@@ -1,0 +1,229 @@
+\section{Exact packets and arbitrary circuit length}\label{supp1:section:001}
+Let $R$ be a unital ring, not necessarily commutative, and let $I$ be a finite address set. An exact packet family is a family $P_a\in R$ such that
+\[
+P_aP_b=\begin{cases}P_a,&a=b,\\0,&a\ne b,\end{cases}
+\qquad \sum_{a\in I}P_a=1.
+\]
+Adjoint conditions are added when needed. For an operator $U$, define the transfer corner
+\[
+U_{ba}=P_bUP_a.
+\]
+The target index comes first. Completeness and distributivity give
+\[
+\sum_{b,a}U_{ba}=U,\qquad
+(UV)_{ba}=\sum_c U_{bc}V_{ca}.
+\]
+The second identity uses $P_c^2=P_c$ when adjacent transfer corners are multiplied.
+
+\subsection{Circuit paths: source Theorem 4.1}
+For $U=U_m\cdots U_1$, the checked result is
+\[
+P_{a_m}UP_{a_0}
+=\sum_{a_1,\ldots,a_{m-1}}
+P_{a_m}U_mP_{a_{m-1}}\cdots P_{a_1}U_1P_{a_0}.
+\]
+The Lean implementation defines a recursive path sum and proves the identity by induction over an arbitrary finite gate list. It is not restricted to a fixed circuit depth. The empty list has circuit operator $1$ and path value $P_bP_a$. Summing the source and target indices reconstructs the full circuit.
+
+
+
+\subsection{Adjoint conservation: source Theorem 4.2}
+Assume a star operation with $P_a^*=P_a$. Then
+\[
+(U_{ba})^*=P_aU^*P_b.
+\]
+The two checked conservation laws are
+\begin{align*}
+U^*U=1&\quad\Longrightarrow\quad
+\sum_b(U_{ba})^*U_{bc}=\delta_{ac}P_a,\\
+UU^*=1&\quad\Longrightarrow\quad
+\sum_aU_{ba}(U_{da})^*=\delta_{bd}P_b.
+\end{align*}
+For the first law, expand each corner, collapse $P_b^2$ and sum:
+\[
+\sum_bP_aU^*P_bUP_c
+=P_aU^*\left(\sum_bP_b\right)UP_c=P_aP_c.
+\]
+The second law is analogous and is separately checked. Concrete complex-matrix versions use conjugate transpose as the adjoint. No commutative multiplication rule is used for operator products.
+
+
+
+
+
+\section{Symmetry and measurement}\label{supp1:section:002}
+\subsection{Exact symmetry: source Theorem 5.1}
+If $HP_a=P_aH$ for every packet, then
+\[
+P_bHP_a=0\quad(b\ne a),\qquad H=\sum_aP_aHP_a.
+\]
+In a complex Banach algebra, commutation also propagates to the actual exponential:
+\[
+e^{zH}P_a=P_ae^{zH}\qquad(z\in\C).
+\]
+Consequently,
+\[
+e^{zH}=\sum_aP_ae^{zH}P_a,
+\qquad P_be^{zH}P_a=0\quad(b\ne a).
+\]
+This covers real-time evolution by taking $z=-it$. The Lean proof invokes the exponential commutation theorem, not an abstract flow supplied with the desired invariant-packet property as a hypothesis. Self-adjointness of $H$ is not needed for the algebraic reducing property, so this result applies more broadly than the Hermitian specialization in the paper.
+
+
+
+This is an exact symmetry result. It does not supply the quantitative broken-symmetry leakage estimate of Theorem 5.2, whose Duhamel and norm arguments remain outside this block.
+
+\subsection{Measurements: source Theorem 7.1}
+For finite complex matrices, define packet dephasing by
+\[
+\deph(X)=\sum_aP_aXP_a.
+\]
+The code proves idempotence and trace duality:
+\[
+\deph(\deph(X))=\deph(X),\qquad
+\tr\bigl(\deph(E)\rho\bigr)=\tr\bigl(E\deph(\rho)\bigr).
+\]
+Trace duality follows term by term from cyclicity:
+\[
+\tr(P_aEP_a\rho)=\tr(EP_a\rho P_a).
+\]
+Therefore a packet-diagonal effect, $\deph(E)=E$, satisfies
+\[
+\boxed{\tr(E\rho)=\tr\bigl(E\deph(\rho)\bigr).}
+\]
+The proof holds for arbitrary finite complex matrices $E$ and $\rho$. Density matrices and positive measurement effects are valid specializations rather than assumptions needed for this trace identity. Taking $E=1$ also gives trace preservation of packet dephasing.
+
+
+
+This does not establish the full Kraus-channel theorem or the Knill--Laflamme recovery criterion. Those require additional positivity, auxiliary-system or recovery-map arguments.
+
+
+
+\section{Corrected Feshbach resolvent}\label{supp1:section:003}
+Write a finite complex matrix in retained and eliminated coordinates:
+\[
+H=\begin{pmatrix}A&B\\C&D\end{pmatrix},\qquad
+zI-H=\begin{pmatrix}zI_P-A&-B\\-C&zI_Q-D\end{pmatrix}.
+\]
+Set
+\[
+D_z=zI_Q-D,\qquad S_z=zI_P-A-BD_z^{-1}C.
+\]
+The effective Hamiltonian is $H_{\mathrm{eff}}(z)=A+BD_z^{-1}C$, so
+$S_z=zI_P-H_{\mathrm{eff}}(z)$.
+
+\subsection{Correct statement: source Theorem 9.1}
+Assume both $D_z$ and $zI-H$ are invertible. Then $S_z$ is invertible and
+\[
+\boxed{\bigl((zI-H)^{-1}\bigr)_{PP}=S_z^{-1}.}
+\]
+The left-hand side is the literal retained-coordinate submatrix of the full inverse. This matches the paper's compressed operator when written in an orthonormal basis of the retained subspace. The proof is valid for arbitrary complex blocks of compatible sizes and does not require Hermiticity.
+
+The checked invertibility criterion is
+\[
+D_z\text{ invertible}\quad\Longrightarrow\quad
+\bigl(zI-H\text{ invertible}\ \Longleftrightarrow\ S_z\text{ invertible}\bigr).
+\]
+Thus one may equivalently assume invertibility of $D_z$ and $S_z$.
+
+\textbf{Why the original assumption is insufficient.}
+Take $z=0$ and $H=\diag(0,-1)$, retaining the first coordinate. Then
+\[
+D_z=1,\qquad zI-H=\begin{pmatrix}0&0\\0&1\end{pmatrix}.
+\]
+The eliminated block is invertible, but the full matrix is singular. Hence the original hypothesis does not ensure the existence of its stated resolvent. The Lean counterexample proves invertibility of the scalar $1$ and noninvertibility of this full $2\times2$ matrix.
+
+
+
+\subsection{Provenance and limits}
+The general block-inverse proof was reused from the checked fifth block of Paper VI and freshly compiled in the Paper VII namespace. The extra counterexample was added in this release. This is reuse of a proof, not a claim of a new Schur identity.
+
+The unnumbered time-domain memory equation in Section 9.2, cutoff-uniform resolvent control and continuum limits are not proved by this finite inverse identity. The source amendment makes the two invertibility assumptions explicit without changing the intended effective Hamiltonian.
+
+
+
+\section{Dispersion with an explicit spacing condition}\label{supp1:section:004}
+The grid eigenvalue in source Theorem 11.1 is
+\[
+\lambda_{k,h}=\frac{4}{h^2}\sin^2\left(\frac{kh}{2}\right).
+\]
+The original low-mode condition is $0\le kh/2\le1$. A nonzero spacing is also required for the quotient to have its intended meaning. For a physical grid, one normally takes $h>0$.
+
+\subsection{Checked stronger statement}
+For every $k,h\in\R$ with $h\ne0$,
+\[
+\boxed{0\le k^2-\lambda_{k,h}\le\frac{k^4h^2}{12}.}
+\]
+The code proves this without the low-mode restriction. The bound may be loose away from the low-mode regime, but it remains valid.
+
+The proof begins with the all-real estimate
+\[
+0\le x^2-\sin^2x\le\frac{x^4}{3}.
+\]
+The lower bound follows from $|\sin x|\le|x|$. For the upper bound, use
+\[
+|x-\sin x|\le\frac{|x|^3}{6},\qquad
+|x+\sin x|\le2|x|.
+\]
+Factoring the difference of squares gives
+\[
+0\le x^2-\sin^2x
+=|x-\sin x|\,|x+\sin x|
+\le\frac{x^4}{3}.
+\]
+With $x=kh/2$ and $h\ne0$,
+\begin{align*}
+k^2-\lambda_{k,h}
+&=\frac4{h^2}\left(x^2-\sin^2x\right),\\
+\frac4{h^2}\frac{x^4}{3}
+&=\frac{k^4h^2}{12}.
+\end{align*}
+Every algebraic transformation and inequality in the active source was accepted by Lean.
+
+
+
+\subsection{What this does not establish}
+This is an exact deterministic error bound for the displayed dispersion relation. It is not a verification of the original paper's floating-point convergence-rate experiment, spectral-dimension plateau measurements or selection of a physical spacetime geometry. Those computations were not rerun in this release.
+
+
+
+\section{A constraint diagnostic that vanishes automatically}\label{supp1:section:005}
+Section 12 defines the physical projector using the exact common kernel of the constraints. In finite dimensions this gives $C_aP=0$ for every $a$. Absorb the factor $i$ and any structure coefficient into $f_c$, and write
+\[
+\mathcal A_{ab}=C_aC_b-C_bC_a-\sum_cf_cC_c.
+\]
+\begin{proposition}[Exact common-kernel compression]\label{supp1:proposition:001}
+If $C_cP=0$ for every $c$, then
+\[
+\mathcal A_{ab}P=0,\qquad P\mathcal A_{ab}P=0.
+\]
+No idempotence or adjoint property of $P$ is needed for this implication.
+\end{proposition}
+\begin{proof}\phantomsection\label{supp1:proof:001}
+Associativity gives
+\[
+\mathcal A_{ab}P=C_a(C_bP)-C_b(C_aP)-\sum_cf_c(C_cP)=0.
+\]
+Left multiplication by $P$ gives the second identity.
+\phantomsection\label{supp1:proof:001:end}\end{proof}
+
+\subsection{Compressed vanishing without operator closure}
+Over the rationals, take
+\[
+P=\begin{pmatrix}1&0&0\\0&0&0\\0&0&0\end{pmatrix},\quad
+X=\begin{pmatrix}0&0&0\\0&0&1\\0&1&0\end{pmatrix},\quad
+Z=\begin{pmatrix}0&0&0\\0&1&0\\0&0&-1\end{pmatrix}.
+\]
+These displayed matrices are symmetric. The code checks that $P^2=P$, $P\ne0$ and $XP=ZP=0$, but
+\[
+[X,Z]=\begin{pmatrix}0&0&0\\0&0&-2\\0&2&0\end{pmatrix}\ne0,
+\qquad P[X,Z]P=0.
+\]
+The commutator therefore violates the zero-structure-coefficient closure relation outside the physical range, despite exact vanishing of its physical compression.
+
+
+
+\subsection{Interpretation for the paper}
+Compressed anomaly vanishing is not sufficient to certify full operator closure. In the exact finite common-kernel setup it is automatic. A nonzero computed compression would instead contradict those exact assumptions or expose an approximation or implementation defect.
+
+This does not establish that a nontrivial compatible refinement tower exists. It does not prove or disprove the full continuum program. A stronger closure claim must test more than this compression, and unbounded constraints need their operator domains specified. This audit is additional to the six checked source items and is not counted as a seventh original theorem.
+
+
+

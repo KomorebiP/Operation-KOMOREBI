@@ -1,0 +1,11 @@
+noncomputable def diagonal : DiagonalErrors n I where
+  code := K.code
+  code_projection := K.code_projection
+  error := mix (fun a => K.error a*K.code)
+    (K.gram_positive.isHermitian.eigenvectorUnitary : Matrix I I ℂ)
+  restricted := mix_restricted K.code (fun a => K.error a*K.code)
+    (fun a => by rw [mul_assoc, K.code_projection.isIdempotentElem.eq]) _
+  weight := K.gram_positive.isHermitian.eigenvalues
+  nonnegative := K.gram_positive.eigenvalues_nonneg
+  gram := diagonalized_gram K.code (fun a => K.error a*K.code) K.gramMatrix
+    K.gram_positive K.restricted_error_gram

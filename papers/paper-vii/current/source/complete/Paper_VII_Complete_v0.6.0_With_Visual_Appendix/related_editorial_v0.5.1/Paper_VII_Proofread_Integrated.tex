@@ -1,0 +1,1547 @@
+\newcommand{\DoNotLoadEpstopdf}{} % All figure sources are already PDF.
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.90in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{bm}
+\usepackage{needspace}
+\usepackage{placeins}
+
+\graphicspath{{figures/}}
+\allowdisplaybreaks
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus VII},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Quantum seeds, symmetry packets, circuit paths, effective dynamics, quantum channels, geometric connections, and quantum-spacetime refinement},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Projector-Resolved Seed Calculus VII}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newtheorem{certificate}[theorem]{Recorded Numerical Check}
+\newtheorem{classical}[theorem]{Classical Input}
+
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\bbC}{\mathbb C}
+\newcommand{\bbR}{\mathbb R}
+\newcommand{\bbZ}{\mathbb Z}
+\newcommand{\bbN}{\mathbb N}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\ket}[1]{\left|#1\right\rangle}
+\newcommand{\bra}[1]{\left\langle#1\right|}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=7pt
+}
+
+\title{\textbf{Projector-Resolved Seed Calculus VII}\\[0.45em]
+\large Quantum Seed Calculus: Symmetry Packets, Circuits, Effective Dynamics, and Quantum Spacetime}
+\author{Komorebi P.}
+\date{Proofread integrated edition 0.5.1\\6 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper develops a finite quantum realization of the projector-resolved seed calculus. A declared operator algebra generates seed orbits, symmetry projectors resolve those orbits into packets, and finite circuit paths reconstruct the original operators exactly. Multiplicity-matrix ranks determine quantum seed rank and the dimension of a local bipartite orbit. Cyclic projectors and tensor refinement supply exact symmetry decompositions. For Hamiltonian evolution, invariant packets and a commutator bound separate exact symmetry from leakage. Moving coordinates require a connection term. A smooth projector field defines range bundles on its open rank regions, with projected connection $\nabla=P\,d$ and curvature $P(dP\wedge dP)P$. Measurements, Kraus channels and the finite Knill--Laflamme criterion are stated with explicit normalization and recovery conditions. Schur--Feshbach reduction requires invertibility of both the eliminated resolvent block and the full resolvent matrix. Finite Euclidean transfer and dispersion estimates are separated from continuum claims. This edition integrates the five Lean supplements into the manuscript: all 19 registered named finite results are covered by 296 checked theorem declarations in 27 modules. The count includes supporting lemmas and does not certify every worked example or numerical value. Nineteen original figures and the historical numerical report are retained without presenting them as freshly regenerated experiments. Constraint closure, continuum convergence, Lorentzian reconstruction, an Einstein infrared limit and a physical spin-two sector remain research targets, not established consequences of the finite calculus.
+\end{abstract}
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\textwidth}
+\textbf{Scope and claim boundary.} The formal coverage register contains 15 theorems, one corollary and three classical inputs. Its 19 entries are checked under the explicit hypotheses printed in this edition. The 296 Lean declarations also include supporting lemmas and specializations; they are not 296 independent discoveries. Unnumbered worked calculations have the proofs given in the text but are not thereby added to the Lean register. Numerical checks are historical finite observations, not mathematical proofs or new runs. No solution of quantum gravity, interacting continuum field theory, anomaly-free gravitational constraints, Lorentzian reconstruction, Einstein limit or physical massless spin-two sector is claimed. Classical references remain in the consolidated end-of-series bibliography.
+\end{minipage}}
+\end{center}
+
+\clearpage
+\begingroup
+\small
+\tableofcontents
+\endgroup
+\clearpage
+\listoffigures
+\listoftables
+\clearpage
+
+\section{The quantum seed realization}
+
+\paragraph{Conventions.}
+Unless a zero-dimensional boundary case is stated explicitly, quantum state spaces are nonzero finite-dimensional complex Hilbert spaces. A complete packet family is a finite collection satisfying
+\[
+P_\alpha^*=P_\alpha,\qquad
+P_\alpha P_\beta=\delta_{\alpha\beta}P_\alpha,\qquad
+\sum_\alpha P_\alpha=I.
+\]
+All operator norms in the analytic estimates are induced by the Hilbert-space norm, not the entrywise maximum norm or the Frobenius norm. We write $[A,B]=AB-BA$ and use units with $\hbar=1$. Parameter derivatives are real derivatives. A matrix $X$ is supported on a code projector $P$ when $PXP=X$.
+
+The common operator sequence of the series becomes
+\[
+\boxed{
+\begin{gathered}
+\text{quantum seed}
+\longrightarrow
+\text{gate or observable address}
+\longrightarrow
+\text{symmetry projection}\\
+\longrightarrow
+\text{packet transfer}
+\longrightarrow
+\text{constraint}
+\longrightarrow
+\text{refinement}
+\longrightarrow
+\text{reconstruction}
+\end{gathered}
+}
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{01_quantum_seed_architecture.pdf}
+\caption{The quantum realization of the common seed-calculus operator chain. The same finite packet language is used for states, gates, Hamiltonians, channels, geometric projectors, and effective dynamics.}
+\label{fig:architecture}
+\end{figure}
+
+\begin{definition}[Finite quantum seed system]
+A finite quantum seed system is a tuple
+\[
+\mathfrak Q=
+\left(
+\cH,
+\psi_0,
+\cO,
+\cR,
+\{P_{\ell,\alpha}\},
+H,
+\tau
+\right),
+\]
+where $\cH$ is a finite-dimensional Hilbert space, $\psi_0\in\cH$ is a nonzero seed, $\cO$ is the declared operator grammar, $\cR$ is a collection of algebraic or physical constraints, $\{P_{\ell,\alpha}\}$ is an exact packet system at each refinement level, $H=H^*$ is a Hamiltonian when dynamics are present, and $\tau$ specifies the topology used in a later completion.
+\end{definition}
+
+The generated state space is
+\[
+\cH(\psi_0;\cO)
+=
+\operatorname{span}
+\left\{
+O_r\cdots O_1\psi_0:
+O_j\in\cO,
+\ r\ge0
+\right\}.
+\]
+The quantum seed is cyclic for the grammar when
+\[
+\cH(\psi_0;\cO)=\cH.
+\]
+This is a statement about the pair $(\psi_0,\cO)$, not about the vector alone. A state may be cyclic for the full matrix algebra and noncyclic for a restricted physical gate set.
+
+\section{Quantum seed rank and cyclicity}
+
+\subsection{Finite observable algebras}
+
+Let a finite-dimensional unital $*$-subalgebra of operators act in its standard multiplicity form
+\[
+\cA
+\cong
+\bigoplus_{i=1}^r
+\left(M_{d_i}(\bbC)\otimes I_{m_i}\right)
+\]
+on
+\[
+\cH
+\cong
+\bigoplus_{i=1}^r
+\left(\bbC^{d_i}\otimes\bbC^{m_i}\right).
+\]
+Here every $d_i$ is a positive integer and every multiplicity $m_i$ is a nonnegative integer. An empty block family represents the zero space and has seed rank zero; an empty maximum below is assigned the value zero. A vector $\psi_i\in\bbC^{d_i}\otimes\bbC^{m_i}$ is identified with a $d_i\times m_i$ coefficient matrix $C_i$.
+
+\begin{theorem}[Orbit dimension of one quantum seed]\label{thm:seed-orbit}
+For integers $d\ge1$ and $m\ge0$, consider the action of $M_d(\bbC)\otimes I_m$ on $\bbC^d\otimes\bbC^m$. Let $C$ be the coefficient matrix of a vector $\psi$. Then
+\[
+\boxed{
+\dim\operatorname{span}\{(A\otimes I_m)\psi:A\in M_d(\bbC)\}
+=d\,\rank C.
+}
+\]
+The seed is cyclic if and only if $\rank C=m$, which is possible only when $m\le d$.
+\end{theorem}
+
+\begin{proof}
+Under the coefficient-matrix identification, $(A\otimes I_m)\psi$ corresponds to $AC$. Every row of $AC$ lies in the row space of $C$. Conversely, any $d\times m$ matrix whose rows lie in the row space of $C$ equals $AC$ for a suitable $A$: choose each row of $A$ to produce the desired row combination. The orbit therefore consists of all matrices with $d$ independently chosen rows in the $\rank C$-dimensional row space of $C$, and has dimension $d\rank C$. It equals the full $dm$-dimensional space exactly when $\rank C=m$.
+\end{proof}
+
+\begin{theorem}[Quantum seed-rank formula]\label{thm:seed-rank}
+For
+\[
+\cA=\bigoplus_i(M_{d_i}(\bbC)\otimes I_{m_i})
+\quad\text{on}\quad
+\cH=\bigoplus_i(\bbC^{d_i}\otimes\bbC^{m_i}),
+\]
+the minimum number of seeds required to generate $\cH$ is
+\[
+\boxed{
+\operatorname{srank}_{\cA}(\cH)
+=
+\max_i\left\lceil\frac{m_i}{d_i}\right\rceil.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Each seed contributes a coefficient matrix of rank at most $d_i$ in the $i$th block. Thus $k$ seeds can cover at most a $kd_i$-dimensional subspace of the multiplicity factor $\bbC^{m_i}$, so $k\ge\lceil m_i/d_i\rceil$ for every $i$.
+
+For the converse, take
+\[
+k=\max_i\left\lceil\frac{m_i}{d_i}\right\rceil.
+\]
+In each block, partition a basis of $\bbC^{m_i}$ into at most $k$ groups of size at most $d_i$. Choose the coefficient matrix of seed $a$ so that its nonzero rows span the $a$th group. The combined row spaces of the $k$ seeds then span $\bbC^{m_i}$ in every block. The preceding theorem shows that their $\cA$-orbits generate the whole direct sum.
+\end{proof}
+
+\begin{corollary}[Local orbit and Schmidt rank]\label{thm:schmidt}
+Let $\psi\in\cH_A\otimes\cH_B$, with $\dim\cH_A=d_A\ge1$, and let $r$ be its Schmidt rank. The reduced positive operator on $B$ is $\rho_B=\Tr_A(\ket\psi\bra\psi)$; normalization of $\psi$ is immaterial to its support. Then
+\[
+\boxed{
+\dim\operatorname{span}\{(A\otimes I_B)\psi:A\in M_{d_A}(\bbC)\}
+=d_A r.
+}
+\]
+In particular, local operators on $A$ generate the complete bipartite Hilbert space exactly when the reduced state on $B$ has full support.
+\end{corollary}
+
+\begin{proof}
+A Schmidt decomposition of length $r$ gives a coefficient matrix of rank $r$. Applying Theorem~\ref{thm:seed-orbit} gives the orbit dimension $d_A r$. The range of $\rho_B$ is the span of the $r$ Schmidt vectors on $B$, so full support is equivalent to $r=\dim\cH_B$. Because $d_A>0$, this is equivalent to the orbit having the full bipartite dimension.
+\end{proof}
+
+This is an algebraic span statement for arbitrary local operators. It is not a claim that a normalized unitary gate orbit contains every vector, nor a deterministic protocol for preparing arbitrary remote states. Entanglement controls the multiplicity support appearing in that algebraic span.
+
+\subsection{A computational-basis seed}
+
+\begin{theorem}[One seed for the computational basis]\label{thm:computational}
+For an integer $n\ge0$, let
+\[
+\psi_0=\ket{0}^{\otimes n}
+\]
+and let $X_j$ denote the Pauli $X$ operator on qubit $j$. Then
+\[
+\left\{
+X_1^{a_1}\cdots X_n^{a_n}\psi_0:
+(a_1,\ldots,a_n)\in\{0,1\}^n
+\right\}
+\]
+is the complete computational basis. Hence the seed is cyclic under the algebra generated by the $X_j$.
+\end{theorem}
+
+\begin{proof}
+For a binary address $a=(a_1,\ldots,a_n)$,
+\[
+X_1^{a_1}\cdots X_n^{a_n}\ket{0\cdots0}
+=
+\ket{a_1\cdots a_n}.
+\]
+Distinct binary addresses produce distinct orthonormal basis vectors. There are $2^n$ of them, equal to the dimension of the Hilbert space.
+\end{proof}
+
+\begin{certificate}[Three-qubit seed orbit]
+The implementation generated all eight computational basis states from $\ket{000}$ using the three local $X$ address operators. The measured orbit rank was $8/8$.
+\end{certificate}
+
+\section{Cyclic symmetry packets}
+
+\subsection{Character projectors}
+
+Let $N\ge1$ be an integer, and let $S$ be a unitary symmetry whose order divides $N$:
+\[
+S^N=I.
+\]
+Set $\omega=e^{2\pi i/N}$.
+
+\begin{theorem}[Cyclic quantum projectors]\label{thm:cyclic}
+The operators
+\[
+\boxed{
+P_j
+=
+\frac1N\sum_{r=0}^{N-1}\omega^{-jr}S^r,
+\qquad
+0\le j<N,
+}
+\]
+are self-adjoint, pairwise orthogonal projectors satisfying
+\[
+P_jP_k=\delta_{jk}P_j,
+\qquad
+\sum_{j=0}^{N-1}P_j=I,
+\qquad
+SP_j=\omega^jP_j.
+\]
+\end{theorem}
+
+\begin{proof}
+Using $S^{r+s}=S^{r+s\bmod N}$ and the finite character orthogonality relation,
+\[
+\frac1N\sum_{r=0}^{N-1}\omega^{(k-j)r}=\delta_{jk},
+\]
+one obtains $P_jP_k=\delta_{jk}P_j$. Summing over $j$ cancels every term indexed by $r\ne0$ and retains the $r=0$ term, proving completeness. Unitarity and the change of residue $r\mapsto-r$ give
+\[
+P_j^*=\frac1N\sum_{r=0}^{N-1}\omega^{jr}S^{-r}=P_j.
+\]
+Finally, multiplication by $S$ shifts the summation index and contributes the factor $\omega^j$.
+\end{proof}
+
+For parity,
+\[
+S=Z^{\otimes n},
+\qquad
+P_{\mathrm{even}}=\frac{I+S}{2},
+\qquad
+P_{\mathrm{odd}}=\frac{I-S}{2}.
+\]
+
+\subsection{Tensor refinement}
+
+Fix $N\ge1$. Suppose every factor $a$ has a complete orthogonal family $P^{(a)}_0,\ldots,P^{(a)}_{N-1}$. The fine tensor packets are
+\[
+P_{\mathbf j}^{\mathrm{fine}}
+=
+P^{(1)}_{j_1}\otimes\cdots\otimes P^{(m)}_{j_m}.
+\]
+
+\begin{theorem}[Tensor/polyphase refinement]\label{thm:tensor}
+For each residue $r\in\bbZ/N\bbZ$, define
+\[
+\boxed{
+P_r^{\mathrm{coarse}}
+=
+\sum_{j_1+\cdots+j_m\equiv r\pmod N}
+P^{(1)}_{j_1}\otimes\cdots\otimes P^{(m)}_{j_m}.
+}
+\]
+Then the $P_r^{\mathrm{coarse}}$ are complete orthogonal projectors, and every coarse packet is the exact sum of its fine descendants.
+\end{theorem}
+
+\begin{proof}
+The fine tensor projectors are mutually orthogonal and sum to the identity. The stated coarse families partition their address set by total residue. Sums over disjoint sets of orthogonal projectors remain orthogonal projectors, and the union of the residue classes is the full fine address set.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{10_tensor_parity_refinement.pdf}
+\caption{The eight computational packets of three qubits refine the two total-parity packets exactly.}
+\label{fig:tensor-refinement}
+\end{figure}
+
+\begin{certificate}[Exact parity refinement]
+For three qubits, the local computational projectors were grouped by Hamming-weight parity. The resulting coarse projectors agreed with $(I\pm Z^{\otimes3})/2$ with residual $0$.
+\end{certificate}
+
+\section{Quantum circuits as packet paths}
+
+Let
+\[
+U=U_mU_{m-1}\cdots U_1
+\]
+be a circuit with $m\ge1$, and let $\{P_\alpha\}$ be a complete packet system. For the empty circuit $m=0$, set $U=I$; its boundary block is $P_\beta P_\alpha=\delta_{\beta\alpha}P_\alpha$.
+
+\begin{theorem}[Exact circuit path expansion]\label{thm:paths}
+For source packet $\alpha_0$ and target packet $\alpha_m$,
+\[
+\boxed{
+P_{\alpha_m}UP_{\alpha_0}
+=
+\sum_{\alpha_1,\ldots,\alpha_{m-1}}
+P_{\alpha_m}U_mP_{\alpha_{m-1}}
+\cdots
+P_{\alpha_1}U_1P_{\alpha_0}.
+}
+\]
+Summing over the source and target packets reconstructs the complete circuit operator.
+\end{theorem}
+
+\begin{proof}
+Insert the identity resolution $I=\sum_\alpha P_\alpha$ between every adjacent pair of gates. Distributing the finite sums gives the path expansion. Summing the left and right boundary projectors reconstructs $U$.
+\end{proof}
+
+\begin{theorem}[Packetwise unitarity conservation]\label{thm:unitarity}
+If $U$ is unitary and $U_{\beta\alpha}=P_\beta UP_\alpha$, then
+\[
+\boxed{
+\sum_\beta U_{\beta\alpha}^*U_{\beta\gamma}
+=
+\delta_{\alpha\gamma}P_\alpha.
+}
+\]
+Similarly,
+\[
+\sum_\alpha U_{\beta\alpha}U_{\delta\alpha}^*
+=
+\delta_{\beta\delta}P_\beta.
+\]
+\end{theorem}
+
+\begin{proof}
+Using completeness and unitarity,
+\[
+\sum_\beta U_{\beta\alpha}^*U_{\beta\gamma}
+=
+P_\alpha U^*\left(\sum_\beta P_\beta\right)UP_\gamma
+=
+P_\alpha P_\gamma.
+\]
+The second identity is analogous.
+\end{proof}
+
+\begin{example}[Bell seed circuit]
+In this example only, $H$ denotes the Hadamard gate, not a Hamiltonian. Starting from $\ket{00}$,
+\[
+(H\otimes I)\ket{00}
+=
+\frac{\ket{00}+\ket{10}}{\sqrt2},
+\]
+and then
+\[
+\operatorname{CNOT}(H\otimes I)\ket{00}
+=
+\frac{\ket{00}+\ket{11}}{\sqrt2}.
+\]
+The parity packets show that the final state lies entirely in the even sector, while the intermediate circuit path passes through both even and odd addresses.
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{02_bell_seed_probabilities.pdf}
+\captionof{figure}{The Bell state generated from the seed $\ket{00}$.}
+\label{fig:bell}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{04_circuit_packet_paths.pdf}
+\captionof{figure}{Circuit reconstruction as a sum over packet paths.}
+\label{fig:circuit-paths}
+\end{minipage}
+\end{figure}
+
+\begin{certificate}[Bell and path reconstruction]
+The Bell-state residual and the complete parity-path reconstruction residual were both $0$ in the numerical implementation.
+\end{certificate}
+
+\section{Symmetry-resolved Hamiltonians and leakage}
+
+Let $H=H^*$ and let $P$ be a packet projector. If $[H,P]=0$, then $P\cH$ is invariant under $e^{-itH}$.
+
+\begin{theorem}[Exact symmetry packets]\label{thm:symmetry}
+If $[H,P_\alpha]=0$ for every packet, then
+\[
+H=\sum_\alpha P_\alpha HP_\alpha
+\]
+and
+\[
+e^{-itH}
+=
+\sum_\alpha P_\alpha e^{-itH}P_\alpha.
+\]
+No amplitude transfers between distinct packets.
+\end{theorem}
+
+\begin{proof}
+The commutation relation gives $P_\beta HP_\alpha=0$ for $\beta\ne\alpha$. Every polynomial in $H$ has the same block form, and the finite-dimensional exponential is the norm limit of its polynomial series.
+\end{proof}
+
+For two qubits and real parameters $J,h$, consider
+\[
+H
+=
+JX\otimes X
++h(Z\otimes I+I\otimes Z).
+\]
+In the ordered even basis $\{\ket{00},\ket{11}\}$ and odd basis $\{\ket{01},\ket{10}\}$,
+\[
+H_{\mathrm{even}}
+=
+\begin{pmatrix}
+2h&J\\
+J&-2h
+\end{pmatrix},
+\qquad
+H_{\mathrm{odd}}
+=
+\begin{pmatrix}
+0&J\\
+J&0
+\end{pmatrix}.
+\]
+Therefore
+\[
+\Spec H_{\mathrm{even}}
+=\{\pm\sqrt{4h^2+J^2}\},
+\qquad
+\Spec H_{\mathrm{odd}}=\{\pm J\}.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.66\textwidth]{03_parity_block_hamiltonian.pdf}
+\caption{The parity-resolved Hamiltonian is exactly block diagonal after the even and odd basis vectors are grouped.}
+\label{fig:parity-hamiltonian}
+\end{figure}
+
+\subsection{Leakage under broken symmetry}
+
+Set $Q=I-P$.
+
+\begin{theorem}[Commutator leakage bound]\label{thm:leakage}
+For every self-adjoint $H$, orthogonal projector $P$, and real time $t$,
+\[
+\boxed{
+\norm{Qe^{-itH}P}
+\le
+|t|\,\norm{[H,P]}.
+}
+\]
+In particular, exact commutation gives zero leakage for all time.
+\end{theorem}
+
+\begin{proof}
+Set $F(s)=e^{isH}Pe^{-isH}$. Differentiation of the actual exponential gives
+\[
+F'(s)=i\,e^{isH}[H,P]e^{-isH},\qquad F(0)=P.
+\]
+Unitary conjugation preserves the operator norm, so $\|F'(s)\|=\|[H,P]\|$. The mean-value estimate on the interval between $0$ and $t$ yields
+\[
+\|F(t)-P\|\le |t|\,\|[H,P]\|.
+\]
+Finally, $e^{itH}Qe^{-itH}P=(P-F(t))P$ and $\|P\|\le1$. Left multiplication by $e^{itH}$ preserves the norm and gives the desired inequality. This argument includes positive, negative and zero time.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{05_leakage_bound.pdf}
+\caption{A parity-breaking perturbation creates nonzero transfer between the packets, while the measured leakage remains below the commutator bound.}
+\label{fig:leakage}
+\end{figure}
+
+\begin{certificate}[Symmetry and negative control]
+For the parity-preserving Hamiltonian, the off-packet block norm and maximum measured leakage were both $0$. After adding a parity-breaking $X\otimes I$ perturbation, the maximum leakage was approximately $0.79196$, and the maximum violation of the proved bound was $0$.
+\end{certificate}
+
+\section{Moving packets, connections, and curvature}
+
+\subsection{Moving quantum coordinates}
+
+\begin{theorem}[Moving-frame Hamiltonian]\label{thm:moving}
+Let $U(t)$ and $\psi(t)$ be differentiable on an open real time interval, let $U(t)$ be unitary, and let $H(t)=H(t)^*$. Suppose
+\[
+i\dot\psi(t)=H(t)\psi(t).
+\]
+Writing
+\[
+\psi(t)=U(t)y(t)
+\]
+gives
+\[
+\boxed{
+i\dot y(t)
+=
+\left(U(t)^*H(t)U(t)-iU(t)^*\dot U(t)\right)y(t).
+}
+\]
+Both the connection term $-iU^*\dot U$ and the effective Hamiltonian $U^*HU-iU^*\dot U$ are Hermitian.
+\end{theorem}
+
+\begin{proof}
+Differentiate $\psi=Uy$:
+\[
+i\dot U y+iU\dot y=HUy.
+\]
+Multiplying by $U^*$ gives the formula. Differentiating $U^*U=I$ shows $U^*\dot U$ is skew-Hermitian, so $-iU^*\dot U$ is Hermitian.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.70\textwidth]{08_moving_frame_connection.pdf}
+\caption{The moving-frame equation closes to numerical precision only when the connection term is retained.}
+\label{fig:moving-frame}
+\end{figure}
+
+\begin{certificate}[Moving-frame correction]
+The complete moving-frame equation had residual $1.0645\times10^{-10}$, while omitting the connection produced residual $0.7000$.
+\end{certificate}
+
+\subsection{A canonical projector connection}
+
+Let $P_1(t),\ldots,P_m(t)$ be differentiable on an open real time interval, with $P_a(t)^*=P_a(t)$ and
+\[
+P_aP_b=\delta_{ab}P_a,
+\qquad
+\sum_aP_a=I.
+\]
+
+\begin{theorem}[Canonical packet connection]\label{thm:canonical}
+Define
+\[
+\boxed{
+C(t)
+=
+\frac12\sum_a[\dot P_a(t),P_a(t)]
+=
+\sum_a\dot P_a(t)P_a(t).
+}
+\]
+Then
+\[
+C(t)^*=-C(t)
+\]
+and
+\[
+\boxed{
+[C(t),P_b(t)]=\dot P_b(t)
+}
+\]
+for every packet $b$.
+\end{theorem}
+
+\begin{proof}
+Differentiating $P_a^2=P_a$ gives
+\[
+\dot P_aP_a+P_a\dot P_a=\dot P_a.
+\]
+Summing over $a$ and using $\sum_a\dot P_a=0$ yields
+\[
+\sum_aP_a\dot P_a=-\sum_a\dot P_aP_a,
+\]
+which proves both displayed formulas for $C$ and its skew-Hermiticity.
+
+For fixed $b$,
+\[
+CP_b=\dot P_bP_b.
+\]
+When $a\ne b$, differentiating $P_bP_a=0$ gives
+\[
+P_b\dot P_a=-\dot P_bP_a.
+\]
+Hence
+\[
+P_bC
+=\sum_aP_b\dot P_aP_a
+=-\dot P_b(I-P_b),
+\]
+and subtraction gives $[C,P_b]=\dot P_b$.
+\end{proof}
+
+The connection is the infinitesimal transport operator of the moving packet frame. It is determined by the packet family itself, without choosing a basis inside any packet.
+
+\subsection{Projector curvature}
+
+\begin{classical}[Projected connection]\label{thm:projected}
+Let $M$ be a smooth finite-dimensional real manifold without boundary, let $V$ be a finite-dimensional real normed vector space, and let $P:M\to\operatorname{End}_{\bbR}(V)$ be smooth with $P(x)^2=P(x)$. In the quantum application, $V$ is the underlying real space of a finite complex Hilbert space and $P$ is an orthogonal complex-linear projector.
+
+The rank of $P$ is locally constant. On each open rank region, its ranges form a smooth vector bundle. For a smooth range section $s$, so that $Ps=s$, define
+\[
+\nabla_Xs=P\,ds(X).
+\]
+This is a connection on smooth range sections. For smooth vector fields $X,Y$, its curvature satisfies
+\[
+\boxed{
+(\nabla_X\nabla_Y-\nabla_Y\nabla_X-\nabla_{[X,Y]})s
+=P[dP(X),dP(Y)]P\,s.
+}
+\]
+Equivalently, its endomorphism-valued curvature is
+\[
+\boxed{F=P(dP\wedge dP)P.}
+\]
+No global frame, globally constant rank or commuting-vector-field assumption is imposed. The geometric formalization concerns real smooth structures, not complex-analytic manifolds or boundary extensions.
+\end{classical}
+
+\begin{proof}
+\textit{Range coordinates.} Fix $a\in M$ and put
+\[
+T_a(x)=P(x)P(a)+(I-P(x))(I-P(a)).
+\]
+Then $T_a(a)=I$ and $P(x)T_a(x)=T_a(x)P(a)$. Invertibility is open, so on a neighborhood of $a$, $T_a(x)$ restricts to an isomorphism from $\Ran P(a)$ to $\Ran P(x)$. This proves local constancy of rank. The local coordinates and their transitions are
+\[
+(x,v)\longmapsto (x,T_a(x)^{-1}v),\qquad
+u\longmapsto T_b(x)^{-1}T_a(x)u.
+\]
+Their smoothness follows from smoothness of $P$ and inversion. The transition maps satisfy the cocycle identity by cancellation. These charts construct the smooth range bundles on the open rank regions, including when different connected components have different ranks.
+
+\textit{Connection rules.} Smoothness of $P\,ds(X)$ and $P^2=P$ show that $\nabla_Xs$ is a smooth range section. Differentiation and projection give
+\[
+\begin{aligned}
+\nabla_{X+Y}s&=\nabla_Xs+\nabla_Ys,&
+\nabla_{fX}s&=f\nabla_Xs,\\
+\nabla_X(s+t)&=\nabla_Xs+\nabla_Xt,&
+\nabla_X(fs)&=f\nabla_Xs+(Xf)s
+\end{aligned}
+\]
+for smooth real $f$. The range coordinates above identify ambient smooth range sections with smooth sections of the constructed bundle.
+
+\textit{Curvature.} Differentiating $P^2=P$ gives $P(dP(X))P=0$. Write $D_Xs=ds(X)$. For ambient smooth sections,
+\[
+D_XD_Ys-D_YD_Xs-D_{[X,Y]}s=0.
+\]
+Expansion of the projected derivatives therefore leaves
+\[
+R(X,Y)s=P(dP(X))D_Ys-P(dP(Y))D_Xs.
+\]
+Since $Ps=s$, differentiation gives $D_Ys=(dP(Y))s+PD_Ys$. The terms with a middle $P$ vanish. Thus
+\[
+R(X,Y)s=P\bigl(dP(X)dP(Y)-dP(Y)dP(X)\bigr)P\,s.
+\]
+This expression is alternating, bilinear in the tangent vectors and range-preserving. The ordinary chain rule and the Lie-bracket transformation law identify the local calculations on chart overlaps, yielding the global formula.
+\end{proof}
+
+For an orthogonal rank-one complex projector, use the scalar connection convention $A=-i\langle u,du\rangle$ in a local unit frame. The associated scalar curvature density is
+\[
+\cF_{\mu\nu}
+=-i\Tr\left(P[\partial_\mu P,\partial_\nu P]\right).
+\]
+On the Bloch sphere,
+\[
+P(\theta,\phi)
+=
+\frac12\left(I+\mathbf n(\theta,\phi)\cdot\boldsymbol\sigma\right),
+\]
+where
+\[
+\mathbf n=(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta).
+\]
+The Pauli multiplication law gives
+\[
+[\partial_\theta P,\partial_\phi P]
+=\frac{i}{2}(\partial_\theta\mathbf n\mathbin{\times}\partial_\phi\mathbf n)\cdot\boldsymbol\sigma.
+\]
+Using $\Tr(P\,\mathbf a\cdot\boldsymbol\sigma)=\mathbf n\cdot\mathbf a$ therefore yields
+\[
+\boxed{\cF_{\theta\phi}
+=\frac12\mathbf n\cdot(\partial_\theta\mathbf n\mathbin{\times}\partial_\phi\mathbf n)
+=\frac12\sin\theta.}
+\]
+The scalar sign changes if the opposite convention for $A$ is chosen. This explicit worked calculation is not a separate entry in the 19-item Lean register.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.76\textwidth]{09_bloch_curvature.pdf}
+\caption{Finite-difference evaluation of the Bloch projector curvature against the exact density $\frac12\sin\theta$.}
+\label{fig:bloch}
+\end{figure}
+
+\begin{certificate}[Geometric packet identities]
+The canonical connection reconstructed every packet derivative with residual $0$. The maximum Bloch-curvature residual was $2.0803\times10^{-11}$.
+\end{certificate}
+
+\section{Measurements and quantum channels}
+
+\subsection{Packet measurements}
+
+Let $\rho$ be a density matrix and let $\{E_k\}$ be a POVM:
+\[
+E_k\ge0,
+\qquad
+\sum_kE_k=I.
+\]
+The outcome probabilities are
+\[
+p_k=\Tr(E_k\rho).
+\]
+
+\begin{theorem}[Block-diagonal measurement invariance]\label{thm:measurement}
+Let $\{P_\alpha\}$ be a complete packet family, and suppose every measurement effect is packet diagonal:
+\[
+E_k=\sum_\alpha P_\alpha E_kP_\alpha.
+\]
+Define the packet-dephased state
+\[
+\cD_P(\rho)=\sum_\alpha P_\alpha\rho P_\alpha.
+\]
+Then
+\[
+\boxed{
+\Tr(E_k\rho)
+=
+\Tr(E_k\cD_P(\rho))
+}
+\]
+for every outcome $k$.
+\end{theorem}
+
+\begin{proof}
+Insert the packet decomposition of $E_k$ and use cyclicity of the trace:
+\[
+\Tr(E_k\rho)
+=
+\sum_\alpha\Tr(P_\alpha E_kP_\alpha\rho)
+=
+\sum_\alpha\Tr(E_kP_\alpha\rho P_\alpha).
+\]
+\end{proof}
+
+This theorem says exactly what coherence a declared measurement can and cannot see. Coherence between different packets is invisible to every packet-diagonal observable, while coherence inside a packet remains available.
+
+\subsection{Kraus transfer}
+
+\begin{classical}[Finite Kraus channel]\label{thm:kraus}
+Let $K_1,\ldots,K_r$ satisfy
+\[
+\sum_aK_a^*K_a=I.
+\]
+Then
+\[
+\boxed{
+\Phi(\rho)=\sum_aK_a\rho K_a^*
+}
+\]
+is completely positive and trace preserving.
+\end{classical}
+
+\begin{proof}
+Trace preservation follows from
+\[
+\Tr\Phi(\rho)
+=\Tr\left(\rho\sum_aK_a^*K_a\right)
+=\Tr\rho.
+\]
+For any auxiliary dimension and positive matrix $X$, each term
+\[
+(I\otimes K_a)X(I\otimes K_a)^*
+\]
+is positive, so their sum is positive. This is complete positivity.
+\end{proof}
+
+Packet superoperator blocks are defined by
+\[
+\Phi_{\alpha\beta;\gamma\delta}(X)
+=
+P_\alpha
+\Phi(P_\gamma XP_\delta)
+P_\beta.
+\]
+Summing all four packet indices reconstructs $\Phi(X)$ exactly.
+
+For amplitude damping with a real parameter $0\le\gamma\le1$,
+\[
+K_0=
+\begin{pmatrix}
+1&0\\0&\sqrt{1-\gamma}
+\end{pmatrix},
+\qquad
+K_1=
+\begin{pmatrix}
+0&\sqrt\gamma\\0&0
+\end{pmatrix}.
+\]
+The excited state becomes
+\[
+\Phi(\ket1\bra1)
+=
+\gamma\ket0\bra0+(1-\gamma)\ket1\bra1.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.56\textwidth]{16_amplitude_damping_channel.pdf}
+\caption{Amplitude damping transfers population from the excited packet to the ground packet while preserving trace and positivity.}
+\label{fig:damping}
+\end{figure}
+
+\begin{certificate}[Channel reconstruction]
+For $\gamma=0.23$, the Kraus completeness and output-trace residuals were $0$. The computed output from $\ket1\bra1$ was $\diag(0.23,0.77)$. Packet dephasing changed no computational-basis measurement probability in the Bell-state test.
+\end{certificate}
+
+\section{Quantum error correction as obstruction-packet annihilation}
+
+Let $P=P^*=P^2$ project onto a code space $\cC\subset\cH$, and let $E_1,\ldots,E_r$ be a finite family of complex error matrices. Neither a nonzero code nor channel normalization is assumed unless stated. The operators
+\[
+P E_a^*E_bP
+\]
+are the code-level obstruction packets: if they retain logical-state information beyond one scalar multiple of $P$, the environment can distinguish logical states and exact correction is impossible.
+
+For precision, a complete recovery is a Kraus map
+\[
+\cR(X)=\sum_jK_jXK_j^*,\qquad \sum_jK_j^*K_j=I.
+\]
+The family is \emph{exactly correctable} when one such recovery works for every coherent error combination $A_w=\sum_aw_aE_a$: for every $w$ there is a real $t_w\ge0$, independent of the logical input, such that
+\[
+PXP=X\quad\Longrightarrow\quad
+\cR(A_wXA_w^*)=t_wX.
+\]
+The coefficient is an unnormalized weight. It is not necessarily a probability for an arbitrary matrix $A_w$.
+
+\begin{classical}[Finite Knill--Laflamme criterion]\label{thm:kl}
+The finite error family is exactly correctable in the sense just defined if and only if there is a positive semidefinite complex matrix $C=(c_{ab})$ such that
+\[
+\boxed{PE_a^*E_bP=c_{ab}P\qquad\text{for every }a,b.}
+\]
+If $\sum_aE_a^*E_a=I$, the equivalent normalized-channel formulation is the existence of a complete recovery satisfying
+\[
+\cR\!\left(\sum_aE_aXE_a^*\right)=X
+\quad\text{for every }X\text{ with }PXP=X.
+\]
+The zero-code and empty-error-family cases are included. An empty family is not a trace-preserving channel on a nonzero ambient space.
+\end{classical}
+
+\begin{proof}
+\textit{Necessity.} Fix an error $E_a$ and let $L_j=K_jE_aP$. Perfect recovery on rank-one code operators gives
+\[
+\sum_j\ket{L_j\psi}\bra{L_j\psi}
+=t_a\ket\psi\bra\psi\qquad(\psi\in\cC).
+\]
+For every vector orthogonal to $\psi$, the quadratic form on the left is a sum of nonnegative squared absolute values and equals zero. Each $L_j\psi$ therefore lies in the span of $\psi$. A linear operator that preserves every line in $\cC$ is scalar there: apply it to two independent vectors and their sum. The one-dimensional case is immediate, and the zero-code case is vacuous. Consequently
+\[
+K_jE_aP=d_{ja}P.
+\]
+Recovery completeness now gives
+\[
+\begin{aligned}
+PE_a^*E_bP
+&=\sum_j (K_jE_aP)^*(K_jE_bP)\\
+&=\left(\sum_j\overline{d_{ja}}d_{jb}\right)P.
+\end{aligned}
+\]
+The coefficients form a Gram matrix, hence are positive semidefinite. For a normalized channel, apply the same rank-one argument to all composite branches $K_jE_aP$ at once to obtain the necessary condition.
+
+\textit{Sufficiency.} Diagonalize $C=U\operatorname{diag}(\lambda_r)U^*$ with $U$ unitary and $\lambda_r\ge0$. Define compressed transformed errors
+\[
+F_r=\sum_aU_{ar}E_aP.
+\]
+Then $F_rP=F_r$ and $F_r^*F_s=\lambda_r\delta_{rs}P$. If $\lambda_r=0$, $F_r^*F_r=0$ forces $F_r=0$. For positive eigenvalues only, set $V_r=F_r/\sqrt{\lambda_r}$. These satisfy
+\[
+V_rP=V_r,\qquad V_r^*V_s=\delta_{rs}P.
+\]
+Let $S=\sum_{\lambda_r>0}V_rV_r^*$. Orthogonality makes $S$ an orthogonal projector. Use the recovery branches
+\[
+K_r=V_r^*,\qquad K_{\mathrm{unused}}=I-S.
+\]
+They are complete on the whole ambient space because
+\[
+\sum_rK_r^*K_r+K_{\mathrm{unused}}^*K_{\mathrm{unused}}
+=S+(I-S)^2=I.
+\]
+The inverse unitary change of coordinates reconstructs each $E_aP$ from the $F_r$. Every recovery branch of a coherent combination is therefore scalar on the code, while its unused-space branch vanishes. For all supported matrices, the resulting recovery is
+\[
+\cR(A_wXA_w^*)=(w^*Cw)X.
+\]
+This establishes the arbitrary-family statement without assuming normalization. Under $\sum_aE_a^*E_a=I$ and $P\ne0$, summing the diagonal KL equations gives $\Tr C=1$, so the normalized-channel output is $X$. When $P=0$, every supported $X$ is zero and the conclusion is automatic. The recovery is trace preserving by completeness and completely positive at every finite ancillary dimension by the Kraus calculation in Classical Input~\ref{thm:kraus}.
+\end{proof}
+
+For the three-qubit bit-flip code,
+\[
+\ket{0_L}=\ket{000},
+\qquad
+\ket{1_L}=\ket{111},
+\]
+and the error family is
+\[
+I,
+\quad X\otimes I\otimes I,
+\quad I\otimes X\otimes I,
+\quad I\otimes I\otimes X.
+\]
+The four error images of the code are pairwise orthogonal two-dimensional syndrome packets whose projectors sum to the identity on the eight-dimensional Hilbert space.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{19_error_correction_syndromes.pdf}
+\caption{The four orthogonal syndrome packets of the three-qubit bit-flip code. Each packet identifies one correctable error without resolving the encoded logical state.}
+\label{fig:error-correction}
+\end{figure}
+
+\begin{certificate}[Exact bit-flip correction]
+The Knill--Laflamme residual and syndrome-completeness residual were both $0$. A mixed single-bit-flip channel applied to a nontrivial logical superposition was reversed with density-matrix residual $1.0385\times10^{-16}$.
+\end{certificate}
+
+\section{Exact effective dynamics}
+
+\subsection{Schur--Feshbach reduction}
+
+Let $P$ be a retained packet projector and $Q=I-P$. In packet coordinates,
+\[
+H=
+\begin{pmatrix}
+H_{PP}&H_{PQ}\\
+H_{QP}&H_{QQ}
+\end{pmatrix}.
+\]
+
+\begin{theorem}[Exact Feshbach resolvent]\label{thm:feshbach}
+Assume that both $zI_Q-H_{QQ}$ and $zI-H$ are invertible. Define
+\[
+\boxed{
+H_{\mathrm{eff}}(z)
+=
+H_{PP}
++H_{PQ}(z-H_{QQ})^{-1}H_{QP}.
+}
+\]
+Then
+\[
+\boxed{
+P(z-H)^{-1}P
+=
+\left(z-H_{\mathrm{eff}}(z)\right)^{-1}
+}
+\]
+where the left side is restricted to $P\cH$, the right side is an inverse on that retained space, and both are written in the same orthonormal basis. Here $z-H_{QQ}$ and $z-H_{\mathrm{eff}}$ abbreviate the appropriately sized scalar matrices minus the indicated blocks.
+\end{theorem}
+
+\begin{proof}
+The block matrix $z-H$ has lower-right block $z-H_{QQ}$. Gaussian block elimination produces the Schur complement
+\[
+z-H_{PP}-H_{PQ}(z-H_{QQ})^{-1}H_{QP}.
+\]
+The assumed invertibility of the lower-right block and of the full matrix implies invertibility of this Schur complement. The upper-left block of the full inverse is its inverse, which is exactly the displayed operator.
+\end{proof}
+
+The second premise cannot be dropped: at $z=0$ and $H=\operatorname{diag}(0,-1)$, the eliminated block is $1$ but $zI-H$ is singular. This counterexample is also included in the Lean module.
+
+The self-energy
+\[
+\Sigma_P(z)
+=H_{PQ}(z-H_{QQ})^{-1}H_{QP}
+\]
+contains the complete influence of the eliminated packet. Bare truncation drops $\Sigma_P(z)$ and is therefore exact only when the cross-packet coupling vanishes or the self-energy cancels for another stated reason.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{06_feshbach_vs_truncation.pdf}
+\captionof{figure}{Exact Feshbach reduction versus bare truncation.}
+\label{fig:feshbach}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{07_packet_green_blocks.pdf}
+\captionof{figure}{Norms of packet Green-function blocks.}
+\label{fig:green-blocks}
+\end{minipage}
+\end{figure}
+
+\begin{certificate}[Effective resolvent]
+For a random six-dimensional Hermitian test, the exact Feshbach residual was $3.2291\times10^{-17}$. The corresponding bare-truncation residual was $1.3091\times10^{-2}$.
+\end{certificate}
+
+\subsection{The hidden packet as memory}
+
+For a time-independent finite Hamiltonian $H$ and fixed projectors $P,Q$, write $\psi=x+y$, with $x=P\psi$ and $y=Q\psi$. Then
+\[
+\begin{aligned}
+i\dot x&=H_{PP}x+H_{PQ}y,\\
+i\dot y&=H_{QP}x+H_{QQ}y.
+\end{aligned}
+\]
+Solving the second equation gives
+\[
+y(t)
+=e^{-itH_{QQ}}y(0)
+-i\int_0^t e^{-i(t-s)H_{QQ}}H_{QP}x(s)\,ds.
+\]
+Substitution yields the exact Volterra equation
+\[
+\boxed{
+\begin{aligned}
+i\dot x(t)
+={}&H_{PP}x(t)
++H_{PQ}e^{-itH_{QQ}}y(0)\\
+&-i\int_0^t
+K(t-s)x(s)\,ds,
+\end{aligned}
+}
+\]
+with memory kernel
+\[
+\boxed{
+K(t)=H_{PQ}e^{-itH_{QQ}}H_{QP}.
+}
+\]
+Thus the eliminated degrees of freedom are retained as a frequency-dependent self-energy or an exact memory term. For forward evolution the integral is causal. A time-dependent Hamiltonian requires its two-time propagator instead of the stationary exponential used here. This Volterra derivation is not a separate entry in the finite Lean register.
+
+\section{Finite quantum geometry}
+
+\subsection{A projector-resolved geometry}
+
+At resolution $\ell$, define
+\[
+\boxed{
+\mathfrak Q_\ell
+=
+\left(
+\cA_\ell,
+\cH_\ell,
+D_\ell,
+\{P_{\ell,\alpha}\},
+E_\ell,
+C_\ell,
+\Pi_\ell^{\mathrm{phys}},
+T_\ell
+\right).
+}
+\]
+The entries are an observable algebra, Hilbert space, geometric or Dirac-type operator, packet projectors, fine embedding, coarse reconstruction, physical constraint projector, and transfer operator. The maps have types $E_\ell:\cH_\ell\to\cH_{\ell+1}$ and $C_\ell:\cH_{\ell+1}\to\cH_\ell$. A left inverse $C_\ell E_\ell=I$ does not by itself assert $C_\ell=E_\ell^*$ or an isometric embedding.
+
+A coherent refinement should satisfy
+\[
+C_\ell E_\ell=I
+\]
+and
+\[
+\boxed{
+P_{\ell,\alpha}
+=
+C_\ell
+\left(
+\sum_{\beta\succ\alpha}P_{\ell+1,\beta}
+\right)
+E_\ell.
+}
+\]
+For an operator $D$, define the refinement defect
+\[
+\Delta_\ell(D)
+=C_\ell D_{\ell+1}E_\ell-D_\ell.
+\]
+Exact resolution independence is $\Delta_\ell(D)=0$. When exact equality is too strong, the correct continuum problem is to prove convergence of the resolvents and uniform control of the effective self-energies.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.84\textwidth]{17_quantum_spacetime_tower.pdf}
+\caption{A conjectural nested packet tower for quantum geometry. The diagram is an organizational model; it is not a numerical reconstruction of physical spacetime.}
+\label{fig:spacetime-tower}
+\end{figure}
+
+\subsection{Euclidean transfer}
+
+\begin{theorem}[Finite Euclidean transfer]\label{thm:euclidean}
+Let $H$ be Hermitian on a nonzero finite-dimensional Hilbert space. For all real $\tau,\sigma\ge0$,
+\[
+T(\tau)=e^{-\tau(H-E_0I)},
+\qquad
+E_0=\min\Spec H,
+\]
+is positive definite and satisfies
+\[
+\boxed{
+T(\tau+\sigma)=T(\tau)T(\sigma).
+}
+\]
+Its spectrum is contained in $(0,1]$.
+\end{theorem}
+
+\begin{proof}
+Diagonalize $H=\sum_jE_jP_j$. Then
+\[
+T(\tau)=\sum_j e^{-\tau(E_j-E_0)}P_j.
+\]
+Every eigenvalue is strictly positive and at most one. Multiplication adds the exponents, proving the semigroup law and $T(0)=I$. Positivity here is operator positivity, not an assertion that every matrix entry is nonnegative.
+\end{proof}
+
+The paper tests a controlled volume-state model
+\[
+H_{nn}=2\kappa+V(n),
+\qquad
+H_{n,n+1}=H_{n+1,n}=-\kappa,
+\]
+with $\kappa>0$ and a real confining potential. This is a finite transfer-matrix test only. Operator positivity alone is not reflection positivity of a Euclidean field measure. It is not derived from a gravitational path integral and is not evidence for a unique microscopic spacetime dynamics.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{13_euclidean_transfer_spectrum.pdf}
+\captionof{figure}{Positive spectrum of the Euclidean transfer operator.}
+\label{fig:euclidean-spectrum}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{14_causal_volume_ground_state.pdf}
+\captionof{figure}{Ground-state volume packet in the controlled toy model.}
+\label{fig:volume-ground}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.68\textwidth]{15_causal_volume_transfer.pdf}
+\caption{The finite Euclidean volume-transfer kernel. Positivity and semigroup composition are exact finite statements; its gravitational interpretation remains provisional.}
+\label{fig:volume-transfer}
+\end{figure}
+
+\begin{certificate}[Finite transfer model]
+The minimum transfer eigenvalue was $0.0767054$, the semigroup residual was $0$, and reconstruction from four volume-residue packets had residual $0$.
+\end{certificate}
+
+\section{Spectral dimension and continuum diagnostics}
+
+Let $L\ge0$ be a finite Laplacian on $N\ge1$ states, with eigenvalues $\lambda_j$ and at least one zero eigenvalue. For diffusion time $\tau>0$, define the normalized heat trace
+\[
+K(\tau)=\frac1N\sum_j e^{-\tau\lambda_j}
+\]
+and the scale-dependent spectral dimension
+\[
+\boxed{
+d_s(\tau)
+=-2\frac{d\log K(\tau)}{d\log\tau}.
+}
+\]
+For a finite system, $d_s(\tau)$ is a diagnostic, not a topological invariant. Indeed, finite differentiation gives
+\[
+d_s(\tau)=2\tau\,
+\frac{\sum_j\lambda_j e^{-\tau\lambda_j}}{\sum_j e^{-\tau\lambda_j}}.
+\]
+It tends to zero as $\tau\downarrow0$ and, under the stated zero-mode assumption, as $\tau\to\infty$. If a general positive operator has no zero mode, its large-time behavior is instead asymptotic to $2\tau\lambda_{\min}$; the zero-mode conclusion must not be applied to it. A geometric dimension can only be inferred from a stable intermediate window and a controlled refinement limit.
+
+\subsection{The circle dispersion bound}
+
+For a periodic grid with spacing $h>0$ and physical wave number $k\in\bbR$,
+\[
+\lambda_{k,h}
+=
+\frac4{h^2}\sin^2\left(\frac{kh}{2}\right).
+\]
+
+\begin{theorem}[Low-mode second-order bound]\label{thm:lowmode}
+For every real $k$ and every nonzero real $h$, define $\lambda_{k,h}=4h^{-2}\sin^2(kh/2)$. Then
+\[
+\boxed{
+0\le k^2-\lambda_{k,h}
+\le
+\frac{k^4h^2}{12}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Put $x=kh/2$. The all-real inequalities $|\sin x|\le|x|$ and $|x-\sin x|\le |x|^3/6$ give
+\[
+0\le x^2-\sin^2x
+=|x-\sin x|\,|x+\sin x|
+\le\frac{|x|^3}{6}\,2|x|
+=\frac{x^4}{3}.
+\]
+Multiplying by $4/h^2$ proves both bounds. The estimate holds for every frequency, but its second-order convergence interpretation keeps $k$ fixed while $h\to0$; it is not a uniform small relative error across all grid modes.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.76\textwidth]{11_circle_low_mode_convergence.pdf}
+\caption{The first nonzero circle mode converges at second order and remains below the proved dispersion bound.}
+\label{fig:circle-convergence}
+\end{figure}
+
+\begin{certificate}[Continuum dispersion]
+The observed convergence order was $1.99936$. The maximum error-minus-bound value was negative, so no tested mode violated the theorem.
+\end{certificate}
+
+\subsection{One- and two-dimensional plateaus}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{12_spectral_dimension.pdf}
+\caption{Intermediate spectral-dimension windows for a finite cycle and a finite two-dimensional torus. The ultraviolet and infrared departures are finite-size effects, not additional dimensions.}
+\label{fig:spectral-dimension}
+\end{figure}
+
+\begin{certificate}[Spectral dimension]
+The median intermediate plateaus were
+\[
+d_s^{(1)}=1.00062,
+\qquad
+d_s^{(2)}=2.03781.
+\]
+These tests recover the expected dimensions of the chosen finite geometries; they do not select a physical quantum-spacetime theory.
+\end{certificate}
+
+\section{Constraint packets and the quantum-spacetime boundary}
+
+At one finite level, let $\widehat C_A$ be a finite family of matrix constraints, with fixed scalar structure coefficients, and let $\Pi^{\mathrm{phys}}$ be the orthogonal projector onto their exact common kernel. If the classical constraint algebra has structure coefficients $f_{AB}^{\ \ C}$, define the anomaly operator
+\[
+\boxed{
+\mathfrak A_{AB}
+=
+[\widehat C_A,\widehat C_B]
+-i\sum_C f_{AB}^{\ \ C}\widehat C_C.
+}
+\]
+Its physical packet is
+\[
+\Pi^{\mathrm{phys}}\mathfrak A_{AB}\Pi^{\mathrm{phys}}.
+\]
+In this exact finite setting, $\widehat C_C\Pi^{\mathrm{phys}}=0$ for every $C$. Associativity gives
+\[
+\mathfrak A_{AB}\Pi^{\mathrm{phys}}=0,
+\qquad
+\Pi^{\mathrm{phys}}\mathfrak A_{AB}\Pi^{\mathrm{phys}}=0
+\]
+automatically. This compression therefore cannot certify operator closure away from the physical range. A nonzero measured compression contradicts the exact-kernel assumptions or indicates an approximation or implementation error. For example, $C_1=\operatorname{diag}(1,0,0)$ and $C_2=E_{12}+E_{21}$ annihilate the same third coordinate, while their commutator $E_{12}-E_{21}$ is nonzero. With zero proposed structure coefficients, the anomaly is nonzero but its physical compression vanishes.
+
+The closure target must be stated at the operator level, not inferred from that automatic compression. Unbounded constraints additionally require a specified common invariant domain. Neither such a domain theory nor gravitational structure functions are supplied by the finite check.
+
+\begin{conjecture}[Anomaly-free refinement]
+For a specified nontrivial quantum-geometric constraint model, there exists a coherent packet tower with nonzero physical spaces, compatible physical projectors and exact operator closure
+\[
+\mathfrak A^{(\ell)}_{AB}=0
+\]
+at every finite level. The compatible physical compression then vanishes as a consequence, not as a substitute for closure.
+\end{conjecture}
+The operator condition is the substantive research target in this edition; the earlier compression-only wording was too weak. A choice of model, dynamics and refinement maps is still needed before this program becomes a fully specified physical existence problem.
+
+\begin{conjecture}[Uniform Feshbach control]
+For the same specified tower, the self-energies from exact elimination of fine packets admit bounds uniform in cutoff and volume on a common spectral domain. Together with consistent Hilbert-space identifications and a proved resolvent convergence criterion, they yield a nontrivial strong-resolvent continuum limit. Uniform boundedness alone is not asserted to imply convergence.
+\end{conjecture}
+
+\begin{conjecture}[Lorentzian reconstruction]
+The Euclidean packet theory satisfies a positivity or reconstruction principle strong enough to produce a Lorentzian Hilbert space with causal propagation and positive physical norm.
+\end{conjecture}
+
+\begin{conjecture}[Einstein infrared limit]
+There exist semiclassical packet states $\Psi_{g,\ell}$ such that the effective action converges to
+\[
+\frac1{16\pi G}
+\int\sqrt{-g}\,(R-2\Lambda)\,d^4x
+\]
+with controlled higher-order corrections.
+\end{conjecture}
+
+\begin{conjecture}[Massless spin-two sector]
+The continuum two-point function possesses a positive transverse-traceless massless spin-two pole, while all unphysical packet sectors are removed by the constraints.
+\end{conjecture}
+
+None of these physical conclusions is established by the exact finite identities. No formal logical-independence theorem is claimed. Exact packet reconstruction is a kinematic and computational advantage; it does not determine the physical action, prove continuum existence, or guarantee the general-relativistic limit.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{18_proof_boundary.pdf}
+\caption{The proof boundary. Finite packet, circuit, leakage, Feshbach, connection, and spectral identities are established here. Constraint closure and the physical continuum claims remain conjectural.}
+\label{fig:proof-boundary}
+\end{figure}
+
+\section{Numerical certificates}
+
+The original manuscript reports CPU experiments and a 22-test suite; it makes no GPU claim. The values below reproduce that historical report. They were not regenerated in this editorial pass and are not counted among the 296 Lean declarations. The original Python experiment package and its raw JSON/CSV records were not recovered for this release, so the historical 22/22 count is not presented as a freshly reproduced result. A displayed floating-point residual of zero denotes the reported computation, not an independent proof of exact arithmetic equality.
+
+\begin{table}[htbp]
+\centering
+\caption{Reported finite numerical checks, retained from the original manuscript and not rerun for this edition.}
+\label{tab:certificates}
+\begin{tabular}{L{0.64\textwidth}r}
+\toprule
+Certificate & Value\\
+\midrule
+Bell-state residual & $0$\\
+Three-qubit seed-orbit rank & $8/8$\\
+Parity off-block norm & $0$\\
+Circuit path reconstruction residual & $0$\\
+Exact-symmetry maximum leakage & $0$\\
+Maximum leakage-bound violation & $0$\\
+Feshbach projected-resolvent residual & $3.2291\times10^{-17}$\\
+Bare-truncation projected-resolvent residual & $1.3091\times10^{-2}$\\
+Moving-frame residual with connection & $1.0645\times10^{-10}$\\
+Moving-frame residual without connection & $7.0000\times10^{-1}$\\
+Canonical packet-connection residual & $0$\\
+Bloch-curvature residual & $2.0803\times10^{-11}$\\
+Kraus completeness residual & $0$\\
+Output trace residual & $0$\\
+Knill--Laflamme residual & $0$\\
+Bit-flip recovery residual & $1.0385\times10^{-16}$\\
+Tensor parity-refinement residual & $0$\\
+Circle low-mode convergence order & $1.99936$\\
+One-dimensional spectral plateau & $1.00062$\\
+Two-dimensional spectral plateau & $2.03781$\\
+Minimum Euclidean-transfer eigenvalue & $0.0767054$\\
+Transfer semigroup residual & $0$\\
+Volume-packet reconstruction residual & $0$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The original reported count is
+\[
+\boxed{22/22\text{ historical numerical tests, not rerun here}.}
+\]
+The 19 figures in this edition were recovered from the named vector drawing objects embedded in the preserved original PDF. Each recovered root drawing stream is byte-identical to its source. This is faithful figure recovery, not regeneration from raw experiment data. The recovery manifest and source hash are included in the release.
+
+\section{Software realization}
+
+The historical numerical companion used the module layout below. This table documents that implementation; these Python experiment modules are not included in the present Lean source/evidence archive. The current archive instead supplies all 27 Lean modules, their verifier, the integrated manuscript and recovered figure assets.
+
+\begin{longtable}{L{0.28\textwidth}L{0.64\textwidth}}
+\toprule
+Module & Responsibility\\
+\midrule
+\endfirsthead
+\toprule
+Module & Responsibility\\
+\midrule
+\endhead
+\texttt{basic.py} & basis states, Pauli gates, tensor embeddings, packet blocks, cyclic and multi-generator reachability\\
+\texttt{symmetry.py} & finite cyclic projectors, parity packets, tensor refinement, sector populations\\
+\texttt{circuits.py} & circuit composition and exact packet-path reconstruction\\
+\texttt{dynamics.py} & unitary evolution, leakage bounds, Feshbach reduction, moving frames, canonical connections, Bloch curvature\\
+\texttt{channels.py} & Kraus maps, measurements, and packet dephasing\\
+\texttt{codes.py} & bit-flip code, syndrome packets, Knill--Laflamme certificate, and recovery\\
+\texttt{geometry.py} & cycle and torus spectra, heat trace, spectral dimension, dispersion bounds, and Euclidean volume transfer\\
+\texttt{experiments.py} & deterministic numerical certificate suite\\
+\texttt{visuals.py} & all code-generated paper figures\\
+\bottomrule
+\end{longtable}
+
+The implementation is deliberately finite-dimensional. Infinite-dimensional limits require separate domain, compactness, convergence, positivity, and renormalization arguments and are not inferred from the finite code.
+
+\section{Conclusion}
+
+The quantum realization of the seed calculus can now be stated precisely. A primitive state is addressed by a declared operator grammar; symmetry projectors split the state and every operator into exact packets; circuit products become sums over packet paths; Hamiltonian symmetry and its controlled breaking are visible as diagonal blocks and leakage; moving packets carry a canonical connection and curvature; channels, measurements, and error-correction conditions admit exact packet formulations; and eliminated sectors return through self-energy and memory rather than disappearing.
+
+The finite theory therefore provides a coherent language for
+\[
+\boxed{
+\begin{gathered}
+\text{seed reachability}
++
+\text{symmetry resolution}
++
+\text{circuit paths}\\
++
+\text{effective dynamics}
++
+\text{geometric transport}
++
+\text{constraint diagnostics}
+\end{gathered}
+}
+\]
+What it does not yet provide is the physical continuum theorem. The next decisive results would be anomaly-free refinement, uniform effective-operator control, Lorentzian reconstruction, the Einstein infrared limit, and a positive massless spin-two sector. Those requirements are explicit enough to be tested and too substantial to be replaced by finite numerical resemblance.
+
+
+\appendix
+\section{Formal coverage and reproducibility}
+\label{sec:formal-coverage}
+
+The finite register has 19 named results, with the original numbering preserved. Each has an explicit source target, and its printed hypotheses have been reviewed against that target and the supporting modules. This correspondence review is mathematical editorial work. Lean compilation is not an automated proof that arbitrary prose is semantically identical to a formal proposition.
+
+\subsection{The checked register}
+All names below have the outer namespace \path{KomorebiPaperVII}. A principal target is a navigation aid, not a claim that one declaration alone proves every clause of its manuscript entry. The full scope and supporting module descriptions are in \path{THEOREM_LEDGER.json}; the complete 296-name inventory is in \path{verification/theorem_inventory.json}.
+
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.16}
+\begin{longtable}{L{0.07\textwidth}L{0.32\textwidth}L{0.53\textwidth}}
+\toprule
+Item & Named result & Principal Lean target\\
+\midrule
+\endfirsthead
+\toprule
+Item & Named result & Principal Lean target\\
+\midrule
+\endhead
+2.1 & Orbit dimension of one quantum seed & \path{SeedOrbit.span_orbit_dimension}\\
+2.2 & Quantum seed-rank formula & \path{SeedOrbit.quantum_seed_rank}\\
+2.3 & Local orbit and Schmidt rank & \path{SeedOrbit.local_orbit_reduced_support}\\
+2.4 & One seed for the computational basis & \path{ComputationalSeed.circuit_seed_basis}\\
+3.1 & Cyclic quantum projectors & \path{CyclicProjectors.finite_cyclic_projectors}\\
+3.2 & Tensor/polyphase refinement & \path{TensorRefinement.tensor_polyphase_refinement}\\
+4.1 & Exact circuit path expansion & \path{PacketFamily.circuit_path_expansion}\\
+4.2 & Packetwise unitarity conservation & \path{PacketFamily.unitarity_columns}\\
+5.1 & Exact symmetry packets & \path{PacketFamily.symmetry_exponential_diagonal}\\
+5.2 & Commutator leakage bound & \path{Leakage.matrix_commutator_leakage}\\
+6.1 & Moving-frame Hamiltonian & \path{MovingFrames.moving_frame_coordinates}\\
+6.3 & Canonical packet connection & \path{Connection.canonical_connection_of_hasDerivAt}\\
+6.4 & Projected connection & \path{GlobalConnection.global_projected_curvature}\\
+7.1 & Block-diagonal measurement invariance & \path{measurement_invariance}\\
+7.2 & Finite Kraus channel & \path{Kraus.channel_completely_positive}\\
+8.1 & Finite Knill-Laflamme criterion & \path{KLFamily.knill_laflamme_family_iff}\\
+9.1 & Exact Feshbach resolvent & \path{SchurFeshbach.projected_resolvent}\\
+10.1 & Finite Euclidean transfer & \path{EuclideanTransfer.finite_euclidean_transfer}\\
+11.1 & Low-mode second-order bound & \path{LowModeConvergence.low_mode_error}\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\subsection{Fresh proof-source checks for this edition}
+The 27 proof files are byte-identical to the fifth-block release. A new run nevertheless compiled all of them from an empty temporary local build directory with Lean 4.34.0-rc2, one worker and warnings treated as errors. All 296 registered theorem dependency reports matched the inventory. The only reported axioms were \path{propext}, \path{Classical.choice} and \path{Quot.sound}. The deliberately false equality and proof placeholder were rejected. Fifteen verifier-infrastructure tests also passed; these are software tests, not additional theorem declarations.
+
+The first orchestration attempt stopped before completion and remains recorded as incomplete. A separate clean retry completed successfully. The accepted run is \path{verification/proofread/lean_rerun_retry/SUMMARY.json}. Every compiler command, source hash, log hash and theorem audit is retained. The audited proof collection still identifies itself as v0.5.0; v0.5.1 is the integrated manuscript edition of that unchanged collection.
+
+The dependency pin is Mathlib revision \path{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. Its existing compiled cache was reused, not rebuilt independently. The separate portable Linux runtime and its prerequisites are not bundled again. A runtime archive checksum verifies bytes, not mathematical correctness of an independently rebuilt dependency library.
+
+\subsection{What is outside the formal count}
+The five continuum research targets are unproved. The Bloch worked calculation, time-domain Volterra derivation, toy-model interpretation, archived plots and original numerical values are not added to the 19-item register merely because they occur in the manuscript. Earlier papers were not rebuilt. No claim of novelty follows from the number of Lean lemmas.
+
+\subsection{Reproducing the available checks}
+From the extracted release root, choose a new empty output directory and run
+\begin{lstlisting}[language={}]
+python scripts/verify.py --kit /path/to/portable/kit \
+  --out verification/local_rerun --timeout 240
+python scripts/test_verifier.py
+\end{lstlisting}
+To build the integrated PDF, run \path{scripts/build_paper.py}. It invokes \texttt{pdflatex} three times in the manuscript directory and checks for missing references, missing assets and overfull boxes. The original PDF, original TeX, historical supplements, revised source and an exact editorial diff are preserved separately. The current README identifies the integrated PDF as the primary reading copy.
+
+\end{document}

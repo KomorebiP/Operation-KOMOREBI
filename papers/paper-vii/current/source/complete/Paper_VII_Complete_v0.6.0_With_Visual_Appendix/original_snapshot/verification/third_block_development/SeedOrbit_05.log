@@ -1,0 +1,68 @@
+/mnt/data/PRSC_VII_v0.3.0_Checked_Third_Block/formalization/SeedOrbit.lean:114:2: error: Type mismatch
+  Nat.mul_left_cancel_iff Fintype.card_pos
+has type
+  Fintype.card o * ?m.35 = Fintype.card o * ?m.36 ↔ ?m.35 = ?m.36
+but is expected to have type
+  Fintype.card o * C.rank = Fintype.card o * (Fintype.card m * finrank ℂ ℂ) ↔ C.rank = Fintype.card m
+/mnt/data/PRSC_VII_v0.3.0_Checked_Third_Block/formalization/SeedOrbit.lean:123:93: error: unsolved goals
+d : Type u_1
+m : Type u_2
+inst✝² : Fintype d
+inst✝¹ : Fintype m
+k : Type u_4
+inst✝ : Fintype k
+C : k → Matrix d m ℂ
+A : k → Matrix d d ℂ
+i : d
+j : m
+⊢ ((fun i q => A q.1 i q.2) * stackSeeds C) i j = (∑ a, A a * C a) i j
+/mnt/data/PRSC_VII_v0.3.0_Checked_Third_Block/formalization/SeedOrbit.lean:125:8: error: This simp argument is unused:
+  Matrix.mul_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [stackSeeds, Fintype.sum_prod_type]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/PRSC_VII_v0.3.0_Checked_Third_Block/formalization/SeedOrbit.lean:125:26: error: This simp argument is unused:
+  stackSeeds
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.mul_apply, Fintype.sum_prod_type]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/PRSC_VII_v0.3.0_Checked_Third_Block/formalization/SeedOrbit.lean:125:38: error: This simp argument is unused:
+  Fintype.sum_prod_type
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.mul_apply, stackSeeds]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/PRSC_VII_v0.3.0_Checked_Third_Block/formalization/SeedOrbit.lean:137:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ a, ?A a * ?C a
+in the target expression
+  ∑ a, (fun a i r => A i (a, r)) a * C a = X
+
+case mpr
+d : Type u_1
+m : Type u_2
+inst✝² : Fintype d
+inst✝¹ : Fintype m
+k : Type u_4
+inst✝ : Fintype k
+C : k → Matrix d m ℂ
+h : ∀ (x : d → m → ℂ), x ∈ rowOrbit (stackSeeds C) d
+X : Matrix d m ℂ
+A : d → k × d → ℂ
+hA : ((stackSeeds C).vecMulLinear.compLeft d) A = X
+⊢ ∑ a, (fun a i r => A i (a, r)) a * C a = X
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    (fun a i r => A i (a, r)) a
+  has type
+    d → d → ℂ
+  but is expected to have type
+    Matrix d d ℂ
+  in the application
+    HMul.hMul ((fun a i r => A i (a, r)) a)

@@ -1,0 +1,1359 @@
+--- retrieved/editable/lean_guide/Paper_VII_Lean_Guide_Final.tex
++++ proofread/editable/lean_guide/Paper_VII_Lean_Guide_Final.tex
+@@ -11,7 +11,11 @@
+ \KomorebiSetup
+ \setlength{\cftsubsecnumwidth}{4.4em}
+ \definecolor{teal}{HTML}{245D60}
+-\setmonofont{DejaVuSansMono}[Path=fonts/,UprightFont=*.ttf,BoldFont=*-Bold.ttf,ItalicFont=*-Oblique.ttf,BoldItalicFont=*-BoldOblique.ttf,Scale=.80]
++\IfFileExists{fonts/DejaVuSansMono.ttf}{%
++  \setmonofont{DejaVuSansMono}[Path=fonts/,UprightFont=*.ttf,BoldFont=*-Bold.ttf,ItalicFont=*-Oblique.ttf,BoldItalicFont=*-BoldOblique.ttf,Scale=.80]
++}{%
++  \setmonofont{DejaVu Sans Mono}[Scale=.80]
++}
+ \begin{document}
+ \KomorebiCover
+ \KomorebiOpeningNote{
+--- retrieved/editable/lean_guide/build.py
++++ proofread/editable/lean_guide/build.py
+@@ -44,6 +44,8 @@
+ 
+     if shutil.which('xelatex') is None:
+         parser.error('XeLaTeX is required. Install it through your TeX distribution.')
++    if shutil.which('xdvipdfmx') is None:
++        parser.error('xdvipdfmx is required. Install it through your TeX distribution.')
+     destination = (args.output_directory or ROOT).expanduser().resolve()
+     environment = dict(os.environ)
+     environment.setdefault('SOURCE_DATE_EPOCH', '1791504000')
+@@ -52,13 +54,14 @@
+     ignore = shutil.ignore_patterns(
+         'qa', '__pycache__', STEM + '.pdf', '*.aux', '*.log', '*.out', '*.toc',
+         '*.lof', '*.lot', '*.bbl', '*.blg', '*.fdb_latexmk', '*.fls', '*.xdv',
+-        'build_pass_*.txt', 'build_bibtex.txt', 'historical_assembly')
++        'build_pass_*.txt', 'build_bibtex.txt', 'build_pdf_driver.txt',
++        'historical_assembly')
+     with tempfile.TemporaryDirectory(prefix='komorebi-paper-vii-lean_guide-') as temporary:
+         stage = Path(temporary) / 'source'
+         shutil.copytree(ROOT, stage, ignore=ignore)
+         for name in ('TEXINPUTS', 'BIBINPUTS', 'BSTINPUTS'):
+             environment[name] = str(stage) + os.pathsep + environment.get(name, '')
+-        command = ['xelatex', '-interaction=nonstopmode', '-halt-on-error',
++        command = ['xelatex', '-no-pdf', '-interaction=nonstopmode', '-halt-on-error',
+                    '-file-line-error', '-recorder', '-jobname=' + STEM, STEM + '.tex']
+         transcripts = []
+ 
+@@ -85,6 +88,9 @@
+                     if shutil.which('bibtex') is None:
+                         raise SystemExit('BibTeX is required by this bibliography.')
+                     run_command(['bibtex', STEM], 'build_bibtex.txt')
++        # Emit the PDF only after references and font subsets have stabilized.
++        run_command(['xdvipdfmx', '-o', STEM + '.pdf', STEM + '.xdv'],
++                    'build_pdf_driver.txt')
+         pdf = stage / (STEM + '.pdf')
+         if not pdf.is_file():
+             raise SystemExit('Compilation completed without the expected PDF: ' + str(pdf))
+--- retrieved/editable/lean_guide/chapters/channels_recovery.tex
++++ proofread/editable/lean_guide/chapters/channels_recovery.tex
+@@ -49,7 +49,7 @@
+ This file alone would prove recovery for supplied orthogonal syndrome data. It would not prove that arbitrary Knill--Laflamme Gram data can be put into that form, and it would not prove necessity of the Gram condition. The current source has separate modules for those obligations.
+ 
+ \subsection{General Gram data are not assumed diagonal}
+-The finite Knill--Laflamme data consists of a star projection $P$, errors $E_a$, and a positive semidefinite coefficient matrix $C$ with
++The finite Knill--Laflamme data consist of a star projection $P$, errors $E_a$, and a positive semidefinite coefficient matrix $C$ with
+ \[
+ PE_a^*E_bP=C_{ab}P.
+ \]
+@@ -70,7 +70,7 @@
+ 
+ \excerpt{KnillLaflammeSufficiency}{kl_null}
+ 
+-The active index is the subtype \code{\{a : I // 0 < D.weight a\}}. For an active error define $F_a=\lambda_a^{-1/2}E_a$. The source proves the square root is nonzero and its square equals the weight before using its inverse. The normalized errors satisfy $F_a^*F_b=\delta_{ab}P$, so the preceding syndrome construction applies.
++The active index is the subtype \texttt{\{a : I // 0 < D.weight a\}}. For an active error define $F_a=\lambda_a^{-1/2}E_a$. The source proves the square root is nonzero and its square equals the weight before using its inverse. The normalized errors satisfy $F_a^*F_b=\delta_{ab}P$, so the preceding syndrome construction applies.
+ 
+ For an unnormalized original error family, the decoder corrects the noise to the exact scale
+ \[
+@@ -125,7 +125,7 @@
+ 
+ \excerpt{ErrorSpanRecovery}{kl_span}
+ 
+-This is one fixed recovery correcting every normalized channel in the error span, with the coefficients explicitly witnessing span membership. It does not claim unit-scale correction for an arbitrary unnormalized linear combination. For unnormalized error families, the separate criterion requires a code-independent nonnegative scale $t$ and proves equivalence with the Gram relation.
++This is one fixed recovery correcting every normalized channel in the error span, with the coefficients explicitly witnessing span membership. It does not claim unit-scale correction for an arbitrary unnormalized linear combination. For unnormalized error families, the separate criterion requires a nonnegative scale $t$ independent of the supported input operator and proves equivalence with the Gram relation.
+ 
+ \excerpt{ErrorSpanRecovery}{kl_family}
+ 
+--- retrieved/editable/lean_guide/chapters/finite_limits.tex
++++ proofread/editable/lean_guide/chapters/finite_limits.tex
+@@ -42,7 +42,7 @@
+ \[
+ 0\le x^2-\sin^2x\le\frac{x^4}{3}
+ \]
+-for every real $x$, using a sine-square lower bound, the cubic error bound for $x-\sin x$ and the estimate $|x+\sin x|\le2|x|$. Substituting $x=wh/2$ yields
++for every real $x$, using the quadratic upper bound for sine squared, the cubic error bound for $x-\sin x$ and the estimate $|x+\sin x|\le2|x|$. Substituting $x=wh/2$ yields
+ \[
+ 0\le w^2-\lambda_h(w)\le\frac{w^4}{12}h^2.
+ \]
+--- retrieved/editable/lean_guide/chapters/reading.tex
++++ proofread/editable/lean_guide/chapters/reading.tex
+@@ -9,9 +9,9 @@
+ The source base is the unchanged v0.6.0 snapshot. Older supplements explain how coverage grew, but their partial descriptions are not the last word on the current source. For example, the fourth block constructed recovery for already orthogonal syndrome data; the fifth block added the spectral reduction and necessity proof for general positive Gram data. The sixth block constructed the range atlas and global manifold curvature. This guide follows the current declarations and retains the older history only where it explains an assumption or correction.
+ 
+ \subsection{Finite types, matrix types and type classes}
+-Lean's \code{Matrix d m ℂ} means a function with a row index in \code{d}, a column index in \code{m}, and values in the complex numbers. The indices are types, not necessarily integers. A \code{Fintype d} instance gives the finite enumeration needed for a sum or dimension; a \code{DecidableEq d} instance lets a definition decide whether two indices agree. \code{Fin n} is the type of integers smaller than the natural number \code{n}. It supplies a concrete index type without replacing an arbitrary finite type throughout the library.
++Lean's \code{Matrix d m ℂ} means a function with a row index in \code{d}, a column index in \code{m}, and values in the complex numbers. The indices are types, not necessarily integers. A \code{Fintype d} instance gives the finite enumeration needed for a sum or dimension; a \code{DecidableEq d} instance lets a definition decide whether two indices agree. \code{Fin n} is the type of natural numbers smaller than \code{n}. It supplies a concrete index type without replacing an arbitrary finite type throughout the library.
+ 
+-The notation \code{Type*} leaves a universe level implicit. Braces in a binder, such as \code{\{n : Type*\}}, denote an implicit argument inferred from later data. Round parentheses denote an explicit argument. Square brackets denote a type-class argument: a structure or property that instance search should obtain. These brackets do not make an assumption disappear. A theorem with \code{[Nonempty n]} is only available when the state index has an inhabitant. A theorem with \code{[Invertible D]} has an actual invertibility requirement even though no ordinary parameter named \code{hD} is printed.
++The notation \code{Type*} leaves a universe level implicit. Braces in a binder, such as \texttt{\{n : Type*\}}, denote an implicit argument inferred from later data. Round parentheses denote an explicit argument. Square brackets denote a type-class argument: a structure or property that instance search should obtain. These brackets do not make an assumption disappear. A theorem with \code{[Nonempty n]} is only available when the state index has an inhabitant. A theorem with \code{[Invertible D]} has an actual invertibility requirement even though no ordinary parameter named \code{hD} is printed.
+ 
+ The declarations set \code{autoImplicit false}. Consequently an undeclared symbol is not silently promoted to a fresh theorem variable. A local \code{variable} command can still supply variables and type classes to subsequent declarations. An excerpt must therefore be read together with its surrounding section, not as an independent file. The chapter contracts explain those surrounding assumptions; the source file and line register permit a direct check.
+ 
+--- retrieved/editable/lean_guide/chapters/seed_packets.tex
++++ proofread/editable/lean_guide/chapters/seed_packets.tex
+@@ -20,7 +20,7 @@
+ The nonempty condition deserves attention. If there are no row indices, the ambient coefficient space is zero and every orbit is already full, regardless of the multiplicity index. Cancelling $|d|$ would be invalid. Lean's final cancellation explicitly uses \code{Fintype.card_pos}; it records precisely why the full-rank test needs an inhabitant. Multiplicity zero is permitted and produces a zero-dimensional target.
+ 
+ \subsection{Several seeds: stack them and prove a minimum}
+-For $k$ seeds $C_a$, the allowed generation is
++Continue with a nonempty row index type. For $k$ seeds $C_a$, the allowed generation is
+ \[
+ X=\sum_{a\in k}A_aC_a,
+ \]
+@@ -117,4 +117,4 @@
+ 
+ \walk{The two \code{let} bindings expose the fine family $Q_a$ and the coarse family $C_r$ inside the statement. After \code{dsimp only}, each conclusion is a direct application of the generic coarse theorem to a previously proved fine-family theorem. The code therefore separates tensor construction from finite grouping, which makes the proof reusable.}
+ 
+-The input here is a packet resolution in each tensor factor. The source does not rederive those local packets from each factor's cyclic symmetry inside this theorem; the cyclic-projector endpoint is the preceding construction that can supply them. Together the two chapters implement the traditional passage from cyclic local packets to a tensor refinement and total-residue packets.
++The input here is a packet resolution in each tensor factor. The source does not rederive those local packets from each factor's cyclic symmetry inside this theorem; the cyclic-projector endpoint is the preceding construction that can supply them. Together the two constructions implement the traditional passage from cyclic local packets to a tensor refinement and total-residue packets.
+--- retrieved/editable/lean_guide/generated/traditional_navigation.tex
++++ proofread/editable/lean_guide/generated/traditional_navigation.tex
+@@ -1,6 +1,6 @@
+ \section{Navigation through the traditional paper}
+ \label{sec:traditional-navigation}
+-The final traditional volume has 153 physical PDF pages. Printed pages are the labels in that volume. PDF pages count the cover and Roman opening pages as well. Every location below was resolved from the actual body page label and checked against the source map. A shared subject does not imply identical formal coverage.
++The final traditional volume has 154 physical PDF pages. Printed pages are the labels in that volume. PDF pages count the cover and Roman opening pages as well. Every location below was resolved from the actual body page label and checked against the source map. A shared subject does not imply identical formal coverage.
+ 
+ \subsection{All 19 finite items in the traditional core}
+ \begin{longtable}{@{}p{.10\linewidth}p{.13\linewidth}p{.49\linewidth}rr@{}}\toprule Item & Number & Core statement & Printed & PDF\\\midrule\endhead
+@@ -18,7 +18,7 @@
+ \hyperref[result:6.3]{6.3} & I.6.3 & Canonical packet connection & 13 & 21\\
+ \hyperref[result:6.4]{6.4} & I.6.4 & Projected connection & 14 & 22\\
+ \hyperref[result:7.1]{7.1} & I.7.1 & Block-diagonal measurement invariance & 16 & 24\\
+-\hyperref[result:7.2]{7.2} & I.7.2 & Finite Kraus channel & 16 & 24\\
++\hyperref[result:7.2]{7.2} & I.7.2 & Finite Kraus channel & 17 & 25\\
+ \hyperref[result:8.1]{8.1} & I.8.1 & Finite Knill--Laflamme criterion & 18 & 26\\
+ \hyperref[result:9.1]{9.1} & I.9.1 & Exact Feshbach resolvent & 20 & 28\\
+ \hyperref[result:10.1]{10.1} & I.10.1 & Finite Euclidean transfer & 22 & 30\\
+@@ -54,11 +54,11 @@
+ II.6.4; 44 & Moving packet leakage & Additional written statement. No corresponding named endpoint in the current 25-module development. & 52\\
+ II.6.5; 44 & Direct packet rotation & Additional written statement. No corresponding named endpoint in the current 25-module development. & 52\\
+ II.6.6; 45 & Convergence of short packet rotations & Additional written statement. No corresponding named endpoint in the current 25-module development. & 53\\
+-II.6.7; 45 & Nonabelian packet connection & Projected manifold curvature and gauge gluing in item 6.4; local orthonormal-frame formulas are additional human statements. & 53\\
+-II.6.8; 46 & Bloch sphere curvature & Additional written statement. No corresponding named endpoint in the current 25-module development. & 54\\
++II.6.7; 46 & Nonabelian packet connection & Projected manifold curvature and gauge gluing in item 6.4; local orthonormal-frame formulas are additional human statements. & 54\\
++II.6.8; 47 & Bloch sphere curvature & Additional written statement. No corresponding named endpoint in the current 25-module development. & 55\\
+ II.7.2; 47 & Complete operator packet system & Additional written statement. No corresponding named endpoint in the current 25-module development. & 55\\
+ II.7.4; 48 & Dephasing as conditional expectation & Additional written statement. No corresponding named endpoint in the current 25-module development. & 56\\
+-II.7.5; 48 & Block diagonal measurement invariance & Block-diagonal trace invariance; item 7.1. & 56\\
++II.7.5; 49 & Block diagonal measurement invariance & Block-diagonal trace invariance; item 7.1. & 57\\
+ II.7.6; 49 & Exact channel block calculus & Additional written statement. No corresponding named endpoint in the current 25-module development. & 57\\
+ II.7.8; 50 & Coherence order projectors & Additional written statement. No corresponding named endpoint in the current 25-module development. & 58\\
+ II.7.9; 50 & Covariant channels preserve coherence order & Additional written statement. No corresponding named endpoint in the current 25-module development. & 58\\
+@@ -71,22 +71,22 @@
+ II.8.4; 54 & Exact recovery on the error span & One total recovery and normalized error-span channels; item 8.1. & 62\\
+ II.8.5; 55 & Syndrome measurement preserves logical information & Syndrome cross-error identities support item 8.1; the measurement interpretation is an additional human statement. & 63\\
+ II.8.7; 55 & Meaning of the approximate defect & Additional written statement. No corresponding named endpoint in the current 25-module development. & 63\\
+-II.9.2; 56 & Exact projected resolvent & Corrected two-invertibility projected resolvent; item 9.1. & 64\\
++II.9.2; 57 & Exact projected resolvent & Corrected two-invertibility projected resolvent; item 9.1. & 65\\
+ II.9.3; 57 & Spectral equivalence & Schur/full invertibility equivalence in item 9.1; spectral and eigenvector formulations extend the endpoint. & 65\\
+ II.9.4; 57 & Upper half plane sign & Additional written statement. No corresponding named endpoint in the current 25-module development. & 65\\
+-II.9.5; 58 & Uniform self energy bounds & Additional written statement. No corresponding named endpoint in the current 25-module development. & 66\\
++II.9.5; 57 & Uniform self energy bounds & Additional written statement. No corresponding named endpoint in the current 25-module development. & 65\\
+ II.9.6; 58 & Low energy expansion & Additional written statement. No corresponding named endpoint in the current 25-module development. & 66\\
+-II.9.7; 58 & Bare truncation error identity & Additional written statement. No corresponding named endpoint in the current 25-module development. & 66\\
++II.9.7; 59 & Bare truncation error identity & Additional written statement. No corresponding named endpoint in the current 25-module development. & 67\\
+ II.9.8; 59 & Exact retained memory equation & Additional written statement. No corresponding named endpoint in the current 25-module development. & 67\\
+ II.9.9; 59 & Positive definite quantum memory & Additional written statement. No corresponding named endpoint in the current 25-module development. & 67\\
+-II.9.10; 59 & Finite oscillatory memory expansion & Additional written statement. No corresponding named endpoint in the current 25-module development. & 67\\
++II.9.10; 60 & Finite oscillatory memory expansion & Additional written statement. No corresponding named endpoint in the current 25-module development. & 68\\
+ II.9.11; 60 & Exact local closure criterion & Additional written statement. No corresponding named endpoint in the current 25-module development. & 68\\
+ II.9.12; 61 & Stability of the self energy & Additional written statement. No corresponding named endpoint in the current 25-module development. & 69\\
+ II.9.13; 61 & Uniform Feshbach control & Additional written statement. No corresponding named endpoint in the current 25-module development. & 69\\
+-II.10.1; 61 & Finite Euclidean transfer & Actual shifted exponential, positivity and spectrum in item 10.1; read its exact endpoint. & 69\\
++II.10.1; 62 & Finite Euclidean transfer & Actual shifted exponential, positivity and spectrum in item 10.1; read its exact endpoint. & 70\\
+ II.10.2; 62 & Hamiltonian reconstruction from transfer & Additional written statement. No corresponding named endpoint in the current 25-module development. & 70\\
+ II.10.3; 62 & Finite reflection positivity & Additional written statement. No corresponding named endpoint in the current 25-module development. & 70\\
+-II.10.4; 62 & Reflection positive correlators & Additional written statement. No corresponding named endpoint in the current 25-module development. & 70\\
++II.10.4; 63 & Reflection positive correlators & Additional written statement. No corresponding named endpoint in the current 25-module development. & 71\\
+ II.10.5; 63 & Ground packet convergence & Additional written statement. No corresponding named endpoint in the current 25-module development. & 71\\
+ II.10.6; 63 & Symmetry resolved transfer & Additional written statement. No corresponding named endpoint in the current 25-module development. & 71\\
+ II.11.2; 64 & Finite scale limits & Additional written statement. No corresponding named endpoint in the current 25-module development. & 72\\
+@@ -96,26 +96,26 @@
+ II.11.7; 66 & Continuum torus small time dimension & Additional written statement. No corresponding named endpoint in the current 25-module development. & 74\\
+ II.11.8; 66 & Rigorous intermediate dimension window & Additional written statement. No corresponding named endpoint in the current 25-module development. & 74\\
+ II.12.2; 67 & Finite constraint closure criterion & Additional written statement. No corresponding named endpoint in the current 25-module development. & 75\\
+-II.12.3; 67 & Physical compression is not a closure test & Finite common-kernel compression audit is encoded in ConstraintAudit. & 75\\
++II.12.3; 68 & Physical compression is not a closure test & Finite common-kernel compression audit is encoded in ConstraintAudit. & 76\\
+ II.12.4; 68 & Invariance of the physical space & Additional written statement. No corresponding named endpoint in the current 25-module development. & 76\\
+ II.12.5; 69 & Exact constraint transport & Additional written statement. No corresponding named endpoint in the current 25-module development. & 77\\
+ II.12.6; 69 & Approximate constraint transport & Additional written statement. No corresponding named endpoint in the current 25-module development. & 77\\
+-II.13.2; 70 & Bounded Hamiltonian direct limit & Additional written statement. No corresponding named endpoint in the current 25-module development. & 78\\
++II.13.2; 71 & Bounded Hamiltonian direct limit & Additional written statement. No corresponding named endpoint in the current 25-module development. & 79\\
+ II.13.3; 71 & Exact packet direct limit & Additional written statement. No corresponding named endpoint in the current 25-module development. & 79\\
+-II.13.4; 71 & Norm summable Hamiltonian tower & Additional written statement. No corresponding named endpoint in the current 25-module development. & 79\\
++II.13.4; 72 & Norm summable Hamiltonian tower & Additional written statement. No corresponding named endpoint in the current 25-module development. & 80\\
+ II.13.5; 72 & Limit of packet leakage & Additional written statement. No corresponding named endpoint in the current 25-module development. & 80\\
+ II.13.6; 72 & Reflection positivity is closed under limits & Additional written statement. No corresponding named endpoint in the current 25-module development. & 80\\
+-II.13.7; 72 & Constraint closure under norm convergence & Additional written statement. No corresponding named endpoint in the current 25-module development. & 80\\
++II.13.7; 73 & Constraint closure under norm convergence & Additional written statement. No corresponding named endpoint in the current 25-module development. & 81\\
+ II.13.8; 73 & Heat trace convergence from trace norm & Additional written statement. No corresponding named endpoint in the current 25-module development. & 81\\
+ \bottomrule\end{longtable}}
+ \subsection{Retained supplements explain the constructed proofs}
+ Part III retains the mathematical portions of all six formal supplements. Read their historical descriptions in order: later constructions strengthen earlier restricted coverage. The source-bound endpoint map records the current result.
+ 
+ {\small\begin{longtable}{@{}p{.14\linewidth}p{.51\linewidth}p{.14\linewidth}p{.12\linewidth}@{}}\toprule Sections & Retained proof material & Printed & PDF\\\midrule\endhead
+-III.1–III.5 & Packet algebra, symmetry and measurements. Corrected resolvent, spacing condition, and finite constraint audit. & 76–80 & 84–88\\
+-III.6–III.10 & Addressed computational seed, tensor refinement, moving coordinates, canonical connection, and Kraus amplification. & 81–84 & 89–92\\
+-III.11–III.14 & Actual orbit spaces, sharp seed counts, independently defined Schmidt rank, cyclic characters, and Euclidean exponential. & 85–88 & 93–96\\
+-III.15–III.17 & Actual-exponential leakage, chart projected curvature, and total orthogonal-syndrome recovery. & 89–92 & 97–100\\
+-III.18–III.23 & General Gram spectral reduction, actual recovery necessity, density/operator bridge, finite references, and error spans. & 93–98 & 101–106\\
+-III.24–III.27 & Constructed range local products, smooth transitions, global connection, gauge law, and actual manifold curvature. & 98–100 & 106–108\\
++III.1–III.5 & Packet algebra, symmetry and measurements. Corrected resolvent, spacing condition, and finite constraint audit. & 77–81 & 85–89\\
++III.6–III.10 & Addressed computational seed, tensor refinement, moving coordinates, canonical connection, and Kraus amplification. & 82–85 & 90–93\\
++III.11–III.14 & Actual orbit spaces, sharp seed counts, independently defined Schmidt rank, cyclic characters, and Euclidean exponential. & 86–89 & 94–97\\
++III.15–III.17 & Actual-exponential leakage, chart projected curvature, and total orthogonal-syndrome recovery. & 90–93 & 98–101\\
++III.18–III.23 & General Gram spectral reduction, actual recovery necessity, density/operator bridge, finite references, and error spans. & 94–99 & 102–107\\
++III.24–III.27 & Constructed range local products, smooth transitions, global connection, gauge law, and actual manifold curvature. & 99–101 & 107–109\\
+ \bottomrule\end{longtable}}
+--- retrieved/editable/lean_guide/komorebi-monograph.sty
++++ proofread/editable/lean_guide/komorebi-monograph.sty
+@@ -1,11 +1,27 @@
+ \NeedsTeXFormat{LaTeX2e}
+-\ProvidesPackage{komorebi-monograph}[2026/10/09 Paper VII modern monograph]
++\ProvidesPackage{komorebi-monograph}[2026/10/18 Paper VII proofread monograph]
+ \RequirePackage{fontspec,unicode-math,setspace,tocloft}
+ \RequirePackage[most]{tcolorbox}
+-\setmainfont{P052}[Path=fonts/,UprightFont=*-Roman.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf]
+-\setsansfont{NimbusSans}[Path=fonts/,UprightFont=*-Regular.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf,Scale=.94]
+-\setmonofont{lmmono10}[Path=fonts/,UprightFont=*-regular.otf,BoldFont=*-regular.otf,ItalicFont=*-italic.otf,Scale=.88]
+-\setmathfont{latinmodern-math.otf}[Path=fonts/]
++\IfFileExists{fonts/P052-Roman.otf}{%
++  \setmainfont{P052}[Path=fonts/,UprightFont=*-Roman.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf]
++}{%
++  \setmainfont{P052-Roman.otf}[BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
++}
++\IfFileExists{fonts/NimbusSans-Regular.otf}{%
++  \setsansfont{NimbusSans}[Path=fonts/,UprightFont=*-Regular.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf,Scale=.94]
++}{%
++  \setsansfont{NimbusSans-Regular.otf}[BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
++}
++\IfFileExists{fonts/lmmono10-regular.otf}{%
++  \setmonofont{lmmono10}[Path=fonts/,UprightFont=*-regular.otf,BoldFont=*-regular.otf,ItalicFont=*-italic.otf,Scale=.88]
++}{%
++  \setmonofont{LMMono10-Regular}[BoldFont=LMMono10-Regular,ItalicFont=LMMono10-Italic,BoldItalicFont=LMMono10-Italic,Scale=.88]
++}
++\IfFileExists{fonts/latinmodern-math.otf}{%
++  \setmathfont{latinmodern-math.otf}[Path=fonts/]
++}{%
++  \setmathfont{Latin Modern Math}
++}
+ \definecolor{accent}{HTML}{245D60}
+ \definecolor{ink}{HTML}{212B34}
+ \definecolor{muted}{HTML}{58646B}
+@@ -14,7 +30,7 @@
+ \providecommand{\KomorebiSubtitle}{Symmetry, circuits, geometric transport, channels, and finite effective dynamics}
+ \providecommand{\KomorebiSeries}{Paper VII}
+ \providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{9 October 2026}
++\providecommand{\KomorebiEdition}{18 October 2026}
+ \providecommand{\KomorebiShortTitle}{Paper VII}
+ \providecommand{\KomorebiCoverTitle}{Quantum Seed and\\Packet Calculus}
+ \providecommand{\KomorebiTitleSize}{31}
+--- retrieved/editable/lean_guide/preamble.tex
++++ proofread/editable/lean_guide/preamble.tex
+@@ -1,7 +1,11 @@
+ \documentclass[11pt,letterpaper]{article}
+ \usepackage[margin=23mm,headheight=15pt]{geometry}
+ \usepackage{fontspec}
+-\newfontfamily\codemathfont{latinmodern-math.otf}[Path=fonts/]
++\IfFileExists{fonts/latinmodern-math.otf}{%
++  \newfontfamily\codemathfont{latinmodern-math.otf}[Path=fonts/]
++}{%
++  \newfontfamily\codemathfont{Latin Modern Math}
++}
+ \newcommand{\CodeChar}[1]{{\char#1}}
+ \newcommand{\CodeSymbol}[1]{\ifnum"#1="29F8\ensuremath{\big/}\else\ifnum"#1="2B1D\ensuremath{\mathbin{\vcenter{\hbox{\rule{.22em}{.22em}}}}}\else{\codemathfont\symbol{"#1}}\fi\fi}
+ \usepackage{amsmath}
+--- retrieved/editable/traditional/Paper_VII_Traditional_Final.tex
++++ proofread/editable/traditional/Paper_VII_Traditional_Final.tex
+@@ -77,13 +77,13 @@
+ \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+ \newcommand{\startreadingpart}[1]{\clearpage\FloatBarrier\part{#1}\setcounter{section}{0}\renewcommand{\thesection}{\Roman{part}.\arabic{section}}\renewcommand{\theHsection}{\arabic{part}.\arabic{section}}}
+ 
+-% Authored modern monograph profile. The nine mathematical parts are unchanged.
++% Authored monograph profile. The October 18 proofreading changes are recorded in the release report.
+ \usepackage{komorebi-monograph}
+ \renewcommand{\KomorebiTitle}{Quantum Seeds and Effective Dynamics}
+ \renewcommand{\KomorebiSubtitle}{Symmetry, geometric transport, quantum channels, and bounded refinement towers}
+ \renewcommand{\KomorebiSeries}{Core series VII}
+ \renewcommand{\KomorebiKind}{Modern Monograph}
+-\renewcommand{\KomorebiEdition}{9 October 2026}
++\renewcommand{\KomorebiEdition}{18 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper VII}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+@@ -119,6 +119,19 @@
+ \crefname{conjecture}{conjecture}{conjectures}
+ \crefname{remark}{remark}{remarks}
+ 
++% Keep the two reviewed subsection headings with their opening statement.
++% The protected part files and every proof body remain unchanged by this hook.
++\pretocmd{\subsection}{%
++  \ifnum\value{subsection}=2\relax
++    \ifnum\value{part}=1\relax
++      \ifnum\value{section}=6\relax\par\Needspace{9\baselineskip}\fi
++    \fi
++    \ifnum\value{part}=2\relax
++      \ifnum\value{section}=7\relax\par\Needspace{9\baselineskip}\fi
++    \fi
++  \fi
++}{}{\PackageError{komorebi}{Cannot attach subsection layout guard}{Restore the reviewed subsection command before building.}}
++
+ % Keep each unboxed statement anchor with its visible heading.
+ \BeforeBeginEnvironment{proposition}{\par\Needspace{5\baselineskip}}
+ \BeforeBeginEnvironment{lemma}{\par\Needspace{5\baselineskip}}
+@@ -149,7 +162,7 @@
+ \section*{Reading this edition}\addcontentsline{toc}{section}{Reading this edition}
+ A seed is useful only together with the operators allowed to act on it. Paper VII follows that principle through symmetry packets, quantum circuits, moving projectors, channels, effective dynamics, and refinement. The finite calculus in Part I supplies the common language. The strengthened development in Part II gives broader bounded constructions and limit criteria. Part III retains the detailed proof completions rather than reducing them to a status summary.
+ 
+-The original finite item numbers keep the prefix I. The strengthened development has the prefix II, and the supplementary constructions have the prefix III. All nine retrieved mathematical source parts are preserved exactly. Overlapping statements and proofs are retained because their hypotheses and uses differ. Their total is not a count of independent discoveries.
++The original finite item numbers keep the prefix I. The strengthened development has the prefix II, and the supplementary constructions have the prefix III. All nine retrieved mathematical source parts are retained, with the local wording and assumption clarifications recorded in this edition. The proof bodies are unchanged. Overlapping statements and proofs are retained because their hypotheses and uses differ. Their total is not a count of independent discoveries.
+ 
+ The selected archived formal checkpoint covers nineteen scoped manuscript items. It records 323 explicit theorem declarations across twenty-five active Lean proof modules. These are different units. The strengthened Part II is outside that nineteen-item contract. This October monograph does not report a fresh Lean compilation. Exact hypotheses, declarations, inherited compiler records, and reproduction instructions appear in the Lean companion.
+ 
+--- retrieved/editable/traditional/build.py
++++ proofread/editable/traditional/build.py
+@@ -46,6 +46,8 @@
+         print('The authored monograph is preserved. Compiling without historical assembly.')
+     if shutil.which('xelatex') is None:
+         parser.error('XeLaTeX is required. Install it through your TeX distribution.')
++    if shutil.which('xdvipdfmx') is None:
++        parser.error('xdvipdfmx is required. Install it through your TeX distribution.')
+     destination = (args.output_directory or ROOT).expanduser().resolve()
+     environment = dict(os.environ)
+     environment.setdefault('SOURCE_DATE_EPOCH', '1791504000')
+@@ -54,13 +56,14 @@
+     ignore = shutil.ignore_patterns(
+         'qa', '__pycache__', STEM + '.pdf', '*.aux', '*.log', '*.out', '*.toc',
+         '*.lof', '*.lot', '*.bbl', '*.blg', '*.fdb_latexmk', '*.fls', '*.xdv',
+-        'build_pass_*.txt', 'build_bibtex.txt', 'historical_assembly')
++        'build_pass_*.txt', 'build_bibtex.txt', 'build_pdf_driver.txt',
++        'historical_assembly')
+     with tempfile.TemporaryDirectory(prefix='komorebi-paper-vii-traditional-') as temporary:
+         stage = Path(temporary) / 'source'
+         shutil.copytree(ROOT, stage, ignore=ignore)
+         for name in ('TEXINPUTS', 'BIBINPUTS', 'BSTINPUTS'):
+             environment[name] = str(stage) + os.pathsep + environment.get(name, '')
+-        command = ['xelatex', '-interaction=nonstopmode', '-halt-on-error',
++        command = ['xelatex', '-no-pdf', '-interaction=nonstopmode', '-halt-on-error',
+                    '-file-line-error', '-recorder', '-jobname=' + STEM, STEM + '.tex']
+         transcripts = []
+ 
+@@ -87,6 +90,9 @@
+                     if shutil.which('bibtex') is None:
+                         raise SystemExit('BibTeX is required by this bibliography.')
+                     run_command(['bibtex', STEM], 'build_bibtex.txt')
++        # Emit the PDF only after references and font subsets have stabilized.
++        run_command(['xdvipdfmx', '-o', STEM + '.pdf', STEM + '.xdv'],
++                    'build_pdf_driver.txt')
+         pdf = stage / (STEM + '.pdf')
+         if not pdf.is_file():
+             raise SystemExit('Compilation completed without the expected PDF: ' + str(pdf))
+--- retrieved/editable/traditional/komorebi-monograph.sty
++++ proofread/editable/traditional/komorebi-monograph.sty
+@@ -1,11 +1,27 @@
+ \NeedsTeXFormat{LaTeX2e}
+-\ProvidesPackage{komorebi-monograph}[2026/10/09 Paper VII modern monograph]
++\ProvidesPackage{komorebi-monograph}[2026/10/18 Paper VII proofread monograph]
+ \RequirePackage{fontspec,unicode-math,setspace,tocloft}
+ \RequirePackage[most]{tcolorbox}
+-\setmainfont{P052}[Path=fonts/,UprightFont=*-Roman.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf]
+-\setsansfont{NimbusSans}[Path=fonts/,UprightFont=*-Regular.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf,Scale=.94]
+-\setmonofont{lmmono10}[Path=fonts/,UprightFont=*-regular.otf,BoldFont=*-regular.otf,ItalicFont=*-italic.otf,Scale=.88]
+-\setmathfont{latinmodern-math.otf}[Path=fonts/]
++\IfFileExists{fonts/P052-Roman.otf}{%
++  \setmainfont{P052}[Path=fonts/,UprightFont=*-Roman.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf]
++}{%
++  \setmainfont{P052-Roman.otf}[BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
++}
++\IfFileExists{fonts/NimbusSans-Regular.otf}{%
++  \setsansfont{NimbusSans}[Path=fonts/,UprightFont=*-Regular.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf,Scale=.94]
++}{%
++  \setsansfont{NimbusSans-Regular.otf}[BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
++}
++\IfFileExists{fonts/lmmono10-regular.otf}{%
++  \setmonofont{lmmono10}[Path=fonts/,UprightFont=*-regular.otf,BoldFont=*-regular.otf,ItalicFont=*-italic.otf,Scale=.88]
++}{%
++  \setmonofont{LMMono10-Regular}[BoldFont=LMMono10-Regular,ItalicFont=LMMono10-Italic,BoldItalicFont=LMMono10-Italic,Scale=.88]
++}
++\IfFileExists{fonts/latinmodern-math.otf}{%
++  \setmathfont{latinmodern-math.otf}[Path=fonts/]
++}{%
++  \setmathfont{Latin Modern Math}
++}
+ \definecolor{accent}{HTML}{245D60}
+ \definecolor{ink}{HTML}{212B34}
+ \definecolor{muted}{HTML}{58646B}
+@@ -14,7 +30,7 @@
+ \providecommand{\KomorebiSubtitle}{Typed transfer, nonlinear packets, and obstruction theory}
+ \providecommand{\KomorebiSeries}{Paper VII}
+ \providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{9 October 2026}
++\providecommand{\KomorebiEdition}{18 October 2026}
+ \providecommand{\KomorebiShortTitle}{Paper VII}
+ \providecommand{\KomorebiCoverTitle}{Projector Resolved\\Seed Calculus VII}
+ \providecommand{\KomorebiTitleSize}{31}
+--- retrieved/editable/traditional/monograph_atlas.tex
++++ proofread/editable/traditional/monograph_atlas.tex
+@@ -238,7 +238,7 @@
+ \[
+ C=\dot P P+\dot Q Q.
+ \]
+-Exact calculation yields the constant matrix $C=J$, with $C^*=-C$ and $[C,P]=\dot P$. At $t=0$, the matrices in the plate let the reader verify these identities by multiplying four small arrays.
++Exact calculation yields the constant matrix $C=J$, with $C^*=-C$ and $[C,P]=\dot P$. At $t=0$, the matrices in the plate let the reader verify these identities by multiplying the displayed small arrays.
+ \head{From two packets to a complete family}
+ For differentiable orthogonal projectors $P_a$ summing to the identity, the paper constructs
+ \[
+@@ -578,7 +578,7 @@
+ \takeaway{A local polar chart can fail while the subspaces remain regular. Use the stated chart hypothesis and the separate convergence theorem when composing small rotations.}
+ 
+ \vpage{31}{Coherence order survives a covariant channel}{CHANNEL, CHOI, AND GENERATOR CHECKS}{Traditional edition: Theorem II.7.8, Theorem II.7.10, Theorem II.7.14.}
+-Take $S=Z=\diag(1,-1)$ on $\CC^2$. Conjugation $X\mapsto ZXZ$ has order zero on diagonal matrices and order one modulo two on off-diagonal matrices. Its projectors on Hilbert--Schmidt operator space are $\Lcal_0(X)=(X+ZXZ)/2$ and $\Lcal_1(X)=(X-ZXZ)/2$.
++Take $S=Z=\diag(1,-1)$ on $\CC^2$. Under conjugation $X\mapsto ZXZ$, diagonal matrices have coherence order zero and off-diagonal matrices have coherence order one modulo two. Its projectors on Hilbert--Schmidt operator space are $\Lcal_0(X)=(X+ZXZ)/2$ and $\Lcal_1(X)=(X-ZXZ)/2$.
+ 
+ Choose amplitude damping with $K_0=\diag(1,4/5)$ and $K_1=(3/5)\ket0\bra1$. The channel is trace preserving, population flows from state one to state zero, and each coherence contracts by $4/5$.
+ \xfig{choi}
+--- retrieved/editable/traditional/parts/02_strengthened.tex
++++ proofread/editable/traditional/parts/02_strengthened.tex
+@@ -453,7 +453,7 @@
+ \[
+ \eta_\gamma=U_\gamma\psi.
+ \]
+-Then
++Choose any total order on this finite path set. Then
+ \[
+ \norm{P_bU\psi}^2
+ =
+@@ -814,7 +814,7 @@
+ \leq
+ C_T\abs{\pi}
+ \]
+-for a constant depending on the packet path but not on the partition.
++for a constant depending on the packet path but not on the partition. The absolute-value notation for the partition denotes its mesh, the largest subinterval length.
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:026}
+@@ -839,10 +839,11 @@
+ 
+ \begin{figure}[t]
+ \centering
+-\includegraphics[width=.62\textwidth]{06_kato_transport.pdf}
++\includegraphics[width=.58\textwidth]{06_kato_transport.pdf}
+ \caption{A moving rank one packet on the Bloch sphere. The Kato evolution transports the range without choosing a phase convention for its eigenvector.}
+ \label{strong:fig:kato_transport}
+ \end{figure}
++\FloatBarrier
+ 
+ \subsection{Local frames and curvature}\label{strong:subsec:curvature}
+ 
+@@ -1438,7 +1439,7 @@
+ \leq
+ \varepsilon_{\rm KL}.
+ \]
+-Thus \(\varepsilon_{\rm KL}\) controls both state dependence of error overlaps and nonorthogonality of nominal syndrome images.
++Thus \(\varepsilon_{\rm KL}\) controls the deviation of error overlaps from their scalar code form.
+ \end{proposition}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:043}
+@@ -2519,7 +2520,7 @@
+ \[
+ L_n\e^{-tL_n}\longrightarrow L\e^{-tL}
+ \]
+-in trace norm and the limiting heat trace is nonzero, then the spectral dimensions converge at that time.
++in trace norm and the limiting heat trace is nonzero, then the spectral dimensions defined by the heat-moment ratio converge at that time.
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:079}
+@@ -2568,7 +2569,7 @@
+ \right)
+ \dd^dx.
+ \]
+-The expansion must respect the limiting gauge identities and must include an estimate for the omitted terms on the declared infrared regime.
++Here the volume coefficient includes the sign and normalization written explicitly in the cosmological term in Part I. The expansion must respect the limiting gauge identities and must include an estimate for the omitted terms on the declared infrared regime.
+ \end{definition}
+ 
+ A spectral dimension close to four does not imply this criterion. A heat trace records eigenvalue growth. It does not determine the tensor structure, gauge identities, sign, or interaction coefficients of an effective action.
+--- retrieved/editable/traditional/parts/03_supplement_03.tex
++++ proofread/editable/traditional/parts/03_supplement_03.tex
+@@ -14,7 +14,7 @@
+ If $d>0$, equality with the full $d\times m$ coefficient space is equivalent to $\rank C=m$. Consequently a cyclic seed requires $m\le d$. The nonempty-row assumption is essential for canceling the factor $d$.
+ 
+ \subsection{Several seeds: both necessity and construction}
+-For seeds $C_1,\ldots,C_k$, generation means the concrete statement
++Continue under the positive-row hypothesis above. For seeds $C_1,\ldots,C_k$, generation means the concrete statement
+ \[
+ \forall X\in M_{d\times m}(\C),\quad
+ \exists A_1,\ldots,A_k\in M_d(\C):\quad
+--- retrieved/editable/traditional/references.bib
++++ proofread/editable/traditional/references.bib
+@@ -94,7 +94,7 @@
+ 
+ @article{Stinespring1955,
+   author  = {W. Forrest Stinespring},
+-  title   = {Positive functions on C star algebras},
++  title   = {Positive functions on {C} star algebras},
+   journal = {Proceedings of the American Mathematical Society},
+   volume  = {6},
+   number  = {2},
+@@ -144,7 +144,7 @@
+ 
+ @article{BenyKempfKribs2007,
+   author  = {C{\'{e}}dric B{\'{e}}ny and Achim Kempf and David W. Kribs},
+-  title   = {Generalization of quantum error correction via the Heisenberg picture},
++  title   = {Generalization of quantum error correction via the {Heisenberg} picture},
+   journal = {Physical Review Letters},
+   volume  = {98},
+   number  = {10},
+@@ -164,7 +164,7 @@
+ 
+ @article{BravyiDiVincenzoLoss2011,
+   author  = {Sergey Bravyi and David P. DiVincenzo and Daniel Loss},
+-  title   = {Schrieffer Wolff transformation for quantum many body systems},
++  title   = {{Schrieffer} {Wolff} transformation for quantum many body systems},
+   journal = {Annals of Physics},
+   volume  = {326},
+   number  = {10},
+@@ -194,7 +194,7 @@
+ 
+ @article{OsterwalderSchrader1973,
+   author  = {Konrad Osterwalder and Robert Schrader},
+-  title   = {Axioms for Euclidean Green functions},
++  title   = {Axioms for {Euclidean} {Green} functions},
+   journal = {Communications in Mathematical Physics},
+   volume  = {31},
+   number  = {2},
+@@ -204,7 +204,7 @@
+ 
+ @article{OsterwalderSchrader1975,
+   author  = {Konrad Osterwalder and Robert Schrader},
+-  title   = {Axioms for Euclidean Green functions. II},
++  title   = {Axioms for {Euclidean} {Green} functions. {II}},
+   journal = {Communications in Mathematical Physics},
+   volume  = {42},
+   number  = {3},
+@@ -250,7 +250,7 @@
+ 
+ @book{ReedSimon1972,
+   author    = {Michael Reed and Barry Simon},
+-  title     = {Methods of Modern Mathematical Physics. I: Functional Analysis},
++  title     = {Methods of Modern Mathematical Physics. {I}: Functional Analysis},
+   publisher = {Academic Press},
+   address   = {New York},
+   year      = {1972}
+--- retrieved/editable/traditional/visual_graphics/dephasing.tex
++++ proofread/editable/traditional/visual_graphics/dephasing.tex
+@@ -74,6 +74,6 @@
+ \node[font=\small,align=center,anchor=east,font=\scriptsize] at (8.55,2.825) {01};
+ \node[font=\small,align=center,anchor=east,font=\scriptsize] at (8.55,2.075) {10};
+ \node[font=\small,align=center,anchor=east,font=\scriptsize] at (8.55,1.325) {11};
+-\node[font=\small,align=center,font=\small] at (6.8,2.3) {same diagonal\\different coherence};
++\node[font=\small,align=center,font=\small] at (6.1,2.3) {same diagonal\\different coherence};
+ \node[font=\small,align=center,font=\small] at (7,0.15) {Bell-projector outcome: $1$ on the left, $1/2$ on the right.};
+ \end{tikzpicture}
+--- retrieved/editable/traditional/visual_graphics/perfect_transfer.tex
++++ proofread/editable/traditional/visual_graphics/perfect_transfer.tex
+@@ -12,7 +12,7 @@
+ \node[font=\small,align=center,font=\small] at (4.5,0.7) {2};
+ \path[draw,fill=white] (1.5,0.7) circle (0.24);
+ \node[font=\small,align=center,font=\small] at (1.5,0.7) {3};
+-\draw[->,dashed,line width=.95pt] (1.5,2.8) -- (4.5,0.7);
++\draw[->,dashed,line width=.95pt,shorten <=0.27cm,shorten >=0.27cm] (1.5,2.8) -- (4.5,0.7);
+ \node[font=\small,align=center] at (3,4.15) {$e^{-\ii\pi L/2}=S^2$};
+ \node[font=\small,align=center,font=\small] at (8.895,4.25) {start};
+ \path[draw=black!30,fill=black!8] (8.6,2.96) rectangle (9.19,3.55);
+--- retrieved/editable/traditional/visual_graphics_extended/constraint_image.tex
++++ proofread/editable/traditional/visual_graphics_extended/constraint_image.tex
+@@ -4,6 +4,6 @@
+ \draw[fill=black!8] (1,0.6) rectangle (5,2.8);\node[align=center] at (3,1.7) {coarse $\CC^3$\\$0\oplus\sigma_a$};
+ \draw[fill=black!8] (7,0.6) rectangle (10.8,2.8);\draw[fill=black!25] (10.8,0.6) rectangle (12,2.8);
+ \draw[->] (5.2,1.7)--(6.8,1.7);\node[above] at (6,1.7) {$R$};
+-\node[align=center] at (8.9,1.7) {embedded image\\same constraints};\node[rotate=90,font=\small] at (11.4,1.7) {new coordinate};
++\node[align=center] at (8.9,1.7) {embedded image\\same constraints};\node[rotate=90,font=\footnotesize] at (11.4,1.7) {new coordinate};
+ \node[font=\small] at (6,0.15) {transported closure on $\operatorname{im}R$; new complement requires its own test};
+ \end{tikzpicture}
+--- retrieved/editable/traditional/visual_graphics_extended/s3.tex
++++ proofread/editable/traditional/visual_graphics_extended/s3.tex
+@@ -4,7 +4,7 @@
+ \draw[fill=black!6] (0.5,0.6) rectangle (2.1,2.2);
+ \draw[fill=black!17] (2.4,0.6) rectangle (4,2.2);
+ \draw[fill=black!30] (4.3,0.6) rectangle (11.5,2.2);
+-\node at (1.3,1.4) {$1$};\node at (3.2,1.4) {$1$};\node at (7.9,1.4) {$2\otimes2=4$};
++\node at (1.3,1.4) {$1$};\node at (3.2,1.4) {$1$};\node at (7.9,1.4) {$2\cdot2=4$};
+ \node[font=\small] at (1.3,2.55) {trivial};\node[font=\small] at (3.2,2.55) {sign};\node[font=\small] at (7.9,2.55) {standard isotypic};
+ \node[font=\small] at (6,0.1) {$\CC[S_3]\cong\CC\oplus\CC\oplus(\CC^2\otimes\CC^2)$};
+ \end{tikzpicture}
+--- retrieved/editable/visual_guide/Paper_VII_Visual_Guide_Final.tex
++++ proofread/editable/visual_guide/Paper_VII_Visual_Guide_Final.tex
+@@ -11,7 +11,7 @@
+ \renewcommand{\KomorebiSubtitle}{Symmetry, circuits, geometric transport,\\channels, and effective dynamics}
+ \renewcommand{\KomorebiSeries}{Paper VII}
+ \renewcommand{\KomorebiKind}{Visual guide}
+-\renewcommand{\KomorebiEdition}{9 October 2026}
++\renewcommand{\KomorebiEdition}{18 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper VII / Visual guide}
+ \renewcommand{\KomorebiCoverBlurb}{Forty worked and reference pages follow quantum seeds, coherent circuit paths, moving subspaces, channels, error recovery, hidden dynamics, and the hypotheses needed for continuum limits.}
+ \KomorebiSetup
+--- retrieved/editable/visual_guide/build.py
++++ proofread/editable/visual_guide/build.py
+@@ -44,6 +44,8 @@
+ 
+     if shutil.which('xelatex') is None:
+         parser.error('XeLaTeX is required. Install it through your TeX distribution.')
++    if shutil.which('xdvipdfmx') is None:
++        parser.error('xdvipdfmx is required. Install it through your TeX distribution.')
+     destination = (args.output_directory or ROOT).expanduser().resolve()
+     environment = dict(os.environ)
+     environment.setdefault('SOURCE_DATE_EPOCH', '1791504000')
+@@ -52,13 +54,14 @@
+     ignore = shutil.ignore_patterns(
+         'qa', '__pycache__', STEM + '.pdf', '*.aux', '*.log', '*.out', '*.toc',
+         '*.lof', '*.lot', '*.bbl', '*.blg', '*.fdb_latexmk', '*.fls', '*.xdv',
+-        'build_pass_*.txt', 'build_bibtex.txt', 'historical_assembly')
++        'build_pass_*.txt', 'build_bibtex.txt', 'build_pdf_driver.txt',
++        'historical_assembly')
+     with tempfile.TemporaryDirectory(prefix='komorebi-paper-vii-visual_guide-') as temporary:
+         stage = Path(temporary) / 'source'
+         shutil.copytree(ROOT, stage, ignore=ignore)
+         for name in ('TEXINPUTS', 'BIBINPUTS', 'BSTINPUTS'):
+             environment[name] = str(stage) + os.pathsep + environment.get(name, '')
+-        command = ['xelatex', '-interaction=nonstopmode', '-halt-on-error',
++        command = ['xelatex', '-no-pdf', '-interaction=nonstopmode', '-halt-on-error',
+                    '-file-line-error', '-recorder', '-jobname=' + STEM, STEM + '.tex']
+         transcripts = []
+ 
+@@ -85,6 +88,9 @@
+                     if shutil.which('bibtex') is None:
+                         raise SystemExit('BibTeX is required by this bibliography.')
+                     run_command(['bibtex', STEM], 'build_bibtex.txt')
++        # Emit the PDF only after references and font subsets have stabilized.
++        run_command(['xdvipdfmx', '-o', STEM + '.pdf', STEM + '.xdv'],
++                    'build_pdf_driver.txt')
+         pdf = stage / (STEM + '.pdf')
+         if not pdf.is_file():
+             raise SystemExit('Compilation completed without the expected PDF: ' + str(pdf))
+--- retrieved/editable/visual_guide/graphics/dephasing.tex
++++ proofread/editable/visual_guide/graphics/dephasing.tex
+@@ -74,6 +74,6 @@
+ \node[font=\small,align=center,anchor=east,font=\scriptsize] at (8.55,2.825) {01};
+ \node[font=\small,align=center,anchor=east,font=\scriptsize] at (8.55,2.075) {10};
+ \node[font=\small,align=center,anchor=east,font=\scriptsize] at (8.55,1.325) {11};
+-\node[font=\small,align=center,font=\small] at (6.8,2.3) {same diagonal\\different coherence};
++\node[font=\small,align=center,font=\small] at (6.1,2.3) {same diagonal\\different coherence};
+ \node[font=\small,align=center,font=\small] at (7,0.15) {Bell-projector outcome: $1$ on the left, $1/2$ on the right.};
+ \end{tikzpicture}
+--- retrieved/editable/visual_guide/graphics/perfect_transfer.tex
++++ proofread/editable/visual_guide/graphics/perfect_transfer.tex
+@@ -12,7 +12,7 @@
+ \node[font=\small,align=center,font=\small] at (4.5,0.7) {2};
+ \path[draw,fill=white] (1.5,0.7) circle (0.24);
+ \node[font=\small,align=center,font=\small] at (1.5,0.7) {3};
+-\draw[->,dashed,line width=.95pt] (1.5,2.8) -- (4.5,0.7);
++\draw[->,dashed,line width=.95pt,shorten <=0.27cm,shorten >=0.27cm] (1.5,2.8) -- (4.5,0.7);
+ \node[font=\small,align=center] at (3,4.15) {$e^{-\ii\pi L/2}=S^2$};
+ \node[font=\small,align=center,font=\small] at (8.895,4.25) {start};
+ \path[draw=black!30,fill=black!8] (8.6,2.96) rectangle (9.19,3.55);
+--- retrieved/editable/visual_guide/graphics_extended/constraint_image.tex
++++ proofread/editable/visual_guide/graphics_extended/constraint_image.tex
+@@ -4,6 +4,6 @@
+ \draw[fill=black!8] (1,0.6) rectangle (5,2.8);\node[align=center] at (3,1.7) {coarse $\CC^3$\\$0\oplus\sigma_a$};
+ \draw[fill=black!8] (7,0.6) rectangle (10.8,2.8);\draw[fill=black!25] (10.8,0.6) rectangle (12,2.8);
+ \draw[->] (5.2,1.7)--(6.8,1.7);\node[above] at (6,1.7) {$R$};
+-\node[align=center] at (8.9,1.7) {embedded image\\same constraints};\node[rotate=90,font=\small] at (11.4,1.7) {new coordinate};
++\node[align=center] at (8.9,1.7) {embedded image\\same constraints};\node[rotate=90,font=\footnotesize] at (11.4,1.7) {new coordinate};
+ \node[font=\small] at (6,0.15) {transported closure on $\operatorname{im}R$; new complement requires its own test};
+ \end{tikzpicture}
+--- retrieved/editable/visual_guide/graphics_extended/s3.tex
++++ proofread/editable/visual_guide/graphics_extended/s3.tex
+@@ -4,7 +4,7 @@
+ \draw[fill=black!6] (0.5,0.6) rectangle (2.1,2.2);
+ \draw[fill=black!17] (2.4,0.6) rectangle (4,2.2);
+ \draw[fill=black!30] (4.3,0.6) rectangle (11.5,2.2);
+-\node at (1.3,1.4) {$1$};\node at (3.2,1.4) {$1$};\node at (7.9,1.4) {$2\otimes2=4$};
++\node at (1.3,1.4) {$1$};\node at (3.2,1.4) {$1$};\node at (7.9,1.4) {$2\cdot2=4$};
+ \node[font=\small] at (1.3,2.55) {trivial};\node[font=\small] at (3.2,2.55) {sign};\node[font=\small] at (7.9,2.55) {standard isotypic};
+ \node[font=\small] at (6,0.1) {$\CC[S_3]\cong\CC\oplus\CC\oplus(\CC^2\otimes\CC^2)$};
+ \end{tikzpicture}
+--- retrieved/editable/visual_guide/komorebi-monograph.sty
++++ proofread/editable/visual_guide/komorebi-monograph.sty
+@@ -1,11 +1,27 @@
+ \NeedsTeXFormat{LaTeX2e}
+-\ProvidesPackage{komorebi-monograph}[2026/10/09 Paper VII modern monograph]
++\ProvidesPackage{komorebi-monograph}[2026/10/18 Paper VII proofread monograph]
+ \RequirePackage{fontspec,unicode-math,setspace,tocloft}
+ \RequirePackage[most]{tcolorbox}
+-\setmainfont{P052}[Path=fonts/,UprightFont=*-Roman.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf]
+-\setsansfont{NimbusSans}[Path=fonts/,UprightFont=*-Regular.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf,Scale=.94]
+-\setmonofont{lmmono10}[Path=fonts/,UprightFont=*-regular.otf,BoldFont=*-regular.otf,ItalicFont=*-italic.otf,Scale=.88]
+-\setmathfont{latinmodern-math.otf}[Path=fonts/]
++\IfFileExists{fonts/P052-Roman.otf}{%
++  \setmainfont{P052}[Path=fonts/,UprightFont=*-Roman.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf]
++}{%
++  \setmainfont{P052-Roman.otf}[BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
++}
++\IfFileExists{fonts/NimbusSans-Regular.otf}{%
++  \setsansfont{NimbusSans}[Path=fonts/,UprightFont=*-Regular.otf,BoldFont=*-Bold.otf,ItalicFont=*-Italic.otf,BoldItalicFont=*-BoldItalic.otf,Scale=.94]
++}{%
++  \setsansfont{NimbusSans-Regular.otf}[BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
++}
++\IfFileExists{fonts/lmmono10-regular.otf}{%
++  \setmonofont{lmmono10}[Path=fonts/,UprightFont=*-regular.otf,BoldFont=*-regular.otf,ItalicFont=*-italic.otf,Scale=.88]
++}{%
++  \setmonofont{LMMono10-Regular}[BoldFont=LMMono10-Regular,ItalicFont=LMMono10-Italic,BoldItalicFont=LMMono10-Italic,Scale=.88]
++}
++\IfFileExists{fonts/latinmodern-math.otf}{%
++  \setmathfont{latinmodern-math.otf}[Path=fonts/]
++}{%
++  \setmathfont{Latin Modern Math}
++}
+ \definecolor{accent}{HTML}{245D60}
+ \definecolor{ink}{HTML}{212B34}
+ \definecolor{muted}{HTML}{58646B}
+@@ -14,7 +30,7 @@
+ \providecommand{\KomorebiSubtitle}{Probabilistic refinement, fractional operators,\\and exact hidden-state elimination}
+ \providecommand{\KomorebiSeries}{Paper VII}
+ \providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{9 October 2026}
++\providecommand{\KomorebiEdition}{18 October 2026}
+ \providecommand{\KomorebiShortTitle}{Paper VII}
+ \providecommand{\KomorebiCoverTitle}{Quantum Seed and\\Packet Calculus}
+ \providecommand{\KomorebiTitleSize}{31}
+--- retrieved/editable/visual_guide/source/extended_pages.tex
++++ proofread/editable/visual_guide/source/extended_pages.tex
+@@ -46,7 +46,7 @@
+ \takeaway{A local polar chart can fail while the subspaces remain regular. Use the stated chart hypothesis and the separate convergence theorem when composing small rotations.}
+ 
+ \vpage{31}{Coherence order survives a covariant channel}{CHANNEL, CHOI, AND GENERATOR CHECKS}{Traditional pp. 50, 52 / Theorem II.7.8, Theorem II.7.10, Theorem II.7.14.}
+-Take $S=Z=\diag(1,-1)$ on $\CC^2$. Conjugation $X\mapsto ZXZ$ has order zero on diagonal matrices and order one modulo two on off-diagonal matrices. Its projectors on Hilbert--Schmidt operator space are $\Lcal_0(X)=(X+ZXZ)/2$ and $\Lcal_1(X)=(X-ZXZ)/2$.
++Take $S=Z=\diag(1,-1)$ on $\CC^2$. Under conjugation $X\mapsto ZXZ$, diagonal matrices have coherence order zero and off-diagonal matrices have coherence order one modulo two. Its projectors on Hilbert--Schmidt operator space are $\Lcal_0(X)=(X+ZXZ)/2$ and $\Lcal_1(X)=(X-ZXZ)/2$.
+ 
+ Choose amplitude damping with $K_0=\diag(1,4/5)$ and $K_1=(3/5)\ket0\bra1$. The channel is trace preserving, population flows from state one to state zero, and each coherence contracts by $4/5$.
+ \xfig{choi}
+@@ -117,7 +117,7 @@
+ For $\varepsilon\in\{0,1/10,1/4,1\}$ the script checks $(A-I)^*(A-I)=\varepsilon^2I$ for $A=\diag(1+\varepsilon,1-\varepsilon)$ and several rational scalar controls. The displayed triangle argument supplies the all-complex-scalar lower bound; a finite list of candidates cannot do that. The family maximum above is also recorded separately.
+ \takeaway{An overlap norm has a useful operational interpretation. Evaluate every error pair, then keep that statement separate from an unproved recovery fidelity estimate.}
+ 
+-\vpage{34}{Control the hidden spectral response}{SIGN, STABILITY, AND A CONVERGENT EXPANSION}{Traditional pp. 57, 58, 61 / Theorem II.9.4, Proposition II.9.5, Theorem II.9.12.}
++\vpage{34}{Control the hidden spectral response}{SIGN, STABILITY, AND A CONVERGENT EXPANSION}{Traditional pp. 57, 61 / Theorem II.9.4, Proposition II.9.5, Theorem II.9.12.}
+ Retain one coordinate in $H=\mat{0&1\\1&2}$, so $A=0$, $B=1$, and $D=2$. In its elimination domain, $\Sigma(z)=1/(z-2)$. At $z=3+\ii$,
+ \[
+ \Sigma(3+\ii)=\frac{1-\ii}{2},\qquad
+@@ -230,7 +230,7 @@
+ The fresh checks verify all three coarse commutators, the isometry, each constraint intertwining, all nine commutator transports, and the residual. The fine-coordinate counterexample rejects extending an image statement to the whole space. Unbounded constraints would additionally require a common invariant domain.
+ \takeaway{Closure is an operator-algebra statement. Refinement intertwining carries that statement on the embedded image; control the new degrees of freedom separately.}
+ 
+-\vpage{39}{Two routes to a bounded Hamiltonian limit}{EXACT EMBEDDINGS AND A SUMMABLE TAIL}{Traditional pp. 70, 71, 72 / Theorem II.13.2, Theorem II.13.4, Corollary II.13.5.}
++\vpage{39}{Two routes to a bounded Hamiltonian limit}{EXACT EMBEDDINGS AND A SUMMABLE TAIL}{Traditional pp. 71, 72 / Theorem II.13.2, Theorem II.13.4, Corollary II.13.5.}
+ For the exact route, let $\HH_n=\CC^n$ with coordinate inclusions and
+ \[
+ H_n=\diag(0,1,1/2,\ldots,1/(n-1)),\qquad H_1=(0).
+--- retrieved/editable/visual_guide/source/generate_extensions.py
++++ proofread/editable/visual_guide/source/generate_extensions.py
+@@ -9,7 +9,7 @@
+ \draw[fill=black!6] (0.5,0.6) rectangle (2.1,2.2);
+ \draw[fill=black!17] (2.4,0.6) rectangle (4,2.2);
+ \draw[fill=black!30] (4.3,0.6) rectangle (11.5,2.2);
+-\node at (1.3,1.4) {$1$};\node at (3.2,1.4) {$1$};\node at (7.9,1.4) {$2\otimes2=4$};
++\node at (1.3,1.4) {$1$};\node at (3.2,1.4) {$1$};\node at (7.9,1.4) {$2\cdot2=4$};
+ \node[font=\small] at (1.3,2.55) {trivial};\node[font=\small] at (3.2,2.55) {sign};\node[font=\small] at (7.9,2.55) {standard isotypic};
+ \node[font=\small] at (6,0.1) {$\CC[S_3]\cong\CC\oplus\CC\oplus(\CC^2\otimes\CC^2)$};'''),
+ 'polar':('Exact rational packet rotation and polar normalization',r'''
+@@ -53,7 +53,7 @@
+ \draw[fill=black!8] (1,0.6) rectangle (5,2.8);\node[align=center] at (3,1.7) {coarse $\CC^3$\\$0\oplus\sigma_a$};
+ \draw[fill=black!8] (7,0.6) rectangle (10.8,2.8);\draw[fill=black!25] (10.8,0.6) rectangle (12,2.8);
+ \draw[->] (5.2,1.7)--(6.8,1.7);\node[above] at (6,1.7) {$R$};
+-\node[align=center] at (8.9,1.7) {embedded image\\same constraints};\node[rotate=90,font=\small] at (11.4,1.7) {new coordinate};
++\node[align=center] at (8.9,1.7) {embedded image\\same constraints};\node[rotate=90,font=\footnotesize] at (11.4,1.7) {new coordinate};
+ \node[font=\small] at (6,0.15) {transported closure on $\operatorname{im}R$; new complement requires its own test};'''),
+ 'tower_tail':('Exact bounded levels and a separate common-space tail',r'''
+ \node[draw,fill=black!7,align=center] (a) at (2,2.2) {$\CC^n$\\$H_n=\operatorname{diag}(0,1,1/2,\ldots)$};
+--- retrieved/editable/visual_guide/source/generate_graphics.py
++++ proofread/editable/visual_guide/source/generate_graphics.py
+@@ -164,7 +164,7 @@
+     dc=dephase(rho,parity(2)[0])
+     p.matrix(.75,3.95,2*rho,cell=.75,rows=['00','01','10','11'],title=r'$2\rho$; also $2D_{\rm parity}(\rho)$')
+     p.matrix(8.7,3.95,2*dc,cell=.75,rows=['00','01','10','11'],title=r'$2D_{\rm computational}(\rho)$')
+-    p.text(6.8,2.3,r'same diagonal\\different coherence',r'font=\small')
++    p.text(6.1,2.3,r'same diagonal\\different coherence',r'font=\small')
+     p.text(7,.15,'Bell-projector outcome: $1$ on the left, $1/2$ on the right.',r'font=\small');index.append(p.finish())
+     Ks,rh,output=damping();p=Plate('damping','Population transfer and coherence contraction in one exact channel')
+     superop=M([[1,0,0,R(9,25)],[0,R(4,5),0,0],[0,0,R(4,5),0],[0,0,0,R(16,25)]])
+@@ -222,7 +222,7 @@
+     coords=[(1.5,2.8),(4.5,2.8),(4.5,.7),(1.5,.7)]
+     for j in range(4):p.line(*coords[j],*coords[(j+1)%4],'black!70,line width=.7pt')
+     for j,(x,y) in enumerate(coords):p.circ(x,y,.24,'draw,fill=white');p.text(x,y,str(j),r'font=\small')
+-    p.line(*coords[0],*coords[2],'->,dashed,line width=.95pt');p.text(3,4.15,r'$e^{-\ii\pi L/2}=S^2$')
++    p.line(*coords[0],*coords[2],'->,dashed,line width=.95pt,shorten <=0.27cm,shorten >=0.27cm');p.text(3,4.15,r'$e^{-\ii\pi L/2}=S^2$')
+     p.matrix(8.6,3.55,M([1,0,0,0]),cell=.59,title='start')
+     p.matrix(11.4,3.55,M([0,0,1,0]),cell=.59,title=r'time $\pi/2$')
+     p.text(10.3,.5,r'Target probability after partial\\momentum dephasing: $1-3\eta/4$.',r'font=\small');index.append(p.finish())
+--- retrieved/editable/visual_guide/source/pages.tex
++++ proofread/editable/visual_guide/source/pages.tex
+@@ -1,4 +1,4 @@
+-\vpage{1}{Three objects, three questions}{HOW TO READ THIS APPENDIX}{Traditional pp. 31, 47, 55 / Section II.1, Section II.7, Section II.9.}
++\vpage{1}{Three objects, three questions}{HOW TO READ THIS APPENDIX}{Traditional pp. 31, 47, 56 / Section II.1, Section II.7, Section II.9.}
+ A quantum calculation becomes easier to follow when its objects remain visible. This appendix follows a state vector, a density matrix, and a retained part of a dynamical system. They may describe the same experiment, but they do not answer the same question.
+ \vfig{three_objects}
+ \head{Amplitudes, not just occupied addresses}
+@@ -233,7 +233,7 @@
+ \[
+ C=\dot P P+\dot Q Q.
+ \]
+-Exact calculation yields the constant matrix $C=J$, with $C^*=-C$ and $[C,P]=\dot P$. At $t=0$, the matrices in the plate let the reader verify these identities by multiplying four small arrays.
++Exact calculation yields the constant matrix $C=J$, with $C^*=-C$ and $[C,P]=\dot P$. At $t=0$, the matrices in the plate let the reader verify these identities by multiplying the displayed small arrays.
+ \head{From two packets to a complete family}
+ For differentiable orthogonal projectors $P_a$ summing to the identity, the paper constructs
+ \[
+@@ -244,7 +244,7 @@
+ The completeness of the family matters in deriving skew-Hermiticity and the simultaneous transport identities. Using only one summand of an incomplete list is not automatically the same connection. The example retains both $P$ and $Q$ throughout, even when the picture emphasizes only the first line.
+ \takeaway{The projector derivative describes motion between subspaces. The canonical connection reconstructs that motion from the complete family without choosing internal packet bases.}
+ 
+-\vpage{14}{A chart failure is not a singular fiber}{THE RANGE BUNDLE IS CONSTRUCTED LOCALLY}{Traditional p. 45 / Theorem II.6.7. Range-atlas details: saved v0.6.0 supplement, pp. 2--4.}
++\vpage{14}{A chart failure is not a singular fiber}{THE RANGE BUNDLE IS CONSTRUCTED LOCALLY}{Traditional p. 46 / Theorem II.6.7. Range-atlas details: saved v0.6.0 supplement, pp. 2--4.}
+ The fiber of a projector field is the actual fixed subspace $E_x=\{v:P(x)v=v\}$. To compare it with a nearby anchor fiber $E_a$, the completion proof constructs
+ \[
+ T_a(x)=P(x)P(a)+(I-P(x))(I-P(a)).
+@@ -263,7 +263,7 @@
+ The v0.6.0 supplement proves the intrinsic connection and its curvature using actual manifold derivatives. Its scope includes bounded idempotents, not only orthogonal ones. The geometric illustration here is finite-dimensional and orthogonal for transparency; that convenience is not promoted to an extra premise of the recorded theorem.
+ \takeaway{A smooth bundle is built from compatible local charts. The singularity of one chart determinant can be harmless, provided another anchor covers the same smooth fiber.}
+ 
+-\vpage{15}{Curvature measures a local area response}{AN EXACT BLOCH-PROJECTOR CALCULATION}{Traditional pp. 45, 46 / Theorem II.6.7, Corollary II.6.8.}
++\vpage{15}{Curvature measures a local area response}{AN EXACT BLOCH-PROJECTOR CALCULATION}{Traditional pp. 46, 47 / Theorem II.6.7, Corollary II.6.8.}
+ On the unit sphere, set $n=(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta)$ and
+ \[
+ P(\theta,\phi)=\frac12(I+n\cdot\sigma).
+@@ -285,7 +285,7 @@
+ The vanishing of the coordinate density at a pole does not mean the geometric curvature disappears there. The spherical area form also carries the factor $\sin\theta$. A phase assigned to parallel transport additionally requires an orientation and a connection-sign convention; flux and phase should not be interchanged without those choices.
+ \takeaway{The projector formula and a local frame calculation agree. Curvature is intrinsic even when no single smooth frame covers the whole sphere.}
+ 
+-\vpage{16}{Which coherence can a measurement see?}{THE ANSWER DEPENDS ON ITS EFFECTS}{Traditional pp. 47, 48 / Theorem II.7.2, Theorem II.7.4, Corollary II.7.5.}
++\vpage{16}{Which coherence can a measurement see?}{THE ANSWER DEPENDS ON ITS EFFECTS}{Traditional pp. 47, 48, 49 / Theorem II.7.2, Theorem II.7.4, Corollary II.7.5.}
+ For the Bell density matrix $\rho=\ket{\Phi^+}\bra{\Phi^+}$, parity dephasing does nothing: both nonzero amplitudes already lie in the even subspace. Computational-basis dephasing instead removes the entries between addresses $00$ and $11$.
+ \vfig{dephasing}
+ Every computational-basis effect $E_a=\ket a\bra a$ has the same expectation on both matrices, namely $1/2$ at $00$ and $11$ and zero elsewhere. These measurements read only the diagonal. They cannot distinguish the pure Bell state from this incoherent mixture.
+@@ -372,7 +372,7 @@
+ The finite calculation checks the actual compressed matrix and rejects its equality to zero. The scalar obstruction is then transparent from the two unequal diagonal entries.
+ \takeaway{Correction must preserve all logical superpositions for the declared error family. Staying in the code and preserving basis probabilities are not sufficient.}
+ 
+-\vpage{21}{Hidden states return as spectral dependence}{TWO INVERTIBILITY CONDITIONS, NOT ONE}{Traditional pp. 56, 57 / Theorem II.9.2, Theorem II.9.3.}
++\vpage{21}{Hidden states return as spectral dependence}{TWO INVERTIBILITY CONDITIONS, NOT ONE}{Traditional p. 57 / Theorem II.9.2, Theorem II.9.3.}
+ Take $H=\mat{0&1\\1&2}$ and retain its first coordinate. The eliminated block is $H_{QQ}=2$. Whenever $z-2$ and the full $zI-H$ are invertible,
+ \[
+ H_{\rm eff}(z)=\frac1{z-2},\qquad
+@@ -412,7 +412,7 @@
+ The check verifies the differential and integral equations symbolically and the displayed nonzero semigroup defect exactly. The plotted curves are merely a visualization of these closed-form identities.
+ \takeaway{Exact elimination trades a hidden coordinate for memory and initial-data forcing. Replacing that memory by a constant generator is an additional approximation, not part of the exact theorem.}
+ 
+-\vpage{23}{Positive transfer is not a stochastic matrix}{SPECTRAL POSITIVITY IS BASIS INDEPENDENT}{Traditional pp. 61, 62 / Theorem II.10.1, Theorem II.10.3.}
++\vpage{23}{Positive transfer is not a stochastic matrix}{SPECTRAL POSITIVITY IS BASIS INDEPENDENT}{Traditional p. 62 / Theorem II.10.1, Theorem II.10.3.}
+ For $H=I-X$, the two eigenvalues are zero and two. Its Euclidean transfer is
+ \[
+ T(\tau)=e^{-\tau H}
+@@ -466,7 +466,7 @@
+ If instead $k=\pi/h$ moves with the grid, the ratio $\lambda_{k,h}/k^2=4/\pi^2$ stays constant, not one. The bound's factor $k^4$ warns that it is not uniform in arbitrary moving high modes. The displayed rational test uses the analytic symbol; it does not assert an integer periodic grid for every chosen spacing.
+ \takeaway{Second-order convergence is a quantified statement with a specified mode regime. Keep that regime fixed when reading an error curve or comparing refinements.}
+ 
+-\vpage{26}{A zero compressed anomaly can be automatic}{TEST THE CONSTRAINTS BEFORE THE PROJECTION}{Traditional p. 67 / Theorem II.12.2, Proposition II.12.3.}
++\vpage{26}{A zero compressed anomaly can be automatic}{TEST THE CONSTRAINTS BEFORE THE PROJECTION}{Traditional pp. 67, 68 / Theorem II.12.2, Proposition II.12.3.}
+ Take the self-adjoint matrices
+ \[
+ C_1=\diag(0,1,-1),\qquad
+--- retrieved/scripts/check_publication_consistency.py
++++ proofread/scripts/check_publication_consistency.py
+@@ -1,22 +1,36 @@
+ #!/usr/bin/env python3
+-"""Check PDF copies, metadata, actual page locators and report dependency pins."""
++"""Read-only verification of the current proofreading release.
++
++Checks synchronized PDFs, actual page navigation, approved source/evidence
++pins, proof-preservation records and the packaged PDF replay. Historical
++October 9 reports retain their dates and are not treated as current runs.
++Use --report PATH to write a fresh report outside the frozen package.
++No mathematical experiment or Lean compiler is invoked by this command.
++"""
+ from pathlib import Path
+-from datetime import datetime, timezone
++import argparse
+ import hashlib
++import importlib.util
+ import json
++import sys
+ import fitz
+ 
+ ROOT = Path(__file__).resolve().parent.parent
++CURRENT = 'verification/proofread_2026-10-18/'
++
+ 
+ def read(name):
+     return json.loads((ROOT / name).read_text())
+ 
+-def sha(p):
+-    return hashlib.sha256(p.read_bytes()).hexdigest()
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
+ 
+ def check(condition, message):
+     if not condition:
+         raise AssertionError(message)
++
+ 
+ def walk(value):
+     if isinstance(value, dict):
+@@ -27,127 +41,149 @@
+         for child in value:
+             yield from walk(child)
+ 
+-def main():
++
++def verify():
+     edition = read('EDITION.json')
+     docs = edition['documents']
+-    check(len(docs) == 3, 'Three companion PDFs required')
++    check([d['role'] for d in docs] == ['traditional', 'visual_guide', 'lean_guide'],
++          'Three ordered companion documents required')
+     for d in docs:
+         for folder in ['papers', 'publication/pdfs', 'editable/' + d['role']]:
+-            p = ROOT / folder / Path(d['path']).name
+-            check(sha(p) == d['sha256'], str(p) + ': PDF copy hash')
+-            check(p.stat().st_size == d['bytes'], str(p) + ': PDF byte size')
+-            with fitz.open(p) as pdf:
+-                check(len(pdf) == d['pages'], str(p) + ': page count')
++            path = ROOT / folder / Path(d['path']).name
++            check(sha(path) == d['sha256'], str(path) + ': PDF copy hash')
++            check(path.stat().st_size == d['bytes'], str(path) + ': PDF byte size')
++            with fitz.open(path) as pdf:
++                check(len(pdf) == d['pages'], str(path) + ': page count')
+     check(sum(d['pages'] for d in docs) == edition['total_pages'], 'Total pages')
+-    check(read('COMPANION_MAP.json')['documents'] == docs, 'Companion metadata')
+-    check(read('publication/CURRENT_PUBLICATION_MANIFEST.json')['documents'] == docs, 'Publication metadata')
+-    check(read('SERIES_STATUS.json')['documents'] == docs, 'Series status')
++    for name in ['COMPANION_MAP.json', 'publication/CURRENT_PUBLICATION_MANIFEST.json',
++                 'SERIES_STATUS.json']:
++        check(read(name)['documents'] == docs, name + ': document metadata parity')
+     trad = ROOT / 'editable/traditional'
+     mapping = read('editable/traditional/canonical_label_to_final.json')
+     visual = read('editable/visual_guide/VISUAL_TO_TRADITIONAL_CROSSWALK.json')
+     lean = read('editable/lean_guide/generated/traditional_crosswalk.json')
++    check(read('CURRENT_PUBLICATION_LOCATORS.json')['canonical_labels'] == mapping,
++          'Root canonical locator parity')
+     visual_targets = lean_targets = 0
+     with fitz.open(ROOT / docs[0]['path']) as pdf:
+         for label, row in mapping.items():
+             page = int(row['physical_pdf_page'])
+             check(1 <= page <= len(pdf), label + ': physical page')
+-            check(pdf[page - 1].get_label() == str(row['printed_page']), label + ': printed label')
++            check(pdf[page - 1].get_label() == str(row['printed_page']),
++                  label + ': printed label')
+         check(len(visual['pages']) == 40, 'Forty retained visual body pages')
+         with fitz.open(ROOT / docs[1]['path']) as guide:
+             for page in visual['pages']:
+-                check(guide[int(page['visual_physical_pdf_page']) - 1].get_label() ==
+-                      str(page['visual_printed_page']), 'Visual printed label')
++                position = int(page['visual_physical_pdf_page'])
++                check(1 <= position <= len(guide), 'Visual physical page')
++                check(guide[position - 1].get_label() == str(page['visual_printed_page']),
++                      'Visual printed label')
+                 for row in page['traditional_targets']:
+                     expected = mapping[row['final_label']]
+-                    for k in ['number','printed_page','physical_pdf_page']:
+-                        check(str(row[k]) == str(expected[k]), row['final_label'] + ': visual ' + k)
++                    for key in ['number', 'printed_page', 'physical_pdf_page']:
++                        check(str(row[key]) == str(expected[key]),
++                              row['final_label'] + ': visual ' + key)
+                     visual_targets += 1
+-        for row in walk({k:v for k,v in lean.items() if k != 'provenance'}):
+-            if not {'final_label','printed_page','physical_pdf_page'} <= row.keys():
++        for row in walk({k: v for k, v in lean.items() if k != 'provenance'}):
++            if not {'final_label', 'printed_page', 'physical_pdf_page'} <= row.keys():
+                 continue
+             expected = mapping[row['final_label']]
+-            for k in ['printed_page','physical_pdf_page']:
+-                check(str(row[k]) == str(expected[k]), row['final_label'] + ': Lean ' + k)
++            for key in ['printed_page', 'physical_pdf_page']:
++                check(str(row[key]) == str(expected[key]),
++                      row['final_label'] + ': Lean ' + key)
+             lean_targets += 1
+-    check(visual_targets >= 40, 'Visual target inventory is incomplete')
+-    check(len(lean['core']) == 19 and len(lean['strengthened']) == 79 and len(lean['supplements']) == 6, 'Lean finite/strengthened/supplement inventory')
+-    check(lean_targets == 110, 'Lean reading locators including twelve supplement endpoints')
++    check(visual_targets == 80, 'Eighty visual reading targets')
++    check(len(lean['core']) == 19 and len(lean['strengthened']) == 79
++          and len(lean['supplements']) == 6, 'Lean reading inventory')
++    check(lean_targets == 110, 'Lean locators including twelve supplement endpoints')
+     check(visual['traditional_pdf_sha256'] == docs[0]['sha256'], 'Visual traditional PDF pin')
+     check(visual['visual_pdf_sha256'] == docs[1]['sha256'], 'Visual own PDF pin')
+-    check(visual['traditional_map_sha256'] == sha(trad / 'canonical_label_to_final.json'), 'Visual map pin')
+-    check(visual['traditional_source_sha256'] == sha(trad / 'Paper_VII_Traditional_Final.tex'), 'Visual wrapper pin')
+-    check(lean['provenance']['traditional_pdf_sha256'] == docs[0]['sha256'], 'Lean traditional PDF pin')
++    check(visual['traditional_map_sha256'] == sha(trad / 'canonical_label_to_final.json'),
++          'Visual map pin')
++    check(visual['traditional_source_sha256'] == sha(trad / 'Paper_VII_Traditional_Final.tex'),
++          'Visual wrapper pin')
++    check(lean['provenance']['traditional_pdf_sha256'] == docs[0]['sha256'],
++          'Lean traditional PDF pin')
+     for name, pin in lean['provenance'].items():
+-        if name.endswith(('.tex','.json')):
+-            check(sha(trad / name) == pin, 'Lean provenance pin ' + name)
++        if name.endswith(('.tex', '.json')):
++            check(sha(trad / name) == pin, 'Lean source/map pin ' + name)
+     for name, data in read('COMPANION_MAP.json')['crosswalks'].items():
+         check(read('editable/' + name) == data, 'Root crosswalk parity ' + name)
+-    for name in read('verification/MONOGRAPH_VERIFICATION.json')['reports']:
+-        report = read(name)
+-        check(report['status'].startswith('PASS'), name + ': review incomplete')
+-        for row in report.get('source_pins',[]) if isinstance(report.get('source_pins',[]),list) else []:
+-            check(sha(ROOT / row['path']) == row['sha256'], name + ': stale source pin ' + row['path'])
+-        for dependency, pin in {**report.get('report_dependencies',{}), **report.get('report_dependency_pins',{}), **report.get('input_pins',{})}.items():
+-            check(sha(ROOT / dependency) == pin, name + ': stale dependency ' + dependency)
+-    visual_report = read('verification/monograph_visual_report.json')
+-    check(visual_report['pdf_sha256'] == docs[1]['sha256'], 'Visual owner PDF pin')
+-    check(visual_report['guide_tex_sha256'] == sha(ROOT / 'editable/visual_guide/Paper_VII_Visual_Guide_Final.tex'), 'Visual owner wrapper pin')
+-    check(visual_report['source_crosswalk_sha256'] == sha(ROOT / 'editable/visual_guide/VISUAL_TO_TRADITIONAL_CROSSWALK.json'), 'Visual owner crosswalk pin')
+-    source_crosswalk = read('editable/visual_guide/SOURCE_CROSSWALK.json')
+-    expected_source_crosswalk = [
++    expected_crosswalk = [
+         {'visual_page': row['visual_page'], 'title': row['title'],
+          'source_line': row['source_line_current'],
+          'targets': [dict(target, label=target['final_label'],
+                           traditional_page=target['printed_page'],
+                           physical_page=target['physical_pdf_page'])
+                      for target in row['traditional_targets']]}
+-        for row in visual['pages']
+-    ]
+-    check(source_crosswalk == expected_source_crosswalk, 'Visual legacy-format crosswalk parity')
+-    check(visual_report['pdf_qa_sha256'] == sha(ROOT / 'editable/visual_guide/PDF_QA.json'), 'Visual QA pin')
+-    check(visual_report['atlas_body_sha256'] == sha(trad / 'monograph_atlas.tex'), 'Integrated atlas body pin')
+-    check(visual_report['atlas_definitions_sha256'] == sha(trad / 'atlas_definitions.tex'), 'Integrated atlas definitions pin')
+-    models = read('verification/monograph_checks/TRADITIONAL_EXACT_MODELS_REVIEW.json')
+-    check(sha(ROOT / models['manifest']) == models['manifest_sha256'], 'Model run manifest pin')
+-    check(sha(ROOT / models['result']) == models['result_sha256'], 'Model run result pin')
+-    figures = read('verification/monograph_figure_report.json')
+-    check(len(figures['figures']) == 35, 'All inherited figures')
+-    for row in figures['source_pins']:
+-        check(sha(ROOT / row['path']) == row['sha256'], 'Figure source pin ' + row['path'])
+-    for row in figures['figures']:
+-        check(sha(ROOT / row['path']) == row['output_sha256'], 'Current figure pin ' + row['path'])
+-        check(sha(ROOT / row['original_source']) == row['input_sha256'], 'Inherited figure pin ' + row['original_source'])
+-    comp = read('verification/monograph_checks/COMPUTATIONAL_REVIEW.json')
+-    check(comp['status'].startswith('PASS'), 'Core computation status')
+-    for dependency, pin in comp['report_dependency_pins'].items():
+-        check(sha(ROOT / dependency) == pin, 'Computation report dependency ' + dependency)
+-    for row in comp['records']:
+-        check(sha(ROOT / row['manifest']) == row['manifest_sha256'], 'Current bounded manifest ' + row['name'])
+-    baseline = ROOT / 'provenance/current_retrieved_baseline/traditional/parts'
+-    parts = sorted(baseline.glob('*.tex'))
+-    check(len(parts) == 9, 'Nine exact retrieved mathematical parts')
+-    for p in parts:
+-        check(p.read_bytes() == (trad / 'parts' / p.name).read_bytes(), p.name + ': preserved part changed')
+-    preservation = read('verification/MONOGRAPH_PRESERVATION.json')
+-    check(preservation['status'].startswith('PASS'), 'Preservation status')
+-    check(sha(ROOT / preservation['current_wrapper_path']) == preservation['current_wrapper_sha256'], 'Preservation wrapper pin')
+-    for row in preservation['baseline_parts']:
+-        check(sha(ROOT / row['current_path']) == row['current_sha256'], 'Preservation current part pin')
+-        check(sha(ROOT / row['baseline_path']) == row['baseline_sha256'], 'Preservation baseline part pin')
+-    replay = read('verification/MONOGRAPH_PACKAGED_BUILD.json')
+-    check(replay['status'] == 'PASS', 'Packaged replay status')
++        for row in visual['pages']]
++    check(read('editable/visual_guide/SOURCE_CROSSWALK.json') == expected_crosswalk,
++          'Visual legacy-format crosswalk parity')
++
++    validation = read(CURRENT + 'RELEASE_VALIDATION.json')
++    check(validation['status'] == 'PASS_FOR_STATED_SCOPE', 'Current validation status')
++    check(validation['documents'] == docs, 'Current validation PDF identity')
++    for row in validation['source_pins']:
++        check(sha(ROOT / row['path']) == row['sha256'], 'Approved current source pin ' + row['path'])
++    for row in validation['report_pins']:
++        check(sha(ROOT / row['path']) == row['sha256'], 'Current evidence pin ' + row['path'])
++    for name in validation['required_pass_reports']:
++        check(read(name)['status'].startswith('PASS'), name + ': incomplete current review')
++
++    preservation = read(CURRENT + 'SOURCE_PRESERVATION.json')
++    module_path = ROOT / 'verification/compare_monograph_preservation.py'
++    spec = importlib.util.spec_from_file_location('paper_vii_preservation', module_path)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    current_preservation = module.verify()
++    check(current_preservation == preservation, 'Preservation evidence differs from current source')
++    check(preservation['status'].startswith('PASS'), 'Proof/math preservation')
++    inherited = read(CURRENT + 'INHERITED_ASSET_PRESERVATION.json')
++    for row in inherited['files']:
++        check(sha(ROOT / row['path']) == row['baseline_sha256'],
++              'Retrieved inherited asset changed ' + row['path'])
++    replay = read(CURRENT + 'PACKAGED_BUILD_REPLAY.json')
++    check(replay['status'] == 'PASS' and replay['check_only'], 'Packaged PDF replay status')
+     check(len(replay['documents']) == 3, 'All replay documents')
+-    check(all(d['page_count_match'] and d['extracted_text_match'] for d in replay['documents']), 'PDF page/text replay')
+-    report = {'status':'PASS_FOR_STATED_SCOPE','checked_at_utc':datetime.now(timezone.utc).isoformat(),
+-        'documents':docs,'active_pdf_copies_checked':9,'canonical_labels_and_aliases':len(mapping),
+-        'visual_body_pages':len(visual['pages']),'visual_locators':visual_targets,'lean_locators':lean_targets,
+-        'root_companion_crosswalk_parity':True,'mathematical_parts_byte_identical':9,
+-        'protected_record_environments':147,'numbered_records':142,'proof_environments':107,
+-        'packaged_rebuild_pages_and_text_match':True,
+-        'byte_identity':{d['document']:d['pdf_byte_identical'] for d in replay['documents']},
+-        'scope':'Current PDF synchronization, page navigation, source/report pins and packaged replay. No mathematical or Lean process is invoked.'}
+-    (ROOT / 'verification/PACKAGE_CONSISTENCY.json').write_text(json.dumps(report,indent=2) + '\n')
+-    print(json.dumps(report,indent=2))
++    for shipped, fresh in zip(docs, replay['documents']):
++        check(fresh['shipped_pdf_sha256'] == shipped['sha256'], 'Replay shipped PDF pin')
++        check(fresh['page_count_match'] and fresh['extracted_text_match'],
++              'Packaged PDF replay page/text equality')
++    return {
++        'status': 'PASS_FOR_STATED_SCOPE', 'documents': docs,
++        'active_pdf_copies_checked': 9,
++        'canonical_labels_and_aliases': len(mapping),
++        'visual_body_pages': 40, 'visual_locators': visual_targets,
++        'lean_locators': lean_targets,
++        'root_companion_crosswalk_parity': True,
++        'record_environments': preservation['record_environments'],
++        'numbered_records': preservation['numbered_records'],
++        'complete_proof_bodies_preserved': preservation['proof_bodies'],
++        'mathematical_spans_preserved': preservation['extracted_mathematical_spans'],
++        'complete_part_files_byte_identical': preservation['complete_files_byte_identical'],
++        'inherited_files_byte_identical_to_retrieved_delivery': len(inherited['files']),
++        'packaged_rebuild_pages_and_text_match': True,
++        'byte_identity': {d['document']: d['pdf_byte_identical'] for d in replay['documents']},
++        'fresh_lean_compilation': False,
++        'scope': 'PDF synchronization, actual navigation, reviewed source/evidence pins, source preservation and packaged PDF replay. No new mathematical experiment or Lean process is invoked.'
++    }
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--report', type=Path)
++    args = parser.parse_args()
++    sys.dont_write_bytecode = True
++    try:
++        result = verify()
++    except (AssertionError, KeyError, OSError, ValueError) as error:
++        result = {'status': 'FAIL', 'error': str(error)}
++    if args.report:
++        args.report.parent.mkdir(parents=True, exist_ok=True)
++        args.report.write_text(json.dumps(result, indent=2) + '\n')
++    print(json.dumps(result, indent=2))
++    return result['status'] == 'FAIL'
++
+ 
+ if __name__ == '__main__':
+-    main()
++    sys.exit(main())
+--- retrieved/verification/compare_monograph_preservation.py
++++ proofread/verification/compare_monograph_preservation.py
+@@ -1,42 +1,163 @@
+ #!/usr/bin/env python3
+-"""Exact conservation of all nine retrieved modular mathematical parts.
++"""Check the stated preservation contract for the 18 October proofreading.
+ 
+-This comparator checks source identity and the displayed-body inventory. It is
+-not a new proof-validity audit and does not assert compiler or continuum closure.
++The six approved prose clarifications intentionally change two part files.
++Every complete proof body and every extracted mathematical span must remain
++identical to the retrieved baseline. This is a source-preservation check, not
++a proof-validity audit or a Lean compiler run. The original exact-file
++comparator is retained under provenance/pre_proofread_2026-10-18/verification/.
++The default operation is read-only; --report writes only the requested file.
+ """
+ from pathlib import Path
+-import collections,hashlib,json,re,sys
+-ROOT=Path(__file__).resolve().parent.parent
+-BEFORE=ROOT/'provenance/current_retrieved_baseline/traditional/parts'
+-AFTER=ROOT/'editable/traditional/parts'
+-KINDS=('theorem','proposition','lemma','corollary','definition','example','remark','boundary','certificate','conjecture','standardfact','classical','construction','statement')
+-def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+-def collect(s,kinds):
+-    return [(m.group(1),m.group(2)) for m in re.finditer(r'\\begin\{('+'|'.join(kinds)+r')\}(.*?)\\end\{\1\}',s,re.S)]
+-def mathspans(s):
+-    # Logical mathematical spans are also preserved because the entire part is
+-    # byte-identical. This inventory makes the supplemented displays explicit.
+-    return re.findall(r'\$\$.*?\$\$|\$[^$]*\$|\\\[.*?\\\]|\\\(.*?\\\)|\\begin\{(?:equation\*?|align\*?|gather\*?|multline\*?)\}.*?\\end\{(?:equation\*?|align\*?|gather\*?|multline\*?)\}',s,re.S)
++import argparse
++import collections
++import hashlib
++import json
++import re
++import sys
++
++ROOT = Path(__file__).resolve().parent.parent
++BEFORE = ROOT / 'provenance/current_retrieved_baseline/traditional/parts'
++AFTER = ROOT / 'editable/traditional/parts'
++KINDS = ('theorem', 'proposition', 'lemma', 'corollary', 'definition',
++         'example', 'remark', 'boundary', 'certificate', 'conjecture',
++         'standardfact', 'classical', 'construction', 'statement')
++
++# This closed list is the reviewed whole-file change contract. Merely preserving
++# mathematical delimiters would not detect an unauthorized prose hypothesis edit.
++APPROVED_REPLACEMENTS = {
++    '02_strengthened.tex': [
++        ('Then\n\\[\n\\norm{P_bU\\psi}^2',
++         'Choose any total order on this finite path set. Then\n\\[\n\\norm{P_bU\\psi}^2'),
++        ('for a constant depending on the packet path but not on the partition.',
++         'for a constant depending on the packet path but not on the partition. The absolute-value notation for the partition denotes its mesh, the largest subinterval length.'),
++        (r'Thus \(\varepsilon_{\rm KL}\) controls both state dependence of error overlaps and nonorthogonality of nominal syndrome images.',
++         r'Thus \(\varepsilon_{\rm KL}\) controls the deviation of error overlaps from their scalar code form.'),
++        ('then the spectral dimensions converge at that time.',
++         'then the spectral dimensions defined by the heat-moment ratio converge at that time.'),
++        ('The expansion must respect the limiting gauge identities and must include an estimate for the omitted terms on the declared infrared regime.',
++         'Here the volume coefficient includes the sign and normalization written explicitly in the cosmological term in Part I. The expansion must respect the limiting gauge identities and must include an estimate for the omitted terms on the declared infrared regime.'),
++        ('\\label{strong:fig:kato_transport}\n\\end{figure}\n\n\\subsection{Local frames and curvature}',
++         '\\label{strong:fig:kato_transport}\n\\end{figure}\n\\FloatBarrier\n\n\\subsection{Local frames and curvature}'),
++        (r'\includegraphics[width=.62\textwidth]{06_kato_transport.pdf}',
++         r'\includegraphics[width=.58\textwidth]{06_kato_transport.pdf}')
++    ],
++    '03_supplement_03.tex': [
++        (r'For seeds $C_1,\ldots,C_k$, generation means the concrete statement',
++         r'Continue under the positive-row hypothesis above. For seeds $C_1,\ldots,C_k$, generation means the concrete statement')
++    ]
++}
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def collect(source, kinds):
++    pattern = r'\\begin\{(' + '|'.join(kinds) + r')\}(.*?)\\end\{\1\}'
++    return [(m.group(1), m.group(2)) for m in re.finditer(pattern, source, re.S)]
++
++
++def mathspans(source):
++    return re.findall(
++        r'\$\$.*?\$\$|\$[^$]*\$|\\\[.*?\\\]|\\\(.*?\\\)|'
++        r'\\begin\{(?:equation\*?|align\*?|gather\*?|multline\*?)\}'
++        r'.*?\\end\{(?:equation\*?|align\*?|gather\*?|multline\*?)\}',
++        source, re.S)
++
++
++def verify():
++    failures, rows = [], []
++    counts = collections.Counter()
++    proofs = spans = 0
++    filenames = sorted(p.name for p in BEFORE.glob('*.tex'))
++    if len(filenames) != 9:
++        failures.append('Expected nine retrieved mathematical parts')
++    if filenames != sorted(p.name for p in AFTER.glob('*.tex')):
++        failures.append('Part inventory changed')
++    wrapper_path = ROOT / 'editable/traditional/Paper_VII_Traditional_Final.tex'
++    actual = re.findall(r'\\input\{parts/([^}]+)\}', wrapper_path.read_text())
++    if actual != filenames:
++        failures.append('Source part input order changed')
++    for name in filenames:
++        before, after = BEFORE / name, AFTER / name
++        if not after.is_file():
++            failures.append(name + ': missing current part')
++            continue
++        old, new = before.read_text(), after.read_text()
++        expected = old
++        for original, replacement in APPROVED_REPLACEMENTS.get(name, []):
++            if expected.count(original) != 1:
++                failures.append(name + ': approved replacement baseline is not unique')
++            else:
++                expected = expected.replace(original, replacement, 1)
++        approved_whole_file = expected == new
++        if not approved_whole_file:
++            failures.append(name + ': complete file differs from the closed list of approved edits')
++        records, current = collect(old, KINDS), collect(new, KINDS)
++        old_proofs, new_proofs = collect(old, ('proof',)), collect(new, ('proof',))
++        old_math, new_math = mathspans(old), mathspans(new)
++        same_inventory = [k for k, _ in records] == [k for k, _ in current]
++        if not same_inventory:
++            failures.append(name + ': ordered statement-kind inventory changed')
++        if old_proofs != new_proofs:
++            failures.append(name + ': complete proof body changed')
++        if old_math != new_math:
++            failures.append(name + ': extracted mathematical span changed')
++        counts.update(k for k, _ in records)
++        proofs += len(old_proofs)
++        spans += len(old_math)
++        rows.append({
++            'baseline_path': str(before.relative_to(ROOT)),
++            'current_path': str(after.relative_to(ROOT)),
++            'baseline_sha256': sha(before), 'current_sha256': sha(after),
++            'complete_file_byte_identical': before.read_bytes() == after.read_bytes(),
++            'complete_file_equals_baseline_plus_approved_edits': approved_whole_file,
++            'approved_replacement_count': len(APPROVED_REPLACEMENTS.get(name, [])),
++            'ordered_record_inventory_identical': same_inventory,
++            'record_environments': len(records),
++            'proof_bodies': len(old_proofs),
++            'all_complete_proof_bodies_identical': old_proofs == new_proofs,
++            'extracted_mathematical_spans': len(old_math),
++            'all_extracted_mathematical_spans_identical': old_math == new_math,
++            'statement_bodies_with_prose_changes': sum(a != b for a, b in zip(records, current))
++        })
++    protected = sum(counts.values())
++    numbered = protected - counts['statement']
++    theorem_like = sum(counts[k] for k in ('theorem', 'proposition', 'lemma', 'corollary'))
++    if (protected, numbered, counts['statement'], theorem_like, proofs) != (147, 142, 5, 96, 107):
++        failures.append('Statement/proof inventory differs from the stated contract')
++    changed = [Path(r['current_path']).name for r in rows if not r['complete_file_byte_identical']]
++    if changed != ['02_strengthened.tex', '03_supplement_03.tex']:
++        failures.append('Changed part inventory differs from the approved proofreading scope')
++    return {
++        'schema': 'komorebi.paper_vii.proofread_preservation.v1',
++        'status': 'FAIL' if failures else 'PASS_FOR_STATED_SCOPE',
++        'scope': 'Nine retained parts; exact full-file equality to the retrieved baseline plus the closed list of six prose clarifications and two figure-layout edits; independently checked complete proof bodies, mathematical spans and statement-kind inventory. This check does not prove the mathematics.',
++        'baseline_parts': rows,
++        'current_wrapper_path': str(wrapper_path.relative_to(ROOT)),
++        'current_wrapper_sha256': sha(wrapper_path),
++        'record_environments': protected, 'numbered_records': numbered,
++        'unnumbered_statements': counts['statement'],
++        'theorem_like_records': theorem_like, 'proof_bodies': proofs,
++        'record_kinds': dict(counts), 'extracted_mathematical_spans': spans,
++        'complete_files_byte_identical': sum(r['complete_file_byte_identical'] for r in rows),
++        'changed_parts': changed, 'failures': failures,
++        'interpretation': 'Counts from overlapping manuscript branches do not count independent discoveries or expand formal coverage.'
++    }
++
++
+ def main():
+-    failures=[];rows=[];counts=collections.Counter();proofs=0;spans=0
+-    filenames=sorted(p.name for p in BEFORE.glob('*.tex'))
+-    if len(filenames)!=9:failures.append({'problem':'Expected nine retrieved baseline mathematical parts','count':len(filenames)})
+-    if filenames!=sorted(p.name for p in AFTER.glob('*.tex')):failures.append({'problem':'Part inventory changed'})
+-    wrapper=(ROOT/'editable/traditional/Paper_VII_Traditional_Final.tex').read_text()
+-    actual=re.findall(r'\\input\{parts/([^}]+)\}',wrapper)
+-    if actual!=filenames:failures.append({'problem':'Source part input order changed','actual':actual,'expected':filenames})
+-    for name in filenames:
+-        b=BEFORE/name;a=AFTER/name
+-        if not a.is_file():failures.append({'part':name,'problem':'Part missing'});continue
+-        old=b.read_text();new=a.read_text();record=collect(old,KINDS);current=collect(new,KINDS);pf=collect(old,('proof',));cp=collect(new,('proof',));ms=mathspans(old);cms=mathspans(new)
+-        if b.read_bytes()!=a.read_bytes():failures.append({'part':name,'problem':'Complete source part differs'})
+-        if record!=current:failures.append({'part':name,'problem':'Protected statement body differs'})
+-        if pf!=cp:failures.append({'part':name,'problem':'Protected proof body differs'})
+-        if ms!=cms:failures.append({'part':name,'problem':'Logical math span differs'})
+-        counts.update(k for k,v in record);proofs+=len(pf);spans+=len(ms)
+-        rows.append({'baseline_path':str(b.relative_to(ROOT)),'current_path':str(a.relative_to(ROOT)),'baseline_sha256':sha(b),'current_sha256':sha(a),'byte_identical':b.read_bytes()==a.read_bytes(),'protected_environments':len(record),'numbered_records':sum(k!='statement' for k,v in record),'unnumbered_statements':sum(k=='statement' for k,v in record),'proof_bodies':len(pf),'logical_math_spans':len(ms)})
+-    protected=sum(counts.values());numbered=protected-counts['statement'];theorems=sum(counts[k] for k in ['theorem','proposition','lemma','corollary'])
+-    if (protected,numbered,counts['statement'],theorems,proofs)!=(147,142,5,96,107):failures.append({'problem':'Retrieved inventory differs from contract','actual':[protected,numbered,counts['statement'],theorems,proofs]})
+-    report={'schema':'komorebi.paper_vii.exact_monograph_preservation.v1','status':'FAIL' if failures else 'PASS','scope':'Complete byte identity of nine current retrieved mathematical parts, including all supplemented displays, and exact ordered statement/proof bodies. No new proof-validity audit.','baseline_parts':rows,'current_wrapper_path':'editable/traditional/Paper_VII_Traditional_Final.tex','current_wrapper_sha256':sha(ROOT/'editable/traditional/Paper_VII_Traditional_Final.tex'),'protected_environments':protected,'numbered_records':numbered,'unnumbered_statements':counts['statement'],'theorem_like_records':theorems,'proof_bodies':proofs,'record_kinds':dict(counts),'logical_math_spans':spans,'byte_identical_parts':sum(x['byte_identical'] for x in rows),'failures':failures}
+-    (ROOT/'verification/MONOGRAPH_PRESERVATION.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='baseline_parts'},indent=2));return bool(failures)
+-if __name__=='__main__':sys.exit(main())
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--report', type=Path)
++    args = parser.parse_args()
++    report = verify()
++    if args.report:
++        args.report.parent.mkdir(parents=True, exist_ok=True)
++        args.report.write_text(json.dumps(report, indent=2) + '\n')
++    print(json.dumps({k: v for k, v in report.items() if k != 'baseline_parts'}, indent=2))
++    return bool(report['failures'])
++
++
++if __name__ == '__main__':
++    sys.exit(main())

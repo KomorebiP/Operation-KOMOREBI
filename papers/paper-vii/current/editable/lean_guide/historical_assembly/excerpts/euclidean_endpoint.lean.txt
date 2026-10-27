@@ -1,0 +1,8 @@
+theorem finite_euclidean_transfer [Nonempty n] (H : Matrix n n ℂ)
+    (hH : H.IsHermitian) (t s : ℝ) (ht : 0 ≤ t) :
+    (transfer H (groundEnergy hH) t).PosDef ∧
+    transfer H (groundEnergy hH) (t+s) =
+      transfer H (groundEnergy hH) t * transfer H (groundEnergy hH) s ∧
+    spectrum ℝ (transfer H (groundEnergy hH) t) ⊆ Set.Ioc 0 1 := by
+  exact ⟨transfer_posDef H hH _ _, transfer_add H _ _ _,
+    transfer_spectrum_interval H hH _ _ ht (ground_energy_le hH)⟩

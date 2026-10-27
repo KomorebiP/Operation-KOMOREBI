@@ -1,0 +1,322 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=0.87in,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,array,tabularx}
+\usepackage{microtype,fancyhdr,xcolor,hyperref}
+\definecolor{ink}{HTML}{233C51}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=ink,pdftitle={Paper VII: Second Lean Block},pdfauthor={Komorebi P.}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Projector Resolved Seed Calculus}
+\fancyhead[R]{\small Paper VII \quad v0.2.0}
+\fancyfoot[L]{\small Komorebi P.}\fancyfoot[R]{\thepage}
+\setlength{\parindent}{0pt}\setlength{\parskip}{0.52em}
+\newcommand{\C}{\mathbb C}\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{\operatorname{tr}}\newcommand{\id}{\operatorname{id}}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\comm}[2]{[#1,#2]}
+\newcommand{\lean}[1]{{\small\texttt{\detokenize{#1}}}}
+\newtheorem*{statement}{Checked statement}
+\begin{document}
+{\Large\bfseries Paper VII}\par
+{\LARGE\bfseries Second Lean Block}\par
+{\large Computational seeds, tensor refinement, moving frames,\par projector connections, and finite Kraus channels}
+
+\textbf{Komorebi P.}\hfill September 6, 2026
+
+\section*{Release status}
+This supplement records five additional finite results checked in Lean. It accompanies the unchanged original manuscript and the first-block supplement. The active release now contains \textbf{82 theorem declarations across nine modules}. Of these, \textbf{50 declarations across five modules are new}. Supporting lemmas and specializations are included in these counts.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l X r@{}}\toprule
+Item & New checked result & Declarations\\\midrule
+2.4 & One seed for the computational basis & 14\\
+3.2 & Tensor/polyphase refinement & 11\\
+6.1 & Moving-frame Hamiltonian & 9\\
+6.3 & Canonical packet connection & 9\\
+7.2 & Finite Kraus channel & 7\\\midrule
+& Total added in this block & 50\\\bottomrule
+\end{tabularx}
+\end{center}
+
+The named-item ledger advances from \textbf{6 of 19} to \textbf{11 of 19}. Eight finite items remain unchecked. The five continuum conjectures remain unproved. These inventory counts are not estimates of mathematical difficulty or percentages of the whole manuscript established.
+
+\section*{Evidence and trust boundary}
+All nine active files compiled with exit code zero under Lean 4.34.0-rc2, using the pinned Mathlib revision recorded in the verification report. Every theorem has an explicit axiom audit. All 82 audits are confined to \lean{propext}, \lean{Classical.choice}, and \lean{Quot.sound}. The final checks were warning-free with warnings treated as errors. Deliberately false and placeholder proofs were rejected in separate controls.
+
+The four first-block source modules are unchanged and were freshly recompiled. Imported Mathlib proof artifacts were reused rather than independently rechecked. The original numerical suite and Papers I--VI were not rerun. The original paper is preserved, not relabeled as a fully verified manuscript.
+
+\textbf{Evidence location.} The archive contains exact commands, hashes, per-file logs and axiom lists in \lean{verification/second_block_release_run/}. The machine-readable cumulative ledger states the scope of each named result.
+
+\newpage
+\section{One seed for the computational basis}
+\textbf{Manuscript item 2.4.}\quad \lean{ComputationalSeed.lean}\hfill 14 declarations
+
+For $n\geq 0$, let
+\[
+ A_n=(\mathbb Z/2\mathbb Z)^{\{0,\ldots,n-1\}},\qquad
+ V_n=\{v:A_n\to\C\}.
+\]
+For an address $a\in A_n$, define the standard coordinate vector
+\[
+ \ket a(x)=\begin{cases}1&x=a,\\0&x\ne a.\end{cases}
+\]
+The seed is $\psi_0=\ket0$. Define a translation operator by
+\[
+ (T_a v)(x)=v(x-a).
+\]
+At position $j$, the local Pauli $X$ is $X_j=T_{e_j}$, where $e_j$ has a single nonzero binary coordinate. The formal circuit uses the identity when $a_j=0$ and $X_j$ when $a_j=1$.
+
+\begin{statement}
+For every binary address $a$,
+\[
+ W_a=\prod_{j=0}^{n-1}X_j^{a_j}=T_a,
+ \qquad W_a\psi_0=\ket a.
+\]
+The family $(W_a\psi_0)_{a\in A_n}$ is linearly independent, spans $V_n$, and has exactly $2^n$ elements. It is the standard computational basis.
+\end{statement}
+
+\begin{proof}
+Composition gives $T_aT_b=T_{a+b}$, and direct evaluation gives $T_a\ket b=\ket{a+b}$. Every binary address satisfies $a+a=0$, so each translation is an involution. In particular, the local operator changes precisely the addressed bit:
+\[
+ X_j\ket a=\ket{a\text{ with coordinate }j\text{ replaced by }a_j+1}.
+\]
+The selected factor at $j$ equals translation by the address supported at $j$ with value $a_j$. Induction on a list proves that the product of translations is translation by their sum. The sum of these single-coordinate addresses is $a$. Thus $W_a=T_a$ and $W_a\psi_0=\ket a$.
+
+Lean identifies the resulting family with \lean{Pi.basisFun} over $\C$. Its standard basis theorems supply linear independence and full span. The finite function-space cardinality gives $|A_n|=2^n$.
+\end{proof}
+
+\textbf{Formal scope.} This is an actual gate-word construction, not an assumption that the addressed states already form a basis. The empty circuit for $n=0$ is included. Orthogonality belongs to the standard computational-basis interpretation; the formal endpoint is identification with that standard coordinate basis, together with independent explicit span and linear-independence theorems.
+
+\textbf{Main certificates.}\par
+\lean{circuit_seed_basis}, \lean{addressed_seed_linearIndependent},\par
+\lean{addressed_seed_spans}, \lean{number_of_addresses}.
+
+\newpage
+\section{Tensor and polyphase refinement}
+\textbf{Manuscript item 3.2.}\quad \lean{TensorRefinement.lean}\hfill 11 declarations
+
+Let $F$ be an arbitrary finite set of factors and let $D_i$ be a finite coordinate index for factor $i$. For matrix families $A_i$, define the coordinate tensor product on the product index space by
+\[
+ \mathsf T(A)(x,y)=\prod_{i\in F} A_i(x_i,y_i).
+\]
+The proof first establishes its multiplication, identity, adjoint and finite-sum laws. Thus the construction is not restricted to two factors or to qubits.
+
+Suppose $N>0$ and each factor has a complete orthogonal self-adjoint projector family $(P^{(i)}_j)_{j\in\mathbb Z/N\mathbb Z}$. For a fine address $a:F\to\mathbb Z/N\mathbb Z$, set
+\[
+ Q_a=\mathsf T\bigl(i\mapsto P^{(i)}_{a_i}\bigr),
+ \qquad
+ C_r=\sum_{\sum_i a_i=r}Q_a.
+\]
+
+\begin{statement}
+The fine and coarse families are complete orthogonal self-adjoint projector systems. In particular,
+\[
+ C_rC_s=\delta_{rs}C_r,\qquad
+ \sum_r C_r=I,\qquad C_r^*=C_r.
+\]
+Each coarse projector is exactly the displayed sum of its fine descendants.
+\end{statement}
+
+\begin{proof}
+The finite product-of-sums identity gives
+\[
+ \mathsf T(A)\mathsf T(B)=\mathsf T(i\mapsto A_iB_i).
+\]
+Consequently, if two fine addresses differ in any coordinate, the corresponding product contains a zero factor. If the addresses agree, the product is the same fine projector. The adjoint passes through the finite coordinate product, so $Q_a^*=Q_a$. Summing over all address functions and using the same product-of-sums identity yields
+\[
+ \sum_a Q_a=\mathsf T\left(i\mapsto\sum_jP^{(i)}_j\right)=I.
+\]
+A separate algebraic regrouping theorem applies to any finite orthogonal family and any address map into a finite set. In the double sum for $C_rC_s$, orthogonality removes all terms with different fine addresses. A surviving address can lie in both classes only when $r=s$. Completeness follows by summing each fine projector exactly once. Adjoint preservation follows term by term. Specializing the address map to total residue proves the claim.
+\end{proof}
+
+\textbf{Formal scope.} Residue grouping is proved for every positive modulus and arbitrary finite factor dimensions. It assumes the supplied local projector laws. The separate cyclic-character construction of those local projectors, item 3.1, is not thereby checked.
+
+\textbf{Main certificate.}\par
+\lean{KomorebiPaperVII.TensorRefinement.tensor_polyphase_refinement}.
+
+\newpage
+\section{Differentiated moving coordinates}
+\textbf{Manuscript item 6.1.}\quad \lean{MovingFrames.lean}\hfill 9 declarations
+
+Fix a real time $t$ and a finite complex coordinate space. Let $U(s)$ be a unitary matrix curve, differentiable entrywise at $t$, and let $\psi(s)$ be differentiable componentwise at $t$. Write $\dot U$ and $\dot\psi$ for those derivatives. Suppose
+\[
+ i\dot\psi=H\psi(t).
+\]
+Only the value of the Hamiltonian at the chosen time is needed; no derivative of $H$ is assumed.
+
+\begin{statement}
+The explicitly defined coordinate curve
+\[
+ y(s)=U(s)^*\psi(s)
+\]
+is differentiable at $t$, with
+\[
+ \dot y=\dot U^*\psi(t)+U(t)^*\dot\psi.
+\]
+It satisfies
+\[
+ \boxed{\quad i\dot y=H_{\mathrm{eff}}y(t),\qquad
+ H_{\mathrm{eff}}=U(t)^*HU(t)-iU(t)^*\dot U.\quad}
+\]
+The connection term $-iU(t)^*\dot U$ is Hermitian. If $H^*=H$, then $H_{\mathrm{eff}}^*=H_{\mathrm{eff}}$.
+\end{statement}
+
+\begin{proof}
+Finite entrywise product rules prove the matrix and matrix-vector differentiation formulas. Since the parameter is real, conjugation commutes with differentiation, giving the stated derivative of $U^*$ and hence of $y$.
+
+Differentiate $U^*U=I$ using those rules and uniqueness of derivatives:
+\[
+ \dot U^*U+U^*\dot U=0.
+\]
+Thus $(U^*\dot U)^*=-U^*\dot U$, so multiplication by $-i$ produces a Hermitian matrix.
+
+The identity $UU^*=I$ gives $\psi=Uy$ for the constructed coordinate curve. Differentiating and inserting the original equation yields
+\[
+ i\dot U y+iU\dot y=HUy.
+\]
+Multiplying by $U^*$ and using $U^*U=I$ gives the transformed equation, with the negative sign on the connection term. Finally, conjugation by $U$ preserves Hermiticity of $H$, and the sum of the two Hermitian terms is Hermitian.
+\end{proof}
+
+\textbf{Formal scope.} The main certificate constructs $y$ and its derivative rather than assuming a separate derivative witness for the desired answer. Both unitary identities are explicit. The proofs are pointwise and apply at any time where the stated hypotheses hold. They do not assert existence of a global solution to an evolution equation.
+
+\textbf{Main certificates.}\par
+\lean{moving_frame_coordinates}, \lean{connection_hermitian},\par
+\lean{effective_hamiltonian_hermitian}.
+
+\newpage
+\section{The canonical packet connection}
+\textbf{Manuscript item 6.3.}\quad \lean{CanonicalConnection.lean}\hfill 9 declarations
+
+Let $P_a(s)$ be a finite family in a normed real algebra with a continuous compatible adjoint. Assume actual derivatives $D_a=\dot P_a(t)$ exist and, for all parameter values under consideration,
+\[
+ P_aP_b=\delta_{ab}P_a,\qquad \sum_aP_a=I,\qquad P_a^*=P_a.
+\]
+In the supplied Lean theorem, the curves are defined on $\R$ and the projector laws hold at every real parameter. Matrix and bounded-operator settings satisfying the typeclass hypotheses fit this algebraic formulation.
+
+\begin{statement}
+Define $C=\sum_aD_aP_a(t)$. Then
+\[
+ \boxed{\quad C=\frac12\sum_a\comm{D_a}{P_a(t)},\qquad C^*=-C,\quad}
+\]
+and, for every $b$,
+\[
+ \boxed{\comm{C}{P_b(t)}=D_b.}
+\]
+\end{statement}
+
+\begin{proof}
+The derivative product rule and uniqueness of derivatives give
+\[
+ D_aP_b+P_aD_b=\delta_{ab}D_a.
+\]
+Differentiating completeness and adjoint invariance gives
+\[
+ \sum_aD_a=0,\qquad D_a^*=D_a.
+\]
+These are proved derivative consequences, not additional axioms supplied in place of differentiation.
+
+On the diagonal, $D_aP_a+P_aD_a=D_a$. Summing shows
+\[
+ \sum_aP_aD_a=-\sum_aD_aP_a=-C.
+\]
+This proves both the half-commutator formula and $C^*=-C$.
+
+Orthogonality directly yields $CP_b=D_bP_b$. For the left product, multiply the differentiated identity for $(b,a)$ on the right by $P_a$ and sum over $a$. Completeness reduces the result to
+\[
+ D_b+P_bC=D_bP_b.
+\]
+Subtracting from the right-product identity gives $CP_b-P_bC=D_b$.
+\end{proof}
+
+\textbf{Formal scope.} The derivative layer is separate from the purely algebraic consequences, making the dependency on genuine derivative hypotheses visible. This proves the one-parameter canonical connection identity. It does not supply the parameter-manifold range bundle, exterior differential calculus, or curvature theorem of item 6.4.
+
+\textbf{Main certificate.}\par
+\lean{KomorebiPaperVII.Connection.canonical_connection_of_hasDerivAt}.
+
+\newpage
+\section{Finite Kraus channels and full amplification}
+\textbf{Manuscript item 7.2.}\quad \lean{KrausChannels.lean}\hfill 7 declarations
+
+For a finite family of complex matrices $K_a$, define
+\[
+ \Phi(\rho)=\sum_a K_a\rho K_a^*.
+\]
+The formalization constructs this as a complex-linear map and proves the following properties directly in the finite matrix representation.
+
+\begin{statement}
+The map $\Phi$ is completely positive. If
+\[
+ \sum_aK_a^*K_a=I,
+\]
+then $\tr\Phi(\rho)=\tr\rho$ for every matrix $\rho$. In particular, positive semidefinite matrices of trace one are mapped to positive semidefinite matrices of trace one.
+\end{statement}
+
+\begin{proof}
+Matrix multiplication distributes across addition and scalar multiplication, which gives complex linearity. If $\rho\succeq0$, each term $K_a\rho K_a^*$ is positive semidefinite, hence so is their finite sum.
+
+To prove complete positivity rather than positivity alone, let $J$ be an arbitrary finite auxiliary index set. For a matrix $X$ indexed by $J\times n$, define its blockwise amplification by
+\[
+ [\Phi^{(J)}(X)]_{(i,u),(j,v)}
+ =\Phi\bigl(X_{(i,\cdot),(j,\cdot)}\bigr)_{u,v}.
+\]
+The explicit index calculation proves the identity
+\[
+ \boxed{\quad
+ \Phi^{(J)}(X)=\sum_a (I_J\otimes K_a)X(I_J\otimes K_a)^*.
+ \quad}
+\]
+Thus this is the actual identity-tensor amplification, not an unrelated map assumed to be positive. Every summand on the right is positive when $X$ is positive, and this holds for every finite $J$.
+
+Finally, cyclicity and linearity of the trace give
+\begin{align*}
+ \tr\Phi(\rho)
+ &=\sum_a\tr(K_a\rho K_a^*)\\
+ &=\tr\left(\left(\sum_aK_a^*K_a\right)\rho\right)
+ =\tr\rho.
+\end{align*}
+Positivity together with trace preservation yields the density-matrix conclusion.
+\end{proof}
+
+\textbf{Formal scope.} Complete positivity is quantified over all finite auxiliary dimensions, not sampled dimensions. Normalization is required only for trace preservation and the density-matrix conclusion. The converse representation theorem for arbitrary completely positive maps is not asserted here.
+
+\textbf{Main certificates.}\par
+\lean{amplification_eq_kraus}, \lean{channel_completely_positive},\par
+\lean{channel_trace_preserving}, \lean{channel_density_matrix}.
+
+\newpage
+\section{Remaining work and reproducibility}
+The cumulative finite-item coverage is 11 of 19. The following eight items remain unchecked in this release.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}l X@{}}\toprule
+Item & Remaining formalization\\\midrule
+2.1 & Orbit dimension of a quantum seed.\\
+2.2 & Minimum seed count and quantum seed-rank formula.\\
+2.3 & Local orbit and the Schmidt-rank identification.\\
+3.1 & General finite-order cyclic character projectors.\\
+5.2 & Quantitative commutator leakage estimate.\\
+6.4 & Projected connection on a parameter manifold and its curvature.\\
+8.1 & Knill--Laflamme necessity and constructive recovery.\\
+10.1 & Finite Euclidean transfer: positivity, spectrum and semigroup.\\\bottomrule
+\end{tabularx}
+\end{center}
+
+The five continuum conjectures are separate from this inventory and remain unproved. The first-block Feshbach theorem still requires both the eliminated block and the full resolvent matrix to be invertible. The first-block constraint audit still distinguishes vanishing after physical compression from full operator closure.
+
+\subsection*{Run the same checks}
+From the extracted release, use the previously delivered portable Linux kit:
+\begin{quote}\small\ttfamily
+python scripts/verify.py --kit /path/to/kit\par
+\hspace*{1em}--out verification/local\par
+\hspace*{1em}--max-checks 3 --resume
+\end{quote}
+The displayed line breaks are typographic; enter this as one command. Repeat after a deliberate pause until the verifier reports complete PASS. Exit code 2 means checkpointed but incomplete, exit code 1 means failure, and exit code 0 requires all nine modules and both controls to pass. Omit the maximum-check limit to run the full sequence in one invocation on a host without short command limits.
+
+The compiler uses one Lean thread, module-mode imports and warnings treated as errors. The verifier records source hashes, complete theorem-name inventories, per-theorem axiom lists, exact commands, exit statuses and log hashes. Resume verifies cached source and log hashes together with runtime and runner consistency. A new output directory gives a fresh run.
+
+\subsection*{Development failures and recovery}
+Initial development encountered import, elaboration and simplification failures, which were repaired without admitted proofs. Combined verification commands exceeded a host command limit. A subsequent execution-session restart lost the working files and raw second-block development logs. The sources were reconstructed, the runtime restored, and all final theorem checks and controls rerun. The surviving evidence is the recovered final run, not the lost development logs. Atomic checkpoints were added to prevent an incomplete run from losing all recorded progress.
+
+\end{document}

@@ -1,0 +1,271 @@
+\vpage{29}{Nonabelian packets carry multiplicity}{A SIX-DIMENSIONAL REGULAR REPRESENTATION}{Traditional p. 36 / Theorem II.3.1, Theorem II.3.2.}
+Let $\HH=\CC[S_3]$ have the six orthonormal basis vectors $\ket g$, with left action $U(h)\ket g=\ket{hg}$. The irreducible characters on the identity, transposition, and three-cycle classes are
+\[
+\begin{array}{c|rrr|r}
+ & e & (12)&(123)&d_\lambda\\\hline
+\text{trivial}&1&1&1&1\\
+\text{sign}&1&-1&1&1\\
+\text{standard}&2&0&-1&2
+\end{array}
+\qquad
+P_\lambda=\frac{d_\lambda}{6}\sum_{g\in S_3}\chi_\lambda(g^{-1})U(g).
+\]
+All matrices in this example are rational. Multiplying them gives self-adjoint idempotents of ranks $1,1,4$, with pairwise zero products and sum $I_6$.
+\xfig{s3}
+\head{The standard packet is four-dimensional}
+The standard representation occurs twice in the regular representation. Its isotypic component therefore has dimension $2\cdot2=4$: one factor carries the two-dimensional irreducible action and the other records multiplicity. A character projector selects the whole isotypic component. It does not select a particular copy or a particular internal vector.
+
+Representation matrix units refine the irreducible factor, while leaving the multiplicity factor untouched. Their multiplication law is stronger information than a list of packet ranks. A basis chosen inside the rank-four packet is a coordinate choice; it must not be mistaken for a canonical decomposition into two individual copies.
+\head{What is executed}
+The fresh exact check constructs all six permutation matrices, tests all $36$ multiplication relations, computes the character averages, and checks ranks independently by Gaussian elimination and traces. It rejects the claim that the standard isotypic projector has rank two. This is one specified representation of $S_3$, not a computational classification of all finite group representations.
+\takeaway{For a nonabelian symmetry, distinguish irreducible dimension from multiplicity. A central character projector retains both.}
+
+\vpage{30}{Rotate whole packets by a polar factor}{AN EXACT LOCAL CHART AND ITS FAILURE}{Traditional pp. 44, 45 / Theorem II.6.5, Theorem II.6.6.}
+On $\HH=\CC^2$, put $P_0=\diag(1,0)$, $P_1=I-P_0$, and
+\[
+R=\mat{3/5&-4/5\\4/5&3/5},\qquad Q_a=RP_aR^*,
+\qquad S=\sum_{a=0}^1Q_aP_a=\frac35R.
+\]
+The exact Gram matrices give
+\[
+(S-I)^*(S-I)=\frac{16}{25}I,\quad S^*S=\frac9{25}I,
+\quad\norm{S-I}=\frac45<1.
+\]
+Consequently the unitary polar factor is $S(S^*S)^{-1/2}=R$, and $Q_aR=RP_a$ for both complete packets.
+\xfig{polar}
+\head{The norm condition selects a chart}
+If the target rank-one packet is orthogonal to the initial one, the two labels are exchanged and $S=0$. Its polar inverse square root is undefined. This is a failure of this direct local construction, although a unitary carrying one packet system to the other still exists. The strict norm assumption is sufficient, not a global existence criterion for all packet rotations.
+
+Short steps can be composed before reaching a distant endpoint. For example, the rational step $R_1=\mat{4/5&-3/5\\3/5&4/5}$ obeys
+\[
+R_1^2=\mat{7/25&-24/25\\24/25&7/25}.
+\]
+The multiplication is exact and each step has a valid local overlap. The convergence theorem has a separate analytic contract: a twice continuously differentiable complete projector path on a compact time interval, sufficiently fine partitions, and a path-dependent constant in an $O(|\pi|)$ operator-norm estimate.
+\head{Evidence boundary}
+The fresh run checks the Gram identities, polar factor, intertwining, and rational two-step product. It also checks that the orthogonal-endpoint overlap has rank zero. It does not certify the analytic convergence theorem by sampling a path.
+\takeaway{A local polar chart can fail while the subspaces remain regular. Use the stated chart hypothesis and the separate convergence theorem when composing small rotations.}
+
+\vpage{31}{Coherence order survives a covariant channel}{CHANNEL, CHOI, AND GENERATOR CHECKS}{Traditional pp. 50, 52 / Theorem II.7.8, Theorem II.7.10, Theorem II.7.14.}
+Take $S=Z=\diag(1,-1)$ on $\CC^2$. Under conjugation $X\mapsto ZXZ$, diagonal matrices have coherence order zero and off-diagonal matrices have coherence order one modulo two. Its projectors on Hilbert--Schmidt operator space are $\Lcal_0(X)=(X+ZXZ)/2$ and $\Lcal_1(X)=(X-ZXZ)/2$.
+
+Choose amplitude damping with $K_0=\diag(1,4/5)$ and $K_1=(3/5)\ket0\bra1$. The channel is trace preserving, population flows from state one to state zero, and each coherence contracts by $4/5$.
+\xfig{choi}
+With the unnormalized Choi convention $J=\sum_{a,b}\Phi(\ket a\bra b)\otimes\ket a\bra b$ and basis $(00,01,10,11)$, the exact matrix is
+\[
+J=\mat{1&0&0&4/5\\0&9/25&0&0\\0&0&0&0\\4/5&0&0&16/25},
+\qquad [J,Z\otimes Z]=0.
+\]
+The $00,11$ block is rank one and positive; the other nonzero eigenvalue is $9/25$. The fresh check also verifies every principal minor is nonnegative.
+\head{Continuous-time symmetry has its own hypotheses}
+For the Lindblad generator with Hamiltonian $H=\diag(0,2)$ and jump $L=(3/5)\ket0\bra1$, $H$ has charge zero and $L$ has charge one. Each matrix unit stays within its coherence order under the generator. Replacing $H$ by $X$ breaks that conclusion: the generator then sends a diagonal matrix to off-diagonal entries.
+
+All four input matrix units are checked exactly for channel covariance, generator order preservation, and zero generator trace. The finite exponential-series argument in the paper extends generator invariance to its semigroup. No master-equation solver is executed here, and symmetry alone supplies no scalar population closure inside higher-rank packets.
+\takeaway{Charge is a property of operator space. Covariance preserves its coherent sectors, while complete positivity is checked separately through Kraus or Choi data.}
+
+\vpage{32}{Null Gram directions are removed before recovery}{A TOTAL CHANNEL FROM SINGULAR ERROR DATA}{Traditional pp. 53, 54 / Theorem II.8.3, Theorem II.8.4.}
+Let $\HH=\CC^3$, with nonzero code projector $P=\diag(1,1,0)$. On the code use the error family $E_1=(3/5)P$, $E_2=(4/5)P$, and $E_3=0$. Its Knill--Laflamme Gram matrix is
+\[
+c=\frac1{25}\mat{9&12&0\\12&16&0\\0&0&0},
+\qquad PE_a^*E_bP=c_{ab}P.
+\]
+The errors are redundant rather than three distinct syndromes. A real unitary change of error coordinates gives
+\[
+W=\mat{3/5&4/5&0\\-4/5&3/5&0\\0&0&1},
+\quad WcW^*=\diag(1,0,0),
+\quad(F_1,F_2,F_3)=(P,0,0).
+\]
+\xfig{gram}
+\head{Normalize only positive eigenvalues}
+The positive branch has $V_1=P$ as an isometry \emph{on the code}, and syndrome support $Q=P$. No factor $\lambda^{-1/2}$ is formed on either zero branch: those branches vanish on the code. Treating them as extra recoverable packets would divide by zero.
+
+The syndrome support is smaller than the ambient space. Define a total recovery with Kraus operators
+\[
+R_1=P,\qquad R_2=\ket0\bra2,
+\qquad R_1^*R_1+R_2^*R_2=I_3.
+\]
+It acts as the identity on code-supported operators and sends the unused complement population into a chosen code state. The declared error map preserves the trace of code states, so recovery returns every code matrix unit, including both off-diagonal units, exactly. It need not preserve states on the unused complement.
+\head{Exceptional cases and scope}
+This construction assumes a nonzero code so that a complement replacement state exists. The zero-code case is vacuous and belongs to the separate formal boundary in the saved ledger. The exact run verifies all nine Gram compressions, the diagonalization, both null branches, total channel normalization, and all four code matrix units. It adds no Lean coverage and does not implement a numerical spectral decoder for arbitrary Gram data.
+\takeaway{Positive Gram support defines genuine syndrome isometries. Null branches vanish; a separate complement rule makes the recovery a total channel.}
+
+\vpage{33}{An approximate defect has a precise norm meaning}{A TWO-POINT OPTIMAL SCALAR PROBLEM}{Traditional p. 55 / Definition II.8.6, Proposition II.8.7.}
+On a two-dimensional code, consider the overlap compression
+\[
+A=PE_a^*E_bP=\diag(11/10,9/10).
+\]
+For instance, within the code take $E_a=I$ and $E_b=A$. This declares an error family, not by itself a normalized noise channel. The optimal scalar compression has
+\[
+\inf_{c\in\CC}\norm{A-cI}=\frac1{10},\qquad c=1\ \text{attains it}.
+\]
+Indeed, for every complex $c$, the triangle inequality gives
+\[
+\frac15=\left|\frac{11}{10}-\frac9{10}\right|
+\leq\left|\frac{11}{10}-c\right|+\left|\frac9{10}-c\right|.
+\]
+Thus the larger of the two distances is at least $1/10$, while both distances equal $1/10$ at $c=1$.
+\xfig{defect}
+\head{What one pair contributes to the family defect}
+For unit code vectors $\psi,\phi$, this pair therefore satisfies
+\[
+\left|\langle E_a\psi,E_b\phi\rangle-\langle\psi,\phi\rangle\right|
+\leq\frac1{10}.
+\]
+The bound is attained on either coordinate vector. For the \emph{whole} declared family $\{I,A\}$, the $A^*A$ compression also enters the maximum: its diagonal entries are $121/100,81/100$, giving pair defect $1/5$. Hence the full family value is $\varepsilon_{\rm KL}=1/5$, not $1/10$.
+
+This distinction prevents a tempting shortcut from one favorable overlap to an approximate correction claim. The quantity measures how close all overlap operators are to scalar action on the code. A recovery fidelity bound requires a declared normalized channel, a metric, and a separate continuity result.
+\head{What is checked exactly}
+For $\varepsilon\in\{0,1/10,1/4,1\}$ the script checks $(A-I)^*(A-I)=\varepsilon^2I$ for $A=\diag(1+\varepsilon,1-\varepsilon)$ and several rational scalar controls. The displayed triangle argument supplies the all-complex-scalar lower bound; a finite list of candidates cannot do that. The family maximum above is also recorded separately.
+\takeaway{An overlap norm has a useful operational interpretation. Evaluate every error pair, then keep that statement separate from an unproved recovery fidelity estimate.}
+
+\vpage{34}{Control the hidden spectral response}{SIGN, STABILITY, AND A CONVERGENT EXPANSION}{Traditional pp. 57, 61 / Theorem II.9.4, Proposition II.9.5, Theorem II.9.12.}
+Retain one coordinate in $H=\mat{0&1\\1&2}$, so $A=0$, $B=1$, and $D=2$. In its elimination domain, $\Sigma(z)=1/(z-2)$. At $z=3+\ii$,
+\[
+\Sigma(3+\ii)=\frac{1-\ii}{2},\qquad
+\Im\Sigma(z)=-(\Im z)\left|(z-2)^{-1}\right|^2\leq0.
+\]
+The upper half-plane sign comes from self-adjoint hidden data. It is not an entrywise sign condition on an arbitrary effective matrix.
+\xfig{stability}
+\head{A stability estimate with a common spectral gap}
+Compare $(B,D)=(1,2)$ with $(\widetilde B,\widetilde D)=(9/8,17/8)$ at $z=3$. Both hidden spectral distances are at least $\delta=3/4$, and both couplings are bounded by $g=9/8$. Then
+\[
+|\Sigma-\widetilde\Sigma|=\left|1-\frac{81}{56}\right|=\frac{25}{56},
+\qquad
+\frac{2g}{\delta}|B-\widetilde B|
++\frac{g^2}{\delta^2}|D-\widetilde D|=\frac{21}{32}.
+\]
+The theorem bounds the actual difference by this common-gap expression. The hypotheses are uniform spectral separation and coupling control; they must be proved for a refinement family before using the bound uniformly.
+\head{A low-energy series and its actual remainder}
+At $z=1/2$, $|z|\,|D^{-1}|=1/4<1$, so
+\[
+\Sigma(z)=-\sum_{n=0}^{\infty}\frac{z^n}{2^{n+1}}.
+\]
+After the first four terms, the exact remainder has magnitude $1/384$. The geometric-series argument controls the infinite tail. The fresh check verifies that value, the complex sign identity, and the projected-resolvent and bare-truncation identities at four declared real spectral parameters.
+
+At $z=2$ the hidden inverse fails; at a full eigenvalue the retained Feshbach inverse fails. Neither point belongs to the resolvent identity's domain. Analytic continuation of a scalar expression does not erase its theorem hypotheses.
+\takeaway{A uniform effective response requires a uniform gap and coupling bound. Exact small examples show how those hypotheses enter each estimate.}
+
+\vpage{35}{Memory positivity is a Gram identity}{TWO HIDDEN FREQUENCIES AND A LOCAL-CLOSURE TEST}{Traditional pp. 59, 60 / Theorem II.9.9, Theorem II.9.11.}
+Use retained space $\CC$ and hidden space $\CC^2$, with $A=0$, $B=(3/5,4/5)$, and $D=\diag(1,2)$. The full Hamiltonian is $\mat{0&3/5&4/5\\3/5&1&0\\4/5&0&2}$. Its memory kernel is
+\[
+K(t)=\frac9{25}e^{-\ii t}+\frac{16}{25}e^{-2\ii t},
+\qquad K(0)=1.
+\]
+Each oscillatory coefficient is positive although $K(t)$ need not be real or pointwise nonnegative. At $t=\pi/2$, it equals $-16/25-9\ii/25$.
+\xfig{memory_positive}
+\head{Positive definite means a matrix test at arbitrary times}
+For retained scalars $v_j$ and real times $t_j$, the structural identity is
+\[
+\sum_{j,k}\overline v_jK(t_j-t_k)v_k
+=\left\|\sum_k e^{\ii t_kD}B^*v_k\right\|^2\geq0.
+\]
+The exact worked check specializes to $t=(0,\pi/2,\pi)$ and $v=(1,2,-1)$. Its phases lie in $\QQ(\ii)$, so both sides are computed without evaluating trigonometric functions. This one Gram test illustrates the factorization; the written identity explains positivity for all times and all vectors.
+\head{Why this does not close to a bare local equation}
+With hidden initial state zero, the full system has $\ddot x(0)=-(A^2+BB^*)x(0)=-x(0)$. The bare retained equation $\ii\dot x=Ax$ would instead give zero acceleration. Therefore exact local closure for every retained initial state fails. More generally, equality of these accelerations forces $BB^*=0$ and hence $B=0$.
+
+A nonzero initial hidden vector also supplies the forcing term $Be^{-\ii tD}y(0)$. It is additional data, not part of the convolution kernel. The checks cover the displayed kernel values, exact Gram factorization, and acceleration defect; no time discretization is used as proof of an integral equation.
+\takeaway{Memory is positive definite through a Gram factorization, not through pointwise signs. Exact bare local closure requires the coupling to vanish.}
+
+\vpage{36}{A positive transfer determines its Hamiltonian}{STRICT POSITIVITY AND THE GROUND GAP}{Traditional pp. 62, 63 / Theorem II.10.2, Proposition II.10.5.}
+On $\HH=\CC^3$, take the strictly positive contraction
+\[
+T=\diag(1,1/2,1/4),\qquad H=-\log T=\diag(0,\log2,2\log2).
+\]
+At unit Euclidean time, $T=e^{-H}$. The self-adjoint logarithm is unique because the logarithm acts on positive spectral values. At integer time $n\geq0$,
+\[
+T^n=\diag(1,2^{-n},4^{-n}),\qquad
+P_0=\diag(1,0,0),\qquad\norm{T^n-P_0}=2^{-n}.
+\]
+The gap $\Delta=\log2$ determines the rate $e^{-n\Delta}$ exactly in this example.
+\xfig{transfer_ground}
+\head{Strict positivity is an essential finite hypothesis}
+For $T'=\diag(1,0)$, the operator is positive semidefinite, but there is no finite self-adjoint $H'$ on all of $\CC^2$ with $T'=e^{-H'}$: every finite eigenvalue of $H'$ exponentiates to a strictly positive value. One may restrict to the positive support, but that changes the space on which the logarithm is defined.
+
+For a family with nontrivial excited spectra, a uniform exponential rate needs a common positive lower bound on the gap. Ground multiplicity does not cause a problem: $P_0$ selects the entire minimum-energy eigenspace. For a Hamiltonian whose minimum is $E_0\ne0$, the normalized transfer is $e^{-t(H-E_0I)}$ before taking the limit.
+\head{Positivity is retained at several Euclidean times}
+For arbitrary vectors $u_j$ and nonnegative integer times $n_j$, the reflected kernel obeys
+\[
+\sum_{j,k}\langle u_j,T^{n_j+n_k}u_k\rangle
+=\left\|\sum_jT^{n_j}u_j\right\|^2.
+\]
+This is a finite Gram factorization. The fresh run checks the exact integer semigroup and diagonal ground error for $n=0,\ldots,12$, and rejects a full-space logarithm for the singular control. Logarithms and the all-time functional-calculus statement are supplied by the written spectral argument, not by these bounded tests.
+\takeaway{A positive definite transfer can be logarithmically reconstructed. Ground convergence needs a declared normalization and gap, while continuum reconstruction still needs its own structure.}
+
+\vpage{37}{The dimension window has an order of limits}{FINITE HEAT DATA AND THE QUANTIFIERS}{Traditional pp. 65, 66 / Theorem II.11.5, Corollary II.11.8.}
+For the unit circle grid with $N$ sites, the scaled eigenvalues are $\lambda_N(k)=4N^2\sin^2(\pi k/N)$. Put $Z_N(t)=\sum_ke^{-t\lambda_N(k)}$ and $d_N(t)=2t\sum_k\lambda_N(k)e^{-t\lambda_N(k)}/Z_N(t)$.
+
+At the single time $t=\log2/16$, two tiny grids admit exact rational heat weights:
+\[
+\begin{array}{c|c|c|c|c}
+N&\text{spectrum}&Z_N&\sum\lambda e^{-t\lambda}&d_N/\log2\\\hline
+2&(0,16)&3/2&8&2/3\\
+4&(0,32,32,64)&25/16&20&8/5
+\end{array}
+\]
+These are unnormalized traces. Normalizing by $N$ changes $Z_N$ but leaves the logarithmic derivative at that fixed grid unchanged.
+\xfig{heat_limits}
+\head{The theorem uses two separate choices}
+For each $\varepsilon>0$, first choose a fixed positive time $t_\varepsilon$ so that the continuum torus dimension differs from one by less than $\varepsilon/2$. Then choose $N_\varepsilon$ so that every $N\geq N_\varepsilon$ differs from that continuum value by less than $\varepsilon/2$ at the \emph{same time}. This proves one controlled intermediate time for all sufficiently fine grids.
+
+It does not assert a uniform interval width from that argument, a moving time $t_N$ with no extra estimates, or an all-scale dimension plateau. At fixed finite $N$, $d_N(t)\to0$ as $t\downarrow0$ and as $t\to\infty$. By contrast, first taking $N\to\infty$ at positive $t$ and then taking $t\downarrow0$ yields the continuum dimension.
+\head{Where the infinite tail is controlled}
+The fixed-time proof bounds centered modes below by $16k^2$ and above by $4\pi^2k^2$. The summable Gaussian dominators control both the heat trace and its first moment. A finite grid table supplies neither those tails nor the quantifiers. The fresh check verifies only the displayed two spectra, rational weights, traces, and dimension coefficients. It rejects confusing an unscaled four-cycle spectrum with the unit-circle scaled spectrum.
+\takeaway{The strengthened window result is a convergence statement with a fixed-time choice. The exact table is a worked calculation, not its proof.}
+
+\vpage{38}{Transport constraints without hiding closure}{THE IMAGE OF AN ISOMETRY IS NOT THE WHOLE LEVEL}{Traditional pp. 67, 69 / Theorem II.12.2, Theorem II.12.5, Proposition II.12.6.}
+On $\CC^3=\CC\ket0\oplus\CC^2$, use $C_a=0\oplus\sigma_a$ for $a=x,y,z$. The common kernel is $\CC\ket0$, and the full algebra closes:
+\[
+[C_x,C_y]=2\ii C_z,\qquad[C_y,C_z]=2\ii C_x,\qquad[C_z,C_x]=2\ii C_y.
+\]
+These are uncompressed identities. They supply an actual closure test in the quotient by the constraint span, unlike the automatic compressed zero on the physical kernel.
+\xfig{constraint_image}
+\head{Exact transport holds on the coarse image}
+Embed by the coordinate isometry $R:\CC^3\to\CC^4$ and set $\widetilde C_a=C_a\oplus1$. Then $\widetilde C_aR=RC_a$, so
+\[
+[\widetilde C_a,\widetilde C_b]R=R[C_a,C_b].
+\]
+The coarse physical vector maps into the fine common kernel. However, the same prescribed Pauli structure does \emph{not} close on the whole fine level: on the added coordinate the commutator is zero, whereas $2\ii\widetilde C_z$ is $2\ii$. Exact transport constrains the image of $R$ and leaves its orthogonal complement as separate data.
+\head{An approximate residual is also explicit}
+Perturb only $\widetilde C_x$ by $(1/10)\ket0\bra0$. For the unit coarse physical vector, the fine constraint residual is exactly $1/10$. The intertwining defect has the same norm. The general approximate-transport result controls such residuals and commutator errors using both defect sizes and a common constraint norm bound; it does not replace a nonzero anomaly by an exact algebra.
+
+The fresh checks verify all three coarse commutators, the isometry, each constraint intertwining, all nine commutator transports, and the residual. The fine-coordinate counterexample rejects extending an image statement to the whole space. Unbounded constraints would additionally require a common invariant domain.
+\takeaway{Closure is an operator-algebra statement. Refinement intertwining carries that statement on the embedded image; control the new degrees of freedom separately.}
+
+\vpage{39}{Two routes to a bounded Hamiltonian limit}{EXACT EMBEDDINGS AND A SUMMABLE TAIL}{Traditional pp. 71, 72 / Theorem II.13.2, Theorem II.13.4, Corollary II.13.5.}
+For the exact route, let $\HH_n=\CC^n$ with coordinate inclusions and
+\[
+H_n=\diag(0,1,1/2,\ldots,1/(n-1)),\qquad H_1=(0).
+\]
+The old energies are retained at every level, $H_{n+1}R_n=R_nH_n$, and $\norm{H_n}\leq1$. On the direct-limit Hilbert space $\ell^2(\NN_0)$, the diagonal sequence defines a bounded self-adjoint $H_\infty$. Even-address projectors intertwine as well and give a fixed two-packet complete system in the limit.
+\xfig{tower_tail}
+\head{Compatibility and boundedness are different assumptions}
+The equally compatible tower $\diag(0,1,2,\ldots,n-1)$ has growing norms. It does not meet the bounded direct-limit theorem, although its natural diagonal operator has a separately definable unbounded domain. That domain-sensitive construction is not obtained by dropping the uniform norm hypothesis.
+
+For the norm route, work instead on the \emph{single fixed space} $\CC^2$ and set
+\[
+H_n=\diag(0,1+2^{-n}),\qquad H=\diag(0,1).
+\]
+Here $\norm{H_{n+1}-H_n}=2^{-(n+1)}$ and $\norm{H_n-H}=2^{-n}$. The summable tail supplies an all-$n$ error bound. For $|t|\leq T$, the paper's Duhamel estimate gives
+\[
+\norm{e^{-\ii tH_n}-e^{-\ii tH}}\leq T2^{-n}.
+\]
+The Euclidean counterpart holds on $0\leq t\leq T$ because both Hamiltonians are nonnegative. If packet projectors also converge in norm, leakage operators converge uniformly on these time intervals.
+\head{Execution scope}
+Exact inclusions and projector compatibility are checked through level eight. The two-dimensional tail identities are checked for $n=0,\ldots,12$. Their infinite conclusion uses the displayed geometric-series argument and the theorem's analytic estimate. A finite prefix cannot certify an unspecified continuation of a tower.
+\takeaway{Exact embedded compatibility uses a uniform norm bound. Approximate convergence uses a common space and summable defects. Keep those two contracts explicit.}
+
+\vpage{40}{Choose the topology that preserves the quantity}{REFLECTION GRAMS, TRACES, AND FINAL SCOPE}{Traditional pp. 72, 73 / Theorem II.13.6, Theorem II.13.8, Section II.14.}
+Let $q_n=1/2+2^{-(n+2)}$ and define the scalar reflected kernel $C_n(j,k)=1+q_n^{j+k}$ on nonnegative integers. Each finite Gram matrix is a sum of two positive rank-one matrices, and pointwise convergence gives $C(j,k)=1+(1/2)^{j+k}$. For times $(0,1,2)$ and coefficients $(1,-2,1)$,
+\[
+\sum_{j,k}v_jC_n(j,k)v_k=(1-q_n)^4\geq0.
+\]
+This exact check illustrates the finite quadratic-form argument that passes positivity to the limit.
+\xfig{trace_topology}
+\head{Operator norm does not preserve trace in growing rank}
+On $\ell^2$, let $P_n$ select the first $n$ coordinates and set $A_n=P_n/n$. Then $\norm{A_n}=1/n\to0$ while $\Tr A_n=1$ for every $n$. These are positive trace-class operators, used as a topology control; the limiting zero is not a finite-Hamiltonian heat operator.
+
+For actual two-state transfers $T_n=\diag(1,q_n)=e^{-H_n}$, with $H_n=\diag(0,-\log q_n)$ at unit time, the trace-norm error is $2^{-(n+2)}$ and the heat traces converge to $3/2$. The trace-norm criterion for spectral-dimension convergence additionally assumes convergence of the first heat moments in trace norm and a nonzero limiting heat trace. Heat-trace convergence alone does not determine that quotient.
+\head{What is fresh, inherited, and still open}
+The extension has fresh bounded exact checks in $\QQ(\ii)$ using Python's standard-library \texttt{Fraction}. The original appendix's 180-check record, including its symbolic derivatives, remains available as inherited evidence. The original SymPy suite is replayed for this edition. Its exact assertions and rejected controls remain separate from the extended examples. All original model and vector sources remain supplied.
+
+The saved v0.6.0 ledger lists 19 finite items; no Lean kernel run or expanded formal coverage is asserted. Its five original continuum/physical targets remain open. The strengthened edition supplies analytic proofs and bounded-limit criteria; neither these examples nor their check counts establish the unresolved physical existence claims.
+\takeaway{Use pointwise convergence for finite positivity tests, operator norm for bounded dynamics and constraints, and trace norm for heat traces. Every conclusion keeps its own hypotheses and evidence scope.}

@@ -1,0 +1,262 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,booktabs,array,tabularx}
+\usepackage[margin=0.78in,headheight=15pt,headsep=18pt,footskip=26pt]{geometry}
+\usepackage{microtype,fancyhdr,xcolor,titlesec,xurl}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus VII: Fourth Lean Block},pdfauthor={Komorebi P.},pdfsubject={Leakage, parameter-space curvature and constructive syndrome recovery}}
+\definecolor{ink}{HTML}{183347}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Projector-Resolved Seed Calculus VII}}
+\fancyhead[R]{\small Fourth Lean block}
+\fancyfoot[L]{\small Komorebi P.\quad\textbar\quad v0.4.0}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}
+\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{9pt}{3pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\C}{\mathbb C}\newcommand{\R}{\mathbb R}
+\newcommand{\Ran}{\operatorname{Ran}}\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\End}{\operatorname{End}}\newcommand{\dd}{\mathrm d}
+\newcommand{\pageheading}[2]{\vspace*{2pt}{\small\color{ink}\textsc{#1}}\par\vspace{2pt}{\Large\bfseries #2}\par\vspace{4pt}}
+\begin{document}
+\pageheading{Release record}{Fourth checked proof block}
+{\large Quantitative leakage, projected curvature and syndrome recovery}\par
+\textbf{Author: Komorebi P.}\hfill September 6, 2026
+
+This block adds \textbf{55 theorem declarations in three modules}. The cumulative release contains \textbf{201 theorem declarations in 15 modules}. Declaration counts include supporting lemmas and specializations. They are not counts of independent manuscript theorems.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}lXr@{}}
+\toprule
+Item & Scope established in the new modules & Declarations\\
+\midrule
+5.2 & Actual exponential and commutator leakage bound; cap and perturbation corollaries & 17\\
+6.4 & Actual projected connection and curvature on normed parameter spaces; tensor pullback & 20\\
+8.1 & Explicit completely positive, trace-preserving recovery from orthogonal syndromes & 18\\
+\midrule
+& Total added & 55\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{Coverage is deliberately not promoted to 19 of 19}
+\textbf{17 of 19 named finite-sector manuscript statements are fully checked.} Theorem 5.2 is now complete. Item 6.4 has a parameter-space curvature formalization but no global smooth range-bundle construction. Item 8.1 has a constructive recovery stage but not the general Gram reduction or necessity direction. Both remain marked partial in the ledger.
+
+All five continuum conjectures remain unproved. A formalization of a finite-dimensional operator identity or smooth parameter-space calculation is not a proof of the paper's physical continuum claims.
+
+\section*{Cumulative verification and preservation}
+All 15 active modules were freshly checked using Lean 4.34.0-rc2 and the pinned Mathlib revision. Every theorem has an axiom audit. The permitted dependencies are \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}. The active modules contain no admitted proofs or added axiom declarations. Warnings are treated as errors. Both deliberate invalid controls are rejected.
+
+The twelve upstream proof files and the original manuscript PDF and TeX are unchanged. The three previous supplements are also preserved. The preservation audit compares 21 retained files, including the unchanged low-memory runner, against the exact third-block archive. This supplement records additions without presenting the original manuscript as a fully verified rewrite.
+
+\section*{Primary evidence}
+The current machine report is \path{verification/fourth_block_release_run/SUMMARY.json}. The current coverage map is \path{THEOREM_LEDGER.json}. Source snapshots and failed development diagnostics are kept separately from the successful release logs.
+
+\newpage
+\pageheading{Theorem 5.2 completed}{Quantitative leakage from the actual exponential}
+Let $A$ be a unital complex C-star algebra, let $H=H^*$, and let $P=P^*=P^2$. Put $Q=1-P$. The checked statement is
+\[
+\boxed{\|Q\exp(-itH)P\|\le |t|\,\|HP-PH\|\qquad(t\in\R).}
+\]
+The matrix specialization uses the Hilbert-space operator norm, implemented by \path{Matrix.Norms.L2Operator}. It is not an entrywise norm or the row-sum operator norm. The theorem includes the zero projector and empty matrix index type. There is no nonzero-time hypothesis.
+
+\section*{Derivative proof rather than an assumed Duhamel estimate}
+For a skew-adjoint generator $G$, define the actual conjugation path
+\[
+T_P(t)=\exp(tG)P\exp(-tG).
+\]
+The formalization derives its derivative from the power-series exponential and the product rule:
+\[
+T_P'(t)=\exp(tG)(GP-PG)\exp(-tG).
+\]
+Both exponential factors are proved unitary. Left and right multiplication by a unitary preserve the C-star norm. Therefore
+\[
+\|T_P'(t)\|=\|GP-PG\|,
+\qquad
+\|T_P(t)-T_P(s)\|\le |t-s|\,\|GP-PG\|.
+\]
+The second inequality follows from the normed-space mean value inequality and covers either ordering of $s$ and $t$. It is not a finite-difference estimate or a numerical time discretization.
+
+Multiplication by $\exp(tG)$ gives
+\[
+(T_P(t)-P)\exp(tG)=\exp(tG)P-P\exp(tG).
+\]
+For every orthogonal projector, $\|P\|\le1$ and $\|1-P\|\le1$. The exact corner identity
+\[
+(1-P)UP=(1-P)(UP-PU)P
+\]
+then bounds leakage by the exponential commutator. Taking $G=-iH$ gives the stated theorem because $\|[G,P]\|=\|[H,P]\|$.
+
+\section*{Checked consequences}
+Unitarity also gives the capped estimate
+\[
+\|Q\exp(-itH)P\|\le\min\{1,\ |t|\,\|[H,P]\|\}.
+\]
+If $H=H_0+V$, both summands are self-adjoint, and $[H_0,P]=0$, then
+\[
+\|Q\exp(-it(H_0+V))P\|\le2|t|\,\|V\|.
+\]
+The latter uses $\|[V,P]\|\le2\|V\|$; its constant is not claimed to be optimal. Exact commutation gives zero leakage. The work does not include unbounded generators or time-dependent Hamiltonians.
+
+\newpage
+\pageheading{Item 6.4 advanced}{Actual projected differentiation and curvature}
+Let $E,F$ be real normed spaces. Let $P:E\to\mathcal L(F,F)$ be differentiable with $P(x)^2=P(x)$ for every $x$. Let $s:E\to F$ be $C^2$ with $P(x)s(x)=s(x)$, and let $X,Y:E\to E$ be differentiable vector fields. The checked connection is the actual expression
+\[
+\nabla_Xs(x)=P(x)\,Ds(x)[X(x)].
+\]
+It is proved to preserve the range condition. It is linear in the vector-field direction and obeys the scalar Leibniz rule
+\[
+\nabla_X(cs)=Dc[X]\,s+c\nabla_Xs
+\]
+for differentiable real scalar functions $c$. No differentiated projector identities are inserted as hypotheses in the main curvature theorem.
+
+\section*{Differentiated projector and section identities}
+Differentiating $P^2=P$ and $Ps=s$ produces
+\begin{align*}
+DP[v]P+PDP[v]&=DP[v],\\
+PDP[v]P&=0,\\
+Ds[v]&=DP[v]s+P Ds[v].
+\end{align*}
+The zero sandwich follows algebraically from the first identity. All products preserve their noncommutative order.
+
+\section*{The vector-field bracket is retained}
+Define the actual curvature action by
+\[
+R_P(X,Y)s=\nabla_X\nabla_Ys-\nabla_Y\nabla_Xs-\nabla_{[X,Y]}s.
+\]
+The source uses the actual Fr\'echet-derivative Lie bracket. Symmetry of second derivatives is supplied by the $C^2$ hypothesis, not postulated separately. Expanding the connection gives
+\[
+R_P(X,Y)s=P\bigl(DP[X]Ds[Y]-DP[Y]Ds[X]\bigr).
+\]
+Substituting the section identity and removing the zero sandwich terms proves
+\[
+\boxed{R_P(X,Y)s=P\bigl(DP[X]DP[Y]-DP[Y]DP[X]\bigr)P s.}
+\]
+Thus the coefficient is precisely $P(\dd P\wedge\dd P)P$ with the convention
+$(\dd P\wedge\dd P)(v,w)=DP[v]DP[w]-DP[w]DP[v]$.
+
+\section*{Tensor properties and the remaining global boundary}
+The coefficient is proved bilinear, alternating, and supported on the range on both sides. The chain rule proves the pullback identity
+\[
+F_{P\circ f}(x)(v,w)=F_P(f(x))(Df(x)v,Df(x)w).
+\]
+The main theorem has global regularity hypotheses on normed parameter spaces. Localization to arbitrary chart domains, smooth local trivializations of the range bundle, and gluing into a global manifold connection remain unformalized. The pullback identity does not by itself supply those constructions. Item 6.4 therefore remains \textbf{partial}.
+
+\newpage
+\pageheading{Item 8.1 advanced}{A constructive and total syndrome recovery}
+Let $P$ be an orthogonal code projector. The input certificate consists of a finite family $V_a$ satisfying
+\[
+V_aP=V_a,
+\qquad
+V_a^*V_b=\delta_{ab}P.
+\]
+These are explicit partial-isometry and orthogonal-syndrome hypotheses. The block does not claim to have obtained them from arbitrary Knill--Laflamme Gram data.
+
+\section*{Constructing the recovery on the whole ambient space}
+Define the syndrome projectors and their complement by
+\[
+S_a=V_aV_a^*,\qquad S=\sum_aS_a,\qquad Q=1-S.
+\]
+The source proves self-adjointness, $S_aS_b=\delta_{ab}S_a$, $S^2=S$, and $Q^2=Q=Q^*$. It also proves $QV_a=0$ and $V_a^*Q=0$.
+
+The recovery is not left undefined outside the syndrome subspaces. Its explicit Kraus operators are $R_a=V_a^*$ together with $R_{\mathrm{extra}}=Q$, giving
+\[
+\mathcal R(\rho)=\sum_aV_a^*\rho V_a+Q\rho Q.
+\]
+They satisfy exact completeness:
+\[
+\sum_aR_a^*R_a+R_{\mathrm{extra}}^*R_{\mathrm{extra}}
+=\sum_aV_aV_a^*+Q=S+Q=I.
+\]
+For finite complex matrices, trace preservation and complete positivity at every finite auxiliary dimension are proved for this actual map. The amplified map is identified with the Kraus family $I_J\otimes R_a$, including the complement term. Positivity is not merely checked on a single matrix size.
+
+\section*{Exact correction, including coherent errors}
+For every code-supported operator $P\rho P=\rho$, the central identity is
+\[
+\boxed{\mathcal R(V_a\rho V_b^*)=\delta_{ab}\rho.}
+\]
+Consequently normalized mixtures satisfy
+\[
+\mathcal R\!\left(\sum_ap_aV_a\rho V_a^*\right)=\rho
+\quad\text{when}\quad\sum_ap_a=1.
+\]
+The identity is algebraic and is proved for complex weights. Physical mixtures use the nonnegative real case. For a coherent error $E_z=\sum_a z_aV_a$, the stronger cross-term calculation yields
+\[
+\mathcal R(E_z\rho E_z^*)=\left(\sum_a z_a\overline{z_a}\right)\rho.
+\]
+Thus normalized coherent superpositions are corrected as well. This is an explicit recovery stage, not a replacement definition that makes the full Knill--Laflamme criterion true by construction.
+
+\newpage
+\pageheading{Coverage and unfinished obligations}{Two partial statements remain}
+\section*{Global projected connection: item 6.4}
+The new theorem handles actual derivatives of vector-valued sections, nonconstant vector fields, the bracket correction, and tensor pullback. The remaining formal work is geometric: localize the hypotheses to arbitrary open chart domains; construct the smooth range subbundle of the trivial ambient bundle; establish its local trivializations; and identify the chartwise operation with a globally defined connection and its curvature.
+
+The global bundle is not included as an axiom, and the existence of its connection is not silently assumed. The manuscript statement is left partial until those interfaces are formalized or its scope is explicitly narrowed in an amended manuscript. The original manuscript is unchanged in this release.
+
+\section*{General Knill--Laflamme criterion: item 8.1}
+The original condition is
+\[
+P E_a^*E_bP=c_{ab}P,\qquad c\succeq0.
+\]
+The new module starts later in the standard constructive argument, with orthogonal partial-isometry syndromes already supplied. To complete the sufficiency direction, the general Gram matrix must be diagonalized, errors transformed by the resulting unitary change of basis, zero eigenvalue directions handled, and the remaining nonzero directions normalized into the certified $V_a$ family. Normalization of physical error channels must be stated consistently.
+
+The necessity direction also remains. It requires a precise exact-correction specification and a proof that a correcting recovery forces scalar code Gram operators. The present recovery theorem does not assume or prove that converse. It is therefore not presented as an ``if and only if'' theorem for arbitrary error families.
+
+\section*{Why the ledger is 17 of 19, not 19 of 19}
+Theorem 5.2 has the original finite-matrix scope and is counted complete. The chart-level formulation of 6.4 and the syndrome recovery stage of 8.1 are separate verified achievements, but neither covers its entire manuscript statement. The current ledger records each partial boundary and its main Lean declaration.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}Xrr@{}}
+\toprule
+Inventory & Prior release & Fourth block\\
+\midrule
+Active theorem declarations & 146 & 201\\
+Active Lean modules & 12 & 15\\
+Fully checked named finite-sector statements & 16 & 17\\
+Partially formalized remaining statements & 0 & 2\\
+Continuum conjectures proved in Lean & 0 & 0\\
+\bottomrule
+\end{tabularx}
+\end{center}
+The previous zero in the partial row denotes the release's ledger classification for these two remaining statements, not an absence of related upstream tools. Declaration counts are not novelty claims or difficulty-weighted progress measures.
+
+\section*{No changed physical proof boundary}
+All five continuum conjectures remain unproved. No conclusion concerning quantum gravity, a continuum field theory, Lorentzian reconstruction, an Einstein limit, or a physical massless spin-two sector follows from this block alone.
+
+\newpage
+\pageheading{Reproducibility and trust}{What the executable evidence establishes}
+\section*{Pinned runtime and fresh checks}
+The release was checked with Lean 4.34.0-rc2 and Mathlib revision
+\begin{center}
+\texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.
+\end{center}
+The portable runtime was restored from the seven archive parts, with the part contents and combined archive SHA-256 checked. The release verifier separately checks the actual Lean version and Mathlib revision before compiling the proof modules.
+
+All \textbf{15 modules and 201 theorem declarations} passed the fresh cumulative run. The verifier checks active source for prohibited proof escapes and compares the declared audit inventory with the compiler's theorem-level axiom output. Each audited dependency set is confined to \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}. These are standard logical dependencies, not newly added mathematical assumptions about the paper.
+
+A deliberately false equality and a deliberate admitted-proof placeholder must fail. Both negative controls are checked separately from the active modules. A timeout or interrupted run is recorded as incomplete or failed, never as a proof.
+
+\section*{Commands}
+From the extracted release directory, use the restored portable kit:
+\begin{quote}\small
+\verb|python scripts/verify.py --kit /path/to/portable-kit|
+\end{quote}
+For environments with short command limits, the same verifier supports resumable batches:
+\begin{quote}\small
+\verb|python scripts/verify.py --kit /path/to/portable-kit \|\par
+\verb|  --out verification/local_run --max-checks 3 --resume|
+\end{quote}
+A resumed success is reused only when the source, log, runner, verifier and runtime checks match. The launcher remains unchanged: Lake prepares the environment, then the Lean process runs with one worker and warnings treated as errors. The script does not weaken kernel checking or enforce a new RAM limit.
+
+\section*{Development failures remain visible}
+Eight of thirteen development checks failed before the new modules passed. The captured sources and diagnostics remain in \path{verification/fourth_block_development/}. The first cumulative audit also exposed a parser bug: it omitted an explicitly axiom-free theorem even though Lean returned zero. That failure is preserved separately. The parser was fixed, seven regression tests passed, and all fifteen modules were checked afresh. No proof source was changed to resolve the parser bug.
+
+\section*{Package integrity and limits}
+The preservation report compares all twelve upstream modules, the original manuscript PDF and TeX, the six earlier supplement files, and the runner against the third-block archive. These 21 files are byte-for-byte unchanged. The package includes a regenerated SHA-256 manifest, the current theorem ledger and the supplement's editable TeX source.
+
+This block did not rebuild Papers I--VI, rerun the original numerical suite, or independently rebuild or recheck every imported Mathlib theorem. The positive verification result certifies the active Lean sources under the recorded dependency environment. It does not certify every prose claim in the original paper or the unformalized parts of items 6.4 and 8.1.
+\end{document}

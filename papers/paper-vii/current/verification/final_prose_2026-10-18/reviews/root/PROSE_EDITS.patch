@@ -1,0 +1,851 @@
+--- before/editable/traditional/parts/03_supplement_01.tex
++++ after/editable/traditional/parts/03_supplement_01.tex
+@@ -1,5 +1,5 @@
+ \section{Exact packets and arbitrary circuit length}\label{supp1:section:001}
+-Let $R$ be a unital ring, not necessarily commutative, and let $I$ be a finite address set. An exact packet family is a family $P_a\in R$ such that
++Let $R$ be a unital ring, not necessarily commutative, and let $I$ be a finite address set. An exact packet family consists of elements $P_a\in R$ satisfying
+ \[
+ P_aP_b=\begin{cases}P_a,&a=b,\\0,&a\ne b,\end{cases}
+ \qquad \sum_{a\in I}P_a=1.
+@@ -43,7 +43,7 @@
+ \sum_bP_aU^*P_bUP_c
+ =P_aU^*\left(\sum_bP_b\right)UP_c=P_aP_c.
+ \]
+-The second law is analogous and is separately checked. Concrete complex-matrix versions use conjugate transpose as the adjoint. No commutative multiplication rule is used for operator products.
++The second law follows by the analogous calculation and has its own formal proof. For complex matrices, the adjoint is the conjugate transpose. The order of the operator products is preserved throughout.
+ 
+ 
+ 
+@@ -64,11 +64,11 @@
+ e^{zH}=\sum_aP_ae^{zH}P_a,
+ \qquad P_be^{zH}P_a=0\quad(b\ne a).
+ \]
+-This covers real-time evolution by taking $z=-it$. The Lean proof invokes the exponential commutation theorem, not an abstract flow supplied with the desired invariant-packet property as a hypothesis. Self-adjointness of $H$ is not needed for the algebraic reducing property, so this result applies more broadly than the Hermitian specialization in the paper.
+-
+-
+-
+-This is an exact symmetry result. It does not supply the quantitative broken-symmetry leakage estimate of Theorem 5.2, whose Duhamel and norm arguments remain outside this block.
++Taking $z=-it$ gives evolution in real time. The Lean proof applies the exponential commutation theorem directly, so invariance of the packets is a proved consequence of commutation. Self-adjointness of $H$ is not needed for the algebraic reducing property, so this result applies more broadly than the Hermitian specialization in the paper.
++
++
++
++This result describes exact symmetry. The quantitative leakage estimate when symmetry is broken appears in Theorem 5.2 and requires the separate Duhamel and norm arguments developed later.
+ 
+ \subsection{Measurements: source Theorem 7.1}
+ For finite complex matrices, define packet dephasing by
+@@ -84,7 +84,7 @@
+ \[
+ \tr(P_aEP_a\rho)=\tr(EP_a\rho P_a).
+ \]
+-Therefore a packet-diagonal effect, $\deph(E)=E$, satisfies
++Therefore an effect that is diagonal in the packets, $\deph(E)=E$, satisfies
+ \[
+ \boxed{\tr(E\rho)=\tr\bigl(E\deph(\rho)\bigr).}
+ \]
+@@ -92,7 +92,7 @@
+ 
+ 
+ 
+-This does not establish the full Kraus-channel theorem or the Knill--Laflamme recovery criterion. Those require additional positivity, auxiliary-system or recovery-map arguments.
++The full theorem for Kraus channels and the Knill--Laflamme recovery criterion require further arguments about positivity, auxiliary systems, and recovery maps. The trace identity above supplies only the measurement statement.
+ 
+ 
+ 
+@@ -114,7 +114,7 @@
+ \[
+ \boxed{\bigl((zI-H)^{-1}\bigr)_{PP}=S_z^{-1}.}
+ \]
+-The left-hand side is the literal retained-coordinate submatrix of the full inverse. This matches the paper's compressed operator when written in an orthonormal basis of the retained subspace. The proof is valid for arbitrary complex blocks of compatible sizes and does not require Hermiticity.
++The left side is the submatrix of the full inverse on the retained coordinates. This matches the paper's compressed operator when written in an orthonormal basis of the retained subspace. The proof is valid for arbitrary complex blocks of compatible sizes and does not require Hermiticity.
+ 
+ The checked invertibility criterion is
+ \[
+@@ -133,9 +133,9 @@
+ 
+ 
+ \subsection{Provenance and limits}
+-The general block-inverse proof was reused from the checked fifth block of Paper VI and freshly compiled in the Paper VII namespace. The extra counterexample was added in this release. This is reuse of a proof, not a claim of a new Schur identity.
+-
+-The unnumbered time-domain memory equation in Section 9.2, cutoff-uniform resolvent control and continuum limits are not proved by this finite inverse identity. The source amendment makes the two invertibility assumptions explicit without changing the intended effective Hamiltonian.
++The proof of the general block inverse was reused from the checked fifth block of Paper VI and compiled in the Paper VII namespace for the archived formal checkpoint. That formal development also added the counterexample above. The retained checkpoint is dated 6 September 2026. This edition revises the exposition without claiming a new Schur identity or a fresh Lean compilation.
++
++The memory equation in the time domain in Section 9.2, resolvent control uniform in the cutoff, and continuum limits require arguments beyond this finite inverse identity. The source amendment makes the two invertibility assumptions explicit without changing the intended effective Hamiltonian.
+ 
+ 
+ 
+@@ -153,7 +153,7 @@
+ \]
+ The code proves this without the low-mode restriction. The bound may be loose away from the low-mode regime, but it remains valid.
+ 
+-The proof begins with the all-real estimate
++The proof begins with an estimate valid for every real argument:
+ \[
+ 0\le x^2-\sin^2x\le\frac{x^4}{3}.
+ \]
+@@ -180,7 +180,7 @@
+ 
+ 
+ \subsection{What this does not establish}
+-This is an exact deterministic error bound for the displayed dispersion relation. It is not a verification of the original paper's floating-point convergence-rate experiment, spectral-dimension plateau measurements or selection of a physical spacetime geometry. Those computations were not rerun in this release.
++This is an exact deterministic error bound for the displayed dispersion relation. The original paper's numerical convergence experiment and spectral dimension measurements provide a different kind of evidence and were not rerun during this prose revision. The bound alone does not select a physical spacetime geometry.
+ 
+ 
+ 
+@@ -216,14 +216,14 @@
+ [X,Z]=\begin{pmatrix}0&0&0\\0&0&-2\\0&2&0\end{pmatrix}\ne0,
+ \qquad P[X,Z]P=0.
+ \]
+-The commutator therefore violates the zero-structure-coefficient closure relation outside the physical range, despite exact vanishing of its physical compression.
++The commutator therefore violates the closure relation with zero structure coefficients outside the physical range, even though its physical compression vanishes exactly.
+ 
+ 
+ 
+ \subsection{Interpretation for the paper}
+-Compressed anomaly vanishing is not sufficient to certify full operator closure. In the exact finite common-kernel setup it is automatic. A nonzero computed compression would instead contradict those exact assumptions or expose an approximation or implementation defect.
+-
+-This does not establish that a nontrivial compatible refinement tower exists. It does not prove or disprove the full continuum program. A stronger closure claim must test more than this compression, and unbounded constraints need their operator domains specified. This audit is additional to the six checked source items and is not counted as a seventh original theorem.
+-
+-
+-
++Vanishing of the compressed anomaly is automatic for the exact finite common kernel. It therefore cannot by itself certify full operator closure. A nonzero computed compression would instead contradict those exact assumptions or expose an approximation or implementation defect.
++
++Existence of a nontrivial compatible refinement tower and the broader continuum program remain separate questions. A stronger closure claim must test more than this compression, and unbounded constraints need their operator domains specified. This audit is additional to the six checked source items and is not counted as a seventh original theorem.
++
++
++
+--- before/editable/traditional/parts/03_supplement_02.tex
++++ after/editable/traditional/parts/03_supplement_02.tex
+@@ -30,12 +30,12 @@
+ \[
+  X_j\ket a=\ket{a\text{ with coordinate }j\text{ replaced by }a_j+1}.
+ \]
+-The selected factor at $j$ equals translation by the address supported at $j$ with value $a_j$. Induction on a list proves that the product of translations is translation by their sum. The sum of these single-coordinate addresses is $a$. Thus $W_a=T_a$ and $W_a\psi_0=\ket a$.
++The selected factor at $j$ equals translation by the address supported at $j$ with value $a_j$. Induction on a list proves that the product of translations is translation by their sum. Each of these addresses contributes one coordinate, and their sum is $a$. Thus $W_a=T_a$ and $W_a\psi_0=\ket a$.
+ 
+ Lean identifies the resulting family with \lean{Pi.basisFun} over $\C$. Its standard basis theorems supply linear independence and full span. The finite function-space cardinality gives $|A_n|=2^n$.
+ \phantomsection\label{supp2:proof:001:end}\end{proof}
+ 
+-\textbf{Formal scope.} This is an actual gate-word construction, not an assumption that the addressed states already form a basis. The empty circuit for $n=0$ is included. Orthogonality belongs to the standard computational-basis interpretation; the formal endpoint is identification with that standard coordinate basis, together with independent explicit span and linear-independence theorems.
++\textbf{Formal scope.} The proof constructs the sequence of gates that produces each addressed state and then identifies the resulting family with the standard coordinate basis. It includes the empty circuit for $n=0$. Orthogonality belongs to the usual computational basis interpretation. The formal endpoint records the basis identification, together with separate explicit theorems for span and linear independence.
+ 
+ 
+ 
+@@ -48,7 +48,7 @@
+ \[
+  \mathsf T(A)(x,y)=\prod_{i\in F} A_i(x_i,y_i).
+ \]
+-The proof first establishes its multiplication, identity, adjoint and finite-sum laws. Thus the construction is not restricted to two factors or to qubits.
++The proof first establishes the laws for multiplication, identity, adjoints, and finite sums. These laws apply to any finite number of factors with the stated finite coordinate sets.
+ 
+ Suppose $N>0$ and each factor has a complete orthogonal self-adjoint projector family $(P^{(i)}_j)_{j\in\mathbb Z/N\mathbb Z}$. For a fine address $a:F\to\mathbb Z/N\mathbb Z$, set
+ \[
+@@ -67,18 +67,18 @@
+ \end{statement}
+ 
+ \begin{proof}\phantomsection\label{supp2:proof:002}
+-The finite product-of-sums identity gives
++Expanding the finite product of sums gives
+ \[
+  \mathsf T(A)\mathsf T(B)=\mathsf T(i\mapsto A_iB_i).
+ \]
+-Consequently, if two fine addresses differ in any coordinate, the corresponding product contains a zero factor. If the addresses agree, the product is the same fine projector. The adjoint passes through the finite coordinate product, so $Q_a^*=Q_a$. Summing over all address functions and using the same product-of-sums identity yields
++Consequently, if two fine addresses differ in any coordinate, the corresponding product contains a zero factor. If the addresses agree, the product is the same fine projector. The adjoint passes through the finite coordinate product, so $Q_a^*=Q_a$. Summing over all address functions and using the same expansion yields
+ \[
+  \sum_a Q_a=\mathsf T\left(i\mapsto\sum_jP^{(i)}_j\right)=I.
+ \]
+ A separate algebraic regrouping theorem applies to any finite orthogonal family and any address map into a finite set. In the double sum for $C_rC_s$, orthogonality removes all terms with different fine addresses. A surviving address can lie in both classes only when $r=s$. Completeness follows by summing each fine projector exactly once. Adjoint preservation follows term by term. Specializing the address map to total residue proves the claim.
+ \phantomsection\label{supp2:proof:002:end}\end{proof}
+ 
+-\textbf{Formal scope.} Residue grouping is proved for every positive modulus and arbitrary finite factor dimensions. It assumes the supplied local projector laws. The separate cyclic-character construction of those local projectors, item 3.1, is not thereby checked.
++\textbf{Formal scope.} Residue grouping is proved for every positive modulus and arbitrary finite factor dimensions. It assumes the supplied local projector laws. Constructing those local projectors from cyclic characters, as in item 3.1, requires the separate proof in the next supplement.
+ 
+ 
+ 
+@@ -91,7 +91,7 @@
+ \[
+  i\dot\psi=H\psi(t).
+ \]
+-Only the value of the Hamiltonian at the chosen time is needed; no derivative of $H$ is assumed.
++Only the value of the Hamiltonian at the chosen time is needed. No derivative of $H$ is assumed.
+ 
+ \begin{statement}\label{supp2:statement:003}
+ The explicitly defined coordinate curve
+@@ -111,7 +111,7 @@
+ \end{statement}
+ 
+ \begin{proof}\phantomsection\label{supp2:proof:003}
+-Finite entrywise product rules prove the matrix and matrix-vector differentiation formulas. Since the parameter is real, conjugation commutes with differentiation, giving the stated derivative of $U^*$ and hence of $y$.
++Applying the product rule entry by entry proves the differentiation formulas for matrix products and for matrices acting on vectors. Since the parameter is real, conjugation commutes with differentiation, giving the stated derivative of $U^*$ and hence of $y$.
+ 
+ Differentiate $U^*U=I$ using those rules and uniqueness of derivatives:
+ \[
+@@ -139,7 +139,7 @@
+ \[
+  P_aP_b=\delta_{ab}P_a,\qquad \sum_aP_a=I,\qquad P_a^*=P_a.
+ \]
+-In the supplied Lean theorem, the curves are defined on $\R$ and the projector laws hold at every real parameter. Matrix and bounded-operator settings satisfying the typeclass hypotheses fit this algebraic formulation.
++In the supplied Lean theorem, the curves are defined on $\R$ and the projector laws hold at every real parameter. The algebraic formulation applies to matrices and bounded operators whenever they satisfy the stated typeclass hypotheses.
+ 
+ \begin{statement}\label{supp2:statement:004}
+ Define $C=\sum_aD_aP_a(t)$. Then
+@@ -167,16 +167,16 @@
+ \[
+  \sum_aP_aD_a=-\sum_aD_aP_a=-C.
+ \]
+-This proves both the half-commutator formula and $C^*=-C$.
++This proves the formula involving half the sum of commutators, together with $C^*=-C$.
+ 
+ Orthogonality directly yields $CP_b=D_bP_b$. For the left product, multiply the differentiated identity for $(b,a)$ on the right by $P_a$ and sum over $a$. Completeness reduces the result to
+ \[
+  D_b+P_bC=D_bP_b.
+ \]
+-Subtracting from the right-product identity gives $CP_b-P_bC=D_b$.
++Subtracting this equation from the identity for multiplication on the right gives $CP_b-P_bC=D_b$.
+ \phantomsection\label{supp2:proof:004:end}\end{proof}
+ 
+-\textbf{Formal scope.} The derivative layer is separate from the purely algebraic consequences, making the dependency on genuine derivative hypotheses visible. This proves the one-parameter canonical connection identity. It does not supply the parameter-manifold range bundle, exterior differential calculus, or curvature theorem of item 6.4.
++\textbf{Formal scope.} The proof derives the differentiated identities before using their algebraic consequences, so the role of the derivative hypotheses remains explicit. It establishes the canonical connection identity for one parameter. The range bundle over a parameter manifold, the exterior differential calculus, and the curvature theorem of item 6.4 are developed in the later supplements.
+ 
+ 
+ 
+@@ -213,7 +213,7 @@
+  \Phi^{(J)}(X)=\sum_a (I_J\otimes K_a)X(I_J\otimes K_a)^*.
+  \quad}
+ \]
+-Thus this is the actual identity-tensor amplification, not an unrelated map assumed to be positive. Every summand on the right is positive when $X$ is positive, and this holds for every finite $J$.
++The displayed identity identifies the defined amplification with tensoring by the identity, which is the operation needed for complete positivity. Every summand on the right is positive when $X$ is positive, and this holds for every finite $J$.
+ 
+ Finally, cyclicity and linearity of the trace give
+ \begin{align*}
+@@ -222,12 +222,12 @@
+  &=\tr\left(\left(\sum_aK_a^*K_a\right)\rho\right)
+  =\tr\rho.
+ \end{align*}
+-Positivity together with trace preservation yields the density-matrix conclusion.
++Positivity together with trace preservation gives the stated conclusion for density matrices.
+ \phantomsection\label{supp2:proof:005:end}\end{proof}
+ 
+-\textbf{Formal scope.} Complete positivity is quantified over all finite auxiliary dimensions, not sampled dimensions. Normalization is required only for trace preservation and the density-matrix conclusion. The converse representation theorem for arbitrary completely positive maps is not asserted here.
+-
+-
+-
+-
+-
++\textbf{Formal scope.} Complete positivity is proved for every finite auxiliary dimension. Normalization is required only for trace preservation and the conclusion about density matrices. The converse representation theorem for arbitrary completely positive maps lies outside this argument.
++
++
++
++
++
+--- before/editable/traditional/parts/03_supplement_03.tex
++++ after/editable/traditional/parts/03_supplement_03.tex
+@@ -3,7 +3,7 @@
+ \[
+ \mathcal O(C)=\{AC:A\in M_d(\C)\}.
+ \]
+-This set is already a linear subspace. The source proves its equality with the linear span of the same orbit, rather than assuming an abstract orbit-dimension formula.
++This set is already a linear subspace. The source proves that it equals the linear span of the orbit before computing its dimension.
+ 
+ A matrix $X$ belongs to $\mathcal O(C)$ exactly when each of its rows belongs to $\operatorname{Row}(C)$. One direction follows by expanding $AC$. For the converse, choose the coefficients producing each row separately and place them in the corresponding row of $A$. An explicit linear equivalence therefore gives
+ \[
+@@ -11,22 +11,22 @@
+ \qquad
+ \boxed{\dim_\C\mathcal O(C)=d\,\rank C.}
+ \]
+-If $d>0$, equality with the full $d\times m$ coefficient space is equivalent to $\rank C=m$. Consequently a cyclic seed requires $m\le d$. The nonempty-row assumption is essential for canceling the factor $d$.
++If $d>0$, equality with the full $d\times m$ coefficient space is equivalent to $\rank C=m$. Consequently a cyclic seed requires $m\le d$. The assumption that there is at least one row is essential for canceling the factor $d$.
+ 
+ \subsection{Several seeds: both necessity and construction}
+-Continue under the positive-row hypothesis above. For seeds $C_1,\ldots,C_k$, generation means the concrete statement
++Continue under the assumption above that the number of rows is positive. For seeds $C_1,\ldots,C_k$, generation means the concrete statement
+ \[
+ \forall X\in M_{d\times m}(\C),\quad
+ \exists A_1,\ldots,A_k\in M_d(\C):\quad
+ X=\sum_{a=1}^k A_aC_a.
+ \]
+-Stack the $C_a$ vertically into a $kd\times m$ matrix $D$. The source proves the exact stacked-action identity and the equivalence
++Stack the $C_a$ vertically into a $kd\times m$ matrix $D$. The source identifies the action on the stacked matrix and proves the equivalence
+ \[
+ \text{the seeds generate}\quad\Longleftrightarrow\quad\rank D=m.
+ \]
+-Thus $m\le kd$ is necessary. It is sufficient as well: embed the $m$ coordinate columns into $kd$ coordinate positions to obtain a full-column-rank matrix $D$, then split its rows back into $k$ seeds. This is an existence proof of actual generating matrices, not only an inequality on possible dimensions.
++Thus $m\le kd$ is necessary. It is sufficient as well: embed the $m$ coordinate columns into $kd$ coordinate positions to obtain a matrix $D$ of full column rank, then split its rows back into $k$ seeds. This construction proves that generating matrices with the required dimensions exist.
+ 
+-\subsection{Simultaneous direct-sum generation}
++\subsection{Simultaneous generation in a direct sum}
+ For the stipulated block representation
+ \[
+ \mathcal A=\bigoplus_i\bigl(M_{d_i}(\C)\otimes I_{m_i}\bigr),\qquad d_i>0,
+@@ -42,14 +42,14 @@
+ 
+ 
+ \section{Schmidt rank and the reduced state}\label{supp3:section:002}
+-Use standard product-basis coordinates $\psi_{ij}$ and let $C_{ij}=\psi_{ij}$. An explicit linear equivalence identifies the product-index state vector with its coefficient matrix. The implementation checks the actual Kronecker action:
++Use coordinates $\psi_{ij}$ in the standard product basis and let $C_{ij}=\psi_{ij}$. An explicit linear equivalence identifies the state vector on the product index set with its coefficient matrix. The implementation checks the actual Kronecker action:
+ \[
+ \operatorname{coeff}\bigl((A\otimes I_B)\psi\bigr)=AC.
+ \]
+-It also proves that the transported matrix orbit equals the span of these Kronecker-transformed state vectors. The state-space dimension formula is therefore connected to the physical local action, not only to a separate matrix model.
++It also proves that the transported matrix orbit equals the span of the state vectors obtained by this Kronecker action. The dimension formula therefore applies to the physical local action on the state space.
+ 
+ \subsection{An independent definition of Schmidt rank}
+-The source defines Schmidt rank as the least number of product-vector summands. A decomposition of length $s$ is the concrete equality
++The source defines Schmidt rank as the least number of summands that are product vectors. A decomposition of length $s$ is the concrete equality
+ \[
+ C_{ij}=\sum_{a=1}^{s}u_a(i)v_a(j).
+ \]
+@@ -57,7 +57,7 @@
+ \[
+ \boxed{r(\psi)=\rank C.}
+ \]
+-The definition uses a least natural number, and the equality with matrix rank is proved. The proof does not define Schmidt rank to be matrix rank. It does not construct an orthonormal Schmidt decomposition or prove a new singular-value decomposition theorem.
++The definition uses a least natural number, and the equality with matrix rank is a theorem. This argument establishes the minimum number of product terms. It does not construct an orthonormal Schmidt decomposition or prove a new theorem on singular value decomposition.
+ 
+ The matrix-orbit dimension and the coefficient equivalence now yield
+ \[
+@@ -66,7 +66,7 @@
+ \]
+ 
+ \subsection{The actual partial trace and its support}
+-The reduced matrix is defined by tracing the addressed index of the pure-state density matrix:
++The reduced matrix is defined by tracing the addressed index of the density matrix of the pure state:
+ \[
+ (\rho_B)_{j\ell}=\sum_i\psi_{ij}\overline{\psi_{i\ell}}.
+ \]
+@@ -82,14 +82,14 @@
+ \boxed{\mathcal O_A(\psi)=\mathcal H_A\otimes\mathcal H_B
+ \quad\Longleftrightarrow\quad \Ran\rho_B=\mathcal H_B.}
+ \]
+-Normalization of $\psi$ is unnecessary for these dimension and support statements. The zero state has rank $0$ under the minimum-product-length definition.
++Normalization of $\psi$ is unnecessary for these dimension and support statements. The zero state has rank $0$ because its decomposition needs no product terms.
+ 
+ 
+ 
+ 
+ 
+ \section{Constructed cyclic character projectors}\label{supp3:section:003}
+-Let $N>0$ and let $S$ be a unitary complex matrix with $S^N=I$. The implementation uses the genuine standard additive character of $\mathbb Z/N\mathbb Z$ and proves its exponential-root form:
++Let $N>0$ and let $S$ be a unitary complex matrix with $S^N=I$. The implementation uses the standard additive character of $\mathbb Z/N\mathbb Z$ and proves its expression through a root of unity:
+ \[
+ \omega=\exp(2\pi i/N),\qquad
+ \chi(r)=\omega^{\operatorname{val}(r)}.
+@@ -98,7 +98,7 @@
+ \[
+ \rho(r)=S^{\operatorname{val}(r)}.
+ \]
+-Reduction of exponents modulo $N$ is proved from $S^N=I$, giving $\rho(r+s)=\rho(r)\rho(s)$ and $\rho(0)=I$. No representation or character-orthogonality assumption is inserted in the final matrix theorem.
++Reduction of exponents modulo $N$ is proved from $S^N=I$, giving $\rho(r+s)=\rho(r)\rho(s)$ and $\rho(0)=I$. The final matrix theorem derives the representation law and character orthogonality from the stated inputs.
+ 
+ \subsection{Exact coefficient formula}
+ The packet definition is a finite sum over residue classes:
+@@ -120,10 +120,10 @@
+ \[
+ \boxed{P_jP_k=\delta_{jk}P_j,\qquad \sum_jP_j=I,\qquad SP_j=\omega^jP_j.}
+ \]
+-Multiplicativity and completeness are first proved for a general representation in a complex algebra, then instantiated with the actual powers of $S$. This organization isolates reusable finite-sum algebra without weakening the final hypotheses.
++Multiplicativity and completeness are first proved for a general representation in a complex algebra, then instantiated with the actual powers of $S$. This organization makes the algebra of finite sums reusable while preserving the final hypotheses.
+ 
+-\subsection{Orthogonal, not merely idempotent}
+-Unitarity supplies $\rho(r)^*=\rho(-r)$, while the character obeys $\overline{\chi(r)}=\chi(-r)$. Reindexing $r\mapsto-r$ proves $P_j^*=P_j$. The final concrete matrix theorem includes Hermiticity together with multiplication, completeness, and eigenaction. Thus the result establishes orthogonal spectral packets, not only algebraic idempotents.
++\subsection{Orthogonality of the projectors}
++Unitarity supplies $\rho(r)^*=\rho(-r)$, while the character obeys $\overline{\chi(r)}=\chi(-r)$. Reindexing $r\mapsto-r$ proves $P_j^*=P_j$. The final concrete matrix theorem includes Hermiticity together with multiplication, completeness, and eigenaction. Together these identities establish orthogonal spectral packets.
+ 
+ The proof includes the degenerate modulus $N=1$: finite order then forces $S=I$ and the sole projector is $I$. It does not need an artificial assumption $N>1$.
+ 
+@@ -132,42 +132,42 @@
+ 
+ 
+ \section{The actual Euclidean transfer exponential}\label{supp3:section:004}
+-Let $H$ be a Hermitian matrix on a nonempty finite complex state space. The source defines
++Let $H$ be a Hermitian matrix on a nonzero complex state space of finite dimension. The source defines
+ \[
+ T_e(t)=\exp\bigl(-t(H-eI)\bigr)
+ \]
+-using Lean's power-series exponential. It does not introduce an unrelated transfer family or assume that a spectral expansion equals this exponential.
++using Lean's exponential defined by a power series. The proof then relates this defined operator to its spectral expansion.
+ 
+ \subsection{Connecting power series and spectral calculus}
+ The shifted generator is proved Hermitian. The implementation then identifies the actual matrix exponential with continuous functional calculus:
+ \[
+ \boxed{T_e(t)=f_t(H),\qquad f_t(x)=e^{-t(x-e)}.}
+ \]
+-The formal proof uses composition, scalar multiplication, subtraction, and the established agreement between the functional-calculus exponential and the power-series exponential. Spectral mapping is consequently available for the operator that was actually defined:
++The formal proof uses composition, scalar multiplication, subtraction, and the established agreement between the exponential in functional calculus and the exponential defined by a power series. Spectral mapping is consequently available for the operator that was actually defined:
+ \[
+ \Spec_\R T_e(t)=\{e^{-t(x-e)}:x\in\Spec_\R H\}.
+ \]
+-Hermiticity also identifies the full complex spectrum with the image of these real eigenvalues. A separate checked theorem states the complex-spectrum interval containment explicitly.
++Hermiticity also identifies the full complex spectrum with the image of these real eigenvalues. A separate checked theorem states the interval containing the complex spectrum explicitly.
+ 
+-\subsection{A genuine minimum eigenvalue}
++\subsection{The minimum eigenvalue}
+ The ground energy is the minimum of the finite, nonempty eigenvalue set. The proof establishes both
+ \[
+ E_0\in\Spec_\R H,\qquad E_0\le x\quad(x\in\Spec_\R H).
+ \]
+-The nonempty-state-space assumption is recorded in the theorem because the minimum of an empty spectrum is not defined by the manuscript's formula.
++The assumption that the state space is nonzero is recorded in the theorem because the minimum of an empty spectrum is not defined by the manuscript's formula.
+ 
+ \subsection{Positivity, semigroup composition, and the interval}
+ Every eigenvalue of $T_e(t)$ is strictly positive, for arbitrary real $e,t$, since the real exponential is positive. For $e=E_0$ and $t\ge0$ it is also at most one. Therefore
+ \[
+ \boxed{T_{E_0}(t)>0,\qquad \Spec T_{E_0}(t)\subseteq(0,1].}
+ \]
+-The two scalar multiples of $H-eI$ commute, so the actual power-series exponential obeys
++The two scalar multiples of $H-eI$ commute, so the exponential defined by the power series obeys
+ \[
+ \boxed{T_e(t+s)=T_e(t)T_e(s),\qquad T_e(0)=I.}
+ \]
+ The semigroup identity is proved for all real $t,s$. Nonnegative time is needed for the upper spectral bound, not for the composition identity or strict positivity.
+ 
+-These are finite-dimensional operator results. No continuum transfer limit, gravitational path integral, or physical spacetime model is established by this theorem. Numerical figures in the original paper were not recomputed in this release.
++These results concern operators on a finite dimensional space. Continuum transfer limits, gravitational path integrals, and physical spacetime models require further structure. The numerical figures retain their earlier computation records and were not recomputed during this prose revision.
+ 
+ 
+ 
+--- before/editable/traditional/parts/03_supplement_04.tex
++++ after/editable/traditional/parts/03_supplement_04.tex
+@@ -3,14 +3,14 @@
+ \[
+ \boxed{\|Q\exp(-itH)P\|\le |t|\,\|HP-PH\|\qquad(t\in\R).}
+ \]
+-The matrix specialization uses the Hilbert-space operator norm, implemented by \path{Matrix.Norms.L2Operator}. It is not an entrywise norm or the row-sum operator norm. The theorem includes the zero projector and empty matrix index type. There is no nonzero-time hypothesis.
++The matrix specialization uses the operator norm on the Hilbert space, implemented by \path{Matrix.Norms.L2Operator}. It is not an entrywise norm or the row-sum operator norm. The theorem includes the zero projector and empty matrix index type. The theorem also applies at time zero.
+ 
+-\subsection{Derivative proof rather than an assumed Duhamel estimate}
++\subsection{Deriving the estimate by differentiation}
+ For a skew-adjoint generator $G$, define the actual conjugation path
+ \[
+ T_P(t)=\exp(tG)P\exp(-tG).
+ \]
+-The formalization derives its derivative from the power-series exponential and the product rule:
++The formalization derives its derivative from the exponential power series and the product rule:
+ \[
+ T_P'(t)=\exp(tG)(GP-PG)\exp(-tG).
+ \]
+@@ -20,7 +20,7 @@
+ \qquad
+ \|T_P(t)-T_P(s)\|\le |t-s|\,\|GP-PG\|.
+ \]
+-The second inequality follows from the normed-space mean value inequality and covers either ordering of $s$ and $t$. It is not a finite-difference estimate or a numerical time discretization.
++The second inequality follows from the mean value inequality in normed spaces and covers either ordering of $s$ and $t$. It is not a finite-difference estimate or a numerical time discretization.
+ 
+ Multiplication by $\exp(tG)$ gives
+ \[
+@@ -41,7 +41,7 @@
+ \[
+ \|Q\exp(-it(H_0+V))P\|\le2|t|\,\|V\|.
+ \]
+-The latter uses $\|[V,P]\|\le2\|V\|$; its constant is not claimed to be optimal. Exact commutation gives zero leakage. The work does not include unbounded generators or time-dependent Hamiltonians.
++The latter uses $\|[V,P]\|\le2\|V\|$. Its constant is not claimed to be optimal. Exact commutation gives zero leakage. The work does not include unbounded generators or time-dependent Hamiltonians.
+ 
+ 
+ 
+@@ -50,7 +50,7 @@
+ \[
+ \nabla_Xs(x)=P(x)\,Ds(x)[X(x)].
+ \]
+-It is proved to preserve the range condition. It is linear in the vector-field direction and obeys the scalar Leibniz rule
++It is proved to preserve the range condition. It is linear in the vector field direction and obeys the scalar Leibniz rule
+ \[
+ \nabla_X(cs)=Dc[X]\,s+c\nabla_Xs
+ \]
+@@ -65,12 +65,12 @@
+ \end{align*}
+ The zero sandwich follows algebraically from the first identity. All products preserve their noncommutative order.
+ 
+-\subsection{The vector-field bracket is retained}
++\subsection{Retaining the bracket of vector fields}
+ Define the actual curvature action by
+ \[
+ R_P(X,Y)s=\nabla_X\nabla_Ys-\nabla_Y\nabla_Xs-\nabla_{[X,Y]}s.
+ \]
+-The source uses the actual Fr\'echet-derivative Lie bracket. Symmetry of second derivatives is supplied by the $C^2$ hypothesis, not postulated separately. Expanding the connection gives
++The source uses the Lie bracket defined through Fr\'echet derivatives. Symmetry of second derivatives is supplied by the $C^2$ hypothesis, not postulated separately. Expanding the connection gives
+ \[
+ R_P(X,Y)s=P\bigl(DP[X]Ds[Y]-DP[Y]Ds[X]\bigr).
+ \]
+@@ -86,7 +86,7 @@
+ \[
+ F_{P\circ f}(x)(v,w)=F_P(f(x))(Df(x)v,Df(x)w).
+ \]
+-The main theorem has global regularity hypotheses on normed parameter spaces. The pullback identity alone does not supply localization, smooth local trivializations, or gluing. The global range-bundle construction and connection gluing are supplied in the final completion below.
++The main theorem has global regularity hypotheses on normed parameter spaces. The pullback identity alone does not supply localization, smooth local trivializations, or gluing. The final supplement constructs the global range bundle and proves that the local connections glue.
+ 
+ 
+ 
+@@ -97,7 +97,7 @@
+ \qquad
+ V_a^*V_b=\delta_{ab}P.
+ \]
+-These are explicit partial-isometry and orthogonal-syndrome hypotheses. The block does not claim to have obtained them from arbitrary Knill--Laflamme Gram data.
++These hypotheses state that the operators are partial isometries with orthogonal syndromes. The next supplement derives such a family from arbitrary Knill--Laflamme Gram data.
+ 
+ \subsection{Constructing the recovery on the whole ambient space}
+ Define the syndrome projectors and their complement by
+@@ -118,7 +118,7 @@
+ For finite complex matrices, trace preservation and complete positivity at every finite auxiliary dimension are proved for this actual map. The amplified map is identified with the Kraus family $I_J\otimes R_a$, including the complement term. Positivity is not merely checked on a single matrix size.
+ 
+ \subsection{Exact correction, including coherent errors}
+-For every code-supported operator $P\rho P=\rho$, the central identity is
++For every operator supported on the code, $P\rho P=\rho$, the central identity is
+ \[
+ \boxed{\mathcal R(V_a\rho V_b^*)=\delta_{ab}\rho.}
+ \]
+@@ -127,11 +127,11 @@
+ \mathcal R\!\left(\sum_ap_aV_a\rho V_a^*\right)=\rho
+ \quad\text{when}\quad\sum_ap_a=1.
+ \]
+-The identity is algebraic and is proved for complex weights. Physical mixtures use the nonnegative real case. For a coherent error $E_z=\sum_a z_aV_a$, the stronger cross-term calculation yields
++The identity is algebraic and is proved for complex weights. Physical mixtures use the nonnegative real case. For a coherent error $E_z=\sum_a z_aV_a$, the calculation of the cross terms yields
+ \[
+ \mathcal R(E_z\rho E_z^*)=\left(\sum_a z_a\overline{z_a}\right)\rho.
+ \]
+-Thus normalized coherent superpositions are corrected as well. This is an explicit recovery stage, not a replacement definition that makes the full Knill--Laflamme criterion true by construction.
++Thus the same map also corrects normalized coherent superpositions. This construction supplies the recovery stage used in the full Knill--Laflamme proof that follows.
+ 
+ 
+ 
+--- before/editable/traditional/parts/03_supplement_05.tex
++++ after/editable/traditional/parts/03_supplement_05.tex
+@@ -23,18 +23,18 @@
+ PE_a^*E_bP=C_{ab}P\quad\text{for all }a,b.
+ \end{gathered}}
+ \]
+-The code-space statement is not limited to a selected basis of states. The formalization separately proves equivalence with correction of \emph{every} complex matrix supported on the code. It also proves preservation with arbitrary finite reference systems, as detailed in the physical-state bridge below.
+-
+-
+-
+-\subsection{Degenerate cases are not silently excluded}
+-There is no positive-definiteness assumption on $C$. Zero eigenvalues, redundant error operators, empty positive-eigenvalue support and the zero projector are included. If $P=0$, the only supported matrix is zero and no trace-one code density matrix exists. The proofs handle that case separately rather than dividing by the code rank or by $\Tr P$.
++The statement applies throughout the code space. The formalization separately proves equivalence with correction of \emph{every} complex matrix supported on the code. It also proves preservation with arbitrary finite reference systems, as detailed in the discussion of density matrices and reference systems below.
++
++
++
++\subsection{Including degenerate cases}
++The matrix $C$ need not be positive definite. The proof includes zero eigenvalues, redundant error operators, an empty set of positive eigenvalues, and the zero projector. If $P=0$, the only supported matrix is zero and no trace-one code density matrix exists. The proofs handle that case separately rather than dividing by the code rank or by $\Tr P$.
+ 
+ For an unnormalized error family, the correct statement is generally
+ \[
+ \mathcal R\mathcal N_E(\rho)=\Tr(C)\rho,
+ \]
+-not unconditional equality to $\rho$. Normalization forces $\Tr C=1$ on a nonzero code. The unrestricted-family formulation and the same-decoder span result appear in the coherent-error discussion below.
++not unconditional equality to $\rho$. Normalization forces $\Tr C=1$ on a nonzero code. The discussion of coherent errors below treats unrestricted error families and shows when the same decoder works throughout their span.
+ 
+ 
+ 
+@@ -49,12 +49,12 @@
+ \[
+ B_r=\sum_a U_{ar}F_a.
+ \]
+-The new module proves, rather than assumes,
++The formal module proves the identities
+ \[
+ B_rP=B_r,\qquad B_r^*B_s=\delta_{rs}\lambda_rP,
+ \qquad \sum_rB_r\rho B_r^*=\sum_aF_a\rho F_a^*.
+ \]
+-For code-supported $\rho$, the restricted and unrestricted error sums are equal. Thus the unitary change of error coordinates preserves the actual channel on the code.
++For $\rho$ supported on the code, the restricted and unrestricted error sums are equal. Thus the unitary change of error coordinates preserves the actual channel on the code.
+ 
+ \subsection{Null directions are removed by proof}
+ If $\lambda_r=0$, then $B_r^*B_r=0$. Positivity of the ordinary complex matrix inner product gives $B_r=0$. This is the checked declaration \path{DiagonalErrors.zero_weight_error}. The normalized syndrome operators are defined only on
+@@ -78,12 +78,12 @@
+ \]
+ Hence the recovery is trace preserving. Its finite Kraus form also proves positivity after amplification by the identity on every finite auxiliary space. The complement term matters: the map is defined as a channel even outside the syndrome ranges.
+ 
+-Finally the checked calculation gives $\mathcal R\mathcal N_E(\rho)=\sum_r\lambda_r\rho=\Tr(C)\rho$. Under input-channel normalization and $P\ne0$, summing the diagonal Gram identities gives $\Tr(C)P=P$, hence $\Tr C=1$. The zero-code branch does not use this cancellation.
++Finally the checked calculation gives $\mathcal R\mathcal N_E(\rho)=\sum_r\lambda_r\rho=\Tr(C)\rho$. Under normalization of the input channel and $P\ne0$, summing the diagonal Gram identities gives $\Tr(C)P=P$, hence $\Tr C=1$. The proof for the zero code does not use this cancellation.
+ 
+ 
+ 
+ \section{Deriving the Gram matrix from recovery}\label{supp5:section:003}
+-Suppose an actual finite trace-preserving recovery corrects every code-supported operator. The proof does not assume the Knill--Laflamme inner-product condition or a pre-existing syndrome decomposition. Instead, it expands the composite channel into the finite Kraus family
++Suppose a finite recovery that preserves trace corrects every operator supported on the code. To derive the Knill--Laflamme condition without assuming a syndrome decomposition, the proof expands the composite channel into the finite Kraus family
+ \[
+ A_{ra}=R_rE_aP.
+ \]
+@@ -91,14 +91,14 @@
+ \[
+ \sum_{r,a} A_{ra}\rho A_{ra}^*=P\rho P.
+ \]
+-This equality on all matrices is obtained from the code-supported sandwich $P\rho P$, using the projector identities.
++This equality on all matrices follows by applying correction to the sandwich supported on the code, $P\rho P$, using the projector identities.
+ 
+ \subsection{Rank-one rigidity of the corrected channel}
+ The module tests the map equality on actual matrix units and flattens each $A_{ra}$ into a row. If $X$ is the matrix of those rows and $p$ is the vector of entries of $P$, the resulting Gram identity is
+ \[
+ X^*X=\overline p\,p^{\mathsf T}.
+ \]
+-The checked rank-one Gram lemma proves that every row of $X$ is proportional to $p$. For nonzero $p$, a nonzero coordinate is selected and a two-coordinate test vector is placed in the null space of the Gram matrix. The implication $X^*Xv=0\Rightarrow Xv=0$ then gives the required proportionality. When $p=0$, the Gram identity forces $X=0$ directly.
++The checked rank-one Gram lemma proves that every row of $X$ is proportional to $p$. For nonzero $p$, a nonzero coordinate is selected and a test vector supported on two coordinates is placed in the null space of the Gram matrix. The implication $X^*Xv=0\Rightarrow Xv=0$ then gives the required proportionality. When $p=0$, the Gram identity forces $X=0$ directly.
+ 
+ Applied to the corrected Kraus family, this yields scalars $z_{ra}$ with
+ \[
+@@ -117,19 +117,19 @@
+ \end{align*}
+ Thus $C=Z^*Z$ is positive semidefinite and satisfies the required compressed identities. The theorem \path{gram_of_recovery} implements this calculation with the original error and recovery matrices.
+ 
+-A second rigidity argument handles a nonnegative scalar multiple of the identity code map. It uses $\sqrt t\,P$ as the rank-one map generator and includes $t=0$. That argument gives necessity for unnormalized error families without pretending that they are channels.
++A second rigidity argument handles a nonnegative scalar multiple of the identity code map. It uses $\sqrt t\,P$ as the rank-one map generator and includes $t=0$. That argument proves necessity for unnormalized error families, which need not define channels.
+ 
+ 
+ 
+ \section{Density matrices, all operators and finite references}\label{supp5:section:004}
+-The operator-space formulation used in necessity must agree with the physical density-state formulation. This bridge is proved explicitly for complex-linear maps on finite matrices.
++The necessity argument is stated for all operators, so it must be connected to correction of physical density matrices. The proof establishes this connection explicitly for complex linear maps on finite matrices.
+ 
+ \subsection{Normalization is not an extra assumption}
+ A nonzero positive semidefinite matrix has strictly positive real trace. If a complex-linear map fixes every normalized code density matrix, apply that hypothesis to
+ \[
+ \frac{\rho}{\Tr\rho}
+ \]
+-for each nonzero positive code-supported $\rho$. Linearity then gives equality on $\rho$ itself. The zero matrix is handled separately. The source proves the real-trace, nonzero-trace and scalar-cancellation facts rather than assuming that normalization is valid.
++for each nonzero positive code-supported $\rho$. Linearity then gives equality on $\rho$ itself. The zero matrix is handled separately. The source proves that the trace is real and nonzero, then justifies cancellation of the scalar. These steps establish that normalization is valid.
+ 
+ \subsection{Complex polarization reaches the whole operator space}
+ Write $q(x)=xx^*$. The module proves the exact identity
+@@ -151,18 +151,18 @@
+ \[
+ (I_A\otimes P)\rho(I_A\otimes P)=\rho,
+ \]
+-then every reference block is code supported. Applying the checked operator-space correction to those blocks gives
++then every reference block is code supported. Applying the checked correction theorem for operators to those blocks gives
+ \[
+ \boxed{\widetilde{\mathcal R}\,\widetilde{\mathcal N}_E(\rho)=\rho.}
+ \]
+-This includes entangled density matrices supported on the reference--code space, and in fact holds for every jointly supported matrix. There is no fixed auxiliary dimension or test-state sampling.
+-
+-The declaration \path{recovery_with_reference} proves the equality. The recovery's complete positivity is separately established by the actual finite Kraus amplification, so preservation of states is not inferred from a merely positive, non-completely-positive map.
++This includes entangled density matrices supported on the combined reference and code space. In fact, the identity holds for every jointly supported matrix and every finite reference dimension.
++
++The declaration \path{recovery_with_reference} proves the equality. The finite Kraus amplification separately establishes complete positivity of the recovery, which is needed to preserve states in the presence of a reference system.
+ 
+ 
+ 
+ \section{Coherent combinations and normalization}\label{supp5:section:005}
+-A correction proof for only one selected Kraus presentation is weaker than a proof that one decoder works throughout the error span. The new module connects the constructed spectral recovery back to the original error operators.
++A correction proof for only one selected Kraus presentation is weaker than a proof that one decoder works throughout the error span. The formal module connects the constructed spectral recovery back to the original error operators.
+ 
+ \subsection{Cross terms for the original errors}
+ For arbitrary positive Gram data, the same recovery satisfies
+@@ -177,7 +177,7 @@
+ =\left(\sum_{a,b}c_a\overline{c_b}C_{ba}\right)\rho
+ =(c^*Cc)\rho.
+ \]
+-The double-sum formula is the literal checked conclusion; the final quadratic-form notation follows by renaming finite indices. It is not restricted to orthogonal errors or real coefficients.
++The formula with a double sum is the literal checked conclusion. The final notation as a quadratic form follows by renaming finite indices. It is not restricted to orthogonal errors or real coefficients.
+ 
+ \subsection{Every normalized channel in the same span}
+ Suppose $F_j=\sum_a c_{ja}E_a$ and $\sum_jF_j^*F_j=I$. The decoder is \emph{not} reconstructed for the $F_j$. Summing the coherent identities gives a scalar multiple $q\rho$. Trace preservation of both the $F$ channel and the recovery forces $q=1$ on a nonzero code. The proof uses positivity of $P$ to justify cancellation of its trace and handles $P=0$ separately. Therefore
+@@ -186,13 +186,13 @@
+ \]
+ This is \path{Data.recovery_span_channel}, a quantified statement over arbitrary finite $F$ families and their complex coefficients.
+ 
+-\subsection{The unnormalized error-family equivalence}
++\subsection{The equivalence for unnormalized error families}
+ For arbitrary finite $E$, define exact family recovery to mean that a finite trace-preserving Kraus recovery and a single $t\ge0$ exist such that
+ \[
+ \mathcal R\mathcal N_E(\rho)=t\rho
+ \quad\text{for every code-supported }\rho.
+ \]
+-Then \path{error_family_correctable_iff_gram} proves that this condition is equivalent to the existence of $C\succeq0$ satisfying the Gram identities. Sufficiency chooses $t=\Tr C$; necessity constructs $C$ from the scaled rank-one rigidity argument.
++Then \path{error_family_correctable_iff_gram} proves that this condition is equivalent to the existence of $C\succeq0$ satisfying the Gram identities. Sufficiency chooses $t=\Tr C$. Necessity constructs $C$ from the scaled rank-one rigidity argument.
+ 
+ The scale is essential. Zero errors can give $t=0$ and cannot be inverted to a nonzero normalized state. An input with a larger total trace is not silently declared a channel. For normalized input channels, the separate channel theorem removes the scale exactly as described in the sufficiency argument above.
+ 
+@@ -205,8 +205,8 @@
+ E_0=\frac35I,\qquad E_1=\frac45I,\qquad
+ C=\begin{pmatrix}9/25&12/25\\12/25&16/25\end{pmatrix}.
+ \]
+-Lean checks the channel normalization, the Gram identities, positivity of $C$, $\det C=0$, and the nonzero off-diagonal entry. It then applies the completed density-state criterion to prove correctability. This is an exact rational-complex example, not a floating-point tolerance check.
++Lean checks the channel normalization, the Gram identities, positivity of $C$, $\det C=0$, and the nonzero off-diagonal entry. It then applies the criterion for density matrices to prove correctability. The calculation is exact and uses rational complex entries.
+ 
+ \subsection{A genuine channel can still be uncorrectable}
+-For full qubit dephasing, $E_0=\operatorname{diag}(1,0)$ and $E_1=\operatorname{diag}(0,1)$, the Kraus normalization is checked. But $E_0^*E_0$ cannot be a scalar multiple of $I$, as its two diagonal entries differ. Necessity therefore proves that no finite recovery channel corrects the full code space. The zero-code case is also checked independently.
+-
++For full qubit dephasing, $E_0=\operatorname{diag}(1,0)$ and $E_1=\operatorname{diag}(0,1)$, the Kraus normalization is checked. But $E_0^*E_0$ cannot be a scalar multiple of $I$, as its two diagonal entries differ. Necessity therefore proves that no finite recovery channel corrects the full code space. The case of the zero code is also checked independently.
++
+--- before/editable/traditional/parts/03_supplement_06.tex
++++ after/editable/traditional/parts/03_supplement_06.tex
+@@ -3,7 +3,7 @@
+ \[
+ \nabla_Xs=P\,\dd s[X].
+ \]
+-The range bundle is constructed from $P$ rather than assumed. Its local connection formulas glue, and the actual covariant commutator satisfies
++The proof begins by constructing the range bundle from $P$. Its local connection formulas glue, and the actual covariant commutator satisfies
+ \[
+ \boxed{(\nabla_X\nabla_Y-\nabla_Y\nabla_X-\nabla_{[X,Y]})s
+ =P\bigl(\dd P[X]\dd P[Y]-\dd P[Y]\dd P[X]\bigr)P\,s.}
+@@ -16,7 +16,7 @@
+ \[
+ \mathcal E_x=\{v\in F:P(x)v=v\}=\Ran P(x).
+ \]
+-The total space is the subset $\mathcal E=\{(x,v):P(x)v=v\}\subseteq M\times F$, with the induced topology. The construction includes actual local homeomorphisms of this space, not merely abstract transition functions.
++The total space is the subset $\mathcal E=\{(x,v):P(x)v=v\}\subseteq M\times F$, with the induced topology. The construction provides local homeomorphisms of this total space as well as the transition functions between them.
+ 
+ \subsection{An invertible intertwiner near each anchor}
+ For idempotents $p,q$, set
+@@ -27,7 +27,7 @@
+ \[
+ U_a=\{x:T(P(x),P(a))\text{ is invertible}\}.
+ \]
+-The invertible elements form an open subset of the bounded-operator algebra. Consequently $U_a$ is open and contains $a$. The family $(U_a)$ covers the whole base. Invertibility is \emph{derived locally}, not assumed at every pair of points.
++The invertible elements form an open subset of the algebra of bounded operators. Consequently $U_a$ is open and contains $a$. The family $(U_a)$ covers the whole base. Invertibility is \emph{derived locally}, not assumed at every pair of points.
+ 
+ \subsection{The mutually inverse local maps}
+ Write $T_a(x)=T(P(x),P(a))$. For $x\in U_a$,
+@@ -43,7 +43,7 @@
+ \[
+ \mathcal E|_{U_a}\ \cong\ U_a\times\mathcal E_a
+ \]
+-is an actual base-preserving local product homeomorphism.
++is a local product homeomorphism that preserves the base point.
+ 
+ \subsection{Smooth overlap maps and rank}
+ The coordinate transition is $g_{ab}(x)=A_b(x)B_a(x)$. It is smooth on $U_a\cap U_b$, agrees with the actual change between local homeomorphisms, and satisfies
+@@ -68,13 +68,13 @@
+ It is not only an ambient expression asserted to land in the range.
+ 
+ \subsection{Connection axioms and smoothness}
+-The new proofs establish range preservation, additivity in the section, linearity over functions in the vector-field argument, and the scalar Leibniz identity
++The formal proofs establish range preservation, additivity in the section, linearity over functions in the vector field argument, and the scalar Leibniz identity
+ \[
+ \nabla_X(fs)=\dd f[X]\,s+f\nabla_Xs.
+ \]
+ Smooth $P$, smooth sections and smooth vector fields give smooth covariant derivatives. Equality of section germs gives equality of covariant derivatives at the point, so the operation is local.
+ 
+-\subsection{Smooth sections are genuinely intrinsic}
++\subsection{Smoothness of sections in bundle coordinates}
+ Let $x\in U_a$. If $P(y)s(y)=s(y)$ in a neighborhood of $x$, then
+ \[
+ s\text{ is smooth at }x
+@@ -106,7 +106,7 @@
+ \[
+ D_Ms([X,Y])=D_M(D_Ms[Y])[X]-D_M(D_Ms[X])[Y].
+ \]
+-This uses the chart pullback of the actual vector fields and the ordinary differential identity, then transfers the result back to the manifold. The point-local auxiliary module permits use within arbitrary open chart domains.
++This uses the chart pullback of the actual vector fields and the ordinary differential identity, then transfers the result back to the manifold. The auxiliary module works locally at a point, so the argument applies within arbitrary open chart domains.
+ 
+ \subsection{Projector and section identities are derived}
+ Differentiating $P^2=P$ in a tangent direction $v$ yields
+@@ -121,11 +121,11 @@
+ Both statements are consequences of actual derivative rules. They are not additional assumptions.
+ 
+ \subsection{Cancellation of the second derivatives}
+-The product rule and the ambient Lie-bracket identity reduce curvature to
++The product rule and the identity for the ambient Lie bracket reduce curvature to
+ \[
+ R^\nabla(X,Y)s=P\dd P[X]\dd s[Y]-P\dd P[Y]\dd s[X].
+ \]
+-Substitute the differentiated range-section identity. The terms containing $P\dd P[v]P$ vanish, leaving
++Substitute the identity obtained by differentiating the range condition for the section. The terms containing $P\dd P[v]P$ vanish, leaving
+ \[
+ R^\nabla(X,Y)s=
+ P\bigl(\dd P[X]\dd P[Y]-\dd P[Y]\dd P[X]\bigr)P s.
+@@ -137,12 +137,12 @@
+ 
+ 
+ \subsection{Geometry and scalar conventions}
+-The main global curvature theorem uses a smooth real manifold without boundary, modeled on a complete normed real space, and bounded real-linear endomorphisms of a complete normed real space. Finite-dimensional parameter and quantum spaces fall within the corresponding real differential calculus. Complex quantum spaces can be viewed through their underlying real normed spaces; this block does not introduce a separate complex-bundle typeclass wrapper.
++The main global curvature theorem uses a smooth real manifold without boundary, modeled on a complete normed real space, and bounded real-linear endomorphisms of a complete normed real space. Finite-dimensional parameter and quantum spaces fall within the corresponding real differential calculus. Complex quantum spaces can be viewed through their underlying real normed spaces. This block does not introduce a separate typeclass wrapper for complex bundles.
+ 
+-The atlas and global connection constructions also support the more general model-with-corners infrastructure where their hypotheses apply. The \emph{curvature completion claim} is specifically for the boundaryless manifold theorem. A boundary/corner curvature generalization is not claimed.
++The atlas and global connection constructions also support the more general infrastructure for models with corners wherever their hypotheses apply. The \emph{curvature completion claim} concerns the stated theorem for manifolds without boundary. Extending that curvature result to boundaries or corners requires further work.
+ 
+-\subsection{Explicit smooth atlas, not an assumed one}
+-The implementation exposes the actual total space, local product homeomorphisms, linear transitions, smoothness proofs and cocycle laws. It does not register these as a \path{ContMDiffVectorBundle} instance. This is an interface choice: no range-bundle atlas, local trivialization, overlap identity or curvature conclusion is inserted as a premise.
++\subsection{An explicit smooth atlas}
++The implementation exposes the actual total space, local product homeomorphisms, linear transitions, smoothness proofs and cocycle laws. It does not register these as a \path{ContMDiffVectorBundle} instance. This is an interface choice. The range bundle atlas, local trivializations, overlap identities, and curvature formula are all constructed or proved from the stated inputs.
+ 
+-The smooth-section equivalence and gauge law make the atlas usable intrinsically. The connection is also defined with values in \path{fiber (P x)}. Six proof-bearing constructed objects, including both local equivalences and the fiber-valued derivative, have separate axiom audits.
++The equivalence for smooth sections and the gauge law make the atlas usable intrinsically. The connection is also defined with values in \path{fiber (P x)}. Six constructed objects that contain proof fields, including both local equivalences and the derivative with values in the fiber, have separate axiom audits.
+ 
+--- before/editable/traditional/parts/04_alternative_derivations.tex
++++ after/editable/traditional/parts/04_alternative_derivations.tex
+@@ -1,7 +1,7 @@
+ 
+ \section{Earlier compact derivations retained as alternatives}\label{legacy:section:001}\label{legacy:alternatives}
+-The following derivations retain valid mathematical arguments from the original manuscript. Their hypotheses and notation agree with the corrected finite core. The earlier abbreviated error-correction argument is replaced by the complete normalized and scaled recovery proofs above, and its substantive conclusions are included there.
+-\subsection{Duhamel proof of fixed-packet leakage}\label{legacy:duhamel}
++The following derivations retain valid mathematical arguments from the original manuscript. Their hypotheses and notation agree with the corrected finite core. The earlier abbreviated argument for error correction is replaced by the complete normalized and scaled recovery proofs above, and its substantive conclusions are included there.
++\subsection{Duhamel proof of leakage from a fixed packet}\label{legacy:duhamel}
+ Let $H=H^*$ on a finite-dimensional complex Hilbert space, $P=P^*=P^2$, $Q=I-P$, and $t\in\mathbb R$.
+ \begin{proof}[Alternative proof of the commutator leakage bound]\phantomsection\label{legacy:proof:001}
+ Because $QP=0$,
+@@ -15,8 +15,8 @@
+ Both unitary factors have norm one, so taking norms and using the integration interval's length $|t|$ yields
+ $\|Qe^{-itH}P\|\le |t|\,\|[H,P]\|$.
+ \phantomsection\label{legacy:proof:001:end}\end{proof}
+-\subsection{Exterior-form proof of the projected curvature}\label{legacy:exterior}
+-Let $P$ be a smooth idempotent field and extend the projected connection to range-bundle-valued differential forms by $\nabla\omega=P\,d\omega$. Thus $\nabla^2$ denotes the exterior covariant square, including the exterior derivative's Lie-bracket term when evaluated on vector fields.
++\subsection{Proof of projected curvature with exterior forms}\label{legacy:exterior}
++Let $P$ be a smooth idempotent field and extend the projected connection to differential forms with values in the range bundle by $\nabla\omega=P\,d\omega$. Thus $\nabla^2$ denotes the exterior covariant square, including the Lie bracket term in the exterior derivative when evaluated on vector fields.
+ \begin{proof}[Alternative proof of the curvature formula]\phantomsection\label{legacy:proof:002}
+ For a section $s$ with $Ps=s$,
+ \[
+--- before/editable/traditional/Paper_VII_Traditional_Final.tex
++++ after/editable/traditional/Paper_VII_Traditional_Final.tex
+@@ -119,18 +119,12 @@
+ \crefname{conjecture}{conjecture}{conjectures}
+ \crefname{remark}{remark}{remarks}
+ 
+-% Keep the two reviewed subsection headings with their opening statement.
+-% The protected part files and every proof body remain unchanged by this hook.
+-\pretocmd{\subsection}{%
+-  \ifnum\value{subsection}=2\relax
+-    \ifnum\value{part}=1\relax
+-      \ifnum\value{section}=6\relax\par\Needspace{9\baselineskip}\fi
+-    \fi
+-    \ifnum\value{part}=2\relax
+-      \ifnum\value{section}=7\relax\par\Needspace{9\baselineskip}\fi
+-    \fi
+-  \fi
+-}{}{\PackageError{komorebi}{Cannot attach subsection layout guard}{Restore the reviewed subsection command before building.}}
++% Reserve enough room for a subsection and its opening prose or statement.
++% This avoids headings stranded above a page break when prose is revised.
++\pretocmd{\subsection}{\par\Needspace{10\baselineskip}}{}{\PackageError{komorebi}{Cannot attach subsection layout guard}{Restore the reviewed subsection command before building.}}
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
+ 
+ % Keep each unboxed statement anchor with its visible heading.
+ \BeforeBeginEnvironment{proposition}{\par\Needspace{5\baselineskip}}
+@@ -148,13 +142,13 @@
+ \BeforeBeginEnvironment{definition}{\par\Needspace{7\baselineskip}}
+ \begin{document}
+ \KomorebiCover
+-\KomorebiOpeningNote{\textbf{Part I.} The corrected finite quantum seed calculus, with its exact released formal contract.
++\KomorebiOpeningNote{\textbf{Part I.} The finite quantum seed calculus develops the packet language and states the precise scope of the archived formal proof.
+ 
+ \medskip
+-\textbf{Part II.} The complete strengthened mathematical development, including all seventy-nine theorem, proposition, lemma, and corollary proofs.
++\textbf{Part II.} The strengthened development extends this language through seventy-nine theorem, proposition, lemma, and corollary proofs.
+ 
+ \medskip
+-\textbf{Part III.} The substantive mathematics of all six formal proof supplements and three retained alternative derivations.
++\textbf{Part III.} Six supplements give the detailed mathematical constructions behind the formal proofs, followed by three alternative derivations.
+ 
+ \medskip
+ \textbf{Part IV.} Forty worked visual pages connect the formulas to finite models and identify the hypotheses needed at each continuum boundary.}
+@@ -162,9 +156,9 @@
+ \section*{Reading this edition}\addcontentsline{toc}{section}{Reading this edition}
+ A seed is useful only together with the operators allowed to act on it. Paper VII follows that principle through symmetry packets, quantum circuits, moving projectors, channels, effective dynamics, and refinement. The finite calculus in Part I supplies the common language. The strengthened development in Part II gives broader bounded constructions and limit criteria. Part III retains the detailed proof completions rather than reducing them to a status summary.
+ 
+-The original finite item numbers keep the prefix I. The strengthened development has the prefix II, and the supplementary constructions have the prefix III. All nine retrieved mathematical source parts are retained, with the local wording and assumption clarifications recorded in this edition. The proof bodies are unchanged. Overlapping statements and proofs are retained because their hypotheses and uses differ. Their total is not a count of independent discoveries.
+-
+-The selected archived formal checkpoint covers nineteen scoped manuscript items. It records 323 explicit theorem declarations across twenty-five active Lean proof modules. These are different units. The strengthened Part II is outside that nineteen-item contract. This October monograph does not report a fresh Lean compilation. Exact hypotheses, declarations, inherited compiler records, and reproduction instructions appear in the Lean companion.
++The original finite item numbers keep the prefix I. The strengthened development has the prefix II, and the supplementary constructions have the prefix III. All nine mathematical source parts are retained. This edition revises their explanatory prose while preserving the mathematical expressions, hypotheses, proof steps, and statement inventory. The accompanying report records the changes. Overlapping statements and proofs are retained because their hypotheses and uses differ. Their total is not a count of independent discoveries.
++
++The selected archived formal checkpoint covers nineteen scoped manuscript items. It records 323 explicit theorem declarations across twenty-five active Lean proof modules. These are different units. The strengthened Part II is outside that nineteen-item contract. The formal evidence comes from the archived checkpoint of 6 September 2026. The present prose revision does not report a fresh Lean compilation. Exact hypotheses, declarations, inherited compiler records, and reproduction instructions appear in the Lean companion.
+ 
+ Five explicitly named conjectures remain open in the finite core: anomaly-free refinement, uniform Feshbach control, Lorentzian reconstruction, the Einstein infrared limit, and massless spin-two packets. Bounded direct limits and norm limits provide useful criteria. Each physical target still needs the additional structure stated in its conjecture.
+ 
+@@ -188,7 +182,7 @@
+ \input{parts/01_finite_core.tex}
+ \startreadingpart{Strengthened quantum packet calculus and continuum towers}
+ \begin{readerroadmap}
+-This part broadens the packet calculus while keeping its hypotheses explicit. Read the nonzero-space, common-space, self-adjointness, finite-address, and trace-class assumptions with each result. Its bounded limits do not establish the five open physical continuum targets.
++This part broadens the packet calculus while keeping its hypotheses explicit. Read each result with its assumptions about nonzero spaces, a common ambient space, self-adjointness, finite address sets, and trace class operators. Its bounded limits do not establish the five open physical continuum targets.
+ \end{readerroadmap}
+ \graphicspath{{assets/strengthened/}}
+ \input{parts/02_strengthened.tex}

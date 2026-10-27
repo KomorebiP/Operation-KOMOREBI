@@ -1,0 +1,23 @@
+theorem moving_frame_coordinates [DecidableEq n]
+    (U : ℝ → Matrix n n ℂ) (psi : ℝ → n → ℂ)
+    (H dU : Matrix n n ℂ) (dpsi : n → ℂ) (t : ℝ)
+    (hu : ∀ i j, HasDerivAt (fun s => U s i j) (dU i j) t)
+    (hp : ∀ i, HasDerivAt (fun s => psi s i) (dpsi i) t)
+    (hleft : ∀ s, (U s).conjTranspose * U s = 1)
+    (hright : ∀ s, U s * (U s).conjTranspose = 1)
+    (hsch : Complex.I • dpsi = H *ᵥ psi t)
+    (hH : H.conjTranspose = H) :
+    let y := fun s => (U s).conjTranspose *ᵥ psi s
+    let dy := dU.conjTranspose *ᵥ psi t + (U t).conjTranspose *ᵥ dpsi
+    (∀ i, HasDerivAt (fun s => y s i) (dy i) t) ∧
+      Complex.I • dy = effectiveHamiltonian (U t) H dU *ᵥ y t ∧
+      (effectiveHamiltonian (U t) H dU).conjTranspose =
+        effectiveHamiltonian (U t) H dU := by
+  dsimp only
+  have hy := matrix_vector_derivative (fun s => (U s).conjTranspose) psi
+    dU.conjTranspose dpsi t (adjoint_derivative U dU t hu) hp
+  refine ⟨hy, ?_, effective_hamiltonian_hermitian U H dU t hu hleft hH⟩
+  apply moving_frame_equation U psi (fun s => (U s).conjTranspose *ᵥ psi s)
+    H dU dpsi _ t hu hp hy (hleft t) _ hsch
+  intro s
+  rw [Matrix.mulVec_mulVec, hright, Matrix.one_mulVec]

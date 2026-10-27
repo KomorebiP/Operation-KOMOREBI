@@ -1,0 +1,5 @@
+theorem matrix_commutator_leakage_bound {n : Type*} [Fintype n] [DecidableEq n]
+    (H P : Matrix n n ℂ) (hH : H.IsHermitian) (hP : P.IsHermitian)
+    (hPP : P*P=P) (t : ℝ) :
+    ‖(1-P) * exp ((-(t : ℂ)*Complex.I) • H) * P‖ ≤ |t| * ‖H*P-P*H‖ := by
+  exact commutator_leakage_bound H P hH.isSelfAdjoint ⟨hPP, hP.isSelfAdjoint⟩ t

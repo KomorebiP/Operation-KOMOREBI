@@ -1,0 +1,13 @@
+theorem state_correctable_iff_gram \CodeChar{123}I : Type*\CodeChar{125} [Fintype I] [DecidableEq I]
+    (P : Matrix n n ℂ) (hP : IsStarProjection P) (E : I → Matrix n n ℂ)
+    (hE : (∑ a, star (E a)*E a)=1) :
+    StateCorrectable P E ↔ ∃ C : Matrix I I ℂ, C.PosSemidef ∧
+      ∀ a b, P*star (E a)*E b*P=C a b • P := by
+  rw [← correctable_iff_gram P hP E hE]
+  constructor
+  · rintro ⟨m,R,hR,hcorrect⟩
+    exact ⟨m,R,hR,(density_corrects_iff_operators P hP E R).mp hcorrect⟩
+  · rintro ⟨m,R,hR,hcorrect⟩
+    exact ⟨m,R,hR,(density_corrects_iff_operators P hP E R).mpr hcorrect⟩
+
+open scoped Kronecker

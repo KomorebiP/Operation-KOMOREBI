@@ -1,0 +1,72 @@
+\section{Effective resolvents, Euclidean transfer, and finite bounds}
+\label{sec:finite-limits}
+
+\subsection{A resolvent identity needs two invertibility hypotheses}
+Split the state index into a retained type $P$ and an eliminated type $Q$. Let the full operator have blocks $A_{pp},A_{pq},A_{qp},A_{qq}$. The eliminated resolvent block is $D=z1_Q-A_{qq}$, and the Schur complement is
+\[
+S(z)=z1_P-A_{pp}-A_{pq}D^{-1}A_{qp}.
+\]
+The theorem identifies the retained corner of the full inverse with $S(z)^{-1}$. Its two bracketed type-class assumptions assert invertibility of $D$ and invertibility of the full resolvent matrix.
+
+\excerpt{SchurFeshbach}{feshbach}
+
+\contract{Both finite state-index types have decidable equality. The eliminated block and the full resolvent matrix are invertible. Lean's matrix inverse notation is a total operation, but that notation alone does not supply genuine invertibility at a singular matrix. The theorem uses the invertibility assumptions to justify the actual inverse identities.}
+
+\walk{First rewrite $z1-A$ as the displayed block matrix, retaining the negative signs on the two off-diagonal blocks. Copy the given full invertibility instance to that rewritten matrix. A Mathlib block-inverse theorem supplies invertibility of its Schur complement and the full inverse formula. Rewrite the inverse-of-invertible notation to the nonsingular matrix inverse, then select the retained submatrix. The two negative off-diagonal factors multiply to the sign already encoded in the definition of \code{schur}.}
+
+The source retains a concrete counterexample to dropping full invertibility: at $z=0$ with $H=\operatorname{diag}(0,-1)$, the eliminated resolvent block is $1$, while the full matrix $z1-H=\operatorname{diag}(0,1)$ is singular.
+
+\excerpt{SchurFeshbach}{feshbach_counterexample}
+
+The companion \code{schur_invertible} theorem says that, under eliminated-block invertibility, full invertibility is equivalent to Schur-complement invertibility. This locates the remaining pole rather than assuming it absent. The corrected assumption is part of the checked interpretation of the traditional result. The retained Paper VI proof is reused in this source; the present edition does not rerun the earlier paper.
+
+\subsection{Euclidean transfer is the power-series exponential}
+The transfer is
+\[
+T_{e}(t)=\exp\bigl(-t(H-e1)\bigr).
+\]
+The definition uses the actual matrix exponential. For Hermitian $H$, a continuous-functional-calculus theorem identifies it with the scalar function $x\mapsto e^{-t(x-e)}$ applied to $H$.
+
+\excerpt{EuclideanTransfer}{euclidean_cfc}
+
+\walk{The proof composes the functional calculus for the exponential with the affine scalar function $-t(x-e)$. It evaluates that affine function through the calculus as $-t(H-e1)$. A theorem relating real continuous functional calculus to the normed-space exponential identifies the final object with the original power series. The spectral conclusions therefore apply to the actual transfer, not an independently postulated spectral surrogate.}
+
+The shift $e_0$ is the minimum of the actual Hermitian eigenvalues. It is defined only when the finite state index is nonempty, because an empty spectrum has no minimum element. The source proves both membership of $e_0$ in the spectrum and the lower-bound property. Positive definiteness of $T_e(t)$ follows from strict positivity of the scalar exponential for every real $t$. Semigroup composition follows because the two scaled generators commute.
+
+\excerpt{EuclideanTransfer}{euclidean_endpoint}
+
+\contract{The endpoint assumes a nonempty finite state index, Hermitian $H$ and nonnegative $t$. It includes $t=0$. The other time $s$ is arbitrary real in the semigroup identity. Spectral containment in $(0,1]$ uses $t\ge0$ and the ground-energy shift. A separate endpoint states containment for the complex spectrum as the real interval's complex image. No infinite-dimensional transfer or continuum limit is concluded.}
+
+\subsection{The low-mode bound keeps its exact constant}
+The finite-circle dispersion expression is $\lambda_h(w)=4h^{-2}\sin^2(wh/2)$. The source first proves
+\[
+0\le x^2-\sin^2x\le\frac{x^4}{3}
+\]
+for every real $x$, using the quadratic upper bound for sine squared, the cubic error bound for $x-\sin x$ and the estimate $|x+\sin x|\le2|x|$. Substituting $x=wh/2$ yields
+\[
+0\le w^2-\lambda_h(w)\le\frac{w^4}{12}h^2.
+\]
+
+\excerpt{LowModeConvergence}{low_mode}
+
+\walk{The proof scales the sine inequality by the nonnegative quantity $4/h^2$. A field calculation identifies the scaled error with $w^2-\lambda_h(w)$. The final algebra simplifies its upper bound to the coefficient $1/12$. The nonzero-spacing hypothesis justifies division; the conclusion has no small-frequency premise and holds for every real $w$.}
+
+For a fixed frequency, the right-hand side tends to zero quadratically as $h$ tends to zero through nonzero values. A growing frequency range needs control of $w^4h^2$. The theorem by itself does not prove convergence of an entire spectrum, a spectral-dimension plateau, a dynamics limit or a spacetime reconstruction. Those applications require their own quantified range and analytic arguments.
+
+\subsection{A compressed anomaly can vanish for purely algebraic reasons}
+The constraint audit sits beside the 19 finite ledger items. If every constraint right-annihilates $P$, then every product term in the proposed anomaly also right-annihilates $P$, so $P\mathcal A P=0$ for arbitrary structure coefficients. The source needs no projector axioms for this observation.
+
+\excerpt{ConstraintAudit}{constraint_kernel}
+
+It also constructs a nonzero physical projector and two rational $3\times3$ constraints that act on its complement. Their commutator is nonzero, yet its physical compression is zero.
+
+\excerpt{ConstraintAudit}{constraint_nonclosure}
+
+This supplies a concrete scope warning: exact common-kernel compression cannot by itself certify operator closure on the whole space. It does not prove that an intended continuum constraint algebra exists or that every refinement has the same behavior. The hypotheses of the finite audit must be checked before applying it to a proposed physical construction.
+
+\subsection{The broader manuscript and the five open targets}
+The preserved original paper and the strengthened traditional edition discuss memory, geometry, diagnostics and physical interpretation beyond the named finite endpoints. A traditional proof can be more explanatory than a formal theorem statement, and a strengthened mathematical statement can go beyond the selected formal endpoint. Coverage is assigned by the full result map, not by similarity of wording or proximity on a page.
+
+The original manuscript's five explicitly named continuum conjectures are anomaly-free refinement, uniform Feshbach control, Lorentzian reconstruction, an Einstein infrared limit and a massless spin-two sector. None is a theorem target in the 19-item ledger. Finite path reconstruction, finite recovery, a projected connection, a resolvent identity and a dispersion error bound do not jointly prove those existence and limiting claims. The formal source provides rigorous finite ingredients and, in the geometric case, broad parameter-manifold calculus under its stated assumptions.
+
+The complete theorem catalog includes seven constraint-audit declarations, four Schur--Feshbach declarations and the other supporting lemmas. The count 323 therefore means named declarations in the current finite development, not 323 independently stated claims in the traditional paper, and not 323 continuum results.

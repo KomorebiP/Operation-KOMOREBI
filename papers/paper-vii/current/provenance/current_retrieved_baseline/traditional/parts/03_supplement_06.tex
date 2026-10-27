@@ -1,0 +1,148 @@
+\section{The global projected connection}\label{supp6:section:001}
+Let $M$ be a smooth real manifold without boundary, $F$ a complete normed real vector space and $P:M\to\End(F)$ a smooth family of bounded idempotents. For smooth range sections $s$, define
+\[
+\nabla_Xs=P\,\dd s[X].
+\]
+The range bundle is constructed from $P$ rather than assumed. Its local connection formulas glue, and the actual covariant commutator satisfies
+\[
+\boxed{(\nabla_X\nabla_Y-\nabla_Y\nabla_X-\nabla_{[X,Y]})s
+=P\bigl(\dd P[X]\dd P[Y]-\dd P[Y]\dd P[X]\bigr)P\,s.}
+\]
+The derivative and Lie bracket are Mathlib's actual manifold operators. No global coordinate chart is assumed. The result requires idempotence, not an additional orthogonality hypothesis.
+
+
+\section{Local products constructed from the projector}\label{supp6:section:002}
+The fiber over $x$ is the actual fixed subspace
+\[
+\mathcal E_x=\{v\in F:P(x)v=v\}=\Ran P(x).
+\]
+The total space is the subset $\mathcal E=\{(x,v):P(x)v=v\}\subseteq M\times F$, with the induced topology. The construction includes actual local homeomorphisms of this space, not merely abstract transition functions.
+
+\subsection{An invertible intertwiner near each anchor}
+For idempotents $p,q$, set
+\[
+T(p,q)=pq+(I-p)(I-q).
+\]
+Lean proves $T(p,p)=I$ and $pT(p,q)=T(p,q)q$. For an anchor $a\in M$, define
+\[
+U_a=\{x:T(P(x),P(a))\text{ is invertible}\}.
+\]
+The invertible elements form an open subset of the bounded-operator algebra. Consequently $U_a$ is open and contains $a$. The family $(U_a)$ covers the whole base. Invertibility is \emph{derived locally}, not assumed at every pair of points.
+
+\subsection{The mutually inverse local maps}
+Write $T_a(x)=T(P(x),P(a))$. For $x\in U_a$,
+\[
+B_a(x):\mathcal E_a\longrightarrow\mathcal E_x,
+\quad v\longmapsto T_a(x)v,
+\]
+\[
+A_a(x):\mathcal E_x\longrightarrow\mathcal E_a,
+\quad w\longmapsto P(a)T_a(x)^{-1}w.
+\]
+The intertwining identity and its inverse counterpart show that the displayed targets are correct. Lean proves both inverse laws, continuity, linearity in the fiber and smooth dependence on the base. Thus
+\[
+\mathcal E|_{U_a}\ \cong\ U_a\times\mathcal E_a
+\]
+is an actual base-preserving local product homeomorphism.
+
+\subsection{Smooth overlap maps and rank}
+The coordinate transition is $g_{ab}(x)=A_b(x)B_a(x)$. It is smooth on $U_a\cap U_b$, agrees with the actual change between local homeomorphisms, and satisfies
+\[
+g_{aa}=I,\qquad g_{bc}g_{ab}=g_{ac}.
+\]
+A continuous linear equivalence between $\mathcal E_a$ and $\mathcal E_x$ also gives local constancy of fiber dimension. No single constant rank across disconnected components is assumed.
+
+
+
+
+
+\section{A connection on the constructed bundle}\label{supp6:section:003}
+The global formula is defined using the actual manifold derivative:
+\[
+\nabla_Xs(x)=P(x)\,D_Ms(x)[X(x)].
+\]
+Here $D_M$ is represented by \path{mvfderiv}. A second definition, \path{GlobalConnection.covariant}, has values in the actual fiber:
+\[
+\nabla s(x):T_xM\longrightarrow\mathcal E_x.
+\]
+It is not only an ambient expression asserted to land in the range.
+
+\subsection{Connection axioms and smoothness}
+The new proofs establish range preservation, additivity in the section, linearity over functions in the vector-field argument, and the scalar Leibniz identity
+\[
+\nabla_X(fs)=\dd f[X]\,s+f\nabla_Xs.
+\]
+Smooth $P$, smooth sections and smooth vector fields give smooth covariant derivatives. Equality of section germs gives equality of covariant derivatives at the point, so the operation is local.
+
+\subsection{Smooth sections are genuinely intrinsic}
+Let $x\in U_a$. If $P(y)s(y)=s(y)$ in a neighborhood of $x$, then
+\[
+s\text{ is smooth at }x
+\quad\Longleftrightarrow\quad
+\bigl(y\mapsto A_a(y)s(y)\bigr)\text{ is smooth at }x.
+\]
+The range condition is only local. The proof uses the actual inverse local maps and equality of germs. It follows that smoothness in bundle coordinates does not depend on the chosen chart.
+
+\subsection{The local connection and its change of coordinates}
+For a coordinate function $u$ valued in $\mathcal E_a$, define
+\[
+\nabla^{(a)}_Xu=A_a\bigl(P\,D_M(B_a u)[X]\bigr).
+\]
+For every overlap point, Lean proves the operator identity
+\[
+\boxed{\nabla^{(b)}_X(g_{ab}u)=g_{ab}\nabla^{(a)}_Xu.}
+\]
+This is proved for arbitrary local coordinate functions. It does not assume that $u$ was obtained from a globally smooth section or that a smooth extension has been supplied. Together with the local smoothness criterion, this closes the gluing step left open in the fifth block.
+
+
+
+
+
+\section{From differentiated projectors to the two-form}\label{supp6:section:004}
+The curvature is defined by the covariant commutator, including the \emph{actual manifold Lie bracket}. It is not defined to equal the desired projector expression.
+
+\subsection{The flat ambient identity is proved in charts}
+For a smooth vector-valued function $s$, the proof identifies directional derivatives with the pullback into each extended chart. It then proves
+\[
+D_Ms([X,Y])=D_M(D_Ms[Y])[X]-D_M(D_Ms[X])[Y].
+\]
+This uses the chart pullback of the actual vector fields and the ordinary differential identity, then transfers the result back to the manifold. The point-local auxiliary module permits use within arbitrary open chart domains.
+
+\subsection{Projector and section identities are derived}
+Differentiating $P^2=P$ in a tangent direction $v$ yields
+\[
+(\dd P[v])P+P\dd P[v]=\dd P[v],
+\qquad P\dd P[v]P=0.
+\]
+Differentiating $Ps=s$ gives
+\[
+\dd s[v]=\dd P[v]s+P\dd s[v].
+\]
+Both statements are consequences of actual derivative rules. They are not additional assumptions.
+
+\subsection{Cancellation of the second derivatives}
+The product rule and the ambient Lie-bracket identity reduce curvature to
+\[
+R^\nabla(X,Y)s=P\dd P[X]\dd s[Y]-P\dd P[Y]\dd s[X].
+\]
+Substitute the differentiated range-section identity. The terms containing $P\dd P[v]P$ vanish, leaving
+\[
+R^\nabla(X,Y)s=
+P\bigl(\dd P[X]\dd P[Y]-\dd P[Y]\dd P[X]\bigr)P s.
+\]
+Lean also proves that this depends only on $X(x)$, $Y(x)$ and $s(x)$, not on their extensions. The operator-valued form is alternating, additive and homogeneous, and lands in the actual fiber. Constant projector bundles have zero curvature form.
+
+
+
+
+
+\subsection{Geometry and scalar conventions}
+The main global curvature theorem uses a smooth real manifold without boundary, modeled on a complete normed real space, and bounded real-linear endomorphisms of a complete normed real space. Finite-dimensional parameter and quantum spaces fall within the corresponding real differential calculus. Complex quantum spaces can be viewed through their underlying real normed spaces; this block does not introduce a separate complex-bundle typeclass wrapper.
+
+The atlas and global connection constructions also support the more general model-with-corners infrastructure where their hypotheses apply. The \emph{curvature completion claim} is specifically for the boundaryless manifold theorem. A boundary/corner curvature generalization is not claimed.
+
+\subsection{Explicit smooth atlas, not an assumed one}
+The implementation exposes the actual total space, local product homeomorphisms, linear transitions, smoothness proofs and cocycle laws. It does not register these as a \path{ContMDiffVectorBundle} instance. This is an interface choice: no range-bundle atlas, local trivialization, overlap identity or curvature conclusion is inserted as a premise.
+
+The smooth-section equivalence and gauge law make the atlas usable intrinsically. The connection is also defined with values in \path{fiber (P x)}. Six proof-bearing constructed objects, including both local equivalences and the fiber-valued derivative, have separate axiom audits.
+

@@ -1,0 +1,14 @@
+theorem finite_cyclic_projectors \CodeChar{123}n : Type*\CodeChar{125} [Fintype n] [DecidableEq n]
+    (S : Matrix n n ℂ) (hS : S^N=1) (hU : S ∈ unitary (Matrix n n ℂ)) :
+    (∀ j k : ZMod N, packet (cyclicPowers S) j * packet (cyclicPowers S) k =
+      if j=k then packet (cyclicPowers S) j else 0) ∧
+    (∑ j : ZMod N, packet (cyclicPowers S) j) = 1 ∧
+    (∀ j : ZMod N, S * packet (cyclicPowers S) j =
+      omega (N := N)^j.val • packet (cyclicPowers S) j) ∧
+    ∀ j : ZMod N, (packet (cyclicPowers S) j).IsHermitian := by
+  obtain ⟨hp, hs, he⟩ := cyclic_quantum_projectors S hS
+  refine ⟨hp, hs, ?_, ?_⟩
+  · intro j
+    simpa only [character_as_power] using he j
+  · intro j
+    exact cyclic_packet_selfAdjoint S hS hU j

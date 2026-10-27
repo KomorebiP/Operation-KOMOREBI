@@ -1,0 +1,11 @@
+theorem density_corrects_iff_operators {I J : Type*} [Fintype I] [Fintype J]
+    (P : Matrix n n ℂ) (hP : IsStarProjection P)
+    (E : I → Matrix n n ℂ) (R : J → Matrix n n ℂ) :
+    (∀ rho : Matrix n n ℂ, rho.PosSemidef → Matrix.trace rho=1 → P*rho*P=rho →
+      noise R (noise E rho)=rho) ↔
+    (∀ rho : Matrix n n ℂ, P*rho*P=rho → noise R (noise E rho)=rho) := by
+  constructor
+  · intro hh rho hs
+    exact fixes_operators_of_density P hP ((noiseLinear R).comp (noiseLinear E)) hh rho hs
+  · intro hh rho _ _ hs
+    exact hh rho hs

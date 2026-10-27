@@ -1,0 +1,33 @@
+/mnt/data/PRSC_VII_v0.5.0_Checked_Fifth_Block/formalization/QuantumStateBridge.lean:181:11: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  noise R (noise E (of fun a b => rho (i, a) (j, b)))
+in the target expression
+  noise R (noise E fun a b => rho (i, a) (j, b)) u v = rho (i, u) (j, v)
+
+n : Type u_1
+inst✝⁵ : Fintype n
+inst✝⁴ : DecidableEq n
+I : Type u_2
+J : Type u_3
+A : Type u_4
+inst✝³ : Fintype I
+inst✝² : Fintype J
+inst✝¹ : Fintype A
+inst✝ : DecidableEq A
+P : Matrix n n ℂ
+E : I → Matrix n n ℂ
+R : J → Matrix n n ℂ
+hcorrect : ∀ (rho : Matrix n n ℂ), P * rho * P = rho → noise R (noise E rho) = rho
+rho : Matrix (A × n) (A × n) ℂ
+hs : kroneckerMap (fun x1 x2 => x1 * x2) 1 P * rho * kroneckerMap (fun x1 x2 => x1 * x2) 1 P = rho
+hblock : ∀ (i j : A), (P * of fun a b => rho (i, a) (j, b)) * P = of fun a b => rho (i, a) (j, b)
+i : A
+u : n
+j : A
+v : n
+hin : (fun a b => amplifiedNoise E rho (i, a) (j, b)) = noise E fun a b => rho (i, a) (j, b)
+⊢ noise R (noise E fun a b => rho (i, a) (j, b)) u v = rho (i, u) (j, v)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    rho (i, a)

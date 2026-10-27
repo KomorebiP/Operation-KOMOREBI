@@ -1,0 +1,346 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,tabularx}
+\usepackage{fancyhdr,hyperref,xurl}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus VII: First Lean-Checked Block},pdfauthor={Komorebi P.},colorlinks=true,linkcolor=black,urlcolor=black}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{PRSC VII: First Lean-Checked Block}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\deph}{\mathcal D_P}
+\newcommand{\comm}[2]{[#1,#2]}
+\newcommand{\code}[1]{{\small\nolinkurl{#1}}}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{scope}{Verification boundary}
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+{\large Projector-Resolved Seed Calculus VII}\\[7pt]
+{\LARGE\bfseries First Lean-Checked Block}\\[9pt]
+{\large Quantum packets, circuits, symmetry and effective dynamics}\\[12pt]
+Komorebi P.\\
+Version 0.1.0\quad\textbar\quad 6 September 2026
+\end{center}
+
+\section*{Release result}
+The four active Lean files compiled successfully. They contain \textbf{32 theorem declarations}, including supporting lemmas, concrete matrix specializations and an additional constraint audit. They cover \textbf{six of the original paper's 19 named finite theorem-like items}. These are different counts. The 19-item ledger contains 15 theorems, one corollary and three classical inputs. It excludes numerical certificates, unnumbered assertions and the five continuum conjectures.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}lXr@{}}
+\toprule
+Source item & Checked mathematical content & Status\\
+\midrule
+4.1 & Arbitrary finite circuit path expansion and reconstruction & Pass\\
+4.2 & Both packet unitarity identities, including complex matrices & Pass\\
+5.1 & Exact symmetry for the generator and its exponential & Pass\\
+7.1 & Block-diagonal measurement invariance & Pass\\
+9.1 & Feshbach resolvent, with corrected invertibility assumptions & Pass\\
+11.1 & Second-order dispersion bound with explicit nonzero spacing & Pass\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Compiler and dependency.} Lean 4.34.0-rc2 was run against mathlib revision
+\begin{center}\code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+Each source was checked with one worker and warnings treated as errors. All 32 theorem axiom reports contained only \code{propext}, \code{Classical.choice} and \code{Quot.sound}. There are no admitted proofs or new axiom declarations in the four active files. A false equality and a deliberate proof placeholder were both rejected with exit code 1 as expected.
+
+\textbf{What changed mathematically.} The Feshbach theorem needs a full-resolvent invertibility hypothesis in addition to invertibility of the eliminated block. The constraint section also needs a sharper distinction between compressed anomaly vanishing and operator closure. Both issues are addressed below, with checked counterexamples.
+
+\begin{scope}
+Thirteen named finite items remain unchecked in this release. None of the five continuum conjectures is proved. The original numerical suite and the full Papers I--VI proof collections were not rerun. The two reused Paper VI modules were adapted and freshly compiled here. This supplement does not replace the entire original manuscript or certify every assertion in it.
+\end{scope}
+
+\clearpage
+\section*{1. Exact packets and arbitrary circuit length}
+Let $R$ be a unital ring, not necessarily commutative, and let $I$ be a finite address set. An exact packet family is a family $P_a\in R$ such that
+\[
+P_aP_b=\begin{cases}P_a,&a=b,\\0,&a\ne b,\end{cases}
+\qquad \sum_{a\in I}P_a=1.
+\]
+Adjoint conditions are added when needed. For an operator $U$, define the transfer corner
+\[
+U_{ba}=P_bUP_a.
+\]
+The target index comes first. Completeness and distributivity give
+\[
+\sum_{b,a}U_{ba}=U,\qquad
+(UV)_{ba}=\sum_c U_{bc}V_{ca}.
+\]
+The second identity uses $P_c^2=P_c$ when adjacent transfer corners are multiplied.
+
+\subsection*{Circuit paths: source Theorem 4.1}
+For $U=U_m\cdots U_1$, the checked result is
+\[
+P_{a_m}UP_{a_0}
+=\sum_{a_1,\ldots,a_{m-1}}
+P_{a_m}U_mP_{a_{m-1}}\cdots P_{a_1}U_1P_{a_0}.
+\]
+The Lean implementation defines a recursive path sum and proves the identity by induction over an arbitrary finite gate list. It is not restricted to a fixed circuit depth. The empty list has circuit operator $1$ and path value $P_bP_a$. Summing the source and target indices reconstructs the full circuit.
+
+\textbf{Formal hooks.} \code{PacketFamily.compose_blocks},
+\code{PacketFamily.circuit_path_expansion} and
+\code{PacketFamily.circuit_reconstruction} in \code{QuantumPacketCore.lean}.
+The gate list is ordered from latest to earliest, $[U_m,\ldots,U_1]$.
+
+\subsection*{Adjoint conservation: source Theorem 4.2}
+Assume a star operation with $P_a^*=P_a$. Then
+\[
+(U_{ba})^*=P_aU^*P_b.
+\]
+The two checked conservation laws are
+\begin{align*}
+U^*U=1&\quad\Longrightarrow\quad
+\sum_b(U_{ba})^*U_{bc}=\delta_{ac}P_a,\\
+UU^*=1&\quad\Longrightarrow\quad
+\sum_aU_{ba}(U_{da})^*=\delta_{bd}P_b.
+\end{align*}
+For the first law, expand each corner, collapse $P_b^2$ and sum:
+\[
+\sum_bP_aU^*P_bUP_c
+=P_aU^*\left(\sum_bP_b\right)UP_c=P_aP_c.
+\]
+The second law is analogous and is separately checked. Concrete complex-matrix versions use conjugate transpose as the adjoint. No commutative multiplication rule is used for operator products.
+
+\textbf{Formal hooks.} \code{unitarity_columns}, \code{unitarity_rows},
+\code{matrix_unitarity_columns} and \code{matrix_unitarity_rows}.
+
+\clearpage
+\section*{2. Symmetry and measurement}
+\subsection*{Exact symmetry: source Theorem 5.1}
+If $HP_a=P_aH$ for every packet, then
+\[
+P_bHP_a=0\quad(b\ne a),\qquad H=\sum_aP_aHP_a.
+\]
+In a complex Banach algebra, commutation also propagates to the actual exponential:
+\[
+e^{zH}P_a=P_ae^{zH}\qquad(z\in\C).
+\]
+Consequently,
+\[
+e^{zH}=\sum_aP_ae^{zH}P_a,
+\qquad P_be^{zH}P_a=0\quad(b\ne a).
+\]
+This covers real-time evolution by taking $z=-it$. The Lean proof invokes the exponential commutation theorem, not an abstract flow supplied with the desired invariant-packet property as a hypothesis. Self-adjointness of $H$ is not needed for the algebraic reducing property, so this result applies more broadly than the Hermitian specialization in the paper.
+
+\textbf{Formal hooks.} \code{PacketFamily.symmetry_diagonal},
+\code{PacketFamily.symmetry_exponential_commutes},
+\code{PacketFamily.symmetry_exponential_diagonal} and
+\code{PacketFamily.symmetry_exponential_no_transfer}.
+
+This is an exact symmetry result. It does not supply the quantitative broken-symmetry leakage estimate of Theorem 5.2, whose Duhamel and norm arguments remain outside this block.
+
+\subsection*{Measurements: source Theorem 7.1}
+For finite complex matrices, define packet dephasing by
+\[
+\deph(X)=\sum_aP_aXP_a.
+\]
+The code proves idempotence and trace duality:
+\[
+\deph(\deph(X))=\deph(X),\qquad
+\tr\bigl(\deph(E)\rho\bigr)=\tr\bigl(E\deph(\rho)\bigr).
+\]
+Trace duality follows term by term from cyclicity:
+\[
+\tr(P_aEP_a\rho)=\tr(EP_a\rho P_a).
+\]
+Therefore a packet-diagonal effect, $\deph(E)=E$, satisfies
+\[
+\boxed{\tr(E\rho)=\tr\bigl(E\deph(\rho)\bigr).}
+\]
+The proof holds for arbitrary finite complex matrices $E$ and $\rho$. Density matrices and positive measurement effects are valid specializations rather than assumptions needed for this trace identity. Taking $E=1$ also gives trace preservation of packet dephasing.
+
+\textbf{Formal hooks.} \code{dephase_trace_duality},
+\code{measurement_invariance} and \code{dephase_trace_preserving}.
+
+This does not establish the full Kraus-channel theorem or the Knill--Laflamme recovery criterion. Those require additional positivity, auxiliary-system or recovery-map arguments.
+
+\clearpage
+\section*{3. Corrected Feshbach resolvent}
+Write a finite complex matrix in retained and eliminated coordinates:
+\[
+H=\begin{pmatrix}A&B\\C&D\end{pmatrix},\qquad
+zI-H=\begin{pmatrix}zI_P-A&-B\\-C&zI_Q-D\end{pmatrix}.
+\]
+Set
+\[
+D_z=zI_Q-D,\qquad S_z=zI_P-A-BD_z^{-1}C.
+\]
+The effective Hamiltonian is $H_{\mathrm{eff}}(z)=A+BD_z^{-1}C$, so
+$S_z=zI_P-H_{\mathrm{eff}}(z)$.
+
+\subsection*{Correct statement: source Theorem 9.1}
+Assume both $D_z$ and $zI-H$ are invertible. Then $S_z$ is invertible and
+\[
+\boxed{\bigl((zI-H)^{-1}\bigr)_{PP}=S_z^{-1}.}
+\]
+The left-hand side is the literal retained-coordinate submatrix of the full inverse. This matches the paper's compressed operator when written in an orthonormal basis of the retained subspace. The proof is valid for arbitrary complex blocks of compatible sizes and does not require Hermiticity.
+
+The checked invertibility criterion is
+\[
+D_z\text{ invertible}\quad\Longrightarrow\quad
+\bigl(zI-H\text{ invertible}\ \Longleftrightarrow\ S_z\text{ invertible}\bigr).
+\]
+Thus one may equivalently assume invertibility of $D_z$ and $S_z$.
+
+\textbf{Why the original assumption is insufficient.}
+Take $z=0$ and $H=\diag(0,-1)$, retaining the first coordinate. Then
+\[
+D_z=1,\qquad zI-H=\begin{pmatrix}0&0\\0&1\end{pmatrix}.
+\]
+The eliminated block is invertible, but the full matrix is singular. Hence the original hypothesis does not ensure the existence of its stated resolvent. The Lean counterexample proves invertibility of the scalar $1$ and noninvertibility of this full $2\times2$ matrix.
+
+\textbf{Formal hooks.} In \code{SchurFeshbach.lean}:
+\code{projected_resolvent}, \code{schur_invertible} and
+\code{eliminated_invertible_full_singular}.
+The formal invertibility assumptions are genuine \code{Invertible} instances, not assumptions of the desired resolvent identity.
+
+\subsection*{Provenance and limits}
+The general block-inverse proof was reused from the checked fifth block of Paper VI and freshly compiled in the Paper VII namespace. The extra counterexample was added in this release. This is reuse of a proof, not a claim of a new Schur identity.
+
+The unnumbered time-domain memory equation in Section 9.2, cutoff-uniform resolvent control and continuum limits are not proved by this finite inverse identity. The source amendment makes the two invertibility assumptions explicit without changing the intended effective Hamiltonian.
+
+\clearpage
+\section*{4. Dispersion with an explicit spacing condition}
+The grid eigenvalue in source Theorem 11.1 is
+\[
+\lambda_{k,h}=\frac{4}{h^2}\sin^2\left(\frac{kh}{2}\right).
+\]
+The original low-mode condition is $0\le kh/2\le1$. A nonzero spacing is also required for the quotient to have its intended meaning. For a physical grid, one normally takes $h>0$.
+
+\subsection*{Checked stronger statement}
+For every $k,h\in\R$ with $h\ne0$,
+\[
+\boxed{0\le k^2-\lambda_{k,h}\le\frac{k^4h^2}{12}.}
+\]
+The code proves this without the low-mode restriction. The bound may be loose away from the low-mode regime, but it remains valid.
+
+The proof begins with the all-real estimate
+\[
+0\le x^2-\sin^2x\le\frac{x^4}{3}.
+\]
+The lower bound follows from $|\sin x|\le|x|$. For the upper bound, use
+\[
+|x-\sin x|\le\frac{|x|^3}{6},\qquad
+|x+\sin x|\le2|x|.
+\]
+Factoring the difference of squares gives
+\[
+0\le x^2-\sin^2x
+=|x-\sin x|\,|x+\sin x|
+\le\frac{x^4}{3}.
+\]
+With $x=kh/2$ and $h\ne0$,
+\begin{align*}
+k^2-\lambda_{k,h}
+&=\frac4{h^2}\left(x^2-\sin^2x\right),\\
+\frac4{h^2}\frac{x^4}{3}
+&=\frac{k^4h^2}{12}.
+\end{align*}
+Every algebraic transformation and inequality in the active source was accepted by Lean.
+
+\textbf{Formal hooks.} \code{LowModeConvergence.sine_square_error} and
+\code{LowModeConvergence.low_mode_error}.
+The proof body is adapted from the Paper VI low-mode module, with provenance retained.
+
+\subsection*{What this does not establish}
+This is an exact deterministic error bound for the displayed dispersion relation. It is not a verification of the original paper's floating-point convergence-rate experiment, spectral-dimension plateau measurements or selection of a physical spacetime geometry. Those computations were not rerun in this release.
+
+\clearpage
+\section*{5. A constraint diagnostic that vanishes automatically}
+Section 12 defines the physical projector using the exact common kernel of the constraints. In finite dimensions this gives $C_aP=0$ for every $a$. Absorb the factor $i$ and any structure coefficient into $f_c$, and write
+\[
+\mathcal A_{ab}=C_aC_b-C_bC_a-\sum_cf_cC_c.
+\]
+\begin{proposition}[Exact common-kernel compression]
+If $C_cP=0$ for every $c$, then
+\[
+\mathcal A_{ab}P=0,\qquad P\mathcal A_{ab}P=0.
+\]
+No idempotence or adjoint property of $P$ is needed for this implication.
+\end{proposition}
+\begin{proof}
+Associativity gives
+\[
+\mathcal A_{ab}P=C_a(C_bP)-C_b(C_aP)-\sum_cf_c(C_cP)=0.
+\]
+Left multiplication by $P$ gives the second identity.
+\end{proof}
+
+\subsection*{Compressed vanishing without operator closure}
+Over the rationals, take
+\[
+P=\begin{pmatrix}1&0&0\\0&0&0\\0&0&0\end{pmatrix},\quad
+X=\begin{pmatrix}0&0&0\\0&0&1\\0&1&0\end{pmatrix},\quad
+Z=\begin{pmatrix}0&0&0\\0&1&0\\0&0&-1\end{pmatrix}.
+\]
+These displayed matrices are symmetric. The code checks that $P^2=P$, $P\ne0$ and $XP=ZP=0$, but
+\[
+[X,Z]=\begin{pmatrix}0&0&0\\0&0&-2\\0&2&0\end{pmatrix}\ne0,
+\qquad P[X,Z]P=0.
+\]
+The commutator therefore violates the zero-structure-coefficient closure relation outside the physical range, despite exact vanishing of its physical compression.
+
+\textbf{Formal hooks.} \code{ConstraintAudit.anomaly_annihilates_common_kernel},
+\code{compressed_anomaly_zero}, \code{commutator_nonzero} and
+\code{physical_commutator_zero}, together with the nonzero-projector and annihilation checks.
+
+\subsection*{Interpretation for the paper}
+Compressed anomaly vanishing is not sufficient to certify full operator closure. In the exact finite common-kernel setup it is automatic. A nonzero computed compression would instead contradict those exact assumptions or expose an approximation or implementation defect.
+
+This does not establish that a nontrivial compatible refinement tower exists. It does not prove or disprove the full continuum program. A stronger closure claim must test more than this compression, and unbounded constraints need their operator domains specified. This audit is additional to the six checked source items and is not counted as a seventh original theorem.
+
+\clearpage
+\section*{6. Remaining proof obligations and reproduction}
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}lXl@{}}
+\toprule
+Item & Named source assertion & This release\\
+\midrule
+2.1 & Orbit dimension of one quantum seed & Not checked\\
+2.2 & Quantum seed-rank formula & Not checked\\
+2.3 & Local orbit and Schmidt rank & Not checked\\
+2.4 & Computational-basis seed & Not checked\\
+3.1 & Cyclic quantum projectors & Not checked\\
+3.2 & Tensor/polyphase refinement & Not checked\\
+4.1 & Exact circuit path expansion & Checked\\
+4.2 & Packetwise unitarity conservation & Checked\\
+5.1 & Exact symmetry packets & Checked\\
+5.2 & Commutator leakage bound & Not checked\\
+6.1 & Moving-frame Hamiltonian & Not checked\\
+6.3 & Canonical packet connection & Not checked\\
+6.4 & Projected connection, classical input & Not checked\\
+7.1 & Block-diagonal measurement invariance & Checked\\
+7.2 & Finite Kraus channel, classical input & Not checked\\
+8.1 & Knill--Laflamme criterion, classical input & Not checked\\
+9.1 & Feshbach resolvent with corrected hypotheses & Checked\\
+10.1 & Finite Euclidean transfer & Not checked\\
+11.1 & Low-mode second-order bound & Checked\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The five conjectures in Section 12 remain separate: compatible anomaly-free refinement, uniform Feshbach control, Lorentzian reconstruction, an Einstein infrared limit and a physical massless spin-two sector. Unnumbered assertions and the old numerical certificates also require separate checks.
+
+\textbf{Reproduction.} From the extracted release directory, with the portable Linux kit available, run
+\begin{verbatim}
+python3 scripts/verify.py --kit /absolute/path/to/portable-kit
+\end{verbatim}
+The script checks the compiler version and actual mathlib revision, then compiles all four active files, audits each theorem's axiom dependencies and runs the expected-failure controls. It writes new evidence to a timestamped directory and exits nonzero if a gate fails. The released results remain in \code{verification/release_run/}.
+
+\textbf{Recorded runtime.} The four final module checks took 15.654 seconds combined in the warmed session, including launcher setup. The runner releases Lake before starting Lean, uses one worker and relies on targeted module imports. No peak-memory reduction was benchmarked. The large portable runtime is not duplicated in this proof bundle.
+
+\textbf{Failure record.} Early drafts failed on Lean elaboration and finite-index simplification, and one import was deprecated. The errors were repaired without admitting results. Development logs are retained, and the final run is warning-free. Imported mathlib modules were used from the pinned cache, not independently reverified in full.
+
+The unchanged original PDF, the precise source amendment patch, the active Lean sources, the upstream proof copies and a machine-readable coverage ledger accompany this supplement.
+\end{document}

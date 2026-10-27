@@ -1,0 +1,7 @@
+structure Data (n I : Type*) [Fintype n] [DecidableEq n] [Fintype I] [DecidableEq I] where
+  code : Matrix n n ℂ
+  code_projection : IsStarProjection code
+  error : I → Matrix n n ℂ
+  gramMatrix : Matrix I I ℂ
+  gram_positive : gramMatrix.PosSemidef
+  gram : ∀ a b, code * star (error a) * error b * code = gramMatrix a b • code

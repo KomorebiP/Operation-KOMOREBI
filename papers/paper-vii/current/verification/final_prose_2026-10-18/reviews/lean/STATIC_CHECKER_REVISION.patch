@@ -1,0 +1,53 @@
+--- before/static_check.py
++++ after/static_check.py
+@@ -38,14 +38,46 @@
+     raw.append({'tag':e['tag'],'source_sha256_matches':sha(p)==e['source_sha256'],'excerpt_sha256_matches':sha(actual)==e['excerpt_sha256'],'exact_contiguous_source_bytes':expected==actual.read_bytes(),'unchanged_from_retrieved_baseline':historical.read_bytes()==actual.read_bytes()})
+ pr={'status':'PASS' if len(raw)==67 and all(all(v for k,v in e.items() if k!='tag') for e in raw) else 'FAIL','exact_raw_excerpts':67,'checks':raw,'formal_sources_modified':False,'scope':'Every selected source block is exact raw UTF-8 and byte-identical to the retrieved edition.'}
+ dump(G/'preservation.json',pr)
++# The user authorized a new prose pass. Protect it with an exact reviewed
++# baseline and a closed sequence of substitutions, while separately retaining
++# the original mathematical-span and source-excerpt checks.
++review_path=H/'prose_review_2026-10-18/REVIEWED_REPLACEMENTS.json'
++review=json.loads(review_path.read_text())
++required={'Paper_VII_Lean_Guide_Final.tex','assemble.py','navigation.py'}|{
++    p.relative_to(H).as_posix() for p in (H/'chapters').glob('*.tex')}
++reviewed={}; expected_text={}
++for record in review['files']:
++    name=record['path']; baseline=H/record['baseline_path']; current=H/name
++    text=baseline.read_text(); substitutions=[]
++    for change in record['replacements']:
++        unique=text.count(change['before'])==change['exact_occurrences']==1
++        substitutions.append(unique)
++        if unique:text=text.replace(change['before'],change['after'],1)
++    checks={'baseline_sha256':sha(baseline)==record['baseline_sha256'],
++            'every_substitution_unique':all(substitutions),
++            'reviewed_sha256':sha(current)==record['reviewed_sha256'],
++            'complete_file_equals_reviewed_substitutions':current.read_bytes()==text.encode()}
++    reviewed[name]={'checks':checks,'replacements':len(substitutions),
++                    'baseline_sha256':sha(baseline),'reviewed_sha256':sha(current)}
++    expected_text[name]=text
++review_checks={'exact_file_inventory':set(reviewed)==set(review['required_files'])==required,
++               'no_duplicate_file_records':len(reviewed)==len(review['files']),
++               'all_files_match_closed_review':all(all(x['checks'].values()) for x in reviewed.values())}
++prose={'status':'PASS' if all(review_checks.values()) else 'FAIL',
++       'scope':'Every authored chapter, opening wrapper and narrative generator equals the preserved baseline plus only the explicitly reviewed substitutions.',
++       'checks':review_checks,'files':reviewed,
++       'review_ledger_sha256':sha(review_path),'fresh_lean_compilation':False}
++dump(G/'prose_review_preservation.json',prose)
+ math=re.compile(r'(?s)\\\[.*?\\\]|\\\(.*?\\\)|(?<!\\)\$\$.*?\$\$|(?<!\\)\$[^$]*?(?<!\\)\$|\\begin\{(equation\*?|align\*?|gather\*?|multline\*?)\}.*?\\end\{\1\}')
+ records=[]
+ for p in sorted((H/'chapters').glob('*.tex')):
+     if p.name=='replay.tex':continue
+     old=(H/'historical_assembly/chapters'/p.name).read_text(); new=p.read_text(); left=[m.group() for m in math.finditer(old)];right=[m.group() for m in math.finditer(new)]
+     contracts=re.findall(r'(?m)^\\(?:contract|walk)\{.*$',old); current=re.findall(r'(?m)^\\(?:contract|walk)\{.*$',new)
+-    records.append({'chapter':p.name,'delimited_mathematical_spans':len(left),'all_mathematical_spans_byte_identical':left==right,'contract_and_proof_walk_paragraphs':len(contracts),'all_contract_and_proof_walk_paragraphs_byte_identical':contracts==current})
+-mp={'status':'PASS' if all(r['all_mathematical_spans_byte_identical'] and r['all_contract_and_proof_walk_paragraphs_byte_identical'] for r in records) else 'FAIL','scope':'All six teaching chapters, excluding the revised evidence/replay chapter. Protects every delimited mathematical span and complete one-line contract/proof-walk paragraph. This is editorial preservation, not proof validation.','total_delimited_mathematical_spans':sum(r['delimited_mathematical_spans'] for r in records),'total_contract_and_proof_walk_paragraphs':sum(r['contract_and_proof_walk_paragraphs'] for r in records),'chapters':records}
++    key=p.relative_to(H).as_posix()
++    expected_contracts=re.findall(r'(?m)^\\(?:contract|walk)\{.*$',expected_text.get(key,''))
++    records.append({'chapter':p.name,'delimited_mathematical_spans':len(left),'all_mathematical_spans_byte_identical':left==right,'contract_and_proof_walk_paragraphs':len(contracts),'all_contract_and_proof_walk_paragraphs_byte_identical_to_historical':contracts==current,'all_contract_and_proof_walk_paragraphs_equal_reviewed_prose':current==expected_contracts,'complete_chapter_equals_closed_review':all(reviewed.get(key,{'checks':{'missing':False}})['checks'].values())})
++mp={'status':'PASS' if prose['status']=='PASS' and all(r['all_mathematical_spans_byte_identical'] and r['all_contract_and_proof_walk_paragraphs_equal_reviewed_prose'] and r['complete_chapter_equals_closed_review'] for r in records) else 'FAIL','scope':'All six teaching chapters retain every delimited mathematical span from the retrieved edition. Complete chapters, including every contract and proof explanation, must equal the preserved prose baseline plus the exact reviewed substitutions. The replay chapter is also protected by the closed prose review. This is editorial preservation, not proof validation.','total_delimited_mathematical_spans':sum(r['delimited_mathematical_spans'] for r in records),'total_contract_and_proof_walk_paragraphs':sum(r['contract_and_proof_walk_paragraphs'] for r in records),'chapters':records}
+ dump(G/'mathematical_span_preservation.json',mp)
+-print(json.dumps({'static':static['status'],'source_modules':25,'theorems':323,'constructed_objects':6,'raw_excerpts':pr['status'],'mathematical_spans':mp['status'],'span_count':mp['total_delimited_mathematical_spans']}))
+-if not all(r['status']=='PASS' for r in (static,pr,mp)):raise SystemExit(1)
++print(json.dumps({'static':static['status'],'source_modules':25,'theorems':323,'constructed_objects':6,'raw_excerpts':pr['status'],'mathematical_spans':mp['status'],'span_count':mp['total_delimited_mathematical_spans'],'closed_prose_review':prose['status']}))
++if not all(r['status']=='PASS' for r in (static,pr,mp,prose)):raise SystemExit(1)

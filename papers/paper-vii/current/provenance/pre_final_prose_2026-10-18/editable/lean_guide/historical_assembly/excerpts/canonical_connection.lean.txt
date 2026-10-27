@@ -1,0 +1,19 @@
+theorem canonical_connection_of_hasDerivAt
+    (hd : ∀ a, HasDerivAt (P a) (D a) t)
+    (hmul : ∀ s a b, P a s * P b s = if a = b then P a s else 0)
+    (hsum : ∀ s, ∑ a, P a s = 1)
+    (hstar : ∀ s a, star (P a s) = P a s) :
+    let C := canonical (fun a => P a t) D
+    star C = -C ∧
+      (∀ b, C * P b t - P b t * C = D b) ∧
+      (1 / 2 : ℝ) • (∑ a, (D a * P a t - P a t * D a)) = C := by
+  dsimp only
+  have hj := differentiated_orthogonality P D t hd hmul
+  have hdiag (a : I) : D a * P a t + P a t * D a = D a := by
+    simpa only [ite_true] using hj a a
+  have hz := differentiated_completeness P D t hd hsum
+  refine ⟨?_, ?_, ?_⟩
+  · exact canonical_skewAdjoint _ _ (hstar t)
+      (differentiated_selfAdjoint P D t hd hstar) hz hdiag
+  · exact canonical_commutator _ _ (hmul t) (hsum t) hj
+  · exact canonical_half_commutator _ _ hz hdiag

@@ -1,0 +1,8 @@
+theorem recovery_corrects (hcomplete : (∑ a, star (K.error a)*K.error a) = 1)
+    (rho : Matrix n n ℂ) (hrho : K.code*rho*K.code=rho) :
+    K.diagonal.syndromes.decoder (noise K.error rho) = rho := by
+  rw [K.recovery_noise_scaled rho hrho]
+  by_cases hp : K.code = 0
+  · have hr : rho=0 := by simpa [hp] using hrho.symm
+    simp [hr]
+  · rw [K.gram_trace_one hp hcomplete, one_smul]

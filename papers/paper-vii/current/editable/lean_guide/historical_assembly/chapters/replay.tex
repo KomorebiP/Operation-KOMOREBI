@@ -1,0 +1,87 @@
+\section{Evidence and reproducible replay}
+\label{sec:replay}
+
+\subsection{What the saved compiler record establishes}
+The authoritative inherited run is \code{verification/final_finite_release_run/SUMMARY.json} in the unchanged snapshot. It began on 6 September 2026 at 15:30:24 UTC and was updated at 15:32:49.641452 UTC. It records all 25 current modules, all 323 named theorem-level axiom audits, successful compiler exits and two deliberate rejected controls. Its source hashes and saved log hashes match the current source and transcripts in this edition's static reconciliation.
+
+The allowed axiom set is \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. Every reported theorem dependency set is a subset of it; one reported theorem is axiom-free. These are foundational dependencies accepted in the recorded Lean environment. Their presence does not mean a manuscript hypothesis such as full-resolvent invertibility or Kraus normalization can be omitted. Axiom auditing and hypothesis reading answer different questions.
+
+The separate inherited \code{CONSTRUCTED_OBJECTS_AUDIT.json} records six proof-bearing constructed objects: the fiber, projection to the fiber, local product homeomorphism, local continuous linear fiber equivalence, fiber-valued covariant derivative, and fiber curvature. This audit is additional to the 323 theorem count. Definitions can contain proofs of inverse, linearity or continuity fields, so checking only theorem names would miss part of the construction evidence. The current \code{verification/constructed_bindings_20261006/} report adds 12 fresh static checks of its source, inventory, runner, transcript, cumulative-summary binding and exact axiom sets. It adds no theorem declarations and executes no Lean compiler.
+
+The source archive does not include the compiled public/private interfaces, the portable compiler kit or the Mathlib cache. The saved success record is not a fresh compilation on the current host. Nor is it an independent recheck of all imported Mathlib proofs. The recorded release reused the pinned library environment and did not rebuild earlier papers.
+
+\subsection{Fresh checks in this documentation edition}
+The present guide independently resolves nested namespaces in the active source and derives 323 distinct theorem declarations across 25 modules. That set matches the saved theorem inventory and all saved theorem axiom reports. It resolves all 19 finite ledger entries, including the definition \code{GlobalConnection.covariant} among the geometric supporting endpoints. Where the ledger provides only a module, the guide explicitly adds source-derived navigation pointers rather than inventing a principal-declaration field in the original ledger.
+
+All 67 selected excerpts are checked as contiguous source blocks. Their raw UTF-8 files, source line ranges, original module hashes and excerpt hashes accompany the document. Code typography uses a monospaced font, with explicit fallback for absent mathematical script letters and the small-square dot-product symbol. These rendering changes do not alter the raw source excerpts. The PDF build checks unresolved references, missing glyphs, extracted theorem names and source-register coverage.
+
+The independent current verification report in \code{verification/fresh_20261006/} also checks current source, transitive import hashes, stored logs, inventory, absence of admitted proofs or added axiom declarations, and the stored rejection-control records. It freshly runs the original verifier's 16 regression tests. Passing those Python tests verifies verifier behavior; it is not a Lean theorem compilation.
+
+The current computational replay separately runs 22 unchanged original numerical test functions, compares all 1,045 numerical result fields with the retained records, and preserves the strengthened source suite's 18,049 checks in 15 groups. A separately corrected strengthened suite passes 17,699 checks in the same 15 groups, plus 87 exact mode-index assertions for $N=4,\ldots,32$. The difference of 350 suite checks comes from correcting duplicate mode indices for odd $N$, rather than dropping theorem coverage. The preserved run and corrected run have separate reports: \code{verification/fresh_20261006/} and \code{verification/corrected_fresh_20261006_r2/}; the correction is documented in \code{verification/corrected_strengthened/CORRECTION_AUDIT.md}. Exact rational finite witnesses are also supplied. These are fresh finite computation and software checks with their stated inputs and tolerances, not universal proofs. The original SymPy visual-example suite was unavailable on this host because its dependencies were absent; independent rational checks do not relabel themselves as a replay of that suite. Lean, Lake and the pinned portable kit were also unavailable, so no fresh kernel or negative-control compiler run is claimed.
+
+\begin{longtable}{@{}p{.31\linewidth}p{.30\linewidth}p{.32\linewidth}@{}}
+\toprule Evidence & Time/source & Meaning\\\midrule\endhead
+25 module compiler exits & Saved 6 September 2026 release & Inherited compilation under the pinned toolchain.\\
+323 theorem axiom reports & Saved release, freshly reconciled & Current source-bound declarations match the stored audited set.\\
+Six constructed-object reports & Separate saved release audit & Proof fields in constructed objects are audited separately.\\
+Source/log/import hashes & Fresh 6 October 2026 checks & Byte and dependency consistency; no compiler execution.\\
+16 verifier regression tests & Fresh Python execution & Checks of the verification program, not kernel evidence.\\
+Finite numerical and rational witnesses & Fresh reported executions & Statements only at the implemented inputs and scopes.\\
+67 excerpt checks and PDF build & Fresh documentation execution & Exact source selection and readable, navigable guide.\\
+\bottomrule\end{longtable}
+
+\subsection{Rebuild only this guide}
+The delivered guide directory contains the complete TeX, generated navigation, rendered code and raw excerpts needed for its PDF. \code{build.py} resolves its paths relative to itself and stages all inputs in a temporary build directory. It performs four complete XeLaTeX passes and copies the finished PDF and diagnostics back. It does not require the original source tree, regenerate mathematical evidence or invoke Lean.
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python editable/lean_guide/build.py
+\end{Verbatim}
+
+Run this from the final package root, or give an absolute path to the script. The environment needs Python 3, XeLaTeX, the specified fonts and TeX packages. For documentation regeneration, \code{assemble.py} also needs FontTools and the unchanged source snapshot. A different source location can be supplied explicitly:
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python editable/lean_guide/assemble.py \
+  --source source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot
+python editable/lean_guide/build.py
+python editable/lean_guide/verify_pdf.py
+\end{Verbatim}
+
+Assembly stops if the source counts, inventory, saved axiom reports, hashes or excerpt locations disagree. It is a documentation reconciliation command, not a proof checker. For a new source edition its fixed count expectations and endpoint selection must be deliberately revised, and that revision must be accompanied by the new evidence rather than silently inheriting the old report.
+
+\subsection{Replay the formal development with the pinned kit}
+Once the separately supplied pinned portable kit is available, run the preserved verifier with the working directory set to \code{source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot}, relative to the final package root. Choose a new output directory so the inherited evidence remains reviewable.
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python scripts/verify.py --kit /path/to/kit \
+  --out verification/my_run --timeout 240
+python scripts/audit_constructions.py --kit /path/to/kit \
+  --run verification/my_run
+python scripts/test_verifier.py
+\end{Verbatim}
+
+The verifier checks the runtime version and Mathlib revision before compiling. It builds local modules in dependency order with one worker and strict warnings, compares emitted axiom audits with the exact inventory, and checks both deliberate invalid controls. The construction audit uses the fresh run's actual build interfaces. It rejects stale source or interface identities.
+
+On a host with short execution windows, the preserved checkpoint mechanism can pause after a few fresh checks:
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python scripts/verify.py --kit /path/to/kit \
+  --out verification/my_run --timeout 240 \
+  --max-checks 3 --resume
+\end{Verbatim}
+
+Repeat that command until the verifier reports complete success. Exit code 2 means paused or incomplete, not a successful complete proof check. Resume verifies hashes of the verifier, runner, inventory, source dependencies and both public and private compiled interfaces before trusting a cached module. An interrupted build should be treated as incomplete even if some earlier modules passed.
+
+The \code{check_low_memory.py} launcher configures ordinary Lean with a single worker; its name does not promise an enforced memory cap. The formal snapshot is not an ordinary delivered Lake project with a current \code{lakefile}. The provenance manifest supplies the locked portable-kit dependencies. A bare \code{lake build} in this directory would not reproduce the documented verification procedure.
+
+\subsection{Integrity and the original example suite}
+Set the working directory to \code{source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix}, relative to the final package root. From that retained complete bundle directory, the wrapper exposes distinct actions:
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python Run-PaperVII.py verify
+python Run-PaperVII.py examples --output-dir /path/to/example_replay
+python Run-PaperVII.py original --output-dir /path/to/original_replay
+\end{Verbatim}
+
+The first verifies manifest and file checksums. The example action is the original exact visual-appendix example suite and requires its declared dependencies. The original action replays the original numerical, figure, TeX and verifier-software workflow; its wrapper documentation explicitly says that action is not Lean. These actions preserve source trees and use separate output locations. Consult the original wrapper and source README for the dependency list rather than confusing a successful checksum action with an executed example or compiler run.
+
+The dependency appendix records the compiler commit and all nine manifest package revisions. The source and transcript hashes bind this edition's reading to those inherited artifacts. Future readers can rebuild the document without a compiler kit, or reproduce the formal evidence with the kit; those are distinct, independently reportable operations.

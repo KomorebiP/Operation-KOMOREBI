@@ -1,0 +1,30 @@
+def localProduct (P : M → F →L[ℝ] F) (hPP : ∀ x, P x*P x=P x)
+    (hP : ContMDiff I \CodeSymbol{1D4D8}(ℝ, F →L[ℝ] F) ∞ P) (a : M) :
+    LocalTotal P a ≃ₜ (domain P a × fiber (P a)) where
+  toFun z := (⟨z.val.val.1,z.property⟩,toCoord P hPP a z.val.val.1 z.val.val.2)
+  invFun y := ⟨⟨(y.1.val,fromCoord P a y.1.val y.2),
+    fromCoord_range P hPP a y.1.val y.2⟩,y.1.property⟩
+  left_inv := by
+    intro z
+    apply Subtype.ext
+    apply Subtype.ext
+    apply Prod.ext
+    · rfl
+    · exact fromCoord_toCoord P hPP a _ z.property _ z.val.property
+  right_inv := by
+    intro y
+    apply Prod.ext
+    · rfl
+    · exact toCoord_fromCoord P hPP a _ y.1.property y.2
+  continuous_toFun := by
+    have hx : Continuous (fun z : LocalTotal P a => z.val.val.1) := by fun_prop
+    have hv : Continuous (fun z : LocalTotal P a => z.val.val.2) := by fun_prop
+    have hc : Continuous (fun z : LocalTotal P a => toCoord P hPP a z.val.val.1) :=
+      (smooth_toCoord P hPP hP a).continuousOn.comp_continuous hx (fun z => z.property)
+    exact (hx.subtype_mk _).prodMk (hc.clm_apply hv)
+  continuous_invFun := by
+    have hx : Continuous (fun y : domain P a × fiber (P a) => y.1.val) := by fun_prop
+    have hv : Continuous (fun y : domain P a × fiber (P a) => y.2) := by fun_prop
+    have hc : Continuous (fun y : domain P a × fiber (P a) => fromCoord P a y.1.val) :=
+      (smooth_fromCoord P hP a).continuous.comp hx
+    exact ((hx.prodMk (hc.clm_apply hv)).subtype_mk _).subtype_mk _

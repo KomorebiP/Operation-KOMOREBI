@@ -1,0 +1,99 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[left=.80in,right=.80in,top=.76in,bottom=.72in,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,mathtools}
+\usepackage{graphicx,array,booktabs,tabularx,multicol}
+\usepackage[table]{xcolor}
+\usepackage{tikz,tcolorbox,fancyhdr}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\usepackage[hidelinks,pdfauthor={Komorebi P.},pdftitle={Paper VII: Final Standalone Visual Guide},pdfsubject={Quantum seeds, coherence, geometric transport, error correction, and hidden dynamics}]{hyperref}
+\usepackage{bookmark}
+\hypersetup{pageanchor=false}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.2}
+\linespread{1.01}
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{7pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont PAPER VII\quad /\quad VISUAL GUIDE}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont KOMOREBI P.}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont Final reader's guide\quad\textbullet\quad Saved formal scope: v0.6.0}
+\fancyfoot[R]{\sffamily\small V\,--\,\thepage}
+\renewcommand{\headrulewidth}{.35pt}\renewcommand{\footrulewidth}{0pt}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\FF}{\mathbb F}\newcommand{\QQ}{\mathbb Q}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\Supp}{\operatorname{Supp}}\newcommand{\Fitt}{\operatorname{Fitt}}
+\newcommand{\Ann}{\operatorname{Ann}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}\newcommand{\Tr}{\operatorname{Tr}}\newcommand{\id}{\operatorname{id}}
+\newcommand{\whot}{\mathbin{\widehat\otimes}}\newcommand{\m}{\mathfrak m}\newcommand{\p}{\mathfrak p}
+\newcommand{\head}[1]{\par\vspace{2pt}{\sffamily\bfseries\normalsize #1}\par\vspace{1pt}}
+\newcommand{\captiontext}[1]{\par\noindent{\footnotesize\color{black!70}#1\par}}
+\newtcolorbox{insight}{colback=black!3,colframe=black!55,boxrule=0pt,leftrule=1.1pt,arc=0pt,left=10pt,right=10pt,top=5pt,bottom=5pt,before skip=6pt,after skip=5pt}
+\newcommand{\takeaway}[1]{\begin{insight}\textbf{Read this as:}\ #1\end{insight}}
+\newcommand{\vfig}[2][.92]{\par\begingroup\centering\resizebox{#1\linewidth}{!}{\input{graphics/#2.tex}}\par\endgroup\vspace{2pt}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newif\ifstarted\startedfalse
+\newcommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+\pdfbookmark[1]{V#1. #2}{PVIIA.visual#1}
+{\sffamily\fontsize{9}{11}\selectfont\bfseries #3\par}\vspace{5pt}
+{\raggedright\hyphenpenalty=10000\sffamily\bfseries\fontsize{22}{25}\selectfont #2\par}\vspace{5pt}
+{\sffamily\fontsize{8.7}{11}\selectfont\color{black!65} #4\par}\vspace{6pt}}
+\newcommand{\pagerefV}[1]{\hyperlink{PVIIA.visual#1.1}{V\,--\,#1}}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\kk}{\mathbb k}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\BB}{\mathcal B}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Ker}{\operatorname{ker}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\src}{\operatorname{src}}\newcommand{\tgt}{\operatorname{tgt}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\Dfun}{\mathsf D}
+\newcommand{\Efun}{\mathsf E}
+\newcommand{\Tfun}{\mathsf T}
+\newcommand{\Sfun}{\mathsf S}
+\newcommand{\Cfun}{\mathsf C}
+\newcommand{\Thetafun}{\mathsf\Theta}
+\newcommand{\ones}{\mathbf{1}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\diagmat}[1]{\operatorname{diag}(#1)}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\bra}[1]{\langle #1\rvert}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\Lcal}{\mathcal L}
+\newcommand{\xfig}[1]{\par\begingroup\centering\resizebox{.86\linewidth}{!}{\input{graphics_extended/#1.tex}}\par\endgroup\vspace{2pt}}
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Quantum Seed and Packet Calculus}
+\renewcommand{\KomorebiSubtitle}{Symmetry, circuits, geometric transport, channels, effective dynamics, and continuum towers}
+\renewcommand{\KomorebiSeries}{Core series VII}
+\renewcommand{\KomorebiKind}{Visual guide}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper VII}
+\renewcommand{\KomorebiTitleSize}{38}
+\renewcommand{\KomorebiTitleLeading}{43}
+\renewcommand{\KomorebiProfile}{atlas}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+
+\input{source/pages.tex}
+\input{source/extended_pages.tex}
+\end{document}

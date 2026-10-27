@@ -1,0 +1,29 @@
+/mnt/data/PRSC_VII_v0.5.0_Checked_Fifth_Block/formalization/ErrorSpanRecovery.lean:45:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  R ?j.1 * E ?j.2 * P
+in the target expression
+  R r * E a * P = (fun ra => z ra * ↑√t) (r, a) • P
+
+n : Type u_1
+I : Type u_2
+J : Type u_3
+inst✝⁵ : Fintype n
+inst✝⁴ : DecidableEq n
+inst✝³ : Fintype I
+inst✝² : DecidableEq I
+inst✝¹ : Fintype J
+inst✝ : DecidableEq J
+P : Matrix n n ℂ
+hP : IsStarProjection P
+E : I → Matrix n n ℂ
+R : J → Matrix n n ℂ
+t : ℝ
+ht : 0 ≤ t
+hcorrect : ∀ (rho : Matrix n n ℂ), P * rho * P = rho → noise R (noise E rho) = ↑t • rho
+Q : Matrix n n ℂ := ↑√t • P
+hsqrt : ↑√t * ↑√t = ↑t
+hmap : ∀ (rho : Matrix n n ℂ), noise (fun ra => R ra.1 * E ra.2 * P) rho = Q * rho * star Q
+z : J × I → ℂ
+hz : ∀ (j : J × I), R j.1 * E j.2 * P = z j • Q
+r : J
+a : I
+⊢ R r * E a * P = (fun ra => z ra * ↑√t) (r, a) • P

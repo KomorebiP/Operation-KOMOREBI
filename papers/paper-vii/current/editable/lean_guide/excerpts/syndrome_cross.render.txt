@@ -1,0 +1,22 @@
+theorem decoder_cross_error (rho : R) (hrho : S.code*rho*S.code=rho) (a b : I) :
+    S.decoder (S.error a*rho*star (S.error b)) = if a=b then rho else 0 := by
+  have hc (c : I) :
+      star (S.error c)*(S.error a*rho*star (S.error b))*S.error c =
+        if c=a then (if a=b then rho else 0) else 0 := by
+    have heq : star (S.error c)*(S.error a*rho*star (S.error b))*S.error c =
+        (star (S.error c)*S.error a)*rho*(star (S.error b)*S.error c) := by
+      noncomm_ring
+    rw [heq, S.gram, S.gram]
+    by_cases hca : c=a
+    · subst c
+      by_cases hab : a=b
+      · subst b; simp [hrho]
+      · simp [hab, Ne.symm hab]
+    · simp [hca]
+  have hq : S.complement*(S.error a*rho*star (S.error b))*S.complement=0 := by
+    calc
+      _ = (S.complement*S.error a)*rho*(star (S.error b)*S.complement) := by
+        noncomm_ring
+      _ = 0 := by rw [S.complement_error, zero_mul, zero_mul]
+  simp only [decoder, hc, hq, add_zero]
+  simp

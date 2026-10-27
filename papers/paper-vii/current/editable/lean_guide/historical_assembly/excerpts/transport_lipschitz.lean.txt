@@ -1,0 +1,9 @@
+theorem transported_lipschitz (G P : A) (hG : star G = -G) (t s : ℝ) :
+    ‖transported G P t - transported G P s‖ ≤
+      |t-s| * ‖G*P-P*G‖ := by
+  have hh := Convex.norm_image_sub_le_of_norm_deriv_le
+    (f := transported G P) (s := Set.univ)
+    (fun x _ => (transported_derivative G P x).differentiableAt)
+    (fun x _ => (transported_derivative_norm G P hG x).le)
+    convex_univ (Set.mem_univ s) (Set.mem_univ t)
+  simpa [Real.norm_eq_abs, mul_comm] using hh

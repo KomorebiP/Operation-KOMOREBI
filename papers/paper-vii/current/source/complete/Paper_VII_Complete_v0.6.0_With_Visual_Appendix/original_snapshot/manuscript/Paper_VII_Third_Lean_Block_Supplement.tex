@@ -1,0 +1,296 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,booktabs,array,tabularx}
+\usepackage[margin=0.78in,headheight=15pt,headsep=18pt,footskip=26pt]{geometry}
+\usepackage{microtype,fancyhdr,xcolor,enumitem,titlesec,xurl}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus VII: Third Lean Block},pdfauthor={Komorebi P.},pdfsubject={Verified finite seed, symmetry and Euclidean-transfer results}}
+\definecolor{ink}{HTML}{183347}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Projector-Resolved Seed Calculus VII}}
+\fancyhead[R]{\small Third Lean block}
+\fancyfoot[L]{\small Komorebi P.\quad\textbar\quad v0.3.0}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}
+\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{9pt}{3pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\C}{\mathbb C}\newcommand{\R}{\mathbb R}\newcommand{\N}{\mathbb N}
+\newcommand{\rank}{\operatorname{rank}}\newcommand{\spanof}{\operatorname{span}}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\pageheading}[2]{\vspace*{2pt}{\small\color{ink}\textsc{#1}}\par\vspace{2pt}{\Large\bfseries #2}\par\vspace{4pt}}
+\begin{document}
+\thispagestyle{fancy}
+\pageheading{Release record}{Third checked finite block}
+{\large Quantum seed rank, cyclic projectors, and Euclidean transfer}\par
+\textbf{Author: Komorebi P.}\hfill September 6, 2026
+
+This supplement records five additional named finite results from the original Paper VII. The cumulative release contains \textbf{146 theorem declarations in 12 Lean modules}. The third block contributes \textbf{64 declarations in three new modules}. Supporting lemmas and specializations are included in declaration counts. They are not separate manuscript theorems.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\linewidth}{@{}lXrr@{}}
+\toprule
+Item & Newly checked result & Module group & Declarations\\
+\midrule
+2.1 & Actual one-seed orbit dimension & SeedOrbit & 8\\
+2.2 & Sharp minimum number of quantum seeds & SeedOrbit & 13\\
+2.3 & Local orbit, Schmidt rank, and reduced support & SeedOrbit & 13\\
+3.1 & Finite-order character projectors & CyclicProjectors & 18\\
+10.1 & Finite Euclidean transfer & EuclideanTransfer & 12\\
+\midrule
+& Total added && 64\\
+\bottomrule
+\end{tabularx}
+\end{center}
+The declaration grouping above is bookkeeping within the source files. Later results reuse earlier lemmas. The machine-readable inventory gives every fully qualified declaration name.
+
+\section*{Cumulative boundary}
+\textbf{16 of 19 named finite manuscript items are checked.} Three remain: the quantitative commutator leakage bound, the manifold projected connection and curvature, and the finite Knill--Laflamme criterion. All five continuum conjectures remain unproved. This count does not estimate the difficulty or fraction of mathematical effort remaining.
+
+The original manuscript PDF and TeX are unchanged. All nine upstream active Lean modules are also unchanged and were freshly recompiled. Earlier supplements and verification records remain historical evidence. The current coverage ledger and the third-block verification report supersede earlier release totals.
+
+\section*{Explicit assumptions}
+The seed-rank minimum requires positive algebra-block dimensions $d_i$. Full local cyclicity requires a nonempty addressed factor. Cyclic projectors require $N>0$, with no exclusion of $N=1$. A minimum eigenvalue is used only on a nonempty finite state space. These hypotheses prevent zero-dimensional or zero-modulus edge cases from being silently discarded.
+
+\section*{Evidence location}
+The executable evidence is in \path{verification/third_block_release_run/SUMMARY.json}, with source hashes, exact commands, exit codes, timings, and an axiom audit for every declaration. The current finite-item mapping is \path{THEOREM_LEDGER.json}.
+
+\newpage
+\pageheading{Theorems 2.1 and 2.2}{Actual orbits and sharp seed counts}
+Let $C\in M_{d\times m}(\C)$ be the coefficient matrix of one seed. Define its orbit by actual matrix multiplication:
+\[
+\mathcal O(C)=\{AC:A\in M_d(\C)\}.
+\]
+This set is already a linear subspace. The source proves its equality with the linear span of the same orbit, rather than assuming an abstract orbit-dimension formula.
+
+A matrix $X$ belongs to $\mathcal O(C)$ exactly when each of its rows belongs to $\operatorname{Row}(C)$. One direction follows by expanding $AC$. For the converse, choose the coefficients producing each row separately and place them in the corresponding row of $A$. An explicit linear equivalence therefore gives
+\[
+\mathcal O(C)\simeq \operatorname{Row}(C)^d,
+\qquad
+\boxed{\dim_\C\mathcal O(C)=d\,\rank C.}
+\]
+If $d>0$, equality with the full $d\times m$ coefficient space is equivalent to $\rank C=m$. Consequently a cyclic seed requires $m\le d$. The nonempty-row assumption is essential for canceling the factor $d$.
+
+\section*{Several seeds: both necessity and construction}
+For seeds $C_1,\ldots,C_k$, generation means the concrete statement
+\[
+\forall X\in M_{d\times m}(\C),\quad
+\exists A_1,\ldots,A_k\in M_d(\C):\quad
+X=\sum_{a=1}^k A_aC_a.
+\]
+Stack the $C_a$ vertically into a $kd\times m$ matrix $D$. The source proves the exact stacked-action identity and the equivalence
+\[
+\text{the seeds generate}\quad\Longleftrightarrow\quad\rank D=m.
+\]
+Thus $m\le kd$ is necessary. It is sufficient as well: embed the $m$ coordinate columns into $kd$ coordinate positions to obtain a full-column-rank matrix $D$, then split its rows back into $k$ seeds. This is an existence proof of actual generating matrices, not only an inequality on possible dimensions.
+
+\section*{Simultaneous direct-sum generation}
+For the stipulated block representation
+\[
+\mathcal A=\bigoplus_i\bigl(M_{d_i}(\C)\otimes I_{m_i}\bigr),\qquad d_i>0,
+\]
+the proof establishes that $k$ seeds generate all blocks simultaneously exactly when $m_i\le kd_i$ for every $i$. It follows that
+\[
+\boxed{\srank_{\mathcal A}(\mathcal H)=\max_i\left\lceil\frac{m_i}{d_i}\right\rceil.}
+\]
+The final Lean proposition is an \code{IsLeast} statement over the set of feasible seed counts. It proves both attainment and minimality. For an empty block family the finite supremum is defined as $0$, matching the zero module.
+
+\textbf{Main declarations:} \path{SeedOrbit.span_orbit_dimension} and \path{SeedOrbit.quantum_seed_rank}, under namespace \code{KomorebiPaperVII}.
+
+\newpage
+\pageheading{Corollary 2.3}{Schmidt rank and the reduced state}
+Use standard product-basis coordinates $\psi_{ij}$ and let $C_{ij}=\psi_{ij}$. An explicit linear equivalence identifies the product-index state vector with its coefficient matrix. The implementation checks the actual Kronecker action:
+\[
+\operatorname{coeff}\bigl((A\otimes I_B)\psi\bigr)=AC.
+\]
+It also proves that the transported matrix orbit equals the span of these Kronecker-transformed state vectors. The state-space dimension formula is therefore connected to the physical local action, not only to a separate matrix model.
+
+\section*{An independent definition of Schmidt rank}
+The source defines Schmidt rank as the least number of product-vector summands. A decomposition of length $s$ is the concrete equality
+\[
+C_{ij}=\sum_{a=1}^{s}u_a(i)v_a(j).
+\]
+It factors $C=UV$ through an $s$-dimensional intermediate space, so $\rank C\le s$. Conversely, choose a basis of the row space of $C$. Expanding each row in this basis constructs a decomposition with exactly $\rank C$ product terms. Thus
+\[
+\boxed{r(\psi)=\rank C.}
+\]
+The definition uses a least natural number, and the equality with matrix rank is proved. The proof does not define Schmidt rank to be matrix rank. It does not construct an orthonormal Schmidt decomposition or prove a new singular-value decomposition theorem.
+
+The matrix-orbit dimension and the coefficient equivalence now yield
+\[
+\boxed{\dim_\C\spanof\{(A\otimes I_B)\psi:A\in M_{d_A}(\C)\}
+=d_A r(\psi).}
+\]
+
+\section*{The actual partial trace and its support}
+The reduced matrix is defined by tracing the addressed index of the pure-state density matrix:
+\[
+(\rho_B)_{j\ell}=\sum_i\psi_{ij}\overline{\psi_{i\ell}}.
+\]
+For the coefficient convention used here, the exact Gram identity is
+\[
+\rho_B=C^{\mathsf T}(C^{\mathsf T})^*,
+\qquad \rank\rho_B=\rank C=r(\psi).
+\]
+The transpose is important. With this convention, writing $C^*C$ instead would conjugate the reduced matrix. The Lean source checks the entrywise identity and positivity of the resulting matrix.
+
+Full support is expressed as surjectivity of the reduced matrix's linear map. Assuming $d_A>0$, the checked equivalence is
+\[
+\boxed{\mathcal O_A(\psi)=\mathcal H_A\otimes\mathcal H_B
+\quad\Longleftrightarrow\quad \Ran\rho_B=\mathcal H_B.}
+\]
+Normalization of $\psi$ is unnecessary for these dimension and support statements. The zero state has rank $0$ under the minimum-product-length definition.
+
+\textbf{Main declarations:} \path{SeedOrbit.schmidt_rank_eq_matrix_rank}, \path{SeedOrbit.local_orbit_schmidt_dimension}, and \path{SeedOrbit.local_orbit_reduced_support}.
+
+\newpage
+\pageheading{Theorem 3.1}{Constructed cyclic character projectors}
+Let $N>0$ and let $S$ be a unitary complex matrix with $S^N=I$. The implementation uses the genuine standard additive character of $\mathbb Z/N\mathbb Z$ and proves its exponential-root form:
+\[
+\omega=\exp(2\pi i/N),\qquad
+\chi(r)=\omega^{\operatorname{val}(r)}.
+\]
+Here $\operatorname{val}(r)$ is the canonical representative in $\{0,\ldots,N-1\}$. The representation is constructed as
+\[
+\rho(r)=S^{\operatorname{val}(r)}.
+\]
+Reduction of exponents modulo $N$ is proved from $S^N=I$, giving $\rho(r+s)=\rho(r)\rho(s)$ and $\rho(0)=I$. No representation or character-orthogonality assumption is inserted in the final matrix theorem.
+
+\section*{Exact coefficient formula}
+The packet definition is a finite sum over residue classes:
+\[
+P_j=\frac1N\sum_{r\in\mathbb Z/N\mathbb Z}\chi(-rj)\rho(r).
+\]
+The source proves
+\[
+\chi(-rj)=\bigl(\omega^{\operatorname{val}(r)\operatorname{val}(j)}\bigr)^{-1},
+\]
+so this is precisely the manuscript's $N$-term Fourier projector formula, with canonical representatives.
+
+\section*{Algebraic identities}
+Primitivity of the standard character yields the checked finite sum
+\[
+\sum_r\chi(tr)=\begin{cases}N,&t=0,\\0,&t\ne0.\end{cases}
+\]
+Reindexing finite sums then gives
+\[
+\boxed{P_jP_k=\delta_{jk}P_j,\qquad \sum_jP_j=I,\qquad SP_j=\omega^jP_j.}
+\]
+Multiplicativity and completeness are first proved for a general representation in a complex algebra, then instantiated with the actual powers of $S$. This organization isolates reusable finite-sum algebra without weakening the final hypotheses.
+
+\section*{Orthogonal, not merely idempotent}
+Unitarity supplies $\rho(r)^*=\rho(-r)$, while the character obeys $\overline{\chi(r)}=\chi(-r)$. Reindexing $r\mapsto-r$ proves $P_j^*=P_j$. The final concrete matrix theorem includes Hermiticity together with multiplication, completeness, and eigenaction. Thus the result establishes orthogonal spectral packets, not only algebraic idempotents.
+
+The proof includes the degenerate modulus $N=1$: finite order then forces $S=I$ and the sole projector is $I$. It does not need an artificial assumption $N>1$.
+
+\textbf{Main declarations:} \path{CyclicProjectors.cyclic_projector_formula} and \path{CyclicProjectors.finite_cyclic_projectors}.
+
+\newpage
+\pageheading{Theorem 10.1}{The actual Euclidean transfer exponential}
+Let $H$ be a Hermitian matrix on a nonempty finite complex state space. The source defines
+\[
+T_e(t)=\exp\bigl(-t(H-eI)\bigr)
+\]
+using Lean's power-series exponential. It does not introduce an unrelated transfer family or assume that a spectral expansion equals this exponential.
+
+\section*{Connecting power series and spectral calculus}
+The shifted generator is proved Hermitian. The implementation then identifies the actual matrix exponential with continuous functional calculus:
+\[
+\boxed{T_e(t)=f_t(H),\qquad f_t(x)=e^{-t(x-e)}.}
+\]
+The formal proof uses composition, scalar multiplication, subtraction, and the established agreement between the functional-calculus exponential and the power-series exponential. Spectral mapping is consequently available for the operator that was actually defined:
+\[
+\Spec_\R T_e(t)=\{e^{-t(x-e)}:x\in\Spec_\R H\}.
+\]
+Hermiticity also identifies the full complex spectrum with the image of these real eigenvalues. A separate checked theorem states the complex-spectrum interval containment explicitly.
+
+\section*{A genuine minimum eigenvalue}
+The ground energy is the minimum of the finite, nonempty eigenvalue set. The proof establishes both
+\[
+E_0\in\Spec_\R H,\qquad E_0\le x\quad(x\in\Spec_\R H).
+\]
+The nonempty-state-space assumption is recorded in the theorem because the minimum of an empty spectrum is not defined by the manuscript's formula.
+
+\section*{Positivity, semigroup composition, and the interval}
+Every eigenvalue of $T_e(t)$ is strictly positive, for arbitrary real $e,t$, since the real exponential is positive. For $e=E_0$ and $t\ge0$ it is also at most one. Therefore
+\[
+\boxed{T_{E_0}(t)>0,\qquad \Spec T_{E_0}(t)\subseteq(0,1].}
+\]
+The two scalar multiples of $H-eI$ commute, so the actual power-series exponential obeys
+\[
+\boxed{T_e(t+s)=T_e(t)T_e(s),\qquad T_e(0)=I.}
+\]
+The semigroup identity is proved for all real $t,s$. Nonnegative time is needed for the upper spectral bound, not for the composition identity or strict positivity.
+
+These are finite-dimensional operator results. No continuum transfer limit, gravitational path integral, or physical spacetime model is established by this theorem. Numerical figures in the original paper were not recomputed in this release.
+
+\textbf{Main declarations:} \path{EuclideanTransfer.finite_euclidean_transfer} and \path{EuclideanTransfer.transfer_complex_spectrum}.
+
+\newpage
+\pageheading{Execution and trust}{Cumulative verification evidence}
+\textbf{Runtime.} The release uses Lean \code{4.34.0-rc2} and the pinned Mathlib commit
+\begin{center}\code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+The portable runtime was restored from the seven archived parts. Part hashes and the reconstructed archive hash passed. The verifier checks the compiler version, Mathlib manifest revision, and actual Mathlib checkout revision before compiling source files.
+
+\section*{What the final run checks}
+All 12 active modules are freshly compiled, including the nine unchanged upstream modules. Every theorem declaration has a matching \code{\#print axioms} query. The final run records \textbf{146 successful declaration audits}. Only \code{propext}, \code{Classical.choice}, and \code{Quot.sound} are permitted in the reported axiom dependency sets.
+
+The active sources are scanned after removing comments and strings. Admitted proofs, new axiom declarations, \code{unsafe}, and \code{native\_decide} are disallowed by the release checks. Warnings are errors. A false equality and an intentional admitted-proof placeholder are compiled separately and must both be rejected. These negative-control sources are not active proof modules.
+
+Source hashes, log hashes, compiler exit codes, and exact commands are stored in the verification JSON. A preservation report independently compares the nine upstream sources and the original manuscript bytes with the second release.
+
+\section*{Reproduction}
+From the extracted release directory, use the previously delivered portable Linux kit:
+\begin{verbatim}
+python scripts/verify.py \
+  --kit /absolute/path/to/Komorebi_Portable_Lean_4.34.0-rc2 \
+  --out verification/local_rerun
+\end{verbatim}
+A fresh output directory and no resume flag request a wholly fresh run. For a host with a short command limit, add \code{--max-checks 3 --resume} and repeat the same command until it reports completion. Exit code $0$ means a complete pass, $1$ a failure, and $2$ a deliberately paused checkpoint.
+
+The launcher captures Lake's environment before starting Lean, limits Lean to one worker, and uses the existing precompiled dependencies. Module imports reduce unnecessary imported information. These are process and elaboration choices, not changes to the kernel's proof rules. The launcher does not impose its own RAM limit.
+
+\section*{Failures and limits}
+Initial drafts failed on imports, elaboration, finite-sum rewrites, complex conjugation, and warning diagnostics. Captured failed logs and source snapshots are preserved separately from the successful final run. Compilation errors were repaired rather than replaced with assumptions.
+
+The imported Mathlib dependencies were not independently rebuilt or kernel-rechecked from scratch. Papers I--VI were not rebuilt, and the original numerical suite was not rerun. Successful checking applies to the exact formal propositions, not automatically to every sentence, figure, or interpretation in the original manuscript.
+
+\newpage
+\pageheading{Completion boundary}{Three finite items remain}
+The cumulative finite inventory now has \textbf{16 checked items and three unchecked items}. The remaining results are substantive and should not be represented as a small amount of routine work merely because there are only three labels left.
+
+\section*{5.2: Quantitative commutator leakage}
+The checked exact-symmetry theorem handles vanishing commutators. It does not imply a quantitative bound when the commutator is small but nonzero. The missing result requires the analytic evolution or Duhamel argument, its norm estimate, and the stated constants and time hypotheses.
+
+\section*{6.4: Manifold projected connection and curvature}
+The second block proves finite projector derivative identities and the canonical packet connection. That is not yet the full bundle-valued manifold theorem. The remaining formalization must connect differentiable sections and the projected connection to the intended curvature expression, with the relevant smoothness and geometric assumptions explicit.
+
+\section*{8.1: Finite Knill--Laflamme criterion}
+The checked Kraus-channel theorem proves complete positivity and trace preservation under its normalization condition. It does not establish the necessary-and-sufficient error-correction criterion or construct a recovery channel from that criterion. The remaining item needs both directions and the intended code-subspace semantics.
+
+\section*{Continuum and interpretive statements}
+Conjectures 12.1--12.5 remain unproved. The finite Euclidean transfer theorem does not establish a continuum spacetime limit. The finite packet proofs do not establish the original paper's proposed physical interpretations. The first-block correction to the Feshbach invertibility assumptions and the distinction between compressed anomaly cancellation and full operator closure remain part of the release record.
+
+\section*{Artifact map}
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+Location & Role\\
+\midrule
+\code{formalization/} & Twelve independent active Lean modules.\\
+\code{THEOREM\_LEDGER.json} & Current finite-item scope and status.\\
+\code{verification/} & Current cumulative run, trust audits, controls, development evidence, and preservation checks.\\
+\code{manuscript/} & Unchanged original PDF and three mathematical supplements.\\
+\code{provenance/} & Original TeX, dependency pins, and historical release records.\\
+\code{scripts/verify.py} & Reproducible, checkpointed cumulative verification.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\textbf{Release interpretation.} This is a cumulative checked proof block, not a declaration that Paper VII is complete. It closes five finite manuscript items with explicit constructions and bridges, while retaining the exact boundary of what has and has not been established.
+\end{document}

@@ -1,0 +1,114 @@
+--- provenance/pre_proofread_2026-10-18/editable/traditional/build.py
++++ editable/traditional/build.py
+@@ -46,6 +46,8 @@
+         print('The authored monograph is preserved. Compiling without historical assembly.')
+     if shutil.which('xelatex') is None:
+         parser.error('XeLaTeX is required. Install it through your TeX distribution.')
++    if shutil.which('xdvipdfmx') is None:
++        parser.error('xdvipdfmx is required. Install it through your TeX distribution.')
+     destination = (args.output_directory or ROOT).expanduser().resolve()
+     environment = dict(os.environ)
+     environment.setdefault('SOURCE_DATE_EPOCH', '1791504000')
+@@ -54,13 +56,14 @@
+     ignore = shutil.ignore_patterns(
+         'qa', '__pycache__', STEM + '.pdf', '*.aux', '*.log', '*.out', '*.toc',
+         '*.lof', '*.lot', '*.bbl', '*.blg', '*.fdb_latexmk', '*.fls', '*.xdv',
+-        'build_pass_*.txt', 'build_bibtex.txt', 'historical_assembly')
++        'build_pass_*.txt', 'build_bibtex.txt', 'build_pdf_driver.txt',
++        'historical_assembly')
+     with tempfile.TemporaryDirectory(prefix='komorebi-paper-vii-traditional-') as temporary:
+         stage = Path(temporary) / 'source'
+         shutil.copytree(ROOT, stage, ignore=ignore)
+         for name in ('TEXINPUTS', 'BIBINPUTS', 'BSTINPUTS'):
+             environment[name] = str(stage) + os.pathsep + environment.get(name, '')
+-        command = ['xelatex', '-interaction=nonstopmode', '-halt-on-error',
++        command = ['xelatex', '-no-pdf', '-interaction=nonstopmode', '-halt-on-error',
+                    '-file-line-error', '-recorder', '-jobname=' + STEM, STEM + '.tex']
+         transcripts = []
+ 
+@@ -87,6 +90,9 @@
+                     if shutil.which('bibtex') is None:
+                         raise SystemExit('BibTeX is required by this bibliography.')
+                     run_command(['bibtex', STEM], 'build_bibtex.txt')
++        # Emit the PDF only after references and font subsets have stabilized.
++        run_command(['xdvipdfmx', '-o', STEM + '.pdf', STEM + '.xdv'],
++                    'build_pdf_driver.txt')
+         pdf = stage / (STEM + '.pdf')
+         if not pdf.is_file():
+             raise SystemExit('Compilation completed without the expected PDF: ' + str(pdf))
+--- provenance/pre_proofread_2026-10-18/editable/visual_guide/build.py
++++ editable/visual_guide/build.py
+@@ -44,6 +44,8 @@
+ 
+     if shutil.which('xelatex') is None:
+         parser.error('XeLaTeX is required. Install it through your TeX distribution.')
++    if shutil.which('xdvipdfmx') is None:
++        parser.error('xdvipdfmx is required. Install it through your TeX distribution.')
+     destination = (args.output_directory or ROOT).expanduser().resolve()
+     environment = dict(os.environ)
+     environment.setdefault('SOURCE_DATE_EPOCH', '1791504000')
+@@ -52,13 +54,14 @@
+     ignore = shutil.ignore_patterns(
+         'qa', '__pycache__', STEM + '.pdf', '*.aux', '*.log', '*.out', '*.toc',
+         '*.lof', '*.lot', '*.bbl', '*.blg', '*.fdb_latexmk', '*.fls', '*.xdv',
+-        'build_pass_*.txt', 'build_bibtex.txt', 'historical_assembly')
++        'build_pass_*.txt', 'build_bibtex.txt', 'build_pdf_driver.txt',
++        'historical_assembly')
+     with tempfile.TemporaryDirectory(prefix='komorebi-paper-vii-visual_guide-') as temporary:
+         stage = Path(temporary) / 'source'
+         shutil.copytree(ROOT, stage, ignore=ignore)
+         for name in ('TEXINPUTS', 'BIBINPUTS', 'BSTINPUTS'):
+             environment[name] = str(stage) + os.pathsep + environment.get(name, '')
+-        command = ['xelatex', '-interaction=nonstopmode', '-halt-on-error',
++        command = ['xelatex', '-no-pdf', '-interaction=nonstopmode', '-halt-on-error',
+                    '-file-line-error', '-recorder', '-jobname=' + STEM, STEM + '.tex']
+         transcripts = []
+ 
+@@ -85,6 +88,9 @@
+                     if shutil.which('bibtex') is None:
+                         raise SystemExit('BibTeX is required by this bibliography.')
+                     run_command(['bibtex', STEM], 'build_bibtex.txt')
++        # Emit the PDF only after references and font subsets have stabilized.
++        run_command(['xdvipdfmx', '-o', STEM + '.pdf', STEM + '.xdv'],
++                    'build_pdf_driver.txt')
+         pdf = stage / (STEM + '.pdf')
+         if not pdf.is_file():
+             raise SystemExit('Compilation completed without the expected PDF: ' + str(pdf))
+--- provenance/pre_proofread_2026-10-18/editable/lean_guide/build.py
++++ editable/lean_guide/build.py
+@@ -44,6 +44,8 @@
+ 
+     if shutil.which('xelatex') is None:
+         parser.error('XeLaTeX is required. Install it through your TeX distribution.')
++    if shutil.which('xdvipdfmx') is None:
++        parser.error('xdvipdfmx is required. Install it through your TeX distribution.')
+     destination = (args.output_directory or ROOT).expanduser().resolve()
+     environment = dict(os.environ)
+     environment.setdefault('SOURCE_DATE_EPOCH', '1791504000')
+@@ -52,13 +54,14 @@
+     ignore = shutil.ignore_patterns(
+         'qa', '__pycache__', STEM + '.pdf', '*.aux', '*.log', '*.out', '*.toc',
+         '*.lof', '*.lot', '*.bbl', '*.blg', '*.fdb_latexmk', '*.fls', '*.xdv',
+-        'build_pass_*.txt', 'build_bibtex.txt', 'historical_assembly')
++        'build_pass_*.txt', 'build_bibtex.txt', 'build_pdf_driver.txt',
++        'historical_assembly')
+     with tempfile.TemporaryDirectory(prefix='komorebi-paper-vii-lean_guide-') as temporary:
+         stage = Path(temporary) / 'source'
+         shutil.copytree(ROOT, stage, ignore=ignore)
+         for name in ('TEXINPUTS', 'BIBINPUTS', 'BSTINPUTS'):
+             environment[name] = str(stage) + os.pathsep + environment.get(name, '')
+-        command = ['xelatex', '-interaction=nonstopmode', '-halt-on-error',
++        command = ['xelatex', '-no-pdf', '-interaction=nonstopmode', '-halt-on-error',
+                    '-file-line-error', '-recorder', '-jobname=' + STEM, STEM + '.tex']
+         transcripts = []
+ 
+@@ -85,6 +88,9 @@
+                     if shutil.which('bibtex') is None:
+                         raise SystemExit('BibTeX is required by this bibliography.')
+                     run_command(['bibtex', STEM], 'build_bibtex.txt')
++        # Emit the PDF only after references and font subsets have stabilized.
++        run_command(['xdvipdfmx', '-o', STEM + '.pdf', STEM + '.xdv'],
++                    'build_pdf_driver.txt')
+         pdf = stage / (STEM + '.pdf')
+         if not pdf.is_file():
+             raise SystemExit('Compilation completed without the expected PDF: ' + str(pdf))

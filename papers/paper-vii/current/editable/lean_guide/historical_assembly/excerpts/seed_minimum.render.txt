@@ -1,0 +1,8 @@
+theorem quantum_seed_rank (dd mm : I → ℕ) (hd : ∀ i, 0 < dd i) :
+    IsLeast \CodeChar{123}s : ℕ | ∃ C : Fin s → (i : I) → Matrix (Fin (dd i)) (Fin (mm i)) ℂ,
+      BlockGenerates dd mm C\CodeChar{125} (seedRankFormula dd mm) := by
+  constructor
+  · exact (exists_block_seeds_iff dd mm hd _).mpr
+      ((seed_formula_le_iff dd mm hd _).mp le_rfl)
+  · intro s hs
+    exact (seed_formula_le_iff dd mm hd s).mpr ((exists_block_seeds_iff dd mm hd s).mp hs)

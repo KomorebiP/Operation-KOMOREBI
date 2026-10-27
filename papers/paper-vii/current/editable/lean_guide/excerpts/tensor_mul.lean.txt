@@ -1,0 +1,8 @@
+theorem tensor_mul (A B : (i : F) → Matrix (D i) (D i) ℂ) :
+    tensor (fun i => A i * B i) = tensor A * tensor B := by
+  ext x y
+  simp only [tensor, Matrix.mul_apply]
+  rw [Fintype.prod_sum]
+  apply Finset.sum_congr rfl
+  intro z _
+  exact Finset.prod_mul_distrib

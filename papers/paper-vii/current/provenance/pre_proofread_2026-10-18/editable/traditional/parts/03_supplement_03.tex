@@ -1,0 +1,175 @@
+\section{Actual orbits and sharp seed counts}\label{supp3:section:001}
+Let $C\in M_{d\times m}(\C)$ be the coefficient matrix of one seed. Define its orbit by actual matrix multiplication:
+\[
+\mathcal O(C)=\{AC:A\in M_d(\C)\}.
+\]
+This set is already a linear subspace. The source proves its equality with the linear span of the same orbit, rather than assuming an abstract orbit-dimension formula.
+
+A matrix $X$ belongs to $\mathcal O(C)$ exactly when each of its rows belongs to $\operatorname{Row}(C)$. One direction follows by expanding $AC$. For the converse, choose the coefficients producing each row separately and place them in the corresponding row of $A$. An explicit linear equivalence therefore gives
+\[
+\mathcal O(C)\simeq \operatorname{Row}(C)^d,
+\qquad
+\boxed{\dim_\C\mathcal O(C)=d\,\rank C.}
+\]
+If $d>0$, equality with the full $d\times m$ coefficient space is equivalent to $\rank C=m$. Consequently a cyclic seed requires $m\le d$. The nonempty-row assumption is essential for canceling the factor $d$.
+
+\subsection{Several seeds: both necessity and construction}
+For seeds $C_1,\ldots,C_k$, generation means the concrete statement
+\[
+\forall X\in M_{d\times m}(\C),\quad
+\exists A_1,\ldots,A_k\in M_d(\C):\quad
+X=\sum_{a=1}^k A_aC_a.
+\]
+Stack the $C_a$ vertically into a $kd\times m$ matrix $D$. The source proves the exact stacked-action identity and the equivalence
+\[
+\text{the seeds generate}\quad\Longleftrightarrow\quad\rank D=m.
+\]
+Thus $m\le kd$ is necessary. It is sufficient as well: embed the $m$ coordinate columns into $kd$ coordinate positions to obtain a full-column-rank matrix $D$, then split its rows back into $k$ seeds. This is an existence proof of actual generating matrices, not only an inequality on possible dimensions.
+
+\subsection{Simultaneous direct-sum generation}
+For the stipulated block representation
+\[
+\mathcal A=\bigoplus_i\bigl(M_{d_i}(\C)\otimes I_{m_i}\bigr),\qquad d_i>0,
+\]
+the proof establishes that $k$ seeds generate all blocks simultaneously exactly when $m_i\le kd_i$ for every $i$. It follows that
+\[
+\boxed{\srank_{\mathcal A}(\mathcal H)=\max_i\left\lceil\frac{m_i}{d_i}\right\rceil.}
+\]
+The final Lean proposition is an \code{IsLeast} statement over the set of feasible seed counts. It proves both attainment and minimality. For an empty block family the finite supremum is defined as $0$, matching the zero module.
+
+
+
+
+
+\section{Schmidt rank and the reduced state}\label{supp3:section:002}
+Use standard product-basis coordinates $\psi_{ij}$ and let $C_{ij}=\psi_{ij}$. An explicit linear equivalence identifies the product-index state vector with its coefficient matrix. The implementation checks the actual Kronecker action:
+\[
+\operatorname{coeff}\bigl((A\otimes I_B)\psi\bigr)=AC.
+\]
+It also proves that the transported matrix orbit equals the span of these Kronecker-transformed state vectors. The state-space dimension formula is therefore connected to the physical local action, not only to a separate matrix model.
+
+\subsection{An independent definition of Schmidt rank}
+The source defines Schmidt rank as the least number of product-vector summands. A decomposition of length $s$ is the concrete equality
+\[
+C_{ij}=\sum_{a=1}^{s}u_a(i)v_a(j).
+\]
+It factors $C=UV$ through an $s$-dimensional intermediate space, so $\rank C\le s$. Conversely, choose a basis of the row space of $C$. Expanding each row in this basis constructs a decomposition with exactly $\rank C$ product terms. Thus
+\[
+\boxed{r(\psi)=\rank C.}
+\]
+The definition uses a least natural number, and the equality with matrix rank is proved. The proof does not define Schmidt rank to be matrix rank. It does not construct an orthonormal Schmidt decomposition or prove a new singular-value decomposition theorem.
+
+The matrix-orbit dimension and the coefficient equivalence now yield
+\[
+\boxed{\dim_\C\spanof\{(A\otimes I_B)\psi:A\in M_{d_A}(\C)\}
+=d_A r(\psi).}
+\]
+
+\subsection{The actual partial trace and its support}
+The reduced matrix is defined by tracing the addressed index of the pure-state density matrix:
+\[
+(\rho_B)_{j\ell}=\sum_i\psi_{ij}\overline{\psi_{i\ell}}.
+\]
+For the coefficient convention used here, the exact Gram identity is
+\[
+\rho_B=C^{\mathsf T}(C^{\mathsf T})^*,
+\qquad \rank\rho_B=\rank C=r(\psi).
+\]
+The transpose is important. With this convention, writing $C^*C$ instead would conjugate the reduced matrix. The Lean source checks the entrywise identity and positivity of the resulting matrix.
+
+Full support is expressed as surjectivity of the reduced matrix's linear map. Assuming $d_A>0$, the checked equivalence is
+\[
+\boxed{\mathcal O_A(\psi)=\mathcal H_A\otimes\mathcal H_B
+\quad\Longleftrightarrow\quad \Ran\rho_B=\mathcal H_B.}
+\]
+Normalization of $\psi$ is unnecessary for these dimension and support statements. The zero state has rank $0$ under the minimum-product-length definition.
+
+
+
+
+
+\section{Constructed cyclic character projectors}\label{supp3:section:003}
+Let $N>0$ and let $S$ be a unitary complex matrix with $S^N=I$. The implementation uses the genuine standard additive character of $\mathbb Z/N\mathbb Z$ and proves its exponential-root form:
+\[
+\omega=\exp(2\pi i/N),\qquad
+\chi(r)=\omega^{\operatorname{val}(r)}.
+\]
+Here $\operatorname{val}(r)$ is the canonical representative in $\{0,\ldots,N-1\}$. The representation is constructed as
+\[
+\rho(r)=S^{\operatorname{val}(r)}.
+\]
+Reduction of exponents modulo $N$ is proved from $S^N=I$, giving $\rho(r+s)=\rho(r)\rho(s)$ and $\rho(0)=I$. No representation or character-orthogonality assumption is inserted in the final matrix theorem.
+
+\subsection{Exact coefficient formula}
+The packet definition is a finite sum over residue classes:
+\[
+P_j=\frac1N\sum_{r\in\mathbb Z/N\mathbb Z}\chi(-rj)\rho(r).
+\]
+The source proves
+\[
+\chi(-rj)=\bigl(\omega^{\operatorname{val}(r)\operatorname{val}(j)}\bigr)^{-1},
+\]
+so this is precisely the manuscript's $N$-term Fourier projector formula, with canonical representatives.
+
+\subsection{Algebraic identities}
+Primitivity of the standard character yields the checked finite sum
+\[
+\sum_r\chi(tr)=\begin{cases}N,&t=0,\\0,&t\ne0.\end{cases}
+\]
+Reindexing finite sums then gives
+\[
+\boxed{P_jP_k=\delta_{jk}P_j,\qquad \sum_jP_j=I,\qquad SP_j=\omega^jP_j.}
+\]
+Multiplicativity and completeness are first proved for a general representation in a complex algebra, then instantiated with the actual powers of $S$. This organization isolates reusable finite-sum algebra without weakening the final hypotheses.
+
+\subsection{Orthogonal, not merely idempotent}
+Unitarity supplies $\rho(r)^*=\rho(-r)$, while the character obeys $\overline{\chi(r)}=\chi(-r)$. Reindexing $r\mapsto-r$ proves $P_j^*=P_j$. The final concrete matrix theorem includes Hermiticity together with multiplication, completeness, and eigenaction. Thus the result establishes orthogonal spectral packets, not only algebraic idempotents.
+
+The proof includes the degenerate modulus $N=1$: finite order then forces $S=I$ and the sole projector is $I$. It does not need an artificial assumption $N>1$.
+
+
+
+
+
+\section{The actual Euclidean transfer exponential}\label{supp3:section:004}
+Let $H$ be a Hermitian matrix on a nonempty finite complex state space. The source defines
+\[
+T_e(t)=\exp\bigl(-t(H-eI)\bigr)
+\]
+using Lean's power-series exponential. It does not introduce an unrelated transfer family or assume that a spectral expansion equals this exponential.
+
+\subsection{Connecting power series and spectral calculus}
+The shifted generator is proved Hermitian. The implementation then identifies the actual matrix exponential with continuous functional calculus:
+\[
+\boxed{T_e(t)=f_t(H),\qquad f_t(x)=e^{-t(x-e)}.}
+\]
+The formal proof uses composition, scalar multiplication, subtraction, and the established agreement between the functional-calculus exponential and the power-series exponential. Spectral mapping is consequently available for the operator that was actually defined:
+\[
+\Spec_\R T_e(t)=\{e^{-t(x-e)}:x\in\Spec_\R H\}.
+\]
+Hermiticity also identifies the full complex spectrum with the image of these real eigenvalues. A separate checked theorem states the complex-spectrum interval containment explicitly.
+
+\subsection{A genuine minimum eigenvalue}
+The ground energy is the minimum of the finite, nonempty eigenvalue set. The proof establishes both
+\[
+E_0\in\Spec_\R H,\qquad E_0\le x\quad(x\in\Spec_\R H).
+\]
+The nonempty-state-space assumption is recorded in the theorem because the minimum of an empty spectrum is not defined by the manuscript's formula.
+
+\subsection{Positivity, semigroup composition, and the interval}
+Every eigenvalue of $T_e(t)$ is strictly positive, for arbitrary real $e,t$, since the real exponential is positive. For $e=E_0$ and $t\ge0$ it is also at most one. Therefore
+\[
+\boxed{T_{E_0}(t)>0,\qquad \Spec T_{E_0}(t)\subseteq(0,1].}
+\]
+The two scalar multiples of $H-eI$ commute, so the actual power-series exponential obeys
+\[
+\boxed{T_e(t+s)=T_e(t)T_e(s),\qquad T_e(0)=I.}
+\]
+The semigroup identity is proved for all real $t,s$. Nonnegative time is needed for the upper spectral bound, not for the composition identity or strict positivity.
+
+These are finite-dimensional operator results. No continuum transfer limit, gravitational path integral, or physical spacetime model is established by this theorem. Numerical figures in the original paper were not recomputed in this release.
+
+
+
+
+

@@ -1,0 +1,16 @@
+theorem tensor_polyphase_refinement \CodeChar{123}F : Type*\CodeChar{125} [Fintype F] [DecidableEq F] \CodeChar{123}D : F → Type*\CodeChar{125}
+    [∀ i, Fintype (D i)] [∀ i, DecidableEq (D i)]
+    (N : ℕ) [NeZero N] (P : (i : F) → ZMod N → Matrix (D i) (D i) ℂ)
+    (hmul : ∀ i j k, P i j * P i k = if j = k then P i j else 0)
+    (hsum : ∀ i, ∑ j, P i j = 1)
+    (hstar : ∀ i j, (P i j).conjTranspose = P i j) :
+    let Q := fun a : F → ZMod N => tensor (fun i => P i (a i))
+    let C := coarse Q (fun a => ∑ i, a i)
+    (∀ r s, C r * C s = if r = s then C r else 0) ∧
+      (∑ r, C r) = 1 ∧ (∀ r, (C r).conjTranspose = C r) := by
+  classical
+  dsimp only
+  refine ⟨?_, ?_, ?_⟩
+  · exact coarse_mul _ _ (fine_mul P hmul)
+  · exact coarse_complete _ _ (fine_complete P hsum)
+  · exact coarse_selfAdjoint _ _ (fine_selfAdjoint P hstar)

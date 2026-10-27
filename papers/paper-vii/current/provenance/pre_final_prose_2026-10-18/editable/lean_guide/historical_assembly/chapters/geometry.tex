@@ -1,0 +1,118 @@
+\section{Moving frames and an actual projected connection}
+\label{sec:geometry}
+
+\subsection{Differentiate the coordinates before rewriting the equation}
+Let $U(t)$ be a finite complex-matrix unitary frame and $\psi(t)$ an actual differentiable vector. With $y(t)=U(t)^*\psi(t)$, the effective Hamiltonian is
+\[
+H_{\mathrm{eff}}=U^*HU-iU^*\dot U.
+\]
+The source uses real time derivatives of complex-valued entries. The variables \code{dU} and \code{dpsi} are candidate derivative values, and the hypotheses \code{HasDerivAt} assert that they are the actual derivatives at the specified time.
+
+\excerpt{MovingFrames}{frame_product}
+
+\walk{The proof applies the scalar product rule to each summand of the matrix-vector product, then differentiates the finite sum. It produces the two expected terms without assuming differentiability of the transformed coordinates in advance. The adjoint-derivative lemma conjugates the derivative of the transposed entry, using that conjugation is real-linear.}
+
+Differentiating $U^*U=1$ gives $\dot U^*U+U^*\dot U=0$, so $U^*\dot U$ is skew-adjoint and $-iU^*\dot U$ is Hermitian. The conjugated term $U^*HU$ is Hermitian when $H$ is Hermitian. That last premise is explicitly present in the final source; unitarity of $U$ by itself does not establish Hermiticity of an arbitrary $H$.
+
+\excerpt{MovingFrames}{moving_coordinates}
+
+\contract{The matrix index is finite with decidable equality. Entrywise derivative hypotheses are at one real time $t$. Both unitary identities hold for every time, permitting construction of the inverse coordinates. The original Schrödinger equation $i\dot\psi=H\psi(t)$ is a premise, and $H^*=H$ is the premise for the Hermiticity conclusion. The theorem constructs $y$, constructs its derivative and proves its equation; it is not an initial-value existence theorem.}
+
+\walk{After unfolding the two \code{let} expressions, the proof obtains the actual derivative of $U^*\psi$ from the product rule. It gives that derivative proof to \code{moving_frame_equation}. The right-unitarity identity reconstructs $\psi=Uy$, while left-unitarity removes $U^*U$ when the differentiated equation is multiplied by $U^*$. The separate Hermiticity lemma uses the differentiated unitary identity and the supplied Hermiticity of $H$.}
+
+\subsection{The canonical connection derives its first-order identities}
+For a differentiable complete orthogonal family $P_a(t)$, write $D_a=\dot P_a(t)$. Differentiating multiplication gives
+\[
+D_aP_b+P_aD_b=\delta_{ab}D_a.
+\]
+Differentiating completeness gives $\sum_aD_a=0$. Differentiating self-adjointness gives $D_a^*=D_a$. These are consequences of actual derivatives of the original functions.
+
+\excerpt{CanonicalConnection}{connection_jet}
+
+The general algebraic part of the file can take these jet identities as hypotheses. The endpoint below proves those hypotheses from the derivative data before applying that algebraic part. It constructs
+\[
+C=\sum_aD_aP_a=\frac12\sum_a[D_a,P_a]
+\]
+and establishes $C^*=-C$ and $[C,P_b]=D_b$.
+
+\excerpt{CanonicalConnection}{canonical_connection}
+
+\contract{The actual-derivative endpoint is in a normed real algebra with a star-ring structure, compatible real scalar action and continuous involution. The finite packet index has decidable equality. The projector multiplication, completeness and adjoint identities hold for all real times. This endpoint treats a curve of projectors; it has no manifold curvature conclusion.}
+
+The skew-adjointness calculation sums $D_aP_a+P_aD_a=D_a$. Their sum vanishes, giving $C+C^*=0$. The commutator calculation first isolates $CP_b=D_bP_b$, then obtains $D_b+P_bC=D_bP_b$ from the differentiated multiplication identities and completeness. Subtracting gives the desired commutator. The factor one-half uses the real scalar structure and the same zero sum.
+
+\subsection{The crucial off-diagonal derivative block is proved}
+For a parameter-dependent idempotent $P$, differentiating $P^2=P$ in direction $v$ gives
+\[
+D_vP\,P+P\,D_vP=D_vP.
+\]
+Multiplying this equation by $P$ and cancelling an identical summand gives $P(D_vP)P=0$. This is a derived fact, not a curvature-specific assumption.
+
+\excerpt{ProjectedCurvature}{sandwich_zero}
+
+For a range section $s$ with $Ps=s$, differentiating the range condition gives
+\[
+D_vs=(D_vP)s+P(D_vs).
+\]
+The chart connection is $\nabla_Xs=P(D_Xs)$. Its curvature is the actual commutator
+\[
+R(X,Y)s=\nabla_X\nabla_Ys-\nabla_Y\nabla_Xs-\nabla_{[X,Y]}s.
+\]
+The bracket term is essential: it cancels the change in the vector fields in the second directional derivatives. The proof uses Mathlib's actual Fréchet derivative and actual Lie bracket, not independently supplied second-order coefficients.
+
+\excerpt{LocalProjectedCurvature}{local_curvature}
+
+\contract{The local theorem has real normed model and fiber spaces. $P$, $X$ and $Y$ are differentiable at the specified point; $s$ is twice continuously differentiable there. The idempotent and range-section equations hold as functions. The global chart-level file supplies an earlier variant with global differentiability; the local variant supports use inside arbitrary chart neighborhoods.}
+
+\walk{Expand the derivative of the projected directional derivative by the product rule. The actual Lie-bracket derivative identity cancels the second derivatives of $s$ and the derivatives of $X,Y$. Substitute the differentiated range-section identity into the two remaining first-derivative terms. The components $P(D_vP)P(D_ws)$ vanish by the sandwich lemma. The surviving term is $P[(D_XP),(D_YP)]s$, and $Ps=s$ puts the final right-hand $P$ into the curvature form.}
+
+\subsection{Build the range atlas from the projector}
+The global development begins with an actual operator-valued map $P:M\to\mathcal L_{\mathbb R}(F,F)$. Its fiber is the fixed subspace $\{v:P(x)v=v\}$ with the subspace topology. The total space is the subtype of $M\times F$ consisting of such fixed pairs. The atlas is constructed from $P$ rather than supplied as a hypothesis.
+
+For idempotents $p,q$, define
+\[
+T(p,q)=pq+(1-p)(1-q).
+\]
+This is identity at $p=q$, and it intertwines the two projectors. Near a base point $a$, the map $T(P(x),P(a))$ is invertible because invertibility is open in the complete operator algebra and it is identity at $x=a$.
+
+\excerpt{GlobalRangeBundle}{range_transport}
+\excerpt{GlobalRangeBundle}{range_intertwines}
+
+Let $U_a=\{x:T(P(x),P(a))\text{ is invertible}\}$. Reconstruction transports the fixed fiber at $a$ into the ambient space at $x$. Coordinates apply the inverse transport and project to the fixed fiber at $a$. The intertwiners show that both maps land in the correct fibers. On $U_a$, the two inverse identities follow from genuine inverse cancellation.
+
+\excerpt{GlobalRangeBundle}{range_product}
+
+This declaration is a homeomorphism from the restricted actual total space to $U_a\times\mathrm{fiber}(P(a))$. In addition to inverse laws, it proves continuity in both directions using the smooth coordinate and reconstruction maps. Transitions are composed from these actual maps. They are continuous linear maps in each fiber, smooth in the base, and satisfy the cocycle law by cancelling the middle reconstruction-coordinate pair.
+
+\excerpt{GlobalRangeBundle}{range_atlas}
+
+\contract{The range-atlas construction uses a smooth real projector map on a charted parameter space and a complete real normed fiber space. Idempotence is required; self-adjointness is not needed for this bundle construction. The explicit atlas theorem does not demand a global chart. Local linear fiber equivalences prove local constancy of finite rank whenever finite rank is being interpreted. The underlying fiber equivalence is the stronger structural statement.}
+
+The implementation uses this explicit smooth atlas directly. It does not package it as a Mathlib \code{ContMDiffVectorBundle} instance. This is a boundary of representation, not an assumed atlas hidden in the proof: the total space, open domains, local product homeomorphisms, transitions and their identities are all constructed and proved.
+
+\subsection{The global derivative and gauge gluing}
+On the manifold, the global connection is defined using \code{mvfderiv}, the actual derivative of a manifold-to-vector-space map. A tangent vector at $x$ has type \code{TangentSpace I x}, so a vector field is a dependent function giving one such vector at every point.
+
+\excerpt{GlobalProjectedConnection}{global_nabla}
+\excerpt{GlobalProjectedConnection}{global_leibniz}
+
+The global range property follows immediately from idempotence. Additivity in sections uses actual differentiability premises. The Leibniz rule needs the range condition for $s(x)$ because the scalar derivative term initially contains $P(x)s(x)$. Linearity in the vector field uses linearity of the derivative. A germ lemma says that locally equal functions have the same covariant derivative at the point.
+
+Local coordinate connections reconstruct a range section, differentiate it globally and then take coordinates. On an open domain, local reconstruction equals the original section in a neighborhood. The germ lemma therefore identifies the local and global connection. On an overlap, coordinate transitions carry one representation into the other.
+
+\excerpt{GlobalProjectedConnection}{global_glue}
+\excerpt{ProjectedBundleCompletion}{smooth_section}
+\excerpt{ProjectedBundleCompletion}{gauge_law}
+
+The smooth-section equivalence needs only an eventual range condition near the point, not an unproved globally extended section. The gauge law in the completion file applies to arbitrary local coordinate functions and compares their reconstructed connection values on an overlap. It is not restricted to a prechosen global frame.
+
+\subsection{Manifold curvature and its endpoint}
+The final curvature theorem uses a smooth real boundaryless manifold modeled on a complete real normed space $E$. The model is $\mathcal I(\mathbb R,E)$; the manifold has \code{ChartedSpace E M} and a smooth \code{IsManifold} instance for that model. The source pulls vector fields into a chart centered at the point, identifies the manifold derivative and bracket with their chart versions, and then proves the cancellation using actual manifold operations.
+
+\excerpt{ManifoldProjectedCurvature}{manifold_curvature}
+
+\contract{Here $P$, the two vector fields and the ambient range section are smooth. The equations $P(x)^2=P(x)$ and $P(x)s(x)=s(x)$ are given globally. The conclusion is $R(X,Y)s=P(dP\wedge dP)P\,s$ at an arbitrary point. The final manifold curvature endpoint assumes no global chart, no supplied curvature identity and no supplied range atlas. The atlas portion separately requires completeness of the fiber space. Finite complex quantum spaces fit by restriction to their underlying real spaces.}
+
+The next theorem proves tensoriality: replacing the two fields and the section by smooth extensions with the same values at the point leaves curvature unchanged. The completion file makes the curvature form alternating and real-linear, proves it maps into the actual fiber, and defines the resulting continuous linear fiber endomorphism. Constant projector maps, including zero and identity, have zero curvature form.
+
+This chain explains the division among the six projected-geometry files. \code{ProjectedCurvature} establishes the parameter-space algebra and calculus; \code{LocalProjectedCurvature} localizes the hypotheses; \code{GlobalRangeBundle} constructs the atlas; \code{GlobalProjectedConnection} defines and glues the connection; \code{ManifoldProjectedCurvature} proves the actual global curvature formula; \code{ProjectedBundleCompletion} supplies intrinsic section, gauge and fiber-form compatibility. Treating only the earliest chart file as current coverage would miss the later global constructions.

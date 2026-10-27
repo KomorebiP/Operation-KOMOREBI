@@ -1,0 +1,27 @@
+theorem rank_one_gram_rigidity {q J : Type*} [Fintype q] [DecidableEq q]
+    [Fintype J] [DecidableEq J] (A : Matrix J q ℂ) (p : q → ℂ)
+    (hgram : A.conjTranspose*A = Matrix.vecMulVec (star p) p) :
+    ∃ z : J → ℂ, ∀ j t, A j t = z j*p t := by
+  by_cases hp : p=0
+  · have hA : A=0 := Matrix.conjTranspose_mul_self_eq_zero.mp (by simpa [hp] using hgram)
+    exact ⟨fun _ => 0, by simp [hA]⟩
+  · obtain ⟨t,ht⟩ : ∃ t, p t ≠ 0 := Function.ne_iff.mp hp
+    refine ⟨fun j => A j t / p t, ?_⟩
+    intro j s
+    let v : q → ℂ := Pi.single s (p t) - Pi.single t (p s)
+    have hpv : p ⬝ᵥ v = 0 := by
+      simp [v, dotProduct_sub, dotProduct_single, mul_comm]
+    have hav : A *ᵥ v=0 := by
+      apply (Matrix.conjTranspose_mul_self_mulVec_eq_zero A v).mp
+      rw [hgram]
+      ext u
+      change (∑ x, star (p u) * p x * v x) = 0
+      simp_rw [mul_assoc]
+      rw [← Finset.mul_sum]
+      change star (p u) * (p ⬝ᵥ v) = 0
+      rw [hpv, mul_zero]
+    have heq : A j s*p t - A j t*p s=0 := by
+      simpa [v, Matrix.mulVec_sub, Matrix.mulVec_single, mul_comm] using congrFun hav j
+    change A j s = (A j t / p t) * p s
+    field_simp [ht]
+    linear_combination heq

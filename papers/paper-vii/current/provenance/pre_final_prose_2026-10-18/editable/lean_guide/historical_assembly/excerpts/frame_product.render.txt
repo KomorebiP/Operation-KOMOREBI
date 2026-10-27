@@ -1,0 +1,7 @@
+theorem matrix_vector_derivative (A : ℝ → Matrix n n ℂ) (y : ℝ → n → ℂ)
+    (dA : Matrix n n ℂ) (dy : n → ℂ) (t : ℝ)
+    (ha : ∀ i j, HasDerivAt (fun s => A s i j) (dA i j) t)
+    (hy : ∀ i, HasDerivAt (fun s => y s i) (dy i) t) (i : n) :
+    HasDerivAt (fun s => (A s *ᵥ y s) i) ((dA *ᵥ y t + A t *ᵥ dy) i) t := by
+  simpa only [Matrix.mulVec, dotProduct, Pi.add_apply, Pi.mul_apply, Finset.sum_add_distrib] using
+    HasDerivAt.fun_sum (u := Finset.univ) (fun j _ => (ha i j).mul (hy j))

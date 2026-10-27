@@ -1,0 +1,8 @@
+theorem cyclic_iff_full_rank [Nonempty d] (C : Matrix d m ℂ) :
+    orbitSpace C = ⊤ ↔ C.rank = Fintype.card m := by
+  rw [Submodule.eq_top_iff_finrank_eq, orbit_dimension]
+  have hdim : finrank ℂ (Matrix d m ℂ) = Fintype.card d * Fintype.card m := by
+    change finrank ℂ (d → m → ℂ) = _
+    simp [Module.finrank_pi_fintype]
+  rw [hdim]
+  exact Nat.mul_left_cancel_iff (Fintype.card_pos)

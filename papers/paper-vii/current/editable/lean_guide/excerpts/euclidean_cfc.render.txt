@@ -1,0 +1,9 @@
+theorem transfer_cfc (H : Matrix n n ℂ) (hH : H.IsHermitian) (e t : ℝ) :
+    transfer H e t = cfc (fun x : ℝ => Real.exp ((-t)*(x-e))) H := by
+  rw [cfc_comp' Real.exp (fun x : ℝ => (-t)*(x-e)) H]
+  have hlin : cfc (fun x : ℝ => (-t)*(x-e)) H = (-t) • (H - e • (1 : Matrix n n ℂ)) := by
+    rw [cfc_const_mul (-t) (fun x : ℝ => x-e) H,
+      cfc_sub (fun x : ℝ => x) (fun _ : ℝ => e) H, cfc_id' ℝ H hH.isSelfAdjoint, cfc_const e H hH.isSelfAdjoint]
+    simp only [Algebra.algebraMap_eq_smul_one]
+  rw [hlin, CFC.real_exp_eq_normedSpace_exp (shifted_hermitian H hH e t).isSelfAdjoint]
+  rfl

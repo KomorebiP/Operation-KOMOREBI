@@ -1,0 +1,9 @@
+theorem amplification_eq_kraus \CodeChar{123}J : Type*\CodeChar{125} [Fintype J] [DecidableEq J]
+    (K : A → Matrix n n ℂ) (rho : Matrix (J × n) (J × n) ℂ) :
+    amplify (channel K) rho =
+      channel (fun a => (1 : Matrix J J ℂ) ⊗ₖ K a) rho := by
+  ext ⟨i, u⟩ ⟨j, v⟩
+  simp_rw [amplify, channel, Matrix.sum_apply, Matrix.mul_apply,
+    Matrix.conjTranspose_apply, Matrix.kroneckerMap_apply]
+  simp [Fintype.sum_prod_type, Matrix.one_apply, apply_ite]
+  rfl

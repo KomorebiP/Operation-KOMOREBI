@@ -1,0 +1,955 @@
+--- before/editable/lean_guide/Paper_VII_Lean_Guide_Final.tex
++++ after/editable/lean_guide/Paper_VII_Lean_Guide_Final.tex
+@@ -20,12 +20,12 @@
+ \KomorebiCover
+ \KomorebiOpeningNote{
+ \textbf{A guide to the actual formal development.}
+-19 scoped finite items. 323 named theorem declarations. 25 proof modules.
++The formal development covers 19 finite items through 323 named theorem declarations in 25 proof modules.
+ The teaching chapters explain the mathematical interfaces and their hypotheses. The complete registers then give exact declarations, source locations, imports, and nine dependency pins.
+ 
+-This edition preserves 67 exact Lean excerpts. Six constructed objects have a separate inherited audit of their proof fields. That additional audit does not enlarge the 323-theorem catalog. Five continuum physics conjectures remain open.
++This edition preserves 67 exact Lean excerpts. Six constructed objects have a separate inherited audit of their proof fields. Those six objects are recorded separately from the catalog of 323 theorems. Five continuum physics conjectures remain open.
+ 
+-Kernel execution evidence is inherited from the v0.6.0 release dated 6 September 2026. This edition reconciles source bytes, declaration locations, saved axiom records, and current finite computations. No fresh Lean compilation was run.}
++Kernel execution evidence is inherited from the v0.6.0 release dated 6 September 2026. This edition checks the correspondence between the source files, declaration locations, saved axiom records, and printed excerpts. It also describes the finite computations recorded on 9 October 2026. The present proofreading pass did not rerun those computations or compile Lean.}
+ 
+ \setcounter{tocdepth}{1}
+ \begingroup\small
+@@ -41,16 +41,16 @@
+ \clearpage\input{chapters/channels_recovery.tex}
+ \clearpage\input{chapters/finite_limits.tex}
+ \clearpage\input{chapters/replay.tex}
+-\clearpage\section{Complete finite-result map}\label{sec:scope}
+-The following map preserves all 19 ledger scopes and resolves their current formal endpoints. Their recorded completion is inherited from the source release under the stated hypotheses. It does not assert that every sentence in the traditional paper is separately formalized. Source pointers added where the ledger gives only a module are identified explicitly.
++\clearpage\section{Complete map of finite results}\label{sec:scope}
++The following map reproduces all 19 ledger scope statements verbatim and resolves their current formal endpoints. Their recorded completion is inherited from the source release under the stated hypotheses. It does not assert that every sentence in the traditional paper is separately formalized. Source pointers added where the ledger gives only a module are identified explicitly.
+ 
+ \input{generated/result_map.tex}
+ \clearpage\section{All named theorem declarations}\label{sec:catalog}
+-The following catalog is derived from active declarations in the 25 current source modules, with nested namespaces resolved. It is reconciled against the saved theorem inventory and all 323 saved axiom reports. It includes supporting lemmas, the finite constraint audit, and strengthened endpoints; it is not a list of 323 manuscript theorems. The source line is the declaration line. ``Core'' means an endpoint in the finite-result map; ``support'' means a declaration used in the formal development or its scope audit. All saved axiom sets lie within \code{propext}, \code{Classical.choice}, and \code{Quot.sound}; the full source-bound sets accompany the guide.
++The following catalog is derived from active declarations in the 25 current source modules, with nested namespaces resolved. It is reconciled against the saved theorem inventory and all 323 saved axiom reports. It includes supporting lemmas, the finite constraint audit, and strengthened endpoints. The count therefore describes formal declarations rather than 323 separate manuscript theorems. The source line identifies the declaration. ``Core'' marks an endpoint in the map of finite results, while ``support'' marks a declaration used in the formal development or its scope audit. All saved axiom sets lie within \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. The complete sets accompany the guide with their source identities.
+ \input{generated/catalog.tex}
+ \clearpage\section{Module dependencies, source identities, and pins}\label{sec:dependencies}
+ \input{generated/dependencies.tex}
+ \clearpage\section{Exact excerpt register}\label{sec:excerpts}
+-Each excerpt is a contiguous block of the unchanged source, retaining its full declaration and proof. The printed code uses explicit font fallback only where the monospaced font lacks a glyph. The corresponding \code{.lean.txt} file preserves raw UTF-8, without editorial substitutions. The source and excerpt hashes below bind the printed selection to its original context. Module-level assumptions remain in force when an excerpt is read; the teaching chapters state the relevant type classes and hypotheses.
++Each excerpt is a contiguous block of the unchanged source, retaining its full declaration and proof. The printed code uses explicit font fallback only where the monospaced font lacks a glyph. The corresponding \code{.lean.txt} file preserves raw UTF-8, without editorial substitutions. The source and excerpt hashes below bind the printed selection to its original context. The assumptions declared in a module remain in force when an excerpt is read. The teaching chapters state the relevant type classes and hypotheses.
+ \input{generated/excerpt_register.tex}
+ \end{document}
+--- before/editable/lean_guide/assemble.py
++++ after/editable/lean_guide/assemble.py
+@@ -125,9 +125,22 @@
+ 'low_mode':('LowModeConvergence','low_mode_error'),
+ 'constraint_kernel':('ConstraintAudit','compressed_anomaly_zero'),
+ 'constraint_nonclosure':('ConstraintAudit','commutator_nonzero')}
+-font=TTFont(HERE/'fonts/DejaVuSansMono.ttf')
++def matching_font(filename, family):
++    bundled=HERE/'fonts'/filename
++    if bundled.is_file():
++        return bundled
++    try:
++        installed=Path(subprocess.check_output(
++            ['fc-match','-f','%{file}',family],text=True).strip())
++    except (FileNotFoundError, subprocess.CalledProcessError) as error:
++        raise RuntimeError('Font lookup failed for '+family) from error
++    if not installed.is_file() or installed.name!=filename:
++        raise RuntimeError('Matching font file required: '+filename)
++    return installed
++
++font=TTFont(matching_font('DejaVuSansMono.ttf','DejaVu Sans Mono'))
+ cmap={k for t in font['cmap'].tables for k in t.cmap}
+-mathfont=TTFont(HERE/'fonts/latinmodern-math.otf')
++mathfont=TTFont(matching_font('latinmodern-math.otf','Latin Modern Math'))
+ mathcmap={k for t in mathfont['cmap'].tables for k in t.cmap}
+ excerpts=[]; fallback=set()
+ for tag,(module,name) in selections.items():
+@@ -144,7 +157,7 @@
+     (HERE/'excerpts'/f'{tag}.render.txt').write_text(rendered)
+     record={'tag':tag,'module':module,'name':name,'source_file':'formalization/'+p.name,'start_line':start,'end_line':start+raw.count('\n')-1,'source_sha256':sha(p),'excerpt_sha256':hashlib.sha256(raw.encode()).hexdigest()}
+     excerpts.append(record)
+-    (GEN/f'excerpt_{tag}.tex').write_text(r'\source{'+record['source_file']+r'}'+'\n'+r'{\footnotesize\color{muted}Exact lines '+str(record['start_line'])+'--'+str(record['end_line'])+r'; excerpt \code{'+tag+r'}. Hash in Section~\ref{sec:excerpts}.}\par\smallskip'+'\n')
++    (GEN/f'excerpt_{tag}.tex').write_text(r'\source{'+record['source_file']+r'}'+'\n'+r'{\footnotesize\color{muted}Exact lines '+str(record['start_line'])+' to '+str(record['end_line'])+r'. Excerpt \code{'+tag+r'}. Hash in Section~\ref{sec:excerpts}.}\par\smallskip'+'\n')
+ 
+ out=[]
+ for r in ledger:
+@@ -154,7 +167,7 @@
+     out.append(r'\textbf{'+caption+r'}\begin{itemize}'+'\n')
+     for n in endpoints[r['item']]:
+         rr=all_declarations[n]
+-        out.append(r'\item \code{'+n+'}; '+r'\code{'+rr['module']+'.lean}, line '+str(rr['line'])+'.\n')
++        out.append(r'\item \code{'+n+'}, '+r'\code{'+rr['module']+'.lean}, line '+str(rr['line'])+'.\n')
+     out.append(r'\end{itemize}'+'\n')
+ (GEN/'result_map.tex').write_text(''.join(out))
+ 
+@@ -165,7 +178,7 @@
+     out.append(r'\begin{longtable}{@{}p{.76\linewidth}p{.17\linewidth}@{}}\toprule Named declaration & Source line\\\midrule\endhead'+'\n')
+     for r in rs:
+         state=('Core '+', '.join(reverse[r['declaration']])) if reverse[r['declaration']] else 'support'
+-        out.append(r'\code{'+r['declaration']+'} & '+str(r['line'])+'; '+state+r'\\'+'\n')
++        out.append(r'\code{'+r['declaration']+'} & '+str(r['line'])+', '+state+r'\\'+'\n')
+     out.append(r'\bottomrule\end{longtable}'+'\n')
+ (GEN/'catalog.tex').write_text(''.join(out))
+ 
+@@ -173,19 +186,19 @@
+ for p in modules:
+     imps=re.findall(r'(?m)^\s*(?:public\s+)?import\s+(?:all\s+)?([\w.]+)\s*$',active_text(p.read_text()))
+     imports.append({'module':p.stem,'sha256':sha(p),'imports':sorted(set(imps)),'local_imports':sorted({x for x in imps if x in saved})})
+-out=[r'\subsection{Current local module graph}'+'\n'+'The dependencies below are read from both public imports and import-all commands. Duplicate imports count once. Import-all is significant in this Lean module edition because private implementation details can be needed by downstream proofs. A module with no local import still imports the pinned Mathlib files named in its source.\n'+r'\begin{longtable}{@{}p{.36\linewidth}p{.57\linewidth}@{}}\toprule Module & Direct current local imports\\\midrule\endhead'+'\n']
+-for r in imports:out.append(r'\code{'+r['module']+'} & '+('; '.join(r'\code{'+v+'}' for v in r['local_imports']) or 'Mathlib only')+r'\\'+'\n')
++out=[r'\subsection{Current local module graph}'+'\n'+'The dependencies below are read from public imports and commands of the form import all. Duplicate imports count once. Importing all declarations matters in this Lean module edition because downstream proofs can require private implementation details. A module with no local import still imports the pinned Mathlib files named in its source.\n'+r'\begin{longtable}{@{}p{.36\linewidth}p{.57\linewidth}@{}}\toprule Module & Direct current local imports\\\midrule\endhead'+'\n']
++for r in imports:out.append(r'\code{'+r['module']+'} & '+(', '.join(r'\code{'+v+'}' for v in r['local_imports']) or 'Mathlib only')+r'\\'+'\n')
+ out.append(r'\bottomrule\end{longtable}\subsection{Current source SHA-256 identities}'+'\n')
+-for r in imports:out.append(r'\textbf{'+r['module']+r'}\par{\footnotesize\code{'+r['sha256']+r'}}\par'+'\n')
++for r in imports:out.append(r'\Needspace{3\baselineskip}\textbf{'+r['module']+r'}\par{\footnotesize\code{'+r['sha256']+r'}}\par'+'\n')
+ pins=json.loads((SRC/'provenance/lake-manifest.json').read_text())['packages']
+-out.append(r'\subsection{Pinned compiler and dependency revisions}'+'\n'+r'Compiler: \code{leanprover/lean4:v4.34.0-rc2}. Saved runtime commit: \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. The following are the nine manifest packages; replay should use the locked revisions, including inherited dependencies.\par'+'\n'+r'\begin{longtable}{@{}p{.23\linewidth}p{.70\linewidth}@{}}\toprule Package & Locked revision\\\midrule\endhead'+'\n')
++out.append(r'\subsection{Pinned compiler and dependency revisions}'+'\n'+r'Compiler: \code{leanprover/lean4:v4.34.0-rc2}. Saved runtime commit: \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. The following are the nine packages in the manifest. Replay should use the locked revisions, including inherited dependencies.\par'+'\n'+r'\begin{longtable}{@{}p{.23\linewidth}p{.70\linewidth}@{}}\toprule Package & Locked revision\\\midrule\endhead'+'\n')
+ for p in pins:out.append(esc(p['name'])+r' & \code{'+p['rev']+r'}\\'+'\n')
+ out.append(r'\bottomrule\end{longtable}'+'\n')
+ (GEN/'dependencies.tex').write_text(''.join(out))
+ 
+ out=[]
+ for r in excerpts:
+-    out.append(r'\subsection*{'+esc(r['tag'])+'}\n'+r'\source{'+r['source_file']+'}\n'+'Lines '+str(r['start_line'])+'--'+str(r['end_line'])+'; declaration '+r'\code{'+r['name']+r'}.\par'+'\n')
++    out.append(r'\subsection*{'+esc(r['tag'])+'}\n'+r'\source{'+r['source_file']+'}\n'+'Lines '+str(r['start_line'])+' to '+str(r['end_line'])+'. Declaration '+r'\code{'+r['name']+r'}.\par'+'\n')
+     out.append(r'{\footnotesize Source SHA-256: \code{'+r['source_sha256']+r'}.\par'+'\nExcerpt SHA-256: '+r'\code{'+r['excerpt_sha256']+r'}.}\par'+'\n')
+ (GEN/'excerpt_register.tex').write_text(''.join(out))
+ dump(GEN/'targets.json',rows);dump(GEN/'result_ledger.json',ledger);dump(GEN/'endpoint_navigation.json',endpoints)
+--- before/editable/lean_guide/chapters/channels_recovery.tex
++++ after/editable/lean_guide/chapters/channels_recovery.tex
+@@ -2,7 +2,7 @@
+ \label{sec:recovery}
+ 
+ \subsection{Complete positivity has an actual amplification map}
+-The Kraus channel is the finite complex-matrix map
++For finite complex matrices, the Kraus channel is the map
+ \[
+ \Phi(\rho)=\sum_aK_a\rho K_a^*.
+ \]
+@@ -13,7 +13,7 @@
+ \excerpt{KrausChannels}{kraus_amplify}
+ \excerpt{KrausChannels}{kraus_cp}
+ 
+-\contract{The system and Kraus index types are finite. The reference type \code{J} is arbitrary finite with decidable equality. Complete positivity itself does not require Kraus normalization; normalization is needed for trace preservation and preservation of density matrices. Every finite reference dimension is quantified in the theorem, rather than sampled in an example. Infinite reference systems are not encoded by these finite matrix declarations.}
++\contract{The system and Kraus index types are finite. The reference type \code{J} is arbitrary finite with decidable equality. Complete positivity itself does not require Kraus normalization. Normalization is needed for trace preservation and preservation of density matrices. Every finite reference dimension is quantified in the theorem, rather than sampled in an example. Infinite reference systems are not encoded by these finite matrix declarations.}
+ 
+ \walk{The amplification identity expands entries of a Kronecker product, uses the identity matrix to force equality of the reference indices, and collapses the corresponding sums. Once amplification is literally a Kraus map, the earlier positivity theorem applies without a new positivity hypothesis about the amplified channel.}
+ 
+@@ -30,13 +30,13 @@
+ \[
+ \mathcal R(\sigma)=\sum_aE_a^*\sigma E_a+Q^\perp\sigma Q^\perp.
+ \]
+-The complement term is important. Without it the decoder would generally lose trace on input outside the sum of syndrome output spaces. The implementation uses \code{Option I} as the total recovery-Kraus index: \code{some a} denotes $E_a^*$, and \code{none} denotes $Q^\perp$. Thus the extra branch is encoded in the actual finite family.
++The complement term is important. Without it the decoder would generally lose trace on input outside the sum of syndrome output spaces. The implementation uses \code{Option I} to index the complete Kraus family for recovery: \code{some a} denotes $E_a^*$, and \code{none} denotes $Q^\perp$. Thus the extra branch is encoded in the actual finite family.
+ 
+ \excerpt{SyndromeRecovery}{syndrome_complete}
+ 
+-\walk{The sum over \code{Option I} splits into the complement branch and the syndrome branches. Self-adjointness and idempotence turn the complement contribution into $Q^\perp$; the syndrome contribution is $Q$. Their sum is the identity. This proves trace preservation on the entire ambient matrix space, not merely on noisy code states.}
++\walk{The sum over \code{Option I} splits into the complement branch and the syndrome branches. Self-adjointness and idempotence turn the complement contribution into $Q^\perp$. The syndrome contribution is $Q$. Their sum is the identity. This proves trace preservation on the entire ambient matrix space, not merely on noisy code states.}
+ 
+-For an arbitrary code-supported operator $P\rho P=\rho$, the decoder of a cross error is
++For an arbitrary operator supported on the code, $P\rho P=\rho$, the decoder of a cross error is
+ \[
+ \mathcal R(E_a\rho E_b^*)=\delta_{ab}\rho.
+ \]
+@@ -44,7 +44,7 @@
+ 
+ \excerpt{SyndromeRecovery}{syndrome_cross}
+ 
+-At the abstract star-ring level, this is an algebraic correction identity. The concrete complex-matrix layer additionally proves positivity, trace preservation, complete positivity at every finite reference dimension and preservation of density matrices. A weighted normalized mixture and a coherent error superposition are then handled by linearity and the cross-error formula.
++Over an abstract star ring, this gives an algebraic correction identity. The construction for complex matrices additionally proves positivity, trace preservation, complete positivity at every finite reference dimension and preservation of density matrices. A weighted normalized mixture and a coherent error superposition are then handled by linearity and the formula for cross errors.
+ 
+ This file alone would prove recovery for supplied orthogonal syndrome data. It would not prove that arbitrary Knill--Laflamme Gram data can be put into that form, and it would not prove necessity of the Gram condition. The current source has separate modules for those obligations.
+ 
+@@ -63,7 +63,7 @@
+ 
+ \excerpt{KnillLaflammeSufficiency}{kl_diagonal}
+ 
+-\walk{The \code{error} field mixes the code-restricted errors by the spectral unitary. The \code{weight} field uses the actual eigenvalues. The \code{gram} field applies the proved diagonalization identity. The \code{restricted} field uses idempotence of the code projector, and the \code{nonnegative} field comes from positivity of the input Gram matrix. The result is built, not supplied as a new input.}
++\walk{The \code{error} field mixes the errors restricted to the code by the spectral unitary. The \code{weight} field uses the actual eigenvalues. The \code{gram} field applies the proved diagonalization identity. The \code{restricted} field uses idempotence of the code projector, and the \code{nonnegative} field comes from positivity of the input Gram matrix. These fields construct the required diagonal data.}
+ 
+ \subsection{Singular directions are eliminated without division by zero}
+ If a diagonal weight is zero, the corresponding restricted error satisfies $E^*E=0$. For finite complex matrices this forces $E=0$. Therefore the construction does not normalize a zero spectral direction.
+@@ -80,12 +80,12 @@
+ 
+ \excerpt{KnillLaflammeSufficiency}{kl_corrects}
+ 
+-\contract{This sufficiency statement assumes finite complex matrices, a star code projection, a positive Gram matrix and its compressed Gram relation, together with global Kraus normalization for exact unit-scale channel correction. The correction conclusion covers all code-supported operators, not only positive ones. The decoder is an actual finite CPTP extension on the whole space. Its spectral construction is mathematical and noncomputable; no numerical eigenvalue routine or executable decoder-performance claim is supplied.}
++\contract{This sufficiency statement assumes finite complex matrices, a star code projection, a positive Gram matrix and its compressed Gram relation, together with global Kraus normalization for exact channel correction with scale one. The correction conclusion covers all operators supported on the code, including those that are not positive. The decoder is an actual finite CPTP extension on the whole space. Its spectral construction is mathematical and noncomputable. The theorem supplies neither a numerical eigenvalue routine nor a performance guarantee for an executable decoder.}
+ 
+ \subsection{Necessity starts from actual recovery}
+-The reverse implication takes a finite recovery family $R_r$ with $\sum_rR_r^*R_r=1$, and assumes its actual composite Kraus map fixes every code-supported operator. It must derive the Gram condition rather than take it as a premise.
++The reverse implication takes a finite recovery family $R_r$ with $\sum_rR_r^*R_r=1$, and assumes its actual composite Kraus map fixes every operator supported on the code. It must derive the Gram condition rather than take it as a premise.
+ 
+-The key rigidity lemma says that if $A^*A$ is the rank-one Gram matrix of a vector $p$, then every row of $A$ is a scalar multiple of $p$. If $p=0$, positivity gives $A=0$. Otherwise choose a nonzero coordinate $p_t$. A vector supported in two coordinates and orthogonal to $p$ is in the kernel of $A^*A$, hence of $A$. The resulting two-coordinate equation yields the row proportionality.
++The key rigidity lemma says that if $A^*A$ is the rank-one Gram matrix of a vector $p$, then every row of $A$ is a scalar multiple of $p$. If $p=0$, positivity gives $A=0$. Otherwise choose a nonzero coordinate $p_t$. A vector supported in two coordinates and orthogonal to $p$ is in the kernel of $A^*A$, hence of $A$. The resulting equation in two coordinates yields the row proportionality.
+ 
+ \excerpt{KnillLaflammeNecessity}{kl_rigidity}
+ 
+@@ -98,35 +98,35 @@
+ \walk{The witness $Z^*Z$ is positive by an existing matrix theorem. The intermediate \code{heq} is obtained by inserting $\sum_rR_r^*R_r=1$ without reordering the error factors. After rewriting every $R_rE_aP$ as a scalar times $P$, self-adjointness and idempotence reduce the sum to the entries of $Z^*Z$ times $P$. Thus positivity is proved from the recovery, not imposed on an unknown matrix.}
+ 
+ \subsection{The state formulation is bridged to all code operators}
+-A physical criterion is usually stated for density matrices: positive semidefinite, trace one and supported on the code. The necessity argument above uses all code-supported operators. The source supplies the missing bridge.
++A physical criterion is usually stated for density matrices: positive semidefinite, trace one and supported on the code. The necessity argument above uses all operators supported on the code. The source supplies the missing bridge.
+ 
+-First, a nonzero positive matrix has positive nonzero trace. Scaling by the inverse real trace produces a density matrix; linearity then removes that normalization. Zero positive matrices are handled separately. Next, the complex polarization identity expresses an arbitrary outer product $xy^*$ as a linear combination of pure positive matrices. Finally, matrix units span all matrices. Agreement of two complex-linear maps on pure states therefore forces agreement on every operator.
++First, a nonzero positive matrix has positive nonzero trace. Scaling by the inverse real trace produces a density matrix. Linearity then removes that normalization. Zero positive matrices are handled separately. Next, the complex polarization identity expresses an arbitrary outer product $xy^*$ as a linear combination of pure positive matrices. Finally, matrix units span all matrices. Two maps that are linear over the complex numbers therefore agree on every operator if they agree on all pure states.
+ 
+ \excerpt{QuantumStateBridge}{density_bridge}
+ 
+-The predicate \code{StateCorrectable P E} existentially quantifies a natural number and a recovery family on \code{Fin m}. Its recovery is normalized and fixes all normalized code density matrices. The final endpoint combines the density bridge with the already proved operator-space equivalence.
++The predicate \code{StateCorrectable P E} existentially quantifies a natural number and a recovery family on \code{Fin m}. Its recovery is normalized and fixes all normalized code density matrices. The final endpoint combines the density bridge with the equivalence already proved on the operator space.
+ 
+ \excerpt{QuantumStateBridge}{kl_criterion}
+ 
+-\contract{The code is a star projection. The error family is finite and normalized by $\sum_aE_a^*E_a=1$. The existential Gram matrix must be positive semidefinite and satisfy every compressed cross relation. The theorem permits the zero code; then no nonzero normalized code density matrix exists, and the operator bridge remains valid because the supported operator space is zero.}
++\contract{The code is a star projection. The error family is finite and normalized by $\sum_aE_a^*E_a=1$. The existential Gram matrix must be positive semidefinite and satisfy every compressed cross relation. The theorem permits the zero code. In that case, no nonzero normalized code density matrix exists, and the operator bridge remains valid because the supported operator space is zero.}
+ 
+ \subsection{Reference systems and error spans}
+-The finite-reference theorem identifies each reference block of $1\otimes\mathcal R$ and $1\otimes\mathcal E$ with the corresponding system noise map. The supported reference matrix condition implies each system block is code-supported, so the operator correction theorem applies block by block.
++The theorem for finite reference systems identifies each reference block of $1\otimes\mathcal R$ and $1\otimes\mathcal E$ with the corresponding system noise map. The supported reference matrix condition implies each system block is supported on the code, so the operator correction theorem applies block by block.
+ 
+ \excerpt{QuantumStateBridge}{kl_reference}
+ 
+-It follows that the same correction identity holds for entangled states with any finite reference system. Positivity and trace-one are not required for the displayed algebraic identity; they can be supplied to interpret the matrix as a density state. This is stronger than checking only product states and does not rely on assuming separability.
++It follows that the same correction identity holds for entangled states with any finite reference system. The displayed algebraic identity requires neither positivity nor a trace of one. These conditions can be supplied to interpret the matrix as a density state. This is stronger than checking only product states and does not rely on assuming separability.
+ 
+-The error-span module keeps track of cross coefficients. With the source's Gram orientation,
++The module for recovery on the error span keeps track of cross coefficients. With the source's Gram orientation,
+ \[
+ \mathcal R(E_a\rho E_b^*)=C_{ba}\rho.
+ \]
+-The reversed indices are deliberate. Expanding a coherent combination produces the scalar $\sum_{a,b}c_a\overline{c_b}C_{ba}$. Summing such expressions over a new Kraus family $F_j$ in the old error span gives a common scalar multiplier. If the new family is normalized, trace preservation forces that multiplier to one on a nonzero code. The zero-code case again has only the zero supported operator.
++The reversed indices are deliberate. Expanding a coherent combination produces the scalar $\sum_{a,b}c_a\overline{c_b}C_{ba}$. Summing such expressions over a new Kraus family $F_j$ in the old error span gives a common scalar multiplier. If the new family is normalized, trace preservation forces that multiplier to one on a nonzero code. For the zero code, the only supported operator is again zero.
+ 
+ \excerpt{ErrorSpanRecovery}{kl_span}
+ 
+-This is one fixed recovery correcting every normalized channel in the error span, with the coefficients explicitly witnessing span membership. It does not claim unit-scale correction for an arbitrary unnormalized linear combination. For unnormalized error families, the separate criterion requires a nonnegative scale $t$ independent of the supported input operator and proves equivalence with the Gram relation.
++This is one fixed recovery correcting every normalized channel in the error span, with the coefficients explicitly witnessing span membership. It does not claim correction with scale one for an arbitrary unnormalized linear combination. For unnormalized error families, the separate criterion requires a nonnegative scale $t$ independent of the supported input operator and proves equivalence with the Gram relation.
+ 
+ \excerpt{ErrorSpanRecovery}{kl_family}
+ 
+-The example module checks illustrative finite cases, including singular and non-diagonal Gram behavior. Those examples help expose conventions, but the general theorem rests on spectral reduction, normalized syndrome recovery, rank-one necessity and the density-operator bridge. The current scope is the full finite complex-matrix criterion under its stated hypotheses; the earlier orthogonal-syndrome block alone was only a stage of that proof.
++The example module checks illustrative finite cases, including singular Gram matrices and Gram matrices that are not diagonal. Those examples help expose conventions, but the general theorem rests on spectral reduction, normalized syndrome recovery, necessity through the rank-one argument, and the bridge from density matrices to operators. The resulting theorem is the full criterion for finite complex matrices under its stated hypotheses. The earlier construction for orthogonal syndromes was one stage of this proof.
+--- before/editable/lean_guide/chapters/dynamics.tex
++++ after/editable/lean_guide/chapters/dynamics.tex
+@@ -6,7 +6,7 @@
+ \[
+ U_{ba}=P_bUP_a.
+ \]
+-The target index $b$ comes first, and the source index $a$ comes second. Matrix factors act from the right on a vector. The gate list in \code{QuantumPacketCore} is written latest to earliest, $[U_m,\ldots,U_1]$, so its product is $U_m\cdots U_1$. Both conventions are explicit source comments and definitions; they determine the orientation of every path.
++The target index $b$ comes first, and the source index $a$ comes second. Matrix factors act from the right on a vector. The gate list in \code{QuantumPacketCore} is written latest to earliest, $[U_m,\ldots,U_1]$, so its product is $U_m\cdots U_1$. The source comments and definitions make both conventions explicit. They determine the orientation of every path.
+ 
+ \contract{The basic corner identities require an arbitrary ring \code{R} and a finite packet index with decidable equality. They require the packet multiplication and completeness laws, but neither an adjoint nor a norm. The coefficients are generally noncommutative.}
+ 
+@@ -22,12 +22,12 @@
+ 
+ \excerpt{QuantumPacketCore}{circuit_path}
+ 
+-\walk{The induction generalizes both boundary indices, which makes the induction hypothesis available at every intermediate $c$. The empty case reduces the identity corner. In the nonempty case, the composition-of-corners lemma creates the exact finite sum needed by the recursive definition; the induction hypothesis replaces each shorter corner. This proves all finite depths rather than checking a two-gate illustration.}
++\walk{The induction generalizes both boundary indices, which makes the induction hypothesis available at every intermediate $c$. The empty case reduces the identity corner. In the nonempty case, the lemma for composing corners creates the finite sum required by the recursive definition. The induction hypothesis then replaces each shorter corner. The resulting proof covers every finite circuit depth.}
+ 
+ Summing the resulting path values over source and target reconstructs the complete circuit operator. It retains coherent complex amplitudes and operator products. No step converts the path sum into a stochastic transition law or assumes that different paths are mutually incoherent.
+ 
+ \subsection{The two unitarity identities use different hypotheses}
+-To take adjoints, supply a star-ring structure and self-adjoint packet elements. The adjoint swaps source and target:
++To take adjoints, supply the structure of a star ring and self-adjoint packet elements. The adjoint swaps source and target:
+ \[
+ U_{ba}^*=(U^*)_{ab}.
+ \]
+@@ -45,17 +45,17 @@
+ 
+ \walk{The local term is reorganized to $P_aU^*P_bUP_c$, using self-adjointness and $P_b^2=P_b$. Summing over $b$ replaces the middle resolution by the identity. The given equation $U^*U=1$ removes the operator factors. The final packet multiplication gives the conditional expression in the conclusion. The concrete matrix wrappers merely specialize this already proved identity.}
+ 
+-For an actual state, this identity can be combined with the Hilbert-space inner product to interpret conservation of total packet probability. The formal statement displayed here is the operator identity. A chosen vector, state normalization and the appropriate inner-product interpretation are additional data in such an application.
++For an actual state, this identity can be combined with the inner product on the Hilbert space to interpret conservation of total packet probability. The formal statement displayed here is the operator identity. A chosen vector, state normalization and the corresponding interpretation through the inner product are additional data in such an application.
+ 
+ \subsection{Exact commutation propagates to the actual exponential}
+-If $H$ commutes with each $P_a$, its cross-packet corners vanish and the diagonal corners reconstruct $H$. The dynamics layer uses a normed complex algebra and the actual power-series exponential. A \code{Commute} proof for $H$ and $P_a$ propagates through complex scalar multiplication and the exponential. Thus $e^{zH}$ is diagonal in the same packet resolution for every complex scalar $z$.
++If $H$ commutes with each $P_a$, its corners between distinct packets vanish and the diagonal corners reconstruct $H$. The dynamics layer uses a normed complex algebra and the exponential defined by its power series. A \code{Commute} proof for $H$ and $P_a$ propagates through complex scalar multiplication and the exponential. Thus $e^{zH}$ is diagonal in the same packet resolution for every complex scalar $z$.
+ 
+ \excerpt{QuantumPacketCore}{symmetry_exp}
+ 
+-For real-time evolution set $z=-it$. The conclusion is exact zero transfer between distinct packets. The commutation hypothesis is still required. It can be proved from a chosen symmetry or supplied as data; the theorem does not infer it merely from the existence of a packet resolution.
++For evolution in real time, set $z=-it$. The conclusion is exact zero transfer between distinct packets. The commutation hypothesis is still required. It can be proved from a chosen symmetry or supplied as data. A packet resolution alone does not imply it.
+ 
+ \subsection{Leakage begins with a differentiated conjugation}
+-The quantitative result works first in an abstract complex C-star algebra. Its matrix specialization activates the Hilbert-space operator norm through \code{Matrix.Norms.L2Operator}. This scope is essential: the displayed bound is not an arbitrary entrywise matrix norm estimate.
++The quantitative result works first in an abstract complex C-star algebra. Its matrix specialization activates the operator norm on the Hilbert space through \code{Matrix.Norms.L2Operator}. This scope is essential: the displayed bound is not an arbitrary entrywise matrix norm estimate.
+ 
+ Let $G^*=-G$ and set $V(t)=e^{tG}Pe^{-tG}$. The source constructs this function and differentiates the actual exponential product:
+ \[
+@@ -66,13 +66,13 @@
+ \excerpt{LeakageBound}{transport_derivative}
+ \excerpt{LeakageBound}{transport_lipschitz}
+ 
+-\walk{The Lipschitz proof applies a mean-value norm inequality on the convex set of all real times. Its derivative-existence argument comes from \code{transported_derivative}, and its uniform derivative bound comes from \code{transported_derivative_norm}. Both are proved for the actual function. Taking one time to be zero gives a bound for $V(t)-P$; multiplying by $e^{tG}$ converts it into a bound for $e^{tG}P-Pe^{tG}$.}
++\walk{The Lipschitz proof applies a mean-value norm inequality on the convex set of all real times. The existence of the derivative follows from \code{transported_derivative}, and its uniform derivative bound comes from \code{transported_derivative_norm}. Both are proved for the actual function. Taking one time to be zero gives a bound for $V(t)-P$. Multiplying by $e^{tG}$ converts it into a bound for $e^{tG}P-Pe^{tG}$.}
+ 
+ For an orthogonal projection,
+ \[
+ (1-P)UP=(1-P)(UP-PU)P.
+ \]
+-The two projection norms are at most one. Hence the leakage corner is bounded by the exponential commutator. Substitute $G=-iH$ for self-adjoint $H$; its commutator norm equals the norm of $HP-PH$. This gives the concrete endpoint.
++The two projection norms are at most one. Hence the leakage corner is bounded by the exponential commutator. Substitute $G=-iH$ for self-adjoint $H$. Its commutator norm equals the norm of $HP-PH$. This gives the concrete endpoint.
+ 
+ \excerpt{LeakageBound}{leakage_matrix}
+ 
+@@ -83,14 +83,14 @@
+ \excerpt{LeakageBound}{leakage_perturbation}
+ 
+ \subsection{Dephasing and a precisely restricted measurement invariance}
+-The dephasing map is $\Delta(\rho)=\sum_aP_a\rho P_a$. It removes off-diagonal corners and is idempotent. The finite complex-matrix proof of trace duality says
++The dephasing map is $\Delta(\rho)=\sum_aP_a\rho P_a$. It removes off-diagonal corners and is idempotent. For finite complex matrices, trace duality gives
+ \[
+ \operatorname{tr}(\Delta(E)\rho)=\operatorname{tr}(E\Delta(\rho)).
+ \]
+-It follows by expanding the finite sum and cyclically rotating matrix factors inside each trace. The subsequent measurement theorem supplies the condition $\Delta(E)=E$, exactly the block-diagonal-observable condition.
++It follows by expanding the finite sum and cyclically rotating matrix factors inside each trace. The subsequent measurement theorem supplies the condition $\Delta(E)=E$, which says precisely that the observable is block diagonal.
+ 
+ \excerpt{QuantumPacketCore}{measurement}
+ 
+-No positivity or trace-one condition on $\rho$ is needed for this algebraic identity. Calling it a probability equality requires an appropriate state and effect in the application. Taking $E=1$ proves trace preservation, since completeness and idempotence give $\Delta(1)=1$. General observables with off-diagonal packet components need not satisfy the invariance premise; dephasing may change their expectation values.
++Neither positivity nor a trace of one for $\rho$ is needed for this algebraic identity. Calling it a probability equality requires an appropriate state and effect in the application. Taking $E=1$ proves trace preservation, since completeness and idempotence give $\Delta(1)=1$. General observables with off-diagonal packet components need not satisfy the invariance premise. Dephasing may change their expectation values.
+ 
+-This chapter explains why the finite core begins with a resolution in a ring and only adds hypotheses when a later operation needs them. The exact circuit formula, adjoint conservation, actual exponential and operator-norm leakage are related constructions with distinct theorem contracts.
++This chapter explains why the finite core begins with a resolution in a ring and only adds hypotheses when a later operation needs them. The exact circuit formula, conservation identities, exponential dynamics and leakage bound are related constructions. Each theorem states the hypotheses needed for its own conclusion.
+--- before/editable/lean_guide/chapters/finite_limits.tex
++++ after/editable/lean_guide/chapters/finite_limits.tex
+@@ -6,39 +6,39 @@
+ \[
+ S(z)=z1_P-A_{pp}-A_{pq}D^{-1}A_{qp}.
+ \]
+-The theorem identifies the retained corner of the full inverse with $S(z)^{-1}$. Its two bracketed type-class assumptions assert invertibility of $D$ and invertibility of the full resolvent matrix.
++The theorem identifies the retained corner of the full inverse with $S(z)^{-1}$. The two assumptions supplied through bracketed type classes assert invertibility of $D$ and invertibility of the full resolvent matrix.
+ 
+ \excerpt{SchurFeshbach}{feshbach}
+ 
+-\contract{Both finite state-index types have decidable equality. The eliminated block and the full resolvent matrix are invertible. Lean's matrix inverse notation is a total operation, but that notation alone does not supply genuine invertibility at a singular matrix. The theorem uses the invertibility assumptions to justify the actual inverse identities.}
++\contract{Both finite types of state indices have decidable equality. The eliminated block and the full resolvent matrix are invertible. Lean's matrix inverse notation is a total operation, but that notation alone does not supply genuine invertibility at a singular matrix. The theorem uses the invertibility assumptions to justify the actual inverse identities.}
+ 
+-\walk{First rewrite $z1-A$ as the displayed block matrix, retaining the negative signs on the two off-diagonal blocks. Copy the given full invertibility instance to that rewritten matrix. A Mathlib block-inverse theorem supplies invertibility of its Schur complement and the full inverse formula. Rewrite the inverse-of-invertible notation to the nonsingular matrix inverse, then select the retained submatrix. The two negative off-diagonal factors multiply to the sign already encoded in the definition of \code{schur}.}
++\walk{First rewrite $z1-A$ as the displayed block matrix, retaining the negative signs on the two off-diagonal blocks. Copy the given full invertibility instance to that rewritten matrix. A Mathlib theorem for block inverses supplies invertibility of its Schur complement and the full inverse formula. Rewrite the inverse supplied by the invertibility instance as the nonsingular matrix inverse, then select the retained submatrix. The two negative off-diagonal factors multiply to the sign already encoded in the definition of \code{schur}.}
+ 
+ The source retains a concrete counterexample to dropping full invertibility: at $z=0$ with $H=\operatorname{diag}(0,-1)$, the eliminated resolvent block is $1$, while the full matrix $z1-H=\operatorname{diag}(0,1)$ is singular.
+ 
+ \excerpt{SchurFeshbach}{feshbach_counterexample}
+ 
+-The companion \code{schur_invertible} theorem says that, under eliminated-block invertibility, full invertibility is equivalent to Schur-complement invertibility. This locates the remaining pole rather than assuming it absent. The corrected assumption is part of the checked interpretation of the traditional result. The retained Paper VI proof is reused in this source; the present edition does not rerun the earlier paper.
++The companion \code{schur_invertible} theorem says that, when the eliminated block is invertible, full invertibility is equivalent to invertibility of the Schur complement. This locates the remaining pole rather than assuming it absent. The corrected assumption is part of the checked interpretation of the traditional result. This source reuses the retained Paper VI proof. The present edition does not rerun the earlier paper.
+ 
+-\subsection{Euclidean transfer is the power-series exponential}
++\subsection{Euclidean transfer is defined by the exponential series}
+ The transfer is
+ \[
+ T_{e}(t)=\exp\bigl(-t(H-e1)\bigr).
+ \]
+-The definition uses the actual matrix exponential. For Hermitian $H$, a continuous-functional-calculus theorem identifies it with the scalar function $x\mapsto e^{-t(x-e)}$ applied to $H$.
++The definition uses the actual matrix exponential. For Hermitian $H$, a theorem from continuous functional calculus identifies it with the scalar function $x\mapsto e^{-t(x-e)}$ applied to $H$.
+ 
+ \excerpt{EuclideanTransfer}{euclidean_cfc}
+ 
+-\walk{The proof composes the functional calculus for the exponential with the affine scalar function $-t(x-e)$. It evaluates that affine function through the calculus as $-t(H-e1)$. A theorem relating real continuous functional calculus to the normed-space exponential identifies the final object with the original power series. The spectral conclusions therefore apply to the actual transfer, not an independently postulated spectral surrogate.}
++\walk{The proof composes the functional calculus for the exponential with the affine scalar function $-t(x-e)$. It evaluates that affine function through the calculus as $-t(H-e1)$. A theorem relating real continuous functional calculus to the exponential in a normed space identifies the final object with the original power series. The spectral conclusions therefore apply to the actual transfer, not an independently postulated spectral surrogate.}
+ 
+-The shift $e_0$ is the minimum of the actual Hermitian eigenvalues. It is defined only when the finite state index is nonempty, because an empty spectrum has no minimum element. The source proves both membership of $e_0$ in the spectrum and the lower-bound property. Positive definiteness of $T_e(t)$ follows from strict positivity of the scalar exponential for every real $t$. Semigroup composition follows because the two scaled generators commute.
++The shift $e_0$ is the minimum of the actual Hermitian eigenvalues. It is defined only when the finite state index is nonempty, because an empty spectrum has no minimum element. The source proves both membership of $e_0$ in the spectrum and the assertion that it is a lower bound. Positive definiteness of $T_e(t)$ follows from strict positivity of the scalar exponential for every real $t$. Semigroup composition follows because the two scaled generators commute.
+ 
+ \excerpt{EuclideanTransfer}{euclidean_endpoint}
+ 
+-\contract{The endpoint assumes a nonempty finite state index, Hermitian $H$ and nonnegative $t$. It includes $t=0$. The other time $s$ is arbitrary real in the semigroup identity. Spectral containment in $(0,1]$ uses $t\ge0$ and the ground-energy shift. A separate endpoint states containment for the complex spectrum as the real interval's complex image. No infinite-dimensional transfer or continuum limit is concluded.}
++\contract{The endpoint assumes a nonempty finite state index, Hermitian $H$ and nonnegative $t$. It includes $t=0$. The other time $s$ is arbitrary real in the semigroup identity. Spectral containment in $(0,1]$ uses $t\ge0$ and the shift by the ground energy. A separate endpoint states containment for the complex spectrum as the real interval's complex image. No infinite-dimensional transfer or continuum limit is concluded.}
+ 
+ \subsection{The low-mode bound keeps its exact constant}
+-The finite-circle dispersion expression is $\lambda_h(w)=4h^{-2}\sin^2(wh/2)$. The source first proves
++The dispersion expression for the finite circle is $\lambda_h(w)=4h^{-2}\sin^2(wh/2)$. The source first proves
+ \[
+ 0\le x^2-\sin^2x\le\frac{x^4}{3}
+ \]
+@@ -49,12 +49,12 @@
+ 
+ \excerpt{LowModeConvergence}{low_mode}
+ 
+-\walk{The proof scales the sine inequality by the nonnegative quantity $4/h^2$. A field calculation identifies the scaled error with $w^2-\lambda_h(w)$. The final algebra simplifies its upper bound to the coefficient $1/12$. The nonzero-spacing hypothesis justifies division; the conclusion has no small-frequency premise and holds for every real $w$.}
++\walk{The proof scales the sine inequality by the nonnegative quantity $4/h^2$. A field calculation identifies the scaled error with $w^2-\lambda_h(w)$. The final algebra simplifies its upper bound to the coefficient $1/12$. The hypothesis that the spacing is nonzero justifies division. The conclusion holds for every real $w$, without a restriction to small frequencies.}
+ 
+-For a fixed frequency, the right-hand side tends to zero quadratically as $h$ tends to zero through nonzero values. A growing frequency range needs control of $w^4h^2$. The theorem by itself does not prove convergence of an entire spectrum, a spectral-dimension plateau, a dynamics limit or a spacetime reconstruction. Those applications require their own quantified range and analytic arguments.
++For a fixed frequency, the right-hand side tends to zero quadratically as $h$ tends to zero through nonzero values. A growing frequency range needs control of $w^4h^2$. The theorem by itself does not prove convergence of an entire spectrum, a plateau in spectral dimension, a dynamics limit or a spacetime reconstruction. Those applications require their own quantified range and analytic arguments.
+ 
+ \subsection{A compressed anomaly can vanish for purely algebraic reasons}
+-The constraint audit sits beside the 19 finite ledger items. If every constraint right-annihilates $P$, then every product term in the proposed anomaly also right-annihilates $P$, so $P\mathcal A P=0$ for arbitrary structure coefficients. The source needs no projector axioms for this observation.
++The constraint audit sits beside the 19 finite ledger items. If every constraint annihilates $P$ on the right, then every product term in the proposed anomaly also annihilates $P$ on the right, so $P\mathcal A P=0$ for arbitrary structure coefficients. The source needs no projector axioms for this observation.
+ 
+ \excerpt{ConstraintAudit}{constraint_kernel}
+ 
+@@ -62,11 +62,11 @@
+ 
+ \excerpt{ConstraintAudit}{constraint_nonclosure}
+ 
+-This supplies a concrete scope warning: exact common-kernel compression cannot by itself certify operator closure on the whole space. It does not prove that an intended continuum constraint algebra exists or that every refinement has the same behavior. The hypotheses of the finite audit must be checked before applying it to a proposed physical construction.
++This supplies a concrete scope warning: exact compression to a common kernel cannot by itself certify operator closure on the whole space. It does not prove that an intended continuum constraint algebra exists or that every refinement has the same behavior. The hypotheses of the finite audit must be checked before applying it to a proposed physical construction.
+ 
+ \subsection{The broader manuscript and the five open targets}
+ The preserved original paper and the strengthened traditional edition discuss memory, geometry, diagnostics and physical interpretation beyond the named finite endpoints. A traditional proof can be more explanatory than a formal theorem statement, and a strengthened mathematical statement can go beyond the selected formal endpoint. Coverage is assigned by the full result map, not by similarity of wording or proximity on a page.
+ 
+-The original manuscript's five explicitly named continuum conjectures are anomaly-free refinement, uniform Feshbach control, Lorentzian reconstruction, an Einstein infrared limit and a massless spin-two sector. None is a theorem target in the 19-item ledger. Finite path reconstruction, finite recovery, a projected connection, a resolvent identity and a dispersion error bound do not jointly prove those existence and limiting claims. The formal source provides rigorous finite ingredients and, in the geometric case, broad parameter-manifold calculus under its stated assumptions.
++The original manuscript names five continuum conjectures: refinement without anomalies, uniform Feshbach control, Lorentzian reconstruction, an Einstein infrared limit and a massless sector with spin two. None is a theorem target among the 19 ledger items. Finite path reconstruction, finite recovery, a projected connection, a resolvent identity and a dispersion error bound do not jointly prove those existence and limiting claims. The formal source provides rigorous finite ingredients and, in the geometric case, a broad calculus on parameter manifolds under its stated assumptions.
+ 
+-The complete theorem catalog includes seven constraint-audit declarations, four Schur--Feshbach declarations and the other supporting lemmas. The count 323 therefore means named declarations in the current finite development, not 323 independently stated claims in the traditional paper, and not 323 continuum results.
++The complete theorem catalog includes seven declarations from the constraint audit, four Schur--Feshbach declarations and the other supporting lemmas. The count 323 therefore means named declarations in the current finite development, not 323 independently stated claims in the traditional paper, and not 323 continuum results.
+--- before/editable/lean_guide/chapters/geometry.tex
++++ after/editable/lean_guide/chapters/geometry.tex
+@@ -2,7 +2,7 @@
+ \label{sec:geometry}
+ 
+ \subsection{Differentiate the coordinates before rewriting the equation}
+-Let $U(t)$ be a finite complex-matrix unitary frame and $\psi(t)$ an actual differentiable vector. With $y(t)=U(t)^*\psi(t)$, the effective Hamiltonian is
++Let $U(t)$ be a unitary frame of finite complex matrices and $\psi(t)$ an actual differentiable vector. With $y(t)=U(t)^*\psi(t)$, the effective Hamiltonian is
+ \[
+ H_{\mathrm{eff}}=U^*HU-iU^*\dot U.
+ \]
+@@ -10,17 +10,17 @@
+ 
+ \excerpt{MovingFrames}{frame_product}
+ 
+-\walk{The proof applies the scalar product rule to each summand of the matrix-vector product, then differentiates the finite sum. It produces the two expected terms without assuming differentiability of the transformed coordinates in advance. The adjoint-derivative lemma conjugates the derivative of the transposed entry, using that conjugation is real-linear.}
++\walk{The proof applies the scalar product rule to each summand of the product of a matrix and a vector, then differentiates the finite sum. It produces the two expected terms without assuming differentiability of the transformed coordinates in advance. The lemma for differentiating an adjoint conjugates the derivative of the transposed entry. It uses the fact that conjugation is linear over the real numbers.}
+ 
+-Differentiating $U^*U=1$ gives $\dot U^*U+U^*\dot U=0$, so $U^*\dot U$ is skew-adjoint and $-iU^*\dot U$ is Hermitian. The conjugated term $U^*HU$ is Hermitian when $H$ is Hermitian. That last premise is explicitly present in the final source; unitarity of $U$ by itself does not establish Hermiticity of an arbitrary $H$.
++Differentiating $U^*U=1$ gives $\dot U^*U+U^*\dot U=0$, so $U^*\dot U$ is skew-adjoint and $-iU^*\dot U$ is Hermitian. The conjugated term $U^*HU$ is Hermitian when $H$ is Hermitian. That last premise is explicitly present in the final source. Unitarity of $U$ by itself does not establish Hermiticity of an arbitrary $H$.
+ 
+ \excerpt{MovingFrames}{moving_coordinates}
+ 
+-\contract{The matrix index is finite with decidable equality. Entrywise derivative hypotheses are at one real time $t$. Both unitary identities hold for every time, permitting construction of the inverse coordinates. The original Schrödinger equation $i\dot\psi=H\psi(t)$ is a premise, and $H^*=H$ is the premise for the Hermiticity conclusion. The theorem constructs $y$, constructs its derivative and proves its equation; it is not an initial-value existence theorem.}
++\contract{The matrix index is finite with decidable equality. Entrywise derivative hypotheses are at one real time $t$. Both unitary identities hold for every time, permitting construction of the inverse coordinates. The original Schrödinger equation $i\dot\psi=H\psi(t)$ is a premise, and $H^*=H$ is the premise for the Hermiticity conclusion. The theorem constructs $y$, constructs its derivative and proves its equation. Existence of a solution for arbitrary initial data is a separate question.}
+ 
+-\walk{After unfolding the two \code{let} expressions, the proof obtains the actual derivative of $U^*\psi$ from the product rule. It gives that derivative proof to \code{moving_frame_equation}. The right-unitarity identity reconstructs $\psi=Uy$, while left-unitarity removes $U^*U$ when the differentiated equation is multiplied by $U^*$. The separate Hermiticity lemma uses the differentiated unitary identity and the supplied Hermiticity of $H$.}
++\walk{After unfolding the two \code{let} expressions, the proof obtains the actual derivative of $U^*\psi$ from the product rule. It gives that derivative proof to \code{moving_frame_equation}. Unitarity on the right reconstructs $\psi=Uy$, while unitarity on the left removes $U^*U$ when the differentiated equation is multiplied by $U^*$. The separate Hermiticity lemma uses the differentiated unitary identity and the supplied Hermiticity of $H$.}
+ 
+-\subsection{The canonical connection derives its first-order identities}
++\subsection{The canonical connection derives its identities for first derivatives}
+ For a differentiable complete orthogonal family $P_a(t)$, write $D_a=\dot P_a(t)$. Differentiating multiplication gives
+ \[
+ D_aP_b+P_aD_b=\delta_{ab}D_a.
+@@ -37,16 +37,16 @@
+ 
+ \excerpt{CanonicalConnection}{canonical_connection}
+ 
+-\contract{The actual-derivative endpoint is in a normed real algebra with a star-ring structure, compatible real scalar action and continuous involution. The finite packet index has decidable equality. The projector multiplication, completeness and adjoint identities hold for all real times. This endpoint treats a curve of projectors; it has no manifold curvature conclusion.}
++\contract{The theorem for actual derivatives works in a normed real algebra with a star ring structure, compatible real scalar action and continuous involution. The finite packet index has decidable equality. The projector multiplication, completeness and adjoint identities hold for all real times. This theorem treats a curve of projectors. Manifold curvature is developed in the later modules.}
+ 
+-The skew-adjointness calculation sums $D_aP_a+P_aD_a=D_a$. Their sum vanishes, giving $C+C^*=0$. The commutator calculation first isolates $CP_b=D_bP_b$, then obtains $D_b+P_bC=D_bP_b$ from the differentiated multiplication identities and completeness. Subtracting gives the desired commutator. The factor one-half uses the real scalar structure and the same zero sum.
++The skew-adjointness calculation sums $D_aP_a+P_aD_a=D_a$. Their sum vanishes, giving $C+C^*=0$. The commutator calculation first isolates $CP_b=D_bP_b$, then obtains $D_b+P_bC=D_bP_b$ from the differentiated multiplication identities and completeness. Subtracting gives the desired commutator. The factor of one half uses the real scalar structure and the same zero sum.
+ 
+ \subsection{The crucial off-diagonal derivative block is proved}
+-For a parameter-dependent idempotent $P$, differentiating $P^2=P$ in direction $v$ gives
++For an idempotent $P$ that varies with a parameter, differentiating $P^2=P$ in direction $v$ gives
+ \[
+ D_vP\,P+P\,D_vP=D_vP.
+ \]
+-Multiplying this equation by $P$ and cancelling an identical summand gives $P(D_vP)P=0$. This is a derived fact, not a curvature-specific assumption.
++Multiplying this equation by $P$ and cancelling an identical summand gives $P(D_vP)P=0$. The curvature calculation therefore uses a consequence of idempotence and differentiation.
+ 
+ \excerpt{ProjectedCurvature}{sandwich_zero}
+ 
+@@ -58,16 +58,16 @@
+ \[
+ R(X,Y)s=\nabla_X\nabla_Ys-\nabla_Y\nabla_Xs-\nabla_{[X,Y]}s.
+ \]
+-The bracket term is essential: it cancels the change in the vector fields in the second directional derivatives. The proof uses Mathlib's actual Fréchet derivative and actual Lie bracket, not independently supplied second-order coefficients.
++The bracket term is essential: it cancels the change in the vector fields in the second directional derivatives. The proof uses Mathlib's actual Fréchet derivative and actual Lie bracket, rather than independently supplied coefficients of second order.
+ 
+ \excerpt{LocalProjectedCurvature}{local_curvature}
+ 
+-\contract{The local theorem has real normed model and fiber spaces. $P$, $X$ and $Y$ are differentiable at the specified point; $s$ is twice continuously differentiable there. The idempotent and range-section equations hold as functions. The global chart-level file supplies an earlier variant with global differentiability; the local variant supports use inside arbitrary chart neighborhoods.}
++\contract{The local theorem has real normed model and fiber spaces. $P$, $X$ and $Y$ are differentiable at the specified point. The section $s$ is twice continuously differentiable there. The idempotent equation and the equation expressing that the section lies in the range hold as functions. An earlier theorem in global chart coordinates assumes global differentiability. The local variant supports use inside arbitrary chart neighborhoods.}
+ 
+-\walk{Expand the derivative of the projected directional derivative by the product rule. The actual Lie-bracket derivative identity cancels the second derivatives of $s$ and the derivatives of $X,Y$. Substitute the differentiated range-section identity into the two remaining first-derivative terms. The components $P(D_vP)P(D_ws)$ vanish by the sandwich lemma. The surviving term is $P[(D_XP),(D_YP)]s$, and $Ps=s$ puts the final right-hand $P$ into the curvature form.}
++\walk{Expand the derivative of the projected directional derivative by the product rule. The derivative identity for the Lie bracket cancels the second derivatives of $s$ and the derivatives of $X,Y$. Substitute the differentiated identity for a section in the range into the two remaining terms involving first derivatives. The components $P(D_vP)P(D_ws)$ vanish by the sandwich lemma. The surviving term is $P[(D_XP),(D_YP)]s$, and $Ps=s$ puts the final right-hand $P$ into the curvature form.}
+ 
+ \subsection{Build the range atlas from the projector}
+-The global development begins with an actual operator-valued map $P:M\to\mathcal L_{\mathbb R}(F,F)$. Its fiber is the fixed subspace $\{v:P(x)v=v\}$ with the subspace topology. The total space is the subtype of $M\times F$ consisting of such fixed pairs. The atlas is constructed from $P$ rather than supplied as a hypothesis.
++The global development begins with an operator family $P:M\to\mathcal L_{\mathbb R}(F,F)$. Its fiber is the fixed subspace $\{v:P(x)v=v\}$ with the subspace topology. The total space is the subtype of $M\times F$ consisting of such fixed pairs. The atlas is constructed from $P$ rather than supplied as a hypothesis.
+ 
+ For idempotents $p,q$, define
+ \[
+@@ -82,16 +82,16 @@
+ 
+ \excerpt{GlobalRangeBundle}{range_product}
+ 
+-This declaration is a homeomorphism from the restricted actual total space to $U_a\times\mathrm{fiber}(P(a))$. In addition to inverse laws, it proves continuity in both directions using the smooth coordinate and reconstruction maps. Transitions are composed from these actual maps. They are continuous linear maps in each fiber, smooth in the base, and satisfy the cocycle law by cancelling the middle reconstruction-coordinate pair.
++This declaration is a homeomorphism from the restricted actual total space to $U_a\times\mathrm{fiber}(P(a))$. In addition to inverse laws, it proves continuity in both directions using the smooth coordinate and reconstruction maps. Transitions are composed from these actual maps. They are continuous linear maps in each fiber, smooth in the base, and satisfy the cocycle law by cancelling the reconstruction and coordinate maps in the middle.
+ 
+ \excerpt{GlobalRangeBundle}{range_atlas}
+ 
+-\contract{The range-atlas construction uses a smooth real projector map on a charted parameter space and a complete real normed fiber space. Idempotence is required; self-adjointness is not needed for this bundle construction. The explicit atlas theorem does not demand a global chart. Local linear fiber equivalences prove local constancy of finite rank whenever finite rank is being interpreted. The underlying fiber equivalence is the stronger structural statement.}
++\contract{The construction of the range atlas uses a smooth real projector map on a charted parameter space and a complete real normed fiber space. This bundle construction requires idempotence and does not require self-adjointness. The explicit atlas theorem does not demand a global chart. Local linear fiber equivalences prove local constancy of finite rank whenever finite rank is being interpreted. The underlying fiber equivalence is the stronger structural statement.}
+ 
+-The implementation uses this explicit smooth atlas directly. It does not package it as a Mathlib \code{ContMDiffVectorBundle} instance. This is a boundary of representation, not an assumed atlas hidden in the proof: the total space, open domains, local product homeomorphisms, transitions and their identities are all constructed and proved.
++The implementation uses this explicit smooth atlas directly. It does not package it as a Mathlib \code{ContMDiffVectorBundle} instance. The total space, open domains, local product homeomorphisms, transitions and their identities are all constructed and proved. The distinction concerns how these results are packaged in Lean.
+ 
+ \subsection{The global derivative and gauge gluing}
+-On the manifold, the global connection is defined using \code{mvfderiv}, the actual derivative of a manifold-to-vector-space map. A tangent vector at $x$ has type \code{TangentSpace I x}, so a vector field is a dependent function giving one such vector at every point.
++On the manifold, the global connection is defined using \code{mvfderiv}, the derivative of a map from a manifold to a vector space. A tangent vector at $x$ has type \code{TangentSpace I x}, so a vector field is a dependent function giving one such vector at every point.
+ 
+ \excerpt{GlobalProjectedConnection}{global_nabla}
+ \excerpt{GlobalProjectedConnection}{global_leibniz}
+@@ -104,15 +104,15 @@
+ \excerpt{ProjectedBundleCompletion}{smooth_section}
+ \excerpt{ProjectedBundleCompletion}{gauge_law}
+ 
+-The smooth-section equivalence needs only an eventual range condition near the point, not an unproved globally extended section. The gauge law in the completion file applies to arbitrary local coordinate functions and compares their reconstructed connection values on an overlap. It is not restricted to a prechosen global frame.
++The equivalence for smooth sections needs only an eventual range condition near the point, not an unproved globally extended section. The gauge law in the completion file applies to arbitrary local coordinate functions and compares their reconstructed connection values on an overlap. It is not restricted to a prechosen global frame.
+ 
+ \subsection{Manifold curvature and its endpoint}
+-The final curvature theorem uses a smooth real boundaryless manifold modeled on a complete real normed space $E$. The model is $\mathcal I(\mathbb R,E)$; the manifold has \code{ChartedSpace E M} and a smooth \code{IsManifold} instance for that model. The source pulls vector fields into a chart centered at the point, identifies the manifold derivative and bracket with their chart versions, and then proves the cancellation using actual manifold operations.
++The final curvature theorem uses a smooth real boundaryless manifold modeled on a complete real normed space $E$. The model is $\mathcal I(\mathbb R,E)$. The manifold has \code{ChartedSpace E M} and a smooth \code{IsManifold} instance for that model. The source pulls vector fields into a chart centered at the point, identifies the manifold derivative and bracket with their chart versions, and then proves the cancellation using actual manifold operations.
+ 
+ \excerpt{ManifoldProjectedCurvature}{manifold_curvature}
+ 
+ \contract{Here $P$, the two vector fields and the ambient range section are smooth. The equations $P(x)^2=P(x)$ and $P(x)s(x)=s(x)$ are given globally. The conclusion is $R(X,Y)s=P(dP\wedge dP)P\,s$ at an arbitrary point. The final manifold curvature endpoint assumes no global chart, no supplied curvature identity and no supplied range atlas. The atlas portion separately requires completeness of the fiber space. Finite complex quantum spaces fit by restriction to their underlying real spaces.}
+ 
+-The next theorem proves tensoriality: replacing the two fields and the section by smooth extensions with the same values at the point leaves curvature unchanged. The completion file makes the curvature form alternating and real-linear, proves it maps into the actual fiber, and defines the resulting continuous linear fiber endomorphism. Constant projector maps, including zero and identity, have zero curvature form.
++The next theorem proves tensoriality: replacing the two fields and the section by smooth extensions with the same values at the point leaves curvature unchanged. The completion file makes the curvature form alternating and linear over the real numbers, proves it maps into the actual fiber, and defines the resulting continuous linear fiber endomorphism. Constant projector maps, including zero and identity, have zero curvature form.
+ 
+-This chain explains the division among the six projected-geometry files. \code{ProjectedCurvature} establishes the parameter-space algebra and calculus; \code{LocalProjectedCurvature} localizes the hypotheses; \code{GlobalRangeBundle} constructs the atlas; \code{GlobalProjectedConnection} defines and glues the connection; \code{ManifoldProjectedCurvature} proves the actual global curvature formula; \code{ProjectedBundleCompletion} supplies intrinsic section, gauge and fiber-form compatibility. Treating only the earliest chart file as current coverage would miss the later global constructions.
++The six files on projected geometry follow this mathematical development. \code{ProjectedCurvature} establishes the algebra and calculus on the parameter space. \code{LocalProjectedCurvature} makes the hypotheses local, and \code{GlobalRangeBundle} constructs the atlas. \code{GlobalProjectedConnection} defines the connection and proves that its local descriptions agree. \code{ManifoldProjectedCurvature} proves the global curvature formula. Finally, \code{ProjectedBundleCompletion} proves compatibility with intrinsic sections, gauge transformations and the curvature form on each fiber. The later global constructions extend the results of the earliest chart file.
+--- before/editable/lean_guide/chapters/reading.tex
++++ after/editable/lean_guide/chapters/reading.tex
+@@ -6,55 +6,55 @@
+ 
+ An endpoint is a theorem whose conclusion expresses the desired result. A supporting lemma may isolate one algebraic or analytic step. A definition constructs an object but is not itself a proof that the object has every advertised property. The formalization deliberately uses several layers: general ring identities, complex matrix specializations, norm estimates, real calculus, spectral constructions and manifold calculus. Reading only a final theorem name loses the distinction between these layers.
+ 
+-The source base is the unchanged v0.6.0 snapshot. Older supplements explain how coverage grew, but their partial descriptions are not the last word on the current source. For example, the fourth block constructed recovery for already orthogonal syndrome data; the fifth block added the spectral reduction and necessity proof for general positive Gram data. The sixth block constructed the range atlas and global manifold curvature. This guide follows the current declarations and retains the older history only where it explains an assumption or correction.
++The source base is the unchanged v0.6.0 snapshot. Older supplements explain how coverage grew, but their partial descriptions are not the last word on the current source. For example, the fourth block constructed recovery for already orthogonal syndrome data. The fifth block added the spectral reduction and necessity proof for general positive Gram data. The sixth block constructed the range atlas and global manifold curvature. This guide follows the current declarations and retains the older history only where it explains an assumption or correction.
+ 
+ \subsection{Finite types, matrix types and type classes}
+-Lean's \code{Matrix d m ℂ} means a function with a row index in \code{d}, a column index in \code{m}, and values in the complex numbers. The indices are types, not necessarily integers. A \code{Fintype d} instance gives the finite enumeration needed for a sum or dimension; a \code{DecidableEq d} instance lets a definition decide whether two indices agree. \code{Fin n} is the type of natural numbers smaller than \code{n}. It supplies a concrete index type without replacing an arbitrary finite type throughout the library.
++Lean's \code{Matrix d m ℂ} means a function with a row index in \code{d}, a column index in \code{m}, and values in the complex numbers. The indices are types, not necessarily integers. A \code{Fintype d} instance gives the finite enumeration needed for a sum or dimension. A \code{DecidableEq d} instance lets a definition decide whether two indices agree. \code{Fin n} is the type of natural numbers smaller than \code{n}. It supplies a concrete index type without replacing an arbitrary finite type throughout the library.
+ 
+-The notation \code{Type*} leaves a universe level implicit. Braces in a binder, such as \texttt{\{n : Type*\}}, denote an implicit argument inferred from later data. Round parentheses denote an explicit argument. Square brackets denote a type-class argument: a structure or property that instance search should obtain. These brackets do not make an assumption disappear. A theorem with \code{[Nonempty n]} is only available when the state index has an inhabitant. A theorem with \code{[Invertible D]} has an actual invertibility requirement even though no ordinary parameter named \code{hD} is printed.
++The notation \code{Type*} leaves a universe level implicit. Braces in a binder, such as \texttt{\{n : Type*\}}, denote an implicit argument inferred from later data. Round parentheses denote an explicit argument. Square brackets denote an argument supplied through a type class. This is a structure or property that instance search should obtain. These brackets do not make an assumption disappear. A theorem with \mbox{\code{[Nonempty n]}} is only available when the state index has an inhabitant. A theorem with \code{[Invertible D]} has an actual invertibility requirement even though no ordinary parameter named \code{hD} is printed.
+ 
+-The declarations set \code{autoImplicit false}. Consequently an undeclared symbol is not silently promoted to a fresh theorem variable. A local \code{variable} command can still supply variables and type classes to subsequent declarations. An excerpt must therefore be read together with its surrounding section, not as an independent file. The chapter contracts explain those surrounding assumptions; the source file and line register permit a direct check.
++The declarations set \code{autoImplicit false}. Consequently an undeclared symbol is not silently promoted to a fresh theorem variable. A local \code{variable} command can still supply variables and type classes to subsequent declarations. An excerpt must therefore be read together with its surrounding section, not as an independent file. The chapter contracts explain those surrounding assumptions. The source file and line register allow the reader to check them directly.
+ 
+ \begin{longtable}{@{}p{.31\linewidth}p{.62\linewidth}@{}}
+ \toprule Source notation & Mathematical reading\\\midrule\endhead
+-\code{Matrix d m ℂ} & Complex rectangular matrix, also a coefficient array of a bipartite state.\\
+-\code{n → ℂ} & Coordinate vector on a finite index type.\\
+-\code{→ₗ[ℂ]} & Complex-linear map, with linearity stored in its structure.\\
+-\code{→L[ℝ]} & Continuous real-linear map, used for derivatives and parameter-dependent operators.\\
+-\code{≃ₗ[ℂ]} & A linear equivalence with inverse and linearity laws.\\
+-\code{≃ₜ} & A homeomorphism, including continuity in both directions.\\
+-\code{≃L[ℝ]} & Continuous real-linear equivalence.\\
+-\code{star}, \code{conjTranspose} & Involution in an abstract star ring; conjugate transpose for complex matrices.\\
+-\code{PosSemidef}, \code{PosDef} & Positive semidefinite and positive definite matrices, respectively.\\
+-\code{IsStarProjection P} & Both idempotence and self-adjointness of the projector.\\
++\code{Matrix d m ℂ} & This is a rectangular complex matrix. It can also represent the coefficient array of a bipartite state.\\
++\code{n → ℂ} & This is a coordinate vector on a finite index type.\\
++\code{→ₗ[ℂ]} & This map is linear over the complex numbers, with linearity stored in its structure.\\
++\code{→L[ℝ]} & This continuous map is linear over the real numbers. It is used for derivatives and operators that vary with a parameter.\\
++\code{≃ₗ[ℂ]} & This is a linear equivalence with an inverse and linearity laws.\\
++\code{≃ₜ} & This is a homeomorphism, including continuity in both directions.\\
++\code{≃L[ℝ]} & This is a continuous equivalence that is linear over the real numbers.\\
++\code{star}, \code{conjTranspose} & These denote the involution in an abstract star ring and the conjugate transpose for complex matrices.\\
++\code{PosSemidef}, \code{PosDef} & These predicates describe positive semidefinite and positive definite matrices, respectively.\\
++\code{IsStarProjection P} & This predicate requires both idempotence and self-adjointness of the projector.\\
+ \code{HasDerivAt f D t} & The actual real derivative of \code{f} at \code{t} is \code{D}.\\
+-\code{fderiv ℝ}, \code{mvfderiv I} & Actual Fréchet derivative; actual derivative of a manifold-to-vector-space map.\\
+-\code{IsLeast S r} & Membership of \code{r} in \code{S}, together with its lower-bound property.\\
++\code{fderiv ℝ}, \code{mvfderiv I} & These are the Fréchet derivative and the derivative of a map from a manifold to a vector space.\\
++\code{IsLeast S r} & This asserts that \code{r} belongs to \code{S} and is a lower bound for it.\\
+ \bottomrule\end{longtable}
+ 
+ \subsection{Quantifiers and the information a structure stores}
+-A family \code{P : I → R} is one element of the ring for each packet index. A dependent family \code{P : (i : F) → J i → Matrix (D i) (D i) ℂ} allows both the local dimension and the local packet-address type to vary with the tensor factor. This is more general than a tensor power of one fixed matrix.
++A family \code{P : I → R} is one element of the ring for each packet index. A dependent family \code{P : (i : F) → J i → Matrix (D i) (D i) ℂ} allows both the local dimension and the type of local packet addresses to vary with the tensor factor. This is more general than a tensor power of one fixed matrix.
+ 
+-The packet structure stores pairwise multiplication and completeness. Its multiplication law includes the diagonal case, so idempotence is a consequence. It does not store self-adjointness; that is supplied only in the star-ring layer. This distinction lets circuit reconstruction work over any ring while the unitary identities require an adjoint.
++The packet structure stores pairwise multiplication and completeness. Its multiplication law includes the diagonal case, so idempotence is a consequence. Self-adjointness is supplied separately when the construction is specialized to a star ring. This distinction lets circuit reconstruction work over any ring while the unitary identities require an adjoint.
+ 
+ \excerpt{QuantumPacketCore}{packet_structure}
+ 
+ Read \code{proj : I → R} as the object, \code{mul_proj} as its orthogonality law and \code{sum_proj} as its complete resolution of the identity. In a matrix realization the first law is $P_iP_j=\delta_{ij}P_i$. The second is $\sum_iP_i=1$. No commutative multiplication assumption is present: matrix multiplication remains operator composition.
+ 
+-Structures used later have a different role. \code{OrthogonalSyndromes} stores an already normalized orthogonal error family, and \code{KnillLaflamme.Data} stores a general positive Gram matrix. \code{Data.diagonal} constructs diagonal error data; its active positive directions are then normalized to construct \code{OrthogonalSyndromes}. The existence of the general Gram data is an assumption of sufficiency; necessity constructs such data from an actual recovery. The final equivalence joins both directions. The correct reading keeps these roles separate rather than interpreting every structure field as a fact proved from scratch.
++Structures used later have a different role. \code{OrthogonalSyndromes} stores an already normalized orthogonal error family, and \code{KnillLaflamme.Data} stores a general positive Gram matrix. \code{Data.diagonal} constructs diagonal error data. Its active positive directions are then normalized to construct \code{OrthogonalSyndromes}. Sufficiency assumes the existence of the general Gram data. Necessity constructs such data from a recovery. The final equivalence joins both directions. The correct reading keeps these roles separate rather than interpreting every structure field as a fact proved from scratch.
+ 
+ \subsection{How to read a proof script}
+-The scripts repeatedly use a small set of proof moves. \code{rw} replaces an expression using a stated equality. \code{simp only} performs a controlled reduction with an explicit list of lemmas; \code{simp} also uses the available simplification database. \code{ext i j} reduces a matrix equality to equality of each entry. \code{funext} proves equality of functions by comparing values. \code{constructor} starts the two obligations of a conjunction or equivalence. \code{rintro} decomposes quantified and existential data. \code{obtain} names an existential witness already proved to exist. \code{refine} fixes the overall shape of a term and leaves specified holes to prove.
++The scripts repeatedly use a small set of proof moves. \code{rw} replaces an expression using a stated equality. \code{simp only} performs a controlled reduction with an explicit list of lemmas. The broader \code{simp} tactic also uses the available simplification database. \code{ext i j} reduces a matrix equality to equality of each entry. \code{funext} proves equality of functions by comparing values. \code{constructor} starts the two obligations of a conjunction or equivalence. \code{rintro} decomposes quantified and existential data. \code{obtain} names an existential witness already proved to exist. \code{refine} fixes the overall shape of a term and leaves specified holes to prove.
+ 
+-The tactic \code{noncomm_ring} normalizes ring expressions without commuting factors. It is appropriate for identities involving $P_bUP_a$. Ordinary \code{ring} is used for scalar arithmetic or commutative coefficient expressions. Reading a ring-normalization step as permission to reorder arbitrary matrix factors would give an incorrect mathematical proof.
++The tactic \code{noncomm_ring} normalizes ring expressions without commuting factors. It is appropriate for identities involving $P_bUP_a$. Ordinary \code{ring} is used for scalar arithmetic or commutative coefficient expressions. A normalization step must therefore be read in the ring where it is used. It does not permit arbitrary matrix factors to be reordered.
+ 
+-A line beginning \code{have} proves or names a local intermediate assertion. The goal remains the same until that assertion is used. A \code{calc} block presents a chain of equalities or inequalities; each link is a separate obligation. Induction on a list proves all finite circuit depths, including the empty list. A finite example verified by \code{norm_num} or \code{fin_cases} proves that concrete example, not a general-dimensional theorem.
++A line beginning \code{have} proves or names a local intermediate assertion. The goal remains the same until that assertion is used. A \code{calc} block presents a chain of equalities or inequalities. Each link is a separate obligation. Induction on a list proves all finite circuit depths, including the empty list. A finite example verified by \code{norm_num} or \code{fin_cases} proves that concrete example, not a theorem in arbitrary dimension.
+ 
+-For a derivative identity the important move is often \code{HasDerivAt.unique}: two proven derivatives of the same function at a point must coincide. The script first differentiates a product, then rewrites the product as a constant or as a known function, then invokes uniqueness. Thus the differentiated projector and unitary identities are derived from actual functions and their derivatives, rather than postulated as unrelated first-order data.
++For a derivative identity the important move is often \code{HasDerivAt.unique}: two proven derivatives of the same function at a point must coincide. The script first differentiates a product, then rewrites the product as a constant or as a known function, then invokes uniqueness. Thus the differentiated projector and unitary identities are derived from actual functions and their derivatives, rather than postulated as unrelated data of first order.
+ 
+ \subsection{Scope is a part of the theorem}
+-The finite-sector results have broad mathematical strength, but several tempting extensions lie outside their conclusions. A statement about the span of an algebra orbit permits every matrix in that algebra; it does not say a physically specified unitary gate set reaches every vector. A finite channel complete-positivity theorem quantifies over every finite reference index; it does not formalize arbitrary infinite reference Hilbert spaces. A derivative computation under supplied smoothness does not prove the existence of a Schrödinger solution for every initial condition.
++The finite results have broad mathematical scope, but their hypotheses also place clear limits on their use. A statement about the span of an algebra orbit permits every matrix in that algebra. Reachability under a physically specified set of unitary gates requires a separate argument. A theorem establishing complete positivity for finite channels quantifies over every finite reference index. Arbitrary infinite reference Hilbert spaces lie outside those declarations. A derivative computation under supplied smoothness does not prove the existence of a Schrödinger solution for every initial condition.
+ 
+-The projected-connection modules do use arbitrary smooth real parameter manifolds and complete normed model spaces, which is broader than a single finite-dimensional chart. This mathematical parameter-space generality is distinct from the paper's unproved continuum physics conjectures. Neither the word ``manifold'' nor an abstract C-star-algebra estimate supplies a continuum tower, a physical constraint algebra, a renormalized limit or a Lorentzian emergence theorem.
++The modules for the projected connection do use arbitrary smooth real parameter manifolds and complete normed model spaces, which is broader than a single finite-dimensional chart. This generality of the mathematical parameter space is distinct from the paper's unproved continuum physics conjectures. Neither the word ``manifold'' nor an estimate in an abstract C-star algebra supplies a continuum tower, a physical constraint algebra, a renormalized limit or a Lorentzian emergence theorem.
+ 
+ Read each conclusion under its actual hypotheses and use its source locator to recover the surrounding assumptions. Source identity and excerpt fidelity are current documentation checks. Saved compiler and axiom transcripts are inherited proof evidence. This distinction continues through the replay chapter and full result map.
+--- before/editable/lean_guide/chapters/replay.tex
++++ after/editable/lean_guide/chapters/replay.tex
+@@ -4,45 +4,45 @@
+ \subsection{What the saved compiler record establishes}
+ The inherited run is \code{verification/final_finite_release_run/SUMMARY.json} in the unchanged v0.6.0 snapshot. It began on 6 September 2026 at 15:30:24 UTC and was updated at 15:32:49.641452 UTC. It records successful compilation of all 25 current modules, all 323 named theorem axiom audits, and two deliberate rejected controls. Current static reconciliation checks the source hashes and saved log hashes against those records.
+ 
+-The allowed axiom set is \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. Every reported theorem dependency set is a subset of it. One reported theorem is axiom-free. These are foundational dependencies accepted in the recorded Lean environment. They do not remove manuscript hypotheses such as full-resolvent invertibility or Kraus normalization. Axiom auditing and hypothesis reading answer different questions.
++The allowed axiom set is \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. Every reported theorem dependency set is a subset of it. One reported theorem has no axiom dependencies. These are foundational dependencies accepted in the recorded Lean environment. They do not remove manuscript hypotheses such as invertibility of the full resolvent or Kraus normalization. Axiom auditing and hypothesis reading answer different questions.
+ 
+-The separate inherited \code{CONSTRUCTED_OBJECTS_AUDIT.json}, in the same release-run directory, records six constructed objects: the fiber, projection to the fiber, local product homeomorphism, local continuous linear fiber equivalence, fiber-valued covariant derivative, and fiber curvature. Definitions can contain proofs of inverse, linearity or continuity fields, so a theorem-name inventory alone would miss part of this evidence. The six-object audit remains separate from the 323-theorem count. The current computation report checks 12 bindings between the inherited audit, source, inventory, runner, transcript and cumulative summary. It adds no theorem declarations and executes no Lean compiler.
++The separate inherited \code{CONSTRUCTED_OBJECTS_AUDIT.json}, in the directory for the same release run, records six constructed objects: the fiber, projection to the fiber, local product homeomorphism, local continuous linear fiber equivalence, covariant derivative taking values in the fiber, and fiber curvature. Definitions can contain proofs of inverse, linearity or continuity fields, so an inventory of theorem names alone would miss part of this evidence. The audit of six objects remains separate from the count of 323 theorems. The computation report dated 9 October 2026 records 12 correspondence checks among the inherited audit, source, inventory, runner, transcript and cumulative summary. Those checks added no theorem declarations and did not execute the Lean compiler.
+ 
+ The source archive omits the compiled public and private interfaces, the portable compiler kit and the Mathlib cache. The saved success record is inherited compilation evidence. It is not a fresh compilation on this host or an independent recheck of all imported Mathlib proofs. The recorded release reused its pinned library environment and did not rebuild earlier papers.
+ 
+ \subsection{Source and document checks in this edition}
+ The guide resolves nested namespaces in active source and derives 323 distinct theorem declarations across 25 modules. That set matches the saved theorem inventory and every saved theorem axiom report. All 19 finite ledger entries resolve, including \code{GlobalConnection.covariant} among the geometric supporting endpoints. Where a ledger entry gives only a module, the guide adds explicitly identified source pointers. It preserves the original ledger.
+ 
+-All 67 selected excerpts are exact contiguous source blocks and remain byte-identical to the retrieved guide's raw UTF-8 selections. Their line ranges, original module hashes and excerpt hashes accompany this document. Rendered code uses explicit font fallback for the mathematical script letters and small-square dot-product symbol absent from the monospaced font. The raw source is unchanged. The PDF checks cover every theorem name, excerpt, reference, missing glyph and text bound.
++All 67 selected excerpts are exact contiguous source blocks and retain exactly the bytes of the retrieved guide's raw UTF-8 selections. Their line ranges, original module hashes and excerpt hashes accompany this document. Rendered code uses explicit font fallback for the mathematical script letters and small square symbol used for dot products absent from the monospaced font. The raw source is unchanged. The PDF checks cover every theorem name, excerpt, reference, missing glyph and text bound.
+ 
+-The local \code{static_check.py} checks saved source and log identities, transitive local import hashes, declarations, dependency pins, inherited rejection records and the six-object audit. It also compares every delimited mathematical span and every contract and proof-walk paragraph in the six teaching chapters with the retrieved edition. These are editorial and source-consistency checks. They do not compile Lean or validate a new proof.
++The local \code{static_check.py} checks saved source and log identities, transitive local import hashes, declarations, dependency pins, inherited rejection records and the audit of six constructed objects. It also compares every delimited mathematical span in the six teaching chapters with the retrieved edition. The prose is checked against a preserved baseline and an explicit record of the approved changes. That record covers each complete chapter, including its hypotheses and explanations of proofs. These checks establish editorial preservation and consistency with the source. They do not compile Lean or validate a new proof.
+ 
+-\subsection{The actual current finite computations}
+-The current report is \code{verification/monograph_checks/COMPUTATIONAL_REVIEW.json}, dated 9 October 2026. Its six bounded execution records retain actual commands, environment versions, caps, inputs, outputs and hashes. The original and corrected numerical gates use Python 3.12.14, NumPy 2.3.5 and SciPy 1.17.0. The symbolic gate uses SymPy 1.14.0. The earlier dependency-unavailability statements in retained October 6 reports describe that older host and are superseded for this edition.
++\subsection{The finite computations recorded on 9 October 2026}
++The report \code{verification/monograph_checks/COMPUTATIONAL_REVIEW.json} records the finite computations performed on 9 October 2026. Its six records retain the commands, environment versions, limits, inputs, outputs and hashes of those executions. The original and corrected numerical checks used Python 3.12.14, NumPy 2.3.5 and SciPy 1.17.0. The symbolic checks used SymPy 1.14.0. Statements about unavailable dependencies in the retained reports of 6 October describe the host used at that earlier date. The present proofreading pass preserves the October 9 evidence without repeating those numerical or symbolic executions.
+ 
+-The original companion passes 22 actual pytest cases. A second entry point calls those same 22 functions directly, so this is not 44 independent tests. The verifier software passes 16 regression methods: nine positive methods and seven malformed-input or tamper controls. These Python controls differ from the two inherited deliberate Lean rejections. No fresh kernel or compiler-control run was available because \code{lean}, \code{lake} and \code{elan} are absent.
++In that recorded run, the original companion passed 22 pytest cases. A second entry point called the same 22 functions directly, so the report contains 22 distinct tests. The verifier software passed 16 regression methods, comprising nine positive methods and seven controls using malformed inputs or tampering. These Python controls differ from the two inherited deliberate Lean rejections. No fresh kernel run or compiler rejection test was possible during this proofreading pass because \code{lean}, \code{lake} and \code{elan} are absent.
+ 
+-All 1,048 stored result leaves, including 1,045 numerical fields, exactly match the original experiment replay. The recorded comparison bounds are absolute $10^{-10}$ and relative $10^{-8}$, although equality made those allowances unnecessary in this run. The unchanged strengthened suite passes 18,049 checks in 15 groups. Its separately corrected copy passes 17,699 checks in the same 15 groups, with 87 exact mode-index assertions for $N=4,\ldots,32$. The two lower endpoints change from \code{-N//2} to \code{-(N//2)}. For odd \code{N}, Python floor division otherwise adds a repeated residue representative. The 350-check difference reflects corrected bookkeeping. The raw source remains intact, and the two overlapping suite totals are not added.
++The report records an exact match for all 1,048 stored result leaves, including 1,045 numerical fields, against the original experiment replay. The recorded comparison bounds are absolute $10^{-10}$ and relative $10^{-8}$, although equality made those allowances unnecessary in the recorded run. The unchanged strengthened suite passed 18,049 checks in 15 groups. Its separately corrected copy passed 17,699 checks in the same 15 groups, with 87 exact mode-index assertions for $N=4,\ldots,32$. The two lower endpoints were changed from \code{-N//2} to \code{-(N//2)}. For odd \code{N}, Python floor division otherwise adds a repeated residue representative. The difference of 350 checks reflects corrected bookkeeping. The raw source remains intact, and the two overlapping suite totals are not added.
+ 
+-The independent exact rational witnesses contain 269 assertions in total, including three explicit negative controls and a separate singular-inverse rejection benchmark. The original visual-example gate runs 180 SymPy assertions, including nine rejected controls, hence 171 positive assertions. The extended gate runs 373 positive exact assertions and 12 rejected controls over rational and Gaussian-rational finite examples. All 38 vector plate sources regenerate byte-identically: 26 original plates and 12 extended plates. Plate regeneration checks presentation consistency rather than adding mathematical proof coverage.
++The independent exact rational witnesses contain 269 assertions in total, including three explicit negative controls and a separate singular-inverse rejection benchmark. The original checks of visual examples executed 180 SymPy assertions, including nine rejected controls and 171 positive assertions. The extended checks executed 373 positive exact assertions and 12 rejected controls over finite examples using rational and Gaussian rational numbers. All 38 vector plate sources regenerated with identical bytes, comprising 26 original plates and 12 extended plates. Regenerating the plates checks consistency of the presentation and does not add mathematical proof coverage.
+ 
+-A separate audit, \code{verification/monograph_checks/TRADITIONAL_EXACT_MODELS_REVIEW.json}, checks the three new traditional illustrations. It passes 30 positive exact assertions and rejects six deliberately false assertions. The model JSON and three generated PDFs reproduce byte-identically. These are fixed examples of seed support, block inversion and channel scaling. They add no formal targets or general recovery conclusion.
++A separate audit, \code{verification/monograph_checks/TRADITIONAL_EXACT_MODELS_REVIEW.json}, records checks of the three traditional illustrations added in that edition. It passed 30 positive exact assertions and rejected six deliberately false assertions. The model JSON and three generated PDFs reproduced with identical bytes. These are fixed examples of seed support, block inversion and channel scaling. They add no formal targets or general recovery conclusion.
+ 
+-The manifest records retain the actual finite ranges, conventions and tolerances. Original numerical checks typically use bounds from $10^{-12}$ to $10^{-10}$, with a $10^{-6}$ moving-frame certificate. The strengthened base tolerance is $2\times10^{-9}$, with individual bounds through $2\times10^{-7}$. Exact arithmetic gates have no numerical tolerance. These executions overlap and use different count units. Their totals are neither summed as independent evidence nor interpreted as universal theorems. They do not settle any of the five physical continuum targets.
++The manifest records retain the actual finite ranges, conventions and tolerances. Original numerical checks typically use bounds from $10^{-12}$ to $10^{-10}$, with a $10^{-6}$ certificate for moving frames. The strengthened base tolerance is $2\times10^{-9}$, with individual bounds through $2\times10^{-7}$. Exact arithmetic gates have no numerical tolerance. These executions overlap and use different count units. Their totals are neither summed as independent evidence nor interpreted as universal theorems. They do not settle any of the five physical continuum targets.
+ 
+ \begin{longtable}{@{}p{.31\linewidth}p{.30\linewidth}p{.32\linewidth}@{}}
+ \toprule Evidence & Time or source & Meaning\\\midrule\endhead
+ 25 module compiler exits & Saved 6 September release & Inherited compilation under the locked toolchain.\\
+ 323 theorem axiom records & Saved release, currently reconciled & Current source declarations agree with the stored audited set.\\
+-Six constructed-object audits & Separate saved release record & Proof fields in definitions are audited separately.\\
+-Source, excerpt and document checks & Current 9 October edition & Exact source correspondence and readable navigation.\\
+-22 pytest cases, 16 verifier methods & Current Python execution & Software checks at the recorded inputs and conditions.\\
+-Numerical and exact witness gates & Current bounded executions & Case-bound computations with explicit arithmetic and assumptions.\\
+-38 vector source regenerations & Current presentation replay & Deterministic plate sources, with no added theorem coverage.\\
++Audits of six constructed objects & Separate saved release record & Proof fields in definitions are audited separately.\\
++Source, excerpt and document checks & Proofreading on 18 October & Exact source correspondence, reviewed prose and readable navigation.\\
++22 pytest cases, 16 verifier methods & Recorded 9 October execution & Software checks at the recorded inputs and conditions.\\
++Numerical and exact witness checks & Recorded 9 October executions & Finite computations with explicit arithmetic and assumptions.\\
++38 vector source regenerations & Recorded 9 October replay & Deterministic plate sources, with no added theorem coverage.\\
+ \bottomrule\end{longtable}
+ 
+ \subsection{Rebuild only this guide}
+-The guide directory contains the authored TeX, frozen navigation, rendered code, raw excerpts, styles and bundled fonts. \code{build.py} copies the complete source tree to an isolated temporary directory and performs four XeLaTeX passes. It compiles the authored document without regenerating prose, source data, figures or mathematical evidence. It does not invoke Lean.
++The guide directory contains the authored TeX, frozen navigation, rendered code, raw excerpts, styles and font licenses. Font binaries are not included in this delivery. The styles use the matching bundled fonts when those are supplied and otherwise use the named installed fonts. The script \code{build.py} copies the complete source tree to an isolated temporary directory. It performs four XeLaTeX passes to resolve the document structure, then runs \code{xdvipdfmx} once to produce the PDF. It compiles the authored document without regenerating prose, source data, figures or mathematical evidence, and it does not invoke Lean.
+ 
+ \begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+ python editable/lean_guide/build.py
+@@ -50,9 +50,9 @@
+ python editable/lean_guide/build.py --check-only
+ \end{Verbatim}
+ 
+-Run these commands from the package root, or supply an absolute path to the script. Python 3, XeLaTeX and the TeX packages named in the preamble are required. Fonts resolve through the relative \code{fonts/} directory. The optional \code{--output-directory} keeps delivered products unchanged, and \code{--check-only} writes no delivered products.
++Run these commands from the package root, or supply an absolute path to the script. Python 3, XeLaTeX, \code{xdvipdfmx} and the TeX packages named in the preamble are required. Fonts resolve through the relative \code{fonts/} directory when the matching binaries are present. Otherwise the styles use installed P052, Nimbus Sans, Latin Modern and DejaVu Sans Mono fonts. The optional \code{--output-directory} keeps delivered products unchanged, and \code{--check-only} writes no delivered products.
+ 
+-Source-table regeneration additionally needs FontTools and the preserved snapshot:
++Regenerating the source tables additionally requires FontTools and the preserved snapshot. The assembler uses the bundled DejaVu Sans Mono and Latin Modern Math files when present, or matching installed files otherwise. Run the following commands only when regenerating the tables as part of an edited release. Refresh the recorded checks and document hashes afterward.
+ 
+ \begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+ python editable/lean_guide/assemble.py
+@@ -88,8 +88,8 @@
+ 
+ The \code{check_low_memory.py} launcher uses ordinary Lean with one worker. Its name does not promise an enforced memory cap. The snapshot is not a delivered Lake project with a current \code{lakefile}. Its provenance manifest supplies the portable kit's locked dependencies. A bare \code{lake build} would not reproduce the retained procedure.
+ 
+-\subsection{The retained complete-bundle wrapper}
+-Set the working directory to \code{source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix}. Its wrapper exposes distinct actions:
++\subsection{The wrapper in the retained complete bundle}
++Set the working directory to \code{source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix}. Its wrapper provides three actions:
+ 
+ \begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+ python Run-PaperVII.py verify
+@@ -97,6 +97,6 @@
+ python Run-PaperVII.py original --output-dir /path/to/original_replay
+ \end{Verbatim}
+ 
+-The integrity action verifies the manifest and checksums. The example action runs the original visual-appendix example suite with its declared dependencies. The original action runs the original numerical, figure, TeX and verifier-software workflow. Its own documentation identifies that action as a companion replay rather than Lean execution. The current report records its separate actual gates. It does not claim that the original all-in-one PowerShell chain, figure-generation chain or historical manuscript rebuild ran as a single workflow.
++The integrity action verifies the manifest and checksums. The example action runs the original example suite for the visual appendix with its declared dependencies. The original action runs the original workflow for numerical examples, figures, TeX and verifier software. Its own documentation identifies that action as a companion replay rather than Lean execution. The October 9 report records the individual checks that were actually executed. It does not claim that the original combined PowerShell procedure, the full figure generation procedure or the historical manuscript rebuild ran as a single workflow.
+ 
+-All nine dependency revisions and the compiler commit appear in the dependency appendix. Source and transcript hashes bind this reading to its inherited artifacts. Document construction, current finite computation and kernel replay each have a distinct purpose and separately reportable outcome.
++All nine dependency revisions and the compiler commit appear in the dependency appendix. Source and transcript hashes bind this reading to its inherited artifacts. Document construction, finite computation and kernel replay each have a distinct purpose. The release records their outcomes separately.
+--- before/editable/lean_guide/chapters/seed_packets.tex
++++ after/editable/lean_guide/chapters/seed_packets.tex
+@@ -2,29 +2,29 @@
+ \label{sec:seeds}
+ 
+ \subsection{One seed: identify the actual image before counting it}
+-The starting coefficient array is $C\in\mathrm{Mat}_{d\times m}(\mathbb C)$. Left multiplication by an arbitrary $d\times d$ matrix changes each row independently within the row space of $C$. This observation is the entire mechanism behind the orbit dimension formula. Lean first defines the row space as the range of the actual right-multiplication linear map; it then defines the orbit as the range of that map acting on all $d$ rows. It does not assume an orbit dimension as an input.
++The starting coefficient array is $C\in\mathrm{Mat}_{d\times m}(\mathbb C)$. Left multiplication by an arbitrary $d\times d$ matrix changes each row independently within the row space of $C$. This observation gives the orbit dimension formula. Lean first defines the row space as the range of the linear map given by right multiplication. It then defines the orbit as the range of that map acting on all $d$ rows. The dimension is derived from this construction.
+ 
+-\contract{The row and multiplicity index types \code{d} and \code{m} have finite enumerations. The orbit is an algebra-action orbit $\{AC:A\in\mathrm{Mat}_{d\times d}(\mathbb C)\}$, already a linear subspace. Its dimension result has no nonempty-row assumption. The full-orbit equivalence adds \code{[Nonempty d]} because it cancels the positive row cardinality.}
++\contract{The row and multiplicity index types \code{d} and \code{m} have finite enumerations. The orbit under the algebra action is $\{AC:A\in\mathrm{Mat}_{d\times d}(\mathbb C)\}$, which is already a linear subspace. The dimension formula permits an empty row type. The equivalence characterizing a full orbit adds \code{[Nonempty d]} because it cancels the positive row cardinality.}
+ 
+ The lemma \code{mem_orbit_iff_rows} supplies both directions. If $X=AC$, each row of $X$ is a linear combination of rows of $C$. Conversely, choose one coefficient row for each row of $X$, collect them into a matrix $A$, and obtain $AC=X$. The latter choice is an existence argument using classical choice. It is not a numerical algorithm for choosing coefficients.
+ 
+-The explicit linear equivalence below packages that row-by-row correspondence. Its domain is the subspace of reachable coefficient arrays; its codomain is the function space whose value at each row is a member of the row space. Both inverse laws reduce to the underlying functions.
++The explicit linear equivalence below expresses this correspondence for each row. Its domain is the subspace of reachable coefficient arrays. Its codomain is the function space whose value at each row is a member of the row space. Both inverse laws reduce to the underlying functions.
+ 
+ \excerpt{SeedOrbit}{row_equiv}
+ 
+-\walk{The \code{toFun} field extracts the rows and attaches the proved row-space membership. The \code{invFun} field assembles those rows, using the reverse membership implication. The equalities of functions are definitional, so the inverse and linearity proofs are \code{rfl}. Taking dimensions of this equivalence gives $|d|\operatorname{rank}C$. The extra \code{orbit_span} lemma identifies the subspace with the span of the literal action set.}
++\walk{The \code{toFun} field extracts the rows and attaches the proof that each row belongs to the row space. The \code{invFun} field assembles those rows, using the reverse membership implication. The equalities of functions are definitional, so the inverse and linearity proofs are \code{rfl}. Taking dimensions of this equivalence gives $|d|\operatorname{rank}C$. The extra \code{orbit_span} lemma identifies the subspace with the span of the literal action set.}
+ 
+ \excerpt{SeedOrbit}{orbit_dimension}
+ \excerpt{SeedOrbit}{cyclic_rank}
+ 
+-The nonempty condition deserves attention. If there are no row indices, the ambient coefficient space is zero and every orbit is already full, regardless of the multiplicity index. Cancelling $|d|$ would be invalid. Lean's final cancellation explicitly uses \code{Fintype.card_pos}; it records precisely why the full-rank test needs an inhabitant. Multiplicity zero is permitted and produces a zero-dimensional target.
++The nonempty condition deserves attention. If there are no row indices, the ambient coefficient space is zero and every orbit is already full, regardless of the multiplicity index. Cancelling $|d|$ would be invalid. Lean's final cancellation explicitly uses \code{Fintype.card_pos}. This records why the test for full rank needs an inhabitant. Multiplicity zero is permitted and gives a target of dimension zero.
+ 
+ \subsection{Several seeds: stack them and prove a minimum}
+ Continue with a nonempty row index type. For $k$ seeds $C_a$, the allowed generation is
+ \[
+ X=\sum_{a\in k}A_aC_a,
+ \]
+-where the algebra element $A_a$ may differ for each seed. This is a linear generating-family problem. The implementation records its universal quantifier over $X$ and its existential family of coefficient matrices.
++where the algebra element $A_a$ may differ for each seed. The question is whether this family generates the whole space linearly. The implementation records its universal quantifier over $X$ and its existential family of coefficient matrices.
+ 
+ \excerpt{SeedOrbit}{seed_generate}
+ \excerpt{SeedOrbit}{stack_rank}
+@@ -35,9 +35,9 @@
+ 
+ \excerpt{SeedOrbit}{full_column}
+ 
+-For a finite direct-sum family, \code{dd mm : I → ℕ} gives the matrix row dimension and multiplicity of each block. A seed now contains one coefficient array in every block. \code{BlockGenerates} quantifies over simultaneous block targets and permits simultaneous block algebra elements. The equivalence \code{block_generates_iff} proves that this is exactly the collection of individual generation tests. It does not replace the simultaneous problem by an unproved heuristic.
++For a finite family of direct summands, \code{dd mm : I → ℕ} gives the matrix row dimension and multiplicity of each block. A seed now contains one coefficient array in every block. \code{BlockGenerates} quantifies over simultaneous block targets and permits simultaneous block algebra elements. The equivalence \code{block_generates_iff} proves that this is exactly the collection of individual generation tests. It does not replace the simultaneous problem by an unproved heuristic.
+ 
+-\contract{Every row dimension \code{dd i} is positive. Multiplicities \code{mm i} may vanish. The block index \code{I} is any finite type, including the empty type. The formula is the finite supremum of natural-number ceiling divisions, so an empty block family gives zero.}
++\contract{Every row dimension \code{dd i} is positive. Multiplicities \code{mm i} may vanish. The block index \code{I} is any finite type, including the empty type. The formula is the finite supremum of ceiling divisions in the natural numbers, so an empty block family gives zero.}
+ 
+ Define
+ \[
+@@ -54,11 +54,11 @@
+ 
+ \excerpt{SeedOrbit}{local_action}
+ 
+-The source does not define Schmidt rank to mean matrix rank and then use that name in a tautology. \code{HasProductDecomposition C s} means an actual representation
++The source defines Schmidt rank through product decompositions before proving that it agrees with matrix rank. \code{HasProductDecomposition C s} means an actual representation
+ \[
+ C_{ij}=\sum_{a<s}u_a(i)v_a(j).
+ \]
+-Such a representation factors $C$ through an $s$-dimensional coordinate space, so $\operatorname{rank}C\le s$. Conversely, choose a basis of the row space and express each row in that basis. The row-basis vectors and their coordinate functions give a product decomposition of length exactly $\operatorname{rank}C$. These two directions prove that matrix rank is the least possible product length.
++Such a representation factors $C$ through an $s$-dimensional coordinate space, so $\operatorname{rank}C\le s$. Conversely, choose a basis of the row space and express each row in that basis. The basis vectors of the row space and their coordinate functions give a product decomposition of length exactly $\operatorname{rank}C$. These two directions prove that matrix rank is the least possible product length.
+ 
+ \excerpt{SeedOrbit}{schmidt_minimum}
+ \excerpt{SeedOrbit}{schmidt_definition}
+@@ -73,21 +73,21 @@
+ 
+ \excerpt{SeedOrbit}{reduced_support}
+ 
+-\contract{The full local-orbit/support equivalence assumes \code{[Nonempty d]}. The dimension equality itself includes zero vectors and empty index types. No normalization of $\psi$ is required for these algebraic rank statements. The action uses every matrix $A$, so the result concerns the linear span under the local operator algebra. It does not assert reachability under an arbitrary restricted family of unitary controls.}
++\contract{The equivalence between a full local orbit and full reduced support assumes \code{[Nonempty d]}. The dimension equality itself includes zero vectors and empty index types. No normalization of $\psi$ is required for these algebraic rank statements. The action uses every matrix $A$, so the result concerns the linear span under the local operator algebra. It does not assert reachability under an arbitrary restricted family of unitary controls.}
+ 
+ \subsection{Addressed bit flips give a computational basis}
+-\code{Address n} is \code{Fin n → ZMod 2}; it is the finite set of bit strings. \code{State n} is the complex vector space of functions on that address set. The seed is the coordinate vector at the zero address. The linear operator \code{translation a} evaluates a vector at $x-a$. On a ket it gives $|b\rangle\mapsto|a+b\rangle$.
++\code{Address n} is defined as \code{Fin n → ZMod 2}, the finite set of bit strings. \code{State n} is the complex vector space of functions on that address set. The seed is the coordinate vector at the zero address. The linear operator \code{translation a} evaluates a vector at $x-a$. On a ket it gives $|b\rangle\mapsto|a+b\rangle$.
+ 
+-Each \code{localX j} translates by the bit vector supported at coordinate $j$. The operator named \code{controlledX a j} in this module is selected by the classical address bit $a_j$: it is identity when that bit is zero, and the local $X$ otherwise. This definition is an address-dependent selection of a gate; its name should not be read as a separately formalized two-qubit controlled-NOT gate.
++Each \code{localX j} translates by the bit vector supported at coordinate $j$. The operator named \code{controlledX a j} in this module is selected by the classical address bit $a_j$: it is identity when that bit is zero, and the local $X$ otherwise. This definition selects a gate according to the address. Despite its name, it does not separately formalize the controlled-NOT gate on two qubits.
+ 
+ The address circuit is the product of this finite gate list. Translation products add their addresses, and the sum of the local address contributions equals $a$. Therefore the circuit translates by $a$ and sends the zero seed to the coordinate basis vector at $a$.
+ 
+ \excerpt{ComputationalSeed}{seed_translation}
+ \excerpt{ComputationalSeed}{seed_basis}
+ 
+-The basis theorem then supplies linear independence and full span. The cardinality theorem gives $2^n$. When $n=0$, the bit-string type has exactly one empty address, the gate list is empty, and its product is identity. The source covers this case without a separate positive-qubit assumption.
++The basis theorem then supplies linear independence and full span. The cardinality theorem gives $2^n$. When $n=0$, the type of bit strings has exactly one empty address, the gate list is empty, and its product is identity. The source covers this case without assuming that the number of qubits is positive.
+ 
+-\subsection{Cyclic projectors from actual finite-order powers}
++\subsection{Cyclic projectors from powers of an element of finite order}
+ Let $N>0$ and $S^N=1$. The source uses \code{ZMod N} as the residue type and the standard primitive additive character $\chi$. It defines
+ \[
+ P_j=\frac1N\sum_{r\in\mathbb Z/N}\chi(-rj)S^{r.\mathrm{val}}.
+@@ -96,25 +96,25 @@
+ 
+ \excerpt{CyclicProjectors}{cyclic_character}
+ 
+-The character-sum lemma is the cancellation mechanism. When its argument is zero the sum is $N$; when it is nonzero, primitivity makes the sum vanish. To prove multiplication of packets, first show that left multiplication by the representation acts on a packet by its character. Substitute that eigenaction into the packet product and collapse the remaining character sum.
++The character sum provides the cancellation needed in the proof. When its argument is zero, the sum is $N$. When the argument is nonzero, primitivity makes the sum vanish. To prove multiplication of packets, first show that left multiplication by the representation acts on a packet by its character. Substitute that eigenaction into the packet product and collapse the remaining character sum.
+ 
+ \excerpt{CyclicProjectors}{cyclic_mul}
+ 
+-Completeness follows from exchanging the two finite sums and applying the same orthogonality in the other index. Adjointness is a separate star-ring argument: conjugate the character, replace $r$ by $-r$, and use the adjoint law for unitary powers. A finite-order element gives the idempotent decomposition; unitarity supplies the Hermitian condition in the complex-matrix endpoint.
++Completeness follows from exchanging the two finite sums and applying the same orthogonality in the other index. Adjointness requires a separate argument in a star ring: conjugate the character, replace $r$ by $-r$, and use the adjoint law for unitary powers. An element of finite order gives the idempotent decomposition. Unitarity supplies the Hermitian condition in the theorem for complex matrices.
+ 
+ \excerpt{CyclicProjectors}{cyclic_matrix}
+ 
+ \contract{The ambient general construction is a complex algebra over a ring. The concrete endpoint has a finite matrix state index and decidable equality. \code{[NeZero N]} excludes zero modulus, includes $N=1$, and justifies division by $N$. The theorem does not require every packet to have nonzero rank.}
+ 
+ \subsection{Tensor factors and regrouping by residue}
+-The tensor implementation uses a finite factor index \code{F}, with a potentially different state index \code{D i} in every factor. A tensor matrix is defined by the product of its local entries. Multiplication expands into a sum over dependent tuples of intermediate indices. The finite product-of-sums identity converts that sum back into the product of local matrix multiplications.
++The tensor implementation uses a finite factor index \code{F}, with a potentially different state index \code{D i} in every factor. A tensor matrix is defined by the product of its local entries. Multiplication expands into a sum over dependent tuples of intermediate indices. The finite identity expressing a product of sums converts that sum back into the product of local matrix multiplications.
+ 
+ \excerpt{TensorRefinement}{tensor_mul}
+ 
+-The product formula, identity formula, adjoint formula and sum formula then prove that the fine packets indexed by tuples are mutually orthogonal, complete and Hermitian. The coarse construction sums fine packets with the same address. Its generic ring-level proof shows that grouping an orthogonal resolution by any finite address map remains an orthogonal resolution. For polyphase grouping, the address is the sum of the factor residues in \code{ZMod N}.
++The product formula, identity formula, adjoint formula and sum formula then prove that the fine packets indexed by tuples are mutually orthogonal, complete and Hermitian. The coarse construction sums fine packets with the same address. The general proof over a ring shows that grouping an orthogonal resolution by any finite address map remains an orthogonal resolution. For polyphase grouping, the address is the sum of the factor residues in \code{ZMod N}.
+ 
+ \excerpt{TensorRefinement}{tensor_refinement}
+ 
+-\walk{The two \code{let} bindings expose the fine family $Q_a$ and the coarse family $C_r$ inside the statement. After \code{dsimp only}, each conclusion is a direct application of the generic coarse theorem to a previously proved fine-family theorem. The code therefore separates tensor construction from finite grouping, which makes the proof reusable.}
++\walk{The two \code{let} bindings expose the fine family $Q_a$ and the coarse family $C_r$ inside the statement. After \code{dsimp only}, each conclusion is a direct application of the generic coarse theorem to a theorem already proved for the fine family. The code therefore separates tensor construction from finite grouping, which makes the proof reusable.}
+ 
+-The input here is a packet resolution in each tensor factor. The source does not rederive those local packets from each factor's cyclic symmetry inside this theorem; the cyclic-projector endpoint is the preceding construction that can supply them. Together the two constructions implement the traditional passage from cyclic local packets to a tensor refinement and total-residue packets.
++The input here is a packet resolution in each tensor factor. The preceding theorem can construct these local packets from each factor's cyclic symmetry. The tensor theorem takes the resulting local resolutions as input. Together the two constructions implement the traditional passage from cyclic local packets to a tensor refinement and packets grouped by total residue.
+--- before/editable/lean_guide/navigation.py
++++ after/editable/lean_guide/navigation.py
+@@ -29,21 +29,51 @@
+ 
+ old=ast.parse((H/'historical_assembly/navigation.py').read_text())
+ relations=next(ast.literal_eval(node.value) for node in old.body if isinstance(node,ast.Assign) and any(isinstance(v,ast.Name) and v.id=='relations' for v in node.targets))
++# Preserve the historical map while expressing the current navigation in prose.
++reviewed_relations={
++    'strong:theorem:001':'Item 2.1 gives the same orbit dimension result.',
++    'strong:theorem:002':'Item 2.2 gives the same sharp minimum number of seeds.',
++    'strong:corollary:001':'Item 2.3 relates the local orbit to reduced support.',
++    'strong:proposition:001':'Item 2.4 constructs the basis by addressed local X gates.',
++    'strong:corollary:002':'Item 3.1 formalizes the cyclic specialization.',
++    'strong:theorem:006':'Item 3.2 formalizes finite grouping of tensor packets.',
++    'strong:theorem:007':'Item 4.1 covers every finite circuit depth.',
++    'strong:theorem:008':'Item 4.2 gives both operator unitarity identities.',
++    'strong:corollary:005':'Item 4.2 gives the operator identity. The probability corollary is proved in the traditional text.',
++    'strong:theorem:010':'Item 5.1 proves packet invariance for the exponential of a fixed generator.',
++    'strong:theorem:011':'Item 5.2 gives the commutator leakage bound. The norm equality for the off-diagonal corner is proved in the traditional text.',
++    'strong:theorem:012':'Item 6.3 gives the canonical connection identities along a curve.',
++    'strong:theorem:014':'Item 6.1 proves the differentiated equation in moving coordinates.',
++    'strong:theorem:018':'Item 6.4 gives projected manifold curvature and gauge gluing. The local formulas in orthonormal frames are proved in the traditional text.',
++    'strong:corollary:008':'Item 7.1 proves trace invariance for block diagonal observables.',
++    'strong:standardfact:001':'Item 7.2 proves complete positivity and trace preservation for finite Kraus channels. The Choi equivalence is proved in the traditional text.',
++    'strong:theorem:026':'Item 8.1 gives the criterion for unnormalized error families and recovery on their span. The traditional text also uses a quotient formulation.',
++    'strong:theorem:027':'Item 8.1 reduces general positive Gram data by spectral diagonalization.',
++    'strong:theorem:028':'Item 8.1 uses one total recovery for normalized channels in the error span.',
++    'strong:corollary:011':'The identities for syndrome cross errors support item 8.1. The traditional text supplies the measurement interpretation.',
++    'strong:theorem:029':'Item 9.1 gives the projected resolvent with both required invertibility hypotheses.',
++    'strong:theorem:030':'Item 9.1 relates invertibility of the full matrix and its Schur complement. The traditional text adds spectral and eigenvector formulations.',
++    'strong:theorem:036':'Item 10.1 constructs the shifted exponential and proves its positivity and spectral bounds under the stated hypotheses.',
++    'strong:theorem:039':'Item 11.1 gives the scalar bound in one dimension. The traditional text proves the summed result in d dimensions.',
++    'strong:proposition:011':'ConstraintAudit formalizes finite compression to the common kernel.'}
++if set(reviewed_relations)!=set(relations):
++    raise RuntimeError('Historical relation inventory changed')
++relations=reviewed_relations
+ core=[]; strengthened=[]; supplements=[]
+ for row in x['finite_items']:
+     core.append({'ledger_number':row['item'],'title':row['title'],'traditional':resolved(row),'guide_ledger_label':'result:'+row['item'],'formal_status':'inherited-complete-scoped-statement'})
+ for row in x['records']:
+     if row['part']!='strong' or not row.get('proof_required'):continue
+-    r=resolved(row); relation=relations.get(r['label'],'Additional written statement. No corresponding named endpoint in the current 25-module development.')
++    r=resolved(row); relation=relations.get(r['label'],'The traditional statement has no corresponding named endpoint among the current 25 modules.')
+     strengthened.append({'title':r['title'],'traditional':r,'relation_to_current_formal_source':relation,'formal_status':'written-result-relation-does-not-enlarge-formal-contract'})
+ if len(core)!=19 or len(strengthened)!=79:raise RuntimeError('Unexpected cross-reading counts')
+ notes={
+-'supp1':'Packet algebra, symmetry and measurements. Corrected resolvent, spacing condition, and finite constraint audit.',
+-'supp2':'Addressed computational seed, tensor refinement, moving coordinates, canonical connection, and Kraus amplification.',
+-'supp3':'Actual orbit spaces, sharp seed counts, independently defined Schmidt rank, cyclic characters, and Euclidean exponential.',
+-'supp4':'Actual-exponential leakage, chart projected curvature, and total orthogonal-syndrome recovery.',
+-'supp5':'General Gram spectral reduction, actual recovery necessity, density/operator bridge, finite references, and error spans.',
+-'supp6':'Constructed range local products, smooth transitions, global connection, gauge law, and actual manifold curvature.'}
++'supp1':'This supplement develops packet algebra, symmetry and measurements. It states the corrected resolvent and spacing hypotheses and audits finite constraints.',
++'supp2':'This supplement constructs an addressed computational seed, tensor refinements, moving coordinates, the canonical connection and Kraus amplification.',
++'supp3':'This supplement derives orbit spaces and sharp seed counts. It defines Schmidt rank independently and develops cyclic characters and the Euclidean exponential.',
++'supp4':'This supplement proves leakage for the exponential, projected curvature in a chart and total recovery from orthogonal syndromes.',
++'supp5':'This supplement proves spectral reduction for general Gram data, necessity from recovery, the bridge from states to operators, and correction with finite references and error spans.',
++'supp6':'This supplement constructs local products for the range, smooth transitions and the global connection. It proves the gauge law and manifold curvature formula.'}
+ for prefix in notes:
+     sections=[resolved(s) for s in x['sections'] if s['part']==prefix]
+     supplements.append({'part':prefix,'summary':notes[prefix],'first':sections[0],'last':sections[-1]})
+@@ -53,14 +83,14 @@
+      r'\begin{longtable}{@{}p{.10\linewidth}p{.13\linewidth}p{.49\linewidth}rr@{}}\toprule Item & Number & Core statement & Printed & PDF\\\midrule\endhead'+'\n']
+ for row in core:
+     r=row['traditional'];out.append(r'\hyperref[result:'+row['ledger_number']+']{'+row['ledger_number']+'} & '+esc(r['number'])+' & '+esc(row['title'])+' & '+r['printed_page']+' & '+str(r['physical_pdf_page'])+r'\\'+'\n')
+-out += [r'\bottomrule\end{longtable}'+'\n',r'\subsection{Strengthened statements and the endpoint boundary}'+'\n',
+-        'This index includes all 79 proof-bearing named statements in strengthened Part II. A relation identifies shared ingredients or a shared finite result. It does not claim that the whole stronger statement has a dedicated Lean theorem. Entries without a corresponding named endpoint remain written mathematical statements. They do not enlarge the 19-item ledger or the 323-declaration inventory.\n\n',
+-        r'{\small\begin{longtable}{@{}p{.13\linewidth}p{.31\linewidth}p{.42\linewidth}r@{}}\toprule Number; printed & Strengthened statement & Relation to the current formal source & PDF\\\midrule\endhead'+'\n']
++out += [r'\bottomrule\end{longtable}'+'\n',r'\subsection{Strengthened statements and their formal counterparts}'+'\n',
++        'This index includes all 79 named statements with proofs in strengthened Part II. A relation identifies shared ingredients or a shared finite result. It does not claim that the whole stronger statement has a dedicated Lean theorem. Entries without a corresponding named endpoint remain written mathematical statements. The formal ledger still contains 19 items, and the declaration inventory still contains 323 entries.\n\n',
++        r'{\small\begin{longtable}{@{}p{.13\linewidth}p{.31\linewidth}p{.42\linewidth}r@{}}\toprule Number (page) & Strengthened statement & Relation to the current formal source & PDF\\\midrule\endhead'+'\n']
+ for row in strengthened:
+     r=row['traditional'];title=re.sub(r'\\\((.*?)\\\)',r'\1',r['title'])
+-    out.append(esc(r['number'])+'; '+r['printed_page']+' & '+esc(title)+' & '+esc(row['relation_to_current_formal_source'])+' & '+str(r['physical_pdf_page'])+r'\\'+'\n')
++    out.append(esc(r['number'])+' ('+r['printed_page']+') & '+esc(title)+' & '+esc(row['relation_to_current_formal_source'])+' & '+str(r['physical_pdf_page'])+r'\\'+'\n')
+ out += [r'\bottomrule\end{longtable}}'+'\n',r'\subsection{Retained supplements explain the constructed proofs}'+'\n',
+-        'Part III retains the mathematical portions of all six formal supplements. Read their historical descriptions in order: later constructions strengthen earlier restricted coverage. The source-bound endpoint map records the current result.\n\n',
++        'Part III retains the mathematical portions of all six formal supplements. Read their historical descriptions in order: later constructions strengthen earlier restricted coverage. The endpoint map ties each current result to its source.\n\n',
+         r'{\small\begin{longtable}{@{}p{.14\linewidth}p{.51\linewidth}p{.14\linewidth}p{.12\linewidth}@{}}\toprule Sections & Retained proof material & Printed & PDF\\\midrule\endhead'+'\n']
+ for row in supplements:
+     first,last=row['first'],row['last'];nums=first['number']+'–'+last['number'];pages=first['printed_page']+'–'+last['printed_page'];physical=str(first['physical_pdf_page'])+'–'+str(last['physical_pdf_page'])
+--- before/editable/lean_guide/static_check.py
++++ after/editable/lean_guide/static_check.py
+@@ -38,14 +38,46 @@
+     raw.append({'tag':e['tag'],'source_sha256_matches':sha(p)==e['source_sha256'],'excerpt_sha256_matches':sha(actual)==e['excerpt_sha256'],'exact_contiguous_source_bytes':expected==actual.read_bytes(),'unchanged_from_retrieved_baseline':historical.read_bytes()==actual.read_bytes()})
+ pr={'status':'PASS' if len(raw)==67 and all(all(v for k,v in e.items() if k!='tag') for e in raw) else 'FAIL','exact_raw_excerpts':67,'checks':raw,'formal_sources_modified':False,'scope':'Every selected source block is exact raw UTF-8 and byte-identical to the retrieved edition.'}
+ dump(G/'preservation.json',pr)
++# The user authorized a new prose pass. Protect it with an exact reviewed
++# baseline and a closed sequence of substitutions, while separately retaining
++# the original mathematical-span and source-excerpt checks.
++review_path=H/'prose_review_2026-10-18/REVIEWED_REPLACEMENTS.json'
++review=json.loads(review_path.read_text())
++required={'Paper_VII_Lean_Guide_Final.tex','assemble.py','navigation.py'}|{
++    p.relative_to(H).as_posix() for p in (H/'chapters').glob('*.tex')}
++reviewed={}; expected_text={}
++for record in review['files']:
++    name=record['path']; baseline=H/record['baseline_path']; current=H/name
++    text=baseline.read_text(); substitutions=[]
++    for change in record['replacements']:
++        unique=text.count(change['before'])==change['exact_occurrences']==1
++        substitutions.append(unique)
++        if unique:text=text.replace(change['before'],change['after'],1)
++    checks={'baseline_sha256':sha(baseline)==record['baseline_sha256'],
++            'every_substitution_unique':all(substitutions),
++            'reviewed_sha256':sha(current)==record['reviewed_sha256'],
++            'complete_file_equals_reviewed_substitutions':current.read_bytes()==text.encode()}
++    reviewed[name]={'checks':checks,'replacements':len(substitutions),
++                    'baseline_sha256':sha(baseline),'reviewed_sha256':sha(current)}
++    expected_text[name]=text
++review_checks={'exact_file_inventory':set(reviewed)==set(review['required_files'])==required,
++               'no_duplicate_file_records':len(reviewed)==len(review['files']),
++               'all_files_match_closed_review':all(all(x['checks'].values()) for x in reviewed.values())}
++prose={'status':'PASS' if all(review_checks.values()) else 'FAIL',
++       'scope':'Every authored chapter, opening wrapper and narrative generator equals the preserved baseline plus only the explicitly reviewed substitutions.',
++       'checks':review_checks,'files':reviewed,
++       'review_ledger_sha256':sha(review_path),'fresh_lean_compilation':False}
++dump(G/'prose_review_preservation.json',prose)
+ math=re.compile(r'(?s)\\\[.*?\\\]|\\\(.*?\\\)|(?<!\\)\$\$.*?\$\$|(?<!\\)\$[^$]*?(?<!\\)\$|\\begin\{(equation\*?|align\*?|gather\*?|multline\*?)\}.*?\\end\{\1\}')
+ records=[]
+ for p in sorted((H/'chapters').glob('*.tex')):
+     if p.name=='replay.tex':continue
+     old=(H/'historical_assembly/chapters'/p.name).read_text(); new=p.read_text(); left=[m.group() for m in math.finditer(old)];right=[m.group() for m in math.finditer(new)]
+     contracts=re.findall(r'(?m)^\\(?:contract|walk)\{.*$',old); current=re.findall(r'(?m)^\\(?:contract|walk)\{.*$',new)
+-    records.append({'chapter':p.name,'delimited_mathematical_spans':len(left),'all_mathematical_spans_byte_identical':left==right,'contract_and_proof_walk_paragraphs':len(contracts),'all_contract_and_proof_walk_paragraphs_byte_identical':contracts==current})
+-mp={'status':'PASS' if all(r['all_mathematical_spans_byte_identical'] and r['all_contract_and_proof_walk_paragraphs_byte_identical'] for r in records) else 'FAIL','scope':'All six teaching chapters, excluding the revised evidence/replay chapter. Protects every delimited mathematical span and complete one-line contract/proof-walk paragraph. This is editorial preservation, not proof validation.','total_delimited_mathematical_spans':sum(r['delimited_mathematical_spans'] for r in records),'total_contract_and_proof_walk_paragraphs':sum(r['contract_and_proof_walk_paragraphs'] for r in records),'chapters':records}
++    key=p.relative_to(H).as_posix()
++    expected_contracts=re.findall(r'(?m)^\\(?:contract|walk)\{.*$',expected_text.get(key,''))
++    records.append({'chapter':p.name,'delimited_mathematical_spans':len(left),'all_mathematical_spans_byte_identical':left==right,'contract_and_proof_walk_paragraphs':len(contracts),'all_contract_and_proof_walk_paragraphs_byte_identical_to_historical':contracts==current,'all_contract_and_proof_walk_paragraphs_equal_reviewed_prose':current==expected_contracts,'complete_chapter_equals_closed_review':all(reviewed.get(key,{'checks':{'missing':False}})['checks'].values())})
++mp={'status':'PASS' if prose['status']=='PASS' and all(r['all_mathematical_spans_byte_identical'] and r['all_contract_and_proof_walk_paragraphs_equal_reviewed_prose'] and r['complete_chapter_equals_closed_review'] for r in records) else 'FAIL','scope':'All six teaching chapters retain every delimited mathematical span from the retrieved edition. Complete chapters, including every contract and proof explanation, must equal the preserved prose baseline plus the exact reviewed substitutions. The replay chapter is also protected by the closed prose review. This is editorial preservation, not proof validation.','total_delimited_mathematical_spans':sum(r['delimited_mathematical_spans'] for r in records),'total_contract_and_proof_walk_paragraphs':sum(r['contract_and_proof_walk_paragraphs'] for r in records),'chapters':records}
+ dump(G/'mathematical_span_preservation.json',mp)
+-print(json.dumps({'static':static['status'],'source_modules':25,'theorems':323,'constructed_objects':6,'raw_excerpts':pr['status'],'mathematical_spans':mp['status'],'span_count':mp['total_delimited_mathematical_spans']}))
+-if not all(r['status']=='PASS' for r in (static,pr,mp)):raise SystemExit(1)
++print(json.dumps({'static':static['status'],'source_modules':25,'theorems':323,'constructed_objects':6,'raw_excerpts':pr['status'],'mathematical_spans':mp['status'],'span_count':mp['total_delimited_mathematical_spans'],'closed_prose_review':prose['status']}))
++if not all(r['status']=='PASS' for r in (static,pr,mp,prose)):raise SystemExit(1)

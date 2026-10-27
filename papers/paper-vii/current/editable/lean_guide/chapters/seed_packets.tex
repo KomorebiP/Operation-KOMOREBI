@@ -1,0 +1,120 @@
+\section{Seeds, local orbits, and the packet resolution}
+\label{sec:seeds}
+
+\subsection{One seed: identify the actual image before counting it}
+The starting coefficient array is $C\in\mathrm{Mat}_{d\times m}(\mathbb C)$. Left multiplication by an arbitrary $d\times d$ matrix changes each row independently within the row space of $C$. This observation gives the orbit dimension formula. Lean first defines the row space as the range of the linear map given by right multiplication. It then defines the orbit as the range of that map acting on all $d$ rows. The dimension is derived from this construction.
+
+\contract{The row and multiplicity index types \code{d} and \code{m} have finite enumerations. The orbit under the algebra action is $\{AC:A\in\mathrm{Mat}_{d\times d}(\mathbb C)\}$, which is already a linear subspace. The dimension formula permits an empty row type. The equivalence characterizing a full orbit adds \code{[Nonempty d]} because it cancels the positive row cardinality.}
+
+The lemma \code{mem_orbit_iff_rows} supplies both directions. If $X=AC$, each row of $X$ is a linear combination of rows of $C$. Conversely, choose one coefficient row for each row of $X$, collect them into a matrix $A$, and obtain $AC=X$. The latter choice is an existence argument using classical choice. It is not a numerical algorithm for choosing coefficients.
+
+The explicit linear equivalence below expresses this correspondence for each row. Its domain is the subspace of reachable coefficient arrays. Its codomain is the function space whose value at each row is a member of the row space. Both inverse laws reduce to the underlying functions.
+
+\excerpt{SeedOrbit}{row_equiv}
+
+\walk{The \code{toFun} field extracts the rows and attaches the proof that each row belongs to the row space. The \code{invFun} field assembles those rows, using the reverse membership implication. The equalities of functions are definitional, so the inverse and linearity proofs are \code{rfl}. Taking dimensions of this equivalence gives $|d|\operatorname{rank}C$. The extra \code{orbit_span} lemma identifies the subspace with the span of the literal action set.}
+
+\excerpt{SeedOrbit}{orbit_dimension}
+\excerpt{SeedOrbit}{cyclic_rank}
+
+The nonempty condition deserves attention. If there are no row indices, the ambient coefficient space is zero and every orbit is already full, regardless of the multiplicity index. Cancelling $|d|$ would be invalid. Lean's final cancellation explicitly uses \code{Fintype.card_pos}. This records why the test for full rank needs an inhabitant. Multiplicity zero is permitted and gives a target of dimension zero.
+
+\subsection{Several seeds: stack them and prove a minimum}
+Continue with a nonempty row index type. For $k$ seeds $C_a$, the allowed generation is
+\[
+X=\sum_{a\in k}A_aC_a,
+\]
+where the algebra element $A_a$ may differ for each seed. The question is whether this family generates the whole space linearly. The implementation records its universal quantifier over $X$ and its existential family of coefficient matrices.
+
+\excerpt{SeedOrbit}{seed_generate}
+\excerpt{SeedOrbit}{stack_rank}
+
+Stacking the seeds gives one matrix with row index $k\times d$. Its row space is the span of all the seed rows. The lemma \code{stacked_action} proves entrywise that multiplication by the large coefficient matrix is exactly the displayed sum. The rank test therefore says that the stacked seed matrix has full column rank. A rank upper bound gives the necessary inequality $|m|\le |k||d|$.
+
+The reverse direction is constructive at the matrix level. When the number of columns does not exceed the available row slots, choose an injection of column indices into row indices and place a $1$ at each corresponding coordinate, with zeros elsewhere. The associated multiplication map is injective because its selected output coordinates reproduce the original input coordinates. The rank theorem follows from that injectivity.
+
+\excerpt{SeedOrbit}{full_column}
+
+For a finite family of direct summands, \code{dd mm : I → ℕ} gives the matrix row dimension and multiplicity of each block. A seed now contains one coefficient array in every block. \code{BlockGenerates} quantifies over simultaneous block targets and permits simultaneous block algebra elements. The equivalence \code{block_generates_iff} proves that this is exactly the collection of individual generation tests. It does not replace the simultaneous problem by an unproved heuristic.
+
+\contract{Every row dimension \code{dd i} is positive. Multiplicities \code{mm i} may vanish. The block index \code{I} is any finite type, including the empty type. The formula is the finite supremum of ceiling divisions in the natural numbers, so an empty block family gives zero.}
+
+Define
+\[
+r=\max_{i\in I}\left\lceil\frac{m_i}{d_i}\right\rceil.
+\]
+The source writes this as \code{Finset.univ.sup} with natural ceiling division. The lemma \code{seed_formula_le_iff} translates $r\le s$ into all inequalities $m_i\le sd_i$. The existence equivalence constructs seeds exactly when those inequalities hold. The final result is \code{IsLeast}: it proves both that $r$ seeds exist and that every successful seed count is at least $r$.
+
+\excerpt{SeedOrbit}{seed_minimum}
+
+\walk{The first half of the pair uses \code{le_rfl} to show the formula satisfies its own inequalities, then applies the proved existence criterion. The second half takes any witness at count $s$, converts its existence to the inequalities, then converts those inequalities back to $r\le s$. Thus minimality and attainability are both present. The conclusion is stronger than merely displaying a candidate formula.}
+
+\subsection{Schmidt rank is independently defined}
+For a bipartite vector $\psi:d\times m\to\mathbb C$, \code{coefficientEquiv} identifies $\psi(i,j)$ with the coefficient matrix $C_{ij}$. The local action $A\otimes 1$ becomes $AC$ in those standard product coordinates. This identity is proved by expanding the Kronecker product and summing over the product index.
+
+\excerpt{SeedOrbit}{local_action}
+
+The source defines Schmidt rank through product decompositions before proving that it agrees with matrix rank. \code{HasProductDecomposition C s} means an actual representation
+\[
+C_{ij}=\sum_{a<s}u_a(i)v_a(j).
+\]
+Such a representation factors $C$ through an $s$-dimensional coordinate space, so $\operatorname{rank}C\le s$. Conversely, choose a basis of the row space and express each row in that basis. The basis vectors of the row space and their coordinate functions give a product decomposition of length exactly $\operatorname{rank}C$. These two directions prove that matrix rank is the least possible product length.
+
+\excerpt{SeedOrbit}{schmidt_minimum}
+\excerpt{SeedOrbit}{schmidt_definition}
+
+\code{Nat.find} takes the least natural number for which a product decomposition exists. The existence needed by \code{Nat.find} has already been proved at the rank. The equality \code{schmidt_rank_eq_matrix_rank} then uses the upper witness and the rank lower bound in opposite directions. It is an equality between independently introduced objects.
+
+The reduced $B$ matrix is also constructed explicitly:
+\[
+(\rho_B)_{j\ell}=\sum_i\psi(i,j)\overline{\psi(i,\ell)}.
+\]
+In the chosen convention it is $C^T(C^T)^*$. Its positivity follows from this Gram representation. Its rank agrees with the matrix rank of $C$, hence with Schmidt rank. Full support is expressed as surjectivity of its multiplication linear map. Combining this with the local orbit dimension gives the endpoint below.
+
+\excerpt{SeedOrbit}{reduced_support}
+
+\contract{The equivalence between a full local orbit and full reduced support assumes \code{[Nonempty d]}. The dimension equality itself includes zero vectors and empty index types. No normalization of $\psi$ is required for these algebraic rank statements. The action uses every matrix $A$, so the result concerns the linear span under the local operator algebra. It does not assert reachability under an arbitrary restricted family of unitary controls.}
+
+\subsection{Addressed bit flips give a computational basis}
+\code{Address n} is defined as \code{Fin n → ZMod 2}, the finite set of bit strings. \code{State n} is the complex vector space of functions on that address set. The seed is the coordinate vector at the zero address. The linear operator \code{translation a} evaluates a vector at $x-a$. On a ket it gives $|b\rangle\mapsto|a+b\rangle$.
+
+Each \code{localX j} translates by the bit vector supported at coordinate $j$. The operator named \code{controlledX a j} in this module is selected by the classical address bit $a_j$: it is identity when that bit is zero, and the local $X$ otherwise. This definition selects a gate according to the address. Despite its name, it does not separately formalize the controlled-NOT gate on two qubits.
+
+The address circuit is the product of this finite gate list. Translation products add their addresses, and the sum of the local address contributions equals $a$. Therefore the circuit translates by $a$ and sends the zero seed to the coordinate basis vector at $a$.
+
+\excerpt{ComputationalSeed}{seed_translation}
+\excerpt{ComputationalSeed}{seed_basis}
+
+The basis theorem then supplies linear independence and full span. The cardinality theorem gives $2^n$. When $n=0$, the type of bit strings has exactly one empty address, the gate list is empty, and its product is identity. The source covers this case without assuming that the number of qubits is positive.
+
+\subsection{Cyclic projectors from powers of an element of finite order}
+Let $N>0$ and $S^N=1$. The source uses \code{ZMod N} as the residue type and the standard primitive additive character $\chi$. It defines
+\[
+P_j=\frac1N\sum_{r\in\mathbb Z/N}\chi(-rj)S^{r.\mathrm{val}}.
+\]
+The representation \code{cyclicPowers S} is constructed from the actual powers of $S$. The proof of its addition law uses $S^N=1$ to reduce an exponent modulo $N$. The root of unity is identified with $\exp(2\pi i/N)$, and the coefficient lemma recovers the familiar inverse power $\omega^{-rj}$.
+
+\excerpt{CyclicProjectors}{cyclic_character}
+
+The character sum provides the cancellation needed in the proof. When its argument is zero, the sum is $N$. When the argument is nonzero, primitivity makes the sum vanish. To prove multiplication of packets, first show that left multiplication by the representation acts on a packet by its character. Substitute that eigenaction into the packet product and collapse the remaining character sum.
+
+\excerpt{CyclicProjectors}{cyclic_mul}
+
+Completeness follows from exchanging the two finite sums and applying the same orthogonality in the other index. Adjointness requires a separate argument in a star ring: conjugate the character, replace $r$ by $-r$, and use the adjoint law for unitary powers. An element of finite order gives the idempotent decomposition. Unitarity supplies the Hermitian condition in the theorem for complex matrices.
+
+\excerpt{CyclicProjectors}{cyclic_matrix}
+
+\contract{The ambient general construction is a complex algebra over a ring. The concrete endpoint has a finite matrix state index and decidable equality. \code{[NeZero N]} excludes zero modulus, includes $N=1$, and justifies division by $N$. The theorem does not require every packet to have nonzero rank.}
+
+\subsection{Tensor factors and regrouping by residue}
+The tensor implementation uses a finite factor index \code{F}, with a potentially different state index \code{D i} in every factor. A tensor matrix is defined by the product of its local entries. Multiplication expands into a sum over dependent tuples of intermediate indices. The finite identity expressing a product of sums converts that sum back into the product of local matrix multiplications.
+
+\excerpt{TensorRefinement}{tensor_mul}
+
+The product formula, identity formula, adjoint formula and sum formula then prove that the fine packets indexed by tuples are mutually orthogonal, complete and Hermitian. The coarse construction sums fine packets with the same address. The general proof over a ring shows that grouping an orthogonal resolution by any finite address map remains an orthogonal resolution. For polyphase grouping, the address is the sum of the factor residues in \code{ZMod N}.
+
+\excerpt{TensorRefinement}{tensor_refinement}
+
+\walk{The two \code{let} bindings expose the fine family $Q_a$ and the coarse family $C_r$ inside the statement. After \code{dsimp only}, each conclusion is a direct application of the generic coarse theorem to a theorem already proved for the fine family. The code therefore separates tensor construction from finite grouping, which makes the proof reusable.}
+
+The input here is a packet resolution in each tensor factor. The preceding theorem can construct these local packets from each factor's cyclic symmetry. The tensor theorem takes the resulting local resolutions as input. Together the two constructions implement the traditional passage from cyclic local packets to a tensor refinement and packets grouped by total residue.

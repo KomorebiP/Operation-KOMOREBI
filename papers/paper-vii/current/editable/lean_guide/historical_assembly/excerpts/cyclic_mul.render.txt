@@ -1,0 +1,15 @@
+theorem packet_mul (rho : ZMod N → A)
+    (hadd : ∀ a b, rho (a+b) = rho a * rho b) (j k : ZMod N) :
+    packet rho j * packet rho k = if j=k then packet rho j else 0 := by
+  conv_lhs => lhs; unfold packet
+  rw [Algebra.smul_mul_assoc, Finset.sum_mul]
+  simp only [Algebra.smul_mul_assoc, packet_eigen rho hadd, smul_smul,
+    ← map_add_eq_mul]
+  have hf (r : ZMod N) : -(r*j) + r*k = (k-j)*r := by ring
+  simp only [hf]
+  rw [← Finset.sum_smul, character_sum]
+  by_cases h : j=k
+  · subst k
+    simp [NeZero.ne N]
+  · have hk : k-j ≠ 0 := sub_ne_zero.mpr (Ne.symm h)
+    simp [hk, h]

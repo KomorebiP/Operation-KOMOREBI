@@ -1,0 +1,19 @@
+theorem projected_connection_curvature (P : M → F →L[ℝ] F)
+    (X Y : ∀ x : M, TangentSpace \CodeSymbol{1D4D8}(ℝ,E) x) (s : M → F) (x : M)
+    (hP : ContMDiff \CodeSymbol{1D4D8}(ℝ,E) \CodeSymbol{1D4D8}(ℝ,F →L[ℝ] F) ∞ P) (hPP : ∀ x, P x*P x=P x)
+    (hX : ContMDiff \CodeSymbol{1D4D8}(ℝ,E) \CodeSymbol{1D4D8}(ℝ,E).tangent ∞
+      (fun x => (X x : TangentBundle \CodeSymbol{1D4D8}(ℝ,E) M)))
+    (hY : ContMDiff \CodeSymbol{1D4D8}(ℝ,E) \CodeSymbol{1D4D8}(ℝ,E).tangent ∞
+      (fun x => (Y x : TangentBundle \CodeSymbol{1D4D8}(ℝ,E) M)))
+    (hs : ContMDiff \CodeSymbol{1D4D8}(ℝ,E) \CodeSymbol{1D4D8}(ℝ,F) ∞ s) (hPs : ∀ x, P x (s x)=s x) :
+    curvature \CodeSymbol{1D4D8}(ℝ,E) P X Y s x = curvatureForm \CodeSymbol{1D4D8}(ℝ,E) P x (X x) (Y x) (s x) := by
+  have hP1 := hP.mdifferentiableAt (x := x) (by simp)
+  have hs1 := hs.mdifferentiableAt (x := x) (by simp)
+  have hz (v : TangentSpace \CodeSymbol{1D4D8}(ℝ,E) x) (z : F) : P x (mvfderiv \CodeSymbol{1D4D8}(ℝ,E) P x v (P x z))=0 := by
+    have hh := congrArg (fun L : F →L[ℝ] F => L z)
+      (projector_differential_sandwich P x hP1 hPP v)
+    simpa [mul_apply_eq_comp] using hh
+  rw [curvature_expansion P X Y s x hP hPP hX hY hs]
+  conv_lhs => rw [section_jet P s x hP1 hs1 hPs (Y x),section_jet P s x hP1 hs1 hPs (X x)]
+  simp only [map_add,hz,add_zero]
+  simp [curvatureForm,hPs,map_sub]

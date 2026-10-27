@@ -1,0 +1,96 @@
+\section{Circuit corners, conserved packets, and leakage}
+\label{sec:dynamics}
+
+\subsection{The order of the indices is part of the definition}
+For a packet resolution $P$, the corner of an operator is
+\[
+U_{ba}=P_bUP_a.
+\]
+The target index $b$ comes first, and the source index $a$ comes second. Matrix factors act from the right on a vector. The gate list in \code{QuantumPacketCore} is written latest to earliest, $[U_m,\ldots,U_1]$, so its product is $U_m\cdots U_1$. The source comments and definitions make both conventions explicit. They determine the orientation of every path.
+
+\contract{The basic corner identities require an arbitrary ring \code{R} and a finite packet index with decidable equality. They require the packet multiplication and completeness laws, but neither an adjoint nor a norm. The coefficients are generally noncommutative.}
+
+Inserting $\sum_cP_c=1$ between two operators gives
+\[
+(UV)_{ba}=\sum_c U_{bc}V_{ca}.
+\]
+The code first rewrites an individual product of corners. The adjacent $P_cP_c$ collapses by idempotence, while all other factors keep their order. Only then does it combine the finite sum and use completeness.
+
+\excerpt{QuantumPacketCore}{compose_blocks}
+
+This is the local mechanism for the whole path expansion. \code{pathSum} is an explicit recursively nested finite sum. For no gates, its value is $P_bP_a$, preserving the boundary packet. For a gate $U$ followed by a shorter circuit, it sums $U_{bc}$ times the shorter path from $a$ to $c$.
+
+\excerpt{QuantumPacketCore}{circuit_path}
+
+\walk{The induction generalizes both boundary indices, which makes the induction hypothesis available at every intermediate $c$. The empty case reduces the identity corner. In the nonempty case, the lemma for composing corners creates the finite sum required by the recursive definition. The induction hypothesis then replaces each shorter corner. The resulting proof covers every finite circuit depth.}
+
+Summing the resulting path values over source and target reconstructs the complete circuit operator. It retains coherent complex amplitudes and operator products. No step converts the path sum into a stochastic transition law or assumes that different paths are mutually incoherent.
+
+\subsection{The two unitarity identities use different hypotheses}
+To take adjoints, supply the structure of a star ring and self-adjoint packet elements. The adjoint swaps source and target:
+\[
+U_{ba}^*=(U^*)_{ab}.
+\]
+For the column identity, the source needs only $U^*U=1$:
+\[
+\sum_bU_{ba}^*U_{bc}=\delta_{ac}P_a.
+\]
+For the row identity, it needs $UU^*=1$:
+\[
+\sum_aU_{ba}U_{da}^*=\delta_{bd}P_b.
+\]
+The source states these separately rather than hiding both inside a single unitary predicate. The distinction matters in abstract star rings where a one-sided inverse need not be two-sided.
+
+\excerpt{QuantumPacketCore}{unitarity_columns}
+
+\walk{The local term is reorganized to $P_aU^*P_bUP_c$, using self-adjointness and $P_b^2=P_b$. Summing over $b$ replaces the middle resolution by the identity. The given equation $U^*U=1$ removes the operator factors. The final packet multiplication gives the conditional expression in the conclusion. The concrete matrix wrappers merely specialize this already proved identity.}
+
+For an actual state, this identity can be combined with the inner product on the Hilbert space to interpret conservation of total packet probability. The formal statement displayed here is the operator identity. A chosen vector, state normalization and the corresponding interpretation through the inner product are additional data in such an application.
+
+\subsection{Exact commutation propagates to the actual exponential}
+If $H$ commutes with each $P_a$, its corners between distinct packets vanish and the diagonal corners reconstruct $H$. The dynamics layer uses a normed complex algebra and the exponential defined by its power series. A \code{Commute} proof for $H$ and $P_a$ propagates through complex scalar multiplication and the exponential. Thus $e^{zH}$ is diagonal in the same packet resolution for every complex scalar $z$.
+
+\excerpt{QuantumPacketCore}{symmetry_exp}
+
+For evolution in real time, set $z=-it$. The conclusion is exact zero transfer between distinct packets. The commutation hypothesis is still required. It can be proved from a chosen symmetry or supplied as data. A packet resolution alone does not imply it.
+
+\subsection{Leakage begins with a differentiated conjugation}
+The quantitative result works first in an abstract complex C-star algebra. Its matrix specialization activates the operator norm on the Hilbert space through \code{Matrix.Norms.L2Operator}. This scope is essential: the displayed bound is not an arbitrary entrywise matrix norm estimate.
+
+Let $G^*=-G$ and set $V(t)=e^{tG}Pe^{-tG}$. The source constructs this function and differentiates the actual exponential product:
+\[
+V'(t)=e^{tG}(GP-PG)e^{-tG}.
+\]
+It proves that the exponentials are unitary. Left and right multiplication by unitary elements preserve the C-star norm, so $\|V'(t)\|=\|GP-PG\|$.
+
+\excerpt{LeakageBound}{transport_derivative}
+\excerpt{LeakageBound}{transport_lipschitz}
+
+\walk{The Lipschitz proof applies a mean-value norm inequality on the convex set of all real times. The existence of the derivative follows from \code{transported_derivative}, and its uniform derivative bound comes from \code{transported_derivative_norm}. Both are proved for the actual function. Taking one time to be zero gives a bound for $V(t)-P$. Multiplying by $e^{tG}$ converts it into a bound for $e^{tG}P-Pe^{tG}$.}
+
+For an orthogonal projection,
+\[
+(1-P)UP=(1-P)(UP-PU)P.
+\]
+The two projection norms are at most one. Hence the leakage corner is bounded by the exponential commutator. Substitute $G=-iH$ for self-adjoint $H$. Its commutator norm equals the norm of $HP-PH$. This gives the concrete endpoint.
+
+\excerpt{LeakageBound}{leakage_matrix}
+
+\contract{The matrix index may be empty. $H$ must be Hermitian and $P$ must be both Hermitian and idempotent. Time is every real $t$, including zero and negative times. The proof does not divide by projector rank, dimension or time, so it includes $P=0$ and $P=1$. The estimate concerns a fixed generator $H$ and its exponential, rather than a general time-dependent propagator.}
+
+The same file proves a cap at one, giving $\min(1,|t|\|[H,P]\|)$, and exact zero leakage when the commutator is zero. If $H=H_0+V$ with $[H_0,P]=0$ and both terms self-adjoint, only $V$ contributes to the commutator. The elementary estimate $\|[V,P]\|\le2\|V\|$ gives the perturbation corollary.
+
+\excerpt{LeakageBound}{leakage_perturbation}
+
+\subsection{Dephasing and a precisely restricted measurement invariance}
+The dephasing map is $\Delta(\rho)=\sum_aP_a\rho P_a$. It removes off-diagonal corners and is idempotent. For finite complex matrices, trace duality gives
+\[
+\operatorname{tr}(\Delta(E)\rho)=\operatorname{tr}(E\Delta(\rho)).
+\]
+It follows by expanding the finite sum and cyclically rotating matrix factors inside each trace. The subsequent measurement theorem supplies the condition $\Delta(E)=E$, which says precisely that the observable is block diagonal.
+
+\excerpt{QuantumPacketCore}{measurement}
+
+Neither positivity nor a trace of one for $\rho$ is needed for this algebraic identity. Calling it a probability equality requires an appropriate state and effect in the application. Taking $E=1$ proves trace preservation, since completeness and idempotence give $\Delta(1)=1$. General observables with off-diagonal packet components need not satisfy the invariance premise. Dephasing may change their expectation values.
+
+This chapter explains why the finite core begins with a resolution in a ring and only adds hypotheses when a later operation needs them. The exact circuit formula, conservation identities, exponential dynamics and leakage bound are related constructions. Each theorem states the hypotheses needed for its own conclusion.

@@ -1,0 +1,40 @@
+{
+  "status": "RESOLVED",
+  "failed_scientific_gates": [],
+  "events": [
+    {
+      "kind": "pre-execution environment interruption",
+      "failure": "The execution worker briefly disconnected before a root inspection process was created.",
+      "resolution": "The worker reconnected. The inspection and final companion commands succeeded on retry. No upload had started."
+    },
+    {
+      "kind": "metadata synchronization preflight",
+      "failure": "The synchronization preflight assumed all three owner reports had a top-level pdf_sha256 field. The Lean report uses guide_pdf.sha256, so the preflight raised KeyError before copying the Lean PDF.",
+      "resolution": "The frozen Lean PDF hash was independently confirmed and its reading copies synchronized before the isolated builder compared them. All three packaged rebuilds subsequently matched page counts, extracted text and full PDF bytes."
+    },
+    {
+      "kind": "package check ordering",
+      "failure": "The package consistency check was invoked while the final proofreading report was still pending, and stopped at that missing input.",
+      "resolution": "The final independent proofreading report and metadata review are prerequisites to the completed consistency check. No mathematical or PDF source failed."
+    },
+    {
+      "kind": "temporary helper cleanup",
+      "failure": "The command containing recursive cleanup was automatically rejected before its process ran. No files changed.",
+      "resolution": "The obsolete helper directory was renamed into a temporary archive. Final artifact paths and bytes were unaffected."
+    },
+    {
+      "kind": "publication checker crosswalk target",
+      "failure": "The checker compared the visual owner report checksum for VISUAL_TO_TRADITIONAL_CROSSWALK.json with SOURCE_CROSSWALK.json, a different derived navigation file. This raised an assertion before package creation.",
+      "resolution": "The checker now verifies the file hashed by the report generator, and independently checks that SOURCE_CROSSWALK.json exactly equals its derived current-page data. All 80 visual and 110 Lean locators, report/source pins and nine PDF copies pass."
+    }
+  ],
+  "owner_validation_events": [
+    "verification/monograph_traditional_report.json",
+    "verification/monograph_visual_report.json",
+    "verification/monograph_lean_report.json",
+    "verification/monograph_figure_report.json"
+  ],
+  "scope": "Resolved authoring and packaging events are separate from mathematical evidence. The bounded scientific checks passed within their stated scopes.",
+  "final_proofread_report": "verification/monograph_proofread_report.json",
+  "final_package_consistency_report": "verification/PACKAGE_CONSISTENCY.json"
+}

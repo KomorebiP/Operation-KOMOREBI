@@ -1,0 +1,14 @@
+theorem local_connections_gauge (P : M → F →L[ℝ] F) (hPP : ∀ x, P x*P x=P x)
+    (hP : ContMDiff I 𝓘(ℝ,F →L[ℝ] F) ∞ P) (a b x : M)
+    (hx : x ∈ domain P a ∩ domain P b) (X : ∀ y : M, TangentSpace I y)
+    (u : M → fiber (P a)) :
+    localNabla I P hPP b X (fun y => transition P hPP a b y (u y)) x =
+      transition P hPP a b x (localNabla I P hPP a X u x) := by
+  have hs : ∀ y, P y (fromCoord P a y (u y))=fromCoord P a y (u y) :=
+    fun y => fromCoord_range P hPP a y (u y)
+  change localNabla I P hPP b X (fun y => toCoord P hPP b y (fromCoord P a y (u y))) x = _
+  rw [localNabla_represents_global I P hPP hP b X (fun y => fromCoord P a y (u y)) hs x hx.2]
+  change toCoord P hPP b x (nabla I P X (fun y => fromCoord P a y (u y)) x) =
+    toCoord P hPP b x (fromCoord P a x
+      (toCoord P hPP a x (nabla I P X (fun y => fromCoord P a y (u y)) x)))
+  rw [fromCoord_toCoord P hPP a x hx.1 _ (nabla_in_range I P hPP X _ x)]

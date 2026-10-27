@@ -1,0 +1,25 @@
+/mnt/data/PRSC_VII_v0.5.0_Checked_Fifth_Block/formalization/ErrorSpanRecovery.lean:204:10: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ i, ?g (e.symm i)
+in the target expression
+  ∑ r, R (e.symm r) * noise E rho * star (R (e.symm r)) = ↑C.trace.re • rho
+
+case mpr.refine_2
+n : Type u_1
+I : Type u_2
+inst✝³ : Fintype n
+inst✝² : DecidableEq n
+inst✝¹ : Fintype I
+inst✝ : DecidableEq I
+P : Matrix n n ℂ
+hP : IsStarProjection P
+E : I → Matrix n n ℂ
+C : Matrix I I ℂ
+hC : C.PosSemidef
+hgram : ∀ (a b : I), P * star (E a) * E b * P = C a b • P
+K : Data n I := { code := P, code_projection := hP, error := E, gramMatrix := C, gram_positive := hC, gram := hgram }
+e : Option K.diagonal.Active ≃ Fin (Fintype.card (Option K.diagonal.Active)) :=
+  Fintype.equivFin (Option K.diagonal.Active)
+R : Option K.diagonal.Active → Matrix n n ℂ := K.diagonal.syndromes.recoveryKraus
+rho : Matrix n n ℂ
+hrho : P * rho * P = rho
+⊢ ∑ r, R (e.symm r) * noise E rho * star (R (e.symm r)) = ↑C.trace.re • rho

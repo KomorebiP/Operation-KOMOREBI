@@ -1,0 +1,10 @@
+theorem local_connections_glue (P : M → F →L[ℝ] F) (hPP : ∀ x, P x*P x=P x)
+    (hP : ContMDiff I 𝓘(ℝ,F →L[ℝ] F) ∞ P) (a b : M)
+    (X : ∀ x : M, TangentSpace I x) (s : M → F) (hPs : ∀ x, P x (s x)=s x)
+    (x : M) (hx : x ∈ domain P a ∩ domain P b) :
+    transition P hPP a b x (localNabla I P hPP a X (fun y => toCoord P hPP a y (s y)) x) =
+      localNabla I P hPP b X (fun y => toCoord P hPP b y (s y)) x := by
+  rw [localNabla_represents_global I P hPP hP a X s hPs x hx.1,
+    localNabla_represents_global I P hPP hP b X s hPs x hx.2]
+  change toCoord P hPP b x (fromCoord P a x (toCoord P hPP a x (nabla I P X s x))) = _
+  rw [fromCoord_toCoord P hPP a x hx.1 _ (nabla_in_range I P hPP X s x)]

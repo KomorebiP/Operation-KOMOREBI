@@ -1,0 +1,28 @@
+theorem recovery_span_channel (F : J → Matrix n n ℂ) (c : J → I → ℂ)
+    (hc : ∀ j, F j=∑ a, c j a • K.error a)
+    (hF : (∑ j, star (F j)*F j)=1)
+    (rho : Matrix n n ℂ) (hrho : K.code*rho*K.code=rho) :
+    K.diagonal.syndromes.decoder (noise F rho)=rho := by
+  let q : ℂ := ∑ j, ∑ a, ∑ b, c j a*star (c j b)*K.gramMatrix b a
+  have hscaled (rho : Matrix n n ℂ) (hs : K.code*rho*K.code=rho) :
+      K.diagonal.syndromes.decoder (noise F rho)=q • rho := by
+    change K.diagonal.syndromes.decoderLinear (∑ j, F j*rho*star (F j)) = _
+    rw [map_sum]
+    change (∑ j, K.diagonal.syndromes.decoder (F j*rho*star (F j))) = _
+    simp_rw [hc, K.recovery_error_superposition rho hs]
+    rw [← Finset.sum_smul]
+  rw [hscaled rho hrho]
+  by_cases hp : K.code=0
+  · have hz : rho=0 := by simpa [hp] using hrho.symm
+    simp [hz]
+  · have hpos : K.code.PosSemidef := by
+      have hx := Matrix.posSemidef_conjTranspose_mul_self K.code
+      change (star K.code*K.code).PosSemidef at hx
+      rw [K.code_projection.isSelfAdjoint.star_eq, K.code_projection.isIdempotentElem.eq] at hx
+      exact hx
+    have ht : Matrix.trace K.code ≠ 0 := (hpos.trace_eq_zero_iff).not.mpr hp
+    have hs : K.code*K.code*K.code=K.code := by simp only [K.code_projection.isIdempotentElem.eq]
+    have hh := congrArg Matrix.trace (hscaled K.code hs)
+    rw [K.recovery_preserves_trace, noise_preserves_trace F hF, Matrix.trace_smul] at hh
+    have hq : q=1 := mul_right_cancel₀ ht (by simpa using hh.symm)
+    rw [hq, one_smul]

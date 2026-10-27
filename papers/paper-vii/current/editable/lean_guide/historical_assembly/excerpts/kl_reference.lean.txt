@@ -1,0 +1,19 @@
+theorem recovery_with_reference {I J A : Type*} [Fintype I] [Fintype J] [Fintype A] [DecidableEq A]
+    (P : Matrix n n ℂ) (E : I → Matrix n n ℂ) (R : J → Matrix n n ℂ)
+    (hcorrect : ∀ rho, P*rho*P=rho → noise R (noise E rho)=rho)
+    (rho : Matrix (A × n) (A × n) ℂ)
+    (hs : ((1 : Matrix A A ℂ) ⊗ₖ P)*rho*((1 : Matrix A A ℂ) ⊗ₖ P)=rho) :
+    amplifiedNoise R (amplifiedNoise E rho)=rho := by
+  have hblock (i j : A) :
+      P*(Matrix.of fun a b => rho (i,a) (j,b))*P=(Matrix.of fun a b => rho (i,a) (j,b)) := by
+    ext u v
+    have hh := congrArg (fun M : Matrix (A × n) (A × n) ℂ => M (i,u) (j,v)) hs
+    simpa [Matrix.mul_apply, Matrix.kroneckerMap_apply, Fintype.sum_prod_type, Matrix.one_apply] using hh
+  ext ⟨i,u⟩ ⟨j,v⟩
+  rw [amplifiedNoise_block]
+  have hin : (fun a b => amplifiedNoise E rho (i,a) (j,b)) =
+      noise E (fun a b => rho (i,a) (j,b)) := by
+    ext a b
+    exact amplifiedNoise_block E rho i j a b
+  rw [hin]
+  exact congrArg (fun M : Matrix n n ℂ => M u v) (hcorrect _ (hblock i j))

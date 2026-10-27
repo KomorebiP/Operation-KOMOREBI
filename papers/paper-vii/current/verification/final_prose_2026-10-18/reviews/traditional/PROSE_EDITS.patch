@@ -1,0 +1,900 @@
+--- previous/editable/traditional/parts/01_finite_core.tex
++++ final/editable/traditional/parts/01_finite_core.tex
+@@ -1,13 +1,13 @@
+ \section{The quantum seed realization}\label{core:section:001}
+ 
+ \paragraph{Conventions.}
+-Unless a zero-dimensional boundary case is stated explicitly, quantum state spaces are nonzero finite-dimensional complex Hilbert spaces. A complete packet family is a finite collection satisfying
++Unless the zero space is explicitly included as a boundary case, quantum state spaces are nonzero complex Hilbert spaces of finite dimension. A complete packet family is a finite collection satisfying
+ \[
+ P_\alpha^*=P_\alpha,\qquad
+ P_\alpha P_\beta=\delta_{\alpha\beta}P_\alpha,\qquad
+ \sum_\alpha P_\alpha=I.
+ \]
+-All operator norms in the analytic estimates are induced by the Hilbert-space norm, not the entrywise maximum norm or the Frobenius norm. We write $[A,B]=AB-BA$ and use units with $\hbar=1$. Parameter derivatives are real derivatives. A matrix $X$ is supported on a code projector $P$ when $PXP=X$.
++All operator norms in the analytic estimates are induced by the norm on the Hilbert space. The estimates do not use the entrywise maximum norm or the Frobenius norm. We write $[A,B]=AB-BA$ and use units with $\hbar=1$. Parameter derivatives are real derivatives. A matrix $X$ is supported on a code projector $P$ when $PXP=X$.
+ 
+ The common operator sequence of the series becomes
+ \[
+@@ -33,7 +33,7 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.98\textwidth]{01_quantum_seed_architecture.pdf}
+-\caption{The quantum realization of the common seed-calculus operator chain. The same finite packet language is used for states, gates, Hamiltonians, channels, geometric projectors, and effective dynamics.}
++\caption{The diagram shows the quantum realization of the common sequence of operators in the seed calculus. The same finite packet language describes states, gates, Hamiltonians, channels, geometric projectors, and effective dynamics.}
+ \label{core:fig:architecture}
+ \end{figure}
+ 
+@@ -89,7 +89,7 @@
+ \bigoplus_{i=1}^r
+ \left(\bbC^{d_i}\otimes\bbC^{m_i}\right).
+ \]
+-Here every $d_i$ is a positive integer and every multiplicity $m_i$ is a nonnegative integer. An empty block family represents the zero space and has seed rank zero; an empty maximum below is assigned the value zero. A vector $\psi_i\in\bbC^{d_i}\otimes\bbC^{m_i}$ is identified with a $d_i\times m_i$ coefficient matrix $C_i$.
++Here every $d_i$ is a positive integer and every multiplicity $m_i$ is a nonnegative integer. An empty block family represents the zero space and has seed rank zero. The maximum over an empty block family is also assigned the value zero. A vector $\psi_i\in\bbC^{d_i}\otimes\bbC^{m_i}$ is identified with a $d_i\times m_i$ coefficient matrix $C_i$.
+ 
+ \begin{theorem}[Orbit dimension of one quantum seed]\label{core:theorem:001}\label{core:thm:seed-orbit}
+ For integers $d\ge1$ and $m\ge0$, consider the action of $M_d(\bbC)\otimes I_m$ on $\bbC^d\otimes\bbC^m$. Let $C$ be the coefficient matrix of a vector $\psi$. Then
+@@ -103,7 +103,7 @@
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{core:proof:001}
+-Under the coefficient-matrix identification, $(A\otimes I_m)\psi$ corresponds to $AC$. Every row of $AC$ lies in the row space of $C$. Conversely, any $d\times m$ matrix whose rows lie in the row space of $C$ equals $AC$ for a suitable $A$: choose each row of $A$ to produce the desired row combination. The orbit therefore consists of all matrices with $d$ independently chosen rows in the $\rank C$-dimensional row space of $C$, and has dimension $d\rank C$. It equals the full $dm$-dimensional space exactly when $\rank C=m$.
++Under the identification by coefficient matrices, $(A\otimes I_m)\psi$ corresponds to $AC$. Every row of $AC$ lies in the row space of $C$. Conversely, any $d\times m$ matrix whose rows lie in the row space of $C$ equals $AC$ for a suitable $A$: choose each row of $A$ to produce the desired row combination. The orbit therefore consists of all matrices with $d$ independently chosen rows in the $\rank C$-dimensional row space of $C$, and has dimension $d\rank C$. It equals the full $dm$-dimensional space exactly when $\rank C=m$.
+ \phantomsection\label{core:proof:001:end}\end{proof}
+ 
+ \begin{theorem}[Quantum seed-rank formula]\label{core:theorem:002}\label{core:thm:seed-rank}
+@@ -134,7 +134,7 @@
+ \phantomsection\label{core:proof:002:end}\end{proof}
+ 
+ \begin{corollary}[Local orbit and Schmidt rank]\label{core:corollary:001}\label{core:thm:schmidt}
+-Let $\psi\in\cH_A\otimes\cH_B$, with $\dim\cH_A=d_A\ge1$, and let $r$ be its Schmidt rank. The reduced positive operator on $B$ is $\rho_B=\Tr_A(\ket\psi\bra\psi)$; normalization of $\psi$ is immaterial to its support. Then
++Let $\psi\in\cH_A\otimes\cH_B$, with $\dim\cH_A=d_A\ge1$, and let $r$ be its Schmidt rank. The reduced positive operator on $B$ is $\rho_B=\Tr_A(\ket\psi\bra\psi)$. Normalization of $\psi$ does not affect its support. Then
+ \[
+ \boxed{
+ \dim\operatorname{span}\{(A\otimes I_B)\psi:A\in M_{d_A}(\bbC)\}
+@@ -148,7 +148,7 @@
+ A Schmidt decomposition of length $r$ gives a coefficient matrix of rank $r$. Applying Theorem~\ref{core:thm:seed-orbit} gives the orbit dimension $d_A r$. The range of $\rho_B$ is the span of the $r$ Schmidt vectors on $B$, so full support is equivalent to $r=\dim\cH_B$. Because $d_A>0$, this is equivalent to the orbit having the full bipartite dimension.
+ \phantomsection\label{core:proof:003:end}\end{proof}
+ 
+-This is an algebraic span statement for arbitrary local operators. It is not a claim that a normalized unitary gate orbit contains every vector, nor a deterministic protocol for preparing arbitrary remote states. Entanglement controls the multiplicity support appearing in that algebraic span.
++The conclusion concerns the algebraic span obtained from arbitrary local operators. A normalized unitary gate orbit need not contain every vector, and the span statement does not supply a deterministic protocol for preparing arbitrary remote states. Entanglement controls the multiplicity support appearing in that algebraic span.
+ 
+ \subsection{A computational-basis seed}
+ 
+@@ -178,7 +178,7 @@
+ \phantomsection\label{core:proof:004:end}\end{proof}
+ 
+ \begin{certificate}[Three-qubit seed orbit]\label{core:certificate:001}
+-The implementation generated all eight computational basis states from $\ket{000}$ using the three local $X$ address operators. The measured orbit rank was $8/8$.
++The original numerical implementation generated all eight computational basis states from $\ket{000}$ using the three local $X$ address operators. It reported an orbit rank of $8/8$.
+ \end{certificate}
+ 
+ \section{Cyclic symmetry packets}\label{core:section:003}
+@@ -217,7 +217,7 @@
+ \[
+ \frac1N\sum_{r=0}^{N-1}\omega^{(k-j)r}=\delta_{jk},
+ \]
+-one obtains $P_jP_k=\delta_{jk}P_j$. Summing over $j$ cancels every term indexed by $r\ne0$ and retains the $r=0$ term, proving completeness. Unitarity and the change of residue $r\mapsto-r$ give
++we obtain $P_jP_k=\delta_{jk}P_j$. Summing over $j$ cancels every term indexed by $r\ne0$ and retains the $r=0$ term, which proves completeness. Unitarity and the change of residue $r\mapsto-r$ give
+ \[
+ P_j^*=\frac1N\sum_{r=0}^{N-1}\omega^{jr}S^{-r}=P_j.
+ \]
+@@ -256,7 +256,7 @@
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{core:proof:006}
+-The fine tensor projectors are mutually orthogonal and sum to the identity. The stated coarse families partition their address set by total residue. Sums over disjoint sets of orthogonal projectors remain orthogonal projectors, and the union of the residue classes is the full fine address set.
++The fine tensor projectors are mutually orthogonal and sum to the identity. Grouping the fine addresses by their total residue partitions the full address set. Sums over disjoint sets of orthogonal projectors remain orthogonal projectors, and the union of the residue classes is the full fine address set.
+ \phantomsection\label{core:proof:006:end}\end{proof}
+ 
+ \begin{figure}[htbp]
+@@ -267,7 +267,7 @@
+ \end{figure}
+ 
+ \begin{certificate}[Exact parity refinement]\label{core:certificate:002}
+-For three qubits, the local computational projectors were grouped by Hamming-weight parity. The resulting coarse projectors agreed with $(I\pm Z^{\otimes3})/2$ with residual $0$.
++For three qubits, the local computational projectors were grouped by the parity of their Hamming weight. The resulting coarse projectors agreed with $(I\pm Z^{\otimes3})/2$ with residual $0$.
+ \end{certificate}
+ 
+ \section{Quantum circuits as packet paths}\label{core:section:004}
+@@ -276,7 +276,7 @@
+ \[
+ U=U_mU_{m-1}\cdots U_1
+ \]
+-be a circuit with $m\ge1$, and let $\{P_\alpha\}$ be a complete packet system. For the empty circuit $m=0$, set $U=I$; its boundary block is $P_\beta P_\alpha=\delta_{\beta\alpha}P_\alpha$.
++be a circuit with $m\ge1$, and let $\{P_\alpha\}$ be a complete packet system. For the empty circuit $m=0$, set $U=I$. Its boundary block is $P_\beta P_\alpha=\delta_{\beta\alpha}P_\alpha$.
+ 
+ \begin{theorem}[Exact circuit path expansion]\label{core:theorem:006}\label{core:thm:paths}
+ For source packet $\alpha_0$ and target packet $\alpha_m$,
+@@ -323,7 +323,7 @@
+ =
+ P_\alpha P_\gamma.
+ \]
+-The second identity is analogous.
++For the second identity, sum over the source packets and use unitarity in the reverse order.
+ \phantomsection\label{core:proof:008:end}\end{proof}
+ 
+ \begin{example}[Bell seed circuit]\label{core:example:001}
+@@ -359,7 +359,7 @@
+ \end{figure}
+ 
+ \begin{certificate}[Bell and path reconstruction]\label{core:certificate:003}
+-The Bell-state residual and the complete parity-path reconstruction residual were both $0$ in the numerical implementation.
++The original numerical implementation reported residuals of $0$ for both the Bell state and its complete reconstruction from parity paths.
+ \end{certificate}
+ 
+ \section{Symmetry-resolved Hamiltonians and leakage}\label{core:section:005}
+@@ -418,7 +418,7 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.66\textwidth]{03_parity_block_hamiltonian.pdf}
+-\caption{The parity-resolved Hamiltonian is exactly block diagonal after the even and odd basis vectors are grouped.}
++\caption{The Hamiltonian becomes exactly block diagonal when the even and odd basis vectors are grouped.}
+ \label{core:fig:parity-hamiltonian}
+ \end{figure}
+ 
+@@ -439,7 +439,7 @@
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{core:proof:010}
+-Set $F(s)=e^{isH}Pe^{-isH}$. Differentiation of the actual exponential gives
++Set $F(s)=e^{isH}Pe^{-isH}$. Differentiating the exponential gives
+ \[
+ F'(s)=i\,e^{isH}[H,P]e^{-isH},\qquad F(0)=P.
+ \]
+@@ -453,12 +453,12 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.78\textwidth]{05_leakage_bound.pdf}
+-\caption{A parity-breaking perturbation creates nonzero transfer between the packets, while the measured leakage remains below the commutator bound.}
++\caption{A perturbation that breaks parity creates nonzero transfer between the packets. The measured leakage remains below the commutator bound.}
+ \label{core:fig:leakage}
+ \end{figure}
+ 
+ \begin{certificate}[Symmetry and negative control]\label{core:certificate:004}
+-For the parity-preserving Hamiltonian, the off-packet block norm and maximum measured leakage were both $0$. After adding a parity-breaking $X\otimes I$ perturbation, the maximum leakage was approximately $0.79196$, and the maximum violation of the proved bound was $0$.
++For the Hamiltonian that preserves parity, the norm of the block between distinct packets and the maximum measured leakage were both $0$. Adding an $X\otimes I$ perturbation broke parity and produced a maximum leakage of approximately $0.79196$. The maximum violation of the proved bound remained $0$.
+ \end{certificate}
+ 
+ \section{Moving packets, connections, and curvature}\label{core:section:006}
+@@ -496,12 +496,12 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.70\textwidth]{08_moving_frame_connection.pdf}
+-\caption{The moving-frame equation closes to numerical precision only when the connection term is retained.}
++\caption{The equation in the moving frame holds to numerical precision only when the connection term is retained.}
+ \label{core:fig:moving-frame}
+ \end{figure}
+ 
+ \begin{certificate}[Moving-frame correction]\label{core:certificate:005}
+-The complete moving-frame equation had residual $1.0645\times10^{-10}$, while omitting the connection produced residual $0.7000$.
++The reported residual for the complete equation in the moving frame was $1.0645\times10^{-10}$. Omitting the connection increased the residual to $0.7000$.
+ \end{certificate}
+ 
+ \subsection{A canonical projector connection}
+@@ -565,7 +565,7 @@
+ and subtraction gives $[C,P_b]=\dot P_b$.
+ \phantomsection\label{core:proof:012:end}\end{proof}
+ 
+-The connection is the infinitesimal transport operator of the moving packet frame. It is determined by the packet family itself, without choosing a basis inside any packet.
++The connection generates infinitesimal transport of the moving packet frame. The packet family determines it directly, so its construction does not require a basis inside any packet.
+ 
+ \subsection{Projector curvature}
+ 
+@@ -587,7 +587,7 @@
+ \[
+ \boxed{F=P(dP\wedge dP)P.}
+ \]
+-No global frame, globally constant rank or commuting-vector-field assumption is imposed. The geometric formalization concerns real smooth structures, not complex-analytic manifolds or boundary extensions.
++No global frame or globally constant rank is required, and the vector fields need not commute. The geometric formalization concerns real smooth structures. It does not cover complex analytic manifolds or extensions to a boundary.
+ \end{classical}
+ 
+ \begin{proof}\phantomsection\label{core:proof:013}
+@@ -625,7 +625,7 @@
+ \[
+ R(X,Y)s=P\bigl(dP(X)dP(Y)-dP(Y)dP(X)\bigr)P\,s.
+ \]
+-This expression is alternating, bilinear in the tangent vectors and range-preserving. The ordinary chain rule and the Lie-bracket transformation law identify the local calculations on chart overlaps, yielding the global formula.
++This expression is alternating and bilinear in the tangent vectors, and it preserves the range. The ordinary chain rule and the transformation law for the Lie bracket make the local calculations agree on chart overlaps, which gives the global formula.
+ \phantomsection\label{core:proof:013:end}\end{proof}
+ 
+ For an orthogonal rank-one complex projector, use the scalar connection convention $A=-i\langle u,du\rangle$ in a local unit frame. The associated scalar curvature density is
+@@ -654,17 +654,17 @@
+ =\frac12\mathbf n\cdot(\partial_\theta\mathbf n\mathbin{\times}\partial_\phi\mathbf n)
+ =\frac12\sin\theta.}
+ \]
+-The scalar sign changes if the opposite convention for $A$ is chosen. This explicit worked calculation is not a separate entry in the 19-item Lean register.
++The scalar sign changes if the opposite convention for $A$ is chosen. This explicit calculation is not a separate entry among the 19 items in the Lean register.
+ 
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.76\textwidth]{09_bloch_curvature.pdf}
+-\caption{Finite-difference evaluation of the Bloch projector curvature against the exact density $\frac12\sin\theta$.}
++\caption{The curvature of the Bloch projector, evaluated by finite differences, is compared with the exact density $\frac12\sin\theta$.}
+ \label{core:fig:bloch}
+ \end{figure}
+ 
+ \begin{certificate}[Geometric packet identities]\label{core:certificate:006}
+-The canonical connection reconstructed every packet derivative with residual $0$. The maximum Bloch-curvature residual was $2.0803\times10^{-11}$.
++The canonical connection reconstructed every packet derivative with residual $0$. The maximum residual for the Bloch curvature was $2.0803\times10^{-11}$.
+ \end{certificate}
+ 
+ \section{Measurements and quantum channels}\label{core:section:007}
+@@ -713,9 +713,11 @@
+ \]
+ \phantomsection\label{core:proof:014:end}\end{proof}
+ 
+-This theorem says exactly what coherence a declared measurement can and cannot see. Coherence between different packets is invisible to every packet-diagonal observable, while coherence inside a packet remains available.
++The theorem identifies which coherences a declared measurement can detect. Observables that are diagonal in the packet decomposition cannot detect coherence between distinct packets. Coherence within a packet remains available to such observables.
+ 
+ \subsection{Kraus transfer}
++
++A quantum channel can transfer both populations and coherences between packet addresses. A Kraus representation describes this transfer by summing the contributions of its individual branches. The normalization of those branches ensures that the total trace is preserved.
+ 
+ \begin{classical}[Finite Kraus channel]\label{core:classical:002}\label{core:thm:kraus}
+ Let $K_1,\ldots,K_r$ satisfy
+@@ -782,7 +784,7 @@
+ \end{figure}
+ 
+ \begin{certificate}[Channel reconstruction]\label{core:certificate:007}
+-For $\gamma=0.23$, the Kraus completeness and output-trace residuals were $0$. The computed output from $\ket1\bra1$ was $\diag(0.23,0.77)$. Packet dephasing changed no computational-basis measurement probability in the Bell-state test.
++For $\gamma=0.23$, the residuals for Kraus completeness and the output trace were $0$. The computed output from $\ket1\bra1$ was $\diag(0.23,0.77)$. In the Bell state test, packet dephasing left every measurement probability in the computational basis unchanged.
+ \end{certificate}
+ 
+ \section{Quantum error correction as obstruction-packet annihilation}\label{core:section:008}
+@@ -791,9 +793,9 @@
+ \[
+ P E_a^*E_bP
+ \]
+-are the code-level obstruction packets: if they retain logical-state information beyond one scalar multiple of $P$, the environment can distinguish logical states and exact correction is impossible.
+-
+-For precision, a complete recovery is a Kraus map
++are the obstruction packets on the code. If they retain information about the logical state beyond one scalar multiple of $P$, the environment can distinguish logical states and exact correction is impossible.
++
++We call a recovery complete when it is a Kraus map
+ \[
+ \cR(X)=\sum_jK_jXK_j^*,\qquad \sum_jK_j^*K_j=I.
+ \]
+@@ -814,7 +816,7 @@
+ \cR\!\left(\sum_aE_aXE_a^*\right)=X
+ \quad\text{for every }X\text{ with }PXP=X.
+ \]
+-The zero-code and empty-error-family cases are included. An empty family is not a trace-preserving channel on a nonzero ambient space.
++The zero code and an empty error family are included. An empty family cannot define a channel that preserves trace on a nonzero ambient space.
+ \end{classical}
+ 
+ \begin{proof}\phantomsection\label{core:proof:016}
+@@ -823,7 +825,7 @@
+ \sum_j\ket{L_j\psi}\bra{L_j\psi}
+ =t_a\ket\psi\bra\psi\qquad(\psi\in\cC).
+ \]
+-For every vector orthogonal to $\psi$, the quadratic form on the left is a sum of nonnegative squared absolute values and equals zero. Each $L_j\psi$ therefore lies in the span of $\psi$. A linear operator that preserves every line in $\cC$ is scalar there: apply it to two independent vectors and their sum. The one-dimensional case is immediate, and the zero-code case is vacuous. Consequently
++For every vector orthogonal to $\psi$, the quadratic form on the left is a sum of nonnegative squared absolute values and equals zero. Each $L_j\psi$ therefore lies in the span of $\psi$. A linear operator that preserves every line in $\cC$ is scalar there: apply it to two independent vectors and their sum. The one-dimensional case is immediate, and the claim is vacuous for the zero code. Consequently
+ \[
+ K_jE_aP=d_{ja}P.
+ \]
+@@ -854,7 +856,7 @@
+ \sum_rK_r^*K_r+K_{\mathrm{unused}}^*K_{\mathrm{unused}}
+ =S+(I-S)^2=I.
+ \]
+-The inverse unitary change of coordinates reconstructs each $E_aP$ from the $F_r$. Every recovery branch of a coherent combination is therefore scalar on the code, while its unused-space branch vanishes. For all supported matrices, the resulting recovery is
++The inverse unitary change of coordinates reconstructs each $E_aP$ from the $F_r$. Every recovery branch of a coherent combination is therefore scalar on the code, while the branch for the unused space vanishes. For all supported matrices, the resulting recovery is
+ \[
+ \cR(A_wXA_w^*)=(w^*Cw)X.
+ \]
+@@ -884,7 +886,7 @@
+ \end{figure}
+ 
+ \begin{certificate}[Exact bit-flip correction]\label{core:certificate:008}
+-The Knill--Laflamme residual and syndrome-completeness residual were both $0$. A mixed single-bit-flip channel applied to a nontrivial logical superposition was reversed with density-matrix residual $1.0385\times10^{-16}$.
++The residuals for the Knill--Laflamme condition and completeness of the syndrome packets were both $0$. A mixed channel of single bit flip errors, applied to a nontrivial logical superposition, was reversed with a residual of $1.0385\times10^{-16}$ in the density matrix.
+ \end{certificate}
+ 
+ \section{Exact effective dynamics}\label{core:section:009}
+@@ -922,11 +924,11 @@
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{core:proof:017}
+-The block matrix $z-H$ has lower-right block $z-H_{QQ}$. Gaussian block elimination produces the Schur complement
++The block in the lower right corner of $z-H$ is $z-H_{QQ}$. Gaussian block elimination produces the Schur complement
+ \[
+ z-H_{PP}-H_{PQ}(z-H_{QQ})^{-1}H_{QP}.
+ \]
+-The assumed invertibility of the lower-right block and of the full matrix implies invertibility of this Schur complement. The upper-left block of the full inverse is its inverse, which is exactly the displayed operator.
++The assumed invertibility of this block and of the full matrix implies that the Schur complement is invertible. The block in the upper left corner of the full inverse is the inverse of that Schur complement, which is exactly the displayed operator.
+ \phantomsection\label{core:proof:017:end}\end{proof}
+ 
+ The second premise cannot be dropped: at $z=0$ and $H=\operatorname{diag}(0,-1)$, the eliminated block is $1$ but $zI-H$ is singular. This counterexample is also included in the Lean module.
+@@ -936,7 +938,7 @@
+ \Sigma_P(z)
+ =H_{PQ}(z-H_{QQ})^{-1}H_{QP}
+ \]
+-contains the complete influence of the eliminated packet. Bare truncation drops $\Sigma_P(z)$ and is therefore exact only when the cross-packet coupling vanishes or the self-energy cancels for another stated reason.
++contains the complete influence of the eliminated packet. Bare truncation drops $\Sigma_P(z)$ and is therefore exact only when the coupling between packets vanishes or the self-energy cancels for another stated reason.
+ 
+ \begin{figure}[htbp]
+ \centering
+@@ -955,7 +957,7 @@
+ \end{figure}
+ 
+ \begin{certificate}[Effective resolvent]\label{core:certificate:009}
+-For a random six-dimensional Hermitian test, the exact Feshbach residual was $3.2291\times10^{-17}$. The corresponding bare-truncation residual was $1.3091\times10^{-2}$.
++In the reported test with a random Hermitian matrix of dimension six, the exact Feshbach residual was $3.2291\times10^{-17}$. The corresponding residual for bare truncation was $1.3091\times10^{-2}$.
+ \end{certificate}
+ 
+ \subsection{The hidden packet as memory}
+@@ -991,7 +993,7 @@
+ K(t)=H_{PQ}e^{-itH_{QQ}}H_{QP}.
+ }
+ \]
+-Thus the eliminated degrees of freedom are retained as a frequency-dependent self-energy or an exact memory term. For forward evolution the integral is causal. A time-dependent Hamiltonian requires its two-time propagator instead of the stationary exponential used here. This Volterra derivation is not a separate entry in the finite Lean register.
++The influence of the eliminated degrees of freedom is therefore retained in a self-energy that depends on frequency, or equivalently in an exact memory term. For forward evolution the integral is causal. When the Hamiltonian depends on time, the corresponding propagator between two times replaces the stationary exponential used here. This Volterra derivation is not a separate entry in the finite Lean register.
+ 
+ \section{Finite quantum geometry}\label{core:section:010}
+ 
+@@ -1014,7 +1016,7 @@
+ \right).
+ }
+ \]
+-The entries are an observable algebra, Hilbert space, geometric or Dirac-type operator, packet projectors, fine embedding, coarse reconstruction, physical constraint projector, and transfer operator. The maps have types $E_\ell:\cH_\ell\to\cH_{\ell+1}$ and $C_\ell:\cH_{\ell+1}\to\cH_\ell$. A left inverse $C_\ell E_\ell=I$ does not by itself assert $C_\ell=E_\ell^*$ or an isometric embedding.
++In order, the entries specify the observable algebra, Hilbert space, geometric or Dirac-type operator, packet projectors, embedding into the fine space, reconstruction onto the coarse space, physical constraint projector, and transfer operator. The maps have types $E_\ell:\cH_\ell\to\cH_{\ell+1}$ and $C_\ell:\cH_{\ell+1}\to\cH_\ell$. The left inverse relation $C_\ell E_\ell=I$ alone does not imply $C_\ell=E_\ell^*$ or make the embedding isometric.
+ 
+ A coherent refinement should satisfy
+ \[
+@@ -1042,7 +1044,7 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.84\textwidth]{17_quantum_spacetime_tower.pdf}
+-\caption{A conjectural nested packet tower for quantum geometry. The diagram is an organizational model; it is not a numerical reconstruction of physical spacetime.}
++\caption{The diagram organizes a conjectural nested packet tower for quantum geometry. It does not provide a numerical reconstruction of physical spacetime.}
+ \label{core:fig:spacetime-tower}
+ \end{figure}
+ 
+@@ -1099,7 +1101,7 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.68\textwidth]{15_causal_volume_transfer.pdf}
+-\caption{The finite Euclidean volume-transfer kernel. Positivity and semigroup composition are exact finite statements; its gravitational interpretation remains provisional.}
++\caption{The figure shows the finite Euclidean kernel for volume transfer. Positivity and semigroup composition hold exactly in the finite model. Its gravitational interpretation remains provisional.}
+ \label{core:fig:volume-transfer}
+ \end{figure}
+ 
+@@ -1125,7 +1127,7 @@
+ d_s(\tau)=2\tau\,
+ \frac{\sum_j\lambda_j e^{-\tau\lambda_j}}{\sum_j e^{-\tau\lambda_j}}.
+ \]
+-It tends to zero as $\tau\downarrow0$ and, under the stated zero-mode assumption, as $\tau\to\infty$. If a general positive operator has no zero mode, its large-time behavior is instead asymptotic to $2\tau\lambda_{\min}$; the zero-mode conclusion must not be applied to it. A geometric dimension can only be inferred from a stable intermediate window and a controlled refinement limit.
++It tends to zero as $\tau\downarrow0$ and, under the stated assumption of a zero mode, as $\tau\to\infty$. If a general positive operator has no zero mode, its behavior at large times is instead asymptotic to $2\tau\lambda_{\min}$. The conclusion for operators with a zero mode therefore does not apply to that case. Inferring a geometric dimension requires a stable intermediate window and a controlled refinement limit.
+ 
+ \subsection{The circle dispersion bound}
+ 
+@@ -1148,14 +1150,14 @@
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{core:proof:019}
+-Put $x=kh/2$. The all-real inequalities $|\sin x|\le|x|$ and $|x-\sin x|\le |x|^3/6$ give
++Put $x=kh/2$. The inequalities $|\sin x|\le|x|$ and $|x-\sin x|\le |x|^3/6$, which hold for every real argument, give
+ \[
+ 0\le x^2-\sin^2x
+ =|x-\sin x|\,|x+\sin x|
+ \le\frac{|x|^3}{6}\,2|x|
+ =\frac{x^4}{3}.
+ \]
+-Multiplying by $4/h^2$ proves both bounds. The estimate holds for every frequency, but its second-order convergence interpretation keeps $k$ fixed while $h\to0$; it is not a uniform small relative error across all grid modes.
++Multiplying by $4/h^2$ proves both bounds. The estimate holds for every frequency. Its interpretation as convergence of second order keeps $k$ fixed while $h\to0$, so it does not assert a uniformly small relative error across all grid modes.
+ \phantomsection\label{core:proof:019:end}\end{proof}
+ 
+ \begin{figure}[htbp]
+@@ -1166,15 +1168,17 @@
+ \end{figure}
+ 
+ \begin{certificate}[Continuum dispersion]\label{core:certificate:011}
+-The observed convergence order was $1.99936$. The maximum error-minus-bound value was negative, so no tested mode violated the theorem.
++The reported convergence order was $1.99936$. For every tested mode, the error was below the bound, so none of those tests violated the theorem.
+ \end{certificate}
+ 
+ \subsection{One- and two-dimensional plateaus}
+ 
++At intermediate diffusion times, a finite cycle and a finite torus can exhibit plateaus near the dimensions of their underlying geometries. The following figure and numerical certificate show the reported behavior for these two examples. The plateaus occur between the small and large time regimes in which the spectral dimension returns to zero.
++
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.80\textwidth]{12_spectral_dimension.pdf}
+-\caption{Intermediate spectral-dimension windows for a finite cycle and a finite two-dimensional torus. The ultraviolet and infrared departures are finite-size effects, not additional dimensions.}
++\caption{The curves show intermediate windows of spectral dimension for a finite cycle and a finite two-dimensional torus. Departures in the ultraviolet and infrared reflect the finite size of the models rather than additional dimensions.}
+ \label{core:fig:spectral-dimension}
+ \end{figure}
+ 
+@@ -1185,7 +1189,7 @@
+ \qquad
+ d_s^{(2)}=2.03781.
+ \]
+-These tests recover the expected dimensions of the chosen finite geometries; they do not select a physical quantum-spacetime theory.
++These tests recover the expected dimensions of the chosen finite geometries. They do not select a physical theory of quantum spacetime.
+ \end{certificate}
+ 
+ \section{Constraint packets and the quantum-spacetime boundary}\label{core:section:012}
+@@ -1220,10 +1224,10 @@
+ \]
+ at every finite level. The compatible physical compression then vanishes as a consequence, not as a substitute for closure.
+ \end{conjecture}
+-The operator condition is the substantive research target in this edition; the earlier compression-only wording was too weak. A choice of model, dynamics and refinement maps is still needed before this program becomes a fully specified physical existence problem.
++The substantive research target is the operator condition. The earlier condition stated only in terms of compression was too weak. A choice of model, dynamics, and refinement maps is still needed before this program becomes a fully specified physical existence problem.
+ 
+ \begin{conjecture}[Uniform Feshbach control]\label{core:conjecture:002}
+-For the same specified tower, the self-energies from exact elimination of fine packets admit bounds uniform in cutoff and volume on a common spectral domain. Together with consistent Hilbert-space identifications and a proved resolvent convergence criterion, they yield a nontrivial strong-resolvent continuum limit. Uniform boundedness alone is not asserted to imply convergence.
++For the same specified tower, the self-energies from exact elimination of fine packets admit bounds uniform in cutoff and volume on a common spectral domain. Together with consistent identifications of the Hilbert spaces and a proved resolvent convergence criterion, they yield a nontrivial continuum limit in the strong resolvent sense. Uniform boundedness alone is not asserted to imply convergence.
+ \end{conjecture}
+ 
+ \begin{conjecture}[Lorentzian reconstruction]\label{core:conjecture:003}
+@@ -1243,7 +1247,7 @@
+ The continuum two-point function possesses a positive transverse-traceless massless spin-two pole, while all unphysical packet sectors are removed by the constraints.
+ \end{conjecture}
+ 
+-None of these physical conclusions is established by the exact finite identities. No formal logical-independence theorem is claimed. Exact packet reconstruction is a kinematic and computational advantage; it does not determine the physical action, prove continuum existence, or guarantee the general-relativistic limit.
++The exact finite identities establish none of these physical conclusions, and no formal theorem of logical independence is claimed. Exact packet reconstruction provides a kinematic and computational advantage. It does not determine the physical action, prove existence of the continuum theory, or guarantee the limit of general relativity.
+ 
+ \begin{figure}[htbp]
+ \centering
+@@ -1254,7 +1258,7 @@
+ 
+ \section{Numerical certificates}\label{core:section:013}
+ 
+-The original manuscript reports CPU experiments and a 22-test suite; it makes no GPU claim. The values below reproduce the original historical report. They are numerical observations and are not counted among the 323 declarations in the selected finite formal checkpoint. The recovered numerical source and raw records accompany the source corpus; the present reading copy distinguishes those observations from mathematical proof. A displayed floating-point residual of zero denotes the reported computation, not an independent proof of exact arithmetic equality.
++The original manuscript reports CPU experiments and a suite of 22 tests. It makes no claim about GPU computation. The values below reproduce that historical report and have not been recomputed for this prose revision. These numerical observations are separate from the 323 declarations in the selected finite formal checkpoint of 6 September 2026. The recovered numerical source and raw records accompany the source corpus. A displayed floating-point residual of zero records the reported computation and does not independently prove equality in exact arithmetic.
+ 
+ \begin{table}[htbp]
+ \centering
+@@ -1300,7 +1304,9 @@
+ \setcounter{section}{14}
+ \section{Conclusion}\label{core:section:014}
+ 
+-The quantum realization of the seed calculus can now be stated precisely. A primitive state is addressed by a declared operator grammar; symmetry projectors split the state and every operator into exact packets; circuit products become sums over packet paths; Hamiltonian symmetry and its controlled breaking are visible as diagonal blocks and leakage; moving packets carry a canonical connection and curvature; channels, measurements, and error-correction conditions admit exact packet formulations; and eliminated sectors return through self-energy and memory rather than disappearing.
++The quantum realization of the seed calculus begins with a primitive state and a declared operator grammar. Symmetry projectors resolve the state and every operator into exact packets. In these coordinates, circuit products become sums over packet paths, and Hamiltonian symmetry appears as a diagonal block structure. When that symmetry is broken, the resulting transfer is measured by the leakage estimates.
++
++Moving packets carry a canonical connection and curvature. Channels and measurements act on the corresponding operator packets, while the conditions for error correction become statements about compression to the code. Exact elimination retains the influence of hidden sectors through self-energy and memory.
+ 
+ The finite theory therefore provides a coherent language for
+ \[
+@@ -1320,6 +1326,6 @@
+ \end{gathered}
+ }
+ \]
+-What it does not yet provide is the physical continuum theorem. The next decisive results would be anomaly-free refinement, uniform effective-operator control, Lorentzian reconstruction, the Einstein infrared limit, and a positive massless spin-two sector. Those requirements are explicit enough to be tested and too substantial to be replaced by finite numerical resemblance.
+-
+-
++A physical continuum theorem remains open. The next required results are anomaly-free refinement, uniform control of effective operators, Lorentzian reconstruction, the Einstein infrared limit, and a positive massless spin-two sector. Each requires its own hypotheses and proof. Agreement in a finite numerical model cannot replace those arguments.
++
++
+--- previous/editable/traditional/parts/02_strengthened.tex
++++ final/editable/traditional/parts/02_strengthened.tex
+@@ -14,7 +14,7 @@
+ \]
+ These identities are simple. Their value appears when the same coordinates are used across representation theory, circuits, channels, error correction, effective dynamics, and geometric limits.
+ 
+-Finite dimensional quantum information and operator theory supply the standard background \cite{NielsenChuang2010,Watrous2018,Bhatia1997}. Finite group projectors come from character theory \cite{Serre1977,FultonHarris1991}. Moving spectral subspaces and geometric phase originate in the work of Kato, Berry, Wilczek, and Zee \cite{Kato1950,Kato1995,Berry1984,WilczekZee1984}. Completely positive maps and quantum dynamical semigroups are treated in \cite{Stinespring1955,Choi1975,Kraus1983,Lindblad1976}. Exact error correction is governed by the Knill Laflamme condition \cite{KnillLaflamme1997,SchumacherNielsen1996,BenyKempfKribs2007}. Projection methods and hidden state memory are linked by the Feshbach, Nakajima, and Zwanzig constructions \cite{Feshbach1958,Nakajima1958,Zwanzig1960,BravyiDiVincenzoLoss2011}.
++Quantum information and operator theory in finite dimensions provide the standard background \cite{NielsenChuang2010,Watrous2018,Bhatia1997}. Finite group projectors come from character theory \cite{Serre1977,FultonHarris1991}. Moving spectral subspaces and geometric phase originate in the work of Kato, Berry, Wilczek, and Zee \cite{Kato1950,Kato1995,Berry1984,WilczekZee1984}. Completely positive maps and quantum dynamical semigroups are treated in \cite{Stinespring1955,Choi1975,Kraus1983,Lindblad1976}. Exact error correction is governed by the Knill Laflamme condition \cite{KnillLaflamme1997,SchumacherNielsen1996,BenyKempfKribs2007}. Projection methods and hidden state memory are linked by the Feshbach, Nakajima, and Zwanzig constructions \cite{Feshbach1958,Nakajima1958,Zwanzig1960,BravyiDiVincenzoLoss2011}.
+ 
+ The first part begins with quantum seeds. A state is cyclic only relative to a declared observable algebra. For an algebra in multiplicity form, the local orbit dimension is controlled by the rank of a coefficient matrix. This recovers the relation between Schmidt rank and the dimension reached by local operations. The finite group section then constructs central isotypic projectors. Cyclic symmetry gives a sharper charge selection rule. An operator with charge \(q\) can move a state only from packet \(j\) to packet \(j+q\).
+ 
+@@ -24,23 +24,23 @@
+ \[
+ K(t)=\sum_a\dot P_a(t)P_a(t)
+ \]
+-is skew adjoint and transports every packet. In the moving frame, the physical Hamiltonian acquires the geometric term \(-\ii W(t)^*\dot W(t)\). A leakage estimate shows that the relevant off packet coupling is not \(QHP\) alone. It is
++is skew adjoint and transports every packet. In the moving frame, the physical Hamiltonian acquires the geometric term \(-\ii W(t)^*\dot W(t)\). The leakage estimate must account for the motion of the packet itself. The physical coupling \(QHP\) is therefore replaced by
+ \[
+ Q(t)\bigl(H(t)-\ii K(t)\bigr)P(t).
+ \]
+ This is the exact finite distinction between following a moving subspace and remaining in a fixed one.
+ 
+-Density matrices require two packet labels. The superoperators
++Density matrices require separate packet labels for their output and input coordinates. The superoperators
+ \[
+ \Pcal_{ab}(X)=P_aXP_b
+ \]
+ form a complete orthogonal packet system on Hilbert Schmidt operator space. Dephasing is the diagonal projection. Every channel has input and output superblocks, with the same composition law as ordinary matrix blocks. A covariant channel preserves the isotypic packets of the conjugation action. In the cyclic case these are coherence orders. The Choi matrix carries the equivalent symmetry under \(U\otimes\overline U\).
+ 
+-Error correction is expressed through compression to a code. Let \(P\) be the code projector. The class of \(PAP\) modulo scalar multiples of \(P\) is the obstruction to making \(A\) invisible inside the code. The Knill Laflamme criterion says that this obstruction vanishes for every product \(E_a^*E_b\) from the error family. Diagonalizing the resulting positive coefficient matrix produces orthogonal syndrome packets and an explicit recovery on the error span.
++Error correction is expressed through compression to a code. Let \(P\) be the code projector. The class of \(PAP\) modulo scalar multiples of \(P\) measures the obstruction to making \(A\) undetectable within the code. The Knill Laflamme criterion says that this obstruction vanishes for every product \(E_a^*E_b\) from the error family. Diagonalizing the resulting positive coefficient matrix produces orthogonal syndrome packets and an explicit recovery on the error span.
+ 
+ The effective dynamics section returns to ordinary Hilbert space packets. Schur complementation gives the exact retained resolvent and a frequency dependent self energy. The same hidden block gives a causal memory kernel in time. For a self adjoint hidden Hamiltonian, the self energy has a fixed sign in the upper half plane, and the time kernel is positive definite. Uniform spectral separation gives direct bounds that can be carried through a refinement tower.
+ 
+-The geometric part has two finite components. A positive transfer matrix gives a reflection positive Hankel kernel and reconstructs a nonnegative Hamiltonian through its logarithm. A finite Laplacian gives a heat trace and a scale dependent spectral dimension. The article proves fixed time convergence from periodic lattices to the continuum torus. Poisson summation then gives the continuum small time dimension.
++The geometric part develops two finite constructions. A strictly positive contraction gives a reflection positive Hankel kernel, and its logarithm reconstructs a nonnegative Hamiltonian. A finite Laplacian gives a heat trace from which the spectral dimension is defined at each diffusion scale. The article proves convergence from periodic lattices to the continuum torus at every fixed positive diffusion time. Poisson summation then determines the continuum dimension as diffusion time tends to zero.
+ 
+ Constraint closure needs a different obstruction. If \(C_a\) are self adjoint constraints and \(P_{\phys}\) projects onto their common kernel, then
+ \[
+@@ -48,7 +48,7 @@
+ \]
+ holds automatically. This compression cannot test closure. The correct finite obstruction is the class of \([C_a,C_b]\) in the quotient of \(\End(\Hcal)\) by the span of the constraints. Vanishing means that the constraint span is closed under commutators.
+ 
+-The last part gives two bounded continuum tower theorems. Exact compatible finite Hamiltonians define a bounded self adjoint operator on the Hilbert direct limit. A norm summable sequence in a common Hilbert space converges to a bounded self adjoint limit, and its unitary and Euclidean evolutions converge uniformly on bounded time intervals. Reflection positivity and fixed algebraic closure pass to limits under the stated convergence assumptions.
++The last part gives two theorems for towers of bounded Hamiltonians. Exactly compatible finite Hamiltonians with a uniform norm bound define a bounded self adjoint operator on the Hilbert direct limit. When successive bounded self adjoint Hamiltonians on a common Hilbert space have norm summable differences, they converge to a bounded self adjoint limit. Their unitary evolutions, and their Euclidean evolutions under the stated positivity assumption, converge uniformly on bounded time intervals. Reflection positivity and closure with fixed structure coefficients pass to the limit under the stated convergence assumptions.
+ 
+ These results do not construct an interacting continuum quantum field theory. They do not prove anomaly freedom on an unbounded common domain, Osterwalder Schrader reconstruction for a continuum measure, an Einstein infrared action, or a positive massless spin two sector. Each of those conclusions needs hypotheses absent from the finite calculations.
+ 
+@@ -161,7 +161,7 @@
+ \end{corollary}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:003}
+-The Schmidt rank is the rank of the coefficient matrix in any product basis. Apply \cref{strong:thm:orbit_dimension}.
++The Schmidt rank is the rank of the coefficient matrix in any product basis. Substituting that rank into \cref{strong:thm:orbit_dimension} gives the stated orbit dimension.
+ \phantomsection\label{strong:proof:003:end}\end{proof}
+ 
+ \begin{figure}[t]
+@@ -323,13 +323,13 @@
+ \end{corollary}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:009}
+-Conjugation by \(S\) is a star automorphism. Apply it to \(AB\) and \(A^*\).
++Conjugation by \(S\) is a star automorphism. Applying it to \(AB\) adds the two charges, while applying it to \(A^*\) changes the sign of the charge.
+ \phantomsection\label{strong:proof:009:end}\end{proof}
+ 
+ \begin{figure}[t]
+ \centering
+ \includegraphics[width=.82\textwidth]{03_symmetry_selection.pdf}
+-\caption{A charge one operator moves each cyclic packet to the next packet and has no other transfer blocks.}
++\caption{An operator of charge one moves each cyclic packet to the next packet and has no other transfer blocks.}
+ \label{strong:fig:symmetry_selection}
+ \end{figure}
+ 
+@@ -434,7 +434,7 @@
+ P_aU^*\left(\sum_bP_b\right)UP_c
+ =P_aP_c.
+ \]
+-The second identity follows in the same way.
++Summing instead over the source packets and using unitarity in the reverse order gives the second identity.
+ \phantomsection\label{strong:proof:013:end}\end{proof}
+ 
+ \begin{corollary}[Probability conservation from one packet]\label{strong:corollary:005}\label{strong:cor:packet_probability}
+@@ -477,7 +477,7 @@
+ \[
+ P_bU\psi=\sum_{\gamma\in\Gamma_b}\eta_\gamma.
+ \]
+-Expand the squared norm and group conjugate cross terms. The norm bound is the triangle inequality. Orthogonality removes every cross term.
++Expanding the squared norm and grouping conjugate cross terms gives the interference formula. The triangle inequality gives the norm bound. When the path outputs are orthogonal, every cross term vanishes and only the individual path probabilities remain.
+ \phantomsection\label{strong:proof:015:end}\end{proof}
+ 
+ \begin{proposition}[Charge pruning of circuit paths]\label{strong:proposition:002}\label{strong:prop:charge_pruning}
+@@ -506,7 +506,7 @@
+ \end{figure}
+ 
+ \begin{example}[Bell circuit]\label{strong:example:001}\label{strong:ex:bell_circuit}
+-Starting from \(\ket{00}\), apply a Hadamard gate to the first qubit and then a controlled not gate. The final state is
++Starting from \(\ket{00}\), apply a Hadamard gate to the first qubit and then a controlled NOT gate. The final state is
+ \[
+ \frac{\ket{00}+\ket{11}}{\sqrt2}.
+ \]
+@@ -520,9 +520,9 @@
+ \begin{theorem}[Exact invariant packets]\label{strong:theorem:010}\label{strong:thm:invariant_packets}
+ The following conditions are equivalent:
+ \begin{enumerate}
+-\item \([H,P_a]=0\) for every \(a\)
+-\item \(P_bHP_a=0\) whenever \(a\neq b\)
+-\item every packet \(P_a\Hcal\) is invariant under \(\e^{-\ii tH}\) for every real \(t\)
++\item The Hamiltonian commutes with each projector: \([H,P_a]=0\) for every \(a\).
++\item Transfer blocks between distinct packets vanish: \(P_bHP_a=0\) whenever \(a\neq b\).
++\item Every packet \(P_a\Hcal\) is invariant under \(\e^{-\ii tH}\) for every real \(t\).
+ \end{enumerate}
+ When they hold,
+ \[
+@@ -607,7 +607,7 @@
+ \end{corollary}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:020}
+-Apply \cref{strong:thm:fixed_leakage} and square the result.
++Apply \cref{strong:thm:fixed_leakage} to the unit vector, then square the resulting nonnegative bound.
+ \phantomsection\label{strong:proof:020:end}\end{proof}
+ 
+ \section{Moving packets and geometric transport}\label{strong:section:006}\label{strong:sec:moving_packets}
+@@ -751,7 +751,7 @@
+ Unitary conjugation preserves the norm.
+ \phantomsection\label{strong:proof:024:end}\end{proof}
+ 
+-The geometric term is therefore part of the exact coupling test. A Hamiltonian may be packet diagonal at every fixed time and still fail to transport the moving packet because the packet itself rotates.
++The exact coupling test therefore includes the geometric term. Even if the Hamiltonian is diagonal in the packet decomposition at every fixed time, its evolution can fail to follow a packet whose range rotates.
+ 
+ \subsection{Discrete packet transport}\label{strong:subsec:discrete_transport}
+ 
+@@ -814,7 +814,7 @@
+ \leq
+ C_T\abs{\pi}
+ \]
+-for a constant depending on the packet path but not on the partition. The absolute-value notation for the partition denotes its mesh, the largest subinterval length.
++for a constant depending on the packet path but not on the partition. Here the size of the partition is measured by its mesh, which is the length of its largest subinterval.
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:026}
+@@ -834,7 +834,7 @@
+ =
+ I+hK(t)+O(h^2).
+ \]
+-This is a first order one step approximation to \(\dot W=KW\). A telescoping product estimate over the partition gives a total error bounded by a constant times \(\sum_j(t_{j+1}-t_j)^2\), which is at most \(T\abs{\pi}\).
++This gives a first order approximation to \(\dot W=KW\) over a single time step. A telescoping product estimate over the partition gives a total error bounded by a constant times \(\sum_j(t_{j+1}-t_j)^2\), which is at most \(T\abs{\pi}\).
+ \phantomsection\label{strong:proof:026:end}\end{proof}
+ 
+ \begin{figure}[t]
+@@ -855,7 +855,7 @@
+ \]
+ 
+ \begin{theorem}[Nonabelian packet connection]\label{strong:theorem:018}\label{strong:thm:nonabelian_connection}
+-The matrix valued one form
++The one form with matrix values
+ \[
+ \Acal=V^*\dd V
+ \]
+@@ -930,7 +930,7 @@
+ (\partial_\theta\bm n\times\partial_\phi\bm n)
+ =\frac12\sin\theta.
+ \]
+-Integration gives one.
++Integrating the displayed curvature over the sphere and applying the stated normalization gives one.
+ \phantomsection\label{strong:proof:028:end}\end{proof}
+ 
+ \section{Operator packets, measurements, and quantum channels}\label{strong:section:007}\label{strong:sec:channels}
+@@ -977,7 +977,7 @@
+ \Tr(P_bX^*P_aYP_b).
+ \end{aligned}
+ \]
+-The Pythagorean identity follows.
++Since the packets are orthogonal and sum to the original operator, their squared norms add to its squared norm.
+ \phantomsection\label{strong:proof:029:end}\end{proof}
+ 
+ \begin{figure}[t]
+@@ -1010,7 +1010,7 @@
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:030}
+-The projectors \(P_a\) form a Kraus family because \(\sum_aP_a^*P_a=I\). Thus the map is completely positive and trace preserving. It is unital for the same reason. Orthogonality and idempotence follow from \cref{strong:thm:operator_packets}. Its range consists exactly of the diagonal operator packets, which is the commutant of the projector family.
++The projectors \(P_a\) form a Kraus family because \(\sum_aP_a^*P_a=I\). Thus the map is completely positive and trace preserving. It is unital for the same reason. Orthogonality and idempotence follow from \cref{strong:thm:operator_packets}. Its range is the sum of the diagonal operator packets. This is exactly the commutant of the projector family.
+ \phantomsection\label{strong:proof:030:end}\end{proof}
+ 
+ \begin{corollary}[Block diagonal measurement invariance]\label{strong:corollary:008}\label{strong:cor:measurement_invariance}
+@@ -1260,7 +1260,7 @@
+ Decompose the initial operator by \cref{strong:thm:coherence_projectors} and apply the invariant packet statement to each component.
+ \phantomsection\label{strong:proof:038:end}\end{proof}
+ 
+-The theorem does not say that every diagonal quantum master equation closes to a classical Markov chain on packet populations. Scalar population closure needs additional isotropy inside each packet.
++Preservation of coherence order does not by itself give a closed classical Markov chain for the packet populations. Such scalar population equations require additional isotropy within each packet.
+ 
+ \section{Quantum error correction as a compression obstruction}\label{strong:section:008}\label{strong:sec:qec}
+ 
+@@ -1270,7 +1270,7 @@
+ \qquad
+ k=\dim\Ccal\ge1.
+ \]
+-The compression of \(A\in\End(\Hcal)\) to the code is \(PAP\in\End(\Ccal)\). The zero code has only the zero supported operator and no normalized code state; that branch is treated in the mathematical completion in Part III.
++The compression of \(A\in\End(\Hcal)\) to the code is \(PAP\in\End(\Ccal)\). The zero code has only the zero supported operator and no normalized code state. Part III treats that branch in the mathematical completion.
+ 
+ \begin{definition}[Code compression obstruction]\label{strong:definition:005}\label{strong:def:code_obstruction}
+ Let
+@@ -1310,7 +1310,7 @@
+ The equivalence between the quotient statement and the scalar compression identity is immediate from the definition. The latter identity is the finite Knill Laflamme criterion \cite{KnillLaflamme1997,SchumacherNielsen1996}.
+ \phantomsection\label{strong:proof:039:end}\end{proof}
+ 
+-The next result gives the packet construction behind the criterion.
++The next result turns the scalar compression identities into a family of orthogonal syndrome packets. Those packets provide the coordinates used by the recovery map.
+ 
+ \begin{theorem}[Orthogonal syndrome construction]\label{strong:theorem:027}\label{strong:thm:syndrome_construction}
+ Assume the Knill Laflamme identities. Then the coefficient matrix \(c\) is positive semidefinite. Choose a unitary matrix \(W\) such that
+@@ -1419,7 +1419,7 @@
+ \phantomsection\label{strong:proof:042:end}\end{proof}
+ 
+ \begin{definition}[Approximate Knill Laflamme defect]\label{strong:definition:006}\label{strong:def:approximate_kl}
+-For a finite error family define, with the maximum of the empty family set to zero,
++For a finite error family, define the following defect. When the family is empty, assign the maximum the value zero.
+ \[
+ \varepsilon_{\rm KL}
+ =
+@@ -1534,7 +1534,7 @@
+ 0&z-D
+ \end{pmatrix}.
+ \]
+-Invert the factors and read the upper left block.
++Invert the factors. The retained resolvent is the block in the upper left corner of the resulting inverse.
+ \phantomsection\label{strong:proof:044:end}\end{proof}
+ 
+ \begin{theorem}[Spectral equivalence]\label{strong:theorem:030}\label{strong:thm:feshbach_spectrum}
+@@ -1590,7 +1590,7 @@
+ R(z)-R(z)^*
+ =(\overline z-z)R(z)R(z)^*.
+ \]
+-Divide by \(2\ii\) and sandwich the result between \(B\) and \(B^*\).
++Divide by \(2\ii\), then multiply the result on the left by \(B\) and on the right by \(B^*\).
+ \phantomsection\label{strong:proof:046:end}\end{proof}
+ 
+ \begin{proposition}[Uniform self energy bounds]\label{strong:proposition:004}\label{strong:prop:self_energy_bounds}
+@@ -1625,7 +1625,7 @@
+ \[
+ \Sigma'(z)=-B(z-D)^{-2}B^*.
+ \]
+-The first two estimates follow. The last is the mean value estimate along the real interval.
++Taking operator norms gives the first two estimates. Applying the derivative bound along the real interval gives the final mean value estimate.
+ \phantomsection\label{strong:proof:047:end}\end{proof}
+ 
+ \begin{proposition}[Low energy expansion]\label{strong:proposition:005}\label{strong:prop:low_energy_expansion}
+@@ -1651,7 +1651,7 @@
+ =-D^{-1}(I-zD^{-1})^{-1}
+ =-\sum_{n=0}^{\infty}z^nD^{-n-1}
+ \]
+-and sandwich by \(B\) and \(B^*\).
++and multiply on the left by \(B\) and on the right by \(B^*\).
+ \phantomsection\label{strong:proof:048:end}\end{proof}
+ 
+ \begin{proposition}[Bare truncation error identity]\label{strong:proposition:006}\label{strong:prop:bare_truncation}
+@@ -1748,13 +1748,13 @@
+ \end{corollary}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:052}
+-Insert the spectral decomposition into the exponential.
++Inserting the spectral decomposition into the exponential gives the stated sum. The spectral projectors are positive semidefinite, so multiplication by the coupling and its adjoint preserves positivity of each coefficient.
+ \phantomsection\label{strong:proof:052:end}\end{proof}
+ 
+ \begin{figure}[t]
+ \centering
+ \includegraphics[width=.76\textwidth]{11_memory_kernel.pdf}
+-\caption{A finite hidden spectrum produces an oscillatory memory kernel rather than an instantaneous retained Hamiltonian.}
++\caption{A finite hidden spectrum produces an oscillatory memory kernel. The retained dynamics therefore depend on the history of the retained state.}
+ \label{strong:fig:memory_kernel}
+ \end{figure}
+ 
+@@ -1823,10 +1823,10 @@
+ \end{corollary}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:055}
+-Apply \cref{strong:prop:self_energy_bounds,strong:thm:self_energy_stability} uniformly.
++The common gap and coupling bounds allow \cref{strong:prop:self_energy_bounds,strong:thm:self_energy_stability} to be applied uniformly across the family.
+ \phantomsection\label{strong:proof:055:end}\end{proof}
+ 
+-This result identifies the finite hypotheses needed for cutoff independent Feshbach control. It does not prove that a chosen geometric refinement tower satisfies them.
++This result identifies hypotheses that make Feshbach control uniform in the cutoff. Whether a chosen geometric refinement tower satisfies those hypotheses remains a separate question.
+ 
+ \section{Euclidean transfer and finite reflection positivity}\label{strong:section:010}\label{strong:sec:euclidean}
+ 
+@@ -1995,7 +1995,7 @@
+ \qquad
+ Z_{L,a}(t)=\Tr(P_a\e^{-tL}).
+ \]
+-The global spectral dimension is the heat weight average
++The global spectral dimension is the average of the packet dimensions weighted by their heat traces:
+ \[
+ d_L(t)
+ =
+@@ -2099,7 +2099,7 @@
+ \[
+ 4\pi^2\abs{k}^2\e^{-16t\abs{k}^2}.
+ \]
+-Both dominators are summable on \(\ZZ^d\). Dominated convergence proves the two limits. Their quotient gives spectral dimension convergence.
++Both dominating sequences are summable on \(\ZZ^d\). Dominated convergence proves the two limits. Their quotient gives spectral dimension convergence.
+ \phantomsection\label{strong:proof:065:end}\end{proof}
+ 
+ \begin{standardfact}[Theta transformation]\label{strong:standardfact:004}\label{strong:fact:theta_transform}
+@@ -2145,7 +2145,7 @@
+ \[
+ tR'(t)=O\left(t^{-1}\e^{-1/(4t)}\right).
+ \]
+-Insert this in the logarithmic derivative.
++Substituting this estimate into the logarithmic derivative gives the stated small time expansion.
+ \phantomsection\label{strong:proof:066:end}\end{proof}
+ 
+ \begin{corollary}[Rigorous intermediate dimension window]\label{strong:corollary:015}\label{strong:cor:dimension_window}
+@@ -2227,7 +2227,7 @@
+ Self adjointness and \(C_aP_{\phys}=0\) give \(P_{\phys}C_a=0\). Both terms in the compressed commutator therefore vanish.
+ \phantomsection\label{strong:proof:069:end}\end{proof}
+ 
+-This is why the quotient in \cref{strong:def:closure_obstruction} is needed. Compression to physical states tests action on the common kernel, not closure of the operator algebra.
++The quotient in \cref{strong:def:closure_obstruction} is needed because closure concerns the operator algebra. Compression to physical states tests only the action on the common kernel, where the constraints already vanish.
+ 
+ \begin{figure}[t]
+ \centering
+@@ -2333,7 +2333,7 @@
+ \quad
+ -C_{\ell+1,b}E_a.
+ \]
+-Their norms give the bound.
++The triangle inequality and the stated bounds on the constraints and defects give the claimed estimate.
+ \phantomsection\label{strong:proof:072:end}\end{proof}
+ 
+ Approximate transport controls finite violations. It does not turn a nonzero anomaly into an exact continuum algebra without a limit theorem and a common operator domain.
+@@ -2396,7 +2396,7 @@
+ \[
+ H_\infty\iota_\ell x=\iota_\ell H_\ell x.
+ \]
+-Compatibility makes this well defined. The uniform norm bound makes it bounded on the dense union, so it extends uniquely. It is symmetric because every \(H_\ell\) is self adjoint. A bounded symmetric operator defined on the whole Hilbert space is self adjoint. The functional calculus intertwining follows first for polynomials and then for exponentials by uniform convergence.
++Compatibility makes the definition independent of the chosen level. The uniform norm bound makes the operator bounded on the dense union, so it extends uniquely to the completion. It is symmetric because every \(H_\ell\) is self adjoint. A bounded symmetric operator defined on the whole Hilbert space is self adjoint. The functional calculus intertwining follows first for polynomials and then for exponentials by uniform convergence.
+ \phantomsection\label{strong:proof:073:end}\end{proof}
+ 
+ \begin{theorem}[Exact packet direct limit]\label{strong:theorem:046}\label{strong:thm:packet_direct_limit}
+@@ -2417,7 +2417,7 @@
+ 
+ \subsection{Norm summable approximation}\label{strong:subsec:norm_summable}
+ 
+-The next theorem uses a common Hilbert space. It is appropriate for bounded effective Hamiltonians, not for an unbounded field Hamiltonian.
++The next theorem places all approximating Hamiltonians on a common Hilbert space. It applies to bounded effective Hamiltonians. An unbounded field Hamiltonian requires a different convergence argument.
+ 
+ \begin{theorem}[Norm summable Hamiltonian tower]\label{strong:theorem:047}\label{strong:thm:norm_summable_tower}
+ Let \((H_n)\) be bounded self adjoint operators on one Hilbert space and assume
+@@ -2447,7 +2447,7 @@
+ =-\ii\int_0^t
+ \e^{-\ii(t-s)H_n}(H_n-H)\e^{-\ii sH}\dd s.
+ \]
+-Both unitary factors have norm one. The Euclidean estimate is identical because the nonnegative semigroups are contractions.
++Both unitary factors have norm one, which gives the first estimate. The same argument gives the Euclidean estimate because the semigroups generated by nonnegative Hamiltonians are contractions.
+ \phantomsection\label{strong:proof:075:end}\end{proof}
+ 
+ \begin{corollary}[Limit of packet leakage]\label{strong:corollary:016}\label{strong:cor:limit_leakage}
+@@ -2520,7 +2520,7 @@
+ \[
+ L_n\e^{-tL_n}\longrightarrow L\e^{-tL}
+ \]
+-in trace norm and the limiting heat trace is nonzero, then the spectral dimensions defined by the heat-moment ratio converge at that time.
++in trace norm and the limiting heat trace is nonzero, then the spectral dimensions defined by the heat moment ratio converge at that time.
+ \end{theorem}
+ 
+ \begin{proof}\phantomsection\label{strong:proof:079}
+@@ -2528,12 +2528,12 @@
+ \phantomsection\label{strong:proof:079:end}\end{proof}
+ 
+ \begin{remark}\label{strong:remark:003}\label{strong:rem:unbounded_limit}
+-The theorems above produce bounded continuum Hamiltonians. A physically useful continuum Hamiltonian is often unbounded. Its construction generally requires strong resolvent convergence, convergence of closed quadratic forms, or another domain sensitive method \cite{Kato1995,ReedSimon1972}. None of those conclusions follows from finite matrix convergence without additional hypotheses.
++The theorems above produce bounded continuum Hamiltonians. A physically useful continuum Hamiltonian is often unbounded. Its construction generally requires strong resolvent convergence, convergence of closed quadratic forms, or another method that controls operator domains \cite{Kato1995,ReedSimon1972}. None of those conclusions follows from finite matrix convergence without additional hypotheses.
+ \end{remark}
+ 
+ \section{Continuum milestones and exact boundary}\label{strong:section:014}\label{strong:sec:boundary}
+ 
+-The finite theorems establish exact identities and bounded limit criteria. They do not collapse the steps between a finite transfer model and a continuum theory. This section records the separate mathematical tasks.
++The finite theorems establish exact identities and criteria for bounded limits. Passing from a finite transfer model to a continuum theory still requires several separate arguments. This section states those remaining mathematical tasks.
+ 
+ \begin{definition}[Anomaly free continuum constraint system]\label{strong:definition:011}\label{strong:def:anomaly_free_continuum}
+ A continuum constraint system consists of a Hilbert space, a common invariant dense domain \(\Dcal\), and operators \(C_a\) on \(\Dcal\). It is anomaly free for prescribed structure coefficients when
+@@ -2554,7 +2554,7 @@
+ \Cref{strong:thm:reflection_limit} shows that positivity of each fixed finite Gram matrix survives pointwise convergence. It does not prove existence, locality, clustering, or the remaining Osterwalder Schrader axioms.
+ 
+ \begin{definition}[Einstein infrared criterion]\label{strong:definition:013}\label{strong:def:einstein_criterion}
+-A quantum geometric tower meets an Einstein infrared criterion only if a controlled long wavelength effective action exists and has an expansion whose leading geometric terms take the form
++A quantum geometric tower meets an Einstein infrared criterion only if an effective action is controlled at long wavelengths and has an expansion whose leading geometric terms take the form
+ \[
+ \Gamma_{\rm eff}[g]
+ =
+@@ -2615,6 +2615,6 @@
+ 
+ Positive Euclidean transfer gives finite reflection positivity. Periodic lattice heat traces converge to the continuum torus at every fixed positive diffusion time, and the continuum small time spectral dimension is recovered after the refinement limit. Constraint closure is measured by a quotient of operator space, not by compression to the physical kernel.
+ 
+-The bounded tower theorems show how exact compatibility and norm summability produce limiting quantum evolutions. They also show the boundary of the argument. Unbounded field Hamiltonians, continuum gauge constraints, reflection positive field measures, the Einstein infrared action, and a massless spin two sector require additional theorems. The finite packet calculus organizes those questions but does not settle them.
+-
+-
++The theorems for bounded towers show how exact compatibility and summable differences in operator norm produce limiting quantum evolutions. Their hypotheses also mark the scope of the argument. Unbounded field Hamiltonians, continuum gauge constraints, reflection positive field measures, the Einstein infrared action, and a massless spin two sector each require additional theorems. The finite packet calculus gives a common framework in which those questions can be stated and studied, while leaving their physical resolution open.
++
++
+--- previous/editable/traditional/monograph_examples.tex
++++ final/editable/traditional/monograph_examples.tex
+@@ -1,22 +1,22 @@
+ \section*{Three exact finite models}\addcontentsline{toc}{section}{Three exact finite models}
+ \subsection*{A seed remembers multiplicity support}
+-For $M_2(\mathbb C)\otimes I_3$, a coefficient matrix with rank one generates a two-dimensional orbit. A rank-two matrix generates a four-dimensional orbit. Neither single seed spans the six-dimensional space, because a $2\times3$ matrix cannot have rank three. Two seeds can cover the three multiplicity coordinates together. This is the finite seed-rank formula with $d=2$ and $m=3$.
++For $M_2(\mathbb C)\otimes I_3$, a coefficient matrix with rank one generates an orbit of dimension two. A matrix of rank two generates an orbit of dimension four. Neither single seed spans the full space of dimension six, because a $2\times3$ matrix cannot have rank three. Two seeds can nevertheless cover all three multiplicity coordinates together. The example illustrates the finite seed rank formula with $d=2$ and $m=3$.
+ \begin{figure}[H]\centering
+ \includegraphics[width=.94\textwidth]{monograph_figures/exact_seed_support.pdf}
+-\caption{Exact coefficient matrices for $d=2$, $m=3$. The combined row support of two seeds has rank three. The bar heights are algebraic orbit dimensions, not unitary preparation probabilities.}\label{monograph:fig:seed_support}
++\caption{The figure displays exact coefficient matrices for $d=2$, $m=3$. The combined row support of two seeds has rank three. The bar heights record algebraic orbit dimensions and should not be read as probabilities of unitary state preparation.}\label{monograph:fig:seed_support}
+ \end{figure}
+ \clearpage
+ \subsection*{An eliminated coordinate still contributes}
+-Take $H=\left(\begin{smallmatrix}2&1\\1&3\end{smallmatrix}\right)$ and retain its first coordinate. The eliminated block is invertible and the Schur complement of $H$ is $2-1/3=5/3$. Its inverse is $3/5$, exactly the retained entry of $H^{-1}$. Inverting the compressed entry alone gives $1/2$. The difference comes from a path through the discarded coordinate.
++Take $H=\left(\begin{smallmatrix}2&1\\1&3\end{smallmatrix}\right)$ and retain its first coordinate. The eliminated block is invertible and the Schur complement of $H$ is $2-1/3=5/3$. Its inverse is $3/5$, exactly the retained entry of $H^{-1}$. Inverting the compressed entry alone gives $1/2$. The difference records the contribution of a path through the eliminated coordinate. Direct compression omits that contribution, while block inversion retains it.
+ \begin{figure}[H]\centering
+ \includegraphics[width=.94\textwidth]{monograph_figures/exact_feshbach_compression.pdf}
+-\caption{A rational two-coordinate block-inverse model. Both the eliminated block and full operator are invertible. The plotted values are exact fractions. This example distinguishes direct compression from resolvent elimination.}\label{monograph:fig:feshbach_compression}
++\caption{This rational model uses two coordinates to illustrate block inversion. Both the eliminated block and the full operator are invertible, and the plotted values are exact fractions. The example shows why direct compression and resolvent elimination give different results.}\label{monograph:fig:feshbach_compression}
+ \end{figure}
+ \clearpage
+ \subsection*{Normalization changes the map}
+-Let $P=|0\rangle\langle0|$ on $\mathbb C^2$ and $Z=\operatorname{diag}(1,-1)$. The normalized Kraus family $\sqrt{3/4}\,I$, $\sqrt{1/4}\,Z$ satisfies $\sum_j K_j^*K_j=I$ and maps $P$ to $P$. The unnormalized family $\sqrt3\,I$, $Z$ satisfies $\sum_j E_j^*E_j=4I$ and maps $P$ to $4P$. The same relative weights produce different output traces.
++Let $P=|0\rangle\langle0|$ on $\mathbb C^2$ and $Z=\operatorname{diag}(1,-1)$. The normalized Kraus family $\sqrt{3/4}\,I$, $\sqrt{1/4}\,Z$ satisfies $\sum_j K_j^*K_j=I$ and maps $P$ to $P$. The unnormalized family $\sqrt3\,I$, $Z$ satisfies $\sum_j E_j^*E_j=4I$ and maps $P$ to $4P$. The two families have the same relative weights, but their total normalization differs. Both outputs are proportional to the same projector, but their traces differ.
+ \begin{figure}[H]\centering
+ \includegraphics[width=.94\textwidth]{monograph_figures/exact_channel_scale.pdf}
+-\caption{Exact weights for one supported code state. The normalized map preserves trace one. The unnormalized positive map has output trace four. The illustration records this finite scaling distinction and does not assert a general recovery construction.}\label{monograph:fig:channel_scale}
++\caption{The figure shows exact weights for one supported code state. The normalized map preserves trace one, while the unnormalized positive map has output trace four. The illustration records this finite scaling distinction and does not assert a general recovery construction.}\label{monograph:fig:channel_scale}
+ \end{figure}
+ \clearpage

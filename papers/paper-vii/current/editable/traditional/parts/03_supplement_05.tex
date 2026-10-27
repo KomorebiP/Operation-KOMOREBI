@@ -1,0 +1,212 @@
+\section{The precise finite channel statement}\label{supp5:section:001}
+Let $\mathcal H=\C^n$ be a finite coordinate space and let $P=P^*=P^2$. A matrix is code supported when $P\rho P=\rho$. For a finite family of square matrices $E_a$, put
+\[
+\mathcal N_E(\rho)=\sum_a E_a\rho E_a^*.
+\]
+The input channel normalization is the actual matrix identity
+\[
+\sum_a E_a^*E_a=I.
+\]
+A finite Kraus recovery has the form $\mathcal R(\sigma)=\sum_r R_r\sigma R_r^*$, with $\sum_rR_r^*R_r=I$. This representation, together with the checked amplification results, provides complete positivity and trace preservation on the entire ambient matrix space.
+
+\subsection{Necessary and sufficient conditions}
+Under the stated normalization, the following equivalence is proved:
+\[
+\boxed{\begin{gathered}
+\exists\,\mathcal R\text{ of the above finite Kraus form,}\\[-2pt]
+\mathcal R\mathcal N_E(\rho)=\rho
+\quad\text{for every }\rho\succeq0,\ \Tr\rho=1,\ P\rho P=\rho
+\end{gathered}}
+\quad\Longleftrightarrow\quad
+\boxed{\begin{gathered}
+\exists C\succeq0,\\
+PE_a^*E_bP=C_{ab}P\quad\text{for all }a,b.
+\end{gathered}}
+\]
+The statement applies throughout the code space. The formalization separately proves equivalence with correction of \emph{every} complex matrix supported on the code. It also proves preservation with arbitrary finite reference systems, as detailed in the discussion of density matrices and reference systems below.
+
+
+
+\subsection{Including degenerate cases}
+The matrix $C$ need not be positive definite. The proof includes zero eigenvalues, redundant error operators, an empty set of positive eigenvalues, and the zero projector. If $P=0$, the only supported matrix is zero and no trace-one code density matrix exists. The proofs handle that case separately rather than dividing by the code rank or by $\Tr P$.
+
+For an unnormalized error family, the correct statement is generally
+\[
+\mathcal R\mathcal N_E(\rho)=\Tr(C)\rho,
+\]
+not unconditional equality to $\rho$. Normalization forces $\Tr C=1$ on a nonzero code. The discussion of coherent errors below treats unrestricted error families and shows when the same decoder works throughout their span.
+
+
+
+\section{From Gram data to an actual total recovery}\label{supp5:section:002}
+Assume $C\succeq0$ and $PE_a^*E_bP=C_{ab}P$. First restrict the error operators to the code, $F_a=E_aP$. The finite Hermitian spectral theorem supplies a unitary $U$ such that
+\[
+U^*CU=\operatorname{diag}(\lambda_r),\qquad \lambda_r\ge0.
+\]
+
+
+Define the transformed errors by an actual finite sum,
+\[
+B_r=\sum_a U_{ar}F_a.
+\]
+The formal module proves the identities
+\[
+B_rP=B_r,\qquad B_r^*B_s=\delta_{rs}\lambda_rP,
+\qquad \sum_rB_r\rho B_r^*=\sum_aF_a\rho F_a^*.
+\]
+For $\rho$ supported on the code, the restricted and unrestricted error sums are equal. Thus the unitary change of error coordinates preserves the actual channel on the code.
+
+\subsection{Null directions are removed by proof}
+If $\lambda_r=0$, then $B_r^*B_r=0$. Positivity of the ordinary complex matrix inner product gives $B_r=0$. This is the checked declaration \path{DiagonalErrors.zero_weight_error}. The normalized syndrome operators are defined only on
+\[
+A_+=\{r:\lambda_r>0\},\qquad V_r=\lambda_r^{-1/2}B_r.
+\]
+Consequently no inverse square root at a null eigenvalue is needed. Lean proves
+\[
+V_rP=V_r,\qquad V_r^*V_s=\delta_{rs}P.
+\]
+The previous block's recovery is now instantiated from these derived syndromes, rather than from an assumed orthogonal error family.
+
+\subsection{A channel on the whole ambient space}
+Put $Q=I-\sum_{r\in A_+}V_rV_r^*$. The recovery is
+\[
+\boxed{\mathcal R(\sigma)=\sum_{r\in A_+}V_r^*\sigma V_r+Q\sigma Q.}
+\]
+The complement is an orthogonal projector and
+\[
+\sum_{r\in A_+}V_rV_r^*+Q^*Q=I.
+\]
+Hence the recovery is trace preserving. Its finite Kraus form also proves positivity after amplification by the identity on every finite auxiliary space. The complement term matters: the map is defined as a channel even outside the syndrome ranges.
+
+Finally the checked calculation gives $\mathcal R\mathcal N_E(\rho)=\sum_r\lambda_r\rho=\Tr(C)\rho$. Under normalization of the input channel and $P\ne0$, summing the diagonal Gram identities gives $\Tr(C)P=P$, hence $\Tr C=1$. The proof for the zero code does not use this cancellation.
+
+
+
+\section{Deriving the Gram matrix from recovery}\label{supp5:section:003}
+Suppose a finite recovery that preserves trace corrects every operator supported on the code. To derive the Knill--Laflamme condition without assuming a syndrome decomposition, the proof expands the composite channel into the finite Kraus family
+\[
+A_{ra}=R_rE_aP.
+\]
+For every ambient matrix $\rho$, correction on the code implies
+\[
+\sum_{r,a} A_{ra}\rho A_{ra}^*=P\rho P.
+\]
+This equality on all matrices follows by applying correction to the sandwich supported on the code, $P\rho P$, using the projector identities.
+
+\subsection{Rank-one rigidity of the corrected channel}
+The module tests the map equality on actual matrix units and flattens each $A_{ra}$ into a row. If $X$ is the matrix of those rows and $p$ is the vector of entries of $P$, the resulting Gram identity is
+\[
+X^*X=\overline p\,p^{\mathsf T}.
+\]
+The checked rank-one Gram lemma proves that every row of $X$ is proportional to $p$. For nonzero $p$, a nonzero coordinate is selected and a test vector supported on two coordinates is placed in the null space of the Gram matrix. The implication $X^*Xv=0\Rightarrow Xv=0$ then gives the required proportionality. When $p=0$, the Gram identity forces $X=0$ directly.
+
+Applied to the corrected Kraus family, this yields scalars $z_{ra}$ with
+\[
+R_rE_aP=z_{ra}P.
+\]
+The essential declarations are \path{rank_one_gram_rigidity}, \path{kraus_rank_one_rigidity} and \path{corrected_kraus_family}. No rank-one Choi characterization is inserted as an axiom or as the desired conclusion in hypothesis form.
+
+\subsection{Trace-preserving recovery supplies the original Gram data}
+Let $Z_{ra}=z_{ra}$. The recovery normalization gives
+\begin{align*}
+PE_a^*E_bP
+&=PE_a^*\Bigl(\sum_rR_r^*R_r\Bigr)E_bP\\
+&=\sum_r(R_rE_aP)^*(R_rE_bP)\\
+&=\Bigl(\sum_r\overline{z_{ra}}z_{rb}\Bigr)P
+=(Z^*Z)_{ab}P.
+\end{align*}
+Thus $C=Z^*Z$ is positive semidefinite and satisfies the required compressed identities. The theorem \path{gram_of_recovery} implements this calculation with the original error and recovery matrices.
+
+A second rigidity argument handles a nonnegative scalar multiple of the identity code map. It uses $\sqrt t\,P$ as the rank-one map generator and includes $t=0$. That argument proves necessity for unnormalized error families, which need not define channels.
+
+
+
+\section{Density matrices, all operators and finite references}\label{supp5:section:004}
+The necessity argument is stated for all operators, so it must be connected to correction of physical density matrices. The proof establishes this connection explicitly for complex linear maps on finite matrices.
+
+\subsection{Normalization is not an extra assumption}
+A nonzero positive semidefinite matrix has strictly positive real trace. If a complex-linear map fixes every normalized code density matrix, apply that hypothesis to
+\[
+\frac{\rho}{\Tr\rho}
+\]
+for each nonzero positive code-supported $\rho$. Linearity then gives equality on $\rho$ itself. The zero matrix is handled separately. The source proves that the trace is real and nonzero, then justifies cancellation of the scalar. These steps establish that normalization is valid.
+
+\subsection{Complex polarization reaches the whole operator space}
+Write $q(x)=xx^*$. The module proves the exact identity
+\[
+4xy^*=q(x+y)-q(x-y)
++i\bigl(q(x+iy)-q(x-iy)\bigr).
+\]
+Agreement on all positive pure outer products therefore implies agreement on every outer product. Actual matrix units then span the full matrix space. Applying this argument to the sandwich by $P$ proves equality on every code-supported operator, including non-Hermitian ones.
+
+The result \path{density_corrects_iff_operators} establishes the equivalence for the actual composite Kraus maps. It does not replace the set of density matrices by an assumed basis of logical states.
+
+\subsection{An arbitrary finite reference system}
+For any finite reference index set $A$, the amplified channel is defined using the actual Kronecker Kraus operators,
+\[
+\widetilde{\mathcal N}_E(\rho)
+=\sum_a(I_A\otimes E_a)\rho(I_A\otimes E_a)^*.
+\]
+Its reference blocks are proved equal to the original channel applied blockwise. If
+\[
+(I_A\otimes P)\rho(I_A\otimes P)=\rho,
+\]
+then every reference block is code supported. Applying the checked correction theorem for operators to those blocks gives
+\[
+\boxed{\widetilde{\mathcal R}\,\widetilde{\mathcal N}_E(\rho)=\rho.}
+\]
+This includes entangled density matrices supported on the combined reference and code space. In fact, the identity holds for every jointly supported matrix and every finite reference dimension.
+
+The declaration \path{recovery_with_reference} proves the equality. The finite Kraus amplification separately establishes complete positivity of the recovery, which is needed to preserve states in the presence of a reference system.
+
+
+
+\section{Coherent combinations and normalization}\label{supp5:section:005}
+A correction proof for only one selected Kraus presentation is weaker than a proof that one decoder works throughout the error span. The formal module connects the constructed spectral recovery back to the original error operators.
+
+\subsection{Cross terms for the original errors}
+For arbitrary positive Gram data, the same recovery satisfies
+\[
+\boxed{\mathcal R(E_a\rho E_b^*)=C_{ba}\rho\qquad(P\rho P=\rho).}
+\]
+The index order $ba$ is intentional: the defining Gram relation is $PE_a^*E_bP=C_{ab}P$. The proof first derives scalar corrected Kraus composites for the constructed recovery and then uses its trace-preserving completeness to identify the original Gram entries.
+
+For $E(c)=\sum_a c_aE_a$, finite-sum expansion gives
+\[
+\mathcal R\bigl(E(c)\rho E(c)^*\bigr)
+=\left(\sum_{a,b}c_a\overline{c_b}C_{ba}\right)\rho
+=(c^*Cc)\rho.
+\]
+The formula with a double sum is the literal checked conclusion. The final notation as a quadratic form follows by renaming finite indices. It is not restricted to orthogonal errors or real coefficients.
+
+\subsection{Every normalized channel in the same span}
+Suppose $F_j=\sum_a c_{ja}E_a$ and $\sum_jF_j^*F_j=I$. The decoder is \emph{not} reconstructed for the $F_j$. Summing the coherent identities gives a scalar multiple $q\rho$. Trace preservation of both the $F$ channel and the recovery forces $q=1$ on a nonzero code. The proof uses positivity of $P$ to justify cancellation of its trace and handles $P=0$ separately. Therefore
+\[
+\boxed{\mathcal R\Bigl(\sum_jF_j\rho F_j^*\Bigr)=\rho.}
+\]
+This is \path{Data.recovery_span_channel}, a quantified statement over arbitrary finite $F$ families and their complex coefficients.
+
+\subsection{The equivalence for unnormalized error families}
+For arbitrary finite $E$, define exact family recovery to mean that a finite trace-preserving Kraus recovery and a single $t\ge0$ exist such that
+\[
+\mathcal R\mathcal N_E(\rho)=t\rho
+\quad\text{for every code-supported }\rho.
+\]
+Then \path{error_family_correctable_iff_gram} proves that this condition is equivalent to the existence of $C\succeq0$ satisfying the Gram identities. Sufficiency chooses $t=\Tr C$. Necessity constructs $C$ from the scaled rank-one rigidity argument.
+
+The scale is essential. Zero errors can give $t=0$ and cannot be inverted to a nonzero normalized state. An input with a larger total trace is not silently declared a channel. For normalized input channels, the separate channel theorem removes the scale exactly as described in the sufficiency argument above.
+
+
+
+\section{Exact examples, trust audit and remaining work}\label{supp5:section:006}
+\subsection{Singular, nonorthogonal errors are accepted}
+On a qubit with full code $P=I$, take
+\[
+E_0=\frac35I,\qquad E_1=\frac45I,\qquad
+C=\begin{pmatrix}9/25&12/25\\12/25&16/25\end{pmatrix}.
+\]
+Lean checks the channel normalization, the Gram identities, positivity of $C$, $\det C=0$, and the nonzero off-diagonal entry. It then applies the criterion for density matrices to prove correctability. The calculation is exact and uses rational complex entries.
+
+\subsection{A genuine channel can still be uncorrectable}
+For full qubit dephasing, $E_0=\operatorname{diag}(1,0)$ and $E_1=\operatorname{diag}(0,1)$, the Kraus normalization is checked. But $E_0^*E_0$ cannot be a scalar multiple of $I$, as its two diagonal entries differ. Necessity therefore proves that no finite recovery channel corrects the full code space. The case of the zero code is also checked independently.
+

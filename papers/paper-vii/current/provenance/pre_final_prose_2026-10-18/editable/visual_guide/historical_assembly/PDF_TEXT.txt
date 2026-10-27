@@ -1,0 +1,2551 @@
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+HOW TO READ THIS APPENDIX
+Three objects, three questions
+Traditional edition: Section II.1, Section II.7, Section II.9; PDF pp. 33, 47, 55.
+A quantum calculation becomes easier to follow when its objects remain visible. This appendix follows a
+state vector, a density matrix, and a retained part of a dynamical system. They may describe the same
+experiment, but they do not answer the same question.
+√
+2 ψ
+1
+0
+0
+1
+Two amplitudes
+one pure state
+2ρ = 2ψψ∗
+1
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+1
+Off-diagonal entries retain phase.
+0
+0
+1
+time
+|x(t)|2
+Hidden coupling returns.
+Amplitudes, not just occupied addresses
+For the Bell vector ψ = (|00⟩+ |11⟩)/
+√
+2, the two nonzero entries are amplitudes. The density matrix
+ρ = ψψ∗contains additional off-diagonal entries. Those entries matter to measurements that compare the
+two addresses. Deleting them is a physical channel, not simply rewriting coordinates.
+Elimination, not disappearance
+When a Hamiltonian couples a retained state to a hidden state, the retained amplitude can leave and later
+return. Its exact equation then remembers the hidden coupling. A smaller matrix obtained by deleting
+rows and columns does not generally reproduce that equation.
+A route through the paper
+Pages V – 3–V – 10 develop seeds, symmetry, and coherent circuit paths. Pages V – 11–V – 15 track leakage
+and moving subspaces. Pages V – 16–V – 20 distinguish measurement, channels, and recovery. Pages
+V – 21–V – 27 follow hidden dynamics and finite geometric diagnostics.
+This standalone guide reads alongside the final traditional edition. Its first 28 worked pages preserve the
+original appendix, with source lines revised to the final edition. Pages V – 29–V – 40 develop additional
+strengthened results. Exact example checks are not new Lean certificates.
+Read this as: A packet coordinate change preserves information. A measurement, dephasing
+operation, or truncation may not. Always identify which operation is actually being performed.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 1
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN ATLAS OF TYPES AND CONVENTIONS
+The objects on the page
+Traditional edition: Definition II.2.1, Definition II.7.1; PDF pp. 34, 47.
+The same letter can stand for different kinds of data in different calculations. Keep the following types
+fixed while reading a formula. In this appendix, vectors are columns, operators compose from right to left,
+and A∗denotes the conjugate transpose.
+Symbol
+Object
+What it records
+H, ψ
+Hilbert space and state vector
+Addresses and coherent amplitudes.
+A
+Declared operator algebra
+Which linear operations are available.
+Pa
+Orthogonal packet projector
+The whole selected subspace, not one basis
+vector.
+ρ
+Positive matrix of trace one
+Populations and coherences.
+Ek
+Positive measurement effect
+An outcome probability Tr(Ekρ).
+Ka
+Kraus operator
+One branch of a channel; generally not a
+projector.
+H
+Self-adjoint Hamiltonian
+Unitary real-time evolution e−itH.
+C, ∇
+Packet transport generator; connection
+Motion of subspaces and differentiation
+within their ranges.
+P, Q
+Retained and hidden projectors
+A decomposition with Q = I −P.
+Σ(z)
+Self-energy
+Spectral influence of the hidden sector.
+L, T(τ)
+Nonnegative operator; Euclidean transfer
+Decay factors and finite heat-trace
+diagnostics.
+Normalization and indexing
+The bit order is the displayed left-to-right tensor order: X1 = X ⊗I ⊗I. A normalized pure state gives
+ρ = ψψ∗; a general coefficient matrix used to count a seed orbit need not be normalized. Scaling a nonzero
+seed does not change its generated linear span.
+A Hamiltonian and a Hadamard gate are both traditionally denoted H. Where both appear, the gate is
+HHad and the Hamiltonian keeps the letter H. Numerical labels on a drawing are coordinates or exact
+example values, not observations of a physical device.
+Read this as: Check the type before interpreting the picture. An idempotent projector, a density
+matrix, and a channel matrix have different defining equations.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 2
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+CYCLICITY DEPENDS ON THE GRAMMAR
+One seed, eight addresses
+Traditional edition: Proposition II.2.5; PDF p. 36.
+Start with ψ0 = |000⟩and allow the three single-bit flip operators X1, X2, X3. For a binary address
+a = (a1, a2, a3), put
+Wa = Xa1
+1 Xa2
+2 Xa3
+3 .
+Waψ0 = |a1a2a3⟩.
+The drawing shows the actual eight states reached by these words. Dashed edges change the first bit
+between the two displayed squares; the other edges change one of the remaining bits.
+|000⟩
+|001⟩
+|010⟩
+|011⟩
+|100⟩
+|101⟩
+|110⟩
+|111⟩
+Three actual words
+W101 = X1X3
+W011 = X2X3
+W110 = X1X2
+dim span{Wa|000⟩} = 8
+Two different meanings of “reach”
+The eight vectors are orthonormal, so their linear span is all of C8. This is exactly the cyclicity statement
+for the algebra generated by the flips. It is not a statement that a product of flips alone prepares every
+normalized vector.
+For example, no such word sends |000⟩to (|000⟩+ |001⟩)/
+√
+2. A Hadamard gate, a suitable linear
+combination in the observable algebra, or a larger preparation grammar is required for that operation.
+Counting linearly independent addressed vectors and synthesizing a physical gate sequence are separate
+tasks.
+The exact check constructs each 8 × 8 word matrix, applies it to the seed, and verifies that the matrix of
+all eight outputs is the identity. It also tests the displayed superposition against every word output. No
+search over an unspecified gate set is involved.
+Read this as: A cyclic seed generates a vector space under an algebra. That conclusion does not
+automatically provide a unitary preparation procedure for every vector in it.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 3
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+SCHMIDT RANK AS ACCESSIBLE MULTIPLICITY
+Entanglement changes the local span
+Traditional edition: Theorem II.2.2, Corollary II.2.4; PDF pp. 35, 36.
+Write a bipartite vector as a coefficient matrix C, with the first subsystem indexing rows. Acting only
+on that subsystem transforms C to AC. Every resulting row remains in the row space of C, and every
+independent choice of such rows can be obtained in this way.
+dim span{(A ⊗I)ψ : A ∈Md(C)} = d rank C.
+Product seed matrix
+1
+0
+0
+0
+Bell seed matrix
+√
+2C
+1
+0
+0
+1
+row rank 1
+orbit dimension 2
+row rank 2
+orbit dimension 4
+A acts on the left. It cannot invent a new direction in the row space.
+The product vector |00⟩has matrix C = diag(1, 0). Its local orbit span contains arbitrary first-subsystem
+vectors but only the second-subsystem direction |0⟩, so its dimension is two. The Bell vector has C = I/
+√
+2,
+rank two, and a four-dimensional local orbit span.
+What the formula does not say
+The action here allows arbitrary matrices and then takes a linear span. It is not the orbit under local
+unitary gates alone. Local unitary operations preserve Schmidt coefficients; they do not turn the Bell
+vector into an arbitrary product vector as a deterministic pure-state transformation.
+For the exact calculation, apply the four matrix units Eab to each seed matrix, flatten the outputs, and
+compute their column rank. The observed dimensions are two and four, respectively. This directly exhibits
+the rows counted by the theorem rather than inferring them from a drawing of entangled particles.
+Read this as: Schmidt rank measures the remote multiplicity directions accessible to the local
+operator span. It is not permission for unrestricted deterministic local state preparation.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 4
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN EXACT MULTIPLICITY LOWER BOUND
+Why one seed is not always enough
+Traditional edition: Theorem II.2.3; PDF p. 36.
+Consider M2(C)⊗I3 acting on C2 ⊗C3. A seed is a 2×3 coefficient matrix. Its two rows span at most two
+directions in the three-dimensional multiplicity factor. Therefore no single seed is cyclic for this algebra.
+C1 =
+ 
+1
+0
+0
+0
+1
+0
+!
+,
+C2 =
+ 
+0
+0
+1
+0
+0
+0
+!
+.
+These two matrices provide a complete set of row directions. Their individual orbit dimensions are four
+and two, and together those spans fill the six-dimensional state space.
+C1
+1
+0
+0
+0
+1
+0
+C2
+0
+0
+1
+0
+0
+0
+d = 2, m = 3
+⌈m/d⌉= 2
+multiplicity 1
+multiplicity 2
+multiplicity 3
+The stacked rows span C3; their local orbits span C2 ⊗C3.
+From the example to the finite formula
+For a block Md(C) ⊗Im, k seed matrices contribute at most kd independent multiplicity directions. Hence
+k ≥⌈m/d⌉. Partitioning a multiplicity basis into groups of size at most d attains this bound. For a direct
+sum of such blocks, the worst block determines the required count:
+srankA(H) = max
+i
+⌈mi/di⌉.
+This is an invariant of the declared representation of the algebra, not of the Hilbert-space dimension alone.
+If the available algebra were enlarged to the full matrix algebra on C6, every nonzero seed would instead
+be cyclic.
+The example checks both the ranks of the separate coefficient matrices and the rank three of their stacked
+row matrix. The argument explains why the construction meets the lower bound; a successful example
+alone would not prove minimality.
+Read this as: Missing multiplicity directions cannot be created by reusing the same left action.
+Additional seeds or a larger operator algebra are genuinely different resources.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 5
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+CHARACTER PROJECTORS YOU CAN MULTIPLY
+Four phases resolve a cyclic shift
+Traditional edition: Corollary II.3.3; PDF p. 38.
+On four sites, let S|k⟩= |k + 1 mod 4⟩and let ω = i. The character projectors are the exact matrices
+Pj = 1
+4
+3
+X
+r=0
+i−jrSr,
+vj(k) = 1
+2i−jk,
+Pj = vjv∗
+j .
+All entries belong to the Gaussian rationals. Thus no approximation to a root of unity is needed in this
+model.
+2V , with V ∗V = I
+1
+1
+1
+1
+1
+−i
+−1
+i
+1
+−1
+1
+−1
+1
+i
+−1
+−i
+site 0
+site 1
+site 2
+site 3
+j = 0 j = 1 j = 2 j = 3
+Sv0 = 1v0
+P0 = v0v∗
+0
+Sv1 = iv1
+P1 = v1v∗
+1
+Sv2 = −1v2
+P2 = v2v∗
+2
+Sv3 = −iv3
+P3 = v3v∗
+3
+Each column has four entries of magnitude 1/2.
+Reading the columns
+Each column vj is a normalized wave around the four sites. Advancing the address multiplies it by ij.
+The entries show phase differences rather than four different probability distributions: every column has
+uniform site probability 1/4.
+Multiplying the actual projectors gives PjPk = 0 for j ̸= k, P 2
+j = Pj, and P
+j Pj = I. In particular, the
+complete packet tuple (Pjψ)j retains the original vector exactly. Recording only the four packet norms is
+a different operation and can discard phase information between packets.
+The four-site shift will return on V – 27. There it diagonalizes the Hamiltonian L = 2I −S −S∗, and its
+four character phases explain perfect transfer between opposite sites. The same fixed projectors serve as
+coordinates, symmetry sectors, and a complete interference ledger.
+Read this as: A character projector retains a complex subspace component. Its norm is only one
+scalar summary of that component, not a substitute for it.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 6
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+TENSOR REFINEMENT BY TOTAL PARITY
+A coarse packet can still contain coherence
+Traditional edition: Theorem II.3.7, Corollary II.3.8; PDF p. 39.
+For three qubits, the eight fine projectors are Pa = |a⟩⟨a|. Grouping addresses by Hamming-weight parity
+gives
+Peven = P000 + P011 + P101 + P110 = I + Z ⊗Z ⊗Z
+2
+,
+Podd = I −Peven.
+This is a sum of subspaces, not an averaging of their coordinates. The rank-four even packet retains all
+complex amplitudes on its four children.
+even
+|000⟩
+|011⟩
+|101⟩
+|110⟩
+odd
+|001⟩
+|010⟩
+|100⟩
+|111⟩
+Each coarse projector has rank four; all eight fine projectors have rank one.
+Refinement is not measurement
+The fine packet description and the coarse packet description each reconstruct the full vector when every
+component is retained. Replacing a state by the mixture P
+a PaρPa is instead a dephasing channel. That
+operation removes cross-child coherence and need not agree with dephasing only between even and odd
+sectors.
+For instance, a superposition of |000⟩and |011⟩lies entirely in the even packet. Its internal relative phase
+survives a parity measurement but is lost by a complete computational-basis measurement if outcomes are
+forgotten. The two measurements use projectors from the same refinement hierarchy but expose different
+information.
+The exact check verifies all eight addresses, their parity grouping, the rank of both coarse projectors,
+and equality with the tensor expression above. The general residue version replaces parity by total label
+modulo N and groups the tensor descendants by their summed residue.
+Read this as: A coarse packet is a whole subspace. Internal coherence survives until an operation
+actually discards it; changing the address description alone does not do so.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 7
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+INTERMEDIATE PACKETS ARE NOT FINAL PACKETS
+Track the Bell state through the circuit
+Traditional edition: Theorem II.4.1, Result II.4.6; PDF pp. 40, 41.
+The input is |00⟩. First apply a Hadamard to the first qubit, then a controlled flip:
+|00⟩
+HHad⊗I
+7−−−−−→|00⟩+ |10⟩
+√
+2
+CNOT
+7−−−−→|00⟩+ |11⟩
+√
+2
+.
+The displayed columns keep amplitudes, including their normalization, at every step. The middle vector
+occupies both parity packets. The final vector occupies only the even packet.
+seed
+1
+0
+0
+0
+00
+01
+10
+11
+after H ⊗I
+√
+2
+2
+0
+√
+2
+2
+0
+00
+01
+10
+11
+after CNOT
+√
+2
+2
+0
+0
+√
+2
+2
+00
+01
+10
+11
+even only
+both parity packets
+even only, with coherence
+How the exact path expansion works
+Insert Peven + Podd = I between the two gates. Each summand records a particular intermediate packet,
+while the boundary projectors select its input and output packets. Summing all terms recovers the original
+4 × 4 circuit matrix:
+X
+a,b,c
+Pb CNOT Pa(HHad ⊗I)Pc = CNOT(HHad ⊗I).
+This expansion is an identity even though the intermediate parity is not measured. Physically inserting a
+measurement would alter the problem by removing interference between its alternatives. A coordinate
+resolution in a derivation should not be mistaken for an experimental intervention.
+In the finite check, all eight parity-indexed matrix terms are constructed and summed. The matrix equality
+is checked before specializing to the input vector. It therefore verifies the decomposition for every input of
+this example, not merely agreement on the Bell seed.
+Read this as: A final invariant packet does not imply that each preceding gate preserved it. Follow
+the amplitudes through the actual intermediate resolutions.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 8
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+A COMPLETE DESTRUCTIVE-INTERFERENCE LEDGER
+Why path probabilities do not add
+Traditional edition: Theorem II.4.2, Theorem II.4.4; PDF p. 40.
+Two consecutive Hadamard gates multiply to the identity. Starting from |0⟩, there are two resolved paths
+to output |1⟩. Their signed products are
+⟨1|HHad|0⟩⟨0|HHad|0⟩= 1
+2,
+⟨1|HHad|1⟩⟨1|HHad|0⟩= −1
+2.
+Their sum is zero. Squaring each separately gives a different answer.
+0
+0
+1
+1
+1/
+√
+2
+1/
+√
+2
+1/
+√
+2
+−1/
+√
+2
+Two actual Hadamard paths, not classical alternatives
+amplitude = 1/2 −1/2 = 0
+̸=
+sum of path probabilities = 1/2
+Where the missing term goes
+For path amplitudes a, b, the outcome probability is |a + b|2 = |a|2 + |b|2 + 2ℜ(a¯b). Here the last term
+is −1/2, canceling the first two terms. The path picture retains this information only if its edges carry
+complex amplitudes rather than unsigned reachability or probabilities.
+The packetwise unitarity identity is likewise an operator identity, including the off-diagonal cancellations:
+X
+b
+U∗
+baUbc = δacPa,
+Uba = PbUPa.
+It cannot be replaced by the assertion that every path individually has unit norm. The exact checks verify
+all four choices of a, c for the two rank-one packets, as well as the two opposite-output path products.
+A measurement at the intermediate stage would remove the cross term. In that modified experiment the
+two alternatives really would contribute total probability 1/2 to output one. Thus the false calculation
+accidentally describes a different experiment.
+Read this as: Insert projectors algebraically to resolve paths, then add amplitudes. Add probabilities
+only when the physical setup has actually made the alternatives incoherent.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 9
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+ONE HAMILTONIAN IN TWO ORDERS
+A symmetry reveals blocks, not approximations
+Traditional edition: Theorem II.5.1; PDF p. 42.
+Take the exact rational Hamiltonian
+H = X ⊗X + 3
+8(Z ⊗I + I ⊗Z).
+It commutes with total parity Z ⊗Z. Reordering the computational basis into even addresses (00, 11)
+and odd addresses (01, 10) displays the invariant subspaces explicitly.
+Computational order
+3
+4
+0
+0
+1
+0
+0
+1
+0
+0
+1
+0
+0
+1
+0
+0
+−3
+4
+00
+01
+10
+11
+00
+01
+10
+11
+Parity order
+3
+4
+1
+0
+0
+1
+−3
+4
+0
+0
+0
+0
+0
+1
+0
+0
+1
+0
+00
+11
+01
+10
+00
+11
+01
+10
+same operator
+different order
+Even eigenvalues: ±5/4. Odd eigenvalues: ±1.
+Heven =
+ 
+3/4
+1
+1
+−3/4
+!
+,
+Hodd =
+ 
+0
+1
+1
+0
+!
+.
+The even block squares to (25/16)I, so its eigenvalues are ±5/4. The odd block squares to I, so its
+eigenvalues are ±1. Exponentiating either block gives the corresponding part of the exact evolution; the
+off-packet transfer stays zero for every real time.
+What has changed?
+Only the order of basis vectors has changed. No matrix entries, amplitudes, or energy levels were discarded.
+This is why the decomposition is exact. Keeping just the even block would be a separate restriction of the
+state space, justified for initial data known to be even and for dynamics that preserve it.
+The next page breaks a symmetry in a smaller model. There the cross-packet entries no longer vanish,
+and their effect must be controlled rather than hidden by reordering. The exact tests here multiply the
+commutator, verify the displayed permutation, and compute all four eigenvalues symbolically.
+Read this as: Block diagonalization uses an invariant decomposition already present in the operator.
+It is not evidence that an arbitrary chosen packet is invariant.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 10
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+COMMUTATORS AND PROBABILITY BOUNDS
+Quantify the amplitude that escapes
+Traditional edition: Theorem II.5.3, Corollary II.5.4; PDF p. 42.
+For a two-level system, choose H = εX, P = |0⟩⟨0|, and Q = I −P. Direct exponentiation gives
+e−itH = cos(εt)I −i sin(εt)X,
+Qe−itHP
+ = | sin(εt)|,
+∥[H, P]∥= |ε|.
+The general commutator estimate becomes the elementary bound | sin u| ≤|u|. Unitarity also bounds the
+amplitude by one.
+0
+0.5
+1
+1.5
+2
+2.5
+0
+0.5
+1
+u = |εt|
+leakage amplitude
+H = εX
+solid: | sin u|
+dashed: min(1, u)
+Probability is sin2 u,
+not | sin u|.
+From a norm to a probability
+For this initial state, the escape probability is sin2(εt), not | sin(εt)|. Consequently
+Pr(hidden packet at t) ≤min{1, ε2t2}.
+At εt = π/6, the amplitude is 1/2 and the probability is 1/4. Near zero, amplitudes are first order while
+escape probabilities are second order. Mixing those two quantities produces an incorrect interpretation of
+a leakage plot.
+The figure samples closed-form functions for display. The supporting check verifies the exact exponential
+identity, its unitarity, the squared leakage matrix, and the special-time value. The bound itself is supplied
+by the paper’s theorem, not established by sampling the curve.
+At larger times amplitude can return from the hidden packet. Thus the commutator bound is a worst-case
+guarantee, not a prediction that leakage rises monotonically forever.
+Read this as: The norm estimate controls amplitude. Square it for a normalized-state probability
+bound, and retain the distinction between a bound and the actual oscillatory dynamics.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 11
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+NOT ALL MOTION IS PHYSICAL EVOLUTION
+A moving frame creates a connection term
+Traditional edition: Theorem II.6.3; PDF p. 44.
+Set the laboratory Hamiltonian to zero and keep ψ(t) = |0⟩fixed. Describe it in rotating coordinates,
+U(t) =
+ 
+cos t
+−sin t
+sin t
+cos t
+!
+,
+y(t) = U(t)∗ψ(t) =
+ 
+cos t
+−sin t
+!
+.
+The vector has not moved in the laboratory, but its coordinate entries have changed.
+θ = 0
+(1, 0)
+θ = π/6
+(
+√
+3/2, −1/2)
+θ = π/3
+(1/2, −
+√
+3/2)
+Solid vector: fixed in the laboratory. Dashed axes: rotating frame.
+The missing term can be computed exactly
+Let J =
+ 
+0
+−1
+1
+0
+!
+. Since U∗˙U = J, the coordinate Hamiltonian is
+Hframe = −iJ =
+ 
+0
+i
+−i
+0
+!
+,
+i ˙y = Hframey.
+This matrix is Hermitian. Omitting it would predict a constant y, contradicting the displayed coordinates.
+In this example the norm of the omitted time derivative is exactly one, so the failure is not a small
+numerical residual.
+For a nonzero laboratory Hamiltonian, the same product rule adds the transformed physical term U∗HU.
+Thus U∗HU −iU∗˙U separates the physical generator from the coordinate correction. Both pieces belong
+to the same equation but have different origins.
+The drawing shows actual rotated axes at three angles, not three different laboratory trajectories. The
+check differentiates the exact matrices and verifies the coordinate Schrödinger equation symbolically. A
+finite-difference test is unnecessary for this model.
+Read this as: When coordinates move, even a stationary physical vector acquires changing
+components. The connection term accounts for that change; it is not an optional force added to the
+laboratory system.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 12
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE CANONICAL PACKET CONNECTION
+Differentiate the subspace itself
+Traditional edition: Theorem II.6.1, Theorem II.6.2; PDF p. 43.
+Continue with P(t) = U(t) diag(1, 0)U(t)∗and Q(t) = I −P(t). Differentiating P 2 = P gives
+˙PP + P ˙P = ˙P,
+P ˙PP = 0.
+The second identity says that the derivative has no component entirely inside the current packet. It moves
+the subspace relative to its complement.
+P(0)
+1
+0
+0
+0
+˙P(0)
+0
+1
+1
+0
+C
+0
+−1
+1
+0
+P ˙PP = 0,
+C∗= −C,
+[C, P] = ˙P.
+For this complete pair of packets, define
+C = ˙PP + ˙QQ.
+Exact calculation yields the constant matrix C = J, with C∗= −C and [C, P] = ˙P. At t = 0, the matrices
+in the plate let the reader verify these identities by multiplying four small arrays.
+From two packets to a complete family
+For differentiable orthogonal projectors Pa summing to the identity, the paper constructs
+C =
+X
+a
+˙PaPa = 1
+2
+X
+a
+[ ˙Pa, Pa].
+It transports every packet derivative simultaneously. No basis within a packet is needed for this formula.
+A basis choice would add internal coordinate data without changing which subspaces are selected.
+The completeness of the family matters in deriving skew-Hermiticity and the simultaneous transport
+identities. Using only one summand of an incomplete list is not automatically the same connection. The
+example retains both P and Q throughout, even when the picture emphasizes only the first line.
+Read this as: The projector derivative describes motion between subspaces.
+The canonical
+connection reconstructs that motion from the complete family without choosing internal packet
+bases.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 13
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE RANGE BUNDLE IS CONSTRUCTED LOCALLY
+A chart failure is not a singular fiber
+Traditional edition: Theorem II.6.7; PDF p. 46. Range-atlas details: saved v0.6.0 supplement, pp. 2–4.
+The fiber of a projector field is the actual fixed subspace Ex = {v : P(x)v = v}. To compare it with a
+nearby anchor fiber Ea, the completion proof constructs
+Ta(x) = P(x)P(a) + (I −P(x))(I −P(a)).
+It equals the identity at the anchor and intertwines the two projectors. Where it is invertible, its restriction
+provides local fiber coordinates.
+0
+det T = 1
+π/6
+det T = 3/4
+π/3
+det T = 1/4
+π/2
+det T = 0
+Ranges of P(θ); the anchor is the horizontal line.
+At the last position, use a new anchor. The fiber still has dimension one.
+An exact example of the domain restriction
+For the rotating line and anchor P(0),
+T0(t) = cos t U(t),
+det T0(t) = cos2 t.
+The chart fails at t = π/2, but P(π/2) = diag(0, 1) is a perfectly regular rank-one projector. Choosing a
+vertical anchor supplies a new chart there. What failed was the comparison with one reference fiber, not
+the fiber itself.
+In general, the open sets where Ta(x) is invertible cover the base. The inverse chart maps and smooth
+overlap maps are constructed from the actual matrices.
+Their cocycle identities express consistent
+coordinate changes, rather than assuming a global basis exists.
+The v0.6.0 supplement proves the intrinsic connection and its curvature using actual manifold derivatives.
+Its scope includes bounded idempotents, not only orthogonal ones. The geometric illustration here is
+finite-dimensional and orthogonal for transparency; that convenience is not promoted to an extra premise
+of the recorded theorem.
+Read this as: A smooth bundle is built from compatible local charts. The singularity of one chart
+determinant can be harmless, provided another anchor covers the same smooth fiber.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 14
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN EXACT BLOCH-PROJECTOR CALCULATION
+Curvature measures a local area response
+Traditional edition: Theorem II.6.7, Corollary II.6.8; PDF p. 46.
+On the unit sphere, set n = (sin θ cos ϕ, sin θ sin ϕ, cos θ) and
+P(θ, ϕ) = 1
+2(I + n · σ).
+This is a smooth rank-one orthogonal projector. The intrinsic curvature is the endomorphism-valued
+two-form P(dP ∧dP)P. With the paper’s scalar convention, its component is
+Fθϕ = −i Tr(P[∂θP, ∂ϕP]) = 1
+2 sin θ.
+Cap flux at θ = π/3 is π/2.
+0
+0
+0.25
+0.5
+polar angle θ
+Fθϕ = 1
+2 sin θ
+π
+The density vanishes at coordinate poles.
+A local frame gives the same answer
+Away from the south pole, use uN = (cos(θ/2), eiϕ sin(θ/2))T . Then P = uNu∗
+N and the scalar one-form is
+AN = −iu∗
+NduN = 1 −cos θ
+2
+dϕ,
+dAN = 1
+2 sin θ dθ ∧dϕ.
+Thus the curvature flux through the cap 0 ≤θ ≤θ0 is π(1 −cos θ0). At θ0 = π/3, it is exactly π/2. The
+plate’s latitude is an illustration of this cap; the formula, not its apparent area on the page, supplies the
+value.
+The vanishing of the coordinate density at a pole does not mean the geometric curvature disappears there.
+The spherical area form also carries the factor sin θ. A phase assigned to parallel transport additionally
+requires an orientation and a connection-sign convention; flux and phase should not be interchanged
+without those choices.
+Read this as: The projector formula and a local frame calculation agree. Curvature is intrinsic
+even when no single smooth frame covers the whole sphere.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 15
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE ANSWER DEPENDS ON ITS EFFECTS
+Which coherence can a measurement see?
+Traditional edition: Theorem II.7.2, Theorem II.7.4, Corollary II.7.5; PDF pp. 47, 48.
+For the Bell density matrix ρ = |Φ+⟩⟨Φ+|, parity dephasing does nothing: both nonzero amplitudes
+already lie in the even subspace. Computational-basis dephasing instead removes the entries between
+addresses 00 and 11.
+2ρ; also 2Dparity(ρ)
+1
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+1
+00
+01
+10
+11
+2Dcomputational(ρ)
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+00
+01
+10
+11
+same diagonal
+different coherence
+Bell-projector outcome: 1 on the left, 1/2 on the right.
+Every computational-basis effect Ea = |a⟩⟨a| has the same expectation on both matrices, namely 1/2 at
+00 and 11 and zero elsewhere. These measurements read only the diagonal. They cannot distinguish the
+pure Bell state from this incoherent mixture.
+A measurement that resolves the difference
+Use the valid two-outcome measurement with effects E = ρ and I −E. Then
+Tr(Eρ) = 1,
+Tr(EDcomputational(ρ)) = 1
+2.
+The effect itself is not diagonal in the fine computational packets. It compares their coherent combination,
+so the paper’s block-diagonal invariance hypothesis does not apply.
+This example contains three operations that should not be conflated: representing a state by all of its
+packet matrix blocks, applying a dephasing channel, and reading one specified measurement. Only the
+second discards the off-diagonal blocks. The third may or may not notice that loss, depending on its
+effects.
+The exact checks construct all four fine projectors, both parity projectors, both dephased states, and the
+outcome traces. They reject the stronger statement that every measurement is invariant under dephasing.
+Read this as: A measurement’s inability to see a coherence does not make that coherence absent.
+It states a restriction on the observable, not an equality of the underlying states.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 16
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+POPULATIONS AND COHERENCES TRANSFORM DIFFERENTLY
+A channel acts on four matrix entries
+Traditional edition: Theorem II.7.6, Result II.7.12; PDF pp. 49, 50.
+Choose amplitude damping with γ = 9/25:
+K0 =
+ 
+1
+0
+0
+4/5
+!
+,
+K1 =
+ 
+0
+3/5
+0
+0
+!
+,
+K∗
+0K0 + K∗
+1K1 = I.
+The channel Φ(ρ) = P
+a KaρK∗
+a is trace preserving and completely positive. The special parameter keeps
+every displayed coefficient rational.
+Superoperator on matrix entries
+1
+0
+0
+9
+25
+0
+4
+5
+0
+0
+0
+0
+4
+5
+0
+0
+0
+0
+16
+25
+00
+01
+10
+11
+00
+01
+10
+11
+Output from |+⟩
+17
+25
+2
+5
+2
+5
+8
+25
+γ = 9/25
+coherence factor
+4/5
+Tr ρ = 1,
+det ρ = 36/625 > 0
+The superoperator uses the entry order (ρ00, ρ01, ρ10, ρ11). Population leaves the excited state with factor
+9/25, while coherences contract by 4/5. These are not the same rate or the same coordinate.
+For ρ+ = 1
+2
+ 
+1
+1
+1
+1
+!
+, the exact output is
+Φ(ρ+) =
+ 
+17/25
+2/5
+2/5
+8/25
+!
+.
+Its trace is one and determinant is 36/625 > 0, so it is a mixed positive state. Keeping only population-
+transfer arrows would not specify its off-diagonal entries.
+The complete-positivity certificate
+The Choi matrix is an explicit sum of two outer products of vectorized Kraus operators. Its eigenvalues
+are 41/25, 9/25, 0, 0, all nonnegative. This gives an independent finite certificate in addition to Kraus
+normalization. The Choi matrix has trace two under the unnormalized maximally entangled convention
+used by the check.
+Read this as: A packet channel acts on pairs of packet addresses, because density matrices have
+two indices. Population transfer alone does not reconstruct a quantum channel.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 17
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+WHY COMPLETE POSITIVITY IS THE RELEVANT CONDITION
+An ancilla tests more than positivity
+Traditional edition: Standard fact II.7.7; PDF p. 49.
+Ordinary transpose T sends a positive single-system matrix to another positive matrix and preserves its
+trace. Those properties are insufficient for a quantum channel on a subsystem of an entangled state. The
+test must include id ⊗T on the larger system.
+2(id ⊗T)(ρBell)
+1
+0
+0
+0
+0
+0
+1
+0
+0
+1
+0
+0
+0
+0
+0
+1
+00
+01
+10
+11
+w = (|01⟩−|10⟩)/
+√
+2
+w∗(id ⊗T)(ρ)w = −1/2
+Transpose is positive on one system.
+It is not completely positive.
+Apply this extended map to the Bell density matrix. The result is
+(id ⊗T)(ρBell) = 1
+2
+
+
+
+
+
+
+
+1
+0
+0
+0
+0
+0
+1
+0
+0
+1
+0
+0
+0
+0
+0
+1
+
+
+
+
+
+
+
+.
+Its middle block has one negative eigenvalue. More concretely, the normalized vector w = (|01⟩−|10⟩)/
+√
+2
+satisfies
+w∗(id ⊗T)(ρBell)w = −1
+2.
+This single exact quadratic-form value certifies failure of positivity on the composite system. No numerical
+eigenvalue tolerance is needed.
+Why the Kraus form avoids this problem
+For every auxiliary dimension and positive X, each term (I ⊗Ka)X(I ⊗Ka)∗is positive. Their sum is
+positive as well. This argument explains the word completely; checking one input density matrix in the
+original dimension is not an equivalent test.
+The transpose counterexample is an explanatory finite calculation, not a new addition to the formal
+theorem count. It makes visible the hypothesis that the manuscript’s Kraus result already supplies. The
+exact check constructs the partial transpose with the stated tensor indexing and evaluates its negative
+witness directly.
+Read this as: A map can look harmless on an isolated system and fail on an entangled extension.
+Complete positivity retains compatibility with every auxiliary system.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 18
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+FOUR EXACT SYNDROME PACKETS
+Find the error without reading the logical state
+Traditional edition: Theorem II.8.2, Theorem II.8.4, Result II.8.8; PDF pp. 52, 53, 54.
+Encode a qubit by |0L⟩= |000⟩and |1L⟩= |111⟩.
+Let P project onto this code and take errors
+Ea ∈{I, X1, X2, X3}. Their images are four orthogonal rank-two packets Qa = EaPE∗
+a that sum to the
+full identity.
+no error
+|000⟩
+|111⟩
+ratio 3 : 4
+X1
+|100⟩
+|011⟩
+ratio 3 : 4
+X2
+|010⟩
+|101⟩
+ratio 3 : 4
+X3
+|001⟩
+|110⟩
+ratio 3 : 4
+Channel probabilities: 1/10, 2/10, 3/10, 4/10.
+Use the logical state ψ = (3|0L⟩+ 4|1L⟩)/5 and channel probabilities w = (1, 2, 3, 4)/10. The noisy state
+is P
+a waEaψψ∗E∗
+a. A syndrome measurement returns label a with probability wa, independent of the
+logical amplitudes.
+The recovery is an actual channel
+The operators Ra = E∗
+aQa satisfy P
+a R∗
+aRa = I. Applying the recovery R(X) = P
+a RaXR∗
+a to the noisy
+state gives exactly ψψ∗. The off-diagonal logical coherence 12/25 is recovered as well as the populations
+9/25 and 16/25.
+The Knill–Laflamme compressions are PE∗
+aEbP = δabP. Their scalar form says that the error labels do
+not resolve the encoded vector. The exact checks evaluate all sixteen compressions, all sixteen syndrome
+products, the four probabilities, the recovery normalization, and the full recovered matrix.
+This code corrects the specified single-bit flips. It is not claimed to correct arbitrary errors on three qubits,
+or even arbitrary single-qubit errors. The next example exhibits an error outside its protected family.
+Read this as: A syndrome identifies an error subspace while leaving a two-dimensional logical
+subspace intact. Measuring the two logical basis states separately would destroy the information the
+recovery must preserve.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 19
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE SCALAR COMPRESSION TEST MATTERS
+A harmless-looking syndrome can hide a logical
+error
+Traditional edition: Theorem II.8.2, Proposition II.8.7; PDF pp. 52, 54.
+Apply Z1 = Z ⊗I ⊗I to the same repetition code. It sends |000⟩to itself and |111⟩to its negative. Both
+states remain inside the original code, so the previous syndrome partition reports no bit flip.
+3|000⟩+ 4|111⟩
+5
+7−→3|000⟩−4|111⟩
+5
+.
+The populations are unchanged, but the relative phase is not.
+V ∗Z1V
+1
+0
+0
+−1
+before: (3, 4)/5
+after: (3, −4)/5
+same code support
+different relative phase
+Required scalar form cI
+c
+0
+0
+c
+A trace of zero does not make diag(1, −1) the zero operator.
+Let V be the code isometry with columns |000⟩, |111⟩. For the proposed error family {I, Z1}, its off-diagonal
+error compression is
+V ∗I∗Z1V =
+ 
+1
+0
+0
+−1
+!
+.
+This matrix is not cI for any scalar c. Thus the Knill–Laflamme condition fails for that family. Its trace
+is zero, but its action on the code is certainly nonzero. A trace test alone would miss the obstruction.
+Known correction versus family recovery
+If it is known with certainty that Z1 occurred, applying Z1 again reverses it. The failed criterion concerns a
+single recovery valid for the whole declared unknown-error family, not invertibility of each error considered
+separately. This distinction prevents a misleading conclusion that no phase error can ever be undone.
+The finite calculation checks the actual compressed matrix and rejects its equality to zero. The scalar
+obstruction is then transparent from the two unequal diagonal entries.
+Read this as: Correction must preserve all logical superpositions for the declared error family.
+Staying in the code and preserving basis probabilities are not sufficient.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 20
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+TWO INVERTIBILITY CONDITIONS, NOT ONE
+Hidden states return as spectral dependence
+Traditional edition: Theorem II.9.2, Theorem II.9.3; PDF pp. 55, 56.
+Take H =
+ 
+0
+1
+1
+2
+!
+and retain its first coordinate. The eliminated block is HQQ = 2. Whenever z −2 and
+the full zI −H are invertible,
+Heff(z) =
+1
+z −2,
+(zI −H)−1
+00 =
+1
+z −1/(z −2) =
+z −2
+z2 −2z −1.
+This is the corrected hypothesis set recorded in the formal release.
+1 −
+√
+2
+1 +
+√
+2
+2
+3
+Filled: full resolvent poles. Open at 2: only the eliminated inverse fails.
+At z = 3: exact retained resolvent 1/2, bare truncation 1/3.
+At z = 3, the exact retained resolvent is 1/2. Bare truncation uses only HPP = 0 and gives 1/3, an error
+of 1/6. The omitted coupling has changed the response even though the retained diagonal entry did not
+change.
+A pole can belong to the elimination chart
+At z = 2, the eliminated inverse does not exist, so the displayed Schur formula cannot be applied there as
+written. Nevertheless, the full resolvent exists and its retained entry is zero. The rational expression has a
+continuation to this value. By contrast, 1 ±
+√
+2 are genuine full-resolvent poles.
+The full-invertibility hypothesis is independently necessary. At z = 0, H = diag(0, −1) has an invertible
+eliminated block in zI −H, but the full matrix is singular. The original prose omitted this condition; the
+preserved amendments restore it. This appendix uses the corrected form throughout.
+Read this as: An exact elimination formula has a spectral domain. Check both inverses before
+evaluating it, and distinguish poles of an intermediate inverse from poles of the full physical resolvent.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 21
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN EXACT QUANTUM MEMORY EQUATION
+The smaller system remembers the discarded one
+Traditional edition: Theorem II.9.8, Theorem II.9.11; PDF pp. 58, 59.
+Choose H = X, initial state (1, 0)T , and retain the first coordinate. The coupled equations and their
+solution are
+i ˙x = y,
+i ˙y = x,
+x(t) = cos t,
+y(t) = −i sin t.
+The hidden probability returns periodically. Deleting the hidden row and column would instead leave the
+zero Hamiltonian and predict x(t) = 1.
+0
+0
+0.5
+1
+time t
+probability
+solid: retained
+dashed: hidden
+K(t) = 1
+The two probabilities
+sum to one.
+π
+Eliminate exactly, not approximately
+Integrating the second equation with y(0) = 0 gives y(t) = −i
+R t
+0 x(s) ds. Substitution produces
+˙x(t) = −
+Z t
+0
+x(s) ds.
+The memory kernel is the constant function one. Differentiating once more recovers ¨x = −x with x(0) = 1
+and ˙x(0) = 0, explaining the cosine solution. A nonzero hidden initial state would add its own forcing
+term; it cannot be silently ignored.
+The full propagator is a unitary group, but its retained scalar entry is not a semigroup. At t = s = π/4,
+x(t + s) −x(t)x(s) = 0 −1
+2 = −1
+2.
+There is no contradiction: compression of a product need not equal the product of the compressed factors
+when the hidden subspace carries intermediate amplitude.
+The check verifies the differential and integral equations symbolically and the displayed nonzero semigroup
+defect exactly. The plotted curves are merely a visualization of these closed-form identities.
+Read this as: Exact elimination trades a hidden coordinate for memory and initial-data forcing.
+Replacing that memory by a constant generator is an additional approximation, not part of the
+exact theorem.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 22
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+SPECTRAL POSITIVITY IS BASIS INDEPENDENT
+Positive transfer is not a stochastic matrix
+Traditional edition: Theorem II.10.1, Theorem II.10.3; PDF p. 60.
+For H = I −X, the two eigenvalues are zero and two. Its Euclidean transfer is
+T(τ) = e−τH = 1
+2
+ 
+1 + q
+1 −q
+1 −q
+1 + q
+!
+,
+q = e−2τ.
+For τ ≥0, the eigenvalues 1, q lie in (0, 1], and multiplying two such matrices replaces q, r by qr. This is
+the semigroup law in spectral coordinates.
+T at e−2τ = 1/2
+3
+4
+1
+4
+1
+4
+3
+4
+ZTZ in another basis
+3
+4
+−1
+4
+−1
+4
+3
+4
+Both have
+spectrum {1, 1/2}.
+Positive-definite operator: v∗Tv > 0 for v ̸= 0. Not an entrywise test.
+At q = 1/2, the displayed T happens also to have nonnegative entries and column sums one. Conjugate
+by the unitary Z. The spectrum and positive-definite quadratic form are preserved, but both off-diagonal
+entries become −1/4. Thus positivity as an operator is not entrywise positivity and does not by itself give
+a Markov interpretation.
+A useful finite positive kernel
+For this nonnegative H, vectors ua and times ta ≥0 satisfy
+X
+a,b
+⟨ua, e−(ta+tb)Hub⟩=
+
+X
+a
+e−taHua
+
+2
+≥0.
+The factorization makes positivity transparent. It remains a finite operator identity. A continuum
+reconstruction theorem requires a compatible field structure, limits, positivity hypotheses, and the other
+assumptions of the chosen reconstruction framework. None follows just from two positive eigenvalues.
+The exact check verifies the matrix semigroup law as a polynomial identity in q, r and verifies the unchanged
+spectrum after conjugation. It rejects entrywise nonnegativity for the conjugated matrix.
+Read this as: Euclidean positivity refers to quadratic forms and spectral values. A stochastic
+interpretation or a continuum physical reconstruction needs additional structure.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 23
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+A FOUR-SITE HEAT TRACE IN CLOSED FORM
+A dimension curve is a scale diagnostic
+Traditional edition: Definition II.11.1, Proposition II.11.2; PDF p. 62.
+For the four-cycle Laplacian L = 2I −S −S∗, the eigenvalues are 0, 2, 2, 4. The normalized heat trace
+and its spectral-dimension diagnostic are therefore
+K(τ) = 1 + 2e−2τ + e−4τ
+4
+= (1 + e−2τ)2
+4
+,
+ds(τ) = −2τ K′(τ)
+K(τ) =
+8τ
+e2τ + 1.
+No numerical differentiation is needed for this finite example.
+-3
+-2
+-1
+0
+1
+0
+1
+2
+log10 τ
+ds(τ)
+solid: four-cycle
+dashed: product of two
+No broad plateau is
+promised at four sites.
+Finite diagnostic,
+not a dimension proof.
+Both ends are finite-size regimes
+As τ →0, every eigenmode contributes approximately one and the dimension diagnostic tends to zero. As
+τ →∞, the zero mode dominates, so it again tends to zero. A finite spectrum cannot sustain a nonzero
+plateau at all scales.
+For the Cartesian product of two identical four-cycles, the Laplacian eigenvalues add and the heat traces
+multiply: K2 = K2. Consequently ds,2 = 2ds exactly. The second curve is not fitted to the first; the
+product identity determines it.
+At τ = log 2/2, the first curve equals 4 log 2/3. This noninteger value is a scale-dependent spectral quantity,
+not a claim that the graph has a fractional topological dimension. Four sites are too few to promise a
+broad geometric plateau. Larger-grid experiments remain finite diagnostics; convergence requires the
+analytic hypotheses developed on V – 37.
+Read this as: A convincing continuum dimension needs a stable scale window that persists under
+controlled refinement. One appealing finite curve is not that theorem.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 24
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN EXACT ERROR ENCLOSURE, NOT A FITTED SLOPE
+Refine the grid while holding the mode fixed
+Traditional edition: Theorem II.11.4; PDF p. 63.
+For the circle symbol, the continuum value is k2 and the grid value is
+λk,h = 4
+h2 sin2
+kh
+2
+
+,
+h ̸= 0.
+For a fixed low mode, the paper bounds the error by 0 ≤k2 −λk,h ≤k4h2/12. The spacing condition
+matters because the displayed expression divides by h2.
+h = 1
+4
+error (approx.)
+≃0.005197495
+bound h2/12
+1
+192
+h = 1
+8
+error (approx.)
+≃0.001301405
+bound h2/12
+1
+768
+h =
+1
+16
+error (approx.)
+≃0.000325478
+bound h2/12
+1
+3072
+Successive error ratios lie strictly between 3.99 and 4.
+What is certified in the displayed table?
+Take k = 1 and h = 1/4, 1/8, 1/16. For x = h/2 ∈[0, 1], alternating Taylor sums give rational lower and
+upper bounds for sin x. Squaring these positive endpoints and multiplying by 4/h2 yields exact rational
+enclosures for each error. The displayed decimals only locate those much narrower rational intervals.
+Each interval lies strictly inside (0, h2/12). Dividing successive interval endpoints proves that both error
+ratios are between 3.99 and 4. The check verifies these inequalities by rational arithmetic, not by trusting
+floating-point sine values or fitting a line on a logarithmic plot.
+Why the low-mode qualification matters
+If instead k = π/h moves with the grid, the ratio λk,h/k2 = 4/π2 stays constant, not one. The bound’s
+factor k4 warns that it is not uniform in arbitrary moving high modes. The displayed rational test uses
+the analytic symbol; it does not assert an integer periodic grid for every chosen spacing.
+Read this as: Second-order convergence is a quantified statement with a specified mode regime.
+Keep that regime fixed when reading an error curve or comparing refinements.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 25
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+TEST THE CONSTRAINTS BEFORE THE PROJECTION
+A zero compressed anomaly can be automatic
+Traditional edition: Theorem II.12.2, Proposition II.12.3; PDF p. 66.
+Take the self-adjoint matrices
+C1 = diag(0, 1, −1),
+C2 =
+
+
+
+
+0
+0
+0
+0
+0
+1
+0
+1
+0
+
+
+
+,
+P = diag(1, 0, 0).
+Both constraints annihilate PC3, and their common kernel is exactly that one-dimensional space. Never-
+theless, their full commutator is nonzero.
+[C1, C2]
+0
+0
+0
+0
+0
+2
+0
+−2
+0
+P[C1, C2]P
+0
+0
+0
+0
+0
+0
+0
+0
+0
+P = diag(1, 0, 0)
+C1P = C2P = 0
+The right matrix is zero by the common-kernel choice, not by operator closure.
+Why the compressed test cannot decide closure
+Since C1P = C2P = 0, each product C1C2P and C2C1P vanishes. Therefore P[C1, C2]P = 0 without any
+requirement that the unprojected commutator close in the chosen constraint span. In this example the
+skew off-diagonal commutator is not a linear combination of the two displayed symmetric constraints.
+More generally, an anomaly expression made from their commutators and linear combinations of constraints
+also kills an exact common-kernel projector on the right. This is an important boundary of the diagnostic,
+recorded by the formal release. A nonzero compressed residual can reveal inconsistent proposed data, but
+an automatic zero does not construct an anomaly-free constraint algebra.
+A substantive closure analysis must inspect the operator relations, their domains, the actual physical
+subspace, and compatibility under refinement. For infinite systems, these questions also involve domain
+and limit control that finite matrix arithmetic cannot replace.
+The exact example computes both constraint products, the full commutator, and its compression. It
+deliberately rejects the inference from compressed zero to unprojected zero.
+Read this as: Before celebrating a vanishing residual, ask whether the way its projector was defined
+already forced it to vanish. A tautological diagnostic cannot supply the missing existence or closure
+theorem.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 26
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+SEEDS, CHARACTERS, INTERFERENCE, AND DEPHASING
+One complete calculation: opposite-site transfer
+Traditional edition: Corollary II.3.3, Theorem II.4.4, Theorem II.7.4; PDF pp. 38, 40, 48.
+Return to the four-site shift S and Laplacian L = 2I −S −S∗. The same character projectors have energies
+(0, 2, 4, 2). At time t = π/2, their evolution phases are (1, −1, 1, −1), exactly the character eigenvalues of
+S2. Hence
+e−iπL/2 = S2,
+|0⟩7−→|2⟩.
+0
+1
+2
+3
+e−iπL/2 = S2
+start
+1
+0
+0
+0
+time π/2
+0
+0
+1
+0
+Target probability after partial
+momentum dephasing: 1 −3η/4.
+At halfway time π/4, the actual amplitude vector is (−i, 1, i, 1)T /2, giving uniform site probabilities.
+The subsequent phases recombine those four amplitudes into a single opposite-site output. Uniform
+intermediate probabilities do not imply an incoherent intermediate state.
+A channel changes the conclusion predictably
+Before evolving, mix the seed density matrix with its complete momentum dephasing:
+ρη = (1 −η)|0⟩⟨0| + η
+X
+j
+Pj|0⟩⟨0|Pj = (1 −η)|0⟩⟨0| + ηI/4,
+0 ≤η ≤1.
+At transfer time, the opposite-site probability is exactly 1−3η/4. Complete momentum dephasing reduces
+it to 1/4. This calculation isolates how discarded coherence changes the interference result.
+Finally, the shift grammar generates four independent vectors from |0⟩, while the Hamiltonian powers
+generate only three: its repeated energy links two momentum directions. The same seed can therefore be
+cyclic for the shift algebra and noncyclic for the Hamiltonian algebra, even though perfect transfer occurs
+at one time.
+Read this as: Perfect transfer is an exact finite interference statement. It neither implies cyclicity
+for every operator grammar nor survives an unaccounted dephasing operation.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 27
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN EVIDENCE GUIDE FOR THE READER
+What these pictures establish
+Traditional edition: Section II.14; PDF p. 71. Saved formal scope: v0.6.0 ledger and completion supplement.
+The appendix uses small objects to make the paper’s constructions inspectable. Every matrix and finite
+example is supplied in editable source, with a separate check record. The plates visualize those calculations;
+their apparent smoothness or symmetry is not itself proof.
+Evidence
+What it supports
+What it does not supply
+Exact matrices
+The displayed finite identities,
+witnesses, and counterexamples.
+A classification of arbitrary systems.
+Symbolic derivatives
+The stated closed-form rotating and
+Bloch examples.
+A proof inferred from numerical
+differentiation.
+Rational enclosures
+The three displayed dispersion
+intervals and ratio inequalities.
+A continuum theorem from three
+sample points.
+Saved Lean release
+Its 19 registered finite items under
+their recorded hypotheses.
+A fresh kernel run for this appendix.
+Numerical replay
+The original finite software examples
+in the tested environment.
+Physical experiments or unrestricted
+convergence.
+Which source is authoritative?
+The saved formal checkpoint is v0.6.0: 323 recorded theorem declarations in 25 current modules, including
+supporting lemmas. These are inherited metadata, not a fresh kernel execution. The final traditional
+edition supplies the current reading references. The original proof sources and the separate v0.5.1 editorial
+sibling retain their own identities.
+The five research boundaries remain separate: an anomaly-free coherent refinement, uniform effective-
+operator control, Lorentzian reconstruction, an Einstein infrared limit, and a positive physical massless
+spin-two sector. A finite projector bundle, positive transfer matrix, or spectral diagnostic does not settle
+them.
+A practical way to use the appendix
+Choose one page, reproduce its matrix calculation, and then read the cited final-edition theorem with
+its hypotheses. The original 180-check SymPy record is inherited: that suite is unavailable here. Fresh
+standard-library checks and their bounds are described on V – 40. In particular, retain the two resolvent
+assumptions on V – 21, the channel-family distinction on V – 20, and the common-kernel caveat on V – 26.
+Read this as: Exact finite structure is valuable because its boundary is explicit. The appendix
+adds understanding and reproducibility, not unproved continuum claims or a new theorem count.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 28
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+A SIX-DIMENSIONAL REGULAR REPRESENTATION
+Nonabelian packets carry multiplicity
+Traditional edition: Theorem II.3.1, Theorem II.3.2; PDF p. 37.
+Let H = C[S3] have the six orthonormal basis vectors |g⟩, with left action U(h)|g⟩= |hg⟩. The irreducible
+characters on the identity, transposition, and three-cycle classes are
+e
+(12)
+(123)
+dλ
+trivial
+1
+1
+1
+1
+sign
+1
+−1
+1
+1
+standard
+2
+0
+−1
+2
+Pλ = dλ
+6
+X
+g∈S3
+χλ(g−1)U(g).
+All matrices in this example are rational. Multiplying them gives self-adjoint idempotents of ranks 1, 1, 4,
+with pairwise zero products and sum I6.
+1
+1
+2 ⊗2 = 4
+trivial
+sign
+standard isotypic
+C[S3] ∼= C ⊕C ⊕(C2 ⊗C2)
+The standard packet is four-dimensional
+The standard representation occurs twice in the regular representation. Its isotypic component therefore
+has dimension 2 · 2 = 4: one factor carries the two-dimensional irreducible action and the other records
+multiplicity. A character projector selects the whole isotypic component. It does not select a particular
+copy or a particular internal vector.
+Representation matrix units refine the irreducible factor, while leaving the multiplicity factor untouched.
+Their multiplication law is stronger information than a list of packet ranks. A basis chosen inside the
+rank-four packet is a coordinate choice; it must not be mistaken for a canonical decomposition into two
+individual copies.
+What is executed
+The fresh exact check constructs all six permutation matrices, tests all 36 multiplication relations, computes
+the character averages, and checks ranks independently by Gaussian elimination and traces. It rejects the
+claim that the standard isotypic projector has rank two. This is one specified representation of S3, not a
+computational classification of all finite group representations.
+Read this as: For a nonabelian symmetry, distinguish irreducible dimension from multiplicity. A
+central character projector retains both.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 29
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN EXACT LOCAL CHART AND ITS FAILURE
+Rotate whole packets by a polar factor
+Traditional edition: Theorem II.6.5, Theorem II.6.6; PDF p. 45.
+On H = C2, put P0 = diag(1, 0), P1 = I −P0, and
+R =
+ 
+3/5
+−4/5
+4/5
+3/5
+!
+,
+Qa = RPaR∗,
+S =
+1
+X
+a=0
+QaPa = 3
+5R.
+The exact Gram matrices give
+(S −I)∗(S −I) = 16
+25I,
+S∗S = 9
+25I,
+∥S −I∥= 4
+5 < 1.
+Consequently the unitary polar factor is S(S∗S)−1/2 = R, and QaR = RPa for both complete packets.
+(3/5, 4/5)
+S = (3/5)R
+S∗S = (9/25)I
+S(S∗S)−1/2 = R
+The norm condition selects a chart
+If the target rank-one packet is orthogonal to the initial one, the two labels are exchanged and S = 0.
+Its polar inverse square root is undefined. This is a failure of this direct local construction, although a
+unitary carrying one packet system to the other still exists. The strict norm assumption is sufficient, not
+a global existence criterion for all packet rotations.
+Short steps can be composed before reaching a distant endpoint. For example, the rational step R1 =
+ 
+4/5
+−3/5
+3/5
+4/5
+!
+obeys
+R2
+1 =
+ 
+7/25
+−24/25
+24/25
+7/25
+!
+.
+The multiplication is exact and each step has a valid local overlap. The convergence theorem has a
+separate analytic contract: a twice continuously differentiable complete projector path on a compact time
+interval, sufficiently fine partitions, and a path-dependent constant in an O(|π|) operator-norm estimate.
+Evidence boundary
+The fresh run checks the Gram identities, polar factor, intertwining, and rational two-step product. It also
+checks that the orthogonal-endpoint overlap has rank zero. It does not certify the analytic convergence
+theorem by sampling a path.
+Read this as: A local polar chart can fail while the subspaces remain regular. Use the stated chart
+hypothesis and the separate convergence theorem when composing small rotations.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 30
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+CHANNEL, CHOI, AND GENERATOR CHECKS
+Coherence order survives a covariant channel
+Traditional edition: Theorem II.7.8, Theorem II.7.10, Theorem II.7.14; PDF pp. 49, 50, 51.
+Take S = Z = diag(1, −1) on C2. Conjugation X 7→ZXZ has order zero on diagonal matrices and
+order one modulo two on off-diagonal matrices. Its projectors on Hilbert–Schmidt operator space are
+L0(X) = (X + ZXZ)/2 and L1(X) = (X −ZXZ)/2.
+Choose amplitude damping with K0 = diag(1, 4/5) and K1 = (3/5)|0⟩⟨1|. The channel is trace preserving,
+population flows from state one to state zero, and each coherence contracts by 4/5.
+even Choi addresses 00, 11
+ 
+1
+4/5
+4/5
+16/25
+!
+odd Choi addresses 01, 10
+diag(9/25, 0)
+Φ(|0⟩⟨1|) = (4/5)|0⟩⟨1|
+With the unnormalized Choi convention J = P
+a,b Φ(|a⟩⟨b|) ⊗|a⟩⟨b| and basis (00, 01, 10, 11), the exact
+matrix is
+J =
+
+
+
+
+
+
+
+1
+0
+0
+4/5
+0
+9/25
+0
+0
+0
+0
+0
+0
+4/5
+0
+0
+16/25
+
+
+
+
+
+
+
+,
+[J, Z ⊗Z] = 0.
+The 00, 11 block is rank one and positive; the other nonzero eigenvalue is 9/25. The fresh check also
+verifies every principal minor is nonnegative.
+Continuous-time symmetry has its own hypotheses
+For the Lindblad generator with Hamiltonian H = diag(0, 2) and jump L = (3/5)|0⟩⟨1|, H has charge zero
+and L has charge one. Each matrix unit stays within its coherence order under the generator. Replacing
+H by X breaks that conclusion: the generator then sends a diagonal matrix to off-diagonal entries.
+All four input matrix units are checked exactly for channel covariance, generator order preservation, and
+zero generator trace. The finite exponential-series argument in the paper extends generator invariance
+to its semigroup. No master-equation solver is executed here, and symmetry alone supplies no scalar
+population closure inside higher-rank packets.
+Read this as: Charge is a property of operator space. Covariance preserves its coherent sectors,
+while complete positivity is checked separately through Kraus or Choi data.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 31
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+A TOTAL CHANNEL FROM SINGULAR ERROR DATA
+Null Gram directions are removed before recovery
+Traditional edition: Theorem II.8.3, Theorem II.8.4; PDF p. 53.
+Let H = C3, with nonzero code projector P = diag(1, 1, 0). On the code use the error family E1 = (3/5)P,
+E2 = (4/5)P, and E3 = 0. Its Knill–Laflamme Gram matrix is
+c = 1
+25
+
+
+
+
+9
+12
+0
+12
+16
+0
+0
+0
+0
+
+
+
+,
+PE∗
+aEbP = cabP.
+The errors are redundant rather than three distinct syndromes. A real unitary change of error coordinates
+gives
+W =
+
+
+
+
+3/5
+4/5
+0
+−4/5
+3/5
+0
+0
+0
+1
+
+
+
+,
+WcW ∗= diag(1, 0, 0),
+(F1, F2, F3) = (P, 0, 0).
+Gram spectrum
+(1, 0, 0)
+one syndrome
+Q = P, rank 2
+unused complement
+I −P, rank 1
+|0⟩⟨2|: replacement branch
+Normalize only positive eigenvalues
+The positive branch has V1 = P as an isometry on the code, and syndrome support Q = P. No factor λ−1/2
+is formed on either zero branch: those branches vanish on the code. Treating them as extra recoverable
+packets would divide by zero.
+The syndrome support is smaller than the ambient space. Define a total recovery with Kraus operators
+R1 = P,
+R2 = |0⟩⟨2|,
+R∗
+1R1 + R∗
+2R2 = I3.
+It acts as the identity on code-supported operators and sends the unused complement population into a
+chosen code state. The declared error map preserves the trace of code states, so recovery returns every
+code matrix unit, including both off-diagonal units, exactly. It need not preserve states on the unused
+complement.
+Exceptional cases and scope
+This construction assumes a nonzero code so that a complement replacement state exists. The zero-code
+case is vacuous and belongs to the separate formal boundary in the saved ledger. The exact run verifies
+all nine Gram compressions, the diagonalization, both null branches, total channel normalization, and all
+four code matrix units. It adds no Lean coverage and does not implement a numerical spectral decoder
+for arbitrary Gram data.
+Read this as: Positive Gram support defines genuine syndrome isometries. Null branches vanish; a
+separate complement rule makes the recovery a total channel.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 32
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+A TWO-POINT OPTIMAL SCALAR PROBLEM
+An approximate defect has a precise norm
+meaning
+Traditional edition: Definition II.8.6, Proposition II.8.7; PDF p. 54.
+On a two-dimensional code, consider the overlap compression
+A = PE∗
+aEbP = diag(11/10, 9/10).
+For instance, within the code take Ea = I and Eb = A. This declares an error family, not by itself a
+normalized noise channel. The optimal scalar compression has
+inf
+c∈C ∥A −cI∥= 1
+10,
+c = 1 attains it.
+Indeed, for every complex c, the triangle inequality gives
+1
+5 =
+
+11
+10 −9
+10
+ ≤
+
+11
+10 −c
+ +
+
+9
+10 −c
+ .
+Thus the larger of the two distances is at least 1/10, while both distances equal 1/10 at c = 1.
+9/10
+1
+11/10
+1/10
+1/10
+one pair: 1/10; full family {I, A}: 1/5
+What one pair contributes to the family defect
+For unit code vectors ψ, ϕ, this pair therefore satisfies
+|⟨Eaψ, Ebϕ⟩−⟨ψ, ϕ⟩| ≤1
+10.
+The bound is attained on either coordinate vector. For the whole declared family {I, A}, the A∗A
+compression also enters the maximum: its diagonal entries are 121/100, 81/100, giving pair defect 1/5.
+Hence the full family value is εKL = 1/5, not 1/10.
+This distinction prevents a tempting shortcut from one favorable overlap to an approximate correction
+claim. The quantity measures how close all overlap operators are to scalar action on the code. A recovery
+fidelity bound requires a declared normalized channel, a metric, and a separate continuity result.
+What is checked exactly
+For ε ∈{0, 1/10, 1/4, 1} the script checks (A −I)∗(A −I) = ε2I for A = diag(1 + ε, 1 −ε) and several
+rational scalar controls. The displayed triangle argument supplies the all-complex-scalar lower bound; a
+finite list of candidates cannot do that. The family maximum above is also recorded separately.
+Read this as: An overlap norm has a useful operational interpretation. Evaluate every error pair,
+then keep that statement separate from an unproved recovery fidelity estimate.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 33
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+SIGN, STABILITY, AND A CONVERGENT EXPANSION
+Control the hidden spectral response
+Traditional edition: Theorem II.9.4, Proposition II.9.5, Theorem II.9.12; PDF pp. 56, 57, 59.
+Retain one coordinate in H =
+ 
+0
+1
+1
+2
+!
+, so A = 0, B = 1, and D = 2. In its elimination domain,
+Σ(z) = 1/(z −2). At z = 3 + i,
+Σ(3 + i) = 1 −i
+2
+,
+ℑΣ(z) = −(ℑz)
+(z −2)−1
+2 ≤0.
+The upper half-plane sign comes from self-adjoint hidden data. It is not an entrywise sign condition on an
+arbitrary effective matrix.
+B = 1, D = 2
+Σ(3) = 1
+eB = 9/8, eD = 17/8
+eΣ(3) = 81/56
+25/56 ≤21/32
+common hypotheses: g = 9/8, δ = 3/4
+A stability estimate with a common spectral gap
+Compare (B, D) = (1, 2) with ( eB, eD) = (9/8, 17/8) at z = 3. Both hidden spectral distances are at least
+δ = 3/4, and both couplings are bounded by g = 9/8. Then
+|Σ −eΣ| =
+1 −81
+56
+ = 25
+56,
+2g
+δ |B −eB| + g2
+δ2 |D −eD| = 21
+32.
+The theorem bounds the actual difference by this common-gap expression. The hypotheses are uniform
+spectral separation and coupling control; they must be proved for a refinement family before using the
+bound uniformly.
+A low-energy series and its actual remainder
+At z = 1/2, |z| |D−1| = 1/4 < 1, so
+Σ(z) = −
+∞
+X
+n=0
+zn
+2n+1 .
+After the first four terms, the exact remainder has magnitude 1/384. The geometric-series argument
+controls the infinite tail. The fresh check verifies that value, the complex sign identity, and the projected-
+resolvent and bare-truncation identities at four declared real spectral parameters.
+At z = 2 the hidden inverse fails; at a full eigenvalue the retained Feshbach inverse fails. Neither point
+belongs to the resolvent identity’s domain. Analytic continuation of a scalar expression does not erase its
+theorem hypotheses.
+Read this as: A uniform effective response requires a uniform gap and coupling bound. Exact
+small examples show how those hypotheses enter each estimate.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 34
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+TWO HIDDEN FREQUENCIES AND A LOCAL-CLOSURE TEST
+Memory positivity is a Gram identity
+Traditional edition: Theorem II.9.9, Theorem II.9.11; PDF pp. 58, 59.
+Use retained space C and hidden space C2, with A = 0, B = (3/5, 4/5), and D = diag(1, 2). The full
+Hamiltonian is
+
+
+
+
+0
+3/5
+4/5
+3/5
+1
+0
+4/5
+0
+2
+
+
+
+. Its memory kernel is
+K(t) = 9
+25e−it + 16
+25e−2it,
+K(0) = 1.
+Each oscillatory coefficient is positive although K(t) need not be real or pointwise nonnegative. At t = π/2,
+it equals −16/25 −9i/25.
+hidden energy 1
+weight 9/25
+hidden energy 2
+weight 16/25
+K(t) = (9/25)e−it + (16/25)e−2it
+Positive definite means a matrix test at arbitrary times
+For retained scalars vj and real times tj, the structural identity is
+X
+j,k
+vjK(tj −tk)vk =
+
+X
+k
+eitkDB∗vk
+
+2
+≥0.
+The exact worked check specializes to t = (0, π/2, π) and v = (1, 2, −1). Its phases lie in Q(i), so both sides
+are computed without evaluating trigonometric functions. This one Gram test illustrates the factorization;
+the written identity explains positivity for all times and all vectors.
+Why this does not close to a bare local equation
+With hidden initial state zero, the full system has ¨x(0) = −(A2 + BB∗)x(0) = −x(0). The bare retained
+equation i ˙x = Ax would instead give zero acceleration. Therefore exact local closure for every retained
+initial state fails. More generally, equality of these accelerations forces BB∗= 0 and hence B = 0.
+A nonzero initial hidden vector also supplies the forcing term Be−itDy(0). It is additional data, not part
+of the convolution kernel. The checks cover the displayed kernel values, exact Gram factorization, and
+acceleration defect; no time discretization is used as proof of an integral equation.
+Read this as: Memory is positive definite through a Gram factorization, not through pointwise
+signs. Exact bare local closure requires the coupling to vanish.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 35
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+STRICT POSITIVITY AND THE GROUND GAP
+A positive transfer determines its Hamiltonian
+Traditional edition: Theorem II.10.2, Proposition II.10.5; PDF pp. 60, 61.
+On H = C3, take the strictly positive contraction
+T = diag(1, 1/2, 1/4),
+H = −log T = diag(0, log 2, 2 log 2).
+At unit Euclidean time, T = e−H. The self-adjoint logarithm is unique because the logarithm acts on
+positive spectral values. At integer time n ≥0,
+T n = diag(1, 2−n, 4−n),
+P0 = diag(1, 0, 0),
+∥T n −P0∥= 2−n.
+The gap ∆= log 2 determines the rate e−n∆exactly in this example.
+1
+1/2
+1/4
+T n :
+1, 2−n, 4−n
+∥T n −P0∥= 2−n
+Strict positivity is an essential finite hypothesis
+For T ′ = diag(1, 0), the operator is positive semidefinite, but there is no finite self-adjoint H′ on all of C2
+with T ′ = e−H′: every finite eigenvalue of H′ exponentiates to a strictly positive value. One may restrict
+to the positive support, but that changes the space on which the logarithm is defined.
+For a family with nontrivial excited spectra, a uniform exponential rate needs a common positive lower
+bound on the gap. Ground multiplicity does not cause a problem: P0 selects the entire minimum-energy
+eigenspace. For a Hamiltonian whose minimum is E0 ̸= 0, the normalized transfer is e−t(H−E0I) before
+taking the limit.
+Positivity is retained at several Euclidean times
+For arbitrary vectors uj and nonnegative integer times nj, the reflected kernel obeys
+X
+j,k
+⟨uj, T nj+nkuk⟩=
+
+X
+j
+T njuj
+
+2
+.
+This is a finite Gram factorization. The fresh run checks the exact integer semigroup and diagonal ground
+error for n = 0, . . . , 12, and rejects a full-space logarithm for the singular control. Logarithms and the
+all-time functional-calculus statement are supplied by the written spectral argument, not by these bounded
+tests.
+Read this as: A positive definite transfer can be logarithmically reconstructed. Ground convergence
+needs a declared normalization and gap, while continuum reconstruction still needs its own structure.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 36
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+FINITE HEAT DATA AND THE QUANTIFIERS
+The dimension window has an order of limits
+Traditional edition: Theorem II.11.5, Corollary II.11.8; PDF pp. 63, 65.
+For the unit circle grid with N sites, the scaled eigenvalues are λN(k) = 4N2 sin2(πk/N). Put ZN(t) =
+P
+k e−tλN(k) and dN(t) = 2t P
+k λN(k)e−tλN(k)/ZN(t).
+At the single time t = log 2/16, two tiny grids admit exact rational heat weights:
+N
+spectrum
+ZN
+P λe−tλ
+dN/ log 2
+2
+(0, 16)
+3/2
+8
+2/3
+4
+(0, 32, 32, 64)
+25/16
+20
+8/5
+These are unnormalized traces. Normalizing by N changes ZN but leaves the logarithmic derivative at
+that fixed grid unchanged.
+fixed finite N
+t ↓0
+dN(t) −→0
+fixed t > 0
+N −→∞
+then t ↓0
+dtorus(t) −→1
+The theorem uses two separate choices
+For each ε > 0, first choose a fixed positive time tε so that the continuum torus dimension differs from
+one by less than ε/2. Then choose Nε so that every N ≥Nε differs from that continuum value by less
+than ε/2 at the same time. This proves one controlled intermediate time for all sufficiently fine grids.
+It does not assert a uniform interval width from that argument, a moving time tN with no extra estimates,
+or an all-scale dimension plateau. At fixed finite N, dN(t) →0 as t ↓0 and as t →∞. By contrast, first
+taking N →∞at positive t and then taking t ↓0 yields the continuum dimension.
+Where the infinite tail is controlled
+The fixed-time proof bounds centered modes below by 16k2 and above by 4π2k2. The summable Gaussian
+dominators control both the heat trace and its first moment. A finite grid table supplies neither those
+tails nor the quantifiers. The fresh check verifies only the displayed two spectra, rational weights, traces,
+and dimension coefficients. It rejects confusing an unscaled four-cycle spectrum with the unit-circle scaled
+spectrum.
+Read this as: The strengthened window result is a convergence statement with a fixed-time choice.
+The exact table is a worked calculation, not its proof.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 37
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE IMAGE OF AN ISOMETRY IS NOT THE WHOLE LEVEL
+Transport constraints without hiding closure
+Traditional edition: Theorem II.12.2, Theorem II.12.5, Proposition II.12.6; PDF pp. 66, 67.
+On C3 = C|0⟩⊕C2, use Ca = 0 ⊕σa for a = x, y, z. The common kernel is C|0⟩, and the full algebra
+closes:
+[Cx, Cy] = 2iCz,
+[Cy, Cz] = 2iCx,
+[Cz, Cx] = 2iCy.
+These are uncompressed identities. They supply an actual closure test in the quotient by the constraint
+span, unlike the automatic compressed zero on the physical kernel.
+coarse C3
+0 ⊕σa
+R
+embedded image
+same constraints
+new coordinate
+transported closure on im R; new complement requires its own test
+Exact transport holds on the coarse image
+Embed by the coordinate isometry R : C3 →C4 and set eCa = Ca ⊕1. Then eCaR = RCa, so
+[ eCa, eCb]R = R[Ca, Cb].
+The coarse physical vector maps into the fine common kernel. However, the same prescribed Pauli structure
+does not close on the whole fine level: on the added coordinate the commutator is zero, whereas 2i eCz is 2i.
+Exact transport constrains the image of R and leaves its orthogonal complement as separate data.
+An approximate residual is also explicit
+Perturb only eCx by (1/10)|0⟩⟨0|. For the unit coarse physical vector, the fine constraint residual is exactly
+1/10. The intertwining defect has the same norm. The general approximate-transport result controls such
+residuals and commutator errors using both defect sizes and a common constraint norm bound; it does
+not replace a nonzero anomaly by an exact algebra.
+The fresh checks verify all three coarse commutators, the isometry, each constraint intertwining, all nine
+commutator transports, and the residual. The fine-coordinate counterexample rejects extending an image
+statement to the whole space. Unbounded constraints would additionally require a common invariant
+domain.
+Read this as: Closure is an operator-algebra statement. Refinement intertwining carries that
+statement on the embedded image; control the new degrees of freedom separately.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 38
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+EXACT EMBEDDINGS AND A SUMMABLE TAIL
+Two routes to a bounded Hamiltonian limit
+Traditional edition: Theorem II.13.2, Theorem II.13.4, Corollary II.13.5; PDF pp. 68, 69, 70.
+For the exact route, let Hn = Cn with coordinate inclusions and
+Hn = diag(0, 1, 1/2, . . . , 1/(n −1)),
+H1 = (0).
+The old energies are retained at every level, Hn+1Rn = RnHn, and ∥Hn∥≤1. On the direct-limit Hilbert
+space ℓ2(N0), the diagonal sequence defines a bounded self-adjoint H∞. Even-address projectors intertwine
+as well and give a fixed two-packet complete system in the limit.
+Cn
+Hn = diag(0, 1, 1/2, . . .)
+Cn+1
+old energies retained
+Rn
+fixed C2: Hn = diag(0, 1 + 2−n)
+tail ∥Hn −H∥= 2−n
+Compatibility and boundedness are different assumptions
+The equally compatible tower diag(0, 1, 2, . . . , n −1) has growing norms. It does not meet the bounded
+direct-limit theorem, although its natural diagonal operator has a separately definable unbounded domain.
+That domain-sensitive construction is not obtained by dropping the uniform norm hypothesis.
+For the norm route, work instead on the single fixed space C2 and set
+Hn = diag(0, 1 + 2−n),
+H = diag(0, 1).
+Here ∥Hn+1 −Hn∥= 2−(n+1) and ∥Hn −H∥= 2−n. The summable tail supplies an all-n error bound.
+For |t| ≤T, the paper’s Duhamel estimate gives
+e−itHn −e−itH ≤T2−n.
+The Euclidean counterpart holds on 0 ≤t ≤T because both Hamiltonians are nonnegative. If packet
+projectors also converge in norm, leakage operators converge uniformly on these time intervals.
+Execution scope
+Exact inclusions and projector compatibility are checked through level eight. The two-dimensional tail
+identities are checked for n = 0, . . . , 12. Their infinite conclusion uses the displayed geometric-series
+argument and the theorem’s analytic estimate. A finite prefix cannot certify an unspecified continuation
+of a tower.
+Read this as: Exact embedded compatibility uses a uniform norm bound. Approximate convergence
+uses a common space and summable defects. Keep those two contracts explicit.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 39
+
+
+PAPER VII
+/
+VISUAL GUIDE
+KOMOREBI P.
+REFLECTION GRAMS, TRACES, AND FINAL SCOPE
+Choose the topology that preserves the quantity
+Traditional edition: Theorem II.13.6, Theorem II.13.8, Section II.14; PDF pp. 70, 71.
+Let qn = 1/2 + 2−(n+2) and define the scalar reflected kernel Cn(j, k) = 1 + qj+k
+n
+on nonnegative integers.
+Each finite Gram matrix is a sum of two positive rank-one matrices, and pointwise convergence gives
+C(j, k) = 1 + (1/2)j+k. For times (0, 1, 2) and coefficients (1, −2, 1),
+X
+j,k
+vjCn(j, k)vk = (1 −qn)4 ≥0.
+This exact check illustrates the finite quadratic-form argument that passes positivity to the limit.
+An = Pn/n
+n equal eigenvalues 1/n
+∥An∥= 1/n →0
+∥An∥1 = Tr An = 1
+positive trace-class control: norm convergence alone does not preserve a trace
+Operator norm does not preserve trace in growing rank
+On ℓ2, let Pn select the first n coordinates and set An = Pn/n. Then ∥An∥= 1/n →0 while Tr An = 1
+for every n. These are positive trace-class operators, used as a topology control; the limiting zero is not a
+finite-Hamiltonian heat operator.
+For actual two-state transfers Tn = diag(1, qn) = e−Hn, with Hn = diag(0, −log qn) at unit time, the
+trace-norm error is 2−(n+2) and the heat traces converge to 3/2. The trace-norm criterion for spectral-
+dimension convergence additionally assumes convergence of the first heat moments in trace norm and a
+nonzero limiting heat trace. Heat-trace convergence alone does not determine that quotient.
+What is fresh, inherited, and still open
+The extension has fresh bounded exact checks in Q(i) using Python’s standard-library Fraction. The
+original appendix’s 180-check record, including its symbolic derivatives, is preserved as inherited evidence:
+SymPy is unavailable in this environment, so that original suite is not rerun. All original model and
+vector sources remain supplied.
+The saved v0.6.0 ledger lists 19 finite items; no Lean kernel run or expanded formal coverage is asserted.
+Its five original continuum/physical targets remain open. The strengthened edition supplies analytic
+proofs and bounded-limit criteria; neither these examples nor their check counts establish the unresolved
+physical existence claims.
+Read this as: Use pointwise convergence for finite positivity tests, operator norm for bounded
+dynamics and constraints, and trace norm for heat traces. Every conclusion keeps its own hypotheses
+and evidence scope.
+Final reader’s guide
+•
+Saved formal scope: v0.6.0
+V – 40

@@ -1,0 +1,14 @@
+theorem smooth_section_iff (P : M → F →L[ℝ] F) (hPP : ∀ x, P x*P x=P x)
+    (hP : ContMDiff I \CodeSymbol{1D4D8}(ℝ,F →L[ℝ] F) ∞ P) (a x : M) (hx : x ∈ domain P a)
+    (s : M → F) (hPs : ∀ᶠ y in \CodeSymbol{1D4DD} x, P y (s y)=s y) :
+    ContMDiffAt I \CodeSymbol{1D4D8}(ℝ,F) ∞ s x ↔
+      ContMDiffAt I \CodeSymbol{1D4D8}(ℝ,fiber (P a)) ∞ (fun y => toCoord P hPP a y (s y)) x := by
+  constructor
+  · intro hs
+    exact ((smooth_toCoord P hPP hP a x hx).contMDiffAt
+      ((isOpen_domain P hP.continuous a).mem_nhds hx)).clm_apply hs
+  · intro hs
+    have hr := (smooth_fromCoord P hP a x).clm_apply hs
+    apply hr.congr_of_eventuallyEq
+    filter_upwards [hPs,(isOpen_domain P hP.continuous a).mem_nhds hx] with y hy hya
+    exact (fromCoord_toCoord P hPP a y hya (s y) hy).symm

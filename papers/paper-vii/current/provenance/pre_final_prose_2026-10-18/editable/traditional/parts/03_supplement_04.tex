@@ -1,0 +1,137 @@
+\section{Quantitative leakage from the actual exponential}\label{supp4:section:001}
+Let $A$ be a unital complex C-star algebra, let $H=H^*$, and let $P=P^*=P^2$. Put $Q=1-P$. The checked statement is
+\[
+\boxed{\|Q\exp(-itH)P\|\le |t|\,\|HP-PH\|\qquad(t\in\R).}
+\]
+The matrix specialization uses the Hilbert-space operator norm, implemented by \path{Matrix.Norms.L2Operator}. It is not an entrywise norm or the row-sum operator norm. The theorem includes the zero projector and empty matrix index type. There is no nonzero-time hypothesis.
+
+\subsection{Derivative proof rather than an assumed Duhamel estimate}
+For a skew-adjoint generator $G$, define the actual conjugation path
+\[
+T_P(t)=\exp(tG)P\exp(-tG).
+\]
+The formalization derives its derivative from the power-series exponential and the product rule:
+\[
+T_P'(t)=\exp(tG)(GP-PG)\exp(-tG).
+\]
+Both exponential factors are proved unitary. Left and right multiplication by a unitary preserve the C-star norm. Therefore
+\[
+\|T_P'(t)\|=\|GP-PG\|,
+\qquad
+\|T_P(t)-T_P(s)\|\le |t-s|\,\|GP-PG\|.
+\]
+The second inequality follows from the normed-space mean value inequality and covers either ordering of $s$ and $t$. It is not a finite-difference estimate or a numerical time discretization.
+
+Multiplication by $\exp(tG)$ gives
+\[
+(T_P(t)-P)\exp(tG)=\exp(tG)P-P\exp(tG).
+\]
+For every orthogonal projector, $\|P\|\le1$ and $\|1-P\|\le1$. The exact corner identity
+\[
+(1-P)UP=(1-P)(UP-PU)P
+\]
+then bounds leakage by the exponential commutator. Taking $G=-iH$ gives the stated theorem because $\|[G,P]\|=\|[H,P]\|$.
+
+\subsection{Checked consequences}
+Unitarity also gives the capped estimate
+\[
+\|Q\exp(-itH)P\|\le\min\{1,\ |t|\,\|[H,P]\|\}.
+\]
+If $H=H_0+V$, both summands are self-adjoint, and $[H_0,P]=0$, then
+\[
+\|Q\exp(-it(H_0+V))P\|\le2|t|\,\|V\|.
+\]
+The latter uses $\|[V,P]\|\le2\|V\|$; its constant is not claimed to be optimal. Exact commutation gives zero leakage. The work does not include unbounded generators or time-dependent Hamiltonians.
+
+
+
+\section{Actual projected differentiation and curvature}\label{supp4:section:002}
+Let $E,F$ be real normed spaces. Let $P:E\to\mathcal L(F,F)$ be differentiable with $P(x)^2=P(x)$ for every $x$. Let $s:E\to F$ be $C^2$ with $P(x)s(x)=s(x)$, and let $X,Y:E\to E$ be differentiable vector fields. The checked connection is the actual expression
+\[
+\nabla_Xs(x)=P(x)\,Ds(x)[X(x)].
+\]
+It is proved to preserve the range condition. It is linear in the vector-field direction and obeys the scalar Leibniz rule
+\[
+\nabla_X(cs)=Dc[X]\,s+c\nabla_Xs
+\]
+for differentiable real scalar functions $c$. No differentiated projector identities are inserted as hypotheses in the main curvature theorem.
+
+\subsection{Differentiated projector and section identities}
+Differentiating $P^2=P$ and $Ps=s$ produces
+\begin{align*}
+DP[v]P+PDP[v]&=DP[v],\\
+PDP[v]P&=0,\\
+Ds[v]&=DP[v]s+P Ds[v].
+\end{align*}
+The zero sandwich follows algebraically from the first identity. All products preserve their noncommutative order.
+
+\subsection{The vector-field bracket is retained}
+Define the actual curvature action by
+\[
+R_P(X,Y)s=\nabla_X\nabla_Ys-\nabla_Y\nabla_Xs-\nabla_{[X,Y]}s.
+\]
+The source uses the actual Fr\'echet-derivative Lie bracket. Symmetry of second derivatives is supplied by the $C^2$ hypothesis, not postulated separately. Expanding the connection gives
+\[
+R_P(X,Y)s=P\bigl(DP[X]Ds[Y]-DP[Y]Ds[X]\bigr).
+\]
+Substituting the section identity and removing the zero sandwich terms proves
+\[
+\boxed{R_P(X,Y)s=P\bigl(DP[X]DP[Y]-DP[Y]DP[X]\bigr)P s.}
+\]
+Thus the coefficient is precisely $P(\dd P\wedge\dd P)P$ with the convention
+$(\dd P\wedge\dd P)(v,w)=DP[v]DP[w]-DP[w]DP[v]$.
+
+\subsection{Tensor properties and the remaining global boundary}
+The coefficient is proved bilinear, alternating, and supported on the range on both sides. The chain rule proves the pullback identity
+\[
+F_{P\circ f}(x)(v,w)=F_P(f(x))(Df(x)v,Df(x)w).
+\]
+The main theorem has global regularity hypotheses on normed parameter spaces. The pullback identity alone does not supply localization, smooth local trivializations, or gluing. The global range-bundle construction and connection gluing are supplied in the final completion below.
+
+
+
+\section{A constructive and total syndrome recovery}\label{supp4:section:003}
+Let $P$ be an orthogonal code projector. The input certificate consists of a finite family $V_a$ satisfying
+\[
+V_aP=V_a,
+\qquad
+V_a^*V_b=\delta_{ab}P.
+\]
+These are explicit partial-isometry and orthogonal-syndrome hypotheses. The block does not claim to have obtained them from arbitrary Knill--Laflamme Gram data.
+
+\subsection{Constructing the recovery on the whole ambient space}
+Define the syndrome projectors and their complement by
+\[
+S_a=V_aV_a^*,\qquad S=\sum_aS_a,\qquad Q=1-S.
+\]
+The source proves self-adjointness, $S_aS_b=\delta_{ab}S_a$, $S^2=S$, and $Q^2=Q=Q^*$. It also proves $QV_a=0$ and $V_a^*Q=0$.
+
+The recovery is not left undefined outside the syndrome subspaces. Its explicit Kraus operators are $R_a=V_a^*$ together with $R_{\mathrm{extra}}=Q$, giving
+\[
+\mathcal R(\rho)=\sum_aV_a^*\rho V_a+Q\rho Q.
+\]
+They satisfy exact completeness:
+\[
+\sum_aR_a^*R_a+R_{\mathrm{extra}}^*R_{\mathrm{extra}}
+=\sum_aV_aV_a^*+Q=S+Q=I.
+\]
+For finite complex matrices, trace preservation and complete positivity at every finite auxiliary dimension are proved for this actual map. The amplified map is identified with the Kraus family $I_J\otimes R_a$, including the complement term. Positivity is not merely checked on a single matrix size.
+
+\subsection{Exact correction, including coherent errors}
+For every code-supported operator $P\rho P=\rho$, the central identity is
+\[
+\boxed{\mathcal R(V_a\rho V_b^*)=\delta_{ab}\rho.}
+\]
+Consequently normalized mixtures satisfy
+\[
+\mathcal R\!\left(\sum_ap_aV_a\rho V_a^*\right)=\rho
+\quad\text{when}\quad\sum_ap_a=1.
+\]
+The identity is algebraic and is proved for complex weights. Physical mixtures use the nonnegative real case. For a coherent error $E_z=\sum_a z_aV_a$, the stronger cross-term calculation yields
+\[
+\mathcal R(E_z\rho E_z^*)=\left(\sum_a z_a\overline{z_a}\right)\rho.
+\]
+Thus normalized coherent superpositions are corrected as well. This is an explicit recovery stage, not a replacement definition that makes the full Knill--Laflamme criterion true by construction.
+
+
+

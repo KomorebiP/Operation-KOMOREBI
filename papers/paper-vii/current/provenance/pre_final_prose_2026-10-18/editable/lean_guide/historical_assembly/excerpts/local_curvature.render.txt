@@ -1,0 +1,16 @@
+theorem projected_connection_curvature (P : E → F →L[ℝ] F)
+    (X Y : E → E) (s : E → F) (x : E)
+    (hP : DifferentiableAt ℝ P x) (hPP : ∀ x, P x * P x = P x)
+    (hX : DifferentiableAt ℝ X x) (hY : DifferentiableAt ℝ Y x)
+    (hs : ContDiffAt ℝ 2 s x) (hPs : ∀ x, P x (s x)=s x) :
+    curvature P X Y s x = curvatureForm P x (X x) (Y x) (s x) := by
+  have hs1 : DifferentiableAt ℝ s x := hs.differentiableAt (by norm_num)
+  have hz (v : E) (z : F) : P x (fderiv ℝ P x v (P x z)) = 0 := by
+    have hh := congrArg (fun L : F →L[ℝ] F => L z)
+      (projector_differential_sandwich P x hP hPP v)
+    simpa [mul_apply_eq_comp] using hh
+  rw [curvature_expansion P X Y s x hP hPP hX hY hs]
+  conv_lhs => rw [section_jet P s x hP hs1 hPs (Y x),
+    section_jet P s x hP hs1 hPs (X x)]
+  simp only [map_add, hz, add_zero]
+  simp [curvatureForm, hPs, map_sub]

@@ -1,0 +1,60 @@
+\section{Reading a Paper VII Lean theorem}
+\label{sec:reading}
+
+\subsection{Three readings of one construction}
+The traditional reading begins with a finite state space, its operator algebra and a packet resolution. It derives matrix identities and explains what they mean for dynamics and recovery. The visual reading displays the same objects as corners, address sets, syndrome subspaces and local coordinates. The Lean reading asks a further question: what precise data must be supplied before each conclusion can be constructed?
+
+An endpoint is a theorem whose conclusion expresses the desired result. A supporting lemma may isolate one algebraic or analytic step. A definition constructs an object but is not itself a proof that the object has every advertised property. The formalization deliberately uses several layers: general ring identities, complex matrix specializations, norm estimates, real calculus, spectral constructions and manifold calculus. Reading only a final theorem name loses the distinction between these layers.
+
+The source base is the unchanged v0.6.0 snapshot. Older supplements explain how coverage grew, but their partial descriptions are not the last word on the current source. For example, the fourth block constructed recovery for already orthogonal syndrome data; the fifth block added the spectral reduction and necessity proof for general positive Gram data. The sixth block constructed the range atlas and global manifold curvature. This guide follows the current declarations and retains the older history only where it explains an assumption or correction.
+
+\subsection{Finite types, matrix types and type classes}
+Lean's \code{Matrix d m ℂ} means a function with a row index in \code{d}, a column index in \code{m}, and values in the complex numbers. The indices are types, not necessarily integers. A \code{Fintype d} instance gives the finite enumeration needed for a sum or dimension; a \code{DecidableEq d} instance lets a definition decide whether two indices agree. \code{Fin n} is the type of natural numbers smaller than \code{n}. It supplies a concrete index type without replacing an arbitrary finite type throughout the library.
+
+The notation \code{Type*} leaves a universe level implicit. Braces in a binder, such as \texttt{\{n : Type*\}}, denote an implicit argument inferred from later data. Round parentheses denote an explicit argument. Square brackets denote a type-class argument: a structure or property that instance search should obtain. These brackets do not make an assumption disappear. A theorem with \code{[Nonempty n]} is only available when the state index has an inhabitant. A theorem with \code{[Invertible D]} has an actual invertibility requirement even though no ordinary parameter named \code{hD} is printed.
+
+The declarations set \code{autoImplicit false}. Consequently an undeclared symbol is not silently promoted to a fresh theorem variable. A local \code{variable} command can still supply variables and type classes to subsequent declarations. An excerpt must therefore be read together with its surrounding section, not as an independent file. The chapter contracts explain those surrounding assumptions; the source file and line register permit a direct check.
+
+\begin{longtable}{@{}p{.31\linewidth}p{.62\linewidth}@{}}
+\toprule Source notation & Mathematical reading\\\midrule\endhead
+\code{Matrix d m ℂ} & Complex rectangular matrix, also a coefficient array of a bipartite state.\\
+\code{n → ℂ} & Coordinate vector on a finite index type.\\
+\code{→ₗ[ℂ]} & Complex-linear map, with linearity stored in its structure.\\
+\code{→L[ℝ]} & Continuous real-linear map, used for derivatives and parameter-dependent operators.\\
+\code{≃ₗ[ℂ]} & A linear equivalence with inverse and linearity laws.\\
+\code{≃ₜ} & A homeomorphism, including continuity in both directions.\\
+\code{≃L[ℝ]} & Continuous real-linear equivalence.\\
+\code{star}, \code{conjTranspose} & Involution in an abstract star ring; conjugate transpose for complex matrices.\\
+\code{PosSemidef}, \code{PosDef} & Positive semidefinite and positive definite matrices, respectively.\\
+\code{IsStarProjection P} & Both idempotence and self-adjointness of the projector.\\
+\code{HasDerivAt f D t} & The actual real derivative of \code{f} at \code{t} is \code{D}.\\
+\code{fderiv ℝ}, \code{mvfderiv I} & Actual Fréchet derivative; actual derivative of a manifold-to-vector-space map.\\
+\code{IsLeast S r} & Membership of \code{r} in \code{S}, together with its lower-bound property.\\
+\bottomrule\end{longtable}
+
+\subsection{Quantifiers and the information a structure stores}
+A family \code{P : I → R} is one element of the ring for each packet index. A dependent family \code{P : (i : F) → J i → Matrix (D i) (D i) ℂ} allows both the local dimension and the local packet-address type to vary with the tensor factor. This is more general than a tensor power of one fixed matrix.
+
+The packet structure stores pairwise multiplication and completeness. Its multiplication law includes the diagonal case, so idempotence is a consequence. It does not store self-adjointness; that is supplied only in the star-ring layer. This distinction lets circuit reconstruction work over any ring while the unitary identities require an adjoint.
+
+\excerpt{QuantumPacketCore}{packet_structure}
+
+Read \code{proj : I → R} as the object, \code{mul_proj} as its orthogonality law and \code{sum_proj} as its complete resolution of the identity. In a matrix realization the first law is $P_iP_j=\delta_{ij}P_i$. The second is $\sum_iP_i=1$. No commutative multiplication assumption is present: matrix multiplication remains operator composition.
+
+Structures used later have a different role. \code{OrthogonalSyndromes} stores an already normalized orthogonal error family, and \code{KnillLaflamme.Data} stores a general positive Gram matrix. \code{Data.diagonal} constructs diagonal error data; its active positive directions are then normalized to construct \code{OrthogonalSyndromes}. The existence of the general Gram data is an assumption of sufficiency; necessity constructs such data from an actual recovery. The final equivalence joins both directions. The correct reading keeps these roles separate rather than interpreting every structure field as a fact proved from scratch.
+
+\subsection{How to read a proof script}
+The scripts repeatedly use a small set of proof moves. \code{rw} replaces an expression using a stated equality. \code{simp only} performs a controlled reduction with an explicit list of lemmas; \code{simp} also uses the available simplification database. \code{ext i j} reduces a matrix equality to equality of each entry. \code{funext} proves equality of functions by comparing values. \code{constructor} starts the two obligations of a conjunction or equivalence. \code{rintro} decomposes quantified and existential data. \code{obtain} names an existential witness already proved to exist. \code{refine} fixes the overall shape of a term and leaves specified holes to prove.
+
+The tactic \code{noncomm_ring} normalizes ring expressions without commuting factors. It is appropriate for identities involving $P_bUP_a$. Ordinary \code{ring} is used for scalar arithmetic or commutative coefficient expressions. Reading a ring-normalization step as permission to reorder arbitrary matrix factors would give an incorrect mathematical proof.
+
+A line beginning \code{have} proves or names a local intermediate assertion. The goal remains the same until that assertion is used. A \code{calc} block presents a chain of equalities or inequalities; each link is a separate obligation. Induction on a list proves all finite circuit depths, including the empty list. A finite example verified by \code{norm_num} or \code{fin_cases} proves that concrete example, not a general-dimensional theorem.
+
+For a derivative identity the important move is often \code{HasDerivAt.unique}: two proven derivatives of the same function at a point must coincide. The script first differentiates a product, then rewrites the product as a constant or as a known function, then invokes uniqueness. Thus the differentiated projector and unitary identities are derived from actual functions and their derivatives, rather than postulated as unrelated first-order data.
+
+\subsection{Scope is a part of the theorem}
+The finite-sector results have broad mathematical strength, but several tempting extensions lie outside their conclusions. A statement about the span of an algebra orbit permits every matrix in that algebra; it does not say a physically specified unitary gate set reaches every vector. A finite channel complete-positivity theorem quantifies over every finite reference index; it does not formalize arbitrary infinite reference Hilbert spaces. A derivative computation under supplied smoothness does not prove the existence of a Schrödinger solution for every initial condition.
+
+The projected-connection modules do use arbitrary smooth real parameter manifolds and complete normed model spaces, which is broader than a single finite-dimensional chart. This mathematical parameter-space generality is distinct from the paper's unproved continuum physics conjectures. Neither the word ``manifold'' nor an abstract C-star-algebra estimate supplies a continuum tower, a physical constraint algebra, a renormalized limit or a Lorentzian emergence theorem.
+
+Read each conclusion under its actual hypotheses and use its source locator to recover the surrounding assumptions. Source identity and excerpt fidelity are current documentation checks. Saved compiler and axiom transcripts are inherited proof evidence. This distinction continues through the replay chapter and full result map.

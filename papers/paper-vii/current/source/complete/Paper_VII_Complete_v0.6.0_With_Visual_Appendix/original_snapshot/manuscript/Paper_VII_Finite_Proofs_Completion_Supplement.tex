@@ -1,0 +1,283 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,booktabs,array,tabularx}
+\usepackage[margin=0.78in,headheight=15pt,headsep=18pt,footskip=26pt]{geometry}
+\usepackage{microtype,fancyhdr,xcolor,titlesec,xurl}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus VII: Finite Proofs Completed},pdfauthor={Komorebi P.},pdfsubject={Global range bundle, projected connection and manifold curvature}}
+\definecolor{ink}{HTML}{183347}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Projector-Resolved Seed Calculus VII}}
+\fancyhead[R]{\small Finite proof completion}
+\fancyfoot[L]{\small Komorebi P.\quad\textbar\quad v0.6.0}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}
+\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{9pt}{3pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\C}{\mathbb C}\newcommand{\R}{\mathbb R}
+\newcommand{\Ran}{\operatorname{Ran}}\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\End}{\operatorname{End}}\newcommand{\dd}{\mathrm d}
+\newcommand{\pageheading}[2]{\vspace*{2pt}{\small\color{ink}\textsc{#1}}\par\vspace{2pt}{\Large\bfseries #2}\par\vspace{4pt}}
+
+\begin{document}
+\pageheading{Finite proof completion}{The global projected connection}
+{\large Paper VII, sixth checked block}\par
+\textbf{Author: Komorebi P.}\hfill September 6, 2026
+
+The final outstanding finite-sector item, \textbf{6.4}, is now checked. The cumulative development contains \textbf{323 theorem declarations in 25 Lean modules}. All \textbf{19 named finite-sector manuscript items} have formal coverage under the exact hypotheses recorded in the theorem ledger. The five continuum conjectures remain unproved.
+
+The new block contributes \textbf{67 theorem declarations across five modules}. These are supporting lemmas and constructions for one remaining manuscript item, not 67 independent manuscript theorems.
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}Xr@{}}\toprule
+New module & Declarations\\\midrule
+\path{GlobalRangeBundle}: actual fibers and smooth local products & 22\\
+\path{LocalProjectedCurvature}: point-local differential identities & 6\\
+\path{GlobalProjectedConnection}: connection laws and gluing & 10\\
+\path{ManifoldProjectedCurvature}: actual global curvature & 17\\
+\path{ProjectedBundleCompletion}: intrinsic and gauge compatibility & 12\\\midrule
+Total added & 67\\\bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{The completed identity}
+Let $M$ be a smooth real manifold without boundary, $F$ a complete normed real vector space and $P:M\to\End(F)$ a smooth family of bounded idempotents. For smooth range sections $s$, define
+\[
+\nabla_Xs=P\,\dd s[X].
+\]
+The range bundle is constructed from $P$ rather than assumed. Its local connection formulas glue, and the actual covariant commutator satisfies
+\[
+\boxed{(\nabla_X\nabla_Y-\nabla_Y\nabla_X-\nabla_{[X,Y]})s
+=P\bigl(\dd P[X]\dd P[Y]-\dd P[Y]\dd P[X]\bigr)P\,s.}
+\]
+The derivative and Lie bracket are Mathlib's actual manifold operators. No global coordinate chart is assumed. The result requires idempotence, not an additional orthogonality hypothesis.
+
+\section*{Verification}
+All 25 modules were freshly compiled in the final run with warnings treated as errors. All 323 declaration-level axiom audits passed. Six constructed objects were separately audited. Their dependencies are confined to \path{propext}, \path{Classical.choice} and \path{Quot.sound}; one upstream theorem is axiom-free. Both deliberate invalid controls were rejected. This records a classical projected-connection result, not a claim of a new differential-geometric theorem.
+
+\newpage
+\pageheading{Actual range bundle}{Local products constructed from the projector}
+The fiber over $x$ is the actual fixed subspace
+\[
+\mathcal E_x=\{v\in F:P(x)v=v\}=\Ran P(x).
+\]
+The total space is the subset $\mathcal E=\{(x,v):P(x)v=v\}\subseteq M\times F$, with the induced topology. The construction includes actual local homeomorphisms of this space, not merely abstract transition functions.
+
+\section*{An invertible intertwiner near each anchor}
+For idempotents $p,q$, set
+\[
+T(p,q)=pq+(I-p)(I-q).
+\]
+Lean proves $T(p,p)=I$ and $pT(p,q)=T(p,q)q$. For an anchor $a\in M$, define
+\[
+U_a=\{x:T(P(x),P(a))\text{ is invertible}\}.
+\]
+The invertible elements form an open subset of the bounded-operator algebra. Consequently $U_a$ is open and contains $a$. The family $(U_a)$ covers the whole base. Invertibility is \emph{derived locally}, not assumed at every pair of points.
+
+\section*{The mutually inverse local maps}
+Write $T_a(x)=T(P(x),P(a))$. For $x\in U_a$,
+\[
+B_a(x):\mathcal E_a\longrightarrow\mathcal E_x,
+\quad v\longmapsto T_a(x)v,
+\]
+\[
+A_a(x):\mathcal E_x\longrightarrow\mathcal E_a,
+\quad w\longmapsto P(a)T_a(x)^{-1}w.
+\]
+The intertwining identity and its inverse counterpart show that the displayed targets are correct. Lean proves both inverse laws, continuity, linearity in the fiber and smooth dependence on the base. Thus
+\[
+\mathcal E|_{U_a}\ \cong\ U_a\times\mathcal E_a
+\]
+is an actual base-preserving local product homeomorphism.
+
+\section*{Smooth overlap maps and rank}
+The coordinate transition is $g_{ab}(x)=A_b(x)B_a(x)$. It is smooth on $U_a\cap U_b$, agrees with the actual change between local homeomorphisms, and satisfies
+\[
+g_{aa}=I,\qquad g_{bc}g_{ab}=g_{ac}.
+\]
+A continuous linear equivalence between $\mathcal E_a$ and $\mathcal E_x$ also gives local constancy of fiber dimension. No single constant rank across disconnected components is assumed.
+
+\section*{Principal checked objects}
+\path{RangeBundle.localProduct}, \path{RangeBundle.fiberEquiv},
+\path{RangeBundle.smooth_range_bundle_atlas} and
+\path{BundleCompletion.localProduct_overlap}, all in namespace \path{KomorebiPaperVII}.
+
+\newpage
+\pageheading{Intrinsic sections and gluing}{A connection on the constructed bundle}
+The global formula is defined using the actual manifold derivative:
+\[
+\nabla_Xs(x)=P(x)\,D_Ms(x)[X(x)].
+\]
+Here $D_M$ is represented by \path{mvfderiv}. A second definition, \path{GlobalConnection.covariant}, has values in the actual fiber:
+\[
+\nabla s(x):T_xM\longrightarrow\mathcal E_x.
+\]
+It is not only an ambient expression asserted to land in the range.
+
+\section*{Connection axioms and smoothness}
+The new proofs establish range preservation, additivity in the section, linearity over functions in the vector-field argument, and the scalar Leibniz identity
+\[
+\nabla_X(fs)=\dd f[X]\,s+f\nabla_Xs.
+\]
+Smooth $P$, smooth sections and smooth vector fields give smooth covariant derivatives. Equality of section germs gives equality of covariant derivatives at the point, so the operation is local.
+
+\section*{Smooth sections are genuinely intrinsic}
+Let $x\in U_a$. If $P(y)s(y)=s(y)$ in a neighborhood of $x$, then
+\[
+s\text{ is smooth at }x
+\quad\Longleftrightarrow\quad
+\bigl(y\mapsto A_a(y)s(y)\bigr)\text{ is smooth at }x.
+\]
+The range condition is only local. The proof uses the actual inverse local maps and equality of germs. It follows that smoothness in bundle coordinates does not depend on the chosen chart.
+
+\section*{The local connection and its change of coordinates}
+For a coordinate function $u$ valued in $\mathcal E_a$, define
+\[
+\nabla^{(a)}_Xu=A_a\bigl(P\,D_M(B_a u)[X]\bigr).
+\]
+For every overlap point, Lean proves the operator identity
+\[
+\boxed{\nabla^{(b)}_X(g_{ab}u)=g_{ab}\nabla^{(a)}_Xu.}
+\]
+This is proved for arbitrary local coordinate functions. It does not assume that $u$ was obtained from a globally smooth section or that a smooth extension has been supplied. Together with the local smoothness criterion, this closes the gluing step left open in the fifth block.
+
+\section*{Principal declarations}
+\path{GlobalConnection.nabla_leibniz}, \path{GlobalConnection.smooth_nabla},
+\path{GlobalConnection.local_connections_glue},
+\path{BundleCompletion.smooth_section_iff} and
+\path{BundleCompletion.local_connections_gauge}.
+
+\newpage
+\pageheading{Actual manifold curvature}{From differentiated projectors to the two-form}
+The curvature is defined by the covariant commutator, including the \emph{actual manifold Lie bracket}. It is not defined to equal the desired projector expression.
+
+\section*{The flat ambient identity is proved in charts}
+For a smooth vector-valued function $s$, the proof identifies directional derivatives with the pullback into each extended chart. It then proves
+\[
+D_Ms([X,Y])=D_M(D_Ms[Y])[X]-D_M(D_Ms[X])[Y].
+\]
+This uses the chart pullback of the actual vector fields and the ordinary differential identity, then transfers the result back to the manifold. The point-local auxiliary module permits use within arbitrary open chart domains.
+
+\section*{Projector and section identities are derived}
+Differentiating $P^2=P$ in a tangent direction $v$ yields
+\[
+(\dd P[v])P+P\dd P[v]=\dd P[v],
+\qquad P\dd P[v]P=0.
+\]
+Differentiating $Ps=s$ gives
+\[
+\dd s[v]=\dd P[v]s+P\dd s[v].
+\]
+Both statements are consequences of actual derivative rules. They are not additional assumptions.
+
+\section*{Cancellation of the second derivatives}
+The product rule and the ambient Lie-bracket identity reduce curvature to
+\[
+R^\nabla(X,Y)s=P\dd P[X]\dd s[Y]-P\dd P[Y]\dd s[X].
+\]
+Substitute the differentiated range-section identity. The terms containing $P\dd P[v]P$ vanish, leaving
+\[
+R^\nabla(X,Y)s=
+P\bigl(\dd P[X]\dd P[Y]-\dd P[Y]\dd P[X]\bigr)P s.
+\]
+Lean also proves that this depends only on $X(x)$, $Y(x)$ and $s(x)$, not on their extensions. The operator-valued form is alternating, additive and homogeneous, and lands in the actual fiber. Constant projector bundles have zero curvature form.
+
+\section*{Principal declaration}
+\path{KomorebiPaperVII.ManifoldCurvature.projected_connection_curvature}
+
+The auxiliary definitions \path{GlobalConnection.curvature} and
+\path{GlobalConnection.curvatureForm} are distinct. The theorem proves their equality on smooth range sections.
+
+\newpage
+\pageheading{Exact formal scope}{What the completion does and does not assert}
+\section*{Geometry and scalar conventions}
+The main global curvature theorem uses a smooth real manifold without boundary, modeled on a complete normed real space, and bounded real-linear endomorphisms of a complete normed real space. Finite-dimensional parameter and quantum spaces fall within the corresponding real differential calculus. Complex quantum spaces can be viewed through their underlying real normed spaces; this block does not introduce a separate complex-bundle typeclass wrapper.
+
+The atlas and global connection constructions also support the more general model-with-corners infrastructure where their hypotheses apply. The \emph{curvature completion claim} is specifically for the boundaryless manifold theorem. A boundary/corner curvature generalization is not claimed.
+
+\section*{Explicit smooth atlas, not an assumed one}
+The implementation exposes the actual total space, local product homeomorphisms, linear transitions, smoothness proofs and cocycle laws. It does not register these as a \path{ContMDiffVectorBundle} instance. This is an interface choice: no range-bundle atlas, local trivialization, overlap identity or curvature conclusion is inserted as a premise.
+
+The smooth-section equivalence and gauge law make the atlas usable intrinsically. The connection is also defined with values in \path{fiber (P x)}. Six proof-bearing constructed objects, including both local equivalences and the fiber-valued derivative, have separate axiom audits.
+
+\section*{Relationship to the preserved manuscript}
+The original Paper VII PDF and TeX are unchanged. This supplement and the final ledger are the authoritative record of newly checked coverage. Earlier amendments remain in force, including the additional invertibility hypothesis needed for the Feshbach full-resolvent identity. Completion means the \emph{19-item finite formalization inventory under its recorded assumptions}, not verification of every sentence, numerical experiment or continuum claim in the original PDF.
+
+\section*{Conjectures remain conjectures}
+The five continuum targets are unchanged: anomaly-free closure, cutoff-uniform Feshbach control, reflection-positive reconstruction, the Einstein--Hilbert limit, and a spin-two sector. None is proved by completing the finite projected-connection theorem.
+
+\section*{No numerical or dependency overclaim}
+This block does not rerun the original numerical suite, rebuild Papers I--VI or independently recheck all imported Mathlib proofs. The symbolic bundle definitions are mathematical constructions, not benchmarked numerical bundle-coordinate routines.
+
+\newpage
+\pageheading{Cumulative manuscript coverage}{All 19 finite-sector items}
+The table records named items, not the number of supporting Lean declarations. The JSON ledger records the exact scope and principal source mapping for each item.
+\begin{center}
+\small\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
+Item & Named finite-sector result & Status\\\midrule
+2.1 & Orbit dimension of one quantum seed & Checked\\
+2.2 & Quantum seed-rank formula & Checked\\
+2.3 & Local orbit and Schmidt rank & Checked\\
+2.4 & One seed for the computational basis & Checked\\
+3.1 & Cyclic quantum projectors & Checked\\
+3.2 & Tensor/polyphase refinement & Checked\\
+4.1 & Exact circuit path expansion & Checked\\
+4.2 & Packetwise unitarity conservation & Checked\\
+5.1 & Exact symmetry packets & Checked\\
+5.2 & Commutator leakage bound & Checked\\
+6.1 & Moving-frame Hamiltonian & Checked\\
+6.3 & Canonical packet connection & Checked\\
+6.4 & Projected connection & Checked\\
+7.1 & Block-diagonal measurement invariance & Checked\\
+7.2 & Finite Kraus channel & Checked\\
+8.1 & Finite Knill-Laflamme criterion & Checked\\
+9.1 & Exact Feshbach resolvent & Checked\\
+10.1 & Finite Euclidean transfer & Checked\\
+11.1 & Low-mode second-order bound & Checked\\
+\bottomrule\end{tabularx}
+\end{center}
+
+\section*{Cumulative source inventory}
+\textbf{256 upstream declarations + 67 new declarations = 323 declarations.}
+All 20 upstream proof files remain byte-for-byte unchanged. The new five modules are listed on page 1. Every declaration in the active inventory has a matching compiler axiom report; the verifier rejects missing, duplicate or unexpected audits.
+
+\section*{Completion boundary}
+\textbf{Finite-sector items: 19/19 checked. Partially checked finite items: 0.}
+The five continuum conjectures are separate from this denominator. Earlier mathematical corrections are preserved in their supplements and the final theorem ledger.
+
+\newpage
+\pageheading{Verification and reproducibility}{Final checked release evidence}
+\section*{Pinned runtime}
+Lean \textbf{4.34.0-rc2}, Mathlib revision
+\begin{center}\small\texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+The portable kit was restored from seven archive parts. Each part and the combined archive passed SHA-256 checks. The kit itself is not duplicated in the source ZIP.
+
+\section*{Final results}
+All 25 active modules returned exit code 0, with warnings treated as errors. All 323 theorem-level axiom audits and all six separate constructed-object audits passed. Both negative controls returned the expected rejection: a false equality and a deliberate admitted-proof placeholder. All 16 Python verifier regression tests passed.
+
+The authoritative report is
+\path{verification/final_finite_release_run/SUMMARY.json}.
+It records commands, source and transitive dependency hashes, compiled-interface hashes, runtime pins, exit codes and axiom lists. The separate construction report is
+\path{verification/final_finite_release_run/CONSTRUCTED_OBJECTS_AUDIT.json}.
+
+\section*{Failures are retained}
+Nine of 16 captured development checks failed before corrections. The diagnostics concerned elaboration, tangent-space aliases, import visibility, local differentiability conversions and simplification. Each captured attempt has its source snapshot and raw log in \path{verification/development_sixth_block}. None of those failed checks is counted as a final proof pass.
+
+\section*{Rechecking}
+From the extracted release, with the portable runtime restored, run:
+\begin{quote}\small\ttfamily
+python scripts/verify.py --kit /path/to/kit --out verification/my\_run --timeout 240\par
+python scripts/audit\_constructions.py --kit /path/to/kit --run verification/my\_run\par
+python scripts/test\_verifier.py
+\end{quote}
+The verifier compiles local dependencies in order and checks source/interface hashes before accepting resumed work. Use \path{--max-checks 3 --resume} when a host has short per-command limits. The second script refuses stale source or build artifacts.
+
+\section*{Trust and portability}
+The launcher invokes the ordinary Lean compiler in module mode with one worker. It does not enforce a RAM cap or weaken proof checking. Generated local build interfaces are excluded from the source archive and can be regenerated. Ordinary compilation and axiom audits are not an independent kernel replay of every imported Mathlib theorem.
+
+\section*{Preservation and package integrity}
+\path{provenance/UPSTREAM_PRESERVATION_sixth_block.json} records unchanged upstream sources and manuscript files. \path{SHA256SUMS.txt} inventories distributed files. The companion artifact audit checks the ZIP, hashes, source preservation, proof counts and final reports.
+\end{document}

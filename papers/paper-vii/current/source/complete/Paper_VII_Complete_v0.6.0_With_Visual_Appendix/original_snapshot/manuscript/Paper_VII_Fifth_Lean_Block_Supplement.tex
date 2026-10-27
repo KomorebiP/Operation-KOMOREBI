@@ -1,0 +1,287 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,booktabs,array,tabularx}
+\usepackage[margin=0.78in,headheight=15pt,headsep=18pt,footskip=26pt]{geometry}
+\usepackage{microtype,fancyhdr,xcolor,titlesec,xurl}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus VII: Fifth Lean Block},pdfauthor={Komorebi P.},pdfsubject={Full finite Knill-Laflamme criterion, density matrices and error-span recovery}}
+\definecolor{ink}{HTML}{183347}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Projector-Resolved Seed Calculus VII}}
+\fancyhead[R]{\small Fifth Lean block}
+\fancyfoot[L]{\small Komorebi P.\quad\textbar\quad v0.5.0}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{4pt}
+\titleformat{\section}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{9pt}{3pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\C}{\mathbb C}\newcommand{\R}{\mathbb R}
+\newcommand{\Ran}{\operatorname{Ran}}\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\End}{\operatorname{End}}\newcommand{\dd}{\mathrm d}
+\newcommand{\pageheading}[2]{\vspace*{2pt}{\small\color{ink}\textsc{#1}}\par\vspace{2pt}{\Large\bfseries #2}\par\vspace{4pt}}
+\begin{document}
+\pageheading{Release record}{Fifth checked proof block}
+{\large The finite Knill--Laflamme criterion and one decoder for the error span}\par
+\textbf{Author: Komorebi P.}\hfill September 6, 2026
+
+This block completes the formalization of manuscript item \textbf{8.1}. The cumulative development now contains \textbf{256 theorem declarations in 20 modules}, with \textbf{55 new declarations in five modules}. Counts include supporting lemmas, specializations and exact regression examples. They are not counts of independent manuscript theorems.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\linewidth}{@{}Xr@{}}
+\toprule
+New module and purpose & Declarations\\
+\midrule
+\path{KnillLaflammeSufficiency}: spectral reduction and total recovery & 22\\
+\path{KnillLaflammeNecessity}: necessity and channel equivalence & 7\\
+\path{QuantumStateBridge}: physical states, operators and references & 9\\
+\path{ErrorSpanRecovery}: coherent errors and the family criterion & 9\\
+\path{KnillLaflammeExamples}: exact positive and negative cases & 8\\
+\midrule
+Total added & 55\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{Current manuscript coverage}
+\textbf{18 of 19 named finite-sector items are fully Lean checked.} Item 6.4 remains partial: the parameter-space connection and curvature calculation is proved, but the global smooth range bundle and atlas gluing have not been formalized. There is no new manifold proof in this block. All five continuum conjectures remain unproved.
+
+Theorem 8.1 is a classical input, not a newly discovered error-correction criterion. Knill and Laflamme developed necessary and sufficient conditions for exact recovery in their original work \cite{kl}. This supplement records the completion of those finite conditions in the project's own checked sources, together with explicit scope and implementation details.
+
+\section*{Cumulative evidence}
+All 20 active modules were freshly compiled in this block. All 256 declaration-level axiom audits passed. The runtime was Lean 4.34.0-rc2 with Mathlib revision
+\begin{center}\small\texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+The final evidence is \path{verification/fifth_block_release_run/SUMMARY.json}. All 15 upstream modules, the original manuscript and all earlier supplements remain unchanged. The preservation audit compares 26 retained files with the exact fourth-block archive.
+
+\section*{Mathematical construction, not a numerical decoder benchmark}
+The spectral construction defines the recovery map using Mathlib's actual Hermitian spectral theorem, not an assumed diagonalization certificate. The eigenvector choices are noncomputable definitions. Lean checks the resulting mathematical identities; this release does not provide a benchmarked numerical eigensolver or recovery implementation.
+
+\newpage
+\pageheading{Item 8.1 completed}{The precise finite channel statement}
+Let $\mathcal H=\C^n$ be a finite coordinate space and let $P=P^*=P^2$. A matrix is code supported when $P\rho P=\rho$. For a finite family of square matrices $E_a$, put
+\[
+\mathcal N_E(\rho)=\sum_a E_a\rho E_a^*.
+\]
+The input channel normalization is the actual matrix identity
+\[
+\sum_a E_a^*E_a=I.
+\]
+A finite Kraus recovery has the form $\mathcal R(\sigma)=\sum_r R_r\sigma R_r^*$, with $\sum_rR_r^*R_r=I$. This representation, together with the checked amplification results, provides complete positivity and trace preservation on the entire ambient matrix space.
+
+\section*{Necessary and sufficient conditions}
+Under the stated normalization, the following equivalence is proved:
+\[
+\boxed{\begin{gathered}
+\exists\,\mathcal R\text{ of the above finite Kraus form,}\\[-2pt]
+\mathcal R\mathcal N_E(\rho)=\rho
+\quad\text{for every }\rho\succeq0,\ \Tr\rho=1,\ P\rho P=\rho
+\end{gathered}}
+\quad\Longleftrightarrow\quad
+\boxed{\begin{gathered}
+\exists C\succeq0,\\
+PE_a^*E_bP=C_{ab}P\quad\text{for all }a,b.
+\end{gathered}}
+\]
+The code-space statement is not limited to a selected basis of states. The formalization separately proves equivalence with correction of \emph{every} complex matrix supported on the code. It also proves preservation with arbitrary finite reference systems, as detailed on page 5.
+
+\section*{Principal declarations}
+\path{KomorebiPaperVII.KnillLaflamme.correctable_iff_gram} proves the operator-space channel criterion.\par
+\path{KomorebiPaperVII.KnillLaflamme.state_correctable_iff_gram} proves the normalized-density-matrix formulation.\par
+\path{KomorebiPaperVII.KnillLaflamme.error_family_correctable_iff_gram} treats arbitrary unnormalized finite error families with an explicit nonnegative scale.
+
+\section*{Degenerate cases are not silently excluded}
+There is no positive-definiteness assumption on $C$. Zero eigenvalues, redundant error operators, empty positive-eigenvalue support and the zero projector are included. If $P=0$, the only supported matrix is zero and no trace-one code density matrix exists. The proofs handle that case separately rather than dividing by the code rank or by $\Tr P$.
+
+For an unnormalized error family, the correct statement is generally
+\[
+\mathcal R\mathcal N_E(\rho)=\Tr(C)\rho,
+\]
+not unconditional equality to $\rho$. Normalization forces $\Tr C=1$ on a nonzero code. The unrestricted-family formulation and the same-decoder span result appear on page 6.
+
+\newpage
+\pageheading{Sufficiency}{From Gram data to an actual total recovery}
+Assume $C\succeq0$ and $PE_a^*E_bP=C_{ab}P$. First restrict the error operators to the code, $F_a=E_aP$. Mathlib's Hermitian spectral theorem supplies a unitary $U$ such that
+\[
+U^*CU=\operatorname{diag}(\lambda_r),\qquad \lambda_r\ge0.
+\]
+The pinned source used is \path{Mathlib/Analysis/Matrix/Spectrum.lean}; its public documentation describes the matrix spectral construction \cite{spectral}.
+
+Define the transformed errors by an actual finite sum,
+\[
+B_r=\sum_a U_{ar}F_a.
+\]
+The new module proves, rather than assumes,
+\[
+B_rP=B_r,\qquad B_r^*B_s=\delta_{rs}\lambda_rP,
+\qquad \sum_rB_r\rho B_r^*=\sum_aF_a\rho F_a^*.
+\]
+For code-supported $\rho$, the restricted and unrestricted error sums are equal. Thus the unitary change of error coordinates preserves the actual channel on the code.
+
+\section*{Null directions are removed by proof}
+If $\lambda_r=0$, then $B_r^*B_r=0$. Positivity of the ordinary complex matrix inner product gives $B_r=0$. This is the checked declaration \path{DiagonalErrors.zero_weight_error}. The normalized syndrome operators are defined only on
+\[
+A_+=\{r:\lambda_r>0\},\qquad V_r=\lambda_r^{-1/2}B_r.
+\]
+Consequently no inverse square root at a null eigenvalue is needed. Lean proves
+\[
+V_rP=V_r,\qquad V_r^*V_s=\delta_{rs}P.
+\]
+The previous block's recovery is now instantiated from these derived syndromes, rather than from an assumed orthogonal error family.
+
+\section*{A channel on the whole ambient space}
+Put $Q=I-\sum_{r\in A_+}V_rV_r^*$. The recovery is
+\[
+\boxed{\mathcal R(\sigma)=\sum_{r\in A_+}V_r^*\sigma V_r+Q\sigma Q.}
+\]
+The complement is an orthogonal projector and
+\[
+\sum_{r\in A_+}V_rV_r^*+Q^*Q=I.
+\]
+Hence the recovery is trace preserving. Its finite Kraus form also proves positivity after amplification by the identity on every finite auxiliary space. The complement term matters: the map is defined as a channel even outside the syndrome ranges.
+
+Finally the checked calculation gives $\mathcal R\mathcal N_E(\rho)=\sum_r\lambda_r\rho=\Tr(C)\rho$. Under input-channel normalization and $P\ne0$, summing the diagonal Gram identities gives $\Tr(C)P=P$, hence $\Tr C=1$. The zero-code branch does not use this cancellation.
+
+\newpage
+\pageheading{Necessity}{Deriving the Gram matrix from recovery}
+Suppose an actual finite trace-preserving recovery corrects every code-supported operator. The proof does not assume the Knill--Laflamme inner-product condition or a pre-existing syndrome decomposition. Instead, it expands the composite channel into the finite Kraus family
+\[
+A_{ra}=R_rE_aP.
+\]
+For every ambient matrix $\rho$, correction on the code implies
+\[
+\sum_{r,a} A_{ra}\rho A_{ra}^*=P\rho P.
+\]
+This equality on all matrices is obtained from the code-supported sandwich $P\rho P$, using the projector identities.
+
+\section*{Rank-one rigidity of the corrected channel}
+The module tests the map equality on actual matrix units and flattens each $A_{ra}$ into a row. If $X$ is the matrix of those rows and $p$ is the vector of entries of $P$, the resulting Gram identity is
+\[
+X^*X=\overline p\,p^{\mathsf T}.
+\]
+The checked rank-one Gram lemma proves that every row of $X$ is proportional to $p$. For nonzero $p$, a nonzero coordinate is selected and a two-coordinate test vector is placed in the null space of the Gram matrix. The implication $X^*Xv=0\Rightarrow Xv=0$ then gives the required proportionality. When $p=0$, the Gram identity forces $X=0$ directly.
+
+Applied to the corrected Kraus family, this yields scalars $z_{ra}$ with
+\[
+R_rE_aP=z_{ra}P.
+\]
+The essential declarations are \path{rank_one_gram_rigidity}, \path{kraus_rank_one_rigidity} and \path{corrected_kraus_family}. No rank-one Choi characterization is inserted as an axiom or as the desired conclusion in hypothesis form.
+
+\section*{Trace-preserving recovery supplies the original Gram data}
+Let $Z_{ra}=z_{ra}$. The recovery normalization gives
+\begin{align*}
+PE_a^*E_bP
+&=PE_a^*\Bigl(\sum_rR_r^*R_r\Bigr)E_bP\\
+&=\sum_r(R_rE_aP)^*(R_rE_bP)\\
+&=\Bigl(\sum_r\overline{z_{ra}}z_{rb}\Bigr)P
+=(Z^*Z)_{ab}P.
+\end{align*}
+Thus $C=Z^*Z$ is positive semidefinite and satisfies the required compressed identities. The theorem \path{gram_of_recovery} implements this calculation with the original error and recovery matrices.
+
+A second rigidity argument handles a nonnegative scalar multiple of the identity code map. It uses $\sqrt t\,P$ as the rank-one map generator and includes $t=0$. That argument gives necessity for unnormalized error families without pretending that they are channels.
+
+\newpage
+\pageheading{Physical-state bridge}{Density matrices, all operators and finite references}
+The operator-space formulation used in necessity must agree with the physical density-state formulation. This bridge is proved explicitly for complex-linear maps on finite matrices.
+
+\section*{Normalization is not an extra assumption}
+A nonzero positive semidefinite matrix has strictly positive real trace. If a complex-linear map fixes every normalized code density matrix, apply that hypothesis to
+\[
+\frac{\rho}{\Tr\rho}
+\]
+for each nonzero positive code-supported $\rho$. Linearity then gives equality on $\rho$ itself. The zero matrix is handled separately. The source proves the real-trace, nonzero-trace and scalar-cancellation facts rather than assuming that normalization is valid.
+
+\section*{Complex polarization reaches the whole operator space}
+Write $q(x)=xx^*$. The module proves the exact identity
+\[
+4xy^*=q(x+y)-q(x-y)
++i\bigl(q(x+iy)-q(x-iy)\bigr).
+\]
+Agreement on all positive pure outer products therefore implies agreement on every outer product. Actual matrix units then span the full matrix space. Applying this argument to the sandwich by $P$ proves equality on every code-supported operator, including non-Hermitian ones.
+
+The result \path{density_corrects_iff_operators} establishes the equivalence for the actual composite Kraus maps. It does not replace the set of density matrices by an assumed basis of logical states.
+
+\section*{An arbitrary finite reference system}
+For any finite reference index set $A$, the amplified channel is defined using the actual Kronecker Kraus operators,
+\[
+\widetilde{\mathcal N}_E(\rho)
+=\sum_a(I_A\otimes E_a)\rho(I_A\otimes E_a)^*.
+\]
+Its reference blocks are proved equal to the original channel applied blockwise. If
+\[
+(I_A\otimes P)\rho(I_A\otimes P)=\rho,
+\]
+then every reference block is code supported. Applying the checked operator-space correction to those blocks gives
+\[
+\boxed{\widetilde{\mathcal R}\,\widetilde{\mathcal N}_E(\rho)=\rho.}
+\]
+This includes entangled density matrices supported on the reference--code space, and in fact holds for every jointly supported matrix. There is no fixed auxiliary dimension or test-state sampling.
+
+The declaration \path{recovery_with_reference} proves the equality. The recovery's complete positivity is separately established by the actual finite Kraus amplification, so preservation of states is not inferred from a merely positive, non-completely-positive map.
+
+\newpage
+\pageheading{One recovery for the error family}{Coherent combinations and normalization}
+A correction proof for only one selected Kraus presentation is weaker than a proof that one decoder works throughout the error span. The new module connects the constructed spectral recovery back to the original error operators.
+
+\section*{Cross terms for the original errors}
+For arbitrary positive Gram data, the same recovery satisfies
+\[
+\boxed{\mathcal R(E_a\rho E_b^*)=C_{ba}\rho\qquad(P\rho P=\rho).}
+\]
+The index order $ba$ is intentional: the defining Gram relation is $PE_a^*E_bP=C_{ab}P$. The proof first derives scalar corrected Kraus composites for the constructed recovery and then uses its trace-preserving completeness to identify the original Gram entries.
+
+For $E(c)=\sum_a c_aE_a$, finite-sum expansion gives
+\[
+\mathcal R\bigl(E(c)\rho E(c)^*\bigr)
+=\left(\sum_{a,b}c_a\overline{c_b}C_{ba}\right)\rho
+=(c^*Cc)\rho.
+\]
+The double-sum formula is the literal checked conclusion; the final quadratic-form notation follows by renaming finite indices. It is not restricted to orthogonal errors or real coefficients.
+
+\section*{Every normalized channel in the same span}
+Suppose $F_j=\sum_a c_{ja}E_a$ and $\sum_jF_j^*F_j=I$. The decoder is \emph{not} reconstructed for the $F_j$. Summing the coherent identities gives a scalar multiple $q\rho$. Trace preservation of both the $F$ channel and the recovery forces $q=1$ on a nonzero code. The proof uses positivity of $P$ to justify cancellation of its trace and handles $P=0$ separately. Therefore
+\[
+\boxed{\mathcal R\Bigl(\sum_jF_j\rho F_j^*\Bigr)=\rho.}
+\]
+This is \path{Data.recovery_span_channel}, a quantified statement over arbitrary finite $F$ families and their complex coefficients.
+
+\section*{The unnormalized error-family equivalence}
+For arbitrary finite $E$, define exact family recovery to mean that a finite trace-preserving Kraus recovery and a single $t\ge0$ exist such that
+\[
+\mathcal R\mathcal N_E(\rho)=t\rho
+\quad\text{for every code-supported }\rho.
+\]
+Then \path{error_family_correctable_iff_gram} proves that this condition is equivalent to the existence of $C\succeq0$ satisfying the Gram identities. Sufficiency chooses $t=\Tr C$; necessity constructs $C$ from the scaled rank-one rigidity argument.
+
+The scale is essential. Zero errors can give $t=0$ and cannot be inverted to a nonzero normalized state. An input with a larger total trace is not silently declared a channel. For normalized input channels, the separate channel theorem removes the scale exactly as described on page 3.
+
+\newpage
+\pageheading{Validation and boundary}{Exact examples, trust audit and remaining work}
+\section*{Singular, nonorthogonal errors are accepted}
+On a qubit with full code $P=I$, take
+\[
+E_0=\frac35I,\qquad E_1=\frac45I,\qquad
+C=\begin{pmatrix}9/25&12/25\\12/25&16/25\end{pmatrix}.
+\]
+Lean checks the channel normalization, the Gram identities, positivity of $C$, $\det C=0$, and the nonzero off-diagonal entry. It then applies the completed density-state criterion to prove correctability. This is an exact rational-complex example, not a floating-point tolerance check.
+
+\section*{A genuine channel can still be uncorrectable}
+For full qubit dephasing, $E_0=\operatorname{diag}(1,0)$ and $E_1=\operatorname{diag}(0,1)$, the Kraus normalization is checked. But $E_0^*E_0$ cannot be a scalar multiple of $I$, as its two diagonal entries differ. Necessity therefore proves that no finite recovery channel corrects the full code space. The zero-code case is also checked independently.
+
+\section*{Audits and failed attempts}
+All 20 final sources returned exit code 0 with warnings treated as errors. All 256 theorem reports were matched to the exact inventory. Allowed axiom dependencies are \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}; one upstream theorem is axiom-free. Active sources contain no admitted proofs, added axiom declarations, \texttt{unsafe}, or \texttt{native\_decide}.
+
+Both deliberately invalid controls were rejected. Sixteen verifier regression tests passed, including cache invalidation when a transitive dependency source or a private compiled interface changes. The final run was freshly executed in batches with atomic checkpoints.
+
+There were \textbf{25 failures among 37 recorded development checks}. Exact source snapshots and compiler diagnostics remain in \path{verification/fifth_block_development/}. The repaired final sources and final successful logs are separate. Checkpoint pauses are not counted as failures.
+
+\section*{Reproduction and the remaining gap}
+Use \path{scripts/verify.py} with the restored portable kit. The script compiles local interfaces in dependency order, records their hashes and rechecks stale dependencies. Generated interface caches are not distributed in the ZIP. The runner has no RAM-limit enforcement and does not independently recheck Mathlib's imported proofs.
+
+\textbf{Item 6.4 remains partial.} The remaining finite-sector work is the global smooth range-bundle construction and gluing of the projected connection over manifold charts. The existing parameter-space curvature theorem is unchanged. None of the five continuum conjectures is proved. Papers I--VI and the original numerical suite were not rerun in this block.
+
+\begin{thebibliography}{2}\small
+\bibitem{kl} E. Knill and R. Laflamme. \emph{A Theory of Quantum Error-Correcting Codes}. 1996. \href{https://arxiv.org/abs/quant-ph/9604034}{arXiv:quant-ph/9604034}.
+\bibitem{spectral} Mathlib contributors. \emph{Spectral theory of Hermitian matrices}. \path{Mathlib.Analysis.Matrix.Spectrum}. \href{https://leanprover-community.github.io/mathlib4_docs/Mathlib/Analysis/Matrix/Spectrum.html}{Official documentation}; verification uses the exact pinned source revision recorded on page 1.
+\end{thebibliography}
+\end{document}

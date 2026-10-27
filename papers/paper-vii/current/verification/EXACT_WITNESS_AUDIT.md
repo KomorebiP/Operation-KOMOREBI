@@ -1,0 +1,2 @@
+Historical record: provenance/pre_monograph_metadata/verification/EXACT_WITNESS_AUDIT.md
+Current edition: verification/MONOGRAPH_VERIFICATION.json
