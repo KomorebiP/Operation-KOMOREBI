@@ -1,0 +1,90 @@
+{
+  "schema": "komorebi-computation-manifest-v1",
+  "date": "2026-09-23",
+  "claim": "Exact core-residual decomposition yields trace/Frobenius/cap tail certificates and moment-triggered exact residual completion.",
+  "arithmetic": "IEEE-754 float64",
+  "software": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41"
+  },
+  "finite_surrogates": {
+    "random_mgf_cases": 120,
+    "tilts_per_case": 4,
+    "random_mgf_rows": 480,
+    "stress_dimension": 50,
+    "stress_target_p": 1e-08,
+    "stress_depths": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "completion_depths": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "seed": 20260923
+  },
+  "checks": {
+    "mgf_rows": 480,
+    "trace_cap_all_valid": true,
+    "trace_frobenius_cap_all_valid": true,
+    "trace_frobenius_tighter_fraction": 0.8354166666666667,
+    "trace_cap_median_slack": 0.0044991477051892995,
+    "trace_frobenius_cap_median_slack": 0.00352631270932135,
+    "tail_all_contained": true,
+    "completion_all_rank_matches": true,
+    "completion_max_spectrum_rel_error": 5.935512888838386e-16,
+    "completion_max_tail_decade_error": 9.769962616701378e-15,
+    "moment_rank_certified_count": 6,
+    "moment_rank_test_count": 7
+  },
+  "stress_comparison": [
+    {
+      "depth": 4,
+      "v07_weyl_width_decades": 90097.4896688383,
+      "v08_trace_moment_width_decades": 11.85534970868436,
+      "improvement_factor": 7599.7327689827225
+    },
+    {
+      "depth": 5,
+      "v07_weyl_width_decades": 16511.193915439762,
+      "v08_trace_moment_width_decades": 9.75650319847119,
+      "improvement_factor": 1692.3270130252208
+    },
+    {
+      "depth": 6,
+      "v07_weyl_width_decades": 3747.457482504603,
+      "v08_trace_moment_width_decades": 7.667756825774752,
+      "improvement_factor": 488.72930736505964
+    },
+    {
+      "depth": 7,
+      "v07_weyl_width_decades": 2274.83527212577,
+      "v08_trace_moment_width_decades": 5.696766548429196,
+      "improvement_factor": 399.320430771913
+    },
+    {
+      "depth": 8,
+      "v07_weyl_width_decades": 1165.2880916745628,
+      "v08_trace_moment_width_decades": 3.391218465459108,
+      "improvement_factor": 343.61929304864304
+    }
+  ],
+  "non_claims": [
+    "Finite numerical sweeps do not prove the universal inequalities; proofs are in PROOF_AUDIT_TRACE_MOMENT_RESIDUAL.md.",
+    "The trace/moment tail interval can remain conservative while a large residual range is unresolved.",
+    "The reference residual-completion implementation uses SVD for rank revelation; the theorem also permits streamed RRQR/TSQR.",
+    "No native GPU timing is claimed in v0.8."
+  ]
+}

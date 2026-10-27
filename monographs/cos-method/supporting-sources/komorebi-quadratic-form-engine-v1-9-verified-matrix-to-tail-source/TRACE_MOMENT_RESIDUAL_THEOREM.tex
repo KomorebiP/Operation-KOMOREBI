@@ -1,0 +1,350 @@
+\section{Trace-aware residual certification and exact completion}
+
+The spectral bridge in the preceding section used an operator-norm residual as
+if every unresolved coefficient could move independently by the same amount.
+That is rigorous but unnecessarily pessimistic once a nontrivial range basis
+has already been captured.  The residual has considerably more structure.
+
+Let \(U\in\mathbb R^{n\times r}\) have orthonormal columns and define
+\[
+B=U^\top A,
+\qquad
+F=(I-UU^\top)A.
+\]
+Then
+\[
+A=UB+F,
+\qquad
+U^\top F=0.
+\]
+
+\begin{theorem}[Exact core--residual decomposition]
+\[
+\boxed{
+A^\top A
+=
+B^\top B+F^\top F.
+}
+\]
+In particular the unresolved spectral term
+\[
+R=F^\top F
+\]
+is positive semidefinite.
+\end{theorem}
+
+\begin{proof}
+Expand \((UB+F)^\top(UB+F)\).  The two cross terms vanish because
+\(U^\top F=0\), while \(U^\top U=I\).
+\end{proof}
+
+This changes the certification problem.  Instead of an arbitrary Hermitian
+error, the missing term is a positive residual with measurable spectral
+moments.  Define
+\[
+t=\operatorname{tr}R,
+\qquad
+v=\operatorname{tr}(R^2),
+\qquad
+\rho=\|R\|_2.
+\]
+Then
+\[
+\boxed{
+ t=\|F\|_F^2,
+ \qquad
+ v=\|FF^\top\|_F^2,
+ \qquad
+ \rho=\|F\|_2^2.
+}
+\]
+The first quantity is the exact missing mean of the Gaussian quadratic form;
+the second records how concentrated the residual spectrum is; the third is its
+largest possible coefficient.
+
+\subsection{A trace--Frobenius--cap MGF envelope}
+
+Set
+\[
+C=B^\top B,
+\qquad
+H=C+R,
+\qquad
+c=\lambda_{\max}(C).
+\]
+For \(0<2\theta(c+\rho)<1\), put
+\[
+\alpha=(1-2\theta c)^{-1}.
+\]
+
+\begin{theorem}[Trace--Frobenius--cap log-MGF certificate]
+For the Gaussian quadratic form with coefficient matrix \(H\),
+\[
+K_H(\theta)
+=-\frac12\log\det(I-2\theta H)
+\]
+satisfies
+\[
+\boxed{
+K_H(\theta)
+\le
+K_C(\theta)
++
+\theta\alpha t
++
+\frac{\theta^2\alpha^2v}
+     {1-2\theta\alpha\rho}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Factor the determinant through the known core:
+\[
+I-2\theta(C+R)
+=
+(I-2\theta C)^{1/2}
+(I-2\theta T)
+(I-2\theta C)^{1/2},
+\]
+where
+\[
+T=(I-2\theta C)^{-1/2}
+R
+(I-2\theta C)^{-1/2}.
+\]
+Since
+\[
+\|(I-2\theta C)^{-1/2}\|_2^2=\alpha,
+\]
+we have
+\[
+\operatorname{tr}T\le\alpha t,
+\qquad
+\operatorname{tr}(T^2)\le\alpha^2v,
+\qquad
+\|T\|_2\le\alpha\rho.
+\]
+For every eigenvalue \(x\) of \(T\),
+\[
+-\frac12\log(1-2\theta x)
+\le
+\theta x
++
+\frac{\theta^2x^2}
+     {1-2\theta\alpha\rho}.
+\]
+The scalar inequality follows from the power series of \(-\log(1-u)\) and a
+geometric bound on all terms of degree at least two.  Summing over the
+eigenvalues of \(T\) proves the result.
+\end{proof}
+
+\begin{corollary}[Trace-aware Chernoff upper tail]
+For \(Q=Z^\top HZ\) with \(Z\sim N(0,I)\),
+\[
+\boxed{
+\Pr(Q\ge q)
+\le
+\inf_{0<2\theta(c+\rho)<1}
+\exp\{\widehat K_H(\theta)-\theta q\},
+}
+\]
+where \(\widehat K_H\) is the preceding MGF upper bound.
+\end{corollary}
+
+A complementary lower endpoint is immediate from
+\[
+H=C+R\succeq C.
+\]
+Using the same normal vector,
+\[
+Z^\top HZ\ge Z^\top CZ
+\]
+almost surely, and therefore
+\[
+\boxed{
+\Pr(Z^\top CZ\ge q)
+\le
+\Pr(Z^\top HZ\ge q).
+}
+\]
+The lower endpoint can be evaluated by K-COS on the captured core spectrum,
+while the upper endpoint is obtained from the optimized trace-aware Chernoff
+bound.
+
+\subsection{Finite stress test}
+
+The previous coefficient-wise Weyl interval was intentionally conservative.
+On the same full-rank, 50-dimensional stress test used in the preceding
+section, its \(10^{-8}\) tail interval remained thousands of decades wide
+until essentially the complete range had been captured.  Preserving the exact
+residual trace and higher residual moments changes that behavior substantially.
+
+\begin{table}[H]
+\centering
+\caption{Tail-bracket width at a true probability of \(10^{-8}\).  The
+trace/moment certificate is still conservative, but it is orders of magnitude
+narrower than coefficient-wise Weyl inflation before full range capture.}
+\begin{tabular}{rrrr}
+\toprule
+Krylov depth & basis dimension & v0.7 Weyl width & v0.8 moment width\\
+\midrule
+4 & 24 & 90,097 & 11.86\\
+5 & 30 & 16,511 & 9.76\\
+6 & 36 & 3,747 & 7.67\\
+7 & 42 & 2,275 & 5.70\\
+8 & 48 & 1,165 & 3.39\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figure_16_trace_moment_vs_weyl.png}
+\caption{Incomplete-range tail certification before exact completion.  The
+trace/moment bound preserves the amount and concentration of unresolved
+spectral mass instead of shifting every coefficient by one worst-case radius.}
+\label{fig:trace-moment-vs-weyl}
+\end{figure}
+
+A separate random implementation audit used 120 random factor/range pairs and
+four admissible positive tilts per pair, for 480 MGF comparisons.  Both the
+trace/cap and trace--Frobenius--cap envelopes dominated the exact log MGF in
+every tested case.  The trace--Frobenius--cap form was at least as tight as the
+trace/cap form in approximately 83.5\% of those comparisons.  This finite
+sweep audits the implementation; the theorem above supplies the universal
+argument.
+
+\subsection{Residual rank from moments}
+
+The same invariants determine when it is better to stop approximating the
+missing spectrum and complete it exactly.  Let
+\[
+s=\operatorname{rank}F=\operatorname{rank}R.
+\]
+If the nonzero eigenvalues of \(R\) are \(r_1,\ldots,r_s\), then
+\[
+t=\sum_i r_i,
+\qquad
+v=\sum_i r_i^2,
+\qquad
+r_i\le\rho.
+\]
+
+\begin{theorem}[Residual-rank bracket]
+\[
+\boxed{
+\left\lceil
+\max\left\{
+\frac{t}{\rho},
+\frac{t^2}{v}
+\right\}
+\right\rceil
+\le
+\operatorname{rank}F
+\le
+n-r.
+}
+\]
+The zero-residual case is interpreted separately as rank zero.
+\end{theorem}
+
+\begin{proof}
+The inequality \(t\le s\rho\) gives \(s\ge t/\rho\).  Cauchy--Schwarz gives
+\[
+t^2
+=
+\left(\sum_{i=1}^s r_i\right)^2
+\le
+s\sum_{i=1}^s r_i^2
+=sv,
+\]
+so \(s\ge t^2/v\).  Finally, every column of \(F\) lies in
+\(\operatorname{range}(U)^\perp\), whose dimension is \(n-r\).
+\end{proof}
+
+Whenever the integer lower bound equals \(n-r\), the missing rank is certified
+exactly without computing a residual SVD.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figure_17_residual_rank_completion.png}
+\caption{Residual-rank certification in the full-rank stress test.  From depth
+3 onward the moment lower bound meets the orthogonal-complement upper bound.
+At depth 8 exactly two residual directions remain.}
+\label{fig:residual-rank-completion}
+\end{figure}
+
+\subsection{Exact residual completion}
+
+Suppose a compact factorization of the residual is
+\[
+F=WD,
+\]
+where \(W\) has orthonormal columns.  Since \(F\) lies in the orthogonal
+complement of \(U\),
+\[
+U^\top W=0.
+\]
+
+\begin{theorem}[Exact residual completion]
+\[
+\boxed{
+A
+=
+[U\;W]
+\begin{bmatrix}
+B\\D
+\end{bmatrix}.
+}
+\]
+Consequently, the nonzero singular values of \(A\) are exactly the singular
+values of the stacked completion core
+\[
+\mathcal C_{\rm complete}
+=
+\begin{bmatrix}
+B\\D
+\end{bmatrix}.
+\]
+\end{theorem}
+
+This identity admits a column-streamed implementation.  For each residual
+column block, project against the residual basis accumulated so far, append
+only genuinely new directions through rank-revealing QR or SVD, and extend the
+coordinate matrices of earlier blocks with zero rows.  New residual directions
+are orthogonal to every earlier residual block by construction, so no earlier
+data block must be revisited.
+
+In the deterministic stress test, exact residual completion reproduced the
+full singular spectrum at relative errors between approximately
+\(2\times10^{-16}\) and \(6\times10^{-16}\) for all tested incomplete bases.
+The resulting \(10^{-8}\) tail differed from the full-spectrum reference by
+less than \(10^{-14}\) decades.  At depth 8 the candidate range had dimension
+48, the missing rank was certified as exactly two, and appending those two
+residual directions closed the spectrum without another approximate Krylov
+stage.
+
+\subsection{Hybrid stopping rule}
+
+The resulting production logic is not ``approximate forever.''  It is a
+certified handoff between two regimes:
+\[
+\boxed{
+\begin{array}{c}
+\text{streamed / pruned Krylov}\\[2mm]
+\downarrow\\[-1mm]
+\text{residual moments }(t,v,\rho)\\[2mm]
+\downarrow\\[-1mm]
+\begin{cases}
+\text{continue Krylov}, & \text{residual range still large},\\
+\text{exact streamed residual completion}, & \text{completion rank affordable}.
+\end{cases}
+\end{array}
+}
+\]
+
+The trace-aware tail certificate remains useful as a rigorous intermediate
+bound and as a stopping diagnostic.  Once only a small number of residual
+directions remain, exact completion is mathematically preferable to forcing a
+worst-case tail envelope to become artificially sharp.
