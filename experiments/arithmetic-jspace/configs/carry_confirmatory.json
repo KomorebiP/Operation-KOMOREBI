@@ -1,0 +1,284 @@
+{
+  "schema_version": "4.0",
+  "profile": "carry_confirmatory",
+  "description": "Eight-seed locked confirmation study for a carry/borrow computation space. Run only after carry_discovery writes and freezes workspace_lock.json.",
+  "experiment": {
+    "name": "arithmetic_carry_workspace_confirmatory_v4",
+    "study_phase": "confirmatory",
+    "paired_initialization": true,
+    "sealed_evaluation": true,
+    "analysis_locked": true
+  },
+  "model": {
+    "vocab_size": 260,
+    "max_seq_len": 64,
+    "d_model": 512,
+    "n_layers": 12,
+    "n_heads": 8,
+    "d_ff": 2048,
+    "dropout": 0.0,
+    "rope_base": 10000.0,
+    "tie_embeddings": true,
+    "gradient_checkpointing": false
+  },
+  "data": {
+    "operations": ["add", "sub"],
+    "min_digits": 1,
+    "max_digits": 10,
+    "pseudo_seed": 271828,
+    "pseudo_states": 8,
+    "derangement_window": 16384,
+    "control_audit_examples": 8192,
+    "derangement_max_abs_pearson": 0.04,
+    "derangement_max_prefix_excess": 0.03,
+    "derangement_max_suffix_excess": 0.03
+  },
+  "arms": [
+    {
+      "name": "correct",
+      "target_rule": "exact_arithmetic",
+      "enabled": true
+    },
+    {
+      "name": "no_carry",
+      "target_rule": "no_transfer_subset_exact",
+      "enabled": true
+    },
+    {
+      "name": "pseudo_fst",
+      "target_rule": "seeded_finite_state_transducer",
+      "enabled": true
+    },
+    {
+      "name": "deranged",
+      "target_rule": "seeded_random_value_derangement",
+      "enabled": true
+    }
+  ],
+  "training": {
+    "max_steps": 80000,
+    "microbatch_size": 32,
+    "gradient_accumulation_steps": 2,
+    "optimizer": "adamw",
+    "learning_rate": 0.0003,
+    "min_learning_rate": 0.00003,
+    "weight_decay": 0.1,
+    "beta1": 0.9,
+    "beta2": 0.95,
+    "adam_eps": 1e-8,
+    "gradient_clip": 1.0,
+    "precision": "bf16_if_supported",
+    "warmup_steps": 2500,
+    "stable_steps": 69500,
+    "decay_steps": 8000,
+    "progress_every_steps": 100,
+    "light_eval_every_steps": 500,
+    "full_eval_every_steps": 2000,
+    "resume_every_steps": 500,
+    "research_checkpoints": [0, 1000, 4000, 9000, 14000, 20000, 30000, 45000, 60000, 80000],
+    "curriculum": [
+      {
+        "name": "local_no_propagation",
+        "start_step": 0,
+        "end_step": 10000,
+        "structure_cycle": ["no_event"],
+        "digits": [1, 4],
+        "carry_chain": [0, 0],
+        "borrow_chain": [0, 0],
+        "operations": ["add", "sub"]
+      },
+      {
+        "name": "single_propagation",
+        "start_step": 10000,
+        "end_step": 25000,
+        "structure_cycle": ["event"],
+        "digits": [2, 6],
+        "carry_chain": [0, 1],
+        "borrow_chain": [0, 1],
+        "operations": ["add", "sub"]
+      },
+      {
+        "name": "multi_propagation",
+        "start_step": 25000,
+        "end_step": 50000,
+        "structure_cycle": ["chain"],
+        "digits": [3, 8],
+        "carry_chain": [1, 4],
+        "borrow_chain": [1, 4],
+        "operations": ["add", "sub"]
+      },
+      {
+        "name": "full_structural_mixture",
+        "start_step": 50000,
+        "end_step": 80000,
+        "structure_cycle": ["no_event", "event", "chain", "balanced"],
+        "digits": [2, 10],
+        "carry_chain": [0, 10],
+        "borrow_chain": [0, 10],
+        "operations": ["add", "sub"]
+      }
+    ]
+  },
+  "evaluation": {
+    "light_items": 1024,
+    "causal_items": 2048,
+    "retain_items": true,
+    "panels": [
+      {
+        "name": "iid_2_10",
+        "split": "test_iid",
+        "count": 2048,
+        "stage": {
+          "min_digits": 2,
+          "max_digits": 10,
+          "operations": ["add", "sub"],
+          "structure_cycle": ["no_event", "event", "chain", "balanced"]
+        }
+      },
+      {
+        "name": "ood_digits_12",
+        "split": "test_ood_plus2",
+        "count": 1024,
+        "stage": {
+          "min_digits": 12,
+          "max_digits": 12,
+          "operations": ["add", "sub"],
+          "structure_cycle": ["no_event", "event", "chain", "balanced"]
+        }
+      },
+      {
+        "name": "ood_digits_16",
+        "split": "test_ood_plus6",
+        "count": 1024,
+        "stage": {
+          "min_digits": 16,
+          "max_digits": 16,
+          "operations": ["add", "sub"],
+          "structure_cycle": ["no_event", "event", "chain", "balanced"]
+        }
+      },
+      {
+        "name": "carry_chain",
+        "split": "test_carry",
+        "count": 1536,
+        "stage": {
+          "min_digits": 5,
+          "max_digits": 10,
+          "operations": ["add"],
+          "structure_cycle": ["event", "chain"]
+        }
+      },
+      {
+        "name": "borrow_chain",
+        "split": "test_borrow",
+        "count": 1536,
+        "stage": {
+          "min_digits": 5,
+          "max_digits": 10,
+          "operations": ["sub"],
+          "structure_cycle": ["event", "chain"]
+        }
+      },
+      {
+        "name": "no_transfer",
+        "split": "test_iid_no_transfer",
+        "count": 1024,
+        "stage": {
+          "min_digits": 2,
+          "max_digits": 10,
+          "operations": ["add", "sub"],
+          "structure_cycle": ["no_event"]
+        }
+      }
+    ],
+    "generation_max_new_tokens": 32,
+    "batch_size": 128
+  },
+  "competence_gates": {
+    "no_carry": {
+      "iid_exact": 0.95,
+      "malformed_max": 0.005
+    },
+    "pseudo_fst": {
+      "iid_exact": 0.95,
+      "malformed_max": 0.005
+    },
+    "deranged": {
+      "iid_exact": 0.0,
+      "malformed_max": 0.01
+    },
+    "probe_requires": {
+      "iid_exact": 0.90,
+      "carry_exact": 0.85,
+      "borrow_exact": 0.85,
+      "malformed_max": 0.005
+    },
+    "claim_requires": {
+      "iid_exact": 0.97,
+      "ood_exact": 0.80,
+      "carry_exact": 0.95,
+      "borrow_exact": 0.95,
+      "control_margin": 0.30,
+      "malformed_max": 0.002
+    }
+  },
+  "space": {
+    "method": "balanced_controllability_observability",
+    "layers": [2, 4, 6, 8, 10],
+    "fit_items": 2048,
+    "holdout_items": 4096,
+    "perturbations_per_item": 32,
+    "perturbation_scale": 0.02,
+    "consumers": [
+      "digit_log_mass",
+      "eos_log_probability",
+      "minus_log_probability",
+      "output_entropy",
+      "top_log_probability",
+      "sealed_vocab_projection_0",
+      "sealed_vocab_projection_1",
+      "sealed_vocab_projection_2",
+      "sealed_vocab_projection_3"
+    ],
+    "random_output_consumers": 4,
+    "whitening_ridge": 0.0001,
+    "controls": ["pca", "random", "complement"]
+  },
+  "causal": {
+    "enabled": true,
+    "controls": ["candidate", "pca", "random", "complement"],
+    "tests": [
+      "candidate_coordinate_ablation",
+      "clean_to_corrupt_coordinate_patch",
+      "independent_upstream_residual_transplant",
+      "coordinate_rescue_after_upstream_transplant"
+    ],
+    "require_free_generation": true,
+    "require_directional_donor_effect": true,
+    "minimum_baseline_qualified_pairs": 512,
+    "minimum_directional_rescue_pairs": 128,
+    "minimum_candidate_minus_random": 0.12,
+    "minimum_rescue_fraction": 0.60
+  },
+  "statistics": {
+    "familywise_alpha": 0.05,
+    "confidence_level": 0.95,
+    "bootstrap_samples": 10000,
+    "minimum_passing_seeds": 7
+  },
+  "seeds": {
+    "mode": "all",
+    "exploration": [],
+    "confirmatory": [104729, 130363, 155921, 181081, 205759, 232003, 257053, 283051],
+    "minimum_confirmatory": 8
+  },
+  "claim_policy": {
+    "allow_jspace_claim": false,
+    "release_ceiling": "CANDIDATE_ONLY",
+    "unimplemented_required_assays": [
+      "formal_causal_mediation",
+      "shared_multiquery_access",
+      "component_specific_writer_rescue"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "experiment_name": "arithmetic_jspace_emergence_longitudinal_v1",
+  "data_config": "configs/emergence_longitudinal.json",
+  "arms": [
+    {"name": "answer_correct", "regime": "answer_only", "control": "correct", "matched_control": true, "stream_key": "answer_primary"},
+    {"name": "answer_shuffled", "regime": "answer_only", "control": "shuffled", "matched_control": true, "stream_key": "answer_primary"},
+    {"name": "worked_correct", "regime": "worked", "control": "correct", "matched_control": false, "stream_key": "worked_secondary"}
+  ],
+  "model": {"vocab_size": 260, "d_model": 320, "n_layers": 6, "n_heads": 8, "ff_multiplier": 4, "max_seq_len": 768, "dropout": 0.0, "rope_base": 10000.0, "tie_embeddings": true},
+  "training": {"max_steps": 8000, "micro_batch_size": 8, "gradient_accumulation": 8, "learning_rate": 0.00025, "minimum_learning_rate": 0.000025, "warmup_steps": 400, "weight_decay": 0.1, "gradient_clip": 1.0, "checkpoint_steps": [0, 25, 50, 100, 200, 400, 800, 1200, 2000, 3200, 5000, 6500, 8000], "eval_samples": 192, "eval_batch_size": 16, "max_new_tokens": 320, "amp": true, "deterministic": true},
+  "probe": {"checkpoint_steps": [0, 100, 400, 1200, 3200, 8000], "rank": 8, "layer": 3, "activation_samples": 192, "gradient_samples": 48, "jacobian_projections": 6, "random_controls": 16, "batch_size": 6, "ridge": 0.1}
+}

@@ -1,0 +1,11 @@
+{
+  "experiment_name": "arithmetic_jspace_symbolic_only_v1",
+  "data_config": "configs/symbolic_only.json",
+  "arms": [
+    {"name": "symbolic_correct", "regime": "symbolic_answer", "control": "correct", "matched_control": true, "stream_key": "symbolic_primary"},
+    {"name": "symbolic_shuffled", "regime": "symbolic_answer", "control": "shuffled", "matched_control": true, "stream_key": "symbolic_primary"}
+  ],
+  "model": {"vocab_size": 260, "d_model": 256, "n_layers": 6, "n_heads": 8, "ff_multiplier": 4, "max_seq_len": 256, "dropout": 0.0, "rope_base": 10000.0, "tie_embeddings": true},
+  "training": {"max_steps": 5000, "micro_batch_size": 48, "gradient_accumulation": 2, "learning_rate": 0.0003, "minimum_learning_rate": 0.00003, "warmup_steps": 250, "weight_decay": 0.1, "gradient_clip": 1.0, "checkpoint_steps": [0, 50, 100, 200, 400, 800, 1600, 3000, 5000], "eval_samples": 128, "eval_batch_size": 32, "max_new_tokens": 48, "amp": true, "deterministic": true},
+  "probe": {"checkpoint_steps": [0, 200, 800, 1600, 5000], "rank": 8, "layer": 3, "activation_samples": 128, "gradient_samples": 32, "jacobian_projections": 4, "random_controls": 12, "batch_size": 8, "ridge": 0.1}
+}

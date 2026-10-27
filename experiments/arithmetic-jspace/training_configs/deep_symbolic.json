@@ -1,0 +1,90 @@
+{
+  "experiment_name": "arithmetic_jspace_deep_symbolic_v1",
+  "data_config": "configs/deep_symbolic.json",
+  "arms": [
+    {
+      "name": "symbolic_correct",
+      "regime": "symbolic_answer",
+      "control": "correct",
+      "matched_control": true,
+      "stream_key": "symbolic_primary"
+    },
+    {
+      "name": "symbolic_shuffled",
+      "regime": "symbolic_answer",
+      "control": "shuffled",
+      "matched_control": true,
+      "stream_key": "symbolic_primary"
+    }
+  ],
+  "model": {
+    "vocab_size": 260,
+    "d_model": 320,
+    "n_layers": 8,
+    "n_heads": 8,
+    "ff_multiplier": 4,
+    "max_seq_len": 256,
+    "dropout": 0.0,
+    "rope_base": 10000.0,
+    "tie_embeddings": true
+  },
+  "training": {
+    "max_steps": 20000,
+    "micro_batch_size": 32,
+    "gradient_accumulation": 2,
+    "learning_rate": 0.0003,
+    "minimum_learning_rate": 0.00003,
+    "warmup_steps": 1000,
+    "weight_decay": 0.1,
+    "gradient_clip": 1.0,
+    "checkpoint_steps": [0, 1000, 4000, 9000, 14000, 20000],
+    "eval_samples": 256,
+    "eval_batch_size": 32,
+    "max_new_tokens": 64,
+    "amp": true,
+    "deterministic": true,
+    "progress_every_steps": 100,
+    "validation_every_steps": 1000,
+    "generation_every_steps": 4000,
+    "resume_every_steps": 500,
+    "heldout_loss_samples": 0,
+    "heldout_generation_samples": 1024,
+    "curriculum_stages": [
+      {
+        "name": "digits_1_2",
+        "end_step": 1000,
+        "difficulties": [1, 2],
+        "operations": ["add", "div_exact", "mul", "sub"]
+      },
+      {
+        "name": "digits_1_3",
+        "end_step": 4000,
+        "difficulties": [1, 2, 3],
+        "operations": ["add", "div_exact", "mul", "sub"]
+      },
+      {
+        "name": "digits_1_4",
+        "end_step": 9000,
+        "difficulties": [1, 2, 3, 4],
+        "operations": ["add", "div_exact", "mul", "sub"]
+      },
+      {
+        "name": "digits_1_5",
+        "end_step": 20000,
+        "difficulties": [1, 2, 3, 4, 5],
+        "operations": ["add", "div_exact", "mul", "sub"]
+      }
+    ]
+  },
+  "probe": {
+    "checkpoint_steps": [0, 1000, 4000, 9000, 14000, 20000],
+    "rank": 8,
+    "layer": 4,
+    "activation_samples": 256,
+    "gradient_samples": 64,
+    "jacobian_projections": 8,
+    "random_controls": 24,
+    "batch_size": 8,
+    "ridge": 0.1
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "experiment_name": "arithmetic_jspace_smoke_v1",
+  "data_config": "configs/jspace_smoke.json",
+  "arms": [
+    {
+      "name": "symbolic_correct",
+      "regime": "symbolic_answer",
+      "control": "correct",
+      "matched_control": true,
+      "stream_key": "symbolic_primary"
+    },
+    {
+      "name": "symbolic_shuffled",
+      "regime": "symbolic_answer",
+      "control": "shuffled",
+      "matched_control": true,
+      "stream_key": "symbolic_primary"
+    }
+  ],
+  "model": {
+    "vocab_size": 260,
+    "d_model": 128,
+    "n_layers": 4,
+    "n_heads": 4,
+    "ff_multiplier": 4,
+    "max_seq_len": 192,
+    "dropout": 0.0,
+    "rope_base": 10000.0,
+    "tie_embeddings": true
+  },
+  "training": {
+    "max_steps": 240,
+    "micro_batch_size": 32,
+    "gradient_accumulation": 1,
+    "learning_rate": 0.0005,
+    "minimum_learning_rate": 0.00005,
+    "warmup_steps": 20,
+    "weight_decay": 0.1,
+    "gradient_clip": 1.0,
+    "checkpoint_steps": [0, 60, 120, 240],
+    "eval_samples": 48,
+    "eval_batch_size": 24,
+    "max_new_tokens": 32,
+    "amp": true,
+    "deterministic": true
+  },
+  "probe": {
+    "checkpoint_steps": [0, 120, 240],
+    "rank": 4,
+    "layer": 2,
+    "activation_samples": 32,
+    "gradient_samples": 8,
+    "jacobian_projections": 2,
+    "random_controls": 4,
+    "batch_size": 4,
+    "ridge": 0.1
+  }
+}
