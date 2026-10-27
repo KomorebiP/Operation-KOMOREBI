@@ -1,0 +1,46 @@
+H12PrincipalDivisor.principal5_cube (v : H12PrincipalDivisor.V) :
+  H12PrincipalDivisor.principal5 (H12PrincipalDivisor.principal5 (H12PrincipalDivisor.principal5 v)) =
+    (7 * v.fst, 7 * v.snd.fst, 7 * v.snd.snd)
+'H12PrincipalDivisor.principal5_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.lift_identity (a b c : Int) :
+  H12PrincipalDivisor.principal5 (H12PrincipalDivisor.liftPoint a b c) =
+    (a, b - 8 * H12PrincipalDivisor.digit b c, c - 5 * H12PrincipalDivisor.digit b c)
+'H12PrincipalDivisor.lift_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.digit_is_remainder (b c : Int) : H12PrincipalDivisor.digit b c = (2 * b - 3 * c) % 7
+'H12PrincipalDivisor.digit_is_remainder' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.digit_range (b c : Int) : 0 ≤ H12PrincipalDivisor.digit b c ∧ H12PrincipalDivisor.digit b c < 7
+'H12PrincipalDivisor.digit_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.unique_lift_digit (b c k j : Int) (hk0 : 0 ≤ k) (hk7 : k < 7) (hj : 7 * j = -2 * b + 3 * c + k) :
+  k = H12PrincipalDivisor.digit b c ∧ j = H12PrincipalDivisor.pivot b c
+'H12PrincipalDivisor.unique_lift_digit' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.lift_preserves_fifth_weight (a b c : Int) :
+  H12PrincipalDivisor.weight (H12PrincipalDivisor.liftPoint a b c).snd.snd = H12PrincipalDivisor.weight c
+'H12PrincipalDivisor.lift_preserves_fifth_weight' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.wall_bounds (a b j : Int) : -1 ≤ H12PrincipalDivisor.wall a b j ∧ H12PrincipalDivisor.wall a b j ≤ 1
+'H12PrincipalDivisor.wall_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.wall_values (a b j : Int) :
+  H12PrincipalDivisor.wall a b j = -1 ∨ H12PrincipalDivisor.wall a b j = 0 ∨ H12PrincipalDivisor.wall a b j = 1
+'H12PrincipalDivisor.wall_values' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.order_difference (a b c : Int) :
+  H12PrincipalDivisor.correctionOrder a b c =
+    H12PrincipalDivisor.weight (H12PrincipalDivisor.liftPoint a b c).snd.snd *
+        H12PrincipalDivisor.cone (H12PrincipalDivisor.liftPoint a b c).fst
+          (H12PrincipalDivisor.liftPoint a b c).snd.fst -
+      H12PrincipalDivisor.weight c * H12PrincipalDivisor.cone a b
+'H12PrincipalDivisor.order_difference' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.order_values (a b c : Int) :
+  H12PrincipalDivisor.correctionOrder a b c = -4 ∨
+    H12PrincipalDivisor.correctionOrder a b c = -1 ∨
+      H12PrincipalDivisor.correctionOrder a b c = 0 ∨
+        H12PrincipalDivisor.correctionOrder a b c = 1 ∨ H12PrincipalDivisor.correctionOrder a b c = 4
+'H12PrincipalDivisor.order_values' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.tau_ray_order (n : Int) (hn : 0 < n) :
+  H12PrincipalDivisor.correctionOrder (2 * n) (4 * n) (5 * n) = 4
+'H12PrincipalDivisor.tau_ray_order' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.s_ray_order (n : Int) (hn : n ≠ 0) : H12PrincipalDivisor.correctionOrder (-n) 0 0 = -4
+'H12PrincipalDivisor.s_ray_order' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.negative_integer_order (n : Int) (hn : 0 < n) :
+  H12PrincipalDivisor.correctionOrder 0 (15 * n) (10 * n) = 4
+'H12PrincipalDivisor.negative_integer_order' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.zero_order : H12PrincipalDivisor.correctionOrder 0 0 0 = 0
+'H12PrincipalDivisor.zero_order' does not depend on any axioms

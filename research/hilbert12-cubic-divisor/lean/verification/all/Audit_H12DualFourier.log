@@ -1,0 +1,29 @@
+H12DualFourier.dual_pairing (k v : H12DualFourier.V) :
+  H12DualFourier.dot (H12DualFourier.dual k) v = H12DualFourier.dot k (H12DualFourier.original v)
+'H12DualFourier.dual_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DualFourier.inverse_left (k : H12DualFourier.V) : H12DualFourier.dualInv (H12DualFourier.dual k) = k
+'H12DualFourier.inverse_left' depends on axioms: [propext, Quot.sound]
+H12DualFourier.inverse_right (k : H12DualFourier.V) : H12DualFourier.dual (H12DualFourier.dualInv k) = k
+'H12DualFourier.inverse_right' depends on axioms: [propext, Quot.sound]
+H12DualFourier.dual_injective (a b : H12DualFourier.V) (h : H12DualFourier.dual a = H12DualFourier.dual b) : a = b
+'H12DualFourier.dual_injective' depends on axioms: [propext, Quot.sound]
+H12DualFourier.conductor_residue (k : H12DualFourier.V) : (H12DualFourier.dual k).z % 3 = k.z % 3
+'H12DualFourier.conductor_residue' depends on axioms: [propext, Quot.sound]
+H12DualFourier.all_iterates_conductor (n : Nat) (k : H12DualFourier.V) : (H12DualFourier.iterate n k).z % 3 = k.z % 3
+'H12DualFourier.all_iterates_conductor' depends on axioms: [propext, Quot.sound]
+H12DualFourier.dual_cubic (k : H12DualFourier.V) :
+  have k1 := H12DualFourier.dual k;
+  have k2 := H12DualFourier.dual k1;
+  have k3 := H12DualFourier.dual k2;
+  { x := k3.x - 6 * k2.x + 12 * k1.x - k.x, y := k3.y - 6 * k2.y + 12 * k1.y - k.y,
+      z := k3.z - 6 * k2.z + 12 * k1.z - k.z } =
+    { x := 0, y := 0, z := 0 }
+'H12DualFourier.dual_cubic' depends on axioms: [propext, Quot.sound]
+H12DualFourier.gauge_winding_preserves_conductor (m n : H12DualFourier.V) :
+  (m.z + n.z - (H12DualFourier.dual n).z) % 3 = m.z % 3
+'H12DualFourier.gauge_winding_preserves_conductor' depends on axioms: [propext, Quot.sound]
+H12DualFourier.actual_frequency_chain :
+  H12DualFourier.dual { x := 0, y := 0, z := 1 } = { x := -1, y := 0, z := 4 } ∧
+    H12DualFourier.dual { x := -1, y := 0, z := 4 } = { x := -4, y := -1, z := 16 } ∧
+      H12DualFourier.dual { x := -4, y := -1, z := 16 } = { x := -12, y := -6, z := 49 }
+'H12DualFourier.actual_frequency_chain' does not depend on any axioms

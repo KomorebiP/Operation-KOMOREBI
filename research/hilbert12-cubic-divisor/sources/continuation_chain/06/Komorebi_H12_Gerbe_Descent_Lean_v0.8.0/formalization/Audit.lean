@@ -1,0 +1,55 @@
+import H12GerbeDescent
+import H12FlatGerbeAction
+import H12WeilCharacter
+
+#print axioms H12.GerbeDescent.normal_fixed
+#print axioms H12.GerbeDescent.certificate_1
+#print axioms H12.GerbeDescent.certificate_2
+#print axioms H12.GerbeDescent.certificate_4
+#print axioms H12.GerbeDescent.certificate_5
+#print axioms H12.GerbeDescent.certificate_6
+#print axioms H12.GerbeDescent.certificate_7
+#print axioms H12.GerbeDescent.certificate_8
+#print axioms H12.GerbeDescent.certificate_9
+#print axioms H12.GerbeDescent.certificate_10
+#print axioms H12.GerbeDescent.certificate_11
+#print axioms H12.GerbeDescent.certificate_12
+#print axioms H12.GerbeDescent.certificate_13
+#print axioms H12.GerbeDescent.certificate_14
+#print axioms H12.GerbeDescent.certificate_15
+#print axioms H12.GerbeDescent.certificate_16
+#print axioms H12.GerbeDescent.certificate_17
+#print axioms H12.GerbeDescent.certificate_18
+#print axioms H12.GerbeDescent.certificate_19
+#print axioms H12.GerbeDescent.fixed_normal_form
+#print axioms H12.GerbeDescent.hodge_normal
+#print axioms H12.GerbeDescent.invariant_hodge_zero
+#print axioms H12.GerbeDescent.normal_parameters
+#print axioms H12.GerbeDescent.normal_injective
+#print axioms H12.GerbeDescent.conjugate_parameters_involution
+#print axioms H12.GerbeDescent.conjugation_fixed_even_restriction
+#print axioms H12.GerbeDescent.no_conjugate_normalized_volume
+#print axioms H12.GerbeDescent.all_exterior_minors
+#print axioms H12.GerbeDescent.pull_table_consistency
+#print axioms H12FlatGerbeAction.projection_intertwines
+#print axioms H12FlatGerbeAction.projection_surjective_witness
+#print axioms H12FlatGerbeAction.opposite_inverse_flat
+#print axioms H12FlatGerbeAction.flat_inverse_opposite
+#print axioms H12FlatGerbeAction.fixed_kernel_relation
+#print axioms H12FlatGerbeAction.fixed_groups_agree
+#print axioms H12FlatGerbeAction.opposite_parameter
+#print axioms H12FlatGerbeAction.all_two_minors
+#print axioms H12FlatGerbeAction.pull_matches_table
+#print axioms H12WeilCharacter.jacobi_norm
+#print axioms H12WeilCharacter.base_pairing_exponent
+#print axioms H12WeilCharacter.base_pairing_nonzero
+#print axioms H12WeilCharacter.conjugation_reverses_phase
+#print axioms H12WeilCharacter.pairing_all_residue_multiples
+#print axioms H12WeilCharacter.pairing_nondegenerate
+#print axioms H12WeilCharacter.product_pairing_exact_exponent
+#print axioms H12WeilCharacter.product_polarization_trivial
+#print axioms H12WeilCharacter.character_doubling
+#print axioms H12WeilCharacter.exact_jacobi_sum
+#print axioms H12WeilCharacter.gauss_cube_group_algebra
+#print axioms H12WeilCharacter.smoothing_determinant
+#print axioms H12WeilCharacter.topological_fifth_cancellation

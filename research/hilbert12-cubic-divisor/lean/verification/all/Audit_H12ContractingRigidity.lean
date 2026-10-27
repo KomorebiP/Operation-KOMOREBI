@@ -1,0 +1,8 @@
+import H12ContractingRigidity
+
+#check H12.ContractingRigidity.invariant_all_powers
+#print axioms H12.ContractingRigidity.invariant_all_powers
+#check H12.ContractingRigidity.continuous_contraction_invariant_constant
+#print axioms H12.ContractingRigidity.continuous_contraction_invariant_constant
+#check H12.ContractingRigidity.normalized_contraction_phase_trivial
+#print axioms H12.ContractingRigidity.normalized_contraction_phase_trivial

@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""Independent direct theta/Weierstrass regressions, no U_alg and no intervals."""
+from pathlib import Path
+from datetime import datetime,timezone
+import argparse,importlib.util,json,time,sys,platform
+import mpmath as mp
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('v03',ROOT/'prior/v03_numerical_checks.py');v03=importlib.util.module_from_spec(spec);spec.loader.exec_module(v03)
+Elliptic=v03.Elliptic
+
+def phi(u,x):return x+u*(u-1)/x+u*u/x**2+u*u*(u+1)/(x-u)+u**4/(x-u)**2
+def phiD(u,x):return 1-u*(u-1)/x**2-2*u*u/x**3-u*u*(u+1)/(x-u)**2-2*u**4/(x-u)**3
+def a4(u):return -5*u*(u*u+2*u-1)
+def a6(u):return -u*(u**4+10*u**3-5*u*u+15*u-1)
+def curve(u,x,y):return y*y+(1-u)*x*y-u*y-x**3+u*x*x
+def h(u):return u-11-1/u
+def js(h):return (h*h+10*h+5)**3/h
+def jt(h):return (h*h+250*h+3125)**3/h**5
+def eta(t):return mp.exp(mp.pi*1j*t/12)*mp.qp(mp.exp(2j*mp.pi*t))
+def coords(E,z):
+ u=-E.yb/E.ya;L=E.ya/E.d;x=(E.wp(z)-E.a)/L**2
+ y=(E.wpp(z)-E.ya-(1-u)*L*(E.wp(z)-E.a))/(2*L**3)
+ return u,L,x,y
+
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--digits',required=True,type=int,choices=[40,70]);args=ap.parse_args()
+ mp.mp.dps=args.digits+25;tic=time.perf_counter();start=datetime.now(timezone.utc).isoformat();tol=mp.mpf(10)**(-args.digits+8)
+ checks=[];errors=[];neg=[];data=[];cuts=[];tails=[]
+ def near(name,x,y):
+  error=abs(x-y)/max(mp.mpf(1),abs(x),abs(y))
+  if error>=tol:raise AssertionError((name,mp.nstr(error,20),mp.nstr(x,20),mp.nstr(y,20)))
+  checks.append(name);errors.append(error)
+ def different(name,x,y):
+  error=abs(x-y)/max(mp.mpf(1),abs(x),abs(y))
+  if error<=mp.mpf('1e-7'):raise AssertionError(('negative control',name,mp.nstr(error,20)))
+  neg.append({'name':name,'normalized_difference':mp.nstr(error,20)})
+ beta=mp.root(7,3)*mp.exp(-2j*mp.pi/3);eps=2-beta;rho=1/eps
+ t=-(beta*beta+2*beta)/15;s=-(beta+2)/15
+ for label,period in [('generic1',mp.mpc('.23','.71')),('generic2',mp.mpc('-.31','1.13')),('cubic',t)]:
+  E=Elliptic(period,args.digits);EQ=Elliptic(5*period,args.digits)
+  u=-E.yb/E.ya;L=E.ya/E.d;H=h(u)
+  b2=u*u-6*u+1;b4=u*u-u
+  g2p=120*(E.a**2+E.b**2)-19*E.g2
+  g3p=280*(E.a**3+E.b**3)-42*E.g2*(E.a+E.b)-55*E.g3
+  near(label+' quotient g2',g2p,5**4*EQ.g2)
+  near(label+' quotient g3',g3p,5**6*EQ.g3)
+  near(label+' source j',1728*E.g2**3/(E.g2**3-27*E.g3**2),js(H))
+  near(label+' quotient j',1728*EQ.g2**3/(EQ.g2**3-27*EQ.g3**2),jt(H))
+  near(label+' discriminant ratio',5**12*(EQ.g2**3-27*EQ.g3**2)/(E.g2**3-27*E.g3**2),H**4)
+  near(label+' exact eta parameter',H,125*(eta(5*period)/eta(period))**6)
+  near(label+' Fricke source/target',js(125/H),jt(H))
+  near(label+' Fricke target/source',jt(125/H),js(H))
+  near(label+' generator parameter',h(-1/u),H)
+  for j,z in enumerate([mp.mpf(1)/3,mp.mpf('.127')+mp.mpf('.08')*period,mp.mpf('.312')+mp.mpf('.27')*period]):
+   _,_,X,Y=coords(E,z);Z=2*Y+(1-u)*X-u
+   Xq=phi(u,X);Zq=phiD(u,X)*Z;Yq=(Zq-(1-u)*Xq+u)/2
+   Xdirect=(25*EQ.wp(5*z)-E.a)/L**2
+   Zdirect=125*EQ.wpp(5*z)/L**3
+   near(label+f' quotient X {j}',Xq,Xdirect)
+   near(label+f' quotient Z {j}',Zq,Zdirect)
+   near(label+f' quotient curve {j}',curve(u,Xq,Yq),a4(u)*Xq+a6(u))
+   near(label+f' rational theta {j}',u*u/(X*(X-u)),E.theta(z))
+   velu=E.wp(z)+mp.fsum(E.wp(z+mp.mpf(k)/5)-E.wp(mp.mpf(k)/5) for k in range(1,5))
+   near(label+f' independent paired quotient {j}',velu,25*EQ.wp(5*z))
+   q=E.theta(z);q1=mp.diff(E.theta,z,1);q2=mp.diff(E.theta,z,2)
+   logsecond=q2/q-(q1/q)**2
+   near(label+f' logarithmic derivative quotient {j}',logsecond,25*EQ.wp(5*z)-5*E.wp(z)+2*(E.a+E.b))
+   un=-1/u;Xn=(X-u)/u**2;Yn=(Y-u*X)/u**3
+   near(label+f' marking curve {j}',curve(un,Xn,Yn),0)
+   near(label+f' marking theta {j}',un**2/(Xn*(Xn-un)),E.theta(z))
+   Xt=(Xn-un)/un**2;Yt=(Yn-un*Xn)/un**3
+   near(label+f' marking square x {j}',Xt,X)
+   near(label+f' marking square y {j}',Yt,-Y-(1-u)*X+u)
+  z=mp.mpf('.127')+mp.mpf('.08')*period
+  different(label+' quotient is not unchanged chart',25*EQ.wp(5*z),E.wp(z))
+  different(label+' logarithmic constant cannot be dropped',25*EQ.wp(5*z)-5*E.wp(z)+2*(E.a+E.b),25*EQ.wp(5*z)-5*E.wp(z))
+  data.append({'label':label,'period':mp.nstr(period,30),'u':mp.nstr(u,30),'h':mp.nstr(H,30),'source_j':mp.nstr(js(H),30),'quotient_j':mp.nstr(jt(H),30),'Eisenstein_cutoffs':[E.series_cutoff,EQ.series_cutoff]})
+  if label=='cubic':Et=E;E5t=EQ
+ Es=Elliptic(s,args.digits);E5s=Elliptic(5*s,args.digits)
+ Ut,Lt,_,_=coords(Et,mp.mpf(1)/3);Us,Ls,_,_=coords(Es,mp.mpf(1)/3)
+ near('actual Tate parameter unchanged',Ut,Us)
+ near('actual scale includes minus sign',Ls,-rho*Lt)
+ near('actual source h unchanged',h(Ut),h(Us))
+ for j,z in enumerate([mp.mpf(1)/3,mp.mpc('.021','.003')]):
+  _,_,Xs,Ys=coords(Es,z);_,_,Xt,Yt=coords(Et,rho*z)
+  near(f'actual chart X {j}',Xt,Xs)
+  near(f'actual chart Y inversion {j}',Yt,-Ys-(1-Ut)*Xs+Ut)
+  qXs=phi(Us,Xs);qXt=phi(Ut,Xt)
+  zYs=phiD(Us,Xs)*(2*Ys+(1-Us)*Xs-Us)
+  zYt=phiD(Ut,Xt)*(2*Yt+(1-Ut)*Xt-Ut)
+  near(f'quotient chart X {j}',qXt,qXs)
+  near(f'quotient chart Z inversion {j}',zYt,-zYs)
+  near(f'coarse lattice scales {j}',25*E5s.wp(5*z),rho**2*25*E5t.wp(5*rho*z))
+ different('wrong actual ordinate sign',Yt,Ys)
+ # Independent differentiated gamma series on overlapping convergence strips.
+ p=mp.exp(2j*mp.pi*t);q=mp.exp(2j*mp.pi*s)
+ def gamma_second(z):
+  if not -mp.im(t)<mp.im(z)<mp.im(s):raise ValueError('Outside differentiated-series convergence strip')
+  a=mp.exp(2j*mp.pi*(z+t));b=mp.exp(2j*mp.pi*(s-z));rad=max(abs(a),abs(b))
+  N=max(100,int(mp.ceil((args.digits+40)*mp.log(10)/(-mp.log(rad)))))
+  if N>20000:raise RuntimeError('Differentiated gamma resource cap exceeded')
+  an=bn=pn=qn=mp.mpc(1);acc=mp.mpc(0)
+  for n in range(1,N+1):
+   an*=a;bn*=b;pn*=p;qn*=q
+   if n%5:acc+=n*(an-bn)/((1-pn)*(1-qn))
+  tail=lambda r:r**(N+1)*((N+1)-N*r)/(1-r)**2
+  err=20*mp.pi**2*(tail(abs(a))+tail(abs(b)))/((1-abs(p))*(1-abs(q)))
+  cuts.append(N);tails.append(err)
+  return -5*(2j*mp.pi)**2*acc
+ z=mp.mpf('.127')-mp.mpf('.5')*mp.im(t)*1j
+ rhs=5*Et.wp(z)-25*E5t.wp(5*z)-2*(Et.a+Et.b)
+ near('actual gamma s-difference is isogeny connection',gamma_second(z+s)-gamma_second(z),rhs)
+ z=mp.mpf('.127')+mp.mpf('.5')*mp.im(t)*1j
+ rhs=25*E5s.wp(5*z)-5*Es.wp(z)+2*(Es.a+Es.b)
+ near('actual gamma tau-difference is isogeny connection',gamma_second(z-t)-gamma_second(z),rhs)
+ result={'started_at':start,'runtime_seconds':time.perf_counter()-tic,'exit_status':0,'requested_digits':args.digits,'working_digits':mp.mp.dps,'equality_count':len(checks),'equalities':checks,'negative_controls':neg,'max_normalized_error':mp.nstr(max(errors),25),'curves':data,'gamma_derivative_cutoffs':cuts,'gamma_derivative_tail_bounds':[mp.nstr(v,20) for v in tails],'python':sys.version.split()[0],'mpmath':mp.__version__,'platform':platform.platform(),'scope':'Direct theta, Weierstrass, eta products and differentiated gamma series; quotient, marking, actual cubic chart transport. Floating regressions, not intervals. No U_alg or fitted coefficients.'}
+ (ROOT/f'evidence/numerical_{args.digits}.json').write_text(json.dumps(result,indent=2)+'\n')
+ print('PASS',args.digits,'digits:',len(checks),'equalities,',len(neg),'negative controls;',result['max_normalized_error'],'max error;',round(result['runtime_seconds'],2),'seconds')
+if __name__=='__main__':main()

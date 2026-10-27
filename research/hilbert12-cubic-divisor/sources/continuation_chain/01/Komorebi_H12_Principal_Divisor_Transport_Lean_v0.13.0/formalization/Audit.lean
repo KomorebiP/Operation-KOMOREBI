@@ -1,0 +1,23 @@
+import H12PrincipalDivisor
+import H12DivisorCarries
+
+#print axioms H12PrincipalDivisor.principal5_cube
+#print axioms H12PrincipalDivisor.lift_identity
+#print axioms H12PrincipalDivisor.digit_is_remainder
+#print axioms H12PrincipalDivisor.digit_range
+#print axioms H12PrincipalDivisor.unique_lift_digit
+#print axioms H12PrincipalDivisor.lift_preserves_fifth_weight
+#print axioms H12PrincipalDivisor.wall_bounds
+#print axioms H12PrincipalDivisor.wall_values
+#print axioms H12PrincipalDivisor.order_difference
+#print axioms H12PrincipalDivisor.order_values
+#print axioms H12PrincipalDivisor.tau_ray_order
+#print axioms H12PrincipalDivisor.s_ray_order
+#print axioms H12PrincipalDivisor.negative_integer_order
+#print axioms H12PrincipalDivisor.zero_order
+#print axioms H12DivisorCarries.unit_period_pivot
+#print axioms H12DivisorCarries.unit_period_weight
+#print axioms H12DivisorCarries.finite_window_boundary
+#print axioms H12DivisorCarries.unit_period_order
+#print axioms H12DivisorCarries.seventh_pivot_carry
+#print axioms H12DivisorCarries.seventh_digit_carry

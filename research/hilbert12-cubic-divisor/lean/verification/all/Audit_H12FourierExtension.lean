@@ -1,0 +1,12 @@
+import H12FourierExtension
+
+#check H12FourierExtension.explicit_flat_extension
+#print axioms H12FourierExtension.explicit_flat_extension
+#check H12FourierExtension.lift_pairing
+#print axioms H12FourierExtension.lift_pairing
+#check H12FourierExtension.invariant_character_residue
+#print axioms H12FourierExtension.invariant_character_residue
+#check H12FourierExtension.cubic_based_exponent
+#print axioms H12FourierExtension.cubic_based_exponent
+#check H12FourierExtension.finite_grid_phase_vanishes
+#print axioms H12FourierExtension.finite_grid_phase_vanishes

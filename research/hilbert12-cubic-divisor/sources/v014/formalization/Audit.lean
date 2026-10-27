@@ -1,0 +1,28 @@
+import H12PrincipalDivisor
+import H12CubicDivisorGrowth
+
+#print axioms H12PrincipalDivisor.principal5_cube
+#print axioms H12PrincipalDivisor.lift_identity
+#print axioms H12PrincipalDivisor.digit_is_remainder
+#print axioms H12PrincipalDivisor.digit_range
+#print axioms H12PrincipalDivisor.unique_lift_digit
+#print axioms H12PrincipalDivisor.lift_preserves_fifth_weight
+#print axioms H12PrincipalDivisor.wall_bounds
+#print axioms H12PrincipalDivisor.wall_values
+#print axioms H12PrincipalDivisor.order_difference
+#print axioms H12PrincipalDivisor.order_values
+#print axioms H12PrincipalDivisor.tau_ray_order
+#print axioms H12PrincipalDivisor.s_ray_order
+#print axioms H12PrincipalDivisor.negative_integer_order
+#print axioms H12PrincipalDivisor.zero_order
+#print axioms H12CubicDivisorGrowth.positive_pivot
+#print axioms H12CubicDivisorGrowth.chamber_wall
+#print axioms H12CubicDivisorGrowth.chamber_order
+#print axioms H12CubicDivisorGrowth.zero_family_order
+#print axioms H12CubicDivisorGrowth.pole_family_order
+#print axioms H12CubicDivisorGrowth.zero_family_injective
+#print axioms H12CubicDivisorGrowth.pole_family_injective
+#print axioms H12CubicDivisorGrowth.families_disjoint
+#print axioms H12CubicDivisorGrowth.zero_box_bounds
+#print axioms H12CubicDivisorGrowth.pole_box_bounds
+#print axioms H12CubicDivisorGrowth.origin_not_in_families

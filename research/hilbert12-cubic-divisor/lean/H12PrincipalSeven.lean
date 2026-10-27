@@ -1,0 +1,106 @@
+import Std
+
+namespace H12PrincipalSeven
+
+abbrev V := Int × Int × Int
+
+def unit (v : V) : V := (v.2.1, -4*v.1+2*v.2.1+15*v.2.2, -v.1+4*v.2.2)
+def principal (v : V) : V := (2*v.1-v.2.1, 4*v.1-15*v.2.2, v.1-2*v.2.2)
+def dualUnit (v : V) : V := (-4*v.2.1-v.2.2, v.1+2*v.2.1, 15*v.2.1+4*v.2.2)
+def dualPrincipal (v : V) : V := (2*v.1+4*v.2.1+v.2.2, -v.1, -15*v.2.1-2*v.2.2)
+def scale (a : Int) (v : V) : V := (a*v.1,a*v.2.1,a*v.2.2)
+def dot (v w : V) : Int := v.1*w.1+v.2.1*w.2.1+v.2.2*w.2.2
+
+theorem principal_cube (v : V) : principal (principal (principal v)) = scale 7 v := by
+  rcases v with ⟨x,y,z⟩
+  simp [principal, scale]
+  omega
+
+theorem dual_principal_cube (v : V) : dualPrincipal (dualPrincipal (dualPrincipal v)) = scale 7 v := by
+  rcases v with ⟨x,y,z⟩
+  simp [dualPrincipal, scale]
+  omega
+
+theorem actions_commute (v : V) : principal (unit v) = unit (principal v) := by
+  rcases v with ⟨x,y,z⟩
+  simp [principal, unit]
+  omega
+
+theorem dual_actions_commute (v : V) : dualPrincipal (dualUnit v) = dualUnit (dualPrincipal v) := by
+  rcases v with ⟨x,y,z⟩
+  simp [dualPrincipal, dualUnit]
+  omega
+
+theorem dual_pairing (v k : V) : dot k (principal v) = dot (dualPrincipal k) v := by
+  rcases v with ⟨x,y,z⟩
+  rcases k with ⟨a,b,c⟩
+  simp [dot, principal, dualPrincipal]
+  grind
+
+def charge (v : V) : Int := v.1+2*v.2.1+4*v.2.2
+
+theorem image_charge (v : V) : charge (dualPrincipal v) = -7*(8*v.2.1+v.2.2) := by
+  rcases v with ⟨x,y,z⟩
+  simp [charge, dualPrincipal]
+  omega
+
+theorem image_preimage (v : V) (r : Int) (h : charge v = 7*r) :
+    dualPrincipal (-v.2.1, v.2.2-2*r, 15*r-8*v.2.2) = v := by
+  rcases v with ⟨x,y,z⟩
+  simp [charge] at h
+  simp [dualPrincipal]
+  omega
+
+theorem image_iff (v : V) : (∃ w : V, dualPrincipal w = v) ↔ 7 ∣ charge v := by
+  constructor
+  · rintro ⟨w, rfl⟩
+    rw [image_charge]
+    exact ⟨-(8*w.2.1+w.2.2), by omega⟩
+  · rintro ⟨r, hr⟩
+    exact ⟨(-v.2.1,v.2.2-2*r,15*r-8*v.2.2), image_preimage v r hr⟩
+
+theorem conductor_residue (v : V) : (dualUnit v).2.2 - v.2.2 = 3*(5*v.2.1+v.2.2) := by
+  simp [dualUnit]
+  omega
+
+theorem kernel_charge_transport (v : V) : charge (dualUnit v) = 2*charge v+7*(8*v.2.1+v.2.2) := by
+  rcases v with ⟨x,y,z⟩
+  simp [charge, dualUnit]
+  omega
+
+theorem kernel_generator : principal (1,2,4) = (0,-56,-7) := by decide
+
+theorem unit_on_kernel : unit (1,2,4) = (2,60,15) := by decide
+
+theorem based_third_carry :
+    let w := principal (0,0,1)
+    (w.1,w.2.1,w.2.2-1) = (0,-15,-3) := by decide
+
+def normCubic (v : V) : Int :=
+  15*v.1^3 + 90*v.1^2*v.2.1 + 12*v.1^2*v.2.2 + 180*v.1*v.2.1^2 +
+  69*v.1*v.2.1*v.2.2 + 6*v.1*v.2.2^2 + 15*v.2.1^3 +
+  48*v.2.1^2*v.2.2 + 12*v.2.1*v.2.2^2 + v.2.2^3
+
+theorem norm_unit_invariant (v : V) : normCubic (dualUnit v) = normCubic v := by
+  rcases v with ⟨x,y,z⟩
+  simp [normCubic, dualUnit]
+  grind
+
+theorem norm_principal_scaling (v : V) : normCubic (dualPrincipal v) = 7*normCubic v := by
+  rcases v with ⟨x,y,z⟩
+  simp [normCubic, dualPrincipal]
+  grind
+
+theorem norm_seed : normCubic (0,0,1) = 1 := by decide
+
+theorem winding_defect (v : V) :
+  let w := ( (dualPrincipal (dualPrincipal v)).1+(dualPrincipal v).1,
+             (dualPrincipal (dualPrincipal v)).2.1+(dualPrincipal v).2.1,
+             (dualPrincipal (dualPrincipal v)).2.2+(dualPrincipal v).2.2 )
+  (7*v.1-(dualPrincipal v).1, 7*v.2.1-(dualPrincipal v).2.1, 7*v.2.2-(dualPrincipal v).2.2) =
+  (w.1-(dualUnit w).1,w.2.1-(dualUnit w).2.1,w.2.2-(dualUnit w).2.2) := by
+  rcases v with ⟨x,y,z⟩
+  simp [dualPrincipal, dualUnit]
+  omega
+
+end H12PrincipalSeven

@@ -1,0 +1,9 @@
+# Development and verification record
+
+1. The first new Lean group module did not close expressions containing division with the selected `group` tactic alone. Rewriting division as multiplication by an inverse resolved this. A blanket rewrite then produced a no-progress diagnostic in two multiplication-only goals; those two unnecessary rewrites were removed. This was a proof-script failure, not a mathematical counterexample or a successful verification.
+2. The initial field-polynomial module imported `Mathlib.Tactic.Ring.Basic` but used the `ring` spelling. In the pinned module setup the available selected tactic was `ring1`. The spelling was corrected. A global CharZero section variable also triggered the unused-section-variable linter; it was moved to exactly the theorems that need it. No theorem conclusion was weakened and no unproved premise was added.
+3. Initial sources and representative compiler output are retained under `evidence/development/`. No incomplete developmental compile is counted as a verified theorem. The final build starts again from an empty project build directory and audits every theorem.
+
+The exact normalizer and numerical normalization tests passed their first executed versions. They were extended with the symmetric discriminant identity, then rerun on the final scripts. Numerical results are not rigorous rounding enclosures. No failed arithmetic comparison with U_alg occurred because no such comparison was attempted or claimed in this block.
+
+4. A combined clean-build invocation ran into the outer tool execution envelope after part 1 and part of part 2. No compiler process remained when checked. Part 2 was rerun as its own synchronous invocation, followed by part 3; the full 109-theorem audit then passed. The clean-extraction replay also uses one stage per invocation.

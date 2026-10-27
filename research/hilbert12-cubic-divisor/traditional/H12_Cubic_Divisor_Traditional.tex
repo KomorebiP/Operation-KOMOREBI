@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage[margin=.83in]{geometry}
+\usepackage{microtype,graphicx,booktabs,longtable,array,calc}
+\usepackage{xcolor,fancyhdr,enumitem}
+\usepackage[unicode,hidelinks]{hyperref}
+\hypersetup{pdfauthor={Komorebi P.},pdftitle={Cubic Divisor Transport and Reconstruction}}
+\usepackage{bookmark}
+\setlength{\headheight}{14pt}
+\setlength{\emergencystretch}{2em}
+\setlength{\parskip}{.3em}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\makeatletter
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.5em}{3.5em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{5em}{4.5em}}
+\makeatother
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\passthrough}[1]{#1}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small Cubic Divisor Transport and Reconstruction}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\title{\textbf{Cubic Divisor Transport and Reconstruction}\\[.7em]
+\large Exact principal-seven data, cubic growth, and a canonical analytic companion}
+\author{Komorebi P.}
+\date{Final companion edition\\October 7, 2026}
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Cubic Divisor Transport and Reconstruction}
+\renewcommand{\KomorebiSubtitle}{Hilbert 12}
+\renewcommand{\KomorebiSeries}{Research library}
+\renewcommand{\KomorebiKind}{Traditional paper}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Cubic Divisor Transport and Reconstruction}
+\renewcommand{\KomorebiTitleSize}{31}
+\renewcommand{\KomorebiTitleLeading}{36}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+
+\relax
+\begin{abstract}
+For a fixed pure-cubic elliptic-gamma specialization, we give the complete signed divisor of its principal-seven correction through an integer ceiling formula. Explicit families establish cubic growth of both zeros and poles. This excludes a precisely specified class of finite fixed-period theta expressions along affine lines. An ungrouped absolutely convergent genus-three divisor product cancels every singularity; an exact fourth logarithmic derivative forces the remaining factor to be a cubic exponential. Reflection and a period-one transition then determine its quadratic and cubic coefficients and give a branch-free special-cube reconstruction. The development includes the normalized fifth-torsion kernel, finite norm transport, the explicit conductor and modulus comparison, and the polarized remaining arithmetic target. The reconstruction is complex analytic. It does not prove the original gamma/class-field identity or solve Hilbert's twelfth problem. Fresh exact, numerical and Lean checks are reported with their finite scopes; the current Lean core covers integer coefficient algebra rather than the analytic reconstruction.
+\end{abstract}
+\clearpage\tableofcontents\clearpage
+
+\section{Fixed data, conventions, and the claim boundary}\label{sec:setting}
+Fix throughout
+\begin{equation}\label{eq:fixed-data}
+\begin{aligned}
+ \omega&=e^{2\pi i/3},&\beta&=7^{1/3}\omega^2,&\epsilon&=2-\beta,&\rho&=\epsilon^{-1},\\
+ \tau&=(\beta^2+2\beta)/15,&t&=-\tau,&s&=-(\beta+2)/15,&
+ \delta&=(\tau+2s+4)/7.
+\end{aligned}
+\end{equation}
+The real cube root $7^{1/3}$ is positive; this fixes the lower complex embedding of $\beta$. We have $\Im t,\Im s,\Im\delta>0$, $\Im\tau<0$ and $|\rho|<1$. The last follows from $N(\epsilon)=1$ and $0<2-7^{1/3}<1$ at the real embedding. The numbers $1,t,s$ are rationally independent: a rational linear relation becomes a polynomial of degree at most two in $\beta$, contradicting its irreducible cubic minimal polynomial.
+\begin{figure}[htbp]\centering\includegraphics[width=.96\linewidth]{figures/01_periods.png}\caption{The chosen cubic embedding and its actual periods. The right panel has equal aspect; rounded drawing coordinates illustrate the exact definitions in \eqref{eq:fixed-data}.}\label{fig:periods}\end{figure}
+
+For positive imaginary periods use the additive product convention
+\begin{align}
+ \theta_0(z;a)&=\prod_{n\ge0}(1-e^{2\pi i(z+na)})(1-e^{2\pi i((n+1)a-z)}),\label{eq:theta-product}\\
+ \Gamma_{\rm ell}(z;a,b)&=\prod_{j,k\ge0}
+ \frac{1-e^{2\pi i((j+1)a+(k+1)b-z)}}{1-e^{2\pi i(ja+kb+z)}}.\label{eq:gamma-product}
+\end{align}
+The negative-first-period continuation is
+\[
+ \Gamma_{\rm ell}(z;-t,s)=\Gamma_{\rm ell}(z+t;t,s)^{-1}.
+\]
+Consequently the main scalar function is
+\[
+ F(z)=\frac{\Gamma_{\rm ell}(z;\tau,s)^5}{\Gamma_{\rm ell}(5z;5\tau,5s)}
+ =\frac{\Gamma_{\rm ell}(5(z+t);5t,5s)}{\Gamma_{\rm ell}(z+t;t,s)^5},
+ \qquad U_\Gamma=F(1/3).
+\]
+This convention agrees with the checked primary authors' copy of Bergeron--Charollois--Garc\'ia \cite{BCG}. All analytic identities at removable or polar points mean meromorphic identities. Pointwise divisions require nonzero denominators.
+
+Put $q_a(z)=\theta_0(z;a)^5/\theta_0(5z;5a)$. Direct product identities and the inherited modular normalization give
+\begin{equation}\label{eq:F-identities}
+\begin{aligned}
+ F(z+1)&=F(z),&\frac{F(z+\tau)}{F(z)}&=q_s(z),&
+ \frac{F(z+s)}{F(z)}&=q_t(z)^{-1},\\
+ q_s(z)&=q_t(\rho z),&F(0)&=\epsilon^2,&F(1/3)F(2/3)&=1.
+\end{aligned}
+\end{equation}
+The two elliptic lattices are homothetic, $\rho\Lambda_s=\Lambda_t$, with $\Lambda_a=\mathbb Z+\mathbb Za$. This is not an endomorphism of the single elliptic lattice $\Lambda_t$. Section~\ref{sec:theta} proves the exact rational fifth-torsion normalization and explains the covariance without omitting its scalar.
+
+We use $F_0=\mathbb Q(\omega)$ for the imaginary-quadratic field, to separate it from the scalar gamma function $F$. The eta quotient is $\mathcal H(a)=\eta(5a)/\eta(a)^5$; the integer step function $H(n)$ used in the divisor formula is a different object. The symbol $R_0$ is the scalar anchor, while $R_*$ is a counting cutoff radius. In the arithmetic block $\varrho$ is a ray character and a radical lift, as explicitly indicated there; it is distinct from the contracting period multiplier $\rho$.
+
+\subsection{The arithmetic candidate is fixed independently}
+Let $J=2+3\omega$ and choose the Gauss branch
+\[
+ X=\beta^{-1}\sum_{a=1}^{6}\chi_7(a)e^{6\pi ia/7},\qquad
+ (\chi_7(1),\ldots,\chi_7(6))=(1,\omega,\omega^2,\omega^2,\omega,1),\quad X^3=J.
+\]
+Then $E=\mathbb Q(\omega,\beta,X)$ has degree eighteen. The retained arithmetic construction defines
+\begin{align*}
+ \nu&=(X+\beta/X-\beta^2)/3,&v&=-\beta^2\nu-2\nu^2,\\
+ Y&=(4\beta^2+\beta-14)v^2+(11\beta-23)v-\beta^2+3\beta-3,\\
+ Z&=\frac{(-2\beta^2+7\beta-8)v^2+(-10\beta^2+11\beta+17)v}{3}
+       +7-\beta-\beta^2,\\
+ U_{\rm alg}&=\frac{Y-(1+2\omega)Z}{2}.
+\end{align*}
+These formulas choose no coefficient or branch by fitting $U_\Gamma$. The original desired identity is $U_\Gamma=U_{\rm alg}$. The established modulus comparison is $|U_\Gamma|=|U_{\rm alg}|$. The remaining exact phase comparison is stated in Section~\ref{sec:remaining}; neither numerical proximity nor the analytic reconstruction supplies it.
+
+\input{sections/theta.tex}
+\input{sections/norms.tex}
+\input{sections/stark.tex}
+\input{sections/principal.tex}
+\input{sections/reconstruction.tex}
+\input{sections/polarization.tex}
+\input{sections/rigidity.tex}
+\input{sections/remaining.tex}
+\input{sections/verification.tex}
+\appendix
+\input{sections/product_proof.tex}
+\input{sections/history.tex}
+\input{sections/bibliography.tex}
+\end{document}

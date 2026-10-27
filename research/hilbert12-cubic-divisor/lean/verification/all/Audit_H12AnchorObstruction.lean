@@ -1,0 +1,20 @@
+import H12AnchorObstruction
+
+#check H12AnchorObstruction.sixth_root_phase_table
+#print axioms H12AnchorObstruction.sixth_root_phase_table
+#check H12AnchorObstruction.target_and_anchor
+#print axioms H12AnchorObstruction.target_and_anchor
+#check H12AnchorObstruction.inverse_point_phase
+#print axioms H12AnchorObstruction.inverse_point_phase
+#check H12AnchorObstruction.fixed_point_carry
+#print axioms H12AnchorObstruction.fixed_point_carry
+#check H12AnchorObstruction.conductor_label
+#print axioms H12AnchorObstruction.conductor_label
+#check H12AnchorObstruction.based_exponent_cancellation
+#print axioms H12AnchorObstruction.based_exponent_cancellation
+#check H12AnchorObstruction.based_cube_exponent
+#print axioms H12AnchorObstruction.based_cube_exponent
+#check H12AnchorObstruction.fixed_point_gauge_value
+#print axioms H12AnchorObstruction.fixed_point_gauge_value
+#check H12AnchorObstruction.constant_orbit_sum
+#print axioms H12AnchorObstruction.constant_orbit_sum

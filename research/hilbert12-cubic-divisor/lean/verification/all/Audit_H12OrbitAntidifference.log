@@ -1,0 +1,47 @@
+H12OrbitAntidifference.prefix_zero (f : Nat → Int) : H12OrbitAntidifference.partialSum f 0 = 0
+'H12OrbitAntidifference.prefix_zero' does not depend on any axioms
+H12OrbitAntidifference.prefix_successor (f : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum f (n + 1) = H12OrbitAntidifference.partialSum f n + f n
+'H12OrbitAntidifference.prefix_successor' does not depend on any axioms
+H12OrbitAntidifference.prefix_primitive (f : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.boundary (H12OrbitAntidifference.partialSum f) n = f n
+'H12OrbitAntidifference.prefix_primitive' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.telescope (b : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (H12OrbitAntidifference.boundary b) n = b n - b 0
+'H12OrbitAntidifference.telescope' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.prefix_congruence_below (f g : Nat → Int) (n : Nat) (h : ∀ (j : Nat), j < n → f j = g j) :
+  H12OrbitAntidifference.partialSum f n = H12OrbitAntidifference.partialSum g n
+'H12OrbitAntidifference.prefix_congruence_below' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.endpoint_charge (f b : Nat → Int) (n : Nat)
+  (h : ∀ (j : Nat), j < n → H12OrbitAntidifference.boundary b j = f j) :
+  H12OrbitAntidifference.partialSum f n = b n - b 0
+'H12OrbitAntidifference.endpoint_charge' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.zero_charge_iff_closed_primitive (f : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum f n = 0 ↔
+    ∃ b, b 0 = 0 ∧ b n = 0 ∧ ∀ (j : Nat), j < n → H12OrbitAntidifference.boundary b j = f j
+'H12OrbitAntidifference.zero_charge_iff_closed_primitive' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.prefix_add (f g : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (fun j => f j + g j) n =
+    H12OrbitAntidifference.partialSum f n + H12OrbitAntidifference.partialSum g n
+'H12OrbitAntidifference.prefix_add' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.charge_under_gauge (f b : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (fun j => f j + H12OrbitAntidifference.boundary b j) n =
+    H12OrbitAntidifference.partialSum f n + b n - b 0
+'H12OrbitAntidifference.charge_under_gauge' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.equal_boundary_preserves_charge (f b : Nat → Int) (n : Nat) (h : b n = b 0) :
+  H12OrbitAntidifference.partialSum (fun j => f j + H12OrbitAntidifference.boundary b j) n =
+    H12OrbitAntidifference.partialSum f n
+'H12OrbitAntidifference.equal_boundary_preserves_charge' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.anchored_primitive_unique (f b : Nat → Int) (h0 : b 0 = 0)
+  (hd : ∀ (j : Nat), H12OrbitAntidifference.boundary b j = f j) (n : Nat) : b n = H12OrbitAntidifference.partialSum f n
+'H12OrbitAntidifference.anchored_primitive_unique' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.prefix_zero_tail (f : Nat → Int) (n : Nat) (h0 : H12OrbitAntidifference.partialSum f n = 0)
+  (ht : ∀ (j : Nat), n ≤ j → f j = 0) (k : Nat) : H12OrbitAntidifference.partialSum f (n + k) = 0
+'H12OrbitAntidifference.prefix_zero_tail' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.weighted_charge (f : Nat → Int) (w : Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (fun j => w * f j) n = w * H12OrbitAntidifference.partialSum f n
+'H12OrbitAntidifference.weighted_charge' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12OrbitAntidifference.nonzero_charge_no_closed_primitive (f : Nat → Int) (n : Nat)
+  (h : H12OrbitAntidifference.partialSum f n ≠ 0) :
+  ¬∃ b, b 0 = 0 ∧ b n = 0 ∧ ∀ (j : Nat), j < n → H12OrbitAntidifference.boundary b j = f j
+'H12OrbitAntidifference.nonzero_charge_no_closed_primitive' depends on axioms: [propext, Quot.sound]

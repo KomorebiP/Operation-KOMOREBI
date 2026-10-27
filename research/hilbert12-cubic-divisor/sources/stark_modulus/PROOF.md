@@ -1,0 +1,642 @@
+# Komorebi H12: exact Stark logarithms and the elliptic-gamma modulus
+
+**Research checkpoint: 2026-10-02. Pure cubic field only: beta cubed equals 7.**
+
+## Result and scope
+
+This note gives an ordinary mathematical proof of the exact logarithmic comparison that was missing from the preceding checkpoint. For the explicit algebraic unit \(W\) already constructed there, the correctly indexed Stark unit is
+
+\[
+W_{\mathrm{St}}=\sigma(W).
+\]
+
+For every \(h\in\mathbb Z/6\mathbb Z\), the proof gives
+
+\[
+\boxed{\zeta_{\mathfrak f}'(\sigma^h,0)
+=-\frac16\log|\sigma^h W_{\mathrm{St}}|^2.} \tag{A}
+\]
+
+The previous integrality, other-place normalization, and abelian-radical proofs then verify the rank-one Stark conditions for this particular ray extension. They are not being assumed as a conjecture. Combining (A) with Bergeron–Charollois–García's **proved** Kronecker limit formula gives
+
+\[
+\boxed{|U_\Gamma|=|U_{\rm alg}|.} \tag{B}
+\]
+
+This is not a proof of \(U_\Gamma=U_{\rm alg}\). The remaining discrepancy has absolute value one; its being a root of unity, or being one, is not established. No general solution of Hilbert 12, no general Stark theorem, no literature-priority claim, and no Lean verification are asserted.
+
+The new algebraic identities were checked by two separate arithmetic implementations: a standalone 18-dimensional rational quotient algebra and SymPy Groebner reduction over \(\mathbb Q\). These are independent implementations, not independent researchers or proof-assistant kernels. The numerical computations are regression checks, not the proof of (A) or (B).
+
+## 1. Fixed conventions and inherited arithmetic
+
+Set
+
+\[
+\omega=e^{2\pi i/3},\quad \beta=7^{1/3}\omega^2,\quad
+J=2+3\omega,\quad \bar J=-1-3\omega,\quad J\bar J=7.
+\]
+
+Write
+
+\[
+F=\mathbb Q(\omega),\qquad K=\mathbb Q(\beta),\qquad
+\epsilon=2-\beta,\qquad \mathcal R=-\log(2-7^{1/3})>0.
+\]
+
+Here \(\mathcal R\) is the regulator of \(K\), and
+
+\[
+\log|\epsilon|=\mathcal R/2. \tag{1.1}
+\]
+
+Indeed, \(N_{K/\mathbb Q}(\epsilon)=1\) and its real image is \(2-7^{1/3}\). The class number is three and \(\epsilon\) is a fundamental unit. These arithmetic facts are recorded in BCG, section 5.2; the earlier unramified-cubic note also proves the class-number and ray-field identification used here.
+
+Take
+
+\[
+\mathfrak f=(3,\beta-1),\qquad
+E=K(\omega,\theta),\qquad \theta=2\cos(6\pi/7).
+\]
+
+The inherited arithmetic proof identifies \(E\) as the narrow ray class field of modulus \(\mathfrak f\) and the real place. It has degree six over \(K\) and degree eighteen over \(\mathbb Q\).
+
+Let
+
+\[
+X=\frac1\beta\sum_{a=1}^{6}\chi_7(a)e^{6\pi ia/7},
+\]
+
+where the character values for \(a=1,\ldots,6\) are
+\(1,\omega,\omega^2,\omega^2,\omega,1\). Then
+
+\[
+X^3=J,\qquad E=\mathbb Q(\beta,X,\omega). \tag{1.2}
+\]
+
+This fixes a specific cube-root branch. The preceding CM note proves, with this branch,
+
+\[
+X=\frac{\Omega^2}{\wp_{\Lambda_0}(1/J)},\qquad
+\Lambda_0=\mathbb Z+\mathbb Z\omega,\qquad
+\Omega=e^{\pi i/6}\frac{\Gamma_{\rm Euler}(1/3)^3}{2\pi}. \tag{1.3}
+\]
+
+That proof uses actual seven-torsion and a lattice estimate for the branch, not numerical recognition.
+
+The arithmetic Frobenius \(\sigma\) at the norm-two prime acts by
+
+\[
+\sigma(\beta)=\beta,\quad \sigma(\omega)=\omega^2,\quad
+\sigma(X)=\omega\beta/X. \tag{1.4}
+\]
+
+The norm-five prime has the same Artin class. In particular, \(\sigma\) generates \(\operatorname{Gal}(E/K)\).
+
+**Actual complex conjugation is a different automorphism.** Denote it by \(\kappa\). In the chosen embedding,
+
+\[
+\kappa(\beta)=\omega^2\beta,\quad \kappa(\omega)=\omega^2,
+\quad \kappa(X)=\omega\beta/X. \tag{1.5}
+\]
+
+For the last formula, the conjugate Gauss resolvent is \(7/G\), and \(\bar\beta=\omega^2\beta\). Formula (1.5) follows directly. It must not be replaced by the involution \(\sigma^3\), which fixes \(K\).
+
+## 2. The major change of route: Artin induction
+
+The splitting field \(F(\beta)/\mathbb Q\) has group \(S_3\), while \(\mathbb Q(\theta)/\mathbb Q\) is cyclic cubic. Their intersection is Galois over \(\mathbb Q\); it cannot have degree three because \(S_3\) has no cyclic cubic quotient. Hence
+
+\[
+\operatorname{Gal}(E/\mathbb Q)=S_3\times C_3. \tag{2.1}
+\]
+
+Use generators
+
+\[
+r:\beta\mapsto\omega\beta,\qquad
+c:\omega\mapsto\omega^2,\qquad
+s_0:\theta\mapsto\theta^2-2,
+\]
+
+where each generator fixes the other specified primitive generators as appropriate. Thus \(r,c\) generate the \(S_3\) factor, \(c\) fixes \(\beta,\theta\), and \(s_0\) generates the second factor. We have
+
+\[
+\operatorname{Gal}(E/K)=\langle c,s_0\rangle,
+\qquad \sigma=cs_0,
+\qquad \operatorname{Gal}(E/F)=\langle r,s_0\rangle.
+\]
+
+Let \(\rho(r)=\omega,\rho(s_0)=1\), and let \(\eta(s_0)=\omega,\eta(r)=1\). The three odd ray characters of \(K\) are
+
+\[
+\chi_j(c)=-1,\qquad \chi_j(s_0)=\omega^j,\qquad j=0,1,2.
+\]
+
+The elementary character identity
+
+\[
+\operatorname{Ind}_{C_2}^{S_3}(\operatorname{sgn})
+=\operatorname{sgn}\oplus\operatorname{Std},
+\qquad
+\operatorname{Std}=\operatorname{Ind}_{C_3}^{S_3}(\rho)
+\]
+
+and induction invariance of Artin L-functions give
+
+\[
+\boxed{L_K(s,\chi_j)
+=L_{\mathbb Q}(s,\chi_{-3}\chi_7^j)\,
+L_F(s,\rho\eta^j).} \tag{2.2}
+\]
+
+For \(j=0\), use the primitive Dirichlet character of conductor three, not its imprimitive extension to modulus twenty-one. All three odd ray characters are ramified at \(\mathfrak f\), so their Artin L-functions agree with the partial-zeta convention omitting that prime. Induction includes the local factors at ramified primes through the inertia-invariant spaces. No unproved Artin holomorphy statement is used.
+
+The even characters make no contribution to the derivative at zero. The nontrivial even characters have at least two archimedean zeros. The trivial character has the zero of \(\zeta_K\), together with the extra zero of \(1-3^{-s}\). This also agrees with BCG, section 3.1.
+
+Exact finite Dirichlet sums give
+
+\[
+D_0=L(0,\chi_{-3})=1/3,\qquad
+D_1=L(0,\chi_{-3}\chi_7)=-2\omega,\qquad
+D_2=-2\omega^2. \tag{2.3}
+\]
+
+For example, the latter two use
+\(-21^{-1}\sum_{a=1}^{21}a\chi_{-3}(a)\chi_7(a)^j\).
+
+For the untwisted cubic factor,
+
+\[
+L_F(s,\rho)=\zeta_K(s)/\zeta_{\mathbb Q}(s).
+\]
+
+The analytic class number formula, \(h_K=3\), and \(\zeta_{\mathbb Q}(0)=-1/2\) give
+
+\[
+L_F'(0,\rho)=3\mathcal R. \tag{2.4}
+\]
+
+Thus the cubic regulator contributes a known normalization; it is not a free scalar left over from a cocycle.
+
+## 3. A six-class imaginary-quadratic calculation
+
+Put \(\lambda=\rho\eta\). Since both \(r\) and \(s_0\) send \(X\) to \(\omega^2X\), \(\lambda\) is the inverse Kummer character for \(F(X)/F\). Its conductor is
+
+\[
+\mathfrak m=3J\mathscr O_F. \tag{3.1}
+\]
+
+Here is an explicit verification. The Eisenstein integers are principal, and the six units map bijectively to \((\mathscr O_F/3)^\times\). Every ideal coprime to three therefore has a unique generator \(\alpha\equiv1\pmod3\). Since \(J\equiv-1\pmod3\), cubic reciprocity gives
+
+\[
+\lambda((\alpha))=(J/(\alpha))_3^2=(\alpha/J)_3^2. \tag{3.2}
+\]
+
+This proves that the conductor divides \(3J\). It must contain \(J\), because the valuation of the Kummer radicand there is one. If its exponent at the prime above three were at most one, its conductor would divide \((1-\omega)J\). The ray class group of that modulus has order two, so it has no nontrivial cubic character. Hence the conductor is exactly (3.1).
+
+The ray group modulo \(3J\) has order
+
+\[
+\frac{63(1-1/3)(1-1/7)}6=6.
+\]
+
+Its six classes have unique primary rational representatives
+
+\[
+1,4,10,13,16,19.
+\]
+
+Reduction modulo \(J\) sends \(\omega\) to \(4\in\mathbb F_7\). Formula (3.2) groups the representatives as follows:
+
+| Index \(m\) | Representatives | \(\lambda\)-value |
+|---|---|---|
+| 0 | 1, 13 | 1 |
+| 1 | 4, 10 | \(\omega\) |
+| 2 | 16, 19 | \(\omega^2\) |
+
+Let \(Z_m(s)\) be the sum of the two ray partial zeta functions in row \(m\), and write \(\ell_m=Z_m'(0)\). Then
+
+\[
+L_F'(0,\lambda)=\ell_0+\omega\ell_1+\omega^2\ell_2,
+\qquad
+L_F'(0,\lambda^2)=\ell_0+\omega^2\ell_1+\omega\ell_2. \tag{3.3}
+\]
+
+The sum of all six ray partial zeta functions is
+
+\[
+\zeta_F(s)(1-3^{-s})(1-7^{-s}),
+\]
+
+whose derivative at zero vanishes. Therefore
+
+\[
+\ell_0+\ell_1+\ell_2=0. \tag{3.4}
+\]
+
+Conjugation of the base field by \(c\) sends \(\rho\eta^2\) to \(\rho^{-1}\eta^2=\lambda^2\), so
+
+\[
+L_F(s,\rho\eta^2)=L_F(s,\lambda^2).
+\]
+
+Combining (2.2)–(3.4) and performing inverse Fourier transformation on \(C_2\times C_3\) yields
+
+\[
+\boxed{\zeta_{\mathfrak f}'(c^e s_0^k,0)
+=(-1)^e\left(\frac{\mathcal R}{6}-\ell_{k-1}\right).} \tag{3.5}
+\]
+
+All subscripts on \(\ell\) are taken modulo three. To check the constants directly, the two nontrivial Fourier contributions are
+
+\[
+-\frac13\left(\omega^{1-k}L_F'(0,\lambda)
++\omega^{2-2k}L_F'(0,\lambda^2)\right).
+\]
+
+In (3.3), the coefficient of \(\ell_{k-1}\) in the parentheses is two and the other two coefficients are minus one. Equation (3.4) turns the parentheses into \(3\ell_{k-1}\).
+
+**Euler-factor warning.** Replacing \(3J\) by \(21=3J\bar J\) would remove the Euler factor at the other prime over seven. Its \(\lambda\)-value is one, so this inserts \(1-7^{-s}\) and destroys the desired first derivative. That imprimitive derivative is zero. The checker verifies this as a separate normalization control, not as the desired L-value.
+
+## 4. Kronecker normalization fixed explicitly
+
+For \(z=a\omega+b\notin\Lambda_0\), define the positive quantity
+
+\[
+H(z)=e^{-\pi\operatorname{Im}(\omega)B_2(a)}
+|1-e^{2\pi iz}|
+\prod_{n\ge1}|(1-e^{2\pi i(n\omega+z)})(1-e^{2\pi i(n\omega-z)})|,
+\tag{4.1}
+\]
+
+where initially \(0\le a<1\) and \(B_2(a)=a^2-a+1/6\). This is the absolute value of the usual Siegel function. Its value is independent of the representative of \(z\) modulo \(\Lambda_0\).
+
+For the shifted Epstein series
+
+\[
+\mathcal E_z(s)=\sum_{m,n\in\mathbb Z}|m+n\omega+z|^{-2s},
+\]
+
+continued from \(\Re s>1\), the precise normalization is
+
+\[
+\mathcal E_z(0)=0,\qquad \mathcal E_z'(0)=-2\log H(z). \tag{4.2}
+\]
+
+A normalization derivation is given in Appendix A. In particular, no factor of two is inferred from an unspecified Mellin convention.
+
+For the ray class represented by \(\alpha\), all its integral ideals are generated exactly once by the elements of \(\alpha+3J\mathscr O_F\). The congruence condition eliminates all nontrivial units. Therefore its partial zeta function is
+
+\[
+63^{-s}\mathcal E_{\alpha/(3J)}(s).
+\]
+
+There is no scale contribution to its derivative, because \(\mathcal E_z(0)=0\). Set
+
+\[
+V_0=H(1/(3J))H(13/(3J)),
+\]
+\[
+V_1=H(4/(3J))H(10/(3J)),\qquad
+V_2=H(16/(3J))H(19/(3J)).
+\]
+
+Then
+
+\[
+\ell_m=-2\log V_m,
+\qquad V_0V_1V_2=1. \tag{4.3}
+\]
+
+## 5. The CM products collapse to three explicit units
+
+Let \(u=1/J\) and \(T=\bar J/3\equiv2/3\pmod{\Lambda_0}\). The three pairs of points above are, respectively,
+
+\[
+\{T\pm2u\},\quad\{T\pm u\},\quad\{T\pm3u\}. \tag{5.1}
+\]
+
+Indeed, \(T=7u/3\), so their numerators over \(3J\) are \(1,13\), \(4,10\), and \(-2,16\). The last numerator \(-2\) may be replaced by \(19\) since \(21/(3J)=\bar J\in\Lambda_0\).
+
+On the normalized curve \(E_0:y^2+y=x^3\), set
+
+\[
+x(z)=\wp_{\Lambda_0}(z)/\Omega^2.
+\]
+
+The previous seven-torsion proof gives
+
+\[
+x(u)=X^{-1},\quad x(2u)=\omega^2X^{-1},\quad x(3u)=\omega X^{-1}. \tag{5.2}
+\]
+
+Also,
+
+\[
+x(T)=-\omega. \tag{5.3}
+\]
+
+For completeness, \(T\) is nonzero three-torsion and its normalized x-coordinate is a root of \(3x(x^3+1)\). The lattice is invariant under ordinary conjugation, so \(\wp(1/3)\) and its derivative are real. Since \(g_3(\Lambda_0)>0\), the real differential equation \(\wp'^2=4\wp^3-g_3\) implies \(\wp(1/3)>0\). The argument of \(\Omega^2\) is \(\pi/3\), selecting \(-\omega\) among the three roots of \(x^3=-1\).
+
+The classical sigma addition identity is
+
+\[
+\frac{\sigma_\Lambda(T+z)\sigma_\Lambda(T-z)}{
+\sigma_\Lambda(T)^2\sigma_\Lambda(z)^2}
+=\wp_\Lambda(z)-\wp_\Lambda(T). \tag{5.4}
+\]
+
+The theta expression for (4.1), or the sigma–theta relation, turns (5.4) into the same identity for absolute Green functions up to a constant independent of \(z\). The quadratic exponential corrections cancel by the parallelogram identity. Furthermore, \(H(\omega z)=H(z)=H(-z)\), either from (4.2) and the isometries of \(\Lambda_0\), or from the theta transformations.
+
+Since \(2u\equiv\omega^2u\) and \(3u\equiv-\omega u\), all three factors \(H(ku)\) are equal. Thus for one positive constant \(C\), the same for all three rows,
+
+\[
+V_0=C|\omega^2/X+\omega|,\quad
+V_1=C|1/X+\omega|,\quad
+V_2=C|\omega/X+\omega|. \tag{5.5}
+\]
+
+Multiplication and (4.3) give \(C^3|X^{-3}+1|=1\). Cubing each equation in (5.5) now removes the unknown constant exactly:
+
+\[
+\boxed{V_m^3=|a_m|,} \tag{5.6}
+\]
+
+where the three algebraic values simplify to
+
+\[
+\begin{aligned}
+a_0&=\frac{(\omega^2+\omega X)^3}{1+J}
+=(1+\omega)X^2-X+1,\\
+a_1&=\frac{(1+\omega X)^3}{1+J}
+=-X^2+(1+\omega)X+1,\\
+a_2&=\frac{(\omega+\omega X)^3}{1+J}
+=-\omega X^2-\omega X+1.
+\end{aligned} \tag{5.7}
+\]
+
+Exact reduction gives
+
+\[
+a_0+a_1+a_2=3,\qquad
+\sum_{i<j}a_i a_j=6\omega,\qquad a_0a_1a_2=1.
+\]
+
+In particular, the \(a_m\) are algebraic units, satisfying
+
+\[
+a_m^3-3a_m^2+6\omega a_m-1=0. \tag{5.8}
+\]
+
+Equations (4.3) and (5.6) prove
+
+\[
+\boxed{\ell_m=-\frac23\log|a_m|.} \tag{5.9}
+\]
+
+This is the new evaluated comparison. The unknown logarithmic constants have been replaced by explicit algebraic units without using any elliptic-gamma algebraicity assumption.
+
+Substitution into (3.5) yields the explicit partial-zeta theorem
+
+\[
+\boxed{\zeta_{\mathfrak f}'(c^e s_0^k,0)
+=(-1)^e\left(\frac{\mathcal R}{6}+\frac23\log|a_{k-1}|\right).} \tag{5.10}
+\]
+
+## 6. Identifying the previously constructed W
+
+Recall the integral cubic coordinate
+
+\[
+\nu=(X+\beta/X-\beta^2)/3,\quad v=-\beta^2\nu-2\nu^2,
+\qquad v^3-\beta v^2+1=0.
+\]
+
+The earlier unit is
+
+\[
+W=(A_W+\omega B_W)/3,
+\]
+
+\[
+\begin{aligned}
+A_W&=(21\beta-42)v^2+(-15\beta^2+30\beta)v-\beta^2-4\beta+11,\\
+B_W&=3\beta^2v^2+(18\beta-42)v-11\beta^2+13\beta+7.
+\end{aligned} \tag{6.1}
+\]
+
+Let \(N_\kappa(z)=z\kappa(z)=|z|^2\) in the fixed embedding. The six exact identities needed for the comparison are
+
+\[
+\boxed{N_\kappa(\sigma^hW)
+=N_\kappa(\epsilon a_{h+1}^2)^{(-1)^h},\quad 0\le h<6.} \tag{6.2}
+\]
+
+These are identities in the explicitly presented degree-eighteen field, not fits to the logarithms. They can be checked by substituting (1.4), (1.5), (5.7), and (6.1), then reducing using
+
+\[
+\beta^3=7,\quad X^3=2+3\omega,\quad \omega^2+\omega+1=0.
+\]
+
+A basis for the rational calculation is \(\beta^iX^j\omega^k\), \(0\le i,j<3\), \(0\le k<2\). For odd \(h\), multiply the two norms instead of dividing: the residual is their product minus one. Both supplied implementations obtain the exact zero polynomial in all six cases.
+
+Taking real logarithms of positive norms gives
+
+\[
+\log|\sigma^h W|=(-1)^h\left(\frac{\mathcal R}{2}+2\log|a_{h+1}|\right)
+=-3\zeta_{\mathfrak f}'(\sigma^{h+5},0). \tag{6.3}
+\]
+
+Consequently \(W_{\rm St}=\sigma(W)\) satisfies
+
+\[
+\zeta_{\mathfrak f}'(\sigma^h,0)
+=-\frac13\log|\sigma^hW_{\rm St}|
+=-\frac16\log|\sigma^hW_{\rm St}|^2. \tag{6.4}
+\]
+
+The one-step shift is essential. The unshifted \(W\) belongs to the original raw gamma value's ray-class indexing, not the identity class.
+
+### Completing the Stark conditions for this extension
+
+The earlier note proves that \(W\) is an algebraic unit, \(\mu(E)=\mu_6\), all its embeddings above the real place of \(K\) have modulus one, and adjoining a sixth root produces an abelian extension of \(K\). These statements are preserved by \(\sigma\). Together with (6.4), this verifies the three conditions stated by BCG in section 3.3 for this specific field and modulus.
+
+Some key inherited algebraic certificates are rechecked here. In particular,
+
+\[
+W^5=\sigma(W)U_{\rm alg}^6,
+\]
+
+and, for \(c_6=-\omega^2\),
+
+\[
+W^{21}=c_6U_{\rm alg}^{25}\sigma(U_{\rm alg})^5\sigma^2(U_{\rm alg}).
+\]
+
+For \(t^6=W\), the lift \(\rho(t)=t^5/U_{\rm alg}\) commutes with \(t\mapsto c_6t\), and satisfies \(\rho^6(t)=c_6^4t\). Irreducibility is checked at the residue assignment \((\beta,v,\omega)=(32,99,48)\) over \(\mathbb F_{181}\), where \(W=23\) and \(T^6-23\) is irreducible. The earlier local-integrality argument validates this reduction. The resulting abelian group is \(C_2\times C_{18}\).
+
+These arithmetic statements concern \(W\), not the still unproved algebraicity of the gamma value.
+
+## 7. Closing the actual gamma modulus gap
+
+The original analytic value is
+
+\[
+U_\Gamma=\frac{\Gamma_{\rm ell}(1/3;\tau,s_{\rm per})^5}
+{\Gamma_{\rm ell}(5/3;5\tau,5s_{\rm per})},
+\quad
+\tau=(\beta^2+2\beta)/15,\quad s_{\rm per}=-(\beta+2)/15.
+\]
+
+BCG section 5.2 identifies this raw expression with the geometric value at ray-class index five. The norm-five smoothing ideal has Artin class \(\sigma\). Their Theorem 3.2 therefore gives, unconditionally,
+
+\[
+\log|U_\Gamma|^2
+=\zeta_{\mathfrak f}'(1,0)-5\zeta_{\mathfrak f}'(\sigma^5,0). \tag{7.1}
+\]
+
+Using (6.3),
+
+\[
+\zeta_{\mathfrak f}'(1,0)-5\zeta_{\mathfrak f}'(\sigma^5,0)
+=\frac13\left(5\log|W|-\log|\sigma(W)|\right).
+\]
+
+The exact algebraic smoothing identity \(W^5/\sigma(W)=U_{\rm alg}^6\) turns this into \(2\log|U_{\rm alg}|\). Thus
+
+\[
+\boxed{|U_\Gamma|=|U_{\rm alg}|.} \tag{7.2}
+\]
+
+There is also a smaller explicit algebraic expression:
+
+\[
+\log|U_\Gamma|^2
+=\mathcal R-\ell_2-5\ell_1
+=\mathcal R+\frac23\log|a_2a_1^5|,
+\]
+
+or
+
+\[
+\boxed{|U_\Gamma|^3=|\epsilon^3a_2a_1^5|.} \tag{7.3}
+\]
+
+In particular the positive real number \(|U_\Gamma|\) is algebraic. This conclusion does not extend automatically to the complex number \(U_\Gamma\).
+
+### The whole logarithmic ray packet
+
+The same argument evaluates the moduli of the admissible geometric gamma values for every ray class and every smoothing ideal covered by BCG's theorem:
+
+\[
+|\mathbf\Gamma_{\mathfrak a,h}(\mathfrak f\mathfrak b^{-1})|^6
+=\left|(\sigma_{\mathfrak b}W_{\rm St})^{N(\mathfrak a)-\sigma_{\mathfrak a}}\right|.
+\tag{7.4}
+\]
+
+This is an equality of absolute values. It is not an Artin action on an already algebraic gamma value and does not specify the phase of a sixth root.
+
+## 8. Why the proposed 528-cycle argument did not close this gap
+
+The index-23 decomposition \(529=1+528\) and the index-10 decomposition \(100=1+3+8\cdot12\) are correct; both have been recomputed exactly.
+
+However, for values \(z_j\) on a cycle of length \(d\), all adjacent ratios \(z_{j+1}/z_j\), including their product one, are unchanged under \(z_j\mapsto c z_j\). The product \(\prod_jz_j\) changes by \(c^d\). Fixing a value on a separate fixed-point orbit does not remove this scalar.
+
+Thus the earlier suggestion that closing the 528-cycle would by itself evaluate its product was not justified. Orbit closure supplies a consistency condition, not the missing normalization. It does not, by itself, identify the finite determinant with the primitive analytic sector. A stronger analytic transport theorem could still use the orbit geometry, but that theorem has not been supplied.
+
+The present proof avoids that inference. Artin induction gives the exact character normalization, the regulator supplies the trivial part, and the classical CM product calculation supplies the other logarithmic sectors.
+
+## 9. Remaining phase problem
+
+Define
+
+\[
+d=U_\Gamma/U_{\rm alg}.
+\]
+
+We now prove \(|d|=1\). We do not prove \(d\in\mu_6\), \(d^6=1\), or \(d=1\).
+
+Even an arbitrarily small phase \(e^{i\delta}\) preserves every single modulus comparison. The previous two-smoothing finite-rigidity theorem requires exact **complex** smoothing identities. Absolute-value identities do not activate it. Nor does the established Stark identity imply BCG's stronger special-value conjecture.
+
+The next genuinely missing input is phase-sensitive: an exact complex regulator/cocycle comparison, an algebraicity argument for the phase, or an exact sixth-power identity followed by branch separation. This note supplies no such input.
+
+## 10. Verification, failures, and provenance
+
+The accepted exact run passes **140 assertions**. These include the six new norm identities in each of two implementations, all odd induced-character decompositions, exact Dirichlet values, ray-class labels, the unit equations, inherited smoothing/radical certificates, and both finite orbit decompositions.
+
+The numerical run passes **27 equality checks at each of 70 and 110 decimal digits**, plus three negative controls at each precision. The CM Siegel products, the finite Gauss sum, and the original elliptic-gamma logarithmic series are evaluated independently. The largest relative errors across the accepted equality checks are approximately \(1.49\times10^{-67}\) and \(8.05\times10^{-108}\), respectively.
+
+For reference, the six \(\sigma^h\)-indexed partial-zeta derivatives are approximately
+
+\[
+(0.6815679018753065,\ 0.8202597752697818,\ 1.3592201085889906,
+-0.6815679018753065,\ -0.8202597752697818,\ -1.3592201085889906).
+\]
+
+The analytic gamma computation gives
+
+\[
+\log|U_\Gamma|^2\approx7.47766844482025925107624357060176274992737255.
+\]
+
+An explicit series-tail majorant for the 7000-term gamma computation is less than \(1.58\times10^{-158}\). This bounds truncation, not floating-point rounding. The runs are not interval certificates.
+
+One exploratory algebra script failed because its Groebner basis was created over the integers but a rational coefficient \(-1/7\) was then submitted. It was corrected by specifying coefficient domain \(\mathbb Q\). The failed draft is retained in `evidence/`. No mathematical claim was inferred from that failed execution. The two production scripts passed. The unsuccessful cycle-normalization inference is separately recorded above as a mathematical limitation, not a software error.
+
+No independent human or second-agent proof review, Lean compilation, or new literature-novelty audit was performed.
+
+## Appendix A. Derivation of the shifted Epstein normalization
+
+Let \(\tau=x+iy\) with \(y>0\), and \(z=a\tau+b\), initially \(0<a<1\). Apply Poisson summation in the integer coordinate \(m\) of
+
+\[
+\mathcal E_z(s)=\sum_{n,m\in\mathbb Z}
+\left((m+b+(n+a)x)^2+(n+a)^2y^2\right)^{-s}.
+\]
+
+The zero Fourier mode is
+
+\[
+\sqrt\pi\,\frac{\Gamma(s-1/2)}{\Gamma(s)}\,
+ y^{1-2s}\bigl[\zeta(2s-1,a)+\zeta(2s-1,1-a)\bigr].
+\]
+
+At zero its value vanishes. Its derivative equals \(2\pi y B_2(a)\), using \(\Gamma(-1/2)=-2\sqrt\pi\), \(1/\Gamma(s)=s+O(s^2)\), and \(\zeta(-1,a)=-B_2(a)/2\).
+
+The nonzero Fourier modes, obtained from the usual Gaussian integral, are exponentially convergent near \(s=0\) for \(0<a<1\). Their derivative sums to
+
+\[
+-2\log|1-e^{2\pi iz}|
+-2\sum_{n\ge1}\log|(1-e^{2\pi i(n\tau+z)})(1-e^{2\pi i(n\tau-z)})|.
+\]
+
+Combining the two terms gives (4.2). Extension to \(a=0\), away from lattice points, follows by continuation in \(z\). Equivalently,
+
+\[
+H_\tau(z)=e^{-\pi(\Im z)^2/y}
+\left|\frac{\theta_1(\pi z;e^{\pi i\tau})}{\eta_{\rm Ded}(\tau)}\right|.
+\]
+
+This representation and the sigma–theta relation justify the absolute addition step in section 5, including the cancellation of quadratic exponential corrections.
+
+## Appendix B. Reproduction
+
+From the package directory:
+
+```text
+python -m pip install sympy==1.14.0 mpmath==1.3.0
+python checks/verify_manifest.py
+python checks/exact_checks.py
+python checks/numerical_checks.py
+```
+
+The first two scripts overwrite their own result files under `evidence/`. A rerun changes runtimes and therefore changes output hashes; the included release manifest authenticates the shipped run, not a later rerun. Run the manifest check before rerunning computations when checking the shipped files.
+
+## Sources and dependency boundary
+
+1. Bergeron, Charollois, García, *Elliptic units for complex cubic fields (On Eisenstein's Jugendtraum)*, arXiv:2311.04110v2, 30 November 2023. Sections 3.1–3.3, Theorem 3.2, and section 5.2. Used for the proved gamma-modulus identity, partial-zeta conventions, Stark formulation, and original ray-class index. https://arxiv.org/html/2311.04110v2
+2. J. S. Milne, *Class Field Theory*, version 4.03, 6 August 2020. VIII, Example 5.13, printed page 249 (cubic reciprocity); VIII.10, printed pages 261–262 (Artin L-functions and induction). https://www.jmilne.org/math/CourseNotes/CFT.pdf
+3. NIST DLMF, 23.10.3 (sigma addition) and 23.6 (sigma–theta relations). https://dlmf.nist.gov/23.10.E3 and https://dlmf.nist.gov/23.6
+4. The retained Komorebi Jacobi/Kummer, unramified-cubic, CM seven-torsion, and norm-five/radical notes supply the explicit field, branch, and unit data. Their files and hashes are included; they do not supply any previously proved gamma phase equality.
+5. The shifted Epstein normalization is derived in Appendix A, so the precise factor two does not rest on transferring another author's Mellin normalization.
+
+The new contribution to this research checkpoint is the explicit evaluation (5.9), the identification (6.4), and the consequence (7.2). The external classical theorems are used as external theorems, not renamed as new results.

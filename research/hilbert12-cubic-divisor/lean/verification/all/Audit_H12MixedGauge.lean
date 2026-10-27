@@ -1,0 +1,28 @@
+import H12MixedGauge
+
+#check H12MixedGauge.zero_anchor
+#print axioms H12MixedGauge.zero_anchor
+#check H12MixedGauge.real_restriction
+#print axioms H12MixedGauge.real_restriction
+#check H12MixedGauge.gauge_boundary
+#print axioms H12MixedGauge.gauge_boundary
+#check H12MixedGauge.gauge_alternating
+#print axioms H12MixedGauge.gauge_alternating
+#check H12MixedGauge.changed_mixed_entry
+#print axioms H12MixedGauge.changed_mixed_entry
+#check H12MixedGauge.unchanged_real_entries
+#print axioms H12MixedGauge.unchanged_real_entries
+#check H12MixedGauge.model_mixed_entry
+#print axioms H12MixedGauge.model_mixed_entry
+#check H12MixedGauge.holomorphic_gauge_hodge_zero
+#print axioms H12MixedGauge.holomorphic_gauge_hodge_zero
+#check H12MixedGauge.holomorphic_gauge_hodge_zero_scaled
+#print axioms H12MixedGauge.holomorphic_gauge_hodge_zero_scaled
+#check H12MixedGauge.hodge_integer_formula
+#print axioms H12MixedGauge.hodge_integer_formula
+#check H12MixedGauge.primitive_hodge_residue
+#print axioms H12MixedGauge.primitive_hodge_residue
+#check H12MixedGauge.model_class_nonzero_mod_seven
+#print axioms H12MixedGauge.model_class_nonzero_mod_seven
+#check H12MixedGauge.scalar_square_cleared
+#print axioms H12MixedGauge.scalar_square_cleared

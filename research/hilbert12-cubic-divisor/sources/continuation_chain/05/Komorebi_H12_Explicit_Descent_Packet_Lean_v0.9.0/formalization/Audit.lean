@@ -1,0 +1,44 @@
+import H12ExplicitDescent
+import H12DescentPacket
+
+#print axioms H12ExplicitDescent.alpha_add
+#print axioms H12ExplicitDescent.beta_add
+#print axioms H12ExplicitDescent.alpha_twisted
+#print axioms H12ExplicitDescent.beta_twisted
+#print axioms H12ExplicitDescent.alpha_original
+#print axioms H12ExplicitDescent.beta_original
+#print axioms H12ExplicitDescent.alpha_rotation
+#print axioms H12ExplicitDescent.beta_rotation
+#print axioms H12ExplicitDescent.quotient_section
+#print axioms H12ExplicitDescent.cocycle_identity
+#print axioms H12ExplicitDescent.alternating_swap
+#print axioms H12ExplicitDescent.normalized_zero
+#print axioms H12ExplicitDescent.commutator_exponent
+#print axioms H12ExplicitDescent.symplectic_shear
+#print axioms H12ExplicitDescent.original_multiplier
+#print axioms H12ExplicitDescent.carry_defect
+#print axioms H12ExplicitDescent.real_cover_coboundary
+#print axioms H12ExplicitDescent.full_cover_residual
+#print axioms H12ExplicitDescent.hodge_coordinates
+#print axioms H12ExplicitDescent.hodge_class_residues
+#print axioms H12DescentPacket.all_common_residues
+#print axioms H12DescentPacket.primitive_class_original_action
+#print axioms H12DescentPacket.primitive_orbit_length_three
+#print axioms H12DescentPacket.primitive_no_nonzero_fixed
+#print axioms H12DescentPacket.primitive_tensor_norm
+#print axioms H12DescentPacket.reciprocal_pairing_action
+#print axioms H12DescentPacket.weyl_product_phase
+#print axioms H12DescentPacket.weyl_periodic_index
+#print axioms H12DescentPacket.weyl_periodic_labels
+#print axioms H12DescentPacket.shear_lift_phase
+#print axioms H12DescentPacket.shear_lift_order_seven
+#print axioms H12DescentPacket.shear_lift_fixes_zero
+#print axioms H12DescentPacket.original_third_step
+#print axioms H12DescentPacket.original_third_second
+#print axioms H12DescentPacket.packet_intertwiner_phase
+#print axioms H12DescentPacket.packet_three_lift_phase
+#print axioms H12DescentPacket.packet_three_lift_index
+#print axioms H12DescentPacket.rotation_packet_phase
+#print axioms H12DescentPacket.commuting_packet_lifts
+#print axioms H12DescentPacket.rotation_cubed_index
+#print axioms H12DescentPacket.opposite_pairing_is_not_trivial

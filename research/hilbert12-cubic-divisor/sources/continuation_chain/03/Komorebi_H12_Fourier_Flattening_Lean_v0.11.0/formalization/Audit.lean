@@ -1,0 +1,32 @@
+import H12OrbitAntidifference
+import H12DualFourier
+import H12FourierExtension
+
+#print axioms H12OrbitAntidifference.prefix_zero
+#print axioms H12OrbitAntidifference.prefix_successor
+#print axioms H12OrbitAntidifference.prefix_primitive
+#print axioms H12OrbitAntidifference.telescope
+#print axioms H12OrbitAntidifference.prefix_congruence_below
+#print axioms H12OrbitAntidifference.endpoint_charge
+#print axioms H12OrbitAntidifference.zero_charge_iff_closed_primitive
+#print axioms H12OrbitAntidifference.prefix_add
+#print axioms H12OrbitAntidifference.charge_under_gauge
+#print axioms H12OrbitAntidifference.equal_boundary_preserves_charge
+#print axioms H12OrbitAntidifference.anchored_primitive_unique
+#print axioms H12OrbitAntidifference.prefix_zero_tail
+#print axioms H12OrbitAntidifference.weighted_charge
+#print axioms H12OrbitAntidifference.nonzero_charge_no_closed_primitive
+#print axioms H12DualFourier.dual_pairing
+#print axioms H12DualFourier.inverse_left
+#print axioms H12DualFourier.inverse_right
+#print axioms H12DualFourier.dual_injective
+#print axioms H12DualFourier.conductor_residue
+#print axioms H12DualFourier.all_iterates_conductor
+#print axioms H12DualFourier.dual_cubic
+#print axioms H12DualFourier.gauge_winding_preserves_conductor
+#print axioms H12DualFourier.actual_frequency_chain
+#print axioms H12FourierExtension.explicit_flat_extension
+#print axioms H12FourierExtension.lift_pairing
+#print axioms H12FourierExtension.invariant_character_residue
+#print axioms H12FourierExtension.cubic_based_exponent
+#print axioms H12FourierExtension.finite_grid_phase_vanishes

@@ -1,0 +1,57 @@
+import H12UnitCoinvariants
+import H12MixedGauge
+import H12AnchorObstruction
+import H12SevenClassDetector
+
+#print axioms H12UnitCoinvariants.ell_delta
+#print axioms H12UnitCoinvariants.ell_original
+#print axioms H12UnitCoinvariants.ell_add
+#print axioms H12UnitCoinvariants.ell_sub
+#print axioms H12UnitCoinvariants.unit_delta
+#print axioms H12UnitCoinvariants.residual_reconstruction
+#print axioms H12UnitCoinvariants.six_generator
+#print axioms H12UnitCoinvariants.exact_preimage
+#print axioms H12UnitCoinvariants.image_iff_multiple_six
+#print axioms H12UnitCoinvariants.quotient_difference
+#print axioms H12UnitCoinvariants.quotient_surjective
+#print axioms H12UnitCoinvariants.period_class
+#print axioms H12UnitCoinvariants.carry_class
+#print axioms H12UnitCoinvariants.tripled_carry
+#print axioms H12UnitCoinvariants.carry_nonzero
+#print axioms H12UnitCoinvariants.doubled_carry_nonzero
+#print axioms H12UnitCoinvariants.delta_scaling
+#print axioms H12UnitCoinvariants.period_restricted_indices
+#print axioms H12UnitCoinvariants.based_character_cubed
+#print axioms H12UnitCoinvariants.based_character_image
+#print axioms H12UnitCoinvariants.all_invariant_sixth_characters
+#print axioms H12MixedGauge.zero_anchor
+#print axioms H12MixedGauge.real_restriction
+#print axioms H12MixedGauge.gauge_boundary
+#print axioms H12MixedGauge.gauge_alternating
+#print axioms H12MixedGauge.changed_mixed_entry
+#print axioms H12MixedGauge.unchanged_real_entries
+#print axioms H12MixedGauge.model_mixed_entry
+#print axioms H12MixedGauge.holomorphic_gauge_hodge_zero
+#print axioms H12MixedGauge.holomorphic_gauge_hodge_zero_scaled
+#print axioms H12MixedGauge.hodge_integer_formula
+#print axioms H12MixedGauge.primitive_hodge_residue
+#print axioms H12MixedGauge.model_class_nonzero_mod_seven
+#print axioms H12MixedGauge.scalar_square_cleared
+#print axioms H12AnchorObstruction.sixth_root_phase_table
+#print axioms H12AnchorObstruction.target_and_anchor
+#print axioms H12AnchorObstruction.inverse_point_phase
+#print axioms H12AnchorObstruction.fixed_point_carry
+#print axioms H12AnchorObstruction.conductor_label
+#print axioms H12AnchorObstruction.based_exponent_cancellation
+#print axioms H12AnchorObstruction.based_cube_exponent
+#print axioms H12AnchorObstruction.fixed_point_gauge_value
+#print axioms H12AnchorObstruction.constant_orbit_sum
+#print axioms H12SevenClassDetector.root_two
+#print axioms H12SevenClassDetector.root_four
+#print axioms H12SevenClassDetector.eval_twist_two
+#print axioms H12SevenClassDetector.eval_twist_four
+#print axioms H12SevenClassDetector.fixed_at_two
+#print axioms H12SevenClassDetector.fixed_at_four
+#print axioms H12SevenClassDetector.coefficient_recovery
+#print axioms H12SevenClassDetector.selector_formula
+#print axioms H12SevenClassDetector.model_selector

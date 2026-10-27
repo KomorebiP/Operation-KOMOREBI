@@ -1,0 +1,53 @@
+import H12PrincipalDivisor
+import H12CubicDivisorGrowth
+
+#check H12CubicDivisorGrowth.positive_pivot
+#print axioms H12CubicDivisorGrowth.positive_pivot
+#check H12CubicDivisorGrowth.chamber_wall
+#print axioms H12CubicDivisorGrowth.chamber_wall
+#check H12CubicDivisorGrowth.chamber_order
+#print axioms H12CubicDivisorGrowth.chamber_order
+#check H12CubicDivisorGrowth.zero_family_order
+#print axioms H12CubicDivisorGrowth.zero_family_order
+#check H12CubicDivisorGrowth.pole_family_order
+#print axioms H12CubicDivisorGrowth.pole_family_order
+#check H12CubicDivisorGrowth.zero_family_injective
+#print axioms H12CubicDivisorGrowth.zero_family_injective
+#check H12CubicDivisorGrowth.pole_family_injective
+#print axioms H12CubicDivisorGrowth.pole_family_injective
+#check H12CubicDivisorGrowth.families_disjoint
+#print axioms H12CubicDivisorGrowth.families_disjoint
+#check H12CubicDivisorGrowth.zero_box_bounds
+#print axioms H12CubicDivisorGrowth.zero_box_bounds
+#check H12CubicDivisorGrowth.pole_box_bounds
+#print axioms H12CubicDivisorGrowth.pole_box_bounds
+#check H12CubicDivisorGrowth.origin_not_in_families
+#print axioms H12CubicDivisorGrowth.origin_not_in_families
+#check H12PrincipalDivisor.principal5_cube
+#print axioms H12PrincipalDivisor.principal5_cube
+#check H12PrincipalDivisor.lift_identity
+#print axioms H12PrincipalDivisor.lift_identity
+#check H12PrincipalDivisor.digit_is_remainder
+#print axioms H12PrincipalDivisor.digit_is_remainder
+#check H12PrincipalDivisor.digit_range
+#print axioms H12PrincipalDivisor.digit_range
+#check H12PrincipalDivisor.unique_lift_digit
+#print axioms H12PrincipalDivisor.unique_lift_digit
+#check H12PrincipalDivisor.lift_preserves_fifth_weight
+#print axioms H12PrincipalDivisor.lift_preserves_fifth_weight
+#check H12PrincipalDivisor.wall_bounds
+#print axioms H12PrincipalDivisor.wall_bounds
+#check H12PrincipalDivisor.wall_values
+#print axioms H12PrincipalDivisor.wall_values
+#check H12PrincipalDivisor.order_difference
+#print axioms H12PrincipalDivisor.order_difference
+#check H12PrincipalDivisor.order_values
+#print axioms H12PrincipalDivisor.order_values
+#check H12PrincipalDivisor.tau_ray_order
+#print axioms H12PrincipalDivisor.tau_ray_order
+#check H12PrincipalDivisor.s_ray_order
+#print axioms H12PrincipalDivisor.s_ray_order
+#check H12PrincipalDivisor.negative_integer_order
+#print axioms H12PrincipalDivisor.negative_integer_order
+#check H12PrincipalDivisor.zero_order
+#print axioms H12PrincipalDivisor.zero_order

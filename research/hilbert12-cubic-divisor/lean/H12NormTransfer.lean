@@ -1,0 +1,81 @@
+import Std
+
+namespace H12NormTransfer
+
+def weightedSum (d : Nat → Int) : Nat → Int
+  | 0 => 0
+  | n+1 => weightedSum d n + (7 : Int)^n*d (n+1)
+
+theorem weighted_telescope (c d : Nat → Int)
+    (hr : ∀ n, c n = 7*c (n+1)-d (n+1)) (n : Nat) :
+    c 0 = (7 : Int)^n*c n - weightedSum d n := by
+  induction n with
+  | zero => simp [weightedSum]
+  | succ n ih =>
+    have hn := hr n
+    simp only [weightedSum, Int.pow_succ]
+    grind
+
+theorem finite_norm_solution (c d : Nat → Int)
+    (hr : ∀ n, c n = 7*c (n+1)-d (n+1))
+    (n : Nat) (hz : c n = 0) : c 0 = -weightedSum d n := by
+  have h := weighted_telescope c d hr n
+  rw [hz] at h
+  simpa using h
+
+theorem weighted_difference (a b : Nat → Int) (n : Nat) :
+    weightedSum (fun j => a j-b j) n = weightedSum a n-weightedSum b n := by
+  induction n with
+  | zero => simp [weightedSum]
+  | succ n ih =>
+    simp only [weightedSum]
+    grind
+
+theorem finite_gauge_difference (c a b : Nat → Int)
+    (hr : ∀ n, c n = 7*c (n+1)-(a (n+1)-b (n+1)))
+    (n : Nat) (hz : c n = 0) :
+    c 0 = -weightedSum a n + weightedSum b n := by
+  have h := finite_norm_solution c (fun j => a j-b j) hr n hz
+  rw [weighted_difference] at h
+  omega
+
+theorem weighted_zero (n : Nat) : weightedSum (fun _ => 0) n = 0 := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp [weightedSum, ih]
+
+theorem zero_residual_tail (c : Nat → Int)
+    (hr : ∀ n, c n = 7*c (n+1)) (n : Nat) (hz : c n = 0) : c 0 = 0 := by
+  have h := weighted_telescope c (fun _ => 0) (by intro j; simpa using hr j) n
+  simp [hz, weighted_zero] at h
+  exact h
+
+def residueCount (r s : Fin 7) : Nat :=
+  ((List.range 7).map (fun j => if (j*r.val)%7=s.val then 1 else 0)).sum
+
+theorem residue_trace_table : ∀ r s : Fin 7,
+    residueCount r s = if r.val=0 then (if s.val=0 then 7 else 0) else 1 := by decide
+
+theorem nonzero_residue_uniform (r s : Fin 7) (hr : r.val ≠ 0) : residueCount r s=1 := by
+  simpa [hr] using residue_trace_table r s
+
+def geo7 (d : Int) := 1+d+d^2+d^3+d^4+d^5+d^6
+
+theorem seven_geometric (d : Int) : (1-d)*geo7 d = 1-d^7 := by
+  simp [geo7]
+  grind
+
+theorem reversed_geometric (d : Int) : d^6+d^5+d^4+d^3+d^2+d+1=geo7 d := by
+  simp [geo7]
+  omega
+
+theorem gamma_positive_split (p q : Int) :
+    p-q^2 = (1+q)*(1-q)-(1-p) := by grind
+
+theorem gamma_negative_split (p q : Int) :
+    p-q^2 = p*(1+q)*(1-q)-q^2*(1-p) := by grind
+
+theorem gamma_period_relation (p q d : Int) (h : p*d^7=q^2) :
+    p*(1-d^7)=p-q^2 := by grind
+
+end H12NormTransfer

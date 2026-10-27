@@ -1,0 +1,30 @@
+import H12PrincipalDivisor
+
+#check H12PrincipalDivisor.principal5_cube
+#print axioms H12PrincipalDivisor.principal5_cube
+#check H12PrincipalDivisor.lift_identity
+#print axioms H12PrincipalDivisor.lift_identity
+#check H12PrincipalDivisor.digit_is_remainder
+#print axioms H12PrincipalDivisor.digit_is_remainder
+#check H12PrincipalDivisor.digit_range
+#print axioms H12PrincipalDivisor.digit_range
+#check H12PrincipalDivisor.unique_lift_digit
+#print axioms H12PrincipalDivisor.unique_lift_digit
+#check H12PrincipalDivisor.lift_preserves_fifth_weight
+#print axioms H12PrincipalDivisor.lift_preserves_fifth_weight
+#check H12PrincipalDivisor.wall_bounds
+#print axioms H12PrincipalDivisor.wall_bounds
+#check H12PrincipalDivisor.wall_values
+#print axioms H12PrincipalDivisor.wall_values
+#check H12PrincipalDivisor.order_difference
+#print axioms H12PrincipalDivisor.order_difference
+#check H12PrincipalDivisor.order_values
+#print axioms H12PrincipalDivisor.order_values
+#check H12PrincipalDivisor.tau_ray_order
+#print axioms H12PrincipalDivisor.tau_ray_order
+#check H12PrincipalDivisor.s_ray_order
+#print axioms H12PrincipalDivisor.s_ray_order
+#check H12PrincipalDivisor.negative_integer_order
+#print axioms H12PrincipalDivisor.negative_integer_order
+#check H12PrincipalDivisor.zero_order
+#print axioms H12PrincipalDivisor.zero_order

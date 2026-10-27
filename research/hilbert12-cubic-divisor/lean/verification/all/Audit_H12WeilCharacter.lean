@@ -1,0 +1,28 @@
+import H12WeilCharacter
+
+#check H12WeilCharacter.jacobi_norm
+#print axioms H12WeilCharacter.jacobi_norm
+#check H12WeilCharacter.base_pairing_exponent
+#print axioms H12WeilCharacter.base_pairing_exponent
+#check H12WeilCharacter.base_pairing_nonzero
+#print axioms H12WeilCharacter.base_pairing_nonzero
+#check H12WeilCharacter.conjugation_reverses_phase
+#print axioms H12WeilCharacter.conjugation_reverses_phase
+#check H12WeilCharacter.pairing_all_residue_multiples
+#print axioms H12WeilCharacter.pairing_all_residue_multiples
+#check H12WeilCharacter.pairing_nondegenerate
+#print axioms H12WeilCharacter.pairing_nondegenerate
+#check H12WeilCharacter.product_pairing_exact_exponent
+#print axioms H12WeilCharacter.product_pairing_exact_exponent
+#check H12WeilCharacter.product_polarization_trivial
+#print axioms H12WeilCharacter.product_polarization_trivial
+#check H12WeilCharacter.character_doubling
+#print axioms H12WeilCharacter.character_doubling
+#check H12WeilCharacter.exact_jacobi_sum
+#print axioms H12WeilCharacter.exact_jacobi_sum
+#check H12WeilCharacter.gauss_cube_group_algebra
+#print axioms H12WeilCharacter.gauss_cube_group_algebra
+#check H12WeilCharacter.smoothing_determinant
+#print axioms H12WeilCharacter.smoothing_determinant
+#check H12WeilCharacter.topological_fifth_cancellation
+#print axioms H12WeilCharacter.topological_fifth_cancellation

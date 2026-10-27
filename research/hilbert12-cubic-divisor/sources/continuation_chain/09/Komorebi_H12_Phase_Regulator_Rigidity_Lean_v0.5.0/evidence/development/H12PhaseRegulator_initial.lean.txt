@@ -1,0 +1,42 @@
+module
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import Mathlib.Analysis.SpecialFunctions.Complex.LogDeriv
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.NormNum
+@[expose] public section
+open MeasureTheory intervalIntegral
+namespace H12.PhaseRegulator
+
+/-- Integration of a linear weight times a genuine second derivative.
+The derivative hypotheses are analytic, not field identities. -/
+theorem integral_linear_second
+    (f f1 f2 : ℝ → ℂ) (hf : ∀ x, HasDerivAt f (f1 x) x)
+    (hf1 : ∀ x, HasDerivAt f1 (f2 x) x) (hc : Continuous f2)
+    (a b c : ℝ) :
+    (∫ x in a..b, ((x-c : ℝ) : ℂ) * f2 x) =
+      ((b-c : ℝ) : ℂ) * f1 b - f b -
+      (((a-c : ℝ) : ℂ) * f1 a - f a) := by
+  apply intervalIntegral.integral_eq_sub_of_hasDerivAt
+  · intro x _
+    have hd := (((Complex.hasDerivAt_ofReal x).sub_const (c : ℂ)).mul (hf1 x)).sub (hf x)
+    convert hd using 1 <;> simp only [Complex.ofReal_sub] <;> ring
+  · exact (((Complex.continuous_ofReal.sub continuous_const).mul hc)).intervalIntegrable a b
+
+/-- The two-segment conductor-three Green functional. -/
+noncomputable def regulator3 (g : ℝ → ℂ) : ℂ :=
+  -2 * (∫ x in (0:ℝ)..(1/3:ℝ), (x : ℂ) * g x) +
+    (∫ x in (1/3:ℝ)..(1:ℝ), ((x-1 : ℝ) : ℂ) * g x)
+
+theorem regulator3_endpoint
+    (f f1 f2 : ℝ → ℂ) (hf : ∀ x, HasDerivAt f (f1 x) x)
+    (hf1 : ∀ x, HasDerivAt f1 (f2 x) x) (hc : Continuous f2) :
+    regulator3 f2 = 3*f (1/3) - 2*f 0 - f 1 := by
+  have h0 := integral_linear_second f f1 f2 hf hf1 hc 0 (1/3) 0
+  have h1 := integral_linear_second f f1 f2 hf hf1 hc (1/3) 1 1
+  simp only [sub_zero] at h0
+  unfold regulator3
+  rw [h0,h1]
+  push_cast
+  ring
+
+end H12.PhaseRegulator

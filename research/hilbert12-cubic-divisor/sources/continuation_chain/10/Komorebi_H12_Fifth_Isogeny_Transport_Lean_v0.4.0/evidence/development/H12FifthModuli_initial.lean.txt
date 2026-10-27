@@ -1,0 +1,74 @@
+/- Rational moduli identities for the explicit order-five quotient.
+No algebraicity of the period-dependent parameter is asserted. -/
+module
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+@[expose] public section
+namespace H12.FifthModuli
+variable {K : Type*} [Field K] [CharZero K]
+
+def b2 (u : K) := u^2-6*u+1
+def b4 (u : K) := u^2-u
+def c4 (u : K) := (b2 u)^2-24*b4 u
+def c6 (u : K) := -(b2 u)^3+36*b2 u*b4 u-216*u^2
+def disc (u : K) := u^5*(u^2-11*u-1)
+def c4quot (u : K) := u^4+228*u^3+494*u^2-228*u+1
+def c6quot (u : K) := -(u^2+1)*(u^4-522*u^3-10006*u^2+522*u+1)
+def discQuot (u : K) := u*(u^2-11*u-1)^5
+
+def h (u : K) := u-11-1/u
+def jSource (v : K) := (v^2+10*v+5)^3/v
+def jQuotient (v : K) := (v^2+250*v+3125)^3/v^5
+def fricke (v : K) := 125/v
+
+theorem source_discriminant (u : K) : (c4 u)^3-(c6 u)^2=1728*disc u := by
+  dsimp [c4,c6,b2,b4,disc]; ring1
+
+theorem quotient_discriminant (u : K) : (c4quot u)^3-(c6quot u)^2=1728*discQuot u := by
+  dsimp [c4quot,c6quot,discQuot]; ring1
+
+theorem kernel_parameter (u : K) (hu : u≠0) : h u=(u^2-11*u-1)/u := by
+  dsimp [h]; field_simp; ring1
+
+theorem kernel_parameter_marking_invariant (u : K) (hu : u≠0) : h (-1/u)=h u := by
+  dsimp [h]; field_simp; ring1
+
+theorem c4_kernel_form (u : K) (hu : u≠0) : c4 u=u^2*((h u)^2+10*h u+5) := by
+  dsimp [c4,b2,b4,h]; field_simp; ring1
+
+theorem c4_quotient_kernel_form (u : K) (hu : u≠0) :
+    c4quot u=u^2*((h u)^2+250*h u+3125) := by
+  dsimp [c4quot,h]; field_simp; ring1
+
+theorem discriminant_kernel_form (u : K) (hu : u≠0) : disc u=u^6*h u := by
+  dsimp [disc,h]; field_simp; ring1
+
+theorem quotient_discriminant_kernel_form (u : K) (hu : u≠0) : discQuot u=u^6*(h u)^5 := by
+  dsimp [discQuot,h]; field_simp; ring1
+
+theorem source_j_formula (u : K) (hu : u≠0) (hh : h u≠0) :
+    (c4 u)^3/disc u=jSource (h u) := by
+  rw [c4_kernel_form u hu,discriminant_kernel_form u hu]
+  dsimp [jSource]; field_simp
+
+theorem quotient_j_formula (u : K) (hu : u≠0) (hh : h u≠0) :
+    (c4quot u)^3/discQuot u=jQuotient (h u) := by
+  rw [c4_quotient_kernel_form u hu,quotient_discriminant_kernel_form u hu]
+  dsimp [jQuotient]; field_simp
+
+theorem discriminant_ratio (u : K) (hu : u≠0) (hh : h u≠0) :
+    discQuot u/disc u=(h u)^4 := by
+  rw [discriminant_kernel_form u hu,quotient_discriminant_kernel_form u hu]
+  field_simp
+
+theorem fricke_involution (v : K) (hv : v≠0) : fricke (fricke v)=v := by
+  dsimp [fricke]; field_simp
+
+theorem fricke_exchanges_source (v : K) (hv : v≠0) : jSource (fricke v)=jQuotient v := by
+  dsimp [jSource,jQuotient,fricke]; field_simp; ring1
+
+theorem fricke_exchanges_quotient (v : K) (hv : v≠0) : jQuotient (fricke v)=jSource v := by
+  dsimp [jSource,jQuotient,fricke]; field_simp; ring1
+
+end H12.FifthModuli

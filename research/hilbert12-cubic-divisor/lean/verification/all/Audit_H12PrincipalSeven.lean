@@ -1,0 +1,36 @@
+import H12PrincipalSeven
+
+#check H12PrincipalSeven.principal_cube
+#print axioms H12PrincipalSeven.principal_cube
+#check H12PrincipalSeven.dual_principal_cube
+#print axioms H12PrincipalSeven.dual_principal_cube
+#check H12PrincipalSeven.actions_commute
+#print axioms H12PrincipalSeven.actions_commute
+#check H12PrincipalSeven.dual_actions_commute
+#print axioms H12PrincipalSeven.dual_actions_commute
+#check H12PrincipalSeven.dual_pairing
+#print axioms H12PrincipalSeven.dual_pairing
+#check H12PrincipalSeven.image_charge
+#print axioms H12PrincipalSeven.image_charge
+#check H12PrincipalSeven.image_preimage
+#print axioms H12PrincipalSeven.image_preimage
+#check H12PrincipalSeven.image_iff
+#print axioms H12PrincipalSeven.image_iff
+#check H12PrincipalSeven.conductor_residue
+#print axioms H12PrincipalSeven.conductor_residue
+#check H12PrincipalSeven.kernel_charge_transport
+#print axioms H12PrincipalSeven.kernel_charge_transport
+#check H12PrincipalSeven.kernel_generator
+#print axioms H12PrincipalSeven.kernel_generator
+#check H12PrincipalSeven.unit_on_kernel
+#print axioms H12PrincipalSeven.unit_on_kernel
+#check H12PrincipalSeven.based_third_carry
+#print axioms H12PrincipalSeven.based_third_carry
+#check H12PrincipalSeven.norm_unit_invariant
+#print axioms H12PrincipalSeven.norm_unit_invariant
+#check H12PrincipalSeven.norm_principal_scaling
+#print axioms H12PrincipalSeven.norm_principal_scaling
+#check H12PrincipalSeven.norm_seed
+#print axioms H12PrincipalSeven.norm_seed
+#check H12PrincipalSeven.winding_defect
+#print axioms H12PrincipalSeven.winding_defect

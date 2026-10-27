@@ -1,0 +1,66 @@
+H12.SignedGeometry.rotate_cube (i : Fin 8) :
+  H12.SignedGeometry.rotate (H12.SignedGeometry.rotate (H12.SignedGeometry.rotate i)) = i
+'H12.SignedGeometry.rotate_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.character_transport (k i : Fin 8) :
+  H12.SignedGeometry.chi (H12.SignedGeometry.rotate k) (H12.SignedGeometry.rotate i) = H12.SignedGeometry.chi k i
+'H12.SignedGeometry.character_transport' depends on axioms: [propext, Quot.sound]
+H12.SignedGeometry.walsh_transport.{u_2} {A : Type u_2} [AddCommGroup A] (x : Fin 8 → A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (fun i => x (H12.SignedGeometry.rotate i)) k =
+    H12.SignedGeometry.walsh x (H12.SignedGeometry.rotate k)
+'H12.SignedGeometry.walsh_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.walsh_inversion.{u_2} {A : Type u_2} [AddCommGroup A] (x : Fin 8 → A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.walsh x) k = 8 • x k
+'H12.SignedGeometry.walsh_inversion' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.affine_spectrum.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine u db dc da) k =
+    if ↑k = 0 then 8 * u + 4 * db + 4 * dc + 4 * da
+    else if ↑k = 1 then -4 * da else if ↑k = 2 then -4 * dc else if ↑k = 4 then -4 * db else 0
+'H12.SignedGeometry.affine_spectrum' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.quadratic_top_cancellation.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 7 = 0
+'H12.SignedGeometry.quadratic_top_cancellation' depends on axioms: [propext]
+H12.SignedGeometry.quadratic_pair_011.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 3 = 4 * dc * da
+'H12.SignedGeometry.quadratic_pair_011' depends on axioms: [propext]
+H12.SignedGeometry.quadratic_pair_101.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 5 = 4 * db * da
+'H12.SignedGeometry.quadratic_pair_101' depends on axioms: [propext]
+H12.SignedGeometry.quadratic_pair_110.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 6 = 4 * db * dc
+'H12.SignedGeometry.quadratic_pair_110' depends on axioms: [propext]
+H12.SignedGeometry.cubic_top_coefficient.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 3) 7 = -6 * db * dc * da
+'H12.SignedGeometry.cubic_top_coefficient' depends on axioms: [propext]
+H12.SignedGeometry.one_step_gain (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine 5 4 (-2) 7) k =
+    if ↑k = 0 then 76 else if ↑k = 1 then -28 else if ↑k = 2 then 8 else if ↑k = 4 then -16 else 0
+'H12.SignedGeometry.one_step_gain' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.three_step_gain (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine 630 471 (-246) 945) k =
+    if ↑k = 0 then 9720 else if ↑k = 1 then -3780 else if ↑k = 2 then 984 else if ↑k = 4 then -1884 else 0
+'H12.SignedGeometry.three_step_gain' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.affine_gauge_spectrum (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine (-4) 3 3 3) k =
+    if ↑k = 0 then 4 else if ↑k = 1 ∨ ↑k = 2 ∨ ↑k = 4 then -12 else 0
+'H12.SignedGeometry.affine_gauge_spectrum' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.gauge_rotation_invariant (i : Fin 8) :
+  H12.SignedGeometry.affine (-4) 3 3 3 (H12.SignedGeometry.rotate i) = H12.SignedGeometry.affine (-4) 3 3 3 i
+'H12.SignedGeometry.gauge_rotation_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.high_subspace_rotation (k : Fin 8) :
+  ↑k = 3 ∨ ↑k = 5 ∨ ↑k = 6 ∨ ↑k = 7 ↔
+    ↑(H12.SignedGeometry.rotate k) = 3 ∨
+      ↑(H12.SignedGeometry.rotate k) = 5 ∨ ↑(H12.SignedGeometry.rotate k) = 6 ∨ ↑(H12.SignedGeometry.rotate k) = 7
+'H12.SignedGeometry.high_subspace_rotation' depends on axioms: [propext, Quot.sound]
+H12.SignedGeometry.walsh_add.{u_2} {A : Type u_2} [AddCommGroup A] (x y : Fin 8 → A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (fun i => x i + y i) k = H12.SignedGeometry.walsh x k + H12.SignedGeometry.walsh y k
+'H12.SignedGeometry.walsh_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.walsh_zsmul.{u_2} {A : Type u_2} [AddCommGroup A] (n : Fin 8 → ℤ) (a : A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (fun i => n i • a) k = H12.SignedGeometry.walsh n k • a
+'H12.SignedGeometry.walsh_zsmul' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.walsh_aggregate.{u_2} {A : Type u_2} [AddCommGroup A] (x : Fin 8 → A) :
+  H12.SignedGeometry.walsh x 0 +
+          (H12.SignedGeometry.walsh x 1 + H12.SignedGeometry.walsh x 2 + H12.SignedGeometry.walsh x 4) +
+        (H12.SignedGeometry.walsh x 3 + H12.SignedGeometry.walsh x 5 + H12.SignedGeometry.walsh x 6) +
+      H12.SignedGeometry.walsh x 7 =
+    8 • x 0
+'H12.SignedGeometry.walsh_aggregate' depends on axioms: [propext]

@@ -1,0 +1,74 @@
+/- Algebraic certificates for the fifth-torsion normalizer. The connection
+between these equations and actual elliptic torsion is an ordinary proof;
+no analytic or elliptic-curve fact is introduced as an axiom. -/
+module
+public import Mathlib.Tactic.Ring.Basic
+public import Mathlib.Tactic.FieldSimp
+public import Mathlib.Tactic.NormNum
+@[expose] public section
+namespace H12.FifthTorsionAlgebra
+variable {K : Type*} [Field K] [CharZero K]
+
+def curvePoly (g2 g3 x : K) : K := 4*x^3-g2*x-g3
+def psiThree (g2 g3 x : K) : K :=
+  3*x^4-(3/2:K)*g2*x^2-3*g3*x-g2^2/16
+def phiTwo (g2 g3 x : K) : K :=
+  x^4+(1/2:K)*g2*x^2+2*g3*x+g2^2/16
+
+theorem division_polynomial_identity (g2 g3 x : K) :
+    x*curvePoly g2 g3 x-phiTwo g2 g3 x=psiThree g2 g3 x := by
+  dsimp [curvePoly,phiTwo,psiThree]; ring
+
+theorem mutual_doubling_first (g2 g3 a b : K)
+    (h : b*curvePoly g2 g3 a=phiTwo g2 g3 a) :
+    psiThree g2 g3 a=curvePoly g2 g3 a*(a-b) := by
+  rw [←division_polynomial_identity,←h]; ring
+
+theorem mutual_doubling_second (g2 g3 a b : K)
+    (h : a*curvePoly g2 g3 b=phiTwo g2 g3 b) :
+    psiThree g2 g3 b= -(curvePoly g2 g3 b*(a-b)) := by
+  rw [←division_polynomial_identity,←h]; ring
+
+theorem tangent_ordinate_product (a b ya yb l m : K)
+    (hl : l^2=4*(2*a+b)) (hm : m^2=4*(a+2*b))
+    (hs : l*(a-b)=ya+yb) (hd : m*(a-b)=ya-yb) :
+    ya*yb=(a-b)^3 := by
+  have h : (4:K)*(ya*yb-(a-b)^3)=0 := by
+    calc
+      _=(ya+yb)^2-(ya-yb)^2-4*(a-b)^3 := by ring
+      _=(l*(a-b))^2-(m*(a-b))^2-4*(a-b)^3 := by rw [hs,hd]
+      _=(l^2-m^2)*(a-b)^2-4*(a-b)^3 := by ring
+      _=0 := by rw [hl,hm]; ring
+  have hn : (4:K)≠0 := by norm_num
+  exact sub_eq_zero.mp ((mul_eq_zero.mp h).resolve_left hn)
+
+theorem curve_product_from_ordinates (g2 g3 a b ya yb : K)
+    (ha : ya^2=curvePoly g2 g3 a)
+    (hb : yb^2=curvePoly g2 g3 b)
+    (hy : ya*yb=(a-b)^3) :
+    curvePoly g2 g3 a*curvePoly g2 g3 b=(a-b)^6 := by
+  rw [←ha,←hb]
+  calc
+    ya^2*yb^2=(ya*yb)^2 := by ring
+    _=((a-b)^3)^2 := by rw [hy]
+    _=(a-b)^6 := by ring
+
+theorem third_division_product (g2 g3 a b : K)
+    (hprod : curvePoly g2 g3 a*curvePoly g2 g3 b=(a-b)^6)
+    (ha : psiThree g2 g3 a=curvePoly g2 g3 a*(a-b))
+    (hb : psiThree g2 g3 b= -(curvePoly g2 g3 b*(a-b))) :
+    psiThree g2 g3 a*psiThree g2 g3 b= -(a-b)^8 := by
+  rw [ha,hb]
+  calc
+    _= -(curvePoly g2 g3 a*curvePoly g2 g3 b)*(a-b)^2 := by ring
+    _= -((a-b)^6)*(a-b)^2 := by rw [hprod]
+    _= -(a-b)^8 := by ring
+
+theorem cubed_normalizer_equation (c d p : K)
+    (hc : c^3=p) (hp : p=d^6) : c^3=d^6 := by rw [hc,hp]
+
+theorem eighth_normalizer_equation (c d p : K)
+    (hc : c^8=p^2) (hp : p= -d^8) : c^8=d^16 := by
+  rw [hc,hp]; ring
+
+end H12.FifthTorsionAlgebra

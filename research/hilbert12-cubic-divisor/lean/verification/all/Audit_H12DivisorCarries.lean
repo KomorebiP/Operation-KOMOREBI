@@ -1,0 +1,14 @@
+import H12DivisorCarries
+
+#check H12DivisorCarries.unit_period_pivot
+#print axioms H12DivisorCarries.unit_period_pivot
+#check H12DivisorCarries.unit_period_weight
+#print axioms H12DivisorCarries.unit_period_weight
+#check H12DivisorCarries.finite_window_boundary
+#print axioms H12DivisorCarries.finite_window_boundary
+#check H12DivisorCarries.unit_period_order
+#print axioms H12DivisorCarries.unit_period_order
+#check H12DivisorCarries.seventh_pivot_carry
+#print axioms H12DivisorCarries.seventh_pivot_carry
+#check H12DivisorCarries.seventh_digit_carry
+#print axioms H12DivisorCarries.seventh_digit_carry

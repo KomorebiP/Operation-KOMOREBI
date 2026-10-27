@@ -1,0 +1,18 @@
+import H12FifthTorsionAlgebra
+
+#check H12.FifthTorsionAlgebra.division_polynomial_identity
+#print axioms H12.FifthTorsionAlgebra.division_polynomial_identity
+#check H12.FifthTorsionAlgebra.mutual_doubling_first
+#print axioms H12.FifthTorsionAlgebra.mutual_doubling_first
+#check H12.FifthTorsionAlgebra.mutual_doubling_second
+#print axioms H12.FifthTorsionAlgebra.mutual_doubling_second
+#check H12.FifthTorsionAlgebra.tangent_ordinate_product
+#print axioms H12.FifthTorsionAlgebra.tangent_ordinate_product
+#check H12.FifthTorsionAlgebra.curve_product_from_ordinates
+#print axioms H12.FifthTorsionAlgebra.curve_product_from_ordinates
+#check H12.FifthTorsionAlgebra.third_division_product
+#print axioms H12.FifthTorsionAlgebra.third_division_product
+#check H12.FifthTorsionAlgebra.cubed_normalizer_equation
+#print axioms H12.FifthTorsionAlgebra.cubed_normalizer_equation
+#check H12.FifthTorsionAlgebra.eighth_normalizer_equation
+#print axioms H12.FifthTorsionAlgebra.eighth_normalizer_equation

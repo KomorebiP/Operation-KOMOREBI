@@ -1,0 +1,63 @@
+H12PrincipalSeven.principal_cube (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.principal (H12PrincipalSeven.principal (H12PrincipalSeven.principal v)) =
+    H12PrincipalSeven.scale 7 v
+'H12PrincipalSeven.principal_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.dual_principal_cube (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)) =
+    H12PrincipalSeven.scale 7 v
+'H12PrincipalSeven.dual_principal_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.actions_commute (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.principal (H12PrincipalSeven.unit v) = H12PrincipalSeven.unit (H12PrincipalSeven.principal v)
+'H12PrincipalSeven.actions_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.dual_actions_commute (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualUnit v) =
+    H12PrincipalSeven.dualUnit (H12PrincipalSeven.dualPrincipal v)
+'H12PrincipalSeven.dual_actions_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.dual_pairing (v k : H12PrincipalSeven.V) :
+  H12PrincipalSeven.dot k (H12PrincipalSeven.principal v) = H12PrincipalSeven.dot (H12PrincipalSeven.dualPrincipal k) v
+'H12PrincipalSeven.dual_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.image_charge (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.charge (H12PrincipalSeven.dualPrincipal v) = -7 * (8 * v.snd.fst + v.snd.snd)
+'H12PrincipalSeven.image_charge' depends on axioms: [propext, Quot.sound]
+H12PrincipalSeven.image_preimage (v : H12PrincipalSeven.V) (r : Int) (h : H12PrincipalSeven.charge v = 7 * r) :
+  H12PrincipalSeven.dualPrincipal (-v.snd.fst, v.snd.snd - 2 * r, 15 * r - 8 * v.snd.snd) = v
+'H12PrincipalSeven.image_preimage' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.image_iff (v : H12PrincipalSeven.V) :
+  (∃ w, H12PrincipalSeven.dualPrincipal w = v) ↔ 7 ∣ H12PrincipalSeven.charge v
+'H12PrincipalSeven.image_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.conductor_residue (v : H12PrincipalSeven.V) :
+  (H12PrincipalSeven.dualUnit v).snd.snd - v.snd.snd = 3 * (5 * v.snd.fst + v.snd.snd)
+'H12PrincipalSeven.conductor_residue' depends on axioms: [propext, Quot.sound]
+H12PrincipalSeven.kernel_charge_transport (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.charge (H12PrincipalSeven.dualUnit v) =
+    2 * H12PrincipalSeven.charge v + 7 * (8 * v.snd.fst + v.snd.snd)
+'H12PrincipalSeven.kernel_charge_transport' depends on axioms: [propext, Quot.sound]
+H12PrincipalSeven.kernel_generator : H12PrincipalSeven.principal (1, 2, 4) = (0, -56, -7)
+'H12PrincipalSeven.kernel_generator' does not depend on any axioms
+H12PrincipalSeven.unit_on_kernel : H12PrincipalSeven.unit (1, 2, 4) = (2, 60, 15)
+'H12PrincipalSeven.unit_on_kernel' does not depend on any axioms
+H12PrincipalSeven.based_third_carry :
+  have w := H12PrincipalSeven.principal (0, 0, 1);
+  (w.fst, w.snd.fst, w.snd.snd - 1) = (0, -15, -3)
+'H12PrincipalSeven.based_third_carry' does not depend on any axioms
+H12PrincipalSeven.norm_unit_invariant (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.normCubic (H12PrincipalSeven.dualUnit v) = H12PrincipalSeven.normCubic v
+'H12PrincipalSeven.norm_unit_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.norm_principal_scaling (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.normCubic (H12PrincipalSeven.dualPrincipal v) = 7 * H12PrincipalSeven.normCubic v
+'H12PrincipalSeven.norm_principal_scaling' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.norm_seed : H12PrincipalSeven.normCubic (0, 0, 1) = 1
+'H12PrincipalSeven.norm_seed' does not depend on any axioms
+H12PrincipalSeven.winding_defect (v : H12PrincipalSeven.V) :
+  have w :=
+    ((H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)).fst +
+        (H12PrincipalSeven.dualPrincipal v).fst,
+      (H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)).snd.fst +
+        (H12PrincipalSeven.dualPrincipal v).snd.fst,
+      (H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)).snd.snd +
+        (H12PrincipalSeven.dualPrincipal v).snd.snd);
+  (7 * v.fst - (H12PrincipalSeven.dualPrincipal v).fst, 7 * v.snd.fst - (H12PrincipalSeven.dualPrincipal v).snd.fst,
+      7 * v.snd.snd - (H12PrincipalSeven.dualPrincipal v).snd.snd) =
+    (w.fst - (H12PrincipalSeven.dualUnit w).fst, w.snd.fst - (H12PrincipalSeven.dualUnit w).snd.fst,
+      w.snd.snd - (H12PrincipalSeven.dualUnit w).snd.snd)
+'H12PrincipalSeven.winding_defect' depends on axioms: [propext, Classical.choice, Quot.sound]

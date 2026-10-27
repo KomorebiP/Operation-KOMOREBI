@@ -1,0 +1,30 @@
+import H12OrbitAntidifference
+
+#check H12OrbitAntidifference.prefix_zero
+#print axioms H12OrbitAntidifference.prefix_zero
+#check H12OrbitAntidifference.prefix_successor
+#print axioms H12OrbitAntidifference.prefix_successor
+#check H12OrbitAntidifference.prefix_primitive
+#print axioms H12OrbitAntidifference.prefix_primitive
+#check H12OrbitAntidifference.telescope
+#print axioms H12OrbitAntidifference.telescope
+#check H12OrbitAntidifference.prefix_congruence_below
+#print axioms H12OrbitAntidifference.prefix_congruence_below
+#check H12OrbitAntidifference.endpoint_charge
+#print axioms H12OrbitAntidifference.endpoint_charge
+#check H12OrbitAntidifference.zero_charge_iff_closed_primitive
+#print axioms H12OrbitAntidifference.zero_charge_iff_closed_primitive
+#check H12OrbitAntidifference.prefix_add
+#print axioms H12OrbitAntidifference.prefix_add
+#check H12OrbitAntidifference.charge_under_gauge
+#print axioms H12OrbitAntidifference.charge_under_gauge
+#check H12OrbitAntidifference.equal_boundary_preserves_charge
+#print axioms H12OrbitAntidifference.equal_boundary_preserves_charge
+#check H12OrbitAntidifference.anchored_primitive_unique
+#print axioms H12OrbitAntidifference.anchored_primitive_unique
+#check H12OrbitAntidifference.prefix_zero_tail
+#print axioms H12OrbitAntidifference.prefix_zero_tail
+#check H12OrbitAntidifference.weighted_charge
+#print axioms H12OrbitAntidifference.weighted_charge
+#check H12OrbitAntidifference.nonzero_charge_no_closed_primitive
+#print axioms H12OrbitAntidifference.nonzero_charge_no_closed_primitive

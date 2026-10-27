@@ -1,0 +1,61 @@
+/- Exact multiplicative normalization recovery. Analytic multiplication-norm
+identities are NOT asserted here; when used they remain explicit hypotheses. -/
+module
+public import Mathlib.Tactic.Group
+@[expose] public section
+namespace H12.CoprimeNormalization
+variable {G : Type*} [CommGroup G]
+
+theorem recover_from_coprime_powers (c u v : G)
+    (h3 : c^3=u) (h8 : c^8=v) : c=u^3/v := by
+  calc
+    c=(c^3)^3/c^8 := by group
+    _=u^3/v := by rw [h3,h8]
+
+theorem coprime_power_uniqueness (c d : G)
+    (h3 : c^3=d^3) (h8 : c^8=d^8) : c=d := by
+  calc
+    c=(d^3)^3/d^8 := recover_from_coprime_powers c (d^3) (d^8) h3 h8
+    _=d := by group
+
+theorem orders_three_eight_trivial (r : G)
+    (h3 : r^3=1) (h8 : r^8=1) : r=1 := by
+  simpa using recover_from_coprime_powers r 1 1 h3 h8
+
+theorem squared_difference_normalizer (c d : G)
+    (h3 : c^3=d^6) (h8 : c^8=d^16) : c=d^2 := by
+  calc
+    c=(d^6)^3/d^16 := recover_from_coprime_powers c (d^6) (d^16) h3 h8
+    _=d^2 := by group
+
+theorem norm_four_fixed_iff (r : G) : r^4=r ↔ r^3=1 := by
+  constructor
+  · intro h
+    calc
+      r^3=r^4/r := by group
+      _=1 := by rw [h]; group
+  · intro h
+    calc
+      r^4=r^3*r := by group
+      _=r := by rw [h]; group
+
+theorem norm_nine_fixed_iff (r : G) : r^9=r ↔ r^8=1 := by
+  constructor
+  · intro h
+    calc
+      r^8=r^9/r := by group
+      _=1 := by rw [h]; group
+  · intro h
+    calc
+      r^9=r^8*r := by group
+      _=r := by rw [h]; group
+
+theorem two_three_norms_fix_scalar (r : G)
+    (h2 : r^4=r) (h3 : r^9=r) : r=1 := by
+  exact orders_three_eight_trivial r
+    ((norm_four_fixed_iff r).mp h2) ((norm_nine_fixed_iff r).mp h3)
+
+theorem scalar_defect_recovery (r : G) :
+    (r^3)^3/(r^8)=r := by group
+
+end H12.CoprimeNormalization

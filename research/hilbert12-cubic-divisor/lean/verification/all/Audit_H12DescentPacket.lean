@@ -1,0 +1,44 @@
+import H12DescentPacket
+
+#check H12DescentPacket.all_common_residues
+#print axioms H12DescentPacket.all_common_residues
+#check H12DescentPacket.primitive_class_original_action
+#print axioms H12DescentPacket.primitive_class_original_action
+#check H12DescentPacket.primitive_orbit_length_three
+#print axioms H12DescentPacket.primitive_orbit_length_three
+#check H12DescentPacket.primitive_no_nonzero_fixed
+#print axioms H12DescentPacket.primitive_no_nonzero_fixed
+#check H12DescentPacket.primitive_tensor_norm
+#print axioms H12DescentPacket.primitive_tensor_norm
+#check H12DescentPacket.reciprocal_pairing_action
+#print axioms H12DescentPacket.reciprocal_pairing_action
+#check H12DescentPacket.weyl_product_phase
+#print axioms H12DescentPacket.weyl_product_phase
+#check H12DescentPacket.weyl_periodic_index
+#print axioms H12DescentPacket.weyl_periodic_index
+#check H12DescentPacket.weyl_periodic_labels
+#print axioms H12DescentPacket.weyl_periodic_labels
+#check H12DescentPacket.shear_lift_phase
+#print axioms H12DescentPacket.shear_lift_phase
+#check H12DescentPacket.shear_lift_order_seven
+#print axioms H12DescentPacket.shear_lift_order_seven
+#check H12DescentPacket.shear_lift_fixes_zero
+#print axioms H12DescentPacket.shear_lift_fixes_zero
+#check H12DescentPacket.original_third_step
+#print axioms H12DescentPacket.original_third_step
+#check H12DescentPacket.original_third_second
+#print axioms H12DescentPacket.original_third_second
+#check H12DescentPacket.packet_intertwiner_phase
+#print axioms H12DescentPacket.packet_intertwiner_phase
+#check H12DescentPacket.packet_three_lift_phase
+#print axioms H12DescentPacket.packet_three_lift_phase
+#check H12DescentPacket.packet_three_lift_index
+#print axioms H12DescentPacket.packet_three_lift_index
+#check H12DescentPacket.rotation_packet_phase
+#print axioms H12DescentPacket.rotation_packet_phase
+#check H12DescentPacket.commuting_packet_lifts
+#print axioms H12DescentPacket.commuting_packet_lifts
+#check H12DescentPacket.rotation_cubed_index
+#print axioms H12DescentPacket.rotation_cubed_index
+#check H12DescentPacket.opposite_pairing_is_not_trivial
+#print axioms H12DescentPacket.opposite_pairing_is_not_trivial

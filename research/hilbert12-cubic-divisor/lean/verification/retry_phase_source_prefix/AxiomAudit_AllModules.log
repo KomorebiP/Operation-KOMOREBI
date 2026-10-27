@@ -1,0 +1,38 @@
+-- Audit_H12PhaseRegulator
+H12.PhaseRegulator.integral_linear_second (f f1 f2 : ℝ → ℂ) (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x)
+  (hf1 : ∀ (x : ℝ), HasDerivAt f1 (f2 x) x) (hc : Continuous f2) (a b c : ℝ) :
+  ∫ (x : ℝ) in a..b, ↑(x - c) * f2 x = ↑(b - c) * f1 b - f b - (↑(a - c) * f1 a - f a)
+'H12.PhaseRegulator.integral_linear_second' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PhaseRegulator.regulator3_endpoint (f f1 f2 : ℝ → ℂ) (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x)
+  (hf1 : ∀ (x : ℝ), HasDerivAt f1 (f2 x) x) (hc : Continuous f2) :
+  H12.PhaseRegulator.regulator3 f2 = 3 * f (1 / 3) - 2 * f 0 - f 1
+'H12.PhaseRegulator.regulator3_endpoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PhaseRegulator.regulator3_exponential_endpoints (f f1 f2 : ℝ → ℂ) (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x)
+  (hf1 : ∀ (x : ℝ), HasDerivAt f1 (f2 x) x) (hc : Continuous f2) :
+  Complex.exp (H12.PhaseRegulator.regulator3 f2) * Complex.exp (f 0) ^ 2 * Complex.exp (f 1) =
+    Complex.exp (f (1 / 3)) ^ 3
+'H12.PhaseRegulator.regulator3_exponential_endpoints' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PhaseRegulator.regulator3_periodic_cube (f f1 f2 : ℝ → ℂ) (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x)
+  (hf1 : ∀ (x : ℝ), HasDerivAt f1 (f2 x) x) (hc : Continuous f2) (hp : Complex.exp (f 1) = Complex.exp (f 0)) :
+  Complex.exp (H12.PhaseRegulator.regulator3 f2) * Complex.exp (f 0) ^ 3 = Complex.exp (f (1 / 3)) ^ 3
+'H12.PhaseRegulator.regulator3_periodic_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PhaseRegulator.regulator3_zero_winding (f f1 f2 : ℝ → ℂ) (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x)
+  (hf1 : ∀ (x : ℝ), HasDerivAt f1 (f2 x) x) (hc : Continuous f2) (hp : f 1 = f 0) :
+  H12.PhaseRegulator.regulator3 f2 = 3 * (f (1 / 3) - f 0)
+'H12.PhaseRegulator.regulator3_zero_winding' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PhaseRegulator.same_second_derivative_same_normalized_cube (f f1 g g1 q : ℝ → ℂ)
+  (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x) (hf1 : ∀ (x : ℝ), HasDerivAt f1 (q x) x)
+  (hg : ∀ (x : ℝ), HasDerivAt g (g1 x) x) (hg1 : ∀ (x : ℝ), HasDerivAt g1 (q x) x) (hc : Continuous q)
+  (hpf : Complex.exp (f 1) = Complex.exp (f 0)) (hpg : Complex.exp (g 1) = Complex.exp (g 0))
+  (h0 : Complex.exp (f 0) = Complex.exp (g 0)) : Complex.exp (f (1 / 3)) ^ 3 = Complex.exp (g (1 / 3)) ^ 3
+'H12.PhaseRegulator.same_second_derivative_same_normalized_cube' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+H12.PhaseRegulator.same_regulator_same_normalized_cube (f f1 f2 g g1 g2 : ℝ → ℂ) (hf : ∀ (x : ℝ), HasDerivAt f (f1 x) x)
+  (hf1 : ∀ (x : ℝ), HasDerivAt f1 (f2 x) x) (hg : ∀ (x : ℝ), HasDerivAt g (g1 x) x)
+  (hg1 : ∀ (x : ℝ), HasDerivAt g1 (g2 x) x) (hcf : Continuous f2) (hcg : Continuous g2)
+  (hpf : Complex.exp (f 1) = Complex.exp (f 0)) (hpg : Complex.exp (g 1) = Complex.exp (g 0))
+  (h0 : Complex.exp (f 0) = Complex.exp (g 0))
+  (hr : Complex.exp (H12.PhaseRegulator.regulator3 f2) = Complex.exp (H12.PhaseRegulator.regulator3 g2)) :
+  Complex.exp (f (1 / 3)) ^ 3 = Complex.exp (g (1 / 3)) ^ 3
+'H12.PhaseRegulator.same_regulator_same_normalized_cube' depends on axioms: [propext, Classical.choice, Quot.sound]

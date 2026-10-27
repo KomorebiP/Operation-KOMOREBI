@@ -1,0 +1,60 @@
+H12UnitCoinvariants.ell_delta (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell (H12UnitCoinvariants.delta v) = -6 * v.z
+'H12UnitCoinvariants.ell_delta' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.ell_original (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell (H12UnitCoinvariants.original v) = H12UnitCoinvariants.ell v - 6 * v.z
+'H12UnitCoinvariants.ell_original' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.ell_add (v w : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell { x := v.x + w.x, y := v.y + w.y, z := v.z + w.z } =
+    H12UnitCoinvariants.ell v + H12UnitCoinvariants.ell w
+'H12UnitCoinvariants.ell_add' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.ell_sub (v w : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell (H12UnitCoinvariants.sub v w) = H12UnitCoinvariants.ell v - H12UnitCoinvariants.ell w
+'H12UnitCoinvariants.ell_sub' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.unit_delta (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.delta v = H12UnitCoinvariants.sub (H12UnitCoinvariants.original v) v
+'H12UnitCoinvariants.unit_delta' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.residual_reconstruction (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.delta (H12UnitCoinvariants.reconstruction v) =
+    { x := v.x - H12UnitCoinvariants.ell v, y := v.y, z := v.z }
+'H12UnitCoinvariants.residual_reconstruction' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.six_generator : H12UnitCoinvariants.delta { x := -3, y := 3, z := -1 } = { x := 6, y := 0, z := 0 }
+'H12UnitCoinvariants.six_generator' does not depend on any axioms
+H12UnitCoinvariants.exact_preimage (v : H12UnitCoinvariants.V) (k : Int) (h : H12UnitCoinvariants.ell v = 6 * k) :
+  H12UnitCoinvariants.delta (H12UnitCoinvariants.preimage v k) = v
+'H12UnitCoinvariants.exact_preimage' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.image_iff_multiple_six (v : H12UnitCoinvariants.V) :
+  (∃ w, H12UnitCoinvariants.delta w = v) ↔ ∃ k, H12UnitCoinvariants.ell v = 6 * k
+'H12UnitCoinvariants.image_iff_multiple_six' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.quotient_difference (v w : H12UnitCoinvariants.V) :
+  (∃ q, H12UnitCoinvariants.delta q = H12UnitCoinvariants.sub v w) ↔
+    ∃ k, H12UnitCoinvariants.ell v - H12UnitCoinvariants.ell w = 6 * k
+'H12UnitCoinvariants.quotient_difference' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.quotient_surjective (k : Int) : H12UnitCoinvariants.ell { x := k, y := 0, z := 0 } = k
+'H12UnitCoinvariants.quotient_surjective' depends on axioms: [propext]
+H12UnitCoinvariants.period_class : H12UnitCoinvariants.ell H12UnitCoinvariants.e2 = 3
+'H12UnitCoinvariants.period_class' does not depend on any axioms
+H12UnitCoinvariants.carry_class : H12UnitCoinvariants.ell H12UnitCoinvariants.carry = -2
+'H12UnitCoinvariants.carry_class' does not depend on any axioms
+H12UnitCoinvariants.tripled_carry :
+  H12UnitCoinvariants.delta H12UnitCoinvariants.e2 =
+    { x := 3 * H12UnitCoinvariants.carry.x, y := 3 * H12UnitCoinvariants.carry.y, z := 3 * H12UnitCoinvariants.carry.z }
+'H12UnitCoinvariants.tripled_carry' does not depend on any axioms
+H12UnitCoinvariants.carry_nonzero : ¬∃ v, H12UnitCoinvariants.delta v = H12UnitCoinvariants.carry
+'H12UnitCoinvariants.carry_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12UnitCoinvariants.doubled_carry_nonzero : ¬∃ v, H12UnitCoinvariants.delta v = { x := 0, y := 10, z := 2 }
+'H12UnitCoinvariants.doubled_carry_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12UnitCoinvariants.delta_scaling (r : Int) (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.delta { x := r * v.x, y := r * v.y, z := r * v.z } =
+    { x := r * (H12UnitCoinvariants.delta v).x, y := r * (H12UnitCoinvariants.delta v).y,
+      z := r * (H12UnitCoinvariants.delta v).z }
+'H12UnitCoinvariants.delta_scaling' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12UnitCoinvariants.period_restricted_indices (k : Fin 6) : 3 * ↑k % 6 = 0 ↔ ↑k = 0 ∨ ↑k = 2 ∨ ↑k = 4
+'H12UnitCoinvariants.period_restricted_indices' does not depend on any axioms
+H12UnitCoinvariants.based_character_cubed (k : Int) : 3 * (2 * k) % 6 = 0
+'H12UnitCoinvariants.based_character_cubed' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.based_character_image (k : Fin 6) : 2 * ↑k % 6 = 0 ∨ 2 * ↑k % 6 = 2 ∨ 2 * ↑k % 6 = 4
+'H12UnitCoinvariants.based_character_image' does not depend on any axioms
+H12UnitCoinvariants.all_invariant_sixth_characters (a b c : Fin 6) :
+  H12UnitCoinvariants.compatible ↑a ↑b ↑c ↔ ↑b = 5 * ↑a % 6 ∧ ↑c = 3 * ↑a % 6
+'H12UnitCoinvariants.all_invariant_sixth_characters' does not depend on any axioms

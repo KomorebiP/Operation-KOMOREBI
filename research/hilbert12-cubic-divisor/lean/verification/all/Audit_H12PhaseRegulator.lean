@@ -1,0 +1,16 @@
+import H12PhaseRegulator
+
+#check H12.PhaseRegulator.integral_linear_second
+#print axioms H12.PhaseRegulator.integral_linear_second
+#check H12.PhaseRegulator.regulator3_endpoint
+#print axioms H12.PhaseRegulator.regulator3_endpoint
+#check H12.PhaseRegulator.regulator3_exponential_endpoints
+#print axioms H12.PhaseRegulator.regulator3_exponential_endpoints
+#check H12.PhaseRegulator.regulator3_periodic_cube
+#print axioms H12.PhaseRegulator.regulator3_periodic_cube
+#check H12.PhaseRegulator.regulator3_zero_winding
+#print axioms H12.PhaseRegulator.regulator3_zero_winding
+#check H12.PhaseRegulator.same_second_derivative_same_normalized_cube
+#print axioms H12.PhaseRegulator.same_second_derivative_same_normalized_cube
+#check H12.PhaseRegulator.same_regulator_same_normalized_cube
+#print axioms H12.PhaseRegulator.same_regulator_same_normalized_cube

@@ -1,0 +1,40 @@
+H12.SignedAlgebra.signed_product.{u_1} {G : Type u_1} [CommGroup G] (x y : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => x i * y i) k = H12.SignedAlgebra.signed x k * H12.SignedAlgebra.signed y k
+'H12.SignedAlgebra.signed_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.signed_transport.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => x (H12.SignedGeometry.rotate i)) k =
+    H12.SignedAlgebra.signed x (H12.SignedGeometry.rotate k)
+'H12.SignedAlgebra.signed_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.carried_transport.{u_1} {G : Type u_1} [CommGroup G] (x carry : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => x (H12.SignedGeometry.rotate i) * carry i) k =
+    H12.SignedAlgebra.signed x (H12.SignedGeometry.rotate k) * H12.SignedAlgebra.signed carry k
+'H12.SignedAlgebra.carried_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.signed_eighth_power.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (H12.SignedAlgebra.signed x) k = x k ^ 8
+'H12.SignedAlgebra.signed_eighth_power' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.signed_powers.{u_1} {G : Type u_1} [CommGroup G] (n : Fin 8 → ℤ) (r : G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => r ^ n i) k = r ^ H12.SignedGeometry.walsh n k
+'H12.SignedAlgebra.signed_powers' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.aggregate_reconstruction.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) :
+  H12.SignedAlgebra.signed x 0 * H12.SignedAlgebra.layerOne x * H12.SignedAlgebra.layerTwo x *
+      H12.SignedAlgebra.signed x 7 =
+    x 0 ^ 8
+'H12.SignedAlgebra.aggregate_reconstruction' depends on axioms: [propext, Quot.sound]
+H12.SignedAlgebra.conductor_ninth_power.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G)
+  (hnorm : H12.SignedAlgebra.signed x 0 = (x 0)⁻¹) :
+  H12.SignedAlgebra.layerOne x * H12.SignedAlgebra.layerTwo x * H12.SignedAlgebra.signed x 7 = x 0 ^ 9
+'H12.SignedAlgebra.conductor_ninth_power' depends on axioms: [propext, Quot.sound]
+H12.SignedAlgebra.gauge_characters.{u_1} {G : Type u_1} [CommGroup G] (r : G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (H12.SignedAlgebra.gauge r) k =
+    if ↑k = 0 then r ^ 4 else if ↑k = 1 ∨ ↑k = 2 ∨ ↑k = 4 then (r ^ 12)⁻¹ else 1
+'H12.SignedAlgebra.gauge_characters' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.gauge_norm_compatibility.{u_1} {G : Type u_1} [CommGroup G] (r : G) :
+  H12.SignedAlgebra.signed (H12.SignedAlgebra.gauge r) 0 = (H12.SignedAlgebra.gauge r 0)⁻¹
+'H12.SignedAlgebra.gauge_norm_compatibility' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.gauge_preserves_norm_constraint.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) (r : G)
+  (hnorm : H12.SignedAlgebra.signed x 0 = (x 0)⁻¹) :
+  H12.SignedAlgebra.signed (fun i => x i * H12.SignedAlgebra.gauge r i) 0 = (x 0 * H12.SignedAlgebra.gauge r 0)⁻¹
+'H12.SignedAlgebra.gauge_preserves_norm_constraint' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.first_layer_detects_gauge.{u_1} {G : Type u_1} [CommGroup G] (r : G) :
+  H12.SignedAlgebra.layerOne (H12.SignedAlgebra.gauge r) = (r ^ 36)⁻¹
+'H12.SignedAlgebra.first_layer_detects_gauge' depends on axioms: [propext, Classical.choice, Quot.sound]

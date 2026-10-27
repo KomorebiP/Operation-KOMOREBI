@@ -1,0 +1,44 @@
+import H12UnitCoinvariants
+
+#check H12UnitCoinvariants.ell_delta
+#print axioms H12UnitCoinvariants.ell_delta
+#check H12UnitCoinvariants.ell_original
+#print axioms H12UnitCoinvariants.ell_original
+#check H12UnitCoinvariants.ell_add
+#print axioms H12UnitCoinvariants.ell_add
+#check H12UnitCoinvariants.ell_sub
+#print axioms H12UnitCoinvariants.ell_sub
+#check H12UnitCoinvariants.unit_delta
+#print axioms H12UnitCoinvariants.unit_delta
+#check H12UnitCoinvariants.residual_reconstruction
+#print axioms H12UnitCoinvariants.residual_reconstruction
+#check H12UnitCoinvariants.six_generator
+#print axioms H12UnitCoinvariants.six_generator
+#check H12UnitCoinvariants.exact_preimage
+#print axioms H12UnitCoinvariants.exact_preimage
+#check H12UnitCoinvariants.image_iff_multiple_six
+#print axioms H12UnitCoinvariants.image_iff_multiple_six
+#check H12UnitCoinvariants.quotient_difference
+#print axioms H12UnitCoinvariants.quotient_difference
+#check H12UnitCoinvariants.quotient_surjective
+#print axioms H12UnitCoinvariants.quotient_surjective
+#check H12UnitCoinvariants.period_class
+#print axioms H12UnitCoinvariants.period_class
+#check H12UnitCoinvariants.carry_class
+#print axioms H12UnitCoinvariants.carry_class
+#check H12UnitCoinvariants.tripled_carry
+#print axioms H12UnitCoinvariants.tripled_carry
+#check H12UnitCoinvariants.carry_nonzero
+#print axioms H12UnitCoinvariants.carry_nonzero
+#check H12UnitCoinvariants.doubled_carry_nonzero
+#print axioms H12UnitCoinvariants.doubled_carry_nonzero
+#check H12UnitCoinvariants.delta_scaling
+#print axioms H12UnitCoinvariants.delta_scaling
+#check H12UnitCoinvariants.period_restricted_indices
+#print axioms H12UnitCoinvariants.period_restricted_indices
+#check H12UnitCoinvariants.based_character_cubed
+#print axioms H12UnitCoinvariants.based_character_cubed
+#check H12UnitCoinvariants.based_character_image
+#print axioms H12UnitCoinvariants.based_character_image
+#check H12UnitCoinvariants.all_invariant_sixth_characters
+#print axioms H12UnitCoinvariants.all_invariant_sixth_characters

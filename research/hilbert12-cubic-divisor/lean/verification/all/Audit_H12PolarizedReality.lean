@@ -1,0 +1,14 @@
+import H12PolarizedReality
+
+#check H12.PolarizedReality.norm_eq_real_part
+#print axioms H12.PolarizedReality.norm_eq_real_part
+#check H12.PolarizedReality.positive_real_equal_of_norm
+#print axioms H12.PolarizedReality.positive_real_equal_of_norm
+#check H12.PolarizedReality.normalized_reality_implies_cube
+#print axioms H12.PolarizedReality.normalized_reality_implies_cube
+#check H12.PolarizedReality.normalized_reality_with_branch
+#print axioms H12.PolarizedReality.normalized_reality_with_branch
+#check H12.PolarizedReality.conjugate_product_real
+#print axioms H12.PolarizedReality.conjugate_product_real
+#check H12.PolarizedReality.positive_polarized_product
+#print axioms H12.PolarizedReality.positive_polarized_product

@@ -1,0 +1,102 @@
+import Std
+
+/-! Exact integer coefficients of the analytic divisor calculation.
+No elliptic gamma, divisor theory, or gamma-arithmetic equality is postulated.
+The map `principal5` acts on the lattice basis (tau,s,1/5).
+-/
+namespace H12PrincipalDivisor
+
+abbrev V := Int × Int × Int
+
+def principal5 (v : V) : V :=
+  (2*v.1-v.2.1, 4*v.1-3*v.2.2, 5*v.1-2*v.2.2)
+
+def pivot (b c : Int) : Int := -((2*b-3*c)/7)
+def digit (b c : Int) : Int := 7*pivot b c+2*b-3*c
+
+def liftPoint (a b c : Int) : V :=
+  (pivot b c, 2*pivot b c-a, 20*pivot b c+5*b-8*c)
+
+def step (a : Int) : Int := if 0 < a then 1 else 0
+def weight (c : Int) : Int := if c % 5 = 0 then 4 else -1
+def cone (a b : Int) : Int := step a-step b
+
+def wall (a b j : Int) : Int := step j-step (2*j-a)-step a+step b
+def correctionOrder (a b c : Int) : Int := weight c * wall a b (pivot b c)
+
+theorem principal5_cube (v : V) :
+    principal5 (principal5 (principal5 v)) = (7*v.1,7*v.2.1,7*v.2.2) := by
+  rcases v with ⟨a,b,c⟩
+  simp [principal5]
+  omega
+
+theorem lift_identity (a b c : Int) :
+    principal5 (liftPoint a b c) = (a,b-8*digit b c,c-5*digit b c) := by
+  simp [principal5,liftPoint,digit]
+  omega
+
+theorem digit_is_remainder (b c : Int) : digit b c = (2*b-3*c)%7 := by
+  simp [digit,pivot]
+  omega
+
+theorem digit_range (b c : Int) : 0 ≤ digit b c ∧ digit b c < 7 := by
+  rw [digit_is_remainder]
+  omega
+
+theorem unique_lift_digit (b c k j : Int) (hk0 : 0 ≤ k) (hk7 : k < 7)
+    (hj : 7*j = -2*b+3*c+k) : k = digit b c ∧ j = pivot b c := by
+  have hr := digit_range b c
+  unfold digit at *
+  omega
+
+theorem lift_preserves_fifth_weight (a b c : Int) :
+    weight (liftPoint a b c).2.2 = weight c := by
+  have h : (20*pivot b c+5*b-8*c)%5=0 ↔ c%5=0 := by omega
+  simp only [liftPoint,weight]
+  rw [h]
+
+theorem wall_bounds (a b j : Int) : -1 ≤ wall a b j ∧ wall a b j ≤ 1 := by
+  unfold wall step
+  split <;> split <;> split <;> split <;> omega
+
+theorem wall_values (a b j : Int) :
+    wall a b j = -1 ∨ wall a b j = 0 ∨ wall a b j = 1 := by
+  have h := wall_bounds a b j
+  omega
+
+theorem order_difference (a b c : Int) :
+    correctionOrder a b c =
+      weight (liftPoint a b c).2.2 *
+        cone (liftPoint a b c).1 (liftPoint a b c).2.1
+      - weight c*cone a b := by
+  rw [lift_preserves_fifth_weight]
+  simp [correctionOrder,liftPoint,cone,wall]
+  grind
+
+theorem order_values (a b c : Int) :
+    correctionOrder a b c = -4 ∨ correctionOrder a b c = -1 ∨
+    correctionOrder a b c = 0 ∨ correctionOrder a b c = 1 ∨
+    correctionOrder a b c = 4 := by
+  have h := wall_values a b (pivot b c)
+  unfold correctionOrder weight
+  split <;> omega
+
+theorem tau_ray_order (n : Int) (hn : 0 < n) : correctionOrder (2*n) (4*n) (5*n) = 4 := by
+  have hp : pivot (4*n) (5*n) = n := by unfold pivot; omega
+  have hw : weight (5*n) = 4 := by unfold weight; have h : (5*n)%5=0 := by omega; simp [h]
+  simp [correctionOrder,wall,hp,hw,step,hn]
+  omega
+
+theorem s_ray_order (n : Int) (hn : n ≠ 0) : correctionOrder (-n) 0 0 = -4 := by
+  simp [correctionOrder,wall,pivot,weight,step]
+  split <;> split <;> omega
+
+theorem negative_integer_order (n : Int) (hn : 0 < n) : correctionOrder 0 (15*n) (10*n) = 4 := by
+  have hp : pivot (15*n) (10*n) = 0 := by unfold pivot; omega
+  have hw : weight (10*n) = 4 := by unfold weight; have h : (10*n)%5=0 := by omega; simp [h]
+  simp [correctionOrder,wall,hp,hw,step]
+  omega
+
+theorem zero_order : correctionOrder 0 0 0 = 0 := by decide
+
+end H12PrincipalDivisor

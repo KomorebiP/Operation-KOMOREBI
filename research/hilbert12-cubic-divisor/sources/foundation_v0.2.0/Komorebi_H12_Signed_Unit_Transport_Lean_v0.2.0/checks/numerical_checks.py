@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Actual cubic gamma packet and signed carries. Floating regression only."""
+from pathlib import Path
+from datetime import datetime,timezone
+from itertools import product
+from functools import lru_cache
+import argparse,importlib.util,json,time,sys,platform
+import mpmath as mp
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('inherited_evaluator',ROOT/'prior/gamma_evaluator.py')
+prior=importlib.util.module_from_spec(spec);spec.loader.exec_module(prior)
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--digits',type=int,choices=[40,70],required=True);arg=ap.parse_args()
+ mp.mp.dps=arg.digits+25;started=datetime.now(timezone.utc).isoformat();tic=time.perf_counter()
+ e=prior.Evaluator(arg.digits);V=list(product((0,1),repeat=3));T=lambda v:(v[2],v[0],v[1]);chi=lambda u,v:(-1)**sum(a*b for a,b in zip(u,v))
+ w=lambda v:mp.mpf(1)/3+(-v[0]*e.t+v[1]*e.s+v[2])/2
+ checks=[];neg=[];errors=[]
+ def near(name,x,y):
+  err=abs(x-y)/max(mp.mpf(1),abs(x),abs(y))
+  if err>mp.mpf(10)**(-arg.digits+8):raise AssertionError((name,mp.nstr(err,20)))
+  checks.append(name);errors.append(err)
+ def different(name,x,y):
+  err=abs(x-y)/max(mp.mpf(1),abs(x),abs(y))
+  if err<mp.mpf('1e-7'):raise AssertionError(('negative control failed',name))
+  neg.append({'name':name,'normalized_difference':mp.nstr(err,15)})
+ @lru_cache(None)
+ def qt(z):return e.theta(z,e.t) # independent direct nome, not covariance shortcut
+ @lru_cache(None)
+ def qs(z):return e.theta(z,e.s)
+ def walsh(values,u):return mp.fprod(values[v]**chi(u,v) for v in V)
+ x={v:e.F(w(v)) for v in V};y={v:e.F(e.rho*w(v)) for v in V}
+ X={u:walsh(x,u) for u in V};Y={u:walsh(y,u) for u in V}
+ B={};At={};qsbase={v:qs(w(v)) for v in V};qtbase={v:qt(w(v)) for v in V}
+ for v in V:
+  At[v]=5+4*v[0]-2*v[1]+7*v[2]
+  near('theta chart permutation '+str(v),qsbase[v],qtbase[T(v)])
+  B[v]=mp.fprod(qt(w(T(T(v)))+j*e.s) for j in range(At[v]))
+  near('actual gamma unit carry '+str(v),y[v],x[T(v)]*B[v])
+ for u in V:
+  near('signed chart transport '+str(u),walsh(qsbase,u),walsh(qtbase,T(u)))
+  Bu=walsh(B,u)
+  near('signed gamma carry '+str(u),Y[u],X[T(u)]*Bu)
+  if sum(u)>=2:
+   changed={v:mp.mpf(2)**At[v]*B[v] for v in V}
+   near('high carry normalization cancellation '+str(u),walsh(changed,u),Bu)
+ near('conductor full norm',X[(0,0,0)],1/x[(0,0,0)])
+ P1=mp.fprod(X[u] for u in V if sum(u)==1);P2=mp.fprod(X[u] for u in V if sum(u)==2);P3=X[(1,1,1)]
+ near('three aggregate reconstruction',P1*P2*P3,x[(0,0,0)]**9)
+ # Gauge test uses an arbitrary phase and verifies insufficiency of selected snapshot data.
+ lam=mp.exp(mp.mpc(0,'0.17'));xx={v:x[v]*lam**(3*sum(v)-4) for v in V}
+ for u in V:
+  if sum(u)>=2:near('undetected phase gauge '+str(u),walsh(xx,u),X[u])
+ near('gauge preserves conductor norm',walsh(xx,(0,0,0)),1/xx[(0,0,0)])
+ near('gauge first-weight detection',mp.fprod(walsh(xx,u) for u in V if sum(u)==1),P1*lam**(-36))
+ different('high channels and norm do not fix target phase',xx[(0,0,0)],x[(0,0,0)])
+ different('unit carry may not be dropped',Y[(1,1,1)],X[(1,1,1)])
+ changed={v:mp.mpf(2)**At[v]*B[v] for v in V}
+ different('first-weight eta gain is nonzero',walsh(changed,(0,0,1)),walsh(B,(0,0,1)))
+ # Walsh jets tested using analytic logs strictly inside the convergence strip.
+ # They prove a numerical cancellation pattern, not the comparison to any arithmetic target.
+ convergence=[]
+ for m in [4,6,8,10]:
+  h=e.rho**m;logvals={v:e.logF(h*w(v)) for v in V}
+  row={'m':m,'errors':{}}
+  for u in V:
+   if sum(u)>=2:
+    logg=mp.fsum(chi(u,v)*logvals[v] for v in V)
+    row['errors'][''.join(map(str,u))]=mp.nstr(abs(mp.expm1(logg)),18)
+  convergence.append(row)
+ h=e.rho**16;logvals={v:e.logF(h*w(v)) for v in V}
+ logtop=mp.fsum(chi((1,1,1),v)*logvals[v] for v in V)
+ leading=-6*((-e.t/2)*(e.s/2)*(mp.mpf(1)/2))*e.c3()
+ rel=abs(logtop/h**3/leading-1)
+ if rel>mp.mpf('1e-6'):raise AssertionError(('cubic Walsh leading asymptotic',mp.nstr(rel,15)))
+ checks.append('cubic Walsh leading asymptotic within stated 1e-6 tolerance')
+ out={'started_at':started,'runtime_seconds':time.perf_counter()-tic,'requested_digits':arg.digits,'working_digits':mp.mp.dps,'python':sys.version.split()[0],'mpmath':mp.__version__,'platform':platform.platform(),'equality_count':len(checks)-1,'equalities':checks[:-1],'asymptotic_check':{'relative_error':mp.nstr(rel,15),'tolerance':'1e-6'},'negative_controls':neg,'max_normalized_error':mp.nstr(max(errors),20),'max_gamma_cutoff':max(e.cutoffs),'max_gamma_truncation_bound':mp.nstr(max(e.tails),20),'signed_values':{''.join(map(str,u)):mp.nstr(X[u],30) for u in V},'convergence':convergence,'scope':'Direct theta products and inherited gamma series with continuation. Floating arithmetic, not intervals; no U_alg is evaluated.'}
+ (ROOT/f'evidence/numerical_{arg.digits}.json').write_text(json.dumps(out,indent=2)+'\n')
+ print(f'PASS {arg.digits} digits: {len(checks)-1} equalities, one asymptotic check, {len(neg)} negative controls; max error {out["max_normalized_error"]}; {out["runtime_seconds"]:.2f}s')
+if __name__=='__main__':main()

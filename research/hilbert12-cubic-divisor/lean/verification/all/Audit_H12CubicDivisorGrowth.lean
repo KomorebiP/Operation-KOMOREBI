@@ -1,0 +1,24 @@
+import H12CubicDivisorGrowth
+
+#check H12CubicDivisorGrowth.positive_pivot
+#print axioms H12CubicDivisorGrowth.positive_pivot
+#check H12CubicDivisorGrowth.chamber_wall
+#print axioms H12CubicDivisorGrowth.chamber_wall
+#check H12CubicDivisorGrowth.chamber_order
+#print axioms H12CubicDivisorGrowth.chamber_order
+#check H12CubicDivisorGrowth.zero_family_order
+#print axioms H12CubicDivisorGrowth.zero_family_order
+#check H12CubicDivisorGrowth.pole_family_order
+#print axioms H12CubicDivisorGrowth.pole_family_order
+#check H12CubicDivisorGrowth.zero_family_injective
+#print axioms H12CubicDivisorGrowth.zero_family_injective
+#check H12CubicDivisorGrowth.pole_family_injective
+#print axioms H12CubicDivisorGrowth.pole_family_injective
+#check H12CubicDivisorGrowth.families_disjoint
+#print axioms H12CubicDivisorGrowth.families_disjoint
+#check H12CubicDivisorGrowth.zero_box_bounds
+#print axioms H12CubicDivisorGrowth.zero_box_bounds
+#check H12CubicDivisorGrowth.pole_box_bounds
+#print axioms H12CubicDivisorGrowth.pole_box_bounds
+#check H12CubicDivisorGrowth.origin_not_in_families
+#print axioms H12CubicDivisorGrowth.origin_not_in_families

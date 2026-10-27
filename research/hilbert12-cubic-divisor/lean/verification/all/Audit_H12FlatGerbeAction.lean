@@ -1,0 +1,20 @@
+import H12FlatGerbeAction
+
+#check H12FlatGerbeAction.projection_intertwines
+#print axioms H12FlatGerbeAction.projection_intertwines
+#check H12FlatGerbeAction.projection_surjective_witness
+#print axioms H12FlatGerbeAction.projection_surjective_witness
+#check H12FlatGerbeAction.opposite_inverse_flat
+#print axioms H12FlatGerbeAction.opposite_inverse_flat
+#check H12FlatGerbeAction.flat_inverse_opposite
+#print axioms H12FlatGerbeAction.flat_inverse_opposite
+#check H12FlatGerbeAction.fixed_kernel_relation
+#print axioms H12FlatGerbeAction.fixed_kernel_relation
+#check H12FlatGerbeAction.fixed_groups_agree
+#print axioms H12FlatGerbeAction.fixed_groups_agree
+#check H12FlatGerbeAction.opposite_parameter
+#print axioms H12FlatGerbeAction.opposite_parameter
+#check H12FlatGerbeAction.all_two_minors
+#print axioms H12FlatGerbeAction.all_two_minors
+#check H12FlatGerbeAction.pull_matches_table
+#print axioms H12FlatGerbeAction.pull_matches_table

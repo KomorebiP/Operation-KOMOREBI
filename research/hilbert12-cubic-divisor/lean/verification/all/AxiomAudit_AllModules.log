@@ -1,0 +1,1743 @@
+-- Audit_H12AnchorObstruction
+H12AnchorObstruction.sixth_root_phase_table (j : Fin 6) :
+  H12AnchorObstruction.sub (H12AnchorObstruction.sixthRoot j) (H12AnchorObstruction.sixthRoot ⟨(6 - ↑j) % 6, ⋯⟩) =
+    H12AnchorObstruction.scale (H12AnchorObstruction.phaseValue j) H12AnchorObstruction.D
+'H12AnchorObstruction.sixth_root_phase_table' depends on axioms: [propext, Quot.sound]
+H12AnchorObstruction.target_and_anchor : H12AnchorObstruction.phaseValue 4 = 1 ∧ H12AnchorObstruction.phaseValue 0 = 0
+'H12AnchorObstruction.target_and_anchor' depends on axioms: [propext]
+H12AnchorObstruction.inverse_point_phase : H12AnchorObstruction.phaseValue 2 = -H12AnchorObstruction.phaseValue 4
+'H12AnchorObstruction.inverse_point_phase' depends on axioms: [propext]
+H12AnchorObstruction.fixed_point_carry (j : Int) :
+  (-(-3 * j) + 3 * j, -4 * (-3 * j) + 3 * j + 15 * -j, -(-3 * j) + 3 * -j) = (6 * j, 0, 0)
+'H12AnchorObstruction.fixed_point_carry' depends on axioms: [propext, Quot.sound]
+H12AnchorObstruction.conductor_label : (-3 * 4 % 6, 3 * 4 % 6, -4 % 6) = (0, 0, 2)
+'H12AnchorObstruction.conductor_label' does not depend on any axioms
+H12AnchorObstruction.based_exponent_cancellation (unitPhase charPhase : Int) :
+  unitPhase + 2 * charPhase - unitPhase = 2 * charPhase
+'H12AnchorObstruction.based_exponent_cancellation' depends on axioms: [propext, Quot.sound]
+H12AnchorObstruction.based_cube_exponent (unitPhase charPhase : Int) :
+  3 * (unitPhase + 2 * charPhase - unitPhase) = 6 * charPhase
+'H12AnchorObstruction.based_cube_exponent' depends on axioms: [propext, Quot.sound]
+H12AnchorObstruction.fixed_point_gauge_value (old atMx atX : Int) (h : atMx = atX) : old + atMx - atX = old
+'H12AnchorObstruction.fixed_point_gauge_value' depends on axioms: [propext, Quot.sound]
+H12AnchorObstruction.constant_orbit_sum (a : Int) (n : Nat) : H12AnchorObstruction.orbitSum (fun x => a) n = ↑n * a
+'H12AnchorObstruction.constant_orbit_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12ConjugationOrder
+H12.ConjugationOrder.bar_involution (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.bar (H12.ConjugationOrder.bar x) = x
+'H12.ConjugationOrder.bar_involution' depends on axioms: [propext]
+H12.ConjugationOrder.sigma_order_three (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.sigma (H12.ConjugationOrder.sigma (H12.ConjugationOrder.sigma x)) = x
+'H12.ConjugationOrder.sigma_order_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.semilinear_relation (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.bar (H12.ConjugationOrder.sigma (H12.ConjugationOrder.bar x)) =
+    H12.ConjugationOrder.sigma (H12.ConjugationOrder.sigma x)
+'H12.ConjugationOrder.semilinear_relation' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.joined_iff_diagonal (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.joined x ↔ H12.ConjugationOrder.ev2 x = H12.ConjugationOrder.ev4 x
+'H12.ConjugationOrder.joined_iff_diagonal' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.conductor_iff_residue_zero (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.conductor x ↔ H12.ConjugationOrder.ev2 x = 0 ∧ H12.ConjugationOrder.ev4 x = 0
+'H12.ConjugationOrder.conductor_iff_residue_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.residue_surjective (u v : Int) :
+  ∃ x, H12.ConjugationOrder.ev2 x = u % 7 ∧ H12.ConjugationOrder.ev4 x = v % 7
+'H12.ConjugationOrder.residue_surjective' depends on axioms: [propext, Quot.sound]
+H12.ConjugationOrder.defect_kernel (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.defect x = 0 ↔ H12.ConjugationOrder.joined x
+'H12.ConjugationOrder.defect_kernel' does not depend on any axioms
+H12.ConjugationOrder.defect_surjective (n : Int) : ∃ x, H12.ConjugationOrder.defect x = n % 7
+'H12.ConjugationOrder.defect_surjective' does not depend on any axioms
+H12.ConjugationOrder.defect_conjugation (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.defect (H12.ConjugationOrder.bar x) = -H12.ConjugationOrder.defect x % 7
+'H12.ConjugationOrder.defect_conjugation' depends on axioms: [propext, Quot.sound]
+H12.ConjugationOrder.defect_rotation (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.defect (H12.ConjugationOrder.sigma x) = H12.ConjugationOrder.defect x
+'H12.ConjugationOrder.defect_rotation' does not depend on any axioms
+H12.ConjugationOrder.conductor_two_tests (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.joined x ∧ H12.ConjugationOrder.joined (H12.ConjugationOrder.mul x H12.ConjugationOrder.omega) ↔
+    H12.ConjugationOrder.conductor x
+'H12.ConjugationOrder.conductor_two_tests' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.conductor_mul_into_joined (x y : H12.ConjugationOrder.R6) (hx : H12.ConjugationOrder.conductor x) :
+  H12.ConjugationOrder.joined (H12.ConjugationOrder.mul x y)
+'H12.ConjugationOrder.conductor_mul_into_joined' depends on axioms: [propext]
+H12.ConjugationOrder.conductor_universal (x : H12.ConjugationOrder.R6) :
+  (∀ (y : H12.ConjugationOrder.R6), H12.ConjugationOrder.joined (H12.ConjugationOrder.mul x y)) ↔
+    H12.ConjugationOrder.conductor x
+'H12.ConjugationOrder.conductor_universal' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.joined_mul (x y : H12.ConjugationOrder.R6) (hx : H12.ConjugationOrder.joined x)
+  (hy : H12.ConjugationOrder.joined y) : H12.ConjugationOrder.joined (H12.ConjugationOrder.mul x y)
+'H12.ConjugationOrder.joined_mul' depends on axioms: [propext]
+H12.ConjugationOrder.conductor_iff_r_multiple (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.conductor x ↔ ∃ y, H12.ConjugationOrder.mul H12.ConjugationOrder.rgen y = x
+'H12.ConjugationOrder.conductor_iff_r_multiple' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationOrder.jacobi_sum_one :
+  H12.ConjugationOrder.add H12.ConjugationOrder.jacobi H12.ConjugationOrder.jacobiBar = H12.ConjugationOrder.one
+'H12.ConjugationOrder.jacobi_sum_one' does not depend on any axioms
+H12.ConjugationOrder.jacobi_product_seven :
+  H12.ConjugationOrder.mul H12.ConjugationOrder.jacobi H12.ConjugationOrder.jacobiBar = H12.ConjugationOrder.seven
+'H12.ConjugationOrder.jacobi_product_seven' does not depend on any axioms
+H12.ConjugationOrder.jacobi_not_joined : ¬H12.ConjugationOrder.joined H12.ConjugationOrder.jacobi
+'H12.ConjugationOrder.jacobi_not_joined' does not depend on any axioms
+H12.ConjugationOrder.jacobi_residues :
+  H12.ConjugationOrder.ev2 H12.ConjugationOrder.jacobi = 1 ∧
+    H12.ConjugationOrder.ev4 H12.ConjugationOrder.jacobi = 0 ∧
+      H12.ConjugationOrder.ev2 H12.ConjugationOrder.jacobiBar = 0 ∧
+        H12.ConjugationOrder.ev4 H12.ConjugationOrder.jacobiBar = 1
+'H12.ConjugationOrder.jacobi_residues' does not depend on any axioms
+H12.ConjugationOrder.jacobi_conjugation :
+  H12.ConjugationOrder.bar H12.ConjugationOrder.jacobi = H12.ConjugationOrder.jacobiBar
+'H12.ConjugationOrder.jacobi_conjugation' does not depend on any axioms
+H12.ConjugationOrder.unit_product_one :
+  H12.ConjugationOrder.mul (H12.ConjugationOrder.mul H12.ConjugationOrder.epsilon0 H12.ConjugationOrder.epsilon1)
+      H12.ConjugationOrder.epsilon2 =
+    H12.ConjugationOrder.one
+'H12.ConjugationOrder.unit_product_one' does not depend on any axioms
+H12.ConjugationOrder.unit_rotation :
+  H12.ConjugationOrder.sigma H12.ConjugationOrder.epsilon0 = H12.ConjugationOrder.epsilon1 ∧
+    H12.ConjugationOrder.sigma H12.ConjugationOrder.epsilon1 = H12.ConjugationOrder.epsilon2 ∧
+      H12.ConjugationOrder.sigma H12.ConjugationOrder.epsilon2 = H12.ConjugationOrder.epsilon0
+'H12.ConjugationOrder.unit_rotation' does not depend on any axioms
+H12.ConjugationOrder.unit_conjugation :
+  H12.ConjugationOrder.bar H12.ConjugationOrder.epsilon0 = H12.ConjugationOrder.epsilon2 ∧
+    H12.ConjugationOrder.bar H12.ConjugationOrder.epsilon1 = H12.ConjugationOrder.epsilon1
+'H12.ConjugationOrder.unit_conjugation' does not depend on any axioms
+H12.ConjugationOrder.unit_defect_action (x : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.defect (H12.ConjugationOrder.mul H12.ConjugationOrder.epsilon0 x) =
+      2 * H12.ConjugationOrder.defect x % 7 ∧
+    H12.ConjugationOrder.defect (H12.ConjugationOrder.mul H12.ConjugationOrder.epsilon1 x) =
+        2 * H12.ConjugationOrder.defect x % 7 ∧
+      H12.ConjugationOrder.defect (H12.ConjugationOrder.mul H12.ConjugationOrder.epsilon2 x) =
+        2 * H12.ConjugationOrder.defect x % 7
+'H12.ConjugationOrder.unit_defect_action' depends on axioms: [propext]
+H12.ConjugationOrder.defect_add (x y : H12.ConjugationOrder.R6) :
+  H12.ConjugationOrder.defect (H12.ConjugationOrder.add x y) =
+    (H12.ConjugationOrder.defect x + H12.ConjugationOrder.defect y) % 7
+'H12.ConjugationOrder.defect_add' depends on axioms: [propext]
+
+-- Audit_H12ConjugationRelations
+H12.ConjugationRelations.sigma_order_three (x : H12.ConjugationRelations.V) :
+  H12.ConjugationRelations.sigma (H12.ConjugationRelations.sigma (H12.ConjugationRelations.sigma x)) = x
+'H12.ConjugationRelations.sigma_order_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationRelations.kappa_involution (x : H12.ConjugationRelations.V) :
+  H12.ConjugationRelations.kappa (H12.ConjugationRelations.kappa x) = x
+'H12.ConjugationRelations.kappa_involution' depends on axioms: [propext]
+H12.ConjugationRelations.dihedral_relation (x : H12.ConjugationRelations.V) :
+  H12.ConjugationRelations.kappa (H12.ConjugationRelations.sigma (H12.ConjugationRelations.kappa x)) =
+    H12.ConjugationRelations.sigma (H12.ConjugationRelations.sigma x)
+'H12.ConjugationRelations.dihedral_relation' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationRelations.residue_rotation (x : H12.ConjugationRelations.V) :
+  H12.ConjugationRelations.residue (H12.ConjugationRelations.sigma x) = H12.ConjugationRelations.residue x
+'H12.ConjugationRelations.residue_rotation' depends on axioms: [propext, Quot.sound]
+H12.ConjugationRelations.rotation_kernel_exact (x : H12.ConjugationRelations.V) :
+  H12.ConjugationRelations.residue x = 0 ↔ ∃ y, H12.ConjugationRelations.rotationRelation y = x
+'H12.ConjugationRelations.rotation_kernel_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ConjugationRelations.residue_surjective (n : Int) : ∃ x, H12.ConjugationRelations.residue x = n % 3
+'H12.ConjugationRelations.residue_surjective' depends on axioms: [propext]
+H12.ConjugationRelations.full_relation_lattice (x : H12.ConjugationRelations.V) :
+  H12.ConjugationRelations.add (H12.ConjugationRelations.rotationRelation (-x.fst, 0))
+      (H12.ConjugationRelations.reflectionRelation (-(x.fst + x.snd), 0)) =
+    x
+'H12.ConjugationRelations.full_relation_lattice' depends on axioms: [propext, Quot.sound]
+H12.ConjugationRelations.primitive_relation :
+  H12.ConjugationRelations.add (H12.ConjugationRelations.rotationRelation (-1, 0))
+      (H12.ConjugationRelations.reflectionRelation (-1, 0)) =
+    (1, 0)
+'H12.ConjugationRelations.primitive_relation' does not depend on any axioms
+
+-- Audit_H12ContractingRigidity
+H12.ContractingRigidity.invariant_all_powers (d : ℂ → ℂ) (rho : ℂ) (hi : ∀ (z : ℂ), d (rho * z) = d z) (n : ℕ) (z : ℂ) :
+  d (rho ^ n * z) = d z
+'H12.ContractingRigidity.invariant_all_powers' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ContractingRigidity.continuous_contraction_invariant_constant (d : ℂ → ℂ) (rho : ℂ) (hr : ‖rho‖ < 1)
+  (hc : ContinuousAt d 0) (hi : ∀ (z : ℂ), d (rho * z) = d z) (z : ℂ) : d z = d 0
+'H12.ContractingRigidity.continuous_contraction_invariant_constant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+H12.ContractingRigidity.normalized_contraction_phase_trivial (d : ℂ → ℂ) (rho : ℂ) (hr : ‖rho‖ < 1)
+  (hc : ContinuousAt d 0) (hi : ∀ (z : ℂ), d (rho * z) = d z) (h0 : d 0 = 1) (z : ℂ) : d z = 1
+'H12.ContractingRigidity.normalized_contraction_phase_trivial' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+
+-- Audit_H12CoprimeNormalization
+H12.CoprimeNormalization.recover_from_coprime_powers.{u_1} {G : Type u_1} [CommGroup G] (c u v : G) (h3 : c ^ 3 = u)
+  (h8 : c ^ 8 = v) : c = u ^ 3 / v
+'H12.CoprimeNormalization.recover_from_coprime_powers' depends on axioms: [propext]
+H12.CoprimeNormalization.coprime_power_uniqueness.{u_1} {G : Type u_1} [CommGroup G] (c d : G) (h3 : c ^ 3 = d ^ 3)
+  (h8 : c ^ 8 = d ^ 8) : c = d
+'H12.CoprimeNormalization.coprime_power_uniqueness' depends on axioms: [propext]
+H12.CoprimeNormalization.orders_three_eight_trivial.{u_1} {G : Type u_1} [CommGroup G] (r : G) (h3 : r ^ 3 = 1)
+  (h8 : r ^ 8 = 1) : r = 1
+'H12.CoprimeNormalization.orders_three_eight_trivial' depends on axioms: [propext]
+H12.CoprimeNormalization.squared_difference_normalizer.{u_1} {G : Type u_1} [CommGroup G] (c d : G) (h3 : c ^ 3 = d ^ 6)
+  (h8 : c ^ 8 = d ^ 16) : c = d ^ 2
+'H12.CoprimeNormalization.squared_difference_normalizer' depends on axioms: [propext]
+H12.CoprimeNormalization.norm_four_fixed_iff.{u_1} {G : Type u_1} [CommGroup G] (r : G) : r ^ 4 = r ↔ r ^ 3 = 1
+'H12.CoprimeNormalization.norm_four_fixed_iff' depends on axioms: [propext]
+H12.CoprimeNormalization.norm_nine_fixed_iff.{u_1} {G : Type u_1} [CommGroup G] (r : G) : r ^ 9 = r ↔ r ^ 8 = 1
+'H12.CoprimeNormalization.norm_nine_fixed_iff' depends on axioms: [propext]
+H12.CoprimeNormalization.two_three_norms_fix_scalar.{u_1} {G : Type u_1} [CommGroup G] (r : G) (h2 : r ^ 4 = r)
+  (h3 : r ^ 9 = r) : r = 1
+'H12.CoprimeNormalization.two_three_norms_fix_scalar' depends on axioms: [propext]
+H12.CoprimeNormalization.scalar_defect_recovery.{u_1} {G : Type u_1} [CommGroup G] (r : G) : (r ^ 3) ^ 3 / r ^ 8 = r
+'H12.CoprimeNormalization.scalar_defect_recovery' depends on axioms: [propext]
+
+-- Audit_H12CubicBranch
+H12.CubicBranch.cube_root_norm_one (z : ℂ) (hz : z ^ 3 = 1) : ‖z‖ = 1
+'H12.CubicBranch.cube_root_norm_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CubicBranch.nontrivial_cube_root_distance (z : ℂ) (hz : z ^ 3 = 1) (hne : z ≠ 1) : ‖z - 1‖ ^ 2 = 3
+'H12.CubicBranch.nontrivial_cube_root_distance' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CubicBranch.cube_root_near_one (z : ℂ) (hz : z ^ 3 = 1) (hnear : ‖z - 1‖ < 1) : z = 1
+'H12.CubicBranch.cube_root_near_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CubicBranch.cube_comparison_with_enclosure (u v : ℂ) (hv : v ≠ 0) (hc : u ^ 3 = v ^ 3) (hb : ‖u / v - 1‖ < 1) :
+  u = v
+'H12.CubicBranch.cube_comparison_with_enclosure' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12DescentPacket
+H12DescentPacket.all_common_residues (a b c : Fin 3) : H12DescentPacket.isFixed3 ↑↑a ↑↑b ↑↑c ↔ ↑a = 0 ∧ ↑b = 0
+'H12DescentPacket.all_common_residues' does not depend on any axioms
+H12DescentPacket.primitive_class_original_action :
+  8 * 1 - 4 * 2 + 15 * 4 - 4 * 1 = 7 * 8 ∧ 1 - 4 * 2 = 7 * -1 ∧ 2 * 1 - 2 + 4 * 4 - 4 * 4 = 0
+'H12DescentPacket.primitive_class_original_action' does not depend on any axioms
+H12DescentPacket.primitive_orbit_length_three (r : Fin 7) : 4 * (4 * (4 * ↑r)) % 7 = ↑r
+'H12DescentPacket.primitive_orbit_length_three' does not depend on any axioms
+H12DescentPacket.primitive_no_nonzero_fixed (r : Fin 7) : 4 * ↑r % 7 = ↑r ↔ ↑r = 0
+'H12DescentPacket.primitive_no_nonzero_fixed' does not depend on any axioms
+H12DescentPacket.primitive_tensor_norm (r : Fin 7) : (↑r + 4 * ↑r + 2 * ↑r) % 7 = 0
+'H12DescentPacket.primitive_tensor_norm' does not depend on any axioms
+H12DescentPacket.reciprocal_pairing_action (k l : Int) : 3 * (2 * k) * (4 * l) - 3 * k * l = 7 * (3 * k * l)
+'H12DescentPacket.reciprocal_pairing_action' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.weyl_product_phase (r a b c d j : Int) :
+  H12DescentPacket.phase r c d j + H12DescentPacket.phase r a b (j + d) - H12DescentPacket.phase r (a + c) (b + d) j -
+      4 * r * (a * d - b * c) =
+    -7 * r * a * d
+'H12DescentPacket.weyl_product_phase' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.weyl_periodic_index (r a b j k : Int) :
+  H12DescentPacket.phase r a b (j + 7 * k) - H12DescentPacket.phase r a b j = 7 * (r * a * k)
+'H12DescentPacket.weyl_periodic_index' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.weyl_periodic_labels (r a b j k l : Int) :
+  H12DescentPacket.phase r (a + 7 * k) (b + 7 * l) j - H12DescentPacket.phase r a b j =
+    7 * r * (k * j + 4 * a * l + 4 * k * b + 28 * k * l)
+'H12DescentPacket.weyl_periodic_labels' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.shear_lift_phase (r a b j : Int) :
+  -H12DescentPacket.quad r j + H12DescentPacket.phase r a b j + H12DescentPacket.quad r (j + b) -
+      H12DescentPacket.phase r (a + 4 * b) b j =
+    -14 * r * b ^ 2
+'H12DescentPacket.shear_lift_phase' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.shear_lift_order_seven (r j : Int) : 7 * H12DescentPacket.quad r j = 7 * (2 * r * j ^ 2)
+'H12DescentPacket.shear_lift_order_seven' does not depend on any axioms
+H12DescentPacket.shear_lift_fixes_zero (r : Int) : H12DescentPacket.quad r 0 = 0
+'H12DescentPacket.shear_lift_fixes_zero' depends on axioms: [propext]
+H12DescentPacket.original_third_step (a b : Int) :
+  H12DescentPacket.originalA
+      (H12DescentPacket.originalA (H12DescentPacket.originalA a b) (H12DescentPacket.originalB b))
+      (H12DescentPacket.originalB (H12DescentPacket.originalB b)) =
+    8 * a + 12 * b
+'H12DescentPacket.original_third_step' depends on axioms: [propext, Quot.sound]
+H12DescentPacket.original_third_second (b : Int) :
+  H12DescentPacket.originalB (H12DescentPacket.originalB (H12DescentPacket.originalB b)) = 8 * b
+'H12DescentPacket.original_third_second' depends on axioms: [propext, Quot.sound]
+H12DescentPacket.packet_intertwiner_phase (r a b j : Int) :
+  H12DescentPacket.phase (4 * r) a b j + H12DescentPacket.quad r (2 * (j + b)) - H12DescentPacket.quad r (2 * j) -
+      H12DescentPacket.phase r (2 * a + b) (2 * b) (2 * j) =
+    7 * (2 * r * b * j)
+'H12DescentPacket.packet_intertwiner_phase' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.packet_three_lift_phase (r j : Int) :
+  H12DescentPacket.quad (2 * r) (2 * j) + H12DescentPacket.quad (4 * r) (4 * j) + H12DescentPacket.quad r (8 * j) -
+      3 * H12DescentPacket.quad r j =
+    7 * (38 * r * j ^ 2)
+'H12DescentPacket.packet_three_lift_phase' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.packet_three_lift_index (j : Int) : 8 * j - j = 7 * j
+'H12DescentPacket.packet_three_lift_index' depends on axioms: [propext, Quot.sound]
+H12DescentPacket.rotation_packet_phase (r a b j : Int) :
+  H12DescentPacket.phase (2 * r) a b j - H12DescentPacket.phase r (4 * a) (4 * b) (4 * j) =
+    -7 * (2 * r * a * j + 8 * r * a * b)
+'H12DescentPacket.rotation_packet_phase' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.commuting_packet_lifts (r j : Int) :
+  H12DescentPacket.quad r (8 * j) - H12DescentPacket.quad (2 * r) (2 * j) = 7 * (16 * r * j ^ 2)
+'H12DescentPacket.commuting_packet_lifts' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DescentPacket.rotation_cubed_index (j : Int) : 64 * j - j = 7 * (9 * j)
+'H12DescentPacket.rotation_cubed_index' depends on axioms: [propext, Quot.sound]
+H12DescentPacket.opposite_pairing_is_not_trivial : 3 % 7 ≠ 0
+'H12DescentPacket.opposite_pairing_is_not_trivial' does not depend on any axioms
+
+-- Audit_H12DualFourier
+H12DualFourier.dual_pairing (k v : H12DualFourier.V) :
+  H12DualFourier.dot (H12DualFourier.dual k) v = H12DualFourier.dot k (H12DualFourier.original v)
+'H12DualFourier.dual_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DualFourier.inverse_left (k : H12DualFourier.V) : H12DualFourier.dualInv (H12DualFourier.dual k) = k
+'H12DualFourier.inverse_left' depends on axioms: [propext, Quot.sound]
+H12DualFourier.inverse_right (k : H12DualFourier.V) : H12DualFourier.dual (H12DualFourier.dualInv k) = k
+'H12DualFourier.inverse_right' depends on axioms: [propext, Quot.sound]
+H12DualFourier.dual_injective (a b : H12DualFourier.V) (h : H12DualFourier.dual a = H12DualFourier.dual b) : a = b
+'H12DualFourier.dual_injective' depends on axioms: [propext, Quot.sound]
+H12DualFourier.conductor_residue (k : H12DualFourier.V) : (H12DualFourier.dual k).z % 3 = k.z % 3
+'H12DualFourier.conductor_residue' depends on axioms: [propext, Quot.sound]
+H12DualFourier.all_iterates_conductor (n : Nat) (k : H12DualFourier.V) : (H12DualFourier.iterate n k).z % 3 = k.z % 3
+'H12DualFourier.all_iterates_conductor' depends on axioms: [propext, Quot.sound]
+H12DualFourier.dual_cubic (k : H12DualFourier.V) :
+  have k1 := H12DualFourier.dual k;
+  have k2 := H12DualFourier.dual k1;
+  have k3 := H12DualFourier.dual k2;
+  { x := k3.x - 6 * k2.x + 12 * k1.x - k.x, y := k3.y - 6 * k2.y + 12 * k1.y - k.y,
+      z := k3.z - 6 * k2.z + 12 * k1.z - k.z } =
+    { x := 0, y := 0, z := 0 }
+'H12DualFourier.dual_cubic' depends on axioms: [propext, Quot.sound]
+H12DualFourier.gauge_winding_preserves_conductor (m n : H12DualFourier.V) :
+  (m.z + n.z - (H12DualFourier.dual n).z) % 3 = m.z % 3
+'H12DualFourier.gauge_winding_preserves_conductor' depends on axioms: [propext, Quot.sound]
+H12DualFourier.actual_frequency_chain :
+  H12DualFourier.dual { x := 0, y := 0, z := 1 } = { x := -1, y := 0, z := 4 } ∧
+    H12DualFourier.dual { x := -1, y := 0, z := 4 } = { x := -4, y := -1, z := 16 } ∧
+      H12DualFourier.dual { x := -4, y := -1, z := 16 } = { x := -12, y := -6, z := 49 }
+'H12DualFourier.actual_frequency_chain' does not depend on any axioms
+
+-- Audit_H12ExplicitDescent
+H12ExplicitDescent.alpha_add (v w : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.add v w) = H12ExplicitDescent.alpha v + H12ExplicitDescent.alpha w
+'H12ExplicitDescent.alpha_add' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_add (v w : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.add v w) = H12ExplicitDescent.beta v + H12ExplicitDescent.beta w
+'H12ExplicitDescent.beta_add' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.alpha_twisted (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.twisted v) =
+    H12ExplicitDescent.alpha v + 4 * H12ExplicitDescent.beta v + 7 * H12ExplicitDescent.aCarry v
+'H12ExplicitDescent.alpha_twisted' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_twisted (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.twisted v) = H12ExplicitDescent.beta v + 7 * H12ExplicitDescent.bCarry v
+'H12ExplicitDescent.beta_twisted' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.alpha_original (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.original v) =
+    2 * H12ExplicitDescent.alpha v + H12ExplicitDescent.beta v + 7 * (-v.x2 + v.y0)
+'H12ExplicitDescent.alpha_original' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_original (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.original v) =
+    2 * H12ExplicitDescent.beta v + 7 * (-v.x0 + 3 * v.x2 + 2 * v.y0 - 7 * v.y2)
+'H12ExplicitDescent.beta_original' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.alpha_rotation (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.rotate v) =
+    4 * H12ExplicitDescent.alpha v + 7 * (-v.x0 + v.x2 + 2 * v.y0 + v.y2)
+'H12ExplicitDescent.alpha_rotation' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_rotation (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.rotate v) =
+    4 * H12ExplicitDescent.beta v + 7 * (-v.x1 - 2 * v.x2 + 2 * v.y1 + v.y2)
+'H12ExplicitDescent.beta_rotation' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.quotient_section (a b : Int) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.liftPair a b) = a ∧
+    H12ExplicitDescent.beta (H12ExplicitDescent.liftPair a b) = b
+'H12ExplicitDescent.quotient_section' depends on axioms: [propext]
+H12ExplicitDescent.cocycle_identity (a b c d e f : Int) :
+  4 * H12ExplicitDescent.alt a b c d + 4 * H12ExplicitDescent.alt (a + c) (b + d) e f =
+    4 * H12ExplicitDescent.alt c d e f + 4 * H12ExplicitDescent.alt a b (c + e) (d + f)
+'H12ExplicitDescent.cocycle_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.alternating_swap (a b c d : Int) : H12ExplicitDescent.alt a b c d = -H12ExplicitDescent.alt c d a b
+'H12ExplicitDescent.alternating_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.normalized_zero (a b : Int) : H12ExplicitDescent.alt a b 0 0 = 0 ∧ H12ExplicitDescent.alt 0 0 a b = 0
+'H12ExplicitDescent.normalized_zero' depends on axioms: [propext]
+H12ExplicitDescent.commutator_exponent (a b c d : Int) :
+  4 * H12ExplicitDescent.alt a b c d - 4 * H12ExplicitDescent.alt c d a b =
+    H12ExplicitDescent.alt a b c d + 7 * H12ExplicitDescent.alt a b c d
+'H12ExplicitDescent.commutator_exponent' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.symplectic_shear (a b c d : Int) :
+  H12ExplicitDescent.alt (a + 4 * b) b (c + 4 * d) d = H12ExplicitDescent.alt a b c d
+'H12ExplicitDescent.symplectic_shear' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.original_multiplier (a b c d : Int) :
+  H12ExplicitDescent.alt (2 * a + b) (2 * b) (2 * c + d) (2 * d) = 4 * H12ExplicitDescent.alt a b c d
+'H12ExplicitDescent.original_multiplier' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.carry_defect (a b c d k l m n : Int) :
+  H12ExplicitDescent.alt (a + 4 * b + 7 * k) (b + 7 * l) (c + 4 * d + 7 * m) (d + 7 * n) -
+      H12ExplicitDescent.alt a b c d =
+    7 * (a * n + 4 * b * n + k * d - b * m - l * c - 4 * l * d + 7 * (k * n - l * m))
+'H12ExplicitDescent.carry_defect' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.real_cover_coboundary (az bz an bn am bm : Int) :
+  4 * H12ExplicitDescent.alt (az + an) (bz + bn) am bm - 4 * H12ExplicitDescent.alt az bz (an + am) (bn + bm) +
+      4 * H12ExplicitDescent.alt az bz an bn =
+    4 * H12ExplicitDescent.alt an bn am bm
+'H12ExplicitDescent.real_cover_coboundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.full_cover_residual (al bl az bz am bm : Int) :
+  4 * H12ExplicitDescent.alt al bl am bm - 4 * H12ExplicitDescent.alt az bz am bm =
+    4 * H12ExplicitDescent.alt (al - az) (bl - bz) am bm
+'H12ExplicitDescent.full_cover_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.hodge_coordinates : H12ExplicitDescent.hodgeCross = [(-5, 3), (-3, -8), (8, 5)]
+'H12ExplicitDescent.hodge_coordinates' depends on axioms: [propext]
+H12ExplicitDescent.hodge_class_residues :
+  ((-5 - 2) % 7 = 0 ∧ (3 - 3) % 7 = 0) ∧ ((-3 - 4) % 7 = 0 ∧ (-8 - 6) % 7 = 0) ∧ (8 - 8) % 7 = 0 ∧ (5 - 12) % 7 = 0
+'H12ExplicitDescent.hodge_class_residues' does not depend on any axioms
+
+-- Audit_H12FifthIsogeny
+H12.FifthIsogeny.numerator_at_zero.{u_1} {K : Type u_1} [Field K] (u : K) : H12.FifthIsogeny.num u 0 = u ^ 4
+'H12.FifthIsogeny.numerator_at_zero' depends on axioms: [propext, Quot.sound]
+H12.FifthIsogeny.numerator_at_kernel.{u_1} {K : Type u_1} [Field K] (u : K) : H12.FifthIsogeny.num u u = u ^ 6
+'H12.FifthIsogeny.numerator_at_kernel' depends on axioms: [propext, Quot.sound]
+H12.FifthIsogeny.denominator_nonzero.{u_1} {K : Type u_1} [Field K] (u x : K) (hx : x ≠ 0) (hxu : x - u ≠ 0) :
+  H12.FifthIsogeny.den u x ≠ 0
+'H12.FifthIsogeny.denominator_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthIsogeny.rational_quotient_formula.{u_1} {K : Type u_1} [Field K] (u x : K) (hx : x ≠ 0) (hxu : x - u ≠ 0) :
+  H12.FifthIsogeny.mapX u x = x + u * (u - 1) / x + u ^ 2 / x ^ 2 + u ^ 2 * (u + 1) / (x - u) + u ^ 4 / (x - u) ^ 2
+'H12.FifthIsogeny.rational_quotient_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthIsogeny.cleared_curve_identity.{u_1} {K : Type u_1} [Field K] (u x : K) :
+  H12.FifthIsogeny.jacNum u x ^ 2 * H12.FifthIsogeny.source u x =
+    4 * H12.FifthIsogeny.num u x ^ 3 * H12.FifthIsogeny.den u x +
+          H12.FifthIsogeny.b2 u * H12.FifthIsogeny.num u x ^ 2 * H12.FifthIsogeny.den u x ^ 2 +
+        (2 * H12.FifthIsogeny.b4 u + 4 * H12.FifthIsogeny.a4 u) * H12.FifthIsogeny.num u x *
+          H12.FifthIsogeny.den u x ^ 3 +
+      (u ^ 2 + 4 * H12.FifthIsogeny.a6 u) * H12.FifthIsogeny.den u x ^ 4
+'H12.FifthIsogeny.cleared_curve_identity' depends on axioms: [propext, Quot.sound]
+H12.FifthIsogeny.maps_curve.{u_1} {K : Type u_1} [Field K] (u x z : K) (hd : H12.FifthIsogeny.den u x ≠ 0)
+  (hz : z ^ 2 = H12.FifthIsogeny.source u x) :
+  H12.FifthIsogeny.mapZ u x z ^ 2 = H12.FifthIsogeny.target u (H12.FifthIsogeny.mapX u x)
+'H12.FifthIsogeny.maps_curve' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthIsogeny.quotient_commutes_with_negation.{u_1} {K : Type u_1} [Field K] (u x z : K) :
+  H12.FifthIsogeny.mapZ u x (H12.FifthIsogeny.negateZ z) = H12.FifthIsogeny.negateZ (H12.FifthIsogeny.mapZ u x z)
+'H12.FifthIsogeny.quotient_commutes_with_negation' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthIsogeny.differential_quotient_identity.{u_1} {K : Type u_1} [Field K] (u x : K) :
+  H12.FifthIsogeny.num u x =
+    (5 * x - 2 * u) * H12.FifthIsogeny.den u x + (x ^ 2 + (x - u) ^ 2) * H12.FifthIsogeny.source u x -
+      (2 * x - u) * x * (x - u) * (6 * x ^ 2 + H12.FifthIsogeny.b2 u * x + H12.FifthIsogeny.b4 u)
+'H12.FifthIsogeny.differential_quotient_identity' depends on axioms: [propext, Quot.sound]
+
+-- Audit_H12FifthModuli
+H12.FifthModuli.source_discriminant.{u_1} {K : Type u_1} [Field K] (u : K) :
+  H12.FifthModuli.c4 u ^ 3 - H12.FifthModuli.c6 u ^ 2 = 1728 * H12.FifthModuli.disc u
+'H12.FifthModuli.source_discriminant' depends on axioms: [propext, Quot.sound]
+H12.FifthModuli.quotient_discriminant.{u_1} {K : Type u_1} [Field K] (u : K) :
+  H12.FifthModuli.c4quot u ^ 3 - H12.FifthModuli.c6quot u ^ 2 = 1728 * H12.FifthModuli.discQuot u
+'H12.FifthModuli.quotient_discriminant' depends on axioms: [propext, Quot.sound]
+H12.FifthModuli.kernel_parameter.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.FifthModuli.h u = (u ^ 2 - 11 * u - 1) / u
+'H12.FifthModuli.kernel_parameter' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.kernel_parameter_marking_invariant.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.FifthModuli.h (-1 / u) = H12.FifthModuli.h u
+'H12.FifthModuli.kernel_parameter_marking_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.c4_kernel_form.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.FifthModuli.c4 u = u ^ 2 * (H12.FifthModuli.h u ^ 2 + 10 * H12.FifthModuli.h u + 5)
+'H12.FifthModuli.c4_kernel_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.c4_quotient_kernel_form.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.FifthModuli.c4quot u = u ^ 2 * (H12.FifthModuli.h u ^ 2 + 250 * H12.FifthModuli.h u + 3125)
+'H12.FifthModuli.c4_quotient_kernel_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.discriminant_kernel_form.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.FifthModuli.disc u = u ^ 6 * H12.FifthModuli.h u
+'H12.FifthModuli.discriminant_kernel_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.quotient_discriminant_kernel_form.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.FifthModuli.discQuot u = u ^ 6 * H12.FifthModuli.h u ^ 5
+'H12.FifthModuli.quotient_discriminant_kernel_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.source_j_formula.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) (hh : H12.FifthModuli.h u ≠ 0) :
+  H12.FifthModuli.c4 u ^ 3 / H12.FifthModuli.disc u = H12.FifthModuli.jSource (H12.FifthModuli.h u)
+'H12.FifthModuli.source_j_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.quotient_j_formula.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) (hh : H12.FifthModuli.h u ≠ 0) :
+  H12.FifthModuli.c4quot u ^ 3 / H12.FifthModuli.discQuot u = H12.FifthModuli.jQuotient (H12.FifthModuli.h u)
+'H12.FifthModuli.quotient_j_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.discriminant_ratio.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) (hh : H12.FifthModuli.h u ≠ 0) :
+  H12.FifthModuli.discQuot u / H12.FifthModuli.disc u = H12.FifthModuli.h u ^ 4
+'H12.FifthModuli.discriminant_ratio' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.fricke_involution.{u_1} {K : Type u_1} [Field K] [CharZero K] (v : K) (hv : v ≠ 0) :
+  H12.FifthModuli.fricke (H12.FifthModuli.fricke v) = v
+'H12.FifthModuli.fricke_involution' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.fricke_exchanges_source.{u_1} {K : Type u_1} [Field K] [CharZero K] (v : K) (hv : v ≠ 0) :
+  H12.FifthModuli.jSource (H12.FifthModuli.fricke v) = H12.FifthModuli.jQuotient v
+'H12.FifthModuli.fricke_exchanges_source' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthModuli.fricke_exchanges_quotient.{u_1} {K : Type u_1} [Field K] [CharZero K] (v : K) (hv : v ≠ 0) :
+  H12.FifthModuli.jQuotient (H12.FifthModuli.fricke v) = H12.FifthModuli.jSource v
+'H12.FifthModuli.fricke_exchanges_quotient' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12FifthTorsionAlgebra
+H12.FifthTorsionAlgebra.division_polynomial_identity.{u_1} {K : Type u_1} [Field K] [CharZero K] (g2 g3 x : K) :
+  x * H12.FifthTorsionAlgebra.curvePoly g2 g3 x - H12.FifthTorsionAlgebra.phiTwo g2 g3 x =
+    H12.FifthTorsionAlgebra.psiThree g2 g3 x
+'H12.FifthTorsionAlgebra.division_polynomial_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthTorsionAlgebra.mutual_doubling_first.{u_1} {K : Type u_1} [Field K] [CharZero K] (g2 g3 a b : K)
+  (h : b * H12.FifthTorsionAlgebra.curvePoly g2 g3 a = H12.FifthTorsionAlgebra.phiTwo g2 g3 a) :
+  H12.FifthTorsionAlgebra.psiThree g2 g3 a = H12.FifthTorsionAlgebra.curvePoly g2 g3 a * (a - b)
+'H12.FifthTorsionAlgebra.mutual_doubling_first' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthTorsionAlgebra.mutual_doubling_second.{u_1} {K : Type u_1} [Field K] [CharZero K] (g2 g3 a b : K)
+  (h : a * H12.FifthTorsionAlgebra.curvePoly g2 g3 b = H12.FifthTorsionAlgebra.phiTwo g2 g3 b) :
+  H12.FifthTorsionAlgebra.psiThree g2 g3 b = -(H12.FifthTorsionAlgebra.curvePoly g2 g3 b * (a - b))
+'H12.FifthTorsionAlgebra.mutual_doubling_second' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthTorsionAlgebra.tangent_ordinate_product.{u_1} {K : Type u_1} [Field K] [CharZero K] (a b ya yb l m : K)
+  (hl : l ^ 2 = 4 * (2 * a + b)) (hm : m ^ 2 = 4 * (a + 2 * b)) (hs : l * (a - b) = ya + yb)
+  (hd : m * (a - b) = ya - yb) : ya * yb = (a - b) ^ 3
+'H12.FifthTorsionAlgebra.tangent_ordinate_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.FifthTorsionAlgebra.curve_product_from_ordinates.{u_1} {K : Type u_1} [Field K] (g2 g3 a b ya yb : K)
+  (ha : ya ^ 2 = H12.FifthTorsionAlgebra.curvePoly g2 g3 a) (hb : yb ^ 2 = H12.FifthTorsionAlgebra.curvePoly g2 g3 b)
+  (hy : ya * yb = (a - b) ^ 3) :
+  H12.FifthTorsionAlgebra.curvePoly g2 g3 a * H12.FifthTorsionAlgebra.curvePoly g2 g3 b = (a - b) ^ 6
+'H12.FifthTorsionAlgebra.curve_product_from_ordinates' depends on axioms: [propext, Quot.sound]
+H12.FifthTorsionAlgebra.third_division_product.{u_1} {K : Type u_1} [Field K] (g2 g3 a b : K)
+  (hprod : H12.FifthTorsionAlgebra.curvePoly g2 g3 a * H12.FifthTorsionAlgebra.curvePoly g2 g3 b = (a - b) ^ 6)
+  (ha : H12.FifthTorsionAlgebra.psiThree g2 g3 a = H12.FifthTorsionAlgebra.curvePoly g2 g3 a * (a - b))
+  (hb : H12.FifthTorsionAlgebra.psiThree g2 g3 b = -(H12.FifthTorsionAlgebra.curvePoly g2 g3 b * (a - b))) :
+  H12.FifthTorsionAlgebra.psiThree g2 g3 a * H12.FifthTorsionAlgebra.psiThree g2 g3 b = -(a - b) ^ 8
+'H12.FifthTorsionAlgebra.third_division_product' depends on axioms: [propext, Quot.sound]
+H12.FifthTorsionAlgebra.cubed_normalizer_equation.{u_1} {K : Type u_1} [Field K] (c d p : K) (hc : c ^ 3 = p)
+  (hp : p = d ^ 6) : c ^ 3 = d ^ 6
+'H12.FifthTorsionAlgebra.cubed_normalizer_equation' depends on axioms: [propext, Quot.sound]
+H12.FifthTorsionAlgebra.eighth_normalizer_equation.{u_1} {K : Type u_1} [Field K] (c d p : K) (hc : c ^ 8 = p ^ 2)
+  (hp : p = -d ^ 8) : c ^ 8 = d ^ 16
+'H12.FifthTorsionAlgebra.eighth_normalizer_equation' depends on axioms: [propext, Quot.sound]
+
+-- Audit_H12FlatGerbeAction
+H12FlatGerbeAction.projection_intertwines (v : H12FlatGerbeAction.TwoForm) :
+  H12FlatGerbeAction.project (H12FlatGerbeAction.pull v) = H12FlatGerbeAction.flat (H12FlatGerbeAction.project v)
+'H12FlatGerbeAction.projection_intertwines' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.projection_surjective_witness (v : H12FlatGerbeAction.V) :
+  H12FlatGerbeAction.project (H12FlatGerbeAction.lift v) = v
+'H12FlatGerbeAction.projection_surjective_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.opposite_inverse_flat (v : H12FlatGerbeAction.V) :
+  H12FlatGerbeAction.opposite (H12FlatGerbeAction.flat v) = v
+'H12FlatGerbeAction.opposite_inverse_flat' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.flat_inverse_opposite (v : H12FlatGerbeAction.V) :
+  H12FlatGerbeAction.flat (H12FlatGerbeAction.opposite v) = v
+'H12FlatGerbeAction.flat_inverse_opposite' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.fixed_kernel_relation (v : H12FlatGerbeAction.V) :
+  H12FlatGerbeAction.original (H12FlatGerbeAction.sub (H12FlatGerbeAction.flat v) v) =
+    H12FlatGerbeAction.rotate (H12FlatGerbeAction.sub v (H12FlatGerbeAction.opposite v))
+'H12FlatGerbeAction.fixed_kernel_relation' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.fixed_groups_agree (v : H12FlatGerbeAction.V) :
+  H12FlatGerbeAction.flat v = v ↔ H12FlatGerbeAction.opposite v = v
+'H12FlatGerbeAction.fixed_groups_agree' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.opposite_parameter (a b : Int) :
+  H12FlatGerbeAction.sub (H12FlatGerbeAction.opposite (H12FlatGerbeAction.parameter a b))
+      (H12FlatGerbeAction.parameter a b) =
+    { c0 := 0 * a + 0 * b, c1 := 12 * a + 6 * b, c2 := 0 * a + 0 * b, c3 := 0 * a + 0 * b, c4 := -6 * a + 18 * b,
+      c5 := 0 * a + 0 * b }
+'H12FlatGerbeAction.opposite_parameter' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FlatGerbeAction.all_two_minors (i j : Fin 15) :
+  (H12FlatGerbeAction.table.getD ↑i []).getD (↑j) 0 = H12FlatGerbeAction.minor ↑i ↑j
+'H12FlatGerbeAction.all_two_minors' depends on axioms: [propext]
+H12FlatGerbeAction.pull_matches_table (i j : Fin 15) :
+  (H12FlatGerbeAction.coordinates (H12FlatGerbeAction.pull (H12FlatGerbeAction.basis ↑j))).getD (↑i) 0 =
+    (H12FlatGerbeAction.table.getD ↑i []).getD (↑j) 0
+'H12FlatGerbeAction.pull_matches_table' depends on axioms: [propext]
+
+-- Audit_H12GerbeDescent
+H12.GerbeDescent.normal_fixed (A B : Int) :
+  H12.GerbeDescent.pull (H12.GerbeDescent.normal A B) = H12.GerbeDescent.normal A B
+'H12.GerbeDescent.normal_fixed' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.GerbeDescent.certificate_1 (v : H12.GerbeDescent.Form) :
+  270 * (v.c1 - (0 * v.c0 + 0 * v.c3)) =
+    -240 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                            12 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                          2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                        30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                      24 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    45 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  12 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                -4 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              -60 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -21 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          18 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        2 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      8 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_1' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_2 (v : H12.GerbeDescent.Form) :
+  270 * (v.c2 - (0 * v.c0 + 0 * v.c3)) =
+    15 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -210 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                              12 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                            1 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                          15 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                        -6 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      -12 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    12 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  54 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                4 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              60 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -12 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          -15 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        -2 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      -2 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_2' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_4 (v : H12.GerbeDescent.Form) :
+  90 * (v.c4 - (0 * v.c0 + 0 * v.c3)) =
+    30 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -90 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                                  -60 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                                -92 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                              -32 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                            -13 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                          45 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                        16 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      -32 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    -32 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  19 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                10 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              150 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            28 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          -38 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        -5 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      -6 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_4' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_5 (v : H12.GerbeDescent.Form) :
+  90 * (v.c5 - (0 * v.c0 + -1 * v.c3)) =
+    60 * ((H12.GerbeDescent.pull v).c1 - v.c1) + 225 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                              -90 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                            8 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                          -46 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                        23 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      -28 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    -76 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  -64 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                7 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              120 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            92 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          -28 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        4 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      -7 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_5' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_6 (v : H12.GerbeDescent.Form) :
+  18 * (v.c6 - (0 * v.c0 + 0 * v.c3)) =
+    -30 * ((H12.GerbeDescent.pull v).c1 - v.c1) + 60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                                45 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                              24 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                            -8 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                          -30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                        -12 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      21 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    24 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  -12 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                -8 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              -120 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -24 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          30 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        4 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      4 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_6' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_7 (v : H12.GerbeDescent.Form) :
+  270 * (v.c7 - (0 * v.c0 + 0 * v.c3)) =
+    -30 * ((H12.GerbeDescent.pull v).c1 - v.c1) + 60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                                45 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                              -24 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                            -2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                          -210 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                        12 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      69 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    21 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  -18 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                -8 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              -120 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -21 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          30 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        4 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      4 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_7' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_8 (v : H12.GerbeDescent.Form) :
+  90 * (v.c8 - (0 * v.c0 + 0 * v.c3)) =
+    -45 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -150 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                                -16 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                              -28 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                            5 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                          75 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                        -76 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      -4 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    32 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  38 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                6 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              60 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -64 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          -19 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        -18 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      4 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_8' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_9 (v : H12.GerbeDescent.Form) :
+  90 * (v.c9 - (-1 * v.c0 + -1 * v.c3)) =
+    -90 * ((H12.GerbeDescent.pull v).c0 - v.c0) + 105 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                                  -120 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                                -8 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                              28 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                            -4 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                          60 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                        31 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      -74 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    -92 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  -32 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                7 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              120 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            76 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          -32 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        4 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      -15 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_9' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_10 (v : H12.GerbeDescent.Form) :
+  90 * (v.c10 - (0 * v.c0 + 1 * v.c3)) =
+    60 * ((H12.GerbeDescent.pull v).c1 - v.c1) + 90 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                            23 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                          14 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                        -7 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                      32 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                    -16 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  -4 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                -23 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              -105 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -28 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          32 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        4 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      8 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_10' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_11 (v : H12.GerbeDescent.Form) :
+  90 * (v.c11 - (0 * v.c0 + 0 * v.c3)) =
+    60 * ((H12.GerbeDescent.pull v).c2 - v.c2) + 15 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                              4 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                            16 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                          2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                        -30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                      -8 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                    7 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                  31 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                -14 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+              4 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+            -60 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+          -23 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+        16 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+      -2 * ((H12.GerbeDescent.pull v).c17 - v.c17)
+'H12.GerbeDescent.certificate_11' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_12 (v : H12.GerbeDescent.Form) :
+  18 * (v.c12 - (0 * v.c0 + 0 * v.c3)) =
+    -15 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                            -6 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                          -12 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                        2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                      30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                    6 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                  -12 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                15 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+              -4 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+            30 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+          -9 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        -1 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      2 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_12' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_13 (v : H12.GerbeDescent.Form) :
+  270 * (v.c13 - (0 * v.c0 + 0 * v.c3)) =
+    -15 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                            6 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                          12 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                        2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                      30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                    -6 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                  12 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                15 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+              2 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+            -150 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+          39 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        -1 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      2 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_13' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_14 (v : H12.GerbeDescent.Form) :
+  45 * (v.c14 - (1 * v.c0 + 1 * v.c3)) =
+    45 * ((H12.GerbeDescent.pull v).c0 - v.c0) + -60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                                30 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                              -4 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                            -16 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                          -2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                        30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                      8 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                    -7 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                  14 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                14 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+              -4 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+            60 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+          -22 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+        -16 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+      2 * ((H12.GerbeDescent.pull v).c17 - v.c17)
+'H12.GerbeDescent.certificate_14' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_15 (v : H12.GerbeDescent.Form) :
+  90 * (v.c15 - (0 * v.c0 + 0 * v.c3)) =
+    30 * ((H12.GerbeDescent.pull v).c1 - v.c1) + 60 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                            15 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                          8 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                        8 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                      2 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                    -30 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                  -4 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                23 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+              8 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+            -16 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+          8 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+        2 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+      4 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_15' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_16 (v : H12.GerbeDescent.Form) :
+  6 * (v.c16 - (-1 * v.c0 + -1 * v.c3)) =
+    -6 * ((H12.GerbeDescent.pull v).c0 - v.c0) + -6 * ((H12.GerbeDescent.pull v).c3 - v.c3) +
+                  -1 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                -2 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+              1 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+            -2 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+          1 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+        15 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+      -4 * ((H12.GerbeDescent.pull v).c15 - v.c15)
+'H12.GerbeDescent.certificate_16' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_17 (v : H12.GerbeDescent.Form) :
+  18 * (v.c17 - (0 * v.c0 + 0 * v.c3)) =
+    30 * ((H12.GerbeDescent.pull v).c1 - v.c1) + 120 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                              12 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                            24 * ((H12.GerbeDescent.pull v).c5 - v.c5) +
+                          -4 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                        -60 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                      -12 * ((H12.GerbeDescent.pull v).c8 - v.c8) +
+                    -21 * ((H12.GerbeDescent.pull v).c10 - v.c10) +
+                  -30 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                -4 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              -60 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            45 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          18 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        -4 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      -4 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_17' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_18 (v : H12.GerbeDescent.Form) :
+  18 * (v.c18 - (0 * v.c0 + 0 * v.c3)) =
+    -30 * ((H12.GerbeDescent.pull v).c1 - v.c1) + -30 * ((H12.GerbeDescent.pull v).c2 - v.c2) +
+                          -6 * ((H12.GerbeDescent.pull v).c4 - v.c4) +
+                        1 * ((H12.GerbeDescent.pull v).c6 - v.c6) +
+                      15 * ((H12.GerbeDescent.pull v).c7 - v.c7) +
+                    -12 * ((H12.GerbeDescent.pull v).c9 - v.c9) +
+                  9 * ((H12.GerbeDescent.pull v).c11 - v.c11) +
+                -2 * ((H12.GerbeDescent.pull v).c12 - v.c12) +
+              -30 * ((H12.GerbeDescent.pull v).c13 - v.c13) +
+            -12 * ((H12.GerbeDescent.pull v).c14 - v.c14) +
+          6 * ((H12.GerbeDescent.pull v).c15 - v.c15) +
+        1 * ((H12.GerbeDescent.pull v).c17 - v.c17) +
+      -2 * ((H12.GerbeDescent.pull v).c18 - v.c18)
+'H12.GerbeDescent.certificate_18' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.certificate_19 (v : H12.GerbeDescent.Form) :
+  1 * (v.c19 - (1 * v.c0 + 0 * v.c3)) = 1 * ((H12.GerbeDescent.pull v).c0 - v.c0)
+'H12.GerbeDescent.certificate_19' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.fixed_normal_form (v : H12.GerbeDescent.Form) (h : H12.GerbeDescent.pull v = v) :
+  v = H12.GerbeDescent.normal v.c0 v.c3
+'H12.GerbeDescent.fixed_normal_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.GerbeDescent.hodge_normal (A B : Int) :
+  H12.GerbeDescent.hodgeReal (H12.GerbeDescent.normal A B) = 3 * B ∧
+    H12.GerbeDescent.hodgeImag (H12.GerbeDescent.normal A B) = -3 * A
+'H12.GerbeDescent.hodge_normal' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.GerbeDescent.invariant_hodge_zero (v : H12.GerbeDescent.Form) (h : H12.GerbeDescent.pull v = v)
+  (hr : H12.GerbeDescent.hodgeReal v = 0) (hi : H12.GerbeDescent.hodgeImag v = 0) : v = H12.GerbeDescent.zero
+'H12.GerbeDescent.invariant_hodge_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.GerbeDescent.normal_parameters (A B : Int) :
+  (H12.GerbeDescent.normal A B).c0 = A ∧ (H12.GerbeDescent.normal A B).c3 = B
+'H12.GerbeDescent.normal_parameters' depends on axioms: [propext]
+H12.GerbeDescent.normal_injective (A B C D : Int) (h : H12.GerbeDescent.normal A B = H12.GerbeDescent.normal C D) :
+  A = C ∧ B = D
+'H12.GerbeDescent.normal_injective' depends on axioms: [propext]
+H12.GerbeDescent.conjugate_parameters_involution (p : Int × Int) :
+  H12.GerbeDescent.conjugateParameters (H12.GerbeDescent.conjugateParameters p) = p
+'H12.GerbeDescent.conjugate_parameters_involution' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.conjugation_fixed_even_restriction (a b : Int)
+  (h : H12.GerbeDescent.conjugateParameters (a, b) = (a, b)) : ∃ k, a = 2 * k
+'H12.GerbeDescent.conjugation_fixed_even_restriction' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.no_conjugate_normalized_volume (b : Int) : H12.GerbeDescent.conjugateParameters (1, b) ≠ (1, b)
+'H12.GerbeDescent.no_conjugate_normalized_volume' depends on axioms: [propext, Quot.sound]
+H12.GerbeDescent.all_exterior_minors (i j : Fin 20) :
+  (H12.GerbeDescent.exteriorTable.getD ↑i []).getD (↑j) 0 = H12.GerbeDescent.minor ↑i ↑j
+'H12.GerbeDescent.all_exterior_minors' depends on axioms: [propext]
+H12.GerbeDescent.pull_table_consistency (i j : Fin 20) :
+  (H12.GerbeDescent.coordinates (H12.GerbeDescent.pull (H12.GerbeDescent.basis ↑j))).getD (↑i) 0 =
+    (H12.GerbeDescent.exteriorTable.getD ↑i []).getD (↑j) 0
+'H12.GerbeDescent.pull_table_consistency' depends on axioms: [propext]
+
+-- Audit_H12LineNorms
+H12.LineNorms.four_line_incidence.{u_1} {K : Type u_1} [CommRing K] (f : Fin 3 → Fin 3 → K) :
+  ∏ i, H12.LineNorms.lineProducts f i = f 0 0 ^ 3 * ∏ i, ∏ j, f i j
+'H12.LineNorms.four_line_incidence' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.LineNorms.cube_reconstruction.{u_1} {K : Type u_1} [CommRing K] (f : Fin 3 → Fin 3 → K) (hn : ∏ i, ∏ j, f i j = 1) :
+  ∏ i, H12.LineNorms.lineProducts f i = f 0 0 ^ 3
+'H12.LineNorms.cube_reconstruction' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.LineNorms.cube_reconstruction_with_norm.{u_1} {K : Type u_1} [Field K] (f : Fin 3 → Fin 3 → K)
+  (hn : ∏ i, ∏ j, f i j ≠ 0) : f 0 0 ^ 3 = (∏ i, H12.LineNorms.lineProducts f i) / ∏ i, ∏ j, f i j
+'H12.LineNorms.cube_reconstruction_with_norm' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.LineNorms.polarized_product.{u_1} {K : Type u_1} [Field K] (u w e eb a ab d db : K) (hw : w ≠ 0) (hd : d ≠ 0)
+  (hu : u ^ 3 = w * e * eb ^ 2 * a ^ 2 * ab ^ 3 * db ^ 2 / d) :
+  u ^ 3 * (e * a * d ^ 3 / w) = (e * eb) ^ 2 * (a * ab) ^ 3 * (d * db) ^ 2
+'H12.LineNorms.polarized_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12MixedGauge
+H12MixedGauge.zero_anchor (v : H12MixedGauge.V) : H12MixedGauge.gaugeLog v (0, 0) = (0, 0)
+'H12MixedGauge.zero_anchor' depends on axioms: [propext]
+H12MixedGauge.real_restriction (a b c : Int) (z : H12MixedGauge.E) :
+  H12MixedGauge.gaugeLog (H12MixedGauge.realV a b c) z = (0, 0)
+'H12MixedGauge.real_restriction' depends on axioms: [propext]
+H12MixedGauge.gauge_boundary (v w : H12MixedGauge.V) (z : H12MixedGauge.E) :
+  H12MixedGauge.deltaLog v w z = (v.x0 * w.y1, v.y0 * w.y1)
+'H12MixedGauge.gauge_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12MixedGauge.gauge_alternating (v w : H12MixedGauge.V) (z : H12MixedGauge.E) :
+  H12MixedGauge.esub (H12MixedGauge.deltaLog v w z) (H12MixedGauge.deltaLog w v z) = H12MixedGauge.skewLog v w
+'H12MixedGauge.gauge_alternating' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12MixedGauge.changed_mixed_entry : H12MixedGauge.skewLog H12MixedGauge.e0 H12MixedGauge.omegaE1 = (1, 0)
+'H12MixedGauge.changed_mixed_entry' does not depend on any axioms
+H12MixedGauge.unchanged_real_entries (a b c d e f : Int) :
+  H12MixedGauge.skewLog (H12MixedGauge.realV a b c) (H12MixedGauge.realV d e f) = (0, 0)
+'H12MixedGauge.unchanged_real_entries' depends on axioms: [propext]
+H12MixedGauge.model_mixed_entry : H12MixedGauge.modelAlt H12MixedGauge.e0 H12MixedGauge.omegaE1 = -3
+'H12MixedGauge.model_mixed_entry' does not depend on any axioms
+H12MixedGauge.holomorphic_gauge_hodge_zero : H12MixedGauge.hodge (0, 0) (1, 0) H12MixedGauge.om = (0, 0)
+'H12MixedGauge.holomorphic_gauge_hodge_zero' does not depend on any axioms
+H12MixedGauge.holomorphic_gauge_hodge_zero_scaled (k : Int) : H12MixedGauge.hodge (0, 0) (k, 0) (0, k) = (0, 0)
+'H12MixedGauge.holomorphic_gauge_hodge_zero_scaled' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12MixedGauge.hodge_integer_formula (a b c : Int) : H12MixedGauge.hodge (a, 0) (b, 0) (c, 0) = (c - a, -a - b)
+'H12MixedGauge.hodge_integer_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12MixedGauge.primitive_hodge_residue :
+  H12MixedGauge.modelH =
+    [H12MixedGauge.eadd (2, 3) (H12MixedGauge.escale 7 (-1, 0)),
+      H12MixedGauge.eadd (4, 6) (H12MixedGauge.escale 7 (-1, -2)),
+      H12MixedGauge.eadd (8, 12) (H12MixedGauge.escale 7 (0, -1))]
+'H12MixedGauge.primitive_hodge_residue' does not depend on any axioms
+H12MixedGauge.model_class_nonzero_mod_seven : -5 % 7 = 2 ∧ 3 % 7 = 3
+'H12MixedGauge.model_class_nonzero_mod_seven' does not depend on any axioms
+H12MixedGauge.scalar_square_cleared (a b c d : Int) : d * b * (c * a) = d * c * (b * a)
+'H12MixedGauge.scalar_square_cleared' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12NormAlgebra
+H12.NormAlgebra.four_sheet_kernel_norm.{u_1} {K : Type u_1} [Field K] (a b c d u v : K) (hu : u ≠ 0) (hv : v ≠ 0)
+  (h : a * b * c * d = u) :
+  a ^ 2 / (u * v) * (b ^ 2 / (u * v)) * (c ^ 2 / (u * v)) * (d ^ 2 / (u * v)) = 1 / (u ^ 2 * v ^ 4)
+'H12.NormAlgebra.four_sheet_kernel_norm' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.even_norm_boundary.{u_1} {K : Type u_1} [Field K] (u v : K) (hu : u ≠ 0) (hv : v ≠ 0) :
+  1 / (u ^ 2 * v ^ 4) = 1 / u ^ 6 * (u / v) ^ 4
+'H12.NormAlgebra.even_norm_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.norm_one_doubling_factor.{u_1} {K : Type u_1} [Field K] (a b c d u : K) (hu : u ≠ 0)
+  (h : a * b * c * d = u) : a ^ 4 / u * (b ^ 4 / u) * (c ^ 4 / u) * (d ^ 4 / u) = 1
+'H12.NormAlgebra.norm_one_doubling_factor' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.kernel_factorization.{u_1} {K : Type u_1} [Field K] (u v w : K) (hu : u ≠ 0) (hv : v ≠ 0) (hw : w ≠ 0) :
+  u ^ 2 / (v * w) = (u ^ 4 / v) ^ 2 / u ^ 6 * (v / w)
+'H12.NormAlgebra.kernel_factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.odd_norm_boundary.{u_1} {K : Type u_1} [Field K] (a b c d : K) (hc : c ≠ 0) :
+  a ^ 2 / (b * d) = a ^ 2 / (b * c) * (c / d)
+'H12.NormAlgebra.odd_norm_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.finite_boundary_product.{u_1} {K : Type u_1} [Field K] (q : ℕ → K) (hq : ∀ (i : ℕ), q i ≠ 0) (m : ℕ) :
+  ∏ j ∈ Finset.range m, q j / q (j + 1) = q 0 / q m
+'H12.NormAlgebra.finite_boundary_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.pointwise_phase_comparison.{u_1} {K : Type u_1} [Field K] (u v epsilon limitValue : K) (hu : u ≠ 0)
+  (hv : v ≠ 0) (he : epsilon ≠ 0) (han : limitValue = epsilon ^ 6 / u ^ 3) (har : limitValue = epsilon ^ 6 / v ^ 3) :
+  u ^ 3 = v ^ 3
+'H12.NormAlgebra.pointwise_phase_comparison' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.three_walsh_channels_recover_norm_one_factor.{u_1} {K : Type u_1} [Field K] (a b c d : K) (ha : a ≠ 0)
+  (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0) :
+  a * b / (c * d) * (a * c / (b * d)) * (a * d / (b * c)) = a ^ 4 / (a * b * c * d)
+'H12.NormAlgebra.three_walsh_channels_recover_norm_one_factor' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+H12.NormAlgebra.walsh_fourth_power_reconstruction.{u_1} {K : Type u_1} [Field K] (a b c d : K) (ha : a ≠ 0) (hb : b ≠ 0)
+  (hc : c ≠ 0) (hd : d ≠ 0) : a * b * c * d * (a * b / (c * d)) * (a * c / (b * d)) * (a * d / (b * c)) = a ^ 4
+'H12.NormAlgebra.walsh_fourth_power_reconstruction' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormAlgebra.walsh_translation_inversion.{u_1} {K : Type u_1} [Field K] (a b c d : K) (ha : a ≠ 0) (hb : b ≠ 0)
+  (hc : c ≠ 0) (hd : d ≠ 0) : c * d / (a * b) = (a * b / (c * d))⁻¹
+'H12.NormAlgebra.walsh_translation_inversion' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12NormProjector
+H12.NormProjector.projector_idempotent (v : H12.NormProjector.Pair) :
+  H12.NormProjector.evenNorm (H12.NormProjector.evenNorm v) = H12.NormProjector.evenNorm v
+'H12.NormProjector.projector_idempotent' depends on axioms: [propext]
+H12.NormProjector.theta_axis_fixed (a : ℤ) :
+  H12.NormProjector.evenNorm (H12.NormProjector.thetaAxis a) = H12.NormProjector.thetaAxis a
+'H12.NormProjector.theta_axis_fixed' depends on axioms: [propext]
+H12.NormProjector.primitive_axis_killed (b : ℤ) :
+  H12.NormProjector.evenNorm (H12.NormProjector.primitiveAxis b) = (0, 0)
+'H12.NormProjector.primitive_axis_killed' depends on axioms: [propext]
+H12.NormProjector.kernel_exact (v : H12.NormProjector.Pair) :
+  H12.NormProjector.evenNorm v = (0, 0) ↔ v = H12.NormProjector.primitiveAxis v.2
+'H12.NormProjector.kernel_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormProjector.fixed_exact (v : H12.NormProjector.Pair) : H12.NormProjector.evenNorm v = v ↔ v.2 = 0
+'H12.NormProjector.fixed_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormProjector.coordinates_inverse (v : H12.NormProjector.Pair) :
+  H12.NormProjector.fromCoordinates (H12.NormProjector.coordinates v) = v
+'H12.NormProjector.coordinates_inverse' depends on axioms: [propext]
+H12.NormProjector.inverse_coordinates (v : H12.NormProjector.Pair) :
+  H12.NormProjector.coordinates (H12.NormProjector.fromCoordinates v) = v
+'H12.NormProjector.inverse_coordinates' depends on axioms: [propext]
+H12.NormProjector.diagonal_in_split_basis (v : H12.NormProjector.Pair) :
+  H12.NormProjector.coordinates (H12.NormProjector.evenNorm v) = ((H12.NormProjector.coordinates v).1, 0)
+'H12.NormProjector.diagonal_in_split_basis' depends on axioms: [propext]
+H12.NormProjector.two_charge_injective (a b : ℤ) (h0 : 4 * a + 4 * b = 0) (hhalf : -4 * b = 0) : a = 0 ∧ b = 0
+'H12.NormProjector.two_charge_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.NormProjector.primitive_nonzero (b : ℤ) : H12.NormProjector.primitiveAxis b = (0, 0) ↔ b = 0
+'H12.NormProjector.primitive_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12NormSemigroup
+H12.NormSemigroup.all_residue_products (a b : Fin 10) :
+  H12.NormSemigroup.action (H12.NormSemigroup.residueProduct a b) =
+    H12.NormSemigroup.multiply (H12.NormSemigroup.action a) (H12.NormSemigroup.action b)
+'H12.NormSemigroup.all_residue_products' does not depend on any axioms
+H12.NormSemigroup.residue_product (m n : ℕ) :
+  H12.NormSemigroup.residue (m * n) =
+    H12.NormSemigroup.residueProduct (H12.NormSemigroup.residue m) (H12.NormSemigroup.residue n)
+'H12.NormSemigroup.residue_product' depends on axioms: [propext]
+H12.NormSemigroup.norm_matrix_multiplicative (m n : ℕ) :
+  H12.NormSemigroup.normMatrix (m * n) =
+    H12.NormSemigroup.multiply (H12.NormSemigroup.normMatrix m) (H12.NormSemigroup.normMatrix n)
+'H12.NormSemigroup.norm_matrix_multiplicative' depends on axioms: [propext]
+H12.NormSemigroup.norm_one : H12.NormSemigroup.normMatrix 1 = H12.NormSemigroup.identity
+'H12.NormSemigroup.norm_one' does not depend on any axioms
+H12.NormSemigroup.norm_two : H12.NormSemigroup.normMatrix 2 = H12.NormSemigroup.projector
+'H12.NormSemigroup.norm_two' does not depend on any axioms
+H12.NormSemigroup.norm_five : H12.NormSemigroup.normMatrix 5 = H12.NormSemigroup.zero
+'H12.NormSemigroup.norm_five' does not depend on any axioms
+
+-- Audit_H12NormTransfer
+H12NormTransfer.weighted_telescope (c d : Nat → Int) (hr : ∀ (n : Nat), c n = 7 * c (n + 1) - d (n + 1)) (n : Nat) :
+  c 0 = 7 ^ n * c n - H12NormTransfer.weightedSum d n
+'H12NormTransfer.weighted_telescope' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.finite_norm_solution (c d : Nat → Int) (hr : ∀ (n : Nat), c n = 7 * c (n + 1) - d (n + 1)) (n : Nat)
+  (hz : c n = 0) : c 0 = -H12NormTransfer.weightedSum d n
+'H12NormTransfer.finite_norm_solution' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.weighted_difference (a b : Nat → Int) (n : Nat) :
+  H12NormTransfer.weightedSum (fun j => a j - b j) n = H12NormTransfer.weightedSum a n - H12NormTransfer.weightedSum b n
+'H12NormTransfer.weighted_difference' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.finite_gauge_difference (c a b : Nat → Int)
+  (hr : ∀ (n : Nat), c n = 7 * c (n + 1) - (a (n + 1) - b (n + 1))) (n : Nat) (hz : c n = 0) :
+  c 0 = -H12NormTransfer.weightedSum a n + H12NormTransfer.weightedSum b n
+'H12NormTransfer.finite_gauge_difference' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.weighted_zero (n : Nat) : H12NormTransfer.weightedSum (fun x => 0) n = 0
+'H12NormTransfer.weighted_zero' depends on axioms: [propext]
+H12NormTransfer.zero_residual_tail (c : Nat → Int) (hr : ∀ (n : Nat), c n = 7 * c (n + 1)) (n : Nat) (hz : c n = 0) :
+  c 0 = 0
+'H12NormTransfer.zero_residual_tail' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.residue_trace_table (r s : Fin 7) :
+  H12NormTransfer.residueCount r s = if ↑r = 0 then if ↑s = 0 then 7 else 0 else 1
+'H12NormTransfer.residue_trace_table' does not depend on any axioms
+H12NormTransfer.nonzero_residue_uniform (r s : Fin 7) (hr : ↑r ≠ 0) : H12NormTransfer.residueCount r s = 1
+'H12NormTransfer.nonzero_residue_uniform' depends on axioms: [propext]
+H12NormTransfer.seven_geometric (d : Int) : (1 - d) * H12NormTransfer.geo7 d = 1 - d ^ 7
+'H12NormTransfer.seven_geometric' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.reversed_geometric (d : Int) : d ^ 6 + d ^ 5 + d ^ 4 + d ^ 3 + d ^ 2 + d + 1 = H12NormTransfer.geo7 d
+'H12NormTransfer.reversed_geometric' depends on axioms: [propext, Quot.sound]
+H12NormTransfer.gamma_positive_split (p q : Int) : p - q ^ 2 = (1 + q) * (1 - q) - (1 - p)
+'H12NormTransfer.gamma_positive_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.gamma_negative_split (p q : Int) : p - q ^ 2 = p * (1 + q) * (1 - q) - q ^ 2 * (1 - p)
+'H12NormTransfer.gamma_negative_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12NormTransfer.gamma_period_relation (p q d : Int) (h : p * d ^ 7 = q ^ 2) : p * (1 - d ^ 7) = p - q ^ 2
+'H12NormTransfer.gamma_period_relation' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12OrbitAntidifference
+H12OrbitAntidifference.prefix_zero (f : Nat → Int) : H12OrbitAntidifference.partialSum f 0 = 0
+'H12OrbitAntidifference.prefix_zero' does not depend on any axioms
+H12OrbitAntidifference.prefix_successor (f : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum f (n + 1) = H12OrbitAntidifference.partialSum f n + f n
+'H12OrbitAntidifference.prefix_successor' does not depend on any axioms
+H12OrbitAntidifference.prefix_primitive (f : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.boundary (H12OrbitAntidifference.partialSum f) n = f n
+'H12OrbitAntidifference.prefix_primitive' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.telescope (b : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (H12OrbitAntidifference.boundary b) n = b n - b 0
+'H12OrbitAntidifference.telescope' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.prefix_congruence_below (f g : Nat → Int) (n : Nat) (h : ∀ (j : Nat), j < n → f j = g j) :
+  H12OrbitAntidifference.partialSum f n = H12OrbitAntidifference.partialSum g n
+'H12OrbitAntidifference.prefix_congruence_below' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.endpoint_charge (f b : Nat → Int) (n : Nat)
+  (h : ∀ (j : Nat), j < n → H12OrbitAntidifference.boundary b j = f j) :
+  H12OrbitAntidifference.partialSum f n = b n - b 0
+'H12OrbitAntidifference.endpoint_charge' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.zero_charge_iff_closed_primitive (f : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum f n = 0 ↔
+    ∃ b, b 0 = 0 ∧ b n = 0 ∧ ∀ (j : Nat), j < n → H12OrbitAntidifference.boundary b j = f j
+'H12OrbitAntidifference.zero_charge_iff_closed_primitive' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.prefix_add (f g : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (fun j => f j + g j) n =
+    H12OrbitAntidifference.partialSum f n + H12OrbitAntidifference.partialSum g n
+'H12OrbitAntidifference.prefix_add' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.charge_under_gauge (f b : Nat → Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (fun j => f j + H12OrbitAntidifference.boundary b j) n =
+    H12OrbitAntidifference.partialSum f n + b n - b 0
+'H12OrbitAntidifference.charge_under_gauge' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.equal_boundary_preserves_charge (f b : Nat → Int) (n : Nat) (h : b n = b 0) :
+  H12OrbitAntidifference.partialSum (fun j => f j + H12OrbitAntidifference.boundary b j) n =
+    H12OrbitAntidifference.partialSum f n
+'H12OrbitAntidifference.equal_boundary_preserves_charge' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.anchored_primitive_unique (f b : Nat → Int) (h0 : b 0 = 0)
+  (hd : ∀ (j : Nat), H12OrbitAntidifference.boundary b j = f j) (n : Nat) : b n = H12OrbitAntidifference.partialSum f n
+'H12OrbitAntidifference.anchored_primitive_unique' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.prefix_zero_tail (f : Nat → Int) (n : Nat) (h0 : H12OrbitAntidifference.partialSum f n = 0)
+  (ht : ∀ (j : Nat), n ≤ j → f j = 0) (k : Nat) : H12OrbitAntidifference.partialSum f (n + k) = 0
+'H12OrbitAntidifference.prefix_zero_tail' depends on axioms: [propext, Quot.sound]
+H12OrbitAntidifference.weighted_charge (f : Nat → Int) (w : Int) (n : Nat) :
+  H12OrbitAntidifference.partialSum (fun j => w * f j) n = w * H12OrbitAntidifference.partialSum f n
+'H12OrbitAntidifference.weighted_charge' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12OrbitAntidifference.nonzero_charge_no_closed_primitive (f : Nat → Int) (n : Nat)
+  (h : H12OrbitAntidifference.partialSum f n ≠ 0) :
+  ¬∃ b, b 0 = 0 ∧ b n = 0 ∧ ∀ (j : Nat), j < n → H12OrbitAntidifference.boundary b j = f j
+'H12OrbitAntidifference.nonzero_charge_no_closed_primitive' depends on axioms: [propext, Quot.sound]
+
+-- Audit_H12OrbitObstruction
+H12.charge_sub (a b : ℤ →₀ ℤ) : H12.charge (a - b) = H12.charge a - H12.charge b
+'H12.charge_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.charge_add (a b : ℤ →₀ ℤ) : H12.charge (a + b) = H12.charge a + H12.charge b
+'H12.charge_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.charge_single (n k : ℤ) : H12.charge (Finsupp.single n k) = k
+'H12.charge_single' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.charge_shift (a : ℤ →₀ ℤ) : H12.charge (H12.shift a) = H12.charge a
+'H12.charge_shift' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.charge_boundary (a : ℤ →₀ ℤ) : H12.charge (H12.boundary a) = 0
+'H12.charge_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.nonzero_charge_not_boundary (d : ℤ →₀ ℤ) (hd : H12.charge d ≠ 0) : ¬∃ a, H12.boundary a = d
+'H12.nonzero_charge_not_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.kernel_profile_not_boundary (k : ℤ) (hk : k ≠ 0) : ¬∃ a, H12.boundary a = Finsupp.single 0 (4 * k)
+'H12.kernel_profile_not_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.normed_profile_not_boundary (k : ℤ) (hk : k ≠ 0) :
+  ¬∃ a, H12.boundary a = Finsupp.single 0 (-8 * k) + Finsupp.single (-1) (-16 * k)
+'H12.normed_profile_not_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.invariant_projection_kills_boundary.{u_1, u_2} {A : Type u_1} {B : Type u_2} (step : A → A) (label : A → B)
+  (h : ∀ (a : A), label (step a) = label a) (d : A →₀ ℤ) : Finsupp.mapDomain label (Finsupp.mapDomain step d - d) = 0
+'H12.invariant_projection_kills_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.two_profile_exact (a b : ℤ) (d : H12.OrbitPoint →₀ ℤ) (h : H12.orbitShift d - d = H12.twoProfile a b) :
+  a = 0 ∧ b = 0
+'H12.two_profile_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.two_profile_not_boundary (a b : ℤ) (h : a ≠ 0 ∨ b ≠ 0) : ¬∃ d, H12.orbitShift d - d = H12.twoProfile a b
+'H12.two_profile_not_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12PacketCarries
+H12.PacketCarries.forward_backward (p : H12.PacketCarries.Triple) :
+  H12.PacketCarries.forward (H12.PacketCarries.backward p) = p
+'H12.PacketCarries.forward_backward' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PacketCarries.backward_forward (p : H12.PacketCarries.Triple) :
+  H12.PacketCarries.backward (H12.PacketCarries.forward p) = p
+'H12.PacketCarries.backward_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PacketCarries.rotate_cube.{u_1} {A : Type u_1} (p : A × A × A) :
+  H12.PacketCarries.rotate (H12.PacketCarries.rotate (H12.PacketCarries.rotate p)) = p
+'H12.PacketCarries.rotate_cube' does not depend on any axioms
+H12.PacketCarries.inverse_carry (b c a : ℚ) :
+  H12.PacketCarries.backward (H12.PacketCarries.point b c a) =
+    (a / 2 + (5 + 4 * b - 2 * c + 7 * a), b / 2, 1 / 3 + c / 2 + (1 + b - c + 2 * a))
+'H12.PacketCarries.inverse_carry' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PacketCarries.forward_carry (b c a : ℚ) :
+  H12.PacketCarries.forward (H12.PacketCarries.point b c a) =
+    (c / 2, a / 2 + (5 - 2 * b + c + 7 * a), 1 / 3 + b / 2 + (1 - b + 2 * a))
+'H12.PacketCarries.forward_carry' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12PhaseRegulator
+libc++abi: terminating due to uncaught exception of type lean::memory_exception: excessive memory consumption detected at 'interpreter' (potential solution: increase memory consumption threshold)
+
+-- Audit_H12PrincipalDivisor
+H12PrincipalDivisor.principal5_cube (v : H12PrincipalDivisor.V) :
+  H12PrincipalDivisor.principal5 (H12PrincipalDivisor.principal5 (H12PrincipalDivisor.principal5 v)) =
+    (7 * v.fst, 7 * v.snd.fst, 7 * v.snd.snd)
+'H12PrincipalDivisor.principal5_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.lift_identity (a b c : Int) :
+  H12PrincipalDivisor.principal5 (H12PrincipalDivisor.liftPoint a b c) =
+    (a, b - 8 * H12PrincipalDivisor.digit b c, c - 5 * H12PrincipalDivisor.digit b c)
+'H12PrincipalDivisor.lift_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.digit_is_remainder (b c : Int) : H12PrincipalDivisor.digit b c = (2 * b - 3 * c) % 7
+'H12PrincipalDivisor.digit_is_remainder' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.digit_range (b c : Int) : 0 ≤ H12PrincipalDivisor.digit b c ∧ H12PrincipalDivisor.digit b c < 7
+'H12PrincipalDivisor.digit_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.unique_lift_digit (b c k j : Int) (hk0 : 0 ≤ k) (hk7 : k < 7) (hj : 7 * j = -2 * b + 3 * c + k) :
+  k = H12PrincipalDivisor.digit b c ∧ j = H12PrincipalDivisor.pivot b c
+'H12PrincipalDivisor.unique_lift_digit' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.lift_preserves_fifth_weight (a b c : Int) :
+  H12PrincipalDivisor.weight (H12PrincipalDivisor.liftPoint a b c).snd.snd = H12PrincipalDivisor.weight c
+'H12PrincipalDivisor.lift_preserves_fifth_weight' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.wall_bounds (a b j : Int) : -1 ≤ H12PrincipalDivisor.wall a b j ∧ H12PrincipalDivisor.wall a b j ≤ 1
+'H12PrincipalDivisor.wall_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.wall_values (a b j : Int) :
+  H12PrincipalDivisor.wall a b j = -1 ∨ H12PrincipalDivisor.wall a b j = 0 ∨ H12PrincipalDivisor.wall a b j = 1
+'H12PrincipalDivisor.wall_values' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.order_difference (a b c : Int) :
+  H12PrincipalDivisor.correctionOrder a b c =
+    H12PrincipalDivisor.weight (H12PrincipalDivisor.liftPoint a b c).snd.snd *
+        H12PrincipalDivisor.cone (H12PrincipalDivisor.liftPoint a b c).fst
+          (H12PrincipalDivisor.liftPoint a b c).snd.fst -
+      H12PrincipalDivisor.weight c * H12PrincipalDivisor.cone a b
+'H12PrincipalDivisor.order_difference' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.order_values (a b c : Int) :
+  H12PrincipalDivisor.correctionOrder a b c = -4 ∨
+    H12PrincipalDivisor.correctionOrder a b c = -1 ∨
+      H12PrincipalDivisor.correctionOrder a b c = 0 ∨
+        H12PrincipalDivisor.correctionOrder a b c = 1 ∨ H12PrincipalDivisor.correctionOrder a b c = 4
+'H12PrincipalDivisor.order_values' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalDivisor.tau_ray_order (n : Int) (hn : 0 < n) :
+  H12PrincipalDivisor.correctionOrder (2 * n) (4 * n) (5 * n) = 4
+'H12PrincipalDivisor.tau_ray_order' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.s_ray_order (n : Int) (hn : n ≠ 0) : H12PrincipalDivisor.correctionOrder (-n) 0 0 = -4
+'H12PrincipalDivisor.s_ray_order' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.negative_integer_order (n : Int) (hn : 0 < n) :
+  H12PrincipalDivisor.correctionOrder 0 (15 * n) (10 * n) = 4
+'H12PrincipalDivisor.negative_integer_order' depends on axioms: [propext, Quot.sound]
+H12PrincipalDivisor.zero_order : H12PrincipalDivisor.correctionOrder 0 0 0 = 0
+'H12PrincipalDivisor.zero_order' does not depend on any axioms
+
+-- Audit_H12PrincipalModel
+H12PrincipalModel.alpha_carry (v : H12PrincipalModel.P) :
+  H12PrincipalModel.alpha (H12PrincipalModel.principal v) =
+    -H12PrincipalModel.beta v + 7 * (v.snd.snd.fst - v.snd.snd.snd.fst)
+'H12PrincipalModel.alpha_carry' depends on axioms: [propext, Quot.sound]
+H12PrincipalModel.beta_carry (v : H12PrincipalModel.P) :
+  H12PrincipalModel.beta (H12PrincipalModel.principal v) =
+    7 * (v.fst - 3 * v.snd.snd.fst - 2 * v.snd.snd.snd.fst + 7 * v.snd.snd.snd.snd.snd)
+'H12PrincipalModel.beta_carry' depends on axioms: [propext, Quot.sound]
+H12PrincipalModel.principal_wedge_zero (a b : Int) : H12PrincipalModel.wedge (-a) 0 (-b) 0 = 0
+'H12PrincipalModel.principal_wedge_zero' depends on axioms: [propext]
+H12PrincipalModel.principal_label_square (a b : Int) :
+  have transform := fun v => (-v.snd, 0);
+  transform (transform (a, b)) = (0, 0)
+'H12PrincipalModel.principal_label_square' does not depend on any axioms
+
+-- Audit_H12PrincipalSeven
+H12PrincipalSeven.principal_cube (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.principal (H12PrincipalSeven.principal (H12PrincipalSeven.principal v)) =
+    H12PrincipalSeven.scale 7 v
+'H12PrincipalSeven.principal_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.dual_principal_cube (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)) =
+    H12PrincipalSeven.scale 7 v
+'H12PrincipalSeven.dual_principal_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.actions_commute (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.principal (H12PrincipalSeven.unit v) = H12PrincipalSeven.unit (H12PrincipalSeven.principal v)
+'H12PrincipalSeven.actions_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.dual_actions_commute (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualUnit v) =
+    H12PrincipalSeven.dualUnit (H12PrincipalSeven.dualPrincipal v)
+'H12PrincipalSeven.dual_actions_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.dual_pairing (v k : H12PrincipalSeven.V) :
+  H12PrincipalSeven.dot k (H12PrincipalSeven.principal v) = H12PrincipalSeven.dot (H12PrincipalSeven.dualPrincipal k) v
+'H12PrincipalSeven.dual_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.image_charge (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.charge (H12PrincipalSeven.dualPrincipal v) = -7 * (8 * v.snd.fst + v.snd.snd)
+'H12PrincipalSeven.image_charge' depends on axioms: [propext, Quot.sound]
+H12PrincipalSeven.image_preimage (v : H12PrincipalSeven.V) (r : Int) (h : H12PrincipalSeven.charge v = 7 * r) :
+  H12PrincipalSeven.dualPrincipal (-v.snd.fst, v.snd.snd - 2 * r, 15 * r - 8 * v.snd.snd) = v
+'H12PrincipalSeven.image_preimage' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.image_iff (v : H12PrincipalSeven.V) :
+  (∃ w, H12PrincipalSeven.dualPrincipal w = v) ↔ 7 ∣ H12PrincipalSeven.charge v
+'H12PrincipalSeven.image_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.conductor_residue (v : H12PrincipalSeven.V) :
+  (H12PrincipalSeven.dualUnit v).snd.snd - v.snd.snd = 3 * (5 * v.snd.fst + v.snd.snd)
+'H12PrincipalSeven.conductor_residue' depends on axioms: [propext, Quot.sound]
+H12PrincipalSeven.kernel_charge_transport (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.charge (H12PrincipalSeven.dualUnit v) =
+    2 * H12PrincipalSeven.charge v + 7 * (8 * v.snd.fst + v.snd.snd)
+'H12PrincipalSeven.kernel_charge_transport' depends on axioms: [propext, Quot.sound]
+H12PrincipalSeven.kernel_generator : H12PrincipalSeven.principal (1, 2, 4) = (0, -56, -7)
+'H12PrincipalSeven.kernel_generator' does not depend on any axioms
+H12PrincipalSeven.unit_on_kernel : H12PrincipalSeven.unit (1, 2, 4) = (2, 60, 15)
+'H12PrincipalSeven.unit_on_kernel' does not depend on any axioms
+H12PrincipalSeven.based_third_carry :
+  have w := H12PrincipalSeven.principal (0, 0, 1);
+  (w.fst, w.snd.fst, w.snd.snd - 1) = (0, -15, -3)
+'H12PrincipalSeven.based_third_carry' does not depend on any axioms
+H12PrincipalSeven.norm_unit_invariant (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.normCubic (H12PrincipalSeven.dualUnit v) = H12PrincipalSeven.normCubic v
+'H12PrincipalSeven.norm_unit_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.norm_principal_scaling (v : H12PrincipalSeven.V) :
+  H12PrincipalSeven.normCubic (H12PrincipalSeven.dualPrincipal v) = 7 * H12PrincipalSeven.normCubic v
+'H12PrincipalSeven.norm_principal_scaling' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12PrincipalSeven.norm_seed : H12PrincipalSeven.normCubic (0, 0, 1) = 1
+'H12PrincipalSeven.norm_seed' does not depend on any axioms
+H12PrincipalSeven.winding_defect (v : H12PrincipalSeven.V) :
+  have w :=
+    ((H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)).fst +
+        (H12PrincipalSeven.dualPrincipal v).fst,
+      (H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)).snd.fst +
+        (H12PrincipalSeven.dualPrincipal v).snd.fst,
+      (H12PrincipalSeven.dualPrincipal (H12PrincipalSeven.dualPrincipal v)).snd.snd +
+        (H12PrincipalSeven.dualPrincipal v).snd.snd);
+  (7 * v.fst - (H12PrincipalSeven.dualPrincipal v).fst, 7 * v.snd.fst - (H12PrincipalSeven.dualPrincipal v).snd.fst,
+      7 * v.snd.snd - (H12PrincipalSeven.dualPrincipal v).snd.snd) =
+    (w.fst - (H12PrincipalSeven.dualUnit w).fst, w.snd.fst - (H12PrincipalSeven.dualUnit w).snd.fst,
+      w.snd.snd - (H12PrincipalSeven.dualUnit w).snd.snd)
+'H12PrincipalSeven.winding_defect' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12SevenClassDetector
+H12SevenClassDetector.root_two : (2 * 2 + 2 + 1) % 7 = 0
+'H12SevenClassDetector.root_two' does not depend on any axioms
+H12SevenClassDetector.root_four : (4 * 4 + 4 + 1) % 7 = 0
+'H12SevenClassDetector.root_four' does not depend on any axioms
+H12SevenClassDetector.eval_twist_two (a b : Int) : -b + 2 * (a - b) - 2 * (a + 2 * b) = -7 * b
+'H12SevenClassDetector.eval_twist_two' depends on axioms: [propext, Quot.sound]
+H12SevenClassDetector.eval_twist_four (a b : Int) : -b + 4 * (a - b) - 4 * (a + 4 * b) = -21 * b
+'H12SevenClassDetector.eval_twist_four' depends on axioms: [propext, Quot.sound]
+H12SevenClassDetector.fixed_at_two (x y z : Fin 7) :
+  H12SevenClassDetector.fixedAt 2 ↑x ↑y ↑z ↔ ↑y = 2 * ↑x % 7 ∧ ↑z = 4 * ↑x % 7
+'H12SevenClassDetector.fixed_at_two' does not depend on any axioms
+H12SevenClassDetector.fixed_at_four (x y z : Fin 7) :
+  H12SevenClassDetector.fixedAt 4 ↑x ↑y ↑z ↔ ↑x = 0 ∧ ↑y = 0 ∧ ↑z = 0
+'H12SevenClassDetector.fixed_at_four' does not depend on any axioms
+H12SevenClassDetector.coefficient_recovery (a b k : Fin 7) :
+  (↑a + 2 * ↑b) % 7 = ↑k ∧ (↑a + 4 * ↑b) % 7 = 0 ↔ ↑a = 2 * ↑k % 7 ∧ ↑b = 3 * ↑k % 7
+'H12SevenClassDetector.coefficient_recovery' does not depend on any axioms
+H12SevenClassDetector.selector_formula (a b12 b21 c : Int) :
+  c - a + 2 * (-a - b12 + b21) = c - 3 * a - 2 * b12 + 2 * b21
+'H12SevenClassDetector.selector_formula' depends on axioms: [propext, Quot.sound]
+H12SevenClassDetector.model_selector : (-5 + 2 * 3) % 7 = 1 ∧ (-5 + 4 * 3) % 7 = 0
+'H12SevenClassDetector.model_selector' does not depend on any axioms
+
+-- Audit_H12SignedGeometry
+H12.SignedGeometry.rotate_cube (i : Fin 8) :
+  H12.SignedGeometry.rotate (H12.SignedGeometry.rotate (H12.SignedGeometry.rotate i)) = i
+'H12.SignedGeometry.rotate_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.character_transport (k i : Fin 8) :
+  H12.SignedGeometry.chi (H12.SignedGeometry.rotate k) (H12.SignedGeometry.rotate i) = H12.SignedGeometry.chi k i
+'H12.SignedGeometry.character_transport' depends on axioms: [propext, Quot.sound]
+H12.SignedGeometry.walsh_transport.{u_2} {A : Type u_2} [AddCommGroup A] (x : Fin 8 → A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (fun i => x (H12.SignedGeometry.rotate i)) k =
+    H12.SignedGeometry.walsh x (H12.SignedGeometry.rotate k)
+'H12.SignedGeometry.walsh_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.walsh_inversion.{u_2} {A : Type u_2} [AddCommGroup A] (x : Fin 8 → A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.walsh x) k = 8 • x k
+'H12.SignedGeometry.walsh_inversion' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.affine_spectrum.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine u db dc da) k =
+    if ↑k = 0 then 8 * u + 4 * db + 4 * dc + 4 * da
+    else if ↑k = 1 then -4 * da else if ↑k = 2 then -4 * dc else if ↑k = 4 then -4 * db else 0
+'H12.SignedGeometry.affine_spectrum' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.quadratic_top_cancellation.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 7 = 0
+'H12.SignedGeometry.quadratic_top_cancellation' depends on axioms: [propext]
+H12.SignedGeometry.quadratic_pair_011.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 3 = 4 * dc * da
+'H12.SignedGeometry.quadratic_pair_011' depends on axioms: [propext]
+H12.SignedGeometry.quadratic_pair_101.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 5 = 4 * db * da
+'H12.SignedGeometry.quadratic_pair_101' depends on axioms: [propext]
+H12.SignedGeometry.quadratic_pair_110.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 2) 6 = 4 * db * dc
+'H12.SignedGeometry.quadratic_pair_110' depends on axioms: [propext]
+H12.SignedGeometry.cubic_top_coefficient.{u_1} {K : Type u_1} [CommRing K] (u db dc da : K) :
+  H12.SignedGeometry.walsh (fun i => H12.SignedGeometry.affine u db dc da i ^ 3) 7 = -6 * db * dc * da
+'H12.SignedGeometry.cubic_top_coefficient' depends on axioms: [propext]
+H12.SignedGeometry.one_step_gain (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine 5 4 (-2) 7) k =
+    if ↑k = 0 then 76 else if ↑k = 1 then -28 else if ↑k = 2 then 8 else if ↑k = 4 then -16 else 0
+'H12.SignedGeometry.one_step_gain' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.three_step_gain (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine 630 471 (-246) 945) k =
+    if ↑k = 0 then 9720 else if ↑k = 1 then -3780 else if ↑k = 2 then 984 else if ↑k = 4 then -1884 else 0
+'H12.SignedGeometry.three_step_gain' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.affine_gauge_spectrum (k : Fin 8) :
+  H12.SignedGeometry.walsh (H12.SignedGeometry.affine (-4) 3 3 3) k =
+    if ↑k = 0 then 4 else if ↑k = 1 ∨ ↑k = 2 ∨ ↑k = 4 then -12 else 0
+'H12.SignedGeometry.affine_gauge_spectrum' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.gauge_rotation_invariant (i : Fin 8) :
+  H12.SignedGeometry.affine (-4) 3 3 3 (H12.SignedGeometry.rotate i) = H12.SignedGeometry.affine (-4) 3 3 3 i
+'H12.SignedGeometry.gauge_rotation_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.high_subspace_rotation (k : Fin 8) :
+  ↑k = 3 ∨ ↑k = 5 ∨ ↑k = 6 ∨ ↑k = 7 ↔
+    ↑(H12.SignedGeometry.rotate k) = 3 ∨
+      ↑(H12.SignedGeometry.rotate k) = 5 ∨ ↑(H12.SignedGeometry.rotate k) = 6 ∨ ↑(H12.SignedGeometry.rotate k) = 7
+'H12.SignedGeometry.high_subspace_rotation' depends on axioms: [propext, Quot.sound]
+H12.SignedGeometry.walsh_add.{u_2} {A : Type u_2} [AddCommGroup A] (x y : Fin 8 → A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (fun i => x i + y i) k = H12.SignedGeometry.walsh x k + H12.SignedGeometry.walsh y k
+'H12.SignedGeometry.walsh_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.walsh_zsmul.{u_2} {A : Type u_2} [AddCommGroup A] (n : Fin 8 → ℤ) (a : A) (k : Fin 8) :
+  H12.SignedGeometry.walsh (fun i => n i • a) k = H12.SignedGeometry.walsh n k • a
+'H12.SignedGeometry.walsh_zsmul' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedGeometry.walsh_aggregate.{u_2} {A : Type u_2} [AddCommGroup A] (x : Fin 8 → A) :
+  H12.SignedGeometry.walsh x 0 +
+          (H12.SignedGeometry.walsh x 1 + H12.SignedGeometry.walsh x 2 + H12.SignedGeometry.walsh x 4) +
+        (H12.SignedGeometry.walsh x 3 + H12.SignedGeometry.walsh x 5 + H12.SignedGeometry.walsh x 6) +
+      H12.SignedGeometry.walsh x 7 =
+    8 • x 0
+'H12.SignedGeometry.walsh_aggregate' depends on axioms: [propext]
+
+-- Audit_H12Taps
+H12.Taps.phase3_lift (n : ℤ) : ∃ d, H12.Taps.phase3 n = n + 3 * d
+'H12.Taps.phase3_lift' depends on axioms: [propext, Quot.sound]
+H12.Taps.gain_lift (xs : List (ℤ × ℤ)) : ∃ d, H12.Taps.gain xs = H12.Taps.firstMoment xs + 3 * d
+'H12.Taps.gain_lift' depends on axioms: [propext, Quot.sound]
+H12.Taps.gain_divisible_by_three (xs : List (ℤ × ℤ)) (h : H12.Taps.firstMoment xs = 0) : 3 ∣ H12.Taps.gain xs
+'H12.Taps.gain_divisible_by_three' depends on axioms: [propext, Quot.sound]
+H12.Taps.stencil_first_moment : H12.Taps.firstMoment H12.Taps.cubicStencil = 0
+'H12.Taps.stencil_first_moment' does not depend on any axioms
+H12.Taps.stencil_second_moment : H12.Taps.secondMoment H12.Taps.cubicStencil = 0
+'H12.Taps.stencil_second_moment' depends on axioms: [propext]
+H12.Taps.stencil_target_gain : H12.Taps.gain H12.Taps.cubicStencil = 3
+'H12.Taps.stencil_target_gain' does not depend on any axioms
+H12.Taps.triple_zero_identity.{u_1} {K : Type u_1} [Field K] (z : K) (hz : z ≠ 0) :
+  z * (z⁻¹ + 3 * z - z ^ 2 - 3) = -(z - 1) ^ 3
+'H12.Taps.triple_zero_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.Taps.cubic_unit_identity.{u_1} {K : Type u_1} [CommRing K] (b : K) (h : b ^ 3 = 7) :
+  (2 - b) * (b ^ 2 + 2 * b + 4) = 1
+'H12.Taps.cubic_unit_identity' depends on axioms: [propext, Quot.sound]
+
+-- Audit_H12TateMarking
+H12.TateMarking.negation_involution.{u_1} {K : Type u_1} [Field K] (u x y : K) :
+  H12.TateMarking.negY u x (H12.TateMarking.negY u x y) = y
+'H12.TateMarking.negation_involution' depends on axioms: [propext, Quot.sound]
+H12.TateMarking.negation_preserves_curve.{u_1} {K : Type u_1} [Field K] (u x y : K) :
+  H12.TateMarking.curve u x (H12.TateMarking.negY u x y) = H12.TateMarking.curve u x y
+'H12.TateMarking.negation_preserves_curve' depends on axioms: [propext, Quot.sound]
+H12.TateMarking.changed_parameter_nonzero.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.TateMarking.newU u ≠ 0
+'H12.TateMarking.changed_parameter_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.TateMarking.parameter_twice.{u_1} {K : Type u_1} [Field K] (u : K) (hu : u ≠ 0) :
+  H12.TateMarking.newU (H12.TateMarking.newU u) = u
+'H12.TateMarking.parameter_twice' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.TateMarking.marking_curve_identity.{u_1} {K : Type u_1} [Field K] (u x y : K) (hu : u ≠ 0) :
+  u ^ 6 * H12.TateMarking.curve (H12.TateMarking.newU u) (H12.TateMarking.newX u x) (H12.TateMarking.newY u x y) =
+    H12.TateMarking.curve u x y
+'H12.TateMarking.marking_curve_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.TateMarking.marking_preserves_curve.{u_1} {K : Type u_1} [Field K] (u x y : K) (hu : u ≠ 0)
+  (hc : H12.TateMarking.curve u x y = 0) :
+  H12.TateMarking.curve (H12.TateMarking.newU u) (H12.TateMarking.newX u x) (H12.TateMarking.newY u x y) = 0
+'H12.TateMarking.marking_preserves_curve' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.TateMarking.marking_x_twice.{u_1} {K : Type u_1} [Field K] (u x : K) (hu : u ≠ 0) :
+  H12.TateMarking.newX (H12.TateMarking.newU u) (H12.TateMarking.newX u x) = x
+'H12.TateMarking.marking_x_twice' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.TateMarking.marking_y_twice.{u_1} {K : Type u_1} [Field K] (u x y : K) (hu : u ≠ 0) :
+  H12.TateMarking.newY (H12.TateMarking.newU u) (H12.TateMarking.newX u x) (H12.TateMarking.newY u x y) =
+    H12.TateMarking.negY u x y
+'H12.TateMarking.marking_y_twice' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.TateMarking.marking_theta_invariant.{u_1} {K : Type u_1} [Field K] (u x : K) (hu : u ≠ 0) (hx : x ≠ 0)
+  (hxu : x - u ≠ 0) :
+  H12.TateMarking.theta (H12.TateMarking.newU u) (H12.TateMarking.newX u x) = H12.TateMarking.theta u x
+'H12.TateMarking.marking_theta_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12UnitCoinvariants
+H12UnitCoinvariants.ell_delta (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell (H12UnitCoinvariants.delta v) = -6 * v.z
+'H12UnitCoinvariants.ell_delta' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.ell_original (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell (H12UnitCoinvariants.original v) = H12UnitCoinvariants.ell v - 6 * v.z
+'H12UnitCoinvariants.ell_original' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.ell_add (v w : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell { x := v.x + w.x, y := v.y + w.y, z := v.z + w.z } =
+    H12UnitCoinvariants.ell v + H12UnitCoinvariants.ell w
+'H12UnitCoinvariants.ell_add' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.ell_sub (v w : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.ell (H12UnitCoinvariants.sub v w) = H12UnitCoinvariants.ell v - H12UnitCoinvariants.ell w
+'H12UnitCoinvariants.ell_sub' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.unit_delta (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.delta v = H12UnitCoinvariants.sub (H12UnitCoinvariants.original v) v
+'H12UnitCoinvariants.unit_delta' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.residual_reconstruction (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.delta (H12UnitCoinvariants.reconstruction v) =
+    { x := v.x - H12UnitCoinvariants.ell v, y := v.y, z := v.z }
+'H12UnitCoinvariants.residual_reconstruction' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.six_generator : H12UnitCoinvariants.delta { x := -3, y := 3, z := -1 } = { x := 6, y := 0, z := 0 }
+'H12UnitCoinvariants.six_generator' does not depend on any axioms
+H12UnitCoinvariants.exact_preimage (v : H12UnitCoinvariants.V) (k : Int) (h : H12UnitCoinvariants.ell v = 6 * k) :
+  H12UnitCoinvariants.delta (H12UnitCoinvariants.preimage v k) = v
+'H12UnitCoinvariants.exact_preimage' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.image_iff_multiple_six (v : H12UnitCoinvariants.V) :
+  (∃ w, H12UnitCoinvariants.delta w = v) ↔ ∃ k, H12UnitCoinvariants.ell v = 6 * k
+'H12UnitCoinvariants.image_iff_multiple_six' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.quotient_difference (v w : H12UnitCoinvariants.V) :
+  (∃ q, H12UnitCoinvariants.delta q = H12UnitCoinvariants.sub v w) ↔
+    ∃ k, H12UnitCoinvariants.ell v - H12UnitCoinvariants.ell w = 6 * k
+'H12UnitCoinvariants.quotient_difference' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.quotient_surjective (k : Int) : H12UnitCoinvariants.ell { x := k, y := 0, z := 0 } = k
+'H12UnitCoinvariants.quotient_surjective' depends on axioms: [propext]
+H12UnitCoinvariants.period_class : H12UnitCoinvariants.ell H12UnitCoinvariants.e2 = 3
+'H12UnitCoinvariants.period_class' does not depend on any axioms
+H12UnitCoinvariants.carry_class : H12UnitCoinvariants.ell H12UnitCoinvariants.carry = -2
+'H12UnitCoinvariants.carry_class' does not depend on any axioms
+H12UnitCoinvariants.tripled_carry :
+  H12UnitCoinvariants.delta H12UnitCoinvariants.e2 =
+    { x := 3 * H12UnitCoinvariants.carry.x, y := 3 * H12UnitCoinvariants.carry.y, z := 3 * H12UnitCoinvariants.carry.z }
+'H12UnitCoinvariants.tripled_carry' does not depend on any axioms
+H12UnitCoinvariants.carry_nonzero : ¬∃ v, H12UnitCoinvariants.delta v = H12UnitCoinvariants.carry
+'H12UnitCoinvariants.carry_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12UnitCoinvariants.doubled_carry_nonzero : ¬∃ v, H12UnitCoinvariants.delta v = { x := 0, y := 10, z := 2 }
+'H12UnitCoinvariants.doubled_carry_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12UnitCoinvariants.delta_scaling (r : Int) (v : H12UnitCoinvariants.V) :
+  H12UnitCoinvariants.delta { x := r * v.x, y := r * v.y, z := r * v.z } =
+    { x := r * (H12UnitCoinvariants.delta v).x, y := r * (H12UnitCoinvariants.delta v).y,
+      z := r * (H12UnitCoinvariants.delta v).z }
+'H12UnitCoinvariants.delta_scaling' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12UnitCoinvariants.period_restricted_indices (k : Fin 6) : 3 * ↑k % 6 = 0 ↔ ↑k = 0 ∨ ↑k = 2 ∨ ↑k = 4
+'H12UnitCoinvariants.period_restricted_indices' does not depend on any axioms
+H12UnitCoinvariants.based_character_cubed (k : Int) : 3 * (2 * k) % 6 = 0
+'H12UnitCoinvariants.based_character_cubed' depends on axioms: [propext, Quot.sound]
+H12UnitCoinvariants.based_character_image (k : Fin 6) : 2 * ↑k % 6 = 0 ∨ 2 * ↑k % 6 = 2 ∨ 2 * ↑k % 6 = 4
+'H12UnitCoinvariants.based_character_image' does not depend on any axioms
+H12UnitCoinvariants.all_invariant_sixth_characters (a b c : Fin 6) :
+  H12UnitCoinvariants.compatible ↑a ↑b ↑c ↔ ↑b = 5 * ↑a % 6 ∧ ↑c = 3 * ↑a % 6
+'H12UnitCoinvariants.all_invariant_sixth_characters' does not depend on any axioms
+
+-- Audit_H12WeilCharacter
+H12WeilCharacter.jacobi_norm : H12WeilCharacter.emul H12WeilCharacter.J H12WeilCharacter.Jbar = (7, 0)
+'H12WeilCharacter.jacobi_norm' does not depend on any axioms
+H12WeilCharacter.base_pairing_exponent : H12WeilCharacter.wedge H12WeilCharacter.Jbar H12WeilCharacter.J = 3
+'H12WeilCharacter.base_pairing_exponent' does not depend on any axioms
+H12WeilCharacter.base_pairing_nonzero : H12WeilCharacter.phase H12WeilCharacter.Jbar H12WeilCharacter.J ≠ 0
+'H12WeilCharacter.base_pairing_nonzero' does not depend on any axioms
+H12WeilCharacter.conjugation_reverses_phase : H12WeilCharacter.phase H12WeilCharacter.J H12WeilCharacter.Jbar = 4
+'H12WeilCharacter.conjugation_reverses_phase' does not depend on any axioms
+H12WeilCharacter.pairing_all_residue_multiples (a b : Fin 7) :
+  H12WeilCharacter.phase (H12WeilCharacter.scale (↑↑a) H12WeilCharacter.Jbar)
+      (H12WeilCharacter.scale (↑↑b) H12WeilCharacter.J) =
+    3 * ↑↑a * ↑↑b % 7
+'H12WeilCharacter.pairing_all_residue_multiples' does not depend on any axioms
+H12WeilCharacter.pairing_nondegenerate (a : Fin 7) :
+  (∀ (b : Fin 7),
+      H12WeilCharacter.phase (H12WeilCharacter.scale (↑↑a) H12WeilCharacter.Jbar)
+          (H12WeilCharacter.scale (↑↑b) H12WeilCharacter.J) =
+        0) ↔
+    ↑a = 0
+'H12WeilCharacter.pairing_nondegenerate' does not depend on any axioms
+H12WeilCharacter.product_pairing_exact_exponent : H12WeilCharacter.productPairingExponent = 63
+'H12WeilCharacter.product_pairing_exact_exponent' does not depend on any axioms
+H12WeilCharacter.product_polarization_trivial : H12WeilCharacter.productPairingExponent % 7 = 0
+'H12WeilCharacter.product_polarization_trivial' does not depend on any axioms
+H12WeilCharacter.character_doubling (k : Fin 7) :
+  H12WeilCharacter.chi (2 * ↑k % 7) = H12WeilCharacter.emul H12WeilCharacter.om (H12WeilCharacter.chi ↑k)
+'H12WeilCharacter.character_doubling' does not depend on any axioms
+H12WeilCharacter.exact_jacobi_sum : H12WeilCharacter.jacobiSum = H12WeilCharacter.J
+'H12WeilCharacter.exact_jacobi_sum' does not depend on any axioms
+H12WeilCharacter.gauss_cube_group_algebra (k : Fin 7) :
+  H12WeilCharacter.gaussCubeCoeff ↑k = H12WeilCharacter.scale ((if ↑k = 0 then 7 else 0) - 1) H12WeilCharacter.J
+'H12WeilCharacter.gauss_cube_group_algebra' does not depend on any axioms
+H12WeilCharacter.smoothing_determinant : H12WeilCharacter.smoothingDet = 5
+'H12WeilCharacter.smoothing_determinant' depends on axioms: [propext]
+H12WeilCharacter.topological_fifth_cancellation : 5 - H12WeilCharacter.smoothingDet = 0
+'H12WeilCharacter.topological_fifth_cancellation' depends on axioms: [propext]
+
+-- Audit_H12CMThreefold
+H12.CMThreefold.intertwining (x : H12.ConjugationOrder.R6) :
+  H12.CMThreefold.change (H12.CMThreefold.original x) = H12.CMThreefold.companion (H12.CMThreefold.change x)
+'H12.CMThreefold.intertwining' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.ordinary_fixed_identity (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.sub (H12.CMThreefold.ordinary z) (H12.CMThreefold.companion (H12.CMThreefold.ordinary z)) =
+    { c0 := H12.ConjugationOrder.escale 6 z, c1 := H12.ConjugationOrder.ez, c2 := H12.ConjugationOrder.ez }
+'H12.CMThreefold.ordinary_fixed_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.twisted_fixed_identity (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.sub
+      (H12.CMThreefold.scale H12.ConjugationOrder.ew (H12.CMThreefold.companion (H12.CMThreefold.twisted z)))
+      (H12.CMThreefold.twisted z) =
+    {
+      c0 :=
+        H12.ConjugationOrder.emul (H12.ConjugationOrder.emul H12.ConjugationOrder.ew H12.CMThreefold.j)
+          (H12.ConjugationOrder.escale 6 z),
+      c1 := H12.ConjugationOrder.ez, c2 := H12.ConjugationOrder.ez }
+'H12.CMThreefold.twisted_fixed_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.seven_doubling_carry (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.original (H12.CMThreefold.embed7 z) =
+    H12.ConjugationOrder.add (H12.CMThreefold.embed7 (H12.ConjugationOrder.escale 2 z))
+      { c0 := H12.ConjugationOrder.ez, c1 := H12.ConjugationOrder.escale 56 z, c2 := H12.ConjugationOrder.escale 7 z }
+'H12.CMThreefold.seven_doubling_carry' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.seven_twisted_factor (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.sub
+      (H12.CMThreefold.scale H12.ConjugationOrder.ew (H12.CMThreefold.original (H12.CMThreefold.embed7 z)))
+      (H12.CMThreefold.embed7 z) =
+    H12.CMThreefold.scale (H12.ConjugationOrder.emul H12.CMThreefold.j z)
+      { c0 := { a := 1, b := 1 }, c1 := { a := 26, b := 18 }, c2 := { a := 7, b := 6 } }
+'H12.CMThreefold.seven_twisted_factor' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.seven_change_coordinates (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.change (H12.CMThreefold.embed7 z) =
+    { c0 := H12.ConjugationOrder.escale 56 z, c1 := H12.ConjugationOrder.ez, c2 := z }
+'H12.CMThreefold.seven_change_coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.c_associate_j :
+  H12.CMThreefold.c =
+    H12.ConjugationOrder.escale (-1) (H12.ConjugationOrder.emul H12.ConjugationOrder.ew H12.CMThreefold.j)
+'H12.CMThreefold.c_associate_j' does not depend on any axioms
+H12.CMThreefold.c_cube_identity :
+  H12.CMThreefold.esub
+      (H12.ConjugationOrder.emul (H12.ConjugationOrder.emul H12.CMThreefold.c H12.CMThreefold.c) H12.CMThreefold.c)
+      { a := 7, b := 0 } =
+    H12.ConjugationOrder.escale 6 H12.CMThreefold.j
+'H12.CMThreefold.c_cube_identity' does not depend on any axioms
+H12.CMThreefold.splitting_identity (z : H12.ConjugationOrder.Eis) :
+  H12.ConjugationOrder.eadd (H12.ConjugationOrder.escale 7 z) (H12.ConjugationOrder.escale (-6) z) = z
+'H12.CMThreefold.splitting_identity' depends on axioms: [propext, Quot.sound]
+H12.CMThreefold.original_ordinary_identity (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.sub (H12.CMThreefold.ordinaryOriginal z)
+      (H12.CMThreefold.original (H12.CMThreefold.ordinaryOriginal z)) =
+    { c0 := H12.ConjugationOrder.ez, c1 := H12.ConjugationOrder.escale (-6) z, c2 := H12.ConjugationOrder.ez }
+'H12.CMThreefold.original_ordinary_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CMThreefold.original_twisted_identity (z : H12.ConjugationOrder.Eis) :
+  H12.CMThreefold.sub
+      (H12.CMThreefold.scale H12.ConjugationOrder.ew (H12.CMThreefold.original (H12.CMThreefold.twistedOriginal z)))
+      (H12.CMThreefold.twistedOriginal z) =
+    { c0 := H12.ConjugationOrder.ez,
+      c1 := H12.ConjugationOrder.escale 6 (H12.ConjugationOrder.emul H12.CMThreefold.c z),
+      c2 := H12.ConjugationOrder.ez }
+'H12.CMThreefold.original_twisted_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12CubicDivisorGrowth
+H12CubicDivisorGrowth.positive_pivot (b c : Int) (h : 2 * b < 3 * c) : 0 < H12PrincipalDivisor.pivot b c
+'H12CubicDivisorGrowth.positive_pivot' depends on axioms: [propext, Quot.sound]
+H12CubicDivisorGrowth.chamber_wall (a b j : Int) (ha : a ≤ 0) (hb : 0 < b) (hj : 0 < j) :
+  H12PrincipalDivisor.wall a b j = 1
+'H12CubicDivisorGrowth.chamber_wall' depends on axioms: [propext, Quot.sound]
+H12CubicDivisorGrowth.chamber_order (a b c : Int) (ha : a ≤ 0) (hb : 0 < b) (hc : 2 * b < 3 * c) :
+  H12PrincipalDivisor.correctionOrder a b c = H12PrincipalDivisor.weight c
+'H12CubicDivisorGrowth.chamber_order' depends on axioms: [propext, Quot.sound]
+H12CubicDivisorGrowth.zero_family_order (n i j k : Int) (hn : 0 < n) (hi : 0 < i) (hj : 0 < j) (hjn : j ≤ n)
+  (hk : 0 < k) : H12PrincipalDivisor.correctionOrder (-i) j (5 * (n + k)) = 4
+'H12CubicDivisorGrowth.zero_family_order' depends on axioms: [propext, Quot.sound]
+H12CubicDivisorGrowth.pole_family_order (n i j k r : Int) (hn : 0 < n) (hi : 0 < i) (hj : 0 < j) (hjn : j ≤ n)
+  (hk : 0 < k) (hr : 1 ≤ r) (hr4 : r ≤ 4) : H12PrincipalDivisor.correctionOrder (-i) j (5 * (n + k) - r) = -1
+'H12CubicDivisorGrowth.pole_family_order' depends on axioms: [propext, Quot.sound]
+H12CubicDivisorGrowth.zero_family_injective (n i j k i' j' k' : Int)
+  (h : H12CubicDivisorGrowth.zeroPoint n i j k = H12CubicDivisorGrowth.zeroPoint n i' j' k') : i = i' ∧ j = j' ∧ k = k'
+'H12CubicDivisorGrowth.zero_family_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12CubicDivisorGrowth.pole_family_injective (n i j k r i' j' k' r' : Int) (hr : 1 ≤ r) (hr4 : r ≤ 4) (hr' : 1 ≤ r')
+  (hr4' : r' ≤ 4) (h : H12CubicDivisorGrowth.polePoint n i j k r = H12CubicDivisorGrowth.polePoint n i' j' k' r') :
+  i = i' ∧ j = j' ∧ k = k' ∧ r = r'
+'H12CubicDivisorGrowth.pole_family_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12CubicDivisorGrowth.families_disjoint (n i j k i' j' k' r : Int) (hr : 1 ≤ r) (hr4 : r ≤ 4) :
+  H12CubicDivisorGrowth.zeroPoint n i j k ≠ H12CubicDivisorGrowth.polePoint n i' j' k' r
+'H12CubicDivisorGrowth.families_disjoint' depends on axioms: [propext, Quot.sound]
+H12CubicDivisorGrowth.zero_box_bounds (n i j k : Int) (_hn : 1 ≤ n) (hi : 1 ≤ i) (hin : i ≤ n) (hj : 1 ≤ j)
+  (hjn : j ≤ n) (hk : 1 ≤ k) (hkn : k ≤ n) :
+  -n ≤ (H12CubicDivisorGrowth.zeroPoint n i j k).fst ∧
+    (H12CubicDivisorGrowth.zeroPoint n i j k).fst < 0 ∧
+      0 < (H12CubicDivisorGrowth.zeroPoint n i j k).snd.fst ∧
+        (H12CubicDivisorGrowth.zeroPoint n i j k).snd.fst ≤ n ∧
+          5 * n < (H12CubicDivisorGrowth.zeroPoint n i j k).snd.snd ∧
+            (H12CubicDivisorGrowth.zeroPoint n i j k).snd.snd ≤ 10 * n
+'H12CubicDivisorGrowth.zero_box_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12CubicDivisorGrowth.pole_box_bounds (n i j k r : Int) (_hn : 1 ≤ n) (hi : 1 ≤ i) (hin : i ≤ n) (hj : 1 ≤ j)
+  (hjn : j ≤ n) (hk : 1 ≤ k) (hkn : k ≤ n) (hr : 1 ≤ r) (hr4 : r ≤ 4) :
+  -n ≤ (H12CubicDivisorGrowth.polePoint n i j k r).fst ∧
+    (H12CubicDivisorGrowth.polePoint n i j k r).fst < 0 ∧
+      0 < (H12CubicDivisorGrowth.polePoint n i j k r).snd.fst ∧
+        (H12CubicDivisorGrowth.polePoint n i j k r).snd.fst ≤ n ∧
+          5 * n < (H12CubicDivisorGrowth.polePoint n i j k r).snd.snd ∧
+            (H12CubicDivisorGrowth.polePoint n i j k r).snd.snd < 10 * n
+'H12CubicDivisorGrowth.pole_box_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12CubicDivisorGrowth.origin_not_in_families (n i j k r : Int) (hi : 0 < i) :
+  H12CubicDivisorGrowth.zeroPoint n i j k ≠ (0, 0, 0) ∧ H12CubicDivisorGrowth.polePoint n i j k r ≠ (0, 0, 0)
+'H12CubicDivisorGrowth.origin_not_in_families' depends on axioms: [propext, Quot.sound]
+
+-- Audit_H12DivisorCarries
+H12DivisorCarries.unit_period_pivot (b c : Int) :
+  H12PrincipalDivisor.pivot (b - 15) (c - 10) = H12PrincipalDivisor.pivot b c
+'H12DivisorCarries.unit_period_pivot' depends on axioms: [propext, Quot.sound]
+H12DivisorCarries.unit_period_weight (c : Int) : H12PrincipalDivisor.weight (c - 10) = H12PrincipalDivisor.weight c
+'H12DivisorCarries.unit_period_weight' depends on axioms: [propext, Quot.sound]
+H12DivisorCarries.finite_window_boundary (b : Int) :
+  H12PrincipalDivisor.step (b - 15) - H12PrincipalDivisor.step b = -if 0 < b ∧ b ≤ 15 then 1 else 0
+'H12DivisorCarries.finite_window_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DivisorCarries.unit_period_order (a b c : Int) :
+  H12PrincipalDivisor.correctionOrder a (b - 15) (c - 10) - H12PrincipalDivisor.correctionOrder a b c =
+    -H12PrincipalDivisor.weight c * if 0 < b ∧ b ≤ 15 then 1 else 0
+'H12DivisorCarries.unit_period_order' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DivisorCarries.seventh_pivot_carry (b c : Int) :
+  H12PrincipalDivisor.pivot (b - 8) (c - 5) =
+    H12PrincipalDivisor.pivot b c + if H12PrincipalDivisor.digit b c = 0 then 1 else 0
+'H12DivisorCarries.seventh_pivot_carry' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12DivisorCarries.seventh_digit_carry (b c : Int) :
+  H12PrincipalDivisor.digit (b - 8) (c - 5) = (H12PrincipalDivisor.digit b c + 6) % 7
+'H12DivisorCarries.seventh_digit_carry' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12FourierExtension
+H12FourierExtension.explicit_flat_extension (m : H12DualFourier.V) :
+  H12FourierExtension.rowDelta (H12FourierExtension.liftNumerator m) = { x := -6 * m.x, y := -6 * m.y, z := -6 * m.z }
+'H12FourierExtension.explicit_flat_extension' depends on axioms: [propext, Quot.sound]
+H12FourierExtension.lift_pairing (m n : H12DualFourier.V) :
+  H12DualFourier.dot (H12FourierExtension.liftNumerator m) (H12DualFourier.original n) -
+      H12DualFourier.dot (H12FourierExtension.liftNumerator m) n =
+    -6 * H12DualFourier.dot m n
+'H12FourierExtension.lift_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FourierExtension.invariant_character_residue (m n : H12DualFourier.V) :
+  H12DualFourier.dot (H12FourierExtension.liftNumerator m) (H12DualFourier.original n) % 6 =
+    H12DualFourier.dot (H12FourierExtension.liftNumerator m) n % 6
+'H12FourierExtension.invariant_character_residue' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12FourierExtension.cubic_based_exponent (m : H12DualFourier.V) : 3 * m.z % 3 = 0
+'H12FourierExtension.cubic_based_exponent' depends on axioms: [propext, Quot.sound]
+H12FourierExtension.finite_grid_phase_vanishes (q n : Int) : q * n % q = 0
+'H12FourierExtension.finite_grid_phase_vanishes' depends on axioms: [propext]
+
+-- Audit_H12PolarizedReality
+H12.PolarizedReality.norm_eq_real_part (z : ℂ) (hi : z.im = 0) (hr : 0 ≤ z.re) : ‖z‖ = z.re
+'H12.PolarizedReality.norm_eq_real_part' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PolarizedReality.positive_real_equal_of_norm (x y : ℂ) (hx : x.im = 0) (hy : y.im = 0) (hxr : 0 < x.re)
+  (hyr : 0 < y.re) (hn : ‖x‖ = ‖y‖) : x = y
+'H12.PolarizedReality.positive_real_equal_of_norm' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PolarizedReality.normalized_reality_implies_cube (z u c : ℂ) (hc : c ≠ 0) (hm : ‖z‖ = ‖u‖) (hz : (c * z ^ 3).im = 0)
+  (hu : (c * u ^ 3).im = 0) (hposz : 0 < (c * z ^ 3).re) (hposu : 0 < (c * u ^ 3).re) : z ^ 3 = u ^ 3
+'H12.PolarizedReality.normalized_reality_implies_cube' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PolarizedReality.normalized_reality_with_branch (z u c : ℂ) (hu0 : u ≠ 0) (hc : c ≠ 0) (hm : ‖z‖ = ‖u‖)
+  (hz : (c * z ^ 3).im = 0) (hu : (c * u ^ 3).im = 0) (hposz : 0 < (c * z ^ 3).re) (hposu : 0 < (c * u ^ 3).re)
+  (hnear : ‖z / u - 1‖ < 1) : z = u
+'H12.PolarizedReality.normalized_reality_with_branch' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PolarizedReality.conjugate_product_real (e a d : ℂ) :
+  (e * (starRingEnd ℂ) e) ^ 2 * (a * (starRingEnd ℂ) a) ^ 3 * (d * (starRingEnd ℂ) d) ^ 2 =
+    ↑(‖e‖ ^ 4 * ‖a‖ ^ 6 * ‖d‖ ^ 4)
+'H12.PolarizedReality.conjugate_product_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.PolarizedReality.positive_polarized_product (e a d : ℂ) (he : e ≠ 0) (ha : a ≠ 0) (hd : d ≠ 0) :
+  0 < ‖e‖ ^ 4 * ‖a‖ ^ 6 * ‖d‖ ^ 4
+'H12.PolarizedReality.positive_polarized_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12SignedAlgebra
+H12.SignedAlgebra.signed_product.{u_1} {G : Type u_1} [CommGroup G] (x y : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => x i * y i) k = H12.SignedAlgebra.signed x k * H12.SignedAlgebra.signed y k
+'H12.SignedAlgebra.signed_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.signed_transport.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => x (H12.SignedGeometry.rotate i)) k =
+    H12.SignedAlgebra.signed x (H12.SignedGeometry.rotate k)
+'H12.SignedAlgebra.signed_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.carried_transport.{u_1} {G : Type u_1} [CommGroup G] (x carry : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => x (H12.SignedGeometry.rotate i) * carry i) k =
+    H12.SignedAlgebra.signed x (H12.SignedGeometry.rotate k) * H12.SignedAlgebra.signed carry k
+'H12.SignedAlgebra.carried_transport' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.signed_eighth_power.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (H12.SignedAlgebra.signed x) k = x k ^ 8
+'H12.SignedAlgebra.signed_eighth_power' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.signed_powers.{u_1} {G : Type u_1} [CommGroup G] (n : Fin 8 → ℤ) (r : G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (fun i => r ^ n i) k = r ^ H12.SignedGeometry.walsh n k
+'H12.SignedAlgebra.signed_powers' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.aggregate_reconstruction.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) :
+  H12.SignedAlgebra.signed x 0 * H12.SignedAlgebra.layerOne x * H12.SignedAlgebra.layerTwo x *
+      H12.SignedAlgebra.signed x 7 =
+    x 0 ^ 8
+'H12.SignedAlgebra.aggregate_reconstruction' depends on axioms: [propext, Quot.sound]
+H12.SignedAlgebra.conductor_ninth_power.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G)
+  (hnorm : H12.SignedAlgebra.signed x 0 = (x 0)⁻¹) :
+  H12.SignedAlgebra.layerOne x * H12.SignedAlgebra.layerTwo x * H12.SignedAlgebra.signed x 7 = x 0 ^ 9
+'H12.SignedAlgebra.conductor_ninth_power' depends on axioms: [propext, Quot.sound]
+H12.SignedAlgebra.gauge_characters.{u_1} {G : Type u_1} [CommGroup G] (r : G) (k : Fin 8) :
+  H12.SignedAlgebra.signed (H12.SignedAlgebra.gauge r) k =
+    if ↑k = 0 then r ^ 4 else if ↑k = 1 ∨ ↑k = 2 ∨ ↑k = 4 then (r ^ 12)⁻¹ else 1
+'H12.SignedAlgebra.gauge_characters' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.gauge_norm_compatibility.{u_1} {G : Type u_1} [CommGroup G] (r : G) :
+  H12.SignedAlgebra.signed (H12.SignedAlgebra.gauge r) 0 = (H12.SignedAlgebra.gauge r 0)⁻¹
+'H12.SignedAlgebra.gauge_norm_compatibility' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.gauge_preserves_norm_constraint.{u_1} {G : Type u_1} [CommGroup G] (x : Fin 8 → G) (r : G)
+  (hnorm : H12.SignedAlgebra.signed x 0 = (x 0)⁻¹) :
+  H12.SignedAlgebra.signed (fun i => x i * H12.SignedAlgebra.gauge r i) 0 = (x 0 * H12.SignedAlgebra.gauge r 0)⁻¹
+'H12.SignedAlgebra.gauge_preserves_norm_constraint' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.SignedAlgebra.first_layer_detects_gauge.{u_1} {G : Type u_1} [CommGroup G] (r : G) :
+  H12.SignedAlgebra.layerOne (H12.SignedAlgebra.gauge r) = (r ^ 36)⁻¹
+'H12.SignedAlgebra.first_layer_detects_gauge' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+-- Audit_H12ThreeStepTransport
+H12.ThreeStepTransport.actual_unit_cube.{u_1} {A : Type u_1} [CommRing A] (v : H12.ThreeStepTransport.Vec A) :
+  H12.ThreeStepTransport.backward (H12.ThreeStepTransport.backward (H12.ThreeStepTransport.backward v)) =
+    H12.ThreeStepTransport.cubeMap v
+'H12.ThreeStepTransport.actual_unit_cube' depends on axioms: [propext, Quot.sound]
+H12.ThreeStepTransport.actual_three_step_carry (b c a : ℚ) :
+  H12.ThreeStepTransport.cubeMap (b / 2, c / 2, 1 / 3 + a / 2) =
+    (b / 2 + (H12.ThreeStepTransport.oneCarry b c a).1, c / 2 + (H12.ThreeStepTransport.oneCarry b c a).2.1,
+      1 / 3 + a / 2 + (H12.ThreeStepTransport.oneCarry b c a).2.2)
+'H12.ThreeStepTransport.actual_three_step_carry' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.ThreeStepTransport.all_iterates_affine (n : ℕ) (b c a : ℤ) :
+  H12.ThreeStepTransport.accum n b c a =
+    H12.ThreeStepTransport.mix b c a (H12.ThreeStepTransport.accum n 0 0 0) (H12.ThreeStepTransport.accum n 1 0 0)
+      (H12.ThreeStepTransport.accum n 0 1 0) (H12.ThreeStepTransport.accum n 0 0 1)
+'H12.ThreeStepTransport.all_iterates_affine' depends on axioms: [propext, Quot.sound]
+H12.ThreeStepTransport.all_iterates_eta_affine (n : ℕ) (b c a : ℤ) :
+  H12.ThreeStepTransport.eta n b c a =
+    H12.ThreeStepTransport.eta n 0 0 0 + b * (H12.ThreeStepTransport.eta n 1 0 0 - H12.ThreeStepTransport.eta n 0 0 0) +
+        c * (H12.ThreeStepTransport.eta n 0 1 0 - H12.ThreeStepTransport.eta n 0 0 0) +
+      a * (H12.ThreeStepTransport.eta n 0 0 1 - H12.ThreeStepTransport.eta n 0 0 0)
+'H12.ThreeStepTransport.all_iterates_eta_affine' depends on axioms: [propext, Quot.sound]
+
+-- Audit_H12CanonicalTheta
+H12.CanonicalTheta.coordinate_factorization.{u_1} {K : Type u_1} [Field K] (a b x : K) (hd : a - b ≠ 0) :
+  (x - a) * (x - b) = (a - b) ^ 2 * H12.CanonicalTheta.coordinate a b x * (H12.CanonicalTheta.coordinate a b x + 1)
+'H12.CanonicalTheta.coordinate_factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CanonicalTheta.canonical_coordinate_form.{u_1} {K : Type u_1} [Field K] (a b x : K) (hd : a - b ≠ 0)
+  (ha : x - a ≠ 0) (hb : x - b ≠ 0) :
+  H12.CanonicalTheta.canonical a b x =
+    1 / (H12.CanonicalTheta.coordinate a b x * (H12.CanonicalTheta.coordinate a b x + 1))
+'H12.CanonicalTheta.canonical_coordinate_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CanonicalTheta.normalized_scalar_replacement.{u_1} {K : Type u_1} [Field K] (a b x c : K) (hc : c = (a - b) ^ 2) :
+  c / ((x - a) * (x - b)) = H12.CanonicalTheta.canonical a b x
+'H12.CanonicalTheta.normalized_scalar_replacement' depends on axioms: [propext, Quot.sound]
+H12.CanonicalTheta.nonzero_difference.{u_1} {K : Type u_1} [Field K] (a b : K) (h : a ≠ b) : a - b ≠ 0
+'H12.CanonicalTheta.nonzero_difference' depends on axioms: [propext, Quot.sound]
+H12.CanonicalTheta.canonical_swap.{u_1} {K : Type u_1} [Field K] (a b x : K) :
+  H12.CanonicalTheta.canonical b a x = H12.CanonicalTheta.canonical a b x
+'H12.CanonicalTheta.canonical_swap' depends on axioms: [propext, Quot.sound]
+H12.CanonicalTheta.coordinate_swap.{u_1} {K : Type u_1} [Field K] (a b x : K) (hd : a - b ≠ 0) :
+  H12.CanonicalTheta.coordinate b a x = -1 - H12.CanonicalTheta.coordinate a b x
+'H12.CanonicalTheta.coordinate_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CanonicalTheta.rational_shape_reflection.{u_1} {K : Type u_1} [Field K] (u : K) :
+  (-1 - u) * (-1 - u + 1) = u * (u + 1)
+'H12.CanonicalTheta.rational_shape_reflection' depends on axioms: [propext, Quot.sound]
+H12.CanonicalTheta.scale_invariance.{u_1} {K : Type u_1} [Field K] (a b x scale : K) (hs : scale ≠ 0) :
+  H12.CanonicalTheta.canonical (scale * a) (scale * b) (scale * x) = H12.CanonicalTheta.canonical a b x
+'H12.CanonicalTheta.scale_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CanonicalTheta.field_normalizer.{u_1} {K : Type u_1} [Field K] (c d : K) (hc : c ≠ 0) (h3 : c ^ 3 = d ^ 6)
+  (h8 : c ^ 8 = d ^ 16) : c = d ^ 2
+'H12.CanonicalTheta.field_normalizer' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12.CanonicalTheta.symmetric_kernel_formula.{u_1} {K : Type u_1} [Field K] (a b x : K) :
+  H12.CanonicalTheta.canonical a b x = ((a + b) ^ 2 - 4 * a * b) / (x ^ 2 - (a + b) * x + a * b)
+'H12.CanonicalTheta.symmetric_kernel_formula' depends on axioms: [propext, Quot.sound]

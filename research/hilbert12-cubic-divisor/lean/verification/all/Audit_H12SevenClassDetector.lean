@@ -1,0 +1,20 @@
+import H12SevenClassDetector
+
+#check H12SevenClassDetector.root_two
+#print axioms H12SevenClassDetector.root_two
+#check H12SevenClassDetector.root_four
+#print axioms H12SevenClassDetector.root_four
+#check H12SevenClassDetector.eval_twist_two
+#print axioms H12SevenClassDetector.eval_twist_two
+#check H12SevenClassDetector.eval_twist_four
+#print axioms H12SevenClassDetector.eval_twist_four
+#check H12SevenClassDetector.fixed_at_two
+#print axioms H12SevenClassDetector.fixed_at_two
+#check H12SevenClassDetector.fixed_at_four
+#print axioms H12SevenClassDetector.fixed_at_four
+#check H12SevenClassDetector.coefficient_recovery
+#print axioms H12SevenClassDetector.coefficient_recovery
+#check H12SevenClassDetector.selector_formula
+#print axioms H12SevenClassDetector.selector_formula
+#check H12SevenClassDetector.model_selector
+#print axioms H12SevenClassDetector.model_selector

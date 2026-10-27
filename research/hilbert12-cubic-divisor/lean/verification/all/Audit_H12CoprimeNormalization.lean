@@ -1,0 +1,18 @@
+import H12CoprimeNormalization
+
+#check H12.CoprimeNormalization.recover_from_coprime_powers
+#print axioms H12.CoprimeNormalization.recover_from_coprime_powers
+#check H12.CoprimeNormalization.coprime_power_uniqueness
+#print axioms H12.CoprimeNormalization.coprime_power_uniqueness
+#check H12.CoprimeNormalization.orders_three_eight_trivial
+#print axioms H12.CoprimeNormalization.orders_three_eight_trivial
+#check H12.CoprimeNormalization.squared_difference_normalizer
+#print axioms H12.CoprimeNormalization.squared_difference_normalizer
+#check H12.CoprimeNormalization.norm_four_fixed_iff
+#print axioms H12.CoprimeNormalization.norm_four_fixed_iff
+#check H12.CoprimeNormalization.norm_nine_fixed_iff
+#print axioms H12.CoprimeNormalization.norm_nine_fixed_iff
+#check H12.CoprimeNormalization.two_three_norms_fix_scalar
+#print axioms H12.CoprimeNormalization.two_three_norms_fix_scalar
+#check H12.CoprimeNormalization.scalar_defect_recovery
+#print axioms H12.CoprimeNormalization.scalar_defect_recovery

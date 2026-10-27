@@ -1,0 +1,70 @@
+H12ExplicitDescent.alpha_add (v w : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.add v w) = H12ExplicitDescent.alpha v + H12ExplicitDescent.alpha w
+'H12ExplicitDescent.alpha_add' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_add (v w : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.add v w) = H12ExplicitDescent.beta v + H12ExplicitDescent.beta w
+'H12ExplicitDescent.beta_add' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.alpha_twisted (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.twisted v) =
+    H12ExplicitDescent.alpha v + 4 * H12ExplicitDescent.beta v + 7 * H12ExplicitDescent.aCarry v
+'H12ExplicitDescent.alpha_twisted' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_twisted (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.twisted v) = H12ExplicitDescent.beta v + 7 * H12ExplicitDescent.bCarry v
+'H12ExplicitDescent.beta_twisted' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.alpha_original (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.original v) =
+    2 * H12ExplicitDescent.alpha v + H12ExplicitDescent.beta v + 7 * (-v.x2 + v.y0)
+'H12ExplicitDescent.alpha_original' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_original (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.original v) =
+    2 * H12ExplicitDescent.beta v + 7 * (-v.x0 + 3 * v.x2 + 2 * v.y0 - 7 * v.y2)
+'H12ExplicitDescent.beta_original' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.alpha_rotation (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.rotate v) =
+    4 * H12ExplicitDescent.alpha v + 7 * (-v.x0 + v.x2 + 2 * v.y0 + v.y2)
+'H12ExplicitDescent.alpha_rotation' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.beta_rotation (v : H12ExplicitDescent.V) :
+  H12ExplicitDescent.beta (H12ExplicitDescent.rotate v) =
+    4 * H12ExplicitDescent.beta v + 7 * (-v.x1 - 2 * v.x2 + 2 * v.y1 + v.y2)
+'H12ExplicitDescent.beta_rotation' depends on axioms: [propext, Quot.sound]
+H12ExplicitDescent.quotient_section (a b : Int) :
+  H12ExplicitDescent.alpha (H12ExplicitDescent.liftPair a b) = a ∧
+    H12ExplicitDescent.beta (H12ExplicitDescent.liftPair a b) = b
+'H12ExplicitDescent.quotient_section' depends on axioms: [propext]
+H12ExplicitDescent.cocycle_identity (a b c d e f : Int) :
+  4 * H12ExplicitDescent.alt a b c d + 4 * H12ExplicitDescent.alt (a + c) (b + d) e f =
+    4 * H12ExplicitDescent.alt c d e f + 4 * H12ExplicitDescent.alt a b (c + e) (d + f)
+'H12ExplicitDescent.cocycle_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.alternating_swap (a b c d : Int) : H12ExplicitDescent.alt a b c d = -H12ExplicitDescent.alt c d a b
+'H12ExplicitDescent.alternating_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.normalized_zero (a b : Int) : H12ExplicitDescent.alt a b 0 0 = 0 ∧ H12ExplicitDescent.alt 0 0 a b = 0
+'H12ExplicitDescent.normalized_zero' depends on axioms: [propext]
+H12ExplicitDescent.commutator_exponent (a b c d : Int) :
+  4 * H12ExplicitDescent.alt a b c d - 4 * H12ExplicitDescent.alt c d a b =
+    H12ExplicitDescent.alt a b c d + 7 * H12ExplicitDescent.alt a b c d
+'H12ExplicitDescent.commutator_exponent' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.symplectic_shear (a b c d : Int) :
+  H12ExplicitDescent.alt (a + 4 * b) b (c + 4 * d) d = H12ExplicitDescent.alt a b c d
+'H12ExplicitDescent.symplectic_shear' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.original_multiplier (a b c d : Int) :
+  H12ExplicitDescent.alt (2 * a + b) (2 * b) (2 * c + d) (2 * d) = 4 * H12ExplicitDescent.alt a b c d
+'H12ExplicitDescent.original_multiplier' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.carry_defect (a b c d k l m n : Int) :
+  H12ExplicitDescent.alt (a + 4 * b + 7 * k) (b + 7 * l) (c + 4 * d + 7 * m) (d + 7 * n) -
+      H12ExplicitDescent.alt a b c d =
+    7 * (a * n + 4 * b * n + k * d - b * m - l * c - 4 * l * d + 7 * (k * n - l * m))
+'H12ExplicitDescent.carry_defect' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.real_cover_coboundary (az bz an bn am bm : Int) :
+  4 * H12ExplicitDescent.alt (az + an) (bz + bn) am bm - 4 * H12ExplicitDescent.alt az bz (an + am) (bn + bm) +
+      4 * H12ExplicitDescent.alt az bz an bn =
+    4 * H12ExplicitDescent.alt an bn am bm
+'H12ExplicitDescent.real_cover_coboundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.full_cover_residual (al bl az bz am bm : Int) :
+  4 * H12ExplicitDescent.alt al bl am bm - 4 * H12ExplicitDescent.alt az bz am bm =
+    4 * H12ExplicitDescent.alt (al - az) (bl - bz) am bm
+'H12ExplicitDescent.full_cover_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+H12ExplicitDescent.hodge_coordinates : H12ExplicitDescent.hodgeCross = [(-5, 3), (-3, -8), (8, 5)]
+'H12ExplicitDescent.hodge_coordinates' depends on axioms: [propext]
+H12ExplicitDescent.hodge_class_residues :
+  ((-5 - 2) % 7 = 0 ∧ (3 - 3) % 7 = 0) ∧ ((-3 - 4) % 7 = 0 ∧ (-8 - 6) % 7 = 0) ∧ (8 - 8) % 7 = 0 ∧ (5 - 12) % 7 = 0
+'H12ExplicitDescent.hodge_class_residues' does not depend on any axioms

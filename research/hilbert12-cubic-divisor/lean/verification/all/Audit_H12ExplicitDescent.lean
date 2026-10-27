@@ -1,0 +1,42 @@
+import H12ExplicitDescent
+
+#check H12ExplicitDescent.alpha_add
+#print axioms H12ExplicitDescent.alpha_add
+#check H12ExplicitDescent.beta_add
+#print axioms H12ExplicitDescent.beta_add
+#check H12ExplicitDescent.alpha_twisted
+#print axioms H12ExplicitDescent.alpha_twisted
+#check H12ExplicitDescent.beta_twisted
+#print axioms H12ExplicitDescent.beta_twisted
+#check H12ExplicitDescent.alpha_original
+#print axioms H12ExplicitDescent.alpha_original
+#check H12ExplicitDescent.beta_original
+#print axioms H12ExplicitDescent.beta_original
+#check H12ExplicitDescent.alpha_rotation
+#print axioms H12ExplicitDescent.alpha_rotation
+#check H12ExplicitDescent.beta_rotation
+#print axioms H12ExplicitDescent.beta_rotation
+#check H12ExplicitDescent.quotient_section
+#print axioms H12ExplicitDescent.quotient_section
+#check H12ExplicitDescent.cocycle_identity
+#print axioms H12ExplicitDescent.cocycle_identity
+#check H12ExplicitDescent.alternating_swap
+#print axioms H12ExplicitDescent.alternating_swap
+#check H12ExplicitDescent.normalized_zero
+#print axioms H12ExplicitDescent.normalized_zero
+#check H12ExplicitDescent.commutator_exponent
+#print axioms H12ExplicitDescent.commutator_exponent
+#check H12ExplicitDescent.symplectic_shear
+#print axioms H12ExplicitDescent.symplectic_shear
+#check H12ExplicitDescent.original_multiplier
+#print axioms H12ExplicitDescent.original_multiplier
+#check H12ExplicitDescent.carry_defect
+#print axioms H12ExplicitDescent.carry_defect
+#check H12ExplicitDescent.real_cover_coboundary
+#print axioms H12ExplicitDescent.real_cover_coboundary
+#check H12ExplicitDescent.full_cover_residual
+#print axioms H12ExplicitDescent.full_cover_residual
+#check H12ExplicitDescent.hodge_coordinates
+#print axioms H12ExplicitDescent.hodge_coordinates
+#check H12ExplicitDescent.hodge_class_residues
+#print axioms H12ExplicitDescent.hodge_class_residues
