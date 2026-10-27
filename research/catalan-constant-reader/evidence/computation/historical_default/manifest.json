@@ -1,0 +1,156 @@
+{
+  "schema_version": 2,
+  "claim_id": "CATALAN_PACKET_HISTORICAL_DEFAULT_RERUN",
+  "repository": {
+    "commit": "unavailable",
+    "dirty": true
+  },
+  "command": [
+    "python3",
+    "computations/catalan_packet_audit.py",
+    "--scan-n",
+    "2000",
+    "--precision-bits",
+    "128",
+    "--output",
+    "evidence/computation/historical_default/results.json"
+  ],
+  "environment": {
+    "software": [
+      {
+        "name": "runner-python",
+        "version": "3.12.14"
+      },
+      {
+        "name": "Python",
+        "version": "3.12.14"
+      }
+    ],
+    "hardware": "Linux-6.18.44-x86_64-with-glibc2.39"
+  },
+  "mathematics": {
+    "assertion_tested": "Exact recurrence Wronskians, finite binomial transform 2-adic valuations, five cleared gcd pairs; reproduction of historical implementation",
+    "coefficient_domain": "Z, Q via Python integers and fractions.Fraction; binomial scan in Z/(2^128); log ratio floating display only",
+    "conventions": "u0=1,u1=7/4,v0=0,v1=13/8,T_n=16^n u_n; S_n,m=sum binom(m,i)T_n+i; W_n=u_n+1 v_n-u_n v_n+1",
+    "inputs": [
+      "computations/catalan_packet_audit.py"
+    ],
+    "bounds": {
+      "wronskian_n": [
+        0,
+        200
+      ],
+      "binomial_n": [
+        1,
+        2000
+      ],
+      "binomial_m": "0 <= m <= 4n",
+      "precision_bits": 128,
+      "direct_n": [
+        1,
+        100
+      ],
+      "direct_m": "0 <= m <= 4n",
+      "gcd_pairs": [
+        [
+          20,
+          66
+        ],
+        [
+          30,
+          100
+        ],
+        [
+          50,
+          166
+        ],
+        [
+          70,
+          232
+        ],
+        [
+          100,
+          332
+        ]
+      ]
+    },
+    "non_claims": [
+      "Does not prove irrationality of Catalan constant",
+      "Does not prove a uniform bound on valuations or common divisors",
+      "External recurrence attribution requires separate literature verification"
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-10-09T18:19:48.518738+00:00",
+    "runtime_seconds": 9.852821,
+    "exit_status": 0,
+    "status": "completed",
+    "timeout_seconds": 300.0,
+    "max_output_bytes": 1048576,
+    "resource_limits": {
+      "memory_bytes": 1073741824,
+      "cpu_seconds": 240,
+      "max_cores": 1,
+      "max_threads": 1
+    },
+    "missing_results": [],
+    "invalid_results": []
+  },
+  "execution_artifacts": [
+    "computations/catalan_packet_audit.py"
+  ],
+  "input_artifacts": [
+    {
+      "path": "computations/catalan_packet_audit.py",
+      "sha256": "4a59096f9c3a0222e6523e5183292678c36b68089bd0bf3103fc3da090db1a7c",
+      "sha256_after": "4a59096f9c3a0222e6523e5183292678c36b68089bd0bf3103fc3da090db1a7c"
+    }
+  ],
+  "output_directory": "evidence/computation/historical_default",
+  "declared_results": [
+    "evidence/computation/historical_default/results.json"
+  ],
+  "outputs": [
+    {
+      "path": "evidence/computation/historical_default/stdout.txt",
+      "sha256": "a7fdb5ce8a73071610819ff0a03517ed1abdb043dde92f9e906e72d83d3effed",
+      "kind": "log"
+    },
+    {
+      "path": "evidence/computation/historical_default/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "log"
+    },
+    {
+      "path": "evidence/computation/historical_default/results.json",
+      "sha256": "cff3c696e26525197c3e043e8bd9f102e73490dc1606a052e061d92ae4ca88c3",
+      "kind": "result"
+    }
+  ],
+  "checks": [
+    {
+      "check": "input hashes unchanged",
+      "passed": true
+    },
+    {
+      "check": "process exited successfully within enforced limits",
+      "passed": true
+    },
+    {
+      "check": "declared result files are present and regular",
+      "passed": true
+    }
+  ],
+  "result": "Run completed; mathematical assertion requires interpretation and review.",
+  "residual_risks": [
+    "Command success does not establish the mathematical interpretation.",
+    "Only listed input artifacts are pinned; external dependencies need recorded versions.",
+    "The thread cap uses conventional environment variables; a child program may ignore them.",
+    "The POSIX CPU-time limit is per process, not an aggregate descendant budget."
+  ]
+}

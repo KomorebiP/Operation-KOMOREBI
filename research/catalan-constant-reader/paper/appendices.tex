@@ -1,0 +1,271 @@
+\chapter{Formula and source reference}
+\label{app:formula-reference}
+
+\section{Recurrence and initial values}
+
+The normalized rational sequences start with
+\begin{equation}
+ (u_0,u_1)=(1,7/4),\qquad(v_0,v_1)=(0,13/8).
+ \label{eq:app-initial}
+\end{equation}
+For $n\geq1$, set
+\begin{align}
+ p(n)&=20n^2-8n+1,\notag\\
+ q(n)&=3520n^6+5632n^5+2064n^4\notag\\
+ &\hspace{1.6em}-384n^3-156n^2+16n+7,\notag\\
+ a_n&=(2n+1)^2(2n+2)^2p(n),\notag\\
+ c_n&=(2n-1)^2(2n)^2p(n+1).
+ \label{eq:app-recurrence-coeffs}
+\end{align}
+Each sequence $w=u$ or $w=v$ obeys
+\begin{equation}
+ a_nw_{n+1}=q(n)w_n+c_nw_{n-1}.
+ \label{eq:app-recurrence}
+\end{equation}
+The forward recurrence is used only at $n\geq1$. Its coefficients $a_n$ are positive there. The first additional terms are
+\begin{equation}
+ u_2=\frac{649}{64},\quad u_3=\frac{19471}{256},\qquad
+ v_2=\frac{10699}{1152},\quad v_3=\frac{8025653}{115200}.
+ \label{eq:app-small-sequences}
+\end{equation}
+
+The Wronskian in this edition uses the orientation
+\begin{equation}
+ W_n=u_{n+1}v_n-u_nv_{n+1}
+ =\frac{(-1)^{n+1}p(n+1)}{2(2n+1)^2(2n+2)^2}.
+ \label{eq:app-Wronskian}
+\end{equation}
+Reversing its two terms reverses the sign. The formula applies to $n\geq0$, with the base case supplied by the initial pair and the induction step supplied by \eqref{eq:app-recurrence}.
+
+\section{Integer packets and integrals}
+
+Set $T_n=16^nu_n$. Its forward recurrence is
+\begin{equation}
+ a_nT_{n+1}=16q(n)T_n+256c_nT_{n-1},
+ \qquad T_0=1,\quad T_1=28.
+ \label{eq:app-T-recurrence}
+\end{equation}
+The initial terms are $1,28,2596,311536$. The universally integral expression is
+\begin{equation}
+ u_n=\sum_{j=0}^n\binom nj
+ \binom{n-\tfrac12}{j}\binom{n+j-\tfrac12}{j},
+ \label{eq:app-half-binomial}
+\end{equation}
+with the external coefficient identity and the written half-binomial denominator argument kept distinct.
+
+For $n,m\geq0$, the integer and rational packets are
+\begin{equation}
+ S_{n,m}=\sum_{i=0}^m\binom miT_{n+i},\qquad
+ H_{n,m}=\sum_{i=0}^m\binom mi16^{n+i}v_{n+i}.
+ \label{eq:app-packets}
+\end{equation}
+Their raw linear form and integral filter satisfy
+\begin{align}
+ F_{n,m}&=8(-1)^n(S_{n,m}G-H_{n,m}),\notag\\
+ \widetilde J_{n,m}
+ &=\sum_{i=0}^m(-16)^i\binom miJ_{n+i}
+ =16^{-n}F_{n,m}.
+ \label{eq:app-filter}
+\end{align}
+The corrected unfiltered integral is
+\begin{equation}
+ J_n=\int_0^1\!\int_0^1
+ \frac{x^{n-1/2}(1-x)^ny^n(1-y)^{n-1/2}}
+ {(1-xy)^{n+1}}\,\dd x\,\dd y
+ =8(-1)^n(u_nG-v_n).
+ \label{eq:app-J}
+\end{equation}
+These are fixed normalization identities. Their factors should be checked together when translating a differently normalized source.
+
+\section{Clearing and primitive reduction}
+
+For a fixed pair, put $U=S_{n,m}$ and write $V=H_{n,m}=N/D$ in reduced form. The exact dictionary is
+\begin{align}
+ Q&=8L_{2(n+m)}^2,\notag\\
+ A&=(-1)^nQU,\qquad B=(-1)^nQV,\notag\\
+ h&=\gcd(DU,N)=\gcd(U,N),\notag\\
+ g&=\gcd(|A|,|B|)=\frac QD\,h,\notag\\
+ q_{\rm red}&=\frac{DU}{h},\qquad p_{\rm red}=\frac Nh,\notag\\
+ \Lambda_{n,m}&=\frac AgG-\frac Bg
+ =\frac{16^nL_{2(n+m)}^2}{g}\widetilde J_{n,m}.
+ \label{eq:app-reduction-dictionary}
+\end{align}
+The symbol $q_{\rm red}$ denotes a reduced denominator. It is unrelated to the polynomial $q(n)$ in the recurrence. The rational coefficients of Eskandari's integral normalization are $\widetilde U_{n,m}=8(-1)^n16^{-n}S_{n,m}$ and $\widetilde V_{n,m}=8(-1)^n16^{-n}H_{n,m}$. They must not be mistaken for the fixed-pair aliases $U,V$ above.
+
+\section{External inputs used by the piece}
+
+The following table is a compact index of the contracts used in this edition. It is not a substitute for their hypotheses, normalization checks, or the original papers. The contracts and acquisition diagnostics accompany the source bundle.
+
+\begin{longtable}{@{}p{0.10\linewidth}p{0.27\linewidth}p{0.56\linewidth}@{}}
+\toprule
+Contract & Source & Application and boundary\\
+\midrule
+\endfirsthead
+\toprule
+Contract & Source & Application and boundary\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+LC01 & Zudilin, 2003 & Recurrence, initial pairs, and identification of the limit with $G$. The recurrence is solved forwards only for $n\geq1$.\\[5pt]
+LC02 & Zudilin, 2003 & Exponential coefficient and error rates. These are asymptotic inputs, not results of the finite run.\\[5pt]
+LC03 & Zudilin, 2003 & Integral identity with an explicitly audited normalization discrepancy. This edition uses the corrected factor $1/8$.\\[5pt]
+LC04 & Zudilin, 2002 & Asymptotic denominator bounds. They do not alone prove the exact integrality of every $T_n$.\\[5pt]
+LC05 & Krattenthaler and Rivoal, 2008 & Strong coefficient arithmetic and the half-binomial formula. The notation bridge is matched at the coefficient level.\\[5pt]
+LC06 & Eskandari, 2026 & The filter and its coefficient dictionary. The base measure has $1-xy$ outside the square root.\\[5pt]
+LC07 & Eskandari, 2026 & The bound $M(\alpha)$ and approximation exponent. It is a preprint input below the irrationality threshold.\\[5pt]
+LC08 & Sun and Wachs, 2026 & Dated irrationality claim and criticism. Neither is imported as an established conclusion here.\\[5pt]
+LC09 & Zudilin, 2019 & Background disjunction: at least one of six even beta values is irrational. It does not isolate $\beta(2)=G$.\\[5pt]
+LC10 & Zagier, 1997 & Prime number theorem input and the conversion to $\log L_k=k+o(k)$.\\
+\end{longtable}
+
+The sources corresponding to LC01--LC07 are cited as Zudilin~\cite{Zudilin2003,Zudilin2002}, Krattenthaler and Rivoal~\cite{KR2008}, and Eskandari~\cite{Eskandari2026}. The dated claims in LC08 are Sun~\cite{Sun2026} and Wachs~\cite{Wachs2026}. The background disjunction is Zudilin~\cite{Zudilin2019}. The prime number theorem contract is tied to Zagier's presentation~\cite{Zagier1997}. No complete third-party source paper is redistributed in this bundle.
+
+\chapter{Worked small cases and reproduction}
+\label{app:worked-reproduction}
+
+\section{The first recurrence step}
+
+At $n=1$, direct substitution in \eqref{eq:app-recurrence-coeffs} gives
+\begin{equation*}
+ p(1)=13,\quad p(2)=65,\quad q(1)=10699,
+ \quad a_1=1872,\quad c_1=260.
+\end{equation*}
+The recurrence therefore yields
+\begin{align*}
+ u_2&=\frac{10699\cdot(7/4)+260}{1872}
+ =\frac{649}{64},\\
+ v_2&=\frac{10699\cdot(13/8)}{1872}
+ =\frac{10699}{1152}.
+\end{align*}
+Multiplying $u_2$ by $16^2$ gives $T_2=2596$. Alternatively, the integer recurrence numerator is
+\begin{equation*}
+ 16\cdot10699\cdot28+256\cdot260\cdot1
+ =4\,859\,712=1872\cdot2596.
+\end{equation*}
+The exact division has no remainder. This calculation illustrates the program's division check. The all-index integrality proof uses the separate half-binomial argument.
+
+The same small case checks the Wronskian orientation:
+\begin{align*}
+ W_0&=\frac74\cdot0-1\cdot\frac{13}{8}
+ =-\frac{13}{8},\\
+ W_1&=\frac{649}{64}\cdot\frac{13}{8}
+ -\frac74\cdot\frac{10699}{1152}
+ =\frac{65}{288}.
+\end{align*}
+Both agree with \eqref{eq:app-Wronskian}. They show why the sign is $(-1)^{n+1}$ for this orientation.
+
+\section{A raw packet and its valuation}
+
+For $(n,m)=(1,1)$,
+\begin{equation*}
+ S_{1,1}=T_1+T_2=28+2596=2624=2^6\cdot41.
+\end{equation*}
+Its exact valuation is $v_2(S_{1,1})=6$. Pascal evolution gives the same result from the initial row: $S_{1,1}=S_{1,0}+S_{2,0}$.
+
+If this calculation is carried out modulo $2^4$, its residue is zero. The residue therefore certifies only $v_2(S_{1,1})\geq4$. It does not identify the exact valuation as $4$. At modulus $2^8$, the residue is $64$, whose valuation is $6<8$, so the modular valuation criterion certifies the exact value $6$. This concrete example explains both the unresolved branch and the sufficient precision branch in the scan.
+
+The associated rational packet is
+\begin{equation*}
+ H_{1,1}=16v_1+16^2v_2
+ =26+\frac{21398}{9}
+ =\frac{21632}{9}.
+\end{equation*}
+Therefore the raw form is
+\begin{equation*}
+ F_{1,1}=-8\left(2624G-\frac{21632}{9}\right)
+ =\frac{173056}{9}-20992G.
+\end{equation*}
+A certified interval for $G$ makes this value positive. This is the smallest counterexample in the finite audit to the proposed sign rule $\operatorname{sign}F_{n,m}=(-1)^m$.
+
+\section{Minimal and redundant clearing in the same example}
+
+Continue with $(n,m)=(1,1)$. The reduced rational packet has $N=21632$ and $D=9$. The minimal pair is
+\begin{equation*}
+ (DS_{1,1},N)=(23616,21632).
+\end{equation*}
+Its gcd is $h=64$. In fact $23616=64\cdot369$ and $21632=64\cdot338$, and $369$ and $338$ are coprime. Thus the reduced approximation is
+\begin{equation*}
+ \frac{H_{1,1}}{S_{1,1}}=\frac{338}{369}.
+\end{equation*}
+
+The universal factor uses $L_4=12$, hence $Q=8L_4^2=1152$. Its redundant scale is $Q/D=128$. Consequently
+\begin{equation*}
+ g=128\cdot64=8192.
+\end{equation*}
+The signed cleared pair is $(-3\,022\,848,-2\,768\,896)$. Dividing by $8192$ gives $(-369,-338)$, so the primitive form is
+\begin{equation}
+ \Lambda_{1,1}=338-369G.
+ \label{eq:app-small-primitive}
+\end{equation}
+The integral identity gives the same expression. Since $\widetilde J_{1,1}=F_{1,1}/16$ and $16L_4^2/g=9/32$,
+\begin{equation*}
+ \frac{16L_4^2}{g}\widetilde J_{1,1}
+ =\frac9{512}F_{1,1}=338-369G.
+\end{equation*}
+This checks the factor $8$, the sign $(-1)^n$, and the denominator index in one exact example.
+
+For comparison, $(n,m)=(1,0)$ has $S=28,H=26,D=1,h=2,Q=32,g=64$. Its primitive form is $13-14G=J_1$. At $(0,0)$, the convention $H=0,D=1$ gives $S=1,Q=8,g=8$ and primitive form $G=J_0/8$. These boundary cases require no valuation of the integer zero.
+
+\section{Current bounds and precision}
+
+\begin{longtable}{@{}p{0.28\linewidth}p{0.31\linewidth}p{0.34\linewidth}@{}}
+\toprule
+Calculation & Stated domain or precision & What is decided\\
+\midrule
+\endfirsthead
+\toprule
+Calculation & Stated domain or precision & What is decided\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Wronskian run & $0\leq n\leq200$ & Exact rational equalities at all recorded indices.\\[5pt]
+Integer $T$ run & $0\leq n\leq10000$ & Every forward exact division has zero remainder.\\[5pt]
+Large Pascal scan & $1\leq n\leq2000$, $0\leq m\leq4n$, modulus $2^{128}$ & All $8\,006\,000$ valuations are exact, maximum $31$.\\[5pt]
+Direct grid & $1\leq n\leq100$, $0\leq m\leq4n$ & All $20\,300$ direct sums agree with the modular scan.\\[5pt]
+Independent recurrence & $0\leq n\leq500$ & Rational sequence agreement and stated clearing checks.\\[5pt]
+Half-binomial check & $0\leq n\leq50$, $0\leq j\leq n$ & All $1\,326$ summands and sequence sums agree.\\[5pt]
+Certified $G$ interval & Euler terms $j=0,\ldots,1000$ & Exact rational endpoints with a tail of at most $2^{-1001}$.\\[5pt]
+Raw filter signs & $1\leq n\leq20$, $0\leq m\leq4n$ & All $860$ forms are nonzero, and $138$ disagree with the sign guess.\\[5pt]
+Cleared gcds & The five pairs in Table~\ref{tab:content-five} & Exact factorization and decomposition at those pairs.\\[5pt]
+Precision negative control & $1\leq n\leq3$, $0\leq m\leq4n$, modulus $2^4$ & Eight zero residues are unresolved, and the direct maximum is $6$.\\
+\end{longtable}
+
+The Euler interval uses $a_k=(2k+1)^{-2}$ and the positive difference convention $\Delta a_k=a_k-a_{k+1}$. The identity
+\begin{equation*}
+ \Delta^ja_0=\int_0^1(1-x^2)^j(-\log x)\,\dd x
+\end{equation*}
+gives $0\leq\Delta^ja_0\leq1$. The positive Euler series for $G$ is $\sum_{j\geq0}2^{-j-1}\Delta^ja_0$. Keeping the first $1001$ terms therefore gives a lower endpoint and an upper endpoint obtained by adding $2^{-1001}$. All retained terms are rational. The analytic tail bound is a written argument. The computed interval is its finite arithmetic application.
+
+\section{Run the public checks}
+
+The following commands are issued from the root of the unpacked source bundle. They use fresh output paths and do not overwrite the preserved evidence. Python 3.12.14 was used for the recorded computation runs. The public arithmetic programs use the Python standard library.
+
+\begin{quote}\small\ttfamily\raggedright
+python3 computations/catalan\_packet\_audit.py\ \textbackslash\\
+\hspace*{1em}--scan-n 2000 --precision-bits 128\ \textbackslash\\
+\hspace*{1em}--output fresh\_default\_results.json
+\end{quote}
+
+\begin{quote}\small\ttfamily\raggedright
+python3 computations/independent\_audit\_final.py\ \textbackslash\\
+\hspace*{1em}--output-dir fresh\_independent
+\end{quote}
+
+\begin{quote}\small\ttfamily\raggedright
+python3 computations/witness\_and\_precision\_audit.py\ \textbackslash\\
+\hspace*{1em}--output-dir fresh\_witness
+\end{quote}
+
+\begin{quote}\small\ttfamily\raggedright
+python3 computations/half\_binomial\_audit.py\ \textbackslash\\
+\hspace*{1em}--output fresh\_half\_binomial\_results.json
+\end{quote}
+
+The first command should reproduce the historical default output exactly. The other commands supply independent constructions, direct witnesses, the precision negative control, and the half-binomial normalization check. A successful exit is not an irrationality certificate. Read the reported ranges, exactness flags, and mismatch records.
+
+To rebuild the two publication PDFs from their supplied figures, run \texttt{python3 build.py}. To regenerate the figures as well, run \texttt{python3 build.py --figures}. The latter requires the plotting dependencies recorded in the source bundle, and rebuilding PDFs also requires a compatible LaTeX installation. Figure generation does not participate in the exact arithmetic decisions. A regenerated plot may differ in rendering metadata while carrying the same mathematical data.
+
+The source bundle records the actual child command arrays, input and output hashes, timestamps, exit statuses, and resource limits for the preserved runs. Fresh runs create new evidence and should be compared with those records. Floating logarithms may differ in their final displayed digit across platforms. Exact integer and rational strings, valuation decisions, and certified signs are the load-bearing comparisons.
+
