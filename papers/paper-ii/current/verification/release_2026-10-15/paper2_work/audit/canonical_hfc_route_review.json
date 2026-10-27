@@ -1,0 +1,80 @@
+{
+  "audit_id": "canonical-hfc-foundation-route-2026-10-15",
+  "reviewer": "paper2_defects_models",
+  "verdict": "General finite rectifiable-cycle Cauchy and canonical Dunford independence remain genuinely unformalized in the inspected project and pinned foundation. There is a concrete build route, but no checked direct specialization currently closes the exact manuscript theorem.",
+  "pinned_mathlib": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+  "scope_of_search": "rg over all Mathlib for winding, homotop/integral, Cauchy-Goursat, Runge theorem, Dunford/HFC; raw definitions and relevant theorem statements read in listed files. This is not a claim of logical impossibility or global absence beyond this pinned source search.",
+  "source_hashes": {
+    "Analysis/Complex/CauchyIntegral.lean": "25c76fe24a2fcc04f6eadd8353f9be268611f8f8eeaf3f119dcaf7d140b7d33f",
+    "MeasureTheory/Integral/CurveIntegral/Basic.lean": "db660370e9274fb92a0115a7379e95e80649d143884fb1729fc0746e97806b2f",
+    "MeasureTheory/Integral/CurveIntegral/Poincare.lean": "29222d193a2b81b57336cb824f643a107d5e2dde187e91e151f632fe81925523",
+    "Analysis/ConstantSpeed.lean": "5546aba7266e3d756b646d5c46ad6fb6432820bfc7a0d032cefcf201c30b67df"
+  },
+  "available_foundation": [
+    {
+      "file": "Analysis/Complex/CauchyIntegral.lean",
+      "results": [
+        "integral_boundary_rect_eq_zero_of_differentiableOn",
+        "circleIntegral_eq_zero_of_differentiable_on_off_countable",
+        "circleIntegral_eq_of_differentiable_on_annulus_off_countable",
+        "DifferentiableOn.analyticOnNhd"
+      ],
+      "scope": "Banach-valued Cauchy for rectangles/disks/annuli and holomorphic power series; not arbitrary cycles with winding."
+    },
+    {
+      "file": "MeasureTheory/Integral/CurveIntegral/Basic.lean",
+      "results": [
+        "curveIntegral_eq_intervalIntegral_deriv",
+        "curveIntegral_symm",
+        "curveIntegral_trans",
+        "curveIntegral_segment"
+      ],
+      "scope": "Actual Bochner integral of a continuous linear one-form along Path, derivativeWithin. Additivity/reversal. Continuous paths with no derivative do not automatically represent rectifiable RS integrals."
+    },
+    {
+      "file": "MeasureTheory/Integral/CurveIntegral/Poincare.lean",
+      "results": [
+        "ContinuousMap.Homotopy.curveIntegral_add_curveIntegral_eq_of_hasFDerivWithinAt",
+        "Convex.exists_forall_hasDerivWithinAt",
+        "Convex.curveIntegral_segment_add_eq_of_hasFDerivWithinAt_symmetric"
+      ],
+      "scope": "Actual C2 homotopy invariance and convex-domain primitives. Basic docs still say WIP, but this Poincare file is implemented. This improves foundation but does not imply general zero-winding homological Cauchy."
+    },
+    {
+      "file": "Analysis/ConstantSpeed.lean",
+      "results": [
+        "naturalParameterization",
+        "edist_naturalParameterization_eq_zero",
+        "has_unit_speed_naturalParameterization"
+      ],
+      "scope": "Arclength representation route separately owned by weighted agent; not cycle independence."
+    }
+  ],
+  "minimal_missing_theorem": {
+    "name_suggestion": "lineIntegral_eq_zero_of_zero_winding_outside",
+    "target": "For every complex Banach E, open O\u2286C, f:C\u2192E differentiable on O, and finite represented closed cycle \u0393 with trace\u0393\u2286O: if ind\u0393(w)=0 for all w outside O, then \u0393.lineIntegral f=0. Define ind\u0393(w)=(2\u03c0i)^(-1)*\u0393.lineIntegral(z\u21a6(z-w)^(-1)) for w off trace, and prove its geometric winding interpretation.",
+    "not_allowed_shortcut": "Do not add the general Cauchy conclusion or canonical h(T)=chosen integral as a theorem premise/certificate and call full HFC closed."
+  },
+  "canonical_independence_reduction": [
+    "Represent signed difference \u0393\u2212\u03930 via finite union with reversed curves, proving additivity and index subtraction.",
+    "For fixed T, O=U\\spectrum(T) is open and h(z)resolvent(T,z) is Banach-holomorphic on O.",
+    "Admissibility gives index(\u0393\u2212\u03930)=0 off O: outside U both indices0; on spectrum(T) both indices1.",
+    "General-cycle Cauchy then gives equality of chosen Dunford integrals.",
+    "Separately construct at least one admissible cycle around compact spectrum inside arbitrary U, including empty-spectrum/zero-space cases, to define canonical h(T)."
+  ],
+  "executable_build_route": [
+    "Bridge AC/BV represented curves to curveIntegral; prove primitive chain rule/FTC for AC paths and local primitives from Poincare.",
+    "Use compact path trace and Lebesgue subdivision to replace each curve piece by polygon segments inside convex balls while preserving integral and index.",
+    "Build finite planar polygonal/square-chain decomposition with coefficients given by winding on complementary cells. Prove its boundary equals the polygonal cycle.",
+    "Apply rectangle/triangle local Cauchy to each cell; zero winding off O ensures only cells contained in O contribute.",
+    "Derive the general-cycle Cauchy theorem, then canonical independence and admissible-cycle existence."
+  ],
+  "first_unproved_step_after_parameterization": "Finite subdivision replacement is a plausible local lemma using primitives, but no checked implementation here. The decisive missing global lemma is planar zero-winding cycle decomposition/homology. Zero winding does not imply null-homotopy (commutator loops in multiply punctured domains), so C2 homotopy invariance alone cannot substitute for homological Cauchy.",
+  "rejected_narrowing": [
+    "One circle enclosing both spectra would require holomorphy across holes and can fail for general U.",
+    "Convex U or global primitive narrows theorem.",
+    "Entire h or polynomial approximation alone does not cover general holomorphic h near disconnected spectra.",
+    "Source-authenticated Conway theorem is ordinary external mathematics, not Lean proof."
+  ],
+  "source_edits": []
+}

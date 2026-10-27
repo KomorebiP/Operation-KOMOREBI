@@ -1,0 +1,78 @@
+{
+  "audit_id": "resultant-independent-defects-owner-2026-10-15",
+  "mode": "read-only independent raw-source semantic audit; no compilation performed",
+  "source_hashes": {
+    "editable/traditional/chapters/04_arithmetic.tex": "6a708d216e817b490eb1ee1ca06a830321df9e6cf8bb5846fc1f17237477af3b",
+    "formal/current/KomorebiVerification/PaperII/ReleaseResultantPolynomial.lean": "51e8739967dbbf847c10aa64596f0375ef8f444b67a089c3ebb6d4f682afa5cd",
+    "formal/current/KomorebiVerification/PaperII/ReleaseResultantPackets.lean": "82064bd83decb8cc224b826b7c64fca4cd43b19b6ad422bf516c5e4dc9ec0a20",
+    "formal/current/KomorebiVerification/PaperII/ReleaseResultantIntegralPackets.lean": "6afeedfef9173fd1d9aa92066f0fb6eaadb800dd56c44553ba78051757f34077",
+    "formal/current/KomorebiVerification/PaperII/ResultantSeparation.lean": "cd0b101b98a160df8dd0698a20015dbf2fa9f611c57fee38af4456e751bc6be7"
+  },
+  "verdict": "PASS: current production source exports full arbitrary chosen integral Bezout identity, actual integral endomorphism before scalar extension, and all packet conclusions; earlier interface gap is resolved. Other reviewed resultant and finite-packet proofs remain mathematically sound. DVR valuation normalization belongs to separate arithmetic review.",
+  "checks": [
+    {
+      "target": "Polynomial-to-certificate",
+      "result": "PASS",
+      "evidence": "certificate_of_charpoly evaluates actual polynomial equality and A.aeval_self_charpoly; six pairwise commutations derive from commutativity in K[X]. No evaluated annihilation conclusion assumed."
+    },
+    {
+      "target": "Actual Sylvester resultant and boundary degrees",
+      "result": "PASS",
+      "evidence": "exists_resultant_bezout explicitly handles f.natDegree=0 with monic f=1; otherwise actual exists_mul_add_mul_eq_C_resultant. g=1 is permitted. Mapped resultant nonzero follows actual resultant_eq_zero_iff from coprimality over K; monicity prevents degree drop under map."
+    },
+    {
+      "target": "Exact projector packet, not nilpotent surrogate",
+      "result": "PASS",
+      "evidence": "F E=0, G E=G, identity action on kerF, zero action on kerG yield rangeE=kerF and kerE=kerG; idempotence gives complement. This is the exact claimed decomposition, not only generalized eigenspace behavior."
+    },
+    {
+      "target": "Integral origin",
+      "result": "PASS including actual original integral endomorphism",
+      "evidence": "Besides natural tensor-image preservation, the generic wrapper proves map(r)\u2022E=(aeval A(v*g)).baseChange K. This explicitly witnesses an O-endomorphism of original L, resolving image-identification concerns without adding a preservation certificate."
+    },
+    {
+      "target": "Arbitrary chosen u,v,r in first theorem",
+      "result": "PASS \u2014 PREVIOUS GAP RESOLVED",
+      "evidence": "integral_bezout_projector now takes arbitrary f,g,u,v,r with r\u22600, charpoly=f*g, u*f+v*g=C r, under IsDomain R/IsFractionRing R K. Fraction-field injection derives map(r)\u22600; generic evaluated certificate produces idempotence, exact range and kernel, IsCompl; scalar identity (map r)\u2022E=(aeval A(v*g)).baseChange K constructs original integral endomorphism; lattice clearing follows actual evaluations preserve tensorLattice. It does not assume resultant choice or monicity, so is stronger than the manuscript first theorem."
+    },
+    {
+      "target": "Finite family assembly",
+      "result": "PASS",
+      "evidence": "zero_on_product_kernel derives coprime kernel sum by finite induction using actual polynomial coprime lemma; CH extends to all module. Sum=I and E_iE_j=0 derived from identity/zero actions; not supplied as certificate fields."
+    },
+    {
+      "target": "Empty or unit packet factors",
+      "result": "PASS",
+      "evidence": "f_i=1 gives kerI=0, so zero packet. Empty family forces charpoly=1 and CH implies I=0, so sum-empty=I is consistent on zero module. All-constant factorization similarly forces zero module."
+    },
+    {
+      "target": "DVR denominator exponent",
+      "result": "OUTSTANDING SEPARATE OWNER",
+      "evidence": "Current integral resultant clearing alone is not yet exact normalized pi valuation bound; arithmetic owner handles unit-times-uniformizer power."
+    }
+  ],
+  "manuscript_preserved": true,
+  "files_edited": [],
+  "revision_history": [
+    {
+      "source_sha256": "4312de4b0ee96b8465a613fff4a9f2cbf9ce354faddbb5b3f5e04de605eb2018",
+      "verdict": "No mathematical error found in actual polynomial/resultant construction, exact kernel/range, integral image preservation, or finite-packet assembly. Exact combined arbitrary-Bezout endpoint can be made more explicit as described. DVR valuation normalization remains separately assigned.",
+      "generic_arbitrary_bezout_status": "Combined endpoint previously not exported."
+    }
+  ],
+  "current_generic_wrapper_review": {
+    "production_path": "release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/ReleaseResultantPolynomial.lean",
+    "production_sha256": "51e8739967dbbf847c10aa64596f0375ef8f444b67a089c3ebb6d4f682afa5cd",
+    "receipt": "paper2_work/resultant_checks/polynomial06/CHECK.json",
+    "checked_by_independent_reviewer": "raw theorem statement and proof, not recompilation",
+    "assumptions": "Finite free L over domain R; actual fraction field K; arbitrary nonzero r and polynomial Bezout identity/charpoly factorization.",
+    "proof_obligations": [
+      "nonzero scalar preserved by fraction-field injection",
+      "generic evaluation/CH certificate",
+      "exact range=ker f and ker E=ker g",
+      "complementary kernels",
+      "scaled projector equals baseChange of actual integral polynomial action v*g",
+      "actual natural lattice clearing"
+    ]
+  }
+}

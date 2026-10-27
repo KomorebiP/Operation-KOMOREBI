@@ -1,0 +1,107 @@
+{
+  "status": "Three drafts strict PASS and independently semantically reviewed by root and defects agent; release promotion done; final exact nested whole-project replay pending.",
+  "accepted_modules": [
+    {
+      "module": "KomorebiVerification.PaperII.ReleaseArcLength",
+      "source": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/ReleaseArcLength.lean",
+      "sha256": "7847942051b35bb1e03dd9743cba079eda65b7066a3b9dd9db4e8deca8e8c336",
+      "checked_draft": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge/ReleaseArcLength.lean",
+      "checked_draft_sha256": "7847942051b35bb1e03dd9743cba079eda65b7066a3b9dd9db4e8deca8e8c336",
+      "receipt": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge_checks/arc03/CHECK.json",
+      "receipt_sha256": "de5d144ea1c2e81a0ffb1c053b3c7437cec1ae64251f7c260c13d2a0c07cb128",
+      "promotion_change": "Byte-identical",
+      "strict_draft_status": "PASS",
+      "final_nested_kernel_status": "pending root whole-release replay"
+    },
+    {
+      "module": "KomorebiVerification.PaperII.ReleaseRectifiable",
+      "source": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/ReleaseRectifiable.lean",
+      "sha256": "2329039f5ccb91f27ffc8c8394fd9fc269f5b3f51c234ade4d937b18dd73a959",
+      "checked_draft": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge/ReleaseRectifiable.lean",
+      "checked_draft_sha256": "2329039f5ccb91f27ffc8c8394fd9fc269f5b3f51c234ade4d937b18dd73a959",
+      "receipt": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge_checks/check02/CHECK.json",
+      "receipt_sha256": "6910bed347dcccec062e6b7dcb94a3f3123ccd59b028973378c1d633ad28dbd4",
+      "promotion_change": "Byte-identical",
+      "strict_draft_status": "PASS",
+      "final_nested_kernel_status": "pending root whole-release replay"
+    },
+    {
+      "module": "KomorebiVerification.PaperII.ReleaseRectifiableCycle",
+      "source": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/ReleaseRectifiableCycle.lean",
+      "sha256": "95edfa117f772ca73daf5344a2a4e85f51e1403e0b809a34ddaebab035206374",
+      "checked_draft": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge/ReleaseRectifiableCycle.lean",
+      "checked_draft_sha256": "504b49e064c642f904465fa40645fdfe5fcca203b9e37abff19f35c8a85a5e20",
+      "receipt": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge_checks/cycle01/CHECK.json",
+      "receipt_sha256": "331db4e22c2f98d94b3f6e15e89d0e4727fbb141cbd00af6edaeb7409f7dea52",
+      "promotion_change": "Two import paths qualified to release namespace; every other byte unchanged",
+      "strict_draft_status": "PASS",
+      "final_nested_kernel_status": "pending root whole-release replay"
+    }
+  ],
+  "claim": "Construct actual integral-cycle representations for finite families of continuous BV closed complex curves, with geometric trace and variation preservation.",
+  "rows": [
+    {
+      "namespace": "Komorebi.PaperII.ReleaseRectifiable",
+      "declarations": [
+        "coordinateVelocity",
+        "integrable_coordinateVelocity",
+        "integral_coordinateVelocity",
+        "cycleOfAbsolutelyContinuous",
+        "curve_cycleOfAbsolutelyContinuous",
+        "cycleOfLipschitz",
+        "curve_cycleOfLipschitz"
+      ],
+      "scope": "Arbitrary finite closed complex paths absolutely continuous on [0,1]. Velocity is constructed from derivatives of both real coordinates; real FTC proves the actual Bochner-integral primitive equals the path pointwise on the whole interval. No supplied representation certificate."
+    },
+    {
+      "namespace": "Komorebi.PaperII.ReleaseArcLength",
+      "declarations": [
+        "unitSpeed_lipschitz",
+        "arcMap_monotone",
+        "arcMap_continuous",
+        "arcMap_image",
+        "arcPath_recovers",
+        "arcPath_unitSpeed",
+        "unitIntervalPath_lipschitz",
+        "unitIntervalPath_zero",
+        "unitIntervalPath_one",
+        "unitIntervalPath_closed",
+        "unitIntervalPath_image",
+        "unitIntervalPath_variation"
+      ],
+      "scope": "Arbitrary continuous BV complex path on [0,1], including geometric length zero. Cumulative variation is continuous monotone onto [0,L]; natural parameterization reconstructs original traversal; rescaling yields an L-Lipschitz path on [0,1] with original endpoints, image, and total variation."
+    },
+    {
+      "namespace": "Komorebi.PaperII.ReleaseRectifiableCycle",
+      "declarations": [
+        "cycleOfRectifiable",
+        "curve_cycleOfRectifiable",
+        "image_curve_cycleOfRectifiable",
+        "trace_cycleOfRectifiable",
+        "variation_curve_cycleOfRectifiable"
+      ],
+      "scope": "Arbitrary finite closed continuous BV family on [0,1] produces an actual IntegralCycle. Its curve is the constructed arclength path, its trace equals the original union, and each curve has the same geometric eVariationOn. Repeated family entries retain multiplicities."
+    }
+  ],
+  "first_unproved_bridge": {
+    "target": "For the constructed arclength path g, integral_0^1 norm(coordinateVelocity g s) ds = (eVariationOn g (Icc 0 1)).toReal. Summing this gives IntegralCycle.length equal to geometric cycle length.",
+    "route": "Prove coordinateVelocity equals deriv g almost everywhere by the coordinate derivative rules. Lipschitz derivative bound gives integral norm <= L. The integral primitive formula and finite-partition triangle estimates give geometric variation <= integral norm. Neither implication is supplied as a hypothesis in accepted theorems.",
+    "status": "not attempted to completion before release freeze; not an identified mathematical flaw"
+  },
+  "further_open_obligations": [
+    "Classical Riemann-Stieltjes/path contour integral equals the represented actual Bochner integral, with invariance under monotone arclength reparameterization and treatment of orientation/multiplicity.",
+    "General zero-winding/homological Cauchy theorem yielding canonical holomorphic functional calculus independent of chosen admissible cycle. This is owned by root/defects route, not asserted by these modules."
+  ],
+  "not_claimed": [
+    "Complete manuscript-scope holomorphic functional-calculus theorem.",
+    "Equality of IntegralCycle.length with geometric length.",
+    "Classical contour integral invariance merely from trace equality."
+  ],
+  "failed_checks": {
+    "initial argument validation": "Output initially placed inside source-root; launcher rejected before compilation. Output moved to separate contour_bridge_checks.",
+    "check01": "Real-to-complex coercion pushed into derivative input; corrected by explicit Complex.ofReal; deprecated CLM.lipschitz replaced by lipschitzWith.",
+    "arc01": "Missing complex/Lipschitz imports and elaboration scaffolding.",
+    "arc02": "Implicit reducible geometricLength arguments blocked rewrite matching; explicit type annotations fixed, arc03 PASS."
+  },
+  "source_provenance": "/workspace/scratch/9f53d520971c/paper2_work/contour_bridge/SOURCE_CHECK.json"
+}

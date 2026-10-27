@@ -1,0 +1,14 @@
+structure PositiveWeightedMultigraph (V : Type u) (E : Type v) where
+  source : E → V
+  target : E → V
+  weight : E → ℕ
+  weight_pos : ∀ e, 0 < weight e
+
+namespace PositiveWeightedMultigraph
+
+variable {V : Type u} {E : Type v}
+
+/-- The recursive endpoint condition for an ordered list of edges. -/
+def IsWalk (G : PositiveWeightedMultigraph V E) (s t : V) : List E → Prop
+  | [] => s = t
+  | e :: es => G.source e = s ∧ G.IsWalk (G.target e) t es

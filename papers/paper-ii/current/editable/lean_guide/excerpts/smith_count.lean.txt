@@ -1,0 +1,21 @@
+theorem smithZModFiber_card_of_admissible {p weight depth : ℕ} [NeZero (p ^ depth)] (hp : 1 < p)
+    (target : ZMod (p ^ depth))
+    (hadmissible : SmithZModAdmissible p weight depth target) :
+    Fintype.card (SmithZModFiber p weight depth target) = p ^ min weight depth := by
+  obtain ⟨x, hx⟩ := (smithZModFiber_nonempty_iff hp target).mpr hadmissible
+  let f : ZMod (p ^ depth) →+ ZMod (p ^ depth) := smithZModMulHom p weight depth
+  have hxEq : f x = target := Set.mem_singleton_iff.mp hx
+  have e : SmithZModFiber p weight depth target ≃ f.ker := by
+    simpa only [SmithZModFiber, f, hxEq] using f.fiberEquivKer x
+  calc
+    Fintype.card (SmithZModFiber p weight depth target) =
+        Nat.card (SmithZModFiber p weight depth target) := Nat.card_eq_fintype_card.symm
+    _ = Nat.card f.ker := Nat.card_congr e
+    _ = (Nat.card (ZMod (p ^ depth))).gcd (p ^ weight) := by
+      simpa [f, smithZModMulHom] using
+        IsAddCyclic.card_nsmulAddMonoidHom_ker (ZMod (p ^ depth)) (p ^ weight)
+    _ = (p ^ depth).gcd (p ^ weight) := by rw [Nat.card_zmod]
+    _ = p ^ min weight depth := by
+      rcases Nat.le_total weight depth with hwd | hdw
+      · rw [Nat.min_eq_left hwd, Nat.gcd_eq_right_iff_dvd.mpr (Nat.pow_dvd_pow p hwd)]
+      · rw [Nat.min_eq_right hdw, Nat.gcd_eq_left_iff_dvd.mpr (Nat.pow_dvd_pow p hdw)]

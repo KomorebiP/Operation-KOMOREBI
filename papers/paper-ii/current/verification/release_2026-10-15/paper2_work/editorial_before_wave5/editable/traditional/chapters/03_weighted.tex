@@ -1,0 +1,592 @@
+\section{Complete filtered transfer algebras}\label{sec:filtered}
+
+A filtration records how deeply a term lies in the chosen notion of precision. The weights record guaranteed filtration gains that add under multiplication. A discrete valuation ring provides the main example.
+
+\begin{definition}[Complete multiplicative filtration]\label{def:filtered_algebra}
+A complete filtered algebra is a unital algebra $\Bcal$ with a decreasing sequence of two-sided ideals
+\[
+\Bcal=F^0\Bcal\supseteq F^1\Bcal\supseteq F^2\Bcal\supseteq\cdots
+\]
+such that
+\[
+F^r\Bcal\,F^s\Bcal\subseteq F^{r+s}\Bcal,
+\qquad
+\bigcap_{L\geq0}F^L\Bcal=0,
+\]
+and the natural map
+\[
+\Bcal\longrightarrow\varprojlim_L\Bcal/F^L\Bcal
+\]
+is an isomorphism.  A transfer term $N_e$ has a declared positive integer weight $w(e)\in\mathbb Z_{>0}$ when
+\[
+N_e\in F^{w(e)}\Bcal.
+\]
+\end{definition}
+
+In the filtration topology, reduction to $\Bcal/F^L\Bcal$ is continuous when the quotient has the discrete topology. Its kernel $F^L\Bcal$ is therefore closed. In particular, a convergent sum of terms in $F^L\Bcal$ remains in that ideal.
+
+If $\OO$ is a complete discrete valuation ring with uniformizer $\pi$ and $\Bcal$ is a separated and complete $\OO$ algebra for the filtration
+\[
+F^L\Bcal=\pi^L\Bcal,
+\]
+then this is a standard example. Finite matrix algebras over $\OO$ satisfy these conditions. Completeness of $\OO$ alone does not imply completeness of every $\OO$ algebra. Basic facts about completeness in this setting are reviewed in \cite{Serre1979}.
+
+\begin{theorem}[Weighted inverse]\label{thm:weighted_inverse}
+Let $\Bcal$ be a complete filtered algebra.  Let $D\in\Bcal$ be invertible with
+\[
+D,D^{-1}\in F^0\Bcal.
+\]
+Let $E$ be a finite set and suppose
+\[
+T=D+\sum_{e\in E}N_e,
+\qquad
+N_e\in F^{w(e)}\Bcal,
+\qquad
+w(e)\geq1.
+\]
+Set
+\[
+A_e=D^{-1}N_e.
+\]
+For a word $\gamma=(e_1,\ldots,e_r)$, write
+\[
+A_\gamma=A_{e_r}\cdots A_{e_1},
+\qquad
+W(\gamma)=\sum_{j=1}^rw(e_j).
+\]
+The empty word has weight zero and contributes the identity.  Then $T$ is invertible and
+\[
+T^{-1}
+=
+\sum_\gamma(-1)^{|\gamma|}A_\gamma D^{-1}.
+\]
+The series converges in the filtration, and the term indexed by $\gamma$ belongs to $F^{W(\gamma)}\Bcal$.
+\end{theorem}
+
+\begin{proof}
+Put
+\[
+A=\sum_{e\in E}A_e.
+\]
+Since left multiplication by $D^{-1}$ preserves the filtration, $A\in F^1\Bcal$.  Completeness gives the convergent Neumann series
+\[
+(I+A)^{-1}=\sum_{r\geq0}(-A)^r.
+\]
+Because $T=D(I+A)$,
+\[
+T^{-1}=(I+A)^{-1}D^{-1}.
+\]
+Expanding each power of $A$ gives the sum over words, with the rightmost edge acting first.  Multiplicativity of the filtration gives
+\[
+A_\gamma\in F^{W(\gamma)}\Bcal.
+\]
+For each $L$, only finitely many words have weight below $L$ because $E$ is finite and every edge has positive weight.  Thus the word expansion converges to the same inverse.
+\end{proof}
+
+The preceding formula does not yet use packet blocks. When $D$ is packet diagonal and the terms $N_e$ are individual transfers, only words with compatible packet endpoints can contribute. These words become directed paths.
+
+\begin{theorem}[Block path formula]\label{thm:block_path_formula}
+Let $\Pcal=(P_\alpha)_{\alpha\in I}$ be a finite packet system in a complete filtered algebra of operators.  Suppose
+\[
+D=\sum_\alpha P_\alpha D P_\alpha
+\]
+belongs to $\Bcal$ and is invertible on every packet.  Assume that the assembled inverse
+\[
+D^{-1}=\sum_\alpha D_\alpha^{-1}P_\alpha\in\Bcal=F^0\Bcal,
+\qquad D_\alpha=P_\alpha DP_\alpha,
+\]
+where each packet inverse is extended by zero to the other packets.  Let the edge set be finite, assume $w(e)\geq1$ for every edge, and write
+\[
+N=\sum_{e:\alpha\to\beta}N_e,
+\qquad
+N_e=P_\beta N_eP_\alpha,
+\qquad
+N_e\in F^{w(e)}\Bcal.
+\]
+For an edge $e:\alpha\to\beta$, put
+\[
+A_e=(P_\beta DP_\beta)^{-1}N_e.
+\]
+Then the block from $P_\alpha X$ to $P_\beta X$ of $(D+N)^{-1}$ is
+\[
+P_\beta(D+N)^{-1}P_\alpha
+=
+\sum_{\gamma:\alpha\leadsto\beta}
+(-1)^{|\gamma|}A_\gamma D_\alpha^{-1},
+\]
+where $D_\alpha=P_\alpha DP_\alpha$ and the sum runs over directed paths from $\alpha$ to $\beta$, including the empty path when $\alpha=\beta$.
+\end{theorem}
+
+\begin{proof}
+The diagonal inverse is
+\[
+D^{-1}=\sum_\alpha D_\alpha^{-1}P_\alpha.
+\]
+The block $P_\beta D^{-1}NP_\alpha$ is nonzero only when there is a declared edge from $\alpha$ to $\beta$.  Repeated block multiplication shows that the $r$th power of $D^{-1}N$ is the sum over all directed paths of length $r$, with the operator factors ordered along the path.  Apply \cref{thm:weighted_inverse} and multiply on the right by the packet diagonal inverse.
+\end{proof}
+
+\begin{corollary}[Minimum path weight]\label{cor:minimum_path_weight}
+For packets $\alpha$ and $\beta$, let $d(\alpha,\beta)$ be the least total weight of a directed path from $\alpha$ to $\beta$, with $d=\infty$ when no path exists.  Use the convention $F^\infty\Bcal=\bigcap_{L\geq0}F^L\Bcal=0$.  If $\alpha\ne\beta$, then
+\[
+P_\beta(D+N)^{-1}P_\alpha
+\in
+F^{d(\alpha,\beta)}\Bcal.
+\]
+If there is no path from $\alpha$ to $\beta$, the block is zero.
+\end{corollary}
+
+\begin{proof}
+Every term in the block path formula is indexed by a path from $\alpha$ to $\beta$ and lies in the filtration level given by its total weight.  If no such path exists, the sum is empty.
+\end{proof}
+
+\begin{example}[A longer path that appears earlier]\label{ex:weighted_route}
+Consider three packets $\alpha$, $\beta$, and $\gamma$.  Suppose there is a direct edge from $\alpha$ to $\gamma$ of weight three, together with edges
+\[
+\alpha\longrightarrow\beta,
+\qquad
+\beta\longrightarrow\gamma
+\]
+of weight one each.  The two edge route has total weight two, so it contributes to the inverse before the direct edge does.  This is why the truncation rule uses total weight rather than path length. The lower bound in \cref{cor:minimum_path_weight} need not be an equality because several paths of the same weight may cancel.
+\end{example}
+
+\begin{keyidea}
+Word length counts how many transfers are composed. Weight counts how much filtration gain those transfers guarantee. The sign in the inverse expansion depends on length, while the precision cutoff depends on weight. A short word can therefore disappear at a chosen precision while a longer word still contributes.
+\end{keyidea}
+
+\begin{corollary}[Acyclic transfer graph]\label{cor:acyclic_inverse}
+If the packet transfer graph is acyclic, then $D^{-1}N$ is nilpotent.  The inverse in \cref{thm:block_path_formula} is a finite sum and does not require completeness of the filtration.
+\end{corollary}
+
+\begin{proof}
+A finite acyclic directed graph has a bound on path length.  Every sufficiently long product of transfer blocks is therefore zero.  The Neumann series terminates.
+\end{proof}
+
+\begin{corollary}[Stability of inversion at finite precision]\label{cor:inverse_stability}
+Let $T$ and $\widetilde T$ be invertible elements of $F^0\Bcal$.  If
+\[
+T-\widetilde T\in F^L\Bcal,
+\]
+then
+\[
+T^{-1}-\widetilde T^{-1}\in F^L\Bcal.
+\]
+\end{corollary}
+
+\begin{proof}
+Use the resolvent identity at zero in the form
+\[
+T^{-1}-\widetilde T^{-1}
+=
+T^{-1}(\widetilde T-T)\widetilde T^{-1}.
+\]
+Both inverse factors belong to $F^0\Bcal$, so the product lies in $F^L\Bcal$.
+\end{proof}
+
+\begin{corollary}[Exact finite precision truncation]\label{cor:finite_precision}
+Under the hypotheses of \cref{thm:weighted_inverse}, define
+\[
+R_L
+=
+\sum_{W(\gamma)<L}(-1)^{|\gamma|}A_\gamma D^{-1}.
+\]
+Then
+\[
+T^{-1}-R_L\in F^L\Bcal,
+\]
+\[
+TR_L-I\in F^L\Bcal,
+\qquad
+R_LT-I\in F^L\Bcal.
+\]
+Thus $R_L$ is the exact inverse in $\Bcal/F^L\Bcal$.
+\end{corollary}
+
+\begin{proof}
+Every omitted word has weight at least $L$, so the difference from the full inverse lies in $F^L\Bcal$.  Multiplication by $T$ or by its inverse preserves membership in $F^L\Bcal$ under the stated filtration assumptions.  The two residual statements follow.
+\end{proof}
+
+\begin{example}[A triangular transfer]\label{ex:triangular_transfer}
+Let $\OO$ be complete with uniformizer $\pi$, and consider
+\[
+T=
+\begin{pmatrix}
+1&\pi^a\\
+0&1
+\end{pmatrix}
+\]
+with $a\geq1$.  The only nontrivial transfer has weight $a$, and its square is zero.  Hence
+\[
+T^{-1}
+=
+\begin{pmatrix}
+1&-\pi^a\\
+0&1
+\end{pmatrix}.
+\]
+At precision $L\leq a$, the transfer vanishes and the inverse is the identity modulo $\pi^L$.  At depth $a+1$, the transfer between the two packets first becomes visible.
+\end{example}
+
+\paragraph{Two compatible word conventions.} The path expansion above labels a word in chronological order and writes its operator product in reverse order, so the first edge acts first.  The following finite-word contract uses written multiplication order.  Reversing all word labels identifies the sums over all words. Individual path labels must retain their stated convention.  The two conventions do not change a weight or an inverse.
+
+\subsection{Finite quotient and normed-ring realizations}
+
+\subsubsection{Normalized edges and written-word convention}
+
+Let $\OO$ be a complete discrete valuation ring with uniformizer $\pi$, fraction field $K$, and filtration
+\[
+F^m\cB=\pi^m\cB
+\]
+on an $\OO$-algebra $\cB$. The finite quotient statements below do not require $\cB$ itself to be complete. Suppose
+\[
+T=D+H,
+\]
+where $D$ is invertible and the perturbation $H$ raises filtration. The symbol
+$K$ is reserved for the fraction field.
+
+A packet decomposition resolves $H=\sum_{e\in E}H_e$ and assigns a
+certified filtration gain
+\[
+D^{-1}H_e\in F^{w(e)}\cB,
+\qquad w(e)\in\Z_{>0}.
+\]
+Each $e$ is a directed transfer edge. For an ordered transfer word
+\[
+\gamma=(e_1,\ldots,e_r),
+\]
+define
+\[
+W(\gamma)=\sum_{j=1}^rw(e_j),
+\qquad
+A_\gamma=A_{e_1}\cdots A_{e_r},
+\qquad A_e=D^{-1}H_e.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{04_weighted_transfer_graph.pdf}
+\caption{A finite packet-transfer graph. Edge weights record filtration gain rather than merely the number of operator compositions.}
+\label{fig:weighted-graph}
+\end{figure}
+
+\begin{theorem}[Certified weighted inverse]\label{thm:weighted-inverse}
+Let $R$ be a possibly noncommutative ring, let $D^{-1}$ be a supplied
+two-sided inverse of $D$, and put $A=D^{-1}H$.
+\begin{enumerate}[label=(\alph*)]
+\item If $A^r=0$, then $D+H$ has the two-sided inverse
+\[
+\boxed{(D+H)^{-1}=\left(\sum_{k=0}^{r-1}(-A)^k\right)D^{-1}.}
+\]
+\item If $R$ is a complete normed ring and $\lVert A\rVert<1$, then
+$\sum_{k\ge0}(-A)^k$ converges and
+\[
+\boxed{(D+H)^{-1}=\left(\sum_{k\ge0}(-A)^k\right)D^{-1}.}
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Factor
+\[
+T=D(I+A),
+\qquad A=D^{-1}H.
+\]
+For a finite cutoff $r$, multiplication on either side gives the
+noncommutative telescoping identity
+\[
+(I+A)\sum_{k=0}^{r-1}(-A)^k
+=
+\left(\sum_{k=0}^{r-1}(-A)^k\right)(I+A)
+=1-(-A)^r.
+\]
+This proves (a). In (b), the strict norm bound makes the geometric series
+summable. Continuity of multiplication passes the same identities to the
+limit. Multiplication by $D^{-1}$ gives the displayed inverse in both orders.
+\end{proof}
+
+\begin{corollary}[Finite precision]\label{cor:finite-precision}
+Let $F^\bullet R$ be a multiplicative decreasing filtration and let
+$q_L:R\to R_L$ be a ring homomorphism that kills $F^L R$. Suppose
+\[
+H=\sum_{e\in E}H_e,
+\qquad D^{-1}H_e\in F^{w(e)}R,
+\qquad w(e)\ge1,
+\]
+with $E$ finite. Then $q_L(D^{-1}H)^L=0$, the finite sum in
+\cref{thm:weighted-inverse}(a) is a two-sided inverse after applying $q_L$,
+and its word expansion may discard every word of weight at least $L$.
+More explicitly, for a length cutoff $N$, define
+\[
+S^{\mathrm{pr}}_{L,N}
+=
+\sum_{n=0}^{N-1}(-1)^n
+\sum_{\substack{\gamma\in E^n\\W(\gamma)<L}}A_\gamma.
+\]
+Lean proves directly that $q_L(S^{\mathrm{pr}}_{L,N})$ equals the mapped
+geometric inverse whenever $q_L(A^N)=0$, and hence is a two-sided inverse of
+$q_L(I+A)$, where $A=\sum_eA_e=D^{-1}H$. With the supplied two-sided
+inverse $D^{-1}$ of $D$, this gives the explicit two-sided inverse
+\[
+\boxed{q_L\!\left(S^{\mathrm{pr}}_{L,N}D^{-1}\right)}
+\quad\text{of}\quad q_L(D+H).
+\]
+If every edge weight is at least $m$ and $L\le mN$, then the nilpotence
+condition follows from the filtration data because
+$m|\gamma|\le W(\gamma)$. For $m>0$, the executable choice
+$N=\lceil L/m\rceil$ satisfies $L\le mN$. This elementary ceiling inequality
+is also proved in Lean. The choice $m=1,N=L$ gives the standard cutoff.
+In the DVR example $q_L:R\to R/\pi^L R$, this reads
+\[
+q_L(T)^{-1}
+=
+q_L\!\left(\sum_{W(\gamma)<L}
+(-1)^{|\gamma|}A_\gamma D^{-1}\right).
+\]
+\end{corollary}
+
+Here $A_\gamma=(D^{-1}H_{e_1})\cdots(D^{-1}H_{e_r})$ in the written
+order. Multiplicativity places it in $F^{W(\gamma)}R$, so the quotient kills
+it when $W(\gamma)\ge L$. Positive weights also imply
+$|\gamma|\le W(\gamma)$, making the retained search finite.
+
+\begin{interpretation}
+Using the standard length cutoff, every discarded word has weight at least the chosen depth and vanishes in the quotient. The retained sum therefore satisfies both inverse identities exactly at that precision. The earlier truncation theorem states the corresponding residual bounds in the complete filtered algebra itself.
+\end{interpretation}
+
+The formal contract does not assert convergence for every complete filtered algebra. Such an assertion needs a separately specified
+topology and completeness theorem. The release proves the result in finite
+quotients above and the contraction specialization for complete normed rings.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{06_filtered_inverse_depth.pdf}
+\caption{At precision $L$, weighted inversion requires only transfer words whose cumulative weight is below $L$.}
+\label{fig:inverse-depth}
+\end{figure}
+
+
+\section{Rational weighted transfer series}\label{sec:path_series}
+
+A finite weighted graph records which path terms can occur in the inverse. Collecting paths by total weight turns this support information into a generating function. The finite adjacency matrix makes that function rational.
+
+\begin{definition}[Weighted transfer series]\label{def:transfer_series}
+Let $G$ be a finite directed multigraph.  Give every edge $e$ a positive integer weight $w(e)$ and a scalar multiplicity $m(e)$ in a field $\bbk$.  Define the polynomial adjacency matrix
+\[
+A(t)_{ij}
+=
+\sum_{e:i\to j}m(e)t^{w(e)}.
+\]
+For column vectors $u$ and $v$, define
+\[
+Z_{u,v}(t)
+=
+\sum_{n\geq0}a_nt^n,
+\]
+where
+\[
+a_n=\sum_{i,j}\ \sum_{\substack{\gamma:i\leadsto j\\W(\gamma)=n}}
+ u_i v_j\prod_{\nu=1}^{|\gamma|}m(e_\nu).
+\]
+Here $\gamma=(e_1,\ldots,e_{|\gamma|})$ is a directed walk. Vertices and edges may repeat, and the empty walk has weight zero and multiplicity one. Thus the endpoint vectors weight the start and end of each walk, rather than only selecting subsets of vertices.
+\end{definition}
+
+\begin{theorem}[Rationality of the transfer series]\label{thm:transfer_rationality}
+The weighted transfer series satisfies
+\[
+Z_{u,v}(t)
+=
+u^{\mathsf T}(I-A(t))^{-1}v.
+\]
+It is a rational function whose denominator divides
+\[
+\det(I-A(t)).
+\]
+\end{theorem}
+
+\begin{proof}
+Since every entry of $A(t)$ has zero constant term, the inverse exists in the formal power series ring and
+\[
+(I-A(t))^{-1}=\sum_{r\geq0}A(t)^r.
+\]
+The $(i,j)$ entry of $A(t)^r$ is the sum of the monomials attached to all paths of length $r$ from $i$ to $j$.  Summing over $r$ records paths of every length.  Multiplication by the endpoint vectors gives the stated series.  The adjugate formula gives
+\[
+(I-A(t))^{-1}
+=
+\frac{\operatorname{adj}(I-A(t))}{\det(I-A(t))},
+\]
+so every entry is rational.
+\end{proof}
+
+\begin{corollary}[Recurrence for path counts]\label{cor:path_recurrence}
+Write
+\[
+Z_{u,v}(t)=\frac{P(t)}{Q(t)},
+\qquad
+Q(t)=1+q_1t+\cdots+q_dt^d.
+\]
+Use the convention $\deg 0=-\infty$. Then, for every nonnegative integer $n>\deg P$,
+\[
+a_n+q_1a_{n-1}+\cdots+q_da_{n-d}=0.
+\]
+\end{corollary}
+
+\begin{proof}
+Compare coefficients in the identity
+\[
+Q(t)Z_{u,v}(t)=P(t).
+\]
+Beyond the degree of $P$, the coefficient on the right is zero.
+\end{proof}
+
+In the recurrence, set $a_k=0$ when $k<0$. This is the coefficient convention for the formal power series $Z_{u,v}(t)$ and makes the first recurrence equations meaningful even when $n<d$.
+
+\begin{corollary}[Several independent weights]\label{cor:multigraded_series}
+Suppose every edge has a weight vector
+\[
+w(e)=(w_1(e),\ldots,w_r(e))\in\mathbb N^r\setminus\{0\}.
+\]
+Replace $t^{w(e)}$ by
+\[
+t_1^{w_1(e)}\cdots t_r^{w_r(e)}.
+\]
+The resulting multigraded transfer series is rational in $t_1,\ldots,t_r$.
+\end{corollary}
+
+\begin{proof}
+The same matrix inverse proof works over the formal power series ring in several variables.  The adjugate formula gives rationality.
+\end{proof}
+
+The multigraded form is useful when dyadic depth, odd depth, and another filtration are tracked separately rather than collapsed into one number.
+
+\begin{example}[A transfer series with one loop]\label{ex:simple_transfer_series}
+Take vertices $0$, $1$, and $2$.  Give the edge $0\to1$ weight one, the loop $1\to1$ weight two, and the edge $1\to2$ weight one.  Every path from $0$ to $2$ uses the first and last edges and may traverse the loop any number of times.  Hence
+\[
+Z_{0,2}(t)
+=
+t^2(1+t^2+t^4+\cdots)
+=
+\frac{t^2}{1-t^2}.
+\]
+There is one path at every positive even weight and no path at an odd weight.  The denominator records the increase of two units produced by the loop.
+\end{example}
+
+\subsection{Automatic finite-graph construction}
+
+Let $G$ be a finite directed graph with positive integer edge weights. Define the polynomial adjacency matrix
+\[
+A(t)_{ij}
+=
+\sum_{e:i\to j}t^{w(e)},
+\]
+where parallel edges are distinct elements of the finite edge type and are
+therefore counted with their full multiplicity.
+
+For fixed start and target vertices $s,t$, define
+\[
+Z_{s,t}(t)
+=
+\sum_{n\ge0}a_n(s,t)t^n,
+\]
+where $a_n(s,t)$ counts directed walks from $s$ to $t$ with total weight $n$.
+Vertices and edges may repeat. Thus ``path zeta'' is retained as the name of
+the series and Lean API, but the walks are not required to visit each vertex only once.
+
+\begin{theorem}[Automatic finite-graph transfer-zeta rationality]\label{thm:transfer-zeta}
+Assume the vertex and edge sets are finite and every edge has positive integer
+weight. For every $n$, exact enumeration of edge tuples of lengths at most
+$n$, followed by endpoint and total-weight filtering, returns $a_n(s,t)$.
+These coefficients obey the recurrence obtained by removing the first edge
+\[
+a_n(s,t)
+=
+\mathbf 1_{s=t,\,n=0}
++\sum_{\substack{e:\,\operatorname{source}(e)=s\\w(e)\le n}}
+a_{n-w(e)}(\operatorname{target}(e),t).
+\]
+Let
+\[
+T(t)=I-A(t),\qquad
+Q(t)=\det T(t),\qquad
+P_{s,t}(t)=\operatorname{adj}(T(t))_{s,t}.
+\]
+Then $Q(0)=1$, hence $Q\ne0$ and $Q$ is a unit in $\Z[[t]]$, and the
+independently enumerated walk series satisfies
+\[
+\boxed{
+Z_{s,t}(t)=Q(t)^{-1}P_{s,t}(t),
+\qquad
+Q(t)Z_{s,t}(t)=P_{s,t}(t)
+}
+\quad\text{in }\Z[[t]].
+\]
+\end{theorem}
+
+\begin{proof}
+Every edge has weight at least one, so a word of weight $n$ has length at
+most $n$. The enumerator therefore searches a finite set containing every
+contributing walk, and its filters are exactly the defining predicates for
+$a_n$. Removing the first edge gives the displayed disjoint decomposition
+into the empty diagonal walk and the first-edge tails. In matrix form this is
+\[
+Z=I+AZ,
+\qquad (I-A)Z=I.
+\]
+Positive weights give $A(0)=0$, so $T(0)=I$ and
+$Q(0)=\det(I)=1$. The two adjugate identities
+\[
+T\operatorname{adj}(T)=Q I,
+\qquad
+\operatorname{adj}(T)T=Q I
+\]
+remain valid after inclusion into $\Z[[t]]$. Multiplying the adjugate by the
+formal-series inverse of $Q$ constructs a two-sided inverse of $T$.
+Uniqueness of the inverse identifies that construction with the independently
+enumerated matrix $Z$, yielding the entrywise formulas.
+\end{proof}
+
+This is the finite transfer-matrix method of \cite{Stanley2012}, but here its
+determinant, adjugate, normalization, recurrence from the first edge, and identification
+with the enumerated series are all formalized. The older API accepting an
+independently supplied normalized coefficient identity $QZ=P$ is retained for
+external certificates. It is no longer needed to obtain rationality for the
+finite graph defined above. The Python companion performs an exact symbolic
+construction as an independent executable check.
+
+\begin{corollary}[Linear recurrence]\label{cor:zeta-recurrence}
+With the canonical polynomials from \cref{thm:transfer-zeta}, write
+\[
+Q(t)=\sum_kq_kt^k,
+\qquad
+Z_{s,t}(t)=\sum_{n\ge0}a_n(s,t)t^n.
+\]
+Then the walk counts satisfy the recurrence with constant coefficients determined by
+$Q$ after the finite initial range contributed by $P_{s,t}$, with $\deg 0=-\infty$:
+\[
+\boxed{
+\sum_{k=0}^{n}q_k a_{n-k}(s,t)=0
+\qquad\bigl(n>\deg P_{s,t}\bigr).
+}
+\]
+\end{corollary}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{05_path_zeta_coefficients.pdf}
+\caption{The walk counts for one weighted graph. The exact generating function is rational, so these counts satisfy a finite linear recurrence.}
+\label{fig:zeta-counts}
+\end{figure}
+
+\begin{example}[A computed transfer zeta]
+For the graph used in the numerical companion, the walk series from packet $0$ to packet $2$ is
+\[
+Z_{0,2}(t)
+=
+\frac{t^3}{1-t^2-t^3-2t^4+t^5+t^6+t^7-t^9}.
+\]
+The first nonzero coefficients are
+\[
+1,1,1,3,1,5,4,10,7,19,17,37,\ldots
+\]
+at their corresponding weights. Direct enumeration through weight $30$ agrees coefficient by coefficient with the rational expansion.
+\end{example}
+
+

@@ -1,0 +1,83 @@
+{
+  "primary_verdict": "proved as written",
+  "claim": "For any finite family of continuous BV closed original complex curves, scalar h continuous on their trace and bounded complex linear operators whose actual resolvent sets contain that trace, the chosen original tagged-RS Dunford values satisfy the typed resolvent sandwich defect identity and the separate-supremum norm bound with the sum of original geometric curve lengths.",
+  "independent_semantic_review": true,
+  "reviewer_source_edits": false,
+  "reviewer_lean_processes": 0,
+  "reviewer_checked_actual_author_compilation_logs": true,
+  "modules": [
+    {
+      "name": "ReleaseRectifiableLength",
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableLength.lean",
+      "sha256": "dc1f61d25ac2695cef3f9da42677aa6d64287fd2093ef75a231592bab0d57374",
+      "bytes": 4913,
+      "strict_compilation_receipt": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/compile_length.log",
+      "receipt_matches_source": true,
+      "source_frozen_by_author": true
+    },
+    {
+      "name": "ReleaseRectifiableRSError",
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableRSError.lean",
+      "sha256": "77d9bcaee7694e27d95c7baed667afca223a6096abde3f94b786e07be993c356",
+      "bytes": 19098,
+      "strict_compilation_receipt": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/compile_rs.log",
+      "receipt_matches_source": true,
+      "source_frozen_by_author": true
+    },
+    {
+      "name": "ReleaseRectifiableDefect",
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableDefect.lean",
+      "sha256": "34b88c77b63a7b94472d3a9eb6ee2cdcb7d61527079b37c44eb0900e41a7044c",
+      "bytes": 6449,
+      "strict_compilation_receipt": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/compile_defect.log",
+      "receipt_matches_source": true,
+      "source_frozen_by_author": true
+    }
+  ],
+  "conventions": {
+    "defect": "C composed Tf minus Tc composed C",
+    "resolvent_sandwich": "resolvent(Tc,z) composed defect composed resolvent(Tf,z)",
+    "normalization": "(2*pi*i)^(-1)",
+    "length": "sum_i eVariationOn(f_i,[0,1]).toReal, counting each Fin n occurrence",
+    "suprema": "sSup(insert0(norm(H)(trace))); reconstructed trace equals original finite union; insert0 handles empty cycle"
+  },
+  "obligations": [
+    {
+      "name": "Independent original contour definition",
+      "status": "passed",
+      "evidence": "rectifiableDunford uses taggedContourIntegral of original f_i and h(z)*actual resolvent(T,z); no velocity identity is a defining field or assumption."
+    },
+    {
+      "name": "Continuous integrands and existence",
+      "status": "passed",
+      "evidence": "h trace continuity and actual resolvent differentiability/continuity give continuous integrands on every original component trace. RS comparison therefore identifies each sum with actual constructed IntegralCycle lineIntegral."
+    },
+    {
+      "name": "Sandwich sign and typing",
+      "status": "passed",
+      "evidence": "Raw baseline continuousDefect=C Tf-Tc C and actual resolvent inverse witnesses give C Rf-Rc C=Rc defect Rf; composition direction and source/target spaces match."
+    },
+    {
+      "name": "Geometric upper bound",
+      "status": "passed",
+      "evidence": "Arclength representative has Lipschitz constant L. Its genuine coordinate velocity has norm<=L at every interior point: both coordinates differentiable gives actual derivative bound; either missing derivative is zero and one-coordinate Lipschitz bound suffices. Integrating gives constructed velocity-length<=original geometric length. Equality is not assumed or claimed."
+    },
+    {
+      "name": "Separate supremum factors",
+      "status": "passed",
+      "evidence": "Baseline actual contour estimate yields velocityLength/(2*pi)*sup|h|*norm(defect)*supnorm(Rc)*supnorm(Rf). Supremum factors and2*pi are nonnegative; replace length by the proved geometric upper bound."
+    },
+    {
+      "name": "Repeated/empty/constant curves",
+      "status": "passed",
+      "evidence": "Termwise finite sums count repeated curves. Fin0 integral,length and inserted-zero suprema give zero. Constant curves have geometric0 and constructed Lipschitz0, so velocity integral vanishes."
+    },
+    {
+      "name": "Canonical h(T) identification",
+      "status": "out of scope",
+      "evidence": "These statements use chosen-cycle rectifiableDunford. No winding condition or holomorphic-domain canonical independence theorem is asserted here."
+    }
+  ],
+  "remaining_gap_for_this_claim": null,
+  "strongest_safe_statement": "Original classical tagged-RS chosen-cycle defect identity and geometric length bound are fully proved at frozen hashes. Promote to canonical holomorphic functional calculus only after separately checked zero-winding/Cauchy and canonical identification."
+}

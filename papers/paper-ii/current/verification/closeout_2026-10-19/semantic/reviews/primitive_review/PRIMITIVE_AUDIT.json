@@ -1,0 +1,186 @@
+{
+  "primary_verdict": "proved as written",
+  "scope": "The seven declarations in ReleaseCyclePrimitive.lean, particularly scalar integral_deriv_curve_eq_sub and IntegralCycle.lineIntegral_deriv_eq_zero; not the whole Paper II closeout.",
+  "review_provenance": "Independent focused source audit in delegated agent. Raw IntegralCycle representation and pinned theorem types inspected before assessing the proof. Fresh candidate compiler execution performed by reviewer, importing existing baseline objects.",
+  "candidate": {
+    "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/primitive/ReleaseCyclePrimitive.lean",
+    "sha256": "194eedd37733f6403438766e0f054e6cb5f9e57f92d326053b4c13d115cf39c8",
+    "first_seen_sha256": "bdc7af002f15e5b904f11a76f459f048736be4d0210065d851533b14aa95095d",
+    "revision_note": "Owner performed final linter cleanup during audit. Final source read and compiler hash-stable; reviewer made no source edits."
+  },
+  "claim_card": {
+    "objects": "Gamma : IntegralCycle, U : Set Complex open with Gamma.trace subset U, F : Complex -> Complex complex differentiable on U.",
+    "exact_per_curve_conclusion": "For every i : Fin Gamma.count, integral_0^1 Gamma.velocity_i(s) * deriv_C F(Gamma.curve_i(s)) ds = F(Gamma.curve_i(1)) - F(Gamma.curve_i(0)).",
+    "exact_final_conclusion": "Gamma.lineIntegral (deriv F) = 0.",
+    "integral_domain": "Lebesgue interval integral of complex scalar functions on [0,1]; finite sum over all indexed curve occurrences.",
+    "exceptions_and_requirements": "No C1, Lipschitz, piecewise-smooth, injectivity, positive speed or nonzero count premise on the curves. F is a supplied single-valued primitive, holomorphic on an open neighborhood of the trace. Only Complex scalar codomain is stated.",
+    "recorded_evidence": "Fresh independent candidate compiler exit 0 on final SHA, plus source-level proof audit. Imported baseline dependencies not independently rebuilt in this invocation."
+  },
+  "raw_representation": {
+    "fields": "count : Nat; base : Fin count -> Complex; velocity : Fin count -> Real -> Complex; velocity_integrable : for every i, IntervalIntegrable velocity_i volume 0 1; closed : integral_0^1 velocity_i = 0.",
+    "curve": "Gamma.curve_i(s) = Gamma.base_i + integral_0^s Gamma.velocity_i(t) dt.",
+    "trace": "Union of images of all Gamma.curve_i on uIcc 0 1.",
+    "lineIntegral": "Sum_i integral_0^1 Gamma.velocity_i(s) * H(Gamma.curve_i(s)) ds.",
+    "meaning": "Actual L1 complex velocities, rather than a scalar proxy or conclusion-valued certificate. Endpoint closure follows from integral velocity zero. Values outside [0,1] may be arbitrary."
+  },
+  "dependency_graph": [
+    {
+      "edge": "Interval-integrable complex g -> interval-integrable real and imaginary coordinates",
+      "kind": "Complex reCLM/imCLM integrable_comp",
+      "status": "passed"
+    },
+    {
+      "edge": "Real primitive integrals -> AC; embed into Complex and recombine -> complex primitive AC",
+      "kind": "Pinned IntervalIntegrable.absolutelyContinuousOnInterval_intervalIntegral; Lipschitz composition; candidate coordinate transport using CLM commutation with integrals",
+      "status": "passed"
+    },
+    {
+      "edge": "IntegralCycle.curve -> AC and derivative equal to its actual velocity almost everywhere",
+      "kind": "Candidate ac_curve; pinned Lebesgue differentiation theorem IntervalIntegrable.ae_hasDerivAt_integral",
+      "status": "passed"
+    },
+    {
+      "edge": "Finite continuous curve family -> compact trace",
+      "kind": "Baseline continuousOn_curve; compact image of closed unit interval and finite compact union",
+      "status": "passed"
+    },
+    {
+      "edge": "F holomorphic on open U -> ContDiffAt Complex 1 near trace -> locally Lipschitz on trace -> globally Lipschitz on compact trace",
+      "kind": "Pinned CauchyIntegral DifferentiableOn.contDiffOn; ContDiffAt.exists_lipschitzOnWith; LocallyLipschitzOn.exists_lipschitzOnWith_of_compact",
+      "status": "passed"
+    },
+    {
+      "edge": "F Lipschitz on trace + curve AC and maps into trace -> F composed curve AC",
+      "kind": "Pinned LipschitzOnWith.comp_absolutelyContinuousOnInterval, with exactly supplied MapsTo",
+      "status": "passed"
+    },
+    {
+      "edge": "Holomorphic F -> deriv F continuous on trace -> integrable velocity times deriv F",
+      "kind": "Pinned DifferentiableOn.deriv; baseline integrable_lineIntegrand",
+      "status": "passed"
+    },
+    {
+      "edge": "Complex derivative of F + a.e. real derivative of curve -> a.e. derivative of composition = velocity times deriv F",
+      "kind": "Pinned HasDerivAt.scomp, with Real-to-Complex scalar tower; derivative output h_prime smul F_prime matches line-integrand order directly",
+      "status": "passed"
+    },
+    {
+      "edge": "AC difference between composition and its proposed primitive, with a.e. derivative zero -> constant -> endpoint difference identity",
+      "kind": "Pinned AbsolutelyContinuousOnInterval.const_of_ae_hasDerivAt_zero; candidate endpoint algebra",
+      "status": "passed"
+    },
+    {
+      "edge": "Closed IntegralCycle endpoints -> zero per curve -> finite sum zero",
+      "kind": "Raw closed field, baseline curve_one/curve_zero, candidate sum_eq_zero",
+      "status": "passed"
+    }
+  ],
+  "obligations": [
+    {
+      "name": "Coordinate reconstruction and transport of complex primitive integral",
+      "status": "passed",
+      "evidence": "Both coordinates are interval integrable; CLMs commute with each 0..s integral for every s in [0,1]. AC sum of embedded real primitive and I times embedded imaginary primitive agrees pointwise with complex primitive."
+    },
+    {
+      "name": "All intervals 0..s used in coordinate transport are integrable",
+      "status": "passed",
+      "evidence": "hg.mono_set with uIcc_subset_uIcc_left hs, for hs : s in uIcc 0 1."
+    },
+    {
+      "name": "Holomorphic to Lipschitz on arbitrary compact trace",
+      "status": "passed",
+      "evidence": "Each trace point has an actual ambient neighborhood contained in U where F is C1 and Lipschitz. Pinned compact local-to-global theorem needs no convexity or connectedness assumption on trace."
+    },
+    {
+      "name": "AC composition stays in required Lipschitz set",
+      "status": "passed",
+      "evidence": "For every s in uIcc 0 1, witness (i,s,hs,rfl) shows curve_i(s) in Gamma.trace."
+    },
+    {
+      "name": "A.e. chain rule uses actual velocity and correct coefficient domains",
+      "status": "passed",
+      "evidence": "Raw velocity derivative theorem is over Real, derivative of F is over Complex; HasDerivAt.scomp supports scalar towers and produces velocity smul deriv F. No coordinate surrogate used."
+    },
+    {
+      "name": "Endpoint cancellation and signs",
+      "status": "passed",
+      "evidence": "g=F(curve)-integral(integrand) is constant; primitive at zero is zero, so integral equals F(curve(1))-F(curve(0)); raw closed velocities give curve(1)=curve(0)=base."
+    },
+    {
+      "name": "Arbitrary interval-integrable velocities, including unbounded or discontinuous L1 representatives",
+      "status": "passed",
+      "evidence": "All regularity is derived from integrable velocity primitives. Lebesgue differentiation is a.e.; no pointwise differentiability of velocity is used."
+    },
+    {
+      "name": "Endpoint derivative failures or arbitrary data outside interval",
+      "status": "passed",
+      "evidence": "Pinned local primitive differentiation theorem explicitly discards endpoint null sets; a.e. zero derivative plus AC yields pointwise constancy including endpoints."
+    },
+    {
+      "name": "Repeated loops, reversals, self intersections, zero speed",
+      "status": "passed",
+      "evidence": "Proof runs independently for every indexed occurrence and uses no geometric exclusion. Each exact derivative integral vanishes."
+    },
+    {
+      "name": "Zero count / empty trace / empty open U",
+      "status": "passed",
+      "evidence": "Finite union and sum are empty; compactness and holomorphic assumptions are vacuous; no index exists for the per-curve argument."
+    },
+    {
+      "name": "Primitive existence for arbitrary holomorphic integrand",
+      "status": "out of scope",
+      "evidence": "The input is F, and the integrated function is deriv F; no statement constructs F for a supplied holomorphic integrand."
+    },
+    {
+      "name": "Banach-valued generalization, homology/Cauchy theorem, canonical calculus, original rectifiable contour identification",
+      "status": "out of scope",
+      "evidence": "The audited terminal theorem is scalar primitive cancellation for the actual velocity representation."
+    },
+    {
+      "name": "Fresh imported-axiom audit / all-source dependency rebuild",
+      "status": "not addressed",
+      "evidence": "Fresh candidate compilation used existing baseline objects; no new #print axioms run or complete release replay in this review."
+    }
+  ],
+  "source_checks": {
+    "baseline_sources": {
+      "ReleaseRectifiable.lean": "2329039f5ccb91f27ffc8c8394fd9fc269f5b3f51c234ade4d937b18dd73a959",
+      "ReleaseAnalyticContour.lean": "3e39aa730cc2ddf277cadec07722cbaac54f71ff8f03638e5a035f01e6579208"
+    },
+    "mathlib_pin": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+    "pinned_sources_read": [
+      "Mathlib/MeasureTheory/Function/AbsolutelyContinuous.lean:328,343,450",
+      "Mathlib/MeasureTheory/Integral/IntervalIntegral/LebesgueDifferentiationThm.lean:66",
+      "Mathlib/MeasureTheory/Integral/IntervalIntegral/AbsolutelyContinuousFun.lean:169",
+      "Mathlib/Analysis/Complex/CauchyIntegral.lean:719,723",
+      "Mathlib/Analysis/Calculus/ContDiff/RCLike.lean:131",
+      "Mathlib/Analysis/Calculus/Deriv/Comp.lean:100",
+      "Mathlib/Topology/Algebra/MetricSpace/Lipschitz.lean:58"
+    ],
+    "circularity": "No dependence on the final cancellation statement; F holomorphic regularity uses upstream Mathlib CauchyIntegral theorems, not the new IntegralCycle line integral."
+  },
+  "compiler_check": {
+    "command": [
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "-DrelaxedAutoImplicit=false",
+      "-DmaxSynthPendingDepth=3",
+      "-Dpp.unicode.fun=true",
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/primitive/ReleaseCyclePrimitive.lean"
+    ],
+    "exit": 0,
+    "seconds": 3.391,
+    "source_sha256_before": "194eedd37733f6403438766e0f054e6cb5f9e57f92d326053b4c13d115cf39c8",
+    "source_sha256_after": "194eedd37733f6403438766e0f054e6cb5f9e57f92d326053b4c13d115cf39c8",
+    "stable": true,
+    "stdout": "",
+    "lean_path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/analytic_baseline/objects:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/mathlib/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/lib/lean",
+    "imported_project_objects": "Previously compiled baseline modules, not independently recompiled in this invocation.",
+    "new_project_olean_written": false
+  },
+  "remaining_gap_for_audited_claim": "None found in final audited source.",
+  "strongest_safe_statement": "Every scalar holomorphic exact derivative integrates to zero over any finite closed IntegralCycle represented by its actual integrable complex velocities, whenever its supplied primitive is holomorphic on an open neighborhood of the complete trace.",
+  "cheapest_next_check": "Full release-driver replay and axiom inspection of the exact final source; use this primitive cancellation only where a single-valued scalar primitive with the stated domain is independently supplied."
+}

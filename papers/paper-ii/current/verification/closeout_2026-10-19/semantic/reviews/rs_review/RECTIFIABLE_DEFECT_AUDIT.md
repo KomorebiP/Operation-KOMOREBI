@@ -1,0 +1,9 @@
+# Original rectifiable chosen-cycle defect bridge
+
+**Verdict: proved as written.** The original tagged Riemann-Stieltjes Dunford integrals satisfy the typed resolvent defect identity and the norm estimate using original geometric length and three separate supremum factors. Exact frozen hashes and matching strict compiler receipts are in RECTIFIABLE_DEFECT_AUDIT.json.
+
+The original integral is defined by its genuine tagged-sum limit. Its equality with the constructed velocity integral is a theorem, not an assumed certificate. The operator defect is C composed with Tf minus Tc composed with C. The integrand sandwich has coarse resolvent first, then defect, then fine resolvent; algebraically the signs agree. Continuity on the original trace follows from continuity of h and actual resolvents. The finite sum bridge preserves multiplicities.
+
+The geometric estimate uses only a proved sufficient upper bound. The arclength representative is Lipschitz with constant equal to original geometric length. Its coordinate velocity has pointwise norm at most that constant in the interior, including the derivative-default cases. Integration gives velocity length at most geometric length. Multiplication by the nonnegative separate supremum factors transports the existing actual contour estimate. Exact equality of speed integral and geometric length is not assumed or claimed. Empty families, constant curves, zero-dimensional operator spaces and repeated curves introduce no dropped hypothesis.
+
+These are chosen-cycle integrals. Identifying them with canonical h(T), with independence of admissible contour and holomorphy domain, requires the separate Cauchy and canonical-identification branch. This audit does not promote the full manuscript theorem before that branch passes. No source edits or reviewer Lean processes were used; all three actual author receipts were inspected and match the frozen source hashes.

@@ -1,0 +1,154 @@
+import KomorebiVerification.PaperII.ReleaseGluing
+import Mathlib.LinearAlgebra.Basis.Defs
+import Mathlib.Algebra.GroupWithZero.Divisibility
+import Mathlib.RingTheory.Ideal.Span
+import Mathlib.LinearAlgebra.Isomorphisms
+import Mathlib.RingTheory.DiscreteValuationRing.Basic
+
+/-!
+# Smith inclusion data and exact quotient exponent
+
+The input is an actual basis of a submodule S and an actual basis of W,
+related by the diagonal inclusion equation.  No quotient isomorphism or
+annihilator formula is assumed.  This is the precise input supplied by a
+Smith normal form of a full-rank lattice inclusion.  The proof works over
+any domain with a nonzero nonunit pi; a DVR uniformizer satisfies these
+conditions.  Zero exponents and empty bases are included.
+-/
+
+set_option autoImplicit false
+open scoped BigOperators
+
+namespace Komorebi.PaperII.ReleaseGluing
+
+universe u v w
+variable {O : Type u} {W : Type v} {I : Type w}
+variable [CommRing O] [IsDomain O] [AddCommGroup W] [Module O W]
+variable [Fintype I] [DecidableEq I]
+
+omit [IsDomain O] in
+theorem mem_submodule_iff_smith_coordinates
+    (S : Submodule O W) (b : Module.Basis I O W) (c : Module.Basis I O S)
+    (pi : O) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : W) = (pi ^ a i) • b i) (x : W) :
+    x ∈ S ↔ ∀ i, pi ^ a i ∣ b.repr x i := by
+  constructor
+  · intro hx i
+    let y : S := ⟨x, hx⟩
+    have hsum : (∑ j, c.repr y j • (c j : W)) = x := by
+      simpa only [Submodule.coe_sum, Submodule.coe_smul] using
+        congrArg (fun z : S => (z : W)) (c.sum_repr y)
+    refine ⟨c.repr y i, ?_⟩
+    rw [← hsum]
+    simp [hdiag, mul_comm, Finsupp.single_apply]
+  · intro hx
+    rw [← b.sum_repr x]
+    apply S.sum_mem
+    intro i _hi
+    obtain ⟨k, hk⟩ := hx i
+    rw [hk, mul_comm, mul_smul, ← hdiag i]
+    exact S.smul_mem k (c i).property
+
+/-- The coordinate map into the actual cyclic O-module quotients. -/
+noncomputable def smithCoordinateMap (b : Module.Basis I O W) (pi : O) (a : I → ℕ) :
+    W →ₗ[O] (∀ i, O ⧸ Ideal.span {pi ^ a i}) :=
+  LinearMap.pi fun i => (Ideal.span {pi ^ a i}).mkQ.comp (b.coord i)
+
+omit [IsDomain O] in
+theorem smithCoordinateMap_ker
+    (S : Submodule O W) (b : Module.Basis I O W) (c : Module.Basis I O S)
+    (pi : O) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : W) = (pi ^ a i) • b i) :
+    LinearMap.ker (smithCoordinateMap b pi a) = S := by
+  ext x
+  rw [mem_submodule_iff_smith_coordinates S b c pi a hdiag]
+  change (smithCoordinateMap b pi a x = 0) ↔ _
+  simp only [smithCoordinateMap, LinearMap.pi_apply, LinearMap.comp_apply,
+    funext_iff, Pi.zero_apply, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero,
+    Ideal.mem_span_singleton, Module.Basis.coord_apply]
+
+omit [IsDomain O] [DecidableEq I] in
+theorem smithCoordinateMap_surjective (b : Module.Basis I O W) (pi : O) (a : I → ℕ) :
+    Function.Surjective (smithCoordinateMap b pi a) := by
+  classical
+  intro y
+  choose r hr using fun i => (Ideal.span {pi ^ a i}).mkQ_surjective (y i)
+  refine ⟨b.equivFun.symm r, ?_⟩
+  ext i
+  change (Ideal.span {pi ^ a i}).mkQ (b.repr (b.equivFun.symm r) i) = y i
+  rw [← b.equivFun_apply, b.equivFun.apply_symm_apply]
+  exact hr i
+
+/-- Smith diagonalization of an inclusion produces the actual quotient decomposition. -/
+noncomputable def smithInclusionQuotientEquiv
+    (S : Submodule O W) (b : Module.Basis I O W) (c : Module.Basis I O S)
+    (pi : O) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : W) = (pi ^ a i) • b i) :
+    (W ⧸ S) ≃ₗ[O] (∀ i, O ⧸ Ideal.span {pi ^ a i}) :=
+  (Submodule.quotEquivOfEq S _ (smithCoordinateMap_ker S b c pi a hdiag).symm).trans
+    ((smithCoordinateMap b pi a).quotKerEquivOfSurjective
+      (smithCoordinateMap_surjective b pi a))
+
+/-- The length of the actual Smith cokernel is the sum of its directional weights. -/
+theorem length_smith_inclusion_quotient [IsDiscreteValuationRing O]
+    (S : Submodule O W) (b : Module.Basis I O W) (c : Module.Basis I O S)
+    (pi : O) (hpi : Irreducible pi) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : W) = (pi ^ a i) • b i) :
+    Module.length O (W ⧸ S) = ∑ i, (a i : ℕ∞) := by
+  rw [(smithInclusionQuotientEquiv S b c pi a hdiag).length_eq,
+    Module.length_pi_of_fintype]
+  apply Finset.sum_congr rfl
+  intro i _hi
+  have heq : Ideal.span {pi ^ a i} = IsLocalRing.maximalIdeal O ^ a i := by
+    rw [hpi.maximalIdeal_eq, Ideal.span_singleton_pow]
+  rw [(Submodule.quotEquivOfEq _ _ heq).length_eq]
+  exact IsDiscreteValuationRing.length_quotient_pow_maximalIdeal (R := O) (a i)
+
+theorem quotient_annihilated_iff_smith_weights_le
+    (S : Submodule O W) (b : Module.Basis I O W) (c : Module.Basis I O S)
+    (pi : O) (hpi : pi ≠ 0) (hunit : ¬ IsUnit pi) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : W) = (pi ^ a i) • b i) (s : ℕ) :
+    (∀ z : W ⧸ S, (pi ^ s) • z = 0) ↔ ∀ i, a i ≤ s := by
+  constructor
+  · intro h i
+    have hk := h (S.mkQ (b i))
+    rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hk
+    have hdvd := (mem_submodule_iff_smith_coordinates S b c pi a hdiag _).mp hk i
+    simp only [map_smul, Finsupp.smul_apply, b.repr_self_apply, ite_true,
+      smul_eq_mul, mul_one] at hdvd
+    exact (pow_dvd_pow_iff hpi hunit).mp hdvd
+  · intro h z
+    obtain ⟨x, rfl⟩ := S.mkQ_surjective z
+    rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
+    apply (mem_submodule_iff_smith_coordinates S b c pi a hdiag _).mpr
+    intro i
+    simp only [map_smul, Finsupp.smul_apply, smul_eq_mul]
+    exact dvd_mul_of_dvd_left ((pow_dvd_pow_iff hpi hunit).mpr (h i)) _
+
+theorem quotient_annihilated_iff_smith_max_le
+    (S : Submodule O W) (b : Module.Basis I O W) (c : Module.Basis I O S)
+    (pi : O) (hpi : pi ≠ 0) (hunit : ¬ IsUnit pi) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : W) = (pi ^ a i) • b i) (s : ℕ) :
+    (∀ z : W ⧸ S, (pi ^ s) • z = 0) ↔ Finset.univ.sup a ≤ s := by
+  rw [quotient_annihilated_iff_smith_weights_le S b c pi hpi hunit a hdiag]
+  simp only [Finset.sup_le_iff, Finset.mem_univ, true_implies]
+
+/-- Given a Smith basis of the actual split-lattice inclusion, its maximum weight
+is exactly the maximum of the least projector denominator weights. -/
+theorem globalWeight_eq_smith_max
+    {V : Type*} [AddCommGroup V] [Module O V]
+    {J : Type*} [Fintype J] (P : Projectors O V J) (Λ : Submodule O V)
+    (b : Module.Basis I O Λ) (c : Module.Basis I O (splitInside P Λ))
+    (pi : O) (hpi : pi ≠ 0) (hunit : ¬ IsUnit pi) (a : I → ℕ)
+    (hdiag : ∀ i, (c i : Λ) = (pi ^ a i) • b i)
+    (finite : ∀ j, ∃ s, ClearsPacket P Λ pi j s) :
+    globalWeight P Λ pi finite = Finset.univ.sup a := by
+  apply le_antisymm
+  · apply (gluing_annihilated_iff_globalWeight_le P Λ pi finite _).mp
+    exact (quotient_annihilated_iff_smith_max_le
+      (splitInside P Λ) b c pi hpi hunit a hdiag _).mpr le_rfl
+  · apply (quotient_annihilated_iff_smith_max_le
+      (splitInside P Λ) b c pi hpi hunit a hdiag _).mp
+    exact (gluing_annihilated_iff_globalWeight_le P Λ pi finite _).mpr le_rfl
+
+end Komorebi.PaperII.ReleaseGluing

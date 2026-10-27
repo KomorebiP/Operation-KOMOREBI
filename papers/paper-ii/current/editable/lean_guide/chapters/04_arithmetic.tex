@@ -1,0 +1,98 @@
+\section{Evaluated separation and lattice precision}\label{sec:separation}
+
+Rows 14--16 start with endomorphisms $F,G,U,V$ of a vector space over a field $K$. The central premise is an evaluated B\'ezout equality
+\[
+UF+VG=rI.
+\]
+The source does not construct polynomials whose evaluation gives these maps, compute a general resultant, factor a characteristic polynomial, or instantiate Cayley--Hamilton. These operations may justify the premise in a mathematical application, but they remain upstream of this formal interface.
+
+Let $N=VG$. The identity without denominators is $N^2=rN$. After adding $r\ne0$, the normalized map $E=r^{-1}N$ is idempotent. The bundled \code{EvaluatedBezoutCertificate} contains six pairwise commutations as well as nonvanishing, B\'ezout, and annihilation. The mapped minimal theorems need fewer fields and state this directly.
+
+\subsection{A proof walkthrough: the square identity without division}
+
+Only $FG=GF$, $GU=UG$, and $FG=0$ are needed to kill the cross term $VGUF$. Using $VG=rI-UF$ on one occurrence of the numerator then proves the square identity.
+\excerpt{PaperII/ResultantSeparation}{bezout_minimal}
+
+The proof rewrites just the second factor, distributes multiplication over subtraction, and invokes vanishing of the cross term. It needs neither $r\ne0$ nor four unused commutations from the stronger bundle. Consequently the theorem without denominators remains meaningful even when normalization is unavailable. The later normalized theorem uses scalar associativity and field simplification with the explicit nonzero hypothesis.
+
+On $\ker F$, the evaluated B\'ezout equation gives $Nx=rx$ directly. On $\ker G$, $Nx=V(Gx)=0$. After normalization, $E$ acts as identity and zero respectively. A statement that $F$ is nilpotent on some larger subspace would not imply $Fx=0$ there. The formal theorem uses exact kernel membership. This prevents an intuition about primary summands from silently strengthening the proved conclusion.
+
+\subsection{What the formal lattice means}
+
+The lattice parameter is an \code{AddSubgroup M}. Preservation by a map means that each member is sent back into this additive subgroup. A general valuation ring, finite generation, full rank, completeness, and a chosen basis are not built into its type.
+
+A clearing certificate at exponent $s$ states that $\pi^sE$ preserves the lattice. The source names this \code{IsSeparationWeight}. If multiplication by $\pi$ also preserves the lattice, the set of clearing exponents is upward closed. Given existence of some clearing exponent, \code{Nat.find} defines a least one and proves its minimality property. This is a noncomputable construction of a least witness, not a search algorithm over matrix entries.
+
+If $r=u\pi^s$, then
+\[
+\pi^sE=u^{-1}VG.
+\]
+To turn this algebraic identity into lattice preservation, one must know that $u^{-1}$ preserves the chosen lattice, together with $V$ and $G$. An abstract field unit need not preserve an arbitrary additive subgroup. The formal certificate for the unit action on the lattice makes this assumption visible. The resulting exponent bounds the least separation weight from above. It need not be the minimal exponent.
+
+The expanded traditional theory identifies exact weights through a lattice gluing module and gives necessary as well as sufficient delay statements. Those ordinary written proofs are beyond these mapped consequences of clearing certificates. They should not be attributed to \code{separationWeight} merely because the names describe related mathematics.
+
+\subsection{Precision delay as transport of a witness}
+
+Formal congruence at depth $n$ means an explicit equation $x-y=\pi^nz$ with $z$ in the lattice. If $\pi^sE$ preserves the lattice, input congruence at $m+s$ becomes output congruence at $m$.
+\excerpt{PaperII/ResultantSeparation}{precision_delay}
+
+The proof opens the original witness $z$. It chooses the new witness $z'=(\pi^sE)z$, whose lattice membership is exactly the clearing hypothesis. Linearity and $\pi^{m+s}=\pi^m\pi^s$ establish the new difference equation. No digit expansion, topology, or valuation API enters this proof. It is sufficient delay from a supplied certificate, without a claim that fewer input digits must fail.
+
+\section{Concrete Smith fibres and the dyadic sign model}\label{sec:smith}
+
+Row 18 proves a concrete arithmetic statement over \code{ZMod (p^depth)} for $p>1$. The hypothesis is not that $p$ is prime. Since the modulus and coefficient are powers of the same integer, the needed gcd and divisibility identities hold at this stated scope.
+
+\subsection{The solution fibre is an actual type of solutions}
+
+For a weight $s$ and depth $L$, multiplication by $p^s$ is an additive endomorphism of $\mathbb Z/p^L\mathbb Z$. Its fibre over $b$ is the subtype of elements that map to $b$.
+\excerpt{PaperII/SmithDyadic}{smith_fibre}
+
+The criterion is
+\[
+p^{\min(s,L)}\mid\operatorname{val}(b),
+\]
+where \code{target.val} is the canonical natural representative. The source proves that this is equivalent to nonemptiness of the actual fibre. If $s\le L$, an admissibility witness supplies a quotient of the target representative and hence a solution. If $L\le s$, admissibility forces the target to be zero. The zero residue supplies a solution.
+
+The forward direction uses the modular representative of a supplied solution and divisibility by both the coefficient and modulus. Thus solvability is proved from concrete modular arithmetic, rather than inserted as a certificate field.
+
+\subsection{A proof walkthrough: counting an admissible fibre}
+
+Once a solution $x_0$ exists, translation by $x_0$ identifies the fibre with the kernel of multiplication by $p^s$. The kernel cardinality in this finite cyclic additive group is the gcd of its order with $p^s$.
+\excerpt{PaperII/SmithDyadic}{smith_count}
+
+The final two cases use the divisibility of one power of $p$ by the other to obtain
+\[
+\#\{x:p^sx=b\pmod {p^L}\}=p^{\min(s,L)}.
+\]
+This is an exact cardinality of a finite type. It does not enumerate the solutions or provide a particular coordinate normal form for every one of them.
+
+For a finite diagonal system, the global fibre is a dependent function type: one solution in each coordinate. Products of finite cardinalities give the count, while one inadmissible coordinate makes the product type empty.
+\excerpt{PaperII/SmithDyadic}{smith_global}
+
+If all coordinates are admissible, the cardinality is $p^{\sum_i\min(s_i,L)}$. Otherwise it is zero. At depth zero, the quotient has one element and the exponent is zero, consistent with the stated formula. A literal zero diagonal coefficient can be represented at precision $L$ by any weight at least $L$, since $p^s$ then vanishes in the quotient.
+
+\subsection{The abstract extension keeps its certificate boundary}
+
+The same module has separate \code{SmithSolvabilityCertificate} and \code{SmithCardinalityCertificate} structures. For arbitrary finite coordinate fibres, these supply the equivalence and count for each coordinate, with an externally chosen base $q$. The global product theorems then assemble them.
+
+In a general discrete valuation ring with residue field of cardinality $q$, the familiar coordinate count has the analogous form. The formal component does not construct that DVR arithmetic or derive its cardinality theorem. Likewise it does not calculate Smith normal form of an input matrix, find matrices for a change of basis, or extract diagonal weights. The automatic result for row 18 begins with a diagonal system over the concrete modular quotient. The abstract extension begins with certificates.
+
+\subsection{Rational sign projectors and local denominator weight}
+
+Row 17 fixes the rational matrices
+\[
+J=\begin{pmatrix}1&1\\0&-1\end{pmatrix},\qquad
+P_+=\begin{pmatrix}1&1/2\\0&0\end{pmatrix},\qquad
+P_-=\begin{pmatrix}0&-1/2\\0&1\end{pmatrix}.
+\]
+Entrywise proofs establish $J^2=I$, projector idempotence, mutual annihilation, and $P_++P_-=I$. The local integrality predicate says that a rational entry's reduced denominator is not divisible by $p$. Each projector has exact local denominator weight zero at every prime other than two and exact weight one at two.
+
+The local word matters. Global integrality demands integer entries. Integrality at $p$ permits denominators prime to $p$. A global denominator weight and a local denominator weight are defined separately in the source. The resultant of the sign factors is explicitly computed as $\operatorname{Res}(X-1,X+1)=2$, and its dyadic valuation is matched to the exact local weights of these matrices.
+
+This is a model with rational entries using valuations with natural number values. It does not construct $\mathbb Q_p$ or its valuation ring, identify arbitrary completed lattices, or prove a general equivalence between all rational integrality criteria and lattice preservation. Reduction modulo two applies to the characteristic factors. The rational matrices containing $1/2$ do not have an entrywise reduction modulo two.
+
+\subsection{The Smith phase identity has only algebraic scope}
+
+Row 22 checks the fractional expression \code{smithPhase}, obtained by pulling back the action, at phase $-1$. Over a field with $2\ne0$ and $z\ne0$, its value is $z^{-1}$. The extra manuscript condition $z\ne-1$ is unnecessary for this algebraic identity and is removed by the formal theorem.
+
+The result does not formalize the complex Smith disk, an interpretation on a M\"obius domain, radius preservation, or physical impedance. In the traditional companion, see the subsection on Smith chart coordinates and its unnumbered phase identity. The subsection counter is not an equation number.

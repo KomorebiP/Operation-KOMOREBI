@@ -1,0 +1,94 @@
+\section{Exact packets and refinement}\label{sec:refinement}
+
+Rows 1--5 start from finite complete projector families. A family $P=(P_i)$ satisfies $P_i^2=P_i$, $P_iP_j=0$ for $i\ne j$, and $\sum_iP_i=I$. Orthogonality here is algebraic annihilation. An inner product, self-adjointness, and topology are absent from these assumptions. The canonical formal family also permits zero projectors, whereas the expanded traditional packet terminology requires nonzero members.
+
+The packet space is the product of actual ranges,
+\[
+\mathcal P(P)=\prod_i\operatorname{range}(P_i).
+\]
+Its elements carry their proofs of membership in a range. Analysis sends $x$ to $(P_i x)_i$. Synthesis sums the underlying vectors. Completeness proves synthesis after analysis. Pairwise annihilation and idempotence prove analysis after synthesis. Both maps are independently defined, so the second inverse law has mathematical content: every tuple in the product of ranges is accepted.
+
+\subsection{What a refinement witness supplies}
+
+A parent map $\pi:J\to I$ assigns fine labels to coarse labels. The finite set \code{children parent a} is the fibre $\pi^{-1}(a)$. The refinement witness records surjectivity and exact equality of coarse maps with sums of their fine children.
+\excerpt{PaperII/NestedRefinement}{refinement}
+
+The structure does not construct a parent map between arbitrary families. To apply its theorems, a caller supplies a map and proves these two fields. The resulting absorption identities are genuine consequences. If $\pi(j)=i$, then
+\[
+P_iQ_j=Q_j=Q_jP_i;
+\]
+if $\pi(j)\ne i$, both products vanish. Expand $P_i$ as the sum of its children, distribute composition, and use orthogonality of the fine family. Transitivity follows by applying this reasoning through two successive parent maps.
+
+\subsection{A proof walkthrough: recovering a selected finite decomposition}
+
+The most general uniqueness theorem in row 2 does not use the refinement witness. Suppose a selected finite set $S$ of packet vectors sums to $x$, with $v_j\in\operatorname{range}(P_j)$ for $j\in S$. Applying $P_i$ kills all terms except $v_i$, so $v_i=P_i x$. The exact proof shows which hypotheses enter.
+\excerpt{PaperII/NestedRefinement}{packet_uniqueness}
+
+First \code{rcases hrange b hb with} extracts a preimage $y$ for the selected packet. Rewriting the packet as $P_b y$ makes idempotence applicable. Next \code{map_sum} distributes $P_b$ across the finite sum. \code{Finset.sum_eq_single_of_mem} leaves the diagonal term. Each other term vanishes after its own range witness is opened. Finally \code{congrArg} applies $P_b$ to the supplied sum equality.
+
+The conclusion is restricted to $b\in S$. No conclusion is drawn about values of the packet function outside that finite set. The source family is complete as a bundled object, but the proof of this result never uses its completeness field. This explains the map's ``Stronger'' classification without suggesting a theorem about arbitrary infinite sums.
+
+\subsection{Coordinate changes need no parent map}
+
+Let $\mathsf A_P$ and $\mathsf S_P$ denote analysis and synthesis. For any two complete finite families on the same module, define
+\[
+R_{P\to Q}=\mathsf A_Q\mathsf S_P,
+\qquad R_{Q\to P}=\mathsf A_P\mathsf S_Q.
+\]
+The source calls these maps refinement and coarsening.
+\excerpt{PaperII/NestedRefinement}{coordinate_maps}
+
+These maps are inverses because $\mathsf S_Q\mathsf A_Q=I$ and $\mathsf A_P\mathsf S_P=I$. The proof uses the earlier simplification rules for exact coordinates.
+\excerpt{PaperII/NestedRefinement}{coordinate_inverses}
+
+The short \code{simp} proofs rest on established inverse laws. They are not assumptions that refinement loses no data. The two packet products are full exact presentations of the same module. Counting the number of labels alone does not measure their dimension: every label contains an entire projector range.
+
+A parent witness adds component formulas. The fine component is obtained by applying the fine projector to its coarse parent packet. The coarse component is the sum of its fine children. These are additional identities about the already defined coordinate equivalence. They do not turn it into averaging, sampling, or truncation.
+
+With a third complete family $H$, the same inverse laws give the cocycle
+\[
+R_{Q\to H}R_{P\to Q}=R_{P\to H}.
+\]
+The theorem \code{refineCoordinates_comp} first proves the equality on each packet and then uses extensionality of linear maps. A reader can thus separate the simple conceptual proof from the bookkeeping needed to state it as equality of bundled maps.
+
+\subsection{Naturality and independently refined blocks}
+
+For $T:M\to N$ with source family $P$ and target family $Q$, the exact coordinate operator is $\mathsf A_QT\mathsf S_P$. Its composition law cancels the middle pair of synthesis and analysis maps. Changing the source and target coordinate systems independently gives the corresponding commuting naturality identity.
+
+The block convention places the output index first:
+\[
+T_{ji}=Q_jTP_i.
+\]
+If source and target families refine separately, a coarse block is the double sum over fine descendants of its source and target labels. The mapped theorem permits different source and target modules, which is stronger than the endomorphism special case. Its composite traceability wrapper also records reconstruction of $T$ from all coarse blocks and from all fine blocks.
+
+The finite algebraic result does not establish sparsity of a computed representation, a block extraction routine with a finite complexity bound, or convergence of an infinite block matrix. These need separate hypotheses and, where intended, separate formal developments.
+
+\section{Residue selectors, Fourier certificates, and CRT}\label{sec:residue}
+
+Rows 6--9 act on coefficient functions $x:\mathbb N\to A$. At a positive modulus $N$, the residue projector keeps $x(n)$ when $n\bmod N=j$ and returns zero otherwise. Since exactly one residue label matches each $n$, idempotence, pairwise annihilation, and completeness follow pointwise. No division or roots of unity are required.
+
+This representation is a sequence module, not a formal power series object with a multiplication law. It is sufficient for coefficient masks. A user wishing to apply the result to a particular function space must supply the connection to that space and any closure or convergence facts.
+
+\subsection{The finite Fourier table is an input over general semirings}
+
+A Fourier realization uses scalars $\omega$, $\omega^\vee$, and $\eta$. The weighted residue kernel is
+\[
+\eta\sum_{k=0}^{N-1}(\omega^\vee)^{jk}\omega^{rk}.
+\]
+Over a general commutative semiring the source does not assume that $\omega^\vee$ is an inverse or that $\eta=1/N$. Instead it accepts a finite orthogonality table with exactly the required conclusion at residue addresses.
+\excerpt{PaperII/ResidueFourierCRT}{fourier_certificate}
+
+The substantive bridge is from that finite table to every coefficient address. The equation $\omega^N=1$ reduces the exponent $n$ to $n\bmod N$. The last line below uses \code{Fin.ext_iff} to equate residue labels through their underlying natural numbers.
+\excerpt{PaperII/ResidueFourierCRT}{fourier_bridge}
+
+After this bridge, the average and the mask are equal coefficient by coefficient: the normalized scalar is one at the selected address and zero elsewhere. The proof works with a finite table rather than an infinite family of independent premises.
+
+There is also a stronger field branch. A primitive root of positive order supplies the normalized orthogonality certificate for the inverse root internally. Its field hypothesis is essential to that branch's scope. Root order by itself is not a replacement for the table over arbitrary rings with zero divisors.
+
+\subsection{Refining residues and factoring their labels}
+
+For positive $N$ and $k$, the modulus-$N$ selector is the sum of all modulus-$Nk$ selectors whose labels reduce to it. This is exact regrouping of masks. No packet is discarded and there is no approximation error to estimate.
+
+For positive coprime $m,n$, CRT gives an equivalence between labels modulo $mn$ and pairs of labels modulo $m$ and $n$. The corresponding selector is the composite of the two independent selectors in either order. For $m=2^a$ and positive odd $n$, the factorization into dyadic and odd moduli is a specialization.
+
+These are coordinate facts. They do not prove that rational spectral projectors have integral denominators, that a completed lattice splits, or that solving a lifting problem is possible. The later arithmetic modules use different data for those questions. This separation is useful when reading the same terminology about dyadic and odd moduli in the traditional paper: residue factorization and spectral denominator clearing are distinct statements.

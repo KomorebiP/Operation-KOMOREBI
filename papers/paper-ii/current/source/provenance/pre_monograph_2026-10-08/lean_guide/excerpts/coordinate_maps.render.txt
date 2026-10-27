@@ -1,0 +1,10 @@
+variable (coarse : LinearProjectorFamily R M ι)
+variable (fine : LinearProjectorFamily R M κ)
+
+/-- Resolve coarse range coordinates by synthesis followed by fine analysis. -/
+def refineCoordinates : PacketSpace coarse →ₗ[R] PacketSpace fine :=
+  fine.rangeAnalysis.comp coarse.rangeSynthesis
+
+/-- Regroup fine range coordinates by synthesis followed by coarse analysis. -/
+def coarsenCoordinates : PacketSpace fine →ₗ[R] PacketSpace coarse :=
+  coarse.rangeAnalysis.comp fine.rangeSynthesis

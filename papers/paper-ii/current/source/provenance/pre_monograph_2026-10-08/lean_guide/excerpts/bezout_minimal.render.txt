@@ -1,0 +1,16 @@
+theorem separatorNumerator_mul_self_of_bezout
+    (bezout : U * F + V * G = r • (1 : End (K := K) (M := M)))
+    (commute_FG : Commute F G) (commute_GU : Commute G U) (annihilate : F * G = 0) :
+    separatorNumerator V G * separatorNumerator V G = r • separatorNumerator V G := by
+  calc
+    separatorNumerator V G * separatorNumerator V G =
+        separatorNumerator V G *
+          (r • (1 : End (K := K) (M := M)) - U * F) := by
+            exact congrArg (separatorNumerator V G * ·)
+              (separatorNumerator_eq_scalar_sub_of_bezout bezout)
+    _ = separatorNumerator V G * (r • (1 : End (K := K) (M := M))) -
+          separatorNumerator V G * (U * F) := by rw [mul_sub]
+    _ = r • separatorNumerator V G := by
+      rw [separatorNumerator_mul_complement_eq_zero_of_commute
+        commute_FG commute_GU annihilate]
+      simp only [sub_zero, mul_smul_comm, mul_one]

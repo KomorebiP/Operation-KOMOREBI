@@ -1,0 +1,73 @@
+{
+  "audit_id": "transfer-independent-defects-owner-2026-10-15",
+  "reviewer": "paper2_defects_models",
+  "mode": "read-only raw-source semantic review; no compiler invoked",
+  "verdict": "PASS for actual scalar-weighted and multigraded unrestricted-walk formal-series rationality, endpoint contraction, and scalar recurrence. No conclusion-valued rationality premise found.",
+  "sources": {
+    "paper2_work/transfer/ReleaseTransferMatrix.lean": "8d5e655c480552fb7e171074d3ffb7780b2366e516944d07fccfe3f8473e7539",
+    "paper2_work/transfer/ReleaseTransferScalar.lean": "087e391b1c6f04e4aeafdca7066eff410606f9a5d6b804f5f4ad0678b0598f76",
+    "paper2_work/transfer/ReleaseTransferMultigraded.lean": "eaafe9a44f3b8fafe6512e8bee9ac4683db378aa8806bafbe5882941bfe815ad",
+    "paper2_work/transfer/ReleaseTransferMultigradedRational.lean": "8dbb6644f882f7a24d834009c9e9309009b840bf65fdb157bbfd9c7ec8dbdcd1",
+    "release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/TransferZeta.lean": "0b5fe6a7650d7461c9c647287b0498b89f76768c98e378deee33e7aafc867cd5",
+    "release_package/Komorebi_Paper_II_Release_2026-10-15/editable/traditional/chapters/03_weighted.tex": "58bfafd44a82358338d8daca144b127ebd17cb254eae44ba912d5ed55f0c5be7"
+  },
+  "obligations": [
+    {
+      "name": "Unrestricted walk semantics",
+      "verdict": "PASS",
+      "reason": "Original IsWalk is list adjacency/source/target recursion. No nodup, no simple-path restriction. ExactWalk subtype ranges over all lists. Original finiteness comes from length<=weight and the proved list/finite-tuple equivalence, already audited in initial report."
+    },
+    {
+      "name": "Scalar multiplicities and parallel/repeated edges",
+      "verdict": "PASS",
+      "reason": "walkMultiplicity=(List.map m es).prod retains every occurrence. E is actual edge label type, distinct parallel edges remain distinct list elements and separate summands. Arbitrary scalar m in CommRing R includes zero, negative, and cancellation; no positivity premise for m."
+    },
+    {
+      "name": "Empty walk and endpoint weights",
+      "verdict": "PASS",
+      "reason": "Empty list contributes1 exactly when s=t and n=0. contract u M v=sum_i sum_j u_i M_ij v_j and endpoint_coeff expose source/target multiplicities, including u_i v_i at weight0. Matrix row is source and column target consistently."
+    },
+    {
+      "name": "Finite first-edge bijection",
+      "verdict": "PASS",
+      "reason": "Scalar sum transports through existing exactWalkFirstEdgeEquiv and firstEdgeTailEquiv. Multigraded firstEdgeEquiv explicitly removes/reattaches head and proves inverse laws. Finsupp tsub is guarded by componentwise weight<=n, derived from weight+tail=n; no invalid vector subtraction."
+    },
+    {
+      "name": "Full multigrade retention",
+      "verdict": "PASS",
+      "reason": "ExactWalk G s t n requires vectorWeight es=n in sigma\u2192\u2080Nat. natGraph degree is only an injective finite-container witness. Coefficients and adjacency monomials remain indexed by full exponent vector; they are never identified merely by equal total degree. Infinite sigma is permitted; finite edge set still yields finite support."
+    },
+    {
+      "name": "Determinant construction and noncircularity",
+      "verdict": "PASS",
+      "reason": "Semantic series is defined independently as exact-walk sum. First-edge equation proves (I-A)Z=I. Q=det(I-A) has constant coefficient1 from positive/nonzero edge weights. invOfUnit constructs scalar inverse with both identities. Actual adjugate identities construct opposite matrix inverse; associativity gives equality to independently enumerated series. QZ=P not assumed."
+    },
+    {
+      "name": "Endpoint rationality",
+      "verdict": "PASS",
+      "reason": "P is actual endpoint contraction of adjugate, Q actual determinant. Q*endpointSeries=P proved in PowerSeries/MvPowerSeries over any commutative ring. For manuscript field case, this is the claimed rational formal expansion with denominator dividing Q after reduction. No separate reduced-RatFunc normalization theorem is exported or required by these coefficient identities."
+    },
+    {
+      "name": "Recurrence including zero numerator",
+      "verdict": "PASS",
+      "reason": "endpoint_recurrence now uses Polynomial.degree< (n:WithBot Nat), hence deg0=bottom convention and n=0 zero-numerator case are covered. Antidiagonal convolution automatically omits negative coefficient indices."
+    },
+    {
+      "name": "Algorithm boundary",
+      "verdict": "PASS with explicit boundary",
+      "reason": "New definitions use noncomputable finite sums/invOfUnit, proving mathematical coefficients and rationality; they do not by themselves export an executable graph solver. Original coefficientAlgorithm and Python companion separately address executable checks."
+    }
+  ],
+  "edge_cases_checked": [
+    "zero scalar multiplicities",
+    "repeated edges and self-loops",
+    "distinct parallel edges with same weight and endpoints",
+    "empty vertex set and empty edge set",
+    "unit/zero endpoint vectors",
+    "vector with some zero coordinates but not all",
+    "empty multigrading type forces no edges",
+    "zero numerator recurrence at n=0"
+  ],
+  "issues": [],
+  "source_edits": []
+}

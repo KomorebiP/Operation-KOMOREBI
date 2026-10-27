@@ -1,0 +1,16 @@
+run_cmd do
+  let env ← getEnv
+  let mut audited : Nat := 0
+  for (name, info) in env.checked.get.constants.toList do
+    if Name.isPrefixOf `Komorebi name then
+      audited := audited + 1
+      if info.isUnsafe then
+        throwError "unsafe project declaration: {name}"
+      let axioms ← Lean.collectAxioms name
+      for axiomName in axioms do
+        unless axiomName == ``propext || axiomName == ``Classical.choice ||
+            axiomName == ``Quot.sound do
+          throwError "unexpected axiom {axiomName} in project declaration {name}"
+  if audited == 0 then
+    throwError "kernel audit found no Komorebi declarations"
+  logInfo m!"FAIL-CLOSED KERNEL AUDIT PASS: {audited} Komorebi declarations; allowed axioms only: propext, Classical.choice, Quot.sound"

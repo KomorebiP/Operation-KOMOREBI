@@ -1,0 +1,303 @@
+{
+  "audit_id": "PAPER-II-WEIGHTED-INITIAL-2026-10-15",
+  "primary_verdict": "incomplete, with the smallest missing implication",
+  "verdict_scope": "Full manuscript-to-Lean scope, not the validity of the already proved finite-quotient and normed-ring theorems.",
+  "normalized_claim": "A finite positive-integral-weight perturbation of a unit in a separated inverse-limit-complete multiplicatively filtered unital algebra admits the weighted noncommutative Neumann inverse, packet path and valuation bounds, and exact finite-precision truncations. Finite positive weighted multigraph walk series with arbitrary field edge multiplicities and endpoint vectors, including the multigraded variant, are rational; the unit-multiplicity univariate case has an independently enumerated integer coefficient algorithm.",
+  "scope": [
+    "editable/traditional/chapters/03_weighted.tex",
+    "editable/traditional/chapters/02_coordinates.tex",
+    "formal/current/KomorebiVerification/PaperII/WeightedTransfer.lean",
+    "formal/current/KomorebiVerification/PaperII/TransferZeta.lean"
+  ],
+  "source_hashes": {
+    "editable/traditional/chapters/03_weighted.tex": "56aeaee491cd3d2d349e53e8ab7e8d10280e51892c5cb682e665a7088fd16988",
+    "editable/traditional/chapters/02_coordinates.tex": "c10c5318fa540ed037e4d11941d82d985fd5a40a6a54f1a5b5f8f92f41983407",
+    "formal/current/KomorebiVerification/PaperII/WeightedTransfer.lean": "a6565343f45bd187fcf7a349cd506bc13a8bac7f85cf665516c2b65b062d7bcc",
+    "formal/current/KomorebiVerification/PaperII/TransferZeta.lean": "0b5fe6a7650d7461c9c647287b0498b89f76768c98e378deee33e7aafc867cd5"
+  },
+  "mode": "Read-only source audit; no manuscript or Lean edits; no Lean process launched. Fresh build and kernel-axiom audit delegated to paper2_runtime.",
+  "instructions": "Read proof-audit and its applicable general logic, filtration, computation and external-source checklists. No applicable AGENTS.md or .mathbox ledger located in working tree.",
+  "claim_cards": [
+    {
+      "claim": "thm:weighted_inverse",
+      "objects": "Unital algebra B; F^n two-sided additive ideals, F^0=B, decreasing and multiplicative; intersection zero; B\u2192lim B/F^n an isomorphism; finite E; N_e in F^{w(e)}, w(e) positive integers; unit D.",
+      "conclusion": "T=D+sum N_e has two-sided inverse sum_words (-1)^length A_e_last...A_e_first D^{-1}; each word in F^{weight}, and finite-depth quotient contains finitely many nonzero terms.",
+      "status": "Mathematical proof passes after making the already intended integer weight type explicit. General completion conclusion not addressed by current Lean."
+    },
+    {
+      "claim": "thm:block_path_formula and cor:minimum_path_weight",
+      "objects": "Finite pairwise orthogonal idempotents P_alpha in B summing to 1; D packet diagonal; each corner inverse extended by zero and their sum in B; N_e=P_target N_e P_source.",
+      "conclusion": "Sandwiched inverse equals chronological directed path sum; off-diagonal block belongs to F^minimum_path_weight and is zero when no path.",
+      "status": "Mathematical proof passes. It uses closure of each filtration ideal under filtration limits, which follows from the definition and should be stated. No Lean packet-path support theorem is present."
+    },
+    {
+      "claim": "cor:acyclic_inverse, cor:inverse_stability, cor:finite_precision",
+      "objects": "Same finite packet graph, respectively acyclic; or arbitrary two units agreeing modulo F^L; or complete weighted inverse.",
+      "conclusion": "Finite terminating inverse without completeness; inverse differences remain in F^L; all-weight-truncated inverse has both residuals in F^L.",
+      "status": "Mathematically sound. No current generic inverse stability / acyclic support / completed residual theorem identified; quotient pruned inverse is formalized."
+    },
+    {
+      "claim": "thm:weighted-inverse and cor:finite-precision",
+      "objects": "Possibly noncommutative ring and supplied two-sided D inverse; either normalized nilpotence or complete normed ring with norm(Dinv H)<1. For precision: finite weighted edges and a ring map killing filtration L.",
+      "conclusion": "Two-sided finite or convergent geometric inverse; explicit signed weight-pruned word inverse after map; scaled ceiling cutoff.",
+      "status": "Current WeightedTransfer.lean statements/proofs match these finite and contraction scopes, including two inverse orders."
+    },
+    {
+      "claim": "thm:transfer_rationality / cor:path_recurrence / cor:multigraded_series",
+      "objects": "Finite directed multigraph, positive integer or nonzero nonnegative vector weights, field scalar edge multiplicities, arbitrary column vectors u,v.",
+      "conclusion": "Weighted walk series u^T(I-A)^{-1}v, normalized determinant denominator, eventual recurrence; analogous rational multivariate series.",
+      "status": "Correct after specifying coefficient endpoint weighting and zero-polynomial degree convention. Not the scope of current integer unit-multiplicity univariate Lean theorem."
+    },
+    {
+      "claim": "thm:transfer-zeta and cor:zeta-recurrence",
+      "objects": "Finite vertex and edge types, source/target maps, positive natural weights; each edge has multiplicity one; fixed vertices s,t.",
+      "conclusion": "Finite tuple enumeration equals semantic unrestricted list-walk count; first-edge recurrence; Q=det(I-A), P=adj(I-A)_st, Q(0)=1, QZ=P in integer power series.",
+      "status": "Raw Lean definitions and proofs give the claimed independent semantic bridge. Recurrence theorem uses P.natDegree<n; zero n=0 boundary is separately trivial but not in its type."
+    }
+  ],
+  "dependency_graph": [
+    {
+      "from": "two-sided ideals + multiplicativity",
+      "to": "A_e and word filtration membership",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "from": "positive weights + finite E",
+      "to": "only finitely many words below each depth",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "from": "separated inverse-limit completeness + quotient geometric residual identities",
+      "to": "unique compatible lift giving full two-sided weighted inverse",
+      "kind": "internal proof",
+      "status": "passed mathematically; not addressed in Lean"
+    },
+    {
+      "from": "orthogonal packet supports + diagonal inverse",
+      "to": "incompatible words vanish, compatible words give path blocks",
+      "kind": "internal proof",
+      "status": "passed mathematically; not addressed in Lean"
+    },
+    {
+      "from": "closed filtration ideals + path formula",
+      "to": "minimum path bound and no-path vanishing",
+      "kind": "internal proof",
+      "status": "passed mathematically; not addressed in Lean"
+    },
+    {
+      "from": "finite acyclic graph",
+      "to": "uniform bound on valid path length",
+      "kind": "internal proof",
+      "status": "passed mathematically; not addressed in Lean"
+    },
+    {
+      "from": "finite geometric telescoping + hD",
+      "to": "two-sided inverse of D+H",
+      "kind": "internal proof",
+      "status": "passed source inspection"
+    },
+    {
+      "from": "complete normed ring + norm(A)<1",
+      "to": "summable powers and multiplication of tsum",
+      "kind": "Mathlib kernel theorem dependency",
+      "status": "source use correct; fresh runtime pending"
+    },
+    {
+      "from": "word expansion + filtration certificate + cutoff bound",
+      "to": "mapped explicit pruned inverse",
+      "kind": "internal proof",
+      "status": "passed source inspection"
+    },
+    {
+      "from": "positive weights + exact list/tuple equivalence",
+      "to": "semantic exhaustive finite coefficient count",
+      "kind": "internal proof",
+      "status": "passed source inspection"
+    },
+    {
+      "from": "first-edge list equivalence",
+      "to": "Z=I+AZ",
+      "kind": "internal proof",
+      "status": "passed source inspection"
+    },
+    {
+      "from": "A(0)=0 + adjugate identities + unit constant coefficient",
+      "to": "canonical two-sided inverse and identification with enumerated Z",
+      "kind": "internal proof + Mathlib algebra",
+      "status": "passed source inspection"
+    },
+    {
+      "from": "arbitrary scalar weighted semantic walk sums / multigraded coefficient model",
+      "to": "field/multigraded rationality at manuscript scope",
+      "kind": "internal proof",
+      "status": "passed mathematically after definition repair; not addressed in Lean"
+    }
+  ],
+  "issues": [
+    {
+      "id": "W-FORMAL-COMPLETE",
+      "severity": "blocking for full Lean coverage",
+      "locator": "03_weighted.tex thm:weighted_inverse, thm:block_path_formula, cor:minimum_path_weight, cor:acyclic_inverse, cor:inverse_stability, cor:finite_precision; WeightedTransfer.lean lines 25-27,238-252",
+      "finding": "MultiplicativeFiltration is only additive membership with multiplication, antitonicity and 1 in degree 0. It has neither F^0=R, separation, completeness, limits, nor packet operators. The normed-ring theorem cannot certify general inverse-limit-complete filtered algebras, and finite quotient correctness alone does not construct the compatible limit in Lean.",
+      "smallest_missing_implication": "From the stated separated inverse-limit-complete ideal filtration and compatible finite geometric inverses, construct an element whose images are those inverses and prove both inverse identities by separation.",
+      "route": "Add exact ideal/quotient inverse-limit completeness data or prove equivalence to a Cauchy-sequence completeness interface. Show geometric partial sums form a compatible quotient family using existing finite telescoping. Lift through the completeness isomorphism and use separation to prove the two residuals zero. Derive weighted word congruence at every L from the existing prunedWordInverse theorem. Add packet support induction and projection continuity to obtain the path block theorem. Do not assume the weighted inverse itself as a completion field."
+    },
+    {
+      "id": "W-FORMAL-SCALAR-ZETA",
+      "severity": "blocking for full Lean coverage",
+      "locator": "03_weighted.tex thm:transfer_rationality; TransferZeta.lean weightedAdjacency/pathZeta lines 368-415",
+      "finding": "Current adjacency entries are Polynomial Z with monomial coefficient 1; pathZeta coefficients are natural cardinalities cast to Z; endpoints are singleton vertices. It proves no theorem for arbitrary field m(e) or weighted u,v.",
+      "smallest_missing_implication": "Define coefficient as finite sum of products of arbitrary edge scalar weights over exact semantic walks, and show its first-edge recurrence; then endpoint bilinear contraction preserves the determinant denominator.",
+      "route": "Generalize the series/adjugate algebra from Z to a commutative ring (field for rational function language), retain ExactWalk equivalence for finite support, replace cardinality by sum of edge-product weights, prove the first-edge decomposition sum, and repeat existing matrix inverse identification. Add u,v coefficient contraction theorem and cancellation/reduced-denominator divisibility over a field."
+    },
+    {
+      "id": "W-FORMAL-MULTIGRADE",
+      "severity": "blocking for full Lean coverage",
+      "locator": "03_weighted.tex cor:multigraded_series",
+      "finding": "All current weights are E\u2192N and series use PowerSeries Z. No vector weight or MvPowerSeries theorem is present.",
+      "smallest_missing_implication": "A nonzero vector in N^r has positive total degree, giving finite walks at each monomial, and the multivariate first-edge series solves (I-A)Z=I.",
+      "route": "Reuse the finite-graph scalar proof with monomials in MvPolynomial/MvPowerSeries over a finite variable type; use sum of component weights as a length bound. Constant-term zero then gives det constant term 1 and the adjugate construction. This is not established by univariate specialization."
+    },
+    {
+      "id": "W-DEF-ENDPOINTS",
+      "severity": "mathematical definition ambiguity",
+      "locator": "03_weighted.tex lines 376-382 def:transfer_series",
+      "finding": "Vertices selected by arbitrary column vectors u,v does not define coefficients or multiplicities; nonindicator and negative field entries are allowed by the theorem.",
+      "repair": "State a_n = sum over i,j and directed walks gamma:i\u2192j with W(gamma)=n of u_i (product over e in gamma of m(e)) v_j, with empty product 1. Explicitly say walks may revisit vertices/edges throughout the section."
+    },
+    {
+      "id": "W-DVR-COMPLETE",
+      "severity": "hypothesis ambiguity / invalid unrestricted example",
+      "locator": "03_weighted.tex lines 27-32 and 235-241",
+      "finding": "Completeness of O alone does not make an arbitrary O-algebra B complete for pi^L B. The opening sentence calls this filtration the standard example without imposing completeness on B. The later finite-quotient subsection does not need B complete, but should distinguish that from the completed theorem.",
+      "counterexample": "For a complete DVR O, B=O[x] is not pi-adically complete: compatible partial sums sum_{j<N} pi^j x^j have no polynomial limit, and 1-pi x is not a unit in O[x]. B=Frac(O) instead has pi^L B=B and is not separated. Neither contradicts the main theorem, whose completeness/separation hypotheses exclude them.",
+      "repair": "Use B a pi-adically separated and complete O-algebra, for example Mat_d(O) for finite d, when calling the construction a complete filtered example."
+    },
+    {
+      "id": "W-DEG-ZERO",
+      "severity": "boundary convention ambiguity",
+      "locator": "03_weighted.tex lines 419 and 562-569; TransferZeta.lean lines 732-740",
+      "finding": "No-path or zero endpoint data give P=0; deg 0 is not declared. The text uses n>deg P whereas Lean uses natDegree P<n (natDegree 0=0).",
+      "repair": "Declare deg(0)=-infinity, or state recurrence whenever the numerator coefficient vanishes and then give n>deg P as a sufficient condition. If exact recurrence coverage includes n=0 with P=0, derive that case directly from coefficient(QZ=P)."
+    },
+    {
+      "id": "W-CLOSURE",
+      "severity": "proof clarity",
+      "locator": "03_weighted.tex cor:minimum_path_weight and cor:finite_precision proofs",
+      "finding": "The inference from all summands in F^d to their infinite sum in F^d uses closedness. This follows from the filtration topology (F^d is the kernel of reduction to B/F^d), so no new hypothesis is needed.",
+      "repair": "Add a sentence explaining each F^d is closed and the tail vanishes in the quotient; this also makes the convergence and residual proof explicit."
+    },
+    {
+      "id": "W-WEIGHT-TYPE",
+      "severity": "typing clarity",
+      "locator": "03_weighted.tex def:filtered_algebra and thm:weighted_inverse",
+      "finding": "The filtration is integer-indexed but the first declared weight is written only w(e)>=1; positive integer weight is explicit only later.",
+      "repair": "Write w:E\u2192Z_{>0} or w(e) in N_{>0} at the first definition."
+    }
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Noncommutative order and both inverse directions",
+      "status": "passed",
+      "evidence": "T=D(1+Dinv H); inverse S Dinv. Written and chronological word conventions are explicitly related by reversal; finite two-sided telescoping retained."
+    },
+    {
+      "obligation": "Empty word and precision L=0",
+      "status": "passed",
+      "evidence": "Empty word contributes Dinv. For L=0 the retained sum is 0 and quotient by F^0=B is the zero ring; ring map killing F^0 similarly forces trivial target."
+    },
+    {
+      "obligation": "Empty edge type",
+      "status": "passed",
+      "evidence": "A=0, full inverse Dinv; tuple expansion has one length-zero function and none in positive lengths."
+    },
+    {
+      "obligation": "Minimum-weight cutoff m=0",
+      "status": "passed",
+      "evidence": "Scaled theorem only assumes L<=mN; executable ceil theorem explicitly requires 0<m, as manuscript does."
+    },
+    {
+      "obligation": "Cycles and cancellations",
+      "status": "passed",
+      "evidence": "Positive weights give coefficient finiteness despite cycles; minimum-path weight is only a lower bound and cancellation is acknowledged."
+    },
+    {
+      "obligation": "Packet inverses belong to B",
+      "status": "passed",
+      "evidence": "Assembled inverse membership is stated explicitly, avoiding ambient-operator invertibility implying algebra invertibility."
+    },
+    {
+      "obligation": "Complete filtered limit exists",
+      "status": "passed mathematically / not addressed formally",
+      "evidence": "Definition is inverse-limit isomorphism. Current Lean has no completeness structure."
+    },
+    {
+      "obligation": "Normed convergence",
+      "status": "passed source inspection",
+      "evidence": "NormedRing + CompleteSpace + norm(a)<1; summable_geometric_of_norm_lt_one and both tsum multiplication identities."
+    },
+    {
+      "obligation": "Enumerator exhaustive, not sampled",
+      "status": "passed",
+      "evidence": "ExactWalk unrestricted lists \u2194 bounded tuples by positivity, coefficientAlgorithm_eq_card_exactWalk, and first-edge equivalences."
+    },
+    {
+      "obligation": "Parallel edge multiplicities",
+      "status": "passed",
+      "evidence": "Distinct E elements counted independently; all formal edge scalar weights equal one."
+    },
+    {
+      "obligation": "General scalar weights and endpoint vectors",
+      "status": "not addressed formally",
+      "evidence": "No scalar field parameter, edge multiplier, or bilinear endpoint theorem in TransferZeta.lean."
+    },
+    {
+      "obligation": "Multivariate weights",
+      "status": "not addressed formally",
+      "evidence": "No vector weight/MvPowerSeries definition in TransferZeta.lean."
+    },
+    {
+      "obligation": "Q(0)=1 and inverse construction",
+      "status": "passed",
+      "evidence": "constantCoeff mapMatrix \u2192 det one; invOfUnit; two adjugate identities; uniqueness identifies independently enumerated series."
+    },
+    {
+      "obligation": "Zero numerator recurrence",
+      "status": "conditional on convention",
+      "evidence": "Need deg(0) convention and one trivial n=0 formal boundary if matching -infinity convention exactly."
+    },
+    {
+      "obligation": "Holomorphic assumptions",
+      "status": "out of scope",
+      "evidence": "No holomorphic theorem occurs in chapter 03; defects/models audit owns that chapter."
+    },
+    {
+      "obligation": "Fresh elaboration/kernel axioms",
+      "status": "conditional",
+      "evidence": "No local Lean run by this agent; source scan found no sorry/admit/axiom/unsafe/native_decide in the two target modules; runtime agent owns replay."
+    }
+  ],
+  "external_sources": {
+    "Serre1979": "Only background illustration, not needed as a proof leaf: inverse-limit completeness is assumed explicitly and the inverse proof can be reconstructed directly.",
+    "Stanley2012": "Historical/background attribution only; complete transfer-matrix proof and current formal semantic bridge are present. No appeal to an unverified external theorem is required.",
+    "literature_check": "Not triggered: no external-paper theorem is needed for any decisive implication in this scoped audit. Mathlib import theorems are kernel dependencies pending runtime audit, not bibliographic assumptions."
+  },
+  "counterchecks": [
+    "One vertex, no edges: A=0, Z=1, Q=P=1.",
+    "Two vertices, no path from s to t: Z=P=0, Q=1; exposes the degree-zero convention.",
+    "One vertex, one edge weight 1 and scalar c, endpoints u,v: Z=uv/(1-ct); exposes omitted scalar/end-vector semantics in Lean scope.",
+    "Noncommutative 2x2 transfer: chronology e1 then e2 uses A_e2 A_e1, consistent with the main path formula; written product API is related only by label reversal.",
+    "Complete DVR O and O[x] perturbation 1-pi x: no polynomial inverse; complete base alone does not validate the illustration.",
+    "Multigrade edges (1,0),(0,1): mixed monomials require multivariate coefficient control, not a univariate theorem."
+  ],
+  "commands": [
+    "Read BASE_CHECKPOINT.json and raw chapter/formal files using sed/rg; read prerequisite packet definition.",
+    "rg --files -g AGENTS.md /workspace/scratch/9f53d520971c returned none.",
+    "rg sorry|admit|^axiom|^opaque|^unsafe|^partial|^constant|native_decide on target modules returned no matches.",
+    "No runtime compilation or external fetch was performed."
+  ],
+  "strongest_safe_statement": "The existing formal files implement the finite noncommutative geometric/precision inversion, complete normed contraction specialization, and integer univariate unit-edge finite-graph walk rationality. The broader manuscript theorems are mathematically sound with the stated definition clarifications, but full manuscript-scope Lean coverage is incomplete.",
+  "cheapest_next_check": "Implement the complete separated quotient-limit bridge first, using existing finite-precision inverse theorems, and compile only that module against the provisioned dependency closure. Separately generalize the exact-walk coefficient sum to scalar weights and then multigraded monomials."
+}

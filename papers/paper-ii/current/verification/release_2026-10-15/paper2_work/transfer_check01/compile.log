@@ -1,0 +1,116 @@
+ReleaseTransferScalar.lean:20:8: error: automatically included section variable(s) unused in theorem `Komorebi.PaperII.ReleaseTransferScalar.walkMultiplicity_nil`:
+  [Fintype E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+ReleaseTransferScalar.lean:21:8: error: automatically included section variable(s) unused in theorem `Komorebi.PaperII.ReleaseTransferScalar.walkMultiplicity_cons`:
+  [Fintype E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+ReleaseTransferScalar.lean:52:6: error: Tactic `rfl` failed: The left-hand side
+  m (↑x).1 * walkMultiplicity m (↑x).2
+is not definitionally equal to the right-hand side
+  m ((G.firstEdgeTailEquiv s t n) x).fst * walkMultiplicity m ↑↑((G.firstEdgeTailEquiv s t n) x).snd
+
+V : Type u
+E : Type v
+R : Type w
+inst✝² : Fintype E
+inst✝¹ : DecidableEq V
+inst✝ : CommRing R
+G : PositiveWeightedMultigraph V E
+m : E → R
+s t : V
+n : ℕ
+f : EmptyExactWalk s t n ⊕ G.FirstEdgeExactWalk s t n → R :=
+  Sum.elim (fun x ↦ 1) fun x ↦ m (↑x).1 * walkMultiplicity m (↑x).2
+hfirst : coefficient G m s t n = ∑ x, f x
+hempty : ∑ _x, 1 = if s = t ∧ n = 0 then 1 else 0
+x : G.FirstEdgeExactWalk s t n
+⊢ m (↑x).1 * walkMultiplicity m (↑x).2 =
+    m ((G.firstEdgeTailEquiv s t n) x).fst * walkMultiplicity m ↑↑((G.firstEdgeTailEquiv s t n) x).snd
+ReleaseTransferScalar.lean:58:6: error: unsolved goals
+case pos
+V : Type u
+E : Type v
+R : Type w
+inst✝² : Fintype E
+inst✝¹ : DecidableEq V
+inst✝ : CommRing R
+G : PositiveWeightedMultigraph V E
+m : E → R
+s t : V
+n : ℕ
+f : EmptyExactWalk s t n ⊕ G.FirstEdgeExactWalk s t n → R :=
+  Sum.elim (fun x ↦ 1) fun x ↦ m (↑x).1 * walkMultiplicity m (↑x).2
+hfirst : coefficient G m s t n = ∑ x, f x
+hempty : ∑ _x, 1 = if s = t ∧ n = 0 then 1 else 0
+e : E
+a✝ : e ∈ Finset.univ
+h : G.source e = s ∧ G.weight e ≤ n
+⊢ m e * ∑ i, walkMultiplicity m ↑↑i = m e * ∑ x, walkMultiplicity m ↑x
+ReleaseTransferScalar.lean:59:6: error: unsolved goals
+case neg
+V : Type u
+E : Type v
+R : Type w
+inst✝² : Fintype E
+inst✝¹ : DecidableEq V
+inst✝ : CommRing R
+G : PositiveWeightedMultigraph V E
+m : E → R
+s t : V
+n : ℕ
+f : EmptyExactWalk s t n ⊕ G.FirstEdgeExactWalk s t n → R :=
+  Sum.elim (fun x ↦ 1) fun x ↦ m (↑x).1 * walkMultiplicity m (↑x).2
+hfirst : coefficient G m s t n = ∑ x, f x
+hempty : ∑ _x, 1 = if s = t ∧ n = 0 then 1 else 0
+e : E
+a✝ : e ∈ Finset.univ
+h : ¬(G.source e = s ∧ G.weight e ≤ n)
+⊢ ∑ x, m e * walkMultiplicity m ↑↑x = 0
+ReleaseTransferScalar.lean:75:2: error: Tactic `apply` failed: could not unify the conclusion of `@Finset.sum_eq_zero`
+  ∑ x ∈ ?s, ?f x = 0
+with the goal
+  (∑ e, if G.source e = i ∧ G.target e = j then (Polynomial.monomial (G.weight e)) (m e) else 0).coeff 0 = 0
+
+Note: The full type of `@Finset.sum_eq_zero` is
+  ∀ {ι : Type ?u.46} {M : Type ?u.45} {s : Finset ι} [inst : AddCommMonoid M] {f : ι → M},
+    (∀ x ∈ s, f x = 0) → ∑ x ∈ s, f x = 0
+
+V : Type u
+E : Type v
+R : Type w
+inst✝² : Fintype E
+inst✝¹ : DecidableEq V
+inst✝ : CommRing R
+G : PositiveWeightedMultigraph V E
+m : E → R
+i j : V
+⊢ (∑ e, if G.source e = i ∧ G.target e = j then (Polynomial.monomial (G.weight e)) (m e) else 0).coeff 0 = 0
+ReleaseTransferScalar.lean:74:24: error: This simp argument is unused:
+  ← Polynomial.lcoeff_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [adjacency, map_sum, Polynomial.lcoeff_apply]
+
+Note: Simp arguments with `←` have the additional effect of removing the other direction from the simp set, even if the simp argument itself is unused. If the hint above does not work, try replacing `←` with `-` to only get that effect and silence this warning.
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ReleaseTransferScalar.lean:74:51: error: This simp argument is unused:
+  map_sum
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [adjacency, ← Polynomial.lcoeff_apply, Polynomial.lcoeff_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ReleaseTransferScalar.lean:74:60: error: This simp argument is unused:
+  Polynomial.lcoeff_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [adjacency, ← Polynomial.lcoeff_apply, map_sum]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

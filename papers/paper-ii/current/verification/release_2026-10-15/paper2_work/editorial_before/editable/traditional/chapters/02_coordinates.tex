@@ -1,0 +1,527 @@
+\section{Packet systems and refinement towers}\label{sec:refinement}
+
+Packet coordinates split a module into pieces that can be recovered separately and then added back together. The construction uses idempotents and does not need an inner product.
+
+\begin{definition}[Packet system]\label{def:packet_system}
+Let $X$ be a module over a unital ring.  A finite packet system on $X$ is a family
+\[
+\Pcal=(P_\alpha)_{\alpha\in I}
+\subseteq\End(X)
+\]
+of nonzero idempotents such that
+\[
+P_\alpha P_\beta=0
+\quad\text{when }\alpha\ne\beta,
+\qquad
+\sum_{\alpha\in I}P_\alpha=I_X.
+\]
+Write
+\[
+X_\alpha=P_\alpha X,
+\qquad
+X^{\Pcal}=\bigoplus_{\alpha\in I}X_\alpha.
+\]
+The analysis and synthesis maps are
+\[
+\Acal_{\Pcal}x=(P_\alpha x)_\alpha,
+\qquad
+\Scal_{\Pcal}(x_\alpha)_\alpha=\sum_\alpha x_\alpha.
+\]
+They are inverse isomorphisms.
+\end{definition}
+
+\begin{definition}[Refinement]\label{def:refinement}\label{def:refinement-map}
+Let $\Pcal=(P_\alpha)_{\alpha\in I}$ and $\Qcal=(Q_\beta)_{\beta\in J}$ be packet systems on the same module.  We say that $\Qcal$ refines $\Pcal$ when there is a surjection
+\[
+\rho:J\longrightarrow I
+\]
+such that
+\[
+P_\alpha=\sum_{\rho(\beta)=\alpha}Q_\beta
+\]
+for every $\alpha\in I$.  The index $\beta$ is then called a child of $\rho(\beta)$.
+\end{definition}
+
+\begin{theorem}[Children, parents, and transitivity]\label{thm:children_transitivity}\label{thm:nested-refinement}
+Suppose that $\Qcal$ refines $\Pcal$ through $\rho$.  Then
+\[
+P_\alpha Q_\beta
+=
+Q_\beta P_\alpha
+=
+\begin{cases}
+Q_\beta & \rho(\beta)=\alpha,\\
+0 & \rho(\beta)\ne\alpha.
+\end{cases}
+\]
+Hence $Q_\beta X\subseteq P_{\rho(\beta)}X$.  If a third packet system $\Rcal$ refines $\Qcal$, then $\Rcal$ refines $\Pcal$ through the composite parent map.
+\end{theorem}
+
+\begin{proof}
+Multiply the identity
+\[
+P_\alpha=\sum_{\rho(\gamma)=\alpha}Q_\gamma
+\]
+by $Q_\beta$ on either side.  Pairwise annihilation in the fine family leaves $Q_\beta$ when $\rho(\beta)=\alpha$ and leaves zero otherwise.  For transitivity, substitute the child expansion of each $Q_\beta$ into the expansion of $P_\alpha$ and group the resulting terms by the composite parent.
+\end{proof}
+
+A refinement tower is a sequence $(\Pcal_\ell)_{\ell\geq0}$ with parent maps
+\[
+\rho_{m,\ell}:I_m\longrightarrow I_\ell
+\qquad(m\geq\ell)
+\]
+that satisfy the composition law for successive levels. The next result shows that the coordinate changes form a coherent system.
+
+\begin{definition}[Coordinate change across levels]\label{def:coordinate_change}\label{def:coordinate-refinement}
+For two packet systems $\Pcal$ and $\Qcal$ on $X$, define
+\[
+J_{\Qcal\leftarrow\Pcal}
+=
+\Acal_{\Qcal}\Scal_{\Pcal}:X^{\Pcal}\longrightarrow X^{\Qcal}
+\]
+and
+\[
+C_{\Pcal\leftarrow\Qcal}
+=
+\Acal_{\Pcal}\Scal_{\Qcal}:X^{\Qcal}\longrightarrow X^{\Pcal}.
+\]
+When $\Qcal$ refines $\Pcal$, the first map resolves each coarse coordinate into its children and the second adds the children back to their parent.
+\end{definition}
+
+\begin{keyidea}
+A coarse coordinate retains a whole vector in its coarse packet. Adding its children keeps the whole vector inside that packet. Fine analysis recovers each child by applying its projector. This explains why the two coordinate maps can be inverse even when the fine system has more packet labels.
+\end{keyidea}
+
+\begin{theorem}[Exact coordinate change and coherence]\label{thm:coordinate_coherence}\label{prop:perfect-reconstruction}
+For any two packet systems on $X$,
+\[
+C_{\Pcal\leftarrow\Qcal}J_{\Qcal\leftarrow\Pcal}=I_{X^{\Pcal}},
+\qquad
+J_{\Qcal\leftarrow\Pcal}C_{\Pcal\leftarrow\Qcal}=I_{X^{\Qcal}}.
+\]
+For three packet systems $\Pcal$, $\Qcal$, and $\Rcal$ on $X$,
+\[
+J_{\Rcal\leftarrow\Qcal}J_{\Qcal\leftarrow\Pcal}
+=
+J_{\Rcal\leftarrow\Pcal},
+\]
+\[
+C_{\Pcal\leftarrow\Qcal}C_{\Qcal\leftarrow\Rcal}
+=
+C_{\Pcal\leftarrow\Rcal}.
+\]
+If $\Qcal$ refines $\Pcal$ through $\rho$, then
+\[
+\bigl(J_{\Qcal\leftarrow\Pcal}x\bigr)_\beta
+=
+Q_\beta x_{\rho(\beta)},
+\qquad
+\bigl(C_{\Pcal\leftarrow\Qcal}y\bigr)_\alpha
+=
+\sum_{\rho(\beta)=\alpha}y_\beta.
+\]
+\end{theorem}
+
+\begin{proof}
+The packet analysis and synthesis maps are inverse.  Therefore
+\[
+C_{\Pcal\leftarrow\Qcal}J_{\Qcal\leftarrow\Pcal}
+=
+\Acal_{\Pcal}\Scal_{\Qcal}\Acal_{\Qcal}\Scal_{\Pcal}
+=
+\Acal_{\Pcal}\Scal_{\Pcal}
+=
+I.
+\]
+The other inverse identity is the same calculation with the two systems exchanged.  The coherence identities follow by inserting
+\[
+\Scal_{\Qcal}\Acal_{\Qcal}=I_X.
+\]
+Now assume that $\Qcal$ refines $\Pcal$.  If $x=(x_\alpha)_\alpha$ with $x_\alpha\in P_\alpha X$, then
+\[
+Q_\beta\sum_\alpha x_\alpha
+=
+Q_\beta x_{\rho(\beta)}
+\]
+by \cref{thm:children_transitivity}.  The formula for $C$ follows by synthesis followed by projection onto the parent packet.
+\end{proof}
+
+\begin{remark}[Refinement and reduction]\label{rem:refinement_reduction}
+The maps in \cref{thm:coordinate_coherence} are isomorphisms because both coordinate spaces represent all of $X$.  They do not reduce dimension and they do not discard packets.  Approximation begins only after one chooses a truncation or compression rule.
+\end{remark}
+
+\begin{corollary}[Orthogonal Hilbert packets]\label{cor:orthogonal_isometry}
+If $X$ is a Hilbert space and every packet system in the tower consists of orthogonal projections, then analysis and synthesis are unitary.  Every coordinate change in \cref{thm:coordinate_coherence} is unitary.
+\end{corollary}
+
+\begin{proof}
+For an orthogonal packet system,
+\[
+\|x\|^2=\sum_\alpha\|P_\alpha x\|^2.
+\]
+Thus analysis is an isometry onto the full packet direct sum.  Synthesis is its inverse.  A coordinate change is a composition of two unitary maps.
+\end{proof}
+
+Every coarse packet is also uniquely reconstructed from its fine children.  If vectors $x_\beta\in Q_\beta X$ sum to a coarse packet $x$, applying $Q_\gamma$ recovers $x_\gamma=Q_\gamma x$.  This is the uniqueness clause of the canonical nested-refinement statement.
+
+\subsection{Typed coordinate naturality}
+These coordinate changes are coherent through every finite tower. If three
+complete packet systems are denoted by $a,b,c$, then
+\[
+J_{c,b}J_{b,a}=J_{c,a},
+\qquad J_{a,a}=I,
+\qquad J_{b,a}^{-1}=J_{a,b}.
+\]
+These laws hold for arbitrary exact packet systems representing the same
+ambient module. The parent maps supply the component formulas linking
+children to their parents. Coordinate coherence itself does not require them.
+
+The same coherence applies to operators. Let $P_a,P_b$ be packet systems on $X$, let $Q_a,Q_b$ be packet
+systems on $Y$, and let $T:X\to Y$ be a typed linear map. Its exact coordinate
+representation
+\[
+\widehat T_{Q,P}=\cA_QT\cS_P
+\]
+preserves identities and typed composition, and the naturality square is
+\[
+\boxed{
+J^Y_{Q_b,Q_a}\,\widehat T_{Q_a,P_a}
+=
+\widehat T_{Q_b,P_b}\,J^X_{P_b,P_a}.
+}
+\]
+The identity, cocycle, composition, inverse, and naturality laws are all proved
+in Lean. The separate refinement hypotheses supply the local component
+formulas linking each child to its parent.
+
+\begin{interpretation}
+These identities concern complete coordinates of the same module. A quotient is a different operation: it identifies vectors that differ by an element of a chosen submodule. Later, finite precision will be expressed by a quotient that removes terms beyond the chosen filtration depth. This distinction explains why refinement is exactly reversible while precision truncation has a prescribed residual.
+\end{interpretation}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{01_nested_dyadic_refinement.pdf}
+\caption{A nested residue hierarchy. Each residue modulo $2$ is the union of two residues modulo $4$, and each residue modulo $4$ is the union of two residues modulo $8$.}
+\label{fig:refinement-tree}
+\end{figure}
+\subsection{Operator blocks across refinement}
+
+For $T\in\End(X)$ and a packet system $\Pcal$, write
+\[
+T^{\Pcal}_{\beta\alpha}=P_\beta T P_\alpha.
+\]
+
+\begin{theorem}[Refinement of operator blocks]\label{thm:block_refinement}\label{thm:transfer-block-refinement}
+Suppose that $\Qcal$ refines $\Pcal$ through $\rho$.  Then
+\[
+T^{\Pcal}_{ba}
+=
+\sum_{\substack{\rho(\beta)=b\\\rho(\alpha)=a}}
+T^{\Qcal}_{\beta\alpha}.
+\]
+The matrix of $T$ in fine coordinates is related to the matrix in coarse coordinates by
+\[
+[T]_{\Pcal}
+=
+C_{\Pcal\leftarrow\Qcal}[T]_{\Qcal}J_{\Qcal\leftarrow\Pcal}.
+\]
+\end{theorem}
+
+\begin{proof}
+Expand the two coarse projectors into their children:
+\[
+P_bTP_a
+=
+\left(\sum_{\rho(\beta)=b}Q_\beta\right)
+T
+\left(\sum_{\rho(\alpha)=a}Q_\alpha\right).
+\]
+Distributing the finite sums gives the first identity.  For the coordinate identity, use
+\[
+[T]_{\Pcal}=\Acal_{\Pcal}T\Scal_{\Pcal}
+\]
+and insert
+\[
+I_X=\Scal_{\Qcal}\Acal_{\Qcal}.
+\]
+\end{proof}
+
+\begin{corollary}[Support under refinement]\label{cor:block_support_refinement}
+Under the hypotheses of \cref{thm:block_refinement}, a coarse block $T^{\Pcal}_{ba}$ is zero if and only if every fine descendant block
+\[
+T^{\Qcal}_{\beta\alpha}
+\qquad
+\bigl(\rho(\beta)=b,\ \rho(\alpha)=a\bigr)
+\]
+is zero.
+\end{corollary}
+
+\begin{proof}
+If every fine block is zero, the coarse block is zero by \cref{thm:block_refinement}.  Conversely, suppose $P_bTP_a=0$.  Multiply on the left by $Q_\beta$ and on the right by $Q_\alpha$.  The child identities in \cref{thm:children_transitivity} give
+\[
+Q_\beta TQ_\alpha=0.
+\]
+\end{proof}
+
+Thus refinement cannot hide an active transfer inside a zero coarse block.  It can only reveal where the active transfer sits among the descendants.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{03_refinement_incidence.pdf}
+\caption{The incidence matrix $M_{r,s}=1$ when the fine residue $s$ belongs to the coarse residue $r$. Its rows implement exact aggregation from fine packets to coarse packets.}
+\label{fig:incidence}
+\end{figure}
+\subsection{Common refinements}
+
+Two packet systems need not be comparable.  When their idempotents commute, their products give a common refinement.
+
+\begin{theorem}[Common refinement of commuting packet systems]\label{thm:common_refinement}
+Let $\Pcal=(P_\alpha)_{\alpha\in I}$ and $\Qcal=(Q_\beta)_{\beta\in J}$ be packet systems on $X$.  Assume
+\[
+P_\alpha Q_\beta=Q_\beta P_\alpha
+\]
+for all $\alpha$ and $\beta$.  Remove the zero operators from the family
+\[
+R_{\alpha\beta}=P_\alpha Q_\beta.
+\]
+The remaining operators form a packet system that refines both $\Pcal$ and $\Qcal$.  The same statement holds for any finite collection of pairwise commuting packet systems.
+\end{theorem}
+
+\begin{proof}
+Commutativity gives
+\[
+R_{\alpha\beta}^2=P_\alpha^2Q_\beta^2=R_{\alpha\beta}.
+\]
+If $(\alpha,\beta)\ne(\alpha',\beta')$, then either $P_\alpha P_{\alpha'}=0$ or $Q_\beta Q_{\beta'}=0$, so the corresponding products annihilate one another.  Finally,
+\[
+\sum_{\alpha,\beta}R_{\alpha\beta}
+=
+\left(\sum_\alpha P_\alpha\right)
+\left(\sum_\beta Q_\beta\right)
+=I_X.
+\]
+For a fixed $\alpha$,
+\[
+P_\alpha
+=P_\alpha\sum_\beta Q_\beta
+=
+\sum_\beta R_{\alpha\beta},
+\]
+and the same argument works for a fixed $\beta$.  Iteration proves the finite family statement.
+\end{proof}
+
+\begin{proposition}[Coarsest common refinement]\label{prop:coarsest_common_refinement}
+Under the hypotheses of \cref{thm:common_refinement}, let $\Rcal$ be a packet system that refines both $\Pcal$ and $\Qcal$.  Then $\Rcal$ refines the nonzero product family $(P_\alpha Q_\beta)$.  Hence that product family is the coarsest packet system that refines both $\Pcal$ and $\Qcal$.
+\end{proposition}
+
+\begin{proof}
+Let $R_\gamma$ be a packet in $\Rcal$.  Because $\Rcal$ refines $\Pcal$, there is a unique $\alpha$ with
+\[
+P_\alpha R_\gamma=R_\gamma.
+\]
+Likewise there is a unique $\beta$ with
+\[
+Q_\beta R_\gamma=R_\gamma.
+\]
+Therefore
+\[
+P_\alpha Q_\beta R_\gamma=R_\gamma.
+\]
+Every packet of $\Rcal$ lies in one product packet.  Summing the packets with the same pair of parents reconstructs that product packet.
+\end{proof}
+
+\begin{example}[A two level split]\label{ex:two_level_split}
+Let
+\[
+X=X_{00}\oplus X_{01}\oplus X_{10}\oplus X_{11}.
+\]
+The four coordinate projections form a fine packet system.  The two sums
+\[
+P_0=Q_{00}+Q_{01},
+\qquad
+P_1=Q_{10}+Q_{11}
+\]
+form a coarse packet system.  If $x=(x_{00},x_{01},x_{10},x_{11})$, the coarse coordinates are
+\[
+(x_{00}+x_{01},x_{10}+x_{11})
+\]
+when the sums are interpreted inside the two coarse direct summands.  Fine analysis recovers the four entries exactly.  Nothing has been approximated.
+\end{example}
+
+\section{Residue coordinates and coprime factorization}\label{sec:residue}
+
+Residue packets sort a formal series by the congruence classes of its exponents. This construction works over every coefficient ring. The character formula describes the same selectors through an operator average and needs stronger hypotheses.
+
+\begin{definition}[Residue selector]\label{def:residue_selector}
+Let $R$ be a commutative ring and let
+\[
+F(z)=\sum_{n\geq0}a_nz^n\in R[[z]].
+\]
+For $N\geq1$ and $0\leq j<N$, define
+\[
+(P_{N,j}F)(z)
+=
+\sum_{n\equiv j\pmod N}a_nz^n.
+\]
+\end{definition}
+
+\begin{proposition}[Residue packet algebra]\label{prop:residue_algebra}\label{prop:residue-algebra}
+For every commutative ring $R$, the operators $(P_{N,j})_{0\leq j<N}$ satisfy the identities below.  If $R$ is nonzero, they form a packet system on $R[[z]]$:
+\[
+P_{N,i}P_{N,j}=\delta_{ij}P_{N,j},
+\qquad
+\sum_{j=0}^{N-1}P_{N,j}=I.
+\]
+\end{proposition}
+
+\begin{proof}
+Every nonnegative integer belongs to one residue class modulo $N$.  A coefficient survives both $P_{N,i}$ and $P_{N,j}$ exactly when the two labels are equal to its residue.  Summing all selectors preserves every coefficient once.
+\end{proof}
+
+\subsection{Finite orthogonality certificates}
+
+Let $U$ act on coefficient sequences by
+\[
+(UF)(z)=F(\omega z).
+\]
+If $\omega^N=1$, then $U^N=I$.
+
+\begin{theorem}[Root-of-unity realization]\label{thm:root-of-unity}
+Let $R$ be a commutative semiring, let $N>0$, and suppose
+$\omega,\omega^\vee,\eta\in R$ satisfy $\omega^N=1$ and the finite
+$N\times N$ Fourier orthogonality table
+\[
+\eta\sum_{k=0}^{N-1}(\omega^\vee)^{jk}\omega^{rk}
+=
+\begin{cases}
+1,&r=j,\\
+0,&r\ne j,
+\end{cases}
+\qquad 0\le j,r<N.
+\]
+Then
+\[
+\boxed{
+P_{N,j}
+=
+\eta\sum_{k=0}^{N-1}(\omega^\vee)^{jk}U^k.
+}
+\]
+In particular, if $R$ is a field, $N>0$, and $\omega$ is a primitive
+$N$th root of unity, the certificate holds with
+$\omega^\vee=\omega^{-1}$ and $\eta=N^{-1}$.
+\end{theorem}
+
+\begin{proof}
+On the monomial $z^n$, the right-hand side acts by
+\[
+\eta\sum_{k=0}^{N-1}(\omega^\vee)^{jk}\omega^{nk}.
+\]
+The identity $\omega^N=1$ reduces this expression to the table entry indexed
+by $r=n\bmod N$. The finite certificate therefore gives exactly the
+coefficient mask defining $P_{N,j}$.
+Over a field, the primitive-root geometric sum supplies the certificate.
+\end{proof}
+
+The field or orthogonality condition is essential. A primitive element of
+order $N$ in a ring with zero divisors does not by itself force the geometric
+sums away from the diagonal to vanish. For example, in $\mathbb F_3\times\mathbb F_3$ the
+element $(-1,1)$ has order two, but the second component of its nontrivial
+character sum is nonzero. The coefficient selector uses no division and remains valid
+without any Fourier certificate. This distinction becomes decisive at the
+dyadic prime.
+
+
+\subsection{The field specialization}
+\begin{theorem}[Character realization]\label{thm:character_realization}
+Let $\bbk$ be a field, assume that $N$ is nonzero in $\bbk$, and suppose that $\bbk$ contains a primitive $N$th root of unity $\omega$.  Define
+\[
+(UF)(z)=F(\omega z).
+\]
+Then
+\[
+P_{N,j}
+=
+\frac1N\sum_{k=0}^{N-1}\omega^{-jk}U^k.
+\]
+\end{theorem}
+
+\begin{proof}
+On $z^n$, the right side acts by the scalar
+\[
+\frac1N\sum_{k=0}^{N-1}\omega^{k(n-j)}.
+\]
+This is one when $n\equiv j\pmod N$ and zero otherwise by the geometric sum identity in the field $\bbk$.
+\end{proof}
+
+\begin{remark}[Two distinct constructions]\label{rem:selector_character}
+The coefficient selector of \cref{def:residue_selector} uses no division.  The character formula in \cref{thm:character_realization} divides by $N$.  At a prime that divides $N$, the coefficient selector may remain integral even when the character average does not.
+\end{remark}
+
+\begin{theorem}[Nested residue refinement]\label{thm:residue_refinement}\label{thm:polyphase-refinement}
+Let $N,M$ be positive integers with $N$ dividing $M$, and let $0\leq j<N$.  Then
+\[
+P_{N,j}
+=
+\sum_{\substack{0\leq s<M\\s\equiv j\pmod N}}P_{M,s}.
+\]
+When $R$ is nonzero, the packet system modulo $M$ refines the packet system modulo $N$.
+\end{theorem}
+
+\begin{proof}
+An exponent $n$ satisfies $n\equiv j\pmod N$ exactly when its unique residue $s$ modulo $M$ satisfies $s\equiv j\pmod N$.
+\end{proof}
+
+\begin{example}[The shift graph of residue packets]\label{ex:residue_shift}
+Multiplication by $z$ sends the residue packet $P_{N,j}R[[z]]$ into $P_{N,j+1}R[[z]]$, where the index is read modulo $N$.  Its packet graph is the directed cycle
+\[
+0\longrightarrow1\longrightarrow\cdots\longrightarrow N-1\longrightarrow0.
+\]
+Multiplication by a polynomial supported on a set of residues gives the corresponding finite set of phase shifts.  This is the simplest transfer graph behind a polyphase representation.
+\end{example}
+
+\begin{theorem}[Coprime factorization]\label{thm:crt_factorization}
+Let $A$ and $B$ be coprime positive integers.  For each $j$ modulo $AB$, write
+\[
+j_A=j\pmod A,
+\qquad
+j_B=j\pmod B.
+\]
+Then
+\[
+P_{AB,j}=P_{A,j_A}P_{B,j_B}.
+\]
+Every pair $(j_A,j_B)$ occurs for one residue $j$ modulo $AB$.
+\end{theorem}
+
+\begin{proof}
+A coefficient survives the product on the right exactly when its exponent satisfies both congruences.  The Chinese remainder theorem gives one residue class modulo $AB$ with those two coordinates.  The needed form of the theorem is standard and may be found in \cite{Lang2002}.
+\end{proof}
+
+\begin{corollary}[Dyadic and odd coordinates]\label{cor:dyadic_odd_coordinates}\label{thm:dyadic-odd}
+Write $N=2^aM$ with $M$ odd.  Every residue packet modulo $N$ is the product of one packet modulo $2^a$ and one packet modulo $M$.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:crt_factorization} to the coprime moduli $2^a$ and $M$.
+\end{proof}
+
+\begin{example}[Residues modulo twelve]\label{ex:mod_twelve}
+The pair
+\[
+(j\pmod4,j\pmod3)=(3,1)
+\]
+corresponds to $j=7$ modulo $12$.  Hence
+\[
+P_{12,7}=P_{4,3}P_{3,1}.
+\]
+This factorization concerns addresses.  It does not say that the two factors have the same integral spectral behavior.
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{02_crt_dyadic_odd_grid.pdf}
+\caption{A composite residue packet is addressed by its dyadic and odd coordinates. The displayed mod-$24$ system is the product of mod $8$ and mod $3$.}
+\label{fig:crt-grid}
+\end{figure}

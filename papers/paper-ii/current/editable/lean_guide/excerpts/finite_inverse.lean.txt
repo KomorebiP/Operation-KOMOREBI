@@ -1,0 +1,12 @@
+def finiteGeometricInverse {R : Type u} [Ring R] (a : R) (N : ℕ) : R :=
+  ∑ n ∈ Finset.range N, (-a) ^ n
+
+/-- If `a ^ N = 0`, the finite geometric candidate is a genuine two-sided inverse of `1 + a`. -/
+theorem finiteGeometricInverse_spec_of_pow_eq_zero {R : Type u} [Ring R]
+    (a : R) (N : ℕ) (hN : a ^ N = 0) :
+    TwoSidedInverse (1 + a) (finiteGeometricInverse a N) := by
+  have hneg : (-a) ^ N = 0 := by
+    rw [neg_pow, hN, mul_zero]
+  constructor
+  · simpa [finiteGeometricInverse, hneg] using geom_sum_mul_neg (-a) N
+  · simpa [finiteGeometricInverse, hneg] using mul_neg_geom_sum (-a) N

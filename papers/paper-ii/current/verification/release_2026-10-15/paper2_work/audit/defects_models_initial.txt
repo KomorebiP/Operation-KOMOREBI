@@ -1,0 +1,104 @@
+Final-release manuscript-to-Lean correspondence at all stated chapter05/06 scopes. Ordinary algebraic proofs pass; several expanded formal endpoints remain absent.
+VERDICT: incomplete, with the smallest missing implication
+
+Raw-source SHA256 pins:
+editable/traditional/chapters/05_defects.tex: f24d9046e91cd05e04e3b4770859b7c8096c7824f87a33e88454d51ab01e392f
+editable/traditional/chapters/06_models.tex: a22dc03e859e59f3277dd76c11cc16efbf0c4e2afc275370f1cf8b86edefc166
+editable/traditional/chapters/07_scope.tex: caadd692dd458f4c2bd7af96a9a466d3ab463697662f0f588b80bc577ae4a1ff
+formal/current/KomorebiVerification/PaperII/LinearDefects.lean: 9ce2a78b78d77c65520415805cdd7e3f40be8ab4d388ff44e731777318dfccc5
+formal/current/KomorebiVerification/PaperII/TypedLinearDefects.lean: 3a4df123500e912e19ef6f2057c770016b8e6f8671a72247332718469bdb58c9
+formal/current/KomorebiVerification/PaperII/TransferZeta.lean: 0b5fe6a7650d7461c9c647287b0498b89f76768c98e378deee33e7aafc867cd5
+formal/current/KomorebiVerification/PaperII/SmithDyadic.lean: e5cc99dc04af1b9c5528d60dc5237b30c4de389e19e105be8aad7ae7f0dd440d
+
+thm:power_defect
+For two vector spaces over one field, C:Xf→Xc, Tf∈End(Xf), Tc∈End(Xc), Δ=C∘Tf−Tc∘C, and n≥1, C∘Tf^n−Tc^n∘C=Σ(k<n)Tc^(n−1−k)∘Δ∘Tf^k.
+Verdict: proved as written
+Formal scope: TypedLinearDefects.power_defect_identity_all is genuinely between different modules; continuous bridge retains types. Algebraic ring analogue is supplementary, not a substitute.
+Remaining gap: No mathematical gap. Fresh compiler replay is delegated to runtime owner.
+Next route: Replay imported declaration and print axioms.
+Obligations: {"typing": "passed", "factor_order": "passed", "induction": "passed", "n=0 extension": "passed"}
+
+cor:power_norm + cor:defect-norm
+For bounded C,Tf,Tc on normed spaces, the stated sum bound holds; if both dynamics have norm≤ρ then nρ^(n−1)‖Δ‖ bounds the defect.
+Verdict: proved as written
+Formal scope: continuous_norm_power_defect_le and continuous_norm_power_defect_le_geometric_majorant cover every n∈N and do not require completeness/nonzero spaces.
+Remaining gap: None at manuscript operator-norm scope.
+Next route: Runtime replay.
+Obligations: {"boundedness": "passed", "rho_nonnegative": "passed: follows from norm≤rho", "zero_space": "passed", "rho=0,n=1": "passed: rho^0=1"}
+
+cor:polynomial_defect
+For p(z)=Σ(n=0..N)a_nz^n over the common field, Cp(Tf)−p(Tc)C is the sum of a_n times the power defect, with constant term zero.
+Verdict: proved as written
+Formal scope: Existing polynomialAction and zero-defect compatibility only. No declaration exposes the full nonzero-defect polynomial sum.
+Remaining gap: Formal endpoint assembling arbitrary polynomial coefficients with the typed power identity.
+Next route: Add algebraic and continuous polynomial identities using Polynomial.sum, map_sum, map_smul and power_defect_identity_all.
+Obligations: {"scalar_linearity": "passed", "constant_term": "passed", "finite_sum": "passed"}
+
+thm:resolvent_defect + witnessed norm
+For scalar z, fine/coarse invertible zI−T, the resolvent sandwich identity has positive sign Rc Δ Rf. Continuous version needs only Rc(zI−Tc)=I and (zI−Tf)Rf=I, with norm≤‖Rc‖‖Δ‖‖Rf‖.
+Verdict: proved as written
+Formal scope: Typed scalarShift identities and continuous norm theorem cover exact displayed scopes; no hidden spectral input.
+Remaining gap: None. Section closing phrase “resolvents with stated inverse witnesses” can be changed to “inverse witnesses, and genuine resolvents when invertibility holds” for consistency.
+Next route: Runtime replay.
+Obligations: {"source_target": "passed", "inverse_sides": "passed", "scalar_commutation": "passed", "sign": "passed", "one_sided_not_resolvent": "passed: manuscript explicitly distinguishes"}
+
+thm:holomorphic_defect
+For complex Banach Xf,Xc, bounded complex-linear C,Tf,Tc, holomorphic h on U containing spectra, and admissible finite rectifiable Cauchy cycle Γ avoiding spectra, the common-contour Dunford difference equals (2πi)^−1∫Γh(z)Rc(z)ΔRf(z)dz and satisfies the length×sup product norm bound.
+Verdict: conditional on a named input
+Formal scope: Current modules contain only pointwise resolvent algebra and operator norm bounds; no contour integral/calculus endpoint.
+Remaining gap: Formal actual contour integral, bounded composition interchange, integrability, length bound and semantic identification with h(T); current Mathlib search found circle Cauchy integral machinery but no general Banach holomorphic functional calculus.
+Next route: Implement parameterized finite rectifiable-cycle integral; define the Dunford functional calculus from it with explicit admissibility, prove sandwich integral and norm estimate. Do not assume the desired defect identity or identify a circle-only result with arbitrary cycles.
+Obligations: {"rectangular_operator_space": "passed", "integral_composition_exchange": "passed: bounded pre/postcomposition", "resolvent_sign": "passed", "norm_constant": "passed", "standard_rectifiable_Dunford_input": "conditional: exact rectifiable-source leaf not authenticated", "zero_spaces_empty_cycle": "needs convention for empty sup or nonempty representative"}
+
+thm:exponential_defect
+For real t on real/complex Banach spaces or complex t on complex Banach spaces, Cexp(tTf)−exp(tTc)C=∫(0→t)exp((t−s)Tc)Δexp(sTf)ds; real t≥0 gives the stated norm bound.
+Verdict: proved as written
+Formal scope: No exponential or interval-integral declaration in current project.
+Remaining gap: Formal typed continuous-map derivative product rule, fundamental theorem, real norm bound, and complex straight-segment parameterization.
+Next route: Use Mathlib.Analysis.SpecialFunctions.Exponential NormedSpace.hasDerivAt_exp_smul_const and primed version; FTC via intervalIntegral.integral_eq_sub_of_hasDerivAt.
+Obligations: {"norm_convergence": "passed: bounded operators", "derivative_order": "passed: each T commutes with its own exponential only", "complex_segment": "passed: s=ut contributes factor t", "negative_real_t": "passed: oriented integral", "t=0": "passed"}
+
+thm:multilevel_defect + cor:exact_compatibility
+For arbitrary finite typed tower X_0,…,X_L and C_l:X_(l+1)→X_l, C_(0,L)T_L−T_0C_(0,L)=Σ_l C_(0,l)Δ_l C_(l+1,L), with triangle/product norm estimate; vanishing local defects gives polynomial, witnessed resolvent and defined analytic compatibility.
+Verdict: proved as written
+Formal scope: Only single-level consequences currently formalized. No arbitrary-length dependent typed tower declaration.
+Remaining gap: Typed chain composition and full finite telescope; norm assembly; analytic compatibility depends on analytic closure.
+Next route: Define dependent chain over Nat with C_i:X_(i+1)→X_i and segment composites by recursion; prove composition law, telescope using common source/target intermediate terms; then specialize existing compatibility.
+Obligations: {"variance": "passed", "telescoping_endpoints": "passed", "L=0": "passed: I T−T I=0 and empty sum", "local_amplification": "passed"}
+
+alg:path-zeta / TransferZeta
+For finite directed multigraph with distinct parallel edges and positive natural weights, count all exact-weight edge lists; counts have first-edge recurrence and the ℤ[[X]] series satisfies det(I−A) Z_st=adj(I−A)_st with Q(0)=1.
+Verdict: proved as written
+Formal scope: ExactWalk→ExactWalkTuple equivalence, FirstEdgeTail equivalence, adjacency coefficient extraction, enumerated inverse and independent adjugate inverse uniqueness all directly inspected. No QZ=P hypothesis in finite_graph_pathZeta_rationality.
+Remaining gap: Expanded chapter03 arbitrary field scalar edge weights/endpoints/multigrading are outside this formal scope; weighted audit owner covers that closure. Algorithm determinant constructors are noncomputable definitions in Lean, not a claimed Lean evaluator.
+Next route: Baseline replay and clarify endpoint coefficient semantics in chapter03.
+Obligations: {"unrestricted_walk_semantics": "passed", "enumerator_bijection": "passed", "positivity_length_bound": "passed", "empty_walk": "passed: one iff s=t,n=0", "parallel_edges": "passed", "matrix_variance": "passed: rows are sources", "noncircular_rationality": "passed"}
+
+Smith chart and polyphase models
+Finite-support sequence packets interleave exactly; a shift sends phase j only to j+r. Reflection rotation pulled back by Γ=(z−1)/(z+1) yields the displayed fractional map; ω=−1 yields 1/z on z≠0,−1.
+Verdict: proved as written
+Formal scope: SmithDyadic.smithPhase_neg_one_eq_inv proves algebraic fractional formula for fields with 2≠0, z≠0. It does not itself construct Cayley conjugacy or prove a disk action.
+Remaining gap: General pullback display leaves z≠−1 and output denominator≠0 implicit. Specify open reflection disk |Γ|<1 (equivalently Re z>0) for the disk model, and chart-domain conditions for broader formula.
+Next route: Publication edit only; exact symbolic derivation is immediate after clearing nonzero denominators.
+Obligations: {"sequence_domain": "passed: c00, finite sums", "shift_direction": "passed", "Smith_N2_formula": "passed", "nonlinear_orbit_not_projectors": "passed", "classification_boundary": "passed"}
+
+finite numerical certificates / scope
+The listed recorded Python results concern particular finite matrices/graphs/precision values; the frozen 25-row contract is not universal coverage of expanded analytic/lattice results.
+Verdict: computationally verified only in a stated range
+Formal scope: Python stability tests use rectangular dimensions, n=1..9, one complex spectral parameter; Smith tests use explicit nonsingular sample values. path_counts is exact integer dynamic programming, not unrestricted theorem proof.
+Remaining gap: Fresh runtime reproduction not executed by this audit. The phrase “direct walk enumeration” describes recurrence counting rather than literal list enumeration. After closure/build the old no-fresh-replay sentence and frozen scope must be updated by publication owner.
+Next route: Runtime/computation owners reproduce and record exact source digests; preserve historical evidence.
+Obligations: {"bounded_claim_language": "passed", "test_source_semantics": "passed", "recorded_not_fresh": "passed", "holonomy_gauge_classification": "out of scope: no such theorem in current chapters"}
+
+Dependencies:
+typed defect → power telescope → power norm/majorant and polynomial defect
+scalar shift cancellation + left coarse/right fine inverse → resolvent sandwich → resolvent norm
+common admissible Dunford contour + integral composition exchange + pointwise resolvent → holomorphic defect/norm
+bounded operator exponential differentiability + bilinear composition product rule + FTC → exponential defect/norm
+typed segment composition → finite telescope → multilevel defect/norm → exact compatibility
+positive edge weights → length≤weight → finite tuple/list equivalence → first-edge recurrence → (I−A)Z=I
+det/adjugate identities + Q(0)=1 → two-sided rational matrix inverse → inverse uniqueness → enumerated rationality
+
+Source caveat: Open PDF exact formulas and proof read; author-site current PDF access returned HTTP403. This is a candidate replacement source, not a verification of Kato1995. Source treats smooth loops/nonzero spaces. General rectifiable-cycle extension remains conditional in this initial source audit.
+
+Strongest safe statement: Current raw formal code establishes typed powers/norms/polynomial zero-defect compatibility/witnessed resolvents and finite positive-weight ℤ graph rationality. Manuscript algebraic, exponential and multilevel derivations pass ordinary checking; full formal release closure requires the listed new endpoints and an exact rectifiable Dunford realization.

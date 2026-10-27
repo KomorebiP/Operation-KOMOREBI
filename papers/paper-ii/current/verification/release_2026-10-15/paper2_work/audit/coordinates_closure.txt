@@ -1,0 +1,65 @@
+PROVED AS WRITTEN
+Named mathematical theorem/corollary statements of current chapter02, using existing baseline plus five new construction/consumer modules. Illustrative examples were corrected mathematically; no claim that every explanatory sentence is a separate Lean declaration.
+
+ACCEPTED MODULES
+KomorebiVerification.PaperII.ReleaseCoordinatesAlgebra: PASS | /workspace/scratch/9f53d520971c/paper2_work/coordinate_checks/algebra02/CHECK.json | 5dd758d71d8981258047f3165e724aa8efceb3cb3d69a14cbea0b75d15797896
+KomorebiVerification.PaperII.ReleaseCoordinatesHilbert: PASS | /workspace/scratch/9f53d520971c/paper2_work/coordinate_checks/hilbert02/CHECK.json | ae6975b3e47c666b4c44b59544e3c67289d88aeea7b088c132ab5cd44611e3ab
+KomorebiVerification.PaperII.ReleaseCoordinatesResidue: PASS | /workspace/scratch/9f53d520971c/paper2_work/coordinate_checks/residue03/CHECK.json | a20dcb492c0d8adedacb5ad56fb62f9eec5a2d880eff62562d9924e1bfac1aaa
+KomorebiVerification.PaperII.ReleaseCoordinatesFourier: PASS | /workspace/scratch/9f53d520971c/paper2_work/coordinate_checks/fourier02/CHECK.json | 6c270d422ffe323cc15e36806dd6302b02278e23a6d075a24a152cad4176cc07
+KomorebiVerification.PaperII.ReleaseCoordinatesConsumers: PASS | /workspace/scratch/9f53d520971c/paper2_work/coordinate_checks/consumers04/CHECK.json | 095e5108b7305b6617cfd9d1ca0d3140977d266f1d9c7ed96e9416831c878e59
+
+cor:orthogonal_isometry
+Scope: Arbitrary real/complex inner-product space, finite projector ranges with PiLp 2 Hilbert norm, symmetric idempotents. No finite-dimensional restriction; completeness is unnecessary.
+Construction: Compose independent range analysis/synthesis equivalence with WithLp type equivalence. Derive preserved inner product using symmetry, idempotence and completeness. Upgrade to LinearIsometryEquiv.
+Endpoints: HilbertCoordinates.hilbertPacketUnitary, HilbertCoordinates.packet_parseval, HilbertCoordinates.hilbertCoordinateChange, HilbertCoordinates.hilbertCoordinateChange_apply
+
+coordinate Hilbert coherence
+Scope: Actual Hilbert-sum linear isometries with arbitrary three finite packet systems.
+Construction: Prove identity/inverse/composition directly from explicit unitary definition and inverse laws.
+Endpoints: HilbertCoordinates.hilbertCoordinateChange_self, HilbertCoordinates.hilbertCoordinateChange_symm, HilbertCoordinates.hilbertCoordinateChange_trans
+
+thm:block_refinement matrix identity
+Scope: Typed linear maps between possibly different modules, independently chosen source/target packet families.
+Construction: Synthesis/analysis cancellation, no refinement assumption needed for conjugacy.
+Endpoints: NestedRefinement.coordinateOperator_conjugation
+
+cor:block_support_refinement
+Scope: Typed source/target Refines data, no nonzero family or field assumption required.
+Construction: Project coarse block on both sides to isolate a fine descendant; converse uses actual finite block expansion.
+Endpoints: NestedRefinement.transferBlock_descendant, NestedRefinement.transferBlock_eq_zero_iff_descendants
+
+prop:residue_algebra
+Scope: Actual PowerSeries R; coefficient-mask equations over semirings, packet nonzero condition over nontrivial rings.
+Construction: Explicit coeff/mk linear equivalence and mask coefficients, actual projector-family laws, evaluation proves nonzero.
+Endpoints: Residue.coefficientEquiv, Residue.seriesResidueProj_coeff, Residue.seriesResidueFamily, Residue.seriesResidueProj_nonzero, Residue.manuscript_series_residue_packet
+
+thm:residue_refinement
+Scope: Arbitrary positive N|M; actual series and sequence Refines objects with surjective parent s↦s mod N.
+Construction: Witness r lifts to the same integer below M, modular arithmetic plus independent fibre masks proves parent sums.
+Endpoints: Residue.divisorParent_surjective, Residue.divisorParent_address, Residue.residueFamily_refines, Residue.seriesResidueFamily_refines
+
+thm:root-of-unity
+Scope: Actual PowerSeries rescale F(X)↦F(omega X), genuine powers and finite linear operator sum over any commutative semiring with the printed finite certificate.
+Construction: Compute actual U powers by induction, evaluate finite operator sum coefficientwise, apply independently proved finite table extension.
+Endpoints: Residue.seriesPhase, Residue.seriesPhase_pow_coeff, Residue.seriesPhase_pow_order, Residue.seriesFourierAverage_coeff, Residue.seriesFourierAverage_eq_residueProj
+
+thm:root-of-unity field certificate and thm:character_realization
+Scope: Fields, positive primitive root order; literal inverse-power weighted rescale operator sum on series.
+Construction: Prove kernel equality, derive exact finite table from primitive-root theorem, invoke actual operator endpoint.
+Endpoints: Residue.ringFourierKernel_inv_eq_fourierKernel, Residue.primitiveRoot_finiteRingFourierCertificate, Residue.seriesFourierAverage_eq_residueProj_of_primitiveRoot
+
+thm:crt_factorization; cor:dyadic_odd_coordinates
+Scope: Actual formal-series masks, positive coprime moduli, dyadic exponent zero allowed, both product orders.
+Construction: Transport independently checked CRT selector equality through concrete coefficient equivalence; masks commute by coefficient tests.
+Endpoints: Residue.seriesResidueProj_crt, Residue.seriesResidueProj_commute, Residue.manuscript_series_dyadic_odd
+
+EDITORIAL: Chapter02 changed hunks independently reviewed and mathematically correct
+INDEPENDENT HILBERT REVIEW: semantic PASS by root.
+REMAINING MATHEMATICAL GAP: none for named chapter02 theorem/corollary scope.
+
+VERIFICATION LIMITS
+Receipts are isolated strict compilation against authenticated baseline/current extra objects, not complete-package rebuild; root must run aggregate current-source verification.
+The named Lang textbook attribution was not exact-page checked; positive CRT implication was independently reconstructed and its pinned primary Mathlib proof inspected.
+Prior FAIL logs are retained. One initial failure was runtime virtual-memory mapping failure; others were ordinary elaboration/linter issues. No failed source was promoted to current.
+
+Import KomorebiVerification.PaperII.ReleaseCoordinatesConsumers to include all five new modules; keep baseline imports and extend exact theorem correspondence/axiom audit with listed endpoints.

@@ -1,0 +1,174 @@
+{
+  "primary_verdict": "proved as written",
+  "claim": "For every continuous bounded-variation original complex path f on[0,1] and H continuous on its trace, the unique limit of all genuine tagged Riemann-Stieltjes sums is the Bochner velocity integral of its constructed Lipschitz arclength representative. Finite closed families satisfy equality with the constructed IntegralCycle lineIntegral, counting each occurrence.",
+  "audited_utc": "2026-10-19T13:54:55.614747+00:00",
+  "review_provenance": "Independent delegated raw-source semantic review. Reviewer read source before author proof notes; no source edits or reviewer Lean execution. Parent reported strict compile success; actual hash-bound log inspected separately.",
+  "source": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableRSError.lean",
+  "source_sha256": "77d9bcaee7694e27d95c7baed667afca223a6096abde3f94b786e07be993c356",
+  "source_bytes": 19098,
+  "source_snapshot": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/rs_review/RSError_audited_77d9bcaee769.lean",
+  "coefficient_hypotheses": [
+    "E normed additive commutative group",
+    "NormedSpace complex E",
+    "NormedSpace real E",
+    "CompleteSpace E for Bochner-existence/comparison theorems; unnecessary assumptions omitted on pure partition/reparameterization/uniqueness statements"
+  ],
+  "exact_predicate": "a<=b and forall epsilon>0 exists delta>0 forall n p q: MonotoneOn p(Iic n),p0=a,pn=b,all qj in[pj,p(j+1)],all widths<delta implies norm(sum_j(f(p(j+1))-f(pj))*H(f(qj))-I)<epsilon. Scalar multiplication is complex smul; sum notation is over j<n.",
+  "dependencies": [
+    {
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/work/Paper_II_Closeout_v1.0.0/formal/current/KomorebiVerification/PaperII/ReleaseRectifiable.lean",
+      "sha256": "2329039f5ccb91f27ffc8c8394fd9fc269f5b3f51c234ade4d937b18dd73a959"
+    },
+    {
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/work/Paper_II_Closeout_v1.0.0/formal/current/KomorebiVerification/PaperII/ReleaseArcLength.lean",
+      "sha256": "7847942051b35bb1e03dd9743cba079eda65b7066a3b9dd9db4e8deca8e8c336"
+    },
+    {
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/work/Paper_II_Closeout_v1.0.0/formal/current/KomorebiVerification/PaperII/ReleaseRectifiableCycle.lean",
+      "sha256": "95edfa117f772ca73daf5344a2a4e85f51e1403e0b809a34ddaebab035206374"
+    },
+    {
+      "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/work/Paper_II_Closeout_v1.0.0/formal/current/KomorebiVerification/PaperII/ReleaseAnalyticContour.lean",
+      "sha256": "3e39aa730cc2ddf277cadec07722cbaac54f71ff8f03638e5a035f01e6579208"
+    }
+  ],
+  "dependency_graph": [
+    "Real-coordinate AC FTC and compact uniform continuity => exact local tagged error and AC all-sums limit.",
+    "Continuous monotone reparameterization plus exact termwise sum identity => pullback all-sums limit.",
+    "Baseline BV arclength reconstruction and Lipschitz representative => original continuous BV all-sums limit; zero length separate.",
+    "Fine partition existence => uniqueness => independently choice-defined taggedContourIntegral equals velocity integral.",
+    "Termwise original curve equality => finite-family integral-cycle sum equality."
+  ],
+  "obligations": [
+    {
+      "obligation": "Original increments",
+      "status": "passed",
+      "evidence": "taggedSum uses f(p(j+1))-f(pj), multiplied by H(f(qj)); it is not a sum on a surrogate curve."
+    },
+    {
+      "obligation": "Partition quantifiers",
+      "status": "passed",
+      "evidence": "Every natural n and every pair of real sequences p,q; p monotone on0..n with exact endpoints. Values outside0..n are irrelevant."
+    },
+    {
+      "obligation": "Tag admissibility",
+      "status": "passed",
+      "evidence": "For each j<n, qj belongs to the actual closed subinterval[pj,p(j+1)]."
+    },
+    {
+      "obligation": "Mesh",
+      "status": "passed",
+      "evidence": "Every interval width is strictly less than a common positive delta; monotonicity makes widths nonnegative."
+    },
+    {
+      "obligation": "Nonvacuity",
+      "status": "passed",
+      "evidence": "exists_tagged_partition chooses n>(b-a)/delta and an equispaced partition with left-endpoint tags; works when a=b using repeated points."
+    },
+    {
+      "obligation": "Uniqueness",
+      "status": "passed",
+      "evidence": "One partition with mesh<min(deltaI,deltaJ), two epsilon/2 estimates, triangle inequality; cannot choose arbitrary unrelated integral values."
+    },
+    {
+      "obligation": "Local AC identity",
+      "status": "passed",
+      "evidence": "Complex coordinate FTC establishes original increment=integral of actual coordinateVelocity. Linearity yields exact oscillation error identity."
+    },
+    {
+      "obligation": "AC global bound",
+      "status": "passed",
+      "evidence": "Sum adjacent interval integrals, sum norms, and sum speed integrals. All endpoints/tags remain in[a,b]."
+    },
+    {
+      "obligation": "All AC tagged sums",
+      "status": "passed",
+      "evidence": "Continuity of H composed with f on compact interval gives uniform oscillation control. eta=epsilon/(V+1) handles V=0 without dividing by V."
+    },
+    {
+      "obligation": "Continuous monotone reparameterization",
+      "status": "passed",
+      "evidence": "Every source partition maps to an ordered endpoint partition under phi. Mapped tags remain inside mapped intervals. Uniform continuity maps small source mesh to small target mesh. Exact original sums agree termwise."
+    },
+    {
+      "obligation": "Non-strict phi and flats",
+      "status": "passed",
+      "evidence": "Only monotone, not strict monotone, is required. Repeated mapped partition points contribute zero increments. No derivative/substitution theorem or inverse of phi is assumed."
+    },
+    {
+      "obligation": "Actual BV arclength reconstruction",
+      "status": "passed",
+      "evidence": "Baseline arcPath_recovers gives f=arcPath composed with arcMap pointwise. arcMap is continuous monotone with endpoints0,L; unitIntervalPath is Lipschitz and has the same trace."
+    },
+    {
+      "obligation": "Zero geometric length",
+      "status": "passed",
+      "evidence": "A separate L=0 branch proves f=unitIntervalPath on the whole interval through exact recovery and arcMap range; denominator branch used only for L>0."
+    },
+    {
+      "obligation": "Positive length",
+      "status": "passed",
+      "evidence": "phi=arcMap/L is continuous monotone with endpoints0,1 and exact reconstruction f=unitIntervalPath composed with phi; applies the preceding all-partition theorem."
+    },
+    {
+      "obligation": "Choice-defined integral",
+      "status": "passed",
+      "evidence": "taggedContourIntegral selects an existing all-sums limit, else0; the proven existence and uniqueness identify the selected value with velocity integral. Undefined convention does not prove integrability."
+    },
+    {
+      "obligation": "Finite cycles/repeated curves",
+      "status": "passed",
+      "evidence": "Equality applied termwise over Fin n. No quotient/set operation collapses occurrences; repeated curves retain multiplicity, Fin0 gives zero."
+    },
+    {
+      "obligation": "Orientation",
+      "status": "passed",
+      "evidence": "Increasing-parameter orientation retained by exact differences. Reversing-parameter invariance is not claimed."
+    },
+    {
+      "obligation": "Cauchy/canonical HFC",
+      "status": "out of scope",
+      "evidence": "This module does not prove zero-winding Cauchy or canonical independence and cannot close those obligations by itself."
+    },
+    {
+      "obligation": "Length=integrated speed equality",
+      "status": "out of scope",
+      "evidence": "RS comparison does not use ReleaseRectifiableLength. Exact speed/geometric equality is neither a hypothesis nor a theorem here."
+    }
+  ],
+  "compiler_evidence": {
+    "command": [
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "-DrelaxedAutoImplicit=false",
+      "-DmaxSynthPendingDepth=3",
+      "-Dpp.unicode.fun=true",
+      "-o",
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/objects/KomorebiVerification/PaperII/ReleaseRectifiableRSError.olean",
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableRSError.lean"
+    ],
+    "exit": 0,
+    "seconds": 4.429,
+    "source_sha256": "77d9bcaee7694e27d95c7baed667afca223a6096abde3f94b786e07be993c356"
+  },
+  "compiler_interpretation": "Recorded source-hash-bound Lean elaboration proves the exact formal statements; semantic correspondence above was audited independently and does not follow merely from compilation.",
+  "external_leaves_checked": [
+    "Pinned Mathlib AbsolutelyContinuousOnInterval.integral_deriv_eq_sub and intervalIntegrable_deriv",
+    "Pinned Mathlib naturalParameterization,edist_naturalParameterization_eq_zero,has_unit_speed_naturalParameterization",
+    "Pinned Mathlib IsCompact.uniformContinuousOn_of_continuous",
+    "Pinned Mathlib intervalIntegral.sum_integral_adjacent_intervals,integral_smul_const,norm_integral_le_of_norm_le"
+  ],
+  "remaining_gap_for_audited_claim": null,
+  "boundaries": [
+    "Only intervals with a<=b are used; general rectifiable theorem normalized to[0,1].",
+    "No discontinuous BV/jump curves.",
+    "No orientation-reversing parameter map theorem.",
+    "No Cauchy theorem,canonical contour/domain independence,or unrestricted contour-existence theorem.",
+    "Not every manuscript sentence is certified."
+  ],
+  "final_revision_pending": false,
+  "final_source_freeze_confirmed_by_author": true,
+  "final_recheck_utc": "2026-10-19T13:56:37.425623+00:00"
+}

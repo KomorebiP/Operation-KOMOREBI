@@ -1,0 +1,181 @@
+Chapter 02 finite packet-coordinate/refinement and residue/Fourier/CRT statements, including all printed boundary cases and exact existing Lean semantic correspondence. Main mathematical theorem arguments pass; two illustrative packet/support claims need nonzero restrictions, tower definition needs explicit refinement clauses, and formal correspondence is incomplete at the listed bridges.
+PRIMARY VERDICT: correct only after a stated restriction
+MODE: Independent subagent raw-source audit; no edits to manuscript or Lean; no Lean runs performed in this initial pass. Source presence is not relabeled as fresh kernel verification.
+
+PRIORITIZED FINDINGS
+
+F01 P1 formal_semantics_gap [C05]
+No Hilbert direct-sum construction or isometry proof; algebraic PacketSpace is insufficient.
+Executable closure: Add a separate HilbertCoordinates module importing targeted Mathlib.Analysis.InnerProductSpace.PiL2. Use PiLp 2 of the actual projector ranges; define analysis and synthesis independently, use self-adjointness plus pairwise annihilation to show all off-diagonal inner products vanish, obtain inner preservation and inverse linear isometries. Transport coherence follows from existing algebraic formulas. Do not put the default Pi supremum norm on PacketSpace and call it unitary.
+
+F02 P1 formal_semantics_gap [C11-C16]
+Residue formal carrier is Nat→A; actual printed carrier R[[z]] and literal U^k operator average are not linked by named formal maps.
+Executable closure: Define coefficient linear equivalence PowerSeries R ≃ₗ[R] (Nat→R) with coeff/mk, independently define series mask by coefficients and phase U by multiplying nth coefficient by omega^n, prove coefficient intertwining, prove (U^k x)n=omega^(n*k)•x_n, distribute finite map sum to identify ringFourierAverage. Prove primitive field ring-kernel equality with fourierKernel and build finite certificate. Then transport selector algebra/CRT/refinement and both Fourier operator equalities.
+
+F03 P2 formal_missing_consumer [C07]
+No exact support-under-refinement iff theorem.
+Executable closure: For forward implication evaluate coarse zero at fine.proj alpha x, postcompose by fine.proj beta, use left/right parent absorption. Reverse implication rewrite transferBlock_refinement and Finset.sum_eq_zero twice. State typed two-module theorem if useful, with endomorphism specialization.
+
+F04 P2 formal_missing_consumer [C06]
+No direct [T]_P=C[T]_QJ consumer; existing naturality is sufficient evidence but not exact one-name endpoint.
+Executable closure: Add coordinateOperator_conjugation by ext packets; simp [coordinateOperator, coarsenCoordinates, refineCoordinates] using analysis/synthesis inverse simp lemmas.
+
+F05 P2 formal_missing_construction [C11,C14]
+Residue nonzero/projector-family parent-surjectivity and arbitrary-divisibility Refines packaging absent.
+Executable closure: Use fibreLinearProjectorFamily residueAddress. Prove nonzero by evaluation at index j of constant nonzero sequence or single j. Prove mergeAddress surjective by lifting r.val to Fin(N*k). Turn current if-sum equality into children filter equality; expose Refines. Obtain N|M specialization by rcases divisibility and show multiplier positive from M>0.
+
+F06 P2 manuscript_definition_ambiguity [C03]
+Refinement tower definition states only compatibility of parent maps, not their refinement property or identities.
+Executable closure: Add each rho_m,l witnesses P_m refining P_l, rho_l,l=id, and explicit cocycle rho_n,l=rho_m,l∘rho_n,m.
+
+F07 P2 false_example_without_restriction [C10,C15]
+Two-level projection example permits zero summands; active shift cycle example inherits possibility of zero coefficient ring.
+Executable closure: State all four summands are nonzero in two-level example. State R nonzero and N>0 in the active residue-shift graph example. These restore stated packet definitions and do not weaken the main theorems.
+
+F08 P3 proof_clarity [C08,C09]
+Binary support pruning and coarsest proof omit explicit surjectivity argument; finite iteration omits empty collection base case.
+Executable closure: Add P_a=sum supported products and P_a≠0 forces a child; coarsest reconstruction follows by multiplying completeness; specify supported identity empty-family convention. Lean already constructs all three points.
+
+F09 P3 typing_clarity [C04,C05,C12]
+Typed source/target common coefficient ring and Hilbert sum norm are conventional but unstated; semiring Fourier theorem refers back to ring-defined selectors.
+Executable closure: Name common scalar ring for typed maps, finite Hilbert direct-sum inner product for unitarity, and coefficient-mask extension to semirings before Fourier theorem.
+
+CLAIM CARDS
+
+C01 def:packet_system (chapter lines 5-31)
+Finite nonzero pairwise annihilating idempotents on a unital-ring module give mutually inverse analysis into the finite direct sum of their actual ranges and synthesis.
+Verdict: proved as written
+Lean: ExactCoordinates.lean:23-100 independently defines the product of ranges, sum synthesis, and proves both inverses; ProjectorCore.LinearProjectorFamily permits zero members and proves the stronger algebraic statement over semirings.
+Boundary: Zero module permits the empty system; nonzero module cannot have empty index. Finite product and finite algebraic direct sum are the same tuples.
+
+C02 thm:children_transitivity (chapter lines 45-66)
+For surjective parent rho with P_a=sum_{rho(b)=a}Q_b, both products P_a Q_b and Q_b P_a equal Q_b or zero by the parent test; range inclusion and transitivity follow.
+Verdict: proved as written
+Lean: NestedRefinement.Refines at 47; four absorption lemmas 120-189 and trans at 251 implement exact hypotheses and both multiplication orders.
+Boundary: No commutativity of coefficient ring required; empty zero-module systems are valid.
+
+C03 refinement tower definition (chapter lines 68-73)
+A sequence of packet systems equipped with compatible parent maps that witness refinement at every ordered pair of levels.
+Verdict: ill-typed or internally inconsistent
+Lean: Printed definition only says maps satisfy a composition law; it does not say P_m refines P_l through rho_m,l, or rho_l,l=id. All later algebraic transport is valid without refinement, but parent-local interpretation needs these missing clauses.
+Boundary: Clarify by explicitly imposing Refines(P_l,P_m,rho_m,l), identity parents and rho_n,l=rho_m,l o rho_n,m.
+
+C04 thm:coordinate_coherence and typed naturality (chapter lines 95-146,167-195)
+Analysis/synthesis transport between arbitrary complete packet systems is invertible, coherent, functorial for typed linear maps, and natural. Refinement additionally gives child/parent formulas.
+Verdict: proved as written
+Lean: NestedRefinement 293-425 proves transport inverse/cocycle/equivalence identities; coordinateOperator 443-534 proves typed composition and naturality; Refines component lemmas 548-584 prove local formulas.
+Boundary: Source and target modules need same coefficient ring; no parent map is required by naturality. All sums finite.
+
+C05 cor:orthogonal_isometry (chapter lines 153-163)
+For orthogonal projections on a real/complex Hilbert space, analysis and synthesis to the finite Hilbert direct sum of ranges and all coordinate transports are unitary.
+Verdict: proved as written
+Lean: No formal norm/inner-product construction for this corollary was found. ExactCoordinates supplies algebraic equivalence only.
+Boundary: Must use sum-of-squared-norms Hilbert norm. Default norm on raw PacketSpace function product is supremum norm and gives a false isometry assertion for two nonzero orthogonal coordinates.
+
+C06 thm:block_refinement (chapter lines 215-248)
+Every coarse endomorphism block equals the finite sum of descendant fine blocks, and [T]_P=C[T]_QJ.
+Verdict: proved as written
+Lean: NestedRefinement.transferBlock_refinement and stronger two-module transferBlock_refinement_between prove the block sum; direct coordinate-conjugation consumer absent but follows immediately from current coordinateOperator_naturality and inverses.
+Boundary: Blocks here are ambient Module.End maps P_b T P_a; interpreting as restricted maps gives the same zero test.
+
+C07 cor:block_support_refinement (chapter lines 250-267)
+P_bTP_a=0 iff every Q_beta T Q_alpha with rho(beta)=b and rho(alpha)=a is zero.
+Verdict: proved as written
+Lean: No exact formal support iff located. Existing absorption lemmas and block sum give a short proof.
+Boundary: Finite sums cannot cancel distinct packet blocks because left/right projection isolates each descendant.
+
+C08 thm:common_refinement (chapter lines 279-312)
+For two finite nonzero packet families whose cross pairs commute, the nonzero products form a packet family refining both through coordinate projections; the same existence holds for any finite pairwise commuting collection.
+Verdict: proved as written
+Lean: CommonRefinement.product constructs all projector laws, Support prunes zero products, common_refines_left/right prove exact surjective Refines; CommonRefinementConsumers.manuscript_common_refinement is direct binary consumer. FiniteCommonRefinement list/finite_common_coarsest constructs finite case, including empty collection.
+Boundary: The empty collection yields supported identity: singleton identity if X is nonzero, empty system if X=0. Printed proof should name this base case and explicitly derive parent surjectivity from nonzero coarse projectors.
+
+C09 prop:coarsest_common_refinement (chapter lines 314-332)
+Any nonzero packet family refining both inputs refines their supported product family through the unique pair-of-parents map.
+Verdict: proved as written
+Lean: CommonRefinement.joint_product_nonzero, jointParent and common_coarsest build actual supported parent; manuscript_coarsest_unique proves uniqueness. No conclusion stored as an assumed field.
+Boundary: Printed summing sentence is correct: multiply completeness of R by P_aQ_b, use two absorption orders, and remove zero terms. This also proves onto parent map.
+
+C10 ex:two_level_split (chapter lines 334-350)
+Four coordinate projections of X00 direct-sum X01 direct-sum X10 direct-sum X11 form a packet system, grouped in pairs.
+Verdict: correct only after a stated restriction
+Lean: A zero summand produces a zero projection, forbidden by def:packet_system. Example needs each X_ab nonzero or explicit removal of zero projections and empty coarse parents.
+Boundary: Smallest counterexample: all four summands zero; four listed projections are zero. Even one zero summand suffices.
+
+C11 prop:residue_algebra (chapter lines 356-380)
+For N>0, coefficient masks on R[[z]] are orthogonal complete idempotents; if commutative R is nonzero each selector is nonzero.
+Verdict: proved as written
+Lean: ResidueFourierCRT.residueProj_idempotent/orthogonal/complete prove exact equations on Nat→A. Missing named PowerSeries coefficient transport and nonzero selector proof.
+Boundary: N=1 is identity; zero ring satisfies all equations but not nonzero packet assertion. Nonzero proof tests z^j, or constant sequence with a nonzero coefficient at j.
+
+C12 thm:root-of-unity (chapter lines 390-425)
+For commutative semiring R, N>0, omega^N=1 and finite table eta sum_k omegaDual^(jk) omega^(rk)=delta_rj, the operator average eta sum_k omegaDual^(jk) U^k equals P_N,j, U(F)(z)=F(omega z). Over fields primitive root supplies the table.
+Verdict: proved as written
+Lean: FiniteRingFourierOrthogonalityCertificate and toRingCertificate prove finite table→all addresses; ringFourierAverage equality proves diagonal multiplier equals selector. Missing literal U endomorphism/power/sum bridge and field kernel→finite ring-table constructor.
+Boundary: N=1 works with eta=1 and omega=1. No inverse or primitive-root hypothesis required for general certificate. Extend the coefficient-mask definition explicitly from rings to semirings when stating this theorem.
+
+C13 thm:character_realization (chapter lines 437-458)
+Over a field with N nonzero and primitive Nth root omega, P_N,j=(1/N)sum_k omega^(-jk)U^k.
+Verdict: proved as written
+Lean: primitiveRoot_fourierOrthogonalityCertificate proves nonzero N and geometric sum from IsPrimitiveRoot; fourierAverage_eq_residueProj_of_primitiveRoot proves diagonal action. Same actual-operator and PowerSeries bridges absent.
+Boundary: Primitive-root field hypothesis already forces N nonzero for N>0; semiring zero-divisor example in text correctly shows need for certificate.
+
+C14 thm:residue_refinement (chapter lines 466-481)
+For positive N|M, P_N,j sums all fine selectors with s mod N=j, and nonzero R gives a refinement of packet systems.
+Verdict: proved as written
+Lean: polyphase_refinement covers N→N*k exact equality on sequences. Missing N|M wrapper, merge surjectivity and actual Refines package, plus nonzero and PowerSeries bridges.
+Boundary: Surjectivity is witnessed by s=j (<N≤N*k); k>0 follows M>0. Case N=M is identity refinement.
+
+C15 ex:residue_shift (chapter lines 483-491)
+Multiplication by z has directed-cycle packet support modulo N; polynomial residue support gives corresponding phase shifts.
+Verdict: correct only after a stated restriction
+Lean: The containment formula is correct over every ring. A directed cycle of active transfers requires R nonzero; in the zero ring every transfer is zero and no nonzero packet exists. No exact formal shift block consumer found.
+Boundary: Add nonzero R to active graph example; N=1 is a one-vertex loop. Explicit shift on sequences: Sx(0)=0, Sx(n+1)=x(n).
+
+C16 thm:crt_factorization, cor:dyadic_odd_coordinates (chapter lines 493-532)
+Positive coprime A,B give a bijection Fin(AB)≃Fin A×Fin B and P_AB,j=P_A,jA P_B,jB; positive odd M gives dyadic-odd specialization.
+Verdict: proved as written
+Lean: ResidueFourierCRT.crtEquiv constructs inverse via Nat.chineseRemainder; crtComponents_bijective, residueProj_crt/comm and residueProj_dyadicOdd give full selector equations on sequences, needing only the common PowerSeries transport for literal printed carrier.
+Boundary: A=1 or B=1 and a=0 are valid. The numerical example (3 mod 4,1 mod 3)→7 mod 12 is correct.
+
+DEPENDENCIES
+finite projector idempotence, ordered pair annihilation, completeness -> exact range analysis/synthesis inverse [internal proof]
+Refines surjective parent, projector sum on each fibre -> two-sided absorption, child formulas, transitivity [internal proof]
+exact range inverse -> cocycle, typed functoriality, naturality [internal proof]
+refinement sum, two-sided absorption -> block expansion and support iff [internal proof]
+cross commutation, nonzero packet members, completeness -> supported product packet and surjective parents [internal proof]
+two refinements, nonzero common-refinement members -> supported joint parent and coarseness [internal proof]
+binary supported product, supported identity empty base -> finite common refinement [internal proof]
+orthogonal Hilbert projections, finite Hilbert-sum convention -> analysis/synthesis unitary [internal mathematical proof; absent formal model]
+residueAddress modulo arithmetic, fibre masks -> residue algebra and divisibility refinement [internal proof]
+finite Fourier table, omega^N=1 -> all coefficient mask multipliers [internal proof]
+field primitive root, geometric finite sum -> Fourier certificate [Mathlib source inspected plus internal proof]
+positive coprime moduli, Nat.chineseRemainder existence/bound/uniqueness -> CRT label equivalence and selector composition [Mathlib source inspected; Lang book attribution not exact-page verified]
+
+OBLIGATIONS
+PASSED: Algebraic types, noncommutative ring ordering, finite sums, exact range domains
+PASSED: Both parent absorption orders and typed naturality orientations
+PASSED: Zero-module and nullary finite common-refinement construction. Printed prose should explain it; Lean constructs supported identity.
+FAILED: Nonzero hypotheses in all examples. Two-level and active shift-cycle examples need restrictions.
+NOT ADDRESSED: Hilbert target norm and formal unitarity. Mathematical corollary valid with finite Hilbert-sum convention; current Lean only algebraic coordinates.
+NOT ADDRESSED: Literal PowerSeries/U-power equivalence to sequence kernel implementation
+NOT ADDRESSED: Arbitrary N|M residue refinement as surjective Refines object. Underlying N→N*k equality proved; missing constructor/wrappers.
+PASSED: Primitive root field/nonzero N and N=1 boundary
+PASSED: Positive CRT cases A=1, B=1; dyadic a=0
+OUT OF SCOPE: Fresh executable kernel verification of current file bytes. Runtime agent handling serial baseline; report makes no new compile claim.
+CONDITIONAL: Lang Algebra exact chapter/page attribution. Bibliographic entry found, primary book copy not available; theorem independently reconstructed and exact Mathlib source checked.
+
+SOURCE CHECKS
+{
+  "mathlib_revision": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+  "checked_local_sources": [
+    "Mathlib/Data/Nat/ModEq.lean:473-495 (CRT existence, bound, modular uniqueness)",
+    "Mathlib/RingTheory/RootsOfUnity/PrimitiveRoots.lean:138 (bounded power injectivity),414 (positive primitive order cast nonzero)"
+  ],
+  "source_question": "Whether positive coprime natural moduli give unique labels below their product, and whether a primitive positive root over a field makes order invertible and yields distinct bounded powers. Both exact hypotheses match the manuscript/formal callers.",
+  "lang_attribution": "Lang 2002 Algebra Revised third edition listed; exact page attribution not checked.",
+  "commands": "Read raw TeX and Lean with nl/sed/cat; searched declaration and absent-endpoint names with rg; inspected pinned local Mathlib source. No computation/sampling used as proof."
+}
+
+STRONGEST SAFE STATEMENT
+All chapter main theorem formulas are mathematically sound with standard scalar and Hilbert-sum conventions. Do not claim exact complete Lean coverage until Hilbert, series/operator transport, support, and residue refinement endpoints are constructed and freshly compiled.

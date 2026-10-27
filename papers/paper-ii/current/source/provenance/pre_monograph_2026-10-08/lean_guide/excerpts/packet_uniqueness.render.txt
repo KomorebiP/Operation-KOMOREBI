@@ -1,0 +1,25 @@
+theorem finitePacket_decomposition_unique
+    (P : LinearProjectorFamily R M κ) (s : Finset κ) (x : M)
+    (packets : κ → M)
+    (hrange : ∀ b ∈ s, packets b ∈ LinearMap.range (P.proj b))
+    (hsum : ∑ b ∈ s, packets b = x) :
+    ∀ b ∈ s, packets b = P.proj b x := by
+  classical
+  intro b hb
+  have hself : P.proj b (packets b) = packets b := by
+    rcases hrange b hb with ⟨y, hy⟩
+    rw [← hy]
+    exact P.idempotent b y
+  have hproject : P.proj b (∑ j ∈ s, packets j) = packets b := by
+    rw [map_sum]
+    calc
+      (∑ j ∈ s, P.proj b (packets j)) = P.proj b (packets b) := by
+        apply Finset.sum_eq_single_of_mem b hb
+        intro j hj hjb
+        rcases hrange j hj with ⟨y, hy⟩
+        rw [← hy]
+        exact P.orthogonal hjb.symm y
+      _ = packets b := hself
+  calc
+    packets b = P.proj b (∑ j ∈ s, packets j) := hproject.symm
+    _ = P.proj b x := congrArg (P.proj b) hsum

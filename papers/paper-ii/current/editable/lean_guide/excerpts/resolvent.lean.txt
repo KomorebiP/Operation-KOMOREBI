@@ -1,0 +1,17 @@
+theorem continuous_scalarShift_resolvent_identity
+    (z : 𝕜) (C : Ef →L[𝕜] Ec)
+    (Tf Rf : Ef →L[𝕜] Ef) (Tc Rc : Ec →L[𝕜] Ec)
+    (hf : (continuousScalarShift z Tf).comp Rf = 1)
+    (hc : Rc.comp (continuousScalarShift z Tc) = 1) :
+    C.comp Rf - Rc.comp C =
+      (Rc.comp (continuousDefect C Tf Tc)).comp Rf := by
+  calc
+    C.comp Rf - Rc.comp C =
+        (Rc.comp
+          ((continuousScalarShift z Tc).comp C -
+            C.comp (continuousScalarShift z Tf))).comp Rf :=
+      continuous_inverse_sandwich_identity
+        (continuousScalarShift z Tc) Rc
+        (continuousScalarShift z Tf) Rf C hc hf
+    _ = (Rc.comp (continuousDefect C Tf Tc)).comp Rf := by
+      rw [continuousScalarShift_comp_sub_comp_continuousScalarShift]

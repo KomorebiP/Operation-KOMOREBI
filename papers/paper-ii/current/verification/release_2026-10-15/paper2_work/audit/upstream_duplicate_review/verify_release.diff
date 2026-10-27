@@ -1,0 +1,68 @@
+--- current/verify_release.py
++++ proposed/verify_release.py
+@@ -104,7 +104,7 @@
+             'limits':['Pinned upstream cache reused, not independently rebuilt.',
+                       'Replay uses Lean own kernel, not an independent implementation.',
+                       'Source ownership and kernel validity do not establish manuscript correspondence.',
+-                      'Only independently reviewed exact-source/exact-body generated runtime helpers may be excluded from logical replay. Upstream duplicate exceptions are not preapproved.'],
++                      'Only exact reviewed generated runtime helpers are excluded from logical replay. The sole exact reviewed upstream-generated theorem is separately kernel body-checked under a fresh name; all other overlaps are rejected.'],
+             'container_memory_max_bytes':Path('/sys/fs/cgroup/memory.max').read_text().strip(),
+             'per_process_timeout_seconds':args.timeout}
+     started=time.monotonic()
+@@ -153,6 +153,7 @@
+         return run(label,command+[str(source)],**kw)
+     template=(audit/'OwnedAudit.template.lean').read_text()
+     reviewed_helpers=[]
++    reviewed_duplicates=[]
+     arr=lambda names:'#['+', '.join('`'+name for name in names)+']'
+     def owned_source(modules,empty_modules,path,helpers=()):
+         path.write_text(template.replace('__IMPORTS__','\n'.join('import '+m for m in modules))
+@@ -171,6 +172,19 @@
+             for row in review['evidence']:
+                 if sha(audit/row['path'])!=row['sha256']:raise ValueError('Runtime helper review evidence changed')
+             report['reviewed_runtime_helpers_sha256']=sha(audit/'reviewed_runtime_helpers.json')
++            duplicate_review=json.loads((audit/'reviewed_upstream_duplicates.json').read_text())
++            if duplicate_review['status']!='REVIEWED':raise ValueError('Upstream duplicate requires independent root review')
++            reviewed_duplicates=duplicate_review['theorems']
++            if len(reviewed_duplicates)!=1 or reviewed_duplicates[0]['name']!='Submodule.factor.eq_1':
++                raise ValueError('Unexpected upstream duplicate review set')
++            for row in duplicate_review['source_files']:
++                base=root if row['origin']=='project' else kit/'workspace/.lake/packages/mathlib'
++                if sha(base/row['path'])!=row['sha256']:raise ValueError('Upstream duplicate review source changed')
++            for row in duplicate_review['runtime_cache_files']:
++                if sha(kit/row['path'])!=row['sha256']:raise ValueError('Reviewed upstream compiled cache changed')
++            for row in duplicate_review['evidence']:
++                if sha(audit/row['path'])!=row['sha256']:raise ValueError('Upstream duplicate review evidence changed')
++            report['reviewed_upstream_duplicates_sha256']=sha(audit/'reviewed_upstream_duplicates.json')
+         inputs=out/'execution_inputs'
+         shutil.copytree(audit,inputs/'audit',ignore=shutil.ignore_patterns('__pycache__'))
+         report['audit_inputs']=[{'path':str(p.relative_to(audit)),'sha256':sha(p)}
+@@ -272,7 +286,27 @@
+             (out/'owned_declarations.json').write_text(json.dumps(owned,indent=2)+'\n')
+             text=lean('replay_whole_closure',audit/'ReplayClosure.lean',
+                 pattern=r'REPLAY_CLOSURE_PASS MODULES '+str(len(modules))+r' CONSTANTS \d+',
+-                extra={'KOMOREBI_REPLAY_MODULES':','.join(modules),'KOMOREBI_REPLAY_CORRUPT':'0'})
++                extra={'KOMOREBI_REPLAY_MODULES':','.join(modules),'KOMOREBI_REPLAY_CORRUPT':'0','KOMOREBI_REPLAY_DUPLICATE_CORRUPT':'0'})
++            duplicates=[json.loads(line[len('REPLAY_UPSTREAM_DUPLICATE_RECHECKED '):]) for line in text.splitlines() if line.startswith('REPLAY_UPSTREAM_DUPLICATE_RECHECKED ')]
++            if len(duplicates)!=len(reviewed_duplicates) or {r['name'] for r in duplicates}!={r['name'] for r in reviewed_duplicates}:
++                raise ValueError('Rechecked upstream duplicate set differs from review')
++            owned_names={r['name'] for r in owned}
++            for expected in reviewed_duplicates:
++                actual=next(r for r in duplicates if r['name']==expected['name'])
++                if actual['name'] in owned_names:raise ValueError('Cannot classify source-owned declaration as upstream duplicate')
++                for key in ['name','serialized_in','upstream_owner','type_expr','value_expr','level_params','all']:
++                    if actual[key]!=expected[key]:raise ValueError('Reviewed upstream duplicate identity changed: '+key)
++                if not actual['fresh_kernel_body_check']:raise ValueError('Upstream duplicate lacks independent kernel body check')
++            (out/'upstream_duplicate_body_rechecks.json').write_text(json.dumps(duplicates,indent=2)+'\n')
++            corrupt_duplicate=lean('kernel_duplicate_body_corrupt_control',audit/'ReplayClosure.lean',reject=True,
++                pattern=r'kernel.*type mismatch|declaration type mismatch|type mismatch',
++                extra={'KOMOREBI_REPLAY_MODULES':','.join(modules),'KOMOREBI_REPLAY_CORRUPT':'0','KOMOREBI_REPLAY_DUPLICATE_CORRUPT':'1'})
++            if 'REPLAY_DUPLICATE_CORRUPT_CONTROL_INJECTED' not in corrupt_duplicate or 'REPLAY_UPSTREAM_DUPLICATE_RECHECKED' in corrupt_duplicate or 'REPLAY_CLOSURE_PASS' in corrupt_duplicate:
++                raise ValueError('Corrupted upstream duplicate did not reach fresh kernel body rejection')
++            report['negative_controls']=9
++            report['upstream_duplicate_body_recheck_count']=len(duplicates)
++            report['upstream_duplicate_body_recheck_names']=[r['name'] for r in duplicates]
++            report['upstream_duplicate_body_recheck_record']='upstream_duplicate_body_rechecks.json'
+             replayed=[json.loads(line[len('REPLAY_CHECKED '):]) for line in text.splitlines() if line.startswith('REPLAY_CHECKED ')]
+             if len(replayed)!=len({r['name'] for r in replayed}) or {r['name'] for r in replayed}!={r['name'] for r in owned if not r['runtime_only']}:
+                 raise ValueError('Replay is not the exact owned logical declaration set')

@@ -1,0 +1,10 @@
+theorem smithZMod_global_conditional_count {p depth : ℕ} [NeZero (p ^ depth)] (hp : 1 < p)
+    (weight : κ → ℕ) (target : κ → ZMod (p ^ depth)) :
+    Fintype.card (GlobalFiber (fun i => SmithZModFiber p (weight i) depth (target i))) =
+      if ∀ i, SmithZModAdmissible p (weight i) depth (target i)
+      then p ^ ∑ i, min (weight i) depth else 0 := by
+  classical
+  exact smith_conditional_product_count
+    (fiber := fun i => SmithZModFiber p (weight i) depth (target i))
+    (admissible := fun i => SmithZModAdmissible p (weight i) depth (target i))
+    p depth weight (fun i => smithZModCoordinateCertificate hp (target i))

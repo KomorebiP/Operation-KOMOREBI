@@ -1,0 +1,11 @@
+# Canonical Paper II wrapper checkpoint
+
+ReleaseCanonicalDefect.lean currently strictly compiles with SHA256 1bc4fc13422571b9b7fec477f52a2c6615305b48528d5504d90df3541d6ec9f6, matching compile_canonical_defect.log. It imports the pinned root canonical HFC core and the three frozen original-RS analytic bridge modules.
+
+Theorem 11.6 formula and norm bound are now stated for genuine canonicalValue, original tagged RS integrals, original geometric length and original rectifiableWinding (also defined from genuine tagged RS integration). The winding comparison is proved off trace. The spectrum and open-domain exclusion hypotheses imply the required off-trace premises, so no comparison is assumed. The admission constructor has no calculus-valued or contour-independence field.
+
+Final checkpoint: the source is frozen at SHA256 e82ddcebd0e531c60f0472329f9a3c2fd3b37c434caf69236e018a6b0f8ee572 and the matching strict compiler receipt has exit zero. The final multilevel compatibility theorem uses the proved general ReleaseCanonicalNaturality endpoint for arbitrary admitted endpoint canonical values. It has no common-cycle premise, no explicit endpoint admission structures beyond the Nonempty definedness witnesses, and works at depth zero.
+
+The exact current Corollary 11.10 says identities hold whenever the relevant expressions are defined. Nonempty AdmissibleCycle witnesses express the source-native canonicalValue's definedness. They contain only holomorphy, spectrum, actual contour traces/resolvents and winding data. Theorem 11.6 supplies original contours and constructs both witnesses internally from its stated geometry. General existence of an admissible Cauchy cycle for every holomorphic germ near a compact spectrum is not itself an enumerated Paper II theorem. Do not claim this entire general-purpose HFC existence API is supplied.
+
+Both formerly partial enumerated manuscript analytic scopes are now represented at their exact required conclusions. Full fresh source compilation and kernel replay are owned by the runtime agent, who has been notified of final frozen bytes. The independent semantic reviewer papers_ii_iii has been asked to rebind the final wrapper hash. No production source changes remain pending.

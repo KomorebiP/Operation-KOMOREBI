@@ -1,0 +1,39 @@
+Paper II publication initial review
+Mode: read-only. No manuscript or PDF changes made.
+Status: editorial corrections and current metadata synchronization needed.
+
+Prioritized findings:
+P2-PUB-01 | release-blocking metadata | publication/README.txt; root CURRENT_READING_EDITION.txt, EDITION.json, SERIES_STATUS.json; current opening/scope prose in all three editions
+Current metadata is inherited October 8 publication state. publication/README.txt describes an unrelated 89-document collection; the Lean guide and visual plate V24 identify only the 25-row historical contract and explicitly no fresh compiler run. This is truthful history but cannot describe the new release once new evidence is accepted.
+After formal freeze, create a current release verification and coverage section in each companion; keep 25-row tutorial/map visibly historical and source-specific. Replace collection-level instructions with Paper II-only current instructions. Do not broaden coverage by inference.
+
+P2-PUB-02 | meaning-changing ambiguity | editable/traditional/chapters/01_orientation.tex:39
+Membership in F^r is a guaranteed lower bound; "becomes visible at greater precision" wrongly promises visibility from that membership alone. The element may be zero or lie deeper.
+A transfer in $F^r\Bcal$ vanishes modulo $F^r\Bcal$. If it is nonzero, its first visible precision depends on its actual filtration depth, which may exceed the declared weight.
+
+P2-PUB-03 | meaning-changing ambiguity | editable/traditional/chapters/01_orientation.tex:43-48 and section title Four kinds of depth
+Compatibility depth currently denotes an operator Delta, whereas the section introduces nonnegative integer quantities. No norm or filtration is specified for an integer compatibility depth.
+Keep the four-way conceptual distinction but call the fourth quantity the compatibility defect; explicitly state that a norm or filtration can measure its size or depth once chosen. No new definition or theorem is needed.
+
+P2-PUB-04 | notation clarification | editable/traditional/chapters/03_weighted.tex, Weighted transfer series definition and Automatic finite-graph construction subsection
+Endpoint column vectors u,v are arbitrary, but coefficients are described only as paths from vertices "selected" by u and v. Later the letter t simultaneously denotes the target vertex and series variable in Z_{s,t}(t). Both intended meanings are clear locally but can be made exact.
+State explicitly that a path i to j contributes u_i v_j times the product of its edge multiplicities. Consider retaining target t and renaming the formal variable X in the local automatic-graph subsection only, with synchronized visual/guide formulas if changed. Root decision required for mathematical-token edits.
+
+P2-PUB-05 | reproducibility metadata | editable/traditional/audit_and_crosswalk.py; publication/build_publication.py; editable/lean_guide/build_guide_data.py
+Primary builder writes publication/build/<stem>, while traditional audit expects .aux/.pdf next to its script. Historical audit hardcodes fresh_lean_build false and old proof-preservation policy. The Lean data builder is intentionally restricted to old canonical v1.2.1, 25 rows and 160 names.
+Parameterize traditional audit build paths and current evidence description, preserving exact historical audits. Keep old guide-data generator for the archived tutorial; add an independent generator for current source, coverage, hashes and receipts rather than overwrite old semantics.
+
+P2-PUB-06 | navigation polish | CURRENT_PUBLICATION_LOCATORS.json; editable/traditional/atlas_macros.tex; eq:smith-inversion
+All 142 recorded PDF destination pages agree with the current PDF. However 26 destinations differ from the actual printed-label page: all 24 visual labels inherit appendix.E, the unnumbered Smith identity inherits its subsection anchor, and the inclusion-matrix proposition anchor sits one page before its printed label. Existing vpage hyperlinks still target the right plates.
+Use explicit unique anchors for current atlas labels and the unnumbered Smith identity; inspect the proposition anchor/page break. Refresh locators from new final AUX and named destinations. Do not report the metadata as broken: it already records both page fields accurately.
+
+Validation: 151 pages checked by text metrics, 28 sampled pages visually inspected; no clipping/overlap observed in sample. All 142 recorded PDF destinations match their recorded pages. This is not a final all-page review.
+
+Build/update plan:
+Obtain root approval for precise local prose corrections and mathematical-agent repairs. Run PDF authoring marker once immediately before first authoring edit.
+Apply minimal editorial corrections in current editable source only. Preserve source branches and historical evidence.
+After current formal evidence is settled, generate a separate current source/coverage/verification section and retain the historical 25-row tutorial with exact labels and excerpts.
+Build traditional edition first through publication/build_publication.py with fixed SOURCE_DATE_EPOCH. Generate locators and update all atlas printed references and Lean-guide crosswalk.
+Build all three companions; synchronize papers/, publication/pdfs/ and editable delivery copies only from checked build outputs.
+Check final references, fonts, warnings and metadata. Render all final pages one at a time or in small batches, remove reproducible previews after review, and preserve a compact QA receipt.
+Refresh publication/source manifests after every final edit. Root owns final archive and Library delivery.

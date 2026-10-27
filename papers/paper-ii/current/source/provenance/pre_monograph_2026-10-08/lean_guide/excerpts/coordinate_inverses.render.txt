@@ -1,0 +1,21 @@
+@[simp] theorem coarsenCoordinates_refineCoordinates
+    (packets : PacketSpace coarse) :
+    coarsenCoordinates coarse fine (refineCoordinates coarse fine packets) =
+      packets := by
+  simp [coarsenCoordinates, refineCoordinates]
+
+/-- Refinement after coarsening is the identity on fine range coordinates. -/
+@[simp] theorem refineCoordinates_coarsenCoordinates
+    (packets : PacketSpace fine) :
+    refineCoordinates coarse fine (coarsenCoordinates coarse fine packets) =
+      packets := by
+  simp [coarsenCoordinates, refineCoordinates]
+
+/-- The exact linear equivalence between the two independent range products. -/
+def coordinateRefinementEquiv : PacketSpace coarse ≃ₗ[R] PacketSpace fine where
+  toFun := refineCoordinates coarse fine
+  invFun := coarsenCoordinates coarse fine
+  left_inv := coarsenCoordinates_refineCoordinates coarse fine
+  right_inv := refineCoordinates_coarsenCoordinates coarse fine
+  map_add' := (refineCoordinates coarse fine).map_add
+  map_smul' := (refineCoordinates coarse fine).map_smul

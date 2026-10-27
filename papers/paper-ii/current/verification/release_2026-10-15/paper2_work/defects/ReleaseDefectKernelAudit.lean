@@ -1,0 +1,22 @@
+import ReleaseDefectPolynomial
+import ReleaseDefectTower
+import ReleaseAnalyticExponential
+import ReleaseAnalyticContourSup
+import ReleaseDefectCompatibility
+
+set_option autoImplicit false
+#print axioms Komorebi.PaperII.ReleaseDefectPolynomial.polynomial_defect
+#print axioms Komorebi.PaperII.ReleaseDefectPolynomial.continuous_polynomial_defect
+#print axioms Komorebi.PaperII.ReleaseDefectTower.multilevel_defect
+#print axioms Komorebi.PaperII.ReleaseDefectTower.continuous_multilevel_defect
+#print axioms Komorebi.PaperII.ReleaseDefectTower.continuous_norm_multilevel_defect_le
+#print axioms Komorebi.PaperII.ReleaseDefectTower.continuous_multilevel_polynomial_compatible
+#print axioms Komorebi.PaperII.ReleaseDefectTower.continuous_multilevel_resolvents_compatible
+#print axioms Komorebi.PaperII.ReleaseAnalyticExponential.exponential_defect_real
+#print axioms Komorebi.PaperII.ReleaseAnalyticExponential.exponential_defect_segment
+#print axioms Komorebi.PaperII.ReleaseAnalyticExponential.norm_exponential_defect_real_le
+#print axioms Komorebi.PaperII.ReleaseAnalyticContour.resolvent_defect_actual
+#print axioms Komorebi.PaperII.ReleaseAnalyticContour.dunfordIntegral_defect
+#print axioms Komorebi.PaperII.ReleaseAnalyticContour.dunfordIntegral_norm_defect_le_sup
+#print axioms Komorebi.PaperII.ReleaseDefectCompatibility.multilevel_exponential_compatible
+#print axioms Komorebi.PaperII.ReleaseDefectCompatibility.multilevel_dunfordIntegral_compatible

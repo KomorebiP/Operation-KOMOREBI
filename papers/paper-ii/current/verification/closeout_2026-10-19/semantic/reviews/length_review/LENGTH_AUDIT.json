@@ -1,0 +1,198 @@
+{
+  "primary_verdict": "proved as written",
+  "scope": "The four declarations in ReleaseRectifiableLength.lean, culminating in length_cycleOfRectifiable_le; not the whole Paper II analytic closeout.",
+  "review_provenance": "Independent focused source audit in delegated fresh agent, with definitions reconstructed from raw baseline sources. Fresh candidate compiler execution performed by this agent; imported baseline object modules were not independently rebuilt in that execution.",
+  "candidate": {
+    "path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableLength.lean",
+    "sha256": "30e78d1e2f26885613d4c7a1057617be05e68a157dcfc6febbdad9e9f48c7a55",
+    "first_seen_sha256": "a865a03c7fd9d8ccb02832de6736e40d8664e76726adfe3a5f0b55f9a16b8006",
+    "revision_note": "Another owner revised the candidate while audit was underway. Final report and compiler result concern the listed final SHA256, not the first-seen version. No source edits by reviewer."
+  },
+  "claim_card": {
+    "quantifiers": "For every n : Nat and f : Fin n -> Real -> Complex, with every f_i continuous and of bounded variation on Icc 0 1 and f_i(1)=f_i(0).",
+    "conclusion": "(cycleOfRectifiable n f hv hc hclosed).length <= sum_i geometricLength(f_i).",
+    "expanded_conclusion": "sum_i integral_0^1 norm(coordinateVelocity(unitIntervalPath(f_i))(s)) ds <= sum_i (eVariationOn f_i (Icc 0 1)).toReal.",
+    "coefficient_domain": "Real nonnegative lengths; velocities in Complex; Lebesgue interval integrals.",
+    "exceptional_cases": "No lower bound on n or length; no injectivity, smoothness, original absolute continuity, nonvanishing speed, or extension regularity required. Domain is the normalized unit interval.",
+    "recorded_status": "Candidate source header says not yet compiled; this audit independently compiled the final SHA256 successfully. The stale header has no mathematical effect."
+  },
+  "definitions": [
+    {
+      "name": "coordinateVelocity",
+      "type": "(Real -> Complex) -> Real -> Complex",
+      "meaning": "ofReal(deriv(Re o f)(x)) + ofReal(deriv(Im o f)(x))*I. Each real derivative is zero when that coordinate is not differentiable. It equals the genuine real-variable complex derivative when both coordinates are differentiable. It need not equal deriv f at other points."
+    },
+    {
+      "name": "geometricLength",
+      "type": "(Real -> Complex) -> Real",
+      "meaning": "(eVariationOn f (Icc 0 1)).toReal. eVariationOn is the supremum of sums of Euclidean complex distances along ordered finite partitions. hv ensures finiteness, so toReal is the genuine finite variation rather than the infinity-to-zero convention."
+    },
+    {
+      "name": "unitIntervalPath",
+      "type": "(Real -> Complex) -> Real -> Complex",
+      "meaning": "g(s)=naturalParameterization f (Icc 0 1) 0 (geometricLength(f)*s). naturalParameterization is f composed with Function.invFunOn of the cumulative variation map, with default point 0. Only its values on [0,1] and its interior derivatives are controlled/needed."
+    },
+    {
+      "name": "IntegralCycle.length",
+      "type": "IntegralCycle -> Real",
+      "meaning": "sum over Fin Gamma.count of the Lebesgue interval integral from 0 to 1 of norm(Gamma.velocity_i). For cycleOfRectifiable, velocity_i is exactly coordinateVelocity(unitIntervalPath f_i). It counts every Fin-index occurrence, without cancelling repeated or oppositely oriented loops."
+    }
+  ],
+  "dependency_graph": [
+    {
+      "edge": "Real coordinate derivatives -> genuine complex real-variable derivative when both exist",
+      "kind": "candidate internal proof",
+      "status": "passed"
+    },
+    {
+      "edge": "Complex K-Lipschitz path -> each coordinate K-Lipschitz",
+      "kind": "candidate internal proof using abs_re_le_norm/abs_im_le_norm",
+      "status": "passed"
+    },
+    {
+      "edge": "Interior point + local K-Lipschitz + differentiability -> derivative norm <= K",
+      "kind": "pinned Mathlib Analysis/Calculus/Deriv/Basic.lean HasDerivAt.le_of_lipschitzOn",
+      "status": "passed"
+    },
+    {
+      "edge": "Nondifferentiable coordinate -> its deriv is zero; remaining coordinate bound <= K",
+      "kind": "pinned Mathlib deriv_zero_of_not_differentiableAt and norm_deriv_le_of_lipschitzOn",
+      "status": "passed"
+    },
+    {
+      "edge": "LipschitzOnWith on [a,b] -> absolutely continuous -> integrable coordinateVelocity",
+      "kind": "Mathlib plus baseline ReleaseRectifiable.integrable_coordinateVelocity",
+      "status": "passed"
+    },
+    {
+      "edge": "Interior norm bound -> integral norm <= (b-a)K",
+      "kind": "pinned integral_mono_on_of_le_Ioo under Lebesgue NullSingletonClass; candidate integral_norm_coordinateVelocity_le",
+      "status": "passed"
+    },
+    {
+      "edge": "Continuous BV f_i -> unitIntervalPath K_i-Lipschitz, K_i=original geometricLength",
+      "kind": "baseline ReleaseArcLength.unitIntervalPath_lipschitz via naturalParameterization and cumulative-variation surjectivity",
+      "status": "passed"
+    },
+    {
+      "edge": "Instantiate interval [0,1] and sum over Fin n -> main upper bound",
+      "kind": "candidate internal proof and definitional unfolding",
+      "status": "passed"
+    }
+  ],
+  "obligations": [
+    {
+      "name": "Normalized continuous BV closed paths",
+      "status": "passed",
+      "evidence": "Exactly hv, hc, hclosed; no hidden geometric restrictions in cycleOfRectifiable."
+    },
+    {
+      "name": "n=0",
+      "status": "passed",
+      "evidence": "Both sums are empty and zero; pointwise proofs quantify over empty Fin 0."
+    },
+    {
+      "name": "Constant and zero-length paths",
+      "status": "passed",
+      "evidence": "K=geometricLength=0 is permitted NNReal; unitIntervalPath(s)=arcPath(f)(0), constant for all s; no division by length occurs."
+    },
+    {
+      "name": "Repeated family entries, multiple traversals, backtracking, self intersections",
+      "status": "passed",
+      "evidence": "Fin-index sums count repeats; variation counts ordered traveled distance. No quotient by trace or injective-path assumption."
+    },
+    {
+      "name": "Original singular continuous BV parametrizations",
+      "status": "passed",
+      "evidence": "Only reconstructed unitIntervalPath is differentiated and required Lipschitz. No derivative theorem is asserted for the original f."
+    },
+    {
+      "name": "One or both coordinate nondifferentiability at an interior point",
+      "status": "passed",
+      "evidence": "All Boolean cases handled by actual deriv default convention, avoiding an unjustified all-points Rademacher claim."
+    },
+    {
+      "name": "Endpoints and arbitrary outside extensions",
+      "status": "passed",
+      "evidence": "Pointwise bound only on Ioo a b. Lebesgue integral comparison removes endpoint singletons; global derivative of the extension is never assumed bounded there."
+    },
+    {
+      "name": "Degenerate interval a=b in intermediate integral bound",
+      "status": "passed",
+      "evidence": "hab allows equality; both interval integral and (b-a)K are zero; Ioo is empty."
+    },
+    {
+      "name": "Exact equality between velocity length and geometric variation",
+      "status": "not addressed",
+      "evidence": "Only <= is proved. Equality is neither a hypothesis nor needed for the stated length bridge."
+    },
+    {
+      "name": "Contour equality for original oriented Riemann-Stieltjes integrals",
+      "status": "out of scope",
+      "evidence": "No contour invariance theorem appears here; trace equality alone would not suffice."
+    },
+    {
+      "name": "Canonical holomorphic calculus / winding / cycle independence",
+      "status": "out of scope",
+      "evidence": "Not part of candidate statement or imports proving this bridge."
+    },
+    {
+      "name": "Fresh full imported-axiom audit / fresh baseline rebuild",
+      "status": "not addressed",
+      "evidence": "Fresh compiler invocation elaborates candidate against existing compiled baseline objects; it is not a new all-source release replay."
+    }
+  ],
+  "decisive_scope_examples": [
+    "For f(t)=t+i|t| at t=0, coordinateVelocity f 0=1, although f is not real-differentiable there and deriv f 0 defaults to 0. This does not contradict the proved bound; it explains why the coordinate case split is necessary.",
+    "An original singular continuous BV loop is allowed even when its original coordinate derivative misses geometric variation; the candidate differentiates its arclength reconstruction instead.",
+    "Repeated occurrences contribute repeated summands on both sides even though the trace union ignores multiplicity."
+  ],
+  "original_length_estimate": {
+    "directly_proved": "L_velocity(cycleOfRectifiable f) <= sum_i geometricLength(f_i).",
+    "safe_consequence": "Given any bound ||A|| <= L_velocity * B with B >= 0, conclude ||A|| <= (sum_i geometricLength(f_i))*B. In the existing chosen-cycle defect estimate, B=(2*pi)^(-1)*Mh*||continuousDefect||*Mc*Mf is nonnegative from existing hypotheses.",
+    "generic_line_integral": "For M >= 0 and a trace norm bound, the existing norm_lineIntegral_le plus this theorem yields ||Gamma.lineIntegral F|| <= (sum_i geometricLength(f_i))*M for Gamma=cycleOfRectifiable. Trace equality transfers the trace bound from original paths.",
+    "not_proved": "The estimate for an original classical contour integral or canonical holomorphic-calculus expression still needs the separately owned integral-identification/canonical representation results."
+  },
+  "source_checks": {
+    "baseline_sources": {
+      "ReleaseArcLength.lean": "7847942051b35bb1e03dd9743cba079eda65b7066a3b9dd9db4e8deca8e8c336",
+      "ReleaseRectifiable.lean": "2329039f5ccb91f27ffc8c8394fd9fc269f5b3f51c234ade4d937b18dd73a959",
+      "ReleaseRectifiableCycle.lean": "95edfa117f772ca73daf5344a2a4e85f51e1403e0b809a34ddaebab035206374",
+      "ReleaseAnalyticContour.lean": "3e39aa730cc2ddf277cadec07722cbaac54f71ff8f03638e5a035f01e6579208"
+    },
+    "mathlib_pin": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+    "pinned_sources_read": [
+      "Mathlib/Analysis/ConstantSpeed.lean",
+      "Mathlib/Topology/EMetricSpace/BoundedVariation.lean",
+      "Mathlib/Analysis/Calculus/Deriv/Basic.lean",
+      "Mathlib/MeasureTheory/Integral/IntervalIntegral/Basic.lean"
+    ],
+    "applicable_AGENTS": "None found under workspace.",
+    "mathbox_ledger": "None found under closeout or raw baseline bundle.",
+    "skill": "c20/proof-audit read; referenced obligation-checklists.md could not be read at either resolved resource locator; relevant type/domain/boundary checks applied directly."
+  },
+  "compiler_check": {
+    "command": [
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "-DrelaxedAutoImplicit=false",
+      "-DmaxSynthPendingDepth=3",
+      "-Dpp.unicode.fun=true",
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/analytic/ReleaseRectifiableLength.lean"
+    ],
+    "exit": 0,
+    "seconds": 2.48,
+    "source_sha256_before": "30e78d1e2f26885613d4c7a1057617be05e68a157dcfc6febbdad9e9f48c7a55",
+    "source_sha256_after": "30e78d1e2f26885613d4c7a1057617be05e68a157dcfc6febbdad9e9f48c7a55",
+    "stable": true,
+    "stdout": "",
+    "lean_path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/analytic_baseline/objects:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/mathlib/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/lib/lean",
+    "imported_project_objects": "Previously compiled baseline modules, not independently recompiled in this invocation.",
+    "new_project_olean_written": false
+  },
+  "remaining_gap_for_audited_claim": "None found in the final audited source. Broader Paper II closeout is outside this verdict.",
+  "strongest_safe_statement": "Every finite family of continuous BV closed complex paths on [0,1] has a constructed integral cycle whose velocity-integral length is at most the sum of original finite metric variations, counting multiplicity.",
+  "cheapest_next_check": "Replay the final source in the full release driver, then add or check the downstream nonnegative-factor monotonicity step and contour-identification/canonical-calculus bridges independently."
+}

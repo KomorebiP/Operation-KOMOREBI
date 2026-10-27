@@ -1,0 +1,376 @@
+{
+  "audit_id": "paper2-arithmetic-initial-2026-10-15",
+  "base_checkpoint": "PAPER-II-RELEASE-BASE-2026-10-15",
+  "reviewer": "/root/paper2_arithmetic",
+  "scope": "Raw chapter 04 and arithmetic prerequisites; independent derivation before status/failure-note inspection",
+  "primary_verdict": "proved as written",
+  "verdict_scope": "Printed mathematical assertions, with standard inherited lattice/natural-number conventions. No false arithmetic theorem found. Full formal correspondence is incomplete.",
+  "formal_completion": "incomplete, with smallest missing implications recorded per claim",
+  "source_files": [
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/editable/traditional/chapters/04_arithmetic.tex",
+      "sha256": "5be0364212d6fad52e176f604adc583eedbd28ad0b9207d59a07c9be4527d497"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/editable/traditional/chapters/02_coordinates.tex",
+      "sha256": "c10c5318fa540ed037e4d11941d82d985fd5a40a6a54f1a5b5f8f92f41983407"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/ResultantSeparation.lean",
+      "sha256": "cd0b101b98a160df8dd0698a20015dbf2fa9f611c57fee38af4456e751bc6be7"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/SmithDyadic.lean",
+      "sha256": "e5cc99dc04af1b9c5528d60dc5237b30c4de389e19e105be8aad7ae7f0dd440d"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/PaperII/ResidueFourierCRT.lean",
+      "sha256": "0e03a04409d02b48354cceeb252ec4827f3c2fc0f15f4121fc1d558fca5657f4"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/formal/current/KomorebiVerification/ResidueProjectors.lean",
+      "sha256": "987899e7a6827501ae15fb0167dc2df3edb74e70d316752ccfe12c4f3ba89f41"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CRT",
+      "locator": "02_coordinates.tex:483-508",
+      "normalized_claim": "For positive coprime A,B, residue labels modulo AB biject with pairs modulo A,B and coefficient selectors multiply in either order.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "A coefficient survives exactly when both modular equalities hold; CRT uniqueness identifies their intersection. A=B=1 and dyadic exponent a=0 cause no exception.",
+      "existing_formal_coverage": "ResidueFourierCRT.crtEquiv, crtComponents_bijective, residueProj_crt, residueProj_crt_comm, residueProj_dyadicOdd prove exact sequence-valued versions over arbitrary semirings/modules.",
+      "remaining_formal_implication": "Literal PowerSeries coefficient transport is not named; arithmetic statement itself is covered.",
+      "dependencies": [
+        "positive coprime CRT",
+        "coefficient masks"
+      ]
+    },
+    {
+      "id": "FOURIER",
+      "locator": "02_coordinates.tex:394-457",
+      "normalized_claim": "A finite orthogonality table and omega^N=1 identify the operator character average with each residue mask. Over a field a primitive Nth root supplies the table.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Periodicity reduces each natural coefficient index to Fin N; geometric sum vanishes when ratio !=1. In positive characteristic existence of a primitive Nth root forces N nonzero. N=1 gives identity. The printed zero-divisor counterexample is valid.",
+      "existing_formal_coverage": "FiniteRingFourierOrthogonalityCertificate.toRingCertificate and ringFourierAverage_eq_residueProj_of_finite_certificate; primitiveRoot_fourierOrthogonalityCertificate and field realization.",
+      "remaining_formal_implication": "Averages are defined by their coefficient multipliers; no theorem identifies the multiplier definition with an independently defined substitution operator finite sum.",
+      "dependencies": [
+        "finite geometric sum",
+        "periodicity"
+      ]
+    },
+    {
+      "id": "BEZOUT",
+      "locator": "04_arithmetic.tex:9-52",
+      "normalized_claim": "For finite free O-lattice, integral A and monic coprime K-polynomials f,g with fg=charpoly(A), r!=0 and uf+vg=r yield projector E=r^-1 v(A)g(A) onto ker f(A) along ker g(A), and rE is integral.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "CH gives FG=0. Evaluated polynomial maps commute. Decomposition x=E x+r^-1 U F x lands in the two kernels; Bezout gives trivial intersection. f=1 or g=1 produces zero or identity; rank-zero case is valid.",
+      "existing_formal_coverage": "EvaluatedBezoutCertificate and minimal idempotence/exact kernel action/denominator clearing theorems cover the evaluated certificate.",
+      "remaining_formal_implication": "No polynomial certificate constructor, CH connection, range=ker equality, or resulting direct-sum equivalence in current file.",
+      "dependencies": [
+        "CH",
+        "polynomial evaluation",
+        "nonzero Bezout scalar"
+      ]
+    },
+    {
+      "id": "RESULTANT",
+      "locator": "04_arithmetic.tex:54-96",
+      "normalized_claim": "Integral polynomial resultants clear two-factor and each finite coprime packet projector. The normalized valuation is an upper bound, not necessarily exact.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Adjugate of Sylvester map applied to constant 1 yields integral u,v. Resultant nonzero over K follows coprimality; injectivity O→K preserves nonzero scalar. Divide r by its unit factor. Empty degree case f=g=1 is separately trivial. Finite pairwise coprime factors yield polynomial CRT idempotents.",
+      "existing_formal_coverage": "Only evaluated denominator/unit-action API plus the concrete sign-factor resultant in SmithDyadic are present.",
+      "remaining_formal_implication": "General resultant→Bezout→evaluated certificate bridge and finite-family construction missing.",
+      "dependencies": [
+        "BEZOUT",
+        "Sylvester adjugate",
+        "DVR unit-power factorization"
+      ]
+    },
+    {
+      "id": "MINIMAL_EVALUATED",
+      "locator": "04_arithmetic.tex:120-205",
+      "normalized_claim": "UF+VG=rI, FG=GF=0 and GU=UG imply (VG)^2=r(VG). If r!=0, E=r^-1VG is idempotent, identity on ker F and zero on ker G. Integral V,G give integral rE.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "N=rI-UF and NUF=VGUF=VUGF=VUFG=0. No other commutations are used. This minimal statement does not assert image E=ker F. Unit inverse preservation is explicitly needed for a uniformizer-only bound.",
+      "existing_formal_coverage": "Exact minimal and bundled theorems, lattice-preserving scalar action, upward closure, Nat.find least clearing exponent, and upper bounds are present.",
+      "remaining_formal_implication": "No gap in the printed evaluated-certificate contract. Its AddSubgroup notion is more general than an O-lattice and does not supply finite generation or clearing existence.",
+      "dependencies": [
+        "noncommutative product identities"
+      ]
+    },
+    {
+      "id": "GLUING",
+      "locator": "04_arithmetic.tex:233-318",
+      "normalized_claim": "For finite rational direct sum V=⊕V_i and full O-lattice Λ, put Λ_i=Λ∩V_i, S=⊕Λ_i. The map Λ/S→⊕(E_iΛ/Λ_i) is injective and coordinatewise surjective; its exponent equals max_i sΛ(E_i).",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Λ_i⊆E_iΛ by idempotence. E_i(S)⊆Λ_i ensures quotient map is well defined. Its kernel is S by reconstruction. Coordinate surjectivity is tautological from E_iΛ. π^s kills Λ/S iff all π^s E_i preserve Λ, because E_i(S)=Λ_i and x=ΣE_i x. Full-rank intersections exist by clearing denominators of bases of V_i; S is a full lattice, so quotient is finitely generated torsion/finite length.",
+      "existing_formal_coverage": "No gluing module, split O-submodule, quotient map, exponent comparison, or finite-lattice clearing-existence theorem is present in current Lean.",
+      "remaining_formal_implication": "Entire genuine O-submodule quotient layer remains. Smallest core implication is π^sΛ⊆S iff ∀i π^s E_iΛ⊆Λ.",
+      "dependencies": [
+        "finite direct-sum projectors",
+        "finite free full lattice",
+        "DVR finite-length torsion"
+      ]
+    },
+    {
+      "id": "GLUING_COROLLARIES",
+      "locator": "04_arithmetic.tex:320-394",
+      "normalized_claim": "The gluing length is sum of Smith exponents, weight is their maximum; two complementary packet quotients both equal the gluing module; zero weight iff integral splitting.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "For binary E, Ex∈Λ_1 iff x∈Λ_1+Λ_2, by x-Ex∈Λ_2. Finite direct sums of O/π^a have length sum a and annihilator exponent max a, including zero factors and empty sum.",
+      "existing_formal_coverage": "Absent as actual quotient theorems.",
+      "remaining_formal_implication": "First-isomorphism-theorem maps and Smith quotient equivalences must be constructed.",
+      "dependencies": [
+        "GLUING",
+        "DVR cyclic quotient lengths"
+      ]
+    },
+    {
+      "id": "REFINEMENT_GLUING",
+      "locator": "04_arithmetic.tex:396-432",
+      "normalized_claim": "Fine split lattice S_Q lies inside coarse split lattice S_P; 0→S_P/S_Q→Λ/S_Q→Λ/S_P→0 is exact and coarse weight ≤ fine weight.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Every fine packet range lies in its parent range. Inclusion gives quotient map, whose kernel is S_P/S_Q. If π^s kills fine gluing, it kills its coarse quotient.",
+      "existing_formal_coverage": "Absent in current Lean.",
+      "remaining_formal_implication": "Construct actual nested-submodule quotient maps/kernel/image and transport annihilator bound.",
+      "dependencies": [
+        "GLUING",
+        "refinement range inclusion",
+        "nested quotient sequence"
+      ]
+    },
+    {
+      "id": "PRECISION",
+      "locator": "04_arithmetic.tex:207-224,448-488",
+      "normalized_claim": "For rational projector E of least clearing exponent s, Λ/π^(m+s)Λ→V/π^mΛ is well defined for every natural m. Every d<s fails uniformly at every m.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Sufficiency is linearity. Minimality supplies z∈Λ with π^dEz∉Λ. x=π^(m+d)z and y=0 lie in Λ and agree modulo the input lattice. Nonzero π^m can be cancelled, so E(x)-E(y) does not lie in π^mΛ. m=0 works; s=0 makes necessity vacuous. Target V/π^mΛ is correctly broader than Λ/π^mΛ.",
+      "existing_formal_coverage": "projector_precision_delay proves only sufficient congruence preservation for an AddSubgroup and a clearing exponent.",
+      "remaining_formal_implication": "Necessity, uniform failure witnesses, and quotient-map construction are missing; nonzero π and scalar closure must be explicit in generalized API.",
+      "dependencies": [
+        "minimal clearing exponent",
+        "nonzero scalar cancellation"
+      ]
+    },
+    {
+      "id": "DYADIC",
+      "locator": "04_arithmetic.tex:551-588,642-670",
+      "normalized_claim": "For A=[[1,1],[0,-1]], E±=(I±A)/2 have local weights 0 at each odd prime and 1 at 2. Res(X-1,X+1)=2.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Entry 1/2 proves exact dyadic failure at exponent 0; multiplying by 2 clears all entries. Odd primes do not divide reduced denominators. Rational matrices cannot be reduced mod 2.",
+      "existing_formal_coverage": "Exact rational matrix identities, PIntegralRational defined by reduced denominator, local weight statements, resultant and padicValNat endpoint are proved in SmithDyadic.",
+      "remaining_formal_implication": "No bridge from reduced denominator criterion to preservation of the actual Z_p^2⊆Q_p^2 lattice, or to ResultantSeparation.separationWeight.",
+      "dependencies": [
+        "rational matrix arithmetic",
+        "prime denominator criterion"
+      ]
+    },
+    {
+      "id": "CHARACTER_INTEGRALITY",
+      "locator": "04_arithmetic.tex:590-606",
+      "normalized_claim": "If N is an O-unit, omega∈O is primitive Nth root and U^N=I preserves Λ, then character averages preserve Λ. Bad residue primes obstruct this coefficient argument, not necessarily integrality of the resulting operator.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "omega inverse=omega^(N-1) belongs to O; 1/N belongs to O. Each coefficient and U-power preserve Λ. N=1 is identity; no claim of automatic bad-prime nonintegrality is made.",
+      "existing_formal_coverage": "No general integral character-average lattice theorem in audited modules.",
+      "remaining_formal_implication": "Finite-sum and scalar-preservation construction, plus root unit lemma.",
+      "dependencies": [
+        "O-module closure",
+        "root-of-unity unit"
+      ]
+    },
+    {
+      "id": "SMITH_DVR",
+      "locator": "04_arithmetic.tex:700-810",
+      "normalized_claim": "Finite rectangular integral matrix over a DVR has sorted Smith valuations, and with finite residue field q the depth-L solve is equivalent to divisibility of Ub, with count q^((n-r)L+Σmin(s_i,L)).",
+      "mathematical_obligation": "passed",
+      "reconstruction": "Select a nonzero matrix entry of minimum valuation, move it to the corner, divide off its unit, and clear row/column since every entry is divisible by that pivot. Induct; all remaining entries remain divisible by the pivot, giving sorted valuations. Ideals of k-minors give sums of first k valuations, hence uniqueness. Reduction by invertible U,V bijects quotient solution sets. Each nonzero coordinate has kernel size q^min(s,L); unused columns contribute q^L and zero rows require target 0. This covers rectangular rank-zero matrices and L=1; extension to L=0 also works.",
+      "existing_formal_coverage": "The general API assumes coordinate solvability/cardinality certificates. It does not construct DVR coordinate facts, arbitrary matrix Smith form, or solution transport by U,V.",
+      "remaining_formal_implication": "Actual DVR quotient coordinate cardinality and matrix diagonalization/solution equivalence missing.",
+      "dependencies": [
+        "DVR divisibility order",
+        "Smith pivot elimination",
+        "finite residue field filtration"
+      ]
+    },
+    {
+      "id": "SMITH_ZMOD",
+      "locator": "04_arithmetic.tex:827-878",
+      "normalized_claim": "For naturals p>1, L and finite dimension, diagonal multiplication by p^s over Z/(p^L) is solvable iff p^min(s,L) divides the canonical target representative; conditional count is p^Σmin(s_i,L), else 0.",
+      "mathematical_obligation": "passed",
+      "reconstruction": "For s≤L divide the target representative by p^s. For s≥L coefficient vanishes and admissibility forces target=0. Kernel size gcd(p^s,p^L)=p^min(s,L), valid for composite p as well. Fibres are kernel translates. Finite products give the count. L=0 gives singleton quotient and cardinality 1; dimension 0 gives one empty solution.",
+      "existing_formal_coverage": "smithZModFiber_nonempty_iff, smithZModFiber_card_of_admissible, smithZMod_global_solvable_iff and smithZMod_global_conditional_count exactly cover the diagonal quotient contract.",
+      "remaining_formal_implication": "No gap in the stated concrete diagonal contract; this does not by itself prove an arbitrary DVR or rectangular matrix theorem.",
+      "dependencies": [
+        "cyclic additive-group kernel cardinality",
+        "finite product cardinality"
+      ]
+    }
+  ],
+  "clarifications": [
+    {
+      "id": "A-CLARIFY-FINITE",
+      "severity": "low",
+      "locator": "04_arithmetic.tex:261-263; 01_orientation.tex:17",
+      "text": "Use finitely generated torsion (hence finite-length) O-module rather than an unqualified finite module. It need not have finite cardinality when the residue field is infinite.",
+      "proposal": "The gluing module is a finitely generated torsion O-module, hence has finite length, because the two full lattices have the same rank."
+    },
+    {
+      "id": "A-CLARIFY-LOCAL-LATTICE",
+      "severity": "low",
+      "locator": "04_arithmetic.tex:648",
+      "text": "The displayed s_{2,Z^2} uses a global Z-lattice after defining s only for a DVR lattice. The numerical assertion is true, but the local typing should match the earlier definition.",
+      "proposal": "Replace s_{2,Z^2} with s_{2,Z_2^2}, or explicitly define local denominator weights of rational matrices on Z_(p)^2."
+    },
+    {
+      "id": "A-CLARIFY-Q",
+      "severity": "low",
+      "locator": "04_arithmetic.tex:747",
+      "text": "Finite residue field is implicit in size q and finite solution counting; make explicit.",
+      "proposal": "Assume the residue field is finite of cardinality q."
+    },
+    {
+      "id": "A-CLARIFY-INCLUSION",
+      "severity": "low",
+      "locator": "04_arithmetic.tex:263",
+      "text": "The full-rank assertion for split lattice is correct but deserves one proof sentence; it also proves existence of all clearing exponents.",
+      "proposal": "Clear denominators of bases of each rational summand to see that Λ∩V_i spans V_i; therefore their direct sum is a full lattice."
+    },
+    {
+      "id": "A-FORMAL-PARTIAL",
+      "severity": "release",
+      "locator": "formal/current/KomorebiVerification/PaperII/ResultantSeparation.lean:41-49,512-526",
+      "text": "No universal formal closure of printed lattice gluing, precision necessity, general resultant construction or arbitrary DVR Smith solve is present. Existing comments accurately declare evaluated-certificate scope.",
+      "proposal": "Complete the missing implications; do not relabel evaluated certificates as proofs of the stronger printed theorems."
+    }
+  ],
+  "source_checks": [
+    {
+      "source": "Mathlib",
+      "revision": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+      "path": "Mathlib/RingTheory/Polynomial/Resultant/Basic.lean",
+      "locators": [
+        "874 exists_mul_add_mul_eq_C_resultant",
+        "885 isUnit_resultant_iff_isCoprime",
+        "908 resultant_eq_zero_iff"
+      ],
+      "checked": "Read theorem statements and adjacent proofs. Adjugate Bezout theorem requires at least one positive degree; monic constant case must be discharged separately.",
+      "translation": "R=O; degrees are natDegree(f),natDegree(g); map to K to use coprimality. Polynomial multiplication order differs harmlessly by commutativity.",
+      "sha256": "01932c13555664ece196527b1776fe30e4354721e509b8620d2723d0be373be5"
+    },
+    {
+      "source": "Mathlib",
+      "revision": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+      "path": "Mathlib/LinearAlgebra/FreeModule/PID.lean",
+      "locators": [
+        "408 Basis.SmithNormalForm",
+        "487 Submodule.exists_smith_normal_form_of_le",
+        "533 Submodule.smithNormalForm"
+      ],
+      "checked": "Read actual basis/inclusion structures and proofs. This API supplies diagonalization of an inclusion but does not bundle sorted divisibility or the manuscript rectangular matrix solve.",
+      "translation": "Use split lattice as submodule of Λ, identify finite basis index, normalize nonzero entries to units times uniformizer powers and transport the cokernel.",
+      "sha256": "8d598b47f02aed4241122a2f88c132fce6b3a26776f24086a5d1d5acb7795aff"
+    },
+    {
+      "source": "Mathlib",
+      "revision": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+      "path": "Mathlib/RingTheory/DiscreteValuationRing/Basic.lean",
+      "locators": [
+        "338 eq_unit_mul_pow_irreducible",
+        "553 length_quotient_pow_maximalIdeal"
+      ],
+      "checked": "Read exact hypotheses [CommRing][IsDomain][IsDiscreteValuationRing], irreducible uniformizer and nonzero element.",
+      "translation": "pi is the manuscript uniformizer. Quotient length is n; finite cardinality additionally needs a finite residue field.",
+      "sha256": "bd3b9201b9a220f253892325aa7a49854d6b5a53ce26455af70e516bfdf83c5f"
+    },
+    {
+      "source": "Mathlib",
+      "revision": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+      "path": "Mathlib/Data/Nat/ModEq.lean",
+      "locators": [
+        "473 chineseRemainder",
+        "483 chineseRemainder_lt_mul",
+        "490 chineseRemainder_modEq_unique"
+      ],
+      "checked": "Read the primary declarations used by crtEquiv.",
+      "translation": "m,n positive coprime naturals, finite residue representatives as Fin labels.",
+      "sha256": "832785951f3a2f46747c891a3b2b64808e3f76f8e45ec76f2fffa2cd87da5417"
+    },
+    {
+      "source": "Stacks Project",
+      "url": "https://stacks.math.columbia.edu/tag/00UA",
+      "checked_on": "2026-10-15",
+      "locator": "Example 10.143.12, source lines 32-42",
+      "checked": "Authenticated public source identifies Sylvester matrix with polynomial combination map and determinant/coprimality criterion; used only as corroboration, not a substitute for the adjugate derivation.",
+      "translation": "Specialize universal monic coefficients to O; take fraction field for nonvanishing. Degree zero handled separately."
+    },
+    {
+      "source": "Original bibliography",
+      "titles": [
+        "Lang, Algebra, revised third edition (2002)",
+        "Newman, Integral Matrices (1972)",
+        "Serre, Local Fields (1979)",
+        "Gohberg-Lancaster-Rodman, Matrix Polynomials (2009)"
+      ],
+      "checked": "Bibliographic records read. No authorized local copies or theorem/page locators were found. Exact attribution in these editions remains unverified; mathematical implications were reconstructed directly and checked against local primary Mathlib sources where available.",
+      "status": "conditional attribution only"
+    }
+  ],
+  "verification": {
+    "lean_runs": "none; root requested coordinated runtime and no broad imports",
+    "computational_runs": "none; existing tests and functions were inspected as source, not accepted as proof",
+    "existing_tests": "test_dyadic.py checks concrete sign matrices, resultant at 2 and 3, and three diagonal examples. smith_diagonal_solve implements the same closed formula and is not independent enumeration; no exhaustive-range claim is justified.",
+    "api_notes": "Archived Python smith_diagonal_solve checks nonnegative weights but does not validate base/depth; resultant_weight casts its result to int and therefore should only be used with integral resultants. These helper limitations do not refute the printed theorems.",
+    "historical_check": "Continuation failures note explicitly distinguishes previous promotions from missing lattice-gluing and precision-necessity proofs; inspected only after raw proof audit."
+  },
+  "closure_plan": [
+    {
+      "priority": 1,
+      "route": "Precision necessity",
+      "steps": [
+        "Use separationWeight_le_of_clears contrapositively to obtain z in lattice with uncleared image at d<s.",
+        "Require pi!=0 and ScalarPreservesLattice pi; construct x=pi^(m+d) z, y=0.",
+        "Cancel pi^m in a claimed output-congruence witness.",
+        "Build actual induced quotient map or retain exact well-defined relation theorem with quotient interpretation explicit."
+      ]
+    },
+    {
+      "priority": 2,
+      "route": "Actual O-submodule gluing",
+      "steps": [
+        "Define packet intersections, their submodule sum, and quotient of Λ by that sum.",
+        "Prove split membership iff all E_i-components lie in Λ.",
+        "Construct component quotient maps and prove injectivity plus coordinate surjectivity.",
+        "Identify quotient annihilation by pi^s with simultaneous clearing; take least exponents.",
+        "Prove nested quotient sequence under refinement and weight monotonicity."
+      ]
+    },
+    {
+      "priority": 3,
+      "route": "Polynomial resultant closure",
+      "steps": [
+        "Get integral Bezout coefficients from exists_mul_add_mul_eq_C_resultant; handle constant monic factors separately.",
+        "Evaluate with algebra-map/aeval and CH; prove evaluated commutations and lattice preservation.",
+        "Use DVR unit-power decomposition and inverse-unit preservation."
+      ]
+    },
+    {
+      "priority": 4,
+      "route": "Smith and lattice inclusion",
+      "steps": [
+        "Construct quotient equivalence from inclusion SNF basis; normalize diagonal units.",
+        "Prove pi-exponent equals maximum of powers and cyclic quotient lengths.",
+        "For full general congruence count construct actual O/(pi^L) coordinate homomorphism, kernel/target fibres, finite-field filtration cardinality, then transport via U,V."
+      ]
+    },
+    {
+      "priority": 5,
+      "route": "Local sign bridge",
+      "steps": [
+        "Identify rational p-integrality with membership in Z_(p) or Z_p.",
+        "Prove entrywise integrality iff standard lattice preservation and connect to the general separation-weight definition."
+      ]
+    }
+  ],
+  "no_edits_to_manuscript_or_formal_source": true
+}

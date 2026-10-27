@@ -1,0 +1,28 @@
+--- 
+
++++ 
+
+@@ -1,4 +1,5 @@
+
+ import KomorebiVerification.PaperII.ReleaseCanonicalHFC
++import KomorebiVerification.PaperII.ReleaseCanonicalNaturality
+ import KomorebiVerification.PaperII.ReleaseRectifiableDefect
+ import KomorebiVerification.PaperII.ReleaseDefectTower
+ 
+@@ -219,12 +220,11 @@
+
+     (C : ∀ n, X (n+1) →L[ℂ] X n) (T : ∀ n, X n →L[ℂ] X n) (L : ℕ)
+     (hd : ∀ k : Fin L, continuousDefect (C k.val) (T (k.val+1)) (T k.val) = 0)
+     (h : ℂ → ℂ)
+-    (Hf : Nonempty (AdmissibleCycle h (T L))) (Hc : Nonempty (AdmissibleCycle h (T 0)))
+-    (Af : AdmissibleCycle h (T L)) (Ac : AdmissibleCycle h (T 0))
+-    (hcycle : Ac.cycle = Af.cycle) :
++    (Hf : Nonempty (AdmissibleCycle h (T L))) (Hc : Nonempty (AdmissibleCycle h (T 0))) :
+     (continuousSegment C (Nat.zero_le L)).comp (canonicalValue h (T L) Hf) =
+       (canonicalValue h (T 0) Hc).comp (continuousSegment C (Nat.zero_le L)) := by
+-  apply canonicalValue_compatible_of_defect_eq_zero h _ _ _ Hf Hc Af Ac hcycle
++  apply Komorebi.PaperII.ReleaseCanonicalNaturality.canonicalValue_compatible_of_defect_eq_zero
++    h _ _ _ Hf Hc
+   exact sub_eq_zero.mpr (continuous_multilevel_compatible C T L hd)
+ 
+ end Komorebi.PaperII.ReleaseCanonicalDefect

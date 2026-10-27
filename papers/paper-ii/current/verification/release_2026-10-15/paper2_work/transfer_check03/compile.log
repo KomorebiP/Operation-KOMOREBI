@@ -1,0 +1,47 @@
+ReleaseTransferScalar.lean:109:60: error: unsolved goals
+V : Type u
+E : Type v
+R : Type w
+inst✝³ : Fintype E
+inst✝² : DecidableEq V
+inst✝¹ : CommRing R
+G : PositiveWeightedMultigraph V E
+m : E → R
+inst✝ : Fintype V
+s t : V
+e : E
+n : ℕ
+⊢ (if n = G.weight e then m e else 0) = (PowerSeries.coeff n) ((PowerSeries.monomial (G.weight e)) (m e))
+ReleaseTransferScalar.lean:111:10: error: This simp argument is unused:
+  PowerSeries.coeff_C_mul_X_pow
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Polynomial.coeff_monomial, eq_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ReleaseTransferScalar.lean:111:41: error: This simp argument is unused:
+  Polynomial.coeff_monomial
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [PowerSeries.coeff_C_mul_X_pow, eq_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ReleaseTransferScalar.lean:222:2: error: Type mismatch: After simplification, term
+  ReleaseTransferMatrix.rational_endpoint_identity Polynomial.coeToPowerSeries.ringHom (transfer G m)
+    (denominatorInverse G m) (denominator_mul_inverse G m) (⇑Polynomial.C ∘ u) (⇑Polynomial.C ∘ v)
+ has type
+  @Eq (PowerSeries R)
+    (↑(transfer G m).det *
+      ReleaseTransferMatrix.contract (fun x ↦ PowerSeries.C (u x))
+        (ReleaseTransferMatrix.rationalMatrix Polynomial.coeToPowerSeries.ringHom (transfer G m)
+          (denominatorInverse G m))
+        fun x ↦ PowerSeries.C (v x))
+    ↑(ReleaseTransferMatrix.contract (fun x ↦ Polynomial.C (u x)) (transfer G m).adjugate fun x ↦ Polynomial.C (v x))
+but is expected to have type
+  @Eq (PowerSeries R)
+    (↑(denominator G m) *
+      ReleaseTransferMatrix.contract (fun x ↦ PowerSeries.C (u x))
+        (ReleaseTransferMatrix.rationalMatrix Polynomial.coeToPowerSeries.ringHom (transfer G m)
+          (denominatorInverse G m))
+        fun x ↦ PowerSeries.C (v x))
+    ↑(ReleaseTransferMatrix.contract (fun x ↦ Polynomial.C (u x)) (transfer G m).adjugate fun x ↦ Polynomial.C (v x))

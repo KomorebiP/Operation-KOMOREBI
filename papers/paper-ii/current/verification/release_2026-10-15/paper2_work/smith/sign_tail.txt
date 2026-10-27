@@ -1,0 +1,63 @@
+
+local instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+
+theorem dyadic_half_norm : ‖(2 : Padic 2)⁻¹‖ = 2 := by
+  rw [norm_inv, Padic.norm_p]
+  norm_num
+
+theorem positive_dyadic_not_preserves :
+    ¬ PreservesLattice (positiveSign 2) (standardLattice 2).toAddSubgroup := by
+  intro h
+  have hx : (![0, 1] : Fin 2 → Padic 2) ∈ (standardLattice 2).toAddSubgroup := by
+    intro i
+    fin_cases i <;> simp
+  have hi := h ![0, 1] hx
+  have hn : ‖(2 : Padic 2)⁻¹‖ ≤ 1 := by
+    simpa [positiveSign_apply] using hi 0
+  rw [dyadic_half_norm] at hn
+  norm_num at hn
+
+theorem negative_dyadic_not_preserves :
+    ¬ PreservesLattice (negativeSign 2) (standardLattice 2).toAddSubgroup := by
+  intro h
+  have hx : (![0, 1] : Fin 2 → Padic 2) ∈ (standardLattice 2).toAddSubgroup := by
+    intro i
+    fin_cases i <;> simp
+  have hi := h ![0, 1] hx
+  have hn : ‖(2 : Padic 2)⁻¹‖ ≤ 1 := by
+    simpa [negativeSign_apply] using hi 0
+  rw [dyadic_half_norm] at hn
+  norm_num at hn
+
+theorem positive_dyadic_clears_one :
+    IsSeparationWeight (2 : Padic 2) (positiveSign 2) (standardLattice 2).toAddSubgroup 1 := by
+  simpa only [IsSeparationWeight, pow_one] using twice_positive_preserves 2
+
+theorem negative_dyadic_clears_one :
+    IsSeparationWeight (2 : Padic 2) (negativeSign 2) (standardLattice 2).toAddSubgroup 1 := by
+  simpa only [IsSeparationWeight, pow_one] using twice_negative_preserves 2
+
+theorem positive_dyadic_finite :
+    HasFiniteSeparationWeight (2 : Padic 2) (positiveSign 2) (standardLattice 2).toAddSubgroup :=
+  ⟨1, positive_dyadic_clears_one⟩
+
+theorem negative_dyadic_finite :
+    HasFiniteSeparationWeight (2 : Padic 2) (negativeSign 2) (standardLattice 2).toAddSubgroup :=
+  ⟨1, negative_dyadic_clears_one⟩
+
+/-- The least clearing exponent on the actual Z_2 standard lattice is exactly one. -/
+theorem positive_dyadic_separationWeight : separationWeight positive_dyadic_finite = 1 := by
+  apply Nat.le_antisymm (separationWeight_le_of_clears _ positive_dyadic_clears_one)
+  apply Nat.one_le_iff_ne_zero.mpr
+  intro hz
+  have h := separationWeight_clears positive_dyadic_finite
+  rw [hz] at h
+  exact positive_dyadic_not_preserves (by simpa [IsSeparationWeight] using h)
+
+theorem negative_dyadic_separationWeight : separationWeight negative_dyadic_finite = 1 := by
+  apply Nat.le_antisymm (separationWeight_le_of_clears _ negative_dyadic_clears_one)
+  apply Nat.one_le_iff_ne_zero.mpr
+  intro hz
+  have h := separationWeight_clears negative_dyadic_finite
+  rw [hz] at h
+  exact negative_dyadic_not_preserves (by simpa [IsSeparationWeight] using h)

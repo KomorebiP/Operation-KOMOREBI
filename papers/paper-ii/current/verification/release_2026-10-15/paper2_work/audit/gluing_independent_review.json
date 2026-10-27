@@ -1,0 +1,115 @@
+{
+  "audit_id": "gluing-independent-defects-owner-2026-10-15",
+  "reviewer": "paper2_defects_models",
+  "mode": "Read-only independent raw-source semantic audit. No Lean rerun by this reviewer; acceptance rests separately on compiler receipts/final production replay.",
+  "verdict": "PASS at the actual exported scopes. No mathematical error or conclusion-valued assumption found. Generic cyclic-equivalence and finite-length endpoints match the manuscript conditional Smith formulas and full-lattice finiteness claims.",
+  "source_hashes": {
+    "formal/current/KomorebiVerification/PaperII/ReleaseGluing.lean": "eaf96f8edb13c2f77cad52a505eac532eff077958c3598d4ec539a77075b5128",
+    "formal/current/KomorebiVerification/PaperII/ReleaseGluingDVR.lean": "96a55454e5434426f0415f97ce81e980d7f4b10837cf3faf9c47c986cc175eb7",
+    "formal/current/KomorebiVerification/PaperII/ReleaseGluingFinite.lean": "5f2999d006c15dae8f17ee1b3ee886c4136fff86279da28390cf07371abb64b6",
+    "formal/current/KomorebiVerification/PaperII/ReleaseGluingEquivSmith.lean": "5ab5c69a5fdfb9378c79eccafd58e7cc3db86cc1de9d1ec9138c43cdb7b6157c",
+    "formal/current/KomorebiVerification/PaperII/ReleaseGluingSmith.lean": "6436daeadde95093e5830ef9858c394ea672be0d8a53c97d63bdb30c90656004",
+    "formal/current/KomorebiVerification/PaperII/ReleaseGluingBinary.lean": "5d62427e41c02ea702f8208ef97e8322165e4b68f65581f388507fcc2a24f7d4",
+    "editable/traditional/chapters/04_arithmetic.tex": "96cbca8e98356c3d0618ec3643acb0c0a296f8d74a948b849238f4c41dd6a34b"
+  },
+  "claim_cards": [
+    {
+      "paper": "def:lattice_packet / thm:gluing_weight",
+      "modules": [
+        "ReleaseGluing"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "For finite complete orthogonal actual linear projectors P and actual O-submodule Lambda, splitLattice is sum of intersections Lambda\u2229range(P_i), proved internal; GluingModule is Lambda quotient by actual splitInside. Canonical component map to product of projected-lattice quotients is injective; each coordinate is surjective.",
+      "evidence": "mem_splitLattice_iff derives integrality of all projections using actual reconstruction. Quotient lift kernel condition proved. gluingMap_injective uses representative x and component integrality; coordinate surjectivity comes from actual image definition. Target is finite product, canonically the finite direct sum in the paper.",
+      "premise_boundary": "Complete/orthogonal/idempotent packet decomposition is legitimate given data, not a gluing conclusion certificate."
+    },
+    {
+      "paper": "existence of packet separation minima / full split lattice",
+      "modules": [
+        "ReleaseGluingDVR",
+        "ReleaseGluingFinite"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "Any rational endomorphism of V has a uniform integral denominator on a full DVR lattice, hence uniformizer-power clearing exists for every rational packet; the actual split lattice is full.",
+      "evidence": "endomorphism_has_nonzero_integral_multiple extends actual finite lattice basis to K, clears finitely many actual operator matrix entries using fraction localization, then reconstructs every lattice vector. DVR nonzero scalar factorization and inverse integral unit give pi-power. splitLattice_isLattice proves FG via Noetherian submodule and spanning by inverting nonzero common pi-power.",
+      "premise_boundary": "A finite lattice basis is explicit input, valid for the finite free lattice in manuscript. No clearing exponent, split-lattice fullness, or annihilator conclusion supplied."
+    },
+    {
+      "paper": "thm:gluing_weight exponent identity",
+      "modules": [
+        "ReleaseGluing",
+        "ReleaseGluingDVR"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "The least exponent annihilating the actual gluing quotient equals maximum of least actual packet-clearing exponents.",
+      "evidence": "annihilates_gluing_iff_clears proved for every s; packet minima use Nat.find and monotonicity; finite max has exact universal threshold; gluing exponent is Nat.find of independently constructed annihilator existence. DVR wrapper supplies existence, no certificate assumed.",
+      "edge_cases": "s=0, empty packet index, zero module, and zero packets are retained. Empty complete projector family forces V=0 and max=0, consistently."
+    },
+    {
+      "paper": "gluing module finite length paragraph",
+      "modules": [
+        "ReleaseGluingFinite"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "Actual gluing quotient of a full DVR lattice has finite O-module length, without finite residue field.",
+      "evidence": "finiteLength_quotient_of_power_annihilates constructs coordinate reduction map W\u2192product O/(pi^s), proves its kernel lies in S using actual uniform annihilation, then factors a surjection W/ker\u2192W/S. Source quotient is explicitly equivalent to finite product of actual cyclic modules. Their lengths equal s via maximal-ideal power theorem; finite sum is not top. dvr_gluing_finiteLength obtains uniform annihilator from rational-projector denominator construction.",
+      "noncircularity": "No finite-length or Smith-decomposition conclusion assumed. No inference from finite cardinality, and no residue-field-finite hypothesis."
+    },
+    {
+      "paper": "thm:gluing_weight final Smith clause / cor:length_and_weight",
+      "modules": [
+        "ReleaseGluingEquivSmith"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "For any actual O-linear equivalence G\u2243product_i O/(pi^a_i), all pi-power annihilator thresholds equal s\u2265max a_i; over DVR length equals sum a_i. For actual GluingModule this max equals globalWeight.",
+      "evidence": "cyclicProduct_annihilated_iff_weights_le tests tuple of class1 and translates to divisibility pi^a_i|pi^s, using domain/nonzero/nonunit pi; reverse checks arbitrary representatives. Transport through actual linear equivalence proves threshold; DVR cyclic length and finite-product length give sum. globalWeight comparison uses both proved threshold equivalences.",
+      "premise_boundary": "The equivalence e is exactly the manuscript hypothesis \u201cIf G is isomorphic to the indicated cyclic sum\u201d; it is not assumed as the result of a theorem claiming to construct Smith form. No inclusion-basis restriction remains in this generic endpoint.",
+      "edge_cases": "Unsorted exponents, a_i=0 (zero cyclic factor), empty I, and G=0 are valid; sup(empty)=0 and empty sum=0."
+    },
+    {
+      "paper": "Smith inclusion source for decomposition",
+      "modules": [
+        "ReleaseGluingSmith"
+      ],
+      "verdict": "PASS at supplied Smith-inclusion scope",
+      "normalized_claim": "Given actual bases of W,S with diagonal inclusion c_i=pi^a_i b_i, quotient W/S is explicitly equivalent to product cyclic modules and has stated length/max exponent.",
+      "evidence": "Coordinate divisibility characterizes actual S, coordinate map has exactly kernel S and is onto by representative choices; first isomorphism theorem constructs equivalence.",
+      "premise_boundary": "This module does not construct a Smith diagonalization from an arbitrary matrix; it starts from actual basis relation hdiag, as documented. General Smith-existence standard fact is not certified by this module alone."
+    },
+    {
+      "paper": "cor:binary_gluing",
+      "modules": [
+        "ReleaseGluingBinary"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "For two complete complementary projectors, either coordinate map is bijective on gluing quotient and both packet minima equal global exponent.",
+      "evidence": "If one component of x\u2208Lambda is integral, complementary component=x\u2212first is integral. Together with reconstruction this proves injectivity; existing surjectivity gives actual linear equivalence. Exponent equality transports true annihilator predicates."
+    },
+    {
+      "paper": "cor:integral_split / thm:gluing_refinement",
+      "modules": [
+        "ReleaseGluing"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "Integral action iff actual split lattice=Lambda iff zero gluing/global weight. Refinement range containment gives nested split lattices, canonical quotient short exact sequence, and nondecreasing separation weight.",
+      "evidence": "Actual nested quotient maps have injectivity, image=kernel, and surjectivity proved using quotient APIs. Monotonicity derives annihilator inclusion and exact exponent threshold; no exactness certificate assumed."
+    },
+    {
+      "paper": "normalized DVR clearing exponent auxiliary",
+      "modules": [
+        "ReleaseGluingDVR"
+      ],
+      "verdict": "PASS",
+      "normalized_claim": "For nonzero known clearing scalar r, pi^(addVal r).toNat clears exactly at normalized valuation exponent.",
+      "evidence": "DVR factorization r=u*pi^s and addVal_def prove addVal r=s (finite), so toNat is not applied blindly to infinity. Multiplication by inverse integral unit preserves Lambda.",
+      "premise_boundary": "Connection to particular resultant requires supplying actual resultant scalar-clearing theorem, reviewed independently."
+    }
+  ],
+  "remaining_scope_boundaries": [
+    "No issue found requiring manuscript weakening or production edits.",
+    "General Smith normal-form existence/algorithm is not constructed by conditional inclusion/equivalence modules; keep its standard-fact/external boundary accurate unless a separate module supplies it.",
+    "Finite-product versus finite-direct-sum identification is standard finite-module notation; core maps are actual quotients, not abstract certificates.",
+    "Canonical arbitrary rectifiable holomorphic functional calculus remains explicitly open and is unaffected by these arithmetic results."
+  ],
+  "source_edits": []
+}

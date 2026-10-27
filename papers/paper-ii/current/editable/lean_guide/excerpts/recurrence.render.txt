@@ -1,0 +1,9 @@
+theorem finite_graph_constant_coefficient_recurrence (s t : V)
+    \{n : ℕ\} (hn : (G.transferNumerator s t).natDegree < n) :
+    ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n,
+        G.transferDenominator.coeff p.1 *
+          (G.coefficientAlgorithm s t p.2 : ℤ) = 0 := by
+  have hcoeff := congrArg (PowerSeries.coeff n)
+    (G.transferDenominator_mul_pathZeta s t)
+  rw [PowerSeries.coeff_mul] at hcoeff
+  simpa [Polynomial.coeff_eq_zero_of_natDegree_lt hn] using hcoeff

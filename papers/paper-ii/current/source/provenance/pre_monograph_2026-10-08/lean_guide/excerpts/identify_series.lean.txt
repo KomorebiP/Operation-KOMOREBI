@@ -1,0 +1,14 @@
+theorem enumeratedPathZetaMatrix_eq_matrixPathZetaMatrix :
+    G.enumeratedPathZetaMatrix = G.matrixPathZetaMatrix := by
+  calc
+    G.enumeratedPathZetaMatrix = 1 * G.enumeratedPathZetaMatrix :=
+      (Matrix.one_mul _).symm
+    _ = (G.matrixPathZetaMatrix * G.transferSeriesMatrix) *
+        G.enumeratedPathZetaMatrix := by
+      rw [G.matrixPathZetaMatrix_mul_transferSeriesMatrix]
+    _ = G.matrixPathZetaMatrix *
+        (G.transferSeriesMatrix * G.enumeratedPathZetaMatrix) :=
+      Matrix.mul_assoc _ _ _
+    _ = G.matrixPathZetaMatrix * 1 := by
+      rw [G.transferSeriesMatrix_mul_enumeratedPathZetaMatrix]
+    _ = G.matrixPathZetaMatrix := Matrix.mul_one _

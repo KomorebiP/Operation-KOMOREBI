@@ -1,0 +1,39 @@
+KomorebiVerification/PaperII/ReleaseSmithTransport.lean:87:2: error: Tactic `apply` failed: could not unify the conclusion of `@funext`
+  ?f = ?g
+with the goal
+  (rectangularDiagonal pi L s x = ↑(quotientMatrixUnit pi L U) *ᵥ fun i ↦ (Submodule.mkQ (powerIdeal pi L)) (b i)) ↔
+    rectangularDiagonal pi L s x = fun i ↦ (Submodule.mkQ (powerIdeal pi L)) ((↑U *ᵥ b) i)
+
+Note: The full type of `@funext` is
+  ∀ {α : Sort ?u.112} {β : α → Sort ?u.111} {f g : (x : α) → β x}, (∀ (x : α), f x = g x) → f = g
+
+O : Type u
+inst✝⁴ : CommRing O
+m : Type u_1
+n : Type u_2
+inst✝³ : Fintype m
+inst✝² : DecidableEq m
+inst✝¹ : Fintype n
+inst✝ : DecidableEq n
+pi : O
+L r f z : ℕ
+M : Matrix (Fin r ⊕ Fin z) (Fin r ⊕ Fin f) O
+U : (Matrix (Fin r ⊕ Fin z) (Fin r ⊕ Fin z) O)ˣ
+V : (Matrix (Fin r ⊕ Fin f) (Fin r ⊕ Fin f) O)ˣ
+s : Fin r → ℕ
+hsmith : ↑U * M * ↑V = rectangularMatrix pi s
+b : Fin r ⊕ Fin z → O
+e : (MatrixFiber (M.map ⇑(Ideal.Quotient.mk (powerIdeal pi L))) fun i ↦ (Submodule.mkQ (powerIdeal pi L)) (b i)) ≃
+  MatrixFiber ((rectangularMatrix pi s).map ⇑(Ideal.Quotient.mk (powerIdeal pi L)))
+    (↑(quotientMatrixUnit pi L U) *ᵥ fun i ↦ (Submodule.mkQ (powerIdeal pi L)) (b i)) :=
+  smithMatrixFiberEquiv (M.map ⇑(Ideal.Quotient.mk (powerIdeal pi L))) (quotientMatrixUnit pi L U)
+    (quotientMatrixUnit pi L V) ((rectangularMatrix pi s).map ⇑(Ideal.Quotient.mk (powerIdeal pi L))) ⋯ fun i ↦
+    (Submodule.mkQ (powerIdeal pi L)) (b i)
+x : Fin r ⊕ Fin f → O ⧸ powerIdeal pi L
+⊢ (rectangularDiagonal pi L s x = ↑(quotientMatrixUnit pi L U) *ᵥ fun i ↦ (Submodule.mkQ (powerIdeal pi L)) (b i)) ↔
+    rectangularDiagonal pi L s x = fun i ↦ (Submodule.mkQ (powerIdeal pi L)) ((↑U *ᵥ b) i)
+'Komorebi.PaperII.SmithDVR.smith_congruence_nonempty_iff' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Quot.sound]
+'Komorebi.PaperII.SmithDVR.smith_congruence_card' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]

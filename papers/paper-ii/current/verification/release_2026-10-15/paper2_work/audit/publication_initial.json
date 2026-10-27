@@ -1,0 +1,119 @@
+{
+  "schema": "komorebi.paper_ii.publication_initial_review.v1",
+  "mode": "read-only",
+  "release_root": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15",
+  "status": "EDITORIAL_AND_CURRENT_METADATA_UPDATES_NEEDED",
+  "mathematical_source_edits": false,
+  "pdf_authoring_marker_run": false,
+  "findings": [
+    {
+      "id": "P2-PUB-01",
+      "priority": "release-blocking metadata",
+      "location": "publication/README.txt; root CURRENT_READING_EDITION.txt, EDITION.json, SERIES_STATUS.json; current opening/scope prose in all three editions",
+      "finding": "Current metadata is inherited October 8 publication state. publication/README.txt describes an unrelated 89-document collection; the Lean guide and visual plate V24 identify only the 25-row historical contract and explicitly no fresh compiler run. This is truthful history but cannot describe the new release once new evidence is accepted.",
+      "action": "After formal freeze, create a current release verification and coverage section in each companion; keep 25-row tutorial/map visibly historical and source-specific. Replace collection-level instructions with Paper II-only current instructions. Do not broaden coverage by inference."
+    },
+    {
+      "id": "P2-PUB-02",
+      "priority": "meaning-changing ambiguity",
+      "location": "editable/traditional/chapters/01_orientation.tex:39",
+      "finding": "Membership in F^r is a guaranteed lower bound; \"becomes visible at greater precision\" wrongly promises visibility from that membership alone. The element may be zero or lie deeper.",
+      "proposed": "A transfer in $F^r\\Bcal$ vanishes modulo $F^r\\Bcal$. If it is nonzero, its first visible precision depends on its actual filtration depth, which may exceed the declared weight."
+    },
+    {
+      "id": "P2-PUB-03",
+      "priority": "meaning-changing ambiguity",
+      "location": "editable/traditional/chapters/01_orientation.tex:43-48 and section title Four kinds of depth",
+      "finding": "Compatibility depth currently denotes an operator Delta, whereas the section introduces nonnegative integer quantities. No norm or filtration is specified for an integer compatibility depth.",
+      "proposed": "Keep the four-way conceptual distinction but call the fourth quantity the compatibility defect; explicitly state that a norm or filtration can measure its size or depth once chosen. No new definition or theorem is needed."
+    },
+    {
+      "id": "P2-PUB-04",
+      "priority": "notation clarification",
+      "location": "editable/traditional/chapters/03_weighted.tex, Weighted transfer series definition and Automatic finite-graph construction subsection",
+      "finding": "Endpoint column vectors u,v are arbitrary, but coefficients are described only as paths from vertices \"selected\" by u and v. Later the letter t simultaneously denotes the target vertex and series variable in Z_{s,t}(t). Both intended meanings are clear locally but can be made exact.",
+      "proposed": "State explicitly that a path i to j contributes u_i v_j times the product of its edge multiplicities. Consider retaining target t and renaming the formal variable X in the local automatic-graph subsection only, with synchronized visual/guide formulas if changed. Root decision required for mathematical-token edits."
+    },
+    {
+      "id": "P2-PUB-05",
+      "priority": "reproducibility metadata",
+      "location": "editable/traditional/audit_and_crosswalk.py; publication/build_publication.py; editable/lean_guide/build_guide_data.py",
+      "finding": "Primary builder writes publication/build/<stem>, while traditional audit expects .aux/.pdf next to its script. Historical audit hardcodes fresh_lean_build false and old proof-preservation policy. The Lean data builder is intentionally restricted to old canonical v1.2.1, 25 rows and 160 names.",
+      "action": "Parameterize traditional audit build paths and current evidence description, preserving exact historical audits. Keep old guide-data generator for the archived tutorial; add an independent generator for current source, coverage, hashes and receipts rather than overwrite old semantics."
+    },
+    {
+      "id": "P2-PUB-06",
+      "priority": "navigation polish",
+      "location": "CURRENT_PUBLICATION_LOCATORS.json; editable/traditional/atlas_macros.tex; eq:smith-inversion",
+      "finding": "All 142 recorded PDF destination pages agree with the current PDF. However 26 destinations differ from the actual printed-label page: all 24 visual labels inherit appendix.E, the unnumbered Smith identity inherits its subsection anchor, and the inclusion-matrix proposition anchor sits one page before its printed label. Existing vpage hyperlinks still target the right plates.",
+      "action": "Use explicit unique anchors for current atlas labels and the unnumbered Smith identity; inspect the proposition anchor/page break. Refresh locators from new final AUX and named destinations. Do not report the metadata as broken: it already records both page fields accurately."
+    }
+  ],
+  "validation": {
+    "pdfs": {
+      "traditional": 80,
+      "visual": 26,
+      "lean_guide": 45
+    },
+    "all_151_pages_text_metrics": "No unresolved ?? references, replacement glyphs or text outside page bounds found. This is not full visual inspection.",
+    "visual_sample_physical_pages": {
+      "traditional": [
+        1,
+        11,
+        14,
+        20,
+        26,
+        35,
+        40,
+        47,
+        52,
+        60,
+        66,
+        75
+      ],
+      "visual": [
+        3,
+        5,
+        8,
+        11,
+        13,
+        15,
+        17,
+        20,
+        23,
+        26
+      ],
+      "lean": [
+        1,
+        4,
+        8,
+        17,
+        24,
+        37
+      ]
+    },
+    "visual_sample_result": "28 sampled rendered pages have readable figures, aligned text and no clipping/overlap seen. Traditional theorem boxes sometimes continue across pages; final reflow needs review.",
+    "traditional_current_pdf_sha256": "3c6228dac67fa2156e82b8e7cd026c28f47bd9219fa23533f25b7a1d31149247",
+    "traditional_locator_count": 142,
+    "recorded_destination_pages_match": true,
+    "all_house_style_copies_identical": true,
+    "tools_available": [
+      "xelatex",
+      "bibtex",
+      "pdftoppm",
+      "PyMuPDF",
+      "Pillow"
+    ],
+    "fresh_build": "Not run, pending mathematical edits and storage-aware final verification."
+  },
+  "update_plan": [
+    "Obtain root approval for precise local prose corrections and mathematical-agent repairs. Run PDF authoring marker once immediately before first authoring edit.",
+    "Apply minimal editorial corrections in current editable source only. Preserve source branches and historical evidence.",
+    "After current formal evidence is settled, generate a separate current source/coverage/verification section and retain the historical 25-row tutorial with exact labels and excerpts.",
+    "Build traditional edition first through publication/build_publication.py with fixed SOURCE_DATE_EPOCH. Generate locators and update all atlas printed references and Lean-guide crosswalk.",
+    "Build all three companions; synchronize papers/, publication/pdfs/ and editable delivery copies only from checked build outputs.",
+    "Check final references, fonts, warnings and metadata. Render all final pages one at a time or in small batches, remove reproducible previews after review, and preserve a compact QA receipt.",
+    "Refresh publication/source manifests after every final edit. Root owns final archive and Library delivery."
+  ],
+  "scope_note": "Conservative local prose and layout review, not a mathematical proof audit. Proof closure and formal coverage are handled by other agents."
+}

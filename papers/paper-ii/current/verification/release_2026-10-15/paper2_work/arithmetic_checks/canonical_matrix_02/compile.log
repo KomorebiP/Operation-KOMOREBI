@@ -1,0 +1,25 @@
+KomorebiVerification/PaperII/ReleaseGluingMatrix.lean:23:38: error: unsolved goals
+O : Type u
+W : Type v
+I : Type w
+inst✝⁴ : CommRing O
+inst✝³ : AddCommGroup W
+inst✝² : Module O W
+inst✝¹ : Fintype I
+inst✝ : DecidableEq I
+S : Submodule O W
+b : Module.Basis I O W
+c : Module.Basis I O ↥S
+U V : GL I O
+d : I → O
+hmat : ↑U * (LinearMap.toMatrix c b) S.subtype * ↑V = Matrix.diagonal d
+eU : (I → O) ≃ₗ[O] I → O := (Matrix.GeneralLinearGroup.toLin U).toLinearEquiv
+eV : (I → O) ≃ₗ[O] I → O := (Matrix.GeneralLinearGroup.toLin V).toLinearEquiv
+b' : Module.Basis I O W := Module.Basis.ofEquivFun (b.equivFun ≪≫ₗ eU)
+c' : Module.Basis I O ↥S := Module.Basis.ofEquivFun (c.equivFun ≪≫ₗ eV.symm)
+i : I
+hc : c.equivFun (c' i) = eV (Pi.single i 1)
+hb : (LinearMap.toMatrix c b) S.subtype *ᵥ c.equivFun (c' i) = b.equivFun ↑(c' i)
+hcalc : eU (b.equivFun ↑(c' i)) = Matrix.diagonal d *ᵥ Pi.single i 1
+j : I
+⊢ (if i = j then d i else 0) = if i = j then d j else 0

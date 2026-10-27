@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{P052}[BoldFont={P052-Bold},ItalicFont={P052-Italic},BoldItalicFont={P052-BoldItalic}]
+\setsansfont{DejaVu Sans}[Scale=.92]
+\setmonofont{DejaVu Sans Mono}[Scale=.80]
+\newfontfamily\codemathfont{Latin Modern Math}
+\newcommand{\CodeSymbol}[1]{\ifnum"#1="29F8\ensuremath{\big/}\else{\codemathfont\symbol{"#1}}\fi}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\usepackage{xcolor,booktabs,longtable,array,enumitem,microtype}
+\PassOptionsToPackage{obeyspaces}{url}
+\usepackage{listings,fvextra,xurl,hyperref,bookmark,fancyhdr,titlesec,needspace}
+\definecolor{teal}{HTML}{164C51}
+\definecolor{muted}{HTML}{516466}
+\definecolor{pale}{HTML}{F2F6F6}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,pdftitle={Paper II: Lean Guide},pdfauthor={Komorebi P.},bookmarksnumbered=true}
+\urlstyle{tt}
+\newcommand{\code}[1]{\nolinkurl{#1}}
+\newcommand{\source}[1]{\par\smallskip{\footnotesize\color{muted}Source: \code{#1}.}\par\smallskip}
+\newcommand{\excerpt}[2]{\Needspace{5\baselineskip}\source{KomorebiVerification/#1.lean}\VerbatimInput[fontsize=\small,frame=leftline,rulecolor=\color{teal},framesep=6pt,breaklines=true,breakanywhere=true,commandchars=\\\{\},xleftmargin=8pt]{excerpts/#2.render.txt}}
+\titleformat{\section}{\Large\sffamily\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{teal}}{\thesubsection}{.65em}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{teal}}{\thesubsubsection}{.65em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .6ex}{1ex}
+\titlespacing*{\subsection}{0pt}{2ex plus .4ex}{.7ex}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{.55em}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,topsep=.4em,leftmargin=1.5em}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{muted}KOMOREBI \quad PAPER II}
+\fancyhead[R]{\small\sffamily\color{muted}LEAN GUIDE}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\lstset{basicstyle=\ttfamily\small,backgroundcolor=\color{pale},frame=single,rulecolor=\color{pale},framerule=0pt,xleftmargin=5pt,xrightmargin=5pt,aboveskip=7pt,belowskip=7pt,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,showstringspaces=false,tabsize=2,escapeinside={(*@}{@*)}}
+\makeatletter
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.5em}{3.5em}}
+\makeatother
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Projector-Resolved Seed Calculus II}
+\renewcommand{\KomorebiSubtitle}{Refinement towers, weighted transfer, and integral separation of operator packets}
+\renewcommand{\KomorebiSeries}{Core series II}
+\renewcommand{\KomorebiKind}{Lean and evidence guide}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper II}
+\renewcommand{\KomorebiTitleSize}{31}
+\renewcommand{\KomorebiTitleLeading}{36}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{A practical reading guide to the complete 25-row contract of the preserved Paper II formal component. The guide explains the source architecture, follows representative proofs, records every mapped target and its boundary, and supplies a reproducible route to rebuilding the formal project.
+\medskip
+
+\textbf{Evidence at this edition.} All 22 preserved formal-component files match the release checksum manifest and the baseline copy. The source contains 15 Lean files. The report of 3 September 2026 records 160 mapped declarations and 1,034 audited namespace entries. These are inherited report claims; no raw compiler transcript accompanies this component, and no new Lean compiler run is claimed here.}
+
+
+\tableofcontents
+\clearpage
+\input{chapters/01_orientation.tex}
+\input{chapters/02_refinement.tex}
+\input{chapters/03_transfer.tex}
+\input{chapters/04_arithmetic.tex}
+\input{chapters/05_defects.tex}
+\input{chapters/06_replay.tex}
+\clearpage
+\section{The complete 25-row contract}\label{sec:map}
+The following map preserves the canonical v1.1.1 classifications, checked scopes, and explicit boundaries. The targets use the namespace abbreviations below. These abbreviations are only typography: the companion JSON expands every name and records its source file and line. A declaration may occur in several rows; there are 171 occurrences and 160 distinct names. Definitions, structures, equivalences, and theorems all count as declaration targets.
+\input{generated/namespace_prefixes.tex}
+\input{generated/theorem_map.tex}
+\clearpage
+\appendix
+\section{Final traditional-paper navigation}\label{app:crosswalk}
+The printed page numbers below refer to the final traditional companion, whose title page is unnumbered. They are not PDF viewer page indices. A shared label is a navigation aid; it does not extend the formal scope to additional claims in the surrounding section. In particular, the Smith-phase display has no equation number.
+\input{generated/traditional_crosswalk.tex}
+\section{Source imports and pinned dependencies}\label{app:imports}
+This table records direct local imports. It is a file dependency graph, not a theorem-level logical dependency analysis. The JSON companion also retains every direct external import. Some modules import the broad \code{Mathlib} module, while others list focused imports.
+\input{generated/local_imports.tex}
+The exact toolchain string is \code{leanprover/lean4:v4.34.0-rc2}. The Lake manifest pins the following source revisions. Its descriptive \code{inputRev} fields such as \code{master} and \code{main} do not replace these exact revisions.
+\input{generated/dependency_pins.tex}
+\section{Source-excerpt and reproduction inventory}\label{app:inventory}
+Every printed Lean listing comes from an exact UTF-8 excerpt in \code{excerpts/*.lean.txt}. The adjacent \code{*.render.txt} file escapes TeX control characters and substitutes a math-font glyph where the code font lacks one. It preserves token order. Exact source text, not the display fallback, is the object to copy into an editor. Excerpts retain their surrounding source context only when that context is printed; they are not standalone Lean files.
+\code{generated/excerpts.json} records each source path, inclusive source line range, full-source SHA-256, exact-excerpt SHA-256, and display-file SHA-256. \code{generated/theorem_map.json} contains all 25 rows with fully qualified targets, classifications, scopes, boundaries, and lexical source locations. \code{generated/mapped_source_index.json} provides an alphabetical target index. \code{generated/static_identity_audit.json} records all manifest comparisons and the optional baseline comparison performed for this edition.
+
+\code{build_guide_data.py} uses only the Python standard library. It generates the map, import table, pins, excerpts, and current static audit without invoking Lean. \code{build_guide.sh} calls that generator and runs XeLaTeX four times. The final PDF requires the P052, DejaVu Sans, DejaVu Sans Mono, and Latin Modern Math fonts used by this edition, together with the LaTeX packages listed in its preamble. The independent PDF check script uses PyMuPDF and Pillow for page rendering and contact sheets.
+
+The source project remains unchanged. Editing this guide cannot by itself repair or strengthen a Lean theorem. A mathematical change to the formal component requires a separate source change, a new compile, an updated map when appropriate, and new execution evidence.
+\end{document}

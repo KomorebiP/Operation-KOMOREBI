@@ -1,0 +1,63 @@
+KomorebiVerification/PaperII/ReleaseCoordinatesResidue.lean:60:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  Packet.fibreLinearProj (fun a ↦ divisorParent N M hN (residueAddress M hM a)) j =
+    ∑ c,
+      @ite (Module.End R (ℕ → A)) (divisorParent N M hN c = j) (instDecidableEqFin N (divisorParent N M hN c) j)
+        (Packet.fibreLinearProj (residueAddress M hM) c) 0
+but is expected to have type
+  Packet.fibreLinearProj (fun x ↦ divisorParent N M hN (residueAddress M hM x)) j =
+    ∑ a,
+      @ite (Module.End R (ℕ → A)) (divisorParent N M hN a = j) (Classical.propDecidable (divisorParent N M hN a = j))
+        (Packet.fibreLinearProj (residueAddress M hM) a) 0
+KomorebiVerification/PaperII/ReleaseCoordinatesResidue.lean:130:4: error: Application type mismatch: The argument
+  (residueFamily_refines N M hN hM hdiv).coarse_eq_sum_children
+has type
+  ∀ (a : Fin N), (residueFamily N hN).proj a = ∑ b ∈ children (divisorParent N M hN) a, (residueFamily M hM).proj b
+but is expected to have type
+  ?m.74 = ?m.75
+in the application
+  LinearMap.congr_fun (residueFamily_refines N M hN hM hdiv).coarse_eq_sum_children
+KomorebiVerification/PaperII/ReleaseCoordinatesResidue.lean:129:12: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  AddCommMonoid (Fin N)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+KomorebiVerification/PaperII/ReleaseCoordinatesResidue.lean:125:32: error: unsolved goals
+R : Type u
+inst✝ : Semiring R
+N M : ℕ
+hN : 0 < N
+hM : 0 < M
+hdiv : N ∣ M
+j : Fin N
+f : PowerSeries R
+n : ℕ
+⊢ (PowerSeries.coeff n) (((seriesResidueFamily N hN).proj j) f) =
+    (PowerSeries.coeff n) ((∑ b ∈ children (divisorParent N M hN) j, (seriesResidueFamily M hM).proj b) f)
+KomorebiVerification/PaperII/ReleaseCoordinatesResidue.lean:144:2: error: Tactic `apply` failed: could not unify the conclusion of `LinearEquiv.injective coefficientEquiv`
+  ?a₁ = ?a₂
+with the goal
+  (PowerSeries.coeff n✝)
+      ((seriesResidueProj m hm (crtComponents m n hm hn s).1 ∘ₗ seriesResidueProj n hn (crtComponents m n hm hn s).2)
+        f) =
+    (PowerSeries.coeff n✝) ((seriesResidueProj (m * n) ⋯ s) f)
+
+Note: The full type of `LinearEquiv.injective coefficientEquiv` is
+  Function.Injective ⇑coefficientEquiv
+
+R : Type u
+inst✝ : Semiring R
+m n : ℕ
+hm : 0 < m
+hn : 0 < n
+hc : m.Coprime n
+s : Fin (m * n)
+f : PowerSeries R
+n✝ : ℕ
+⊢ (PowerSeries.coeff n✝)
+      ((seriesResidueProj m hm (crtComponents m n hm hn s).1 ∘ₗ seriesResidueProj n hn (crtComponents m n hm hn s).2)
+        f) =
+    (PowerSeries.coeff n✝) ((seriesResidueProj (m * n) ⋯ s) f)
+'Komorebi.Residue.residueFamily_refines' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'Komorebi.Residue.seriesResidueFamily_refines' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]
+'Komorebi.Residue.seriesResidueProj_crt' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]

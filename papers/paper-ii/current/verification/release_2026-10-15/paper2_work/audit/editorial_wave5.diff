@@ -1,0 +1,339 @@
+--- editable/traditional/Paper_II_Traditional_Final.tex (before)
++++ editable/traditional/Paper_II_Traditional_Final.tex (after)
+@@ -124,6 +124,7 @@
+ \usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+ \usepackage{komorebi-monograph}
+ \renewcommand{\KomorebiKind}{Modern Monograph}
++\renewcommand{\KomorebiEdition}{15 October 2026}
+ \KomorebiSetup
+ \input{atlas_macros.tex}
+ \begin{document}
+@@ -131,12 +132,12 @@
+ \KomorebiOpeningNote{\textbf{Reading route.} Exact packet coordinates and residue selectors lead to weighted inversion and rational walk series. Lattice gluing then gives separation weights and precision delays. Smith congruences and operator defects connect these formulas to finite computation.
+ 
+ \medskip
+-\textbf{Companions.} The worked visual atlas appears in this volume and as a separate guide. The Lean guide follows the preserved 25 row formal contract. Each guide records its own evidence and scope.}
++\textbf{Companions.} The worked visual atlas appears in this volume and as a separate guide. The Lean guide distinguishes the current formal development from the inherited 25-row walkthrough. Each guide records its evidence and scope.}
+ \begin{abstract}
+ 
+ A complete family of idempotents gives exact coordinates, but a single family does not record scale or integral visibility.  We study towers in which every coarse idempotent is the sum of its fine descendants.  The coordinate changes are invertible and coherent, and every operator block is the sum of its refined blocks.  Residue selectors give a model over arbitrary rings.  When roots of unity are available they agree with character averages, and coprime moduli factor through the Chinese remainder theorem.  In a complete filtered algebra, a diagonal operator plus positive weight transfers has an inverse obtained by summing admissible weighted paths.  The formula truncates exactly at finite precision, while finite transfer graphs have rational path series.  For a rational spectral decomposition over a discrete valuation ring, resultants give denominator bounds.  The exact denominator is the largest Smith exponent of the lattice gluing module.  This yields a necessary and sufficient precision delay, monotonicity under refinement, and a full congruence solving formula.  We close with exact formulas for the propagation of a coarsening defect through powers, resolvents, holomorphic functions, exponentials, and multilevel towers.
+ \end{abstract}
+-\noindent This edition integrates the expanded mathematical narrative with the canonical v1.2.1 certificate level formulations.  It preserves the distinction between general written proofs, formal specifications, and finite computational examples.  The visual atlas and the separate Lean guide provide worked models and the complete formal contract crosswalk.
++\noindent This edition integrates the expanded mathematical narrative with the canonical v1.2.1 certificate level formulations.  It preserves the distinction between general written proofs, formal specifications, and finite computational examples.  The visual atlas and the separate Lean guide provide worked models and separate current and inherited formal crosswalks.
+ \tableofcontents\listoffigures\listoftables\clearpage
+ \pagenumbering{arabic}
+ \input{chapters/01_orientation.tex}
+--- editable/visual_guide/Paper_II_Visual_Guide_Final.tex (before)
++++ editable/visual_guide/Paper_II_Visual_Guide_Final.tex (after)
+@@ -37,7 +37,7 @@
+ \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+ \newif\ifstarted\startedfalse
+ \newcommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+-\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
++\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\phantomsection\label{visual:#1}
+ {\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}V#1\quad /\quad #3\par}\vspace{5pt}
+ {\sffamily\bfseries\fontsize{19}{22}\selectfont #2\par}\vspace{5pt}
+ {\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+@@ -60,6 +60,7 @@
+ \usepackage{komorebi-monograph}
+ \renewcommand{\KomorebiKind}{Visual guide}
+ \renewcommand{\KomorebiCoverBlurb}{Twenty-four worked plates follow exact coordinates, weighted paths, integral separation, and operator defects through explicit finite models.}
++\renewcommand{\KomorebiEdition}{15 October 2026}
+ \KomorebiSetup
+ \begin{document}
+ \KomorebiCover
+@@ -73,7 +74,7 @@
+ {\sffamily\bfseries\Large\color{accent}A route through the examples}\par\medskip
+ The labels V1 through V24 identify worked pages independently of PDF
+ pagination. Each page names its corresponding statement in the final
+-traditional edition. The Lean guide provides the separate formal contract.
++traditional edition. The Lean guide separates current formal coverage from the inherited contract.
+ \medskip
+ \begin{multicols}{2}
+ {\small\noindent\hyperlink{vpage1}{\textbf{V1} Three kinds of resolution}\par\smallskip}
+@@ -115,7 +116,7 @@
+ The models expose the mechanisms and their boundaries. Exact finite checks
+ validate the displayed instances. Universal statements keep the hypotheses
+ and proofs given in the traditional paper. Lean coverage is recorded by the
+-separate theorem map. No new kernel compilation is claimed here.
++current correspondence and the inherited theorem map. Each compiler claim belongs to its dated source-and-log record.
+ \clearpage
+ \pdfbookmark[0]{Worked visual guide}{workedguide}
+ \pagenumbering{arabic}
+--- editable/lean_guide/Paper_II_Lean_Guide_Final.tex (before)
++++ editable/lean_guide/Paper_II_Lean_Guide_Final.tex (after)
+@@ -37,20 +37,22 @@
+ 
+ \usepackage{komorebi-monograph}
+ \renewcommand{\KomorebiKind}{Lean and evidence guide}
+-\renewcommand{\KomorebiCoverBlurb}{A guide to the preserved formal contract, its declarations and boundaries, with exact source excerpts and reproducible static checks.}
++\renewcommand{\KomorebiCoverBlurb}{Current formal scope and evidence, followed by the inherited declaration-level walkthrough and exact source excerpts.}
+ \setmonofont{DejaVuSansMono}[Path=fonts/,UprightFont=*.ttf,BoldFont=*-Bold.ttf,ItalicFont=*-Oblique.ttf,BoldItalicFont=*-BoldOblique.ttf,Scale=.80]
++\renewcommand{\KomorebiEdition}{15 October 2026}
+ \KomorebiSetup
+ \begin{document}
+ \KomorebiCover
+-\KomorebiOpeningNote{A practical guide to the preserved Paper II formal component and its complete contract of 25 rows. The guide explains the source architecture, follows representative proofs, records every mapped target and its boundary, and supplies a reproducible route to rebuilding the formal project.
++\KomorebiOpeningNote{This guide separates the current formal development from the inherited 25-row contract. The current overview records exact source scope and verification status. The later walkthrough preserves the canonical source architecture, representative proofs, and historical evidence with their original boundaries.
+ \medskip
+-
+-\textbf{Evidence at this edition.} All 22 preserved files of the formal component match the release checksum manifest and the baseline copy. The source contains 15 Lean files. The report of 3 September 2026 records 160 mapped declarations and 1,034 audited namespace entries. These are inherited report claims. No raw compiler transcript accompanies this component, and no new Lean compiler run is claimed here.}
++\input{generated/current_opening.tex}}
+ 
+ 
+ \tableofcontents
+ \clearpage
+ \pagenumbering{arabic}
++\input{generated/current_release.tex}
++\clearpage
+ \input{chapters/01_orientation.tex}
+ \input{chapters/02_refinement.tex}
+ \input{chapters/03_transfer.tex}
+@@ -58,7 +60,7 @@
+ \input{chapters/05_defects.tex}
+ \input{chapters/06_replay.tex}
+ \clearpage
+-\section{The complete contract of 25 rows}\label{sec:map}
++\section{The inherited contract of 25 rows}\label{sec:map}
+ The following map preserves the canonical v1.1.1 classifications, checked scopes, and explicit boundaries. The targets use the namespace abbreviations below. These abbreviations are only typography: the companion JSON expands every name and records its source file and line. A declaration may occur in several rows. There are 171 occurrences and 160 distinct names. Definitions, structures, equivalences, and theorems all count as declaration targets.
+ \input{generated/namespace_prefixes.tex}
+ \input{generated/theorem_map.tex}
+@@ -66,7 +68,7 @@
+ \appendix
+ \section{Navigation in the final traditional paper}\label{app:crosswalk}
+ The printed page numbers below refer to the final traditional companion, whose cover is unnumbered and whose preliminary pages use Roman numerals. They are not PDF viewer page indices. A shared label is a navigation aid. It does not extend the formal scope to additional claims in the surrounding section. In particular, the Smith phase display has no equation number.
+-\input{generated/traditional_crosswalk.tex}
++\input{generated/current_traditional_crosswalk.tex}
+ \section{Source imports and pinned dependencies}\label{app:imports}
+ This table records direct local imports. It is a graph of file dependencies rather than a logical dependency analysis of the theorems. The JSON companion also retains every direct external import. Some modules import the broad \code{Mathlib} module, while others list focused imports.
+ \input{generated/local_imports.tex}
+@@ -78,5 +80,5 @@
+ 
+ \code{build_guide_data.py} uses only the Python standard library. It generates the map, import table, pins, excerpts, and current static audit without invoking Lean. \code{build_guide.sh} calls that generator and runs XeLaTeX four times. The bundled P052, Nimbus Sans, DejaVu Sans Mono, and Latin Modern Math fonts provide the typography for this edition. The required LaTeX packages are listed in the preamble. The independent PDF check script uses PyMuPDF and Pillow for page rendering and contact sheets.
+ 
+-The source project remains unchanged. Editing this guide cannot by itself repair or strengthen a Lean theorem. A mathematical change to the formal component requires a separate source change, a new compile, an updated map when appropriate, and new execution evidence.
++The historical source snapshot remains preserved. Current additions live in the separate current project and are indexed in the current correspondence. Editing this guide cannot by itself repair or strengthen a Lean theorem. A mathematical change to the formal component requires a separate source change, a new compile, an updated map when appropriate, and new execution evidence.
+ \end{document}
+--- editable/traditional/chapters/07_scope.tex (before)
++++ editable/traditional/chapters/07_scope.tex (after)
+@@ -1,10 +1,12 @@
+ \section{Edition and proof scope}\label{sec:edition-scope}
+-The traditional article is a single edition organized by topic.  The expanded branch of ordinary proofs supplies the main narrative, including common refinements, complete filtered inversion, exact lattice gluing, rectangular Smith congruences, and analytic and multilevel defects.  The canonical v1.2.1 release supplies the explicitly certified specializations, finite graph construction, worked realizations, and three algorithm specifications.
++The traditional article is a single edition organized by topic. The expanded branch supplies the written proofs of common refinements, complete filtered inversion, lattice gluing, rectangular Smith congruences, and analytic and multilevel defects. The canonical v1.2.1 release supplies the inherited specializations, finite graph construction, worked realizations, and three algorithm specifications.
+ 
+-The frozen Lean contract has 25 rows: 21 canonical numbered items, one Smith-phase identity, and three algorithm specifications.  A shared human theorem can serve more than one source address, and a contract row may use several Lean declarations.  These are distinct counting units.  In particular, the complete inverse-limit filtered theorem, general lattice gluing theorem, holomorphic and exponential calculus, and multilevel statements are ordinary written proofs here. The inherited 25-row contract does not automatically cover them.
++\input{generated/current_scope.tex}
+ 
+-The source statements have received only the recorded local hypothesis and endpoint repairs.  The original branch sources are preserved beside this editable edition.  The source crosswalk records original labels, final labels, display numbers, pages, and the relationship between the scopes.  The proof-preservation audit compares every inherited proof body.  No fresh Lean compiler replay is asserted by this article.
++The inherited Lean contract has 25 rows: 21 canonical numbered items, one Smith-phase identity, and three algorithm specifications. It remains a dated source contract. The current correspondence separately records the exact present statements, proof targets, source hashes, and execution evidence. A row may use several declarations, and several source labels may refer to one written theorem; these are distinct counting units.
+ 
+-The standalone visual guide gives exact worked models.  The Lean guide explains declaration-level contracts, pins, and recorded build evidence.  Illustrations and finite tests support understanding and implementation checks. They do not replace universal proofs.
++The original branch sources and historical reports remain preserved. The current editorial log records the hypothesis, notation, and endpoint clarifications, including the verified rectifiable-cycle citation. Current navigation metadata records printed pages and PDF destinations. Historical proof-preservation reports retain their original scope and date; they do not describe later edited proof text.
+ 
+-This monograph includes the twenty-four worked plates after the proof dependency map and this account of the proof scope. Their statement references use the printed page numbers of this volume. The separate visual guide contains the same models for readers who want to follow the examples on their own.
++The visual guide gives exact worked models. The Lean guide opens with the current proof scope and then explains the inherited declaration-level contract. Illustrations and finite checks support understanding and implementation. Universal claims depend on their written proofs and the exact formal statements where coverage is recorded.
++
++This monograph includes the twenty-four worked plates after this account of the proof scope. Their statement references use the printed pages of this volume. The separate visual guide contains the same models for readers who want to follow the examples on their own.
+--- editable/traditional/generated/current_scope.tex (before)
++++ editable/traditional/generated/current_scope.tex (after)
+@@ -0,0 +1 @@
++\textbf{Current verification snapshot (15 October 2026).} The current Lean project is \texttt{formal/current/}. New proof modules and their individual strict checks are recorded in the current correspondence. Aggregate replay and final source review remain pending. The general rectifiable-cycle representation and independence bridge for the canonical holomorphic functional calculus remains incomplete in Lean. The written theorem retains its full statement and the verified Conway reference.
+--- editable/traditional/chapters/03_weighted.tex (before)
++++ editable/traditional/chapters/03_weighted.tex (after)
+@@ -352,9 +352,7 @@
+ Using the standard length cutoff, every discarded word has weight at least the chosen depth and vanishes in the quotient. The retained sum therefore satisfies both inverse identities exactly at that precision. The earlier truncation theorem states the corresponding residual bounds in the complete filtered algebra itself.
+ \end{interpretation}
+ 
+-The formal contract does not assert convergence for every complete filtered algebra. Such an assertion needs a separately specified
+-topology and completeness theorem. The release proves the result in finite
+-quotients above and the contraction specialization for complete normed rings.
++The inherited finite-word contract proves the result in the finite quotients above and in the contraction specialization for complete normed rings. The complete filtered statement has its own separation and inverse-limit completeness hypotheses. Its current Lean coverage is recorded separately in the current correspondence.
+ 
+ \begin{figure}[htbp]
+ \centering
+--- editable/traditional/chapters/04_arithmetic.tex (before)
++++ editable/traditional/chapters/04_arithmetic.tex (after)
+@@ -171,7 +171,7 @@
+ $uf+vg=r$ evaluates to the first certificate, while
+ $(fg)(A)=0$ supplies the second. When $fg=\chi_A$, this last equality is
+ Cayley Hamilton. Standard B\'ezout, resultant, and DVR facts are recalled
+-from \cite{Lang2002,Serre1979}. The formal theorem begins with the evaluated
++from \cite{Lang2002,Serre1979}. The inherited certificate theorem begins with the evaluated
+ certificate. It does not infer exact action merely from nilpotence of
+ $f(A)$ or $g(A)$, which would be insufficient.
+ 
+@@ -869,7 +869,7 @@
+ q^{\sum_i\min(s_i,L)}
+ \]
+ is a classical consequence of the corresponding solvability and fibre counts
+-for each coordinate. In the Lean development this general form takes those
++for each coordinate. In the inherited abstract Lean interface this general form takes those
+ coordinate facts as explicit certificates supplied to the abstract product
+ API. Their derivation from a structure theorem for a general DVR is outside
+ that formal contract. Construction and diagonalization of Smith normal form
+--- editable/lean_guide/chapters/01_orientation.tex (before)
++++ editable/lean_guide/chapters/01_orientation.tex (after)
+@@ -1,8 +1,8 @@
+-\section{What this guide verifies and teaches}\label{sec:orientation}
++\section{Reading the inherited formal walkthrough}\label{sec:orientation}
+ 
+ The traditional paper develops the mathematical theory and its written proofs. The visual guide provides finite models for its identities, precision statements, and boundaries. This guide explains how to read and use the preserved Lean component: the types accepted by each theorem, the objects actually constructed, the obligations supplied by a caller, and the evidence attached to the source. These three companions have complementary roles.
+ 
+-The formal component is version 1.1.1, preserved within canonical manuscript release 1.2.1. In the delivered package it is located at \code{source/canonical_v1.2.1/formalization/lean/}. The final traditional edition incorporates a broader written development. Its ordinary proofs of lattice gluing, necessary precision delay, convergence in an inverse limit, general DVR arithmetic, holomorphic and exponential defects, and multilevel identities are not converted into Lean proofs by appearing beside formally mapped results.
++The component described in this walkthrough is the historical version 1.1.1, preserved within canonical manuscript release 1.2.1. Current additions and their boundaries are recorded in Section~\ref{sec:current-release}. In the delivered package it is located at \code{source/canonical_v1.2.1/formalization/lean/}. The final traditional edition incorporates a broader written development. Its ordinary proofs of lattice gluing, necessary precision delay, convergence in an inverse limit, general DVR arithmetic, holomorphic and exponential defects, and multilevel identities are not converted into Lean proofs by appearing beside formally mapped results.
+ 
+ The fixed formal contract contains 25 rows: 21 numbered canonical statements, one Smith phase identity, and three mathematical algorithm specifications. The appendix crosswalk identifies their locations in the integrated traditional edition. Throughout this guide, ``row'' means a row of the canonical formal map, never a count of every theorem in the final traditional paper.
+ 
+@@ -63,7 +63,7 @@
+ 
+ \section{Source architecture and entry points}\label{sec:architecture}
+ 
+-The main entry point is \code{import KomorebiVerification.PaperII}. It imports the eight substantive modules but not the audit command. The root module \code{KomorebiVerification.lean} imports the aggregate for Lake's default library target. The standalone audit imports the substantive modules explicitly and inspects the resulting environment.
++In the historical snapshot, the main entry point is \code{import KomorebiVerification.PaperII}. It imports the eight substantive modules but not the audit command. The root module \code{KomorebiVerification.lean} imports the aggregate for Lake's default library target. The standalone audit imports the substantive modules explicitly and inspects the resulting environment.
+ 
+ \begin{longtable}{p{.30\textwidth}p{.61\textwidth}}
+ \toprule Module or layer & Responsibility \\\midrule\endhead
+--- editable/lean_guide/chapters/05_defects.tex (before)
++++ editable/lean_guide/chapters/05_defects.tex (after)
+@@ -69,4 +69,4 @@
+ 
+ \subsection{What remains in the written companion}
+ 
+-The final traditional development also proves holomorphic functional calculus, exponential, and multilevel defect identities with their own analytic or compositional hypotheses. The preserved Lean map records finite polynomial compatibility, the power estimates, and the resolvent identities with inverse witnesses. Those additional written results remain ordinary proofs in this edition. The formal contract can be complete while the broader traditional theorem inventory has a different coverage boundary.
++The final traditional development also proves holomorphic functional calculus, exponential, and multilevel defect identities with their own analytic or compositional hypotheses. The preserved Lean map records finite polynomial compatibility, the power estimates, and the resolvent identities with inverse witnesses. Those additional results are outside this inherited map. The current extension status, including its remaining analytic bridge, is recorded in Section~\ref{sec:current-release}.
+--- editable/lean_guide/chapters/06_replay.tex (before)
++++ editable/lean_guide/chapters/06_replay.tex (after)
+@@ -1,4 +1,4 @@
+-\section{Reproducing the formal project}\label{sec:replay}
++\section{Reproducing the historical formal project}\label{sec:replay}
+ 
+ Reproduction has two separate layers. The lightweight guide checks confirm that the supplied source matches its checksum manifest, that all mapped names can be found lexically, and that the printed excerpts are exact slices of those files. The Lean replay builds the project, resolves names in the compiled environment, and traverses axiom dependencies. Only the latter executes Lean.
+ 
+@@ -63,7 +63,7 @@
+ 
+ The canonical \code{VERIFICATION_REPORT.md}, dated 3 September 2026, reports successful aggregate build, theorem-map resolution of 160 unique declarations, and a successful scan of 1,034 compiled namespace entries with a gate that rejects violations. It records the approved axiom basis and states that no audited declaration reports \code{sorryAx}. This guide inherits those statements as a release report.
+ 
+-The inspected canonical component contains no raw transcript of those Lean commands and no log hash attestation for each command. Consequently this edition does not claim a fresh compiler replay, a fresh environment scan, or an identity chain from the source to the transcripts that the supplied artifacts do not contain. The report itself is checksummed, so its preservation is verifiable. Checksumming a report does not independently establish its execution claims.
++The inspected canonical component contains no raw transcript of those Lean commands and no log hash attestation for each command. Consequently the historical component alone does not establish a fresh compiler replay, a fresh environment scan, or an identity chain to missing transcripts. Current execution evidence is reported separately in Section~\ref{sec:current-release}. The report itself is checksummed, so its preservation is verifiable. Checksumming a report does not independently establish its execution claims.
+ 
+ The new lightweight check establishes the following facts directly from the delivered files:
+ \begin{enumerate}
+@@ -77,7 +77,7 @@
+ 
+ The scan policy checks active occurrences of \code{sorry}, \code{admit}, \code{sorryAx}, \code{axiom}, \code{unsafe}, \code{native_decide}, and named shortcuts for dynamic declaration. It strips nested block comments, line comments, and strings while retaining line positions. This is a useful static check, not a replacement for Lean elaboration or the environment's transitive axiom inspection.
+ 
+-The guide's PDF build and visual review are new publication checks. They verify rendering, references, fonts, line overflow, page coverage, and consistency of the guide's data files. They do not add mathematical formalization coverage. The complete generated audit records \code{lean_compiler_run: false} explicitly.
++The historical guide audit records PDF and static source checks, including \code{lean_compiler_run: false}. Current PDF checks and current Lean replay are separate evidence records. A document build verifies rendering and navigation; formal coverage depends on the current source types and their own compiler evidence.
+ 
+ \subsection{A practical rule for reporting success}
+ 
+--- editable/traditional/visual_atlas.tex (before)
++++ editable/traditional/visual_atlas.tex (after)
+@@ -1,4 +1,4 @@
+-% Exact worked exposition. The original manuscript and Lean sources are unchanged.
++% Worked exposition inherited from the earlier edition; current navigation and scope are synchronized.
+ 
+ \vpage{1}{Three kinds of resolution}{PAPER II / A WORKED VISUAL GUIDE}{Traditional paper: Definition 3.4 (p. 4), Theorem 5.10 (p. 16), Theorem 7.7 (p. 25)}
+ Paper II asks three different questions that can all sound like ``increase the resolution.'' This guide separates them, then follows small objects far enough that the distinctions can be computed rather than merely named.
+@@ -574,8 +574,8 @@
+ 
+ \takeaway{A small local defect is meaningful only together with control of the surrounding operators or inverses. Near a pole, the domain and amplification factors are part of the theorem, not technical decoration.}
+ 
+-\vpage{24}{Read the certificates with the pictures}{PROOF BOUNDARY / HOW TO USE THIS GUIDE}{Formal source: v1.2.1 / Lean component v1.1.1 / 25-row scoped contract}
+-The original release has a frozen twenty-five-item formal contract: twenty-one numbered main-text definitions/results, one Smith-phase identity, and three algorithm specifications. Its recorded Lean evidence is preserved unchanged. This guide adds explanatory models, not a new claim that every illustrative calculation has been formalized in Lean.
++\vpage{24}{Read the certificates with the pictures}{PROOF BOUNDARY / HOW TO USE THIS GUIDE}{Formal evidence: current correspondence and the inherited 25-row contract}
++The original release has a frozen twenty-five-item formal contract: twenty-one numbered main-text definitions/results, one Smith-phase identity, and three algorithm specifications. Its dated source and evidence remain preserved. Current proof additions have a separate correspondence and replay record. The visual models illustrate the mathematics; their finite checks have their own recorded ranges.
+ 
+ {\small
+ \begin{tabularx}{\linewidth}{@{}p{.28\linewidth}YY@{}}\toprule
+@@ -590,8 +590,8 @@
+ \end{tabularx}}
+ 
+ \head{Reproduce the explanatory calculations}
+-The new source contains \textbf{118 named exact checks}. Each finite range is recorded in the file \texttt{EXACT\_CHECKS.json}. They cover masks, CRT labels, modular inverse products, graph enumeration, rational recurrences, lattice denominators, complete finite fibers, phase identities, and defect formulas. Graphics are generated from those same exact model definitions. Numerical placement of geometric points is only a rendering step.
+-
+-For the preserved final release, the Python suite was rerun in an isolated working directory: all 48 tests passed. All 118 exact visual checks passed, and all 22 regenerated vector plates matched their source bytes. Thirteen PDF/PNG figure pairs were regenerated and checked for presence. Nine numerical summary rows passed the recorded comparison. These checks are not a fresh Lean build. The traditional companion integrates the expanded mathematics and records its local hypothesis corrections. The inherited 25-row formal contract retains its original scope.
++The preserved model source contains \textbf{118 named exact checks}. Each finite range is recorded in the file \texttt{EXACT\_CHECKS.json}. They cover masks, CRT labels, modular inverse products, graph enumeration, rational recurrences, lattice denominators, complete finite fibers, phase identities, and defect formulas. Graphics are generated from those same exact model definitions. Numerical placement of geometric points is only a rendering step.
++
++The historical monograph report records an isolated Python replay: all 48 tests passed. All 118 exact visual checks passed, and all 22 regenerated vector plates matched their source bytes. Thirteen PDF/PNG figure pairs were regenerated and checked for presence. Nine numerical summary rows passed the recorded comparison. These are finite computation records. Current Lean replay and source coverage are recorded separately. The inherited 25-row contract retains its original scope; the current correspondence identifies additional proofs and remaining bridges.
+ 
+ \takeaway{Use the guide to understand what a theorem says and why its hypotheses matter. Use the theorem map and preserved proof sources to identify the precise formal result. Neither a picture nor a finite test expands that result's scope.}
+--- editable/visual_guide/source/pages_final.tex (before)
++++ editable/visual_guide/source/pages_final.tex (after)
+@@ -1,4 +1,4 @@
+-% Exact worked exposition. The original manuscript and Lean sources are unchanged.
++% Worked exposition inherited from the earlier edition; current navigation and scope are synchronized.
+ 
+ \vpage{1}{Three kinds of resolution}{PAPER II / A WORKED VISUAL GUIDE}{Traditional paper: Definition 3.4 (p. 4), Theorem 5.10 (p. 16), Theorem 7.7 (p. 25)}
+ Paper II asks three different questions that can all sound like ``increase the resolution.'' This guide separates them, then follows small objects far enough that the distinctions can be computed rather than merely named.
+@@ -574,8 +574,8 @@
+ 
+ \takeaway{A small local defect is meaningful only together with control of the surrounding operators or inverses. Near a pole, the domain and amplification factors are part of the theorem, not technical decoration.}
+ 
+-\vpage{24}{Read the certificates with the pictures}{PROOF BOUNDARY / HOW TO USE THIS GUIDE}{Formal source: v1.2.1 / Lean component v1.1.1 / 25-row scoped contract}
+-The original release has a frozen twenty-five-item formal contract: twenty-one numbered main-text definitions/results, one Smith-phase identity, and three algorithm specifications. Its recorded Lean evidence is preserved unchanged. This guide adds explanatory models, not a new claim that every illustrative calculation has been formalized in Lean.
++\vpage{24}{Read the certificates with the pictures}{PROOF BOUNDARY / HOW TO USE THIS GUIDE}{Formal evidence: current correspondence and the inherited 25-row contract}
++The original release has a frozen twenty-five-item formal contract: twenty-one numbered main-text definitions/results, one Smith-phase identity, and three algorithm specifications. Its dated source and evidence remain preserved. Current proof additions have a separate correspondence and replay record. The visual models illustrate the mathematics; their finite checks have their own recorded ranges.
+ 
+ {\small
+ \begin{tabularx}{\linewidth}{@{}p{.28\linewidth}YY@{}}\toprule
+@@ -590,8 +590,8 @@
+ \end{tabularx}}
+ 
+ \head{Reproduce the explanatory calculations}
+-The new source contains \textbf{118 named exact checks}. Each finite range is recorded in the file \texttt{EXACT\_CHECKS.json}. They cover masks, CRT labels, modular inverse products, graph enumeration, rational recurrences, lattice denominators, complete finite fibers, phase identities, and defect formulas. Graphics are generated from those same exact model definitions. Numerical placement of geometric points is only a rendering step.
+-
+-For the preserved final release, the Python suite was rerun in an isolated working directory: all 48 tests passed. All 118 exact visual checks passed, and all 22 regenerated vector plates matched their source bytes. Thirteen PDF/PNG figure pairs were regenerated and checked for presence. Nine numerical summary rows passed the recorded comparison. These checks are not a fresh Lean build. The traditional companion integrates the expanded mathematics and records its local hypothesis corrections. The inherited 25-row formal contract retains its original scope.
++The preserved model source contains \textbf{118 named exact checks}. Each finite range is recorded in the file \texttt{EXACT\_CHECKS.json}. They cover masks, CRT labels, modular inverse products, graph enumeration, rational recurrences, lattice denominators, complete finite fibers, phase identities, and defect formulas. Graphics are generated from those same exact model definitions. Numerical placement of geometric points is only a rendering step.
++
++The historical monograph report records an isolated Python replay: all 48 tests passed. All 118 exact visual checks passed, and all 22 regenerated vector plates matched their source bytes. Thirteen PDF/PNG figure pairs were regenerated and checked for presence. Nine numerical summary rows passed the recorded comparison. These are finite computation records. Current Lean replay and source coverage are recorded separately. The inherited 25-row contract retains its original scope; the current correspondence identifies additional proofs and remaining bridges.
+ 
+ \takeaway{Use the guide to understand what a theorem says and why its hypotheses matter. Use the theorem map and preserved proof sources to identify the precise formal result. Neither a picture nor a finite test expands that result's scope.}
+--- editable/lean_guide/generated/current_opening.tex (before)
++++ editable/lean_guide/generated/current_opening.tex (after)
+@@ -0,0 +1 @@
++\textbf{Current snapshot (15 October 2026).} New strict module checks and semantic reviews accompany the current project. Aggregate replay and final certification remain pending. The canonical general rectifiable holomorphic-calculus bridge remains incomplete.
+--- editable/lean_guide/generated/current_release.tex (before)
++++ editable/lean_guide/generated/current_release.tex (after)
+@@ -0,0 +1,10 @@
++\section{Current formal scope and evidence}\label{sec:current-release}
++The current project is \code{formal/current/}. Its correspondence records exact current source statements, proof targets, source hashes, and the evidence attached to each claim. The inherited 25-row source contract is preserved separately and is explained in the rest of this guide.
++
++\input{generated/current_opening.tex}
++
++The mathematical proof of the general holomorphic functional-calculus statement uses the verified rectifiable-cycle form of Conway's theorem. The current Lean contour-integral core and the canonical representation and independence bridge have distinct proof obligations. The remaining bridge must be proved before the full statement receives kernel coverage.
++
++Current modules include exact refinement constructions, scalar and multigraded transfer identities, resultant constructions, polynomial and multilevel defects, and analytic integral identities. Each module's exact hypotheses and construction burden are recorded in the current correspondence. New finite sums and inverses marked \code{noncomputable} provide mathematical definitions, not an extracted executable solver.
++
++\textbf{Reproduction.} Keep the current project's toolchain, dependency manifest, aggregate imports, strict compiler flags, and source hashes together. A per-module draft check certifies only its recorded source hash. Adapted production imports require a new whole-source replay. The final current receipt must identify the exact promoted sources and kernel audit; it cannot be inferred from the historical counts below.
+--- editable/lean_guide/generated/current_traditional_crosswalk.tex (before)
++++ editable/lean_guide/generated/current_traditional_crosswalk.tex (after)
+@@ -0,0 +1,28 @@
++\begin{longtable}{p{.07\textwidth}p{.50\textwidth}p{.32\textwidth}}
++\toprule Row & Canonical label & Final locator \\ \midrule\endhead
++1 & \code{def:refinement-map} & Statement 3.2, p.~3 \\ \addlinespace
++2 & \code{thm:nested-refinement} & Statement 3.3, p.~3 \\ \addlinespace
++3 & \code{def:coordinate-refinement} & Statement 3.4, p.~4 \\ \addlinespace
++4 & \code{prop:perfect-reconstruction} & Statement 3.5, p.~4 \\ \addlinespace
++5 & \code{thm:transfer-block-refinement} & Statement 3.8, p.~6 \\ \addlinespace
++6 & \code{prop:residue-algebra} & Statement 4.2, p.~9 \\ \addlinespace
++7 & \code{thm:root-of-unity} & Statement 4.3, p.~9 \\ \addlinespace
++8 & \code{thm:polyphase-refinement} & Statement 4.6, p.~11 \\ \addlinespace
++9 & \code{thm:dyadic-odd} & Statement 4.9, p.~11 \\ \addlinespace
++10 & \code{thm:weighted-inverse} & Statement 5.10, p.~16 \\ \addlinespace
++11 & \code{cor:finite-precision} & Statement 5.11, p.~17 \\ \addlinespace
++12 & \code{thm:transfer-zeta} & Statement 6.6, p.~20 \\ \addlinespace
++13 & \code{cor:zeta-recurrence} & Statement 6.7, p.~21 \\ \addlinespace
++14 & \code{thm:bezout-projector} & Statement 7.5, p.~24 \\ \addlinespace
++15 & \code{def:separation-weight} & Statement 7.6, p.~25 \\ \addlinespace
++16 & \code{thm:precision-delay} & Statement 7.7, p.~25 \\ \addlinespace
++17 & \code{prop:dyadic-sign} & Statement 9.3, p.~32 \\ \addlinespace
++18 & \code{thm:smith-solve} & Statement 10.6, p.~35 \\ \addlinespace
++19 & \code{thm:power-defect} & Statement 11.1, p.~37 \\ \addlinespace
++20 & \code{cor:defect-norm} & Statement 11.3, p.~37 \\ \addlinespace
++21 & \code{thm:resolvent-defect} & Statement 11.5, p.~37 \\ \addlinespace
++22 & \code{eq:smith-inversion} & Section 12.3, Smith-phase identity, p.~43 \\ \addlinespace
++23 & \code{alg:residue} & Statement B.1, p.~47 \\ \addlinespace
++24 & \code{alg:weighted-inverse} & Statement B.2, p.~47 \\ \addlinespace
++25 & \code{alg:path-zeta} & Statement B.3, p.~47 \\ \addlinespace
++\bottomrule\end{longtable}

@@ -1,0 +1,93 @@
+{
+  "schema": "paper-ii-semantic-audit/1",
+  "reviewer": "paper2_runtime independent reader; did not author these two construction modules",
+  "primary_verdict": "incomplete, with the smallest missing implication",
+  "scope": "Literal Lean-to-manuscript correspondence for six complete filtered transfer claims. The mathematical arguments inspected are sound. One corner-normalization identity remains to be exposed as a Lean endpoint.",
+  "inputs": [
+    {
+      "path": "/workspace/scratch/9f53d520971c/paper2_work/weighted/src/KomorebiVerification/PaperII/ReleaseFiltered.lean",
+      "sha256": "d39a21c296726e0f1056743cd8c401fb8a1eba1739ae899f5e764ebe5e3bdafa"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/paper2_work/weighted/src/KomorebiVerification/PaperII/ReleaseFilteredPaths.lean",
+      "sha256": "802f52aa5f823ef13a3d8fa3aa117a48dd6a1f7530587cfdc594f8abe2d3671e"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/editable/traditional/chapters/03_weighted.tex",
+      "sha256": "58bfafd44a82358338d8daca144b127ebd17cb254eae44ba912d5ed55f0c5be7"
+    },
+    {
+      "path": "/workspace/scratch/9f53d520971c/release_package/Komorebi_Paper_II_Release_2026-10-15/editable/traditional/chapters/02_coordinates.tex",
+      "sha256": "810e4a615babb27fb5458b8252541e5f6069185221da02d31b71c3d319afa1ee"
+    }
+  ],
+  "claims": [
+    {
+      "locator": "def:filtered_algebra",
+      "status": "passed",
+      "claim": "An exhaustive decreasing multiplicative two-sided ideal filtration with bijective canonical map to compatible residue families supplies separated inverse-limit completeness.",
+      "reason": "IdealFiltration.all_mem supplies F^0=R. left_mem/right_mem derive both ideal actions. Residue is the genuine quotient relation x-y\u2208F^n; reduce is identity-induced. Complete asks only bijectivity of the canonical map, not a Neumann-series conclusion. separated and lift_coherent derive exactly the two components used."
+    },
+    {
+      "locator": "thm:weighted_inverse",
+      "status": "passed",
+      "claim": "Over any unital possibly noncommutative ring with the stated complete filtration, a finite sum of positively weighted perturbations of a unit has a two-sided inverse and a filtration-convergent signed word expansion.",
+      "reason": "geometric_coherent is proved from powers gaining depth; lift_coherent supplies S; residual identities and separation establish both inverse equations. weighted_inverse_from_raw_edges derives normalized edge bounds and all finite-depth congruences. Raw terms multiplied by Dinv preserve ideal depth."
+    },
+    {
+      "locator": "thm:block_path_formula",
+      "status": "incomplete",
+      "claim": "The inverse packet block equals the signed sum over compatible chronological paths with the target corner inverse on every edge and the source corner inverse on the right.",
+      "reason": "ofSandwich derives left/right support from the manuscript sandwich equation. block_word_eq derives endpoint filtering, complete_diagonal_block_path_formula gives all quotient-depth equalities, assembled_corner_inverse derives the global inverse from local corner inverses. The literal identity normalizing by the assembled global Dinv versus the manuscript target-corner inverse should be added explicitly."
+    },
+    {
+      "locator": "cor:minimum_path_weight",
+      "status": "passed modulo the same explicit corner-normalization bridge",
+      "claim": "Any lower bound d for all path weights bounds the inverse block; absent a path, the block vanishes.",
+      "reason": "diagonal_minimum_path_weight proves the stronger arbitrary-lower-bound statement from the completed block congruences, and diagonal_no_path_block_zero uses separation. Choosing the actual least path weight specializes that statement; the absent-path case is handled separately. No equality of valuation is asserted."
+    },
+    {
+      "locator": "cor:acyclic_inverse",
+      "status": "passed",
+      "claim": "Finite acyclic supported transfers are nilpotent with exponent card V and yield a finite diagonal-plus-transfer inverse without completeness or positive weights.",
+      "reason": "Acyclic means no nonempty closed path, not an assumed path-length bound. path_cut_of_vertex_mem and vertices_nodup derive length<card V. block_word_eq then kills every length-card V term. Normalization preserves endpoint graph and acyclicity."
+    },
+    {
+      "locator": "cor:inverse_stability",
+      "status": "passed",
+      "claim": "Two two-sided inverses of congruent units are congruent at the same depth.",
+      "reason": "inverse_stability derives Tinv-Uinv=Tinv*(U-T)*Uinv with correct noncommutative order and applies both ideal actions. No completeness assumption is used."
+    },
+    {
+      "locator": "cor:finite_precision",
+      "status": "passed",
+      "claim": "The explicit sum retaining exactly words of weight<L differs from the full inverse by F^L and has both residuals in F^L.",
+      "reason": "retained_length_lt proves every retained word has length<L, so N=L omits none. geometric_sub_pruned_mem removes exactly the high-weight terms. weighted_inverse_from_raw_edges derives both residuals in the original ring."
+    }
+  ],
+  "dependency_graph": [
+    "IdealFiltration and canonical residue limit -> separated + coherent lift -> two-sided Neumann inverse.",
+    "Multiplicative word bounds + finite distributive expansion -> finite weight pruning -> full diagonal inverse and both residuals.",
+    "Packet orthogonality/support -> endpoint word filter -> complete path formula.",
+    "No closed nonempty path -> no repeated vertex -> length<card V -> nilpotence -> finite inverse.",
+    "Completed path congruences + lower bounds -> inverse block depth; separation -> absent-path zero."
+  ],
+  "obligations": {
+    "coefficient_domain": "passed: Ring R is more general than the manuscript unital algebra, with no hidden commutativity.",
+    "completion": "passed: exact underlying-set inverse limit of actual residue quotients; no theorem-specific completeness witness.",
+    "chronology": "passed: IsPath uses written order, ChronologicalPath uses first edge first, and isPath_reverse_iff proves reversal including empty path.",
+    "signs": "passed: (-1)^length is central; length-two chronological e then f yields written f*e and positive sign.",
+    "cutoff": "passed: all weights>=1 imply retained length<L; L=0 gives empty sum and assertions in F^0=R.",
+    "empty_edge_set": "passed: at positive depth only the empty word remains, giving Dinv; at depth zero congruences are vacuous.",
+    "empty_vertex_type": "passed: packet_sum forces the zero ring, so the exponent-zero nilpotence statement remains valid.",
+    "diagonal_path": "passed: empty path forces least bound zero; no-path hypothesis is impossible on the diagonal.",
+    "source_target_support": "passed for global normalized edges; local-corner identity requested explicitly.",
+    "external_inputs": "Only pinned formal ring/list/finite-sum results are used. Serre background citation is not a leaf of these constructive proofs."
+  },
+  "remaining_gap": "Add (sum_i dinv_i)*N_e = dinv_target(e)*N_e and P_s*(sum_i dinv_i)=dinv_s from two-sided corner supports and orthogonal packets, then point the coverage row to these endpoints.",
+  "nonblocking_copyedits": [
+    "signed_diagonal_word_mem docstring should say declared lower filtration bound, not exactly (which could suggest exact valuation).",
+    "diagonal_inverse docstring should say multiplying/factoring, not conjugating."
+  ],
+  "validation": "Read all raw definitions and proofs of both construction modules and the manuscript claims; checked exact accepted source hashes and author compile receipts. No new mathematical computation or source mutation performed by this reviewer."
+}

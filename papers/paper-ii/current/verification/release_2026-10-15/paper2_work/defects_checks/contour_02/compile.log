@@ -1,0 +1,63 @@
+ReleaseAnalyticContour.lean:66:0: error: automatically included section variable(s) unused in theorem `Komorebi.PaperII.ReleaseAnalyticContour.IntegralCycle.lineIntegral_map`:
+  [IsScalarTower ℝ ℂ E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [IsScalarTower ℝ ℂ E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+ReleaseAnalyticContour.lean:77:0: error: automatically included section variable(s) unused in theorem `Komorebi.PaperII.ReleaseAnalyticContour.IntegralCycle.lineIntegral_sub`:
+  [IsScalarTower ℝ ℂ E]
+  [CompleteSpace E]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [IsScalarTower ℝ ℂ E] [CompleteSpace E] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+ReleaseAnalyticContour.lean:136:4: error: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+ReleaseAnalyticContour.lean:200:4: error: 'change' tactic failed, pattern
+  h (Γ.curve i s) • C ∘SL resolvent Tf (Γ.curve i s) - h (Γ.curve i s) • resolvent Tc (Γ.curve i s) ∘SL C = ?m.643
+is not definitionally equal to target
+  (fun x ↦ Γ.velocity i x • (fun z ↦ post (h z • resolvent Tf z) - pre (h z • resolvent Tc z)) (Γ.curve i x)) s =
+    (fun x ↦
+        Γ.velocity i x • (fun z ↦ h z • resolvent Tc z ∘SL continuousDefect C Tf Tc ∘SL resolvent Tf z) (Γ.curve i x))
+      s
+ReleaseAnalyticContour.lean:203:16: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  Γ.lineIntegral fun z ↦ (⇑post ∘ (h • resolvent Tf)) z - (⇑pre ∘ (h • resolvent Tc)) z
+in the target expression
+  C ∘SL dunfordIntegral Γ h Tf - dunfordIntegral Γ h Tc ∘SL C =
+    (2 * ↑Real.pi * Complex.I)⁻¹ • Γ.lineIntegral fun z ↦ post (h z • resolvent Tf z) - pre (h z • resolvent Tc z)
+
+Ef : Type u
+Ec : Type v
+inst✝⁹ : NormedAddCommGroup Ef
+inst✝⁸ : NormedAddCommGroup Ec
+inst✝⁷ : NormedSpace ℂ Ef
+inst✝⁶ : NormedSpace ℂ Ec
+inst✝⁵ : NormedSpace ℝ Ef
+inst✝⁴ : NormedSpace ℝ Ec
+inst✝³ : IsScalarTower ℝ ℂ Ef
+inst✝² : IsScalarTower ℝ ℂ Ec
+inst✝¹ : CompleteSpace Ef
+inst✝ : CompleteSpace Ec
+Γ : IntegralCycle
+h : ℂ → ℂ
+hh : ContinuousOn h Γ.trace
+C : Ef →L[ℂ] Ec
+Tf : Ef →L[ℂ] Ef
+Tc : Ec →L[ℂ] Ec
+hf : Γ.trace ⊆ resolventSet ℂ Tf
+hc : Γ.trace ⊆ resolventSet ℂ Tc
+post : (Ef →L[ℂ] Ef) →L[ℂ] Ef →L[ℂ] Ec := (ContinuousLinearMap.compL ℂ Ef Ef Ec) C
+pre : (Ec →L[ℂ] Ec) →L[ℂ] Ef →L[ℂ] Ec := (ContinuousLinearMap.compL ℂ Ef Ec Ec).flip C
+hff : ContinuousOn (h • resolvent Tf) Γ.trace
+hcc : ContinuousOn (h • resolvent Tc) Γ.trace
+hp : (Γ.lineIntegral fun z ↦ post ((h • resolvent Tf) z)) = post (Γ.lineIntegral (h • resolvent Tf))
+hq : (Γ.lineIntegral fun z ↦ pre ((h • resolvent Tc) z)) = pre (Γ.lineIntegral (h • resolvent Tc))
+hdiff :
+  (Γ.lineIntegral fun z ↦ (⇑post ∘ (h • resolvent Tf)) z - (⇑pre ∘ (h • resolvent Tc)) z) =
+    Γ.lineIntegral (⇑post ∘ (h • resolvent Tf)) - Γ.lineIntegral (⇑pre ∘ (h • resolvent Tc))
+hpoint :
+  (Γ.lineIntegral fun z ↦ post (h z • resolvent Tf z) - pre (h z • resolvent Tc z)) =
+    Γ.lineIntegral fun z ↦ h z • resolvent Tc z ∘SL continuousDefect C Tf Tc ∘SL resolvent Tf z
+⊢ C ∘SL dunfordIntegral Γ h Tf - dunfordIntegral Γ h Tc ∘SL C =
+    (2 * ↑Real.pi * Complex.I)⁻¹ • Γ.lineIntegral fun z ↦ post (h z • resolvent Tf z) - pre (h z • resolvent Tc z)

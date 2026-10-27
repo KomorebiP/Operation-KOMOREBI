@@ -1,0 +1,16 @@
+/--
+The exact finite enumeration used for the coefficient of weight `n`.
+-/
+def walkTuplesAtWeight [Fintype E] [DecidableEq E] [DecidableEq V]
+    (G : PositiveWeightedMultigraph V E) (s t : V) (n : ℕ) :
+    Finset (BoundedEdgeTuple E n) :=
+  Finset.univ.filter fun x ↦
+    G.IsWalk s t (tupleEdges x) ∧ G.pathWeight (tupleEdges x) = n
+
+/-- Membership in the finite enumerator has exactly the advertised meaning. -/
+theorem mem_walkTuplesAtWeight_iff [Fintype E] [DecidableEq E] [DecidableEq V]
+    (G : PositiveWeightedMultigraph V E) (s t : V) (n : ℕ)
+    (x : BoundedEdgeTuple E n) :
+    x ∈ G.walkTuplesAtWeight s t n ↔
+      G.IsWalk s t (tupleEdges x) ∧ G.pathWeight (tupleEdges x) = n := by
+  simp [walkTuplesAtWeight]

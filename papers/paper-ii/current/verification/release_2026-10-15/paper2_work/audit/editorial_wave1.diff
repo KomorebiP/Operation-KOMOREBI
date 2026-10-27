@@ -1,0 +1,215 @@
+--- before/editable/traditional/chapters/01_orientation.tex
++++ after/editable/traditional/chapters/01_orientation.tex
+@@ -30,29 +30,29 @@
+ 
+ Every theorem in this paper concerns linear operators. An exact refinement retains the full object and changes its coordinates. Questions about nonlinear operation trees, nonlinear correction, and obstruction complexes require a separate theory.
+ 
+-\section{Four kinds of depth}\label{sec:four_depths}
++\section{Depth and compatibility}\label{sec:four_depths}
+ 
+-Several quantities below are measured by nonnegative integers.  They do not measure the same thing.  Keeping them separate makes the later formulas easier to read.
++Packet, filtration, and separation depths describe three different kinds of scale. Compatibility is initially recorded by an operator defect. Keeping these notions separate makes the later formulas easier to read.
+ 
+ The first is packet depth.  A finer packet family has more idempotents and a more detailed address set.  The passage from residues modulo two to residues modulo four is an example.  Packet depth is combinatorial.  It says how many distinctions have been made in the coordinate system.
+ 
+-The second is filtration depth.  A transfer in $F^r\Bcal$ is invisible modulo $F^r\Bcal$ and becomes visible at greater precision.  Two paths with the same number of edges can have different filtration depths.  A longer path can appear earlier when its edges have smaller weights.
++The second is filtration depth. A transfer in $F^r\Bcal$ vanishes modulo $F^r\Bcal$. This membership gives a lower bound on its depth. A nonzero transfer may first become visible only at a higher precision. Two paths with the same number of edges can have different filtration depths. A longer path can appear earlier when its edges have smaller weights.
+ 
+ The third is separation depth.  A rational packet projector may require multiplication by $\pi^s$ before it preserves the chosen lattice.  This number depends on both the rational decomposition and the lattice.  It can be zero even when the corresponding eigenvalues are close, and it can be positive even when the rational projector is simple.
+ 
+-The fourth is compatibility depth.  A fine operator and a separately chosen coarse operator need not commute with coarsening.  Their discrepancy is
++The fourth notion is the compatibility defect. A fine operator and a separately chosen coarse operator need not commute with coarsening. Their discrepancy is
+ \[
+ \Delta=CT_f-T_cC.
+ \]
+-This is not a packet depth or a denominator.  It measures the failure of one operator model to represent another exactly.
++This operator records the failure of one model to represent another exactly. A chosen norm measures its size, while a chosen filtration can assign a depth. No integer compatibility depth is assigned without that additional structure.
+ 
+ The four notions meet in applications, but no one of them determines the others.  An exact refinement tower may have zero coordinate error while its fine spectral packets have positive lattice weight.  A filtered inverse may truncate exactly at a given depth while the coarse operator still has a nonzero compatibility defect.  The paper treats each quantity with its own theorem before combining them.
+ 
+ \begin{keyidea}
+-Packet depth changes the address of a component. Filtration depth controls when a transfer survives a precision cutoff. Separation depth clears a rational denominator on a chosen lattice. Compatibility depth measures a discrepancy between two operator models. These quantities can interact, but each needs its own hypothesis and its own calculation.
++Packet depth changes the address of a component. Filtration depth controls when a transfer survives a precision cutoff. Separation depth clears a rational denominator on a chosen lattice. The compatibility defect records a discrepancy between two operator models. These quantities can interact, but each needs its own hypothesis and its own calculation.
+ \end{keyidea}
+ 
+-A simple two packet model already contains all four ideas.  Let
++A simple two packet model already contains all four notions.  Let
+ \[
+ X=X_0\oplus X_1,
+ \qquad
+--- before/editable/traditional/chapters/02_coordinates.tex
++++ after/editable/traditional/chapters/02_coordinates.tex
+@@ -70,7 +70,14 @@
+ \rho_{m,\ell}:I_m\longrightarrow I_\ell
+ \qquad(m\geq\ell)
+ \]
+-that satisfy the composition law for successive levels. The next result shows that the coordinate changes form a coherent system.
++such that $\Pcal_m$ refines $\Pcal_\ell$ through $\rho_{m,\ell}$ for every $m\geq\ell$, and
++\[
++\rho_{\ell,\ell}=\id_{I_\ell},
++\qquad
++\rho_{n,\ell}=\rho_{m,\ell}\circ\rho_{n,m}
++\qquad(n\geq m\geq\ell).
++\]
++Thus every parent map witnesses the stated refinement and the maps compose coherently. The next result shows that the coordinate changes form a coherent system.
+ 
+ \begin{definition}[Coordinate change across levels]\label{def:coordinate_change}\label{def:coordinate-refinement}
+ For two packet systems $\Pcal$ and $\Qcal$ on $X$, define
+@@ -151,7 +158,7 @@
+ \end{remark}
+ 
+ \begin{corollary}[Orthogonal Hilbert packets]\label{cor:orthogonal_isometry}
+-If $X$ is a Hilbert space and every packet system in the tower consists of orthogonal projections, then analysis and synthesis are unitary.  Every coordinate change in \cref{thm:coordinate_coherence} is unitary.
++If $X$ is a real or complex Hilbert space and every packet system in the tower consists of orthogonal projections, equip each finite packet direct sum with the Hilbert inner product $\langle(x_\alpha),(y_\alpha)\rangle=\sum_\alpha\langle x_\alpha,y_\alpha\rangle$. Then analysis and synthesis are unitary. Every coordinate change in \cref{thm:coordinate_coherence} is unitary.
+ \end{corollary}
+ 
+ \begin{proof}
+@@ -177,7 +184,7 @@
+ children to their parents. Coordinate coherence itself does not require them.
+ 
+ The same coherence applies to operators. Let $P_a,P_b$ be packet systems on $X$, let $Q_a,Q_b$ be packet
+-systems on $Y$, and let $T:X\to Y$ be a typed linear map. Its exact coordinate
++systems on $Y$, where $X$ and $Y$ are modules over the same scalar ring, and let $T:X\to Y$ be a linear map over that ring. Its exact coordinate
+ representation
+ \[
+ \widehat T_{Q,P}=\cA_QT\cS_P
+@@ -308,7 +315,7 @@
+ =
+ \sum_\beta R_{\alpha\beta},
+ \]
+-and the same argument works for a fixed $\beta$.  Iteration proves the finite family statement.
++and the same argument works for a fixed $\beta$. Since each $P_\alpha$ and $Q_\beta$ is nonzero, these identities ensure that every parent has a nonzero product child. The two parent maps on the supported product family are therefore surjective. Iteration proves the finite family statement. For the empty collection, use the supported identity family: $(I_X)$ when $X\ne0$ and the empty family when $X=0$.
+ \end{proof}
+ 
+ \begin{proposition}[Coarsest common refinement]\label{prop:coarsest_common_refinement}
+@@ -328,7 +335,12 @@
+ \[
+ P_\alpha Q_\beta R_\gamma=R_\gamma.
+ \]
+-Every packet of $\Rcal$ lies in one product packet.  Summing the packets with the same pair of parents reconstructs that product packet.
++Every packet of $\Rcal$ lies in one product packet. Multiplying $\sum_\gamma R_\gamma=I_X$ by $P_\alpha Q_\beta$ and using the parent identities gives
++\[
++P_\alpha Q_\beta
++=\sum_{\substack{\gamma:\ P_\alpha R_\gamma=R_\gamma\\Q_\beta R_\gamma=R_\gamma}}R_\gamma.
++\]
++Thus the packets with the same pair of parents reconstruct the product packet. If that product packet is nonzero, the sum has a child, so the parent map onto the supported product family is surjective.
+ \end{proof}
+ 
+ \begin{example}[A two level split]\label{ex:two_level_split}
+@@ -336,7 +348,7 @@
+ \[
+ X=X_{00}\oplus X_{01}\oplus X_{10}\oplus X_{11}.
+ \]
+-The four coordinate projections form a fine packet system.  The two sums
++Assume that all four summands are nonzero. The four coordinate projections form a fine packet system.  The two sums
+ \[
+ P_0=Q_{00}+Q_{01},
+ \qquad
+@@ -380,6 +392,8 @@
+ \end{proof}
+ 
+ \subsection{Finite orthogonality certificates}
++
++The coefficient-mask definition of $P_{N,j}$ also makes sense over a commutative semiring: it only retains or sets coefficients to zero. We use that same definition in the following semiring statement.
+ 
+ Let $U$ act on coefficient sequences by
+ \[
+@@ -474,7 +488,7 @@
+ \end{proof}
+ 
+ \begin{example}[The shift graph of residue packets]\label{ex:residue_shift}
+-Multiplication by $z$ sends the residue packet $P_{N,j}R[[z]]$ into $P_{N,j+1}R[[z]]$, where the index is read modulo $N$.  Its packet graph is the directed cycle
++Assume that $R$ is nonzero and $N>0$. Multiplication by $z$ sends the residue packet $P_{N,j}R[[z]]$ into $P_{N,j+1}R[[z]]$, where the index is read modulo $N$.  Its packet graph is the directed cycle
+ \[
+ 0\longrightarrow1\longrightarrow\cdots\longrightarrow N-1\longrightarrow0.
+ \]
+--- before/editable/traditional/chapters/03_weighted.tex
++++ after/editable/traditional/chapters/03_weighted.tex
+@@ -17,17 +17,19 @@
+ \[
+ \Bcal\longrightarrow\varprojlim_L\Bcal/F^L\Bcal
+ \]
+-is an isomorphism.  A transfer term $N_e$ has declared weight $w(e)\geq1$ when
++is an isomorphism.  A transfer term $N_e$ has a declared positive integer weight $w(e)\in\mathbb Z_{>0}$ when
+ \[
+ N_e\in F^{w(e)}\Bcal.
+ \]
+ \end{definition}
+ 
+-If $\OO$ is a complete discrete valuation ring with uniformizer $\pi$, the filtration
+-\[
+-F^L\Bcal=\pi^L\Bcal
+-\]
+-is the standard example.  Basic facts about completeness in this setting are reviewed in \cite{Serre1979}.
++In the filtration topology, reduction to $\Bcal/F^L\Bcal$ is continuous when the quotient has the discrete topology. Its kernel $F^L\Bcal$ is therefore closed. In particular, a convergent sum of terms in $F^L\Bcal$ remains in that ideal.
++
++If $\OO$ is a complete discrete valuation ring with uniformizer $\pi$ and $\Bcal$ is a separated and complete $\OO$ algebra for the filtration
++\[
++F^L\Bcal=\pi^L\Bcal,
++\]
++then this is a standard example. Finite matrix algebras over $\OO$ satisfy these conditions. Completeness of $\OO$ alone does not imply completeness of every $\OO$ algebra. Basic facts about completeness in this setting are reviewed in \cite{Serre1979}.
+ 
+ \begin{theorem}[Weighted inverse]\label{thm:weighted_inverse}
+ Let $\Bcal$ be a complete filtered algebra.  Let $D\in\Bcal$ be invertible with
+@@ -234,7 +236,7 @@
+ \[
+ F^m\cB=\pi^m\cB
+ \]
+-on an $\OO$-algebra $\cB$. Suppose
++on an $\OO$-algebra $\cB$. The finite quotient statements below do not require $\cB$ itself to be complete. Suppose
+ \[
+ T=D+H,
+ \]
+@@ -379,7 +381,12 @@
+ =
+ \sum_{n\geq0}a_nt^n,
+ \]
+-where $a_n$ is the total multiplicity of paths from the vertices selected by $u$ to the vertices selected by $v$ with total weight $n$.
++where
++\[
++a_n=\sum_{i,j}\ \sum_{\substack{\gamma:i\leadsto j\\W(\gamma)=n}}
++ u_i v_j\prod_{\nu=1}^{|\gamma|}m(e_\nu).
++\]
++Here $\gamma=(e_1,\ldots,e_{|\gamma|})$ is a directed walk. Vertices and edges may repeat, and the empty walk has weight zero and multiplicity one. Thus the endpoint vectors weight the start and end of each walk, rather than only selecting subsets of vertices.
+ \end{definition}
+ 
+ \begin{theorem}[Rationality of the transfer series]\label{thm:transfer_rationality}
+@@ -416,7 +423,7 @@
+ \qquad
+ Q(t)=1+q_1t+\cdots+q_dt^d.
+ \]
+-Then, for every $n>\deg P$,
++Use the convention $\deg 0=-\infty$. Then, for every nonnegative integer $n>\deg P$,
+ \[
+ a_n+q_1a_{n-1}+\cdots+q_da_{n-d}=0.
+ \]
+@@ -552,7 +559,7 @@
+ Z_{s,t}(t)=\sum_{n\ge0}a_n(s,t)t^n.
+ \]
+ Then the walk counts satisfy the recurrence with constant coefficients determined by
+-$Q$ after the finite initial range contributed by $P_{s,t}$:
++$Q$ after the finite initial range contributed by $P_{s,t}$, with $\deg 0=-\infty$:
+ \[
+ \boxed{
+ \sum_{k=0}^{n}q_k a_{n-k}(s,t)=0
+--- before/editable/traditional/atlas_macros.tex
++++ after/editable/traditional/atlas_macros.tex
+@@ -12,7 +12,7 @@
+ 
+ \newif\ifstarted\startedfalse
+ \providecommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+-\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
++\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\phantomsection\label{visual:#1}
+ {\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}V#1\quad /\quad #3\par}\vspace{5pt}
+ {\sffamily\bfseries\fontsize{19}{22}\selectfont #2\par}\vspace{5pt}
+ {\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+--- before/editable/traditional/chapters/06_models.tex
++++ after/editable/traditional/chapters/06_models.tex
+@@ -55,6 +55,7 @@
+ {(1-\omega_N^k)z+(1+\omega_N^k)}.
+ \]
+ For $N=2$ and $k=1$,
++\phantomsection
+ \[
+ T_{2,1}(z)=\frac1z,
+ \qquad z\ne0,-1.

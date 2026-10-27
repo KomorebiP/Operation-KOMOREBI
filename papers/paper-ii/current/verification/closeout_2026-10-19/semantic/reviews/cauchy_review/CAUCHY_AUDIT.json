@@ -1,0 +1,270 @@
+{
+  "primary_verdict": "proved as written",
+  "scope": "General homological Cauchy comparison lineIntegral_eq_of_winding in ReleaseCycleCauchy.lean and its listed local analytic dependencies. Not a verdict on canonical holomorphic functional calculus or original rectifiable contour identification.",
+  "review_provenance": "Independent delegated raw-source audit. Reviewer reconstructed IntegralCycle and every matching/gluing/winding branch; an isolated child independently inspected H1/H2 raw sources. Fresh strict compiler execution of the main source against existing dependency objects was performed by reviewer. No source edits.",
+  "source_sha256": {
+    "dixon/ReleaseCycleCauchy.lean": "dcffa6777c08ef6efcea05a01701c27cdf9cb18f9b17133709ff1dbcc176febc",
+    "cauchy/ReleaseCycleParameter.lean": "e34660f403be1c63f7cc90a93306345a811e8cc3e6fdacc0921a7b089e785682",
+    "cauchy/ReleaseCycleWinding.lean": "ff7e02e9b84ad07b93758e5ef53a5cd4ff04fbe9e9a096f6541acc4cc16546be",
+    "cauchy/ReleaseCycleDixon.lean": "d9781a743632e69e3e9bd3c80048ad40905cc1cfa92432d0fbf9d16d5d721eef",
+    "cauchy/dslope/ReleaseCycleDSlope.lean": "4377235c25789855dfebd94f24f6574cf58697a35f5581e96ec6aa166056f39c",
+    "cauchy/dslope/ReleaseCycleDecay.lean": "7d2ee803020f2c05b1b5642a8a4494a33a26d8ef71000671fbaf5cd5bc59fad4",
+    "primitive/ReleaseCyclePrimitive.lean": "194eedd37733f6403438766e0f054e6cb5f9e57f92d326053b4c13d115cf39c8"
+  },
+  "claim_card": {
+    "quantifiers": "Every type E with NormedAddCommGroup, NormedSpace Complex, compatible NormedSpace Real, IsScalarTower Real Complex E, CompleteSpace; every finite IntegralCycle Gamma, Delta; every open U : Set Complex; every f : Complex -> E differentiableOn Complex f U.",
+    "hypotheses": "Gamma.trace subset U; Delta.trace subset U; for all w not in U, winding Gamma w = winding Delta w.",
+    "conclusion": "Gamma.lineIntegral f = Delta.lineIntegral f.",
+    "representation": "IntegralCycle contains an arbitrary finite family of actual interval-integrable Complex velocities v_i, bases, and equations integral_0^1 v_i = 0. curve_i(s)=base_i+integral_0^s v_i; lineIntegral f=sum_i integral_0^1 v_i(s) smul f(curve_i(s)).",
+    "winding": "Complex-valued normalized analytic integral (2*pi*I)^(-1) * lineIntegral(z -> (z-w)^(-1)). Its geometric use here is only off the trace, guaranteed outside U by trace containment; no integer-valued hypothesis is used.",
+    "domain_and_exceptions": "U may be disconnected, nonconvex, unbounded, empty or all Complex. Cycles may be empty, constant, repeated, reversed, self-intersecting or non-piecewise-smooth. Target E may be zero-dimensional or infinite-dimensional. Data outside U and curve extensions outside [0,1] are arbitrary."
+  },
+  "normalized_objects": {
+    "dslope": "dslope f w z=(z-w)^(-1) smul (f z-f w) when z != w, and deriv_Complex f w when z=w.",
+    "H1": "H1_Gamma(w)=Gamma.lineIntegral(dslope f w).",
+    "H2": "H2_Gamma(w)=Gamma.lineIntegral(z -> (z-w)^(-1) smul f z).",
+    "pairDixon": "If w in U, H1_Gamma(w)-H1_Delta(w); otherwise H2_Gamma(w)-H2_Delta(w).",
+    "off_trace_identity": "H1_Gamma(w)=H2_Gamma(w)-K_Gamma(w) smul f(w), where K_Gamma(w)=Gamma.lineIntegral(z -> (z-w)^(-1)). Equal analytic winding implies equal K because the Cauchy prefactor is nonzero."
+  },
+  "dependency_graph": [
+    {
+      "node": "Parameter differentiation",
+      "depends_on": [
+        "baseline integrable_lineIntegrand",
+        "pinned dominated local derivative interval-integral theorem"
+      ],
+      "leaf_kind": "internal proof plus exact pinned source",
+      "status": "passed"
+    },
+    {
+      "node": "H1 holomorphy",
+      "depends_on": [
+        "joint dslope continuity on arbitrary open U",
+        "partial dslope holomorphy including diagonal",
+        "compact trace uniform derivative bound via Cauchy estimate",
+        "Parameter differentiation"
+      ],
+      "leaf_kind": "internal H1 source plus pinned Complex.differentiableOn_dslope/Cauchy estimate",
+      "status": "passed"
+    },
+    {
+      "node": "H2 holomorphy off trace",
+      "depends_on": [
+        "positive uniform separation ball from compact trace",
+        "compact bound on f(trace)",
+        "Parameter differentiation"
+      ],
+      "leaf_kind": "internal Dixon source",
+      "status": "passed"
+    },
+    {
+      "node": "H2 decay at infinity",
+      "depends_on": [
+        "norm_lineIntegral_le",
+        "reverse triangle inequality",
+        "compact trace and continuous density bounds",
+        "reciprocal norm limit"
+      ],
+      "leaf_kind": "internal Decay source",
+      "status": "passed"
+    },
+    {
+      "node": "Winding local constancy",
+      "depends_on": [
+        "Parameter differentiation of inverse kernel",
+        "scalar primitive cancellation for -(z-w)^(-1)",
+        "zero derivative constancy on off-trace ball"
+      ],
+      "leaf_kind": "internal Winding source; independently audited primitive source; pinned MeanValue",
+      "status": "passed"
+    },
+    {
+      "node": "Winding eventually exactly zero",
+      "depends_on": [
+        "trace in a large ball",
+        "pinned holomorphic primitive existence on a ball",
+        "scalar primitive cancellation",
+        "cocompact norm tails"
+      ],
+      "leaf_kind": "internal Winding source and pinned HasPrimitives",
+      "status": "passed"
+    },
+    {
+      "node": "H1/H2 pair matching",
+      "depends_on": [
+        "off-trace algebraic dslope identity",
+        "lineIntegral_sub and lineIntegral_map",
+        "nonzero Cauchy normalization",
+        "equal winding"
+      ],
+      "leaf_kind": "internal Dixon pairH1H2match proof",
+      "status": "passed"
+    },
+    {
+      "node": "Entire pair continuation",
+      "depends_on": [
+        "H1 holomorphy inside U",
+        "H2 holomorphy off traces",
+        "local winding constancy at every point outside U",
+        "outside-U equal winding",
+        "exact local matching"
+      ],
+      "leaf_kind": "internal differentiable_pairDixon proof",
+      "status": "passed"
+    },
+    {
+      "node": "Continuation equals zero",
+      "depends_on": [
+        "eventual winding zero and off-trace",
+        "matching even for unbounded U",
+        "H2 decay",
+        "pinned Banach Liouville"
+      ],
+      "leaf_kind": "internal pairDixon_eq_zero with every helper input discharged",
+      "status": "passed"
+    },
+    {
+      "node": "Integral comparison",
+      "depends_on": [
+        "twisted holomorphic density (z-w) smul f(z)",
+        "dslope_twist_eq including diagonal",
+        "zero continuation at w in U",
+        "separate empty-U norm bound branch"
+      ],
+      "leaf_kind": "internal final theorem",
+      "status": "passed"
+    }
+  ],
+  "obligations": [
+    {
+      "name": "Actual arbitrary integrable velocities",
+      "status": "passed",
+      "evidence": "Dominating function at curve i is norm(velocity_i(t))*M, interval integrable from the defining field. Neither velocity pointwise bounds nor C1 curves are assumed."
+    },
+    {
+      "name": "Parameter differentiation measurability and derivative inputs",
+      "status": "passed",
+      "evidence": "For every nearby parameter, continuous trace density gives integrable line integrand and AE strong measurability; derivative density is continuous at the target parameter; derivative bound and chain scalar multiplication hold for every curve point. Pinned theorem requires exactly these hypotheses."
+    },
+    {
+      "name": "H1 arbitrary open domain and diagonal",
+      "status": "passed",
+      "evidence": "Convex tubes are used only locally near diagonal; off-diagonal quotient continuity applies on general U. Separate fixed-node holomorphy includes the diagonal through pinned removable-singularity theorem. Compact trace times a closed parameter ball gives finite uniform Cauchy bound."
+    },
+    {
+      "name": "Standalone two-variable dslope holomorphy",
+      "status": "not addressed",
+      "evidence": "Source proves joint continuity, required partial holomorphy, derivative continuity and compact uniformity. No two-variable DifferentiableOn theorem is stated or needed for the final claim."
+    },
+    {
+      "name": "H2 derivative kernel sign and separation",
+      "status": "passed",
+      "evidence": "Derivative in w of (z-w)^(-1) is +(z-w)^(-2). exists_ball_away_trace yields epsilon <= norm(z-w_prime) for every trace point and every parameter in one neighborhood."
+    },
+    {
+      "name": "H2 decay",
+      "status": "passed",
+      "evidence": "norm(H2(w)) <= length(Gamma)*M/(norm(w)-R) for norm(w)>R; compactness supplies R,M; cocompact norm tails imply convergence to zero. No finite-dimensionality of target used."
+    },
+    {
+      "name": "Winding local constancy and infinity",
+      "status": "passed",
+      "evidence": "Derivative of winding vanishes by exact scalar primitive integral cancellation. At large w, inverse kernel has a primitive on a ball containing trace, so winding is exactly zero eventually. No integrality premise or circular general Cauchy comparison is used."
+    },
+    {
+      "name": "hmatch helper premise discharged concretely",
+      "status": "passed",
+      "evidence": "pairDixon_eq_zero invokes pairH1H2match from continuous densities, off-trace membership and equal winding; it also supplies both off-trace/winding-zero tails and both decay limits internally. Final lineIntegral_eq_of_winding has no hmatch/decay/continuation-zero premises."
+    },
+    {
+      "name": "Boundary glue outside U including boundary points",
+      "status": "passed",
+      "evidence": "At w not in U both traces avoid w. In a common neighborhood winding of each cycle is its value at w and both traces are avoided. At a nearby point inside U, outside-U equality at the original w plus local constancy yields matching; outside U piece equality is definitional. Thus continuation agrees locally with holomorphic H2 difference at every such w."
+    },
+    {
+      "name": "Trace points inside U",
+      "status": "passed",
+      "evidence": "Trace points belong to open U, where continuation is locally H1 difference and diagonal dslope has its derivative value. No off-trace assumption enters this branch."
+    },
+    {
+      "name": "Liouville and zero-dimensional target",
+      "status": "passed",
+      "evidence": "Pinned Differentiable.apply_eq_of_tendsto_cocompact is Banach-valued and imposes Nontrivial only on its domain. Here domain is Complex, so no Nontrivial E or finite-dimensional target assumption is required."
+    },
+    {
+      "name": "Twist extraction including w on trace",
+      "status": "passed",
+      "evidence": "For z != w quotient cancels (z-w); at z=w product derivative is 1 smul f(w)+0 smul f_prime(w)=f(w). Therefore dslope_twist_eq holds for all z and the chosen w in U may lie on either trace."
+    },
+    {
+      "name": "Empty U",
+      "status": "passed",
+      "evidence": "Separate branch bounds each line-integral norm by length*0 using the impossible trace-membership premise, then deduces integral zero. No arbitrary point of empty U is selected."
+    },
+    {
+      "name": "Empty cycles / constants / repeated or reversed loops / arbitrary overlap",
+      "status": "passed",
+      "evidence": "All proofs quantify over finite index occurrences without positive-count, nonconstant, injective, disjoint or orientation-sign restrictions. Repeats remain in sums and normalized winding."
+    },
+    {
+      "name": "Topological winding integrality or equivalence with another external contour representation",
+      "status": "out of scope",
+      "evidence": "The theorem uses the explicitly defined normalized analytic winding for IntegralCycle. Its relation to original RS contours requires the separately audited representation bridge."
+    },
+    {
+      "name": "Full dependency rebuild / fresh imported-axiom audit",
+      "status": "not addressed",
+      "evidence": "Fresh compiler command elaborated main source against existing dependency objects. It does not certify new full release replay or imported-object/source correspondence by itself."
+    }
+  ],
+  "decisive_branch_reconstruction": {
+    "boundary": "a near w outside U: winding_Gamma(a)=winding_Gamma(w)=winding_Delta(w)=winding_Delta(a), and a avoids both traces. If a in U apply algebraic pair match; otherwise piecewise equality is rfl.",
+    "infinity": "Outside a sufficiently large compact set both windings are zero and both traces avoided. Pair matching then identifies inside-U H1 values with H2 values as well, so the whole continuation has the H2 difference limit 0 even when U is unbounded.",
+    "twist": "Apply the concrete zero-continuation theorem to g(z)=(z-w) smul f(z). Its U-branch at w is the difference of the original integrals, because dslope g w z=f(z) for every z."
+  },
+  "source_checks": {
+    "mathlib_pin": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+    "exact_pinned_sources_inspected": [
+      "Analysis/Calculus/ParametricIntervalIntegral.lean:97-112",
+      "Analysis/Calculus/DSlope.lean:35-46",
+      "Analysis/Complex/RemovableSingularity.lean:60-65",
+      "Analysis/Complex/HasPrimitives.lean:116,291-293",
+      "Analysis/Calculus/MeanValue.lean:767-771",
+      "Analysis/Complex/Liouville.lean:131-152"
+    ],
+    "primitive_source_audit": "../primitive_review/PRIMITIVE_AUDIT.json; final primitive SHA identical to current dependency SHA.",
+    "H1_H2_independent_child": {
+      "verdict": "proved as written",
+      "report": "h1_h2/H1_H2_AUDIT.json",
+      "md": "h1_h2/H1_H2_AUDIT.md",
+      "no_compiler_run": true,
+      "hashes_match_parent_source_inventory": true
+    },
+    "applicable_instructions": "No AGENTS.md or .mathbox ledger found in the scoped workspace during prior source audit. Already-read c20/proof-audit applied."
+  },
+  "compiler_check": {
+    "command": [
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "-DrelaxedAutoImplicit=false",
+      "-DmaxSynthPendingDepth=3",
+      "-Dpp.unicode.fun=true",
+      "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/dixon/ReleaseCycleCauchy.lean"
+    ],
+    "exit": 0,
+    "seconds": 3.515,
+    "source_sha256_before": "dcffa6777c08ef6efcea05a01701c27cdf9cb18f9b17133709ff1dbcc176febc",
+    "source_sha256_after": "dcffa6777c08ef6efcea05a01701c27cdf9cb18f9b17133709ff1dbcc176febc",
+    "stable": true,
+    "stdout": "",
+    "lean_path": "/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/cauchy/objects:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/primitive:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/analytic_baseline/objects:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/mathlib/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/4dc8da22778a/paper_ii_closeout_20261019/runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/lib/lean",
+    "imported_project_objects": "Previously compiled cauchy, primitive and analytic_baseline modules, not independently recompiled in this invocation.",
+    "new_project_olean_written": false
+  },
+  "remaining_gap_for_audited_claim": "None found for lineIntegral_eq_of_winding under its actual stated hypotheses.",
+  "strongest_safe_statement": "For arbitrary finite closed IntegralCycles and arbitrary Banach-valued holomorphic f on any open U containing both traces, equality of their normalized analytic winding at every point outside U implies equality of their actual Bochner cycle integrals.",
+  "cheapest_next_check": "Run the final full release-driver replay and imported axiom audit for the frozen source tree, then separately verify canonical HFC identification and original-contour transport at their exact definitions.",
+  "report_sha256_final_source_check": "dcffa6777c08ef6efcea05a01701c27cdf9cb18f9b17133709ff1dbcc176febc"
+}

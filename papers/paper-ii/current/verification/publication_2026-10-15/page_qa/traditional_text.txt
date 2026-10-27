@@ -1,0 +1,4592 @@
+OPERATION KOMOREBI
+REALIZATION CALCULUS
+PAPER II
+Projector Resolved
+Seed Calculus II
+Refinement towers, weighted transfer, and integral separation
+of operator packets
+An exact account of how packet coordinates refine, weighted transfers accumulate, and rational
+splittings become visible on an integral lattice.
+Komorebi P.
+Modern Monograph
+•
+15 October 2026
+
+
+How to use this volume
+Reading route. Exact packet coordinates and residue selectors lead to weighted inversion and
+rational walk series. Lattice gluing then gives separation weights and precision delays. Smith con-
+gruences and operator defects connect these formulas to finite computation.
+Companions. The worked visual atlas appears in this volume and as a separate guide. The Lean
+guide distinguishes the current formal development from the inherited 25-row walkthrough. Each
+guide records its evidence and scope.
+Overview
+A complete family of idempotents gives exact coordinates, but a single family does not record
+scale or integral visibility. We study towers in which every coarse idempotent is the sum of its fine
+descendants. The coordinate changes are invertible and coherent, and every operator block is the
+sum of its refined blocks. Residue selectors give a model over arbitrary rings. When roots of unity
+are available they agree with character averages, and coprime moduli factor through the Chinese re-
+mainder theorem. In a complete filtered algebra, a diagonal operator plus positive weight transfers
+has an inverse obtained by summing admissible weighted paths. The formula truncates exactly at
+finite precision, while finite transfer graphs have rational path series. For a rational spectral decom-
+position over a discrete valuation ring, resultants give denominator bounds. The exact denominator
+is the largest Smith exponent of the lattice gluing module. This yields a necessary and sufficient pre-
+cision delay, monotonicity under refinement, and a full congruence solving formula. We close with
+exact formulas for the propagation of a coarsening defect through powers, resolvents, holomorphic
+functions, exponentials, and multilevel towers.
+This edition integrates the expanded mathematical narrative with the canonical v1.2.1 certificate level
+formulations. It preserves the distinction between general written proofs, formal specifications, and
+finite computational examples. The visual atlas and the separate Lean guide provide worked models
+and separate current and inherited formal crosswalks.
+Contents
+1
+Introduction
+1
+2
+Depth and compatibility
+2
+3
+Packet systems and refinement towers
+3
+3.1
+Typed coordinate naturality . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5
+3.2
+Operator blocks across refinement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+6
+3.3
+Common refinements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+7
+4
+Residue coordinates and coprime factorization
+9
+4.1
+Finite orthogonality certificates . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+10
+4.2
+The field specialization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+10
+5
+Complete filtered transfer algebras
+12
+5.1
+Finite quotient and normed-ring realizations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+16
+5.1.1
+Normalized edges and written-word convention . . . . . . . . . . . . . . . . . . .
+16
+6
+Rational weighted transfer series
+18
+REALIZATION CALCULUS
+i
+
+
+6.1
+Automatic finite-graph construction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+21
+7
+Rational spectral projectors and resultant bounds
+23
+7.1
+Evaluated certificates and explicit lattice action
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+25
+7.1.1
+Minimal evaluated Bézout identities . . . . . . . . . . . . . . . . . . . . . . . . . .
+25
+7.1.2
+Certificate-level precision delay . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+26
+8
+Exact lattice separation
+26
+8.1
+Refinement and separation weight . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+29
+8.2
+Exact precision delay . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+30
+9
+The dyadic sign split
+31
+9.1
+The concrete rational sign matrix . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+32
+9.1.1
+Why coefficient packets remain available
+. . . . . . . . . . . . . . . . . . . . . . .
+33
+10 Smith normal form and congruence lifting
+33
+10.1 Concrete diagonal fibres over integer quotients
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+36
+11 Linear refinement defects
+37
+11.1 Inverse witnesses from one side and norm control . . . . . . . . . . . . . . . . . . . . . . . . .
+38
+11.2 Analytic functional calculus
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+39
+11.3 Several refinement levels . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+40
+12 Worked realizations in the common operator language
+41
+12.1 Signal polyphase coordinates . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+41
+12.2 Sparsity of transfer blocks
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+42
+12.3 A short realization in Smith chart coordinates . . . . . . . . . . . . . . . . . . . . . . . . . . .
+42
+13 Finite computational certificates
+43
+14 Scope and limits
+46
+A
+Notation table
+46
+B
+Algorithmic forms
+47
+B.1
+Residue analysis and synthesis . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+47
+B.2
+Weighted inverse at finite precision . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+47
+B.3
+Walk construction for transfer zeta . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+48
+C
+Proof dependency map
+48
+D
+Edition and proof scope
+50
+E
+Visual atlas
+51
+List of Figures
+1
+A nested residue hierarchy. Each residue modulo 2 is the union of two residues modulo
+4, and each residue modulo 4 is the union of two residues modulo 8.
+. . . . . . . . . . .
+6
+2
+The incidence matrix 𝑀𝑟,𝑠= 1 when the fine residue 𝑠belongs to the coarse residue 𝑟.
+Its rows implement exact aggregation from fine packets to coarse packets.
+. . . . . . . .
+8
+REALIZATION CALCULUS
+ii
+
+
+3
+A composite residue packet is addressed by its dyadic and odd coordinates. The dis-
+played mod-24 system is the product of mod 8 and mod 3. . . . . . . . . . . . . . . . . .
+12
+4
+A finite packet-transfer graph. Edge weights record filtration gain rather than merely the
+number of operator compositions.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+17
+5
+At precision 𝐿, weighted inversion requires only transfer words whose cumulative
+weight is below 𝐿. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+19
+6
+The walk counts for one weighted graph. The exact generating function is rational, so
+these counts satisfy a finite linear recurrence. . . . . . . . . . . . . . . . . . . . . . . . . .
+22
+7
+The rational sign projectors for an integral involution. Their denominator has 2-adic
+weight one. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+33
+8
+The denominator weight of the sign projector is nonzero only at the prime two. . . . . .
+34
+9
+A controlled defect for one step and its telescoping norm bound under repeated operator
+application.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+39
+10
+Norms of packet blocks for a finite stencil. The original operator is exactly reconstructed
+from a sparse transfer pattern. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+42
+11
+Nested phase orbits at powers of 2 on the Smith reflection disk. The full treatment of the
+Smith chart is deferred to the signal paper.
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+44
+12
+A symmetric refinement weight concentrated near the boundary points for open and
+short circuits.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+45
+13
+The dependency structure of Paper II. Coordinate coherence, residue/CRT, weighted
+inversion, automatic finite-graph transfer rationality, and integral separation are distinct
+branches with explicit inputs. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+49
+List of Tables
+1
+Representative numerical and symbolic checks. . . . . . . . . . . . . . . . . . . . . . . . .
+45
+REALIZATION CALCULUS
+iii
+
+
+OPERATION KOMOREBI
+PAPER II
+1 Introduction
+A complete family of pairwise annihilating idempotents decomposes a module into exact coordinate
+pieces. Many problems require more than one such decomposition. A signal may be split first into
+two residue classes and then into four. A filtered operator may be resolved into transfers that appear at
+different valuation depths. A rational spectral splitting may exist over the fraction field while remaining
+invisible on the original lattice. These are all refinement problems, but they involve different notions
+of scale.
+The first part of the article concerns exact refinement. If a fine packet family refines a coarse family,
+then each coarse idempotent is the sum of its fine descendants. The coordinate spaces at the two levels
+are canonically isomorphic because both represent the whole module. The refinement relation adds
+more information. It tells us which fine coordinates belong to each coarse coordinate, and it gives a
+compatible decomposition of every operator block. This is the algebra behind polyphase coordinates
+and nested filter banks. Standard treatments of those subjects may be found in [10, 2].
+The second part studies inversion in a complete filtered algebra. Suppose an operator has the form
+𝑇= 𝐷+ 𝑁,
+where 𝐷is invertible and every packet transfer in 𝑁raises the filtration by a positive amount. The
+ordinary Neumann series can then be expanded into weighted paths. The weight is not the number
+of edges. It is the total filtration gain along the path. At precision 𝐿, every path of weight at least 𝐿
+vanishes. A finite transfer graph also gives a rational generating function for the number of paths of
+each total weight. The relevant generating function facts are classical and are discussed in [9].
+The third part concerns integral separation. Let 𝑉be a vector space over the fraction field of a discrete
+valuation ring 𝒪, and let Λ be an 𝒪lattice in 𝑉. A rational projector 𝐸need not preserve Λ. Its separation
+weight is the least 𝑠such that
+𝜋𝑠𝐸Λ ⊆Λ.
+A Bézout construction gives an upper bound through a polynomial resultant. That bound need not
+be exact because it does not see the position of the lattice. The exact answer is controlled by the finite
+length module
+𝐺Λ,𝒫= Λ/ ⨁
+𝛼
+(Λ ∩𝑉𝛼),
+where 𝑉= ⨁𝛼𝑉𝛼is the rational packet decomposition. The largest Smith exponent of this gluing
+module is exactly the common denominator needed to make every packet projector integral. This in-
+terpretation also proves that separation weight cannot decrease under refinement. Background on local
+fields, Smith normal form, and matrix polynomials may be found in [8, 6, 3].
+The last part records how a defect between fine and coarse operators propagates. If
+Δ = 𝐶𝑇𝑓−𝑇𝑐𝐶,
+then exact formulas describe the corresponding defect for powers, resolvents, holomorphic functions,
+exponentials, and a chain of several refinement levels. These formulas are elementary, but collecting
+them in one place makes the later analytic uses transparent. The spectral and resolvent background
+follows the usual operator theory in [4].
+REALIZATION CALCULUS
+1
+
+
+OPERATION KOMOREBI
+PAPER II
+Every theorem in this paper concerns linear operators. An exact refinement retains the full object and
+changes its coordinates. Questions about nonlinear operation trees, nonlinear correction, and obstruc-
+tion complexes require a separate theory.
+2 Depth and compatibility
+Packet, filtration, and separation depths describe three different kinds of scale. Compatibility is initially
+recorded by an operator defect. Keeping these notions separate makes the later formulas easier to read.
+The first is packet depth. A finer packet family has more idempotents and a more detailed address
+set. The passage from residues modulo two to residues modulo four is an example. Packet depth is
+combinatorial. It says how many distinctions have been made in the coordinate system.
+The second is filtration depth. A transfer in 𝐹𝑟ℬvanishes modulo 𝐹𝑟ℬ. This membership gives a lower
+bound on its depth. A nonzero transfer may first become visible only at a higher precision. Two paths
+with the same number of edges can have different filtration depths. A longer path can appear earlier
+when its edges have smaller weights.
+The third is separation depth. A rational packet projector may require multiplication by 𝜋𝑠before it
+preserves the chosen lattice. This number depends on both the rational decomposition and the lattice.
+It can be zero even when the corresponding eigenvalues are close, and it can be positive even when the
+rational projector is simple.
+The fourth notion is the compatibility defect. A fine operator and a separately chosen coarse operator
+need not commute with coarsening. Their discrepancy is
+Δ = 𝐶𝑇𝑓−𝑇𝑐𝐶.
+This operator records the failure of one model to represent another exactly. A chosen norm measures
+its size, while a chosen filtration can assign a depth. No integer compatibility depth is assigned without
+that additional structure.
+The four notions meet in applications, but no one of them determines the others. An exact refinement
+tower may have zero coordinate error while its fine spectral packets have positive lattice weight. A
+filtered inverse may truncate exactly at a given depth while the coarse operator still has a nonzero
+compatibility defect. The paper treats each quantity with its own theorem before combining them.
+The central idea
+Packet depth changes the address of a component. Filtration depth controls when a transfer sur-
+vives a precision cutoff. Separation depth clears a rational denominator on a chosen lattice. The
+compatibility defect records a discrepancy between two operator models. These quantities can
+interact, but each needs its own hypothesis and its own calculation.
+A simple two packet model already contains all four notions. Let
+𝑋= 𝑋0 ⊕𝑋1,
+𝐷= (𝐷0
+0
+0
+𝐷1
+) ,
+𝑁= ( 0
+𝑁01
+𝑁10
+0 ) .
+A finer family may split 𝑋0 and 𝑋1 into smaller summands. The blocks 𝑁01 and 𝑁10 may enter at
+different filtration weights. Over a fraction field, the rational packet spaces may fail to split the chosen
+lattice. A coarse operator on one selected summand may also fail to intertwine with the full matrix. The
+later sections isolate these four effects one at a time.
+REALIZATION CALCULUS
+2
+
+
+OPERATION KOMOREBI
+PAPER II
+3 Packet systems and refinement towers
+Packet coordinates split a module into pieces that can be recovered separately and then added back
+together. The construction uses idempotents and does not need an inner product.
+Definition 3.1 (Packet system). Let 𝑋be a module over a unital ring. A finite packet system on 𝑋
+is a family
+𝒫= (𝑃𝛼)𝛼∈𝐼⊆End(𝑋)
+of nonzero idempotents such that
+𝑃𝛼𝑃𝛽= 0
+when 𝛼≠𝛽,
+∑
+𝛼∈𝐼
+𝑃𝛼= 𝐼𝑋.
+Write
+𝑋𝛼= 𝑃𝛼𝑋,
+𝑋𝒫= ⨁
+𝛼∈𝐼
+𝑋𝛼.
+The analysis and synthesis maps are
+𝒜𝒫𝑥= (𝑃𝛼𝑥)𝛼,
+𝒮𝒫(𝑥𝛼)𝛼= ∑
+𝛼
+𝑥𝛼.
+They are inverse isomorphisms.
+Definition 3.2 (Refinement). Let 𝒫= (𝑃𝛼)𝛼∈𝐼and 𝒬= (𝑄𝛽)𝛽∈𝐽be packet systems on the same
+module. We say that 𝒬refines 𝒫when there is a surjection
+𝜌∶𝐽⟶𝐼
+such that
+𝑃𝛼= ∑
+𝜌(𝛽)=𝛼
+𝑄𝛽
+for every 𝛼∈𝐼. The index 𝛽is then called a child of 𝜌(𝛽).
+Theorem 3.3 (Children, parents, and transitivity). Suppose that 𝒬refines 𝒫through 𝜌. Then
+𝑃𝛼𝑄𝛽= 𝑄𝛽𝑃𝛼= {𝑄𝛽
+𝜌(𝛽) = 𝛼,
+0
+𝜌(𝛽) ≠𝛼.
+Hence 𝑄𝛽𝑋⊆𝑃𝜌(𝛽)𝑋. If a third packet system ℛrefines 𝒬, then ℛrefines 𝒫through the composite parent
+map.
+Proof. Multiply the identity
+𝑃𝛼= ∑
+𝜌(𝛾)=𝛼
+𝑄𝛾
+by 𝑄𝛽on either side. Pairwise annihilation in the fine family leaves 𝑄𝛽when 𝜌(𝛽) = 𝛼and leaves
+zero otherwise. For transitivity, substitute the child expansion of each 𝑄𝛽into the expansion of 𝑃𝛼and
+group the resulting terms by the composite parent.
+REALIZATION CALCULUS
+3
+
+
+OPERATION KOMOREBI
+PAPER II
+A refinement tower is a sequence (𝒫ℓ)ℓ≥0 with parent maps
+𝜌𝑚,ℓ∶𝐼𝑚⟶𝐼ℓ
+(𝑚≥ℓ)
+such that 𝒫𝑚refines 𝒫ℓthrough 𝜌𝑚,ℓfor every 𝑚≥ℓ, and
+𝜌ℓ,ℓ= id𝐼ℓ,
+𝜌𝑛,ℓ= 𝜌𝑚,ℓ∘𝜌𝑛,𝑚
+(𝑛≥𝑚≥ℓ).
+Thus every parent map witnesses the stated refinement and the maps compose coherently. The next
+result shows that the coordinate changes form a coherent system.
+Definition 3.4 (Coordinate change across levels). For two packet systems 𝒫and 𝒬on 𝑋, define
+𝐽𝒬←𝒫= 𝒜𝒬𝒮𝒫∶𝑋𝒫⟶𝑋𝒬
+and
+𝐶𝒫←𝒬= 𝒜𝒫𝒮𝒬∶𝑋𝒬⟶𝑋𝒫.
+When 𝒬refines 𝒫, the first map resolves each coarse coordinate into its children and the second
+adds the children back to their parent.
+The central idea
+A coarse coordinate retains a whole vector in its coarse packet. Adding its children keeps the whole
+vector inside that packet. Fine analysis recovers each child by applying its projector. This explains
+why the two coordinate maps can be inverse even when the fine system has more packet labels.
+Theorem 3.5 (Exact coordinate change and coherence). For any two packet systems on 𝑋,
+𝐶𝒫←𝒬𝐽𝒬←𝒫= 𝐼𝑋𝒫,
+𝐽𝒬←𝒫𝐶𝒫←𝒬= 𝐼𝑋𝒬.
+For three packet systems 𝒫, 𝒬, and ℛon 𝑋,
+𝐽ℛ←𝒬𝐽𝒬←𝒫= 𝐽ℛ←𝒫,
+𝐶𝒫←𝒬𝐶𝒬←ℛ= 𝐶𝒫←ℛ.
+If 𝒬refines 𝒫through 𝜌, then
+(𝐽𝒬←𝒫𝑥)𝛽= 𝑄𝛽𝑥𝜌(𝛽),
+(𝐶𝒫←𝒬𝑦)𝛼= ∑
+𝜌(𝛽)=𝛼
+𝑦𝛽.
+Proof. The packet analysis and synthesis maps are inverse. Therefore
+𝐶𝒫←𝒬𝐽𝒬←𝒫= 𝒜𝒫𝒮𝒬𝒜𝒬𝒮𝒫= 𝒜𝒫𝒮𝒫= 𝐼.
+The other inverse identity is the same calculation with the two systems exchanged. The coherence
+identities follow by inserting
+𝒮𝒬𝒜𝒬= 𝐼𝑋.
+REALIZATION CALCULUS
+4
+
+
+OPERATION KOMOREBI
+PAPER II
+Now assume that 𝒬refines 𝒫. If 𝑥= (𝑥𝛼)𝛼with 𝑥𝛼∈𝑃𝛼𝑋, then
+𝑄𝛽∑
+𝛼
+𝑥𝛼= 𝑄𝛽𝑥𝜌(𝛽)
+by theorem 3.3. The formula for 𝐶follows by synthesis followed by projection onto the parent packet.
+Remark 3.6 (Refinement and reduction). The maps in theorem 3.5 are isomorphisms because both co-
+ordinate spaces represent all of 𝑋. They do not reduce dimension and they do not discard packets.
+Approximation begins only after one chooses a truncation or compression rule.
+Corollary 3.7 (Orthogonal Hilbert packets). If 𝑋is a real or complex Hilbert space and every packet system
+in the tower consists of orthogonal projections, equip each finite packet direct sum with the Hilbert inner product
+⟨(𝑥𝛼), (𝑦𝛼)⟩= ∑𝛼⟨𝑥𝛼, 𝑦𝛼⟩. Then analysis and synthesis are unitary. Every coordinate change in theorem 3.5 is
+unitary.
+Proof. For an orthogonal packet system,
+‖𝑥‖2 = ∑
+𝛼
+‖𝑃𝛼𝑥‖2.
+Thus analysis is an isometry onto the full packet direct sum. Synthesis is its inverse. A coordinate
+change is a composition of two unitary maps.
+Every coarse packet is also uniquely reconstructed from its fine children. If vectors 𝑥𝛽∈𝑄𝛽𝑋sum
+to a coarse packet 𝑥, applying 𝑄𝛾recovers 𝑥𝛾= 𝑄𝛾𝑥. This is the uniqueness clause of the canonical
+nested-refinement statement.
+3.1 Typed coordinate naturality
+These coordinate changes are coherent through every finite tower. If three complete packet systems are
+denoted by 𝑎, 𝑏, 𝑐, then
+𝐽𝑐,𝑏𝐽𝑏,𝑎= 𝐽𝑐,𝑎,
+𝐽𝑎,𝑎= 𝐼,
+𝐽−1
+𝑏,𝑎= 𝐽𝑎,𝑏.
+These laws hold for arbitrary exact packet systems representing the same ambient module. The parent
+maps supply the component formulas linking children to their parents. Coordinate coherence itself
+does not require them.
+The same coherence applies to operators. Let 𝑃𝑎, 𝑃𝑏be packet systems on 𝑋, let 𝑄𝑎, 𝑄𝑏be packet sys-
+tems on 𝑌, where 𝑋and 𝑌are modules over the same scalar ring, and let 𝑇∶𝑋→𝑌be a linear map
+over that ring. Its exact coordinate representation
+̂𝑇𝑄,𝑃= 𝒜𝑄𝑇𝒮𝑃
+preserves identities and typed composition, and the naturality square is
+𝐽𝑌
+𝑄𝑏,𝑄𝑎̂𝑇𝑄𝑎,𝑃𝑎= ̂𝑇𝑄𝑏,𝑃𝑏𝐽𝑋
+𝑃𝑏,𝑃𝑎.
+The identity, cocycle, composition, inverse, and naturality laws are all proved in Lean. The separate
+refinement hypotheses supply the local component formulas linking each child to its parent.
+REALIZATION CALCULUS
+5
+
+
+OPERATION KOMOREBI
+PAPER II
+How to read the result
+These identities concern complete coordinates of the same module. A quotient is a different oper-
+ation: it identifies vectors that differ by an element of a chosen submodule. Later, finite precision
+will be expressed by a quotient that removes terms beyond the chosen filtration depth. This dis-
+tinction explains why refinement is exactly reversible while precision truncation has a prescribed
+residual.
+mod 2
+0
+1
+mod 4
+0
+2
+1
+3
+mod 8
+0
+4
+2
+6
+1
+5
+3
+7
+A nested residue hierarchy
+Each child retains its residue address in the coarser level.
+A child j at level 2N belongs to the parent j mod N.
+Figure 1. A nested residue hierarchy. Each residue modulo 2 is the union of two residues modulo 4, and each residue
+modulo 4 is the union of two residues modulo 8.
+3.2 Operator blocks across refinement
+For 𝑇∈End(𝑋) and a packet system 𝒫, write
+𝑇𝒫
+𝛽𝛼= 𝑃𝛽𝑇𝑃𝛼.
+Theorem 3.8 (Refinement of operator blocks). Suppose that 𝒬refines 𝒫through 𝜌. Then
+𝑇𝒫
+𝑏𝑎= ∑
+𝜌(𝛽)=𝑏
+𝜌(𝛼)=𝑎
+𝑇𝒬
+𝛽𝛼.
+The matrix of 𝑇in fine coordinates is related to the matrix in coarse coordinates by
+[𝑇]𝒫= 𝐶𝒫←𝒬[𝑇]𝒬𝐽𝒬←𝒫.
+REALIZATION CALCULUS
+6
+
+
+OPERATION KOMOREBI
+PAPER II
+Proof. Expand the two coarse projectors into their children:
+𝑃𝑏𝑇𝑃𝑎= ⎛
+⎜
+⎝
+∑
+𝜌(𝛽)=𝑏
+𝑄𝛽⎞
+⎟
+⎠
+𝑇⎛
+⎜
+⎝
+∑
+𝜌(𝛼)=𝑎
+𝑄𝛼⎞
+⎟
+⎠
+.
+Distributing the finite sums gives the first identity. For the coordinate identity, use
+[𝑇]𝒫= 𝒜𝒫𝑇𝒮𝒫
+and insert
+𝐼𝑋= 𝒮𝒬𝒜𝒬.
+Corollary 3.9 (Support under refinement). Under the hypotheses of theorem 3.8, a coarse block 𝑇𝒫
+𝑏𝑎is zero if
+and only if every fine descendant block
+𝑇𝒬
+𝛽𝛼
+(𝜌(𝛽) = 𝑏, 𝜌(𝛼) = 𝑎)
+is zero.
+Proof. If every fine block is zero, the coarse block is zero by theorem 3.8. Conversely, suppose 𝑃𝑏𝑇𝑃𝑎= 0.
+Multiply on the left by 𝑄𝛽and on the right by 𝑄𝛼. The child identities in theorem 3.3 give
+𝑄𝛽𝑇𝑄𝛼= 0.
+Thus refinement cannot hide an active transfer inside a zero coarse block. It can only reveal where the
+active transfer sits among the descendants.
+3.3 Common refinements
+Two packet systems need not be comparable. When their idempotents commute, their products give a
+common refinement.
+Theorem 3.10 (Common refinement of commuting packet systems). Let 𝒫= (𝑃𝛼)𝛼∈𝐼and 𝒬=
+(𝑄𝛽)𝛽∈𝐽be packet systems on 𝑋. Assume
+𝑃𝛼𝑄𝛽= 𝑄𝛽𝑃𝛼
+for all 𝛼and 𝛽. Remove the zero operators from the family
+𝑅𝛼𝛽= 𝑃𝛼𝑄𝛽.
+The remaining operators form a packet system that refines both 𝒫and 𝒬. The same statement holds for any
+finite collection of pairwise commuting packet systems.
+Proof. Commutativity gives
+𝑅2
+𝛼𝛽= 𝑃2
+𝛼𝑄2
+𝛽= 𝑅𝛼𝛽.
+REALIZATION CALCULUS
+7
+
+
+OPERATION KOMOREBI
+PAPER II
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+Fine residue modulo 12
+0
+1
+2
+3
+Coarse residue modulo 4
+1
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+1
+Exact refinement incidence
+A fine residue modulo 12 belongs to its residue modulo 4.
+Each fine packet has one parent. Each coarse packet contains three children.
+Figure 2. The incidence matrix 𝑀𝑟,𝑠= 1 when the fine residue 𝑠belongs to the coarse residue 𝑟. Its rows implement
+exact aggregation from fine packets to coarse packets.
+If (𝛼, 𝛽) ≠(𝛼′, 𝛽′), then either 𝑃𝛼𝑃𝛼′ = 0 or 𝑄𝛽𝑄𝛽′ = 0, so the corresponding products annihilate one
+another. Finally,
+∑
+𝛼,𝛽
+𝑅𝛼𝛽= (∑
+𝛼
+𝑃𝛼) (∑
+𝛽
+𝑄𝛽) = 𝐼𝑋.
+For a fixed 𝛼,
+𝑃𝛼= 𝑃𝛼∑
+𝛽
+𝑄𝛽= ∑
+𝛽
+𝑅𝛼𝛽,
+and the same argument works for a fixed 𝛽. Since each 𝑃𝛼and 𝑄𝛽is nonzero, these identities ensure
+that every parent has a nonzero product child. The two parent maps on the supported product family
+are therefore surjective. Iteration proves the finite family statement. For the empty collection, use the
+supported identity family: (𝐼𝑋) when 𝑋≠0 and the empty family when 𝑋= 0.
+Proposition 3.11 (Coarsest common refinement). Under the hypotheses of theorem 3.10, let ℛbe a packet
+system that refines both 𝒫and 𝒬. Then ℛrefines the nonzero product family (𝑃𝛼𝑄𝛽). Hence that product family
+is the coarsest packet system that refines both 𝒫and 𝒬.
+Proof. Let 𝑅𝛾be a packet in ℛ. Because ℛrefines 𝒫, there is a unique 𝛼with
+𝑃𝛼𝑅𝛾= 𝑅𝛾.
+Likewise there is a unique 𝛽with
+𝑄𝛽𝑅𝛾= 𝑅𝛾.
+Therefore
+𝑃𝛼𝑄𝛽𝑅𝛾= 𝑅𝛾.
+REALIZATION CALCULUS
+8
+
+
+OPERATION KOMOREBI
+PAPER II
+Every packet of ℛlies in one product packet. Multiplying ∑𝛾𝑅𝛾= 𝐼𝑋by 𝑃𝛼𝑄𝛽and using the parent
+identities gives
+𝑃𝛼𝑄𝛽=
+∑
+𝛾∶𝑃𝛼𝑅𝛾=𝑅𝛾
+𝑄𝛽𝑅𝛾=𝑅𝛾
+𝑅𝛾.
+Thus the packets with the same pair of parents reconstruct the product packet. If that product packet
+is nonzero, the sum has a child, so the parent map onto the supported product family is surjective.
+Example 3.12 (A two level split). Let
+𝑋= 𝑋00 ⊕𝑋01 ⊕𝑋10 ⊕𝑋11.
+Assume that all four summands are nonzero. The four coordinate projections form a fine packet system.
+The two sums
+𝑃0 = 𝑄00 + 𝑄01,
+𝑃1 = 𝑄10 + 𝑄11
+form a coarse packet system. If 𝑥= (𝑥00, 𝑥01, 𝑥10, 𝑥11), the coarse coordinates are
+(𝑥00 + 𝑥01, 𝑥10 + 𝑥11)
+when the sums are interpreted inside the two coarse direct summands. Fine analysis recovers the four
+entries exactly. Nothing has been approximated.
+4 Residue coordinates and coprime factorization
+Residue packets sort a formal series by the congruence classes of its exponents. This construction works
+over every coefficient ring. The character formula describes the same selectors through an operator
+average and needs stronger hypotheses.
+Definition 4.1 (Residue selector). Let 𝑅be a commutative ring and let
+𝐹(𝑧) = ∑
+𝑛≥0
+𝑎𝑛𝑧𝑛∈𝑅[[𝑧]].
+For 𝑁≥1 and 0 ≤𝑗< 𝑁, define
+(𝑃𝑁,𝑗𝐹)(𝑧) =
+∑
+𝑛≡𝑗
+(mod 𝑁)
+𝑎𝑛𝑧𝑛.
+Proposition 4.2 (Residue packet algebra). For every commutative ring 𝑅, the operators (𝑃𝑁,𝑗)0≤𝑗<𝑁satisfy
+the identities below. If 𝑅is nonzero, they form a packet system on 𝑅[[𝑧]]:
+𝑃𝑁,𝑖𝑃𝑁,𝑗= 𝛿𝑖𝑗𝑃𝑁,𝑗,
+𝑁−1
+∑
+𝑗=0
+𝑃𝑁,𝑗= 𝐼.
+Proof. Every nonnegative integer belongs to one residue class modulo 𝑁. A coefficient survives both
+𝑃𝑁,𝑖and 𝑃𝑁,𝑗exactly when the two labels are equal to its residue. Summing all selectors preserves
+every coefficient once.
+REALIZATION CALCULUS
+9
+
+
+OPERATION KOMOREBI
+PAPER II
+4.1 Finite orthogonality certificates
+The coefficient-mask definition of 𝑃𝑁,𝑗also makes sense over a commutative semiring: it only retains
+or sets coefficients to zero. We use that same definition in the following semiring statement.
+Let 𝑈act on coefficient sequences by
+(𝑈𝐹)(𝑧) = 𝐹(𝜔𝑧).
+If 𝜔𝑁= 1, then 𝑈𝑁= 𝐼.
+Theorem 4.3 (Root-of-unity realization). Let 𝑅be a commutative semiring, let 𝑁> 0, and suppose
+𝜔, 𝜔∨, 𝜂∈𝑅satisfy 𝜔𝑁= 1 and the finite 𝑁× 𝑁Fourier orthogonality table
+𝜂
+𝑁−1
+∑
+𝑘=0
+(𝜔∨)𝑗𝑘𝜔𝑟𝑘= {1,
+𝑟= 𝑗,
+0,
+𝑟≠𝑗,
+0 ≤𝑗, 𝑟< 𝑁.
+Then
+𝑃𝑁,𝑗= 𝜂
+𝑁−1
+∑
+𝑘=0
+(𝜔∨)𝑗𝑘𝑈𝑘.
+In particular, if 𝑅is a field, 𝑁> 0, and 𝜔is a primitive 𝑁th root of unity, the certificate holds with 𝜔∨= 𝜔−1
+and 𝜂= 𝑁−1.
+Proof. On the monomial 𝑧𝑛, the right-hand side acts by
+𝜂
+𝑁−1
+∑
+𝑘=0
+(𝜔∨)𝑗𝑘𝜔𝑛𝑘.
+The identity 𝜔𝑁= 1 reduces this expression to the table entry indexed by 𝑟= 𝑛mod 𝑁. The finite
+certificate therefore gives exactly the coefficient mask defining 𝑃𝑁,𝑗. Over a field, the primitive-root
+geometric sum supplies the certificate.
+The field or orthogonality condition is essential. A primitive element of order 𝑁in a ring with zero
+divisors does not by itself force the geometric sums away from the diagonal to vanish. For example, in
+𝔽3 × 𝔽3 the element (−1, 1) has order two, but the second component of its nontrivial character sum
+is nonzero. The coefficient selector uses no division and remains valid without any Fourier certificate.
+This distinction becomes decisive at the dyadic prime.
+4.2 The field specialization
+Theorem 4.4 (Character realization). Let 𝕜be a field, assume that 𝑁is nonzero in 𝕜, and suppose that
+𝕜contains a primitive 𝑁th root of unity 𝜔. Define
+(𝑈𝐹)(𝑧) = 𝐹(𝜔𝑧).
+Then
+𝑃𝑁,𝑗= 1
+𝑁
+𝑁−1
+∑
+𝑘=0
+𝜔−𝑗𝑘𝑈𝑘.
+REALIZATION CALCULUS
+10
+
+
+OPERATION KOMOREBI
+PAPER II
+Proof. On 𝑧𝑛, the right side acts by the scalar
+1
+𝑁
+𝑁−1
+∑
+𝑘=0
+𝜔𝑘(𝑛−𝑗).
+This is one when 𝑛≡𝑗(mod 𝑁) and zero otherwise by the geometric sum identity in the field 𝕜.
+Remark 4.5 (Two distinct constructions). The coefficient selector of definition 4.1 uses no division. The
+character formula in theorem 4.4 divides by 𝑁. At a prime that divides 𝑁, the coefficient selector may
+remain integral even when the character average does not.
+Theorem 4.6 (Nested residue refinement). Let 𝑁, 𝑀be positive integers with 𝑁dividing 𝑀, and let
+0 ≤𝑗< 𝑁. Then
+𝑃𝑁,𝑗=
+∑
+0≤𝑠<𝑀
+𝑠≡𝑗
+(mod 𝑁)
+𝑃𝑀,𝑠.
+When 𝑅is nonzero, the packet system modulo 𝑀refines the packet system modulo 𝑁.
+Proof. An exponent 𝑛satisfies 𝑛≡𝑗(mod 𝑁) exactly when its unique residue 𝑠modulo 𝑀satisfies
+𝑠≡𝑗(mod 𝑁).
+Example 4.7 (The shift graph of residue packets). Assume that 𝑅is nonzero and 𝑁> 0. Multiplication
+by 𝑧sends the residue packet 𝑃𝑁,𝑗𝑅[[𝑧]] into 𝑃𝑁,𝑗+1𝑅[[𝑧]], where the index is read modulo 𝑁. Its packet
+graph is the directed cycle
+0 ⟶1 ⟶⋯⟶𝑁−1 ⟶0.
+Multiplication by a polynomial supported on a set of residues gives the corresponding finite set of
+phase shifts. This is the simplest transfer graph behind a polyphase representation.
+Theorem 4.8 (Coprime factorization). Let 𝐴and 𝐵be coprime positive integers. For each 𝑗modulo 𝐴𝐵,
+write
+𝑗𝐴= 𝑗
+(mod 𝐴),
+𝑗𝐵= 𝑗
+(mod 𝐵).
+Then
+𝑃𝐴𝐵,𝑗= 𝑃𝐴,𝑗𝐴𝑃𝐵,𝑗𝐵.
+Every pair (𝑗𝐴, 𝑗𝐵) occurs for one residue 𝑗modulo 𝐴𝐵.
+Proof. A coefficient survives the product on the right exactly when its exponent satisfies both congru-
+ences. The Chinese remainder theorem gives one residue class modulo 𝐴𝐵with those two coordinates.
+The needed form of the theorem is standard and may be found in [5].
+Corollary 4.9 (Dyadic and odd coordinates). Write 𝑁= 2𝑎𝑀with 𝑀odd. Every residue packet modulo 𝑁
+is the product of one packet modulo 2𝑎and one packet modulo 𝑀.
+Proof. Apply theorem 4.8 to the coprime moduli 2𝑎and 𝑀.
+Example 4.10 (Residues modulo twelve). The pair
+(𝑗
+(mod 4), 𝑗
+(mod 3)) = (3, 1)
+REALIZATION CALCULUS
+11
+
+
+OPERATION KOMOREBI
+PAPER II
+corresponds to 𝑗= 7 modulo 12. Hence
+𝑃12,7 = 𝑃4,3𝑃3,1.
+This factorization concerns addresses. It does not say that the two factors have the same integral spectral
+behavior.
+0
+1
+2
+3
+4
+5
+6
+7
+Residue modulo 8
+0
+1
+2
+Residue modulo 3
+0
+9
+18
+3
+12
+21
+6
+15
+16
+1
+10
+19
+4
+13
+22
+7
+8
+17
+2
+11
+20
+5
+14
+23
+Two coordinates for each residue
+The mod 24 address is equivalent to its mod 8 and mod 3 addresses.
+Each cell contains the unique residue j modulo 24 with those two addresses.
+Figure 3. A composite residue packet is addressed by its dyadic and odd coordinates. The displayed mod-24 system
+is the product of mod 8 and mod 3.
+5 Complete filtered transfer algebras
+A filtration records how deeply a term lies in the chosen notion of precision. The weights record guar-
+anteed filtration gains that add under multiplication. A discrete valuation ring provides the main ex-
+ample.
+Definition 5.1 (Complete multiplicative filtration). A complete filtered algebra is a unital algebra
+ℬwith a decreasing sequence of two-sided ideals
+ℬ= 𝐹0ℬ⊇𝐹1ℬ⊇𝐹2ℬ⊇⋯
+such that
+𝐹𝑟ℬ𝐹𝑠ℬ⊆𝐹𝑟+𝑠ℬ,
+⋂
+𝐿≥0
+𝐹𝐿ℬ= 0,
+and the natural map
+ℬ⟶lim
+←−
+𝐿
+ℬ/𝐹𝐿ℬ
+REALIZATION CALCULUS
+12
+
+
+OPERATION KOMOREBI
+PAPER II
+is an isomorphism. A transfer term 𝑁𝑒has a declared positive integer weight 𝑤(𝑒) ∈ℤ>0 when
+𝑁𝑒∈𝐹𝑤(𝑒)ℬ.
+In the filtration topology, reduction to ℬ/𝐹𝐿ℬis continuous when the quotient has the discrete topol-
+ogy. Its kernel 𝐹𝐿ℬis therefore closed. In particular, a convergent sum of terms in 𝐹𝐿ℬremains in
+that ideal.
+If 𝒪is a complete discrete valuation ring with uniformizer 𝜋and ℬis a separated and complete 𝒪
+algebra for the filtration
+𝐹𝐿ℬ= 𝜋𝐿ℬ,
+then this is a standard example. Finite matrix algebras over 𝒪satisfy these conditions. Completeness of
+𝒪alone does not imply completeness of every 𝒪algebra. Basic facts about completeness in this setting
+are reviewed in [8].
+Theorem 5.2 (Weighted inverse). Let ℬbe a complete filtered algebra. Let 𝐷∈ℬbe invertible with
+𝐷, 𝐷−1 ∈𝐹0ℬ.
+Let 𝐸be a finite set and suppose
+𝑇= 𝐷+ ∑
+𝑒∈𝐸
+𝑁𝑒,
+𝑁𝑒∈𝐹𝑤(𝑒)ℬ,
+𝑤(𝑒) ≥1.
+Set
+𝐴𝑒= 𝐷−1𝑁𝑒.
+For a word 𝛾= (𝑒1, … , 𝑒𝑟), write
+𝐴𝛾= 𝐴𝑒𝑟⋯𝐴𝑒1,
+𝑊(𝛾) =
+𝑟
+∑
+𝑗=1
+𝑤(𝑒𝑗).
+The empty word has weight zero and contributes the identity. Then 𝑇is invertible and
+𝑇−1 = ∑
+𝛾
+(−1)|𝛾|𝐴𝛾𝐷−1.
+The series converges in the filtration, and the term indexed by 𝛾belongs to 𝐹𝑊(𝛾)ℬ.
+Proof. Put
+𝐴= ∑
+𝑒∈𝐸
+𝐴𝑒.
+Since left multiplication by 𝐷−1 preserves the filtration, 𝐴∈𝐹1ℬ. Completeness gives the convergent
+Neumann series
+(𝐼+ 𝐴)−1 = ∑
+𝑟≥0
+(−𝐴)𝑟.
+Because 𝑇= 𝐷(𝐼+ 𝐴),
+𝑇−1 = (𝐼+ 𝐴)−1𝐷−1.
+REALIZATION CALCULUS
+13
+
+
+OPERATION KOMOREBI
+PAPER II
+Expanding each power of 𝐴gives the sum over words, with the rightmost edge acting first. Multiplica-
+tivity of the filtration gives
+𝐴𝛾∈𝐹𝑊(𝛾)ℬ.
+For each 𝐿, only finitely many words have weight below 𝐿because 𝐸is finite and every edge has
+positive weight. Thus the word expansion converges to the same inverse.
+The preceding formula does not yet use packet blocks. When 𝐷is packet diagonal and the terms 𝑁𝑒
+are individual transfers, only words with compatible packet endpoints can contribute. These words
+become directed paths.
+Theorem 5.3 (Block path formula). Let 𝒫= (𝑃𝛼)𝛼∈𝐼be a finite packet system in a complete filtered
+algebra of operators. Suppose
+𝐷= ∑
+𝛼
+𝑃𝛼𝐷𝑃𝛼
+belongs to ℬand is invertible on every packet. Assume that the assembled inverse
+𝐷−1 = ∑
+𝛼
+𝐷−1
+𝛼𝑃𝛼∈ℬ= 𝐹0ℬ,
+𝐷𝛼= 𝑃𝛼𝐷𝑃𝛼,
+where each packet inverse is extended by zero to the other packets. Let the edge set be finite, assume 𝑤(𝑒) ≥1
+for every edge, and write
+𝑁= ∑
+𝑒∶𝛼→𝛽
+𝑁𝑒,
+𝑁𝑒= 𝑃𝛽𝑁𝑒𝑃𝛼,
+𝑁𝑒∈𝐹𝑤(𝑒)ℬ.
+For an edge 𝑒∶𝛼→𝛽, put
+𝐴𝑒= (𝑃𝛽𝐷𝑃𝛽)−1𝑁𝑒.
+Then the block from 𝑃𝛼𝑋to 𝑃𝛽𝑋of (𝐷+ 𝑁)−1 is
+𝑃𝛽(𝐷+ 𝑁)−1𝑃𝛼= ∑
+𝛾∶𝛼⇝𝛽
+(−1)|𝛾|𝐴𝛾𝐷−1
+𝛼,
+where 𝐷𝛼= 𝑃𝛼𝐷𝑃𝛼and the sum runs over directed paths from 𝛼to 𝛽, including the empty path when
+𝛼= 𝛽.
+Proof. The diagonal inverse is
+𝐷−1 = ∑
+𝛼
+𝐷−1
+𝛼𝑃𝛼.
+The block 𝑃𝛽𝐷−1𝑁𝑃𝛼is nonzero only when there is a declared edge from 𝛼to 𝛽. Repeated block mul-
+tiplication shows that the 𝑟th power of 𝐷−1𝑁is the sum over all directed paths of length 𝑟, with the
+operator factors ordered along the path. Apply theorem 5.2 and multiply on the right by the packet
+diagonal inverse.
+Corollary 5.4 (Minimum path weight). For packets 𝛼and 𝛽, let 𝑑(𝛼, 𝛽) be the least total weight of a directed
+path from 𝛼to 𝛽, with 𝑑= ∞when no path exists. Use the convention 𝐹∞ℬ= ⋂𝐿≥0 𝐹𝐿ℬ= 0. If 𝛼≠𝛽, then
+𝑃𝛽(𝐷+ 𝑁)−1𝑃𝛼∈𝐹𝑑(𝛼,𝛽)ℬ.
+If there is no path from 𝛼to 𝛽, the block is zero.
+REALIZATION CALCULUS
+14
+
+
+OPERATION KOMOREBI
+PAPER II
+Proof. Every term in the block path formula is indexed by a path from 𝛼to 𝛽and lies in the filtration
+level given by its total weight. If no such path exists, the sum is empty.
+Example 5.5 (A longer path that appears earlier). Consider three packets 𝛼, 𝛽, and 𝛾. Suppose there is
+a direct edge from 𝛼to 𝛾of weight three, together with edges
+𝛼⟶𝛽,
+𝛽⟶𝛾
+of weight one each. The two edge route has total weight two, so it contributes to the inverse before the
+direct edge does. This is why the truncation rule uses total weight rather than path length. The lower
+bound in corollary 5.4 need not be an equality because several paths of the same weight may cancel.
+The central idea
+Word length counts how many transfers are composed. Weight counts how much filtration gain
+those transfers guarantee. The sign in the inverse expansion depends on length, while the preci-
+sion cutoff depends on weight. A short word can therefore disappear at a chosen precision while
+a longer word still contributes.
+Corollary 5.6 (Acyclic transfer graph). If the packet transfer graph is acyclic, then 𝐷−1𝑁is nilpotent. The
+inverse in theorem 5.3 is a finite sum and does not require completeness of the filtration.
+Proof. A finite acyclic directed graph has a bound on path length. Every sufficiently long product of
+transfer blocks is therefore zero. The Neumann series terminates.
+Corollary 5.7 (Stability of inversion at finite precision). Let 𝑇and ̃𝑇be invertible elements of 𝐹0ℬ. If
+𝑇−̃𝑇∈𝐹𝐿ℬ,
+then
+𝑇−1 −̃𝑇−1 ∈𝐹𝐿ℬ.
+Proof. Use the resolvent identity at zero in the form
+𝑇−1 −̃𝑇−1 = 𝑇−1(̃𝑇−𝑇)̃𝑇−1.
+Both inverse factors belong to 𝐹0ℬ, so the product lies in 𝐹𝐿ℬ.
+Corollary 5.8 (Exact finite precision truncation). Under the hypotheses of theorem 5.2, define
+𝑅𝐿=
+∑
+𝑊(𝛾)<𝐿
+(−1)|𝛾|𝐴𝛾𝐷−1.
+Then
+𝑇−1 −𝑅𝐿∈𝐹𝐿ℬ,
+𝑇𝑅𝐿−𝐼∈𝐹𝐿ℬ,
+𝑅𝐿𝑇−𝐼∈𝐹𝐿ℬ.
+Thus 𝑅𝐿is the exact inverse in ℬ/𝐹𝐿ℬ.
+Proof. Every omitted word has weight at least 𝐿, so the difference from the full inverse lies in 𝐹𝐿ℬ. Mul-
+tiplication by 𝑇or by its inverse preserves membership in 𝐹𝐿ℬunder the stated filtration assumptions.
+The two residual statements follow.
+REALIZATION CALCULUS
+15
+
+
+OPERATION KOMOREBI
+PAPER II
+Example 5.9 (A triangular transfer). Let 𝒪be complete with uniformizer 𝜋, and consider
+𝑇= (1
+𝜋𝑎
+0
+1 )
+with 𝑎≥1. The only nontrivial transfer has weight 𝑎, and its square is zero. Hence
+𝑇−1 = (1
+−𝜋𝑎
+0
+1 ) .
+At precision 𝐿≤𝑎, the transfer vanishes and the inverse is the identity modulo 𝜋𝐿. At depth 𝑎+ 1, the
+transfer between the two packets first becomes visible.
+Two compatible word conventions.
+The path expansion above labels a word in chronological order
+and writes its operator product in reverse order, so the first edge acts first. The following finite-word
+contract uses written multiplication order. Reversing all word labels identifies the sums over all words.
+Individual path labels must retain their stated convention. The two conventions do not change a weight
+or an inverse.
+5.1 Finite quotient and normed-ring realizations
+5.1.1
+Normalized edges and written-word convention
+Let 𝒪be a complete discrete valuation ring with uniformizer 𝜋, fraction field 𝐾, and filtration
+𝐹𝑚ℬ= 𝜋𝑚ℬ
+on an 𝒪-algebra ℬ. The finite quotient statements below do not require ℬitself to be complete. Suppose
+𝑇= 𝐷+ 𝐻,
+where 𝐷is invertible and the perturbation 𝐻raises filtration. The symbol 𝐾is reserved for the fraction
+field.
+A packet decomposition resolves 𝐻= ∑𝑒∈𝐸𝐻𝑒and assigns a certified filtration gain
+𝐷−1𝐻𝑒∈𝐹𝑤(𝑒)ℬ,
+𝑤(𝑒) ∈ℤ>0.
+Each 𝑒is a directed transfer edge. For an ordered transfer word
+𝛾= (𝑒1, … , 𝑒𝑟),
+define
+𝑊(𝛾) =
+𝑟
+∑
+𝑗=1
+𝑤(𝑒𝑗),
+𝐴𝛾= 𝐴𝑒1 ⋯𝐴𝑒𝑟,
+𝐴𝑒= 𝐷−1𝐻𝑒.
+REALIZATION CALCULUS
+16
+
+
+OPERATION KOMOREBI
+PAPER II
+0
+1
+2
+w = 2
+w = 1
+w = 3
+w = 2
+w = 1
+w = 4
+Weighted transfer graph
+Edge weights measure filtration gain. Every edge has multiplicity one.
+The weighted walk series below starts at packet 0 and ends at packet 2.
+Figure 4. A finite packet-transfer graph. Edge weights record filtration gain rather than merely the number of operator
+compositions.
+Theorem 5.10 (Certified weighted inverse). Let 𝑅be a possibly noncommutative ring, let 𝐷−1 be a
+supplied two-sided inverse of 𝐷, and put 𝐴= 𝐷−1𝐻.
+(a) If 𝐴𝑟= 0, then 𝐷+ 𝐻has the two-sided inverse
+(𝐷+ 𝐻)−1 = (
+𝑟−1
+∑
+𝑘=0
+(−𝐴)𝑘) 𝐷−1.
+(b) If 𝑅is a complete normed ring and ‖𝐴‖ < 1, then ∑𝑘≥0(−𝐴)𝑘converges and
+(𝐷+ 𝐻)−1 = (∑
+𝑘≥0
+(−𝐴)𝑘) 𝐷−1.
+Proof. Factor
+𝑇= 𝐷(𝐼+ 𝐴),
+𝐴= 𝐷−1𝐻.
+For a finite cutoff 𝑟, multiplication on either side gives the noncommutative telescoping identity
+(𝐼+ 𝐴)
+𝑟−1
+∑
+𝑘=0
+(−𝐴)𝑘= (
+𝑟−1
+∑
+𝑘=0
+(−𝐴)𝑘) (𝐼+ 𝐴) = 1 −(−𝐴)𝑟.
+This proves (a). In (b), the strict norm bound makes the geometric series summable. Continuity of
+multiplication passes the same identities to the limit. Multiplication by 𝐷−1 gives the displayed inverse
+in both orders.
+REALIZATION CALCULUS
+17
+
+
+OPERATION KOMOREBI
+PAPER II
+Corollary 5.11 (Finite precision). Let 𝐹•𝑅be a multiplicative decreasing filtration and let 𝑞𝐿∶𝑅→𝑅𝐿be a
+ring homomorphism that kills 𝐹𝐿𝑅. Suppose
+𝐻= ∑
+𝑒∈𝐸
+𝐻𝑒,
+𝐷−1𝐻𝑒∈𝐹𝑤(𝑒)𝑅,
+𝑤(𝑒) ≥1,
+with 𝐸finite. Then 𝑞𝐿(𝐷−1𝐻)𝐿= 0, the finite sum in theorem 5.10(a) is a two-sided inverse after applying 𝑞𝐿,
+and its word expansion may discard every word of weight at least 𝐿. More explicitly, for a length cutoff 𝑁, define
+𝑆pr
+𝐿,𝑁=
+𝑁−1
+∑
+𝑛=0
+(−1)𝑛
+∑
+𝛾∈𝐸𝑛
+𝑊(𝛾)<𝐿
+𝐴𝛾.
+Lean proves directly that 𝑞𝐿(𝑆pr
+𝐿,𝑁) equals the mapped geometric inverse whenever 𝑞𝐿(𝐴𝑁) = 0, and hence is a
+two-sided inverse of 𝑞𝐿(𝐼+ 𝐴), where 𝐴= ∑𝑒𝐴𝑒= 𝐷−1𝐻. With the supplied two-sided inverse 𝐷−1 of 𝐷,
+this gives the explicit two-sided inverse
+𝑞𝐿(𝑆pr
+𝐿,𝑁𝐷−1)
+of
+𝑞𝐿(𝐷+ 𝐻).
+If every edge weight is at least 𝑚and 𝐿≤𝑚𝑁, then the nilpotence condition follows from the filtration data
+because 𝑚|𝛾| ≤𝑊(𝛾). For 𝑚> 0, the executable choice 𝑁= ⌈𝐿/𝑚⌉satisfies 𝐿≤𝑚𝑁. This elementary
+ceiling inequality is also proved in Lean. The choice 𝑚= 1, 𝑁= 𝐿gives the standard cutoff. In the DVR
+example 𝑞𝐿∶𝑅→𝑅/𝜋𝐿𝑅, this reads
+𝑞𝐿(𝑇)−1 = 𝑞𝐿⎛
+⎜
+⎝
+∑
+𝑊(𝛾)<𝐿
+(−1)|𝛾|𝐴𝛾𝐷−1⎞
+⎟
+⎠
+.
+Here 𝐴𝛾= (𝐷−1𝐻𝑒1) ⋯(𝐷−1𝐻𝑒𝑟) in the written order. Multiplicativity places it in 𝐹𝑊(𝛾)𝑅, so the
+quotient kills it when 𝑊(𝛾) ≥𝐿. Positive weights also imply |𝛾| ≤𝑊(𝛾), making the retained search
+finite.
+How to read the result
+Using the standard length cutoff, every discarded word has weight at least the chosen depth and
+vanishes in the quotient. The retained sum therefore satisfies both inverse identities exactly at
+that precision. The earlier truncation theorem states the corresponding residual bounds in the
+complete filtered algebra itself.
+The inherited finite-word contract proves the result in the finite quotients above and in the contraction
+specialization for complete normed rings. The complete filtered statement has its own separation and
+inverse-limit completeness hypotheses. Its current Lean coverage is recorded separately in the current
+correspondence.
+6 Rational weighted transfer series
+A finite weighted graph records which path terms can occur in the inverse. Collecting paths by total
+weight turns this support information into a generating function. The finite adjacency matrix makes
+that function rational.
+REALIZATION CALCULUS
+18
+
+
+OPERATION KOMOREBI
+PAPER II
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+Precision L
+0
+2
+4
+6
+8
+10
+Largest allowed integer weight
+Finite filtration cutoff
+At precision L, only transfer words with total weight less than L contribute.
+This is the support cutoff L − 1. It does not count the number of surviving walks.
+Figure 5. At precision 𝐿, weighted inversion requires only transfer words whose cumulative weight is below 𝐿.
+Definition 6.1 (Weighted transfer series). Let 𝐺be a finite directed multigraph. Give every edge
+𝑒a positive integer weight 𝑤(𝑒) and a scalar multiplicity 𝑚(𝑒) in a field 𝕜. Define the polynomial
+adjacency matrix
+𝐴(𝑡)𝑖𝑗= ∑
+𝑒∶𝑖→𝑗
+𝑚(𝑒)𝑡𝑤(𝑒).
+For column vectors 𝑢and 𝑣, define
+𝑍𝑢,𝑣(𝑡) = ∑
+𝑛≥0
+𝑎𝑛𝑡𝑛,
+where
+𝑎𝑛= ∑
+𝑖,𝑗
+∑
+𝛾∶𝑖⇝𝑗
+𝑊(𝛾)=𝑛
+𝑢𝑖𝑣𝑗
+|𝛾|
+∏
+𝜈=1
+𝑚(𝑒𝜈).
+Here 𝛾= (𝑒1, … , 𝑒|𝛾|) is a directed walk. Vertices and edges may repeat, and the empty walk has
+weight zero and multiplicity one. Thus the endpoint vectors weight the start and end of each walk,
+rather than only selecting subsets of vertices.
+Theorem 6.2 (Rationality of the transfer series). The weighted transfer series satisfies
+𝑍𝑢,𝑣(𝑡) = 𝑢T(𝐼−𝐴(𝑡))−1𝑣.
+It is a rational function whose denominator divides
+det(𝐼−𝐴(𝑡)).
+REALIZATION CALCULUS
+19
+
+
+OPERATION KOMOREBI
+PAPER II
+Proof. Since every entry of 𝐴(𝑡) has zero constant term, the inverse exists in the formal power series
+ring and
+(𝐼−𝐴(𝑡))−1 = ∑
+𝑟≥0
+𝐴(𝑡)𝑟.
+The (𝑖, 𝑗) entry of 𝐴(𝑡)𝑟is the sum of the monomials attached to all paths of length 𝑟from 𝑖to 𝑗. Sum-
+ming over 𝑟records paths of every length. Multiplication by the endpoint vectors gives the stated series.
+The adjugate formula gives
+(𝐼−𝐴(𝑡))−1 = adj(𝐼−𝐴(𝑡))
+det(𝐼−𝐴(𝑡)),
+so every entry is rational.
+Corollary 6.3 (Recurrence for path counts). Write
+𝑍𝑢,𝑣(𝑡) = 𝑃(𝑡)
+𝑄(𝑡),
+𝑄(𝑡) = 1 + 𝑞1𝑡+ ⋯+ 𝑞𝑑𝑡𝑑.
+Use the convention deg 0 = −∞. Then, for every nonnegative integer 𝑛> deg 𝑃,
+𝑎𝑛+ 𝑞1𝑎𝑛−1 + ⋯+ 𝑞𝑑𝑎𝑛−𝑑= 0.
+Proof. Compare coefficients in the identity
+𝑄(𝑡)𝑍𝑢,𝑣(𝑡) = 𝑃(𝑡).
+Beyond the degree of 𝑃, the coefficient on the right is zero.
+In the recurrence, set 𝑎𝑘= 0 when 𝑘< 0. This is the coefficient convention for the formal power series
+𝑍𝑢,𝑣(𝑡) and makes the first recurrence equations meaningful even when 𝑛< 𝑑.
+Corollary 6.4 (Several independent weights). Suppose every edge has a weight vector
+𝑤(𝑒) = (𝑤1(𝑒), … , 𝑤𝑟(𝑒)) ∈ℕ𝑟∖{0}.
+Replace 𝑡𝑤(𝑒) by
+𝑡𝑤1(𝑒)
+1
+⋯𝑡𝑤𝑟(𝑒)
+𝑟
+.
+The resulting multigraded transfer series is rational in 𝑡1, … , 𝑡𝑟.
+Proof. The same matrix inverse proof works over the formal power series ring in several variables. The
+adjugate formula gives rationality.
+The multigraded form is useful when dyadic depth, odd depth, and another filtration are tracked sep-
+arately rather than collapsed into one number.
+Example 6.5 (A transfer series with one loop). Take vertices 0, 1, and 2. Give the edge 0 →1 weight
+one, the loop 1 →1 weight two, and the edge 1 →2 weight one. Every path from 0 to 2 uses the first
+and last edges and may traverse the loop any number of times. Hence
+𝑍0,2(𝑡) = 𝑡2(1 + 𝑡2 + 𝑡4 + ⋯) =
+𝑡2
+1 −𝑡2 .
+REALIZATION CALCULUS
+20
+
+
+OPERATION KOMOREBI
+PAPER II
+There is one path at every positive even weight and no path at an odd weight. The denominator records
+the increase of two units produced by the loop.
+6.1 Automatic finite-graph construction
+Let 𝐺be a finite directed graph with positive integer edge weights. Define the polynomial adjacency
+matrix
+𝐴(𝑡)𝑖𝑗= ∑
+𝑒∶𝑖→𝑗
+𝑡𝑤(𝑒),
+where parallel edges are distinct elements of the finite edge type and are therefore counted with their
+full multiplicity.
+For fixed start and target vertices 𝑠, 𝑡, define
+𝑍𝑠,𝑡(𝑡) = ∑
+𝑛≥0
+𝑎𝑛(𝑠, 𝑡)𝑡𝑛,
+where 𝑎𝑛(𝑠, 𝑡) counts directed walks from 𝑠to 𝑡with total weight 𝑛. Vertices and edges may repeat.
+Thus “path zeta” is retained as the name of the series and Lean API, but the walks are not required to
+visit each vertex only once.
+Theorem 6.6 (Automatic finite-graph transfer-zeta rationality). Assume the vertex and edge sets are
+finite and every edge has positive integer weight. For every 𝑛, exact enumeration of edge tuples of lengths at
+most 𝑛, followed by endpoint and total-weight filtering, returns 𝑎𝑛(𝑠, 𝑡). These coefficients obey the recur-
+rence obtained by removing the first edge
+𝑎𝑛(𝑠, 𝑡) = 1𝑠=𝑡, 𝑛=0 +
+∑
+𝑒∶source(𝑒)=𝑠
+𝑤(𝑒)≤𝑛
+𝑎𝑛−𝑤(𝑒)(target(𝑒), 𝑡).
+Let
+𝑇(𝑡) = 𝐼−𝐴(𝑡),
+𝑄(𝑡) = det 𝑇(𝑡),
+𝑃𝑠,𝑡(𝑡) = adj(𝑇(𝑡))𝑠,𝑡.
+Then 𝑄(0) = 1, hence 𝑄≠0 and 𝑄is a unit in ℤ[[𝑡]], and the independently enumerated walk series
+satisfies
+𝑍𝑠,𝑡(𝑡) = 𝑄(𝑡)−1𝑃𝑠,𝑡(𝑡),
+𝑄(𝑡)𝑍𝑠,𝑡(𝑡) = 𝑃𝑠,𝑡(𝑡)
+in ℤ[[𝑡]].
+Proof. Every edge has weight at least one, so a word of weight 𝑛has length at most 𝑛. The enumerator
+therefore searches a finite set containing every contributing walk, and its filters are exactly the defining
+predicates for 𝑎𝑛. Removing the first edge gives the displayed disjoint decomposition into the empty
+diagonal walk and the first-edge tails. In matrix form this is
+𝑍= 𝐼+ 𝐴𝑍,
+(𝐼−𝐴)𝑍= 𝐼.
+Positive weights give 𝐴(0) = 0, so 𝑇(0) = 𝐼and 𝑄(0) = det(𝐼) = 1. The two adjugate identities
+𝑇adj(𝑇) = 𝑄𝐼,
+adj(𝑇)𝑇= 𝑄𝐼
+remain valid after inclusion into ℤ[[𝑡]]. Multiplying the adjugate by the formal-series inverse of 𝑄con-
+structs a two-sided inverse of 𝑇. Uniqueness of the inverse identifies that construction with the inde-
+pendently enumerated matrix 𝑍, yielding the entrywise formulas.
+REALIZATION CALCULUS
+21
+
+
+OPERATION KOMOREBI
+PAPER II
+This is the finite transfer-matrix method of [9], but here its determinant, adjugate, normalization, recur-
+rence from the first edge, and identification with the enumerated series are all formalized. The older
+API accepting an independently supplied normalized coefficient identity 𝑄𝑍= 𝑃is retained for ex-
+ternal certificates. It is no longer needed to obtain rationality for the finite graph defined above. The
+Python companion performs an exact symbolic construction as an independent executable check.
+Corollary 6.7 (Linear recurrence). With the canonical polynomials from theorem 6.6, write
+𝑄(𝑡) = ∑
+𝑘
+𝑞𝑘𝑡𝑘,
+𝑍𝑠,𝑡(𝑡) = ∑
+𝑛≥0
+𝑎𝑛(𝑠, 𝑡)𝑡𝑛.
+Then the walk counts satisfy the recurrence with constant coefficients determined by 𝑄after the finite initial range
+contributed by 𝑃𝑠,𝑡, with deg 0 = −∞:
+𝑛
+∑
+𝑘=0
+𝑞𝑘𝑎𝑛−𝑘(𝑠, 𝑡) = 0
+(𝑛> deg 𝑃𝑠,𝑡).
+0
+4
+8
+12
+16
+20
+24
+28
+32
+36
+Total walk weight
+0
+1
+10
+102
+103
+104
+Number of walks
+Weighted walk counts
+All walks from packet 0 to packet 2, including loops and repeated visits.
+Exact integer counts through weight 36. The vertical scale is logarithmic above 1.
+Figure 6. The walk counts for one weighted graph. The exact generating function is rational, so these counts satisfy a
+finite linear recurrence.
+Example 6.8 (A computed transfer zeta). For the graph used in the numerical companion, the walk
+series from packet 0 to packet 2 is
+𝑍0,2(𝑡) =
+𝑡3
+1 −𝑡2 −𝑡3 −2𝑡4 + 𝑡5 + 𝑡6 + 𝑡7 −𝑡9 .
+The first nonzero coefficients are
+1, 1, 1, 3, 1, 5, 4, 10, 7, 19, 17, 37, …
+REALIZATION CALCULUS
+22
+
+
+OPERATION KOMOREBI
+PAPER II
+at their corresponding weights. Direct enumeration through weight 30 agrees coefficient by coefficient
+with the rational expansion.
+7 Rational spectral projectors and resultant bounds
+Let 𝒪be a discrete valuation ring with fraction field 𝐾and uniformizer 𝜋. Let Λ be a finite free 𝒪
+module and put
+𝑉= 𝐾⊗𝒪Λ.
+Suppose 𝐴∈End𝒪(Λ).
+Theorem 7.1 (Bézout spectral projector). Assume that
+𝜒𝐴(𝑥) = 𝑓(𝑥)𝑔(𝑥)
+with monic polynomials 𝑓, 𝑔∈𝒪[𝑥] that are coprime in 𝐾[𝑥]. Choose 𝑢, 𝑣∈𝒪[𝑥] and a nonzero 𝑟∈𝒪
+such that
+𝑢(𝑥)𝑓(𝑥) + 𝑣(𝑥)𝑔(𝑥) = 𝑟.
+Then
+𝐸𝑓= 𝑟−1𝑣(𝐴)𝑔(𝐴)
+is the projector of 𝑉onto Ker 𝑓(𝐴) along Ker 𝑔(𝐴). In particular,
+𝐸2
+𝑓= 𝐸𝑓,
+𝑟𝐸𝑓∈End𝒪(Λ).
+Proof. Cayley Hamilton gives
+𝑓(𝐴)𝑔(𝐴) = 0.
+If 𝑥∈Ker 𝑓(𝐴), then the Bézout identity gives
+𝑣(𝐴)𝑔(𝐴)𝑥= 𝑟𝑥,
+so 𝐸𝑓𝑥= 𝑥. If 𝑥∈Ker 𝑔(𝐴), then 𝐸𝑓𝑥= 0. The same identity gives the direct sum decomposition
+𝑉= Ker 𝑓(𝐴) ⊕Ker 𝑔(𝐴).
+Indeed, every 𝑥∈𝑉is the sum of
+𝑟−1𝑣(𝐴)𝑔(𝐴)𝑥∈Ker 𝑓(𝐴)
+and
+𝑟−1𝑢(𝐴)𝑓(𝐴)𝑥∈Ker 𝑔(𝐴).
+Thus 𝐸𝑓is the stated projector and is idempotent. The formula for 𝑟𝐸𝑓has coefficients in 𝒪, so it pre-
+serves Λ.
+REALIZATION CALCULUS
+23
+
+
+OPERATION KOMOREBI
+PAPER II
+Theorem 7.2 (Several coprime spectral packets). Assume
+𝜒𝐴(𝑥) =
+𝑟
+∏
+𝑖=1
+𝑓𝑖(𝑥),
+where the monic factors 𝑓𝑖∈𝒪[𝑥] are pairwise coprime in 𝐾[𝑥]. Put
+𝑔𝑖= ∏
+𝑗≠𝑖
+𝑓𝑗.
+There are complementary projectors 𝐸𝑖with
+im 𝐸𝑖= Ker 𝑓𝑖(𝐴),
+∑
+𝑖
+𝐸𝑖= 𝐼,
+𝐸𝑖𝐸𝑗= 0
+(𝑖≠𝑗).
+One may choose 𝐸𝑖so that
+Res(𝑓𝑖, 𝑔𝑖)𝐸𝑖∈End𝒪(Λ)
+up to multiplication of the resultant by a unit.
+Proof. Apply theorem 7.1 to the factorization 𝜒𝐴= 𝑓𝑖𝑔𝑖. The resulting projector is one on Ker 𝑓𝑖(𝐴)
+and zero on every Ker 𝑓𝑗(𝐴) with 𝑗≠𝑖. The direct sum decomposition follows from the polynomial
+Chinese remainder theorem. The orthogonality and sum identities follow by evaluating the correspond-
+ing idempotents in 𝐾[𝑥]/(𝜒𝐴). The Sylvester Bézout relation for (𝑓𝑖, 𝑔𝑖) gives the stated denominator
+bound.
+Corollary 7.3 (Resultant denominator bound). Under the hypotheses of theorem 7.1, one may take
+𝑟= Res(𝑓, 𝑔)
+up to multiplication by a unit. Therefore
+𝜋val𝜋(Res(𝑓,𝑔))𝐸𝑓Λ ⊆Λ.
+Proof. The Sylvester matrix construction gives a Bézout relation with right side equal to the resultant.
+Apply theorem 7.1. Standard facts about resultants may be found in [5, 3].
+Example 7.4 (A resultant bound that is not exact). Let
+𝐴= diag(0, 𝜋𝑠)
+on the standard lattice Λ = 𝒪2. The factors 𝑥and 𝑥−𝜋𝑠have resultant −𝜋𝑠, up to the harmless choice
+of resultant order, but the two spectral projectors are the integral coordinate projectors. Their exact
+separation weight is zero. The resultant sees the closeness of the two eigenvalues. It does not see that
+the chosen lattice already splits along their eigenspaces.
+How to read the result
+A resultant bounds the denominator through the characteristic factors. The exact separation
+weight also depends on how the lattice sits inside the rational packet spaces. These are two stages
+REALIZATION CALCULUS
+24
+
+
+OPERATION KOMOREBI
+PAPER II
+of the calculation. First construct a rational projector with a known clearing denominator. Then
+measure the gluing of the chosen lattice to find the least denominator that actually works.
+7.1 Evaluated certificates and explicit lattice action
+7.1.1
+Minimal evaluated Bézout identities
+Let 𝒪be a DVR, 𝐾= Frac(𝒪), and 𝐴∈End𝒪(Λ) for a finite free lattice Λ. Suppose the characteristic
+polynomial factors over 𝒪as
+𝜒𝐴(𝑥) = 𝑓(𝑥)𝑔(𝑥),
+where 𝑓and 𝑔are coprime over 𝐾[𝑥].
+Theorem 7.5 (Evaluated Bézout spectral projector). Let 𝐹, 𝐺, 𝑈, 𝑉∈End𝐾(Λ⊗𝒪𝐾) and let 𝑟∈𝐾×.
+Suppose
+𝑈𝐹+ 𝑉𝐺= 𝑟𝐼,
+𝐹𝐺= 0,
+𝐹𝐺= 𝐺𝐹,
+𝐺𝑈= 𝑈𝐺.
+Put 𝑁= 𝑉𝐺. Then
+𝑁2 = 𝑟𝑁.
+Consequently the operator
+𝐸= 𝑟−1𝑉𝐺
+is idempotent, acts as the identity on ker 𝐹, and acts as zero on ker 𝐺. If 𝑉and 𝐺preserve Λ, then
+𝑟𝐸= 𝑉𝐺∈End𝒪(Λ).
+Proof. The Bézout identity gives 𝑁= 𝑟𝐼−𝑈𝐹. The two stated commutation relations and 𝐹𝐺= 0 give
+𝑁(𝑈𝐹) = 𝑉𝐺𝑈𝐹= 𝑉𝑈𝐺𝐹= 𝑉𝑈𝐹𝐺= 0.
+Therefore
+𝑁2 = 𝑁(𝑟𝐼−𝑈𝐹) = 𝑟𝑁.
+Since 𝑟≠0, 𝐸2 = 𝑟−2𝑁2 = 𝐸. If 𝐹𝑥= 0, the evaluated Bézout identity gives 𝑉𝐺𝑥= 𝑟𝑥, hence 𝐸𝑥= 𝑥.
+If 𝐺𝑥= 0, then 𝐸𝑥= 0. The lattice assertion follows directly from 𝑟𝐸= 𝑉𝐺.
+The equality 𝑁2 = 𝑟𝑁before division uses neither 𝑟≠0 nor the other pairwise commutation relations
+that hold in the polynomial application. Normalizing to 𝐸uses 𝑟≠0. Its action on ker 𝐹uses only the
+Bézout identity and 𝑟≠0, while vanishing on ker 𝐺follows immediately from 𝑁= 𝑉𝐺. The bundled
+Lean certificate records all pairwise commutations as convenient evaluated polynomial data, but the
+minimal theorems expose only the hypotheses they consume.
+For the polynomial application, one supplies 𝐹= 𝑓(𝐴), 𝐺= 𝑔(𝐴), 𝑈= 𝑢(𝐴), and 𝑉= 𝑣(𝐴). A Bézout
+or resultant identity 𝑢𝑓+𝑣𝑔= 𝑟evaluates to the first certificate, while (𝑓𝑔)(𝐴) = 0 supplies the second.
+When 𝑓𝑔= 𝜒𝐴, this last equality is Cayley Hamilton. Standard Bézout, resultant, and DVR facts are
+recalled from [5, 8]. The inherited certificate theorem begins with the evaluated certificate. It does not
+infer exact action merely from nilpotence of 𝑓(𝐴) or 𝑔(𝐴), which would be insufficient.
+REALIZATION CALCULUS
+25
+
+
+OPERATION KOMOREBI
+PAPER II
+Definition 7.6 (Separation weight). For a rational projector 𝐸and a specified 𝒪lattice Λ, provided
+at least one clearing exponent exists, define
+𝑠𝜋,Λ(𝐸) = min{𝑠≥0 ∶𝜋𝑠𝐸(Λ) ⊆Λ}.
+If the evaluated certificate arises from integral 𝑣, 𝑔and 𝑟= 𝑢𝜋𝑠with 𝑢−1 preserving the lattice,
+then theorem 7.5 gives the upper bound
+𝑠𝜋,Λ(𝐸) ≤𝑠= val𝜋(𝑟).
+Indeed,
+𝜋𝑠𝐸= 𝑢−1𝑉𝐺
+preserves Λ. The minimal Lean theorem needs only the lattice action of 𝑢−1. The bundled wrapper
+for lattice units records both 𝑢and 𝑢−1. A nonzero scalar in the fraction field need not be an
+integral unit. Existence of a clearing exponent is an explicit hypothesis. Once one exists, the least
+one is obtained from the least element property of the natural numbers. Clearing exponents are
+upward closed provided multiplication by 𝜋preserves the lattice.
+7.1.2
+Certificate-level precision delay
+Theorem 7.7 (Projector precision delay). Let 𝐸be a rational projector with 𝜋𝑠𝐸(Λ) ⊆Λ. If
+𝑥≡𝑦
+(mod 𝜋𝑚+𝑠Λ),
+then
+𝐸𝑥≡𝐸𝑦
+(mod 𝜋𝑚Λ).
+Thus 𝑚+ 𝑠input digits suffice to determine 𝑚output digits of the projected packet.
+Proof. Write 𝑥−𝑦= 𝜋𝑚+𝑠𝑧. Since 𝜋𝑠𝐸(𝑧) ∈Λ,
+𝐸(𝑥−𝑦) = 𝜋𝑚(𝜋𝑠𝐸(𝑧)) ∈𝜋𝑚Λ.
+The theorem gives a precision budget for delayed separation. A packet with weight 𝑠can be recon-
+structed at the requested output precision by retaining 𝑠additional input digits.
+8 Exact lattice separation
+The exact denominator belongs to the pair consisting of the rational packet decomposition and the
+integral lattice.
+REALIZATION CALCULUS
+26
+
+
+OPERATION KOMOREBI
+PAPER II
+Definition 8.1 (Lattice packet data). Let
+𝑉= ⨁
+𝛼∈𝐼
+𝑉𝛼
+be a finite direct sum over 𝐾, with packet projectors 𝐸𝛼. Let Λ ⊆𝑉be an 𝒪lattice. Put
+Λ𝛼= Λ ∩𝑉𝛼,
+Λsplit = ⨁
+𝛼
+Λ𝛼,
+and define the gluing module
+𝐺Λ,𝒫= Λ/Λsplit.
+The separation weight of 𝐸𝛼is
+𝑠Λ(𝐸𝛼) = min{𝑠≥0 ∶𝜋𝑠𝐸𝛼Λ ⊆Λ}.
+The global separation weight is
+𝑠Λ(𝒫) = max({0} ∪{𝑠Λ(𝐸𝛼) ∶𝛼∈𝐼}).
+For a finitely generated torsion 𝒪module 𝐺, write exp𝜋(𝐺) for the least 𝑠such that 𝜋𝑠𝐺= 0.
+The gluing module 𝐺Λ,𝒫is a finitely generated torsion 𝒪module, hence has finite length, because Λsplit
+and Λ are full lattices in the same vector space. To see that the split lattice is full, clear denominators of
+bases of the rational summands. Each Λ ∩𝑉𝛼then spans 𝑉𝛼, so their direct sum spans 𝑉.
+Theorem 8.2 (Gluing module and exact separation weight). With the notation of definition 8.1, the
+map
+Φ ∶𝐺Λ,𝒫⟶⨁
+𝛼∈𝐼
+𝐸𝛼Λ/Λ𝛼,
+[𝑥] ⟼(𝐸𝛼𝑥+ Λ𝛼)𝛼
+is injective, and every coordinate projection of its image is surjective. We also have
+exp𝜋(𝐺Λ,𝒫) = 𝑠Λ(𝒫).
+If
+𝐺Λ,𝒫≅
+𝑟
+⨁
+𝑗=1
+𝒪/𝜋𝑎𝑗𝒪
+with 𝑎1 ≤⋯≤𝑎𝑟, then
+𝑠Λ(𝒫) = max({0} ∪{𝑎𝑗∶1 ≤𝑗≤𝑟}).
+Proof. If 𝑥∈Λ maps to zero, then 𝐸𝛼𝑥∈Λ𝛼for every 𝛼. Since
+𝑥= ∑
+𝛼
+𝐸𝛼𝑥,
+we have 𝑥∈Λsplit. Thus Φ is injective. The coordinate map onto 𝐸𝛼Λ/Λ𝛼is surjective by the definition
+of 𝐸𝛼Λ.
+REALIZATION CALCULUS
+27
+
+
+OPERATION KOMOREBI
+PAPER II
+Let 𝑠= 𝑠Λ(𝒫). For every 𝑥∈Λ and every 𝛼,
+𝜋𝑠𝐸𝛼𝑥∈Λ𝛼.
+Hence
+𝜋𝑠𝑥= ∑
+𝛼
+𝜋𝑠𝐸𝛼𝑥∈Λsplit,
+so 𝜋𝑠𝐺Λ,𝒫= 0. This proves
+exp𝜋(𝐺Λ,𝒫) ≤𝑠.
+If 𝑑< 𝑠, then for some 𝛼there is an 𝑥∈Λ with
+𝜋𝑑𝐸𝛼𝑥∉Λ𝛼.
+The class 𝜋𝑑[𝑥] is therefore nonzero in the gluing module. Thus 𝜋𝑑does not annihilate the gluing mod-
+ule, and equality follows. The final formula is the usual description of the exponent through Smith
+normal form.
+Corollary 8.3 (Total gluing and worst precision). If
+𝐺Λ,𝒫≅
+𝑟
+⨁
+𝑗=1
+𝒪/𝜋𝑎𝑗𝒪,
+then
+length𝒪(𝐺Λ,𝒫) =
+𝑟
+∑
+𝑗=1
+𝑎𝑗,
+𝑠Λ(𝒫) = max({0} ∪{𝑎𝑗∶1 ≤𝑗≤𝑟}).
+Thus the lattice index measures the total amount of gluing, while the separation weight measures the worst preci-
+sion loss in one direction.
+Proof. The length and exponent of a finitely generated torsion module are read directly from its Smith
+decomposition. Apply theorem 8.2.
+Corollary 8.4 (Two complementary packets). Suppose
+𝑉= 𝑉1 ⊕𝑉2
+with projector 𝐸onto 𝑉1 and complementary projector 𝐼−𝐸. Then
+Λ/(Λ1 ⊕Λ2) ≅𝐸Λ/Λ1 ≅(𝐼−𝐸)Λ/Λ2.
+Consequently
+𝑠Λ(𝐸) = 𝑠Λ(𝐼−𝐸) = exp𝜋(Λ/(Λ1 ⊕Λ2)).
+Proof. Map 𝑥∈Λ to 𝐸𝑥+ Λ1. Its kernel consists of the 𝑥for which 𝐸𝑥∈Λ1. In that case
+(𝐼−𝐸)𝑥= 𝑥−𝐸𝑥∈Λ ∩𝑉2 = Λ2,
+so the kernel is Λ1 ⊕Λ2. The map is surjective by definition. The complementary map is handled in
+the same way. The equality of weights follows from theorem 8.2.
+REALIZATION CALCULUS
+28
+
+
+OPERATION KOMOREBI
+PAPER II
+Corollary 8.5 (Integral splitting criterion). Every packet projector preserves Λ if and only if
+Λ = ⨁
+𝛼
+(Λ ∩𝑉𝛼).
+Equivalently,
+𝑠Λ(𝒫) = 0
+⟺
+𝐺Λ,𝒫= 0.
+Proof. If every projector preserves Λ, then
+𝑥= ∑
+𝛼
+𝐸𝛼𝑥
+expresses every 𝑥∈Λ as a sum of vectors in Λ𝛼. The converse is immediate because each projector
+is the identity on one direct summand and zero on the others. The final equivalence follows from
+theorem 8.2.
+8.1 Refinement and separation weight
+A finer rational packet system imposes more integral splitting conditions.
+Theorem 8.6 (Gluing exact sequence under refinement). Let 𝒬= (𝑄𝛽) refine 𝒫= (𝑃𝛼) on 𝑉, and
+let Λ be a lattice. Define
+Λ𝒫= ⨁
+𝛼
+(Λ ∩𝑃𝛼𝑉),
+Λ𝒬= ⨁
+𝛽
+(Λ ∩𝑄𝛽𝑉).
+Then
+Λ𝒬⊆Λ𝒫⊆Λ
+and there is a short exact sequence
+0 ⟶Λ𝒫/Λ𝒬⟶Λ/Λ𝒬⟶Λ/Λ𝒫⟶0.
+In particular,
+𝑠Λ(𝒫) ≤𝑠Λ(𝒬).
+Proof. Every fine packet space lies in its parent packet space, so every element of Λ𝒬belongs to Λ𝒫. The
+displayed exact sequence is the standard quotient sequence for nested submodules. The exponent of
+a quotient cannot exceed the exponent of the module from which it is obtained. Apply theorem 8.2 to
+the two gluing modules.
+Example 8.7 (Strict growth under refinement). Take the standard lattice ℤ2
+2 and the involution from
+proposition 9.1. The one packet system (𝐼) has weight zero. Refining it into the two rational sign packets
+produces weight one. The coarse lattice is already split because there is only one summand. The fine
+eigenspaces are glued together by one dyadic digit.
+Remark 8.8 (Strict growth can occur). A coarse packet family may preserve the lattice even though a
+fine spectral split does not. Refinement can reveal rational directions that are glued together integrally.
+The weight records the extra depth needed to separate them.
+REALIZATION CALCULUS
+29
+
+
+OPERATION KOMOREBI
+PAPER II
+8.2 Exact precision delay
+The separation weight has an operational meaning. It is the exact number of extra input digits needed
+to recover a projected packet uniformly.
+Theorem 8.9 (Necessary and sufficient precision delay). Let 𝐸be a rational projector on 𝑉, let Λ be a
+lattice, and let
+𝑠= 𝑠Λ(𝐸).
+For every 𝑚≥0, the rule
+[𝑥]𝑚+𝑠⟼[𝐸𝑥]𝑚
+from Λ/𝜋𝑚+𝑠Λ to 𝑉/𝜋𝑚Λ is well defined. Here 𝑚is an integer. If 𝑑is an integer with 0 ≤𝑑< 𝑠, then for
+every integer 𝑚≥0 there are 𝑥, 𝑦∈Λ such that
+𝑥≡𝑦
+(mod 𝜋𝑚+𝑑Λ)
+but
+𝐸𝑥≢𝐸𝑦
+(mod 𝜋𝑚Λ).
+Thus 𝑠extra digits are both sufficient and necessary for a uniform precision guarantee.
+Proof. If
+𝑥−𝑦= 𝜋𝑚+𝑠𝑧,
+then
+𝐸(𝑥−𝑦) = 𝜋𝑚(𝜋𝑠𝐸𝑧) ∈𝜋𝑚Λ.
+This proves that the rule is well defined. Now take 𝑑< 𝑠. By the minimality of 𝑠, there is a 𝑧∈Λ with
+𝜋𝑑𝐸𝑧∉Λ.
+Set
+𝑥= 𝜋𝑚+𝑑𝑧,
+𝑦= 0.
+Then 𝑥≡𝑦modulo 𝜋𝑚+𝑑Λ, while
+𝐸(𝑥−𝑦) = 𝜋𝑚(𝜋𝑑𝐸𝑧) ∉𝜋𝑚Λ.
+The central idea
+The necessity statement is uniform over the lattice. A particular input may need fewer extra digits,
+but a smaller delay cannot recover every projected packet at the prescribed precision. This is why
+the least clearing exponent gives an exact precision guarantee rather than only a sufficient budget.
+Example 8.10 (The same rational split with two lattices). Let
+𝑉= 𝐾𝑒1 ⊕𝐾𝑒2
+and let 𝐸project onto 𝐾𝑒1. On the split lattice
+Λ0 = 𝒪𝑒1 ⊕𝒪𝑒2,
+REALIZATION CALCULUS
+30
+
+
+OPERATION KOMOREBI
+PAPER II
+the weight is zero. Fix 𝑠≥1 and consider
+Λ𝑠= 𝒪𝑒1 + 𝒪(𝜋−𝑠𝑒1 + 𝑒2).
+Then
+Λ𝑠∩𝐾𝑒1 = 𝒪𝑒1,
+Λ𝑠∩𝐾𝑒2 = 𝜋𝑠𝒪𝑒2.
+The gluing module is isomorphic to 𝒪/𝜋𝑠𝒪, so
+𝑠Λ𝑠(𝐸) = 𝑠.
+The rational decomposition has not changed. Only the lattice has changed.
+The example can be realized by an integral operator. Define
+𝐴𝑒1 = 0,
+𝐴𝑒2 = 𝜋𝑠𝑒2.
+In the basis
+𝑒1,
+𝜋−𝑠𝑒1 + 𝑒2,
+the matrix of 𝐴is
+(0
+−1
+0
+𝜋𝑠) .
+Its eigenvalue factors have resultant equal to 𝜋𝑠up to a unit, and the exact projector weight on Λ𝑠is
+also 𝑠.
+9 The dyadic sign split
+The smallest example already shows why coefficient selectors and spectral averages must be kept dis-
+tinct.
+Proposition 9.1 (Sign projectors over a lattice). Let
+𝐴= (1
+1
+0
+−1)
+act on ℤ2
+𝑝. Over ℚ𝑝, the sign projectors are
+𝐸+ = 𝐼+ 𝐴
+2
+= (1
+1/2
+0
+0 ) ,
+𝐸−= 𝐼−𝐴
+2
+= (0
+−1/2
+0
+1
+) .
+For every odd prime 𝑝, both projectors preserve ℤ2
+𝑝. At 𝑝= 2,
+𝑠2(𝐸+) = 𝑠2(𝐸−) = 1.
+The factors 𝑥−1 and 𝑥+ 1 have resultant 2.
+Proof. The displayed matrices are complementary idempotents. The scalar 2 is a unit in ℤ𝑝for odd 𝑝,
+so both matrices are integral there. Over ℤ2, multiplying by 2 clears the denominators, while neither
+REALIZATION CALCULUS
+31
+
+
+OPERATION KOMOREBI
+PAPER II
+projector preserves the standard lattice. Thus both weights are one. The resultant of the two linear
+factors is their root difference, which is 2.
+Modulo 2, the two eigenvalues become equal. The rational sign packets remain distinct over ℚ2, but
+the standard lattice does not split into their intersections until one more dyadic digit is retained.
+Proposition 9.2 (Integral character averages away from the group order). Let 𝒪be a discrete valuation
+ring, let 𝑁be a unit in 𝒪, and suppose 𝒪contains a primitive 𝑁th root of unity 𝜔. If an integral operator 𝑈
+satisfies 𝑈𝑁= 𝐼, then
+𝐸𝑗= 1
+𝑁
+𝑁−1
+∑
+𝑘=0
+𝜔−𝑗𝑘𝑈𝑘
+preserves every 𝑈stable 𝒪lattice. At primes dividing 𝑁, this formula alone gives no integral projector.
+Proof. Every scalar coefficient in the displayed sum belongs to 𝒪because 𝑁is a unit and 𝜔is integral.
+Each power of 𝑈preserves the lattice, so their 𝒪linear combination does as well. When 𝑁is not a unit,
+division by 𝑁is not an operation in 𝒪, so the same argument is unavailable.
+At a prime dividing 𝑁, the factor 1/𝑁no longer guarantees that the character average preserves the
+lattice. Cancellation may still make a particular projector integral. Coefficient residue selectors remain
+exact because they never divide by the group order.
+9.1 The concrete rational sign matrix
+Consider the integral involution
+𝐴= (1
+1
+0
+−1) ,
+𝐴2 = 𝐼.
+Over a field of characteristic different from two, its sign projectors are
+𝐸+ = 𝐼+ 𝐴
+2
+= (1
+1/2
+0
+0 ) ,
+𝐸−= 𝐼−𝐴
+2
+= (0
+−1/2
+0
+1
+) .
+They are orthogonal idempotents and sum to 𝐼.
+Proposition 9.3 (Odd-adic versus dyadic behavior). For every prime 𝑝≠2, every entry of 𝐸+ and 𝐸−is
+𝑝-integral, and each projector has exact local denominator weight zero. At 𝑝= 2, each projector has exact local
+denominator weight one. Multiplication by 2 makes it integral, while the unscaled matrix is not integral:
+𝑠2,ℤ2
+2(𝐸+) = 𝑠2,ℤ2
+2(𝐸−) = 1.
+The characteristic factors 𝑥−1 and 𝑥+ 1 have resultant 2. Its 2-adic valuation is one, exactly the two local
+projector weights above, and its 𝑝-adic valuation is zero at every prime 𝑝≠2.
+Proof. The reduced denominators of the displayed entries are 1 or 2, which proves the local integrality
+and minimality statements directly. The resultant is
+Res(𝑥−1, 𝑥+ 1) = 2.
+REALIZATION CALCULUS
+32
+
+
+OPERATION KOMOREBI
+PAPER II
+1
+1
+2
+0
+0
+0
+−1
+2
+0
+1
+The two rational sign projectors
+An integral involution separates over the rationals with denominator 2.
+E + = (I + A)/2
+E −= (I −A)/2
+E2
++ = E + ,
+E2
+−= E −,
+E + E −= E −E + = 0
+Here A = [[1, 1], [0, −1]]. Both projectors have exact 2-adic denominator weight one.
+Figure 7. The rational sign projectors for an integral involution. Their denominator has 2-adic weight one.
+Thus 𝑣2(2) = 1 and 𝑣𝑝(2) = 0 for primes 𝑝≠2.
+The two characteristic factors 𝑥−1 and 𝑥+ 1 have the same reduction in 𝔽2[𝑥]. The rational matrices
+𝐸+ and 𝐸−themselves cannot be reduced modulo 2, because their entries contain 1/2. Consequently
+the integral special fibre does not inherit their separate idempotent splitting, even though the two
+projectors remain distinct over ℚ2. This is the simplest model of delayed dyadic separation.
+9.1.1
+Why coefficient packets remain available
+The failure of the character formula
+1
+2(𝐼± 𝐴)
+to be integral does not invalidate coefficient selectors such as even and odd residue extraction. It shows
+that two distinct constructions must be distinguished:
+integral address selector
+≠
+character-average spectral projector
+when the group order is not a unit. The first can remain exact over ℤ2. The second can acquire a de-
+nominator weight.
+10 Smith normal form and congruence lifting
+The gluing module gives the exact common denominator of packet projectors. Smith normal form gives
+the corresponding coordinate by coordinate solvability and branching rule.
+REALIZATION CALCULUS
+33
+
+
+OPERATION KOMOREBI
+PAPER II
+2
+3
+5
+7
+11
+Coefficient prime p
+0
+1
+Denominator weight
+1
+0
+0
+0
+0
+The denominator singles out the prime two
+The exact local weight of each sign projector is vp(2).
+The denominator 2 is a unit at every odd prime.
+Figure 8. The denominator weight of the sign projector is nonzero only at the prime two.
+Standard Fact 10.1 (Smith normal form over a discrete valuation ring). Let 𝑀∈𝑀𝑚,𝑛(𝒪). There are
+invertible matrices
+𝑈∈GL𝑚(𝒪),
+𝑉∈GL𝑛(𝒪)
+such that
+𝑈𝑀𝑉= diag(𝜋𝑠1, … , 𝜋𝑠𝑟, 0, … , 0),
+where
+0 ≤𝑠1 ≤⋯≤𝑠𝑟
+and 𝑟is the rank over 𝐾. The exponents are uniquely determined. See [6].
+Proposition 10.2 (Computing a packet weight from an inclusion matrix). Choose an 𝒪basis of Λ and an
+𝒪basis of Λsplit. Let 𝐵be the matrix of the inclusion
+Λsplit ↪Λ.
+If the Smith form of 𝐵is
+diag(𝜋𝑎1, … , 𝜋𝑎𝑛),
+0 ≤𝑎1 ≤⋯≤𝑎𝑛,
+then
+𝐺Λ,𝒫≅
+𝑛
+⨁
+𝑗=1
+𝒪/𝜋𝑎𝑗𝒪,
+𝑠Λ(𝒫) = max({0} ∪{𝑎𝑗∶1 ≤𝑗≤𝑛}).
+Proof. The gluing module is the cokernel of the inclusion matrix 𝐵. Smith normal form gives its invari-
+ant factors. The weight formula follows from theorem 8.2.
+REALIZATION CALCULUS
+34
+
+
+OPERATION KOMOREBI
+PAPER II
+Theorem 10.3 (Smith weighted congruence solve). Let 𝑀∈𝑀𝑚,𝑛(𝒪) have Smith exponents 𝑠1, … , 𝑠𝑟.
+Assume the residue field is finite of cardinality 𝑞, fix 𝐿≥1, and consider
+𝑀𝑥≡𝑏
+(mod 𝜋𝐿).
+Put
+̃𝑏= 𝑈𝑏
+for a Smith matrix 𝑈as in standard fact 10.1. The congruence is solvable if and only if
+̃𝑏𝑖≡0
+(mod 𝜋min(𝑠𝑖,𝐿))
+(1 ≤𝑖≤𝑟)
+and
+̃𝑏𝑖≡0
+(mod 𝜋𝐿)
+(𝑟< 𝑖≤𝑚).
+When it is solvable, the number of solutions in (𝒪/𝜋𝐿𝒪)𝑛is
+𝑞(𝑛−𝑟)𝐿+∑
+𝑟
+𝑖=1 min(𝑠𝑖,𝐿).
+Proof. Set 𝑥= 𝑉𝑦. Multiplying the congruence by 𝑈reduces it to independent equations
+𝜋𝑠𝑖𝑦𝑖≡̃𝑏𝑖
+(mod 𝜋𝐿)
+(1 ≤𝑖≤𝑟)
+and zero equations in the remaining rows. Multiplication by 𝜋𝑠𝑖on 𝒪/𝜋𝐿𝒪has image equal to the
+elements divisible by 𝜋min(𝑠𝑖,𝐿) and kernel of size
+𝑞min(𝑠𝑖,𝐿).
+Each of the 𝑛−𝑟unused variables is free and contributes 𝑞𝐿choices. Multiplying the independent
+counts gives the formula.
+Corollary 10.4 (Obstruction and branching data). The transformed entries of ̃𝑏that fail the stated divisibility
+conditions are the complete finite congruence obstructions. When all obstructions vanish, the Smith exponents
+determine the number of solution branches at depth 𝐿.
+Proof. This is exactly the solvability and counting statement of theorem 10.3 written in invariant coor-
+dinates.
+Example 10.5 (Three weighted directions). Take 𝑝= 2, 𝐿= 6, and the diagonal weights
+(0, 1, 3).
+The right side
+(1, 2, 8)
+is admissible. The three coordinate kernels have sizes
+1,
+2,
+8,
+so there are 16 solutions. Replacing the final entry 8 by 4 violates the required divisibility by 23 and
+makes the system unsolvable.
+REALIZATION CALCULUS
+35
+
+
+OPERATION KOMOREBI
+PAPER II
+10.1 Concrete diagonal fibres over integer quotients
+Let 𝑀be a matrix over a DVR. Smith normal form gives invertible matrices 𝑈, 𝑉such that
+𝑈𝑀𝑉= diag(𝜋𝑠1𝑢1, … , 𝜋𝑠𝑟𝑢𝑟, 0, … , 0),
+where each 𝑢𝑖is a unit and
+0 ≤𝑠1 ≤⋯≤𝑠𝑟.
+The exponents 𝑠𝑖are directional lifting weights.
+Theorem 10.6 (Concrete Smith-weighted congruence solve). Let 𝑝> 1 and consider the diagonal
+system over (ℤ/(𝑝𝐿)ℤ)𝑑
+diag(𝑝𝑠1, … , 𝑝𝑠𝑑)𝑥= 𝑏
+(mod 𝑝𝐿).
+The system is solvable if and only if
+𝑝min(𝑠𝑖,𝐿) ∣(𝑏𝑖)val
+for every 𝑖, where (𝑏𝑖)val is the canonical natural representative. Conditional on this admissibility condition,
+the number of solutions is
+𝑝∑𝑑
+𝑖=1 min(𝑠𝑖,𝐿).
+If any coordinate is inadmissible, the solution set is empty and its cardinality is zero.
+Proof. Lean proves the one-coordinate arithmetic directly over ℤ/𝑝𝐿ℤfor every 𝑝> 1:
+(∃𝑥∈ℤ/𝑝𝐿ℤ∶
+𝑝𝑠𝑥= 𝑏
+(mod 𝑝𝐿))
+⟺
+𝑝min(𝑠,𝐿) ∣𝑏val,
+where 𝑏val is the canonical natural representative, and every admissible fibre has exactly 𝑝min(𝑠,𝐿) ele-
+ments. The coordinates are independent, so the product equivalence gives the displayed global count.
+If one coordinate fibre is empty, the global fibre is empty. Lean proves both the global solvability equiv-
+alence and the conditional count, including cardinality zero on the inadmissible branch.
+For an arbitrary DVR 𝒪with residue field cardinality 𝑞, the analogous formula
+𝑞∑𝑖min(𝑠𝑖,𝐿)
+follows from the solvability and fibre count for each coordinate. The current revision adds direct proofs
+of this DVR coordinate arithmetic; the current correspondence records those targets and the rectangular
+transport separately. The inherited abstract product interface remains available when the coordinate
+facts are supplied as certificates. A Smith form and its changes of basis are inputs to the transport
+statement; it does not provide an extracted diagonalization routine. See [8, 5].
+If a Smith form is rank deficient, a literal zero diagonal factor requires the corresponding target co-
+ordinate to vanish modulo 𝑝𝐿and then contributes all 𝑝𝐿possible coordinate values. In the concrete
+quotient it can equivalently be represented by any weight 𝑠𝑖≥𝐿, since 𝑝𝑠𝑖= 0 in ℤ/(𝑝𝐿)ℤ. The theo-
+rem then gives exactly that condition and factor. The numbered theorem takes the diagonal data as its
+input.
+Example 10.7. At 𝑝= 2, depth 𝐿= 6, and weights (0, 1, 3), the right side (1, 2, 8) is admissible. The
+coordinate kernels have sizes
+1, 2, 8,
+REALIZATION CALCULUS
+36
+
+
+OPERATION KOMOREBI
+PAPER II
+so the system has 16 solutions. Replacing 8 by 4 in the final coordinate violates the divisibility condition
+and makes the system unsolvable.
+How to read the result
+The gluing calculation takes the largest Smith weight because every packet must be separated
+to the requested precision. The congruence calculation retains the individual directional weights.
+A coordinate with weight 𝑠𝑖contributes a solvability threshold and min(𝑠𝑖, 𝐿) to the branching
+exponent. The independent coordinate counts multiply, so these truncated weights add in the
+exponent.
+11 Linear refinement defects
+Exact coordinate refinement describes two representations of the same object. In an application, the
+coarse operator may instead be chosen to model coarse dynamics. An intertwining defect measures
+the mismatch between applying the operator before or after passing to coarse coordinates.
+Let 𝑋𝑓and 𝑋𝑐be vector spaces or Banach spaces over a common field, and let
+𝐶∶𝑋𝑓⟶𝑋𝑐
+be a linear map, and let
+𝑇𝑓∈End(𝑋𝑓),
+𝑇𝑐∈End(𝑋𝑐).
+Define
+Δ = 𝐶𝑇𝑓−𝑇𝑐𝐶.
+The central idea
+There are two routes from a fine state to a coarse result. One applies the fine operator and then
+maps the result to the coarse space. The other maps the state first and then applies the coarse
+operator. The defect is the difference between these routes. Its vanishing says that the chosen op-
+erators are compatible with the comparison map. The norm estimates below combine the size of
+this defect with the norms of the surrounding operators.
+Theorem 11.1 (Power defect identity). For every integer 𝑛≥1,
+𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶=
+𝑛−1
+∑
+𝑘=0
+𝑇𝑛−1−𝑘
+𝑐
+Δ𝑇𝑘
+𝑓.
+Proof. The statement is clear for 𝑛= 1. For the induction step, write
+𝐶𝑇𝑛+1
+𝑓
+−𝑇𝑛+1
+𝑐
+𝐶= (𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶)𝑇𝑓+ 𝑇𝑛
+𝑐(𝐶𝑇𝑓−𝑇𝑐𝐶)
+and apply the induction hypothesis.
+Corollary 11.2 (Power norm bound). For bounded operators between Banach spaces,
+‖𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶‖ ≤‖Δ‖
+𝑛−1
+∑
+𝑘=0
+‖𝑇𝑐‖𝑛−1−𝑘‖𝑇𝑓‖𝑘.
+REALIZATION CALCULUS
+37
+
+
+OPERATION KOMOREBI
+PAPER II
+Proof. Apply the triangle inequality and submultiplicativity to theorem 11.1.
+Corollary 11.3 (Norm bound). For a submultiplicative operator norm,
+‖𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶‖ ≤‖Δ‖
+𝑛−1
+∑
+𝑘=0
+‖𝑇𝑐‖𝑛−1−𝑘‖𝑇𝑓‖𝑘.
+If ‖𝑇𝑓‖, ‖𝑇𝑐‖ ≤𝜌, then
+‖𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶‖ ≤𝑛𝜌𝑛−1‖Δ‖.
+Corollary 11.4 (Polynomial defect). For
+𝑝(𝑧) =
+𝑁
+∑
+𝑛=0
+𝑎𝑛𝑧𝑛,
+we have
+𝐶𝑝(𝑇𝑓) −𝑝(𝑇𝑐)𝐶=
+𝑁
+∑
+𝑛=1
+𝑎𝑛
+𝑛−1
+∑
+𝑘=0
+𝑇𝑛−1−𝑘
+𝑐
+Δ𝑇𝑘
+𝑓.
+Proof. The constant terms cancel because 𝐶𝐼= 𝐼𝐶. Apply theorem 11.1 to every positive power and
+sum.
+Theorem 11.5 (Resolvent defect identity). If 𝑧−𝑇𝑓and 𝑧−𝑇𝑐are invertible, then
+𝐶(𝑧−𝑇𝑓)−1 −(𝑧−𝑇𝑐)−1𝐶= (𝑧−𝑇𝑐)−1Δ(𝑧−𝑇𝑓)−1.
+Proof. Multiply the claimed identity on the left by 𝑧−𝑇𝑐and on the right by 𝑧−𝑇𝑓. The left side
+becomes
+(𝑧−𝑇𝑐)𝐶−𝐶(𝑧−𝑇𝑓) = 𝐶𝑇𝑓−𝑇𝑐𝐶= Δ.
+Multiplying back by the two resolvents proves the formula.
+11.1 Inverse witnesses from one side and norm control
+For continuous linear maps, the same identity gives the certified norm bound
+‖𝐶𝑅𝑓−𝑅𝑐𝐶‖ ≤‖𝑅𝑐‖ ‖Δ‖ ‖𝑅𝑓‖,
+from a left inverse witness for the coarse scalar shift and a right inverse witness for the fine scalar shift.
+These witnesses suffice for the displayed identity. On their own, they need not define inverses on both
+sides and hence need not define resolvents. If Δ = 0, Lean also proves, for every finite polynomial 𝑝,
+the exact compatibility
+𝐶𝑝(𝑇𝑓) = 𝑝(𝑇𝑐) 𝐶,
+in both the algebraic setting and the setting of continuous linear maps. Thus all powers and polynomial
+actions intertwine with coarse reconstruction. The stated inverse witnesses also intertwine. In partic-
+ular, genuine resolvents do so when the scalar shifts are invertible. This is the linear prototype of the
+more general theory of refinement defects reserved for Paper III.
+REALIZATION CALCULUS
+38
+
+
+OPERATION KOMOREBI
+PAPER II
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+Operator power n
+10−4
+10−3
+10−2
+10−1
+100
+101
+Spectral norm
+Measured defect
+Telescoping bound
+Propagation of a refinement defect
+The exact telescoping identity gives a norm bound at each operator power.
+Numerical model: three coarse coordinates, three children each, and a 0.09 perturbation.
+The vertical axis is logarithmic so both the defect and its bound remain visible.
+Figure 9. A controlled defect for one step and its telescoping norm bound under repeated operator application.
+11.2 Analytic functional calculus
+Theorem 11.6 (Holomorphic functional calculus defect). Let 𝑋𝑓and 𝑋𝑐be complex Banach spaces,
+and let 𝐶∶𝑋𝑓→𝑋𝑐, 𝑇𝑓, and 𝑇𝑐be bounded complex-linear maps. Let ℎbe holomorphic on an open set
+𝑈containing both spectra. Let Γ be an admissible finite rectifiable Cauchy cycle in 𝑈and in both resolvent
+sets, with winding number one on the union of the spectra and zero outside 𝑈. The length of a cycle counts
+multiplicities. Then
+𝐶ℎ(𝑇𝑓) −ℎ(𝑇𝑐)𝐶=
+1
+2𝜋𝑖∫
+Γ
+ℎ(𝑧)(𝑧−𝑇𝑐)−1Δ(𝑧−𝑇𝑓)−1 𝑑𝑧.
+Consequently,
+‖𝐶ℎ(𝑇𝑓) −ℎ(𝑇𝑐)𝐶‖ ≤length(Γ)
+2𝜋
+sup
+𝑧∈Γ
+|ℎ(𝑧)| ‖Δ‖
+× sup
+𝑧∈Γ
+‖(𝑧−𝑇𝑐)−1‖ sup
+𝑧∈Γ
+‖(𝑧−𝑇𝑓)−1‖.
+Proof. The assertion is immediate if either space is zero. Otherwise, use the rectifiable-cycle form of the
+holomorphic functional calculus in [1, Chapter VII, §4, Theorem 4.1, formula (4.5), and Proposition 4.6].
+For each operator 𝑇, compare Γ with a positive simple system around its spectrum. Their difference
+has zero winding outside 𝑈∖𝜎(𝑇), so Theorem 4.1 applied to the resolvent-valued integrand identifies
+the two integrals. Consequently,
+ℎ(𝑇) =
+1
+2𝜋𝑖∫
+Γ
+ℎ(𝑧)(𝑧−𝑇)−1 𝑑𝑧.
+REALIZATION CALCULUS
+39
+
+
+OPERATION KOMOREBI
+PAPER II
+Subtract the two formulas after composing with 𝐶, then use theorem 11.5 inside the integral. The norm
+estimate follows from the standard contour bound.
+Theorem 11.7 (Exponential defect identity). Let 𝐶∶𝑋𝑓→𝑋𝑐, 𝑇𝑓, and 𝑇𝑐be bounded linear maps
+between Banach spaces over a common field. For real 𝑡, use real or complex spaces. For complex 𝑡, use complex
+spaces and complex-linear maps. Then
+𝐶𝑒𝑡𝑇𝑓−𝑒𝑡𝑇𝑐𝐶= ∫
+𝑡
+0
+𝑒(𝑡−𝑠)𝑇𝑐Δ𝑒𝑠𝑇𝑓𝑑𝑠,
+where the integral is taken along the straight segment from 0 to 𝑡when 𝑡is complex. For real 𝑡≥0,
+‖𝐶𝑒𝑡𝑇𝑓−𝑒𝑡𝑇𝑐𝐶‖ ≤‖Δ‖ ∫
+𝑡
+0
+‖𝑒(𝑡−𝑠)𝑇𝑐‖‖𝑒𝑠𝑇𝑓‖ 𝑑𝑠.
+Proof. For real 𝑡, differentiate
+𝐹(𝑠) = 𝑒(𝑡−𝑠)𝑇𝑐𝐶𝑒𝑠𝑇𝑓.
+We obtain
+𝐹′(𝑠) = 𝑒(𝑡−𝑠)𝑇𝑐Δ𝑒𝑠𝑇𝑓.
+Integration from 0 to 𝑡gives the identity. The complex statement follows by the same calculation along
+the straight segment. The norm bound follows from the integral formula.
+11.3 Several refinement levels
+Let
+𝐶ℓ∶𝑋ℓ+1 ⟶𝑋ℓ
+be linear maps for 0 ≤ℓ< 𝐿, and let 𝑇ℓ∈End(𝑋ℓ). Put
+Δℓ= 𝐶ℓ𝑇ℓ+1 −𝑇ℓ𝐶ℓ.
+For 𝑎< 𝑏, write
+𝐶𝑎,𝑏= 𝐶𝑎𝐶𝑎+1 ⋯𝐶𝑏−1,
+with 𝐶𝑎,𝑎= 𝐼.
+Theorem 11.8 (Multilevel defect decomposition). The total defect from level 𝐿to level zero is
+𝐶0,𝐿𝑇𝐿−𝑇0𝐶0,𝐿=
+𝐿−1
+∑
+ℓ=0
+𝐶0,ℓΔℓ𝐶ℓ+1,𝐿.
+For bounded maps,
+‖𝐶0,𝐿𝑇𝐿−𝑇0𝐶0,𝐿‖ ≤
+𝐿−1
+∑
+ℓ=0
+‖𝐶0,ℓ‖‖Δℓ‖‖𝐶ℓ+1,𝐿‖.
+Proof. Insert the intermediate terms
+𝐶0,ℓ𝑇ℓ𝐶ℓ,𝐿
+REALIZATION CALCULUS
+40
+
+
+OPERATION KOMOREBI
+PAPER II
+for 0 ≤ℓ≤𝐿. Consecutive differences telescope. The difference between the terms indexed by ℓ+ 1
+and ℓis
+𝐶0,ℓ(𝐶ℓ𝑇ℓ+1 −𝑇ℓ𝐶ℓ)𝐶ℓ+1,𝐿.
+Summing gives the identity. The norm estimate follows from the triangle inequality.
+How to read the result
+The multilevel formula keeps track of where each mismatch enters. A defect at one level is com-
+posed with the comparison maps needed to reach the input and output levels. The norm estimate
+therefore depends on both the local defects and the maps that carry them through the hierarchy.
+Controlling local mismatches alone does not control the total error if those maps amplify them.
+Example 11.9 (A visible one step defect). Let 𝑋𝑓= 𝕜2, let 𝑋𝑐= 𝕜, and let
+𝐶(𝑥1, 𝑥2) = 𝑥1.
+Take
+𝑇𝑓= (𝑎
+𝑏
+𝑐
+𝑑) ,
+𝑇𝑐= (𝑎).
+Then
+Δ = 𝐶𝑇𝑓−𝑇𝑐𝐶= (0, 𝑏).
+The coarse operator is exactly compatible with the fine operator precisely when the discarded coor-
+dinate does not feed into the retained coordinate. The entry 𝑐does not appear in the one step defect
+because it moves information in the opposite direction. It can still affect later powers through the terms
+in theorem 11.1.
+Corollary 11.10 (Exact compatibility). If every one step defect Δℓvanishes, then
+𝐶0,𝐿𝑝(𝑇𝐿) = 𝑝(𝑇0)𝐶0,𝐿
+for every polynomial 𝑝. The analogous resolvent, holomorphic, and exponential identities also hold whenever the
+relevant expressions are defined.
+Proof. The total one step defect vanishes by theorem 11.8. Apply corollary 11.4 and theorems 11.5 to 11.7.
+12 Worked realizations in the common operator language
+12.1 Signal polyphase coordinates
+Let 𝑥= (𝑥𝑛)𝑛∈ℤ∈𝑐00(ℤ; 𝑅) and let the seed be 𝛿0 under the bilateral shifts (𝑆𝑟𝛿0)𝑛= 𝛿𝑛,𝑟. This makes
+the algebraic span and every displayed sum finite. The 𝑁packets are
+𝑥𝑗[𝑚] = 𝑥[𝑁𝑚+ 𝑗].
+Synthesis interleaves these sequences. A linear filter with a finite impulse response that is invariant
+under shifts becomes an 𝑁×𝑁matrix of transfer blocks. Refining from 𝑁to 𝑀with 𝑁∣𝑀splits each
+coarse phase into its descendants without changing the reconstructed signal. The same formulas extend
+REALIZATION CALCULUS
+41
+
+
+OPERATION KOMOREBI
+PAPER II
+to standard sequence completions when the synthesis series converges. This is the usual polyphase
+viewpoint from multirate filter banks [10].
+12.2 Sparsity of transfer blocks
+A banded operator need not remain banded after residue reordering, but its nonzero couplings become
+a structured packet graph. With the convention (𝑆𝑟𝑥)𝑛= 𝑥𝑛−𝑟, the only active transfer is
+𝑃𝑁,𝑗+𝑟𝑆𝑟𝑃𝑁,𝑗,
+with indices taken modulo 𝑁. More general finite stencils produce a finite set of active phase differ-
+ences.
+0
+1
+2
+3
+4
+5
+Input packet j
+0
+1
+2
+3
+4
+5
+Output packet i
+5.66
+2.83
+0
+0
+0
+1.92
+2.04
+5.66
+2.83
+0
+0
+0
+0
+2.04
+5.66
+2.83
+0
+0
+0
+0
+2.04
+5.66
+2.83
+0
+0
+0
+0
+2.04
+5.66
+2.83
+2.65
+0
+0
+0
+2.04
+5.66
+0
+2
+4
+A sparse transfer pattern
+Frobenius norms for the fixed 48 coordinate stencil, resolved modulo 6.
+Norm
+The diagonal preserves a packet. Only the two neighboring phases transfer.
+Exact squared norms were checked with rational arithmetic. Displayed norms are rounded.
+Figure 10. Norms of packet blocks for a finite stencil. The original operator is exactly reconstructed from a sparse
+transfer pattern.
+12.3 A short realization in Smith chart coordinates
+How to read the result
+The Smith chart used here is a coordinate diagram for impedance and reflection. It is different
+from the Smith normal form used earlier to study integral congruences. The connection within
+this paper is the way a change of coordinates makes an action easier to describe. Here a rotation
+REALIZATION CALCULUS
+42
+
+
+OPERATION KOMOREBI
+PAPER II
+in reflection coordinates becomes a fractional linear map in impedance coordinates. The sampled
+phase orbit is a geometric example and does not supply another linear projector decomposition.
+Let 𝑍and 𝑍0 ≠0 be complex impedances, put 𝑧= 𝑍/𝑍0, and assume 𝑧≠−1. Write
+Γ = 𝑧−1
+𝑧+ 1.
+On the open reflection disk |Γ| < 1, multiplication by any phase 𝜔𝑘
+𝑁stays in the disk and has a finite
+inverse-chart image. The phase action is
+Γ ↦𝜔𝑘
+𝑁Γ.
+Outside the open disk, the same chart formula requires 1 −𝜔𝑘
+𝑁Γ ≠0. Pulling the phase action back on
+this domain gives
+𝑇𝑁,𝑘(𝑧) = (1 + 𝜔𝑘
+𝑁)𝑧+ (1 −𝜔𝑘
+𝑁)
+(1 −𝜔𝑘
+𝑁)𝑧+ (1 + 𝜔𝑘
+𝑁).
+For 𝑁= 2 and 𝑘= 1,
+𝑇2,1(𝑧) = 1
+𝑧,
+𝑧≠0, −1.
+Thus the nontrivial action at the first phase level exchanges normalized impedance and admittance.
+Calling these values “packets” is geometric terminology for the sampled orbit. It does not assert that
+the two values form linear idempotent ranges. Higher refinements at powers of 2 sample the same
+reflection circle at progressively finer electrical phases. Compare the standard Smith chart conventions
+in [7].
+The symmetric weight
+𝑤Smith(Γ) =
+1
+|1 −Γ|2 +
+1
+|1 + Γ|2
+indicates where small errors in reflection coordinates produce large impedance or admittance errors.
+13 Finite computational certificates
+The following results and tables are the recorded v1.2.1 finite implementation evidence. They do not
+certify the expanded lattice or analytic statements in Lean. Current reproduction outcomes are reported
+in the verification files accompanying this edition.
+All numerical work in this paper is finite and reproducible. It tests the Python implementation of iden-
+tities proved above or checked against certificates. It does not replace those arguments or the Lean
+kernel checks. Release 1.2.1 runs 48 tests, including contracts for invalid input, refinement transitivity,
+aggregation of transfer blocks, Fourier/DFT agreement, Smith fibre counts by exhaustive enumeration,
+and consistency of the stored JSON and CSV records.
+Numerical Certificate 13.1 (Weighted inverse). For the tested diagonal-plus-transfer matrices, the fil-
+tered inverse agrees exactly with direct modular inversion at all tested precisions:
+210,
+38,
+57.
+The maximum modular residual is zero in every case.
+REALIZATION CALCULUS
+43
+
+
+OPERATION KOMOREBI
+PAPER II
+−1
+0
+1
+−1
+0
+1
+Im Γ
+N = 2
+−1
+0
+1
+−1
+0
+1
+N = 4
+−1
+0
+1
+Re Γ
+−1
+0
+1
+Im Γ
+N = 8
+−1
+0
+1
+Re Γ
+−1
+0
+1
+N = 16
+Nested polyphase samples
+Reflection coordinates retain their geometry at every dyadic refinement.
+Every sample has |Γ| = 0.72. Gold marks points added at N = 4, 8, or 16.
+Figure 11. Nested phase orbits at powers of 2 on the Smith reflection disk. The full treatment of the Smith chart is
+deferred to the signal paper.
+REALIZATION CALCULUS
+44
+
+
+OPERATION KOMOREBI
+PAPER II
+−1.0
+−0.5
+0.0
+0.5
+1.0
+Re Γ
+−1.0
+−0.5
+0.0
+0.5
+1.0
+Im Γ
+0.5
+1.0
+2.0
+3.0
+log10 w(Γ)
+Symmetric Smith refinement weight
+The weight increases near the two boundary points Γ = −1 and Γ = 1.
+w(Γ) = |1 −Γ|−2 + |1 + Γ|−2
+The 300 × 300 grid is shown only where |Γ| < 0.985.
+Figure 12. A symmetric refinement weight concentrated near the boundary points for open and short circuits.
+Table 1. Representative numerical and symbolic checks.
+Check
+Result
+Packet synthesis residuals for moduli 2, 3, 4, 6, 8, 12
+0
+Nested refinement residuals for 2 →4, 2 →8, 3 →6,
+3 →12, 4 →8, 4 →12, 6 →12
+0
+CRT residuals for dyadic and odd moduli for 4 × 3,
+8 × 3, 4 × 5, 8 × 5
+0
+Maximum finite Fourier projector residual
+6.60 × 10−15
+Weighted inverse residual modulo 210
+0
+Weighted inverse residual modulo 38
+0
+Weighted inverse residual modulo 57
+0
+Difference between filtered and direct modular
+inverses
+0
+Transfer zeta coefficients versus direct walk
+enumeration through weight 30
+exact match
+Dyadic sign projector resultant weight
+𝑣2(2) = 1
+Sign projector resultant weight at the odd prime 3
+𝑣3(2) = 0
+Power defect telescoping identity residual
+at most 6.94 × 10−18
+Resolvent defect identity residual
+1.09 × 10−17
+Smith 𝑁= 2 phase versus 𝑧↦1/𝑧
+residual below 1.4 × 10−16
+REALIZATION CALCULUS
+45
+
+
+OPERATION KOMOREBI
+PAPER II
+Numerical Certificate 13.2 (Transfer zeta). The rational function
+−𝑡3
+𝑡9 −𝑡7 −𝑡6 −𝑡5 + 2𝑡4 + 𝑡3 + 𝑡2 −1
+was expanded through degree 30. Every coefficient agrees with direct weighted-walk enumeration.
+Numerical Certificate 13.3 (Dyadic separation). The code verifies exactly that the two rational sign
+projectors are idempotent, orthogonal, and complementary, that scaling by 2 makes both integral, and
+that the same projectors are already integral modulo every tested odd prime.
+14 Scope and limits
+The exact statements above have several deliberate boundaries.
+First, refinement changes coordinates while preserving reconstruction. If a numerical method discards
+fine packets, the resulting error must be estimated separately.
+Second, the weighted inverse is linear. A nonlinear map creates higher order interactions among packet
+coordinates. Those interactions are not contained in the path formula of theorem 5.2.
+Third, a resultant is only a denominator bound. The exact weight depends on the lattice and is given
+by theorem 8.2. The two examples in examples 7.4 and 8.10 show that the same eigenvalue separation
+can give different integral packet weights.
+Fourth, the dyadic sign example is a model rather than a classification of all phenomena at the prime
+two. Character averages, trace splittings, quadratic refinements, and deformation projectors must each
+be checked on their own lattices.
+Finally, the defect formulas do not prove that a chosen coarse operator is a good approximation. They
+say exactly how a known one step defect propagates. A useful approximation theorem must also bound
+that defect in the problem under study.
+A Notation table
+Symbol
+Meaning
+𝑃ℓ,𝛼
+packet projector at refinement level ℓ
+𝐼ℓ
+packet address set at level ℓ
+𝛽≻𝛼
+fine packet 𝛽is a child of coarse packet 𝛼
+𝒜ℓ, 𝒮ℓ
+packet analysis and synthesis maps
+𝐽ℓ+1,ℓ
+exact coordinate refinement map
+𝐶ℓ,ℓ+1
+exact coordinate regrouping from fine to coarse
+𝑇(ℓ)
+𝛽𝛼
+transfer block 𝑃ℓ,𝛽𝑇𝑃ℓ,𝛼
+𝑃𝑁,𝑗
+residue or phase selector for address 𝑗(mod 𝑁)
+𝑤(𝑒)
+positive filtration weight of a transfer edge
+𝑊(𝛾)
+cumulative weight of a transfer word or graph walk
+𝐴(𝑡)
+polynomial weighted adjacency matrix
+𝑍𝑠,𝑡(𝑡)
+weighted transfer-zeta function from vertex 𝑠to vertex 𝑡
+REALIZATION CALCULUS
+46
+
+
+OPERATION KOMOREBI
+PAPER II
+Symbol
+Meaning
+𝑠𝜋,Λ(𝐸)
+separation weight of a rational projector on the chosen lattice,
+when a clearing exponent exists
+Δ
+linear refinement defect for one step 𝐶𝑇𝑓−𝑇𝑐𝐶
+B Algorithmic forms
+B.1 Residue analysis and synthesis
+def analyze_residues(x, N):
+require N > 0
+return [x[j::N] for j in range(N)]
+def synthesize_residues(packets):
+N = len(packets)
+require packet lengths fit one N-way interleaving
+y = empty(sum(len(p) for p in packets))
+for j, packet in enumerate(packets):
+y[j::N] = packet
+return y
+The verified contract is synthesize(analyze(𝑥, 𝑁)) = 𝑥. The Lean counterpart uses packet coordinates
+restricted to projector ranges and proves both inverse laws. The finite Python routine checks the con-
+crete array realization.
+B.2 Weighted inverse at finite precision
+Dinv = inverse(D)
+# certified on both sides
+edge[e] = Dinv @ H_edge[e]
+require Dinv @ H == sum(edge[e] for e in edges)
+require edge[e] lies in filtration[weight[e]]
+m = certified_lower_bound(weight)
+# 1 <= m <= weight[e]
+N = (L + m - 1) // m
+# so L <= m*N
+S = 0
+for n in range(N):
+for word in edge_tuples(edges, n):
+if sum(weight[e] for e in word) < L:
+S += (-1)**n * ordered_product(edge[e] for e in word)
+return q_L(S @ Dinv)
+Lean proves that the mapped pruned sum is exactly the mapped finite geometric inverse. The lower
+bound 𝑚gives 𝑚|𝛾| ≤𝑊(𝛾), so 𝐿≤𝑚𝑁derives 𝑞𝐿(𝐴𝑁) = 0 from the filtration certificate and makes
+the returned value an inverse on both sides of 𝑞𝐿(𝐷+ 𝐻). The Lean lemma 𝐿≤𝑚⌈𝐿/𝑚⌉justifies
+the displayed executable cutoff for 𝑚> 0. Taking 𝑚= 1 and 𝑁= 𝐿gives the unconditional cutoff
+for positive weights. The Python implementation checks the DVR matrix specialization against direct
+modular inversion.
+REALIZATION CALCULUS
+47
+
+
+OPERATION KOMOREBI
+PAPER II
+B.3 Walk construction for transfer zeta
+def coefficient(G, start, target, n):
+total = 0
+for length in range(n + 1):
+for word in edge_tuples(G, length):
+if is_walk(word, start, target) and weight(word) == n:
+total += 1
+return total
+A[i,j] = sum(t**weight(e) for distinct edges e from i to j)
+T = I - A
+Q = det(T)
+H = adjugate(T)
+P = H[start, target]
+assert Q.coeff(0) == 1
+Z = coefficient_series(G, start, target)
+prove Q * Z == P
+Positive weights make the coefficient loop finite because every contributing word has length at most 𝑛.
+Lean proves the enumeration correct, derives its recurrence from the first edge, proves (𝐼−𝐴)𝑍= 𝐼,
+constructs the determinant/adjugate inverse, and identifies the two matrices by inverse uniqueness.
+Thus the normalized 𝑄𝑍= 𝑃identity and its induced recurrence follow from finite graph data. The
+Python companion repeats the exact symbolic construction as an executable check. The Lean proof
+does not use it as an oracle.
+C Proof dependency map
+The proof order is:
+complete packet axioms ⇒finite-packet uniqueness and coordinate coherence
+⇒coordinate naturality and refined transfer blocks,
+residue selectors and a finite Fourier table ⇒Fourier formulas,
+coprime moduli ⇒dyadic–odd formulas,
+quotient, filtration, and edge-weight certificates ⇒explicit pruned inverse,
+finite positive-weight graph ⇒semantic enumeration and first-edge recurrence
+⇒det / adj rationality and recurrence,
+minimal evaluated Bézout data and inverse-unit lattice action
+⇒separation bound, upward closure, and precision delay,
+concrete ℤ/𝑝𝐿ℤcoordinate fibres ⇒finite Smith product count,
+one-step typed defect ⇒powers, polynomial actions, and witnessed resolvents.
+The walk branch for transfer zeta is logically independent of operator inversion. Its rationality conclu-
+sion follows from finite graph data without a supplied 𝑄𝑍= 𝑃premise. Likewise, CRT factorization
+follows directly from residue selectors and coprimality. It does not require the abstract refinement
+theorem, although it supplies a concrete refinement family. General Smith diagonalization and the
+construction of polynomial Bézout/resultant data remain inputs to the formalized branches that use
+those certificates.
+REALIZATION CALCULUS
+48
+
+
+OPERATION KOMOREBI
+PAPER II
+Complete packet axioms
+Coordinate coherence
+Naturality and
+refined transfer blocks
+Residue selectors
+and finite Fourier table
+Finite Fourier formulas
+Spectral residue
+projectors
+Residue selectors
+and coprime moduli
+Dyadic and odd CRT
+Concrete
+refinement families
+Quotient, filtration
+and weight certificates
+Pruned finite inverse
+Precision cutoff
+Finite graph with
+positive edge weights
+Walk enumeration
+and first-edge recurrence
+Determinant rationality
+and recurrence
+Evaluated Bézout data
+and lattice action
+Integral separation
+Upward closure
+and precision delay
+Supplied Smith data
+and coordinate fibres
+Finite Smith product
+Solvability
+and fibre cardinality
+A typed one-step defect
+Telescoping powers
+Polynomial actions
+and resolvents
+Distinct proof branches
+Each row identifies its own inputs and the conclusions they support.
+The walk series is independent of operator inversion. General Smith and Bézout constructions
+remain upstream inputs to their certificate branches.
+Figure 13. The dependency structure of Paper II. Coordinate coherence, residue/CRT, weighted inversion, automatic
+finite-graph transfer rationality, and integral separation are distinct branches with explicit inputs.
+REALIZATION CALCULUS
+49
+
+
+OPERATION KOMOREBI
+PAPER II
+D Edition and proof scope
+The traditional article is a single edition organized by topic. The expanded branch supplies the written
+proofs of common refinements, complete filtered inversion, lattice gluing, rectangular Smith congru-
+ences, and analytic and multilevel defects. The canonical v1.2.1 release supplies the inherited special-
+izations, finite graph construction, worked realizations, and three algorithm specifications.
+Current verification snapshot (15 October 2026). The current project is formal/current/. Its correspon-
+dence contains 81 source records, including 53 proof-level items. Current targets and historical records
+are kept separately, with exact source and proof hashes. The map and the Lean guide report each item's
+recorded verification status and remaining gates.
+The current map retains named open bridges. In particular, the general rectifiable-cycle bridge for the
+canonical holomorphic functional calculus remains incomplete in Lean: velocity and geometric-length
+representation, agreement with the classical contour integral, and canonical independence are still
+open. The written theorem retains its full statement and the verified Conway reference.
+Current Lean scope. 51 of 53 proof-level source records have kernel-checked, semantically accepted
+scope. 2 analytic records have kernel-checked partial scope with the general canonical rectifiable-
+calculus bridge still open. The current correspondence records the exact boundaries.
+The inherited Lean contract has 25 rows: 21 canonical numbered items, one Smith-phase identity, and
+three algorithm specifications. It remains a dated source contract. The current correspondence sepa-
+rately records the exact present statements, proof targets, source hashes, and execution evidence. A
+row may use several declarations, and several source labels may refer to one written theorem; these
+are distinct counting units.
+The original branch sources and historical reports remain preserved. The current editorial log
+records the hypothesis, notation, and endpoint clarifications, including the verified rectifiable-cycle
+citation. Current navigation metadata records printed pages and PDF destinations. Historical proof-
+preservation reports retain their original scope and date; they do not describe later edited proof
+text.
+The visual guide gives exact worked models. The Lean guide opens with the current proof scope and
+then explains the inherited declaration-level contract. Illustrations and finite checks support under-
+standing and implementation. Universal claims depend on their written proofs and the exact formal
+statements where coverage is recorded.
+This monograph includes the twenty-four worked plates after this account of the proof scope. Their
+statement references use the printed pages of this volume. The separate visual guide contains the same
+models for readers who want to follow the examples on their own.
+REALIZATION CALCULUS
+50
+
+
+OPERATION KOMOREBI
+PAPER II
+E Visual atlas
+Twenty-four worked plates follow the main constructions through explicit vectors, matrices, weighted
+walks, and congruence fibres. Their labels V1 to V24 stay fixed across the integrated atlas and the stan-
+dalone guide. Each plate names the corresponding statement and its printed page in this monograph.
+Three routes through the atlas
+Exact coordinates. Read V1 to V8, then the finite filter in V20.
+Weights and arithmetic. Read V9 to V19. The first group follows weighted operator words and
+graph walks. The second follows denominator clearing and Smith congruences.
+Realizations and defects. Read V20 to V24. These plates separate the Smith impedance chart from
+Smith normal form, trace error propagation, and connect the examples to the formal contract.
+The matrices and finite ranges shown here are explicit models. The general proofs remain in the pre-
+ceding sections. A picture or finite computation does not extend the hypotheses of a theorem or the
+coverage of a Lean declaration.
+REALIZATION CALCULUS
+51
+
+
+OPERATION KOMOREBI
+PAPER II
+V1
+/
+PAPER II / A WORKED VISUAL GUIDE
+Three kinds of resolution
+Traditional paper: Definition 3.4 (p. 4), Theorem 5.10 (p. 17), Theorem 7.7 (p. 26)
+Paper II asks three different questions that can all sound like “increase the resolution.” This guide separates them,
+then follows small objects far enough that the distinctions can be computed rather than merely named.
+ADDRESS
+WEIGHT
+SEPARATION
+0
+2
+4
+6
+0
+4
+2
+6
+4 coordinates at both levels
+𝑎
+1
+𝑏
+2
+𝑎𝑏𝑎
+4
+𝑊(𝑎𝑏𝑎) = 1 + 2 + 1 = 4
+1
+1
+2
+0
+0
+2𝐸+ integral
+𝐸+ not integral
+Three different operations. On the left, all coefficients survive a regrouping. In the middle, an integer weight controls which
+operator words can matter modulo a chosen power. On the right, a rational projector needs a denominator cleared before
+integral precision can be recovered.
+Address resolution
+A coefficient such as 𝑥6 can sit in the even packet, then the residue-2 packet modulo 4, then the residue-6 packet
+modulo 8. Its value does not become more accurate. Its address becomes more specific, while the full object remains
+exactly reconstructible.
+Arithmetic precision
+An operator word with total filtration weight at least 𝐿vanishes in the specified depth-𝐿quotient. Increasing 𝐿
+can make additional words relevant. This is a change in the precision of the ring in which the answer is required,
+not a lossless rearrangement of one fixed list.
+Separation precision
+For the integral involution used later, 𝐸+ = (𝐼+ 𝐴)/2 is an exact rational projector but not an integral one at 2.
+One extra input digit suffices to recover the projected difference to the requested precision. The packet is present
+over the fraction field even when its integral separation is delayed.
+Read this as: Keep three quantities distinct: the packet address, the precision cutoff, and the denominator
+weight. Finer addresses do not automatically improve arithmetic precision or remove a spectral denomi-
+nator.
+REALIZATION CALCULUS
+52
+
+
+OPERATION KOMOREBI
+PAPER II
+V2
+/
+ORIENTATION / SYMBOLS WITH JOBS
+An atlas of the refinement layer
+Traditional paper: Definition 3.2 (p. 3), Definition 3.4 (p. 4), Definition 7.6 (p. 26)
+The same letter can have different roles in different realizations. The table fixes the roles used here. Every small
+matrix in the guide is explicitly supplied. No diagonalization or classification theorem is inferred from a picture.
+Object
+Role
+Worked instance
+𝑃𝑁,𝑗
+Retain coefficients with address 𝑗modulo 𝑁.
+Even/odd masks, then mod-4
+and mod-8 masks.
+𝒜𝑁, 𝒮𝑁
+Split into range-restricted packet vectors, then sum them.
+A permutation/interleaving of
+eight coordinates.
+𝐽, 𝐶
+Exact refinement and regrouping. In the defect chapter, 𝐶
+may instead be any supplied coarsening map.
+A permutation in V5 and a
+shear in V22.
+𝑇𝑏𝑎
+Input packet 𝑎, output packet 𝑏: 𝑃𝑏𝑇𝑃𝑎.
+Blocks of a finite cyclic filter.
+𝐷, 𝐻, 𝐴
+𝑇= 𝐷+ 𝐻= 𝐷(𝐼+ 𝐴), with 𝐴= 𝐷−1𝐻.
+Explicit integral 2 × 2 matrices.
+𝑤(𝑒), 𝑊(𝛾)
+Positive certified edge gain and its additive word weight.
+𝑤(𝑎) = 1, 𝑤(𝑏) = 2.
+𝐿
+Precision depth in a quotient such as ℤ/2𝐿ℤ.
+𝐿= 5 gives arithmetic modulo
+32.
+𝐴(𝑡), 𝑍(𝑡)
+Polynomial graph adjacency and unsigned walk-count
+series.
+Two parallel edges remain dis-
+tinct.
+𝐸, Λ, 𝑠
+A rational projector, a specified lattice, and a clearing
+exponent.
+𝐸+ has local weight 1 at 2.
+(𝑠𝑖)
+Directional weights of a supplied Smith diagonal.
+(1, 2)
+modulo
+8
+or
+(0, 1, 3)
+across depths.
+Δ
+The failure of an independently chosen operator to
+intertwine: 𝐶𝑇𝑓−𝑇𝑐𝐶.
+One nonzero entry 1/16.
+Suggested reading routes
+For exact coordinates, read V3 through V8, then the finite filter on V20. For weighted inversion and counting,
+read V9 through V13. For arithmetic separation and congruence fibers, read V14 through V19. The final pages
+distinguish nonlinear chart geometry, error propagation, and the formal contract.
+Read this as: Operator words carry signed matrix values. Graph walks carry unsigned counts. Smith nor-
+mal form concerns linear congruences. The Smith impedance chart on V21 is a different, nonlinear con-
+struction.
+REALIZATION CALCULUS
+53
+
+
+OPERATION KOMOREBI
+PAPER II
+V3
+/
+MODEL A / LOSSLESS ADDRESS REFINEMENT
+Follow one coefficient through the tower
+Traditional paper: Theorem 3.3 (p. 3), Theorem 4.6 (p. 11)
+Take a vector 𝑥= (𝑥0, … , 𝑥15). A packet is not a single summary number: it retains every coefficient at its selected
+addresses. For example,
+𝑃2,0𝑥= (𝑥0, 0, 𝑥2, 0, … , 𝑥14, 0).
+The rail below lists the addresses in each packet. Its display order groups descendants under their parents. The
+matrix example on V5 instead uses increasing residue order.
+𝑁= 2
+0
+2
+4
+6
+8
+10
+12
+14
+𝑟= 0
+1
+3
+5
+7
+9
+11
+13
+15
+𝑟= 1
+16
+𝑁= 4
+0
+4
+8
+12
+𝑟= 0
+2
+6
+10
+14
+𝑟= 2
+1
+5
+9
+13
+𝑟= 1
+3
+7
+11
+15
+𝑟= 3
+16
+𝑁= 8
+0
+8
+𝑟= 0
+4
+12
+𝑟= 4
+2
+10
+𝑟= 2
+6
+14
+𝑟= 6
+1
+9
+𝑟= 1
+5
+13
+𝑟= 5
+3
+11
+𝑟= 3
+7
+15
+𝑟= 7
+16
+Each cell is an address n; its coefficient travels with it.
+Every row contains all sixteen addresses exactly once. A heavier boundary separates packet ranges. The numbers are coeffi-
+cient addresses, not new coefficient values. There is no interpolation, averaging, or omitted high-frequency tail.
+The address 6 is even, is 2 modulo 4, and is 6 modulo 8. Its coefficient therefore lies in the successive ranges
+𝑃8,6𝑋⊆𝑃4,2𝑋⊆𝑃2,0𝑋.
+The corresponding identities hold as operators:
+𝑃2,0 = 𝑃4,0 + 𝑃4,2,
+𝑃4,2 = 𝑃8,2 + 𝑃8,6.
+Applying either composite parent selector to 𝑃8,6𝑥leaves it unchanged. Applying the odd selector kills it. This
+is absorption between a parent and a child, rather than an approximate resemblance between nearby scales.
+Why the reconstruction is unique
+If a vector is a sum of components in disjoint packet ranges, apply the projector for one range. All other compo-
+nents vanish and the selected component remains. Thus every child component is recovered uniquely from the
+sum.
+Read this as: Refinement is a sharper address book for the same coefficients. The total number of free
+coordinates does not change.
+REALIZATION CALCULUS
+54
+
+
+OPERATION KOMOREBI
+PAPER II
+V4
+/
+MODEL A / THE MEANING OF COARSENING
+Regrouping is not averaging
+Traditional paper: Definition 3.4 (p. 4), Theorem 3.5 (p. 4)
+The word coarsening can suggest compression. In the exact coordinate theorem it means regrouping complete
+packet vectors. Replacing each packet by one scalar sum is a different operation and really does lose information.
+For 𝑥= (1, 2, 3, 4), the fine packets are the four coordinate-supported vectors. Regrouping gives (1, 0, 3, 0) and
+(0, 2, 0, 4). Every original coordinate remains available in one of these two vectors.
+Fine packet vectors
+1
+0
+0
+0
+0
+2
+0
+0
+0
+0
+3
+0
+0
+0
+0
+4
+Coarse packet vectors
+1
+0
+3
+0
+0
+2
+0
+4
+∑children
+4 × 1 = 4 free coordinates 2 × 2 = 4 free coordinates
+Scalar incidence only
+1
+0
+1
+0
+0
+1
+0
+1
+(𝑥0 + 𝑥2, 𝑥1 + 𝑥3)
+4 ⟶2 scalars: loss
+The left and middle panels store the same four independent coordinates. The right panel instead applies a 2 × 4 numerical
+incidence matrix to four scalar entries. That is not the range-restricted exact coordinate map.
+Define
+𝑋pkt
+𝑁= ⨁
+𝑗
+𝑃𝑁,𝑗𝑋,
+𝒜𝑁𝑥= (𝑃𝑁,𝑗𝑥)𝑗,
+𝒮𝑁(𝑥𝑗)𝑗= ∑
+𝑗
+𝑥𝑗.
+Completeness and mutual annihilation give both inverse laws. Consequently,
+𝐽= 𝒜4𝒮2,
+𝐶= 𝒜2𝒮4,
+𝐶𝐽= 𝐼,
+𝐽𝐶= 𝐼.
+The apparently larger list of fine packets simply has smaller individual packet spaces.
+A kernel witnesses genuine information loss
+For the scalar incidence matrix 𝐵drawn on the right,
+𝐵(1, 0, −1, 0)T = 0.
+The zero vector and (1, 0, −1, 0) therefore have the same two scalar summaries. No inverse can recover the original
+four scalars from that output alone.
+Read this as: Ask what each packet stores. A list of full packet vectors can be exactly invertible. A list of
+packet means or totals generally is not.
+REALIZATION CALCULUS
+55
+
+
+OPERATION KOMOREBI
+PAPER II
+V5
+/
+MODEL A / COHERENCE AND NATURALITY
+The operator changes coordinates too
+Traditional paper: Theorem 3.5 (p. 4), Theorem 3.8 (p. 6)
+Use a finite periodic carrier 𝑋= ℚ8 for this example. Let 𝑆𝑒𝑗= 𝑒𝑗+1 mod 8 and let
+𝑇= 𝐼+ 2𝑆+ 𝑆2.
+This is a concrete cyclic model, not an unannounced boundary convention for the finitely supported signal on
+V20. Write 𝑅𝑁for the permutation that groups coordinates in increasing residue order modulo 𝑁.
+̂𝑇2
+1
+⋅
+⋅
+1
+⋅
+⋅
+⋅
+2
+1
+1
+⋅
+⋅
+2
+⋅
+⋅
+⋅
+⋅
+1
+1
+⋅
+⋅
+2
+⋅
+⋅
+⋅
+⋅
+1
+1
+⋅
+⋅
+2
+⋅
+2
+⋅
+⋅
+⋅
+1
+⋅
+⋅
+1
+⋅
+2
+⋅
+⋅
+1
+1
+⋅
+⋅
+⋅
+⋅
+2
+⋅
+⋅
+1
+1
+⋅
+⋅
+⋅
+⋅
+2
+⋅
+⋅
+1
+1
+𝐽4,2
+1
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+⋅
+1
+̂𝑇4
+1
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+2
+⋅
+1
+⋅
+⋅
+1
+⋅
+2
+⋅
+2
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+2
+⋅
+1
+⋅
+⋅
+1
+⋅
+1
+⋅
+2
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+2
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+2
+⋅
+1
+⋅
+⋅
+⋅
+⋅
+1
+⋅
+2
+⋅
+1
+𝐽4,2̂𝑇2 = ̂𝑇4𝐽4,2
+Actual 8 × 8 matrices. Dots are zero entries. The other entries are exact integers. Heavy lines mark the packet blocks: size
+four at level two and size two at level four.
+The reordered operators and change of coordinates are
+̂𝑇𝑁= 𝑅𝑁𝑇𝑅−1
+𝑁,
+𝐽4,2 = 𝑅4𝑅−1
+2 .
+Multiplication cancels the intermediate coordinate maps:
+𝐽4,2̂𝑇2 = ̂𝑇4𝐽4,2,
+𝐽8,4𝐽4,2 = 𝐽8,2.
+Thus it makes no difference whether the operator is applied before or after a consistent coordinate change. One
+must transport the operator, not merely reuse the same numerical matrix under a new ordering.
+Refined blocks still reconstruct the same map
+A coarse block expands as
+𝑃𝑏𝑇𝑃𝑎=
+∑
+𝛽≻𝑏, 𝛼≻𝑎
+𝑃𝛽𝑇𝑃𝛼.
+The terms are maps embedded in the original source and target spaces. Adding their norms, or adding their
+matrix entries after forgetting the embeddings, is not this operator identity.
+Read this as: The fine matrix contains a different block organization of the same operator. An indepen-
+dently guessed coarse matrix is a separate approximation problem, measured later by a defect.
+REALIZATION CALCULUS
+56
+
+
+OPERATION KOMOREBI
+PAPER II
+V6
+/
+MODEL A / RESIDUE MASKS IN CHARACTERISTIC TWO
+Selectors survive without division
+Traditional paper: Proposition 4.2 (p. 9)
+Work first in 𝔽2, where 1 + 1 = 0. The eight coefficients below are just a finite display of a coefficient sequence.
+The even and odd projectors are diagonal masks with entries zero and one.
+𝑥
+1
+1
+0
+1
+1
+0
+1
+1
+𝑃2,0𝑥
+1
+0
+0
+0
+1
+0
+1
+0
+𝑃2,1𝑥
+0
+1
+0
+1
+0
+0
+0
+1
+(𝑃2,0 + 𝑃2,1)𝑥
+1
+1
+0
+1
+1
+0
+1
+1
+0
+1
+2
+3
+4
+5
+6
+7
+Coefficient address 𝑛
+No division by 2
+All arithmetic in 𝔽2
+Each nonzero input coefficient is retained by exactly one mask. Reconstruction is exact over 𝔽2. No average and no root of
+unity is used.
+For a general coefficient ring and a positive integer 𝑁, the definition is
+(𝑃𝑁,𝑗𝑥)𝑛= {𝑥𝑛,
+𝑛≡𝑗
+(mod 𝑁),
+0,
+otherwise.
+An address belongs to one residue class, so applying two masks either keeps that same coefficient or kills it. This
+proves
+𝑃𝑁,𝑖𝑃𝑁,𝑗= 𝛿𝑖𝑗𝑃𝑁,𝑗,
+∑
+𝑗
+𝑃𝑁,𝑗= 𝐼.
+The argument is coordinatewise and does not require the coefficients to form a field.
+Why the usual even/odd average is a different formula
+Over a field of characteristic not two, parity extraction can be represented using 𝐹(𝑧) and 𝐹(−𝑧) and division
+by 2. In characteristic two, −𝑧= 𝑧and 2 = 0, so that formula cannot be used. The coefficient mask, however, still
+distinguishes even from odd exponents.
+This distinction also explains the later involution example. Failure to reduce a rational spectral projector contain-
+ing 1/2 does not make every integral coefficient-address selector disappear.
+Read this as: The basic object is the address selector. A Fourier average is one possible realization of it and
+has additional algebraic hypotheses.
+REALIZATION CALCULUS
+57
+
+
+OPERATION KOMOREBI
+PAPER II
+V7
+/
+MODEL A / AN EXACT NINE-ENTRY TABLE
+A Fourier certificate you can inspect
+Traditional paper: Theorem 4.3 (p. 10)
+Take 𝑁= 3 and work in 𝔽7. Set
+𝜔= 2,
+𝜔−1 = 4,
+𝜂= 3−1 = 5.
+Here 23 = 1 and neither 2 nor 22 is one. The unnormalized geometric sums are the entries in the first matrix.
+∑𝑘4𝑗𝑘2𝑟𝑘(mod 7)
+3
+0
+0
+0
+3
+0
+0
+0
+3
+× 5
+𝑃𝑗(𝑧𝑟) ∶5 = 3−1 (mod 7)
+1
+0
+0
+0
+1
+0
+0
+0
+1
+𝜔= 2,
+𝜔3 = 1
+𝜔−1 = 4,
+𝜂= 5
+𝑗, 𝑟∈{0, 1, 2}
+In 𝔽3 × 𝔽3: order two does not imply orthogonality.
+𝜔= (−1, 1),
+𝜂= (2, 2),
+𝜂(1 + 𝜔) = (0, 1) ≠(0, 0)
+All entries are exact residues modulo seven. Multiplying the diagonal value 3 by 5 produces 1. The lower calculation is a
+genuine failed Fourier certificate in a different coefficient ring.
+On the monomial 𝑧𝑛, define 𝑈𝐹(𝑧) = 𝐹(2𝑧). The proposed projector acts by
+5
+2
+∑
+𝑘=0
+4𝑗𝑘2𝑛𝑘.
+The identity 23 = 1 makes this depend only on 𝑛mod 3. The nine-entry table therefore establishes the formula
+for every exponent once periodicity is used, rather than requiring a separate test at every coefficient.
+Order alone is not sufficient over every ring
+In 𝔽3 ×𝔽3, the element (−1, 1) has order two, but one component is a trivial character. Its nontrivial Fourier sum
+does not vanish in that component. Thus an element of order 𝑁in a ring with zero divisors is not, by itself, the
+full orthogonality certificate.
+Read this as: The finite table is a checkable sufficient input. Over a field, a primitive root supplies it. Over
+a more general ring, inspect the actual table instead of inferring orthogonality from order alone.
+REALIZATION CALCULUS
+58
+
+
+OPERATION KOMOREBI
+PAPER II
+V8
+/
+MODEL A / THE DYADIC AND ODD RECTANGLE
+One address, two independent residues
+Traditional paper: Corollary 4.9 (p. 11)
+Because 4 and 3 are coprime, a residue modulo 12 is specified by a column 𝑎= 𝑛mod 4 and a row 𝑏= 𝑛mod 3.
+Each cell contains the unique combined address.
+𝑏= 0
+0
+9
+6
+3
+𝑏= 1
+4
+1
+10
+7
+𝑏= 2
+8
+5
+2
+11
+𝑎= 0
+𝑎= 1
+𝑎= 2
+𝑎= 3
+𝑎= 𝑛mod 4
+𝑏= 𝑛mod 3
+(𝑎, 𝑏) = (3, 1) ⟺𝑛= 7 (mod 12)
+7, 19, 31, …
+𝑃12,7 = 𝑃4,3𝑃3,1
+The twelve cells are a permutation of 0, … , 11, not twelve extra degrees of freedom. The selected cell contains every integer
+congruent to 7 modulo 12.
+An explicit reconstruction formula is
+𝑛≡9𝑎+ 4𝑏
+(mod 12),
+because 9 is one modulo four and zero modulo three, while 4 has the opposite pair of residues. For (𝑎, 𝑏) = (3, 1)
+this gives 31 ≡7.
+Applying the two masks in either order gives
+𝑃12,7 = 𝑃4,3𝑃3,1 = 𝑃3,1𝑃4,3.
+More generally, an address survives exactly when it satisfies both congruences. The coprime reconstruction iden-
+tifies this intersection with one combined residue class.
+The hypothesis can be seen failing
+Replace 4 and 3 by 4 and 6. The requirements 𝑛≡0 (mod 4) and 𝑛≡1 (mod 6) are incompatible: the first
+makes 𝑛even and the second makes it odd. A full rectangular address product no longer exists. Compatible
+pairs must agree modulo the greatest common divisor.
+Read this as: CRT separates address coordinates. It does not claim that dyadic and odd spectral projectors
+have the same denominator weights or the same lifting behavior.
+REALIZATION CALCULUS
+59
+
+
+OPERATION KOMOREBI
+PAPER II
+V9
+/
+MODEL B / ORDERED TRANSFERS IN A FILTERED RING
+Which words can survive precision five?
+Traditional paper: Theorem 5.10 (p. 17), Corollary 5.11 (p. 18)
+Let 𝐸𝑖𝑗send the 𝑗th basis vector to the 𝑖th. In integral 2 × 2 matrices set
+𝑎= 2𝐸01,
+𝑏= 4𝐸10,
+𝐴= 𝑎+ 𝑏.
+Their certified dyadic weights are 1 and 2. At precision 𝐿= 5, every word of weight at least five vanishes modulo
+32.
+1
+0
+𝐼
+keep
+𝑎
+1
+−2𝐸01
+keep
+𝑏
+2
+−4𝐸10
+keep
+𝑎𝑏
+3
++8𝐸00
+keep
+𝑏𝑎
+3
++8𝐸11
+keep
+𝑎𝑏𝑎
+4
+−16𝐸01
+keep
+𝑏𝑎𝑏
+5
+−32𝐸10
+zero mod 32
+word
+cumulative weight
+signed contribution
+𝐿= 5
+All nonzero retained terms of the signed inverse sum, followed by the first discarded nonzero word. The empty word con-
+tributes 𝐼. Other words of weight below five can still be zero because 𝑎2 = 𝑏2 = 0.
+The words are written matrix products: in 𝑎𝑏, the map 𝑏acts first. Therefore
+𝑎𝑏= 8𝐸00,
+𝑏𝑎= 8𝐸11,
+𝑎𝑏𝑎= 16𝐸01.
+The two products 𝑎𝑏and 𝑏𝑎cannot be identified merely because they have equal weight. Both their order and
+their source/target information matter.
+The pruning rule supplies a sufficient reason for a term to vanish. It is not an assertion that every word below the
+threshold contributes nontrivially. Packet incompatibility and algebraic relations can remove additional words.
+Read this as: Length controls the sign. Cumulative weight controls precision. The ordered matrix product
+controls the actual contribution. None of these three can replace the others.
+REALIZATION CALCULUS
+60
+
+
+OPERATION KOMOREBI
+PAPER II
+V10
+/
+MODEL B / A COMPLETE MODULO-32 CALCULATION
+An inverse computed in both orders
+Traditional paper: Theorem 5.10 (p. 17), Corollary 5.11 (p. 18)
+Keep the matrices from V9 and choose
+𝐷= (1
+1
+0
+1) ,
+𝐷−1 = (1
+−1
+0
+1 ) ,
+𝑇= 𝐷(𝐼+ 𝐴) = (5
+3
+4
+1) .
+The six retained contributions sum to
+𝑆= 𝐼−𝑎−𝑏+ 𝑎𝑏+ 𝑏𝑎−𝑎𝑏𝑎= ( 9
+−18
+−4
+9 ) .
+The required inverse is 𝐾= 𝑆𝐷−1 in the quotient, not 𝐷−1𝑆.
+𝑇
+5
+3
+4
+1
+𝐾
+9
+5
+28
+13
+𝑇𝐾(mod 32)
+1
+0
+0
+1
+𝐾𝑇(mod 32)
+1
+0
+0
+1
+𝑆= ( 9
+−18
+−4
+9 ) ,
+𝐾= 𝑆𝐷−1 (mod 32)
+The displayed 𝐾uses canonical residues from 0 to 31. Both left and right products are the identity modulo 32. These are
+exact modular equalities, not floating-point residuals.
+One can verify the claim without trusting the word expansion:
+𝑇𝐾= (129
+64
+64
+33) ≡𝐼,
+𝐾𝑇= ( 65
+32
+192
+97) ≡𝐼
+(mod 32).
+The cancellation of the exterior factor 𝐷explains the order. Since 𝑇= 𝐷(𝐼+ 𝐴), multiply its inverse by 𝐷−1 on
+the right of the inverse of 𝐼+ 𝐴.
+What the finite theorem does not require
+There is no claim here that the same integer series converges in the ordinary real matrix norm. The quotient kills
+all sufficiently deep products, so a finite sum suffices. The complete normed-ring theorem is a separate result
+with its own strict contraction hypothesis.
+Read this as: A correct noncommutative formula must work on both sides and preserve the order of its
+factors. Here the entire result can be checked by two integer matrix products.
+REALIZATION CALCULUS
+61
+
+
+OPERATION KOMOREBI
+PAPER II
+V11
+/
+MODEL B / A CERTIFIED CUTOFF, NOT A HEURISTIC
+The residual tells you when to stop
+Traditional paper: Theorem 5.10 (p. 17), Corollary 5.11 (p. 18), Section B.2 (p. 47)
+For 𝑆𝑁= ∑
+𝑁−1
+𝑘=0 (−𝐴)𝑘, telescoping gives
+(𝐼+ 𝐴)𝑆𝑁= 𝑆𝑁(𝐼+ 𝐴) = 𝐼−(−𝐴)𝑁.
+Thus the exact residual is known. To certify precision 𝐿, it is enough to show that every residual entry is divisible
+by 2𝐿.
+1
+1
+3
+2
+4
+3
+6
+4
+7
+5
+9
+6
+10
+7
+𝐿= 5
+number 𝑁of geometric terms
+valuation of the residual (−𝐴)𝑁
+The plotted values are the minimum dyadic valuations of the nonzero entries of (−𝐴)𝑁. The dashed line is the requested
+cutoff 𝐿= 5. This is an exact valuation profile, not a measured numerical convergence curve.
+In this particular model, 𝐴2 = 8𝐼. Therefore
+𝑣2(𝐴2𝑘) = 3𝑘,
+𝑣2(𝐴2𝑘+1) = 3𝑘+ 1,
+where the matrix valuation means the minimum entry valuation. Three geometric terms leave a residual of
+valuation four and do not suffice modulo 32. Four terms leave valuation six and do suffice.
+The generic positive-weight estimate is more conservative. If every edge weight is at least 𝑚> 0, a word of length
+𝑁has weight at least 𝑚𝑁. Hence the cutoff
+𝑁= ⌈𝐿
+𝑚⌉
+is sufficient. Here the certified minimum weight is 𝑚= 1, so the generic choice is five. The extra identity 𝐴2 = 8𝐼
+justifies stopping at four in this example.
+Read this as: A structural identity may improve a cutoff. An observed small real norm or an arbitrarily
+larger claimed minimum edge weight does not supply that certificate.
+REALIZATION CALCULUS
+62
+
+
+OPERATION KOMOREBI
+PAPER II
+V12
+/
+MODEL C / A GRAPH WITH PARALLEL EDGES
+Walks are not simple paths
+Traditional paper: Theorem 6.6 (p. 21)
+Consider the directed graph below. The loop ℓhas weight one, the two distinct edges 𝑎, 𝑏from 0 to 1 each have
+weight two, and the return edge 𝑟has weight one.
+0
+1
+ℓ∶1
+𝑎∶2
+𝑏∶2
+𝑟∶1
+Edge labels carry
+positive integer weights.
+All walks from 0 to 1 of weight 5
+ℓℓℓ𝑎
+ℓℓℓ𝑏
+𝑎𝑟𝑎
+𝑎𝑟𝑏
+𝑏𝑟𝑎
+𝑏𝑟𝑏
+Every word on the right is read chronologically from left to right as an edge traversal. This is intentionally different from the
+right-to-left action of a written operator product in V9.
+A walk may revisit a vertex and reuse an edge. At total weight five there are six walks from 0 to 1. Two use three
+loops followed by either 𝑎or 𝑏. Four travel to 1, return to 0, and travel to 1 again, with two independent choices
+of parallel edge.
+Their multiplicities enter the polynomial adjacency matrix:
+𝐴(𝑡) = (𝑡
+2𝑡2
+𝑡
+0 ) .
+The coefficient 2 remembers the two distinct edges. Replacing it by 1 would count a different graph.
+The first-edge decomposition
+Let 𝑎𝑛(𝑠, 𝑡) count walks of total weight 𝑛from 𝑠to 𝑡. Removing the first edge gives
+𝑎𝑛(𝑠, 𝑡) = 1𝑠=𝑡, 𝑛=0 +
+∑
+𝑒∶source(𝑒)=𝑠
+𝑤(𝑒)≤𝑛
+𝑎𝑛−𝑤(𝑒)(target(𝑒), 𝑡).
+The empty walk is allowed precisely on the diagonal at weight zero. Positive weights ensure that every contribut-
+ing walk has length at most 𝑛, so enumeration at each fixed weight is finite.
+Read this as: The graph series counts unsigned walks, including repetitions and parallel-edge multiplicity.
+It does not count simple paths, and it does not know whether an associated operator product vanishes or
+cancels.
+REALIZATION CALCULUS
+63
+
+
+OPERATION KOMOREBI
+PAPER II
+V13
+/
+MODEL C / AUTOMATIC RATIONALITY AND RECURRENCE
+A finite graph produces its denominator
+Traditional paper: Theorem 6.6 (p. 21), Corollary 6.7 (p. 22)
+For the graph on V12, compute the determinant and adjugate rather than guessing a recurrence:
+𝐼−𝐴(𝑡) = (1 −𝑡
+−2𝑡2
+−𝑡
+1 ) ,
+𝑄(𝑡) = 1 −𝑡−2𝑡3,
+adj(𝐼−𝐴)0,1 = 2𝑡2.
+Since 𝑄(0) = 1, its inverse exists as a formal power series with integer coefficients.
+0
+0
+1
+0
+2
+2
+3
+2
+4
+2
+5
+6
+6
+10
+7
+14
+8
+26
+9
+46
+10
+74
+11
+126
+12
+218
+𝑛
+𝑎𝑛
+𝑍0,1(𝑡) =
+2𝑡2
+1 −𝑡−2𝑡3
+𝑎8 = 𝑎7 + 2𝑎5 = 14 + 2 ⋅6 = 26
+The coefficients are independently computed by the first-edge recurrence and checked against the rational series through
+weight 24. Literal edge-walk enumeration supplies a third check through weight 10.
+From 𝑄𝑍0,1 = 2𝑡2 one obtains
+𝑎0 = 𝑎1 = 0,
+𝑎2 = 2,
+𝑎𝑛= 𝑎𝑛−1 + 2𝑎𝑛−3
+(𝑛≥3).
+The numerator is responsible for the initial exception. Omitting it would incorrectly force the entire series to
+vanish.
+Three boundaries of this calculation
+This is a formal series identity. No analytic convergence at a chosen real or complex value of 𝑡is needed. The
+canonical determinant need not be the minimal denominator after cancellation. Finally, positive weights prevent
+infinitely many walks at a fixed weight: a single weight-zero loop would already give the infinitely many distinct
+walks 1, ℓ, ℓ2, … at weight zero.
+Read this as: Finite positive-weight graph data determine a rational series and an eventual recurrence. The
+proof does not begin by assuming a certificate 𝑄𝑍= 𝑃that already contains that conclusion.
+REALIZATION CALCULUS
+64
+
+
+OPERATION KOMOREBI
+PAPER II
+V14
+/
+MODEL D / AN EVALUATED BÉZOUT CERTIFICATE
+Separate before dividing
+Traditional paper: Theorem 7.5 (p. 25), Definition 7.6 (p. 26)
+Use the integral involution
+𝐴= (1
+1
+0
+−1) ,
+𝐴2 = 𝐼.
+With 𝐹= 𝐴−𝐼and 𝐺= 𝐴+ 𝐼, the identities
+−𝐹+ 𝐺= 2𝐼,
+𝐹𝐺= 0
+are an explicit evaluated Bézout certificate. Here all the required commutations follow because these operators
+are polynomials in the same matrix.
+𝐴
+1
+1
+0
+−1
+𝑁= 𝐼+ 𝐴
+2
+1
+0
+0
+𝐸+ = 𝑁/2
+1
+1
+2
+0
+0
+𝑁2 = 2𝑁
+𝐸2
++ = 𝐸+
+𝐸+(1, 0) = (1, 0),
+𝐸+(−1, 2) = (0, 0)
+The denominator-free numerator is quasi-idempotent: 𝑁2 = 2𝑁. Division by the nonzero scalar 2 gives an idempotent over
+the fraction field. It does not yet make the projector integral on the selected lattice.
+The numerator 𝑁= 𝐺acts by 2 on ker(𝐴−𝐼) and by zero on ker(𝐴+ 𝐼). Thus
+𝐸+ = 1
+2𝑁= (1
+1/2
+0
+0 )
+is the required separator. The complementary projector is 𝐸−= 𝐼−𝐸+.
+A denominator bound need not be minimal
+The same projector can be presented with the inflated certificate −2𝐹+ 2𝐺= 4𝐼. Its numerator is 2𝐺and its
+normalization is still 𝐸+. This supplies a two-digit clearing bound at 2, although one digit is enough. Thus the
+valuation of a supplied certificate gives an upper bound, not automatically the least possible weight.
+For the original sign factors the concrete resultant is Res(𝑥−1, 𝑥+ 1) = 2 and the bound is sharp. That equality
+is special to this displayed calculation, not a universal minimality theorem for every resultant certificate.
+Read this as: First check the evaluated identities and the numerator. Then normalize in the fraction field.
+Finally ask what denominator is needed on the particular lattice.
+REALIZATION CALCULUS
+65
+
+
+OPERATION KOMOREBI
+PAPER II
+V15
+/
+MODEL D / THE EIGENLATTICE HAS INDEX TWO
+Where the dyadic digit is lost
+Traditional paper: Proposition 9.3 (p. 32)
+The eigenspaces are spanned by (1, 0) and (−1, 2). Their integral eigenvectors do not form an integral basis of ℤ2.
+The change-of-basis determinant is two.
+(1, 0)
+(−1, 2)
+𝐸+(0, 1) = ( 1
+2, 0)
+𝐵= (1
+−1
+0
+2 ) ,
+det 𝐵= 2
+Filled: 𝐵ℤ2 = {(𝑥, 𝑦) ∶𝑦is even}
+Unfilled: the other lattice coset.
+𝐵−1 is integral at odd primes, not at 2.
+An ordinary integer-lattice picture, not a drawing of the topology of ℚ2. Filled dots have even second coordinate. Unfilled
+dots lie in the other coset. The hollow point at (1/2, 0) records the image of an integral vector under 𝐸+.
+Write
+𝐵= (1
+−1
+0
+2 ) ,
+𝐴𝐵= 𝐵diag(1, −1),
+𝐸+ = 𝐵diag(1, 0)𝐵−1.
+The index-two eigenlattice explains the denominator in 𝐵−1 and in the projector. Over the localized lattice Λ𝑝=
+ℤ2
+(𝑝), the number 2 is a unit for every odd prime 𝑝. Hence the local denominator weight is zero there and one at
+𝑝= 2.
+This is a local assertion. Odd localization does not change the fact that the displayed eigenvectors span an index-
+two sublattice inside the ordinary integer lattice.
+The special fiber does not retain the rational splitting
+Modulo two, 𝑥−1 = 𝑥+1 and 𝐴becomes a nontrivial unipotent matrix. The entries 1/2 in 𝐸± cannot be reduced
+modulo two. By contrast, the coefficient selectors on V6 use only zero and one and remain available.
+Read this as: The obstruction is in integral separation, not in the existence of the two rational eigenspaces.
+The lattice is part of the question.
+REALIZATION CALCULUS
+66
+
+
+OPERATION KOMOREBI
+PAPER II
+V16
+/
+MODEL D / A SHARP PRECISION-DELAY EXAMPLE
+One extra digit is genuinely necessary
+Traditional paper: Theorem 7.7 (p. 26), Proposition 9.3 (p. 32)
+The projector acts by
+𝐸+(𝑥, 𝑦) = (𝑥+ 𝑦/2, 0).
+Its factor 1/2 can consume one dyadic digit. The claim concerns differences: if the inputs agree modulo 2𝑚+1Λ,
+their projected differences lie in 2𝑚Λ.
+input pair
+difference
+same mod 8?
+𝐸+ difference
+same mod 8?
+0, (0, 8)
+(0, 8)
+yes
+(4, 0)
+no
+0, (0, 16)
+(0, 16)
+yes
+(8, 0)
+yes
+𝑚= 3 ∶
+3 input digits fail; 4 input digits suffice.
+For 𝑚= 3, inputs differing by (0, 8) agree modulo eight, but their projected outputs differ by (4, 0) and do not. Raising the
+input agreement to modulo sixteen makes the projected outputs agree modulo eight.
+The example works at every positive depth:
+𝐸+(0, 2𝑚) = (2𝑚−1, 0) ∉2𝑚Λ,
+𝐸+(0, 2𝑚+1) = (2𝑚, 0) ∈2𝑚Λ.
+Thus a zero-delay promise fails, while one extra input digit is sufficient. This witnesses sharpness for the specified
+projector and lattice.
+The general calculation is just as short
+If 𝜋𝑠𝐸Λ ⊆Λ and 𝑥−𝑦= 𝜋𝑚+𝑠𝑣, then
+𝐸(𝑥−𝑦) = 𝜋𝑚(𝜋𝑠𝐸𝑣) ∈𝜋𝑚Λ.
+No rounding procedure is hiding in this identity. Nor does it authorize reducing 𝐸modulo 𝜋when its entries
+are nonintegral. Individual projected points may lie in a fractional lattice. The theorem controls their difference
+at the stated integral scale.
+Accuracy and branching are different views
+The later Smith example records how many inputs share one output at finite depth. Here we ask how accurately
+an input must be known to determine a projected output difference. Both involve directional divisibility, but they
+are different questions.
+Read this as: The phrase “one lost digit” has an exact meaning: both a sufficiency theorem and an explicit
+pair of inputs showing that a smaller delay fails.
+REALIZATION CALCULUS
+67
+
+
+OPERATION KOMOREBI
+PAPER II
+V17
+/
+MODEL E / TWO DIRECTIONAL WEIGHTS
+See every Smith fiber modulo eight
+Traditional paper: Theorem 10.6 (p. 36)
+Consider the actual map of finite sets
+(ℤ/8ℤ)2 ⟶(ℤ/8ℤ)2,
+(𝑥, 𝑦) ⟼(2𝑥, 4𝑦).
+The first coordinate of the output must be even. The second must be zero or four. Those are precisely the attainable
+targets in the right panel.
+64 inputs (𝑥, 𝑦)
+0
+1
+2
+3
+4
+5
+6
+7
+0
+1
+2
+3
+4
+5
+6
+7
+8 attainable targets (2𝑥, 4𝑦)
+0
+1
+2
+3
+4
+5
+6
+7
+0
+1
+2
+3
+4
+5
+6
+7
+diag(2, 4)
+mod8
+Every filled target has exactly 2 ⋅4 = 8 preimages.
+All sixty-four input points and all sixty-four possible target addresses are shown. The eight filled target points are the image.
+Every attainable target has exactly eight preimages. The other fifty-six targets have none.
+For a specific attainable target (2, 4),
+2𝑥≡2
+(mod 8) ⟺𝑥∈{1, 5},
+4𝑦≡4
+(mod 8) ⟺𝑦∈{1, 3, 5, 7}.
+The coordinate choices are independent, giving 2 ⋅4 = 8 solutions. The entire carrier is partitioned consistently:
+8 attainable targets × 8 inputs per target = 64.
+For an inadmissible target, such as (1, 4) or (2, 2), the fiber is empty. The same nonzero cardinality formula must
+not be applied to it.
+The arithmetic behind the picture
+Multiplication by 𝑝𝑠modulo 𝑝𝐿has kernel size 𝑝min(𝑠,𝐿). Its image consists exactly of residues whose canonical
+representatives are divisible by that same power. The displayed model has 𝑝= 2, 𝐿= 3 and weights (1, 2).
+Read this as: A directional weight has two consequences: a divisibility condition on the target and a con-
+ditional multiplicity of inputs. Solvability comes before counting.
+REALIZATION CALCULUS
+68
+
+
+OPERATION KOMOREBI
+PAPER II
+V18
+/
+MODEL E / EXPLICIT SMITH COORDINATES
+Transport the whole solution fiber
+Traditional paper: Theorem 10.6 (p. 36)
+The preceding diagonal system is connected to a nondiagonal one by the unimodular change of variables
+𝑀= (2
+2
+0
+4) ,
+𝑉= (1
+−1
+0
+1 ) ,
+𝑀𝑉= diag(2, 4) = 𝐷.
+Since det 𝑉= 1, 𝑥= 𝑉𝑦is bijective modulo eight. Thus 𝑀𝑥= 𝑏is equivalent to 𝐷𝑦= 𝑏.
+𝐷𝑦= (2, 4)
+0
+1
+2
+3
+4
+5
+6
+7
+0
+1
+2
+3
+4
+5
+6
+7
+𝑀𝑥= (2, 4)
+0
+1
+2
+3
+4
+5
+6
+7
+0
+1
+2
+3
+4
+5
+6
+7
+𝑥= 𝑉𝑦
+𝑥0 = 𝑦0 −𝑦1
+𝑥1 = 𝑦1
+The eight solutions are permuted, not created or discarded.
+The eight solutions for the target (2, 4), before and after the coordinate shear. Coordinates are residues in {0, … , 7}. No
+interpolation on this modular grid is intended.
+For example, the diagonal solution 𝑦= (1, 3) corresponds to
+𝑥= 𝑉𝑦= (−2, 3) ≡(6, 3)
+(mod 8),
+and 𝑀(6, 3)T = (18, 12)T ≡(2, 4)T. Applying the inverse shear recovers the original solution.
+Two boundary cases worth keeping visible
+A unit diagonal coordinate has exactly one solution for every target. A literal zero coordinate has all eight possible
+inputs when its target is zero, and no input when the target is nonzero. A zero coordinate is not inverted or silently
+omitted.
+The displayed diagonalization is verified by multiplication. The theorem takes diagonal data as input. A Smith
+normal form for an arbitrary matrix or general DVR requires a separate structure theorem.
+Read this as: An invertible change of coordinates transports existence, every solution, and the fiber count.
+The target must be transformed as prescribed when checking admissibility.
+REALIZATION CALCULUS
+69
+
+
+OPERATION KOMOREBI
+PAPER II
+V19
+/
+MODEL E / A DEPTH-BY-DEPTH FIBER BUDGET
+Precision exposes directional freedom
+Traditional paper: Theorem 10.6 (p. 36)
+Take 𝑝= 2 and the supplied diagonal weights (𝑠0, 𝑠1, 𝑠2) = (0, 1, 3). At depth 𝐿, an admissible target has
+2𝑊(𝐿) solutions,
+𝑊(𝐿) = min(0, 𝐿) + min(1, 𝐿) + min(3, 𝐿).
+Each direction contributes only the amount visible at the current depth.
+4
+1
+8
+2
+16
+3
+16
+4
+16
+5
+16
+6
+precision depth 𝐿
+Bar height = 𝑊(𝐿); label = 2𝑊(𝐿) solutions.
+𝑠2 = 3
+𝑠1 = 1
+𝑠0 = 0
+The stacked height records the exponent 𝑊(𝐿). The label above each bar records the actual number of solutions. The zero-
+weight direction contributes no branching. This is a finite cardinality calculation, not an information-theoretic assumption
+about random inputs.
+The values are
+𝐿
+1
+2
+3
+4
+5
+6
+𝑊(𝐿)
+2
+3
+4
+4
+4
+4
+# solutions
+4
+8
+16
+16
+16
+16.
+Once 𝐿≥3, the nonzero weights have been fully exposed and the admissible fiber cardinality stabilizes at sixteen.
+The input space still grows as 23𝐿. The number of attainable targets grows accordingly.
+At depth six, (1, 2, 8) is admissible and gives sixteen solutions. Replacing the last coordinate by four makes the
+target inadmissible and gives zero solutions, even though the weights and depth are unchanged.
+What changes with a zero diagonal factor?
+A literal zero factor contributes 𝐿, not a fixed eventual weight, and requires a zero target coordinate. Its fiber
+therefore keeps growing with the modulus. That case must not be mistaken for a finite nonzero Smith weight.
+Read this as: The scalar sum of weights gives the count, but the separate weights give the admissibility
+conditions. Keeping only a determinant valuation can hide which target coordinate fails.
+REALIZATION CALCULUS
+70
+
+
+OPERATION KOMOREBI
+PAPER II
+V20
+/
+MODEL F / A FINITE POLYPHASE REALIZATION
+Filter first or split first: same output
+Traditional paper: Section B.1 (p. 47)
+Use the finitely supported signal 𝑥= (1, 2, 3, 4, 5, 6) and the filter ℎ= (1, 2, 1). Outside the displayed support,
+the input is zero. Let 𝑒𝑚= 𝑥2𝑚and 𝑜𝑚= 𝑥2𝑚+1.
+𝑥
+1
+2
+3
+4
+5
+6
+ℎ∗𝑥
+1
+4
+8
+12
+16
+20
+17
+6
+𝑦even
+1
+8
+16
+17
+𝑦odd
+4
+12
+20
+6
+ℎ= (1, 2, 1)
+zero extension
+no periodic wrap
+Exact integer convolution, including both output tail coefficients. The two bottom rows are the even and odd output phases.
+Interleaving them reconstructs the full eight-term output.
+If 𝑤denotes one delay on a phase sequence, the filter becomes
+(𝑦even
+𝑦odd
+) = (1 + 𝑤
+2𝑤
+2
+1 + 𝑤)
+⏟⏟⏟⏟⏟⏟⏟
+𝐻phase(𝑤)
+(𝑒
+𝑜) .
+The cross-phase delay is not optional. A unit shift sends an odd sample to the next even position, while it sends
+an even sample to the odd position in the same phase block.
+Here 𝑒= 1 + 3𝑤+ 5𝑤2 and 𝑜= 2 + 4𝑤+ 6𝑤2, so direct polynomial multiplication gives
+𝑦even = 1 + 8𝑤+ 16𝑤2 + 17𝑤3,
+𝑦odd = 4 + 12𝑤+ 20𝑤2 + 6𝑤3.
+This is the same result as ordinary convolution followed by residue extraction. No numerical transform or lim-
+iting argument is needed because every sequence is finitely supported.
+Read this as: A phase matrix is not just a sparsity pattern. Its delay factors carry the quotient-and-
+remainder information needed when a shift crosses a phase boundary.
+REALIZATION CALCULUS
+71
+
+
+OPERATION KOMOREBI
+PAPER II
+V21
+/
+MODEL G / A NONLINEAR PHASE ORBIT
+Two Smith constructions, different roles
+Traditional paper: Section 12.3 (p. 42), Section 12.3, Smith-phase identity (p. 43)
+Smith normal form concerns linear congruences. The Smith impedance chart uses the nonlinear coordinate change
+Γ = 𝑧−1
+𝑧+ 1,
+𝑧= 1 + Γ
+1 −Γ.
+They share a name, not a mathematical definition. Sample the reflection circle at the exact algebraic points Γ𝑘=
+1
+2𝑒𝑖𝑘𝜋/4.
+Γ𝑘= 1
+2𝑒𝑖𝑘𝜋/4
+0
+1
+2
+3
+4
+5
+6
+7
+𝑧𝑘= (1 + Γ𝑘)/(1 −Γ𝑘)
+0
+1
+2
+3
+4
+5
+6
+7
+Equal phase steps do not become equal impedance steps.
+Matching labels identify the same point in the two coordinates. All eight points are computed algebraically. Only their place-
+ment on the page is rendered numerically. The outer left circle is |Γ| = 1, not part of the sampled radius-1/2 orbit.
+The half-turn Γ ↦−Γ gives
+𝑧⟼1
+𝑧,
+𝑧≠0, −1.
+Thus the labels 0 and 4 are 3 and 1/3. Label 2 is (3 + 4𝑖)/5, and the opposite point is its reciprocal. The domain
+restrictions come from the forward and inverse coordinate denominators.
+These sampled phase points are not linear idempotent ranges. Refining from two to four to eight samples inserts
+more points on the same orbit. This does not imply a linear packet decomposition of impedance values.
+Read this as: The chart is a geometric realization of phase action. Its nonlinear coordinate sensitivity near
+Γ = ±1 is not the Smith congruence-fiber count and not a new linear projector theorem.
+REALIZATION CALCULUS
+72
+
+
+OPERATION KOMOREBI
+PAPER II
+V22
+/
+MODEL H / EXACT TELESCOPING, EXPLICIT GROWTH
+A small defect can grow under powers
+Traditional paper: Theorem 11.1 (p. 37), Corollary 11.3 (p. 38)
+Choose an invertible coordinate shear but independently keep the same numerical operator at both levels:
+𝐶= (1
+𝜀
+0
+1) ,
+𝑇𝑓= 𝑇𝑐= diag(1, 2),
+𝜀= 1
+16.
+Then Δ = 𝐶𝑇𝑓−𝑇𝑐𝐶= 𝜀𝐸01. Exact coordinate invertibility has not forced these independently selected operators
+to intertwine.
+1
+1
+1
+3
+4
+2
+7
+12
+3
+15
+32
+4
+31
+80
+5
+63
+192
+6
+number of applications 𝑛
+Black: 16‖actual defect‖∞; pale: certified majorant.
+Actual defects and certified upper bounds in the induced infinity norm, both divided by 𝜀. All heights are exact integers. The
+upper estimate is valid but need not be tight.
+Direct multiplication gives
+𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶= 𝜀(2𝑛−1)𝐸01.
+The general telescoping formula explains every contribution:
+𝐶𝑇𝑛
+𝑓−𝑇𝑛
+𝑐𝐶=
+𝑛−1
+∑
+𝑘=0
+𝑇𝑛−1−𝑘
+𝑐
+Δ𝑇𝑘
+𝑓.
+Since both operator norms are two, the source theorem bounds the error by 𝑛2𝑛−1𝜀. It does not promise a uniform-
+in-𝑛small error merely because 𝜀is small.
+Had we chosen the transported operator 𝑇′
+𝑐= 𝐶𝑇𝑓𝐶−1, the defect would be zero and every polynomial action
+would intertwine exactly. That is a different choice of coarse operator, not a stronger conclusion from the faulty
+one.
+Read this as: Separate coordinate coherence from operator consistency. A defect from one step is propa-
+gated by the dynamics on both sides. The telescoping identity tells you exactly how.
+REALIZATION CALCULUS
+73
+
+
+OPERATION KOMOREBI
+PAPER II
+V23
+/
+MODEL H / A DOMAIN-SENSITIVE COMPARISON
+Resolvents amplify errors near poles
+Traditional paper: Theorem 11.5 (p. 38)
+For the same model, take 𝑧∉{1, 2} and form the actual inverse matrices
+𝑅𝑓= (𝑧𝐼−𝑇𝑓)−1,
+𝑅𝑐= (𝑧𝐼−𝑇𝑐)−1.
+Their off-diagonal intertwining error is
+𝐶𝑅𝑓−𝑅𝑐𝐶= 𝑅𝑐Δ𝑅𝑓=
+𝜀
+(𝑧−1)(𝑧−2)𝐸01.
+Both inverse hypotheses matter. Neither resolvent is asserted at a pole.
+5
+2
+4
+3
+11
+5
+25
+6
+21
+10
+100
+11
+41
+20
+400
+21
+201
+100
+10000
+101
+𝑧
+‖𝐶𝑅𝑓−𝑅𝑐𝐶‖∞/𝜀
+Exact rational samples; the point 𝑧= 2 itself is excluded.
+The bars show exact amplification factors for five rational choices 𝑧> 2. Rows are separate samples, not equally spaced
+positions on the 𝑧axis. The coefficient 𝜀= 1/16 has been divided out.
+At 𝑧= 3 the amplification factor is only 1/2. At 𝑧= 201/100, it is 10000/101, so a small one-step defect can create
+a much larger resolvent defect. This follows from the exact formula rather than from unstable floating-point
+subtraction of two nearly singular inverses.
+The certified general norm estimate is
+‖𝐶𝑅𝑓−𝑅𝑐𝐶‖ ≤‖𝑅𝑐‖ ‖Δ‖ ‖𝑅𝑓‖.
+The paper also proves a one-sided-witness version: a left inverse for the coarse shift and a right inverse for the fine
+shift suffice for the algebraic identity. That does not turn arbitrary one-sided witnesses into a claim of two-sided
+resolvent existence.
+Read this as: A small local defect is meaningful only together with control of the surrounding operators
+or inverses. Near a pole, the domain and amplification factors are part of the theorem, not technical deco-
+ration.
+REALIZATION CALCULUS
+74
+
+
+OPERATION KOMOREBI
+PAPER II
+V24
+/
+PROOF BOUNDARY / HOW TO USE THIS GUIDE
+Read the certificates with the pictures
+Formal evidence: current correspondence and the inherited 25-row contract
+The original release has a frozen twenty-five-item formal contract: twenty-one numbered main-text definitions
+and results, one Smith-phase identity, and three algorithm specifications. Its dated source and evidence remain
+preserved. Current proof additions have a separate correspondence and replay record. The table below describes
+the inherited interfaces; the current map identifies the broader constructions. The visual models illustrate the
+mathematics, and their finite checks have recorded ranges.
+Current Lean scope. 51 of 53 proof-level source records have kernel-checked, semantically accepted scope. 2
+analytic records have kernel-checked partial scope with the general canonical rectifiable-calculus bridge still
+open. The current correspondence records the exact boundaries.
+Inherited interface
+Inputs and checked scope
+Boundary of that interface
+Exact refinement
+Complete projector families and a
+parent map when formulas relating
+parents to children are used.
+A canonical refinement for every
+arbitrary pair of decompositions.
+Fourier realization
+A finite orthogonality table, or
+field/root hypotheses that provide it.
+Orthogonality from multiplicative
+order alone over every ring.
+Weighted inversion
+A two-sided inverse of 𝐷, a
+multiplicative filtration, and positive
+certified gains.
+Convergence in every possible
+complete filtered algebra.
+Graph rationality
+A finite multigraph with positive
+weights, together with its actual
+determinant and adjugate.
+Simple-path counts, analytic
+convergence everywhere, or operator
+noncancellation.
+Spectral separation
+Evaluated Bézout identities and
+explicit lattice-preservation data.
+Automatic construction or
+minimality of every resultant
+certificate.
+Smith congruences
+Concrete diagonal data modulo 𝑝𝐿,
+with 𝑝> 1.
+An automatically constructed
+general-DVR Smith normal form.
+Linear defects
+Actual typed maps and the stated
+inverse or norm witnesses.
+Small propagated errors
+independent of time or distance
+from a pole.
+Reproduce the explanatory calculations
+The preserved model source contains 118 named exact checks. Each finite range is recorded in the file EX-
+ACT_CHECKS.json. They cover masks, CRT labels, modular inverse products, graph enumeration, rational recur-
+rences, lattice denominators, complete finite fibers, phase identities, and defect formulas. Graphics are generated
+from those same exact model definitions. Numerical placement of geometric points is only a rendering step.
+The historical monograph report records 48 passing Python tests, 118 exact visual checks, 22 byte-matching re-
+generated vector plates, 13 regenerated PDF/PNG figure pairs, and nine matching numerical summary rows.
+These finite computation records retain their tested ranges and dates. Current Lean replay and source coverage
+have separate records.
+Read this as: Use the guide to understand what a theorem says and why its hypotheses matter. Use the
+theorem map and preserved proof sources to identify the precise formal result. Neither a picture nor a
+finite test expands that result’s scope.
+REALIZATION CALCULUS
+75
+
+
+OPERATION KOMOREBI
+PAPER II
+References
+[1] John B. Conway. A Course in Functional Analysis. Springer, second edition, 1990.
+[2] Ingrid Daubechies. Ten Lectures on Wavelets, volume 61 of CBMS NSF Regional Conference Series in
+Applied Mathematics. Society for Industrial and Applied Mathematics, Philadelphia, 1992.
+[3] Israel Gohberg, Peter Lancaster, and Leiba Rodman. Matrix Polynomials, volume 58 of Classics in
+Applied Mathematics. Society for Industrial and Applied Mathematics, Philadelphia, 2009.
+[4] Tosio Kato. Perturbation Theory for Linear Operators. Classics in Mathematics. Springer, Berlin, 1995.
+[5] Serge Lang. Algebra, volume 211 of Graduate Texts in Mathematics. Springer, New York, revised
+third edition, 2002.
+[6] Morris Newman. Integral Matrices, volume 45 of Pure and Applied Mathematics. Academic Press,
+New York, 1972.
+[7] David M. Pozar. Microwave Engineering. Wiley, 4 edition, 2012.
+[8] Jean Pierre Serre. Local Fields, volume 67 of Graduate Texts in Mathematics. Springer, New York,
+1979. Translated by Marvin Jay Greenberg.
+[9] Richard P. Stanley. Enumerative Combinatorics, Volume 1, volume 49 of Cambridge Studies in Advanced
+Mathematics. Cambridge University Press, Cambridge, second edition, 2012.
+[10] P. P. Vaidyanathan. Multirate Systems and Filter Banks. Prentice Hall Signal Processing Series. Pren-
+tice Hall, Englewood Cliffs, New Jersey, 1993.
+REALIZATION CALCULUS
+76
