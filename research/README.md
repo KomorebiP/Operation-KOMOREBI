@@ -56,6 +56,7 @@ Incomplete implementation entries are listed separately in the [incubator](../do
 | [Machine Understanding](machine-understanding/) | Model results and empirical demonstrations remain separately scoped. |
 | [OSL and Neuralese](osl-neuralese/) | Historical failed experiments and incomplete verifier attempts remain part of the evidence. |
 | [OSL and Neuralese: reading edition](osl-neuralese/reading-edition/) | Read alongside the experimental records and their limitations. |
+| [SRIC: external semantic admission](../docs/SRIC_REPAIR_2026-10-27.md) | Corrected 0.3.3 beta source runtime: 15 admission/CLI tests passed on the recorded fixture scope; real-checkpoint execution and scientific qualification remain pending. The retained 0.3.2 edition has documented defects. |
 | [SRIC: endogenous semantic witness](sric-block23-witness/) | Finite synthetic semantic-witness construction; recorded real-model pilot remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23. |
 | [Stratified Recursive Improvement Closure](stratified-recursive-improvement/) | Formal model closure does not itself establish unrestricted real-world self-improvement. |
 | [AVOC](avoc/) | Read the formal contract and retained limitations in the component. |

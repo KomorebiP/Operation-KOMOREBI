@@ -10,7 +10,7 @@ This is an editorial assessment of existing release/status records at [source re
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Subsequent work includes the [SRIC repair](SRIC_REPAIR_2026-10-27.md) and [three additional written-proof reviews](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md). Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
 ## Completion stages
 

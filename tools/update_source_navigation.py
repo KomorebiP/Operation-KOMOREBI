@@ -268,7 +268,7 @@ The [formalization guide](formal/README.md) explains the corresponding Lean proj
 | Lean coverage | Which formal claims have recorded compiler evidence and which still need a current replay. |
 | Confidence basis | The kind and scope of recorded review, proof, calculation, or experimental evidence. |
 
-Lean is optional: a sound written argument can support a result without formalization. Reader inclusion requires a clear claim and appropriate support. The [focused soundness review](docs/SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](docs/SRIC_ADMISSION_AUDIT_2026-10-27.md) explain the decisions; incomplete implementation entries are separated into an [incubator](docs/INCUBATOR.md). These reviews are limited in scope and do not certify every listed work.
+Lean is optional: a sound written argument can support a result without formalization. Reader inclusion requires a clear claim and appropriate support. The [focused soundness review](docs/SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](docs/SRIC_ADMISSION_AUDIT_2026-10-27.md) explain the decisions; incomplete implementation entries are separated into an [incubator](docs/INCUBATOR.md). The [SRIC repair](docs/SRIC_REPAIR_2026-10-27.md) and [three additional Machine Societies proof reviews](docs/MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md) record subsequent progress. These reviews are limited in scope and do not certify every listed work.
 
 These fields are assessed separately. A finished reading edition can contain open conjectures; a passing collection check verifies its stated integrity and tooling scope. The [27 October audit](docs/AUDIT_2026-10-27.md) records source-integrity checks and partial Windows package qualification. The [finalization queue](docs/FINALIZATION_QUEUE.md) tracks source recovery, fresh proof builds, bounded reviews, and remaining experiments.
 
@@ -351,6 +351,8 @@ The [monographs](../monographs/README.md) provide extended accounts and further 
 
 **All software is beta and work in progress.** Each component documents its supported inputs, dependencies, and qualification scope.
 
+The [corrected SRIC admission 0.3.3 source edition](sric-admission-v0.3.3/README.md) includes bounded admission and CLI regression checks. It remains a prototype; real-model execution is pending.
+
 ## Independent libraries
 
 | Library | Purpose |
@@ -379,6 +381,8 @@ Use a component's documented installation and examples. A mathematical result in
 The [package index](../packages/README.md) covers software in this collection. The [experimental laboratories](../experiments/README.md) and [research programs](../research/README.md) contain further implementations and protocols.
 
 The [collection verification guide](VERIFICATION.md) provides Git checkout instructions, a small standard-library example, and commands for source and navigation checks. For a concrete package record, see [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md): its engine and installed cases passed on the recorded Windows environment, while full release qualification remains incomplete.
+
+The [corrected SRIC 0.3.3 source runtime](../packages/sric-admission-v0.3.3/README.md) has bounded admission/CLI qualification and remains beta; real-model execution is pending.
 
 ## Reproduce a result
 

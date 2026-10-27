@@ -212,9 +212,11 @@ Proofread reading volumes plus 68 named formal declarations in a finite core and
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Final 118-page edition; 15 of 62 retained statement/proof pairs received targeted self-review, with bounded exact checks. The other 47 were not newly audited.
+Final 118-page edition. The earlier 15-claim self-review and a new three-claim review cover 18 distinct statement/proof pairs in the same source; 44 of 62 pairs remain outside these targeted reviews.
 
-**Next gate:** Schedule review of the remaining 47 proofs and keep theoretical results separate from agent-deployment evidence.
+**Next gate:** Review the remaining 44 pairs in bounded batches; keep theoretical results separate from agent-deployment evidence and independent peer review.
+
+[Latest bounded written review](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md)
 
 [Source directory](../monographs/machine-societies) · [README.md](../monographs/machine-societies/README.md)
 
@@ -574,13 +576,7 @@ Source-locked external-model protocol with infrastructure tests; the real Coconu
 
 **Next gate:** Authenticate the exact checkpoint and dataset, run the frozen adapter and admission gates, then report the actual result.
 
-**Reader listing: incubator.** A bounded audit reproduced admission with empty replay logits, order-dependent handling of a NaN replay error, and an unsupported real-checkpoint flag for an absent fingerprint. The normal engineered fixture remains explicitly synthetic.
-
-**Return gate:** Publish a separately identified corrected edition with rejection tests for empty/non-finite logits and absent or invalid provenance, plus the existing positive fixture and finite-mismatch control. Qualify any real-model run separately with pinned checkpoint evidence.
-
-[Focused review](SRIC_ADMISSION_AUDIT_2026-10-27.md)
-
-[Edition and reader guide](SRIC_ADMISSION_AUDIT_2026-10-27.md)
+[Edition and reader guide](SRIC_REPAIR_2026-10-27.md)
 
 [Source directory](../research/sric-external-admission) · [README.md](../research/sric-external-admission/README.md) · [frozen/README.md](../research/sric-external-admission/frozen/README.md) · [REAL_EXECUTION_STATUS.md](../research/sric-external-admission/REAL_EXECUTION_STATUS.md)
 

@@ -2,6 +2,8 @@
 
 **All software is beta and work in progress.** Each component documents its supported inputs, dependencies, and qualification scope.
 
+The [corrected SRIC admission 0.3.3 source edition](sric-admission-v0.3.3/README.md) includes bounded admission and CLI regression checks. It remains a prototype; real-model execution is pending.
+
 ## Independent libraries
 
 | Library | Purpose |

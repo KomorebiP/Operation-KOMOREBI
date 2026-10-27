@@ -26,6 +26,10 @@ jobs:
         run: python -B tools/update_completion_status.py --check
       - name: Test receipt and navigation regressions
         run: python -B -m unittest discover -s tools -p 'test_*.py' -v
+      - name: Install pinned NumPy for bounded SRIC qualification
+        run: python -m pip install numpy==2.3.5
+      - name: Test corrected SRIC admission boundaries and fixture CLI
+        run: python -B packages/sric-admission-v0.3.3/tests/test_admission_boundaries.py
       - name: Test formal receipt and upload guards
         working-directory: formal/research-preview-1
         run: python -B -m unittest discover -s tests -p 'test_*.py' -v

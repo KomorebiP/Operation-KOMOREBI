@@ -59,7 +59,7 @@ This is an editorial assessment of existing release/status records at [source re
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Subsequent work includes the [SRIC repair](SRIC_REPAIR_2026-10-27.md) and [three additional written-proof reviews](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md). Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
 ## Completion stages
 
@@ -138,6 +138,8 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
             catalogue += f"Current counterpart: [{c['title']}](#{c['id']}).\n\n"
         if 'reader_guide' in row:
             catalogue += link('Edition and reader guide', row['reader_guide'], page) + '\n\n'
+        if 'review_report' in row:
+            catalogue += link('Latest bounded written review', row['review_report'], page) + '\n\n'
         if 'software_verification' in row:
             catalogue += link('Fresh software check (separate from Lean evidence)', row['software_verification']['path'], page) + '\n\n'
         evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
@@ -156,7 +158,7 @@ Recorded {data['as_of']}. Status cleanup is separate from mathematical research,
 
 Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
 '''
-    lanes = [('now', 'Completed editorial cleanup'), ('next', 'Next finishing work'),
+    lanes = [('now', 'Completed cleanup and bounded qualification'), ('next', 'Next finishing work'),
              ('review', 'Proof and submission review'), ('research', 'Formal, mathematical and empirical development')]
     for lane, title in lanes:
         queue += '\n## ' + title + '\n'
@@ -193,6 +195,13 @@ See the [first focused review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admissi
         incubator += entry['reason'] + '\n\n**Return gate:** ' + entry['return_gate'] + '\n\n'
         incubator += link('Preserved source', row['destination']+'/', 'docs/INCUBATOR.md') + ' · '
         incubator += f'[Completion and evidence record](STATUS_CATALOG.md#{row["id"]}) · ' + link('Review and findings', entry['review'], 'docs/INCUBATOR.md') + '\n\n'
+    returned = [row for row in primary if 'reader_return' in row]
+    if returned:
+        incubator += '## Returned to a scoped reading list\n\nEarlier audit links remain valid. These entries have a later recorded decision; their remaining limits still apply.\n\n'
+        for row in returned:
+            entry = row['reader_return']
+            incubator += f'<a id="{row["id"]}"></a>\n\n### {row["title"]}\n\n'
+            incubator += entry['scope'] + '\n\n' + link('Current review and edition', entry['review'], 'docs/INCUBATOR.md') + ' · ' + link('Earlier audit', entry['previous_review'], 'docs/INCUBATOR.md') + '\n\n'
     incubator += '[Research reading list](../research/README.md) · [Complete inventory](COMPONENT_INDEX.md) · [Finalization queue](FINALIZATION_QUEUE.md)\n'
     return {'docs/COMPLETION_STATUS.md': text, 'docs/STATUS_CATALOG.md': catalogue,
             'docs/FINALIZATION_QUEUE.md': queue, 'docs/INCUBATOR.md': incubator}
@@ -223,7 +232,7 @@ def validate_reader_reviews(root, data, available, current, git):
         raw_review = (root/binding['path']).read_bytes()
         assert hashlib.sha256(raw_review).hexdigest() == binding['sha256'], 'Reader review binding changed'
         review = json.loads(raw_review)
-        for artifact in [review['report'], review['computation']]:
+        for artifact in [review['report']] + [review[k] for k in ('computation', 'edition') if k in review]:
             assert artifact['path'] in data['maintained_documents'] or artifact['path'] in data['assessment_records']
             assert hashlib.sha256((root/artifact['path']).read_bytes()).hexdigest() == artifact['sha256'], artifact['path']
         reviewed = git_tree(root, git, review['source_revision'])
@@ -254,12 +263,12 @@ def validate(root, data, git):
         assert path.startswith('docs/') and path.endswith('.md') and '..' not in path.split('/'), path
         assert (root/path).is_file(), 'Missing maintained document: '+path
     for path in data.get('assessment_records', []):
-        assert path.startswith(('manifests/', 'verification/')) and path.endswith('.json') and '..' not in path.split('/'), path
+        assert path.startswith(('manifests/', 'verification/', 'packages/')) and path.endswith('.json') and '..' not in path.split('/'), path
         assert (root/path).is_file(), 'Missing assessment record: '+path
         json.loads((root/path).read_text(encoding='utf-8'))
     for artifact in data.get('assessment_artifacts', []):
         path = artifact['path']
-        assert path.startswith('verification/') and '..' not in path.split('/'), path
+        assert path.startswith(('verification/', 'packages/')) and '..' not in path.split('/'), path
         assert hashlib.sha256((root/path).read_bytes()).hexdigest() == artifact['sha256'], 'Assessment artifact changed: '+path
     for row in records:
         c = available[row['id']]
@@ -269,10 +278,16 @@ def validate(root, data, git):
         assert row['scope'] and row['next_step'] and row['evidence'], row['id']
         if 'reader_guide' in row:
             assert row['reader_guide'] in maintained, 'Unregistered reader guide: '+row['id']
+        if 'review_report' in row:
+            assert row['review_report'] in maintained, 'Unregistered review report: '+row['id']
         if 'reader_listing' in row:
             entry = row['reader_listing']
             assert entry['placement'] == 'incubator' and row['import_role'] == 'primary', row['id']
             assert entry['reason'] and entry['return_gate'] and entry['review'] in maintained, row['id']
+        if 'reader_return' in row:
+            entry = row['reader_return']
+            assert 'reader_listing' not in row and entry['scope'], row['id']
+            assert entry['review'] in maintained and entry['previous_review'] in maintained, row['id']
         if 'software_verification' in row:
             report = row['software_verification']
             assert report['path'] in data.get('assessment_records', []), row['id']

@@ -28,7 +28,7 @@ Read Realization Calculus and Komorebi Space together. Realization Boundaries de
 
 | Work | Focus |
 |---|---|
-| [Machine Societies](machine-societies/) | Interacting computational agents and their theoretical models. |
+| [Machine Societies](machine-societies/) | Final 118-page edition. The earlier 15-claim self-review and a new three-claim review cover 18 distinct statement/proof pairs in the same source; 44 of 62 pairs remain outside these targeted reviews. |
 | [Machine Native Reasoning](machine-native-reasoning/) | Mathematical interfaces, computational representations, and reasoning constructions. |
 | [Self-Improving Intelligence](self-improving-intelligence/) | Theoretical models and conditions for recursive improvement. |
 | [Self-Improving Intelligence: visual guide](self-improving-intelligence/visual-guide/) | Visual companion to the self-improvement development. |

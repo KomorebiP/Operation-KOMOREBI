@@ -38,6 +38,24 @@ class ReviewHistoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); self.validate(root, self.fixture(root))
 
+    def test_written_review_does_not_require_a_computation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);data=self.fixture(root)
+            path=root/'later.json';review=json.loads(path.read_text())
+            review.pop('computation');path.write_text(json.dumps(review))
+            data['reader_curation_reviews'][1]['sha256']=hashlib.sha256(path.read_bytes()).hexdigest()
+            self.validate(root,data)
+
+    def test_later_review_can_return_an_entry_to_reading_list(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);data=self.fixture(root)
+            path=root/'later.json';review=json.loads(path.read_text())
+            review['decisions'].append({'id':'earlier','placement':'retain'})
+            path.write_text(json.dumps(review))
+            data['reader_curation_reviews'][1]['sha256']=hashlib.sha256(path.read_bytes()).hexdigest()
+            data['components'][0].pop('reader_listing')
+            self.validate(root,data)
+
     def test_dropped_earlier_review_cannot_silently_erase_binding(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); data=self.fixture(root)

@@ -4,7 +4,7 @@ Recorded 2026-10-27. Status cleanup is separate from mathematical research, form
 
 Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
 
-## Completed editorial cleanup
+## Completed cleanup and bounded qualification
 
 ### F01 — Separate current and historical status
 
@@ -114,6 +114,8 @@ Existing review scopes do not cover all proofs or establish external submission 
 
 **Done when:** Record statement-specific reviews, resolve findings, and keep literature priority and empirical review distinct from proof correctness.
 
+**Progress:** Three additional Machine Societies proof pairs passed targeted self-review at the same manuscript hash: deterministic quotient, erasure reconstruction, and repair budget. Combined coverage is 18 of 62 pairs; 44 remain. Other listed review obligations stay open.
+
 Applies to: [Machine Societies](STATUS_CATALOG.md#monographs-machine-societies) · [Hypergraph Lumpability and Bayesian Refinement](STATUS_CATALOG.md#research-hypergraph-bayesian-refinement) · [Stratified Relational Workspace Theory](STATUS_CATALOG.md#research-stratified-relational-workspace) · [Seeded Two-Axis Calculus](STATUS_CATALOG.md#seeded-two-axis).
 
 ### F14 — Review substantive support before reader promotion
@@ -130,11 +132,13 @@ Applies to: [Euler Signal Bridge](STATUS_CATALOG.md#euler-signal-bridge) · [Hil
 
 ### F15 — Repair and qualify SRIC Block 24 admission gates
 
-**Status: open**
+**Status: done**
 
-The retained Block 24 Python pipeline admitted malformed replay evidence and inferred real-checkpoint evidence from a missing fingerprint.
+The three reproduced admission/provenance defects are repaired in the separate 0.3.3 beta source runtime.
 
-**Done when:** Resolve the three reproduced Python-pipeline defects in docs/SRIC_ADMISSION_AUDIT_2026-10-27.md in a new edition, with explicit negative controls and provenance validation. Retain the original source/fixture evidence; real-checkpoint execution remains a separate gate.
+**Done when:** Publish a separately identified corrected edition with rejection controls, preserved synthetic positive fixture, and source-bound evidence.
+
+**Progress:** 15 test methods passed locally, including all 48 NaN positions, provenance failures, finite mismatch, and a custom-path CLI round trip. Original 0.3.2 evidence remains intact. Real-model execution and wider qualification remain open under F12.
 
 Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission).
 

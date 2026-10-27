@@ -14,16 +14,6 @@ Only synthetic estimator execution is recorded; the actual Qwen and primary caus
 
 [Preserved source](../research/rrct-multispace-protocol) · [Completion and evidence record](STATUS_CATALOG.md#research-rrct-multispace-protocol) · [Review and findings](SOUNDNESS_REVIEW_2026-10-27.md)
 
-<a id="research-sric-external-admission"></a>
-
-## SRIC: external semantic admission
-
-A bounded audit reproduced admission with empty replay logits, order-dependent handling of a NaN replay error, and an unsupported real-checkpoint flag for an absent fingerprint. The normal engineered fixture remains explicitly synthetic.
-
-**Return gate:** Publish a separately identified corrected edition with rejection tests for empty/non-finite logits and absent or invalid provenance, plus the existing positive fixture and finite-mismatch control. Qualify any real-model run separately with pinned checkpoint evidence.
-
-[Preserved source](../research/sric-external-admission) · [Completion and evidence record](STATUS_CATALOG.md#research-sric-external-admission) · [Review and findings](SRIC_ADMISSION_AUDIT_2026-10-27.md)
-
 <a id="research-prism-1r"></a>
 
 ## PRISM-1R
@@ -33,5 +23,17 @@ Hardware is an uncompiled boundary skeleton with success tie-offs; no executed h
 **Return gate:** Replace success tie-offs with real generation, certificate, dependency and fault inputs; compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
 
 [Preserved source](../research/prism-1r) · [Completion and evidence record](STATUS_CATALOG.md#research-prism-1r) · [Review and findings](SOUNDNESS_REVIEW_2026-10-27.md)
+
+## Returned to a scoped reading list
+
+Earlier audit links remain valid. These entries have a later recorded decision; their remaining limits still apply.
+
+<a id="research-sric-external-admission"></a>
+
+### SRIC: external semantic admission
+
+Returned through the corrected 0.3.3 beta source edition after bounded admission/CLI qualification. The original 0.3.2 defects remain historical facts; real-model execution and wider scientific claims remain pending.
+
+[Current review and edition](SRIC_REPAIR_2026-10-27.md) · [Earlier audit](SRIC_ADMISSION_AUDIT_2026-10-27.md)
 
 [Research reading list](../research/README.md) · [Complete inventory](COMPONENT_INDEX.md) · [Finalization queue](FINALIZATION_QUEUE.md)

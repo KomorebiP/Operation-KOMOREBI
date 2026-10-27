@@ -109,3 +109,7 @@ The [finalization queue](FINALIZATION_QUEUE.md) names remaining work and its com
 ## SRIC admission counterexamples
 
 The [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) records seven local fixture executions and three reproduced gaps in the retained Python pipeline. Its NumPy harness is a diagnostic counterexample record, not a repaired runtime or an acceptance suite. No real checkpoint was run. Follow the audit for the exact command, environment, observed controls, and correction gates.
+
+## Corrected SRIC runtime
+
+The [0.3.3 repair guide](SRIC_REPAIR_2026-10-27.md) identifies the corrected source edition and its 15-test qualification suite. The collection workflow installs NumPy 2.3.5 and runs `python -B packages/sric-admission-v0.3.3/tests/test_admission_boundaries.py`. This includes the synthetic CLI round trip and rejection controls, without downloading a real model. It is separate from the historical counterexample harness above.
