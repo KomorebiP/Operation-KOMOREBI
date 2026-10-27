@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "claim_id": "EulerSignalBridge-FIR-2026-10-09",
+  "repository": {
+    "commit": "standalone script; no Git repository",
+    "dirty": true
+  },
+  "command": "python verify_bridge.py",
+  "environment": {
+    "software": [
+      "Python 3.12.14",
+      "NumPy 2.3.5",
+      "Matplotlib 3.10.8"
+    ],
+    "hardware": "Linux x86_64; CPU only"
+  },
+  "mathematics": {
+    "assertion_tested": "FIR stencil equals finite binomial-coordinate transfer; successive affine transfers compose; prime residual coefficients are integral.",
+    "coefficient_domain": "Python arbitrary-precision integers for all arithmetic checks; float64 only for illustrative frequency curves",
+    "conventions": "Signed Euler EGF sech(t); a(n)=E_(2n); advance shift S a(n)=a(n+1); Delta=S-I.",
+    "inputs": [
+      "Signed Euler sequence through E_94",
+      "deterministic alternating cubic integer signal",
+      "affine transfer polynomial rows"
+    ],
+    "bounds": {
+      "sample_count": 48,
+      "transfer_M": [
+        1,
+        5
+      ],
+      "phase_s": "0 <= s < M",
+      "difference_k": [
+        0,
+        6
+      ],
+      "composition_M_N": [
+        1,
+        3
+      ],
+      "composition_order": [
+        0,
+        4
+      ],
+      "primes": [
+        2,
+        3,
+        5,
+        7,
+        11
+      ]
+    },
+    "non_claims": [
+      "No Fourier transform of the Euler sequence",
+      "No universal Euler congruence follows from finite checks",
+      "No novelty claim for the FIR or binomial identities",
+      "No Lean build performed"
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "none",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-10-09T01:58:32.687088+00:00",
+    "runtime_seconds": 0.23854584200307727,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "exact_results.json",
+      "sha256": "a5ae2204454aa4a1a2e1ab83415ba8a8a93cde6db6a0367833351902ad07dd6c"
+    },
+    {
+      "path": "Komorebi_Euler_Signal_Bridge.png",
+      "sha256": "c7b9e72a4c444f296831850f4ba97b58aae2860277ca091a5824c2803c95d0d4"
+    }
+  ],
+  "checks": [
+    "direct sample stencil versus independently expanded polynomial rows",
+    "exact composition coefficient comparison",
+    "small hand-computable Euler controls",
+    "prime coefficient divisibility"
+  ],
+  "result": "PASS: 395 exact finite assertions plus initial-value controls.",
+  "residual_risks": [
+    "A version 1 manifest records limited execution provenance; the script hash is separately supplied.",
+    "Full-branch valuation bounds require a separate mathematical argument."
+  ]
+}
