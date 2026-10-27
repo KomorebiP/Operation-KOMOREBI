@@ -100,7 +100,7 @@ git diff --check
 git diff --stat
 ```
 
-Review the resulting diff before publication. This regenerates the sixteen maintained navigation/status outputs and validates the additional documents registered in the status manifest. It does not revise the original scientific source packages. The public authorship statement and component guides are maintained separately and checked through that registration.
+Review the resulting diff before publication. This regenerates all maintained navigation/status outputs and validates the additional documents registered in the status manifest. It does not revise the original scientific source packages. The public authorship statement and component guides are maintained separately and checked through that registration.
 
 The [finalization queue](FINALIZATION_QUEUE.md) names remaining work and its completion criteria. Update a status only when the corresponding evidence supports it.
 

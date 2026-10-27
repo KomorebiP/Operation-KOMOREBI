@@ -116,6 +116,18 @@ Existing review scopes do not cover all proofs or establish external submission 
 
 Applies to: [Machine Societies](STATUS_CATALOG.md#monographs-machine-societies) · [Hypergraph Lumpability and Bayesian Refinement](STATUS_CATALOG.md#research-hypergraph-bayesian-refinement) · [Stratified Relational Workspace Theory](STATUS_CATALOG.md#research-stratified-relational-workspace) · [Seeded Two-Axis Calculus](STATUS_CATALOG.md#seeded-two-axis).
 
+### F14 — Review substantive support before reader promotion
+
+**Status: ongoing**
+
+Lean is optional; precise statements, sufficient arguments or appropriately bounded evidence, and honest completion claims are required.
+
+**Done when:** Review the exact claims and evidence for each proposed promotion, resolve identified defects, and record the reviewer and source revision. A finite pass or listing decision cannot certify a whole program.
+
+**Progress:** Seven small entries screened; three focused mathematical claims reviewed; two incomplete implementation entries moved to the incubator. Remaining manuscripts and analytic dependencies are not certified by this pass.
+
+Applies to: [Euler Signal Bridge](STATUS_CATALOG.md#euler-signal-bridge) · [Hilbert 12: ambient dual slice](STATUS_CATALOG.md#hilbert12-ambient-dual-slice) · [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) · [Hilbert 12: analytic Fourier branch](STATUS_CATALOG.md#hilbert12-analytic-fourier) · [Hilbert 12: contracting ambient torsion](STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion) · [PRISM-1R](STATUS_CATALOG.md#research-prism-1r) · [RRCT multispace convergence protocol](STATUS_CATALOG.md#research-rrct-multispace-protocol).
+
 ## Formal, mathematical and empirical development
 
 ### F11 — Extend selected formal cores only against explicit claim maps

@@ -161,7 +161,10 @@ class Renderer:
 
     def reader_path(self, row):
         """Prefer a maintained edition guide while retaining original source paths."""
-        return self.status_by_id.get(row['id'], {}).get('reader_guide', row['destination']+'/')
+        status = self.status_by_id.get(row['id'], {})
+        if status.get('reader_listing', {}).get('placement') == 'incubator':
+            return 'docs/INCUBATOR.md#'+row['id']
+        return status.get('reader_guide', row['destination']+'/')
 
     def existing(self, path):
         if self.tracked_paths is not None:
@@ -169,10 +172,14 @@ class Renderer:
         return (self.root/path).exists()
 
     def rows(self, values, page, boundary=False):
-        return [(link(r['title'],self.reader_path(r),page), r['boundary'] if boundary else r['summary']) for r in values]
+        return [(link(r['title'],self.reader_path(r),page), self.status_by_id.get(r['id'], {}).get('reader_summary', r['boundary'] if boundary else r['summary'])) for r in values]
 
     def group_page(self, page, heading, intro, values, *, boundary=False, extra=''):
+        held = [r for r in values if self.status_by_id.get(r['id'], {}).get('reader_listing', {}).get('placement') == 'incubator']
+        values = [r for r in values if r not in held]
         text = '# '+heading+'\n\n**Komorebi P.**\n\n'+intro+'\n'
+        if held:
+            text += '\nIncomplete implementation entries are listed separately in the '+link('incubator', 'docs/INCUBATOR.md', page)+'. This reading list is curated; the complete source inventory remains available.\n'
         for category,label in CATEGORY_LABELS.items():
             rows = [r for r in values if r['category']==category]
             if rows:
@@ -260,6 +267,8 @@ The [formalization guide](formal/README.md) explains the corresponding Lean proj
 | Completion stage | Whether a specific manuscript, release contract, or prototype has reached its stated milestone. |
 | Lean coverage | Which formal claims have recorded compiler evidence and which still need a current replay. |
 | Confidence basis | The kind and scope of recorded review, proof, calculation, or experimental evidence. |
+
+Lean is optional: a sound written argument can support a result without formalization. Reader inclusion requires a clear claim and appropriate support. The [focused soundness review](docs/SOUNDNESS_REVIEW_2026-10-27.md) explains the latest decisions; incomplete implementation entries are separated into an [incubator](docs/INCUBATOR.md). This review is limited in scope and does not certify every listed work.
 
 These fields are assessed separately. A finished reading edition can contain open conjectures; a passing collection check verifies its stated integrity and tooling scope. The [27 October audit](docs/AUDIT_2026-10-27.md) records source-integrity checks and partial Windows package qualification. The [finalization queue](docs/FINALIZATION_QUEUE.md) tracks source recovery, fresh proof builds, bounded reviews, and remaining experiments.
 

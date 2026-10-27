@@ -8,6 +8,10 @@ This is an editorial assessment of existing release/status records at [source re
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
+## Reader selection and soundness
+
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [focused review](SOUNDNESS_REVIEW_2026-10-27.md) records the scope and provenance of the latest checks. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+
 ## Completion stages
 
 | Stage | Primary entries | Meaning |

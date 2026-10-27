@@ -9,6 +9,33 @@ import update_source_navigation as nav
 
 
 class NavigationTests(unittest.TestCase):
+    def test_incubator_entry_is_omitted_from_reading_list_but_retained_in_inventory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            rows=[{'id':i,'title':title,'category':'research','destination':'research/'+i,
+                   'available':True,'role':'primary','summary':'Original summary','boundary':'Original boundary'}
+                  for i,title in [('kept','Written result'),('held','Incomplete implementation')]]
+            renderer=nav.Renderer(Path(tmp), {'components':rows})
+            renderer.status_by_id={'held':{'reader_listing':{'placement':'incubator'}},
+                                   'kept':{'reader_summary':'A scoped written proof.'}}
+            renderer.group_page('research/README.md','Research','Introduction',rows,boundary=True)
+            output=renderer.outputs['research/README.md']
+            self.assertIn('Written result',output)
+            self.assertIn('A scoped written proof.',output)
+            self.assertNotIn('[Incomplete implementation]',output)
+            self.assertIn('incubator',output)
+            self.assertEqual(len(renderer.primary),2)
+            self.assertEqual(renderer.reader_path(rows[1]),'docs/INCUBATOR.md#held')
+
+    def test_unclassified_short_entry_stays_in_reading_list(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            row={'id':'brief','title':'Short proof','category':'research','destination':'research/brief',
+                 'available':True,'role':'primary','summary':'One argument','boundary':'No wider claim'}
+            renderer=nav.Renderer(Path(tmp),{'components':[row]})
+            renderer.group_page('research/README.md','Research','Introduction',[row],boundary=True)
+            self.assertIn('Short proof',renderer.outputs['research/README.md'])
+            self.assertIn('No wider claim',renderer.outputs['research/README.md'])
+            self.assertEqual(renderer.reader_path(row),'research/brief/')
+
     def test_committed_presence_survives_sparse_checkout(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)

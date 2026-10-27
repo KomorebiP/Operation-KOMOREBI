@@ -57,6 +57,10 @@ This is an editorial assessment of existing release/status records at [source re
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
+## Reader selection and soundness
+
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [focused review](SOUNDNESS_REVIEW_2026-10-27.md) records the scope and provenance of the latest checks. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+
 ## Completion stages
 
 '''
@@ -124,6 +128,11 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
 **Next gate:** {row['next_step']}
 
 '''
+        if 'reader_listing' in row:
+            entry = row['reader_listing']
+            catalogue += '**Reader listing: incubator.** ' + entry['reason'] + '\n\n'
+            catalogue += '**Return gate:** ' + entry['return_gate'] + '\n\n'
+            catalogue += link('Focused review', entry['review'], page) + '\n\n'
         if 'current_counterpart' in row:
             c = by_id[row['current_counterpart']]
             catalogue += f"Current counterpart: [{c['title']}](#{c['id']}).\n\n"
@@ -169,8 +178,24 @@ Keep accepted source packages and dated failures intact. New claims or corrected
 
 The collection's current reuse grant already addresses retained historical undecided notices. Updating navigation to explain that grant is cleanup; it does not require relabeling historical source bytes or changing third-party terms.
 '''
+    incubator = '''# Incubator: incomplete implementation entries
+
+These entries are removed from the main reading lists until the return criteria below are met. Their original files remain available for development and inspection. Placement here is a readiness decision, not a conclusion that every mathematical idea in them is false. Lean is not required for return; appropriate written, computational, or implementation evidence is.
+
+See the [focused review](SOUNDNESS_REVIEW_2026-10-27.md) for the inspected sources, findings, and limits. No whole-collection soundness certification is implied for entries outside this list.
+
+'''
+    for row in primary:
+        entry = row.get('reader_listing')
+        if not entry:
+            continue
+        incubator += f'<a id="{row["id"]}"></a>\n\n## {row["title"]}\n\n'
+        incubator += entry['reason'] + '\n\n**Return gate:** ' + entry['return_gate'] + '\n\n'
+        incubator += link('Preserved source', row['destination']+'/', 'docs/INCUBATOR.md') + ' · '
+        incubator += f'[Completion and evidence record](STATUS_CATALOG.md#{row["id"]})\n\n'
+    incubator += '[Research reading list](../research/README.md) · [Complete inventory](COMPONENT_INDEX.md) · [Finalization queue](FINALIZATION_QUEUE.md)\n'
     return {'docs/COMPLETION_STATUS.md': text, 'docs/STATUS_CATALOG.md': catalogue,
-            'docs/FINALIZATION_QUEUE.md': queue}
+            'docs/FINALIZATION_QUEUE.md': queue, 'docs/INCUBATOR.md': incubator}
 
 
 def git_tree(root, git, revision):
@@ -208,6 +233,10 @@ def validate(root, data, git):
         assert row['scope'] and row['next_step'] and row['evidence'], row['id']
         if 'reader_guide' in row:
             assert row['reader_guide'] in maintained, 'Unregistered reader guide: '+row['id']
+        if 'reader_listing' in row:
+            entry = row['reader_listing']
+            assert entry['placement'] == 'incubator' and row['import_role'] == 'primary', row['id']
+            assert entry['reason'] and entry['return_gate'] and entry['review'] in maintained, row['id']
         if 'software_verification' in row:
             report = row['software_verification']
             assert report['path'] in data.get('assessment_records', []), row['id']
@@ -226,6 +255,23 @@ def validate(root, data, git):
     assert not data['new_lean_execution'] and not data['new_mathematical_proof_audit']
     pinned = git_tree(root, git, data['source_revision'])
     current = git_tree(root, git, 'HEAD')
+    if 'reader_curation_review' in data:
+        binding = data['reader_curation_review']
+        assert binding['path'] in data['assessment_records']
+        raw_review = (root/binding['path']).read_bytes()
+        assert hashlib.sha256(raw_review).hexdigest() == binding['sha256'], 'Reader review binding changed'
+        review = json.loads(raw_review)
+        for artifact in [review['report'], review['computation']]:
+            assert artifact['path'] in maintained or artifact['path'] in data['assessment_records']
+            assert hashlib.sha256((root/artifact['path']).read_bytes()).hexdigest() == artifact['sha256'], artifact['path']
+        reviewed = git_tree(root, git, review['source_revision'])
+        for source_file in review['reviewed_sources']:
+            assert reviewed.get(source_file['path']) == source_file['sha'], source_file['path']
+            assert current.get(source_file['path']) == source_file['sha'], 'Reassess changed reviewed source: '+source_file['path']
+        decisions = {r['id']: r for r in review['decisions']}
+        assert len(decisions) == len(review['decisions']) and set(decisions) <= set(available)
+        incubated = {r['id'] for r in records if r.get('reader_listing', {}).get('placement') == 'incubator'}
+        assert incubated == {i for i, r in decisions.items() if r['placement'] == 'incubator'}
     paths = sorted(evidence)
     raw = subprocess.check_output([git, 'cat-file', '--batch'], cwd=root,
                                   input=('\n'.join(evidence[p]['git_blob_sha1'] for p in paths)+'\n').encode())

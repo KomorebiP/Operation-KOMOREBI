@@ -544,6 +544,12 @@ Protocol and numerical smoke checks; the primary multi-family causal campaign is
 
 **Next gate:** Execute the source-locked primary campaign with all required independent estimator families and mediation gates.
 
+**Reader listing: incubator.** Only synthetic estimator execution is recorded; the actual Qwen and primary causal runs are absent.
+
+**Return gate:** Run the frozen-model smoke with authenticated inputs and report its descriptive scope; any workspace claim additionally requires the full primary causal, mediation, and replication gates.
+
+[Focused review](SOUNDNESS_REVIEW_2026-10-27.md)
+
 [Source directory](../research/rrct-multispace-protocol) · [README.md](../research/rrct-multispace-protocol/README.md) · [VALIDATION_REPORT.md](../research/rrct-multispace-protocol/VALIDATION_REPORT.md)
 
 <a id="packages-rrct"></a>
@@ -627,6 +633,12 @@ Internally complete manuscript and finite certificates; external proof and liter
 Architecture and semantic reference tests; RTL is an uncompiled interface skeleton with candidate bit packing.
 
 **Next gate:** Compile and simulate the RTL, then synthesize and measure an FPGA prototype before making hardware performance claims.
+
+**Reader listing: incubator.** Hardware is an uncompiled boundary skeleton with success tie-offs; no executed hardware qualification.
+
+**Return gate:** Replace success tie-offs with real generation, certificate, dependency and fault inputs; compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
+
+[Focused review](SOUNDNESS_REVIEW_2026-10-27.md)
 
 [Source directory](../research/prism-1r) · [README.md](../research/prism-1r/README.md) · [BUILD_STATUS.md](../research/prism-1r/BUILD_STATUS.md)
 
@@ -799,6 +811,8 @@ Written FIR/operator identities and 395 finite exact assertions; no universal co
 Exact finite algebra and a fixed-point obstruction; the analytic comparison remains open.
 
 **Next gate:** Connect the exact dual-slice construction to a justified analytic comparison without assuming the missing equality.
+
+[Edition and reader guide](components/H12_AMBIENT_DUAL_SLICE.md)
 
 [Source directory](../research/hilbert12-ambient-dual-slice) · [H12_Ambient_Dual_Slice_Research_Note.md](../research/hilbert12-ambient-dual-slice/H12_Ambient_Dual_Slice_Research_Note.md)
 
