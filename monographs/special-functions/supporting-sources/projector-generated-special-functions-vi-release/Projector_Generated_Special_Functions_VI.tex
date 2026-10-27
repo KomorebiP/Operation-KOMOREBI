@@ -1,0 +1,1322 @@
+\documentclass[11pt,openany]{report}
+\usepackage[letterpaper,margin=0.82in,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage{graphicx,float,placeins}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{needspace}
+\allowdisplaybreaks
+
+\hypersetup{
+  pdftitle={Projector-Generated Special Functions VI},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Meixner shape semigroups, beta-binomial packet refinement, polynomial martingales, coherent-state frames, and Gamma-sech Berezin kernels}
+}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Paper}{HTML}{FAFAF7}
+\definecolor{Muted}{HTML}{5D6D7E}
+\definecolor{CodeBG}{HTML}{F3F5F5}
+
+\pagecolor{Paper}
+\color{Ink}
+\graphicspath{{figures/}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.52em}
+\raggedbottom
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Projector-Generated Special Functions VI}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Worked example}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary statement}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\Expect}{\mathbb E}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Id}{\mathrm I}
+\newcommand{\ket}[1]{\left|#1\right\rangle}
+\newcommand{\bra}[1]{\left\langle#1\right|}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Bcal}{\mathcal B}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Kcal}{\mathcal K}
+\newcommand{\Lcal}{\mathcal L}
+\newcommand{\Mcal}{\mathcal M}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\Wcal}{\mathcal W}
+\newcommand{\rhoM}{\rho}
+\newcommand{\poch}[2]{\left(#1\right)_{#2}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{CodeBG},
+  frame=single,
+  rulecolor=\color{Muted!45},
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{Muted},
+  numbersep=7pt,
+  tabsize=4,
+  columns=fullflexible,
+  keepspaces=true
+}
+\lstset{style=pythonstyle}
+
+\newcommand{\FigureWide}[3]{%
+\Needspace{0.52\textheight}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth,height=0.43\textheight,keepaspectratio]{#1.pdf}
+\caption{#2 #3}
+\label{fig:#1}
+\end{figure}
+}
+
+\newcommand{\InlinePart}[1]{%
+\FloatBarrier
+\Needspace{10\baselineskip}
+\refstepcounter{part}%
+\addcontentsline{toc}{part}{\protect\numberline{\thepart}#1}%
+\vspace{1.4em}
+{\color{Blue}\Large\bfseries Part \thepart\par}
+\vspace{0.2em}
+{\color{Blue}\LARGE\bfseries #1\par}
+\vspace{0.9em}
+}
+
+\newcommand{\FlowChapter}[1]{%
+\FloatBarrier
+\Needspace{14\baselineskip}
+\refstepcounter{chapter}%
+\setcounter{section}{0}%
+\setcounter{subsection}{0}%
+\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+\markboth{#1}{#1}%
+\vspace{1.3em}
+{\color{Muted}\large\bfseries Chapter \thechapter\par}
+\vspace{0.15em}
+{\LARGE\bfseries #1\par}
+\vspace{0.9em}
+}
+
+\title{\textbf{Projector-Generated Special Functions VI}\\[0.25em]
+\Large Meixner Shape Semigroups, Beta--Binomial Packet Refinement, Polynomial Martingales, and Gamma--Sech Berezin Kernels}
+\author{Komorebi P.}
+\date{}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\pagenumbering{roman}
+\maketitle
+
+\begin{abstract}
+This paper develops the shape coordinate that was implicit in the log-Gamma and Meixner structures of the preceding paper. For every \(\alpha>0\), define the normalized log-Gamma packet
+\[
+g_\alpha(y)
+=
+\Gamma(\alpha)^{-1/2}
+\exp\!\left(
+\frac{\alpha y}{2}-\frac{\e^y}{2}
+\right).
+\]
+Two packets of different shape have the exact cross-ambiguity function
+\[
+\boxed{
+\Acal_{\alpha,\beta}(h,\eta)
+=
+\e^{(\alpha-\beta)h/4}
+\frac{\Gamma((\alpha+\beta)/2+\ii\eta)}
+{\sqrt{\Gamma(\alpha)\Gamma(\beta)}}
+\sech^{(\alpha+\beta)/2+\ii\eta}\!\left(\frac h2\right).
+}
+\]
+Its squared modulus factors exactly into a beta-logit displacement density and a symmetric Meixner spectral density. This factorization exposes a continuous convolution semigroup in the shape parameter. The semigroup has an explicit L\'evy density, a nonlocal generator, and even cumulants governed by Bernoulli numbers.
+
+The orthogonal-polynomial side carries an exact refinement law. A Meixner--Pollaczek packet of total shape \(\alpha+\beta\) splits into products of packets of shapes \(\alpha\) and \(\beta\). The squared coefficients form a beta-binomial distribution and sum to one. The many-child extension is governed by a Dirichlet-multinomial law and is coassociative. Under the corresponding Meixner increment process, the unnormalized packet polynomials are martingales. In orthonormal coordinates, the transfer operator has the exact singular values
+\[
+\boxed{
+\sigma_n(\alpha,t)
+=
+\sqrt{\frac{(\alpha)_n}{(\alpha+t)_n}}.
+}
+\]
+These singular values satisfy a cocycle law and give immediate compactness and Schatten-class criteria.
+
+The Weyl translates of \(g_\alpha\) form a continuous tight frame. Their overlap is the Gamma--sech kernel above, and their coherent-state transform is an isometry into a reproducing-kernel Hilbert space. The associated Berezin transform is convolution with a probability kernel that factors into independent position and frequency marginals. Its Fourier multiplier is strictly positive, so the transform is injective, while its decay shows that the inverse is unbounded. After the natural shape rescaling, both marginals converge to standard Gaussians and the Berezin transform converges to the two-dimensional heat operator \(\e^{\Delta/2}\).
+
+The classical ingredients include log-Gamma laws, Meixner distributions, Meixner--Pollaczek polynomials, coherent states, and Berezin quantization. The generated contribution is the exact packet system joining cross-shape ambiguity, shape convolution, beta-binomial refinement, polynomial transfer, coherent frames, and the Gaussian fixed point in one calculus. The paper does not prove the signed M\"obius coherence estimate and does not prove the Riemann hypothesis.
+
+All figures were generated by the accompanying Python program. The release contains 28 vector figures, matching PNG files, exact tables, 24 built-in checks, independent tests, and the complete Python source.
+\end{abstract}
+
+\chapter*{Status and claim boundary}
+\addcontentsline{toc}{chapter}{Status and claim boundary}
+The paper proves the cross-shape Gamma--sech formula, the shape-affinity inequality, the beta-logit and Meixner factorization, the convolution-semigroup law, the L\'evy--Khintchine representation, the Bernoulli cumulant formula, the normalized two-child and many-child packet theorems, coassociativity, the polynomial martingale law, the complete singular-value formula, the coherent-state resolution, the reproducing kernel, the exact Berezin factorization, its strictly positive multiplier, and the Gaussian heat limit.
+
+The words generated and packet refer to the way these classical objects arise from one exact refinement system. They do not assert that the Gamma function, the Meixner law, the beta-binomial distribution, the Meixner--Pollaczek polynomials, or coherent-state quantization are historically new. The candidate contribution is the common normalization and the collection of exact transfer laws linking them.
+
+The quantum discussion uses the logarithmic number-basis coordinate developed in the 2026 construction of Wei, Zhai, Lu, and collaborators. That external work realizes phases \(n^{-\ii t}\) through a logarithmic Hamiltonian. The present shape semigroup and coherent frame are different observables and no figure from that article is reproduced or adapted.
+
+The positive shape theory does not control the signed principal M\"obius packet. None of the theorems below establishes the remaining coherence bound required for RH.
+
+\begingroup
+\footnotesize
+\setlength{\parskip}{0pt}
+\tableofcontents
+\listoffigures
+\endgroup
+\clearpage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+
+\InlinePart{Cross-shape log-Gamma packets}
+
+\FlowChapter{The shape coordinate}
+
+The log-Gamma packet is
+\[
+\boxed{
+g_\alpha(y)
+=
+\Gamma(\alpha)^{-1/2}
+\e^{\alpha y/2-\e^y/2},
+\qquad
+\alpha>0.
+}
+\]
+Its squared modulus is the density of \(Y=\log U\) when \(U\) has the Gamma law with shape \(\alpha\) and unit scale.
+
+\begin{proposition}[Normalization]
+For every \(\alpha>0\),
+\[
+\int_{\R}|g_\alpha(y)|^2\dd y=1.
+\]
+\end{proposition}
+
+\begin{proof}
+Set \(u=\e^y\). Then \(\dd y=\dd u/u\), and
+\[
+\int_{\R}|g_\alpha(y)|^2\dd y
+=
+\frac1{\Gamma(\alpha)}
+\int_0^\infty u^{\alpha-1}\e^{-u}\dd u
+=1.
+\]
+\end{proof}
+
+\FigureWide{01_theory_pipeline}{From the shape parameter to a complete packet system.}{The upper row follows the exact mathematical chain. The lower row records two consequences of the semigroup structure: Bernoulli cumulants and the Gaussian heat fixed point.}
+
+\FigureWide{02_shape_windows}{Log-Gamma packets at four shape values.}{Changing \(\alpha\) translates and narrows the active logarithmic window. The normalization remains one in \(L^2(\R)\).}
+
+\FlowChapter{Cross-shape ambiguity}
+
+For \(\alpha,\beta>0\), translation gap \(h\), and modulation gap \(\eta\), define
+\[
+\Acal_{\alpha,\beta}(h,\eta)
+=
+\int_{\R}
+ g_\alpha\!\left(y+\frac h2\right)
+ g_\beta\!\left(y-\frac h2\right)
+ \e^{\ii\eta y}\dd y.
+\]
+
+\begin{theorem}[Cross-shape Gamma--sech formula]
+The cross-ambiguity function has the exact closed form
+\[
+\boxed{
+\Acal_{\alpha,\beta}(h,\eta)
+=
+\e^{(\alpha-\beta)h/4}
+\frac{\Gamma(\lambda+\ii\eta)}
+{\sqrt{\Gamma(\alpha)\Gamma(\beta)}}
+\sech^{\lambda+\ii\eta}\!\left(\frac h2\right),
+\qquad
+\lambda=\frac{\alpha+\beta}{2}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Multiplying the two packets gives
+\[
+g_\alpha\!\left(y+\frac h2\right)
+g_\beta\!\left(y-\frac h2\right)
+=
+\frac{\e^{(\alpha-\beta)h/4}}
+{\sqrt{\Gamma(\alpha)\Gamma(\beta)}}
+\exp\!\left(
+\lambda y-\frac{\e^y}{2}(\e^{h/2}+\e^{-h/2})
+\right).
+\]
+Since
+\[
+\frac12(\e^{h/2}+\e^{-h/2})=\cosh(h/2),
+\]
+we obtain
+\[
+\Acal_{\alpha,\beta}(h,\eta)
+=
+\frac{\e^{(\alpha-\beta)h/4}}
+{\sqrt{\Gamma(\alpha)\Gamma(\beta)}}
+\int_{\R}
+\e^{(\lambda+\ii\eta)y}
+\e^{-\e^y\cosh(h/2)}\dd y.
+\]
+The substitution \(u=\e^y\cosh(h/2)\) turns the integral into
+\[
+\Gamma(\lambda+\ii\eta)
+\cosh(h/2)^{-\lambda-\ii\eta}.
+\]
+This is the stated formula.
+\end{proof}
+
+\FigureWide{03_cross_ambiguity}{Magnitude of one cross-shape ambiguity function.}{The packet remains localized in both translation and modulation. Unequal shapes tilt the displacement law but do not change the analytic form of the frequency factor.}
+
+At the origin, the overlap is
+\[
+\boxed{
+F(\alpha,\beta)
+=
+\Acal_{\alpha,\beta}(0,0)
+=
+\frac{\Gamma((\alpha+\beta)/2)}
+{\sqrt{\Gamma(\alpha)\Gamma(\beta)}}.
+}
+\]
+
+\begin{proposition}[Strict shape affinity]
+For \(\alpha,\beta>0\),
+\[
+0<F(\alpha,\beta)\le1,
+\]
+with equality if and only if \(\alpha=\beta\).
+\end{proposition}
+
+\begin{proof}
+The value is the inner product \(\ip{g_\alpha}{g_\beta}\), so Cauchy--Schwarz gives the upper bound. Equality requires the two positive normalized functions to be proportional almost everywhere. Their logarithmic derivatives differ by \((\alpha-\beta)/2\), so proportionality forces \(\alpha=\beta\). The same conclusion follows from strict log-convexity of the Gamma function.
+\end{proof}
+
+Expanding the affinity around \(\beta=\alpha+\delta\) gives
+\[
+F(\alpha,\alpha+\delta)
+=
+1-\frac{\psi_1(\alpha)}{8}\delta^2+O(\delta^3).
+\]
+The induced shape metric is therefore
+\[
+\boxed{
+g_{\alpha\alpha}=\frac14\psi_1(\alpha).
+}
+\]
+
+\FigureWide{04_shape_fidelity}{Affinity across the two-dimensional shape plane.}{The diagonal is the unique unit-overlap set. The curvature transverse to the diagonal is controlled by the trigamma function.}
+
+\InlinePart{Factorization and the shape semigroup}
+
+\FlowChapter{Beta-logit displacement and Meixner frequency}
+
+Define
+\[
+\boxed{
+p_{\alpha,\beta}(h)
+=
+\frac{\Gamma(\alpha+\beta)}
+{2^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)}
+\e^{(\alpha-\beta)h/2}
+\sech^{\alpha+\beta}\!\left(\frac h2\right)
+}
+\]
+and
+\[
+\boxed{
+\rho_s(\eta)
+=
+\frac{2^{s-1}}{\pi\Gamma(s)}
+\left|\Gamma\!\left(\frac s2+\ii\eta\right)\right|^2,
+\qquad s>0.
+}
+\]
+
+\begin{theorem}[Exact cross-spectrogram factorization]
+For all real \(h,\eta\),
+\[
+\boxed{
+\frac1{2\pi}
+\abs{\Acal_{\alpha,\beta}(h,\eta)}^2
+=
+p_{\alpha,\beta}(h)\rho_{\alpha+\beta}(\eta).
+}
+\]
+Both factors are probability densities.
+\end{theorem}
+
+\begin{proof}
+Take the squared modulus of the cross-ambiguity formula. The complex exponent of \(\sech(h/2)\) contributes only its real part. Multiplying the displayed formulas for \(p_{\alpha,\beta}\) and \(\rho_{\alpha+\beta}\) yields the same constant by direct cancellation.
+
+To normalize the position factor, set
+\[
+u=\frac{\e^h}{1+\e^h}.
+\]
+Then \(u\in(0,1)\), \(\dd h=\dd u/[u(1-u)]\), and the transformed density is the Beta\((\alpha,\beta)\) density. The frequency normalization follows from the standard Gamma integral, or from the fact that \(\rho_s\) is the spectral density of the normalized packet \(g_s\).
+\end{proof}
+
+\FigureWide{05_beta_logit}{The displacement marginal.}{The transformation \(u=\e^h/(1+\e^h)\) converts each curve into a beta density. Exchanging \(\alpha\) and \(\beta\) reflects the packet through the origin.}
+
+\FigureWide{06_meixner_densities}{The symmetric Meixner packet family.}{The shape parameter is additive under convolution. Larger shape produces a broader spectral law because its variance is \(s/4\).}
+
+\FigureWide{07_cross_factorization}{Direct and factorized cross-packet energy.}{The first two panels are the direct and product constructions. Their difference is at floating-point roundoff.}
+
+\FlowChapter{Convolution in the shape parameter}
+
+The characteristic function of \(\rho_s\) is
+\[
+\boxed{
+\widehat\rho_s(h)
+=
+\int_{\R}\rho_s(\eta)\e^{\ii h\eta}\dd\eta
+=
+\sech^s(h/2).
+}
+\]
+
+\begin{theorem}[Meixner shape semigroup]
+For \(s,t>0\),
+\[
+\boxed{
+\rho_{s+t}=\rho_s*\rho_t.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The Fourier transform of the convolution is
+\[
+\widehat\rho_s(h)\widehat\rho_t(h)
+=
+\sech^{s+t}(h/2)
+=
+\widehat\rho_{s+t}(h).
+\]
+Uniqueness of Fourier transforms of probability measures gives the result.
+\end{proof}
+
+The Gamma recurrence gives a second exact shape law.
+
+\begin{proposition}[Two-step density ladder]
+For \(s>0\),
+\[
+\boxed{
+\rho_{s+2}(\eta)
+=
+\frac{s^2+4\eta^2}{s(s+1)}
+\rho_s(\eta).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Use
+\[
+\Gamma\!\left(\frac s2+1+\ii\eta\right)
+=
+\left(\frac s2+\ii\eta\right)
+\Gamma\!\left(\frac s2+\ii\eta\right)
+\]
+and simplify the normalization factor with \(\Gamma(s+2)=s(s+1)\Gamma(s)\).
+\end{proof}
+
+\FigureWide{08_shape_ladder}{Successive densities generated by the Gamma recurrence.}{Multiplying by a quadratic polynomial and renormalizing raises the shape by two.}
+
+\FigureWide{09_convolution_semigroup}{A direct convolution check and its residual.}{The convolution of shapes \(1.3\) and \(2.2\) matches the shape \(3.5\) density across the plotted window.}
+
+\FlowChapter{L\'evy generator and Bernoulli cumulants}
+
+The shape parameter is continuous, so the family has an infinitesimal generator.
+
+\begin{theorem}[L\'evy--Khintchine representation]
+For real \(\xi\),
+\[
+\boxed{
+-\log\cosh(\xi/2)
+=
+\int_0^\infty
+\frac{\cos(\xi x)-1}{x\sinh(\pi x)}\dd x.
+}
+\]
+Consequently, the shape-\(s\) law has symmetric L\'evy measure
+\[
+\boxed{
+\nu_s(\dd x)
+=
+\frac{s}{2|x|\sinh(\pi|x|)}\dd x.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Differentiate the integral with respect to \(\xi\). The derivative is
+\[
+-\int_0^\infty\frac{\sin(\xi x)}{\sinh(\pi x)}\dd x
+=-\frac12\tanh(\xi/2),
+\]
+using the standard sine-transform identity. This is the derivative of \(-\log\cosh(\xi/2)\). Both sides vanish at \(\xi=0\), which fixes the constant. Multiplying by \(s\) gives the L\'evy exponent of \(\sech^s(\xi/2)\).
+\end{proof}
+
+On smooth rapidly decreasing functions, the unit-shape generator is
+\[
+\boxed{
+(\Lcal f)(\eta)
+=
+\int_0^\infty
+\frac{f(\eta+x)+f(\eta-x)-2f(\eta)}
+{2x\sinh(\pi x)}\dd x.
+}
+\]
+Its Fourier symbol is \(-\log\cosh(\xi/2)\).
+
+\FigureWide{10_levy_generator}{The L\'evy density and generator symbol.}{The singularity at the origin is canceled by the second difference in the generator. The numerical integral agrees with the exact Fourier symbol.}
+
+The Bernoulli numbers appear in every even cumulant.
+
+\begin{theorem}[Bernoulli cumulant law]
+Let \(X_s\) have density \(\rho_s\). Its odd cumulants vanish. For \(m\ge1\),
+\[
+\boxed{
+\kappa_{2m}(X_s)
+=
+s\frac{(2^{2m}-1)|B_{2m}|}{2m}.
+}
+\]
+In particular,
+\[
+\kappa_2=\frac s4,
+\qquad
+\kappa_4=\frac s8,
+\qquad
+\kappa_6=\frac s4.
+\]
+\end{theorem}
+
+\begin{proof}
+The cumulant generating function is
+\[
+\log\Expect\e^{tX_s}
+=-s\log\cos(t/2)
+\]
+near the origin. The classical Bernoulli expansion of \(\log\cos x\) gives
+\[
+-s\log\cos(t/2)
+=
+\sum_{m\ge1}
+\frac{\kappa_{2m}}{(2m)!}t^{2m}.
+\]
+Matching coefficients gives the stated formula. Symmetry removes the odd cumulants.
+\end{proof}
+
+\FigureWide{11_bernoulli_cumulants}{The first four even cumulants as shape varies.}{Every cumulant is linear in the shape parameter. The coefficients are exact Bernoulli-number combinations.}
+
+\InlinePart{Polynomial packets and exact refinement}
+
+\FlowChapter{Meixner--Pollaczek packet coordinates}
+
+Let \(P_n^{(s/2)}(x,\pi/2)\) be the standard Meixner--Pollaczek polynomial with shape \(s>0\). Its generating function is
+\[
+\boxed{
+\sum_{n=0}^\infty
+P_n^{(s/2)}(x,\pi/2)z^n
+=
+(1-\ii z)^{-s/2+\ii x}
+(1+\ii z)^{-s/2-\ii x}.
+}
+\]
+Define the orthonormal packet
+\[
+\boxed{
+p_{n,s}(x)
+=
+\sqrt{\frac{n!}{(s)_n}}
+P_n^{(s/2)}(x,\pi/2).
+}
+\]
+Then
+\[
+\int_{\R}p_{m,s}(x)p_{n,s}(x)\rho_s(x)\dd x
+=\delta_{mn}.
+\]
+
+\begin{theorem}[Two-child packet refinement]
+For \(\alpha,\beta>0\),
+\[
+\boxed{
+p_{n,\alpha+\beta}(x+y)
+=
+\sum_{r=0}^n
+C_{n,r}^{\alpha,\beta}
+ p_{r,\alpha}(x)
+ p_{n-r,\beta}(y),
+}
+\]
+where
+\[
+\boxed{
+C_{n,r}^{\alpha,\beta}
+=
+\sqrt{
+\frac{n!(\alpha)_r(\beta)_{n-r}}
+{(\alpha+\beta)_n r!(n-r)!}
+}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the two generating functions of shapes \(\alpha\) and \(\beta\). Their product is the generating function of shape \(\alpha+\beta\) evaluated at \(x+y\). Comparing the coefficient of \(z^n\) gives the standard addition theorem. Multiplying each polynomial by its normalization factor produces the displayed coefficient.
+\end{proof}
+
+The coefficient squares are
+\[
+\boxed{
+|C_{n,r}^{\alpha,\beta}|^2
+=
+\binom nr
+\frac{(\alpha)_r(\beta)_{n-r}}
+{(\alpha+\beta)_n}.
+}
+\]
+This is the beta-binomial probability mass function. Hence
+\[
+\boxed{
+\sum_{r=0}^n|C_{n,r}^{\alpha,\beta}|^2=1.
+}
+\]
+The refinement is therefore an isometric packet split.
+
+\FigureWide{12_packet_splitter}{The exact two-child polynomial splitter.}{One parent packet is reconstructed from every degree allocation across the two children. The beta-binomial coefficient is the exact transfer amplitude.}
+
+\FigureWide{13_beta_binomial_energy}{Beta-binomial packet energy for several shape pairs.}{The squared coefficients form probability laws. Symmetric shapes produce symmetric degree allocation, while unequal shapes tilt the energy toward one child.}
+
+\begin{example}[Degree four]
+Take \(\alpha=2\), \(\beta=3\), and \(n=4\). Then
+\[
+p_{4,5}(x+y)
+=
+\sum_{r=0}^4
+\sqrt{
+\binom4r
+\frac{(2)_r(3)_{4-r}}{(5)_4}
+}
+ p_{r,2}(x)p_{4-r,3}(y).
+\]
+For \(y=0.85\), the direct parent polynomial and the reconstructed child sum agree pointwise. The largest residual on the plotted grid is below \(2\times10^{-15}\).
+\end{example}
+
+\FigureWide{14_addition_example}{A worked degree-four reconstruction.}{The left panel overlays the parent and child synthesis. The right panel shows the pointwise floating-point residual.}
+
+\FlowChapter{Many-child refinement and coassociativity}
+
+Let \(\alpha_1,\ldots,\alpha_m>0\), set \(A=\sum_j\alpha_j\), and let \(r_1+\cdots+r_m=n\).
+
+\begin{theorem}[Multinomial packet refinement]
+For \(x_1,\ldots,x_m\in\R\),
+\[
+\boxed{
+p_{n,A}\!\left(\sum_{j=1}^m x_j\right)
+=
+\sum_{r_1+\cdots+r_m=n}
+C_{n,\mathbf r}^{\boldsymbol\alpha}
+\prod_{j=1}^m p_{r_j,\alpha_j}(x_j),
+}
+\]
+where
+\[
+\boxed{
+C_{n,\mathbf r}^{\boldsymbol\alpha}
+=
+\sqrt{
+\frac{n!\prod_j(\alpha_j)_{r_j}}
+{(A)_n\prod_jr_j!}
+}.
+}
+\]
+The coefficient squares form the Dirichlet-multinomial law and satisfy
+\[
+\sum_{r_1+\cdots+r_m=n}
+|C_{n,\mathbf r}^{\boldsymbol\alpha}|^2=1.
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the \(m\) generating functions and compare the coefficient of \(z^n\). The product generating function has total shape \(A\) and total coordinate \(\sum_jx_j\). Normalization gives the square-root Dirichlet-multinomial coefficient. The sum-of-squares identity is the normalization of the Dirichlet-multinomial distribution.
+\end{proof}
+
+\FigureWide{15_multinomial_simplex}{Three-child packet allocation on a degree-eight simplex.}{The marker area and color encode squared transfer amplitude. The complete coefficient energy is one.}
+
+\begin{corollary}[Coassociativity]
+The many-child coefficient is independent of the order in which binary refinements are performed. In particular, the two paths
+\[
+(\alpha+\beta)+\gamma
+\qquad\text{and}\qquad
+\alpha+(\beta+\gamma)
+\]
+produce the same three-child coefficient.
+\end{corollary}
+
+\begin{proof}
+Multiply the binary coefficients along either tree. Every intermediate Pochhammer factor cancels. Both products reduce to
+\[
+\sqrt{
+\frac{n!(\alpha)_{r_1}(\beta)_{r_2}(\gamma)_{r_3}}
+{(\alpha+\beta+\gamma)_n r_1!r_2!r_3!}
+}.
+\]
+\end{proof}
+
+\FigureWide{16_coassociativity}{Two refinement trees with one terminal coefficient.}{The coefficient does not depend on bracketing. This is the exact associativity law needed for arbitrary packet trees.}
+
+\InlinePart{Polynomial martingales and shape transfer}
+
+\FlowChapter{The Meixner increment process}
+
+The convolution law permits a process \((X_s)_{s>0}\) with independent increments such that
+\[
+X_s\sim\rho_s
+\]
+and
+\[
+X_{s+t}=X_s+Y_t,
+\qquad
+Y_t\sim\rho_t,
+\]
+with \(Y_t\) independent of \(X_s\).
+
+\begin{theorem}[Polynomial martingale law]
+For the standard Meixner--Pollaczek polynomial,
+\[
+\boxed{
+\Expect\!\left[
+P_n^{((s+t)/2)}(X_{s+t},\pi/2)
+\mid X_s
+\right]
+=
+P_n^{(s/2)}(X_s,\pi/2).
+}
+\]
+For orthonormal packets,
+\[
+\boxed{
+\Expect\!\left[
+p_{n,s+t}(X_{s+t})\mid X_s
+\right]
+=
+\sigma_n(s,t)p_{n,s}(X_s),
+}
+\]
+where
+\[
+\boxed{
+\sigma_n(s,t)
+=
+\sqrt{\frac{(s)_n}{(s+t)_n}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the addition theorem to \(X_s+Y_t\). After conditioning on \(X_s\), every positive-degree polynomial in \(Y_t\) integrates to zero by orthogonality. Only the term assigning degree zero to the increment remains. The standard normalization gives the first identity. Dividing by the orthonormal factors gives the singular value.
+\end{proof}
+
+Define the transfer
+\[
+(T_{s,t}f)(x)
+=
+\int_{\R}f(x+y)\rho_t(y)\dd y.
+\]
+It maps \(L^2(\rho_{s+t})\) to \(L^2(\rho_s)\), and
+\[
+\boxed{
+T_{s,t}p_{n,s+t}
+=
+\sigma_n(s,t)p_{n,s}.
+}
+\]
+
+\FigureWide{17_transfer_singular_values}{Exact singular values across polynomial degree.}{Large shape increments contract high-degree modes more strongly. The constant mode is preserved exactly.}
+
+\FigureWide{18_transfer_spectrum}{The contraction spectrum as a function of initial shape and degree.}{The packet transfer is diagonal in the orthonormal polynomial basis.}
+
+\begin{proposition}[Cocycle and compactness]
+The singular values satisfy
+\[
+\boxed{
+\sigma_n(s,t)\sigma_n(s+t,u)=\sigma_n(s,t+u).
+}
+\]
+For every \(t>0\),
+\[
+\sigma_n(s,t)\sim
+\sqrt{\frac{\Gamma(s+t)}{\Gamma(s)}}n^{-t/2}.
+\]
+Consequently, \(T_{s,t}\) is compact. It belongs to the Schatten class \(S_p\) exactly when
+\[
+pt>2.
+\]
+It is Hilbert--Schmidt when \(t>1\) and trace class when \(t>2\).
+\end{proposition}
+
+\begin{proof}
+The cocycle follows by direct cancellation of Pochhammer symbols. The asymptotic follows from the Gamma-ratio formula. The Schatten condition is
+\[
+\sum_{n\ge0}\sigma_n(s,t)^p<\infty,
+\]
+which is equivalent to convergence of \(\sum n^{-pt/2}\).
+\end{proof}
+
+The constant mode has singular value one. On the mean-zero subspace, the operator norm is
+\[
+\boxed{
+\norm{T_{s,t}}_{L^2_0\to L^2_0}
+=
+\sqrt{\frac{s}{s+t}}.
+}
+\]
+This gives an exact shape-dependent spectral gap.
+
+\FigureWide{19_martingale_transfer}{The first polynomial martingale factors.}{Each degree has one exact contraction coefficient. The transfer law is finite, diagonal, and compatible with repeated shape increments.}
+
+\InlinePart{Coherent frames and Berezin quantization}
+
+\FlowChapter{Log-Gamma coherent states}
+
+Define the Weyl-centered coherent state
+\[
+\boxed{
+\psi_{\alpha,u,\eta}(y)
+=
+\e^{\ii\eta(y-u/2)}g_\alpha(y-u).
+}
+\]
+
+\begin{theorem}[Cross-shape coherent overlap]
+For \(\alpha,\beta>0\),
+\[
+\boxed{
+\ip{\psi_{\alpha,u,\eta}}{\psi_{\beta,v,\nu}}
+=
+\e^{\ii(\nu u-\eta v)/2}
+\Acal_{\alpha,\beta}(v-u,\nu-\eta).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the definitions and collect the Weyl phase. The remaining integral is the cross-shape ambiguity with translation difference \(v-u\) and modulation difference \(\nu-\eta\).
+\end{proof}
+
+For a fixed shape \(\alpha\), define the coherent transform
+\[
+(V_\alpha f)(u,\eta)
+=
+\ip{\psi_{\alpha,u,\eta}}{f}.
+\]
+
+\begin{theorem}[Continuous tight frame]
+For \(f\in L^2(\R)\),
+\[
+\boxed{
+\frac1{2\pi}
+\int_{\R^2}|(V_\alpha f)(u,\eta)|^2\dd u\dd\eta
+=
+\norm{f}_2^2.
+}
+\]
+Equivalently,
+\[
+\boxed{
+\frac1{2\pi}
+\int_{\R^2}
+\ket{\psi_{\alpha,u,\eta}}
+\bra{\psi_{\alpha,u,\eta}}
+\dd u\dd\eta
+=
+I
+}
+\]
+in the weak operator sense.
+\end{theorem}
+
+\begin{proof}
+This is the Moyal identity for time-frequency shifts of a normalized window. It can also be proved directly by integrating first in \(\eta\), which produces a Dirac delta in the position difference, and then using \(\norm{g_\alpha}_2=1\).
+\end{proof}
+
+The range of \(V_\alpha\) is a reproducing-kernel Hilbert space with kernel
+\[
+K_\alpha((u,\eta),(v,\nu))
+=
+\ip{\psi_{\alpha,u,\eta}}{\psi_{\alpha,v,\nu}}.
+\]
+
+\FigureWide{20_coherent_lattice}{A finite sample of the coherent-state orbit.}{Marker size is the overlap magnitude with the packet at the origin. The full orbit is continuous and resolves the identity.}
+
+\FigureWide{21_rkhs_kernel}{Magnitude of the reproducing kernel.}{The kernel is the equal-shape Gamma--sech ambiguity. It is localized in both phase-space directions and is nonzero on the real plane.}
+
+\FlowChapter{The Gamma--sech Berezin kernel}
+
+For a bounded symbol \(F\), define the anti-Wick operator
+\[
+\boxed{
+\operatorname{Op}_\alpha(F)
+=
+\frac1{2\pi}
+\int_{\R^2}
+F(u,\eta)
+\ket{\psi_{\alpha,u,\eta}}
+\bra{\psi_{\alpha,u,\eta}}
+\dd u\dd\eta.
+}
+\]
+Its lower symbol is
+\[
+\widetilde F(z)
+=
+\ip{\psi_z}{\operatorname{Op}_\alpha(F)\psi_z}.
+\]
+
+\begin{theorem}[Exact Berezin factorization]
+The lower symbol is the convolution
+\[
+\boxed{
+\widetilde F
+=
+\Bcal_\alpha*F,
+}
+\]
+where
+\[
+\boxed{
+\Bcal_\alpha(h,\eta)
+=
+\frac1{2\pi}
+\abs{\Acal_{\alpha,\alpha}(h,\eta)}^2
+=
+p_\alpha(h)q_\alpha(\eta).
+}
+\]
+The factors are
+\[
+\boxed{
+p_\alpha(h)
+=
+\frac{\Gamma(\alpha+1/2)}
+{2\sqrt\pi\Gamma(\alpha)}
+\sech^{2\alpha}(h/2)
+}
+\]
+and
+\[
+\boxed{
+q_\alpha(\eta)=\rho_{2\alpha}(\eta).
+}
+\]
+Both are probability densities.
+\end{theorem}
+
+\begin{proof}
+Insert the coherent-state resolution into the lower symbol. The overlap depends only on the phase-space difference, so the integral is a convolution with \(|K_\alpha|^2/(2\pi)\). The factorization theorem with \(\alpha=\beta\) gives the two marginals.
+\end{proof}
+
+\FigureWide{22_berezin_factorization}{The two marginal laws and their product.}{The smoothing kernel is exactly separable in the natural position and frequency coordinates.}
+
+Under the Fourier convention
+\[
+\widehat f(\xi,x)
+=
+\int_{\R^2}f(h,\eta)\e^{-\ii(\xi h+x\eta)}\dd h\dd\eta,
+\]
+the multiplier is
+\[
+\boxed{
+\widehat\Bcal_\alpha(\xi,x)
+=
+\frac{|\Gamma(\alpha+\ii\xi)|^2}{\Gamma(\alpha)^2}
+\sech^{2\alpha}(x/2).
+}
+\]
+
+\begin{corollary}[Injectivity and ill-posed inversion]
+The Berezin transform is injective on \(L^2(\R^2)\) and on the Schwartz class. Its inverse is unbounded on \(L^2\).
+\end{corollary}
+
+\begin{proof}
+The multiplier is strictly positive for real \((\xi,x)\), so a vanishing transformed function has zero Fourier transform. On the other hand, the multiplier tends to zero as either dual variable tends to infinity. Division by it cannot define a bounded multiplier on \(L^2\).
+\end{proof}
+
+\FigureWide{23_berezin_multiplier}{The positive multiplier on dual phase space.}{The transform loses no frequency exactly, but high dual frequencies are strongly suppressed. This explains injectivity together with unstable inversion.}
+
+The exact variances are
+\[
+\boxed{
+\Var_{p_\alpha}(H)=2\psi_1(\alpha)
+}
+\]
+and
+\[
+\boxed{
+\Var_{q_\alpha}(\Omega)=\frac\alpha2.
+}
+\]
+The first follows from the logit-Beta law with equal parameters. The second is the Meixner variance at shape \(2\alpha\).
+
+\FlowChapter{Gaussian heat fixed point}
+
+Let \(H_\alpha\) have density \(p_\alpha\), and let \(\Omega_\alpha\) have density \(q_\alpha\). Define
+\[
+Z_\alpha=\sqrt{\frac\alpha2}H_\alpha,
+\qquad
+W_\alpha=\sqrt{\frac2\alpha}\Omega_\alpha.
+\]
+
+\begin{theorem}[Gaussian marginal limits]
+As \(\alpha\to\infty\),
+\[
+\boxed{
+Z_\alpha\Longrightarrow N(0,1),
+\qquad
+W_\alpha\Longrightarrow N(0,1).
+}
+\]
+The two variables are independent under the product Berezin kernel.
+\end{theorem}
+
+\begin{proof}
+For the position factor, the characteristic function is
+\[
+\frac{|\Gamma(\alpha+\ii\xi)|^2}{\Gamma(\alpha)^2}.
+\]
+Evaluate it at \(\xi\sqrt{\alpha/2}\) and use the Taylor expansion of \(\log\Gamma\) together with \(\psi_1(\alpha)\sim1/\alpha\). The limit is \(\e^{-\xi^2/2}\).
+
+For the frequency factor, the characteristic function is \(\sech^{2\alpha}(x/2)\). Evaluate it at \(x\sqrt{2/\alpha}\). Since \(\log\sech z=-z^2/2+O(z^4)\), the limit is again \(\e^{-x^2/2}\). Independence is exact because the two-dimensional kernel factors.
+\end{proof}
+
+\FigureWide{24_gaussian_marginals}{The two standardized marginals approaching the same normal density.}{The convergence is already close at moderate shape and becomes visually indistinguishable by \(\alpha=80\).}
+
+Let \(S_\alpha\) be the Berezin convolution written in the standardized coordinates above.
+
+\begin{corollary}[Heat-operator limit]
+For every Schwartz function \(F\),
+\[
+\boxed{
+S_\alpha F
+\longrightarrow
+\e^{\Delta/2}F
+}
+\]
+in every Schwartz seminorm after the natural phase-space rescaling.
+\end{corollary}
+
+\begin{proof}
+The rescaled convolution kernels converge to the standard two-dimensional Gaussian and have uniformly controlled moments of every fixed order. Their Fourier multipliers converge with all derivatives on compact sets to \(\e^{-(\xi^2+x^2)/2}\), the multiplier of \(\e^{\Delta/2}\). Standard dominated estimates complete the argument.
+\end{proof}
+
+\FigureWide{25_gaussian_heat_limit}{The rescaled Berezin kernel, the Gaussian heat kernel, and their residual.}{The packet quantization has a classical heat-kernel fixed point in the large-shape limit.}
+
+\InlinePart{Geometry, implementation, and research boundary}
+
+\FlowChapter{Three exact local scales}
+
+The normalized packet family has three natural local coordinates.
+
+\begin{proposition}[Diagonal metric coefficients]
+For the shape, translation, and modulation directions,
+\[
+\boxed{
+g_{\alpha\alpha}=\frac14\psi_1(\alpha),
+\qquad
+g_{uu}=\frac\alpha4,
+\qquad
+g_{\eta\eta}=\psi_1(\alpha).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The shape derivative is
+\[
+\partial_\alpha g_\alpha
+=
+\frac12(y-\psi(\alpha))g_\alpha.
+\]
+Its squared norm is \(\psi_1(\alpha)/4\), and its mean inner product with \(g_\alpha\) is zero.
+
+Translation is generated by momentum. The packet momentum variance is \(\alpha/4\), obtained by differentiating \(g_\alpha\) directly. Modulation is generated by position, whose variance under \(|g_\alpha|^2\) is \(\psi_1(\alpha)\).
+\end{proof}
+
+\FigureWide{27_shape_geometry}{The three diagonal metric coefficients.}{Shape and modulation sensitivity decrease with \(\alpha\), while translation sensitivity increases. The large-shape packet is narrow in position and broad in frequency.}
+
+\FigureWide{26_transfer_hierarchy}{The exact hierarchy proved in this paper.}{Shape convolution generates the polynomial refinement system. Coherent-state quantization converts the same kernel into a positive phase-space smoothing operator.}
+
+\FlowChapter{Relation to the arithmetic packet series}
+
+Papers III through V began with the positive squarefree depth kernel and derived a universal Gamma-Laguerre scaling law. The parameter
+\[
+\alpha=\frac{2a-1}{\beta}
+\]
+was the shape of the limiting Gamma packet. The present paper treats \(\alpha\) as an independent continuous coordinate and proves the exact laws governing how packets of different shape combine.
+
+The bridge can be summarized as follows:
+\[
+\boxed{
+\begin{aligned}
+\text{squarefree depth packet}
+&\longrightarrow
+\text{Gamma scaling shape }\alpha\\
+&\longrightarrow
+\text{log-Gamma packet }g_\alpha\\
+&\longrightarrow
+\text{Meixner shape semigroup }\rho_\alpha\\
+&\longrightarrow
+\text{beta-binomial polynomial refinement}\\
+&\longrightarrow
+\text{coherent-state and Berezin packet geometry}.
+\end{aligned}
+}
+\]
+
+\FigureWide{28_function_family_map}{The generated function-family map.}{Each lower object is a proved consequence of one of the upper transfer laws. The map records dependencies rather than a historical novelty claim.}
+
+\FlowChapter{Quantum coordinate and implementation boundary}
+
+The accepted 2026 construction of Wei, Zhai, Lu, and collaborators uses the number-basis Hamiltonian
+\[
+H\ket n=\log n\ket n
+\]
+to produce phases \(n^{-\ii t}\), and develops polynomial-resource state preparation and logarithmic evolution. The present papers use the same logarithmic coordinate for their number-basis packet systems. The external construction establishes a direct zeta-to-dynamical-transition correspondence, while the current shape semigroup describes positive depth and phase-space transfer rather than the direct zeta amplitude.
+
+A quantum realization of the positive shape transfer would require preparation of the relevant packet state, controlled logarithmic phase evolution, and a shape-increment channel whose classical law is \(\rho_t\). The exact polynomial singular system above supplies a finite truncation strategy. The present paper does not give a complete gate count for that additional channel.
+
+\begin{boundary}[RH remains on the signed side]
+For the principal M\"obius transfer,
+\[
+c_k
+=
+\sum_n\frac{\mu(n)}{n^2}
+\left(1-\frac1{n^2}\right)^k,
+\]
+while the positive packet energy is
+\[
+E_k
+=
+\sum_n\frac{\mu(n)^2}{n^4}
+\left(1-\frac1{n^2}\right)^{2k}.
+\]
+The preceding papers prove \(E_k\asymp k^{-3/2}\). The Riemann hypothesis is equivalent, through the classical sequential criterion, to subpolynomial growth of \(|c_k|^2/E_k\). The positive semigroup, martingale, frame, and heat-kernel results proved here do not establish that signed estimate.
+\end{boundary}
+
+\FlowChapter{Open problems native to the shape calculus}
+
+The paper leaves several focused questions.
+
+\begin{enumerate}[leftmargin=2.0em]
+\item Determine sharp logarithmic Sobolev and hypercontractive constants for the Meixner shape transfer \(T_{s,t}\).
+\item Classify the exact Schatten behavior of matrix-valued and character-resolved shape transfers.
+\item Determine whether the cross-shape coherent kernel is totally positive in selected real coordinate slices.
+\item Construct discrete packet lattices that retain stable frame bounds uniformly in \(\alpha\).
+\item Quantify the inverse instability of the Berezin transform in Gevrey and analytic function classes.
+\item Derive higher-order corrections to the Gaussian heat limit from the Bernoulli cumulants.
+\item Connect the beta-binomial packet splitter to arithmetic refinement trees before taking the Gamma scaling limit.
+\item Determine which positive shape estimates survive after the M\"obius sign operator is inserted.
+\end{enumerate}
+
+\FlowChapter{Verification}
+
+The Python generator evaluates every displayed family, produces all figures, and performs independent numerical checks of the main identities. The checks compare closed forms with quadrature, transformed densities with direct formulas, convolution with the target semigroup density, polynomial refinement with direct evaluation, and transfer eigenvalues with conditional integration.
+
+\input{generated_tables/headline.tex}
+\input{generated_tables/checks.tex}
+
+The largest recorded residual comes from the finite-grid Gaussian limit check. It is below \(9\times10^{-4}\), well inside the declared tolerance of \(2\times10^{-2}\). The exact algebraic and integral identities are typically verified between \(10^{-17}\) and \(10^{-10}\), depending on the quadrature involved.
+
+\appendix
+
+\FlowChapter{Formula registry}
+
+\begin{longtable}{L{0.24\textwidth}L{0.64\textwidth}}
+\toprule
+Object & Formula \\
+\midrule
+\endfirsthead
+\toprule
+Object & Formula \\
+\midrule
+\endhead
+Log-Gamma packet & \(g_\alpha(y)=\Gamma(\alpha)^{-1/2}\e^{\alpha y/2-\e^y/2}\) \\
+Cross ambiguity & \(\Acal_{\alpha,\beta}(h,\eta)=\e^{(\alpha-\beta)h/4}\Gamma((\alpha+\beta)/2+\ii\eta)[\Gamma(\alpha)\Gamma(\beta)]^{-1/2}\sech^{(\alpha+\beta)/2+\ii\eta}(h/2)\) \\
+Shape affinity & \(F(\alpha,\beta)=\Gamma((\alpha+\beta)/2)/\sqrt{\Gamma(\alpha)\Gamma(\beta)}\) \\
+Beta-logit factor & \(p_{\alpha,\beta}(h)=\Gamma(\alpha+\beta)\e^{(\alpha-\beta)h/2}\sech^{\alpha+\beta}(h/2)/[2^{\alpha+\beta}\Gamma(\alpha)\Gamma(\beta)]\) \\
+Meixner factor & \(\rho_s(\eta)=2^{s-1}|\Gamma(s/2+\ii\eta)|^2/[\pi\Gamma(s)]\) \\
+Characteristic function & \(\widehat\rho_s(h)=\sech^s(h/2)\) \\
+L\'evy density & \(\nu_s(\dd x)=s[2|x|\sinh(\pi|x|)]^{-1}\dd x\) \\
+Even cumulants & \(\kappa_{2m}=s(2^{2m}-1)|B_{2m}|/(2m)\) \\
+Two-child coefficient & \(C_{n,r}^{\alpha,\beta}=\sqrt{n!(\alpha)_r(\beta)_{n-r}/[(\alpha+\beta)_n r!(n-r)!]}\) \\
+Many-child coefficient & \(C_{n,\mathbf r}^{\boldsymbol\alpha}=\sqrt{n!\prod_j(\alpha_j)_{r_j}/[(\sum_j\alpha_j)_n\prod_jr_j!]}\) \\
+Transfer singular value & \(\sigma_n(s,t)=\sqrt{(s)_n/(s+t)_n}\) \\
+Coherent state & \(\psi_{\alpha,u,\eta}(y)=\e^{\ii\eta(y-u/2)}g_\alpha(y-u)\) \\
+Berezin position law & \(p_\alpha(h)=\Gamma(\alpha+1/2)\sech^{2\alpha}(h/2)/[2\sqrt\pi\Gamma(\alpha)]\) \\
+Berezin frequency law & \(q_\alpha(\eta)=\rho_{2\alpha}(\eta)\) \\
+Berezin multiplier & \(\widehat\Bcal_\alpha(\xi,x)=|\Gamma(\alpha+\ii\xi)|^2\Gamma(\alpha)^{-2}\sech^{2\alpha}(x/2)\) \\
+Metric coefficients & \(g_{\alpha\alpha}=\psi_1(\alpha)/4\), \(g_{uu}=\alpha/4\), \(g_{\eta\eta}=\psi_1(\alpha)\) \\
+\bottomrule
+\end{longtable}
+
+\FlowChapter{Selected numerical tables}
+
+The generator writes the cumulant and transfer-spectrum tables as CSV files. A short excerpt is reproduced here.
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+Shape & \(\kappa_2\) & \(\kappa_4\) & \(\kappa_6\) & \(\kappa_8\) \\
+\midrule
+0.5 & 0.125 & 0.0625 & 0.125 & 0.53125 \\
+1.0 & 0.25 & 0.125 & 0.25 & 1.0625 \\
+2.0 & 0.5 & 0.25 & 0.5 & 2.125 \\
+4.0 & 1.0 & 0.5 & 1.0 & 4.25 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For initial shape \(s=2\), the first transfer singular values are
+\[
+\sigma_n(2,t)=\sqrt{\frac{(2)_n}{(2+t)_n}}.
+\]
+At increment \(t=2\), these begin
+\[
+1,
+\sqrt{\frac12},
+\sqrt{\frac3{10}},
+\sqrt{\frac15},
+\sqrt{\frac17},\ldots.
+\]
+They decay like \(n^{-1}\), so this transfer is compact but not trace class.
+
+\FlowChapter{Complete Python implementation}
+
+The source below generates every figure and every result table in this paper.
+
+\lstinputlisting{projector_generated_special_functions_vi.py}
+
+\FlowChapter{Reproduction}
+
+From the source directory, run
+\begin{lstlisting}[language=bash,numbers=none]
+python projector_generated_special_functions_vi.py
+pytest -q
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_VI.tex
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_VI.tex
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_VI.tex
+\end{lstlisting}
+
+\FlowChapter{Bibliographic note}
+
+\begin{thebibliography}{12}
+
+\bibitem{DLMFGamma}
+NIST Digital Library of Mathematical Functions.
+Chapter 5, Gamma Function.
+\url{https://dlmf.nist.gov/5}.
+
+\bibitem{DLMFMP}
+NIST Digital Library of Mathematical Functions.
+Sections 18.19 and 18.23, Meixner--Pollaczek polynomials and generating functions.
+\url{https://dlmf.nist.gov/18.23}.
+
+\bibitem{Koekoek}
+R. Koekoek, P. A. Lesky, and R. F. Swarttouw.
+\emph{Hypergeometric Orthogonal Polynomials and Their $q$-Analogues}.
+Springer, 2010.
+
+\bibitem{Schoutens}
+W. Schoutens.
+\emph{Stochastic Processes and Orthogonal Polynomials}.
+Springer, 2000.
+
+\bibitem{Sato}
+K. Sato.
+\emph{L\'evy Processes and Infinitely Divisible Distributions}.
+Cambridge University Press, 1999.
+
+\bibitem{Folland}
+G. B. Folland.
+\emph{Harmonic Analysis in Phase Space}.
+Princeton University Press, 1989.
+
+\bibitem{Berezin}
+F. A. Berezin.
+General concept of quantization.
+\emph{Communications in Mathematical Physics}, 40:153--174, 1975.
+
+\bibitem{Perelomov}
+A. Perelomov.
+\emph{Generalized Coherent States and Their Applications}.
+Springer, 1986.
+
+\bibitem{Wei2026}
+S. Wei, Y. Zhai, Q. Lu, W. Yang, P. Gao, C. Wei, J. Song, F. Nori, T. Xin, and G. Long.
+The Riemann Hypothesis manifested in dynamical quantum phase transitions.
+\emph{Nature Communications}, article in press, 2026.
+DOI: 10.1038/s41467-026-74935-8.
+
+\bibitem{PGSFV}
+Komorebi P.
+\emph{Projector-Generated Special Functions V: Log-Gamma Gabor Packets, Gamma--Sech Ambiguity Kernels, Meixner--Pollaczek Spectra, and $\mathrm{SU}(1,1)$ Duality}.
+Preceding paper in this series.
+
+\end{thebibliography}
+
+\end{document}
