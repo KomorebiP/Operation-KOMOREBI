@@ -1,27 +1,36 @@
 # Independent libraries
 
-Each flagship library has one canonical source destination. This central repository supplies navigation and a coordinated release manifest; it does not maintain another editable copy.
+**Both libraries are beta releases and works in progress.** They are publicly available for use, inspection, and feedback under their respective licenses. Their current version numbers do not imply completion or a stable release designation.
+
+Each library has one canonical source repository. This central collection supplies navigation and publication records without maintaining a second editable copy.
 
 ## Komorebi Math
 
-Canonical private repository: [KomorebiP/komorebi-math](https://github.com/KomorebiP/komorebi-math).
+Canonical public repository: [KomorebiP/komorebi-math](https://github.com/KomorebiP/komorebi-math). Download the [beta prerelease](https://github.com/KomorebiP/komorebi-math/releases/tag/beta-2026-10-27).
 
-The imported source checkpoint is **R4 Block 21 Certificate Consistency**, dated 24 September 2026, on the `1.0.0b4` line. The matched wheel has build tag `4b21`. Older documentation and test-profile names must be reconciled with this exact source.
+Komorebi Math is the Python library for finite operator, coordinate, signal, and arithmetic calculations. The current package metadata uses version **1.0.0**. Its distribution status remains **beta / work in progress**. The `stable` and `v1` namespaces are technical API names.
 
-The 5 October deep audit recorded finite-group certificate, prime-field arithmetic, and optimizer edge cases despite substantial passing tests. Repair and validation status belongs to the exact selected library revision. This central index grants no stronger implementation guarantee.
+Start with the [README](https://github.com/KomorebiP/komorebi-math#readme), [user guide](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md), and [worked examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/WORKED_EXAMPLES.md). Original software and documentation use the [MIT License](https://github.com/KomorebiP/komorebi-math/blob/main/LICENSE.md). Third-party material retains its notices.
 
-The 7 October preparation ran the original publication gate: 16 of 17 checks passed, while the complete source suite could not start because pytest was unavailable. Five exact-oracle producer probes completed 3,000 bounded cases with zero failures. The complete consistency probe was blocked by absent SymPy; strict documentation validation was skipped. These outcomes are separately retained. Existing source terms permit private evaluation and reserve redistribution rights.
+The source revision inspected for the start of public publication was [5f2b7dd](https://github.com/KomorebiP/komorebi-math/commit/5f2b7ddc879c12d2bb00cbe5c487aa0bc7709222). Later publication-label changes have their own commits. The [release guide](https://github.com/KomorebiP/komorebi-math/blob/main/docs/RELEASE_PROCESS.md) and [Actions runs](https://github.com/KomorebiP/komorebi-math/actions) record qualification procedures and execution outcomes.
 
 ## Polyphase Float
 
-Canonical private repository: [KomorebiP/polyphase-float](https://github.com/KomorebiP/polyphase-float).
+Canonical public repository: [KomorebiP/polyphase-float](https://github.com/KomorebiP/polyphase-float). Download the [beta prerelease](https://github.com/KomorebiP/polyphase-float/releases/tag/beta-2026-10-27).
 
-The imported source checkpoint is **0.18.0**, an arbitrary-precision binary floating-point C library using GMP. MPFR is used by optional interoperability, differential tests, and reference benchmarks.
+Polyphase Float is a C11 library for arbitrary-precision binary floating-point arithmetic built on GMP. The current source uses version **0.20.0** and remains a **beta / work in progress** candidate. MPFR supports optional interoperability, differential tests, and reference benchmarks.
 
-Its existing source terms are **LGPL-3.0-or-later**. The 5 October audit recorded Bessel signed-zero parity and interval-factorial enclosure defects. Platform qualification and the exact state of any repairs remain component-specific.
+Start with the [README](https://github.com/KomorebiP/polyphase-float#readme) and [User Guide and Reference](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/README.md). The source uses [LGPL-3.0-or-later](https://github.com/KomorebiP/polyphase-float/blob/main/LICENSE.md).
 
-## Remote binding
+The source revision inspected for the start of public publication was [0b551118](https://github.com/KomorebiP/polyphase-float/commit/0b551118e9664b4aff174b74ebe1579357995fa9). The [readiness record](https://github.com/KomorebiP/polyphase-float/blob/main/docs/ONE_POINT_ZERO_READINESS.md) identifies remaining promotion requirements. [Claims and evidence](https://github.com/KomorebiP/polyphase-float/blob/main/docs/CLAIMS_AND_EVIDENCE.md) and [qualification](https://github.com/KomorebiP/polyphase-float/blob/main/docs/QUALIFICATION.md) define the numerical and platform evidence boundaries.
 
-The three private destinations are populated. See [GitHub import status](GITHUB_IMPORT_STATUS.md) for actual remote commit bindings and fresh qualification outcomes. The preparation results above remain historical evidence for their stated revisions. No public release or visibility change is implied by a private source import.
+## Evidence and earlier checkpoints
+
+The [7 October import report](GITHUB_IMPORT_STATUS.md) preserves the older R4 Block 21 Python and 0.18.0 C checkpoints, repairs, and qualification results. Those records describe their named revisions. They do not establish the results of later source changes.
+
+At the initial 27 October publication check, the latest inspected hosted Math qualification and Polyphase fuzz runs had failed before any job steps executed. These runs supply no fresh test results. Current execution outcomes are available from each repository's Actions page.
+
+Public availability does not change the beta status or the limits stated by an individual numerical routine or certificate.
 
 [Return to the program](../README.md).
+

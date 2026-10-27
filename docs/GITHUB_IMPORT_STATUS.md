@@ -1,5 +1,15 @@
 # GitHub import and qualification status
 
+## Current publication notice
+
+On 27 October 2026, all three canonical repositories became public. The [Realization Calculus publication collection](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/papers-2026-10-25) supplies the twelve frozen core-paper archives and additional editions as release assets. The [current publication status](PUBLICATION_STATUS.md) distinguishes those assets, earlier source-tree imports, and pending uploads.
+
+Both independent libraries are **beta releases and works in progress**. Their current sources use Python package version 1.0.0 and C version 0.20.0. The [library guide](LIBRARIES.md) links their current documentation and terms.
+
+The report below is preserved as evidence for **7 October 2026**. Its private visibility, source revisions, qualification results, and remaining-import statements describe that historical checkpoint. They are not assertions about the current publication state.
+
+## Historical import report
+
 Recorded 7 October 2026. All three canonical repositories are private and contain actual source. This is a partial program assembly; further components remain listed in the contribution ledger.
 
 ## Imported revisions
@@ -40,3 +50,4 @@ Selected local repair receipts are preserved beside the central validation recei
 Papers V–XII, Stratified Universality, Signal Reconstruction, OSL/Neuralese and later program components still need their selected sources imported and reconciled. The historical 87-record register remains a source-reconciliation baseline, not a current theorem count. The exact October Paper X companion-source gap remains visible in the selection record.
 
 All component-specific terms remain in place. This private import does not change repository visibility, publish a release, or grant a new license.
+

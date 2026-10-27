@@ -1,25 +1,30 @@
-# Operation Komorebi
+# Realization Calculus
 
-**Realization Calculus · Komorebi P.**
+**Komorebi P.**
 
-Komorebi is a mathematical and computational research program developed through sustained human–machine collaboration. Its organizing questions concern transformations, compatibility, residuals, obstructions, and realization: what structure survives a change of representation, what prevents a proposed construction, and what evidence establishes that the construction works?
+Realization Calculus is a mathematical and computational research program concerned with transformations, compatibility, residuals, obstructions, and realization: what structure survives a change of representation, what prevents a proposed construction, and what evidence establishes that the construction works?
 
-Packets retain selected components of a resolved object. Transfer blocks describe how maps act between those components. Exact reconstruction, refinement, and named residuals make these objects useful across arithmetic, algebra, signal processing, numerical computation, and experiments in machine reasoning.
+Packets retain selected components of a resolved object. Transfer blocks describe how maps act between those components. Exact reconstruction, refinement, and named residuals connect the work across arithmetic, algebra, signal processing, numerical computation, and experiments in machine reasoning.
 
-This repository connects the papers, formal developments, experiments, and additional software. The installable Python library and the C floating-point library have separate source repositories and version histories.
+Start with the [collected volume and publication package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Realization_Calculus_Publication_Package.zip), browse the [twelve core papers](papers/README.md), or open the [public release collection](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/papers-2026-10-25). The [publication status](docs/PUBLICATION_STATUS.md) records the available editions and remaining uploads.
 
 ## Choose an entrance
 
-| Entrance | Contents and current state |
+| Entrance | Available material |
 |---|---|
-| [Komorebi Math](docs/LIBRARIES.md#komorebi-math) | Imported Python library in its own private repository. Its selected source is R4 Block 21 on the `1.0.0b4` line. |
-| [Polyphase Float](docs/LIBRARIES.md#polyphase-float) | Imported C library, version 0.18.0, in its own private repository. |
-| [Papers](papers/README.md) | Papers I–XII and further editions, with actual import status. |
-| [Formalizations](formal/README.md) | Imported Research Preview 1 and the separate project environments still to recover. |
-| [Experiments](experiments/README.md) | AI, scientific, and computational studies being reconciled with their source and controls. |
-| [Additional software](packages/README.md) | Numerical engines, research instruments, and other packages awaiting their individual source imports. |
+| [Collected Realization Calculus volume](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Realization_Calculus_Publication_Package.zip) | Downloadable publication package for the core collection. |
+| [Papers and companion editions](papers/README.md) | Public archives for Papers I–XII and further monographs. Earlier source imports remain browsable in this repository. |
+| [Komorebi Space and Realization Boundaries](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Realization_Calculus_Twin_Volumes_GitHub_Ready.zip) | The twin-volume package. |
+| [Large Signal Model](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Large_Signal_Model_Final_GitHub_Release_1.0.0.zip) | The published model research package and its recorded evidence. |
+| [Komorebi Math](https://github.com/KomorebiP/komorebi-math) | **Beta / work in progress.** Public Python library, MIT license. |
+| [Polyphase Float](https://github.com/KomorebiP/polyphase-float) | **Beta / work in progress.** Public C library, LGPL-3.0-or-later. |
+| [Formalizations](formal/README.md) | Research Preview 1 and navigation to separate formal environments. |
+| [Experiments](experiments/README.md) | Scientific and computational studies with their recorded controls and limits. |
+| [Additional software](packages/README.md) | Numerical engines and research instruments, including AM-SPD. |
 
-Start with [START_HERE](docs/START_HERE.md) for a guided reading route. The [contribution index](CONTRIBUTIONS.md) records imported components, selected editions, and the full historical Part I register.
+Both flagship libraries are beta releases and remain works in progress. Their current version numbers and technical stable-API names do not change that release status. See the [library guide](docs/LIBRARIES.md) for installation, documentation, and qualification links.
+
+[START_HERE](docs/START_HERE.md) supplies a guided reading route. The [contribution index](CONTRIBUTIONS.md) preserves the source-import ledger and historical register. Use the publication status for the current downloadable collection.
 
 ## A concrete starting point
 
@@ -34,11 +39,13 @@ python -B tools/check_release.py
 
 These commands run a finite reference computation and artifact checks. The separate [proof reproduction instructions](formal/research-preview-1/REPRODUCE.md) identify its pinned Lean environment.
 
-## Release status
+## Publication and evidence
 
-This is a repository assembly candidate. Imported bytes and recorded verification are distinguished from checks executed on this candidate. Selected source editions awaiting import remain visible in the contribution ledger. The historical 87-entry register is an inclusion baseline, not a current theorem census or proof of complete corpus coverage.
+All three canonical repositories are public: [Operation-KOMOREBI](https://github.com/KomorebiP/Operation-KOMOREBI), [komorebi-math](https://github.com/KomorebiP/komorebi-math), and [polyphase-float](https://github.com/KomorebiP/polyphase-float).
 
-The three private repositories are populated: [Operation-KOMOREBI](https://github.com/KomorebiP/Operation-KOMOREBI), [komorebi-math](https://github.com/KomorebiP/komorebi-math), and [polyphase-float](https://github.com/KomorebiP/polyphase-float). The [GitHub import status](docs/GITHUB_IMPORT_STATUS.md) binds the imported snapshots and subsequent repairs to actual remote commits and records their verification scope.
+The latest core-paper editions are distributed as release assets. Earlier Papers I–IV and K-COS source trees remain browsable here. A release archive and a source-tree import are separate records. Download the named assets on the release page for the published editions.
 
-[Distribution status](docs/DISTRIBUTION_STATUS.md) records component terms and unresolved choices. No blanket license is applied by this assembly.
+Written arguments, formal coverage, finite computations, and open obligations retain their stated scope. Publication does not constitute a new Lean replay or close a conjecture. Paper XI retains Conjecture 66 obligations. The historical register is an inclusion baseline, not a current theorem census.
+
+[Distribution status](docs/DISTRIBUTION_STATUS.md) records component terms. Licenses and third-party notices remain attached to their respective packages. [GitHub import status](docs/GITHUB_IMPORT_STATUS.md) preserves the earlier import and qualification evidence.
 

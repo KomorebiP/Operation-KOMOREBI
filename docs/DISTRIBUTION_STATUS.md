@@ -1,5 +1,15 @@
 # Distribution status
 
+## Current publication notice
+
+As of 27 October 2026, all three canonical repositories are public and the [Realization Calculus publication collection](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/papers-2026-10-25) is published. The [publication status](PUBLICATION_STATUS.md) records its assets and remaining uploads.
+
+The current [Komorebi Math license](https://github.com/KomorebiP/komorebi-math/blob/main/LICENSE.md) is MIT. The current [Polyphase Float license](https://github.com/KomorebiP/polyphase-float/blob/main/LICENSE.md) is LGPL-3.0-or-later. **Both libraries are beta releases and works in progress.**
+
+Published archives retain their own licenses and notices. The historical table below describes earlier assembly decisions. In particular, its private-evaluation statement for the older Math checkpoint does not describe the current public library. Its statements about missing imports describe the earlier source tree, not the newer release assets. No blanket license is applied to this repository by the visibility change.
+
+## Historical assembly record
+
 This assembly preserves existing component terms. It does not apply a blanket license or change an inherited license.
 
 | Component | Recorded terms or decision |
@@ -17,3 +27,4 @@ Public attribution is **Komorebi P.** Source exports, document metadata, embedde
 Remote creation, private upload, public visibility, and releases are separate states. This repository currently records prepared contents and their actual import status. Public release approval will refer to the concrete reviewed file set and its component license map.
 
 [Return to the program](../README.md).
+
