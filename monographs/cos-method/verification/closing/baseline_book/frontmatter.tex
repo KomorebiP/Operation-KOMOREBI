@@ -1,0 +1,58 @@
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}\markboth{Preface}{}
+A Gaussian quadratic-form probability is often presented as an inversion problem. In a large calculation, the spectrum required by that inversion must first be obtained. Data may not fit in memory. A structural approximation may discard couplings. A reduced basis may leave part of the range unresolved. Each choice affects what can ultimately be said about the probability.
+
+This book connects those choices. It begins with the exact Gaussian reduction to a weighted sum of independent squares and ends with an interval for the requested tail probability. Between them lie streamed factors, phase blocks, range cores, spectral intervals, and local transform expansions. Changing representation reduces the work only if the mathematical object is preserved or the resulting error is controlled.
+
+K-COS is the transform method at the end of this construction. Exponential tilting moves an upper-tail query toward the center of a reweighted law. Centered spectral packets reduce repeated evaluations of the cumulant generating function. Fourier-cosine inversion evaluates the weighted tail functional. Packet approximation, finite support, and omitted modes contribute separate errors. Their separate bounds make refinement possible.
+
+The distinction between exact representation and controlled approximation runs throughout the argument. So does the distinction between a real-arithmetic theorem and a computed interval with outward rounding. These are the interfaces that determine which parts of the method can be composed.
+
+The four parts follow that dependency: Gaussian laws, structured operators and spectral recovery, packet and inversion analysis, then numerical enclosure and acceptance. One four-dimensional example accompanies the development from factor to independently checkable probability. Further visual studies, formal correspondence, reproducible computation, notation, and references are collected at the back.
+
+The intended reader knows finite-dimensional linear algebra, Gaussian probability, and basic numerical analysis. Written proofs carry the mathematical argument. The accompanying numerical and formal sources provide distinct, explicitly delimited forms of supporting evidence.
+
+\chapter*{How to read this book}
+\addcontentsline{toc}{chapter}{How to read this book}\markboth{How to read this book}{}
+\section*{Following the calculation}
+For the complete matrix-to-tail route, read the chapters in order. For a supplied spectrum, read the Gaussian reductions in Chapter~\ref{ch:gaussian}, then Chapters~\ref{ch:packets}--\ref{ch:accuracy}. The intervening operator chapters explain what must be established when the spectrum is not already known.
+
+A recurring example begins in Section~\ref{sec:worked-law} with an exact dyadic factor and spectrum $(1,1,2,2)$. Section~\ref{sec:worked-stream} changes its storage partition. Section~\ref{sec:worked-tilt} derives the tilt and packets. Section~\ref{sec:worked-enclosure} completes the enclosure and compares it with a closed-form probability.
+
+\section*{Interpreting the answer}
+A directed calculation returns an outward interval $[p_-,p_+]$. Requested multiplicative tolerance $\varepsilon>0$ is accepted only if $p_->0$ and
+\[
+\frac{p_+}{p_-}-1\le\varepsilon.
+\]
+A plausible point estimate can still fail this test. Failure means that the requested accuracy was not certified. Agreement with an independent value is useful evidence, but cannot replace the interval inequality.
+
+The supplied directed backend requires an exact positive spectrum with rank greater than two, a nonnegative threshold, an admissible positive tilt, and a support endpoint above the threshold. Its automatic planner handles queries above the mean. The analytic packet theory has broader rank coverage, but its binary64 implementation does not inherit a directed-rounding guarantee.
+
+For matrix inputs, certification targets the exact Gram matrix of the stored binary64 factor. Preprocessing and statistical-model validity are separate obligations. Signed and noncentral reductions are exact mathematics, but their supplied numerical paths have narrower guarantees than the positive directed backend.
+
+Appendix~\ref{app:lean} identifies the finite-algebra and order statements represented in Lean. Appendix~\ref{app:reproduction} gives reproducible computations and their trust assumptions. Neither finite tests nor the limited formal companion establish end-to-end correctness of every layer.
+
+\chapter*{Notation and conventions}
+\addcontentsline{toc}{chapter}{Notation and conventions}\markboth{Notation and conventions}{}
+All vector spaces and matrices in this book are finite dimensional unless stated otherwise. Matrices and factors are real, while transform arguments may be complex. Gaussian components in a spectral reduction are independent standard normal variables. Logarithms are natural unless the base is displayed.
+
+\begin{longtable}{@{}P{.18\linewidth}P{.76\linewidth}@{}}
+\toprule Symbol & Meaning\\\midrule\endhead
+$A$ & A factor. In the streaming construction, $A\in\mathbb R^{n\times m}$.\\
+$K=AA^\top$ & The sample-space Gram matrix.\\
+$H=A^\top A$ & The feature-space Gram matrix in the phase construction. Elsewhere $H$ denotes the explicitly defined symmetric coefficient matrix.\\
+$Q$ & The scalar Gaussian quadratic form whose law is being evaluated.\\
+$\lambda_j$ & Its nonzero spectral coefficients, including multiplicity.\\
+$q$ & The threshold in $P(Q\ge q)$.\\
+$\kappa(s)$ & The cumulant generating function, $\log\mathbb E e^{sQ}$.\\
+$\theta$ & A positive tilt in the moment-generating-function domain.\\
+$b$, $N$ & The upper support endpoint and the number of retained COS modes.\\
+$u_k$, $J_k$ & Frequency $k\pi/b$ and its exponentially weighted payoff integral.\\
+$\|\cdot\|_2$ & Euclidean vector norm or induced matrix norm, as appropriate.\\
+$\|\cdot\|_F$ & Frobenius norm.\\
+$M\succeq0$ & Positive semidefiniteness.\\
+\bottomrule
+\end{longtable}
+The symbols $U$, $B$, and $R$ have locally defined linear-algebra roles. A core or basis is never assumed to span the exact range unless that hypothesis is stated. Nonzero spectra are compared with multiplicity. Additional zero eigenvalues in an oversized core do not change the quadratic-form law.
+
+The implementation retains some earlier variable names. Appendix~\ref{app:reproduction} maps those names to the notation used here. Printed endpoint strings, not rounded display fields, are the numerical record of an enclosure.

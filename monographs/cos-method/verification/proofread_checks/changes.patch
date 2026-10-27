@@ -1,0 +1,771 @@
+--- before/engine/test_interval_kcos.py
++++ after/engine/test_interval_kcos.py
+@@ -1,5 +1,7 @@
+ import math
+ import unittest
++from decimal import Decimal, localcontext
++from directed_accuracy import interval_endpoint_strings, directed_relative_accuracy
+ 
+ from interval_kcos import (
+     design_positive_tail_parameters,
+@@ -38,10 +40,12 @@
+             interval_dps=90,
+         )
+ 
++        self.assertGreater(exact["width_decades"], 0.0)
+         self.assertTrue(result.passed_positive_sum)
+         self.assertLessEqual(result.log10_lower, exact["log10_upper"])
+         self.assertGreaterEqual(result.log10_upper, exact["log10_lower"])
+         self.assertLess(result.multiplicative_ratio_minus_one, 1e-8)
++        return result
+ 
+     def test_1e100(self):
+         self._run_control(100)
+@@ -52,6 +56,39 @@
+     def test_1e5000(self):
+         self._run_control(5000)
+ 
++    def test_reported_width_uses_unrounded_endpoints(self):
++        result = self._run_control(1000)
++        left, right = interval_endpoint_strings(result.log10_interval)
++        with localcontext() as ctx:
++            ctx.prec = 160
++            expected = float(Decimal(right) - Decimal(left))
++        self.assertTrue(math.isclose(result.width_decades, expected, rel_tol=1e-13))
++        accuracy = directed_relative_accuracy(result.log10_interval, "1e-8", dps=140)
++        self.assertTrue(math.isclose(
++            result.multiplicative_ratio_minus_one, float(accuracy.ratio_upper),
++            rel_tol=1e-13,
++        ))
++
++    def test_arithmetic_width_survives_binary64_endpoint_collapse(self):
++        result = self._run_control(5000)
++        left, right = interval_endpoint_strings(result.arithmetic_only_log10_interval)
++        self.assertEqual(float(left), float(right))
++        with localcontext() as ctx:
++            ctx.prec = 200
++            expected = float(Decimal(right) - Decimal(left))
++        self.assertGreater(expected, 0.0)
++        self.assertGreater(result.arithmetic_only_width_decades, 0.0)
++        # Outward decimal serialization can enlarge a very narrow interval.
++        # Bound that enlargement by one final-place unit at each endpoint,
++        # plus the final advisory conversion to binary64.
++        with localcontext() as ctx:
++            ctx.prec = 200
++            quantum = sum(Decimal(1).scaleb(Decimal(v).as_tuple().exponent)
++                          for v in (left, right))
++            observed = Decimal.from_float(result.arithmetic_only_width_decades)
++            error = abs(observed - (Decimal(right) - Decimal(left)))
++            self.assertLessEqual(error, quantum + abs(observed) * Decimal("2e-16"))
++
+ 
+ if __name__ == "__main__":
+     unittest.main(verbosity=2)
+--- before/engine/interval_kcos.py
++++ after/engine/interval_kcos.py
+@@ -355,11 +355,15 @@
+     ) / iv.log(10)
+ 
+     lo, hi = _float_endpoints(log10_interval)
+-    alo, ahi = _float_endpoints(arithmetic_log10)
+-    width = hi - lo
+-    arithmetic_width = ahi - alo
+-
+-    ratio_minus_one = math.expm1(math.log(10.0) * width) if math.isfinite(width) else math.inf
++    # Compute differences before converting to binary64. Subtracting rounded
++    # endpoint summaries destroys narrow widths at large negative logarithms.
++    # These float fields are advisory; certification uses the outward endpoint
++    # strings and the separate directed_relative_accuracy acceptance routine.
++    width_iv = log10_interval.b - log10_interval.a
++    arithmetic_width_iv = arithmetic_log10.b - arithmetic_log10.a
++    width = float(width_iv.b)
++    arithmetic_width = float(arithmetic_width_iv.b)
++    ratio_minus_one = float(iv.expm1(iv.log(10) * width_iv).b)
+ 
+     return IntervalLogTailResult(
+         log10_interval=outward_interval_string(log10_interval),
+@@ -426,7 +430,7 @@
+         "log10_interval": outward_interval_string(log10sf),
+         "log10_lower": lo,
+         "log10_upper": hi,
+-        "width_decades": hi - lo,
++        "width_decades": float((log10sf.b - log10sf.a).b),
+     }
+ 
+ 
+--- before/book/references.tex
++++ after/book/references.tex
+@@ -24,6 +24,24 @@
+ \href{https://doi.org/10.2307/2346911}{doi:10.2307/2346911}.
+ \bibitem{FangOosterlee2008} F. Fang and C.~W. Oosterlee, A novel pricing
+ method for European options based on Fourier-cosine series expansions,
+-\emph{SIAM Journal on Scientific Computing} 31(2) (2008), 826--848.
++\emph{SIAM Journal on Scientific Computing} 31(2) (2008--2009), 826--848.
++Published online in 2008.
+ \href{https://doi.org/10.1137/080718061}{doi:10.1137/080718061}.
++\bibitem{JunikePankrashkin2022} G. Junike and K. Pankrashkin,
++Precise option pricing by the COS method---How to choose the truncation range,
++\emph{Applied Mathematics and Computation} 421 (2022), 126935.
++\href{https://doi.org/10.1016/j.amc.2022.126935}{doi:10.1016/j.amc.2022.126935}.
++\bibitem{Junike2024} G. Junike, On the number of terms in the COS method
++for European option pricing, \emph{Numerische Mathematik} 156 (2024), 533--564.
++\href{https://doi.org/10.1007/s00211-024-01402-1}{doi:10.1007/s00211-024-01402-1}.
++\bibitem{JunikeStier2025} G. Junike and H. Stier, From characteristic
++functions to multivariate distribution functions and European option prices
++by the (damped) COS method, \emph{SIAM Journal on Numerical Analysis}
++63(6) (2025), 2421--2453.
++\href{https://doi.org/10.1137/24M1666240}{doi:10.1137/24M1666240}.
++\bibitem{Wu2011} M.~C. Wu, S. Lee, T. Cai, Y. Li, M. Boehnke, and X. Lin,
++Rare-variant association testing for sequencing data with the sequence
++kernel association test, \emph{American Journal of Human Genetics}
++89(1) (2011), 82--93.
++\href{https://doi.org/10.1016/j.ajhg.2011.05.029}{doi:10.1016/j.ajhg.2011.05.029}.
+ \end{thebibliography}--- before/book/replay_results.tex
++++ after/book/replay_results.tex
+@@ -4,18 +4,18 @@
+ Regression group & Tests & Result\\
+ \midrule
+ Streaming, phases, pruning, residuals, and case study & 31 & pass\\
+-Directed positive COS interval backend & 3 & pass\\
++Directed positive COS interval backend and width reporting & 5 & pass\\
+ Accuracy-driven positive controller & 2 & pass\\
+ Verified dense spectrum and matrix-to-tail bridge & 4 & pass\\
+ Signed and noncentral analytic-ledger engines & 8 & pass\\
+ Directed acceptance and endpoint serialization & 10 & pass\\
+ \midrule
+-Total & 58 & pass\\
++Total & 60 & pass\\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+ 
+-All 58 test methods passed, with no failures, errors, or skips. Test methods
++All 60 test methods passed, with no failures, errors, or skips. Test methods
+ can contain multiple subcases, so this is not an assertion count. Source
+ hashes before and after the replay agree.
+ 
+--- before/book/chapters/04_range.tex
++++ after/book/chapters/04_range.tex
+@@ -87,7 +87,11 @@
+ \end{pmatrix}.
+ \]
+ Therefore the nonzero eigenvalues of
+-\([A,U][A,U]^\top\) are exactly the eigenvalues of the small core Gram.
++\([A,U][A,U]^\top\) are exactly the nonzero eigenvalues of the small
++core Gram, with multiplicity. If $\operatorname{range}(Q)=\operatorname{range}(A)$,
++the compact residual update also spans exactly $\operatorname{range}([A,U])$.
++In that case the core has full row rank and its Gram matrix has no additional
++zero eigenvalues.
+ \end{theorem}
+ 
+ \begin{proof}
+@@ -95,7 +99,11 @@
+ \(QC+Q_\perp R_\perp=QC+F=U\).  The stated orthogonality
+ conditions make \([Q,Q_\perp]\) an isometry on the compact core
+ space.  Left multiplication by this isometry preserves all nonzero singular
+-values of the core, and squaring them yields the Gram eigenvalues.
++values of the core, and squaring them yields the nonzero Gram eigenvalues.
++If $Q$ spans exactly the old range and $Q_\perp$ spans exactly the residual
++range, their combined range is precisely that of the appended factor.
++The core then has full row rank. Without this exact-range hypothesis, unused
++basis directions can introduce zero eigenvalues into the core Gram.
+ \end{proof}
+ 
+ This is useful for overlapping genomic windows and small incremental variant
+--- before/book/chapters/11_evidence.tex
++++ after/book/chapters/11_evidence.tex
+@@ -8,7 +8,9 @@
+ Appendix~\ref{app:reproduction}.
+ \section{Demonstrated deep-tail precision}\label{sec:final-3}
+ \textbf{Evidence scope.} The tables and figures in this section report the
+-retained experimental record. They are not new performance measurements.
++retained experimental record. The fixed-resolution interval widths are
++recomputed from full outward endpoints, using the retained exact inputs.
++They are not new performance measurements.
+ Only results explicitly described as directed rounding are numerical
+ enclosures. Other reported certificates are analytic approximation ledgers
+ evaluated in floating point. Replayed regression tests and independently
+@@ -29,8 +31,8 @@
+ validation regime & deepest $\log_{10}p$ & observed error & certificate & spectral size\\
+ \midrule
+ directed-rounding $0.02\chi^2_{80}$ control
+-& $-5000$ & enclosure width $3.37\times10^{-11}$ decades
+-& multiplicative ratio $\le 1+7.75\times10^{-11}$ & 80 df\\
++& $-5000$ & enclosure width $3.34\times10^{-11}$ decades
++& multiplicative ratio $\le 1+7.70\times10^{-11}$ & 80 df\\
+ large-scale positive spectrum
+ & $-922.031162$ & below stored reference resolution & $5.71\times10^{-9}$ & rank 1997\\
+ corrected strong-dependence case study
+@@ -178,13 +180,15 @@
+ \]
+ decades across the four cases.  Thus the slow reference is numerically stable
+ at a scale well below the observed K-COS-versus-inversion difference.
++Agreement between truncations is convergence evidence. The omitted-integral
++bound alone does not enclose quadrature discretization or numerical rounding,
++so this comparison is not assigned the directed-enclosure guarantee.
+ 
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=.82\linewidth]{figure_27_imhof_p1e16_validation.png}
+ \caption{Independent direct-inversion validation near $p=10^{-16}$ on four
+-heterogeneous spectra.  Circles show the relative K-COS/inversion difference;
+-crosses show the analytic bound on the inversion integral omitted beyond the
++heterogeneous spectra.  Circles show the relative K-COS/inversion difference. Crosses show the analytic bound on the inversion integral omitted beyond the
+ final truncation point.}
+ \label{fig:imhof-p1e16}
+ \end{figure}
+@@ -375,16 +379,20 @@
+ \subsection{Phenotype-space equivalence}
+ 
+ For each scenario, 100 Gaussian null residual draws were evaluated in three
+-ways:
++ways. Under the standardized Gaussian null, write $e=M_Xz$ with
++$z\sim N(0,I)$. Because $M_XA=A$, the statistic used here is
++$Q=\frac12 z^\top Kz$, so its nonzero mixture coefficients are
++$\frac12\lambda_j(K)$. The factor $\frac12$ belongs to this case-study
++normalization, not to the general quadratic-form definition.
+ 
+ \begin{enumerate}
+ \item directly through the factor,
+ \[
+-Q=\frac12\|A^\top e\|_2^2;
++Q=\frac12\|A^\top e\|_2^2.
+ \]
+ \item through the sample kernel,
+ \[
+-Q=\frac12 e^\top Ke;
++Q=\frac12 e^\top Ke.
+ \]
+ \item through the eigencoordinates of $K$.
+ \end{enumerate}
+--- before/book/chapters/C_reproduction.tex
++++ after/book/chapters/C_reproduction.tex
+@@ -3,9 +3,11 @@
+ \section{Reference pseudocode}\label{sec:final-A}
+ 
+ \begin{lstlisting}[language=Python]
++import numpy as np
++
+ def stream_KV(block_source, V, project=lambda x: x):
+     U = project(V)
+-    Y = zeros_like(U)
++    Y = np.zeros_like(U)
+     for A_block in block_source:
+         Y += A_block @ (A_block.T @ U)
+     return project(Y)
+@@ -43,7 +45,8 @@
+ 
+ \section{Replayed numerical controls}\label{app:fresh-validation}
+ The numerical replay evaluates the six retained regression groups on the
+-supplied engine without modifying the engine source. It also runs two
++supplied engine, including the interval-width reporting regressions.
++The engine source remains unchanged during each replay. It also runs two
+ independent containment controls. The machine-readable replay record states
+ the actual environment, commands, source hashes, test counts, and outcomes.
+ Those records are separate from the retained timing tables in the main text.
+@@ -54,8 +57,10 @@
+ proof of all inputs or of the arithmetic library. Directed enclosures rely on
+ the stated interval arithmetic and transcendental implementation. The shared
+ interval-precision context requires sequential calls. Floating summary fields
+-are display values. The outward decimal endpoint strings carry the numerical
+-enclosure.
++are display values. Widths and multiplicative-ratio summaries are computed
++before conversion to binary64, avoiding cancellation between rounded endpoint
++summaries. The outward decimal endpoint strings carry the numerical enclosure,
++and directed acceptance uses those strings rather than the display fields.
+ 
+ \section{Why parsing and output are part of the proof obligation}
+ An interval can be valid internally and become invalid when printed. A narrow
+@@ -67,7 +72,10 @@
+ than admitted to a formula outside its hypotheses.
+ 
+ \section{Figure and data provenance}\label{app:provenance}
+-The empirical figures use the retained numerical tables. The visual atlas
++The empirical figures use the retained numerical tables. The fixed-resolution
++interval-width figure is regenerated from full outward endpoint strings,
++with its exact inputs, computed widths, and plotting code retained in the
++proofreading record. The visual atlas
+ uses declared finite models and its own reproducible Python generators.
+ These are distinct sources of evidence. A diagram of an exact identity is
+ not a new runtime benchmark, and a replacement layout is not a new numerical
+--- before/book/chapters/06_packets.tex
++++ after/book/chapters/06_packets.tex
+@@ -35,9 +35,10 @@
+ Let
+ \begin{equation}
+ Q=\sum_{j=1}^{r}\lambda_j Z_j^2,
+-\qquad \lambda_j>0.
++\qquad \lambda_j>0,\quad r\ge1.
+ \label{eq:Q}
+ \end{equation}
++The variables $Z_j$ are independent standard normal variables.
+ The moment generating function exists for
+ \[
+ \Re s < \frac{1}{2\lambda_{\max}},
+@@ -181,7 +182,7 @@
+ \end{proof}
+ 
+ \begin{remark}[What is compressed]\label{claim:final-26-3}
+-A packet of $n_P$ eigenvalues is replaced by its center and $p$ centered moments. Large spectral spikes may be retained exactly. If the representation contains $s$ exact eigenvalues and $R$ packets of order $p$, evaluation of the CGF on $N$ frequencies costs $O(N(s+Rp))$ arithmetic operations after compilation, instead of $O(Nr)$ direct eigenvalue-transform evaluations.
++A packet of $n_P$ eigenvalues is replaced by its center and $p$ centered moments. Large spectral spikes may be retained exactly. If the representation contains $s$ exact eigenvalues and $R$ packets of order $p$, evaluation of the CGF on $N$ frequencies costs $O(N(s+R(p+1)))$ arithmetic operations after compilation, instead of $O(Nr)$ direct eigenvalue-transform evaluations.
+ \end{remark}
+ 
+ \begin{remark}[Query dependence]\label{claim:final-26-4}
+--- before/book/chapters/12_synthesis.tex
++++ after/book/chapters/12_synthesis.tex
+@@ -63,7 +63,7 @@
+ \item the exact operator $H$ is identical under $S$ and $S'$.
+ \item every phase coupling $P_hHP_g$ is identical under $S$ and $S'$.
+ \item the exact phase graph and every $k$-step polyphase light cone are
+-identical under $S$ and $S'$;
++identical under $S$ and $S'$.
+ \item any exact matrix-free Krylov method applied through streamed products
+ produces the same Krylov subspaces in exact arithmetic under $S$ and $S'$.
+ \end{enumerate}
+@@ -82,10 +82,10 @@
+ \end{proof}
+ 
+ \begin{corollary}[Adaptive resident-block scheduler]\label{claim:final-29-2}
+-An implementation may change resident block size at runtime---including
+-recursively splitting a phase block after an allocation failure---without
+-changing the exact phase graph or exact Krylov trajectory, provided all
+-required storage blocks are processed exactly.
++An implementation may change resident block size at runtime, including
++recursive splits after an allocation failure, without changing the exact
++phase graph or the exact Krylov subspaces. All required storage blocks must
++be processed exactly, with the operator and starting block held fixed.
+ \end{corollary}
+ 
+ This separates \emph{mathematical locality} from \emph{physical storage
+@@ -113,10 +113,20 @@
+ polyphase light-cone theorem gives $P_hH^kP_g=0$.  Storage-phase commutation
+ allows each active phase operator to be evaluated through arbitrary exact
+ storage blocks.  Every path of length at most $k$ beginning in $F_0$ stays in $F_k$.
+-Consequently restriction to $P_{F_k}HP_{F_k}=A_{F_k}^\top A_{F_k}$ preserves
+-the requested $k$-step power on the initial support, including its zero
+-outside output.  Blocks wholly outside the retained phase set may therefore
+-be omitted from this restricted factor evaluation.
++Let $J_F$ be the coordinate inclusion from the retained coordinates
++$F=F_k$ into the full variant space. Thus $P_F=J_FJ_F^\top$ and
++$A_F=AJ_F$. The compressed operator and its ambient embedding satisfy
++\[
++H_F=J_F^\top HJ_F=A_F^\top A_F,
++\qquad P_FHP_F=J_FH_FJ_F^\top.
++\]
++These identities distinguish the compressed matrix from the larger ambient
++matrix. Since every path of length at most $k$ from $F_0$ stays in $F$,
++\[
++H^kX=J_F H_F^k J_F^\top X.
++\]
++This includes the zero output outside $F$. Blocks wholly outside the retained
++phase set may therefore be omitted from the restricted factor evaluation.
+ \end{proof}
+ 
+ The theorem turns an algebraic support statement into an execution law:
+@@ -206,6 +216,14 @@
+ positive-law alias bound needed here. A general COS accuracy theorem is not
+ inherited without checking its hypotheses.
+ 
++The choice of truncation range is studied by Junike and Pankrashkin
++\cite{JunikePankrashkin2022}, and explicit mode-count bounds under stated
++regularity assumptions by Junike \cite{Junike2024}. Junike and Stier develop
++a damped COS framework for distributional quantities and related integrals
++\cite{JunikeStier2025}. These are relevant predecessors to the support,
++mode, and reweighting layers. The bounds proved here are specialized to the
++quadratic-form transform and must be justified under their own hypotheses.
++
+ No novelty is claimed for Gaussian spectral reduction, exponential tilting,
+ saddlepoint centering, Fourier-cosine inversion, Weyl bounds, QR updates, or
+ out-of-core multiplication themselves.  The proposed contribution is their
+--- before/book/chapters/10_accuracy.tex
++++ after/book/chapters/10_accuracy.tex
+@@ -90,7 +90,7 @@
+ \begin{enumerate}
+ \item the COS mode count \(K\).
+ \item the tilted support scale \(L\), which changes \(U\) and its associated
+-Chernoff parameter;
++Chernoff parameter.
+ \item the interval arithmetic precision.
+ \end{enumerate}
+ 
+@@ -100,8 +100,9 @@
+ determines the next refinement: mode error increases \(K\), while
+ support/alias error increases \(L\).
+ 
+-The solver terminates only after the multiplicative inequality above has been
+-proved.
++A certified return occurs only after the multiplicative inequality above
++has been proved. Reaching a resource limit instead terminates the calculation
++with the failure status described next.
+ 
+ \section{Fail-closed behavior}
+ 
+--- before/book/chapters/B_lean.tex
++++ after/book/chapters/B_lean.tex
+@@ -46,7 +46,7 @@
+ \end{align*}
+ The source uses ordinary finite sums in $\R$. The factor convention is the
+ sample Gram $AA^\top$, matching \decl{stream_sample_gram}. It is not the dual
+-Gram $A^\top A$. The paper's statistic $Q=\tfrac12 v^\top Kv$ requires the
++Gram $A^\top A$. The case-study statistic $Q=\tfrac12 v^\top Kv$ requires the
+ additional scalar factor $\tfrac12$ when applying these identities.
+ 
+ \section{Exact block refinement}
+--- before/book/chapters/08_adaptive.tex
++++ after/book/chapters/08_adaptive.tex
+@@ -6,7 +6,10 @@
+ output serialization are enclosed as well.
+ \section{Adaptive K-COS algorithm}
+ 
+-The packet planner accepts $(\lambda_1,\ldots,\lambda_r,q,\tau)$, where $\tau$ is a requested relative tolerance.
++The packet planner accepts a finite positive spectrum, an upper-tail query
++$q>\sum_j\lambda_j$, and a requested relative tolerance $\tau>0$.
++Its initial support parameter satisfies $L>0$, and its mode count is a
++positive integer.
+ 
+ \begin{enumerate}[leftmargin=2em]
+ \item Solve $\kappa'(\theta_*)=q$.
+@@ -16,7 +19,10 @@
+ \item Evaluate the support/alias certificate from \eqref{eq:eps-support}--\eqref{eq:eta}.
+ \item Evaluate the omitted-mode certificate \eqref{eq:eps-cos}.
+ \item If the combined relative certificate exceeds $\tau$, refine whichever analytic error source dominates: split packets, increase $b$, or increase $N$.
+-\item Return the tail probability, the compiled spectral passport, and the error ledger.
++\item Return a certified analytic result only after the combined bound meets
++$\tau$. Return the tail estimate, the compiled spectral representation,
++and its error ledger together. If resource limits are reached first,
++report failure to certify rather than accepting the estimate.
+ \end{enumerate}
+ 
+ The resulting object is query dependent. Schematically,
+--- before/book/chapters/03_phases.tex
++++ after/book/chapters/03_phases.tex
+@@ -6,7 +6,11 @@
+ the phase graph is assumed.
+ \section{Polyphase structure}\label{sec:final-14}
+ 
+-Let \(P_h\) project onto variant phase \(h\), and again set
++Let the phase projectors form an orthogonal decomposition of variant space:
++\[
++P_h^\top=P_h=P_h^2,\qquad P_hP_g=0\ (h\ne g),\qquad \sum_hP_h=I.
++\]
++Thus $P_h$ projects onto variant phase $h$. Again set
+ \[
+ H=A^\top A.
+ \]
+@@ -237,9 +241,12 @@
+ the triangle inequality.  The constant terms cancel.
+ \end{proof}
+ 
+-The polynomial theorem covers arbitrary vectors in a finite Krylov space,
+-including polynomial filters and restarted combinations, rather than only the
+-monomial $H^kX$.
++The theorem compares the same polynomial $p$ and the same starting block
++$X$ under the two operators. It therefore covers fixed polynomial filters
++and fixed linear combinations of Krylov powers, not only $H^kX$.
++If an adaptive iteration selects different coefficients or restart vectors
++under $H$ and $H_0$, their discrepancy requires a separate bound. The
++fixed-polynomial certificate alone does not control that additional change.
+ 
+ \begin{corollary}[Certified phase pruning]\label{claim:final-15-6}
+ If a thresholded phase graph is chosen so that
+--- before/book/chapters/07_inversion.tex
++++ after/book/chapters/07_inversion.tex
+@@ -191,7 +191,7 @@
+ =\prod_{j=1}^{r}\left(1+(a_jt)^2\right)^{-1/4}.
+ \label{eq:phi-modulus}
+ \end{equation}
+-Define the logarithmic decay rate
++For $t>0$, define the logarithmic decay rate
+ \begin{equation}
+ \beta(t)
+ =-\frac{d\log|\phi_{\theta}(t)|}{d\log t}
+@@ -199,7 +199,7 @@
+ \frac{(a_jt)^2}{1+(a_jt)^2}.
+ \label{eq:beta}
+ \end{equation}
+-Then $\beta(t)$ is nondecreasing for $t\ge0$.
++Set $\beta(0)=0$ by continuous extension. Then $\beta(t)$ is nondecreasing for $t\ge0$.
+ \end{lemma}
+ 
+ \begin{proof}
+@@ -330,7 +330,7 @@
+ \end{proof}
+ 
+ \begin{remark}\label{claim:final-26-14}
+-Proposition \ref{prop:finite-refinement} proves existence of a finite representation meeting any analytic tolerance. It does not by itself prove that every possible greedy refinement schedule terminates optimally. The packet planner refines the largest currently certified obstruction and is evaluated in Chapter~\ref{ch:evidence}.
++Proposition \ref{prop:finite-refinement} proves existence of a finite representation meeting any analytic tolerance. It proves neither termination of an arbitrary greedy schedule nor optimality of its resource use. A particular capped implementation can fail to certify even though a finite analytic refinement exists. The packet planner refines the largest currently certified obstruction and is evaluated in Chapter~\ref{ch:evidence}.
+ \end{remark}
+ 
+ 
+--- before/book/chapters/02_streaming.tex
++++ after/book/chapters/02_streaming.tex
+@@ -7,8 +7,9 @@
+ \section{Weighted-feature specialization}\label{sec:final-7}
+ 
+ A prominent application constructs the general factor from weighted,
+-covariate-residualized features.  A rare-variant kernel statistic is one concrete instance, but the same
+-formulas apply to any feature matrix with nonnegative column weights.
++covariate-residualized features.  The sequence kernel association test (SKAT) provides one application
++\cite{Wu2011}, but the same formulas apply to any feature matrix with
++nonnegative column weights.
+ 
+ Let
+ \[
+@@ -29,7 +30,7 @@
+ 
+ The central implementation difficulty is not the algebraic size of the
+ model but the mismatch between the total factor size \(n\times m\) and the
+-working memory of an accelerator.  The key point of this manuscript is that
++working memory of an accelerator.  The key point of this book is that
+ several decompositions act on different mathematical coordinates and therefore
+ compose:
+ \[
+@@ -44,7 +45,7 @@
+ }
+ \]
+ 
+-Storage blocking controls residence.  Structural phases encode LD windows,
++Storage blocking controls residence.  Structural phases encode linkage-disequilibrium (LD) windows,
+ annotations, frequency bands, or other coordinate groups.  Krylov methods
+ compress the operator to the rank actually requested.  Spectral packets
+ compress the final generalized-\(\chi^2\) transform.
+--- before/book/chapters/05_spectrum.tex
++++ after/book/chapters/05_spectrum.tex
+@@ -225,9 +225,11 @@
+ \]
+ 
+ \begin{theorem}[Range-core singular-value certificate]\label{claim:final-22-4}
+-Let the singular values of \(A\) be \(\sigma_i(A)\), and let
+-\(\widetilde\sigma_i(B)\) denote the singular values of \(B\) padded by zeros
+-to the ambient spectral dimension.  Then
++For $A\in\mathbb R^{n\times m}$, list the singular values of $A$ and
++$B$ in decreasing order and pad both lists with zeros to length $n$.
++Write these lists as $\sigma_i(A)$ and $\widetilde\sigma_i(B)$,
++respectively. They are the square roots of the $n$ eigenvalues of
++$AA^\top$ and $(UB)(UB)^\top$. Then, for $1\le i\le n$,
+ \[
+ \boxed{
+ \left|
+@@ -260,7 +262,8 @@
+ \[
+ \|A-UB\|_2=\|F\|_2=\delta.
+ \]
+-The nonzero singular values of \(UB\) are exactly those of \(B\).
++The nonzero singular values of $UB$ and $B$ agree, with multiplicity,
++and their zero-padded lists agree in the stated ambient convention.
+ The standard singular-value perturbation inequality gives the stated bound.
+ Squaring the nonnegative endpoints gives the eigenvalue interval.
+ \end{proof}
+@@ -586,8 +589,9 @@
+ \[
+ F=WD,
+ \]
+-where \(W\) has orthonormal columns.  Since \(F\) lies in the orthogonal
+-complement of \(U\),
++where the columns of $W$ form an orthonormal basis of
++$\operatorname{range}(F)$. Zero residual directions are omitted.
++Since this range lies in the orthogonal complement of $U$,
+ \[
+ U^\top W=0.
+ \]
+@@ -603,8 +607,8 @@
+ \end{bmatrix}.
+ }
+ \]
+-Consequently, the nonzero singular values of \(A\) are exactly the singular
+-values of the stacked completion core
++Consequently, the nonzero singular values of $A$ are exactly the nonzero
++singular values, with multiplicity, of the stacked completion core
+ \[
+ \mathcal C_{\rm complete}
+ =
+@@ -613,6 +617,17 @@
+ \end{bmatrix}.
+ \]
+ \end{theorem}
++
++\begin{proof}
++The decomposition $A=UB+F$ and the identity $F=WD$ give the factorization.
++The matrix $[U\;W]$ has orthonormal columns, so
++$A^\top A=\mathcal C_{\rm complete}^\top\mathcal C_{\rm complete}$.
++The nonzero singular values therefore agree with multiplicity. If the
++combined basis contains directions outside $\operatorname{range}(A)$,
++its row Gram may include additional zeros. Its entire spectrum is the
++nonzero spectrum of $AA^\top$ only when the combined basis spans exactly
++$\operatorname{range}(A)$.
++\end{proof}
+ 
+ This identity admits a column-streamed implementation.  For each residual
+ column block, project against the residual basis accumulated so far, append
+@@ -833,15 +848,10 @@
+ \qquad
+ \rho\le9.18\times10^{-50}.
+ \]
+-For example, the leading coefficient was enclosed by
+-\[
+-0.999\ldots97435
+-<
+-\lambda_1
+-<
+-1.000\ldots02565,
+-\]
+-with a width of order \(10^{-49}\).
++The leading coefficient, whose exact value is one in this control,
++was enclosed with a width of order $10^{-49}$. The full outward-rounded
++endpoints are preserved in the spectral record. Ellipsized decimal strings
++are not used as interval endpoints.
+ 
+ At
+ \[
+--- before/book/chapters/09_intervals.tex
++++ after/book/chapters/09_intervals.tex
+@@ -8,6 +8,12 @@
+ remainder bounds, yielding an interval that contains the probability
+ represented by an exactly supplied positive spectrum, subject to the stated
+ arithmetic trust base.
++
++The implementation notation uses $K(s)=\kappa(s)$ for the cumulant
++generating function, $U=b$ for the support endpoint, and $I_k=J_k$ for
++the payoff integrals of Chapter~\ref{ch:inversion}. The integer $K$ without
++an argument denotes the number of retained cosine modes, not the function
++$K(s)$.
+ 
+ \section{Interval target}
+ 
+@@ -219,16 +225,19 @@
+ 
+ This finite expression was evaluated independently by directed-rounding
+ interval arithmetic, without using K-COS.  The K-COS enclosure and this exact
+-control enclosure overlap at
+-\[
+-p=10^{-100},
++control enclosure are compared at thresholds targeting
++\[
++p\approx10^{-100},
+ \qquad
+ 10^{-1000},
+ \qquad
+ 10^{-5000}.
+ \]
+ 
+-With \(K=128\) and 90 interval decimal digits, the resulting K-COS widths are
++With $K=128$ and 90 interval decimal digits, the resulting K-COS widths
++are listed below. Widths and ratios are computed from the full outward
++endpoints before rounding the displayed values. At all three stored inputs,
++the independent exact-law interval is fully contained in the K-COS interval.
+ 
+ \begin{center}
+ \begin{tabular}{@{}rrr@{}}
+@@ -236,14 +245,14 @@
+ target & width in $\log_{10}p$ & multiplicative ratio minus one\\
+ \midrule
+ $10^{-100}$ &
+-$8.95\times10^{-13}$ &
++$8.93\times10^{-13}$ &
+ $2.06\times10^{-12}$\\
+ $10^{-1000}$ &
+-$6.94\times10^{-12}$ &
+-$1.60\times10^{-11}$\\
++$7.01\times10^{-12}$ &
++$1.62\times10^{-11}$\\
+ $10^{-5000}$ &
+-$3.37\times10^{-11}$ &
+-$7.75\times10^{-11}$\\
++$3.34\times10^{-11}$ &
++$7.70\times10^{-11}$\\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+@@ -255,17 +264,18 @@
+ \boxed{
+ \frac{p_+}{p_-}
+ \le
+-1+7.75\times10^{-11}
+-}
+-\]
+-up to the displayed rounding of that ratio.
++1+7.70\times10^{-11}
++}
++\]
++The displayed upper bound is rounded upward from the directed ratio bound.
+ 
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=.82\linewidth]{figure_24_interval_deep_tail_width.png}
+ \caption{Width of the directed-rounding K-COS probability enclosure on exact
+-scaled-chi-square controls.  The enclosure remains narrow even at
+-$10^{-5000}$.}
++scaled-chi-square controls, using $K=128$ and 90 interval decimal digits.
++Widths are recomputed from the full outward endpoints of the retained inputs.
++The enclosure remains narrow even near $10^{-5000}$.}
+ \label{fig:interval-tail-width}
+ \end{figure}
+ 
+--- before/book/chapters/01_gaussian.tex
++++ after/book/chapters/01_gaussian.tex
+@@ -34,8 +34,13 @@
+ }
+ \]
+ 
+-The numerical tail problem therefore depends only on a positive spectrum,
+-regardless of how that spectrum was generated.
++Here and throughout the central reductions, the variables $Z_j$ are independent
++standard normal variables. The numerical tail problem therefore depends only
++on a positive spectrum, regardless of how that spectrum was generated.
++If there are no nonzero coefficients, then $Q=0$ almost surely and
++$P(Q\ge q)=1$ for $q\le0$, while $P(Q\ge q)=0$ for $q>0$.
++This deterministic case is handled directly, without a saddlepoint or an
++inversion calculation.
+ 
+ \begin{proposition}[Representation equivalence]\label{claim:final-2-1}
+ The same central quadratic-form law may be supplied by any of the following:
+@@ -134,8 +139,10 @@
+ K'(\theta)=q
+ \]
+ inside this domain whenever a positive spectral component is present.  The
+-finite-upper-endpoint negative-only case is handled by the same tilted
+-geometry with the endpoint fixed at zero.
++negative-only case with at least one nonzero coefficient has a positive
++saddlepoint only for $E[Q]<q<0$. Indeed, $K'(\theta)$ increases from
++$E[Q]$ to zero as $\theta\to\infty$. For $q\ge0$ its survival
++probability is zero, and no finite positive saddlepoint solves the query.
+ 
+ The packet representation is sign aware: positive and negative eigenvalues are
+ clustered separately, and each same-sign packet stores a center $\mu$ and
+@@ -234,9 +241,17 @@
+ \sum_i\frac{c_i^2}{\lambda_i}
+ \ge0.
+ \]
+-If \(\Sigma\) is nonsingular on the \(M\)-active subspace, then \(q_0=0\).
+-When \(\Sigma\) is singular, \(q_0\) is the deterministic quadratic
+-contribution outside the random covariance support.
++The noncentral chi-square components are independent. To state the
++zero-shift condition precisely, put $T=M^{1/2}S$, $b=M^{1/2}\mu$,
++and let $P_T$ be the orthogonal projector onto $\operatorname{range}(T)$.
++Then
++\[
++q_0=\|(I-P_T)b\|^2.
++\]
++Thus $q_0=0$ exactly when $M^{1/2}\mu\in\operatorname{range}(M^{1/2}S)$.
++In particular, $\Sigma\succ0$ is sufficient. For singular covariance the
++shift is the squared deterministic component perpendicular to the random
++range in these weighted coordinates.
+ \end{theorem}
+ 
+ \begin{proof}
+@@ -264,8 +279,13 @@
+ 0,
+ \]
+ so there is no unresolved stochastic linear term in a zero-eigenvalue
+-direction.  The remaining constant is the squared norm of the deterministic
+-component and is therefore nonnegative.
++direction. For the positive eigenvectors $v_i$ of $T^\top T=SMS$,
++the vectors $Tv_i/\sqrt{\lambda_i}$ form an orthonormal basis of
++$\operatorname{range}(T)$. Their inner products with $b$ are
++$c_i/\sqrt{\lambda_i}$. Hence the subtracted sum equals $\|P_Tb\|^2$,
++leaving $q_0=\|(I-P_T)b\|^2\ge0$. Orthogonal rotation preserves
++independence of the normal coordinates, so the squared components are
++independent as stated.
+ \end{proof}
+ 
+ The numerical interface implements this reduction directly.  In an isotropic

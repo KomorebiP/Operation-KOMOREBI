@@ -1,0 +1,370 @@
+\chapter{Gaussian quadratic forms}\label{ch:gaussian}
+\chapterlead{A quadratic statistic may be presented as a matrix, a factor, or a list of
+spectral coefficients. The representation determines how the calculation is
+organized. Under the Gaussian model, the spectrum determines the law.
+This chapter fixes that distinction before any numerical approximation is
+introduced.}
+\label{sec:gaussian-core}
+
+The primary mathematical object is a Gaussian quadratic form.
+
+\section{Central positive forms}
+
+Let
+\[
+X\sim N(0,\Sigma),
+\qquad
+M\succeq0,
+\]
+and write \(S=\Sigma^{1/2}\).  With \(X=SZ\), \(Z\sim N(0,I)\),
+\[
+Q=X^\top MX
+=
+Z^\top(SMS)Z.
+\]
+If the nonzero eigenvalues of the positive semidefinite operator
+\[
+H=SMS
+\]
+are \(\lambda_1,\ldots,\lambda_r\), then
+\[
+\boxed{
+Q\overset d=
+\sum_{j=1}^r\lambda_jZ_j^2.
+}
+\]
+
+Here and throughout the central reductions, the variables $Z_j$ are independent
+standard normal variables. The numerical tail problem therefore depends only
+on a positive spectrum, regardless of how that spectrum was generated.
+If there are no nonzero coefficients, then $Q=0$ almost surely and
+$P(Q\ge q)=1$ for $q\le0$, while $P(Q\ge q)=0$ for $q>0$.
+This deterministic case is handled directly, without a saddlepoint or an
+inversion calculation.
+
+\begin{proposition}[Representation equivalence]\label{claim:final-2-1}
+The same central quadratic-form law may be supplied by any of the following:
+\begin{enumerate}
+\item a nonnegative spectrum \(\{\lambda_j\}\).
+\item a positive semidefinite matrix \(H\).
+\item a factor \(A\) with \(H=AA^\top\) or \(H=A^\top A\).
+\item a replayable streamed factor
+\[
+A=[A_1\ \cdots\ A_B].
+\]
+\end{enumerate}
+The nonzero spectra of \(AA^\top\) and \(A^\top A\) are identical, and
+\[
+AA^\top=\sum_bA_bA_b^\top.
+\]
+\end{proposition}
+
+\begin{proof}
+If $AA^\top u=\lambda u$ with $\lambda>0$, then $A^\top u\ne0$ and
+$A^\top A(A^\top u)=\lambda A^\top u$. Conversely, an eigenvector
+$v$ of $A^\top A$ with positive eigenvalue maps to the eigenvector $Av$
+of $AA^\top$. These maps restrict to inverse isomorphisms of the
+corresponding eigenspaces after scaling, so multiplicities agree.
+Horizontal concatenation gives $AA^\top=\sum_b A_bA_b^\top$ by direct
+matrix multiplication. Orthogonal diagonalization then identifies the
+associated Gaussian quadratic-form laws.
+\end{proof}
+
+This proposition is the domain-independent source of the memory-bounded
+streaming method developed below.
+
+\section{Central indefinite forms}
+
+The positive case is not the natural boundary of the central theory.  Let
+\[
+X\sim N(0,\Sigma),
+\qquad
+M=M^\top,
+\]
+where $M$ may be indefinite, and again write $S=\Sigma^{1/2}$.  The symmetric
+operator
+\[
+H=SMS
+\]
+has a real signed spectrum.
+
+\begin{theorem}[Exact central signed reduction]\label{claim:final-2-2}
+If $\lambda_1,\ldots,\lambda_r$ are the nonzero eigenvalues of $H$, then
+\[
+\boxed{
+X^\top M X
+\overset d=
+\sum_{j=1}^r\lambda_jZ_j^2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Write $X=SZ$ with $Z\sim N(0,I)$ and diagonalize
+\[
+SMS=V\Lambda V^\top.
+\]
+Rotational invariance of the standard normal gives
+\[
+Z^\top V\Lambda V^\top Z
+\overset d=
+\sum_j\lambda_jZ_j^2.
+\]
+No positivity assumption on $M$ is needed for this central reduction.
+\end{proof}
+
+The sign pattern determines the support.  If every $\lambda_j\ge0$, the lower
+endpoint is zero.  If every $\lambda_j\le0$, the upper endpoint is zero.  If
+both signs occur, the distribution is unbounded in both directions.
+
+For the right-tail path, the cumulant generating function is
+\[
+\kappa(s)
+=
+-\frac12\sum_j\log(1-2s\lambda_j),
+\]
+with real domain
+\[
+\boxed{
+\max_{\lambda_j<0}\frac{1}{2\lambda_j}
+< s <
+\min_{\lambda_j>0}\frac{1}{2\lambda_j}.
+}
+\]
+Here a missing negative or positive spectral set gives a domain endpoint
+\(-\infty\) or \(+\infty\), respectively.
+When $q>E[Q]=\sum_j\lambda_j$, the saddlepoint is the unique positive solution
+of
+\[
+\kappa'(\theta)=q
+\]
+inside this domain whenever a positive spectral component is present.  The
+negative-only case with at least one nonzero coefficient has a positive
+saddlepoint only for $E[Q]<q<0$. Indeed, $\kappa'(\theta)$ increases from
+$E[Q]$ to zero as $\theta\to\infty$. For $q\ge0$ its survival
+probability is zero, and no finite positive saddlepoint solves the query.
+
+The packet representation is sign aware: positive and negative eigenvalues are
+clustered separately, and each same-sign packet stores a center $\mu$ and
+centered moments.  The local expansion remains
+\[
+-\frac12\log(1-2s(\mu+\delta))
+=
+-\frac12\log(1-2s\mu)
++
+\frac12\sum_{n\ge1}
+\frac{\alpha(s)^n\delta^n}{n},
+\qquad
+\alpha(s)=\frac{2s}{1-2s\mu},
+\]
+with the same geometric remainder condition
+\[
+|\alpha(s)|\max|\delta|<1.
+\]
+
+A useful distinction appears in the Fourier tail.  Under the saddlepoint tilt,
+\[
+\left|\phi_\theta(t)\right|
+=
+\prod_j
+\left[
+1+
+\left(
+\frac{2\lambda_j t}{1-2\theta\lambda_j}
+\right)^2
+\right]^{-1/4}.
+\]
+If $r$ coefficients are nonzero, then asymptotically
+\[
+|\phi_\theta(t)|=O(|t|^{-r/2}).
+\]
+Thus certification difficulty depends strongly on spectral rank, not only on
+how small the requested probability is.
+
+The signed law has an exact spectral reduction, but its numerical
+certification requires bounds appropriate to its support and Fourier decay.
+The finite-endpoint, mixed-sign, and low-rank controls are developed in
+Chapter~\ref{ch:evidence}.
+
+\section{Noncentral positive forms}
+
+Let
+\[
+X\sim N(\mu,\Sigma),
+\qquad
+M\succeq0.
+\]
+Again set \(S=\Sigma^{1/2}\) and diagonalize
+\[
+SMS=V\Lambda V^\top.
+\]
+Writing
+\[
+c=V^\top SM\mu,
+\]
+each positive-eigenvalue direction satisfies
+\[
+\lambda_iY_i^2+2c_iY_i
+=
+\lambda_i
+\left(
+Y_i+\frac{c_i}{\lambda_i}
+\right)^2
+-
+\frac{c_i^2}{\lambda_i}.
+\]
+
+\begin{theorem}[Exact noncentral reduction]\label{claim:final-2-3}
+For the positive eigenvalues \(\lambda_i>0\),
+\[
+\boxed{
+Q
+\overset d=
+q_0
++
+\sum_i
+\lambda_i
+\chi^2_1(\delta_i),
+}
+\]
+where
+\[
+\delta_i=
+\left(\frac{c_i}{\lambda_i}\right)^2
+\]
+and
+\[
+q_0
+=
+\mu^\top M\mu
+-
+\sum_i\frac{c_i^2}{\lambda_i}
+\ge0.
+\]
+The noncentral chi-square components are independent. To state the
+zero-shift condition precisely, put $T=M^{1/2}S$, $b=M^{1/2}\mu$,
+and let $P_T$ be the orthogonal projector onto $\operatorname{range}(T)$.
+Then
+\[
+q_0=\|(I-P_T)b\|^2.
+\]
+Thus $q_0=0$ exactly when $M^{1/2}\mu\in\operatorname{range}(M^{1/2}S)$.
+In particular, $\Sigma\succ0$ is sufficient. For singular covariance the
+shift is the squared deterministic component perpendicular to the random
+range in these weighted coordinates.
+\end{theorem}
+
+\begin{proof}
+Expand
+\[
+(\mu+SZ)^\top M(\mu+SZ)
+=
+Z^\top SMSZ
++
+2\mu^\top MSZ
++
+\mu^\top M\mu
+\]
+and rotate by \(V\).  Completing the square gives the displayed
+noncentral components.  For a null vector of \(SMS\),
+\[
+M^{1/2}Sv=0,
+\]
+hence
+\[
+v^\top SM\mu
+=
+(M^{1/2}Sv)^\top M^{1/2}\mu
+=
+0,
+\]
+so there is no unresolved stochastic linear term in a zero-eigenvalue
+direction. For the positive eigenvectors $v_i$ of $T^\top T=SMS$,
+the vectors $Tv_i/\sqrt{\lambda_i}$ form an orthonormal basis of
+$\operatorname{range}(T)$. Their inner products with $b$ are
+$c_i/\sqrt{\lambda_i}$. Hence the subtracted sum equals $\|P_Tb\|^2$,
+leaving $q_0=\|(I-P_T)b\|^2\ge0$. Orthogonal rotation preserves
+independence of the normal coordinates, so the squared components are
+independent as stated.
+\end{proof}
+
+The numerical interface implements this reduction directly.  In an isotropic
+control,
+\[
+\Sigma=I,\qquad M=aI,\qquad a>0,
+\]
+the law collapses to the exact scaled noncentral chi-square distribution
+\[
+Q/a\sim\chi^2_d(\|\mu\|^2).
+\]
+
+The numerical controls for this reduction appear in
+Chapter~\ref{ch:evidence}. They test a floating analytic-ledger engine and
+are not assigned the directed-enclosure guarantee of the central positive
+backend.
+
+\section{Decomposition axes}
+
+The solver separates four logically different representations:
+\[
+\boxed{
+\text{storage blocks}
+\circ
+\text{structural phases}
+\circ
+\text{Krylov/range compression}
+\circ
+\text{spectral tail packets}.
+}
+\]
+Storage blocks answer where data reside.  Structural phases answer how the
+operator propagates.  Krylov/range compression answers which subspace has
+actually been resolved.  Spectral packets answer how the final transform is
+evaluated.  These decompositions should not be conflated.
+
+
+
+
+\section{A factor, a spectrum, and an exact law}\label{sec:worked-law}
+We will follow one small example through the remaining parts of the book. Its entries are exact binary fractions, so the same matrix can be used for symbolic algebra and for a binary64 input without introducing an input-rounding ambiguity. Set
+\[
+A=\frac12
+\begin{pmatrix}
+ 1& 1& 1& 1& 1& 1\\
+ 1&-1& 1&-1& 1&-1\\
+ 1& 1&-1&-1&-1&-1\\
+ 1&-1&-1& 1&-1& 1
+\end{pmatrix}.
+\]
+Multiplication gives
+\[
+K=AA^\top=\frac12
+\begin{pmatrix}
+3&0&-1&0\\0&3&0&-1\\-1&0&3&0\\0&-1&0&3
+\end{pmatrix}.
+\]
+The orthogonal matrix
+\[
+V=\frac12
+\begin{pmatrix}
+1&1&1&1\\1&-1&1&-1\\1&1&-1&-1\\1&-1&-1&1
+\end{pmatrix}
+\]
+satisfies $V^\top K V=\operatorname{diag}(1,1,2,2)$. For $Z\sim N(0,I_4)$,
+\[
+Q=Z^\top KZ\ \overset d=\ Y+2W,
+\qquad Y,W\text{ independent with law }\chi^2_2.
+\]
+The spectrum is therefore $(1,1,2,2)$ and $\mathbb E Q=6$. The six-dimensional feature Gram $A^\top A$ has these same four nonzero eigenvalues and two additional zeros.
+
+Here the probability law also has a closed form. The densities of $Y$ and $2W$ are $\tfrac12e^{-x/2}$ and $\tfrac14e^{-x/4}$ on the nonnegative half-line. Their convolution is
+\[
+f_Q(x)=\int_0^x\frac12e^{-y/2}\frac14e^{-(x-y)/4}\,dy
+       =\frac12\bigl(e^{-x/4}-e^{-x/2}\bigr).
+\]
+Integrating from $q$ to infinity gives
+\begin{equation}
+P(Q\ge q)=2e^{-q/4}-e^{-q/2},\qquad q\ge0.
+\label{eq:worked-exact-tail}
+\end{equation}
+At $q=40$ the probability is approximately $9.079779837\times10^{-5}$. This formula will be used as an independent control, not as a shortcut inside the COS calculation. The next part begins with the factor $A$ and asks which operations may change its storage or basis without changing this law.

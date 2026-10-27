@@ -1,0 +1,222 @@
+\chapter{Exponential tilting and spectral packets}\label{ch:packets}
+\chapterlead{The operator stage ends at a spectrum. The probability stage begins with a
+threshold and an accuracy requirement. Exponential tilting places the query
+in a better-conditioned region of the transformed law. Centered packets
+compress repeated transform evaluations on the grid that the query uses,
+without replacing the distribution by a moment-matched surrogate.}
+\label{sec:packets}
+Storage blocks partition a factor before eigendecomposition. Spectral packets
+group the coefficients after a spectrum is available. They act on different
+objects. The packet expansion approximates the transform on a specified
+complex grid and supplies a remainder bound on that grid.
+
+The written packet bounds concern exact arithmetic. A directed packet implementation would also have to enclose its centers, moments, and transform evaluations. The positive interval backend in Chapter~\ref{ch:intervals} instead evaluates the supplied spectrum directly. The two routes share the inversion analysis, but their arithmetic guarantees must not be conflated.
+
+\section{Quadratic-form transform and saddlepoint tilt}
+
+Let
+\begin{equation}
+Q=\sum_{j=1}^{r}\lambda_j Z_j^2,
+\qquad \lambda_j>0,\quad r\ge1.
+\label{eq:Q}
+\end{equation}
+The variables $Z_j$ are independent standard normal variables.
+The moment generating function exists for
+\[
+\Re s < \frac{1}{2\lambda_{\max}},
+\qquad
+\lambda_{\max}=\max_j\lambda_j,
+\]
+and its cumulant generating function is
+\begin{equation}
+\kappa(s)=\log \E e^{sQ}
+=-\frac12\sum_{j=1}^{r}\log(1-2s\lambda_j).
+\label{eq:cgf}
+\end{equation}
+For complex $s$, $\kappa$ denotes the analytic logarithm normalized by
+$\kappa(0)=0$. Each factor $1-2s\lambda_j$ has positive real part on this
+domain, so its logarithm in the sum is principal. The sum need not equal the
+principal logarithm of the product, whose argument can wrap by $2\pi$.
+For real $\theta<1/(2\lambda_{\max})$,
+\begin{equation}
+\kappa^{(m)}(\theta)
+=2^{m-1}(m-1)!\sum_{j=1}^{r}
+\frac{\lambda_j^m}{(1-2\theta\lambda_j)^m},
+\qquad m\ge1.
+\label{eq:derivatives}
+\end{equation}
+At $\theta=0$, this recovers the standard cumulant identity
+\[
+\operatorname{cum}_m(Q)=2^{m-1}(m-1)!\sum_j\lambda_j^m.
+\]
+
+\begin{theorem}[Unique upper-tail saddlepoint]
+\label{thm:saddle}
+If $q>\E Q=\sum_j\lambda_j$, there exists a unique
+\[
+\theta_*=\theta(q)\in\left(0,\frac{1}{2\lambda_{\max}}\right)
+\]
+satisfying
+\begin{equation}
+\kappa'(\theta_*)=q.
+\label{eq:saddle}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:derivatives},
+\[
+\kappa'(\theta)=\sum_j\frac{\lambda_j}{1-2\theta\lambda_j}
+\]
+is continuous and strictly increasing on the stated interval. It equals $\E Q$ at $\theta=0$ and diverges as $\theta\uparrow1/(2\lambda_{\max})$. The intermediate value theorem and strict monotonicity give existence and uniqueness.
+\end{proof}
+
+Define the exponentially tilted law by
+\begin{equation}
+f_{\theta}(x)=e^{\theta x-\kappa(\theta)}f(x).
+\label{eq:tilt-density}
+\end{equation}
+Its characteristic function is
+\begin{equation}
+\phi_{\theta}(t)
+=\exp\{\kappa(\theta+\ii t)-\kappa(\theta)\},
+\label{eq:tilt-cf}
+\end{equation}
+and $\E_{\theta}Q=\kappa'(\theta)$. Therefore the choice \eqref{eq:saddle} moves the query $q$ to the mean of the tilted law.
+
+For any $\theta>0$ in the transform domain,
+\begin{equation}
+\Pp(Q\ge q)
+=e^{\kappa(\theta)-\theta q}
+\E_{\theta}\!\left[e^{-\theta(Q-q)}\mathbf 1_{\{Q\ge q\}}\right].
+\label{eq:tilt-tail}
+\end{equation}
+This classical exponential-tilting identity lets K-COS evaluate the upper tail
+without subtracting a cumulative distribution function (CDF) value close to one.
+
+\section{Centered spectral packets}
+
+Let a nonempty packet $P\subset\{1,\ldots,r\}$ contain $n_P\ge1$ eigenvalues. Define its center
+\[
+\mu_P=\frac{1}{n_P}\sum_{j\in P}\lambda_j,
+\qquad
+\delta_j=\lambda_j-\mu_P,
+\]
+and centered moments
+\begin{equation}
+M_{P,m}=\sum_{j\in P}\delta_j^m,
+\qquad m\ge0.
+\label{eq:centeredmoments}
+\end{equation}
+Thus $M_{P,0}=n_P$ and $M_{P,1}=0$.
+
+\begin{theorem}[Centered packet expansion]
+\label{thm:packet}
+Fix $s\in\C$ with $\Re s<1/(2\lambda_{\max})$, use the principal logarithm, and define
+\begin{equation}
+\alpha_P(s)=\frac{2s}{1-2s\mu_P},
+\qquad
+\rho_P(s)=|\alpha_P(s)|\max_{j\in P}|\delta_j|.
+\label{eq:alpha-rho}
+\end{equation}
+For a nonnegative integer expansion order $p$, if $\rho_P(s)<1$, then the packet contribution to \eqref{eq:cgf} is
+\begin{align}
+\kappa_P(s)
+&=-\frac{n_P}{2}\log(1-2s\mu_P)
++\frac12\sum_{m=1}^{p}
+\frac{\alpha_P(s)^m}{m}M_{P,m}
++R_{P,p}(s),
+\label{eq:packet-expansion}
+\end{align}
+where
+\begin{equation}
+|R_{P,p}(s)|
+\le
+\frac{n_P}{2}
+\frac{\rho_P(s)^{p+1}}{(p+1)(1-\rho_P(s))}.
+\label{eq:packet-remainder}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+For $j\in P$,
+\[
+1-2s\lambda_j
+=(1-2s\mu_P)(1-\alpha_P(s)\delta_j).
+\]
+The transform-domain condition gives positive real part for each
+\(1-2s\lambda_j\) and for \(1-2s\mu_P\).  The disk condition gives
+positive real part for \(1-\alpha_P\delta_j\).  The two factor arguments
+therefore sum inside \((-\pi,\pi)\), so their principal logarithms add
+without a branch ambiguity.  Hence
+\[
+-\frac12\log(1-2s\lambda_j)
+=-\frac12\log(1-2s\mu_P)
+-\frac12\log(1-\alpha_P\delta_j).
+\]
+When $|\alpha_P\delta_j|<1$,
+\[
+-\log(1-z)=\sum_{m\ge1}\frac{z^m}{m}.
+\]
+Summing over $j\in P$ gives \eqref{eq:packet-expansion}. The remainder satisfies
+\[
+\left|\sum_{m\ge p+1}\frac{z^m}{m}\right|
+\le
+\sum_{m\ge p+1}\frac{|z|^m}{p+1}
+=\frac{|z|^{p+1}}{(p+1)(1-|z|)}.
+\]
+Using $|z|\le\rho_P(s)$ and summing $n_P$ terms yields \eqref{eq:packet-remainder}.
+\end{proof}
+
+\begin{remark}[What is compressed]\label{claim:final-26-3}
+A packet of $n_P$ eigenvalues is replaced by its center and $p$ centered moments. Large spectral spikes may be retained exactly. If the representation contains $s$ exact eigenvalues and $R$ packets of order $p$, evaluation of the CGF on $N$ frequencies costs $O(N(s+R(p+1)))$ arithmetic operations after compilation, instead of $O(Nr)$ direct eigenvalue-transform evaluations.
+\end{remark}
+
+\begin{remark}[Query dependence]\label{claim:final-26-4}
+The relevant packet condition is not merely geometric closeness of eigenvalues. It is the complex-grid quantity $\rho_P(\theta_*+\ii u_k)$. Thus a partition suitable for one tail query or one COS grid need not be suitable for another.
+\end{remark}
+
+
+
+\section{The running example under an exponential tilt}\label{sec:worked-tilt}
+For spectrum $(1,1,2,2)$, the cumulant generator is
+$\kappa(s)=-\log(1-2s)-\log(1-4s)$ on $\Re s<1/4$.
+At $q=40$, the saddlepoint equation reduces to
+$160\theta^2-112\theta+17=0$, with
+\[
+\frac{2}{1-2\theta}+\frac{4}{1-4\theta}=40,
+\qquad
+\theta_* = \frac{14-\sqrt{26}}{40}\approx0.2225245122.
+\]
+The other root lies outside the transform domain. The tilted mean is $40$,
+while the likelihood-ratio identity restores the original tail probability.
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\linewidth]{figures_production/worked_tilt.pdf}
+\caption{The running example before and after exponential tilting. The original mean is $6$, while the reweighted mean is the query $q=40$. Shading identifies the tail under the tilted law. Both curves are point evaluations of explicit densities, not numerical enclosures.}
+\label{fig:worked-tilt}
+\end{figure}
+
+The two copies of $1$ form one exact packet, and the two copies of $2$ form another. All centered deviations vanish, so the packet remainder is zero on every admissible grid. The numerical enclosure still has support, Fourier-mode, and arithmetic errors.
+
+\clearpage
+\section{A packet with a nonzero remainder}\label{sec:worked-packet}
+To see the approximation itself, take a separate declared packet
+\[
+\{1.96,1.98,2.02,2.04\},\qquad \mu=2,
+\]
+and evaluate its contribution at $s=0.1+0.4\,\mathrm i$. The deviations are $-0.04,-0.02,0.02,0.04$. In particular,
+\[
+M_1=M_3=0,\quad M_2=0.004,\quad M_4=0.00000544.
+\]
+The factor $\alpha=2s/(1-4s)$ gives $\rho=0.04|\alpha|<1$, so Theorem~\ref{thm:packet} applies. Retaining successive even moment orders gives the values below. Both columns are rounded point evaluations. The theorem, not these rounded comparisons, is the reason the remainder is bounded.
+
+\begin{center}\small\input{worked_packet_table.tex}\end{center}
+
+\begin{figure}[!htbp]
+\centering\includegraphics[width=\linewidth]{figures_production/worked_packet_error.pdf}
+\caption{Pointwise transform error and its geometric remainder for the declared packet $(1.96,1.98,2.02,2.04)$ at $s=0.1+0.4i$. Increasing the retained moment order contracts both quantities. The shaded gap separates the observed discrepancy from the analytic bound.}
+\label{fig:spectral-packets}
+\end{figure}
+
+

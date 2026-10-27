@@ -1,0 +1,1570 @@
+--- baseline/book/K_COS_Monograph.tex
++++ revised/book/K_COS_Monograph.tex
+@@ -2,34 +2,41 @@
+ \usepackage{monograph}
+ \begin{document}
+ \hypersetup{pageanchor=false}
+-\makebookcover
++\monocover
+ \frontmatter
++\monotitle
+ \hypersetup{pageanchor=true}
+ \input{frontmatter}
+ \clearpage
+ \tableofcontents
+ \clearpage
+ \mainmatter
+-\bookpart{Gaussian quadratic forms}{The law is spectral. Its computational representation need not be.}{Central positive forms\par Signed forms\par Noncentrality and singular covariance}
++\monopart{part:gaussian}{Gaussian quadratic forms}{A Gaussian quadratic form has several equivalent representations. We begin with the laws they describe, the hypotheses that make them equivalent, and a small calculation that will accompany the development.}
+ \input{chapters/01_gaussian}
+-\bookpart{Structured operators and spectral recovery}{Control residence, propagation, and unresolved range independently.}{Exact streamed representations\par Polyphase propagation and scheduling\par Range cores and low-rank interfaces\par Spectral uncertainty and exact completion}
++\monopart{part:operators}{Structured operators and spectral recovery}{The factor need not fit in memory, and not every part of its action is relevant to a given query. Exact streaming, phase structure, and range compression address these questions separately. Spectral bounds account for what a reduction leaves unresolved.}
+ \input{chapters/02_streaming}
+ \input{chapters/03_phases}
+ \input{chapters/04_range}
+ \input{chapters/05_spectrum}
+-\bookpart{The K-COS method}{Compile the spectrum for the query, then carry every approximation into the tail functional.}{Exponential tilting and spectral packets\par COS inversion and the analytic error budget\par Adaptive evaluation and numerical interfaces}
++\addtocontents{toc}{\protect\newpage}
++\monopart{part:kcos}{The K-COS method}{With a spectrum in hand, the problem becomes a tail calculation. Exponential tilting changes its numerical scale. Centered packets simplify the transform on the chosen grid. Separate bounds account for packet approximation, finite support, and omitted modes.}
+ \input{chapters/06_packets}
+ \input{chapters/07_inversion}
+ \input{chapters/08_adaptive}
+-\bookpart{Certified numerical computation}{Accept an accuracy claim only after the complete numerical interval proves it.}{Directed probability enclosures\par Accuracy-driven certification\par Numerical evidence and applications\par Composition, scope, and contribution}
++\monopart{part:certified}{Certified numerical computation}{A remainder theorem concerns exact arithmetic. A numerical enclosure must also contain the arithmetic used to evaluate the approximation. This part connects those obligations, states the acceptance rule, and examines the evidence and limits of the implementation.}
+ \input{chapters/09_intervals}
+ \input{chapters/10_accuracy}
+ \input{chapters/11_evidence}
+ \input{chapters/12_synthesis}
+ \appendix
++\bookmarksetup{startatroot}
+ \input{chapters/A_atlas}
++\bookmarksetup{startatroot}
+ \input{chapters/B_lean}
++\bookmarksetup{startatroot}
+ \input{chapters/C_reproduction}
++\bookmarksetup{startatroot}
+ \input{chapters/D_glossary}
++\bookmarksetup{startatroot}
+ \input{references}
+ \end{document}
+--- baseline/book/chapters/01_gaussian.tex
++++ revised/book/chapters/01_gaussian.tex
+@@ -1,9 +1,9 @@
+ \chapter{Gaussian quadratic forms}\label{ch:gaussian}
+-A quadratic statistic may be presented as a matrix, a factor, or a list of
++\chapterlead{A quadratic statistic may be presented as a matrix, a factor, or a list of
+ spectral coefficients. The representation determines how the calculation is
+ organized. Under the Gaussian model, the spectrum determines the law.
+ This chapter fixes that distinction before any numerical approximation is
+-introduced.
++introduced.}
+ \label{sec:gaussian-core}
+ 
+ The primary mathematical object is a Gaussian quadratic form.
+@@ -119,7 +119,7 @@
+ 
+ For the right-tail path, the cumulant generating function is
+ \[
+-K(s)
++\kappa(s)
+ =
+ -\frac12\sum_j\log(1-2s\lambda_j),
+ \]
+@@ -136,11 +136,11 @@
+ When $q>E[Q]=\sum_j\lambda_j$, the saddlepoint is the unique positive solution
+ of
+ \[
+-K'(\theta)=q
++\kappa'(\theta)=q
+ \]
+ inside this domain whenever a positive spectral component is present.  The
+ negative-only case with at least one nonzero coefficient has a positive
+-saddlepoint only for $E[Q]<q<0$. Indeed, $K'(\theta)$ increases from
++saddlepoint only for $E[Q]<q<0$. Indeed, $\kappa'(\theta)$ increases from
+ $E[Q]$ to zero as $\theta\to\infty$. For $q\ge0$ its survival
+ probability is zero, and no finite positive saddlepoint solves the query.
+ 
+@@ -324,3 +324,47 @@
+ 
+ 
+ 
++
++\section{A factor, a spectrum, and an exact law}\label{sec:worked-law}
++We will follow one small example through the remaining parts of the book. Its entries are exact binary fractions, so the same matrix can be used for symbolic algebra and for a binary64 input without introducing an input-rounding ambiguity. Set
++\[
++A=\frac12
++\begin{pmatrix}
++ 1& 1& 1& 1& 1& 1\\
++ 1&-1& 1&-1& 1&-1\\
++ 1& 1&-1&-1&-1&-1\\
++ 1&-1&-1& 1&-1& 1
++\end{pmatrix}.
++\]
++Multiplication gives
++\[
++K=AA^\top=\frac12
++\begin{pmatrix}
++3&0&-1&0\\0&3&0&-1\\-1&0&3&0\\0&-1&0&3
++\end{pmatrix}.
++\]
++The orthogonal matrix
++\[
++V=\frac12
++\begin{pmatrix}
++1&1&1&1\\1&-1&1&-1\\1&1&-1&-1\\1&-1&-1&1
++\end{pmatrix}
++\]
++satisfies $V^\top K V=\operatorname{diag}(1,1,2,2)$. For $Z\sim N(0,I_4)$,
++\[
++Q=Z^\top KZ\ \overset d=\ Y+2W,
++\qquad Y,W\text{ independent with law }\chi^2_2.
++\]
++The spectrum is therefore $(1,1,2,2)$ and $\mathbb E Q=6$. The six-dimensional feature Gram $A^\top A$ has these same four nonzero eigenvalues and two additional zeros.
++
++Here the probability law also has a closed form. The densities of $Y$ and $2W$ are $\tfrac12e^{-x/2}$ and $\tfrac14e^{-x/4}$ on the nonnegative half-line. Their convolution is
++\[
++f_Q(x)=\int_0^x\frac12e^{-y/2}\frac14e^{-(x-y)/4}\,dy
++       =\frac12\bigl(e^{-x/4}-e^{-x/2}\bigr).
++\]
++Integrating from $q$ to infinity gives
++\begin{equation}
++P(Q\ge q)=2e^{-q/4}-e^{-q/2},\qquad q\ge0.
++\label{eq:worked-exact-tail}
++\end{equation}
++At $q=40$ the probability is approximately $9.079779837\times10^{-5}$. This formula will be used as an independent control, not as a shortcut inside the COS calculation. The next part begins with the factor $A$ and asks which operations may change its storage or basis without changing this law.
+--- baseline/book/chapters/02_streaming.tex
++++ revised/book/chapters/02_streaming.tex
+@@ -1,9 +1,9 @@
+ \chapter{Exact streamed representations}\label{ch:streaming}
+-Large factors need not be resident all at once. The identities in this
++\chapterlead{Large factors need not be resident all at once. The identities in this
+ chapter separate total data size from the working set without changing the
+ operator. A storage partition is therefore a choice about execution, not a
+ statistical approximation. Weighted features provide a concrete construction,
+-but every subsequent identity applies to a supplied real factor.
++but every subsequent identity applies to a supplied real factor.}
+ \section{Weighted-feature specialization}\label{sec:final-7}
+ 
+ A prominent application constructs the general factor from weighted,
+@@ -349,7 +349,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_08_partition_invariance.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_08_partition_invariance.pdf}
+ \caption{Partition-refinement invariance in floating-point tests. Coarse, fine, irregular, singleton-heavy, and permuted blockings reproduce the explicitly formed Gram matrix and its action to machine precision. The block schedule is therefore an execution choice rather than a change in the statistical model.}
+ \label{fig:partition-invariance}
+ \end{figure}
+@@ -408,9 +408,29 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_03_memory_law.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_03_memory_law.pdf}
+ \caption{The memory law. The complete factor grows linearly with total variant count $m$, whereas the streamed kernel action and the two-dimensional tiled construction remain bounded when resident block size, Krylov width, and covariate rank are fixed.}
+ \label{fig:memory-law}
+ \end{figure}
+ 
+ 
++
++\section{The running example in three storage blocks}\label{sec:worked-stream}
++Partition the factor of Section~\ref{sec:worked-law} into consecutive pairs of columns,
++\[
++A=[A_1\ A_2\ A_3],\qquad A_i\in\mathbb R^{4\times2}.
++\]
++The second and third blocks are identical, but they are different column positions in the factor. Both must be counted. Their Gram contributions are
++\begin{align*}
++A_1A_1^\top&=\frac12
++\begin{pmatrix}1&0&1&0\\0&1&0&1\\1&0&1&0\\0&1&0&1\end{pmatrix},\\
++A_2A_2^\top=A_3A_3^\top&=\frac12
++\begin{pmatrix}1&0&-1&0\\0&1&0&-1\\-1&0&1&0\\0&-1&0&1\end{pmatrix}.
++\end{align*}
++Adding all three gives the matrix $K$ already derived. Merging the last four columns into one storage block gives the same result. Discarding the repeated third block does not: that changes its coefficient contribution and hence the probability law.
++
++For the declared vector $v=(1,2,-1,0)^\top$, the action can be evaluated without forming any block Gram matrix:
++\[
++\sum_{j=1}^3 A_j(A_j^\top v)=Kv=(2,3,-2,-1)^\top.
++\]
++Every operation in this identity is rational. The companion calculation checks it symbolically, along with the change from three blocks to two. It illustrates the central distinction of this chapter: changing the storage partition is exact because every column is still represented. Dropping an operator coupling is a different operation and requires the error analysis developed next.
+--- baseline/book/chapters/03_phases.tex
++++ revised/book/chapters/03_phases.tex
+@@ -1,9 +1,9 @@
+ \chapter{Polyphase propagation and scheduling}\label{ch:phases}
+-Storage blocks say where data are held. Structural phases say where an
++\chapterlead{Storage blocks say where data are held. Structural phases say where an
+ operator can send a vector. Exact zero couplings produce finite propagation
+ frontiers. Weak couplings produce a controlled leakage problem instead.
+ The scheduler must distinguish those two cases and state what knowledge of
+-the phase graph is assumed.
++the phase graph is assumed.}
+ \section{Polyphase structure}\label{sec:final-14}
+ 
+ Let the phase projectors form an orthogonal decomposition of variant space:
+@@ -268,14 +268,14 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_09_approximate_lightcone_certificate.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_09_approximate_lightcone_certificate.pdf}
+ \caption{Weak long-range phase couplings replace the exact zero outside the retained light cone by a nonzero but certified envelope.  In this PSD test, the phasewise transfer-matrix certificate bounds the observed leakage at every depth from one through eight.}
+ \label{fig:approx-lightcone-certificate}
+ \end{figure}
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_10_threshold_tradeoff.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_10_threshold_tradeoff.pdf}
+ \caption{Certified phase-graph sparsification at Krylov depth five.  Retaining fewer off-diagonal phase blocks reduces communication and operator work while the transfer-matrix bound remains above the measured truncation error.  The bound is intentionally conservative because it ignores cancellation and singular-vector alignment.}
+ \label{fig:threshold-tradeoff}
+ \end{figure}
+@@ -529,14 +529,14 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_11_budget_scheduler_comparison.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_11_budget_scheduler_comparison.pdf}
+ \caption{Depth-five pruning under a fixed certified error budget.  A global block-norm threshold is nearly unable to prune this example without crossing the requested tolerance, whereas query-aware edge risks remove many phase pairs.  The exact-envelope refinement safely uses slack left by the additive majorant.}
+ \label{fig:budget-scheduler-comparison}
+ \end{figure}
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.82\linewidth]{figure_13_edge_risk_vs_block_norm.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_13_edge_risk_vs_block_norm.pdf}
+ \caption{Raw phase-block magnitude and finite-depth query risk are different quantities.  The edge score $\beta_{hg}^{(5)}$ incorporates the start profile and every depth-five transfer path through the phase graph. The block norm $\mathcal B_{hg}$ does not.}
+ \label{fig:edge-risk-vs-norm}
+ \end{figure}
+@@ -624,8 +624,8 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.82\linewidth]{figure_12_double_buffer_model.png}
+-\caption{Idealized effect of asynchronous double buffering over $64$ streamed blocks.  The largest modeled speedup occurs when transfer and computation times are comparable, because neither resource is left idle for most of the pipeline.  The additional cost is one extra resident block buffer.}
++\includegraphics[width=\linewidth]{figures_edition/figure_12_double_buffer_model.pdf}
++\caption{Modeled buffering times for five I/O and compute settings, each with 64 streamed blocks. The horizontal labels give the per-block times used in the model. Overlap reduces the total when transfers and computation can proceed concurrently. These are model values, not measured accelerator timings.}
+ \label{fig:double-buffer-model}
+ \end{figure}
+ 
+--- baseline/book/chapters/04_range.tex
++++ revised/book/chapters/04_range.tex
+@@ -1,9 +1,9 @@
+ \chapter{Range cores and low-rank interfaces}\label{ch:range}
+-After storage and propagation have been organized, the remaining question is
++\chapterlead{After storage and propagation have been organized, the remaining question is
+ which subspace has actually been resolved. Local ranks govern the width of
+ phase messages. Orthogonal factor updates carry that information into a small
+ core with the same nonzero spectrum when the full range has been captured.
+-An incomplete range requires an additional certificate, developed next.
++An incomplete range requires an additional certificate, developed next.}
+ \section{Phase-local rank}\label{sec:final-18}
+ 
+ Let \(R\) be a newly generated Krylov residual and
+@@ -171,6 +171,7 @@
+ 
+ 
+ 
++\clearpage
+ \section{An exact core calculation}
+ Consider the orthonormal range basis and core factor
+ \[
+@@ -190,8 +191,22 @@
+ has the law $4Z_1^2+2Z_2^2$, whether it is computed from the full factor, the
+ full Gram matrix, or the core.
+ 
+-This example also separates algebraic exactness from backend coverage. Its
+-active rank is two. The spectral reduction and analytic packet theory remain
++\subsection*{Why the nonzero-spectrum qualification matters}
++Take instead
++\[
++A=\begin{pmatrix}1&0\\0&0\end{pmatrix},\qquad Q_r=I_2,\qquad B=Q_r^\top A=A.
++\]
++The captured subspace contains the range of $A$, but is larger than that range.
++Both Gram matrices have spectrum $\{1,0\}$. Their nonzero spectrum is
++$\{1\}$. Thus the nonzero spectrum of $AA^\top$ cannot be identified with the
++\emph{entire} spectrum of $BB^\top$. Choosing the compact basis
++$Q_r=(1,0)^\top$ instead gives $B=(1,0)$ and the one-dimensional core Gram
++$(1)$. The extra zero records an unused basis direction, not an additional
++random contribution. This is why range containment and exact-range equality
++have different conclusions in Theorem~\ref{claim:final-21-1}.
++
++The first example in this section has active rank two. It separates algebraic
++exactness from backend coverage. The spectral reduction and analytic packet theory remain
+ valid, but the implemented directed positive-tail backend described in
+ Chapter~\ref{ch:intervals} requires active rank greater than two. Capturing a
+ range exactly does not remove a later numerical method's hypotheses.
+--- baseline/book/chapters/05_spectrum.tex
++++ revised/book/chapters/05_spectrum.tex
+@@ -1,9 +1,9 @@
+ \chapter{Spectral uncertainty and exact completion}\label{ch:spectrum}
+-A useful operator approximation is not automatically a useful tail
++\chapterlead{A useful operator approximation is not automatically a useful tail
+ approximation. This chapter transports phase-pruning error to eigenvalue
+ intervals, measures unresolved range through trace information, and completes
+ small residual ranges exactly. A separate post-verification theorem connects
+-stored binary64 factors to rigorous spectral intervals.
++stored binary64 factors to rigorous spectral intervals.}
+ \section{From phase pruning to certified quadratic-form tails}\label{sec:final-22}
+ 
+ The previous sections certify the effect of phase pruning on Krylov
+@@ -271,11 +271,11 @@
+ This provides a useful architecture:
+ \[
+ \boxed{
+-\text{pruned operator for basis discovery}
+-\to
+-\text{one exact streamed factor check}
+-\to
+-\text{certified spectral core}.
++\begin{gathered}
++\text{pruned operator for basis discovery}\\
++\longrightarrow\ \text{exact streamed factor check}\\
++\longrightarrow\ \text{certified spectral core}
++\end{gathered}
+ }
+ \]
+ 
+@@ -292,7 +292,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_15_range_core_certification.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_15_range_core_certification.pdf}
+ \caption{Certify-after-prune range residual.  The range-core theorem is valid
+ at every depth, but a deep-tail full-spectrum guarantee can remain useless
+ until the range residual is genuinely small.  This negative result is retained
+@@ -388,15 +388,15 @@
+ \begin{theorem}[Trace--Frobenius--cap log-MGF certificate]\label{claim:final-23-2}
+ For the Gaussian quadratic form with coefficient matrix \(H\),
+ \[
+-K_H(\theta)
++\kappa_H(\theta)
+ =-\frac12\log\det(I-2\theta H)
+ \]
+ satisfies
+ \[
+ \boxed{
+-K_H(\theta)
+-\le
+-K_C(\theta)
++\kappa_H(\theta)
++\le
++\kappa_C(\theta)
+ +
+ \theta\alpha t
+ +
+@@ -454,10 +454,10 @@
+ \Pr(Q\ge q)
+ \le
+ \inf_{0<2\theta(c+\rho)<1}
+-\exp\{\widehat K_H(\theta)-\theta q\},
+-}
+-\]
+-where \(\widehat K_H\) is the preceding MGF upper bound.
++\exp\{\widehat\kappa_H(\theta)-\theta q\},
++}
++\]
++where \(\widehat\kappa_H\) is the preceding MGF upper bound.
+ \end{corollary}
+ 
+ A complementary lower endpoint is immediate from
+@@ -508,8 +508,8 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_16_trace_moment_vs_weyl.png}
+-\caption{Incomplete-range tail certification before exact completion.  The
++\includegraphics[width=\linewidth]{figures_edition/figure_16_trace_moment_vs_weyl.pdf}
++\caption{Incomplete-range tail certification before exact completion.  Infinite Weyl widths have no finite plotted point. The
+ trace/moment bound preserves the amount and concentration of unresolved
+ spectral mass instead of shifting every coefficient by one worst-case radius.}
+ \label{fig:trace-moment-vs-weyl}
+@@ -576,7 +576,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_17_residual_rank_completion.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_17_residual_rank_completion.pdf}
+ \caption{Residual-rank certification in the full-rank stress test.  From depth
+ 3 onward the moment lower bound meets the orthogonal-complement upper bound.
+ At depth 8 exactly two residual directions remain.}
+@@ -898,7 +898,7 @@
+ streamed factors, the next step is to replace the full-basis postcheck with a
+ verified range-core/residual certificate and interval exact-completion step,
+ so that the matrix-to-spectrum guarantee inherits the same memory-bounded
+-architecture developed elsewhere in this manuscript.
+-
+-
+-
++architecture developed in the preceding chapters.
++
++
++
+--- baseline/book/chapters/06_packets.tex
++++ revised/book/chapters/06_packets.tex
+@@ -5,30 +5,9 @@
+ compress repeated transform evaluations on the grid that the query actually
+ uses. They do not replace the distribution by a moment-matched surrogate.
+ \label{sec:packets}
+-Matrix storage packets operate before eigendecomposition.  The spectral
+-packets here operate after the eigenvalues are available and compress the
+-\emph{transform}, not the probability law into a moment-matched surrogate.
+-The same operator can therefore use storage blocks, structural phases, range
+-compression, and spectral packets simultaneously.
+-
+-The packet results in this section are mathematical approximation theorems.
+-Their binary64 implementation reports a separate analytic ledger.  The
+-directed-rounding positive backend in Chapter~\ref{ch:intervals} evaluates
+-the supplied positive spectrum directly. It does not automatically validate
+-a binary64 packet approximation.  A combined directed packet implementation
+-must enclose packet centers, moments, remainders, and transform arithmetic.
+-
+-\begin{figure}[htbp]
+-\centering
+-\includegraphics[width=.86\linewidth]{figure_07_spectral_packets.png}
+-\caption{A second decomposition layer: centered spectral moments compress the
+-complex transform after the operator problem has produced a spectrum.  This
+-schematic uses the definitions for nonempty packets and preserves the rounded
+-packet-center and second-moment labels from the archived illustration,
+-independently of physical storage blocks. It does not reconstruct the
+-unavailable original eigenvalue vector.}
+-\label{fig:spectral-packets}
+-\end{figure}
++Storage blocks partition a factor before eigendecomposition. Spectral packets group the coefficients after a spectrum is available. These operations therefore act on different objects. The packet expansion below approximates the transform on a specified complex grid, with a remainder bound for that grid. It is not a replacement distribution fitted to a few moments.
++
++The written packet bounds concern exact arithmetic. A directed packet implementation would also have to enclose its centers, moments, and transform evaluations. The positive interval backend in Chapter~\ref{ch:intervals} instead evaluates the supplied spectrum directly. The two routes share the inversion analysis, but their arithmetic guarantees must not be conflated.
+ 
+ \section{Quadratic-form transform and saddlepoint tilt}
+ 
+@@ -190,3 +169,49 @@
+ \end{remark}
+ 
+ 
++
++\clearpage
++\section{The running example under an exponential tilt}\label{sec:worked-tilt}
++For the spectrum $(1,1,2,2)$, repeated coefficients collapse the cumulant generator to
++\[
++\kappa(s)=-\log(1-2s)-\log(1-4s),\qquad \Re s<\frac14.
++\]
++At threshold $q=40$, the saddlepoint equation is
++\[
++\frac{2}{1-2\theta}+\frac{4}{1-4\theta}=40.
++\]
++It reduces to $160\theta^2-112\theta+17=0$. The admissible root is
++\[
++\theta_* = \frac{14-\sqrt{26}}{40}\approx0.2225245122,
++\]
++while the other root lies outside the transform domain. Substitution gives $\kappa'(\theta_*)=40$. The tilted mean is exactly the query threshold, although the tail itself is still evaluated under the original law through the likelihood-ratio identity.
++
++\begin{figure}[!htbp]
++\centering\includegraphics[width=.88\linewidth]{worked_tilt.pdf}
++\caption{The running example before and after tilting. The reweighted density has mean $40$, compared with mean $6$ for the original law. The graph is a point evaluation of the two explicit densities, not a probability enclosure.}
++\label{fig:worked-tilt}
++\end{figure}
++
++There are two exact packets: the two copies of $1$ and the two copies of $2$. In either packet every centered deviation is zero. All positive-order centered moments vanish and the packet remainder is zero on every admissible grid. This is a useful limiting case: the representation is compressed, but no approximation error has been introduced. The numerical enclosure still has support, Fourier-mode, and arithmetic errors.
++
++\clearpage
++\section{A packet with a nonzero remainder}\label{sec:worked-packet}
++To see the approximation itself, take a separate declared packet
++\[
++\{1.96,1.98,2.02,2.04\},\qquad \mu=2,
++\]
++and evaluate its contribution at $s=0.1+0.4\,\mathrm i$. The deviations are $-0.04,-0.02,0.02,0.04$. In particular,
++\[
++M_1=M_3=0,\quad M_2=0.004,\quad M_4=0.00000544.
++\]
++The factor $\alpha=2s/(1-4s)$ gives $\rho=0.04|\alpha|<1$, so Theorem~\ref{thm:packet} applies. Retaining successive even moment orders gives the values below. Both columns are rounded point evaluations. The theorem, not these rounded comparisons, is the reason the remainder is bounded.
++
++\begin{center}\small\input{worked_packet_table.tex}\end{center}
++
++\begin{figure}[!htbp]
++\centering\includegraphics[width=.88\linewidth]{worked_packet_error.pdf}
++\caption{A fully specified centered packet at one complex transform argument. The geometric remainder bound decreases with retained moment order and dominates the point-evaluated error in this calculation.}
++\label{fig:spectral-packets}
++\end{figure}
++
++Changing $\theta$, the support endpoint, or the mode count changes the complex grid. A packet that is economical at this one argument must therefore be checked again on the entire grid used by a tail query. The next chapter carries those gridwise errors into the probability functional.
+--- baseline/book/chapters/07_inversion.tex
++++ revised/book/chapters/07_inversion.tex
+@@ -1,10 +1,10 @@
+ \chapter{COS inversion and the analytic error budget}\label{ch:inversion}
+-The tail functional has three distinct approximation errors: packet
++\chapterlead{The tail functional has three distinct approximation errors: packet
+ compression on a finite grid, finite support with cosine folding, and omitted
+ Fourier modes. Each receives its own bound. Their sum yields an analytic
+ certificate, while a finite-refinement theorem shows that the mathematical
+ error can be made arbitrarily small for a fixed positive spectrum and an
+-upper-tail query.
++upper-tail query.}
+ \section{Tilted COS tail functional}
+ 
+ Because $Q\ge0$, K-COS uses the interval $[0,b]$.  Throughout the
+--- baseline/book/chapters/08_adaptive.tex
++++ revised/book/chapters/08_adaptive.tex
+@@ -1,9 +1,9 @@
+ \chapter{Adaptive evaluation and numerical interfaces}\label{ch:adaptive}
+-An adaptive solver should refine the representation responsible for the
++\chapterlead{An adaptive solver should refine the representation responsible for the
+ largest unresolved error. The planner described here chooses packets, support,
+ and modes jointly. Its floating implementation retains an analytic ledger.
+ The next part supplies the stricter contract in which finite arithmetic and
+-output serialization are enclosed as well.
++output serialization are enclosed as well.}
+ \section{Adaptive K-COS algorithm}
+ 
+ The packet planner accepts a finite positive spectrum, an upper-tail query
+@@ -69,7 +69,7 @@
+ \[
+ \frac{2}{U}
+ \sum_k
+-|I_k|
++|J_k|
+ \left(
+ e^{\varepsilon_k}-1
+ \right).
+@@ -81,7 +81,7 @@
+ \log\left(
+ \frac{2}{U}
+ \sum_k
+-|I_k|
++|J_k|
+ \left(
+ e^{\varepsilon_k}-1
+ \right)
+@@ -116,7 +116,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.82\linewidth]{figure_21_reference_convergence.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_21_reference_convergence.pdf}
+ \caption{Reference-convergence audit.  The adaptive certified answer remains
+ stable while an initially under-resolved fixed-grid reference converges toward
+ it.  A single nominally large reference grid is therefore not treated as
+--- baseline/book/chapters/09_intervals.tex
++++ revised/book/chapters/09_intervals.tex
+@@ -9,11 +9,7 @@
+ represented by an exactly supplied positive spectrum, subject to the stated
+ arithmetic trust base.
+ 
+-The implementation notation uses $K(s)=\kappa(s)$ for the cumulant
+-generating function, $U=b$ for the support endpoint, and $I_k=J_k$ for
+-the payoff integrals of Chapter~\ref{ch:inversion}. The integer $K$ without
+-an argument denotes the number of retained cosine modes, not the function
+-$K(s)$.
++The notation follows the analytic development: $\kappa$ is the cumulant generating function, $b$ the support endpoint, $N$ the retained mode count, and $J_k$ the payoff coefficient. The implementation-name correspondence is given in Appendix~\ref{app:reproduction}.
+ 
+ \section{Interval target}
+ 
+@@ -51,7 +47,7 @@
+ \[
+ P(Q\ge q)
+ =
+-e^{K(\theta)-\theta q}
++e^{\kappa(\theta)-\theta q}
+ S_\theta(q),
+ \]
+ where
+@@ -69,10 +65,10 @@
+ Once serialized as an exact decimal input, it is simply a valid tilt inside
+ the MGF domain.
+ 
+-The same is true of the support endpoint \(U\) and the auxiliary Chernoff
++The same is true of the support endpoint \(b\) and the auxiliary Chernoff
+ parameter \(\eta\).  Correctness requires only
+ \[
+-U>q\ge0,\qquad U>0,
++b>q\ge0,\qquad b>0,
+ \qquad
+ \theta<\eta<\frac{1}{2\lambda_{\max}}.
+ \]
+@@ -81,21 +77,21 @@
+ 
+ Under the tilted measure,
+ \[
+-P_\theta(Q>U)
++P_\theta(Q>b)
+ \le
+ \exp\left\{
+-K(\eta)-K(\theta)-(\eta-\theta)U
++\kappa(\eta)-\kappa(\theta)-(\eta-\theta)b
+ \right\}.
+ \]
+ 
+ The full-characteristic-function cosine expansion periodizes the tilted density
+-on \([0,U]\).  Because the original positive quadratic form is supported on
++on \([0,b]\).  Because the original positive quadratic form is supported on
+ \([0,\infty)\), the total positive-tail mass aliased back into one fundamental
+-interval is at most \(P_\theta(Q>U)\).
+-
+-The actual payoff omitted above \(U\) is at most
+-\[
+-e^{-\theta(U-q)}P_\theta(Q>U).
++interval is at most \(P_\theta(Q>b)\).
++
++The actual payoff omitted above \(b\) is at most
++\[
++e^{-\theta(b-q)}P_\theta(Q>b).
+ \]
+ 
+ Therefore
+@@ -103,9 +99,9 @@
+ \boxed{
+ E_{\rm support}
+ \le
+-P_\theta(Q>U)
++P_\theta(Q>b)
+ \left(
+-1+e^{-\theta(U-q)}
++1+e^{-\theta(b-q)}
+ \right).
+ }
+ \]
+@@ -142,32 +138,32 @@
+ 
+ For the payoff coefficient
+ \[
+-I_k=
+-\int_q^U
++J_k=
++\int_q^b
+ e^{-\theta(x-q)}
+-\cos(k\pi x/U)\,dx,
++\cos(k\pi x/b)\,dx,
+ \]
+ the elementary bound
+ \[
+-|I_k|\le\frac1\theta
++|J_k|\le\frac1\theta
+ \]
+ holds.
+ 
+ Let
+ \[
+-p=\frac r2>1,\qquad K\ge1.
+-\]
+-For a finite transform retaining modes \(0,\ldots,K-1\),
++\nu=\frac r2>1,\qquad N\ge1.
++\]
++For a finite transform retaining modes \(0,\ldots,N-1\),
+ \[
+ \boxed{
+ E_{\rm series}
+ \le
+-\frac{2C_\theta}{U\theta}
+-\left(\frac{U}{\pi}\right)^p
++\frac{2C_\theta}{b\theta}
++\left(\frac{b}{\pi}\right)^\nu
+ \left[
+-K^{-p}
++N^{-\nu}
+ +
+-\frac{K^{1-p}}{p-1}
++\frac{N^{1-\nu}}{\nu-1}
+ \right].
+ }
+ \]
+@@ -177,8 +173,8 @@
+ 
+ \section{Final enclosure theorem}
+ 
+-Let \(\boldsymbol S_K\) be the directed-rounding interval containing the finite
+-\(K\)-mode tilted COS sum, and set
++Let \(\boldsymbol S_N\) be the directed-rounding interval containing the finite
++\(N\)-mode tilted COS sum, and set
+ \[
+ E=E_{\rm support}+E_{\rm series}.
+ \]
+@@ -187,7 +183,7 @@
+ \boxed{
+ S_\theta(q)
+ \in
+-\boldsymbol S_K+[-E,E].
++\boldsymbol S_N+[-E,E].
+ }
+ \]
+ 
+@@ -196,15 +192,22 @@
+ \boxed{
+ \log P(Q\ge q)
+ \in
+-K(\theta)-\theta q
++\kappa(\theta)-\theta q
+ +
+ \log\left(
+-\boldsymbol S_K+[-E,E]
++\boldsymbol S_N+[-E,E]
+ \right).
+ }
+ \]
+ 
+ All finite arithmetic in this expression is enclosed by the interval backend.
++
++\section{Completing the running calculation}\label{sec:worked-enclosure}
++The factor, spectrum, and tilt of Sections~\ref{sec:worked-law}--\ref{sec:worked-tilt} now determine a complete positive-spectrum calculation at $q=40$. The exact diagonalization supplies the coefficients $(1,1,2,2)$. The implementation receives those coefficients as exact decimal literals, together with a serialized decimal approximation to the admissible tilt. Correctness does not require that decimal to equal the radical saddlepoint exactly.
++
++\input{worked_enclosure_result.tex}
++
++The certificate in this example concerns the tail evaluation for the exact spectrum. Its connection to the matrix is the explicit algebraic diagonalization above. It does not test a black-box eigensolver. Chapter~\ref{ch:spectrum} gives the separate post-verification theorem required for a general computed eigensystem.
+ 
+ \section{Independent exact interval control through \texorpdfstring{\(10^{-5000}\)}{1e-5000}}
+ 
+@@ -234,7 +237,7 @@
+ 10^{-5000}.
+ \]
+ 
+-With $K=128$ and 90 interval decimal digits, the resulting K-COS widths
++With $N=128$ and 90 interval decimal digits, the resulting K-COS widths
+ are listed below. Widths and ratios are computed from the full outward
+ endpoints before rounding the displayed values. At all three stored inputs,
+ the independent exact-law interval is fully contained in the K-COS interval.
+@@ -273,7 +276,7 @@
+ \centering
+ \includegraphics[width=.82\linewidth]{figure_24_interval_deep_tail_width.png}
+ \caption{Width of the directed-rounding K-COS probability enclosure on exact
+-scaled-chi-square controls, using $K=128$ and 90 interval decimal digits.
++scaled-chi-square controls, using $N=128$ and 90 interval decimal digits.
+ Widths are recomputed from the full outward endpoints of the retained inputs.
+ The enclosure remains narrow even near $10^{-5000}$.}
+ \label{fig:interval-tail-width}
+--- baseline/book/chapters/10_accuracy.tex
++++ revised/book/chapters/10_accuracy.tex
+@@ -1,9 +1,9 @@
+ \chapter{Accuracy-driven certification}\label{ch:accuracy}
+-A requested tolerance is an input to the problem, not an informal expectation
++\chapterlead{A requested tolerance is an input to the problem, not an informal expectation
+ about its answer. The controller accepts a result only when an outward
+ probability interval proves the multiplicative accuracy requirement. Failure
+ to prove that inequality remains a failure of certification, even when a
+-point estimate appears accurate.
++point estimate appears accurate.}
+ \label{sec:final-5}
+ 
+ The public numerical contract should specify the desired accuracy, not the
+@@ -40,7 +40,7 @@
+ }
+ \]
+ 
+-No value of \(K\), support width, or arithmetic precision appears in the
++No value of \(N\), support width, or arithmetic precision appears in the
+ external contract.
+ 
+ \begin{theorem}[Accuracy contract for the positive exact-spectrum backend]\label{claim:final-5-1}
+@@ -88,8 +88,8 @@
+ The controller adjusts three internal resources:
+ 
+ \begin{enumerate}
+-\item the COS mode count \(K\).
+-\item the tilted support scale \(L\), which changes \(U\) and its associated
++\item the COS mode count \(N\).
++\item the tilted support scale \(L\), which changes \(b\) and its associated
+ Chernoff parameter.
+ \item the interval arithmetic precision.
+ \end{enumerate}
+@@ -97,7 +97,7 @@
+ At each stage the full directed-rounding interval is recomputed.  If the
+ rounding component is material relative to the requested budget, arithmetic
+ precision is increased.  Otherwise the dominant analytic contribution
+-determines the next refinement: mode error increases \(K\), while
++determines the next refinement: mode error increases \(N\), while
+ support/alias error increases \(L\).
+ 
+ A certified return occurs only after the multiplicative inequality above
+@@ -151,7 +151,7 @@
+ \begin{center}
+ \begin{tabular}{@{}rrrr@{}}
+ \toprule
+-requested accuracy & achieved ratio minus one & \(K\) & \(L\)\\
++requested accuracy & achieved ratio minus one & \(N\) & \(L\)\\
+ \midrule
+ \(10^{-8}\)  & \(3.19\times10^{-10}\) & 64  & 10\\
+ \(10^{-10}\) & \(7.70\times10^{-11}\) & 128 & 10\\
+--- baseline/book/chapters/11_evidence.tex
++++ revised/book/chapters/11_evidence.tex
+@@ -1,20 +1,8 @@
+ \chapter{Numerical evidence and applications}\label{ch:evidence}
+-This chapter separates exact-law controls, independently evaluated
+-heterogeneous spectra, simulated feature kernels, and runtime measurements.
+-The retained tables describe the experiments that produced them. Regression
+-replay checks the supplied implementation, but does not turn an old timing
+-into a new measurement or a floating analytic bound into a directed enclosure.
+-The replay record and its exact inputs are supplied in
+-Appendix~\ref{app:reproduction}.
+-\section{Demonstrated deep-tail precision}\label{sec:final-3}
+-\textbf{Evidence scope.} The tables and figures in this section report the
+-retained experimental record. The fixed-resolution interval widths are
+-recomputed from full outward endpoints, using the retained exact inputs.
+-They are not new performance measurements.
+-Only results explicitly described as directed rounding are numerical
+-enclosures. Other reported certificates are analytic approximation ledgers
+-evaluated in floating point. Replayed regression tests and independently
+-checked controls are identified separately in Appendix~\ref{app:reproduction}.
++The numerical record has four distinct roles: exact-law controls test values with independent formulas, heterogeneous spectra test inversion across irregular coefficients, simulated kernels test the operator pipeline, and timing measurements characterize particular implementations. This chapter keeps those roles separate. The source package records the inputs and environments behind the retained experiments. Current regression and containment checks are reported in Appendix~\ref{app:reproduction}.
++
++\section{Deep-tail controls}\label{sec:final-3}
++A directed enclosure includes rounding as well as analytic remainders. An analytic ledger evaluated in ordinary floating point does not. The labels in this chapter identify which conclusion a result supports. The retained timing measurements are not presented as a new hardware comparison.
+ 
+ The method is designed for a regime in which direct survival probabilities can
+ underflow long before the mathematical probability becomes numerically
+@@ -26,7 +14,7 @@
+ 
+ \begin{center}
+ \small
+-\begin{tabular}{@{}p{0.27\linewidth}p{0.13\linewidth}p{0.22\linewidth}p{0.16\linewidth}p{0.12\linewidth}@{}}
++\begin{tabular}{@{}P{0.27\linewidth}P{0.13\linewidth}P{0.22\linewidth}P{0.16\linewidth}P{0.12\linewidth}@{}}
+ \toprule
+ validation regime & deepest $\log_{10}p$ & observed error & certificate & spectral size\\
+ \midrule
+@@ -35,7 +23,7 @@
+ & multiplicative ratio $\le 1+7.70\times10^{-11}$ & 80 df\\
+ large-scale positive spectrum
+ & $-922.031162$ & below stored reference resolution & $5.71\times10^{-9}$ & rank 1997\\
+-corrected strong-dependence case study
++strong-dependence kernel
+ & $-457.973916$ & below stored reference resolution & $5.20\times10^{-9}$ & rank 996\\
+ heterogeneous inversion benchmark near $10^{-16}$
+ & $-16$ & $2.88$--$6.52\times10^{-15}$ decades & independent integral converged & ranks 80--120\\
+@@ -328,7 +316,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_18_realistic_ld_effective_rank.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_18_realistic_ld_effective_rank.pdf}
+ \caption{LD structure changes the effective spectral rank.  The corrected
+ copy-LD models create much stronger local dependence than the latent-Gaussian
+ moderate-LD case, while all remain within the same streamed SKAT pipeline.}
+@@ -365,7 +353,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_19_realistic_streaming_invariance.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_19_realistic_streaming_invariance.pdf}
+ \caption{Raw-genotype streaming reproduces the materialized SKAT kernel across
+ multiple LD regimes and block sizes.  The observed discrepancies are at
+ floating-point summation scale.}
+@@ -429,7 +417,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering
+-\includegraphics[width=.84\linewidth]{figure_20_realistic_deep_tail_accuracy.png}
++\includegraphics[width=\linewidth]{figures_edition/figure_20_realistic_deep_tail_accuracy.pdf}
+ \caption{K-COS versus the high-resolution full-spectrum tilted reference on
+ realistic LD spectra.  Accuracy remains at roughly machine-scale in log
+ probability through the deepest corrected copy-LD query, near $10^{-458}$.}
+--- baseline/book/chapters/12_synthesis.tex
++++ revised/book/chapters/12_synthesis.tex
+@@ -1,10 +1,10 @@
+ \chapter{Composition, scope, and contribution}\label{ch:synthesis}
+-The useful synthesis is not that every decomposition commutes with every
++\chapterlead{The useful synthesis is not that every decomposition commutes with every
+ other. It is that each layer preserves a specified object or exposes a
+ specified error. The final calculation is justified only when those objects
+ and bounds agree at their interfaces. This chapter states the exact
+ composition result, locates the contribution among established methods, and
+-makes the remaining implementation boundaries explicit.
++makes the remaining implementation boundaries explicit.}
+ \section{Method synthesis: composable decompositions}\label{sec:final-29}
+ 
+ The solver is organized around four independent decomposition axes:
+@@ -250,7 +250,7 @@
+ 
+ \begin{center}
+ \small
+-\begin{tabular}{@{}p{0.30\linewidth}p{0.20\linewidth}p{0.41\linewidth}@{}}
++\begin{tabular}{@{}P{0.30\linewidth}P{0.20\linewidth}P{0.41\linewidth}@{}}
+ \toprule
+ Statement & Status & Meaning\\
+ \midrule
+--- baseline/book/chapters/A_atlas.tex
++++ revised/book/chapters/A_atlas.tex
+@@ -1,4 +1,5 @@
+-\chapter{Visual atlas}\label{app:atlas}
++\chapter{Visual studies}\label{app:atlas}
++\begingroup\small
+ These studies use declared finite examples to show what each representation
+ retains, what each approximation changes, and where an accuracy obligation
+ enters. Their Python generators and input records accompany the volume.
+@@ -7,7 +8,7 @@
+ 
+ 
+ 
+-{\LARGE\bfseries\color{navy}From a large factor to a justified tail\par}
++{\displayface\fontsize{27}{30}\selectfont\color{ink}From a factor to a justified tail\par}
+ \vspace{3pt}
+ \begin{center}\includegraphics[width=\linewidth,height=2.1in,keepaspectratio]{figures_visual/00_pipeline.pdf}\end{center}
+ {\small\color{navy}The four representation layers are compatible, but their accuracy obligations remain distinct.}
+@@ -18,14 +19,12 @@
+ 
+ The main chapters supply the proofs. Appendix~\ref{app:lean} identifies formal coverage. The final study separates algebraic, analytic, and numerical evidence.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Preserve exact identities where possible. Expose every approximation at the point where it enters.\end{tcolorbox}
++\studyresult{Preserve exact identities where possible. Expose every approximation at the point where it enters.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:synthesis}.}
+ \clearpage
+-{\small\bfseries\color{teal}01 \textperiodcentered{} Factor and law}
+-
+-{\LARGE\bfseries\color{navy}A spectrum is the distributional interface\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/01_factor_spectrum.pdf}\end{center}
++\atlasheading{01}{Factor and law}{A spectrum is the distributional interface}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/01_factor_spectrum.pdf}\end{center}
+ {\small\color{navy}A declared integer factor, shown through its kernel and two numerically evaluated nonzero spectra.}
+ 
+ \[X=\Sigma^{1/2}Z,\quad Z\sim N(0,I),\quad H=\Sigma^{1/2}M\Sigma^{1/2}.\]
+@@ -36,14 +35,12 @@
+ 
+ Positive coefficients give support on the nonnegative half-line. Signed coefficients define a different support problem. The exact reduction extends to symmetric indefinite forms, while the positive-support interval backend developed later has narrower hypotheses.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Representation equivalence is exact mathematics. Certifying computed eigenvalues is a further numerical obligation.\end{tcolorbox}
++\studyresult{Representation equivalence is exact mathematics. Certifying computed eigenvalues is a further numerical obligation.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:gaussian}.}
+ \clearpage
+-{\small\bfseries\color{teal}02 \textperiodcentered{} Storage partition}
+-
+-{\LARGE\bfseries\color{navy}Column blocks add their Gram operators exactly\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/02_block_gram.pdf}\end{center}
++\atlasheading{02}{Storage partition}{Column blocks add their Gram operators exactly}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/02_block_gram.pdf}\end{center}
+ {\small\color{navy}All block Gram contributions use the same color scale. Their exact sum is the full sample kernel.}
+ 
+ \[A=[A_1\ \cdots\ A_B],\qquad AA^{\mathsf T}=\sum_{b=1}^B A_bA_b^{\mathsf T}.\]
+@@ -54,14 +51,12 @@
+ 
+ A streamed action need not store each block kernel. It first multiplies by the block transpose, then by the block itself, and accumulates the sample-space result. The dimensions explain why the operator can remain exact even when the whole factor cannot reside at once.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Execution partitions determine residence and I/O. Keeping all blocks preserves the operator.\end{tcolorbox}
++\studyresult{Execution partitions determine residence and I/O. Keeping all blocks preserves the operator.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:streaming}.}
+ \clearpage
+-{\small\bfseries\color{teal}03 \textperiodcentered{} Algebraic sizing}
+-
+-{\LARGE\bfseries\color{navy}Memory depends on the resident width\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/03_memory.pdf}\end{center}
++\atlasheading{03}{Algebraic sizing}{Memory depends on the resident width}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/03_memory.pdf}\end{center}
+ {\small\color{navy}An explicitly counted binary64 payload with fixed resident width. Total-factor storage grows linearly in $m$.}
+ 
+ \[\text{working storage}=O(nc+ns+cs+np).\]
+@@ -72,14 +67,12 @@
+ 
+ Backend workspace, I/O buffers, saved outputs, and spectral-solver storage require their own accounting. A two-dimensional sample/feature tile also needs its tile-local covariate data. An algebraic storage bound does not promise a device-specific allocation total.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Separate algebraic payload, implementation workspace, and persistent output when planning memory.\end{tcolorbox}
++\studyresult{Separate algebraic payload, implementation workspace, and persistent output when planning memory.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:streaming}.}
+ \clearpage
+-{\small\bfseries\color{teal}04 \textperiodcentered{} Weighted-feature specialization}
+-
+-{\LARGE\bfseries\color{navy}Residualization is an orthogonal projection\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/04_residualization.pdf}\end{center}
++\atlasheading{04}{Weighted-feature specialization}{Residualization is an orthogonal projection}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/04_residualization.pdf}\end{center}
+ {\small\color{navy}An exact two-coordinate projection splits a feature into removed and retained components.}
+ 
+ \[Q_X^{\mathsf T}Q_X=I,\quad M_X=I-Q_XQ_X^{\mathsf T},\quad M_X^2=M_X=M_X^{\mathsf T}.\]
+@@ -90,14 +83,12 @@
+ 
+ The factor $A=M_XGW^{1/2}$ is one specialization of the domain-independent engine. A correct range basis must represent the actual covariate span. Rank deficiency cannot be handled by silently treating extra QR columns as covariate directions.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries The general engine operates on factors. Residualized weighted features provide one important factor construction.\end{tcolorbox}
++\studyresult{The general engine operates on factors. Residualized weighted features provide one important factor construction.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:streaming}.}
+ \clearpage
+-{\small\bfseries\color{teal}05 \textperiodcentered{} Structural locality}
+-
+-{\LARGE\bfseries\color{navy}Exact zeros create a finite phase cone\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/05_phase_cone.pdf}\end{center}
++\atlasheading{05}{Structural locality}{Exact zeros create a finite phase cone}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/05_phase_cone.pdf}\end{center}
+ {\small\color{navy}Exact integer phase support for depths zero through four. A colored entry is genuinely nonzero.}
+ 
+ \[\sum_hP_h=I,\qquad g\to h\iff P_hHP_g\ne0.\]
+@@ -108,14 +99,12 @@
+ 
+ These exact zeros justify omitting inactive phases for that finite-depth query. Storage blocks may still subdivide each active phase arbitrarily. The phase graph answers propagation questions, while the storage partition answers residence questions.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries A certified zero allows exact omission. A merely small coupling needs an error bound.\end{tcolorbox}
++\studyresult{A certified zero allows exact omission. A merely small coupling needs an error bound.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:phases}.}
+ \clearpage
+-{\small\bfseries\color{teal}06 \textperiodcentered{} Approximate locality}
+-
+-{\LARGE\bfseries\color{navy}Weak edges need a transfer envelope\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/06_approximate_cone.pdf}\end{center}
++\atlasheading{06}{Approximate locality}{Weak edges need a transfer envelope}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/06_approximate_cone.pdf}\end{center}
+ {\small\color{navy}One declared weak-edge control. Exact zeros are plotted at a floor solely to fit the logarithmic axis.}
+ 
+ \[\rho(X)_h=\|P_hX\|_F,\qquad \mathcal B_{hg}=\|P_hHP_g\|_2.\]
+@@ -126,14 +115,12 @@
+ 
+ The toy chain receives a signed weak edge of weight $-0.035$ between phases one and nine. Starting in phase five, that edge has no effect through depth four. At later depths the figure compares floating observed error with the transfer-envelope evaluation. The theorem supplies the general bound. The plot checks this finite instance.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Approximate locality produces a budgeted leakage quantity, not an exact support assertion.\end{tcolorbox}
++\studyresult{Approximate locality produces a budgeted leakage quantity, not an exact support assertion.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:phases}.}
+ \clearpage
+-{\small\bfseries\color{teal}07 \textperiodcentered{} Core and residual}
+-
+-{\LARGE\bfseries\color{navy}The unresolved range has positive structure\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/07_residual.pdf}\end{center}
++\atlasheading{07}{Core and residual}{The unresolved range has positive structure}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/07_residual.pdf}\end{center}
+ {\small\color{navy}Positive residual coefficients and their invariants for a declared coordinate-range control.}
+ 
+ \[A=UB+F,\quad U^{\mathsf T}F=0,\quad A^{\mathsf T}A=B^{\mathsf T}B+F^{\mathsf T}F.\]
+@@ -144,14 +131,12 @@
+ 
+ The control captures the first three coordinate directions of the integer factor. Its Gram decomposition is checked exactly. Residual eigenvalues and the cap are floating diagnostics. A small residual norm alone does not prove that an extreme-tail probability has the requested relative accuracy.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Unresolved spectral mass is an explicit object with its own trace, concentration, and cap.\end{tcolorbox}
++\studyresult{Unresolved spectral mass is an explicit object with its own trace, concentration, and cap.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:spectrum}.}
+ \clearpage
+-{\small\bfseries\color{teal}08 \textperiodcentered{} Exact completion}
+-
+-{\LARGE\bfseries\color{navy}A small remaining range can be completed\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/08_completion.pdf}\end{center}
++\atlasheading{08}{Exact completion}{A small remaining range can be completed}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/08_completion.pdf}\end{center}
+ {\small\color{navy}Completed and full singular spectra coincide in the integer factor control. The captured core is incomplete.}
+ 
+ \[U^{\mathsf T}W=0,\qquad A=[U\ W]\begin{bmatrix}B\\D\end{bmatrix}.\]
+@@ -162,14 +147,12 @@
+ 
+ Residual moments also provide a rank lower bound. Together with the orthogonal-complement dimension they can identify the missing rank when the two integers agree. A completion procedure must retain all genuine residual directions. A floating rank threshold has a separate error obligation.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries When the remaining rank is affordable, exact completion can replace further approximate iteration.\end{tcolorbox}
++\studyresult{When the remaining rank is affordable, exact completion can replace further approximate iteration.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:spectrum}.}
+ \clearpage
+-{\small\bfseries\color{teal}09 \textperiodcentered{} Probability reweighting}
+-
+-{\LARGE\bfseries\color{navy}Tilting moves the query into the bulk\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/09_tilt.pdf}\end{center}
++\atlasheading{09}{Probability reweighting}{Tilting moves the query into the bulk}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/09_tilt.pdf}\end{center}
+ {\small\color{navy}The threshold becomes central under the tilted law. The likelihood-ratio weight restores the original tail.}
+ 
+ \[\kappa(s)=-\frac12\sum_j\log(1-2s\lambda_j),\qquad 0<\theta<\frac1{2\lambda_{\max}}.\]
+@@ -180,14 +163,12 @@
+ 
+ The figure uses $Q=0.02\chi^2_{80}$ and $q=4$. Its original mean is $1.6$, while the tilted mean is $4$ at $\theta=15$. The plotted densities follow the same exact gamma family with different scales. No approximation to the probability law is introduced by tilting.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Use the tilt to condition the calculation. Retain the exact reweighting identity to preserve the target probability.\end{tcolorbox}
++\studyresult{Use the tilt to condition the calculation. Retain the exact reweighting identity to preserve the target probability.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:packets}.}
+ \clearpage
+-{\small\bfseries\color{teal}10 \textperiodcentered{} Local transform representation}
+-
+-{\LARGE\bfseries\color{navy}A spectral packet stores centered moments\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/10_packet.pdf}\end{center}
++\atlasheading{10}{Local transform representation}{A spectral packet stores centered moments}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/10_packet.pdf}\end{center}
+ {\small\color{navy}Centered storage and the declared-grid remainder ladder for one finite packet.}
+ 
+ \[M_{P,m}=\sum_{j\in P}(\lambda_j-\mu_P)^m,\quad\alpha_P(s)=\frac{2s}{1-2s\mu_P},\quad\rho_P(s)=|\alpha_P(s)|\max_{j\in P}|\lambda_j-\mu_P|.\]
+@@ -199,86 +180,76 @@
+ 
+ The five-eigenvalue control uses $0.09,0.095,0.10,0.105,0.11$, a tilt of one, and 220 frequencies from zero to eighteen. The figure compares floating transform errors with the analytic remainder at orders one through eight. These computations illustrate the bound. They do not enclose library rounding.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries The local packet representation requires the transform domain, logarithm branch, and printed radius condition.\end{tcolorbox}
++\studyresult{The local packet representation requires the transform domain, logarithm branch, and printed radius condition.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:packets}.}
+ \clearpage
+-{\small\bfseries\color{teal}11 \textperiodcentered{} Grid-dependent compilation}
+-
+-{\LARGE\bfseries\color{navy}The query determines the useful packet\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/11_query_grid.pdf}\end{center}
++\atlasheading{11}{Grid-dependent compilation}{The query determines the useful packet}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/11_query_grid.pdf}\end{center}
+ {\small\color{navy}The same spectral packet has different expansion ratios at tilts zero, two, and four.}
+ 
+-\[s_k=\theta+i\frac{k\pi}{U},\qquad\rho_P(s_k)<1\quad\text{on every retained frequency}.\]
++\[s_k=\theta+i\frac{k\pi}{b},\qquad\rho_P(s_k)<1\quad\text{on every retained frequency}.\]
+ \[(\Lambda,q,\varepsilon)\longmapsto\mathcal P_{\Lambda,q,\varepsilon}.\]
+-A distance between eigenvalues is insufficient to decide whether a packet is useful. The expansion must be controlled at the actual complex arguments $s_k=\theta+i k\pi/U$ selected by the tail query. The tilt, support endpoint, and retained mode count all change that grid.
++A distance between eigenvalues is insufficient to decide whether a packet is useful. The expansion must be controlled at the actual complex arguments $s_k=\theta+i k\pi/b$ selected by the tail query. The tilt, support endpoint, and retained mode count all change that grid.
+ 
+ The figure holds the same five eigenvalues and packet center fixed while changing the tilt. Near the transform singularity the low-frequency radius can grow sharply. At high frequency the radius approaches the relative packet half-width. Neither effect is captured by inspecting raw eigenvalue spacing alone.
+ 
+ The compiled representation may retain large spikes exactly and packetize a smooth spectral bulk. Split a packet or raise its order when its propagated error exceeds budget. A plan can be reused only after checking that its stored conditions and grid remain applicable to the new request.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries The passport belongs to a spectrum, a query, and an accuracy contract, rather than to the spectrum alone.\end{tcolorbox}
++\studyresult{The passport belongs to a spectrum, a query, and an accuracy contract, rather than to the spectrum alone.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:packets}.}
+ \clearpage
+-{\small\bfseries\color{teal}12 \textperiodcentered{} Finite-window transform}
+-
+-{\LARGE\bfseries\color{navy}Cosine inversion integrates a weighted tail\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/12_cos.pdf}\end{center}
++\atlasheading{12}{Finite-window transform}{Cosine inversion integrates a weighted tail}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/12_cos.pdf}\end{center}
+ {\small\color{navy}The weighted payoff and finite-interval basis have different roles. The prime gives half weight to mode zero.}
+ 
+-\[I_k=\int_q^Ue^{-\theta(x-q)}\cos(u_kx)\,dx=\Re\!\left[e^{iu_kq}\frac{1-e^{(-\theta+iu_k)(U-q)}}{\theta-iu_k}\right].\]
+-\[S_K=\frac2U\sum_{k=0}^{K-1}{}^{\prime}\, I_k\,\Re\,\phi_\theta(u_k),\qquad\phi_\theta(t)=e^{\kappa(\theta+it)-\kappa(\theta)}.\]
+-On a positive-support interval $[0,U]$, the cosine frequencies are $u_k=k\pi/U$. The payoff is zero below the threshold and decays exponentially above it. Integrating each cosine mode against that payoff gives an explicit coefficient.
++\[J_k=\int_q^Ue^{-\theta(x-q)}\cos(u_kx)\,dx=\Re\!\left[e^{iu_kq}\frac{1-e^{(-\theta+iu_k)(b-q)}}{\theta-iu_k}\right].\]
++\[S_N=\frac2b\sum_{k=0}^{N-1}{}^{\prime}\, J_k\,\Re\,\phi_\theta(u_k),\qquad\phi_\theta(t)=e^{\kappa(\theta+it)-\kappa(\theta)}.\]
++On a positive-support interval $[0,b]$, the cosine frequencies are $u_k=k\pi/b$. The payoff is zero below the threshold and decays exponentially above it. Integrating each cosine mode against that payoff gives an explicit coefficient.
+ 
+ The finite sum uses the tilted characteristic function rather than a CDF value close to one. Multiplying by the likelihood-ratio prefactor returns the original tail scale. This avoids subtracting two almost equal numbers, but it does not remove the need to bound discarded support and omitted modes.
+ 
+-The picture uses $q=4$, $U=7$, and $\theta=15$. It separates the payoff shape from three cosine modes. Correctness of the positive-support backend requires $q\ge0$ and $U>q$. The saddlepoint planner additionally selects upper-tail queries above the original mean.
+-
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries A finite-window, finite-mode transform is an intermediate quantity whose omitted contributions require bounds.\end{tcolorbox}
++The picture uses $q=4$, $b=7$, and $\theta=15$. It separates the payoff shape from three cosine modes. Correctness of the positive-support backend requires $q\ge0$ and $b>q$. The saddlepoint planner additionally selects upper-tail queries above the original mean.
++
++\studyresult{A finite-window, finite-mode transform is an intermediate quantity whose omitted contributions require bounds.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:inversion}.}
+ \clearpage
+-{\small\bfseries\color{teal}13 \textperiodcentered{} Omitted Fourier modes}
+-
+-{\LARGE\bfseries\color{navy}Mode decay bounds the infinite remainder\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/13_mode_decay.pdf}\end{center}
++\atlasheading{13}{Omitted Fourier modes}{Mode decay bounds the infinite remainder}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/13_mode_decay.pdf}\end{center}
+ {\small\color{navy}Declared equal-coefficient controls illustrate why the number of active coefficients affects high-frequency decay.}
+ 
+ \[a_j=\frac{2\lambda_j}{1-2\theta\lambda_j},\quad|\phi_\theta(t)|=\prod_j(1+(a_jt)^2)^{-1/4}\le C_\theta t^{-r/2}.\]
+-\[E_{\rm series}\le\frac{2C_\theta}{U\theta}\left(\frac U\pi\right)^\nu\left[K^{-\nu}+\frac{K^{1-\nu}}{\nu-1}\right],\quad\nu=r/2>1.\]
++\[E_{\rm series}\le\frac{2C_\theta}{b\theta}\left(\frac b\pi\right)^\nu\left[N^{-\nu}+\frac{N^{1-\nu}}{\nu-1}\right],\quad\nu=r/2>1.\]
+ The modulus of the normalized tilted characteristic function has a positive product formula. Its decay is controlled by the actual transformed coefficients. More active positive coefficients increase the asymptotic decay exponent.
+ 
+ The figure compares eight and eighty equal coefficients at the same admissible tilt. It evaluates the exact modulus formula in ordinary floating arithmetic. A rapidly falling curve is useful for choosing modes, but acceptance depends on a proved bound for the entire omitted series.
+ 
+-The rigorous interval backend uses a simple envelope $C_\theta t^{-r/2}$ and the payoff bound $|I_k|\le1/\theta$. Its resulting series bound requires $r>2$. The packetized analytic path has a sharper frequency-dependent decay-rate bound. Those are distinct formulas with distinct implementation scopes.
+-
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries The infinite-mode remainder is a mathematical tail of a series, separate from floating summation error.\end{tcolorbox}
++The rigorous interval backend uses a simple envelope $C_\theta t^{-r/2}$ and the payoff bound $|J_k|\le1/\theta$. Its resulting series bound requires $r>2$. The packetized analytic path has a sharper frequency-dependent decay-rate bound. Those are distinct formulas with distinct implementation scopes.
++
++\studyresult{The infinite-mode remainder is a mathematical tail of a series, separate from floating summation error.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:inversion}.}
+ \clearpage
+-{\small\bfseries\color{teal}14 \textperiodcentered{} Analytic and arithmetic budgets}
+-
+-{\LARGE\bfseries\color{navy}The error ledger keeps separate causes\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/14_ledger.pdf}\end{center}
++\atlasheading{14}{Analytic and arithmetic budgets}{The error ledger keeps separate causes}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/14_ledger.pdf}\end{center}
+ {\small\color{navy}Four causes of uncertainty and their natural controls. Every budget must be justified before acceptance.}
+ 
+ \[|p-\widehat p|\le E_{\rm packet}+E_{\rm support}+E_{\rm modes}\quad\text{(analytic packet path)}.\]
+-\[S_\theta(q)\in\boldsymbol S_K+[-E,E],\qquad E=E_{\rm support}+E_{\rm series}\quad\text{(exact-spectrum interval path)}.\]
++\[S_\theta(q)\in\boldsymbol S_N+[-E,E],\qquad E=E_{\rm support}+E_{\rm series}\quad\text{(exact-spectrum interval path)}.\]
+ Packet approximation changes the retained-grid transform. Support truncation and cosine periodization change the finite-window functional. Mode truncation removes infinitely many terms. These three mathematical approximation errors have different refinement controls and must be accounted for separately.
+ 
+ Directed-rounding arithmetic introduces a fourth quantity: the width of the computed interval for finite operations. That width is not a substitute for an analytic remainder. Conversely, an analytic bound does not automatically enclose the rounding of logarithms, exponentials, or summation.
+ 
+ For the exact-spectrum interval backend, no packet approximation is used. The finite transform interval is enlarged by support and series bounds, then passed through a positive logarithm and prefactor enclosure. Extending directed-rounding certification to the packet transform requires enclosing its moment construction and remainder propagation as well.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Name the uncertainty before refining it. The same scalar tolerance can hide different unresolved causes.\end{tcolorbox}
++\studyresult{Name the uncertainty before refining it. The same scalar tolerance can hide different unresolved causes.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:inversion}.}
+ \clearpage
+-{\small\bfseries\color{teal}15 \textperiodcentered{} Requested accuracy}
+-
+-{\LARGE\bfseries\color{navy}Acceptance is a logarithmic interval test\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/15_acceptance.pdf}\end{center}
++\atlasheading{15}{Requested accuracy}{Acceptance is a logarithmic interval test}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/15_acceptance.pdf}\end{center}
+ {\small\color{navy}An illustrative tolerance of $10^{-8}$ determines the permitted log width. The plotted curve is numerical.}
+ 
+ \[\log_{10}p\in[d_-,d_+],\quad w=d_+-d_-,\quad\frac{p_+}{p_-}-1=\operatorname{expm1}(\log(10)w).\]
+@@ -289,14 +260,12 @@
+ 
+ The controller returns an accepted result only after the full enclosure passes the requested tolerance. An unresolved positive lower bound, invalid transform domain, inadequate mode budget, or exhausted precision budget must produce a failure status. A point estimate can still be informative, but it cannot be relabeled as an accepted enclosure.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries The decision logic and input semantics are part of certification, just as the transform arithmetic is.\end{tcolorbox}
++\studyresult{The decision logic and input semantics are part of certification, just as the transform arithmetic is.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:accuracy}.}
+ \clearpage
+-{\small\bfseries\color{teal}16 \textperiodcentered{} Independent control family}
+-
+-{\LARGE\bfseries\color{navy}An exact-law control reaches deep logarithms\par}
+-\vspace{3pt}
+-\begin{center}\includegraphics[width=\linewidth,height=3.1in,keepaspectratio]{figures_visual/16_exact_control.pdf}\end{center}
++\atlasheading{16}{Independent control family}{An exact-law control reaches deep logarithms}
++\vspace{3pt}
++\begin{center}\includegraphics[width=\linewidth,height=2.95in,keepaspectratio]{figures_visual/16_exact_control.pdf}\end{center}
+ {\small\color{navy}An independently evaluable exact-law family. The plot is regenerated from a positive finite sum in decimal arithmetic.}
+ 
+ \[z=q/0.04,\qquad P(Q\ge q)=e^{-z}\sum_{k=0}^{39}\frac{z^k}{k!}.\]
+@@ -307,14 +276,12 @@
+ 
+ This control can distinguish a transform error from a reference error without relying on another COS run. Its equal-coefficient structure also means that one packet can represent the spectrum exactly. Success on this family does not establish equal performance for heterogeneous spectra, signed laws, or every matrix-to-spectrum bridge.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries Choose a reference with a different mathematical route. Report its arithmetic scope alongside the result.\end{tcolorbox}
++\studyresult{Choose a reference with a different mathematical route. Report its arithmetic scope alongside the result.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Chapter~\ref{ch:intervals}.}
+ \clearpage
+-{\small\bfseries\color{teal}17 \textperiodcentered{} Publication and evidence map}
+-
+-{\LARGE\bfseries\color{navy}Read each evidence layer on its own terms\par}
+-\vspace{3pt}
+-\vspace{5pt}\begin{center}\small\renewcommand{\arraystretch}{1.3}\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.25\linewidth}>{\raggedright\arraybackslash}p{.33\linewidth}>{\raggedright\arraybackslash}p{.36\linewidth}@{}}\toprule
++\atlasheading{17}{Publication and evidence map}{Read each evidence layer on its own terms}
++\vspace{3pt}
++\vspace{5pt}\begin{center}\small\renewcommand{\arraystretch}{1.3}\begin{tabular}{@{}>{\raggedright\arraybackslash}P{.25\linewidth}>{\raggedright\arraybackslash}P{.33\linewidth}>{\raggedright\arraybackslash}P{.36\linewidth}@{}}\toprule
+ Representation layer & Evidence to inspect & Scope to preserve\\
+ \midrule
+ Block / projector algebra & Exact identities. Selected Lean sources & All required hypotheses and finite dimensions\\
+@@ -330,5 +297,7 @@
+ 
+ The accompanying package preserves executable sources and verification records. Rebuild the figures with the supplied script, inspect the finite control record, and compare the formalization guide with its checked sources. All illustrations use declared controls, and no empirical timing or production tail claim is introduced by this atlas.
+ 
+-\begin{tcolorbox}[colback=pale,colframe=teal,boxrule=.4pt,arc=0pt,left=7pt,right=7pt,top=5pt,bottom=5pt]\small\bfseries A complete result carries its assumptions, representation semantics, numerical enclosure, and formal scope.\end{tcolorbox}
++\studyresult{A complete result carries its assumptions, representation semantics, numerical enclosure, and formal scope.}
+ \vfill{\footnotesize\color{navy}\textbf{Reading connection.} Appendix~\ref{app:lean}.}
++
++\endgroup
+--- baseline/book/chapters/B_lean.tex
++++ revised/book/chapters/B_lean.tex
+@@ -224,13 +224,13 @@
+ both positivity and a separate domain-correct monotonicity argument. The
+ interval-library implementation also requires its own correctness contract.
+ 
+-\section{Declaration inventory and manuscript concordance}
++\section{Declaration inventory and theorem correspondence}
+ 
+ All names below are prefixed by \decl{KomorebiQCOS}. The inventory counts
+ project theorems only. Imported mathlib theorems are not counted.
+ 
+ {\small
+-\begin{longtable}{@{}p{0.49\linewidth}p{0.45\linewidth}@{}}
++\begin{longtable}{@{}P{0.49\linewidth}P{0.45\linewidth}@{}}
+ \toprule Declaration & Exact formal scope\\\midrule\endhead
+ \decl{gramEntry_empty} & Empty variant block gives zero.\\
+ \decl{gramEntry_singleton} & One column gives its outer product.\\
+--- baseline/book/chapters/C_reproduction.tex
++++ revised/book/chapters/C_reproduction.tex
+@@ -27,7 +27,7 @@
+ research implementations with precisely stated numerical contracts. They are
+ not presented as a measured native GPU production runtime.
+ 
+-\begin{longtable}{@{}p{.40\linewidth}p{.55\linewidth}@{}}
++\begin{longtable}{@{}P{.40\linewidth}P{.55\linewidth}@{}}
+ \toprule
+ Module & Responsibility\\
+ \midrule
+@@ -42,6 +42,9 @@
+ \path{streaming_skat.py} & Replayable factor and kernel actions.\\
+ \bottomrule
+ \end{longtable}
++
++\section{Names used by the implementation}
++The analysis uses $\kappa(s)$, $b$, $J_k$, and $N$. The numerical source retains the names \texttt{K(s)} for the cumulant, \texttt{U} for the support endpoint, \texttt{I\_k} for the payoff integral, and \texttt{K} for the integer mode count. These names do not denote additional mathematical objects. The exact inputs and serialized output intervals determine the calculation.
+ 
+ \section{Replayed numerical controls}\label{app:fresh-validation}
+ The numerical replay evaluates the six retained regression groups on the
+@@ -72,7 +75,7 @@
+ than admitted to a formula outside its hypotheses.
+ 
+ \section{Figure and data provenance}\label{app:provenance}
+-The empirical figures use the retained numerical tables. The fixed-resolution
++Fourteen empirical and sizing figures have been redrawn as vector graphics from the retained tables. Their plotting script and source hashes are included. This changes the presentation, not the measurements. The fixed-resolution
+ interval-width figure is regenerated from full outward endpoint strings,
+ with its exact inputs, computed widths, and plotting code retained in the
+ proofreading record. The visual atlas
+@@ -81,13 +84,22 @@
+ not a new runtime benchmark, and a replacement layout is not a new numerical
+ experiment.
+ 
+-Three empirical illustrations need a particular qualification. The raw
+-singular-value vectors for the phase-rank and QR illustrations and the raw
+-eigenvalue vector behind one packet schematic were not retained. Their
+-published replacements use the exact recorded rank audit, the recorded QR
+-discrepancy audit, and the available rounded packet-center and second-moment
+-labels with the formal packet definitions. No missing samples are inferred.
++Two retained empirical illustrations need a particular qualification. The raw
++singular-value vectors for the phase-rank and QR illustrations were not retained. Their
++displays use the recorded rank audit and QR discrepancy audit rather than inventing
++missing samples. The packet illustration in Chapter~\ref{ch:packets} instead uses a
++fully declared four-coefficient example with reproducible complex-grid evaluations.
+ The corresponding limitation remains visible in each figure caption.
++
++\section{Reproducing the running example}
++The four-dimensional factor, block actions, Gaussian law, and saddlepoint identity are checked symbolically. The packet comparison is evaluated at high precision. The positive tail is enclosed with directed arithmetic and compared with an independent interval for the closed-form survival probability. A failed fixed-resolution decision is retained, followed by the successful mode refinement.
++\begin{lstlisting}
++python illustrations/worked_example.py
++\end{lstlisting}
++The script writes its declared figures and machine-readable results. It does not replace the existing test suite or establish performance for larger problems. To redraw the retained tables separately, run
++\begin{lstlisting}
++python illustrations/redraw_recorded_figures.py
++\end{lstlisting}
+ 
+ \section{Rebuilding and replaying}
+ Run the document builder from the package root:
+@@ -101,18 +113,7 @@
+ \begin{lstlisting}
+ python replay.py --include-controls
+ \end{lstlisting}
+-The replay writes new logs rather than overwriting retained results. The
+-pinned Lean project and its reproduction instructions reside in the
+-\path{lean/} directory. Compiler and dependency caches are not bundled.
+-Reproduction requires the exact pinned toolchain and dependencies, or their
+-reconstruction. The guide distinguishes that requirement from the retained
+-compiler evidence.
++The replay writes separate logs. The \path{lean/} directory contains the pinned formal source and retained compiler evidence. Compiler and dependency caches are not bundled. Reproduction requires the exact pinned toolchain and dependencies.
+ 
+ \section{Scope of the publication checks}
+-The assembly audit checks that every theorem, lemma, proposition, corollary,
+-and remark from the primary mathematical source is retained. It checks
+-labels, references, source mappings, and the compiled page geometry. The
+-Python controls are rerun separately. No new Lean kernel check or native-GPU
+-benchmark is claimed. The complete record is supplied with the editable
+-sources.
+-
++The package records source preservation, labels and references, PDF geometry, and the numerical replay. These checks do not constitute an end-to-end proof. Lean was not rerun, and no new hardware benchmark is claimed.
+--- baseline/book/chapters/D_glossary.tex
++++ revised/book/chapters/D_glossary.tex
+@@ -4,7 +4,7 @@
+ \renewcommand{\arraystretch}{1.08}
+ 
+ 
+-\begin{longtable}{@{}p{.25\linewidth}p{.70\linewidth}@{}}
++\begin{longtable}{@{}P{.25\linewidth}P{.70\linewidth}@{}}
+ \toprule
+ Term & Meaning\\
+ \midrule
+@@ -34,22 +34,22 @@
+ \bottomrule
+ \end{longtable}
+ 
+-\section{Principal symbols}
+-\begin{longtable}{@{}p{.25\linewidth}p{.70\linewidth}@{}}
++\clearpage\section{Principal symbols}
++\begin{longtable}{@{}P{.25\linewidth}P{.70\linewidth}@{}}
+ \toprule
+ Symbol & Convention\\
+ \midrule
+ \endhead
+ $Q$ & A quadratic random variable. In the candidate-eigensystem theorem, the local symbol $Q$ instead denotes a candidate basis matrix.\\
+ $A$, $A_b$ & A real factor and its resident column blocks.\\
+-$H$, $K$ & Symmetric operators. The local symbol $K(s)$ in the signed and interval analysis denotes a cumulant generating function, not a kernel matrix.\\
++$H$, $K$ & Symmetric operators, with sample Gram $K=AA^\top$ and feature Gram $H=A^\top A$ in the streaming construction.\\
+ $\Sigma$, $M$, $\mu$ & Covariance, quadratic weight, and Gaussian mean.\\
+ $\lambda_j$ & Spectral coefficients. Positivity is imposed whenever a positive-support theorem requires it.\\
+ $q$ & The tail threshold.\\
+-$\kappa$, $K(\cdot)$ & Local notations for a cumulant generating function.\\
++$\kappa$ & Cumulant generating function. The implementation name \texttt{K(s)} is mapped in Appendix~\ref{app:reproduction}.\\
+ $\theta$, $\eta$ & Admissible exponential tilts, with $\eta>\theta$ when used in a Chernoff support bound.\\
+-$b$, $U$ & Upper support-window endpoints. Both notations denote the endpoint of a positive COS window in their respective constructions.\\
+-$N$, $K$ & Local cosine mode counts. A bare $K$ used as a mode count is distinguished from the matrix or function by context.\\
++$b$ & Upper endpoint of the positive COS support window. The implementation calls this \texttt{U}.\\
++$N$ & Retained COS mode count. The implementation argument is \texttt{K}.\\
+ $P_h$ & Orthogonal structural phase projectors.\\
+ $M_{P,m}$ & The $m$th centered power sum of a spectral packet $P$.\\
+ $\rho_P(s)$ & The packet's complex-grid convergence radius parameter.\\
+--- baseline/book/frontmatter.tex
++++ revised/book/frontmatter.tex
+@@ -1,110 +1,58 @@
+ \chapter*{Preface}
+-\addcontentsline{toc}{chapter}{Preface}
+-\markboth{Preface}{}
+-A quadratic form often arrives as a large matrix, although the question asked
+-of it is only a probability. Between those two objects lie several different
+-computational problems. The matrix may be too large to keep in memory. Its
+-action may have a structure that permits local computation. Only part of its
+-range may have been resolved. The probability of interest may be too small to
+-represent in ordinary floating point. Solving one of these problems does not
+-silently solve the others.
++\addcontentsline{toc}{chapter}{Preface}\markboth{Preface}{}
++A Gaussian quadratic-form probability is often presented as an inversion problem. In a large calculation, the spectrum required by that inversion must first be obtained. Data may not fit in memory. A structural approximation may discard couplings. A reduced basis may leave part of the range unresolved. Each choice affects what can ultimately be said about the probability.
+ 
+-This book develops a single route through them. It begins with exact Gaussian
+-quadratic-form laws, moves through streamed factors and structural phase
+-representations, and ends with spectral transforms and explicit probability
+-enclosures. The central requirement is consistent throughout: a change of
+-representation must preserve the mathematical object or expose the error it
+-introduces.
++This book connects those choices. It begins with the exact Gaussian reduction to a weighted sum of independent squares and ends with an interval for the requested tail probability. Between them lie streamed factors, phase blocks, range cores, spectral intervals, and local transform expansions. Changing representation reduces the work only if the mathematical object is preserved or the resulting error is controlled.
+ 
+-K-COS is the probability-facing component of this construction. Exponential
+-tilting changes the numerical geometry of an extreme-tail query. Centered
+-spectral packets reduce the cost of evaluating the transform on its required
+-complex grid. Fourier-cosine inversion converts those evaluations into a tail
+-functional. Packet compression, finite support, and omitted modes contribute
+-different errors, so the method accounts for them separately.
++K-COS is the transform method at the end of this construction. Exponential tilting moves an upper-tail query toward the center of a reweighted law. Centered spectral packets reduce repeated evaluations of the cumulant generating function. Fourier-cosine inversion evaluates the weighted tail functional. Packet approximation, finite support, and omitted modes contribute separate errors. Their separate bounds make refinement possible.
+ 
+-The wider quadratic-form engine supplies the upstream representations.
+-Resident column blocks allow exact factor actions without storing the whole
+-factor. Structural phases bound propagation and identify work that a finite
+-query cannot use. Range cores and residual moments measure what remains
+-unresolved. A dense post-verification theorem then gives a rigorous bridge
+-from stored factor entries to spectral intervals.
++The distinction between exact representation and controlled approximation runs throughout the argument. So does the distinction between a real-arithmetic theorem and a computed interval with outward rounding. These are the interfaces that determine which parts of the method can be composed.
+ 
+-The account distinguishes three numerical conclusions. An algebraic identity
+-states exact mathematics. An analytic ledger bounds approximation error in
+-that mathematics. A directed numerical enclosure additionally accounts for
+-finite arithmetic within a specified implementation and trust base. A
+-floating calculation that passes an analytic bound is not automatically a
+-directed enclosure. The distinction matters most when the requested accuracy
+-is smaller than ordinary rounding effects.
++The four parts follow that dependency: Gaussian laws, structured operators and spectral recovery, packet and inversion analysis, then numerical enclosure and acceptance. One four-dimensional example accompanies the development from factor to independently checkable probability. Further visual studies, formal correspondence, reproducible computation, notation, and references are collected at the back.
+ 
+-The four parts follow the dependencies of the argument. The first establishes
+-the Gaussian laws. The second develops structured operators and spectral
+-recovery. The third derives K-COS and its analytic error budget. The fourth
+-turns the positive-spectrum calculation into an accuracy-driven numerical
+-contract, examines the evidence, and states the contribution and its limits.
+-A visual atlas gives finite examples. The formal appendix identifies the
+-exact subset represented in Lean. Computational records and a glossary
+-complete the volume.
++The intended reader knows finite-dimensional linear algebra, Gaussian probability, and basic numerical analysis. Written proofs carry the mathematical argument. The accompanying numerical and formal sources provide distinct, explicitly delimited forms of supporting evidence.
+ 
+-The construction uses established spectral reduction, exponential tilting,
+-and Fourier-cosine inversion. Its emphasis is their integration with
+-independently controlled storage, propagation, range, and query-dependent
+-spectral representations. Within Realization Calculus, this is a concrete
+-instance of preserving an object while changing the realization through which
+-it is computed.
++\chapter*{How to read this book}
++\addcontentsline{toc}{chapter}{How to read this book}\markboth{How to read this book}{}
++\section*{Following the calculation}
++For the complete matrix-to-tail route, read the chapters in order. For a supplied spectrum, read the Gaussian reductions in Chapter~\ref{ch:gaussian}, then Chapters~\ref{ch:packets}--\ref{ch:accuracy}. The intervening operator chapters explain what must be established when the spectrum is not already known.
+ 
+-\chapter*{Reading routes and conventions}
+-\addcontentsline{toc}{chapter}{Reading routes and conventions}
+-\markboth{Reading routes and conventions}{}
+-Readers interested principally in tail evaluation can begin with
+-Chapter~\ref{ch:gaussian}, then read Chapters~\ref{ch:packets}--\ref{ch:accuracy}.
+-Readers concerned with large factors should follow
+-Chapters~\ref{ch:streaming}--\ref{ch:spectrum} before entering the transform
+-analysis. The visual atlas can be read alongside either route. It supplies
+-small declared examples, not substitutes for the hypotheses of the theorems.
++A recurring example begins in Section~\ref{sec:worked-law} with an exact dyadic factor and spectrum $(1,1,2,2)$. Section~\ref{sec:worked-stream} changes its storage partition. Section~\ref{sec:worked-tilt} derives the tilt and packets. Section~\ref{sec:worked-enclosure} completes the enclosure and compares it with a closed-form probability.
+ 
+-\begin{scopebox}
+-\textbf{The accuracy contract.} For an exactly specified problem, a directed
+-positive-tail result is accepted only when its outward probability interval
+-$[p_-,p_+]$ has $p_->0$ and proves
++\section*{Interpreting the answer}
++A directed calculation returns an outward interval $[p_-,p_+]$. Requested multiplicative tolerance $\varepsilon>0$ is accepted only if $p_->0$ and
+ \[
+-\frac{p_+}{p_-}-1\le\varepsilon_{\rm requested}.
++\frac{p_+}{p_-}-1\le\varepsilon.
+ \]
+-An unresolved tolerance is reported as uncertified. Numerical agreement with
+-an independent value is useful evidence, but does not replace this decision.
+-\end{scopebox}
++A plausible point estimate can still fail this test. Failure means that the requested accuracy was not certified. Agreement with an independent value is useful evidence, but cannot replace the interval inequality.
+ 
+-The positive interval backend requires more than two strictly positive
+-spectral coefficients, a nonnegative threshold, an admissible positive tilt,
+-and a positive support endpoint above the threshold. Its automatic planner
+-handles queries above the spectral mean. These are implementation conditions,
+-not claims that the underlying probability law ceases to exist outside them.
+-The analytic packet theory and the implemented directed backend have different
+-rank restrictions.
++The supplied directed backend requires an exact positive spectrum with rank greater than two, a nonnegative threshold, an admissible positive tilt, and a support endpoint above the threshold. Its automatic planner handles queries above the mean. The analytic packet theory has broader rank coverage, but its binary64 implementation does not inherit a directed-rounding guarantee.
+ 
+-Matrix certification treats each stored binary64 factor entry as its exact
+-dyadic value. It does not certify an unrecorded preprocessing step or an
+-unknown matrix before rounding. For a simulated or fitted statistical model,
+-validity of the Gaussian representation remains an application-level
+-obligation.
++For matrix inputs, certification targets the exact Gram matrix of the stored binary64 factor. Preprocessing and statistical-model validity are separate obligations. Signed and noncentral reductions are exact mathematics, but their supplied numerical paths have narrower guarantees than the positive directed backend.
+ 
+-All matrices are finite dimensional unless explicitly stated otherwise.
+-The symbol $\succeq0$ denotes positive semidefiniteness. Norms with subscript
+-$2$ are Euclidean vector norms or induced spectral norms as appropriate.
+-The Frobenius norm is written $\|\cdot\|_F$. Logarithms are natural unless
+-$\log_{10}$ is displayed. Local scalar or matrix notation is declared where
+-used, and Appendix~\ref{app:glossary} records the recurring symbols.
++Appendix~\ref{app:lean} identifies the finite-algebra and order statements represented in Lean. Appendix~\ref{app:reproduction} gives reproducible computations and their trust assumptions. Neither finite tests nor the limited formal companion establish end-to-end correctness of every layer.
+ 
+-\begin{longtable}{@{}p{.25\linewidth}p{.70\linewidth}@{}}
+-\toprule
+-Evidence layer & What it establishes\\
+-\midrule
+-\endhead
+-Written theorem & The conclusion follows from the stated mathematical hypotheses and the supplied proof.\\
+-Numerical experiment & The named finite inputs produced the recorded outputs under the recorded computation.\\
+-Directed enclosure & The specified numerical path returns an outer interval, conditional on its arithmetic trust base and analytic remainder theorems.\\
+-Lean correspondence & The named finite-algebra or order statement is represented by the retained formal source and compiler evidence.\\
++\chapter*{Notation and conventions}
++\addcontentsline{toc}{chapter}{Notation and conventions}\markboth{Notation and conventions}{}
++All vector spaces and matrices in this book are finite dimensional unless stated otherwise. Matrices and factors are real, while transform arguments may be complex. Gaussian components in a spectral reduction are independent standard normal variables. Logarithms are natural unless the base is displayed.
++
++\begin{longtable}{@{}P{.18\linewidth}P{.76\linewidth}@{}}
++\toprule Symbol & Meaning\\\midrule\endhead
++$A$ & A factor. In the streaming construction, $A\in\mathbb R^{n\times m}$.\\
++$K=AA^\top$ & The sample-space Gram matrix.\\
++$H=A^\top A$ & The feature-space Gram matrix in the phase construction. Elsewhere $H$ denotes the explicitly defined symmetric coefficient matrix.\\
++$Q$ & The scalar Gaussian quadratic form whose law is being evaluated.\\
++$\lambda_j$ & Its nonzero spectral coefficients, including multiplicity.\\
++$q$ & The threshold in $P(Q\ge q)$.\\
++$\kappa(s)$ & The cumulant generating function, $\log\mathbb E e^{sQ}$.\\
++$\theta$ & A positive tilt in the moment-generating-function domain.\\
++$b$, $N$ & The upper support endpoint and the number of retained COS modes.\\
++$u_k$, $J_k$ & Frequency $k\pi/b$ and its exponentially weighted payoff integral.\\
++$\|\cdot\|_2$ & Euclidean vector norm or induced matrix norm, as appropriate.\\
++$\|\cdot\|_F$ & Frobenius norm.\\
++$M\succeq0$ & Positive semidefiniteness.\\
+ \bottomrule
+ \end{longtable}
++The symbols $U$, $B$, and $R$ have locally defined linear-algebra roles. A core or basis is never assumed to span the exact range unless that hypothesis is stated. Nonzero spectra are compared with multiplicity. Additional zero eigenvalues in an oversized core do not change the quadratic-form law.
+ 
++The implementation retains some earlier variable names. Appendix~\ref{app:reproduction} maps those names to the notation used here. Printed endpoint strings, not rounded display fields, are the numerical record of an enclosure.
+--- baseline/book/references.tex
++++ revised/book/references.tex
+@@ -1,18 +1,8 @@
+ \backmatter
+ \chapter{Sources and further reading}
+-The mathematical development brings together the quadratic-form engine,
+-the query-adaptive K-COS packet theory, and the streaming polyphase
+-factorization analysis. The visual studies and finite-algebra formalization
+-supply complementary reading routes. These author sources are preserved in
+-the accompanying provenance records, together with the executable inputs and
+-source hashes needed to distinguish proofs, numerical runs, and compiler
+-records. They are not separate repeated chapters in the volume.
++The volume combines the quadratic-form engine, query-adaptive packet theory, and streaming polyphase analysis. Their source correspondence and reproducible records accompany the editable book. The works below provide the classical inversion, COS, and statistical foundations. Section~\ref{sec:prior-work} distinguishes those foundations from the contribution developed here.
+ 
+-The external references below supply the classical inversion and COS
+-foundations used in the text. The integration of these methods with
+-query-specific spectral packets and separately certified operator
+-representations is discussed in Section~\ref{sec:prior-work}.
+-
++\begingroup\small
+ \patchcmd{\thebibliography}{\chapter*{\bibname}}{\section*{\bibname}}{}{}
+ \begin{thebibliography}{9}
+ \bibitem{Imhof1961} J.~P. Imhof, Computing the distribution of quadratic forms
+@@ -44,4 +34,5 @@
+ kernel association test, \emph{American Journal of Human Genetics}
+ 89(1) (2011), 82--93.
+ \href{https://doi.org/10.1016/j.ajhg.2011.05.029}{doi:10.1016/j.ajhg.2011.05.029}.
+-\end{thebibliography}+\end{thebibliography}
++\endgroup

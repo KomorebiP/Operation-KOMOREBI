@@ -1,0 +1,212 @@
+\chapter{Range cores and low-rank interfaces}\label{ch:range}
+\chapterlead{After storage and propagation have been organized, the remaining question is
+which subspace has actually been resolved. Local ranks govern the width of
+phase messages. Orthogonal factor updates carry that information into a small
+core with the same nonzero spectrum when the full range has been captured.
+An incomplete range requires an additional certificate, developed next.}
+\section{Phase-local rank}\label{sec:final-18}
+
+Let \(R\) be a newly generated Krylov residual and
+\[
+R_h=P_hR.
+\]
+
+\begin{theorem}[Minimal exact phase width]\label{claim:final-18-1}
+Let
+\[
+r_h=\operatorname{rank}(R_h).
+\]
+Every phase-supported basis spanning \(\operatorname{range}(R_h)\) has at
+least \(r_h\) vectors, and a rank-revealing QR or compact SVD attains exactly
+\(r_h\).
+\end{theorem}
+
+This justifies nonuniform Krylov block widths by phase.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.82\linewidth]{figure_05_phase_local_rank.png}
+\caption{Phase-local rank as a dimension law. The archived six-phase audit records constructed rank, numerical rank and minimum exact width of one through six, with the remaining capacity wasted by a uniform width of twelve. A rank-revealing factorization keeps the new directions. This summary replaces an annotated singular-value curve whose raw plotted vector was not archived.}
+\label{fig:phase-local-rank}
+\end{figure}
+
+
+\section{Low-rank interface messages}\label{sec:final-19}
+
+If an inter-phase coupling has exact factorization
+\[
+P_hHP_g
+=
+U_{hg}V_{hg}^\top
+\]
+of rank \(r_{hg}\), then
+\[
+\boxed{
+P_hHP_gx
+=
+U_{hg}(V_{hg}^\top x).
+}
+\]
+
+This representation reduces storage and communication.  It does not
+automatically reduce wall-clock time unless the factors are applied through
+batched or fused kernels. A Python reference implementation can lose to
+dense BLAS despite lower arithmetic and storage.
+
+
+\section{Exact QR-core updates}\label{sec:final-20}
+
+Suppose
+\[
+A=QR,
+\qquad
+Q^\top Q=I,
+\]
+and append a new block \(U\).  Set
+\[
+C=Q^\top U,
+\qquad
+F=U-QC,
+\qquad
+F=Q_\perp R_\perp,
+\qquad Q_\perp^\top Q_\perp=I,
+\qquad Q^\top Q_\perp=0.
+\]
+Here the columns of \(Q_\perp\) form an orthonormal basis of the nonzero
+residual range. Zero residual directions are omitted.
+
+\begin{theorem}[Exact QR-core update]\label{claim:final-20-1}
+\[
+[A,U]
+=
+[Q,Q_\perp]
+\begin{pmatrix}
+R&C\\
+0&R_\perp
+\end{pmatrix}.
+\]
+Therefore the nonzero eigenvalues of
+\([A,U][A,U]^\top\) are exactly the nonzero eigenvalues of the small
+core Gram, with multiplicity. If $\operatorname{range}(Q)=\operatorname{range}(A)$,
+the compact residual update also spans exactly $\operatorname{range}([A,U])$.
+In that case the core has full row rank and its Gram matrix has no additional
+zero eigenvalues.
+\end{theorem}
+
+\begin{proof}
+The first block product is \(QR=A\). The second is
+\(QC+Q_\perp R_\perp=QC+F=U\).  The stated orthogonality
+conditions make \([Q,Q_\perp]\) an isometry on the compact core
+space.  Left multiplication by this isometry preserves all nonzero singular
+values of the core, and squaring them yields the nonzero Gram eigenvalues.
+If $Q$ spans exactly the old range and $Q_\perp$ spans exactly the residual
+range, their combined range is precisely that of the appended factor.
+The core then has full row rank. Without this exact-range hypothesis, unused
+basis directions can introduce zero eigenvalues into the core Gram.
+\end{proof}
+
+This is useful for overlapping genomic windows and small incremental variant
+updates.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.84\linewidth]{figure_06_qr_core_equivalence.png}
+\caption{QR-core spectral equivalence under the stated orthonormality hypotheses. The diagram pairs the exact factor identity with the archived maximum absolute and relative \(\ell_2\) singular-spectrum discrepancies for a 128-row factor with 180 old and 37 appended columns. Recorded audit metrics replace the overlaid singular-value curves, whose raw vectors were not archived.}
+\label{fig:qr-core-equivalence}
+\end{figure}
+
+
+\section{Range-core spectral compression}\label{sec:final-21}
+
+Suppose an orthonormal basis \(Q_r\) captures the factor range:
+\[
+\operatorname{range}(A)\subseteq\operatorname{range}(Q_r).
+\]
+Then
+\[
+A=Q_rB,
+\qquad
+B=Q_r^\top A.
+\]
+
+\begin{theorem}[Exact range core]\label{claim:final-21-1}
+The nonzero eigenvalues of
+\[
+K=AA^\top
+\]
+are exactly the nonzero eigenvalues of
+\[
+BB^\top,
+\]
+with multiplicity. If $\operatorname{range}(Q_r)=\operatorname{range}(A)$,
+then $BB^\top$ is positive definite on the core space and its entire spectrum
+is the nonzero spectrum of $K$.
+\end{theorem}
+
+\begin{proof}
+Since $A=Q_rB$ and $Q_r^\top Q_r=I$, one has
+$AA^\top=Q_r(BB^\top)Q_r^\top$. The map $x\mapsto Q_rx$ is an isometry
+from the core space onto $\operatorname{range}(Q_r)$. On that range the two
+operators are conjugate, and $AA^\top$ vanishes on its orthogonal complement.
+Hence their nonzero eigenvalues agree with multiplicity. If the captured
+range equals $\operatorname{range}(A)$, then $B$ has full row rank, so
+$BB^\top$ is positive definite. Without that equality, the core may retain
+additional zero eigenvalues.
+\end{proof}
+
+
+Thus the computational pipeline can terminate its data-streaming stage after
+the range is captured:
+\[
+\boxed{
+\text{streamed data}
+\to
+\text{small spectral core}
+\to
+\text{tail evaluation}.
+}
+\]
+
+
+
+\clearpage
+\section{An exact core calculation}
+Consider the orthonormal range basis and core factor
+\[
+U=\begin{pmatrix}1&0\\0&1/\sqrt2\\0&1/\sqrt2\end{pmatrix},
+\qquad
+B=\begin{pmatrix}1&0&1\\0&2&0\end{pmatrix},
+\qquad A=UB.
+\]
+Direct multiplication gives
+\[
+BB^\top=\begin{pmatrix}2&0\\0&4\end{pmatrix},
+\qquad
+AA^\top=\begin{pmatrix}2&0&0\\0&2&2\\0&2&2\end{pmatrix}.
+\]
+The large operator has eigenvalues $4,2,0$. Its two-dimensional core has
+exactly the nonzero eigenvalues $4,2$. The Gaussian quadratic form therefore
+has the law $4Z_1^2+2Z_2^2$, whether it is computed from the full factor, the
+full Gram matrix, or the core.
+
+\subsection*{Why the nonzero-spectrum qualification matters}
+Take instead
+\[
+A=\begin{pmatrix}1&0\\0&0\end{pmatrix},\qquad Q_r=I_2,\qquad B=Q_r^\top A=A.
+\]
+The captured subspace contains the range of $A$, but is larger than that range.
+Both Gram matrices have spectrum $\{1,0\}$. Their nonzero spectrum is
+$\{1\}$. Thus the nonzero spectrum of $AA^\top$ cannot be identified with the
+\emph{entire} spectrum of $BB^\top$. Choosing the compact basis
+$Q_r=(1,0)^\top$ instead gives $B=(1,0)$ and the one-dimensional core Gram
+$(1)$. The extra zero records an unused basis direction, not an additional
+random contribution. This is why range containment and exact-range equality
+have different conclusions in Theorem~\ref{claim:final-21-1}.
+
+The first example in this section has active rank two. It separates algebraic
+exactness from backend coverage. The spectral reduction and analytic packet theory remain
+valid, but the implemented directed positive-tail backend described in
+Chapter~\ref{ch:intervals} requires active rank greater than two. Capturing a
+range exactly does not remove a later numerical method's hypotheses.

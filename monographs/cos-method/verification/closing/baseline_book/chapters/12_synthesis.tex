@@ -1,0 +1,362 @@
+\chapter{Composition, scope, and contribution}\label{ch:synthesis}
+\chapterlead{The useful synthesis is not that every decomposition commutes with every
+other. It is that each layer preserves a specified object or exposes a
+specified error. The final calculation is justified only when those objects
+and bounds agree at their interfaces. This chapter states the exact
+composition result, locates the contribution among established methods, and
+makes the remaining implementation boundaries explicit.}
+\section{Method synthesis: composable decompositions}\label{sec:final-29}
+
+The solver is organized around four independent decomposition axes:
+\[
+\boxed{
+\mathcal D
+=
+\mathcal D_{\rm storage}
+\circ
+\mathcal D_{\rm phase}
+\circ
+\mathcal D_{\rm rank}
+\circ
+\mathcal D_{\rm spectrum}.
+}
+\]
+This display describes the pipeline schematically, not four endomorphisms
+proved to commute pairwise.  The precise commutation theorem below is for
+exact storage refinement and a fixed structural phase partition.  Full range
+capture or residual completion preserves the nonzero spectrum exactly. A
+truncated packet representation instead preserves the requested tail within
+its explicit analytic error bound.
+
+They answer different questions.  Storage decomposition controls what is
+resident.  Phase decomposition controls where information can propagate.
+Rank decomposition controls how many directions must be retained.  Spectral
+packetization controls the cost of the final deep-tail transform.  The central
+structural fact is that these representations can be changed independently
+without changing the exact operator when their respective invariance
+conditions are satisfied.
+
+\subsection{Storage-phase commutation}
+
+Fix a structural phase partition
+\[
+\{1,\ldots,m\}=\mathcal P_1\sqcup\cdots\sqcup\mathcal P_H
+\]
+and let each phase be subdivided into arbitrary storage blocks
+\[
+\mathcal P_h
+=
+J_{h1}\sqcup\cdots\sqcup J_{hB_h}.
+\]
+Let $S$ denote this physical storage subdivision.  The phase projectors
+$P_h$ are defined by the structural phases, not by $S$.
+
+\begin{theorem}[Storage-phase commutation theorem]\label{claim:final-29-1}
+Let
+\[
+A=M_XGW^{1/2},
+\qquad H=A^\top A,
+\]
+and let $S$ and $S'$ be any two exact storage refinements that respect the
+same structural phase partition.  Then:
+\begin{enumerate}[label=(\roman*)]
+\item the exact operator $H$ is identical under $S$ and $S'$.
+\item every phase coupling $P_hHP_g$ is identical under $S$ and $S'$.
+\item the exact phase graph and every $k$-step polyphase light cone are
+identical under $S$ and $S'$.
+\item any exact matrix-free Krylov method applied through streamed products
+produces the same Krylov subspaces in exact arithmetic under $S$ and $S'$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Storage refinement changes only the order and grouping of finite sums.
+By partition refinement invariance, the streamed products reconstruct the
+same $A$, $A^\top$, and therefore the same $H=A^\top A$.  Since each
+$P_h$ is fixed by the structural phase partition, every block
+$P_hHP_g$ is unchanged.  The phase graph is defined only by these blocks, so
+its path structure and light cones are unchanged.  Finally, an exact
+matrix-free Krylov method depends only on repeated applications of the same
+operator to the same starting block. Hence its generated subspaces are
+identical.
+\end{proof}
+
+\begin{corollary}[Adaptive resident-block scheduler]\label{claim:final-29-2}
+An implementation may change resident block size at runtime, including
+recursive splits after an allocation failure, without changing the exact
+phase graph or the exact Krylov subspaces. All required storage blocks must
+be processed exactly, with the operator and starting block held fixed.
+\end{corollary}
+
+This separates \emph{mathematical locality} from \emph{physical storage
+granularity}.  A phase may remain fixed as an LD window or annotation class
+while its physical representation is subdivided according to free GPU
+memory, scalar precision, transfer granularity, or stream count.
+
+\subsection{Frontier-to-I/O theorem}
+
+\begin{theorem}[Exact frontier-to-I/O reduction]\label{claim:final-29-3}
+Suppose a validated exact phase graph of the fixed operator $H=A^\top A$
+is already supplied and the initial Krylov block is supported on a phase set
+$F_0$.  Keep covariate projections, weights, and structural phase metadata
+fixed, and assume all factor-action blocks required for the retained phase
+operator are available.  At depth $k$, let $F_k$ be the graph
+$k$-neighborhood of $F_0$.  Then no storage block lying wholly in a phase
+outside $F_k$ can affect the $k$-step Krylov vector.  Such a block need not be
+loaded when evaluating the requested power through the restricted factor
+$A_{F_k}$.  Storage blocks mixing active and inactive phases require a
+separate refinement before this omission is valid.
+\end{theorem}
+
+\begin{proof}
+For every phase $h\notin F_k$ and every starting phase $g\in F_0$, the
+polyphase light-cone theorem gives $P_hH^kP_g=0$.  Storage-phase commutation
+allows each active phase operator to be evaluated through arbitrary exact
+storage blocks.  Every path of length at most $k$ beginning in $F_0$ stays in $F_k$.
+Let $J_F$ be the coordinate inclusion from the retained coordinates
+$F=F_k$ into the full variant space. Thus $P_F=J_FJ_F^\top$ and
+$A_F=AJ_F$. The compressed operator and its ambient embedding satisfy
+\[
+H_F=J_F^\top HJ_F=A_F^\top A_F,
+\qquad P_FHP_F=J_FH_FJ_F^\top.
+\]
+These identities distinguish the compressed matrix from the larger ambient
+matrix. Since every path of length at most $k$ from $F_0$ stays in $F$,
+\[
+H^kX=J_F H_F^k J_F^\top X.
+\]
+This includes the zero output outside $F$. Blocks wholly outside the retained
+phase set may therefore be omitted from the restricted factor evaluation.
+\end{proof}
+
+The theorem turns an algebraic support statement into an execution law:
+\[
+\boxed{
+\text{Krylov depth}
+\longrightarrow
+\text{reachable phases}
+\longrightarrow
+\text{storage blocks that must be transferred}.
+}
+\]
+Discovery or verification of the phase graph may itself require all inputs.
+The theorem does not claim minimum total I/O, omission of mixed-phase blocks,
+or correctness for an unverified approximate graph.  The scheduler is constrained
+by the exact operator graph rather than solely by available memory.
+
+\subsection{Full method stack}
+
+The complete positive-form solver may therefore be written as
+\[
+\boxed{\begin{aligned}
+A
+&\longrightarrow \text{resident storage blocks}\\
+&\longrightarrow \text{structural phase frontier}\\
+&\longrightarrow \text{phase-local Krylov/range core}\\
+&\longrightarrow \text{residual moment certificate or exact completion}\\
+&\longrightarrow \{\lambda_j\}\\
+&\longrightarrow \text{centered spectral packets}\\
+&\longrightarrow \log P(Q\ge q).
+\end{aligned}}
+\]
+
+Three invariances make the stack composable:
+\begin{enumerate}
+\item storage refinement does not change the represented operator.
+\item structural phase scheduling does not depend on physical block size.
+\item once the spectrum or a certified spectral enclosure is obtained, the
+      tail engine is independent of the application that produced it.
+\end{enumerate}
+
+The resulting method can be aggressive during basis discovery and still return
+to exactness.  Approximate phase pruning is controlled by query and operator
+budgets. Unresolved range structure is measured by trace, square-trace, and
+spectral-cap invariants. And when the remaining rank is small, streamed
+residual completion restores the exact nonzero spectrum before the final tail
+evaluation.
+
+\subsection{Method summary}
+
+The resolved synthesis is
+\[
+\boxed{\begin{aligned}
+&\text{exact streamed factor actions}
++\text{ structural light cones}
++\text{ certified pruning}\\
+&+\text{ phase-local rank}
++\text{ residual moment certificates}
++\text{ exact residual completion}\\
+&+\text{ spectral packets}
++\text{ log-domain extreme-tail evaluation}.
+\end{aligned}}
+\]
+
+The central design principle is separation of representation from semantics:
+changing how an operator is stored, scheduled, compressed, or evaluated must
+not silently change the mathematical quadratic form.  Each approximation
+layer therefore either carries an explicit certificate or terminates in an
+exact completion step.
+
+
+
+\section{Prior work and the contribution boundary}\label{sec:prior-work}
+Characteristic-function methods for quadratic forms substantially predate
+this engine.  Imhof's 1961 paper is a foundational historical comparator
+\cite{Imhof1961}.  Davies' Algorithm AS~155 treats linear combinations of
+noncentral chi-square variables with signed coefficients and an optional
+Gaussian term, using characteristic-function inversion and explicit
+truncation/integration controls \cite{Davies1980}.  Its documented difficult
+low-degree cases are relevant to the retained low-rank limitations here.
+
+The Fourier-cosine representation and the use of characteristic-function
+values for cosine coefficients are due to Fang and Oosterlee
+\cite{FangOosterlee2008}.  Their formulation distinguishes finite-domain
+coefficients from the full characteristic-function coefficients used to
+approximate them.  The support/folding argument above supplies the particular
+positive-law alias bound needed here. A general COS accuracy theorem is not
+inherited without checking its hypotheses.
+
+The choice of truncation range is studied by Junike and Pankrashkin
+\cite{JunikePankrashkin2022}, and explicit mode-count bounds under stated
+regularity assumptions by Junike \cite{Junike2024}. Junike and Stier develop
+a damped COS framework for distributional quantities and related integrals
+\cite{JunikeStier2025}. These are relevant predecessors to the support,
+mode, and reweighting layers. The bounds proved here are specialized to the
+quadratic-form transform and must be justified under their own hypotheses.
+
+No novelty is claimed for Gaussian spectral reduction, exponential tilting,
+saddlepoint centering, Fourier-cosine inversion, Weyl bounds, QR updates, or
+out-of-core multiplication themselves.  The proposed contribution is their
+explicit integration with independently adjustable storage, structural,
+range-residual, and query-specific centered spectral representations.  The
+packet compiler in Chapter~\ref{ch:packets} is a concrete mechanism: its
+local CGF remainder is propagated to the requested tail functional and
+refined jointly with support and mode errors.  The finite refinement theorem
+is an existence theorem, not a complexity guarantee or proof of planner
+optimality.
+
+The source-attribution record supports the listed COS and Davies formulas
+and the Imhof bibliographic entry. It is not an exhaustive priority search.
+The independent Imhof-style inversion checks support accuracy on the tested
+heterogeneous spectra. They do not establish a universal runtime advantage
+over a mature Davies implementation.
+
+
+\section{Guarantee levels and scope}\label{sec:final-31}
+
+The framework contains several different evidence levels.  They are kept
+separate because a proved algebraic identity, a finite numerical validation,
+and a directed-rounding probability enclosure are different kinds of claims.
+
+\begin{center}
+\small
+\begin{tabular}{@{}P{0.30\linewidth}P{0.20\linewidth}P{0.41\linewidth}@{}}
+\toprule
+Statement & Status & Meaning\\
+\midrule
+Block factor and streamed-action identities &
+proved &
+Exact finite-dimensional matrix identities. Storage blocking introduces no
+mathematical approximation.\\
+
+Storage-phase commutation and exact light cones &
+proved &
+Physical block refinement does not change the structural phase graph. Phases
+outside the exact finite-depth frontier contribute zero.\\
+
+Approximate light-cone and pruning certificates &
+proved + tested &
+Weak discarded couplings carry explicit finite-depth transfer and
+operator-norm budgets.\\
+
+Range residual and exact completion &
+proved + tested &
+The unresolved factor is measured directly. Small residual rank can be
+completed exactly.\\
+
+Positive exact-spectrum tail enclosure &
+directed rounding + proved remainders &
+For rank \(>2\), the finite transform is enclosed numerically and enlarged by
+proved support/alias and infinite-mode bounds.\\
+
+Accuracy-driven positive tail solver &
+certified / fail-closed &
+A result is accepted only after
+\(p_+/p_- - 1\le\varepsilon_{\rm requested}\) is proved.\\
+
+Positive noncentral engine &
+exact reduction + tested tail solver &
+The Gaussian form is reduced to a deterministic shift plus positive
+noncentral chi-square components.\\
+
+Signed / indefinite engine &
+proved reduction + analytic-ledger tests &
+High-rank and finite-endpoint cases passed analytic error checks. Low-rank mixed-sign forms
+remain limited by slow Fourier decay of the present COS certificate.\\
+
+Binary64 factor to rigorous spectrum &
+implemented at moderate dimension &
+Candidate eigensystems are post-certified by directed-rounding orthogonality
+and reconstruction bounds, then propagated monotonically into the tail.  The
+remaining issue is scalable streamed/subspace verification rather than the
+basic correctness theorem.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three boundaries remain material:
+
+\begin{enumerate}
+\item scale the verified matrix-to-spectrum bridge to streamed range-core and
+residual-completion linear algebra without materializing a full dense basis;
+\item replace the conservative low-rank mixed-sign Fourier-tail certificate
+with a rigorous convolution or quadrature route;
+\item implement the proven streamed and residual-completion algorithms in the
+final native GPU runtime and measure transfer/compute crossover on hardware.
+\end{enumerate}
+
+These are boundaries of the implementation, not hidden assumptions in the
+certified positive matrix-to-tail result at moderate dimension.
+
+
+
+\section{Conclusion}\label{sec:final-32}
+
+The quadratic-form problem can be separated into representation, structure,
+spectral recovery, and tail evaluation.
+
+At the representation level, factors can be streamed in blocks without
+changing the operator.  At the structural level, phase graphs constrain
+finite-depth propagation and allow certified scheduling.  At the spectral
+level, unresolved range structure is measured rather than guessed and can be
+completed exactly when its rank becomes small.  At the probability level,
+exponential tilting and spectral packets make extreme tails computationally
+tractable, while directed-rounding interval arithmetic and analytic remainder
+bounds turn the positive exact-spectrum calculation into an explicit
+probability enclosure.
+
+The resulting numerical contract is deliberately stronger than
+``approximately evaluate a small probability.''  For the rigorous positive
+backend, the user supplies an accuracy requirement.  Internal resolution is
+refined until that requirement is proved, or the solver returns an
+uncertified interval rather than claiming success.
+
+The deepest retained exact control reaches
+\[
+p=10^{-5000}.
+\]
+At that point the recorded accuracy-driven run reported relative multiplicative
+uncertainty below \(10^{-18}\).  This establishes that extreme-tail depth by
+itself is not the limiting numerical variable. The meaningful limit is whether
+the complete error ledger can be made smaller than the requested tolerance.
+
+The matrix-to-spectrum bridge closes that upstream correctness gap for
+moderate binary64 factors by post-certifying an otherwise untrusted candidate
+eigensystem.  The remaining rigorous frontier is primarily one of scalable
+representation: carry the same enclosure through streamed range cores and
+residual completion without forming a full dense eigenbasis, while extending
+the fail-closed accuracy contract to difficult low-rank mixed-sign forms.
+
+
+
+

@@ -1,0 +1,251 @@
+\chapter{Accuracy-driven certification}\label{ch:accuracy}
+A requested tolerance is an input to the problem, not an informal expectation
+about its answer. The controller accepts a result only when an outward
+probability interval proves the multiplicative accuracy requirement. Failure
+to prove that inequality remains a failure of certification, even when a
+point estimate appears accurate.
+\label{sec:final-5}
+
+The public numerical contract should specify the desired accuracy, not the
+internal transform resolution.
+
+For an exact positive spectrum and threshold \(q\), the solver accepts a
+requested relative multiplicative accuracy
+\[
+\varepsilon_{\rm req}>0
+\]
+and returns a certified interval
+\[
+[p_-,p_+]
+\]
+only when
+\[
+\boxed{
+\frac{p_+}{p_-}-1
+\le
+\varepsilon_{\rm req}.
+}
+\]
+
+In logarithmic coordinates, if
+\[
+\log_{10}p\in[d_-,d_+],
+\]
+the acceptance rule is
+\[
+\boxed{
+10^{d_+-d_-}-1
+\le
+\varepsilon_{\rm req}.
+}
+\]
+
+No value of \(K\), support width, or arithmetic precision appears in the
+external contract.
+
+\begin{theorem}[Accuracy contract for the positive exact-spectrum backend]\label{claim:final-5-1}
+Assume an exact supplied positive decimal spectrum of rank greater than two,
+a threshold \(q\ge0\) with valid interval-design parameters, and requested multiplicative tolerance
+\(\varepsilon_{\rm req}>0\).  Suppose the directed-rounding interval backend
+returns an enclosure
+\[
+\log_{10}p\in[d_-,d_+]
+\]
+that includes the proved support/alias and omitted-mode remainders.  If the
+accuracy-driven controller returns \texttt{certified=True}, then
+\[
+\boxed{
+P(Q\ge q)\in[10^{d_-},10^{d_+}]
+}
+\]
+and
+\[
+\boxed{
+\frac{10^{d_+}}{10^{d_-}}-1
+\le
+\varepsilon_{\rm req}.
+}
+\]
+If the resource caps are reached before this inequality is proved, the
+controller returns \texttt{certified=False} rather than promoting the interval
+midpoint to a certified answer.
+\end{theorem}
+
+\begin{proof}
+The directed-rounding backend encloses the finite transform and exponential
+prefactor and then enlarges that enclosure by the proved support/alias and
+infinite-mode error bounds.  Therefore the true tail probability lies inside
+the returned interval.  The controller encloses
+\(\operatorname{expm1}(\log(10)(d_+-d_-))\) by directed rounding and
+sets \texttt{certified=True} only when the upper endpoint of that ratio
+enclosure is no larger than the lower endpoint of the exact requested
+tolerance enclosure.  High precision alone is not an enclosure proof.  The fail-closed branch follows directly from
+the controller definition.
+\end{proof}
+
+\section{Adaptive refinement}
+
+The controller adjusts three internal resources:
+
+\begin{enumerate}
+\item the COS mode count \(K\).
+\item the tilted support scale \(L\), which changes \(U\) and its associated
+Chernoff parameter;
+\item the interval arithmetic precision.
+\end{enumerate}
+
+At each stage the full directed-rounding interval is recomputed.  If the
+rounding component is material relative to the requested budget, arithmetic
+precision is increased.  Otherwise the dominant analytic contribution
+determines the next refinement: mode error increases \(K\), while
+support/alias error increases \(L\).
+
+The solver terminates only after the multiplicative inequality above has been
+proved.
+
+\section{Fail-closed behavior}
+
+If the configured resource caps are exhausted before the requested accuracy
+is established, the solver does not silently return its midpoint as though it
+were certified.
+
+Instead it returns
+\[
+\boxed{\texttt{certified = false}}
+\]
+together with the unresolved interval and a failure reason.
+
+This behavior is part of the numerical definition of the solver.
+
+\section{Accuracy ladder through \texorpdfstring{\(10^{-5000}\)}{1e-5000}}
+
+The exact control
+\[
+Q=0.02\chi^2_{80}
+\]
+was evaluated at tail depths
+\[
+10^{-100},
+\qquad
+10^{-1000},
+\qquad
+10^{-5000}.
+\]
+
+For each depth the controller was asked to prove relative multiplicative
+accuracies
+\[
+10^{-8},
+\quad
+10^{-10},
+\quad
+10^{-12},
+\quad
+10^{-14}.
+\]
+All twelve contracts were satisfied.
+
+At the \(10^{-5000}\) point, the controller produced:
+
+\begin{center}
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+requested accuracy & achieved ratio minus one & \(K\) & \(L\)\\
+\midrule
+\(10^{-8}\)  & \(3.19\times10^{-10}\) & 64  & 10\\
+\(10^{-10}\) & \(7.70\times10^{-11}\) & 128 & 10\\
+\(10^{-12}\) & \(3.48\times10^{-15}\) & 128 & 12\\
+\(10^{-14}\) & \(3.48\times10^{-15}\) & 128 & 12\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The gap between requested and achieved accuracy is expected: refinement is
+discrete, so one additional support or mode refinement can improve the
+certificate by several orders of magnitude.
+
+A further stress test requested
+\[
+10^{-16}
+\quad\text{and}\quad
+10^{-18}
+\]
+relative accuracy at the same \(10^{-5000}\) tail.  The solver obtained
+approximately
+\[
+3.05\times10^{-18}
+\]
+and
+\[
+9.20\times10^{-20}
+\]
+respectively.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.82\linewidth]{figure_26_accuracy_driven_refinement.png}
+\caption{Accuracy-driven refinement.  Each point lies at or below the
+requested-equals-achieved line because an interval result is labeled certified only
+after the requested multiplicative probability accuracy has been proved.}
+\label{fig:accuracy-driven}
+\end{figure}
+
+\section{Acceptance arithmetic and serialization are directed}
+
+The acceptance condition must be evaluated as carefully as the probability
+interval.
+
+Converting a tiny log-width \(w\) using
+\[
+10^w-1
+\]
+under an insufficient point-precision context can lose the width. At approximately \(10^{-15}\)
+relative scales, the ratio can round to zero.
+
+Even when the probability interval remains valid, that conversion cannot
+support a certification decision. The implementation encloses
+\[
+\boxed{
+\operatorname{expm1}(\log(10)\,w)
+}
+\]
+with directed interval arithmetic before deciding whether the requested
+accuracy has been met.  Acceptance compares the upper endpoint of that ratio
+with the lower endpoint of the requested exact tolerance, so a rounded point
+estimate cannot promote an unresolved boundary case to success.
+
+Authoritative output strings must preserve the same outer enclosure.  The
+implementation converts each exact binary interval endpoint to a decimal
+string with \texttt{Decimal} and explicit \texttt{ROUND\_FLOOR} for lower
+endpoints or \texttt{ROUND\_CEILING} for upper endpoints.  Ordinary interval
+display formatting is not used as an authoritative serialization method:
+nearest-rounded decimal text can move an endpoint inward even when the
+internal interval arithmetic was directed.  Matrix-to-tail propagation keeps
+these endpoint strings and applies the same directed ratio test.
+
+The correctness requirement applies not only to the tail integral but also
+to the logic that labels its result certified.
+
+\section{Input semantics at \texorpdfstring{\(p\approx10^{-16}\)}{p about 1e-16}}
+
+At this accuracy scale, the representation of the threshold \(q\) itself is
+measurable.  In the \(0.02\chi^2_{80}\) control targeted at \(10^{-16}\),
+rounding the high-precision threshold to binary float64 shifts the exact tail
+by approximately
+\[
+3.83\times10^{-15}
+\]
+decades.  The hardened float64 solver evaluated at that same rounded input
+then differs from the exact tail of the rounded input by approximately
+\[
+5.17\times10^{-15}
+\]
+decades.
+
+Accordingly, claims below the float64 input-quantization scale use exact-decimal
+or interval inputs.  The rigorous accuracy contract therefore certifies the
+mathematical inputs supplied to it, rather than silently identifying a rounded
+binary threshold with an ideal decimal threshold.
+
+
+

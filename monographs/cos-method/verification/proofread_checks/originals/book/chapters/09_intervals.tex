@@ -1,0 +1,330 @@
+\chapter{Directed probability enclosures}\label{ch:intervals}
+
+\label{sec:final-4}
+
+An analytic remainder estimate controls the error of a mathematical
+approximation. A numerical enclosure must also control the arithmetic used
+to evaluate it. This chapter joins directed arithmetic to explicit
+remainder bounds, yielding an interval that contains the probability
+represented by an exactly supplied positive spectrum, subject to the stated
+arithmetic trust base.
+
+\section{Interval target}
+
+For a positive central quadratic form
+\[
+Q=\sum_{j=1}^{r}\lambda_jZ_j^2,
+\qquad
+\lambda_j>0,
+\]
+the output is not merely a point estimate.  It is
+\[
+\boxed{
+\log_{10}P(Q\ge q)\in[d_-,d_+].
+}
+\]
+Hence the corresponding multiplicative uncertainty satisfies
+\[
+\boxed{
+\frac{p_+}{p_-}\le 10^{d_+-d_-}.
+}
+\]
+
+The finite transform and exponential prefactor are evaluated by
+directed-rounding interval arithmetic.  The resulting interval is enlarged by
+two independently proved analytic remainders: a support/periodization alias
+bound and an omitted-COS-mode bound.
+
+\section{No exact saddlepoint is required}
+
+Choose any
+\[
+0<\theta<\frac{1}{2\lambda_{\max}}.
+\]
+Exponential tilting gives
+\[
+P(Q\ge q)
+=
+e^{K(\theta)-\theta q}
+S_\theta(q),
+\]
+where
+\[
+S_\theta(q)
+=
+E_\theta\!\left[
+e^{-\theta(Q-q)}
+1_{\{Q\ge q\}}
+\right].
+\]
+
+The interval proof does not require \(\theta\) to be the exact saddlepoint.
+A high-precision saddlepoint is used only as an efficient design choice.
+Once serialized as an exact decimal input, it is simply a valid tilt inside
+the MGF domain.
+
+The same is true of the support endpoint \(U\) and the auxiliary Chernoff
+parameter \(\eta\).  Correctness requires only
+\[
+U>q\ge0,\qquad U>0,
+\qquad
+\theta<\eta<\frac{1}{2\lambda_{\max}}.
+\]
+
+\section{Rigorous support and alias control}
+
+Under the tilted measure,
+\[
+P_\theta(Q>U)
+\le
+\exp\left\{
+K(\eta)-K(\theta)-(\eta-\theta)U
+\right\}.
+\]
+
+The full-characteristic-function cosine expansion periodizes the tilted density
+on \([0,U]\).  Because the original positive quadratic form is supported on
+\([0,\infty)\), the total positive-tail mass aliased back into one fundamental
+interval is at most \(P_\theta(Q>U)\).
+
+The actual payoff omitted above \(U\) is at most
+\[
+e^{-\theta(U-q)}P_\theta(Q>U).
+\]
+
+Therefore
+\[
+\boxed{
+E_{\rm support}
+\le
+P_\theta(Q>U)
+\left(
+1+e^{-\theta(U-q)}
+\right).
+}
+\]
+
+\section{Rigorous infinite-mode control}
+
+Define
+\[
+a_j=
+\frac{2\lambda_j}{1-2\theta\lambda_j}.
+\]
+The normalized tilted characteristic function satisfies
+\[
+|\phi_\theta(t)|
+=
+\prod_{j=1}^r
+\left(
+1+(a_jt)^2
+\right)^{-1/4}.
+\]
+
+Since
+\[
+1+(a_jt)^2\ge(a_jt)^2,
+\]
+we have
+\[
+|\phi_\theta(t)|
+\le
+C_\theta t^{-r/2},
+\qquad
+C_\theta=\prod_j a_j^{-1/2}.
+\]
+
+For the payoff coefficient
+\[
+I_k=
+\int_q^U
+e^{-\theta(x-q)}
+\cos(k\pi x/U)\,dx,
+\]
+the elementary bound
+\[
+|I_k|\le\frac1\theta
+\]
+holds.
+
+Let
+\[
+p=\frac r2>1,\qquad K\ge1.
+\]
+For a finite transform retaining modes \(0,\ldots,K-1\),
+\[
+\boxed{
+E_{\rm series}
+\le
+\frac{2C_\theta}{U\theta}
+\left(\frac{U}{\pi}\right)^p
+\left[
+K^{-p}
++
+\frac{K^{1-p}}{p-1}
+\right].
+}
+\]
+
+This first interval backend therefore requires \(r>2\).  Lower-rank positive
+forms can use a different tail bound and are not claimed by this theorem.
+
+\section{Final enclosure theorem}
+
+Let \(\boldsymbol S_K\) be the directed-rounding interval containing the finite
+\(K\)-mode tilted COS sum, and set
+\[
+E=E_{\rm support}+E_{\rm series}.
+\]
+Then
+\[
+\boxed{
+S_\theta(q)
+\in
+\boldsymbol S_K+[-E,E].
+}
+\]
+
+If the lower endpoint of this interval is positive, directed rounding gives
+\[
+\boxed{
+\log P(Q\ge q)
+\in
+K(\theta)-\theta q
++
+\log\left(
+\boldsymbol S_K+[-E,E]
+\right).
+}
+\]
+
+All finite arithmetic in this expression is enclosed by the interval backend.
+
+\section{Independent exact interval control through \texorpdfstring{\(10^{-5000}\)}{1e-5000}}
+
+For the control
+\[
+Q=0.02\chi^2_{80},
+\]
+the survival probability has the finite exact formula
+\[
+P(Q\ge q)
+=
+e^{-x}
+\sum_{j=0}^{39}
+\frac{x^j}{j!},
+\qquad
+x=\frac{q}{0.04}.
+\]
+
+This finite expression was evaluated independently by directed-rounding
+interval arithmetic, without using K-COS.  The K-COS enclosure and this exact
+control enclosure overlap at
+\[
+p=10^{-100},
+\qquad
+10^{-1000},
+\qquad
+10^{-5000}.
+\]
+
+With \(K=128\) and 90 interval decimal digits, the resulting K-COS widths are
+
+\begin{center}
+\begin{tabular}{@{}rrr@{}}
+\toprule
+target & width in $\log_{10}p$ & multiplicative ratio minus one\\
+\midrule
+$10^{-100}$ &
+$8.95\times10^{-13}$ &
+$2.06\times10^{-12}$\\
+$10^{-1000}$ &
+$6.94\times10^{-12}$ &
+$1.60\times10^{-11}$\\
+$10^{-5000}$ &
+$3.37\times10^{-11}$ &
+$7.75\times10^{-11}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Thus the \(10^{-5000}\) result is not merely a point estimate agreeing with a
+reference.  For the exact supplied spectrum, it comes with a directed-rounding
+logarithmic enclosure whose probability ratio satisfies
+\[
+\boxed{
+\frac{p_+}{p_-}
+\le
+1+7.75\times10^{-11}
+}
+\]
+up to the displayed rounding of that ratio.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.82\linewidth]{figure_24_interval_deep_tail_width.png}
+\caption{Width of the directed-rounding K-COS probability enclosure on exact
+scaled-chi-square controls.  The enclosure remains narrow even at
+$10^{-5000}$.}
+\label{fig:interval-tail-width}
+\end{figure}
+
+\section{Arithmetic width versus analytic width}
+
+At the \(10^{-5000}\) control, the interval precision was swept from 40 to 120
+decimal digits.  The total certified width remained essentially
+\[
+3.34247\times10^{-11}
+\]
+decades.
+
+Over the same sweep, the arithmetic-only width contracted from approximately
+\[
+7.5\times10^{-37}
+\]
+to
+\[
+6.3\times10^{-117}
+\]
+decades.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.82\linewidth]{figure_25_interval_arithmetic_vs_analytic.png}
+\caption{Arithmetic versus analytic uncertainty at a $10^{-5000}$ tail.  The
+directed-rounding arithmetic enclosure becomes negligible. The final width is
+controlled by the explicit analytic support and series remainders.}
+\label{fig:interval-arithmetic}
+\end{figure}
+
+This separation is important.  Increasing numerical precision cannot improve
+an analytic truncation theorem.  Conversely, once interval arithmetic is far
+below the analytic error budget, numerical rounding is no longer the limiting
+uncertainty.
+
+\section{Guarantee boundary}
+
+The directed enclosure has the following scope:
+
+\begin{quote}
+For an exact supplied positive decimal spectrum of rank greater than two, the
+backend returns a directed-rounding logarithmic probability enclosure enlarged
+by proved analytic support/alias and omitted-mode bounds.
+\end{quote}
+
+The result is conditional on correctness of the interval-arithmetic library
+implementation.  The implementation uses \texttt{mpmath.iv}, whose
+interval layer applies downward and upward endpoint rounding.
+
+A completely end-to-end guarantee beginning from an arbitrary floating-point
+matrix requires one more layer: either a rigorously enclosed matrix-to-spectrum
+computation, or an exact/residual completion step whose linear algebra is also
+performed with verified interval or ball arithmetic.
+
+The packetized spectral representation has likewise not yet been
+ported to interval arithmetic.  The first rigorous backend deliberately uses
+the exact supplied spectrum so that representation error cannot be hidden
+inside the numerical enclosure.
+
+
+

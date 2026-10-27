@@ -1,0 +1,910 @@
+--- baseline/book/chapters/01_gaussian.tex
++++ final/book/chapters/01_gaussian.tex
+@@ -291,7 +291,7 @@
+ The numerical interface implements this reduction directly.  In an isotropic
+ control,
+ \[
+-\Sigma=I,\qquad M=aI,
++\Sigma=I,\qquad M=aI,\qquad a>0,
+ \]
+ the law collapses to the exact scaled noncentral chi-square distribution
+ \[
+--- baseline/book/chapters/02_streaming.tex
++++ final/book/chapters/02_streaming.tex
+@@ -220,7 +220,8 @@
+ \end{proof}
+ 
+ \begin{corollary}[Streaming Golub--Kahan equivalence]\label{claim:final-10-3}
+-Any exact-arithmetic algorithm whose access to \(A\) occurs only through
++With the same initial state, algorithmic choices, and random draws, any
++exact-arithmetic algorithm whose access to \(A\) occurs only through
+ \(AV\) and \(A^\top U\) produces the same iterates when those products are
+ implemented by the preceding streamed formulas.
+ \end{corollary}
+@@ -391,7 +392,8 @@
+ \begin{table}[htbp]
+ \centering
+ \caption{Algebraic float64 memory model for \(n=2000\), \(p=4\),
+-Krylov width \(s=16\), resident variant block \(c=1024\).}
++Krylov width \(s=16\), resident variant block \(c=1024\), and
++sample tile height \(t=256\).}
+ \begin{tabular}{rrrr}
+ \toprule
+ \(m\) & full factor (MiB) & streamed \(KV\) (MiB) & tiled Gram (MiB)\\
+@@ -420,17 +422,17 @@
+ \[
+ A=[A_1\ A_2\ A_3],\qquad A_i\in\mathbb R^{4\times2}.
+ \]
+-The second and third blocks are identical, but they are different column positions in the factor. Both must be counted. Their Gram contributions are
+-\begin{align*}
+-A_1A_1^\top&=\frac12
+-\begin{pmatrix}1&0&1&0\\0&1&0&1\\1&0&1&0\\0&1&0&1\end{pmatrix},\\
+-A_2A_2^\top=A_3A_3^\top&=\frac12
++Although $A_2=A_3$, both column groups must be counted. Their Gram contributions are
++\[
++A_1A_1^\top=\frac12
++\begin{pmatrix}1&0&1&0\\0&1&0&1\\1&0&1&0\\0&1&0&1\end{pmatrix},\qquad
++A_2A_2^\top=A_3A_3^\top=\frac12
+ \begin{pmatrix}1&0&-1&0\\0&1&0&-1\\-1&0&1&0\\0&-1&0&1\end{pmatrix}.
+-\end{align*}
+-Adding all three gives the matrix $K$ already derived. Merging the last four columns into one storage block gives the same result. Discarding the repeated third block does not: that changes its coefficient contribution and hence the probability law.
++\]
++The sum is $K$. Merging the last two blocks preserves it. Discarding $A_3$ instead changes the operator and its probability law.
+ 
+ For the declared vector $v=(1,2,-1,0)^\top$, the action can be evaluated without forming any block Gram matrix:
+ \[
+ \sum_{j=1}^3 A_j(A_j^\top v)=Kv=(2,3,-2,-1)^\top.
+ \]
+-Every operation in this identity is rational. The companion calculation checks it symbolically, along with the change from three blocks to two. It illustrates the central distinction of this chapter: changing the storage partition is exact because every column is still represented. Dropping an operator coupling is a different operation and requires the error analysis developed next.
++The symbolic check confirms both storage partitions. Every column remains represented. Dropping an operator coupling instead changes the operator and requires the error analysis developed next.
+--- baseline/book/chapters/03_phases.tex
++++ final/book/chapters/03_phases.tex
+@@ -292,7 +292,7 @@
+ \begin{itemize}
+ \item every observed phase norm lay below $\mathcal B^k\rho(X)$.
+ \item every observed thresholding error lay below
+-$(\mathcal B^k-\mathcal B_0^k)\rho(X)$;
++$(\mathcal B^k-\mathcal B_0^k)\rho(X)$.
+ \item the largest total observed-error-to-certificate ratio was approximately
+ $0.669$.
+ \end{itemize}
+@@ -330,7 +330,13 @@
+ \mathcal B_{\mathcal O}
+ =\mathcal B-\sum_{e\in\mathcal O}\Delta_e.
+ \]
+-The diagonal is always retained.
++The diagonal is always retained. The corresponding pruned operator is
++\[
++H_{\mathcal O}
++=H-\sum_{\{h,g\}\in\mathcal O}
++\bigl(P_hHP_g+P_gHP_h\bigr).
++\]
++Thus $\mathcal B_{\mathcal O}$ is its block-norm transfer matrix.
+ 
+ For depth $k\ge1$ and starting phase profile $\rho_0=\rho(X)$, define the
+ \emph{edge risk vector}
+@@ -449,7 +455,8 @@
+ \subsection{Equal-cost optimality}
+ 
+ Suppose each retained phase pair has the same communication or scheduling
+-cost.  Under the additive certificate, a set of omitted pairs is feasible if
++cost, and fix a budget $\tau\ge0$. Under the additive certificate, a set of
++omitted pairs is feasible if
+ \[
+ \sum_{e\in\mathcal O}\beta_e^{(k)}\le\tau.
+ \]
+@@ -460,7 +467,7 @@
+ 
+ \begin{theorem}[Cardinality-optimal certified pruning]
+ \label{thm:unit-cost-optimal}
+-Let $r$ be the largest integer satisfying
++Let $r\in\{0,\ldots,N\}$ be the largest integer satisfying
+ \[
+ \sum_{i=1}^{r}\beta_{(i)}\le\tau.
+ \]
+@@ -470,7 +477,9 @@
+ \end{theorem}
+ 
+ \begin{proof}
+-Among all subsets of cardinality $r+1$, the smallest possible sum of risks is
++If $r=N$, every candidate pair can be omitted and optimality is immediate.
++Otherwise, among all subsets of cardinality $r+1$, the smallest possible sum
++of risks is
+ \[
+ \sum_{i=1}^{r+1}\beta_{(i)}.
+ \]
+@@ -478,9 +487,9 @@
+ pairs is feasible.  The prefix of length $r$ is feasible by construction.
+ \end{proof}
+ 
+-This is a genuine optimization theorem, not a heuristic threshold rule.  The
+-optimization target is the additive certificate itself. The tighter exact
+-transfer envelope can leave additional slack.
++Optimality is relative to the scalar additive certificate, not to the actual
++operator error or to every tighter certificate. The exact transfer envelope
++can leave additional slack.
+ 
+ \subsection{Exact-envelope refinement}
+ 
+--- baseline/book/chapters/04_range.tex
++++ final/book/chapters/04_range.tex
+@@ -21,13 +21,15 @@
+ \(r_h\).
+ \end{theorem}
+ 
+-This justifies nonuniform Krylov block widths by phase.
++This justifies nonuniform Krylov block widths by phase. Here rank means exact
++algebraic rank. Discarding a direction by a floating singular-value threshold
++is an approximation and requires its own error bound.
+ 
+ 
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=\linewidth]{figures_production/figure_05_phase_local_rank.pdf}
+-\caption{The six-phase rank inventory determines a minimum width of one through six. Pale bars show the unused capacity of a uniform width of twelve. These recorded ranks are sufficient for the comparison. No unavailable singular-value vectors have been reconstructed.}
++\caption{The recorded six-phase ranks require widths from one through six. Pale bars show the excess capacity of a uniform width of twelve. The comparison uses the rank inventory, not a reconstructed singular-value distribution.}
+ \label{fig:phase-local-rank}
+ \end{figure}
+ 
+--- baseline/book/chapters/05_spectrum.tex
++++ final/book/chapters/05_spectrum.tex
+@@ -154,9 +154,12 @@
+ almost surely.  Taking upper-tail events yields the result.
+ \end{proof}
+ 
+-The two endpoint probabilities can be evaluated by the same K-COS machinery
+-used for the unpruned spectrum.  Its numerical error certificate is separate
+-from the spectral enclosure above.
++The endpoint probabilities are separate tail queries. Each must satisfy the
++hypotheses of the numerical backend used to evaluate it. In particular, zero
++lower coefficients can reduce the active rank below the directed backend's
++coverage. The stochastic enclosure remains valid in that case, but it does
++not by itself supply a supported numerical evaluation. Numerical error is
++separate from the spectral uncertainty above.
+ 
+ \subsection{A dual-budget pruning rule}
+ 
+@@ -192,8 +195,8 @@
+ 
+ In the deterministic ten-phase experiment, fixing the query budget at
+ \(0.05\) and the operator budget at \(0.005\) removed \(23\) of \(45\)
+-undirected phase pairs.  At a true probability of \(10^{-8}\), the certified
+-tail interval was
++undirected phase pairs.  At a reference probability near \(10^{-8}\), the analytic
++tail bracket was
+ \[
+ 10^{-8.11143}
+ \le
+@@ -201,7 +204,9 @@
+ \le
+ 10^{-7.89036},
+ \]
+-a width of about \(0.221\) decades.  With an operator budget of \(0.0075\),
++a width of about \(0.221\) decades. These endpoints summarize the
++real-arithmetic error analysis evaluated in floating point, not a directed
++rounding enclosure. With an operator budget of \(0.0075\),
+ \(34\) pairs were removed and the interval widened to about \(0.320\)
+ decades.  By contrast, allowing a strong coupling to be removed under a very
+ loose operator budget produced a multi-decade interval.
+@@ -359,9 +364,9 @@
+  \rho=\|F\|_2^2.
+ }
+ \]
+-The first quantity is the exact missing mean of the Gaussian quadratic form;
+-the second records how concentrated the residual spectrum is. The third is its
+-largest possible coefficient.
++The first quantity is the exact missing mean of the Gaussian quadratic form.
++The second records how concentrated the residual spectrum is. The third is
++its largest coefficient.
+ 
+ \subsection{A trace--Frobenius--cap MGF envelope}
+ 
+@@ -483,9 +488,9 @@
+ 
+ \begin{table}[htbp]
+ \centering
+-\caption{Tail-bracket width at a true probability of \(10^{-8}\).  The
+-trace/moment certificate is still conservative, but it is orders of magnitude
+-narrower than coefficient-wise Weyl inflation before full range capture.}
++\caption{Tail-bracket width in decades at a reference probability near \(10^{-8}\).
++The trace/moment bound is conservative but substantially narrower than
++coefficient-wise Weyl inflation before full range capture.}
+ \begin{tabular}{rrrr}
+ \toprule
+ Krylov depth & basis dimension & Weyl width & moment width\\
+@@ -636,8 +641,8 @@
+ 
+ \subsection{Hybrid stopping rule}
+ 
+-The resulting computational rule is not ``approximate forever.''  It is a
+-certified handoff between two regimes:
++Residual information supplies a stopping rule for approximate iteration and
++a handoff to exact completion:
+ \[
+ \boxed{
+ \begin{array}{c}
+@@ -883,11 +888,10 @@
+ 
+ The theorem applies in every finite dimension, but the present verifier forms a full candidate
+ basis \(Q\) and postchecks dense matrices.  It therefore closes the correctness
+-boundary before it closes the large-scale memory boundary.  For very large
+-streamed factors, the next step is to replace the full-basis postcheck with a
+-verified range-core/residual certificate and interval exact-completion step,
+-so that the matrix-to-spectrum guarantee inherits the same memory-bounded
+-architecture developed in the preceding chapters.
+-
+-
+-
++boundary before it closes the large-scale memory boundary.  For very large streamed factors, a memory-bounded guarantee would require a
++verified range-core/residual certificate and an interval completion step in
++place of the full-basis postcheck. Those extensions are not part of the
++implemented dense verifier.
++
++
++
+--- baseline/book/chapters/06_packets.tex
++++ final/book/chapters/06_packets.tex
+@@ -1,11 +1,14 @@
+ \chapter{Exponential tilting and spectral packets}\label{ch:packets}
+-The operator stage ends at a spectrum. The probability stage begins with a
++\chapterlead{The operator stage ends at a spectrum. The probability stage begins with a
+ threshold and an accuracy requirement. Exponential tilting places the query
+-in a better-conditioned region of the transformed law. Centered packets then
+-compress repeated transform evaluations on the grid that the query actually
+-uses. They do not replace the distribution by a moment-matched surrogate.
++in a better-conditioned region of the transformed law. Centered packets
++compress repeated transform evaluations on the grid that the query uses,
++without replacing the distribution by a moment-matched surrogate.}
+ \label{sec:packets}
+-Storage blocks partition a factor before eigendecomposition. Spectral packets group the coefficients after a spectrum is available. These operations therefore act on different objects. The packet expansion below approximates the transform on a specified complex grid, with a remainder bound for that grid. It is not a replacement distribution fitted to a few moments.
++Storage blocks partition a factor before eigendecomposition. Spectral packets
++group the coefficients after a spectrum is available. They act on different
++objects. The packet expansion approximates the transform on a specified
++complex grid and supplies a remainder bound on that grid.
+ 
+ The written packet bounds concern exact arithmetic. A directed packet implementation would also have to enclose its centers, moments, and transform evaluations. The positive interval backend in Chapter~\ref{ch:intervals} instead evaluates the supplied spectrum directly. The two routes share the inversion analysis, but their arithmetic guarantees must not be conflated.
+ 
+@@ -30,6 +33,10 @@
+ =-\frac12\sum_{j=1}^{r}\log(1-2s\lambda_j).
+ \label{eq:cgf}
+ \end{equation}
++For complex $s$, $\kappa$ denotes the analytic logarithm normalized by
++$\kappa(0)=0$. Each factor $1-2s\lambda_j$ has positive real part on this
++domain, so its logarithm in the sum is principal. The sum need not equal the
++principal logarithm of the product, whose argument can wrap by $2\pi$.
+ For real $\theta<1/(2\lambda_{\max})$,
+ \begin{equation}
+ \kappa^{(m)}(\theta)
+@@ -84,7 +91,8 @@
+ \E_{\theta}\!\left[e^{-\theta(Q-q)}\mathbf 1_{\{Q\ge q\}}\right].
+ \label{eq:tilt-tail}
+ \end{equation}
+-This identity is classical exponential tilting; K-COS uses it to avoid subtracting a CDF value numerically close to one.
++This classical exponential-tilting identity lets K-COS evaluate the upper tail
++without subtracting a cumulative distribution function (CDF) value close to one.
+ 
+ \section{Centered spectral packets}
+ 
+@@ -170,21 +178,18 @@
+ 
+ 
+ 
+-\clearpage
+ \section{The running example under an exponential tilt}\label{sec:worked-tilt}
+-For the spectrum $(1,1,2,2)$, repeated coefficients collapse the cumulant generator to
+-\[
+-\kappa(s)=-\log(1-2s)-\log(1-4s),\qquad \Re s<\frac14.
+-\]
+-At threshold $q=40$, the saddlepoint equation is
+-\[
+-\frac{2}{1-2\theta}+\frac{4}{1-4\theta}=40.
+-\]
+-It reduces to $160\theta^2-112\theta+17=0$. The admissible root is
+-\[
+-\theta_* = \frac{14-\sqrt{26}}{40}\approx0.2225245122,
+-\]
+-while the other root lies outside the transform domain. Substitution gives $\kappa'(\theta_*)=40$. The tilted mean is exactly the query threshold, although the tail itself is still evaluated under the original law through the likelihood-ratio identity.
++For spectrum $(1,1,2,2)$, the cumulant generator is
++$\kappa(s)=-\log(1-2s)-\log(1-4s)$ on $\Re s<1/4$.
++At $q=40$, the saddlepoint equation reduces to
++$160\theta^2-112\theta+17=0$, with
++\[
++\frac{2}{1-2\theta}+\frac{4}{1-4\theta}=40,
++\qquad
++\theta_* = \frac{14-\sqrt{26}}{40}\approx0.2225245122.
++\]
++The other root lies outside the transform domain. The tilted mean is $40$,
++while the likelihood-ratio identity restores the original tail probability.
+ 
+ \begin{figure}[!htbp]
+ \centering\includegraphics[width=\linewidth]{figures_production/worked_tilt.pdf}
+@@ -192,7 +197,7 @@
+ \label{fig:worked-tilt}
+ \end{figure}
+ 
+-There are two exact packets: the two copies of $1$ and the two copies of $2$. In either packet every centered deviation is zero. All positive-order centered moments vanish and the packet remainder is zero on every admissible grid. This is a useful limiting case: the representation is compressed, but no approximation error has been introduced. The numerical enclosure still has support, Fourier-mode, and arithmetic errors.
++The two copies of $1$ form one exact packet, and the two copies of $2$ form another. All centered deviations vanish, so the packet remainder is zero on every admissible grid. The numerical enclosure still has support, Fourier-mode, and arithmetic errors.
+ 
+ \clearpage
+ \section{A packet with a nonzero remainder}\label{sec:worked-packet}
+@@ -214,4 +219,4 @@
+ \label{fig:spectral-packets}
+ \end{figure}
+ 
+-Changing $\theta$, the support endpoint, or the mode count changes the complex grid. A packet that is economical at this one argument must therefore be checked again on the entire grid used by a tail query. The next chapter carries those gridwise errors into the probability functional.
++
+--- baseline/book/chapters/07_inversion.tex
++++ final/book/chapters/07_inversion.tex
+@@ -235,7 +235,8 @@
+ 
+ \begin{theorem}[Omitted COS-mode certificate]
+ \label{thm:cos-tail}
+-Let $N\ge1$, $b>q\ge0$, and $u_N=N\pi/b$ and $\beta_N=\beta(u_N)$. If $\beta_N>0$, then the contribution of all exact tilted-COS modes $k\ge N$ to the weighted tail functional is bounded by
++Let $N\ge1$ and $b>q\ge0$. Set $u_N=N\pi/b$ and
++$\beta_N=\beta(u_N)$. If $\beta_N>0$, then the contribution of all exact tilted-COS modes $k\ge N$ to the weighted tail functional is bounded by
+ \begin{equation}
+ \eps_{\mathrm{COS}}
+ \le
+--- baseline/book/chapters/08_adaptive.tex
++++ final/book/chapters/08_adaptive.tex
+@@ -64,10 +64,10 @@
+ 
+ \subsection{Log-domain packet error accumulation}
+ 
+-At extreme tail depths the analytic packet certificate contains sums of the
+-form
++After separating the likelihood-ratio prefactor, the packet contribution
++contains sums of the form
+ \[
+-\frac{2}{U}
++\frac{2}{b}
+ \sum_k
+ |J_k|
+ \left(
+@@ -75,11 +75,11 @@
+ \right).
+ \]
+ Direct evaluation can overflow even when the candidate is destined to be
+-rejected by the adaptive planner.  The hardened implementation instead
++rejected by the adaptive planner.  The implementation instead
+ computes
+ \[
+ \log\left(
+-\frac{2}{U}
++\frac{2}{b}
+ \sum_k
+ |J_k|
+ \left(
+@@ -98,8 +98,7 @@
+ 
+ An independently evaluated reference is useful only if its own numerical
+ resolution has converged.  In a rank-350 deep-tail audit, an initial fixed-grid
+-reference appeared to disagree with the adaptive answer.  Increasing the
+-reference COS grid gave discrepancies of approximately
++reference appeared to disagree with the adaptive answer.  Increasing the reference COS grid gave absolute discrepancies of approximately
+ \[
+ 1.88\times10^{-2},
+ \quad
+@@ -111,7 +110,7 @@
+ \]
+ decades as the grid was refined through
+ \[
+-K=4096,\ 8192,\ 16384,\ 32768.
++N=4096,\ 8192,\ 16384,\ 32768.
+ \]
+ 
+ \begin{figure}[htbp]
+--- baseline/book/chapters/09_intervals.tex
++++ final/book/chapters/09_intervals.tex
+@@ -2,12 +2,11 @@
+ 
+ \label{sec:final-4}
+ 
+-An analytic remainder estimate controls the error of a mathematical
++\chapterlead{An analytic remainder estimate controls the error of a mathematical
+ approximation. A numerical enclosure must also control the arithmetic used
+ to evaluate it. This chapter joins directed arithmetic to explicit
+-remainder bounds, yielding an interval that contains the probability
+-represented by an exactly supplied positive spectrum, subject to the stated
+-arithmetic trust base.
++remainder bounds, yielding an interval for an exactly supplied positive
++spectrum under the stated arithmetic trust assumptions.}
+ 
+ The notation follows the analytic development: $\kappa$ is the cumulant generating function, $b$ the support endpoint, $N$ the retained mode count, and $J_k$ the payoff coefficient. The implementation-name correspondence is given in Appendix~\ref{app:reproduction}.
+ 
+@@ -168,7 +167,7 @@
+ }
+ \]
+ 
+-This first interval backend therefore requires \(r>2\).  Lower-rank positive
++This implemented interval backend therefore requires \(r>2\).  Lower-rank positive
+ forms can use a different tail bound and are not claimed by this theorem.
+ 
+ \section{Final enclosure theorem}
+@@ -339,10 +338,10 @@
+ computation, or an exact/residual completion step whose linear algebra is also
+ performed with verified interval or ball arithmetic.
+ 
+-The packetized spectral representation has likewise not yet been
+-ported to interval arithmetic.  The first rigorous backend deliberately uses
+-the exact supplied spectrum so that representation error cannot be hidden
+-inside the numerical enclosure.
+-
+-
+-
++The supplied interval backend evaluates the exact spectrum directly.
++Packet centers, moments, and their propagated errors are not evaluated with
++directed arithmetic in this implementation. The packetized path therefore
++retains its separate analytic guarantee.
++
++
++
+--- baseline/book/chapters/10_accuracy.tex
++++ final/book/chapters/10_accuracy.tex
+@@ -6,7 +6,7 @@
+ point estimate appears accurate.}
+ \label{sec:final-5}
+ 
+-The public numerical contract should specify the desired accuracy, not the
++The external numerical contract specifies the desired accuracy, not the
+ internal transform resolution.
+ 
+ For an exact positive spectrum and threshold \(q\), the solver accepts a
+@@ -234,7 +234,7 @@
+ \[
+ 3.83\times10^{-15}
+ \]
+-decades.  The hardened float64 solver evaluated at that same rounded input
++decades.  The binary64 solver evaluated at that same rounded input
+ then differs from the exact tail of the rounded input by approximately
+ \[
+ 5.17\times10^{-15}
+--- baseline/book/chapters/11_evidence.tex
++++ final/book/chapters/11_evidence.tex
+@@ -1,5 +1,11 @@
+ \chapter{Numerical evidence and applications}\label{ch:evidence}
+-The numerical record has four distinct roles: exact-law controls test values with independent formulas, heterogeneous spectra test inversion across irregular coefficients, simulated kernels test the operator pipeline, and timing measurements characterize particular implementations. This chapter keeps those roles separate. The source package records the inputs and environments behind the retained experiments. Current regression and containment checks are reported in Appendix~\ref{app:reproduction}.
++\chapterlead{Exact-law controls test values against independent formulas. Heterogeneous
++spectra test inversion across irregular coefficients. Simulated kernels test
++the operator pipeline. Timing measurements characterize particular
++implementations. These are distinct forms of evidence.}
++The source package records the inputs and environments behind the reported
++experiments. The release regression and containment checks are reported in
++Appendix~\ref{app:reproduction}.
+ 
+ \section{Deep-tail controls}\label{sec:final-3}
+ A directed enclosure includes rounding as well as analytic remainders. An analytic ledger evaluated in ordinary floating point does not. The labels in this chapter identify which conclusion a result supports. The retained timing measurements are not presented as a new hardware comparison.
+@@ -7,8 +13,7 @@
+ The method is designed for a regime in which direct survival probabilities can
+ underflow long before the mathematical probability becomes numerically
+ unresolvable.  The engine therefore treats \(\log p\) as the primary numerical
+-quantity and keeps approximation certificates alive in the same extreme-tail
+-regime.
++quantity and evaluates its error bounds on that logarithmic scale.
+ 
+ The validation ladder spans seven qualitatively different settings:
+ 
+@@ -60,7 +65,7 @@
+ \[
+ \boxed{\log_{10}p=-922.0311624669905}
+ \]
+-using 79 spectral packets and \(K=128\).  Its independently evaluated
++using 79 spectral packets and \(N=128\).  Its independently evaluated
+ full-spectrum tilted reference agreed within the stored reporting precision, while the
+ reported relative certificate was
+ \[
+@@ -130,14 +135,14 @@
+ 
+ The four spectra include balanced, skewed, dominant-spike, and higher-rank
+ cases.  Each reference integral was evaluated at two truncation limits.  The
+-omitted integral after \(U\) was bounded using
++omitted integral after the frequency cutoff \(T>0\) was bounded using
+ \[
+ \frac1\pi
+-\int_U^\infty\frac{du}{uR(u)}
++\int_T^\infty\frac{du}{uR(u)}
+ \le
+-\frac{C}{\pi p}U^{-p},
++\frac{C}{\pi\nu}T^{-\nu},
+ \qquad
+-p=\frac12\sum_jh_j,
++\nu=\frac12\sum_jh_j,
+ \qquad
+ C=\prod_j\lambda_j^{-h_j/2}.
+ \]
+@@ -210,7 +215,7 @@
+ \[
+ \boxed{p\approx10^{-81.891937}}.
+ \]
+-At the deepest point the packetized solver used 35 packets, $K=4096$, and
++At the deepest point the packetized solver used 35 packets, $N=4096$, and
+ reported a relative certificate
+ \[
+ 5.78\times10^{-9}.
+@@ -221,9 +226,9 @@
+ standard errors.
+ 
+ \paragraph{Retained low-rank limitation.}
+-The exact mixed-sign identity
+-\[
+-Q=0.07(\chi^2_2-\chi^2_2)
++For independent $Y_1,Y_2\sim\chi^2_2$, the quadratic form
++\[
++Q=0.07(Y_1-Y_2)
+ \]
+ is Laplace distributed with scale $0.14$, so for $q\ge0$,
+ \[
+@@ -282,7 +287,7 @@
+ 
+ \begin{table}[htbp]
+ \centering
+-\caption{Realistic rare-variant simulation scenarios.  Adjacent $r^2$ is
++\caption{Synthetic rare-variant simulation scenarios.  Adjacent $r^2$ is
+ computed within the simulated LD blocks after variant standardization.}
+ \begin{tabular}{lrrrrr}
+ \toprule
+@@ -296,6 +301,11 @@
+ \end{tabular}
+ \end{table}
+ 
++Effective rank here is the participation ratio
++\[
++r_{\rm eff}=\frac{(\sum_j\lambda_j)^2}{\sum_j\lambda_j^2}.
++\]
++It measures spectral concentration, not an integer count of nonzero directions.
+ The corresponding spectra therefore span a substantial range of concentration:
+ stronger LD reduces effective rank even when the nominal quadratic-form rank
+ remains close to the sample residual dimension.
+@@ -313,20 +323,17 @@
+ 31, 127, and 509.  Within each block the implementation performs
+ 
+ \[
+-G_b
+-\to
+-G_b-\bar G_b
+-\to
+-\text{variance scaling}
+-\to
+-M_X G_b
+-\to
+-W_b^{1/2}
+-\to
+-A_bA_b^\top,
+-\]
+-
+-without materializing the full weighted factor.
++\begin{aligned}
++G_b&\longrightarrow G_b-\bar G_b
++     \longrightarrow \widetilde G_b,\\
++\widetilde G_b&\longrightarrow M_X\widetilde G_b
++     \longrightarrow A_b=M_X\widetilde G_bW_b^{1/2}
++     \longrightarrow A_bA_b^\top,
++\end{aligned}
++\]
++
++where $\widetilde G_b$ denotes the centered and scaled block. The full
++weighted factor is never materialized.
+ 
+ Across all four LD scenarios and all three resident block sizes, the largest
+ relative discrepancy against the fully materialized kernel was
+@@ -376,7 +383,7 @@
+ Thus the simulated phenotype path, the streamed kernel, and the generalized
+ $\chi^2$ spectral representation agree to floating-point precision.
+ 
+-\subsection{Deep tails on realistic LD spectra}
++\subsection{Deep tails on simulated LD spectra}
+ 
+ For every scenario, tail queries were generated at tilt fractions
+ 0.90, 0.97, and 0.99 of the positive singularity.  K-COS was compared with a
+@@ -409,7 +416,7 @@
+ \begin{center}
+ \begin{tabular}{rrrr}
+ \toprule
+-tilt fraction & $\log_{10}p$ & K-COS $K$ & absolute error (decades)\\
++tilt fraction & $\log_{10}p$ & COS modes $N$ & absolute error (decades)\\
+ \midrule
+ 0.9950 & -65.950669 & 2048 & $4.69\times10^{-13}$\\
+ 0.9970 & -95.305034 & 2048 & $3.70\times10^{-14}$\\
+@@ -430,8 +437,8 @@
+ 
+ The evidence remains synthetic.  These generators do not reproduce every
+ population-genetic feature of a sequencing cohort, and this block is not an
+-external-cohort replication.  It also addresses the Gaussian linear-model null;
+-finite-sample Bernoulli or logistic calibration remains a separate statistical
++external-cohort replication. It addresses the Gaussian linear-model null.
++Finite-sample Bernoulli or logistic calibration remains a separate statistical
+ problem.
+ 
+ 
+@@ -456,7 +463,7 @@
+ \label{tab:chi}
+ \begin{tabular}{rrrr}
+ \toprule
+-True tail $p$ & $N$ & Global COS rel. error & Tilted COS rel. error\\
++Target tail $p$ & $N$ & Global COS rel. error & Tilted COS rel. error\\
+ \midrule
+ $10^{-6}$  & 64  & $3.56\times10^{-8}$ & $2.71\times10^{-14}$\\
+ $10^{-10}$ & 64  & $1.64\times10^{-4}$ & $6.59\times10^{-15}$\\
+@@ -471,7 +478,7 @@
+ 
+ \subsection{Genotype-derived spectra}
+ 
+-The second experiment used the existing Komorebi SKAT benchmark generator. Synthetic genotype matrices were centered and scaled, residualized against three covariates, weighted by $(1-\mathrm{MAF})^{24}$, and converted to the positive quadratic-form spectrum
++The second experiment used the existing Komorebi SKAT benchmark generator. Synthetic genotype matrices were centered and scaled, then residualized against three covariates. The kernel weights were $w_j=(1-\mathrm{MAF}_j)^{24}$, where MAF denotes minor-allele frequency. The factor used column scales $\sqrt{w_j}$. Its positive quadratic-form spectrum was
+ \[
+ \lambda=\tfrac12\operatorname{eig}(AA^{\mathsf T}).
+ \]
+@@ -546,17 +553,15 @@
+ \label{fig:runtime}
+ \end{figure}
+ 
+-The planning overhead matters. At rank 397, one adaptive analytic-ledger query is slower than one exact tilted-COS query. The crossover appears between ranks 397 and 797 in this prototype, while compiled reuse is much faster. No universal speedup claim is therefore made.
++Planning matters. The first adaptive query is slower at rank 397 and faster at rank 797 in this prototype. Compiled reuse measures a different cost. These timings establish no universal speedup.
+ 
+ 
+ 
+ \section{Numerical verification}\label{sec:final-28}
+ 
+-All identities were compared against explicitly formed reference matrices.
+-
+ \begin{table}[htbp]
+ \centering
+-\caption{Partition-invariance checks.}
++\caption{Stored-run identifiers and actual block counts.}
+ \begin{tabular}{lrrr}
+ \toprule
+ partition & blocks & Gram relative error & action relative error\\
+@@ -570,29 +575,12 @@
+ \end{tabular}
+ \end{table}
+ 
+-A hierarchical coarse-to-fine refinement gave relative discrepancy
+-\[
+-3.17\times10^{-16}.
+-\]
+-
+-For an explicitly PSD polyphase operator
+-\[
+-H=L^\top L
+-\]
+-with block-bidiagonal \(L\), the smallest eigenvalue was approximately
+-\[
+-2.86,
+-\]
+-and the largest norm observed outside the exact \(k\)-step light cone was
+-\[
+-\boxed{0}.
+-\]
+-
+-The QR-core update reproduced the full singular spectrum with relative
+-\(\ell_2\) discrepancy
+-\[
+-5.89\times10^{-16}.
+-\]
+-
+-
+-
++Hierarchical refinement gave relative discrepancy $3.17\times10^{-16}$.
++For $H=L^\top L$ with block-bidiagonal $L$, the smallest eigenvalue was
++approximately $2.86$ and the largest norm outside the exact light cone
++was zero. The QR-core singular-spectrum discrepancy was
++$5.89\times10^{-16}$ in relative $\ell_2$ norm. These are finite controls,
++not universal floating-point error bounds.
++
++
++
+--- baseline/book/chapters/12_synthesis.tex
++++ final/book/chapters/12_synthesis.tex
+@@ -146,7 +146,7 @@
+ 
+ \subsection{Full method stack}
+ 
+-The complete positive-form solver may therefore be written as
++The representation pipeline may therefore be written as
+ \[
+ \boxed{\begin{aligned}
+ A
+@@ -154,11 +154,14 @@
+ &\longrightarrow \text{structural phase frontier}\\
+ &\longrightarrow \text{phase-local Krylov/range core}\\
+ &\longrightarrow \text{residual moment certificate or exact completion}\\
+-&\longrightarrow \{\lambda_j\}\\
+-&\longrightarrow \text{centered spectral packets}\\
+-&\longrightarrow \log P(Q\ge q).
++&\longrightarrow \text{spectrum or verified spectral enclosure}.
+ \end{aligned}}
+ \]
++
++From that point the implementation has two numerical paths. Centered packets
++lead to an analytic error ledger evaluated in floating point. Direct evaluation
++of the supplied positive spectrum leads to a directed probability enclosure.
++The second path does not yet certify packet construction or packet arithmetic.
+ 
+ Three invariances make the stack composable:
+ \begin{enumerate}
+@@ -304,15 +307,17 @@
+ \end{tabular}
+ \end{center}
+ 
+-Three boundaries remain material:
++Four implementation boundaries remain material:
+ 
+ \begin{enumerate}
+-\item scale the verified matrix-to-spectrum bridge to streamed range-core and
+-residual-completion linear algebra without materializing a full dense basis;
+-\item replace the conservative low-rank mixed-sign Fourier-tail certificate
+-with a rigorous convolution or quadrature route;
+-\item implement the proven streamed and residual-completion algorithms in the
+-final native GPU runtime and measure transfer/compute crossover on hardware.
++\item The verified matrix-to-spectrum bridge is dense. Its streamed range-core
++and residual-completion counterparts require verified linear algebra.
++\item Packet construction and evaluation are not implemented with directed
++rounding. Their analytic ledgers remain distinct from numerical enclosures.
++\item The mixed-sign low-rank certificate is conservative. Signed and noncentral
++numerical paths do not inherit the positive backend's directed guarantee.
++\item Native GPU execution and hardware transfer/compute crossover measurements
++are outside the supplied Python implementation and recorded benchmarks.
+ \end{enumerate}
+ 
+ These are boundaries of the implementation, not hidden assumptions in the
+@@ -343,7 +348,7 @@
+ 
+ The deepest retained exact control reaches
+ \[
+-p=10^{-5000}.
++p\approx10^{-5000}.
+ \]
+ At that point the recorded accuracy-driven run reported relative multiplicative
+ uncertainty below \(10^{-18}\).  This establishes that extreme-tail depth by
+@@ -352,8 +357,8 @@
+ 
+ The matrix-to-spectrum bridge closes that upstream correctness gap for
+ moderate binary64 factors by post-certifying an otherwise untrusted candidate
+-eigensystem.  The remaining rigorous frontier is primarily one of scalable
+-representation: carry the same enclosure through streamed range cores and
++eigensystem.  Further numerical guarantees require scalable
++representation and a directed implementation of packet arithmetic: carry the same enclosure through streamed range cores and
+ residual completion without forming a full dense eigenbasis, while extending
+ the fail-closed accuracy contract to difficult low-rank mixed-sign forms.
+ 
+--- baseline/book/chapters/A_atlas.tex
++++ final/book/chapters/A_atlas.tex
+@@ -164,9 +164,9 @@
+ \[M_{P,m}=\sum_{j\in P}(\lambda_j-\mu_P)^m,\quad\alpha_P(s)=\frac{2s}{1-2s\mu_P},\quad\rho_P(s)=|\alpha_P(s)|\max_{j\in P}|\lambda_j-\mu_P|.\]
+ \[\kappa_P(s)=-\frac{n_P}{2}\log(1-2s\mu_P)+\frac12\sum_{m=1}^{p}\frac{\alpha_P(s)^m M_{P,m}}m+R_{P,p}(s),\]
+ \[|R_{P,p}(s)|\le\frac{n_P}{2}\frac{\rho_P(s)^{p+1}}{(p+1)(1-\rho_P(s))}.\]
+-A packet contains nearby eigenvalues, their arithmetic mean $\mu_P$, and centered power sums $M_{P,m}$. Its first centered moment vanishes in exact arithmetic. Instead of substituting one surrogate eigenvalue or one surrogate distribution, the representation expands the packet contribution to the log transform.
+-
+-Use a nonempty packet of positive coefficients, integer order $p\ge0$, and $\Re s<1/(2\lambda_{\max})$. The logarithm is the analytic principal branch on this transform domain. If $\rho_P(s)<1$, its power series gives the explicit remainder. The bound decreases geometrically when the radius ratio stays away from one.
++The packet stores nearby eigenvalues through their mean $\mu_P$ and centered power sums $M_{P,m}$, with $M_{P,1}=0$. It expands the log transform rather than substituting a surrogate distribution.
++
++Use a nonempty positive packet, integer order $p\ge0$, and $\Re s<1/(2\lambda_{\max})$. The factor logarithms use their principal branches and sum to the analytic $\kappa$ normalized at zero. For $\rho_P(s)<1$, the series has the stated remainder, which decreases geometrically when the radius ratio stays away from one.
+ 
+ The five-eigenvalue control uses $0.09,0.095,0.10,0.105,0.11$, a tilt of one, and 220 frequencies from zero to eighteen. The figure compares floating transform errors with the analytic remainder at orders one through eight. These computations illustrate the bound. They do not enclose library rounding.
+ 
+--- baseline/book/chapters/C_reproduction.tex
++++ final/book/chapters/C_reproduction.tex
+@@ -2,12 +2,19 @@
+ 
+ \section{Reference pseudocode}\label{sec:final-A}
+ 
++For weighted blocks before residualization, \texttt{project} applies the
++fixed projector $M_X$. For already residualized factor blocks, use the
++identity default. The listing is a binary64 reference implementation of the
++streamed identity, not an interval-arithmetic proof of that identity. The
++tail import is available when \path{engine/} is on the Python import path.
++
+ \begin{lstlisting}[language=Python]
+ import numpy as np
++from accuracy_driven import certified_positive_logsf
+ 
+ def stream_KV(block_source, V, project=lambda x: x):
+-    U = project(V)
+-    Y = np.zeros_like(U)
++    U = project(np.asarray(V, dtype=np.float64))
++    Y = np.zeros_like(U, dtype=np.float64)
+     for A_block in block_source:
+         Y += A_block @ (A_block.T @ U)
+     return project(Y)
+@@ -47,15 +54,15 @@
+ The analysis uses $\kappa(s)$, $b$, $J_k$, and $N$. The numerical source retains the names \texttt{K(s)} for the cumulant, \texttt{U} for the support endpoint, \texttt{I\_k} for the payoff integral, and \texttt{K} for the integer mode count. These names do not denote additional mathematical objects. The exact inputs and serialized output intervals determine the calculation.
+ 
+ \section{Replayed numerical controls}\label{app:fresh-validation}
+-The retained numerical replay evaluates the six regression groups on the
+-supplied engine, including the interval-width reporting regressions. The
+-figure-production pass did not repeat this engine replay. It checked the
+-plotted inputs and their provenance, recomputed the declared illustrations,
+-and confirmed that the engine source and data were unchanged.
+-The engine source remains unchanged during each replay. It also runs two
+-independent containment controls. The machine-readable replay record states
+-the actual environment, commands, source hashes, test counts, and outcomes.
+-Those records are separate from the retained timing tables in the main text.
++The release replay executes all six regression groups on the supplied
++engine, including the interval-width reporting tests, and runs both
++independent containment controls. Its record identifies the environment,
++commands, source hashes, test counts, and outcomes. The engine source was
++unchanged during this execution. These results are separate from the
++recorded timing experiments in the main text.
++
++The release records are in \path{verification/closing/}. Earlier reports
++remain as provenance, not as substitutes for this replay.
+ 
+ \input{replay_results.tex}
+ 
+@@ -78,7 +85,10 @@
+ than admitted to a formula outside its hypotheses.
+ 
+ \section{Figure and data provenance}\label{app:provenance}
+-All fifty graphics are supplied as vector PDF and editable SVG files. The plots use retained measurements, explicit storage models, or declared finite illustrations. Their plotting source and input hashes are included. The presentation changes, not the recorded measurements. The figure labels identify which kind of evidence is shown. The fixed-resolution
++All fifty graphics are supplied as vector PDF and editable SVG files. The
++plots use recorded measurements, explicit storage models, or declared finite
++illustrations. Their plotting sources and input hashes are included, and
++the figure labels distinguish these evidence types. The fixed-resolution
+ interval-width figure is regenerated from full outward endpoint strings,
+ with its exact inputs, computed widths, and plotting code retained in the
+ proofreading record. The visual atlas
+@@ -92,7 +102,7 @@
+ displays use the recorded rank audit and QR discrepancy audit rather than inventing
+ missing samples. The packet illustration in Chapter~\ref{ch:packets} instead uses a
+ fully declared four-coefficient example with reproducible complex-grid evaluations.
+-The corresponding limitation remains visible in each figure caption.
++The captions identify the available rank and discrepancy evidence.
+ 
+ \section{Reproducing the running example}
+ The four-dimensional factor, block actions, Gaussian law, and saddlepoint identity are checked symbolically. The packet comparison is evaluated at high precision. The positive tail is enclosed with directed arithmetic and compared with an independent interval for the closed-form survival probability. A failed fixed-resolution decision is retained, followed by the successful mode refinement.
+@@ -119,4 +129,19 @@
+ The replay writes separate logs. The \path{lean/} directory contains the pinned formal source and retained compiler evidence. Compiler and dependency caches are not bundled. Reproduction requires the exact pinned toolchain and dependencies.
+ 
+ \section{Scope of the publication checks}
+-The package records source preservation, plotted input provenance, figure bounds, labels and references, and PDF geometry. The earlier numerical replay is retained separately. Figure regeneration does not repeat or extend that replay. These checks do not constitute an end-to-end proof. Lean was not rerun, and no new hardware benchmark is claimed.
++The closing audit checks source correspondence, figure-data provenance,
++labels and references, navigation, and page geometry. It also records the
++fresh numerical replay and finite algebra controls. Rendered pages are
++inspected separately from those programmatic checks. No new hardware
++benchmark is claimed.
++
++The Lean compiler was unavailable in the closing environment. The formal
++sources and retained compiler evidence are unchanged, and no new Lean
++compilation is claimed. Neither a successful finite replay nor a publication
++audit establishes an end-to-end formal proof of the numerical implementation.
++
++To verify the delivered files and repeat the publication audit, run:
++\begin{lstlisting}
++python verify_manifest.py
++python audit.py
++\end{lstlisting}
+--- baseline/book/chapters/D_glossary.tex
++++ final/book/chapters/D_glossary.tex
+@@ -10,24 +10,32 @@
+ \midrule
+ \endhead
+ Analytic ledger & A bound on packet, support, and mode approximation errors in the real or complex arithmetic model. It does not, by itself, enclose numerical rounding.\\
++Binary64 & The IEEE double-precision binary format. A finite stored value represents an exact dyadic rational, although earlier preprocessing may have rounded the intended input.\\
++CDF & Cumulative distribution function, $F(q)=\Pr(Q\le q)$.\\
++CGF & Cumulant generating function. In the complex transform domain, the analytic logarithm normalized at zero is used.\\
+ Central form & A quadratic form of a Gaussian vector with zero mean.\\
+ Certificate & A justified bound with a stated object and scope. Structural, analytic, numerical, and formal certificates are not interchangeable.\\
+ Centered packet & A nonempty spectral group represented by its center, centered moments, and a remainder bound valid on a specified complex grid.\\
+ COS & Fourier-cosine evaluation of a functional using characteristic-function coefficients.\\
+ Directed enclosure & An outer interval whose finite arithmetic is rounded outward and which is enlarged by proved analytic remainders.\\
++Effective rank & The participation ratio $(\sum_j\lambda_j)^2/\sum_j\lambda_j^2$ for a nonzero positive spectrum. It need not be an integer.\\
+ Exact completion & Recovery of unresolved factor directions when a residual-rank argument permits the remaining range to be represented explicitly.\\
+ Exact input & The mathematical value encoded by the supplied literal or stored binary entry, not an unspecified quantity before rounding.\\
+ Fail-closed & A numerical policy that does not label a result certified unless the stated acceptance inequality is proved.\\
+ Folding & Reflection of a positive-support measure into a cosine period. It explains the alias contribution from mass outside the selected window.\\
+ Gram representation & The operator $AA^\top$ or its dual $A^\top A$. Their positive eigenvalues agree with multiplicity.\\
+ Krylov query & A vector or block-vector expression generated by repeated operator actions, often summarized as a polynomial in the operator.\\
++LD & Linkage disequilibrium, the dependence among alleles at distinct loci represented by the synthetic genotype models.\\
+ Light cone & The phases reachable from a specified initial support in a bounded number of exact structural steps.\\
++MAF & Minor-allele frequency, used to define a variant's weight in the synthetic kernel examples.\\
++MiB & Mebibyte, equal to $2^{20}$ bytes. Memory tables report modeled payload, not total device allocation.\\
+ Noncentrality & The squared mean displacement in a standardized Gaussian direction. The symbol $\delta_i$ in a noncentral chi-square component differs from a centered packet deviation.\\
+ Phase & A structural subspace specified by an orthogonal projector. It need not coincide with a physical storage block.\\
+ Post-verification & Certification of a candidate numerical output using independently enclosed residuals rather than trust in the algorithm that proposed it.\\
+ Range core & A small factor or operator representation on a captured subspace. Exact spectral equivalence requires that the relevant range be captured.\\
+ Residual & The component not represented by a chosen subspace or approximation. Its trace, square-trace, norm, and rank carry different information.\\
+ Saddlepoint tilt & An admissible exponential tilt satisfying $\kappa'(\theta_*)=q$. It improves centering, but exact solution of that equation is not required for the directed enclosure theorem.\\
++SKAT & Sequence kernel association test, used here as an application of Gaussian quadratic-form evaluation.\\
+ Spectral passport & The query-dependent collection of spikes, packet centers, moments, radii, and COS parameters needed for repeated evaluation.\\
+ Storage refinement & Splitting a factor block into disjoint smaller blocks while retaining all columns and hence the same Gram operator.\\
+ Survival probability & The upper-tail probability $\Pr(Q\ge q)$. For the nondegenerate continuous laws considered here, strict and non-strict thresholds agree.\\

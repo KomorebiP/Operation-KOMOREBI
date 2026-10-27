@@ -1,0 +1,436 @@
+\chapter{Exact streamed representations}\label{ch:streaming}
+\chapterlead{Large factors need not be resident all at once. The identities in this
+chapter separate total data size from the working set without changing the
+operator. A storage partition is therefore a choice about execution, not a
+statistical approximation. Weighted features provide a concrete construction,
+but every subsequent identity applies to a supplied real factor.}
+\section{Weighted-feature specialization}\label{sec:final-7}
+
+A prominent application constructs the general factor from weighted,
+covariate-residualized features.  The sequence kernel association test (SKAT) provides one application
+\cite{Wu2011}, but the same formulas apply to any feature matrix with
+nonnegative column weights.
+
+Let
+\[
+G\in\mathbb R^{n\times m},
+\qquad
+W=\operatorname{diag}(w_1,\ldots,w_m),
+\quad w_j\ge 0,
+\]
+and let \(Q_X\in\mathbb R^{n\times p}\) have orthonormal columns spanning
+the null-model covariates.  Define
+\[
+M_X=I-Q_XQ_X^\top,
+\qquad
+A=M_XGW^{1/2},
+\qquad
+K=AA^\top.
+\]
+
+The central implementation difficulty is not the algebraic size of the
+model but the mismatch between the total factor size \(n\times m\) and the
+working memory of an accelerator.  The key point of this book is that
+several decompositions act on different mathematical coordinates and therefore
+compose:
+\[
+\boxed{
+\text{storage blocks}
+\circ
+\text{structural phases}
+\circ
+\text{Krylov/range compression}
+\circ
+\text{spectral tail packets}.
+}
+\]
+
+Storage blocking controls residence.  Structural phases encode linkage-disequilibrium (LD) windows,
+annotations, frequency bands, or other coordinate groups.  Krylov methods
+compress the operator to the rank actually requested.  Spectral packets
+compress the final generalized-\(\chi^2\) transform.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.72\linewidth]{figure_01_residualization_geometry.png}
+\caption{Residualization is the geometric starting point. Every sample-space vector splits into a component in the covariate span and an orthogonal residual component. The factor $A=M_XGW^{1/2}$ therefore acts only on variation remaining after the null-model covariates have been removed.}
+\label{fig:residualization-geometry}
+\end{figure}
+
+
+\section{Variant-block Gram decomposition}\label{sec:final-8}
+
+Partition the variant indices into disjoint blocks
+\[
+\{1,\ldots,m\}
+=
+J_1\sqcup\cdots\sqcup J_B.
+\]
+Let
+\[
+G_b=G_{[:,J_b]},
+\qquad
+W_b=W_{J_b,J_b},
+\qquad
+A_b=M_XG_bW_b^{1/2}.
+\]
+Then
+\[
+A=[A_1\ \cdots\ A_B].
+\]
+
+\begin{theorem}[Additive block Gram identity]\label{claim:final-8-1}
+\[
+\boxed{
+K
+=
+AA^\top
+=
+\sum_{b=1}^B A_bA_b^\top
+=
+M_X
+\left(
+\sum_{b=1}^B G_bW_bG_b^\top
+\right)
+M_X.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Horizontal concatenation gives
+\[
+[A_1\ \cdots\ A_B]
+\begin{bmatrix}
+A_1^\top\\
+\vdots\\
+A_B^\top
+\end{bmatrix}
+=
+\sum_bA_bA_b^\top.
+\]
+The final form follows from
+\(A_b=M_XG_bW_b^{1/2}\) and
+\(M_X^\top=M_X=M_X^2\).
+\end{proof}
+
+\begin{remark}\label{claim:final-8-2}
+The theorem is exact for every partition.  Block boundaries are execution
+parameters, not statistical parameters.
+\end{remark}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.92\linewidth]{figure_02_exact_block_kernel_assembly.png}
+\caption{Exact block-kernel assembly. The sample interaction kernel carried by each resident variant block is $K_b=A_bA_b^\top$, and the full kernel is their exact sum. Streaming changes the order of evaluation, not the operator.}
+\label{fig:block-kernel-assembly}
+\end{figure}
+
+
+\section{Exact streamed kernel actions}\label{sec:final-9}
+
+\begin{theorem}[One-pass sample-space streaming action]\label{claim:final-9-1}
+For every block vector \(V\in\mathbb R^{n\times s}\),
+\[
+\boxed{
+KV
+=
+M_X
+\sum_{b=1}^B
+G_bW_bG_b^\top
+M_XV.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the additive block Gram identity to \(KV\), then associate each block
+product as
+\[
+G_bW_b(G_b^\top M_XV).
+\]
+\end{proof}
+
+\begin{algorithm}[Streamed \(KV\)]\label{claim:final-9-2}
+\begin{enumerate}[label=\arabic*.]
+\item Compute \(U=M_XV\).
+\item Set \(Y=0\).
+\item For each resident block \(b\), compute
+\[
+T_b=G_b^\top U,
+\qquad
+Y\leftarrow Y+G_b(W_bT_b).
+\]
+\item Return \(M_XY\).
+\end{enumerate}
+\end{algorithm}
+
+\begin{corollary}[Working memory independent of total variant count]\label{claim:final-9-3}
+If at most \(c\) variants are resident and the block-vector width is \(s\),
+then the algebraic working set is
+\[
+\boxed{
+O(nc+ns+cs+np),
+}
+\]
+independent of total variant count \(m\).
+\end{corollary}
+
+
+\section{Streamed factor actions and Golub--Kahan}\label{sec:final-10}
+
+Let \(V\in\mathbb R^{m\times s}\) be partitioned conformally:
+\[
+V=
+\begin{bmatrix}
+V_1\\
+\vdots\\
+V_B
+\end{bmatrix}.
+\]
+
+\begin{theorem}[Streamed \(AV\)]\label{claim:final-10-1}
+\[
+\boxed{
+AV
+=
+M_X
+\sum_{b=1}^B
+G_bW_b^{1/2}V_b.
+}
+\]
+\end{theorem}
+
+\begin{theorem}[Streamed \(A^\top U\)]\label{claim:final-10-2}
+For \(U\in\mathbb R^{n\times s}\),
+\[
+\boxed{
+(A^\top U)_b
+=
+W_b^{1/2}G_b^\top M_XU.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Both identities follow by substituting
+\(A=M_XGW^{1/2}\) and partitioning the variant coordinate.
+\end{proof}
+
+\begin{corollary}[Streaming Golub--Kahan equivalence]\label{claim:final-10-3}
+Any exact-arithmetic algorithm whose access to \(A\) occurs only through
+\(AV\) and \(A^\top U\) produces the same iterates when those products are
+implemented by the preceding streamed formulas.
+\end{corollary}
+
+This applies directly to block Golub--Kahan bidiagonalization, matrix-free
+singular-value iteration, range finding, and restarted variants.  The
+factor need not be resident.
+
+
+\section{Two-pass dual action}\label{sec:final-11}
+
+The variant-space normal operator is
+\[
+H=A^\top A.
+\]
+
+\begin{theorem}[Two-pass streamed dual action]\label{claim:final-11-1}
+For every \(V\in\mathbb R^{m\times s}\),
+\[
+\boxed{
+HV=A^\top(AV).
+}
+\]
+The product is evaluated exactly by a streamed pass forming
+\(Y=AV\in\mathbb R^{n\times s}\), followed by a second streamed pass
+emitting the blocks
+\[
+(HV)_b=W_b^{1/2}G_b^\top M_XY.
+\]
+\end{theorem}
+
+This form is particularly natural for variant-space polyphase Krylov
+iterations because the right-coordinate blocks can be produced and consumed
+sequentially.
+
+
+\section{Two-dimensional sample/variant tiling}\label{sec:final-12}
+
+A variant block may itself exceed device memory.  Let
+\[
+H_b=G_bW_b^{1/2}
+\]
+and partition samples into row tiles \(I_1,\ldots,I_R\).
+
+\begin{theorem}[Two-pass residualized tile construction]\label{claim:final-12-1}
+Define
+\[
+R_b=Q_X^\top H_b.
+\]
+Then
+\[
+\boxed{
+R_b
+=
+\sum_r
+Q_{X,I_r}^\top H_{b,I_r},
+}
+\]
+and after \(R_b\) is known,
+\[
+\boxed{
+A_{b,I_r}
+=
+H_{b,I_r}-Q_{X,I_r}R_b.
+}
+\]
+Consequently,
+\[
+\boxed{
+K_{I_r,I_s}
+=
+\sum_b
+A_{b,I_r}A_{b,I_s}^\top.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The first identity is the row-partitioned matrix product
+\(Q_X^\top H_b\).  The second is the definition
+\(M_XH_b=H_b-Q_XQ_X^\top H_b\).  The last identity is the corresponding
+sample-tile expansion of \(AA^\top\).
+\end{proof}
+
+With sample tile height \(t\) and resident variant width \(c\), the dominant
+working storage, including a resident covariate tile, is
+\[
+O(tc+pc+tp+t^2).
+\]
+This count excludes the backing input store, completed output blocks,
+allocator overhead, and library workspaces.
+
+
+\section{Partition refinement and permutation invariance}\label{sec:final-13}
+
+\begin{theorem}[Partition-refinement invariance]\label{claim:final-13-1}
+Let \(\mathcal J\) be any partition of the variants and let
+\(\mathcal J'\) refine \(\mathcal J\).  Then
+\[
+\boxed{
+\sum_{J\in\mathcal J}A_JA_J^\top
+=
+\sum_{J'\in\mathcal J'}A_{J'}A_{J'}^\top
+=
+AA^\top.
+}
+\]
+The analogous streamed operator action is also invariant.
+\end{theorem}
+
+\begin{proof}
+Each coarse block is a disjoint union of refined blocks.  Apply the additive
+Gram theorem within each coarse block and sum.
+\end{proof}
+
+\begin{corollary}[Adaptive memory splitting]\label{claim:final-13-2}
+A runtime may recursively subdivide any block that exceeds available device
+memory without changing the exact operator.
+\end{corollary}
+
+\begin{proposition}[Variant permutation invariance]\label{claim:final-13-3}
+If the columns of \(G\) and the diagonal entries of \(W\) are permuted by the
+same permutation, \(K\) and every streamed sample-space action are unchanged.
+\end{proposition}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_edition/figure_08_partition_invariance.pdf}
+\caption{Partition-refinement invariance in floating-point tests. Coarse, fine, irregular, singleton-heavy, and permuted blockings reproduce the explicitly formed Gram matrix and its action to machine precision. The block schedule is therefore an execution choice rather than a change in the statistical model.}
+\label{fig:partition-invariance}
+\end{figure}
+
+
+\section{Memory planning law}\label{sec:final-27}
+
+Let \(d\) be the number of bytes per floating scalar, \(c\) the resident
+variant count, \(s\) the Krylov width, and \(p\) the covariate rank.
+Ignoring library workspace and allocator overhead, a streamed sample-space
+action has working memory on the order of
+\[
+\boxed{
+d\,[nc+2ns+cs+np+O(ps+c)].
+}
+\]
+
+The full factor costs
+\[
+dnm.
+\]
+
+For fixed \(n,p,s,c\),
+\[
+\boxed{
+\frac{M_{\rm stream}}{M_{\rm full}}
+=
+O\!\left(
+\frac{c}{m}
++
+\frac{s}{m}
++
+\frac{p}{m}
+\right),
+}
+\]
+so device memory remains bounded as total variant count grows.
+
+\begin{table}[htbp]
+\centering
+\caption{Algebraic float64 memory model for \(n=2000\), \(p=4\),
+Krylov width \(s=16\), resident variant block \(c=1024\).}
+\begin{tabular}{rrrr}
+\toprule
+\(m\) & full factor (MiB) & streamed \(KV\) (MiB) & tiled Gram (MiB)\\
+\midrule
+10,000 & 152.6 & 16.308 & 8.555\\
+50,000 & 762.9 & 16.308 & 8.555\\
+100,000 & 1,525.9 & 16.308 & 8.555\\
+500,000 & 7,629.4 & 16.308 & 8.555\\
+1,000,000 & 15,258.8 & 16.308 & 8.555\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_edition/figure_03_memory_law.pdf}
+\caption{The memory law. The complete factor grows linearly with total variant count $m$, whereas the streamed kernel action and the two-dimensional tiled construction remain bounded when resident block size, Krylov width, and covariate rank are fixed.}
+\label{fig:memory-law}
+\end{figure}
+
+
+
+\section{The running example in three storage blocks}\label{sec:worked-stream}
+Partition the factor of Section~\ref{sec:worked-law} into consecutive pairs of columns,
+\[
+A=[A_1\ A_2\ A_3],\qquad A_i\in\mathbb R^{4\times2}.
+\]
+The second and third blocks are identical, but they are different column positions in the factor. Both must be counted. Their Gram contributions are
+\begin{align*}
+A_1A_1^\top&=\frac12
+\begin{pmatrix}1&0&1&0\\0&1&0&1\\1&0&1&0\\0&1&0&1\end{pmatrix},\\
+A_2A_2^\top=A_3A_3^\top&=\frac12
+\begin{pmatrix}1&0&-1&0\\0&1&0&-1\\-1&0&1&0\\0&-1&0&1\end{pmatrix}.
+\end{align*}
+Adding all three gives the matrix $K$ already derived. Merging the last four columns into one storage block gives the same result. Discarding the repeated third block does not: that changes its coefficient contribution and hence the probability law.
+
+For the declared vector $v=(1,2,-1,0)^\top$, the action can be evaluated without forming any block Gram matrix:
+\[
+\sum_{j=1}^3 A_j(A_j^\top v)=Kv=(2,3,-2,-1)^\top.
+\]
+Every operation in this identity is rational. The companion calculation checks it symbolically, along with the change from three blocks to two. It illustrates the central distinction of this chapter: changing the storage partition is exact because every column is still represented. Dropping an operator coupling is a different operation and requires the error analysis developed next.

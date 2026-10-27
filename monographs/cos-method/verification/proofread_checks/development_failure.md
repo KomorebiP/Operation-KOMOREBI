@@ -1,0 +1,3 @@
+# Recovered regression-test assumption
+
+The first new arithmetic-width test failed when it required relative agreement of 1e-12 between an internal binary interval width and the width of its outward-rounded decimal serialization. The implementation produced 8.043058733543795e-87; decimal endpoint subtraction produced 8.043058734e-87. The difference is the documented outward endpoint serialization, not an enclosure failure. The test now bounds that difference by one final-place decimal unit per endpoint plus the final binary64 conversion error. The initial test failure is retained here rather than omitted.

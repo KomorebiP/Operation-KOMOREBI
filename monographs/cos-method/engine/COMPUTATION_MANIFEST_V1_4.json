@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "claim_id": "QF-v1.4-directed-rounding-deep-tail",
+  "repository": {
+    "commit": "not-a-git-repository",
+    "dirty": true
+  },
+  "command": "python test_interval_kcos.py; interval control and precision-sweep scripts retained in evidence files",
+  "environment": {
+    "software": [
+      "Python 3.13.5",
+      "mpmath 1.3.0",
+      "mpmath.iv directed interval context"
+    ],
+    "hardware": "OpenAI container CPU runtime"
+  },
+  "mathematics": {
+    "assertion_tested": "Directed-rounding K-COS plus analytic support/alias and omitted-mode bounds encloses the exact positive central quadratic-form tail.",
+    "coefficient_domain": "positive exact decimal spectra; tested Q=0.02*chi2_80",
+    "conventions": "upper-tail survival probability; log10 interval output",
+    "inputs": [
+      "target tails 1e-100, 1e-1000, 1e-5000",
+      "rank 80",
+      "K=128",
+      "interval precision 90 decimal digits"
+    ],
+    "bounds": {
+      "series_certificate_requires_rank_gt": 2,
+      "interval_precision_sweep": [
+        40,
+        60,
+        80,
+        100,
+        120
+      ]
+    },
+    "non_claims": [
+      "does not certify arbitrary floating-point eigendecomposition",
+      "does not yet interval-enclose packetized spectrum compression",
+      "software guarantee is conditional on correctness of mpmath interval implementation"
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-09-24",
+    "runtime_seconds": null,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "interval_deep_tail_controls_detailed.json",
+      "sha256": "da86e96804ead087c9e78ddeec86c48789f62e3452d6da43662f59940c9d6ad7"
+    },
+    {
+      "path": "interval_precision_sweep_1e5000.csv",
+      "sha256": "732fca95ed8c5665433e7cc9724d67dc4ca661c52c844b373909ab8dd754b09e"
+    },
+    {
+      "path": "PROOF_AUDIT_INTERVAL_KCOS.md",
+      "sha256": "67a47aabff1701acce2006dad2c2ab29b80750fd203cdf5d2ef9864500a6f1ad"
+    }
+  ],
+  "checks": [
+    "3/3 interval K-COS unit tests passed",
+    "all K-COS intervals overlap independent exact chi-square intervals",
+    "all requested target log-probabilities lie in both enclosures",
+    "1e-5000 arithmetic-only interval width decreases with precision while total width remains analytic-bound limited"
+  ],
+  "result": "implementation and finite assertion verified in the stated range",
+  "residual_risks": [
+    "mpmath.iv implementation is trusted, not formally verified here",
+    "matrix-to-spectrum directed rounding remains open",
+    "interval packetization remains open"
+  ]
+}

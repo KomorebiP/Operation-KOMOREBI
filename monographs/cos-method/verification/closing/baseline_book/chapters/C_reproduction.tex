@@ -1,0 +1,122 @@
+\chapter{Computation and reproducibility}\label{app:reproduction}
+
+\section{Reference pseudocode}\label{sec:final-A}
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def stream_KV(block_source, V, project=lambda x: x):
+    U = project(V)
+    Y = np.zeros_like(U)
+    for A_block in block_source:
+        Y += A_block @ (A_block.T @ U)
+    return project(Y)
+
+def certified_tail(q, spectrum, relative_accuracy):
+    # Refines support, COS modes, and interval precision.
+    # Returns certified=False if the requested accuracy is not proved.
+    return certified_positive_logsf(
+        q, spectrum, relative_accuracy=relative_accuracy
+    )
+\end{lstlisting}
+
+
+\section{Executable layers}\label{sec:final-B}
+The accompanying package contains the Python engine, deterministic tests,
+recorded numerical inputs, and the pinned Lean companion. The programs are
+research implementations with precisely stated numerical contracts. They are
+not presented as a measured native GPU production runtime.
+
+\begin{longtable}{@{}P{.40\linewidth}P{.55\linewidth}@{}}
+\toprule
+Module & Responsibility\\
+\midrule
+\endhead
+\path{quadratic_form_engine.py} & Central and positive noncentral interfaces.\\
+\path{accuracy_driven.py} & Refinement and fail-closed acceptance.\\
+\path{interval_kcos.py} & Directed positive-spectrum tail enclosures.\\
+\path{directed_accuracy.py} & Directed ratio tests and outward serialization.\\
+\path{verified_spectrum.py} & Dense candidate-eigensystem post-verification.\\
+\path{generalized_tail.py} & Signed and noncentral floating paths.\\
+\path{residual_completion.py} & Completion of unresolved factor range.\\
+\path{streaming_skat.py} & Replayable factor and kernel actions.\\
+\bottomrule
+\end{longtable}
+
+\section{Names used by the implementation}
+The analysis uses $\kappa(s)$, $b$, $J_k$, and $N$. The numerical source retains the names \texttt{K(s)} for the cumulant, \texttt{U} for the support endpoint, \texttt{I\_k} for the payoff integral, and \texttt{K} for the integer mode count. These names do not denote additional mathematical objects. The exact inputs and serialized output intervals determine the calculation.
+
+\section{Replayed numerical controls}\label{app:fresh-validation}
+The retained numerical replay evaluates the six regression groups on the
+supplied engine, including the interval-width reporting regressions. The
+figure-production pass did not repeat this engine replay. It checked the
+plotted inputs and their provenance, recomputed the declared illustrations,
+and confirmed that the engine source and data were unchanged.
+The engine source remains unchanged during each replay. It also runs two
+independent containment controls. The machine-readable replay record states
+the actual environment, commands, source hashes, test counts, and outcomes.
+Those records are separate from the retained timing tables in the main text.
+
+\input{replay_results.tex}
+
+A successful finite replay is evidence about those executions. It is not a
+proof of all inputs or of the arithmetic library. Directed enclosures rely on
+the stated interval arithmetic and transcendental implementation. The shared
+interval-precision context requires sequential calls. Floating summary fields
+are display values. Widths and multiplicative-ratio summaries are computed
+before conversion to binary64, avoiding cancellation between rounded endpoint
+summaries. The outward decimal endpoint strings carry the numerical enclosure,
+and directed acceptance uses those strings rather than the display fields.
+
+\section{Why parsing and output are part of the proof obligation}
+An interval can be valid internally and become invalid when printed. A narrow
+logarithmic width can also disappear if it is first evaluated in an
+insufficient point-precision context. The implementation therefore preserves
+literal interval endpoints, compares an upper bound on the multiplicative
+ratio with a lower bound on the requested tolerance, and serializes the lower
+and upper endpoints outward. Unsupported domain inputs are rejected rather
+than admitted to a formula outside its hypotheses.
+
+\section{Figure and data provenance}\label{app:provenance}
+All fifty graphics are supplied as vector PDF and editable SVG files. The plots use retained measurements, explicit storage models, or declared finite illustrations. Their plotting source and input hashes are included. The presentation changes, not the recorded measurements. The figure labels identify which kind of evidence is shown. The fixed-resolution
+interval-width figure is regenerated from full outward endpoint strings,
+with its exact inputs, computed widths, and plotting code retained in the
+proofreading record. The visual atlas
+uses declared finite models and its own reproducible Python generators.
+These are distinct sources of evidence. A diagram of an exact identity is
+not a new runtime benchmark, and a replacement layout is not a new numerical
+experiment.
+
+Two retained empirical illustrations need a particular qualification. The raw
+singular-value vectors for the phase-rank and QR illustrations were not retained. Their
+displays use the recorded rank audit and QR discrepancy audit rather than inventing
+missing samples. The packet illustration in Chapter~\ref{ch:packets} instead uses a
+fully declared four-coefficient example with reproducible complex-grid evaluations.
+The corresponding limitation remains visible in each figure caption.
+
+\section{Reproducing the running example}
+The four-dimensional factor, block actions, Gaussian law, and saddlepoint identity are checked symbolically. The packet comparison is evaluated at high precision. The positive tail is enclosed with directed arithmetic and compared with an independent interval for the closed-form survival probability. A failed fixed-resolution decision is retained, followed by the successful mode refinement.
+\begin{lstlisting}
+python illustrations/worked_example.py
+\end{lstlisting}
+The script writes its declared figures and machine-readable results. It does not replace the existing test suite or establish performance for larger problems. To regenerate the publication graphics from their declared sources, run
+\begin{lstlisting}
+python illustrations/production_figures.py
+\end{lstlisting}
+
+\section{Rebuilding and replaying}
+Run the document builder from the package root:
+\begin{lstlisting}
+python build.py
+\end{lstlisting}
+It compiles the editable LaTeX source and writes the monograph PDF. A TeX
+installation with the packages listed in the source is required.
+
+Run the numerical replay separately:
+\begin{lstlisting}
+python replay.py --include-controls
+\end{lstlisting}
+The replay writes separate logs. The \path{lean/} directory contains the pinned formal source and retained compiler evidence. Compiler and dependency caches are not bundled. Reproduction requires the exact pinned toolchain and dependencies.
+
+\section{Scope of the publication checks}
+The package records source preservation, plotted input provenance, figure bounds, labels and references, and PDF geometry. The earlier numerical replay is retained separately. Figure regeneration does not repeat or extend that replay. These checks do not constitute an end-to-end proof. Lean was not rerun, and no new hardware benchmark is claimed.

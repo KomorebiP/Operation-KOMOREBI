@@ -1,0 +1,632 @@
+\chapter{Polyphase propagation and scheduling}\label{ch:phases}
+\chapterlead{Storage blocks say where data are held. Structural phases say where an
+operator can send a vector. Exact zero couplings produce finite propagation
+frontiers. Weak couplings produce a controlled leakage problem instead.
+The scheduler must distinguish those two cases and state what knowledge of
+the phase graph is assumed.}
+\section{Polyphase structure}\label{sec:final-14}
+
+Let the phase projectors form an orthogonal decomposition of variant space:
+\[
+P_h^\top=P_h=P_h^2,\qquad P_hP_g=0\ (h\ne g),\qquad \sum_hP_h=I.
+\]
+Thus $P_h$ projects onto variant phase $h$. Again set
+\[
+H=A^\top A.
+\]
+Define the exact phase graph by
+\[
+g\to h
+\quad\Longleftrightarrow\quad
+P_hHP_g\ne0.
+\]
+
+\begin{theorem}[Polyphase light cone]\label{claim:final-14-1}
+If the graph distance from phase \(g\) to phase \(h\) exceeds \(k\), then
+\[
+\boxed{
+P_hH^kP_g=0.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the projector resolution
+\(\sum_jP_j=I\) between successive factors of \(H\).  Every nonzero term in
+\(P_hH^kP_g\) corresponds to a phase path of length \(k\).  If no such path
+exists, every term vanishes.
+\end{proof}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_04_polyphase_lightcone.pdf}
+\caption{Active phase-depth pairs in the retained PSD chain control are filled squares. Open circles mark inactive pairs. All stored norms beyond the graph frontier are zero. The dashed boundary separates reachable phases from those that the finite-depth query cannot use.}
+\label{fig:polyphase-lightcone}
+\end{figure}
+
+\begin{theorem}[Streaming-polyphase composition]\label{claim:final-14-2}
+At Krylov depth \(k\), an exact matrix-free iteration may omit every phase
+outside the exact light cone.  Within each active phase, arbitrary storage
+refinement may be used.
+\end{theorem}
+
+\begin{proof}
+The light-cone theorem removes inactive phase contributions exactly.
+Partition-refinement invariance shows that the remaining active phase
+operators may be streamed through any exact subpartition.
+\end{proof}
+
+This is the key composition law:
+\[
+\boxed{
+\text{mathematical locality}
+\longrightarrow
+\text{active phases}
+\longrightarrow
+\text{active storage blocks}.
+}
+\]
+
+
+\section{Certified approximate light cones}\label{sec:final-15}
+\label{sec:approx-lightcone}
+
+The exact light-cone theorem requires literal zero phase couplings.  Real LD,
+annotation, and feature graphs are often only approximately sparse.  This
+section replaces exact support by a computable phasewise envelope.
+
+Let the phase projectors be $P_1,\ldots,P_q$, and let $X$ be a vector or block
+vector.  Define its phase-norm profile
+\[
+\rho(X)_g=\lVert P_gX\rVert_F,
+\]
+and define the nonnegative phase-transfer matrix
+\[
+\mathcal B_{hg}=\lVert P_hHP_g\rVert_2.
+\]
+The matrix $\mathcal B$ records the strength of every one-step phase transfer
+without assuming that weak couplings vanish.
+
+\begin{theorem}[Weighted phase-transfer envelope]
+\label{thm:weighted-transfer}
+For every block vector $X$,
+\[
+\boxed{
+\rho(HX)\leq \mathcal B\rho(X)
+}
+\]
+componentwise.  Consequently, for every integer $k\geq0$,
+\[
+\boxed{
+\rho(H^kX)\leq \mathcal B^k\rho(X).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Using $\sum_gP_g=I$ and submultiplicativity,
+\[
+\begin{aligned}
+\lVert P_hHX\rVert_F
+&=\left\lVert\sum_gP_hHP_gX\right\rVert_F\\
+&\leq\sum_g\lVert P_hHP_g\rVert_2\lVert P_gX\rVert_F\\
+&=(\mathcal B\rho(X))_h.
+\end{aligned}
+\]
+Iteration gives the power bound.
+\end{proof}
+
+Now choose a symmetric set of retained phase blocks and define
+\[
+H_0=\sum_{(h,g)\in\mathcal E_0}P_hHP_g.
+\]
+Let
+\[
+(\mathcal B_0)_{hg}=
+\begin{cases}
+\mathcal B_{hg},&(h,g)\in\mathcal E_0,\\
+0,&\text{otherwise},
+\end{cases}
+\qquad
+\mathcal R=\mathcal B-\mathcal B_0.
+\]
+Symmetric pair retention preserves self-adjointness of $H_0$, although the
+following error theorem does not require positive semidefiniteness of $H_0$.
+
+\begin{theorem}[Thresholded-power certificate]
+\label{thm:thresholded-power}
+For every $k\geq1$,
+\[
+\boxed{
+\rho\bigl((H^k-H_0^k)X\bigr)
+\leq
+(\mathcal B^k-\mathcal B_0^k)\rho(X).
+}
+\]
+In particular,
+\[
+\boxed{
+\lVert(H^k-H_0^k)X\rVert_F
+\leq
+\left\lVert(\mathcal B^k-\mathcal B_0^k)\rho(X)\right\rVert_2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Write $E=H-H_0$.  The telescoping identity gives
+\[
+H^k-H_0^k
+=
+\sum_{j=0}^{k-1}H^{k-1-j}EH_0^j.
+\]
+The block-norm matrix of $E$ is $\mathcal R$.  Applying
+Theorem~\ref{thm:weighted-transfer} successively to each term gives
+\[
+\rho\bigl((H^k-H_0^k)X\bigr)
+\leq
+\sum_{j=0}^{k-1}
+\mathcal B^{k-1-j}\mathcal R\mathcal B_0^j\rho(X).
+\]
+The matrix telescoping identity
+\[
+\mathcal B^k-\mathcal B_0^k
+=
+\sum_{j=0}^{k-1}
+\mathcal B^{k-1-j}(\mathcal B-\mathcal B_0)\mathcal B_0^j
+\]
+yields the phasewise formula.  Orthogonality of the phase projectors gives
+\[
+\lVert Y\rVert_F^2=\sum_h\lVert P_hY\rVert_F^2,
+\]
+which proves the global bound.
+\end{proof}
+
+\begin{corollary}[Certified approximate light cone]
+\label{cor:approx-lightcone}
+Assume $X$ is supported on a set of start phases $S$.  If phase $h$ is not
+reachable from $S$ by a retained path of length at most $k$, then
+\[
+P_hH_0^kX=0
+\]
+and
+\[
+\boxed{
+\lVert P_hH^kX\rVert_F
+\leq
+\bigl[(\mathcal B^k-\mathcal B_0^k)\rho(X)\bigr]_h.
+}
+\]
+Thus an exact zero outside the retained light cone is replaced by a certified
+nonzero leakage budget.
+\end{corollary}
+
+\begin{corollary}[Scalar threshold law]\label{claim:final-15-4}
+For any induced matrix norm, let
+\[
+M=\max\{\lVert\mathcal B\rVert,\lVert\mathcal B_0\rVert\}.
+\]
+Then
+\[
+\boxed{
+\lVert\mathcal B^k-\mathcal B_0^k\rVert
+\leq
+kM^{k-1}\lVert\mathcal R\rVert.
+}
+\]
+Hence weak discarded coupling produces a first-order error bound proportional
+to the discarded transfer norm and to the Krylov depth.
+\end{corollary}
+
+\begin{theorem}[Krylov-polynomial certificate]
+\label{thm:polynomial-certificate}
+Let
+\[
+p(t)=\sum_{j=0}^d a_jt^j.
+\]
+Then
+\[
+\boxed{
+\rho\bigl((p(H)-p(H_0))X\bigr)
+\leq
+\sum_{j=1}^d
+|a_j|(\mathcal B^j-\mathcal B_0^j)\rho(X).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply Theorem~\ref{thm:thresholded-power} to every nonconstant power and use
+the triangle inequality.  The constant terms cancel.
+\end{proof}
+
+The theorem compares the same polynomial $p$ and the same starting block
+$X$ under the two operators. It therefore covers fixed polynomial filters
+and fixed linear combinations of Krylov powers, not only $H^kX$.
+If an adaptive iteration selects different coefficients or restart vectors
+under $H$ and $H_0$, their discrepancy requires a separate bound. The
+fixed-polynomial certificate alone does not control that additional change.
+
+\begin{corollary}[Certified phase pruning]\label{claim:final-15-6}
+If a thresholded phase graph is chosen so that
+\[
+\left\lVert
+(\mathcal B^k-\mathcal B_0^k)\rho(X)
+\right\rVert_2
+\leq\tau,
+\]
+then replacing $H^kX$ by $H_0^kX$ incurs Frobenius error at most $\tau$.
+The same statement holds for a Krylov polynomial with the certificate in
+Theorem~\ref{thm:polynomial-certificate}.
+\end{corollary}
+
+This turns graph thresholding into an error-budget decision.  A phase or
+interface is not discarded because it merely appears small. It is discarded
+only when the weighted sum of all paths using discarded couplings remains
+inside the requested tolerance.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_09_approximate_lightcone_certificate.pdf}
+\caption{Observed propagation error and the transfer-matrix envelope in the retained PSD control. The envelope remains above the measured error at every tested depth. Shading makes the conservative margin visible without treating it as statistical uncertainty.}
+\label{fig:approx-lightcone-certificate}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_10_threshold_tradeoff.pdf}
+\caption{At Krylov depth five, retaining more off-diagonal blocks reduces both the measured truncation error and its transfer bound in this control. Lines join recorded samples. The bound ignores cancellation and singular-vector alignment, so its margin is intentionally conservative.}
+\label{fig:threshold-tradeoff}
+\end{figure}
+
+\subsection{Numerical audit}
+
+The validation operator has twelve phases of width four.  A block-bidiagonal
+factor generates a positive-definite local operator $H_0$, and weak symmetric
+long-range blocks are then added to obtain $H$.  Both normalized operators
+remain positive definite.  A three-column start block is supported in phase
+zero.
+
+For depths one through eight:
+\begin{itemize}
+\item every observed phase norm lay below $\mathcal B^k\rho(X)$.
+\item every observed thresholding error lay below
+$(\mathcal B^k-\mathcal B_0^k)\rho(X)$;
+\item the largest total observed-error-to-certificate ratio was approximately
+$0.669$.
+\end{itemize}
+
+A separate hard-threshold sweep retained between $22$ and $132$ directed
+off-diagonal phase blocks.  Every measured depth-five error remained below its
+certificate. The largest observed-error-to-certificate ratio was approximately
+$0.376$.  Finally, a degree-four signed polynomial in $H$ satisfied the
+phasewise polynomial certificate in all twelve phases, with maximum ratio
+approximately $0.068$.
+
+These computations validate the implementation and illustrate sharpness.  The
+universal result is supplied by the preceding proofs, not by the finite test.
+
+
+
+\section{Certified budget-optimal phase scheduling}\label{sec:final-16}
+\label{sec:budget-scheduler}
+
+The preceding section answers a validation question: given a retained phase
+operator $H_0$, how large can the Krylov error be?  This section turns that
+certificate into a selection rule.  The goal is to remove as much phase
+communication as possible while remaining inside a prescribed error budget.
+
+Let $\mathcal E$ denote the set of undirected off-diagonal phase pairs.  Because
+$H$ is self-adjoint, $\mathcal B$ is symmetric.  For a phase pair
+$e=\{h,g\}$ define the nonnegative matrix $\Delta_e$ by
+\[
+(\Delta_e)_{hg}=\mathcal B_{hg},\qquad
+(\Delta_e)_{gh}=\mathcal B_{gh},
+\]
+with every other entry zero.  If $\mathcal O\subseteq\mathcal E$ is the set
+of omitted pairs, define
+\[
+\mathcal B_{\mathcal O}
+=\mathcal B-\sum_{e\in\mathcal O}\Delta_e.
+\]
+The diagonal is always retained.
+
+For depth $k\ge1$ and starting phase profile $\rho_0=\rho(X)$, define the
+\emph{edge risk vector}
+\[
+\boxed{
+q_e^{(k)}
+=
+\sum_{j=0}^{k-1}
+\mathcal B^{k-1-j}\Delta_e\mathcal B^j\rho_0
+}
+\]
+and its scalar risk
+\[
+\boxed{
+\beta_e^{(k)}=\lVert q_e^{(k)}\rVert_2.
+}
+\]
+Unlike the raw block norm $\mathcal B_{hg}$, this quantity depends on the
+start profile and on Krylov depth.
+
+\begin{theorem}[Edge-additive leakage majorant]
+\label{thm:edge-additive-majorant}
+For every omitted set $\mathcal O\subseteq\mathcal E$,
+\[
+\boxed{
+0\le
+(\mathcal B^k-\mathcal B_{\mathcal O}^k)\rho_0
+\le
+\sum_{e\in\mathcal O}q_e^{(k)}
+}
+\]
+componentwise.  Consequently,
+\[
+\boxed{
+\lVert(H^k-H_{\mathcal O}^k)X\rVert_F
+\le
+\left\lVert
+(\mathcal B^k-\mathcal B_{\mathcal O}^k)\rho_0
+\right\rVert_2
+\le
+\sum_{e\in\mathcal O}\beta_e^{(k)}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The first inequality in the second display is
+Theorem~\ref{thm:thresholded-power}.  For the transfer matrices, the exact
+noncommutative telescoping identity is
+\[
+\mathcal B^k-\mathcal B_{\mathcal O}^k
+=
+\sum_{j=0}^{k-1}
+\mathcal B^{k-1-j}
+(\mathcal B-\mathcal B_{\mathcal O})
+\mathcal B_{\mathcal O}^j.
+\]
+All matrices and $\rho_0$ are nonnegative, and
+$0\le\mathcal B_{\mathcal O}\le\mathcal B$ entrywise.  Hence
+\[
+\mathcal B_{\mathcal O}^j\rho_0
+\le
+\mathcal B^j\rho_0.
+\]
+Substituting
+\[
+\mathcal B-\mathcal B_{\mathcal O}
+=
+\sum_{e\in\mathcal O}\Delta_e
+\]
+and distributing the sum gives the componentwise majorant.  The final scalar
+bound follows from the Euclidean triangle inequality.
+\end{proof}
+
+\begin{corollary}[Polynomial edge-risk certificate]\label{claim:final-16-2}
+Let
+\[
+p(t)=\sum_{d=0}^{D}a_dt^d.
+\]
+Define
+\[
+q_e^{(p)}
+=
+\sum_{d=1}^{D}|a_d|q_e^{(d)},
+\qquad
+\beta_e^{(p)}=\lVert q_e^{(p)}\rVert_2.
+\]
+Then
+\[
+\boxed{
+\lVert(p(H)-p(H_{\mathcal O}))X\rVert_F
+\le
+\sum_{e\in\mathcal O}\beta_e^{(p)}.
+}
+\]
+Thus the same scheduling machinery applies to finite Krylov combinations and
+polynomial filters.
+\end{corollary}
+
+\begin{corollary}[Query-invisible phase pair]\label{claim:final-16-3}
+If
+\[
+\Delta_e\mathcal B^j\rho_0=0
+\qquad
+\text{for every }0\le j<k,
+\]
+then
+\[
+\beta_e^{(k)}=0.
+\]
+Therefore a phase pair can be large in operator norm and still have zero
+risk for a particular finite-depth query.  A magnitude-only threshold cannot
+represent this distinction.
+\end{corollary}
+
+\subsection{Equal-cost optimality}
+
+Suppose each retained phase pair has the same communication or scheduling
+cost.  Under the additive certificate, a set of omitted pairs is feasible if
+\[
+\sum_{e\in\mathcal O}\beta_e^{(k)}\le\tau.
+\]
+Sort the risks as
+\[
+\beta_{(1)}\le\beta_{(2)}\le\cdots\le\beta_{(N)}.
+\]
+
+\begin{theorem}[Cardinality-optimal certified pruning]
+\label{thm:unit-cost-optimal}
+Let $r$ be the largest integer satisfying
+\[
+\sum_{i=1}^{r}\beta_{(i)}\le\tau.
+\]
+Then omitting the $r$ least-risk phase pairs is feasible, and no feasible
+omitted set can contain more than $r$ pairs under the scalar additive
+certificate.
+\end{theorem}
+
+\begin{proof}
+Among all subsets of cardinality $r+1$, the smallest possible sum of risks is
+\[
+\sum_{i=1}^{r+1}\beta_{(i)}.
+\]
+By maximality of $r$, that sum exceeds $\tau$.  Hence no set of $r+1$ omitted
+pairs is feasible.  The prefix of length $r$ is feasible by construction.
+\end{proof}
+
+This is a genuine optimization theorem, not a heuristic threshold rule.  The
+optimization target is the additive certificate itself. The tighter exact
+transfer envelope can leave additional slack.
+
+\subsection{Exact-envelope refinement}
+
+After the cardinality-optimal additive schedule is found, recomputing
+\[
+\left\lVert
+(\mathcal B^k-\mathcal B_{\mathcal O}^k)\rho_0
+\right\rVert_2
+\]
+may reveal unused budget.  Additional pairs can then be removed one at a time,
+provided the exact transfer envelope remains below $\tau$.
+
+\begin{proposition}[Certified refinement]\label{claim:final-16-5}
+Any sequence of additional omissions accepted only when
+\[
+\left\lVert
+(\mathcal B^k-\mathcal B_{\mathcal O}^k)\rho_0
+\right\rVert_2\le\tau
+\]
+remains a valid $\tau$-certificate for the original operator error.
+\end{proposition}
+
+The refinement rule used in the reference implementation chooses, among all
+currently feasible next omissions, the pair that produces the smallest
+increase in the exact transfer envelope.  It is certified but is not claimed
+globally optimal.
+
+\subsection{Unequal communication costs}
+
+Let $c_e\ge0$ denote the communication or storage cost saved by omitting pair
+$e$.  Under the scalar additive certificate, the exact discrete selection
+problem is
+\[
+\boxed{
+\max_{x_e\in\{0,1\}}
+\sum_e c_ex_e
+\quad\text{subject to}\quad
+\sum_e\beta_e^{(k)}x_e\le\tau.
+}
+\]
+This is the $0$--$1$ knapsack problem.  Hence unequal-cost scheduling is
+combinatorial in general.  The implementation supplies a safe
+cost-to-risk greedy heuristic. Its output remains certified because it never
+exceeds the additive risk budget.  A fractional-knapsack relaxation supplies
+an upper bound on the maximum possible saved cost.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_11_budget_scheduler_comparison.pdf}
+\caption{Query-aware schedulers omit more phase pairs than a global norm threshold in this depth-five control. Envelope refinement uses slack left by the additive bound. The figure compares retained schedules, not measured execution times or a universal optimality claim.}
+\label{fig:budget-scheduler-comparison}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_13_edge_risk_vs_block_norm.pdf}
+\caption{Block norm and query-dependent risk for each phase pair in the retained control. Adjacency is distinguished by both marker and color. The query risk includes the start profile and finite-depth transfer paths, information absent from the block norm alone.}
+\label{fig:edge-risk-vs-norm}
+\end{figure}
+
+\subsection{Numerical audit}
+
+The twelve-phase operator from Section~\ref{sec:approx-lightcone} was reused at
+Krylov depth five.  There are $66$ undirected off-diagonal phase pairs.
+For error budgets $10^{-3}$, $2\times10^{-3}$, $5\times10^{-3}$, and
+$10^{-2}$, the additive-optimal scheduler retained respectively
+$61$, $56$, $45$, and $36$ pairs.  Exact-envelope refinement reduced those
+counts further to
+$58$, $50$, $36$, and $30$ pairs while remaining inside budget.
+
+In the same test, the best single global threshold on the raw block norm
+retained $65$ pairs at every one of those four budgets.  The difference is
+structural: the global threshold is blind to start phase and Krylov depth.
+
+A separate six-phase problem contains $15$ candidate phase pairs, so all
+$2^{15}=32768$ subsets can be enumerated.  At four distinct budgets, the
+sorted-risk scheduler matched the brute-force cardinality optimum under the
+additive certificate in every case.  The exact-envelope greedy refinement also
+matched the brute-force exact-envelope optimum in cardinality for all four
+budgets in this finite audit.  The latter agreement is empirical and is not
+promoted to a theorem.
+
+For an unequal-cost eight-phase test, costs were proportional to the bytes in
+symmetric dense phase blocks.  The cost-to-risk heuristic saved $5408$ bytes
+out of a $9472$-byte communication proxy while using additive risk $0.011632$
+under budget $0.012$.  The fractional relaxation upper bound was $5647.8$
+bytes, placing the greedy schedule within about $4.25\%$ of that relaxation
+bound on this instance.
+
+
+\section{Asynchronous double-buffer execution model}\label{sec:final-17}
+\label{sec:double-buffer}
+
+The mathematical streaming identities do not require transfers and GEMMs to be
+serial.  Consider $B$ storage blocks.  Let $t_b$ be the transfer time for block
+$b$ and $c_b$ its device compute time.
+
+\begin{proposition}[Ideal two-buffer pipeline]\label{claim:final-17-1}
+In a model with perfect asynchronous overlap, transfer of block $b+1$ may run
+while block $b$ is being processed.  The serial one-buffer time is
+\[
+T_{\rm serial}=\sum_{b=1}^{B}(t_b+c_b),
+\]
+whereas the two-buffer pipeline time is
+\[
+\boxed{
+T_{\rm pipe}
+=
+t_1
++
+\sum_{b=1}^{B-1}\max\{c_b,t_{b+1}\}
++
+c_B.
+}
+\]
+For uniform times $t_b=t$ and $c_b=c$,
+\[
+T_{\rm pipe}=t+c+(B-1)\max\{t,c\}.
+\]
+\end{proposition}
+
+\begin{proof}
+After the first block arrives, every interior pipeline stage finishes only when
+both the current computation and the next transfer have completed.  Their
+joint stage duration is therefore the maximum of those two times.  The initial
+transfer and final compute cannot be hidden and form the two boundary terms.
+\end{proof}
+
+If one resident block uses $M_{\rm block}$ bytes and all other fixed working
+state uses $M_{\rm fixed}$ bytes, the corresponding memory models are
+\[
+M_{\rm single}=M_{\rm fixed}+M_{\rm block},
+\qquad
+\boxed{
+M_{\rm double}=M_{\rm fixed}+2M_{\rm block}.
+}
+\]
+The proposition is a scheduling model, not a hardware timing claim.  PCIe or
+NVLink contention, kernel launch overhead, synchronization, page pinning, and
+library workspaces can reduce realized overlap.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_12_double_buffer_model.pdf}
+\caption{Modeled wall time for five per-block I/O and compute settings, with 64 blocks in each case. The vertical labels specify I/O time followed by compute time. Connected points compare single and double buffering. These are model predictions, not accelerator measurements.}
+\label{fig:double-buffer-model}
+\end{figure}
+
+

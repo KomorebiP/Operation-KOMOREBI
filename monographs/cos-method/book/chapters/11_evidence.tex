@@ -1,0 +1,586 @@
+\chapter{Numerical evidence and applications}\label{ch:evidence}
+\chapterlead{Exact-law controls test values against independent formulas. Heterogeneous
+spectra test inversion across irregular coefficients. Simulated kernels test
+the operator pipeline. Timing measurements characterize particular
+implementations. These are distinct forms of evidence.}
+The source package records the inputs and environments behind the reported
+experiments. The release regression and containment checks are reported in
+Appendix~\ref{app:reproduction}.
+
+\section{Deep-tail controls}\label{sec:final-3}
+A directed enclosure includes rounding as well as analytic remainders. An analytic ledger evaluated in ordinary floating point does not. The labels in this chapter identify which conclusion a result supports. The retained timing measurements are not presented as a new hardware comparison.
+
+The method is designed for a regime in which direct survival probabilities can
+underflow long before the mathematical probability becomes numerically
+unresolvable.  The engine therefore treats \(\log p\) as the primary numerical
+quantity and evaluates its error bounds on that logarithmic scale.
+
+The validation ladder spans seven qualitatively different settings:
+
+\begin{center}
+\small
+\begin{tabular}{@{}P{0.27\linewidth}P{0.13\linewidth}P{0.22\linewidth}P{0.16\linewidth}P{0.12\linewidth}@{}}
+\toprule
+validation regime & deepest $\log_{10}p$ & observed error & certificate & spectral size\\
+\midrule
+directed-rounding $0.02\chi^2_{80}$ control
+& $-5000$ & enclosure width $3.34\times10^{-11}$ decades
+& multiplicative ratio $\le 1+7.70\times10^{-11}$ & 80 df\\
+large-scale positive spectrum
+& $-922.031162$ & below stored reference resolution & $5.71\times10^{-9}$ & rank 1997\\
+strong-dependence kernel
+& $-457.973916$ & below stored reference resolution & $5.20\times10^{-9}$ & rank 996\\
+heterogeneous inversion benchmark near $10^{-16}$
+& $-16$ & $2.88$--$6.52\times10^{-15}$ decades & independent integral converged & ranks 80--120\\
+signed finite-endpoint exact control
+& $-200$ & $\le 2.84\times10^{-14}$ decades & $7.23\times10^{-13}$ & rank 80\\
+signed mixed multiscale
+& $-81.891937$ & $1.42\times10^{-12}$ decades vs full grid & $5.78\times10^{-9}$ & rank 340\\
+noncentral exact controls
+& $-40$ & $\le 9.26\times10^{-15}$ decades & passing & up to 50 df\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The analytic scaled-chi-square ladder also includes
+\[
+\log_{10}p=-100,-300,-1000,-5000,
+\]
+with respective reported absolute log-probability discrepancies
+\[
+2.84\times10^{-14},\quad
+<10^{-15},\quad
+3.41\times10^{-13},\quad
+<10^{-15}
+\]
+in the stored benchmark output.  The corresponding analytic relative certificates
+remain finite throughout, reaching only
+\[
+3.85\times10^{-11}
+\]
+at \(10^{-5000}\).
+
+A large-scale run with \(n=2000\), \(m=50{,}000\), 49,951 retained
+features, and quadratic-form rank 1997 produced
+\[
+\boxed{\log_{10}p=-922.0311624669905}
+\]
+using 79 spectral packets and \(N=128\).  Its independently evaluated
+full-spectrum tilted reference agreed within the stored reporting precision, while the
+reported relative certificate was
+\[
+5.71\times10^{-9}.
+\]
+
+The corrected strong-dependence case study independently reached
+\[
+\boxed{\log_{10}p=-457.9739160722001}
+\]
+with a finite \(5.20\times10^{-9}\) certificate.  The signed finite-endpoint
+control passed its analytic ledger through \(10^{-200}\), while a rank-340 mixed-sign
+multiscale spectrum passed its analytic ledger to
+\[
+\boxed{\log_{10}p=-81.89193686056221}.
+\]
+Finally, the noncentral engine matched exact noncentral-chi-square controls
+from \(10^{-4}\) through \(10^{-40}\), with maximum observed discrepancy
+\[
+9.26\times10^{-15}
+\]
+decades.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_23_deep_tail_precision_envelope.pdf}
+\caption{Retained log-probability discrepancies across positive, signed, mixed-sign, and noncentral control families. The symmetric-log vertical scale preserves exact stored zeros without a positive display floor. These are pointwise comparisons with the stated references, not uniform error bounds.}
+\label{fig:deep-tail-precision-envelope}
+\end{figure}
+
+\subsection{Independent characteristic-function inversion near \texorpdfstring{\(10^{-16}\)}{1e-16}}
+
+Closed-form controls are important, but they can hide numerical difficulties
+that appear only for heterogeneous spectra.  An independent inversion test was
+therefore run on four generalized chi-square laws near
+\[
+P(Q\ge q)\approx10^{-16}.
+\]
+
+The reference evaluates the original characteristic function directly through
+the central Imhof inversion identity
+\[
+P(Q\ge q)
+=
+\frac12
++
+\frac1\pi
+\int_0^\infty
+\frac{\sin\Theta(u)}{u\,R(u)}\,du,
+\]
+where, for distinct positive coefficients \(\lambda_j\) with multiplicities
+\(h_j\),
+\[
+\Theta(u)
+=
+\frac12\sum_j h_j\arctan(\lambda_j u)
+-
+\frac12qu,
+\qquad
+R(u)
+=
+\prod_j
+\left(1+\lambda_j^2u^2\right)^{h_j/4}.
+\]
+This route does not use exponential tilting, the COS expansion, spectral
+packets, or the K-COS error controller.
+
+The four spectra include balanced, skewed, dominant-spike, and higher-rank
+cases.  Each reference integral was evaluated at two truncation limits.  The
+omitted integral after the frequency cutoff \(T>0\) was bounded using
+\[
+\frac1\pi
+\int_T^\infty\frac{du}{uR(u)}
+\le
+\frac{C}{\pi\nu}T^{-\nu},
+\qquad
+\nu=\frac12\sum_jh_j,
+\qquad
+C=\prod_j\lambda_j^{-h_j/2}.
+\]
+
+\begin{center}
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+spectrum & rank & \(|\Delta\log_{10}p|\) & relative difference & reference tail bound / \(p\)\\
+\midrule
+balanced & 80 & $6.52\times10^{-15}$ & $1.50\times10^{-14}$ & $6.84\times10^{-20}$\\
+skewed & 80 & $4.13\times10^{-15}$ & $9.50\times10^{-15}$ & $4.44\times10^{-18}$\\
+spiky & 80 & $5.19\times10^{-15}$ & $1.20\times10^{-14}$ & $7.00\times10^{-17}$\\
+balanced & 120 & $2.88\times10^{-15}$ & $6.64\times10^{-15}$ & $4.19\times10^{-29}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two inversion truncations agree to between approximately
+\[
+1.2\times10^{-21}
+\quad\text{and}\quad
+3.7\times10^{-17}
+\]
+decades across the four cases.  Thus the slow reference is numerically stable
+at a scale well below the observed K-COS-versus-inversion difference.
+Agreement between truncations is convergence evidence. The omitted-integral
+bound alone does not enclose quadrature discretization or numerical rounding,
+so this comparison is not assigned the directed-enclosure guarantee.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_27_imhof_p1e16_validation.pdf}
+\caption{Independent direct-inversion checks near $p=10^{-16}$ on four heterogeneous spectra. Circles show relative K-COS/reference differences and diamonds show the reference integral-tail bound. The latter is one error component, not a complete enclosure of all reference arithmetic.}
+\label{fig:imhof-p1e16}
+\end{figure}
+
+This test is complementary to the exact scaled-chi-square controls.  It asks
+whether the solver remains accurate when no single-gamma reduction is
+available and when an algorithmically different inversion of the full
+characteristic function is used as the reference.
+
+These results have different evidentiary roles.  The scaled-chi-square,
+finite-endpoint signed, Laplace signed, and noncentral cases provide analytic
+controls.  The heterogeneous inversion battery, large-scale, strong-dependence, and
+rank-340 mixed-sign cases test irregular spectra for which no single-gamma
+closed form is available.  Together they test correctness against known distributions,
+representation compression, and stability on the intended high-rank numerical
+regime.  The low-rank Laplace example also records a deliberate certificate
+failure boundary rather than conflating numerical agreement with certification.
+
+
+\section{Signed and noncentral controls}
+\paragraph{Exact finite-endpoint control.}
+For
+\[
+Q=-0.02\,\chi^2_{80},
+\]
+the right tail is a lower chi-square tail with finite upper endpoint zero.  The
+signed engine agrees with the exact distribution through
+\[
+\boxed{p=10^{-200}},
+\]
+with maximum observed log-probability error about $2.84\times10^{-14}$ decades
+and certificates around $10^{-12}$.
+
+\paragraph{Mixed-sign high-rank analytic-ledger control.}
+A deterministic rank-340 multiscale spectrum with 180 positive and 160
+negative coefficients was tested from approximately $10^{-14}$ to
+\[
+\boxed{p\approx10^{-81.891937}}.
+\]
+At the deepest point the packetized solver used 35 packets, $N=4096$, and
+reported a relative certificate
+\[
+5.78\times10^{-9}.
+\]
+Its log-probability differed from the unpacketized full-spectrum signed solver
+by about $1.42\times10^{-12}$ decades.  Independent exponential-tilt
+importance sampling placed the discrepancy at about $1.41$ Monte Carlo
+standard errors.
+
+\paragraph{Retained low-rank limitation.}
+For independent $Y_1,Y_2\sim\chi^2_2$, the quadratic form
+\[
+Q=0.07(Y_1-Y_2)
+\]
+is Laplace distributed with scale $0.14$, so for $q\ge0$,
+\[
+P(Q\ge q)=\frac12e^{-q/0.14}.
+\]
+The computed values agree with this exact law through $10^{-200}$ to roughly
+$10^{-9}$ decades or better.  However, the implemented analytic COS-series
+certificate rejects these low-rank mixed cases because the tilted
+characteristic function decays only as $|t|^{-2}$.  The implementation reports
+this as a certificate failure rather than silently accepting the numerical
+value.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_24_signed_certificate_boundary.pdf}
+\caption{The negative finite-endpoint and rank-340 mixed-sign controls meet the requested analytic tolerance. The rank-four Laplace controls do not, despite close numerical agreement with their exact law. The horizontal line is the requested tolerance. These analytic-ledger results do not enclose floating-point roundoff.}
+\label{fig:signed-certificate-boundary}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_22_noncentral_controls.pdf}
+\caption{Absolute log-probability discrepancies for three scaled noncentral chi-square families, labeled by degrees of freedom and noncentrality. Recorded zeros remain at zero. All analytic truncation checks pass, but this comparison is not a directed probability enclosure.}
+\label{fig:noncentral-controls}
+\end{figure}
+
+
+\section{Rare-variant kernel case study}\label{sec:final-24}
+
+The preceding sections establish operator identities and certified numerical
+bounds.  This section tests the same machinery on the project's existing
+rare-variant SKAT simulation layer, including explicit LD structure,
+covariates, per-variant standardization, rare-variant weighting, and the
+phenotype-space score statistic.
+
+\subsection{Simulation provenance and implementation correction}
+
+Two established genotype generators were used.
+
+The first is a latent-Gaussian block-LD generator.  Within a genomic block,
+alleles are obtained by thresholding correlated Gaussian latent variables at
+variant-specific minor-allele frequencies.
+
+The second is a copy-LD generator in which haplotype states persist along a
+block with high probability and are occasionally redrawn. The simulator
+must initialize its genotype accumulator to zero before adding haplotypes.
+Allocating the accumulator with \verb|np.empty| and then applying
+\verb|+=| would make the output depend on unspecified memory contents.
+All copy-LD results reported here use explicit zero initialization. Results
+from an uninitialized accumulator are excluded from the evidence record.
+
+\subsection{Tested LD regimes}
+
+Four deterministic scenarios were evaluated.
+
+\begin{table}[htbp]
+\centering
+\caption{Synthetic rare-variant simulation scenarios.  Adjacent $r^2$ is
+computed within the simulated LD blocks after variant standardization.}
+\begin{tabular}{lrrrrr}
+\toprule
+scenario & $n$ & $m$ & rank & median adjacent $r^2$ & effective rank\\
+\midrule
+latent LD, moderate & 600 & 3000 & 596 & 0.0069 & 441.9\\
+latent LD, strong & 600 & 3000 & 596 & 0.1140 & 240.3\\
+copy LD, strong & 600 & 3000 & 596 & 0.8298 & 200.1\\
+copy LD, large & 1000 & 5000 & 996 & 0.8179 & 353.0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Effective rank here is the participation ratio
+\[
+r_{\rm eff}=\frac{(\sum_j\lambda_j)^2}{\sum_j\lambda_j^2}.
+\]
+It measures spectral concentration, not an integer count of nonzero directions.
+The corresponding spectra therefore span a substantial range of concentration:
+stronger LD reduces effective rank even when the nominal quadratic-form rank
+remains close to the sample residual dimension.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_18_realistic_ld_effective_rank.pdf}
+\caption{Nonzero and effective rank across four synthetic dependence scenarios. Connectors pair the two quantities for each scenario. Stronger dependence changes spectral concentration substantially even when nonzero rank is unchanged.}
+\label{fig:realistic-ld-rank}
+\end{figure}
+
+\subsection{Streaming directly from raw genotype blocks}
+
+The raw genotype matrix was streamed in resident variant blocks of widths
+31, 127, and 509.  Within each block the implementation performs
+
+\[
+\begin{aligned}
+G_b&\longrightarrow G_b-\bar G_b
+     \longrightarrow \widetilde G_b,\\
+\widetilde G_b&\longrightarrow M_X\widetilde G_b
+     \longrightarrow A_b=M_X\widetilde G_bW_b^{1/2}
+     \longrightarrow A_bA_b^\top,
+\end{aligned}
+\]
+
+where $\widetilde G_b$ denotes the centered and scaled block. The full
+weighted factor is never materialized.
+
+Across all four LD scenarios and all three resident block sizes, the largest
+relative discrepancy against the fully materialized kernel was
+
+\[
+\boxed{6.61\times10^{-16}}.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_19_realistic_streaming_invariance.pdf}
+\caption{Retained raw-genotype streaming discrepancies across synthetic dependence regimes and resident block widths. Marker shapes distinguish the scenarios in grayscale as well as color. The plotted differences are at floating-point summation scale.}
+\label{fig:realistic-streaming}
+\end{figure}
+
+This test is stronger than applying the streamed identity to a precomputed
+factor because the centering, variance scaling, covariate projection, and
+rare-variant weights are all performed inside the block loop.
+
+\subsection{Phenotype-space equivalence}
+
+For each scenario, 100 Gaussian null residual draws were evaluated in three
+ways. Under the standardized Gaussian null, write $e=M_Xz$ with
+$z\sim N(0,I)$. Because $M_XA=A$, the statistic used here is
+$Q=\frac12 z^\top Kz$, so its nonzero mixture coefficients are
+$\frac12\lambda_j(K)$. The factor $\frac12$ belongs to this case-study
+normalization, not to the general quadratic-form definition.
+
+\begin{enumerate}
+\item directly through the factor,
+\[
+Q=\frac12\|A^\top e\|_2^2.
+\]
+\item through the sample kernel,
+\[
+Q=\frac12 e^\top Ke.
+\]
+\item through the eigencoordinates of $K$.
+\end{enumerate}
+
+The worst relative discrepancy across all draws and all scenarios was
+
+\[
+\boxed{8.32\times10^{-16}}.
+\]
+
+Thus the simulated phenotype path, the streamed kernel, and the generalized
+$\chi^2$ spectral representation agree to floating-point precision.
+
+\subsection{Deep tails on simulated LD spectra}
+
+For every scenario, tail queries were generated at tilt fractions
+0.90, 0.97, and 0.99 of the positive singularity.  K-COS was compared with a
+higher-resolution full-spectrum tilted reference.
+
+The large corrected copy-LD case was then pushed further, to fractions
+0.995, 0.997, 0.999, and 0.9995.  The deepest tested reference value was
+
+\[
+\boxed{\log_{10}p=-457.973916}.
+\]
+
+At that point the displayed K-COS and high-resolution full-spectrum values
+were identical.  Across the complete realistic-LD battery, the largest
+absolute discrepancy was
+
+\[
+\boxed{3.21\times10^{-12}\ \text{decades}}.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/figure_20_realistic_deep_tail_accuracy.pdf}
+\caption{Absolute differences between K-COS and refined full-spectrum tilted references on the synthetic dependence scenarios. The corrected large copy-LD controls extend through approximately $10^{-458}$. Zeros are plotted at zero rather than assigned an artificial positive floor.}
+\label{fig:realistic-deep-tail}
+\end{figure}
+
+For the $n=1000$, $m=5000$ corrected copy-LD spectrum, selected results are
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+tilt fraction & $\log_{10}p$ & COS modes $N$ & absolute error (decades)\\
+\midrule
+0.9950 & -65.950669 & 2048 & $4.69\times10^{-13}$\\
+0.9970 & -95.305034 & 2048 & $3.70\times10^{-14}$\\
+0.9990 & -240.602047 & 8192 & $4.94\times10^{-14}$\\
+0.9995 & -457.973916 & 16384 & below stored reference resolution\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Interpretation and boundary}
+
+This simulation block does not add a new algebraic theorem.  It supplies a
+more demanding validation layer for the theorem chain already proved.
+Specifically, it shows that the exact streaming identities and the K-COS
+deep-tail machinery remain numerically stable under substantially different
+rare-variant LD structures and through the complete raw-genotype preprocessing
+path.
+
+The evidence remains synthetic.  These generators do not reproduce every
+population-genetic feature of a sequencing cohort, and this block is not an
+external-cohort replication. It addresses the Gaussian linear-model null.
+Finite-sample Bernoulli or logistic calibration remains a separate statistical
+problem.
+
+
+
+\section{Spectral-packet experiments}
+These tables and figures report the retained packet-planner experiments.
+Their analytic error bounds exclude floating-point roundoff. They measure a
+different numerical path from the directed positive backend, and are not
+reinterpreted as directed probability enclosures or new performance runs.
+
+\subsection{Exactly solvable chi-square stress test}
+
+To isolate the effect of exponential tilting, we first used
+\[
+Q=0.02\chi^2_{80},
+\]
+whose survival probabilities are available directly from the chi-square distribution. Table \ref{tab:chi} compares a global COS calculation with query-centered tilted COS.
+
+\begin{table}[htbp]
+\centering
+\caption{Relative error in an exactly solvable chi-square family.}
+\label{tab:chi}
+\begin{tabular}{rrrr}
+\toprule
+Target tail $p$ & $N$ & Global COS rel. error & Tilted COS rel. error\\
+\midrule
+$10^{-6}$  & 64  & $3.56\times10^{-8}$ & $2.71\times10^{-14}$\\
+$10^{-10}$ & 64  & $1.64\times10^{-4}$ & $6.59\times10^{-15}$\\
+$10^{-10}$ & 128 & $2.03\times10^{-6}$ & $9.05\times10^{-15}$\\
+$10^{-14}$ & 64  & $1.43$              & $3.53\times10^{-14}$\\
+$10^{-14}$ & 128 & $6.15\times10^{-2}$ & $3.87\times10^{-14}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The test demonstrates the numerical motivation for tilting: evaluating a small tail directly under the shifted law is substantially more stable than reconstructing a global CDF and subtracting from one. This observation is not a novelty claim for exponential tilting itself.
+
+\subsection{Genotype-derived spectra}
+
+The second experiment used the existing Komorebi SKAT benchmark generator. Synthetic genotype matrices were centered and scaled, then residualized against three covariates. The kernel weights were $w_j=(1-\mathrm{MAF}_j)^{24}$, where MAF denotes minor-allele frequency. The factor used column scales $\sqrt{w_j}$. Its positive quadratic-form spectrum was
+\[
+\lambda=\tfrac12\operatorname{eig}(AA^{\mathsf T}).
+\]
+Three independent $n=400$, $m=1200$ genotype sets yielded numerical rank $397$. Four upper-tail queries per spectrum were generated by choosing saddlepoint locations at fractions $0.70,0.80,0.85,0.90$ of the transform singularity. The comparison reference used exact-spectrum tilted COS with $N=2048$ and a large support parameter $L=20$. The adaptive method was asked for a relative analytic tolerance of $10^{-8}$.
+
+Across the twelve queries:
+\begin{itemize}
+\item every requested $10^{-8}$ analytic certificate passed.
+\item the worst observed relative error was $6.148608\times10^{-11}$.
+\item the largest returned analytic relative bound was $7.917203\times10^{-9}$.
+\item the planner selected $N\in\{64,128\}$, $L\in\{10,11,12,13\}$, and 11--16 packets.
+\end{itemize}
+
+Figure \ref{fig:coverage} plots the observed errors against the returned analytic bounds. Every point lies above the equality line because the vertical coordinate is the bound.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/certificate_coverage.pdf}
+\caption{Twelve retained genotype-derived tail queries, redrawn from the recovered source table. The vertical coordinate is the analytic relative bound and the horizontal coordinate is observed relative error. Every point lies above equality. Marker shape identifies the source spectrum.}
+\label{fig:coverage}
+\end{figure}
+
+\subsection{Tolerance ladder}
+
+At a reference tail probability near $8.99\times10^{-15}$, the same engine was requested to meet three tolerances. Table \ref{tab:ladder} shows how the representation refined automatically.
+
+\begin{table}[htbp]
+\centering
+\caption{Adaptive refinement at an extreme-tail query.}
+\label{tab:ladder}
+\begin{tabular}{rrrrrr}
+\toprule
+Requested $\tau$ & $N$ & $L$ & Packets & Analytic bound & Observed error\\
+\midrule
+$10^{-6}$  & 128 & 10 & 10 & $3.56\times10^{-7}$  & $3.63\times10^{-12}$\\
+$10^{-8}$  & 128 & 12 & 15 & $4.87\times10^{-9}$  & $9.14\times10^{-13}$\\
+$10^{-10}$ & 256 & 14 & 24 & $8.21\times10^{-11}$ & $5.65\times10^{-14}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/tolerance_ladder.pdf}
+\caption{One extreme-tail query evaluated under three requested tolerances. Increasing the accuracy request refines the packet representation and, at the tightest setting, the mode count. The returned analytic bound remains above observed error and below the requested tolerance.}
+\label{fig:ladder}
+\end{figure}
+
+\subsection{Prototype runtime scaling}
+
+Table \ref{tab:runtime} reports median CPU timings from the Python prototype. ``Adaptive total'' includes planning and analytic error checks. ``Compiled evaluation'' measures reuse of an already compiled spectral passport at the selected grid.
+
+\begin{table}[htbp]
+\centering
+\caption{Prototype runtime scaling on genotype-derived spectra.}
+\label{tab:runtime}
+\begin{tabular}{rrrrrr}
+\toprule
+Rank & Packets & Exact tilted & Adaptive total & Compiled eval. & Compiled speedup\\
+\midrule
+397  & 13 & 6.66 ms & 10.45 ms & 0.549 ms & $12.1\times$\\
+797  & 16 & 13.32 ms & 11.49 ms & 0.604 ms & $22.0\times$\\
+1197 & 17 & 21.52 ms & 11.24 ms & 0.651 ms & $33.1\times$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_production/runtime_scaling.pdf}
+\caption{Retained median CPU timings for exact tilted COS, the adaptive calculation including planning, and reuse of a compiled spectral representation. The logarithmic vertical scale keeps the much smaller reuse cost visible. First-query and reuse costs are not interchangeable.}
+\label{fig:runtime}
+\end{figure}
+
+Planning matters. The first adaptive query is slower at rank 397 and faster at rank 797 in this prototype. Compiled reuse measures a different cost. These timings establish no universal speedup.
+
+
+
+\section{Numerical verification}\label{sec:final-28}
+
+\begin{table}[htbp]
+\centering
+\caption{Stored-run identifiers and actual block counts.}
+\begin{tabular}{lrrr}
+\toprule
+partition & blocks & Gram relative error & action relative error\\
+\midrule
+coarse 4 & 4 & \(2.91\times10^{-16}\) & \(5.99\times10^{-16}\)\\
+fine 64 & 32 & \(3.39\times10^{-16}\) & \(6.00\times10^{-16}\)\\
+irregular & 9 & \(3.34\times10^{-16}\) & \(5.87\times10^{-16}\)\\
+singleton-front & 21 & \(2.43\times10^{-16}\) & \(5.82\times10^{-16}\)\\
+permuted, block 73 & 29 & \(3.52\times10^{-16}\) & \(5.89\times10^{-16}\)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Hierarchical refinement gave relative discrepancy $3.17\times10^{-16}$.
+For $H=L^\top L$ with block-bidiagonal $L$, the smallest eigenvalue was
+approximately $2.86$ and the largest norm outside the exact light cone
+was zero. The QR-core singular-spectrum discrepancy was
+$5.89\times10^{-16}$ in relative $\ell_2$ norm. These are finite controls,
+not universal floating-point error bounds.
+
+
+

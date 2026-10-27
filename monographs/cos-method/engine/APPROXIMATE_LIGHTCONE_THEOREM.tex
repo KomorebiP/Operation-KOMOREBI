@@ -1,0 +1,234 @@
+\section{Certified approximate light cones}
+\label{sec:approx-lightcone}
+
+The exact light-cone theorem requires literal zero phase couplings.  Real LD,
+annotation, and feature graphs are often only approximately sparse.  This
+section replaces exact support by a computable phasewise envelope.
+
+Let the phase projectors be $P_1,\ldots,P_q$, and let $X$ be a vector or block
+vector.  Define its phase-norm profile
+\[
+\rho(X)_g=\lVert P_gX\rVert_F,
+\]
+and define the nonnegative phase-transfer matrix
+\[
+\mathcal B_{hg}=\lVert P_hHP_g\rVert_2.
+\]
+The matrix $\mathcal B$ records the strength of every one-step phase transfer
+without assuming that weak couplings vanish.
+
+\begin{theorem}[Weighted phase-transfer envelope]
+\label{thm:weighted-transfer}
+For every block vector $X$,
+\[
+\boxed{
+\rho(HX)\leq \mathcal B\rho(X)
+}
+\]
+componentwise.  Consequently, for every integer $k\geq0$,
+\[
+\boxed{
+\rho(H^kX)\leq \mathcal B^k\rho(X).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Using $\sum_gP_g=I$ and submultiplicativity,
+\[
+\begin{aligned}
+\lVert P_hHX\rVert_F
+&=\left\lVert\sum_gP_hHP_gX\right\rVert_F\\
+&\leq\sum_g\lVert P_hHP_g\rVert_2\lVert P_gX\rVert_F\\
+&=(\mathcal B\rho(X))_h.
+\end{aligned}
+\]
+Iteration gives the power bound.
+\end{proof}
+
+Now choose a symmetric set of retained phase blocks and define
+\[
+H_0=\sum_{(h,g)\in\mathcal E_0}P_hHP_g.
+\]
+Let
+\[
+(\mathcal B_0)_{hg}=
+\begin{cases}
+\mathcal B_{hg},&(h,g)\in\mathcal E_0,\\
+0,&\text{otherwise},
+\end{cases}
+\qquad
+\mathcal R=\mathcal B-\mathcal B_0.
+\]
+Symmetric pair retention preserves self-adjointness of $H_0$, although the
+following error theorem does not require positive semidefiniteness of $H_0$.
+
+\begin{theorem}[Thresholded-power certificate]
+\label{thm:thresholded-power}
+For every $k\geq1$,
+\[
+\boxed{
+\rho\bigl((H^k-H_0^k)X\bigr)
+\leq
+(\mathcal B^k-\mathcal B_0^k)\rho(X).
+}
+\]
+In particular,
+\[
+\boxed{
+\lVert(H^k-H_0^k)X\rVert_F
+\leq
+\left\lVert(\mathcal B^k-\mathcal B_0^k)\rho(X)\right\rVert_2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Write $E=H-H_0$.  The telescoping identity gives
+\[
+H^k-H_0^k
+=
+\sum_{j=0}^{k-1}H^{k-1-j}EH_0^j.
+\]
+The block-norm matrix of $E$ is $\mathcal R$.  Applying
+Theorem~\ref{thm:weighted-transfer} successively to each term gives
+\[
+\rho\bigl((H^k-H_0^k)X\bigr)
+\leq
+\sum_{j=0}^{k-1}
+\mathcal B^{k-1-j}\mathcal R\mathcal B_0^j\rho(X).
+\]
+The matrix telescoping identity
+\[
+\mathcal B^k-\mathcal B_0^k
+=
+\sum_{j=0}^{k-1}
+\mathcal B^{k-1-j}(\mathcal B-\mathcal B_0)\mathcal B_0^j
+\]
+yields the phasewise formula.  Orthogonality of the phase projectors gives
+\[
+\lVert Y\rVert_F^2=\sum_h\lVert P_hY\rVert_F^2,
+\]
+which proves the global bound.
+\end{proof}
+
+\begin{corollary}[Certified approximate light cone]
+\label{cor:approx-lightcone}
+Assume $X$ is supported on a set of start phases $S$.  If phase $h$ is not
+reachable from $S$ by a retained path of length at most $k$, then
+\[
+P_hH_0^kX=0
+\]
+and
+\[
+\boxed{
+\lVert P_hH^kX\rVert_F
+\leq
+\bigl[(\mathcal B^k-\mathcal B_0^k)\rho(X)\bigr]_h.
+}
+\]
+Thus an exact zero outside the retained light cone is replaced by a certified
+nonzero leakage budget.
+\end{corollary}
+
+\begin{corollary}[Scalar threshold law]
+For any induced matrix norm, let
+\[
+M=\max\{\lVert\mathcal B\rVert,\lVert\mathcal B_0\rVert\}.
+\]
+Then
+\[
+\boxed{
+\lVert\mathcal B^k-\mathcal B_0^k\rVert
+\leq
+kM^{k-1}\lVert\mathcal R\rVert.
+}
+\]
+Hence weak discarded coupling produces a first-order error bound proportional
+to the discarded transfer norm and to the Krylov depth.
+\end{corollary}
+
+\begin{theorem}[Krylov-polynomial certificate]
+\label{thm:polynomial-certificate}
+Let
+\[
+p(t)=\sum_{j=0}^d a_jt^j.
+\]
+Then
+\[
+\boxed{
+\rho\bigl((p(H)-p(H_0))X\bigr)
+\leq
+\sum_{j=1}^d
+|a_j|(\mathcal B^j-\mathcal B_0^j)\rho(X).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply Theorem~\ref{thm:thresholded-power} to every nonconstant power and use
+the triangle inequality.  The constant terms cancel.
+\end{proof}
+
+The polynomial theorem covers arbitrary vectors in a finite Krylov space,
+including polynomial filters and restarted combinations, rather than only the
+monomial $H^kX$.
+
+\begin{corollary}[Certified phase pruning]
+If a thresholded phase graph is chosen so that
+\[
+\left\lVert
+(\mathcal B^k-\mathcal B_0^k)\rho(X)
+\right\rVert_2
+\leq\tau,
+\]
+then replacing $H^kX$ by $H_0^kX$ incurs Frobenius error at most $\tau$.
+The same statement holds for a Krylov polynomial with the certificate in
+Theorem~\ref{thm:polynomial-certificate}.
+\end{corollary}
+
+This turns graph thresholding into an error-budget decision.  A phase or
+interface is not discarded because it merely appears small; it is discarded
+only when the weighted sum of all paths using discarded couplings remains
+inside the requested tolerance.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figure_09_approximate_lightcone_certificate.png}
+\caption{Weak long-range phase couplings replace the exact zero outside the retained light cone by a nonzero but certified envelope.  In this PSD test, the phasewise transfer-matrix certificate bounds the observed leakage at every depth from one through eight.}
+\label{fig:approx-lightcone-certificate}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figure_10_threshold_tradeoff.png}
+\caption{Certified phase-graph sparsification at Krylov depth five.  Retaining fewer off-diagonal phase blocks reduces communication and operator work while the transfer-matrix bound remains above the measured truncation error.  The bound is intentionally conservative because it ignores cancellation and singular-vector alignment.}
+\label{fig:threshold-tradeoff}
+\end{figure}
+
+\subsection{Numerical audit}
+
+The validation operator has twelve phases of width four.  A block-bidiagonal
+factor generates a positive-definite local operator $H_0$, and weak symmetric
+long-range blocks are then added to obtain $H$.  Both normalized operators
+remain positive definite.  A three-column start block is supported in phase
+zero.
+
+For depths one through eight:
+\begin{itemize}
+\item every observed phase norm lay below $\mathcal B^k\rho(X)$;
+\item every observed thresholding error lay below
+$(\mathcal B^k-\mathcal B_0^k)\rho(X)$;
+\item the largest total observed-error-to-certificate ratio was approximately
+$0.669$.
+\end{itemize}
+
+A separate hard-threshold sweep retained between $22$ and $132$ directed
+off-diagonal phase blocks.  Every measured depth-five error remained below its
+certificate; the largest observed-error-to-certificate ratio was approximately
+$0.376$.  Finally, a degree-four signed polynomial in $H$ satisfied the
+phasewise polynomial certificate in all twelve phases, with maximum ratio
+approximately $0.068$.
+
+These computations validate the implementation and illustrate sharpness.  The
+universal result is supplied by the preceding proofs, not by the finite test.

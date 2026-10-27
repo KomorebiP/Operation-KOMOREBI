@@ -1,0 +1,337 @@
+\chapter{COS inversion and the analytic error budget}\label{ch:inversion}
+\chapterlead{The tail functional has three distinct approximation errors: packet
+compression on a finite grid, finite support with cosine folding, and omitted
+Fourier modes. Each receives its own bound. Their sum yields an analytic
+certificate, while a finite-refinement theorem shows that the mathematical
+error can be made arbitrarily small for a fixed positive spectrum and an
+upper-tail query.}
+\section{Tilted COS tail functional}
+
+Because $Q\ge0$, K-COS uses the interval $[0,b]$.  Throughout the
+following functional and packet-error results, assume $b>q\ge0$, $b>0$,
+$0<\theta<1/(2\lambda_{\max})$, and an integer mode count $N\ge1$.  Let
+\[
+u_k=\frac{k\pi}{b},
+\qquad k=0,1,\ldots,
+\]
+and define the exponentially weighted cosine integrals
+\begin{equation}
+J_k(q,b,\theta)
+=\int_q^b e^{-\theta(x-q)}\cos(u_kx)\,dx.
+\label{eq:J-def}
+\end{equation}
+They admit the closed form
+\begin{equation}
+J_k
+=\Re\left[
+ e^{\ii u_k q}
+ \frac{1-e^{(-\theta+\ii u_k)(b-q)}}{\theta-\ii u_k}
+\right].
+\label{eq:J-formula}
+\end{equation}
+The prime on a cosine sum denotes half weight for $k=0$.
+
+If the exact tilted characteristic function is used, the $N$-mode finite-window expression is
+\begin{equation}
+T_{N,b}
+=\frac{2}{b}\sum_{k=0}^{N-1}{}'
+J_k\,
+\Re\left[e^{\kappa(\theta+\ii u_k)-\theta q}\right].
+\label{eq:tail-cos}
+\end{equation}
+The cancellation of $\kappa(\theta)$ in \eqref{eq:tail-cos} is useful numerically: the likelihood-ratio prefactor from \eqref{eq:tilt-tail} and the normalization in \eqref{eq:tilt-cf} do not need to be formed separately inside each mode.
+
+\section{Propagation of packet error}
+
+Let $\widehat\kappa(s_k)$ be the packet approximation at
+\[
+s_k=\theta+\ii u_k,
+\]
+and suppose
+\begin{equation}
+|\widehat\kappa(s_k)-\kappa(s_k)|\le B_k.
+\label{eq:Bk}
+\end{equation}
+For disjoint packets, $B_k$ can be chosen as the sum of the packet bounds \eqref{eq:packet-remainder}.
+
+\begin{theorem}[Finite-grid packet-to-tail bound]
+\label{thm:packet-tail}
+Let $\widehat T_{N,b}$ be obtained from \eqref{eq:tail-cos} by replacing $\kappa(s_k)$ by $\widehat\kappa(s_k)$. Then
+\begin{equation}
+|\widehat T_{N,b}-T_{N,b}|
+\le \eps_{\mathrm{pkt}},
+\label{eq:packet-tail-bound}
+\end{equation}
+where
+\begin{equation}
+\eps_{\mathrm{pkt}}
+=
+\frac{2}{b}
+ e^{\kappa(\theta)-\theta q}
+\sum_{k=0}^{N-1}{}'
+|J_k|\bigl(e^{B_k}-1\bigr).
+\label{eq:eps-pkt}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Write $\Delta_k=\widehat\kappa(s_k)-\kappa(s_k)$. Then
+\[
+|e^{\widehat\kappa(s_k)-\theta q}-e^{\kappa(s_k)-\theta q}|
+\le
+|e^{\kappa(s_k)-\theta q}|\,(e^{|\Delta_k|}-1).
+\]
+Moreover
+\[
+\Re\kappa(\theta+\ii u_k)-\kappa(\theta)
+=\log|\phi_{\theta}(u_k)|\le0,
+\]
+so
+\[
+|e^{\kappa(s_k)-\theta q}|
+\le e^{\kappa(\theta)-\theta q}.
+\]
+Substitute this into the finite cosine sum and apply the triangle inequality.
+\end{proof}
+
+\section{Positive support, truncation, and cosine periodization}
+
+Using full characteristic-function coefficients on $[0,b]$ reconstructs the even $2b$-periodization of the tilted density rather than the strictly truncated density. For a nonnegative density supported on $[0,\infty)$, the total mass folded back into $[0,b]$ equals the tilted mass above $b$. This gives a clean error control for the positive quadratic-form setting.
+
+
+\begin{lemma}[Integrated cosine identity by folding]
+\label{lem:folding}
+Let \(\nu_\theta\) be the tilted probability measure and let
+\(F_b:[0,\infty)\to[0,b]\) fold each interval of length \(2b\) by
+reflection.  Then
+\(\cos(k\pi F_b(x)/b)=\cos(k\pi x/b)\).
+For \(h(x)=e^{-\theta(x-q)}\mathbf1_{[q,b]}(x)\),
+\[
+\int h\,d(F_{b\#}\nu_\theta)
+=\frac2b\sum_{k=0}^{\infty}{}'
+J_k\,\Re\phi_\theta(k\pi/b).
+\]
+The series is absolutely convergent for every positive rank \(r\ge1\).
+\end{lemma}
+\begin{proof}
+A positive weighted chi-square sum has an absolutely continuous law. Its
+folded measure therefore has no atom at the jump of \(h\).  The even periodic
+extension of \(h\) has bounded Fej\'er means, which converge at every continuity
+point.  Dominated convergence identifies the integral of those means with
+\(\int h\,d(F_{b\#}\nu_\theta)\).  Their cosine coefficients are the Ces\`aro
+weighted coefficients \(2J_k/b\), and folding preserves the cosine moments
+\(\Re\phi_\theta(k\pi/b)\).  Finally
+\(J_k=O(k^{-1})\) and
+\(|\phi_\theta(k\pi/b)|=O(k^{-r/2})\), as follows directly from the product
+formula below.  Thus the coefficient products are
+\(O(k^{-1-r/2})\). Their absolute sum converges.  The Ces\`aro sums and ordinary
+sum have the same limit, proving the displayed identity.  This argument
+justifies the weighted functional without requiring pointwise convergence of
+the reconstructed density at every boundary.
+\end{proof}
+
+\begin{proposition}[Support and periodization bound]
+\label{prop:support}
+Let the finite positive spectrum have rank \(r\ge1\), and let
+\(b>q\ge0\), \(b>0\), and \(0<\theta<1/(2\lambda_{\max})\).  Let
+\[
+\tau_{\theta}(b)=\Pp_{\theta}(Q>b).
+\]
+Then the combined error from (i) replacing the tilted density on $[0,b]$ by its full-coefficient cosine periodization and (ii) omitting the original integral over $(b,\infty)$ is bounded by
+\begin{equation}
+\eps_{\mathrm{sup}}
+\le
+e^{\kappa(\theta)-\theta q}\,
+\tau_{\theta}(b)
+\left(1+e^{-\theta(b-q)}\right).
+\label{eq:eps-support}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:folding}, the infinite cosine functional integrates
+the folded measure.  The part of that measure originating from \((b,\infty)\)
+is nonnegative and has total mass $\tau_{\theta}(b)$. On $[q,b]$, the weight $e^{-\theta(x-q)}$ is at most one, so its contribution to the weighted functional is at most $\tau_{\theta}(b)$. For the omitted original tail, $x\ge b$ implies
+\[
+e^{-\theta(x-q)}\le e^{-\theta(b-q)},
+\]
+so that term is at most $e^{-\theta(b-q)}\tau_{\theta}(b)$. Multiplication by the likelihood-ratio prefactor in \eqref{eq:tilt-tail} gives \eqref{eq:eps-support}.
+\end{proof}
+
+The tilted tail probability itself can be bounded by Chernoff's inequality. For $\eta>\theta$ inside the transform domain,
+\begin{equation}
+\tau_{\theta}(b)
+\le
+\exp\left\{
+\kappa(\eta)-\kappa(\theta)-(\eta-\theta)b
+\right\}.
+\label{eq:tilted-chernoff}
+\end{equation}
+When $b>\kappa'(\theta)$, the minimizing $\eta$ is the unique solution of
+\begin{equation}
+\kappa'(\eta)=b.
+\label{eq:eta}
+\end{equation}
+For the saddlepoint tilt, $\kappa'(\theta_*)=q<b$, so such an $\eta$ exists.
+
+\section{A specialized omitted-mode bound}
+
+The tilted characteristic function has an especially transparent modulus.
+
+\begin{lemma}[Tilted characteristic-function modulus]
+\label{lem:modulus}
+Define
+\begin{equation}
+a_j=\frac{2\lambda_j}{1-2\theta\lambda_j}>0.
+\label{eq:aj}
+\end{equation}
+Then
+\begin{equation}
+|\phi_{\theta}(t)|
+=\prod_{j=1}^{r}\left(1+(a_jt)^2\right)^{-1/4}.
+\label{eq:phi-modulus}
+\end{equation}
+For $t>0$, define the logarithmic decay rate
+\begin{equation}
+\beta(t)
+=-\frac{d\log|\phi_{\theta}(t)|}{d\log t}
+=\frac12\sum_{j=1}^{r}
+\frac{(a_jt)^2}{1+(a_jt)^2}.
+\label{eq:beta}
+\end{equation}
+Set $\beta(0)=0$ by continuous extension. Then $\beta(t)$ is nondecreasing for $t\ge0$.
+\end{lemma}
+
+\begin{proof}
+Taking the modulus of each factor in \eqref{eq:tilt-cf} gives \eqref{eq:phi-modulus}. Differentiating its logarithm gives \eqref{eq:beta}. Each summand $x/(1+x)$ with $x=(a_jt)^2$ is nondecreasing in $t$.
+\end{proof}
+
+\begin{corollary}[Power envelope from one frequency]
+\label{cor:power-envelope}
+For $t\ge t_0>0$,
+\begin{equation}
+|\phi_{\theta}(t)|
+\le
+|\phi_{\theta}(t_0)|
+\left(\frac{t}{t_0}\right)^{-\beta(t_0)}.
+\label{eq:power-envelope}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+By Lemma \ref{lem:modulus},
+\[
+\frac{d\log|\phi_{\theta}(t)|}{d\log t}=-\beta(t)\le-\beta(t_0)
+\]
+for $t\ge t_0$. Integrating from $t_0$ to $t$ proves the claim.
+\end{proof}
+
+For $k\ge1$, the exact integral \eqref{eq:J-formula} implies
+\begin{equation}
+|J_k|
+\le \frac{2}{u_k}.
+\label{eq:J-bound}
+\end{equation}
+
+\begin{theorem}[Omitted COS-mode certificate]
+\label{thm:cos-tail}
+Let $N\ge1$ and $b>q\ge0$. Set $u_N=N\pi/b$ and
+$\beta_N=\beta(u_N)$. If $\beta_N>0$, then the contribution of all exact tilted-COS modes $k\ge N$ to the weighted tail functional is bounded by
+\begin{equation}
+\eps_{\mathrm{COS}}
+\le
+ e^{\kappa(\theta)-\theta q}
+\frac{4|\phi_{\theta}(u_N)|}{\pi}
+\left(\frac1N+\frac1{\beta_N}\right).
+\label{eq:eps-cos}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Using the cosine coefficient magnitude $2|\phi_{\theta}(u_k)|/b$ and \eqref{eq:J-bound}, the omitted series is at most
+\[
+e^{\kappa(\theta)-\theta q}
+\frac{4}{\pi}
+\sum_{k=N}^{\infty}\frac{|\phi_{\theta}(u_k)|}{k}.
+\]
+By Corollary \ref{cor:power-envelope},
+\[
+|\phi_{\theta}(u_k)|
+\le
+|\phi_{\theta}(u_N)|\left(\frac{k}{N}\right)^{-\beta_N}.
+\]
+Therefore
+\[
+\sum_{k=N}^{\infty}\frac{|\phi_{\theta}(u_k)|}{k}
+\le
+|\phi_{\theta}(u_N)|N^{\beta_N}
+\sum_{k=N}^{\infty}k^{-\beta_N-1}.
+\]
+Finally,
+\[
+\sum_{k=N}^{\infty}k^{-\beta_N-1}
+\le N^{-\beta_N-1}+\int_N^{\infty}x^{-\beta_N-1}\,dx
+=N^{-\beta_N-1}+\frac{N^{-\beta_N}}{\beta_N},
+\]
+which yields \eqref{eq:eps-cos}.
+\end{proof}
+
+\section{Combined analytic certificate}
+
+\begin{theorem}[K-COS analytic error certificate]
+\label{thm:combined}
+Let $p=\Pp(Q\ge q)$, and let $\widehat p$ be the finite K-COS approximation formed with
+\begin{enumerate}[label=(\roman*)]
+\item an upper interval endpoint $b>q$,
+\item an integer $N\ge1$ of cosine modes,
+\item a packet approximation satisfying \eqref{eq:Bk} on the finite grid.
+\end{enumerate}
+Under the positive-spectrum and parameter hypotheses of Proposition \ref{prop:support},
+\begin{equation}
+|p-\widehat p|
+\le
+\eps_{\mathrm{an}}
+:=\eps_{\mathrm{pkt}}+\eps_{\mathrm{sup}}+\eps_{\mathrm{COS}}.
+\label{eq:combined}
+\end{equation}
+If $\eps_{\mathrm{an}}<|\widehat p|$, then
+\begin{equation}
+\frac{|p-\widehat p|}{|p|}
+\le
+\frac{\eps_{\mathrm{an}}}
+{|\widehat p|-\eps_{\mathrm{an}}}.
+\label{eq:relative-certificate}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Decompose the error into packet error on the retained grid, support and periodization error, and the exact omitted cosine series. The first is bounded by Theorem \ref{thm:packet-tail}, the second by Proposition \ref{prop:support}, and the third by Theorem \ref{thm:cos-tail}. This proves \eqref{eq:combined}. Also
+\[
+|p|\ge |\widehat p|-|p-\widehat p|
+\ge |\widehat p|-\eps_{\mathrm{an}},
+\]
+which gives \eqref{eq:relative-certificate}.
+\end{proof}
+
+\begin{remark}[Certificate boundary]\label{claim:final-26-12}
+Theorem \ref{thm:combined} is an \emph{analytic approximation certificate}. It does not enclose IEEE floating-point rounding in complex logarithms, exponentials, root finding, or summation. A machine-level certificate would require directed rounding, interval arithmetic, or a comparable validated-numerics layer.
+\end{remark}
+
+\section{Finite refinability}
+
+The combined error terms correspond to three distinct obstructions. Packet error is reduced by splitting spectral packets or raising packet order. Support error is reduced by increasing $b$. Cosine-series error is reduced by increasing $N$.
+
+\begin{proposition}[Existence of a finite analytic refinement]
+\label{prop:finite-refinement}
+Fix a finite positive spectrum $\{\lambda_j\}_{j=1}^{r}$, an upper-tail query $q>\E Q$, and $\eps>0$. There exist a finite interval endpoint $b>q$, a finite number of cosine modes $N$, and a finite packet partition (allowing singleton packets) for which the analytic error bound in \eqref{eq:combined} is below $\eps$.
+\end{proposition}
+
+\begin{proof}
+First choose $b$ sufficiently large that \eqref{eq:eps-support} is below $\eps/3$. This is possible because the tilted law has a moment generating function in a nontrivial right neighborhood of zero and hence its Chernoff bound tends to zero exponentially as $b\to\infty$. Hold this $b$ fixed. By \eqref{eq:phi-modulus}, $|\phi_{\theta}(t)|\to0$ polynomially as $t\to\infty$, while $\beta(t)\to r/2>0$. Therefore \eqref{eq:eps-cos} tends to zero as $N\to\infty$, so a finite $N$ makes it below $\eps/3$. Finally, split every packet to singletons if necessary. A singleton has $\delta_j=0$, so its packet remainder is exactly zero. Hence a finite partition makes $\eps_{\mathrm{pkt}}<\eps/3$. Summing the three terms proves the claim.
+\end{proof}
+
+\begin{remark}\label{claim:final-26-14}
+Proposition \ref{prop:finite-refinement} proves existence of a finite representation meeting any analytic tolerance. It proves neither termination of an arbitrary greedy schedule nor optimality of its resource use. A particular capped implementation can fail to certify even though a finite analytic refinement exists. The packet planner refines the largest currently certified obstruction and is evaluated in Chapter~\ref{ch:evidence}.
+\end{remark}
+
+

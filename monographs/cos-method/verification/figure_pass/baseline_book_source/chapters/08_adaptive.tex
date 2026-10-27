@@ -1,0 +1,132 @@
+\chapter{Adaptive evaluation and numerical interfaces}\label{ch:adaptive}
+\chapterlead{An adaptive solver should refine the representation responsible for the
+largest unresolved error. The planner described here chooses packets, support,
+and modes jointly. Its floating implementation retains an analytic ledger.
+The next part supplies the stricter contract in which finite arithmetic and
+output serialization are enclosed as well.}
+\section{Adaptive K-COS algorithm}
+
+The packet planner accepts a finite positive spectrum, an upper-tail query
+$q>\sum_j\lambda_j$, and a requested relative tolerance $\tau>0$.
+Its initial support parameter satisfies $L>0$, and its mode count is a
+positive integer.
+
+\begin{enumerate}[leftmargin=2em]
+\item Solve $\kappa'(\theta_*)=q$.
+\item Initialize an upper interval $b=q+L\sqrt{\kappa''(\theta_*)+\sqrt{\kappa^{(4)}(\theta_*)}}$ and a mode count $N$.
+\item Retain the largest spectral spikes exactly and place the remaining sorted eigenvalues into coarse packets.
+\item Evaluate $\rho_P(\theta_*+\ii u_k)$ and the packet remainder bound on the actual COS grid. Split packets until the propagated packet contribution is within its budget.
+\item Evaluate the support/alias certificate from \eqref{eq:eps-support}--\eqref{eq:eta}.
+\item Evaluate the omitted-mode certificate \eqref{eq:eps-cos}.
+\item If the combined relative certificate exceeds $\tau$, refine whichever analytic error source dominates: split packets, increase $b$, or increase $N$.
+\item Return a certified analytic result only after the combined bound meets
+$\tau$. Return the tail estimate, the compiled spectral representation,
+and its error ledger together. If resource limits are reached first,
+report failure to certify rather than accepting the estimate.
+\end{enumerate}
+
+The resulting object is query dependent. Schematically,
+\begin{equation}
+(\Lambda,q,\tau)
+\longmapsto
+\mathcal P_{\Lambda,q,\tau}
+\longmapsto
+(\widehat p,\text{certificate}),
+\label{eq:compiler-map}
+\end{equation}
+where $\mathcal P_{\Lambda,q,\tau}$ stores exact spikes, packet centers, centered moments, packet radii, and the selected COS parameters.
+
+
+\section{Numerical interfaces and log-domain evaluation}\label{sec:final-25}
+
+The preceding mathematics is exposed through a domain-neutral engine rather
+than through a SKAT-only entry point.  The central positive engine accepts:
+
+\begin{itemize}
+\item an explicit nonnegative spectrum.
+\item a positive semidefinite matrix.
+\item a dense factor \(A\).
+\item a replayable streamed column-factor source.
+\item or a covariance/quadratic-matrix pair
+\((\Sigma,M)\).
+\end{itemize}
+
+A signed central engine accepts a signed spectrum, a symmetric operator, or
+\[
+(\Sigma,M),\qquad M=M^\top,
+\]
+and performs the exact central-indefinite reduction proved in Chapter~\ref{ch:gaussian}.  A
+separate noncentral positive engine accepts
+\[
+(\mu,\Sigma,M),\qquad M\succeq0,
+\]
+and performs the corresponding noncentral reduction.
+
+\subsection{Log-domain packet error accumulation}
+
+At extreme tail depths the analytic packet certificate contains sums of the
+form
+\[
+\frac{2}{U}
+\sum_k
+|J_k|
+\left(
+e^{\varepsilon_k}-1
+\right).
+\]
+Direct evaluation can overflow even when the candidate is destined to be
+rejected by the adaptive planner.  The hardened implementation instead
+computes
+\[
+\log\left(
+\frac{2}{U}
+\sum_k
+|J_k|
+\left(
+e^{\varepsilon_k}-1
+\right)
+\right)
+\]
+by log-sum-exp arithmetic, and compares this quantity with the logarithm of
+the requested tolerance before converting a final accepted bound back to
+float64.
+
+This change does not weaken the mathematical bound. It changes only its
+floating-point representation.
+
+\subsection{Reference convergence is part of verification}
+
+An independently evaluated reference is useful only if its own numerical
+resolution has converged.  In a rank-350 deep-tail audit, an initial fixed-grid
+reference appeared to disagree with the adaptive answer.  Increasing the
+reference COS grid gave discrepancies of approximately
+\[
+1.88\times10^{-2},
+\quad
+2.6\times10^{-3}\text{--}4.0\times10^{-3},
+\quad
+1.39\times10^{-4},
+\quad
+2.60\times10^{-8}
+\]
+decades as the grid was refined through
+\[
+K=4096,\ 8192,\ 16384,\ 32768.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_edition/figure_21_reference_convergence.pdf}
+\caption{Reference-convergence audit.  The adaptive certified answer remains
+stable while an initially under-resolved fixed-grid reference converges toward
+it.  A single nominally large reference grid is therefore not treated as
+authoritative without its own refinement check.}
+\label{fig:reference-convergence}
+\end{figure}
+
+The numerical verification rule is consequently two-sided: the adaptive
+solver must satisfy its own certificate, and any external or fixed-grid
+reference used for comparison must demonstrate numerical convergence.
+
+
+
