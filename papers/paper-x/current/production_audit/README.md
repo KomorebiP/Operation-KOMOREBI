@@ -1,0 +1,22 @@
+The fresh owning-module audit accepted all 122 selected modules from the recovered October 10 conditional reader lineage. It enumerated 2,846 owned kernel declarations, including 2,127 theorems and 444 names containing `_private`, plus generated inductives, constructors and recursors. All 45 explicit target contracts resolved with the expected owning module and declaration kind. The transitive axiom union is exactly `Classical.choice`, `Quot.sound` and `propext`; no forbidden axiom was accepted. All 122 source pins and all 392 generated artifact pins were unchanged before and after the audit. The selected module set includes 105 PaperX modules and 17 CebotarevDensity foundation modules.
+
+`accepted_audit/` contains the unchanged as-executed report, complete per-declaration records, exact elaborated target types, source/artifact pins and the runner as executed. `contract_review/` maps the 20 publication records to explicit symbols and preserves raw signatures, source lines, hashes and correspondence limits. These navigation routes are not a whole-manuscript proof audit or 20 independently certified semantic equivalences. The conditional final theorem preserves its two independent conclusions and its supplied-carrier/nonzero-occupancy assumptions.
+
+The preserved checkpoint is byte-identical in `checkpoint_toolkit/`. Fresh fixture controls are separate in `live_toolkit/`: 18 cases, comprising four positive cases, nine intended policy rejections and five intended compiler rejections. The original 64 unit methods passed freshly and also passed after relocation. Two supplementary new-module controls demonstrate that private payloads and generated declarations are loaded: an unused private axiom is detected and rejected. These fixture counts are separate from production declaration counts. The 39 theorem targets among the 45 explicit targets are not a claim of 39 companion tests.
+
+Run the audit from a release containing sibling `production_audit/` and `production_replay/` directories:
+
+```sh
+python -B production_audit/replay_owned_audit.py \
+  --production-replay production_replay \
+  --runtime /path/to/Komorebi_Portable_Lean_4.34.0-rc2 \
+  --work /external/new_audit
+```
+
+Add `--preflight-only` to check relocated source/artifact binding and runtime pins without rerunning the census. The wrapper uses the delivered relative source/artifact paths, authenticates the original build receipt, and creates an explicitly marked path-rebound receipt only in the new external working directory. Original reports remain unchanged. The default command performs a fresh owning-module audit against the delivered proof objects; it does not recompile production sources. The separate production replay build driver supplies that operation.
+
+The audit uses `-j1 -M6144 -DwarningAsError=true`. Run it serially with approximately 6 GiB available for Lean and additional host overhead. This host completed the full census at that cap. Both initial 4 GiB attempts failed with an explicit Lean interpreter memory exception. A partial 12-owner run at 6 GiB was cancelled after its first census/type capture to avoid repeated global enumeration; the successful full 122-owner run used the unchanged AuditCore. Failed/cancelled attempts, the brief overlap during cancellation, and all bookkeeping/relocation failures and repairs are retained explicitly. They are not counted as passes.
+
+The portable wrapper passed after copying both delivered directories to a new location. Four mutation controls rejected changes to a private payload, production source, explicit target contract and source index. No full Lean audit was repeated for that portability check. The pinned portable runtime remains external; its exact Lean binary, compatibility shim, dependency manifest and nine dependency revisions are checked. The eight available compiled dependency roots are used; Cli has no compiled root or production import. There is no cold Mathlib rebuild or verification of the unrecovered October 16–17 package identities.
+
+The original runtime helper drops arbitrary LD_PRELOAD values. The separate adapter enables only the authenticated portable kit's `compat/app_path.so` with SHA256 `fdcc7edf41b2c301abd13ec01041d44eee52148cbf05f2332bc39b23c5862853`, which adapts application-path discovery. Compiler and kernel bytes are unchanged. AuditCore and audit_engine are byte-identical to the recovered checkpoint.

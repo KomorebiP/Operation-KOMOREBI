@@ -1,0 +1,24 @@
+PaperX.FiniteCarrierSummands.exists_lifted_summand.{u_1, u_2, u_3} {R : Type u_1} {Γ : Type u_2} {ι : Type u_3}
+  [CommRing R] [IsDomain R] [Group Γ] [Fintype Γ] [Fintype ι] [DecidableEq ι] (π : R)
+  [IsAdicComplete (Ideal.span {π}) R] (e k : ℕ) (ρ : PaperX.RepresentationLimits.MatrixRep R Γ ι)
+  (hΓ : ↑(Fintype.card Γ) ≠ 0) (hdiv : ↑(Fintype.card Γ) ∣ π ^ e) (hk : 0 < k)
+  (B : Matrix ι ι (R ⧸ Ideal.span {π} ^ (e + k))) (hB : B * B = B)
+  (hcomm :
+    ∀ (g : Γ),
+      (ρ g).map ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ (e + k))) * B =
+        B * (ρ g).map ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ (e + k)))) :
+  ∃ P,
+    P.matrix.map ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ k)) = B.map ⇑(Ideal.Quotient.factorPow (Ideal.span {π}) ⋯) ∧
+      P.retraction ∘ₗ P.inclusion = LinearMap.id ∧
+        P.inclusion ∘ₗ P.retraction = P.linear ∧
+          (∀ (g : Γ) (v : ↥P.image.toSubmodule),
+              P.inclusion ((P.image.toRepresentation g) v) = ((PaperX.MatrixProjector.carrier ρ) g) (P.inclusion v)) ∧
+            (∀ (g : Γ) (v : ι → R),
+                P.retraction (((PaperX.MatrixProjector.carrier ρ) g) v) =
+                  (P.image.toRepresentation g) (P.retraction v)) ∧
+              (∀ (w : ι → R ⧸ Ideal.span {π} ^ k),
+                  (∃ v, ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ k)) ∘ ↑v = w) ↔
+                    (B.map ⇑(Ideal.Quotient.factorPow (Ideal.span {π}) ⋯)).mulVec w = w) ∧
+                ∀ (w : ι → R ⧸ Ideal.span {π} ^ k),
+                  (∃ v, ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ k)) ∘ ↑v = w) ↔
+                    (B.map ⇑(Ideal.Quotient.factorPow (Ideal.span {π}) ⋯)).mulVec w = 0

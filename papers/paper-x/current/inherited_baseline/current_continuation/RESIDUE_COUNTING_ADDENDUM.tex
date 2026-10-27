@@ -1,0 +1,269 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\Cl}{\operatorname{Cl}}
+\newcommand{\Nm}{\operatorname N}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\covol}{\operatorname{covol}}
+\newcommand{\absn}[1]{\lvert #1\rvert}
+\newtheorem{proposition}{Proposition}
+\title{Paper X: residue counts and arithmetic norm weights}
+\author{Komorebi P.}
+\date{Checked continuation amendment, September 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.5em}
+
+\paragraph{Scope and notation.}
+Let $K$ be a number field of degree $d\geq1$, with ring of integers
+$\OO=\OO_K$. Write $\Nm I=\#(\OO/I)$ for the absolute norm of a nonzero
+integral ideal and $n(x)=\Nm_{K/\mathbb Q}(x)\in\ZZ$ for $x\in\OO$.
+Thus $\Nm(x)=\absn{n(x)}$. Let $\iota$ be the mixed embedding in its
+Euclidean coordinates, $L(J)=\iota(J)$, and $D$ the actual unit-norm
+fundamental cone used in the preceding counting block. Its norm function
+scales by $t^d$ under a positive real dilation $t$.
+The full-paper ledger remains \textbf{17 checked claims and 3 partial claims}.
+
+\paragraph{Actual additive residues.}
+Fix nonzero integral ideals $M\subseteq J$, and put $q=[J:M]=\#(J/M)$.
+The formal quotient of ideal lattices is identified with the additive
+congruence relation $x-a\in M$ on actual elements of $J$. In particular,
+the residue label is not an independent parameter attached to a count.
+
+\begin{proposition}\label{prop:residue-count}
+There is a constant $B\geq0$, depending on $K,M,J$, such that, for every
+$a\in J/M$ and every real $t\geq1$,
+\[
+ \left|\#\{x\in J:x\bmod M=a,\ \iota(x)\in tD\}
+ -\frac{\vol(D)}{q\,\covol(L(J))}t^d\right|
+ \leq B(t^{d-1}+1).
+\]
+The same constant works for all residues $a$.
+\end{proposition}
+
+The estimate is proved from the actual boundary charts and the fixed-lattice
+discrepancy theorem. The index factor comes from the covolume identity
+$\covol(L(M))=q\,\covol(L(J))$.
+For a complex weight $w:J/M\to\CC$, summing the estimates gives the leading
+term
+\[
+ \frac{\vol(D)t^d}{q\,\covol(L(J))}\sum_{a\in J/M}w(a),
+\]
+with error at most $B\sum_a\absn{w(a)}(t^{d-1}+1)$.
+If the finite sum of weights is zero, only that error remains.
+Writing $Y=t^d$ gives an error $O(Y^{1-1/d}+1)$ for the actual norm threshold.
+These assertions include $d=1$.
+
+\smallskip
+\noindent\emph{Lean attachment:}
+\texttt{ResidueLatticeIdeal}, \texttt{ResidueLatticeIdealPoints},
+\texttt{ResidueLatticeIdealWeights}, and \texttt{ResidueLatticeNormCounts}.
+
+\newpage
+\paragraph{The residue norm and its sign.}
+For $m\in\NN$, reducing the multiplication matrices of $\OO$ modulo $m$
+and taking their determinants constructs a monoid homomorphism
+\[
+ \overline n:\OO/m\OO\longrightarrow\ZZ/m\ZZ,
+ \qquad \overline n([x])=n(x)\bmod m.
+\]
+The construction is proved independent of the integral basis.
+For $m\ne0$, its source is finite of cardinality $m^d$.
+Consequently $x-y\in m\OO$ implies $n(x)\equiv n(y)\pmod m$.
+No surjectivity of $\overline n$ is asserted.
+
+The relation to the geometric sign is also proved. If $\sigma$ ranges over
+real embeddings and $\tau$ over one embedding from each complex pair, then
+\[
+ n(x)=\prod_{\sigma}\sigma(x)\prod_{\tau}\absn{\tau(x)}^2.
+\]
+For $x\ne0$, the second factor is positive. Thus the sign of $n(x)$ is
+exactly the sign of the real-coordinate product. Cutting $D$ into its
+positive and negative portions $D_+,D_-$ adds no boundary outside the
+existing frontier, and both portions retain the proved boundary atlas.
+They are disjoint and their union is $D$.
+
+For $\varepsilon\in\{1,-1\}$ define
+$\overline n_{\varepsilon}(a)=\varepsilon\overline n(a)$.
+On the corresponding sign portion,
+\[
+ \Nm(x)\bmod m=\overline n_{\varepsilon}([x]).
+\]
+The sign cannot be dropped: $-1\equiv2\pmod3$, whereas
+$\Nm(-1)=1$ and $\Nm(2)=2$ for principal ideals of $\ZZ$.
+
+\paragraph{The exact ideal filter.}
+Suppose $IJ=(x)$, $n(x)$ has the indicated sign, and
+$\gcd(\Nm J,m)=1$. For $c\in\ZZ/m\ZZ$,
+\[
+ \Nm I\equiv c\pmod m
+ \quad\Longleftrightarrow\quad
+ \overline n_{\varepsilon}([x])=c(\Nm J\bmod m).
+\]
+This gives an actual finite residue target, which is allowed to be empty.
+The product identity before cancellation does not require coprimality.
+
+Let $[J]=C^{-1}$ in $\Cl(\OO)$, and let $\mathcal G(J)$ denote the
+actual fundamental-cone generator set. For every predicate $P:\RR\to\mathrm{Prop}$
+and every real $X$, the norm-preserving correspondence gives
+\begin{align*}
+ &\#\{x\in\mathcal G(J):\Nm(x)\leq X\Nm J,\ P(\Nm(x))\}\\
+ &\qquad=\#\mu(K)\,
+ \#\{I\ne0:[I]=C,\ \Nm I\leq X,\ P(\Nm I\,\Nm J)\}.
+\end{align*}
+The same norm-preserving equivalence carries arbitrary complex weights.
+In particular, write $G_{J,\chi}(Y)$ for the sum of
+$\chi(\Nm(x)\bmod m)$ over these generators with $\Nm(x)\leq Y$, and
+$T_{C,\chi}(X)$ for the corresponding sum over ideals in class $C$.
+For multiplicative $\chi$ preserving $0$ and $1$, the exact identity is
+\begin{equation}\label{eq:weighted-torsion}
+ G_{J,\chi}(X\Nm J)
+ =\#\mu(K)\,\chi(\Nm J\bmod m)\,T_{C,\chi}(X).
+\end{equation}
+Both signs are included before applying this full roots-of-unity factor.
+A root of unity can interchange the sign portions, so that factor is not
+automatically valid for either portion separately.
+
+\smallskip
+\noindent\emph{Lean attachment:}
+\texttt{NormResidueArithmetic}, \texttt{NormResidueIdealFilter},
+\texttt{NormSignArithmetic}, \texttt{IdealNormFilterAttachment}, and
+\texttt{IdealNormWeightedAttachment}.
+
+\newpage
+\paragraph{Ordinary class characters: an unconditional power saving.}
+The preceding block proved, for every ordinary ideal class $C$,
+\[
+ A_C(X)=c_KX+O_{K,C}(X^{1-1/d}),\qquad
+ c_K=\frac{2^{r_1}(2\pi)^{r_2}R_K}{\#\mu(K)\sqrt{\absn{\Delta_K}}}.
+\]
+Here $A_C$ counts actual nonzero integral ideals, $r_1,r_2$ count the real
+and complex places, $R_K$ is the regulator, and $\Delta_K$ is the discriminant. For a weight
+$w:\Cl(\OO)\to\CC$, define the actual finite ideal sum
+\[
+ S_w(X)=\sum_{\substack{I\ne0\\\Nm I\leq X}}w([I]).
+\]
+Exact grouping by ideal class gives $S_w(X)=\sum_C w(C)A_C(X)$.
+If $\sum_Cw(C)=0$, the common leading coefficient cancels, so there is
+$B_w\geq0$ such that
+\[
+ \absn{S_w(X)}\leq B_wX^{1-1/d}\qquad(X\geq1).
+\]
+For every nontrivial character $\chi:\Cl(\OO)\to\CC^{\times}$,
+the finite character sum is zero. Thus the displayed estimate applies
+without an additional arithmetic cancellation hypothesis.
+This conclusion concerns ordinary class characters; it does not identify
+them with the further norm-residue characters needed for Frobenius separation.
+
+\paragraph{An actual Mellin endpoint.}
+The counting functions are constant on the integer norm steps. Their
+measurability, and hence that of $S_w$, is proved from this fact.
+For zero-sum $w$, define
+\[
+ F_w(h)=(1+h)\int_1^{\infty}x^{-2-h}S_w(x)\,dx
+ \qquad(h\geq0).
+\]
+Since $1-1/d<1$, the logarithmic first moment
+\[
+ M_w=\int_1^{\infty}(1+\log x)\,\absn{x^{-2}S_w(x)}\,dx
+\]
+is finite. Lean proves the explicit estimate
+$\absn{F_w(h)-F_w(0)}\leq hM_w$ for every $h\geq0$, and therefore
+$F_w(h)=F_w(0)+O(h)$ as $h\downarrow0$.
+The function here is the displayed integral of the actual ideal sum.
+Its identification with the intended arithmetic Euler product is a separate step.
+
+For a finite family of nontrivial ordinary class characters, suppose functions
+$p,Z$ satisfy $h\,p(h)\to P\ne0$, $h\,Z(h)\to Q\ne0$, and, for all sufficiently
+small $h>0$,
+\[
+ Z(h)=\left(p(h)\prod_i F_{\chi_i}(h)\right)^e,
+ \qquad e\in\NN.
+\]
+The checked real-axis criterion then gives $e=1$ and
+$F_{\chi_i}(0)\ne0$ for every $i$. The pole limits and product identity
+remain hypotheses of this application.
+
+\smallskip
+\noindent\emph{Lean attachment:}
+\texttt{IdealClassCharacterBound}, \texttt{IdealCharacterMellinMeasurable},
+\texttt{IdealCharacterMellin}, and \texttt{IdealCharacterMellinPole}.
+
+\newpage
+\paragraph{An actual unit action on ideal residues.}
+Fix $m>0$ and a nonzero integral ideal $J$.
+Multiplication by $u\in(\OO/m\OO)^{\times}$ gives a proved permutation of
+$J/mJ$. Its inverse follows from $(ab-1)x\in mJ$ when
+$ab-1\in m\OO$ and $x\in J$. No surjectivity of
+$J/mJ\to\OO/m\OO$ or coprimality condition on $J$ is used.
+The well-defined residue norm on this quotient satisfies
+\[
+ \overline n_J(u\cdot a)=\overline n(u)\,\overline n_J(a).
+\]
+For a multiplicative $\chi:\ZZ/m\ZZ\to\CC$ preserving $1$, an exhibited
+unit with
+\begin{equation}\label{eq:unit-witness}
+ u\in(\OO/m\OO)^{\times},\qquad \chi(\overline n(u))\ne1
+\end{equation}
+therefore forces
+\[
+ \sum_{a\in J/mJ}\chi\bigl(s\,\overline n_J(a)\bigr)=0
+ \qquad(s\in\ZZ/m\ZZ).
+\]
+Taking $s=1,-1$ gives the two finite means needed by the sign-corrected
+norm weights. Their vanishing follows from the actual permutation.
+
+\paragraph{The assembled ideal norm-character estimate.}
+\begin{proposition}\label{prop:norm-character}
+Let $C\in\Cl(\OO)$, let $J\ne0$ be an integral ideal with $[J]=C^{-1}$,
+and let $m>0$. Let $\chi:\ZZ/m\ZZ\to\CC$ preserve multiplication,
+$0$, and $1$. Assume a residue-ring unit satisfying
+\eqref{eq:unit-witness}, and assume
+$\chi(\Nm J\bmod m)\ne0$. Then
+\[
+ T_{C,\chi}(X)
+ =\sum_{\substack{I\ne0,\ [I]=C\\\Nm I\leq X}}
+       \chi(\Nm I\bmod m)
+ =O_{K,J,m,\chi}(X^{1-1/d}).
+\]
+More precisely, some $B\geq0$ bounds its absolute value by
+$BX^{1-1/d}$ for every real $X\geq1$.
+\end{proposition}
+
+The assembly identifies the residue sum with the sum over actual generators,
+recombines the sign portions, and uses $Y=t^d$ to obtain
+$\absn{G_{J,\chi}(Y)}\leq B_0(Y^{1-1/d}+1)$.
+Equation~\eqref{eq:weighted-torsion} then permits division by the nonzero
+factor $\#\mu(K)\chi(\Nm J\bmod m)$.
+The final theorem supplies its finite means and counting estimates internally.
+For $d=1$ the exponent is zero and the conclusion is a bounded sum, so the
+argument does not require $d>1$.
+
+\paragraph{What remains open.}
+Nontriviality of $\chi$ on the larger residue ring does not supply
+\eqref{eq:unit-witness}: its restriction to the image of the norm on units
+may be trivial. Witness existence for the intended characters, their
+remaining norm-image cases, and suitable inverse-class representatives with
+$\chi(\Nm J)\ne0$ are still arithmetic obligations.
+Measurability and the Mellin attachment for these norm-character sums remain
+to be checked. The compiled Mellin results above concern ordinary class characters.
+The resulting estimates must also be attached to the required Euler-product
+identities and prime-occurrence argument. The conditional pole criterion
+does not supply those identities. Claims 9.1, 9.2, and 11.1 remain partial,
+including the separate local compatibility obligations. The ledger stays
+\textbf{17 checked / 3 partial}.
+
+\smallskip
+\noindent\emph{Lean attachment:}
+\texttt{IdealResidueUnitActionMean}, \texttt{NormResidueUnitCounting},
+\texttt{NormResidueGeneratorAttachment}, \texttt{IdealNormCharacterBound},
+and \texttt{NormResidueCharacterCounting}.
+\end{document}

@@ -1,0 +1,13 @@
+PaperX.QuadraticGaloisPackets.pointPacketEquiv.{u_1, u_3} {B : Type u_1} [CommRing B] (R : Type u_3) [CommRing R]
+  [Algebra R B] : (CoordinateRing R →ₐ[R] B) ≃ Packet B
+PaperX.QuadraticGaloisPackets.pointPacketEquiv_natural.{u_1, u_2, u_3} {B : Type u_1} {C : Type u_2} [CommRing B]
+  [CommRing C] (R : Type u_3) [CommRing R] [Algebra R B] [Algebra R C] (f : B →ₐ[R] C) (p : CoordinateRing R →ₐ[R] B) :
+  (pointPacketEquiv R) (f.comp p) = mapPacket f.toRingHom ((pointPacketEquiv R) p)
+PaperX.QuadraticArithmeticCompletion.arithmetic_completion_iff {R : Type} [CommRing R] (I : Ideal R)
+  [IsAdicComplete I R] [TopologicalSpace R] (C : Conditions I) (finite : ∀ (k : ℕ), Finite (R ⧸ I ^ (k + 1))) :
+  (∃ χ, Continuous ⇑↑χ ∧ Realizes I C χ) ↔ ∀ (k : ℕ), ∃ χ, C.allowed k χ
+PaperX.QuadraticArithmeticCompletion.dyadic_completion (C : Conditions (IsLocalRing.maximalIdeal ℤ_[2]))
+  (occupied : ∀ (k : ℕ), ∃ χ, C.allowed k χ) :
+  ∃ χ,
+    Continuous ⇑↑χ ∧
+      Realizes (IsLocalRing.maximalIdeal ℤ_[2]) C χ ∧ (χ = ofRoot (oneRoot ℤ_[2]) ∨ χ = ofRoot (negativeRoot ℤ_[2]))

@@ -1,0 +1,14 @@
+import PaperX.NumberFieldFrobeniusRestriction
+import PaperX.RestrictionEmbeddingConjugacy
+
+#print axioms PaperX.NumberFieldFrobeniusRestriction.restriction_mem_stabilizer
+#print axioms PaperX.NumberFieldFrobeniusRestriction.restriction_mem_inertia
+#print axioms PaperX.NumberFieldFrobeniusRestriction.restriction_residue_power
+#print axioms PaperX.NumberFieldFrobeniusRestriction.restriction_arithmeticFrobenius
+#print axioms PaperX.NumberFieldFrobeniusRestriction.exists_simultaneous_frobenius_at
+#print axioms PaperX.NumberFieldFrobeniusRestriction.exists_simultaneous_frobenius
+#print axioms PaperX.RestrictionEmbeddingConjugacy.embeddingAutomorphism
+#print axioms PaperX.RestrictionEmbeddingConjugacy.embeddingAutomorphism_commutes
+#print axioms PaperX.RestrictionEmbeddingConjugacy.restriction_intertwines
+#print axioms PaperX.RestrictionEmbeddingConjugacy.restriction_conjugate
+#print axioms PaperX.RestrictionEmbeddingConjugacy.restriction_isConj

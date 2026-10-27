@@ -1,0 +1,8 @@
+import PaperX.IdealNormFilterAttachment
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalEquiv
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalEquiv_apply_fst
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalEquiv_absNorm
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalFilterEquiv
+#print axioms PaperX.IdealNormFilter.card_generators_eq_filtered_principal_mul_torsion
+#print axioms PaperX.IdealNormFilter.filtered_class_eq_filtered_principal
+#print axioms PaperX.IdealNormFilter.card_bounded_filtered_generators

@@ -1,0 +1,120 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[left=20mm,right=20mm,top=19mm,bottom=19mm,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,mathtools,mathrsfs,bm}
+\usepackage{graphicx,array,booktabs,tabularx,multicol}
+\usepackage[table]{xcolor}
+\usepackage{tikz,tcolorbox,fancyhdr}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc,positioning}
+\usepackage[hidelinks,pdfauthor={Komorebi P.},pdftitle={Paper X: A Visual Appendix},pdfsubject={Residual seeds, lifting forests, finite occupancy, and the arithmetic separator boundary}]{hyperref}
+\usepackage{bookmark}
+\hypersetup{pageanchor=false}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.2}
+\linespread{1.03}
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{7pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont PAPER X\quad /\quad VISUAL APPENDIX}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont KOMOREBI P.}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont Reader's edition\quad\textbullet\quad Block 27 + scalar/Mellin continuation}
+\fancyfoot[R]{\sffamily\small V\,--\,\thepage}
+\renewcommand{\headrulewidth}{.35pt}\renewcommand{\footrulewidth}{0pt}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\FF}{\mathbb F}\newcommand{\QQ}{\mathbb Q}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\Supp}{\operatorname{Supp}}\newcommand{\Fitt}{\operatorname{Fitt}}
+\newcommand{\Ann}{\operatorname{Ann}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}\newcommand{\Tr}{\operatorname{Tr}}\newcommand{\id}{\operatorname{id}}
+\newcommand{\whot}{\mathbin{\widehat\otimes}}\newcommand{\m}{\mathfrak m}\newcommand{\p}{\mathfrak p}
+\newcommand{\head}[1]{\par\vspace{2pt}{\sffamily\bfseries\normalsize #1}\par\vspace{1pt}}
+\newcommand{\captiontext}[1]{\par\noindent{\footnotesize\color{black!70}#1\par}}
+\newtcolorbox{insight}{colback=black!3,colframe=black!55,boxrule=0pt,leftrule=1.1pt,arc=0pt,left=10pt,right=10pt,top=5pt,bottom=5pt,before skip=6pt,after skip=5pt}
+\newcommand{\takeaway}[1]{\begin{insight}\textbf{Read this as:}\ #1\end{insight}}
+\newcommand{\vfig}[2][.96]{\par\begingroup\centering\resizebox{#1\linewidth}{!}{\input{graphics/#2.tex}}\par\endgroup\vspace{2pt}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newif\ifstarted\startedfalse
+\newcommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+\pdfbookmark[1]{V#1. #2}{PXA.visual#1}
+{\sffamily\fontsize{9}{11}\selectfont\bfseries #3\par}\vspace{5pt}
+{\raggedright\hyphenpenalty=10000\sffamily\bfseries\fontsize{22}{25}\selectfont #2\par}\vspace{5pt}
+{\sffamily\fontsize{8.7}{11}\selectfont\color{black!65} #4\par}\vspace{6pt}}
+\newcommand{\pagerefV}[1]{\hyperlink{PXA.visual#1.1}{V#1}}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\kk}{\mathbb k}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\BB}{\mathcal B}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Ker}{\operatorname{ker}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\src}{\operatorname{src}}\newcommand{\tgt}{\operatorname{tgt}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\Dfun}{\mathsf D}
+\newcommand{\Efun}{\mathsf E}
+\newcommand{\Tfun}{\mathsf T}
+\newcommand{\Sfun}{\mathsf S}
+\newcommand{\Cfun}{\mathsf C}
+\newcommand{\Thetafun}{\mathsf\Theta}
+\newcommand{\ones}{\mathbf{1}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\diagmat}[1]{\operatorname{diag}(#1)}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\bra}[1]{\langle #1\rvert}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\dd}{\mathrm d}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\cost}{\operatorname{cost}}
+\newcommand{\err}{\operatorname{err}}
+\newcommand{\vp}{v_p}
+\newcommand{\Zp}{\mathbb Z_p}\newcommand{\Qp}{\mathbb Q_p}\newcommand{\Ztwo}{\mathbb Z_2}
+\newcommand{\Cj}{C_{4,j}}\newcommand{\Uj}{U_{4,j}}
+\newcommand{\binomzero}[2]{\binom{#1}{#2}}
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Universal Residual Seeds}
+\renewcommand{\KomorebiSubtitle}{Deformation forests, transport categories, and conditional system completion}
+\renewcommand{\KomorebiSeries}{Core series X}
+\renewcommand{\KomorebiKind}{Visual guide}
+\renewcommand{\KomorebiShortTitle}{Paper X}
+\renewcommand{\KomorebiTitleSize}{36}
+\renewcommand{\KomorebiTitleLeading}{41}
+\renewcommand{\KomorebiEdition}{Verification edition / 20 October 2026}
+\KomorebiSetup
+\renewcommand{\KomorebiProfile}{atlas}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\pagenumbering{roman}
+
+\section*{The current reading contract}
+This guide preserves the Block 27 and scalar/Mellin worked examples. Their stated checkpoint limits belong to those source revisions. The later occupied-system endpoint is checked at its amended conditional scope: 20/20 internal claims. Actual completed source members, inverse-limit profile closure, compatible carrier presentations and constituent local comparisons remain supplied inputs.
+\begin{center}
+\begin{tikzpicture}[node distance=13mm,every node/.style={draw=KomorebiPine,fill=KomorebiSoft,rounded corners=2pt,align=center,text width=5.5cm,inner sep=7pt},>=Stealth]
+\node (a) {Completed source family\\All-depth horizontal transport\\Closed target profile};
+\node[below=of a] (b) {Transported target family};
+\node[right=9mm of a] (c) {Arithmetic trace separator\\Explicit compatible carrier\\Selected constituent copies};
+\node[below=of c] (d) {Recovered carrier summand};
+\draw[->,thick,KomorebiPine] (a)--(b);
+\draw[->,thick,KomorebiPine] (c)--(d);
+\end{tikzpicture}
+\end{center}
+The endpoint proves both outputs. It does not assert that their supplied local structures have been identified. Zero multiplicity is allowed; nonzero occupancy needs its own input. All-place carrier recovery needs the pointwise presentations at each place.
+\clearpage
+\section*{A checked scope and a later unpromoted scope}
+The final checked conditional release records two successful builds, matching proof objects, source and axiom checks, and negative controls. Its exact production source and saved records accompany this edition. A later stronger residual-system attempt records 19/20, no promoted endpoint, and an unavailable pinned Lean executable. The two records describe different input contracts.
+
+The traditional edition gives the complete retained manuscript and the later conditional assembly. The Lean guide shows the source-exact endpoint, its proof structure and its evidence. The PDF build checks presentation. The separate October 20 production run freshly compiles the selected 122-module closure; its source selection and exact limits are recorded in the Lean guide.
+\clearpage
+\setcounter{page}{1}\renewcommand{\thepage}{V\arabic{page}}
+\input{source/pages.tex}
+\end{document}

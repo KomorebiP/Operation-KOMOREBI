@@ -1,0 +1,7 @@
+import PaperX.FamilyClassification
+import PaperX.FamilyExamples
+import PaperX.FamilyBoundary
+#check PaperX.FamilyClassification.exists_family_unique_up_to_conjugacy
+#check PaperX.OrthogonalProjectors.Family.decomposition_equivariant
+example := PaperX.FamilyExamples.actual_three_summand_lift
+example := PaperX.FamilyBoundary.generic_rigidity_on_distinct_families

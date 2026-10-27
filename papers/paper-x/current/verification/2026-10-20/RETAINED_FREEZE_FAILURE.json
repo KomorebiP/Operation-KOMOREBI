@@ -1,0 +1,25 @@
+{
+  "status": "FAILED_INITIAL_FREEZE",
+  "scope": "Packaging only; production, source and reader evidence unchanged.",
+  "reason": "Freeze script wrote MANIFEST.json; unchanged generic strict verifier requires MANIFEST_SHA256.json.",
+  "repair": "Use the existing strict-verifier canonical filename, preserve the initial failure/archive outside final release, and regenerate the exact manifest.",
+  "initial_integrity_report": {
+    "status": "FAIL",
+    "schema": "komorebi.strict_manifest.v1",
+    "strict": true,
+    "files_checked": 0,
+    "files_expected": 0,
+    "failures": [
+      {
+        "problem": "cannot read valid manifest: [Errno 2] No such file or directory: '/workspace/scratch/fbc994080222/paper_x_release/Paper_X_Final_Release_v1.0.0/MANIFEST_SHA256.json'",
+        "path": "MANIFEST_SHA256.json"
+      }
+    ],
+    "scope": "Exact regular-file membership, sizes and SHA-256 consistency with the supplied manifest. Not provenance, proof review or Lean execution."
+  },
+  "followup_failure": {
+    "status": "FAIL",
+    "problem": "After removal, a MANIFEST.json file reappeared in a later strict check and the previous preliminary ZIP was again present at its old output path. Both matched the known earlier working state; cause not established.",
+    "repair": "Retain MANIFEST.json as an explicit non-cyclic pointer to MANIFEST_SHA256.json, include it in exact membership, then verify serially and replace the known preliminary output atomically. No scientific source changed."
+  }
+}

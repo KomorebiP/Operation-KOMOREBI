@@ -1,0 +1,275 @@
+{
+  "recorded_utc": "2026-10-20T18:25:43.360434+00:00",
+  "primary_verdict": "proved as written",
+  "verdict_scope": "Independent bounded static proof/type review of the exact amended finite-copy carrier closure theorem, with explicit supplied data and dependency boundary below. This is not a fresh Lean kernel certificate, all-source proof audit, or proof of unrestricted arithmetic attachment.",
+  "claim_card": {
+    "normalized_claim": "Over a characteristic-zero field, a supplied finite family of finite-dimensional continuous representations, natural multiplicities bounded by carrier capacities, equivariant carrier and initial selected-copy presentations, and a nonsingular actual trace sample yield equivariant split maps for the initial representation and canonical selected copies, unique natural multiplicities from the initial traces, a continuous selected action and common characteristic-polynomial product. Independently supplied local Weil-monodromy/smooth-inertia data and genuine semilinear comparison data yield their corresponding finite-copy closure formulas.",
+    "raw_target": "PaperX.StrictCompatibleCarrierCompletion.compatible_carrier_summand_completion",
+    "raw_locator": "lean_guide/source/StrictCompatibleCarrierCompletion.lean:330-395 (397 total source lines)",
+    "coefficient_domain": "K is a Field with CharZero and arbitrary supplied TopologicalSpace; global group GG is a topological Monoid. Local Weil group GW and period group GP are separately supplied Groups. Finite constituent index I, finite-dimensional V_i; m,c:I->Nat with m_i<=c_i.",
+    "source_target": "copiesRep rho m and supplied rhoU0 have split equivariant maps into supplied carrier; local outputs concern copiesInertialDatum H D m and copiesRep rho_p m.",
+    "exceptional_cases": "Empty I and zero multiplicities are permitted. No positive rank, nonzero summand, arbitrary local-predicate closure, unknown carrier construction, or global-to-local arithmetic attachment is asserted by the raw theorem."
+  },
+  "dependency_graph": [
+    {
+      "edge": "capacity inequality + supplied equivariant Bcar -> canonical selected split",
+      "leaf": "CarrierSummands inclusion/retraction, transported_split and transported equivariance",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "edge": "supplied initial equivariant e0 -> initial split and equality of actual sample traces",
+      "leaf": "initial_summand_transport and conjugation invariance of trace",
+      "kind": "internal proof plus Mathlib linear algebra",
+      "status": "passed"
+    },
+    {
+      "edge": "actual trace equality + nonzero determinant + characteristic zero -> unique natural multiplicities",
+      "leaf": "CarrierCompatibility sampled_trace; TraceRecovery inverse matrix and Nat.cast_injective",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "edge": "constituent continuity and common charpolys -> selected continuity and polynomial product",
+      "leaf": "coordinatewise product action and finite-product charpoly theorem",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "edge": "supplied InertialDatum -> actual finite-copy Weil datum, smooth inertia and fixed-kernel identities",
+      "leaf": "WeilData, WeilCopies, WeilSmooth, WeilProfileClosure",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "edge": "supplied semilinear Comparison -> selected comparison and coordinate weight census; period equations -> period-space equivalence",
+      "leaf": "SemilinearTateComparison copiesComparison and SemilinearPeriods periodCopiesEquiv",
+      "kind": "internal proof",
+      "status": "passed"
+    },
+    {
+      "edge": "arithmetic occurrence -> nonsingular sample",
+      "leaf": "Claim 9.1 construction is supplied to this theorem as hdet; terminal wrapper converts the actual arithmetic separator to hdet",
+      "kind": "separate theorem",
+      "status": "out of scope"
+    }
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Carrier and initial selected summand are actual representations with supplied equivariant linear equivalences",
+      "status": "passed",
+      "evidence": "Bcar/hBcar and e0/he0 occur explicitly in theorem types and are used in map construction and trace conjugation."
+    },
+    {
+      "obligation": "Critical split implication",
+      "status": "passed",
+      "evidence": "J=Bcar^-1 o inclusion; R=retraction o Bcar. RJ=id follows from coordinate restriction after zero extension. Initial maps compose J with e0 and e0^-1 with R."
+    },
+    {
+      "obligation": "Natural multiplicity recovery",
+      "status": "passed",
+      "evidence": "Trace of copies is C*m. Inverse matrix gives equality over K; CharZero makes Nat casts injective. The initial trace equality is derived using e0, not freely assumed."
+    },
+    {
+      "obligation": "Arbitrary local predicates",
+      "status": "conditional",
+      "evidence": "selected_local_condition requires FiniteCopyClosed Q explicitly. It is a separate theorem and is not universally incorporated into CarrierRecoveryAt."
+    },
+    {
+      "obligation": "Nonzero occupancy",
+      "status": "out of scope",
+      "evidence": "m=0 is admitted and returns the zero selected space. Appendix D and teaching explicitly retain a separate nonzero premise."
+    },
+    {
+      "obligation": "Local-to-global identification of actions",
+      "status": "not addressed",
+      "evidence": "rho, D.r and rho_p are independent parameters. No group restriction map, attachment relation, or equality ties local actions to global rho. This is an explicit semantic/application boundary, not a proved attachment."
+    },
+    {
+      "obligation": "Intrinsic Hodge-Tate multiplicities from arbitrary period data",
+      "status": "not addressed",
+      "evidence": "weightMultiplicity counts supplied Comparison coordinates; intrinsic periodSpace equivalence is separately proved. No equality between those two dimensions is inferred without arithmetic invariant-space input."
+    },
+    {
+      "obligation": "All coefficient places",
+      "status": "passed",
+      "evidence": "Claim92 is universally parameterized at one arbitrary place. Same m can be reused pointwise when all constituent/carrier/local presentations are supplied; source does not construct missing presentations."
+    },
+    {
+      "obligation": "Minimum/zero cases",
+      "status": "passed",
+      "evidence": "Coordinate formulas remain meaningful for empty I, m_i=0 and zero-dimensional copies: zero space, split zero maps, charpoly1 and trace0. No nonzero conclusion leaks."
+    }
+  ],
+  "decisive_evidence": [
+    "The capstone proof contains five direct applications to initial_summand_transport, initial_summand_multiplicities_unique, selected_global_carrier, selected_weil_packets, and selected_semilinear_period_packets. It neither assumes its conclusion nor invokes the terminal theorem.",
+    "WeilProfileClosure.actual_attachment_reduction explicitly retains equality hA of an independently constructed arithmetic attachment with the finite-copy datum; the carrier capstone does not instantiate hA.",
+    "Period Comparison.action_eq uses the actual semilinear tensor action, and copiesComparison proves its equation coordinatewise. This is stronger than a bare weight-label census, while remaining conditional on constituent Comparison inputs."
+  ],
+  "statement_alignment": {
+    "amended_current_contract": "manuscript/conditional_completion.tex:10-32 and lean_guide/teaching.tex:276-322 match finite-copy supplied-data scope. The reader says semantic local inputs, pointwise presentations, no identification with transported target family, and no nonzero inference.",
+    "historical_main_statement": "manuscript/Paper_X_Block27_Amended.tex:1335-1385 states the abstract strictly-compatible-system summand theorem and retains historical partial-formalization wording. This broader arithmetic reading must continue to be read with current Appendix D, not relabeled unrestricted formal closure.",
+    "no_new_release_critical_gap": "No missing implication found in the actual amended raw finite-copy closure statement. Claiming a new arithmetic attachment, arbitrary local predicate preservation, or nonzero universal occupancy would exceed the audited type."
+  },
+  "source_identity": {
+    "guide_copy_sha256": "4fa6b2fd0c212d75e1158049e777f94217b1dab5ce5f84c2690dfcb826406388",
+    "preserved_production_sha256": "4fa6b2fd0c212d75e1158049e777f94217b1dab5ce5f84c2690dfcb826406388",
+    "guide_matches_preserved_checked_production_bytes": true,
+    "note": "The often-mentioned readable checked_conditional/source directory contains only the terminal module. Claim92 production source is preserved as a content-addressed payload and has a byte-identical printed-guide source copy."
+  },
+  "source_files": [
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/lean_guide/source/StrictCompatibleCarrierCompletion.lean",
+      "sha256": "4fa6b2fd0c212d75e1158049e777f94217b1dab5ce5f84c2690dfcb826406388"
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/manuscript/conditional_completion.tex",
+      "sha256": "211a207125f30f0f8e80eb1048113fb2f9ebf666807c49cfa73a8af1609a0765"
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/manuscript/Paper_X_Block27_Amended.tex",
+      "sha256": "ca8642874fc5dd33b9c9e6d0248cde3b872fd8d8ef4833cfa62669ae418977f7"
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/lean_guide/teaching.tex",
+      "sha256": "00008e2c39684418b0ad8a0674bc12fa912d8bccd509adef9c4773674b5b0ea6"
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/lean_guide/statement_register.tex",
+      "sha256": "cae53a258abb7e2828457b704e8eb67334ba3a6052513927491de0f974ffb2e3"
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/readable/checked_conditional/source/PaperX/ConditionalOccupiedSystemCompletion.lean",
+      "sha256": "ba15fd1ea175fecfcc705243c75d1061c8bdf500221dafe86f29fe1c5d21c5e0"
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/ARCHIVE_MAP.json",
+      "sha256": "df9448f3c6a9b43f53d49384f2adea9e3537f5d721cae8490c26e4723f3c794c"
+    }
+  ],
+  "preserved_dependency_payloads": [
+    {
+      "name": "CarrierCompatibility.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/CarrierCompatibility.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/56/5686a56df2526bb551b863f4585cbe03b60f3d4c851d5c5ce65fbd67bdccaac1",
+      "sha256": "5686a56df2526bb551b863f4585cbe03b60f3d4c851d5c5ce65fbd67bdccaac1",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "CarrierPolynomials.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/CarrierPolynomials.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/22/223a9eaa65bfc106b0cdb657fa11978224b436775eee039f40345f3e62d087fa",
+      "sha256": "223a9eaa65bfc106b0cdb657fa11978224b436775eee039f40345f3e62d087fa",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "CarrierSummands.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/CarrierSummands.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/33/33a3afc42de1a2c03016cb347c2cf3fd159babdf3983b7c56ed89a95595cc338",
+      "sha256": "33a3afc42de1a2c03016cb347c2cf3fd159babdf3983b7c56ed89a95595cc338",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "SemilinearPeriods.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/SemilinearPeriods.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/70/701ce37901c7904e96ba2ff2eba97a2c9023afec515265b69e3657d8e74e05f2",
+      "sha256": "701ce37901c7904e96ba2ff2eba97a2c9023afec515265b69e3657d8e74e05f2",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "SemilinearTateComparison.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/SemilinearTateComparison.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/c4/c4e441d54b91dfaa4e1f61f7ec29861a8276fe7deda103380f81b320e21c6458",
+      "sha256": "c4e441d54b91dfaa4e1f61f7ec29861a8276fe7deda103380f81b320e21c6458",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "TraceRecovery.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/TraceRecovery.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/d6/d62a7b0966d53bb7331ead3ca41e8b6ba74d5882cc39997a85ebd6ef2e7f73ff",
+      "sha256": "d62a7b0966d53bb7331ead3ca41e8b6ba74d5882cc39997a85ebd6ef2e7f73ff",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "WeilCopies.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/WeilCopies.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/86/86907064c9635ce9b10141361c699ae2847094be9189d592206136f69b868f63",
+      "sha256": "86907064c9635ce9b10141361c699ae2847094be9189d592206136f69b868f63",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "WeilData.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/WeilData.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/65/654b4325fd9927a6b77b6f08d41c2e91bc6c87eedcc9d7d61b88865983d8a81f",
+      "sha256": "654b4325fd9927a6b77b6f08d41c2e91bc6c87eedcc9d7d61b88865983d8a81f",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "WeilEuler.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/WeilEuler.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/9f/9f5acc7a49a1748cd24b05261e796c4f7af4914b158f1c2f902e15079ecf5f02",
+      "sha256": "9f5acc7a49a1748cd24b05261e796c4f7af4914b158f1c2f902e15079ecf5f02",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read; WeilEuler product used at internal dependency boundary."
+    },
+    {
+      "name": "WeilProfileClosure.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/WeilProfileClosure.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/05/057c398e2cf538764bafb12c178161fb08efe84b390629368627c78a336dd207",
+      "sha256": "057c398e2cf538764bafb12c178161fb08efe84b390629368627c78a336dd207",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "WeilSmooth.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/inherited_sources/PaperX/WeilSmooth.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/84/84f7865f8964ae837fd5641b29b79e528aa348ac71b256e7c09e23859108358b",
+      "sha256": "84f7865f8964ae837fd5641b29b79e528aa348ac71b256e7c09e23859108358b",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    },
+    {
+      "name": "StrictCompatibleCarrierCompletion.lean",
+      "original_member_path": "Paper_X_Claim92_Strict_Compatible_Carrier_Closure_v1.0.0_Checked/work/lean/PaperX/StrictCompatibleCarrierCompletion.lean",
+      "original_container_sha256": "6aeef7d8274776cfbb19ce356646cb9f0a266368016bcf410fb731d96a60b1bd",
+      "payload_path": "/workspace/scratch/fbc994080222/paper_x_baseline/inner/Paper_X/formal_preservation/objects/sha256/4f/4fa6b2fd0c212d75e1158049e777f94217b1dab5ce5f84c2690dfcb826406388",
+      "sha256": "4fa6b2fd0c212d75e1158049e777f94217b1dab5ce5f84c2690dfcb826406388",
+      "matched_archive_map_sha256": true,
+      "read_scope": "Raw definitions and relevant proof bodies read."
+    }
+  ],
+  "source_and_computation_checks": {
+    "fresh_lean_execution": false,
+    "load_bearing_finite_computation": false,
+    "independent_provenance": "The same child agent had prior reader-scope context before this task. This was a separate bounded static review of raw theorem types, definitions and critical proof implications, not a blind fresh-session audit or external-peer review. Prior inherited audit verdicts were not used as proof. The review uses the same model family and may share systematic errors.",
+    "checks": [
+      "Read applicable ancestor instructions (none found), no .mathbox directory found.",
+      "Compared guide source hash to archived Claim92 production payload through ARCHIVE_MAP.",
+      "Read source theorem bodies and relevant preserved dependency definitions directly.",
+      "Read current Appendix D, statement register and teaching contract, plus historical theorem9.2."
+    ],
+    "review_context_disclosure": "Prior main/visual reader-scope findings were known to this reviewer. Independence is limited to reconstructing the raw carrier implication in a separate delegated task; no external-peer or blind-session independence is claimed."
+  },
+  "remaining_gap": "None for the exact amended conditional finite-copy closure type in this bounded static review. The unproved application bridges are arithmetic identification of supplied local data with the intended global representation, any extra local predicate closure, nonzero occupancy, and any missing all-place presentations.",
+  "strongest_safe_statement": "Actual finite-copy carrier splitting and unique multiplicity recovery, with closure of the independently supplied local algebraic and semilinear data. No unrestricted strict-compatible-system existence or new arithmetic attachment certificate.",
+  "cheapest_next_check": "Bind the matching source hash and dependency lineage to the final release verifier; retain Appendix D and teaching scope disclosures. Fresh kernel replay, if pursued by root, is a separate verification activity."
+}

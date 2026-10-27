@@ -1,0 +1,127 @@
+--- Projector_Resolved_Seed_Calculus_X_Block19_Amended.tex
++++ Projector_Resolved_Seed_Calculus_X_Block20_Amended.tex
+@@ -118,7 +118,7 @@
+ 
+ \begin{center}
+ \fbox{\begin{minipage}{0.94\linewidth}
+-\textbf{Block 19 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. A sufficiently deep complete orthogonal family of equivariant quotient projectors now lifts to an actual decomposition inside a supplied finite-group carrier, with precision loss independent of the number of labels. The actual invariant images and their reductions are checked. Over local coefficients with a nonunit ideal generator, lifts of the same positive-depth family are equivariantly conjugate by a unit congruent to the identity. The intended arithmetic packet and period-data interpretation remains unfinished.
++\textbf{Block 20 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. Finite logarithmic recovery now applies to every nilpotent operator over a characteristic-zero field, preserving all annihilating exponents and recovering intertwiners and original group actions under the stated sample hypotheses. For supplied finite original inertia images, a common positive power produces the required trivial-original-action sample from an inertia element with trivial norm and nonzero cocycle value. The norm, cocycle and reconstruction data remain supplied. Actual arithmetic attachment, packet identification, and coefficient and Hodge--Tate/period comparisons remain unfinished.
+ \end{minipage}}
+ \end{center}
+ 
+@@ -1318,7 +1318,7 @@
+ inertia, its restricted action and finite-dimensional Euler denominator agree.
+ Twisting again by $-t$ recovers the datum with $N$ still supplied.
+ 
+-There is also an extracted inverse on the explicit class $N^3=0$:
++Block 13 also established an extracted inverse on the explicit class $N^3=0$:
+ \[
+ \log_2 U=(U-I)-\tfrac12(U-I)^2,\qquad
+  a^{-1}\log_2(\exp(aN))=N\quad(a\ne0).
+@@ -1328,7 +1328,8 @@
+ $r_D(u)=r_E(u)=I$ and $t(u)\ne0$, an intertwiner of the reconstructed cubic
+ actions recovers both original group equivariance and monodromy equivariance.
+ The general nilpotence exponential theorem is not restricted to this cubic
+-class, but the extracted inverse proved here is.
++class, but the extracted inverse in Block 13 was. Block 20 below removes
++that restriction by using the full finite logarithm.
+ 
+ The rational affine-group example has $u=(1,1)$, $d=(0,1/3)$ and
+ \[
+@@ -1707,7 +1708,7 @@
+ \section*{Current formalization boundary}
+ The smooth formal-model classification, its finite point count, its integral digit streams, and its rational seed zeta identity are now checked in Lean. The actual representing-ring algebra isomorphism remains a supplied hypothesis; neither smoothness nor Galois representability is inferred from numerical counts. All local maps are included in the classification, and locality and actual maximal-ideal-adic continuity are separately proved. Arbitrary choices of parameter representatives do not add phantom maps.
+ 
+-The cumulative ledger contains fifteen checked source proof claims and five partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2, 9.1, 9.2, 11.1 and 11.2 retain the arithmetic gaps recorded in the current ledger. Finite-exponential reconstruction and cubic logarithmic recovery advance the local comparison without proving arithmetic attachment or universal positive occupancy. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and a cumulative build of all project production modules. No new PDF was typeset.
++The cumulative ledger contains fifteen checked source proof claims and five partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2, 9.1, 9.2, 11.1 and 11.2 retain the arithmetic gaps recorded in the current ledger. Finite-exponential reconstruction and general nilpotent logarithmic recovery advance the local comparison under the stated sample hypotheses, without proving arithmetic attachment or universal positive occupancy. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and a cumulative build of all project production modules. No new PDF was typeset.
+ 
+ 
+ \paragraph{Finite-group comparison with precision loss (Block 17).}
+@@ -1901,4 +1902,87 @@
+ outside this result. The full arithmetic ledger remains fifteen checked
+ claims and five partial claims; universal occupancy remains conjectural.
+ 
++
++\paragraph{General finite logarithmic recovery (Block 20).}
++Let $A$ be a rational algebra, without any commutativity assumption on $A$.
++For a unipotent element $U$ and a positive integer $d$ satisfying
++$(U-1)^d=0$, put
++\[
++L_d(U)=\sum_{j=1}^{d-1}\frac{(-1)^{j+1}}{j}(U-1)^j.
++\]
++The value is independent of the chosen annihilating exponent. The finite
++logarithm and the nilpotent exponential satisfy
++\[
++L(\exp N)=N,\qquad \exp(L(U))=U.
++\]
++Both maps preserve every annihilating exponent, and hence preserve the
++exact nilpotency class of $N$ and $\exp(N)-1$, or of $U-1$ and $L(U)$.
++The Lean finite sum includes its zero-index term with coefficient zero;
++the displayed mathematical sum starts at one. The formal statements also
++handle the zero algebra and the exponent-zero case.
++
++The proof evaluates Mathlib's formal power-series inverse identities at
++constant nilpotent series. Such evaluation is exactly a finite polynomial.
++For an arbitrary noncommutative ambient algebra, perform the calculation
++inside the commutative subalgebra generated by the element and then apply
++its inclusion. No analytic convergence or topology is assumed. The
++finite logarithm commutes with ring homomorphisms between rational algebras.
++
++Let $K$ be a characteristic-zero field and $N$ an endomorphism with
++$N^d=0$. For $t\ne0$ the actual recovery formula is
++\[
++N=\frac1t\sum_{j=1}^{d-1}\frac{(-1)^{j+1}}{j}
++       \bigl(\exp(tN)-1\bigr)^j.
++\]
++All coefficients lie in $K$. The vector spaces need not be finite
++dimensional, but nilpotence still means that some finite power of the
++whole operator is zero. A linear map intertwines two nilpotent operators exactly
++when it intertwines their exponential samples at a common nonzero
++parameter. Also
++\[
++\ker\bigl(\exp(tN)-1\bigr)=\ker N.
++\]
++
++For supplied covariance data and the twisted cocycle of Block 13, let
++$\rho_D(g)=\exp(t(g)N_D)r_D(g)$. If a common element $u$ satisfies
++$r_D(u)=r_E(u)=1$ and $t(u)\ne0$, every intertwiner of $\rho_D$ and
++$\rho_E$ recovers both the original $r$-intertwiner and the $N$-intertwiner.
++There is no cubic nilpotence restriction. This recovers equivariant
++projectors for both original components. Reconstructed-action isomorphisms
++induce actual isomorphisms of the inertia-fixed monodromy kernels. Their local characteristic polynomials
++agree under the existing finite-dimensional and normal-subgroup hypotheses.
++
++For actual finite original inertia images the common kernel sample is
++derived. Suppose $u\in H$ satisfies $\nu(u)=1$ and $t(u)\ne0$ and both
++$r_D(H)$ and $r_E(H)$ are finite. Their sampled actions have positive
++finite orders $a,b$. At $u^{ab}$ both original actions are trivial, and
++\[
++t(u^{ab})=(ab)t(u)\ne0
++\]
++by the cocycle identity and characteristic zero. Thus the same full
++intertwiner equivalence holds using the actual finite-image hypotheses,
++without a separately supplied common trivial-action sample. The initial
++nonzero cocycle sample and the arithmetic interpretation of the data
++remain requirements.
++
++Actual affine representations with monodromy chains of every finite
++length invoke these theorems. In particular a length-six example has
++$N^5\ne0$ and $N^6=0$ and is recovered from its actual reconstructed action.
++The length-four example still defeats the old quadratic logarithm, while
++the full finite logarithm recovers it.
++
++The sample hypotheses retain substantive content. A zero parameter loses
++$N$. For unrestricted supplied algebraic data, one can also absorb
++$\exp(tN)$ into $r$ and set the new monodromy to zero; the reconstructed
++representation is unchanged. The absorbed original action fails the
++required trivial-action sample condition. This is a counterexample in the
++algebraic datum class, not a failure of uniqueness of arithmetic
++Weil--Deligne attachment with finite original inertia action.
++
++Block 20 removes the general logarithmic-extraction gap from the local
++algebraic comparison. It does not construct the actual arithmetic
++attachment, identify every intended packet, prove the coefficient and
++Hodge--Tate/period comparisons, or prove arithmetic Frobenius coverage.
++The full ledger remains fifteen checked claims and five partial claims.
++
+ \end{document}

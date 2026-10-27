@@ -1,0 +1,12 @@
+import PaperX.NormSignArithmetic
+#print axioms PaperX.NormSignArithmetic.embedding_fiber_eq_pair
+#print axioms PaperX.NormSignArithmetic.embedding_fiber_product_real
+#print axioms PaperX.NormSignArithmetic.embedding_fiber_product_complex
+#print axioms PaperX.NormSignArithmetic.field_norm_eq_real_mul_complex
+#print axioms PaperX.NormSignArithmetic.complex_factor_pos
+#print axioms PaperX.NormSignArithmetic.field_norm_pos_iff
+#print axioms PaperX.NormSignArithmetic.field_norm_neg_iff
+#print axioms PaperX.NormSignArithmetic.integer_norm_pos_iff
+#print axioms PaperX.NormSignArithmetic.integer_norm_neg_iff
+#print axioms PaperX.NormSignArithmetic.integer_norm_pos_of_mem_signCone
+#print axioms PaperX.NormSignArithmetic.integer_norm_neg_of_mem_signCone

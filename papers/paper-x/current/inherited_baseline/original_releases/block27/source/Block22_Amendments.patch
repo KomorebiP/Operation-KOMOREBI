@@ -1,0 +1,185 @@
+--- Projector_Resolved_Seed_Calculus_X_Block21_Amended.tex
++++ Projector_Resolved_Seed_Calculus_X_Block22_Amended.tex
+@@ -118,12 +118,12 @@
+ 
+ \begin{center}
+ \fbox{\begin{minipage}{0.94\linewidth}
+-\textbf{Block 21 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. The fixed quadratic packet of actual $G_{\Q}$ characters defined by the action on a square root of $-1$ is now identified naturally with the points of $R[X]/(X^2-1)$. Its finite-level completion, continuity and dyadic classification are proved, including an actual finite character that fails to lift. This finishes a restricted arithmetic interpretation relevant to Claim 8.2. The general logarithmic recovery results of Block 20 remain checked. The manuscript's full arithmetic packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
++\textbf{Block 22 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. For the fixed quadratic packet of actual $G_{\Q}$ characters, local triviality after the field-induced map from $G_{\Q_p}$ is proved equivalent to $p\equiv1\pmod4$ or global triviality. Its preservation under coefficient completion and simultaneous finite-level existence criterion are proved. The packet characters are trivial on actual valuation inertia at every odd prime, with a locally dominating valuation constructed. The equality of the valuation decomposition group with the entire local Galois group is not established, and ramification at two is not claimed. The full packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
+ \end{minipage}}
+ \end{center}
+ 
+ 
+-\paragraph{Cumulative formalization status after Block 21.}
++\paragraph{Cumulative formalization status after Block 22.}
+ The cumulative formal ledger records 15 source proof claims checked at their
+ stated scope, 5 partially formalized, and no untouched proof claims. Partial
+ claims 8.2, 9.1, 9.2, 11.1, and 11.2 are not completed arithmetic theorems.
+@@ -1708,7 +1708,7 @@
+ \section*{Current formalization boundary}
+ The smooth formal-model classification, its finite point count, its integral digit streams, and its rational seed zeta identity are now checked in Lean. The actual representing-ring algebra isomorphism remains a supplied hypothesis; neither smoothness nor Galois representability is inferred from numerical counts. All local maps are included in the classification, and locality and actual maximal-ideal-adic continuity are separately proved. Arbitrary choices of parameter representatives do not add phantom maps.
+ 
+-The cumulative ledger contains fifteen checked source proof claims and five partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2, 9.1, 9.2, 11.1 and 11.2 retain the arithmetic gaps recorded in the current ledger. Block 21 identifies one actual quadratic arithmetic packet with its coordinate-ring points and proves its full conditional finite-depth completion, including continuity and reduction compatibility. This does not identify every packet in the common arithmetic spine or attach Hodge--Tate and Weil--Deligne invariants. General nilpotent logarithmic recovery remains checked under its stated sample hypotheses. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and cumulative compiler evidence. No new PDF was typeset.
++The cumulative ledger contains fifteen checked source proof claims and five partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2, 9.1, 9.2, 11.1 and 11.2 retain the arithmetic gaps recorded in the current ledger. Blocks 21--22 identify one actual quadratic arithmetic packet with its coordinate-ring points and prove its conditional finite-depth completion with actual simultaneous local-triviality conditions. The p-adic criterion is proved at every arithmetic prime. The packet characters are trivial on actual valuation inertia at odd primes; identification of its decomposition group with the full local Galois group remains open here, and ramification at two is not proved. These results do not identify every packet in the common arithmetic spine or attach Hodge--Tate and Weil--Deligne invariants. General nilpotent logarithmic recovery remains checked under its stated sample hypotheses. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and cumulative compiler evidence. No new PDF was typeset.
+ 
+ 
+ \paragraph{Finite-group comparison with precision loss (Block 17).}
+@@ -2078,9 +2078,157 @@
+ conditional completion. The packet is defined by one fixed quotient; it
+ is not the collection of all quadratic characters of $G_{\Q}$. No local
+ ramification criterion, Hodge--Tate weight, Weil--Deligne attachment, or
+-cross-coefficient local invariant is established here. The full
++cross-coefficient local invariant was established by Block 21. The full
+ manuscript still requires its remaining packet identifications and
+ arithmetic comparisons. The ledger remains fifteen checked claims and
+ five partial claims, and universal positive occupancy remains conjectural.
+ 
++\paragraph{Actual quadratic local conditions and completion (Block 22).}
++Continue with the fixed packet $\mathcal P_q$ above. For a
++characteristic-zero field $K$, let
++\[
++j_K:G_K\longrightarrow G_{\Q}
++\]
++be the actual field-induced homomorphism between absolute Galois groups.
++It includes a chosen embedding of algebraic closures. Let $i_K$ be the
++image of the chosen square root $i$ under that embedding. Lean proves
++compatibility with the Galois actions and hence
++\[
++(q\circ j_K)(\sigma)=1
++\quad\Longleftrightarrow\quad \sigma(i_K)=i_K.
++\]
++The fixed-field theorem for the algebraic closure then gives
++\[
++q\circ j_K=1
++\quad\Longleftrightarrow\quad
++\exists x\in K,\ x^2=-1.
++\]
++If no such root exists, the local quotient is surjective onto $C_2$.
++These are statements about the actual local Galois map, not a supplied
++arithmetic interpretation of a scalar label.
++
++For every commutative coefficient ring $B$ and $\chi\in\mathcal P_q(B)$,
++define $\chi_K=\chi\circ j_K$. The local character is continuous and
++commutes with coefficient change. The precise local admissibility
++condition is
++\[
++\operatorname{LocallyTrivial}_K(\chi)
++\quad\Longleftrightarrow\quad \chi_K=1.
++\]
++Descent through the fixed quadratic quotient proves
++\[
++\operatorname{LocallyTrivial}_K(\chi)
++\quad\Longleftrightarrow\quad
++\bigl(\exists x\in K,\ x^2=-1\bigr)\ \lor\ \chi=1.
++\]
++No reducedness, characteristic-zero or domain hypothesis is imposed on
++$B$. In particular, the formula applies to the finite coefficient
++quotients used in completion.
++
++The p-adic square-root criterion is proved for every prime:
++\[
++\bigl(\exists x\in\Q_p,\ x^2=-1\bigr)
++\quad\Longleftrightarrow\quad p\equiv1\pmod4.
++\]
++A root satisfies $\lvert x\rvert_p^2=1$ and is therefore integral.
++Reduction modulo three rules out a root in $\Q_3$, and reduction modulo
++four rules out a root in $\Q_2$. At an odd prime, any residue root of
++$X^2+1$ has nonzero derivative and lifts by the pinned Mathlib Hensel
++theorem. The finite-field square criterion then gives the stated
++congruence. An explicit Hensel application at the residue root $2$ modulo $5$ supplies
++a root in $\Z_5$. Consequently
++\[
++\boxed{
++\operatorname{LocallyTrivial}_{\Q_p}(\chi)
++\quad\Longleftrightarrow\quad p\equiv1\pmod4\ \lor\ \chi=1.
++}
++\]
++The arithmetic prime $p$ is independent of the coefficient prime. For
++the two integral $\Z_2$-valued characters, the sign character is locally
++trivial exactly at primes congruent to one modulo four. Both distinct
++global characters are locally trivial at five, while the sign character
++is nontrivial on the full local Galois groups at three and two.
++
++The inertia theorem uses actual residue actions. For a valuation subring
++$A$ of an extension field $L/K$, let $D_A$ be its decomposition subgroup
++in $\operatorname{Aut}_K(L)$ and put
++\[
++I_A=\ker\bigl(D_A\longrightarrow\operatorname{Aut}(k_A)\bigr),
++\]
++where $k_A$ is the residue field. If $2$ is a unit in $A$, every member
++of $I_A$ fixes every $y\in L$ with $y^2=-1$. Indeed $y^{-1}=-y$, so
++$y$ belongs to $A$ and is a unit there. An automorphism sends $y$ to
++$y$ or $-y$. Their residues are distinct because $2$ and $y$ are units,
++whereas inertia fixes residues. The second possibility is excluded.
++
++For every prime $p$, Lean constructs a valuation subring
++$A\subseteq\overline{\Q_p}$ containing the integral image of $\Z_p$
++such that the induced map $\Z_p\to A$ is local. For odd $p$, two is
++a unit. The preceding argument applies to every valuation subring
++containing that integral image, and hence every member of
++$\mathcal P_q(B)$ is trivial on its inertia subgroup after actual local
++restriction. The existence theorem supplies a locally dominating choice,
++so this assertion is not vacuous.
++
++This inertia is the actual residue-action kernel inside $D_A$. No equality
++$D_A=G_{\Q_p}$ is established in this block. Nor is ramification at two
++proved: the nontrivial full local character there is a separate result.
++At three the $\Z_2$-valued sign character is nontrivial on the full local
++Galois group but trivial on every inertia subgroup covered by the theorem.
++Thus local triviality and the stated inertia triviality are distinguished
++by checked arithmetic examples.
++
++The local conditions survive coefficient completion by a proved theorem.
++For an $I$-adically separated commutative ring $R$,
++\[
++\operatorname{LocallyTrivial}_K(\chi)
++\quad\Longleftrightarrow\quad
++\operatorname{LocallyTrivial}_K(\chi\bmod I^m)
++\text{ for every }m\ge1.
++\]
++If $-1$ has a square root in $K$, every packet member satisfies the
++condition. Otherwise the condition says that the character is globally
++trivial, and separatedness detects that equality through all reductions.
++This proves the closure statement for the independently defined arithmetic
++property.
++
++Suppose now that $R$ is $I$-adically complete and that every positive
++quotient $R/I^m$ is finite. Let $C_m\subseteq\mathcal P_q(R/I^m)$ be
++allowed subsets preserved by reduction, and let $(p_s)_{s\in S}$ be any
++indexed family of arithmetic primes. The index set $S$ need not be finite.
++Lean proves the simultaneous arithmetic completion criterion
++\[
++\begin{split}
++&\exists\chi\in\mathcal P_q(R),\quad
++ \chi\text{ continuous},\quad
++ \chi\bmod I^m\in C_m\ (m\ge1),\quad
++ \chi_{\Q_{p_s}}=1\ (s\in S)\\
++&\quad\Longleftrightarrow\quad
++ \forall m\ge1,\ \exists\psi\in C_m,\quad
++ \forall s\in S,\ p_s\equiv1\pmod4\ \lor\ \psi=1.
++\end{split}
++\]
++The constructed character also satisfies every odd-prime valuation-inertia
++condition stated above. Finite-branch compactness selects all finite
++characters together; no coherent branch or surjective transition maps
++are assumed. The new local-closure implication is proved, not supplied.
++Every-level occupancy remains a substantive hypothesis. One nonsplit
++selected prime forces the completed global character to be trivial.
++
++For the integral dyadic packet, a single detecting precision is also
++proved: reduction modulo four detects local triviality uniformly in the
++arithmetic prime. Modulo two does not suffice. The sign character is
++nontrivial locally at three, while its reduction modulo two is trivial.
++This is a coefficient-depth failure, distinct from splitting of the
++arithmetic field.
++
++Block 22 finishes this actual local admissibility and completion step for
++the fixed quadratic packet. It does not identify all packets in the
++manuscript's common arithmetic spine, attach Weil--Deligne objects, or
++prove coefficient and Hodge--Tate/period comparisons. The decomposition
++and full local Galois group identification remains a separate inertia
++obligation, and ramification at two is not claimed. The full arithmetic
++ledger remains fifteen checked source claims and five partial claims.
++Universal occupancy and natural finite seed rank remain conjectures.
++
+ \end{document}

@@ -1,0 +1,136 @@
+PaperX.RequiredPacketOccupancy.naturalTrace.{u, v, w} {K : Type u} [Field K] {V : Type v} [AddCommGroup V] [Module K V]
+  {J : Type w} (T : J → Module.End K V) (a : J → K) (indices : List J) : ℕ
+'PaperX.RequiredPacketOccupancy.naturalTrace' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.PositiveTrace.{u, v, w} {K : Type u} [Field K] {V : Type v} [AddCommGroup V] [Module K V]
+  [FiniteDimensional K V] {J : Type w} (T : J → Module.End K V) (a : J → K) (indices : List J) : Prop
+'PaperX.RequiredPacketOccupancy.PositiveTrace' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.naturalTrace_cast.{u, v, w} {K : Type u} [Field K] {V : Type v} [AddCommGroup V]
+  [Module K V] [FiniteDimensional K V] {J : Type w} (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  ↑(PaperX.RequiredPacketOccupancy.naturalTrace T a indices) =
+    (LinearMap.trace K V) (PaperX.JointOccupancy.joint T a indices)
+'PaperX.RequiredPacketOccupancy.naturalTrace_cast' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.naturalTrace_eq_of_cast.{u, v, w} {K : Type u} [Field K] {V : Type v} [AddCommGroup V]
+  [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J)
+  (n : ℕ) (hn : ↑n = (LinearMap.trace K V) (PaperX.JointOccupancy.joint T a indices)) :
+  n = PaperX.RequiredPacketOccupancy.naturalTrace T a indices
+'PaperX.RequiredPacketOccupancy.naturalTrace_eq_of_cast' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.exists_unique_trace_integer.{u, v, w} {K : Type u} [Field K] {V : Type v}
+  [AddCommGroup V] [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  ∃! n, ↑n = (LinearMap.trace K V) (PaperX.JointOccupancy.joint T a indices)
+'PaperX.RequiredPacketOccupancy.exists_unique_trace_integer' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.naturalTrace_pos_iff_occupied.{u, v, w} {K : Type u} [Field K] {V : Type v}
+  [AddCommGroup V] [Module K V] [FiniteDimensional K V] {J : Type w} (T : J → Module.End K V) (a : J → K)
+  (indices : List J) :
+  0 < PaperX.RequiredPacketOccupancy.naturalTrace T a indices ↔ PaperX.JointOccupancy.Occupied T a indices
+'PaperX.RequiredPacketOccupancy.naturalTrace_pos_iff_occupied' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.naturalTrace_eq_zero_iff_not_occupied.{u, v, w} {K : Type u} [Field K] {V : Type v}
+  [AddCommGroup V] [Module K V] [FiniteDimensional K V] {J : Type w} (T : J → Module.End K V) (a : J → K)
+  (indices : List J) :
+  PaperX.RequiredPacketOccupancy.naturalTrace T a indices = 0 ↔ ¬PaperX.JointOccupancy.Occupied T a indices
+'PaperX.RequiredPacketOccupancy.naturalTrace_eq_zero_iff_not_occupied' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.naturalTrace_pos_iff_fieldTrace_ne_zero.{u, v, w} {K : Type u} [Field K] {V : Type v}
+  [AddCommGroup V] [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  0 < PaperX.RequiredPacketOccupancy.naturalTrace T a indices ↔
+    (LinearMap.trace K V) (PaperX.JointOccupancy.joint T a indices) ≠ 0
+'PaperX.RequiredPacketOccupancy.naturalTrace_pos_iff_fieldTrace_ne_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.naturalTrace_eq_zero_iff_fieldTrace_eq_zero.{u, v, w} {K : Type u} [Field K] {V : Type v}
+  [AddCommGroup V] [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  PaperX.RequiredPacketOccupancy.naturalTrace T a indices = 0 ↔
+    (LinearMap.trace K V) (PaperX.JointOccupancy.joint T a indices) = 0
+'PaperX.RequiredPacketOccupancy.naturalTrace_eq_zero_iff_fieldTrace_eq_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.positiveTrace_iff_rank_pos.{u, v, w} {K : Type u} [Field K] {V : Type v} [AddCommGroup V]
+  [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  PaperX.RequiredPacketOccupancy.PositiveTrace T a indices ↔
+    0 < Module.finrank K ↥(PaperX.JointOccupancy.jointSpace T a indices)
+'PaperX.RequiredPacketOccupancy.positiveTrace_iff_rank_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.occupied_iff_positiveTrace.{u, v, w} {K : Type u} [Field K] {V : Type v} [AddCommGroup V]
+  [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  PaperX.JointOccupancy.Occupied T a indices ↔ PaperX.RequiredPacketOccupancy.PositiveTrace T a indices
+'PaperX.RequiredPacketOccupancy.occupied_iff_positiveTrace' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.positiveTrace_iff_fieldTrace_ne_zero.{u, v, w} {K : Type u} [Field K] {V : Type v}
+  [AddCommGroup V] [Module K V] [FiniteDimensional K V] {J : Type w} [CharZero K] (T : J → Module.End K V) (a : J → K)
+  (hs : ∀ (j : J), PaperX.SpectralProjectors.Split (T j)) (hc : ∀ (i j : J), Commute (T i) (T j)) (indices : List J) :
+  PaperX.RequiredPacketOccupancy.PositiveTrace T a indices ↔
+    (LinearMap.trace K V) (PaperX.JointOccupancy.joint T a indices) ≠ 0
+'PaperX.RequiredPacketOccupancy.positiveTrace_iff_fieldTrace_ne_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.all_packets_iff_witnesses.{u, v, w, x} {P : Type x} (K : P → Type u) (V : P → Type v)
+  (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)] [(p : P) → Module (K p) (V p)]
+  (T : (p : P) → J p → Module.End (K p) (V p)) (a : (p : P) → J p → K p) (indices : (p : P) → List (J p)) :
+  (∀ (p : P), PaperX.JointOccupancy.Occupied (T p) (a p) (indices p)) ↔
+    ∃ x, ∀ (p : P), x p ≠ 0 ∧ ∀ i ∈ indices p, (T p i) (x p) = a p i • x p
+'PaperX.RequiredPacketOccupancy.all_packets_iff_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.all_positive_iff_occupied.{u, v, w, x} {P : Type x} (K : P → Type u) (V : P → Type v)
+  (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)] [(p : P) → Module (K p) (V p)]
+  [∀ (p : P), FiniteDimensional (K p) (V p)] (T : (p : P) → J p → Module.End (K p) (V p)) (a : (p : P) → J p → K p)
+  (indices : (p : P) → List (J p)) :
+  (∀ (p : P), 0 < PaperX.RequiredPacketOccupancy.naturalTrace (T p) (a p) (indices p)) ↔
+    ∀ (p : P), PaperX.JointOccupancy.Occupied (T p) (a p) (indices p)
+'PaperX.RequiredPacketOccupancy.all_positive_iff_occupied' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.all_positive_iff_witnesses.{u, v, w, x} {P : Type x} (K : P → Type u) (V : P → Type v)
+  (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)] [(p : P) → Module (K p) (V p)]
+  [∀ (p : P), FiniteDimensional (K p) (V p)] (T : (p : P) → J p → Module.End (K p) (V p)) (a : (p : P) → J p → K p)
+  (indices : (p : P) → List (J p)) :
+  (∀ (p : P), 0 < PaperX.RequiredPacketOccupancy.naturalTrace (T p) (a p) (indices p)) ↔
+    ∃ x, ∀ (p : P), x p ≠ 0 ∧ ∀ i ∈ indices p, (T p i) (x p) = a p i • x p
+'PaperX.RequiredPacketOccupancy.all_positive_iff_witnesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.RequiredPacketOccupancy.all_positive_iff_fieldTrace_ne_zero.{u, v, w, x} {P : Type x} (K : P → Type u)
+  (V : P → Type v) (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)]
+  [(p : P) → Module (K p) (V p)] [∀ (p : P), FiniteDimensional (K p) (V p)] (T : (p : P) → J p → Module.End (K p) (V p))
+  (a : (p : P) → J p → K p) (indices : (p : P) → List (J p)) [∀ (p : P), CharZero (K p)]
+  (hs : ∀ (p : P) (j : J p), PaperX.SpectralProjectors.Split (T p j))
+  (hc : ∀ (p : P) (i j : J p), Commute (T p i) (T p j)) :
+  (∀ (p : P), 0 < PaperX.RequiredPacketOccupancy.naturalTrace (T p) (a p) (indices p)) ↔
+    ∀ (p : P), (LinearMap.trace (K p) (V p)) (PaperX.JointOccupancy.joint (T p) (a p) (indices p)) ≠ 0
+'PaperX.RequiredPacketOccupancy.all_positive_iff_fieldTrace_ne_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.all_fieldTrace_ne_zero_iff_witnesses.{u, v, w, x} {P : Type x} (K : P → Type u)
+  (V : P → Type v) (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)]
+  [(p : P) → Module (K p) (V p)] [∀ (p : P), FiniteDimensional (K p) (V p)] (T : (p : P) → J p → Module.End (K p) (V p))
+  (a : (p : P) → J p → K p) (indices : (p : P) → List (J p)) [∀ (p : P), CharZero (K p)]
+  (hs : ∀ (p : P) (j : J p), PaperX.SpectralProjectors.Split (T p j))
+  (hc : ∀ (p : P) (i j : J p), Commute (T p i) (T p j)) :
+  (∀ (p : P), (LinearMap.trace (K p) (V p)) (PaperX.JointOccupancy.joint (T p) (a p) (indices p)) ≠ 0) ↔
+    ∃ x, ∀ (p : P), x p ≠ 0 ∧ ∀ i ∈ indices p, (T p i) (x p) = a p i • x p
+'PaperX.RequiredPacketOccupancy.all_fieldTrace_ne_zero_iff_witnesses' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.all_positiveTrace_iff_occupied.{u, v, w, x} {P : Type x} (K : P → Type u)
+  (V : P → Type v) (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)]
+  [(p : P) → Module (K p) (V p)] [∀ (p : P), FiniteDimensional (K p) (V p)] (T : (p : P) → J p → Module.End (K p) (V p))
+  (a : (p : P) → J p → K p) (indices : (p : P) → List (J p)) [∀ (p : P), CharZero (K p)]
+  (hs : ∀ (p : P) (j : J p), PaperX.SpectralProjectors.Split (T p j))
+  (hc : ∀ (p : P) (i j : J p), Commute (T p i) (T p j)) :
+  (∀ (p : P), PaperX.RequiredPacketOccupancy.PositiveTrace (T p) (a p) (indices p)) ↔
+    ∀ (p : P), PaperX.JointOccupancy.Occupied (T p) (a p) (indices p)
+'PaperX.RequiredPacketOccupancy.all_positiveTrace_iff_occupied' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.RequiredPacketOccupancy.all_positiveTrace_iff_witnesses.{u, v, w, x} {P : Type x} (K : P → Type u)
+  (V : P → Type v) (J : P → Type w) [(p : P) → Field (K p)] [(p : P) → AddCommGroup (V p)]
+  [(p : P) → Module (K p) (V p)] [∀ (p : P), FiniteDimensional (K p) (V p)] (T : (p : P) → J p → Module.End (K p) (V p))
+  (a : (p : P) → J p → K p) (indices : (p : P) → List (J p)) [∀ (p : P), CharZero (K p)]
+  (hs : ∀ (p : P) (j : J p), PaperX.SpectralProjectors.Split (T p j))
+  (hc : ∀ (p : P) (i j : J p), Commute (T p i) (T p j)) :
+  (∀ (p : P), PaperX.RequiredPacketOccupancy.PositiveTrace (T p) (a p) (indices p)) ↔
+    ∃ x, ∀ (p : P), x p ≠ 0 ∧ ∀ i ∈ indices p, (T p i) (x p) = a p i • x p
+'PaperX.RequiredPacketOccupancy.all_positiveTrace_iff_witnesses' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

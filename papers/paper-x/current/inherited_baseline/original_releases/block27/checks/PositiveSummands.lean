@@ -1,0 +1,4 @@
+import PaperX.FiniteCarrierSummands
+import PaperX.SummandExamples
+#check PaperX.FiniteCarrierSummands.exists_lifted_summand
+example := PaperX.SummandExamples.actual_two_adic_projector_lift

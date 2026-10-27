@@ -1,0 +1,370 @@
+import PaperX.ClassBranchLifting
+import PaperX.ClassCompletion
+import PaperX.FiniteFiberBranches
+import PaperX.InverseLimitLocalConditions
+
+/-!
+Paper X: horizontal transport completion block.
+
+This formalizes the finite-depth content of an admissible residual transport:
+a map on representation classes at every precision, preservation of the selected
+admissible conditions, and naturality with respect to coefficient reduction.
+
+The main theorem proves that such a transport sends a completed source branch
+to a compatible target branch and, over an adically complete coefficient ring
+with finite coefficient quotients, reconstructs an actual target
+representation realizing that transported branch.  No arithmetic transport is
+asserted unless supplied through the `allowed` predicates and the transport
+fields below.
+-/
+set_option autoImplicit false
+
+namespace PaperX.HorizontalTransportCompletion
+
+open PaperX.Compactness
+open PaperX.FiniteFiberBranches
+open PaperX.RepresentationLimits
+open PaperX.RepresentationClasses
+open PaperX.ClassCompletion
+open PaperX.ClassBranchLifting
+open PaperX.InverseLimitLocalConditions
+
+variable {R G ι : Type} [CommRing R] [Group G]
+  [Fintype ι] [DecidableEq ι]
+variable (I : Ideal R)
+
+/-- Finite-depth form of an admissible residual transport.  It acts on actual
+change-of-basis classes, carries every selected source condition to the target
+condition, and commutes with reduction between arbitrary precisions. -/
+structure AdmissibleClassTransport
+    (C D : ClassConditions (G := G) (ι := ι) I) where
+  map : (k : ℕ) → ClassRep (R ⧸ I ^ k) G ι → ClassRep (R ⧸ I ^ k) G ι
+  allowed : ∀ k c, C.allowed k c → D.allowed k (map k c)
+  reduction : ∀ {j k : ℕ} (h : j ≤ k) c,
+    transitionClass I h (map k c) = map j (transitionClass I h c)
+
+/-- The inverse system of admissible representation classes for one selected
+condition family. -/
+def conditionTower (C : ClassConditions (G := G) (ι := ι) I) : Tower where
+  Level k := {c : ClassRep (R ⧸ I ^ k) G ι // C.allowed k c}
+  parent k c :=
+    ⟨transitionClass I (Nat.le_succ k) c.val,
+      C.downward (Nat.le_succ k) c.val c.property⟩
+
+/-- An admissible transport is literally a map of the corresponding inverse
+towers. -/
+def AdmissibleClassTransport.asTowerMap
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D) :
+    TowerMap (conditionTower I C) (conditionTower I D) where
+  map k c := ⟨T.map k c.val, T.allowed k c.val c.property⟩
+  parent_commutes k c := by
+    apply Subtype.ext
+    exact (T.reduction (Nat.le_succ k) c.val).symm
+
+/-- Identity is an admissible transport. -/
+def AdmissibleClassTransport.id
+    (C : ClassConditions (G := G) (ι := ι) I) :
+    AdmissibleClassTransport I C C where
+  map := fun _ c => c
+  allowed := fun _ _ h => h
+  reduction := by
+    intro j k h c
+    rfl
+
+/-- Admissible transports compose without losing reduction naturality. -/
+def AdmissibleClassTransport.comp
+    {C D E : ClassConditions (G := G) (ι := ι) I}
+    (U : AdmissibleClassTransport I D E)
+    (T : AdmissibleClassTransport I C D) :
+    AdmissibleClassTransport I C E where
+  map := fun k c => U.map k (T.map k c)
+  allowed := fun k c hc => U.allowed k (T.map k c) (T.allowed k c hc)
+  reduction := by
+    intro j k h c
+    calc
+      transitionClass I h (U.map k (T.map k c))
+          = U.map j (transitionClass I h (T.map k c)) :=
+            U.reduction h (T.map k c)
+      _ = U.map j (T.map j (transitionClass I h c)) :=
+            congrArg (U.map j) (T.reduction h c)
+
+/-- A completed integral representation determines its exact admissible class
+branch. -/
+def realizationBranch
+    (C : ClassConditions (G := G) (ι := ι) I)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) :
+    Branch (conditionTower I C) where
+  value k := ⟨classOf (reduce I ρ k), hρ k⟩
+  compatible k := by
+    apply Subtype.ext
+    simp [conditionTower]
+
+/-- Transport an entire compatible branch, not merely one residual root. -/
+def transportBranch
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D)
+    (b : Branch (conditionTower I C)) : Branch (conditionTower I D) :=
+  mapBranch (T.asTowerMap I) b
+
+@[simp] theorem transportBranch_value
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D)
+    (b : Branch (conditionTower I C)) (k : ℕ) :
+    (transportBranch I T b).value k =
+      ⟨T.map k (b.value k).val, T.allowed k (b.value k).val (b.value k).property⟩ :=
+  rfl
+
+/-- Forget the admissibility witness while retaining the compatible class
+branch. -/
+def forgetConditionTower
+    (C : ClassConditions (G := G) (ι := ι) I) :
+    TowerMap (conditionTower I C) (classTower (G := G) (ι := ι) I) where
+  map := fun _ c => c.val
+  parent_commutes := by
+    intro k c
+    rfl
+
+/-- The transported admissible branch viewed as an ordinary branch of
+representation classes. -/
+def transportedClassBranch
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) :
+    Branch (classTower (G := G) (ι := ι) I) :=
+  mapBranch (forgetConditionTower I D)
+    (transportBranch I T (realizationBranch I C ρ hρ))
+
+@[simp] theorem transportedClassBranch_value
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) (k : ℕ) :
+    (transportedClassBranch I T ρ hρ).value k =
+      T.map k (classOf (reduce I ρ k)) :=
+  rfl
+
+/-- Horizontal transport plus vertical completeness reconstructs an actual
+integral target realization.  The conclusion remembers the exact transported
+class at every finite precision; it is stronger than target nonemptiness. -/
+theorem exists_transported_realization [IsAdicComplete I R]
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (finiteR : ∀ k, Finite (R ⧸ I ^ k))
+    (T : AdmissibleClassTransport I C D)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) :
+    ∃ σ : MatrixRep R G ι,
+      (∀ k, D.allowed k (classOf (reduce I σ k))) ∧
+      ∀ k, classOf (reduce I σ k) = T.map k (classOf (reduce I ρ k)) := by
+  let b := transportedClassBranch I T ρ hρ
+  obtain ⟨σ, hσ⟩ := realization_of_class_branch I finiteR b
+  refine ⟨σ, ?_, ?_⟩
+  · intro k
+    rw [hσ k]
+    exact ((transportBranch I T (realizationBranch I C ρ hρ)).value k).property
+  · intro k
+    exact hσ k
+
+variable [TopologicalSpace G]
+
+/-- If every finite representative of an allowed target class is continuous,
+the transported realization can be chosen adically continuous as well. -/
+theorem exists_continuous_transported_realization [IsAdicComplete I R]
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (finiteR : ∀ k, Finite (R ⧸ I ^ k))
+    (T : AdmissibleClassTransport I C D)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k)))
+    (continuous : ∀ k (τ : MatrixRep (R ⧸ I ^ k) G ι),
+      D.allowed k (classOf τ) → PaperX.RepresentationTopology.FiniteRepContinuous τ) :
+    ∃ σ : MatrixRep R G ι,
+      (∀ k, D.allowed k (classOf (reduce I σ k))) ∧
+      PaperX.RepresentationTopology.AdicRepContinuous I σ ∧
+      ∀ k, classOf (reduce I σ k) = T.map k (classOf (reduce I ρ k)) := by
+  let b := transportedClassBranch I T ρ hρ
+  obtain ⟨σ, hσ, hc⟩ := continuous_realization_of_class_branch I finiteR b
+    (fun k τ hτ => continuous k τ (by
+      rw [hτ]
+      exact ((transportBranch I T (realizationBranch I C ρ hρ)).value k).property))
+  refine ⟨σ, ?_, hc, ?_⟩
+  · intro k
+    rw [hσ k]
+    exact ((transportBranch I T (realizationBranch I C ρ hρ)).value k).property
+  · intro k
+    exact hσ k
+
+end PaperX.HorizontalTransportCompletion
+
+namespace PaperX.HorizontalTransportCompletion
+
+open PaperX.InverseLimitLocalConditions
+
+open PaperX.RepresentationLimits
+open PaperX.RepresentationClasses
+open PaperX.ClassCompletion
+
+variable {R G ι : Type} [CommRing R] [Group G]
+  [Fintype ι] [DecidableEq ι]
+variable (I : Ideal R)
+
+/-- Exact relation between complete realizations induced by a finite-depth
+horizontal transport.  It records the whole compatible system of transported
+classes, not only the residual class. -/
+def TransportedAlong
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D)
+    (ρ σ : MatrixRep R G ι) : Prop :=
+  ∀ k, classOf (reduce I σ k) = T.map k (classOf (reduce I ρ k))
+
+
+/-- If the target complete property is known to be inverse-limit closed for the
+selected target finite-level conditions, the transported reconstruction satisfies
+that property automatically.  This is the literal closure hypothesis appearing
+in Claim 11.1; no separate complete-level transport axiom is needed. -/
+theorem exists_transported_realization_of_inverseLimitClosed [IsAdicComplete I R]
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (finiteR : ∀ k, Finite (R ⧸ I ^ k))
+    (T : AdmissibleClassTransport I C D)
+    (TargetProfile : MatrixRep R G ι → Prop)
+    (closed : InverseLimitClosed I D TargetProfile)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) :
+    ∃ σ : MatrixRep R G ι,
+      (∀ k, D.allowed k (classOf (reduce I σ k))) ∧
+      TransportedAlong I T ρ σ ∧ TargetProfile σ := by
+  obtain ⟨σ, hD, hT⟩ := exists_transported_realization I finiteR T ρ hρ
+  exact ⟨σ, hD, hT,
+    (inverseLimitClosed_iff_realizations I D TargetProfile).mp closed σ hD⟩
+
+/-- Arithmetic semantics are intentionally separated from the class-level
+transport.  A selected complete profile is preserved only when this implication
+is actually supplied/proved for the intended arithmetic realization. -/
+def PreservesCompleteProfile
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (T : AdmissibleClassTransport I C D)
+    (SourceProfile TargetProfile : MatrixRep R G ι → Prop) : Prop :=
+  ∀ ρ σ, TransportedAlong I T ρ σ → SourceProfile ρ → TargetProfile σ
+
+/-- The class transport and an explicit complete-profile preservation theorem
+compose without conflating finite congruence data with arithmetic semantics. -/
+theorem exists_transported_realization_with_profile [IsAdicComplete I R]
+    {C D : ClassConditions (G := G) (ι := ι) I}
+    (finiteR : ∀ k, Finite (R ⧸ I ^ k))
+    (T : AdmissibleClassTransport I C D)
+    (SourceProfile TargetProfile : MatrixRep R G ι → Prop)
+    (preserves : PreservesCompleteProfile I T SourceProfile TargetProfile)
+    (ρ : MatrixRep R G ι)
+    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k)))
+    (hSource : SourceProfile ρ) :
+    ∃ σ : MatrixRep R G ι,
+      (∀ k, D.allowed k (classOf (reduce I σ k))) ∧
+      TransportedAlong I T ρ σ ∧ TargetProfile σ := by
+  obtain ⟨σ, hD, hT⟩ := exists_transported_realization I finiteR T ρ hρ
+  exact ⟨σ, hD, hT, preserves ρ σ hT hSource⟩
+
+section Indexed
+
+variable {Λ : Type}
+variable (O : Λ → Type) [∀ l, CommRing (O l)]
+variable {G ι : Type} [Group G] [Fintype ι] [DecidableEq ι]
+variable (J : (l : Λ) → Ideal (O l))
+
+/-- Coefficient-indexed horizontal completion.  Once one completed source
+member is supplied at each coefficient place, admissible horizontal transports
+produce actual target members at every place with exact finite-depth class
+matching.  This is the system-level algebraic content of the horizontal half of
+Claim 11.1; no Frobenius separation or WD/Hodge--Tate comparison is hidden in
+this statement. -/
+theorem exists_transported_system
+    [∀ l, IsAdicComplete (J l) (O l)]
+    (C D : (l : Λ) → ClassConditions (G := G) (ι := ι) (J l))
+    (finiteO : ∀ l k, Finite (O l ⧸ (J l) ^ k))
+    (T : ∀ l, AdmissibleClassTransport (J l) (C l) (D l))
+    (ρ : (l : Λ) → MatrixRep (O l) G ι)
+    (hρ : ∀ l k, (C l).allowed k (classOf (reduce (J l) (ρ l) k))) :
+    ∃ σ : (l : Λ) → MatrixRep (O l) G ι,
+      (∀ l k, (D l).allowed k (classOf (reduce (J l) (σ l) k))) ∧
+      ∀ l, TransportedAlong (J l) (T l) (ρ l) (σ l) := by
+  classical
+  have H : ∀ l, ∃ σ : MatrixRep (O l) G ι,
+      (∀ k, (D l).allowed k (classOf (reduce (J l) σ k))) ∧
+      TransportedAlong (J l) (T l) (ρ l) σ := by
+    intro l
+    exact exists_transported_realization (J l) (finiteO l) (T l) (ρ l) (hρ l)
+  refine ⟨fun l => Classical.choose (H l), ?_, ?_⟩
+  · intro l k
+    exact (Classical.choose_spec (H l)).1 k
+  · intro l
+    exact (Classical.choose_spec (H l)).2
+
+
+/-- Coefficient-indexed form using exactly the inverse-limit-closure premise of
+Claim 11.1.  Every target member reconstructed from transported finite classes
+inherits the supplied closed local/arithmetic predicate. -/
+theorem exists_transported_system_of_inverseLimitClosed
+    [∀ l, IsAdicComplete (J l) (O l)]
+    (C D : (l : Λ) → ClassConditions (G := G) (ι := ι) (J l))
+    (finiteO : ∀ l k, Finite (O l ⧸ (J l) ^ k))
+    (T : ∀ l, AdmissibleClassTransport (J l) (C l) (D l))
+    (TargetProfile : (l : Λ) → MatrixRep (O l) G ι → Prop)
+    (closed : ∀ l, InverseLimitClosed (J l) (D l) (TargetProfile l))
+    (ρ : (l : Λ) → MatrixRep (O l) G ι)
+    (hρ : ∀ l k, (C l).allowed k (classOf (reduce (J l) (ρ l) k))) :
+    ∃ σ : (l : Λ) → MatrixRep (O l) G ι,
+      (∀ l k, (D l).allowed k (classOf (reduce (J l) (σ l) k))) ∧
+      (∀ l, TransportedAlong (J l) (T l) (ρ l) (σ l)) ∧
+      ∀ l, TargetProfile l (σ l) := by
+  classical
+  have H : ∀ l, ∃ σ : MatrixRep (O l) G ι,
+      (∀ k, (D l).allowed k (classOf (reduce (J l) σ k))) ∧
+      TransportedAlong (J l) (T l) (ρ l) σ ∧ TargetProfile l σ := by
+    intro l
+    exact exists_transported_realization_of_inverseLimitClosed (J l) (finiteO l)
+      (T l) (TargetProfile l) (closed l) (ρ l) (hρ l)
+  refine ⟨fun l => Classical.choose (H l), ?_, ?_, ?_⟩
+  · intro l k
+    exact (Classical.choose_spec (H l)).1 k
+  · intro l
+    exact (Classical.choose_spec (H l)).2.1
+  · intro l
+    exact (Classical.choose_spec (H l)).2.2
+
+/-- Indexed version with an explicit arithmetic/local semantic profile.  The
+only semantic premise is the named preservation implication; the compactness
+and reconstruction layer does not manufacture Hodge--Tate, Weil--Deligne,
+fixed-determinant, or other deformation properties. -/
+theorem exists_transported_system_with_profile
+    [∀ l, IsAdicComplete (J l) (O l)]
+    (C D : (l : Λ) → ClassConditions (G := G) (ι := ι) (J l))
+    (finiteO : ∀ l k, Finite (O l ⧸ (J l) ^ k))
+    (T : ∀ l, AdmissibleClassTransport (J l) (C l) (D l))
+    (SourceProfile TargetProfile : (l : Λ) → MatrixRep (O l) G ι → Prop)
+    (preserves : ∀ l,
+      PreservesCompleteProfile (J l) (T l) (SourceProfile l) (TargetProfile l))
+    (ρ : (l : Λ) → MatrixRep (O l) G ι)
+    (hρ : ∀ l k, (C l).allowed k (classOf (reduce (J l) (ρ l) k)))
+    (hSource : ∀ l, SourceProfile l (ρ l)) :
+    ∃ σ : (l : Λ) → MatrixRep (O l) G ι,
+      (∀ l k, (D l).allowed k (classOf (reduce (J l) (σ l) k))) ∧
+      (∀ l, TransportedAlong (J l) (T l) (ρ l) (σ l)) ∧
+      ∀ l, TargetProfile l (σ l) := by
+  classical
+  have H : ∀ l, ∃ σ : MatrixRep (O l) G ι,
+      (∀ k, (D l).allowed k (classOf (reduce (J l) σ k))) ∧
+      TransportedAlong (J l) (T l) (ρ l) σ ∧ TargetProfile l σ := by
+    intro l
+    exact exists_transported_realization_with_profile (J l) (finiteO l) (T l)
+      (SourceProfile l) (TargetProfile l) (preserves l) (ρ l) (hρ l) (hSource l)
+  refine ⟨fun l => Classical.choose (H l), ?_, ?_, ?_⟩
+  · intro l k
+    exact (Classical.choose_spec (H l)).1 k
+  · intro l
+    exact (Classical.choose_spec (H l)).2.1
+  · intro l
+    exact (Classical.choose_spec (H l)).2.2
+
+end Indexed
+
+end PaperX.HorizontalTransportCompletion

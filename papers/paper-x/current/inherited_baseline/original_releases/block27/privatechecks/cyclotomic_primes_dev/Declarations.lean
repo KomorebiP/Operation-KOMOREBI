@@ -1,0 +1,7 @@
+import PaperX.CyclotomicFrobeniusPrimes
+#check PaperX.CyclotomicFrobeniusPrimes.exists_prime_above_with_frobenius
+#print axioms PaperX.CyclotomicFrobeniusPrimes.exists_prime_above_with_frobenius
+#check PaperX.CyclotomicFrobeniusPrimes.permitted_prime_has_frobenius_witness
+#print axioms PaperX.CyclotomicFrobeniusPrimes.permitted_prime_has_frobenius_witness
+#check PaperX.CyclotomicFrobeniusPrimes.exists_arithmetic_frobenius_prime
+#print axioms PaperX.CyclotomicFrobeniusPrimes.exists_arithmetic_frobenius_prime

@@ -1,0 +1,41 @@
+@weightedFiberCount : {E : Type u_1} →
+  [inst : NormedAddCommGroup E] →
+    [InnerProductSpace ℝ E] → (L₀ L : Submodule ℤ E) → [Fintype (Residues L₀ L)] → Set E → (Residues L₀ L → ℂ) → ℝ → ℂ
+@exists_fiber_discrepancy_bound : ∀ {E : Type u_1} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]
+  (L₀ L : Submodule ℤ E) [inst_2 : FiniteDimensional ℝ E] [inst_3 : MeasurableSpace E] [inst_4 : BorelSpace E]
+  [inst_5 : DiscreteTopology ↥L₀] [inst_6 : IsZLattice ℝ L₀] [inst_7 : DiscreteTopology ↥L] [IsZLattice ℝ L],
+  L₀ ≤ L →
+    ∀ {ι : Type u_2} [inst_9 : Fintype ι] (b : Basis ι ℤ ↥L₀) {D : Set E},
+      MeasurableSet D →
+        Bornology.IsBounded D →
+          ∀
+            (A :
+              PaperX.LatticeCounting.LipschitzBoundaryAtlas ι
+                (⇑(PaperX.LatticeCountingTransport.coordinates L₀ b) '' D)),
+            ∃ C,
+              0 ≤ C ∧
+                ∀ (c : Residues L₀ L) (t : ℝ),
+                  1 ≤ t →
+                    |↑(fiberCount L₀ L D c t) -
+                          t ^ Fintype.card ι *
+                            (volume.real D / ZLattice.covolume L volume / ↑(Nat.card (Residues L₀ L)))| ≤
+                      C * (t ^ (Fintype.card ι - 1) + 1)
+[diag] Diagnostics
+  [reduction] unfolded reducible declarations (max: 36, num: 1):
+    [reduction] semiOutParam ↦ 36
+  use `set_option diagnostics.threshold <num>` to control threshold for reporting counters
+∃ C,
+  0 ≤ C ∧
+    ∀ (w : Residues L₀ L → ℂ) (t : ℝ),
+      1 ≤ t →
+        ‖weightedFiberCount L₀ L D w t -
+              ↑(t ^ Fintype.card ι * (volume.real D / ZLattice.covolume L volume / ↑(Nat.card (Residues L₀ L)))) *
+                ∑ c, w c‖ ≤
+          (∑ c, ‖w c‖) * C * (t ^ (Fintype.card ι - 1) + 1) : Prop
+[diag] Diagnostics
+  [reduction] unfolded reducible declarations (max: 110, num: 4):
+    [reduction] outParam ↦ 110
+    [reduction] semiOutParam ↦ 36
+    [reduction] Residues ↦ 36
+    [reduction] FiniteDimensional ↦ 34
+  use `set_option diagnostics.threshold <num>` to control threshold for reporting counters

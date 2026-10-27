@@ -1,0 +1,13 @@
+# Block 27 development record
+
+The block extends actual finite-number-field attachment and isolates general prime coverage. It does not supply a proof of general Chebotarev coverage.
+
+Completed routes: integral prime contraction; decomposition/inertia/residue restriction; ramification-index and discriminant control; absolute witness conjugacy modulo inertia; factored trace independence; chosen-versus-canonical embedding comparison; actual open-normal fixed fields and a conditional arithmetic coverage equivalence.
+
+Compiler repairs are preserved in `privatechecks/`: a scalar-action power lemma was initially used where a multiplicative action lemma was required; the proof was repaired with `smul_pow'`. An ideal/additive-subgroup membership coercion was made explicit. The final finite conjugacy wrapper also failed because the homomorphism simplifier did not normalize the definitionally equal absolute-Galois group aliases; binding the restriction with the explicit GQ domain fixed it. An empty log was initially read before that process had ended, and the premature pass report was corrected. Independent review preserved the failed run and repeated the corrected source check. These were elaboration failures, not counterexamples to the final theorem statements. Other per-module development logs are retained. No unresolved placeholder is admitted in production.
+
+Source-scope audit also confirmed that Claim 9.1 is not restricted to rational arithmetic base: its principal Galois example uses G_{F,S}. Current scope notes therefore distinguish the rational-base coverage interface from the additional attachment/coverage or transfer needed over general F.
+
+The attempt does not complete full Claim 9.1. The failure to close it is specific: no argument here produces primes in every prescribed conjugacy class of an arbitrary finite Galois number field. The new equivalence records that obligation exactly and cannot replace it.
+
+**Release verification passed.** All 178 production modules passed the clean build. The 2,064 named declarations passed the transitive axiom audit using only Classical.choice, Quot.sound and propext. The block adds 59 theorem/lemma declarations and 16 other named declarations; the cumulative theorem/lemma count is 1,455. All 12 positive controls passed, and 25 false claims plus the placeholder were rejected as intended. All 170 predecessor source and rebuilt proof-object hashes match Block 26. Fresh archive replay reproduced all 8 new proof objects and the retained Block 22 exact regression. Independent exact-source review of all new modules and manuscript review passed.

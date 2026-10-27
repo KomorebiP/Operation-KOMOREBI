@@ -1,0 +1,43 @@
+--- independently-reviewed-core
++++ final-core
+@@ -27,6 +27,7 @@
+ structure Spine where
+   sample : V → G
+   good : Λ → V → Prop
++  good_cofinite : ∀ l, {v | ¬ good l v}.Finite
+   polynomial : V → Polynomial E
+   determinant : (l : Λ) → G → K l
+   Weight : Type
+@@ -53,6 +54,32 @@
+     (S.polynomial v).map (emb l)) ∧
+   (∀ l g, (ρ l g).det = S.determinant l g) ∧
+   ∀ l, LocalRealizes S l (ρ l)
++
++/-- The good-place metadata in the chosen spine gives an actual almost-everywhere
++common polynomial statement at every coefficient place. -/
++theorem realizes_almost_everywhere
++    (S : Spine (G := G) (ι := ι) (V := V) (E := E) K)
++    (emb : (l : Λ) → E →+* K l) (ρ : (l : Λ) → MatrixRep (K l) G ι)
++    (h : RealizesSpine S emb ρ) (l : Λ) :
++    ∀ᶠ v in Filter.cofinite,
++      (ρ l (S.sample v)).charpoly = (S.polynomial v).map (emb l) := by
++  have hg : ∀ᶠ v in Filter.cofinite, S.good l v :=
++    Filter.mem_cofinite.mpr (S.good_cofinite l)
++  exact hg.mono (fun v hv => h.1 l v hv)
++
++/-- An integral realization supplies the actual branch promised in the source,
++including its allowed objects and exact successive reductions. -/
++def reductionBranch {R : Type} [CommRing R] (I : Ideal R)
++    (C : ClassConditions (G := G) (ι := ι) I) (ρ : MatrixRep R G ι)
++    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) :
++    PaperX.Compactness.Branch (PaperX.RepresentationForests.tower I (framed I C)) where
++  value k := ⟨reduce I ρ k, hρ k⟩
++  compatible k := Subtype.ext (transition_reduce I ρ (Nat.le_succ k))
++
++@[simp] theorem reductionBranch_value {R : Type} [CommRing R] (I : Ideal R)
++    (C : ClassConditions (G := G) (ι := ι) I) (ρ : MatrixRep R G ι)
++    (hρ : ∀ k, C.allowed k (classOf (reduce I ρ k))) (k : ℕ) :
++    ((reductionBranch I C ρ hρ).value k).val = reduce I ρ k := rfl
+ 
+ variable [TopologicalSpace G] [∀ l, TopologicalSpace (K l)]
+ 

@@ -1,0 +1,11 @@
+import PaperX.IdealCharacterMellinPole
+#print axioms PaperX.IdealClassCharacter.classCount_eq_floor
+#print axioms PaperX.IdealClassCharacter.measurable_classCount
+#print axioms PaperX.IdealClassCharacter.measurable_weightedSum
+#print axioms PaperX.IdealClassCharacter.classMellin
+#print axioms PaperX.IdealClassCharacter.integrable_weightedSum_logMoment
+#print axioms PaperX.IdealClassCharacter.classMellin_sub_isBigO
+#print axioms PaperX.IdealClassCharacter.classMellin_sub_norm_le
+#print axioms PaperX.IdealClassCharacter.integrable_character_logMoment
+#print axioms PaperX.IdealClassCharacter.characterMellin_sub_isBigO
+#print axioms PaperX.IdealClassCharacter.classCharacter_pole_criterion

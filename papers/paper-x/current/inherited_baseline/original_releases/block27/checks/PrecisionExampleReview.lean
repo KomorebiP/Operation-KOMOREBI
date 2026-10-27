@@ -1,0 +1,59 @@
+import PaperX.PrecisionExamples
+import PaperX.PrecisionBoundary
+set_option pp.universes true
+#check @PaperX.PrecisionExamples.quotient_eq_iff
+#print axioms PaperX.PrecisionExamples.quotient_eq_iff
+#check @PaperX.PrecisionExamples.quotient_matrices_eq_iff
+#print axioms PaperX.PrecisionExamples.quotient_matrices_eq_iff
+#check @PaperX.PrecisionExamples.group_order_nonzero
+#print axioms PaperX.PrecisionExamples.group_order_nonzero
+#check @PaperX.PrecisionExamples.group_order_not_unit
+#print axioms PaperX.PrecisionExamples.group_order_not_unit
+#check @PaperX.PrecisionExamples.group_order_divides_two
+#print axioms PaperX.PrecisionExamples.group_order_divides_two
+#check @PaperX.PrecisionExamples.initial_lift_intertwines_mod_four
+#print axioms PaperX.PrecisionExamples.initial_lift_intertwines_mod_four
+#check @PaperX.PrecisionExamples.initial_lift_intertwines_quotient
+#print axioms PaperX.PrecisionExamples.initial_lift_intertwines_quotient
+#check @PaperX.PrecisionExamples.initial_lift_not_intertwiner
+#print axioms PaperX.PrecisionExamples.initial_lift_not_intertwiner
+#check @PaperX.PrecisionExamples.integer_averaging_sum
+#print axioms PaperX.PrecisionExamples.integer_averaging_sum
+#check @PaperX.PrecisionExamples.rational_average_formula
+#print axioms PaperX.PrecisionExamples.rational_average_formula
+#check @PaperX.PrecisionExamples.comparison_intertwines
+#print axioms PaperX.PrecisionExamples.comparison_intertwines
+#check @PaperX.PrecisionExamples.comparison_det
+#print axioms PaperX.PrecisionExamples.comparison_det
+#check @PaperX.PrecisionExamples.comparison_isUnit
+#print axioms PaperX.PrecisionExamples.comparison_isUnit
+#check @PaperX.PrecisionExamples.initial_lift_isUnit
+#print axioms PaperX.PrecisionExamples.initial_lift_isUnit
+#check @PaperX.PrecisionExamples.comparison_preserves_mod_two
+#print axioms PaperX.PrecisionExamples.comparison_preserves_mod_two
+#check @PaperX.PrecisionExamples.comparison_changes_mod_four
+#print axioms PaperX.PrecisionExamples.comparison_changes_mod_four
+#check @PaperX.PrecisionExamples.no_exact_intertwiner_preserves_mod_four
+#print axioms PaperX.PrecisionExamples.no_exact_intertwiner_preserves_mod_four
+#check @PaperX.PrecisionExamples.actual_two_adic_precision_lift
+#print axioms PaperX.PrecisionExamples.actual_two_adic_precision_lift
+#check @PaperX.PrecisionExamples.two_adic_isomorphism_detected_mod_four
+#print axioms PaperX.PrecisionExamples.two_adic_isomorphism_detected_mod_four
+#check @PaperX.PrecisionExamples.twoIdeal_eq_maximal
+#print axioms PaperX.PrecisionExamples.twoIdeal_eq_maximal
+#check @PaperX.PrecisionExamples.fixed_finite_type
+#print axioms PaperX.PrecisionExamples.fixed_finite_type
+#check @PaperX.PrecisionExamples.actual_two_adic_precision_completion
+#print axioms PaperX.PrecisionExamples.actual_two_adic_precision_completion
+#check @PaperX.PrecisionBoundary.sign_and_trivial_same_mod_two
+#print axioms PaperX.PrecisionBoundary.sign_and_trivial_same_mod_two
+#check @PaperX.PrecisionBoundary.sign_generator_det
+#print axioms PaperX.PrecisionBoundary.sign_generator_det
+#check @PaperX.PrecisionBoundary.sign_not_integrally_conjugate_trivial
+#print axioms PaperX.PrecisionBoundary.sign_not_integrally_conjugate_trivial
+#check @PaperX.PrecisionBoundary.sign_continuous
+#print axioms PaperX.PrecisionBoundary.sign_continuous
+#check @PaperX.PrecisionBoundary.trivial_continuous
+#print axioms PaperX.PrecisionBoundary.trivial_continuous
+#check @PaperX.PrecisionBoundary.sign_and_trivial_not_conjugate_mod_four
+#print axioms PaperX.PrecisionBoundary.sign_and_trivial_not_conjugate_mod_four

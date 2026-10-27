@@ -1,0 +1,16 @@
+import PaperX.CyclotomicInertiaBridge
+
+#print axioms PaperX.CyclotomicInertiaBridge.residue_injective_on_roots
+#print axioms PaperX.CyclotomicInertiaBridge.root_mem_valuation
+#print axioms PaperX.CyclotomicInertiaBridge.inertia_fixes_roots
+#print axioms PaperX.CyclotomicInertiaBridge.decomposition_maps_roots_to_power
+#print axioms PaperX.CyclotomicInertiaBridge.restriction_eq_one_of_inertia
+#print axioms PaperX.CyclotomicInertiaBridge.order_isUnit_of_coprime
+#print axioms PaperX.CyclotomicInertiaBridge.restriction_eq_one_of_coprime_inertia
+#print axioms PaperX.CyclotomicInertiaBridge.restriction_eq_primePower_of_residue
+#print axioms PaperX.CyclotomicInertiaBridge.restriction_eq_primePower_of_coprime_residue
+#print axioms PaperX.CyclotomicInertiaBridge.pullback_trivial_on_inertia
+#print axioms PaperX.CyclotomicInertiaBridge.pullback_on_arithmeticFrobenius
+#print axioms PaperX.CyclotomicInertiaBridge.pullback_character_on_arithmeticFrobenius
+#print axioms PaperX.CyclotomicInertiaBridge.twoAdic_distinct_roots_same_residue
+#print axioms PaperX.CyclotomicInertiaBridge.twoAdic_order_not_unit

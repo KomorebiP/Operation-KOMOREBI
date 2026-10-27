@@ -1,0 +1,19 @@
+import PaperX.IdealNormCharacterBound
+#print axioms PaperX.IdealNormWeighted.generatorAbsNorm
+#print axioms PaperX.IdealNormWeighted.generatorAbsNorm_cast
+#print axioms PaperX.IdealNormWeighted.BoundedClassIdeals
+#print axioms PaperX.IdealNormWeighted.BoundedPrincipalIdeals
+#print axioms PaperX.IdealNormWeighted.boundedClassIdeals_finite
+#print axioms PaperX.IdealNormWeighted.boundedPrincipalIdeals_finite
+#print axioms PaperX.IdealNormWeighted.boundedGenerators_finite
+#print axioms PaperX.IdealNormWeighted.classPrincipalEquiv
+#print axioms PaperX.IdealNormWeighted.classPrincipalEquiv_absNorm
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum
+#print axioms PaperX.IdealNormWeighted.classNormSum
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum_eq_principal
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum_eq_classNormSum
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum_character
+#print axioms PaperX.IdealNormWeighted.classNormSum_character_eq_div
+#print axioms PaperX.IdealNormWeighted.classNormSum_bound_of_generator_bound
+#print axioms PaperX.IdealNormWeighted.exists_classNormSum_bound_of_generator_bound
+#print axioms PaperX.IdealNormWeighted.classNormSum_isBigO_of_generator_bound

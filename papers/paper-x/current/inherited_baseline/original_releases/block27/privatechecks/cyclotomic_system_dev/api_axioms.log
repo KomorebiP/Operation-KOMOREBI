@@ -1,0 +1,75 @@
+PaperX.CyclotomicSystemSeparation.primeSample_cofiniteQuotientCoverage.{u_1} (n : ℕ) [NeZero n] (L : Type u_1) [Field L]
+  [NumberField L] [IsCyclotomicExtension {n} ℚ L] (forbidden : Finset ℕ) :
+  PaperX.CofiniteConjugacyCoverage.CofiniteQuotientCoverage (PaperX.CyclotomicPrimeCoverage.primeSample n L forbidden)
+PaperX.CyclotomicSystemSeparation.dense_good_prime_samples.{u_1} (n : ℕ) [NeZero n] (L : Type u_1) [Field L]
+  [NumberField L] [IsCyclotomicExtension {n} ℚ L] (good : PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅ → Prop)
+  (hgood : {p | ¬good p}.Finite) :
+  DenseRange fun q => q.2 * PaperX.CyclotomicPrimeCoverage.primeSample n L ∅ ↑q.1 * q.2⁻¹
+PaperX.CyclotomicSystemSeparation.finite_prime_system_separator.{u_1, u_2, u_3, u_4, u_5, u_6} (n : ℕ) [NeZero n]
+  (L : Type u_1) [Field L] [NumberField L] [IsCyclotomicExtension {n} ℚ L] {Λ : Type u_2} {I : Type u_3} {E : Type u_4}
+  [Field E] [Fintype I] [DecidableEq I] {K : Λ → Type u_5} [(l : Λ) → Field (K l)] [∀ (l : Λ), CharZero (K l)]
+  [(l : Λ) → TopologicalSpace (K l)] [∀ (l : Λ), IsTopologicalRing (K l)] [∀ (l : Λ), T2Space (K l)]
+  {W : Λ → I → Type u_6} [(l : Λ) → (i : I) → AddCommGroup (W l i)] [(l : Λ) → (i : I) → Module (K l) (W l i)]
+  [∀ (l : Λ) (i : I), FiniteDimensional (K l) (W l i)] (ρ : (l : Λ) → (i : I) → Representation (K l) Gal(L/ℚ) (W l i))
+  [∀ (l : Λ) (i : I), (ρ l i).IsIrreducible] (emb : (l : Λ) → E →+* K l)
+  (t : I → PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅ → E)
+  (good : Λ → PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅ → Prop) (hgood : ∀ (l : Λ), {p | ¬good l p}.Finite)
+  (compat :
+    ∀ (l : Λ) (i : I) (p : PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅),
+      good l p → (ρ l i).character (PaperX.CyclotomicPrimeCoverage.primeSample n L ∅ p) = (emb l) (t i p))
+  (hne : ∀ (i j : I), PaperX.CompatibleSystemRigidity.MemberwiseEquiv ρ i j → i = j) (l₀ : Λ)
+  (bad : Finset (PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅)) :
+  ∃ v,
+    Function.Injective v ∧
+      (∀ (i : I), good l₀ (v i)) ∧
+        (∀ (i : I), v i ∉ bad) ∧
+          (PaperX.FiniteSeparation.sampleMatrix t v).det ≠ 0 ∧
+            (∀ (l : Λ), ((emb l).mapMatrix (PaperX.FiniteSeparation.sampleMatrix t v)).det ≠ 0) ∧
+              ∀ (l : Λ) (j i : I),
+                good l (v j) →
+                  (emb l).mapMatrix (PaperX.FiniteSeparation.sampleMatrix t v) j i =
+                    (ρ l i).character (PaperX.CyclotomicPrimeCoverage.primeSample n L ∅ (v j))
+PaperX.CyclotomicSystemSeparation.finite_prime_system_separator_avoiding.{u_1, u_2, u_3, u_4, u_5, u_6} (n : ℕ)
+  [NeZero n] (L : Type u_1) [Field L] [NumberField L] [IsCyclotomicExtension {n} ℚ L] {Λ : Type u_2} {I : Type u_3}
+  {E : Type u_4} [Field E] [Fintype I] [DecidableEq I] {K : Λ → Type u_5} [(l : Λ) → Field (K l)]
+  [∀ (l : Λ), CharZero (K l)] [(l : Λ) → TopologicalSpace (K l)] [∀ (l : Λ), IsTopologicalRing (K l)]
+  [∀ (l : Λ), T2Space (K l)] {W : Λ → I → Type u_6} [(l : Λ) → (i : I) → AddCommGroup (W l i)]
+  [(l : Λ) → (i : I) → Module (K l) (W l i)] [∀ (l : Λ) (i : I), FiniteDimensional (K l) (W l i)]
+  (ρ : (l : Λ) → (i : I) → Representation (K l) Gal(L/ℚ) (W l i)) [∀ (l : Λ) (i : I), (ρ l i).IsIrreducible]
+  (emb : (l : Λ) → E →+* K l) (t : I → PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅ → E)
+  (good : Λ → PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅ → Prop) (hgood : ∀ (l : Λ), {p | ¬good l p}.Finite)
+  (compat :
+    ∀ (l : Λ) (i : I) (p : PaperX.CyclotomicPrimeCoverage.PermittedPrime n ∅),
+      good l p → (ρ l i).character (PaperX.CyclotomicPrimeCoverage.primeSample n L ∅ p) = (emb l) (t i p))
+  (hne : ∀ (i j : I), PaperX.CompatibleSystemRigidity.MemberwiseEquiv ρ i j → i = j) (l₀ : Λ) (forbidden : Finset ℕ) :
+  ∃ v,
+    (Function.Injective fun i => ↑(v i)) ∧
+      (∀ (i : I), good l₀ (v i)) ∧
+        (∀ (i : I), ↑(v i) ∉ forbidden) ∧
+          (PaperX.FiniteSeparation.sampleMatrix t v).det ≠ 0 ∧
+            (∀ (l : Λ), ((emb l).mapMatrix (PaperX.FiniteSeparation.sampleMatrix t v)).det ≠ 0) ∧
+              ∀ (l : Λ) (j i : I),
+                good l (v j) →
+                  (emb l).mapMatrix (PaperX.FiniteSeparation.sampleMatrix t v) j i =
+                    (ρ l i).character (PaperX.CyclotomicPrimeCoverage.primeSample n L ∅ (v j))
+PaperX.CyclotomicSystemSeparation.quarticSample (p : PaperX.CyclotomicPrimeCoverage.PermittedPrime 4 ∅) :
+  Gal(CyclotomicField 4 ℚ/ℚ)
+PaperX.CyclotomicSystemSeparation.quartic_cofinite_coverage :
+  PaperX.CofiniteConjugacyCoverage.CofiniteQuotientCoverage PaperX.CyclotomicSystemSeparation.quarticSample
+PaperX.CyclotomicSystemSeparation.exists_large_quartic_sample (σ : Gal(CyclotomicField 4 ℚ/ℚ)) (B : ℕ) :
+  ∃ p, B < ↑p ∧ PaperX.CyclotomicSystemSeparation.quarticSample p = σ
+'PaperX.CyclotomicSystemSeparation.primeSample_cofiniteQuotientCoverage' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PaperX.CyclotomicSystemSeparation.dense_good_prime_samples' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PaperX.CyclotomicSystemSeparation.finite_prime_system_separator' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PaperX.CyclotomicSystemSeparation.finite_prime_system_separator_avoiding' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'PaperX.CyclotomicSystemSeparation.quarticSample' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PaperX.CyclotomicSystemSeparation.quartic_cofinite_coverage' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PaperX.CyclotomicSystemSeparation.exists_large_quartic_sample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

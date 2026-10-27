@@ -1,0 +1,43 @@
+import PaperX.PrecisionAveraging
+import PaperX.OrderPrecision
+import PaperX.PrecisionCompletion
+set_option pp.universes true
+#check @PaperX.PrecisionAveraging.sum_intertwines
+#print axioms PaperX.PrecisionAveraging.sum_intertwines
+#check @PaperX.PrecisionAveraging.correct_intertwiner
+#print axioms PaperX.PrecisionAveraging.correct_intertwiner
+#check @PaperX.PrecisionAveraging.exists_intertwiner_lift
+#print axioms PaperX.PrecisionAveraging.exists_intertwiner_lift
+#check @PaperX.PrecisionAveraging.positive_quotient_local
+#print axioms PaperX.PrecisionAveraging.positive_quotient_local
+#check @PaperX.PrecisionAveraging.exists_isomorphism_lift
+#print axioms PaperX.PrecisionAveraging.exists_isomorphism_lift
+#check @PaperX.PrecisionAveraging.conjugacy_iff_reduction
+#print axioms PaperX.PrecisionAveraging.conjugacy_iff_reduction
+#check @PaperX.OrderPrecision.exists_order_exponent
+#print axioms PaperX.OrderPrecision.exists_order_exponent
+#check @PaperX.OrderPrecision.order_ne_zero
+#print axioms PaperX.OrderPrecision.order_ne_zero
+#check @PaperX.OrderPrecision.uniform_detection_precision
+#print axioms PaperX.OrderPrecision.uniform_detection_precision
+#check @PaperX.OrderPrecision.reduceClass_injective
+#print axioms PaperX.OrderPrecision.reduceClass_injective
+#check @PaperX.OrderPrecision.finite_classes_of_finite_coefficients
+#print axioms PaperX.OrderPrecision.finite_classes_of_finite_coefficients
+#check @PaperX.OrderPrecision.finite_integral_classes
+#print axioms PaperX.OrderPrecision.finite_integral_classes
+#check @PaperX.PrecisionCompletion.integral_type_of_realization
+#print axioms PaperX.PrecisionCompletion.integral_type_of_realization
+#check @PaperX.PrecisionCompletion.finite_group_completion
+#print axioms PaperX.PrecisionCompletion.finite_group_completion
+#check @PaperX.PrecisionCompletion.finite_group_completion_iff
+#print axioms PaperX.PrecisionCompletion.finite_group_completion_iff
+#check @PaperX.PrecisionCompletion.depth_one_certificate_occupancy
+#print axioms PaperX.PrecisionCompletion.depth_one_certificate_occupancy
+#check @PaperX.PrecisionCompletion.continuous_finite_group_completion
+#print axioms PaperX.PrecisionCompletion.continuous_finite_group_completion
+#check @PaperX.PrecisionCompletion.fixed_quotient_completion
+#print axioms PaperX.PrecisionCompletion.fixed_quotient_completion
+#check @PaperX.PrecisionCompletion.continuous_fixed_quotient_completion
+#print axioms PaperX.PrecisionCompletion.continuous_fixed_quotient_completion
+#print PaperX.PrecisionCompletion.FiniteType

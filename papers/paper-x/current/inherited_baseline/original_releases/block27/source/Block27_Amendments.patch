@@ -1,0 +1,107 @@
+diff --git a/source/Projector_Resolved_Seed_Calculus_X_Block26_Amended.tex b/source/Projector_Resolved_Seed_Calculus_X_Block27_Amended.tex
+rename from source/Projector_Resolved_Seed_Calculus_X_Block26_Amended.tex
+rename to source/Projector_Resolved_Seed_Calculus_X_Block27_Amended.tex
+--- a/source/Projector_Resolved_Seed_Calculus_X_Block26_Amended.tex
++++ b/source/Projector_Resolved_Seed_Calculus_X_Block27_Amended.tex
+@@ -118,12 +118,12 @@
+ 
+ \begin{center}
+ \fbox{\begin{minipage}{0.94\linewidth}
+-\textbf{Block 26 formal-verification status.} Seventeen source proof claims are checked at their declared conditional scope and three remain partial. Block 25 proves the system-to-member isomorphism bridge under the required overlap density and proves actual arithmetic Frobenius separation for representations of a fixed cyclotomic Galois group over $\Q$. General arithmetic Frobenius coverage remains unproved here, so Claim 9.1 remains partial. Claim 11.2 is checked as the full-spine existence boundary with a nonzero joint eigenvector in every supplied required packet. The residual, higher-depth, and positive-trace requirements are retained; universal arithmetic occupancy is not proved. Claim 8.2 is checked as a universally quantified conditional completion theorem, retaining its explicit local-closure and finite-level-existence hypotheses. Earlier accounting included verification of particular arithmetic application premises in this claim; those applications remain separate and unfinished. For the fixed quadratic packet of actual $G_{\Q}$ characters, local triviality after the field-induced map from $G_{\Q_p}$ is proved equivalent to $p\equiv1\pmod4$ or global triviality. Its preservation under coefficient completion and simultaneous finite-level existence criterion are proved. The packet characters are trivial on actual valuation inertia at every odd prime, with a locally dominating valuation constructed. The equality of the valuation decomposition group with the entire local Galois group is not established, and ramification at two is not claimed. The full packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
++\textbf{Block 27 formal-verification status.} Seventeen source proof claims are checked at their declared conditional scope and three remain partial. Block 27 proves actual prime and Frobenius restriction to arbitrary finite normal number fields, derives unramifiedness outside the discriminant, and proves independence from Frobenius choices. Its general arithmetic coverage equivalence retains the prime-existence assertion as a premise. Block 25 proves the system-to-member isomorphism bridge under the required overlap density and proves actual arithmetic Frobenius separation for representations of a fixed cyclotomic Galois group over $\Q$. General arithmetic Frobenius coverage remains unproved here, so Claim 9.1 remains partial. Claim 11.2 is checked as the full-spine existence boundary with a nonzero joint eigenvector in every supplied required packet. The residual, higher-depth, and positive-trace requirements are retained; universal arithmetic occupancy is not proved. Claim 8.2 is checked as a universally quantified conditional completion theorem, retaining its explicit local-closure and finite-level-existence hypotheses. Earlier accounting included verification of particular arithmetic application premises in this claim; those applications remain separate and unfinished. For the fixed quadratic packet of actual $G_{\Q}$ characters, local triviality after the field-induced map from $G_{\Q_p}$ is proved equivalent to $p\equiv1\pmod4$ or global triviality. Its preservation under coefficient completion and simultaneous finite-level existence criterion are proved. The packet characters are trivial on actual valuation inertia at every odd prime, with a locally dominating valuation constructed. The equality of the valuation decomposition group with the entire local Galois group is not established, and ramification at two is not claimed. The full packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
+ \end{minipage}}
+ \end{center}
+ 
+ 
+-\paragraph{Cumulative formalization status after Block 26.}
++\paragraph{Cumulative formalization status after Block 27.}
+ The cumulative formal ledger records 17 source proof claims checked at their
+ stated conditional scope, 3 partially formalized, and no untouched proof claims.
+ Claims 8.2 and 11.2 are checked with their stated hypotheses retained.
+@@ -1255,6 +1255,77 @@
+ group. Finally, in $\mathbb Z_2$, the distinct square roots $1$ and $-1$ have
+ the same residue, so the condition that the root order be a unit cannot be
+ discarded.
++
++\paragraph{General finite-field Frobenius comparison (Block 27).}
++Let $L/\Q$ now be any finite normal number field, with a chosen embedding
++$j:L\hookrightarrow\overline{\Q}$. Write $\mathcal A$ for the integral
++closure of $\mathbb Z$ in $\overline{\Q}$. The embedding restricts to an
++injective map $\mathcal O_L\to\mathcal A$ which intertwines the actual
++Galois actions. If $\mathfrak Q\subset\mathcal A$ is maximal above $(p)$,
++its contraction $\mathfrak P\subset\mathcal O_L$ is a nonzero maximal
++ideal above $(p)$, and the induced residue map is injective.
++
++Restriction carries the actual decomposition group at $\mathfrak Q$ into
++that at $\mathfrak P$, carries ideal inertia into ideal inertia, and
++preserves the arithmetic $p$-power residue action. Thus the absolute
++Frobenius constructed in Block 26 gives a simultaneous finite Frobenius
++at the contracted prime. This assertion applies to arbitrary finite normal
++number fields and does not require a cyclotomic generator.
++
++The exceptional primes are controlled by the actual field discriminant:
++\[
++ S_L=\{p\text{ rational prime}:p\mid\operatorname{disc}(L)\}.
++\]
++This set is finite. For $p\notin S_L$, every prime of $\mathcal O_L$
++above $(p)$ is unramified. Lean proves that the actual inertia cardinality
++is the ramification index. It follows that inertia is trivial and the
++arithmetic Frobenius at a fixed finite prime is unique as a field
++automorphism. Neither trivial inertia nor uniqueness is assumed in place
++of the arithmetic unramifiedness condition.
++
++The choice of absolute prime and Frobenius lift is also controlled. Let
++$(\mathfrak Q_u,\gamma_u)$ and $(\mathfrak Q_v,\gamma_v)$ be any two
++actual arithmetic witnesses at the same rational prime. Transitivity on
++primes of $\mathcal A$ above $(p)$ gives $a\in G_{\Q}$ with
++\[
++ \mathfrak Q_v=a\mathfrak Q_u,\qquad
++ \gamma_v^{-1}a\gamma_u a^{-1}\in I_{\mathfrak Q_v}.
++\]
++Consequently, any representation trivial on $I_{\mathfrak Q_v}$ has the
++same trace on the two witnesses. For representations factoring through
++$L$, triviality on this actual absolute inertia is derived whenever
++$p\notin S_L$. The restrictions of all absolute witnesses at such a prime
++therefore form a single conjugacy class. This conclusion requires only
++the indicated finite factorization and the discriminant exclusion.
++
++There is a final compatibility between embeddings. For a normal subfield
++$L\subset\overline{\Q}$, restriction defined through a chosen embedding
++is conjugate to canonical restriction by one fixed automorphism of $L$.
++This identifies their conjugacy classes and lets the arithmetic comparison
++apply directly to the fixed fields of open normal subgroups of $G_{\Q}$.
++Those fixed fields are proved to be finite Galois number fields, with the
++original open normal subgroup as the kernel of restriction.
++
++The remaining prime-existence obligation now has a precise formulation.
++For every finite Galois subfield $L$, every finite set $B$ of rational
++primes, and every $\sigma\in\operatorname{Gal}(L/\Q)$, require a prime
++$p\notin B\cup S_L$ and an actual absolute arithmetic witness $\gamma_p$
++such that
++\[
++ q_L(\gamma_p)\sim\sigma.
++\]
++Lean proves that this assertion is equivalent to the cofinite quotient
++coverage required by the general separator, for any fixed choice of actual
++Frobenius witnesses. The equivalence derives independence from the witness
++choices; it does not supply the displayed prime-existence assertion.
++Arbitrary finite exclusions absorb $S_L$, and the resulting conditional
++density theorem preserves the separate good-prime sets of coefficient
++members. General prime coverage remains unproved, so Claim 9.1 remains
++partial. The source ledger is still seventeen checked and three partial.
++This new arithmetic interface has base $\Q$. For the source's general-base
++instances involving $G_{F,S}$, the analogous actual-prime and norm-power
++Frobenius attachment and coverage over $F$, or a proved transfer to the
++rational-base result, also remain necessary.
+ 
+ \paragraph{Finite deletion can destroy density.}
+ In the actual discrete group $C_2=\{1,a\}$, set $s(0)=a$ and $s(m+1)=1$.
+@@ -1947,7 +2018,7 @@
+ \section*{Current formalization boundary}
+ The smooth formal-model classification, its finite point count, its integral digit streams, and its rational seed zeta identity are now checked in Lean. The actual representing-ring algebra isomorphism remains a supplied hypothesis; neither smoothness nor Galois representability is inferred from numerical counts. All local maps are included in the classification, and locality and actual maximal-ideal-adic continuity are separately proved. Arbitrary choices of parameter representatives do not add phantom maps.
+ 
+-The cumulative ledger contains seventeen checked source proof claims and three partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2 and 11.2 are complete at their conditional source scope, with arithmetic application premises still unproved in general. Claim 11.2 retains every residual level, every higher depth, and every required supplied packet; it does not prove their nonemptiness or positive trace unconditionally. Claims 9.1, 9.2, and 11.1 retain the gaps recorded in the current ledger. Block 25 proves the general system-to-member bridge under overlap density and the full finite cyclotomic arithmetic separation case, with actual unramified Frobenius primes supplied. General absolute-Galois Frobenius coverage remains unfinished. Blocks 21--22 identify one actual quadratic arithmetic packet with its coordinate-ring points and prove its conditional finite-depth completion with actual simultaneous local-triviality conditions. The p-adic criterion is proved at every arithmetic prime. The packet characters are trivial on actual valuation inertia at odd primes; identification of its decomposition group with the full local Galois group remains open here, and ramification at two is not proved. These results do not identify every packet in the common arithmetic spine or attach Hodge--Tate and Weil--Deligne invariants. General nilpotent logarithmic recovery remains checked under its stated sample hypotheses. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and cumulative compiler evidence. No new PDF was typeset.
++The cumulative ledger contains seventeen checked source proof claims and three partial claims, with no untouched proof claims. Block 27 removes the finite-number-field restriction and Frobenius-choice attachment gaps, while general prescribed-conjugacy prime coverage remains unproved. Exact finite occupancy is checked. Claims 8.2 and 11.2 are complete at their conditional source scope, with arithmetic application premises still unproved in general. Claim 11.2 retains every residual level, every higher depth, and every required supplied packet; it does not prove their nonemptiness or positive trace unconditionally. Claims 9.1, 9.2, and 11.1 retain the gaps recorded in the current ledger. Block 25 proves the general system-to-member bridge under overlap density and the full finite cyclotomic arithmetic separation case, with actual unramified Frobenius primes supplied. General absolute-Galois Frobenius coverage remains unfinished. Blocks 21--22 identify one actual quadratic arithmetic packet with its coordinate-ring points and prove its conditional finite-depth completion with actual simultaneous local-triviality conditions. The p-adic criterion is proved at every arithmetic prime. The packet characters are trivial on actual valuation inertia at odd primes; identification of its decomposition group with the full local Galois group remains open here, and ramification at two is not proved. These results do not identify every packet in the common arithmetic spine or attach Hodge--Tate and Weil--Deligne invariants. General nilpotent logarithmic recovery remains checked under its stated sample hypotheses. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and cumulative compiler evidence. No new PDF was typeset.
+ 
+ 
+ \paragraph{Finite-group comparison with precision loss (Block 17).}

@@ -1,0 +1,20 @@
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
+open NumberField IsCyclotomicExtension
+#check AlgHom.ext_of_adjoin_eq_top
+#check RingHom.toIntAlgHom
+#check MulSemiringAction.toRingHom
+#check IsPrimitiveRoot.pow_eq_pow_mod
+#check pow_eq_pow_mod
+#check pow_mod_orderOf
+#check Ideal.Quotient.algebraMap_eq
+#check Ideal.Quotient.algebraMap_injective
+#check frobenius
+#check RingHom.toIntAlgHom_apply
+#check IsPrimitiveRoot.toInteger_isPrimitiveRoot
+#check IsPrimitiveRoot.pow_eq_one
+#check pow_mod
+#check ZMod.val_natCast
+#check Ideal.mem_of_liesOver
+#check Ideal.mem_comap
+#check CharP.of_prime_eq_zero
+#check IsCyclotomicExtension.Rat.adjoin_singleton_eq_top

@@ -1,0 +1,129 @@
+--- Projector_Resolved_Seed_Calculus_X_Block20_Amended.tex
++++ Projector_Resolved_Seed_Calculus_X_Block21_Amended.tex
+@@ -118,12 +118,12 @@
+ 
+ \begin{center}
+ \fbox{\begin{minipage}{0.94\linewidth}
+-\textbf{Block 20 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. Finite logarithmic recovery now applies to every nilpotent operator over a characteristic-zero field, preserving all annihilating exponents and recovering intertwiners and original group actions under the stated sample hypotheses. For supplied finite original inertia images, a common positive power produces the required trivial-original-action sample from an inertia element with trivial norm and nonzero cocycle value. The norm, cocycle and reconstruction data remain supplied. Actual arithmetic attachment, packet identification, and coefficient and Hodge--Tate/period comparisons remain unfinished.
++\textbf{Block 21 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. The fixed quadratic packet of actual $G_{\Q}$ characters defined by the action on a square root of $-1$ is now identified naturally with the points of $R[X]/(X^2-1)$. Its finite-level completion, continuity and dyadic classification are proved, including an actual finite character that fails to lift. This finishes a restricted arithmetic interpretation relevant to Claim 8.2. The general logarithmic recovery results of Block 20 remain checked. The manuscript's full arithmetic packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
+ \end{minipage}}
+ \end{center}
+ 
+ 
+-\paragraph{Eighth-block formalization status.}
++\paragraph{Cumulative formalization status after Block 21.}
+ The cumulative formal ledger records 15 source proof claims checked at their
+ stated scope, 5 partially formalized, and no untouched proof claims. Partial
+ claims 8.2, 9.1, 9.2, 11.1, and 11.2 are not completed arithmetic theorems.
+@@ -1708,7 +1708,7 @@
+ \section*{Current formalization boundary}
+ The smooth formal-model classification, its finite point count, its integral digit streams, and its rational seed zeta identity are now checked in Lean. The actual representing-ring algebra isomorphism remains a supplied hypothesis; neither smoothness nor Galois representability is inferred from numerical counts. All local maps are included in the classification, and locality and actual maximal-ideal-adic continuity are separately proved. Arbitrary choices of parameter representatives do not add phantom maps.
+ 
+-The cumulative ledger contains fifteen checked source proof claims and five partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2, 9.1, 9.2, 11.1 and 11.2 retain the arithmetic gaps recorded in the current ledger. Finite-exponential reconstruction and general nilpotent logarithmic recovery advance the local comparison under the stated sample hypotheses, without proving arithmetic attachment or universal positive occupancy. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and a cumulative build of all project production modules. No new PDF was typeset.
++The cumulative ledger contains fifteen checked source proof claims and five partial claims, with no untouched proof claims. Exact finite occupancy is checked. Claims 8.2, 9.1, 9.2, 11.1 and 11.2 retain the arithmetic gaps recorded in the current ledger. Block 21 identifies one actual quadratic arithmetic packet with its coordinate-ring points and proves its full conditional finite-depth completion, including continuity and reduction compatibility. This does not identify every packet in the common arithmetic spine or attach Hodge--Tate and Weil--Deligne invariants. General nilpotent logarithmic recovery remains checked under its stated sample hypotheses. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and cumulative compiler evidence. No new PDF was typeset.
+ 
+ 
+ \paragraph{Finite-group comparison with precision loss (Block 17).}
+@@ -1985,4 +1985,102 @@
+ Hodge--Tate/period comparisons, or prove arithmetic Frobenius coverage.
+ The full ledger remains fifteen checked claims and five partial claims.
+ 
++
++
++\paragraph{Interpreted quadratic arithmetic completion (Block 21).}
++Fix the continuous quotient
++\[
++q:G_{\Q}\longrightarrow C_2
++\]
++obtained by the action on a chosen square root $i$ of $-1$ in the algebraic
++closure. Its surjectivity and the equivalence
++\[
++q(\sigma)=1\quad\Longleftrightarrow\quad\sigma(i)=i
++\]
++are proved using the existing actual quadratic Galois construction.
++For a commutative ring $B$, define the arithmetic packet
++\[
++\mathcal P_q(B)=
++\{\chi:G_{\Q}\longrightarrow B^\times\mid\ker q\subseteq\ker\chi\},
++\]
++where the maps are group homomorphisms. Unique descent through the actual
++surjective map $q$ is derived, rather than supplied. Every member has finite
++image and is continuous for the coefficient topology, since its descent
++has the finite discrete domain $C_2$.
++
++Let $R$ be any commutative ring and $B$ any commutative $R$-algebra. The
++coordinate ring $A_R=R[X]/(X^2-1)$ represents precisely this specified
++packet:
++\[
++\Hom_{R\text{-alg}}(A_R,B)
++\simeq\{x\in B:x^2=1\}
++\simeq\Hom(C_2,B^\times)
++\simeq\mathcal P_q(B).
++\]
++The first map evaluates the coordinate. Its inverse is the quotient
++universal property. A root is a unit with itself as inverse and determines
++a character by its value on the generator of $C_2$. Finally pull back
++along $q$. All inverse identities and naturality under coefficient
++homomorphisms are proved. In particular, the point reductions and actual
++arithmetic character reductions coincide. There is no invertibility-of-two,
++reducedness or nontriviality hypothesis on $B$. No smoothness or
++\'{e}taleness statement at two is used or asserted.
++
++Let $I\subseteq R$ and suppose that $R$ is $I$-adically complete. Using
++the checked ring-map reconstruction on the quadratic coordinate ring,
++Lean proves
++\[
++\mathcal P_q(R)\simeq\varprojlim_{m\ge0}\mathcal P_q(R/I^m).
++\]
++The zero-precision quotient is included only for the formal indexing.
++The inverse constructs an actual arithmetic character, with exactly the
++prescribed reductions. It is unique, and its continuity is derived from
++its factorization through the same finite quotient.
++
++There is also a completion theorem without chosen compatible characters.
++Suppose that $R/I^m$ is finite for every $m\ge1$, and that
++$C_m\subseteq\mathcal P_q(R/I^m)$ are allowed subsets such that every
++reduction of an allowed member is allowed. Then
++\[
++\begin{split}
++&\exists\chi\in\mathcal P_q(R),\quad
++  \chi\text{ is continuous and }\chi\bmod I^m\in C_m
++  \text{ for all }m\ge1\\
++&\hspace{3em}\Longleftrightarrow\quad
++  C_m\ne\varnothing\text{ for all }m\ge1.
++\end{split}
++\]
++The root interpretation makes the allowed finite levels genuinely finite.
++Finite-branch compactness chooses the compatible roots, and the ring
++reconstruction gives their integral root. Naturality turns this into the
++required arithmetic character. Surjectivity of transitions and individual
++liftability of every finite node are not assumed. The root-level theorem
++needs only the allowed root subsets to be finite.
++
++For $R=\Z_2$, Lean derives finiteness of all positive maximal-ideal
++quotients and applies this completion theorem. Since $\Z_2$ is a domain,
++its only roots of $X^2-1$ are $1$ and $-1$. Thus the integral packet has
++exactly two distinct characters: the trivial character and the sign
++character describing the action on $i$. They have the same reduction
++modulo two and distinct reductions modulo four.
++
++The distinction between finite occupancy and continuation is witnessed
++by an actual finite arithmetic character. The roots modulo eight are
++$1,3,5,7$. The root $3$ defines a member of
++$\mathcal P_q(\Z/8\Z)$, but no member of
++$\mathcal P_q(\Z/16\Z)$ reduces to it. Indeed the only scalar lifts of
++$3$ are $3$ and $11$, and both square to $9$ modulo sixteen. The formal
++proof also classifies all roots modulo sixteen and the reductions with
++children. Consequently a nonempty finite node need not lie on an
++infinite branch, even in this explicitly interpreted arithmetic packet.
++
++Block 21 completes this restricted arithmetic interpretation and its
++conditional completion. The packet is defined by one fixed quotient; it
++is not the collection of all quadratic characters of $G_{\Q}$. No local
++ramification criterion, Hodge--Tate weight, Weil--Deligne attachment, or
++cross-coefficient local invariant is established here. The full
++manuscript still requires its remaining packet identifications and
++arithmetic comparisons. The ledger remains fifteen checked claims and
++five partial claims, and universal positive occupancy remains conjectural.
++
+ \end{document}

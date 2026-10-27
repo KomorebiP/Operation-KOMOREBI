@@ -1,0 +1,40 @@
+import PaperX.FiniteAvoidanceBoundary
+
+#check PaperX.FiniteAvoidanceBoundary.sample
+#print axioms PaperX.FiniteAvoidanceBoundary.sample
+#check PaperX.FiniteAvoidanceBoundary.sample_zero
+#print axioms PaperX.FiniteAvoidanceBoundary.sample_zero
+#check PaperX.FiniteAvoidanceBoundary.sample_succ
+#print axioms PaperX.FiniteAvoidanceBoundary.sample_succ
+#check PaperX.FiniteAvoidanceBoundary.sample_surjective
+#print axioms PaperX.FiniteAvoidanceBoundary.sample_surjective
+#check PaperX.FiniteAvoidanceBoundary.sample_dense
+#print axioms PaperX.FiniteAvoidanceBoundary.sample_dense
+#check PaperX.FiniteAvoidanceBoundary.sample_conjugacy_dense
+#print axioms PaperX.FiniteAvoidanceBoundary.sample_conjugacy_dense
+#check PaperX.FiniteAvoidanceBoundary.sample_quotient_coverage
+#print axioms PaperX.FiniteAvoidanceBoundary.sample_quotient_coverage
+#check PaperX.FiniteAvoidanceBoundary.Remaining
+#print axioms PaperX.FiniteAvoidanceBoundary.Remaining
+#check PaperX.FiniteAvoidanceBoundary.remainingSample
+#print axioms PaperX.FiniteAvoidanceBoundary.remainingSample
+#check PaperX.FiniteAvoidanceBoundary.remainingSample_eq_one
+#print axioms PaperX.FiniteAvoidanceBoundary.remainingSample_eq_one
+#check PaperX.FiniteAvoidanceBoundary.remaining_conjugate_eq_one
+#print axioms PaperX.FiniteAvoidanceBoundary.remaining_conjugate_eq_one
+#check PaperX.FiniteAvoidanceBoundary.remaining_misses_generator
+#print axioms PaperX.FiniteAvoidanceBoundary.remaining_misses_generator
+#check PaperX.FiniteAvoidanceBoundary.remaining_not_dense
+#print axioms PaperX.FiniteAvoidanceBoundary.remaining_not_dense
+#check PaperX.FiniteAvoidanceBoundary.remaining_conjugacy_not_dense
+#print axioms PaperX.FiniteAvoidanceBoundary.remaining_conjugacy_not_dense
+#check PaperX.FiniteAvoidanceBoundary.remaining_quotient_coverage_fails
+#print axioms PaperX.FiniteAvoidanceBoundary.remaining_quotient_coverage_fails
+#check PaperX.FiniteAvoidanceBoundary.signCharacter
+#print axioms PaperX.FiniteAvoidanceBoundary.signCharacter
+#check PaperX.FiniteAvoidanceBoundary.trivialCharacter
+#print axioms PaperX.FiniteAvoidanceBoundary.trivialCharacter
+#check PaperX.FiniteAvoidanceBoundary.characters_agree_after_deletion
+#print axioms PaperX.FiniteAvoidanceBoundary.characters_agree_after_deletion
+#check PaperX.FiniteAvoidanceBoundary.characters_differ
+#print axioms PaperX.FiniteAvoidanceBoundary.characters_differ

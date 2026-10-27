@@ -1,0 +1,17 @@
+import PaperX.ProfiniteSeparation
+import Mathlib.NumberTheory.NumberField.Cyclotomic.Galois
+import Mathlib.NumberTheory.LSeries.PrimesInAP
+#check Nat.forall_exists_prime_gt_and_eq_mod
+#check Finset.le_sup
+#check ZMod.isUnit_iff_coprime
+#check ZMod.isUnit_iff_coprime
+#check ZMod.isUnit_iff_coprime
+#check ZMod.unitOfCoprime
+#check ZMod.coe_unitOfCoprime
+#check Units.ext
+#check IsCyclotomicExtension.Rat.galEquivZMod_apply_of_pow_eq
+#check IsPrimitiveRoot.pow_eq_pow_iff_modEq
+#check IsOfFinOrder.pow_inj_mod
+#check ZMod.natCast_eq_natCast_iff
+#check Nat.mod_eq_of_lt
+#check IsCyclotomicExtension.Rat.galEquivZMod_stabilizer

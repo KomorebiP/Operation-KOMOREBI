@@ -1,0 +1,87 @@
+PaperX.CyclotomicPrimeCoverage.PermittedPrime (n : ℕ) (forbidden : Finset ℕ) : Type
+'PaperX.CyclotomicPrimeCoverage.PermittedPrime' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primeResidue (n : ℕ) (forbidden : Finset ℕ)
+  (p : PaperX.CyclotomicPrimeCoverage.PermittedPrime n forbidden) : (ZMod n)ˣ
+'PaperX.CyclotomicPrimeCoverage.primeResidue' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.exists_prime_with_residue (n : ℕ) [NeZero n] (forbidden : Finset ℕ) (u : (ZMod n)ˣ)
+  (B : ℕ) : ∃ p, B < ↑p ∧ PaperX.CyclotomicPrimeCoverage.primeResidue n forbidden p = u
+'PaperX.CyclotomicPrimeCoverage.exists_prime_with_residue' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primeResidue_surjective (n : ℕ) [NeZero n] (forbidden : Finset ℕ) :
+  Function.Surjective (PaperX.CyclotomicPrimeCoverage.primeResidue n forbidden)
+'PaperX.CyclotomicPrimeCoverage.primeResidue_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K] [NumberField K]
+  [IsCyclotomicExtension {n} ℚ K] (p : ℕ) (hp : p.Coprime n) : Gal(K/ℚ)
+'PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primeSample.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K] [NumberField K]
+  [IsCyclotomicExtension {n} ℚ K] (forbidden : Finset ℕ)
+  (p : PaperX.CyclotomicPrimeCoverage.PermittedPrime n forbidden) : Gal(K/ℚ)
+'PaperX.CyclotomicPrimeCoverage.primeSample' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.galEquiv_primePowerAutomorphism.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) (hp : p.Coprime n) :
+  (IsCyclotomicExtension.Rat.galEquivZMod n K) (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp) =
+    ZMod.unitOfCoprime p hp
+'PaperX.CyclotomicPrimeCoverage.galEquiv_primePowerAutomorphism' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_apply.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) (hp : p.Coprime n) {x : K} (hx : x ^ n = 1) :
+  (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp) x = x ^ p
+'PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.exists_prime_with_automorphism.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (forbidden : Finset ℕ) (σ : Gal(K/ℚ)) (B : ℕ) :
+  ∃ p, B < ↑p ∧ PaperX.CyclotomicPrimeCoverage.primeSample n K forbidden p = σ
+'PaperX.CyclotomicPrimeCoverage.exists_prime_with_automorphism' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primeSample_surjective.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K] [NumberField K]
+  [IsCyclotomicExtension {n} ℚ K] (forbidden : Finset ℕ) :
+  Function.Surjective (PaperX.CyclotomicPrimeCoverage.primeSample n K forbidden)
+'PaperX.CyclotomicPrimeCoverage.primeSample_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primeSample_quotientCoverage.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (forbidden : Finset ℕ) :
+  PaperX.ProfiniteSeparation.QuotientCoverage (PaperX.CyclotomicPrimeCoverage.primeSample n K forbidden)
+'PaperX.CyclotomicPrimeCoverage.primeSample_quotientCoverage' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_mem_stabilizer.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) [Fact (Nat.Prime p)]
+  (P : Ideal (NumberField.RingOfIntegers K)) [P.IsMaximal] [P.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) :
+  PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp ∈ MulAction.stabilizer Gal(K/ℚ) P
+'PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_mem_stabilizer' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_residue.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) [Fact (Nat.Prime p)]
+  (P : Ideal (NumberField.RingOfIntegers K)) [P.IsMaximal] [P.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n)
+  (x : NumberField.RingOfIntegers K) :
+  (Ideal.Quotient.mk P) (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp • x) =
+    (Ideal.Quotient.mk P) x ^ p
+'PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_residue' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_arithmeticFrobenius.{u_1} (n : ℕ) [NeZero n] (K : Type u_1)
+  [Field K] [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) [Fact (Nat.Prime p)]
+  (P : Ideal (NumberField.RingOfIntegers K)) [P.IsMaximal] [P.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) :
+  PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp ∈ MulAction.stabilizer Gal(K/ℚ) P ∧
+    ∀ (x : NumberField.RingOfIntegers K),
+      (Ideal.Quotient.mk P) (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp • x) =
+        (Ideal.Quotient.mk P) x ^ p
+'PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_arithmeticFrobenius' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicPrimeCoverage.permitted_prime_ramificationIdx.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) [Fact (Nat.Prime p)]
+  (P : Ideal (NumberField.RingOfIntegers K)) [P.IsMaximal] [P.LiesOver (Ideal.span {↑p})] (hcop : p.Coprime n) :
+  P.ramificationIdx ℤ = 1
+'PaperX.CyclotomicPrimeCoverage.permitted_prime_ramificationIdx' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_unramified_arithmeticFrobenius.{u_1} (n : ℕ) [NeZero n]
+  (K : Type u_1) [Field K] [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) [Fact (Nat.Prime p)]
+  (P : Ideal (NumberField.RingOfIntegers K)) [P.IsMaximal] [P.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) :
+  P.ramificationIdx ℤ = 1 ∧
+    PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp ∈ MulAction.stabilizer Gal(K/ℚ) P ∧
+      ∀ (x : NumberField.RingOfIntegers K),
+        (Ideal.Quotient.mk P) (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp • x) =
+          (Ideal.Quotient.mk P) x ^ p
+'PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism_unramified_arithmeticFrobenius' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

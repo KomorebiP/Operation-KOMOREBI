@@ -1,0 +1,14 @@
+import PaperX.IdealResidueUnitActionMean
+#print axioms PaperX.IdealResidueUnitAction.residue_mk_surjective
+#print axioms PaperX.IdealResidueUnitAction.mulResidue
+#print axioms PaperX.IdealResidueUnitAction.mulResidue_mk
+#print axioms PaperX.IdealResidueUnitAction.mulResidue_inverse
+#print axioms PaperX.IdealResidueUnitAction.unitPerm
+#print axioms PaperX.IdealResidueUnitAction.residueNorm_mulResidue
+#print axioms PaperX.IdealResidueUnitAction.residueNorm_unitPerm
+#print axioms PaperX.IdealResidueUnitAction.sum_mul_residueNorm_eq_zero
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdeal
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdeal_le
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdeal_le_modulus
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdealResiduesFinite
+#print axioms PaperX.IdealResidueUnitAction.sum_modulusTimesIdeal_norm_eq_zero

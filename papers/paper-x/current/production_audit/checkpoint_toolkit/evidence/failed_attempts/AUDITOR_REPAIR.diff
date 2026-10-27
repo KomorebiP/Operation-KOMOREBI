@@ -1,0 +1,21 @@
+--- AuditCore.initial_failed.lean
++++ lean/AuditCore.lean
+@@ -12,6 +12,7 @@
+   name : Name
+   kind : String
+   owner : Name
++  deriving Inhabited
+ 
+ private def kindOf : ConstantInfo → String
+   | .thmInfo _ => "theorem"
+@@ -67,8 +68,8 @@
+   if constants.isEmpty then
+     throwError "P10_EMPTY_OWNED_CONSTANT_SET"
+   let sorted := constants.toArray.qsort (fun a b => Name.lt a.1 b.1)
+-  let mut theorems := 0
+-  let mut rejected := 0
++  let mut theorems : Nat := 0
++  let mut rejected : Nat := 0
+   for (name, ci) in sorted do
+     let axioms ← Lean.collectAxioms name
+     let forbidden := axioms.filter fun ax => !allowed ax

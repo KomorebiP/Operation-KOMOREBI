@@ -1,0 +1,4 @@
+import PaperX.DeterminantSpine
+#print axioms PaperX.DeterminantSpine.classDet_changeCoefficients
+#print axioms PaperX.DeterminantSpine.determinant_detected
+#print axioms PaperX.DeterminantSpine.class_realization_has_common_determinant

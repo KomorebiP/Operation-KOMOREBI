@@ -1,0 +1,29 @@
+import PaperX.NumberFieldPrimeRestriction
+#check @PaperX.NumberFieldPrimeRestriction.integralEmbedding
+#print axioms PaperX.NumberFieldPrimeRestriction.integralEmbedding
+#check @PaperX.NumberFieldPrimeRestriction.integralEmbedding_apply
+#print axioms PaperX.NumberFieldPrimeRestriction.integralEmbedding_apply
+#check @PaperX.NumberFieldPrimeRestriction.integralEmbedding_injective
+#print axioms PaperX.NumberFieldPrimeRestriction.integralEmbedding_injective
+#check @PaperX.NumberFieldPrimeRestriction.integralEmbedding_smul
+#print axioms PaperX.NumberFieldPrimeRestriction.integralEmbedding_smul
+#check @PaperX.NumberFieldPrimeRestriction.restrictedPrime
+#print axioms PaperX.NumberFieldPrimeRestriction.restrictedPrime
+#check @PaperX.NumberFieldPrimeRestriction.mem_restrictedPrime
+#print axioms PaperX.NumberFieldPrimeRestriction.mem_restrictedPrime
+#check @PaperX.NumberFieldPrimeRestriction.restrictedPrime_isPrime
+#print axioms PaperX.NumberFieldPrimeRestriction.restrictedPrime_isPrime
+#check @PaperX.NumberFieldPrimeRestriction.quotientEmbedding
+#print axioms PaperX.NumberFieldPrimeRestriction.quotientEmbedding
+#check @PaperX.NumberFieldPrimeRestriction.quotientEmbedding_mk
+#print axioms PaperX.NumberFieldPrimeRestriction.quotientEmbedding_mk
+#check @PaperX.NumberFieldPrimeRestriction.quotientEmbedding_injective
+#print axioms PaperX.NumberFieldPrimeRestriction.quotientEmbedding_injective
+#check @PaperX.NumberFieldPrimeRestriction.restrictedPrime_liesOver
+#print axioms PaperX.NumberFieldPrimeRestriction.restrictedPrime_liesOver
+#check @PaperX.NumberFieldPrimeRestriction.prime_mem_restrictedPrime
+#print axioms PaperX.NumberFieldPrimeRestriction.prime_mem_restrictedPrime
+#check @PaperX.NumberFieldPrimeRestriction.restrictedPrime_ne_bot
+#print axioms PaperX.NumberFieldPrimeRestriction.restrictedPrime_ne_bot
+#check @PaperX.NumberFieldPrimeRestriction.restrictedPrime_isMaximal
+#print axioms PaperX.NumberFieldPrimeRestriction.restrictedPrime_isMaximal

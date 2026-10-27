@@ -1,0 +1,11 @@
+import PaperX.IdealClassCharacterBound
+#print axioms PaperX.IdealClassCharacter.boundedIdeals_finite
+#print axioms PaperX.IdealClassCharacter.weightedSum
+#print axioms PaperX.IdealClassCharacter.weightedSum_eq_sum_classCount
+#print axioms PaperX.IdealClassCharacter.sum_character_eq_zero
+#print axioms PaperX.IdealClassCharacter.countExponent_lt_one
+#print axioms PaperX.IdealClassCharacter.weightedSum_eq_sum_errors
+#print axioms PaperX.IdealClassCharacter.exists_weightedSum_bound
+#print axioms PaperX.IdealClassCharacter.exists_characterSum_bound
+#print axioms PaperX.IdealClassCharacter.weightedSum_isBigO
+#print axioms PaperX.IdealClassCharacter.characterSum_isBigO

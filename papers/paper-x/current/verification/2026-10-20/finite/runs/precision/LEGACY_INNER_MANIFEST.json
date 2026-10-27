@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "claim_id": "PaperX-Block17-precision-averaging-finite-audit",
+  "repository": {
+    "commit": "not a git checkout; script checksum records exact source",
+    "dirty": false
+  },
+  "command": "python3 block17/checks/exact_precision.py",
+  "environment": {
+    "software": [
+      "Python 3.12.14",
+      "standard library only"
+    ],
+    "hardware": "x86_64"
+  },
+  "mathematics": {
+    "assertion_tested": "Averaging an actual integral finite-group comparison equivariant mod p^(e+k) produces a p-integral exact intertwiner congruent to it mod p^k, where e = v_p(|G|); unit determinant persists when k >= 1.",
+    "coefficient_domain": "Exact integers and fractions only. Fractions whose denominators are prime to p are elements of Z_(p), hence of Z_p. No floating point enters any decision.",
+    "conventions": "Row-major 2 by 2 matrices acting on column vectors; rho(g) P = P tau(g); average = sum_g rho(g) A tau(g^-1)/|G|.",
+    "inputs": [
+      "Template diag(1,-1); every nonsingular frame in {-2,-1,0,1,2}^4, integral conjugate actions only, deduplicated; p=2; k=1,2; all four entries of A modulo 2^(1+k).",
+      "Faithful order-four rotation [[0,-1],[1,0]], conjugated by [[1,h],[0,1]] for h=-1,0,1; p=2, e=2, k=1; all A modulo 8. This checks e>1, without asserting e=2 is optimal for this particular action.",
+      "Permutation action on basis e0-e2,e1-e2; identity, upper-unit shear, lower-unit shear frames; p=2,3; e=k=1; all A modulo p^2, with every p^4 lift by one further entrywise digit for each equivariant residue."
+    ],
+    "bounds": {
+      "C2_frame_entries": [
+        -2,
+        2
+      ],
+      "C2_moduli": [
+        4,
+        8
+      ],
+      "C4_modulus": 8,
+      "S3_moduli": [
+        4,
+        9
+      ],
+      "S3_extra_lift_digits": [
+        2,
+        3
+      ],
+      "resource_cutoff": null
+    },
+    "non_claims": [
+      "Bounded implementation audit; not a universal proof of the lifting or completion theorems.",
+      "Only the stated actual integral finite-group actions and rational p-integral averages are tested.",
+      "No arbitrary torsion representation is claimed to lift integrally.",
+      "No Galois, Hodge-Tate, Weil-Deligne or arithmetic packet identification is inferred.",
+      "Group-order valuation gives a sufficient bound; this audit does not assert it is always optimal."
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "none",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-10-20T18:27:22.727791+00:00",
+    "runtime_seconds": 2.6652907019997656,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "checks/exact_precision.py",
+      "sha256": "44980dddefee2be7c8575989884a9471aa8ce9c1befde2ff70d73e2550aa0c25"
+    },
+    {
+      "path": "exact_precision.json",
+      "sha256": "70ae7df9c4404ad7102b270295264ea3ac0ce0d65c57debc253df893a2e70284"
+    }
+  ],
+  "checks": [
+    "Actual integer group laws",
+    "Exact rational Reynolds average",
+    "p-integral entries",
+    "Exact all-group intertwining",
+    "Precision loss congruence",
+    "Averaging idempotence",
+    "Unit determinant preservation",
+    "Mod-8 obstruction to preserving full precision",
+    "Mod-4 obstruction for trivial and sign characters"
+  ],
+  "result": "implementation and finite assertion verified in the stated range; independent review separate",
+  "residual_risks": [
+    "Finite ranges are not universal theorems; independent code review pending."
+  ]
+}

@@ -1,0 +1,6 @@
+import PaperX.NormResidueCharacter
+#print axioms PaperX.NormResidue.sum_norm_character_eq_zero
+#print axioms PaperX.NormResidue.sum_mul_norm_character_eq_zero
+#print axioms PaperX.NormResidue.norm_unit_character_ne_one_iff
+#print axioms PaperX.NormResidue.integerQuotient_sum_character_eq_zero
+#print axioms PaperX.NormResidue.integerQuotient_sum_mul_character_eq_zero

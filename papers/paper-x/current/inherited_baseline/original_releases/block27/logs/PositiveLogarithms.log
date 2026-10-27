@@ -1,0 +1,14 @@
+PaperX.NilpotentLogarithm.nilpotentEquiv.{u_1} {A : Type u_1} [Ring A] [Algebra ℚ A] :
+  { a // IsNilpotent a } ≃ { u // IsNilpotent (u - 1) }
+PaperX.LogarithmTruncation.monodromy_eq_log_sum.{u_2, u_3} {K : Type u_2} {V : Type u_3} [Field K] [CharZero K]
+  [AddCommGroup V] [Module K V] {N : Module.End K V} {d : ℕ} (hN : N ^ d = 0) {t : K} (ht : t ≠ 0) :
+  N = t⁻¹ • ∑ j ∈ Finset.range d, ((-1) ^ (j + 1) / ↑j) • (PaperX.NilpotentExponential.expN N t - 1) ^ j
+PaperX.FiniteSampleRecovery.reconstruct_intertwiner_iff_of_finite_inertia.{u_1, u_2, u_3, u_4} {K : Type u_1}
+  {G : Type u_2} [Field K] [CharZero K] [Group G] {ν : G →* Kˣ} {V : Type u_3} {W : Type u_4} [AddCommGroup V]
+  [Module K V] [AddCommGroup W] [Module K W] {D : PaperX.WeilData.Datum ν V} {E : PaperX.WeilData.Datum ν W}
+  (t : PaperX.MonodromyReconstruction.TwistedCocycle ν) (H : Subgroup G) (u : ↥H) (hν : ν ↑u = 1) (htu : t.value ↑u ≠ 0)
+  (hD : (Set.range fun g => D.r ↑g).Finite) (hE : (Set.range fun g => E.r ↑g).Finite) (f : V →ₗ[K] W) :
+  (∀ (g : G) (x : V),
+      f (((PaperX.MonodromyReconstruction.reconstruct D t) g) x) =
+        ((PaperX.MonodromyReconstruction.reconstruct E t) g) (f x)) ↔
+    (∀ (g : G) (x : V), f ((D.r g) x) = (E.r g) (f x)) ∧ E.N ∘ₗ f = f ∘ₗ D.N

@@ -1,0 +1,81 @@
+PaperX.CyclotomicIntegralFrobenius.map_injective_on_roots.{u_1, u_2} {R : Type u_1} {S : Type u_2} [CommRing R]
+  [IsDomain R] [CommRing S] [IsDomain S] (f : R →+* S) (n : ℕ) [NeZero n] (hn : ↑n ≠ 0) {x y : R} (hx : x ^ n = 1)
+  (hy : y ^ n = 1) (hres : f x = f y) : x = y
+'PaperX.CyclotomicIntegralFrobenius.map_injective_on_roots' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup : Type
+'PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers : Subalgebra ℤ (AlgebraicClosure ℚ)
+'PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.root_isIntegral (n : ℕ) [NeZero n] {x : AlgebraicClosure ℚ} (hx : x ^ n = 1) :
+  IsIntegral ℤ x
+'PaperX.CyclotomicIntegralFrobenius.root_isIntegral' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.maps_roots_to_power (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers)
+  [Q.IsMaximal] (n : ℕ) [NeZero n] (hn : ↑n ≠ 0) (p : ℕ) (γ : PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup)
+  (hγ :
+    ∀ (z : ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers),
+      (Ideal.Quotient.mk Q) (γ • z) = (Ideal.Quotient.mk Q) z ^ p)
+  {x : AlgebraicClosure ℚ} (hx : x ^ n = 1) : γ x = x ^ p
+'PaperX.CyclotomicIntegralFrobenius.maps_roots_to_power' depends on axioms: [propext, Classical.choice, Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.order_nonzero_in_quotient
+  (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers) [Q.IsMaximal] (n p : ℕ) [Fact (Nat.Prime p)]
+  [Q.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) : ↑n ≠ 0
+'PaperX.CyclotomicIntegralFrobenius.order_nonzero_in_quotient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.restriction_eq_primePower_of_residue.{u_1} (n : ℕ) [NeZero n] (L : Type u_1)
+  [Field L] [NumberField L] [IsCyclotomicExtension {n} ℚ L]
+  (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers) [Q.IsMaximal] (p : ℕ) [Fact (Nat.Prime p)]
+  [Q.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) (γ : PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup)
+  (hγ :
+    ∀ (z : ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers),
+      (Ideal.Quotient.mk Q) (γ • z) = (Ideal.Quotient.mk Q) z ^ p) :
+  (PaperX.CyclotomicAbsoluteSamples.restrictionMap n L) γ =
+    PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n L p hp
+'PaperX.CyclotomicIntegralFrobenius.restriction_eq_primePower_of_residue' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.restriction_eq_one_of_inertia.{u_1} (n : ℕ) [NeZero n] (L : Type u_1) [Field L]
+  [NumberField L] [IsCyclotomicExtension {n} ℚ L] (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers)
+  [Q.IsMaximal] (p : ℕ) [Fact (Nat.Prime p)] [Q.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n)
+  (γ : PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup)
+  (hγ : γ ∈ Ideal.inertia PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup Q) :
+  (PaperX.CyclotomicAbsoluteSamples.restrictionMap n L) γ = 1
+'PaperX.CyclotomicIntegralFrobenius.restriction_eq_one_of_inertia' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.pullback_trivial_on_inertia.{u_1, u_2, u_3} (n : ℕ) [NeZero n] (L : Type u_1)
+  [Field L] [NumberField L] [IsCyclotomicExtension {n} ℚ L]
+  (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers) [Q.IsMaximal] (p : ℕ) [Fact (Nat.Prime p)]
+  [Q.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) {K : Type u_2} {V : Type u_3} [Field K] [AddCommGroup V]
+  [Module K V] (ρ : Representation K Gal(L/ℚ) V) (γ : PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup)
+  (hγ : γ ∈ Ideal.inertia PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup Q) :
+  (MonoidHom.comp ρ (PaperX.CyclotomicAbsoluteSamples.restrictionMap n L)) γ = 1
+'PaperX.CyclotomicIntegralFrobenius.pullback_trivial_on_inertia' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.pullback_on_arithmeticFrobenius.{u_1, u_2, u_3} (n : ℕ) [NeZero n] (L : Type u_1)
+  [Field L] [NumberField L] [IsCyclotomicExtension {n} ℚ L]
+  (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers) [Q.IsMaximal] (p : ℕ) [Fact (Nat.Prime p)]
+  [Q.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) {K : Type u_2} {V : Type u_3} [Field K] [AddCommGroup V]
+  [Module K V] (ρ : Representation K Gal(L/ℚ) V) (γ : PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup)
+  (hγ :
+    ∀ (z : ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers),
+      (Ideal.Quotient.mk Q) (γ • z) = (Ideal.Quotient.mk Q) z ^ p) :
+  (MonoidHom.comp ρ (PaperX.CyclotomicAbsoluteSamples.restrictionMap n L)) γ =
+    ρ (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n L p hp)
+'PaperX.CyclotomicIntegralFrobenius.pullback_on_arithmeticFrobenius' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicIntegralFrobenius.pullback_character_on_arithmeticFrobenius.{u_1, u_2, u_3} (n : ℕ) [NeZero n]
+  (L : Type u_1) [Field L] [NumberField L] [IsCyclotomicExtension {n} ℚ L]
+  (Q : Ideal ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers) [Q.IsMaximal] (p : ℕ) [Fact (Nat.Prime p)]
+  [Q.LiesOver (Ideal.span {↑p})] (hp : p.Coprime n) {K : Type u_2} {V : Type u_3} [Field K] [AddCommGroup V]
+  [Module K V] (ρ : Representation K Gal(L/ℚ) V) (γ : PaperX.CyclotomicIntegralFrobenius.AbsoluteGroup)
+  (hγ :
+    ∀ (z : ↥PaperX.CyclotomicIntegralFrobenius.AbsoluteIntegers),
+      (Ideal.Quotient.mk Q) (γ • z) = (Ideal.Quotient.mk Q) z ^ p) :
+  Representation.character (MonoidHom.comp ρ (PaperX.CyclotomicAbsoluteSamples.restrictionMap n L)) γ =
+    ρ.character (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n L p hp)
+'PaperX.CyclotomicIntegralFrobenius.pullback_character_on_arithmeticFrobenius' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

@@ -1,0 +1,49 @@
+--- audit_engine.before_strict_types.py
++++ scripts/audit_engine.py
+@@ -50,7 +50,12 @@
+                 raise AuditError('Duplicate JSON key: ' + k)
+             obj[k] = v
+         return obj
+-    return json.loads(text, object_pairs_hook=pairs)
++    def nonfinite(value):
++        raise AuditError('Nonfinite JSON constant: ' + value)
++    try:
++        return json.loads(text, object_pairs_hook=pairs, parse_constant=nonfinite)
++    except json.JSONDecodeError as e:
++        raise AuditError('Malformed JSON: ' + str(e)) from e
+ 
+ def safe_relative(value: str) -> PurePosixPath:
+     if not isinstance(value,str) or not value or '\\' in value or ':' in value or '\x00' in value:
+@@ -87,7 +92,7 @@
+     return {'status':'PASS', 'files':len(records)}
+ 
+ def execute(argv: list[str], cwd: Path, env: dict[str,str], timeout: float, log: Path) -> dict:
+-    if not isinstance(timeout,(float,int)) or not math.isfinite(timeout) or timeout <= 0:
++    if type(timeout) not in (float,int) or not math.isfinite(timeout) or timeout <= 0:
+         raise AuditError('Timeout must be finite and positive')
+     if log.exists():
+         raise AuditError('Refusing to overwrite an existing log')
+@@ -117,12 +122,12 @@
+     return result
+ 
+ def require_success(result: dict) -> None:
+-    if result.get('returncode') != 0 or result.get('timed_out') is not False or result.get('spawn_error'):
++    if type(result.get('returncode')) is not int or result['returncode'] != 0 or result.get('timed_out') is not False or result.get('spawn_error'):
+         raise AuditError('Process did not complete successfully')
+ 
+ def require_rejection(result: dict, text: str, diagnostic: str) -> None:
+     code = result.get('returncode')
+-    if not isinstance(code,int) or code <= 0 or result.get('timed_out') is not False or result.get('spawn_error'):
++    if type(code) is not int or code <= 0 or result.get('timed_out') is not False or result.get('spawn_error'):
+         raise AuditError('Crash, timeout or spawn failure is not an intended rejection')
+     if diagnostic not in text or 'error' not in text.lower():
+         raise AuditError('Expected rejection diagnostic missing')
+@@ -141,6 +146,8 @@
+         if end is not None:
+             raise AuditError('Audit record after completion marker')
+         r = parse_json(line[len(PREFIX):])
++        if not isinstance(r,dict):
++            raise AuditError('Audit event must be a JSON object')
+         kind = r.get('event')
+         if kind=='declaration':
+             if set(r)!={'event','name','kind','owner','axioms','forbidden'}:

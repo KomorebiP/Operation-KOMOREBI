@@ -1,0 +1,111 @@
+diff --git a/source/Projector_Resolved_Seed_Calculus_X_Block25_Amended.tex b/source/Projector_Resolved_Seed_Calculus_X_Block26_Amended.tex
+rename from source/Projector_Resolved_Seed_Calculus_X_Block25_Amended.tex
+rename to source/Projector_Resolved_Seed_Calculus_X_Block26_Amended.tex
+--- a/source/Projector_Resolved_Seed_Calculus_X_Block25_Amended.tex
++++ b/source/Projector_Resolved_Seed_Calculus_X_Block26_Amended.tex
+@@ -118,12 +118,12 @@
+ 
+ \begin{center}
+ \fbox{\begin{minipage}{0.94\linewidth}
+-\textbf{Block 25 formal-verification status.} Seventeen source proof claims are checked at their declared conditional scope and three remain partial. Block 25 proves the system-to-member isomorphism bridge under the required overlap density and proves actual arithmetic Frobenius separation for representations of a fixed cyclotomic Galois group over $\Q$. General arithmetic Frobenius coverage remains unproved here, so Claim 9.1 remains partial. Claim 11.2 is checked as the full-spine existence boundary with a nonzero joint eigenvector in every supplied required packet. The residual, higher-depth, and positive-trace requirements are retained; universal arithmetic occupancy is not proved. Claim 8.2 is checked as a universally quantified conditional completion theorem, retaining its explicit local-closure and finite-level-existence hypotheses. Earlier accounting included verification of particular arithmetic application premises in this claim; those applications remain separate and unfinished. For the fixed quadratic packet of actual $G_{\Q}$ characters, local triviality after the field-induced map from $G_{\Q_p}$ is proved equivalent to $p\equiv1\pmod4$ or global triviality. Its preservation under coefficient completion and simultaneous finite-level existence criterion are proved. The packet characters are trivial on actual valuation inertia at every odd prime, with a locally dominating valuation constructed. The equality of the valuation decomposition group with the entire local Galois group is not established, and ramification at two is not claimed. The full packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
++\textbf{Block 26 formal-verification status.} Seventeen source proof claims are checked at their declared conditional scope and three remain partial. Block 25 proves the system-to-member isomorphism bridge under the required overlap density and proves actual arithmetic Frobenius separation for representations of a fixed cyclotomic Galois group over $\Q$. General arithmetic Frobenius coverage remains unproved here, so Claim 9.1 remains partial. Claim 11.2 is checked as the full-spine existence boundary with a nonzero joint eigenvector in every supplied required packet. The residual, higher-depth, and positive-trace requirements are retained; universal arithmetic occupancy is not proved. Claim 8.2 is checked as a universally quantified conditional completion theorem, retaining its explicit local-closure and finite-level-existence hypotheses. Earlier accounting included verification of particular arithmetic application premises in this claim; those applications remain separate and unfinished. For the fixed quadratic packet of actual $G_{\Q}$ characters, local triviality after the field-induced map from $G_{\Q_p}$ is proved equivalent to $p\equiv1\pmod4$ or global triviality. Its preservation under coefficient completion and simultaneous finite-level existence criterion are proved. The packet characters are trivial on actual valuation inertia at every odd prime, with a locally dominating valuation constructed. The equality of the valuation decomposition group with the entire local Galois group is not established, and ramification at two is not claimed. The full packet identifications, Galois-to-Weil--Deligne attachment, and coefficient and Hodge--Tate/period comparisons remain unfinished.
+ \end{minipage}}
+ \end{center}
+ 
+ 
+-\paragraph{Cumulative formalization status after Block 25.}
++\paragraph{Cumulative formalization status after Block 26.}
+ The cumulative formal ledger records 17 source proof claims checked at their
+ stated conditional scope, 3 partially formalized, and no untouched proof claims.
+ Claims 8.2 and 11.2 are checked with their stated hypotheses retained.
+@@ -1171,6 +1171,90 @@
+ coverage in arbitrary finite quotients of the absolute Galois group, nor the
+ Hodge--Tate and Weil--Deligne comparisons of Claim 9.2. The source-claim ledger
+ therefore remains seventeen checked and three partial.
++
++\paragraph{Absolute Galois restriction and arithmetic witnesses (Block 26).}
++Fix a cyclotomic number field $L=\Q(\zeta_n)$ with $n>0$ and an embedding
++$j:L\hookrightarrow\overline{\Q}$. The new restriction map
++\[
++ q_L:G_{\Q}\longrightarrow\operatorname{Gal}(L/\Q),\qquad
++ j(q_L(\gamma)x)=\gamma(j(x)),
++\]
++is an actual continuous surjective homomorphism with open kernel. Surjectivity
++is derived by extending automorphisms to the algebraic closure. Pullback along
++a surjective homomorphism preserves and reflects equivariant linear
++isomorphisms, invariant subspaces, and irreducibility. These assertions keep
++the underlying linear maps and submodules and do not assume a finite acting
++group. In particular, the equivalence relation for systems is preserved and
++reflected componentwise.
++
++The arithmetic witnesses use the integral closure
++$\mathcal A$ of $\mathbb Z$ in $\overline{\Q}$. For each rational prime $p$,
++Lean constructs a maximal ideal $\mathfrak Q$ of $\mathcal A$ above $(p)$ and
++an actual element $\gamma_p\in G_{\Q}$ such that
++\[
++ \gamma_p\in\operatorname{Stab}_{G_{\Q}}(\mathfrak Q),\qquad
++ \overline{\gamma_p(a)}=\overline a^{\,p}
++ \quad(a\in\mathcal A).
++\]
++The existence argument applies Mathlib's proved profinite stabilizer-surjectivity
++theorem to this actual invariant ring. The residue $p$-power map is proved
++bijective by taking $p$-th roots in $\overline{\Q}$ and showing that they
++remain integral when their $p$-th powers are integral. This constructs an
++arithmetic Frobenius witness in the prime-ideal decomposition group; it does
++not assert that an arbitrary global lift belongs to that group.
++
++When $p\nmid n$, the comparison with the finite cyclotomic sample is proved:
++\[
++ q_L(\gamma_p)=\sigma_p,
++ \qquad \sigma_p(\zeta_n)=\zeta_n^p.
++\]
++Reduction distinguishes $n$-th roots of unity at such a prime. Indeed, if
++$x^n=y^n=1$ and their reductions agree, the factorization of $x^n-y^n$ gives
++\[
++ (x-y)\sum_{i=0}^{n-1}x^i y^{n-1-i}=0.
++\]
++The second factor reduces to $n\overline y^{\,n-1}\ne0$, so the domain
++property gives $x=y$. This proves both Frobenius recognition on the
++cyclotomic generator and triviality of its inertia action. Consequently,
++every representation pulled back through $q_L$ is unramified there.
++
++The valuation formulation is checked separately. For any valuation subring
++$A\subset\overline{\Q}$ with residue characteristic $p\nmid n$, its actual
++residue-action kernel fixes every $n$-th root of unity. A supplied element of
++its decomposition subgroup with $p$-power residue action restricts to
++$\sigma_p$. These statements use Mathlib's valuation inertia and decomposition
++subgroups. No identification of the valuation and integral-closure prime
++models is assumed in the formal comparison.
++
++For a compatible family $\rho_{i,\lambda}$ of representations of the fixed
++finite group, set $V_{i,\lambda}=\rho_{i,\lambda}\circ q_L$. Suppose the
++actual absolute-Galois members are irreducible and the systems are pairwise
++componentwise nonisomorphic. The finite prime separator now yields distinct
++permitted rational primes $p_j$, actual prime ideals $\mathfrak Q_j$ and
++arithmetic Frobenius witnesses $\gamma_j$ as above, outside any prescribed
++finite set, such that the common algebraic trace matrix has nonzero
++determinant. Every coefficient embedding preserves this nonvanishing, and
++\[
++ \iota_\lambda(t_i(p_j))=
++ \operatorname{tr}(V_{i,\lambda}(\gamma_j))
++\]
++whenever $p_j$ is good for that coefficient member. The operator and trace
++values agree for every global lift with the same cyclotomic restriction.
++Neither Frobenius-witness existence nor quotient coverage is a supplied
++hypothesis in this restricted arithmetic theorem. The common cyclotomic
++factorization and the compatible trace data remain explicit hypotheses.
++
++This completes the passage to actual absolute-Galois Frobenius witnesses for
++the fixed cyclotomic class. It does not establish prime coverage for arbitrary
++finite Galois extensions. Claim 9.1 therefore remains partial, and the
++source ledger remains seventeen checked and three partial.
++
++The boundaries are formalized as well. Pullback along a nonsurjective
++homomorphism can make inequivalent irreducible representations isomorphic.
++Samples can cover one quotient while missing an open quotient of the full
++group. Finally, in $\mathbb Z_2$, the distinct square roots $1$ and $-1$ have
++the same residue, so the condition that the root order be a unit cannot be
++discarded.
+ 
+ \paragraph{Finite deletion can destroy density.}
+ In the actual discrete group $C_2=\{1,a\}$, set $s(0)=a$ and $s(m+1)=1$.

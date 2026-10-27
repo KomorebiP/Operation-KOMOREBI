@@ -1,0 +1,246 @@
+import PaperX.IdealCharacterMellinMeasurable
+import PaperX.IdealClassCharacterSum
+import PaperX.IdealNormFilterAttachment
+import PaperX.NormResidueAlgebra
+import PaperX.NormSignFormula
+import PaperX.NormSignGeometry
+import PaperX.ResidueLatticeFibers
+import PaperX.IdealClassCharacterBound
+import PaperX.IdealNormWeightedAttachment
+import PaperX.NormResidueArithmetic
+import PaperX.NormSignArithmetic
+import PaperX.ResidueLatticeIdeal
+import PaperX.ResidueLatticePointSums
+import PaperX.IdealCharacterMellin
+import PaperX.IdealNormCharacterBound
+import PaperX.NormResidueBoundary
+import PaperX.NormResidueCharacter
+import PaperX.NormResidueIdealFilter
+import PaperX.ResidueLatticeIdealPoints
+import PaperX.ResidueLatticeWeights
+import PaperX.IdealCharacterMellinPole
+import PaperX.NormResidueLatticeMap
+import PaperX.NormSignResidueCounting
+import PaperX.ResidueLatticeIdealWeights
+import PaperX.IdealResidueUnitAction
+import PaperX.NormResidueGeneratorAttachment
+import PaperX.NormSignDilation
+import PaperX.NormSignPartition
+import PaperX.ResidueLatticeNormCounts
+import PaperX.IdealResidueUnitActionMean
+import PaperX.NormResidueWeightedCounting
+import PaperX.NormResidueGeneratorSum
+import PaperX.NormResidueUnitCounting
+import PaperX.NormResidueCharacterCounting
+
+#print axioms PaperX.IdealClassCharacter.classCount_eq_floor
+#print axioms PaperX.IdealClassCharacter.measurable_classCount
+#print axioms PaperX.IdealClassCharacter.boundedIdeals_finite
+#print axioms PaperX.IdealClassCharacter.weightedSum
+#print axioms PaperX.IdealClassCharacter.weightedSum_eq_sum_classCount
+#print axioms PaperX.IdealClassCharacter.sum_character_eq_zero
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalEquiv
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalEquiv_apply_fst
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalEquiv_absNorm
+#print axioms PaperX.IdealNormFilter.idealSetPrincipalFilterEquiv
+#print axioms PaperX.IdealNormFilter.card_generators_eq_filtered_principal_mul_torsion
+#print axioms PaperX.IdealNormFilter.filtered_class_eq_filtered_principal
+#print axioms PaperX.IdealNormFilter.card_bounded_filtered_generators
+#print axioms PaperX.NormResidue.modulusIdeal
+#print axioms PaperX.NormResidue.residueMatrix
+#print axioms PaperX.NormResidue.residueMatrix_modulus
+#print axioms PaperX.NormResidue.residueMatrix_eq_zero_of_mem
+#print axioms PaperX.NormResidue.quotientMatrix
+#print axioms PaperX.NormResidue.quotientNorm
+#print axioms PaperX.NormResidue.quotientNorm_mk
+#print axioms PaperX.NormResidue.norm_congr_of_sub_mem
+#print axioms PaperX.NormResidue.quotientNorm_basis_independent
+#print axioms PaperX.NormSignArithmetic.embedding_fiber_eq_pair
+#print axioms PaperX.NormSignArithmetic.embedding_fiber_product_real
+#print axioms PaperX.NormSignArithmetic.embedding_fiber_product_complex
+#print axioms PaperX.NormSignArithmetic.field_norm_eq_real_mul_complex
+#print axioms PaperX.NormSignArithmetic.complex_factor_pos
+#print axioms PaperX.NormSignGeometry.frontier_positive_restriction
+#print axioms PaperX.NormSignGeometry.realProduct
+#print axioms PaperX.NormSignGeometry.realProduct_continuous
+#print axioms PaperX.NormSignGeometry.realProduct_ne_zero
+#print axioms PaperX.NormSignGeometry.signCone
+#print axioms PaperX.NormSignGeometry.signCone_frontier_subset
+#print axioms PaperX.NormSignGeometry.signCone_measurable
+#print axioms PaperX.NormSignGeometry.signCone_bounded
+#print axioms PaperX.NormSignGeometry.signCone_disjoint
+#print axioms PaperX.NormSignGeometry.signCone_union
+#print axioms PaperX.NormSignGeometry.signConeAtlas
+#print axioms PaperX.ResidueLattice.Residues
+#print axioms PaperX.ResidueLattice.fiberCount
+#print axioms PaperX.ResidueLattice.residue_eq_iff
+#print axioms PaperX.ResidueLattice.fiberCosetEquiv
+#print axioms PaperX.ResidueLattice.fiberCount_eq_cosetCount
+#print axioms PaperX.ResidueLattice.card_residues
+#print axioms PaperX.ResidueLattice.card_residues_eq_covolume_ratio
+#print axioms PaperX.ResidueLattice.finite_residues
+#print axioms PaperX.ResidueLattice.residue_density
+#print axioms PaperX.ResidueLattice.exists_fiber_discrepancy_bound
+#print axioms PaperX.IdealClassCharacter.countExponent_lt_one
+#print axioms PaperX.IdealClassCharacter.weightedSum_eq_sum_errors
+#print axioms PaperX.IdealClassCharacter.exists_weightedSum_bound
+#print axioms PaperX.IdealClassCharacter.exists_characterSum_bound
+#print axioms PaperX.IdealClassCharacter.weightedSum_isBigO
+#print axioms PaperX.IdealClassCharacter.characterSum_isBigO
+#print axioms PaperX.IdealNormWeighted.generatorAbsNorm
+#print axioms PaperX.IdealNormWeighted.generatorAbsNorm_cast
+#print axioms PaperX.IdealNormWeighted.BoundedClassIdeals
+#print axioms PaperX.IdealNormWeighted.BoundedPrincipalIdeals
+#print axioms PaperX.IdealNormWeighted.boundedClassIdeals_finite
+#print axioms PaperX.IdealNormWeighted.boundedPrincipalIdeals_finite
+#print axioms PaperX.IdealNormWeighted.boundedGenerators_finite
+#print axioms PaperX.IdealNormWeighted.classPrincipalEquiv
+#print axioms PaperX.IdealNormWeighted.classPrincipalEquiv_absNorm
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum
+#print axioms PaperX.IdealNormWeighted.classNormSum
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum_eq_principal
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum_eq_classNormSum
+#print axioms PaperX.IdealNormWeighted.boundedGeneratorSum_character
+#print axioms PaperX.IdealNormWeighted.classNormSum_character_eq_div
+#print axioms PaperX.NormResidue.integerQuotientNorm
+#print axioms PaperX.NormResidue.integerQuotientNorm_mk
+#print axioms PaperX.NormResidue.integer_norm_congr
+#print axioms PaperX.NormResidue.integer_quotient_finite
+#print axioms PaperX.NormResidue.integer_quotient_card
+#print axioms PaperX.NormResidue.principal_absNorm_residue_nonneg
+#print axioms PaperX.NormResidue.principal_absNorm_residue_nonpos
+#print axioms PaperX.NormResidue.principal_absNorm_congr_nonneg
+#print axioms PaperX.NormResidue.principal_absNorm_congr_nonpos
+#print axioms PaperX.NormSignArithmetic.field_norm_pos_iff
+#print axioms PaperX.NormSignArithmetic.field_norm_neg_iff
+#print axioms PaperX.NormSignArithmetic.integer_norm_pos_iff
+#print axioms PaperX.NormSignArithmetic.integer_norm_neg_iff
+#print axioms PaperX.NormSignArithmetic.integer_norm_pos_of_mem_signCone
+#print axioms PaperX.NormSignArithmetic.integer_norm_neg_of_mem_signCone
+#print axioms PaperX.ResidueLattice.idealLattice_mono
+#print axioms PaperX.ResidueLattice.IdealResidues
+#print axioms PaperX.ResidueLattice.idealFiberCount
+#print axioms PaperX.ResidueLattice.finite_idealResidues
+#print axioms PaperX.ResidueLattice.exists_idealFiber_bound
+#print axioms PaperX.ResidueLattice.weightedFiberCount
+#print axioms PaperX.ResidueLattice.LatticePoints
+#print axioms PaperX.ResidueLattice.pointFiberEquiv
+#print axioms PaperX.ResidueLattice.latticePointSum
+#print axioms PaperX.ResidueLattice.finite_latticePoints
+#print axioms PaperX.ResidueLattice.weightedFiberCount_eq_pointSum
+#print axioms PaperX.IdealClassCharacter.measurable_weightedSum
+#print axioms PaperX.IdealClassCharacter.classMellin
+#print axioms PaperX.IdealClassCharacter.integrable_weightedSum_logMoment
+#print axioms PaperX.IdealClassCharacter.classMellin_sub_isBigO
+#print axioms PaperX.IdealClassCharacter.classMellin_sub_norm_le
+#print axioms PaperX.IdealClassCharacter.integrable_character_logMoment
+#print axioms PaperX.IdealClassCharacter.characterMellin_sub_isBigO
+#print axioms PaperX.IdealNormWeighted.classNormSum_bound_of_generator_bound
+#print axioms PaperX.IdealNormWeighted.exists_classNormSum_bound_of_generator_bound
+#print axioms PaperX.IdealNormWeighted.classNormSum_isBigO_of_generator_bound
+#print axioms PaperX.NormResidue.opposite_sign_elements_congruent
+#print axioms PaperX.NormResidue.opposite_sign_signed_norms_congruent
+#print axioms PaperX.NormResidue.opposite_sign_principal_norms_differ
+#print axioms PaperX.NormResidue.sum_norm_character_eq_zero
+#print axioms PaperX.NormResidue.sum_mul_norm_character_eq_zero
+#print axioms PaperX.NormResidue.norm_unit_character_ne_one_iff
+#print axioms PaperX.NormResidue.integerQuotient_sum_character_eq_zero
+#print axioms PaperX.NormResidue.integerQuotient_sum_mul_character_eq_zero
+#print axioms PaperX.NormResidue.signedResidue
+#print axioms PaperX.NormResidue.normSign
+#print axioms PaperX.NormResidue.signedResidue_mk
+#print axioms PaperX.NormResidue.ideal_product_norm_residue
+#print axioms PaperX.NormResidue.signedResidue_eq_ideal_product
+#print axioms PaperX.NormResidue.idealResidueTarget
+#print axioms PaperX.NormResidue.idealResidueTarget_finite
+#print axioms PaperX.NormResidue.ideal_norm_residue_iff
+#print axioms PaperX.NormResidue.ideal_norm_residue_iff_of_coprime
+#print axioms PaperX.ResidueLattice.integerPoint
+#print axioms PaperX.ResidueLattice.integerPoint_mem_iff
+#print axioms PaperX.ResidueLattice.integerPoint_sub
+#print axioms PaperX.ResidueLattice.integerPoint_injective
+#print axioms PaperX.ResidueLattice.idealPointEquiv
+#print axioms PaperX.ResidueLattice.idealPoint_residue_eq_iff
+#print axioms PaperX.ResidueLattice.idealFiberCount_eq_integer_count
+#print axioms PaperX.ResidueLattice.norm_weighted_error_le
+#print axioms PaperX.ResidueLattice.norm_weighted_nat_error_le
+#print axioms PaperX.ResidueLattice.WeightedEstimate
+#print axioms PaperX.ResidueLattice.ZeroMeanEstimate
+#print axioms PaperX.ResidueLattice.weightedEstimate_of_uniform_bound
+#print axioms PaperX.ResidueLattice.WeightedEstimate.zeroMean
+#print axioms PaperX.ResidueLattice.exists_weightedFiber_bound
+#print axioms PaperX.ResidueLattice.exists_zeroMean_weightedFiber_bound
+#print axioms PaperX.IdealClassCharacter.classCharacter_pole_criterion
+#print axioms PaperX.NormResidueLattice.integerRepresentative
+#print axioms PaperX.NormResidueLattice.integerRepresentative_point
+#print axioms PaperX.NormResidueLattice.integerRepresentative_equiv
+#print axioms PaperX.NormResidueLattice.residueToIntegerQuotient
+#print axioms PaperX.NormResidueLattice.residueToIntegerQuotient_mk
+#print axioms PaperX.NormResidueLattice.residueNorm
+#print axioms PaperX.NormResidueLattice.residueNorm_mk
+#print axioms PaperX.NormSignGeometry.signRegion
+#print axioms PaperX.NormSignGeometry.signRegion_measurable
+#print axioms PaperX.NormSignGeometry.signRegion_bounded
+#print axioms PaperX.NormSignGeometry.nonempty_signRegionAtlas
+#print axioms PaperX.NormSignGeometry.signFiberCount
+#print axioms PaperX.NormSignGeometry.exists_signFiber_bound
+#print axioms PaperX.NormSignGeometry.exists_sign_zeroMean_bound
+#print axioms PaperX.ResidueLattice.idealWeightedCount
+#print axioms PaperX.ResidueLattice.idealWeightedCount_eq_pointSum
+#print axioms PaperX.ResidueLattice.exists_idealWeighted_bound
+#print axioms PaperX.ResidueLattice.exists_zeroMean_idealWeighted_bound
+#print axioms PaperX.IdealResidueUnitAction.residue_mk_surjective
+#print axioms PaperX.IdealResidueUnitAction.mulResidue
+#print axioms PaperX.IdealResidueUnitAction.mulResidue_mk
+#print axioms PaperX.IdealResidueUnitAction.mulResidue_inverse
+#print axioms PaperX.IdealResidueUnitAction.unitPerm
+#print axioms PaperX.IdealResidueUnitAction.residueNorm_mulResidue
+#print axioms PaperX.IdealResidueUnitAction.residueNorm_unitPerm
+#print axioms PaperX.NormResidueLattice.integerRepresentative_absNorm_cast
+#print axioms PaperX.NormResidueLattice.coneLatticeEquiv_coe
+#print axioms PaperX.NormResidueLattice.latticePointsGeneratorEquiv
+#print axioms PaperX.NormResidueLattice.latticePointsGeneratorEquiv_absNorm
+#print axioms PaperX.NormResidueLattice.latticeGeneratorSum_eq_boundedGeneratorSum
+#print axioms PaperX.NormSignArithmetic.realProduct_smul
+#print axioms PaperX.NormSignArithmetic.realProduct_pos_of_mem_smul_signCone
+#print axioms PaperX.NormSignArithmetic.realProduct_neg_of_mem_smul_signCone
+#print axioms PaperX.NormSignArithmetic.ne_zero_of_mem_smul_signCone
+#print axioms PaperX.NormSignArithmetic.toMixed_mem_smul_signCone
+#print axioms PaperX.NormSignArithmetic.integer_norm_pos_of_mem_smul_signRegion
+#print axioms PaperX.NormSignArithmetic.integer_norm_neg_of_mem_smul_signRegion
+#print axioms PaperX.NormSignGeometry.signRegion_disjoint
+#print axioms PaperX.NormSignGeometry.signRegion_union
+#print axioms PaperX.NormSignGeometry.smul_signRegion_disjoint
+#print axioms PaperX.NormSignGeometry.smul_signRegion_union
+#print axioms PaperX.NormSignGeometry.latticePointsSignEquiv
+#print axioms PaperX.NormSignGeometry.latticePointsSignEquiv_symm_inl_coe
+#print axioms PaperX.NormSignGeometry.latticePointsSignEquiv_symm_inr_coe
+#print axioms PaperX.NormSignGeometry.finsum_latticePoints_sign_split
+#print axioms PaperX.ResidueLattice.idealNormFiberCount
+#print axioms PaperX.ResidueLattice.idealFiberCount_eq_normFiberCount
+#print axioms PaperX.ResidueLattice.idealNormFiberCount_eq_integer_count
+#print axioms PaperX.ResidueLattice.exists_idealNormFiber_bound
+#print axioms PaperX.ResidueLattice.exists_idealNormWeighted_bound
+#print axioms PaperX.ResidueLattice.exists_zeroMean_idealNormWeighted_bound
+#print axioms PaperX.IdealResidueUnitAction.sum_mul_residueNorm_eq_zero
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdeal
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdeal_le
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdeal_le_modulus
+#print axioms PaperX.IdealResidueUnitAction.modulusTimesIdealResiduesFinite
+#print axioms PaperX.IdealResidueUnitAction.sum_modulusTimesIdeal_norm_eq_zero
+#print axioms PaperX.NormResidueLattice.normWeight
+#print axioms PaperX.NormResidueLattice.normWeight_mk
+#print axioms PaperX.NormResidueLattice.normWeightedCount
+#print axioms PaperX.NormResidueLattice.exists_normWeightedCount_bound
+#print axioms PaperX.NormResidueLattice.generatorPointWeight
+#print axioms PaperX.NormResidueLattice.normWeight_actualPoint
+#print axioms PaperX.NormResidueLattice.weightedFiberCount_eq_generatorPointSum
+#print axioms PaperX.NormResidueLattice.normWeightedCount_eq_generatorPointSum
+#print axioms PaperX.NormResidueLattice.normWeight_sum_eq_zero
+#print axioms PaperX.NormResidueLattice.exists_normWeightedCount_bound_of_unit
+#print axioms PaperX.NormResidueLattice.modulusNormWeightedCount
+#print axioms PaperX.NormResidueLattice.exists_modulusNormWeightedCount_bound
+#print axioms PaperX.NormResidueLattice.normWeightedCount_eq_boundedGeneratorSum
+#print axioms PaperX.NormResidueLattice.modulusNormWeightedCount_eq_boundedGeneratorSum
+#print axioms PaperX.NormResidueLattice.exists_boundedGeneratorSum_bound_of_unit
+#print axioms PaperX.NormResidueLattice.exists_classNormSum_bound_of_unit

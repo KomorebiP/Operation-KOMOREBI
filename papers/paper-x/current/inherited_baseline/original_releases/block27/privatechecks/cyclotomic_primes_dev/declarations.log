@@ -1,0 +1,40 @@
+PaperX.CyclotomicFrobeniusPrimes.exists_prime_above_with_frobenius.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (p : ℕ) [Fact (Nat.Prime p)] (hp : p.Coprime n) :
+  ∃ P,
+    P.IsMaximal ∧
+      P.LiesOver (Ideal.span {↑p}) ∧
+        P.ramificationIdx ℤ = 1 ∧
+          PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp ∈ MulAction.stabilizer Gal(K/ℚ) P ∧
+            ∀ (x : NumberField.RingOfIntegers K),
+              (Ideal.Quotient.mk P) (PaperX.CyclotomicPrimeCoverage.primePowerAutomorphism n K p hp • x) =
+                (Ideal.Quotient.mk P) x ^ p
+'PaperX.CyclotomicFrobeniusPrimes.exists_prime_above_with_frobenius' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicFrobeniusPrimes.permitted_prime_has_frobenius_witness.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (forbidden : Finset ℕ)
+  (p : PaperX.CyclotomicPrimeCoverage.PermittedPrime n forbidden) :
+  ∃ P,
+    P.IsMaximal ∧
+      P.LiesOver (Ideal.span {↑↑p}) ∧
+        P.ramificationIdx ℤ = 1 ∧
+          PaperX.CyclotomicPrimeCoverage.primeSample n K forbidden p ∈ MulAction.stabilizer Gal(K/ℚ) P ∧
+            ∀ (x : NumberField.RingOfIntegers K),
+              (Ideal.Quotient.mk P) (PaperX.CyclotomicPrimeCoverage.primeSample n K forbidden p • x) =
+                (Ideal.Quotient.mk P) x ^ ↑p
+'PaperX.CyclotomicFrobeniusPrimes.permitted_prime_has_frobenius_witness' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperX.CyclotomicFrobeniusPrimes.exists_arithmetic_frobenius_prime.{u_1} (n : ℕ) [NeZero n] (K : Type u_1) [Field K]
+  [NumberField K] [IsCyclotomicExtension {n} ℚ K] (forbidden : Finset ℕ) (σ : Gal(K/ℚ)) (B : ℕ) :
+  ∃ p P,
+    B < ↑p ∧
+      PaperX.CyclotomicPrimeCoverage.primeSample n K forbidden p = σ ∧
+        P.IsMaximal ∧
+          P.LiesOver (Ideal.span {↑↑p}) ∧
+            P.ramificationIdx ℤ = 1 ∧
+              σ ∈ MulAction.stabilizer Gal(K/ℚ) P ∧
+                ∀ (x : NumberField.RingOfIntegers K), (Ideal.Quotient.mk P) (σ • x) = (Ideal.Quotient.mk P) x ^ ↑p
+'PaperX.CyclotomicFrobeniusPrimes.exists_arithmetic_frobenius_prime' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

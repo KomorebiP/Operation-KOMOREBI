@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "recorded_utc": "2026-10-20T18:39:46.314308+00:00",
+  "scope": "Two supplementary new-module axiom-policy fixture controls and four isolated import-mode probes. Not production modules and not extra production compiler replays.",
+  "production_modules_checked": 0,
+  "unchanged_AuditCore": true,
+  "AuditCore_sha256": "8b106c1956c1d3597fd719eebaa65c401889cb246125ff99dde94d81680898fb",
+  "policy_fixture_controls": [
+    {
+      "case": "ProbeModuleGoodAudit",
+      "returncode": 0,
+      "declarations": 36,
+      "private_named_declarations": 18,
+      "type_constructor_recursor_declarations": 6,
+      "forbidden": [],
+      "complete_markers": [
+        {
+          "declarations": 36,
+          "event": "complete",
+          "owners": [
+            "ProbeModuleGood"
+          ],
+          "targets": 0,
+          "theorems": 8
+        }
+      ]
+    },
+    {
+      "case": "ProbeModuleBadAudit",
+      "returncode": 1,
+      "declarations": 37,
+      "private_named_declarations": 19,
+      "type_constructor_recursor_declarations": 6,
+      "forbidden": [
+        {
+          "axioms": [
+            "_private.ProbeModuleBad.0.Probe.hiddenUnused"
+          ],
+          "event": "declaration",
+          "forbidden": [
+            "_private.ProbeModuleBad.0.Probe.hiddenUnused"
+          ],
+          "kind": "axiom",
+          "name": "_private.ProbeModuleBad.0.Probe.hiddenUnused",
+          "owner": "ProbeModuleBad"
+        }
+      ],
+      "complete_markers": []
+    }
+  ],
+  "selective_import_probe": {
+    "module_import_all_count": 36,
+    "ordinary_module_import_count": 21,
+    "import_all_names_and_transitive_axioms_equal_legacy_AuditCore": true,
+    "ordinary_import_omitted_names": [
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket._sizeOf_1",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket._sizeOf_inst",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.casesOn",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.ctorIdx",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.mk._flat_ctor",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.mk.inj",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.mk.injEq",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.mk.noConfusion",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.mk.sizeOf_spec",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.noConfusion",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.noConfusionType",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.recOn",
+      "_private.ProbeModuleGood.0.Probe.PrivatePacket.value",
+      "_private.ProbeModuleGood.0.Probe.privateValue",
+      "_private.ProbeModuleGood.0.Probe.unusedPrivateTheorem"
+    ],
+    "direct_legacy_production_import_rejected": true,
+    "direct_legacy_production_error": "/workspace/scratch/fbc994080222/paper_x_import_semantics/DirectLegacyProductionRejected.lean:1:0: error: cannot import non-`module` PaperX.Counting from `module`"
+  },
+  "pinned_source_evidence": [
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_runtime/extracted/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/src/lean/Lean/Environment.lean",
+      "sha256": "ee364e4788ce0560c87f621eeb3c4c3dfec62e8db4e15e099fd80e6adc533b86",
+      "relevant_lines": [
+        2107,
+        2185
+      ]
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_runtime/extracted/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/src/lean/Lean/Elab/Import.lean",
+      "sha256": "5d46fc36944ed3cbb9b862cb954fdd8ea2d2036f135e4b48adc368b69dc8b8fc",
+      "relevant_lines": [
+        142,
+        162
+      ]
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_runtime/extracted/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/src/lean/Lean/Util/CollectAxioms.lean",
+      "sha256": "64f340d42f18c51ee83527f03fa69cc26415dd71dcf7fe71031b7760be90007d",
+      "relevant_lines": [
+        17,
+        44,
+        89,
+        154
+      ]
+    },
+    {
+      "path": "/workspace/scratch/fbc994080222/paper_x_runtime/extracted/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/src/lean/Lean/Data/SMap.lean",
+      "sha256": "d4575d3c8853fedcdd7b8a28cd6985e4f1afe17f37db15d5f49a81adba2cdbc7",
+      "relevant_lines": [
+        103,
+        115
+      ]
+    }
+  ],
+  "findings": [
+    "Legacy roots select globalLevel.private and force all transitive private data; exact owner census includes private/generated declarations.",
+    "New-module root with import all imports full selected-owner data but ordinary imported dependencies are not recursively upgraded to importAll.",
+    "collectAxioms uses precomputed imported transitive-axiom summaries; loading external theorem bodies is not needed for those summaries.",
+    "A new-module root cannot directly import legacy AuditCore or actual legacy production module PaperX.Counting, so a bare module/import all header rewrite is not a drop-in solution for the mixed122-module project."
+  ],
+  "no_production_source_object_or_policy_changed": true,
+  "retained_failure": "failed_attempts/run_elab_wrapper retains initial wrong command-monad wrapper and its errors; fixed run_cmd wrappers determine final results."
+}

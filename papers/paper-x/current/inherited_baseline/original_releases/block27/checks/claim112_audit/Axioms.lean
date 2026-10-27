@@ -1,0 +1,41 @@
+import PaperX.RequiredPacketOccupancy
+import PaperX.RequiredPacketBoundary
+import PaperX.SpineExistenceCriterion
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace
+#print axioms PaperX.RequiredPacketOccupancy.PositiveTrace
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace_cast
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace_eq_of_cast
+#print axioms PaperX.RequiredPacketOccupancy.exists_unique_trace_integer
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace_pos_iff_occupied
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace_eq_zero_iff_not_occupied
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace_pos_iff_fieldTrace_ne_zero
+#print axioms PaperX.RequiredPacketOccupancy.naturalTrace_eq_zero_iff_fieldTrace_eq_zero
+#print axioms PaperX.RequiredPacketOccupancy.positiveTrace_iff_rank_pos
+#print axioms PaperX.RequiredPacketOccupancy.occupied_iff_positiveTrace
+#print axioms PaperX.RequiredPacketOccupancy.positiveTrace_iff_fieldTrace_ne_zero
+#print axioms PaperX.RequiredPacketOccupancy.all_packets_iff_witnesses
+#print axioms PaperX.RequiredPacketOccupancy.all_positive_iff_occupied
+#print axioms PaperX.RequiredPacketOccupancy.all_positive_iff_witnesses
+#print axioms PaperX.RequiredPacketOccupancy.all_positive_iff_fieldTrace_ne_zero
+#print axioms PaperX.RequiredPacketOccupancy.all_fieldTrace_ne_zero_iff_witnesses
+#print axioms PaperX.RequiredPacketOccupancy.all_positiveTrace_iff_occupied
+#print axioms PaperX.RequiredPacketOccupancy.all_positiveTrace_iff_witnesses
+#print axioms PaperX.RequiredPacketBoundary.operator
+#print axioms PaperX.RequiredPacketBoundary.target
+#print axioms PaperX.RequiredPacketBoundary.operator_split
+#print axioms PaperX.RequiredPacketBoundary.operators_commute
+#print axioms PaperX.RequiredPacketBoundary.projector
+#print axioms PaperX.RequiredPacketBoundary.projector_trace
+#print axioms PaperX.RequiredPacketBoundary.occupied_iff
+#print axioms PaperX.RequiredPacketBoundary.omitted_packet_empty
+#print axioms PaperX.RequiredPacketBoundary.prefix_occupied
+#print axioms PaperX.RequiredPacketBoundary.no_family_fully_occupied
+#print axioms PaperX.RequiredPacketBoundary.some_but_not_all
+#print axioms PaperX.RequiredPacketBoundary.finite_prefix_misses_failure
+#print axioms PaperX.RequiredPacketBoundary.finite_sample_misses_failure
+#print axioms PaperX.SpineExistenceCriterion.SystemRealization
+#print axioms PaperX.SpineExistenceCriterion.system_iff_positive_levels
+#print axioms PaperX.SpineExistenceCriterion.system_iff_residual_and_higher
+#print axioms PaperX.SpineExistenceCriterion.system_and_every_packet_iff_trace_ne_zero
+#print axioms PaperX.SpineExistenceCriterion.system_and_every_packet_iff_positive_trace
+#print axioms PaperX.SpineExistenceCriterion.full_existence_boundary

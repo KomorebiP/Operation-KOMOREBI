@@ -1,0 +1,28 @@
+PaperX.QuadraticLocalArithmetic.arithmetic_local_completion_iff.{u_2} {R : Type} [CommRing R] (I : Ideal R)
+  {S : Type u_2} (prime : S → ℕ) [∀ (s : S), Fact (Nat.Prime (prime s))] [IsAdicComplete I R] [TopologicalSpace R]
+  (C : PaperX.QuadraticArithmeticCompletion.Conditions I) (finite : ∀ (k : ℕ), Finite (R ⧸ I ^ (k + 1))) :
+  (∃ χ,
+      Continuous ⇑↑χ ∧
+        PaperX.QuadraticArithmeticCompletion.Realizes I C χ ∧
+          (∀ (s : S), PaperX.QuadraticLocalPackets.LocallyTrivial ℚ_[prime s] χ) ∧
+            ∀ (l : ℕ) (hl : Fact (Nat.Prime l)), l ≠ 2 → PaperX.QuadraticGaloisInertia.InertiaTrivial l χ) ↔
+    ∀ (k : ℕ),
+      ∃ χ,
+        C.allowed k χ ∧
+          ∀ (s : S),
+            prime s % 4 = 1 ∨
+              χ = PaperX.QuadraticGaloisPackets.ofRoot (PaperX.QuadraticGaloisPackets.oneRoot (R ⧸ I ^ (k + 1)))
+PaperX.QuadraticLocalArithmetic.dyadic_local_detection_mod_four (p : ℕ) [Fact (Nat.Prime p)]
+  (χ : PaperX.QuadraticGalois.Packet ℤ_[2]) :
+  PaperX.QuadraticLocalPackets.LocallyTrivial ℚ_[p] χ ↔
+    PaperX.QuadraticLocalPackets.LocallyTrivial ℚ_[p] (PaperX.QuadraticGalois.mapPacket (PadicInt.toZModPow 2) χ)
+PaperX.QuadraticGaloisInertia.exists_dominating_inertia_trivial.{u_1} (p : ℕ) [Fact (Nat.Prime p)] {B : Type u_1}
+  [CommRing B] (hodd : p ≠ 2) :
+  ∃ A,
+    ∃ (h : ∀ (x : ℤ_[p]), (PaperX.QuadraticPadicInertia.integralMap p) x ∈ A),
+      IsLocalHom ((PaperX.QuadraticPadicInertia.integralMap p).codRestrict A.toSubring h) ∧
+        ∀ (χ : PaperX.QuadraticGalois.Packet B),
+          ∀ σ ∈ ValuationSubring.inertiaSubgroup ℚ_[p] A,
+            (PaperX.QuadraticLocalPackets.localCharacter ℚ_[p] χ)
+                ((PaperX.QuadraticGaloisInertia.decompositionInclusion p A) σ) =
+              1

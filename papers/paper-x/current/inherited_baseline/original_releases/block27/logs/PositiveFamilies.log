@@ -1,0 +1,24 @@
+PaperX.FamilyClassification.exists_family_unique_up_to_conjugacy.{u_1, u_2, u_3, u_4} {R : Type u_1} {Γ : Type u_2}
+  {ι : Type u_3} {J : Type u_4} [CommRing R] [IsDomain R] [IsLocalRing R] [Group Γ] [Fintype Γ] [Fintype ι]
+  [DecidableEq ι] [Fintype J] (π : R) [IsAdicComplete (Ideal.span {π}) R] (hπ : ¬IsUnit π) (e k : ℕ) (hk : 0 < k)
+  (ρ : PaperX.RepresentationLimits.MatrixRep R Γ ι) (hΓ : ↑(Fintype.card Γ) ≠ 0) (hdiv : ↑(Fintype.card Γ) ∣ π ^ e)
+  (Q : PaperX.OrthogonalProjectors.Family (PaperX.RepresentationLimits.reduce (Ideal.span {π}) ρ (e + k)) J) :
+  ∃ E,
+    (∀ (i : J),
+        (E.projector i).matrix.map ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ k)) =
+          (Q.projector i).matrix.map ⇑(Ideal.Quotient.factorPow (Ideal.span {π}) ⋯)) ∧
+      ∀ (F : PaperX.OrthogonalProjectors.Family ρ J),
+        (∀ (i : J),
+            (F.projector i).matrix.map ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ k)) =
+              (Q.projector i).matrix.map ⇑(Ideal.Quotient.factorPow (Ideal.span {π}) ⋯)) →
+          ∃ U,
+            ↑U = PaperX.FamilyRigidity.comparison E F ∧
+              (↑U).map ⇑(Ideal.Quotient.mk (Ideal.span {π} ^ k)) = 1 ∧
+                (∀ (g : Γ), ρ g * ↑U = ↑U * ρ g) ∧
+                  ∀ (i : J), ↑U * (E.projector i).matrix * ↑U⁻¹ = (F.projector i).matrix
+PaperX.OrthogonalProjectors.Family.decomposition_equivariant.{u_1, u_2, u_3, u_4} {R : Type u_1} {Γ : Type u_2}
+  {ι : Type u_3} {J : Type u_4} [CommRing R] [Group Γ] [Fintype ι] [DecidableEq ι] [Fintype J]
+  {ρ : PaperX.RepresentationLimits.MatrixRep R Γ ι} (E : PaperX.OrthogonalProjectors.Family ρ J) (g : Γ)
+  (v : E.Components) :
+  (E.decomposition fun j => ((E.projector j).image.toRepresentation g) (v j)) =
+    ((PaperX.MatrixProjector.carrier ρ) g) (E.decomposition v)

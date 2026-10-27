@@ -1,0 +1,91 @@
+--- Block17_Amended.tex
++++ Projector_Resolved_Seed_Calculus_X_Block18_Amended.tex
+@@ -118,7 +118,7 @@
+ 
+ \begin{center}
+ \fbox{\begin{minipage}{0.94\linewidth}
+-\textbf{Block 17 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. Finite-group comparison now permits a nonunit group order: a finite precision loss determined by its valuation yields actual integral isomorphisms and completion with the specified finite-group type. The intended arithmetic packet interpretation remains unfinished.
++\textbf{Block 18 formal-verification status.} Fifteen source proof claims remain checked and five remain partial at full arithmetic scope. A sufficiently deep equivariant quotient projector now lifts to an actual summand inside a supplied finite-group carrier, with the proved precision loss. The actual image, complementary kernel, and their reductions are checked. The intended arithmetic packet and period-data interpretation remains unfinished.
+ \end{minipage}}
+ \end{center}
+ 
+@@ -1757,4 +1757,79 @@
+ residual-only detection and full preservation of the input precision cannot
+ be asserted here.
+ 
++
++\paragraph{Lifting a summand inside a supplied finite-group carrier (Block 18).}
++Let $R$ be a commutative integral domain complete and separated for the
++$(\pi)$-adic filtration. Let $\Gamma$ be a finite group, and let
++$\rho:\Gamma\to\mathrm{GL}_n(R)$ be an actual integral representation.
++Assume that $a=|\Gamma|\ne0$ in $R$ and $a\mid\pi^e$. For $k>0$, suppose
++\[
++\bar E\in M_n\bigl(R/(\pi)^{e+k}\bigr),\qquad
++\bar E^2=\bar E,\qquad
++\bar\rho(g)\bar E=\bar E\bar\rho(g)\quad(g\in\Gamma).
++\]
++There is an actual integral matrix $E$ satisfying
++\[
++E^2=E,\qquad \rho(g)E=E\rho(g),\qquad
++E\bmod(\pi)^k=\bar E\bmod(\pi)^k.
++\]
++No integral summand or coherent family of quotient projectors is assumed.
++No local-ring assumption or finiteness of the residue field is needed.
++
++To prove this, apply the preceding averaging correction with both
++representations equal to $\rho$. This produces an exact equivariant matrix
++$A$ with the prescribed reduction at depth $k$, so that
++$A^2-A\in(\pi)^kM_n(R)$. Averaging alone need not preserve idempotence.
++Use the integral polynomial
++\[
++f(A)=3A^2-2A^3.
++\]
++The identities
++\[
++f(A)-A=(1-2A)(A^2-A),\qquad
++f(A)^2-f(A)=(A^2-A)^2(4A^2-4A-3)
++\]
++show that successive corrections preserve the retained reduction and improve
++the idempotence defect. In these formulas scalar constants denote scalar
++matrices. The Lean proof establishes at least one additional ideal digit at
++each step, constructs the resulting compatible family of finite-level matrices, and uses
++completeness and separatedness to recover $E$. Every matrix commuting with
++$A$ commutes with $E$. There is no division by $2$, so the correction also
++works in residue characteristic $2$.
++
++The actual submodules $U=\operatorname{im}E$ and $W=\ker E$ are invariant,
++and addition gives an equivariant isomorphism
++\[
++U\oplus W\simeq R^n.
++\]
++The inclusion $i:U\hookrightarrow R^n$ and retraction $r(v)=Ev$ are
++constructed as linear maps and satisfy $ri=1_U$ and $ir=E$. Their
++equivariance is proved. Coordinatewise reduction maps $U$ onto
++$\operatorname{im}(\bar E\bmod(\pi)^k)$ and maps $W$ onto
++$\ker(\bar E\bmod(\pi)^k)$. Both equalities are surjectivity statements
++onto the actual submodules over the finite-level quotient, not merely containment. The same
++projector defines a summand after pullback through any group homomorphism
++to $\Gamma$.
++
++For $R=\mathbb Z_2$ and the sign carrier
++$\rho(s)=\operatorname{diag}(1,-1)$, the projector
++\[
++\bar E=\begin{pmatrix}1&2\\0&0\end{pmatrix}\pmod4
++\]
++is equivariant and the theorem constructs a nonzero proper equivariant
++projector retaining its reduction modulo $2$. No exact equivariant
++endomorphism retains this prescribed matrix modulo $4$. At the insufficient
++input depth $1$, the projector
++$\left(\begin{smallmatrix}1&1\\0&0\end{smallmatrix}\right)\pmod2$
++has no exact equivariant lift retaining its reduction. These are statements
++about the supplied carrier and prescribed projectors, not about nonexistence
++of all integral summands.
++
++This block constructs one summand and its complement inside a supplied
++finite-group carrier. It advances the carrier step in Claim 9.2. It does
++not identify the intended arithmetic packets, construct the arithmetic
++Weil--Deligne attachment, establish the Hodge--Tate comparisons, or prove
++universal occupancy. The full arithmetic ledger remains fifteen checked
++claims and five partially formalized claims.
++
+ \end{document}

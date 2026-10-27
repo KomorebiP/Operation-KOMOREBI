@@ -1,0 +1,9 @@
+import PaperX.QuadraticLocalArithmetic
+#check PaperX.QuadraticLocalArithmetic.arithmetic_local_completion_iff
+#check PaperX.QuadraticLocalArithmetic.dyadic_local_detection_mod_four
+#check PaperX.QuadraticGaloisInertia.exists_dominating_inertia_trivial
+example := PaperX.QuadraticLocalArithmetic.sign_inertiaTrivial_three
+example := PaperX.QuadraticLocalArithmetic.sign_not_locallyTrivial_three
+example := PaperX.QuadraticLocalArithmetic.sign_residual_locallyTrivial_three
+example := PaperX.QuadraticLocalArithmetic.sign_locallyTrivial_five
+example := PaperX.PadicQuadraticSplitting.root_iff_mod_four_eq_one

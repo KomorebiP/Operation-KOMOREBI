@@ -1,0 +1,789 @@
+@PaperX.Counting.weighted_chart_count_max.{u_1} : ∀ {O : Type u_1} [inst : CommRing.{u_1} O]
+  [@IsDedekindDomain.{u_1} O inst]
+  (P : @Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+  [@Ideal.IsPrime.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) P]
+  (hP :
+    @Ne.{u_1 + 1} (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) P
+      (@Bot.bot.{u_1} (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Submodule.instBot.{u_1, u_1} O O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+          (@Semiring.toAddCommMonoid.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))))))
+  [Finite.{u_1 + 1}
+      (@HasQuotient.Quotient.{u_1, u_1} O
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Ideal.instHasQuotient_1.{u_1} O inst) P)]
+  {d : Nat} (w : Fin d → Nat) (m : Nat),
+  @Eq.{1} Nat (Nat.card.{u_1} (@PaperX.Counting.WeightedChart.{u_1} O inst P d w m))
+    (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+      (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+      (@PaperX.Counting.residueCard.{u_1} O inst P)
+      (@Finset.sum.{0, 0} (Fin d) Nat Nat.instAddCommMonoid (@Finset.univ.{0} (Fin d) (Fin.fintype d))
+        fun (i : Fin d) =>
+        @Max.max.{0} Nat Nat.instMax (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) m (w i))
+          (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))))
+@PaperX.Counting.count_via_chart.{u_1,
+    u_2} : ∀ {O : Type u_1} [inst : CommRing.{u_1} O] [@IsDedekindDomain.{u_1} O inst]
+  (P : @Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+  [@Ideal.IsPrime.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) P]
+  (hP :
+    @Ne.{u_1 + 1} (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) P
+      (@Bot.bot.{u_1} (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Submodule.instBot.{u_1, u_1} O O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+          (@Semiring.toAddCommMonoid.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))))))
+  [Finite.{u_1 + 1}
+      (@HasQuotient.Quotient.{u_1, u_1} O
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Ideal.instHasQuotient_1.{u_1} O inst) P)]
+  {X : Type u_2} {d : Nat} (w : Fin d → Nat) (m : Nat)
+  (e : Equiv.{u_2 + 1, u_1 + 1} X (@PaperX.Counting.WeightedChart.{u_1} O inst P d w m)),
+  @Eq.{1} Nat (Nat.card.{u_2} X)
+    (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+      (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+      (@PaperX.Counting.residueCard.{u_1} O inst P)
+      (@Finset.sum.{0, 0} (Fin d) Nat Nat.instAddCommMonoid (@Finset.univ.{0} (Fin d) (Fin.fintype d))
+        fun (i : Fin d) => @HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) m (w i)))
+@PaperX.Singular.singular_root_count.{u_1} : ∀ {O : Type u_1} [inst : CommRing.{u_1} O]
+  [inst_1 : @IsDomain.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))]
+  [inst_2 : @IsDiscreteValuationRing.{u_1} O inst inst_1]
+  [Finite.{u_1 + 1}
+      (@HasQuotient.Quotient.{u_1, u_1} O
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Ideal.instHasQuotient_1.{u_1} O inst)
+        (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+          (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))]
+  (m e : Nat) (he : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) e),
+  @Eq.{1} Nat (Nat.card.{u_1} (@PaperX.Singular.Roots.{u_1} O inst inst_1 inst_2 m e))
+    (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+      (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+      (Nat.card.{u_1}
+        (@HasQuotient.Quotient.{u_1, u_1} O
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@Ideal.instHasQuotient_1.{u_1} O inst)
+          (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+            (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))))
+      (@HSub.hSub.{0, 0, 0} Nat Nat Nat (@instHSub.{0} Nat instSubNat) m
+        (@CeilDiv.ceilDiv.{0, 0} Nat Nat Nat.instAddCommMonoid Nat.instPartialOrder Nat.instAddCommMonoid
+          Nat.instPartialOrder
+          (@DistribSMul.toSMulZeroClass.{0, 0} Nat Nat (@AddMonoid.toAddZeroClass.{0} Nat Nat.instAddMonoid)
+            (@instDistribSMul.{0} Nat Nat.instNonUnitalNonAssocSemiring))
+          Nat.instCeilDiv m e)))
+@PaperX.BranchingDimension.actual_singular_dimension.{u_1} : ∀ {O : Type u_1} [inst : CommRing.{u_1} O]
+  [inst_1 : @IsDomain.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))]
+  [inst_2 : @IsDiscreteValuationRing.{u_1} O inst inst_1]
+  [Finite.{u_1 + 1}
+      (@HasQuotient.Quotient.{u_1, u_1} O
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Ideal.instHasQuotient_1.{u_1} O inst)
+        (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+          (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))]
+  (e : Nat) (he : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) e),
+  @Filter.Tendsto.{0, 0} Nat Real
+    (fun (m : Nat) =>
+      @HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (Real.log
+            (@Nat.cast.{0} Real Real.instNatCast
+              (Nat.card.{u_1} (@PaperX.Singular.Roots.{u_1} O inst inst_1 inst_2 m e))))
+          (Real.log
+            (@Nat.cast.{0} Real Real.instNatCast
+              (Nat.card.{u_1}
+                (@HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                  (@Ideal.instHasQuotient_1.{u_1} O inst)
+                  (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))))))
+        (@Nat.cast.{0} Real Real.instNatCast m))
+    (@Filter.atTop.{0} Nat Nat.instPreorder)
+    (@nhds.{0} Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+        (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+          (@Nat.cast.{0} Real Real.instNatCast e))))
+@PaperX.Singular.compatible_root_family_zero.{u_1} : ∀ {O : Type u_1} [inst : CommRing.{u_1} O]
+  [inst_1 : @IsDomain.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))]
+  [inst_2 : @IsDiscreteValuationRing.{u_1} O inst inst_1] (e : Nat)
+  (he : @LT.lt.{0} Nat instLTNat (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) e)
+  (x :
+    (m : Nat) →
+      @HasQuotient.Quotient.{u_1, u_1} O
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Ideal.instHasQuotient_1.{u_1} O inst)
+        (@HPow.hPow.{u_1, 0, u_1}
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@instHPow.{u_1, 0}
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+            (@Submodule.instPowNat.{u_1, u_1} O
+              (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+              (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+              (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+          (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+            (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+          m))
+  (hcompat :
+    ∀ {m n : Nat} (h : @LE.le.{0} Nat instLENat m n),
+      @Eq.{u_1 + 1}
+        (@HasQuotient.Quotient.{u_1, u_1} O (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+          (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+          (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+            (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+            (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+              (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@IsScalarTower.left.{u_1, u_1} O O
+                  (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@Monoid.toMulAction.{u_1} O
+                    (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+            (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+              (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+            m))
+        (@DFunLike.coe.{u_1 + 1, u_1 + 1, u_1 + 1}
+          (@RingHom.{u_1, u_1}
+            (@HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+              (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+              (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                    (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@IsScalarTower.left.{u_1, u_1} O O
+                      (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@Monoid.toMulAction.{u_1} O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                n))
+            (@HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+              (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+              (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                    (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@IsScalarTower.left.{u_1, u_1} O O
+                      (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@Monoid.toMulAction.{u_1} O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                m))
+            (@Semiring.toNonAssocSemiring.{u_1}
+              (@HasQuotient.Quotient.{u_1, u_1} O
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                    (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                      (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                      (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@IsScalarTower.left.{u_1, u_1} O O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@Monoid.toMulAction.{u_1} O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                  (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                  n))
+              (@Ring.toSemiring.{u_1}
+                (@HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    n))
+                (@Ideal.Quotient.ring.{u_1} O (@CommRing.toRing.{u_1} O inst)
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    n)
+                  (@Ideal.IsTwoSided.instHPowNat.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    (@Ideal.instIsTwoSided_1.{u_1} O inst
+                      (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))
+                    n))))
+            (@Semiring.toNonAssocSemiring.{u_1}
+              (@HasQuotient.Quotient.{u_1, u_1} O
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                    (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                      (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                      (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@IsScalarTower.left.{u_1, u_1} O O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@Monoid.toMulAction.{u_1} O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                  (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                  m))
+              (@Ring.toSemiring.{u_1}
+                (@HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    m))
+                (@Ideal.Quotient.ring.{u_1} O (@CommRing.toRing.{u_1} O inst)
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    m)
+                  (@Ideal.IsTwoSided.instHPowNat.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    (@Ideal.instIsTwoSided_1.{u_1} O inst
+                      (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))
+                    m)))))
+          (@HasQuotient.Quotient.{u_1, u_1} O
+            (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+            (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+            (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+              (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+              (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                  (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                  (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@IsScalarTower.left.{u_1, u_1} O O
+                    (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@Monoid.toMulAction.{u_1} O
+                      (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+              (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+              n))
+          (fun
+              (x :
+                @HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    n)) =>
+            @HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+              (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+              (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                    (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@IsScalarTower.left.{u_1, u_1} O O
+                      (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@Monoid.toMulAction.{u_1} O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                m))
+          (@RingHom.instFunLike.{u_1, u_1}
+            (@HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+              (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+              (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                    (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@IsScalarTower.left.{u_1, u_1} O O
+                      (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@Monoid.toMulAction.{u_1} O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                n))
+            (@HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+              (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+              (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                    (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@IsScalarTower.left.{u_1, u_1} O O
+                      (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@Monoid.toMulAction.{u_1} O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                m))
+            (@Semiring.toNonAssocSemiring.{u_1}
+              (@HasQuotient.Quotient.{u_1, u_1} O
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                    (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                      (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                      (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@IsScalarTower.left.{u_1, u_1} O O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@Monoid.toMulAction.{u_1} O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                  (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                  n))
+              (@Ring.toSemiring.{u_1}
+                (@HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    n))
+                (@Ideal.Quotient.ring.{u_1} O (@CommRing.toRing.{u_1} O inst)
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    n)
+                  (@Ideal.IsTwoSided.instHPowNat.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    (@Ideal.instIsTwoSided_1.{u_1} O inst
+                      (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))
+                    n))))
+            (@Semiring.toNonAssocSemiring.{u_1}
+              (@HasQuotient.Quotient.{u_1, u_1} O
+                (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                    (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                      (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                      (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                      (@IsScalarTower.left.{u_1, u_1} O O
+                        (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@Monoid.toMulAction.{u_1} O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                  (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                  m))
+              (@Ring.toSemiring.{u_1}
+                (@HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                  (@Ideal.instHasQuotient.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    m))
+                (@Ideal.Quotient.ring.{u_1} O (@CommRing.toRing.{u_1} O inst)
+                  (@HPow.hPow.{u_1, 0, u_1} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    Nat (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                    (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)) O
+                        (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                        (@IsScalarTower.left.{u_1, u_1} O O
+                          (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))
+                          (@Monoid.toMulAction.{u_1} O
+                            (@Semiring.toMonoid.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst)))))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    m)
+                  (@Ideal.IsTwoSided.instHPowNat.{u_1} O (@Ring.toSemiring.{u_1} O (@CommRing.toRing.{u_1} O inst))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    (@Ideal.instIsTwoSided_1.{u_1} O inst
+                      (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))
+                    m)))))
+          (@Ideal.Quotient.factorPow.{u_1} O (@CommRing.toRing.{u_1} O inst)
+            (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+              (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+            (@Ideal.instIsTwoSided_1.{u_1} O inst
+              (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2)))
+            n m h)
+          (x n))
+        (x m))
+  (hroot :
+    ∀ (m : Nat),
+      @Eq.{u_1 + 1}
+        (@HasQuotient.Quotient.{u_1, u_1} O
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@Ideal.instHasQuotient_1.{u_1} O inst)
+          (@HPow.hPow.{u_1, 0, u_1}
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@instHPow.{u_1, 0}
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+              (@Submodule.instPowNat.{u_1, u_1} O
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                  (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+            (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+              (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+            m))
+        (@HPow.hPow.{u_1, 0, u_1}
+          (@HasQuotient.Quotient.{u_1, u_1} O
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@Ideal.instHasQuotient_1.{u_1} O inst)
+            (@HPow.hPow.{u_1, 0, u_1}
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@instHPow.{u_1, 0}
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                (@Submodule.instPowNat.{u_1, u_1} O
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                  (@Semiring.toModule.{u_1} O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                  (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                    (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+              (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+              m))
+          Nat
+          (@HasQuotient.Quotient.{u_1, u_1} O
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@Ideal.instHasQuotient_1.{u_1} O inst)
+            (@HPow.hPow.{u_1, 0, u_1}
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@instHPow.{u_1, 0}
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                (@Submodule.instPowNat.{u_1, u_1} O
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                  (@Semiring.toModule.{u_1} O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                  (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                    (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+              (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+              m))
+          (@instHPow.{u_1, 0}
+            (@HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@Ideal.instHasQuotient_1.{u_1} O inst)
+              (@HPow.hPow.{u_1, 0, u_1}
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@instHPow.{u_1, 0}
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                    (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                      (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                m))
+            Nat
+            (@NPow.toPow.{u_1}
+              (@HasQuotient.Quotient.{u_1, u_1} O
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@Ideal.instHasQuotient_1.{u_1} O inst)
+                (@HPow.hPow.{u_1, 0, u_1}
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                  (@instHPow.{u_1, 0}
+                    (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                    (@Submodule.instPowNat.{u_1, u_1} O
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                      (@Semiring.toModule.{u_1} O
+                        (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                      (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                        (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                  (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                  m))
+              (@Monoid.toNPow.{u_1}
+                (@HasQuotient.Quotient.{u_1, u_1} O
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                  (@Ideal.instHasQuotient_1.{u_1} O inst)
+                  (@HPow.hPow.{u_1, 0, u_1}
+                    (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                    (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                    (@instHPow.{u_1, 0}
+                      (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                      (@Submodule.instPowNat.{u_1, u_1} O
+                        (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                        (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                        (@Semiring.toModule.{u_1} O
+                          (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                        (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                          (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                          (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                    (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                    m))
+                (@Semiring.toMonoid.{u_1}
+                  (@HasQuotient.Quotient.{u_1, u_1} O
+                    (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                    (@Ideal.instHasQuotient_1.{u_1} O inst)
+                    (@HPow.hPow.{u_1, 0, u_1}
+                      (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                      (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                      (@instHPow.{u_1, 0}
+                        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                        (@Submodule.instPowNat.{u_1, u_1} O
+                          (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                          (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                          (@Semiring.toModule.{u_1} O
+                            (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                          (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                            (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                            (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                      (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                      m))
+                  (@Ideal.Quotient.semiring.{u_1} O inst
+                    (@HPow.hPow.{u_1, 0, u_1}
+                      (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                      (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                      (@instHPow.{u_1, 0}
+                        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                        (@Submodule.instPowNat.{u_1, u_1} O
+                          (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                          (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                          (@Semiring.toModule.{u_1} O
+                            (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                          (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                            (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                            (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                      (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                        (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                      m))))))
+          (x m) e)
+        (@OfNat.ofNat.{u_1}
+          (@HasQuotient.Quotient.{u_1, u_1} O
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@Ideal.instHasQuotient_1.{u_1} O inst)
+            (@HPow.hPow.{u_1, 0, u_1}
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@instHPow.{u_1, 0}
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                (@Submodule.instPowNat.{u_1, u_1} O
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                  (@Semiring.toModule.{u_1} O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                  (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                    (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+              (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+              m))
+          (nat_lit 0)
+          (@Zero.toOfNat0.{u_1}
+            (@HasQuotient.Quotient.{u_1, u_1} O
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@Ideal.instHasQuotient_1.{u_1} O inst)
+              (@HPow.hPow.{u_1, 0, u_1}
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@instHPow.{u_1, 0}
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                    (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                      (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                m))
+            (@Submodule.Quotient.instZeroQuotient.{u_1, u_1} O O (@CommRing.toRing.{u_1} O inst)
+              (@Ring.toAddCommGroup.{u_1} O (@CommRing.toRing.{u_1} O inst))
+              (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@HPow.hPow.{u_1, 0, u_1}
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@instHPow.{u_1, 0}
+                  (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+                  (@Submodule.instPowNat.{u_1, u_1} O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                    (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                    (@Semiring.toModule.{u_1} O
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                    (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                      (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                      (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+                (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+                m)))))
+  (m : Nat),
+  @Eq.{u_1 + 1}
+    (@HasQuotient.Quotient.{u_1, u_1} O
+      (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+      (@Ideal.instHasQuotient_1.{u_1} O inst)
+      (@HPow.hPow.{u_1, 0, u_1}
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@instHPow.{u_1, 0} (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          Nat
+          (@Submodule.instPowNat.{u_1, u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+            O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+            (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+              (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+              (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+        (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+          (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+        m))
+    (x m)
+    (@OfNat.ofNat.{u_1}
+      (@HasQuotient.Quotient.{u_1, u_1} O
+        (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+        (@Ideal.instHasQuotient_1.{u_1} O inst)
+        (@HPow.hPow.{u_1, 0, u_1}
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@instHPow.{u_1, 0}
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+            (@Submodule.instPowNat.{u_1, u_1} O
+              (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+              (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+              (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+              (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+          (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+            (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+          m))
+      (nat_lit 0)
+      (@Zero.toOfNat0.{u_1}
+        (@HasQuotient.Quotient.{u_1, u_1} O
+          (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@Ideal.instHasQuotient_1.{u_1} O inst)
+          (@HPow.hPow.{u_1, 0, u_1}
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@instHPow.{u_1, 0}
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+              (@Submodule.instPowNat.{u_1, u_1} O
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                  (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+            (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+              (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+            m))
+        (@Submodule.Quotient.instZeroQuotient.{u_1, u_1} O O (@CommRing.toRing.{u_1} O inst)
+          (@Ring.toAddCommGroup.{u_1} O (@CommRing.toRing.{u_1} O inst))
+          (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+          (@HPow.hPow.{u_1, 0, u_1}
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+            (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+            (@instHPow.{u_1, 0}
+              (@Ideal.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))) Nat
+              (@Submodule.instPowNat.{u_1, u_1} O
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)) O
+                (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                (@Semiring.toModule.{u_1} O (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))
+                (@IsScalarTower.right.{u_1, u_1} O O (@CommRing.toCommSemiring.{u_1} O inst)
+                  (@CommSemiring.toSemiring.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst))
+                  (@Algebra.id.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)))))
+            (@IsLocalRing.maximalIdeal.{u_1} O (@CommRing.toCommSemiring.{u_1} O inst)
+              (@IsDiscreteValuationRing.toIsLocalRing.{u_1} O inst inst_1 inst_2))
+            m))))

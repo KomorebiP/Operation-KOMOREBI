@@ -1,0 +1,2582 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.90in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{bm}
+\usepackage{needspace}
+\usepackage{placeins}
+
+
+\graphicspath{{figures/}}
+\allowdisplaybreaks
+
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus X},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Universal residual seeds, deformation forests, directed transport, seed zeta functions, companion completion, compatible carriers, and finite occupancy},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Projector-Resolved Seed Calculus X}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{classicalinput}[theorem]{Classical Input}
+\newtheorem{numericalcertificate}[theorem]{Numerical Certificate}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\mfrak}{\mathfrak m}
+\newcommand{\F}{\mathbf F}
+\newcommand{\Z}{\mathbf Z}
+\newcommand{\Q}{\mathbf Q}
+\newcommand{\C}{\mathbf C}
+\newcommand{\Spf}{\operatorname{Spf}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Frob}{\operatorname{Frob}}
+\newcommand{\WD}{\operatorname{WD}}
+\newcommand{\HT}{\operatorname{HT}}
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\red}{\operatorname{red}}
+\newcommand{\Def}{\operatorname{Def}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\Cl}{\operatorname{Cl}}
+\newcommand{\SCC}{\operatorname{SCC}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\Sys}{\mathscr S}
+\newcommand{\Forest}{\mathfrak F}
+\newcommand{\Compat}{\mathfrak C}
+\newcommand{\Packet}{\mathfrak P}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.62em}
+\setlist[itemize]{leftmargin=1.55em,itemsep=0.20em,topsep=0.30em}
+\setlist[enumerate]{leftmargin=1.75em,itemsep=0.24em,topsep=0.32em}
+\captionsetup{font=small,labelfont=bf}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  showstringspaces=false,
+  tabsize=4,
+  numbers=left,
+  numberstyle=\tiny,
+  xleftmargin=1.5em,
+  framexleftmargin=1.2em
+}
+
+\title{\textbf{Projector-Resolved Seed Calculus X}\\[0.35em]
+\large Universal Residual Seeds: Deformation Forests, Transport Categories, and System Completion}
+\author{Komorebi P.}
+\date{}
+
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Universal Residual Seeds}
+\renewcommand{\KomorebiSubtitle}{Deformation forests, transport categories, and conditional system completion}
+\renewcommand{\KomorebiSeries}{Core series X}
+\renewcommand{\KomorebiKind}{Traditional monograph}
+\renewcommand{\KomorebiShortTitle}{Paper X}
+\renewcommand{\KomorebiTitleSize}{36}
+\renewcommand{\KomorebiTitleLeading}{41}
+\renewcommand{\KomorebiEdition}{Verification edition / 20 October 2026}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{This reading edition joins the preserved Block 27 manuscript, the subsequent residue-counting continuation, and the final checked conditional occupied-system completion. The live internal ledger is 20/20 at the explicitly amended conditional scope. Historical checkpoint totals remain dated evidence of their own source revisions. Universal companion existence, carrier existence, and nonzero occupancy are not inferred. The final assembly and its exact inputs are in Section~\ref{sec:conditional-final}.}
+
+
+
+\begin{abstract}
+A residual representation is a genuine zeroth-order coordinate.  All positive-depth perturbations above it may fill its formal deformation neighborhood, but they cannot move into a different residual class.  This paper develops the corresponding universal object: a residual forest whose roots are residual representations, whose finite levels are lifts modulo powers of a uniformizer, and whose infinite branches are complete characteristic-zero objects.  We prove the residual partition, no-crossing, inverse-limit reconstruction, finite-branch compactness, exact smooth and singular branch counts, packet decomposition of tangent and obstruction cohomology, a directed minimum-seed theorem, rational seed-zeta formulas, and finite companion-forest completion.  The coefficient prime two is represented by a weighted forest in which characteristic-zero packets may merge modulo two and become visible only at later depth.  We then define a prime-independent system seed through a common Frobenius spine, prove a compatible-carrier summand theorem under finite Frobenius separation, and reduce finite occupancy in a fixed semisimple carrier to the nonnegative integer trace of an exact joint projector.  The paper does not prove that every admissible residual companion exists or that every finite Hecke packet is occupied.  Those two existence statements remain the exact horizontal boundary beyond vertical deformation theory.
+\end{abstract}
+
+\input{reading_contract.tex}
+\clearpage
+\tableofcontents
+\newpage
+
+\section{The universal seed at residual depth}
+
+The earlier papers treat a seed as a primitive object together with an operator grammar, a packet system, a topology, and an exact reconstruction law.  In arithmetic deformation problems, the primitive coordinate has two layers:
+
+\[
+\boxed{
+\text{residual root}
+\quad+\quad
+\text{positive-depth deformation coordinates}.
+}
+\]
+
+The distinction is structural.  A correction divisible by the uniformizer changes higher digits but leaves the residual digit fixed.  Therefore the correct universal arithmetic seed cannot be one residual representation unless the admissible residual space has only one point.  It must contain every residual root and the complete formal neighborhood above each root.
+
+Let \(\Ocal\) be a complete discrete valuation ring with uniformizer \(\varpi\), maximal ideal \((\varpi)\), residue field
+\[
+k=\Ocal/(\varpi),\qquad |k|=q,
+\]
+and fraction field \(K\).  When a characteristic-zero conclusion is intended, assume additionally that \(\operatorname{char}K=0\); the general counting statements do not require that restriction.  Let \(\mathcal M\) be a moduli functor on complete local Noetherian \(\Ocal\)-algebras with residue field \(k\), equipped with a well-defined reduction map
+\[
+\red_A:\mathcal M(A)\longrightarrow \mathcal M(k).
+\]
+For a Galois representation this means either that a framed integral model has been fixed or that the residual semisimplified class is used.
+
+\begin{definition}[Residual seed system]\label{px:1.1}
+For \(\bar x\in\mathcal M(k)\), define the residual fiber
+\[
+\mathcal M_{\bar x}(A)
+=
+\{x\in\mathcal M(A):\red_A(x)=\bar x\}.
+\]
+The point \(\bar x\) is the residual root.  The family of all nonempty fibers is the residual special fiber, and the formal deformation problems above them form the residual forest.
+\end{definition}
+
+For a Galois problem the principal example is
+\[
+\bar\rho:G_{F,S}\longrightarrow \GL_n(k),
+\]
+with a deformation functor \(\Def_{\bar\rho}\) cut out by a determinant and selected local conditions.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.87\linewidth]{01_residual_seed_architecture.pdf}
+\caption{The universal residual seed is not one point.  It is the special fiber together with one complete formal neighborhood above each admissible root.}
+\end{figure}
+
+\subsection{What the paper is designed to separate}
+
+Three statements are often compressed into one sentence even though they have different logical content.
+
+\begin{enumerate}
+\item \textbf{Vertical completeness:} every compatible perturbation stream above a fixed root reconstructs a point of its complete deformation space.
+\item \textbf{Horizontal companion existence:} every required residual root, including roots at other coefficient primes, actually exists.
+\item \textbf{Occupancy:} the resulting arithmetic packet occurs in a nonzero global carrier of the required type.
+\end{enumerate}
+
+The first belongs to deformation and inverse-limit theory.  The second is a residual companion problem.  The third is an arithmetic or automorphic nonvanishing problem.  Neither of the last two follows from arbitrarily deep perturbation above one already occupied root.
+
+\section{Residual partition and no crossing}
+
+\begin{theorem}[Residual partition]\label{px:2.1}
+For every coefficient algebra \(A\),
+\[
+\boxed{
+\mathcal M(A)
+=
+\bigsqcup_{\bar x\in\mathcal M(k)}
+\mathcal M_{\bar x}(A).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Every \(A\)-valued object has one reduced object \(\red_A(x)\in\mathcal M(k)\), so the union is exhaustive.  Two distinct fibers cannot intersect because an object cannot have two different reductions.  Hence the union is disjoint.
+\end{proof}
+
+\begin{theorem}[No crossing under positive-depth perturbation]\label{px:2.2}
+Suppose \(x,y\in\mathcal M(\Ocal)\) are related by a deformation operation that is congruent to the identity modulo \(\varpi\).  Then
+\[
+\red(x)=\red(y).
+\]
+Every finite composition remains in one residual fiber.  If an infinite perturbation stream converges in the \(\varpi\)-adic topology, its limit remains in the same fiber.  The existence of that limit is an explicit hypothesis, not a consequence of positive depth alone.
+\end{theorem}
+
+\begin{proof}
+A correction in \(\varpi\Ocal\) vanishes after reduction modulo \(\varpi\).  Thus one operation preserves the residual root, and induction proves the finite statement.  For a convergent stream, convergence at the first finite precision makes its reduction eventually equal to that of its limit.  Every term already has the initial reduction, so the limit has that reduction too.  Completeness applies to Cauchy streams; it does not make every root-preserving stream Cauchy.  For example, \(0,3,0,3,\ldots\) has constant reduction modulo \(3\) but no limit modulo \(9\).
+\end{proof}
+
+\begin{corollary}[Zeroth-order obstruction]\label{px:2.3}
+If two admissible objects have different residual roots, no sequence of genuinely positive-depth perturbations beginning at one can reach the other.  A horizontal transport between their roots is a zeroth-order operation, not a deeper lift.
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{03_no_crossing_branches.pdf}
+\caption{Each perturbation stream remains above its initial residual root.  Refinement adds digits vertically; it does not move a branch horizontally.}
+\end{figure}
+
+\begin{numericalcertificate}[Exact residual partition]\label{px:2.4}
+The finite implementation partitions the integers \(0,\ldots,8\) into the three classes modulo \(3\):
+\[
+\{0,3,6\},\qquad \{1,4,7\},\qquad \{2,5,8\}.
+\]
+Every tested correction of the form \(x\mapsto x+p h\) preserves the residual class exactly.
+\end{numericalcertificate}
+
+\section{Lift forests and inverse-limit reconstruction}
+
+Fix \(\bar x\in\mathcal M(k)\).  For \(m\ge1\), set
+\[
+X_m(\bar x)=\mathcal M_{\bar x}(\Ocal/\varpi^m).
+\]
+Reduction gives transition maps
+\[
+r_{m+1,m}:X_{m+1}(\bar x)\longrightarrow X_m(\bar x).
+\]
+A compatible branch is a sequence \((x_m)_{m\ge1}\) satisfying
+\[
+r_{m+1,m}(x_{m+1})=x_m.
+\]
+
+\begin{classicalinput}[Represented complete deformation problems]\label{px:3.1}
+When a deformation functor is represented by a complete local ring \(R_{\bar x}\), its \(\Ocal\)-valued points are continuous local maps \(R_{\bar x}\to\Ocal\).  Completeness identifies such maps with compatible maps to every quotient \(\Ocal/\varpi^m\).
+\end{classicalinput}
+
+\begin{theorem}[Formal inverse-limit reconstruction]\label{px:3.2}
+Assume \(\mathcal M_{\bar x}\) is represented by a complete local \(\Ocal\)-algebra \(R_{\bar x}\).  Then reduction induces a natural bijection
+\[
+\boxed{
+\mathcal M_{\bar x}(\Ocal)
+\cong
+\varprojlim_m
+\mathcal M_{\bar x}(\Ocal/\varpi^m).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+A continuous local homomorphism \(R_{\bar x}\to\Ocal\) reduces to a compatible family of homomorphisms into \(\Ocal/\varpi^m\).  Conversely, compatible finite-level maps determine a map
+\[
+R_{\bar x}\longrightarrow\varprojlim_m\Ocal/\varpi^m\cong\Ocal.
+\]
+The two constructions are inverse because equality in a separated complete ring is detected modulo every power of its maximal ideal.
+\end{proof}
+
+\begin{theorem}[Finite-branch compactness]\label{px:3.3}
+Suppose every \(X_m(\bar x)\) is finite and nonempty and every node has finitely many children.  Then the lift tree above \(\bar x\) contains an infinite compatible branch.
+\end{theorem}
+
+\begin{proof}
+The tree is infinite because it has a nonempty level at every depth, and it is finitely branching by hypothesis.  K\"onig's lemma gives an infinite path.  The edge relation is reduction, so that path is a compatible branch.
+\end{proof}
+
+Surjectivity of every transition map is sufficient but not necessary.  Finite branching and nonempty arbitrarily deep levels are the compactness mechanism.
+
+\begin{proposition}[Smooth formal branch count]\label{px:3.4}
+If
+\[
+R_{\bar x}\cong\Ocal[[t_1,\ldots,t_d]]\quad\text{as complete local }\Ocal\text{-algebras},
+\]
+then
+\[
+\boxed{
+\#X_m(\bar x)=q^{d(m-1)}.
+}
+\]
+Fix a uniformizer and a section \(s:k\to\Ocal\) of reduction, with \(s(0)=0\). Every \(\Ocal\)-valued branch is encoded by \(d\) positive-depth digit streams
+\[
+t_i=s(a_{i,1})\varpi+s(a_{i,2})\varpi^2+\cdots,
+\qquad a_{i,j}\in k,
+\]
+\end{proposition}
+
+\begin{proof}
+A local map sends each parameter into the image of \((\varpi)\) in \(\Ocal/\varpi^m\). Conversely, every tuple in that image is nilpotent and defines a coefficient-preserving evaluation homomorphism. This homomorphism is local. To prove uniqueness without assuming continuity of an arbitrary competing homomorphism, observe in one variable that a homomorphism killing \(X^N\) only sees the finite polynomial truncation modulo \(X^N\). Induction over the finite number of variables gives uniqueness in all dimensions. The actual local maps are therefore in bijection with the full parameter tuple set. Its cardinality is \(q^{d(m-1)}\), including the zero-dimensional chart.
+
+For integral maps, reduce an arbitrary tuple in \((\varpi)\Ocal\) at every precision, evaluate there, and use the represented-map reconstruction theorem. The finite evaluations are compatible, the reconstructed algebra map is local, and every competing local map has the same finite reductions. Separatedness gives uniqueness. Local maps are continuous in the maximal-ideal adic topologies. This establishes the integral parameter classification rather than assuming it from the finite count.
+
+For the digit claim, subtract the chosen representative of the residue and divide the remainder by the uniformizer. Iterating gives unique digits. Conversely, the partial sums of any digit stream form a compatible Cauchy family and reconstruct uniquely by completeness and separatedness. More precisely, for each parameter there is a unique stream \((a_{i,j})_{j\ge1}\) such that
+\[
+\varpi^{n+1}\mid t_i-\sum_{j=1}^{n}s(a_{i,j})\varpi^j\qquad(n\ge0).
+\]
+The section is a set-theoretic section of reduction, not an asserted embedding of residue fields into the coefficient ring. Finally, a supplied local \(\Ocal\)-algebra isomorphism from \(R_{\bar x}\) transports both the map classification and the count.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth]{02_residual_digit_forest.pdf}
+\caption{The first four levels of a full \(3\)-adic digit forest.  A path is a compatible finite-depth perturbation stream.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{04_inverse_limit_digits.pdf}
+\caption{A compatible base-five residue tower reconstructs the digit stream \((2,4,1,3,0,2)\).}
+\end{figure}
+
+\section{Tangent and obstruction packets}
+
+For a residual representation \(\bar\rho\), first-order deformations and lifting obstructions are classically controlled by cohomology of the adjoint module.  The projector calculus does not replace that theory.  It resolves the controlling complex into invariant packets when suitable projectors exist.
+
+\begin{classicalinput}[Tangent and obstruction spaces]\label{px:4.1}
+For a framed representation problem, first-order lifts are described by \(Z^1(G,\ad\bar\rho)\).  For an unframed Schur problem, tangent directions are described by \(H^1(G,\ad\bar\rho)\).  Relations in a presentation of a deformation ring map into \(H^2(G,\ad\bar\rho)\), which contains the obstruction classes.
+\end{classicalinput}
+
+Let
+\[
+C^0\xrightarrow{d_0}C^1\xrightarrow{d_1}C^2\xrightarrow{}\cdots
+\]
+be a cochain complex over a field.  Suppose a finite family of projectors \(P_j^r:C^r\to C^r\) satisfies
+\[
+\sum_jP_j^r=I,
+\qquad
+P_i^rP_j^r=\delta_{ij}P_j^r,
+\qquad
+d_rP_j^r=P_j^{r+1}d_r.
+\]
+
+\begin{theorem}[Cohomology packet decomposition]\label{px:4.2}
+Under these hypotheses, each packet is a subcomplex and
+\[
+\boxed{
+H^r(C^\bullet)
+\cong
+\bigoplus_jH^r(P_jC^\bullet).
+}
+\]
+In particular,
+\[
+H^1=\bigoplus_jH^1_j,
+\qquad
+H^2=\bigoplus_jH^2_j,
+\]
+so tangent and obstruction spaces reconstruct exactly from their packet components.
+\end{theorem}
+
+\begin{proof}
+For each packet, use the actual image submodules
+\(C_j^r=\operatorname{im}P_j^r\). Commutation with the differential
+makes these a subcomplex. Write
+\[
+Z^r=\ker d_r,\qquad B^r=\operatorname{im}d_{r-1}\subseteq Z^r,
+\qquad H^r=Z^r/B^r,
+\]
+and define \(Z_j^r,B_j^r,H_j^r\) using the restricted differentials of
+\(C_j^\bullet\). The inclusion \(i_j:C_j^\bullet\to C^\bullet\)
+and the image-valued projection \(p_j:C^\bullet\to C_j^\bullet\)
+are cochain maps, so they induce maps on these genuine quotients.
+
+For \(i\ne j\), orthogonality gives
+\(H(p_i)H(i_j)=0\). Idempotence gives
+\(H(p_j)H(i_j)=I\), and completeness gives
+\(\sum_j H(i_j)H(p_j)=I\). Thus the maps
+\[
+[z]\longmapsto([P_j^r z])_j,
+\qquad
+([z_j])_j\longmapsto\left[\sum_j i_j z_j\right]
+\]
+are inverse linear maps. The finite product equals the direct sum, proving
+the assertion. In the formalization, both sides are also identified with
+Mathlib's standard homology objects of the genuine graded complexes.
+\end{proof}
+
+\paragraph{Scope of the splitting.}
+The algebraic proof works over any commutative ring and does not divide by
+\(2\), so it applies in characteristic two when the stated integral
+chain projectors exist. It does not construct those projectors. The
+identification of a particular Galois tangent or obstruction problem with
+this cohomology remains the preceding classical input.
+The splitting detects vanishing:
+\[
+H^r(C^\bullet)=0\quad\Longleftrightarrow\quad
+H^r(C_j^\bullet)=0\text{ for every }j.
+\]
+It does not force either side to vanish or decouple nonlinear deformation
+equations. Moreover, commutation with the differential is essential:
+complementary idempotents on the underlying vector spaces need not
+preserve cocycles or coboundaries.
+
+\paragraph{Naturality.}
+If a cochain map \(F:C^\bullet\to D^\bullet\) intertwines the supplied
+projectors, it restricts to maps \(F_j:C_j^\bullet\to D_j^\bullet\).
+The direct-sum decomposition commutes with \(H^r(F)\) and the family
+\(H^r(F_j)\). This is checked using representatives in the actual
+quotients, independently of any dimension computation.
+
+
+\begin{remark}[Odd and dyadic nonlinear equations]\label{px:4.3}
+At odd residue characteristic, a differential graded Lie model may be written in Maurer--Cartan form
+\[
+d\eta+\frac12[\eta,\eta]=0,
+\]
+and a cyclic grading converts this into exact packet convolutions.  At residue characteristic two, division by \(2\) is not integral.  A quadratic or divided-square refinement must be retained.  This is one reason the dyadic residual forest is weighted rather than obtained by formal substitution into the odd-prime formulas.
+\end{remark}
+
+\begin{numericalcertificate}[Finite packet complex]\label{px:4.4}
+The exact modular test uses two invariant subcomplexes over \(\F_5\).  Their cohomology dimensions are
+\[
+(0,0,0),
+\qquad
+(1,2,1),
+\]
+and the reconstructed total is
+\[
+\dim(H^0,H^1,H^2)=(1,2,1).
+\]
+The packet-sum residual is zero.
+\end{numericalcertificate}
+
+\paragraph{New checked realization of the finite pattern.}
+The Block 04 implementation separately uses
+\[
+\mathbf F_5^2\xrightarrow{d_0}\mathbf F_5^4\xrightarrow{d_1}\mathbf F_5^2,
+\quad d_0(a,b)=(a,0,0,0),\quad d_1(a,b,c,d)=(b,0).
+\]
+The first packet is the exact complex with dimensions \((1,2,1)\),
+and the second packet has zero differentials and dimensions \((1,2,1)\).
+The actual middle cohomology is linearly isomorphic to \(\mathbf F_5^2\),
+which is checked in Lean. Independent exhaustive coset tests check all
+three cohomology degrees after changes of basis. This is a new specified
+realization of the displayed dimension pattern, not a claimed rerun of
+the original companion implementation.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{11_tangent_obstruction_packets.pdf}
+\caption{A finite chain-projector model.  Tangent and obstruction dimensions are carried by one packet and reconstruct exactly.}
+\end{figure}
+
+\section{The weighted dyadic residual forest}
+
+At an odd prime, distinct sign characters remain distinct in the residue field.  At the coefficient prime two,
+\[
+1\equiv-1\pmod2.
+\]
+Thus distinct characteristic-zero packets can share one residual root and separate only after more precision is retained.
+
+\begin{definition}[Visibility weight]\label{px:5.1}
+For two integral packet coordinates \(a,b\in\Ocal\), define their separation depth
+\[
+w(a,b)=\min\{m\ge1:a\not\equiv b\pmod{\varpi^m}\},
+\]
+when such an \(m\) exists.  A dyadic packet decomposition is weighted by these first visibility depths and by the valuations of any denominators required by its rational projectors.
+\end{definition}
+
+\begin{example}[The two sign branches]\label{px:5.2}
+The characters \(\chi_+(g)=1\) and \(\chi_-(g)=-1\) have the same reduction modulo \(2\), but
+\[
+1\not\equiv-1\pmod4.
+\]
+Their first separation depth is therefore \(2\).  One mod-two root contains two branches that become distinct at the next level.
+\end{example}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{05_dyadic_delayed_separation.pdf}
+\caption{The sign packets merge at residual depth and separate at depth two.  This is a genuine change in integral coordinates, not a numerical plotting effect.}
+\end{figure}
+
+A simple weighted formal model already captures delayed visibility.  Let \(w_i\ge1\) and constrain
+\[
+t_i\in(\varpi^{w_i}\Ocal+\varpi^m\Ocal)/\varpi^m\Ocal.
+\]
+Then coordinate \(i\) is invisible until \(m>w_i\).
+
+\begin{proposition}[Weighted smooth-chart count]\label{px:5.3}
+For weights \(\bm w=(w_1,\ldots,w_d)\),
+\[
+\boxed{
+N_{\bm w}(m)
+=
+q^{\sum_{i=1}^d\max(m-w_i,0)}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The image of \(\varpi^{w_i}\Ocal\) in \(\Ocal/\varpi^m\) has one element when \(m\le w_i\), and \(q^{m-w_i}\) elements when \(m>w_i\).  Multiplying the independent coordinate counts gives the formula.
+\end{proof}
+
+This model does not assert that every dyadic Galois deformation ring is a weighted formal ball.  It gives the exact local counting law once such weighted coordinates or a Smith-normal-form chart have been proved.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{07_weighted_formal_chart.pdf}
+\caption{Weights delay finite-depth visibility.  Once all coordinates are active, the asymptotic slope equals the ordinary formal dimension.}
+\end{figure}
+
+\section{Seed zeta functions and branching dimensions}
+
+Finite-depth counts record more than the existence of a branch.  They distinguish smooth, weighted, and singular local geometry.
+
+\begin{definition}[Seed zeta function]\label{px:6.1}
+For a residual root \(\bar x\) with finite levels, define
+\[
+\boxed{
+Z_{\bar x}(T)
+=
+\sum_{m\ge1}\#X_m(\bar x)T^m.
+}
+\]
+When a weighted chart is specified, write \(Z_{\bm w}(T)\).
+\end{definition}
+
+\begin{theorem}[Smooth seed zeta function]\label{px:6.2}
+For a smooth formal component of dimension \(d\),
+\[
+\boxed{
+Z_d(T)=\frac{T}{1-q^dT}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+By the proved formal-model map-to-parameter equivalence, \(\#X_m=q^{d(m-1)}\) counts all the actual local coefficient-algebra maps. Summing the geometric series gives the identity. The checked statement is an equality of infinite formal power series, with zero constant coefficient.
+\end{proof}
+
+\begin{theorem}[Weighted seed zeta function]\label{px:6.3}
+Let \(1\le w_1\le\cdots\le w_d\), put \(W=\sum_iw_i\), and let
+\[
+a_m=q^{\sum_i\max(m-w_i,0)}.
+\]
+Then
+\[
+\boxed{
+Z_{\bm w}(T)
+=
+\sum_{m=1}^{w_d}a_mT^m
++
+q^{-W}\frac{(q^dT)^{w_d+1}}{1-q^dT}.
+}
+\]
+In particular, every weighted smooth chart has a rational seed zeta function.
+\end{theorem}
+
+\begin{proof}
+The finite sum records the depths before all coordinates are active.  For \(m\ge w_d+1\),
+\[
+a_m=q^{dm-W},
+\]
+so the remaining terms form one geometric series.
+\end{proof}
+
+\begin{theorem}[Singular power seed]\label{px:6.4}
+For integers \(e\ge1\) and \(m\ge1\), in \(\Ocal/\varpi^m\) the equation
+\[
+x^e=0
+\]
+has exactly
+\[
+\boxed{
+q^{m-\lceil m/e\rceil}
+}
+\]
+solutions.  Its seed zeta function is
+\[
+\boxed{
+Z_e(T)
+=
+\frac{\sum_{r=1}^{e}q^{r-1}T^r}
+{1-q^{e-1}T^e}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The congruence is equivalent to
+\[
+e\,v_\varpi(x)\ge m,
+\]
+so \(x\) must lie in \(\varpi^{\lceil m/e\rceil}\Ocal/\varpi^m\), which has the stated cardinality.  Write \(m=ek+r\), \(1\le r\le e\).  The exponent becomes \((e-1)k+r-1\).  Summing over \(k\ge0\) and \(1\le r\le e\) gives the rational expression.
+\end{proof}
+
+\begin{definition}[Branching dimension]\label{px:6.5}
+When the limit exists, define the finite-level counting exponent
+\[
+\dim_{\mathrm{seed}}(\bar x)
+=
+\lim_{m\to\infty}
+\frac{\log_q\#X_m(\bar x)}{m}.
+\]
+A limsup may be used in general.
+\end{definition}
+
+\begin{corollary}[Fractional singular dimension]\label{px:6.6}
+For \(x^e=0\),
+\[
+\boxed{
+\dim_{\mathrm{seed}}=1-\frac1e.
+}
+\]
+In particular, \(x^2=0\) has branching dimension \(1/2\).
+
+\paragraph{Counting exponent versus compatible branches.}
+The preceding exponent counts all finite-level solutions, including nodes which cannot lift indefinitely. It is not the cardinality or dimension of the space of infinite branches. In fact every compatible tower of solutions to \(x^e=0\), for \(e\ge1\), is the zero tower. For each \(m\), a solution at depth \(em\) lies in \(\varpi^m\Ocal/\varpi^{em}\); its reduction at depth \(m\) is therefore zero. Compatibility proves the assertion at every depth. This observation and the real logarithmic limit are both formalized in Block 02.
+
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.83\linewidth]{06_smooth_singular_counts.pdf}
+\caption{A smooth two-dimensional formal chart and the singular equation \(x^2=0\) have visibly different exponential growth.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{08_fractional_seed_dimension.pdf}
+\caption{The finite-depth branching dimension of \(x^e=0\) is \(1-1/e\), giving a family of fractional local growth exponents.}
+\end{figure}
+
+\section{Residual transport categories}
+
+Vertical lifting never changes a residual root.  Horizontal coverage requires operations whose residual effect is not congruent to the identity.  Examples that may define such transports include twisting, duality, restriction, induction, tensor product, symmetric powers, exterior powers, and functorial transfer.  The word ``may'' is essential: each operation must preserve the deformation conditions and the realization statement being transported.
+
+\begin{definition}[Admissible residual transport]\label{px:7.1}
+An admissible transport from \(\bar\rho\) to \(\bar\rho'\) consists of
+\[
+\mathcal T:\bar\rho\longmapsto\bar\rho'
+\]
+together with natural maps
+\[
+\mathcal T_A:\Def_{\bar\rho}(A)\longrightarrow\Def_{\bar\rho'}(A)
+\]
+for every coefficient algebra \(A\), compatible with base change and reduction.  When the transport is reversible, it is an isomorphism in the residual transport groupoid.  One-way operations give a directed category.
+\end{definition}
+
+For a finite collection of roots, record a directed edge \(u\to v\) whenever occupancy or the relevant property is known to propagate from \(u\) to \(v\).
+
+\begin{definition}[Directed seed rank]\label{px:7.2}
+For a directed transport graph \(G\), define
+\[
+\srank_G
+=
+\min\{|S|:\Cl_G(S)=V(G)\},
+\]
+where \(\Cl_G(S)\) is the set of vertices reachable from \(S\).
+\end{definition}
+
+\begin{theorem}[Directed minimum-seed theorem]\label{px:7.3}
+Let \(G\) be a finite directed graph.  Collapse every strongly connected component to one vertex, obtaining the condensation DAG.  Then
+\[
+\boxed{
+\srank_G
+=
+\#\{\text{source strongly connected components of }G\}.
+}
+\]
+One representative from each source component is a minimum seed set.
+\end{theorem}
+
+\begin{proof}
+Every vertex of a finite DAG is reachable from a source, so one seed in each source component reaches the entire condensation graph.  Within a strongly connected component, one vertex reaches every other.  Hence the source representatives are sufficient.
+
+Conversely, a source component has no incoming edge from another component.  It cannot be reached from a seed outside itself, so every generating seed set must meet it.  Therefore the number of source components is also a lower bound.
+\end{proof}
+
+For reversible transports the condensation has one vertex per connected component, recovering the undirected minimum-seed theorem.
+
+\paragraph{Formal scope and propagation.}
+Reachability is the reflexive-transitive closure of the supplied directed edge
+relation, and a strongly connected component is the actual quotient by mutual
+reachability. The minimum seed count is defined independently as the least
+cardinality of a set that reaches all vertices. Every covering set must meet
+every source component; conversely, meeting every source component suffices
+in a finite graph. Thus any choice of one representative from each source is
+optimal. Empty graphs have rank zero, and self-loops are permitted. Adding
+admissible edges cannot increase the minimum seed count.
+
+If a property $P$ propagates along every supplied edge and holds at all selected
+seeds, it holds at every reached vertex. These are explicit hypotheses. The
+minimum-seed theorem does not construct valid arithmetic edges or supply
+initial occupancy.
+
+\paragraph{Why the finite hypothesis cannot be dropped.}
+Take vertices $\{*\}\sqcup\{v_n:n\in\mathbf N\}$, with $*$ isolated and
+edges $v_{n+1}\to v_n$. Every strongly connected component is a singleton,
+and $\{*\}$ is the unique source component. No finite seed set covers all
+vertices: it can reach only indices no larger than the largest chosen index.
+Both the unique-source statement and the failure of every finite cover are
+checked in Lean. Hence one source component in an infinite condensation does
+not imply that one seed reaches all objects.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.91\linewidth]{09_directed_transport_graph.pdf}
+\caption{A finite directed transport model.  The components \(\{A,B\}\), \(\{D,E\}\), and \(\{G\}\) are sources; \(C\) and \(F\) are reached downstream.}
+\label{fig:transport-graph}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.86\linewidth]{10_source_scc_condensation.pdf}
+\caption{The condensation DAG makes the minimum seed count visible without searching every subset of roots.}
+\end{figure}
+
+\begin{numericalcertificate}[Directed seed count]\label{px:7.4}
+The test graph has five strongly connected components and three source components.  The theorem gives seed rank three.  Exhaustive search over every subset of vertices independently returns three, and the selected representatives reach all seven roots.
+
+\paragraph{New explicit checked realization.}
+Separately from the unretrieved original companion implementation, Block 05
+specifies vertices $A,B,C,D,E,F,G$ and the eight edges
+\[
+ A\to B,\ B\to A,\ B\to C,\ C\to F,\ D\to E,\ E\to D,\ E\to F,\ G\to F.
+\]
+The source components are $\{A,B\}$, $\{D,E\}$, and $\{G\}$; the other
+components are $\{C\}$ and $\{F\}$. A bounded path search to length three
+is proved closed under every original edge, which certifies equality with
+unbounded reachability. The resulting label certificate is identified with
+the actual quotient by mutual reachability. Lean checks seed rank three and
+exactly the four minimum sets
+\[
+ \{A,D,G\},\quad\{A,E,G\},\quad\{B,D,G\},\quad\{B,E,G\}.
+\]
+Independent exact tests enumerate every directed graph on zero through four
+vertices, including loops, and every seed subset. These finite tests audit the
+implementation; the universal theorem is a separate formal proof.
+
+\end{numericalcertificate}
+
+\section{Prime-independent system seeds}
+
+A compatible system should not be treated as an unrelated collection of \(\lambda\)-adic roots.  Its members share algebraic Frobenius polynomials, Hodge--Tate data, determinant information, and local Weil--Deligne packets.
+
+\begin{definition}[Common arithmetic spine]\label{px:8.1}
+Let \(M\) be a number field.  A common spine \(\Compat\) consists of:
+\begin{itemize}
+\item characteristic polynomials \(P_v(X)\in M[X]\) at almost all places;
+\item coefficient-prime independent weight and determinant data;
+\item prescribed local Weil--Deligne or inertial packet labels at the ramified places.
+\end{itemize}
+For each finite place \(\lambda\) of \(M\), let
+\[
+X_{\lambda,m}(\Compat)
+\]
+be the finite set of admissible objects modulo \(\varpi_\lambda^m\) realizing the reduction of this spine.
+\end{definition}
+
+The system seed is the fibered object
+\[
+\boxed{
+\Sys_{\mathrm{sys}}
+=
+\Sys_2^{\mathrm{wt}}
+\times_{\Compat}
+\prod_{\lambda\nmid2}'\Sys_\lambda.
+}
+\]
+The fiber product notation states a compatibility requirement.  It does not prove that every fiber is nonempty.
+
+\begin{theorem}[Adelic finite-depth completion]\label{px:8.2}
+Assume:
+\begin{enumerate}
+\item an algebraic common spine \(\Compat\) over a number field \(M\) is fixed;
+\item for every finite place \(\lambda\) of \(M\) and every \(m\ge1\), the companion level \(X_{\lambda,m}(\Compat)\) is finite and nonempty;
+\item the reduction forests are finitely branching;
+\item the selected local conditions are closed under inverse limits.
+\end{enumerate}
+Then for every \(\lambda\) there is an infinite compatible branch
+\[
+\rho_\lambda\in\varprojlim_mX_{\lambda,m}(\Compat),
+\]
+and the collection \(\{\rho_\lambda\}_\lambda\) realizes the prescribed strictly compatible spine.
+\end{theorem}
+
+\begin{proof}
+Finite-branch compactness gives an infinite branch in every coefficient-prime forest.  Inverse-limit closure gives an admissible \(\lambda\)-adic object.  By definition each finite level has the prescribed reductions of the common Frobenius and local packets.  Equality at every finite precision implies equality in the complete coefficient ring.  Thus all members realize the same spine.
+\end{proof}
+
+\begin{corollary}[Residual companion obstruction]\label{px:8.3}
+If
+\[
+X_{\lambda,1}(\Compat)=\varnothing
+\]
+for one coefficient prime \(\lambda\), no compatible completion with spine \(\Compat\) exists.  Deeper perturbations at other primes cannot create the missing residual companion.
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{13_common_system_spine.pdf}
+\caption{The local members are coordinates of one system only after their finite data descend to a common algebraic spine.}
+\end{figure}
+
+\begin{example}[A scalar companion failure]\label{px:8.4}
+For
+\[
+f(x)=x^2+1,
+\]
+there are two simple branches at \(p=5\) and \(p=13\), no residual roots at \(p=3\) or \(p=7\), and one root modulo \(2\) that has no child modulo \(4\).  A complete \(5\)-adic branch therefore does not imply an adelic solution.
+\end{example}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.79\linewidth]{12_companion_forest_occupancy.pdf}
+\caption{Finite companion levels for \(x^2+1=0\).  The obstruction at \(2,3,7\) is visible before any deep lifting argument begins.}
+\end{figure}
+
+
+\paragraph{Conditional scope and complete assembly (Block 23).}
+The theorem above is conditional on the chosen spine and the stated local
+inverse-limit closure. In the fixed-rank integral representation setting,
+``closed under inverse limits'' means that every compatible family of admissible
+finite representation classes, after coherent matrix framing and reconstruction,
+satisfies the full selected local realization relations. It is not merely
+closedness of an unrelated label space. Weight and packet relations retain their
+supplied arithmetic meaning; they are parameters of the universal theorem.
+For a general moduli functor, effectivity requires its own reconstruction
+hypothesis or the corresponding full meaning of admissible inverse-limit closure.
+
+The complete Lean assembly now includes the common polynomials, good-place sets
+with finite complements, coefficient-specific prescribed determinants, and every
+selected weight and packet relation. Determinants are recovered from their
+actual finite-class determinants. A single common field-valued character on the
+whole Galois group is not assumed. The returned representations are continuous,
+and their reductions form the actual compatible branches. Their common
+polynomial identities hold at every declared good place, hence almost everywhere
+for each coefficient prime.
+
+This checks Claim 8.2 as the universal conditional source theorem. The previous
+partial status also demanded proofs that particular intended arithmetic packets
+satisfy its premises; that stronger application target is not a conclusion of
+the theorem. The Block 23 source-claim count was therefore sixteen checked and four partial.
+Concrete Hodge--Tate and Weil--Deligne attachments, torsion interpretations,
+closure instances, and companion nonemptiness remain obligations of arithmetic
+applications. Inertial-type labels are not upgraded to full Weil--Deligne data.
+
+\paragraph{Checked representation-level completion and its arithmetic boundary.}
+The eighth formalization block works with actual matrix representations of a
+fixed group, not only with underlying sets. For a complete separated ring $R$
+and ideal $I$, compatible maps
+$\rho_m:G\to\operatorname{GL}_d(R/I^m)$ reconstruct a unique integral
+representation for that fixed compatible family. Multiplication and inverses
+are verified after every reduction. If all finite representations are continuous
+for the discrete quotient topology, the integral representation is continuous
+for the ideal-adic topology. This does not assert uniqueness among all possible
+branches of the allowed forest.
+
+The forest has as its level the actual subtype of representations satisfying
+the declared finite conditions. Those conditions must be preserved by reduction.
+Finiteness and nonemptiness at every level give an infinite branch and hence an
+actual continuous representation. Finiteness of the coefficient quotient alone
+is not a substitute for finiteness of the allowed representation set for an
+arbitrary source group. Surjectivity of the reductions is not required.
+
+All coefficients of the characteristic polynomial commute with reduction.
+Consequently, prescribed integral characteristic polynomials at every precision
+hold exactly in the reconstructed representation. For a common coefficient field
+$E$, local integral polynomials lie in $\Ocal_\lambda[X]$ and are compared with
+$P_v\in E[X]$ only after mapping both into the local coefficient field. No field
+embedding $E\to\Ocal_\lambda$ is assumed. The allowed-place predicate is explicit
+and may depend on $\lambda$. Trivial action on a supplied subgroup is likewise
+detected at every precision; identifying that subgroup with arithmetic inertia
+is a separate input.
+
+The eleventh block assembles continuous coefficient-field representations, exact
+common polynomials and the prescribed local predicate from positive finite
+depths. Depth-zero finiteness and nonemptiness are derived. Claims 8.2 and 11.1
+already assume inverse-limit closure of the selected local conditions; an
+unconditional closure theorem is not a missing hypothesis of their conditional
+proofs. Their conditional matrix core is checked. The remaining full arithmetic
+interpretation must identify the admissible finite objects and the actual local
+invariants with these data. The coherent-framing obligation is resolved by Block 14
+below. An arbitrary local
+predicate is not being renamed Hodge--Tate or Weil--Deligne compatibility.
+
+
+\paragraph{Completion from conjugacy classes (Block 14).}
+Over an $I$-adically complete separated commutative coefficient ring $R$,
+for a fixed finite rank, the formalization now takes finite-level objects to be
+actual matrix representations modulo conjugation by an invertible matrix.
+Assume the coefficient quotients $R/I^k$ are finite.
+Conjugation commutes with coefficient reduction, and each conjugacy class has
+finitely many frames over a finite coefficient ring. Thus finite allowed class
+levels give finite full preimages of allowed matrix representations. Downward
+admissibility and positive-depth nonemptiness yield an exactly compatible
+matrix branch and an actual integral representation. More strongly, every
+prescribed compatible class branch has such representatives, using finite
+nonempty fibers over that branch. No surjectivity of reductions or lifting of
+prescribed change-of-basis matrices is assumed. This does not assert uniqueness
+up to integral conjugacy.
+
+For finitely generated $I$ with finite $R/I$, finiteness of $R/I^k$ is derived.
+One continuous representative per allowed class suffices, because continuity
+is proved invariant under conjugation. Characteristic polynomials, determinants
+and trivial action on a supplied subgroup are likewise actual invariants.
+The unframed common-spine theorem constructs continuous coefficient-field
+representations with the prescribed whole polynomials and the explicitly
+supplied inverse-limit-closed local predicate.
+
+An actual $\mathbb Z_3$ example applies the class-level completion theorem
+for the cyclic group of order two and polynomial $X^2-1$, producing a nonidentity generator. Another
+checked example has compatible classes represented by
+$\operatorname{diag}(1,-1)$ modulo $3$ and
+$\operatorname{diag}(-1,1)$ modulo $9$: these chosen matrices disagree under
+reduction, and an actual swap of basis repairs them. Arbitrary independent
+representatives therefore do not replace the framing argument.
+
+The framing obligation is finished. Identifying the manuscript's arithmetic
+admissible objects, actual local invariants and finite-level packet reductions
+with this interface remains separate. An uninterpreted local predicate is not
+a construction of Hodge--Tate or Weil--Deligne compatibility. The source's local
+closure hypothesis remains explicit. Block 23 completes the universal
+conditional implication; these particular arithmetic applications remain
+unproved.
+
+
+\paragraph{Actual local comparisons from fixed-depth certificates (Block 15).}
+Let $R$ be an $I$-adically complete separated commutative ring with finite
+coefficient quotients and an injective map into a field $K$. Fix a finite matrix
+rank. For finitely many
+local group maps $\phi_s:H_s\to G$ and integral template representations
+$\tau_s$, fix detecting depths $d_s$. At precision $m$ retain matrices $P_{s,m}$
+as part of the admissible object and require
+\[
+\rho_m(\phi_s(h))P_{s,m}=P_{s,m}\tau_{s,m}(h).
+\]
+For $m\ge d_s$ require their determinants to remain nonzero after reduction to
+$R/I^{d_s}$. Earlier levels omit that test. Finite occupied augmented levels
+give a compatible branch of both representations and comparisons. The integral
+limits satisfy the actual equations and have nonzero determinants, so the
+comparisons are units over $K$. A converse supplies all finite nodes from any
+integral realization with these detectors. Finite-level invertibility and
+compatible prior choices of comparisons are not assumed.
+
+The unframed positive-depth version also retains continuity and whole common
+polynomials. Its actual local isomorphisms are derived from the certificates;
+there is no uninterpreted local-stability predicate for this particular problem.
+The fixed depths and augmented-level occupancy remain explicit inputs.
+
+The formalization specializes to the actual maps
+$G_{\mathbb Q_p}\to G_{\mathbb Q}$ induced by the field embeddings and choices
+of algebraic closures. A nontrivial continuous quadratic character of
+$G_{\mathbb Q}$, constructed from its action on $i^2=-1$, gives the integral
+$2$-adic actions
+\[
+\tau(\sigma)=\operatorname{diag}(1,-1),\quad
+\rho(\sigma)=\begin{pmatrix}1&-1\\0&-1\end{pmatrix},\quad
+P=\begin{pmatrix}1&1\\0&2\end{pmatrix}
+\]
+at a nonidentity quadratic element. The determinant $2$ is detected modulo $4$.
+The representations are conjugate over $\mathbb Q_2$ but not integrally
+conjugate. A separate $\mathbb Z_3$ example invokes simultaneous completion
+and reconstructs a comparison which is an integral nonunit and a field unit.
+
+The bound is substantive: for the unipotent actions
+$\rho_a(g)=\begin{pmatrix}1&ag\\0&1\end{pmatrix}$, every integral intertwiner
+with $\rho_1$ has determinant $aP_{22}^2$. Taking $a=\pi^n$ for a nonzero
+$\pi\in I$ rules out every
+fixed detecting depth, even though all the field-valued approximants are
+isomorphic and their integral limit is trivial. This does not refute Claim 8.2,
+which already assumes inverse-limit closure of its chosen local conditions.
+
+Exact prescribed local Galois action is stronger than an inertial-type label.
+The common arithmetic packet interpretation, its coefficient comparisons and
+the actual Hodge--Tate/Weil--Deligne attachment remain separate. The new theorem
+does not supply a uniform bound for all intended arithmetic packets. Those
+arithmetic applications remain unfinished; the universal conditional implication
+is checked in Block 23.
+
+\paragraph{Derived comparison bounds (Block 16).}
+For a finite group $\Gamma$ whose order is a unit in a commutative local
+coefficient ring $R$, any prescribed equivariant residual isomorphism lifts to
+an integral isomorphism. Lift its matrix to $A$ and define
+\[
+P=|\Gamma|^{-1}\sum_{g\in\Gamma}\rho(g)A\tau(g^{-1}).
+\]
+Reindexing proves equivariance, and reduction recovers the prescribed matrix.
+Its determinant is a unit. Complete local coefficients with finite quotients,
+occupied compatible finite conditions and this residual type therefore give
+actual integral completion with detector depth one. A fixed continuous map
+$G\to\Gamma$ permits pullback to infinite source groups. The finite-level
+representations must factor through the same map, and the residual type is
+imposed on their $\Gamma$-actions. No uniform determinant bound or augmented
+certificate occupancy is assumed in this sector.
+
+For a second sector let $R$ be a DVR with uniformizer $\pi$, fraction field $K$
+and matrix rank $n$. If a fixed template $\tau$ has full $K$-linear action span,
+finite generation and denominator clearing give a fixed $c$ such that
+\[
+\pi^c M_n(R)\subseteq\operatorname{span}_R\{\tau(g):g\in G\}.
+\]
+Normalize a field comparison to an integral $P$ with a unit entry. The displayed
+span constructs an integral $B$ with $BP=\pi^cI$, so
+\[
+\det P\mid\pi^{cn},\qquad \det P\not\equiv0\pmod{\pi^{cn+1}}.
+\]
+One $c$ works for all integral representations in the fixed field-isomorphism
+class. Jacobson density derives full span from actual irreducibility and a
+scalar commutant. The formalization states these hypotheses directly and does
+not assume the DVR fraction field is algebraically closed.
+
+If at every precision there is an integral representation of this rational
+type satisfying the finite conditions, the derived bound supplies the
+simultaneous certificates of Block 15 and preserves the type after completion.
+The integral approximants are not required to be coherent, but their existence
+is a substantive premise. Arbitrary torsion nodes are not asserted to lift.
+
+Over $\mathbb Z_3$, the actual average corrects
+$A=\left(\begin{smallmatrix}1&1\\0&1\end{smallmatrix}\right)$ to
+$P=\left(\begin{smallmatrix}1&-1/2\\0&1\end{smallmatrix}\right)$ for the
+involutions $\rho(g)=\left(\begin{smallmatrix}1&1\\0&-1\end{smallmatrix}\right)$
+and $\tau(g)=\operatorname{diag}(1,-1)$. It preserves the residual comparison
+and has determinant one. Pullback through the quadratic character of the
+actual $G_{\mathbb Q}$ gives continuous arithmetic examples. In contrast, the
+identity and $\operatorname{diag}(1,\mathrm{sign})$ over $\mathbb Z/4$ agree
+modulo two but are not integrally conjugate. Their group order is not a unit.
+These restricted results do not supply general arithmetic packet attachment,
+all finite-level existence statements, or cross-coefficient compatibility.
+
+\section{Compatible carriers and finite Frobenius separation}
+
+One useful completion mechanism is available when the desired packet already occurs as a semisimple summand of a known compatible carrier.
+
+\begin{theorem}[Finite Frobenius separation]\label{px:9.1}
+Let $\mathscr W_1,\ldots,\mathscr W_r$ be pairwise nonisomorphic strictly
+compatible systems whose members are absolutely irreducible, with common
+algebraic unramified trace values $t_i(v)$ in a number field $E$.
+There are $r$ distinct permitted unramified places $v_1,\ldots,v_r$ for which
+\[
+ C=(t_i(v_j))_{j,i}\in M_r(E),\qquad \det C\ne0.
+\]
+Every coefficient-field embedding $\sigma_\lambda:E\hookrightarrow E_\lambda$
+therefore sends $C$ to an invertible matrix. Its entries agree with the
+ordinary representation traces
+$\operatorname{Tr}(W_{i,\lambda}(\operatorname{Frob}_{v_j}))$
+when the selected places satisfy the unramified compatibility convention
+for that coefficient prime. In particular, places above the residue
+characteristic of $\lambda$ are excluded from this ordinary trace comparison.
+\end{theorem}
+
+\begin{proof}
+Fix one coefficient prime. The classical independence of the characters of
+pairwise nonisomorphic absolutely irreducible representations and the density
+of unramified Frobenius conjugacy classes give independent restricted trace
+functions. Density here concerns the union of the conjugacy classes, not an
+unsupported assertion about a set of chosen representatives.
+
+For $r$ independent functions, their evaluation linear forms span the
+$r$-dimensional coefficient dual: a proper span would leave a nonzero
+coefficient vector annihilated by every evaluation, contradicting independence.
+Choose a basis from the evaluations. Its $r$ distinct sample points give an
+invertible square matrix. The common algebraic traces put that matrix over
+$E$; an injective field embedding reflects the nonvanishing of its determinant.
+All further field embeddings preserve the same nonvanishing.
+\end{proof}
+
+\paragraph{Formalization boundary.}
+Characteristic-zero independence is now Lean-checked for actual finite-dimensional
+irreducible representations of arbitrary monoids. Finiteness of the group and
+algebraic closedness of the field are not needed for this result. The proof
+uses the actual monoid algebra and Jacobson density to select constituent
+actions. Jointly continuous coordinate actions have continuous characters.
+Coverage in every open normal quotient of a compact totally disconnected group
+implies density of the conjugacy-saturated samples and hence the finite separator.
+General arithmetic Frobenius coverage remains unformalized. Block 25 now proves
+the bridge from componentwise nonisomorphic systems to nonisomorphic members
+at the selected coefficient prime, under density on the required good-place
+overlaps. It also proves the complete restricted separator for a fixed finite
+cyclotomic Galois group over $\Q$, with arithmetic coverage derived from the
+proved Dirichlet theorem. The full arithmetic theorem remains partial. Selection
+is existential and gives no effective upper bound on the selected primes.
+A common algebraic matrix is still distinct from an ordinary unramified trace
+comparison at all coefficient primes simultaneously.
+
+\paragraph{System isomorphism and good-place overlaps (Block 25).}
+The system equivalence used here is componentwise representation isomorphism:
+\[
+ \mathscr W_i\simeq\mathscr W_j
+ \quad\Longleftrightarrow\quad
+ \forall\lambda,\ W_{i,\lambda}\simeq W_{j,\lambda}.
+\]
+For finite-dimensional irreducible representations of any monoid over a
+characteristic-zero field, the new character-rigidity theorem proves that
+equality of characters is equivalent to an actual equivariant linear isomorphism.
+Neither a finite group nor an algebraically closed coefficient field is needed.
+
+Suppose two members are isomorphic at $\lambda_0$. Injectivity of the common
+coefficient embedding gives $t_i(v)=t_j(v)$ at every place good for $\lambda_0$.
+At another coefficient prime $\lambda$, this equality compares actual member
+traces on the intersection of the two good-place sets. Conjugacy density of
+that intersection and continuity extend the equality to the whole group;
+character rigidity then gives an actual isomorphism at $\lambda$.
+Thus the nonisomorphism of systems supplies the required nonisomorphism of
+members. Equality of optional labels or record fields is not used as a
+substitute for representation equivalence.
+
+The generic separator now derives this bridge and permits any additional finite
+set of excluded places. Its coverage premise retains every finite deletion:
+for each finite excluded set and each open normal quotient, every quotient
+class contains a conjugate of an allowed sample. This implies density on each
+pair of cofinite good-place sets; no all-coefficient-prime common ordinary-trace
+domain is assumed.
+
+\paragraph{Arithmetic coverage for a fixed cyclotomic extension (Block 25).}
+Let $n>0$ and let $L=\Q(\zeta_n)$ be a cyclotomic number field. The canonical
+isomorphism
+\[
+ \operatorname{Gal}(L/\Q)\simeq(\mathbb Z/n\mathbb Z)^\times
+\]
+defines $\sigma_p$ by $\sigma_p(\zeta_n)=\zeta_n^p$ when $p\nmid n$.
+For every automorphism $\sigma$, finite set $B\subset\mathbb N$ and bound $b$,
+Lean proves that there is a rational prime $p>b$, with $p\notin B$ and
+$p\nmid n$, such that $\sigma_p=\sigma$. The prime-existence step uses the
+proved Dirichlet theorem in the pinned Mathlib dependency.
+
+The arithmetic attachment is checked in this finite cyclotomic case. There is
+an actual maximal prime $\mathfrak P$ of $\mathcal O_L$ above $(p)$, its
+ramification index is one, and $\sigma_p$ belongs to its decomposition group.
+For every integral $x\in\mathcal O_L$,
+\[
+ \overline{\sigma_p(x)}=\overline{x}^{\,p}
+ \quad\text{in }\mathcal O_L/\mathfrak P.
+\]
+The residue identity is proved on all integral elements using
+$\mathcal O_L=\mathbb Z[\zeta_n]$. Existence of $\mathfrak P$ is obtained by
+lying over, rather than assumed. This specifies arithmetic Frobenius, with
+$p$-power residue action. The action and unramifiedness statements also hold
+for every maximal prime above the selected $p$.
+
+Consequently, for pairwise componentwise nonisomorphic compatible irreducible
+representation families of this fixed finite Galois group, the common algebraic
+trace matrix can be selected at distinct rational primes outside any prescribed
+finite set, with nonzero determinant. Every coefficient embedding preserves its
+nonvanishing; actual member trace comparisons retain that member's good-prime
+condition. No coverage or character-continuity hypothesis is added in this
+cyclotomic specialization: the prime coverage is proved, and the finite
+extension's Krull topology is discrete. A concrete conductor-four instance uses
+the actual field $\Q(\zeta_4)$.
+
+This is a complete restricted arithmetic case of Claim 9.1. It does not establish
+coverage in arbitrary finite quotients of the absolute Galois group, nor the
+Hodge--Tate and Weil--Deligne comparisons of Claim 9.2. The source-claim ledger
+therefore remains seventeen checked and three partial.
+
+\paragraph{Absolute Galois restriction and arithmetic witnesses (Block 26).}
+Fix a cyclotomic number field $L=\Q(\zeta_n)$ with $n>0$ and an embedding
+$j:L\hookrightarrow\overline{\Q}$. The new restriction map
+\[
+ q_L:G_{\Q}\longrightarrow\operatorname{Gal}(L/\Q),\qquad
+ j(q_L(\gamma)x)=\gamma(j(x)),
+\]
+is an actual continuous surjective homomorphism with open kernel. Surjectivity
+is derived by extending automorphisms to the algebraic closure. Pullback along
+a surjective homomorphism preserves and reflects equivariant linear
+isomorphisms, invariant subspaces, and irreducibility. These assertions keep
+the underlying linear maps and submodules and do not assume a finite acting
+group. In particular, the equivalence relation for systems is preserved and
+reflected componentwise.
+
+The arithmetic witnesses use the integral closure
+$\mathcal A$ of $\mathbb Z$ in $\overline{\Q}$. For each rational prime $p$,
+Lean constructs a maximal ideal $\mathfrak Q$ of $\mathcal A$ above $(p)$ and
+an actual element $\gamma_p\in G_{\Q}$ such that
+\[
+ \gamma_p\in\operatorname{Stab}_{G_{\Q}}(\mathfrak Q),\qquad
+ \overline{\gamma_p(a)}=\overline a^{\,p}
+ \quad(a\in\mathcal A).
+\]
+The existence argument applies Mathlib's proved profinite stabilizer-surjectivity
+theorem to this actual invariant ring. The residue $p$-power map is proved
+bijective by taking $p$-th roots in $\overline{\Q}$ and showing that they
+remain integral when their $p$-th powers are integral. This constructs an
+arithmetic Frobenius witness in the prime-ideal decomposition group; it does
+not assert that an arbitrary global lift belongs to that group.
+
+When $p\nmid n$, the comparison with the finite cyclotomic sample is proved:
+\[
+ q_L(\gamma_p)=\sigma_p,
+ \qquad \sigma_p(\zeta_n)=\zeta_n^p.
+\]
+Reduction distinguishes $n$-th roots of unity at such a prime. Indeed, if
+$x^n=y^n=1$ and their reductions agree, the factorization of $x^n-y^n$ gives
+\[
+ (x-y)\sum_{i=0}^{n-1}x^i y^{n-1-i}=0.
+\]
+The second factor reduces to $n\overline y^{\,n-1}\ne0$, so the domain
+property gives $x=y$. This proves both Frobenius recognition on the
+cyclotomic generator and triviality of its inertia action. Consequently,
+every representation pulled back through $q_L$ is unramified there.
+
+The valuation formulation is checked separately. For any valuation subring
+$A\subset\overline{\Q}$ with residue characteristic $p\nmid n$, its actual
+residue-action kernel fixes every $n$-th root of unity. A supplied element of
+its decomposition subgroup with $p$-power residue action restricts to
+$\sigma_p$. These statements use Mathlib's valuation inertia and decomposition
+subgroups. No identification of the valuation and integral-closure prime
+models is assumed in the formal comparison.
+
+For a compatible family $\rho_{i,\lambda}$ of representations of the fixed
+finite group, set $V_{i,\lambda}=\rho_{i,\lambda}\circ q_L$. Suppose the
+actual absolute-Galois members are irreducible and the systems are pairwise
+componentwise nonisomorphic. The finite prime separator now yields distinct
+permitted rational primes $p_j$, actual prime ideals $\mathfrak Q_j$ and
+arithmetic Frobenius witnesses $\gamma_j$ as above, outside any prescribed
+finite set, such that the common algebraic trace matrix has nonzero
+determinant. Every coefficient embedding preserves this nonvanishing, and
+\[
+ \iota_\lambda(t_i(p_j))=
+ \operatorname{tr}(V_{i,\lambda}(\gamma_j))
+\]
+whenever $p_j$ is good for that coefficient member. The operator and trace
+values agree for every global lift with the same cyclotomic restriction.
+Neither Frobenius-witness existence nor quotient coverage is a supplied
+hypothesis in this restricted arithmetic theorem. The common cyclotomic
+factorization and the compatible trace data remain explicit hypotheses.
+
+This completes the passage to actual absolute-Galois Frobenius witnesses for
+the fixed cyclotomic class. It does not establish prime coverage for arbitrary
+finite Galois extensions. Claim 9.1 therefore remains partial, and the
+source ledger remains seventeen checked and three partial.
+
+The boundaries are formalized as well. Pullback along a nonsurjective
+homomorphism can make inequivalent irreducible representations isomorphic.
+Samples can cover one quotient while missing an open quotient of the full
+group. Finally, in $\mathbb Z_2$, the distinct square roots $1$ and $-1$ have
+the same residue, so the condition that the root order be a unit cannot be
+discarded.
+
+\paragraph{General finite-field Frobenius comparison (Block 27).}
+Let $L/\Q$ now be any finite normal number field, with a chosen embedding
+$j:L\hookrightarrow\overline{\Q}$. Write $\mathcal A$ for the integral
+closure of $\mathbb Z$ in $\overline{\Q}$. The embedding restricts to an
+injective map $\mathcal O_L\to\mathcal A$ which intertwines the actual
+Galois actions. If $\mathfrak Q\subset\mathcal A$ is maximal above $(p)$,
+its contraction $\mathfrak P\subset\mathcal O_L$ is a nonzero maximal
+ideal above $(p)$, and the induced residue map is injective.
+
+Restriction carries the actual decomposition group at $\mathfrak Q$ into
+that at $\mathfrak P$, carries ideal inertia into ideal inertia, and
+preserves the arithmetic $p$-power residue action. Thus the absolute
+Frobenius constructed in Block 26 gives a simultaneous finite Frobenius
+at the contracted prime. This assertion applies to arbitrary finite normal
+number fields and does not require a cyclotomic generator.
+
+The exceptional primes are controlled by the actual field discriminant:
+\[
+ S_L=\{p\text{ rational prime}:p\mid\operatorname{disc}(L)\}.
+\]
+This set is finite. For $p\notin S_L$, every prime of $\mathcal O_L$
+above $(p)$ is unramified. Lean proves that the actual inertia cardinality
+is the ramification index. It follows that inertia is trivial and the
+arithmetic Frobenius at a fixed finite prime is unique as a field
+automorphism. Neither trivial inertia nor uniqueness is assumed in place
+of the arithmetic unramifiedness condition.
+
+The choice of absolute prime and Frobenius lift is also controlled. Let
+$(\mathfrak Q_u,\gamma_u)$ and $(\mathfrak Q_v,\gamma_v)$ be any two
+actual arithmetic witnesses at the same rational prime. Transitivity on
+primes of $\mathcal A$ above $(p)$ gives $a\in G_{\Q}$ with
+\[
+ \mathfrak Q_v=a\mathfrak Q_u,\qquad
+ \gamma_v^{-1}a\gamma_u a^{-1}\in I_{\mathfrak Q_v}.
+\]
+Consequently, any representation trivial on $I_{\mathfrak Q_v}$ has the
+same trace on the two witnesses. For representations factoring through
+$L$, triviality on this actual absolute inertia is derived whenever
+$p\notin S_L$. The restrictions of all absolute witnesses at such a prime
+therefore form a single conjugacy class. This conclusion requires only
+the indicated finite factorization and the discriminant exclusion.
+
+There is a final compatibility between embeddings. For a normal subfield
+$L\subset\overline{\Q}$, restriction defined through a chosen embedding
+is conjugate to canonical restriction by one fixed automorphism of $L$.
+This identifies their conjugacy classes and lets the arithmetic comparison
+apply directly to the fixed fields of open normal subgroups of $G_{\Q}$.
+Those fixed fields are proved to be finite Galois number fields, with the
+original open normal subgroup as the kernel of restriction.
+
+The remaining prime-existence obligation now has a precise formulation.
+For every finite Galois subfield $L$, every finite set $B$ of rational
+primes, and every $\sigma\in\operatorname{Gal}(L/\Q)$, require a prime
+$p\notin B\cup S_L$ and an actual absolute arithmetic witness $\gamma_p$
+such that
+\[
+ q_L(\gamma_p)\sim\sigma.
+\]
+Lean proves that this assertion is equivalent to the cofinite quotient
+coverage required by the general separator, for any fixed choice of actual
+Frobenius witnesses. The equivalence derives independence from the witness
+choices; it does not supply the displayed prime-existence assertion.
+Arbitrary finite exclusions absorb $S_L$, and the resulting conditional
+density theorem preserves the separate good-prime sets of coefficient
+members. General prime coverage remains unproved, so Claim 9.1 remains
+partial. The source ledger is still seventeen checked and three partial.
+This new arithmetic interface has base $\Q$. For the source's general-base
+instances involving $G_{F,S}$, the analogous actual-prime and norm-power
+Frobenius attachment and coverage over $F$, or a proved transfer to the
+rational-base result, also remain necessary.
+
+\paragraph{Finite deletion can destroy density.}
+In the actual discrete group $C_2=\{1,a\}$, set $s(0)=a$ and $s(m+1)=1$.
+The original samples are surjective and satisfy quotient coverage. Removing
+index zero leaves only the identity, so both density and quotient coverage fail.
+The actual rational sign and trivial characters agree on the remaining samples
+but differ globally. This checked example explains why ordinary coverage alone
+cannot justify deleting the bad places in the system comparison.
+
+\begin{theorem}[Compatible-carrier summand completion]\label{px:9.2}
+Suppose a semisimple strictly compatible carrier decomposes as
+\[
+\mathscr W
+\cong
+\bigoplus_{i=1}^{r}
+\mathscr W_i^{\oplus c_i},
+\]
+with the \(\mathscr W_i\) as above.  At one coefficient prime \(\lambda_0\), suppose a semisimple summand has the form
+\[
+V_{\lambda_0}
+\cong
+\bigoplus_{i=1}^{r}
+W_{i,\lambda_0}^{\oplus m_i},
+\qquad
+0\le m_i\le c_i.
+\]
+Then
+\[
+\boxed{
+V_\lambda
+=
+\bigoplus_{i=1}^{r}
+W_{i,\lambda}^{\oplus m_i}
+}
+\]
+defines a strictly compatible summand at every coefficient prime.  The vector \((m_i)\) is uniquely recoverable from finitely many Frobenius traces supplied by the separation theorem.
+\end{theorem}
+
+\begin{proof}
+Use the same multiplicities in every member of the compatible carrier.  Direct sums preserve strict compatibility, and \(m_i\le c_i\) makes \(V_\lambda\) a summand of \(W_\lambda\).  At the separating places, the target trace vector is \(C\bm m\).  Full column rank makes \(\bm m\) the unique solution.
+\end{proof}
+
+\paragraph{Recovery and realization are different steps.}
+For a certified square separator the coefficient vector is $C^{-1}t$.
+This is a valid carrier multiplicity vector only when every entry is a
+nonnegative integer and satisfies its capacity bound $m_i\le c_i$.
+Those tests and uniqueness of natural multiplicities in characteristic zero
+are separately Lean-checked, as is transport through a field embedding.
+Reduction modulo a residue characteristic is not a field embedding and may
+lose rank. The representation construction and common-polynomial part are now
+Lean-checked as described below. The full strictly compatible arithmetic
+statement, including its local conditions, remains partially formalized.
+
+\paragraph{Scope of the supplied-carrier hypothesis.}
+Claim 9.2 supplies the compatible carrier, its decomposition and the compatible
+constituent systems. Constructing unknown such objects is not required by that
+conditional theorem. The remaining formal obligation is that finite sums preserve
+the intended actual local arithmetic structures, together with the arithmetic
+separator input. The algebraic monodromy results below do not by themselves
+identify attached Weil--Deligne representations or Hodge--Tate comparison data.
+
+\paragraph{Explicit summands inside a supplied decomposition.}
+Let $K$ be a field, let $G$ be a monoid, and let
+$\rho_i:G\to\operatorname{End}_K(W_i)$ be actual representations on
+finite-dimensional spaces, indexed by a finite set $I$. For natural numbers
+$m_i\le c_i$, set
+\[
+ U_m=\prod_{i\in I}\prod_{k<m_i}W_i,
+ \qquad U_c=\prod_{i\in I}\prod_{k<c_i}W_i.
+\]
+These finite products realize the corresponding finite direct sums. The
+representation on $U_m$ acts componentwise. Define $j:U_m\to U_c$ by retaining
+the first $m_i$ copies and filling every remaining coordinate with zero.
+Define $r:U_c\to U_m$ by restriction to the selected copies. Lean proves
+\[
+ rj=1_{U_m},\qquad
+ j\rho_m(g)=\rho_c(g)j,\qquad
+ r\rho_c(g)=\rho_m(g)r.
+\]
+The image of $j$ is exactly the subspace whose unused coordinates vanish.
+Consequently $jr$ is an equivariant idempotent. A supplied equivariant
+isomorphism $D:W\xrightarrow{\sim}U_c$ gives the split maps
+$D^{-1}j$ and $rD$ inside the original carrier. The decomposition $D$ is an
+input; these statements do not construct a decomposition of an unknown
+arithmetic carrier.
+
+The same formalization proves, for each $g\in G$,
+\[
+ \det\bigl(XI-\rho_m(g)\bigr)
+ =\prod_{i\in I}\det\bigl(XI-\rho_i(g)\bigr)^{m_i},
+ \qquad
+ \operatorname{Tr}\bigl(\rho_m(g)\bigr)
+ =\sum_{i\in I}(m_i:K)\operatorname{Tr}\bigl(\rho_i(g)\bigr).
+\]
+Constituents may have different dimensions. Zero multiplicities, zero-dimensional
+constituents, and the empty index set are included. If at a permitted sample
+$g$ the constituent polynomials are the images of $P_{i,g}\in E[X]$ under a
+specified map $E\to K$, the summand polynomial is the image of
+$\prod_iP_{i,g}^{m_i}$. Applying this independently at each coefficient field
+preserves a supplied common polynomial family. This does not establish the
+Hodge--Tate or Weil--Deligne conditions in strict compatibility.
+
+Joint continuity of the constituent actions implies joint continuity of the
+constructed action. The inclusion and retraction are continuous for the
+product topologies, and triviality on a supplied subgroup is preserved.
+Neither continuity nor triviality is inferred for a carrier whose corresponding
+hypothesis has not been supplied. The maps transported by $D$ are proved
+algebraically; their topological interpretation additionally requires the
+appropriate continuity of $D$ and its inverse.
+
+For the three-character example below, the construction produces an actual
+three-dimensional summand inside the carrier of dimension seven. At the sample
+$(0,1)$ its characteristic polynomial is $(X-1)^2(X+1)$. A separate checked
+counterexample uses the coordinate inclusion $\mathbf Q\to\mathbf Q^2$, its
+coordinate retraction, and the swap involution: the split law holds, but
+compression sends the swap to zero and therefore fails to preserve its square.
+Thus selecting whole constituent copies, with the proved equivariance, is
+essential to this construction.
+
+\paragraph{Algebraic monodromy data on the selected copies.}
+Fix a field $K$ and a nonzero scalar $q\in K^\times$. On each constituent
+$W_i$, supply an automorphism $F_i$ and a nilpotent endomorphism $N_i$ with
+$F_iN_iF_i^{-1}=qN_i$. The scalar $q$ is common to this finite family.
+The componentwise operators $F_m,N_m$ on $U_m$ satisfy the same relation;
+$F_m$ is invertible and $N_m$ is nilpotent. The split maps constructed above
+intertwine both operators. The proof first identifies the independently defined
+kernel through an equivariant linear isomorphism
+\[
+ \ker N_m\simeq\prod_{i\in I}\prod_{k<m_i}\ker N_i.
+\]
+The relation, with $q\ne0$, proves that both $F_i$ and its inverse preserve
+$\ker N_i$. Thus $F_i|_{\ker N_i}$ is an actual automorphism, and Lean proves
+\[
+ \det(XI-F_m|_{\ker N_m})
+   =\prod_{i\in I}\det(XI-F_i|_{\ker N_i})^{m_i}.
+\]
+The corresponding kernel dimensions and traces are additive with multiplicity.
+Common constituent kernel polynomials, when supplied through a coefficient-ring
+map, give the mapped product polynomial for the summand. Whole-space Frobenius
+polynomials are not substituted for these kernel polynomials.
+
+The exact special chain has basis $e_0,\ldots,e_{n-1}$ and operators
+\[
+ Ne_0=0,\qquad Ne_j=e_{j-1}\ (j>0),\qquad Fe_j=aq^{-j}e_j,
+ \qquad a,q\in K^\times.
+\]
+Lean proves $N^n=0$, and for $n>0$ also $N^{n-1}\ne0$ and
+$\ker N=Ke_0$. Consequently its kernel polynomial is $X-a$, whereas its
+whole-space polynomial is $\prod_{j=0}^{n-1}(X-aq^{-j})$.
+The zero-length chain is included as a zero-dimensional space; the assertion
+$\ker N=Ke_0$ is made only for positive length.
+
+For $n>1$, replacing $N$ by zero retains exactly the same $F$ and the same
+whole-space characteristic polynomial, while changing the degree of the kernel
+polynomial from one to $n$. Both pairs still satisfy the algebraic monodromy
+relation. This Lean-checked example shows that whole Frobenius data alone do
+not determine the monodromy kernel polynomial. It is not asserted to be a
+counterexample among the intended strictly compatible arithmetic systems.
+
+These statements concern supplied algebraic pairs. No Weil-group or inertia
+action, Hodge--Tate object, arithmetic comparison, or realization of the pair
+from a Galois representation is constructed here. The polynomial convention is
+$\det(XI-F|_{\ker N})$; no identification with an inertia-dependent local
+Euler factor is asserted. Claim 9.2 remains partial at its full arithmetic scope.
+
+
+\paragraph{Checked group, inertia and monodromy finite sums (Block 12).}
+Let $K$ be a field, $G$ a group, and $\nu:G\to K^\times$ a character.
+The new datum consists of an actual representation $r$ and nilpotent $N$ with
+$r(g)N=\nu(g)Nr(g)$ for every $g$. For a supplied subgroup $H$, define
+\[
+ E(D,H)=\ker N\cap V^H.
+\]
+This is the intersection of independently defined kernel and actual invariant
+subspaces. For normal $H$, the restricted whole-group representation and its
+inverse automorphisms are constructed. A change from $\varphi$ to $\varphi h$,
+with $h\in H$, leaves the restricted operator itself unchanged.
+
+For a finite family of finite-dimensional constituents and natural multiplicities,
+the actual local space of the constructed sum is linearly equivalent to the sum of the constituent local spaces, equivariantly
+for every group element. Its characteristic polynomials multiply, its dimensions
+and traces add, and maps intertwining both the group and $N$ restrict to the
+local spaces. The explicit bounded-copy inclusion and retraction still split
+there. Finite inertia image and an open inertia kernel are preserved.
+
+Writing $Q_D(T)$ for the reversed local characteristic polynomial, Lean proves
+\[
+ Q_D(T)=\det(1-T r(\varphi)\mid E(D,H)),\qquad Q_D(0)=1,
+ \qquad
+ Q_{\bigoplus_iD_i^{\oplus m_i}}(T)=\prod_iQ_{D_i}(T)^{m_i}.
+\]
+The abstract formulas do not need characteristic zero. Normality and finite
+dimension appear explicitly where used. Arithmetic identification of $G,H,\nu$
+and $\varphi$ remains separate. In the geometric-Frobenius convention,
+$\nu(\varphi)$ is the inverse residue cardinality; it is this unit, rather than
+the residue cardinality, that enters the earlier special-chain parameter.
+
+An explicit action of $C_2\times\mathbb Z$ has $\nu(\varphi)=1/3$,
+$F=\operatorname{diag}(2,6,18)$ and $Ne_1=e_0$, $Ne_2=e_1$, $Ne_0=0$.
+Trivial inertia gives local dimension one and denominator $1-2T$; scalar sign
+inertia gives dimension zero and denominator one. The entire $F$ and $N$ are
+equal in these two examples, and $N^2\ne0$. Thus inertia cannot be omitted.
+Conversely, unramified chains of lengths one and three have equal Euler
+denominators while only the first has $N=0$. Euler factors therefore do not
+identify complete monodromy data.
+
+The remaining arithmetic comparison is
+$\operatorname{WD}(\bigoplus_i V_i^{\oplus m_i})\cong
+\bigoplus_i\operatorname{WD}(V_i)^{\oplus m_i}$ for the actual attached functor,
+intertwining the Weil action and monodromy, together with the intended coefficient
+and Hodge--Tate comparisons. These are not supplied by the abstract datum.
+Claim 9.2 remains partial at its full arithmetic scope.
+
+Recovered multiplicities determine the semisimple isomorphism type relative
+to the specified constituents, not a canonical embedding or projector inside
+a repeated isotypic component. For example, the two projectors
+$\operatorname{diag}(1,0)$ and $\operatorname{diag}(0,1)$ on a two-dimensional
+trivial representation are distinct equivariant idempotents with trace one.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{14_frobenius_separator_matrix.pdf}
+\caption{A finite set of trace evaluations separates three compatible constituents and recovers their multiplicities.}
+\end{figure}
+
+\begin{numericalcertificate}[Multiplicity recovery]\label{px:9.3}
+The original companion matrix was not retrieved or rerun. A new exact
+realization uses the trivial character and two independent sign characters
+of $(\mathbf Z/2\mathbf Z)^2$, evaluated at $(0,0),(1,0),(0,1)$:
+\[
+ C=\begin{pmatrix}1&1&1\\1&-1&1\\1&1&-1\end{pmatrix},
+ \qquad \det C=4,
+ \qquad C\begin{pmatrix}2\\0\\1\end{pmatrix}
+       =\begin{pmatrix}3\\3\\1\end{pmatrix}.
+\]
+Lean checks that these are the traces of actual one-dimensional
+representations, recovers $(2,0,1)$ uniquely, rejects a target whose unique
+solution is $(1/2,0,0)$, and rejects $(4,0,1)$ under capacities $(3,2,2)$.
+The separator becomes singular modulo two. These are finite-image
+representation checks, not fabricated Frobenius data for an arithmetic carrier.
+\end{numericalcertificate}
+
+The theorem is substantial only when a suitable compatible carrier and its irreducible compatible constituents are already known.  It does not assert that every geometric representation embeds into such a carrier.
+
+
+\paragraph{Finite-exponential reconstruction and a cubic inverse (Block 13).}
+Let $K$ be a characteristic-zero field and let $(r,N)$ be supplied group data
+with nilpotent $N$ and $r(g)N=\nu(g)Nr(g)$. For a supplied scalar map satisfying
+\[
+t(gh)=t(g)+\nu(g)t(h),
+\]
+the formalization constructs
+\[
+\rho(g)=\exp(t(g)N)r(g),\qquad
+\exp(aN)=\sum_{j=0}^{d-1}\frac{a^j}{j!}N^j\quad(N^d=0).
+\]
+Lean proves the representation laws, actual finite-copy and split-map
+compatibility, and joint continuity from continuity of $N$, $r$ and $t$ with
+the stated continuous vector-space operations. The monodromy fixed kernel
+intersected with subgroup invariants is unchanged by this twist. For normal
+inertia, its restricted action and finite-dimensional Euler denominator agree.
+Twisting again by $-t$ recovers the datum with $N$ still supplied.
+
+Block 13 also established an extracted inverse on the explicit class $N^3=0$:
+\[
+\log_2 U=(U-I)-\tfrac12(U-I)^2,\qquad
+ a^{-1}\log_2(\exp(aN))=N\quad(a\ne0).
+\]
+Both exponential/logarithmic inverse identities are checked on the cubic
+nilpotent and unipotent loci. If a supplied common sample $u$ has
+$r_D(u)=r_E(u)=I$ and $t(u)\ne0$, an intertwiner of the reconstructed cubic
+actions recovers both original group equivariance and monodromy equivariance.
+The general nilpotence exponential theorem is not restricted to this cubic
+class, but the extracted inverse in Block 13 was. Block 20 below removes
+that restriction by using the full finite logarithm.
+
+The rational affine-group example has $u=(1,1)$, $d=(0,1/3)$ and
+\[
+\rho(u)=\begin{pmatrix}1&1&1/2\\0&1&1\\0&0&1\end{pmatrix},
+\qquad \rho(d)=\operatorname{diag}(1,3,9).
+\]
+Reversing the factor order or dropping the quadratic term gives checked
+failures. For the length-four chain, the quadratic logarithm has erroneous
+$e_3$-to-$e_0$ coefficient $-1/3$, so its cubic restriction is substantive.
+A zero-parameter sample also fails to recover $N$.
+
+No arithmetic group, tame cocycle or required sample is constructed by these
+statements. The attached comparison for every intended representation,
+coefficient comparisons and Hodge--Tate/period data remain separate. Finite
+inertia image and an open inertia kernel of $r$ are not asserted to persist
+under this twist to $\rho$. Claim 9.2 remains partial.
+
+\section{Finite spectral occupancy}
+
+System completion produces arithmetic members.  It does not prove that a desired packet occurs in a global carrier.  In a fixed finite-dimensional semisimple carrier, however, occupancy is an exact projector question.
+
+Let \(E\) be a field of characteristic zero and let \(T_1,\ldots,T_N\) be commuting operators on a finite-dimensional \(E\)-vector space \(A\), each diagonalizable over \(E\).  Thus the selected spectra split over the coefficient field.  Let \(a_i\in E\) be a selected target scalar for \(T_i\), possibly absent from its spectrum.  Define
+\[
+e_i
+=
+\prod_{\mu\in\Spec(T_i)\setminus\{a_i\}}
+\frac{T_i-\mu I}{a_i-\mu},
+\qquad
+e_T=\prod_{i=1}^{N}e_i,
+\]
+with \(e_i=0\) if \(a_i\) is absent.
+
+\begin{theorem}[Exact finite occupancy trace]\label{px:10.1}
+The operator \(e_T\) is the projector onto the joint eigenspace
+\[
+A_T
+=
+\{v:T_iv=a_iv\text{ for every }i\}.
+\]
+Moreover,
+\[
+\boxed{
+\Tr(e_T)=\rank(e_T)=\dim A_T\in\Z_{\ge0}.
+}
+\]
+The trace is identified with its unique nonnegative integer preimage under \(\Z\hookrightarrow E\).  Thus \(\Tr(e_T)>0\) refers to that integer, not to an ordering of an arbitrary field \(E\).  The finite packet is occupied exactly when this integer is positive.  In positive characteristic the field-valued trace can vanish for a nonzero projector; the rank test, not a positive field trace, must then be used.
+\end{theorem}
+
+\begin{proof}
+For each operator, its finite set of actual eigenvalues is used without
+multiplicity. The polynomial
+\[
+ p_{i,a}(X)=\prod_{\mu\in\Spec(T_i)\setminus\{a\}}
+ (a-\mu)^{-1}(X-\mu)
+\]
+is used when $a$ occurs, and the zero polynomial otherwise. For an eigenvector
+$T_i v=bv$, evaluation gives
+\[
+ p_{i,a}(T_i)v=\begin{cases}v&b=a,\\0&b\ne a.\end{cases}
+\]
+Because the eigenspaces span $A$, this proves that $e_i=p_{i,a_i}(T_i)$ maps
+all of $A$ into the selected eigenspace and fixes that eigenspace pointwise.
+It therefore proves the individual projector and image assertions, including
+an absent target.
+
+Polynomials in commuting operators commute. If projections $P,Q$ onto
+$U,W$ commute, then $PQ$ maps into both $U$ and $W$, and fixes every vector
+in $U\cap W$. Induction proves that the actual ordered product $e_T$ is a
+projection onto $A_T$; commutation also makes the result independent of the
+ordering. An empty list of conditions gives the identity.
+
+For a projection onto a subspace, the direct sum of its image and kernel
+identifies it with $I\oplus0$. Thus its trace in $E$ is the natural dimension
+of its image cast into $E$. In characteristic zero this cast is injective,
+so there is a unique natural integer represented by the trace. That integer
+is positive exactly when the joint eigenspace contains a nonzero vector.
+\end{proof}
+
+\paragraph{Naturality and finite hypotheses.}
+If $F T_i=U_i F$ and the source operators split, then
+$F e_{T,a}=e_{U,a}F$. This follows first on source eigenvectors and then on
+their span. In particular, a change of basis conjugates the constructed
+projector and preserves its trace. Adding conditions decreases the actual
+joint eigenspace and cannot increase its dimension. These statements do not
+assume an orthonormal basis or a positive definite inner product.
+
+\paragraph{A specified finite realization.}
+On $\Q^4$, take the diagonal operators with diagonal lists
+\[
+(1,1,1,0),\quad(2,2,0,0),\quad(3,0,0,0),\quad(0,4,4,4)
+\]
+and target scalars $(1,2,3,4)$. All four targets occur individually. Imposing
+these conditions successively gives actual projector ranks $3,2,1,0$.
+The last packet is empty despite individual feasibility. The formal code
+checks these operators, projector formulas, traces and dimensions. This is
+a newly specified realization, not a claim to have recovered the original
+companion implementation.
+
+\paragraph{Why the hypotheses cannot be omitted.}
+For
+\[
+ P=\begin{pmatrix}1&0\\0&0\end{pmatrix},\qquad
+ Q=\tfrac12\begin{pmatrix}1&1\\1&1\end{pmatrix},
+\]
+each operator is idempotent, but $PQ$ is not idempotent and has trace $1/2$.
+For the Jordan block $J=\left(\begin{smallmatrix}1&1\\0&1\end{smallmatrix}\right)$,
+the singleton-spectrum Lagrange polynomial is $1$, so the formula produces
+the identity although the eigenspace at $1$ is only a line. Both failures
+are exact formal counterexamples to dropping the corresponding hypotheses,
+not counterexamples to the theorem with those hypotheses retained.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.77\linewidth]{15_finite_occupancy_ranks.pdf}
+\caption{A consistent sequence of finite conditions narrows the carrier from ranks \(3\) to \(2\) to \(1\).  One inconsistent condition forces the joint projector to zero.}
+\end{figure}
+
+\begin{conjecture}[Universal occupancy]\label{px:10.2}
+For every admissible finite arithmetic packet in the intended global class, there exists a finite-dimensional carrier in which the associated joint projector has positive trace.
+\end{conjecture}
+
+This conjecture is not a consequence of the projector formula.  The formula measures occupancy exactly once the carrier is fixed.  It cannot force the trace to be positive.
+
+\section{A conditional system-completion criterion}
+
+The preceding results can be assembled without promoting their missing hypotheses to theorems.
+
+\begin{theorem}[Residual-system completion criterion]\label{px:11.1}
+Fix an admissible arithmetic class.  Suppose:
+\begin{enumerate}
+\item every object has a unique residual root in an exhaustive residual moduli space;
+\item a common algebraic spine is defined for the desired system;
+\item every coefficient-prime residual companion exists;
+\item every companion forest has nonempty finite levels, finite branching, and inverse-limit closed local conditions;
+\item the required horizontal transports preserve the common spine and the selected local deformation conditions.
+\end{enumerate}
+Then the desired strictly compatible arithmetic system exists.  If, in addition, the system is a summand of a known compatible carrier, the summand is recovered at every coefficient prime by finitely many Frobenius traces.
+\end{theorem}
+
+\begin{proof}
+The first four hypotheses give the system by adelic finite-depth completion.  The transport hypothesis identifies any roots that are meant to be generated horizontally without changing the prescribed spine.  The final assertion is the compatible-carrier summand theorem.
+\end{proof}
+
+\begin{corollary}[Exact location of the remaining existence problem]\label{px:11.2}
+Inverse-limit reconstruction alone is not a nonemptiness theorem.  The existence requirements must retain both residual companions and liftability through every finite depth:
+\[
+\boxed{
+\begin{aligned}
+\text{companion existence: }&X_{\lambda,1}(\Compat)\ne\varnothing
+\text{ for every }\lambda;\\
+\text{finite-depth liftability: }&X_{\lambda,m}(\Compat)\ne\varnothing
+\text{ for every }\lambda,m\ge2;\\
+\text{finite occupancy: }&\Tr(e_T)>0
+\text{ for every required global packet.}
+\end{aligned}}
+\]
+Formal reconstruction does not create a missing residual root, repair an empty higher level, or force global occupancy.  Nonempty finite levels with finite branching supply a branch, after which inverse-limit closure reconstructs an admissible object.
+\end{corollary}
+
+
+\paragraph{An occupied node can have no child.}
+The actual order-two representation with generator
+\[
+ A=\begin{pmatrix}1&2\\2&3\end{pmatrix}\pmod4
+\]
+satisfies $A^2=I$ and $\det(XI-A)=X^2-1$. It has no lift modulo $8$ with
+the same characteristic polynomial. Indeed, every lift has entries congruent
+to $1,2,2,3$ modulo $4$. Trace zero then forces its determinant to be $3$
+modulo $8$, whereas $X^2-1$ requires determinant $-1=7$ modulo $8$.
+Both the occupied node and the absence of any next-level matrix or representation
+with the prescribed polynomial are Lean-checked. Other branches of the same
+unrestricted involution forest survive, so this example does not contradict
+finite-branch compactness.
+
+\paragraph{Local properties need their own limit argument.}
+Over a domain, for a nonzero $\pi\in I$, the representations of the additive
+integer group given by
+\[
+ \rho_n(g)=\begin{pmatrix}1&\pi^n g\\0&1\end{pmatrix}
+\]
+are all nontrivial and converge pointwise in the ideal-adic topology to the
+trivial representation. The convergence and the failure of limit preservation
+for nontriviality are formally checked. Thus not every property of approximating
+integral representations can be asserted for a limit. This example is not
+claimed to disprove stability for any particular intended Galois local condition.
+
+\paragraph{Complete conditional existence boundary (Block 24).}
+The eleventh block established the corresponding conditional matrix criterion.
+Block 24 now uses the complete common-spine conclusion of Claim 8.2: the returned
+coefficient-field representations are continuous, have the prescribed common
+polynomials and coefficient-specific determinants, and satisfy every selected
+local realization relation under the stated inverse-limit closure hypothesis.
+All finite reductions belong to the admissible classes.
+
+For each supplied required packet $p$, let $A_p$ be its finite-dimensional carrier
+over a characteristic-zero field $E_p$, and let $e_p$ be the actual joint spectral
+projector for its finite list of split commuting conditions. No order on $E_p$
+is assumed. The source notation $\Tr(e_p)>0$ means that the unique natural number
+$n_p$ with $\Tr(e_p)=(n_p:E_p)$ is positive. The checked projector formula identifies
+$n_p$ with the dimension of the actual joint eigenspace.
+
+An admissible realization here includes continuous coefficient-field members and
+membership of every finite reduction in its designated admissible class.
+Under the completion hypotheses and these supplied carrier hypotheses, Lean proves
+\[
+\begin{aligned}
+&\exists\,\rho,\ (x_p)_p:\quad
+  \rho\text{ is an admissible realization of the full chosen spine},\quad
+  0\ne x_p\in\operatorname{im}(e_p)\text{ for every }p\\
+&\quad\Longleftrightarrow\quad
+ \bigl(\forall\lambda,\ X_{\lambda,1}(\Compat)\ne\varnothing\bigr)
+ \ \land\ \bigl(\forall\lambda,\ \forall m\ge2,
+               X_{\lambda,m}(\Compat)\ne\varnothing\bigr)
+ \ \land\ \bigl(\forall p,\ n_p>0\bigr).
+\end{aligned}
+\]
+The packet index may be infinite. Each $x_p$ belongs to its own supplied carrier;
+no common vector across distinct carriers or embedding of the reconstructed
+system into those carriers is asserted. Neither an unknown carrier nor positive
+trace is constructed without the corresponding hypotheses.
+
+This completes Claim 11.2 at its conditional source scope, on the same counting
+basis used for Claim 8.2 in Block 23. The full arithmetic application premises
+remain separate. In particular, the criterion does not prove universal occupancy,
+Hodge--Tate or Weil--Deligne attachment, or the Frobenius recovery clause of
+Claim 11.1. The latter still depends on the partial Claims 9.1 and 9.2.
+
+\paragraph{Every required packet is necessary.}
+For each omitted index $N\in\mathbb N$, consider one-dimensional rational carriers
+with the identity operator, requiring eigenvalue $0$ at $N$ and eigenvalue $1$
+at every other index. The actual spectral projector has trace $0$ at $N$ and
+trace $1$ elsewhere. Lean proves that any predetermined finite sample of packet
+indices can miss an empty required packet: choose $N$ outside that sample.
+The family depends on the omitted index. This does not assert that one fixed
+family passes every finite prefix while failing global occupancy.
+
+\begin{conjecture}[Natural finite seed rank]\label{px:11.3}
+For the admissible residual transport category attached to a fixed arithmetic class, the directed seed rank is finite.  A one-seed theorem additionally requires a source component from which every required object is reachable and transports preserving deformation and occupancy data.  For a finite condensation DAG, having exactly one source implies that reachability condition.  For an infinite category, the existence of a unique source alone does not establish it.
+\end{conjecture}
+
+\section{Worked finite models}
+
+\subsection{Smooth branch}
+
+For \(q=3\) and formal dimension \(d=2\), the finite levels have cardinalities
+\[
+1,9,81,729,6561,\ldots.
+\]
+The seed zeta function is
+\[
+Z(T)=\frac{T}{1-9T}.
+\]
+
+\subsection{Weighted dyadic chart}
+
+For weights \((1,2,4)\), the counts are
+\[
+1,2,8,32,256,2048,\ldots.
+\]
+The first coordinate is active immediately, the second one level later, and the third at depth five.  The exact rational function generated by the code is
+\[
+Z_{(1,2,4)}(T)
+=
+\frac{T(1-6T-8T^2-32T^3)}{1-8T}.
+\]
+The negative signs in this presentation arise from moving the denominator to \(1-8T\); every power-series coefficient is positive.
+
+\subsection{Singular branch}
+
+For \(x^2=0\) over a residue field of size three, the counts are
+\[
+1,3,3,9,9,27,27,81,\ldots,
+\]
+and
+\[
+Z(T)=\frac{T+3T^2}{1-3T^2}.
+\]
+The exact branching dimension is \(1/2\).
+
+\subsection{Directed transport}
+
+The finite graph in \cref{fig:transport-graph} has three source components.  The source-component theorem and brute-force enumeration both return the minimum seed count three.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.84\linewidth]{16_proof_status.pdf}
+\caption{The finite and formal statements proved in this paper are separated from the two remaining universal existence assertions.}
+\label{fig:proof-status}
+\end{figure}
+
+\section{Computational certificates}
+
+The code uses exact integer, rational, symbolic, and modular arithmetic for all mathematical identities.  Floating-point arithmetic is used only to render the figures and to report a regression estimate alongside an exact branching dimension.
+
+\begin{table}[H]
+\centering
+\caption{Selected exact certificates.}
+\begin{tabular}{lr}
+\toprule
+Certificate & Result\\
+\midrule
+Residual packet count in the mod-three model & 3\\
+Compatible base-five inverse-limit branch & yes\\
+First dyadic sign separation depth & 2\\
+Source strongly connected components & 3\\
+Brute-force minimum directed seed count & 3\\
+Cohomology packet reconstruction residual & 0\\
+Compatible common-spine test & passed\\
+Inconsistent spine detected & yes\\
+Recovered carrier multiplicities & \((2,0,1)\)\\
+Finite occupancy ranks & \((3,2,1,0)\)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The complete automated suite contains \(28\) tests.  They cover residual partition, no crossing, inverse-limit digits, weighted and singular zeta coefficients, directed source components, cohomology packets, companion forests, common-spine consistency, finite Frobenius separation, multiplicity recovery, and exact occupancy projectors.
+
+\section{Claim ledger}
+
+\begin{longtable}{p{0.34\linewidth}p{0.18\linewidth}p{0.40\linewidth}}
+\toprule
+Statement & Status & Scope or boundary\\
+\midrule
+\endfirsthead
+\toprule
+Statement & Status & Scope or boundary\\
+\midrule
+\endhead
+Residual partition & proved & any moduli functor with well-defined reduction\\
+No crossing & proved & operations trivial at residual depth\\
+Inverse-limit reconstruction & proved & represented complete deformation problem\\
+Finite-branch compactness & proved & finite nonempty levels and finite branching\\
+Smooth and weighted seed zeta formulas & proved & stated formal coordinate models\\
+Singular power zeta and dimension & proved & scalar equation \(x^e=0\)\\
+Cohomology packet decomposition & proved & chain projectors commuting with the differential\\
+Directed minimum-seed theorem & proved & finite directed transport graph\\
+Adelic finite-depth completion & proved & common spine, all finite levels occupied, closed local conditions\\
+Compatible-carrier summand completion & proved & known semisimple compatible carrier and finite separation\\
+Finite occupancy trace & Lean checked & supplied commuting split operators; characteristic-zero trace criterion\\
+Universal residual companions & not proved & requires nonempty root at every coefficient prime\\
+Universal compatible-system completion & not proved & algebraic spine and companion occupancy remain necessary\\
+Universal automorphic occupancy & not proved & requires positive global packet traces\\
+Unrestricted reciprocity & not claimed & belongs to later local and global papers\\
+\bottomrule
+\end{longtable}
+
+\section{Conclusion}
+
+The residual seed theory becomes precise once vertical and horizontal generation are separated.  Positive-depth perturbations can be complete within one formal component.  They cannot change the residual root.  The universal arithmetic seed is therefore a forest rather than one branch:
+\[
+\boxed{
+\text{residual roots}
+\longrightarrow
+\text{finite deformation levels}
+\longrightarrow
+\text{inverse-limit branches}.
+}
+\]
+
+Projectors add three useful structures to this forest.  They split tangent and obstruction complexes into exact subproblems, they measure delayed dyadic visibility through weights, and they turn finite carrier occupancy into an integer trace.  Directed transport adds a fourth: it converts the informal question ``how many seeds are needed?'' into the source-component count of a condensation graph.
+
+The system-level boundary is now narrow enough to state without ambiguity.  One must construct a common algebraic spine, populate every residual companion forest, lift those companions through all depths, and prove positive occupancy of the required global packets.  The present paper proves the formal reconstruction, counting, transport, compactness, carrier, and finite-projector theorems used in that reduction.  It does not assert the missing universal existence statements.
+
+\appendix
+
+\section{Algorithms implemented in the companion package}
+
+\subsection{Residual towers}
+
+The residual module partitions coordinates modulo \(p\), verifies compatibility
+\[
+x_{m+1}\equiv x_m\pmod{p^m},
+\]
+and reconstructs the digit \(a_{m-1}\) by
+\[
+a_{m-1}=\left\lfloor\frac{x_m}{p^{m-1}}\right\rfloor\pmod p.
+\]
+
+For canonical representatives $0\le x_m<p^m$, set $x_0=0$. Compatibility also gives
+$a_{m-1}=(x_m-x_{m-1})/p^{m-1}\in\{0,\ldots,p-1\}$.
+The floor in the first formula is essential. For example, the compatible
+base-five residues $4,19$ give the second digit $3$, not the rational number $19/5$.
+The executable companion already uses integer floor division. This edition
+corrects the displayed algorithm, not the implementation.
+
+\subsection{Transport condensation}
+
+The transport module computes strongly connected components by two depth-first passes, forms the condensation graph, finds all source components, and selects one representative from each.  A brute-force subset search is included only as an independent finite certificate.
+
+\subsection{Companion forests}
+
+For an integral polynomial \(f\), the finite root forest is obtained by exact enumeration of
+\[
+f(x)\equiv0\pmod{p^m}
+\]
+and by connecting a child \(x_{m+1}\) to its reduction modulo \(p^m\).  This is intended for small exact examples, not large deformation rings.
+
+\subsection{Cohomology packets}
+
+Modular Gaussian elimination computes the ranks of the differentials.  For
+\[
+C^{i-1}\xrightarrow{d_{i-1}}C^i\xrightarrow{d_i}C^{i+1},
+\]
+the finite dimension is evaluated as
+\[
+\dim H^i
+=
+\dim C^i-\rank d_i-\rank d_{i-1}.
+\]
+Packet subcomplexes are computed separately and checked against the total.
+
+\subsection{Finite occupancy}
+
+For each commuting semisimple operator, a Lagrange polynomial constructs the exact spectral idempotent.  Their product gives the joint packet projector.  Symbolic rational arithmetic verifies idempotence and the equality of trace and rank.
+
+\section{Reproducibility boundary}
+
+The companion code is a finite certificate library.  It does not construct universal Galois deformation rings, compute general continuous group cohomology, prove representability, discover compatible systems, or evaluate automorphic trace formulas.  Those are mathematical inputs or later existence problems.  The release is designed to make every finite example and every displayed count independently reproducible without confusing computation with proof.
+
+
+\section*{Historical Block 27 formalization boundary}
+The following checkpoint discussion belongs to the Block 27 source. Its statements
+of partial status are not the live ledger of this edition. The later conditional
+contract is stated in Appendix~\ref{sec:conditional-final}. The original frontmatter
+for that checkpoint is preserved here before the detailed development.
+\input{historical_checkpoint_frontmatter.tex}
+\paragraph{Retained checkpoint discussion.}
+The smooth formal-model classification, its finite point count, its integral digit streams, and its rational seed zeta identity are now checked in Lean. The actual representing-ring algebra isomorphism remains a supplied hypothesis; neither smoothness nor Galois representability is inferred from numerical counts. All local maps are included in the classification, and locality and actual maximal-ideal-adic continuity are separately proved. Arbitrary choices of parameter representatives do not add phantom maps.
+
+The cumulative ledger contains seventeen checked source proof claims and three partial claims, with no untouched proof claims. Block 27 removes the finite-number-field restriction and Frobenius-choice attachment gaps, while general prescribed-conjugacy prime coverage remains unproved. Exact finite occupancy is checked. Claims 8.2 and 11.2 are complete at their conditional source scope, with arithmetic application premises still unproved in general. Claim 11.2 retains every residual level, every higher depth, and every required supplied packet; it does not prove their nonemptiness or positive trace unconditionally. Claims 9.1, 9.2, and 11.1 retain the gaps recorded in the current ledger. Block 25 proves the general system-to-member bridge under overlap density and the full finite cyclotomic arithmetic separation case, with actual unramified Frobenius primes supplied. General absolute-Galois Frobenius coverage remains unfinished. Blocks 21--22 identify one actual quadratic arithmetic packet with its coordinate-ring points and prove its conditional finite-depth completion with actual simultaneous local-triviality conditions. The p-adic criterion is proved at every arithmetic prime. The packet characters are trivial on actual valuation inertia at odd primes; identification of its decomposition group with the full local Galois group remains open here, and ramification at two is not proved. These results do not identify every packet in the common arithmetic spine or attach Hodge--Tate and Weil--Deligne invariants. General nilpotent logarithmic recovery remains checked under its stated sample hypotheses. Universal occupancy and natural finite seed rank remain conjectures. The original companion package has not been rerun. The release provides separate exact checks and cumulative compiler evidence. No new PDF was typeset.
+
+
+\paragraph{Finite-group comparison with precision loss (Block 17).}
+Let $R$ be a commutative domain, $\Gamma$ a finite group, and $\rho,\tau$
+actual integral matrix representations. Suppose $a=|\Gamma|\ne0$ in $R$ and
+$a\mid\pi^e$. An equivariant matrix modulo $(\pi)^{e+k}$ lifts to an
+integral equivariant matrix with the prescribed reduction modulo $(\pi)^k$.
+Indeed, lift its entries to $A$ and form
+\[
+S=\sum_{g\in\Gamma}\rho(g)A\tau(g^{-1}).
+\]
+The finite equations imply $S-aA=\pi^{e+k}E$ with $E$ integral. Choose $b$
+with $\pi^e=ab$ and put $P=A+b\pi^kE$. Then $aP=S$, so cancellation of
+$a\ne0$ proves equivariance. Over a local ring, if $\pi$ is a nonunit,
+$k>0$ and the supplied comparison is invertible, $P$ is an integral unit.
+Neither completeness nor a finite residue field is needed for this step.
+
+For a DVR, $e=v_\pi(|\Gamma|)$ is derived from the actual group order.
+The single precision $e+1$, independent of rank, detects integral
+isomorphism. It makes reduction injective on integral isomorphism classes,
+and finite coefficient quotients give finitely many integral classes in
+fixed rank. This is a formalization of classical finite-group rigidity
+(Maranda, 1953, Theorem~2), with an explicit proof of the comparison's
+precision loss.
+
+For complete local coefficients with finite quotients, downward-compatible
+allowed representations occupied at every precision, and the required
+finite-group type at depth $e+1$, reconstruction followed by this comparison
+produces the required integral representation. Continuity is proved for a
+finite discrete source and for pullback through a fixed continuous map to
+that source. Occupancy at only one precision is insufficient. The result
+lifts comparisons between actual integral representations; it does not lift
+arbitrary quotient representations or supply the missing arithmetic packet
+interpretation.
+
+For $C_2$ over $\mathbb Z_2$, take
+\[
+\tau(g)=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\qquad
+\rho(g)=\begin{pmatrix}1&2\\0&-1\end{pmatrix},\qquad
+A=\begin{pmatrix}1&1\\0&1\end{pmatrix}.
+\]
+The matrix $A$ intertwines modulo $4$ and its average is
+$P=\left(\begin{smallmatrix}1&-1\\0&1\end{smallmatrix}\right)$.
+No exact intertwiner can retain $A$ modulo $4$, although $P$ retains it
+modulo $2$. The actual trivial and sign representations also agree modulo
+$2$ but are not integrally isomorphic. These checked examples show why
+residual-only detection and full preservation of the input precision cannot
+be asserted here.
+
+
+\paragraph{Lifting a summand inside a supplied finite-group carrier (Block 18).}
+Let $R$ be a commutative integral domain complete and separated for the
+$(\pi)$-adic filtration. Let $\Gamma$ be a finite group, and let
+$\rho:\Gamma\to\mathrm{GL}_n(R)$ be an actual integral representation.
+Assume that $a=|\Gamma|\ne0$ in $R$ and $a\mid\pi^e$. For $k>0$, suppose
+\[
+\bar E\in M_n\bigl(R/(\pi)^{e+k}\bigr),\qquad
+\bar E^2=\bar E,\qquad
+\bar\rho(g)\bar E=\bar E\bar\rho(g)\quad(g\in\Gamma).
+\]
+There is an actual integral matrix $E$ satisfying
+\[
+E^2=E,\qquad \rho(g)E=E\rho(g),\qquad
+E\bmod(\pi)^k=\bar E\bmod(\pi)^k.
+\]
+No integral summand or coherent family of quotient projectors is assumed.
+No local-ring assumption or finiteness of the residue field is needed.
+
+To prove this, apply the preceding averaging correction with both
+representations equal to $\rho$. This produces an exact equivariant matrix
+$A$ with the prescribed reduction at depth $k$, so that
+$A^2-A\in(\pi)^kM_n(R)$. Averaging alone need not preserve idempotence.
+Use the integral polynomial
+\[
+f(A)=3A^2-2A^3.
+\]
+The identities
+\[
+f(A)-A=(1-2A)(A^2-A),\qquad
+f(A)^2-f(A)=(A^2-A)^2(4A^2-4A-3)
+\]
+show that successive corrections preserve the retained reduction and improve
+the idempotence defect. In these formulas scalar constants denote scalar
+matrices. The Lean proof establishes at least one additional ideal digit at
+each step, constructs the resulting compatible family of finite-level matrices, and uses
+completeness and separatedness to recover $E$. Every matrix commuting with
+$A$ commutes with $E$. There is no division by $2$, so the correction also
+works in residue characteristic $2$.
+
+The actual submodules $U=\operatorname{im}E$ and $W=\ker E$ are invariant,
+and addition gives an equivariant isomorphism
+\[
+U\oplus W\simeq R^n.
+\]
+The inclusion $i:U\hookrightarrow R^n$ and retraction $r(v)=Ev$ are
+constructed as linear maps and satisfy $ri=1_U$ and $ir=E$. Their
+equivariance is proved. Coordinatewise reduction maps $U$ onto
+$\operatorname{im}(\bar E\bmod(\pi)^k)$ and maps $W$ onto
+$\ker(\bar E\bmod(\pi)^k)$. Both equalities are surjectivity statements
+onto the actual submodules over the finite-level quotient, not merely containment. The same
+projector defines a summand after pullback through any group homomorphism
+to $\Gamma$.
+
+For $R=\mathbb Z_2$ and the sign carrier
+$\rho(s)=\operatorname{diag}(1,-1)$, the projector
+\[
+\bar E=\begin{pmatrix}1&2\\0&0\end{pmatrix}\pmod4
+\]
+is equivariant and the theorem constructs a nonzero proper equivariant
+projector retaining its reduction modulo $2$. No exact equivariant
+endomorphism retains this prescribed matrix modulo $4$. At the insufficient
+input depth $1$, the projector
+$\left(\begin{smallmatrix}1&1\\0&0\end{smallmatrix}\right)\pmod2$
+has no exact equivariant lift retaining its reduction. These are statements
+about the supplied carrier and prescribed projectors, not about nonexistence
+of all integral summands.
+
+This block constructs one summand and its complement inside a supplied
+finite-group carrier. It advances the carrier step in Claim 9.2. It does
+not identify the intended arithmetic packets, construct the arithmetic
+Weil--Deligne attachment, establish the Hodge--Tate comparisons, or prove
+universal occupancy. At the Block 18 checkpoint, the ledger recorded fifteen
+checked claims and five partially formalized claims; see the Block 23
+conditional-scope correction above.
+
+
+\paragraph{Simultaneous projector-family lifting and rigidity (Block 19).}
+Keep the complete domain, supplied finite-group carrier and group-order
+hypotheses of Block 18. Let $J$ be any finite label set and $k>0$. Suppose
+$(\bar E_i)_{i\in J}$ is a complete orthogonal family of equivariant
+idempotents modulo $(\pi)^{e+k}$. There exists an integral equivariant
+family $(E_i)_{i\in J}$ satisfying
+\[
+E_i^2=E_i,\qquad E_iE_j=0\ (i\ne j),\qquad
+\sum_{i\in J}E_i=1,\qquad
+E_i\bmod(\pi)^k=\bar E_i\bmod(\pi)^k.
+\]
+The loss is at most $e$, independent of $|J|$ and the ambient matrix rank.
+There is no local-ring or finite-residue-field hypothesis for existence.
+The formal theorem also treats empty label sets whenever their input
+equations can hold.
+
+Average every supplied matrix once. Inductively let $C$ be the complement
+of the previously lifted projectors and correct the next averaged matrix
+inside the corner defined by $C$. The integral polynomial correction
+preserves the retained reduction and commutation with $C$ and the carrier.
+Multiplication by $C$ gives the required supported projector. This consumes
+no further precision. Once every label has been lifted, the complementary
+idempotent reduces to zero at positive depth. Adic separatedness forces it
+to vanish, proving the sum-to-identity equation.
+
+The actual invariant images $U_i=\operatorname{im}E_i$ give an equivariant
+linear isomorphism
+\[
+\bigoplus_{i\in J}U_i\simeq R^n,
+\qquad (v_i)_i\longmapsto\sum_i v_i,
+\qquad v\longmapsto(E_iv)_i.
+\]
+Lean represents the finite direct sum by the finite product of the image
+submodules. The existing coordinatewise reduction theorem maps every
+$U_i$ onto the corresponding reduced projector image. No chosen bases or
+unproved freeness of the images are used.
+
+For rigidity alone, let $R$ be a commutative local ring, let $\pi$ be a
+nonunit, and let $E,F$ be complete equivariant families on the same carrier
+with $E_i\equiv F_i\pmod{(\pi)^k}$ for every label and $k>0$. Then
+\[
+U=\sum_{i\in J}F_iE_i,\qquad
+U\equiv1\pmod{(\pi)^k},\qquad UE_i=F_iU.
+\]
+Reduction reflects invertibility in this setting, so $U$ is an integral
+unit and $UE_iU^{-1}=F_i$. It commutes with the carrier and induces actual
+equivariant isomorphisms $\operatorname{im}E_i\simeq\operatorname{im}F_i$.
+This rigidity theorem requires neither a finite acting group, a domain,
+nor completeness. More generally a unit-reflecting coefficient map suffices.
+The combined result proves existence and uniqueness up to this labeled
+conjugacy; exact uniqueness of the matrices is false.
+
+For the continuous $\mathbb Z_2$ carrier
+$\rho(s)=\operatorname{diag}(1,-1,1)$, conjugate the three coordinate
+projectors by $1+2e_{01}$ and reduce modulo $4$. They form a complete
+equivariant family. The general theorem constructs three nonzero integral
+summands retaining this family modulo $2$. No exact equivariant family
+retains the whole prescribed family modulo $4$. Separate checked examples
+show that independent equivariant idempotent lifts can lose orthogonality,
+and that distinct complete families with the same reduction can be related
+by the asserted identity-congruent conjugacy.
+
+Block 19 completes this finite-group projector-family step. The actual
+arithmetic packets, Galois-to-Weil--Deligne attachment, coefficient and
+Hodge--Tate/period comparisons, and arithmetic Frobenius coverage remain
+outside this result. At the Block 19 checkpoint, the ledger recorded fifteen
+checked claims and five partial claims; see the Block 23 conditional-scope
+correction above. Universal occupancy remains conjectural.
+
+
+\paragraph{General finite logarithmic recovery (Block 20).}
+Let $A$ be a rational algebra, without any commutativity assumption on $A$.
+For a unipotent element $U$ and a positive integer $d$ satisfying
+$(U-1)^d=0$, put
+\[
+L_d(U)=\sum_{j=1}^{d-1}\frac{(-1)^{j+1}}{j}(U-1)^j.
+\]
+The value is independent of the chosen annihilating exponent. The finite
+logarithm and the nilpotent exponential satisfy
+\[
+L(\exp N)=N,\qquad \exp(L(U))=U.
+\]
+Both maps preserve every annihilating exponent, and hence preserve the
+exact nilpotency class of $N$ and $\exp(N)-1$, or of $U-1$ and $L(U)$.
+The Lean finite sum includes its zero-index term with coefficient zero;
+the displayed mathematical sum starts at one. The formal statements also
+handle the zero algebra and the exponent-zero case.
+
+The proof evaluates Mathlib's formal power-series inverse identities at
+constant nilpotent series. Such evaluation is exactly a finite polynomial.
+For an arbitrary noncommutative ambient algebra, perform the calculation
+inside the commutative subalgebra generated by the element and then apply
+its inclusion. No analytic convergence or topology is assumed. The
+finite logarithm commutes with ring homomorphisms between rational algebras.
+
+Let $K$ be a characteristic-zero field and $N$ an endomorphism with
+$N^d=0$. For $t\ne0$ the actual recovery formula is
+\[
+N=\frac1t\sum_{j=1}^{d-1}\frac{(-1)^{j+1}}{j}
+       \bigl(\exp(tN)-1\bigr)^j.
+\]
+All coefficients lie in $K$. The vector spaces need not be finite
+dimensional, but nilpotence still means that some finite power of the
+whole operator is zero. A linear map intertwines two nilpotent operators exactly
+when it intertwines their exponential samples at a common nonzero
+parameter. Also
+\[
+\ker\bigl(\exp(tN)-1\bigr)=\ker N.
+\]
+
+For supplied covariance data and the twisted cocycle of Block 13, let
+$\rho_D(g)=\exp(t(g)N_D)r_D(g)$. If a common element $u$ satisfies
+$r_D(u)=r_E(u)=1$ and $t(u)\ne0$, every intertwiner of $\rho_D$ and
+$\rho_E$ recovers both the original $r$-intertwiner and the $N$-intertwiner.
+There is no cubic nilpotence restriction. This recovers equivariant
+projectors for both original components. Reconstructed-action isomorphisms
+induce actual isomorphisms of the inertia-fixed monodromy kernels. Their local characteristic polynomials
+agree under the existing finite-dimensional and normal-subgroup hypotheses.
+
+For actual finite original inertia images the common kernel sample is
+derived. Suppose $u\in H$ satisfies $\nu(u)=1$ and $t(u)\ne0$ and both
+$r_D(H)$ and $r_E(H)$ are finite. Their sampled actions have positive
+finite orders $a,b$. At $u^{ab}$ both original actions are trivial, and
+\[
+t(u^{ab})=(ab)t(u)\ne0
+\]
+by the cocycle identity and characteristic zero. Thus the same full
+intertwiner equivalence holds using the actual finite-image hypotheses,
+without a separately supplied common trivial-action sample. The initial
+nonzero cocycle sample and the arithmetic interpretation of the data
+remain requirements.
+
+Actual affine representations with monodromy chains of every finite
+length invoke these theorems. In particular a length-six example has
+$N^5\ne0$ and $N^6=0$ and is recovered from its actual reconstructed action.
+The length-four example still defeats the old quadratic logarithm, while
+the full finite logarithm recovers it.
+
+The sample hypotheses retain substantive content. A zero parameter loses
+$N$. For unrestricted supplied algebraic data, one can also absorb
+$\exp(tN)$ into $r$ and set the new monodromy to zero; the reconstructed
+representation is unchanged. The absorbed original action fails the
+required trivial-action sample condition. This is a counterexample in the
+algebraic datum class, not a failure of uniqueness of arithmetic
+Weil--Deligne attachment with finite original inertia action.
+
+Block 20 removes the general logarithmic-extraction gap from the local
+algebraic comparison. It does not construct the actual arithmetic
+attachment, identify every intended packet, prove the coefficient and
+Hodge--Tate/period comparisons, or prove arithmetic Frobenius coverage.
+At the Block 20 checkpoint, the ledger recorded fifteen checked claims
+and five partial claims; see the Block 23 scope correction above.
+
+
+
+\paragraph{Interpreted quadratic arithmetic completion (Block 21).}
+Fix the continuous quotient
+\[
+q:G_{\Q}\longrightarrow C_2
+\]
+obtained by the action on a chosen square root $i$ of $-1$ in the algebraic
+closure. Its surjectivity and the equivalence
+\[
+q(\sigma)=1\quad\Longleftrightarrow\quad\sigma(i)=i
+\]
+are proved using the existing actual quadratic Galois construction.
+For a commutative ring $B$, define the arithmetic packet
+\[
+\mathcal P_q(B)=
+\{\chi:G_{\Q}\longrightarrow B^\times\mid\ker q\subseteq\ker\chi\},
+\]
+where the maps are group homomorphisms. Unique descent through the actual
+surjective map $q$ is derived, rather than supplied. Every member has finite
+image and is continuous for the coefficient topology, since its descent
+has the finite discrete domain $C_2$.
+
+Let $R$ be any commutative ring and $B$ any commutative $R$-algebra. The
+coordinate ring $A_R=R[X]/(X^2-1)$ represents precisely this specified
+packet:
+\[
+\Hom_{R\text{-alg}}(A_R,B)
+\simeq\{x\in B:x^2=1\}
+\simeq\Hom(C_2,B^\times)
+\simeq\mathcal P_q(B).
+\]
+The first map evaluates the coordinate. Its inverse is the quotient
+universal property. A root is a unit with itself as inverse and determines
+a character by its value on the generator of $C_2$. Finally pull back
+along $q$. All inverse identities and naturality under coefficient
+homomorphisms are proved. In particular, the point reductions and actual
+arithmetic character reductions coincide. There is no invertibility-of-two,
+reducedness or nontriviality hypothesis on $B$. No smoothness or
+\'{e}taleness statement at two is used or asserted.
+
+Let $I\subseteq R$ and suppose that $R$ is $I$-adically complete. Using
+the checked ring-map reconstruction on the quadratic coordinate ring,
+Lean proves
+\[
+\mathcal P_q(R)\simeq\varprojlim_{m\ge0}\mathcal P_q(R/I^m).
+\]
+The zero-precision quotient is included only for the formal indexing.
+The inverse constructs an actual arithmetic character, with exactly the
+prescribed reductions. It is unique, and its continuity is derived from
+its factorization through the same finite quotient.
+
+There is also a completion theorem without chosen compatible characters.
+Suppose that $R/I^m$ is finite for every $m\ge1$, and that
+$C_m\subseteq\mathcal P_q(R/I^m)$ are allowed subsets such that every
+reduction of an allowed member is allowed. Then
+\[
+\begin{split}
+&\exists\chi\in\mathcal P_q(R),\quad
+  \chi\text{ is continuous and }\chi\bmod I^m\in C_m
+  \text{ for all }m\ge1\\
+&\hspace{3em}\Longleftrightarrow\quad
+  C_m\ne\varnothing\text{ for all }m\ge1.
+\end{split}
+\]
+The root interpretation makes the allowed finite levels genuinely finite.
+Finite-branch compactness chooses the compatible roots, and the ring
+reconstruction gives their integral root. Naturality turns this into the
+required arithmetic character. Surjectivity of transitions and individual
+liftability of every finite node are not assumed. The root-level theorem
+needs only the allowed root subsets to be finite.
+
+For $R=\Z_2$, Lean derives finiteness of all positive maximal-ideal
+quotients and applies this completion theorem. Since $\Z_2$ is a domain,
+its only roots of $X^2-1$ are $1$ and $-1$. Thus the integral packet has
+exactly two distinct characters: the trivial character and the sign
+character describing the action on $i$. They have the same reduction
+modulo two and distinct reductions modulo four.
+
+The distinction between finite occupancy and continuation is witnessed
+by an actual finite arithmetic character. The roots modulo eight are
+$1,3,5,7$. The root $3$ defines a member of
+$\mathcal P_q(\Z/8\Z)$, but no member of
+$\mathcal P_q(\Z/16\Z)$ reduces to it. Indeed the only scalar lifts of
+$3$ are $3$ and $11$, and both square to $9$ modulo sixteen. The formal
+proof also classifies all roots modulo sixteen and the reductions with
+children. Consequently a nonempty finite node need not lie on an
+infinite branch, even in this explicitly interpreted arithmetic packet.
+
+Block 21 completes this restricted arithmetic interpretation and its
+conditional completion. The packet is defined by one fixed quotient; it
+is not the collection of all quadratic characters of $G_{\Q}$. No local
+ramification criterion, Hodge--Tate weight, Weil--Deligne attachment, or
+cross-coefficient local invariant was established by Block 21. The full
+manuscript still requires its remaining packet identifications and
+arithmetic comparisons. At the Block 21 checkpoint, the ledger recorded
+fifteen checked claims and five partial claims; see the Block 23 conditional-scope
+correction above. Universal positive occupancy remains conjectural.
+
+\paragraph{Actual quadratic local conditions and completion (Block 22).}
+Continue with the fixed packet $\mathcal P_q$ above. For a
+characteristic-zero field $K$, let
+\[
+j_K:G_K\longrightarrow G_{\Q}
+\]
+be the actual field-induced homomorphism between absolute Galois groups.
+It includes a chosen embedding of algebraic closures. Let $i_K$ be the
+image of the chosen square root $i$ under that embedding. Lean proves
+compatibility with the Galois actions and hence
+\[
+(q\circ j_K)(\sigma)=1
+\quad\Longleftrightarrow\quad \sigma(i_K)=i_K.
+\]
+The fixed-field theorem for the algebraic closure then gives
+\[
+q\circ j_K=1
+\quad\Longleftrightarrow\quad
+\exists x\in K,\ x^2=-1.
+\]
+If no such root exists, the local quotient is surjective onto $C_2$.
+These are statements about the actual local Galois map, not a supplied
+arithmetic interpretation of a scalar label.
+
+For every commutative coefficient ring $B$ and $\chi\in\mathcal P_q(B)$,
+define $\chi_K=\chi\circ j_K$. The local character is continuous and
+commutes with coefficient change. The precise local admissibility
+condition is
+\[
+\operatorname{LocallyTrivial}_K(\chi)
+\quad\Longleftrightarrow\quad \chi_K=1.
+\]
+Descent through the fixed quadratic quotient proves
+\[
+\operatorname{LocallyTrivial}_K(\chi)
+\quad\Longleftrightarrow\quad
+\bigl(\exists x\in K,\ x^2=-1\bigr)\ \lor\ \chi=1.
+\]
+No reducedness, characteristic-zero or domain hypothesis is imposed on
+$B$. In particular, the formula applies to the finite coefficient
+quotients used in completion.
+
+The p-adic square-root criterion is proved for every prime:
+\[
+\bigl(\exists x\in\Q_p,\ x^2=-1\bigr)
+\quad\Longleftrightarrow\quad p\equiv1\pmod4.
+\]
+A root satisfies $\lvert x\rvert_p^2=1$ and is therefore integral.
+Reduction modulo three rules out a root in $\Q_3$, and reduction modulo
+four rules out a root in $\Q_2$. At an odd prime, any residue root of
+$X^2+1$ has nonzero derivative and lifts by the pinned Mathlib Hensel
+theorem. The finite-field square criterion then gives the stated
+congruence. An explicit Hensel application at the residue root $2$ modulo $5$ supplies
+a root in $\Z_5$. Consequently
+\[
+\boxed{
+\operatorname{LocallyTrivial}_{\Q_p}(\chi)
+\quad\Longleftrightarrow\quad p\equiv1\pmod4\ \lor\ \chi=1.
+}
+\]
+The arithmetic prime $p$ is independent of the coefficient prime. For
+the two integral $\Z_2$-valued characters, the sign character is locally
+trivial exactly at primes congruent to one modulo four. Both distinct
+global characters are locally trivial at five, while the sign character
+is nontrivial on the full local Galois groups at three and two.
+
+The inertia theorem uses actual residue actions. For a valuation subring
+$A$ of an extension field $L/K$, let $D_A$ be its decomposition subgroup
+in $\operatorname{Aut}_K(L)$ and put
+\[
+I_A=\ker\bigl(D_A\longrightarrow\operatorname{Aut}(k_A)\bigr),
+\]
+where $k_A$ is the residue field. If $2$ is a unit in $A$, every member
+of $I_A$ fixes every $y\in L$ with $y^2=-1$. Indeed $y^{-1}=-y$, so
+$y$ belongs to $A$ and is a unit there. An automorphism sends $y$ to
+$y$ or $-y$. Their residues are distinct because $2$ and $y$ are units,
+whereas inertia fixes residues. The second possibility is excluded.
+
+For every prime $p$, Lean constructs a valuation subring
+$A\subseteq\overline{\Q_p}$ containing the integral image of $\Z_p$
+such that the induced map $\Z_p\to A$ is local. For odd $p$, two is
+a unit. The preceding argument applies to every valuation subring
+containing that integral image, and hence every member of
+$\mathcal P_q(B)$ is trivial on its inertia subgroup after actual local
+restriction. The existence theorem supplies a locally dominating choice,
+so this assertion is not vacuous.
+
+This inertia is the actual residue-action kernel inside $D_A$. No equality
+$D_A=G_{\Q_p}$ is established in this block. Nor is ramification at two
+proved: the nontrivial full local character there is a separate result.
+At three the $\Z_2$-valued sign character is nontrivial on the full local
+Galois group but trivial on every inertia subgroup covered by the theorem.
+Thus local triviality and the stated inertia triviality are distinguished
+by checked arithmetic examples.
+
+The local conditions survive coefficient completion by a proved theorem.
+For an $I$-adically separated commutative ring $R$,
+\[
+\operatorname{LocallyTrivial}_K(\chi)
+\quad\Longleftrightarrow\quad
+\operatorname{LocallyTrivial}_K(\chi\bmod I^m)
+\text{ for every }m\ge1.
+\]
+If $-1$ has a square root in $K$, every packet member satisfies the
+condition. Otherwise the condition says that the character is globally
+trivial, and separatedness detects that equality through all reductions.
+This proves the closure statement for the independently defined arithmetic
+property.
+
+Suppose now that $R$ is $I$-adically complete and that every positive
+quotient $R/I^m$ is finite. Let $C_m\subseteq\mathcal P_q(R/I^m)$ be
+allowed subsets preserved by reduction, and let $(p_s)_{s\in S}$ be any
+indexed family of arithmetic primes. The index set $S$ need not be finite.
+Lean proves the simultaneous arithmetic completion criterion
+\[
+\begin{split}
+&\exists\chi\in\mathcal P_q(R),\quad
+ \chi\text{ continuous},\quad
+ \chi\bmod I^m\in C_m\ (m\ge1),\quad
+ \chi_{\Q_{p_s}}=1\ (s\in S)\\
+&\quad\Longleftrightarrow\quad
+ \forall m\ge1,\ \exists\psi\in C_m,\quad
+ \forall s\in S,\ p_s\equiv1\pmod4\ \lor\ \psi=1.
+\end{split}
+\]
+The constructed character also satisfies every odd-prime valuation-inertia
+condition stated above. Finite-branch compactness selects all finite
+characters together; no coherent branch or surjective transition maps
+are assumed. The new local-closure implication is proved, not supplied.
+Every-level occupancy remains a substantive hypothesis. One nonsplit
+selected prime forces the completed global character to be trivial.
+
+For the integral dyadic packet, a single detecting precision is also
+proved: reduction modulo four detects local triviality uniformly in the
+arithmetic prime. Modulo two does not suffice. The sign character is
+nontrivial locally at three, while its reduction modulo two is trivial.
+This is a coefficient-depth failure, distinct from splitting of the
+arithmetic field.
+
+Block 22 finishes this actual local admissibility and completion step for
+the fixed quadratic packet. It does not identify all packets in the
+manuscript's common arithmetic spine, attach Weil--Deligne objects, or
+prove coefficient and Hodge--Tate/period comparisons. The decomposition
+and full local Galois group identification remains a separate inertia
+obligation, and ramification at two is not claimed. The full arithmetic
+ledger at the Block 22 checkpoint recorded fifteen checked source claims
+and five partial claims; the Block 23 conditional-scope correction gives
+sixteen checked and four partial.
+Universal occupancy and natural finite seed rank remain conjectures.
+
+\input{residue_continuation_body.tex}
+\input{conditional_completion.tex}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\input{references.tex}
+\clearpage
+\section{Worked visual atlas}\label{sec:atlas}
+The following thirty pages reproduce the worked atlas from the separate visual
+guide. They retain their own page labels V1--V30, so the same example has the
+same address in either reading route. The two opening contract pages of the
+standalone guide are not repeated here.
+
+The atlas develops exact finite models, not substitutes for universal proofs.
+Its first part separates residual roots, coherent branches, and occupied carrier
+packets. Its second part studies residue norms, cancellation, Mellin estimates,
+and the boundary between a finite calculation and arithmetic occurrence.
+The final page records the three distinct historical and current contracts.
+
+The build script appends these source-built pages after this leaf and copies their
+bookmarks and internal links. The mathematical manuscript, its historical
+checkpoint statements, and the later conditional assembly remain above.
+\end{document}

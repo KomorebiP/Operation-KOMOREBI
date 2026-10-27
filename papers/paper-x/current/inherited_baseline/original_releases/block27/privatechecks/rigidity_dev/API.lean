@@ -1,0 +1,10 @@
+import PaperX.IrreducibleCharacterRigidity
+
+#check PaperX.IrreducibleCharacterRigidity.character_eq_of_equiv
+#check PaperX.IrreducibleCharacterRigidity.equiv_iff_character_eq
+#check PaperX.IrreducibleCharacterRigidity.character_eq_of_dense_samples
+#check PaperX.IrreducibleCharacterRigidity.equiv_of_dense_character_eq
+#print axioms PaperX.IrreducibleCharacterRigidity.character_eq_of_equiv
+#print axioms PaperX.IrreducibleCharacterRigidity.equiv_iff_character_eq
+#print axioms PaperX.IrreducibleCharacterRigidity.character_eq_of_dense_samples
+#print axioms PaperX.IrreducibleCharacterRigidity.equiv_of_dense_character_eq

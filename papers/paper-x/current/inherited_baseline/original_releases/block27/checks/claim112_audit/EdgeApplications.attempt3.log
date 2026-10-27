@@ -1,0 +1,50 @@
+/root/.codex/tmp/paperx_block24/checks/claim112_audit/EdgeApplications.lean:33:2: error: Tactic `decide` failed for proposition
+  ↑(Module.finrank (ZMod 2) (Fin 0 → ZMod 2)) = ↑2
+because its `Decidable` instance
+  ZMod.decidableEq 2 ↑(Module.finrank (ZMod 2) (Fin 0 → ZMod 2)) ↑2
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match h : (↑↑(Module.finrank (ZMod 2) (Fin 0 → ZMod 2))).beq ↑↑2 with
+  | true => isTrue ⋯
+  | false => isFalse ⋯
+PaperX.SpineExistenceCriterion.full_existence_boundary {Λ G ι V E : Type} [Group G] [TopologicalSpace G] [Fintype ι]
+  [DecidableEq ι] [Field E] (O K : Λ → Type) [(l : Λ) → CommRing (O l)] [(l : Λ) → Field (K l)]
+  [(l : Λ) → TopologicalSpace (K l)] (I : (l : Λ) → Ideal (O l)) [∀ (l : Λ), IsAdicComplete (I l) (O l)]
+  (hI : ∀ (l : Λ), (I l).FG) [∀ (l : Λ), Finite (O l ⧸ I l)]
+  (C : (l : Λ) → PaperX.ClassCompletion.ClassConditions (I l))
+  (finite : ∀ (l : Λ) (k : ℕ), 0 < k → Finite { c // (C l).allowed k c })
+  (continuous :
+    ∀ (l : Λ) (k : ℕ) (c : PaperX.RepresentationClasses.ClassRep (O l ⧸ I l ^ k) G ι),
+      (C l).allowed k c →
+        ∃ ρ, PaperX.RepresentationClasses.classOf ρ = c ∧ PaperX.RepresentationTopology.FiniteRepContinuous ρ)
+  (inc : (l : Λ) → O l →+* K l) (hinc : ∀ (l : Λ), Continuous ⇑(inc l)) (emb : (l : Λ) → E →+* K l)
+  (S : PaperX.ConditionalArithmeticSpine.Spine K)
+  (closed :
+    ∀ (l : Λ),
+      PaperX.InverseLimitLocalConditions.InverseLimitClosed (I l) (C l) fun ρ =>
+        PaperX.ConditionalArithmeticSpine.LocalRealizes S l (PaperX.RepresentationLimits.changeCoefficients (inc l) ρ))
+  (localP : (l : Λ) → V → Polynomial (O l))
+  (poly_integral :
+    ∀ (l : Λ) (v : V), S.good l v → Polynomial.map (inc l) (localP l v) = Polynomial.map (emb l) (S.polynomial v))
+  (poly_spec :
+    ∀ (l : Λ) (k : ℕ) (c : PaperX.RepresentationClasses.ClassRep (O l ⧸ I l ^ k) G ι),
+      (C l).allowed k c →
+        ∀ (v : V),
+          S.good l v →
+            PaperX.ClassInvariants.classCharpoly c (S.sample v) =
+              Polynomial.map (Ideal.Quotient.mk (I l ^ k)) (localP l v))
+  (localDet : (l : Λ) → G → O l) (det_integral : ∀ (l : Λ) (g : G), (inc l) (localDet l g) = S.determinant l g)
+  (det_spec :
+    ∀ (l : Λ) (k : ℕ) (c : PaperX.RepresentationClasses.ClassRep (O l ⧸ I l ^ k) G ι),
+      (C l).allowed k c →
+        ∀ (g : G), PaperX.DeterminantSpine.classDet c g = (Ideal.Quotient.mk (I l ^ k)) (localDet l g))
+  {P : Type} (F A J : P → Type) [(p : P) → Field (F p)] [∀ (p : P), CharZero (F p)] [(p : P) → AddCommGroup (A p)]
+  [(p : P) → Module (F p) (A p)] [∀ (p : P), FiniteDimensional (F p) (A p)] (T : (p : P) → J p → Module.End (F p) (A p))
+  (a : (p : P) → J p → F p) (indices : (p : P) → List (J p)) (hs : ∀ (p : P) (j : J p), Split (T p j))
+  (hc : ∀ (p : P) (i j : J p), Commute (T p i) (T p j)) :
+  (∃ ρ x,
+      PaperX.SpineExistenceCriterion.SystemRealization O K I C inc emb S ρ ∧
+        ∀ (p : P), x p ≠ 0 ∧ ∀ i ∈ indices p, (T p i) (x p) = a p i • x p) ↔
+    (∀ (l : Λ), ∃ c, (C l).allowed 1 c) ∧
+      (∀ (l : Λ) (k : ℕ), 2 ≤ k → ∃ c, (C l).allowed k c) ∧ ∀ (p : P), PositiveTrace (T p) (a p) (indices p)

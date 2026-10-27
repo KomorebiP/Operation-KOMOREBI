@@ -1,0 +1,14 @@
+import PaperX.ResidueLatticeIdeal
+#check Fintype.sum_fiberwise
+#check Finset.sum_fiberwise
+#check finsum_eq_sum
+#check Nat.card_eq_fintype_card
+#check Fintype.card_subtype_iff
+#check Metric.finite_isBounded_inter_isClosed
+#check Bornology.IsBounded.smul
+#check Module.finrank_pos
+#check NumberField.mixedEmbedding_injective
+#check Finite.of_injective
+#check Equiv.subtypeSubtypeEquivSubtypeInter
+#check Fintype.sum_equiv
+#check Fintype.card_ofFinite

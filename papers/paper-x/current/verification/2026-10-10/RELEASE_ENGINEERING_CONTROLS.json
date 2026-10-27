@@ -1,0 +1,121 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "name": "positive",
+      "returncode": 0,
+      "expected_success": true,
+      "output": {
+        "status": "passed",
+        "manifest_files": 1,
+        "bytes_read": 20,
+        "errors": [],
+        "additional_files": [],
+        "scope": "file integrity only; no Lean compilation or scientific test execution"
+      }
+    },
+    {
+      "name": "modified_byte_rejected",
+      "returncode": 1,
+      "expected_success": false,
+      "output": {
+        "status": "failed",
+        "manifest_files": 1,
+        "bytes_read": 20,
+        "errors": [
+          {
+            "path": "sample.dat",
+            "error": "size_or_hash_mismatch"
+          }
+        ],
+        "additional_files": [],
+        "scope": "file integrity only; no Lean compilation or scientific test execution"
+      }
+    },
+    {
+      "name": "missing_file_rejected",
+      "returncode": 1,
+      "expected_success": false,
+      "output": {
+        "status": "failed",
+        "manifest_files": 1,
+        "bytes_read": 0,
+        "errors": [
+          {
+            "path": "sample.dat",
+            "error": "missing_or_nonregular_file"
+          }
+        ],
+        "additional_files": [],
+        "scope": "file integrity only; no Lean compilation or scientific test execution"
+      }
+    },
+    {
+      "name": "strict_extra_file_rejected",
+      "returncode": 1,
+      "expected_success": false,
+      "output": {
+        "status": "failed",
+        "manifest_files": 1,
+        "bytes_read": 20,
+        "errors": [
+          {
+            "error": "additional_files",
+            "paths": [
+              "extra"
+            ]
+          }
+        ],
+        "additional_files": [
+          "extra"
+        ],
+        "scope": "file integrity only; no Lean compilation or scientific test execution"
+      }
+    },
+    {
+      "name": "unsafe_manifest_path_rejected",
+      "returncode": 1,
+      "expected_success": false,
+      "output": {
+        "status": "failed",
+        "manifest_files": 1,
+        "bytes_read": 0,
+        "errors": [
+          {
+            "path": "../outside.dat",
+            "error": "unsafe_or_duplicate_manifest_path"
+          },
+          {
+            "error": "additional_files",
+            "paths": [
+              "sample.dat"
+            ]
+          }
+        ],
+        "additional_files": [
+          "sample.dat"
+        ],
+        "scope": "file integrity only; no Lean compilation or scientific test execution"
+      }
+    },
+    {
+      "name": "missing_engine_nonzero_and_stale_output_removed",
+      "returncode": 1,
+      "expected_success": false,
+      "stale_pdf_removed": true,
+      "output": {
+        "file_name": "Negative_Control.pdf",
+        "status": "failed",
+        "pages": null,
+        "passes": 0,
+        "seconds": 0.0,
+        "errors": [
+          "FileNotFoundError(2, 'No such file or directory')"
+        ],
+        "warnings": [],
+        "pdf": "build/Negative_Control/Negative_Control.pdf"
+      }
+    }
+  ],
+  "scientific_scope": "release-engineering controls only"
+}
