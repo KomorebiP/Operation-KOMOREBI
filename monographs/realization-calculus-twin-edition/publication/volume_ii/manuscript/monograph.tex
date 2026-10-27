@@ -1,0 +1,119 @@
+\documentclass[11pt,oneside,openany]{book}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{mathpazo,amssymb}
+\usepackage[paperwidth=7.5in,paperheight=10in,inner=0.80in,outer=0.80in,top=0.82in,bottom=0.78in,headheight=14pt,headsep=0.22in,footskip=0.35in]{geometry}
+\usepackage{microtype,graphicx,booktabs,array,longtable,tabularx}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{titlesec,fancyhdr,enumitem,caption,float,needspace,etoolbox,listings}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref,bookmark}
+\definecolor{Ink}{HTML}{172A3A}
+\definecolor{Accent}{HTML}{286E75}
+\definecolor{Soft}{HTML}{F0F5F5}
+\definecolor{Quiet}{HTML}{62727C}
+\definecolor{CoverLight}{HTML}{CDDEE2}
+\hypersetup{colorlinks=true,linkcolor=Accent,citecolor=Accent,urlcolor=Accent,pdftitle={Realization Boundaries: Finite Grammar, Infinite Groups, and the Limits of Reconstruction},pdfauthor={Komorebi P.},pdfsubject={Realization Calculus, abelian groups, profinite completion, computable structures},bookmarksnumbered=true}
+\urlstyle{same}
+\renewcommand{\bibname}{References}
+\setlength{\parindent}{1.05em}
+\setlength{\parskip}{3.5pt plus 0.8pt}
+\linespread{1.045}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+\titleformat{\chapter}[display]{\normalfont\color{Ink}}{\sffamily\small\color{Accent}\MakeUppercase{\chaptertitlename}\ \thechapter}{9pt}{\fontsize{25}{29}\selectfont\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000}
+\titlespacing*{\chapter}{0pt}{4pt}{20pt}
+\titleformat{\section}{\large\bfseries\color{Ink}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{Ink}}{\thesubsection}{0.7em}{}
+\titlespacing*{\section}{0pt}{16pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{5pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{Quiet}\nouppercase{\leftmark}}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{Quiet}REALIZATION CALCULUS}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter\quad #1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+\captionsetup{font=small,labelfont={bf,color=Accent},justification=raggedright,singlelinecheck=false,skip=8pt}
+\setlist{itemsep=3pt,topsep=6pt,parsep=0pt,leftmargin=1.6em}
+\newtheoremstyle{research}{9pt}{9pt}{\itshape}{} {\bfseries\color{Ink}}{.}{0.55em}{}
+\theoremstyle{research}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newtheorem{question}[theorem]{Question}
+\newtcolorbox{keybox}[1][]{breakable,colback=Soft,colframe=Accent,boxrule=0.5pt,arc=0pt,left=11pt,right=11pt,top=10pt,bottom=10pt,before skip=12pt,after skip=12pt,#1}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\F}{\mathbb F}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Tor}{\operatorname{Tor}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\den}{\operatorname{den}}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\Sub}{\operatorname{Sub}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\trank}{\operatorname{trank}}
+\newcommand{\fin}{\operatorname{fin}}
+\newcommand{\Obs}{\mathcal F}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\eqfin}{=^{*}}
+\newcommand{\neqfin}{\ne^{*}}
+\newcommand{\primes}{\mathcal P}
+\newcommand{\bits}{\{0,1\}^{\N}}
+\newcommand{\proofend}{\hfill$\square$}
+\newcommand{\chapterintro}[1]{\noindent\textit{#1}\par\vspace{5pt}}
+\newcommand{\figfile}[1]{../figures/#1}
+\lstset{basicstyle=\ttfamily\footnotesize,columns=fullflexible,keepspaces=true,breaklines=true,frame=single,rulecolor=\color{Quiet!35},backgroundcolor=\color{Soft},xleftmargin=4pt,xrightmargin=4pt,aboveskip=10pt,belowskip=10pt,showstringspaces=false,upquote=true}
+\newcommand{\SeriesIndex}{2}
+\newcommand{\SeriesVolume}{II}
+\newcommand{\SeriesTitle}{Realization Boundaries}
+\newcommand{\SeriesTitleLines}{Realization\\Boundaries}
+\newcommand{\SeriesSubtitleLines}{Finite Grammar, Infinite Groups,\\and the Limits of Reconstruction}
+\newcommand{\SeriesMotif}{$D\ \subseteq\ G_A\ \subseteq\ P$}
+\newcommand{\SeriesCoverCaption}{One ambient completion.\\Different algebraic realizations.\\Precisely measured information.}
+\input{../../shared/series-style}
+\begin{document}
+\SeriesCover
+\frontmatter
+\input{../../shared/series-front}
+\input{chapters/00_front}
+\begingroup\setlength{\parskip}{0pt}\tableofcontents\endgroup
+\input{chapters/00_notation}
+\mainmatter
+\input{chapters/01_contracts}
+\input{chapters/02_ambient}
+\input{chapters/03_spectrum}
+\input{chapters/04_purity}
+\input{chapters/05_construction}
+\input{chapters/06_roots}
+\input{chapters/07_classification}
+\input{chapters/08_computability}
+\input{chapters/09_reconstruction}
+\input{chapters/10_grammar}
+\input{chapters/11_atlas}
+\input{chapters/12_calculus}
+\appendix
+\input{chapters/13_implementation}
+\input{chapters/14_formal}
+\input{chapters/15_glossary}
+\backmatter
+\input{chapters/16_references}
+\end{document}

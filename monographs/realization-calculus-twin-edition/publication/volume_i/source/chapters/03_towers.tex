@@ -1,0 +1,488 @@
+\partnote{Resolution, repair, and retained detail}{Resolution gives a concrete family of views. Its compatibility differential connects exact maps, protected information, and residual coordinates. Recovering every finite coordinate is then separated from convergence in a chosen norm.}
+\section{Resolution towers and exact transport}\label{sec:towers}
+\subsection{The sequential model}
+A tower in a category \(\mathcal C\) is a sequence
+\[
+ \cdots\xrightarrow{\rho_2}X_2\xrightarrow{\rho_1}X_1
+ \xrightarrow{\rho_0}X_0.
+\]
+For sets, a point is a sequence \(x_n\in X_n\) with \(\rho_n(x_{n+1})=x_n\). Composite restrictions turn the tower into a view system on \(\N\), with an arrow \(i\to j\) when \(i\le j\). Its section space is the same coherent point type, with the same coordinates.
+
+A candidate transport from \(X\) to \(Y\) consists of maps \(f_n:X_n\to Y_n\). It is exact when
+\begin{equation}\label{eq:exacttower}
+ \rho^Y_n f_{n+1}=f_n\rho^X_n\quad\text{for all }n.
+\end{equation}
+
+\begin{proposition}[The exact tower category]\label{KS16}
+Identity maps and composites of exact transports are exact. An exact transport induces a map of coherent point spaces by \(x\mapsto(f_nx_n)_n\), preserving identities and composition.
+\end{proposition}
+\begin{proof}
+For two exact transports, substitute \(\rho^Z_ng_{n+1}=g_n\rho^Y_n\) and \(\rho^Y_nf_{n+1}=f_n\rho^X_n\) into the composite square. For a coherent point,
+\[
+ \rho^Y_n f_{n+1}x_{n+1}
+ =f_n\rho^X_nx_{n+1}=f_nx_n.
+\]
+Identity, associativity, and composition on points are checked coordinatewise.
+\end{proof}
+\source{KS16}
+This is a category on a fixed schedule. A full procategory allows additional reindexing and equivalence relations on maps. Those constructions must be supplied rather than identified with the fixed schedule by terminology.
+
+\subsection{The actual residual of a transport}
+Assume \(\mathcal C\) is preadditive, so differences of maps make sense. The tower differential is
+\[
+ (\partial f)_n=\rho^Y_nf_{n+1}-f_n\rho^X_n.
+\]
+Its target has components \(\Hom(X_{n+1},Y_n)\), not \(\Hom(X_n,Y_n)\).
+
+\begin{proposition}[The transport Leibniz identity]\label{KS17}
+For composable candidates,
+\[
+ \partial(gf)_n=(\partial g)_nf_{n+1}+g_n(\partial f)_n.
+\]
+In particular exactness is equivalent to vanishing of the differential.
+\end{proposition}
+\begin{proof}
+Expand the right side. The terms \(-g_n\rho^Y_nf_{n+1}\) and \(+g_n\rho^Y_nf_{n+1}\) cancel, leaving \(\rho^Z_ng_{n+1}f_{n+1}-g_nf_n\rho^X_n\). This is the differential of the composite. The exactness statement is \eqref{eq:exacttower}.
+\end{proof}
+\source{KS17}
+There is no additional mixed defect term in this identity. Such a term would require a different definition of the defect or a different expansion. Typed cancellation is a useful safeguard against importing an attractive but incorrect error formula.
+
+\subsection{Cofinal views preserve points, not every measurement}
+Let \(\phi:\N\to\N\) be monotone and unbounded. The sampled tower uses levels \(X_{\phi(n)}\) and their composite restrictions.
+
+\begin{theorem}[Cofinal reconstruction of points]\label{KS18}
+Sampling induces an equivalence between the coherent points of \(X\) and of its sampled tower.
+\end{theorem}
+\begin{proof}
+Write $\rho_{i,j}:X_j\to X_i$ for the composite restriction when $i\le j$, with $\rho_{i,i}=I$. These maps satisfy $\rho_{i,j}\rho_{j,k}=\rho_{i,k}$. A coherent sampled point obeys
+\[
+ \rho_{\phi(n),\phi(m)}y_m=y_n\qquad(n\le m),
+\]
+by iterating its adjacent coherence equations.
+
+For each $k$, unboundedness gives an index $n$ with $k\le\phi(n)$. Set $x_k=\rho_{k,\phi(n)}y_n$. If $m$ is another permissible index, choose $\ell\ge n,m$. Monotonicity permits both composite restrictions, and sampled coherence gives
+\[
+ \rho_{k,\phi(n)}y_n
+ =\rho_{k,\phi(n)}\rho_{\phi(n),\phi(\ell)}y_\ell
+ =\rho_{k,\phi(\ell)}y_\ell
+ =\rho_{k,\phi(m)}y_m.
+\]
+Thus $x_k$ is independent of the choice, including when the schedule repeats a level.
+
+For the adjacent equation at $k$, choose one $n$ with $k+1\le\phi(n)$. Then
+\[
+ \rho_{k,k+1}x_{k+1}
+ =\rho_{k,k+1}\rho_{k+1,\phi(n)}y_n
+ =\rho_{k,\phi(n)}y_n=x_k.
+\]
+The recovered family is therefore a point of the original tower.
+
+Sampling a full point and recovering its $k$th coordinate gives $\rho_{k,\phi(n)}x_{\phi(n)}=x_k$ by its original coherence. Recovering a sampled point and evaluating at $k=\phi(n)$ allows the index $n$ itself, giving $\rho_{\phi(n),\phi(n)}y_n=y_n$. These are both inverse identities. No surjectivity of the bonding maps or of the point evaluations was used.
+\end{proof}
+\source{KS18}
+This theorem is about exact coherent points. Raw residual size is a different quantity. On identity scalar towers, \(f_n=(-1)^n\) has nonzero fine differences, but its even subsequence is constant. The coarse residual vanishes because adjacent fine defects cancel. A cofinal equivalence of limits does not imply equality of residual norms or an absence of aliasing in uncorrected data.
+
+\plate{03_tower}{Exact transport commutes with every adjacent restriction. A cofinal subsequence retains coherent points, but a raw defect can cancel during coarsening. The retained coarse value alone need not record the omitted fine discrepancy.}{fig:tower}
+
+\input{chapters/03a_observation}
+
+\chap{Banach repair and constructed split coordinates}\label{sec:split}
+\subsection{An actual complete candidate space}
+Let \(X_n,Y_n\) be Banach spaces over a complete nontrivially normed field, with continuous linear bonding maps and uniform bounds \(\norm{\rho^X_n}\le B_X\), \(\norm{\rho^Y_n}\le B_Y\). Use the spaces of bounded operator families
+\[
+ E=\ell^\infty_n\mathcal L(X_n,Y_n),\qquad
+ R=\ell^\infty_n\mathcal L(X_{n+1},Y_n).
+\]
+The source formalization derives the required completeness from the operator spaces and their bounded product. The same differential satisfies
+\[
+ \norm{\partial f}_\infty\le(B_X+B_Y)\norm f_\infty.
+\]
+Thus it is a continuous linear map, and evaluation at a fixed level is continuous. These facts connect algebraic compatibility to an analytic limit argument.
+
+\subsection{From a correction operator to a projection}
+The next statement is general. Let \(E\) be Banach, let \(d:E\to R\), \(p:E\to S\), and \(A:R\to E\) be continuous linear maps. Suppose \(pA=0\) and, for \(0\le q<1\),
+\begin{equation}\label{eq:contraction}
+ \norm{df-dA(df)}\le q\norm{df}\qquad(f\in E).
+\end{equation}
+The hypothesis concerns residuals of actual candidates. It need not hold for every independent vector in \(R\).
+
+\begin{theorem}[Constructed geometric repair]\label{KS19}
+Starting from \(f^{(0)}=f\), define
+\[
+ f^{(m+1)}=f^{(m)}-A(df^{(m)}).
+\]
+There is a bounded linear projection \(P_A:E\to\ker d\) with
+\[
+ f^{(m)}\longrightarrow P_Af,\qquad p(P_Af)=p(f),
+\]
+and
+\[
+ \norm{f^{(m)}-P_Af}
+ \le\frac{\norm A}{1-q}\norm{df^{(m)}}.
+\]
+It fixes every exact candidate and satisfies
+\[
+ \norm{P_A}\le1+\frac{\norm A\norm d}{1-q}.
+\]
+\end{theorem}
+\begin{proof}
+Put $r_m=df^{(m)}$. Additivity of $d$ gives
+\[
+ r_{m+1}=r_m-dAr_m.
+\]
+Each $r_m$ is the residual of an actual candidate, so the stated hypothesis applies at every iteration. Induction yields, for $j\ge0$,
+\[
+ \norm{r_{m+j}}\le q^j\norm{r_m},\qquad
+ \norm{f^{(m+j+1)}-f^{(m+j)}}
+ \le\norm A\,q^j\norm{r_m}.
+\]
+For $n>m$, the finite triangle inequality therefore gives
+\[
+ \norm{f^{(n)}-f^{(m)}}
+ \le\norm A\,\norm{r_m}\sum_{j=0}^{n-m-1}q^j
+ \le\frac{\norm A}{1-q}\norm{r_m}.
+\]
+Since $\norm{r_m}\le q^m\norm{df}$ tends to zero, this is a Cauchy estimate. Completeness of $E$ supplies a limit, denoted $P_Af$. Passing $n\to\infty$ in the same norm inequality proves the required tail estimate.
+
+Continuity of $d$ implies $d(P_Af)=\lim_m r_m=0$. Protection holds before taking a limit: $pA=0$ gives $pf^{(m+1)}=pf^{(m)}$, hence $pf^{(m)}=pf$ for every $m$. Continuity of $p$ gives $p(P_Af)=pf$. This explains why continuity of the observable belongs to this analytic statement.
+
+For linearity, write $L=I-Ad$, so $f^{(m)}=L^mf$. For fixed $f,g$ and scalars $\lambda,\mu$,
+\[
+ L^m(\lambda f+\mu g)=\lambda L^mf+\mu L^mg.
+\]
+Continuity of addition and scalar multiplication allows passage to the norm limit and proves linearity of $P_A$. The estimate with $m=0$ gives
+\[
+ \norm{P_Af}\le\norm f+\frac{\norm A}{1-q}\norm{df}
+ \le\left(1+\frac{\norm A\norm d}{1-q}\right)\norm f,
+\]
+so the linear map is bounded. If $df=0$, every iterate equals $f$, hence $P_Af=f$. Its image is contained in $\ker d$ and it fixes that kernel, proving surjectivity onto its stated image and $P_A^2=P_A$. For $q=0$ the residual vanishes after the first update and the same inequalities remain valid.
+\end{proof}
+\source{KS19}
+This theorem constructs the dynamics from \(A\). It does not construct a suitable \(A\) for every residual problem. That missing input can, however, be derived for a useful class of actual towers.
+
+\subsection{A right inverse from target splittings}
+Suppose each target bonding map has a continuous linear section
+\[
+ s_n:Y_n\to Y_{n+1},\qquad \rho^Y_ns_n=I,\qquad \norm{s_n}\le S.
+\]
+Assume the propagation gap
+\begin{equation}\label{eq:splitgap}
+ SB_X<1,\qquad K=\frac{S}{1-SB_X}.
+\end{equation}
+For \(r\in R\), recursively set
+\begin{equation}\label{eq:greenrecurrence}
+ (Ar)_0=0,\qquad
+ (Ar)_{n+1}=s_n\bigl(r_n+(Ar)_n\rho^X_n\bigr).
+\end{equation}
+
+\begin{theorem}[Split tower correction]\label{KS20}
+The recurrence defines a continuous linear map \(A:R\to E\) with
+\[
+ \partial A=I_R,\qquad \norm A\le K.
+\]
+The operator \(P=I-A\partial\) is an exact projection and
+\[
+ (Pf)_0=f_0,\qquad
+ \norm{f-Pf}_\infty\le K\norm{\partial f}_\infty.
+\]
+\end{theorem}
+\begin{proof}
+Let $\theta=SB_X<1$. The number $K=S/(1-\theta)$ is nonnegative and satisfies
+\[
+ S+SB_XK=K.
+\]
+Fix $r\in R$ and define its coordinates recursively as in \eqref{eq:greenrecurrence}. The initial coordinate has norm zero. If $\norm{(Ar)_n}\le K\norm r_\infty$, submultiplicativity of operator norms gives
+\[
+ \begin{aligned}
+ \norm{(Ar)_{n+1}}
+ &\le\norm{s_n}\bigl(\norm{r_n}+\norm{(Ar)_n}\norm{\rho^X_n}\bigr)\\
+ &\le S(1+KB_X)\norm r_\infty=K\norm r_\infty.
+ \end{aligned}
+\]
+Induction proves the estimate at every coordinate, so the recursively defined family actually belongs to the bounded product $E$.
+
+The coordinate recurrence preserves addition and scalar multiplication, starting from the zero initial coordinate. Induction therefore proves these laws for the family map $A$. Its uniform estimate proves $\norm A\le K$, giving a continuous linear map with the claimed domain and codomain.
+
+For every $n$, apply the target restriction to the recurrence. The equation $\rho^Y_ns_n=I$ gives
+\[
+ \rho^Y_n(Ar)_{n+1}=r_n+(Ar)_n\rho^X_n,
+ \qquad (\partial Ar)_n=r_n.
+\]
+Coordinate equality yields the operator identity $\partial A=I_R$. In particular this identity holds for every bounded residual, not just residuals already known to lie in the image.
+
+Set $P=I-A\partial$. Then
+\[
+ \partial P=\partial-\partial A\partial=0,\qquad
+ P^2=I-2A\partial+A(\partial A)\partial=I-A\partial=P.
+\]
+The expression $2A\partial$ abbreviates addition of the same operator twice and uses no division by two. Every exact $f$ is fixed because $\partial f=0$. Since $(Ar)_0=0$, the seed of $Pf$ is $f_0$. Finally $f-Pf=A\partial f$, and the bound on $A$ gives the asserted residual estimate. The denominators above are justified exactly by the strict propagation gap.
+\end{proof}
+\source{KS20}
+The surjectivity is onto all bounded residual families. It is stronger than the assertion that some exact output can be assigned to each candidate. The gap and the chosen splittings are genuine inputs.
+
+\subsection{Protected information beyond the seed}
+When the target grows, its new kernel directions are independent information. Define
+\[
+ N_n(f)=(I-s_n\rho^Y_n)f_{n+1},\qquad
+ (p_Lf)_0=f_0,\quad(p_Lf)_{n+1}=N_n(f).
+\]
+Each \(N_n(f)\) lands in \(\ker\rho^Y_n\). The observable \(p_L\) retains both the seed and every new output component, relative to the chosen sections.
+
+\begin{theorem}[Split coordinate theorem]\label{KS21}
+The observable is a bounded projection with \(p_LA=0\) and \(p_LP=p_L\). It separates exact candidates. If
+\[
+ \mathcal S_L=\{s\in E:p_Ls=s\},
+\]
+then
+\[
+ \Phi:E\simeq_L\mathcal S_L\times R,
+ \qquad \Phi(f)=(p_Lf,\partial f),
+ \qquad \Phi^{-1}(s,r)=Ps+Ar.
+\]
+Repair becomes \((s,r)\mapsto(s,0)\). It is the unique exact repair preserving \(p_Lf\).
+\end{theorem}
+\begin{proof}
+Put \(B_n=I-s_n\rho^Y_n\). Since \(\rho^Y_ns_n=I\), direct multiplication gives
+\[
+ B_n^2=B_n,\qquad \rho^Y_nB_n=0,\qquad B_ns_n=0.
+\]
+Moreover, \(B_ny=y\) whenever \(\rho^Y_ny=0\). Thus \(B_n\) really projects onto the target kernel. Its norm is at most \(1+SB_Y\). Coordinate zero of \(p_L\) is the identity, and every later coordinate applies \(B_n\), so \(p_L^2=p_L\) and \(\norm{p_L}\le1+SB_Y\). In particular the formula defines a map on the bounded product, not just on arbitrary coordinate families.
+
+The recurrence for \(Ar\) gives zero seed and places \((Ar)_{n+1}\) in the image of \(s_n\). The identities just proved make all its innovations zero. Therefore \(p_LA=0\), and
+\[
+ p_LP=p_L(I-A\partial)=p_L.
+\]
+We next prove separation on the exact space. If \(f\) is exact, its restriction equation rewrites as
+\[
+ f_{n+1}=s_n\rho^Y_nf_{n+1}+B_nf_{n+1}
+          =s_nf_n\rho^X_n+N_n(f).
+\]
+Two exact families with the same seed and innovations agree first at level zero and then at every later level by this recurrence. More generally, if two arbitrary families have the same observable and differential, their difference is exact with zero observable, so separation on the exact space makes their difference zero.
+
+The proposed chart has the claimed target because \(p_L(p_Lf)=p_Lf\). Given \(s\in\mathcal S_L\) and \(r\in R\), set \(f=Ps+Ar\). The preceding identities and \(\partial A=I\) give
+\[
+ p_Lf=p_Ls=s,\qquad \partial f=r.
+\]
+This proves one round trip. For the other, \(f\) and \(P(p_Lf)+A\partial f\) have the same observable and residual, so the joint separation just proved identifies them. All maps are linear and bounded on their indicated subspaces and finite products, establishing a continuous linear equivalence.
+
+Finally, \(Pf\) has coordinates \((p_Lf,0)\). Any exact answer with the same observable has those same two coordinates, hence equals \(Pf\). This uniqueness is relative to the complete observable of seed and innovations. It is not obtained by assuming that the seed alone determines an exact growing-target family.
+\end{proof}
+\source{KS21}
+This is an actual analytic coordinate equivalence, not generally an isometry. The protected coordinate depends on the declared splitting. It should not be called an intrinsic semantic coordinate without a further comparison theorem.
+
+\fixedplate{04_split}{In the split coordinate chart, a candidate separates into retained information and compatibility residual. The exact subspace is the zero residual slice. The chart and its protected coordinate depend on the chosen target sections.}{fig:split}
+
+\subsection{A growing example and the gap boundary}
+Use \(X_n=Y_n=\R^{n+1}\) with maximum norms. Let \(\pi_n\) delete the last coordinate, take \(\rho^X_n=\tfrac12\pi_n\), \(\rho^Y_n=\pi_n\), and let \(s_n\) append zero. Then \(S=B_Y=1\), \(B_X=1/2\), and \(K=2\).
+
+\begin{example}[Repair of the identity family]\label{KS22}
+The bounded candidate \(f_n=I\) is not exact. Its repair is
+\[
+ (Pf)_n=\operatorname{diag}(2^{-n},2^{-(n-1)},\ldots,2^{-1},1).
+\]
+The new last output row is retained at every stage while inherited rows are propagated by the factor \(1/2\).
+\end{example}
+\begin{proof}
+At level zero the value is one. Exactness forces every inherited row at the next level to be one half of its previous value. Preservation of the innovation forces the new row to remain the corresponding identity row. Induction gives the displayed diagonal.
+\end{proof}
+\source{KS22}
+For constant real scalar identity towers, by contrast, \((\partial f)_n=f_{n+1}-f_n\). The constant residual \(r_n=1\) has no bounded primitive, since any primitive satisfies \(f_n=f_0+n\). Here \(SB_X=1\). This counterexample excludes discarding the gap indiscriminately. It does not prove that the gap is necessary for every individual tower. Exact repair preserving the initial coordinate still exists in this constant example, by replacing a candidate with its initial constant family. Surjectivity onto all bounded residuals does not follow from that repair.
+\source{KS23}
+
+\subsection{What is canonical}
+For fixed splitting and protected observable, the repair above is unique. Changing the splitting can change both the observable and the repaired answer. In the growing example, replace \(s_n(y)=(y,0)\) by \(s_n'(y)=(y,y_0)\). At the first positive level, repair of the identity becomes
+\[
+ \begin{pmatrix}1/2&0\\-1/2&1\end{pmatrix}
+ \quad\text{instead of}\quad
+ \begin{pmatrix}1/2&0\\0&1\end{pmatrix}.
+\]
+Both are exact continuations for their respective innovation profiles and have the same seed. Thus a unique answer for a declared preservation problem is not an answer independent of all preservation choices.
+\source{KS24}
+
+\input{chapters/03b_repair_transport}
+
+\chap{Multiscale residuals and the limits of reconstruction}\label{sec:cascade}
+\subsection{A split coarsener retains its missing detail}
+Let \(C:R\to\overline R\) and \(J:\overline R\to R\) be linear maps with \(CJ=I\). Put \(H=I-JC\). Then
+\[
+ r=JCr+Hr,\qquad CH=0,\qquad H^2=H.
+\]
+The two coordinates \((Cr,Hr)\) retain all information. The coarse coordinate alone generally does not.
+
+The actual dyadic tower coarsener has the typed formula
+\begin{equation}\label{eq:dyadic}
+ (Cr)_n=\rho^Y_{2n}r_{2n+1}+r_{2n}\rho^X_{2n+1}.
+\end{equation}
+It is obtained by telescoping two adjacent compatibility squares. With target sections, a lift is
+\[
+ (Jc)_{2n}=0,\qquad (Jc)_{2n+1}=s_{2n}c_n.
+\]
+The section identity gives \(CJ=I\), so the missing detail is explicitly \(Hr\), not an unspecified reconstruction error. The normed construction imposes the bounds needed to make these maps bounded on its operator family spaces.
+\source{KS25}
+
+\subsection{A whole cascade}
+At scale \(j\), let \(C_j:R_j\to R_{j+1}\) and \(J_j:R_{j+1}\to R_j\) be bounded linear maps with \(C_jJ_j=I\). For \(x\in R_0\), define
+\[
+ x_0=x,\quad x_{j+1}=C_jx_j,\quad
+ L_0=I,\quad L_N=J_0\cdots J_{N-1},
+\]
+\[
+ h_j=x_j-J_jx_{j+1},\qquad Q_Nx=L_Nx_N,
+ \qquad S_N=I-Q_N.
+\]
+The map \(Q_N\) restores the surviving coarse remainder to the original space. It is this restored remainder, not just \(x_N\), that controls reconstruction.
+
+\begin{theorem}[Finite reconstruction and nested remainders]\label{KS26}
+For every \(N\),
+\[
+ x=Q_Nx+\sum_{j<N}L_jh_j,
+ \qquad S_Nx=\sum_{j<N}L_jh_j.
+\]
+Each \(Q_N\) is a projection, and for \(N\le M\),
+\[
+ Q_NQ_M=Q_MQ_N=Q_M.
+\]
+The vectors with all details zero are exactly the persistent subspace
+\[
+ \mathcal P_\infty=\{x:Q_Nx=x\text{ for every }N\}.
+\]
+\end{theorem}
+\begin{proof}
+Let $D_0=I$ and $D_N=C_{N-1}\cdots C_0:R_0\to R_N$. Thus $x_N=D_Nx$, $Q_N=L_ND_N$, and repeated use of $C_jJ_j=I$ gives
+\[
+ D_NL_N=I_{R_N}.
+\]
+This cancellation takes place between adjacent maps with matching domains. No identification of different residual spaces is needed.
+
+Since $L_{j+1}=L_jJ_j$ and $x_{j+1}=C_jx_j$,
+\[
+ L_jh_j=L_j(x_j-J_jx_{j+1})=Q_jx-Q_{j+1}x.
+\]
+Summing from $j=0$ to $N-1$ leaves $x-Q_Nx$ because $Q_0=I$. This proves both finite reconstruction identities, including $N=0$, when the detail sum is empty.
+
+Idempotence follows from $D_NL_N=I$:
+\[
+ Q_N^2=L_N(D_NL_N)D_N=Q_N.
+\]
+For $M\ge N$, put $C_{N,M}=C_{M-1}\cdots C_N$ and $J_{N,M}=J_N\cdots J_{M-1}$, using identities for $M=N$. Then
+\[
+ D_M=C_{N,M}D_N,\quad L_M=L_NJ_{N,M},\quad C_{N,M}J_{N,M}=I.
+\]
+The identities $D_NL_M=J_{N,M}$ and $D_ML_N=C_{N,M}$ now give
+\[
+ Q_NQ_M=L_NJ_{N,M}D_M=Q_M,\qquad
+ Q_MQ_N=L_MC_{N,M}D_N=Q_M.
+\]
+Both orders have been checked, rather than inferred from one range inclusion.
+
+If all $h_j$ vanish, the finite telescope gives $Q_Nx=x$ for every $N$. Conversely, if every $Q_Nx=x$, then $L_jh_j=Q_jx-Q_{j+1}x=0$. Apply the left inverse $D_j$ of $L_j$ to obtain $h_j=0$. The injectivity of the restoration composite is the step that recovers the original detail from its transported value.
+\end{proof}
+\source{KS26}
+
+\fixedplate{05_cascade}{A split cascade retains every discarded component as a detail. The finite sum is always exact after the restored coarse remainder is included. An infinite detail expansion requires that remainder to vanish in the topology being used.}{fig:cascade}
+
+\subsection{Convergence has its own theorem}
+Call \(x\) norm recoverable when \(Q_Nx\to0\). This is equivalent to \(S_Nx\to x\), but it does not follow merely from vanishing persistent subspace. Let
+\[
+ \mathcal F=\bigcup_N\ker Q_N
+\]
+be the finite core.
+
+\begin{theorem}[Density criterion for norm recovery]\label{KS27}
+Suppose \(\sup_N\norm{Q_N}\le K<\infty\). Then the norm recoverable vectors are exactly \(\overline{\mathcal F}\). In particular all vectors are norm recoverable if and only if the finite core is dense.
+\end{theorem}
+\begin{proof}
+The nested identities first imply that the kernels increase: if $Q_My=0$ and $N\ge M$, then $Q_Ny=Q_NQ_My=0$. Thus the finite core really is an increasing union of linear subspaces.
+
+Suppose $Q_Nx\to0$. Put $y_N=S_Nx=x-Q_Nx$. Idempotence gives $Q_Ny_N=Q_Nx-Q_N^2x=0$, so $y_N\in\mathcal F$. Since $x-y_N=Q_Nx\to0$, these are finite-core approximants converging to $x$. Hence $x\in\overline{\mathcal F}$.
+
+Conversely, fix $x\in\overline{\mathcal F}$ and $\epsilon>0$. If $K=0$, the common operator bound gives $\norm{Q_Nx}=0$ for every $N$, so convergence is immediate. Suppose $K>0$. Choose $y\in\mathcal F$ satisfying $\norm{x-y}<\epsilon/(K+1)$. Some $M$ has $Q_My=0$. For every $N\ge M$, nesting and the common operator bound give
+\[
+ \norm{Q_Nx}=\norm{Q_N(x-y)}\le K\norm{x-y}
+ <\epsilon\frac{K}{K+1}\le\epsilon.
+\]
+The approximation $y$ is chosen before the depth $N$, giving precisely the quantifier order in norm convergence. This proves equality of the two sets. Applying it to every $x\in R_0$ gives the density criterion.
+\end{proof}
+\source{KS27}
+There are other sufficient conditions. If the transported details are absolutely summable in the Banach space \(R_0\), their sum exists and the remaining boundary lies in \(\mathcal P_\infty\). If that persistent subspace is zero, the sum equals \(x\). Alternatively,
+\[
+ \norm{x-S_Nx}\le\left(\prod_{j<N}\norm{J_j}\right)\norm{x_N}
+\]
+gives a direct sufficient decay test. A decreasing coarse norm by itself is not enough when restoration gains grow.
+
+\subsection{The actual dyadic result}
+For the dyadic residual hierarchy defined above, the persistent residual is zero. Zero detail at a scale reveals every even coordinate, while an odd coordinate is passed to a smaller index at the next scale. Strong induction on the coordinate index therefore proves that a residual with all details zero is zero.
+
+\begin{theorem}[Dyadic determination and finite coordinate recovery]\label{KS28}
+In the actual dyadic system, all detail coordinates jointly determine the residual. Moreover,
+\[
+ k+1<2^N\quad\Longrightarrow\quad
+ (Q_Nr)_k=0,\qquad(S_Nr)_k=r_k.
+\]
+Thus every fixed residual coordinate is recovered exactly at a sufficiently large finite depth. The statement does not assert convergence in the supremum norm over all coordinates.
+\end{theorem}
+\begin{proof}
+Write \(R_j\) for the residual space at scale \(j\). Its lift has the actual coordinate formula
+\[
+ (J_jz)_{2m}=0,\qquad (J_jz)_{2m+1}=s^{(j)}_{2m}z_m,
+\]
+where \(s^{(j)}_{2m}\) is the corresponding target section at that scale. The expression on the right is composition of the section with the residual operator. Its source and target are those of the odd coordinate at scale \(j\).
+
+Set \(L_{j,0}=I_{R_j}\) and \(L_{j,N+1}=J_jL_{j+1,N}\). We prove, simultaneously for all starting scales \(j\), that
+\[
+ k+1<2^N\quad\Longrightarrow\quad (L_{j,N}z)_k=0
+ \qquad(z\in R_{j+N}).
+\]
+For \(N=0\), the inequality \(k+1<1\) has no solution. Suppose the assertion holds at depth \(N\). At depth \(N+1\), an even coordinate vanishes by the displayed lift formula. For an odd coordinate \(k=2m+1\), the hypothesis gives
+\[
+ 2(m+1)<2^{N+1},\qquad m+1<2^N.
+\]
+The induction hypothesis at starting scale \(j+1\) makes \((L_{j+1,N}z)_m\) zero. Composing that zero operator with \(s^{(j)}_{2m}\) gives zero at coordinate \(k\). This completes the induction without identifying residual spaces at different scales.
+
+Now \(Q_Nr=L_{0,N}x_N\), so the support assertion applies to the restored remainder. Since \(S_Nr=r-Q_Nr\), it gives the reconstruction equation. Finally, if two residuals have identical details at every scale, the finite telescope makes their \(S_N\) reconstructions equal for every \(N\). At any fixed coordinate choose \(N\) with \(k+1<2^N\). The reconstruction equation then makes their original coordinates equal. Hence the residuals are equal.
+\end{proof}
+\source{KS28}
+The strict inequality matters: the next coordinate, \(k=2^N-1\), can still have a nonzero remainder. There is also a sharper, nonconsecutive description of the support.
+
+\begin{proposition}[The dyadic support pattern]\label{KS55}
+For the same lifts,
+\[
+ 2^N\nmid(k+1)\quad\Longrightarrow\quad(Q_Nr)_k=0.
+\]
+Thus coordinate \(k\) is certainly recovered once \(N>\nu_2(k+1)\), where \(\nu_2(m)\) is the largest power-of-two exponent dividing the positive integer \(m\). The only possible unrecovered coordinates at depth \(N\) are
+\[
+ 2^N-1,\quad 2\cdot2^N-1,\quad3\cdot2^N-1,\quad\ldots.
+\]
+\end{proposition}
+\begin{proof}
+Prove the assertion for \(L_{j,N}\) by induction, uniformly in \(j\). At depth zero every positive integer is divisible by one, so there is nothing to prove. At depth \(N+1\), even coordinates vanish. If \(k=2m+1\), then
+\[
+ 2^{N+1}\mid(k+1)\quad\Longleftrightarrow\quad2^N\mid(m+1).
+\]
+When divisibility fails, the inner coordinate in \(J_jL_{j+1,N}\) vanishes by induction. The formula for the odd lift finishes the proof. Apply the result to \(Q_Nr=L_{0,N}x_N\).
+\end{proof}
+\source{KS55}
+This refinement is formalized by a scale-uniform induction on the actual varying-fiber residual system in \code{DyadicSupport.lean}. It asserts where a remainder \emph{may} survive, not that every allowed coordinate is nonzero. In the scalar identity-bonding model with \(C(a,b)=a+b\), the residual constantly equal to one has value \(2^N\) at every surviving position. That example proves sharpness of the uniform prefix cutoff.
+
+\plate{16_dyadic_support}{The possible support of the restored dyadic remainder is sparse and periodic. At depth \(N\), only positions whose index plus one is divisible by \(2^N\) can remain. Open cells are guaranteed recovered. Marked cells are allowed to survive, not asserted nonzero for every residual.}{fig:dyadicsupport}
+
+\subsection{Two boundary examples}
+On \(\ell^\infty(\N,\R)\), let \(C\) remove the first coordinate and let \(J\) prepend zero. Then \(Q_Nx\) is the tail of \(x\), placed at its original coordinates with zeros before \(N\). Every fixed coordinate is eventually zero in the remainder, and \(\norm{Q_N}\le1\). Nevertheless the constant sequence \(\mathbf1\) satisfies \(\norm{Q_N\mathbf1}=1\) for every \(N\).
+
+\begin{proposition}[The recovery domain is \(c_0\)]\label{KS29}
+For this shift cascade,
+\[
+ S_Nx\to x\text{ in }\ell^\infty
+ \quad\Longleftrightarrow\quad x_n\to0.
+\]
+For \(x_n=q^n\), \(0\le q<1\), the error is exactly \(q^N\).
+\end{proposition}
+\begin{proof}
+The error norm is \(\sup_{n\ge N}|x_n|\). It tends to zero precisely when the sequence tends to zero. For a geometric sequence its largest tail value is the first one, \(q^N\).
+\end{proof}
+\source{KS29}
+As a second example, take scalar spaces with \(C=\tfrac12I\), \(J=2I\). The coarse value \(x_N=2^{-N}x\) tends to zero, but restoration gives \(Q_Nx=x\). Every detail is zero and the entire input is persistent. The example belongs to this scalar cascade, not to the actual dyadic hierarchy, whose persistent subspace was proved to vanish.
+
+\begin{insight}
+Retained packets make omission explicit. They do not guarantee convergence. Coordinate recovery, bounded reconstruction, summability, and attainment remain different mathematical properties.
+\end{insight}

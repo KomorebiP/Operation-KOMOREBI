@@ -1,0 +1,55 @@
+% Shared twin-volume typography.
+\usepackage[scaled=.95]{helvet}
+\renewcommand{\ttdefault}{lmtt}
+\geometry{letterpaper,inner=.82in,outer=.82in,top=.86in,bottom=.86in,headheight=14pt,headsep=17pt,footskip=25pt}
+\definecolor{Ink}{HTML}{172A3A}
+\ifnum\SeriesIndex=1
+\definecolor{Accent}{HTML}{426F5D}
+\definecolor{Soft}{HTML}{F0F5F0}
+\definecolor{CoverLight}{HTML}{D9E6DC}
+\else
+\definecolor{Accent}{HTML}{286E75}
+\definecolor{Soft}{HTML}{F0F5F5}
+\definecolor{CoverLight}{HTML}{CDDEE2}
+\fi
+\definecolor{Quiet}{HTML}{62727C}
+\color{Ink}
+\hypersetup{colorlinks=true,linkcolor=Accent,citecolor=Accent,urlcolor=Accent,pdfauthor={Komorebi P.},pdftitle={Realization Calculus, Volume \SeriesVolume: \SeriesTitle},pdfsubject={Realization Calculus twin-volume edition},bookmarksnumbered=true}
+\urlstyle{same}
+\setlength{\parindent}{1.05em}
+\setlength{\parskip}{3.5pt plus .8pt}
+\linespread{1.045}
+\setlength{\emergencystretch}{3em}
+\raggedbottom\widowpenalty=7000\clubpenalty=7000
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{Quiet}\MakeUppercase{\SeriesTitle}}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{Quiet}REALIZATION CALCULUS\quad /\quad \SeriesVolume}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+\titleformat{\section}{\large\bfseries\color{Ink}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{Ink}}{\thesubsection}{.7em}{}
+\titleformat{\subsubsection}{\normalsize\itshape\color{Ink}}{\thesubsubsection}{.7em}{}
+\titlespacing*{\section}{0pt}{16pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{5pt}
+\captionsetup{font=small,labelfont={bf,color=Accent},justification=raggedright,singlelinecheck=false,skip=8pt}
+\setlist{itemsep=3pt,topsep=6pt,parsep=0pt,leftmargin=1.6em}
+\newcommand{\SeriesCover}{%
+\hypersetup{pageanchor=false}
+\begin{titlepage}\thispagestyle{empty}\null
+\begin{tikzpicture}[remember picture,overlay]
+\fill[Ink] (current page.south west) rectangle (current page.north east);
+\fill[Accent] (current page.north west) rectangle ([xshift=.12in]current page.south west);
+\node[anchor=north west,text=CoverLight,font=\sffamily\small,align=left] at ([xshift=.85in,yshift=-.88in]current page.north west) {REALIZATION CALCULUS};
+\draw[Accent,line width=2pt] ([xshift=.85in,yshift=-1.32in]current page.north west)--([xshift=-.85in,yshift=-1.32in]current page.north east);
+\node[anchor=north west,text=CoverLight,font=\sffamily\fontsize{11}{14}\selectfont] at ([xshift=.85in,yshift=-1.68in]current page.north west) {VOLUME \SeriesVolume};
+\node[anchor=north west,text=white,text width=6.7in,align=left,font=\fontsize{42}{48}\selectfont] at ([xshift=.85in,yshift=-2.18in]current page.north west) {\SeriesTitleLines};
+\node[anchor=north west,text=CoverLight,text width=6.7in,align=left,font=\fontsize{18}{25}\selectfont] at ([xshift=.85in,yshift=-4.03in]current page.north west) {\SeriesSubtitleLines};
+\draw[CoverLight!35,line width=.5pt] ([xshift=.85in,yshift=3.10in]current page.south west)--([xshift=3.0in,yshift=3.10in]current page.south west);
+\node[anchor=west,text=white,font=\fontsize{23}{29}\selectfont] at ([xshift=.85in,yshift=2.60in]current page.south west) {\SeriesMotif};
+\node[anchor=north west,text=CoverLight,text width=5.8in,align=left,font=\fontsize{11}{16}\selectfont] at ([xshift=.85in,yshift=2.18in]current page.south west) {\SeriesCoverCaption};
+\node[anchor=south west,text=white,font=\large] at ([xshift=.85in,yshift=.85in]current page.south west) {Komorebi P.};
+\node[anchor=south east,text=CoverLight,font=\sffamily\fontsize{50}{55}\selectfont] at ([xshift=-.85in,yshift=.75in]current page.south east) {\SeriesVolume};
+\end{tikzpicture}
+\end{titlepage}\hypersetup{pageanchor=true}\color{Ink}}
+\newcommand{\SeriesFrontHeading}[1]{\section*{#1}\ifnum\SeriesIndex=1\else\addcontentsline{toc}{chapter}{#1}\fi}

@@ -1,0 +1,106 @@
+\chap{Coherence need not mean removable phase}\label{sec:phase}
+The preceding descent theory starts with transition data that already satisfy their composition laws. It is useful to see, in a completely finite calculation, how those laws can hold while a further simplification remains impossible. The following model separates \emph{coherent composition} from \emph{a choice of coordinates that removes every phase}.
+
+The coefficient group and the degree of the data matter. The cocycles in Section~\ref{sec:stack} label individual arrows in a view category. Here a phase is attached to a \emph{pair} of group elements. These are different constructions. The finite example is not obtained by renaming the earlier section obstruction as a general second cohomology group.
+
+\subsection{A two-bit phase law}
+Write \(\mathbf F_2=\Z/2\Z\) additively, and let
+\[
+ G=\mathbf F_2^2,\qquad x=(x_1,x_2),\qquad
+ c(x,y)=x_2y_1.
+\]
+All entries and operations in this subsection lie in \(\mathbf F_2\). In particular minus and plus agree, although retaining a minus sign in the coboundary formula helps explain its origin.
+
+\begin{proposition}[A normalized associative phase]\label{KS80}
+The phase vanishes when either argument is zero and satisfies
+\begin{equation}\label{eq:phase-cocycle}
+ c(x,y)+c(x+y,z)=c(y,z)+c(x,y+z).
+\end{equation}
+There is no function \(a:G\to\mathbf F_2\) such that
+\begin{equation}\label{eq:phase-flatten}
+ c(x,y)=a(x)+a(y)-a(x+y)\quad\text{for every }x,y\in G.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Normalization follows from multiplication by zero. Expanding the two sides of \eqref{eq:phase-cocycle} gives, respectively,
+\[
+ x_2y_1+(x_2+y_2)z_1,
+ \qquad y_2z_1+x_2(y_1+z_1),
+\]
+which are equal by distributivity.
+
+Every expression \(a(x)+a(y)-a(x+y)\) is symmetric in \(x,y\), because \(G\) is abelian. With \(e_1=(1,0)\) and \(e_2=(0,1)\), however,
+\[
+ c(e_1,e_2)=0,\qquad c(e_2,e_1)=1.
+\]
+This contradicts the symmetry required by \eqref{eq:phase-flatten}.
+\end{proof}
+\source{KS80}
+The proof rules out all sixteen possible scalar functions \(a\), not just linear functions or selected trial gauges. The source \code{ProjectiveExample.lean} proves the normalization, cocycle, asymmetry, and no-scalar-flattening statements. The matrix interpretation and group construction below are worked derivations of the finite model, not separate formal declarations.
+
+\plate{30_phase}{The entry in row $x$ and column $y$ is $c(x,y)=x_2y_1$. The two entries singled out in the text, $c(e_1,e_2)=0$ and $c(e_2,e_1)=1$, already obstruct every scalar flattening. Associativity still holds for every triple.}{fig:phase}
+
+\subsection{The phase is visible in actual matrices}
+Over \(\R\), define
+\[
+ X=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+ Z=\begin{pmatrix}1&0\\0&-1\end{pmatrix},\qquad
+ U_{(p,q)}=X^pZ^q\quad(p,q\in\{0,1\}).
+\]
+Direct multiplication gives \(X^2=Z^2=I\) and \(ZX=-XZ\). Moving \(Z^{x_2}\) past \(X^{y_1}\) therefore yields
+\begin{equation}\label{eq:phase-matrices}
+ U_xU_y=(-1)^{c(x,y)}U_{x+y}.
+\end{equation}
+For example \(U_{e_1}U_{e_2}=XZ\), while \(U_{e_2}U_{e_1}=-XZ\). The two-bit labels add commutatively, but their chosen matrix lifts do not commute.
+
+Associativity of three lifted matrices requires the same total sign on both parenthesizations. Equation~\eqref{eq:phase-cocycle} is exactly that requirement:
+\[
+ (U_xU_y)U_z
+ =(-1)^{c(x,y)+c(x+y,z)}U_{x+y+z},
+\]
+\[
+ U_x(U_yU_z)
+ =(-1)^{c(y,z)+c(x,y+z)}U_{x+y+z}.
+\]
+Thus a nonzero phase is not automatically a failed associativity law. It can be the data that make the composition law explicit.
+
+Changing lifts to \(U'_x=(-1)^{a(x)}U_x\) changes the phase to
+\[
+ c'(x,y)=c(x,y)+a(x)+a(y)-a(x+y).
+\]
+No such change makes \(c'\) vanish identically. The antisymmetric part is unchanged by every scalar change of lift. In this model it is
+\[
+ \kappa(x,y)=c(x,y)-c(y,x)
+            =x_2y_1-y_2x_1.
+\]
+This is a directly observable obstruction certificate for the model. Its nonzero value at \((e_1,e_2)\) is enough, without a search over gauges.
+
+The same symmetry argument rules out removing this sign multiplier by arbitrary nonzero complex scalar lifts as well. A multiplicative scalar coboundary \(b(x)b(y)/b(x+y)\) on an abelian group is symmetric, whereas the multiplier in \eqref{eq:phase-matrices} is not. This last sentence is an algebraic consequence written here. The retained Lean example uses the stated \(\mathbf F_2\)-valued formulation.
+
+\subsection{Retaining the phase restores an ordinary multiplication law}
+Instead of trying to discard the phase, include it in the state. On the eight-element set \(\widetilde G=\mathbf F_2\times G\), put
+\begin{equation}\label{eq:central-extension}
+ (a,x)\cdot(b,y)=(a+b+c(x,y),x+y).
+\end{equation}
+The first coordinate of the left-associated product of three elements is
+\(a+b+d+c(x,y)+c(x+y,z)\). The right-associated coordinate is
+\(a+b+d+c(y,z)+c(x,y+z)\). Equation~\eqref{eq:phase-cocycle} proves equality. Normalization gives identity \((0,0)\), and
+\[
+ (a,x)^{-1}=(a+c(x,x),x).
+\]
+Both inverse products are the identity because \(x+x=0\) and arithmetic is modulo two. Hence \eqref{eq:central-extension} defines a group.
+
+Projection \((a,x)\mapsto x\) is a homomorphism onto \(G\). Its kernel is \(\{(0,0),(1,0)\}\), which commutes with every element. The map
+\[
+ (a,x)\longmapsto(-1)^aU_x
+\]
+is a homomorphism by \eqref{eq:phase-matrices}. Its eight matrices are distinct: they are \(\pm I,\pm X,\pm Z,\pm XZ\). It is therefore faithful. The phase extension is not an assertion that \(G\) itself has acquired an ordinary representation with these same lifts. The represented group has changed.
+
+\begin{insight}
+\textbf{A precise form of retaining the obstruction.} The original four labels do not support a phase-free multiplication of the chosen matrices. Keeping one additional bit gives an eight-element multiplication that does. This repairs the description by retaining information, not by proving that the original phase was a coboundary.
+\end{insight}
+
+\subsection{How this example fits the realization calculus}
+There are three different questions in this small model. First, the phase satisfies the associativity relation. Second, scalar changes cannot trivialize it. Third, an enlarged state that retains the phase admits an ordinary multiplication law. Each question has a complete answer, but their answers are not interchangeable.
+
+The example illustrates why an obstruction should be attached to the allowed changes and to a specified presentation problem. Enlarging the presentation can be mathematically productive, but it changes what is being realized and what information is carried. No general theorem that every obstruction can be removed by a finite enlargement is claimed. The finite checker enumerates all group triples, all scalar gauges, and all multiplication triples in \(\widetilde G\), independently of the symmetry proof above.

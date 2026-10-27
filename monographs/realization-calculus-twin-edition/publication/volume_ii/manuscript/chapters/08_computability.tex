@@ -1,0 +1,88 @@
+\chapter{The exact cost of an effective realization}
+\label{ch:computability}
+\chapterintro{The selector does not change the completion, but it determines exactly which oracles can compute the original group. The proof must distinguish a named element from an unmarked isomorphism type.}
+
+\section{Oracles, copies, and degrees}
+An oracle for a set $X\subseteq\N$ answers membership questions about $X$. The notation $A\le_T X$ means that a terminating oracle procedure decides membership in $A$. Two sets have the same Turing degree when each is computable from the other.
+
+The degree spectrum of a countable structure is the set of degrees of its copies. When that spectrum has a least degree, it is called the degree of the isomorphism type. This terminology is standard in computable structure theory \cite{Montalban,Calvert}. Here we prove an exact oracle criterion that specifies which oracles compute at least one copy. We do not identify this statement with an unproved claim that every such oracle degree is realized as the exact degree of a particular copy.
+
+For a group on a countable coded domain, knowledge of its atomic diagram is equivalent, at the level needed here, to knowledge of its group operation and equality. A computation of integer multiples uses finitely many additions. A search for a root can therefore be performed in any oracle-computable copy.
+
+\section{A presentation from the selector}
+Reduced rationals have canonical integer codes. Finite-support vectors in $D$ have canonical codes given by increasing prime labels and nonzero residues. Their Cartesian product is a computably named countable domain with decidable equality and a computable bijection to $\N$.
+
+\begin{proposition}[Uniform construction relative to the selector]
+\label{thm:computeupper}
+If $A\le_T X$, then the normal-form construction gives an $X$-computable copy of $G_A$. In its canonical normal-form presentation, the group operation has Turing degree exactly $\deg_T(A)$.
+\end{proposition}
+\begin{proof}
+To add $(r,d)$ and $(t,e)$, compute the prime divisors of $\den(r)\den(t)$. At each of these finitely many primes, query the corresponding selector bit and evaluate the three section residues. Lemma~\ref{thm:cocyclesupport} guarantees that every other correction coordinate is zero. Formula~\eqref{eq:grouplaw} then gives the sum. Negation and equality are computable without querying $A$.
+
+For the lower bound on this particular presentation, compute the sum of the coded elements $(1/p,0)$ and $((p-1)/p,0)$. Its finite torsion part is the value in Proposition~\ref{thm:cocyclebit}. For $p=p_{2n}$, that value is zero exactly when $n\in A$. Thus the operation computes every selector bit.
+\end{proof}
+The number of oracle questions used by one addition is finite and bounded by the number of distinct prime divisors of the denominator product. This is a locality statement about the operation, not a claim of a polynomial-time implementation. Factoring integers and finding their prime indices contribute ordinary computational costs.
+
+\section{Decoding a marked copy}
+\begin{proposition}[Uniform marked decoding]
+\label{thm:markeddecode}
+Given an $X$-computable copy of $G_A$ together with the name of $u_A$, one can uniformly compute $A$ in $X$.
+\end{proposition}
+\begin{proof}
+For input $n$, search the domain simultaneously for solutions of
+\[
+p_{2n}y=u_A,\qquad p_{2n+1}z=u_A.
+\]
+Each candidate test is decidable in $X$. Exactly one equation has a solution by \eqref{eq:evenroot}--\eqref{eq:oddroot}. Dovetailing the searches therefore terminates. A solution to the first equation means $n\in A$, and a solution to the second means $n\notin A$.
+\end{proof}
+The procedure does not decide a negative existential statement directly. It uses two complementary positive searches. The paired selector is what converts enumerable root information into a total decision procedure.
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=\textwidth]{\figfile{04_degree_equivalence.pdf}}
+\caption{The two effective directions. Selector access computes the finite cocycle and hence a normal-form copy. A marked copy computes the selector by two complementary root searches. The middle-to-right arrow records an abstract isomorphism, not an algorithm for finding one. The unmarked converse uses a fixed infinite-order element and finite exception data.}
+\label{fig:degrees}
+\end{figure}
+
+\section{Decoding an unmarked copy}
+\begin{theorem}[Exact oracle criterion]
+\label{thm:degree}
+For every $A,X\subseteq\N$,
+\[
+G_A\text{ has an }X\text{-computable copy}
+\quad\Longleftrightarrow\quad A\le_T X.
+\]
+In particular, the isomorphism type of $G_A$ has least presentation degree $\deg_T(A)$.
+\end{theorem}
+\begin{proof}
+The reverse implication is Proposition~\ref{thm:computeupper}. For the forward implication, let $H$ be an $X$-computable copy. Choose the name $h$ of an infinite-order element. Such an element exists because $H$ has quotient $\Q$ by its torsion subgroup.
+
+Under an isomorphism to $G_A$, the element $h$ has a normal form with nonzero rational part. Lemma~\ref{thm:tailsignature} gives a finite exception set. Choose $N$ so that every prime in the pairs indexed by $n\ge N$ avoids that set. For these $n$, exactly one of
+\[
+p_{2n}y=h,\qquad p_{2n+1}z=h
+\]
+has a solution, and the first is solvable exactly when $n\in A$.
+
+Dovetailing the two searches decides every bit beyond $N$. Hard-code the name of $h$, the number $N$, and the finitely many bits below $N$ into the oracle procedure. These are finite constants, so the result is a Turing reduction of $A$ to $X$.
+
+The canonical normal-form copy has exact degree $\deg_T(A)$ by Proposition~\ref{thm:computeupper}, while every copy computes $A$ by the forward implication. Hence this degree is the least one.
+\end{proof}
+There is no claim of a uniform algorithm finding an infinite-order element or its exception bound in every unmarked copy. The theorem is an existence statement about Turing reductions, and a finite list of constants is legitimate in such a reduction. For marked copies, Proposition~\ref{thm:markeddecode} gives the genuinely uniform version.
+
+The distinction also matches the algebra. If $A\eqfin B$, then the unmarked groups are identical inside $P$ and $A$ and $B$ have the same Turing degree. Recovering a literal selector uniformly from the unmarked group would demand more than the isomorphism type remembers.
+
+\section{Every degree over one computable completion}
+\begin{corollary}[Degree variation with fixed observations]
+\label{thm:alldegrees}
+Every Turing degree occurs as the least presentation degree of a countable, reduced, residually finite abelian group whose profinite completion is $P$, equipped with the fixed computable inverse-system presentation of Chapter~\ref{ch:roots}.
+\end{corollary}
+\begin{proof}
+Choose any set $A$ of the desired degree and apply Theorem~\ref{thm:degree}. All the structural and completion properties were proved in Chapters~\ref{ch:purity}--\ref{ch:roots}.
+\end{proof}
+For $A=\varnothing$, the copy is computable. For $A=K$, the group has no computable copy and its least degree is the halting degree $\mathbf 0'$. Iterated jumps yield further examples. An arbitrary selector supplies any desired degree without changing the finite quotient tables or their transition maps.
+
+The group $G_K$ still has a finite mathematical definition. Its noncomputability is not a proof that it cannot be named in a finite semantic language. The theorem concerns effective copies with computable operations and equality.
+
+\section{A sharper separation than prime-spectrum coding}
+For the initial groups $D_B$, an enumeration of the selected prime set suffices. For $G_A$, the paired complementary tests decide the selector. Meanwhile, every prime torsion factor is present in every $G_A$, so the information is no longer stored in which finite-order elements exist.
+
+It resides in the relationship between torsion coordinates and infinite-order elements. All finite quotient groups remain fixed, but the root pattern of an admissible marked element distinguishes the selectors. This is why the construction measures a realization cost rather than merely relabeling the finite quotient data.

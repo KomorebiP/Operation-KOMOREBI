@@ -1,0 +1,94 @@
+\chapter{Formal companion and proof guide}
+\label{app:formal}
+\chapterintro{The formal companion works with the actual infinite groups and their canonical completions. Its computational theorems use explicit oracle programs and decidable equality on named copies. This appendix explains the interfaces and the evidence behind them.}
+
+\section{The proof dependencies}
+\begin{figure}[htbp]
+\centering\includegraphics[width=\textwidth]{\figfile{08_proof_dependencies.pdf}}
+\caption{Principal dependencies of the proof development. Finite arithmetic checks illustrate the constructions. The infinite theorems are proved independently, and effective conclusions use their own oracle and presentation semantics.}
+\end{figure}
+
+The companion retains both the ambient preimage and the finite normal form. The ambient model supplies the purity, homomorphism, and completion arguments. The finite model supplies executable arithmetic. Coordinate identities connect the two models, so a finite calculation is never substituted for a theorem about the infinite object.
+
+The machine readable statement registry records all numbered contracts in the book, their Lean declarations, and their exact scope. The table below lists the principal dependencies. Compiler receipts and source hashes accompany the companion rather than interrupting the mathematical exposition.
+
+\section{Statement registry}
+\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.45\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}@{}}
+\toprule
+Statement&Conclusion&Key dependency\\\midrule
+\endfirsthead
+\toprule Statement&Conclusion&Key dependency\\\midrule\endhead
+\ref{thm:reach}&An inaccessible packet obstructs generation.&Typed block-support condition.\\
+\ref{thm:torP}&$\Tor(P)=D$, and $D$ is dense.&Distinct prime coordinates.\\
+\ref{thm:endD}&All endomorphisms of $D$ are diagonal.&Prime annihilators.\\
+\ref{thm:rankD}&$D$ has infinite endomorphism-seed rank.&Finite support.\\
+\ref{thm:procyclic}&$P$ is topologically cyclic.&Chinese remainder theorem.\\
+\ref{thm:Dcompletion}&$\widehat D=P$.&Cofinal finite coordinate kernels.\\
+\ref{thm:Vrational}&$P/D$ is a rational vector space.&Unique integer division modulo $D$.\\
+\ref{thm:subD}&$\Sub(D)\cong\mathcal P(\N)$.&Coordinate isolation by CRT.\\
+\ref{thm:spectrumce}&Computable copies of $D_B$ correspond to enumerable selectors.&Prime-order witness searches.\\
+\ref{thm:unary}&Unary selector groups correspond to ultimately periodic sets.&Finite-state orbit.\\
+\ref{thm:purecorrespondence}&Pure intermediate groups are rational preimages.&Finite adjustment at divisor primes.\\
+\ref{thm:generalquotients}&All preimages $H_W$ have completion $P$.&Purity and finite-target exponent.\\
+\ref{thm:finitehom}&Restriction preserves all maps to finite targets.&Finite coordinate factorization.\\
+\ref{thm:normalform}&$G_A$ has unique $(r,d)$ names.&Nonzero rational line.\\
+\ref{thm:cocyclesupport}&Each cocycle value has controlled finite support.&Reduction outside denominator primes.\\
+\ref{thm:cocyclelaw}&The normal forms form the actual group $G_A$.&Cocycle identity.\\
+\ref{thm:cocyclebit}&A cocycle value reads one selector coordinate.&The chosen section at one prime.\\
+\ref{thm:rootcertificate}&A root or a prime obstruction is constructible.&Finite residual correction.\\
+\ref{thm:rootfiber}&A nonempty root fiber has $\rad(m)$ elements.&The prime-coordinate kernel.\\
+\ref{thm:quotientformula}&$G_A/mG_A=C_{\rad(m)}$.&Root kernel and finite surjectivity.\\
+\ref{thm:tailsignature}&Every nontorsion element has the same tail signature.&Finite numerator, denominator, and support exceptions.\\
+\ref{thm:isoclass}&$G_A\cong G_B$ iff $A\eqfin B$.&Intrinsic divisibility and finite transport.\\
+\ref{thm:allhom}&Every homomorphism is a diagonal multiplier.&The quotients $G_A/pG_A$.\\
+\ref{thm:homobstruction}&Different eventual classes admit only torsion-image maps.&One selected prime per pair.\\
+\ref{thm:endGA}&Exact endomorphism-ring description.&Diagonal action on the rational line.\\
+\ref{thm:rankGA}&Every $G_A$ has infinite seed rank.&Infinitely many omitted unselected coordinates.\\
+\ref{thm:degree}&An oracle computes a copy iff it computes $A$.&Cocycle evaluation and complementary root searches.\\
+\ref{thm:nodecoder}&No recovery from the unmarked quotient system.&Two nonisomorphic common-completion groups.\\
+\ref{thm:faithful}&Completion is faithful but not full on the paired family.&Finite separation and the torsion-image obstruction.\\
+\ref{thm:rankonereflection}&Completion reflects isomorphisms between paired-prime groups.&Diagonal units and the exact source category.\\
+\ref{thm:escape}&Continuum many groups escape a fixed countable grammar.&Repeated diagonal disagreement.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+
+\section{Reading the formal layers}
+\subsection{Ambient groups, subgroups, and generation}
+The prime product is an unrestricted dependent function space. Its finite support subgroup is defined inside that product. The quotient becomes a rational vector space only after positive integer multiplication is proved bijective on the actual quotient.
+
+The subgroup classification isolates coordinates by Chinese remainder interpolation and reconstructs every finite support vector from prime seeds. Intrinsic prime torsion gives abstract isomorphism classification. The topology on the subgroup lattice is independently induced by membership functions, and the resulting Cantor homeomorphism is then proved continuous in both directions.
+
+The general reachability theorem uses a genuine dependent direct sum, primitive transfer blocks, finite operator words, and ordinary finite directed paths. An omitted nonzero packet supplies both the algebraic obstruction and, under the stated continuity hypotheses, the closed kernel obstruction to topological generation.
+
+\subsection{Finite arithmetic and roots}
+The executable root solver takes a rational code, a finite residue list, and a selector oracle. Each list position names a prime value. Positions that are not prime do not contribute to the interpreted vector. Consequently raw list equality is not the equality of represented group elements.
+
+Every finite support correction admits a residue list, and every element of the original selector group admits one of the finite normal form codes. A successful solver output is proved to satisfy the root equation at every prime. A rejected request returns a prime dividing the multiplier with a nonzero target coordinate. The correction is zero at divisor primes. This normalization concerns the correction, and need not make the entire root coordinate zero.
+
+The traced implementation erases to the executable solver. If $B$ is its finite correction bound, it uses at most $m+1+2B$ selector queries and at most $m+1+B$ loop candidates. These are explicit oracle and iteration counts. They are not bounds on the bit cost of rational arithmetic, primality testing, division, or modular inversion. The Lean proofs certify the Lean implementation and its mathematical interpretation. They do not claim kernel verification of the separate Python runtime.
+
+\subsection{Computable copies and degrees}
+The effective layer uses native oracle recursion with oracle calls, primitive recursion, and terminating searches. A named infinite copy has a bijection from the natural numbers, a specified zero, and an oracle computable addition operation. Equality of names is decidable. Inversion and subtraction are computed by proved terminating searches.
+
+Redundant finite codes are permitted only after equality of their represented elements is proved oracle computable. The companion then constructs least representatives, computes their enumeration, and obtains genuinely bijective natural names. The concrete normal form supplies all those hypotheses through rational arithmetic and finite cocycle evaluation.
+
+Marked decoding performs two complementary positive root searches. For an unmarked copy, the existence proof may choose a finite natural name of the distinguished element under an abstract isomorphism and hard code that name. It does not uniformly locate the distinguished element from an arbitrary copy. This gives the same existential oracle criterion while preserving the marked and unmarked distinction.
+
+The degree statements use the native Turing reducibility relation. Ordinary degrees of sets are represented by total binary membership oracles. The least degree is attained by a constructed copy and is a lower bound for every other oracle computing a copy. All members retain the same finite quotient observation system.
+
+\subsection{Observations, categories, and fixed grammars}
+The observation interface contains finite groups, transition maps, and their cofiltered index category. It does not contain the source group or evaluations of named source points. The common coordinate subsystem is proved categorically cofinal in the system of all finite quotient kernels. A natural isomorphism identifies its reindexed diagrams. The no decoder theorem therefore concerns the actual unmarked quotient systems.
+
+Faithfulness uses the official completion functor on all residually finite groups. Failure of fullness is packaged on the paired family. Failure to reflect isomorphisms is packaged on the larger full category that also contains the direct sum. These are distinct source categories, as required by the mathematical statements.
+
+Grammar escape uses infinitely repeated disagreement against every semantic output. Independent repeated bits retain continuum many pairwise nonisomorphic groups, with no embeddings between distinct members. The semantics may be noncomputable. The theorem excludes outputs of the fixed grammar and does not assert escape from every possible surrounding language.
+
+\section{Reproduction and trust}
+The companion includes source files, exact statement contracts, positive examples, rejection controls, source hashes, and compiler receipts. The verification script rebuilds the production modules with warnings treated as errors, audits their declaration dependencies, executes the contracts, and replays the project modules with the supplied kernel checker. The portable runtime and dependency revisions are pinned in the accompanying machine readable files.
+
+The rejection controls test specific false strengthenings, including universal root existence, the wrong cyclic quotient modulus, literal unmarked selector recovery, removal of required finiteness hypotheses, and reconstruction from the unmarked observation system. Each rejection must contain the intended diagnostic. A missing import or an unrelated elaboration error is not accepted as a mathematical rejection.
+
+Only the standard logical dependencies recorded by the companion are admitted. Imported dependency caches are trusted inputs whose bytes are checked during the run. Kernel replay uses the same Lean implementation, so it is not an independent kernel or external peer review. The source archive and its receipts preserve enough information to repeat the checks within that stated trust boundary.

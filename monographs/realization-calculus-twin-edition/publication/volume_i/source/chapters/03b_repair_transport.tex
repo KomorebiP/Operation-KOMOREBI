@@ -1,0 +1,192 @@
+\chap{Repair under a change of representation}\label{sec:repair-transport}
+An exact transformation should carry coherent inputs to coherent outputs. It need not carry the selected repair of an incoherent input to the selected repair of its transformed image. The distinction has an exact formula. In split coordinates, a compatible change of representation is generally block triangular rather than block diagonal. Its off-diagonal term records precisely the discrepancy between the two repair routes.
+
+\subsection{A section is a choice of residual coordinates}
+Let \(d:E\to R\) be a continuous linear map between normed spaces over a nontrivially normed field. Suppose it has a continuous linear right inverse \(A:R\to E\), so \(dA=I_R\). Set
+\[
+ K=\ker d,\qquad P_A=I_E-Ad.
+\]
+Then \(dP_A=0\), \(P_A\) fixes \(K\), and \(P_A^2=P_A\). The right inverse chooses where each residual is represented inside the candidate space. Different right inverses can choose different representatives of the same residual.
+
+\begin{theorem}[The split defect chart]\label{KS65}
+The maps
+\[
+ \chi_A:E\simeq_L K\times R,\qquad
+ \chi_A(x)=(P_Ax,dx),\qquad
+ \chi_A^{-1}(u,r)=u+Ar
+\]
+are inverse continuous linear equivalences. In these coordinates, \(P_A\) sends \((u,r)\) to \((u,0)\). If \(B\) is another right inverse, then \(A-B\) takes values in \(K\), and
+\[
+ P_Bx-P_Ax=(A-B)dx.
+\]
+The projections commute if and only if they are equal, and they are equal if and only if \(A=B\).
+\end{theorem}
+\begin{proof}
+The identity \(dA=I\) gives \(dP_A=d-dAd=0\), so the proposed first chart coordinate actually belongs to \(K\). If \(u\in K\), then \(du=0\) and \(P_Au=u\). Therefore, for \((u,r)\in K\times R\),
+\[
+ d(u+Ar)=r,\qquad P_A(u+Ar)=u+Ar-A(r)=u.
+\]
+In the other direction, \(P_Ax+A(dx)=x-Adx+Adx=x\). These are both inverse equations, including the membership condition for the kernel coordinate. All component maps are bounded linear, so they define a continuous linear equivalence on the standard finite product. Applied to \(P_Ax\), the chart gives \((P_Ax,0)\), proving the repair formula.
+
+For a second right inverse \(B\), the equation \(d(A-B)=I-I=0\) places its difference from \(A\) in \(K\). Direct subtraction gives
+\[
+ P_B-P_A=(I-Bd)-(I-Ad)=(A-B)d.
+\]
+Both projections have range \(K\) and fix every point of \(K\). Thus applying \(P_A\) after \(P_B\) gives \(P_B\), while applying \(P_B\) after \(P_A\) gives \(P_A\). These two compositions are equal if and only if the projections are equal.
+
+If \(P_A=P_B\), evaluate their difference at \(Ar\). Since \(dAr=r\), the difference formula yields \((A-B)r=0\) for every \(r\), hence \(A=B\). Equality of sections conversely makes their projection formulas identical. The argument uses the right inverse to test every residual. It does not infer equality of sections merely from agreement on some restricted set of observed residuals.
+\end{proof}
+\source{KS65}
+This is a linear splitting, not necessarily an orthogonal one. The exact coordinate \(u\) depends on the chosen section. The residual coordinate \(r=dx\) does not. A specified Hilbert geometry can make one section distinguished through orthogonality, but the algebraic split alone does not do so.
+
+The tower construction is stronger in a different direction. Its recurrence builds a right inverse from the target splittings, and its observable identifies what that repair preserves. The abstract chart here isolates the mechanism shared by those concrete constructions.
+
+\subsection{A change of representation has two components}
+Let \(D:F\to T\) be a second continuous linear defect map. A compatible change consists of bounded linear maps
+\[
+ S:E\to F,\qquad C:R\to T,\qquad DS=Cd.
+\]
+The equation is the commuting defect square. It says that transforming a candidate and then measuring its defect agrees with transforming its actual defect. No sections have yet been used.
+
+In particular, \(S\) carries \(\ker d\) into \(\ker D\). It may still have a kernel, lose information, or fail to be onto. Calling it a change of representation does not assert an equivalence unless inverse maps have also been supplied.
+
+Choose sections \(A\) of \(d\) and \(B\) of \(D\). Define
+\begin{equation}\label{eq:repair-mismatch}
+ M=SA-BC:R\longrightarrow F.
+\end{equation}
+The commuting square and section identities give \(DM=0\). Thus this mismatch takes residual information into an exact direction of the target.
+
+\begin{theorem}[Triangular transport and repair mismatch]\label{KS66}
+In split defect coordinates, the change of representation is
+\begin{equation}\label{eq:triangular-chart}
+ \chi_BS\chi_A^{-1}(u,r)=(Su+Mr,Cr).
+\end{equation}
+The two repair routes differ by
+\begin{equation}\label{eq:repair-change}
+ P_BSx-SP_Ax=M(dx).
+\end{equation}
+Consequently they agree on exact inputs, and
+\[
+ \norm{P_BSx-SP_Ax}\le\norm M\norm{dx},
+ \qquad \norm M\le\norm S\norm A+\norm B\norm C.
+\]
+They agree on all inputs if and only if \(SA=BC\).
+
+For two consecutive compatible changes \((S_1,C_1)\), \((S_2,C_2)\), with compatible choices of sections at the three ends, their mismatches satisfy
+\[
+ M_{21}=S_2M_1+M_2C_1.
+\]
+If \(dx_j\to0\) in norm for a fixed change and fixed sections, the repair discrepancy tends to zero.
+\end{theorem}
+\begin{proof}
+First \(DS=Cd\) sends \(\ker d\) into \(\ker D\), and
+\[
+ DM=DSA-DBC=CdA-C=C-C=0.
+\]
+Thus both terms in the proposed exact coordinate have the correct codomain. Given \(u\in\ker d\), compute the residual and exact coordinates of \(S(u+Ar)\) separately:
+\[
+ DS(u+Ar)=Cr,\qquad
+ S(u+Ar)-BCr=Su+(SA-BC)r.
+\]
+This proves the triangular formula as an equality in \(\ker D\times T\).
+
+For a general input, use the same commuting square to obtain
+\[
+ \begin{aligned}
+ P_BSx-SP_Ax
+ &=Sx-BDSx-Sx+SAdx\\
+ &=(SA-BC)dx=M(dx).
+ \end{aligned}
+\]
+Its norm is at most \(\norm M\norm{dx}\). The triangle inequality and submultiplicativity give \(\norm M\le\norm S\norm A+\norm B\norm C\). Exact inputs have \(dx=0\), so the two routes agree there regardless of the section choices. If they agree on \emph{every} input, substitute \(x=Ar\). Then \(dAr=r\) makes \(Mr=0\) for each residual, hence \(SA=BC\). That equality conversely makes the discrepancy vanish everywhere.
+
+For composition, denote the three sections by \(A,B,A_2\). The composite residual map is \(C_2C_1\), so its mismatch is \(S_2S_1A-A_2C_2C_1\). Insert and subtract \(S_2BC_1\):
+\[
+ \begin{aligned}
+ S_2S_1A-A_2C_2C_1
+ &=S_2(S_1A-BC_1)+(S_2B-A_2C_2)C_1\\
+ &=S_2M_1+M_2C_1.
+ \end{aligned}
+\]
+All terms map the first residual space into the last candidate space, in the written order. Finally, for fixed bounded \(M\), the estimate \(\norm{M(dx_j)}\le\norm M\norm{dx_j}\) proves convergence of the discrepancy when \(dx_j\to0\). Allowing the section or representation norms to grow with \(j\) would require a separate uniform bound.
+\end{proof}
+\source{KS66}
+The off-diagonal term in \eqref{eq:triangular-chart} has a specific meaning. A raw residual can become part of the target's chosen exact coordinate after a change of presentation. Deleting the residual before changing presentation removes that contribution. Deleting it afterwards does not. This is not a failure of exactness preservation. Both routes end in the target exact space, but they can end at different points in it.
+
+\subsection{A two-coordinate model in which the routes differ}
+Use \(E=F=\R^2\), write candidates as \((u,r)\), and take
+\[
+ d(u,r)=D(u,r)=r,\qquad A(r)=B(r)=(0,r).
+\]
+The exact space is the horizontal axis and both repairs are \(P(u,r)=(u,0)\). For a real parameter \(c\), set
+\[
+ S_c(u,r)=(u+cr,r),\qquad C=I.
+\]
+The defect square commutes because the second coordinate is unchanged. The mismatch is \(M_c(r)=(cr,0)\). Hence
+\[
+ PS_c(u,r)=(u+cr,0),\qquad S_cP(u,r)=(u,0).
+\]
+With \(c=2\) and input \((0,1)\), one route gives \((2,0)\) and the other gives \((0,0)\). Both have zero residual. A report containing only their final residuals would miss the entire difference.
+
+\plate{21_mismatch}{The shear preserves the residual coordinate but mixes it into the chosen exact coordinate. Repair after the shear reaches \((2,0)\). Repair before the shear reaches \((0,0)\). Their difference is the exact-valued mismatch applied to the original residual. The example uses the ordinary Euclidean drawing, while the algebraic identity does not depend on that drawing.}{fig:mismatch}
+
+Two shears compose by adding their parameters. In the mismatch law this appears as \(M_{c_2+c_1}=S_{c_2}M_{c_1}+M_{c_2}\), and \(S_{c_2}\) fixes the exact horizontal axis. The identity is therefore a simple instance of the same composition rule, not an unrelated coordinate trick.
+
+\subsection{Actual tower resampling gives a defect map}
+Return to Banach towers with contractive source and target bonds. Let \(\phi\) be a monotone schedule. Candidate sampling is
+\[
+ (S_\phi f)_n=f_{\phi(n)}.
+\]
+The sampled bonding map is the actual composite restriction between the selected levels. The residual map \(C_\phi\) is not pointwise sampling of a scalar error score. It accumulates transported fine defects across each omitted block.
+
+For a block from \(a\) to \(b\), its value on a residual family \(r\) is
+\begin{equation}\label{eq:block-defect-sum}
+ (C_{a,b}r)=\sum_{k=a}^{b-1}
+ \rho^Y_{a,k}\,r_k\,\rho^X_{k+1,b}.
+\end{equation}
+For the schedule \(\phi\), set \((C_\phi r)_n=C_{\phi(n),\phi(n+1)}r\). Every summand maps \(X_b\) into \(Y_a\). These surrounding restrictions are necessary when the spaces change with the level. For an actual differential, the sum telescopes to
+\[
+ C_{a,b}(\partial f)=\rho^Y_{a,b}f_b-f_a\rho^X_{a,b}.
+\]
+The dyadic coarsener in Section~\ref{sec:cascade} is the case \(b=a+2\).
+
+\begin{theorem}[Bounded-gap resampling and selected repair]\label{KS67}
+Suppose \(\phi(n+1)-\phi(n)\le m\) for a fixed natural number \(m\). Then the actual sampling maps are bounded and satisfy
+\[
+ \norm{S_\phi}\le1,\qquad \norm{C_\phi}\le m,
+ \qquad \partial_\phi S_\phi=C_\phi\partial.
+\]
+Exact candidates remain exact under every monotone common resampling, even without a gap bound. If \(A\) and \(B\) are bounded right inverses for the fine and sampled differentials, then
+\[
+ \norm{P_BS_\phi f-S_\phi P_Af}
+ \le(\norm A+m\norm B)\norm{\partial f}.
+\]
+\end{theorem}
+\begin{proof}
+For a bounded candidate family, \(\sup_n\norm{f_{\phi(n)}}\le\sup_k\norm{f_k}\), proving the sampling bound. For a bounded residual family, each summand in \eqref{eq:block-defect-sum} is a map from \(X_b\) to \(Y_a\) and has norm at most \(\norm r_\infty\), because every composite bond is contractive. A selected block has length at most \(m\), so the triangle inequality bounds its sum by \(m\norm r_\infty\). Taking the supremum over blocks proves that \(C_\phi\) maps into the bounded residual product and has the asserted operator norm. If a block has length zero its sum is zero, in agreement with the identity restriction.
+
+To verify the commuting square, insert
+\(r_k=\rho^Y_kf_{k+1}-f_k\rho^X_k\). The \(k\)-th term becomes
+\[
+ \rho^Y_{a,k+1}f_{k+1}\rho^X_{k+1,b}
+ -\rho^Y_{a,k}f_k\rho^X_{k,b}.
+\]
+Successive internal terms cancel in the finite sum, leaving \(\rho^Y_{a,b}f_b-f_a\rho^X_{a,b}\). This is exactly the sampled differential. No infinite series interchange is involved.
+
+If the fine differential vanishes, the finite telescope is zero on every selected interval. That conclusion remains true for unbounded gap lengths, because each individual interval is finite. What may fail without a gap bound is boundedness of the residual transformation on \emph{arbitrary} bounded residual families, not preservation of exact inputs.
+
+When the two bounded sections exist, Theorem~\ref{KS66} applies to the commuting square just established. Substitute \(\norm{S_\phi}\le1\) and \(\norm{C_\phi}\le m\) in its estimate to get \((\norm A+m\norm B)\norm{\partial f}\). Existence of those sections is an additional hypothesis, not a consequence of the sampling estimate.
+\end{proof}
+\source{KS67}
+The existence of the two right inverses is not inferred merely from contractivity of the bonds. The split-tower theorem provides them under its additional section and propagation-gap conditions. Keeping these hypotheses separate prevents a resampling theorem from being mistaken for an unconditional reconstruction algorithm.
+
+\subsection{Two distinct losses under coarsening}
+On scalar identity towers, a fine residual block \((1,-1)\) has zero two-step sum. Thus \(C_\phi r=0\) need not imply \(r=0\), even for a bounded-gap schedule. This is cancellation. Retaining an independent detail coordinate remedies that information loss in a split coarsener, as the next section shows.
+
+Unbounded gaps cause a different issue. With \(\phi(n)=n^2\), the bounded residual family \(r_k=1\) has block sums \(2n+1\). These are unbounded. Therefore block accumulation cannot be a map from every bounded residual family to a bounded sampled residual family in this example. The constant residual is not claimed to be the differential of a bounded candidate on the identity tower. It is a witness about the proposed operator on the entire residual space.
+
+Neither example contradicts cofinal invariance of coherent points or eventual transports. Those theorems concern exact compatibility. A norm on all raw defects, the retained fine detail, and the choice of a repair section are additional structures.
+
+\begin{insight}
+A compatible change of representation transports equations correctly. It transports the selected repair correctly only when the chosen residual sections also commute. The mismatch is an exact-valued operator, so it can remain invisible to a residual-only check.
+\end{insight}

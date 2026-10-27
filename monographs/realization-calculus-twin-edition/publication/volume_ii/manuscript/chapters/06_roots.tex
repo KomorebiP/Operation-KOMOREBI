@@ -1,0 +1,123 @@
+\chapter{Root certificates and finite quotients}
+\label{ch:roots}
+\chapterintro{An integer-root problem has a complete answer: either a finite coordinate obstructs it, or a finite correction constructs a root. This calculation controls every finite quotient.}
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.94\textwidth]{\figfile{03_root_certificates.pdf}}
+\caption{For the marked element $u_A$, one prime in each pair gives an obstruction and the other gives a root. A nonzero coordinate at a prime dividing the multiplier certifies impossibility. The displayed pattern is an exact worked selector, not a statistical sample.}
+\label{fig:rootcertificates}
+\end{figure}
+
+\section{An exact decision criterion}
+The general purity argument already establishes the root condition. For $G_A$, normal forms make the successful branch constructive.
+
+\begin{theorem}[Root or obstruction]
+\label{thm:rootcertificate}
+Let $g=s_A(r)+d\in G_A$ and let $m\ge1$. Then
+\[
+g\in mG_A\quad\Longleftrightarrow\quad
+ g_p=0\quad\text{for every }p\mid m.
+\]
+If the condition fails, a prime $p\mid m$ with $g_p\ne0$ is a nonexistence certificate. If it holds, a root is obtained by the finite procedure in the proof.
+\end{theorem}
+\begin{proof}
+Necessity follows because multiplication by $m$ is zero in every coordinate $C_p$ with $p\mid m$.
+
+Assume the condition holds and put $t=r/m$. The vector
+\[
+h=g-ms_A(t)
+\]
+has zero image in $V$ and therefore lies in $D$. Its support is contained in the union of the support of $d$ and the prime divisors of $\den(r)\den(t)$. Indeed, at any other selected coordinate, reduction gives $r-mt=0$, and unselected section values are zero.
+
+For $p\mid m$, the coordinate $h_p$ is zero. At every other prime put $e_p=m^{-1}h_p$, and at primes dividing $m$ put $e_p=0$. Then $e\in D$ and $me=h$. Consequently
+\[
+y=s_A(t)+e\quad\text{satisfies}\quad my=g.
+\]
+Every nonzero correction coordinate is found in the stated finite support set.
+\end{proof}
+A failed root is witnessed by one coordinate. A successful root requires a rational division and a finite-support adjustment. This is a simple instance of a realization problem with both positive and negative certificates.
+
+\begin{proposition}[All roots and their number]
+\label{thm:rootfiber}
+If $my=g$ is solvable, its solution set is the coset
+\[
+y_0+G_A[m],\qquad
+G_A[m]=\bigoplus_{p\mid m}C_p.
+\]
+It has exactly $\rad(m)$ elements.
+\end{proposition}
+\begin{proof}
+Two solutions differ by an element annihilated by $m$, and adding such an element to a solution gives another. The ambient product has a nonzero $m$-torsion coordinate only when $p\mid m$. All those finite coordinate factors lie in $D\subseteq G_A$. The kernel is therefore the displayed finite direct sum, whose cardinal is $\rad(m)$.
+\end{proof}
+Repeated prime powers do not enlarge the root kernel. For example, a solvable fourth-root equation has two solutions, not four. The squarefree coordinate structure is responsible for this behavior.
+
+\section{The quotient formula}
+\begin{theorem}[All integer quotients]
+\label{thm:quotientformula}
+For $m\ge1$, the coordinate map
+\[
+\pi_m:G_A\longrightarrow\prod_{p\mid m}C_p
+\]
+is surjective with kernel $mG_A$. Thus
+\[
+G_A/mG_A\cong\prod_{p\mid m}C_p\cong C_{\rad(m)}.
+\]
+For $m\mid n$, the transition map is the corresponding coordinate projection.
+\end{theorem}
+\begin{proof}
+A vector supported on the prime divisors of $m$ realizes any tuple in the target, proving surjectivity. The root criterion identifies the kernel. The Chinese remainder theorem identifies the finite product with the squarefree cyclic group. The transition assertion follows by taking the same coordinates before and after quotienting.
+\end{proof}
+
+\begin{center}
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$m$&$\rad(m)$&$G_A/mG_A$&Root-fiber size when nonempty\\\midrule
+1&1&$0$&1\\
+4&2&$C_2$&2\\
+8&2&$C_2$&2\\
+12&6&$C_6$&6\\
+18&6&$C_6$&6\\
+30&30&$C_{30}$&30\\
+60&30&$C_{30}$&30\\\bottomrule
+\end{tabular}
+\end{center}
+
+The kernel itself depends only on the distinct prime divisors:
+\[
+mG_A=\rad(m)G_A.
+\]
+This is stronger than equality of the quotient orders. It is equality of the subgroups inside the fixed source group.
+
+\section{Why these are all finite quotients}
+Let $f:G_A\to F$ be any homomorphism to a finite group. Its image is an abelian subgroup of $F$, and every element of the image is annihilated by $\lvert F\rvert$. Therefore $f$ kills $\lvert F\rvert G_A$ and factors through the quotient in Theorem~\ref{thm:quotientformula}.
+
+This proves that every finite quotient is cyclic of squarefree order. Conversely every cyclic squarefree group occurs, by selecting its finite prime set. The quotient system, not merely this list, is canonically the same for all selectors.
+
+\begin{corollary}[Common profinite completion]
+\label{thm:GAcompletion}
+For every $A\subseteq\N$, the inclusion $G_A\subseteq P$ extends to a canonical isomorphism
+\[
+\widehat{G_A}\cong P.
+\]
+The induced topology on $G_A$ is its full profinite topology.
+\end{corollary}
+\begin{proof}
+The coordinate kernels are cofinal among finite-index normal subgroups by the preceding factorization argument. Their inverse limit is $P$. Neighborhoods defined by finitely many coordinate zeros coincide with the kernels $mG_A$, so the induced and profinite topologies agree.
+\end{proof}
+The product $P$ has a computable profinite presentation: list the primes, form the finite addition tables of $A_N$, and give the coordinate projections. This is the standard inverse-system meaning of a computable profinite presentation \cite[Definition 3.3]{Lupini}. It is independent of $A$. The uncountable product is presented by an effective inverse system, not by a computable listing of all its elements. This does not turn an arbitrary $G_A$ into a computable discrete group.
+
+\section{The information retained by a marked element}
+For the distinguished element $u_A=s_A(1)$, the coordinate criterion simplifies to
+\begin{equation}
+\label{eq:markroot}
+p\mid_{G_A}u_A\quad\Longleftrightarrow\quad p\notin S_A.
+\end{equation}
+Consequently, for each $n$,
+\begin{align}
+ p_{2n}\mid_{G_A}u_A&\quad\Longleftrightarrow\quad n\in A,\label{eq:evenroot}\\
+ p_{2n+1}\mid_{G_A}u_A&\quad\Longleftrightarrow\quad n\notin A.\label{eq:oddroot}
+\end{align}
+Exactly one root equation is solvable. This binary pattern is the selector written in intrinsic group language.
+
+
+The finite quotient objects alone have not changed. What has been added is the coherent image of a particular source element. It is therefore important not to paraphrase the common-completion theorem as equality of every possible finite observation. Marked source data is a stronger observation contract.
