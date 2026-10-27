@@ -1,0 +1,9 @@
+theorem exact_active_evaluation (A : R) : evalActive P A = A := by
+  classical
+  have term (e : I × I) :
+      (if P.block A e.1 e.2 ≠ 0 then P.block A e.1 e.2 else 0) =
+      P.block A e.1 e.2 := by
+    by_cases h : P.block A e.1 e.2 = 0 <;> simp [h]
+  simp only [evalActive, activeBlocks, Finset.sum_filter]
+  simp_rw [term]
+  simpa only [Fintype.sum_prod_type] using P.reconstruct A

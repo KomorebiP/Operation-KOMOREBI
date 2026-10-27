@@ -1,0 +1,7 @@
+theorem compact_factorization (A : Matrix m n ℂ) : compactQ A * compactR A = A := by
+  unfold compactQ compactR
+  rw [←LinearMap.toMatrix_comp]
+  have he : (columnSpace A).subtype ∘ₗ (Matrix.toEuclideanLin A).rangeRestrict =
+      Matrix.toEuclideanLin A := by ext x i; rfl
+  rw [he,Matrix.toEuclideanLin_eq_toLin_orthonormal]
+  exact LinearMap.toMatrix_toLin _ _ _

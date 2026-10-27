@@ -1,0 +1,5 @@
+theorem packet_perturbation_bound (P : I → X →L[K] X) (src : E → I)
+    (A Δ : E → X →L[K] X) (hΔ : ∀ e, Δ e = (Δ e).comp (P (src e))) (x : X) :
+    ‖((∑ e, (A e + Δ e)) - (∑ e, A e)) x‖ ≤ ∑ e, ‖Δ e‖ * ‖P (src e) x‖ := by
+  rw [packet_error_action_identity P src A Δ hΔ]
+  exact (norm_sum_le _ _).trans (Finset.sum_le_sum (fun e _ => (Δ e).le_opNorm _))

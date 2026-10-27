@@ -1,0 +1,5 @@
+theorem exact_matrix_batch \CodeChar{123}C : Type*\CodeChar{125} (P : PacketFamily (Matrix X X K) I)
+    (A : Matrix X X K) (Z : Matrix X C K) :
+    A * Z = ∑ e ∈ activeBlocks P A, (P.block A e.1 e.2) * Z := by
+  rw [← Matrix.sum_mul]
+  exact congrArg (fun a : Matrix X X K => a * Z) (exact_active_evaluation P A).symm

@@ -1,0 +1,5 @@
+theorem grouped_execution_output {E Shape V : Type*} [Fintype E] [DecidableEq Shape]
+    [AddCommMonoid V] (key : E → Shape) (value : E → V) :
+    (∑ k ∈ activeShapeClasses key, ∑ e ∈ Finset.univ.filter (fun e => key e = k), value e) =
+      ∑ e, value e := by
+  exact Finset.sum_fiberwise_of_maps_to (fun e _ => each_block_has_shape key e) value

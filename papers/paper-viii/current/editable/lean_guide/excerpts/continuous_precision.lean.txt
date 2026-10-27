@@ -1,0 +1,18 @@
+theorem precision_allocation_optimal [Nonempty E] (s c : E → ℝ) (budget : ℝ)
+    (hs : ∀ e, 0 < s e) (hc : ∀ e, 0 < c e) (hb : 0 < budget)
+    (eps : E → ℝ) (heps : AllocationFeasible s budget eps) :
+    precisionObjective c (optimalTolerance s c budget) ≤ precisionObjective c eps := by
+  have ho := optimal_tolerance_positive s c budget hs hc hb
+  have hbalance := relative_budget_identity s c eps budget hs hc hb heps.2
+  have hlog : (∑ e, c e * Real.log (eps e / optimalTolerance s c budget e)) ≤ 0 := by
+    calc
+      _ ≤ ∑ e, c e * (eps e / optimalTolerance s c budget e - 1) := by
+        apply Finset.sum_le_sum
+        intro e _
+        exact mul_le_mul_of_nonneg_left
+          (Real.log_le_sub_one_of_pos (div_pos (heps.1 e) (ho e))) (le_of_lt (hc e))
+      _ = 0 := by
+        simp_rw [mul_sub, mul_one]
+        rw [Finset.sum_sub_distrib, hbalance, sub_self]
+  have hd := precision_objective_difference c eps (optimalTolerance s c budget) heps.1 ho
+  linarith

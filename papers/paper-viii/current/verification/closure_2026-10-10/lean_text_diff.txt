@@ -1,0 +1,221 @@
+--- original p12
++++ rebuilt p12
+@@ -37,5 +37,8 @@
+ Exact lines 56–66. Excerpt chain_factors. SHA-256 in Section 15.
+ theorem chainFactors_correct (n : ℕ) :
+ chainProduct (fun j => D j + U j * (V j).conjTranspose) n =
++chainProduct D n + (chainFactors r D U V n).1 * (chainFactors r D U V n).2.conjTranspose :=
++by
++↪
+ REALIZATION CALCULUS
+ 9
+
+--- original p13
++++ rebuilt p13
+@@ -1,8 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-chainProduct D n + (chainFactors r D U V n).1 * (chainFactors r D U V n).2.conjTranspose :=
+-by
+-↪
+ induction n with
+ | zero =>
+ ext i j
+
+--- original p14
++++ rebuilt p14
+@@ -42,5 +42,6 @@
+ simp only [Fintype.sum_prod_type, Finset.mul_sum, mul_assoc]
+ Proof reading. The zero-mode case reduces to the one-coordinate identity. In the successor case, ex-
+ pand one contraction, rewrite trailing contractions using the induction hypothesis, and express the
++full matrix sum over a product type as two nested sums. Associativity and distribution align the two
+ REALIZATION CALCULUS
+ 11
+
+--- original p15
++++ rebuilt p15
+@@ -1,6 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-full matrix sum over a product type as two nested sums. Associativity and distribution align the two
+ formulas. The event type counted later follows this recursive contraction, yielding 2𝑘𝑑𝑘+1 operations
+ in the declared model and 𝑘𝑑2 factor values. Cases 𝑘= 0 and 𝑑= 0 are represented by their actual
+ index types.
+@@ -40,5 +39,8 @@
+ 5.3 Toeplitz padding is concrete
+ Contract. The matrix and generator definitions assume [NeZero n], so the length is positive. The
+ zero-padding helper itself is meaningful without that instance.
++Source: formalization/ToeplitzEmbedding.lean.
++Exact lines 54–58. Excerpt toeplitz_apply. SHA-256 in Section 15.
++theorem toeplitz_embedding_action (c r x : Fin n →ℂ) (i : Fin n) :
+ REALIZATION CALCULUS
+ 12
+
+--- original p16
++++ rebuilt p16
+@@ -1,8 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-Source: formalization/ToeplitzEmbedding.lean.
+-Exact lines 54–58. Excerpt toeplitz_apply. SHA-256 in Section 15.
+-theorem toeplitz_embedding_action (c r x : Fin n →ℂ) (i : Fin n) :
+ (Matrix.circulant (toeplitzGenerator c r) *ᵥzeroPad x) (Fin.castAdd n i) =
+ (toeplitzMatrix c r *ᵥx) i := by
+ simp only [Matrix.mulVec, dotProduct, Fin.sum_univ_add, zero_pad_left, zero_pad_right,
+
+--- original p21
++++ rebuilt p21
+@@ -44,5 +44,6 @@
+ _ ≤∑e, c e * (eps e / optimalTolerance s c budget e - 1) := by
+ apply Finset.sum_le_sum
+ intro e _
++exact mul_le_mul_of_nonneg_left
+ REALIZATION CALCULUS
+ 18
+
+--- original p22
++++ rebuilt p22
+@@ -1,6 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-exact mul_le_mul_of_nonneg_left
+ (Real.log_le_sub_one_of_pos (div_pos (heps.1 e) (ho e))) (le_of_lt (hc e))
+ _ = 0 := by
+ simp_rw [mul_sub, mul_one]
+@@ -46,5 +45,6 @@
+ /- The parameter is the reciprocal of the manuscript's multiplier. -/
+ Proof reading. Obtain an attaining scale from clipped_scale_exists. Its positivity and budget identity
+ establish feasibility; the minimum supplies the cap inequalities. A distinct feasible vector has strictly
++larger objective by the supporting logarithmic inequality. This rules out every competing minimizer
+ REALIZATION CALCULUS
+ 19
+
+--- original p23
++++ rebuilt p23
+@@ -1,6 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-larger objective by the supporting logarithmic inequality. This rules out every competing minimizer
+ and gives the equivalence with the constructed tolerance vector. At total-cap budget, the tolerance
+ vector remains unique but the scale, and hence the reciprocal multiplier, need not be unique. The
+ endpoint-nonuniqueness declaration records that distinction.
+
+--- original p26
++++ rebuilt p26
+@@ -39,5 +39,6 @@
+ | .leaf a => BudgetDP.tabulate B (BudgetDP.singletonTable (w a) (κ a))
+ | .node a n ts =>
+ let cached := Vector.ofFn (fun i => storedTree B κ w σ (ts i))
++let merged := BudgetDP.combineStored (fun i : Fin (n + 1) => cached.get i)
+ REALIZATION CALCULUS
+ 23
+
+--- original p27
++++ rebuilt p27
+@@ -1,6 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-let merged := BudgetDP.combineStored (fun i : Fin (n + 1) => cached.get i)
+ BudgetDP.tabulate B (fun b => BudgetDP.choose (BudgetDP.singletonTable (w a) (κ a) b)
+ (BudgetDP.add (some (σ a)) (BudgetDP.lookup merged b)))
+ /- The implemented cached array agrees entrywise with the proved exact recurrence. -/
+
+--- original p35
++++ rebuilt p35
+@@ -42,5 +42,6 @@
+ intro he
+ have he' : J*ᵥz=0 := congrArg WithLp.ofLp he
+ have hz' : (z : Fin (k+1) →ℂ)=0 := by
++calc
+ REALIZATION CALCULUS
+ 32
+
+--- original p36
++++ rebuilt p36
+@@ -1,6 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-calc
+ (z : Fin (k+1) →ℂ) = (Jᴴ*J)*ᵥz := by rw [hj,Matrix.one_mulVec]
+ _ = Jᴴ*ᵥ(J*ᵥz) := (Matrix.mulVec_mulVec _ _ _).symm
+ _ = 0 := by rw [he',Matrix.mulVec_zero]
+@@ -41,5 +40,6 @@
+ Exact lines 35–60. Excerpt weighted_tail. SHA-256 in Section 15.
+ theorem weighted_tail_lower (a w : Fin d →ℝ) (ha : ∀i, 0 ≤a i)
+ (hsort : Antitone a) (hw0 : ∀i, 0 ≤w i) (hw1 : ∀i, w i ≤1)
++(k : ℕ) (hw : (d-k : ℕ) ≤∑i,w i) :
+ REALIZATION CALCULUS
+ 33
+
+--- original p37
++++ rebuilt p37
+@@ -1,6 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-(k : ℕ) (hw : (d-k : ℕ) ≤∑i,w i) :
+ (∑i, if i.val<k then (0:ℝ) else a i) ≤∑i, a i*w i := by
+ by_cases hk : k<d
+ · let μ := a ⟨k,hk⟩
+@@ -49,5 +48,7 @@
+ have hl := weighted_tail_lower (fun i => σ i^2) (rowWeight Q)
+ (fun i => sq_nonneg _) hsort2 (rowWeight_nonneg Q) (rowWeight_le_one Q hQ) k hw
+ have he : tailEnergy σ k = ∑i, if i.val<k then (0:ℝ) else σ i^2 := by
++unfold tailEnergy discarded
++apply Finset.sum_congr rfl
+ REALIZATION CALCULUS
+ 34
+
+--- original p38
++++ rebuilt p38
+@@ -1,7 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-unfold tailEnergy discarded
+-apply Finset.sum_congr rfl
+ intro i _
+ split_ifs <;> simp
+ rw [←he,←diagonal_frame_energy σ Q] at hl
+@@ -48,5 +46,7 @@
+ rw [←frobenius_diagonal_tail svd.values k,Real.sqrt_sq_eq_abs]
+ have hn : 0 ≤frobeniusNorm (diag (discarded svd.values k)) := by
+ unfold frobeniusNorm
++exact norm_nonneg (diag (discarded svd.values k))
++exact (abs_of_nonneg hn).symm
+ REALIZATION CALCULUS
+ 35
+
+--- original p39
++++ rebuilt p39
+@@ -1,7 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-exact norm_nonneg (diag (discarded svd.values k))
+-exact (abs_of_nonneg hn).symm
+ Proof reading. Rewrite the core reconstruction as a lift through the composed isometries. Rewrite
+ the factor product as the retained diagonal lift. Derive isometry of each composed factor. Apply the
+ spectral and Frobenius transfer lemmas to their independently proved diagonal best-rank conclusions.
+@@ -41,5 +39,10 @@
+ recompressLeft Q svd k*(recompressRight V svd k)ᴴ= lift Q V G := by
+ rw [recompressed_product,kept_all _ k hk,←lift_comp]
+ exact congrArg (lift Q V) svd.reconstruction.symm
++Proof reading. When 𝑑≤𝑘, retaining the entire value list gives the original diagonal. Rewrite the
++constructed product by that full-retention identity, then use the supplied SVD reconstruction under
++the outer lift. The separate rank-zero endpoint proves that keeping no columns gives the zero product.
++Empty index types avoid dummy inverse operations and support zero original factors. Repeated or
++zero singular values are permitted by the non-strict ordering.
+ REALIZATION CALCULUS
+ 36
+
+--- original p40
++++ rebuilt p40
+@@ -1,10 +1,5 @@
+ OPERATION KOMOREBI
+ PAPER VIII / LEAN GUIDE
+-Proof reading. When 𝑑≤𝑘, retaining the entire value list gives the original diagonal. Rewrite the
+-constructed product by that full-retention identity, then use the supplied SVD reconstruction under
+-the outer lift. The separate rank-zero endpoint proves that keeping no columns gives the zero product.
+-Empty index types avoid dummy inverse operations and support zero original factors. Repeated or
+-zero singular values are permitted by the non-strict ordering.
+ 10.9 The boundary after the sixth block
+ The ordered-SVD-data theorem proves conditional exact optimality and exact tail errors. General SVD
+ existence, identification with the canonical Mathlib singularValues API, a floating-point SVD or QR

@@ -1,0 +1,28 @@
+theorem prefix_kernel_witness (k : ℕ) (hk : k<d)
+    (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.rank≤k) :
+    ∃ y : EuclideanSpace ℂ (Fin d), y≠0 ∧ B*ᵥ y=0 ∧
+      ∀ i : Fin d, k+1 ≤ i.val → y i=0 := by
+  let J := prefixEmbedding k (by omega : k+1≤d)
+  have hj : Jᴴ*J=1 := prefix_isometry k _
+  have hr : (B*J).rank < Fintype.card (Fin (k+1)) := by
+    have := Matrix.rank_mul_le_left B J
+    simp only [Fintype.card_fin]
+    omega
+  obtain ⟨z,hz,hbz⟩ := rank_lt_kernel_witness (B*J) hr
+  let y : EuclideanSpace ℂ (Fin d) := WithLp.toLp 2 (J*ᵥ z)
+  have hy : y≠0 := by
+    intro he
+    have he' : J*ᵥ z=0 := congrArg WithLp.ofLp he
+    have hz' : (z : Fin (k+1) → ℂ)=0 := by
+      calc
+        (z : Fin (k+1) → ℂ) = (Jᴴ*J)*ᵥ z := by rw [hj,Matrix.one_mulVec]
+        _ = Jᴴ*ᵥ(J*ᵥ z) := (Matrix.mulVec_mulVec _ _ _).symm
+        _ = 0 := by rw [he',Matrix.mulVec_zero]
+    apply hz
+    exact (EuclideanSpace.equiv (Fin (k+1)) ℂ).injective hz'
+  refine ⟨y,hy,?_,?_⟩
+  · change B*ᵥ(J*ᵥ z)=0
+    rw [Matrix.mulVec_mulVec]
+    exact hbz
+  · intro i hi
+    exact prefix_support k _ z i hi

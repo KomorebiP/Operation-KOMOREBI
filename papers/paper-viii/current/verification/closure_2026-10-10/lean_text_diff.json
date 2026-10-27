@@ -1,0 +1,114 @@
+[
+  {
+    "page": 12,
+    "same_words": false,
+    "before_length": 2244,
+    "after_length": 2341,
+    "diff": "--- original p12\n+++ rebuilt p12\n@@ -37,5 +37,8 @@\n Exact lines 56\u201366. Excerpt chain_factors. SHA-256 in Section 15.\n theorem chainFactors_correct (n : \u2115) :\n chainProduct (fun j => D j + U j * (V j).conjTranspose) n =\n+chainProduct D n + (chainFactors r D U V n).1 * (chainFactors r D U V n).2.conjTranspose :=\n+by\n+\u21aa\n REALIZATION CALCULUS\n 9"
+  },
+  {
+    "page": 13,
+    "same_words": false,
+    "before_length": 1728,
+    "after_length": 1631,
+    "diff": "--- original p13\n+++ rebuilt p13\n@@ -1,8 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-chainProduct D n + (chainFactors r D U V n).1 * (chainFactors r D U V n).2.conjTranspose :=\n-by\n-\u21aa\n induction n with\n | zero =>\n ext i j"
+  },
+  {
+    "page": 14,
+    "same_words": false,
+    "before_length": 2132,
+    "after_length": 2233,
+    "diff": "--- original p14\n+++ rebuilt p14\n@@ -42,5 +42,6 @@\n simp only [Fintype.sum_prod_type, Finset.mul_sum, mul_assoc]\n Proof reading. The zero-mode case reduces to the one-coordinate identity. In the successor case, ex-\n pand one contraction, rewrite trailing contractions using the induction hypothesis, and express the\n+full matrix sum over a product type as two nested sums. Associativity and distribution align the two\n REALIZATION CALCULUS\n 11"
+  },
+  {
+    "page": 15,
+    "same_words": false,
+    "before_length": 1931,
+    "after_length": 2009,
+    "diff": "--- original p15\n+++ rebuilt p15\n@@ -1,6 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-full matrix sum over a product type as two nested sums. Associativity and distribution align the two\n formulas. The event type counted later follows this recursive contraction, yielding 2\ud835\udc58\ud835\udc51\ud835\udc58+1 operations\n in the declared model and \ud835\udc58\ud835\udc512 factor values. Cases \ud835\udc58= 0 and \ud835\udc51= 0 are represented by their actual\n index types.\n@@ -40,5 +39,8 @@\n 5.3 Toeplitz padding is concrete\n Contract. The matrix and generator definitions assume [NeZero n], so the length is positive. The\n zero-padding helper itself is meaningful without that instance.\n+Source: formalization/ToeplitzEmbedding.lean.\n+Exact lines 54\u201358. Excerpt toeplitz_apply. SHA-256 in Section 15.\n+theorem toeplitz_embedding_action (c r x : Fin n \u2192\u2102) (i : Fin n) :\n REALIZATION CALCULUS\n 12"
+  },
+  {
+    "page": 16,
+    "same_words": false,
+    "before_length": 1887,
+    "after_length": 1708,
+    "diff": "--- original p16\n+++ rebuilt p16\n@@ -1,8 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-Source: formalization/ToeplitzEmbedding.lean.\n-Exact lines 54\u201358. Excerpt toeplitz_apply. SHA-256 in Section 15.\n-theorem toeplitz_embedding_action (c r x : Fin n \u2192\u2102) (i : Fin n) :\n (Matrix.circulant (toeplitzGenerator c r) *\u1d65zeroPad x) (Fin.castAdd n i) =\n (toeplitzMatrix c r *\u1d65x) i := by\n simp only [Matrix.mulVec, dotProduct, Fin.sum_univ_add, zero_pad_left, zero_pad_right,"
+  },
+  {
+    "page": 21,
+    "same_words": false,
+    "before_length": 2578,
+    "after_length": 2610,
+    "diff": "--- original p21\n+++ rebuilt p21\n@@ -44,5 +44,6 @@\n _ \u2264\u2211e, c e * (eps e / optimalTolerance s c budget e - 1) := by\n apply Finset.sum_le_sum\n intro e _\n+exact mul_le_mul_of_nonneg_left\n REALIZATION CALCULUS\n 18"
+  },
+  {
+    "page": 22,
+    "same_words": false,
+    "before_length": 2480,
+    "after_length": 2548,
+    "diff": "--- original p22\n+++ rebuilt p22\n@@ -1,6 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-exact mul_le_mul_of_nonneg_left\n (Real.log_le_sub_one_of_pos (div_pos (heps.1 e) (ho e))) (le_of_lt (hc e))\n _ = 0 := by\n simp_rw [mul_sub, mul_one]\n@@ -46,5 +45,6 @@\n /- The parameter is the reciprocal of the manuscript's multiplier. -/\n Proof reading. Obtain an attaining scale from clipped_scale_exists. Its positivity and budget identity\n establish feasibility; the minimum supplies the cap inequalities. A distinct feasible vector has strictly\n+larger objective by the supporting logarithmic inequality. This rules out every competing minimizer\n REALIZATION CALCULUS\n 19"
+  },
+  {
+    "page": 23,
+    "same_words": false,
+    "before_length": 2402,
+    "after_length": 2302,
+    "diff": "--- original p23\n+++ rebuilt p23\n@@ -1,6 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-larger objective by the supporting logarithmic inequality. This rules out every competing minimizer\n and gives the equivalence with the constructed tolerance vector. At total-cap budget, the tolerance\n vector remains unique but the scale, and hence the reciprocal multiplier, need not be unique. The\n endpoint-nonuniqueness declaration records that distinction."
+  },
+  {
+    "page": 26,
+    "same_words": false,
+    "before_length": 2275,
+    "after_length": 2350,
+    "diff": "--- original p26\n+++ rebuilt p26\n@@ -39,5 +39,6 @@\n | .leaf a => BudgetDP.tabulate B (BudgetDP.singletonTable (w a) (\u03ba a))\n | .node a n ts =>\n let cached := Vector.ofFn (fun i => storedTree B \u03ba w \u03c3 (ts i))\n+let merged := BudgetDP.combineStored (fun i : Fin (n + 1) => cached.get i)\n REALIZATION CALCULUS\n 23"
+  },
+  {
+    "page": 27,
+    "same_words": false,
+    "before_length": 2715,
+    "after_length": 2640,
+    "diff": "--- original p27\n+++ rebuilt p27\n@@ -1,6 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-let merged := BudgetDP.combineStored (fun i : Fin (n + 1) => cached.get i)\n BudgetDP.tabulate B (fun b => BudgetDP.choose (BudgetDP.singletonTable (w a) (\u03ba a) b)\n (BudgetDP.add (some (\u03c3 a)) (BudgetDP.lookup merged b)))\n /- The implemented cached array agrees entrywise with the proved exact recurrence. -/"
+  },
+  {
+    "page": 35,
+    "same_words": false,
+    "before_length": 2365,
+    "after_length": 2370,
+    "diff": "--- original p35\n+++ rebuilt p35\n@@ -42,5 +42,6 @@\n intro he\n have he' : J*\u1d65z=0 := congrArg WithLp.ofLp he\n have hz' : (z : Fin (k+1) \u2192\u2102)=0 := by\n+calc\n REALIZATION CALCULUS\n 32"
+  },
+  {
+    "page": 36,
+    "same_words": false,
+    "before_length": 2479,
+    "after_length": 2509,
+    "diff": "--- original p36\n+++ rebuilt p36\n@@ -1,6 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-calc\n (z : Fin (k+1) \u2192\u2102) = (J\u1d34*J)*\u1d65z := by rw [hj,Matrix.one_mulVec]\n _ = J\u1d34*\u1d65(J*\u1d65z) := (Matrix.mulVec_mulVec _ _ _).symm\n _ = 0 := by rw [he',Matrix.mulVec_zero]\n@@ -41,5 +40,6 @@\n Exact lines 35\u201360. Excerpt weighted_tail. SHA-256 in Section 15.\n theorem weighted_tail_lower (a w : Fin d \u2192\u211d) (ha : \u2200i, 0 \u2264a i)\n (hsort : Antitone a) (hw0 : \u2200i, 0 \u2264w i) (hw1 : \u2200i, w i \u22641)\n+(k : \u2115) (hw : (d-k : \u2115) \u2264\u2211i,w i) :\n REALIZATION CALCULUS\n 33"
+  },
+  {
+    "page": 37,
+    "same_words": false,
+    "before_length": 2436,
+    "after_length": 2456,
+    "diff": "--- original p37\n+++ rebuilt p37\n@@ -1,6 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-(k : \u2115) (hw : (d-k : \u2115) \u2264\u2211i,w i) :\n (\u2211i, if i.val<k then (0:\u211d) else a i) \u2264\u2211i, a i*w i := by\n by_cases hk : k<d\n \u00b7 let \u03bc := a \u27e8k,hk\u27e9\n@@ -49,5 +48,7 @@\n have hl := weighted_tail_lower (fun i => \u03c3 i^2) (rowWeight Q)\n (fun i => sq_nonneg _) hsort2 (rowWeight_nonneg Q) (rowWeight_le_one Q hQ) k hw\n have he : tailEnergy \u03c3 k = \u2211i, if i.val<k then (0:\u211d) else \u03c3 i^2 := by\n+unfold tailEnergy discarded\n+apply Finset.sum_congr rfl\n REALIZATION CALCULUS\n 34"
+  },
+  {
+    "page": 38,
+    "same_words": false,
+    "before_length": 2568,
+    "after_length": 2593,
+    "diff": "--- original p38\n+++ rebuilt p38\n@@ -1,7 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-unfold tailEnergy discarded\n-apply Finset.sum_congr rfl\n intro i _\n split_ifs <;> simp\n rw [\u2190he,\u2190diagonal_frame_energy \u03c3 Q] at hl\n@@ -48,5 +46,7 @@\n rw [\u2190frobenius_diagonal_tail svd.values k,Real.sqrt_sq_eq_abs]\n have hn : 0 \u2264frobeniusNorm (diag (discarded svd.values k)) := by\n unfold frobeniusNorm\n+exact norm_nonneg (diag (discarded svd.values k))\n+exact (abs_of_nonneg hn).symm\n REALIZATION CALCULUS\n 35"
+  },
+  {
+    "page": 39,
+    "same_words": false,
+    "before_length": 2579,
+    "after_length": 2959,
+    "diff": "--- original p39\n+++ rebuilt p39\n@@ -1,7 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-exact norm_nonneg (diag (discarded svd.values k))\n-exact (abs_of_nonneg hn).symm\n Proof reading. Rewrite the core reconstruction as a lift through the composed isometries. Rewrite\n the factor product as the retained diagonal lift. Derive isometry of each composed factor. Apply the\n spectral and Frobenius transfer lemmas to their independently proved diagonal best-rank conclusions.\n@@ -41,5 +39,10 @@\n recompressLeft Q svd k*(recompressRight V svd k)\u1d34= lift Q V G := by\n rw [recompressed_product,kept_all _ k hk,\u2190lift_comp]\n exact congrArg (lift Q V) svd.reconstruction.symm\n+Proof reading. When \ud835\udc51\u2264\ud835\udc58, retaining the entire value list gives the original diagonal. Rewrite the\n+constructed product by that full-retention identity, then use the supplied SVD reconstruction under\n+the outer lift. The separate rank-zero endpoint proves that keeping no columns gives the zero product.\n+Empty index types avoid dummy inverse operations and support zero original factors. Repeated or\n+zero singular values are permitted by the non-strict ordering.\n REALIZATION CALCULUS\n 36"
+  },
+  {
+    "page": 40,
+    "same_words": false,
+    "before_length": 1068,
+    "after_length": 608,
+    "diff": "--- original p40\n+++ rebuilt p40\n@@ -1,10 +1,5 @@\n OPERATION KOMOREBI\n PAPER VIII / LEAN GUIDE\n-Proof reading. When \ud835\udc51\u2264\ud835\udc58, retaining the entire value list gives the original diagonal. Rewrite the\n-constructed product by that full-retention identity, then use the supplied SVD reconstruction under\n-the outer lift. The separate rank-zero endpoint proves that keeping no columns gives the zero product.\n-Empty index types avoid dummy inverse operations and support zero original factors. Repeated or\n-zero singular values are permitted by the non-strict ordering.\n 10.9 The boundary after the sixth block\n The ordered-SVD-data theorem proves conditional exact optimality and exact tail errors. General SVD\n existence, identification with the canonical Mathlib singularValues API, a floating-point SVD or QR"
+  }
+]

@@ -1,0 +1,25 @@
+theorem walsh_apply_correct (k : ℕ) (x : TensorIndex 2 k → ℂ) :
+    walshApply k x = walshMatrix k *ᵥ x := by
+  induction k with
+  | zero =>
+    funext i
+    cases i
+    change x PUnit.unit = ∑ i : Unit, (1:ℂ)*x i
+    simp only [one_mul]
+    symm
+    apply Finset.sum_eq_single PUnit.unit
+    · intro b _ h
+      cases b
+      exact (h rfl).elim
+    · intro h
+      exact (h (Finset.mem_univ _)).elim
+  | succ k ih =>
+    funext p
+    rcases p with ⟨i,u⟩
+    change (if i = 0 then walshApply k (fun v => x (0,v)+x (1,v)) u
+      else walshApply k (fun v => x (0,v)-x (1,v)) u) =
+        ∑ v : Fin 2 × TensorIndex 2 k, (walshTwo i v.1 * walshMatrix k u v.2) * x v
+    simp_rw [ih]
+    fin_cases i <;>
+      simp [walshTwo, Matrix.mulVec, dotProduct, Fintype.sum_prod_type,
+        Fin.sum_univ_two, mul_add, Finset.sum_add_distrib, sub_eq_add_neg]

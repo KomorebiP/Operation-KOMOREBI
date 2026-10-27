@@ -1,0 +1,11 @@
+theorem spectral_best_lift (Q : Matrix m r ℂ) (V : Matrix n s ℂ)
+    (hQ : Qᴴ*Q=1) (hV : Vᴴ*V=1) (G H : Matrix r s ℂ) (k : ℕ)
+    (hbest : BestRank spectralNorm G H k) :
+    BestRank spectralNorm (lift Q V G) (lift Q V H) k := by
+  refine ⟨(rank_lift_le Q V H).trans hbest.1,fun B hB => ?_⟩
+  calc
+    spectralNorm (lift Q V G-lift Q V H) = spectralNorm (G-H) := by
+      rw [←lift_sub,spectral_lift Q V hQ hV]
+    _ ≤ spectralNorm (G-compress Q V B) := hbest.2 _ ((rank_compress_le Q V B).trans hB)
+    _ = spectralNorm (compress Q V (lift Q V G-B)) := by rw [compressed_error Q V hQ hV]
+    _ ≤ spectralNorm (lift Q V G-B) := spectral_compress_le Q V hQ hV _

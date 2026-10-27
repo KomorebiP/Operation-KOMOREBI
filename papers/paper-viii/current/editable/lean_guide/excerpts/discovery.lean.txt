@@ -1,0 +1,12 @@
+theorem discovery_frobenius_certificate (hP : ∀ a, (P.proj a)ᴴ = P.proj a)
+    (A : Matrix X X ℂ) :
+    ‖A-diagonalCompression P A‖^2 =
+      ∑ b, ∑ a, if b=a then 0 else ‖P.block A b a‖^2 := by
+  rw [compression_residual P A,
+    frobenius_sum_sq (offDiagonalTerm P A) (offDiagonal_trace_orthogonal P hP A)]
+  simp only [Fintype.sum_prod_type,offDiagonalTerm]
+  apply Finset.sum_congr rfl
+  intro b _
+  apply Finset.sum_congr rfl
+  intro a _
+  by_cases h : b=a <;> simp [h]

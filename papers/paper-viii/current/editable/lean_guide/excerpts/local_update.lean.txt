@@ -1,0 +1,9 @@
+theorem local_recompilation (keep overhead : α → R) (ctx : CachedContext α R)
+    (hv : Valid keep overhead ctx) (newTree : CandidateTree α) :
+    (∀ c : Cut (fill ctx newTree),
+      updateValue keep overhead ctx (optimalValue keep overhead newTree) ≤
+        cutValue keep overhead c) ∧
+    ∃ c : Cut (fill ctx newTree), cutValue keep overhead c =
+      updateValue keep overhead ctx (optimalValue keep overhead newTree) := by
+  rw [updateValue_correct keep overhead ctx hv newTree]
+  exact exact_tree_compiler keep overhead (fill ctx newTree)

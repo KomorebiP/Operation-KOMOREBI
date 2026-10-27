@@ -1,0 +1,79 @@
+\vpage{29}{A complex range needs an adjoint}{THE INNER PRODUCT IS PART OF THE CONTRACT}{}
+The earlier compact example is real. Over $\CC$, an isometry means $Q^*Q=I$, with conjugation. Take the exact Gaussian-rational factors
+\[
+Q_L=\mat{3/5&0\\4\mathrm i/5&0\\0&1},\qquad
+Q_R=\mat{1&0\\0&\mathrm i},\qquad G=\diag(5,2).
+\]
+Their product is a genuinely complex rectangular operator:
+\[
+A=Q_LGQ_R^*=\mat{3&0\\4\mathrm i&0\\0&-2\mathrm i},
+\qquad A^*A=\diag(25,4).
+\]
+\vfig{complex_core}
+\head{The small calculation exposes a wrong convention}
+The first column of $Q_L$ has Hermitian squared length $9/25+16/25=1$. Its bilinear square without conjugation is $9/25-16/25=-7/25$. Thus $Q_L^TQ_L$ is not the identity. The portable negative control replaces the adjoint by transpose and rejects the resulting isometry claim.
+
+Keeping the first diagonal entry of $G$ gives $A_1$ with its second column zero. The residual has squared Frobenius norm four and Gram matrix $\diag(0,4)$, hence spectral norm two. Both errors agree with the discarded core singular value. Every displayed arithmetic operation occurs in $\QQ(\mathrm i)$.
+\head{What the finite check establishes}
+It checks both isometries, the reconstructed ambient matrix, its Gram matrix, and the explicit rank-one residual. Global best-rank optimality still comes from the manuscript's compression and lower-bound proof; this two-column calculation is a worked instance of that argument. No existence theorem or numerical SVD routine is executed.
+\takeaway{Conjugation preserves the complex Euclidean norm. A transpose is correct in the vectorization identity on \pagerefV{7}, but an adjoint is required for an isometric range lift.}
+
+\vpage{30}{Inverse reachability is still an inclusion}{A FINITE INVERSE WITH A CANCELLED ROUTE}{}
+Reuse the signed diamond from \pagerefV{14}, now as a complete operator:
+\[
+A=I+K=\mat{1&0&0&0\\1&1&0&0\\1&0&1&0\\0&1&-1&1}.
+\]
+The two routes from coordinate zero to coordinate three cancel, so $K^2=0$. Consequently
+\[
+A^{-1}=I-K=\mat{1&0&0&0\\-1&1&0&0\\-1&0&1&0\\0&-1&1&1}.
+\]
+\vfig[.52]{inverse_closure}
+\head{What the closure permits}
+The directed transitive closure includes $0\to3$, because it records existence of a route rather than the signed sum of its coefficients. Nevertheless $(A^{-1})_{30}=0$. Reachability is therefore an upper envelope for inverse support, just as it is for product support.
+
+The portable checker computes the inverse independently by rational row elimination, compares it with $I-K$, constructs Boolean reachability, and checks every inverse entry outside that closure. It separately rejects the assertion that every reachable transfer is nonzero.
+\head{Why the general proof is broader}
+This example happens to have a terminating Neumann polynomial. The general finite-dimensional theorem does not require nilpotence or a small norm. For a fixed source coordinate, its reachable-coordinate subspace is invariant under $A$. If $A$ is invertible, the restricted map is injective. Equal finite domain and codomain dimensions make it surjective, so the inverse preserves the same subspace.
+
+The finite-dimensional and invertibility hypotheses matter. In an infinite-dimensional space, an injective restriction can fail to be onto. A singular matrix does not have an inverse whose support can be tested at all.
+\takeaway{The inverse can never transmit outside the reachable subspace under the theorem's hypotheses. Inside that subspace, coefficient cancellation can still remove a structurally permitted interaction.}
+
+\vpage{31}{One tree can serve a weighted family}{SHARED COMPILATION HAS ITS OWN OBJECTIVE}{}
+Use a tree with one root and two terminal children. There are exactly two admissible prunings: keep the root, or split into both children. All declared errors and the split overhead are zero. Their additive total costs are:
+\begin{center}
+\begin{tabular}{lrr}\toprule
+Cost component & Keep & Split\\\midrule
+Setup paid once & 4 & 2\\
+Operator 1, per use & 2 & 8\\
+Operator 2, per use & 7 & 2\\\bottomrule
+\end{tabular}
+\end{center}
+\vfig[.45]{shared_family}
+With reuse weights $(r_1,r_2)=(1,3)$, the aggregated objectives are
+\[
+J_{\rm keep}=4+2+3\cdot7=27,\qquad
+J_{\rm split}=2+8+3\cdot2=16.
+\]
+The exact shared optimum is split. Operator 1 alone prefers keep on its per-use costs, while operator 2 prefers split. Choosing independently and trying to combine those decisions would not solve the declared one-pruning problem.
+\head{A hand-computable decision threshold}
+Fix $r_1=1$ and vary $r_2=r\ge0$. Keeping costs $6+7r$ and splitting costs $10+2r$. Splitting is strictly cheaper when $r>4/5$; its first integer reuse win is $r=1$. The checker evaluates both admissible choices for integers zero through four and checks the displayed totals at three.
+\head{Where the common-tree proof applies}
+The family corollary aggregates local keep costs and errors, then uses the same exact subtree recurrence. In this example, each row denotes the sum of the selected local leaf terms; it does not conceal a nonlocal discount. A setup shared by distant unrelated nodes, overlapping candidates, or a global resource constraint would need an enlarged state or a different model.
+\takeaway{Reuse weights change the objective before compilation. Shared optimality is exact for the supplied common tree and additive family costs, rather than for an unspecified set of future workloads.}
+
+\vpage{32}{Safe integers can still be conservative}{QUANTIZATION AND THE SIZE OF THE BUDGET TABLE}{}
+Let one integer unit represent $h=1/10$ of certified error. For an individual nonnegative error $e$, choosing
+\[
+w=\lceil e/h\rceil\qquad\text{ensures}\qquad e\le hw.
+\]
+Thus integer feasibility $\sum w\le B$ implies the real bound $\sum e\le hB$. This implication is checked before applying the exact option or tree recurrence.
+\vfig{quantization}
+\head{A false certificate and a conservative rejection}
+For errors $(3/50,2/25)$, rounding down assigns weights $(0,0)$ although their real sum is $7/50>1/10$. Rounding up gives $(1,1)$ and correctly excludes the assignment from budget one.
+
+Now change the errors to $(3/50,1/50)$. Their sum is $2/25\le1/10$, but separate ceilings still give $(1,1)$. The integer model rejects a genuinely real-feasible assignment. Conservative rounding protects soundness; it need not preserve every optimum of the unquantized problem.
+\head{Why the complexity is pseudo polynomial}
+For a declared integer budget $B$, a table has $B+1$ possible exact-weight states. A direct merge checks at most $(B+1)^2$ state pairs. At $B=255$, this means 256 states and 65,536 candidate pairs at a merge, even though the budget fits in eight binary digits.
+
+With a bounded number of children, the paper's direct tree implementation therefore has quadratic budget dependence at each node. Polynomial dependence on the numerical value of $B$ does not mean polynomial dependence on the binary input length. These are counts of declared states and pairs, not measured runtimes or claims that every state is reachable.
+\takeaway{The dynamic program is exact for its integer data. Conservative conversion and the numerical size of the budget are separate obligations that determine its accuracy and practical scale.}

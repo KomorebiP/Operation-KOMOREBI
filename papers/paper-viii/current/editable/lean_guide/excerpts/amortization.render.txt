@@ -1,0 +1,7 @@
+theorem integer_amortization_threshold (setup baseline candidate : ℝ)
+    (hs : 0 ≤ setup) (h : candidate < baseline) (reuse : ℕ) :
+    setup + (reuse : ℝ) * candidate < (reuse : ℝ) * baseline ↔
+      minimumReuse setup baseline candidate ≤ reuse := by
+  rw [amortization_threshold setup baseline candidate reuse h, minimumReuse]
+  rw [← Nat.floor_lt (div_nonneg hs (le_of_lt (sub_pos.mpr h)))]
+  omega

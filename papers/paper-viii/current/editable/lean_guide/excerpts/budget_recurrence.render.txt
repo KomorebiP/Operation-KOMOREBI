@@ -1,0 +1,7 @@
+def budgetTable (κ : α → R) (w : α → ℕ) (σ : α → R) :
+    CandidateTree α → ℕ → Option R
+  | .leaf a, b => BudgetDP.singletonTable (w a) (κ a) b
+  | .node a _ ts, b =>
+    BudgetDP.choose (BudgetDP.singletonTable (w a) (κ a) b)
+      (BudgetDP.add (some (σ a))
+        (BudgetDP.combine (fun i => budgetTable κ w σ (ts i)) b))

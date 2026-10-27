@@ -1,0 +1,9 @@
+structure OrderedThinSVD (G : Matrix r s ℂ) (d : ℕ) where
+  left : Matrix r (Fin d) ℂ
+  right : Matrix s (Fin d) ℂ
+  values : Fin d → ℝ
+  left_isometry : leftᴴ*left=1
+  right_isometry : rightᴴ*right=1
+  nonnegative : ∀ i, 0 ≤ values i
+  sorted : Antitone values
+  reconstruction : G=lift left right (diag values)

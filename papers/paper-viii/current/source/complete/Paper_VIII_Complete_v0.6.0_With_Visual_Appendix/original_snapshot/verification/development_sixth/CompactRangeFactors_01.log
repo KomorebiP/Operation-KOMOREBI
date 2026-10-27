@@ -1,0 +1,108 @@
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:29:0: error: automatically included section variable(s) unused in theorem `KomorebiPaperVIII.SmallCore.compactDim_eq_rank`:
+  [DecidableEq m]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq m] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:35:0: error: automatically included section variable(s) unused in theorem `KomorebiPaperVIII.SmallCore.compactQ_apply`:
+  [DecidableEq m]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq m] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:42:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  ∑ x, (↑((columnBasis A) j)).ofLp x * (starRingEnd ℂ) ((↑((columnBasis A) i)).ofLp x) = if i = j then 1 else 0
+but is expected to have type
+  ∑ x, (starRingEnd ℂ) ((↑((columnBasis A) i)).ofLp x) * (↑((columnBasis A) j)).ofLp x = if i = j then 1 else 0
+
+Note: The following definitions were not unfolded because their definition is not exposed:
+  Complex.mulAux ↦ 60
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:48:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (LinearMap.toMatrix ?v₂ ?v₃) ?f * (LinearMap.toMatrix ?v₁ ?v₂) ?g
+in the target expression
+  (LinearMap.toMatrix (columnBasis A).toBasis (EuclideanSpace.basisFun m ℂ).toBasis) (columnSpace A).subtype *
+      (LinearMap.toMatrix (EuclideanSpace.basisFun n ℂ).toBasis (columnBasis A).toBasis)
+        (Matrix.toEuclideanLin A).rangeRestrict =
+    A
+
+m : Type u_1
+n : Type u_2
+inst✝³ : Fintype m
+inst✝² : Fintype n
+inst✝¹ : DecidableEq m
+inst✝ : DecidableEq n
+A : Matrix m n ℂ
+⊢ (LinearMap.toMatrix (columnBasis A).toBasis (EuclideanSpace.basisFun m ℂ).toBasis) (columnSpace A).subtype *
+      (LinearMap.toMatrix (EuclideanSpace.basisFun n ℂ).toBasis (columnBasis A).toBasis)
+        (Matrix.toEuclideanLin A).rangeRestrict =
+    A
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    (Matrix.toEuclideanLin A).rangeRestrict
+  has type
+    @LinearMap ℂ ℂ Field.toSemifield.toSemiring Field.toSemifield.toSemiring (RingHom.id ℂ) (EuclideanSpace ℂ n)
+      (↥(Matrix.toEuclideanLin A).range) (WithLp.instAddCommGroup 2 ((i : n) → (fun x => ℂ) i)).toAddCommMonoid
+      (Matrix.toEuclideanLin A).range.addCommMonoid (WithLp.instModule 2 ℂ ((i : n) → (fun x => ℂ) i))
+      (Matrix.toEuclideanLin A).range.module
+  but is expected to have type
+    @LinearMap ℂ ℂ Complex.instCommSemiring.toSemiring Complex.instCommSemiring.toSemiring (RingHom.id ℂ)
+      (EuclideanSpace ℂ n) (↥(columnSpace A)) (PiLp.normedAddCommGroup 2 fun x => ℂ).toAddCommMonoid
+      (columnSpace A).normedAddCommGroup.toAddCommMonoid (PiLp.innerProductSpace fun x => ℂ).toModule
+      (columnSpace A).innerProductSpace.toModule
+  in the application
+    (LinearMap.toMatrix (EuclideanSpace.basisFun n ℂ).toBasis (columnBasis A).toBasis)
+      (Matrix.toEuclideanLin A).rangeRestrict
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:55:18: error: Tactic `rewrite` failed: Motive is dependent:
+  fun _a => (compactQ _a)ᴴ * _a
+
+Note: The rewrite tactic cannot substitute terms on which the type of the target expression depends. The type of the expression
+  (compactQ A)ᴴ * A
+depends on the value
+  A
+
+m : Type u_1
+n : Type u_2
+inst✝³ : Fintype m
+inst✝² : Fintype n
+inst✝¹ : DecidableEq m
+inst✝ : DecidableEq n
+A : Matrix m n ℂ
+| (compactQ A)ᴴ * A
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:62:8: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a => _a ≤ (compactR A).rank
+Error: Application type mismatch: The argument
+  compactR A
+has type
+  Matrix (Fin (compactDim A)) n ℂ
+but is expected to have type
+  Matrix (Fin _a) n ℂ
+in the application
+  (compactR A).rank
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+case a
+m : Type u_1
+n : Type u_2
+inst✝³ : Fintype m
+inst✝² : Fintype n
+inst✝¹ : DecidableEq m
+inst✝ : DecidableEq n
+A : Matrix m n ℂ
+⊢ compactDim A ≤ (compactR A).rank
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:66:25: error(lean.unknownIdentifier): Unknown constant `Matrix.rank_eq_zero`
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/CompactRangeFactors.lean:65:75: error: unsolved goals
+m : Type u_1
+n : Type u_2
+inst✝³ : Fintype m
+inst✝² : Fintype n
+inst✝¹ : DecidableEq m
+inst✝ : DecidableEq n
+A : Matrix m n ℂ
+⊢ A.rank = 0 ↔ A = 0

@@ -1,0 +1,11 @@
+theorem chainFactors_correct (n : ℕ) :
+    chainProduct (fun j => D j + U j * (V j).conjTranspose) n =
+      chainProduct D n + (chainFactors r D U V n).1 * (chainFactors r D U V n).2.conjTranspose := by
+  induction n with
+  | zero =>
+    ext i j
+    simp [chainProduct, chainFactors, ChainColumns]
+  | succ n ih =>
+    rw [chainProduct, ih]
+    exact bdlr_product (D n) (chainProduct D n) (U n) (V n)
+      (chainFactors r D U V n).1 (chainFactors r D U V n).2

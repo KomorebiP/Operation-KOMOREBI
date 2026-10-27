@@ -1,0 +1,14 @@
+theorem storedTree_correct (B : ℕ) (κ : α → R) (w : α → ℕ) (σ : α → R)
+    (t : CandidateTree α) (b : ℕ) (hb : b ≤ B) :
+    BudgetDP.lookup (storedTree B κ w σ t) b = budgetTable κ w σ t b := by
+  induction t generalizing b with
+  | leaf a => exact BudgetDP.lookup_tabulate B _ b hb
+  | node a n ts ih =>
+    simp only [storedTree, budgetTable, BudgetDP.lookup_tabulate _ _ _ hb]
+    congr 2
+    rw [BudgetDP.combineStored_correct _ b hb]
+    apply BudgetDP.combine_congr_local
+    intro i k hk
+    simpa only [BudgetDP.vector_get_ofFn] using ih i k (hk.trans hb)
+
+/- The executable tabulated compiler scans its stored root table. -/

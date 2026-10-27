@@ -1,0 +1,2 @@
+Historical record: provenance/pre_monograph_metadata/verification/COMPUTATION_AUDIT.md
+Current edition: verification/MONOGRAPH_VERIFICATION.json

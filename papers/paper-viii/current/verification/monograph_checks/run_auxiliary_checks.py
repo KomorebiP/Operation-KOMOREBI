@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json,platform,subprocess,sys
+ROOT=Path(__file__).resolve().parents[2];C=ROOT/'verification/monograph_checks'
+def main():
+ dest='verification/monograph_checks/run_auxiliary_20261009'
+ artifacts=['verification/monograph_checks/'+n for n in ['audit_auxiliary.py','check_corpus_arithmetic.py','check_traditional_models.py','RETRIEVED_INTEGRITY.json','Paper_VII_QuantumPacketCore_reference.lean','FOUNDATION_REFERENCE_ORIGIN.json']]+['verification/checks/run_experiment.py','verification/checks/validate_manifest.py','editable/traditional/monograph_data/exact_examples.json']
+ artifacts += [p.relative_to(ROOT).as_posix() for folder in [ROOT/'source',ROOT/'downloads',C/'run_vectors_20261009_final_vectors/generated_graphics',ROOT/'editable/visual_guide/graphics'] for p in sorted(folder.rglob('*')) if p.is_file()]
+ contract={'claim_id':'PAPER_VIII_MONOGRAPH_AUXILIARY_EXACT_SOURCE_CORPUS_20261009','software':[{'name':'Python','version':platform.python_version()}],'randomness':{'used':False,'generator':'','seed':None},'execution_artifacts':artifacts,'mathematics':{'assertion_tested':'1062source files and2rawarchive payloads match initial retrieved inventory; copied VII foundation matches VIII;30vector plate formulas unchanged except2header coordinate moves;264stored ratio and146throughput arithmetic fields;74exact assertions+5false controls in3new traditional finite models.','coefficient_domain':'Rawbytes/SHA256 and standardlibrary Fraction exact Q; corpus arithmetic binary64 with declared tolerance1e-12 relative/absolute.','conventions':'Stored metadata fields only, no inferred timing provenance. Matrix entries(target,source). Model tree costs/errors explicitly additive. Header geometry changes must be exact replacements.','inputs':artifacts,'bounds':{'source_files':1062,'archive_members':1062,'vector_plates':30,'corpus_rows':154,'ratio_fields':264,'gflops_fields':146,'exact_model_assertions':74,'false_controls':5,'precision_assignment_count':8,'tree_pruning_count':3,'matrix_dimension':4},'non_claims':['No fresh Lean/Lake kernel check.','No CPU/GPU timing or CUDA execution.','No same-device-output or correctness-reference provenance recovered.','Illustrative finite models do not extend the formal theorem contract.','Archive and manifest counts overlap and are not unique theorem counts.']}}
+ cp=C/'contracts/auxiliary_20261009.json';cp.write_text(json.dumps(contract,indent=2)+'\n')
+ argv=[sys.executable,'verification/checks/run_experiment.py','--root',str(ROOT),'--contract',str(cp),'--output',dest,'--result',dest+'/result.json','--result',dest+'/corpus.json','--result',dest+'/traditional_models.json','--timeout','240','--max-output-bytes','4194304','--max-memory-bytes','2147483648','--max-cpu-seconds','210','--max-cores','1','--max-threads','1']
+ for rel in artifacts:argv+=['--input',rel]
+ argv+=['--',sys.executable,'verification/monograph_checks/audit_auxiliary.py','--out',dest]
+ r=subprocess.run(argv,cwd=ROOT);assert r.returncode==0
+ val=subprocess.run([sys.executable,'verification/checks/validate_manifest.py',dest+'/manifest.json','--root',str(ROOT)],cwd=ROOT,text=True,capture_output=True);(ROOT/dest/'VALIDATION.txt').write_text(val.stdout+val.stderr);assert val.returncode==0,(val.stdout,val.stderr);print('PASS AUXILIARY MANIFEST')
+if __name__=='__main__':main()

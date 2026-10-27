@@ -1,0 +1,26 @@
+theorem weighted_tail_lower (a w : Fin d → ℝ) (ha : ∀ i, 0 ≤ a i)
+    (hsort : Antitone a) (hw0 : ∀ i, 0 ≤ w i) (hw1 : ∀ i, w i ≤ 1)
+    (k : ℕ) (hw : (d-k : ℕ) ≤ ∑ i,w i) :
+    (∑ i, if i.val<k then (0:ℝ) else a i) ≤ ∑ i, a i*w i := by
+  by_cases hk : k<d
+  · let μ := a ⟨k,hk⟩
+    have hμ : 0 ≤ μ := ha _
+    have hp : ∀ i : Fin d,
+        (if i.val<k then 0 else a i) + μ*(w i-(if i.val<k then 0 else 1)) ≤ a i*w i := by
+      intro i
+      by_cases hi : i.val<k
+      · have hle : μ ≤ a i := hsort (by show i.val ≤ k; omega)
+        simp only [hi,ite_true,zero_add,sub_zero]
+        exact mul_le_mul_of_nonneg_right hle (hw0 i)
+      · have hle : a i ≤ μ := hsort (by show k ≤ i.val; omega)
+        simp only [hi,ite_false]
+        nlinarith [mul_nonneg (sub_nonneg.mpr hle) (sub_nonneg.mpr (hw1 i))]
+    have hs := Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin d))) => hp i)
+    simp only [Finset.sum_add_distrib] at hs
+    have ht := tail_indicator_sum (d:=d) k hk.le
+    have hz : 0 ≤ μ*((∑ i,w i)-(d-k : ℕ)) := mul_nonneg hμ (sub_nonneg.mpr hw)
+    rw [←Finset.mul_sum,Finset.sum_sub_distrib,ht] at hs
+    linarith
+  · have he : ∀ i : Fin d, i.val<k := fun i => by omega
+    simp only [he,ite_true,Finset.sum_const_zero]
+    exact Finset.sum_nonneg (fun i _ => mul_nonneg (ha i) (hw0 i))

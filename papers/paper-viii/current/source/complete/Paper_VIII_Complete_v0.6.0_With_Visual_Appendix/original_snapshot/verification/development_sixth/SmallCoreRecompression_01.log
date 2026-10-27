@@ -1,0 +1,86 @@
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/SmallCoreRecompression.lean:40:0: error: cannot omit referenced section variable `inst✝⁹`
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/SmallCoreRecompression.lean:64:0: error: automatically included section variable(s) unused in theorem `KomorebiPaperVIII.SmallCore.recompressed_product`:
+  [Fintype m]
+  [Fintype n]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype m] [Fintype n] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/SmallCoreRecompression.lean:80:6: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a => _aᴴ * _a * svd.right = svd.right * diag fun i => svd.values i ^ 2
+Error: Application type mismatch: The argument
+  svd
+has type
+  OrderedThinSVD G d
+but is expected to have type
+  OrderedThinSVD _a d
+in the application
+  svd.right
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+r : Type u_3
+s : Type u_4
+inst✝³ : Fintype r
+inst✝² : Fintype s
+inst✝¹ : DecidableEq r
+inst✝ : DecidableEq s
+d : ℕ
+G : Matrix r s ℂ
+svd : OrderedThinSVD G d
+hself : (diag svd.values)ᴴ = diag svd.values
+hsquare : diag svd.values * diag svd.values = diag fun i => svd.values i ^ 2
+⊢ Gᴴ * G * svd.right = svd.right * diag fun i => svd.values i ^ 2
+/mnt/data/PRSC_VIII_v0.6.0_Checked_Sixth_Block/formalization/SmallCoreRecompression.lean:99:27: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a =>
+    BestRank spectralNorm (lift Q V _a) (lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) k ∧
+      BestRank frobeniusNorm (lift Q V _a) (lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) k ∧
+        spectralNorm (lift Q V _a - lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) =
+            nextSingular svd.values k ∧
+          frobeniusNorm (lift Q V _a - lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) ^ 2 =
+              tailEnergy svd.values k ∧
+            frobeniusNorm (lift Q V _a - lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) =
+              √(tailEnergy svd.values k)
+Error: Application type mismatch: The argument
+  svd
+has type
+  OrderedThinSVD G d
+but is expected to have type
+  OrderedThinSVD _a d
+in the application
+  svd.left
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+m : Type u_1
+n : Type u_2
+r : Type u_3
+s : Type u_4
+inst✝⁷ : Fintype m
+inst✝⁶ : Fintype n
+inst✝⁵ : Fintype r
+inst✝⁴ : Fintype s
+inst✝³ : DecidableEq m
+inst✝² : DecidableEq n
+inst✝¹ : DecidableEq r
+inst✝ : DecidableEq s
+d : ℕ
+Q : Matrix m r ℂ
+V : Matrix n s ℂ
+hQ : Qᴴ * Q = 1
+hV : Vᴴ * V = 1
+G : Matrix r s ℂ
+svd : OrderedThinSVD G d
+k : ℕ
+⊢ BestRank spectralNorm (lift Q V G) (lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) k ∧
+    BestRank frobeniusNorm (lift Q V G) (lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) k ∧
+      spectralNorm (lift Q V G - lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) =
+          nextSingular svd.values k ∧
+        frobeniusNorm (lift Q V G - lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) ^ 2 =
+            tailEnergy svd.values k ∧
+          frobeniusNorm (lift Q V G - lift (Q * svd.left) (V * svd.right) (diag (kept svd.values k))) =
+            √(tailEnergy svd.values k)

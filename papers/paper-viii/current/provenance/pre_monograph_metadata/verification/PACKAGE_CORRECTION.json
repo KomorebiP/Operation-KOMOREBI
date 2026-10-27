@@ -1,0 +1,16 @@
+{
+  "status": "CORRECTED",
+  "problem": "Initial outer index excluded every basename MANIFEST_SHA256.json, including two preserved nested raw manifests.",
+  "effect": "The two files were retained and raw-byte checked but not covered by the initial outer file index. No source or PDF changed.",
+  "correction": "Exclude only the exact outer root/manifest path in both the indexer and verifier; assert ZIP file count equals indexed payload count plus one.",
+  "superseded_initial_archive_sha256": "0b7b646f424b9de6fdad4900493ed38aa8ae054c803ef855ee7080122a54dec2",
+  "validation": "The corrected whole-file index and byte-for-byte ZIP comparison are run before delivery.",
+  "save_roundtrip_issue": {
+    "observed_saved_bytes": 39032768,
+    "observed_saved_sha256": "cc33c383a05ffed2fef55364132a6ee911145c0640ea589cc43259a0c4b98f68",
+    "zip_central_directory_present": false,
+    "effect": "Three saved PDFs and the full extracted edition remained intact; only the saved archive was incomplete.",
+    "root_cause": "Not established.",
+    "repair": "Build and verify a temporary archive, fsync, atomically replace the delivery path, then replace the same saved archive identity and verify the saved bytes."
+  }
+}

@@ -1,0 +1,5 @@
+theorem recompression_full (Q : Matrix m r ℂ) (V : Matrix n s ℂ)
+    \CodeChar{123}G : Matrix r s ℂ\CodeChar{125} (svd : OrderedThinSVD G d) (k : ℕ) (hk : d ≤ k) :
+    recompressLeft Q svd k*(recompressRight V svd k)ᴴ = lift Q V G := by
+  rw [recompressed_product,kept_all _ k hk,←lift_comp]
+  exact congrArg (lift Q V) svd.reconstruction.symm

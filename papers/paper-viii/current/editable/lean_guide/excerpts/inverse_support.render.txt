@@ -1,0 +1,7 @@
+theorem inverse_block_zero_of_no_path (A B : R) (hBA : B*A = 1) (b a : I)
+    (h : ¬ Reachable P A b a) : P.block B b a = 0 := by
+  have hm := invariant_space_inverse (K := K) A B hBA
+    (reachableSpace (K := K) P A a) (reachableSpace_invariant P A a)
+    (P.proj a) (seed_mem_reachableSpace P A a)
+  have hz := hm b h
+  simpa only [PacketFamily.block,mul_assoc] using hz

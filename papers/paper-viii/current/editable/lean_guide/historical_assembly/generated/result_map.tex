@@ -1,0 +1,643 @@
+\subsection{2.3 — Exact evaluation}
+\label{result:2.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite orthogonal idempotent family summing to one. Exact nonzero support, not thresholded support. Actual rectangular matrix batches are covered.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.exact_active_evaluation}; \code{PacketIR.lean}, line 41.
+\item \code{KomorebiPaperVIII.exact_active_action}; \code{PacketIR.lean}, line 52.
+\item \code{KomorebiPaperVIII.exact_matrix_batch}; \code{PacketIR.lean}, line 145.
+\end{itemize}
+\subsection{2.5 — Block composition}
+\label{result:2.5}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite projector family over a ring. Relational composition gives an inclusion because nonzero path terms can cancel.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.exact_block_composition}; \code{PacketIR.lean}, line 58.
+\item \code{KomorebiPaperVIII.product_support_inclusion}; \code{PacketIR.lean}, line 63.
+\end{itemize}
+\subsection{2.6 — Adjoint and tensor semantics}
+\label{result:2.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Adjoint identity explicitly assumes self-adjoint projectors in a star ring. Tensor identity uses actual Kronecker products of finite matrices.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.exact_adjoint_block}; \code{PacketIR.lean}, line 95.
+\item \code{KomorebiPaperVIII.exact_tensor_block}; \code{PacketIR.lean}, line 135.
+\end{itemize}
+\subsection{2.9 — Contract conversion}
+\label{result:2.9}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Formal output conversion includes the actual decoding map and its declared time. Direct downstream composition is proved. This is a contract model, not independent validation of timings.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.contract_conversion}; \code{SchedulingContracts.lean}, line 54.
+\item \code{KomorebiPaperVIII.direct_compressed_consumption}; \code{SchedulingContracts.lean}, line 62.
+\item \code{KomorebiPaperVIII.omitted_decode_understates_time}; \code{SchedulingContracts.lean}, line 69.
+\end{itemize}
+\subsection{3.1 — Dense and packet application counts}
+\label{result:3.1}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite scalar address and modeled multiply-accumulate event cardinalities. Two scalar operations per coefficient/right-hand side. No device instruction claim.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.packet_storage_count}; \code{PacketCostModels.lean}, line 27.
+\item \code{KomorebiPaperVIII.packet_application_count}; \code{PacketCostModels.lean}, line 31.
+\item \code{KomorebiPaperVIII.dense_storage_count}; \code{PacketCostModels.lean}, line 36.
+\item \code{KomorebiPaperVIII.dense_application_count}; \code{PacketCostModels.lean}, line 39.
+\end{itemize}
+\subsection{3.2 — Equal diagonal packets}
+\label{result:3.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Equal widths, n = card(I)*b. Positive/nonzero denominators for real ratios. Work-ratio specialization follows from equal\_bdlr\_reduction at r=0.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.equal_diagonal_storage}; \code{PacketCostModels.lean}, line 44.
+\item \code{KomorebiPaperVIII.equal_diagonal_work}; \code{PacketCostModels.lean}, line 48.
+\item \code{KomorebiPaperVIII.equal_block_reduction}; \code{PacketCostModels.lean}, line 87.
+\end{itemize}
+\subsection{3.4 — BDLR application and storage}
+\label{result:3.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Explicit diagonal and two thin factor address/event types; third kernel accumulates into the diagonal result. The actual algebraic action is the unchanged LowRankAlgebra.bdlr\_apply theorem.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.bdlr_storage_count}; \code{PacketCostModels.lean}, line 58.
+\item \code{KomorebiPaperVIII.bdlr_application_count}; \code{PacketCostModels.lean}, line 68.
+\item \code{KomorebiPaperVIII.equal_bdlr_storage}; \code{PacketCostModels.lean}, line 75.
+\item \code{KomorebiPaperVIII.equal_bdlr_work}; \code{PacketCostModels.lean}, line 81.
+\item \code{KomorebiPaperVIII.equal_bdlr_reduction}; \code{PacketCostModels.lean}, line 91.
+\end{itemize}
+\subsection{3.6 — Streaming byte count}
+\label{result:3.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} One block read, one source read, target read and write per active edge, no interedge reuse. Count is of declared events.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.streaming_value_count}; \code{PacketCostModels.lean}, line 102.
+\item \code{KomorebiPaperVIII.streaming_byte_count}; \code{PacketCostModels.lean}, line 111.
+\end{itemize}
+\subsection{3.8 — Roofline lower bound}
+\label{result:3.8}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Time bound assumes positive peak rates and actual capacity inequalities. Work-rate bound assumes nonnegative work, positive bytes and elapsed time. These hypotheses are explicit.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.roofline_time_bound}; \code{PacketCostModels.lean}, line 118.
+\item \code{KomorebiPaperVIII.roofline_work_rate}; \code{PacketCostModels.lean}, line 126.
+\end{itemize}
+\subsection{3.9 — Capacity threshold}
+\label{result:3.9}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Dense scalar capacity equivalence uses n,M nonnegative and scalar byte size positive. BDLR natural-number storage inequality is exact; workspace memory is excluded.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.dense_capacity_threshold}; \code{PacketCostModels.lean}, line 139.
+\item \code{KomorebiPaperVIII.bdlr_capacity_threshold}; \code{PacketCostModels.lean}, line 143.
+\end{itemize}
+\subsection{3.10 — Materialization cost}
+\label{result:3.10}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Explicit dense low-rank product followed by one scalar addition per output has 2*n\textasciicircum{}2*r+n\textasciicircum{}2 modeled operations. The remainder has the exact quadratic bound n\textasciicircum{}2, stronger than the displayed big-O term; no generic implementation lower bound.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.materialization_work_count}; \code{PacketCostModels.lean}, line 151.
+\item \code{KomorebiPaperVIII.materialization_quadratic_remainder}; \code{PacketCostModels.lean}, line 156.
+\item \code{KomorebiPaperVIII.dense_storage_count}; \code{PacketCostModels.lean}, line 36.
+\end{itemize}
+\subsection{4.1 — Equal block banded count}
+\label{result:4.1}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual band address subtype in Fin p x Fin p. Count p*(2*w+1)-w*(w+1) proved from finite sums under w<p. Explicit stored-scalar and multiply/accumulate event types give b\textasciicircum{}2*N and 2*q*b\textasciicircum{}2*N. The manuscript substitution p=n/b additionally needs b>0 and exact divisibility. No hardware operation timing claim.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.banded_block_count}; \code{BandedCount.lean}, line 73.
+\item \code{KomorebiPaperVIII.banded_storage_count}; \code{BandedCount.lean}, line 85.
+\item \code{KomorebiPaperVIII.banded_operation_count}; \code{BandedCount.lean}, line 90.
+\end{itemize}
+\subsection{4.2 — Sparse plus low rank application}
+\label{result:4.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Counts actual sparse-value and thin-factor address types, excluding sparse index metadata. Algebraic action follows from the upstream bdlr\_apply identity, which does not require its D argument to be diagonal.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.sparse_low_rank_storage_count}; \code{PacketCostModels.lean}, line 164.
+\item \code{KomorebiPaperVIII.sparse_low_rank_work_count}; \code{PacketCostModels.lean}, line 169.
+\end{itemize}
+\subsection{4.3 — Circulant spectral representation}
+\label{result:4.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual circulant and unitary-normalized Fourier matrix on ZMod n for every n>0. The exponential formula, both unitarity identities, exact diagonalization and two-transform application are checked. No FFT complexity or hardware execution is claimed.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.fourier_matrix_exponential}; \code{CirculantFourier.lean}, line 39.
+\item \code{KomorebiPaperVIII.fourier_unitary}; \code{CirculantFourier.lean}, line 83.
+\item \code{KomorebiPaperVIII.circulant_spectral_representation}; \code{CirculantFourier.lean}, line 150.
+\item \code{KomorebiPaperVIII.circulant_fourier_application}; \code{CirculantFourier.lean}, line 155.
+\end{itemize}
+\subsection{4.4 — Toeplitz circulant embedding}
+\label{result:4.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual complex Toeplitz matrix, explicitly reversed generator of length n+n and Fin.addCases zero padding for n>0. The diagonal uses c[0]; r[0] is irrelevant. Neither symmetry nor Hermiticity is assumed.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.toeplitz_circulant_block}; \code{ToeplitzEmbedding.lean}, line 28.
+\item \code{KomorebiPaperVIII.toeplitz_embedding_action}; \code{ToeplitzEmbedding.lean}, line 54.
+\item \code{KomorebiPaperVIII.toeplitz_generator_first_half}; \code{ToeplitzEmbedding.lean}, line 60.
+\item \code{KomorebiPaperVIII.toeplitz_generator_middle}; \code{ToeplitzEmbedding.lean}, line 64.
+\end{itemize}
+\subsection{4.5 — Kronecker modewise application}
+\label{result:4.5}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual column-major Matrix.vec and actual Kronecker products; the right factor uses transpose, not adjoint. Arithmetic and factor-storage counts are cardinalities of finite address/event types.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.kronecker_modewise}; \code{StructuredTensor.lean}, line 19.
+\item \code{KomorebiPaperVIII.kronecker_modewise_work}; \code{StructuredTensor.lean}, line 27.
+\item \code{KomorebiPaperVIII.kronecker_factor_storage}; \code{StructuredTensor.lean}, line 32.
+\end{itemize}
+\subsection{4.6 — Equal tensor factors}
+\label{result:4.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual arbitrary-length recursive tensor matrix and slice-by-slice contraction. Exact event count 2*k*d\textasciicircum{}(k+1) and storage k*d\textasciicircum{}2; includes k=0 and d=0. Model charges two operations per multiply-accumulate.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.tensor_dimension}; \code{StructuredTensor.lean}, line 51.
+\item \code{KomorebiPaperVIII.tensor_apply_correct}; \code{StructuredTensor.lean}, line 73.
+\item \code{KomorebiPaperVIII.tensor_modewise_work}; \code{StructuredTensor.lean}, line 112.
+\item \code{KomorebiPaperVIII.tensor_factor_storage}; \code{StructuredTensor.lean}, line 126.
+\end{itemize}
+\subsection{4.7 — Walsh Hadamard recursion}
+\label{result:4.7}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Recursively constructed complex Walsh matrices and actual sum/difference butterfly. Proves ordinary-transpose orthogonality, algorithm correctness and exactly N*log2(N) additions/subtractions for N=2\textasciicircum{}k, including N=1.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.walsh_orthogonal}; \code{WalshTransform.lean}, line 33.
+\item \code{KomorebiPaperVIII.walsh_apply_correct}; \code{WalshTransform.lean}, line 60.
+\item \code{KomorebiPaperVIII.walsh_operation_count}; \code{WalshTransform.lean}, line 99.
+\item \code{KomorebiPaperVIII.walsh_log_operation_count}; \code{WalshTransform.lean}, line 115.
+\end{itemize}
+\subsection{5.1 — Exact BDLR product}
+\label{result:5.1}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite rectangular factors over a field with involution. Diagonal closure and actual correction rank are proved. No materialization or timing claim.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.packet_diagonal_product}; \code{LowRankAlgebra.lean}, line 33.
+\item \code{KomorebiPaperVIII.bdlr_product}; \code{LowRankAlgebra.lean}, line 57.
+\item \code{KomorebiPaperVIII.bdlr_product_rank_bound}; \code{LowRankAlgebra.lean}, line 68.
+\end{itemize}
+\subsection{5.2 — Rank growth in a product chain}
+\label{result:5.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual variable-rank thin matrix factors are constructed for every length, including zero rank and the empty product. The correction matrix rank is bounded by the sum of factor widths. Packet diagonality of the base product is derived.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.chainFactors_correct}; \code{LowRankChains.lean}, line 56.
+\item \code{KomorebiPaperVIII.bdlr_chain_rank_bound}; \code{LowRankChains.lean}, line 69.
+\item \code{KomorebiPaperVIII.packet_diagonal_chain}; \code{LowRankChains.lean}, line 87.
+\end{itemize}
+\subsection{5.3 — Woodbury inversion}
+\label{result:5.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Both D and I+V* D\textasciicircum{}\{-1\} U are units. The update is proved invertible. Ordinary matrix inverse and arbitrary right-hand-side batches. Uses Mathlib classical Woodbury identity.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.bdlr_woodbury}; \code{LowRankAlgebra.lean}, line 89.
+\item \code{KomorebiPaperVIII.bdlr_update_isUnit}; \code{LowRankAlgebra.lean}, line 97.
+\item \code{KomorebiPaperVIII.bdlr_woodbury_solve}; \code{LowRankAlgebra.lean}, line 110.
+\end{itemize}
+\subsection{5.4 — Inverse norm bound}
+\label{result:5.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Real or complex matrices with the Hilbert-space L2 operator norm, including rectangular factors. Same two invertibility assumptions as 5.3.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.bdlr_inverse_norm_bound}; \code{LowRankAlgebra.lean}, line 126.
+\end{itemize}
+\subsection{5.5 — Eckart Young Mirsky theorem}
+\label{result:5.5}
+\textbf{Recorded status.} external\_input\_with\_checked\_svd\_data\_specialization.
+
+\textbf{Recorded hypotheses and scope.} Ordered diagonal spectral/Frobenius best-rank inequalities and rectangular isometric transfer are now independently checked as supporting results for 5.6. General SVD existence and a theorem phrased in the canonical Mathlib singularValues API remain outside this release. This classical entry stays separately tracked, not added to the 56 manuscript-proved count.
+
+\subsection{5.6 — Small core recompression}
+\label{result:5.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual compact orthonormal column-space factorizations with dimensions equal to the input matrix ranks. For any supplied ordered thin SVD of the actual small core, constructs thin square-root factors with min(d,k) columns, proves rank <= k, global spectral and Frobenius optimality against every ambient competitor, and exact tail errors. No assumed optimality, tail formulas, norm invariance or rank identities. Includes zero and rank-deficient factors, k=0, k>=d and repeated singular values. SVD existence/computation, floating-point QR/SVD, and canonical Mathlib singularValues identification are not independently formalized. The supplied SVD equations are explicit hypotheses, as in the manuscript.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.SmallCore.small_core_optimal_recompression}; \code{SmallCoreRecompression.lean}, line 124.
+\item \code{KomorebiPaperVIII.SmallCore.recompression_optimality}; \code{SmallCoreRecompression.lean}, line 91.
+\item \code{KomorebiPaperVIII.SmallCore.compact_product_reconstruction}; \code{SmallCoreTransfer.lean}, line 61.
+\item \code{KomorebiPaperVIII.SmallCore.diagonal_spectral_best}; \code{SpectralOptimality.lean}, line 120.
+\item \code{KomorebiPaperVIII.SmallCore.diagonal_frobenius_best}; \code{FrobeniusOptimality.lean}, line 106.
+\end{itemize}
+\subsection{5.8 — Product chain perturbation}
+\label{result:5.8}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual ordered products in a normed ring with norm-one identity. Includes the empty chain. The displayed finite sum uses perturbed suffix norms and exact prefix norms. This covers operators on nonzero normed spaces, without a commutativity assumption.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.product_chain_perturbation}; \code{ProductChainError.lean}, line 148.
+\item \code{KomorebiPaperVIII.product_chain_error_bound}; \code{ProductChainError.lean}, line 129.
+\end{itemize}
+\subsection{5.9 — Certified repeated recompression}
+\label{result:5.9}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual left-multiplied iterates with additive post-product residuals in a normed ring. Both actual residual norms and arbitrary certified error budgets are supported, including the empty iteration.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.repeated_recompression_bound}; \code{ProductChainError.lean}, line 100.
+\item \code{KomorebiPaperVIII.repeated_recompression_actual_error}; \code{ProductChainError.lean}, line 114.
+\end{itemize}
+\subsection{6.1 — Path support of powers}
+\label{result:6.1}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Recursive finite sum over active paths equals the actual block of A\textasciicircum{}n. Includes length zero explicitly.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.power_path_expansion}; \code{TransferSupport.lean}, line 37.
+\item \code{KomorebiPaperVIII.power_block_zero_of_no_path}; \code{TransferSupport.lean}, line 74.
+\item \code{KomorebiPaperVIII.power_support_inclusion}; \code{TransferSupport.lean}, line 79.
+\end{itemize}
+\subsection{6.2 — Polynomial support}
+\label{result:6.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual finite polynomial sum in an algebra. Support contained in the union over powers, including the constant term.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.polynomial_support_inclusion}; \code{TransferSupport.lean}, line 127.
+\item \code{KomorebiPaperVIII.polynomial_zero_of_no_paths}; \code{TransferSupport.lean}, line 142.
+\end{itemize}
+\subsection{6.3 — Acyclic transfer nilpotence}
+\label{result:6.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Absence of paths of length h+1 forces A\textasciicircum{}(h+1)=0. Also derived from a supplied strictly increasing topological level certificate. No graph-level construction algorithm is claimed.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.nilpotent_of_path_bound}; \code{TransferSupport.lean}, line 86.
+\item \code{KomorebiPaperVIII.nilpotent_of_topological_levels}; \code{TransferSupport.lean}, line 109.
+\end{itemize}
+\subsection{6.5 — Level schedule for a triangular solve}
+\label{result:6.5}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual well-founded forward substitution and stage evaluator in dependent, possibly unequal block spaces. Finite acyclic graph, invertible local diagonal maps, and arbitrary linear edge transfers. No precomputed solution or topological schedule is assumed. Stages read only predecessors and solve the original block equations at canonical depth.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.DAG.Graph.solve_correct}; \code{TriangularSolve.lean}, line 38.
+\item \code{KomorebiPaperVIII.DAG.Graph.solve_unique}; \code{TriangularSolve.lean}, line 46.
+\item \code{KomorebiPaperVIII.DAG.Graph.triangular_bijective}; \code{TriangularSolve.lean}, line 65.
+\item \code{KomorebiPaperVIII.DAG.Graph.stagedSolve_correct_through}; \code{TriangularSolve.lean}, line 91.
+\item \code{KomorebiPaperVIII.DAG.Graph.level_schedule_solves}; \code{TriangularSolve.lean}, line 112.
+\end{itemize}
+\subsection{6.6 — Sequential depth}
+\label{result:6.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Canonical predecessor-max levels are constructed from acyclicity through strict ancestor-cardinality decrease. For nonempty finite graphs, attained maximum equals one plus longest edge-path length. Empty graph has depth zero. This is an ideal unit-task schedule, not a hardware timing theorem.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.DAG.Graph.level_attained}; \code{GraphSchedules.lean}, line 101.
+\item \code{KomorebiPaperVIII.DAG.Graph.path_length_le_depth}; \code{GraphSchedules.lean}, line 156.
+\item \code{KomorebiPaperVIII.DAG.Graph.depth_attained}; \code{GraphSchedules.lean}, line 164.
+\item \code{KomorebiPaperVIII.DAG.Graph.empty_depth}; \code{GraphSchedules.lean}, line 177.
+\end{itemize}
+\subsection{6.7 — Inverse support lies in the transitive closure}
+\label{result:6.7}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual reachable packet subspace in a finite-dimensional algebra is invariant. A left inverse makes the restricted forward map injective, hence surjective, yielding inverse invariance. Actual nonsingular matrix inverse specialization. Reachability is reflexive: zero-length paths are included. No inverse-support hypothesis is assumed.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.inverse_block_zero_of_no_path}; \code{InverseSupport.lean}, line 94.
+\item \code{KomorebiPaperVIII.inverse_support_inclusion}; \code{InverseSupport.lean}, line 102.
+\item \code{KomorebiPaperVIII.matrix_inverse_support}; \code{InverseSupport.lean}, line 116.
+\end{itemize}
+\subsection{6.8 — Schur support inclusion}
+\label{result:6.8}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual rectangular retained-hidden factors and nonsingular hidden matrix inverse. Nonzero Schur block implies a direct retained edge or nonzero entrance, reachable hidden path (possibly zero length), and nonzero exit. Only support inclusion is asserted; cancellation may remove a permitted block.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.schur_correction_expansion}; \code{SchurSupport.lean}, line 25.
+\item \code{KomorebiPaperVIII.schur_correction_support}; \code{SchurSupport.lean}, line 33.
+\item \code{KomorebiPaperVIII.schur_support_inclusion}; \code{SchurSupport.lean}, line 57.
+\item \code{KomorebiPaperVIII.schur_zero_of_no_route}; \code{SchurSupport.lean}, line 76.
+\end{itemize}
+\subsection{7.2 — Invariant packet Krylov decomposition}
+\label{result:7.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual bounded linear maps and spans of finite power orbits. Commutation with the complete finite projector family gives the power expansion and Krylov inclusion. Local spaces lie in the actual projector ranges and their sum is direct. No equality of the global and local Krylov spaces is asserted.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.invariant_packet_power_expansion}; \code{KrylovPackets.lean}, line 76.
+\item \code{KomorebiPaperVIII.invariant_packet_krylov}; \code{KrylovPackets.lean}, line 89.
+\item \code{KomorebiPaperVIII.local_krylov_direct}; \code{KrylovPackets.lean}, line 131.
+\end{itemize}
+\subsection{7.3 — Approximate packet Krylov bound}
+\label{result:7.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Positive integer power, actual operator norm, and actual Metric.infDist to the sum of local Krylov spaces. Membership of the comparison vector D\textasciicircum{}j v is derived from packet diagonality. The power estimate also allows a trivial normed ring.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.approximate_packet_power_bound}; \code{KrylovPackets.lean}, line 170.
+\item \code{KomorebiPaperVIII.approximate_packet_krylov_distance}; \code{KrylovPackets.lean}, line 183.
+\end{itemize}
+\subsection{7.4 — Block Jacobi condition bound}
+\label{result:7.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Nonempty finite complex matrices, D positive definite and D+K positive definite. D\textasciicircum{}(-1/2) is the actual inverse of CFC.sqrt D. With ||D\textasciicircum{}(-1/2) K D\textasciicircum{}(-1/2)||\_2 <= eta <1, proves the condition product ||B||\_2*||B\textasciicircum{}(-1)||\_2 <=(1+eta)/(1-eta). Norms are the Euclidean operator norm. The inverse estimate does not require a separately assumed Hermitian perturbation.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.invSqrt_isUnit}; \code{BlockJacobi.lean}, line 59.
+\item \code{KomorebiPaperVIII.invSqrt_normalizes}; \code{BlockJacobi.lean}, line 65.
+\item \code{KomorebiPaperVIII.normalized_decomposition}; \code{BlockJacobi.lean}, line 80.
+\item \code{KomorebiPaperVIII.block_jacobi_condition}; \code{BlockJacobi.lean}, line 87.
+\end{itemize}
+\subsection{7.5 — Preconditioned conjugate gradient convergence}
+\label{result:7.5}
+\textbf{Recorded status.} external\_input\_not\_independently\_formalized.
+
+\textbf{Recorded hypotheses and scope.} Classical input tracked separately; see the boundary discussion.
+
+\subsection{7.6 — Certified packet preconditioning}
+\label{result:7.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Monotonicity of the actual sqrt-based CG factor and its value at the normalized matrix condition number. Propagates an explicit classical energy-error estimate to the certified eta bound. Classical input 7.5 (CG convergence algorithm theorem) is not reproved or silently assumed as a new axiom.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.matrix_condition_ge_one}; \code{BlockJacobi.lean}, line 97.
+\item \code{KomorebiPaperVIII.cgFactor_mono}; \code{BlockJacobi.lean}, line 106.
+\item \code{KomorebiPaperVIII.certified_packet_factor}; \code{BlockJacobi.lean}, line 126.
+\item \code{KomorebiPaperVIII.certified_energy_error}; \code{BlockJacobi.lean}, line 134.
+\end{itemize}
+\subsection{8.1 — Packet perturbation certificate}
+\label{result:8.1}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual continuous linear maps and their operator norm. Source support is assumed only for errors, a weaker sufficient hypothesis. Vector and uniform operator bounds. Not an IEEE/CUDA implementation verification.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.packet_perturbation_bound}; \code{PacketPerturbation.lean}, line 35.
+\item \code{KomorebiPaperVIII.packet_relative_perturbation_bound}; \code{PacketPerturbation.lean}, line 42.
+\item \code{KomorebiPaperVIII.packet_operator_perturbation_bound}; \code{PacketPerturbation.lean}, line 51.
+\item \code{KomorebiPaperVIII.contractive_packet_operator_bound}; \code{PacketPerturbation.lean}, line 59.
+\end{itemize}
+\subsection{8.2 — Floating point matrix product model}
+\label{result:8.2}
+\textbf{Recorded status.} external\_input\_not\_independently\_formalized.
+
+\textbf{Recorded hypotheses and scope.} Classical input tracked separately; see the boundary discussion.
+
+\subsection{8.3 — Mixed precision product chain}
+\label{result:8.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Stagewise packet bounds are uniform operator-norm certificates on a nonzero normed space, not vector-specific bounds reused as operator norms. The exact-product perturbation theorem propagates those certificates. Vector error follows by multiplying the operator bound by the input norm.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.mixed_precision_product_chain}; \code{ProductChainError.lean}, line 164.
+\item \code{KomorebiPaperVIII.chain_action_error}; \code{ProductChainError.lean}, line 180.
+\end{itemize}
+\subsection{8.4 — Continuous precision allocation}
+\label{result:8.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite nonempty edge set, strictly positive sensitivities, costs, and budget. Actual sum c*log(1/eps). Feasibility, global optimality, strict inequality away from formula, and unique minimizer. No KKT or convexity result is assumed.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.optimal_tolerance_feasible}; \code{ContinuousPrecision.lean}, line 48.
+\item \code{KomorebiPaperVIII.precision_allocation_optimal}; \code{ContinuousPrecision.lean}, line 80.
+\item \code{KomorebiPaperVIII.precision_allocation_strict}; \code{ContinuousPrecision.lean}, line 100.
+\item \code{KomorebiPaperVIII.continuous_precision_unique_minimizer}; \code{ContinuousPrecision.lean}, line 131.
+\end{itemize}
+\subsection{8.5 — Clipped precision allocation}
+\label{result:8.5}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite nonempty set; strictly positive sensitivities, costs and caps; 0<budget<=total capped tolerance. Existence by IVT; global strict supporting-log inequality and unique minimizing vector. Unique positive multiplier only strictly below the maximum; endpoint nonuniqueness checked.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.clipped_scale_exists}; \code{ClippedPrecision.lean}, line 74.
+\item \code{KomorebiPaperVIII.clipped_unique_minimizer}; \code{ClippedPrecision.lean}, line 211.
+\item \code{KomorebiPaperVIII.clipped_multiplier_exists_unique}; \code{ClippedPrecision.lean}, line 250.
+\item \code{KomorebiPaperVIII.clipped_endpoint_nonunique_multiplier}; \code{ClippedPrecision.lean}, line 244.
+\end{itemize}
+\subsection{8.7 — Exact discrete precision program}
+\label{result:8.7}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Independent legal assignments choose one listed option per edge. Nonnegative integer weights and exact ordered-field costs. Exact-weight states plus the final budget scan give the optimum with attainment or exact infeasibility. The residual-budget subtraction is guarded. StoredBudgetCompiler proves the actual array-backed implementation equal to this specification.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.BudgetDP.discrete_precision_program}; \code{DiscretePrecision.lean}, line 96.
+\item \code{KomorebiPaperVIII.BudgetDP.discreteBudget_some_iff}; \code{DiscretePrecision.lean}, line 110.
+\item \code{KomorebiPaperVIII.BudgetDP.discreteBudget_none_iff}; \code{DiscretePrecision.lean}, line 124.
+\item \code{KomorebiPaperVIII.BudgetDP.storedDiscreteBudget_correct}; \code{StoredBudgetCompiler.lean}, line 186.
+\end{itemize}
+\subsection{9.1 — Simultaneous spectral decomposition}
+\label{result:9.1}
+\textbf{Recorded status.} external\_input\_not\_independently\_formalized.
+
+\textbf{Recorded hypotheses and scope.} Classical input tracked separately; see the boundary discussion.
+
+\subsection{9.2 — Exact block discovery certificate}
+\label{result:9.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual finite complex matrices and arbitrary complete orthogonal projector family, not only standard coordinate projectors. Hilbert-Schmidt orthogonality via adjoint products and cyclic trace proves the squared Frobenius residual identity. Separate Euclidean operator-norm triangle inequality certificate. This certifies a supplied packet system, not autonomous discovery.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.compression_residual}; \code{DiscoveryCertificate.lean}, line 49.
+\item \code{KomorebiPaperVIII.block_trace_orthogonal}; \code{DiscoveryCertificate.lean}, line 54.
+\item \code{KomorebiPaperVIII.discovery_frobenius_certificate}; \code{DiscoveryCertificate.lean}, line 126.
+\item \code{KomorebiPaperVIII.discovery_operator_certificate}; \code{DiscoveryCertificate.lean}, line 144.
+\end{itemize}
+\subsection{9.4 — Exact Lagrangian packet compiler}
+\label{result:9.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Arbitrary finite branching rooted trees, independent inductively defined cuts. Returned cut attains the recurrence and beats every legal cut. Generic ordered field covers rationals and reals. No universal discovery/approximation claim.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.exact_tree_compiler}; \code{ExactTreeCompiler.lean}, line 79.
+\item \code{KomorebiPaperVIII.CandidateTree.compile_attains}; \code{ExactTreeCompiler.lean}, line 69.
+\item \code{KomorebiPaperVIII.CandidateTree.exact_lagrangian_compiler}; \code{ExactTreeCompiler.lean}, line 102.
+\end{itemize}
+\subsection{9.5 — Shared compilation for an operator family}
+\label{result:9.5}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Exact weighted family aggregation at pruning level including setup and split overhead. Proved even without sign restrictions; intended application uses nonnegative weights.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.cutValue_weighted_family}; \code{ExactTreeCompiler.lean}, line 113.
+\item \code{KomorebiPaperVIII.CandidateTree.shared_family_compiler}; \code{ExactTreeCompiler.lean}, line 125.
+\end{itemize}
+\subsection{9.6 — Monotone Lagrangian frontier}
+\label{result:9.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Any two optimal cuts, 0 <= lambda1 < lambda2; error nonincreasing and cost nondecreasing. Optimality is discharged by the constructive compiler theorem for its returned cuts.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.monotone_lagrangian_frontier}; \code{ExactTreeCompiler.lean}, line 142.
+\end{itemize}
+\subsection{9.7 — Supported Pareto points}
+\label{result:9.7}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Positive scalarization parameter. Every true optimum is undominated. TreeCompilerUpdates.unsupported\_pareto\_example supplies the rational three-point unsupported-frontier inequality. Quantized-budget compiler remains unformalized.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.positive_lagrangian_pareto}; \code{ExactTreeCompiler.lean}, line 157.
+\end{itemize}
+\subsection{9.8 — Quantized budget dynamic program}
+\label{result:9.8}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} The actual candidate tree and independent Cut type from the previous block, with arbitrary nonempty finite branching. Min-plus convolution over integer weights proves lower bounds, attainment, and infeasibility. StoredBudgetCompiler certifies the actual cached array-backed output. The implementation returns the minimum cost, not a backtracked cut.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.budgetTable_correct}; \code{QuantizedTreeCompiler.lean}, line 36.
+\item \code{KomorebiPaperVIII.CandidateTree.quantized_budget_compiler}; \code{QuantizedTreeCompiler.lean}, line 91.
+\item \code{KomorebiPaperVIII.CandidateTree.compileBudget_some_iff}; \code{QuantizedTreeCompiler.lean}, line 107.
+\item \code{KomorebiPaperVIII.CandidateTree.compileBudget_none_iff}; \code{QuantizedTreeCompiler.lean}, line 122.
+\item \code{KomorebiPaperVIII.CandidateTree.storedBudget_minimum}; \code{StoredBudgetCompiler.lean}, line 147.
+\end{itemize}
+\subsection{9.9 — Pseudo polynomial complexity}
+\label{result:9.9}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Array-backed tables cache child results. Concrete convolution candidate indices have at most (B+1)\textasciicircum{}2 elements. The declared unit-cost tabulation model is bounded by nodeCount*(3*(B+1)+(B+1)\textasciicircum{}2). Root minimum scan is an additional linear pass. This is pseudo-polynomial in numeric B and does not count exact-arithmetic bit complexity, compiler internals, or hardware instructions.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.merge_trial_count}; \code{StoredBudgetCompiler.lean}, line 222.
+\item \code{KomorebiPaperVIII.CandidateTree.merge_trial_bound}; \code{StoredBudgetCompiler.lean}, line 226.
+\item \code{KomorebiPaperVIII.CandidateTree.tabulation_pseudopolynomial}; \code{StoredBudgetCompiler.lean}, line 256.
+\end{itemize}
+\subsection{9.11 — Compiler stability}
+\label{result:9.11}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual solved keep/split scores satisfy strict half-gap inequalities at every internal node. Entire returned cut is unchanged. Ties cannot satisfy these strict hypotheses; no robustness at ties is claimed.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.half_gap_order}; \code{TreeCompilerUpdates.lean}, line 18.
+\item \code{KomorebiPaperVIII.CandidateTree.compiler_stability}; \code{TreeCompilerUpdates.lean}, line 45.
+\end{itemize}
+\subsection{9.12 — Local recompilation}
+\label{result:9.12}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Explicit one-hole context with cached sibling values. Replacing a subtree models localized data changes. Cache validity is constructed by refresh, not the new optimum. updateValue reads only new subtree score and caches on ancestor frames. Exact new global optimum and attaining cut proved.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.CandidateTree.CachedContext.refresh_valid}; \code{TreeCompilerUpdates.lean}, line 95.
+\item \code{KomorebiPaperVIII.CandidateTree.CachedContext.updateValue_correct}; \code{TreeCompilerUpdates.lean}, line 109.
+\item \code{KomorebiPaperVIII.CandidateTree.CachedContext.sibling_tree_unchanged}; \code{TreeCompilerUpdates.lean}, line 128.
+\item \code{KomorebiPaperVIII.CandidateTree.CachedContext.sibling_value_unchanged}; \code{TreeCompilerUpdates.lean}, line 134.
+\item \code{KomorebiPaperVIII.CandidateTree.CachedContext.local_recompilation}; \code{TreeCompilerUpdates.lean}, line 142.
+\end{itemize}
+\subsection{10.2 — Launch reduction by shape}
+\label{result:10.2}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite grouping by complete shape signature, partition/fiberwise sum equals original output and work. One launch per active class is a backend capability assumption, not verified CUDA code.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.shape_launch_count}; \code{SchedulingContracts.lean}, line 80.
+\item \code{KomorebiPaperVIII.grouped_execution_output}; \code{SchedulingContracts.lean}, line 89.
+\item \code{KomorebiPaperVIII.grouped_execution_work}; \code{SchedulingContracts.lean}, line 95.
+\end{itemize}
+\subsection{10.3 — Acyclic schedule depth}
+\label{result:10.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Finite acyclic task graph, unit positive-integer stages, dependency precedence, and unlimited concurrency. Constructed canonical level schedule is pointwise earliest and has minimal makespan; its depth is attained by an actual path when nonempty. Empty graph depth is zero. No weighted-task/resource-limited scheduling claim.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.DAG.Graph.level_valid}; \code{GraphSchedules.lean}, line 126.
+\item \code{KomorebiPaperVIII.DAG.Graph.level_minimal}; \code{GraphSchedules.lean}, line 129.
+\item \code{KomorebiPaperVIII.DAG.Graph.optimal_depth}; \code{GraphSchedules.lean}, line 150.
+\item \code{KomorebiPaperVIII.DAG.Graph.depth_attained}; \code{GraphSchedules.lean}, line 164.
+\item \code{KomorebiPaperVIII.DAG.Graph.same_level_independent}; \code{GraphSchedules.lean}, line 181.
+\item \code{KomorebiPaperVIII.DAG.Graph.empty_depth}; \code{GraphSchedules.lean}, line 177.
+\end{itemize}
+\subsection{10.4 — Amortization threshold}
+\label{result:10.4}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Actual declared setup+R*candidate vs R*baseline inequality. Positive per-use advantage; setup nonnegative for smallest natural reuse floor+1. Equality is break-even, not profitability.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.amortization_threshold}; \code{SchedulingContracts.lean}, line 101.
+\item \code{KomorebiPaperVIII.no_amortization}; \code{SchedulingContracts.lean}, line 107.
+\item \code{KomorebiPaperVIII.integer_amortization_threshold}; \code{SchedulingContracts.lean}, line 117.
+\item \code{KomorebiPaperVIII.minimum_reuse_attains}; \code{SchedulingContracts.lean}, line 125.
+\end{itemize}
+\subsection{10.5 — Graph replay threshold}
+\label{result:10.5}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Capture plus repeated replay vs repeated ordinary execution under replay<ordinary. Pure timing-model identity, not new GPU data.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.graph_replay_threshold}; \code{SchedulingContracts.lean}, line 137.
+\end{itemize}
+\subsection{10.6 — Materialization threshold}
+\label{result:10.6}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Nonnegative materialization cost and reuse count. Strict profitability iff explicit per-use time is lower and reuse exceeds the ratio.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.materialization_threshold}; \code{SchedulingContracts.lean}, line 142.
+\end{itemize}
+\subsection{11.3 — Fair matching is an equivalence relation}
+\label{result:11.3}
+\textbf{Recorded status.} checked.
+
+\textbf{Recorded hypotheses and scope.} Equality of complete case, output, correctness reference, and timing-scope metadata. No inference of actual timing accuracy from matching metadata.
+
+\begin{itemize}
+\item \code{KomorebiPaperVIII.fair_match_iff_eq}; \code{SchedulingContracts.lean}, line 32.
+\item \code{KomorebiPaperVIII.fair_matching_equivalence}; \code{SchedulingContracts.lean}, line 40.
+\end{itemize}

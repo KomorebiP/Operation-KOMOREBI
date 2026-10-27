@@ -1,0 +1,24 @@
+theorem tensor_apply_correct (d k : ℕ) (A : Fin k → Matrix (Fin d) (Fin d) ℂ)
+    (x : TensorIndex d k → ℂ) :
+    tensorApply d k A x = tensorMatrix d k A *ᵥ x := by
+  induction k with
+  | zero =>
+    funext i
+    cases i
+    change x PUnit.unit = ∑ i : Unit, (1 : ℂ) * x i
+    simp only [one_mul]
+    symm
+    apply Finset.sum_eq_single PUnit.unit
+    · intro b _ h
+      cases b
+      exact (h rfl).elim
+    · intro h
+      exact (h (Finset.mem_univ _)).elim
+  | succ k ih =>
+    funext p
+    change (∑ j, A 0 p.1 j * tensorApply d k (fun i => A i.succ) (fun u => x (j,u)) p.2) = _
+    simp_rw [ih]
+    change (∑ j, A 0 p.1 j * (∑ u, tensorMatrix d k (fun i => A i.succ) p.2 u * x (j,u))) =
+      ∑ i : Fin d × TensorIndex d k,
+        (A 0 p.1 i.1 * tensorMatrix d k (fun j => A j.succ) p.2 i.2) * x i
+    simp only [Fintype.sum_prod_type, Finset.mul_sum, mul_assoc]

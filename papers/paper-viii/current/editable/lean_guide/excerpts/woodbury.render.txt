@@ -1,0 +1,6 @@
+theorem bdlr_woodbury (D : Matrix X X K) (U V : Matrix X Rk K)
+    (hD : IsUnit D) (hS : IsUnit (1 + V.conjTranspose * D⁻¹ * U)) :
+    (D + U * V.conjTranspose)⁻¹ =
+      D⁻¹ - D⁻¹ * U * (1 + V.conjTranspose * D⁻¹ * U)⁻¹ * V.conjTranspose * D⁻¹ := by
+  simpa using Matrix.add_mul_mul_inv_eq_sub D U (1 : Matrix Rk Rk K)
+    V.conjTranspose hD isUnit_one (by simpa using hS)
