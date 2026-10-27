@@ -1,0 +1,12 @@
+/mnt/data/avoc17_work/AVOC_Formal_v0.17.0/AVOC/ArtifactWorkflowExamples.lean:299:2: error: Tactic `decide` failed for proposition
+  artifactFromSource artifact.identity artifact.sourceBytes = Except.ok artifact
+because its `Decidable` instance
+  instDecidableEqExcept_batteries (artifactFromSource artifact.identity artifact.sourceBytes) (Except.ok artifact)
+did not reduce to `isTrue` or `isFalse`.
+
+After unfolding the instances `instDecidableEqExcept_batteries` and `instDecidableEqExcept_batteries.decEq`, reduction got stuck at the `Decidable` instance
+  match artifactFromSource artifact.identity artifact.sourceBytes, Except.ok artifact with
+  | Except.error a, Except.error b => if h : a = b then h ▸ isTrue ⋯ else isFalse ⋯
+  | Except.error a, Except.ok a_1 => isFalse ⋯
+  | Except.ok a, Except.error a_1 => isFalse ⋯
+  | Except.ok a, Except.ok b => if h : a = b then h ▸ isTrue ⋯ else isFalse ⋯

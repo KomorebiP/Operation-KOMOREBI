@@ -1,0 +1,64 @@
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:78:12: error: unsolved goals
+case error
+j : Json
+credit : Nat
+r : ImportResult
+b : CheckedBank
+hb : r.checked = some b
+e : String
+hp : parseCertificate j = Except.error e
+hl : (fun a => paidImport a credit) <$> Except.error e = Except.ok r
+⊢ ∃ rows, Except.error e = Except.ok rows ∧ b.rows = rows ∧ checkBank rows = true
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:81:4: error: Tactic `subst` failed: did not find equation for eliminating 'r'
+
+case ok
+j : Json
+credit : Nat
+r : ImportResult
+b : CheckedBank
+hb : r.checked = some b
+rows : Array Row
+hp : parseCertificate j = Except.ok rows
+hl :
+  (do
+      let rows ← Except.ok rows
+      Except.ok (paidImport rows credit)) =
+    Except.ok r
+⊢ ∃ rows_1, Except.ok rows = Except.ok rows_1 ∧ b.rows = rows_1 ∧ checkBank rows_1 = true
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:80:19: error: This simp argument is unused:
+  Except.bind
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hp, pure, Except.pure, Except.ok.injEq] at hl
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:80:51: error: This simp argument is unused:
+  Except.ok.injEq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hp, Except.bind, pure, Except.pure] at hl
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:113:21: error: Type mismatch
+  Json.mkObj
+has type
+  List (String × Json) → Json
+but is expected to have type
+  Json
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:112:4: error: Missing cases:
+(some (CheckedBank.mk (Array.mk _) _))
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:114:6: error: This `do` element and its control-flow region are dead code. Consider refactoring your code to remove it.
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:114:6: error: Type mismatch
+  [("status", ?m.69), ("validation_charged", toJson imported.charged), ("query_charged", toJson 0),
+    ("remaining", toJson imported.remaining), ("required_validation", toJson (validationCharge rows)),
+    ("queries", toJson [])]
+has type
+  List (String × Json)
+but is expected to have type
+  Except String Json
+/mnt/data/AVOC_Formal_v0.27.0/AVOC/SemanticLibraryCodec.lean:118:6: error: Type mismatch
+  some bank
+has type
+  Option ?m.105
+but is expected to have type
+  List Json

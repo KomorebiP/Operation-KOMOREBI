@@ -1,0 +1,41 @@
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryDecisionCodec.lean:100:9: error: unsolved goals
+case none
+j j' : Job
+ht : j.ledger.current = none
+h :
+  (do
+      let t ← Except.error "no current attempt"
+      if 1 ≤ RetryBayesian.mean (reliability j t.fee) (belief j) then
+          (fun a =>
+              { prior := ⟨(RetryBayesian.afterFault (reliability j t.fee) (belief j)).prob true, ⋯⟩, slow := j.slow,
+                fast := j.fast, benefit := j.benefit, benefit_nonneg := ⋯, limits := j.limits, ledger := j.ledger,
+                ledger_safe := ⋯, horizon := j.horizon }) <$>
+            throw "fault has zero declared probability"
+        else
+          pure
+            { prior := ⟨(RetryBayesian.afterFault (reliability j t.fee) (belief j)).prob true, ⋯⟩, slow := j.slow,
+              fast := j.fast, benefit := j.benefit, benefit_nonneg := ⋯, limits := j.limits, ledger := j.ledger,
+              ledger_safe := ⋯, horizon := j.horizon }) =
+    Except.ok j'
+⊢ j'.ledger = j.ledger
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryDecisionCodec.lean:105:6: error: Dependent elimination failed: Failed to solve equation
+  Except.ok j' =
+    Decidable.rec
+      (fun h =>
+        (fun x =>
+            Except.pure
+              { prior := ⟨(RetryBayesian.afterFault (reliability j v✝.fee) (belief j)).prob true, ⋯⟩, slow := j.slow,
+                fast := j.fast, benefit := j.benefit, benefit_nonneg := ⋯, limits := j.limits, ledger := j.ledger,
+                ledger_safe := ⋯, horizon := j.horizon })
+          h)
+      (fun h =>
+        (fun x =>
+            match throw "fault has zero declared probability" with
+            | Except.error err => Except.error err
+            | Except.ok v =>
+              Except.pure
+                { prior := ⟨(RetryBayesian.afterFault (reliability j v✝.fee) (belief j)).prob true, ⋯⟩, slow := j.slow,
+                  fast := j.fast, benefit := j.benefit, benefit_nonneg := ⋯, limits := j.limits, ledger := j.ledger,
+                  ledger_safe := ⋯, horizon := j.horizon })
+          h)
+      ((1 - RetryBayesian.mean (reliability j v✝.fee) (belief j)).instDecidableLe 0)

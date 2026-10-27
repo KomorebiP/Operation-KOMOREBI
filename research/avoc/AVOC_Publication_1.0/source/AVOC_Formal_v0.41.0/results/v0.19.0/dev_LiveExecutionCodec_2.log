@@ -1,0 +1,223 @@
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:96:12: error: unsolved goals
+case error
+j : Job
+wire : Json
+es : List (Event j)
+s : RunState
+e : String
+hw : wire.getArr? = Except.error e
+h :
+  (do
+      let __do_lift ← Except.error e
+      let events ← List.mapM (parseEvent j) __do_lift.toList
+      if j.horizon < events.length then do
+          throw "history exceeds declared horizon"
+          Prod.mk events <$> replay j (initialRun j) events
+        else Prod.mk events <$> replay j (initialRun j) events) =
+    Except.ok (es, s)
+⊢ replay j (initialRun j) es = Except.ok s
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:99:14: error: unsolved goals
+case ok.error
+j : Job
+wire : Json
+es : List (Event j)
+s : RunState
+arr : Array Json
+hw : wire.getArr? = Except.ok arr
+e : String
+hp : List.mapM (parseEvent j) arr.toList = Except.error e
+h :
+  (do
+      let __do_lift ← Except.ok arr
+      let events ← List.mapM (parseEvent j) __do_lift.toList
+      if j.horizon < events.length then do
+          throw "history exceeds declared horizon"
+          Prod.mk events <$> replay j (initialRun j) events
+        else Prod.mk events <$> replay j (initialRun j) events) =
+    Except.ok (es, s)
+⊢ replay j (initialRun j) es = Except.ok s
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:102:6: error: unsolved goals
+case pos
+j : Job
+wire : Json
+es : List (Event j)
+s : RunState
+arr : Array Json
+hw : wire.getArr? = Except.ok arr
+events : List (Event j)
+hp : List.mapM (parseEvent j) arr.toList = Except.ok events
+hl : events.length > j.horizon
+h :
+  (do
+      let __do_lift ← Except.ok arr
+      let events ← List.mapM (parseEvent j) __do_lift.toList
+      if j.horizon < events.length then do
+          throw "history exceeds declared horizon"
+          Prod.mk events <$> replay j (initialRun j) events
+        else Prod.mk events <$> replay j (initialRun j) events) =
+    Except.ok (es, s)
+⊢ replay j (initialRun j) es = Except.ok s
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:104:18: error: unsolved goals
+case neg.error
+j : Job
+wire : Json
+es : List (Event j)
+s : RunState
+arr : Array Json
+hw : wire.getArr? = Except.ok arr
+events : List (Event j)
+hp : List.mapM (parseEvent j) arr.toList = Except.ok events
+hl : ¬events.length > j.horizon
+e : String
+hr : replay j (initialRun j) events = Except.error e
+h :
+  (do
+      let __do_lift ← Except.ok arr
+      let events ← List.mapM (parseEvent j) __do_lift.toList
+      if j.horizon < events.length then do
+          throw "history exceeds declared horizon"
+          Prod.mk events <$> replay j (initialRun j) events
+        else Prod.mk events <$> replay j (initialRun j) events) =
+    Except.ok (es, s)
+⊢ replay j (initialRun j) es = Except.ok s
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:107:12: error: Type mismatch: After simplification, term
+  h
+ has type
+  (do
+      let __do_lift ← Except.ok arr
+      let events ← List.mapM (parseEvent j) __do_lift.toList
+      if j.horizon < events.length then do
+          throw "history exceeds declared horizon"
+          Prod.mk events <$> replay j (initialRun j) events
+        else Prod.mk events <$> replay j (initialRun j) events) =
+    Except.ok (es, s)
+but is expected to have type
+  events = es ∧ state = s
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:99:41: error: This simp argument is unused:
+  hp
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeReplay, hw] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:102:32: error: This simp argument is unused:
+  hp
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeReplay, hw, hl] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:102:36: error: This simp argument is unused:
+  hl
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeReplay, hw, hp] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:104:45: error: This simp argument is unused:
+  hp
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeReplay, hw, hl, hr] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:104:49: error: This simp argument is unused:
+  hl
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeReplay, hw, hp, hr] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:104:53: error: This simp argument is unused:
+  hr
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeReplay, hw, hp, hl] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:122:12: error: unsolved goals
+case error
+j : Job
+wire : Json
+actual : StoreView
+es : List (Event j)
+s : RunState
+e : String
+hd : decodeReplay j wire = Except.error e
+h :
+  (do
+      let __x ← Except.error e
+      if view __x.2 = actual then pure __x else throw "current external store disagrees with confirmed history") =
+    Except.ok (es, s)
+⊢ replay j (initialRun j) es = Except.ok s ∧ view s = actual
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:126:46: error: Type mismatch: After simplification, term
+  h
+ has type
+  (do
+      let __x ← Except.ok (events, state)
+      if view __x.2 = actual then pure __x else throw "current external store disagrees with confirmed history") =
+    Except.ok (es, s)
+but is expected to have type
+  events = es ∧ state = s
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:128:42: error(lean.unknownIdentifier): Unknown identifier `events`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:128:49: error(lean.unknownIdentifier): Unknown identifier `state`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:129:4: error: unsolved goals
+case neg
+j : Job
+wire : Json
+actual : StoreView
+es : List (Event j)
+s : RunState
+events : List (Event j)
+state : RunState
+hd : decodeReplay j wire = Except.ok (events, state)
+ha : ¬agrees (view state) actual = true
+h :
+  (do
+      let __x ← Except.ok (events, state)
+      if view __x.2 = actual then pure __x else throw "current external store disagrees with confirmed history") =
+    Except.ok (es, s)
+⊢ replay j (initialRun j) es = Except.ok s ∧ view s = actual
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:129:22: error: This simp argument is unused:
+  ha
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [resume, hd] at h
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:133:46: error: Function expected at
+  ArchiveSafe
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  s
+
+Hint: The identifier `ArchiveSafe` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:135:47: error(lean.unknownIdentifier): Unknown identifier `replay_initial_archive_safe`
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:141:25: error: don't know how to synthesize implicit argument `ArchiveSafe`
+  @resumed_certificate (?m.38 j wire actual es s ticket h ha) (?m.39 j wire actual es s ticket h ha) j wire actual es s
+    h
+context:
+j : Job
+wire : Json
+actual : StoreView
+es : List (Event j)
+s : RunState
+ticket : Ticket
+h : resume j wire actual = Except.ok (es, s)
+ha : actual.admitted = some ticket
+⊢ ?m.38 j wire actual es s ticket h ha
+/mnt/data/AVOC_Formal_v0.19.0/AVOC/LiveExecutionCodec.lean:141:25: error: don't know how to synthesize implicit argument
+  @resumed_certificate (?m.38 j wire actual es s ticket h ha) (?m.39 j wire actual es s ticket h ha) j wire actual es s
+    h
+context:
+j : Job
+wire : Json
+actual : StoreView
+es : List (Event j)
+s : RunState
+ticket : Ticket
+h : resume j wire actual = Except.ok (es, s)
+ha : actual.admitted = some ticket
+⊢ Sort ?u.19

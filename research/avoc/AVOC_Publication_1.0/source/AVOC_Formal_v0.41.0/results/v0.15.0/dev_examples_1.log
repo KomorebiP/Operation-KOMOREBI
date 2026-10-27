@@ -1,0 +1,91 @@
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:20:46: error: unsolved goals
+b : RationalBelief Bool
+o : Unit
+hp : 0 < predictiveProb b silentChannel o
+w : Bool
+⊢ b.prob w /
+      predictiveProb b { prob := fun x x_1 => 1, nonneg := silentChannel._proof_1, sum_one := silentChannel._proof_2 }
+        o =
+    b.prob w
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:25:37: error: This simp argument is unused:
+  silent_predictive
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [bayesUpdate, bayesNumerator, silentChannel]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:63:48: error: linarith failed to find a contradiction
+case false
+k : ℕ
+s : BState
+left✝ : false ∈ learnedSystem.actions s
+he : backup learnedSystem (coarseValue k) s = tableQ learnedSystem (coarseValue k) s false
+hl : 2 / 5 + ↑k / 3 ≤ backup learnedSystem (coarseValue k) s
+⊢ False
+failed
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:105:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  |qValue rawSystem k s a - tableQ learnedSystem (coarseValue k) (id s) a| ≤
+    modelQBudget (1 / 5) (bayesianTransportBudget 0 0 (fun x => 0) (fun k => ↑k / 3) fun x => 0) (fun x => 1 / 15) k
+but is expected to have type
+  |qValue rawSystem k s a - tableQ learnedSystem (coarseValue k) s a| ≤
+    modelQBudget (1 / 5) (fun x => 0) (fun x => 1 / 15) k
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:111:77: error: unsolved goals
+k : ℕ
+ih : ∀ (s : BState), value rawSystem k s = ↑k / 2
+s : BState
+a : Bool
+⊢ value
+      { actions := fun x => {true, false}, actions_nonempty := ⋯, prob := fun x x_1 x_2 => 1,
+        prob_nonneg := rawSystem._proof_2, prob_sum_one := rawSystem._proof_3, step := fun s x x_1 => s,
+        reward := fun x a => rawReward a }
+      k s =
+    ↑k / 2
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:118:46: error: `if_false` has been deprecated: Use `ite_false` instead
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:112:44: error: This simp argument is unused:
+  ih
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [qValue, expectation, rawSystem]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:125:14: error: unsolved goals
+case succ
+k : ℕ
+ih : ∀ (s : BState), planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) = ↑k * (2 / 5)
+s : BState
+⊢ 2 / 5 +
+      planValue
+        { actions := fun x => {true, false}, actions_nonempty := ⋯, prob := fun x x_1 x_2 => 1,
+          prob_nonneg := rawSystem._proof_2, prob_sum_one := rawSystem._proof_3, step := fun s x x_1 => s,
+          reward := fun x a => if a = true then 2 / 5 else 2⁻¹ }
+        s
+        (policyPlan
+          { actions := fun x => {true, false}, actions_nonempty := ⋯, prob := fun x x_1 x_2 => 1,
+            prob_nonneg := rawSystem._proof_2, prob_sum_one := rawSystem._proof_3, step := fun s x x_1 => s,
+            reward := fun x a => if a = true then 2 / 5 else 2⁻¹ }
+          (fun x x_1 => true) k s) =
+    ↑k * (2 / 5) + 2 / 5
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:126:55: error: This simp argument is unused:
+  ih
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [policyPlan, planValue, rawSystem, rawReward, Nat.cast_add, add_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:148:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  0 ≤ value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ∧
+    value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ≤
+      regretBudget
+        (fun k =>
+          2 *
+            modelQBudget (1 / 5) (bayesianTransportBudget 0 0 (fun x => 0) (fun k => ↑k / 3) fun x => 0)
+              (fun x => 1 / 15) k)
+        k
+but is expected to have type
+  0 ≤ value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ∧
+    value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ≤
+      regretBudget (fun j => 2 * modelQBudget (1 / 5) (fun x => 0) (fun x => 1 / 15) j) k

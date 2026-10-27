@@ -1,0 +1,179 @@
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:47:72: error: unexpected identifier; expected '}'
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:54:76: error: unexpected identifier; expected '}'
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:82:71: error: unexpected identifier; expected '}'
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:93:73: error: unexpected identifier; expected '}'
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:106:24: error: `if_pos` has been deprecated: Use `ite_eq_left` instead
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:115:23: error: `if_pos` has been deprecated: Use `ite_eq_left` instead
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:124:24: error: `if_pos` has been deprecated: Use `ite_eq_left` instead
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:133:33: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  f ≥ 0
+  e ≥ 0
+  d ≥ 0
+  c ≥ 0
+  c - d ≥ 1
+  c - f ≤ -1
+  b ≥ 0
+  b - e ≥ 0
+  a ≥ 0
+  a - b ≥ 0
+where
+ a := ↑lim.credits
+ b := ↑l.charged
+ c := ↑lim.attempts
+ d := ↑l.reserved
+ e := ↑l.confirmed
+ f := ↑{ charged := l.charged + fee, confirmed := l.confirmed, reserved := l.reserved + 1, current := l.current,
+      published := l.published, terminal := l.terminal }.reserved
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:134:22: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  g ≥ 0
+  f ≥ 0
+  e ≥ 0
+  d ≥ 0
+  c ≥ 0
+  c - d ≥ 0
+  b ≥ 0
+  b - e ≥ 0
+  b - e - f + g ≤ -1
+  a ≥ 0
+  a - b ≥ 0
+where
+ a := ↑lim.credits
+ b := ↑l.charged
+ c := ↑lim.attempts
+ d := ↑l.reserved
+ e := ↑l.confirmed
+ f := ↑(match l.current with
+  | none => 0
+  | some t => t.fee)
+ g := ↑fee
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:136:4: error: Dependent elimination failed: Failed to solve equation
+  some t = l.4
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:138:2: error: unsolved goals
+case refine_3
+lim : Limits
+l : Ledger
+op fee : Nat
+left✝³ : l.terminal = false
+hp : l.published = false
+hc : l.current = none
+hm : room lim l fee
+h :
+  reserve lim l op fee =
+    Except.ok
+      { charged := l.charged + fee, confirmed := l.confirmed, reserved := l.reserved + 1, current := l.current,
+        published := l.published, terminal := l.terminal }
+left✝² : l.charged ≤ lim.credits
+left✝¹ : l.reserved ≤ lim.attempts
+left✝ : ∀ (t : Ticket), l.current = some t → t.generation < l.reserved
+right✝ : l.published = true → l.current ≠ none
+hh : l.confirmed + 0 ≤ l.charged
+⊢ l.published = true → ¬l.current = none
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:145:33: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  g ≥ 0
+  f ≥ 0
+  e ≥ 0
+  d ≥ 0
+  c ≥ 0
+  c - d ≥ 1
+  c - g ≤ -1
+  b ≥ 0
+  b - e - f ≥ 0
+  a ≥ 0
+  a - b ≥ 0
+where
+ a := ↑lim.credits
+ b := ↑l.charged
+ c := ↑lim.attempts
+ d := ↑l.reserved
+ e := ↑l.confirmed
+ f := ↑t.fee
+ g := ↑{ charged := l.charged + t.fee, confirmed := l.confirmed, reserved := l.reserved + 1, current := l.current,
+      published := l.published, terminal := l.terminal }.reserved
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:146:22: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  g ≥ 0
+  f ≥ 0
+  e ≥ 0
+  d ≥ 0
+  c ≥ 0
+  c - d ≥ 0
+  b ≥ 0
+  b - e - f ≥ 0
+  b - e + f - g ≤ -1
+  a ≥ 0
+  a - b ≥ 0
+where
+ a := ↑lim.credits
+ b := ↑l.charged
+ c := ↑lim.attempts
+ d := ↑l.reserved
+ e := ↑l.confirmed
+ f := ↑t.fee
+ g := ↑(match l.current with
+  | none => 0
+  | some t => t.fee)
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:148:4: error: Dependent elimination failed: Failed to solve equation
+  some t' = l.4
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:150:2: error: unsolved goals
+case refine_3
+lim : Limits
+l : Ledger
+t : Ticket
+left✝⁴ : l.terminal = false
+left✝³ : l.published = false
+hc : l.current = some t
+hm : room lim l t.fee
+h :
+  renew lim l t =
+    Except.ok
+      { charged := l.charged + t.fee, confirmed := l.confirmed, reserved := l.reserved + 1, current := l.current,
+        published := l.published, terminal := l.terminal }
+left✝² : l.charged ≤ lim.credits
+left✝¹ : l.reserved ≤ lim.attempts
+left✝ : ∀ (t : Ticket), l.current = some t → t.generation < l.reserved
+right✝ : l.published = true → l.current ≠ none
+hh : l.confirmed + t.fee ≤ l.charged
+⊢ l.published = true → ¬l.current = none
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:186:44: error: Application type mismatch: The argument
+  rfl
+has type
+  ?m.59 = ?m.59
+but is expected to have type
+  { charged := l.charged + t.fee, confirmed := l.confirmed, reserved := l.reserved + 1, current := l.current,
+        published := l.published, terminal := l.terminal }.current =
+    some { operation := t.operation, generation := l.reserved, fee := t.fee }
+in the application
+  And.intro rfl
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:203:73: error: unsolved goals
+lim : Limits
+l : Ledger
+t : Ticket
+h : l.published = true
+⊢ sorry () = Except.error "retry refused"
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:204:8: error: declaration uses `sorry`
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:217:85: error: unsolved goals
+lim : Limits
+l : Ledger
+op fee : Nat
+h : l.terminal = true
+⊢ sorry () = Except.error "reservation refused"
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:218:8: error: declaration uses `sorry`
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:221:80: error: unsolved goals
+lim : Limits
+l : Ledger
+t : Ticket
+h : lim.attempts ≤ l.reserved
+hn : ¬l.reserved < lim.attempts
+⊢ sorry () = Except.error "retry refused"
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:223:8: error: declaration uses `sorry`
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:226:86: error: unsolved goals
+lim : Limits
+l : Ledger
+t : Ticket
+h : lim.credits < l.charged + t.fee
+hn : ¬l.charged + t.fee ≤ lim.credits
+⊢ sorry () = Except.error "retry refused"
+/mnt/data/AVOC_Formal_v0.21.0/AVOC/AttemptAccounting.lean:228:8: error: declaration uses `sorry`

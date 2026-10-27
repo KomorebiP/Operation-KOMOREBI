@@ -1,0 +1,71 @@
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:177:4: error: unsolved goals
+case h_1.refl
+V : Type
+a : Authority V
+j : Journal V
+key : String
+hs : Safe a j
+x✝¹ : Option (Closed V)
+r✝ : Closed V
+heq✝¹ : findClosed key j.closed = some r✝
+x✝ : Resolution
+heq✝ : r✝.resolution = Resolution.abandoned
+⊢ Safe a (unchanged j).journal
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:178:15: error: No goals to be solved
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:207:17: error: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:216:4: error: unsolved goals
+case h_1.refl
+V : Type
+j : Journal V
+key : String
+x✝¹ : Option (Closed V)
+r✝ : Closed V
+heq✝¹ : findClosed key j.closed = some r✝
+x✝ : Resolution
+heq✝ : r✝.resolution = Resolution.abandoned
+⊢ (unchanged j).journal.current = j.current
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:217:15: error: No goals to be solved
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:295:4: error: unsolved goals
+case h_1.refl
+V : Type
+j : Journal V
+key : String
+x✝¹ : Option (Closed V)
+r✝ : Closed V
+heq✝¹ : findClosed key j.closed = some r✝
+x✝ : Resolution
+heq✝ : r✝.resolution = Resolution.abandoned
+⊢ (unchanged j).journal.current.evaluationSpent = j.current.evaluationSpent + (unchanged j).evaluationDebit ∧
+    (unchanged j).journal.current.switchSpent = j.current.switchSpent + (unchanged j).switchDebit
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:296:15: error: No goals to be solved
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:350:16: error: unsolved goals
+case cons.error
+V : Type
+inst✝ : DecidableEq V
+a : Authority V
+out : Journal V
+cmd : Command V
+tail : List (Command V)
+ih : ∀ (j : Journal V), Safe a j → replay a j tail = Except.ok out → Safe a out
+j : Journal V
+hs : Safe a j
+msg : String
+he : apply a j cmd = Except.error msg
+h :
+  (do
+      let r ← Except.error msg
+      replay a r.journal tail) =
+    Except.ok out
+⊢ Safe a out
+/mnt/data/AVOC_Formal_v0.24.0/AVOC/DurableUpgrade.lean:352:56: error: Type mismatch: After simplification, term
+  h
+ has type
+  @Eq (Except String (Journal V))
+    (do
+      let r ← Except.ok r
+      replay a r.journal tail)
+    (Except.ok out)
+but is expected to have type
+  @Eq (Except String (Journal V)) (replay a r.journal tail) (Except.ok out)

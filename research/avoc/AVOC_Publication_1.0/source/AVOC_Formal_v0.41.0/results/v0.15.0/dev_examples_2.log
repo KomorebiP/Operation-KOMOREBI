@@ -1,0 +1,26 @@
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:65:44: error: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:107:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  |qValue rawSystem k s a - tableQ learnedSystem (coarseValue k) s a| ≤
+    modelQBudget (1 / 5) (bayesianTransportBudget 0 0 (fun x => 0) (fun k => ↑k / 3) fun x => 0) (fun x => 1 / 15) k
+but is expected to have type
+  |qValue rawSystem k s a - tableQ learnedSystem (coarseValue k) s a| ≤
+    modelQBudget (1 / 5) (fun x => 0) (fun x => 1 / 15) k
+/mnt/data/AVOC_Formal_v0.15.0/AVOC/ModelBridgeExamples.lean:153:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  0 ≤ value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ∧
+    value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ≤
+      regretBudget
+        (fun k =>
+          2 *
+            modelQBudget (1 / 5) (bayesianTransportBudget 0 0 (fun x => 0) (fun k => ↑k / 3) fun x => 0)
+              (fun x => 1 / 15) k)
+        k
+but is expected to have type
+  0 ≤ value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ∧
+    value rawSystem k s - planValue rawSystem s (policyPlan rawSystem (fun x x_1 => true) k s) ≤
+      regretBudget (fun j => 2 * modelQBudget (1 / 5) (fun x => 0) (fun x => 1 / 15) j) k

@@ -1,0 +1,62 @@
+/mnt/data/AVOC_Formal_v0.25.0/AVOC/SynthesisPromotion.lean:45:52: error: unsolved goals
+r : Program
+calls credit : Nat
+candidate : Program
+a : Upgrade.Authority Program := authority r calls credit
+base : DurableUpgrade.Journal Program := DurableUpgrade.initial r
+hb : DurableUpgrade.Safe a base := DurableUpgrade.initial_safe a r (equivalent_refl r)
+t : DurableUpgrade.Ticket Program :=
+  { key := "generated-candidate-0", before := base.current,
+    proposal := { parent := r, revision := 0, candidate := candidate, core := a.core, objective := a.objective } }
+started : DurableUpgrade.Reply Program
+he : DurableUpgrade.begin a base t = Except.ok started
+hs : DurableUpgrade.Safe a started.journal := DurableUpgrade.begin_safe a base t started hb he
+a✝ : String
+hf : DurableUpgrade.finish a started.journal t.key = Except.error a✝
+⊢ (match DurableUpgrade.begin (authority r calls credit) (DurableUpgrade.initial r) t with
+    | Except.error msg => Except.error msg
+    | Except.ok r => Except.ok r.journal) =
+    Except.ok started.journal
+/mnt/data/AVOC_Formal_v0.25.0/AVOC/SynthesisPromotion.lean:49:75: error: unsolved goals
+r : Program
+calls credit : Nat
+candidate : Program
+a : Upgrade.Authority Program := authority r calls credit
+base : DurableUpgrade.Journal Program := DurableUpgrade.initial r
+hb : DurableUpgrade.Safe a base := DurableUpgrade.initial_safe a r (equivalent_refl r)
+t : DurableUpgrade.Ticket Program :=
+  { key := "generated-candidate-0", before := base.current,
+    proposal := { parent := r, revision := 0, candidate := candidate, core := a.core, objective := a.objective } }
+started : DurableUpgrade.Reply Program
+he : DurableUpgrade.begin a base t = Except.ok started
+hs : DurableUpgrade.Safe a started.journal := DurableUpgrade.begin_safe a base t started hb he
+finished : DurableUpgrade.Reply Program
+hf : DurableUpgrade.finish a started.journal t.key = Except.ok finished
+⊢ (match DurableUpgrade.begin (authority r calls credit) (DurableUpgrade.initial r) t with
+    | Except.error msg => Except.error msg
+    | Except.ok r_1 =>
+      match DurableUpgrade.finish (authority r calls credit) r_1.journal t.key with
+      | Except.error msg => Except.error msg
+      | Except.ok r => Except.ok r.journal) =
+    Except.ok finished.journal
+/mnt/data/AVOC_Formal_v0.25.0/AVOC/SynthesisPromotion.lean:46:59: error: This simp argument is unused:
+  he
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [DurableUpgrade.replay, DurableUpgrade.apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.25.0/AVOC/SynthesisPromotion.lean:50:61: error: This simp argument is unused:
+  he
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [DurableUpgrade.replay, DurableUpgrade.apply, hf]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.25.0/AVOC/SynthesisPromotion.lean:50:65: error: This simp argument is unused:
+  hf
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [DurableUpgrade.replay, DurableUpgrade.apply, he]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

@@ -1,0 +1,34 @@
+/mnt/data/AVOC_Formal_v0.20.0/AVOC/AtomicCommitModel.lean:38:15: error: Application type mismatch: The argument
+  hp
+has type
+  s.pending = none
+but is expected to have type
+  none = none
+in the application
+  And.intro hp
+/mnt/data/AVOC_Formal_v0.20.0/AVOC/AtomicCommitModel.lean:90:19: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  a ≥ 0
+where
+ a := ↑{ current := r.after, next := s.next + 1, pending := none, last := some r }.next
+/mnt/data/AVOC_Formal_v0.20.0/AVOC/AtomicCommitModel.lean:123:14: error: invalid `▸` notation, expected result type of cast is 
+  Safe j d
+however, the equality 
+  hd
+of type 
+  (store, e).2 = (out, d).2
+does not contain the expected result type on either the left or the right hand side
+/mnt/data/AVOC_Formal_v0.20.0/AVOC/AtomicCommitModel.lean:136:8: error: Tactic `subst` failed: did not find equation for eliminating 'd'
+
+case neg.ok
+j : Job
+store out : Store j
+c d : Checkpoint j
+r : Commit j
+h : reconcilePublished j store c r = Except.ok (out, d)
+hb : ¬(store.last ≠ some r ∨ store.next ≠ r.intent.sequence + 1)
+e : Checkpoint j
+ha : acknowledge j c r store.current = Except.ok e
+he : (store, e) = (out, d)
+hd : (store, e).2 = (out, d).2
+⊢ reconcilePublished j store d r = Except.ok (store, d)

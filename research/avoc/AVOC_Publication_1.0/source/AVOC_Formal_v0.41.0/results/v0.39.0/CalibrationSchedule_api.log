@@ -1,0 +1,50 @@
+Fin.sum_univ_eq_sum_range.{u_1} {α : Type u_1} [AddCommMonoid α] (f : ℕ → α) (n : ℕ) :
+  ∑ i, f ↑i = ∑ i ∈ Finset.range n, f i
+Finset.sum_ite_eq.{u_1, u_2} {ι : Type u_1} {M : Type u_2} [AddCommMonoid M] [DecidableEq ι] (s : Finset ι) (a : ι)
+  (b : ι → M) : (∑ x ∈ s, if a = x then b x else 0) = if a ∈ s then b a else 0
+Finset.sum_ite_eq.{u_1, u_2} {ι : Type u_1} {M : Type u_2} [AddCommMonoid M] [DecidableEq ι] (s : Finset ι) (a : ι)
+  (b : ι → M) : (∑ x ∈ s, if a = x then b x else 0) = if a ∈ s then b a else 0
+Finset.sum_ite_eq.{u_1, u_2} {ι : Type u_1} {M : Type u_2} [AddCommMonoid M] [DecidableEq ι] (s : Finset ι) (a : ι)
+  (b : ι → M) : (∑ x ∈ s, if a = x then b x else 0) = if a ∈ s then b a else 0
+Finset.sum_ite_eq.{u_1, u_2} {ι : Type u_1} {M : Type u_2} [AddCommMonoid M] [DecidableEq ι] (s : Finset ι) (a : ι)
+  (b : ι → M) : (∑ x ∈ s, if a = x then b x else 0) = if a ∈ s then b a else 0
+theorem Fin.sum_univ_eq_sum_range.{u_1} : ∀ {α : Type u_1} [inst : AddCommMonoid α] (f : ℕ → α) (n : ℕ),
+  ∑ i, f ↑i = ∑ i ∈ Finset.range n, f i :=
+fun {α} [AddCommMonoid α] f n =>
+  Trans.trans
+    (Fintype.sum_equiv
+      (Fin.equivSubtype.trans
+        (Equiv.subtypeEquivRight
+          (of_eq_true
+            (Eq.trans
+              (forall_congr fun x => Eq.trans (congrArg (Iff (x < n)) (propext Finset.mem_range)) (iff_self (x < n)))
+              (implies_true ℕ)))))
+      (fun i => f ↑i) (fun i => f ↑i)
+      (of_eq_true
+        (Eq.trans
+          (forall_congr fun x =>
+            Eq.trans
+              (congrArg (Eq (f ↑x))
+                (congrArg f
+                  (Eq.trans
+                    (congrArg Subtype.val
+                      (congrArg
+                        (⇑(Equiv.subtypeEquivRight
+                            (of_eq_true
+                              (Eq.trans
+                                (forall_congr fun x =>
+                                  Eq.trans (congrArg (Iff (x < n)) (propext Finset.mem_range)) (iff_self (x < n)))
+                                (implies_true ℕ)))))
+                        (Fin.equivSubtype_apply x)))
+                    (Equiv.subtypeEquivRight_apply_coe
+                      (of_eq_true
+                        (Eq.trans
+                          (forall_congr fun x =>
+                            Eq.trans (congrArg (Iff (x < n)) (propext Finset.mem_range)) (iff_self (x < n)))
+                          (implies_true ℕ)))
+                      ⟨↑x, x.isLt⟩))))
+              (eq_self (f ↑x)))
+          (implies_true (Fin n)))))
+    (Eq.mpr (id (congrArg (fun _a => ∑ i ∈ _a, f ↑i = ∑ i ∈ Finset.range n, f i) (Eq.symm Finset.attach_eq_univ)))
+      (Eq.mpr (id (congrArg (fun _a => _a = ∑ i ∈ Finset.range n, f i) (Finset.sum_attach (Finset.range n) f)))
+        (Eq.refl (∑ x ∈ Finset.range n, f x))))

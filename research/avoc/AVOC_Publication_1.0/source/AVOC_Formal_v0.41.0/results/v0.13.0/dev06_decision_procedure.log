@@ -1,0 +1,33 @@
+/mnt/data/AVOC_Formal_v0.13.0/AVOC/SchedulingExamples.lean:22:2: error: failed to synthesize
+  Decidable (∀ (x : Diamond), (x ∉ {(0, 0)} ∧ ∀ y < x, y ∈ {(0, 0)}) ↔ x ∈ {(0, 1), (1, 0)})
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/mnt/data/AVOC_Formal_v0.13.0/AVOC/SchedulingExamples.lean:26:2: error: failed to synthesize
+  Decidable (((0, 0) ∉ ∅ ∧ ∀ y < (0, 0), y ∈ ∅) ∧ Legal (insert (0, 0) ∅) [(0, 1), (1, 0), (1, 1)])
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/mnt/data/AVOC_Formal_v0.13.0/AVOC/SchedulingExamples.lean:30:2: error: failed to synthesize
+  Decidable (((0, 0) ∉ ∅ ∧ ∀ y < (0, 0), y ∈ ∅) ∧ Legal (insert (0, 0) ∅) [(1, 0), (0, 1), (1, 1)])
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/mnt/data/AVOC_Formal_v0.13.0/AVOC/SchedulingExamples.lean:34:2: error: failed to synthesize
+  Decidable ¬(((1, 1) ∉ ∅ ∧ ∀ y < (1, 1), y ∈ ∅) ∧ Legal (insert (1, 1) ∅) [(0, 0), (0, 1), (1, 0)])
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/mnt/data/AVOC_Formal_v0.13.0/AVOC/SchedulingExamples.lean:39:2: error: failed to synthesize
+  Decidable
+    ((∀ ⦃x : Diamond⦄, x ∈ {(1, 1)} → ∀ ⦃y : Diamond⦄, y ∈ {(1, 1)} → x ≤ y → x = y) ∧
+      ¬((1, 1) ∉ ∅ ∧ ∀ y < (1, 1), y ∈ ∅))
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/mnt/data/AVOC_Formal_v0.13.0/AVOC/SchedulingExamples.lean:52:6: error: Tactic `decide` failed for proposition
+  ∀ (B : Finset Diamond), (∀ ⦃x : Diamond⦄, x ∈ B → ∀ ⦃y : Diamond⦄, y ∈ B → x ≤ y → x = y) → B.card ≤ 2
+because its `Decidable` instance
+  Classical.propDecidable
+    (∀ (B : Finset Diamond), (∀ ⦃x : Diamond⦄, x ∈ B → ∀ ⦃y : Diamond⦄, y ∈ B → x ≤ y → x = y) → B.card ≤ 2)
+did not reduce to `isTrue` or `isFalse`.
+
+After unfolding the instance `Classical.propDecidable`, reduction got stuck at the `Decidable` instance
+  Classical.choice ⋯
+
+Hint: Reduction got stuck on `Classical.choice`, which indicates that a `Decidable` instance is defined using classical reasoning, proving an instance exists rather than giving a concrete construction. The `decide` tactic works by evaluating a decision procedure via reduction, and it cannot make progress with such instances. This can occur due to the `open scoped Classical` command, which enables the instance `Classical.propDecidable`.

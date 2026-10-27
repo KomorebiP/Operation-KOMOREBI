@@ -1,0 +1,11 @@
+# Development failures and repairs, v0.28.0
+
+1. The container did not support the attempted streaming session. That setup call failed before being used as evidence. Runtime assembly was rerun synchronously and all seven part SHA/CRC checks and combined archive SHA passed.
+2. First-pass affine proofs triggered unused-section-variable and unused-simp warnings under warnings-as-errors. An explicit basis-column equality and a current `push Not` tactic replaced the problematic scripts. The first diagnostic is preserved as development_signature_first.log.
+3. Replacing a broad Mathlib.Tactic import with lightweight imports exposed the missing Matrix decidable-equality instance. Importing the actual pinned Matrix.Basic module fixed executable coefficient comparison. The transient failed elaboration generated dependent error messages mentioning `sorry`; no source placeholder was inserted or accepted.
+4. The first contextual-sequencing proof used a wrapped equivalence hypothesis as an uninstantiated simp rule. Applying it explicitly fixed the proof. The diagnostic is in development_program_first.log.
+5. The initial matrix-notation import path was wrong for the pinned revision. The actual module is Mathlib.LinearAlgebra.Matrix.Notation. The corrected concrete examples all pass ordinary kernel proofs, including `by decide`; no native evaluation axiom was used.
+6. One cumulative-build slice and one negative-test batch hit the outer execution limit. No Lean child remained running at inspection. Only final successful per-target records and substantive rejection logs are accepted by the collector. Unfinished targets were rerun.
+7. The first final source scanner incorrectly flagged the legacy `admit` action constructor and case labels as the proof tactic. Exact constructor-label patterns are now distinguished; an actual `admit` tactic would still be flagged. The independent 1,499-declaration axiom audit found no placeholder/project/native axiom. No mathematical source was changed to repair the scanner.
+
+No failed mathematical claim was patched by assumption or an added axiom. The harmful-fusion and incomplete-probe claims are intentionally refuted in the positive library and rejected in the negative suite. There is no unresolved new proof file in the aggregate build. Inherited live runtime suites were not rerun.

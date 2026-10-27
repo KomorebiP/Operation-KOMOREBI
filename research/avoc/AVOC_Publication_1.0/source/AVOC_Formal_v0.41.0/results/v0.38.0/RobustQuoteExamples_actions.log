@@ -1,0 +1,968 @@
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:214:51: error: unsolved goals
+⊢ ∃ a,
+    (match
+          ExecutablePlanner.best
+            (List.map
+                (ExecutablePlanner.actionEval
+                  { actions := actionList (nominal uncertainModel), observations := [false, true],
+                    prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                    reward := reward (nominal uncertainModel) }
+                  (fun x =>
+                    {
+                      score :=
+                        (Option.map ExecutablePlanner.Candidate.score
+                              (ExecutablePlanner.best
+                                (List.map
+                                  (ExecutablePlanner.actionEval
+                                    { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                      prob := probability (nominal uncertainModel),
+                                      step := step (nominal uncertainModel), reward := reward (nominal uncertainModel) }
+                                    (fun x => { score := 0, choice := none, work := 1 }) x)
+                                  (if x.done = true then [Action.stop]
+                                  else
+                                    Action.stop ::
+                                      ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.inspectWarm]
+                                        else []) ++
+                                        ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                            [Action.generateCold]
+                                          else []) ++
+                                          ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                            if x.coldStatus = Status.ready then [Action.deployCold] else []))))))).getD
+                          0,
+                      choice :=
+                        Option.map ExecutablePlanner.Candidate.action
+                          (ExecutablePlanner.best
+                            (List.map
+                              (ExecutablePlanner.actionEval
+                                { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                  prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                                  reward := reward (nominal uncertainModel) }
+                                (fun x => { score := 0, choice := none, work := 1 }) x)
+                              (if x.done = true then [Action.stop]
+                              else
+                                Action.stop ::
+                                  ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                      [Action.inspectWarm]
+                                    else []) ++
+                                    ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                        [Action.generateCold]
+                                      else []) ++
+                                      ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                        if x.coldStatus = Status.ready then [Action.deployCold] else [])))))),
+                      work :=
+                        1 +
+                          (List.map
+                              (ExecutablePlanner.Candidate.work ∘
+                                ExecutablePlanner.actionEval
+                                  { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                    prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                                    reward := reward (nominal uncertainModel) }
+                                  (fun x => { score := 0, choice := none, work := 1 }) x)
+                              (if x.done = true then [Action.stop]
+                              else
+                                Action.stop ::
+                                  ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                      [Action.inspectWarm]
+                                    else []) ++
+                                    ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                        [Action.generateCold]
+                                      else []) ++
+                                      ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                        if x.coldStatus = Status.ready then [Action.deployCold] else []))))).sum })
+                  { warmStatus := Status.untried, coldStatus := Status.untried, budget := 0, spent := 0, total := 0,
+                    done := false })
+                (if (NatBand.singleton 0).upper = 0 then [Action.inspectWarm] else []) ++
+              (List.map
+                  (ExecutablePlanner.actionEval
+                    { actions := actionList (nominal uncertainModel), observations := [false, true],
+                      prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                      reward := reward (nominal uncertainModel) }
+                    (fun x =>
+                      {
+                        score :=
+                          (Option.map ExecutablePlanner.Candidate.score
+                                (ExecutablePlanner.best
+                                  (List.map
+                                    (ExecutablePlanner.actionEval
+                                      { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                        prob := probability (nominal uncertainModel),
+                                        step := step (nominal uncertainModel),
+                                        reward := reward (nominal uncertainModel) }
+                                      (fun x => { score := 0, choice := none, work := 1 }) x)
+                                    (if x.done = true then [Action.stop]
+                                    else
+                                      Action.stop ::
+                                        ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                            [Action.inspectWarm]
+                                          else []) ++
+                                          ((if
+                                                x.coldStatus = Status.untried ∧
+                                                  (NatBand.singleton 0).upper ≤ x.budget then
+                                              [Action.generateCold]
+                                            else []) ++
+                                            ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                              if x.coldStatus = Status.ready then [Action.deployCold]
+                                              else []))))))).getD
+                            0,
+                        choice :=
+                          Option.map ExecutablePlanner.Candidate.action
+                            (ExecutablePlanner.best
+                              (List.map
+                                (ExecutablePlanner.actionEval
+                                  { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                    prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                                    reward := reward (nominal uncertainModel) }
+                                  (fun x => { score := 0, choice := none, work := 1 }) x)
+                                (if x.done = true then [Action.stop]
+                                else
+                                  Action.stop ::
+                                    ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                        [Action.inspectWarm]
+                                      else []) ++
+                                      ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.generateCold]
+                                        else []) ++
+                                        ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                          if x.coldStatus = Status.ready then [Action.deployCold] else [])))))),
+                        work :=
+                          1 +
+                            (List.map
+                                (ExecutablePlanner.Candidate.work ∘
+                                  ExecutablePlanner.actionEval
+                                    { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                      prob := probability (nominal uncertainModel),
+                                      step := step (nominal uncertainModel), reward := reward (nominal uncertainModel) }
+                                    (fun x => { score := 0, choice := none, work := 1 }) x)
+                                (if x.done = true then [Action.stop]
+                                else
+                                  Action.stop ::
+                                    ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                        [Action.inspectWarm]
+                                      else []) ++
+                                      ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.generateCold]
+                                        else []) ++
+                                        ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                          if x.coldStatus = Status.ready then [Action.deployCold] else []))))).sum })
+                    { warmStatus := Status.untried, coldStatus := Status.untried, budget := 0, spent := 0, total := 0,
+                      done := false })
+                  (if (NatBand.singleton 0).upper = 0 then [Action.generateCold] else []) ++
+                (List.map
+                    (ExecutablePlanner.actionEval
+                      { actions := actionList (nominal uncertainModel), observations := [false, true],
+                        prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                        reward := reward (nominal uncertainModel) }
+                      (fun x =>
+                        {
+                          score :=
+                            (Option.map ExecutablePlanner.Candidate.score
+                                  (ExecutablePlanner.best
+                                    (List.map
+                                      (ExecutablePlanner.actionEval
+                                        { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                          prob := probability (nominal uncertainModel),
+                                          step := step (nominal uncertainModel),
+                                          reward := reward (nominal uncertainModel) }
+                                        (fun x => { score := 0, choice := none, work := 1 }) x)
+                                      (if x.done = true then [Action.stop]
+                                      else
+                                        Action.stop ::
+                                          ((if
+                                                x.warmStatus = Status.untried ∧
+                                                  (NatBand.singleton 0).upper ≤ x.budget then
+                                              [Action.inspectWarm]
+                                            else []) ++
+                                            ((if
+                                                  x.coldStatus = Status.untried ∧
+                                                    (NatBand.singleton 0).upper ≤ x.budget then
+                                                [Action.generateCold]
+                                              else []) ++
+                                              ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                                if x.coldStatus = Status.ready then [Action.deployCold]
+                                                else []))))))).getD
+                              0,
+                          choice :=
+                            Option.map ExecutablePlanner.Candidate.action
+                              (ExecutablePlanner.best
+                                (List.map
+                                  (ExecutablePlanner.actionEval
+                                    { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                      prob := probability (nominal uncertainModel),
+                                      step := step (nominal uncertainModel), reward := reward (nominal uncertainModel) }
+                                    (fun x => { score := 0, choice := none, work := 1 }) x)
+                                  (if x.done = true then [Action.stop]
+                                  else
+                                    Action.stop ::
+                                      ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.inspectWarm]
+                                        else []) ++
+                                        ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                            [Action.generateCold]
+                                          else []) ++
+                                          ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                            if x.coldStatus = Status.ready then [Action.deployCold] else [])))))),
+                          work :=
+                            1 +
+                              (List.map
+                                  (ExecutablePlanner.Candidate.work ∘
+                                    ExecutablePlanner.actionEval
+                                      { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                        prob := probability (nominal uncertainModel),
+                                        step := step (nominal uncertainModel),
+                                        reward := reward (nominal uncertainModel) }
+                                      (fun x => { score := 0, choice := none, work := 1 }) x)
+                                  (if x.done = true then [Action.stop]
+                                  else
+                                    Action.stop ::
+                                      ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.inspectWarm]
+                                        else []) ++
+                                        ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                            [Action.generateCold]
+                                          else []) ++
+                                          ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                            if x.coldStatus = Status.ready then [Action.deployCold] else []))))).sum })
+                      { warmStatus := Status.untried, coldStatus := Status.untried, budget := 0, spent := 0, total := 0,
+                        done := false })
+                    (if Status.untried = Status.ready then [Action.deployWarm] else []) ++
+                  List.map
+                    (ExecutablePlanner.actionEval
+                      { actions := actionList (nominal uncertainModel), observations := [false, true],
+                        prob := probability (nominal uncertainModel), step := step (nominal uncertainModel),
+                        reward := reward (nominal uncertainModel) }
+                      (fun x =>
+                        {
+                          score :=
+                            (Option.map ExecutablePlanner.Candidate.score
+                                  (ExecutablePlanner.best
+                                    (List.map
+                                      (ExecutablePlanner.actionEval
+                                        { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                          prob := probability (nominal uncertainModel),
+                                          step := step (nominal uncertainModel),
+                                          reward := reward (nominal uncertainModel) }
+                                        (fun x => { score := 0, choice := none, work := 1 }) x)
+                                      (if x.done = true then [Action.stop]
+                                      else
+                                        Action.stop ::
+                                          ((if
+                                                x.warmStatus = Status.untried ∧
+                                                  (NatBand.singleton 0).upper ≤ x.budget then
+                                              [Action.inspectWarm]
+                                            else []) ++
+                                            ((if
+                                                  x.coldStatus = Status.untried ∧
+                                                    (NatBand.singleton 0).upper ≤ x.budget then
+                                                [Action.generateCold]
+                                              else []) ++
+                                              ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                                if x.coldStatus = Status.ready then [Action.deployCold]
+                                                else []))))))).getD
+                              0,
+                          choice :=
+                            Option.map ExecutablePlanner.Candidate.action
+                              (ExecutablePlanner.best
+                                (List.map
+                                  (ExecutablePlanner.actionEval
+                                    { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                      prob := probability (nominal uncertainModel),
+                                      step := step (nominal uncertainModel), reward := reward (nominal uncertainModel) }
+                                    (fun x => { score := 0, choice := none, work := 1 }) x)
+                                  (if x.done = true then [Action.stop]
+                                  else
+                                    Action.stop ::
+                                      ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.inspectWarm]
+                                        else []) ++
+                                        ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                            [Action.generateCold]
+                                          else []) ++
+                                          ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                            if x.coldStatus = Status.ready then [Action.deployCold] else [])))))),
+                          work :=
+                            1 +
+                              (List.map
+                                  (ExecutablePlanner.Candidate.work ∘
+                                    ExecutablePlanner.actionEval
+                                      { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                        prob := probability (nominal uncertainModel),
+                                        step := step (nominal uncertainModel),
+                                        reward := reward (nominal uncertainModel) }
+                                      (fun x => { score := 0, choice := none, work := 1 }) x)
+                                  (if x.done = true then [Action.stop]
+                                  else
+                                    Action.stop ::
+                                      ((if x.warmStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                          [Action.inspectWarm]
+                                        else []) ++
+                                        ((if x.coldStatus = Status.untried ∧ (NatBand.singleton 0).upper ≤ x.budget then
+                                            [Action.generateCold]
+                                          else []) ++
+                                          ((if x.warmStatus = Status.ready then [Action.deployWarm] else []) ++
+                                            if x.coldStatus = Status.ready then [Action.deployCold] else []))))).sum })
+                      { warmStatus := Status.untried, coldStatus := Status.untried, budget := 0, spent := 0, total := 0,
+                        done := false })
+                    (if Status.untried = Status.ready then [Action.deployCold] else [])))) with
+        | none => some { action := Action.stop, score := 0, work := 15 }
+        | some d => if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 15 } else some d) =
+        some a ∧
+      a.action = Action.inspectWarm
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:224:67: error: unsolved goals
+⊢ (Option.map ExecutablePlanner.Candidate.action
+          (match
+            match
+              match
+                ExecutablePlanner.best
+                  (List.map
+                      (robustCandidate uncertainModel 1
+                        { warmStatus := Status.untried, coldStatus := Status.untried, budget := 0, spent := 0,
+                          total := 0, done := false })
+                      (if Status.untried = Status.ready then [Action.deployWarm] else []) ++
+                    List.map
+                      (robustCandidate uncertainModel 1
+                        { warmStatus := Status.untried, coldStatus := Status.untried, budget := 0, spent := 0,
+                          total := 0, done := false })
+                      (if Status.untried = Status.ready then [Action.deployCold] else [])) with
+              | none =>
+                some
+                  { action := Action.generateCold,
+                    score :=
+                      (Option.map ExecutablePlanner.Candidate.score
+                            (match
+                              match
+                                ExecutablePlanner.best
+                                  (List.map
+                                      (ExecutablePlanner.actionEval
+                                        { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                          prob := probability (nominal uncertainModel),
+                                          step := step (nominal uncertainModel),
+                                          reward := reward (nominal uncertainModel) }
+                                        (fun x => { score := 0, choice := none, work := 1 })
+                                        { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                          spent := 0, total := 0, done := false })
+                                      (if Status.ready = Status.untried then [Action.generateCold] else []) ++
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.untried = Status.ready then [Action.deployWarm] else []) ++
+                                      [{ action := Action.deployCold, score := 60, work := 5 }])) with
+                              | none => some { action := Action.inspectWarm, score := 0, work := 5 }
+                              | some d =>
+                                if d.score ≤ 0 then some { action := Action.inspectWarm, score := 0, work := 5 }
+                                else some d with
+                            | none => some { action := Action.stop, score := 0, work := 5 }
+                            | some d =>
+                              if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                              else some d)).getD
+                        0,
+                    work :=
+                      1 +
+                        (1 +
+                            (1 +
+                              (5 +
+                                (5 +
+                                  ((List.map
+                                        (ExecutablePlanner.Candidate.work ∘
+                                          ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.untried, coldStatus := Status.failed, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                        (if Status.failed = Status.untried then [Action.generateCold] else [])).sum +
+                                    ((List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.untried, coldStatus := Status.failed, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.untried = Status.ready then [Action.deployWarm] else [])).sum +
+                                      (List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.untried, coldStatus := Status.failed, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.failed = Status.ready then [Action.deployCold] else [])).sum))))) +
+                          (1 +
+                            (1 +
+                              (5 +
+                                (5 +
+                                  ((List.map
+                                        (ExecutablePlanner.Candidate.work ∘
+                                          ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                        (if Status.ready = Status.untried then [Action.generateCold] else [])).sum +
+                                    ((List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.untried = Status.ready then [Action.deployWarm] else [])).sum +
+                                      5))))))) }
+              | some d =>
+                if
+                    d.score ≤
+                      (Option.map ExecutablePlanner.Candidate.score
+                            (match
+                              match
+                                ExecutablePlanner.best
+                                  (List.map
+                                      (ExecutablePlanner.actionEval
+                                        { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                          prob := probability (nominal uncertainModel),
+                                          step := step (nominal uncertainModel),
+                                          reward := reward (nominal uncertainModel) }
+                                        (fun x => { score := 0, choice := none, work := 1 })
+                                        { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                          spent := 0, total := 0, done := false })
+                                      (if Status.ready = Status.untried then [Action.generateCold] else []) ++
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.untried = Status.ready then [Action.deployWarm] else []) ++
+                                      [{ action := Action.deployCold, score := 60, work := 5 }])) with
+                              | none => some { action := Action.inspectWarm, score := 0, work := 5 }
+                              | some d =>
+                                if d.score ≤ 0 then some { action := Action.inspectWarm, score := 0, work := 5 }
+                                else some d with
+                            | none => some { action := Action.stop, score := 0, work := 5 }
+                            | some d =>
+                              if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                              else some d)).getD
+                        0 then
+                  some
+                    { action := Action.generateCold,
+                      score :=
+                        (Option.map ExecutablePlanner.Candidate.score
+                              (match
+                                match
+                                  ExecutablePlanner.best
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.ready = Status.untried then [Action.generateCold] else []) ++
+                                      (List.map
+                                          (ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                          (if Status.untried = Status.ready then [Action.deployWarm] else []) ++
+                                        [{ action := Action.deployCold, score := 60, work := 5 }])) with
+                                | none => some { action := Action.inspectWarm, score := 0, work := 5 }
+                                | some d =>
+                                  if d.score ≤ 0 then some { action := Action.inspectWarm, score := 0, work := 5 }
+                                  else some d with
+                              | none => some { action := Action.stop, score := 0, work := 5 }
+                              | some d =>
+                                if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                else some d)).getD
+                          0,
+                      work :=
+                        1 +
+                          (1 +
+                              (1 +
+                                (5 +
+                                  (5 +
+                                    ((List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.untried, coldStatus := Status.failed, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.failed = Status.untried then [Action.generateCold] else [])).sum +
+                                      ((List.map
+                                            (ExecutablePlanner.Candidate.work ∘
+                                              ExecutablePlanner.actionEval
+                                                { actions := actionList (nominal uncertainModel),
+                                                  observations := [false, true],
+                                                  prob := probability (nominal uncertainModel),
+                                                  step := step (nominal uncertainModel),
+                                                  reward := reward (nominal uncertainModel) }
+                                                (fun x => { score := 0, choice := none, work := 1 })
+                                                { warmStatus := Status.untried, coldStatus := Status.failed,
+                                                  budget := 0, spent := 0, total := 0, done := false })
+                                            (if Status.untried = Status.ready then [Action.deployWarm] else [])).sum +
+                                        (List.map
+                                            (ExecutablePlanner.Candidate.work ∘
+                                              ExecutablePlanner.actionEval
+                                                { actions := actionList (nominal uncertainModel),
+                                                  observations := [false, true],
+                                                  prob := probability (nominal uncertainModel),
+                                                  step := step (nominal uncertainModel),
+                                                  reward := reward (nominal uncertainModel) }
+                                                (fun x => { score := 0, choice := none, work := 1 })
+                                                { warmStatus := Status.untried, coldStatus := Status.failed,
+                                                  budget := 0, spent := 0, total := 0, done := false })
+                                            (if Status.failed = Status.ready then [Action.deployCold]
+                                            else [])).sum))))) +
+                            (1 +
+                              (1 +
+                                (5 +
+                                  (5 +
+                                    ((List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.ready = Status.untried then [Action.generateCold] else [])).sum +
+                                      ((List.map
+                                            (ExecutablePlanner.Candidate.work ∘
+                                              ExecutablePlanner.actionEval
+                                                { actions := actionList (nominal uncertainModel),
+                                                  observations := [false, true],
+                                                  prob := probability (nominal uncertainModel),
+                                                  step := step (nominal uncertainModel),
+                                                  reward := reward (nominal uncertainModel) }
+                                                (fun x => { score := 0, choice := none, work := 1 })
+                                                { warmStatus := Status.untried, coldStatus := Status.ready, budget := 0,
+                                                  spent := 0, total := 0, done := false })
+                                            (if Status.untried = Status.ready then [Action.deployWarm] else [])).sum +
+                                        5))))))) }
+                else some d with
+            | none =>
+              some
+                { action := Action.inspectWarm,
+                  score :=
+                    2 / 5 *
+                          (Option.map ExecutablePlanner.Candidate.score
+                                (match
+                                  ExecutablePlanner.best
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.failed = Status.untried then [Action.inspectWarm] else []) ++
+                                      { action := Action.generateCold, score := 0, work := 5 } ::
+                                        (List.map
+                                            (ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                            (if Status.failed = Status.ready then [Action.deployWarm] else []) ++
+                                          List.map
+                                            (ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                            (if Status.untried = Status.ready then [Action.deployCold] else []))) with
+                                | none => some { action := Action.stop, score := 0, work := 5 }
+                                | some d =>
+                                  if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                  else some d)).getD
+                            0 +
+                        3 / 5 *
+                          (Option.map ExecutablePlanner.Candidate.score
+                                (match
+                                  ExecutablePlanner.best
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.ready = Status.untried then [Action.inspectWarm] else []) ++
+                                      { action := Action.generateCold, score := 0, work := 5 } ::
+                                        { action := Action.deployWarm, score := 200, work := 5 } ::
+                                          List.map
+                                            (ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                            (if Status.untried = Status.ready then [Action.deployCold] else [])) with
+                                | none => some { action := Action.stop, score := 0, work := 5 }
+                                | some d =>
+                                  if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                  else some d)).getD
+                            0 -
+                      208,
+                  work :=
+                    1 +
+                      (1 +
+                          (1 +
+                            (5 +
+                              ((List.map
+                                    (ExecutablePlanner.Candidate.work ∘
+                                      ExecutablePlanner.actionEval
+                                        { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                          prob := probability (nominal uncertainModel),
+                                          step := step (nominal uncertainModel),
+                                          reward := reward (nominal uncertainModel) }
+                                        (fun x => { score := 0, choice := none, work := 1 })
+                                        { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                          spent := 0, total := 0, done := false })
+                                    (if Status.failed = Status.untried then [Action.inspectWarm] else [])).sum +
+                                (5 +
+                                  ((List.map
+                                        (ExecutablePlanner.Candidate.work ∘
+                                          ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                        (if Status.failed = Status.ready then [Action.deployWarm] else [])).sum +
+                                    (List.map
+                                        (ExecutablePlanner.Candidate.work ∘
+                                          ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                        (if Status.untried = Status.ready then [Action.deployCold] else [])).sum))))) +
+                        (1 +
+                          (1 +
+                            (5 +
+                              ((List.map
+                                    (ExecutablePlanner.Candidate.work ∘
+                                      ExecutablePlanner.actionEval
+                                        { actions := actionList (nominal uncertainModel), observations := [false, true],
+                                          prob := probability (nominal uncertainModel),
+                                          step := step (nominal uncertainModel),
+                                          reward := reward (nominal uncertainModel) }
+                                        (fun x => { score := 0, choice := none, work := 1 })
+                                        { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                          spent := 0, total := 0, done := false })
+                                    (if Status.ready = Status.untried then [Action.inspectWarm] else [])).sum +
+                                (5 +
+                                  (5 +
+                                    (List.map
+                                        (ExecutablePlanner.Candidate.work ∘
+                                          ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                        (if Status.untried = Status.ready then [Action.deployCold]
+                                        else [])).sum))))))) }
+            | some d =>
+              if
+                  d.score ≤
+                    2 / 5 *
+                          (Option.map ExecutablePlanner.Candidate.score
+                                (match
+                                  ExecutablePlanner.best
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.failed = Status.untried then [Action.inspectWarm] else []) ++
+                                      { action := Action.generateCold, score := 0, work := 5 } ::
+                                        (List.map
+                                            (ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                            (if Status.failed = Status.ready then [Action.deployWarm] else []) ++
+                                          List.map
+                                            (ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                            (if Status.untried = Status.ready then [Action.deployCold] else []))) with
+                                | none => some { action := Action.stop, score := 0, work := 5 }
+                                | some d =>
+                                  if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                  else some d)).getD
+                            0 +
+                        3 / 5 *
+                          (Option.map ExecutablePlanner.Candidate.score
+                                (match
+                                  ExecutablePlanner.best
+                                    (List.map
+                                        (ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                        (if Status.ready = Status.untried then [Action.inspectWarm] else []) ++
+                                      { action := Action.generateCold, score := 0, work := 5 } ::
+                                        { action := Action.deployWarm, score := 200, work := 5 } ::
+                                          List.map
+                                            (ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                            (if Status.untried = Status.ready then [Action.deployCold] else [])) with
+                                | none => some { action := Action.stop, score := 0, work := 5 }
+                                | some d =>
+                                  if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                  else some d)).getD
+                            0 -
+                      208 then
+                some
+                  { action := Action.inspectWarm,
+                    score :=
+                      2 / 5 *
+                            (Option.map ExecutablePlanner.Candidate.score
+                                  (match
+                                    ExecutablePlanner.best
+                                      (List.map
+                                          (ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                          (if Status.failed = Status.untried then [Action.inspectWarm] else []) ++
+                                        { action := Action.generateCold, score := 0, work := 5 } ::
+                                          (List.map
+                                              (ExecutablePlanner.actionEval
+                                                { actions := actionList (nominal uncertainModel),
+                                                  observations := [false, true],
+                                                  prob := probability (nominal uncertainModel),
+                                                  step := step (nominal uncertainModel),
+                                                  reward := reward (nominal uncertainModel) }
+                                                (fun x => { score := 0, choice := none, work := 1 })
+                                                { warmStatus := Status.failed, coldStatus := Status.untried,
+                                                  budget := 0, spent := 0, total := 0, done := false })
+                                              (if Status.failed = Status.ready then [Action.deployWarm] else []) ++
+                                            List.map
+                                              (ExecutablePlanner.actionEval
+                                                { actions := actionList (nominal uncertainModel),
+                                                  observations := [false, true],
+                                                  prob := probability (nominal uncertainModel),
+                                                  step := step (nominal uncertainModel),
+                                                  reward := reward (nominal uncertainModel) }
+                                                (fun x => { score := 0, choice := none, work := 1 })
+                                                { warmStatus := Status.failed, coldStatus := Status.untried,
+                                                  budget := 0, spent := 0, total := 0, done := false })
+                                              (if Status.untried = Status.ready then [Action.deployCold] else []))) with
+                                  | none => some { action := Action.stop, score := 0, work := 5 }
+                                  | some d =>
+                                    if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                    else some d)).getD
+                              0 +
+                          3 / 5 *
+                            (Option.map ExecutablePlanner.Candidate.score
+                                  (match
+                                    ExecutablePlanner.best
+                                      (List.map
+                                          (ExecutablePlanner.actionEval
+                                            { actions := actionList (nominal uncertainModel),
+                                              observations := [false, true],
+                                              prob := probability (nominal uncertainModel),
+                                              step := step (nominal uncertainModel),
+                                              reward := reward (nominal uncertainModel) }
+                                            (fun x => { score := 0, choice := none, work := 1 })
+                                            { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                              spent := 0, total := 0, done := false })
+                                          (if Status.ready = Status.untried then [Action.inspectWarm] else []) ++
+                                        { action := Action.generateCold, score := 0, work := 5 } ::
+                                          { action := Action.deployWarm, score := 200, work := 5 } ::
+                                            List.map
+                                              (ExecutablePlanner.actionEval
+                                                { actions := actionList (nominal uncertainModel),
+                                                  observations := [false, true],
+                                                  prob := probability (nominal uncertainModel),
+                                                  step := step (nominal uncertainModel),
+                                                  reward := reward (nominal uncertainModel) }
+                                                (fun x => { score := 0, choice := none, work := 1 })
+                                                { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                                  spent := 0, total := 0, done := false })
+                                              (if Status.untried = Status.ready then [Action.deployCold] else [])) with
+                                  | none => some { action := Action.stop, score := 0, work := 5 }
+                                  | some d =>
+                                    if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 5 }
+                                    else some d)).getD
+                              0 -
+                        208,
+                    work :=
+                      1 +
+                        (1 +
+                            (1 +
+                              (5 +
+                                ((List.map
+                                      (ExecutablePlanner.Candidate.work ∘
+                                        ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                      (if Status.failed = Status.untried then [Action.inspectWarm] else [])).sum +
+                                  (5 +
+                                    ((List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.failed = Status.ready then [Action.deployWarm] else [])).sum +
+                                      (List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.failed, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.untried = Status.ready then [Action.deployCold]
+                                          else [])).sum))))) +
+                          (1 +
+                            (1 +
+                              (5 +
+                                ((List.map
+                                      (ExecutablePlanner.Candidate.work ∘
+                                        ExecutablePlanner.actionEval
+                                          { actions := actionList (nominal uncertainModel),
+                                            observations := [false, true], prob := probability (nominal uncertainModel),
+                                            step := step (nominal uncertainModel),
+                                            reward := reward (nominal uncertainModel) }
+                                          (fun x => { score := 0, choice := none, work := 1 })
+                                          { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                            spent := 0, total := 0, done := false })
+                                      (if Status.ready = Status.untried then [Action.inspectWarm] else [])).sum +
+                                  (5 +
+                                    (5 +
+                                      (List.map
+                                          (ExecutablePlanner.Candidate.work ∘
+                                            ExecutablePlanner.actionEval
+                                              { actions := actionList (nominal uncertainModel),
+                                                observations := [false, true],
+                                                prob := probability (nominal uncertainModel),
+                                                step := step (nominal uncertainModel),
+                                                reward := reward (nominal uncertainModel) }
+                                              (fun x => { score := 0, choice := none, work := 1 })
+                                              { warmStatus := Status.ready, coldStatus := Status.untried, budget := 0,
+                                                spent := 0, total := 0, done := false })
+                                          (if Status.untried = Status.ready then [Action.deployCold]
+                                          else [])).sum))))))) }
+              else some d with
+          | none => some { action := Action.stop, score := 0, work := 15 }
+          | some d => if d.score ≤ 0 then some { action := Action.stop, score := 0, work := 15 } else some d)).getD
+      Action.stop =
+    Action.generateCold
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:239:80: error: unsolved goals
+⊢ 0 < ∑ x ∈ Finset.range 2, 2 * (∑ x ∈ Finset.range x, 4 / 5 * (↑x * 260) + 4 / 5 * (↑x * 260))

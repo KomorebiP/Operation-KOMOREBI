@@ -1,0 +1,33 @@
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:215:2: error: Tactic `rfl` failed: The left-hand side
+  (ExecutablePlanner.evaluate (executable (nominal uncertainModel)) 2 uncertainPlan).choice
+is not definitionally equal to the right-hand side
+  some Action.inspectWarm
+
+⊢ (ExecutablePlanner.evaluate (executable (nominal uncertainModel)) 2 uncertainPlan).choice = some Action.inspectWarm
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:220:2: error: Tactic `rfl` failed: The left-hand side
+  robustChoice uncertainModel 1 uncertainPlan
+is not definitionally equal to the right-hand side
+  Action.generateCold
+
+⊢ robustChoice uncertainModel 1 uncertainPlan = Action.generateCold
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:246:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactStart.plan).choice
+in the target expression
+  robustChoice exactModel 1 exactStart.plan =
+    (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactLazyStart.plan).choice.getD Action.stop
+
+a : Action
+ha : a ∈ actions (nominal exactModel) exactStart.plan
+hz : ∀ (b : Action), localQRadius exactModel 1 b = 0
+best : Action
+hchoice : (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactStart.plan).choice = some best
+hmem : best ∈ (system (nominal exactModel)).actions exactStart.plan
+hmax :
+  ∀ b ∈ (system (nominal exactModel)).actions exactStart.plan,
+    Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan b ≤
+      Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan best
+h :
+  robustChoice exactModel 1 exactStart.plan =
+    (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactLazyStart.plan).choice.getD Action.stop
+hp : exactLazyStart.plan = exactStart.plan
+⊢ best = Action.inspectWarm

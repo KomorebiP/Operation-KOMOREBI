@@ -1,0 +1,40 @@
+/mnt/data/AVOC_Formal_v0.14.0/AVOC/ResearchControllerExamples.lean:78:2: error: linarith failed to find a contradiction
+case h1
+h :
+  (bayesUpdate { prob := fun x => 1 / 2, nonneg := ⋯, sum_one := ⋯ }
+          {
+            prob := fun w o =>
+              if
+                  o =
+                    match w with
+                    | false => none
+                    | true => some () then
+                1
+              else 0,
+            nonneg := ⋯, sum_one := ⋯ }
+          (some ()) ⋯).prob
+      true =
+    1
+a✝ : (bayesUpdate uniformBoolBelief receiptChannel (some ()) initial_some_positive).prob true < 1
+⊢ False
+failed
+/mnt/data/AVOC_Formal_v0.14.0/AVOC/ResearchControllerExamples.lean:131:24: error: This simp argument is unused:
+  Fintype.sum_bool
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [reward, hh, demo, accepted, probability, predictiveProb, Fintype.sum_option, receiptChannel, signal]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.14.0/AVOC/ResearchControllerExamples.lean:148:2: error: 'change' tactic failed, pattern
+  reward demo initial (Action.attempt 0) +
+      (probability demo initial (Action.attempt 0) (some ()) * reward demo afterSignal (Action.verify 0) +
+        probability demo initial (Action.attempt 0) none *
+          reward demo (step demo initial (Action.attempt 0) none) Action.stop) =
+    3 / 2
+is not definitionally equal to target
+  reward demo initial (Action.attempt 0) +
+      (probability demo initial (Action.attempt 0) none *
+          (controller demo).reward (step demo initial (Action.attempt 0) none) Action.stop +
+        probability demo initial (Action.attempt 0) (some default) *
+          (controller demo).reward (step demo initial (Action.attempt 0) (some default)) (Action.verify 0)) =
+    3 / 2

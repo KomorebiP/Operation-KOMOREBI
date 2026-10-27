@@ -1,0 +1,48 @@
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryLedger.lean:20:2: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  f ≥ 0
+  e ≥ 0
+  d ≥ 0
+  d - e ≥ 0
+  c ≥ 0
+  a ≥ 0
+  a - c ≥ 0
+  a - c - f ≤ -1
+where
+ a := ↑lim.credits
+ c := ↑l.charged
+ d := ↑lim.attempts
+ e := ↑l.reserved
+ f := ↑q.fee
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryLedger.lean:17:41: error: This simp argument is unused:
+  decide_eq_true_eq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [RetryBayesian.enabled, state, room]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryLedger.lean:44:43: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryLedger.lean:55:61: error: unexpected identifier; expected '}'
+/mnt/data/AVOC_Formal_v0.22.0/AVOC/RetryLedger.lean:53:56: error: unsolved goals
+Ω : Type u_1
+inst✝ : Fintype Ω
+q : RetryBayesian.Reliability Ω
+lim : Limits
+l : Ledger
+b : RationalBelief Ω
+old : Ticket
+hs : Safe lim l
+ht : l.terminal = false
+hp : l.published = false
+hc : l.current = some old
+hf : q.fee = old.fee
+hr : RetryBayesian.recommend q (state lim l b) = true
+hm : room lim l old.fee
+out : Ledger :=
+  { charged := l.charged + old.fee, confirmed := l.confirmed, reserved := l.reserved, current := l.current,
+    published := l.published, terminal := l.terminal }
+⊢ ∃ out,
+    authorize q lim l b old = Except.ok out ∧
+      Safe lim out ∧
+        out.confirmed = l.confirmed ∧
+          out.charged = l.charged + old.fee ∧ publish out old = Except.error "publication refused"

@@ -1,0 +1,95 @@
+{
+  "artifacts_sha256": {
+    "results/v0.41.0/gate_review_probes.json": "cf9693a303e9e9d2c3c2a570bbeb3382472e7bc35dfcb8878ddcee7bac3ecbbd",
+    "results/v0.41.0/gate_review_probes.py": "bbe8539a5585798f0267c06ca36a285cd4e29c9ef40532c8c2938b30a9e2edaf",
+    "results/v0.41.0/gate_review_runtime_probes.json": "2c2babd854960865842edcd94937bbed0a8ba380651b2a6f42e55638636551d5",
+    "results/v0.41.0/gate_review_runtime_probes.py": "8c51ad81fd34d3b21c6e40ced17309f620875789a28b399ace18c77c078059fc"
+  },
+  "development_failures": [
+    {
+      "failure": "First expanded probe-report serialization failed because a comparison value was a Python set.",
+      "resolution": "Serialized sorted module lists instead; the complete 57-case probe rerun passed. No production evidence was changed."
+    }
+  ],
+  "findings": [
+    {
+      "evidence": [
+        "negative_mixed_expected_token",
+        "negative_mixed_unexpected_eof",
+        "negative_mixed_exception",
+        "negative_mixed_panic"
+      ],
+      "finding": "A substantive proof error could coexist with an unrecognized parser or compiler-crash diagnostic and still count as a valid negative rejection.",
+      "id": "negative_mixed_diagnostics",
+      "resolution": "The negative classifier now rejects additional expected-token, unexpected-eof, panic, exception, resource and internal-error signatures. Signal exit codes and timeouts were already rejected.",
+      "severity": "blocker",
+      "status": "closed"
+    },
+    {
+      "finding": "The build-record helper could accept a matching missing-import digest until the complete release graph rejected the missing artifact.",
+      "id": "missing_import_digest",
+      "resolution": "The helper explicitly rejects any absent import-output digest. The final release also checks every current local source and output.",
+      "severity": "hardening",
+      "status": "closed"
+    },
+    {
+      "finding": "Inherited regression source hashes omitted most fixture files, permitting fixture bytes to change after the recorded regression.",
+      "id": "inherited_fixture_freshness",
+      "resolution": "The regression runner now includes every file under examples/robust_quote, examples/calibration and examples/lazy_staged in its current source hashes.",
+      "severity": "blocker",
+      "status": "closed"
+    }
+  ],
+  "inspection": [
+    "Read all eleven declared release tools, including the version-in-middle build_v041_parallel.py.",
+    "Checked empty and wrong-type JSON rejection, stale source/log/import/object rejection, compiler pin binding, and negative substantive-diagnostic requirements.",
+    "Checked exact release build and named-theorem inventory membership plus current full audit log re-evaluation.",
+    "Checked that independent review covers all new AVOC modules, including modules without named theorem declarations.",
+    "Checked pinned inherited baseline record, inherited mathematical/Python sources, historical evidence hashes and current archived-observation oracle inputs.",
+    "Checked recorder-oracle section/count/status/input membership and eighteen contiguous actual-Lean batch records.",
+    "Checked bounded oracle completion/provenance linkage and required inherited five-case regression summaries.",
+    "Checked cumulative packaging exact membership, CRC, source-byte hashes and rejection of source-tree symlinks.",
+    "Reviewed added runtime provenance block and exercised 15 isolated mutations, including missing and stale source/object files and omitted transitive imports."
+  ],
+  "kind": "independent_release_infrastructure_review",
+  "limits": [
+    "This is an independent practical code review with isolated synthetic mutation probes, not a universal correctness proof of Python gate code.",
+    "The review does not authenticate hostile evidence or prove the compiler, operating system, dependency binaries, or external process trustworthy.",
+    "The Lean shortcut scan is lexical and the axiom report scope is the inventoried named theorem/lemma declarations; the clean compilation and independent source review remain separate required gates.",
+    "This review did not run or claim a clean build, production release gate, or packaged release. Final release execution remains required.",
+    "The synthetic accepted oracle-shape fixture in the probes is solely a schema-validator control and is not evidence that Lean comparisons ran."
+  ],
+  "open_blockers": [],
+  "probe_cases": 72,
+  "probe_passed": 72,
+  "review_updates": [
+    {
+      "change": "Added actual Lean runtime provenance closure gate after the initial review.",
+      "limits": "Initial 57-case probe record is preserved with its original tool hashes. This delta review adds 15 separate probes of the changed block.",
+      "new_probe_cases": 15,
+      "new_probe_passed": 15,
+      "scope": "Exact transitive RecorderMain source/object membership, current digests, module count, executable identity and pinned Lean binary digest.",
+      "tool_changes": {
+        "tools/release_check_v041.py": {
+          "current": "acc1135fae2885f1e8635d5413a1188f6930ce071e2264e74385c31ed9483eac",
+          "previous": "395d3a0c2db1857e3c9f0d642335ff8e2dcf9b66a26fbb1fc865cb1f03f5a33e"
+        }
+      }
+    }
+  ],
+  "reviewed_tool_sha256": {
+    "tools/build_v041_parallel.py": "532119c84127e3ea0bfa42190b3be3d1a817ebf4ef00c6b060b7d0b8ec9fb399",
+    "tools/check_inherited_v041.py": "f6c06c1761205ba7e3c67c73c6f46904093513fd3d3c5cfcdb3798e4248a70d9",
+    "tools/inventory_v041.py": "1417d51a0021710ae47343188720360fdb5cca04896af13c8f59d54aa4ea1d99",
+    "tools/lean_one_v041.py": "55fe4b4852fd99a4140614b4cbc68849087a540b402837c537067b4e4973f526",
+    "tools/package_v041.py": "be0f78913e8463e300efe88ba968bb0f69505ef433b21ed70d2779f7e16ad339",
+    "tools/release_check_v041.py": "acc1135fae2885f1e8635d5413a1188f6930ce071e2264e74385c31ed9483eac",
+    "tools/release_common_v041.py": "71ad3dccd34625c0e7117a9aa6514138c2ead18dab7fcee22d5704ac09f31642",
+    "tools/run_inherited_regression_v041.py": "b47a79e6a6f53968d2b727c93ed91ae83d29adea64e62db687c881dfeb76fa3d",
+    "tools/run_negative_v041.py": "15e942434f7dbfebfed26811ef55be57b28ee412e13b678a97168fcf1e8736aa",
+    "tools/source_scan_v041.py": "4670d9dc0ddc768db750133c39f6bb8284f532b5ef2d29f86db5cb6638be743d",
+    "tools/verify_v041.py": "3e515de7382f855254ac81a8c1e15a1e51d10271949824f77c6aaa6950c9074b"
+  },
+  "status": "passed",
+  "version": "0.41.0"
+}

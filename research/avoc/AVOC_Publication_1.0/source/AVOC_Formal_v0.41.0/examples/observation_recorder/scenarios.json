@@ -1,0 +1,398 @@
+[
+  {
+    "name": "empty ready snapshot",
+    "commands": [],
+    "expected": {
+      "status": "recorded",
+      "pending": [],
+      "log": [],
+      "ready": true
+    }
+  },
+  {
+    "name": "same pending begin replay",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        0
+      ]
+    ],
+    "expected": {
+      "status": "recorded",
+      "pending": [
+        [
+          0,
+          0
+        ]
+      ],
+      "log": [],
+      "ready": false
+    }
+  },
+  {
+    "name": "finish replay and late begin",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ]
+    ],
+    "expected": {
+      "status": "recorded",
+      "pending": [],
+      "log": [
+        [
+          0,
+          0,
+          "success"
+        ]
+      ],
+      "ready": true
+    }
+  },
+  {
+    "name": "finalization order independent of begin order",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        1,
+        1
+      ],
+      [
+        "finish",
+        1,
+        1,
+        "rejection"
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ],
+      [
+        "begin",
+        1,
+        1
+      ]
+    ],
+    "expected": {
+      "status": "recorded",
+      "pending": [],
+      "log": [
+        [
+          1,
+          1,
+          "rejection"
+        ],
+        [
+          0,
+          0,
+          "success"
+        ]
+      ],
+      "ready": true
+    }
+  },
+  {
+    "name": "unrelated pending blocks globally",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ],
+      [
+        "begin",
+        1,
+        1
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ],
+      [
+        "begin",
+        0,
+        0
+      ]
+    ],
+    "expected": {
+      "status": "recorded",
+      "pending": [
+        [
+          1,
+          1
+        ]
+      ],
+      "log": [
+        [
+          0,
+          0,
+          "success"
+        ]
+      ],
+      "ready": false
+    }
+  },
+  {
+    "name": "terminal status immutable",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "fault"
+      ],
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ]
+    ],
+    "expected": {
+      "status": "rejected",
+      "index": 3,
+      "error": "command_rejected"
+    }
+  },
+  {
+    "name": "terminal identity immutable",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ],
+      [
+        "begin",
+        0,
+        1
+      ]
+    ],
+    "expected": {
+      "status": "rejected",
+      "index": 2,
+      "error": "command_rejected"
+    }
+  },
+  {
+    "name": "pending identity immutable",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "begin",
+        0,
+        1
+      ]
+    ],
+    "expected": {
+      "status": "rejected",
+      "index": 1,
+      "error": "command_rejected"
+    }
+  },
+  {
+    "name": "unknown finalization rejected",
+    "commands": [
+      [
+        "finish",
+        0,
+        0,
+        "success"
+      ]
+    ],
+    "expected": {
+      "status": "rejected",
+      "index": 0,
+      "error": "command_rejected"
+    }
+  },
+  {
+    "name": "first rejection erases output snapshot",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        0,
+        "rejection"
+      ],
+      [
+        "finish",
+        1,
+        1,
+        "fault"
+      ],
+      [
+        "begin",
+        1,
+        1
+      ]
+    ],
+    "expected": {
+      "status": "rejected",
+      "index": 2,
+      "error": "command_rejected"
+    }
+  },
+  {
+    "name": "changed finalization identity",
+    "commands": [
+      [
+        "begin",
+        0,
+        0
+      ],
+      [
+        "finish",
+        0,
+        1,
+        "success"
+      ]
+    ],
+    "expected": {
+      "status": "rejected",
+      "index": 1,
+      "error": "command_rejected"
+    }
+  },
+  {
+    "name": "fault replay does not reopen",
+    "commands": [
+      [
+        "begin",
+        0,
+        1
+      ],
+      [
+        "finish",
+        0,
+        1,
+        "fault"
+      ],
+      [
+        "finish",
+        0,
+        1,
+        "fault"
+      ],
+      [
+        "begin",
+        0,
+        1
+      ],
+      [
+        "finish",
+        0,
+        1,
+        "fault"
+      ]
+    ],
+    "expected": {
+      "status": "recorded",
+      "pending": [],
+      "log": [
+        [
+          0,
+          1,
+          "fault"
+        ]
+      ],
+      "ready": true
+    }
+  }
+]

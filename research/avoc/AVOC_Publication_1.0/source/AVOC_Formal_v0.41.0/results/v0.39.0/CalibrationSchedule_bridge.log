@@ -1,0 +1,68 @@
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.38.0/AVOC/CalibrationSchedule.lean:134:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ i, ?f ↑i
+in the target expression
+  ∑ ω, FiniteCalibration.mass n (↑ω) p = 1
+
+Ω : Type u_1
+J : Type u_2
+K : Type u_3
+inst✝ : Fintype Ω
+n : ℕ
+p : ℚ
+hp0 : 0 ≤ p
+hp1 : p ≤ 1
+⊢ ∑ ω, FiniteCalibration.mass n (↑ω) p = 1
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.38.0/AVOC/CalibrationSchedule.lean:140:42: error: unsolved goals
+n : ℕ
+p : ℚ
+hp0 : 0 ≤ p
+hp1 : p ≤ 1
+k : Fin (n + 1)
+⊢ (∑ ω, if ω = k then FiniteCalibration.mass n (↑ω) p else 0) = FiniteCalibration.mass n (↑k) p
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.38.0/AVOC/CalibrationSchedule.lean:142:19: error: declaration uses `sorry`
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.38.0/AVOC/CalibrationSchedule.lean:154:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  eventMass law fun ω => ?event (count ω)
+in the target expression
+  (eventMass law fun ω => ¬FiniteCalibration.Contains n (↑(count ω)) m alpha p) = FiniteCalibration.missMass n m alpha p
+
+Ω : Type u_1
+inst✝ : Fintype Ω
+law : Law Ω
+n m : ℕ
+alpha p : ℚ
+count : Ω → Fin (n + 1)
+count_law : ∀ (k : Fin (n + 1)), (eventMass law fun ω => count ω = k) = FiniteCalibration.mass n (↑k) p
+⊢ (eventMass law fun ω => ¬FiniteCalibration.Contains n (↑(count ω)) m alpha p) = FiniteCalibration.missMass n m alpha p
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.38.0/AVOC/CalibrationSchedule.lean:206:2: error: Tactic `apply` failed: could not unify the conclusion of `@selected_failure_le`
+  (eventMass ?law fun ω => ?bad (?select ω) ω) ≤ ∑ j, ?alpha j
+with the goal
+  (eventMass law fun ω =>
+      ¬FiniteCalibration.Contains (n (select ω)) (↑(count (select ω) ω)) (m (select ω)) (alpha (select ω))
+          (p (select ω))) ≤
+    ∑ j, alpha j
+
+Note: The full type of `@selected_failure_le` is
+  ∀ {Ω : Type ?u.81} {J : Type ?u.80} [inst : Fintype Ω] [inst_1 : Fintype J] (law : Law Ω) (bad : J → Ω → Prop)
+    (alpha : J → ℚ),
+    (∀ (j : J), eventMass law (bad j) ≤ alpha j) →
+      ∀ (select : Ω → J), (eventMass law fun ω => bad (select ω) ω) ≤ ∑ j, alpha j
+
+Ω : Type u_1
+J : Type u_2
+inst✝¹ : Fintype Ω
+inst✝ : Fintype J
+law : Law Ω
+n m : J → ℕ
+alpha p : J → ℚ
+hm : ∀ (j : J), 0 < m j
+ha : ∀ (j : J), 0 ≤ alpha j
+hp0 : ∀ (j : J), 0 ≤ p j
+hp1 : ∀ (j : J), p j ≤ 1
+count : (j : J) → Ω → Fin (n j + 1)
+count_law :
+  ∀ (j : J) (k : Fin (n j + 1)), (eventMass law fun ω => count j ω = k) = FiniteCalibration.mass (n j) (↑k) (p j)
+select : Ω → J
+⊢ (eventMass law fun ω =>
+      ¬FiniteCalibration.Contains (n (select ω)) (↑(count (select ω) ω)) (m (select ω)) (alpha (select ω))
+          (p (select ω))) ≤
+    ∑ j, alpha j

@@ -1,0 +1,62 @@
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.40.0/AVOC/ObservedCalibration.lean:73:0: error: automatically included section variable(s) unused in theorem `Komorebi.AVOC.Affine.ObservedCalibration.observedPlan_none_warm`:
+  [Fintype Ω]
+  [Fintype J]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype Ω] [Fintype J] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.40.0/AVOC/ObservedCalibration.lean:80:0: error: automatically included section variable(s) unused in theorem `Komorebi.AVOC.Affine.ObservedCalibration.observedPlan_none_cold`:
+  [Fintype Ω]
+  [Fintype J]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype Ω] [Fintype J] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.40.0/AVOC/ObservedCalibration.lean:107:6: error: Tactic `subst` failed: did not find equation for eliminating 'planned'
+
+case some.some
+Ω : Type u_1
+J : Type u_2
+inst✝¹ : Fintype Ω
+inst✝ : Fintype J
+r c✝ : ℕ
+md : QModel r c✝
+d : DeterministicRealization md
+n m : J → ℕ
+alpha p : J → ℚ
+observed : (j : J) → Ω → Option (Fin (n j + 1))
+selectWarm selectCold : Ω → J
+wp cp : ℚ
+hwparam : ∀ (ω : Ω), p (selectWarm ω) = wp
+hcparam : ∀ (ω : Ω), p (selectCold ω) = cp
+ω : Ω
+hall :
+  ∀ (j : J) (k : Fin (n j + 1)), observed j ω = some k → FiniteCalibration.Contains (n j) (↑k) (m j) (alpha j) (p j)
+planned : QModel r c✝
+w : Fin (n (selectWarm ω) + 1)
+hw : observed (selectWarm ω) ω = some w
+c : Fin (n (selectCold ω) + 1)
+hc : observed (selectCold ω) ω = some c
+hplan :
+  (do
+      let warm ← some w
+      let cold ← some c
+      some
+          (replaceProbabilityBands md (learnedBand (n (selectWarm ω)) (↑warm) (m (selectWarm ω)) (alpha (selectWarm ω)))
+            (learnedBand (n (selectCold ω)) (↑cold) (m (selectCold ω)) (alpha (selectCold ω))))) =
+    some planned
+⊢ EpisodeCertified planned wp cp d.warmSetup d.coldSetup d.warmGross d.coldGross
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.40.0/AVOC/ObservedCalibration.lean:106:39: error: This simp argument is unused:
+  Option.bind_some
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [observedPlan, hw, hc, pure, Option.some.injEq] at hplan
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/f1f5bbfe51d7/work/AVOC_Formal_v0.40.0/AVOC/ObservedCalibration.lean:106:63: error: This simp argument is unused:
+  Option.some.injEq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [observedPlan, hw, hc, Option.bind_some, pure] at hplan
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

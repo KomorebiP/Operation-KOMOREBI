@@ -1,0 +1,58 @@
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:215:2: error: Tactic `decide` failed for proposition
+  (ExecutablePlanner.evaluate (executable (nominal uncertainModel)) 2 uncertainPlan).choice = some Action.inspectWarm
+because its `Decidable` instance
+  (ExecutablePlanner.evaluate (executable (nominal uncertainModel)) 2 uncertainPlan).choice.instDecidableEq
+    (some Action.inspectWarm)
+did not reduce to `isTrue` or `isFalse`.
+
+After unfolding the instances `instDecidableAnd`, `instDecidableEqBool`, `instDecidableEqNat`, `Bool.decEq`, `Int.decLt`, `Int.decNonneg`, `Nat.decEq`, `Nat.decLe`, `Option.instDecidableEq`, `Rat.instDecidableLe`, and `Staged.instDecidableEqStatus`, reduction got stuck at the `Decidable` instance
+  match (ExecutablePlanner.evaluate (executable (nominal uncertainModel)) 2 uncertainPlan).choice with
+  | none =>
+    match some Action.inspectWarm with
+    | none => isTrue ⋯
+    | some val => isFalse ⋯
+  | some a =>
+    match some Action.inspectWarm with
+    | none => isFalse ⋯
+    | some b =>
+      match Staged.instDecidableEqAction a b with
+      | isTrue h => isTrue ⋯
+      | isFalse n => isFalse ⋯
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:220:2: error: Tactic `decide` failed for proposition
+  robustChoice uncertainModel 1 uncertainPlan = Action.generateCold
+because its `Decidable` instance
+  Staged.instDecidableEqAction (robustChoice uncertainModel 1 uncertainPlan) Action.generateCold
+did not reduce to `isTrue` or `isFalse`.
+
+After unfolding the instances `instDecidableAnd`, `instDecidableEqBool`, `instDecidableEqNat`, `Bool.decEq`, `Int.decLt`, `Int.decNonneg`, `Nat.decEq`, `Nat.decLe`, `Rat.instDecidableLe`, `Staged.instDecidableEqAction`, and `Staged.instDecidableEqStatus`, reduction got stuck at the `Decidable` instance
+  match h : (robustChoice uncertainModel 1 uncertainPlan).ctorIdx.beq Action.generateCold.ctorIdx with
+  | true => isTrue ⋯
+  | false => isFalse ⋯
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:243:30: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactStart.plan).choice
+in the target expression
+  robustChoice exactModel 1 exactLazyStart.plan =
+    (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactLazyStart.plan).choice.getD Action.stop
+
+a : Action
+ha : a ∈ actions (nominal exactModel) exactStart.plan
+hz : ∀ (b : Action), localQRadius exactModel 1 b = 0
+best : Action
+hchoice : (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactStart.plan).choice = some best
+hmem : best ∈ (system (nominal exactModel)).actions exactStart.plan
+hmax :
+  ∀ b ∈ (system (nominal exactModel)).actions exactStart.plan,
+    Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan b ≤
+      Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan best
+h :
+  robustChoice exactModel 1 exactLazyStart.plan =
+    (ExecutablePlanner.evaluate (executable (nominal exactModel)) (1 + 1) exactLazyStart.plan).choice.getD Action.stop
+⊢ best = Action.inspectWarm
+/mnt/data/avoc_v038_work/AVOC_Formal_v0.38.0/AVOC/RobustQuoteExamples.lean:246:2: error: Type mismatch
+  hmax a ha
+has type
+  Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan a ≤
+    Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan Action.inspectWarm
+but is expected to have type
+  Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan a + 0 ≤
+    Guarded.qValue (system (nominal exactModel)) 1 exactStart.plan Action.inspectWarm - 0
