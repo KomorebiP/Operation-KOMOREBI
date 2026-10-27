@@ -1,0 +1,46 @@
+{
+  "schema": "komorebi.neuralese.entry_recurrence_probe.preregistration.v1",
+  "version": "0.3.1-draft",
+  "status": "adaptive_developmental_frozen_checkpoint_probe",
+  "source": "Komorebi_Neuralese_Completion_Surface_v0.3.0",
+  "checkpoint_seeds": [0, 1],
+  "episodes_per_checkpoint": 8,
+  "episode_seed_formula": "940000 + 1000 * checkpoint_seed",
+  "semantic_starts": "all eight per episode",
+  "max_suffix_horizon": 8,
+  "suffixes": "all binary canonical words at every exact depth 0 through 8",
+  "initialization_schemes": [
+    "native_anchor a_q",
+    "incoming_R = normalize(M_R a_(R^-1 q))",
+    "incoming_F = normalize(M_F a_(F^-1 q))"
+  ],
+  "hard_endpoints": [
+    "exact continuation accuracy",
+    "strictly positive target margin",
+    "exact equality of breadth-first hard continuation signatures",
+    "errors repaired and errors introduced by uniform replacement of all eight anchors"
+  ],
+  "soft_endpoints": [
+    "maximum and RMS probability difference",
+    "maximum and RMS centered-logit difference",
+    "maximum and mean oriented positive-ray angle"
+  ],
+  "soft_gate": null,
+  "soft_rule": "descriptive only; no post-hoc numerical equivalence threshold",
+  "registered_gates": {
+    "E0_source_and_numeric_integrity": "all four frozen source/checkpoint digests match and all computed values are finite",
+    "A0_native_anchors_hard_correct_through_H": "all native-anchor decisions are correct through H=8 in both seeds and all episodes",
+    "I0_known_seed0_defect_confined_to_empty_suffix": "in every fresh seed-0 episode, only state 2 at exact suffix depth 0 is wrong and decodes as 6; seed 1 and every positive suffix depth are correct",
+    "R0_uniform_R_reanchor_repairs_without_hard_regression": "all native errors are repaired and no hard errors are introduced by replacing every anchor with its R-incoming representative",
+    "F0_uniform_F_reanchor_repairs_without_hard_regression": "same criterion for the F-incoming representative",
+    "P0_incoming_routes_have_identical_hard_signatures": "R-incoming and F-incoming representatives yield identical hard predictions for every declared suffix"
+  },
+  "scale_boundary": "Native anchors retain their stored scale at H=0. Recurrent representatives are normalized. All positive-depth transitions normalize after applying a generator.",
+  "claim_boundary": [
+    "This diagnoses two fixed learned checkpoints only.",
+    "Fresh coordinate episodes remain inside reconstructed D4 training support.",
+    "Hard equivalence does not imply exact soft or state equivalence.",
+    "Episode-conditioned incoming representatives are counterfactual initializations, not a deployable episode-independent embedding table.",
+    "Finite success through H=8 does not establish unbounded stability."
+  ]
+}
