@@ -1,0 +1,479 @@
+\section{Representations, tasks, and retained distinctions}
+\label{sec:representations}
+
+AVOC begins with an operational question about information: which distinctions must a retained artifact preserve so that a specified task can still be performed? The answer depends on the task. A representation that is adequate for one query can fail for another, and a representation that answers the current query can fail to support future controlled transitions. The formal development separates these obligations before assigning costs or probabilities.
+
+\begin{definition}[Deterministic refinement and task sufficiency]
+Let $X$ be a raw state space and let $\phi:X\to Z$ and $T:X\to Y$ be functions. We write
+\[
+ \phi\succeq T
+ \quad\Longleftrightarrow\quad
+ \exists d:Z\to Y\ \ \forall x\in X,\ d(\phi(x))=T(x).
+\]
+More generally, $\phi\succeq\psi$ means that $\psi$ factors through $\phi$. The relation is called refinement. The representation $\phi$ is task sufficient for $T$ when $\phi\succeq T$. Two representations are information equivalent when each refines the other.
+\end{definition}
+
+The decoder is part of the assertion. It may be computationally expensive, and its existence alone supplies no efficient implementation. Refinement is reflexive, using the identity decoder, and transitive, by composition of decoders. Thus it is a preorder. Information equivalence is the associated equivalence relation. Neither relation compares the byte length, acquisition cost, or evaluation time of the representations.
+
+\begin{theorem}[Exact fiber criterion]
+\label{thm:fiber-criterion}
+Suppose $Y$ is nonempty. Then $\phi$ is sufficient for $T$ if and only if
+\[
+ \phi(x)=\phi(y)\quad\Longrightarrow\quad T(x)=T(y)
+ \qquad(x,y\in X).
+\]
+In particular, a single pair with $\phi(x)=\phi(y)$ and $T(x)\ne T(y)$ proves insufficiency.
+\end{theorem}
+\begin{proof}
+If $T=d\circ\phi$, equality of the two representations gives equality after applying $d$. Conversely, fix a default $y_0\in Y$. For every reachable $z\in\phi(X)$ choose $x_z$ with $\phi(x_z)=z$ and set $d(z)=T(x_z)$. Set $d(z)=y_0$ on unreachable representation states. The fiber hypothesis ensures that $T(x_z)=T(x)$ whenever $z=\phi(x)$, so $d(\phi(x))=T(x)$. The nonempty-codomain hypothesis supplies the default on unreachable states. The formal proof uses classical choice for the representatives.
+\end{proof}
+
+The target $T$ itself is sufficient for $T$. Every sufficient representation refines $T$, by definition. Consequently $T$ is a canonical coarsest sufficient representation in this information preorder. A sufficient representation is task minimal when $T$ also refines it, and hence task minimality is exactly information equivalence with $T$. This is a statement about retained distinctions, rather than a theorem that the target can be computed cheaply or stored in a shortest file.
+
+\begin{proposition}[Finite data processing]
+For a finite sample $D\subseteq X$, let $c_D(\phi)=|\phi(D)|$ denote the number of reached representation states. If $\phi\succeq\psi$, then
+\[
+ c_D(\psi)\le c_D(\phi).
+\]
+\end{proposition}
+\begin{proof}
+Choose $d$ with $\psi=d\circ\phi$. Then $\psi(D)=d(\phi(D))$, and the image of a finite set under a function has cardinality at most that of the original set.
+\end{proof}
+
+The finite sample serves only to count reached states. Sufficiency in Theorem~\ref{thm:fiber-criterion} is quantified over all of $X$. Agreement on a sample is therefore a different kind of evidence unless that sample exhausts the domain.
+
+\begin{example}[A task must be declared before compression]
+Let $X=\{0,1\}^3$ and let $T(x_1,x_2,x_3)=x_1\wedge x_2$. The representation $\phi(x)=T(x)$ is sufficient for this target, although it discards $x_3$ and many distinctions among the first two coordinates. The representation $\psi(x)=x_1\oplus x_2$ is insufficient: $(0,0,0)$ and $(1,1,0)$ have the same $\psi$ value and different $T$ values. No decoder can repair this collision. Conversely, retaining all three coordinates refines $T$ but retains more information than this task requires.
+\end{example}
+
+\subsection{Query families and joint targets}
+
+Suppose a family of tasks is given by $T_q:X\to Y$, indexed by $q\in Q$. Define the joint target
+\[
+ T_{\mathrm{joint}}(x)=(T_q(x))_{q\in Q}\in Y^Q.
+\]
+Then $\phi$ is sufficient for the joint target if and only if it is sufficient for each individual task. The forward direction evaluates the decoded answer vector at $q$. For the reverse direction, choose a decoder $d_q$ for each query and define $d(z)(q)=d_q(z)$. The formal theorem permits an arbitrary query index type, and the simultaneous decoder selection uses classical choice.
+
+This distinction matters for reuse. An artifact can be minimal for one fixed target while a later target requires a distinction that the artifact discarded. A reusable library therefore needs a declared target family or an exact semantic key. Enlarging that family changes the sufficiency obligation. The framework does not infer the full future query family from the fact that past tasks succeeded.
+
+\section{Information value and finite Bayesian evidence}
+\label{sec:information-value}
+
+An information ordering becomes a decision ordering only after specifying a prior, available actions, and utility. The source treats the prior and utility as declared mathematical inputs. In probabilistic applications the prior is normalized and nonnegative. Some structural decision identities need less and are proved even for arbitrary rational weights.
+
+\begin{definition}[Deterministic experiment value]
+Let $\Omega$ be finite, $A$ be a finite nonempty action set, $b:\Omega\to\Q$ be a prior, and $u:\Omega\times A\to\Q$ be utility. For an observation $\phi:\Omega\to Z$ and policy $\pi:Z\to A$, define
+\[
+ J_b(\phi,\pi)=\sum_{\omega\in\Omega}b(\omega)u(\omega,\pi(\phi(\omega))).
+\]
+When $Z$ is finite, write $J_b^*(\phi)=\max_{\pi:Z\to A}J_b(\phi,\pi)$.
+\end{definition}
+
+\begin{theorem}[Deterministic information-value monotonicity]
+If $\phi\succeq\psi$, then $J_b^*(\psi)\le J_b^*(\phi)$. If the acquisition costs satisfy $c_\phi\le c_\psi$, then
+\[
+ J_b^*(\psi)-c_\psi\le J_b^*(\phi)-c_\phi.
+\]
+\end{theorem}
+\begin{proof}
+Let $d$ decode $\psi$ from $\phi$. Any coarse policy $\pi$ lifts to $\pi\circ d$. For every world the lifted policy chooses exactly the same action, so its decision value is unchanged. A maximizing coarse policy exists because the policy space is finite and nonempty. Its lifted value is at most the best fine value. Subtracting the stated costs gives the second inequality.
+\end{proof}
+
+More information can increase gross decision value while decreasing net value if it costs more. The theorem's cost hypothesis is therefore essential to its domination conclusion. It also supplies a practical pruning rule: an experiment that is coarser and no cheaper can be removed from a finite decision menu without losing an optimum.
+
+\subsection{Stochastic observations and garbling}
+
+\begin{definition}[Finite rational channel]
+A channel from $\Omega$ to a finite observation alphabet $O$ consists of rational entries $E(o\mid\omega)\ge0$ with $\sum_o E(o\mid\omega)=1$ for every $\omega$. Given a second channel $K(y\mid o)$, their composite is
+\[
+ (EK)(y\mid\omega)=\sum_o E(o\mid\omega)K(y\mid o).
+\]
+The composite is a garbling of $E$.
+\end{definition}
+
+The unnormalized signal-action score and policy value are
+\[
+ S_E(o,a)=\sum_\omega b(\omega)E(o\mid\omega)u(\omega,a),
+ \qquad J_b(E,\pi)=\sum_o S_E(o,\pi(o)).
+\]
+This form avoids dividing by the evidence mass. In particular, it remains well defined on observations whose predictive probability is zero.
+
+\begin{theorem}[Finite stochastic information-value monotonicity]
+Every deterministic policy on $EK$ is weakly dominated in value by some deterministic policy on $E$. Consequently the best deterministic value of $EK$ is at most that of $E$.
+\end{theorem}
+\begin{proof}
+For each fine observation $o$, select $a_o\in A$ maximizing $S_E(o,a)$. Such a selection exists because $A$ is finite and nonempty. For a coarse policy $\pi$, expand the channel composition and rearrange finite sums:
+\[
+ J_b(EK,\pi)=\sum_o\sum_y K(y\mid o)S_E(o,\pi(y)).
+\]
+Every inner score is at most $S_E(o,a_o)$. Nonnegativity and normalization of the row of $K$ give
+\[
+ \sum_y K(y\mid o)S_E(o,\pi(y))\le S_E(o,a_o).
+\]
+Summing over $o$ proves domination by the fine policy $o\mapsto a_o$. Taking a best coarse policy yields the optimal-value comparison.
+\end{proof}
+
+\begin{example}[Information has a price]
+For two equally likely worlds, let the action predict the world and let utility be $1$ for a correct prediction and $0$ otherwise. A constant observation gives value $1/2$. Revealing the world gives value $1$. If revelation costs $1/8$, its net value is $7/8$, exceeding the free constant experiment's $1/2$. If it costs $3/4$, its net value is $1/4$. The information order is unchanged across these two cases, while the preferred paid experiment changes.
+\end{example}
+
+\subsection{Exact Bayesian updates}
+
+A rational belief is a nonnegative vector $b$ on finite $\Omega$ with $\sum_\omega b(\omega)=1$. For a channel $E$, define the predictive mass
+\[
+ p(o)=\sum_\omega b(\omega)E(o\mid\omega).
+\]
+For $p(o)>0$, the posterior is $b_o(\omega)=b(\omega)E(o\mid\omega)/p(o)$. The total updater in the source uses $b_o=b$ when $p(o)=0$. This fallback is normalized and has zero coefficient in predictive expectations. Nonnegativity of every summand implies that each Bayes numerator also vanishes on such an impossible observation. Hence, with the total-update convention, the division-free identity
+\[
+ p(o)b_o(\omega)=b(\omega)E(o\mid\omega)
+\]
+holds on every branch. It follows that
+\[
+ \sum_o p(o)\sum_\omega b_o(\omega)u(\omega,\pi(o))=J_b(E,\pi).
+\]
+Posterior-predictive evaluation and the unnormalized decision formula therefore agree exactly.
+
+For any nonnegative likelihood weight $L$, write
+\[
+ M_b(L)=\sum_\omega b(\omega)L(\omega),\qquad
+ C_L(b)(\omega)=\frac{b(\omega)L(\omega)}{M_b(L)}
+\]
+when $M_b(L)>0$. Given nonnegative $L_1,L_2$ and positive successive evidence masses, the source proves
+\[
+ M_b(L_1)M_{C_{L_1}(b)}(L_2)=M_b(L_1L_2),\qquad
+ C_{L_2}(C_{L_1}(b))=C_{L_1L_2}(b).
+\]
+These identities follow by expanding the finite sums and canceling the positive normalizers. Both conditioning orders agree when their respective intermediate masses are positive. Applying this algebra to physical observations requires the appropriate joint likelihood model. In particular, multiplying likelihoods is justified by a stated factorization of the evidence law, rather than merely by the existence of two reports.
+
+\subsection{Compression must preserve the likelihood}
+
+\begin{theorem}[Conditioning commutes with exact compression]
+Let $\phi:\Omega\to Z$ map between finite spaces, and define the pushforward belief $\bar b(z)=\sum_{\phi(\omega)=z}b(\omega)$. Suppose $L=\bar L\circ\phi$ for a nonnegative likelihood $\bar L:Z\to\Q$, and the evidence mass is positive. Then
+\[
+ \phi_*C_L(b)=C_{\bar L}(\phi_*b).
+\]
+Such an exact $\bar L$ exists if and only if $L$ is constant on every fiber of $\phi$.
+\end{theorem}
+\begin{proof}
+Grouping the normalizer by fibers gives $M_b(L)=M_{\bar b}(\bar L)$. On each fiber $\phi^{-1}(z)$, the likelihood can be factored outside the sum. Thus
+\[
+ \sum_{\phi(\omega)=z}\frac{b(\omega)L(\omega)}{M_b(L)}
+ =\frac{\bar b(z)\bar L(z)}{M_{\bar b}(\bar L)}.
+\]
+The factorization criterion is Theorem~\ref{thm:fiber-criterion} applied to the rational-valued target $L$.
+\end{proof}
+
+A prior compression that merges worlds with different likelihoods has no exact coarse likelihood for that observation. A later evidence update can consequently reveal a distinction that the compressed state no longer represents. This is the evidence version of the collision obstruction.
+
+\begin{example}[Rare evidence can reverse a posterior completely]
+Under the uniform prior on $\{0,1\}$, take $L_0=(\varepsilon,0)$ and $L_1=(0,\varepsilon)$ with rational $\varepsilon>0$. The two likelihoods differ pointwise by at most $\varepsilon$, and both evidence masses equal $\varepsilon/2$. Their posteriors are respectively $(1,0)$ and $(0,1)$, with full $L^1$ distance $2$. Arbitrarily small positive likelihood perturbations therefore do not imply uniform pointwise posterior stability without an additional evidence condition. The later model-error chapter uses weighted continuation comparisons rather than identifying nearby posterior points as the same controller state.
+\end{example}
+
+\section{Sufficiency for controlled futures}
+\label{sec:control-sufficiency}
+
+For a one-shot task, refinement preserves sufficiency by decoder composition. A state abstraction for a controlled process has a second obligation: its fibers must remain compatible with the process's transitions. This extra obligation changes the mathematical behavior of refinement.
+
+\begin{definition}[Deterministic control sufficiency]
+Let $A_0$ be a finite nonempty set of admissible actions, let $f:S\times A_0\to S$ be transition, and let $r:S\times A_0\to\Q$ be reward. A representation $\phi:S\to Z$ is control sufficient if, whenever $\phi(s)=\phi(t)$, every admissible action satisfies
+\[
+ r(s,a)=r(t,a),\qquad \phi(f(s,a))=\phi(f(t,a)).
+\]
+The global action set is common to all states in this definition.
+\end{definition}
+
+Define the finite-horizon values by
+\[
+ V_0(s)=0,\qquad Q_n(s,a)=r(s,a)+V_n(f(s,a)),\qquad
+ V_{n+1}(s)=\max_{a\in A_0}Q_n(s,a).
+\]
+
+\begin{theorem}[Exact preservation of controlled value]
+If $\phi$ is control sufficient, then $V_n$ is constant on every fiber of $\phi$ for every $n\in\N$. The same is true of $Q_n(\cdot,a)$ for each admissible $a$, and Bellman-optimal action sets coincide within each fiber.
+\end{theorem}
+\begin{proof}
+At horizon zero the values vanish. If $V_n$ is fiber constant and $\phi(s)=\phi(t)$, control sufficiency gives equal rewards and equal represented successors. Hence $Q_n(s,a)=Q_n(t,a)$ for every admissible $a$. Taking the maximum over the common action set proves equality of $V_{n+1}$. The action-value equality also makes all inequalities defining optimal action membership identical at $s$ and $t$.
+\end{proof}
+
+\begin{example}[A finer representation can fail dynamic closure]
+Consider $S=\{0,1,2\}$, one action, zero reward, and transitions $f(0)=0$, $f(1)=2$, $f(2)=2$. The constant representation is control sufficient. The finer representation with fibers $\{0,1\}$ and $\{2\}$ refines that constant representation, but it merges states $0$ and $1$ whose successors fall into different fine fibers. It is therefore not control sufficient. This example is retained as an explicit formal counterexample to arbitrary refinement monotonicity.
+\end{example}
+
+The exact repair is simple: a refinement of a control-sufficient representation remains control sufficient if the finer representation is itself transition closed. Reward equality is inherited through the coarse decoder, while successor equality must be supplied for the fine representation. For models with state-dependent action sets, exact action feasibility is an additional obligation, handled by the guarded control interfaces later in the paper.
+
+\subsection{Projected stochastic laws}
+
+Let $S$ be finite and replace deterministic transition by rational probability rows $P_a(s,s')\ge0$ with $\sum_{s'}P_a(s,s')=1$. The stochastic Bellman recursion is
+\[
+ V_0(s)=0,\qquad Q_n(s,a)=r(s,a)+\sum_{s'}P_a(s,s')V_n(s'),\qquad
+ V_{n+1}(s)=\max_{a\in A_0}Q_n(s,a).
+\]
+Equality of entire raw transition rows is sufficient for compression, but can demand more than the abstract process needs. The appropriate condition compares their projected laws.
+
+\begin{definition}[Projected stochastic control sufficiency]
+A representation $\phi:S\to Z$ is projected stochastically sufficient if equal represented current states have equal immediate rewards and, for every admissible $a$ and every rational fiber-constant function $W:S\to\Q$,
+\[
+ \sum_{s'}P_a(s,s')W(s')=\sum_{s'}P_a(t,s')W(s')
+ \quad\text{whenever }\phi(s)=\phi(t).
+\]
+\end{definition}
+
+When $Z$ is finite, this expectation condition is equivalent to equality of the mass sent to every abstract fiber:
+\[
+ \sum_{\phi(s')=z'}P_a(s,s')=\sum_{\phi(s')=z'}P_a(t,s')\qquad(z'\in Z).
+\]
+To prove necessity, use the indicator of the fiber as $W$. To prove sufficiency, group the expectation by fibers and factor out the common value of $W$ on each nonempty fiber. Empty fibers contribute zero. These arguments explain why raw states may have distinct next-state probabilities while having identical controlled abstract behavior.
+
+\begin{theorem}[Exact stochastic quotient]
+Suppose $\phi:S\to Z$ is surjective and projected stochastically sufficient, with $S,Z$ finite. Choose a representative $s_z$ of every fiber, and define
+\[
+ \bar r(z,a)=r(s_z,a),\qquad
+ \bar P_a(z,z')=\sum_{\phi(s')=z'}P_a(s_z,s').
+\]
+These quantities give a normalized rational stochastic control system, independent of the representative choices for admissible actions. For every finite horizon,
+\[
+ \bar V_n(\phi(s))=V_n(s).
+\]
+\end{theorem}
+\begin{proof}
+Nonnegative fiber masses give nonnegative quotient probabilities; partitioning $S$ by the fibers shows that each quotient row sums to one. Sufficiency makes reward and projected mass unchanged when replacing $s_z$ by another representative. Inductively assume the value equality at horizon $n$. Then
+\[
+ \sum_{z'}\bar P_a(\phi(s),z')\bar V_n(z')
+ =\sum_{s'}P_a(s,s')V_n(s'),
+\]
+by projected equality and fiberwise grouping. Immediate rewards agree, so every action backup agrees. Taking the maximum over the common action set proves the next horizon. The zero-horizon case is immediate.
+\end{proof}
+
+This result concerns exact finite models with a specified reward and transition law. It neither discovers the correct abstraction automatically nor identifies a supplied rational model with a physical system. Its role is to certify the consequences of a declared abstraction once the one-step obligations have been established.
+
+\section{Artifacts, identities, and proof-carrying admission}
+\label{sec:artifact-identities}
+
+An artifact's semantic content and its operational identity serve different purposes. Semantic equivalence permits replacement in a declared task language. Operational identity prevents a receipt for one statement, dependency set, environment, or generation from authorizing another.
+
+The concrete binding layer uses a small data-only propositional language. Formulas contain numbered atoms, truth, falsity, conjunction, disjunction, and implication. Derivations contain the corresponding introduction and elimination rules. Atoms are interpreted as arbitrary propositions under a valuation $v:\N\to\operatorname{Prop}$. A recursive inference function either returns a formula or rejects. It accepts data representing a derivation, rather than executable tactics or imported source code.
+
+\begin{theorem}[Checker soundness]
+If the inference checker accepts derivation $p$ for target $F$ under context $\Gamma$, then every valuation satisfying $\Gamma$ satisfies $F$.
+\end{theorem}
+\begin{proof}
+Induct on the derivation. A used assumption belongs to $\Gamma$ and is true by the context hypothesis. Conjunction introduction combines the two inductive conclusions, and its projections select the corresponding conclusion. Implication introduction applies the induction hypothesis in the extended context; implication elimination applies a proved implication to a proved premise. The two disjunction injections construct the appropriate alternative. Case elimination applies the matching branch proof after extending the context with the observed alternative. Falsity elimination follows from the impossible proposition. The checker's shape and equality tests ensure that the formulas in these rules match exactly.
+\end{proof}
+
+This is soundness of the defined propositional checker. It is not a universal ingestion theorem for arbitrary Lean source. Dependencies remain assumptions in the checker context, and their truth must come from the surrounding certified workflow.
+
+\begin{definition}[Protected artifact identity]
+An identity records a task name, a formula, its statement-byte snapshot, a list of dependencies with their formulas and artifact-byte snapshots, and an environment snapshot. An artifact contains that identity, a source-byte snapshot, and a data-only derivation. A ticket consists of a generation number together with an artifact. A receipt names the exact ticket and records an approval bit.
+\end{definition}
+
+All byte snapshots in this model are exact strings. No finite hash is assumed injective. The validator checks four obligations: the pending artifact's identity equals the current identity, the receipt names the exact pending ticket, its approval bit is true, and the derivation checks for the current target under the current dependency context. The resulting validation theorem supplies the target proposition whenever the dependency propositions hold.
+
+A changed statement, dependency, environment, source snapshot, or ticket generation is rejected by the corresponding equality gate. Approval alone supplies no proof. Re-registering an identical payload still changes its generation, which prevents an old receipt from serving as authorization for a new registration.
+
+The finite slot model increments its generation on registration. Successful admission consumes the pending ticket; failed admission leaves it unchanged. A successfully consumed receipt cannot admit again because no pending ticket remains. These statements describe admission in the defined reducer. They do not establish exactly-once performance of external paid work, filesystem durability, or authentication of an external provider. The recovery chapters treat the separate accounting and persistence obligations.
+
+\section{Certified Boolean synthesis and semantic reuse}
+\label{sec:boolean-synthesis}
+
+The Boolean backend provides a complete finite example of semantic checking, cost-aware replacement, and retained computation. Its restricted language is deliberate: strong universal conclusions are possible because both the input domain and semantics are explicit.
+
+\subsection{Programs and their declared work}
+
+Programs are finite abstract syntax trees built from Boolean literals, three input variables, negation, conjunction, disjunction, and exclusive-or. The input domain is the eight triples in $\{0,1\}^3$. Let $N(p)$ be the tree-node count: each literal or variable contributes one, negation adds one to its child, and a binary constructor adds one to the sum of its child counts.
+
+The instrumented evaluator evaluates both children of a binary operation. A structural induction proves that its output equals the ordinary evaluator and that its visit count is exactly $N(p)$ for every input. Thus node count is a valid eager-traversal meter for this interpreter. It is not a short-circuit meter, hardware runtime, memory-allocation count, or Boolean circuit size with shared subexpressions.
+
+\begin{theorem}[Complete Boolean equivalence check]
+Let $\sigma(p)$ be the eight output bits of $p$, in the fixed lexicographic input order. Then
+\[
+ \sigma(p)=\sigma(q)\quad\Longleftrightarrow\quad
+ \forall x\in\{0,1\}^3,\ p(x)=q(x).
+\]
+The executable checker comparing all eight outputs is sound and complete.
+\end{theorem}
+\begin{proof}
+Equality of signatures gives equality at every entry. Every possible input occurs in the enumerated list, so every input is covered. Conversely, pointwise equality makes the two mapped output lists equal. This is exhaustive finite checking, not a sampled approximation.
+\end{proof}
+
+\subsection{Bounded grammar search}
+
+The initial grammar layer has five atoms: two literals and three variables. If a layer is $L$, expansion retains $L$, adds all negations, and adds all ordered pairs under each of the three binary operations. Let $M_d$ count emitted list entries at depth $d$. The source proves
+\[
+ M_0=5,\qquad M_{d+1}=2M_d+3M_d^2.
+\]
+The entries can contain duplicates. The node bound is $B_0=1$, $B_{d+1}=2B_d+1$, and every expression of height at most $d$ occurs in the depth-$d$ list. In particular $M_1=85$ and $M_2=21845$.
+
+The search retains an incumbent equivalent to a reference. A candidate replaces it only when the complete checker passes and the candidate has strictly fewer nodes. Induction over the examined list proves preservation of equivalence and nonincrease of node count. The returned incumbent has node count at most that of every equivalent examined candidate.
+
+Generation is reserved before a layer is constructed. The declared generation charge is the sum of the layer-entry counts through the chosen depth. A candidate comparison is conservatively charged
+\[
+ T(r,d)=8\bigl(N(r)+B_d+1\bigr).
+\]
+The examined prefix is limited by both a user trial cap and the remaining budget divided by $T(r,d)$. Its generation plus examination charge is proved at most the supplied budget. If the generation charge does not fit, search returns the original reference and incurs zero modeled search charge. If the entire layer fits both limits, the result is optimal among equivalent expressions of height at most $d$. A partial prefix provides optimality only over that prefix.
+
+\begin{example}[A smaller artifact need not repay its discovery]
+The reference $\neg(\neg x_1\vee\neg x_2)$ has six nodes. The equivalent conjunction $x_1\wedge x_2$ has three. The archived depth-one search examines the complete 85-entry layer under its stated limits and returns the conjunction, with modeled search charge $6890$. Each eager evaluation subsequently saves three visits. A large deployment can repay the exploration cost; a single evaluation cannot. The synthesis theorem supplies semantic safety and a budget bound even in the unprofitable case, and the promotion layer separately checks the campaign economics.
+\end{example}
+
+\subsection{Compaction preserves the search optimum}
+
+Semantic entries carry an expression, its complete eight-bit signature, its node count, and equations certifying the two cached fields. The index retains at most one representative of each signature and keeps a smallest representative among inserted expressions. There are at most $2^8=256$ entries, regardless of the size of the submitted list.
+
+\begin{proposition}[Recursive semantic coverage]
+For every depth $d$, recursively expanding the retained representatives and compacting again preserves the smallest equivalent node count obtainable from the full uncompressed grammar layer at that depth, with the same reference fallback.
+\end{proposition}
+\begin{proof}
+Compaction gives every input expression an equivalent retained representative of no greater node count. Equivalence is a congruence for each grammar constructor. Replacing either child by a no-larger equivalent representative therefore preserves the result and does not increase its node count. Negation has the same property. Induction on depth supplies semantic and cost coverage of the full grammar by recursive representatives. Conversely, every retained representative originates in the full grammar. These two inclusions in semantic-cost coverage give equal selected optimum costs.
+\end{proof}
+
+This is a precise example of reusable knowledge reducing subsequent construction. It is finite semantic compaction with a proof of optimum preservation. It does not establish that arbitrary learned representations preserve future optimization problems. The instrumented construction separately records emitted entries, total node mass, and index probes; its declared tariff excludes several host costs, including allocation and serialization.
+
+\subsection{From bounded search to a global cost certificate}
+
+A complete finite semantic algebra supports a stronger conclusion than searching a deeper finite layer. Let $D$ be a semantic domain with interpretations of the Boolean constructors. A cost function $c:D\to\N$ is a lower certificate if it satisfies the constructor inequalities
+\begin{align*}
+ c(\text{literal }b)&\le1,& c(\text{variable }j)&\le1,\\
+ c(\neg s)&\le c(s)+1,&
+ c(s\mathbin{\circ}t)&\le c(s)+c(t)+1
+ \quad(\circ\in\{\wedge,\vee,\oplus\}).
+\end{align*}
+
+\begin{theorem}[Attained global semantic minimum]
+\label{thm:semantic-minimum}
+Suppose $c$ satisfies those inequalities and, for every semantic state $s$, a witness expression $w_s$ has semantics $s$ and node count $c(s)$. Then for every expression $p$ with semantics $s$,
+\[
+ N(w_s)=c(s)\le N(p).
+\]
+No expression-height bound appears in this conclusion. Two such attained cost certificates have identical cost functions.
+\end{theorem}
+\begin{proof}
+Structural induction proves $c(\operatorname{sem}(p))\le N(p)$. The leaf inequalities give the base cases. For a unary constructor, use its inequality and the child's induction hypothesis. For a binary constructor, use its inequality and both child hypotheses. Applying this lower bound to any expression with semantics $s$ and using the attained witness proves global minimality. For two certificates, apply each one's lower bound to the other's witness, obtaining both inequalities between their costs.
+\end{proof}
+
+For the three-input Boolean backend, $D$ consists of all 256 truth signatures. A proposed bank must have exactly 256 rows. Each row's stored expression is checked for its exact signature and claimed node count, and the bank is checked against every unary and binary constructor inequality. An accepted bank therefore carries the hypotheses of Theorem~\ref{thm:semantic-minimum}. Its query returns a globally node-minimal expression within this entire Boolean tree grammar, including all finite heights.
+
+The distinction is substantive. A bounded search is global only within its examined language fragment. A checked closure bank certifies a lower bound for every expression by structural induction and supplies witnesses attaining that bound. The universal conclusion remains specific to the grammar, three-input semantics, and eager tree-node tariff. It does not claim unrestricted program minimization or optimal implementation on physical hardware.
+
+\section{Exact affine artifacts and complete finite probes}
+\label{sec:affine-semantics}
+
+The affine backend extends exact semantic certification to infinite input domains. Its complete finite test is possible because the represented functions have a fixed algebraic form.
+
+\begin{definition}[Dimension-indexed affine signature]
+Over a ring $R$, a signature from dimension $n$ to dimension $m$ is a pair $(A,b)$ with $A\in R^{m\times n}$ and $b\in R^m$, denoting $x\mapsto Ax+b$. Dimensions are part of the type. Composition and pointwise addition are
+\[
+ (B,c)\circ(A,b)=(BA,Bb+c),\qquad
+ (A,b)+(A',b')=(A+A',b+b').
+\]
+\end{definition}
+
+\begin{theorem}[Complete zero-and-basis probes]
+Two affine signatures $f,g:R^n\to R^m$ are equal if and only if they agree at $0$ and at every standard basis vector $e_j$. Thus $n+1$ vector probes establish equality on all inputs. A mismatch in signatures has a mismatch among these probes.
+\end{theorem}
+\begin{proof}
+The zero probe identifies the offsets because $f(0)=b_f$. At $e_j$, the output is the $j$th matrix column plus the offset. After canceling the now-equal offsets, equality of the basis probes identifies every column. Equal coefficients give equal evaluations for all inputs. The mismatch assertion is the contrapositive.
+\end{proof}
+
+The theorem is algebraic completeness, rather than empirical interpolation from arbitrary function values. Its premise is that both candidates belong to the affine language over the stated ring. Adding a nonlinear primitive changes the language and invalidates this probe argument unless a new completeness theorem is supplied.
+
+\begin{example}[The zero probe is necessary]
+Over $\Q$, consider scalar maps $f(x)=x$ and $g(x)=2x-1$. They agree at the single basis vector $x=1$, but $f(0)=0$ and $g(0)=-1$. Omitting the zero probe would accept a false affine equivalence. Over a field, equality of the linear matrices alone also leaves arbitrary affine offsets unconstrained.
+\end{example}
+
+\subsection{Typed normalization and safe contextual replacement}
+
+Typed programs combine affine atoms, identities, sequential composition, and pointwise addition. Composition connects only matching intermediate dimensions. An independent recursive execution semantics and coefficient-normalization semantics are defined. Structural induction proves
+\[
+ \operatorname{eval}(\operatorname{normalize}(p),x)=\operatorname{run}(p,x)
+ \qquad\text{for all }x.
+\]
+Hence two programs are equivalent if and only if their normal signatures coincide. Decidable coefficient comparison is a sound and complete checker when equality in $R$ is decidable, as it is for the rational and finite-field executable examples.
+
+One-hole typed contexts permit replacement at arbitrary nesting depth. Equivalence is preserved under composition and pointwise addition, so plugging equivalent programs into such a context preserves its semantics. A declared additive nonnegative primitive tariff, with $m$ charged for adding two $m$-dimensional outputs, also makes contextual cost monotone: a no-more-expensive replacement cannot increase the whole context's declared cost. This is a compositional guarantee for the explicit syntax and tariff.
+
+\section{Fusion, rank certificates, and retargeted reuse}
+\label{sec:affine-cost}
+
+An exact normal form can improve verification without improving evaluation. The affine backend therefore checks semantics and cost separately. Its dense arithmetic tariff is
+\[
+ D(n,m)=m(2n+1),
+\]
+charging $n$ multiplications, $n$ accumulations, and one bias addition per output row. The coefficient-composition tariff is
+\[
+ C(n,m,k)=2knm+D(m,k).
+\]
+These are declared scalar-operation tariffs. They exclude bit complexity, memory traffic, allocation, and physical timing.
+
+\subsection{Fusion has an amortization threshold}
+
+Replacing a composed program by one dense atom with its normalized coefficients preserves every output. Its per-call execution tariff becomes $D(n,m)$. The source's no-slower selector retains the original program whenever that dense tariff is greater than its current execution cost. Normalization work is charged separately for campaign comparisons.
+
+\begin{example}[Beneficial and harmful fusion]
+A dense $2\to3\to2$ chain has per-call tariff $D(2,3)+D(3,2)=29$. Its fused $2\to2$ map costs $10$ per call, and coefficient composition costs $38$. Thus $38+10q\le29q$ exactly when $q\ge2$, with strict savings exactly when $q\ge3$.
+
+In contrast, a $4\to1\to4$ bottleneck costs $D(4,1)+D(1,4)=21$ per call, while its dense fused $4\to4$ form costs $36$. Fusion remains semantically correct but loses its cheap intermediate bottleneck. The cost-aware selector therefore keeps the original chain in that comparison.
+\end{example}
+
+The second case motivates retaining a factorized artifact. A dense semantic key can identify a function while a different execution representation realizes it more cheaply.
+
+\subsection{An upper factorization and a lower rank witness}
+
+Work over a field $R$. For reference $f=(A,b):R^n\to R^m$, a candidate supplies an intermediate width $k$, first and second affine signatures
+\[
+ a(x)=Ux+u_0,\qquad d(y)=Vy+v_0,
+\]
+and matrices $L\in R^{k\times m}$, $H\in R^{n\times k}$. The checker verifies
+\[
+ VU=A,\qquad Vu_0+v_0=b,\qquad LAH=I_k.
+\]
+The first two identities give the exact upper implementation. The third is an independently checkable lower witness. Validation uses polynomial matrix identities; an untrusted rank routine is not part of the logical justification.
+
+\begin{theorem}[Certified minimum affine width]
+\label{thm:affine-width}
+An accepted candidate has $k=\operatorname{rank}(A)$. Every exact two-stage affine factorization of $f$ through width $\ell$ satisfies $k\le\ell$. Under the dense two-stage tariff,
+\[
+ F(n,m,k)=D(n,k)+D(k,m),
+\]
+the accepted candidate is no more expensive than any such two-stage factorization.
+\end{theorem}
+\begin{proof}
+The upper factorization gives $\operatorname{rank}(A)=\operatorname{rank}(VU)\le k$. The lower witness gives
+\[
+ k=\operatorname{rank}(I_k)=\operatorname{rank}(LAH)\le\operatorname{rank}(A).
+\]
+Thus rank equals $k$. Any exact factorization through $\ell$ has $\operatorname{rank}(A)\le\ell$, by the same upper rank inequality. Finally,
+\[
+ F(n,m,k)=k(2n+1)+m(2k+1)
+\]
+is increasing in $k$, so minimum width gives minimum tariff in this class.
+\end{proof}
+
+Exact factorization alone does not prove minimum width. A redundant factorization can be correct while failing to supply a valid $LAH=I_k$. Conversely, a lower rank witness alone does not prove that the proposed affine implementation has the correct offset. Both directions are needed.
+
+\begin{example}[A checked rank-one bottleneck]
+In the archived finite-field example over $\mathbf F_5$, $A$ is the $4\times4$ all-ones matrix and $b=(1,2,3,4)$. The first stage computes $y=x_1+x_2+x_3+x_4$. The second emits $(y+1,y+2,y+3,y+4)$. Taking $L$ to select the first output coordinate and $H$ to select the first input coordinate gives $LAH=(1)$. The width-one factorization is therefore exact and width minimal.
+
+Its tariff is $9+12=21$, compared with dense cost $36$, saving $15$ per call. The declared factor-checking charge is $105$. For this already atomic reference, the campaign inequality is exactly
+\[
+ 105+g\le15q,
+\]
+where $g$ is the declared generation work and $q$ the deployment count. With $g=0$, seven calls break even. Generation, validation, and deployment are all visible in this comparison.
+\end{example}
+
+The menu selector compares three equivalent implementations: the current program, its dense fused atom, and the accepted minimum-width two-stage plan. Its selected tariff is exactly
+\[
+ \min\{\operatorname{cost}(p),\ D(n,m),\ F(n,m,k)\}.
+\]
+This proves a minimum over the explicit menu, and also comparison with every exact two-dense-stage factorization. It does not prove a globally cheapest affine program in the larger language. Sparse schedules, sharing, special primitives, and hardware-specific algorithms have different admissible implementations or tariffs. An identity program already costs zero in this syntax and remains preferable to a paid dense factorization.
+
+\subsection{Reuse under a changed offset}
+
+Suppose a stored candidate has been validated for $(A,b)$ and a later target is $(A,b')$ with exactly the same linear matrix. Keep $U,u_0,V,L,H$ and replace only the second-stage offset by
+\[
+ v_0'=b'-Vu_0.
+\]
+Then $VU=A$ is unchanged, $Vu_0+v_0'=b'$, and $LAH=I_k$ remains true. The same width and two-stage tariff are retained. A second retargeting overwrites the offset rather than accumulating prior offset changes.
+
+The import gate rechecks the entire stored certificate and exact equality of the current linear semantic key before constructing the retargeted checked record. It rejects invalid saved certificates and changed linear matrices. The current implementation is then compared with the reused plan, so a previously beneficial plan is not automatically preferred after other implementation changes.
+
+This is an exact reuse theorem for a specified invariant key. It shows which part of the calculation is reusable and which part must be adapted. Persisting a claimed certificate, trusting a previous receipt, or comparing a suggestive task label would not provide these hypotheses. The proof-carrying bank and the protected artifact workflow supply complementary mechanisms for making that distinction explicit.

@@ -1,0 +1,834 @@
+\section{Finite-horizon planning with admissible actions}
+\label{sec:planning}
+
+An artifact decision changes both what is available and what can be afforded.
+Inspection can turn an untried cached artifact into a ready artifact, but a
+rejection also spends its inspection fee. Generation can create a candidate,
+but deployment must wait for a checked success. A controller therefore needs
+an action set that depends on the current state, rather than a fixed menu with
+inadmissible actions assigned convenient scores.
+
+\begin{definition}[Guarded rational system]
+Let $S$ be a state space, $A(s)$ a finite nonempty set of actions, and $O$ a
+finite observation space. A guarded system consists of a rational reward
+$r(s,a)$, a transition $T(s,a,o)$, and rational probabilities $P(o\mid s,a)$
+satisfying
+\[
+ P(o\mid s,a)\geq0,\qquad \sum_{o\in O}P(o\mid s,a)=1.
+\]
+Its finite-horizon Bellman values are
+\begin{align}
+ V_0(s)&=0,\label{eq:bellmanzero}\\
+ Q_h(s,a)&=r(s,a)+\sum_oP(o\mid s,a)V_h(T(s,a,o)),\label{eq:qvalue}\\
+ V_{h+1}(s)&=\max_{a\in A(s)}Q_h(s,a).\label{eq:bellman}
+\end{align}
+\end{definition}
+
+Here $h$ in $Q_h$ counts \emph{continuation} steps. Choosing an acquisition
+action and then deploying a successful artifact requires two total actions,
+so its first-action score is $Q_1$, not $Q_0$. This indexing also applies to
+\texttt{robustChoice md h s} in the formal source.
+
+The state space need not be finite. Rational Bayesian beliefs are one intended
+instance. Only each feasible action set and the observation space are finite.
+The finite maximum exists even when there is no asserted efficient procedure
+for finding it. The mathematical selector and the executable evaluator are
+separate constructions.
+
+\begin{theorem}[Optimality over complete adaptive plans]
+Every horizon $H$ has a legal deterministic observation tree attaining
+$V_H(s)$. Every other legal deterministic observation tree has value at most
+$V_H(s)$. If each admissible transition preserves an invariant, the attaining
+tree preserves that invariant on every branch.
+\end{theorem}
+\begin{proof}
+At horizon zero, the empty tree has value zero. At horizon $h+1$, choose an
+action attaining the finite maximum in \eqref{eq:bellman}; after each observation,
+attach an optimal horizon-$h$ tree at the successor state. Induction proves
+equality of the resulting expected value and the Bellman value. For an arbitrary
+legal tree, induction bounds each child value by the corresponding optimal
+continuation. Multiplication by nonnegative probabilities, summation, and the
+maximum over admissible first actions give the upper bound. Invariant
+preservation follows by the same tree induction. The invariant argument applies
+to every observation branch, including a branch of probability zero.
+\end{proof}
+
+This is a prose reconstruction of
+\path{safe_optimal_plan_exists},
+\path{optimalPlan_value}, and \path{planValue_le_value} in
+\path{AVOC/GuardedControl.lean}. The competitors are complete adaptive
+observation trees. They need not use the same subsequent choices as the selected
+controller. The comparator nevertheless uses the same state, information,
+action guards, and transition model. An oracle with additional information is a
+different optimization problem.
+
+\subsection{Warm inspection and cold generation}
+
+The lazy staged controller makes this structure concrete. Its state records
+warm and cold statuses, remaining budget, reserved spending, original credit,
+and a terminal flag. Each artifact status is untried, failed, or ready. The
+action list always contains stop. Inspection and generation require an untried
+status and enough budget. Deployment requires the matching ready status.
+Stopping or deploying ends the episode.
+
+An acquisition transition pays its setup fee whether its Boolean report is true
+or false. A true report changes the corresponding status to ready. A false
+report changes it to failed. Acquisition rewards are negative setup fees,
+deployment rewards are nonnegative gross values, and stopping has reward zero.
+This prevents three easy accounting mistakes: assuming unsuccessful acquisition
+is free, treating a quote as an already available artifact, and deploying before
+checked success.
+
+\begin{example}[The artifact-backed rank-one comparison]
+The exact quote model retained in \path{AVOC/RobustQuoteExamples.lean} has
+warm setup $133$, cold setup $196$, success probability $1$ for both, and gross
+deployment value $15000$ for each over $1000$ calls. With initial credit $196$
+and two total actions available,
+\[
+ Q_1(\mathrm{inspectWarm})=15000-133=14867,
+ \qquad
+ Q_1(\mathrm{generateCold})=15000-196=14804.
+\]
+Warm inspection is better by $63$ in this exact model. At one total action,
+acquisition has only its negative immediate reward, and stopping is preferable
+when neither artifact is ready. The deployment opportunity creates the change
+between these two horizons.
+\end{example}
+
+This example has actual bounded artifact witnesses in the retained source.
+The gross value is the symbolic execution saving for the protected workload,
+not a measured dollar return or a wall-clock benchmark. The singleton evidence
+makes all quote uncertainty radii vanish, so the robust lower-Q selector
+recovers the inherited exact selector. The relevant declarations are
+\path{exact_recovers_v037},
+\path{exact_all_local_radii_zero}, and
+\path{artifact_refines_deterministic_fields}.
+
+\subsection{An executable evaluator and its cost boundary}
+
+The executable planner enumerates admissible first actions and observation
+branches, recursively evaluates continuations, and chooses a best score. Under
+the formal \path{Realizes} relation, its returned score equals the mathematical
+Bellman value. A full catalogue enumeration and a verified admissibility check
+connect the staged workflow to that evaluator. In particular,
+\path{WorkflowPlanner.model_realizes} and
+\path{executable_policy_source_safe} connect actual staged transitions,
+source-bound artifacts, and the selected policy.
+
+The planner's work counter counts defined recursive evaluator nodes. A branching
+cap permits reserving an abstract planning allowance, and truncated lookahead
+has a source-backed policy regret bound. This counter is not a rational-bit
+complexity bound. It does not include all host parsing, catalogue scans,
+reservation arithmetic, storage operations, or physical invocation cost.
+Consequently, a proved allowance in that model cannot by itself establish a
+time bound for the complete service.
+
+\section{Quote uncertainty and certified lower-Q selection}
+\label{sec:quotes}
+
+Quotes carry more than a success estimate. A protected identity records the
+artifact kind, exact source signature, workload call count, cost model, provider,
+checker, environment, and schema. A setup band has natural endpoints. Gross
+and probability bands have rational endpoints, with probability endpoints in
+$[0,1]$ and nonnegative gross lower endpoints. A submitted quote validates only
+when it equals the protected approved quote. Changing either identity or any
+band changes the evidence.
+
+For kind $k\in\{w,c\}$, write
+\[
+ c_k\in[c_k^-,c_k^+],\qquad
+ g_k\in[g_k^-,g_k^+],\qquad
+ p_k\in[p_k^-,p_k^+].
+\]
+The formal nominal model reserves $c_k^+$, credits $g_k^-$, and uses $p_k^-$.
+A compatible realization supplies exact values inside these bands. In the true
+comparison system, rewards and report probabilities use those exact values,
+but the state transitions and action guards remain those of the nominal model.
+In particular, setup reservations continue to use the upper setup bound.
+
+This common guard matters. If the true setup is $1$ and the upper quoted setup
+is $3$, a budget of $2$ still makes the acquisition inadmissible for both systems
+in the theorem. The comparator does not obtain an extra feasible action by
+knowing the smaller true fee. A theorem against that larger feasible set would
+require a different comparison argument.
+
+\subsection{From primitive bands to value bounds}
+
+Let $w_c(k)=c_k^+-c_k^-$, $w_g(k)=g_k^+-g_k^-$, and
+$w_p(k)=p_k^+-p_k^-$. The source uses the uniform quantities
+\begin{align}
+ \varepsilon&=w_c(w)+w_c(c)+w_g(w)+w_g(c),\\
+ \delta&=2\bigl(w_p(w)+w_p(c)\bigr),\\
+ M&=c_w^++c_c^++g_w^++g_c^+.
+\end{align}
+They bound reward error, Boolean-row $L^1$ error, and nominal one-step reward
+magnitude respectively. For an acquisition of kind $k$, the sharper local
+reward error is $w_c(k)$ and its row error is $2w_p(k)$. For deployment of kind
+$k$, the local reward error is $w_g(k)$ and its row error is zero. Stop has zero
+primitive errors.
+
+\begin{lemma}[Bernoulli row error and expectation transport]
+For Bernoulli parameters $p,q$,
+\[
+ \sum_{o\in\{0,1\}}|P_p(o)-P_q(o)|=2|p-q|.
+\]
+If $|W(t)|\leq B$, then replacing an observation row $P$ by $\widehat P$
+changes its expected continuation by at most
+\[
+ \left|\sum_o(P(o)-\widehat P(o))W(T(s,a,o))\right|
+ \leq B\sum_o|P(o)-\widehat P(o)|.
+\]
+\end{lemma}
+\begin{proof}
+The two Bernoulli row differences are $p-q$ and $q-p$, which have equal
+absolute values. For the second statement, apply the triangle inequality to the
+finite sum and use the uniform bound on each continuation value.
+\end{proof}
+
+Induction on the Bellman recursion gives $|\widehat V_h(s)|\leq hM$ for the
+nominal value. The source's accumulated value radius and local Q radius are
+\begin{align}
+ D_h&=\sum_{j=0}^{h-1}(\varepsilon+\delta jM),\label{eq:value-radius}\\
+ \rho_h(a)&=D_h+\varepsilon_a+\delta_a hM,\label{eq:local-radius}\\
+ \Gamma_h&=D_h+\varepsilon+\delta hM.\label{eq:global-radius}
+\end{align}
+The Bellman residual is zero here because the nominal tables are exact Bellman
+values. The broader model-error framework also allows a supplied table with a
+proved nonzero residual, but no residual term is silently introduced in these
+quote results.
+
+\begin{theorem}[Value and Q enclosures]
+For every compatible realization, every state, and every continuation horizon,
+\begin{align}
+ |V_h(s)-\widehat V_h(s)|&\leq D_h,\\
+ |Q_h(s,a)-\widehat Q_h(s,a)|&\leq\rho_h(a)\leq\Gamma_h.
+\end{align}
+Thus $L_h(s,a)=\widehat Q_h(s,a)-\rho_h(a)$ and
+$U_h(s,a)=\widehat Q_h(s,a)+\rho_h(a)$ enclose the true Q value.
+\end{theorem}
+\begin{proof}
+At horizon zero the value error is zero. In a single backup, insert and subtract
+the expectation of the nominal continuation under the true row. The reward
+error contributes at most $\varepsilon_a$, the continuation-value error at most
+$D_h$, and row transport at most $\delta_a hM$. Taking a maximum over the same
+feasible action set is nonexpansive in the uniform score error. Therefore
+$D_{h+1}\leq D_h+\varepsilon+\delta hM$, whose accumulated upper bound is
+\eqref{eq:value-radius}. The local Q statement follows from the same inserted
+expectation before taking a maximum.
+\end{proof}
+
+The reconstructed argument follows \path{value_error},
+\path{local_q_error}, \path{value_between}, and
+\path{q_between} in \path{AVOC/RobustQuotePlanning.lean}. The primitive
+steps are \path{reward_close}, \path{probability_l1_le}, and
+\path{expectation_transport}.
+
+\subsection{What the robust selector optimizes}
+
+The executable robust choice maximizes $L_h(s,a)$ over feasible actions. It is
+a maximizer of a \emph{certified surrogate lower bound}. It is not asserted to
+solve the exact minimax problem over all compatible realizations. A bound can
+be valid and substantially below the actual worst-case score.
+
+\begin{proposition}[Distinct-competitor dominance]
+If $a$ is feasible and
+\[
+ U_h(s,b)\leq L_h(s,a)\quad
+ \text{for every feasible }b\ne a,
+\]
+then $a$ is optimal in every compatible realization.
+\end{proposition}
+\begin{proof}
+For a distinct competitor, chain the three inequalities
+$Q_h(s,b)\leq U_h(s,b)\leq L_h(s,a)\leq Q_h(s,a)$.
+The comparison with $a$ itself is reflexive.
+\end{proof}
+
+This is \path{competitor_dominance_sound} in
+\path{AVOC/CalibrationBridge.lean}. Excluding self-comparison is essential
+for a useful non-singleton certificate. The older sufficient condition compares
+every feasible upper score, including the chosen action's own upper score, to
+its lower score. That older condition is sound but forces the chosen radius to
+be zero. The formal declaration
+\path{self_comparison_forces_zero_radius} records this limitation.
+
+\begin{example}[A deliberately conservative abstract quote fixture]
+The retained uncertainty example assigns zero setup to both kinds, warm gross
+$200$, cold gross $60$, warm success band $[3/5,1]$, and exact cold success $1$.
+Start with both statuses untried and use $h=1$, hence two total actions. The
+nominal scores are warm $120$, cold $60$, and stop $0$. Here
+$\varepsilon=0$, $\delta=4/5$, $M=260$, and $D_1=0$. The local warm radius
+is $208$, while the cold and stop radii are zero:
+\[
+\begin{array}{c|r|r|r}
+ \text{action}&\widehat Q_1&\rho_1&L_1\\\hline
+ \mathrm{inspectWarm}&120&208&-88\\
+ \mathrm{generateCold}&60&0&60\\
+ \mathrm{stop}&0&0&0
+\end{array}
+\]
+The lower-Q rule chooses cold although warm's exact compatible Q range is
+$[120,200]$. This is a clear example of conservatism in the certified envelope.
+It does not show that cold is the exact maximin choice.
+\end{example}
+
+The source proves the widths, local radii, and numerical order through
+\path{uncertain_warm_local_radius},
+\path{uncertain_cold_local_radius}, and
+\path{uncertainty_changes_numerical_order}. The displayed first-action
+ranking is a direct reconstruction at the stated initial state and horizon.
+This fixture is \emph{abstract quote planning}, not an artifact-backed saving
+example. Its protected rank-one source has dense cost $36$ per call and the
+fixture has one call, so gross values $200$ and $60$ cannot come from bounded
+execution savings for that source. The separate $1000$-call example above is
+the artifact-backed comparison. These two roles must remain distinct.
+
+\subsection{Whole-policy regret, not only first-action quality}
+
+Let $a_h(s)$ maximize $L_h(s,a)$ and let $a^*$ maximize the true $Q_h$.
+Then
+\begin{align*}
+ V_{h+1}(s)-Q_h(s,a_h(s))
+ &\leq U_h(s,a^*)-L_h(s,a_h(s))\\
+ &\leq U_h(s,a^*)-L_h(s,a^*)\\
+ &\leq 2\Gamma_h.
+\end{align*}
+The comparison controls the Bellman loss of the actual choice at each state.
+The policy is rebuilt at every remaining horizon with the same frozen evidence.
+
+\begin{theorem}[Expected frozen-policy regret]
+For a horizon $H$, let $J_H^{\rm lower}(s)$ be the expected value of the complete
+adaptive policy induced by robust lower-Q selection. Under any compatible
+realization,
+\[
+ 0\leq V_H(s)-J_H^{\rm lower}(s)
+ \leq\sum_{h=0}^{H-1}2\Gamma_h.
+\]
+The comparator is the true optimal legal adaptive plan with the same
+conservative reservation guards.
+\end{theorem}
+\begin{proof}
+Write the regret at a node with $h+1$ remaining steps as its local Bellman loss
+plus the expected regret of the selected continuation. The local term is at
+most $2\Gamma_h$. By induction, every child regret is bounded by the common
+sum $\sum_{j<h}2\Gamma_j$. Taking the expectation leaves that constant unchanged
+because probabilities sum to one. This yields the cumulative upper bound.
+Nonnegativity follows because the selected complete tree is legal and $V_H$
+dominates the value of every legal tree.
+\end{proof}
+
+This is the argument implemented by \path{plan_regret_le} in
+\path{AVOC/GuardedPolicyRegret.lean} and
+\path{robust_policy_regret} in \path{AVOC/RobustQuotePlanning.lean}.
+Ordinary finite sums simplify the displayed bound to
+\[
+ \varepsilon H(H+1)+\frac{\delta M}{3}H(H-1)(H+1).
+\]
+This last closed form is a prose algebraic consequence of the source's sums,
+not a newly compiled Lean declaration. The envelope is deliberately broad and
+may be vacuous for a particular application. It remains a valid certificate.
+The regret is an expected policy-value difference. It does not bound every
+realized sequence of successes and failures.
+
+\section{Exact finite-grid calibration}
+\label{sec:calibration}
+
+Probability bands need an evidence rule. The implemented rule is an exact
+rational finite-grid cell-envelope construction. It should not be relabeled as
+an exact inversion of binomial tails or as a Clopper--Pearson interval. Its proof
+uses a different and simpler exclusion budget.
+
+Let $K$ be the number of successes in $n$ Bernoulli trials with rational
+parameter $p\in[0,1]$. Define
+\[
+ b_{n,k}(p)=\binom nk p^k(1-p)^{n-k},\qquad 0\leq k\leq n.
+\]
+Choose a positive integer grid size $m$ and nonnegative rational allowance
+$\alpha$. The grid cells have endpoints
+\[
+ \ell_i=\frac{i}{m},\qquad u_i=\frac{i+1}{m},\qquad 0\leq i<m.
+\]
+For observed count $k$, the envelope of its point mass over cell $i$ is
+\[
+ B_{n,k,i}=\binom nk u_i^k(1-\ell_i)^{n-k}.
+\]
+Retain the cell exactly when
+\[
+ B_{n,k,i}>\frac{\alpha}{n+1}.
+\]
+Return the closed interval spanning all retained cells. If there are no retained
+cells, return $[0,1]$. The returned interval is therefore always a valid band.
+The construction performs exact rational arithmetic and strict comparison.
+Boundary cells cover $0$ and $1$ as well as interior parameters.
+
+\begin{theorem}[Finite-sample grid coverage]
+If $K$ has the binomial count law $b_{n,k}(p)$, the returned interval $I(K)$ obeys
+\[
+ \Prob\{p\notin I(K)\}\leq\alpha.
+\]
+This holds for every rational $p\in[0,1]$, without assuming that $p$ is a grid
+point.
+\end{theorem}
+\begin{proof}
+Some grid cell contains $p$. In that cell, $p\leq u_i$ and
+$1-p\leq1-\ell_i$, hence $b_{n,k}(p)\leq B_{n,k,i}$. If $p$ is outside the
+returned interval, the containing cell could not have been retained: any
+retained cell lies inside the hull. Therefore
+$B_{n,k,i}\leq\alpha/(n+1)$, and the mass of this excluded count $k$ is at most
+that threshold. There are $n+1$ possible counts, so summing their failure masses
+gives at most $\alpha$. If no cells were retained, the returned full band cannot
+exclude $p$ and the conclusion is immediate.
+\end{proof}
+
+The source proves the grid cover, the cell envelope, excluded-count mass, and
+final sum as \path{grid_covers}, \path{mass_le_envelope},
+\path{excluded_mass_le}, and \path{missMass_le} in
+\path{AVOC/FiniteCalibration.lean}. This proves finite-sample validity of the
+algorithm itself within the exact rational binomial model. It does not infer the
+sampling model from a list of reported outcomes.
+
+\begin{example}[Ten successes are evidence, not certainty]
+For $n=10$, $m=10$, and $\alpha=1/10$, ten successes retain cells
+$\{6,7,8,9\}$ and return $[3/5,1]$. Ten failures retain
+$\{0,1,2,3\}$ and return $[0,2/5]$. These endpoint calculations are explicit
+Lean theorems. By contrast, the empirical singleton $\{K/n\}$ has no such
+coverage property. At $n=1$ and $p=1/2$, both possible singletons exclude the
+true parameter, so its miss probability is $1$.
+\end{example}
+
+The relevant declarations include \path{ten_successes_lower},
+\path{ten_successes_upper}, \path{ten_failures_lower},
+\path{ten_failures_upper}, and
+\path{empirical_singleton_counterexample}. Nothing here says the true
+parameter has posterior probability $9/10$ of lying inside an observed band.
+The guarantee concerns repeated-data failure probability under the specified
+law.
+
+\subsection{Predetermined schedules and data-dependent selection}
+
+A schedule is a finite set $J$ of checkpoints. Each checkpoint fixes an
+identity stratum, sample size $n_j$, grid $m_j>0$, true parameter $p_j$, and
+nonnegative error allocation $\alpha_j$. Its count statistic has the stated
+binomial marginal. Counts can be dependent, including different prefixes of
+one source and checkpoints that share other underlying randomness.
+
+\begin{theorem}[Scheduled and selected failure bounds]
+Let $B_j$ be the event that checkpoint $j$'s interval excludes $p_j$. Then
+\[
+ \Prob\Bigl(\bigcup_{j\in J}B_j\Bigr)
+ \leq\sum_{j\in J}\alpha_j.
+\]
+For any data-dependent selector $j(\omega)\in J$,
+\[
+ \Prob\{\omega\in B_{j(\omega)}\}\leq\sum_{j\in J}\alpha_j.
+\]
+\end{theorem}
+\begin{proof}
+For each outcome $\omega$, the indicator of a union is at most the sum of the
+individual indicators. Multiply by the nonnegative rational weight of
+$\omega$ and sum over the finite probability space. Interchange the two finite
+sums to obtain the union bound. Each checkpoint has failure mass at most its
+allocated $\alpha_j$ by finite-grid coverage. Finally, selected failure implies
+failure of at least one scheduled checkpoint, so it is a subset of the union.
+This last inclusion holds pointwise even if selection sees all outcomes.
+\end{proof}
+
+This reconstructs \path{finite_union_le},
+\path{scheduled_binomial_failure_le}, and
+\path{selected_binomial_failure_le} in
+\path{AVOC/CalibrationSchedule.lean}. Neither checkpoint independence nor
+an independent selector is required. Predetermination is required: the theorem
+does not authorize creating arbitrary new checkpoints after viewing the data.
+It is finite scheduled selection, rather than an unrestricted anytime
+confidence sequence.
+
+\begin{example}[Why the schedule's total allowance is necessary]
+Take a fair Boolean outcome $\omega$ and two checkpoint bad events
+$B_0=\{\omega=0\}$ and $B_1=\{\omega=1\}$. Each has probability $1/2$.
+Selecting $j(\omega)=\omega$ makes selected failure certain. The total allowance
+$1/2+1/2=1$ remains valid, while either single checkpoint's allowance fails.
+This is the exact obstruction proved by
+\path{fairBool_adaptive_exceeds_single_budget}.
+\end{example}
+
+\section{From source laws to actual terminal samples}
+\label{sec:recorder}
+
+The count-law obligation is substantial. Fair marginals do not imply a binomial
+sum. Two identical fair bits each have parameter $1/2$, but their two-bit count
+is either zero or two and never one. The source contains this obstruction as
+\path{correlatedPair_not_product}.
+
+The primitive model uses a finite rational probability space and, for each
+identity $k$, a finite latent Boolean vector of length $N_k$. Its success
+parameter $p_k$ is fixed. The fresh-outcome contract states that after agreement
+with any specified pattern on a previously revealed set of positions, a fresh
+position's joint success mass is $p_k$ times that history mass. In notation,
+\[
+ \Prob\{H\text{ matches and }X_i=1\}=p_k\Prob\{H\text{ matches}\},
+ \qquad i\text{ fresh}.
+\]
+The multiplication-only form is meaningful for histories of mass zero and does
+not divide by them. Induction determines the mass of every full pattern, then
+summing patterns by success count gives its binomial law. Truncation yields the
+same law for each fixed prefix.
+
+The formal steps are \path{conditional_implies_product},
+\path{count_fiber_eq_binomial}, and
+\path{prefix_count_fiber_eq_binomial} in
+\path{AVOC/ObservationStream.lean}. This derives the count law from a
+primitive source law. The primitive source law itself remains an explicit
+model assumption.
+
+\subsection{Pending intents and immutable terminal events}
+
+The new lifecycle recorder separates a pending-intent list from a terminal log.
+A single global natural-number operation-ID namespace covers both lists and
+all identities. Pending entries store an ID and identity. Terminal entries
+store an ID, identity, and success, rejection, or fault. An unfinished outcome
+cannot be inserted as a terminal event.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+Command situation & Defined result\\\midrule
+Fresh begin & Append one pending ID and identity.\\
+Exact pending begin replay & Return the same state.\\
+Begin replay after matching completion & Return the same state without reopening.\\
+Matching fresh finish & Remove the pending ID and append one terminal event.\\
+Exact terminal replay & Return the same state.\\
+Changed identity or terminal outcome & Reject the command.\\
+Finish without matching intent & Reject the command.\\
+Unfinished terminal outcome & Reject the command.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+These cases resolve a concrete inherited obstruction. If an immutable log stores
+an unfinished event under an ID, later adding success under that ID changes the
+event and must be rejected. A pending registry therefore cannot simply be an
+unfinished terminal record. The declaration
+\path{inherited_unfinished_terminal_conflict} proves the mismatch, rather
+than relying on a narrative explanation.
+
+\begin{theorem}[Pure recorder lifecycle invariant]
+Every successful run from the empty state has unique pending IDs, unique
+terminal IDs, disjoint pending and terminal IDs, and no unfinished terminal
+entries. An accepted terminal event occurs once and remains once throughout
+every later successful continuation. Terminal history grows by suffix append.
+\end{theorem}
+\begin{proof}
+For a begin step, the transition first checks both uses of the ID. It either
+returns the unchanged state for a matching replay, rejects conflicting reuse,
+or appends a fresh pending entry. For a finish step, exact replay is unchanged;
+otherwise successful completion requires an unused terminal ID and a matching
+pending entry. Removing that pending ID and appending its terminal event
+preserves uniqueness and disjointness. Unfinished outcomes are rejected before
+these cases. Induction over a successful command list preserves the invariant.
+Every successful step leaves the log unchanged or appends one event, which
+proves retention under continuation.
+\end{proof}
+
+The source declarations are \path{run_wellFormed},
+\path{runFrom_log_prefix}, and
+\path{accepted_terminal_retained_once} in
+\path{AVOC/ObservationRecorder.lean}. A success adds true once to its
+identity's samples, a rejection adds false once, and a fault adds no sample.
+False outcomes count toward sample readiness just as true outcomes do.
+
+\subsection{A source-generative recorder and whole-run refinement}
+
+The raw recorder accepts externally supplied terminal labels. The generative
+recorder instead has begin, report, and fault commands. A fresh report constructs
+its true or false label from the next latent Boolean of its identity. A replay
+checks the terminal log first and reuses the stored outcome, consuming no new
+source bit. A fresh report with an exhausted source rejects. Faults and begins
+consume no source bit. Reporting after a fault conflicts with the immutable
+terminal event.
+
+Every accepted generative step emits an ordinary recorder command and an
+effective reveal marker. Whole-run induction proves that the emitted commands
+reproduce the actual raw recorder state and that the reveal state equals the
+inherited reveal machine on its effective trace. In particular, for every
+identity,
+\begin{equation}
+ \mathrm{samples}_k(\mathrm{terminalLog})
+ =\mathrm{source}_k.\mathrm{take}
+     \bigl(|\mathrm{samples}_k(\mathrm{terminalLog})|\bigr).
+ \label{eq:recorder-prefix}
+\end{equation}
+
+This is \path{run_refines} and \path{run_samples_eq_take} in
+\path{AVOC/RecorderReveal.lean}. The source-prefix correspondence is a
+derived invariant of the defined machine, not an additional equality asserted
+for each observed raw event. It still does not establish that an arbitrary
+external success label came from this latent source. A parser can check the
+label's syntax without checking its physical or statistical origin.
+
+\begin{example}[Replay and faults do not create new evidence]
+Let an identity's source be $[\mathrm{true},\mathrm{false}]$. Begin ID $7$, report
+ID $7$, then report ID $7$ again. The sample list is $[\mathrm{true}]$ and the
+remaining source begins with false. Begin ID $8$ and finish it as a fault. The
+sample list stays unchanged. Begin and report ID $9$. It appends false, yielding
+$[\mathrm{true},\mathrm{false}]$. A further fresh report rejects after source
+exhaustion, while a replay of ID $7$ remains possible. The replay supplies no
+extra success and the fault supplies no concealed binary observation.
+\end{example}
+
+This is an illustrative execution of the defined transitions. The retained
+formal examples \path{replay_fault_exhaustion_example} and
+\path{exhausted_fresh_report_rejected} provide closely related checked
+instances. Reusing a different ID for the same physical operation is a separate
+identity problem. Global ID uniqueness alone cannot rule it out.
+
+\section{Unconditional calibrated policy issuance}
+\label{sec:issuance}
+
+The recorder-to-policy endpoint reads counts from the actual terminal log.
+Rejected whole runs supply no counts. Successful runs with \emph{any} pending
+operation also supply no counts, even when the pending identity is unrelated to
+the selected checkpoint. A fully resolved run still needs enough success or
+rejection reports for both selected checkpoints. A checkpoint always reads the
+first predetermined $n_j$ reports, so later reports cannot change that count.
+
+When both selected counts are available, the endpoint constructs their exact
+learned probability bands and installs them for a fresh frozen policy episode.
+Setup and gross memberships are supplied deterministic premises. The warm and
+cold selectors may depend on all outcomes but must select checkpoints with the
+specified warm and cold true parameters. Changing a probability band does not
+authorize changing an outstanding operation's evidence.
+
+\begin{theorem}[Recorder-to-policy bad-issuance bound]
+Assume finite rational latent sources satisfy the primitive conditional laws;
+the finite schedule, grids, and nonnegative allowances are predetermined;
+scheduled prefix lengths fit within their sources; selected strata match the
+specified true probabilities; and deterministic setup/gross memberships hold.
+Then
+\begin{equation}
+ \Prob\{\text{a plan is issued and lacks its episode certificate}\}
+ \leq \sum_{j\in J}\alpha_j.
+ \label{eq:issuance}
+\end{equation}
+The episode certificate supplies a compatible realization with the stated exact
+parameters, value and Q enclosures, and expected whole-policy regret for every
+finite horizon under frozen quotes.
+\end{theorem}
+\begin{proof}
+The primitive conditional law yields binomial prefix count laws at all scheduled
+checkpoints. The generative run refinement gives \eqref{eq:recorder-prefix}.
+Whenever gated counts are available, taking the fixed first $n_j$ reports
+therefore gives the corresponding latent prefix count. On the event where all
+scheduled bands cover their true parameters, either the gates suppress issuance
+or both selected learned bands contain the correct parameters. Combine those
+memberships with the supplied deterministic memberships to construct a
+compatible realization. The deterministic frozen-episode theorem then supplies
+the policy certificate. Thus bad issuance is a subset of the scheduled band
+failure union, whose probability is bounded by the total allowance.
+\end{proof}
+
+The final declarations are \path{recorder_episode_coverage} and
+\path{recorder_issued_failure_le} in
+\path{AVOC/RecorderPolicy.lean}. Success of execution, absence of pending
+intents, availability of enough samples, log-prefix equality, and the binomial
+count law are not separately supplied premises to that final theorem. They are
+derived or checked by its machine and gates. The primitive source laws and
+deterministic memberships are still supplied.
+
+The probability in \eqref{eq:issuance} ranges over the original outcome space,
+including rejected, unresolved, and insufficient-data runs. There is no claim
+that a plan will be issued, that any operation finishes, or that collection is
+cheap. If the issuance probability is $q>0$, the generic conditional implication
+is only
+\[
+ \Prob\{\text{uncertified}\mid\text{issued}\}
+ \leq \min\left(1,\frac{\sum_j\alpha_j}{q}\right).
+\]
+The same nominal allowance need not hold after conditioning on issuance.
+
+\subsection{Completion conditioning can select a biased population}
+
+\begin{example}[Predictable availability still biases completed runs]
+Let $(X_1,X_2)$ be independent fair bits. Reveal $X_1$, and reveal $X_2$ by the
+deadline only if $X_1=1$. Availability of the second report depends on the past,
+not on $X_2$. Completion probability is $1/2$. Conditional on completion,
+$X_1=1$ with probability one, and the two-bit count has probability zero of
+being zero. A genuine two-trial binomial count with parameter $1/2$ has zero
+count probability $1/4$.
+\end{example}
+
+This is kernel-checked in \path{AVOC/ObservationCensoring.lean}, including
+\path{deadline_second_retention_predictable},
+\path{deadline_conditioned_first_success}, and
+\path{deadline_conditioned_count_not_binomial}. It shows why one cannot
+replace the original law by the law conditioned on enough reports arriving.
+
+A direct interval illustration uses ten independent fair bits and issues an
+interval only when all ten are true. Its issuance probability is $2^{-10}$.
+The implemented $n=m=10$, $\alpha=1/10$ interval is then $[3/5,1]$, which excludes
+$1/2$. Conditional on issuance, failure is certain. Unconditional bad issuance
+is only $2^{-10}$ and satisfies the allowance. This finite calculation is an
+illustrative consequence of the checked interval endpoints and the elementary
+product law, not a new Lean declaration.
+
+\subsection{Complete logs do not fix outcome-dependent completion order}
+
+Conditioning and ordering are different obstructions. Suppose two independent
+fair attempts start together. Success takes one unit of time and rejection
+takes two; resolve ties by the initiation ID. Record every final outcome and
+wait until all intents have resolved. The completion order is
+\[
+\begin{array}{c|c|c}
+\text{initiation outcomes}&\text{completion-order outcomes}&\text{mass}\\\hline
+(0,0)&(0,0)&1/4\\
+(0,1)&(1,0)&1/4\\
+(1,0)&(1,0)&1/4\\
+(1,1)&(1,1)&1/4
+\end{array}
+\]
+The first completed bit succeeds with probability $3/4$. No report was missing,
+no terminal event was forged, and no operation remains pending. Nevertheless,
+the first-completed prefix is not a fair source prefix.
+
+For the implemented interval, the stronger retained finite experiment starts
+twenty independent fair attempts and lets all successes complete before all
+rejections. If there are at least ten successes, the first ten completed reports
+are all true. Their interval is $[3/5,1]$ and excludes $1/2$. That event has mass
+\[
+ \frac{1}{2^{20}}\sum_{k=10}^{20}\binom{20}{k}
+ =\frac{308333}{524288}>\frac{1}{10}.
+\]
+Thus actual interval failure exceeds its nominal allowance despite complete,
+fully resolved lifecycle records. The exact Python evidence is preserved under
+\path{results/v0.41.0/review_completion_order.py} and its JSON receipt. It is
+a finite computational obstruction with an explicit rational derivation here,
+not a newly kernel-checked theorem.
+
+The generative theorem assigns the next latent bit in report order and assumes
+that source's conditional law. Independent outcomes in initiation order do not
+automatically satisfy that assumption after outcome-dependent reordering. A
+physical deployment must justify its report-order contract, for example through
+an initiation-indexed sampling policy or a proved alternative coupling. The
+current release leaves that physical coupling open.
+
+\section{Checked recovery and durable accounting}
+\label{sec:recovery}
+
+Recovery must distinguish a recorded intention from a completed paid result.
+The robust quote recovery model binds a commit to its sequence, complete
+pre-state, selected action, quote evidence, outcome tag, and post-state. Fresh
+acknowledgment checks those bindings and checks that the supplied typed outcome
+realizes the action through the runtime's \path{confirm} transition. It then
+requires the computed successor's store view to equal the recorded durable
+post-state. An unfinished intent is rejected rather than interpreted as a
+negative observation or permission to repeat paid work.
+
+\begin{proposition}[Fresh acknowledgment and replay]
+A successful fresh acknowledgment advances the sequence by one and yields
+the successor certified by \path{confirm}. It preserves the runtime safety
+invariant. Repeating that accepted commit at the resulting matching checkpoint
+returns the same checkpoint.
+\end{proposition}
+\begin{proof}
+Each failed identity, sequence, pre-state, outcome, evidence, or post-state
+comparison returns an error. A successful fresh branch therefore exposes all
+those equalities and a successful \path{confirm}. The successor invariant
+follows from \path{confirm_safe}. At the resulting checkpoint, the recorded
+last commit, next sequence, and actual store view match the duplicate branch,
+which returns the state unchanged.
+\end{proof}
+
+These are \path{acknowledge_fresh_contract},
+\path{acknowledge_safe}, and \path{acknowledge_idempotent} in
+\path{AVOC/RobustQuoteRecovery.lean}. Duplicate acknowledgment recognizes
+the already accepted commit and checkpoint. It does not freshly validate every
+field of an independently supplied outcome argument on that replay branch.
+This is appropriate for state replay but must not be described as new checking
+of a second physical result.
+
+The \path{prepare} constructor selects the robust action and binds current
+evidence into its intent. Acknowledgment alone does not prove that an arbitrary
+supplied commit was originally produced by \path{prepare}. If the conclusion
+needs provenance of the planner's choice, that provenance must be supplied or
+established by the enclosing protocol. Fresh acknowledgment proves the exact
+checked transition contract, not an unstated origin claim.
+
+Probability bands are frozen within the episode. Replacing them for a fresh
+episode preserves the source and protected identity fields but changes the
+approved evidence. An old intent cannot be acknowledged under the changed
+evidence. The explicit declaration
+\path{new_bands_obstruct_old_acknowledgement} in
+\path{AVOC/CalibrationBridge.lean} prevents calibration from silently
+rewriting an active durable operation.
+
+\subsection{Prepaid evaluation and upgrade journals}
+
+The separate durable-upgrade machine has a journal containing the current
+upgrade state, one optional pending ticket, and closed tickets. A ticket binds
+a campaign-local key, its complete parent state, and a proposal. Beginning a
+funded fresh ticket charges its protected evaluation tariff immediately.
+Repeating the same ticket is unchanged. Finishing it charges no second
+evaluation tariff, and switching occurs only according to the checked upgrade
+decision. Abandoning clears the pending ticket while retaining its already
+charged evaluation expenditure.
+
+The upgrade authority supplies checker soundness and sound lower and upper
+utility bounds for one fixed workload, objective, and unit convention. These
+are explicit obligations in \path{AVOC/VerifiedUpgrade.lean}. Receiving a JSON
+utility bound or an approval flag does not prove them.
+
+In particular, a failed or abandoned evaluation is not a free trial. The
+complete parent state includes spending, so reusing a ticket based on an old
+active version but ignoring changed expenditure is rejected. The formal
+declarations \path{begin_keeps_active},
+\path{finish_evaluation_unchanged}, and
+\path{abandon_keeps_current} make these distinctions explicit.
+
+For a successful paid trace with total evaluation debit $e$ and switching debit
+$u$, the formal accounting identities are
+\begin{align}
+ \mathrm{evaluationSpent}_{\rm final}
+ &=\mathrm{evaluationSpent}_{\rm initial}+e,\\
+ \mathrm{switchSpent}_{\rm final}
+ &=\mathrm{switchSpent}_{\rm initial}+u.
+\end{align}
+From a safe initial journal, their sum stays within protected credits.
+Successful replay also cannot decrease the protected utility of the active
+version. These are \path{paid_trace_exact_accounting},
+\path{paid_trace_no_overspend}, and
+\path{replay_utility_nondecreasing} in
+\path{AVOC/DurableUpgradeLaws.lean}.
+
+Restoration replays supplied commands from a specified initial version and
+compares the result with the actual checkpoint. A successful restoration equals
+that checkpoint. Provided the specified initial version satisfies the
+authority's contract, restoration also inherits the safety certificate. This checks consistency
+between two supplied records. It cannot authenticate their physical origin or
+detect coordinated replacement of both the journal and checkpoint.
+
+\subsection{What recovery establishes about external execution}
+
+The lifecycle recorder is a pure finite snapshot reducer. Its once-only
+terminal history is not exactly-once external execution. It neither invokes
+an operation nor persists a crash-safe transaction. The recovery models give
+checked state-transition and replay contracts, while the retained runtime and
+storage adapters have their stated bounded evidence and external trust
+assumptions. Filesystem durability, endpoint authentication, physical identity,
+and reliable observation delivery are not consequences of a pure transition
+function.
+
+A rejected pure batch supplies no final export. That is an all-or-nothing
+reduction result, not rollback of physical work already performed before
+rejection. A fault closes an intent without supplying a binary sample. It does
+not establish that retrying the corresponding paid operation is safe or free.
+Conservative reserved spending remains a protected model quantity rather than
+an automatic identity with actual billed expenditure.
+
+The completed chain is therefore precise: under the declared finite source
+model, the lifecycle machinery derives trustworthy prefix correspondence;
+fixed scheduled calibration bounds bad issuance; on the simultaneous-coverage
+event, every issued frozen episode has the proved value and policy guarantees;
+outside that event, uncertified issuance has mass at most the scheduled total
+allowance; and the checked recovery machines preserve their specified state
+and accounting contracts. Physical source coupling,
+universal host/storage refinement, multi-episode accumulation, and measured
+productivity remain separate obligations.
