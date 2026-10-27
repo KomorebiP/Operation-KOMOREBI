@@ -1,0 +1,1 @@
+$ErrorActionPreference="Stop"; Set-Location $PSScriptRoot; python .\run_ambient_diagnostics.py --profile smoke --output-dir .\results\local\ambient_smoke; if($LASTEXITCODE){throw "Ambient smoke assay failed with exit code $LASTEXITCODE"}
