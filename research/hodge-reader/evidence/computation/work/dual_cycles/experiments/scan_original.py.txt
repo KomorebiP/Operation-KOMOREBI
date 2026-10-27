@@ -1,0 +1,10 @@
+import sys,time,json
+sys.path.insert(0,'/mnt/data/hodge_push_work/Komorebi_Hodge_Carrier70_v0.1.0/search')
+from general_carrier import run
+cases=[(25,(1,6,11,16,20,21)),(33,(1,4,16,22,25,31)),(35,(1,8,15,22,29,30)),(39,(1,7,16,22,34,37)),(40,(1,9,17,25,33,35)),(45,(1,10,19,28,36,37)),(55,(1,12,23,34,45,50)),(70,(1,20,24,42,61,62))]
+results=[]
+for m,a in cases:
+ t=time.time()
+ r=run(m,a,18);results.append(r)
+ print(m,r.get('weight_sum'),r.get('candidate_dual'),r.get('support_size'),time.time()-t,flush=True)
+open('/mnt/data/hodge_push_work/experiments/scan.json','w').write(json.dumps(results,indent=2))

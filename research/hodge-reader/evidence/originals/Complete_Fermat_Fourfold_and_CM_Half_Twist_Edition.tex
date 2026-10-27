@@ -1,0 +1,1554 @@
+\documentclass[11pt,oneside]{book}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=0.82in,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage{url}
+
+\definecolor{ink}{HTML}{17202A}
+\definecolor{blue}{HTML}{2E86AB}
+\definecolor{teal}{HTML}{2A9D8F}
+\definecolor{orange}{HTML}{F4A261}
+\definecolor{red}{HTML}{E76F51}
+\definecolor{purple}{HTML}{6C5CE7}
+\definecolor{paper}{HTML}{FBFBF8}
+\definecolor{softgray}{HTML}{EEF1F3}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=purple,
+  citecolor=teal,
+  urlcolor=blue,
+  pdftitle={Complete Fermat Fourfold and CM Half-Twist Edition},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Fermat fourfold character packets, conductor polyphase, Delsarte correspondences, Kummer phases, and CM half-twists},
+  pdfkeywords={Fermat fourfold, character packets, algebraic cycles, conductor projectors, Delsarte, Kummer, CM half-twist}
+}
+
+\graphicspath{{figures/}}
+\captionsetup{font=small,labelfont=bf,margin=0.04\textwidth}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setlist[itemize]{leftmargin=1.45em,itemsep=0.25em,topsep=0.3em}
+\setlist[enumerate]{leftmargin=1.65em,itemsep=0.25em,topsep=0.3em}
+\renewcommand{\arraystretch}{1.16}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Complete Fermat Fourfold and CM Half-Twist Edition}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{problem}[theorem]{Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newtcolorbox{claimboundary}{
+  colback=red!5,colframe=red!75!black,title=Claim boundary,
+  fonttitle=\bfseries,breakable,boxrule=0.9pt,arc=1.2mm}
+\newtcolorbox{resultbox}[1][]{
+  colback=teal!5,colframe=teal!75!black,title={#1},
+  fonttitle=\bfseries,breakable,boxrule=0.9pt,arc=1.2mm}
+\newtcolorbox{openproblem}[1][]{
+  colback=orange!7,colframe=orange!85!black,title={#1},
+  fonttitle=\bfseries,breakable,boxrule=0.9pt,arc=1.2mm}
+\newtcolorbox{methodbox}[1][]{
+  colback=blue!5,colframe=blue!75!black,title={#1},
+  fonttitle=\bfseries,breakable,boxrule=0.9pt,arc=1.2mm}
+
+\newtcolorbox{scopebox}[1][]{
+  colback=purple!5,colframe=purple!72!black,title={#1},
+  fonttitle=\bfseries,breakable,boxrule=0.9pt,arc=1.2mm}
+
+\newcommand{\Hdg}{\operatorname{Hdg}}
+\newcommand{\Alg}{\operatorname{Alg}}
+\newcommand{\cl}{\operatorname{cl}}
+\newcommand{\CH}{\operatorname{CH}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\C}{\mathbf{C}}
+\newcommand{\id}{\mathrm{id}}
+
+\newcommand{\compactpart}[1]{%
+  \par\vspace{1.2em}\noindent
+  \begin{tcolorbox}[colback=purple!5,colframe=purple!70!black,boxrule=0.9pt,arc=1.2mm,left=4mm,right=4mm,top=3mm,bottom=3mm]
+  {\Large\bfseries #1}
+  \end{tcolorbox}
+  \addcontentsline{toc}{part}{#1}
+  \markboth{#1}{#1}
+  \vspace{0.4em}
+}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  frame=single,
+  breaklines=true,
+  backgroundcolor=\color{softgray},
+  rulecolor=\color{softgray},
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+
+
+
+\begin{document}
+
+\frontmatter
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\centering
+\vspace*{0.08in}
+{\Huge\bfseries Complete Fermat Fourfold\par}
+\vspace{0.05in}
+{\Huge\bfseries and CM Half-Twist Edition\par}
+\vspace{0.08in}
+{\LARGE Projector-Resolved Character Packet Calculus\par}
+\vspace{0.12in}
+{\Large Balanced Character Packets, Exact Conductors, Delsarte Transfers,\par}
+{\Large Weighted Dyadic Refinement, Kummer Polyphase, and Imaginary CM Weights\par}
+\vspace{0.14in}
+{\large Komorebi P.\par}
+\vspace{0.10in}
+\includegraphics[width=0.60\textwidth]{40_cm_half_plane.pdf}
+\vspace{0.06in}
+{\small A constructive theorem--proof monograph on Fermat character packets, algebraic transfers, and CM half-twist carriers.\par}
+\vspace{0.08in}
+{\small August 2026\par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+This monograph develops a constructive calculus for the primitive middle cohomology of the Fermat fourfold
+\[
+X_m^4=\{x_0^m+\cdots+x_5^m=0\}\subset\mathbf P^5.
+\]
+Diagonal symmetry resolves the cohomology into one-dimensional complex character lines and finite rational Galois packets. The central objects are balanced six-packets, exact conductor projectors, prime-local refinement laws, nonnegative packet identities, explicit monomial and incidence correspondences, and cyclotomic CM half-twists.
+
+The main development includes the finite balanced-packet equation, centered Fourier coordinates, conductor descent and M\"obius exact-conductor projectors, complementary-pair and saturated-join certificates, dual charges, curve and Delsarte channels, the exceptional degree-$33$ Klein--Delsarte transfer, infinite packet towers, odd prime-power classification, weighted dyadic reconstruction, a finite audit through degree $100$, CRT--Kummer phase grammar, K4 and K23 reductions, a pure-imaginary cyclotomic selector, and explicit lower Fermat-curve CM carriers. Positive cycle frames and divisor-lowering transfers provide the synthesis layer used to reconstruct packet classes from explicit correspondences.
+
+The constructive endpoint is a rank-one Chow correspondence from the selected lower Fermat-curve CM factor to each remaining K23 weight-one packet. The manuscript separates symbolic identities, finite exact certificates, correspondence-level theorems, published background, and open construction maps.
+
+\begin{scopebox}[Purpose of this edition]
+This edition begins from the Fermat character decomposition and treats Hodge type as one address in the packet system. The primary question is constructive:
+\begin{center}\itshape
+Given a rational Fermat character packet, what explicit cycle, transfer, or correspondence realizes it?
+\end{center}
+Published all-degree existence results are treated as background. The focus here is the explicit packet grammar, the prime-local decomposition, the CM half-twist carrier, and the algorithm that turns those data into cycle constructions.
+\end{scopebox}
+
+\chapter*{Reader's map}
+\addcontentsline{toc}{chapter}{Reader's map}
+The constructive pipeline is
+\[
+\boxed{\begin{gathered}
+\text{balanced six-packet}\longrightarrow\text{exact conductor}\longrightarrow\text{prime-local refinement}\\
+\text{certificate channel}\longrightarrow\text{algebraic correspondence}\\
+\text{rational packet reconstruction}
+\end{gathered}}
+\]
+The main certificate channels are
+\[
+\text{pair},\quad
+\text{saturated join},\quad
+\text{curve},\quad
+\text{Delsarte},\quad
+\text{weighted dyadic},\quad
+\text{Kummer--Schur},\quad
+\text{CM half-twist}.
+\]
+
+\begin{center}
+\begin{tabular}{p{0.24\textwidth}p{0.27\textwidth}p{0.38\textwidth}}
+\toprule
+Layer & Main object & Constructive question \\
+\midrule
+Character address & $a=(a_0,\ldots,a_5)$ & Which rational Galois packet is selected? \\
+Balance & $\ell_a(u)=3$ & Does every conjugate remain in the middle packet? \\
+Conductor & $Q_{m,c}$ & Which minimal modulus carries the packet? \\
+Local phase & dyadic or mod-$5$ children & Which prime-local grammar applies? \\
+Certificate & pair, SAT, curve, Delsarte, Kummer & Which explicit correspondence channel is available? \\
+Transfer & $T=\sum_r B_rA_r$ & Does the correspondence return the full packet? \\
+CM carrier & $e_{\Sigma}H^1(F_d)$ & Which lower curve carries the half-twist? \\
+Reconstruction & nonzero projected cycle & How is the rational orbit recovered exactly? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{33_fermat_packet_pipeline.pdf}
+\caption{Constructive Fermat packet workflow from a balanced address to a nonzero packet-resolved cycle.}
+\end{figure}
+
+{\small\setlength{\parskip}{0pt}\tableofcontents}
+
+\mainmatter
+
+
+
+\compactpart{Part I. Fermat Fourfold Character Geometry}
+
+\chapter{Program, objects, and constructive objective}
+For each integer \(m\ge3\), consider the smooth Fermat fourfold
+\[
+X_m^4=\{x_0^m+x_1^m+x_2^m+x_3^m+x_4^m+x_5^m=0\}\subset\mathbf P^5.
+\]
+The diagonal symmetry group resolves primitive middle cohomology into one-dimensional complex character lines. Rational packets are finite Galois orbits of these lines. This makes the geometry unusually explicit: each packet has a residue address, an exact conductor, a local prime profile, and a finite list of possible correspondence channels.
+
+\begin{scopebox}[Constructive objective]
+For every rational character packet
+\[
+W\subset H^4_{\mathrm{prim}}(X_m^4,\Q)
+\]
+of middle type, construct an explicit algebraic cycle or algebraic correspondence whose cohomology projection to \(W\) is nonzero.
+\end{scopebox}
+
+The aim is not merely to know that some class exists. The aim is to produce:
+\begin{enumerate}
+\item a finite symbolic certificate identifying the packet
+\item an explicit correspondence channel
+\item a nonzero matrix coefficient or period certificate
+\item a rational reconstruction of the full Galois orbit
+\end{enumerate}
+
+The packet calculus uses Hodge level as a selection address, conductor as a polyphase depth, local prime data as a refinement grammar, and algebraic correspondences as analysis--synthesis maps. A packet may fail one grammar without being exceptional geometrically. The degree-\(33\) construction is the central example: ordinary pair and saturation channels miss the packet, while a cross-family cubic transfer reaches it exactly.
+
+\begin{resultbox}[Core distinction]
+\[
+\text{abstract existence}
+\qquad\neq\qquad
+\text{explicit packet-resolved construction}.
+\]
+This book studies the second problem.
+\end{resultbox}
+
+
+\chapter{Character packets and balanced residue equations}
+Let
+\[
+U_m=(\mathbf Z/m\mathbf Z)^\times
+\]
+and let \(\langle r\rangle_m\in\{1,\ldots,m\}\) denote the least positive residue, with \(\langle r\rangle_m=m\) when \(m\mid r\). A primitive character address is a six-tuple
+\[
+a=(a_0,\ldots,a_5),\qquad 1\le a_i<m,
+\qquad \sum_i a_i\equiv0\pmod m.
+\]
+The Hodge level of the conjugate indexed by \(u\in U_m\) is
+\[
+\ell_a(u)=\frac1m\sum_{i=0}^5\langle ua_i\rangle_m.
+\]
+The character line has type \((2,2)\) exactly when \(\ell_a(1)=3\). Its rational Galois orbit is a Hodge packet exactly when
+\[
+\boxed{
+\ell_a(u)=3\qquad\forall u\in U_m.
+}
+\tag{B1}
+\]
+
+To remove coordinate permutations, introduce the count vector
+\[
+n(a)=(n_1,\ldots,n_{m-1})\in\mathbf N^{m-1},
+\qquad n_r=\#\{i:a_i=r\}.
+\]
+Let
+\[
+R_m(u,r)=\langle ur\rangle_m.
+\]
+Then the complete balanced six-packet space is the finite integer set
+\[
+\boxed{
+\mathcal B_m=
+\left\{
+ n\in\mathbf N^{m-1}:
+ \mathbf1^Tn=6,
+ \quad R_mn=3m\,\mathbf1
+\right\}.
+}
+\tag{B2}
+\]
+The unit group permutes the residue coordinates. Rational packets correspond to \(U_m\)-orbits in \(\mathcal B_m\).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{33_fermat_packet_pipeline.pdf}
+\caption{A constructive packet proof separates finite Hodge classification from the algebraic correspondence that realizes the packet.}
+\end{figure}
+
+\section{Centered Fourier form}
+Define
+\[
+\rho_m(r)=\langle r\rangle_m-\frac m2,
+\qquad
+F_a(u)=\sum_i\rho_m(ua_i).
+\]
+Then \(a\) is balanced if and only if \(F_a(u)=0\) for all units. Moreover,
+\[
+F_a(-u)=-F_a(u),
+\]
+so only odd characters occur. For a Dirichlet character \(\chi\) on \(U_m\), put
+\[
+\mathcal B_{m,\chi}(r)=
+\sum_{u\in U_m}\rho_m(ur)\overline{\chi(u)}.
+\]
+Finite Fourier inversion gives the exact criterion
+\[
+\boxed{
+ a\in\mathcal B_m
+ \Longleftrightarrow
+ \sum_i\mathcal B_{m,\chi}(a_i)=0
+ \quad\text{for every odd }\chi.
+}
+\tag{BF}
+\]
+This formulation is the basis for the prime-power classification and the conductor-defect tree.
+
+
+\chapter{Exact conductor polyphase and divisor-lattice projectors}
+For a packet \(a\), define
+\[
+g(a)=\gcd(m,a_0,\ldots,a_5),
+\qquad
+c(a)=\frac{m}{g(a)}.
+\]
+Writing \(a=g(a)b\), the coordinate-power map
+\[
+\pi_{g(a)}:X_m^4\longrightarrow X_{c(a)}^4,
+\qquad [x_i]\longmapsto[x_i^{g(a)}],
+\]
+sends the degree-\(c(a)\) character packet \(b\) to the degree-\(m\) packet \(a\).
+
+\begin{theorem}[Conductor descent]
+Every imprimitive balanced packet at degree \(m\) is the coordinate-power pullback of a unique full-conductor packet at its exact conductor \(c\mid m\). Consequently
+\[
+\mathcal B_m=\bigsqcup_{c\mid m}L_{m/c}\mathcal B_c^{\mathrm{full}}.
+\]
+\end{theorem}
+\begin{proof}
+If every occupied residue is divisible by \(g\), divide the six entries and the modulus by \(g\). Since
+\[
+\langle ugb_i\rangle_{gc}=g\langle \bar u b_i\rangle_c,
+\]
+the balance equation descends. The maximal common divisor is unique. The converse follows by scaling.
+\end{proof}
+
+For \(d\mid m\), let
+\[
+E_{m,d}=\frac1{(m/d)^5}\pi_{m/d}^*\pi_{m/d*}.
+\]
+On a character of exact conductor \(c\),
+\[
+E_{m,d}=\begin{cases}1,&c\mid d,\\0,&c\nmid d.\end{cases}
+\]
+Therefore
+\[
+\boxed{E_{m,d}E_{m,e}=E_{m,\gcd(d,e)}.}
+\tag{C1}
+\]
+M\"obius inversion produces pairwise orthogonal exact-conductor projectors
+\[
+\boxed{
+Q_{m,c}=\sum_{d\mid c}\mu(c/d)E_{m,d}.
+}
+\tag{C2}
+\]
+They satisfy
+\[
+Q_{m,c}Q_{m,e}=\delta_{ce}Q_{m,c},
+\qquad
+\sum_{c\mid m}Q_{m,c}=I.
+\]
+Hence
+\[
+\boxed{
+H^4_{\mathrm{prim}}(X_m^4,\Q)
+=\bigoplus_{c\mid m}\operatorname{im}Q_{m,c}.
+}
+\tag{8.3}
+\]
+Each \(Q_{m,c}\) is a rational linear combination of graph correspondences, so the conductor decomposition is itself algebraic.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{34_conductor_divisor_lattice.pdf}
+\caption{The divisor lattice is the correct all-degree progression. Only full-conductor seeds require new analysis.}
+\end{figure}
+
+
+\compactpart{Part II. Constructive Packet Grammar}
+
+
+\chapter{Constructive certificate grammar}
+Fix a full-conductor orbit in \(\mathcal B_m\). The constructive program tests a hierarchy of increasingly general certificate channels.
+
+\section{Complementary pairs}
+For \(1\le r<m\), let
+\[
+p_r=e_r+e_{m-r}.
+\]
+A packet is pair-decomposable when
+\[
+n=p_{r_1}+p_{r_2}+p_{r_3}.
+\tag{P}
+\]
+These are the standard linear-cycle or Tate-pair packets.
+
+\section{Balanced four-packets and saturation}
+Let
+\[
+\mathcal F_m=
+\left\{
+\gamma\in\mathbf N^{m-1}:
+\mathbf1^T\gamma=4,
+\quad R_m\gamma=2m\,\mathbf1
+\right\}.
+\]
+A saturated certificate is an exact nonnegative identity
+\[
+\boxed{
+ n+\sum_{j=1}^{2N-3}p_{r_j}
+ =\sum_{i=1}^N\gamma_i,
+ \qquad \gamma_i\in\mathcal F_m.
+}
+\tag{S}
+\]
+The case \(N=2\) is one-step quasi-decomposition. Higher \(N\) allows several surface packets to reconstruct one six-packet after Tate stabilization.
+
+Under the standard associative Fermat join formalism, (9.2) yields an isomorphism of character motives after tensoring with Tate factors. Since the right side is built from algebraic classes on Fermat surfaces, Tate cancellation returns algebraicity of the original packet. The exact Chow-level associativity and cancellation maps should be written explicitly in a final formal treatment.
+
+\section{Dual charges}
+An antisymmetric charge is a rational function \(w\) on residues satisfying
+\[
+w(m-r)=-w(r)
+\]
+and
+\[
+\sum_{r\in\gamma}w(r)=0
+\qquad\forall \gamma\in\mathcal F_m.
+\]
+Such a charge vanishes on every complementary pair and on every saturated identity. If \(w(n)\ne0\), the entire lower-packet saturation semigroup is excluded. This is a universal obstruction to a grammar, not a nonalgebraicity theorem.
+
+\section{Curve, Delsarte, and incidence channels}
+A curve certificate splits the six entries into triples
+\[
+a=A\sqcup B,
+\qquad \sum A=m,
+\quad \sum B=2m,
+\quad B=uA\pmod m.
+\]
+The resulting \((1,1)\) class on a product of Fermat curves is algebraic by Lefschetz \((1,1)\), and the join correspondence returns a surface class.
+
+A Delsarte certificate consists of an exponent matrix and a resolved monomial map to a lower-degree hypersurface carrying an already algebraic packet. An incidence certificate uses algebraic lowering maps
+\[
+A_r:V\to H^2(Y_r)
+\]
+whose combined positive transfer
+\[
+T=\sum_rA_r^\dagger A_r
+\]
+is invertible on the packet. Divisor lowering and Cayley--Hamilton reconstruction then produce the cycle.
+
+
+\chapter{Positive packet frames and exact synthesis}
+\section{Analysis and synthesis}
+Fix a finite family of rational algebraic cycle classes
+\[
+c_1,\ldots,c_N\in H^{2p}(X,\Q).
+\]
+Let $V\subseteq H^{2p}(X,\R)$ be the target packet under study. Define
+\[
+C:\R^N\to H^{2p}(X,\R),
+\qquad Ce_j=c_j,
+\]
+and the positive frame operator
+\[
+S=CC^*=\sum_{j=1}^N|c_j\rangle\langle c_j|.
+\]
+
+\begin{theorem}[Finite positive cycle-frame certificate]
+Let $A=\Span_{\R}\{c_1,\ldots,c_N\}$. Then
+\[
+\im S=A,
+\qquad
+\ker S=A^\perp.
+\]
+The selected cycles span $V$ if and only if $S|_V$ is positive definite.
+\end{theorem}
+\begin{proof}
+The equality $\im(CC^*)=\im C$ is standard. Moreover
+\[
+\langle v,Sv\rangle=\|C^*v\|^2=\sum_j|\langle c_j,v\rangle|^2.
+\]
+This vanishes exactly when $v$ is orthogonal to every cycle class.
+\end{proof}
+
+If $H$ is a matrix whose columns form an orthonormal basis of $V$, the finite Gram certificate is
+\[
+G=H^*SH.
+\]
+Then $A\supseteq V$ if and only if $\lambda_{\min}(G)>0$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{06_cycle_analysis_matrix.pdf}
+\caption{A finite cycle-analysis matrix records cohomology coordinates of candidate algebraic cycles.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{07_cycle_frame_spectrum.pdf}
+\caption{The packet-restricted Gram spectrum gives a finite spectral saturation certificate.}
+\end{figure}
+
+The orthogonal synthesis of a class $\alpha$ from the cycle span is
+\[
+P_A\alpha=S S^\dagger\alpha.
+\]
+If $\alpha\in A$, this is exact.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{08_cycle_frame_reconstruction.pdf}
+\caption{Finite-dimensional frame synthesis reconstructs the class whenever it lies in the algebraic span.}
+\end{figure}
+
+\section{Packet assembly without false orthogonality}
+Partition the cycle indices into packets $I_\lambda$. Define
+\[
+S_\lambda=\sum_{j\in I_\lambda}|c_j\rangle\langle c_j|.
+\]
+Then
+\[
+S=\sum_\lambda S_\lambda.
+\]
+No orthogonality of the child spans is assumed.
+
+\begin{theorem}[Positive child-kernel intersection]
+For any subspace $V$,
+\[
+\ker(S|_V)=\bigcap_\lambda\ker(S_\lambda|_V).
+\]
+\end{theorem}
+\begin{proof}
+If $Sv=0$, positivity gives
+\[
+0=\langle v,Sv\rangle=\sum_\lambda\langle v,S_\lambda v\rangle.
+\]
+Each nonnegative summand vanishes, which implies $S_\lambda v=0$. The converse is immediate.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.84\textwidth]{11_child_kernel_intersection.pdf}
+\caption{A target direction survives the parent obstruction only when every positive child channel misses it.}
+\end{figure}
+
+
+\chapter{Polyphase refinement of cycle and correspondence libraries}
+\section{Exact parent-child frame law}
+Fix a projective embedding and assign each cycle its degree. For modulus $M$, define the residue packet
+\[
+I_{M,r}=\{j:\deg Z_j\equiv r\pmod M\},
+\qquad
+S_{M,r}=\sum_{j\in I_{M,r}}|c_j\rangle\langle c_j|.
+\]
+
+\begin{theorem}[Exact degree polyphase refinement]
+For every positive integer $L$,
+\[
+S_{M,r}=\sum_{\ell=0}^{L-1}S_{LM,r+\ell M}.
+\]
+\end{theorem}
+\begin{proof}
+The congruence class $r$ modulo $M$ is the disjoint union of the classes $r+\ell M$ modulo $LM$. The rank-one frame terms are partitioned accordingly.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{09_degree_polyphase_tree.pdf}
+\caption{Degree addresses refine from modulo $2$ to modulo $4$ while the total cycle frame remains unchanged.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.76\textwidth]{10_polyphase_assembly_residuals.pdf}
+\caption{Numerical certificates of exact parent-child frame assembly in the reproducible toy model.}
+\end{figure}
+
+\section{Multiaxial packet addresses}
+Degree residue is only one address. A refined cycle packet may be labeled by
+\[
+\lambda=(r_{\mathrm{Lef}},r_{\deg},\chi_{\mathrm{mon}},s_{\mathrm{supp}},\nu_{\mathrm{Frob}}).
+\]
+The entries record Lefschetz depth, degree residue, monodromy or symmetry type, support stratum, and arithmetic phase. The total positive frame remains the sum of all leaves. This allows independent methods to solve different geometric sectors before exact synthesis.
+
+
+\chapter{Finite saturation of constructive cycle libraries}
+For each degree cutoff $D$, let $A_D^p(X)$ be the rational span of codimension-$p$ cycle classes of degree at most $D$. Then
+\[
+A_1^p\subseteq A_2^p\subseteq\cdots\subseteq H^{2p}(X,\Q).
+\]
+
+\begin{theorem}[Finite stabilization]
+There exists $D_0$ such that $A_D^p(X)=A_{D_0}^p(X)$ for every $D\ge D_0$.
+\end{theorem}
+\begin{proof}
+The dimensions form a nondecreasing sequence of integers bounded by $\dim H^{2p}(X,\Q)$. Only finitely many strict increases are possible.
+\end{proof}
+
+\begin{corollary}[Approximation becomes exact]
+Let $P_D$ be the orthogonal projector onto $A_D^p(X)\otimes\R$. For a rational class $\alpha$,
+\[
+\lim_{D\to\infty}\|(I-P_D)\alpha\|=0
+\]
+if and only if $\alpha\in A_D^p(X)$ for some finite $D$.
+\end{corollary}
+\begin{proof}
+After stabilization, the residual is constant. A constant tail converging to zero is zero.
+\end{proof}
+
+Because the matrices and target vector can be chosen over $\Q$, real membership implies rational membership by row reduction over $\Q$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{12_finite_saturation.pdf}
+\caption{The cycle span has a finite rank ceiling. Once the residual converges to zero, exact membership has already occurred at a finite stage.}
+\end{figure}
+
+\begin{resultbox}[Finite packet-coverage certificate]
+If $H$ is a rational basis matrix for a selected target packet and $C_D$ is the cycle matrix, then the degree-$D$ cycle library covers that packet exactly when
+\[
+\rank_{\Q} C_D=\rank_{\Q}[C_D\ H].
+\]
+Equivalently, the packet-restricted positive frame has positive minimum eigenvalue.
+\end{resultbox}
+
+
+\compactpart{Part III. Exceptional Transfers, Prime-Local Structure, and Infinite Families}
+
+
+\chapter{The exceptional degree-33 packet and the Klein--Delsarte transfer}
+The degree-33 Fermat fourfold provides a stringent constructive test because one rational orbit escapes the ordinary decomposable and standard channels. The packet is first isolated and separated from several obvious cycle families. A cross-family monomial transfer to a smooth cubic fourfold then supplies the missing correspondence channel.
+
+\section{The exceptional packet}
+A representative is
+\[
+a=(7,10,13,19,22,28),
+\]
+or after permutation,
+\[
+\widetilde a=(7,19,28,10,13,22).
+\]
+Every unit conjugate has residue sum \(99=3\cdot33\), so the orbit is rational of type \((2,2)\). It is not totally pair-decomposable. The previously proposed symmetric surface
+\[
+W=\{p_1(x^{11})=p_2(x^{11})=p_3(x^{11})=0\}
+\]
+does not carry the primitive packet: Newton's identity makes the third equation redundant on \(X_{33}^4\), and
+\[
+[W]=242h^2.
+\]
+Thus \(W\) is purely ambient.
+
+\section{Klein--Delsarte cubic}
+Consider the smooth cubic fourfold
+\[
+Y:\quad y_0^2y_4+y_1^2y_0+y_2^2y_1+y_3^2y_2+y_4^2y_3+y_5^3=0.
+\]
+An explicit monomial exponent matrix gives a dominant rational map
+\[
+\phi:X_{33}^4\dashrightarrow Y
+\]
+whose projective-torus lattice map has Smith diagonal
+\[
+(1,33,33,33,33),
+\]
+so the generic torus degree is \(33^4\).
+
+Take the cubic Jacobian-ring class
+\[
+P(y)=y_1y_2y_5.
+\]
+It is nonzero in the degree-three Jacobian ring. The residue pullback has the exact exponent identity
+\[
+C^Tb+10\mathbf1=(6,18,27,9,12,21)=\widetilde a-\mathbf1.
+\tag{10.1}
+\]
+Therefore the pullback of the corresponding primitive cubic \((2,2)\)-class lies in the one-dimensional Fermat line \(V(\widetilde a)\).
+
+Because the graph is defined over \(\Q\), its image is Galois-stable. Containing one character line forces it to contain the complete rational orbit. Rational \((2,2)\) classes on the cubic are algebraized through its Fano variety of lines, and the graph correspondence transports those cycles back to the Fermat fourfold.
+
+\begin{theorem}[Degree-33 packet closure]
+The rational packet generated by \((7,10,13,19,22,28)\) is algebraic on \(X_{33}^4\).
+\end{theorem}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{35_degree33_klein_correspondence.pdf}
+\caption{The exceptional degree-33 packet is reached through a lower-degree cubic and a divisor-lowering incidence correspondence.}
+\end{figure}
+
+The episode is methodologically important. Failure of a finite cycle grammar is not evidence of nonalgebraicity. It may indicate a missing cross-family correspondence.
+
+
+\chapter{The cubic-fourfold transfer engine}
+Let $X\subset\mathbb P^5$ be a smooth cubic fourfold and let $F(X)$ be its Fano variety of lines. The universal incidence variety
+\[
+P=\{(\ell,x):x\in\ell\}\subset F(X)\times X
+\]
+induces the Abel-Jacobi map
+\[
+A=p_*q^*:H^4_{\mathrm{prim}}(X,\Q)\to H^2_{\mathrm{prim}}(F(X),\Q).
+\]
+Beauville and Donagi proved that this is a polarized Hodge isomorphism up to the standard twist \cite{BeauvilleDonagi}. The polarized adjoint is represented by an algebraic incidence return after inserting the appropriate power of the Pluecker class. Therefore the divisor-lowering transfer is invertible.
+
+\begin{resultbox}[Classical validation]
+A primitive rational $(2,2)$ class on a cubic fourfold is sent to a rational $(1,1)$ class on $F(X)$, represented by a divisor. The algebraic return correspondence and its polynomial inverse reconstruct an algebraic codimension-two class on $X$. This is a validation of the packet criterion, not a claim of a new proof of the classical cubic-fourfold result.
+\end{resultbox}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{21_cubic_fourfold_incidence.pdf}
+\caption{The universal line lowers primitive degree-four cohomology to divisor degree on the Fano variety.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{22_cubic_transfer_spectrum.pdf}
+\caption{Illustrative normalized transfer spectrum. The mathematical criterion is nonvanishing, not the displayed toy values.}
+\end{figure}
+
+
+\chapter{Infinite towers and full-conductor promotion}
+The coordinate-power maps propagate every solved seed through infinitely many degrees.
+
+\begin{theorem}[Infinite packet tower]
+Let \(W\) be an algebraic rational character packet on \(X_d^{2p}\). For every \(k\ge1\), its coordinate-power pullback is an algebraic packet on \(X_{kd}^{2p}\). In particular, the degree-33 exceptional packet yields a 20-dimensional algebraic packet on every \(X_{33k}^4\).
+\end{theorem}
+
+The tower packet remains an old conductor-33 sector. A stronger construction appends a complementary pair
+\[
+(1,m-1)
+\]
+after scaling a solved seed to modulus \(m=kd\). If
+\[
+b=(b_0,\ldots,b_{2p+1})
+\]
+is algebraic at degree \(d\), then
+\[
+\Theta_{m,b}=(kb_0,\ldots,kb_{2p+1},1,m-1)
+\]
+has full raw conductor \(m\) and middle Hodge type two dimensions higher. Its rational orbit has dimension \(\varphi(m)\). This produces full-raw-conductor algebraic packets of unbounded rank.
+
+Raw conductor is not the complete novelty invariant: removing Tate pairs or reversing joins can reveal a smaller stable conductor. The stable residual should therefore be defined only after eliminating conductor descent, Tate suspension, joins, Delsarte pullbacks, and incidence channels.
+
+
+\chapter{Prime-power classification}
+The odd prime-power classification follows from a primitive-character filtration and a six-entry mass bound.
+
+\section{Valuation strata and orbit mass}
+Let \(m=p^r\) with \(p\) odd. Decompose the entries by exact \(p\)-adic valuation. At one stratum, write \(a=p^jb\), with \(b\in U_{p^{r-j}}\), and define the odd count
+\[
+\delta_j(b)=n_j(b)-n_j(-b).
+\]
+Since the packet has six entries,
+\[
+\|\delta_j\|_1\le 12.
+\tag{12.1}
+\]
+Primitive odd characters force \(\delta_j\) to be constant on the kernel cosets of
+\[
+U_{p^s}\to U_{p^{s-1}}.
+\]
+A nonzero odd kernel-orbit defect has mass at least \(2p\).
+
+\section{Large odd primes}
+If \(p\ge7\), then \(2p>12\), so every odd defect vanishes. Each residue occurs with the same multiplicity as its complement. Therefore every packet is three complementary pairs.
+
+\section{The three-primary branch}
+At \(p=3\), a kernel orbit has three elements. Define
+\[
+O_b=\{b,b+q,b+2q\},
+\qquad q=3^{r-1},
+\]
+and
+\[
+\Gamma_b=O_b\sqcup\{3(q-b)\}.
+\]
+The packet \(\Gamma_b\) is a balanced four-packet. A case analysis on the number of oriented kernel orbits gives exact identities expressing every full-conductor nonpair packet as a pair/surface packet or a one-step saturated sum of two balanced four-packets.
+
+\section{The five-primary branch}
+At \(p=5\), a nonzero odd defect consumes exactly five unit entries. The sixth entry is forced by balance. Up to the unit action there is one full-conductor exceptional orbit
+\[
+\boxed{
+\alpha_{5^r}=
+(1,1+q,1+2q,1+3q,1+4q,5q-5),
+\qquad q=5^{r-1}.
+}
+\tag{12.2}
+\]
+All other packets lie in the pair/surface grammar. The family (12.2) is the pure five-primary Hasse--Davenport branch.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.91\textwidth]{36_prime_power_classification.pdf}
+\caption{The six-entry mass bound produces a complete odd prime-power classification and isolates the five-primary family.}
+\end{figure}
+
+\begin{center}
+\input{tables/odd_prime_spots.tex}
+\end{center}
+
+
+\chapter{Weighted dyadic reconstruction}
+Prime \(2\) cannot be handled by inserting \(p=2\) into the odd-prime orbit-mass proof. The unit group has the separate form
+\[
+\mathbf Z_2^\times\cong\{\pm1\}\times(1+4\mathbf Z_2).
+\]
+The first address is a sign packet; only afterward does the principal-unit refinement begin.
+
+Let \(m=2^s\) and \(h=2^{s-1}\). For an odd residue \(b\pmod h\), its two lifts are \(b\) and \(b+h\). Define
+\[
+L_sn(b)=n(b)+n(b+h),
+\qquad
+D_sn(b)=n(b)-n(b+h).
+\]
+For every odd unit \(u\), one has the exact weighted identity
+\[
+\boxed{
+\begin{aligned}
+&n(b)\rho_s(ub)+n(b+h)\rho_s(u(b+h))\\
+&\qquad=L_sn(b)\rho_{s-1}(\bar ub)
++2^{s-2}D_sn(b)\varepsilon_s(u,b),
+\end{aligned}
+}
+\tag{13.1}
+\]
+where \(\varepsilon_s(u,b)\in\{\pm1\}\). Repetition yields a Haar-like expansion whose detail packets carry visible powers of two. The Hodge balance equation becomes a binary carry relation between weighted details.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\textwidth]{37_dyadic_weighted_refinement.pdf}
+\caption{At prime two, sign refinement and powers-of-two weights replace the odd-prime orbit-size argument.}
+\end{figure}
+
+Exact enumeration gives:
+\begin{center}
+\input{tables/dyadic_classification.tex}
+\end{center}
+For \(m=32,64,128\), the unique packet left after pair and SAT(2) reduction is
+\[
+A_m=\left(1,\frac m4+1,\frac m2+1,\frac m2+4,\frac{3m}4+1,m-8\right).
+\]
+It obeys the uniform SAT(3) identity
+\[
+\begin{aligned}
+&A_m+(2,m-2)+(4,m-4)+(m/2,m/2)\\
+&=(1,m/2,m/2+1,m-2)\\
+&\quad +(2,m/4+1,3m/4+1,m-4)\\
+&\quad +(4,m/2,m/2+4,m-8).
+\end{aligned}
+\tag{13.2}
+\]
+All three packets on the right are balanced. Formula (13.2) was checked through modulus \(4096\). A uniform proof that no second residual family appears at higher dyadic depth remains an important formalization target, although the computational evidence is strong.
+
+
+\chapter{Finite constructive audit through degree 100}
+The finite constructive audit exactly enumerates balanced packets, reduces them by unit orbits, checks pair and SAT(2) certificates, and searches higher saturated identities with \(N\le8\). Every returned identity is rechecked by exact integer arithmetic.
+
+All named verification groups pass:
+\begin{center}
+\input{tables/fermat_named_checks.tex}
+\end{center}
+The dyadic weighted identity passes \(89{,}478{,}480\) coefficient checks through \(2^{14}\). The exact packet audit is complete through degree \(100\) for the implemented grammar.
+
+After removing the degree-33 Klein channel and the degree-39 curve channel, every remaining post-saturation degree in the audit is divisible by five. This is a powerful localization of the residual grammar, but it is not by itself a universal proof.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{42_verification_summary.pdf}
+\caption{Finite checks validate the symbolic grammar and examples; universal Chow correspondences remain separate theorem obligations.}
+\end{figure}
+
+\section{Exact residual representatives}
+\small
+\input{tables/residual_degrees_100.tex}
+\normalsize
+
+The residuals are not random. Their mod-5 phase profiles form a small local grammar.
+
+
+\compactpart{Part IV. CRT--Kummer Polyphase and CM Half-Twists}
+
+
+\chapter{Local mod-5 phase grammar}
+Assume \(m=5q\) and first suppose \((5,q)=1\). For \(b\pmod q\) and a phase \(r\in\{0,1,2,3,4\}\), let \(\lambda_r(b)\) be the CRT lift satisfying
+\[
+\lambda_r(b)\equiv r\pmod5,
+\qquad
+\lambda_r(b)\equiv b\pmod q.
+\]
+The finite audit reveals four canonical multiplicity profiles, up to multiplication by a unit modulo five:
+\[
+(1,0,0,0,5),
+\quad
+(2,1,1,1,1),
+\quad
+(1,0,2,1,2),
+\quad
+(1,0,1,3,1).
+\]
+The first is the complete-five-phase K5 packet, the second is a four-phase K4 lift, and the final two are one K23 pair--triple mechanism.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.76\textwidth]{38_mod5_phase_profiles.pdf}
+\caption{Only four local mod-5 profiles occur among the audited residual orbits; the last two unify as K23.}
+\end{figure}
+
+\section{K4 four-phase reduction}
+Choose nonzero residues \(b,c,d\pmod q\) and put
+\[
+e\equiv-5^{-1}b\pmod q.
+\]
+Define
+\[
+A_{b;c,d}=
+(\lambda_1(b),\lambda_2(b),\lambda_3(b),\lambda_4(b),5c,5d)
+\]
+and
+\[
+\Gamma_{b;c,d}=(b,c,d,e).
+\]
+
+\begin{theorem}[Four-phase CRT reduction]
+The six-packet \(A_{b;c,d}\) is balanced modulo \(5q\) if and only if the four-packet \(\Gamma_{b;c,d}\) is balanced modulo \(q\).
+\end{theorem}
+\begin{proof}
+For a unit \(u\), let \(s=\langle ub\rangle_q\) and \(z=\langle u5^{-1}b\rangle_q\). The complete five-element fiber over \(s\) has sum \(5s+10q\); its phase-zero lift is \(5z\). The four nonzero phases therefore sum to \(5s+10q-5z\). Adding the last two entries and imposing the middle value \(15q\) gives
+\[
+s+\langle uc\rangle_q+\langle ud\rangle_q-z=q.
+\]
+Since \(\langle ue\rangle_q=q-z\), this is exactly the balance equation for \((b,c,d,e)\).
+\end{proof}
+
+All 16 audited K4 residuals reduce exactly to balanced four-packets.
+
+
+\chapter{K23 pair--triple factorization}
+Let a K23 packet have one phase-zero entry and five nonzero phases:
+\[
+A=P\sqcup T\sqcup\{5e\},
+\qquad |P|=2,
+\quad |T|=3,
+\]
+with
+\[
+\sum P\equiv0\pmod5,
+\qquad
+\sum T\equiv0\pmod5.
+\]
+Write
+\[
+\sum P=5C,
+\qquad
+\sum T=5D,
+\]
+and reduce \(C,D\) modulo \(q\) to positive representatives \(c,d\). Define
+\[
+C_P=P\sqcup\{m-5c\},
+\]
+\[
+S_T=T\sqcup\{m-5d\},
+\]
+and
+\[
+L=(5c,5d,5e).
+\]
+
+\begin{theorem}[Exact K23 packet identity]
+One has the exact multiset equality
+\[
+\boxed{
+A+(5c,m-5c)+(5d,m-5d)=C_P+S_T+L.
+}
+\tag{15.1}
+\]
+For every unit \(u\pmod m\),
+\[
+h_{C_P}(u)+h_{S_T}(u)+h_L(u)=5,
+\]
+and \(c+d+e\equiv0\pmod q\).
+\end{theorem}
+
+The five nonzero phases have only two irreducible possibilities: all five phases are equal, or they contain a complementary pair and a zero-sum triple. Indeed, if no complementary phase pair occurs, the phase support lies in one of four two-element subsets; the zero-sum condition forces all five entries to use one phase. This proves the local K5/K23 dichotomy.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{39_k23_factorization.pdf}
+\caption{The K23 packet becomes a curve packet, a surface packet, and a lower curve packet after two explicit Tate-pair stabilizations.}
+\end{figure}
+
+At the motive level, write
+\[
+N=M(C_P)\otimes M(S_T).
+\]
+The Hodge-level identity implies that \(N(1)\) has weight one and has Hodge type opposite to the lower curve packet \(M(L)\) at every embedding.
+
+
+\chapter{Imaginary CM selector}
+Write the lower curve packet as
+\[
+\ell=(c,d,e)\pmod q,
+\qquad c+d+e\equiv0\pmod q.
+\]
+Let \(K=\Q(\zeta_q)\) and define
+\[
+\boxed{
+\Delta_\ell=(1-\zeta_q^c)(1-\zeta_q^d)(1-\zeta_q^e).
+}
+\tag{CM1}
+\]
+
+\begin{theorem}[Pure imaginary selector]
+\[
+\overline{\Delta_\ell}=-\Delta_\ell.
+\]
+\end{theorem}
+\begin{proof}
+Since
+\[
+1-\zeta_q^{-a}=-\zeta_q^{-a}(1-\zeta_q^a),
+\]
+complex conjugation multiplies the product by
+\[
+(-1)^3\zeta_q^{-(c+d+e)}=-1.
+\]
+\end{proof}
+
+For an embedding \(\sigma_u:\zeta_q\mapsto\zeta_q^u\), let
+\[
+h_\ell(u)=\frac{\langle uc\rangle_q+\langle ud\rangle_q+\langle ue\rangle_q}{q}\in\{1,2\}.
+\]
+Using
+\[
+1-e^{2\pi ir/q}=-2i\,e^{\pi ir/q}\sin\frac{\pi r}{q},
+\]
+one obtains
+\[
+\sigma_u(\Delta_\ell)
+=8i(-1)^{h_\ell(u)}
+\prod_{a\in\{c,d,e\}}
+\sin\frac{\pi\langle ua\rangle_q}{q}.
+\tag{CM2}
+\]
+Every sine factor is positive, so the sign of the imaginary part is exactly the Hodge sign. Consequently the CM type of \(N(1)\) is the conjugate of the CM type of the lower curve packet:
+\[
+\boxed{
+\Sigma_N=\overline{\Sigma_\ell}.
+}
+\tag{CM3}
+\]
+This is the rigorous form of the statement that the half-twist occurs on the imaginary plane.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.73\textwidth]{40_cm_half_plane.pdf}
+\caption{The half-twist acts with eigenvalues $+i$ and $-i$ on conjugate CM embedding sectors.}
+\end{figure}
+
+The exact audit generates 364 K23 certificates from seven rational packet orbits. Every certificate obeys the opposite curve CM sign, factors through a lower conductor, and is a Galois translate of an upper-half-plane CM type.
+
+\begin{center}
+\input{tables/cm_audit.tex}
+\end{center}
+
+In the audited cases, the minimal CM conductors are \(3,5,7,\) or \(9\), even when the original fourfold modulus is \(50,70,\) or \(90\). Thus the weight-one carrier is not arbitrary: it is a character factor of the Jacobian of a lower-degree Fermat curve.
+
+
+\chapter{Explicit Fermat-curve carrier and the rank-one Chow target}
+Let \(F_d\) be the Fermat curve of the minimal CM conductor and let \(e_{\Sigma_N}\) be the algebraic character idempotent selecting the required orbit. The explicit carrier is
+\[
+A_{\Sigma_N}=e_{\Sigma_N}J(F_d)
+\]
+up to isogeny. The desired constructive theorem is an algebraic correspondence
+\[
+\Gamma_N\in
+\CH^\ast(F_d\times C_P\times S_T)_\Q
+\]
+inducing
+\[
+\boxed{
+\Gamma_{N*}:
+ e_{\Sigma_N}H^1(F_d)
+ \xrightarrow{\sim}
+ M(C_P)\otimes M(S_T)(1).
+}
+\tag{CM4}
+\]
+Once (CM4) is available, its tensor product with the conjugate lower curve packet is a rational \((1,1)\) class on a product of curves or abelian varieties. Lefschetz \((1,1)\) makes it algebraic, and the Shioda--Katsura join maps push the divisor to a codimension-two cycle on \(X_m^4\).
+
+Because the selected character packets are rank one, any nonzero equivariant morphism is an isomorphism. The geometric proof therefore needs only:
+\begin{enumerate}
+\item a Kummer-convolution or half-twist correspondence with the correct character covariance
+\item one nonzero period, Jacobi-sum, or intersection matrix coefficient
+\end{enumerate}
+The remaining issue is constructive, not a missing Hodge-sign classification. Motivic Gauss and Jacobi sum correspondences, including Davenport--Hasse multiplication in Chow-motive form over finite fields, provide a closely related model \cite{OtsuboYamazaki}, but the characteristic-zero packet map required here is still to be written.
+
+\begin{openproblem}[Explicit CM Packet Correspondence Theorem]
+For every K23 packet, construct the correspondence (CM4), pair it with the lower curve packet, and push the resulting divisor through the two Fermat join maps. Prove that the final character projection is nonzero.
+\end{openproblem}
+
+
+
+\chapter{Literature interface and constructive novelty}
+Several established theories meet in this edition.
+
+Shioda--Katsura induction supplies recursive maps among Fermat varieties and explains why curve, surface, and Tate factors are natural constructive atoms \cite{ShiodaKatsura}. Kang records an all-degree generalized-Hodge existence theorem for Fermat varieties of dimensions three and four \cite{KangFermat}. Da Silva studies the reach of explicit Shioda-style packet criteria and isolates degrees where those restricted constructions leave residual packets \cite{DaSilvaFermat}. Van Geemen and van Geemen--Izadi develop CM half-twists and their realization inside tensor products involving CM abelian varieties and Fermat curves \cite{VanGeemenHalfTwist,VanGeemenIzadi}. Otsubo--Yamazaki provide a motivic framework for Gauss and Jacobi sums, including Davenport--Hasse-type identities at the level of Chow motives \cite{OtsuboYamazaki}.
+
+The constructive packet program developed here is organized around:
+\begin{itemize}
+\item exact conductor projectors as algebraic graph combinations
+\item a finite packet certificate grammar
+\item a worked degree-$33$ Klein--Delsarte transfer
+\item infinite old-packet towers and full-conductor promotion
+\item odd prime-power packet classification
+\item a weighted dyadic recursion and uniform SAT(3) family
+\item exact CRT--Kummer reductions for K4 and K23 packets
+\item a pure-imaginary CM selector and explicit lower Fermat-curve carriers
+\item an algorithmic packet-resolved Chow correspondence target
+\end{itemize}
+
+\begin{scopebox}[Novelty boundary]
+The all-degree abstract existence statement is background, not the organizing claim of this book. The constructive objective is finer: resolve each rational character orbit, name its local certificate, identify its lower carrier, and write an explicit nonzero correspondence.
+\end{scopebox}
+
+
+\compactpart{Part V. Transfer, Propagation, and Verification Toolkit}
+
+
+\chapter{Divisor-lowering transfer and explicit reconstruction}
+\section{Degree bookkeeping}
+Let $X$ have complex dimension $n$, let $V\subseteq H_{\mathrm{prim}}^{2p}(X,\Q)$ be a rational Hodge substructure, and let $Y_r$ be smooth projective. Choose correspondences
+\[
+\Gamma_r\in\CH^{n-p+1}(X\times Y_r)_{\Q},
+\qquad
+\Lambda_r\in\CH^{\dim Y_r+p-1}(Y_r\times X)_{\Q}.
+\]
+They induce
+\[
+A_r=(\Gamma_r)_*:V\to H^2(Y_r,\Q),
+\qquad
+B_r=(\Lambda_r)_*:H^2(Y_r,\Q)\to H^{2p}(X,\Q).
+\]
+Algebraic correspondences preserve rationality and shift Hodge type by the required bidegree.
+
+\begin{theorem}[Invertible divisor-lowering transfer]
+Suppose
+\[
+T=\sum_{r=1}^M B_rA_r
+\]
+preserves $V$ and is invertible on $V$. Then every rational Hodge class in $V$ is algebraic.
+\end{theorem}
+\begin{proof}
+Let $\alpha\in V$ be of type $(p,p)$. Each $A_r\alpha$ is rational of type $(1,1)$ on $Y_r$, hence is the class of a rational divisor $D_r$ by the Lefschetz $(1,1)$ theorem. Therefore
+\[
+T\alpha=\sum_r(\Lambda_r)_*[D_r]
+\]
+is algebraic on $X$.
+
+Let $\chi_T(t)=t^d+c_{d-1}t^{d-1}+\cdots+c_0$ be the characteristic polynomial on $V$. Invertibility means $c_0\ne0$. Cayley-Hamilton gives
+\[
+T^{-1}=-\frac{1}{c_0}\bigl(T^{d-1}+c_{d-1}T^{d-2}+\cdots+c_1I\bigr).
+\]
+Each power of $T$ is induced by compositions and rational sums of algebraic correspondences. Thus $T^{-1}$ preserves algebraic cycle classes. Hence $\alpha=T^{-1}(T\alpha)$ is algebraic.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{15_divisor_lowering_transfer.pdf}
+\caption{A primitive Hodge class is lowered to divisor degree, algebraized there, and returned through an invertible transfer.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{18_cayley_hamilton_inverse.pdf}
+\caption{The inverse transfer is a rational polynomial in the original algebraic correspondence operator.}
+\end{figure}
+
+\section{Positive multi-channel form}
+Assume the polarized adjoint $A_r^\dagger$ is realized by an algebraic return correspondence $B_r$. This is an additional geometric hypothesis, not an automatic consequence in arbitrary settings. Then
+\[
+T=\sum_rA_r^\dagger A_r
+\]
+is positive and
+\[
+\langle v,Tv\rangle=\sum_r\|A_rv\|^2.
+\]
+Therefore
+\[
+\ker T=\bigcap_r\ker A_r.
+\]
+Joint injectivity of the lowering channels is enough.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{16_positive_correspondence_frame.pdf}
+\caption{Several incidence channels may be individually incomplete while their positive sum is invertible.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{17_multi_incidence_kernel_intersection.pdf}
+\caption{The correct criterion is the vanishing of the joint kernel, not completeness of one channel.}
+\end{figure}
+
+\begin{corollary}[Finite Gram certificate]
+Choose a rational basis $e_1,\ldots,e_d$ of $V$. If
+\[
+G_{ij}=\sum_r\langle A_re_i,A_re_j\rangle_{Y_r}
+\]
+has nonzero determinant, every rational Hodge class in $V$ is algebraic.
+\end{corollary}
+
+
+\chapter{Propagation through connected families}
+Let $\pi:\mathcal X\to S$ and $\rho_r:\mathcal Y_r\to S$ be smooth projective families over a connected base. Relative algebraic correspondences induce morphisms of Gauss-Manin local systems. In a flat rational trivialization, their transfer matrix is constant.
+
+\begin{theorem}[Propagation of invertibility]
+If a relative transfer $T_s$ is invertible on one fiber $s_0$, it is invertible on every fiber in the connected base on which the local systems and correspondences are defined.
+\end{theorem}
+\begin{proof}
+The determinant of the constant rational matrix representing the local-system morphism is locally constant. It is nonzero at $s_0$, hence everywhere on the connected base.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.83\textwidth]{19_family_propagation.pdf}
+\caption{One verified fiber can control a connected smooth family when the correspondence is relative and flat.}
+\end{figure}
+
+
+\chapter{Verification and formalization workflow}
+Numerical experiments can scout candidate families but cannot replace an exact rank certificate. The intended pipeline is:
+\[
+\begin{aligned}
+\text{exact incidence data}
+&\longrightarrow \text{rational cohomology basis}
+\longrightarrow \text{packet transfer matrices}\\
+&\longrightarrow \text{rank or positivity certificate}
+\longrightarrow \text{symbolic theorem proof}.
+\end{aligned}
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{31_verification_workflow.pdf}
+\caption{Numerical scouting is separated from rational certification and formal theorem verification.}
+\end{figure}
+
+\section{Reproducible finite checks}
+The accompanying Python generator produces all figures and runs eighteen independent finite checks covering:
+\begin{itemize}
+\item frame idempotency and range rank
+\item positive Hodge Gram spectrum
+\item exact modulo-$2$ and modulo-$4$ polyphase assembly
+\item positive transfer rank and energy identities
+\item Cayley-Hamilton inversion
+\item contraction of the removable nonlinear packet
+\item Adams projector idempotency and degree isolation
+\item nilpotent trace blindness
+\item support multiplicity recovery
+\item finite rank stabilization
+\end{itemize}
+These tests verify the finite examples and implementation. They do not establish the unwritten universal correspondence theorem.
+
+
+\compactpart{Part VI. Verification and Constructive Completion}
+
+
+\chapter{Verification ledger}
+The complete edition separates symbolic theorems, finite exact checks, geometric correspondences, and literature claims.
+
+\section{Finite checks}
+The base projector-calculus release passed 18 finite checks. The Fermat extension adds:
+\begin{itemize}
+\item 14 exact degree-33 Klein checks
+\item 4 infinite tower checks
+\item 4 exact conductor-polyphase checks
+\item 13 odd prime-power checks
+\item 89,478,480 dyadic weighted coefficient identities
+\item exact packet classifications at dyadic degrees through 128
+\item exact balanced-packet audit through degree 100
+\item 364 K23 CM-type certificates
+\end{itemize}
+
+\section{What finite checks establish}
+They establish exact arithmetic identities, matrix products, orbit counts, conductor decompositions, Hodge balance, and nonnegative multiset equalities for every tested instance. They also detect false universal pattern claims quickly.
+
+\section{What finite checks do not establish}
+They do not replace:
+\begin{itemize}
+\item a universal dyadic uniqueness proof
+\item a universal mixed-prime phase-classification proof beyond the audited range
+\item a Chow-level Kummer--Schur or half-twist correspondence
+\item a historical priority audit
+\end{itemize}
+
+
+\chapter{Constructive completion theorem stack}
+The constructive Fermat program can be stated as a dependency stack.
+
+\begin{theorem}[Conditional packet-construction theorem]
+Assume the following correspondence statements:
+\begin{enumerate}
+\item saturated Fermat joins are associative on Chow motives and complementary Tate factors cancel
+\item every Delsarte torus map used by the certificate grammar extends through a resolved graph with full-support boundary annihilation
+\item the weighted dyadic classification has no residual beyond the uniform SAT(3) family
+\item every K5, K4, and K23 local phase packet has its prescribed Kummer--Schur or CM half-twist Chow correspondence
+\end{enumerate}
+Then every rational middle character packet on every Fermat fourfold has an explicit packet-resolved algebraic cycle representative.
+\end{theorem}
+\begin{proof}
+Apply the exact conductor projectors. Descend each nonzero component to its full-conductor seed. Classify the seed by the pair, saturation, curve, Delsarte, dyadic, or Kummer phase grammar. Use the corresponding Chow map to produce a nonzero cycle projection. Pull old packets back to the original degree and sum the orthogonal conductor components. Finally sum the Galois orbit to obtain a rational cycle.
+\end{proof}
+
+\begin{openproblem}[Unconditional constructive completion]
+Write the missing correspondence maps explicitly and verify their nonzero packet matrix coefficients. The most concentrated target is the rank-one CM map (CM4).
+\end{openproblem}
+
+
+\chapter{Research checklist}
+\begin{longtable}{p{0.43\textwidth}p{0.17\textwidth}p{0.32\textwidth}}
+\toprule
+Task & Status & Required proof object \\
+\midrule\endfirsthead
+\toprule
+Task & Status & Required proof object \\
+\midrule\endhead
+Universal balanced packet equation & Complete & Finite residue matrix \\
+Exact conductor descent & Complete & Coordinate-power graph \\
+M\"obius conductor projectors & Complete & Rational graph combination \\
+Degree-33 Klein packet & Manuscript-level complete & Resolved graph and residue pullback \\
+Infinite old-packet towers & Complete & Pullback/pushforward identity \\
+Odd prime-power classification & Symbolically complete & Primitive-character filtration \\
+Dyadic weighted recursion & Identity complete & Uniform uniqueness induction \\
+K4 CRT reduction & Complete & Lower balanced four-packet \\
+K23 local phase classification & Complete & Pair--triple lemma \\
+K23 CM sign descent & Complete & Imaginary selector $\Delta_\ell$ \\
+Explicit lower CM carrier & Identified & Fermat-curve character idempotent \\
+CM carrier Chow map & Open & Nonzero algebraic correspondence \\
+All-degree constructive algorithm & Conditional & Assemble all correspondence channels \\
+Constructive literature map & Open audit & Separate published existence results from explicit correspondence priority \\
+\bottomrule
+\end{longtable}
+
+
+
+\chapter{Constructive conclusion}
+The Fermat-fourfold program is now organized as a finite hierarchy of character addresses and explicit transfers. A packet begins as a balanced six-tuple. Exact conductor projectors descend it to its minimal modulus. Prime-local analysis then selects the relevant grammar: complementary pairs, saturated surface joins, curve factors, Delsarte descent, weighted dyadic refinement, or Kummer--Schur phase decomposition.
+
+The degree-$33$ packet demonstrates why a constructive theory must allow cross-family transfers. It escapes the obvious lower-packet grammar but is reached by a monomial map to a smooth cubic fourfold. The prime-power classification shows that odd primes and the dyadic prime have genuinely different packet geometries. The mod-$5$ audit compresses mixed-prime residuals into K5, K4, and K23 local types. The K23 identity isolates a weight-one factor, and the pure-imaginary cyclotomic element
+\[
+\Delta_\ell=(1-\zeta_q^c)(1-\zeta_q^d)(1-\zeta_q^e)
+\]
+selects the upper/lower CM embedding sectors exactly.
+
+The carrier-selection problem is therefore explicit: the half-twist lies in a character factor of the Jacobian of a lower Fermat curve. The remaining constructive task is rank one.
+
+\begin{resultbox}[Final constructive endpoint]
+Construct one nonzero equivariant Chow correspondence
+\[
+e_{\Sigma}H^1(F_d)
+\longrightarrow
+M(C_P)\otimes M(S_T)(1)
+\]
+for each K23 carrier, then pair it with the conjugate lower curve packet and push the resulting divisor through the Fermat join maps.
+\end{resultbox}
+
+This endpoint is stronger than an abstract existence statement and more informative than a finite classification. It asks for an algorithmic cycle formula that reveals how conductor, local phase, imaginary CM type, and algebraic transfer fit together.
+
+
+
+\appendix
+
+
+
+\chapter{Formula registry}
+\begin{longtable}{p{0.30\textwidth}p{0.59\textwidth}}
+\toprule
+Object & Formula \\
+\midrule
+Fermat fourfold & $X_m^4=\{x_0^m+\cdots+x_5^m=0\}\subset\mathbf P^5$ \\
+Hodge level address & $\ell_a(u)=m^{-1}\sum_i\langle ua_i\rangle_m$ \\
+Balanced packet space & $\mathcal B_m=\{n\in\mathbf N^{m-1}:\mathbf1^Tn=6,\ R_mn=3m\mathbf1\}$ \\
+Exact conductor & $c(a)=m/\gcd(m,a_0,\ldots,a_5)$ \\
+Old-space projector & $E_{m,d}=(m/d)^{-5}\pi_{m/d}^*\pi_{m/d*}$ \\
+Conductor projector & $Q_{m,c}=\sum_{d\mid c}\mu(c/d)E_{m,d}$ \\
+Complementary pair & $p_r=e_r+e_{m-r}$ \\
+Balanced four-packets & $\mathcal F_m=\{\gamma:\mathbf1^T\gamma=4,\ R_m\gamma=2m\mathbf1\}$ \\
+Saturated certificate & $n+\sum_{j=1}^{2N-3}p_{r_j}=\sum_{i=1}^{N}\gamma_i$ \\
+Positive cycle frame & $S=CC^*=\sum_j|c_j\rangle\langle c_j|$ \\
+Packet coverage & $\lambda_{\min}(H^*SH)>0$ \\
+Positive transfer & $T=\sum_rA_r^\dagger A_r$ \\
+Degree-$33$ matrix identity & $AC=33I_6$ \\
+Five-primary family & $\alpha_{5q}=(1,1+q,1+2q,1+3q,1+4q,5q-5)$ \\
+Dyadic low/high packets & $L_sn(b)=n(b)+n(b+2^{s-1})$, $D_sn(b)=n(b)-n(b+2^{s-1})$ \\
+K4 lower packet & $\Gamma_{b;c,d}=(b,c,d,-5^{-1}b)$ modulo $q$ \\
+K23 identity & $A+(5c,m-5c)+(5d,m-5d)=C_P+S_T+L$ \\
+Imaginary selector & $\Delta_\ell=(1-\zeta_q^c)(1-\zeta_q^d)(1-\zeta_q^e)$ \\
+CM type & $\Sigma_N=\{u:\operatorname{Im}\sigma_u(\Delta_\ell)>0\}$ \\
+Complex structure & $J=iP_{\Sigma_N}-iP_{\overline{\Sigma_N}}$ \\
+Explicit carrier & $A_{\Sigma_N}=e_{\Sigma_N}J(F_d)$ up to isogeny \\
+Rank-one Chow target & $e_{\Sigma_N}H^1(F_d)\to M(C_P)\otimes M(S_T)(1)$ \\
+\bottomrule
+\end{longtable}
+
+
+\chapter{Correspondence degree and twist bookkeeping}
+Let $X$ have dimension $n$ and $Y$ dimension $m$. A correspondence $\Gamma\in\CH^r(X\times Y)$ acts by
+\[
+\Gamma_*:H^i(X)\to H^{i+2(r-n)}(Y).
+\]
+To lower $H^{2p}(X)$ to $H^2(Y)$, choose $r=n-p+1$. To return $H^2(Y)$ to $H^{2p}(X)$, choose a correspondence of codimension $m+p-1$ on $Y\times X$. This bookkeeping is essential when inserting polarizations into transpose incidence correspondences.
+
+
+
+\chapter{Verification tables}
+The finite tables below summarize named test suites, dyadic packet classification, odd prime-power spot checks, residual degrees through \(100\), and the K23 CM audit. They are exact certificates for the displayed instances and reproducible code paths.
+
+\section{Named suites}
+\input{tables/fermat_named_checks.tex}
+
+\section{Dyadic classification}
+\input{tables/dyadic_classification.tex}
+
+\section{Odd prime-power spot checks}
+\input{tables/odd_prime_spots.tex}
+
+\section{Residual degrees through 100}
+\input{tables/residual_degrees_100.tex}
+
+\section{CM half-twist audit}
+\input{tables/cm_audit.tex}
+
+
+
+\chapter{Source and claim map}
+The edition uses four classes of input.
+\begin{enumerate}
+\item The internal projector-resolved seed calculus supplies positive packet assembly, exact parent-child refinement, weighted dyadic transfer, and obstruction bookkeeping \cite{SeedI,SeedII,SeedIII}.
+\item Classical Fermat geometry supplies diagonal character decompositions, Shioda--Katsura joins, Fermat-curve factors, and coordinate-power maps \cite{ShiodaKatsura}.
+\item Established correspondence theory supplies the cubic-fourfold incidence engine and CM half-twist background \cite{BeauvilleDonagi,VanGeemenHalfTwist,VanGeemenIzadi}.
+\item Motivic Gauss and Jacobi sum identities supply the natural algebraic model for Kummer and Davenport--Hasse packet relations \cite{OtsuboYamazaki}.
+\end{enumerate}
+
+The manuscript's exact internal statements are the finite packet equations, conductor projectors, packet identities, prime-power classifications, weighted dyadic identities, CRT--Kummer reductions, and imaginary CM selector. Geometric statements that require a resolved graph, an associative join in Chow motives, or a nonzero equivariant correspondence are marked accordingly. Historical priority for each explicit correspondence should be audited separately from the mathematical proof.
+
+
+
+\backmatter
+\chapter*{Afterword on constructive status}
+\addcontentsline{toc}{chapter}{Afterword on constructive status}
+The edition contains three kinds of statement. First are exact symbolic theorems and finite certificates: residue equations, conductor decompositions, packet identities, matrix products, and CM sign laws. Second are correspondence schemas whose hypotheses explicitly require algebraic maps, resolved graphs, or Chow-motive joins. Third is the remaining constructive target: a nonzero rank-one CM packet correspondence. These layers should remain distinct when the work is cited, formalized, or prepared for publication.
+
+
+
+{\small
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0.18em}
+
+\bibitem{VoisinHodge}
+C. Voisin.
+\newblock \emph{Hodge Theory and Complex Algebraic Geometry I and II}.
+\newblock Cambridge University Press, 2002--2003.
+
+\bibitem{BeauvilleDonagi}
+A. Beauville and R. Donagi.
+\newblock La vari\'et\'e des droites d'une hypersurface cubique de dimension 4.
+\newblock \emph{C. R. Acad. Sci. Paris S\'er. I Math.}, 301:703--706, 1985.
+
+\bibitem{SeedI}
+Komorebi P.
+\newblock \emph{Projector-Resolved Seed Calculus I: Typed Seeds, Operator Grammars, and Exact Reconstruction}.
+\newblock Internal research manuscript, 2026.
+
+\bibitem{SeedII}
+Komorebi P.
+\newblock \emph{Projector-Resolved Seed Calculus II: Polyphase Refinement, Weighted Transfer, and Dyadic-Odd Resolution}.
+\newblock Internal research manuscript, 2026.
+
+\bibitem{SeedIII}
+Komorebi P.
+\newblock \emph{Projector-Resolved Seed Calculus III: Nonlinear Operator Trees, Obstruction Packets, and Holonomy}.
+\newblock Internal research manuscript, 2026.
+
+\bibitem{KangFermat}
+S.-J. Kang.
+\newblock Refined motivic dimension of some Fermat varieties.
+\newblock \emph{Bulletin of the Australian Mathematical Society}, 93(2):223--230, 2016.
+\newblock doi:10.1017/S0004972715001379.
+
+\bibitem{ShiodaKatsura}
+T. Shioda and T. Katsura.
+\newblock On Fermat varieties.
+\newblock \emph{Tohoku Mathematical Journal}, 31:97--115, 1979.
+
+\bibitem{VanGeemenHalfTwist}
+B. van Geemen.
+\newblock Half twists of Hodge structures of CM-type.
+\newblock \emph{Journal of the Mathematical Society of Japan}, 53:813--833, 2001.
+
+\bibitem{VanGeemenIzadi}
+B. van Geemen and E. Izadi.
+\newblock Half twists and the cohomology of hypersurfaces.
+\newblock arXiv:math/0008170, 2000.
+
+\bibitem{DaSilvaFermat}
+G. da Silva Jr.
+\newblock Notes on the Hodge conjecture for Fermat varieties.
+\newblock \emph{Experimental Results}, 2:e22, 2021.
+\newblock doi:10.1017/exp.2021.14.
+
+\bibitem{OtsuboYamazaki}
+N. Otsubo and T. Yamazaki.
+\newblock Motivic Gauss and Jacobi sums.
+\newblock arXiv:2402.06072, 2024; published in \emph{Annales de la Facult\'e des Sciences de Toulouse}, 35(1):95--135, 2026.
+
+\bibitem{FermatNotes}
+Komorebi P.
+\newblock Fermat fourfold packet notes: conductor polyphase, Klein--Delsarte closure, Kummer phases, and CM half-twists.
+\newblock Internal research package, 2026.
+
+\end{thebibliography}
+}
+\end{document}

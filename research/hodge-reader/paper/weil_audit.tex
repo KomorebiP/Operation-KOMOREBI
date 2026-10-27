@@ -1,0 +1,171 @@
+\chapter{Explicit Weil classes and a failed counterexample route}
+The separate September 22 computation addresses an abelian sixfold of Weil type. Its role is different from the Fermat constructive work. It began by looking for a Hodge class whose chosen geometric representative would fail to deform. The exact calculation found such a failure for a particular graph, then found replacement divisor factorizations. The tested route did not establish nonalgebraicity.
+
+This chapter records the rational classes, the cycle projector, the seed graph, the tangent calculation, the degeneration boundary and the replacement factorization. Every claim is made at the level supported by those objects. The 924-basis calculation is finite exterior algebra. A search over all algebraic cycles was not performed.
+
+\section{The lattice, polarization and seed}
+Let $K=\Q(i)$ and take homology lattice $\Z[i]^6$. Use the conjugate-linear-first Hermitian form
+\[
+h(v,w)=\overline v^{\,t}\operatorname{diag}(1,1,1,-1,-1,-3)w,
+\qquad E=\Im h.
+\]
+The seed complex structure is
+\[
+J_0=\operatorname{diag}(i,i,i,-i,-i,-i).
+\]
+It preserves the alternating form $E$, and $E(v,J_0v)>0$ for nonzero $v$. These are the Riemann positivity conditions for the seed abelian variety. The sign depends on the declared Hermitian convention. Omitting that convention would leave the polarization claim ambiguous.
+
+Write $(x_1,y_1,\ldots,x_6,y_6)$ for the integral dual basis. Define
+\[
+\Omega_6=\bigwedge_{j=1}^{6}(x_j+iy_j),\qquad
+u=\Re\Omega_6,\qquad v=\Im\Omega_6.
+\]
+Both $u$ and $v$ are explicit integral six-forms, with 32 nonzero terms each. An unspecified complex determinant-line generator would not by itself define these rational classes. The chosen expansion removes that ambiguity.
+
+For complex structures in the Weil domain with three positive and three negative $K$-embedding directions, $\Omega_6$ has type $(3,3)$. Indeed, the $K$-determinant contains three one-forms from each Hodge side. Thus the rational span
+\[
+W=\Span_{\Q}\{u,v\}
+\]
+is a Hodge substructure of degree six across the domain. The first-order computation confirms that persistence in all 18 real tangent directions at the seed. The all-domain assertion comes from the determinant Hodge-type argument, rather than extrapolation from those tangent tests.
+
+\section{The intersection form and primitive directions}
+Use the orientation
+\[
+\int x_1y_1\cdots x_6y_6=-1
+\]
+for this seed. If $\theta$ is the polarization class specified by $E$, the exact Gram matrix on $(\theta^3,u,v)$ is
+\[
+\begin{pmatrix}
+2160&0&0\\
+0&-32&0\\
+0&0&-32
+\end{pmatrix}.
+\]
+The exterior calculation also gives $\theta\wedge u=\theta\wedge v=0$, so the two Weil directions are primitive. The negative signs are compatible with the middle-degree Hodge--Riemann convention and the stated orientation.
+
+For any class $c$ in degree six, the orthogonal projection onto $W$ under this intersection pairing is
+\begin{equation}\label{eq:weilprojection}
+P_W(c)=-\frac{\langle c,u\rangle u+\langle c,v\rangle v}{32}.
+\end{equation}
+The verifier checked this identity on every one of the $\binom{12}{6}=924$ rational exterior basis vectors. Its output has image of dimension two, with image basis $u,v$. This is an exact finite-dimensional statement.
+
+\section{An algebraic projector from isogenies}
+An arbitrary orthogonal projector need not be algebraic. In this example the desired projector can be written as a rational polynomial in actual isogeny pullbacks.
+
+Let
+\[
+S=[2+i]^*+[2-i]^*
+\]
+act on $H^6$. The exact eigenvalues and dimensions are
+\[
+\begin{array}{c|rrrr}
+\text{eigenvalue}&-234&-70&150&250\\
+\text{dimension}&2&72&450&400 .
+\end{array}
+\]
+Their dimensions sum to 924. The eigenvalue $-234$ selects $W$, because
+\[
+(2+i)^6=-117+44i,\qquad
+(2-i)^6=-117-44i.
+\]
+The rational polynomial
+\begin{equation}\label{eq:weilisogeny}
+P_W=\frac{(S+70I)(S-150I)(S-250I)}{-30480384}
+\end{equation}
+equals \eqref{eq:weilprojection}. The denominator is the product of the three eigenvalue differences at $-234$. It is nonzero, and the polynomial takes value one on $W$ and zero on the other three eigenspaces.
+
+The maps $[2\pm i]$ are algebraic endomorphisms of the abelian variety. Their graphs induce the pullback operators. Hence \eqref{eq:weilisogeny} preserves rational algebraic cycle classes. A nonzero $P_W$ component of any algebraic threefold supplies an algebraic Weil direction, even if the original effective cycle has a large ambient component.
+
+This also corrects a source-level eigencharacter confusion. The polarization cube has eigenvalue
+\[
+[2+i]^*(\theta^3)=125\,\theta^3=\operatorname{Norm}(2+i)^3\theta^3,
+\]
+while the Weil directions have eigenvalues $-117\pm44i$. The norm-cubed character therefore identifies the polarization cube, and does not identify the two-dimensional Weil subspace. The September audit recorded this local failure in Section 4.3 of the cited secant-cycle preprint. That specific calculation is not a full audit of the preprint \cite{SecantPreprintAudit}.
+
+\section{The seed graph supplies both rational Weil classes}
+At the seed, take the graph of
+\[
+(z_1,z_2,z_3)\longmapsto
+(z_1,z_2,z_3,\overline z_1,\overline z_2,\overline z_3).
+\]
+Conjugation preserves the $\Z[i]$ lattice and is holomorphic from an elliptic factor with complex structure $i$ to a target factor with complex structure $-i$. Thus this map defines an abelian-subvariety graph and is algebraic at $J_0$. On its three source factors the polarization restricts to weights $(2,2,4)$, giving $\int_Z\theta^3=3!\cdot2\cdot2\cdot4=96$. Pulling the explicit determinant form back to the graph gives the other two periods. In full,
+\[
+\left(\int_Z\theta^3,\int_Zu,\int_Zv\right)=(96,0,-8).
+\]
+Its exact Poincaré dual has 64 nonzero basis terms. Pairing that dual against all 924 basis vectors reproduces the graph periods. The projector gives
+\[
+P_W[Z]=v/4.
+\]
+The isogeny $[1+i]$ acts on the Weil directions by
+\[
+[1+i]^*u=8v,\qquad[1+i]^*v=-8u.
+\]
+It follows that
+\[
+v=4P_W[Z],\qquad
+u=-\tfrac12[1+i]^*P_W[Z].
+\]
+Thus both directions are algebraic at this seed, through rational combinations of actual graph and isogeny correspondences.
+
+The class $v$ is primitive. It need not be the class of a single effective threefold. For a nonzero effective codimension-three cycle on a polarized sixfold, its pairing with $\theta^3$ is positive. A primitive $v$ has pairing zero. The correct target permits signed rational cycles, or asks for a nonzero projection of an arbitrary effective cycle. Looking for a Chow component whose individual effective members equal $v$ would impose the wrong problem.
+
+\section{A representative can obstruct without obstructing its class}
+The Weil domain has real tangent dimension 18 at the seed. For the selected graph, the first-order graph-preservation constraints have real rank 12 in the nonsplit case with weights $(1,1,3)$. The graph-preserving tangent space therefore has real dimension 6, or complex dimension 3.
+
+The split control with weights $(1,1,1)$ has constraint rank 6, leaving real dimension 12, or complex dimension 6. These ranks were checked both in the exterior calculation and by a separate exact real matrix construction.
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=0.98\linewidth]{33_weil_graph_tangent_boundary.pdf}
+\caption{Exact tangent dimensions for one selected graph at two seeds. These ranks do not bound deformation spaces of every algebraic cycle.}
+\end{figure}
+
+The nonsplit graph fails to follow many nearby Weil directions, even though $u,v$ remain Hodge classes. This is a failure of that geometric representative. It does not show that every cycle representing the same rational class fails, and it does not bound all components of a Chow variety.
+
+To prove a Hodge counterexample one would need a global statement that every algebraic threefold has zero pairing with both $u$ and $v$ at some fully mixed member, while those rational Hodge classes remain nonzero. A tangent rank bound for one graph provides no such statement.
+
+\section{The product locus and replacement factorizations}
+Split the six directions into a four-dimensional Weil factor $C$ and a two-dimensional factor $B$. The determinant forms factor:
+\[
+\Omega_6=\Omega_C\wedge\Omega_B.
+\]
+Writing their real and imaginary parts as $c_R,c_I,b_R,b_I$ gives
+\[
+u=c_Rb_R-c_Ib_I,\qquad
+v=c_Rb_I+c_Ib_R.
+\]
+On the product locus, the degree-four Weil classes on $C$ are algebraic by the checked fourfold theorem, and the degree-two classes on $B$ are divisors by Lefschetz $(1,1)$. Their products give the degree-six classes. This locus has complex dimension five. The product argument does not establish the fully mixed sixfold statement \cite{MarkmanWeil,MarkmanICM2026}.
+
+The selected mixed tangent direction $B_{13}=1$ breaks the original factorization infinitesimally: the old surface factor loses type $(1,1)$ and the old fourfold factor loses type $(2,2)$. Nevertheless the full $u,v$ remain type $(3,3)$. At first this looked like a promising obstruction.
+
+The exact audit then found replacement divisor factors using the pairs
+\[
+(1,6),\qquad(2,5),\qquad(3,4).
+\]
+These replacement factors remain of divisor type along the selected tangent. With
+\[
+X=-\tfrac12(\Delta J)J_0,\qquad
+J(t)=e^{tX}J_0e^{-tX},
+\]
+the pair blocks are preserved by the integrating generator. Thus the alternate factorization defeats the tested counterexample path. It proves no universal result for every fully mixed point, and it invalidates the inference that failure of the original factorization establishes nonalgebraicity.
+
+\section{The nilpotent does not construct a degeneration}
+The exact computation also produced a nilpotent in the unitary Lie algebra, with block
+\[
+i\begin{pmatrix}1&-1\\1&-1\end{pmatrix}
+\]
+on each of the pairs $(e_1,e_4)$ and $(e_2,e_5)$. It has square zero, rank two over $K$ and rank four over $\Q$. The remaining Hermitian plane is $\operatorname{diag}(1,-3)$.
+
+Modulo 3, the equation $x^2+y^2=0$ has only the solution $(0,0)$. This is a finite anisotropy control for the residual discriminant. It does not construct a semistable algebraic family with this nilpotent as monodromy. An abstract rational nilpotent satisfying Lie-algebra identities is weaker than a geometric degeneration with the required integral, polarization and admissibility data.
+
+The earlier source audit quoted Brosnan's Proposition 4 as a constraint relating maximal degeneration to split discriminant. The current audit authenticated the paper metadata but did not re-extract that exact proposition. This reader therefore retains the implication as a conditional literature context, and does not use it to prove nonalgebraicity \cite{BrosnanDegeneration}. Even a verified obstruction to one maximal degeneration would not exclude all algebraic cycle constructions.
+
+\section{The remaining question}
+For a fully mixed member of this discriminant-$-3$ Weil family, does there exist an algebraic threefold $Z$ such that
+\[
+\left(\int_Zu,\int_Zv\right)\ne(0,0)?
+\]
+One such nonzero period, followed by the algebraic projector and the $[1+i]$ action, would generate both Weil directions. The tested graph is one source at the seed. The product and replacement factorization give additional sources on special loci. Exhausting every fully mixed member is a separate task.
+
+The checked Markman results cover abelian fourfolds of Weil type and the stated split or discriminant-$-1$ sixfold cases. They are not silently extended to the nonsplit discriminant-$-3$ sixfold considered here. The source contracts retain these hypotheses explicitly.
+
+The Weil audit closes a particular counterexample attempt with a failure record. It supplies exact rational classes, an algebraic projector, algebraic seeds and clear constraints on deformation arguments. It does not produce a Hodge counterexample, establish a rank bound for all cycles, or prove the general conjecture.
