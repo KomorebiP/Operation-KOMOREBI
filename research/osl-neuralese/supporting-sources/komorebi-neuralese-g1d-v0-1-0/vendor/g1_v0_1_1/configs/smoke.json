@@ -1,0 +1,57 @@
+{
+  "schema": "komorebi.neuralese.g1.config.v1",
+  "profile": "smoke",
+  "seed": 710101,
+  "model": {
+    "source_layer": 12,
+    "device": "cuda",
+    "dtype": "float16",
+    "max_sequence_length": 128,
+    "local_files_only": true,
+    "trust_remote_code": false,
+    "strict_backbone_hash": false,
+    "expected_model_type": "qwen2",
+    "expected_architecture": "Qwen2ForCausalLM",
+    "expected_hidden_size": 896,
+    "expected_layers": 24,
+    "attention_implementation": "eager"
+  },
+  "workspace": {
+    "width": 64,
+    "steps": 3,
+    "injection_scale": 0.1,
+    "state_clip": 12.0,
+    "dropout": 0.0
+  },
+  "task": {
+    "states": 6,
+    "train_base_problems": 96,
+    "validation_base_problems": 24,
+    "test_base_problems": 32,
+    "ood_base_problems": 32,
+    "train_chain_min": 1,
+    "train_chain_max": 4,
+    "ood_chain_min": 5,
+    "ood_chain_max": 8
+  },
+  "training": {
+    "steps": 40,
+    "batch_size": 2,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "loss_scale_initial": 1024.0,
+    "max_overflow_retries": 16,
+    "log_every": 5,
+    "eval_batch_size": 4
+  },
+  "gates": {
+    "scientific_enabled": false,
+    "recurrent_iid_min": 0.70,
+    "per_query_min": 0.60,
+    "zero_gap_min": 0.20,
+    "shuffle_gap_min": 0.15,
+    "feedback_gap_min": 0.05,
+    "ood_min": 0.45
+  }
+}
