@@ -1,0 +1,730 @@
+% New theoretical companion. Prior manuscripts are unchanged.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext}
+\usepackage{microtype}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{newtxmath}
+\usepackage{booktabs,array,longtable,tabularx,graphicx,tocloft}
+\usepackage{enumitem,fancyhdr,titlesec,needspace,placeins}
+\usepackage{xcolor}
+\definecolor{ink}{HTML}{172A44}
+\definecolor{muted}{HTML}{5B6778}
+\usepackage[pdfencoding=auto,psdextra]{hyperref}
+\usepackage{bookmark}
+\hypersetup{hidelinks,pdftitle={Self-Improving Intelligence: Representation, Discovery, and Recursive Revision},pdfauthor={Komorebi P.},pdfsubject={First theoretical draft on discovery procedures, repair, transfer, and recursive improvement},pdfkeywords={recursive self improvement, general intelligence, representation discovery, repair, metaproductivity}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Self-Improving Intelligence}}
+\fancyhead[R]{\small Theoretical draft, 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.65em}{}
+\titleformat{\part}[display]{\Large\bfseries}{\partname\ \thepart}{.4em}{}
+\titlespacing*{\part}{0pt}{0pt}{1.6em}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.65em}{}
+\titlespacing*{\section}{0pt}{2.5ex plus .4ex}{1.2ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus .3ex}{.8ex}
+\setlength{\parindent}{1.2em}\setlength{\parskip}{.24em}
+\setlength{\emergencystretch}{2em}
+\clubpenalty=10000\widowpenalty=10000\displaywidowpenalty=10000
+\setlength{\textfloatsep}{18pt plus 2pt minus 2pt}\raggedbottom
+\setlist{leftmargin=1.5em,topsep=.4em,itemsep=.25em,parsep=0pt}
+\setcounter{tocdepth}{1}\setlength{\cftbeforesecskip}{1pt}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{counterexample}[theorem]{Counterexample}
+\newtheorem{example}[theorem]{Example}
+\newcommand{\X}{\mathcal X}\newcommand{\Z}{\mathcal Z}
+\newcommand{\U}{\mathcal U}\newcommand{\Q}{\mathcal Q}
+\newcommand{\Y}{\mathcal Y}\newcommand{\C}{\mathcal C}
+\newcommand{\M}{\mathcal M}\newcommand{\E}{\mathbb E}
+\newcommand{\Ffive}{\mathbb F_5}\newcommand{\TV}{d_{\mathrm{TV}}}
+\newcommand{\img}[1]{\operatorname{im}(#1)}
+\newcommand{\Eq}{\equiv_{\C}}\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newcommand{\B}{\mathcal B}\newcommand{\Rcal}{\mathcal R}\newcommand{\Gcal}{\mathcal G}
+\newcommand{\Safe}{\mathsf{Safe}}\newcommand{\Post}{\operatorname{Post}}\newcommand{\Pareto}{\operatorname{Pareto}}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}\thispagestyle{empty}
+\vspace*{.25in}
+\noindent{\color{muted}\small\textsc{Operation Komorebi}\hfill\textsc{Theoretical research manuscript}}\par
+\vspace{.65in}
+\noindent{\color{ink}\fontsize{34}{39}\selectfont\bfseries Self-Improving\\Intelligence\par}
+\vspace{.19in}
+\noindent{\fontsize{17}{22}\selectfont Representation, Discovery,\\and Recursive Revision\par}
+\vspace{.27in}\noindent{\color{ink}\rule{\textwidth}{.85pt}}\par
+\vspace{.16in}
+\noindent\textbf{Komorebi P.}\hfill\textit{First theoretical draft}\\
+\noindent 8 October 2026\hfill Version 0.1.0\par
+\vspace{.38in}
+\noindent{\color{ink}\large\bfseries Abstract}\par\smallskip
+\noindent Improving a solver is not the same as improving the process that produces its successors. We develop a contract-relative theory of recursive improvement in which representations, experiments, repair languages, selection procedures, and evidence can change while their meanings and costs remain explicit. A finite repair problem separates a useful correction from identification of its underlying cause. A resource recurrence synthesizes one observation-dependent procedure with simultaneous bounds on execution and complete controller storage. Exact transport preserves that procedure, not only its final answer. We distinguish greater repair capacity from better search within an unchanged language, and prove conditional bounds for candidate selection, foreign-task transfer, and false acceptance across an adaptive lineage. A finite progress construction identifies when one authorized policy can sustain a specified number of verified improvements within a bounded number of attempts. A hidden-cell instrument connects these results to a compiled diagnostic improvement, while counterexamples expose the limits of greedy information gain, local acceptance, and uncharged language growth. The resulting account links reusable understanding to the discovery of better discovery procedures. It is a theoretical architecture and a collection of conditional results, not a demonstration of general intelligence, autonomous neural self-improvement, or inevitable acceleration.
+\vfill\noindent\rule{\textwidth}{.4pt}\par\smallskip
+\noindent{\color{muted}\small\textbf{Scope.} Self-contained mathematical arguments and exact finite reference constructions. Prior experimental histories are not used as evidence for the proposed integrated system. The first draft does not claim independent peer review or proof-assistant verification.}
+\end{titlepage}
+\hypersetup{pageanchor=true}\pagenumbering{roman}
+\begingroup\small\setlength{\parskip}{0pt}\tableofcontents\endgroup\clearpage
+\section*{Reading the draft}\addcontentsline{toc}{section}{Reading the draft}
+The central question is what has changed when a system becomes better at making itself better. More stored answers can improve a solver without improving its learning procedure. A richer repair language can make a correction expressible without making it discoverable. An improved search procedure can find useful corrections without establishing that its own descendants will search better still. The paper keeps these distinctions visible within one account.
+
+A conceptual reading can follow Sections~\ref{sec:introduction}--\ref{sec:world}, the interpretations after the formal results, and Part~IV. A mathematical reading proceeds through diagnosis, synthesis, transport, selection, and recursive progress. The running instrument is finite and inspectable. Appendix~\ref{app:trace} gives a complete diagnostic trace, and the source package contains the reference compiler, exact checks, and an itemized review record.
+
+\paragraph{Relation to earlier work.}
+\emph{Machine Understanding} specifies what representations must preserve across inquiry and explanation~\cite{understanding}. \emph{Stratified Recursive Improvement Closure} (SRIC) supplies the earlier distinction between task, improvement-process, and epistemic improvement, together with repair transport and evidence-preserving lineages~\cite{sric}. Neuralese and Operator-Symbolic Language (OSL) distinguish provisional latent computation from an explicit semantic interface~\cite{neuralese,osl}. This paper consolidates their theoretical roles. It neither reproduces their experimental histories nor imports a complete-system claim from them. Every formal statement used below is proved here or identified as a cited foundation.
+
+\paragraph{What is new in this manuscript.}
+The proposed integration makes the improvement procedure itself a charged, transferable computational object. Its observations must support an appropriate repair, its decisions must fit one executable policy, and its acceptance must refer to a preserved evaluation contract. The finite constructions sharpen those obligations. Partition refinement, decision trees, dynamic programming, statistical concentration, and simulation arguments have classical foundations. Their appearance here is not a priority claim for the underlying mathematics.
+
+\paragraph{Conventions.}
+The principal constructive models are finite and deterministic. A stochastic law appears only with an explicit probability model. A protected predicate means a declared operational constraint, not a proof of moral adequacy. An exact reference check verifies the implemented finite case. A proof supplies the general conditional argument. No benchmark score, test count, or version number substitutes for the other.
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}\toprule
+Symbol & Meaning\\\midrule
+$S$, $U$, $L$ & A target solver, an improvement procedure, and a reusable library.\\
+$\Xi$, $B$ & An evaluation contract and its resource allowance.\\
+$\Rcal_\Xi(U,L;B)$ & Expected improvement produced by the procedure, not an oracle over its unselected candidates.\\
+$B_0\subseteq X$ & Possible current states of a finite repair problem.\\
+$e$, $r$, $P$ & An experiment, a terminal repair, and an executable diagnostic tree.\\
+$F_h(B_0)$ & Nondominated execution/storage pairs for successful trees of depth at most $h$.\\
+$\sigma$, $\tau$ & Correspondences of states and operations in a declared transfer.\\
+$\mathcal K$, $W_{h,k}$ & A safe continuation set and states guaranteeing $k$ progress events within $h$ attempts.\\\bottomrule
+\end{tabularx}\end{center}
+\clearpage\pagenumbering{arabic}
+\part{The object that improves}
+\section{From a better answer to a better investigator}\label{sec:introduction}
+A system encounters a failure, changes its representation, and succeeds on the next attempt. Something useful has happened. The system may have learned a fact, recovered a missing variable, or selected a more suitable operation. Yet the next unfamiliar failure may leave it no better equipped than before. It has a repaired answer without a reusable account of repair.
+
+A stronger change would preserve the way the failure was investigated. The system might discover that its representation merged two situations with different future consequences. It might learn to seek an observation that separates those situations, to reject an inadequate family of repairs, or to reuse a diagnostic method in another notation. The object retained is then not merely a solution. It is part of a procedure for acquiring solutions.
+
+The recursive question begins one step further out. Can the system improve that procedure, use the revised procedure to construct another improvement, and retain a defensible comparison across those changes? The question is not answered by putting an agent's source code in its own context. Editability is an affordance. Productive revision is a property of what the permitted edits actually achieve.
+
+We take general intelligence as a motivating problem rather than a theorem premise. A broad reasoner should acquire useful capabilities across substantially different tasks without receiving their solutions inside an uncharged interpreter. Chollet's account of skill-acquisition efficiency emphasizes scope, priors, and experience rather than demonstrated skill alone~\cite{chollet}. Our narrower contribution concerns one possible mechanism behind such acquisition: reusable procedures for diagnosing failures, choosing informative actions, constructing corrections, and preserving their scope.
+
+\subsection{Three distinct achievements}
+\emph{Task improvement} changes how well a solver performs a declared task. \emph{Process improvement} changes how effectively an improvement procedure produces useful solvers from comparable starting conditions. \emph{Epistemic improvement} changes how reliably the evaluation process distinguishes genuine gains from misleading evidence. This separation is inherited from SRIC~\cite{sric}. A system can advance on one axis without advancing on the others.
+
+A larger archive, for example, can improve retrieval while the procedure that extends the archive remains unchanged. A stronger checker can reject more invalid proposals while producing no additional valid proposals. A faster search may exploit a defect in its evaluation. None of these possibilities makes improvement meaningless. They identify the claim that must be tested.
+
+Recursive improvement also differs from sustained acceleration. A sequence of positive gains can converge to a finite limit. A sequence of better algorithms can consume increasing development costs. A procedure can improve on one task family and deteriorate on another. The substantive claim is not that a feedback loop exists, but that the loop produces useful and transferable changes under a stable comparison.
+
+\subsection{The route developed here}
+The paper moves from representational failure to a finite repair problem, from that problem to a compiled procedure, and from the procedure to transferable and statistically accountable improvement. It then treats the succession of procedures as another finite control problem. This last step makes a common quantifier visible: the system needs one policy that can carry its claims forward, not a different hypothetical policy for every desired property.
+
+The route does not require every useful correction to be formally proved beneficial on all future tasks. Exact semantic certificates and statistical performance evidence have different jobs. Nor does it require each system to invent its own computational substrate. A finite search language may be supplied. The theory must disclose what that language already makes possible and what the learner actually selects or extends.
+
+\begin{figure}[!ht]\centering
+\includegraphics[width=.96\linewidth]{figures/two_loops.pdf}
+\caption{The inner process repairs a solver. The outer process changes how repair is attempted. Arrows indicate proposed information flow, not an implemented neural agent.}\label{fig:loops}
+\end{figure}
+
+\section{Related work and the proposed contribution}\label{sec:related}
+Learning how to learn has a substantial history. Learned optimizers can acquire update rules from optimization problems~\cite{andrychowicz}. Model-Agnostic Meta-Learning trains parameters from which a small number of updates can adapt to a new task~\cite{maml}. These approaches show why adaptation mechanisms deserve direct study. Neither the phrase meta-learning nor the presence of an outer objective, by itself, establishes an indefinitely improving outer procedure.
+
+DreamCoder couples learned program libraries to neural search guidance~\cite{dreamcoder}. Its relevance is the interaction between a language for expressing solutions and the ability to search that language. SEAL instead learns to produce adaptation data and update directives whose value is evaluated after the resulting parameter update~\cite{seal}. These are different places at which an improvement process can become learnable.
+
+The G\"odel-machine formulation treats a self-rewrite as admissible after a proof of usefulness within encoded assumptions~\cite{goedel}. The Darwin G\"odel Machine uses empirical evaluation and an archive of modified coding agents~\cite{dgm}. They should not be conflated. A proof-based criterion and a benchmark-based criterion support different guarantees and have different costs.
+
+More recent systems sharpen the distinction between a task agent and its modifier. Hyperagents makes both roles editable and studies transfer of improvement strategies~\cite{hyperagents}. Its reported main experiments retain a supplied parent-selection mechanism. The general expressiveness of the editable program is not itself evidence that efficient discovery occurs on every computable task.
+
+The September 2026 AIDE$^2$ preprint studies repeated modification of a research agent's harness and reports transfer beyond its selection tasks~\cite{aide}. Its separate comparison of a discovered agent as an outer-loop improver is explicitly inconclusive relative to the strong reference. This distinction is directly relevant: improvements in research performance and improvements in driving the next improvement loop are related hypotheses, not interchangeable observations. These public works are research context. Their empirical findings are not treated as evidence for the architecture proposed here.
+
+Causal abstraction provides a formal account of mechanism-preserving interpretation~\cite{geiger}. Adaptive data analysis studies why repeated access to evaluation information can invalidate ordinary statistical reasoning~\cite{dwork}. Both are necessary neighbors. A self-improver must know what its representations mean and what its evidence permits it to conclude.
+
+\subsection{What this paper adds to that discussion}
+The intended contribution is an integrated realization contract. A candidate improvement identifies its target, information access, experiment family, repair language, controller, retained evidence, and charged resources. It also identifies the comparison under which the procedure itself is said to improve. The exact results concern finite cases of that contract. The architectural hypotheses concern whether learned proposal and acquisition mechanisms can satisfy it economically on wider tasks.
+
+This is not a claim that program libraries, recursive search, causal abstraction, or guarded updates originated with Komorebi. The aim is to connect them without allowing the cost or uncertainty of one stage to disappear inside another. A valid final repair is weaker than a valid procedure for finding it. A transferable repair is weaker than a transferable investigation. A safe accepted edge is weaker than a lineage with a continuing path to further improvement.
+
+\section{A protected comparison for improvement procedures}\label{sec:contract}
+Let $S$ denote a solver implementation, $U$ an improvement procedure, and $L$ the library available to that procedure. The distinction is functional rather than physical. They may occupy one executable program. Their different roles are retained so that changes can be attributed rather than hidden in a single checkpoint name.
+
+\begin{definition}[Improvement contract]\label{def:contract}
+A contract $\Xi$ specifies a distribution $\mathcal H$ of starting-solver/task pairs, an initial information and library boundary, permitted observations and modifications, a resource allowance $B$, protected predicates, and an evaluation rule $J_\tau(S)\in[0,1]$. The improvement procedure returns one selected descendant or the unchanged baseline. Selection must use only the admitted development information. The final evaluation is not available as an oracle for choosing retrospectively among all candidates.
+\end{definition}
+
+Write $U(S,\tau,L;B)$ for the selected result, including the procedure's randomness where applicable. Its productivity is
+\begin{equation}\label{eq:productivity}
+\Rcal_\Xi(U,L;B)=\E_{(S,\tau)\sim\mathcal H}
+\big[J_\tau(U(S,\tau,L;B))-J_\tau(S)\big].
+\end{equation}
+Invalid execution and out-of-budget behavior receive the treatment fixed by $\Xi$, not an exclusion chosen after seeing the outcome. The score may be a primary coordinate of a larger profile. Resource, validity, and group-specific constraints need not be folded into one scalar.
+
+The value in~\eqref{eq:productivity} lies in $[-1,1]$. A procedure that may return the baseline need not achieve a nonnegative true value: noisy selection can still choose a worse descendant. A nonnegative certificate requires additional evidence. The mere existence of a fallback does not make every selector good at using it.
+
+\subsection{Fixed-library and full-system comparisons}
+A comparison of $\Rcal_\Xi(U',L;B)$ with $\Rcal_\Xi(U,L;B)$ isolates process change at a common library. A comparison with $(U',L')$ measures the combined descendant. Both are useful, but they answer different questions. A crossed comparison of $(U,L)$, $(U',L)$, $(U,L')$, and $(U',L')$ can expose interaction between procedure and library. There is no general additive decomposition that makes their contributions independent.
+
+The same discipline applies to base models, training histories, tools, and stored controllers. A changed foundation model is a changed component. A foreign-agent test must supply a valid adapter or charge discovery of one. Calling two targets unfamiliar does not make them distributionally independent of the development process.
+
+\begin{counterexample}[More knowledge without a better improver]\label{ex:library}
+Consider four equally likely task names. A fixed procedure returns a stored solution when one exists and otherwise leaves the solver unchanged. A library containing one answer yields a smaller expected gain than a library containing all four. The procedure has not changed. Holding the library fixed gives identical productivity for the two copies of the procedure. The full system improved, but this example contains no improvement of the improvement rule.
+\end{counterexample}
+
+\subsection{What persists across a recursive step}
+A lineage state can be written schematically as
+\[
+Z_t=(S_t,U_t,L_t,E_t,\Xi_t,\rho_t),
+\]
+where $E_t$ records evidence and rejected alternatives, and $\rho_t$ records remaining resources and scope. A proposed modification may target any admitted subset. A comparison across different $\Xi_t$ needs a declared bridge. It cannot be justified merely because both scores are called accuracy.
+
+The public record should distinguish which changes were selected by the system, which were supplied by an external designer, and which were only proposed. A successful finite search within a fixed grammar is a genuine computational result. It is not evidence that the grammar was invented, that a broader domain was covered, or that the outer search process improved itself.
+
+\section{A small world with reusable diagnostic structure}\label{sec:world}
+Consider eight cells with exactly one latent defect, indexed by $j\in\{0,\ldots,7\}$. The solver must repair that cell while preserving the others. Its old representation retains only the number of defects, so every episode initially looks identical.
+
+A diagnostic query names a subset $A$ and returns $\mathbf 1\{j\in A\}$. The reference language contains eight singleton queries and three bit-coordinate queries. Repair $r_i$ succeeds exactly when $i=j$. Because repair is irreversible within the episode, a procedure may commit only when every surviving possibility justifies its choice. Otherwise it may continue investigating or abstain.
+
+The model is fully declared. Setting each known cell as the defect on a calibration copy would permit learning the complete query table in $8(8+3)=88$ observation calls. The code instead generates that table from the analytical specification and records it as supplied information. It does not claim to have executed those calibrations or inferred a hidden environment.
+
+Equality-first testing asks whether $j=0$, then $j=1$, and so on. Its worst case needs seven queries, identifying the last cell by elimination. The three bit-coordinate queries need only three. Each procedure then performs one repair. Both complete binary trees have eight leaves and fifteen stored records. Faster execution has not made the controller free.
+
+
+\clearpage\part{Discovering and transporting repair}
+\section{A residual constrains a diagnosis}\label{sec:diagnosis}
+A residual records disagreement between a prediction and an observation, between a proposed operation and a required invariant, or between two routes of translation. It is evidence against a conjunction of assumptions. It does not uniquely identify which assumption failed.
+
+For example, an unexpected output can arise because a state variable was discarded, a transition was modeled incorrectly, the observation was noisy, or an action had a side effect omitted from the model. These explanations can agree on the current discrepancy and disagree about the next useful experiment. An automatic instruction to enlarge the representation after every error would confuse missing information with faulty dynamics.
+
+Let a hidden case $\theta$ determine a set $\mathcal R(\theta)$ of successful repairs. The set may have several members. Diagnosis need only obtain enough information to choose a repair in the appropriate set. It need not identify every hidden property of $\theta$.
+
+\begin{proposition}[Feedback indistinguishability limits repair]\label{prop:indistinguishable}
+Suppose two cases have disjoint successful-repair sets and induce transcript laws $P_0,P_1$ under a fixed admitted investigation protocol. A repair selector observes only the transcript and independent private randomness. Under equal prior probabilities, its average probability of successful repair is at most
+\[
+\frac{1+\TV(P_0,P_1)}2.
+\]
+In particular, identical transcript laws rule out certain success in both cases.
+\end{proposition}
+\begin{proof}
+From the selected repair construct a binary decision: report case zero if the repair belongs to $\mathcal R(0)$, and case one otherwise. Success in case zero implies a correct decision. Success in case one also implies a correct decision because the two repair sets are disjoint. Thus repair success is at most the success of this binary test. For a randomized test with probability $f(o)\in[0,1]$ of reporting zero, the latter success is
+\[
+\tfrac12\big(1+\E_{P_0}f-\E_{P_1}f\big)
+\leq\tfrac12(1+\TV(P_0,P_1)).
+\]
+The inequality follows by summing the positive differences of the two finite probability laws. The same argument applies to any measurable transcript space with the usual total-variation definition.
+\end{proof}
+
+The bound concerns the entire transcript, not each observation marginal in isolation. Correlations between observations can identify a case even when every separate marginal is uninformative. Randomized action selection is already covered when it is part of the declared protocol and its observable record.
+
+Nor does the bound identify the most informative protocol. The learner must choose experiments before receiving their outcomes. A protocol that distinguishes the cases may exist while being inadmissible, too expensive, or absent from the current language. The finite synthesis below makes those possibilities separate outcomes.
+
+\subsection{Repair sufficiency is not full identification}
+Suppose $\mathcal R(\theta_1)=\{a,c\}$ and $\mathcal R(\theta_2)=\{b,c\}$. The cases are distinct, yet repair $c$ works in both. A method can stop without learning which case occurred. Conversely, pairwise overlap of repair sets does not guarantee one repair for an entire uncertainty set. The three sets $\{a,b\}$, $\{b,c\}$, and $\{a,c\}$ intersect pairwise and have empty total intersection. The stopping condition must refer to the whole surviving set.
+
+This matters for representation discovery. A useful latent state may preserve exactly those distinctions needed for future repair decisions rather than every property of the underlying process. Whether that state remains sufficient after new repair operations become available is a separate question.
+
+\subsection{Repairing a failed representation}
+Let $X$ be a finite set with deterministic operations $F_u:X\to X$ and output labels $q(x)$. Begin with a partition $P_0$ that preserves both the old retained labels and $q$. Define the next partition by splitting a block whenever two states in it have successors in different current blocks under some permitted operation. Equivalently,
+\[
+x\equiv_{P_{t+1}}y
+\quad\Longleftrightarrow\quad
+x\equiv_{P_t}y\ \text{ and }\
+F_u(x)\equiv_{P_t}F_u(y)\ \text{for every }u.
+\]
+The construction uses a complete transition description. Having a few observed contradictions does not give a learner that table for free.
+
+\begin{proposition}[Least stable refinement of a retained representation]\label{prop:refinement}
+The splitting construction stabilizes after at most $|X|-|P_0|$ strict refinements. Its final partition is the coarsest refinement of $P_0$ on which every $F_u$ has a well-defined quotient operation. It preserves every finite continuation of the retained labels and outputs.
+\end{proposition}
+\begin{proof}
+A strict refinement increases the number of nonempty blocks, which is bounded by $|X|$. At a fixed point, equivalent states have equivalent successors, so the quotient operations are well-defined. Induction on word length then preserves all retained labels after every finite word. For minimality, let $R$ be any stable partition refining $P_0$. If $R$ refines $P_t$, stability of $R$ implies that $R$-equivalent states have successors in the same $P_t$ blocks, so they remain together in $P_{t+1}$. Induction shows that $R$ refines every $P_t$ and hence the terminal partition.
+\end{proof}
+
+This is a standard partition-refinement argument expressed as a repair of an old representation. It is not necessarily the smallest representation for the outputs alone: $P_0$ may retain distinctions that are no longer needed. Discarding those distinctions requires a different contract. The continuation and cost perspectives are developed more fully in \emph{Machine Understanding}~\cite{understanding}.
+
+A counterexample pair is useful because it proves that a current block is too coarse under the stated transition model. It does not specify how a learned encoder can acquire the missing coordinate from its actual inputs. The mathematical quotient and its realizable acquisition procedure remain separate objects.
+
+\section{One investigation, one repair, and two resource bounds}\label{sec:synthesis}
+We now give a finite model in which that acquisition problem can be decided exactly. The result is deliberately restricted, but it charges the complete investigation rather than only a selected final answer.
+
+\begin{definition}[Finite repair experiment model]\label{def:repairmodel}
+A model has a finite nonempty state set $X$, a finite experiment set $\mathcal E$, and a finite repair set $\mathcal A$. Experiment $e$ is allowed on a domain $D_e\subseteq X$, changes the state by $f_e:D_e\to X$, and reports $o_e:D_e\to O_e$. Its execution cost $c_e\geq0$ is fixed and known. Repair $a$ has fixed cost $c_a\geq0$ and succeeds on a declared set $G_a\subseteq X$. All costs are in one stated unit. A nonempty set $B_0\subseteq X$ records the possible current states.
+\end{definition}
+
+A chosen experiment must be uniformly allowed: $B_0\subseteq D_e$. After observing $o$, the possible \emph{post-experiment} states are
+\begin{equation}\label{eq:post}
+B_{e,o}=\{f_e(x):x\in B_0,\ o_e(x)=o\}.
+\end{equation}
+Only nonempty branches are retained. A terminal repair is justified when $B_0\subseteq G_a$. If the original state or an earlier obligation matters, it must be retained as an immutable tag in $X$. Merely changing the current state into a known state is not recovery of its history.
+
+A diagnostic program is a finite rooted tree. An internal record names an experiment and branches on its possible report. A leaf names a repair justified on that branch's surviving states. We count one storage record per node of the complete tree. Shared subroutines, compressed code, and graphs with merged suffixes belong to other storage models. The present count is chosen because it is exact and unambiguous.
+
+Let $W(P,B_0)$ be the largest execution cost of a complete path, including its terminal repair. Let $M(P)$ be the number of stored tree records. These costs are not independently minimized. A single tree has to realize both.
+
+For horizon $h$, let $\mathcal F_h(B_0)$ be the nondominated attainable pairs $(w,m)$. A pair dominates another when it is no larger in either coordinate and strictly smaller in at least one. Let $T(B_0)=\{(c_a,1):B_0\subseteq G_a\}$. Then
+\begin{align}\label{eq:pareto}
+\mathcal F_0(B_0)&=\Pareto T(B_0),\\
+\mathcal F_h(B_0)&=\Pareto\left(T(B_0)\cup
+\bigcup_{e:B_0\subseteq D_e}
+\left\{\left(c_e+\max_o w_o,\ 1+\sum_o m_o\right):
+(w_o,m_o)\in\mathcal F_{h-1}(B_{e,o})\ \forall o\right\}\right).
+\nonumber
+\end{align}
+An empty child frontier makes that experiment unavailable for a successful complete tree. An empty union is not a zero-cost solution.
+
+\begin{theorem}[Exact finite repair synthesis with compiled storage]\label{thm:synthesis}
+For every finite model, nonempty $B_0$, and integer $h\geq0$, recurrence~\eqref{eq:pareto} yields exactly the nondominated cost pairs of successful diagnostic trees of depth at most $h$. Every retained pair has an executable witness. A work/storage allowance $(b,m)$ is feasible if and only if some retained pair is componentwise at most $(b,m)$.
+\end{theorem}
+\begin{proof}
+At horizon zero only a justified terminal repair can succeed, giving $T(B_0)$. Assume the claim at $h-1$. A successful tree at horizon $h$ either stops immediately or has one uniformly allowed first experiment. Its child at each possible report is successful on exactly the post-experiment support in~\eqref{eq:post}. The execution cost is the root cost plus the worst child cost. The storage is the root record plus the sum over every child, including children not traversed in a particular execution. Conversely, choosing a successful child for each report constructs a successful root tree with those costs. Replacing a dominated child by a dominating one never increases the root maximum or sum. Thus Pareto pruning loses no feasible allowance. Induction proves both completeness and witness construction.
+\end{proof}
+
+The theorem is an application of finite dynamic programming, not an efficient general solution to scientific discovery. Its state subsets and child combinations may grow exponentially. It assumes the transition, observation, legality, and success tables are correct. It also does not include the cost of constructing those tables in its online path cost. Acquisition of the model, compiler execution, and validation are separately charged development resources.
+
+\subsection{A more informative question can be a worse repair question}
+\begin{counterexample}[Entropy reduction need not minimize repair work]\label{ex:entropy}
+There are four equally likely cases. Repair $a$ succeeds in $\{0,1,2\}$ and repair $b$ succeeds in $\{3\}$. A balanced query separates $\{0,1\}$ from $\{2,3\}$. Another query separates $\{0,1,2\}$ from $\{3\}$. Both cost one unit and leave the state unchanged. The balanced query has the larger entropy reduction, but its second branch still needs another observation. The unbalanced query supports a correct repair after one observation in every case. Maximizing information about the entire hidden case is not the same objective as minimizing the cost of a successful correction.
+\end{counterexample}
+
+\begin{figure}[!h]\centering
+\includegraphics[width=.94\linewidth]{figures/repair_partition.pdf}
+\caption{Two equally priced questions about four cases. The balanced split leaves one branch with incompatible repairs. The repair-aligned split identifies a valid action immediately. The figure represents exact sets, not measured agent behavior.}\label{fig:repair}
+\end{figure}
+
+The example suggests a learning target more specific than general curiosity. A useful acquisition policy should distinguish alternative \emph{decisions} when needed, preserve unresolved alternatives when they matter later, and avoid spending work on irrelevant details merely because those details are easy to predict.
+
+\subsection{What a compiled witness proves}
+The reference implementation returns a concrete tree together with its cost pair. A separate interpreter checks its branch coverage, the domains of its experiments, the success of each leaf, and both resource counts. The checker does not infer that the environment model is true. It checks the relation between a specified model and the proposed procedure. This is the same reason an OSL semantic check and a learned Neuralese realization need separate evidence~\cite{osl,neuralese}.
+
+\section{Selecting a better procedure without hiding an oracle}\label{sec:selection}
+The finite compiler can itself be the object modified by an outer process. One candidate may change the experiment order. Another may change the cost model, add a repair constructor, or select a different representation for the uncertainty set. Their effects should not all be described as the same kind of learning.
+
+For a fixed finite collection $\{U_1,\ldots,U_N\}$, suppose a declared assessment gives estimates $\widehat R_i$ of true productivities $R_i$. This assessment can be exact on a fully specified finite distribution or statistical under additional assumptions. Choosing a candidate must use the assessment actually available at selection time, not a hidden final score inspected afterward.
+
+\begin{proposition}[Selection under uniform assessment error]\label{prop:selection}
+If $|\widehat R_i-R_i|\leq\varepsilon$ for every candidate and $\hat\imath$ maximizes $\widehat R_i$, then
+\[
+R_{\hat\imath}\geq \max_iR_i-2\varepsilon.
+\]
+If a baseline is included and the selected candidate's estimated advantage exceeds $2\varepsilon+\gamma$, its true advantage exceeds $\gamma$.
+\end{proposition}
+\begin{proof}
+For a true maximizer $i^*$,
+$R_{\hat\imath}\geq\widehat R_{\hat\imath}-\varepsilon
+\geq\widehat R_{i^*}-\varepsilon
+\geq R_{i^*}-2\varepsilon$.
+Apply the same two error bounds to the selected candidate and the baseline for the second assertion.
+\end{proof}
+
+The uniform premise is the essential obligation. A small error for each candidate considered in isolation does not automatically control a candidate selected after adaptive access to the same evaluation record. Section~\ref{sec:evidence} addresses an explicit alternative based on conditional validity.
+
+\subsection{Changing the selector and changing the language}
+An improved selector over a fixed candidate family can produce higher gains without making any previously impossible repair expressible. Conversely, a richer language can increase the best achievable gain while a weak selector never finds the new repair. These are distinct forms of headroom, already separated in the earlier SRIC treatment~\cite{sric}.
+
+For a fixed budget, let $R^*_{\mathcal G}$ be the largest productivity among procedures expressible in a declared language $\mathcal G$, with installed data and interpreter costs held fixed. The gap $R^*_{\mathcal G}-R(U)$ is search or selection headroom \emph{within that language}. Comparing $R^*_{\mathcal G'}$ with $R^*_{\mathcal G}$ concerns expressibility and resources. Neither upper envelope is automatically available to the learner.
+
+A zero observed gain from one selector update is not a proof of saturation. A genuine saturation statement needs either a complete finite search or an upper bound close enough to the incumbent value. Otherwise the failure may reflect the proposer, the evidence channel, the search allowance, or the evaluation.
+
+\subsection{The compiled instrument improver}
+In the eight-cell instrument, the supplied language admits both singleton and bit queries. Recurrence~\eqref{eq:pareto} can construct a depth-three diagnosis. The exported program replaces the equality-first diagnostic policy in an otherwise unchanged repair system. It does not contain the hidden defect index of the next episode.
+
+Under a cap of three diagnostic calls and one repair call, the equality-first procedure certifies and repairs the first three cells, then abstains on the other five. On the uniform finite case distribution, its productivity from a zero-success baseline is $3/8$. The depth-three procedure certifies all eight cases, giving productivity $1$. These are exact properties of stipulated procedures. The compiler selected a better procedure within a supplied finite language. It did not invent the language, learn a general visual representation, or improve the compiler that performed this search.
+
+That last distinction is deliberate. The example demonstrates what a verified process-improvement edge would mean. The further recursive claim would require a descendant compiler that is better at producing such edges from comparable starting conditions. An archive entry saying that the descendant is more reflective supplies no such evidence.
+
+\section{Transporting an investigation, not merely its result}\label{sec:transport}
+A repair can commute with a representation map even when the procedure used to discover it cannot be transferred. The investigation may depend on an unavailable observation, on a source-specific reset, or on the precise meaning of a stopping condition. A transport contract must include those actions and their evidence.
+
+Consider source and target finite repair models. Let $\sigma:X\to X'$ be a bijection, $\tau:\mathcal E\to\mathcal E'$ a bijection of experiments, $\psi:\mathcal A\to\mathcal A'$ a bijection of repairs, and $\eta_e:O_e\to O'_{\tau(e)}$ a bijection of report labels. Assume
+\begin{align}\label{eq:transport}
+\sigma(D_e)&=D'_{\tau(e)}, &
+\sigma f_e(x)&=f'_{\tau(e)}\sigma(x),\\
+\eta_e(o_e(x))&=o'_{\tau(e)}(\sigma x), &
+\sigma(G_a)&=G'_{\psi(a)},\nonumber
+\end{align}
+and matching execution costs. These assumptions concern supplied semantics. Their discovery or learned approximation is an additional problem.
+
+\begin{theorem}[Exact transport of diagnostic procedures]\label{thm:transport}
+Under~\eqref{eq:transport}, relabeling every experiment, branch, and repair transports successful diagnostic trees bijectively between the source support $B_0$ and target support $\sigma(B_0)$. Execution cost, complete tree storage, and depth are preserved. In particular,
+\[
+\mathcal F_h(B_0)=\mathcal F'_h(\sigma(B_0)).
+\]
+The same conclusion holds for every selected tree, not only a cost-optimal tree.
+\end{theorem}
+\begin{proof}
+A terminal repair is valid on $B_0$ exactly when its image is valid on $\sigma(B_0)$. For an internal experiment, domain preservation gives uniform admissibility. Transition and observation preservation yield
+\[
+\sigma(B_{e,o})=B'_{\tau(e),\eta_e(o)}.
+\]
+Apply induction to every child. The report bijection preserves the number of children, the maximum execution cost, and the sum of stored child records. Inverse maps give the converse correspondence. The equality of frontiers follows because costs and dominance are unchanged.
+\end{proof}
+
+The theorem covers a complete explanation of how the repair is found. It is stronger than equality of the repaired output but weaker than a claim that any learned representation admits such a correspondence. A known map costs something to store and execute. In the toy instrument, an arbitrary cell permutation requires a label adapter. A permutation of eight names is not discovered merely by allocating an eight-row table.
+
+\subsection{Approximate performance transfer}
+Suppose a source comparison gives productivity advantage $\Delta$ to $U'$ over $U$. Let $\widetilde U',\widetilde U$ be actual transported target procedures. If each procedure's productivity differs from its source value by at most $\varepsilon$, then
+\begin{equation}\label{eq:gaintransport}
+\Rcal'(\widetilde U')-\Rcal'(\widetilde U)
+\geq\Delta-2\varepsilon.
+\end{equation}
+This follows by subtracting the two inequalities. A common source of the premise is an exact task correspondence plus a bounded evaluation-law shift. For any fixed gain function in $[-1,1]$, changing the task law by total variation $\delta$ changes its expectation by at most $2\delta$. A further pointwise gain discrepancy $\eta$ therefore gives $\varepsilon=\eta+2\delta$.
+
+This elementary estimate does not certify admissibility or sure success. A rare unauthorized action can have small average loss and still violate a zero-tolerance constraint. Such constraints require their own preservation check. The same is true of uncharged translation work: an equal-output target procedure can fall outside the budget after the adapter is added.
+
+\begin{counterexample}[Output transfer with no transferable investigation]\label{ex:unavailable}
+A source can inspect a hidden bit for one unit and then choose one of two disjoint successful repairs. The target has the same hidden states and repair effects, but no operation that reveals the bit. The final repair meanings correspond exactly. The source diagnostic policy does not transport, and no target policy can guarantee success from the two-state uncertainty set. The missing object is an information channel, not a better translation of the repair names.
+\end{counterexample}
+
+\section{Growing a repair language without losing its old scope}\label{sec:grammar}
+A persistent discrepancy can be a limitation of the candidate language rather than the search procedure. Repeatedly optimizing coefficients cannot produce a nonlinear term in a language that expresses only affine functions. Reordering uninformative experiments cannot separate two cases whose transcripts are always identical. A learner must distinguish an unsuccessful search from a certified absence of a suitable expression.
+
+A conservative extension embeds each old program into a new language with the same meanings on the old domain. That semantic property is valuable, but it does not imply nonregression under a fixed resource allowance. The new interpreter may consume more time, memory, or evidence before executing the embedded old program.
+
+\begin{proposition}[The resource price of conservative extension]\label{prop:extension}
+Suppose an embedding preserves every old procedure's successful behavior and adds at most $d\geq0$ execution work and $s\geq0$ stored records. Every old allowance $(b,m)$ is then feasible in the new language under allowance $(b+d,m+s)$. Feasibility at the unchanged allowance follows only when the embedded procedure fits that allowance. Semantic conservativity alone supplies no such guarantee.
+\end{proposition}
+\begin{proof}
+Embed a witness for the old allowance. By hypothesis its behavior is preserved and its costs are bounded by the shifted pair. The unchanged-budget assertion requires the corresponding inequalities. For the final claim, an old one-unit procedure can be embedded with identical output into a new interpreter requiring two units of startup work. It remains semantically available but cannot execute within the old one-unit allowance.
+\end{proof}
+
+A practical extension should retain a directly executable old path when possible, then route only justified cases through the new machinery. The routing operation also has a cost and an information requirement. A context-dependent grammar is not a solution if deciding the context already requires solving the original problem.
+
+\subsection{Error localization and new constructors}
+The useful role of packets and residuals is to make this diagnosis structured. A packet can declare a domain, a retained distinction, an uncertainty set, an operation interface, and unresolved conditions. A residual identifies which preservation equation or evidence constraint failed. A constructor adds a new kind of candidate repair. The theory does not assume that a packet is an independent physical component or that its name supplies a new algorithm.
+
+A grammar extension should therefore carry four different items: the old behavior it preserves, the new expressions it enables, the information needed to select and parameterize those expressions, and the evidence that they improve a protected task. These items can fail independently. This is the conceptual connection to SRIC's repair calculus and to OSL's distinction between an expression, a checked meaning, and authority to execute it~\cite{sric,osl}.
+\clearpage\part{Evidence and recursive continuation}
+\section{Evidence that survives candidate selection}\label{sec:evidence}
+A self-improvement procedure has an unusual incentive to find weaknesses in its own measurements. It searches repeatedly, retains favorable results, and changes the way later candidates are generated. A validation number can therefore become part of the training information even when it is never called a training label. This is a central issue in adaptive data analysis~\cite{dwork}.
+
+The correct distinction is between development evidence used to generate a candidate, selection evidence used to choose among candidates, and final evidence used to assess the selected procedure. A private test repeatedly consulted by an outer selector is still selection information for that outer process. Keeping it hidden from the inner solver does not make it independent of the entire lineage.
+
+A practical record should identify what was frozen before each assessment, which outputs were exposed, and which claim the assessment supports. When a procedure changes a checker, both the checker change and the candidate it would approve cannot receive their only justification from the new checker's own approval. That restriction does not forbid improving evaluators. It prevents the target of validation from silently changing the validation standard in the same step.
+
+\begin{proposition}[Conditional error budgets across an adaptive lineage]\label{prop:lineage}
+Let $\mathcal H_{t-1}$ be the information available before attempt $t$. Suppose the event $A_t$ that attempt $t$ accepts a false improvement claim satisfies
+\[
+\Pr(A_t\mid\mathcal H_{t-1})\leq\delta_t
+\quad\text{almost surely},
+\]
+for deterministic $\delta_t\geq0$ with $\sum_{t\geq1}\delta_t\leq\delta$. Then
+\[
+\Pr\big(\exists t\geq1:A_t\big)\leq\delta.
+\]
+The candidate-generating process and the time at which attempts stop may depend on the earlier history.
+\end{proposition}
+\begin{proof}
+Taking expectations gives $\Pr(A_t)\leq\delta_t$. The union bound gives the result for any finite number of attempts. The infinite statement follows from continuity of probability for the increasing finite unions. A history-dependent stop can only reduce the set of attempts whose acceptance events occur.
+\end{proof}
+
+No independence between attempts is needed. The conditional premise is stronger than a marginal guarantee for a candidate considered before adaptive selection. It must be justified by the actual sampling or verification mechanism. A budget such as $\delta_t=\delta/[t(t+1)]$ is summable, but writing that schedule does not make an invalid test conditionally valid.
+
+\subsection{One sufficient fresh-audit construction}
+Freeze a candidate and its comparator using the prior history. Draw $n_t$ fresh evaluation cases conditionally independently from the declared distribution and record paired score differences $Y_i\in[-1,1]$. Let $\Delta_t$ be their conditional mean and $\widehat\Delta_t$ their average. The bounded-variable concentration inequality gives
+\[
+\Pr\left(\widehat\Delta_t-\Delta_t\geq r\mid\mathcal H_{t-1}\right)
+\leq \exp(-n_tr^2/2).
+\]
+Consequently, accepting a claim $\Delta_t\geq\gamma$ only when
+\begin{equation}\label{eq:audit}
+\widehat\Delta_t-\sqrt{2\log(1/\delta_t)/n_t}\geq\gamma
+\end{equation}
+meets the preceding conditional error requirement for that claim. This is a fixed-sample sufficient construction. The candidate and $n_t$ may depend on past data, but $n_t$ is fixed before this audit is examined. Inspecting the same sample repeatedly and stopping at a favorable value requires a time-uniform method or a separately justified spending rule. Time-uniform concentration is an established subject~\cite{howard}.
+
+Formula~\eqref{eq:audit} can be conservative and expensive. It is included to make the premise operational, not as a claim that this test is optimal. If evaluator randomness, shared tasks, or dependence between runs changes the sampling unit, the analysis must change with it. Thousands of messages from one trained lineage do not automatically become thousands of independent improvement trials.
+
+\begin{counterexample}[Reused evidence can reward memorization]\label{ex:reuse}
+A task has $N$ equally likely names and an externally fixed binary answer for each. After the answers on a development subset become available, a candidate stores them and gives the wrong answer on every other name. It is perfect on that subset and has true accuracy equal only to the subset's fraction of the task universe. An outer loop that keeps selecting by the same subset can improve its reported score without improving beyond the information it has exposed. Renaming the subset a holdout does not restore independence.
+\end{counterexample}
+
+\subsection{Proof obligations and performance evidence}
+A semantic proof can establish that a proposed operation preserves a specified relation. A program checker can establish that a finite tree respects the supplied domains and budgets. A fresh performance comparison can support usefulness on a declared task law. None of these establishes the truth of every environmental premise. Their evidence types should remain separate in an improvement receipt.
+
+The constructive tests shipped with this paper are deterministic finite enumerations. They are not samples from an AGI population, and they do not use~\eqref{eq:audit} to manufacture confidence intervals. Their role is to check the implementations of the stated finite arguments.
+
+\section{The complete cost of becoming a better improver}\label{sec:cost}
+A procedure can save work on each future task and still be a poor investment when its discovery and validation are expensive. Conversely, a costly method can be worthwhile when it is reused sufficiently often. Both observations are ordinary resource accounting. They become especially important when a claimed improvement shifts work from inference into training, into a translator, or into an external oracle.
+
+Use a resource vector rather than an unexplained token total:
+\[
+C=(C_{\rm model},C_{\rm search},C_{\rm validate},C_{\rm install},
+C_{\rm execute},C_{\rm store}).
+\]
+These coordinates need not share units. Model construction may involve environment observations. Search and validation may involve processor work. Installation may require conversion or compilation. Execution work concerns one deployment. Storage concerns the retained library and complete controller. A scalar comparison needs declared conversion weights or a common physical budget, not an arbitrary sum of unlike quantities.
+
+For the hidden-cell instrument, a compiled tree has fifteen records even though a successful depth-three run visits only four. The bit-query API is installed for both procedures in the matched comparison. Its table representation, if used, occupies $n(n+\log_2n)$ Boolean entries for the chosen power-of-two family. The reported three-versus-seven diagnostic comparison does not imply that inspecting a large subset costs one machine instruction in every implementation. It uses one sensor call as its stipulated unit.
+
+\begin{proposition}[Amortization of a reusable process improvement]\label{prop:amortization}
+In a fixed additive resource unit, suppose installing a new procedure has incremental cost $C\geq0$ relative to the old one, and its expected per-use saving on an unchanged task distribution is $d>0$. If there are $N$ uses and no additional costs or changes in the task law, its expected cumulative saving is $Nd-C$. It is strictly resource-improving exactly when $N>C/d$.
+\end{proposition}
+\begin{proof}
+Linearity of expectation gives expected total use savings $Nd$, without requiring independence between uses when each has the stated expectation. Subtract the fixed incremental cost and solve the strict inequality.
+\end{proof}
+
+The formula is not a prediction of future demand. Distribution drift, maintenance, growing context, retrieval overhead, or a changed interface can alter $d$ or add costs. The value of the repair library depends on whether later problems actually admit its operations.
+
+\subsection{Larger search spaces can lower productivity}
+\begin{counterexample}[More expressibility with worse fixed-budget discovery]\label{ex:dilution}
+A search language has $N$ candidates, exactly one useful. A procedure samples uniformly with replacement $B\geq1$ times and recognizes usefulness perfectly after each sample. Its probability of finding the useful candidate is $1-(1-1/N)^B$. Adding an additional useless candidate preserves every old expression and strictly decreases this probability. The best attainable repair is unchanged, while the implemented discovery procedure becomes worse under the same sampling budget.
+\end{counterexample}
+
+This does not argue against grammar growth. It identifies what the learner must improve alongside growth: proposal probabilities, indexing, modular reuse, or informative pruning. The search space and the search distribution are different parts of the agent.
+
+An archive has a related ambiguity. The best true value among retained artifacts cannot decrease when an old artifact remains available under the same score. But a deployed selector can perform worse as retrieval becomes harder. The monotonicity of a hypothetical maximum is not the monotonicity of actual use. Resource-limited archive management belongs inside the recursive system rather than outside its reported budget.
+
+\section{A finite certificate for repeated improvement}\label{sec:recursion}
+A valid local change can destroy the ability to make another valid change. A new representation may discard the evidence needed to verify future proposals. A controller may consume the remaining budget while preserving the current task score. A shortcut can bypass an interface on which later transports depend. Recursive continuation therefore needs its own object.
+
+Let $Z$ be a finite set of complete lineage configurations. A configuration includes the currently selected solver and improver, retained libraries and evidence, the active comparison contract, and relevant resource state. The following theorem assumes this configuration is observed. Unknown configurations require belief-state modeling or a different synthesis result. No unrestricted introspection is inferred.
+
+Each $z$ has a finite set of authorized attempts $A(z)$. An attempt has a nonempty set $\Post(z,a)$ of possible successor configurations. This can represent all outcomes of a stochastic proposal or an abstract uncertainty set. A safe set $\Safe\subseteq Z$ encodes the declared semantic, evidence, authority, and resource conditions. A pause or terminal state may have a zero-progress self-loop. Actual expensive attempts must debit resources in $Z$, or the model must explicitly state their replenishment.
+
+Define
+\[
+K_0=\Safe,\qquad
+K_{n+1}=\{z\in K_n:\exists a\in A(z),\ \Post(z,a)\subseteq K_n\}.
+\]
+The descending finite sequence reaches a fixed point $\mathcal K$. It is the set from which some policy keeps every successor safe indefinitely. This can include doing nothing forever. Safety alone is not recursive improvement.
+
+For each transition, a progress mark $p(z,a,z')\in\{0,1\}$ is supplied by a checked criterion. A mark of one means the specified process-improvement claim has been established under the same comparison. It is not assigned merely because a file changed. Define
+\begin{align}\label{eq:progress}
+W_{0,0}&=\mathcal K, & W_{0,k}&=\varnothing\quad(k>0),\\
+W_{h,k}&=\{z\in\mathcal K:\exists a\in A(z),\ \Post(z,a)\subseteq\mathcal K,\nonumber\\[-2pt]
+&\hspace{34mm} z'\in W_{h-1,\max\{0,k-p(z,a,z')\}}
+\quad\forall z'\in\Post(z,a)\}.\nonumber
+\end{align}
+Here $h$ is the number of remaining attempts and $k$ the number of still-required progress events. A pause action lets a policy that finishes early use the remaining horizon without changing the result.
+
+\begin{theorem}[Common-policy recursive progress]\label{thm:progress}
+A configuration belongs to $W_{h,k}$ if and only if there exists one authorized policy that keeps all outcomes in $\mathcal K$ and guarantees at least $k$ checked progress events within $h$ attempts. A policy depending on the current configuration and the remaining pair $(h,k)$ suffices. The finite recurrence gives a witness when feasible and a complete negative answer within the stated model when infeasible.
+\end{theorem}
+\begin{proof}
+At horizon zero, zero remaining progress is possible exactly in $\mathcal K$, and positive remaining progress is impossible. Assume the claim for $h-1$. A policy at $z$ must choose one initial action before its outcome is known. Every possible successor must remain in $\mathcal K$ and must admit a continuation meeting the remaining target $\max\{0,k-p\}$. By induction these conditions are exactly the memberships in~\eqref{eq:progress}. Conversely, choose a witnessing first action and a witnessing continuation for each observed successor. The resulting policy works on every path. Induction proves necessity, sufficiency, and the stated memory requirement. Finiteness makes the construction terminating.
+\end{proof}
+
+The use of one first action is important. The weaker claim that every possible outcome has some favorable action, selected after secretly learning that outcome, is not an implementable policy. Likewise, independently feasible semantic, resource, and evaluation certificates must refer to the same attempt and successor relation.
+
+The theorem is complete only for its finite catalogue and its information boundary. It does not create a promising next candidate or identify the true productivity of an arbitrary program. Its progress labels may come from exact finite evaluation or from a separate evidence layer. With probabilistic labels, the conclusion about actual progress holds on the event that the relevant certificates are valid. Proposition~\ref{prop:lineage} can bound failure of that event under its own assumptions.
+
+\subsection{Safe rejection can prevent a worst-case progress guarantee}
+\begin{counterexample}[Repeated opportunity is not bounded sure progress]\label{ex:retry}
+At a safe configuration, an attempt either produces a genuine improvement or rejects the candidate and returns to the same configuration. Both outcomes are possible at every attempt. A safe pause is also available. For every finite $h$, there is a path with $h$ consecutive rejections, so no policy guarantees one improvement within $h$ attempts. With an independent positive success probability, eventual success can nevertheless occur with probability one. The worst-case finite theorem and that probabilistic statement answer different questions.
+\end{counterexample}
+
+\subsection{Why local improvement does not imply recursive viability}
+A second finite example has a proposal that raises the current score but deletes the only retained witness needed to validate any subsequent proposal. Its destination lies outside $\Safe$ when witness availability is protected. If witness availability is omitted, it may remain safe but have no productive continuation. The result depends on the contract, not the flattering name assigned to the edit.
+
+This is a compact version of the closure perspective in SRIC~\cite{sric}. The present contribution is to connect that perspective to a concrete diagnostic tree, a resource witness, and a specified productivity comparison rather than treating closure as a free consequence of successful self-modification.
+
+\section{Acceleration is an additional hypothesis}\label{sec:acceleration}
+Recursive improvement can be meaningful without being indefinitely accelerating. Its measured pace depends on useful gains, the cost of finding and checking them, available opportunities, and the chosen scale of evaluation. A normalized task score has a ceiling. A changing suite can continually introduce new headroom, but its successive normalized scores are not automatically comparable.
+
+\begin{proposition}[A fixed-margin ceiling on a fixed score]\label{prop:ceiling}
+Suppose a lineage has a fixed measure $R_t\in[a,b]$, every accepted progress event increases it by at least $\gamma>0$, and all other transitions are nondecreasing in that same measure. Then the number of progress events is at most
+\[
+\left\lfloor\frac{b-a}{\gamma}\right\rfloor.
+\]
+An infinite sequence of positive increments is compatible with bounded total improvement when no common positive lower bound is imposed.
+\end{proposition}
+\begin{proof}
+After $k$ progress events, telescoping and nondecrease give $R_t\geq R_0+k\gamma\geq a+k\gamma$. Since $R_t\leq b$, the bound follows. For the second assertion, start at zero and use increments $2^{-t}$ for $t\geq1$. Every increment is positive and their partial sums remain below one.
+\end{proof}
+
+If nonprogress transitions can decrease the measure, the first bound need not hold: repeatedly falling and recovering can generate arbitrarily many positive increments. Those recoveries are not unlimited cumulative progress. A moving evaluator creates a different problem. It may be appropriate, but it requires bridges to preserve the meaning of the comparison.
+
+A simple accounting model can express the additional conditions for acceleration. Let $g_t$ be an expected useful gain and $c_t>0$ the complete cost of the corresponding discovery and acceptance cycle. Improvement productivity per unit resource is $g_t/c_t$. Raising $g_t$ alone does not raise that ratio when $c_t$ rises faster. A larger reachable repair set is similarly insufficient when proposal quality falls or validation becomes the limiting cost.
+
+SRIC's bottleneck perspective is useful here: improving one stage can expose another stage as the dominant limitation~\cite{sric}. The next bottleneck might be information acquisition rather than proposal generation, or evidence quality rather than repair expressibility. A theory of acceleration would need to specify how those bottlenecks move and which resources support their resolution. A claim of universal acceleration does not follow from the existence of one productive cycle.
+
+
+\clearpage\part{A bounded route toward general intelligence}
+\section{A proposed learned architecture}\label{sec:architecture}
+The mathematical contracts do not specify a complete learning algorithm. They do identify the components that a credible algorithm must make learnable and the evidence required when those components change. The intended architecture has one active solver, a recurrent working state, a persistent library of typed operations, an acquisition policy, a proposal mechanism, and an admission procedure. These are roles in one realized computation, not a requirement for a separate large model for every role.
+
+\subsection{What would learn}
+Let $r_\phi$ encode the retained state, $G_{\theta,a}$ describe proposed operations, $\pi_\omega$ choose observations or experiments, and $p_\psi$ propose candidate programs or parameter updates. A development episode can modify $\phi,\theta,\omega,\psi$ through a declared learning rule. A persistent program library can also change by adding, replacing, or removing checked operators. Temporary deliberation without a retained modification is not called a new learned generation here.
+
+The learning signals need separate purposes. Prediction losses train anticipation of future outputs. Intervention-consistency losses test whether the proposed operations match their intended effects. Acquisition rewards favor useful reductions of repair uncertainty after charging experiment cost. Proposal rewards evaluate the actual selected descendant rather than fluency of its rationale. Preservation checks protect specified older capabilities or interfaces. There is no universal set of weights that turns these distinct obligations into one sufficient scalar objective.
+
+A latent computation may suggest that a particular variable matters. A typed checkpoint should then declare the variable's domain, the operations it supports, the evidence used to infer it, and the continuations on which it was checked. Its translator must not read the answer that the checkpoint claims to predict. Its complexity is charged. OSL is a proposed semantic consumer for such checkpoints, while Neuralese concerns the learned latent producer~\cite{osl,neuralese}. This paper does not implement their complete learned bridge.
+
+\begin{proposition}[Local operation agreement preserves finite continuation]\label{prop:continuation}
+Let $D$ be invariant under every source operation $F_a$, let $q:D\to Z$, and suppose
+\[
+qF_a=G_aq\quad\text{on }D
+\]
+for every admitted $a$. If the required output satisfies $y=\bar yq$ on $D$, then for every finite operation word $w$,
+\[
+qF_w=G_wq,\qquad yF_w=\bar yG_wq.
+\]
+\end{proposition}
+\begin{proof}
+The empty word gives the identity. Assume the relation holds for a prefix. Domain invariance allows application of the next local equation, giving $qF_aF_w=G_aqF_w=G_aG_wq$. Induction establishes the first identity and composing with $\bar y$ gives the second.
+\end{proof}
+
+The proposition is a specification for meaningful reuse, not a method for learning $q$ or $G_a$. Invariance matters because an unchecked operation can leave the domain where the equations hold. Output preservation matters because commuting hidden states need not retain the task variable. Actual causal use matters because a probe can decode an appropriate state that the solver does not use.
+
+\subsection{What a complete attempt would do}
+A bounded iteration would begin with an observed task failure and an explicit set of plausible causes. The active acquisition policy chooses an admitted experiment. Its result updates those causes and the current state. A proposer supplies a candidate repair or a new constructor when the old language is insufficient. A separate execution checks the candidate's declared interface, resource usage, and behavior. A selected candidate is assessed on evidence not used to construct it. If admitted, its actual changes and scope are stored, including the procedure that found it.
+
+A later outer attempt may change the acquisition policy, proposer, or selection code. It must then be assessed as an improver from comparable starting conditions, not only as the latest solver. An improvement may be retained provisionally for a particular domain rather than promoted globally. Failed hypotheses remain useful evidence when their assumptions and reasons for rejection are preserved.
+
+Candidate evaluation can use the same kind of mathematical tools as the proposer without sharing the candidate's unchecked assumptions. Independence here means a specified information and authority separation, not a mystical absence of common software or training ancestry. External audit data and the authority to redefine a protected score are not supplied to a candidate as editable inputs for the same transaction.
+
+\subsection{A learned policy is not an unconstrained interpreter}
+A sufficiently powerful interpreter can hide the entire solution behind a small label. The remedy is not to forbid interpreters by definition. It is to state their installed information, runtime, storage, and access. This is the resource lesson of \emph{Machine Understanding}~\cite{understanding}. The diagnostic tree is intentionally explicit so that this accounting can be performed exactly in the worked case.
+
+Nor should neural implementation be required simply for appearance. A library of executable operators and a learned experiment selector can be a meaningful adaptive system. Conversely, updating a large weight tensor does not automatically establish a useful representation, a causal mechanism, or a transferable improvement procedure. The architecture is evaluated by its realized operations and the origin of their improvement.
+
+\section{The compiled diagnostic improvement}\label{sec:worked}
+We can now state the exact mathematical achievement of the running example. It is deliberately smaller than the full learned architecture, but complete enough to expose the relevant distinctions.
+
+For $n=2^k$ cells, assume a single defective cell, binary reports, singleton queries, and $k$ bit-coordinate queries. All queries leave the cell unchanged and cost one diagnostic call. A correct final repair costs one additional call. Distinct cells require distinct terminal repairs. There are no false repair commits. A literal tree record contains one experiment or repair identifier plus its child references.
+
+\begin{theorem}[Optimal diagnosis in the hidden-cell family]\label{thm:cells}
+Every certain diagnosis needs at least $k$ binary queries in the worst case. The bit-query procedure attains this bound and uses $2n-1$ records in a full binary tree. Any procedure using singleton queries alone needs at least $n-1$ queries in the worst case, and equality-first testing attains that bound with the same number of tree records. Thus their worst total execution costs, including repair, are $k+1$ and $n$.
+\end{theorem}
+\begin{proof}
+A binary tree of depth less than $k$ has fewer than $2^k=n$ leaves. Every successful leaf can identify at most one cell because its repair must be correct for every remaining case. Therefore depth at least $k$ is required. The $k$ coordinate bits identify every cell and give a complete binary tree with $n$ leaves and $n-1$ internal nodes. For singleton tests, an adversary can answer no on each tested cell while at least two untested cells remain. Fewer than $n-1$ distinct singleton queries therefore cannot guarantee identification. Equality-first testing uses one leaf for each positive answer and one final leaf for the last remaining cell, again totaling $2n-1$ records. Adding the terminal repair gives the claimed work counts.
+\end{proof}
+
+\begin{figure}[!ht]\centering
+\includegraphics[width=.92\linewidth]{figures/diagnostic_cost.pdf}
+\caption{Exact total execution costs for the power-of-two cell family. Singleton testing requires $n-1$ diagnostic queries, while the admitted bit queries require $\log_2 n$. A final repair adds one call to each plotted curve. Both full trees have $2n-1$ stored records. The curves omit separately charged model acquisition, compilation, and adapters.}\label{fig:cost}
+\end{figure}
+
+\subsection{What is actually compiled}
+The reference compiler receives an observation table and the set of successful terminal repairs. It computes the frontier in Theorem~\ref{thm:synthesis} and returns an optimal tree under a chosen work/storage allowance. At $n=8$ it returns a four-call, fifteen-record witness. A separately coded interpreter checks every initial cell and every branch. The reference comparison constructs the equality-first baseline independently, rather than comparing the compiler to a weakened version of its own output.
+
+The selected tree is an executable diagnostic policy for future episodes. It is not a saved answer for the calibration case. In a new episode, the hidden cell is unavailable to the policy. Only reports from its queries determine the branch and eventual repair. A cell permutation supplies a controlled foreign interface when the query sets, terminal repairs, and adapter are transported together. Theorem~\ref{thm:transport} explains that transfer. The tests do not claim that the adapter was learned without correspondence data.
+
+\subsection{The measured object is a procedure}
+Under the earlier four-call cap, the equality-first improver repairs $3/8$ of the uniform eight-cell cases and otherwise abstains. The compiled improver repairs all cases. The repaired solvers themselves are simple: each now knows the correct cell-specific operation. What improved is the procedure that acquires that case-specific correction. The library and sensor language are unchanged.
+
+There is still no claim that the compiler has improved itself. Its output is a better diagnostic component, not a faster version of the dynamic-programming code. A second recursive edge would require a modification of the process that discovers such components, evaluated on new repair problems at a matched development budget. The current constructive demonstration establishes one bounded edge and a method for describing further edges.
+
+\subsection{Controls that expose the boundary}
+Removing the bit-query family changes the synthesis problem and restores the singleton lower bound. Omitting the adapter breaks foreign-label replay even when the tree shape is unchanged. Deliberately choosing an incorrect leaf causes the independent checker to reject the certificate. Reducing the allowed tree records below fifteen rules out the certain eight-cell solution in this literal binary-tree model. These are failures of distinct requirements, not reasons to reinterpret the target after a run.
+
+The repair-aligned query example in Section~\ref{sec:synthesis} supplies a different control. There the compiler need not identify the exact hidden case. It should stop when one repair works for every surviving case. This prevents full identification from being hard-coded as the universal objective of inquiry.
+
+\section{Generality requires more than semantic relabeling}\label{sec:generality}
+The exact transport theorem is useful because it proves what is preserved when a correspondence exists. It is not evidence that the system can discover correspondences efficiently across arbitrary tasks. A relabeled hidden-cell world remains the same informational problem. Transfer from diagnosis to theorem discovery, planning, or empirical model construction needs additional argument.
+
+A credible generality study would vary several things separately: the state distinctions needed for future behavior, the allowed experiment language, the repair constructors, the information available to the learner, and the resource costs. It would also separate unfamiliar instances of a known schema from unfamiliar combinations of schemas and from an operation family that the old language cannot express.
+
+The proposed mechanism is not that every task reduces to binary cell location. It is that many tasks can expose a useful pattern: a currently retained representation fails to support a consequential distinction, an experiment can discriminate among causes, and a reusable operation can resolve the resulting class of failures. Whether that pattern is broad enough and economical enough to contribute to general intelligence is a research hypothesis.
+
+\subsection{The next decisive learning comparison}
+The most informative next study would compare a parent and descendant improvement procedure on the same family of fresh starting solvers. It would hold installed libraries and base-model access fixed in the primary contrast, then add a separate full-system contrast that includes any learned library. A stronger ordinary program-library learner should be included, since library learning itself is established~\cite{dreamcoder}.
+
+The development system would be allowed to acquire or revise an encoder, experiment selector, and operator library in bounded simulated environments. Evaluation would include longer continuations, new operator compositions, and changed observation formats. Each change should have an explicit semantic target and a resource ledger. Removing acquisition adaptation, repair reuse, or recurrent state separately would locate which mechanism produces a gain. Those are proposed experiments, not results reported in this paper.
+
+The desired endpoint is not merely that the descendant solves more familiar cases. It is that its acquired improvement procedure produces better valid repairs on unfamiliar cases within the same budget, and that the gain survives adequate controls for retained answers, installed adapters, and selection leakage. A subsequent generation must repeat that comparison rather than inherit its predecessor's claim by name.
+
+\subsection{What would count against the central hypothesis}
+The obstruction-guided procedure may be no better than an ordinary search method given the same information. Its apparent advantage may vanish after charging its diagnostic model and checker. Its recovered operators may fail on longer compositions. A learned selector may memorize surface labels instead of identifying the causal distinction. A larger repair language may dilute search enough to erase its representational advantage. These outcomes would identify where the proposed integration fails or requires stronger assumptions.
+
+A negative result on a restricted task family would not prove that general intelligence is impossible. A positive result would not prove AGI either. Both would help determine whether the proposed mechanism earns its place in a larger architecture.
+
+\section{Open problems and first-draft boundaries}\label{sec:limits}
+The exact core rests on finite models, supplied semantics, bounded horizons, and explicit information. Several important extensions remain.
+
+\paragraph{Learning the experiment model.}
+The repair recurrence assumes the observation and transition tables that a real learner must infer. A useful extension would account for uncertainty in those tables and distinguish safe exploration from changes that destroy the evidence needed for repair. Model uncertainty should not be replaced by a guessed deterministic table merely to preserve an exact theorem.
+
+\paragraph{Discovering a repair language.}
+The compiler selects within a supplied language. Genuine constructor discovery needs a representation of candidate meanings, a method for proposing them, and evidence that the new language preserves old operations while making new problems tractable. Expressibility of all computable programs is not an efficient search strategy.
+
+\paragraph{Transfer without a supplied correspondence.}
+The exact policy-transport theorem assumes its maps. Learning them introduces gauge ambiguity, underidentification, lossy observations, and potential answer leakage. The Neuralese-to-OSL bridge remains a separate learned realization problem, not a solved consequence of writing a commuting square~\cite{neuralese}.
+
+\paragraph{Improving evaluation without changing the question.}
+An evaluator can be genuinely defective. Correcting it requires retaining evidence of the defect, specifying the new scope, and distinguishing a change in estimated performance from a change in the underlying target. A fully unrestricted evaluator rewrite would remove the stable comparison on which the reported improvement depends.
+
+\paragraph{Noisy and distributed recursive synthesis.}
+The finite progress theorem uses fully observed configurations and worst-case successor sets. Useful systems may need probabilistic service, partial observation, or several decision centers. Separate success probabilities do not automatically yield one policy that satisfies all constraints. A noisy extension must state both the risk accepted and the evidence supporting its transition law.
+
+\paragraph{Long-run productivity.}
+Repeated finite improvements do not determine the eventual learning curve. A richer task distribution, increasing resources, changing architectures, or new scientific observations may create further headroom. Those changes should be modeled and charged rather than absorbed into a claim of autonomous acceleration. The current paper does not settle whether general-purpose recursive improvement has increasing, constant, or diminishing returns.
+
+\subsection{Authority and bounded implementation}
+The formal permission to modify a local program is not authorization to change external services, access private data, or remove an institution's controls. Proposed deployments would require an explicit scope of authority and a justified handling of affected parties. The reference package does not connect to services, modify other agents, train a neural model, or conduct autonomous external research. It constructs and checks finite mathematical objects in a local process.
+
+Similarly, stopping and refusal are legitimate outcomes when required evidence or resources are missing. An improvement claim must not become a reason to suppress those outcomes. A preserved archive can retain unsuccessful attempts without promoting them into operating authority. These commitments follow the evidence-preserving lineage perspective rather than a presumption that continued self-modification is always desirable.
+
+\section{Conclusion}\label{sec:conclusion}
+A better solver, a better repair procedure, and a better process for discovering repair procedures are different objects. They can interact productively, but the interaction must be demonstrated rather than supplied by the word recursive. General intelligence motivates the search for transferable methods of discovery. It is not a premise from which those methods follow.
+
+The finite theory gives concrete obligations. An investigation must obtain enough information to choose a successful repair, but need not identify every hidden detail. Its execution and stored controller must fit the same resource witness. A transfer must preserve the investigation's observations and admissibility, not only its final output. A language extension must retain an executable old path or account for the additional overhead. An adaptive lineage must preserve the evidential meaning of its accepted gains. A locally valid update must still leave a path for the claims made about continuation.
+
+The hidden-cell compiler realizes one bounded improvement of a diagnostic procedure. It also makes the limit exact: its observation model and search language are supplied, its compiler is fixed, and its label transports are explicit. The learned architecture remains a proposal that must acquire these capabilities under weaker assumptions.
+
+The central research direction is nevertheless coherent. A system can treat its own failures as constraints on a representation, turn those constraints into informative experiments, retain successful corrections as reusable operations, and make the procedure that performs this work a new object of learning. The next substantive advance would be a learner that does this more effectively on unfamiliar problems because of methods it acquired earlier, while preserving the evidence and resource account that make the claim credible.
+
+\clearpage\appendix
+\section{A complete diagnostic trace}\label{app:trace}
+Take $n=8$ and hidden defect $j=5$, whose binary digits are $101$. One optimal tree uses the three queries
+\[
+A_0=\{1,3,5,7\},\qquad A_1=\{2,3,6,7\},\qquad A_2=\{4,5,6,7\}.
+\]
+The precise order may differ among equally optimal compiled trees. For this order, the supports are
+\[
+\{0,\ldots,7\}\xrightarrow{1}\{1,3,5,7\}
+\xrightarrow{0}\{1,5\}\xrightarrow{1}\{5\}.
+\]
+The terminal repair is $r_5$. The path uses three diagnostic calls and one repair call. The complete tree stores all eight repair leaves and seven query nodes, not merely this path.
+
+Equality-first testing asks about cells zero through five before it obtains a positive report. It uses six diagnostic calls on this particular case, then one repair. Under the three-diagnostic cap it abstains after three negative reports. The cap is fixed before the episode, not shortened for the baseline after observing which cell is defective.
+
+For a target relabeling $\sigma(i)=3i+1\pmod8$, the defect has target label $\sigma(5)=0$. Each query becomes $\sigma(A_r)$ and the terminal repair becomes $r'_{\sigma(5)}$. Reports and tree shape agree with the source, but the label adapter is part of the transported interface. Applying the old numeric repair label five directly in the target would be incorrect. This is why syntactic resemblance does not replace a semantic map.
+
+\subsection{A repair problem that should stop before full identification}
+In the four-case example, the support $\{0,1,2\}$ admits repair $a$ immediately. A compiler that insists on identifying the precise case would spend unnecessary work. The successful stopping condition is the existence of one action whose success set contains the whole support. Conversely, the support $\{2,3\}$ admits no common repair in that example. A leaf chosen there without another observation is invalid even though either repair succeeds in one of its cases.
+
+\section{Reference computations and evidence scope}\label{app:checks}
+The package implements the finite experiment model, the two-resource recurrence, tree reconstruction, and a separate replay checker. It also implements stable partition refinement and finite recursive-progress synthesis. Exact test groups compare selected constructions with separately coded enumerations on small domains. Integer and rational arithmetic are used for mathematical acceptance checks. Plotting converts exact analytical quantities to display coordinates only.
+
+The verification program records its exact domains, input and output hashes, command, interpreter, duration, and outcomes. The source audit inventories formal statements and checks labels, citations, and their proof environments. The build uses LaTeX and the supplied vector figures. A clean rebuild is compared by extracted PDF text, not claimed to be byte-identical across environments.
+
+These checks are authored within this project. Alternative algorithms provide implementation cross-checks, not independent peer review. No test count establishes a universal claim outside its implemented domain. The proofs in the manuscript provide the conditional general arguments. No Lean certificate, trained agent, learned semantic bridge, or automated research run is included.
+
+\subsection{A precise reading of the finite demonstration}
+The observation and success tables are supplied analytical semantics. The compiler selects a tree without access to the next episode's hidden index. The checker separately receives that index when exhaustively verifying all possible episodes. That division prevents a policy from consulting hidden state during replay. It does not make the supplied model an empirically learned object.
+
+The main generated files are the compiled cell-tree certificate, a report of source and transported replays, the cost frontiers, and the exact check results. All can be regenerated locally. The README records the commands and the review notes record any failures or limitations encountered during preparation.
+
+\section{Claim map and a route beyond the first draft}\label{app:claimmap}
+\begin{small}\begin{longtable}{@{}p{.30\textwidth}p{.62\textwidth}@{}}\toprule
+Claim & What the present manuscript supplies\\\midrule\endhead
+Feedback can support a repair & A transcript-discrimination bound and a common-repair stopping condition. No automatic causal diagnosis is inferred.\\
+A representation supports continuation & A least stable refinement and explicit operation equations. Learning the representation is additional.\\
+A repair can be found within a budget & An exact finite work/storage recurrence and a checkable tree. It requires a supplied finite experiment model.\\
+A discovery procedure transfers & A correspondence preserving complete investigation semantics and costs. Discovering that correspondence is additional.\\
+A candidate procedure is better & A selection bound under uniform assessment error and a protected productivity comparison. The error premise must be established.\\
+A lineage preserves credible gains & Conditional error spending and an explicit distinction between development, selection, and audit evidence.\\
+A lineage can improve repeatedly & An exact finite common-policy criterion for marked progress. Marks require separate valid evidence.\\
+The process accelerates & Not established. A fixed-score ceiling and cost accounting expose additional requirements.\\
+The system is generally intelligent & Not established. Generality and learned discovery remain research targets across unfamiliar structures.\\\bottomrule
+\end{longtable}\end{small}
+
+The next revision should focus on a small number of consequential extensions: learning an uncertain experiment model, costed discovery of a new repair constructor, and one genuine parent-to-child improvement of the compiler rather than only its compiled diagnostic output. The exact framework makes each extension an identifiable obligation. It should not be diluted into a promise that adding more components will automatically produce a general agent.
+
+\clearpage\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{99}\small
+\bibitem{understanding} Komorebi P. \emph{Machine Understanding: Representation, Explanation, and Transfer}. Operation Komorebi, first consolidated edition, v1.0.0, 8 October 2026.
+\bibitem{sric} Komorebi P. \emph{Stratified Recursive Improvement Closure: Obstruction, Descent, Transport, and Evidence-Preserving Lineages}. Formal theory draft v2.4, Block 23, 3 September 2026. The reviewed source is identified in the package source map. Cited for theoretical structure, not as empirical evidence for this manuscript's architecture.
+\bibitem{neuralese} Komorebi P. \emph{Neuralese}. Operation Komorebi, Final Research Edition v1.0, 2026. Section 12 specifies the proposed semantic and continuation interface.
+\bibitem{osl} Komorebi P. \emph{Operator-Symbolic Language}. Operation Komorebi, Final Research Edition v1.0, 2026. Explicit semantic and operational interface.
+\bibitem{chollet} F. Chollet. On the Measure of Intelligence. 2019. \url{https://arxiv.org/abs/1911.01547}.
+\bibitem{andrychowicz} M. Andrychowicz, M. Denil, S. Gomez, M. W. Hoffman, D. Pfau, T. Schaul, B. Shillingford, and N. de Freitas. Learning to learn by gradient descent by gradient descent. 2016. \url{https://arxiv.org/abs/1606.04474}.
+\bibitem{maml} C. Finn, P. Abbeel, and S. Levine. Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks. \emph{PMLR} 70:1126--1135, 2017. \url{https://proceedings.mlr.press/v70/finn17a.html}.
+\bibitem{dreamcoder} K. Ellis et al. DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning. 2020. \url{https://arxiv.org/abs/2006.08381}.
+\bibitem{seal} A. Zweiger, J. Pari, H. Guo, E. Aky\"urek, Y. Kim, and P. Agrawal. Self-Adapting Language Models. 2025. \url{https://arxiv.org/abs/2506.10943}.
+\bibitem{goedel} J. Schmidhuber. Goedel Machines: Self-Referential Universal Problem Solvers Making Provably Optimal Self-Improvements. 2003, revised 2006. \url{https://arxiv.org/abs/cs/0309048}.
+\bibitem{dgm} J. Zhang, S. Hu, C. Lu, R. Lange, and J. Clune. Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents. 2025. \url{https://arxiv.org/abs/2505.22954}.
+\bibitem{hyperagents} J. Zhang et al. Hyperagents. 2026. \url{https://arxiv.org/abs/2603.19461}. Public manuscript accessed 8 October 2026.
+\bibitem{aide} D. Srikanth, B. Zhao, D. Xu, Y. Wu, and Z. Jiang. Recursive self-improvement of AI research agents. Preprint, 22 September 2026. \url{https://arxiv.org/abs/2609.26457}. The outer-loop comparison is qualified in Section 3.6.
+\bibitem{geiger} A. Geiger et al. Causal Abstraction: A Theoretical Foundation for Mechanistic Interpretability. \emph{Journal of Machine Learning Research} 26(83):1--64, 2025. \url{https://jmlr.org/papers/v26/23-0058.html}.
+\bibitem{dwork} C. Dwork, V. Feldman, M. Hardt, T. Pitassi, O. Reingold, and A. Roth. Preserving Statistical Validity in Adaptive Data Analysis. 2014, revised 2016. \url{https://arxiv.org/abs/1411.2664}.
+\bibitem{howard} S. R. Howard, A. Ramdas, J. McAuliffe, and J. Sekhon. Time-uniform Chernoff bounds via nonnegative supermartingales. \emph{Probability Surveys} 17:257--317, 2020. \url{https://doi.org/10.1214/18-PS321}.
+\end{thebibliography}
+\end{document}
