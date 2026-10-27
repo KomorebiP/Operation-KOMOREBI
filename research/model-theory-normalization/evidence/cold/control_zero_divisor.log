@@ -1,0 +1,19 @@
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.10/checks/controls/zero_divisor.lean:4:59: error: Tactic `decide` failed for proposition
+  Komorebi.Binary.divModInt 5 0 = some (0, 0)
+because its `Decidable` instance
+  (Komorebi.Binary.divModInt 5 0).instDecidableEq (some (0, 0))
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match Komorebi.Binary.divModInt 5 0 with
+  | none =>
+    match some (0, 0) with
+    | none => isTrue ⋯
+    | some val => isFalse ⋯
+  | some a =>
+    match some (0, 0) with
+    | none => isFalse ⋯
+    | some b =>
+      match (fun a b => instDecidableEqProd a b) a b with
+      | isTrue h => isTrue ⋯
+      | isFalse n => isFalse ⋯

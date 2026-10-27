@@ -1,0 +1,19 @@
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.10/checks/controls/wrong_signed_division.lean:4:63: error: Tactic `decide` failed for proposition
+  Komorebi.Binary.divModInt (-7) 3 = some (-2, 1)
+because its `Decidable` instance
+  (Komorebi.Binary.divModInt (-7) 3).instDecidableEq (some (-2, 1))
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match Komorebi.Binary.divModInt (-7) 3 with
+  | none =>
+    match some (-2, 1) with
+    | none => isTrue ⋯
+    | some val => isFalse ⋯
+  | some a =>
+    match some (-2, 1) with
+    | none => isFalse ⋯
+    | some b =>
+      match (fun a b => instDecidableEqProd a b) a b with
+      | isTrue h => isTrue ⋯
+      | isFalse n => isFalse ⋯
