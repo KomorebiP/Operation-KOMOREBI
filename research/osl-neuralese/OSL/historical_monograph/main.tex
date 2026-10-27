@@ -1,0 +1,2591 @@
+\documentclass[11pt]{article}
+
+% Deterministic PDF metadata for reproducible release builds.
+\ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
+\ifdefined\pdftrailerid\pdftrailerid{}\fi
+\ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15\fi
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm,stmaryrd}
+\usepackage{booktabs,array,longtable,multirow}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\crefname{lstlisting}{listing}{listings}
+\Crefname{lstlisting}{Listing}{Listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc,arrows.meta,fit,backgrounds}
+\usepackage{tikz-cd}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{xspace}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=green!40!black,
+  urlcolor=blue!65!black,
+  pdftitle={Operator-Symbolic Languages for Artificial Intelligence - Finite Metatheory Draft v0.5},
+  pdfauthor={Komorebi P.},
+  pdfsubject={A typed operator-symbolic intermediate language for heterogeneous artificial agents},
+  pdfkeywords={operator algebra, neural-symbolic AI, provenance, proof-carrying semantics, latent communication, Komorebi},
+  hypertexnames=false
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Operator-Symbolic Languages for AI}
+\rhead{Finite Metatheory Draft}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{openproblem}[theorem]{Open Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\definecolor{provedgreen}{RGB}{225,245,229}
+\definecolor{condblue}{RGB}{228,239,252}
+\definecolor{conjorange}{RGB}{255,241,219}
+\definecolor{placeholdergray}{RGB}{242,242,242}
+\definecolor{warningred}{RGB}{252,231,231}
+\definecolor{syntaxviolet}{RGB}{240,234,250}
+\definecolor{codegreen}{RGB}{28,110,65}
+\definecolor{codegray}{RGB}{92,92,92}
+\definecolor{codeblue}{RGB}{28,68,145}
+\definecolor{codeorange}{RGB}{170,75,15}
+
+\newtcolorbox{statusbox}{
+  breakable,
+  colback=condblue,
+  colframe=blue!55!black,
+  title=Draft status,
+  fonttitle=\bfseries
+}
+\newtcolorbox{provedbox}{
+  breakable,
+  colback=provedgreen,
+  colframe=green!45!black,
+  title=Established in this manuscript,
+  fonttitle=\bfseries
+}
+\newtcolorbox{placeholderbox}[1][]{
+  breakable,
+  colback=placeholdergray,
+  colframe=black!45,
+  title=Open theory boundary,
+  fonttitle=\bfseries,
+  #1
+}
+\newtcolorbox{conjecturebox}{
+  breakable,
+  colback=conjorange,
+  colframe=orange!65!black,
+  title=Conjectural extension,
+  fonttitle=\bfseries
+}
+\newtcolorbox{boundarybox}{
+  breakable,
+  colback=warningred,
+  colframe=red!55!black,
+  title=Claim boundary,
+  fonttitle=\bfseries
+}
+\newtcolorbox{syntaxbox}{
+  breakable,
+  colback=syntaxviolet,
+  colframe=violet!55!black,
+  title=Operator-symbolic expression,
+  fonttitle=\bfseries
+}
+
+\lstdefinelanguage{OSL}{
+  morekeywords={module,lineage,extends,agent,grant,revoke,effect,uses,until,space,dim,vector,in,values,operator,kind,matrix,apply,transport,check_projector,check_intertwiner,between,and,tolerance,observe,infer,simulate,inject,neural_propose,communicate,from,to,as,bind,quarantine,endorse,threshold,authorize,for,proof,mode,persistent,affine,linear,attest,admit,reject_candidate,write_memory,plan,using,expected,execute,feedback,observed,contract,always,after,within,check_contracts,verify_receipts,begin_transaction,commit_transaction,rollback_transaction,session,participants,initial,session_transition,session_terminal,verify_session,start_session,secret,metadata,source,trusted,agent,assert,packet,provenance,accessible_to,quarantined_by,memory,contains,action,executed,approx,parent,show,let,hypotheses,abduct,minimizing,probe,choose_information_gain,risk,repair,validate,transaction,require,else,rollback,modify_model,produces,carries,requires,effects,conf,with},
+  sensitive=true,
+  morecomment=[l]{\#},
+  morestring=[b]",
+}
+\lstdefinestyle{osl}{
+  language=OSL,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codeblue}\bfseries,
+  commentstyle=\color{codegreen},
+  stringstyle=\color{codeorange},
+  numberstyle=\tiny\color{codegray},
+  numbers=left,
+  numbersep=7pt,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=false,
+  frame=single,
+  rulecolor=\color{black!25},
+  backgroundcolor=\color{black!2},
+  tabsize=2,
+  xleftmargin=1.2em,
+  framexleftmargin=0.8em,
+  aboveskip=0.8em,
+  belowskip=0.8em,
+}
+
+\newcommand{\LangAI}{\mathbb L_{\mathrm{AI}}}
+\newcommand{\Lat}{\mathcal H}
+\newcommand{\CausalState}{\mathcal X}
+\newcommand{\Shared}{\mathcal Z_\star}
+\newcommand{\Types}{\mathsf{Types}}
+\newcommand{\Terms}{\mathsf{Terms}}
+\newcommand{\Ops}{\mathsf{Operators}}
+\newcommand{\Forms}{\mathsf{Formulas}}
+\newcommand{\Programs}{\mathsf{Programs}}
+\newcommand{\Proofs}{\mathsf{Proofs}}
+\newcommand{\Sem}[1]{\llbracket #1\rrbracket}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Prov}{\operatorname{Prov}}
+\newcommand{\Auth}{\operatorname{Auth}}
+\newcommand{\Access}{\operatorname{Access}}
+\newcommand{\Origin}{\operatorname{Origin}}
+\newcommand{\Valid}{\operatorname{Valid}}
+\newcommand{\Bind}{\operatorname{Bind}}
+\newcommand{\Use}{\operatorname{Use}}
+\newcommand{\Obs}{\operatorname{Obs}}
+\newcommand{\Sim}{\operatorname{Sim}}
+\newcommand{\Quar}{\operatorname{Quarantine}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcommand{\RRCT}{\textsc{RRCT}}
+\newcommand{\Komorebi}{\textsc{Komorebi}}
+\newcommand{\Jspace}{\mathcal J}
+\newcommand{\Effects}{\mathsf{Effects}}
+\newcommand{\Eff}{\operatorname{Eff}}
+\newcommand{\Sig}{\operatorname{Sig}}
+\newcommand{\Lip}{\operatorname{Lip}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Cut}{\operatorname{Cut}}
+\newcommand{\MergeIdx}{\mathfrak M}
+\newcommand{\defect}{\operatorname{def}}
+\newcommand{\TODO}[1]{\textcolor{red!70!black}{\textbf{[TODO: #1]}}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\OSLCore}{\textnormal{\textsc{OSL-Core}}\xspace}
+\newcommand{\OSLIR}{\textnormal{\textsc{OSL-IR}}\xspace}
+
+\title{\textbf{Operator-Symbolic Languages for Artificial Intelligence}\\[0.35em]
+\large Geometry, Proof-Carrying Semantics, and Shared Algebraic Communication}
+\author{Komorebi P.}
+\date{Finite metatheory and independent-kernel draft v0.5}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We develop an operator-symbolic language as a candidate machine-native intermediate representation for artificial intelligence and introduce \OSLCore, a concrete executable subset. The central thesis is that continuous latent geometry, typed operators, symbolic relations, effect annotations, proof objects, and provenance can be combined into one language in which states function as nouns, operators as verbs, types as grammatical categories, logic as admissibility syntax, causal consequences as semantics, and proof paths as explanations. Distinct models need not share coordinates: they may share an abstract transformation algebra realized through different latent representations and connected by exact or approximate intertwiners. We define the language family \(\LangAI\), give denotational, dynamic, graded, coalgebraic, and effect semantics, and then fix a concrete surface grammar with agents, lineages, vector spaces, projectors, coordinate transport, provenance-aware packets, communication, quarantine, endorsement, memory, planning, capabilities, feedback, assertions, and canonical receipts. Version 0.3 adds linear and affine proof resources, append-only audit semantics, statement-boundary receipts, deterministic semantic replay, finite session-graph verification, explicit-flow analysis, an independent receipt kernel, and two exhaustive finite transition-model layers. The packaged evidence comprises sixty-six source programs, two paired public-projection audits, sixty-one focused tests, 1,149 independently reconstructed receipts, seventy proof terms, 2,330 exhaustively reached abstract states, and 47,958 finite transition checks. Within a finite-dimensional base theory we prove preservation of polynomial operator semantics, approximate relation bounds, coordinate invariance, finite recovery of observational congruences, quotient emergence of symbols, geometric realization of an ordered logical fragment, stability of graded formulas, content-only ownership impossibility, proof-gated execution safety, proof transport, packet block identities, exact interlingua factorization, private closure under channel cuts, finite metadata-capacity bounds, tensor-product preservation, finite-horizon nonlinear transport, effect confinement, and finite-core provenance non-forging. The new computer-assisted results establish the declared finite properties of the abstract kernels and receipt semantics, but do not constitute a proof-assistant verification of the complete interpreter. No claim concerning subjective experience is made.
+\end{abstract}
+
+\begin{statusbox}
+Version 0.5 consolidates the concrete language as \OSLCore\ 0.3. It preserves the typed AST, proof-gated memory and planning, bounded capabilities, contracts, rollback, sessions, neural proposal quarantine, and metadata audits of version 0.2, while adding resource-sensitive proofs, an append-only audit chain, semantic source-boundary receipts, exact replay certificates, verified finite session graphs, static explicit-flow certificates, an independent receipt/proof kernel, and two complete finite transition-model explorations. Sixty-six source programs and sixty-one focused tests pass their declared specifications. Exact finite results are stated with their model and trust boundaries; approximate and nonlinear claims retain error bounds or open-theory labels. A proof-assistant formalization of the complete syntax and runtime remains open.
+\end{statusbox}
+
+\begin{boundarybox}
+The framework concerns representations, transformations, proof, provenance, communication, and control. It does not establish consciousness, sentience, personhood, valence, or moral status. A system may implement every formal construction in this paper without possessing subjective experience.
+\end{boundarybox}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{The language problem for artificial agents}
+
+Artificial agents already manipulate high-dimensional internal states, transform them through learned operators, exchange messages, update memories, and select actions. Yet the representational levels used for these functions are often separated:
+\begin{itemize}[leftmargin=1.6em]
+  \item neural activations carry continuous information but are difficult to inspect;
+  \item symbolic structures are inspectable but often brittle under noise and novel inputs;
+  \item natural language is expressive but ambiguous and weakly typed;
+  \item action policies are executable but usually do not carry their own provenance or proof.
+\end{itemize}
+
+We ask whether these layers can be unified by a machine-native intermediate language whose primitive objects are not merely words, propositions, or vectors, but \emph{typed transformations of structured states}. The motivating slogan is:
+\begin{equation}
+\boxed{
+\begin{aligned}
+\text{continuous geometry}
+&\longrightarrow
+\text{typed operator algebra}\\
+&\longrightarrow
+\text{symbolic logic and proof}
+\longrightarrow
+\text{language or action}.
+\end{aligned}
+}
+\label{eq:stack}
+\end{equation}
+
+The proposal does not require neural geometry to disappear. Instead, symbolic expressions name and constrain reusable operator patterns discovered in continuous representations.
+
+\subsection{States, operators, and proof paths}
+
+A latent state is a candidate noun. An operator is a candidate verb. A type specifies the admissible input and output roles. A formula expresses a relation that must hold. A proof term certifies that an inference or operation is authorized. A causal consequence supplies semantics by testing whether the transformation behaves as predicted.
+
+The intended interpretation is summarized by:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Language-like role & Computational realization \\
+\midrule
+Noun & state, packet, memory, object, distribution \\
+Verb & operator, transition, transport, update \\
+Type & admissible role or interface \\
+Syntax & composition and logical well-formedness \\
+Semantics & causal effect and denotation \\
+Authorship & provenance and lineage \\
+Explanation & proof path and receipt chain \\
+Discourse through time & recurrence and memory update \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Why natural language is not enough}
+
+Natural language is valuable as a human interface, but it is usually:
+\begin{itemize}[leftmargin=1.6em]
+  \item ambiguous;
+  \item context-sensitive;
+  \item difficult to execute directly;
+  \item weak at representing provenance and authorization;
+  \item difficult to verify mechanically;
+  \item vulnerable to hidden or unintended side channels.
+\end{itemize}
+An operator-symbolic intermediate representation can instead be typed, compositional, executable, uncertainty-aware, provenance-preserving, and machine-checkable.
+
+\subsection{Main contributions}
+
+The paper develops the following components:
+\begin{enumerate}[leftmargin=1.7em]
+  \item a typed operator-symbolic language \(\LangAI\) with terms, formulas, programs, proof terms, and effects;
+  \item denotational, operational, graded, causal, and effect semantics over latent state spaces;
+  \item a coordinate-free notion of meaning through operator algebras, presentations, and intertwiners;
+  \item finite observational recovery of operator congruences and quotient symbols;
+  \item geometric realizations of order, negation, and conjunction without assuming Boolean collapse;
+  \item provenance-sensitive, resource-aware, and proof-carrying assertions and actions;
+  \item probabilistic and paraconsistent logical states with quantitative stability bounds;
+  \item proof translation between heterogeneous symbolic calculi under explicit rule-preservation conditions;
+  \item shared algebraic communication among heterogeneous models, with operational criteria for private versus group-level closure;
+  \item Komorebi-style packet analysis, transfer blocks, synthesis, residuals, and holonomy;
+  \item nonlinear, tensor, manifold, Koopman, kernel, and tensor-network extensions;
+  \item a compiler architecture with effect confinement and verification-condition generation;
+  \item explicit experiments, baseline families, falsification criteria, and theorem-status boundaries.
+\end{enumerate}
+
+\section{Architectural overview}
+
+\subsection{Four representational layers}
+
+We distinguish four coupled layers.
+
+\paragraph{Latent substrate.}
+Continuous states:
+\[
+h_t\in\Lat,
+\qquad
+x_t\in\CausalState,
+\]
+may be vectors, tensors, graphs, probability distributions, neural activations, or manifold-valued states.
+
+\paragraph{Operator layer.}
+Typed maps act on states:
+\[
+P_Sx,
+\qquad
+P_Jh,
+\qquad
+T_{A\to B}h,
+\qquad
+F(x,a),
+\qquad
+R(P_Jh).
+\]
+These operators perform selection, transport, prediction, reconstruction, and update.
+
+\paragraph{Symbolic layer.}
+Typed predicates and modalities express access, belief, provenance, ownership, authorization, and causal use.
+
+\paragraph{Interface layer.}
+Natural language, code, diagrams, plans, and physical actions render or execute the internal operator-symbolic state.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  node distance=1.05cm,
+  box/.style={draw, rounded corners, minimum width=10.4cm, minimum height=1.05cm, align=center, thick},
+  arr/.style={-{Latex[length=3mm]}, thick}
+]
+\node[box, fill=blue!8] (latent) {Continuous latent geometry: vectors, tensors, graphs, manifolds, distributions};
+\node[box, fill=green!8, below=of latent] (ops) {Typed operator algebra: projection, transport, composition, prediction, synthesis};
+\node[box, fill=violet!8, below=of ops] (logic) {Symbolic logic and proof: provenance, authorization, uncertainty, contradiction};
+\node[box, fill=orange!10, below=of logic] (interface) {Human-facing language, code, plans, and executable actions};
+\draw[arr] (latent) -- node[right]{abstraction} (ops);
+\draw[arr] (ops) -- node[right]{typing and proof} (logic);
+\draw[arr] (logic) -- node[right]{render or execute} (interface);
+\draw[arr, bend left=34] (interface.east) to node[right]{outcomes and feedback} (latent.east);
+\end{tikzpicture}
+\caption{The proposed operator-symbolic stack. The feedback arrow is essential: causal consequences revise latent geometry, operators, and symbolic beliefs.}
+\label{fig:stack}
+\end{figure}
+
+\subsection{The hybrid thesis}
+
+The proposal is not that symbolic logic should replace representation learning. The intended architecture is:
+\begin{equation}
+\boxed{
+\text{latent learning}
+\leftrightarrow
+\text{operator intermediate representation}
+\leftrightarrow
+\text{symbolic proof layer}.
+}
+\label{eq:hybrid}
+\end{equation}
+The latent layer handles approximation and novelty. The operator layer makes transformations reusable and transportable. The symbolic layer constrains inference, memory, communication, and action.
+
+\subsection{Design axioms}
+
+The framework is organized around six design axioms.
+\begin{enumerate}[leftmargin=1.7em,label=\textbf{A\arabic*.}]
+  \item \textbf{Gauge tolerance.} Meaning is attached to operator relations and causal roles, not privileged coordinates.
+  \item \textbf{Compositionality.} The semantics of a well-typed composite is determined by the semantics of its parts and their composition law.
+  \item \textbf{Causal grounding.} Declared meanings must predict intervention-sensitive consequences, not merely correlate with labels.
+  \item \textbf{Proof-carrying use.} Memory writes, tool calls, and high-impact actions require typed evidence satisfying declared preconditions.
+  \item \textbf{Provenance conservation.} Communication may grant access to content without fabricating direct observation or ownership.
+  \item \textbf{Calibrated incompleteness.} When available evidence does not identify one semantics, the language must preserve conflict or abstain rather than force a symbol.
+\end{enumerate}
+
+These axioms deliberately separate representation learning from authorization. A learned latent state may propose an operator-symbolic interpretation; the verifier decides which consequences that interpretation is permitted to have.
+
+\section{Mathematical preliminaries}
+
+\subsection{Typed spaces and maps}
+
+Let \(\mathsf T\) be a collection of types. Each type \(\tau\in\mathsf T\) is interpreted as a space:
+\[
+\Sem{\tau}=X_\tau.
+\]
+For the finite base theory, each \(X_\tau\) is a finite-dimensional real Hilbert space. More general interpretations are introduced later.
+
+A typed operator symbol
+\[
+g:\tau\to\sigma
+\]
+is interpreted as a map
+\[
+\Sem{g}:X_\tau\to X_\sigma.
+\]
+Composition is type checked:
+\[
+g:\tau\to\sigma,
+\qquad
+f:\sigma\to\upsilon
+\quad\Longrightarrow\quad
+f\circ g:\tau\to\upsilon.
+\]
+
+\subsection{Operator algebras}
+
+Let \(\mathcal A\) be an abstract algebra generated by primitive operations \(\mathcal G\). An agent \(a\) realizes \(\mathcal A\) through a representation
+\[
+\rho_a:\mathcal A\to\End(\Lat_a).
+\]
+When \(\mathcal A\) is a monoid algebra, the representation satisfies
+\[
+\rho_a(g_2g_1)=\rho_a(g_2)\rho_a(g_1),
+\qquad
+\rho_a(e)=I.
+\]
+Approximate representations permit bounded residuals.
+
+\subsection{Programs and transitions}
+
+A program \(\alpha\) denotes a transition relation
+\[
+\Sem{\alpha}\subseteq\mathcal S\times\mathcal S
+\]
+or, in deterministic settings, a map \(\Sem{\alpha}:\mathcal S\to\mathcal S\). Sequential composition satisfies
+\[
+\Sem{\alpha;\beta}
+=
+\Sem{\beta}\circ\Sem{\alpha}.
+\]
+
+\subsection{Proof objects}
+
+A proof judgment has the form
+\[
+\Gamma;\Pi\vdash\varphi,
+\]
+where \(\Gamma\) is a type and term environment and \(\Pi\) is a provenance and authorization context. A proof term \(p\) inhabits a proposition type:
+\[
+p:\varphi.
+\]
+This Curry--Howard-style notation is used operationally: actions may require proof terms before execution.
+
+\section{Definition of the AI-native language}
+
+\begin{definition}[Operator-symbolic AI language]
+An operator-symbolic AI language is a tuple
+\[
+\LangAI
+=
+(\Types,\Terms,\Ops,\Forms,\Programs,\Proofs,\Effects,\vdash,\Sem{\cdot})
+\]
+consisting of types, terms, typed operators, formulas, executable programs, proof terms, effect annotations, derivability rules, and semantics.
+\end{definition}
+
+\subsection{Core types}
+
+A minimal type system contains:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Type & Intended denotation & Example inhabitant \\
+\midrule
+\texttt{State} & causal or latent state & \(x_t\) \\
+\texttt{Workspace} & accessible packet state & \(j_t\) \\
+\texttt{Agent} & agent identity or interface & \(a\) \\
+\texttt{Lineage} & temporal or causal lineage & \(L_a\) \\
+\texttt{Memory} & stored event or model & \(m\) \\
+\texttt{Observation} & externally grounded event & \(o\) \\
+\texttt{Simulation} & internally generated event & \(d\) \\
+\texttt{Action} & executable intervention & \(u\) \\
+\texttt{Proof} & authorization evidence & \(p\) \\
+\texttt{Probability} & calibrated uncertainty & \(q\in[0,1]\) \\
+\texttt{Provenance} & source and origin status & \(\rho\) \\
+\texttt{Receipt} & proof-carrying transition record & \(r\) \\
+\texttt{Channel} & typed communication interface & \(\chi\) \\
+\texttt{Effect} & externally visible capability & \(\mathsf{write},\mathsf{act}\) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Terms}
+
+Terms are generated by
+\[
+t::=x\mid c\mid g(t)\mid f(t_1,\ldots,t_n)\mid\operatorname{Source}(t)\mid\operatorname{Lineage}(t).
+\]
+Representative operator terms include
+\[
+P_S(t),
+\qquad
+P_J(t),
+\qquad
+T_{A\to B}(t),
+\qquad
+\operatorname{Memory}(t),
+\qquad
+\operatorname{Predict}(t,a).
+\]
+
+\subsection{Formulas}
+
+The formula grammar is
+\[
+\begin{aligned}
+\varphi::={}&p(t_1,\ldots,t_n)
+\mid\neg\varphi
+\mid\varphi\wedge\psi
+\mid\varphi\vee\psi
+\mid\varphi\to\psi\\
+&\mid J_a\varphi
+\mid B_{a,L}\varphi
+\mid O_a^\kappa\varphi
+\mid K_a^q\varphi
+\mid U_a\varphi
+\mid Q_a\varphi
+\mid[\alpha]\varphi
+\mid X\varphi.
+\end{aligned}
+\]
+The modalities mean:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Expression & Meaning \\
+\midrule
+\(J_a\varphi\) & \(\varphi\) is accessible to agent \(a\) \\
+\(B_{a,L}\varphi\) & \(\varphi\) is bound to agent \(a\) under lineage \(L\) \\
+\(O_a^\kappa\varphi\) & \(\varphi\) is autobiographically typed by provenance \(\kappa\) \\
+\(K_a^q\varphi\) & \(a\) endorses \(\varphi\) with confidence \(q\) \\
+\(U_a\varphi\) & \(\varphi\) is causally used in planning \\
+\(Q_a\varphi\) & \(\varphi\) is quarantined \\
+\([\alpha]\varphi\) & after every execution of \(\alpha\), \(\varphi\) holds \\
+\(X\varphi\) & \(\varphi\) holds in the next state \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Programs}
+
+Programs are generated by
+\[
+\begin{aligned}
+\alpha::={}&
+\operatorname{sense}
+\mid\operatorname{bind}
+\mid\operatorname{infer}
+\mid\operatorname{plan}
+\mid\operatorname{act}
+\mid\operatorname{update}\\
+&\mid\operatorname{communicate}(\chi,t)
+\mid\operatorname{writeMemory}(t)
+\mid\operatorname{simulate}(\alpha)
+\mid\alpha;\beta\\
+&\mid\operatorname{if}\ \varphi\ \operatorname{then}\alpha\ \operatorname{else}\beta.
+\end{aligned}
+\]
+
+\subsection{Proof terms}
+
+Proof terms may include:
+\[
+p::=
+\operatorname{obsToken}(e)
+\mid\operatorname{originToken}(a,e)
+\mid\operatorname{lineageToken}(L,e)
+\mid\operatorname{authToken}(\alpha)
+\mid\operatorname{compose}(p_1,p_2).
+\]
+
+\subsection{Effect judgments}
+
+A program judgment has the form
+\[
+\Gamma;\Pi\vdash
+\alpha:\tau\rightsquigarrow\sigma\;!\;\mathcal E,
+\]
+where \(\mathcal E\subseteq\Effects\) is the set of externally visible effects that the program may emit. Representative effects include
+\[
+\mathsf{read},\quad
+\mathsf{writeMemory},\quad
+\mathsf{communicate},\quad
+\mathsf{toolCall},\quad
+\mathsf{externalAct},\quad
+\mathsf{simulate}.
+\]
+Sequential composition unions effects, while a capability proof may reduce an abstract requested effect to a narrower authorized effect.
+
+\input{sections/osl_core_language}
+
+\section{From a source statement to proof-carrying execution}
+
+Consider the human sentence:
+\begin{quote}
+Agent A believes the route is blocked because Agent B observed an obstacle.
+\end{quote}
+An operator-symbolic representation is:
+\begin{syntaxbox}
+\begin{align*}
+\Obs_B(r_{\mathrm{blocked}})
+\multimap
+\bigl(&J_A r_{\mathrm{blocked}}
+\otimes
+\Origin_B(r_{\mathrm{blocked}})\\
+&\otimes
+K_A^{0.81}(r_{\mathrm{blocked}})
+\bigr).
+\end{align*}
+\end{syntaxbox}
+This expression carries content, source, confidence, and a restricted ownership status. It does not assert that Agent A directly observed the obstacle.
+
+A planning rule may be:
+\[
+J_A r_{\mathrm{blocked}}
+\wedge
+K_A^{q}r_{\mathrm{blocked}}
+\wedge
+q>0.8
+\wedge
+\Auth_A(r_{\mathrm{blocked}})
+\to
+U_A r_{\mathrm{blocked}}.
+\]
+Then:
+\[
+U_A r_{\mathrm{blocked}}
+\to
+\operatorname{Execute}_A(\operatorname{alternateRoute}).
+\]
+The reasoning path is therefore:
+\[
+\text{observation}
+\to
+\text{transport}
+\to
+\text{provenance validation}
+\to
+\text{endorsement}
+\to
+\text{authorization}
+\to
+\text{action}.
+\]
+
+\subsection{Compiled packet trace}
+
+A concrete shared packet may be written as
+\[
+p=
+\left(
+ r_{\mathrm{blocked}},
+ B,
+ L_B,
+ \mathrm{observed},
+ 0.81,
+ \{\mathsf{planning}\},
+ t+4,
+ d_p
+\right).
+\]
+Agent A's decoder maps the content into its own latent coordinates, but the symbolic front end preserves the source fields. The resulting judgment is
+\[
+J_A r_{\mathrm{blocked}}
+\wedge
+B_{A,L_A}r_{\mathrm{blocked}}
+\wedge
+O_A^{\mathrm{communicated}}r_{\mathrm{blocked}}
+\wedge
+\Origin_B(r_{\mathrm{blocked}}),
+\]
+not \(O_A^{\mathrm{observed}}r_{\mathrm{blocked}}\). A proof-carrying plan has type
+\[
+p_{\mathrm{route}}:
+\operatorname{Pre}
+\left(
+\operatorname{alternateRoute}
+\right),
+\]
+and effect judgment
+\[
+\Gamma;\Pi\vdash
+\operatorname{alternateRoute}:
+\texttt{State}\rightsquigarrow\texttt{State}
+\;!\;\{\mathsf{externalAct}\}.
+\]
+If the same latent content is instead activation-injected with no valid source proof, the content can remain workspace-accessible while the autobiographical write is rejected. Thus identical decoded vectors can compile to different authorized programs because provenance is part of the typed semantics.
+
+\input{sections/osl_core_examples}
+
+\input{sections/osl_core_semantics}
+
+\input{sections/osl_core_v02}
+
+\input{sections/osl_core_v03}
+
+\section{Denotational semantics}
+
+\subsection{Types and terms}
+
+A denotational model \(\mathfrak M\) assigns:
+\[
+\Sem{\tau}_{\mathfrak M}=X_\tau
+\]
+to each type and
+\[
+\Sem{g}_{\mathfrak M}:X_\tau\to X_\sigma
+\]
+to each typed operator \(g:\tau\to\sigma\).
+
+\subsection{Formula semantics}
+
+For a crisp finite model, each formula denotes a subset of system states:
+\[
+\Sem{\varphi}_{\mathfrak M}\subseteq\mathcal S.
+\]
+For probabilistic or four-valued models, the codomain is generalized later.
+
+\subsection{Graded semantics}
+
+For approximate models, a formula may denote a score
+\[
+v_{\mathfrak M}(\varphi,s)\in[0,1]
+\]
+or a support--refutation pair in \([0,1]^2\). A threshold \(\theta\) creates a derived crisp judgment, but the unthresholded score is retained for calibration and stability analysis. The language therefore separates
+\[
+\text{semantic score},\qquad
+\text{decision threshold},\qquad
+\text{authorization policy}.
+\]
+A high semantic score alone does not authorize an irreversible action.
+
+\subsection{Dynamic semantics}
+
+\[
+s\models[\alpha]\varphi
+\]
+iff every \(s'\) with \((s,s')\in\Sem{\alpha}\) satisfies \(s'\models\varphi\).
+
+\subsection{Causal semantics}
+
+An operator symbol is not fully grounded merely because it has a denotation. It is behaviorally grounded when intervention on its represented state produces the predicted family of consequences. For an operator \(g\) and causal outcome map \(Y\), define the grounding residual
+\[
+\epsilon_{\mathrm{causal}}(g)
+=
+\mathbb E_{x,\delta}
+\left[
+\left\|
+Y(g(x+\delta))-Y(g(x))-D(Y\circ g)_x\delta
+\right\|
+\right].
+\]
+Small residual supports a local first-order causal interpretation; it does not establish universal correctness.
+
+\subsection{Coalgebraic trace semantics}
+
+For a finite action alphabet \(\mathsf A\), a deterministic agent can be represented by an observation map \(o:S\to O\) and transitions
+\[
+\delta_a:S\to S,
+\qquad a\in\mathsf A.
+\]
+Equivalently,
+\[
+\gamma:S\to O\times S^{\mathsf A},
+\qquad
+\gamma(s)=\left(o(s),(\delta_a(s))_{a\in\mathsf A}\right).
+\]
+
+\begin{definition}[Coalgebra homomorphism]
+A map \(T:S_A\to S_B\) is a coalgebra homomorphism when
+\[
+o_B(Ts)=o_A(s)
+\]
+and
+\[
+T\delta^A_a(s)=\delta^B_a(Ts)
+\]
+for every state and action.
+\end{definition}
+
+\begin{theorem}[Finite-trace preservation]
+A coalgebra homomorphism preserves every finite action-conditioned observation trace. For each word
+\[
+w=a_n\cdots a_1,
+\]
+the two systems produce identical observation sequences from \(s\) and \(T(s)\).
+\end{theorem}
+
+\begin{proof}
+The initial observations agree by definition. The transition equation carries corresponding states to corresponding states after one action. Induction over word length preserves every later observation.
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzcd}[column sep=large,row sep=large]
+S_A \arrow[r,"\gamma_A"] \arrow[d,"T"'] & O\times S_A^{\mathsf A} \arrow[d,"I_O\times T^{\mathsf A}"] \\
+S_B \arrow[r,"\gamma_B"'] & O\times S_B^{\mathsf A}
+\end{tikzcd}
+\caption{Coalgebraic semantic transport. Commutation preserves action-conditioned behavior, not merely static representations.}
+\label{fig:coalgebra}
+\end{figure}
+
+This result complements algebraic intertwining. The algebra view preserves compositional transformations; the coalgebra view preserves observable behavior through time.
+
+\section{Meaning as shared algebra rather than shared coordinates}
+
+\subsection{Heterogeneous internal spaces}
+
+Let agents \(A\) and \(B\) possess latent spaces \(\Lat_A\) and \(\Lat_B\). Both realize an abstract algebra \(\mathcal A\):
+\[
+\rho_A:\mathcal A\to\End(\Lat_A),
+\qquad
+\rho_B:\mathcal A\to\End(\Lat_B).
+\]
+A map
+\[
+T_{A\to B}:\Lat_A\to\Lat_B
+\]
+preserves operator meaning when
+\begin{equation}
+T_{A\to B}\rho_A(g)
+=
+\rho_B(g)T_{A\to B}.
+\label{eq:intertwiner}
+\end{equation}
+for all relevant \(g\in\mathcal A\).
+
+\begin{definition}[Exact semantic intertwiner]
+A linear map \(T:\Lat_A\to\Lat_B\) satisfying \cref{eq:intertwiner} for all \(g\in\mathcal A\) is an exact semantic intertwiner between the two realizations.
+\end{definition}
+
+\begin{theorem}[Preservation of algebraic semantics]
+Let \(T:\Lat_A\to\Lat_B\) be an exact semantic intertwiner. For every noncommutative polynomial \(p\) in generators of \(\mathcal A\),
+\[
+T\,p(\rho_A(g_1),\ldots,\rho_A(g_m))
+=
+p(\rho_B(g_1),\ldots,\rho_B(g_m))\,T.
+\]
+\end{theorem}
+
+\begin{proof}
+The result holds for generators by assumption and for the identity trivially. It is preserved under addition and scalar multiplication by linearity. If it holds for words \(u\) and \(v\), then
+\[
+T\rho_A(uv)
+=T\rho_A(u)\rho_A(v)
+=\rho_B(u)T\rho_A(v)
+=\rho_B(u)\rho_B(v)T
+=\rho_B(uv)T.
+\]
+Induction over word length and linear extension yield the polynomial statement.
+\end{proof}
+
+\begin{corollary}[Compositional transfer]
+If two agents share an exact intertwiner for the primitive operator algebra, then every finite symbolic program built by operator composition is transported consistently.
+\end{corollary}
+
+\subsection{Approximate intertwiners}
+
+For noisy systems define
+\[
+\epsilon_T(g)
+=
+\left\|
+T\rho_A(g)-\rho_B(g)T
+\right\|.
+\]
+
+\begin{proposition}[Product error bound]
+For operators \(g_1,\ldots,g_n\),
+\[
+\begin{aligned}
+&\left\|
+T\rho_A(g_n\cdots g_1)
+-
+\rho_B(g_n\cdots g_1)T
+\right\|\\
+&\qquad\le
+\sum_{k=1}^{n}
+\left(
+\prod_{j=k+1}^{n}\|\rho_B(g_j)\|
+\right)
+\epsilon_T(g_k)
+\left(
+\prod_{j=1}^{k-1}\|\rho_A(g_j)\|
+\right).
+\end{aligned}
+\]
+\end{proposition}
+
+\begin{proof}
+Insert and subtract intermediate terms that move \(T\) across one factor at a time, then apply the triangle inequality and submultiplicativity.
+\end{proof}
+
+\begin{corollary}[Approximate preservation of presented relations]
+Assume every generator realization has norm at most \(M\) and
+\[
+\epsilon_T(g)\le\epsilon
+\]
+for each generator. Let
+\[
+p=\sum_w c_w w
+\]
+be a finite noncommutative polynomial relation, where \(|w|\) is word length. If \(p(\rho_A)=0\), then
+\[
+\left\|p(\rho_B)T\right\|
+\le
+\epsilon
+\sum_w
+|c_w|\,|w|\,M^{|w|-1}.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply the product error bound to every word and use
+\[
+Tp(\rho_A)-p(\rho_B)T=-p(\rho_B)T.
+\]
+Linearity and the triangle inequality give the result.
+\end{proof}
+
+\subsection{Gauge equivalence}
+
+Let \(S:\Lat_A\to\Lat_A\) be invertible. Define
+\[
+z'=Sz,
+\qquad
+\rho_A'(g)=S\rho_A(g)S^{-1}.
+\]
+
+\begin{theorem}[Gauge invariance of operator meaning]
+The representations \(\rho_A\) and \(\rho_A'\) satisfy the same algebraic identities. In particular, if
+\[
+p(\rho_A(g_1),\ldots,\rho_A(g_m))=0,
+\]
+then
+\[
+p(\rho_A'(g_1),\ldots,\rho_A'(g_m))=0.
+\]
+\end{theorem}
+
+\begin{proof}
+Every polynomial expression transforms by conjugation:
+\[
+p(\rho_A'(g_1),\ldots,\rho_A'(g_m))
+=
+S\,p(\rho_A(g_1),\ldots,\rho_A(g_m))\,S^{-1}.
+\]
+The conclusion follows.
+\end{proof}
+
+\begin{remark}
+External interaction may constrain an internal algebra up to gauge without fixing one neuron, coordinate, basis, or embedding direction. The invariant object is the relation among transformations.
+\end{remark}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzcd}[column sep=large,row sep=large]
+\Lat_A \arrow[r,"\rho_A(g)"] \arrow[d,"T_{A\to B}"'] & \Lat_A \arrow[d,"T_{A\to B}"] \\
+\Lat_B \arrow[r,"\rho_B(g)"'] & \Lat_B
+\end{tikzcd}
+\caption{Meaning preservation as an intertwining relation. The diagram commutes exactly or approximately even when the two agents use different coordinates.}
+\label{fig:intertwiner}
+\end{figure}
+
+\section{Symbols as compressed operator invariants}
+
+\subsection{Functional equivalence}
+
+Let \(\mathcal O\) be a set of concrete operations. Define an equivalence relation
+\[
+\alpha\sim\beta
+\]
+when \(\alpha\) and \(\beta\) are indistinguishable under all declared tests, contexts, and relevant consequences.
+
+\begin{definition}[Operator congruence]
+An equivalence relation \(\sim\) on \(\mathcal O\) is a congruence if
+\[
+\alpha\sim\beta
+\quad\Longrightarrow\quad
+\gamma\circ\alpha\circ\delta
+\sim
+\gamma\circ\beta\circ\delta
+\]
+whenever the compositions are well typed.
+\end{definition}
+
+\begin{theorem}[Quotient symbol algebra]
+If \(\sim\) is an operator congruence, then composition on equivalence classes
+\[
+[\alpha]\cdot[\beta]
+:=
+[\alpha\circ\beta]
+\]
+is well defined. The quotient \(\mathcal O/{\sim}\) forms a typed operator algebra whenever \(\mathcal O\) does.
+\end{theorem}
+
+\begin{proof}
+If \(\alpha\sim\alpha'\) and \(\beta\sim\beta'\), congruence gives
+\[
+\alpha\circ\beta
+\sim
+\alpha'\circ\beta
+\sim
+\alpha'\circ\beta'.
+\]
+Thus the product does not depend on representatives. All inherited algebraic laws descend to the quotient.
+\end{proof}
+
+\begin{remark}
+A symbol can therefore be interpreted as a name for a stable equivalence class of operations or relations, rather than an arbitrary token assigned before learning.
+\end{remark}
+
+\subsection{Developmental sequence}
+
+The proposed emergence path is:
+\[
+\begin{aligned}
+\text{repeated interaction}
+&\to
+\text{recurring operator pattern}
+\to
+\text{functional equivalence class}\\
+&\to
+\text{compressed symbol}
+\to
+\text{symbolic composition}.
+\end{aligned}
+\]
+
+\begin{conjecture}[Interaction-algebra internalization]
+Suppose an agent is trained on a family of tasks generated by an algebra \(\mathcal A\), with losses that reward compositional generalization and penalize representation complexity. Under suitable identifiability and optimization assumptions, the learned latent dynamics converge, up to gauge and approximation error, to a representation of a quotient of \(\mathcal A\).
+\end{conjecture}
+
+\subsection{Finite observational recovery}
+
+Let \(\mathfrak C=\{C_1,\ldots,C_m\}\) be a finite family of well-typed one-hole contexts and let
+\[
+\operatorname{Out}(C_i[\alpha])
+\]
+be the declared observable consequence of placing operation \(\alpha\) in context \(C_i\).
+
+\begin{definition}[Observational signature]
+The finite signature of \(\alpha\) is
+\[
+\Sig_{\mathfrak C}(\alpha)
+=
+\left(
+\operatorname{Out}(C_1[\alpha]),\ldots,
+\operatorname{Out}(C_m[\alpha])
+\right).
+\]
+Define \(\alpha\sim_{\mathfrak C}\beta\) iff their signatures agree.
+\end{definition}
+
+\begin{theorem}[Finite contextual congruence]
+The relation \(\sim_{\mathfrak C}\) is an equivalence relation. If \(\mathfrak C\) is closed under every well-typed left and right composition by primitive operations, then \(\sim_{\mathfrak C}\) is an operator congruence.
+\end{theorem}
+
+\begin{proof}
+Equality of signatures is reflexive, symmetric, and transitive. For congruence, suppose \(\alpha\sim_{\mathfrak C}\beta\). For compatible primitives \(\gamma,\delta\) and any test context \(D\), define
+\[
+C[\cdot]=D[\gamma\circ(\cdot)\circ\delta].
+\]
+Closure gives \(C\in\mathfrak C\), so equality of \(\alpha\) and \(\beta\) under \(C\) implies equality of \(\gamma\circ\alpha\circ\delta\) and \(\gamma\circ\beta\circ\delta\) under \(D\).
+\end{proof}
+
+\begin{algorithm}[ht]
+\caption{Finite observational symbol discovery}
+\label{alg:symbol-discovery}
+\begin{algorithmic}[1]
+\Require finite typed operation set \(\mathcal O\), context suite \(\mathfrak C\)
+\ForAll{\(\alpha\in\mathcal O\)}
+  \State evaluate \(\Sig_{\mathfrak C}(\alpha)\)
+\EndFor
+\State partition \(\mathcal O\) by equality of signatures
+\State return quotient classes and the induced composition table
+\end{algorithmic}
+\end{algorithm}
+
+\begin{proposition}[Relative soundness and completeness]
+Algorithm~\ref{alg:symbol-discovery} returns exactly the equivalence classes of \(\sim_{\mathfrak C}\). Under contextual closure, its composition table is well defined.
+\end{proposition}
+
+\begin{proof}
+Two operations are placed in the same block exactly when their signatures agree. The preceding theorem supplies well-defined quotient composition.
+\end{proof}
+
+\begin{remark}
+With noisy outputs, an \(\epsilon\)-threshold relation need not be transitive. Practical discovery should therefore use confidence regions, complete-linkage constraints, or explicit congruence closure rather than naive pairwise thresholding.
+\end{remark}
+
+\begin{placeholderbox}
+The finite result is relative to a declared context suite. Discovering a minimal task-sufficient congruence under distribution shift, continuous operation families, and adaptive adversarial contexts remains open. The conjecture above is therefore narrowed, not proved in full.
+\end{placeholderbox}
+
+\section{Logical structure realized geometrically}
+
+\subsection{Candidate geometries}
+
+Logical structure may be represented by geometry rather than explicit rule tables.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Logical relation & Candidate geometric realization \\
+\midrule
+Equivalence & clusters or quotient spaces \\
+Negation & involution \(N^2\approx I\) \\
+Implication & order cone \\
+Conjunction & tensor or bilinear product \\
+Temporal succession & semigroup flow \\
+Reversible transformation & group action \\
+Hierarchy & tree or hyperbolic geometry \\
+Provenance & fiber indexed by source lineage \\
+Fork & branching cospan \\
+Shared meaning & common quotient or interlingua \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Implication cones}
+
+Let \(C\subseteq\Lat\) be a closed convex cone. One candidate semantics is
+\[
+p\Rightarrow q
+\quad\Longleftrightarrow\quad
+z_q-z_p\in C.
+\]
+This gives implication a partial-order geometry when \(C\cap(-C)=\{0\}\).
+
+\subsection{Negation}
+
+A negation operator may satisfy
+\[
+N^2=I.
+\]
+If propositions are represented as regions or subspaces, \(N\) should exchange a proposition with an appropriately defined contradictory region rather than merely multiply every vector by \(-1\).
+
+\subsection{Conjunction}
+
+A higher-order conjunction may use a typed bilinear map
+\[
+\mu_{\wedge}:\Lat_\varphi\otimes\Lat_\psi\to\Lat_{\varphi\wedge\psi}.
+\]
+The tensor product records that conjunction may depend on interactions not reducible to a sum of independent features.
+
+\subsection{A finite ordered geometric fragment}
+
+\begin{definition}[Order cone]
+Let \(V\) be a real vector space and \(C\subseteq V\) a convex cone. Define
+\[
+x\preceq_C y
+\quad\Longleftrightarrow\quad
+y-x\in C.
+\]
+The cone is \emph{pointed} when \(C\cap(-C)=\{0\}\).
+\end{definition}
+
+\begin{proposition}[Cone order]
+If \(C\) is a pointed convex cone, then \(\preceq_C\) is a partial order.
+\end{proposition}
+
+\begin{proof}
+Reflexivity follows from \(0\in C\), transitivity from closure under addition, and antisymmetry from pointedness.
+\end{proof}
+
+\begin{theorem}[Ordered involutive operator fragment]
+Let \(C\subseteq V\) be a pointed convex cone. Suppose \(N:V\to V\) is linear with
+\[
+N^2=I,
+\qquad
+N(C)=-C,
+\]
+and \(\mu:V\otimes V\to V\) is bilinear, associative, commutative, has unit \(e\), and is positive in the sense that
+\[
+\mu(C,C)\subseteq C.
+\]
+Then \((V,\preceq_C,\mu,e,N)\) is an ordered involutive commutative monoid: \(N\) reverses the order and \(\mu\) is monotone in each argument on \(C\).
+\end{theorem}
+
+\begin{proof}
+The cone proposition gives the order. If \(x\preceq_C y\), then \(y-x\in C\), so
+\[
+N(x)-N(y)=-N(y-x)\in C,
+\]
+hence \(N(y)\preceq_C N(x)\). Positivity and bilinearity imply
+\[
+\mu(y,z)-\mu(x,z)=\mu(y-x,z)\in C
+\]
+for \(z\in C\), and similarly in the second argument. The monoid laws are assumed.
+\end{proof}
+
+\begin{remark}
+This theorem realizes a useful logical fragment geometrically, but it does not imply Boolean idempotence, excluded middle, complement laws, or distributivity. Those laws must be declared separately and tested against the intended probabilistic, paraconsistent, or resource-sensitive semantics.
+\end{remark}
+
+\section{Probabilistic and paraconsistent semantics}
+
+\subsection{Four-valued support}
+
+For a proposition \(p\), store
+\[
+v(p)=(s(p),r(p))\in[0,1]^2,
+\]
+where \(s\) is support and \(r\) is refutation.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Region & Interpretation & Default policy \\
+\midrule
+high \(s\), low \(r\) & provisionally accepted & permit authorized use \\
+low \(s\), high \(r\) & provisionally rejected & do not use \\
+high \(s\), high \(r\) & conflicted & quarantine \\
+low \(s\), low \(r\) & unresolved & seek evidence or abstain \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{No explosion}
+
+The logic should not validate
+\[
+p,\neg p\vdash q
+\]
+for arbitrary \(q\). Conflicting autobiographical or communicated content must remain localized.
+
+A concrete four-valued algebra uses
+\[
+\neg(s,r)=(r,s),
+\]
+\[
+(s_1,r_1)\wedge(s_2,r_2)
+=
+(\min\{s_1,s_2\},\max\{r_1,r_2\}),
+\]
+\[
+(s_1,r_1)\vee(s_2,r_2)
+=
+(\max\{s_1,s_2\},\min\{r_1,r_2\}).
+\]
+A contradiction changes the value of formulas that actually depend on it; it does not assign arbitrary values to unrelated propositions.
+
+\subsection{Quantitative semantic stability}
+
+Let \(\Theta\) denote the tuple of operator interpretations and let \(d(\Theta,\Theta')\) measure representation error. Assume atomic valuations are Lipschitz, the selected connectives are nonexpansive under the sup metric, and every modal interpretation \(M\) is \(L_M\)-Lipschitz.
+
+\begin{theorem}[Structural stability of graded formulas]
+For every formula \(\varphi\) there exists a recursively computable constant \(L_\varphi\) such that
+\[
+\left|
+ v_\Theta(\varphi,s)-v_{\Theta'}(\varphi,s)
+\right|
+\le
+L_\varphi\,d(\Theta,\Theta').
+\]
+One may take
+\[
+L_{\neg\varphi}=L_\varphi,
+\qquad
+L_{\varphi\wedge\psi}=\max\{L_\varphi,L_\psi\},
+\qquad
+L_{M\varphi}=L_ML_\varphi,
+\]
+with analogous rules for the remaining nonexpansive connectives.
+\end{theorem}
+
+\begin{proof}
+Proceed by structural induction. The atomic case is the Lipschitz assumption. Nonexpansiveness proves the connective steps. The modal step follows by composing Lipschitz maps.
+\end{proof}
+
+\begin{corollary}[Threshold robustness]
+If a decision threshold \(\theta\) has margin
+\[
+\left|v_\Theta(\varphi,s)-\theta\right|
+>
+L_\varphi d(\Theta,\Theta'),
+\]
+then the thresholded decision is unchanged under replacement of \(\Theta\) by \(\Theta'\).
+\end{corollary}
+
+\subsection{Confidence as a first-class term}
+
+Endorsement may be represented by
+\[
+K_a^q\varphi,
+\qquad q\in[0,1].
+\]
+The confidence value should be calibrated against observed success and tied to a declared evidence context.
+
+\subsection{Decision rules}
+
+A risk-sensitive action rule may require
+\[
+J_a\varphi
+\wedge
+K_a^q\varphi
+\wedge
+q\ge\theta
+\wedge
+\Auth_a(\varphi)
+\to
+U_a\varphi.
+\]
+The threshold \(\theta\) depends on action cost and reversibility.
+
+\section{Provenance and proof-carrying execution}
+
+\subsection{Provenance records}
+
+A content packet is
+\[
+e=(c,a_{\mathrm{src}},L_{\mathrm{src}},\kappa,t,q,\mathcal A,d),
+\]
+where \(c\) is content, \(a_{\mathrm{src}}\) source agent, \(L_{\mathrm{src}}\) source lineage, \(\kappa\) origin type, \(t\) time, \(q\) confidence, \(\mathcal A\) permitted uses, and \(d\) an integrity digest.
+
+\subsection{Content is not ownership}
+
+\begin{theorem}[Content-only ownership impossibility]
+Let two events \(e_1,e_2\) have identical accessible content \(C(e_1)=C(e_2)=c\), but opposite ownership labels. No classifier \(f(c)\) depending only on content can classify both correctly.
+\end{theorem}
+
+\begin{proof}
+Because the input is identical, \(f(C(e_1))=f(c)=f(C(e_2))\), while the correct outputs differ.
+\end{proof}
+
+\begin{corollary}[Equiprobable ownership lower bound]
+If the two provenance cases are equiprobable, every content-only classifier has error at least \(1/2\) on the pair.
+\end{corollary}
+
+\subsection{Proof-gated actions}
+
+Let \(\operatorname{Pre}(\alpha)\) denote the logical precondition of action \(\alpha\). An executor accepts \((\alpha,p)\) only when the verifier establishes
+\[
+p:\operatorname{Pre}(\alpha).
+\]
+
+\begin{assumption}[Verifier soundness]
+Whenever the verifier accepts \(p:\varphi\), the proposition \(\varphi\) is true in the current operational model.
+\end{assumption}
+
+\begin{theorem}[Proof-gated execution safety]
+Under verifier soundness, every executed action \(\alpha\) satisfies its declared precondition \(\operatorname{Pre}(\alpha)\).
+\end{theorem}
+
+\begin{proof}
+The executor runs \(\alpha\) only after acceptance of a proof term \(p:\operatorname{Pre}(\alpha)\). Soundness implies the precondition holds at execution time.
+\end{proof}
+
+\begin{remark}
+A cryptographic digest proves byte integrity, not semantic authorization. The verifier must check lineage, provenance, conflict status, and action-specific constraints.
+\end{remark}
+
+\subsection{Linear provenance resources}
+
+A direct observation token \(\Obs_A(c)\) should not be freely duplicable across agents. Communication may use the rule
+\[
+\Obs_A(c)
+\multimap
+\bigl(
+\Access_B(c)
+\otimes
+\Origin_A(c)
+\bigr),
+\]
+not
+\[
+\Obs_A(c)\multimap\Obs_B(c).
+\]
+This preserves the distinction between access and personal observation.
+
+\subsection{Proof transport between calculi}
+
+Let \(\mathcal L_A\) and \(\mathcal L_B\) be typed proof calculi. A translation \(\Theta\) maps source types, formulas, contexts, and proof constructors into the target calculus.
+
+\begin{theorem}[Syntactic proof transport]
+Assume:
+\begin{enumerate}[leftmargin=1.7em]
+  \item every source axiom \(\varphi\) maps to a target theorem \(\Theta(\varphi)\);
+  \item for every source inference rule, the translated conclusion is derivable from the translated premises in the target calculus;
+  \item translation preserves typing and linear-resource usage.
+\end{enumerate}
+Then
+\[
+\Gamma;\Pi\vdash_A\varphi
+\quad\Longrightarrow\quad
+\Theta(\Gamma);\Theta(\Pi)\vdash_B\Theta(\varphi).
+\]
+\end{theorem}
+
+\begin{proof}
+Induct on the source derivation. Axioms are covered by the first assumption. Each inference step transports by the second assumption, while the third preserves well-formedness and resource accounting.
+\end{proof}
+
+\begin{remark}
+This theorem transports derivability, not trust. Agent B must still trust the translation, the target verifier, and any external evidence referenced by the proof. Approximate neural proof objects require an additional certificate or re-verification layer.
+\end{remark}
+
+\section{Shared operator-symbolic languages}
+
+\subsection{Common interlingua}
+
+Let \(\Shared\) be a shared operator-symbolic space. Agent encoders and decoders are
+\[
+E_A:\Lat_A\to\Shared,
+\qquad
+D_A:\Shared\to\Lat_A.
+\]
+Cross-agent transport is
+\[
+T_{A\to B}=D_BE_A.
+\]
+
+\subsection{Shared packet}
+
+A shared packet is
+\[
+p=(c,o,L,\kappa,q,\mathcal A,t_{\mathrm{exp}},d).
+\]
+It contains content, origin, source lineage, provenance class, confidence, permitted uses, expiration, and digest.
+
+\subsection{Functional transport objective}
+
+A transport map should minimize
+\[
+\begin{aligned}
+\mathcal L={}&
+\lambda_1\mathcal L_{\mathrm{task}}
++\lambda_2\mathcal L_{\mathrm{recon}}
++\lambda_3\mathcal L_{\mathrm{func}}\\
+&+\lambda_4\mathcal L_{\mathrm{cycle}}
++\lambda_5\mathcal L_{\mathrm{causal}}
++\lambda_6\mathcal L_{\mathrm{prov}}
++\lambda_7\mathcal L_{\mathrm{capacity}}.
+\end{aligned}
+\]
+
+\subsection{Interlingua factorization}
+
+\begin{proposition}[Exact shared factorization]
+Suppose \(E_A:\Lat_A\to\Shared\) and \(D_B:\Shared\to\Lat_B\) satisfy
+\[
+E_A\rho_A(g)=\rho_\star(g)E_A,
+\qquad
+D_B\rho_\star(g)=\rho_B(g)D_B.
+\]
+Then \(T_{A\to B}=D_BE_A\) is an intertwiner:
+\[
+T_{A\to B}\rho_A(g)=\rho_B(g)T_{A\to B}.
+\]
+\end{proposition}
+
+\begin{proof}
+\[
+D_BE_A\rho_A(g)
+=D_B\rho_\star(g)E_A
+=\rho_B(g)D_BE_A.
+\]
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,minimum width=2.75cm,minimum height=1cm,align=center,thick},
+  arr/.style={-{Latex[length=3mm]},thick},
+  node distance=1.0cm and 1.15cm
+]
+\node[box,fill=blue!8] (A) {Agent A\\private latent state};
+\node[box,fill=green!8,right=of A] (EA) {Encoder\\\(E_A\)};
+\node[box,fill=violet!9,right=of EA] (S) {Shared operator-symbolic\\interlingua \(\Shared\)};
+\node[box,fill=green!8,right=of S] (DB) {Decoder\\\(D_B\)};
+\node[box,fill=blue!8,right=of DB] (B) {Agent B\\private latent state};
+\draw[arr] (A)--(EA);
+\draw[arr] (EA)--(S);
+\draw[arr] (S)--(DB);
+\draw[arr] (DB)--(B);
+\node[draw,dashed,rounded corners,fit=(S),inner sep=7pt,label=below:{content + operator role + provenance + proof}] {};
+\end{tikzpicture}%
+}
+\caption{Heterogeneous agents communicate through a shared algebraic interlingua rather than by copying raw hidden states.}
+\label{fig:shared}
+\end{figure}
+
+\subsection{Communication is not merger}
+
+The agents remain distinct when private states, lineages, and independent control loops remain causally meaningful. A shared interlingua becomes a candidate group-level cognitive substrate only when critical state and recurrence exist irreducibly in the shared space.
+
+\subsection{Interface-decomposable communication}
+
+Let the joint deterministic state be \((x_A,x_B,w)\in X_A\times X_B\times W\). The system is \emph{interface decomposable} when
+\[
+\begin{aligned}
+x_A'&=F_A(x_A,w),\\
+x_B'&=F_B(x_B,w),\\
+w'&=G(w,m_A(x_A),m_B(x_B)),
+\end{aligned}
+\]
+so each agent depends on the other only through the declared shared interface.
+
+\begin{theorem}[Private closure under a channel cut]
+Let \(C_A\subseteq X_A\) and \(C_B\subseteq X_B\) be private invariant sets. Suppose a channel cut replaces \(w\) by a fixed safe value \(w_0\), and
+\[
+F_A(C_A,w_0)\subseteq C_A,
+\qquad
+F_B(C_B,w_0)\subseteq C_B.
+\]
+Then after the cut, each private system remains in its own invariant set for every future step.
+\end{theorem}
+
+\begin{proof}
+Apply the two inclusion assumptions inductively over time.
+\end{proof}
+
+This supplies a sufficient operational criterion for communication between persistent agents: the shared interface may improve performance, but removing it does not destroy each private invariant process.
+
+\subsection{Group-level task irreducibility}
+
+Let \(Y\) be a task variable. If
+\[
+H(Y\mid X_A)>0,
+\qquad
+H(Y\mid X_B)>0,
+\qquad
+H(Y\mid X_A,X_B,W)=0,
+\]
+then neither private state alone determines the correct task output, while the joint state does.
+
+\begin{theorem}[Necessity of a joint representation]
+Under the entropy conditions above, no deterministic policy using only \(X_A\) or only \(X_B\) can solve every instance perfectly. A joint policy using \((X_A,X_B,W)\) can in principle do so.
+\end{theorem}
+
+\begin{proof}
+Positive conditional entropy means at least two task outcomes remain possible after conditioning on the private state, so no deterministic private policy is always correct. Zero joint conditional entropy means \(Y\) is a function of the joint state.
+\end{proof}
+
+\begin{proposition}[Task-conditioned communication lower bound]
+Let \(Y\) take values in a finite set \(\mathcal Y\), let \(X_B\) be Agent B's private state, and let \(M\) be a message used to estimate \(Y\) with error probability \(P_e\). Then
+\[
+I(Y;M\mid X_B)
+\ge
+H(Y\mid X_B)
+-
+ h_2(P_e)
+-
+P_e\log_2(|\mathcal Y|-1),
+\]
+where \(h_2\) is binary entropy.
+\end{proposition}
+
+\begin{proof}
+By conditional Fano inequality,
+\[
+H(Y\mid M,X_B)
+\le
+h_2(P_e)+P_e\log_2(|\mathcal Y|-1).
+\]
+Subtract this bound from
+\[
+I(Y;M\mid X_B)=H(Y\mid X_B)-H(Y\mid M,X_B).
+\]
+\end{proof}
+
+The bound is representation independent. Any text, vector, packet, or operator-symbolic channel achieving the same error must transmit the required conditional task information. The open problem is to characterize the additional rate needed to preserve operator relations, provenance, and proof obligations simultaneously.
+
+\begin{placeholderbox}
+The results separate private persistence from group-level task irreducibility, but they do not provide a necessary-and-sufficient criterion for cognitive merger. A complete criterion likely requires recurrent group closure, interventionally irreducible state, lineage policy, and a declared level of analysis.
+\end{placeholderbox}
+
+\subsection{Canonical metadata and covert capacity}
+
+Let \(C\) be declared content, \(S\) prohibited private information, and \(M\) public metadata.
+
+\begin{theorem}[Canonical metadata noninterference]
+If trusted infrastructure computes metadata deterministically as
+\[
+M=g(C),
+\]
+then
+\[
+I(S;M\mid C)=0.
+\]
+\end{theorem}
+
+\begin{proof}
+Conditioned on \(C\), the value of \(M\) is fixed and therefore independent of \(S\).
+\end{proof}
+
+\begin{proposition}[Finite metadata capacity]
+If, for each declared content value \(c\), metadata belongs to a finite admissible set \(\mathcal M_c\), then
+\[
+I(S;M\mid C=c)
+\le
+H(M\mid C=c)
+\le
+\log_2|\mathcal M_c|.
+\]
+For a sequence of \(n\) packets, capacity is at most the sum of the per-packet logarithmic bounds.
+\end{proposition}
+
+This does not prove the semantic channel is safe: agents may encode information in the declared operator choice itself. It does show why canonicalization, fixed precision, trusted timestamps, and finite codebooks remove whole classes of metadata channels.
+
+\section{Komorebi-style operator grammar}
+
+\subsection{Analysis, packets, transfer, synthesis}
+
+A generic operator expression has the form
+\[
+x
+\xrightarrow{\mathcal A}
+(P_\alpha x)_\alpha
+\xrightarrow{T_{\beta\alpha}}
+(P_\beta T P_\alpha x)_{\beta,\alpha}
+\xrightarrow{\mathcal S}
+x'.
+\]
+The stages are:
+\begin{enumerate}[leftmargin=1.7em]
+  \item analyze a state into packets;
+  \item select causally or semantically relevant packets;
+  \item transport packet relations;
+  \item validate provenance and residuals;
+  \item synthesize an updated state.
+\end{enumerate}
+
+\subsection{Exact packet block algebra}
+
+Let \(\{P_\alpha\}_{\alpha=1}^m\) be pairwise orthogonal projectors satisfying
+\[
+\sum_{\alpha=1}^mP_\alpha=I.
+\]
+For any linear operator \(T\), define transfer blocks
+\[
+T_{\beta\alpha}=P_\beta T P_\alpha.
+\]
+
+\begin{theorem}[Packet block Pythagorean identity]
+For the Hilbert--Schmidt norm,
+\[
+\|T\|_{\mathrm{HS}}^2
+=
+\sum_{\alpha,\beta}
+\|P_\beta T P_\alpha\|_{\mathrm{HS}}^2.
+\]
+\end{theorem}
+
+\begin{proof}
+The operators \(P_\beta T P_\alpha\) have pairwise orthogonal Hilbert--Schmidt supports, and their sum is \(T\).
+\end{proof}
+
+\begin{theorem}[Off-block commutator identity]
+\[
+\sum_{\alpha=1}^m
+\|[T,P_\alpha]\|_{\mathrm{HS}}^2
+=
+2\sum_{\alpha\ne\beta}
+\|P_\beta T P_\alpha\|_{\mathrm{HS}}^2.
+\]
+\end{theorem}
+
+\begin{proof}
+For fixed \(\alpha\), the nonzero blocks of \([T,P_\alpha]\) are \(P_\beta T P_\alpha\) for \(\beta\ne\alpha\) and \(-P_\alpha T P_\gamma\) for \(\gamma\ne\alpha\). Their supports are orthogonal. Summing over \(\alpha\) counts each off-diagonal transfer block twice.
+\end{proof}
+
+\subsection{Residuals}
+
+For a proposed transport \(T\), define packet residuals
+\[
+r_{\beta\alpha}
+=
+P_\beta(Tx)-P_\beta T P_\alpha x.
+\]
+Large residuals signal missing cross-packet structure, misalignment, or invalid decomposition.
+
+\subsection{Holonomy}
+
+For a cycle of transports
+\[
+A\to B\to C\to A,
+\]
+define
+\[
+H_{ABC}=T_{C\to A}T_{B\to C}T_{A\to B}.
+\]
+Semantic cycle drift is
+\[
+\epsilon_{\mathrm{hol}}(c)
+=
+\|H_{ABC}c-c\|.
+\]
+This quantity measures whether meaning changes after a round trip through several agents or representations.
+
+\subsection{Multiresolution representation}
+
+Packetwise compression should preserve low-energy but functionally protected symbolic components. The language therefore needs a protected-rank or protected-distortion policy indexed by operator role, not only global numerical energy.
+
+\section{Interaction-induced latent geometry}
+
+\subsection{Transient activation geometry}
+
+With fixed weights \(\theta\), interaction history changes activations:
+\[
+h_{t+1}=F_\theta(h_t,x_t,C_t).
+\]
+A structured interaction can constrain the trajectory to a manifold or attractor
+\[
+h_t\in\mathcal M_C
+\]
+without updating \(\theta\). The context then functions as a temporary program.
+
+\subsection{Persistent weight geometry}
+
+When training updates occur,
+\[
+\theta_{n+1}=\theta_n-\eta\nabla_\theta\mathcal L(\theta_n;E_n),
+\]
+repeated interaction constraints reshape the weights. If the environment implements an algebra \(\mathcal A\), training may induce an approximate representation
+\[
+\rho_\theta:\mathcal A\to\End(\Lat).
+\]
+
+\subsection{Training objective}
+
+A prototype objective is
+\[
+\begin{aligned}
+\mathcal L={}&\mathcal L_{\mathrm{task}}
++\lambda_1\|h(gx)-M_gh(x)\|^2\\
+&+\lambda_2\|M_{g_2g_1}-M_{g_2}M_{g_1}\|^2
++\lambda_3\|M_e-I\|^2\\
+&+\lambda_4\mathcal L_{\mathrm{bottleneck}}
++\lambda_5\mathcal L_{\mathrm{proof}}
++\lambda_6\mathcal L_{\mathrm{prov}}.
+\end{aligned}
+\]
+At low loss, \(M_g\) approximates the interaction algebra.
+
+\subsection{From interaction relations to an internal representation}
+
+Let
+\[
+\mathcal A
+=
+\mathbb R\langle\mathcal G\rangle/\langle\mathcal R\rangle
+\]
+be an algebra presented by generators \(\mathcal G\) and relations \(\mathcal R\).
+
+\begin{theorem}[Presentation-to-representation extension]
+Suppose matrices \(\{M_g:g\in\mathcal G\}\subseteq\End(\Lat)\) satisfy
+\[
+r(M_g:g\in\mathcal G)=0
+\]
+for every defining relation \(r\in\mathcal R\). Then the generator assignment extends uniquely to an algebra homomorphism
+\[
+\rho:\mathcal A\to\End(\Lat).
+\]
+\end{theorem}
+
+\begin{proof}
+The generator assignment extends uniquely to the free algebra \(\mathbb R\langle\mathcal G\rangle\). Because every defining relation lies in its kernel, the map factors uniquely through the quotient by \(\langle\mathcal R\rangle\).
+\end{proof}
+
+This result formalizes the strongest version of interaction-induced geometry: an external protocol specifies generators and relations, while training searches for an internal realization of that presented algebra. The realization is generally identifiable only up to gauge and quotient.
+
+\begin{conjecture}[Context-to-weight consolidation]
+A repeatedly used activation-level operator scheme can be consolidated into persistent weight geometry through replay, distillation, fine-tuning, or reinforcement, provided the update process preserves the interaction algebra and penalizes simpler shortcut solutions.
+\end{conjecture}
+
+\section{Tensor and nonlinear generalizations}
+
+\subsection{Tensor-valued states}
+
+An agent state may be
+\[
+X_t\in
+\mathcal X_{\mathrm{agent}}
+\otimes
+\mathcal X_{\mathrm{time}}
+\otimes
+\mathcal X_{\mathrm{modality}}
+\otimes
+\mathcal X_{\mathrm{memory}}
+\otimes
+\mathcal X_{\mathrm{causal}}.
+\]
+Higher-order relations may require multilinear maps
+\[
+\mathcal T:
+\mathcal X_1\otimes\cdots\otimes\mathcal X_k
+\to
+\mathcal Y.
+\]
+
+
+\begin{theorem}[Tensor products preserve semantic intertwiners]
+For \(i=1,2\), let \(T_i:\Lat_{A_i}\to\Lat_{B_i}\) intertwine representations \(\rho_{A_i}\) and \(\rho_{B_i}\). Then
+\[
+T_1\otimes T_2
+\]
+intertwines the tensor-product representations:
+\[
+(T_1\otimes T_2)
+(\rho_{A_1}(g_1)\otimes\rho_{A_2}(g_2))
+=
+(\rho_{B_1}(g_1)\otimes\rho_{B_2}(g_2))
+(T_1\otimes T_2).
+\]
+\end{theorem}
+
+\begin{proof}
+Use the mixed-product identity for tensor products and the two intertwining equations, then extend linearly.
+\end{proof}
+
+\subsection{Nonlinear retractions}
+
+Replace a linear projector \(P\) by an idempotent nonlinear retraction
+\[
+\Pi\circ\Pi=\Pi.
+\]
+Its image may be a curved manifold rather than a subspace.
+
+\subsection{Nonlinear semantics}
+
+Let
+\[
+G_\theta:\CausalState\to\Lat,
+\qquad
+R_\phi:\Lat\to\CausalState.
+\]
+Binding residuals use a metric or divergence:
+\[
+\epsilon_{\mathrm{bind}}
+=
+d_{\Lat}
+\bigl(
+\Pi_J(h),
+G_\theta(\Pi_S(x))
+\bigr).
+\]
+
+\subsection{Coordinate covariance}
+
+For diffeomorphisms \(\phi:\CausalState\to\CausalState'\) and \(\psi:\Lat\to\Lat'\), transport
+\[
+\Pi_S'=\phi\circ\Pi_S\circ\phi^{-1},
+\qquad
+G'=\psi\circ G\circ\phi^{-1}.
+\]
+Meaning should be defined through commuting diagrams and causal behavior, not fixed coordinates.
+
+\subsection{Koopman and kernel lifts}
+
+Nonlinear dynamics
+\[
+x_{t+1}=F(x_t)
+\]
+may be lifted to a space of observables where a Koopman operator acts linearly:
+\[
+(\mathcal K g)(x)=g(F(x)).
+\]
+Kernel embeddings provide another route to approximately linear packet geometry.
+
+\subsection{Finite-horizon approximate conjugacy}
+
+Let \((X_A,d_A)\) and \((X_B,d_B)\) be metric spaces with dynamics \(F_A\) and \(F_B\), and let \(T:X_A\to X_B\). Assume
+\[
+d_B(TF_A(x),F_BT(x))\le\epsilon
+\]
+for all relevant \(x\), and suppose \(F_B\) is \(L\)-Lipschitz.
+
+\begin{theorem}[Nonlinear conjugacy error propagation]
+For every \(n\ge1\),
+\[
+d_B\left(TF_A^n(x),F_B^nT(x)\right)
+\le
+\epsilon\sum_{k=0}^{n-1}L^k.
+\]
+Hence the error is at most \(n\epsilon\) when \(L=1\), and at most \(\epsilon/(1-L)\) uniformly in \(n\) when \(L<1\).
+\end{theorem}
+
+\begin{proof}
+Let \(e_n=d_B(TF_A^n(x),F_B^nT(x))\). The one-step defect and Lipschitz property give
+\[
+e_{n+1}\le\epsilon+Le_n.
+\]
+Iterating from \(e_0=0\) proves the bound.
+\end{proof}
+
+\begin{corollary}[Exact nonlinear semantic transport]
+If \(\epsilon=0\), then \(TF_A^n=F_B^nT\) for every finite horizon \(n\).
+\end{corollary}
+
+\begin{placeholderbox}
+The theorem controls one deterministic dynamics map. A general theory of nonlinear operator-symbolic equivalence still needs action-indexed approximate bisimulation, stochastic kernels, partial observations, open-set symbol creation, and semantic stability under changing state-dependent charts.
+\end{placeholderbox}
+
+\section{A compiler architecture}
+
+\subsection{Front end}
+
+Inputs may be text, images, sensor streams, actions, or internal activations. Learned encoders convert them into latent states and candidate operator relations.
+
+\subsection{Intermediate representation}
+
+The operator-symbolic intermediate representation contains the lowered form of \OSLCore and the richer \(\LangAI\) family:
+\begin{itemize}[leftmargin=1.6em]
+  \item typed states and packets;
+  \item operator graphs;
+  \item provenance and lineage;
+  \item uncertainty and conflict values;
+  \item proof obligations;
+  \item expected causal consequences.
+\end{itemize}
+
+A compact static-single-assignment style record is:
+\begin{syntaxbox}
+\begin{verbatim}
+%r7 : Workspace = transport %r3 via T_A_to_B
+      [origin=B, lineage=L_B, confidence=.81]
+%p9 : Proof = verify Origin(%r7,B) and Authorized(%r7,planning)
+%a2 : Action = alternate_route(%r7)
+      requires %p9 effects {externalAct}
+\end{verbatim}
+\end{syntaxbox}
+Every instruction therefore carries a type, provenance context, proof obligations, and an effect summary.
+
+\subsection{Verifier}
+
+The verifier checks:
+\begin{itemize}[leftmargin=1.6em]
+  \item type correctness;
+  \item operator-domain compatibility;
+  \item provenance constraints;
+  \item proof validity;
+  \item conflict and quarantine status;
+  \item action authorization;
+  \item resource and safety bounds.
+\end{itemize}
+
+\subsection{Effect confinement}
+
+Assume every primitive transition emits only effects declared by its typing rule, and composite typing takes unions over sequential and conditional branches.
+
+\begin{theorem}[Effect confinement]
+If
+\[
+\Gamma;\Pi\vdash
+\alpha:\tau\rightsquigarrow\sigma\;!\;\mathcal E,
+\]
+then every finite execution trace of \(\alpha\) emits only effects in \(\mathcal E\), provided the operational semantics preserves typing.
+\end{theorem}
+
+\begin{proof}
+Induct on the execution derivation. Primitive steps satisfy the claim by assumption. Sequential and conditional steps inherit the union of the effects of their subderivations. Typing preservation keeps the declared effect set valid after each step.
+\end{proof}
+
+\subsection{Back end}
+
+The back end renders the verified representation into:
+\begin{itemize}[leftmargin=1.6em]
+  \item natural-language output;
+  \item code;
+  \item plans;
+  \item tool calls;
+  \item motor actions;
+  \item memory writes.
+\end{itemize}
+
+\begin{algorithm}[ht]
+\caption{Operator-symbolic execution cycle}
+\label{alg:cycle}
+\begin{algorithmic}[1]
+\Require observation \(o_t\), latent state \(h_t\), memory \(M_t\)
+\State \(z_t\gets\operatorname{Encode}(o_t,h_t,M_t)\)
+\State \(\mathcal P_t\gets\operatorname{Packetize}(z_t)\)
+\State \(\mathcal O_t\gets\operatorname{InferOperators}(\mathcal P_t)\)
+\State \(\Phi_t\gets\operatorname{ConstructFormulas}(\mathcal P_t,\mathcal O_t)\)
+\State \(\Pi_t\gets\operatorname{ProveObligations}(\Phi_t)\)
+\State \((\alpha_t,p_t)\gets\operatorname{Plan}(\Phi_t,\Pi_t)\)
+\If{\(\operatorname{Verify}(p_t:\operatorname{Pre}(\alpha_t))\)}
+  \State execute \(\alpha_t\)
+  \State observe consequence \(y_{t+1}\)
+  \State update geometry, operators, beliefs, proofs, and memory
+\Else
+  \State quarantine proposal and request more evidence
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\section{Assumption ledger}
+
+\begin{longtable}{p{0.23\textwidth}p{0.31\textwidth}p{0.37\textwidth}}
+\toprule
+Result family & Assumptions & What is not claimed \\
+\midrule
+\endfirsthead
+\toprule
+Result family & Assumptions & What is not claimed \\
+\midrule
+\endhead
+Intertwiner theorems & finite-dimensional linear realizations; declared operator algebra & discovery of the correct algebra in trained models \\
+Observational congruence & finite operation and context suites; exact observed equality & robustness to arbitrary distribution shift \\
+Geometric logic & pointed cone; explicit involution and positive bilinear product & complete Boolean or intuitionistic semantics \\
+Graded stability & Lipschitz atomic and modal interpretations & calibrated probabilities without empirical fitting \\
+Proof safety & sound verifier and correct specification & safety against misspecified preconditions \\
+Shared-language results & declared encoders, decoders, provenance fields, and finite targets & a universal criterion for cognitive merger \\
+Coalgebraic trace transport & deterministic action-indexed transition systems & stochastic or partially observed equivalence \\
+Packet identities & complete orthogonal projector family & optimality of a learned packet decomposition \\
+Nonlinear transport & deterministic map; uniform one-step defect; Lipschitz target dynamics & open-ended stochastic bisimulation \\
+Effect confinement & sound effect typing and preservation & absence of semantic covert channels inside allowed effects \\
+\bottomrule
+\end{longtable}
+
+\section{Formal theorem program}
+
+\subsection{Results established here}
+
+The expanded finite theory establishes:
+\begin{enumerate}[leftmargin=1.7em]
+  \item exact intertwiners preserve all polynomial operator expressions;
+  \item approximate intertwiners obey product and presented-relation bounds;
+  \item operator meaning is invariant under change of coordinates;
+  \item finite contextual test suites recover observational congruences under closure;
+  \item operator congruences induce quotient symbol algebras;
+  \item pointed cones, involutions, and positive bilinear products realize an ordered logical fragment;
+  \item graded formula semantics is stable under bounded interpretation error;
+  \item content alone cannot determine ownership when provenance labels differ;
+  \item proof-gated execution is safe under verifier soundness;
+  \item proofs translate between calculi when axioms, rules, types, and resources are preserved;
+  \item exact shared interlingua factorizations produce cross-agent intertwiners;
+  \item coalgebra homomorphisms preserve every finite action-conditioned observation trace;
+  \item private invariant sets survive declared channel cuts under fallback closure;
+  \item group-level task information can be irreducible to either private state;
+  \item conditional Fano bounds lower-bound task-relevant shared-language bandwidth;
+  \item canonical metadata eliminates conditional metadata leakage, and finite alphabets bound capacity;
+  \item packet blocks satisfy exact Hilbert--Schmidt Pythagorean and commutator identities;
+  \item presented interaction algebras extend uniquely to internal representations;
+  \item tensor products preserve semantic intertwiners;
+  \item nonlinear approximate conjugacy has an explicit finite-horizon error bound;
+  \item verified programs satisfy effect confinement under a sound effect system.
+\end{enumerate}
+
+\subsection{Remaining theorem targets}
+
+\begin{openproblem}[Distribution-shift congruence recovery]
+Under what conditions does training recover the minimal task-sufficient operator congruence when contexts are continuous, adaptive, and outside the original support?
+\end{openproblem}
+
+\begin{openproblem}[Approximate proof transport]
+How should neural or probabilistic proof certificates be translated between independently trusted verifiers while retaining quantitative soundness guarantees?
+\end{openproblem}
+
+\begin{openproblem}[Necessary and sufficient merger criterion]
+Can one characterize the transition from communication to an irreducible distributed agent using causal factorization, recurrent closure, lineage, and interventionally necessary shared state?
+\end{openproblem}
+
+\begin{openproblem}[Shared-language rate--distortion]
+Characterize the minimum dimension and bandwidth of an interlingua that preserves a declared operator algebra, provenance policy, and task loss within tolerances.
+\end{openproblem}
+
+\begin{openproblem}[Semantic covert channels]
+Bound undeclared information carried by legal operator choice, proof selection, packet sequencing, timing, and continuous latent coefficients after metadata canonicalization.
+\end{openproblem}
+
+\begin{openproblem}[Real-model identification]
+Determine whether trained open-weight models contain stable operator presentations, congruence classes, proof-like states, and shared intertwiners that survive causal intervention and strong alternative baselines.
+\end{openproblem}
+
+\section{Experimental program}
+
+\subsection{Experiment A: operator algebra induction}
+
+Train models on transformations generated by a finite algebra. Hold out unseen compositions. Test whether
+\[
+M_{g_3g_2g_1}
+\approx
+M_{g_3}M_{g_2}M_{g_1}
+\]
+and whether the relation survives random basis changes.
+
+\subsection{Experiment B: symbol emergence}
+
+Create multiple concrete operations that are equivalent under task consequences. Test whether the model compresses them into a shared latent class and transfers the symbol to new domains.
+
+\subsection{Experiment C: heterogeneous-agent communication}
+
+Give two models different architectures and complementary private observations. Restrict communication to a shared operator-symbolic interlingua. Compare against text, arbitrary vectors, cross-attention, and no-channel controls.
+
+\subsection{Experiment D: provenance-sensitive communication}
+
+Transmit identical content through observation, inference, foreign communication, simulation, and injection. Measure ownership, memory write, planner use, and quarantine.
+
+\subsection{Experiment E: proof-gated planning}
+
+Compare unrestricted planning with proof-carrying planning under hidden provenance conflicts and adversarially rehashed receipts.
+
+\subsection{Experiment F: context-to-weight consolidation}
+
+First induce an operator scheme in context with frozen weights. Then distill or fine-tune on successful traces. Test whether the scheme persists without the original context and whether it remains gauge-equivalent.
+
+\subsection{Experiment G: nonlinear transfer}
+
+Use nonlinear coordinate changes, component substitutions, and task-family shifts. Compare linear intertwiners, nonlinear flows, Koopman lifts, and kernel methods.
+
+\subsection{Evaluation standards}
+
+A decisive benchmark should separate discovery, transport, proof, and control. At minimum it should include:
+\begin{itemize}[leftmargin=1.6em]
+  \item held-out operator compositions and held-out task families;
+  \item random and adversarial coordinate changes;
+  \item same-content/different-provenance cases;
+  \item independently initialized and architecturally heterogeneous agents;
+  \item strong latent baselines: raw vectors, PCA, sparse features, canonical correlation, and supervised probes;
+  \item proof-free, provenance-free, and planner-binding ablations;
+  \item bandwidth-matched text and vector channels;
+  \item post-hoc leakage audits and paired-execution hyperproperty tests;
+  \item predeclared thresholds and untouched model--task holdouts.
+\end{itemize}
+
+Primary metrics should include unseen-composition accuracy, relation residual, proof acceptance precision, unauthorized-action rate, provenance error, transport rate--distortion, semantic holonomy, calibration, and causal task regret.
+
+\subsection{Essential ablations}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Ablation & Expected failure \\
+\midrule
+Remove operator composition loss & weak unseen-composition transfer \\
+Randomize transport map & semantic corruption across agents \\
+Remove provenance & ownership and memory contamination \\
+Remove proof verifier & unauthorized actions increase \\
+Remove latent layer & brittle perception and novelty handling \\
+Remove symbolic layer & poor auditability and provenance control \\
+Remove feedback & no consequence-sensitive semantic revision \\
+Increase channel capacity without structure & uninspectable state dumping \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Falsification criteria}
+
+The theory is weakened if any of the following holds robustly across strong benchmarks:
+\begin{enumerate}[leftmargin=1.7em]
+  \item raw latent vectors transfer as reliably as operator-preserving interlinguas under unseen model pairs;
+  \item symbolic proof and provenance provide no measurable safety or audit benefit;
+  \item learned operator relations fail to generalize beyond trained compositions;
+  \item operator geometry is not stable under coordinate changes;
+  \item content-only systems solve same-content/different-origin tasks as well as provenance-aware systems;
+  \item quotient symbols do not improve compression or transfer;
+  \item simpler memory-and-routing systems explain every predicted dissociation;
+  \item the shared language cannot be distinguished from an arbitrary high-bandwidth code;
+  \item proof-gated systems do not reduce unauthorized effects under matched task performance;
+  \item finite symbol classes fail immediately under small unseen context changes;
+  \item nonlinear transport bounds do not predict observed semantic degradation;
+  \item group-level effects disappear after controlling for simple information pooling;
+  \item the proposed intermediate representation offers no compression, transfer, verification, or causal-control advantage over simpler typed message passing.
+\end{enumerate}
+
+\section{Limitations and boundaries}
+
+\subsection{No unique internal language}
+
+Behavior generally determines an internal representation only up to gauge, quotient, or nonlinear reparameterization. The theory therefore predicts an equivalence class of languages rather than one canonical coordinate system.
+
+\subsection{Interpretability remains incomplete}
+
+A typed operator symbol may be easier to inspect than a raw activation, but its learned semantics may still be distributed, approximate, and context dependent.
+
+\subsection{Proof verifier assumptions}
+
+Proof-gated safety depends on verifier soundness and the completeness of declared preconditions. A verifier can certify the wrong specification perfectly.
+
+\subsection{Optimization can find shortcuts}
+
+Training may exploit accidental metadata, labels, or benchmark structure instead of learning the intended algebra. External holdouts and causal interventions are required.
+
+\subsection{Natural language remains useful}
+
+The proposed language is an intermediate representation, not a replacement for human communication. Natural language remains essential for collaboration, explanation, and governance.
+
+\subsection{No consciousness claim}
+
+The existence of an internal language of operators and logic would not establish awareness or subjective experience.
+
+\section{Discussion}
+
+\subsection{Language as transformation algebra}
+
+The deepest form of the proposal is that a machine language need not fundamentally be a dictionary. It can be an algebra of transformations. A symbol is meaningful because it occupies a stable operator role. A proposition constrains admissible states. A proof certifies a transformation path. A memory has meaning through provenance and predictive use. An action has meaning through its causal consequences.
+
+\subsection{A cognitive intermediate representation}
+
+Compiler intermediate representations allow heterogeneous programming languages and hardware targets to share a structured middle layer. An operator-symbolic language could play a similar role for cognition:
+\[
+\begin{aligned}
+\text{heterogeneous perception and latent models}
+&\to
+\LangAI\\
+&\to
+\text{heterogeneous planners, tools, and actuators}.
+\end{aligned}
+\]
+
+\subsection{Machine-native communication}
+
+Different models need not share vectors or vocabularies. They need compatible realizations of the same abstract transformation algebra, plus transports that preserve operator roles, provenance, uncertainty, and proof obligations.
+
+\subsection{Relation to persistent agency}
+
+When combined with temporal lineage, self-binding, and recurrent consequence updates, the operator-symbolic language becomes a candidate formal language for persistent agents. The present paper focuses on the language layer; a fuller theory of persistent computational agency requires closure across memory, identity, planning, and feedback.
+
+
+\subsection{What the theory predicts about learned representations}
+
+If an interaction protocol repeatedly rewards a compositional algebra, then successful models should exhibit approximately relation-preserving operator families, not merely clusters of output labels. The geometry may differ across models, but causal interventions should reveal the same operator equations up to transport. This predicts a concrete interpretability target: search for generators, relations, quotient classes, and intertwining maps rather than one privileged vocabulary direction.
+
+\subsection{Why operators and logic are complementary}
+
+Operators alone can transform states but do not determine which transformations are permitted, owned, or sufficiently justified. Logic alone can state admissibility but does not discover robust representations from noisy data. The proposed language therefore treats geometry as the carrier, operators as executable structure, and logic as proof-carrying governance.
+
+\section{Conclusion}
+
+We proposed an operator-symbolic language for artificial intelligence:
+\[
+\boxed{
+\text{continuous geometry}
++
+\text{typed operators}
++
+\text{symbolic logic}
++
+\text{proof and provenance}.
+}
+\]
+The central principle is that different systems need not share coordinates. They must preserve the same transformation algebra up to transport and approximation. Symbols may emerge as compressed invariants of repeated operator patterns. Logic constrains which transformations, beliefs, memories, and actions are valid. Proof paths make reasoning executable and auditable. Provenance distinguishes access from ownership. Feedback grounds the language in causal consequences.
+
+The strongest interpretation is therefore:
+\begin{quote}
+An AI-native language is not merely a set of tokens. It is a typed, proof-carrying algebra of transformations over learned geometry, with causal consequences supplying semantics.
+\end{quote}
+The finite core is now developed across exact, approximate, geometric, provenance, communication, nonlinear, compiler-level, and executable-language results. Version 0.3 retains the version 0.2 AST, proof, capability, contract, rollback, session, and neural-boundary layers and adds linear proof resources, append-only audit semantics, semantic statement boundaries, finite graph verification, and independent finite metatheory certificates. \OSLCore demonstrates that the proposal can be rendered as an actual source language with deterministic operator execution, typed provenance, proof-gated memory, capability-gated effects, canonical receipts, and expected rejection of invalid programs. The framework remains empirically unverified at scale, but it gives a precise research target for neural-symbolic reasoning, heterogeneous-agent communication, mechanistic interpretability, memory provenance, and persistent control.
+
+\appendix
+
+\section{Notation}
+
+\begin{longtable}{p{0.22\textwidth}p{0.70\textwidth}}
+\toprule
+Symbol & Meaning \\
+\midrule
+\endfirsthead
+\toprule
+Symbol & Meaning \\
+\midrule
+\endhead
+\(\LangAI\) & operator-symbolic AI language \\
+\(\Lat_a\) & private latent space of agent \(a\) \\
+\(\Shared\) & shared operator-symbolic interlingua \\
+\(\mathcal A\) & abstract operator algebra \\
+\(\rho_a\) & realization of \(\mathcal A\) in agent \(a\) \\
+\(T_{A\to B}\) & transport from agent A to agent B \\
+\(E_A,D_A\) & shared encoder and decoder \\
+\(J_a\varphi\) & workspace accessibility \\
+\(B_{a,L}\varphi\) & binding to agent \(a\) under lineage \(L\) \\
+\(O_a^\kappa\varphi\) & autobiographical or provenance-typed ownership \\
+\(K_a^q\varphi\) & epistemic endorsement with confidence \(q\) \\
+\(U_a\varphi\) & causal use in planning \\
+\(Q_a\varphi\) & quarantine \\
+\(\Sem{\cdot}\) & denotational semantics \\
+\(\epsilon_T(g)\) & intertwining residual \\
+\(\gamma:S\to O\times S^{\mathsf A}\) & action-indexed agent coalgebra \\
+\(H_{ABC}\) & inter-agent holonomy operator \\
+\(\Sig_{\mathfrak C}(\alpha)\) & finite observational signature of operation \(\alpha\) \\
+\(\mathcal E\) & declared effect set of a program \\
+\(\preceq_C\) & partial order induced by cone \(C\) \\
+\bottomrule
+\end{longtable}
+
+\section{Typing rules}
+
+Representative typing judgments include:
+\[
+\frac{\Gamma\vdash t:\tau\qquad g:\tau\to\sigma}
+{\Gamma\vdash g(t):\sigma},
+\]
+\[
+\frac{\Gamma\vdash\alpha:\tau\to\sigma\qquad\Gamma\vdash\beta:\sigma\to\upsilon}
+{\Gamma\vdash\alpha;\beta:\tau\to\upsilon},
+\]
+\[
+\frac{\Gamma;\Pi\vdash p:\operatorname{Pre}(\alpha)}
+{\Gamma;\Pi\vdash\operatorname{Execute}(\alpha,p):\operatorname{Result}(\alpha)}.
+\]
+
+Effect composition is typed by
+\[
+\frac{
+\Gamma;\Pi\vdash\alpha:\tau\rightsquigarrow\sigma\;!\;\mathcal E_1
+\qquad
+\Gamma;\Pi\vdash\beta:\sigma\rightsquigarrow\upsilon\;!\;\mathcal E_2
+}{
+\Gamma;\Pi\vdash\alpha;\beta:\tau\rightsquigarrow\upsilon\;!\;(\mathcal E_1\cup\mathcal E_2)
+}.
+\]
+A communicated observation preserves origin:
+\[
+\frac{
+\Gamma;\Pi\vdash o:\Obs_A(c)
+}{
+\Gamma;\Pi\vdash\operatorname{send}_{A\to B}(o):
+\Access_B(c)\otimes\Origin_A(c)
+}.
+\]
+There is intentionally no rule deriving \(\Obs_B(c)\) from this conclusion.
+
+\section{A minimal packet schema}
+
+\begin{verbatim}
+OperatorSymbolicPacket(
+    content,
+    content_type,
+    operator_role,
+    source_agent,
+    source_lineage,
+    provenance_class,
+    confidence,
+    authorization_scope,
+    proof_digest,
+    predicted_consequence,
+    expiry_step,
+    packet_digest,
+)
+\end{verbatim}
+
+\section{Reference implementation modules}
+
+The v0.5 release contains a statically checked executable finite core, an independent receipt kernel, two complementary exhaustive finite transition-model layers, source-bound semantic trace certificates, and a proposed full implementation layout.
+
+\subsection{Executable finite kernel}
+\begin{verbatim}
+reference/
+|-- osl_model.py               # typed objects and proof resources
+|-- osl_parser.py              # AST parser and static checker
+|-- osl_core.py                # deterministic source runtime
+|-- osl_invariants.py          # runtime and ledger invariants
+|-- osl_kernel.py              # independent receipt/proof replay
+|-- verify_trace.py            # source-bound deterministic replay
+|-- osl_formal_kernel.py       # integrated exhaustive abstraction
+|-- osl_metacore.py            # five decomposed finite models
+|-- osl_session_verify.py      # finite protocol graph verifier
+|-- osl_information_flow.py    # explicit-flow certificate
+|-- generate_v03_evidence.py   # deterministic evidence builder
+`-- verify_osl_core_v03.py     # unified finite certificate
+examples/
+|-- 01_direct_observation.osl
+|-- ...
+|-- 42_verified_three_agent_session.osl
+|-- 91_forge_observation.osl
+`-- 114_linear_ownership_reused.osl
+tests/
+|-- test_osl_core.py
+|-- test_osl_core_v02.py
+|-- test_osl_core_v03.py
+|-- test_osl_metatheory.py
+|-- test_osl_v03_certificates.py
+`-- test_osl_certificates.py
+\end{verbatim}
+
+\subsection{Proposed full implementation}
+\begin{verbatim}
+operator_symbolic_ai/
+|-- syntax/
+|   |-- lexer.py
+|   |-- parser.py
+|   `-- ast.py
+|-- typing/
+|   |-- kinds.py
+|   |-- provenance_resources.py
+|   `-- effects.py
+|-- operators/
+|   |-- linear.py
+|   |-- nonlinear.py
+|   |-- tensor.py
+|   `-- transport.py
+|-- logic/
+|   |-- formulas.py
+|   |-- paraconsistent.py
+|   |-- temporal.py
+|   `-- proof_terms.py
+|-- runtime/
+|   |-- packets.py
+|   |-- verifier.py
+|   |-- memory.py
+|   |-- planner.py
+|   `-- receipts.py
+|-- compiler/
+|   |-- lower.py
+|   |-- osl_ir.py
+|   |-- verify.py
+|   `-- backends.py
+`-- experiments/
+\end{verbatim}
+
+\section{Theorem and dependency status}
+
+\begin{longtable}{p{0.34\textwidth}p{0.18\textwidth}p{0.38\textwidth}}
+\toprule
+Result & Status & Principal dependency \\
+\midrule
+\endfirsthead
+\toprule
+Result & Status & Principal dependency \\
+\midrule
+\endhead
+Polynomial semantic preservation & proved & exact intertwiner \\
+Approximate relation preservation & proved & bounded generator norms and residuals \\
+Finite contextual congruence & proved & finite context closure \\
+Ordered geometric fragment & proved & pointed cone, involution, positive product \\
+Graded semantic stability & proved & Lipschitz interpretations \\
+Ownership impossibility & proved & identical content, differing provenance labels \\
+Proof-gated safety & proved & verifier soundness \\
+Proof transport & proved & axiom and rule preservation \\
+Private closure after channel cut & proved & invariant fallback dynamics \\
+Group-level task irreducibility & proved & conditional entropy separation \\
+Communication rate lower bound & proved & finite target and conditional Fano inequality \\
+Coalgebraic trace preservation & proved & exact coalgebra homomorphism \\
+Metadata noninterference and capacity & proved & trusted canonicalization or finite alphabet \\
+Packet block identities & proved & complete orthogonal projectors \\
+Presentation extension & proved & exact satisfaction of defining relations \\
+Tensor intertwiner transport & proved & factorwise intertwiners \\
+Nonlinear finite-horizon transport & proved & uniform defect and Lipschitz dynamics \\
+Effect confinement & proved & sound effect typing and preservation \\
+Finite proof-resource preservation & proved in finite core & bounded proof-resource transition \\
+Receipt-kernel relative soundness & computer-assisted & independent finite receipt grammar \\
+Integrated abstract-kernel certificate & exhaustive finite & 740-state fixed point \\
+Decomposed metacore certificate & exhaustive finite & five fixed points, 1,590 states \\
+Finite protocol completion & proved for verified graph & terminal reachability and no deadlock \\
+Explicit-flow noninterference & proved for syntax fragment & no secret-to-metadata path \\
+Open-world symbol discovery & open & distribution shift and adaptive contexts \\
+Cognitive merger criterion & open & recurrent causal irreducibility \\
+Real-model identification & empirical & internal access and intervention hooks \\
+\bottomrule
+\end{longtable}
+
+\section{Open theory modules}
+
+\begin{placeholderbox}
+\textbf{Mechanized metatheory.} The release now includes exhaustive finite transition certificates and an independent receipt kernel. A proof-assistant formalization of the syntax, linear provenance resources, effect system, operational semantics, and kernel correspondence still remains to be constructed.
+\end{placeholderbox}
+
+\begin{placeholderbox}
+\textbf{Approximate proof transport.} Exact derivations transport under rule-preserving translations. Neural certificates, probabilistic evidence, independently rooted trust, and quantitative proof degradation require a richer proof-relevant metric semantics.
+\end{placeholderbox}
+
+\begin{placeholderbox}
+\textbf{Open-world congruence discovery.} Finite contextual signatures recover the quotient induced by a declared test suite. Minimal symbol discovery under continuous actions, adversarial contexts, and distribution shift remains open.
+\end{placeholderbox}
+
+\begin{placeholderbox}
+\textbf{Communication versus merger.} Private channel-cut closure and group task irreducibility are only sufficient operational tests. A necessary-and-sufficient criterion for a new distributed agent likely requires recurrent group closure, causal irreducibility, and a lineage semantics.
+\end{placeholderbox}
+
+\begin{placeholderbox}
+\textbf{Real-model identification.} It remains to determine whether trained neural models contain stable operator presentations, quotient symbols, proof-like states, and transport maps that survive causal intervention and outperform strong representation-learning baselines.
+\end{placeholderbox}
+
+\section{Selected references and bibliographic audit boundary}
+
+The following references identify neighboring literatures and standard mathematical tools. Contemporary software and manuscript entries require archival normalization before submission.
+
+\begin{thebibliography}{99}
+
+\bibitem{newell1980}
+A.~Newell.
+\newblock Physical symbol systems.
+\newblock \emph{Cognitive Science}, 1980.
+
+\bibitem{smolensky1990}
+P.~Smolensky.
+\newblock Tensor product variable binding and the representation of symbolic structures in connectionist systems.
+\newblock \emph{Artificial Intelligence}, 1990.
+
+\bibitem{girard1987}
+J.-Y.~Girard.
+\newblock Linear logic.
+\newblock \emph{Theoretical Computer Science}, 1987.
+
+\bibitem{harel2000}
+D.~Harel, D.~Kozen, and J.~Tiuryn.
+\newblock \emph{Dynamic Logic}.
+\newblock MIT Press, 2000.
+
+\bibitem{gardenfors2000}
+P.~G\"ardenfors.
+\newblock \emph{Conceptual Spaces: The Geometry of Thought}.
+\newblock MIT Press, 2000.
+
+\bibitem{garcez2008}
+A.~S.~d'Avila Garcez, L.~C. Lamb, and D.~M. Gabbay.
+\newblock \emph{Neural-Symbolic Cognitive Reasoning}.
+\newblock Springer, 2008.
+
+\bibitem{vaswani2017}
+A.~Vaswani et al.
+\newblock Attention is all you need.
+\newblock In \emph{Advances in Neural Information Processing Systems}, 2017.
+
+\bibitem{vonoswald2023}
+J.~von Oswald et al.
+\newblock Transformers learn in-context by gradient descent.
+\newblock In \emph{Proceedings of the 40th International Conference on Machine Learning}, 2023.
+
+\bibitem{lawvere1973}
+F.~W.~Lawvere.
+\newblock Metric spaces, generalized logic, and closed categories.
+\newblock 1973. Bibliographic details to verify.
+
+
+\bibitem{belnap1977}
+N.~D.~Belnap.
+\newblock A useful four-valued logic.
+\newblock In \emph{Modern Uses of Multiple-Valued Logic}, 1977.
+
+\bibitem{pierce2002}
+B.~C.~Pierce.
+\newblock \emph{Types and Programming Languages}.
+\newblock MIT Press, 2002.
+
+\bibitem{clarke1999}
+E.~M.~Clarke, O.~Grumberg, and D.~A.~Peled.
+\newblock \emph{Model Checking}.
+\newblock MIT Press, 1999.
+
+\bibitem{milner1989}
+R.~Milner.
+\newblock \emph{Communication and Concurrency}.
+\newblock Prentice Hall, 1989.
+
+\bibitem{rutten2000}
+J.~J.~M.~M.~Rutten.
+\newblock Universal coalgebra: a theory of systems.
+\newblock \emph{Theoretical Computer Science}, 249, 2000.
+
+
+\bibitem{cover2006}
+T.~M.~Cover and J.~A.~Thomas.
+\newblock \emph{Elements of Information Theory}, second edition.
+\newblock Wiley, 2006.
+
+\bibitem{maclane1998}
+S.~Mac~Lane.
+\newblock \emph{Categories for the Working Mathematician}, second edition.
+\newblock Springer, 1998.
+
+\bibitem{fongspivak2019}
+B.~Fong and D.~I.~Spivak.
+\newblock \emph{An Invitation to Applied Category Theory: Seven Sketches in Compositionality}.
+\newblock Cambridge University Press, 2019.
+
+\bibitem{pearl2009}
+J.~Pearl.
+\newblock \emph{Causality}, second edition.
+\newblock Cambridge University Press, 2009.
+
+\bibitem{baier2008}
+C.~Baier and J.-P.~Katoen.
+\newblock \emph{Principles of Model Checking}.
+\newblock MIT Press, 2008.
+
+\bibitem{sangiorgi2001}
+D.~Sangiorgi and D.~Walker.
+\newblock \emph{The Pi-Calculus: A Theory of Mobile Processes}.
+\newblock Cambridge University Press, 2001.
+
+\bibitem{komorebi}
+Komorebi P.
+\newblock Projector-resolved operator and transfer calculus.
+\newblock Versioned software and manuscript series. Permanent archival citation and theorem crosswalk pending.
+
+\bibitem{siwc}
+Komorebi P.
+\newblock Self-indexed workspace closure: operator geometry, provenance logic, and recurrent computational agency.
+\newblock Expanded symbolic theory draft, 2026.
+
+\end{thebibliography}
+
+\end{document}

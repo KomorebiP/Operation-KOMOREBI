@@ -1,0 +1,21 @@
+module proof_planning
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+grant A effect externalAct uses 1 until 100
+observe route by B content "route-three-blocked" confidence 0.95
+communicate route from B to A as route_at_A
+endorse route_at_A by A threshold 0.90
+authorize route_at_A by A for planning
+proof p_access access route_at_A by A
+proof p_origin origin route_at_A source B lineage L_B
+proof p_clear clear route_at_A for A
+proof p_end endorsement route_at_A by A
+proof p_auth authorization route_at_A by A for planning
+proof p_use use route_at_A by A for planning from ["p_access","p_origin","p_clear","p_end","p_auth"]
+plan reroute by A using route_at_A effect externalAct expected 1.0 requires p_use
+execute reroute by A
+feedback reroute by A observed 1.1
+assert proof p_use valid true
+assert action reroute executed true

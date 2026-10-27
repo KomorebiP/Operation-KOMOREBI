@@ -1,0 +1,10 @@
+module inference_chain
+lineage L_A
+agent A lineage L_A
+grant A effect writeMemory
+observe wet_ground by A content "ground-is-wet" confidence 0.97
+infer recent_rain by A from wet_ground content "rain-likely-occurred" confidence 0.82
+write_memory recent_rain by A as inferred
+assert packet recent_rain provenance inferred
+assert memory A contains recent_rain as inferred true
+assert memory A contains recent_rain as observed false

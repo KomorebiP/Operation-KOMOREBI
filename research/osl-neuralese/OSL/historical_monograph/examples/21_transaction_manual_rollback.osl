@@ -1,0 +1,8 @@
+module transaction_manual_rollback
+lineage L_A
+agent A lineage L_A
+begin_transaction temporary_memory
+observe temporary by A content "temporary-event" confidence 0.99
+write_memory temporary by A as observed
+rollback_transaction temporary_memory
+assert memory A contains temporary as observed false

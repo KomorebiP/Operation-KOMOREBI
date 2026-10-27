@@ -1,0 +1,12 @@
+# EXPECT-ERROR: stale or semantically invalid
+module linear_ownership_reused
+lineage L_A
+agent A lineage L_A
+observe e by A content "event" confidence 0.98
+proof pa access e by A
+proof po origin e source A lineage L_A
+proof pc clear e for A
+proof pv observation e by A
+proof own ownership e by A as observed from ["pa","po","pc","pv"] mode linear
+write_memory e by A as observed requires own
+write_memory e by A as observed requires own

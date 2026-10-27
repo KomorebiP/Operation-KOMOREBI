@@ -1,0 +1,21 @@
+module verified_three_agent_session
+lineage L_A
+lineage L_B
+lineage L_C
+agent A lineage L_A
+agent B lineage L_B
+agent C lineage L_C
+session S participants ["A","B","C"] initial waiting_A
+session_transition S waiting_A communicate A B -> waiting_B
+session_transition S waiting_B communicate B C -> waiting_C
+session_transition S waiting_C communicate C A -> ready
+session_terminal S ready
+verify_session S
+start_session S
+observe a by A content "a" confidence 0.9
+communicate a from A to B as aB in S
+observe b by B content "b" confidence 0.9
+communicate b from B to C as bC in S
+observe c by C content "c" confidence 0.9
+communicate c from C to A as cA in S
+assert session S state ready

@@ -1,0 +1,150 @@
+{
+  "schema": "komorebi.osl-neuralese.current-checks.v1",
+  "utc": "2026-10-07T05:14:48.943960+00:00",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "checks": [
+    {
+      "name": "core05_integrity",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 0.616,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "reference/verify_core05_package.py"
+      ],
+      "log": "core05_integrity.log",
+      "log_sha256": "82d1550d17afd3bc7f911deecf7c8c94857c00b14bbefe3804b16f86a94194a0"
+    },
+    {
+      "name": "core05_unit",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 11.198,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests"
+      ],
+      "log": "core05_unit.log",
+      "log_sha256": "6e834c65d1965ed6c59780f97de2151697f9ad716e413d676300810e63ea0ade"
+    },
+    {
+      "name": "core05_corpus",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 1.521,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "reference/generate_core05_evidence.py",
+        "--output",
+        "/mnt/data/osl_neuralese_finalization/replay_final/corpus"
+      ],
+      "log": "core05_corpus.log",
+      "log_sha256": "8227fa2ae4713a139dce4f41b37a97039b707b33e0e401b17115574c1c268437"
+    },
+    {
+      "name": "core05_bridge",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 0.87,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "reference/generate_core05_evidence.py",
+        "--examples",
+        "/tmp/osl-neuralese-check-iovfv5jk/OSL/OSL_Core_0.5_Semantic_Independence_v0.1.0/bridge_examples",
+        "--output",
+        "/mnt/data/osl_neuralese_finalization/replay_final/bridge"
+      ],
+      "log": "core05_bridge.log",
+      "log_sha256": "8f408d6f2c71ad25bc9cff987015239a107c0a0201adbed09efb8c6a8503b1cc"
+    },
+    {
+      "name": "discovery_bridge",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 0.82,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "verify_release.py",
+        "--osl-core",
+        "/tmp/osl-neuralese-check-iovfv5jk/OSL/OSL_Core_0.5_Semantic_Independence_v0.1.0/reference"
+      ],
+      "log": "discovery_bridge.log",
+      "log_sha256": "8b9c9c9e82d3bfa4c35eadd00761d0bc3581511ef597f30a9da6e0d6bf94a811"
+    },
+    {
+      "name": "finite_interface",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 1.727,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "log": "finite_interface.log",
+      "log_sha256": "8fd923c9e3103a5b1b8eceafcc44c5380bee694a621caa15f8f67296bf617ac4"
+    },
+    {
+      "name": "actual_osl_demo",
+      "returncode": 0,
+      "timeout": false,
+      "completed": true,
+      "seconds": 0.919,
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-B",
+        "run_demo.py",
+        "--output",
+        "/mnt/data/osl_neuralese_finalization/replay_final/demo"
+      ],
+      "log": "actual_osl_demo.log",
+      "log_sha256": "79491c4321557eef3d3c3819a5b6cb8b697cd8152aaf62caa9c1519dac94d541"
+    }
+  ],
+  "corpus_comparison": [
+    {
+      "file": "CORE05_CONFORMANCE_REPORT.json",
+      "original_sha256": "692685e386f72e76084634dfee2ef9df825c12b6849249eb2b0f4f8cac043fef",
+      "fresh_sha256": "692685e386f72e76084634dfee2ef9df825c12b6849249eb2b0f4f8cac043fef",
+      "byte_identical": true
+    },
+    {
+      "file": "CORE05_SEMANTIC_REPORT.json",
+      "original_sha256": "e2c6643e2a32bfb79dda75f94cf7f07368abf0580a023376a865d1d74d584f37",
+      "fresh_sha256": "e2c6643e2a32bfb79dda75f94cf7f07368abf0580a023376a865d1d74d584f37",
+      "byte_identical": true
+    },
+    {
+      "file": "CORE05_TRACE_BUNDLE.jsonl",
+      "original_sha256": "0341cc7ba342c72681275357f7a29be15e18a38f32b81c8149c1a112090b551b",
+      "fresh_sha256": "0341cc7ba342c72681275357f7a29be15e18a38f32b81c8149c1a112090b551b",
+      "byte_identical": true
+    }
+  ],
+  "all_checks_pass": true,
+  "scope": "OSL finite language, bounded Discovery Bridge, exact finite checkpoint and actual admission paths; no neural training or learned evaluation",
+  "neural_scientific_replication": false,
+  "unspent_banks_consumed": false
+}

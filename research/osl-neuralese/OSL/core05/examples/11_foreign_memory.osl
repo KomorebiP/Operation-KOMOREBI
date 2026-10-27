@@ -1,0 +1,11 @@
+module foreign_memory
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+grant B effect writeMemory
+observe private_event by A content "sensor-A-saw-object-7" confidence 0.89
+communicate private_event from A to B as foreign_event_at_B
+write_memory foreign_event_at_B by B as communicated
+assert memory B contains foreign_event_at_B as communicated true
+assert memory B contains foreign_event_at_B as observed false

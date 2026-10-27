@@ -1,0 +1,11 @@
+# EXPECT-ERROR: terminal states with outgoing transitions
+module terminal_outgoing
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+session S participants ["A","B"] initial waiting_A
+session_transition S waiting_A communicate A B -> ready
+session_transition S ready communicate B A -> waiting_A
+session_terminal S ready
+verify_session S

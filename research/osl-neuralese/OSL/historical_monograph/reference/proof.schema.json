@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/osl-core/0.3/proof.schema.json",
+  "title": "OSL-Core 0.3 Proof Term",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name", "kind", "subject", "agent", "scope", "memory_class",
+    "source_agent", "source_lineage", "premises", "claims",
+    "subject_digest", "state_digest", "created_step", "trusted",
+    "resource_mode", "remaining_uses", "consumed_step", "proof_digest"
+  ],
+  "properties": {
+    "name": {"type": "string"},
+    "kind": {
+      "enum": [
+        "access", "origin", "clear", "endorsement", "authorization",
+        "observation", "relevance", "use", "ownership", "capability"
+      ]
+    },
+    "subject": {"type": "string"},
+    "agent": {"type": ["string", "null"]},
+    "scope": {"type": ["string", "null"]},
+    "memory_class": {"type": ["string", "null"]},
+    "source_agent": {"type": ["string", "null"]},
+    "source_lineage": {"type": ["string", "null"]},
+    "premises": {"type": "array", "items": {"type": "string"}},
+    "claims": {"type": "array", "items": {"type": "string"}},
+    "subject_digest": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "state_digest": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "created_step": {"type": "integer", "minimum": 0},
+    "trusted": {"type": "boolean"},
+    "resource_mode": {"enum": ["persistent", "affine", "linear"]},
+    "remaining_uses": {"type": ["integer", "null"], "minimum": 0, "maximum": 1},
+    "consumed_step": {"type": ["integer", "null"], "minimum": 0},
+    "proof_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"resource_mode": {"const": "persistent"}}},
+      "then": {
+        "properties": {
+          "remaining_uses": {"type": "null"},
+          "consumed_step": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"resource_mode": {"enum": ["affine", "linear"]}}},
+      "then": {"properties": {"remaining_uses": {"enum": [0, 1]}}}
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# EXPECT-ERROR: no remaining uses
+module capability_exhausted
+lineage L_A
+agent A lineage L_A
+grant A effect externalAct uses 1 until 100
+observe e by A content "action" confidence 0.95
+endorse e by A threshold 0.9
+authorize e by A for planning
+plan first by A using e effect externalAct
+execute first by A
+plan second by A using e effect externalAct
+execute second by A

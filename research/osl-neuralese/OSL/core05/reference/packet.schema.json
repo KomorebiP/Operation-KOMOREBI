@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/osl-core/0.5/packet.schema.json",
+  "title": "OSL-Core 0.5 Canonical Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "content",
+    "source_agent",
+    "source_lineage",
+    "provenance",
+    "confidence",
+    "accessible_to",
+    "bound_to",
+    "quarantined_by",
+    "endorsed_by",
+    "authorizations",
+    "observation_tokens",
+    "simulated",
+    "parent_digest",
+    "status",
+    "latent_source",
+    "obligations",
+    "support",
+    "refutation",
+    "unresolved",
+    "content_digest",
+    "packet_digest"
+  ],
+  "properties": {
+    "name": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"},
+    "content": {"type": "string"},
+    "source_agent": {"type": "string"},
+    "source_lineage": {"type": "string"},
+    "provenance": {
+      "enum": [
+        "observed",
+        "inferred",
+        "recalled",
+        "simulated",
+        "communicated",
+        "injected",
+        "foreign",
+        "reconstructed",
+        "conflicted",
+        "unresolved"
+      ]
+    },
+    "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "accessible_to": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "bound_to": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "quarantined_by": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "endorsed_by": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "authorizations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string"},
+        "uniqueItems": true
+      }
+    },
+    "observation_tokens": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "simulated": {"type": "boolean"},
+    "parent_digest": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "status": {"enum": ["grounded", "provisional", "admitted", "quarantined", "rejected"]},
+    "latent_source": {"type": ["string", "null"]},
+    "obligations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "support": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "refutation": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "unresolved": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "packet_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

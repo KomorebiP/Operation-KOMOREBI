@@ -1,0 +1,5 @@
+# Execution notes
+
+The first bridge corpus replay passed a relative `--examples bridge_examples` path to the upstream generator. The generator attempted to make that relative path relative to its absolute root and raised `ValueError` before evaluating any bridge program. The rerun used the absolute examples path and completed. No upstream source or scientific threshold was changed. The enclosing first shell command continued to later checks, so its final exit code was not treated as evidence that this failed subcommand passed.
+
+An integrity run on the shortened edition directory name `core05` reported `manifest_archive_name`. The package verifier deliberately compares its manifest archive name to its actual root name. Its other 156 payload checks passed. The failed JSON is retained as `core05_integrity.json`. A fresh run in a canonical-named original extraction completed all checks; see `core05_integrity_canonical_root.json`. No original verifier or manifest was edited to bypass this condition.

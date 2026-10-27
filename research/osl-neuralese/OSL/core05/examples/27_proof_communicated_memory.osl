@@ -1,0 +1,14 @@
+module proof_communicated_memory
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+observe event by B content "B-observed-event" confidence 0.95
+communicate event from B to A as event_at_A
+proof p_access access event_at_A by A
+proof p_origin origin event_at_A source B lineage L_B
+proof p_clear clear event_at_A for A
+proof p_ownership ownership event_at_A by A as communicated from ["p_access","p_origin","p_clear"]
+write_memory event_at_A by A as communicated requires p_ownership
+assert memory A contains event_at_A as communicated true
+assert memory A contains event_at_A as observed false
