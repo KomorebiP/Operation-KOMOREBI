@@ -1,0 +1,297 @@
+\section{From phase pruning to certified SKAT tails}
+
+The previous sections certify the effect of phase pruning on Krylov
+propagation.  A SKAT-like test ultimately depends on the spectrum itself, so
+one more bridge is needed:
+\[
+\text{phase pruning}
+\longrightarrow
+\text{operator error}
+\longrightarrow
+\text{spectral error}
+\longrightarrow
+\text{tail-probability error}.
+\]
+
+\subsection{Block-norm operator domination}
+
+Let
+\[
+E=H-H_0
+\]
+be the self-adjoint error introduced by phase pruning.  Using the same
+orthogonal phase projectors \(P_h\), define
+\[
+\mathcal C_{hg}
+=
+\|P_hEP_g\|_2.
+\]
+
+\begin{theorem}[Block-norm operator certificate]
+\[
+\boxed{
+\|E\|_2
+\le
+\|\mathcal C\|_2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+For any vector \(x\), let
+\[
+r_g=\|P_gx\|_2.
+\]
+Then
+\[
+\|P_hEx\|_2
+\le
+\sum_g
+\|P_hEP_g\|_2\,\|P_gx\|_2
+=
+(\mathcal C r)_h.
+\]
+Orthogonality of the phase decomposition gives
+\[
+\|Ex\|_2^2
+=
+\sum_h\|P_hEx\|_2^2
+\le
+\|\mathcal C r\|_2^2
+\le
+\|\mathcal C\|_2^2\|r\|_2^2
+=
+\|\mathcal C\|_2^2\|x\|_2^2.
+\]
+Taking the supremum over unit vectors proves the claim.
+\end{proof}
+
+The important computational point is that \(\mathcal C\) is only a
+phase-by-phase matrix.  The same block norms already used to construct the
+polyphase scheduler therefore provide a global operator certificate.
+
+\subsection{Weyl enclosure of the quadratic-form coefficients}
+
+Assume
+\[
+H\succeq0
+\]
+and let the eigenvalues of \(H\) and \(H_0\), in decreasing order, be
+\[
+\lambda_i
+\qquad\text{and}\qquad
+\mu_i.
+\]
+If
+\[
+\|H-H_0\|_2\le\varepsilon,
+\]
+Weyl's inequality gives
+\[
+|\lambda_i-\mu_i|\le\varepsilon.
+\]
+
+\begin{corollary}[Positive spectral interval]
+For every \(i\),
+\[
+\boxed{
+\ell_i
+=
+\max\{0,\mu_i-\varepsilon\}
+\le
+\lambda_i
+\le
+u_i
+=
+\max\{0,\mu_i+\varepsilon\}.
+}
+\]
+\end{corollary}
+
+This remains valid even if symmetric phase pruning makes \(H_0\) slightly
+indefinite.
+
+\subsection{Certified generalized-\texorpdfstring{\(\chi^2\)}{chi-square} tail bracket}
+
+For independent standard normal variables \(Z_i\), define
+\[
+Q_-=\sum_i\ell_iZ_i^2,
+\qquad
+Q=\sum_i\lambda_iZ_i^2,
+\qquad
+Q_+=\sum_i u_iZ_i^2.
+\]
+
+\begin{theorem}[Stochastic tail enclosure]
+For every threshold \(q\),
+\[
+\boxed{
+\Pr(Q_-\ge q)
+\le
+\Pr(Q\ge q)
+\le
+\Pr(Q_+\ge q).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Couple all three quadratic forms using the same normal variables \(Z_i\).
+Since
+\[
+0\le\ell_i\le\lambda_i\le u_i
+\]
+for every \(i\),
+\[
+Q_-\le Q\le Q_+
+\]
+almost surely.  Taking upper-tail events yields the result.
+\end{proof}
+
+The two endpoint probabilities can be evaluated by the same K-COS machinery
+used for the unpruned spectrum.  Its numerical error certificate is separate
+from the spectral enclosure above.
+
+\subsection{A dual-budget pruning rule}
+
+The local Krylov certificate from the previous section and the global spectral
+certificate answer different questions.  The former asks whether omitted
+couplings matter to the current Krylov query; the latter asks whether they can
+move the spectrum enough to matter to the final test.
+
+A production schedule should therefore enforce
+\[
+\boxed{
+\sum_{e\in\mathcal O}\beta_e^{(k)}
+\le
+\tau_K,
+\qquad
+\|\mathcal C_{\mathcal O}\|_2
+\le
+\tau_\lambda.
+}
+\]
+
+The implementation uses a conservative greedy rule: phase pairs are considered
+in increasing query-risk order, and a pair is omitted only when adding it
+preserves both inequalities.  The rule is certified but is not claimed to be
+globally optimal under the two simultaneous constraints.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figure_14_dual_budget_tail_bridge.png}
+\caption{Dual-budget phase pruning.  The query-local budget controls Krylov
+propagation while the operator budget controls final spectral and tail
+uncertainty.  A loose operator budget can admit a strong coupling and widen
+the tail interval by several decades even when the Krylov-local budget still
+passes.}
+\label{fig:dual-budget-tail}
+\end{figure}
+
+In the deterministic ten-phase experiment, fixing the query budget at
+\(0.05\) and the operator budget at \(0.005\) removed \(23\) of \(45\)
+undirected phase pairs.  At a true probability of \(10^{-8}\), the certified
+tail interval was
+\[
+10^{-8.11143}
+\le
+p
+\le
+10^{-7.89036},
+\]
+a width of about \(0.221\) decades.  With an operator budget of \(0.0075\),
+\(34\) pairs were removed and the interval widened to about \(0.320\)
+decades.  By contrast, allowing a strong coupling to be removed under a very
+loose operator budget produced a multi-decade interval.
+
+\subsection{Certify after prune}
+
+There is a second route that does not use the pruned operator as the final
+spectral approximation.  Let \(U\) be any orthonormal sample-space basis,
+possibly generated cheaply from a pruned or approximate Krylov process, and
+define
+\[
+B=U^\top A,
+\qquad
+F=(I-UU^\top)A,
+\qquad
+\delta=\|F\|_2.
+\]
+
+\begin{theorem}[Range-core singular-value certificate]
+Let the singular values of \(A\) be \(\sigma_i(A)\), and let
+\(\widetilde\sigma_i(B)\) denote the singular values of \(B\) padded by zeros
+to the ambient spectral dimension.  Then
+\[
+\boxed{
+\left|
+\sigma_i(A)
+-
+\widetilde\sigma_i(B)
+\right|
+\le
+\delta.
+}
+\]
+Consequently,
+\[
+\max\{0,\widetilde\sigma_i(B)-\delta\}^2
+\le
+\lambda_i(AA^\top)
+\le
+\left(
+\widetilde\sigma_i(B)+\delta
+\right)^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Because \(U\) has orthonormal columns,
+\[
+A=UB+F
+\]
+and
+\[
+\|A-UB\|_2=\|F\|_2=\delta.
+\]
+The nonzero singular values of \(UB\) are exactly those of \(B\).
+The standard singular-value perturbation inequality gives the stated bound.
+Squaring the nonnegative endpoints gives the eigenvalue interval.
+\end{proof}
+
+This provides a useful architecture:
+\[
+\boxed{
+\text{pruned operator for basis discovery}
+\to
+\text{one exact streamed factor check}
+\to
+\text{certified spectral core}.
+}
+\]
+
+\subsection{A retained negative result}
+
+The preceding theorem is exact, but a correct interval need not be useful.
+
+In a full-rank \(50\times50\) stress test, a pruned Krylov basis of dimensions
+\(12\) through \(48\) left range residuals between roughly \(0.87\) and
+\(0.99\) times the leading singular value.  The corresponding \(10^{-8}\)
+tail intervals were therefore vacuous or thousands of decades wide.  At
+dimension \(50\), the range residual fell to approximately
+\(1.2\times10^{-15}\), and the tail interval collapsed to the exact value.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figure_15_range_core_certification.png}
+\caption{Certify-after-prune range residual.  The range-core theorem is valid
+at every depth, but a deep-tail full-spectrum guarantee can remain useless
+until the range residual is genuinely small.  This negative result is retained
+as a stopping-rule lesson rather than hidden as an implementation failure.}
+\label{fig:range-core-cert}
+\end{figure}
+
+The practical lesson is that range-core certification is a stopping test, not
+a promise that a severely incomplete basis automatically yields a useful
+full-spectrum tail bound.
+
