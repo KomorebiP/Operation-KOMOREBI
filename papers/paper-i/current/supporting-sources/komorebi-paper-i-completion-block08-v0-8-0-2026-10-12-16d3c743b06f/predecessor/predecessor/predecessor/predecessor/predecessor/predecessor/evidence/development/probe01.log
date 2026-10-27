@@ -1,0 +1,37 @@
+Equiv.sigmaSubtypeFiberEquiv.{u_8, u_9} {α : Type u_8} {β : Type u_9} (f : α → β) (p : β → Prop)
+  (h : ∀ (x : α), p (f x)) : (y : Subtype p) × { x // f x = ↑y } ≃ α
+Equiv.sigmaCongrRight.{u_1, u_2, u_3} {α : Type u_3} {β₁ : α → Type u_1} {β₂ : α → Type u_2}
+  (F : (a : α) → β₁ a ≃ β₂ a) : (a : α) × β₁ a ≃ (a : α) × β₂ a
+Module.Basis.reindex.{u_1, u_2, u_3, u_4} {ι : Type u_1} {ι' : Type u_2} {R : Type u_3} {M : Type u_4} [Semiring R]
+  [AddCommMonoid M] [Module R M] (b : Module.Basis ι R M) (e : ι ≃ ι') : Module.Basis ι' R M
+Module.Basis.reindex_apply.{u_1, u_2, u_3, u_4} {ι : Type u_1} {ι' : Type u_2} {R : Type u_3} {M : Type u_4}
+  [Semiring R] [AddCommMonoid M] [Module R M] (b : Module.Basis ι R M) (e : ι ≃ ι') (i' : ι') :
+  (b.reindex e) i' = b (e.symm i')
+Finset.exists_mem_eq_sup.{u_2, u_5} {α : Type u_2} {ι : Type u_5} [LinearOrder α] [OrderBot α] (s : Finset ι)
+  (h : s.Nonempty) (f : ι → α) : ∃ i ∈ s, s.sup f = f i
+Finset.le_sup.{u_2, u_3} {α : Type u_2} {β : Type u_3} [SemilatticeSup α] [OrderBot α] {s : Finset β} {f : β → α}
+  {b : β} (hb : b ∈ s) : f b ≤ s.sup f
+Finset.sup_eq_zero.{u_2, u_3} {α : Type u_2} {β : Type u_3} [SemilatticeSup α] [OrderBot α] {s : Finset β} {f : β → α}
+  [Zero α] [IsBotZeroClass α] : s.sup f = 0 ↔ ∀ i ∈ s, f i = 0
+Set.finite_range.{u, w} {α : Type u} {ι : Sort w} (f : ι → α) [Finite ι] : (Set.range f).Finite
+Fintype.card_subtype.{u_1} {α : Type u_1} [Fintype α] (p : α → Prop) [Fintype { a // p a }] [DecidablePred p] :
+  Fintype.card { x // p x } = {x | p x}.card
+Fintype.card_coe.{u_1} {α : Type u_1} (s : Finset α) [Fintype ↥s] : Fintype.card ↥s = s.card
+Probe.lean:14:7: error(lean.unknownIdentifier): Unknown constant `Matrix.isSymmetric_toEuclideanLin_iff`
+Probe.lean:15:7: error(lean.unknownIdentifier): Unknown constant `FiniteDimensional.finrank_eq_zero_iff`
+Module.End.HasEigenvalue.{v, w} {R : Type v} {M : Type w} [CommRing R] [AddCommGroup M] [Module R M]
+  (f : Module.End R M) (a : R) : Prop
+LinearMap.IsSymmetric.eigenvectorBasis.{u_3, u_4} {𝕜 : Type u_3} [RCLike 𝕜] {E : Type u_4} [NormedAddCommGroup E]
+  [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ} (hT : T.IsSymmetric)
+  (hn : Module.finrank 𝕜 E = n) : OrthonormalBasis (Fin n) 𝕜 E
+LinearMap.IsSymmetric.card_filter_eigenvalues_eq.{u_1, u_2} {𝕜 : Type u_1} [RCLike 𝕜] {E : Type u_2}
+  [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ} (hT : T.IsSymmetric)
+  (hn : Module.finrank 𝕜 E = n) (μ : 𝕜) :
+  {i | ↑(hT.eigenvalues hn i) = μ}.card = Module.finrank 𝕜 ↥(Module.End.eigenspace T μ)
+Matrix.toEuclideanLin.{u_3, u_7, u_8} {𝕜 : Type u_3} [RCLike 𝕜] {m : Type u_7} {n : Type u_8} [Fintype n]
+  [DecidableEq n] : Matrix m n 𝕜 ≃ₗ[𝕜] EuclideanSpace 𝕜 n →ₗ[𝕜] EuclideanSpace 𝕜 m
+def LinearMap.IsSymmetric.{u_1, u_2} : {𝕜 : Type u_1} →
+  {E : Type u_2} →
+    [inst : RCLike 𝕜] → [inst_1 : SeminormedAddCommGroup E] → [inst_2 : InnerProductSpace 𝕜 E] → (E →ₗ[𝕜] E) → Prop :=
+fun {𝕜} {E} [RCLike 𝕜] [SeminormedAddCommGroup E] [InnerProductSpace 𝕜 E] T =>
+  ∀ (x y : E), inner 𝕜 (T x) y = inner 𝕜 x (T y)

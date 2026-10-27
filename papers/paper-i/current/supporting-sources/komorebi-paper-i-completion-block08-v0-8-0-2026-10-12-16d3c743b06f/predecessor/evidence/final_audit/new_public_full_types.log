@@ -1,0 +1,266 @@
+theorem Komorebi.PaperICompletion7.LocalResidue.jacobson_isMaximal.{u} : ∀ {R : Type u} [inst : Ring R] [IsLocalRing R],
+  (Ring.jacobson R).IsMaximal :=
+fun {R} [Ring R] [IsLocalRing R] =>
+  Exists.casesOn (Ideal.exists_maximal R) fun m hm =>
+    have heq :=
+      Eq.mpr (id (congrArg (fun _a => _a = m) (Ring.jacobson_eq_sInf_isMaximal R)))
+        (le_antisymm (sInf_le hm)
+          (le_sInf fun I hI => Eq.le (Komorebi.PaperICompletion7.LocalResidue.maximal_left_ideal_unique m I hm hI)));
+    Eq.symm heq ▸ hm
+theorem Komorebi.PaperICompletion7.LocalResidue.maximal_left_ideal_unique.{u} : ∀ {R : Type u} [inst : Ring R]
+  [IsLocalRing R] (I J : Ideal R), I.IsMaximal → J.IsMaximal → I = J :=
+fun {R} [Ring R] [IsLocalRing R] I J hI hJ =>
+  Decidable.byContradiction fun h =>
+    Komorebi.PaperICompletion7.LocalResidue.proper_sup_ne_top I J (Ideal.IsMaximal.ne_top hI)
+      (Ideal.IsMaximal.ne_top hJ) (Ideal.IsMaximal.coprime_of_ne hI hJ h)
+theorem Komorebi.PaperICompletion7.LocalResidue.proper_sup_ne_top.{u} : ∀ {R : Type u} [inst : Ring R] [IsLocalRing R]
+  (I J : Ideal R), I ≠ ⊤ → J ≠ ⊤ → I ⊔ J ≠ ⊤ :=
+fun {R} [Ring R] [IsLocalRing R] I J hI hJ h =>
+  have hone := Eq.mpr (id (congrArg (fun _a => 1 ∈ _a) h)) True.intro;
+  Exists.casesOn (Submodule.mem_sup.mp hone) fun a h =>
+    And.casesOn h fun ha right =>
+      Exists.casesOn right fun b h =>
+        And.casesOn h fun hb hab =>
+          Or.casesOn (IsLocalRing.isUnit_or_isUnit_of_add_one hab) (fun hu => hI (Ideal.eq_top_of_isUnit_mem I ha hu))
+            fun hu => hJ (Ideal.eq_top_of_isUnit_mem J hb hu)
+@[reducible] def Komorebi.PaperICompletion7.LocalResidue.residueDivisionRing.{u} : (R : Type u) →
+  [inst : Ring R] → [IsLocalRing R] → DivisionRing (R ⧸ Ring.jacobson R) :=
+fun R [Ring R] [IsLocalRing R] => Ideal.Quotient.divisionRing (Ring.jacobson R)
+theorem Komorebi.PaperICompletion7.LocalResidue.seedFinrank_eq_residue_finrank.{u, v} : ∀ {R : Type u} [inst : Ring R]
+  [IsLocalRing R] {M : Type v} [inst_2 : AddCommGroup M] [inst_3 : Module R M] [Module.Finite R M],
+  Komorebi.SeedRankBasics.seedFinrank R M =
+    Module.finrank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M) :=
+fun {R} [Ring R] [IsLocalRing R] {M} [AddCommGroup M] [Module R M] [Module.Finite R M] =>
+  let this := Komorebi.PaperICompletion7.LocalResidue.residueDivisionRing R;
+  Eq.trans Komorebi.PaperICompletion7.ModuleTop.seedFinrank_eq_radicalTop
+    (Eq.symm Module.finrank_eq_spanFinrank_of_free)
+theorem Komorebi.PaperICompletion7.LocalResidue.seedRank_eq_residue_dimension.{u, v} : ∀ {R : Type u} [inst : Ring R]
+  [IsLocalRing R] {M : Type v} [inst_2 : AddCommGroup M] [inst_3 : Module R M] [Module.Finite R M],
+  Komorebi.SeedRankBasics.seedRank R M =
+    Module.rank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M) :=
+fun {R} [Ring R] [IsLocalRing R] {M} [AddCommGroup M] [Module R M] [Module.Finite R M] =>
+  let this := Komorebi.PaperICompletion7.LocalResidue.residueDivisionRing R;
+  Eq.trans Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop (Eq.symm Submodule.rank_eq_spanRank_of_free)
+@[reducible] def Komorebi.PaperICompletion7.ModuleTop.RadicalTop.{u, v} : (R : Type u) →
+  (M : Type v) → [inst : Ring R] → [inst_1 : AddCommGroup M] → [Module R M] → Type v :=
+fun R M [Ring R] [AddCommGroup M] [Module R M] => Komorebi.PaperICompletion7.Nakayama.IdealTop (Ring.jacobson R) M
+theorem Komorebi.PaperICompletion7.ModuleTop.family_generates_iff.{u, v, w} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R)
+  [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    ∀ {ι : Type w} (x : ι → M),
+      Komorebi.SeedRankBasics.FamilyGenerates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+          (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I) ∘ x) ↔
+        Komorebi.SeedRankBasics.FamilyGenerates R M x :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI {ι} x =>
+  Eq.mpr
+    (id
+      (congrFun'
+        (congrArg Iff
+          (congrArg (Komorebi.SeedRankBasics.Generates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M))
+            (Set.range_comp (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I)) x)))
+        (Komorebi.SeedRankBasics.Generates R M (Set.range x))))
+    (Komorebi.PaperICompletion7.ModuleTop.image_generates_iff I hI (Set.range x))
+theorem Komorebi.PaperICompletion7.ModuleTop.generates_iff_radicalTop.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (s : Set M),
+  Komorebi.SeedRankBasics.Generates R M s ↔
+    Komorebi.SeedRankBasics.Generates (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+      (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap (Ring.jacobson R)) '' s) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] s =>
+  Iff.symm (Komorebi.PaperICompletion7.ModuleTop.image_generates_iff (Ring.jacobson R) le_rfl s)
+theorem Komorebi.PaperICompletion7.ModuleTop.idealTop_finite.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R) [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R → Module.Finite (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI =>
+  (Komorebi.SeedRankBasics.seedRank_lt_aleph0_iff (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)).mp
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a < Cardinal.aleph0)
+          (Eq.symm (Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_idealTop I hI))))
+      ((Komorebi.SeedRankBasics.seedRank_lt_aleph0_iff R M).mpr inferInstance))
+theorem Komorebi.PaperICompletion7.ModuleTop.image_generates_iff.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R) [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    ∀ (s : Set M),
+      Komorebi.SeedRankBasics.Generates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+          (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I) '' s) ↔
+        Komorebi.SeedRankBasics.Generates R M s :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI s =>
+  id
+    (Eq.mp
+      (congrFun'
+        (congrArg Iff
+          (congrFun' (congrArg Eq (Submodule.map_span (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) s)) ⊤))
+        (Submodule.span R s = ⊤))
+      (Komorebi.PaperICompletion7.Nakayama.map_eq_top_iff I hI (Submodule.span R s)))
+theorem Komorebi.PaperICompletion7.ModuleTop.lifts_generate.{u, v, w} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R) [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    ∀ {ι : Type w} (x : ι → Komorebi.PaperICompletion7.Nakayama.IdealTop I M) (y : ι → M),
+      (∀ (i : ι), (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) (y i) = x i) →
+        Komorebi.SeedRankBasics.FamilyGenerates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) x →
+          Komorebi.SeedRankBasics.FamilyGenerates R M y :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI {ι} x y hxy hx =>
+  (Komorebi.PaperICompletion7.ModuleTop.family_generates_iff I hI y).mp
+    (have heq := funext hxy;
+    Eq.mpr
+      (id
+        (congrArg
+          (fun _a =>
+            Komorebi.SeedRankBasics.FamilyGenerates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) _a)
+          heq))
+      hx)
+theorem Komorebi.PaperICompletion7.ModuleTop.quotient_basis_lifts_generate.{u, v, w} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R)
+  [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    ∀ {ι : Type w} (b : Module.Basis ι (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)) (x : ι → M),
+      (∀ (i : ι), (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) (x i) = b i) →
+        Komorebi.SeedRankBasics.FamilyGenerates R M x :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI {ι} b x hx =>
+  Komorebi.PaperICompletion7.ModuleTop.lifts_generate I hI (⇑b) x hx (Module.Basis.span_eq b)
+theorem Komorebi.PaperICompletion7.ModuleTop.seedFinrank_eq_idealTop.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R)
+  [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    Komorebi.SeedRankBasics.seedFinrank R M =
+      Komorebi.SeedRankBasics.seedFinrank (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI =>
+  congrArg (⇑Cardinal.toNat) (Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_idealTop I hI)
+theorem Komorebi.PaperICompletion7.ModuleTop.seedFinrank_eq_radicalTop.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M],
+  Komorebi.SeedRankBasics.seedFinrank R M =
+    Komorebi.SeedRankBasics.seedFinrank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] =>
+  Komorebi.PaperICompletion7.ModuleTop.seedFinrank_eq_idealTop (Ring.jacobson R) le_rfl
+theorem Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_idealTop.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R) [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    Komorebi.SeedRankBasics.seedRank R M =
+      Komorebi.SeedRankBasics.seedRank (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI =>
+  let f := Komorebi.PaperICompletion7.Nakayama.idealTopMap I;
+  le_antisymm
+    (Exists.casesOn
+      (Komorebi.SeedRankBasics.exists_generating_set_card_eq_seedRank (R ⧸ I)
+        (Komorebi.PaperICompletion7.Nakayama.IdealTop I M))
+      fun s h =>
+      And.casesOn h fun hs hcard =>
+        let g := fun y => Classical.choose (Komorebi.PaperICompletion7.Nakayama.idealTopMap_surjective I y);
+        have hg := fun y => Classical.choose_spec (Komorebi.PaperICompletion7.Nakayama.idealTopMap_surjective I y);
+        have himage :=
+          Set.ext fun y =>
+            {
+              mp := fun a =>
+                Exists.casesOn a fun x h =>
+                  And.casesOn h fun left right =>
+                    Exists.casesOn left fun z h =>
+                      And.casesOn h fun hz right_1 =>
+                        Eq.ndrec (motive := fun x => f x = y → y ∈ s)
+                          (fun right => right ▸ Eq.mpr (id (congrArg (fun _a => _a ∈ s) (hg z))) hz) right_1 right,
+              mpr := fun hy => Exists.intro (g y) ⟨Exists.intro y ⟨hy, rfl⟩, hg y⟩ };
+        have hlift :=
+          (Komorebi.PaperICompletion7.ModuleTop.image_generates_iff I hI (g '' s)).mp
+            (id
+              (Eq.mpr
+                (id
+                  (congrArg
+                    (fun _a =>
+                      Komorebi.SeedRankBasics.Generates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) _a)
+                    himage))
+                hs));
+        Trans.trans (Trans.trans (Komorebi.SeedRankBasics.seedRank_le_mk_of_generates R M hlift) Cardinal.mk_image_le)
+          hcard)
+    (Exists.casesOn (Komorebi.SeedRankBasics.exists_generating_set_card_eq_seedRank R M) fun s h =>
+      And.casesOn h fun hs hcard =>
+        have himage := (Komorebi.PaperICompletion7.ModuleTop.image_generates_iff I hI s).mpr hs;
+        Trans.trans
+          (Trans.trans
+            (Komorebi.SeedRankBasics.seedRank_le_mk_of_generates (R ⧸ I)
+              (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) himage)
+            Cardinal.mk_image_le)
+          hcard)
+theorem Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M],
+  Komorebi.SeedRankBasics.seedRank R M =
+    Komorebi.SeedRankBasics.seedRank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] =>
+  Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_idealTop (Ring.jacobson R) le_rfl
+@[reducible] def Komorebi.PaperICompletion7.Nakayama.IdealTop.{u, v} : {R : Type u} →
+  [inst : Ring R] → Ideal R → (M : Type v) → [inst_1 : AddCommGroup M] → [Module R M] → Type v :=
+fun {R} [Ring R] I M [AddCommGroup M] [Module R M] => M ⧸ I • ⊤
+theorem Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_ideal_smul.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M],
+  ∀ I ≤ Ring.jacobson R, ∀ (N : Submodule R M), N ⊔ I • ⊤ = ⊤ → N = ⊤ :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I hI N h =>
+  Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_module_jacobson N
+    (top_unique
+      (Eq.mpr (id (congrArg (fun _a => _a ≤ N ⊔ Module.jacobson R M) (Eq.symm h)))
+        (sup_le_sup_left (LE.le.trans (Submodule.smul_mono_left hI) (Ring.jacobson_smul_top_le R M)) N)))
+theorem Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_jacobson_smul.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (N : Submodule R M),
+  N ⊔ Ring.jacobson R • ⊤ = ⊤ → N = ⊤ :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] N h =>
+  Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_ideal_smul (Ring.jacobson R) le_rfl N h
+theorem Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_module_jacobson.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (N : Submodule R M),
+  N ⊔ Module.jacobson R M = ⊤ → N = ⊤ :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] N h =>
+  Decidable.byContradiction fun hn =>
+    Exists.casesOn (Or.resolve_left (eq_top_or_exists_le_coatom N) hn) fun P h_1 =>
+      And.casesOn h_1 fun hP hNP =>
+        have hrad := sInf_le hP;
+        hP.left (top_unique (h ▸ sup_le hNP hrad))
+def Komorebi.PaperICompletion7.Nakayama.idealTopMap.{u, v} : {R : Type u} →
+  {M : Type v} →
+    [inst : Ring R] →
+      [inst_1 : AddCommGroup M] →
+        [inst_2 : Module R M] →
+          (I : Ideal R) →
+            [inst_3 : I.IsTwoSided] → M →ₛₗ[Ideal.Quotient.mk I] Komorebi.PaperICompletion7.Nakayama.IdealTop I M :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] I [I.IsTwoSided] =>
+  { toFun := ⇑(I • ⊤).mkQ, map_add' := ⋯, map_smul' := ⋯ }
+@[defeq] theorem Komorebi.PaperICompletion7.Nakayama.idealTopMap_apply.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] (I : Ideal R) [inst_3 : I.IsTwoSided] (x : M),
+  (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) x = Submodule.Quotient.mk x :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] I [I.IsTwoSided] x => rfl
+theorem Komorebi.PaperICompletion7.Nakayama.idealTopMap_ker.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] (I : Ideal R) [inst_3 : I.IsTwoSided],
+  (Komorebi.PaperICompletion7.Nakayama.idealTopMap I).ker = I • ⊤ :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] I [I.IsTwoSided] =>
+  Submodule.ext fun x => Submodule.Quotient.mk_eq_zero (I • ⊤)
+@[defeq] theorem Komorebi.PaperICompletion7.Nakayama.idealTopMap_smul.{u, v} : ∀ {R : Type u} {M : Type v}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] (I : Ideal R) [inst_3 : I.IsTwoSided] (a : R) (x : M),
+  (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) (a • x) =
+    (Ideal.Quotient.mk I) a • (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) x :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] I [I.IsTwoSided] a x => rfl
+theorem Komorebi.PaperICompletion7.Nakayama.idealTopMap_surjective.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] (I : Ideal R) [inst_3 : I.IsTwoSided],
+  Function.Surjective ⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I) :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] I [I.IsTwoSided] => Submodule.mkQ_surjective (I • ⊤)
+theorem Komorebi.PaperICompletion7.Nakayama.map_eq_top_iff.{u, v} : ∀ {R : Type u} {M : Type v} [inst : Ring R]
+  [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (I : Ideal R) [inst_4 : I.IsTwoSided],
+  I ≤ Ring.jacobson R →
+    ∀ (N : Submodule R M), Submodule.map (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) N = ⊤ ↔ N = ⊤ :=
+fun {R} {M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] I [I.IsTwoSided] hI N =>
+  {
+    mp := fun h =>
+      have hc := congrArg (Submodule.comap (Komorebi.PaperICompletion7.Nakayama.idealTopMap I)) h;
+      Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_ideal_smul I hI N
+        (Eq.mp (congrArg (fun _a => N ⊔ _a = ⊤) (Komorebi.PaperICompletion7.Nakayama.idealTopMap_ker I))
+          (Eq.mp
+            (congrArg (fun _a => N ⊔ (Komorebi.PaperICompletion7.Nakayama.idealTopMap I).ker = _a)
+              (Submodule.comap_top (Komorebi.PaperICompletion7.Nakayama.idealTopMap I)))
+            (Eq.mp
+              (congrArg (fun _a => _a = Submodule.comap (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) ⊤)
+                (Submodule.comap_map_eq (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) N))
+              hc))),
+    mpr := fun h =>
+      Eq.mpr (id (congrArg (fun _a => Submodule.map (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) _a = ⊤) h))
+        (Eq.mpr
+          (id (congrArg (fun _a => _a = ⊤) (Submodule.map_top (Komorebi.PaperICompletion7.Nakayama.idealTopMap I))))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => _a = ⊤)
+                (LinearMap.range_eq_top.mpr (Komorebi.PaperICompletion7.Nakayama.idealTopMap_surjective I))))
+            (Eq.refl ⊤))) }

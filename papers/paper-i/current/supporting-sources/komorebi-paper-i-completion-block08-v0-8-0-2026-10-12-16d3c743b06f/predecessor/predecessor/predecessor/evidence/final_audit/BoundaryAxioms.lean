@@ -1,0 +1,24 @@
+import GeometricBoundaryConsumers
+#print axioms PaperIBlock05Tests.jordan_space_dimension_two
+#print axioms PaperIBlock05Tests.jordan_intrinsic_multiplicity_one
+#print axioms PaperIBlock05Tests.jordan_eigenspace_dimension_one
+#print axioms PaperIBlock05Tests.jordan_square_zero
+#print axioms PaperIBlock05Tests.jordan_nonzero
+#print axioms PaperIBlock05Tests.jordan_no_eigenbasis
+#print axioms PaperIBlock05Tests.jordan_cyclic
+#print axioms PaperIBlock05Tests.jordan_geometric_maximum_one
+#print axioms PaperIBlock05Tests.jordan_spectral_maximum_one
+#print axioms PaperIBlock05Tests.repeated_jordan_intrinsic_two
+#print axioms PaperIBlock05Tests.repeated_jordan_eigenspace_two
+#print axioms PaperIBlock05Tests.repeated_jordan_seed_count_two
+#print axioms PaperIBlock05Tests.repeated_jordan_spectral_maximum_two
+#print axioms PaperIBlock05Tests.quadratic_label_ne_linear
+#print axioms PaperIBlock05Tests.rational_unsplit_eigenspace_zero
+#print axioms PaperIBlock05Tests.rational_unsplit_geometric_maximum_zero
+#print axioms PaperIBlock05Tests.rational_unsplit_seed_count_one
+#print axioms PaperIBlock05Tests.algClosed_hypothesis_cannot_be_dropped
+#print axioms PaperIBlock05Tests.zero_space_geometric_maximum
+#print axioms PaperIBlock05Tests.zero_space_spectral_maximum
+#print axioms PaperIBlock05Tests.literal_cokernel_kernel
+#print axioms PaperIBlock05Tests.literal_cokernel_representative
+#print axioms PaperIBlock05Tests.jordan_one_factor_presentation

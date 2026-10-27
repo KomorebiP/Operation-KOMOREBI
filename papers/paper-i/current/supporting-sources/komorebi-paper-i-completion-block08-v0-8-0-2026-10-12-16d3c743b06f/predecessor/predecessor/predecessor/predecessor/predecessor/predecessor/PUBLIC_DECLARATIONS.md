@@ -1,0 +1,49 @@
+# New public declarations
+
+These are source declarations, not a count of independent or novel mathematical discoveries. Full types and transitive axioms were printed in `evidence/extension_attempt01/declaration_types.log`.
+
+- `Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber` (def) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:24`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_eq_zero_of_subsingleton` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:66`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_nonneg` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:27`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_symm` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:30`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator` (def) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:39`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator_inverse` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:42`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.norm_coordinateOperator_le` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:48`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.norm_le_conditionNumber_mul_coordinateOperator` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:59`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.one_le_conditionNumber` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:35`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber` (def) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:79`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber_eq` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:82`.
+- `Komorebi.PaperICompletion.ConditionedCoordinates.packet_conditioned_coordinate_bounds` (theorem) — `source/extension/PaperICompletion/ConditionedCoordinates.lean:86`.
+- `Komorebi.PaperICompletion.CyclicClassification.cyclic_four_way_without_polynomial_certificate` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:176`.
+- `Komorebi.PaperICompletion.CyclicClassification.cyclic_of_minpoly_degree_eq_finrank` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:122`.
+- `Komorebi.PaperICompletion.CyclicClassification.exists_full_annihilator_vector` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:115`.
+- `Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:50`.
+- `Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:138`.
+- `Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_operatorAlgebra_cyclic` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:147`.
+- `Komorebi.PaperICompletion.CyclicClassification.minpolyQuotientEquivOrbit` (def) — `source/extension/PaperICompletion/CyclicClassification.lean:79`.
+- `Komorebi.PaperICompletion.CyclicClassification.minpoly_degree_eq_finrank_of_cyclic` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:94`.
+- `Komorebi.PaperICompletion.CyclicClassification.minpoly_eq_charpoly_of_cyclic` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:106`.
+- `Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:164`.
+- `Komorebi.PaperICompletion.CyclicClassification.orbitMap` (def) — `source/extension/PaperICompletion/CyclicClassification.lean:27`.
+- `Komorebi.PaperICompletion.CyclicClassification.orbitMap_apply` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:31`.
+- `Komorebi.PaperICompletion.CyclicClassification.orbitMap_ker_eq_annihilator_of_surjective` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:63`.
+- `Komorebi.PaperICompletion.CyclicClassification.orbit_finrank_eq_minpoly_degree` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:87`.
+- `Komorebi.PaperICompletion.CyclicClassification.singleton_generates_iff_orbitMap_surjective` (theorem) — `source/extension/PaperICompletion/CyclicClassification.lean:35`.
+- `Komorebi.PaperICompletion.SpectralCertificates.EigenLabels` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:31`.
+- `Komorebi.PaperICompletion.SpectralCertificates.eigenFibreEquiv` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:40`.
+- `Komorebi.PaperICompletion.SpectralCertificates.eigenLabelsFintype` (instance) — `source/extension/PaperICompletion/SpectralCertificates.lean:33`.
+- `Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:37`.
+- `Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity_le_max` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:77`.
+- `Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:60`.
+- `Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis_is_eigenbasis` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:64`.
+- `Komorebi.PaperICompletion.SpectralCertificates.groupedIndexEquiv` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:46`.
+- `Komorebi.PaperICompletion.SpectralCertificates.groupedIndex_eigenvalue` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:53`.
+- `Komorebi.PaperICompletion.SpectralCertificates.hermitian_matrix_seedNumber_isLeast` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:166`.
+- `Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:73`.
+- `Komorebi.PaperICompletion.SpectralCertificates.real_symmetric_matrix_seedNumber_isLeast` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:175`.
+- `Komorebi.PaperICompletion.SpectralCertificates.seedNumber_isLeast_of_eigenbasis` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:84`.
+- `Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_operatorAlgebra_seedRanks` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:141`.
+- `Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedNumber_isLeast` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:122`.
+- `Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedRank_eq_max_eigenspace_finrank` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:152`.
+- `Komorebi.PaperICompletion.SpectralCertificates.spectralList` (def) — `source/extension/PaperICompletion/SpectralCertificates.lean:108`.
+- `Komorebi.PaperICompletion.SpectralCertificates.spectralList_multiplicity_eq_finrank` (theorem) — `source/extension/PaperICompletion/SpectralCertificates.lean:113`.

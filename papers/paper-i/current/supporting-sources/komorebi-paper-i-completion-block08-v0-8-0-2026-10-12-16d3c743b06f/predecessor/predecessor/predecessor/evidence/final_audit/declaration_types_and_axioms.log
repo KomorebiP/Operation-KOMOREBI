@@ -1,0 +1,1843 @@
+Ideal.Quotient.factor_surjective.{u} {R : Type u} [Ring R] {S T : Ideal R} [S.IsTwoSided] [T.IsTwoSided] (H : S ≤ T) :
+  Function.Surjective ⇑(Ideal.Quotient.factor H)
+'Ideal.Quotient.factor_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+Ideal.pi_quotient_surjective.{u_2, u_3} {R : Type u_2} [CommRing R] {ι : Type u_3} [Finite ι] {I : ι → Ideal R}
+  (hf : Pairwise (Function.onFun IsCoprime I)) (x : (i : ι) → R ⧸ I i) :
+  ∃ r, ∀ (i : ι), (Ideal.Quotient.mk (I i)) r = x i
+'Ideal.pi_quotient_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.FiniteAlgorithms.assembleTransferBlockTable.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι] [Fintype κ]
+  (B : κ → ι → M →ₗ[R] N) : M →ₗ[R] N
+'Komorebi.FiniteAlgorithms.assembleTransferBlockTable' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.FiniteAlgorithms.exactGraphSeedRank.{u, v} {K : Type u} {ν : Type v} [Field K] [Fintype ν] [DecidableEq ν]
+  (A : Matrix ν ν K) : ℕ
+'Komorebi.FiniteAlgorithms.exactGraphSeedRank' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.FiniteAlgorithms.exactGraphSeedRank_isLeast.{u, v, w} {K : Type u} {ν : Type v} [Field K] [Fintype ν]
+  [DecidableEq ν] {Λ : Type w} [Fintype Λ] (A : Matrix ν ν K) (R : ℕ) (multiplicity : Λ → ℕ) (eigenvalue : Λ → K)
+  (eigenbasis : Module.Basis ((eigen : Λ) × Fin (multiplicity eigen)) K (ν → K))
+  (hEigen :
+    ∀ (z : (eigen : Λ) × Fin (multiplicity eigen)), (Matrix.toLin' A) (eigenbasis z) = eigenvalue z.fst • eigenbasis z)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (projectorPolynomial : Λ → Polynomial K)
+  (hproject :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ((Polynomial.aeval (Matrix.toLin' A)) (projectorPolynomial eigen))
+          (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity (fun e j => eigenbasis ⟨e, j⟩) ⟨↑j, ⋯⟩) =
+        eigenbasis ⟨eigen, j⟩)
+  (hSpectrumCover : ∀ μ ∈ spectrum K A, ∃ eigen, eigenvalue eigen = μ)
+  (hMultiplicity :
+    ∀ (eigen : Λ), Komorebi.FiniteAlgorithms.graphEigenMultiplicity A (eigenvalue eigen) = multiplicity eigen)
+  (hMaxSpectrum : eigenvalue maxEigen ∈ spectrum K A) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Matrix.toLin' A) r}
+    (Komorebi.FiniteAlgorithms.exactGraphSeedRank A)
+'Komorebi.FiniteAlgorithms.exactGraphSeedRank_isLeast' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.FiniteAlgorithms.orbitClosureIter_eq_orbitHull_of_stop.{u, v, w} {k : Type u} {V : Type v} {ι : Type w}
+  [Field k] [AddCommGroup V] [Module k V] [Fintype ι] (operators : ι → Module.End k V) (seeds : Set V) (n : ℕ)
+  (hStop :
+    Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds (n + 1) =
+      Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n) :
+  Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n = Komorebi.FiniteAlgorithms.orbitHull operators seeds
+'Komorebi.FiniteAlgorithms.orbitClosureIter_eq_orbitHull_of_stop' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.FiniteAlgorithms.orbitHull_algorithm_terminates_and_correct.{u, v, w} {k : Type u} {V : Type v} {ι : Type w}
+  [Field k] [AddCommGroup V] [Module k V] [Fintype ι] [FiniteDimensional k V] (operators : ι → Module.End k V)
+  (seeds : Set V) :
+  ∃ n,
+    Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds (n + 1) =
+        Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n ∧
+      Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n = Komorebi.FiniteAlgorithms.orbitHull operators seeds
+'Komorebi.FiniteAlgorithms.orbitHull_algorithm_terminates_and_correct' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.FiniteAlgorithms.transferBlockTable.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι] [Fintype κ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (Q : Komorebi.Foundation.LinearProjectorFamily R N κ)
+  (T : M →ₗ[R] N) : κ → ι → M →ₗ[R] N
+'Komorebi.FiniteAlgorithms.transferBlockTable' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.FiniteAlgorithms.transferBlock_algorithm_correct.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w}
+  {ι : Type x} {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  [Fintype κ] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : M →ₗ[R] N) :
+  Komorebi.FiniteAlgorithms.assembleTransferBlockTable (Komorebi.FiniteAlgorithms.transferBlockTable P Q T) = T
+'Komorebi.FiniteAlgorithms.transferBlock_algorithm_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.FiniteAlgorithms.transferGraph_iff_block_ne_zero.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w}
+  {ι : Type x} {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  [Fintype κ] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : M →ₗ[R] N) (j : κ) (i : ι) :
+  Komorebi.FiniteAlgorithms.transferGraph P Q T j i ↔ Komorebi.Foundation.transferBlock P Q T j i ≠ 0
+'Komorebi.FiniteAlgorithms.transferGraph_iff_block_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.LinearProjectorFamily.conjugate.{u, v, w, x} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) :
+  Komorebi.Foundation.LinearProjectorFamily R N ι
+'Komorebi.Foundation.LinearProjectorFamily.conjugate' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.LinearProjectorFamily.exactPacketCoordinates.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) :
+  M ≃ₗ[R] P.PacketSpace
+'Komorebi.Foundation.LinearProjectorFamily.exactPacketCoordinates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.Foundation.LinearProjectorFamily.rangeAnalysis_rangeSynthesis.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (packets : P.PacketSpace) : P.rangeAnalysis (P.rangeSynthesis packets) = packets
+'Komorebi.Foundation.LinearProjectorFamily.rangeAnalysis_rangeSynthesis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.Foundation.LinearProjectorFamily.rangeSynthesis_rangeAnalysis.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (x : M) : P.rangeSynthesis (P.rangeAnalysis x) = x
+'Komorebi.Foundation.LinearProjectorFamily.rangeSynthesis_rangeAnalysis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.Foundation.conjugate_transferBlock.{u, v, w, x} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (T : Module.End R M) (j i : ι) :
+  Komorebi.Foundation.transferBlock (P.conjugate U) (P.conjugate U) (Komorebi.Foundation.conjugateEnd U T) j i =
+    Komorebi.Foundation.conjugateEnd U (Komorebi.Foundation.transferBlock P P T j i)
+'Komorebi.Foundation.conjugate_transferBlock' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.end_comp_eq_sum_transferBlock_comps.{u, v, y} {R : Type u} {M : Type v} {ι : Type y} [Semiring R]
+  [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (T U : Module.End R M) :
+  U ∘ₗ T = ∑ k, ∑ i, ∑ j, Komorebi.Foundation.transferBlock P P U k j ∘ₗ Komorebi.Foundation.transferBlock P P T j i
+'Komorebi.Foundation.end_comp_eq_sum_transferBlock_comps' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.transferBlock_comp_end.{u, v, y} {R : Type u} {M : Type v} {ι : Type y} [Semiring R]
+  [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (T U : Module.End R M) (k i : ι) :
+  Komorebi.Foundation.transferBlock P P (U ∘ₗ T) k i =
+    ∑ j, Komorebi.Foundation.transferBlock P P U k j ∘ₗ Komorebi.Foundation.transferBlock P P T j i
+'Komorebi.Foundation.transferBlock_comp_end' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.transferBlock_comp_linearMap.{u, v, w, x, y, z, u_1} {R : Type u} {M : Type v} {N : Type w}
+  {L : Type x} {ι : Type y} {κ : Type z} {τ : Type u_1} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N]
+  [Module R N] [AddCommMonoid L] [Module R L] [Fintype ι] [Fintype κ] [Fintype τ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (Q : Komorebi.Foundation.LinearProjectorFamily R N κ)
+  (S : Komorebi.Foundation.LinearProjectorFamily R L τ) (T : M →ₗ[R] N) (U : N →ₗ[R] L) (k : τ) (i : ι) :
+  Komorebi.Foundation.transferBlock P S (U ∘ₗ T) k i =
+    ∑ j, Komorebi.Foundation.transferBlock Q S U k j ∘ₗ Komorebi.Foundation.transferBlock P Q T j i
+'Komorebi.Foundation.transferBlock_comp_linearMap' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.transferBlock_reconstruction_end.{u, v, y} {R : Type u} {M : Type v} {ι : Type y} [Semiring R]
+  [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (T : Module.End R M) : ∑ j, ∑ i, Komorebi.Foundation.transferBlock P P T j i = T
+'Komorebi.Foundation.transferBlock_reconstruction_end' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Foundation.transferBlock_reconstruction_linearMap.{u, v, w, y, z} {R : Type u} {M : Type v} {N : Type w}
+  {ι : Type y} {κ : Type z} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  [Fintype κ] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : M →ₗ[R] N) :
+  ∑ j, ∑ i, Komorebi.Foundation.transferBlock P Q T j i = T
+'Komorebi.Foundation.transferBlock_reconstruction_linearMap' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.Packet.fibreLinearProj_refinement.{u, v, w, x, u_1} {R : Type u} {M : Type v} {α : Type w} {β : Type x}
+  {γ : Type u_1} [Semiring R] [AddCommMonoid M] [Module R M] [DecidableEq β] [DecidableEq γ] [Fintype γ] (fine : α → γ)
+  (merge : γ → β) (b : β) :
+  Komorebi.Packet.fibreLinearProj (fun a => merge (fine a)) b =
+    ∑ c, if merge c = b then Komorebi.Packet.fibreLinearProj fine c else 0
+'Komorebi.Packet.fibreLinearProj_refinement' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.blockMulClosed_iff_transitive.{u, v, w} {ι : Type w} [Fintype ι]
+  [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) [∀ (i : ι), Nontrivial ↥(LinearMap.range (P.proj i))]
+  (rel : ι → ι → Prop) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.BlockMulClosed P rel ↔ ∀ (a c b : ι), rel a c → rel c b → rel a b
+'Komorebi.PacketNaturalityCompletion.FullBlocks.blockMulClosed_iff_transitive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.end_finrank_eq_packet_sum_eq_square.{u, v, w} {ι : Type w} [Fintype ι]
+  [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) :
+  Module.finrank K (Module.End K V) =
+      ∑ b, ∑ a, Module.finrank K ↥(LinearMap.range (P.proj a)) * Module.finrank K ↥(LinearMap.range (P.proj b)) ∧
+    ∑ b, ∑ a, Module.finrank K ↥(LinearMap.range (P.proj a)) * Module.finrank K ↥(LinearMap.range (P.proj b)) =
+      (∑ a, Module.finrank K ↥(LinearMap.range (P.proj a))) ^ 2
+'Komorebi.PacketNaturalityCompletion.FullBlocks.end_finrank_eq_packet_sum_eq_square' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.finrank_eq_sum_packet_finrank.{u, v, w} {ι : Type w} [Fintype ι]
+  [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) :
+  Module.finrank K V = ∑ a, Module.finrank K ↥(LinearMap.range (P.proj a))
+'Komorebi.PacketNaturalityCompletion.FullBlocks.finrank_eq_sum_packet_finrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.fullBlockAlgEquiv.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) :
+  Module.End R M ≃ₐ[R] Komorebi.PacketNaturalityCompletion.FullBlocks.PacketBlockAlgebra P
+'Komorebi.PacketNaturalityCompletion.FullBlocks.fullBlockAlgEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.identity_blocks_supported_iff_reflexive.{u, v, w} {ι : Type w}
+  [Fintype ι] [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) [∀ (i : ι), Nontrivial ↥(LinearMap.range (P.proj i))]
+  (rel : ι → ι → Prop) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.BlocksSupported P rel
+      (Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks P 1) ↔
+    ∀ (a : ι), rel a a
+'Komorebi.PacketNaturalityCompletion.FullBlocks.identity_blocks_supported_iff_reflexive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.packetBlockAlgebra_mul_eq_blockMul.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (B C : Komorebi.PacketNaturalityCompletion.FullBlocks.PacketBlockAlgebra P) :
+  B * C = Komorebi.PacketNaturalityCompletion.FullBlocks.blockMul P B C
+'Komorebi.PacketNaturalityCompletion.FullBlocks.packetBlockAlgebra_mul_eq_blockMul' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks_synthesizeBlocks.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (B : Komorebi.PacketNaturalityCompletion.FullBlocks.PacketBlocks P) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks P
+      (Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks P B) =
+    B
+'Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks_synthesizeBlocks' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks_restrictBlocks.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (T : Module.End R M) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks P
+      (Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks P T) =
+    T
+'Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks_restrictBlocks' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.Packets.eq_iff_projectors_eq.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (x y : M) : x = y ↔ ∀ (i : ι), (P.proj i) x = (P.proj i) y
+'Komorebi.PacketNaturalityCompletion.Packets.eq_iff_projectors_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.Packets.transferBlock_pow_eq_packetPathSum.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (T : Module.End R M) (m : ℕ) (b a : ι) :
+  Komorebi.Foundation.transferBlock P P (T ^ m) b a =
+    Komorebi.PacketNaturalityCompletion.Packets.packetPathSum P T m b a
+'Komorebi.PacketNaturalityCompletion.Packets.transferBlock_pow_eq_packetPathSum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull_le_reachable_support.{u, v, w} {R : Type u}
+  {M : Type v} {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (ops : Set (Module.End R M)) (S₀ : Set ι) (seeds : Set M)
+  (hseeds : ∀ s ∈ seeds, Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P S₀ s) :
+  Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull ops seeds ≤
+    Komorebi.PacketNaturalityCompletion.Reachability.supportedSubmodule P
+      (Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀)
+'Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull_le_reachable_support' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.Reachability.conjugate_reachableFrom_iff.{u, v, w, u_1} {R : Type u} {M : Type v}
+  {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] {N : Type u_1} [AddCommMonoid N] [Module R N]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (ops : Set (Module.End R M)) (S₀ : Set ι)
+  (b : ι) :
+  Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom (P.conjugate U)
+      (Komorebi.Foundation.conjugateEnd U '' ops) S₀ b ↔
+    Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀ b
+'Komorebi.PacketNaturalityCompletion.Reachability.conjugate_reachableFrom_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.Reachability.conjugate_transferEdge_iff.{u, v, w, u_1} {R : Type u} {M : Type v}
+  {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] {N : Type u_1} [AddCommMonoid N] [Module R N]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (ops : Set (Module.End R M)) (a b : ι) :
+  Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge (P.conjugate U)
+      (Komorebi.Foundation.conjugateEnd U '' ops) a b ↔
+    Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops a b
+'Komorebi.PacketNaturalityCompletion.Reachability.conjugate_transferEdge_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.Reachability.unreachable_nonzero_packet_obstruction.{u, v, w} {R : Type u}
+  {M : Type v} {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (ops : Set (Module.End R M)) (S₀ : Set ι) (seeds : Set M)
+  (hseeds : ∀ s ∈ seeds, Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P S₀ s) (b : ι)
+  (hb : ¬Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀ b)
+  [Nontrivial ↥(LinearMap.range (P.proj b))] :
+  Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull ops seeds ≠ ⊤
+'Komorebi.PacketNaturalityCompletion.Reachability.unreachable_nonzero_packet_obstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.StrictNaturality.full_transfer_edge_zero_pattern_correspondence.{u, v, w, x, y}
+  {K : Type u} {M : Type v} {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M]
+  [AddCommGroup N] [Module K N] [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)}
+  {B : Subalgebra K (Module.End K N)} {P : Komorebi.Foundation.LinearProjectorFamily K M ι}
+  {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q)
+  (hΦ : Function.Bijective ⇑F.linearMap) (hφ : Function.Bijective ⇑F.algebraMap)
+  (hpacket : Function.Bijective F.packetMap) :
+  Function.Bijective (Prod.map F.packetMap F.packetMap) ∧
+    Prod.map F.packetMap F.packetMap ⁻¹'
+          Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraTransferPattern B Q =
+        Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraTransferPattern A P ∧
+      Prod.map F.packetMap F.packetMap ⁻¹' Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraZeroPattern B Q =
+        Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraZeroPattern A P
+'Komorebi.PacketNaturalityCompletion.StrictNaturality.full_transfer_edge_zero_pattern_correspondence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.StrictNaturality.generatedHull_natural.{u, v, w, x, y} {K : Type u} {M : Type v}
+  {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
+  [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q) (S : Set M) :
+  Submodule.map F.linearMap (Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull A S) =
+    Komorebi.PacketNaturalityCompletion.StrictNaturality.MappedGeneratedHull F S
+'Komorebi.PacketNaturalityCompletion.StrictNaturality.generatedHull_natural' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_naturality_package.{u, v, w, x, y} {K : Type u} {M : Type v}
+  {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
+  [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q) (S : Set M) :
+  Submodule.map F.linearMap (Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull A S) =
+      Komorebi.PacketNaturalityCompletion.StrictNaturality.MappedGeneratedHull F S ∧
+    (∀ (a : ι) (x : M), F.linearMap ((P.proj a) x) = (Q.proj (F.packetMap a)) (F.linearMap x)) ∧
+      (∀ (T : ↥A) (b a : ι),
+          F.linearMap ∘ₗ Komorebi.Foundation.transferBlock P P (↑T) b a =
+            Komorebi.Foundation.transferBlock Q Q (↑(F.algebraMap T)) (F.packetMap b) (F.packetMap a) ∘ₗ F.linearMap) ∧
+        Function.Injective F.packetMap
+'Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_naturality_package' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_eq_of_bijective.{u, v, w, x, y} {K : Type u}
+  {M : Type v} {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N]
+  [Module K N] [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q)
+  (hΦ : Function.Bijective ⇑F.linearMap) (hφ : Function.Bijective ⇑F.algebraMap) :
+  Cardinal.lift.{w, v} (Komorebi.SeedRankBasics.seedRank (↥A) M) =
+    Cardinal.lift.{v, w} (Komorebi.SeedRankBasics.seedRank (↥B) N)
+'Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_eq_of_bijective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_le.{u, v, w, x, y} {K : Type u} {M : Type v}
+  {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
+  [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q)
+  (hΦ : Function.Surjective ⇑F.linearMap) :
+  Cardinal.lift.{v, w} (Komorebi.SeedRankBasics.seedRank (↥B) N) ≤
+    Cardinal.lift.{w, v} (Komorebi.SeedRankBasics.seedRank (↥A) M)
+'Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PacketNaturalityCompletion.TypedQuiver.typed_reachability_certificate.{u} {K : Type u} [Field K] :
+  Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowB ∘ₗ Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowA =
+      LinearMap.id ∧
+    Komorebi.PacketNaturalityCompletion.TypedQuiver.eV₃ ∈ Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowB.ker ∧
+      Komorebi.PacketNaturalityCompletion.TypedQuiver.eV₃ ∉
+          Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowA.range ∧
+        (∀ (seeds : Set (Komorebi.PacketNaturalityCompletion.TypedQuiver.X K)),
+            (∀ s ∈ seeds, s.2 = 0) →
+              Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull
+                  Komorebi.PacketNaturalityCompletion.TypedQuiver.quiverOps seeds ≠
+                ⊤) ∧
+          Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull
+              Komorebi.PacketNaturalityCompletion.TypedQuiver.quiverOps
+              Komorebi.PacketNaturalityCompletion.TypedQuiver.certificateSeeds =
+            ⊤
+'Komorebi.PacketNaturalityCompletion.TypedQuiver.typed_reachability_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber.{u, v, w} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]
+  (e : X ≃L[𝕜] Y) : ℝ
+'Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_eq_zero_of_subsingleton.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] [Subsingleton X] (e : X ≃L[𝕜] Y) :
+  Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e = 0
+'Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_eq_zero_of_subsingleton' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_nonneg.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] (e : X ≃L[𝕜] Y) : 0 ≤ Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e
+'Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_nonneg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_symm.{u, v, w} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]
+  (e : X ≃L[𝕜] Y) :
+  Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e.symm =
+    Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e
+'Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber_symm' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator.{u, v, w} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]
+  (e : X ≃L[𝕜] Y) (T : X →L[𝕜] X) : Y →L[𝕜] Y
+'Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator_inverse.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] (e : X ≃L[𝕜] Y) (T : X →L[𝕜] X) :
+  Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator e.symm
+      (Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator e T) =
+    T
+'Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator_inverse' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.norm_coordinateOperator_le.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] (e : X ≃L[𝕜] Y) (T : X →L[𝕜] X) :
+  ‖Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator e T‖ ≤
+    Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e * ‖T‖
+'Komorebi.PaperICompletion.ConditionedCoordinates.norm_coordinateOperator_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.norm_le_conditionNumber_mul_coordinateOperator.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] (e : X ≃L[𝕜] Y) (T : X →L[𝕜] X) :
+  ‖T‖ ≤
+    Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e *
+      ‖Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator e T‖
+'Komorebi.PaperICompletion.ConditionedCoordinates.norm_le_conditionNumber_mul_coordinateOperator' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.one_le_conditionNumber.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] [Nontrivial X] (e : X ≃L[𝕜] Y) :
+  1 ≤ Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e
+'Komorebi.PaperICompletion.ConditionedCoordinates.one_le_conditionNumber' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber.{u, v, u_1} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {ι : Type u_1} [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) : ℝ
+'Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber_eq.{u, v, u_1} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {ι : Type u_1} [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) :
+  Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber P = ‖P.analysis‖ * ‖P.synthesis‖
+'Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.ConditionedCoordinates.packet_conditioned_coordinate_bounds.{u, v, u_1} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {ι : Type u_1} [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) (T : X →L[𝕜] X) :
+  ‖P.analysis ∘SL T ∘SL P.synthesis‖ ≤ Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber P * ‖T‖ ∧
+    ‖T‖ ≤ Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber P * ‖P.analysis ∘SL T ∘SL P.synthesis‖
+'Komorebi.PaperICompletion.ConditionedCoordinates.packet_conditioned_coordinate_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.cyclic_four_way_without_polynomial_certificate.{u, v, u_1} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {Λ : Type u_1} (T : Module.End k V)
+  (R : ℕ) (geometricMultiplicity blockMultiplicity : Λ → ℕ) (hpositive : ∀ (eigen : Λ), 0 < geometricMultiplicity eigen)
+  (hbound : ∀ (eigen : Λ), geometricMultiplicity eigen ≤ R) (maxEigen : Λ) (hmax : geometricMultiplicity maxEigen = R)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R)
+  (hgeometric_eq_blocks : ∀ (eigen : Λ), geometricMultiplicity eigen = blockMultiplicity eigen) :
+  (Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+      Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity) ∧
+    (Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity ↔
+        Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity) ∧
+      (Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity ↔ minpoly k T = LinearMap.charpoly T)
+'Komorebi.PaperICompletion.CyclicClassification.cyclic_four_way_without_polynomial_certificate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.cyclic_of_minpoly_degree_eq_finrank.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V)
+  (hdegree : (minpoly k T).natDegree = Module.finrank k V) : Komorebi.SingleOperatorGraph.HasCyclicVector T
+'Komorebi.PaperICompletion.CyclicClassification.cyclic_of_minpoly_degree_eq_finrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.exists_full_annihilator_vector.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ x,
+    (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+      Module.annihilator (Polynomial k) (Module.AEval' T)
+'Komorebi.PaperICompletion.CyclicClassification.exists_full_annihilator_vector' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    ∃ x, Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)
+'Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ minpoly k T = LinearMap.charpoly T
+'Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_operatorAlgebra_cyclic.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Komorebi.SeedRankBasics.Cyclic (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V
+'Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_operatorAlgebra_cyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.minpolyQuotientEquivOrbit.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx :
+    (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+      Module.annihilator (Polynomial k) (Module.AEval' T)) :
+  (Polynomial k ⧸ Ideal.span {minpoly k T}) ≃ₗ[Polynomial k]
+    ↥(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).range
+'Komorebi.PaperICompletion.CyclicClassification.minpolyQuotientEquivOrbit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.minpoly_degree_eq_finrank_of_cyclic.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V)
+  (hT : Komorebi.SingleOperatorGraph.HasCyclicVector T) : (minpoly k T).natDegree = Module.finrank k V
+'Komorebi.PaperICompletion.CyclicClassification.minpoly_degree_eq_finrank_of_cyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.minpoly_eq_charpoly_of_cyclic.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V)
+  (hT : Komorebi.SingleOperatorGraph.HasCyclicVector T) : minpoly k T = LinearMap.charpoly T
+'Komorebi.PaperICompletion.CyclicClassification.minpoly_eq_charpoly_of_cyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V]
+  (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = 1 ↔
+    minpoly k T = LinearMap.charpoly T
+'Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.orbitMap.{u, v} {k : Type u} [Field k] {V : Type v} [AddCommGroup V]
+  [Module k V] (T : Module.End k V) (x : V) : Polynomial k →ₗ[Polynomial k] Module.AEval' T
+'Komorebi.PaperICompletion.CyclicClassification.orbitMap' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.orbitMap_apply.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V) (p : Polynomial k) :
+  (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x) p = (Module.AEval'.of T) (((Polynomial.aeval T) p) x)
+'Komorebi.PaperICompletion.CyclicClassification.orbitMap_apply' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.orbitMap_ker_eq_annihilator_of_surjective.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx : Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)) :
+  (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+    Module.annihilator (Polynomial k) (Module.AEval' T)
+'Komorebi.PaperICompletion.CyclicClassification.orbitMap_ker_eq_annihilator_of_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.orbit_finrank_eq_minpoly_degree.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx :
+    (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+      Module.annihilator (Polynomial k) (Module.AEval' T)) :
+  Module.finrank k ↥(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).range = (minpoly k T).natDegree
+'Komorebi.PaperICompletion.CyclicClassification.orbit_finrank_eq_minpoly_degree' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.CyclicClassification.singleton_generates_iff_orbitMap_surjective.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V) :
+  (Komorebi.SingleOperatorGraph.FamilyGenerates T fun x_1 => x) ↔
+    Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)
+'Komorebi.PaperICompletion.CyclicClassification.singleton_generates_iff_orbitMap_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.EigenLabels.{u, v} {k : Type u} {I : Type v} (μ : I → k) : Set k
+'Komorebi.PaperICompletion.SpectralCertificates.EigenLabels' does not depend on any axioms
+Komorebi.PaperICompletion.SpectralCertificates.eigenFibreEquiv.{u, v} {k : Type u} {I : Type v} [Fintype I] (μ : I → k)
+  (value : k) : { i // μ i = value } ≃ Fin (Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity μ value)
+'Komorebi.PaperICompletion.SpectralCertificates.eigenFibreEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.eigenLabelsFintype.{u, v} {k : Type u} {I : Type v} [Fintype I]
+  (μ : I → k) : Fintype ↑(Komorebi.PaperICompletion.SpectralCertificates.EigenLabels μ)
+'Komorebi.PaperICompletion.SpectralCertificates.eigenLabelsFintype' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity.{u, v} {k : Type u} {I : Type v} (μ : I → k)
+  (value : k) : ℕ
+'Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity_le_max.{u, v} {k : Type u} {I : Type v} [Fintype I]
+  (μ : I → k) (value : ↑(Komorebi.PaperICompletion.SpectralCertificates.EigenLabels μ)) :
+  Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity μ ↑value ≤
+    Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity μ
+'Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity_le_max' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis.{u, v, w} {k : Type u} [Field k] {I : Type v}
+  [Fintype I] {V : Type w} [AddCommGroup V] [Module k V] (μ : I → k) (b : Module.Basis I k V) :
+  Module.Basis
+    ((value : ↑(Komorebi.PaperICompletion.SpectralCertificates.EigenLabels μ)) ×
+      Fin (Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity μ ↑value))
+    k V
+'Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis_is_eigenbasis.{u, v, w} {k : Type u} [Field k]
+  {I : Type v} [Fintype I] {V : Type w} [AddCommGroup V] [Module k V] (T : Module.End k V) (μ : I → k)
+  (b : Module.Basis I k V) (hEigen : ∀ (i : I), T (b i) = μ i • b i)
+  (z :
+    (value : ↑(Komorebi.PaperICompletion.SpectralCertificates.EigenLabels μ)) ×
+      Fin (Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity μ ↑value)) :
+  T ((Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis μ b) z) =
+    ↑z.fst • (Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis μ b) z
+'Komorebi.PaperICompletion.SpectralCertificates.groupedEigenbasis_is_eigenbasis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.groupedIndexEquiv.{u, v} {k : Type u} {I : Type v} [Fintype I]
+  (μ : I → k) :
+  (value : ↑(Komorebi.PaperICompletion.SpectralCertificates.EigenLabels μ)) ×
+      Fin (Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity μ ↑value) ≃
+    I
+'Komorebi.PaperICompletion.SpectralCertificates.groupedIndexEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.groupedIndex_eigenvalue.{u, v} {k : Type u} {I : Type v} [Fintype I]
+  (μ : I → k)
+  (z :
+    (value : ↑(Komorebi.PaperICompletion.SpectralCertificates.EigenLabels μ)) ×
+      Fin (Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity μ ↑value)) :
+  μ ((Komorebi.PaperICompletion.SpectralCertificates.groupedIndexEquiv μ) z) = ↑z.fst
+'Komorebi.PaperICompletion.SpectralCertificates.groupedIndex_eigenvalue' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.hermitian_matrix_seedNumber_isLeast.{u, v} {𝕜 : Type u} [RCLike 𝕜]
+  {n : Type v} [Fintype n] [DecidableEq n] (A : Matrix n n 𝕜) (hA : A.IsHermitian) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Matrix.toEuclideanLin A) r}
+    (Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+      (Komorebi.PaperICompletion.SpectralCertificates.spectralList (Matrix.toEuclideanLin A) ⋯))
+'Komorebi.PaperICompletion.SpectralCertificates.hermitian_matrix_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity.{u, v} {k : Type u} {I : Type v} [Fintype I]
+  (μ : I → k) : ℕ
+'Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.real_symmetric_matrix_seedNumber_isLeast.{v} {n : Type v} [Fintype n]
+  [DecidableEq n] (A : Matrix n n ℝ) (hA : A.IsSymm) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Matrix.toEuclideanLin A) r}
+    (Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+      (Komorebi.PaperICompletion.SpectralCertificates.spectralList (Matrix.toEuclideanLin A) ⋯))
+'Komorebi.PaperICompletion.SpectralCertificates.real_symmetric_matrix_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.seedNumber_isLeast_of_eigenbasis.{u, v, w} {k : Type u} [Field k]
+  {I : Type v} [Fintype I] {V : Type w} [AddCommGroup V] [Module k V] [Nonempty I] (T : Module.End k V) (μ : I → k)
+  (b : Module.Basis I k V) (hEigen : ∀ (i : I), T (b i) = μ i • b i) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r}
+    (Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity μ)
+'Komorebi.PaperICompletion.SpectralCertificates.seedNumber_isLeast_of_eigenbasis' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_operatorAlgebra_seedRanks.{u, v} {𝕜 : Type u} [RCLike 𝕜]
+  {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+      Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+        (Komorebi.PaperICompletion.SpectralCertificates.spectralList T hT) ∧
+    Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+      ↑(Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+          (Komorebi.PaperICompletion.SpectralCertificates.spectralList T hT))
+'Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_operatorAlgebra_seedRanks' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedNumber_isLeast.{u, v} {𝕜 : Type u} [RCLike 𝕜]
+  {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r}
+    (Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+      (Komorebi.PaperICompletion.SpectralCertificates.spectralList T hT))
+'Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedRank_eq_max_eigenspace_finrank.{u, v} {𝕜 : Type u}
+  [RCLike 𝕜] {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Finset.univ.sup fun value => Module.finrank 𝕜 ↥(T.eigenspace ↑value))
+'Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedRank_eq_max_eigenspace_finrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.spectralList.{u, v} {𝕜 : Type u} [RCLike 𝕜] {V : Type v}
+  [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) : Fin (Module.finrank 𝕜 V) → 𝕜
+'Komorebi.PaperICompletion.SpectralCertificates.spectralList' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion.SpectralCertificates.spectralList_multiplicity_eq_finrank.{u, v} {𝕜 : Type u} [RCLike 𝕜]
+  {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) (value : 𝕜) :
+  Komorebi.PaperICompletion.SpectralCertificates.eigenMultiplicity
+      (Komorebi.PaperICompletion.SpectralCertificates.spectralList T hT) value =
+    Module.finrank 𝕜 ↥(T.eigenspace value)
+'Komorebi.PaperICompletion.SpectralCertificates.spectralList_multiplicity_eq_finrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactorProduct_seedNumber_isLeast.{u} {k : Type u} [Field k]
+  {r : ℕ} (f : Fin r → Polynomial k) (hf : ∀ (i : Fin r), 0 < (f i).natDegree)
+  (hchain : ∀ (i j : Fin r), i ≤ j → f i ∣ f j) :
+  IsLeast
+    {n | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates (Polynomial k) ((i : Fin r) → Polynomial k ⧸ Ideal.span {f i}) s}
+    r
+'Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactorProduct_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactor_operator_seedRanks.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) {r : ℕ} (f : Fin r → Polynomial k)
+  (hf : ∀ (i : Fin r), 0 < (f i).natDegree) (hchain : ∀ (i j : Fin r), i ≤ j → f i ∣ f j)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] (i : Fin r) → Polynomial k ⧸ Ideal.span {f i}) :
+  IsLeast {n | Komorebi.SingleOperatorGraph.SeedNumberLE T n} r ∧
+    Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = r ∧
+      Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = ↑r
+'Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactor_operator_seedRanks' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : Type (max (u + 1) v)
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.cyclic_iff_label_injective.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ Function.Injective D.label
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.cyclic_iff_label_injective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.cyclic_of_label_injective.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (hD : Function.Injective D.label) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.cyclic_of_label_injective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) : D.Index → Ideal (Polynomial k)
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label_injective_iff_minpoly_eq_charpoly.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Function.Injective D.label ↔ minpoly k T = LinearMap.charpoly T
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label_injective_iff_minpoly_eq_charpoly' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label_injective_of_cyclic.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T)
+  (hT : Komorebi.SingleOperatorGraph.HasCyclicVector T) : Function.Injective D.label
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label_injective_of_cyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.maxCount.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) : ℕ
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.maxCount' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.maxCount_eq.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D E : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) : D.maxCount = E.maxCount
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.maxCount_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedFinrank_eq.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = D.maxCount
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedFinrank_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedNumber_isLeast.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} D.maxCount
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedRank_eq.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = ↑D.maxCount
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedRank_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.chosenPrimaryPresentation.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.chosenPrimaryPresentation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.operator_seedFinrank_eq_primaryGeneratorCount.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount T
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.operator_seedFinrank_eq_primaryGeneratorCount' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.operator_seedRank_eq_primaryGeneratorCount.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount T)
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.operator_seedRank_eq_primaryGeneratorCount' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) : ℕ
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount_eq_zero_iff.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount T = 0 ↔ Subsingleton V
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount_eq_zero_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryPresentation_nonempty.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Nonempty (Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T)
+'Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryPresentation_nonempty' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.coloredSeeds.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (I : ι → Ideal R) {r : ℕ} (color : ι → Fin r) (j : Fin r) (i : ι) : R ⧸ I i
+'Komorebi.PaperICompletion3.PrimarySeedFormula.coloredSeeds' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.coloredSeeds_generate.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  [Fintype ι] (I : ι → Ideal R) {r : ℕ} (color : ι → Fin r)
+  (hcoprime : ∀ (i j : ι), i ≠ j → color i = color j → IsCoprime (I i) (I j)) :
+  Komorebi.SeedRankBasics.FamilyGenerates R ((i : ι) → R ⧸ I i)
+    (Komorebi.PaperICompletion3.PrimarySeedFormula.coloredSeeds I color)
+'Komorebi.PaperICompletion3.PrimarySeedFormula.coloredSeeds_generate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.coprime_primePower_ideals.{u} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] (p q : R) (hp : Irreducible p) (hq : Irreducible q) (hneq : Ideal.span {p} ≠ Ideal.span {q})
+  (m n : ℕ) : IsCoprime (Ideal.span {p ^ m}) (Ideal.span {q ^ n})
+'Komorebi.PaperICompletion3.PrimarySeedFormula.coprime_primePower_ideals' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.dropZeroExponentEquiv.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (p : ι → R) (e : ι → ℕ) :
+  ((i : ι) → R ⧸ Ideal.span {p i ^ e i}) ≃ₗ[R] (i : { i // e i ≠ 0 }) → R ⧸ Ideal.span {p ↑i ^ e ↑i}
+'Komorebi.PaperICompletion3.PrimarySeedFormula.dropZeroExponentEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.exists_operator_primary_seed_formula.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ ι x p,
+    ∃ (_ : ∀ (i : ι), Irreducible (p i)),
+      ∃ e,
+        ∃ (_ : ∀ (i : ι), 0 < e i),
+          ∃ _f,
+            IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r}
+                (Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i}) ∧
+              (Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+                  Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i}) ∧
+                Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+                  ↑(Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i})
+'Komorebi.PaperICompletion3.PrimarySeedFormula.exists_operator_primary_seed_formula' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.exists_positive_primaryProduct_equiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ ι x p,
+    ∃ (_ : ∀ (i : ι), Irreducible (p i)),
+      ∃ e,
+        ∃ (_ : ∀ (i : ι), 0 < e i),
+          Nonempty (Module.AEval' T ≃ₗ[Polynomial k] (i : ι) → Polynomial k ⧸ Ideal.span {p i ^ e i})
+'Komorebi.PaperICompletion3.PrimarySeedFormula.exists_positive_primaryProduct_equiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.exists_primaryProduct_equiv.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ ι x p,
+    ∃ (_ : ∀ (i : ι), Irreducible (p i)),
+      ∃ e, Nonempty (Module.AEval' T ≃ₗ[Polynomial k] (i : ι) → Polynomial k ⧸ Ideal.span {p i ^ e i})
+'Komorebi.PaperICompletion3.PrimarySeedFormula.exists_primaryProduct_equiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.familyGenerates_iff_polynomialModule.{u, v, u_1} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] {ι : Type u_1} (T : Module.End k V) (s : ι → V) :
+  Komorebi.SingleOperatorGraph.FamilyGenerates T s ↔
+    Komorebi.SeedRankBasics.FamilyGenerates (Polynomial k) (Module.AEval' T) fun i => (Module.AEval'.of T) (s i)
+'Komorebi.PaperICompletion3.PrimarySeedFormula.familyGenerates_iff_polynomialModule' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.familyGenerates_linearEquiv_iff.{u, v, w, u_1} {R : Type u} [Semiring R]
+  {M : Type v} [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] {ι : Type u_1} (f : M ≃ₗ[R] N)
+  (s : ι → M) :
+  (Komorebi.SeedRankBasics.FamilyGenerates R N fun i => f (s i)) ↔ Komorebi.SeedRankBasics.FamilyGenerates R M s
+'Komorebi.PaperICompletion3.PrimarySeedFormula.familyGenerates_linearEquiv_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.fiberColor.{u, v} {ι : Type u} [Fintype ι] {Λ : Type v} (label : ι → Λ)
+  (i : ι) : Fin (Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity label)
+'Komorebi.PaperICompletion3.PrimarySeedFormula.fiberColor' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.fiberColor_injective_on_fiber.{u, v} {ι : Type u} [Fintype ι] {Λ : Type v}
+  (label : ι → Λ) {i j : ι} (hlabel : label i = label j)
+  (hcolor :
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberColor label i =
+      Komorebi.PaperICompletion3.PrimarySeedFormula.fiberColor label j) :
+  i = j
+'Komorebi.PaperICompletion3.PrimarySeedFormula.fiberColor_injective_on_fiber' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity.{u, v} {ι : Type u} [Fintype ι] {Λ : Type v}
+  (label : ι → Λ) (a : Λ) : ℕ
+'Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity_le_max.{u, v} {ι : Type u} [Fintype ι] {Λ : Type v}
+  (label : ι → Λ) (i : ι) :
+  Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity label (label i) ≤
+    Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity label
+'Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity_le_max' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity_le_of_generates.{u, v, u_1} {R : Type u} [CommRing R]
+  {ι : Type v} [Fintype ι] (I P : ι → Ideal R) (hIP : ∀ (i : ι), I i ≤ P i) (a : Ideal R) [a.IsMaximal] {κ : Type u_1}
+  [Fintype κ] (s : κ → (i : ι) → R ⧸ I i) (hs : Komorebi.SeedRankBasics.FamilyGenerates R ((i : ι) → R ⧸ I i) s) :
+  Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity P a ≤ Fintype.card κ
+'Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity_le_of_generates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity.{u, v} {ι : Type u} [Fintype ι] {Λ : Type v}
+  (label : ι → Λ) : ℕ
+'Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.operatorModule_isTorsion.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Module.IsTorsion (Polynomial k) (Module.AEval' T)
+'Komorebi.PaperICompletion3.PrimarySeedFormula.operatorModule_isTorsion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.operator_seedNumber_isLeast_of_polynomialModule.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (r : ℕ)
+  (h : IsLeast {n | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates (Polynomial k) (Module.AEval' T) s} r) :
+  IsLeast {n | Komorebi.SingleOperatorGraph.SeedNumberLE T n} r
+'Komorebi.PaperICompletion3.PrimarySeedFormula.operator_seedNumber_isLeast_of_polynomialModule' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.primaryProduct_seedNumber_isLeast.{u, v} {R : Type u} [CommRing R]
+  {ι : Type v} [Fintype ι] (I P : ι → Ideal R) (hIP : ∀ (i : ι), I i ≤ P i) (hmax : ∀ (i : ι), (P i).IsMaximal)
+  (hcoprime : ∀ (i j : ι), P i ≠ P j → IsCoprime (I i) (I j)) :
+  IsLeast {r | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates R ((i : ι) → R ⧸ I i) s}
+    (Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity P)
+'Komorebi.PaperICompletion3.PrimarySeedFormula.primaryProduct_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.primePowerProduct_seedNumber_isLeast.{u, v} {R : Type u} [CommRing R]
+  [IsDomain R] [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (p : ι → R) (hp : ∀ (i : ι), Irreducible (p i))
+  (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) :
+  IsLeast {r | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates R ((i : ι) → R ⧸ Ideal.span {p i ^ e i}) s}
+    (Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i})
+'Komorebi.PaperICompletion3.PrimarySeedFormula.primePowerProduct_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.primePower_quotient_subsingleton_of_exponent_zero.{u} {R : Type u}
+  [CommRing R] (p : R) {n : ℕ} (hn : n = 0) : Subsingleton (R ⧸ Ideal.span {p ^ n})
+'Komorebi.PaperICompletion3.PrimarySeedFormula.primePower_quotient_subsingleton_of_exponent_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (I P : ι → Ideal R) (hIP : ∀ (i : ι), I i ≤ P i) (a : Ideal R) : ((i : ι) → R ⧸ I i) →ₗ[R] { i // P i = a } → R ⧸ a
+'Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap_surjective.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (I P : ι → Ideal R) (hIP : ∀ (i : ι), I i ≤ P i) (a : Ideal R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap I P hIP a)
+'Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.residue_finrank_le_card_of_generates.{u, v, w, u_1, u_2} {R : Type u}
+  [CommRing R] {M : Type v} [AddCommGroup M] [Module R M] {K : Type w} [Field K] [Algebra R K] {Y : Type u_1}
+  [AddCommGroup Y] [Module K Y] [Module R Y] [IsScalarTower R K Y] {ι : Type u_2} [Fintype ι] (f : M →ₗ[R] Y)
+  (hf : Function.Surjective ⇑f) (s : ι → M) (hs : Komorebi.SeedRankBasics.FamilyGenerates R M s) :
+  Module.finrank K Y ≤ Fintype.card ι
+'Komorebi.PaperICompletion3.PrimarySeedFormula.residue_finrank_le_card_of_generates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion3.PrimarySeedFormula.seedNumber_isLeast_linearEquiv.{u, v, w} {R : Type u} [Semiring R]
+  {M : Type v} [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (f : M ≃ₗ[R] N) (r : ℕ)
+  (h : IsLeast {n | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates R N s} r) :
+  IsLeast {n | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates R M s} r
+'Komorebi.PaperICompletion3.PrimarySeedFormula.seedNumber_isLeast_linearEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.eq_zero_of_coprime_smul.{u} {R : Type u} [CommRing R] (p q : R)
+  (hc : IsCoprime p q) (x : R ⧸ Ideal.span {q}) (hx : p • x = 0) : x = 0
+'Komorebi.PaperICompletion4.GroupedPrimary.eq_zero_of_coprime_smul' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ) (p : R)
+  (hp : Irreducible p) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p) ≃ₗ[R]
+    (i : { i // Ideal.span {q i} = Ideal.span {p} }) → R ⧸ Ideal.span {q ↑i ^ e ↑i}
+'Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.primaryCongr.{u, v, w} {R : Type u} [CommRing R] {M : Type v} [AddCommGroup M]
+  [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) ≃ₗ[R]
+    ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule N p)
+'Komorebi.PaperICompletion4.GroupedPrimary.primaryCongr' depends on axioms: [propext, Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.primaryProduct_mem_iff.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ) (p : R)
+  (hp : Irreducible p) (x : (i : ι) → R ⧸ Ideal.span {q i ^ e i}) :
+  x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p ↔
+    ∀ (i : ι), Ideal.span {q i} ≠ Ideal.span {p} → x i = 0
+'Komorebi.PaperICompletion4.GroupedPrimary.primaryProduct_mem_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.primary_equiv_mem_iff.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) (x : M) :
+  f x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule N p ↔
+    x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p
+'Komorebi.PaperICompletion4.GroupedPrimary.primary_equiv_mem_iff' depends on axioms: [propext, Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.mem_primarySubmodule.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) (x : M) :
+  x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p ↔ ∃ n, p ^ n • x = 0
+'Komorebi.PaperICompletion4.IntrinsicPrimary.mem_primarySubmodule' depends on axioms: [propext]
+Komorebi.PaperICompletion4.IntrinsicPrimary.power_kills_of_le.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) {m n : ℕ} (h : m ≤ n) (x : M) (hx : p ^ m • x = 0) : p ^ n • x = 0
+'Komorebi.PaperICompletion4.IntrinsicPrimary.power_kills_of_le' depends on axioms: [propext]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient
+      (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)) p ≃ₗ[R ⧸ Ideal.span {p}]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal_mk.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R)
+  (x : ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)) :
+  (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal M p) (Submodule.Quotient.mk x) =
+    Submodule.Quotient.mk ↑x
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) : Submodule R M
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule' depends on axioms: [propext]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary.{u, v} {R : Type u} [CommRing R]
+  (M : Type v) [AddCommGroup M] [Module R M] (p : R) :
+  Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p = Ideal.primaryComponent M (Ideal.span {p})
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) →ₗ[R]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) : (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p).ker = p • ⊤
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p)
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) : Type v
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) : ℕ
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] {ι : Type v} [Fintype ι] (T : Module.End k V)
+  (p : Polynomial k) (hp : Irreducible p) (q : ι → Polynomial k) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (hlabel : ∀ (i : ι), Ideal.span {q i} = Ideal.span {p})
+  (f :
+    ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+      (i : ι) → Polynomial k ⧸ Ideal.span {q i ^ e i}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = Fintype.card ι
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p})
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_of_span_eq.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (p q : Polynomial k)
+  (hp : Irreducible p) (hq : Irreducible q) (h : Ideal.span {p} = Ideal.span {q}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T q
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_of_span_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_zero_of_absent.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p)
+  (h : ∀ (i : D.Index), D.label i ≠ Ideal.span {p}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = 0
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_zero_of_absent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (p : Polynomial k)
+  (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p ≤
+    Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : ℕ
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum_attained.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ p,
+    p.Monic ∧
+      Irreducible p ∧
+        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum_attained' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) : Set ℕ
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  BddAbove (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T).Nonempty
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryComponentEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+    (i : { i // D.label i = Ideal.span {p} }) → Polynomial k ⧸ Ideal.span {D.prime ↑i ^ D.exponent ↑i}
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryComponentEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p ≃ₗ[Polynomial k ⧸ Ideal.span {p}]
+    { i // D.label i = Ideal.span {p} } → Polynomial k ⧸ Ideal.span {p}
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_primary_membership.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Module.AEval'.of T) x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p ↔
+    ∃ n, ((Polynomial.aeval T) p ^ n) x = 0
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_primary_membership' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_scalarImage_membership.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Module.AEval'.of T) x ∈ p • ⊤ ↔ ∃ y, ((Polynomial.aeval T) p) y = x
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_scalarImage_membership' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsic_primary_max.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Finset.univ.sup fun i => Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (D.prime i)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsic_primary_max' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.primary_fiber_presentation_invariant.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D E : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) =
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity E.label (Ideal.span {p})
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.primary_fiber_presentation_invariant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient.{u, v} {R : Type u} [CommRing R] (M : Type v) [AddCommGroup M]
+  [Module R M] (p : R) : Type v
+'Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul.{u} {R : Type u} [CommRing R] (I : Ideal R) (p : R)
+  (hI : I ≤ Ideal.span {p}) (x : R ⧸ I) : (Ideal.Quotient.factor hI) x = 0 ↔ ∃ y, p • y = x
+'Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff.{u, v} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] (p : R) (x : M) : x ∈ p • ⊤ ↔ ∃ y, p • y = x
+'Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (p : R) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient ((i : ι) → R ⧸ Ideal.span {q i ^ e i})
+      p ≃ₗ[R ⧸ Ideal.span {p}]
+    { i // Ideal.span {q i} = Ideal.span {p} } → R ⧸ Ideal.span {p}
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap.{u, v} {R : Type u} [CommRing R] {ι : Type v} (q : ι → R)
+  (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) (p : R) :
+  ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) →ₗ[R] { i // Ideal.span {q i} = Ideal.span {p} } → R ⧸ Ideal.span {p}
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_ker.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (p : R) (hp : Irreducible p) :
+  (Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p).ker = p • ⊤
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_surjective.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (q : ι → R) (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) (p : R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p)
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.quotientAfterEquiv_ker.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) :
+  ((p • ⊤).mkQ ∘ₗ ↑f).ker = p • ⊤
+'Komorebi.PaperICompletion4.ResidueQuotient.quotientAfterEquiv_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p ≃ₗ[R ⧸ Ideal.span {p}]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient N p
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr_mk.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) (x : M) :
+  (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr p f) (Submodule.Quotient.mk x) =
+    Submodule.Quotient.mk (f x)
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) [Module (R ⧸ Ideal.span {p}) N]
+  [IsScalarTower R (R ⧸ Ideal.span {p}) N] (f : M →ₗ[R] N) (hf : Function.Surjective ⇑f) (hker : f.ker = p • ⊤) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p ≃ₗ[R ⧸ Ideal.span {p}] N
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) [Module (R ⧸ Ideal.span {p}) N]
+  [IsScalarTower R (R ⧸ Ideal.span {p}) N] (f : M →ₗ[R] N) (hf : Function.Surjective ⇑f) (hker : f.ker = p • ⊤)
+  (x : M) : (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv p f hf hker) (Submodule.Quotient.mk x) = f x
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.smul_surjective_of_coprime.{u} {R : Type u} [CommRing R] (p q : R)
+  (h : IsCoprime p q) : Function.Surjective fun x => p • x
+'Komorebi.PaperICompletion4.ResidueQuotient.smul_surjective_of_coprime' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.cyclicMinpolyQuotientEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx : Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)) :
+  Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {minpoly k T}
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.cyclicMinpolyQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.eigenspace_finrank_pos_iff_mem_spectrum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (a : k) :
+  0 < Module.finrank k ↥(T.eigenspace a) ↔ a ∈ spectrum k T
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.eigenspace_finrank_pos_iff_mem_spectrum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_eq_one_iff.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V]
+  (T : Module.End k V) :
+  Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T = 1 ↔
+    ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_eq_one_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_pos.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] (T : Module.End k V) :
+  0 < Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_all_spectral_multiplicities_one.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_all_spectral_multiplicities_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_geometricSeedMaximum_one.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V]
+  (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T = 1
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_geometricSeedMaximum_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Nonempty (Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {minpoly k T})
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.minpoly_eq_charpoly_iff_all_spectral_multiplicities_one.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V) :
+  minpoly k T = LinearMap.charpoly T ↔ ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.minpoly_eq_charpoly_iff_all_spectral_multiplicities_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.spectralSeedMaximum_attained.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V]
+  (T : Module.End k V) :
+  ∃ a ∈ spectrum k T,
+    Module.finrank k ↥(T.eigenspace a) = Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T
+'Komorebi.PaperICompletion5.CyclicGeometricCriterion.spectralSeedMaximum_attained' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (a : k)
+  (ha : a ∉ spectrum k T) : Module.finrank k ↥(T.eigenspace a) = 0
+'Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_le_seedFinrank.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (a : k) :
+  Module.finrank k ↥(T.eigenspace a) ≤
+    Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V
+'Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_le_seedFinrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : Set ℕ
+'Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_bddAbove.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  BddAbove (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T)
+'Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_bddAbove' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_nonempty.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T).Nonempty
+'Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_nonempty' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : ℕ
+'Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_attained.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ a, Module.finrank k ↥(T.eigenspace a) = Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T
+'Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_attained' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_eq_spectralSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T
+'Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_eq_spectralSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.monic_irreducible_eq_X_sub_C.{u} {k : Type u} [Field k] [IsAlgClosed k]
+  (p : Polynomial k) (hm : p.Monic) (hp : Irreducible p) : ∃ a, p = Polynomial.X - Polynomial.C a
+'Komorebi.PaperICompletion5.GeometricSeedFormula.monic_irreducible_eq_X_sub_C' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_geometricSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T
+'Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_geometricSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_spectralSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T
+'Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_spectralSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_geometricSeedMaximum.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T)
+'Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_geometricSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_spectralSeedMaximum.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)
+'Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_spectralSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.primaryValues_eq_geometricValues.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T
+'Komorebi.PaperICompletion5.GeometricSeedFormula.primaryValues_eq_geometricValues' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : Set ℕ
+'Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues_bddAbove.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  BddAbove (Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues T)
+'Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues_bddAbove' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : ℕ
+'Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.finrank_cokernel_eq_finrank_kernel.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (S : Module.End k V) :
+  Module.finrank k (V ⧸ LinearMap.range S) = Module.finrank k ↥(LinearMap.ker S)
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.finrank_cokernel_eq_finrank_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (a : k) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (Polynomial.X - Polynomial.C a) =
+    Module.finrank k ↥(T.eigenspace a)
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.linearResidue_finrank.{u} {k : Type u} [Field k] (a : k) :
+  Module.finrank k (Polynomial k ⧸ Ideal.span {Polynomial.X - Polynomial.C a}) = 1
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.linearResidue_finrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) :
+  Module.AEval' T →ₗ[k] V ⧸ LinearMap.range ((Polynomial.aeval T) p)
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap_ker.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) :
+  (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap T p).ker =
+    Submodule.restrictScalars k (p • ⊤)
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap_surjective.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap T p)
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient (Module.AEval' T) p ≃ₗ[k]
+    V ⧸ LinearMap.range ((Polynomial.aeval T) p)
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel_mk.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel T p)
+      (Submodule.Quotient.mk ((Module.AEval'.of T) x)) =
+    Submodule.Quotient.mk x
+'Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SeedRankBasics.generates_singleton_iff_surjective.{u, v} (A : Type u) (M : Type v) [Semiring A]
+  [AddCommMonoid M] [Module A M] (x : M) :
+  Komorebi.SeedRankBasics.Generates A M {x} ↔ Function.Surjective ⇑(Komorebi.SeedRankBasics.oneSeedMap A M x)
+'Komorebi.SeedRankBasics.generates_singleton_iff_surjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankBasics.multiSeedQuotientEquiv.{u, v, w} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] {ι : Type w} (v : ι → M) (hv : Komorebi.SeedRankBasics.FamilyGenerates A M v) :
+  ((ι →₀ A) ⧸ (Komorebi.SeedRankBasics.multiSeedMap A M v).ker) ≃ₗ[A] M
+'Komorebi.SeedRankBasics.multiSeedQuotientEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankBasics.multiSeedQuotientEquivRange.{u, v, w} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] {ι : Type w} (v : ι → M) :
+  ((ι →₀ A) ⧸ (Komorebi.SeedRankBasics.multiSeedMap A M v).ker) ≃ₗ[A]
+    ↥(Komorebi.SeedRankBasics.multiSeedMap A M v).range
+'Komorebi.SeedRankBasics.multiSeedQuotientEquivRange' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankBasics.multiSeedQuotientEquivRange_apply_mk.{u, v, w} (A : Type u) (M : Type v) [Ring A]
+  [AddCommGroup M] [Module A M] {ι : Type w} (v : ι → M) (c : ι →₀ A) :
+  (Komorebi.SeedRankBasics.multiSeedQuotientEquivRange A M v) (Submodule.Quotient.mk c) =
+    ⟨(Finsupp.linearCombination A v) c, ⋯⟩
+'Komorebi.SeedRankBasics.multiSeedQuotientEquivRange_apply_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SeedRankBasics.oneSeedQuotientEquivRange.{u, v} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] (x : M) :
+  (A ⧸ (Komorebi.SeedRankBasics.oneSeedMap A M x).ker) ≃ₗ[A] ↥(Komorebi.SeedRankBasics.oneSeedMap A M x).range
+'Komorebi.SeedRankBasics.oneSeedQuotientEquivRange' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankBasics.oneSeedQuotientEquivRange_apply_mk.{u, v} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] (x : M) (a : A) :
+  (Komorebi.SeedRankBasics.oneSeedQuotientEquivRange A M x) (Submodule.Quotient.mk a) = ⟨a • x, ⋯⟩
+'Komorebi.SeedRankBasics.oneSeedQuotientEquivRange_apply_mk' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankOperations.cyclic_iff_seedRank_eq_one.{u} (A M : Type u) [Semiring A] [AddCommMonoid M] [Module A M]
+  [Nontrivial M] : Komorebi.SeedRankBasics.Cyclic A M ↔ Komorebi.SeedRankBasics.seedRank A M = 1
+'Komorebi.SeedRankOperations.cyclic_iff_seedRank_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankOperations.finrank_le_seedRank_of_scalar_quotient.{u} (k A X Y : Type u) [Field k] [Semiring A]
+  [Algebra k A] [AddCommMonoid X] [Module A X] [AddCommGroup Y] [Module k Y] [Module.Finite k Y] (χ : A →ₐ[k] k)
+  (f : X →ₛₗ[χ.toRingHom] Y) (hf : Function.Surjective ⇑f) :
+  ↑(Module.finrank k Y) ≤ Komorebi.SeedRankBasics.seedRank A X
+'Komorebi.SeedRankOperations.finrank_le_seedRank_of_scalar_quotient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SeedRankOperations.seedFinrank_isLeast_free_surjection.{u} (A M : Type u) [Semiring A] [AddCommMonoid M]
+  [Module A M] [Module.Finite A M] : IsLeast {n | ∃ f, Function.Surjective ⇑f} (Komorebi.SeedRankBasics.seedFinrank A M)
+'Komorebi.SeedRankOperations.seedFinrank_isLeast_free_surjection' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SeedRankOperations.seedRank_imageAlgebra_eq.{u} {k A B M N : Type u} [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] (φ : A →ₐ[k] B)
+  (f : M →ₛₗ[φ.toRingHom] N) (hf : Function.Bijective ⇑f) :
+  Komorebi.SeedRankBasics.seedRank A M = Komorebi.SeedRankBasics.seedRank (↥φ.range) N
+'Komorebi.SeedRankOperations.seedRank_imageAlgebra_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankOperations.seedRank_le_of_surjective_semilinear.{u} {A B M N : Type u} [Semiring A] [Semiring B]
+  [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] {σ : A →+* B} (f : M →ₛₗ[σ] N)
+  (hf : Function.Surjective ⇑f) : Komorebi.SeedRankBasics.seedRank B N ≤ Komorebi.SeedRankBasics.seedRank A M
+'Komorebi.SeedRankOperations.seedRank_le_of_surjective_semilinear' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SeedRankOperations.seedRank_prod_le_add.{u} (A M N : Type u) [Semiring A] [AddCommMonoid M] [Module A M]
+  [AddCommMonoid N] [Module A N] :
+  Komorebi.SeedRankBasics.seedRank A (M × N) ≤
+    Komorebi.SeedRankBasics.seedRank A M + Komorebi.SeedRankBasics.seedRank A N
+'Komorebi.SeedRankOperations.seedRank_prod_le_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankOperations.seedRank_prod_productAlgebra.{u} (A B M N : Type u) [Semiring A] [Semiring B]
+  [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] :
+  Komorebi.SeedRankBasics.seedRank (A × B) (M × N) =
+    max (Komorebi.SeedRankBasics.seedRank A M) (Komorebi.SeedRankBasics.seedRank B N)
+'Komorebi.SeedRankOperations.seedRank_prod_productAlgebra' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankOperations.seedRank_tensorProduct_le_mul.{u} (k A B X Y : Type u) [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid X] [Module k X] [Module A X] [IsScalarTower k A X]
+  [SMulCommClass k A X] [AddCommMonoid Y] [Module k Y] [Module B Y] [IsScalarTower k B Y] [SMulCommClass k B Y] :
+  Komorebi.SeedRankBasics.seedRank (TensorProduct k A B) (TensorProduct k X Y) ≤
+    Komorebi.SeedRankBasics.seedRank A X * Komorebi.SeedRankBasics.seedRank B Y
+'Komorebi.SeedRankOperations.seedRank_tensorProduct_le_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SeedRankOperations.tensorOperator_smul_tmul.{u} (k A B X Y : Type u) [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid X] [Module k X] [Module A X] [IsScalarTower k A X]
+  [SMulCommClass k A X] [AddCommMonoid Y] [Module k Y] [Module B Y] [IsScalarTower k B Y] [SMulCommClass k B Y] (a : A)
+  (b : B) (x : X) (y : Y) : a ⊗ₜ[k] b • x ⊗ₜ[k] y = (a • x) ⊗ₜ[k] (b • y)
+'Komorebi.SeedRankOperations.tensorOperator_smul_tmul' depends on axioms: [propext, Quot.sound]
+Komorebi.SemisimpleCompletion.fullMatrix_every_nonzero_vector_generates.{u} {k : Type u} [Field k] {n : ℕ}
+  {x : Fin n → k} (hx : x ≠ 0) : Komorebi.SeedRankBasics.Generates (Matrix (Fin n) (Fin n) k) (Fin n → k) {x}
+'Komorebi.SemisimpleCompletion.fullMatrix_every_nonzero_vector_generates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SemisimpleCompletion.fullMatrix_seedRank_eq_one.{u} {k : Type u} [Field k] {n : ℕ} (hn : 0 < n) :
+  Komorebi.SeedRankBasics.seedRank (Matrix (Fin n) (Fin n) k) (Fin n → k) = 1
+'Komorebi.SemisimpleCompletion.fullMatrix_seedRank_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SemisimpleCompletion.multiplicity_obstruction.{u} {k : Type u} [Field k] {r d m : ℕ} (hd : 0 < d)
+  {v : Fin r → Komorebi.SemisimpleCompletion.BlockModule d m}
+  (hv :
+    Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.SemisimpleCompletion.BlockAlgebra d)
+      (Komorebi.SemisimpleCompletion.BlockModule d m) v) :
+  m ⌈/⌉ d ≤ r
+'Komorebi.SemisimpleCompletion.multiplicity_obstruction' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SemisimpleCompletion.multiplicity_seedRank_formula.{u} {k : Type u} [Field k] {d m : ℕ} (hd : 0 < d) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.SemisimpleCompletion.BlockAlgebra d)
+      (Komorebi.SemisimpleCompletion.BlockModule d m) =
+    ↑(m ⌈/⌉ d)
+'Komorebi.SemisimpleCompletion.multiplicity_seedRank_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.SemisimpleCompletion.semisimple_seedRank_eq_maxCeilDiv_of_equivalences.{u} {k : Type u} [Field k] {I : Type u}
+  [Fintype I] [DecidableEq I] (d m : I → ℕ) {A X : Type u} [Semiring A] [Algebra k A] [AddCommMonoid X] [Module A X]
+  (algebraEquiv : A ≃ₐ[k] Komorebi.SemisimpleCompletion.SplitProductAlgebra d)
+  (moduleEquiv : X ≃ₛₗ[↑algebraEquiv.toRingEquiv] Komorebi.SemisimpleCompletion.SplitProductModule d m)
+  (hd : ∀ (i : I), 0 < d i) : Komorebi.SeedRankBasics.seedRank A X = ↑(Komorebi.SemisimpleCompletion.maxCeilDiv d m)
+'Komorebi.SemisimpleCompletion.semisimple_seedRank_eq_maxCeilDiv_of_equivalences' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SemisimpleCompletion.splitProduct_seedRank_eq_maxCeilDiv.{u, v} {k : Type u} [Field k] {I : Type v} [Fintype I]
+  [DecidableEq I] (d m : I → ℕ) (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.SemisimpleCompletion.SplitProductAlgebra d)
+      (Komorebi.SemisimpleCompletion.SplitProductModule d m) =
+    ↑(Komorebi.SemisimpleCompletion.maxCeilDiv d m)
+'Komorebi.SemisimpleCompletion.splitProduct_seedRank_eq_maxCeilDiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.complex_cycle_seedNumber_isLeast_two (n : ℕ) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Komorebi.SingleOperatorGraph.cycleAdjacency n) r} 2
+'Komorebi.SingleOperatorGraph.complex_cycle_seedNumber_isLeast_two' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.cyclic_matrix_criterion_of_primary_decomposition.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [FiniteDimensional k X] (T : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (hpositive : ∀ (eigen : Λ), 0 < multiplicity eigen)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R)
+  (hpoly : minpoly k T = LinearMap.charpoly T ↔ ∀ (eigen : Λ), multiplicity eigen = 1) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    (∀ (eigen : Λ), multiplicity eigen = 1) ∧ minpoly k T = LinearMap.charpoly T
+'Komorebi.SingleOperatorGraph.cyclic_matrix_criterion_of_primary_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.cyclic_matrix_four_way_iff_of_primary_decomposition.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [FiniteDimensional k X] (T : Module.End k X) (R : ℕ)
+  (geometricMultiplicity blockMultiplicity : Λ → ℕ) (hpositive : ∀ (eigen : Λ), 0 < geometricMultiplicity eigen)
+  (hbound : ∀ (eigen : Λ), geometricMultiplicity eigen ≤ R) (maxEigen : Λ) (hmax : geometricMultiplicity maxEigen = R)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R)
+  (hgeometric_eq_blocks : ∀ (eigen : Λ), geometricMultiplicity eigen = blockMultiplicity eigen)
+  (hpoly :
+    minpoly k T = LinearMap.charpoly T ↔ Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity) :
+  (Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+      Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity) ∧
+    (Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity ↔
+        Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity) ∧
+      (Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity ↔ minpoly k T = LinearMap.charpoly T)
+'Komorebi.SingleOperatorGraph.cyclic_matrix_four_way_iff_of_primary_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (adjacency : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (eigenbasis : Module.Basis ((eigen : Λ) × Fin (multiplicity eigen)) k X)
+  (hEigen : ∀ (z : (eigen : Λ) × Fin (multiplicity eigen)), adjacency (eigenbasis z) = eigenvalue z.fst • eigenbasis z)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (projectorPolynomial : Λ → Polynomial k)
+  (hproject :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ((Polynomial.aeval adjacency) (projectorPolynomial eigen))
+          (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity (fun e j => eigenbasis ⟨e, j⟩) ⟨↑j, ⋯⟩) =
+        eigenbasis ⟨eigen, j⟩) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE adjacency r} R
+'Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity_of_distinct.{u, v, w} {k : Type u}
+  [Field k] {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (adjacency : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (eigenbasis : Module.Basis ((eigen : Λ) × Fin (multiplicity eigen)) k X)
+  (hEigen : ∀ (z : (eigen : Λ) × Fin (multiplicity eigen)), adjacency (eigenbasis z) = eigenvalue z.fst • eigenbasis z)
+  (heigenvalue : Function.Injective eigenvalue) (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ)
+  (hmax : multiplicity maxEigen = R) : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE adjacency r} R
+'Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity_of_distinct' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.operatorAlgebra_seedFinrank_eq_of_seedNumber_isLeast.{u, v} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] (T : Module.End k X) (R : ℕ)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = R
+'Komorebi.SingleOperatorGraph.operatorAlgebra_seedFinrank_eq_of_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.operatorAlgebra_seedRank_eq_of_seedNumber_isLeast.{u, v} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] (T : Module.End k X) (R : ℕ)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = ↑R
+'Komorebi.SingleOperatorGraph.operatorAlgebra_seedRank_eq_of_seedNumber_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.path_endpoint_seedNumber_isLeast_one.{u} {k : Type u} [Field k] (n : ℕ) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Komorebi.PathGraphKrylov.pathStep k n) r} 1
+'Komorebi.SingleOperatorGraph.path_endpoint_seedNumber_isLeast_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.singleOperator_operatorAlgebra_seedRanks_eq_of_primary_decomposition.{u, v, w} {k : Type u}
+  [Field k] {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (T : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (blockGenerator : (eigen : Λ) → Fin (multiplicity eigen) → X)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (hblocks : Komorebi.SingleOperatorGraph.FamilyGenerates T fun z => blockGenerator z.fst z.snd)
+  (hextract :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ∃ p,
+        ((Polynomial.aeval T) p) (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity blockGenerator ⟨↑j, ⋯⟩) =
+          blockGenerator eigen j)
+  (q : (eigen : Λ) → X →ₗ[k] Fin (multiplicity eigen) → k) (hq : ∀ (eigen : Λ), Function.Surjective ⇑(q eigen))
+  (hqT :
+    ∀ (eigen : Λ) (p : Polynomial k) (x : X),
+      (q eigen) (((Polynomial.aeval T) p) x) = Polynomial.eval (eigenvalue eigen) p • (q eigen) x) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = R ∧
+    Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = ↑R
+'Komorebi.SingleOperatorGraph.singleOperator_operatorAlgebra_seedRanks_eq_of_primary_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.SingleOperatorGraph.singleOperator_seedNumber_isLeast_of_primary_decomposition.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (T : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (blockGenerator : (eigen : Λ) → Fin (multiplicity eigen) → X)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (hblocks : Komorebi.SingleOperatorGraph.FamilyGenerates T fun z => blockGenerator z.fst z.snd)
+  (hextract :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ∃ p,
+        ((Polynomial.aeval T) p) (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity blockGenerator ⟨↑j, ⋯⟩) =
+          blockGenerator eigen j)
+  (q : (eigen : Λ) → X →ₗ[k] Fin (multiplicity eigen) → k) (hq : ∀ (eigen : Λ), Function.Surjective ⇑(q eigen))
+  (hqT :
+    ∀ (eigen : Λ) (p : Polynomial k) (x : X),
+      (q eigen) (((Polynomial.aeval T) p) x) = Polynomial.eval (eigenvalue eigen) p • (q eigen) x) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R
+'Komorebi.SingleOperatorGraph.singleOperator_seedNumber_isLeast_of_primary_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower_apply.{u_6}
+  {𝕂 : Type u_6} [RCLike 𝕂] (m n : ℤ) (x : ↥(lp (fun x => 𝕂) 2)) :
+  ↑((KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower m) x)
+      n =
+    ↑x (n - m)
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower_apply' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.adjoint_transferBlock.{u_4, u_5} {𝕂 : Type u_4}
+  {E : Type u_5} [RCLike 𝕂] [NormedAddCommGroup E] [InnerProductSpace 𝕂 E] [CompleteSpace E] (Pα Pβ T : E →L[𝕂] E)
+  (hα : ContinuousLinearMap.adjoint Pα = Pα) (hβ : ContinuousLinearMap.adjoint Pβ = Pβ) :
+  ContinuousLinearMap.adjoint
+      (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.transferBlock Pβ T Pα) =
+    KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.transferBlock Pα (ContinuousLinearMap.adjoint T)
+      Pβ
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.adjoint_transferBlock' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.closure_le_ker_of_le_ker.{u_1, u_2} {𝕜 : Type u_1}
+  {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : X →L[𝕜] X)
+  (H : Submodule 𝕜 X) (hH : H ≤ (↑Q).ker) : H.topologicalClosure ≤ (↑Q).ker
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.closure_le_ker_of_le_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense.{u_1, u_4, u_5}
+  {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {Y : Type u_4} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] {α : Type u_5}
+  [NormedAddCommGroup α] [NormedSpace 𝕜 α] [CompleteSpace Y] (f : α →L[𝕜] Y) (hiso : Isometry ⇑f)
+  (hdense : DenseRange ⇑f) : UniformSpace.Completion α ≃L[𝕜] Y
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_intertwines.{u_1, u_4,
+    u_5}
+  {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {Y : Type u_4} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] {α : Type u_5}
+  [NormedAddCommGroup α] [NormedSpace 𝕜 α] [CompleteSpace Y] (f : α →L[𝕜] Y) (hiso : Isometry ⇑f)
+  (hdense : DenseRange ⇑f) (A : α →L[𝕜] α) (B : Y →L[𝕜] Y) (hintertwine : f ∘SL A = B ∘SL f) :
+  ↑(KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense f hiso hdense) ∘SL
+      A.completion =
+    B ∘SL
+      ↑(KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense f hiso hdense)
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_intertwines' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_unique.{u_1, u_4, u_5}
+  {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {Y : Type u_4} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] {α : Type u_5}
+  [NormedAddCommGroup α] [NormedSpace 𝕜 α] [CompleteSpace Y] (f : α →L[𝕜] Y) (hiso : Isometry ⇑f)
+  (hdense : DenseRange ⇑f) (g : UniformSpace.Completion α →L[𝕜] Y) (hg : ∀ (x : α), g ↑x = f x) :
+  g = ↑(KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense f hiso hdense)
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_unique' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_seedCardinality_isLeast.{u_6}
+  {𝕂 : Type u_6} [RCLike 𝕂] :
+  IsLeast
+    {n |
+      KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.GeneratesWithNSeeds
+        (Set.range
+          KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concrete.power)
+        n}
+    1
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_seedCardinality_isLeast' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_topologicallyCyclic.{u_6}
+  {𝕂 : Type u_6} [RCLike 𝕂] :
+  KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.TopologicallyCyclic
+    (Set.range
+      KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concrete.power)
+    (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.delta 0)
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_topologicallyCyclic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.dense_operatorHull_image.{u_1, u_2, u_4}
+  {𝕜 : Type u_1} {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type u_4}
+  [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (f : X →L[𝕜] Y) (hf : Function.Surjective ⇑f) (φ : (X →L[𝕜] X) → Y →L[𝕜] Y)
+  (A : Set (X →L[𝕜] X)) (B : Set (Y →L[𝕜] Y)) (S : Set X) (hφ : ∀ T ∈ A, φ T ∈ B)
+  (hintertwine : ∀ T ∈ A, f ∘SL T = φ T ∘SL f)
+  (hgenerate :
+    (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.operatorHull A S).topologicalClosure = ⊤) :
+  (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.operatorHull B (⇑f '' S)).topologicalClosure = ⊤
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.dense_operatorHull_image' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.idempotentRange_eq_closure_map.{u_1, u_2}
+  {𝕜 : Type u_1} {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : X →L[𝕜] X)
+  (hQ : ∀ (x : X), Q (Q x) = Q x) (M : Submodule 𝕜 X) (hM : M.topologicalClosure = ⊤) :
+  (Submodule.map (↑Q) M).topologicalClosure = (↑Q).range
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.idempotentRange_eq_closure_map' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.map_packetRange_eq.{u_1, u_2, u_4} {𝕜 : Type u_1}
+  {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type u_4}
+  [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (f : X →L[𝕜] Y) (hf : Function.Surjective ⇑f) (P : X →L[𝕜] X) (Q : Y →L[𝕜] Y)
+  (hintertwine : f ∘SL P = Q ∘SL f) : Submodule.map (↑f) (↑P).range = (↑Q).range
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.map_packetRange_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetEquiv.{u_1, u_2, u_3} {𝕜 : Type u_1}
+  {X : Type u_2} {ι : Type u_3} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) : X ≃L[𝕜] (i : ι) → ↥(P.packet i)
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetRange_eq_closure_map.{u_1, u_2, u_3}
+  {𝕜 : Type u_1} {X : Type u_2} {ι : Type u_3} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  [Fintype ι] (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) (M : Submodule 𝕜 X)
+  (hM : M.topologicalClosure = ⊤) (i : ι) : (Submodule.map (↑(P.proj i)) M).topologicalClosure = P.packet i
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetRange_eq_closure_map' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_packet_isomorphism.{u_1, u_2, u_3}
+  {𝕜 : Type u_1} {X : Type u_2} {ι : Type u_3} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  [Fintype ι] [CompleteSpace X] (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) :
+  (∀ (i : ι), IsClosed ↑(P.packet i)) ∧ ∃ e, ↑e = P.analysis ∧ ↑e.symm = P.synthesis
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_packet_isomorphism' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_reachability_obstruction.{u_1, u_2}
+  {𝕜 : Type u_1} {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : X →L[𝕜] X)
+  (H : Submodule 𝕜 X) (hQ : Q ≠ 0) (hH : H ≤ (↑Q).ker) : H.topologicalClosure ≠ ⊤
+'KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_reachability_obstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Module.AEval.isTorsion_of_finiteDimensional.{u_2, u_3, u_4} (K : Type u_2) (M : Type u_3) {A : Type u_4} (a : A)
+  [Field K] [Ring A] [Algebra K A] [AddCommGroup M] [Module A M] [Module K M] [IsScalarTower K A M]
+  [FiniteDimensional K A] : Module.IsTorsion (Polynomial K) (Module.AEval K M a)
+'Module.AEval.isTorsion_of_finiteDimensional' depends on axioms: [propext, Classical.choice, Quot.sound]
+Module.equiv_directSum_of_isTorsion.{u, v} {R : Type u} [CommRing R] [IsPrincipalIdealRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] [IsDomain R] [h' : Module.Finite R M] (hM : Module.IsTorsion R M) :
+  ∃ ι x p, ∃ (_ : ∀ (i : ι), Irreducible (p i)), ∃ e, Nonempty (M ≃ₗ[R] DirectSum ι fun i => R ⧸ R ∙ p i ^ e i)
+'Module.equiv_directSum_of_isTorsion' depends on axioms: [propext, Classical.choice, Quot.sound]
+Polynomial.exists_irreducible_of_natDegree_pos.{u_1} {R : Type u_1} [CommSemiring R] [NoZeroDivisors R] [WfDvdMonoid R]
+  {f : Polynomial R} [Nontrivial R] (hf : 0 < f.natDegree) : ∃ g, Irreducible g ∧ g ∣ f
+'Polynomial.exists_irreducible_of_natDegree_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+BLOCK05_TYPES_PASS

@@ -1,0 +1,986 @@
+@[reducible] def Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra.{u} : {k : Type u} → ℕ → Type u :=
+fun {k} d => Matrix (Fin d) (Fin d) k
+@[reducible] def Komorebi.PaperICompletion8.DivisionBlock.BlockModule.{u} : {k : Type u} → ℕ → ℕ → Type u :=
+fun {k} d m => Matrix (Fin d) (Fin m) k
+theorem Komorebi.PaperICompletion8.DivisionBlock.block_smul_eq_mul.{u} : ∀ {k : Type u} [inst : DivisionRing k]
+  {d m : ℕ} (A : Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+  (V : Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m), A • V = A * V :=
+fun {k} [DivisionRing k] {d m} A V =>
+  Matrix.ext fun i j =>
+    id
+      (of_eq_true
+        (Eq.trans
+          (congrFun'
+            (congrArg Eq
+              (Eq.trans (Finset.sum_apply j Finset.univ fun c => A i c • V c)
+                (Finset.sum_congr (Eq.refl Finset.univ) fun x a => Eq.refl (A i x * V x j))))
+            (∑ x, A i x * V x j))
+          (eq_self (∑ x, A i x * V x j))))
+theorem Komorebi.PaperICompletion8.DivisionBlock.leftGenerates_iff_familyGenerates.{u} : ∀ {k : Type u}
+  [inst : DivisionRing k] {r d m : ℕ} (v : Fin r → Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m),
+  Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔
+    Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+      (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) v :=
+fun {k} [DivisionRing k] {r d m} v =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔ _a)
+        (Komorebi.SeedRankBasics.FamilyGenerates.eq_1 (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) v)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔ _a)
+          (Komorebi.SeedRankBasics.Generates.eq_1 (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+            (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) (Set.range v))))
+      (Eq.mpr
+        (id (congrArg (fun _a => Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔ _a) (propext eq_top_iff)))
+        (Eq.mpr
+          (id
+            (congrArg (fun _a => Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔ _a)
+              (propext
+                (Submodule.top_le_span_range_iff_forall_exists_fun
+                  (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)))))
+          {
+            mp := fun h X =>
+              Exists.casesOn (h X) fun A hA =>
+                Exists.intro A
+                  (Eq.mpr
+                    (id
+                      (congrFun'
+                        (congrArg Eq
+                          (Finset.sum_congr (Eq.refl Finset.univ) fun x a =>
+                            Komorebi.PaperICompletion8.DivisionBlock.block_smul_eq_mul (A x) (v x)))
+                        X))
+                    (Eq.symm hA)),
+            mpr := fun h X =>
+              Exists.casesOn (h X) fun A hA =>
+                Exists.intro A
+                  (Eq.mp
+                    (congrArg (Eq X)
+                      (Finset.sum_congr (Eq.refl Finset.univ) fun x a =>
+                        Komorebi.PaperICompletion8.DivisionBlock.block_smul_eq_mul (A x) (v x)))
+                    (Eq.symm hA)) })))
+theorem Komorebi.PaperICompletion8.DivisionBlock.oneBlock_seedFinrank_eq_ceilDiv.{u} : ∀ {k : Type u}
+  [inst : DivisionRing k] {d m : ℕ},
+  0 < d →
+    Komorebi.SeedRankBasics.seedFinrank (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+        (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) =
+      m ⌈/⌉ d :=
+fun {k} [DivisionRing k] {d m} hd =>
+  Komorebi.SemisimpleCompletion.seedFinrank_eq_of_exists_fin_family_iff (m ⌈/⌉ d) fun r =>
+    {
+      mp := fun a =>
+        Exists.casesOn a fun v hv =>
+          have hm :=
+            (Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_iff hd).mp
+              (Exists.intro v ((Komorebi.PaperICompletion8.DivisionBlock.leftGenerates_iff_familyGenerates v).mpr hv));
+          (ceilDiv_le_iff_le_mul hd).mpr (Eq.mp (congrArg (LE.le m) (Nat.mul_comm r d)) hm),
+      mpr := fun hr =>
+        have hm := Eq.mpr (id (congrArg (LE.le m) (Nat.mul_comm r d))) ((ceilDiv_le_iff_le_mul hd).mp hr);
+        Exists.casesOn ((Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_iff hd).mpr hm) fun v hv =>
+          Exists.intro v ((Komorebi.PaperICompletion8.DivisionBlock.leftGenerates_iff_familyGenerates v).mp hv) }
+theorem Komorebi.PaperICompletion8.DivisionBlock.oneBlock_seedRank_eq_ceilDiv.{u} : ∀ {k : Type u}
+  [inst : DivisionRing k] {d m : ℕ},
+  0 < d →
+    Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+        (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) =
+      ↑(m ⌈/⌉ d) :=
+fun {k} [DivisionRing k] {d m} hd =>
+  have hfin :=
+    Exists.casesOn
+      (Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_of_le hd
+        (have hm := (ceilDiv_le_iff_le_mul hd).mp le_rfl;
+        Eq.mpr (id (Eq.trans (congrArg (LE.le m) (Nat.mul_comm (m ⌈/⌉ d) d)) ge_iff_le._simp_1)) hm))
+      fun v hv =>
+      Module.Finite.of_surjective
+        (Komorebi.SeedRankBasics.multiSeedMap (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) v)
+        ((Komorebi.SeedRankBasics.familyGenerates_iff_surjective
+              (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d) (Matrix (Fin d) (Fin m) k) v).mp
+          ((Komorebi.PaperICompletion8.DivisionBlock.leftGenerates_iff_familyGenerates v).mp hv));
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(m ⌈/⌉ d))
+        (Komorebi.SeedRankBasics.seedRank_eq_seedFinrank (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m))))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => ↑_a = ↑(m ⌈/⌉ d))
+          (Komorebi.PaperICompletion8.DivisionBlock.oneBlock_seedFinrank_eq_ceilDiv hd)))
+      (Eq.refl ↑(m ⌈/⌉ d)))
+@[reducible] def Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra.{u, v} : {I : Type v} →
+  {D : I → Type u} → (I → ℕ) → Type (max v u) :=
+fun {I} {D} d => (i : I) → Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra (d i)
+@[reducible] def Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule.{u, v} : {I : Type v} →
+  {D : I → Type u} → (I → ℕ) → (I → ℕ) → Type (max v u) :=
+fun {I} {D} d m => (i : I) → Komorebi.PaperICompletion8.DivisionBlock.BlockModule (d i) (m i)
+theorem Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_familyGenerates_iff.{u, v} : ∀ {I : Type v}
+  [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d m : I → ℕ) {r : ℕ}
+  (v : Fin r → Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m),
+  Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+      (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v ↔
+    ∀ (i : I), Komorebi.PaperICompletion8.DivisionRows.LeftGenerates fun j => v j i :=
+fun {I} [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {r} v =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a ↔ ∀ (i : I), Komorebi.PaperICompletion8.DivisionRows.LeftGenerates fun j => v j i)
+        (Komorebi.SeedRankBasics.FamilyGenerates.eq_1
+          (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a ↔ ∀ (i : I), Komorebi.PaperICompletion8.DivisionRows.LeftGenerates fun j => v j i)
+          (Komorebi.SeedRankBasics.Generates.eq_1 (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+            (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) (Set.range v))))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => _a ↔ ∀ (i : I), Komorebi.PaperICompletion8.DivisionRows.LeftGenerates fun j => v j i)
+            (propext eq_top_iff)))
+        (Eq.mpr
+          (id
+            (congrArg (fun _a => _a ↔ ∀ (i : I), Komorebi.PaperICompletion8.DivisionRows.LeftGenerates fun j => v j i)
+              (propext
+                (Submodule.top_le_span_range_iff_forall_exists_fun
+                  (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)))))
+          {
+            mp := fun h i X =>
+              Exists.casesOn (h (Pi.single i X)) fun c hc =>
+                Exists.intro (fun j => c j i)
+                  (Trans.trans
+                    (Trans.trans (of_eq_true (Eq.trans (congrArg (Eq X) (Pi.single_eq_same i X)) (eq_self X)))
+                      (Eq.mpr (id (congrArg (fun _a => Pi.single i X i = _a i) hc)) (Eq.refl (Pi.single i X i))))
+                    (of_eq_true
+                      (Eq.trans
+                        (congrFun'
+                          (congrArg Eq
+                            (Eq.trans (Finset.sum_apply i Finset.univ fun c_1 => c c_1 • v c_1)
+                              (Finset.sum_congr (Eq.refl Finset.univ) fun x a =>
+                                Komorebi.PaperICompletion8.DivisionBlock.block_smul_eq_mul (c x i) (v x i))))
+                          (∑ x, c x i * v x i))
+                        (eq_self (∑ x, c x i * v x i))))),
+            mpr := fun h X =>
+              (fun c hc =>
+                  let a := fun j i => c i j;
+                  Exists.intro a
+                    (funext fun i =>
+                      Eq.mpr
+                        (id
+                          (congrFun'
+                            (congrArg Eq
+                              (Eq.trans
+                                (Eq.trans
+                                  (congrFun
+                                    (Finset.sum_congr (Eq.refl Finset.univ) fun x a => Eq.refl ((fun i => c i x) • v x))
+                                    i)
+                                  (Finset.sum_apply i Finset.univ fun c_1 => (fun i => c i c_1) • v c_1))
+                                (Finset.sum_congr (Eq.refl Finset.univ) fun x a =>
+                                  Komorebi.PaperICompletion8.DivisionBlock.block_smul_eq_mul (c i x) (v x i))))
+                            (X i)))
+                        (Eq.mp
+                          (congrFun'
+                            (congrArg Eq (Finset.sum_congr (Eq.refl Finset.univ) fun x a => Eq.refl (c i x * v x i)))
+                            (X i))
+                          (Eq.symm (hc i)))))
+                (fun i => Classical.choose ((fun i => h i (X i)) i)) fun i =>
+                Classical.choose_spec ((fun i => h i (X i)) i) })))
+theorem Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedFinrank_eq_maxCeilDiv.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedFinrank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+        (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) =
+      Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m hd =>
+  Komorebi.SemisimpleCompletion.seedFinrank_eq_of_exists_fin_family_iff
+    (Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) fun r =>
+    Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_maxCeilDiv_le d m hd
+theorem Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedRank_eq_maxCeilDiv.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+        (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) =
+      ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m hd =>
+  Exists.casesOn
+    ((Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_maxCeilDiv_le d m hd).mpr le_rfl)
+    fun v hv =>
+    let this :=
+      Module.Finite.of_surjective
+        (Komorebi.SeedRankBasics.multiSeedMap (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v)
+        ((Komorebi.SeedRankBasics.familyGenerates_iff_surjective
+              (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+              (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v).mp
+          hv);
+    Eq.mpr
+      (id
+        (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+          (Komorebi.SeedRankBasics.seedRank_eq_seedFinrank
+            (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+            (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m))))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => ↑_a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+            (Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedFinrank_eq_maxCeilDiv d m hd)))
+        (Eq.refl ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)))
+theorem Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_coordinate_bounds.{u, v} : ∀
+  {I : Type v} [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d m : I → ℕ) {r : ℕ},
+  (∀ (i : I), 0 < d i) →
+    ((∃ v,
+        Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v) ↔
+      ∀ (i : I), m i ≤ r * d i) :=
+fun {I} [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {r} hd =>
+  {
+    mp := fun a =>
+      Exists.casesOn (motive := fun x => ∀ (i : I), m i ≤ r * d i) a fun v hv i =>
+        Komorebi.PaperICompletion8.DivisionRows.multiplicity_le_of_leftGenerates (hd i)
+          ((Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_familyGenerates_iff d m v).mp hv i),
+    mpr := fun h =>
+      (fun w hw =>
+          let v := fun j i => w i j;
+          Exists.intro v
+            ((Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_familyGenerates_iff d m v).mpr fun i =>
+              id (hw i)))
+        (fun i =>
+          Classical.choose
+            ((fun i => Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_of_le (hd i) (h i)) i))
+        fun i =>
+        Classical.choose_spec
+          ((fun i => Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_of_le (hd i) (h i)) i) }
+theorem Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_maxCeilDiv_le.{u, v} : ∀
+  {I : Type v} [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ)
+  {r : ℕ},
+  (∀ (i : I), 0 < d i) →
+    ((∃ v,
+        Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+          (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v) ↔
+      Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m ≤ r) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {r} hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a ↔ Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m ≤ r)
+        (propext
+          (Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_coordinate_bounds d m hd))))
+    {
+      mp := fun h =>
+        Finset.sup_le fun i hi =>
+          (ceilDiv_le_iff_le_mul (hd i)).mpr (Eq.mpr (id (congrArg (LE.le (m i)) (Nat.mul_comm (d i) r))) (h i)),
+      mpr := fun h i =>
+        have hblock := Finset.le_sup (Finset.mem_univ i);
+        have hceil := LE.le.trans hblock h;
+        have hm := (ceilDiv_le_iff_le_mul (hd i)).mp hceil;
+        Eq.mpr (id ge_iff_le._simp_1) (Eq.mp (congrArg (LE.le (m i)) (Nat.mul_comm (d i) r)) hm) }
+def Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv.{v} : {I : Type v} → [Fintype I] → (I → ℕ) → (I → ℕ) → ℕ :=
+fun {I} [Fintype I] d m => Finset.univ.sup fun i => m i ⌈/⌉ d i
+theorem Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv_isLeast_product_generatorCount.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ),
+  (∀ (i : I), 0 < d i) →
+    IsLeast
+      {r |
+        ∃ v,
+          Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+            (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v}
+      (Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m hd =>
+  ⟨(Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_maxCeilDiv_le d m hd).mpr le_rfl,
+    fun ⦃r⦄ hr =>
+    (Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_maxCeilDiv_le d m hd).mp hr⟩
+theorem Komorebi.PaperICompletion8.DivisionProduct.seedRank_eq_maxCeilDiv_of_divisionProduct_decomposition.{u, v} : ∀
+  {I : Type v} [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ)
+  {X : Type (max u v)} [inst_3 : AddCommMonoid X]
+  [inst_4 : Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) X]
+  (e :
+    X ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+      Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) X =
+      ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {X} [AddCommMonoid X]
+    [Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) X] e hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+        (Komorebi.SeedRankBasics.seedRank_linearEquiv e)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+          (Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedRank_eq_maxCeilDiv d m hd)))
+      (Eq.refl ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)))
+def Komorebi.PaperICompletion8.DivisionRows.LeftGenerates.{u} : {k : Type u} →
+  [DivisionRing k] → {r d m : ℕ} → (Fin r → Matrix (Fin d) (Fin m) k) → Prop :=
+fun {k} [DivisionRing k] {r d m} v => ∀ (X : Matrix (Fin d) (Fin m) k), ∃ A, X = ∑ i, A i * v i
+def Komorebi.PaperICompletion8.DivisionRows.RowsSpan.{u} : {k : Type u} →
+  [DivisionRing k] → {r d m : ℕ} → (Fin r → Matrix (Fin d) (Fin m) k) → Prop :=
+fun {k} [DivisionRing k] {r d m} v => Submodule.span k (Set.range fun p => v p.1 p.2) = ⊤
+theorem Komorebi.PaperICompletion8.DivisionRows.ceilDiv_isLeast_generatorCount.{u} : ∀ {k : Type u}
+  [inst : DivisionRing k] {d m : ℕ},
+  0 < d → IsLeast {r | ∃ v, Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v} (m ⌈/⌉ d) :=
+fun {k} [DivisionRing k] {d m} hd =>
+  ⟨(Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_iff hd).mpr
+      (have hm := (ceilDiv_le_iff_le_mul hd).mp le_rfl;
+      Eq.mpr (id (Eq.trans (congrArg (LE.le m) (Nat.mul_comm (m ⌈/⌉ d) d)) ge_iff_le._simp_1)) hm),
+    fun ⦃r⦄ hr =>
+    (ceilDiv_le_iff_le_mul hd).mpr
+      (have hm := (Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_iff hd).mp hr;
+      Eq.mpr (id ge_iff_le._simp_1) (Eq.mp (congrArg (LE.le m) (Nat.mul_comm r d)) hm))⟩
+theorem Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_iff.{u} : ∀ {k : Type u} [inst : DivisionRing k]
+  {r d m : ℕ}, 0 < d → ((∃ v, Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v) ↔ m ≤ r * d) :=
+fun {k} [DivisionRing k] {r d m} hd =>
+  {
+    mp := fun a =>
+      Exists.casesOn a fun v hv => Komorebi.PaperICompletion8.DivisionRows.multiplicity_le_of_leftGenerates hd hv,
+    mpr := Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_of_le hd }
+theorem Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_of_le.{u} : ∀ {k : Type u} [inst : DivisionRing k]
+  {r d m : ℕ}, 0 < d → m ≤ r * d → ∃ v, Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v :=
+fun {k} [DivisionRing k] {r d m} hd h =>
+  have he_nonempty :=
+    Function.Embedding.nonempty_of_card_le
+      (Eq.mpr
+        (id
+          (congr (congrArg LE.le (Fintype.card_fin m))
+            (Eq.trans (Fintype.card_prod (Fin r) (Fin d))
+              (congr (congrArg HMul.hMul (Fintype.card_fin r)) (Fintype.card_fin d)))))
+        h);
+  let e := Classical.choice he_nonempty;
+  let v := fun i a j => if e j = (i, a) then 1 else 0;
+  have hv_basis := fun j =>
+    funext fun q =>
+      of_eq_true
+        (Eq.trans
+          (congr
+            (congrArg Eq
+              (ite_congr
+                (Eq.trans (congrArg (Eq (e q)) Prod.mk.eta)
+                  ((fun x_0 x_1 =>
+                      propext ((fun x_0 x_1 => Function.Injective.eq_iff (Function.Embedding.injective e)) x_0 x_1))
+                    q j))
+                (fun a => Eq.refl 1) fun a => Eq.refl 0))
+            (Eq.trans (congrFun (Pi.basisFun_apply k (Fin m) j) q) (Pi.single_apply j 1 q)))
+          (eq_self (if q = j then 1 else 0)));
+  Exists.intro v
+    ((Komorebi.PaperICompletion8.DivisionRows.leftGenerates_iff_rowsSpan hd v).mpr
+      (Eq.mpr (id (congrArg (fun _a => _a) (Komorebi.PaperICompletion8.DivisionRows.RowsSpan.eq_1 v)))
+        (top_unique
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => _a ≤ Submodule.span k (Set.range fun p => v p.1 p.2))
+                (Eq.symm (Module.Basis.span_eq (Pi.basisFun k (Fin m))))))
+            (Submodule.span_mono fun ⦃a⦄ a_1 => Exists.casesOn a_1 fun j h => h ▸ Exists.intro (e j) (hv_basis j))))))
+theorem Komorebi.PaperICompletion8.DivisionRows.leftGenerates_iff_rowsSpan.{u} : ∀ {k : Type u} [inst : DivisionRing k]
+  {r d m : ℕ},
+  0 < d →
+    ∀ (v : Fin r → Matrix (Fin d) (Fin m) k),
+      Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔ Komorebi.PaperICompletion8.DivisionRows.RowsSpan v :=
+fun {k} [DivisionRing k] {r d m} hd v =>
+  {
+    mp := fun hgen =>
+      Eq.mpr (id (congrArg (fun _a => _a) (Komorebi.PaperICompletion8.DivisionRows.RowsSpan.eq_1 v)))
+        (top_unique fun ⦃y⦄ _hy =>
+          let a₀ := ⟨0, hd⟩;
+          let X := fun x => y;
+          Exists.casesOn (hgen X) fun A hA =>
+            have hy :=
+              funext fun j =>
+                have hentry := congrFun (congrFun hA a₀) j;
+                Eq.mpr
+                  (id
+                    (congrArg (Eq (y j))
+                      (Eq.trans (Finset.sum_apply j Finset.univ fun c => ∑ b, A c a₀ b • v c b)
+                        (Finset.sum_congr (Eq.refl Finset.univ) fun x a =>
+                          Eq.trans (Finset.sum_apply j Finset.univ fun c => A x a₀ c • v x c)
+                            (Finset.sum_congr (Eq.refl Finset.univ) fun x_1 a => Eq.refl (A x a₀ x_1 * v x x_1 j))))))
+                  (Eq.mp (congrArg (Eq (y j)) (Matrix.sum_apply a₀ j Finset.univ fun c => A c * v c)) hentry);
+            Eq.mpr (id (congrArg (fun _a => _a ∈ Submodule.span k (Set.range fun p => v p.1 p.2)) hy))
+              (Submodule.sum_mem (Submodule.span k (Set.range fun p => v p.1 p.2)) fun i _hi =>
+                Submodule.sum_mem (Submodule.span k (Set.range fun p => v p.1 p.2)) fun b _hb =>
+                  Submodule.smul_mem (Submodule.span k (Set.range fun p => v p.1 p.2)) (A i a₀ b)
+                    (Submodule.subset_span (Set.mem_range_self (i, b))))),
+    mpr := fun hrows X =>
+      have hsurj :=
+        have htop := Eq.mpr (id top_le_iff._simp_2) (Eq.mp top_le_iff._simp_2 (Eq.le (Eq.symm hrows)));
+        (Submodule.top_le_span_range_iff_forall_exists_fun k).mp htop;
+      (fun c hc =>
+          let A := fun i a b => c a (i, b);
+          Exists.intro A
+            (Matrix.ext fun a j =>
+              have hrow := congrFun (hc a) j;
+              Eq.mpr (id (congrArg (fun _a => X a j = _a) (Matrix.sum_apply a j Finset.univ fun i => A i * v i)))
+                (id
+                  (id
+                    (Trans.trans
+                      (Eq.mp
+                        (congrArg (Eq (X a j))
+                          (Eq.trans (Finset.sum_apply j Finset.univ fun c_1 => c a c_1 • v c_1.1 c_1.2)
+                            (Finset.sum_congr (Eq.refl Finset.univ) fun x a_1 => Eq.refl (c a x * v x.1 x.2 j))))
+                        (Eq.symm hrow))
+                      (Fintype.sum_prod_type fun p => c a p * v p.1 p.2 j))))))
+        (fun a => Classical.choose ((fun a => hsurj (X a)) a)) fun a =>
+        Classical.choose_spec ((fun a => hsurj (X a)) a) }
+theorem Komorebi.PaperICompletion8.DivisionRows.multiplicity_le_of_leftGenerates.{u} : ∀ {k : Type u}
+  [inst : DivisionRing k] {r d m : ℕ},
+  0 < d →
+    ∀ {v : Fin r → Matrix (Fin d) (Fin m) k}, Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v → m ≤ r * d :=
+fun {k} [DivisionRing k] {r d m} hd {v} hgen =>
+  have hrows := (Komorebi.PaperICompletion8.DivisionRows.leftGenerates_iff_rowsSpan hd v).mp hgen;
+  have hdim := finrank_le_of_span_eq_top hrows;
+  Eq.mpr (id ge_iff_le._simp_1)
+    (Eq.mp
+      (congr (congrArg LE.le (Eq.trans (Module.finrank_fintype_fun_eq_card k) (Fintype.card_fin m)))
+        (Eq.trans (Fintype.card_prod (Fin r) (Fin d))
+          (congr (congrArg HMul.hMul (Fintype.card_fin r)) (Fintype.card_fin d))))
+      hdim)
+theorem Komorebi.PaperICompletion8.ProductPresentation.exists_multiplicity_presentation.{u, v, w} : ∀ {I : Type v}
+  [Fintype I] [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ) (M : Type w)
+  [inst_1 : AddCommGroup M] [inst_2 : Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) M]
+  [Module.Finite (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) M],
+  (∀ (i : I), 0 < d i) →
+    ∃ m,
+      Nonempty
+        (M ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+          Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d M [AddCommGroup M]
+    [Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) M]
+    [Module.Finite (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) M] hd =>
+  let A := Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d;
+  Exists.casesOn (IsSemisimpleModule.exists_linearEquiv_fin_dfinsupp A M) fun n h =>
+    Exists.casesOn h fun S h =>
+      Exists.casesOn h fun e hS =>
+        let this := fun j => hS j;
+        (fun f ef =>
+            Exists.intro (fun i => Fintype.card { j // f j = i })
+              (Nonempty.intro
+                (((e ≪≫ₗ DirectSum.linearEquivFunOnFintype A (Fin n) fun j => ↥(S j)) ≪≫ₗ
+                    LinearEquiv.piCongrRight fun j => (ef j).some) ≪≫ₗ
+                  Komorebi.PaperICompletion8.ProductPresentation.regroupSimpleFactors d f)))
+          (fun j =>
+            Classical.choose
+              ((fun j => Komorebi.PaperICompletion8.ProductPresentation.simple_equiv_natural d (↥(S j)) hd) j))
+          fun j =>
+          Classical.choose_spec
+            ((fun j => Komorebi.PaperICompletion8.ProductPresentation.simple_equiv_natural d (↥(S j)) hd) j)
+def Komorebi.PaperICompletion8.ProductPresentation.regroupSimpleFactors.{u, v, w} : {I : Type v} →
+  [inst : DecidableEq I] →
+    {D : I → Type u} →
+      [inst_1 : (i : I) → DivisionRing (D i)] →
+        (d : I → ℕ) →
+          {J : Type w} →
+            [inst_2 : Fintype J] →
+              (f : J → I) →
+                ((j : J) →
+                    Komorebi.PaperICompletion8.RegularMultiplicity.Simple d
+                      (f j)) ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+                  Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d fun i =>
+                    Fintype.card { j // f j = i } :=
+fun {I} [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d {J} [Fintype J] f =>
+  let A := Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d;
+  let e := fun i =>
+    (LinearEquiv.piCongrRight fun j =>
+          Subtype.casesOn j fun j hj =>
+            hj ▸ LinearEquiv.refl A (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d (f ↑⟨j, ⋯⟩))).trans
+      (LinearEquiv.piCongrLeft A (fun x => Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+        (Fintype.equivFin { j // f j = i }));
+  let __spread.0 := Equiv.piCongrFiberwise fun i => (e i).toEquiv;
+  { toFun := __spread.0.toFun, map_add' := ⋯, map_smul' := ⋯, invFun := __spread.0.invFun, left_inv := ⋯,
+    right_inv := ⋯ }
+theorem Komorebi.PaperICompletion8.ProductPresentation.simple_equiv_natural.{u, v, w} : ∀ {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ) (S : Type w)
+  [inst_1 : AddCommGroup S] [inst_2 : Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) S]
+  [IsSimpleModule (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) S],
+  (∀ (i : I), 0 < d i) →
+    ∃ i,
+      Nonempty
+        (S ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+          Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d S [AddCommGroup S]
+    [Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) S]
+    [IsSimpleModule (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) S] hd =>
+  let A := Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d;
+  let this := IsSimpleModule.nontrivial A S;
+  Exists.casesOn (IsSemisimpleRing.exists_linearEquiv_ideal_of_isSimpleModule A S) fun J h =>
+    Nonempty.casesOn h fun e =>
+      let f := ↑(Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv d) ∘ₗ Submodule.subtype J ∘ₗ ↑e;
+      have hf :=
+        Function.Injective.comp
+          (LinearEquiv.injective (Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv d))
+          (Function.Injective.comp (Submodule.subtype_injective J) (LinearEquiv.injective e));
+      Exists.casesOn (exists_ne 0) fun x hx =>
+        have hfx := fun h => hx (hf (Eq.trans h (Eq.symm (LinearMap.map_zero f))));
+        Exists.casesOn
+          (Decidable.byContradiction fun h =>
+            hfx (funext fun i => Decidable.byContradiction fun hh => h (Exists.intro i hh)))
+          fun i hi =>
+          Exists.casesOn
+            (Decidable.byContradiction fun h =>
+              hi (funext fun j => Decidable.byContradiction fun hh => h (Exists.intro j hh)))
+            fun j hj =>
+            let g := LinearMap.proj j ∘ₗ LinearMap.proj i ∘ₗ f;
+            have hg := fun h => hj (congrArg (fun h => h x) h);
+            let this := Komorebi.PaperICompletion8.RegularMultiplicity.simple_isSimple d i (hd i);
+            Exists.intro i (Nonempty.intro (LinearEquiv.ofBijective g (LinearMap.bijective_of_ne_zero hg)))
+@[reducible] def Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule.{u, v} : {I : Type v} →
+  {D : I → Type u} → (I → ℕ) → (I → ℕ) → Type (max v u) :=
+fun {I} {D} d m => (i : I) → Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i
+@[reducible] def Komorebi.PaperICompletion8.RegularMultiplicity.Simple.{u, v} : {I : Type v} →
+  {D : I → Type u} → (I → ℕ) → I → Type u :=
+fun {I} {D} d i => Fin (d i) → D i
+def Komorebi.PaperICompletion8.RegularMultiplicity.columnsEquiv.{u, v} : {I : Type v} →
+  {D : I → Type u} →
+    [inst : (i : I) → DivisionRing (D i)] →
+      (d m : I → ℕ) →
+        Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d
+            m ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+          Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d m :=
+fun {I} {D} [(i : I) → DivisionRing (D i)] d m =>
+  { toFun := fun a i j r => a i r j, map_add' := ⋯, map_smul' := ⋯, invFun := fun x i r j => x i j r, left_inv := ⋯,
+    right_inv := ⋯ }
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.directSum_seedRank.{u, v} : ∀ {I : Type v} [inst : Fintype I]
+  [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+        (DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) =
+      ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+        (Eq.symm
+          (Komorebi.SeedRankBasics.seedRank_linearEquiv
+            (Komorebi.PaperICompletion8.RegularMultiplicity.multiplicityDirectSumEquiv d m)))))
+    (Komorebi.PaperICompletion8.RegularMultiplicity.multiplicity_seedRank d m hd)
+def Komorebi.PaperICompletion8.RegularMultiplicity.multiplicityDirectSumEquiv.{u, v} : {I : Type v} →
+  [Fintype I] →
+    {D : I → Type u} →
+      [inst : (i : I) → DivisionRing (D i)] →
+        (d m : I → ℕ) →
+          Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d
+              m ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+            DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i :=
+fun {I} [Fintype I] {D} [(i : I) → DivisionRing (D i)] d m =>
+  (DirectSum.linearEquivFunOnFintype (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) I fun i =>
+      Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i).symm
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.multiplicity_seedRank.{u, v} : ∀ {I : Type v} [inst : Fintype I]
+  [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+        (Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d m) =
+      ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+        (Eq.symm
+          (Komorebi.SeedRankBasics.seedRank_linearEquiv
+            (Komorebi.PaperICompletion8.RegularMultiplicity.columnsEquiv d m)))))
+    (Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedRank_eq_maxCeilDiv d m hd)
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.naturalCopies_seedRank.{u} : ∀ {D : Type u}
+  [inst : DivisionRing D] (d m : ℕ),
+  0 < d → Komorebi.SeedRankBasics.seedRank (Matrix (Fin d) (Fin d) D) (Fin m → Fin d → D) = ↑(m ⌈/⌉ d) :=
+fun {D} [DivisionRing D] d m hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(m ⌈/⌉ d))
+        (Eq.symm
+          (Komorebi.SeedRankBasics.seedRank_linearEquiv
+            (Komorebi.PaperICompletion8.RegularMultiplicity.singleColumnsEquiv d m)))))
+    (Komorebi.PaperICompletion8.DivisionBlock.oneBlock_seedRank_eq_ceilDiv hd)
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.naturalDirectSum_seedRank.{u} : ∀ {D : Type u}
+  [inst : DivisionRing D] (d m : ℕ),
+  0 < d →
+    Komorebi.SeedRankBasics.seedRank (Matrix (Fin d) (Fin d) D) (DirectSum (Fin m) fun x => Fin d → D) = ↑(m ⌈/⌉ d) :=
+fun {D} [DivisionRing D] d m hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(m ⌈/⌉ d))
+        (Komorebi.SeedRankBasics.seedRank_linearEquiv
+          (DirectSum.linearEquivFunOnFintype (Matrix (Fin d) (Fin d) D) (Fin m) fun x => Fin d → D))))
+    (Komorebi.PaperICompletion8.RegularMultiplicity.naturalCopies_seedRank d m hd)
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.natural_nonzero_generates.{u} : ∀ {D : Type u}
+  [inst : DivisionRing D] {n : ℕ} {x : Fin n → D},
+  x ≠ 0 → Komorebi.SeedRankBasics.Generates (Matrix (Fin n) (Fin n) D) (Fin n → D) {x} :=
+fun {D} [DivisionRing D] {n} {x} hx =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a)
+        (propext
+          (Komorebi.SeedRankBasics.generates_singleton_iff_surjective (Matrix (Fin n) (Fin n) D) (Fin n → D) x))))
+    (Exists.casesOn
+      (Classical.byContradiction fun h =>
+        hx (funext fun i => Classical.byContradiction fun hi => h (Exists.intro i hi)))
+      fun j hj y =>
+      let A := fun i k => if k = j then y i / x j else 0;
+      Exists.intro A
+        (funext fun i =>
+          id
+            (of_eq_true
+              (Eq.trans
+                (congrFun'
+                  (congrArg Eq
+                    (Eq.trans
+                      (Eq.trans
+                        (Finset.sum_congr (Eq.refl Finset.univ) fun x_1 a =>
+                          Eq.trans (ite_mul (x_1 = j) (y i / x j) 0 (x x_1))
+                            (ite_congr (Eq.refl (x_1 = j)) (fun a => Eq.refl (y i / x j * x x_1)) fun a =>
+                              zero_mul (x x_1)))
+                        (Finset.sum_ite_eq' Finset.univ j fun x_1 => y i / x j * x x_1))
+                      (Eq.trans (ite_eq_left_of_eq_true (y i / x j * x j) 0 (Finset.mem_univ._simp_1 j))
+                        (IsUnit.div_mul_cancel
+                          (of_eq_true
+                            (Eq.trans isUnit_iff_ne_zero._simp_1
+                              (Eq.trans (congrArg Not (eq_false hj)) not_false_eq_true)))
+                          (y i)))))
+                  (y i))
+                (eq_self (y i))))))
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.natural_seedRank_eq_one.{u} : ∀ {D : Type u}
+  [inst : DivisionRing D] {n : ℕ},
+  0 < n → Komorebi.SeedRankBasics.seedRank (Matrix (Fin n) (Fin n) D) (Fin n → D) = 1 :=
+fun {D} [DivisionRing D] {n} hn =>
+  let this := Nonempty.intro ⟨0, hn⟩;
+  let x := Pi.single ⟨0, hn⟩ 1;
+  have hx := fun h =>
+    have hh := congrFun h ⟨0, hn⟩;
+    False.elim (Eq.mp (Eq.trans (congrFun' (congrArg Eq (Pi.single_eq_same ⟨0, hn⟩ 1)) 0) one_ne_zero._simp_1) hh);
+  have hsurj :=
+    (Komorebi.SeedRankBasics.generates_singleton_iff_surjective (Matrix (Fin n) (Fin n) D) (Fin n → D) x).mp
+      (Komorebi.PaperICompletion8.RegularMultiplicity.natural_nonzero_generates hx);
+  let this_1 :=
+    Module.Finite.of_surjective (Komorebi.SeedRankBasics.oneSeedMap (Matrix (Fin n) (Fin n) D) (Fin n → D) x) hsurj;
+  (Komorebi.SeedRankBasics.seedRank_eq_one_iff_cyclic (Matrix (Fin n) (Fin n) D) (Fin n → D)).mpr
+    (Exists.intro x (Komorebi.PaperICompletion8.RegularMultiplicity.natural_nonzero_generates hx))
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.other_factor_smul_zero.{u, v} : ∀ {I : Type v} [Fintype I]
+  [inst : DecidableEq I] {D : I → Type u} [inst_1 : (i : I) → DivisionRing (D i)] (d : I → ℕ) (i j : I),
+  j ≠ i →
+    ∀ (a : Matrix (Fin (d j)) (Fin (d j)) (D j)) (x : Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+      Pi.single j a • x = 0 :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d i j hji a x =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = 0) (Komorebi.PaperICompletion8.RegularMultiplicity.simple_smul d (Pi.single j a) i x)))
+    (of_eq_true
+      (Eq.trans
+        (congrFun'
+          (congrArg Eq
+            (Eq.trans
+              (congrFun'
+                (congrArg Matrix.mulVec
+                  ((fun x_0 x_1 x => (fun x_0 x_1 => Pi.single_eq_of_ne (Ne.symm hji)) x_0 x_1 x)
+                    (fun i => Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra (d i)) (fun i => Matrix.zero) a))
+                x)
+              (Matrix.zero_mulVec x)))
+          0)
+        (eq_self 0)))
+def Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv.{u, v} : {I : Type v} →
+  {D : I → Type u} →
+    [inst : (i : I) → DivisionRing (D i)] →
+      (d : I → ℕ) →
+        Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra
+            d ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+          Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d d :=
+fun {I} {D} [(i : I) → DivisionRing (D i)] d =>
+  { toFun := fun a i j r => a i r j, map_add' := ⋯, map_smul' := ⋯, invFun := fun x i r j => x i j r, left_inv := ⋯,
+    right_inv := ⋯ }
+@[defeq] theorem Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv_apply.{u, v} : ∀ {I : Type v}
+  [Fintype I] [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ)
+  (a : Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) (i : I) (j r : Fin (d i)),
+  (Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv d) a i j r = a i r j :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d a i j r => rfl
+def Komorebi.PaperICompletion8.RegularMultiplicity.regularDirectSumEquiv.{u, v} : {I : Type v} →
+  [Fintype I] →
+    {D : I → Type u} →
+      [inst : (i : I) → DivisionRing (D i)] →
+        (d : I → ℕ) →
+          Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra
+              d ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+            DirectSum I fun i => Fin (d i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i :=
+fun {I} [Fintype I] {D} [(i : I) → DivisionRing (D i)] d =>
+  (Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv d).trans
+    (Komorebi.PaperICompletion8.RegularMultiplicity.multiplicityDirectSumEquiv d d)
+@[instance_reducible] def Komorebi.PaperICompletion8.RegularMultiplicity.simpleModule.{u, v} : {I : Type v} →
+  {D : I → Type u} →
+    [inst : (i : I) → DivisionRing (D i)] →
+      (d : I → ℕ) →
+        (i : I) →
+          Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+            (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) :=
+fun {I} {D} [(i : I) → DivisionRing (D i)] d i =>
+  Module.compHom (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+    (Pi.evalRingHom (fun j => Matrix (Fin (d j)) (Fin (d j)) (D j)) i)
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.simple_isSimple.{u, v} : ∀ {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ) (i : I),
+  0 < d i →
+    IsSimpleModule (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+      (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d i hd =>
+  let this := Nonempty.intro ⟨0, hd⟩;
+  isSimpleModule_iff_toSpanSingleton_surjective.mpr
+    ⟨inferInstance, fun x hx =>
+      (Komorebi.SeedRankBasics.generates_singleton_iff_surjective
+            (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+            (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) x).mp
+        (Komorebi.PaperICompletion8.RegularMultiplicity.simple_nonzero_generates d i hx)⟩
+theorem Komorebi.PaperICompletion8.RegularMultiplicity.simple_nonzero_generates.{u, v} : ∀ {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ) (i : I)
+  {x : Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i},
+  x ≠ 0 →
+    Komorebi.SeedRankBasics.Generates (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+      (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) {x} :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d i {x} hx =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a)
+        (propext
+          (Komorebi.SeedRankBasics.generates_singleton_iff_surjective
+            (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+            (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) x))))
+    (have h :=
+      (Komorebi.SeedRankBasics.generates_singleton_iff_surjective (Matrix (Fin (d i)) (Fin (d i)) (D i))
+            (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) x).mp
+        (Komorebi.PaperICompletion8.RegularMultiplicity.natural_nonzero_generates hx);
+    fun y =>
+    Exists.casesOn (h y) fun a ha =>
+      Exists.intro (Pi.single i a)
+        (Eq.mpr
+          (id
+            (congrFun'
+              (congrArg Eq
+                (Eq.trans
+                  (Komorebi.SeedRankBasics.oneSeedMap_apply
+                    (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+                    (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) x (Pi.single i a))
+                  (congrFun' (congrArg Matrix.mulVec (Pi.single_eq_same i a)) x)))
+              y))
+          (Eq.mp
+            (congrFun'
+              (congrArg Eq
+                (Komorebi.SeedRankBasics.oneSeedMap_apply (Matrix (Fin (d i)) (Fin (d i)) (D i))
+                  (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) x a))
+              y)
+            ha)))
+@[defeq] theorem Komorebi.PaperICompletion8.RegularMultiplicity.simple_smul.{u, v} : ∀ {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ)
+  (a : Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) (i : I)
+  (x : Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i), a • x = Matrix.mulVec (a i) x :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d a i x => rfl
+def Komorebi.PaperICompletion8.RegularMultiplicity.singleColumnsEquiv.{u} : {D : Type u} →
+  [inst : DivisionRing D] → (d m : ℕ) → Matrix (Fin d) (Fin m) D ≃ₗ[Matrix (Fin d) (Fin d) D] Fin m → Fin d → D :=
+fun {D} [DivisionRing D] d m =>
+  { toFun := fun a j i => a i j, map_add' := ⋯, map_smul' := ⋯, invFun := fun x i j => x j i, left_inv := ⋯,
+    right_inv := ⋯ }
+theorem Komorebi.PaperICompletion8.SemisimpleExistence.exists_artinian_radicalTop_seed_formula.{u} : ∀ (R M : Type u)
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] [IsArtinianRing R],
+  ∃ q D d m x,
+    (∀ (i : Fin q), 0 < d i) ∧
+      ∃ eR,
+        Nonempty
+            (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+              DirectSum (Fin q) fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) ∧
+          Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun R M [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] [IsArtinianRing R] =>
+  let this := Komorebi.PaperICompletion7.ModuleTop.idealTop_finite (Ring.jacobson R) le_rfl;
+  Exists.casesOn
+    (Komorebi.PaperICompletion8.SemisimpleExistence.exists_semisimple_seed_formula (R ⧸ Ring.jacobson R)
+      (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M))
+    fun q h =>
+    Exists.casesOn h fun D h =>
+      Exists.casesOn h fun d h =>
+        Exists.casesOn h fun m h =>
+          Exists.casesOn h fun hD h =>
+            And.casesOn h fun hd right =>
+              Exists.casesOn right fun eR h =>
+                And.casesOn h fun heM hr =>
+                  Exists.intro q
+                    (Exists.intro D
+                      (Exists.intro d
+                        (Exists.intro m
+                          (Exists.intro hD
+                            ⟨hd,
+                              Exists.intro eR
+                                ⟨heM, Eq.trans Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop hr⟩⟩))))
+theorem Komorebi.PaperICompletion8.SemisimpleExistence.exists_compatible_presentation.{u, v} : ∀ {I : Type v}
+  [Fintype I] [DecidableEq I] {D : I → Type u} [inst : (i : I) → DivisionRing (D i)] (d : I → ℕ) {R M : Type (max u v)}
+  [inst_1 : Ring R] [inst_2 : AddCommGroup M] [inst_3 : Module R M] [Module.Finite R M]
+  (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d),
+  (∀ (i : I), 0 < d i) →
+    ∃ m,
+      Nonempty
+        (M ≃ₛₗ[↑eR] DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d {R M} [Ring R] [AddCommGroup M] [Module R M]
+    [Module.Finite R M] eR hd =>
+  let A := Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d;
+  let this := Module.compHom M eR.symm.toRingHom;
+  let e :=
+    let __spread.0 := AddEquiv.refl M;
+    { toFun := __spread.0.toFun, map_add' := __spread.0.map_add',
+      map_smul' := fun a x =>
+        id (Eq.mpr (id (congrArg (fun _a => a • x = _a • x) (RingEquiv.symm_apply_apply eR a))) (Eq.refl (a • x))),
+      invFun := __spread.0.invFun, left_inv := __spread.0.left_inv, right_inv := __spread.0.right_inv };
+  let this_1 := { is_surjective := RingEquiv.surjective eR };
+  let this_2 := Module.Finite.of_surjective (↑e) (LinearEquiv.surjective e);
+  Exists.casesOn (Komorebi.PaperICompletion8.ProductPresentation.exists_multiplicity_presentation d M hd) fun m h =>
+    Nonempty.casesOn h fun em =>
+      Exists.intro m
+        (Nonempty.intro
+          ((e.trans em).trans (Komorebi.PaperICompletion8.RegularMultiplicity.multiplicityDirectSumEquiv d m)))
+theorem Komorebi.PaperICompletion8.SemisimpleExistence.exists_finiteAlgebra_seed_formula.{u} : ∀ (R M : Type u)
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] (k : Type u) [inst_4 : Field k]
+  [inst_5 : Algebra k R] [Module.Finite k R],
+  ∃ q D d m x,
+    (∀ (i : Fin q), 0 < d i) ∧
+      ∃ eR,
+        Nonempty
+            (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+              DirectSum (Fin q) fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) ∧
+          Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun R M [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] k [Field k] [Algebra k R] [Module.Finite k R] =>
+  let this := isArtinian_of_tower k inferInstance;
+  Komorebi.PaperICompletion8.SemisimpleExistence.exists_artinian_radicalTop_seed_formula R M
+theorem Komorebi.PaperICompletion8.SemisimpleExistence.exists_semisimple_seed_formula.{u} : ∀ (R M : Type u)
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M] [IsSemisimpleRing R],
+  ∃ q D d m x,
+    (∀ (i : Fin q), 0 < d i) ∧
+      ∃ eR,
+        Nonempty
+            (M ≃ₛₗ[↑eR]
+              DirectSum (Fin q) fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) ∧
+          Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun R M [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] [IsSemisimpleRing R] =>
+  Exists.casesOn (Komorebi.PaperICompletion8.SemisimpleFormula.exists_wedderburn_decomposition R) fun q h =>
+    Exists.casesOn h fun D h =>
+      Exists.casesOn h fun d h =>
+        Exists.casesOn h fun hD h =>
+          And.casesOn h fun hd right =>
+            Nonempty.casesOn right fun eR =>
+              let this := hD;
+              have hpos := fun i => Nat.pos_of_ne_zero NeZero.out;
+              Exists.casesOn (Komorebi.PaperICompletion8.SemisimpleExistence.exists_compatible_presentation d eR hpos)
+                fun m h =>
+                Nonempty.casesOn h fun eM =>
+                  Exists.intro q
+                    (Exists.intro D
+                      (Exists.intro d
+                        (Exists.intro m
+                          (Exists.intro hD
+                            ⟨hpos,
+                              Exists.intro eR
+                                ⟨Nonempty.intro eM,
+                                  Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions d m
+                                    eR eM hpos⟩⟩))))
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.exists_finite_simple_decomposition.{u} : ∀ (R M : Type u)
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [IsSemisimpleRing R] [Module.Finite R M],
+  ∃ n S, Nonempty (M ≃ₗ[R] DirectSum (Fin n) fun i => ↥(S i)) ∧ ∀ (i : Fin n), IsSimpleModule R ↥(S i) :=
+fun R M [Ring R] [AddCommGroup M] [Module R M] [IsSemisimpleRing R] [Module.Finite R M] =>
+  Exists.casesOn (IsSemisimpleModule.exists_linearEquiv_fin_dfinsupp R M) fun n h =>
+    Exists.casesOn h fun S h => Exists.casesOn h fun e hS => Exists.intro n (Exists.intro S ⟨Nonempty.intro e, hS⟩)
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.exists_wedderburn_decomposition.{u} : ∀ (R : Type u)
+  [inst : Ring R] [IsSemisimpleRing R],
+  ∃ q D d x, (∀ (i : Fin q), NeZero (d i)) ∧ Nonempty (R ≃+* ((i : Fin q) → Matrix (Fin (d i)) (Fin (d i)) (D i))) :=
+fun R [Ring R] [IsSemisimpleRing R] => IsSemisimpleRing.exists_ringEquiv_pi_matrix_divisionRing R
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.finiteAlgebra_radicalQuotient_decomposition.{u} : ∀ (R : Type u)
+  [inst : Ring R] (k : Type u) [inst_1 : Field k] [inst_2 : Algebra k R] [Module.Finite k R],
+  ∃ q D d x,
+    (∀ (i : Fin q), NeZero (d i)) ∧
+      Nonempty (R ⧸ Ring.jacobson R ≃+* ((i : Fin q) → Matrix (Fin (d i)) (Fin (d i)) (D i))) :=
+fun R [Ring R] k [Field k] [Algebra k R] [Module.Finite k R] =>
+  let this := Komorebi.PaperICompletion8.SemisimpleFormula.finiteAlgebra_radicalQuotient_isSemisimple R k;
+  Komorebi.PaperICompletion8.SemisimpleFormula.exists_wedderburn_decomposition (R ⧸ Ring.jacobson R)
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.finiteAlgebra_radicalQuotient_isSemisimple.{u} : ∀ (R : Type u)
+  [inst : Ring R] (k : Type u) [inst_1 : Field k] [inst_2 : Algebra k R] [Module.Finite k R],
+  IsSemisimpleRing (R ⧸ Ring.jacobson R) :=
+fun R [Ring R] k [Field k] [Algebra k R] [Module.Finite k R] =>
+  let this := isArtinian_of_tower k inferInstance;
+  inferInstance
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedFinrank_of_decompositions.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ)
+  {R M : Type (max u v)} [inst_3 : Ring R] [inst_4 : AddCommGroup M] [inst_5 : Module R M] [Module.Finite R M]
+  (eR : R ⧸ Ring.jacobson R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedFinrank R M = Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {R M} [Ring R] [AddCommGroup M] [Module R M]
+    [Module.Finite R M] eR eM hd =>
+  id
+    (Eq.mp
+      (congrArg (Eq (Cardinal.toNat ⊤.spanRank))
+        (Cardinal.toNat_natCast (Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)))
+      (congrArg (⇑Cardinal.toNat)
+        (Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedRank_of_decompositions d m eR eM hd)))
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedRank_of_decompositions.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ)
+  {R M : Type (max u v)} [inst_3 : Ring R] [inst_4 : AddCommGroup M] [inst_5 : Module R M] [Module.Finite R M]
+  (eR : R ⧸ Ring.jacobson R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {R M} [Ring R] [AddCommGroup M] [Module R M]
+    [Module.Finite R M] eR eM hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+        Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop))
+    (Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions d m eR eM hd)
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.seedRank_eq_radicalTop_restricted.{u} : ∀ {R M : Type u}
+  [inst : Ring R] [inst_1 : AddCommGroup M] [inst_2 : Module R M] [Module.Finite R M],
+  Komorebi.SeedRankBasics.seedRank R M =
+    Komorebi.SeedRankBasics.seedRank R (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M) :=
+fun {R M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] =>
+  let f := { toFun := id, map_add' := fun x x_1 => rfl, map_smul' := fun x x_1 => rfl };
+  have h := Komorebi.SeedRankOperations.seedRank_eq_of_bijective_semilinear f Function.bijective_id;
+  Eq.trans Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop (Eq.symm h)
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedFinrank_of_decompositions.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ)
+  {R M : Type (max u v)} [inst_3 : Ring R] [inst_4 : AddCommGroup M] [inst_5 : Module R M]
+  (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM : M ≃ₛₗ[↑eR] DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedFinrank R M = Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {R M} [Ring R] [AddCommGroup M] [Module R M]
+    eR eM hd =>
+  id
+    (Eq.mp
+      (congrArg (Eq (Cardinal.toNat ⊤.spanRank))
+        (Cardinal.toNat_natCast (Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)))
+      (congrArg (⇑Cardinal.toNat)
+        (Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions d m eR eM hd)))
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] {D : I → Type u} [inst_2 : (i : I) → DivisionRing (D i)] (d m : I → ℕ)
+  {R M : Type (max u v)} [inst_3 : Ring R] [inst_4 : AddCommGroup M] [inst_5 : Module R M]
+  (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM : M ≃ₛₗ[↑eR] DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] {D} [(i : I) → DivisionRing (D i)] d m {R M} [Ring R] [AddCommGroup M] [Module R M]
+    eR eM hd =>
+  let this := { is_surjective := RingEquiv.surjective eR };
+  Eq.trans (Komorebi.SeedRankOperations.seedRank_eq_of_bijective_semilinear (↑eM) (LinearEquiv.bijective eM))
+    (Komorebi.PaperICompletion8.RegularMultiplicity.directSum_seedRank d m hd)
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.split_originalRing_top_seedRank.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] (k : Type u) [inst_2 : Field k] (d m : I → ℕ) {R M : Type (max u v)}
+  [inst_3 : Ring R] [inst_4 : AddCommGroup M] [inst_5 : Module R M] [Module.Finite R M]
+  (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] k [Field k] d m {R M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] eR
+    eM hd =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m))
+        Komorebi.PaperICompletion8.SemisimpleFormula.seedRank_eq_radicalTop_restricted))
+    (Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions d m eR eM hd)
+theorem Komorebi.PaperICompletion8.SemisimpleFormula.split_radicalTop_seedRank.{u, v} : ∀ {I : Type v}
+  [inst : Fintype I] [DecidableEq I] (k : Type u) [inst_2 : Field k] (d m : I → ℕ) {R M : Type (max u v)}
+  [inst_3 : Ring R] [inst_4 : AddCommGroup M] [inst_5 : Module R M] [Module.Finite R M]
+  (eR : R ⧸ Ring.jacobson R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i),
+  (∀ (i : I), 0 < d i) →
+    Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m) :=
+fun {I} [Fintype I] [DecidableEq I] k [Field k] d m {R M} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M] eR
+    eM hd =>
+  Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedRank_of_decompositions d m eR eM hd

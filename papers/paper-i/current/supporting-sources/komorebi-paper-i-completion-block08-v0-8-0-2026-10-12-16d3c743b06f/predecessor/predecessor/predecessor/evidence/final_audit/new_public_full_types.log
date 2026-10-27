@@ -1,0 +1,502 @@
+def Komorebi.PaperICompletion5.CyclicGeometricCriterion.cyclicMinpolyQuotientEquiv.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          (T : Module.End k V) →
+            (x : V) →
+              Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x) →
+                Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {minpoly k T} :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T x hx =>
+  ((Komorebi.PaperICompletion.CyclicClassification.minpolyQuotientEquivOrbit T x ⋯).trans
+      (LinearEquiv.ofTop (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).range ⋯)).symm
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.eigenspace_finrank_pos_iff_mem_spectrum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V) (a : k), 0 < Module.finrank k ↥(T.eigenspace a) ↔ a ∈ spectrum k T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T a =>
+  Eq.mpr (id (congrArg (fun _a => _a ↔ a ∈ spectrum k T) (propext Module.finrank_pos_iff)))
+    (Eq.mpr (id (congrArg (fun _a => _a ↔ a ∈ spectrum k T) (propext Submodule.nontrivial_iff_ne_bot)))
+      (Eq.mpr (id (congrArg (fun _a => _a ↔ a ∈ spectrum k T) (Eq.symm (propext Module.End.hasEigenvalue_iff))))
+        (Eq.mpr (id (congrArg (fun _a => _a ↔ a ∈ spectrum k T) (propext Module.End.hasEigenvalue_iff_mem_spectrum)))
+          Iff.rfl)))
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_eq_one_iff.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V),
+  Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T = 1 ↔
+    ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] T =>
+  {
+    mp := fun h a ha =>
+      have hpos :=
+        (Komorebi.PaperICompletion5.CyclicGeometricCriterion.eigenspace_finrank_pos_iff_mem_spectrum T a).mpr ha;
+      have hle :=
+        le_csSup (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_bddAbove T)
+          (Exists.intro a rfl);
+      Decidable.byContradiction fun a_1 =>
+        Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_eq_one_iff._proof_1_1 T h a hpos hle
+          a_1,
+    mpr := fun h =>
+      have hle :=
+        csSup_le (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_nonempty T) fun n a =>
+          Exists.casesOn a fun a h_1 =>
+            h_1 ▸
+              id
+                (if ha : a ∈ spectrum k T then Eq.mpr (id (congrArg (fun _a => _a ≤ 1) (h a ha))) (le_refl 1)
+                else
+                  Eq.mpr
+                    (id
+                      (congrArg (fun _a => _a ≤ 1)
+                        (Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum
+                          T a ha)))
+                    (Nat.zero_le 1));
+      have hp := Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_pos T;
+      Decidable.byContradiction fun a =>
+        Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_eq_one_iff._proof_1_2 T hle hp a }
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_pos.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V), 0 < Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] T =>
+  Decidable.byContradiction fun h =>
+    have hg := Nat.eq_zero_of_not_pos h;
+    have hz :=
+      Eq.mpr
+        (id
+          (congrArg (fun _a => _a = 0)
+            (Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_geometricSeedMaximum T)))
+        (Eq.mpr (id (congrArg (fun _a => ↑_a = 0) hg)) (Eq.refl ↑0));
+    not_subsingleton V
+      ((Komorebi.SeedRankBasics.seedRank_eq_zero_iff (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V).mp hz)
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_all_spectral_multiplicities_one.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  [IsAlgClosed k] [Nontrivial V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] T =>
+  Iff.trans (Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_geometricSeedMaximum_one T)
+    (Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_eq_one_iff T)
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_geometricSeedMaximum_one.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  [IsAlgClosed k] [Nontrivial V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T = 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] T =>
+  have h :=
+    Iff.trans (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T)
+      (Iff.symm
+        (Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly T));
+  Iff.trans
+    (Eq.mp
+      (congrArg (fun _a => Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ _a = 1)
+        (Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_geometricSeedMaximum T))
+      h)
+    (Eq.mpr
+      (id
+        (Eq.trans
+          (congrFun'
+            (congrArg Iff
+              (congrArg (Eq ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T))
+                (Eq.symm Nat.cast_one)))
+            (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T = 1))
+          (congrFun' (congrArg Iff Nat.cast_inj._simp_1)
+            (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T = 1))))
+      Iff.rfl)
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Nonempty (Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {minpoly k T}) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  {
+    mp := fun h =>
+      Exists.casesOn ((Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective T).mp h)
+        fun x hx =>
+        Nonempty.intro (Komorebi.PaperICompletion5.CyclicGeometricCriterion.cyclicMinpolyQuotientEquiv T x hx),
+    mpr := fun a =>
+      Nonempty.casesOn a fun e =>
+        let z := e.symm ((Ideal.Quotient.mk (Ideal.span {minpoly k T})) 1);
+        (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective T).mpr
+          (Exists.intro ((Module.AEval'.of T).symm z) fun y =>
+            Exists.casesOn (Ideal.Quotient.mk_surjective (e y)) fun p hp =>
+              Exists.intro p
+                (LinearEquiv.injective e
+                  (id
+                    (Eq.mpr (id (congrArg (fun _a => _a = e y) (LinearEquiv.map_smul e p z)))
+                      (Eq.mpr
+                        (id
+                          (congrFun'
+                            (congrArg Eq
+                              (Eq.trans
+                                (Eq.trans
+                                  (congrArg (HSMul.hSMul p)
+                                    (Eq.trans
+                                      (congrArg (⇑e)
+                                        (congrArg (⇑e.symm) (map_one (Ideal.Quotient.mk (Ideal.span {minpoly k T})))))
+                                      ((fun c => LinearEquiv.apply_symm_apply e c) 1)))
+                                  (Algebra.smul_def p 1))
+                                (mul_one ((algebraMap (Polynomial k) (Polynomial k ⧸ Ideal.span {minpoly k T})) p))))
+                            (e y)))
+                        hp))))) }
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.minpoly_eq_charpoly_iff_all_spectral_multiplicities_one.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V]
+  [inst_3 : FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] (T : Module.End k V),
+  minpoly k T = LinearMap.charpoly T ↔ ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] T =>
+  Iff.trans (Iff.symm (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T))
+    (Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_all_spectral_multiplicities_one T)
+theorem Komorebi.PaperICompletion5.CyclicGeometricCriterion.spectralSeedMaximum_attained.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V),
+  ∃ a ∈ spectrum k T,
+    Module.finrank k ↥(T.eigenspace a) = Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V] T =>
+  Exists.casesOn (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_attained T) fun a ha =>
+    Exists.intro a
+      ⟨(Komorebi.PaperICompletion5.CyclicGeometricCriterion.eigenspace_finrank_pos_iff_mem_spectrum T a).mp
+          (Eq.mpr (id (congrArg (fun _a => 0 < _a) ha))
+            (Komorebi.PaperICompletion5.CyclicGeometricCriterion.geometricSeedMaximum_pos T)),
+        Eq.trans ha (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_eq_spectralSeedMaximum T)⟩
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V), ∀ a ∉ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 0 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T a ha =>
+  have hn := fun h => ha (Module.End.HasEigenvalue.mem_spectrum h);
+  have hb :=
+    Eq.mp
+      (Eq.trans
+        (congrArg Not
+          Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum._simp_1_1)
+        Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum._simp_1_2)
+      hn;
+  Eq.mpr (id (congrArg (fun _a => Module.finrank k ↥_a = 0) hb)) (finrank_bot k V)
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_le_seedFinrank.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V) (a : k),
+  Module.finrank k ↥(T.eigenspace a) ≤
+    Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T a =>
+  Eq.mpr
+    (id
+      (congrArg
+        (fun _a => _a ≤ Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V)
+        (Eq.symm (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace T a))))
+    (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank T
+      (Polynomial.X - Polynomial.C a) (Polynomial.irreducible_X_sub_C a))
+def Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → Set ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T => Set.range fun a => Module.finrank k ↥(T.eigenspace a)
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_bddAbove.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V), BddAbove (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  Exists.intro (Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V) fun ⦃n⦄ a =>
+    Exists.casesOn a fun a h =>
+      h ▸ Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_le_seedFinrank T a
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_nonempty.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V),
+  (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T).Nonempty :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  Exists.intro (Module.finrank k ↥(T.eigenspace 0)) (Exists.intro 0 rfl)
+def Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  sSup (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T)
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_attained.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  ∃ a, Module.finrank k ↥(T.eigenspace a) = Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  Nat.sSup_mem (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_nonempty T)
+    (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_bddAbove T)
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_eq_spectralSeedMaximum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  le_antisymm
+    (csSup_le (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_nonempty T) fun n a =>
+      Exists.casesOn a fun a h =>
+        h ▸
+          if ha : a ∈ spectrum k T then
+            le_csSup (Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues_bddAbove T)
+              (Exists.intro a ⟨ha, rfl⟩)
+          else
+            id
+              (Eq.mpr
+                (id
+                  (congrArg (fun _a => _a ≤ Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)
+                    (Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_eq_zero_of_not_mem_spectrum T a
+                      ha)))
+                (Nat.zero_le (Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T))))
+    (csSup_le' fun ⦃n⦄ a =>
+      Exists.casesOn a fun a h =>
+        And.casesOn h fun left right =>
+          right ▸
+            le_csSup (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues_bddAbove T)
+              (Exists.intro a rfl))
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.monic_irreducible_eq_X_sub_C.{u} : ∀ {k : Type u}
+  [inst : Field k] [IsAlgClosed k] (p : Polynomial k),
+  p.Monic → Irreducible p → ∃ a, p = Polynomial.X - Polynomial.C a :=
+fun {k} [Field k] [IsAlgClosed k] p hm hp =>
+  Exists.intro (-p.coeff 0)
+    (Eq.mpr
+      (id
+        (congrArg (Eq p)
+          (Eq.trans (congrArg (HSub.hSub Polynomial.X) (map_neg Polynomial.C (p.coeff 0)))
+            (sub_neg_eq_add Polynomial.X (Polynomial.C (p.coeff 0))))))
+      (Eq.mp
+        (congrArg (Eq p)
+          (congrFun'
+            (congrArg HAdd.hAdd
+              (Eq.trans
+                (congrFun'
+                  (congrArg HMul.hMul
+                    (Eq.trans (congrArg (⇑Polynomial.C) (Polynomial.Monic.leadingCoeff hm)) (map_one Polynomial.C)))
+                  Polynomial.X)
+                (one_mul Polynomial.X)))
+            (Polynomial.C (p.coeff 0))))
+        (Polynomial.eq_X_add_C_of_degree_eq_one (IsAlgClosed.degree_eq_one_of_irreducible k hp))))
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_geometricSeedMaximum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  [IsAlgClosed k] (T : Module.End k V),
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T)
+        (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum T)))
+    (id
+      (id
+        (Eq.mpr
+          (id
+            (congrArg
+              (fun _a => sSup _a = sSup (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T))
+              (Komorebi.PaperICompletion5.GeometricSeedFormula.primaryValues_eq_geometricValues T)))
+          (Eq.refl (sSup (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T))))))
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_spectralSeedMaximum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  [IsAlgClosed k] (T : Module.End k V),
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)
+        (Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_geometricSeedMaximum T)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)
+          (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_eq_spectralSeedMaximum T)))
+      (Eq.refl (Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)))
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_geometricSeedMaximum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  [IsAlgClosed k] (T : Module.End k V),
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T))
+        (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum T)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => ↑_a = ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T))
+          (Eq.symm
+            (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum T))))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => ↑_a = ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T))
+            (Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_geometricSeedMaximum T)))
+        (Eq.refl ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum T))))
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_spectralSeedMaximum.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  (T : Module.End k V),
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T))
+        (Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_geometricSeedMaximum T)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => ↑_a = ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T))
+          (Komorebi.PaperICompletion5.GeometricSeedFormula.geometricSeedMaximum_eq_spectralSeedMaximum T)))
+      (Eq.refl ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)))
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.primaryValues_eq_geometricValues.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  (T : Module.End k V),
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] T =>
+  Set.ext fun n =>
+    {
+      mp := fun a =>
+        Exists.casesOn a fun p h =>
+          And.casesOn h fun hm right =>
+            And.casesOn right fun hp right =>
+              right ▸
+                Exists.casesOn (Komorebi.PaperICompletion5.GeometricSeedFormula.monic_irreducible_eq_X_sub_C p hm hp)
+                  fun a h =>
+                  Eq.ndrec (motive := fun p =>
+                    p.Monic →
+                      Irreducible p →
+                        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p ∈
+                          Komorebi.PaperICompletion5.GeometricSeedFormula.geometricMultiplicityValues T)
+                    (fun hm hp =>
+                      Exists.intro a
+                        (Eq.symm
+                          (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace
+                            T a)))
+                    (Eq.symm h) hm hp,
+      mpr := fun a =>
+        Exists.casesOn a fun a h =>
+          h ▸
+            Exists.intro (Polynomial.X - Polynomial.C a)
+              ⟨Polynomial.monic_X_sub_C a,
+                ⟨Polynomial.irreducible_X_sub_C a,
+                  Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace T a⟩⟩ }
+def Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → Set ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  {n | ∃ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = n}
+theorem Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues_bddAbove.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V), BddAbove (Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  Exists.intro (Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V) fun ⦃n⦄ a =>
+    Exists.casesOn a fun a h =>
+      And.casesOn h fun left right =>
+        right ▸ Komorebi.PaperICompletion5.GeometricSeedFormula.eigenspace_finrank_le_seedFinrank T a
+def Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  sSup (Komorebi.PaperICompletion5.GeometricSeedFormula.spectralMultiplicityValues T)
+theorem Komorebi.PaperICompletion5.LinearPrimaryEigenspace.finrank_cokernel_eq_finrank_kernel.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (S : Module.End k V), Module.finrank k (V ⧸ LinearMap.range S) = Module.finrank k ↥(LinearMap.ker S) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] S =>
+  have hq := Submodule.finrank_quotient_add_finrank (LinearMap.range S);
+  have hk := LinearMap.finrank_range_add_finrank_ker S;
+  Decidable.byContradiction fun a =>
+    Komorebi.PaperICompletion5.LinearPrimaryEigenspace.finrank_cokernel_eq_finrank_kernel._proof_1_1 S hq hk a
+theorem Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V) (a : k),
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (Polynomial.X - Polynomial.C a) =
+    Module.finrank k ↥(T.eigenspace a) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T a =>
+  let p := Polynomial.X - Polynomial.C a;
+  let this := PrincipalIdealRing.isMaximal_of_irreducible (Polynomial.irreducible_X_sub_C a);
+  let this := Ideal.Quotient.field (Ideal.span {p});
+  let this_1 := isArtinian_of_tower k inferInstance;
+  have hd :=
+    have h :=
+      Module.finrank_mul_finrank k (Polynomial k ⧸ Ideal.span {p})
+        (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p);
+    id
+      (Eq.mp
+        (congrFun'
+          (congrArg Eq
+            (Eq.trans
+              (congrFun'
+                (congrArg HMul.hMul (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.linearResidue_finrank a))
+                (Module.finrank (Polynomial k ⧸ Ideal.span {Polynomial.X - Polynomial.C a})
+                  (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T
+                    (Polynomial.X - Polynomial.C a))))
+              (one_mul
+                (Module.finrank (Polynomial k ⧸ Ideal.span {Polynomial.X - Polynomial.C a})
+                  (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T
+                    (Polynomial.X - Polynomial.C a))))))
+          (Module.finrank k
+            (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T
+              (Polynomial.X - Polynomial.C a))))
+        h);
+  have heval :=
+    of_eq_true
+      (Eq.trans
+        (congrFun'
+          (congrArg Eq
+            (Eq.trans (Polynomial.aeval_sub T)
+              (congr (congrArg HSub.hSub (Polynomial.aeval_X T))
+                (Eq.trans (Polynomial.aeval_C T a) (Algebra.algebraMap_eq_smul_one a)))))
+          (T - a • 1))
+        (eq_self (T - a • 1)));
+  Trans.trans
+    (Trans.trans
+      (Trans.trans
+        (Trans.trans hd
+          (LinearEquiv.finrank_eq
+            (LinearEquiv.restrictScalars k
+              (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal (Module.AEval' T) p))))
+        (LinearEquiv.finrank_eq
+          (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel T p)))
+      (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.finrank_cokernel_eq_finrank_kernel ((Polynomial.aeval T) p)))
+    (Eq.mpr (id (congrArg (fun _a => Module.finrank k ↥(LinearMap.ker _a) = Module.finrank k ↥(T.eigenspace a)) heval))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => Module.finrank k ↥(LinearMap.ker (T - a • 1)) = Module.finrank k ↥_a)
+            Module.End.eigenspace_def))
+        (Eq.refl (Module.finrank k ↥(LinearMap.ker (T - a • 1))))))
+theorem Komorebi.PaperICompletion5.LinearPrimaryEigenspace.linearResidue_finrank.{u} : ∀ {k : Type u} [inst : Field k]
+  (a : k), Module.finrank k (Polynomial k ⧸ Ideal.span {Polynomial.X - Polynomial.C a}) = 1 :=
+fun {k} [Field k] a =>
+  Eq.mp
+    (congrArg (Eq (Module.finrank k (Polynomial k ⧸ Ideal.span {Polynomial.X - Polynomial.C a})))
+      (Module.finrank_self k))
+    (LinearEquiv.finrank_eq ↑(Polynomial.quotientSpanXSubCAlgEquiv a))
+def Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          (T : Module.End k V) →
+            (p : Polynomial k) → Module.AEval' T →ₗ[k] V ⧸ LinearMap.range ((Polynomial.aeval T) p) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p =>
+  (LinearMap.range ((Polynomial.aeval T) p)).mkQ ∘ₗ ↑(Module.AEval'.of T).symm
+theorem Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap_ker.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k),
+  (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap T p).ker =
+    Submodule.restrictScalars k (p • ⊤) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p =>
+  Submodule.ext fun x =>
+    id
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => _a ↔ x ∈ p • ⊤)
+            (propext (Submodule.Quotient.mk_eq_zero (LinearMap.range ((Polynomial.aeval T) p))))))
+        (Eq.mpr (id (congrArg (fun _a => _a ↔ x ∈ p • ⊤) (propext LinearMap.mem_range)))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => (∃ y, ((Polynomial.aeval T) p) y = (Module.AEval'.of T).symm x) ↔ _a)
+                (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p x))))
+            Iff.rfl)))
+theorem Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap_surjective.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k),
+  Function.Surjective ⇑(Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap T p) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p =>
+  Function.Surjective.comp (Submodule.mkQ_surjective (LinearMap.range ((Polynomial.aeval T) p)))
+    (LinearEquiv.surjective (Module.AEval'.of T).symm)
+def Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          (T : Module.End k V) →
+            (p : Polynomial k) →
+              Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient (Module.AEval' T) p ≃ₗ[k]
+                V ⧸ LinearMap.range ((Polynomial.aeval T) p) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p =>
+  (Submodule.Quotient.restrictScalarsEquiv k (p • ⊤)).symm.trans
+    (((Submodule.restrictScalars k (p • ⊤)).quotEquivOfEq
+          (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap T p).ker ⋯).trans
+      ((Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialCokernelMap T p).quotKerEquivOfSurjective ⋯))
+theorem Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel_mk.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k)
+  (x : V),
+  (Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel T p)
+      (Submodule.Quotient.mk ((Module.AEval'.of T) x)) =
+    Submodule.Quotient.mk x :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p x =>
+  Eq.refl
+    ((Komorebi.PaperICompletion5.LinearPrimaryEigenspace.polynomialQuotientEquivCokernel T p)
+      (Submodule.Quotient.mk ((Module.AEval'.of T) x)))

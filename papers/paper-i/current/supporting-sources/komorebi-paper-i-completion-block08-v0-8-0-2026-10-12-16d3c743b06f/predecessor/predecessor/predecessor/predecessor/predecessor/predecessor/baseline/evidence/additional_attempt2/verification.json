@@ -1,0 +1,52 @@
+{
+  "status": "FAIL",
+  "started_utc": "2026-10-10T17:37:02Z",
+  "main_receipt_sha256": "8fb2c832575caf6fcdc1339a3e3a7aed34ed6c8d613edb11a86b8c318ec5a63e",
+  "checks": [
+    {
+      "label": "owned_declaration_audit",
+      "command": [
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "-DautoImplicit=false",
+        "-DrelaxedAutoImplicit=false",
+        "/mnt/data/Komorebi_Paper_I_Final_Lean_Audit_v0.1.0_2026-10-10/tests/OwnedDeclarationAudit.lean"
+      ],
+      "environment_additions": {},
+      "returncode": 0,
+      "seconds": 56.16,
+      "passed": true,
+      "required_marker": "OWNED_AUDIT_PASS ",
+      "log": "owned_declaration_audit.log",
+      "log_sha256": "185654ef9fd2c8bdc89bd211dca3221d5252f5df6d8a3824ed4809940a17b6d8"
+    },
+    {
+      "label": "replay_KomorebiVerification_MathlibImports",
+      "command": [
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "-DautoImplicit=false",
+        "-DrelaxedAutoImplicit=false",
+        "/mnt/data/Komorebi_Paper_I_Final_Lean_Audit_v0.1.0_2026-10-10/tests/ReplayExact.lean"
+      ],
+      "environment_additions": {
+        "KOMOREBI_REPLAY_MODULE": "KomorebiVerification.MathlibImports"
+      },
+      "returncode": 1,
+      "seconds": 1.069,
+      "passed": false,
+      "required_marker": "REPLAY_EXACT_PASS KomorebiVerification.MathlibImports",
+      "log": "replay_KomorebiVerification_MathlibImports.log",
+      "log_sha256": "00c64f55459e38c0867512094a4040a5fb68e0d22708a73f4d853a153e92d65c"
+    }
+  ],
+  "limits": [
+    "Official same-kernel replay is not an independently implemented verifier.",
+    "Pinned upstream compiled imports are reused; no fresh Mathlib proof replay is claimed."
+  ],
+  "owned_declarations": 1152,
+  "outside_project_namespaces": 26,
+  "failure": "replay_KomorebiVerification_MathlibImports failed; log /mnt/data/Komorebi_Paper_I_Final_Lean_Audit_v0.1.0_2026-10-10/evidence/additional_attempt2/replay_KomorebiVerification_MathlibImports.log"
+}

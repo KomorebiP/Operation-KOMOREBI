@@ -1,0 +1,1 @@
+Complete current 54-module production source closure. Each Lean file is byte-identical to its accepted source. See ../CURRENT_SOURCE_INDEX.json and the root verification runner. This convenience copy is not a separate fresh build. The pinned runtime and Mathlib cache remain external.

@@ -1,0 +1,15 @@
+/-- Evaluating mapped coefficients agrees with extending the evaluated operator. -/
+theorem aeval_map_baseChange (T : Module.End k V) (p : k[X]) :
+    aeval (T.baseChange K) (p.map (algebraMap k K)) = (aeval T p).baseChange K := by
+  rw [aeval_map_algebraMap]
+  exact aeval_algHom_apply (Module.End.baseChangeHom k K V) T p
+
+/-- The minimal polynomial itself commutes with every field extension. -/
+theorem minpoly_baseChange [FiniteDimensional k V] (T : Module.End k V) :
+    minpoly K (T.baseChange K) = (minpoly k T).map (algebraMap k K) := by
+  apply minpoly.eq_of_linearIndependent
+    ((minpoly.monic (LinearMap.isIntegral T)).map _)
+  · rw [aeval_map_baseChange, minpoly.aeval, LinearMap.baseChange_zero]
+  · rw [Polynomial.degree_map_eq_of_injective (algebraMap k K).injective,
+      Polynomial.degree_eq_natDegree (minpoly.ne_zero (LinearMap.isIntegral T))]
+  · exact linearIndependent_baseChange_powers K T

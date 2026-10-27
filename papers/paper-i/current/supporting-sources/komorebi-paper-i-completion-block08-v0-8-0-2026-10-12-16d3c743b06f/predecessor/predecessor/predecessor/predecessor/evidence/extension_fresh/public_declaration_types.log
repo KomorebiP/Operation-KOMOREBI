@@ -1,0 +1,1155 @@
+Komorebi.PaperICompletion4.GroupedPrimary.eq_zero_of_coprime_smul.{u} {R : Type u} [CommRing R] (p q : R)
+  (hc : IsCoprime p q) (x : R ⧸ Ideal.span {q}) (hx : p • x = 0) : x = 0
+theorem Komorebi.PaperICompletion4.GroupedPrimary.eq_zero_of_coprime_smul.{u} : ∀ {R : Type u} [inst : CommRing R]
+  (p q : R), IsCoprime p q → ∀ (x : R ⧸ Ideal.span {q}), p • x = 0 → x = 0 :=
+fun {R} [CommRing R] p q hc x hx =>
+  Exists.casesOn hc fun a h =>
+    Exists.casesOn h fun b hab =>
+      have hq :=
+        Eq.mpr (id (congrArg (fun _a => _a = 0) (Algebra.smul_def q x)))
+          (id
+            (Eq.mpr
+              (id
+                (congrArg (fun _a => _a * x = 0)
+                  (Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_singleton q)))))
+              (Eq.mpr (id (congrArg (fun _a => _a = 0) (zero_mul x))) (Eq.refl 0))));
+      Trans.trans
+        (Trans.trans (Eq.symm (one_smul R x)) (Eq.mpr (id (congrArg (fun _a => 1 • x = _a • x) hab)) (Eq.refl (1 • x))))
+        (Eq.mpr (id (congrArg (fun _a => _a = 0) (add_smul (a * p) (b * q) x)))
+          (Eq.mpr (id (congrArg (fun _a => _a + (b * q) • x = 0) (mul_smul a p x)))
+            (Eq.mpr (id (congrArg (fun _a => a • p • x + _a = 0) (mul_smul b q x)))
+              (Eq.mpr (id (congrArg (fun _a => a • _a + b • q • x = 0) hx))
+                (Eq.mpr (id (congrArg (fun _a => a • 0 + b • _a = 0) hq))
+                  (Eq.mpr (id (congrArg (fun _a => _a + b • 0 = 0) (smul_zero a)))
+                    (Eq.mpr (id (congrArg (fun _a => 0 + _a = 0) (smul_zero b)))
+                      (Eq.mpr (id (congrArg (fun _a => _a = 0) (add_zero 0))) (Eq.refl 0)))))))))
+'Komorebi.PaperICompletion4.GroupedPrimary.eq_zero_of_coprime_smul' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ) (p : R)
+  (hp : Irreducible p) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p) ≃ₗ[R]
+    (i : { i // Ideal.span {q i} = Ideal.span {p} }) → R ⧸ Ideal.span {q ↑i ^ e ↑i}
+def Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv.{u, v} : {R : Type u} →
+  [inst : CommRing R] →
+    [IsDomain R] →
+      [IsPrincipalIdealRing R] →
+        {ι : Type v} →
+          [Fintype ι] →
+            (q : ι → R) →
+              (∀ (i : ι), Irreducible (q i)) →
+                (e : ι → ℕ) →
+                  (p : R) →
+                    Irreducible p →
+                      ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule
+                            ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p) ≃ₗ[R]
+                        (i : { i // Ideal.span {q i} = Ideal.span {p} }) → R ⧸ Ideal.span {q ↑i ^ e ↑i} :=
+fun {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {ι} [Fintype ι] q hq e p hp =>
+  let f :=
+    (LinearMap.pi fun i => LinearMap.proj ↑i) ∘ₗ
+      (Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p).subtype;
+  LinearEquiv.ofBijective f ⋯
+'Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.primaryCongr.{u, v, w} {R : Type u} [CommRing R] {M : Type v} [AddCommGroup M]
+  [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) ≃ₗ[R]
+    ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule N p)
+def Komorebi.PaperICompletion4.GroupedPrimary.primaryCongr.{u, v, w} : {R : Type u} →
+  [inst : CommRing R] →
+    {M : Type v} →
+      [inst_1 : AddCommGroup M] →
+        [inst_2 : Module R M] →
+          {N : Type w} →
+            [inst_3 : AddCommGroup N] →
+              [inst_4 : Module R N] →
+                (p : R) →
+                  (M ≃ₗ[R] N) →
+                    ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) ≃ₗ[R]
+                      ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule N p) :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p f =>
+  { toFun := fun x => ⟨f ↑x, ⋯⟩, map_add' := ⋯, map_smul' := ⋯, invFun := fun y => ⟨f.symm ↑y, ⋯⟩, left_inv := ⋯,
+    right_inv := ⋯ }
+'Komorebi.PaperICompletion4.GroupedPrimary.primaryCongr' depends on axioms: [propext, Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.primaryProduct_mem_iff.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ) (p : R)
+  (hp : Irreducible p) (x : (i : ι) → R ⧸ Ideal.span {q i ^ e i}) :
+  x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p ↔
+    ∀ (i : ι), Ideal.span {q i} ≠ Ideal.span {p} → x i = 0
+theorem Komorebi.PaperICompletion4.GroupedPrimary.primaryProduct_mem_iff.{u, v} : ∀ {R : Type u} [inst : CommRing R]
+  [IsDomain R] [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (q : ι → R),
+  (∀ (i : ι), Irreducible (q i)) →
+    ∀ (e : ι → ℕ) (p : R),
+      Irreducible p →
+        ∀ (x : (i : ι) → R ⧸ Ideal.span {q i ^ e i}),
+          x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p ↔
+            ∀ (i : ι), Ideal.span {q i} ≠ Ideal.span {p} → x i = 0 :=
+fun {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {ι} [Fintype ι] q hq e p hp x =>
+  {
+    mp := fun a =>
+      Exists.casesOn (motive := fun x_1 => ∀ (i : ι), Ideal.span {q i} ≠ Ideal.span {p} → x i = 0) a fun n hn i hi =>
+        have hc :=
+          Komorebi.PaperICompletion3.PrimarySeedFormula.coprime_primePower_ideals p (q i) hp (hq i) (Ne.symm hi) n
+            (e i);
+        Komorebi.PaperICompletion4.GroupedPrimary.eq_zero_of_coprime_smul (p ^ n) (q i ^ e i)
+          ((Ideal.isCoprime_span_singleton_iff (p ^ n) (q i ^ e i)).mp hc) (x i) (congrFun hn i),
+    mpr := fun hx =>
+      Exists.intro (Finset.univ.sup e)
+        (funext fun i =>
+          if hi : Ideal.span {q i} = Ideal.span {p} then
+            have hid :=
+              Eq.mp (congr (congrArg Eq (Ideal.span_singleton_pow (q i) (e i))) (Ideal.span_singleton_pow p (e i)))
+                (congrArg (fun I => I ^ e i) hi);
+            have hz :=
+              Eq.mpr (id (congrArg (fun _a => _a = 0) (Algebra.smul_def (p ^ e i) (x i))))
+                (id
+                  (have hpq :=
+                    Eq.mpr (id (congrArg (fun _a => p ^ e i ∈ _a) hid))
+                      (Ideal.subset_span (Set.mem_singleton (p ^ e i)));
+                  Eq.mpr (id (congrArg (fun _a => _a * x i = 0) (Ideal.Quotient.eq_zero_iff_mem.mpr hpq)))
+                    (Eq.mpr (id (congrArg (fun _a => _a = 0) (zero_mul (x i)))) (Eq.refl 0))));
+            Komorebi.PaperICompletion4.IntrinsicPrimary.power_kills_of_le (R ⧸ Ideal.span {q i ^ e i}) p
+              (Finset.le_sup (Finset.mem_univ i)) (x i) hz
+          else
+            of_eq_true
+              (Eq.trans
+                (congrFun'
+                  (congrArg Eq
+                    (Eq.trans (congrArg (HSMul.hSMul (p ^ Finset.univ.sup e)) (hx i hi))
+                      (smul_zero (p ^ Finset.univ.sup e))))
+                  0)
+                (eq_self 0))) }
+'Komorebi.PaperICompletion4.GroupedPrimary.primaryProduct_mem_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.GroupedPrimary.primary_equiv_mem_iff.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) (x : M) :
+  f x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule N p ↔
+    x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p
+theorem Komorebi.PaperICompletion4.GroupedPrimary.primary_equiv_mem_iff.{u, v, w} : ∀ {R : Type u} [inst : CommRing R]
+  {M : Type v} [inst_1 : AddCommGroup M] [inst_2 : Module R M] {N : Type w} [inst_3 : AddCommGroup N]
+  [inst_4 : Module R N] (p : R) (f : M ≃ₗ[R] N) (x : M),
+  f x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule N p ↔
+    x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p f x =>
+  id
+    (of_eq_true
+      (Eq.trans
+        (congrFun'
+          (congrArg Iff
+            (congrArg Exists
+              (funext fun n =>
+                Eq.trans (congrFun' (congrArg Eq ((fun c x => Eq.symm (LinearEquiv.map_smul f c x)) (p ^ n) x)) 0)
+                  ((fun x_0 => propext ((fun x_0 => map_eq_zero_iff f (LinearEquiv.injective f)) x_0)) (p ^ n • x)))))
+          (∃ n, p ^ n • x = 0))
+        (iff_self (∃ n, p ^ n • x = 0))))
+'Komorebi.PaperICompletion4.GroupedPrimary.primary_equiv_mem_iff' depends on axioms: [propext, Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.mem_primarySubmodule.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) (x : M) :
+  x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p ↔ ∃ n, p ^ n • x = 0
+theorem Komorebi.PaperICompletion4.IntrinsicPrimary.mem_primarySubmodule.{u, v} : ∀ {R : Type u} [inst : CommRing R]
+  (M : Type v) [inst_1 : AddCommGroup M] [inst_2 : Module R M] (p : R) (x : M),
+  x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p ↔ ∃ n, p ^ n • x = 0 :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p x => Iff.rfl
+'Komorebi.PaperICompletion4.IntrinsicPrimary.mem_primarySubmodule' depends on axioms: [propext]
+Komorebi.PaperICompletion4.IntrinsicPrimary.power_kills_of_le.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) {m n : ℕ} (h : m ≤ n) (x : M) (hx : p ^ m • x = 0) : p ^ n • x = 0
+theorem Komorebi.PaperICompletion4.IntrinsicPrimary.power_kills_of_le.{u, v} : ∀ {R : Type u} [inst : CommRing R]
+  (M : Type v) [inst_1 : AddCommGroup M] [inst_2 : Module R M] (p : R) {m n : ℕ},
+  m ≤ n → ∀ (x : M), p ^ m • x = 0 → p ^ n • x = 0 :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p {m n} h x hx =>
+  Exists.casesOn (Nat.exists_eq_add_of_le h) fun r h_1 =>
+    Eq.ndrec (motive := fun {n} => m ≤ n → p ^ n • x = 0)
+      (fun h =>
+        Eq.mpr (id (congrArg (fun _a => _a • x = 0) (pow_add p m r)))
+          (Eq.mpr (id (congrArg (fun _a => _a • x = 0) (mul_comm (p ^ m) (p ^ r))))
+            (Eq.mpr (id (congrArg (fun _a => _a = 0) (mul_smul (p ^ r) (p ^ m) x)))
+              (Eq.mpr (id (congrArg (fun _a => p ^ r • _a = 0) hx))
+                (Eq.mpr (id (congrArg (fun _a => _a = 0) (smul_zero (p ^ r)))) (Eq.refl 0))))))
+      (Eq.symm h_1) h
+'Komorebi.PaperICompletion4.IntrinsicPrimary.power_kills_of_le' depends on axioms: [propext]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient
+      (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)) p ≃ₗ[R ⧸ Ideal.span {p}]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p
+def Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal.{u, v} : {R : Type u} →
+  [inst : CommRing R] →
+    (M : Type v) →
+      [inst_1 : AddCommGroup M] →
+        [inst_2 : Module R M] →
+          [IsArtinian R M] →
+            (p : R) →
+              Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient
+                  (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)) p ≃ₗ[R ⧸ Ideal.span {p}]
+                Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] [IsArtinian R M] p =>
+  Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv p
+    (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p) ⋯ ⋯
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal_mk.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R)
+  (x : ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)) :
+  (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal M p) (Submodule.Quotient.mk x) =
+    Submodule.Quotient.mk ↑x
+theorem Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal_mk.{u, v} : ∀ {R : Type u}
+  [inst : CommRing R] (M : Type v) [inst_1 : AddCommGroup M] [inst_2 : Module R M] [inst_3 : IsArtinian R M] (p : R)
+  (x : ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)),
+  (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal M p) (Submodule.Quotient.mk x) =
+    Submodule.Quotient.mk ↑x :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] [IsArtinian R M] p x =>
+  Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk p
+    (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p)
+    (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective M p)
+    (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker M p) x
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) : Submodule R M
+def Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule.{u, v} : {R : Type u} →
+  [inst : CommRing R] → (M : Type v) → [inst_1 : AddCommGroup M] → [inst_2 : Module R M] → R → Submodule R M :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p =>
+  { carrier := {x | ∃ n, p ^ n • x = 0}, add_mem' := ⋯, zero_mem' := ⋯, smul_mem' := ⋯ }
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule' depends on axioms: [propext]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary.{u, v} {R : Type u} [CommRing R]
+  (M : Type v) [AddCommGroup M] [Module R M] (p : R) :
+  Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p = Ideal.primaryComponent M (Ideal.span {p})
+theorem Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary.{u, v} : ∀ {R : Type u}
+  [inst : CommRing R] (M : Type v) [inst_1 : AddCommGroup M] [inst_2 : Module R M] (p : R),
+  Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p = Ideal.primaryComponent M (Ideal.span {p}) :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p =>
+  Submodule.ext fun x =>
+    of_eq_true
+      (Eq.trans
+        (congr
+          (congrArg Iff (Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary._simp_1_1 M p x))
+          (Eq.trans
+            (Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary._simp_1_2 M (Ideal.span {p})
+              x)
+            (congrArg Exists
+              (funext fun n =>
+                Eq.trans
+                  (congrFun'
+                    (congrArg Membership.mem
+                      (Eq.trans
+                        (congrArg (Submodule.torsionBySet R M) (congrArg SetLike.coe (Ideal.span_singleton_pow p n)))
+                        (Submodule.torsionBySet_ideal_span_singleton_eq (p ^ n))))
+                    x)
+                  (Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary._simp_1_3 (p ^ n) x)))))
+        (iff_self (∃ n, p ^ n • x = 0)))
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) →ₗ[R]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p
+def Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal.{u, v} : {R : Type u} →
+  [inst : CommRing R] →
+    (M : Type v) →
+      [inst_1 : AddCommGroup M] →
+        [inst_2 : Module R M] →
+          (p : R) →
+            ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) →ₗ[R]
+              Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p =>
+  (p • ⊤).mkQ ∘ₗ (Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p).subtype
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) : (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p).ker = p • ⊤
+theorem Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker.{u, v} : ∀ {R : Type u} [inst : CommRing R]
+  (M : Type v) [inst_1 : AddCommGroup M] [inst_2 : Module R M] (p : R),
+  (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p).ker = p • ⊤ :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p =>
+  Submodule.ext fun x =>
+    id
+      (Eq.mpr (id (congrArg (fun _a => _a ↔ x ∈ p • ⊤) (propext (Submodule.Quotient.mk_eq_zero (p • ⊤)))))
+        (Eq.mpr
+          (id
+            (congrArg (fun _a => _a ↔ x ∈ p • ⊤)
+              (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p ↑x))))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => (∃ y, p • y = ↑x) ↔ _a)
+                (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p x))))
+            {
+              mp := fun a =>
+                Exists.casesOn a fun y hy =>
+                  Exists.casesOn x.property fun n hn =>
+                    have hyprim :=
+                      Exists.intro (n + 1)
+                        (Eq.mpr (id (congrArg (fun _a => _a • y = 0) (pow_succ p n)))
+                          (Eq.mpr (id (congrArg (fun _a => _a = 0) (mul_smul (p ^ n) p y)))
+                            (Eq.mpr (id (congrArg (fun _a => p ^ n • _a = 0) hy)) hn)));
+                    Exists.intro ⟨y, hyprim⟩ (Subtype.ext hy),
+              mpr := fun a => Exists.casesOn a fun y hy => Exists.intro (↑y) (congrArg Subtype.val hy) })))
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p)
+theorem Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective.{u, v} : ∀ {R : Type u}
+  [inst : CommRing R] (M : Type v) [inst_1 : AddCommGroup M] [inst_2 : Module R M] [IsArtinian R M] (p : R),
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p) :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] [IsArtinian R M] p =>
+  let f := DistribSMul.toLinearMap R M p;
+  Exists.casesOn (IsArtinian.monotone_stabilizes (LinearMap.iterateRange f)) fun n hn =>
+    have hpow := fun n =>
+      Nat.recAux (motive := fun n => ∀ (x : M), (f ^ n) x = p ^ n • x)
+        (fun x =>
+          of_eq_true
+            (Eq.trans
+              (congr (congrArg Eq (congrFun' (congrArg DFunLike.coe (pow_zero f)) x))
+                (Eq.trans (congrFun' (congrArg HSMul.hSMul (pow_zero p)) x) (one_smul R x)))
+              (eq_self x)))
+        (fun n ih x =>
+          Eq.mpr (id (congrArg (fun _a => _a x = p ^ (n + 1) • x) (pow_succ f n)))
+            (Eq.mpr (id (congrArg (fun _a => _a = p ^ (n + 1) • x) (Module.End.mul_apply (f ^ n) f x)))
+              (Eq.mpr (id (congrArg (fun _a => _a = p ^ (n + 1) • x) (ih (f x))))
+                (Eq.mpr (id (congrArg (fun _a => p ^ n • f x = _a • x) (pow_succ p n)))
+                  (Eq.mpr (id (congrArg (fun _a => p ^ n • f x = _a) (mul_smul (p ^ n) p x)))
+                    (Eq.refl (p ^ n • f x)))))))
+        n;
+    fun z =>
+    Exists.casesOn (Submodule.mkQ_surjective (p • ⊤) z) fun x h =>
+      h ▸
+        have hx :=
+          Eq.mpr (id (congrArg (fun _a => (f ^ n) x ∈ _a) (Eq.symm (hn (n + 1) (Nat.le_succ n)))))
+            (LinearMap.mem_range_self (f ^ n) x);
+        Exists.casesOn hx fun y hy =>
+          have hy' :=
+            Eq.mp (congrArg (fun _a => _a = p ^ n • x) (mul_smul (p ^ n) p y))
+              (Eq.mp (congrArg (fun _a => _a • y = p ^ n • x) (pow_succ p n))
+                (Eq.mp (congrArg (fun _a => p ^ (n + 1) • y = _a) (hpow n x))
+                  (Eq.mp (congrArg (fun _a => _a = (f ^ n) x) (hpow (n + 1) y)) hy)));
+          have hprimary :=
+            Exists.intro n
+              (Eq.mpr (id (congrArg (fun _a => _a = 0) (smul_sub (p ^ n) x (p • y))))
+                (Eq.mpr (id (congrArg (fun _a => p ^ n • x - _a = 0) hy'))
+                  (Eq.mpr (id (congrArg (fun _a => _a = 0) (sub_self (p ^ n • x)))) (Eq.refl 0))));
+          Exists.intro ⟨x - p • y, hprimary⟩
+            (id
+              (have hz :=
+                (Submodule.Quotient.mk_eq_zero (p • ⊤)).mpr
+                  ((Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p (p • y)).mpr (Exists.intro y rfl));
+              Eq.mpr (id (congrArg (fun _a => _a = Submodule.Quotient.mk x) (Submodule.Quotient.mk_sub (p • ⊤))))
+                (Eq.mpr (id (congrArg (fun _a => Submodule.Quotient.mk x - _a = Submodule.Quotient.mk x) hz))
+                  (Eq.mpr (id (congrArg (fun _a => _a = Submodule.Quotient.mk x) (sub_zero (Submodule.Quotient.mk x))))
+                    (Eq.refl (Submodule.Quotient.mk x))))))
+'Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) : Type v
+@[reducible] def Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → Polynomial k → Type v :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p =>
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient
+    (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p)) p
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) : ℕ
+def Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → Polynomial k → ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p =>
+  Module.finrank (Polynomial k ⧸ Ideal.span {p})
+    (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] {ι : Type v} [Fintype ι] (T : Module.End k V)
+  (p : Polynomial k) (hp : Irreducible p) (q : ι → Polynomial k) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (hlabel : ∀ (i : ι), Ideal.span {q i} = Ideal.span {p})
+  (f :
+    ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+      (i : ι) → Polynomial k ⧸ Ideal.span {q i ^ e i}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = Fintype.card ι
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] {ι : Type v}
+  [inst_3 : Fintype ι] (T : Module.End k V) (p : Polynomial k),
+  Irreducible p →
+    ∀ (q : ι → Polynomial k),
+      (∀ (i : ι), Irreducible (q i)) →
+        ∀ (e : ι → ℕ),
+          (∀ (i : ι), 0 < e i) →
+            (∀ (i : ι), Ideal.span {q i} = Ideal.span {p}) →
+              ∀
+                (f :
+                  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+                    (i : ι) → Polynomial k ⧸ Ideal.span {q i ^ e i}),
+                Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = Fintype.card ι :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] {ι} [Fintype ι] T p hp q hq e he hlabel f =>
+  let this := PrincipalIdealRing.isMaximal_of_irreducible hp;
+  let this := Ideal.Quotient.field (Ideal.span {p});
+  have E :=
+    Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr p f ≪≫ₗ
+      Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv q hq e he p hp;
+  have h := LinearEquiv.finrank_eq E;
+  have hc :=
+    Eq.mpr
+      (id
+        (congrArg
+          (Eq
+            (Module.finrank (Polynomial k ⧸ Ideal.span {p})
+              (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p)))
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition._simp_1_2))
+      (Eq.mp
+        (congrArg
+          (Eq
+            (Module.finrank (Polynomial k ⧸ Ideal.span {p})
+              (Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient
+                (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p)) p)))
+          (Eq.trans (Module.finrank_fintype_fun_eq_card (Polynomial k ⧸ Ideal.span {p}))
+            Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition._simp_1_2))
+        h);
+  Eq.trans hc (Fintype.card_congr (Equiv.subtypeUnivEquiv hlabel))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p})
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  {T : Module.End k V} (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k),
+  Irreducible p →
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+      Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T} D p hp =>
+  let this := PrincipalIdealRing.isMaximal_of_irreducible hp;
+  let this := Ideal.Quotient.field (Ideal.span {p});
+  have h :=
+    LinearEquiv.finrank_eq (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv D p hp);
+  Eq.mpr
+    (id
+      (congrArg
+        (Eq
+          (Module.finrank (Polynomial k ⧸ Ideal.span {p})
+            (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p)))
+        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber._simp_1_2))
+    (Eq.mp
+      (congrArg
+        (Eq
+          (Module.finrank (Polynomial k ⧸ Ideal.span {p})
+            (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p)))
+        (Eq.trans (Module.finrank_fintype_fun_eq_card (Polynomial k ⧸ Ideal.span {p}))
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber._simp_1_2))
+      h)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_of_span_eq.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (p q : Polynomial k)
+  (hp : Irreducible p) (hq : Irreducible q) (h : Ideal.span {p} = Ideal.span {q}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T q
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_of_span_eq.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V) (p q : Polynomial k),
+  Irreducible p →
+    Irreducible q →
+      Ideal.span {p} = Ideal.span {q} →
+        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T q :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T p q hp hq h =>
+  let D := Komorebi.PaperICompletion3.OperatorPrimaryAPI.chosenPrimaryPresentation T;
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T q)
+        (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber D p hp)))
+    (Eq.mpr
+      (id
+        (congrArg
+          (fun _a => Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) = _a)
+          (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber D q hq)))
+      (Eq.mpr
+        (id
+          (congrArg
+            (fun _a =>
+              Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label _a =
+                Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {q}))
+            h))
+        (Eq.refl (Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {q})))))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_of_span_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_zero_of_absent.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p)
+  (h : ∀ (i : D.Index), D.label i ≠ Ideal.span {p}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = 0
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_zero_of_absent.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  {T : Module.End k V} (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k),
+  Irreducible p →
+    (∀ (i : D.Index), D.label i ≠ Ideal.span {p}) →
+      Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = 0 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T} D p hp h =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = 0)
+        (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber D p hp)))
+    (let this := { false := fun i => h (↑i) i.property };
+    of_eq_true (Eq.trans (congrFun' (congrArg Eq Fintype.card_eq_zero) 0) (eq_self 0)))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_zero_of_absent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (p : Polynomial k)
+  (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p ≤
+    Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V) (p : Polynomial k),
+  Irreducible p →
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p ≤
+      Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T p hp =>
+  let D := Komorebi.PaperICompletion3.OperatorPrimaryAPI.chosenPrimaryPresentation T;
+  if h : ∃ i, D.label i = Ideal.span {p} then
+    Exists.casesOn h fun i hi =>
+      Eq.mpr
+        (id
+          (congrArg
+            (fun _a => _a ≤ Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V)
+            (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber D p hp)))
+        (Eq.mpr
+          (id
+            (congrArg
+              (fun _a => Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) ≤ _a)
+              (Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedFinrank_eq D)))
+          (Eq.mpr
+            (id
+              (congrArg
+                (fun _a => Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label _a ≤ D.maxCount)
+                (Eq.symm hi)))
+            (Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity_le_max D.label i)))
+  else
+    Eq.mpr
+      (id
+        (congrArg
+          (fun _a => _a ≤ Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V)
+          (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_zero_of_absent D p hp
+            (id (Eq.mp not_exists._simp_1 h)))))
+      (Nat.zero_le (Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : ℕ
+def Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  sSup (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum_attained.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ p,
+    p.Monic ∧
+      Irreducible p ∧
+        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum_attained.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  ∃ p,
+    p.Monic ∧
+      Irreducible p ∧
+        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  Nat.sSup_mem (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty T)
+    (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove T)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum_attained' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) : Set ℕ
+def Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → Set ℕ :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  {n | ∃ p, p.Monic ∧ Irreducible p ∧ Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = n}
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  BddAbove (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T)
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  BddAbove (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  Exists.intro (Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V) fun ⦃n⦄ a =>
+    Exists.casesOn a fun p h =>
+      And.casesOn h fun left right =>
+        And.casesOn right fun hp right =>
+          right ▸ Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank T p hp
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T).Nonempty
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V),
+  (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues T).Nonempty :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  Exists.intro (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T Polynomial.X)
+    (Exists.intro Polynomial.X ⟨Polynomial.monic_X, ⟨Polynomial.irreducible_X, rfl⟩⟩)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryComponentEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+    (i : { i // D.label i = Ideal.span {p} }) → Polynomial k ⧸ Ideal.span {D.prime ↑i ^ D.exponent ↑i}
+def Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryComponentEquiv.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          {T : Module.End k V} →
+            (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) →
+              (p : Polynomial k) →
+                Irreducible p →
+                  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+                    (i : { i // D.label i = Ideal.span {p} }) →
+                      Polynomial k ⧸ Ideal.span {D.prime ↑i ^ D.exponent ↑i} :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] {T} D p hp =>
+  (Komorebi.PaperICompletion4.GroupedPrimary.primaryCongr p D.equiv).trans
+    (Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv D.prime ⋯ D.exponent p hp)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryComponentEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p ≃ₗ[Polynomial k ⧸ Ideal.span {p}]
+    { i // D.label i = Ideal.span {p} } → Polynomial k ⧸ Ideal.span {p}
+def Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          [FiniteDimensional k V] →
+            {T : Module.End k V} →
+              (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) →
+                (p : Polynomial k) →
+                  Irreducible p →
+                    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T
+                        p ≃ₗ[Polynomial k ⧸ Ideal.span {p}]
+                      { i // D.label i = Ideal.span {p} } → Polynomial k ⧸ Ideal.span {p} :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T} D p hp =>
+  have this := ⋯;
+  (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal (Module.AEval' T) p).trans
+    ((Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr p D.equiv).trans
+      (Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv D.prime ⋯ D.exponent ⋯ p hp))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_primary_membership.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Module.AEval'.of T) x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p ↔
+    ∃ n, ((Polynomial.aeval T) p ^ n) x = 0
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_primary_membership.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k)
+  (x : V),
+  (Module.AEval'.of T) x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p ↔
+    ∃ n, ((Polynomial.aeval T) p ^ n) x = 0 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p x =>
+  id
+    (of_eq_true
+      (Eq.trans
+        (congrFun'
+          (congrArg Iff
+            (congrArg Exists
+              (funext fun n =>
+                congrFun' (congrArg Eq (congrFun' (congrArg DFunLike.coe (map_pow (Polynomial.aeval T) p n)) x)) 0)))
+          (∃ n, ((Polynomial.aeval T) p ^ n) x = 0))
+        (iff_self (∃ n, ((Polynomial.aeval T) p ^ n) x = 0))))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_primary_membership' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_scalarImage_membership.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Module.AEval'.of T) x ∈ p • ⊤ ↔ ∃ y, ((Polynomial.aeval T) p) y = x
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_scalarImage_membership.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k)
+  (x : V), (Module.AEval'.of T) x ∈ p • ⊤ ↔ ∃ y, ((Polynomial.aeval T) p) y = x :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p x =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a ↔ ∃ y, ((Polynomial.aeval T) p) y = x)
+        (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p ((Module.AEval'.of T) x)))))
+    Iff.rfl
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_scalarImage_membership' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  let D := Komorebi.PaperICompletion3.OperatorPrimaryAPI.chosenPrimaryPresentation T;
+  le_antisymm
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a ≤ Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T)
+          (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsic_primary_max D)))
+      (Finset.sup_le fun i a =>
+        let p := normalize (D.prime i);
+        have hp := Associated.irreducible (associated_normalize (D.prime i)) (D.irreducible i);
+        have hm := Polynomial.monic_normalize (Irreducible.ne_zero (D.irreducible i));
+        have heq :=
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_of_span_eq T p (D.prime i) hp
+            (D.irreducible i) (Ideal.span_singleton_eq_span_singleton.mpr (normalize_associated (D.prime i)));
+        Eq.mpr
+          (id
+            (congrArg (fun _a => _a ≤ Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T)
+              (Eq.symm heq)))
+          (le_csSup (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_bddAbove T)
+            (Exists.intro p ⟨hm, ⟨hp, rfl⟩⟩))))
+    (csSup_le (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty T) fun n x =>
+      match x with
+      | Exists.intro p ⟨left, ⟨hp, hn⟩⟩ =>
+        hn ▸ Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_le_seedFinrank T p hp)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsic_primary_max.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Finset.univ.sup fun i => Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (D.prime i)
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsic_primary_max.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  {T : Module.End k V} (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T),
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Finset.univ.sup fun i => Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (D.prime i) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T} D =>
+  Eq.mpr
+    (id
+      (congrArg
+        (fun _a =>
+          _a =
+            Finset.univ.sup fun i =>
+              Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (D.prime i))
+        (Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedFinrank_eq D)))
+    (id
+      (id
+        ((fun {α} {β} [SemilatticeSup α] [OrderBot α] s s_1 e_s =>
+            Eq.rec (motive := fun s_2 e_s => ∀ (f f_1 : β → α), f = f_1 → s.sup f = s_2.sup f_1)
+              (fun f f_1 e_f => e_f ▸ Eq.refl (s.sup f)) e_s)
+          Finset.univ Finset.univ (Eq.refl Finset.univ)
+          (fun i => Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (D.label i))
+          (fun i => Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (D.prime i))
+          (funext fun i =>
+            Eq.symm
+              (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber D (D.prime i)
+                (D.irreducible i))))))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsic_primary_max' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T)
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T =>
+  let D := Komorebi.PaperICompletion3.OperatorPrimaryAPI.chosenPrimaryPresentation T;
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T))
+        (Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedRank_eq D)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => ↑_a = ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T))
+          (Eq.symm (Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.seedFinrank_eq D))))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => ↑_a = ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T))
+            (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum T)))
+        (Eq.refl ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T))))
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.primary_fiber_presentation_invariant.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D E : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) =
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity E.label (Ideal.span {p})
+theorem Komorebi.PaperICompletion4.OperatorIntrinsicFormula.primary_fiber_presentation_invariant.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  {T : Module.End k V} (D E : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k),
+  Irreducible p →
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) =
+      Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity E.label (Ideal.span {p}) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T} D E p hp =>
+  Eq.trans (Eq.symm (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber D p hp))
+    (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber E p hp)
+'Komorebi.PaperICompletion4.OperatorIntrinsicFormula.primary_fiber_presentation_invariant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient.{u, v} {R : Type u} [CommRing R] (M : Type v) [AddCommGroup M]
+  [Module R M] (p : R) : Type v
+@[reducible] def Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient.{u, v} : {R : Type u} →
+  [inst : CommRing R] → (M : Type v) → [inst_1 : AddCommGroup M] → [Module R M] → R → Type v :=
+fun {R} [CommRing R] M [AddCommGroup M] [Module R M] p => M ⧸ p • ⊤
+'Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul.{u} {R : Type u} [CommRing R] (I : Ideal R) (p : R)
+  (hI : I ≤ Ideal.span {p}) (x : R ⧸ I) : (Ideal.Quotient.factor hI) x = 0 ↔ ∃ y, p • y = x
+theorem Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul.{u} : ∀ {R : Type u} [inst : CommRing R]
+  (I : Ideal R) (p : R) (hI : I ≤ Ideal.span {p}) (x : R ⧸ I), (Ideal.Quotient.factor hI) x = 0 ↔ ∃ y, p • y = x :=
+fun {R} [CommRing R] I p hI x =>
+  Exists.casesOn (Ideal.Quotient.mk_surjective x) fun r h =>
+    h ▸
+      {
+        mp := fun h =>
+          have hd := Ideal.mem_span_singleton.mp (Ideal.Quotient.eq_zero_iff_mem.mp h);
+          Exists.casesOn hd fun s h_1 =>
+            Eq.ndrec (motive := fun r =>
+              (Ideal.Quotient.factor hI) ((Ideal.Quotient.mk I) r) = 0 → ∃ y, p • y = (Ideal.Quotient.mk I) r)
+              (fun h =>
+                Exists.intro ((Ideal.Quotient.mk I) s)
+                  (of_eq_true
+                    (Eq.trans
+                      (congr (congrArg Eq (Algebra.smul_def p ((Ideal.Quotient.mk I) s)))
+                        (map_mul (Ideal.Quotient.mk I) p s))
+                      (eq_self ((Ideal.Quotient.mk I) p * (Ideal.Quotient.mk I) s)))))
+              (Eq.symm h_1) h,
+        mpr := fun a =>
+          Exists.casesOn a fun y hy =>
+            Exists.casesOn (Ideal.Quotient.mk_surjective y) fun s h =>
+              Eq.ndrec (motive := fun y =>
+                p • y = (Ideal.Quotient.mk I) r → (Ideal.Quotient.factor hI) ((Ideal.Quotient.mk I) r) = 0)
+                (fun hy =>
+                  Eq.mpr (id (congrArg (fun _a => (Ideal.Quotient.factor hI) _a = 0) (Eq.symm hy)))
+                    (Eq.mpr
+                      (id
+                        (congrFun'
+                          (congrArg Eq
+                            (congrArg (⇑(Ideal.Quotient.factor hI)) (Algebra.smul_def p ((Ideal.Quotient.mk I) s))))
+                          0))
+                      (Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton.mpr (dvd_mul_right p s)))))
+                h hy }
+'Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff.{u, v} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] (p : R) (x : M) : x ∈ p • ⊤ ↔ ∃ y, p • y = x
+theorem Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff.{u, v} : ∀ {R : Type u} [inst : CommRing R]
+  {M : Type v} [inst_1 : AddCommGroup M] [inst_2 : Module R M] (p : R) (x : M), x ∈ p • ⊤ ↔ ∃ y, p • y = x :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] p x =>
+  of_eq_true
+    (Eq.trans
+      (congrFun'
+        (congrArg Iff
+          (Eq.trans (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff._simp_1_1 x p ⊤)
+            (congrArg Exists
+              (funext fun b =>
+                Eq.trans
+                  (congrFun' (congrArg And Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff._simp_1_2)
+                    (p • b = x))
+                  (true_and (p • b = x))))))
+        (∃ y, p • y = x))
+      (iff_self (∃ b, p • b = x)))
+'Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (p : R) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient ((i : ι) → R ⧸ Ideal.span {q i ^ e i})
+      p ≃ₗ[R ⧸ Ideal.span {p}]
+    { i // Ideal.span {q i} = Ideal.span {p} } → R ⧸ Ideal.span {p}
+def Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv.{u, v} : {R : Type u} →
+  [inst : CommRing R] →
+    [IsDomain R] →
+      [IsPrincipalIdealRing R] →
+        {ι : Type v} →
+          (q : ι → R) →
+            (∀ (i : ι), Irreducible (q i)) →
+              (e : ι → ℕ) →
+                (∀ (i : ι), 0 < e i) →
+                  (p : R) →
+                    Irreducible p →
+                      Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient ((i : ι) → R ⧸ Ideal.span {q i ^ e i})
+                          p ≃ₗ[R ⧸ Ideal.span {p}]
+                        { i // Ideal.span {q i} = Ideal.span {p} } → R ⧸ Ideal.span {p} :=
+fun {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {ι} q hq e he p hp =>
+  Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv p
+    (Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p) ⋯ ⋯
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryProductQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap.{u, v} {R : Type u} [CommRing R] {ι : Type v} (q : ι → R)
+  (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) (p : R) :
+  ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) →ₗ[R] { i // Ideal.span {q i} = Ideal.span {p} } → R ⧸ Ideal.span {p}
+def Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap.{u, v} : {R : Type u} →
+  [inst : CommRing R] →
+    {ι : Type v} →
+      (q : ι → R) →
+        (e : ι → ℕ) →
+          (∀ (i : ι), 0 < e i) →
+            (p : R) →
+              ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) →ₗ[R]
+                { i // Ideal.span {q i} = Ideal.span {p} } → R ⧸ Ideal.span {p} :=
+fun {R} [CommRing R] {ι} q e he p =>
+  Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap (fun i => Ideal.span {q i ^ e i})
+    (fun i => Ideal.span {q i}) ⋯ (Ideal.span {p})
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_ker.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (p : R) (hp : Irreducible p) :
+  (Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p).ker = p • ⊤
+theorem Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_ker.{u, v} : ∀ {R : Type u} [inst : CommRing R]
+  [IsDomain R] [IsPrincipalIdealRing R] {ι : Type v} (q : ι → R),
+  (∀ (i : ι), Irreducible (q i)) →
+    ∀ (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) (p : R),
+      Irreducible p → (Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p).ker = p • ⊤ :=
+fun {R} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R] {ι} q hq e he p hp =>
+  Submodule.ext fun x =>
+    Eq.mpr (id (congrArg (fun _a => _a ↔ x ∈ p • ⊤) (propext LinearMap.mem_ker)))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => (Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p) x = 0 ↔ _a)
+            (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p x))))
+        {
+          mp := fun hx =>
+            have hcoord := fun i =>
+              if hi : Ideal.span {q i} = Ideal.span {p} then
+                have hz := congrFun hx ⟨i, hi⟩;
+                (Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul (Ideal.span {q i ^ e i}) p
+                      (LE.le.trans_eq
+                        (Ideal.span_singleton_le_span_singleton.mpr (dvd_pow_self (q i) (Nat.ne_of_gt (he i)))) hi)
+                      (x i)).mp
+                  hz
+              else
+                have hc :=
+                  have h :=
+                    Komorebi.PaperICompletion3.PrimarySeedFormula.coprime_primePower_ideals p (q i) hp (hq i)
+                      (Ne.symm hi) 1 (e i);
+                  Eq.mp (congrFun' (congrArg IsCoprime (pow_one p)) (q i ^ e i))
+                    ((Ideal.isCoprime_span_singleton_iff (p ^ 1) (q i ^ e i)).mp h);
+                Komorebi.PaperICompletion4.ResidueQuotient.smul_surjective_of_coprime p (q i ^ e i) hc (x i);
+            (fun y hy => Exists.intro y (funext hy)) (fun i => Classical.choose (hcoord i)) fun i =>
+              Classical.choose_spec (hcoord i),
+          mpr := fun a =>
+            Exists.casesOn a fun y h =>
+              h ▸
+                funext fun i =>
+                  (Komorebi.PaperICompletion4.ResidueQuotient.factor_eq_zero_iff_smul (Ideal.span {q ↑i ^ e ↑i}) p
+                        (LE.le.trans_eq
+                          (Ideal.span_singleton_le_span_singleton.mpr (dvd_pow_self (q ↑i) (Nat.ne_of_gt (he ↑i))))
+                          i.property)
+                        (p • y ↑i)).mpr
+                    (Exists.intro (y ↑i) rfl) })
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_surjective.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (q : ι → R) (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) (p : R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p)
+theorem Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_surjective.{u, v} : ∀ {R : Type u}
+  [inst : CommRing R] {ι : Type v} (q : ι → R) (e : ι → ℕ) (he : ∀ (i : ι), 0 < e i) (p : R),
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap q e he p) :=
+fun {R} [CommRing R] {ι} q e he p =>
+  Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap_surjective (fun i => Ideal.span {q i ^ e i})
+    (fun i => Ideal.span {q i}) (Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap._proof_1 q e he)
+    (Ideal.span {p})
+'Komorebi.PaperICompletion4.ResidueQuotient.primaryResidueMap_surjective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.quotientAfterEquiv_ker.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) :
+  ((p • ⊤).mkQ ∘ₗ ↑f).ker = p • ⊤
+theorem Komorebi.PaperICompletion4.ResidueQuotient.quotientAfterEquiv_ker.{u, v, w} : ∀ {R : Type u} [inst : CommRing R]
+  {M : Type v} [inst_1 : AddCommGroup M] [inst_2 : Module R M] {N : Type w} [inst_3 : AddCommGroup N]
+  [inst_4 : Module R N] (p : R) (f : M ≃ₗ[R] N), ((p • ⊤).mkQ ∘ₗ ↑f).ker = p • ⊤ :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p f =>
+  Submodule.ext fun x =>
+    id
+      (Eq.mpr (id (congrArg (fun _a => _a ↔ x ∈ p • ⊤) (propext (Submodule.Quotient.mk_eq_zero (p • ⊤)))))
+        (Eq.mpr
+          (id
+            (congrArg (fun _a => _a ↔ x ∈ p • ⊤)
+              (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p (f x)))))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => (∃ y, p • y = f x) ↔ _a)
+                (propext (Komorebi.PaperICompletion4.ResidueQuotient.mem_scalarImage_iff p x))))
+            {
+              mp := fun a =>
+                Exists.casesOn a fun y hy =>
+                  Exists.intro (f.symm y)
+                    (LinearEquiv.injective f
+                      (Eq.mpr
+                        (id
+                          (congrFun'
+                            (congrArg Eq
+                              (Eq.trans (map_smul f p (f.symm y))
+                                (congrArg (HSMul.hSMul p) ((fun c => LinearEquiv.apply_symm_apply f c) y))))
+                            (f x)))
+                        hy)),
+              mpr := fun a =>
+                Exists.casesOn a fun y h => h ▸ Exists.intro (f y) (Eq.symm (LinearEquiv.map_smul f p y)) })))
+'Komorebi.PaperICompletion4.ResidueQuotient.quotientAfterEquiv_ker' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p ≃ₗ[R ⧸ Ideal.span {p}]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient N p
+def Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr.{u, v, w} : {R : Type u} →
+  [inst : CommRing R] →
+    {M : Type v} →
+      [inst_1 : AddCommGroup M] →
+        [inst_2 : Module R M] →
+          {N : Type w} →
+            [inst_3 : AddCommGroup N] →
+              [inst_4 : Module R N] →
+                (p : R) →
+                  (M ≃ₗ[R] N) →
+                    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p ≃ₗ[R ⧸ Ideal.span {p}]
+                      Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient N p :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p f =>
+  Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv p ((p • ⊤).mkQ ∘ₗ ↑f) ⋯ ⋯
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr_mk.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) (f : M ≃ₗ[R] N) (x : M) :
+  (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr p f) (Submodule.Quotient.mk x) =
+    Submodule.Quotient.mk (f x)
+theorem Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr_mk.{u, v, w} : ∀ {R : Type u} [inst : CommRing R]
+  {M : Type v} [inst_1 : AddCommGroup M] [inst_2 : Module R M] {N : Type w} [inst_3 : AddCommGroup N]
+  [inst_4 : Module R N] (p : R) (f : M ≃ₗ[R] N) (x : M),
+  (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr p f) (Submodule.Quotient.mk x) =
+    Submodule.Quotient.mk (f x) :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p f x =>
+  Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk p ((p • ⊤).mkQ ∘ₗ ↑f)
+    (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr._proof_4 p f)
+    (Komorebi.PaperICompletion4.ResidueQuotient.quotientAfterEquiv_ker p f) x
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientCongr_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) [Module (R ⧸ Ideal.span {p}) N]
+  [IsScalarTower R (R ⧸ Ideal.span {p}) N] (f : M →ₗ[R] N) (hf : Function.Surjective ⇑f) (hker : f.ker = p • ⊤) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p ≃ₗ[R ⧸ Ideal.span {p}] N
+def Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv.{u, v, w} : {R : Type u} →
+  [inst : CommRing R] →
+    {M : Type v} →
+      [inst_1 : AddCommGroup M] →
+        [inst_2 : Module R M] →
+          {N : Type w} →
+            [inst_3 : AddCommGroup N] →
+              [inst_4 : Module R N] →
+                (p : R) →
+                  [inst_5 : Module (R ⧸ Ideal.span {p}) N] →
+                    [IsScalarTower R (R ⧸ Ideal.span {p}) N] →
+                      (f : M →ₗ[R] N) →
+                        Function.Surjective ⇑f →
+                          f.ker = p • ⊤ →
+                            Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p ≃ₗ[R ⧸ Ideal.span {p}] N :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p
+    [Module (R ⧸ Ideal.span {p}) N] [IsScalarTower R (R ⧸ Ideal.span {p}) N] f hf hker =>
+  let e := ((p • ⊤).quotEquivOfEq f.ker ⋯).trans (f.quotKerEquivOfSurjective hf);
+  let __src := e.toAddEquiv;
+  { toFun := __src.toFun, map_add' := ⋯, map_smul' := ⋯, invFun := __src.invFun, left_inv := ⋯, right_inv := ⋯ }
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk.{u, v, w} {R : Type u} [CommRing R] {M : Type v}
+  [AddCommGroup M] [Module R M] {N : Type w} [AddCommGroup N] [Module R N] (p : R) [Module (R ⧸ Ideal.span {p}) N]
+  [IsScalarTower R (R ⧸ Ideal.span {p}) N] (f : M →ₗ[R] N) (hf : Function.Surjective ⇑f) (hker : f.ker = p • ⊤)
+  (x : M) : (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv p f hf hker) (Submodule.Quotient.mk x) = f x
+theorem Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk.{u, v, w} : ∀ {R : Type u} [inst : CommRing R]
+  {M : Type v} [inst_1 : AddCommGroup M] [inst_2 : Module R M] {N : Type w} [inst_3 : AddCommGroup N]
+  [inst_4 : Module R N] (p : R) [inst_5 : Module (R ⧸ Ideal.span {p}) N]
+  [inst_6 : IsScalarTower R (R ⧸ Ideal.span {p}) N] (f : M →ₗ[R] N) (hf : Function.Surjective ⇑f) (hker : f.ker = p • ⊤)
+  (x : M),
+  (Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv p f hf hker) (Submodule.Quotient.mk x) = f x :=
+fun {R} [CommRing R] {M} [AddCommGroup M] [Module R M] {N} [AddCommGroup N] [Module R N] p
+    [Module (R ⧸ Ideal.span {p}) N] [IsScalarTower R (R ⧸ Ideal.span {p}) N] f hf hker x =>
+  of_eq_true (eq_self (f x))
+'Komorebi.PaperICompletion4.ResidueQuotient.scalarQuotientEquiv_mk' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Komorebi.PaperICompletion4.ResidueQuotient.smul_surjective_of_coprime.{u} {R : Type u} [CommRing R] (p q : R)
+  (h : IsCoprime p q) : Function.Surjective fun x => p • x
+theorem Komorebi.PaperICompletion4.ResidueQuotient.smul_surjective_of_coprime.{u} : ∀ {R : Type u} [inst : CommRing R]
+  (p q : R), IsCoprime p q → Function.Surjective fun x => p • x :=
+fun {R} [CommRing R] p q h =>
+  Exists.casesOn h fun a h =>
+    Exists.casesOn h fun b hab x =>
+      Exists.intro (a • x)
+        (have hq := Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_singleton q));
+        have hid := congrArg (⇑(Ideal.Quotient.mk (Ideal.span {q}))) hab;
+        Eq.mpr
+          (id
+            (congrFun'
+              (congrArg Eq
+                (Eq.trans (congrArg (HSMul.hSMul p) (Algebra.smul_def a x))
+                  (Algebra.smul_def p ((algebraMap R (R ⧸ Ideal.span {q})) a * x))))
+              x))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => _a = x)
+                (Eq.symm
+                  (mul_assoc ((algebraMap R (R ⧸ Ideal.span {q})) p) ((algebraMap R (R ⧸ Ideal.span {q})) a) x))))
+            (Eq.mpr
+              (id
+                (congrArg (fun _a => _a * x = x)
+                  (mul_comm ((algebraMap R (R ⧸ Ideal.span {q})) p) ((algebraMap R (R ⧸ Ideal.span {q})) a))))
+              (id
+                (Eq.mpr
+                  (id
+                    (congrArg (fun _a => _a * x = x)
+                      (Eq.mp
+                        (congr
+                          (congrArg Eq
+                            (Eq.trans (map_add (Ideal.Quotient.mk (Ideal.span {q})) (a * p) (b * q))
+                              (Eq.trans
+                                (congr (congrArg HAdd.hAdd (map_mul (Ideal.Quotient.mk (Ideal.span {q})) a p))
+                                  (Eq.trans (map_mul (Ideal.Quotient.mk (Ideal.span {q})) b q)
+                                    (Eq.trans (congrArg (HMul.hMul ((Ideal.Quotient.mk (Ideal.span {q})) b)) hq)
+                                      (mul_zero ((Ideal.Quotient.mk (Ideal.span {q})) b)))))
+                                (add_zero
+                                  ((Ideal.Quotient.mk (Ideal.span {q})) a * (Ideal.Quotient.mk (Ideal.span {q})) p)))))
+                          (map_one (Ideal.Quotient.mk (Ideal.span {q}))))
+                        hid)))
+                  (Eq.mpr (id (congrArg (fun _a => _a = x) (one_mul x))) (Eq.refl x)))))))
+'Komorebi.PaperICompletion4.ResidueQuotient.smul_surjective_of_coprime' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+BLOCK04_TYPES_PASS

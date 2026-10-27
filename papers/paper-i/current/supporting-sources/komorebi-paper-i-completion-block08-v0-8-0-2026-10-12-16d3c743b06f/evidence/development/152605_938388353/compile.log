@@ -1,0 +1,50 @@
+Module.compHom.{u_1, u_2, u_3} {R : Type u_1} {S : Type u_2} (M : Type u_3) [Semiring R] [AddCommMonoid M] [Module R M]
+  [Semiring S] (f : S →+* R) : Module S M
+Pi.evalRingHom.{u, v} {I : Type u} (f : I → Type v) [(i : I) → NonAssocSemiring (f i)] (i : I) : ((i : I) → f i) →+* f i
+LinearEquiv.piCongrRight.{u, x, u_1, u_2} {R : Type u} {ι : Type x} [Semiring R] {φ : ι → Type u_1} {ψ : ι → Type u_2}
+  [(i : ι) → AddCommMonoid (φ i)] [(i : ι) → Module R (φ i)] [(i : ι) → AddCommMonoid (ψ i)] [(i : ι) → Module R (ψ i)]
+  (e : (i : ι) → φ i ≃ₗ[R] ψ i) : ((i : ι) → φ i) ≃ₗ[R] (i : ι) → ψ i
+LinearEquiv.piCongrLeft.{u, x, x', u_1} (R : Type u) {ι : Type x} {ι' : Type x'} [Semiring R] (φ : ι → Type u_1)
+  [(i : ι) → AddCommMonoid (φ i)] [(i : ι) → Module R (φ i)] (e : ι' ≃ ι) : ((i' : ι') → φ (e i')) ≃ₗ[R] (i : ι) → φ i
+LinearEquiv.restrictScalars.{u_1, u_4, u_5, u_7} (R : Type u_1) {S : Type u_4} {M : Type u_5} {M₂ : Type u_7}
+  [Semiring R] [Semiring S] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module R M₂] [Module S M] [Module S M₂]
+  [LinearMap.CompatibleSMul M M₂ R S] (f : M ≃ₗ[S] M₂) : M ≃ₗ[R] M₂
+DirectSum.linearEquivFunOnFintype.{u, v, w} (R : Type u) [Semiring R] (ι : Type v) (M : ι → Type w)
+  [(i : ι) → AddCommMonoid (M i)] [(i : ι) → Module R (M i)] [Fintype ι] :
+  (DirectSum ι fun i => M i) ≃ₗ[R] (i : ι) → M i
+IsSimpleModule.{u_2, u_4} (R : Type u_2) [Ring R] (M : Type u_4) [AddCommGroup M] [Module R M] : Prop
+isSimpleModule_iff.{u_2, u_4} (R : Type u_2) [Ring R] (M : Type u_4) [AddCommGroup M] [Module R M] :
+  IsSimpleModule R M ↔ IsSimpleOrder (Submodule R M)
+isSimpleModule_iff_isAtom.{u_2, u_4} {R : Type u_2} [Ring R] {M : Type u_4} [AddCommGroup M] [Module R M]
+  {m : Submodule R M} : IsSimpleModule R ↥m ↔ IsAtom m
+/mnt/data/Komorebi_Paper_I_Completion_Block08_v0.8.0_2026-10-12/source/extension/Probe08.lean:13:7: error(lean.unknownIdentifier): Unknown identifier `isSimpleModule_iff_cyclic`
+/mnt/data/Komorebi_Paper_I_Completion_Block08_v0.8.0_2026-10-12/source/extension/Probe08.lean:14:7: error(lean.unknownIdentifier): Unknown constant `IsSimpleModule.of_surjective`
+Module.Finite.of_injective.{u_1, u_2, u_3, u_4} {R : Type u_1} {S : Type u_2} {M : Type u_3} {N : Type u_4} [Semiring R]
+  [Semiring S] [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module S N] [IsNoetherian S N] {σ : R →+* S}
+  {σ' : S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (f : M →ₛₗ[σ] N) (hf : Function.Injective ⇑f) :
+  Module.Finite R M
+Module.Finite.pi.{u_1, u_5, u_6} {R : Type u_1} [Semiring R] {ι : Type u_5} {M : ι → Type u_6} [Finite ι]
+  [(i : ι) → AddCommMonoid (M i)] [(i : ι) → Module R (M i)] [h : ∀ (i : ι), Module.Finite R (M i)] :
+  Module.Finite R ((i : ι) → M i)
+IsSemisimpleRing.isSemisimpleModule.{u_2, u_4} {R : Type u_2} [Ring R] {M : Type u_4} [AddCommGroup M] [Module R M]
+  [IsSemisimpleRing R] : IsSemisimpleModule R M
+IsSemisimpleModule.exists_linearEquiv_dfinsupp.{u_2, u_4} (R : Type u_2) [Ring R] (M : Type u_4) [AddCommGroup M]
+  [Module R M] [IsSemisimpleModule R M] : ∃ s x, sSupIndep s ∧ ∀ (m : ↑s), IsSimpleModule R ↥↑m
+Module.End.{u, v} (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] [Module R M] : Type v
+LinearEquiv.ofBijective.{u_1, u_2, u_4, u_6} {R : Type u_1} {R₂ : Type u_2} {M : Type u_4} {M₂ : Type u_6} [Semiring R]
+  [Semiring R₂] [AddCommMonoid M] [AddCommMonoid M₂] {module_M : Module R M} {module_M₂ : Module R₂ M₂} {σ₁₂ : R →+* R₂}
+  {σ₂₁ : R₂ →+* R} (f : M →ₛₗ[σ₁₂] M₂) [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (hf : Function.Bijective ⇑f) :
+  M ≃ₛₗ[σ₁₂] M₂
+Komorebi.SeedRankOperations.seedRank_eq_of_bijective_semilinear.{u} {A B M N : Type u} [Semiring A] [Semiring B]
+  [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] {σ : A →+* B} (f : M →ₛₗ[σ] N) [RingHomSurjective σ]
+  (hf : Function.Bijective ⇑f) : Komorebi.SeedRankBasics.seedRank A M = Komorebi.SeedRankBasics.seedRank B N
+Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedRank_eq_maxCeilDiv.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+      (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) =
+    ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.DivisionBlock.oneBlock_seedRank_eq_ceilDiv.{u} {k : Type u} [DivisionRing k] {d m : ℕ}
+  (hd : 0 < d) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+      (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) =
+    ↑(m ⌈/⌉ d)

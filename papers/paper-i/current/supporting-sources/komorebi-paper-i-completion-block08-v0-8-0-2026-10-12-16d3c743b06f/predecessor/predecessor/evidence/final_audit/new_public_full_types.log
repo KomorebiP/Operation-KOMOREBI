@@ -1,0 +1,549 @@
+def Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor.{u, v} : {k : Type u} →
+  [inst : Field k] → {V : Type v} → [inst_1 : AddCommGroup V] → [inst_2 : Module k V] → Module.End k V → Prop :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  ∃ p, p.Monic ∧ 0 < p.natDegree ∧ Nonempty (Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p})
+def Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix.{u} : {k : Type u} →
+  [inst : Field k] → (p : Polynomial k) → Matrix (Fin p.natDegree) (Fin p.natDegree) k :=
+fun {k} [Field k] p i j => if ↑j + 1 = p.natDegree then -p.coeff ↑i else if ↑i = ↑j + 1 then 1 else 0
+theorem Komorebi.PaperICompletion6.OneInvariantFactor.exists_companion_basis_of_cyclic.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T →
+    ∃ b, (LinearMap.toMatrix b b) T = Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix (minpoly k T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T h =>
+  Nonempty.casesOn
+    ((Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation T).mp h)
+    fun E =>
+    Exists.intro
+      (Komorebi.PaperICompletion6.OneInvariantFactor.quotientCompanionBasis T (minpoly k T)
+        (minpoly.monic (LinearMap.isIntegral T)) E)
+      (Komorebi.PaperICompletion6.OneInvariantFactor.toMatrix_quotientCompanionBasis T (minpoly k T)
+        (minpoly.monic (LinearMap.isIntegral T)) E)
+theorem Komorebi.PaperICompletion6.OneInvariantFactor.factor_eq_minpoly.{u, v} : ∀ {k : Type u} [inst : Field k]
+  {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] (T : Module.End k V)
+  (p : Polynomial k),
+  p.Monic → ∀ (E : Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}), p = minpoly k T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] T p hp E =>
+  have hs :=
+    Eq.trans (Polynomial.span_minpoly_eq_annihilator k T)
+      (Eq.trans (LinearEquiv.annihilator_eq E) Ideal.annihilator_quotient);
+  Polynomial.eq_of_monic_of_dvd_of_natDegree_le (minpoly.monic (LinearMap.isIntegral T)) hp
+    (Ideal.span_singleton_le_span_singleton.mp (Eq.ge hs))
+    (Polynomial.natDegree_le_of_dvd (Ideal.span_singleton_le_span_singleton.mp (Eq.le hs))
+      (minpoly.ne_zero (LinearMap.isIntegral T)))
+theorem Komorebi.PaperICompletion6.OneInvariantFactor.hasCyclicVector_iff_oneInvariantFactor.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [Nontrivial V]
+  (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] T =>
+  {
+    mp := fun h =>
+      Exists.intro (minpoly k T)
+        ⟨minpoly.monic (LinearMap.isIntegral T),
+          ⟨Eq.mpr
+              (id
+                (congrArg (fun _a => 0 < _a.natDegree)
+                  ((Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T).mp h)))
+              (Eq.mpr (id (congrArg (fun _a => 0 < _a) (LinearMap.charpoly_natDegree T))) Module.finrank_pos),
+            (Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation T).mp
+              h⟩⟩,
+    mpr := fun a =>
+      Exists.casesOn a fun p h =>
+        And.casesOn h fun hp right =>
+          And.casesOn right fun _hd right =>
+            Nonempty.casesOn right fun E =>
+              (Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation
+                    T).mpr
+                (Nonempty.intro
+                  ((congrArg (fun _a => Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {_a})
+                        (Komorebi.PaperICompletion6.OneInvariantFactor.factor_eq_minpoly T p hp E)).mp
+                    E)) }
+def Komorebi.PaperICompletion6.OneInvariantFactor.quotientCompanionBasis.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          (T : Module.End k V) →
+            (p : Polynomial k) →
+              p.Monic →
+                (Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}) → Module.Basis (Fin p.natDegree) k V :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p hp E =>
+  (AdjoinRoot.powerBasis' hp).basis.map (Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv T p E)
+def Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv.{u, v} : {k : Type u} →
+  [inst : Field k] →
+    {V : Type v} →
+      [inst_1 : AddCommGroup V] →
+        [inst_2 : Module k V] →
+          (T : Module.End k V) →
+            (p : Polynomial k) →
+              (Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}) → AdjoinRoot p ≃ₗ[k] V :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p E =>
+  (LinearEquiv.restrictScalars k E.symm).trans (Module.AEval'.of T).symm
+theorem Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv_intertwines.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}) (x : AdjoinRoot p),
+  T ((Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv T p E) x) =
+    (Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv T p E) (AdjoinRoot.root p * x) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p E x =>
+  id
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = (Module.AEval'.of T).symm (E.symm (AdjoinRoot.root p * x)))
+          (Eq.symm (Module.AEval'.of_symm_X_smul T (E.symm x)))))
+      (eq_of_heq
+        ((fun F F' e_1 =>
+            Eq.ndrec (motive := fun F' =>
+              ∀ (α α' : Type v),
+                α = α' →
+                  ∀ (β : α → Type v) (β' : α' → Type v),
+                    β ≍ β' →
+                      ∀ (self : DFunLike F α β) (self' : DFunLike F' α' β'),
+                        self ≍ self' →
+                          ∀ (a : F) (a' : F'), a ≍ a' → ∀ (a_1 : α) (a'_1 : α'), a_1 ≍ a'_1 → a a_1 ≍ a' a'_1)
+              (fun α α' e_2 =>
+                Eq.ndrec (motive := fun α' =>
+                  ∀ (β : α → Type v) (β' : α' → Type v),
+                    β ≍ β' →
+                      ∀ (self : DFunLike F α β) (self' : DFunLike F α' β'),
+                        self ≍ self' → ∀ (a a' : F), a ≍ a' → ∀ (a_1 : α) (a'_1 : α'), a_1 ≍ a'_1 → a a_1 ≍ a' a'_1)
+                  (fun β β' e_3 =>
+                    Eq.ndrec (motive := fun β' =>
+                      ∀ (self : DFunLike F α β) (self' : DFunLike F α β'),
+                        self ≍ self' → ∀ (a a' : F), a ≍ a' → ∀ (a_1 a'_1 : α), a_1 ≍ a'_1 → a a_1 ≍ a' a'_1)
+                      (fun self self' e_4 =>
+                        Eq.ndrec (motive := fun self' =>
+                          ∀ (a a' : F), a ≍ a' → ∀ (a_1 a'_1 : α), a_1 ≍ a'_1 → a a_1 ≍ a' a'_1)
+                          (fun a a' e_5 =>
+                            Eq.ndrec (motive := fun a' => ∀ (a_1 a'_1 : α), a_1 ≍ a'_1 → a a_1 ≍ a' a'_1)
+                              (fun a_1 a' e_6 => eq_of_heq e_6 ▸ HEq.refl (a a_1)) (eq_of_heq e_5))
+                          (eq_of_heq e_4))
+                      (eq_of_heq e_3))
+                  e_2)
+              e_1)
+          (Module.AEval' T ≃ₗ[k] V) (Module.AEval' T ≃ₗ[k] V) (Eq.refl (Module.AEval' T ≃ₗ[k] V)) (Module.AEval' T)
+          (Module.AEval' T) (Eq.refl (Module.AEval' T)) (fun x => V) (fun x => V) (heq_of_eq (Eq.refl fun x => V))
+          EquivLike.toFunLike EquivLike.toFunLike (heq_of_eq (Eq.refl EquivLike.toFunLike)) (Module.AEval'.of T).symm
+          (Module.AEval'.of T).symm (heq_of_eq (Eq.refl (Module.AEval'.of T).symm)) (Polynomial.X • E.symm x)
+          (E.symm (AdjoinRoot.root p * x))
+          (heq_of_eq
+            (Eq.mpr
+              (id
+                (congrArg (fun _a => _a = E.symm (AdjoinRoot.root p * x))
+                  (Eq.symm (LinearEquiv.map_smul E.symm Polynomial.X x))))
+              (Eq.refl (E.symm (Polynomial.X • x))))))))
+theorem Komorebi.PaperICompletion6.OneInvariantFactor.toMatrix_quotientCompanionBasis.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V) (p : Polynomial k)
+  (hp : p.Monic) (E : Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}),
+  (LinearMap.toMatrix (Komorebi.PaperICompletion6.OneInvariantFactor.quotientCompanionBasis T p hp E)
+        (Komorebi.PaperICompletion6.OneInvariantFactor.quotientCompanionBasis T p hp E))
+      T =
+    Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p hp E =>
+  let pb := AdjoinRoot.powerBasis' hp;
+  let e := Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv T p E;
+  have hconj :=
+    LinearMap.ext fun x =>
+      id
+        (Eq.mpr
+          (id
+            (congrArg (fun _a => e.symm _a = AdjoinRoot.root p * x)
+              (Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv_intertwines T p E x)))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => _a = AdjoinRoot.root p * x)
+                (LinearEquiv.symm_apply_apply e (AdjoinRoot.root p * x))))
+            (Eq.refl (AdjoinRoot.root p * x))));
+  have hpoly :=
+    Eq.mpr (id (congrArg (fun _a => _a = p) (PowerBasis.minpolyGen_eq pb)))
+      (id
+        (Eq.mpr (id (congrArg (fun _a => _a = p) (AdjoinRoot.minpoly_root (Polynomial.Monic.ne_zero hp))))
+          (of_eq_true
+            (Eq.trans
+              (congrFun'
+                (congrArg Eq
+                  (Eq.trans
+                    (congrArg (HMul.hMul p)
+                      (Eq.trans
+                        (congrArg (⇑Polynomial.C)
+                          (Eq.trans (congrArg Inv.inv (Polynomial.Monic.leadingCoeff hp)) inv_one))
+                        (map_one Polynomial.C)))
+                    (mul_one p)))
+                p)
+              (eq_self p)))));
+  id
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p)
+          (LinearMap.toMatrix_map_left pb.basis (pb.basis.map e) T e)))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => _a = Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p)
+            (LinearMap.toMatrix_map_right pb.basis pb.basis (T ∘ₗ ↑e) e)))
+        (Eq.mpr
+          (id
+            (congrArg
+              (fun _a =>
+                (LinearMap.toMatrix pb.basis pb.basis) _a =
+                  Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p)
+              hconj))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => _a = Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p)
+                (Eq.symm (Algebra.leftMulMatrix_apply pb.basis pb.gen))))
+            (Eq.mpr
+              (id
+                (congrArg (fun _a => _a = Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p)
+                  (PowerBasis.leftMulMatrix pb)))
+              (Eq.mpr
+                (id
+                  (congrArg
+                    (fun _a =>
+                      (Matrix.of fun i j => if ↑j + 1 = pb.dim then -_a.coeff ↑i else if ↑i = ↑j + 1 then 1 else 0) =
+                        Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p)
+                    hpoly))
+                (Eq.refl
+                  (Matrix.of fun i j => if ↑j + 1 = pb.dim then -p.coeff ↑i else if ↑i = ↑j + 1 then 1 else 0))))))))
+theorem Komorebi.PaperICompletion6.PrimaryCyclicCriterion.cyclic_of_subsingleton.{u_1, u_2} : ∀ {R : Type u_1}
+  [inst : Semiring R] {M : Type u_2} [inst_1 : AddCommMonoid M] [inst_2 : Module R M] [Subsingleton M],
+  Komorebi.SeedRankBasics.Cyclic R M :=
+fun {R} [Semiring R] {M} [AddCommMonoid M] [Module R M] [Subsingleton M] => Exists.intro 0 (Subsingleton.elim (R ∙ 0) ⊤)
+theorem Komorebi.PaperICompletion6.PrimaryCyclicCriterion.hasCyclicVector_iff_nonzero_primary_cyclic.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V]
+  [Nontrivial V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    ∀ (p : Polynomial k),
+      Irreducible p →
+        Nontrivial ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+          Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+            ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] T =>
+  { mp := fun h p a a_1 => Komorebi.PaperICompletion6.PrimaryCyclicCriterion.primary_cyclic_of_hasCyclicVector T h p,
+    mpr := fun h =>
+      have hb := fun p hp =>
+        Komorebi.PaperICompletion6.PrimaryCyclicCriterion.intrinsicMultiplicity_le_one_of_primary_cyclic T p hp
+          (Or.casesOn (motive := fun t =>
+            subsingleton_or_nontrivial
+                  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) =
+                t →
+              Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+                ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p))
+            (subsingleton_or_nontrivial
+              ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p))
+            (fun hs h =>
+              let this := hs;
+              Komorebi.PaperICompletion6.PrimaryCyclicCriterion.cyclic_of_subsingleton)
+            (fun hn h_1 => h p hp hn)
+            (Eq.refl
+              (subsingleton_or_nontrivial
+                ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p))));
+      have hm :=
+        csSup_le (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.monicPrimaryMultiplicityValues_nonempty T)
+          fun n a =>
+          Exists.casesOn a fun p h => And.casesOn h fun _hp right => And.casesOn right fun hi right => right ▸ hb p hi;
+      have hz := fun he =>
+        have hr :=
+          Eq.mpr
+            (id
+              (congrArg (fun _a => _a = 0)
+                (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum T)))
+            (Eq.mpr (id (congrArg (fun _a => ↑_a = 0) he)) (Eq.refl ↑0));
+        not_subsingleton V
+          ((Komorebi.SeedRankBasics.seedRank_eq_zero_iff (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V).mp hr);
+      have hr :=
+        Eq.mpr
+          (id
+            (congrArg (fun _a => _a = 1)
+              (Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum T)))
+          (Eq.mpr
+            (id
+              (congrArg (fun _a => ↑_a = 1)
+                (have this :=
+                  Decidable.byContradiction fun a =>
+                    Komorebi.PaperICompletion6.PrimaryCyclicCriterion.hasCyclicVector_iff_nonzero_primary_cyclic._proof_1_1
+                      T hm hz a;
+                this)))
+            (Eq.refl ↑1));
+      (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T).mpr
+        ((Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly T).mp
+          hr) }
+theorem Komorebi.PaperICompletion6.PrimaryCyclicCriterion.hasCyclicVector_iff_polynomialModule_cyclic.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ Komorebi.SeedRankBasics.Cyclic (Polynomial k) (Module.AEval' T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a ↔ Komorebi.SeedRankBasics.Cyclic (Polynomial k) (Module.AEval' T))
+        (propext (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective T))))
+    (Eq.mpr
+      (id
+        (congrArg
+          (fun _a => (∃ x, Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)) ↔ _a)
+          (propext (Komorebi.SeedRankBasics.cyclic_iff_exists_surjective_oneSeedMap (Polynomial k) (Module.AEval' T)))))
+      { mp := fun a => Exists.casesOn a fun x hx => Exists.intro ((Module.AEval'.of T) x) hx,
+        mpr := fun a => Exists.casesOn a fun x hx => Exists.intro ((Module.AEval'.of T).symm x) hx })
+theorem Komorebi.PaperICompletion6.PrimaryCyclicCriterion.intrinsicMultiplicity_le_one_of_primary_cyclic.{u, v} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V)
+  (p : Polynomial k),
+  Irreducible p →
+    Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+        ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+      Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p ≤ 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T p hp h =>
+  let this := PrincipalIdealRing.isMaximal_of_irreducible hp;
+  let this := Ideal.Quotient.field (Ideal.span {p});
+  let P := Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p;
+  let Q := p • ⊤;
+  Exists.casesOn h fun x hx =>
+    have hs := Eq.mpr (id (congrFun' (congrArg Eq (congrArg (Submodule.span (Polynomial k)) Set.range_const)) ⊤)) hx;
+    have hb :=
+      Komorebi.PaperICompletion3.PrimarySeedFormula.residue_finrank_le_card_of_generates Q.mkQ
+        (Submodule.mkQ_surjective Q) (fun x_1 => x) hs;
+    Eq.mpr (id ge_iff_le._simp_1)
+      (Eq.mp
+        (congrArg
+          (LE.le
+            (Module.finrank (Polynomial k ⧸ Ideal.span {p})
+              (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ⧸ p • ⊤)))
+          Fintype.card_unique)
+        hb)
+theorem Komorebi.PaperICompletion6.PrimaryCyclicCriterion.primary_cyclic_of_hasCyclicVector.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T →
+    ∀ (p : Polynomial k),
+      Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+        ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T hT p =>
+  Komorebi.PaperICompletion6.PrimaryCyclicCriterion.submodule_cyclic_of_hasCyclicVector T hT
+    (Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p)
+theorem Komorebi.PaperICompletion6.PrimaryCyclicCriterion.submodule_cyclic_of_hasCyclicVector.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T →
+    ∀ (P : Submodule (Polynomial k) (Module.AEval' T)), Komorebi.SeedRankBasics.Cyclic (Polynomial k) ↥P :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] T hT P =>
+  Exists.casesOn ((Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_exists_surjective T).mp hT)
+    fun x hx =>
+    have hp := Submodule.IsPrincipal.of_comap (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x) hx P;
+    (Komorebi.SeedRankBasics.cyclic_iff_top_isPrincipal (Polynomial k) ↥P).mpr (Module.isPrincipal_submodule_iff.mpr hp)
+theorem Komorebi.PaperICompletion6.ScalarExtension.aeval_map_baseChange.{u, v, w} : ∀ {k : Type u} [inst : Field k]
+  {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K] [inst_4 : Algebra k K]
+  (T : Module.End k V) (p : Polynomial k),
+  (Polynomial.aeval (LinearMap.baseChange K T)) (Polynomial.map (algebraMap k K) p) =
+    LinearMap.baseChange K ((Polynomial.aeval T) p) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] T p =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = LinearMap.baseChange K ((Polynomial.aeval T) p))
+        (Polynomial.aeval_map_algebraMap K (LinearMap.baseChange K T) p)))
+    (Polynomial.aeval_algHom_apply (Module.End.baseChangeHom k K V) T p)
+theorem Komorebi.PaperICompletion6.ScalarExtension.baseChange_nontrivial.{u, v, w} : ∀ {k : Type u} [inst : Field k]
+  {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K] [inst_4 : Algebra k K]
+  [Nontrivial V], Nontrivial (TensorProduct k K V) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [Nontrivial V] =>
+  Function.Injective.nontrivial (Module.Flat.tensorProduct_mk_injective k V K)
+theorem Komorebi.PaperICompletion6.ScalarExtension.hasCyclicVector_baseChange_iff.{u, v, w} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K] [FiniteDimensional k V] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector (LinearMap.baseChange K T) ↔
+    Komorebi.SingleOperatorGraph.HasCyclicVector T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a ↔ Komorebi.SingleOperatorGraph.HasCyclicVector T)
+        (propext
+          (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly
+            (LinearMap.baseChange K T)))))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => minpoly K (LinearMap.baseChange K T) = (LinearMap.baseChange K T).charpoly ↔ _a)
+          (propext (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T))))
+      (Komorebi.PaperICompletion6.ScalarExtension.minpoly_eq_charpoly_baseChange_iff K T))
+theorem Komorebi.PaperICompletion6.ScalarExtension.hasCyclicVector_iff_extended_spectral_multiplicities_one.{u, v, w} : ∀
+  {k : Type u} [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w)
+  [inst_3 : Field K] [inst_4 : Algebra k K] [FiniteDimensional k V] [Nontrivial V] [IsAlgClosed K] (T : Module.End k V),
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    ∀ a ∈ spectrum K (LinearMap.baseChange K T),
+      Module.finrank K ↥(Module.End.eigenspace (LinearMap.baseChange K T) a) = 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] [Nontrivial V]
+    [IsAlgClosed K] T =>
+  let this := Komorebi.PaperICompletion6.ScalarExtension.baseChange_nontrivial K;
+  Iff.trans (Iff.symm (Komorebi.PaperICompletion6.ScalarExtension.hasCyclicVector_baseChange_iff K T))
+    (Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_all_spectral_multiplicities_one
+      (LinearMap.baseChange K T))
+theorem Komorebi.PaperICompletion6.ScalarExtension.isBaseChange_endomorphisms.{u, v, w} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K] [FiniteDimensional k V], IsBaseChange K (LinearMap.baseChangeHom k K V V) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => IsBaseChange K _a)
+        (Eq.symm (Komorebi.PaperICompletion6.ScalarExtension.tensor_endHom_eq_baseChange K))))
+    (IsBaseChange.end (TensorProduct.isBaseChange k V K))
+theorem Komorebi.PaperICompletion6.ScalarExtension.linearIndependent_baseChange.{u, v, w, u_1} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K] [FiniteDimensional k V] {ι : Type u_1} {f : ι → Module.End k V},
+  LinearIndependent k f → LinearIndependent K fun i => LinearMap.baseChange K (f i) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [inst_3 : Field K] [Algebra k K] [FiniteDimensional k V] {ι} {f}
+    hf =>
+  have h :=
+    LinearIndependent.map' (Module.Flat.linearIndependent_one_tmul hf)
+      (↑(Komorebi.PaperICompletion6.ScalarExtension.isBaseChange_endomorphisms K).equiv)
+      (LinearMap.ker_eq_bot.mpr
+        (LinearEquiv.injective (Komorebi.PaperICompletion6.ScalarExtension.isBaseChange_endomorphisms K).equiv));
+  Eq.mp
+    (congrFun
+      (congrFun
+        (congrFun
+          (congrArg (LinearIndependent K)
+            (funext fun x =>
+              Eq.trans (congrArg (HSMul.hSMul 1) (LinearMap.baseChangeHom_apply k K V V (f x)))
+                (one_smul K (LinearMap.baseChange K (f x)))))
+          inst_3.toDivisionRing.toSemiring)
+        LinearMap.addCommGroup.toAddCommMonoid)
+      LinearMap.module)
+    h
+theorem Komorebi.PaperICompletion6.ScalarExtension.linearIndependent_baseChange_powers.{u, v, w} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K] [FiniteDimensional k V] (T : Module.End k V),
+  LinearIndependent K fun i => LinearMap.baseChange K T ^ ↑i :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] T =>
+  Eq.mp
+    (congrFun
+      (congrFun
+        (congrFun (congrArg (LinearIndependent K) (funext fun i => LinearMap.baseChange_pow k K V T ↑i))
+          Field.toSemifield.toSemiring)
+        LinearMap.addCommMonoid)
+      LinearMap.module)
+    (Komorebi.PaperICompletion6.ScalarExtension.linearIndependent_baseChange K (linearIndependent_pow T))
+theorem Komorebi.PaperICompletion6.ScalarExtension.minpoly_baseChange.{u, v, w} : ∀ {k : Type u} [inst : Field k]
+  {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K] [inst_4 : Algebra k K]
+  [FiniteDimensional k V] (T : Module.End k V),
+  minpoly K (LinearMap.baseChange K T) = Polynomial.map (algebraMap k K) (minpoly k T) :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] T =>
+  minpoly.eq_of_linearIndependent K (LinearMap.baseChange K T)
+    (Polynomial.Monic.map (algebraMap k K) (minpoly.monic (LinearMap.isIntegral T)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = 0)
+          (Komorebi.PaperICompletion6.ScalarExtension.aeval_map_baseChange K T (minpoly k T))))
+      (Eq.mpr (id (congrArg (fun _a => LinearMap.baseChange K _a = 0) (minpoly.aeval k T)))
+        (Eq.mpr (id (congrArg (fun _a => _a = 0) LinearMap.baseChange_zero)) (Eq.refl 0))))
+    (minpoly k T).natDegree
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = ↑(minpoly k T).natDegree)
+          (Polynomial.degree_map_eq_of_injective (RingHom.injective (algebraMap k K)) (minpoly k T))))
+      (Eq.mpr
+        (id
+          (congrArg (fun _a => _a = ↑(minpoly k T).natDegree)
+            (Polynomial.degree_eq_natDegree (minpoly.ne_zero (LinearMap.isIntegral T)))))
+        (Eq.refl ↑(minpoly k T).natDegree)))
+    (Komorebi.PaperICompletion6.ScalarExtension.linearIndependent_baseChange_powers K T)
+theorem Komorebi.PaperICompletion6.ScalarExtension.minpoly_eq_charpoly_baseChange_iff.{u, v, w} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K] [inst_5 : FiniteDimensional k V] (T : Module.End k V),
+  minpoly K (LinearMap.baseChange K T) = (LinearMap.baseChange K T).charpoly ↔ minpoly k T = LinearMap.charpoly T :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a = (LinearMap.baseChange K T).charpoly ↔ minpoly k T = LinearMap.charpoly T)
+        (Komorebi.PaperICompletion6.ScalarExtension.minpoly_baseChange K T)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => Polynomial.map (algebraMap k K) (minpoly k T) = _a ↔ minpoly k T = LinearMap.charpoly T)
+          (LinearMap.charpoly_baseChange T K)))
+      (Function.Injective.eq_iff (Polynomial.map_injective (algebraMap k K) (RingHom.injective (algebraMap k K)))))
+theorem Komorebi.PaperICompletion6.ScalarExtension.minpoly_natDegree_baseChange.{u, v, w} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K] [FiniteDimensional k V] (T : Module.End k V),
+  (minpoly K (LinearMap.baseChange K T)).natDegree = (minpoly k T).natDegree :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] [FiniteDimensional k V] T =>
+  Eq.mpr
+    (id
+      (congrArg (fun _a => _a.natDegree = (minpoly k T).natDegree)
+        (Komorebi.PaperICompletion6.ScalarExtension.minpoly_baseChange K T)))
+    (Eq.mpr
+      (id
+        (congrArg (fun _a => _a = (minpoly k T).natDegree)
+          (Polynomial.natDegree_map_eq_of_injective (RingHom.injective (algebraMap k K)) (minpoly k T))))
+      (Eq.refl (minpoly k T).natDegree))
+theorem Komorebi.PaperICompletion6.ScalarExtension.tensor_endHom_eq_baseChange.{u, v, w} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] (K : Type w) [inst_3 : Field K]
+  [inst_4 : Algebra k K], ⋯.endHom = LinearMap.baseChangeHom k K V V :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] K [Field K] [Algebra k K] =>
+  LinearMap.ext fun T =>
+    IsBaseChange.algHom_ext (TensorProduct.isBaseChange k V K) ((TensorProduct.isBaseChange k V K).endHom T)
+      ((LinearMap.baseChangeHom k K V V) T) fun x =>
+      Eq.mpr
+        (id
+          (congrArg (Eq (((TensorProduct.isBaseChange k V K).endHom T) (1 ⊗ₜ[k] x)))
+            (congrFun' (congrArg DFunLike.coe (LinearMap.baseChangeHom_apply k K V V T)) (1 ⊗ₜ[k] x))))
+        (IsBaseChange.endHom_comp_apply (TensorProduct.isBaseChange k V K) T x)
+theorem Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_iff_invariantFactor_count_one.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [FiniteDimensional k V] [Nontrivial V]
+  (T : Module.End k V) {r : ℕ} (p : Fin r → Polynomial k),
+  (∀ (i : Fin r), 0 < (p i).natDegree) →
+    (∀ (i j : Fin r), i ≤ j → p i ∣ p j) →
+      ∀ (E : Module.AEval' T ≃ₗ[Polynomial k] (i : Fin r) → Polynomial k ⧸ Ideal.span {p i}),
+        Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ r = 1 :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] T {r} p hp hchain E =>
+  have hr :=
+    (Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactor_operator_seedRanks T p hp hchain E).right.right;
+  have h :=
+    Iff.trans (Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T)
+      (Iff.symm
+        (Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly T));
+  Iff.trans (Eq.mp (congrArg (fun _a => Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ _a = 1) hr) h)
+    (Eq.mpr
+      (id
+        (Eq.trans (congrFun' (congrArg Iff (congrArg (Eq ↑r) (Eq.symm Nat.cast_one))) (r = 1))
+          (congrFun' (congrArg Iff Nat.cast_inj._simp_1) (r = 1))))
+      Iff.rfl)
+theorem Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_six_way.{u, v, w} : ∀ {k : Type u} [inst : Field k]
+  {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [inst_3 : FiniteDimensional k V] [Nontrivial V]
+  (K : Type w) [inst_5 : Field K] [inst_6 : Algebra k K] [IsAlgClosed K] (T : Module.End k V),
+  [Komorebi.SingleOperatorGraph.HasCyclicVector T,
+      Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = 1,
+      ∀ (p : Polynomial k),
+        Irreducible p →
+          Nontrivial ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+            Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+              ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p),
+      Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor T, minpoly k T = LinearMap.charpoly T,
+      ∀ a ∈ spectrum K (LinearMap.baseChange K T),
+        Module.finrank K ↥(Module.End.eigenspace (LinearMap.baseChange K T) a) = 1].TFAE :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] K [Field K] [Algebra k K]
+    [IsAlgClosed K] T =>
+  have tfae_1_iff_5 := Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly T;
+  have tfae_2_iff_5 :=
+    Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly T;
+  have tfae_1_iff_3 := Komorebi.PaperICompletion6.PrimaryCyclicCriterion.hasCyclicVector_iff_nonzero_primary_cyclic T;
+  have tfae_1_iff_4 := Komorebi.PaperICompletion6.OneInvariantFactor.hasCyclicVector_iff_oneInvariantFactor T;
+  have tfae_1_iff_6 :=
+    Komorebi.PaperICompletion6.ScalarExtension.hasCyclicVector_iff_extended_spectral_multiplicities_one K T;
+  List.tfae_of_cycle
+    (List.IsChain.cons_cons (fun h => tfae_2_iff_5.mpr (tfae_1_iff_5.mp h))
+      (List.IsChain.cons_cons (fun h => tfae_1_iff_3.mp (tfae_1_iff_5.mpr (tfae_2_iff_5.mp h)))
+        (List.IsChain.cons_cons (fun h => tfae_1_iff_4.mp (tfae_1_iff_3.mpr h))
+          (List.IsChain.cons_cons (fun h => tfae_1_iff_5.mp (tfae_1_iff_4.mpr h))
+            (List.IsChain.cons_cons (fun h => tfae_1_iff_6.mp (tfae_1_iff_5.mpr h))
+              (List.IsChain.singleton
+                (∀ a ∈ spectrum K (LinearMap.baseChange K T),
+                  Module.finrank K ↥(Module.End.eigenspace (LinearMap.baseChange K T) a) = 1)))))))
+    fun h => tfae_1_iff_6.mpr h
+theorem Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_six_way_algebraicClosure.{u, v} : ∀ {k : Type u}
+  [inst : Field k] {V : Type v} [inst_1 : AddCommGroup V] [inst_2 : Module k V] [inst_3 : FiniteDimensional k V]
+  [Nontrivial V] (T : Module.End k V),
+  [Komorebi.SingleOperatorGraph.HasCyclicVector T,
+      Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = 1,
+      ∀ (p : Polynomial k),
+        Irreducible p →
+          Nontrivial ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+            Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+              ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p),
+      Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor T, minpoly k T = LinearMap.charpoly T,
+      ∀ a ∈ spectrum (AlgebraicClosure k) (LinearMap.baseChange (AlgebraicClosure k) T),
+        Module.finrank (AlgebraicClosure k) ↥(Module.End.eigenspace (LinearMap.baseChange (AlgebraicClosure k) T) a) =
+          1].TFAE :=
+fun {k} [Field k] {V} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] T =>
+  Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_six_way (AlgebraicClosure k) T

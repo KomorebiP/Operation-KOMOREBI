@@ -1,0 +1,74 @@
+{
+  "schema": "paper-i-run-index/0.2.0",
+  "accepted_runs": [
+    {
+      "id": "B02-RUNTIME",
+      "receipt": "evidence/environment/runtime_restore.json",
+      "scope": "Authenticated offline runtime restoration"
+    },
+    {
+      "id": "B02-BASELINE",
+      "receipt": "evidence/baseline_launcher_receipt.json",
+      "scope": "Actual full original launcher; all three stage receipts PASS"
+    },
+    {
+      "id": "B02-EXTENSION",
+      "receipt": "evidence/extension_launcher_receipt.json",
+      "scope": "Actual extension launcher; clean compilation, type/ownership audits, four exact replays, positive and negative controls"
+    },
+    {
+      "id": "B02-COVERAGE",
+      "receipt": "evidence/coverage_reproduction.json",
+      "scope": "Byte-identical extraction and map regeneration from packaged source snapshot"
+    }
+  ],
+  "current_block_incidents": [
+    {
+      "id": "B02-E01",
+      "kind": "PROOF_DEVELOPMENT_REJECTED",
+      "files": [
+        "spectral01.log",
+        "spectral02.log",
+        "spectral03.log",
+        "spectral05.log"
+      ],
+      "what_failed": "Early spectral grouping drafts had syntax/unused-variable, rewriting, Finset inference and cardinal-versus-natural coercion errors.",
+      "recovery": "Corrected actual Lean terms and type annotations. The final spectral source compiled cleanly in the clean extension audit."
+    },
+    {
+      "id": "B02-E02",
+      "kind": "FOREGROUND_INTERRUPTION",
+      "files": [
+        "condition01_incident.json",
+        "condition01.log",
+        "condition01.lean"
+      ],
+      "what_failed": "Foreground container timeout interrupted the initial conditioning check. No accepted object or diagnostics resulted.",
+      "recovery": "Rechecked under a dedicated bounded subprocess with the same maxSynthPendingDepth=3 setting as the audited baseline. Development and final clean audits passed."
+    },
+    {
+      "id": "B02-E03",
+      "kind": "FOREGROUND_INTERRUPTION",
+      "files": [
+        "boundary01_incident.json",
+        "boundary01.log",
+        "boundary01.lean"
+      ],
+      "what_failed": "A combined root and boundary foreground command timed out. Root compilation had passed; the boundary attempt produced no accepted result.",
+      "recovery": "Moved to individual bounded commands. Preserved the interrupted attempt instead of treating it as PASS."
+    },
+    {
+      "id": "B02-E04",
+      "kind": "PROOF_DEVELOPMENT_REJECTED",
+      "files": [
+        "boundary02.json",
+        "boundary02.log",
+        "boundary02.lean"
+      ],
+      "what_failed": "Boundary draft used the wrong eigenvector-lemma argument order, insufficient definitional simplification in map laws, and omitted the existential seed witness.",
+      "recovery": "Corrected those terms. Twelve named consumer theorems then compiled in development and the final clean audit."
+    }
+  ],
+  "historical_incidents": "The unchanged baseline/evidence/RUN_INDEX.json retains prior-block incidents. They are not new failures in this block.",
+  "other_development_logs": "All probe and intermediate logs in evidence/development are exploratory evidence, not substitutes for the accepted final runs."
+}

@@ -1,0 +1,3 @@
+import ScalarExtensionBoundaryConsumers
+open Komorebi.PaperICompletion6.ScalarExtension
+example := hasCyclicVector_iff_extended_spectral_multiplicities_one ℚ PaperIBlock04Tests.squaredOperator

@@ -1,0 +1,67 @@
+{
+  "active_processes_at_completion": false,
+  "runs": [
+    {
+      "path": "fresh_main",
+      "effective_status": "INTERRUPTED",
+      "raw_receipt_note": "The raw pre-interruption receipt says RUNNING. INTERRUPTION.json records termination; it is not a current running job."
+    },
+    {
+      "path": "fresh_main_retry",
+      "effective_status": "PASS"
+    },
+    {
+      "path": "additional_attempt1",
+      "effective_status": "CONTROLLED_STOP_RECORDED_AS_FAIL"
+    },
+    {
+      "path": "additional_attempt2",
+      "effective_status": "OWNERSHIP_PASS_REPLAY_WRAPPER_FAIL"
+    },
+    {
+      "path": "additional_attempt3",
+      "effective_status": "PASS"
+    },
+    {
+      "path": "controls_attempt1",
+      "effective_status": "PASS"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "E01",
+      "status": "ENVIRONMENT_DOWNLOAD_FAILURE",
+      "what": "Direct official compiler download could not resolve github.com.",
+      "recovery": "Authenticated and restored the matching seven-part offline kit from Library.",
+      "evidence": "evidence/environment/official_release_probe.log"
+    },
+    {
+      "id": "E02",
+      "status": "INTERRUPTED_INITIAL_BUILD",
+      "what": "The first foreground invocation hit the 180-second container command limit after one module had compiled. No proof error was reported.",
+      "recovery": "Reran all 20 modules in a distinct empty output directory.",
+      "evidence": "evidence/fresh_main/INTERRUPTION.json"
+    },
+    {
+      "id": "E03",
+      "status": "FAILED_DIAGNOSTIC_INVOCATION",
+      "what": "The pinned leanchecker does not implement --help. That invocation selected a broad default target, started concurrent replay, and was killed by the memory limit.",
+      "recovery": "Used the pinned replayFromImports API with one explicit module per serial process.",
+      "evidence": "evidence/environment/leanchecker_help_attempt.json"
+    },
+    {
+      "id": "E04",
+      "status": "CONTROLLED_STOP_OF_AUDIT_INSTRUMENTATION",
+      "what": "Stopped the first extra-audit program to avoid recomputing the module-name array for each imported constant and removed a redundant blanket Lean import.",
+      "recovery": "Cached module names once and reran the audit. No production source changed.",
+      "evidence": "evidence/additional_attempt1/INSTRUMENTATION_CHANGE.json"
+    },
+    {
+      "id": "E05",
+      "status": "REPLAY_WRAPPER_TYPE_ERROR",
+      "what": "The first exact-replay wrapper inferred BaseIO from IO.getEnv and did not typecheck with the IO replay operation.",
+      "recovery": "Added an explicit IO Unit annotation and reran the ownership audit plus all 20 replays.",
+      "evidence": "evidence/additional_attempt2/INSTRUMENTATION_CHANGE.json"
+    }
+  ]
+}

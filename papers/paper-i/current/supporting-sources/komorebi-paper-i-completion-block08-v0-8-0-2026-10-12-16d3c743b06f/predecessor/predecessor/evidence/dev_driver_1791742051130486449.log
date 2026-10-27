@@ -1,0 +1,55 @@
+/mnt/data/Komorebi_Paper_I_Completion_Block06_v0.6.0_2026-10-11/source/extension/PaperICompletion6/OneInvariantFactor.lean:34:9: error: typeclass instance problem is stuck
+  Semiring ?m.78
+
+Note: Lean will not try to resolve this typeclass instance problem because the type argument to `Semiring` is a metavariable. This argument must be fully determined before Lean will try to resolve the typeclass.
+
+Hint: Adding type annotations and supplying implicit arguments to functions can give Lean more information for typeclass resolution. For example, if you have a variable `x` that you intend to be a `Nat`, but Lean reports it as having an unresolved type like `?m`, replacing `x` with `(x : Nat)` can get typeclass resolution un-stuck.
+/mnt/data/Komorebi_Paper_I_Completion_Block06_v0.6.0_2026-10-11/source/extension/PaperICompletion6/OneInvariantFactor.lean:63:65: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (↑e.symm ∘ₗ T) ∘ₗ ↑e
+in the target expression
+  (LinearMap.toMatrix pb.basis pb.basis) (↑e.symm ∘ₗ T ∘ₗ ↑e) = companionMatrix p
+
+k : Type u
+inst✝² : Field k
+V : Type v
+inst✝¹ : AddCommGroup V
+inst✝ : Module k V
+T : Module.End k V
+p : k[X]
+hp : p.Monic
+E : Module.AEval' T ≃ₗ[k[X]] k[X] ⧸ Ideal.span {p}
+pb : PowerBasis k (AdjoinRoot p) := AdjoinRoot.powerBasis' hp
+e : AdjoinRoot p ≃ₗ[k] V := quotientVectorEquiv T p E
+hconj : (↑e.symm ∘ₗ T) ∘ₗ ↑e = (Algebra.lmul k (AdjoinRoot p)) pb.gen
+hpoly : pb.minpolyGen = p
+⊢ (LinearMap.toMatrix pb.basis pb.basis) (↑e.symm ∘ₗ T ∘ₗ ↑e) = companionMatrix p
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    companionMatrix p
+  has type
+    Matrix (Fin p.natDegree) (Fin p.natDegree) k
+  but is expected to have type
+    Matrix (Fin pb.dim) (Fin pb.dim) k
+  in the application
+    (LinearMap.toMatrix pb.basis pb.basis) (↑e.symm ∘ₗ T ∘ₗ ↑e) = companionMatrix p
+/mnt/data/Komorebi_Paper_I_Completion_Block06_v0.6.0_2026-10-11/source/extension/PaperICompletion6/OneInvariantFactor.lean:81:8: error(lean.unknownIdentifier): Unknown constant `Polynomial.dvd_antisymm`
+/mnt/data/Komorebi_Paper_I_Completion_Block06_v0.6.0_2026-10-11/source/extension/PaperICompletion6/OneInvariantFactor.lean:97:4: error: Tactic `assumption` failed
+
+case mpr
+k : Type u
+inst✝⁴ : Field k
+V : Type v
+inst✝³ : AddCommGroup V
+inst✝² : Module k V
+inst✝¹ : FiniteDimensional k V
+inst✝ : Nontrivial V
+T : Module.End k V
+p : k[X]
+hp : p.Monic
+_hd : 0 < p.natDegree
+E : Module.AEval' T ≃ₗ[k[X]] k[X] ⧸ Ideal.span {minpoly k T}
+⊢ Nonempty (Module.AEval' T ≃ₗ[k[X]] k[X] ⧸ Ideal.span {minpoly k T})
+
+RECEIPT /mnt/data/Komorebi_Paper_I_Completion_Block06_v0.6.0_2026-10-11/evidence/development/20261011T180731_632688 1 30.7

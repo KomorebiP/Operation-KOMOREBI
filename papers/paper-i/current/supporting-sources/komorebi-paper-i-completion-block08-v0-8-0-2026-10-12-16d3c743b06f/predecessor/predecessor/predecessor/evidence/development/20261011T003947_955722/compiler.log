@@ -1,0 +1,20 @@
+/mnt/data/Komorebi_Paper_I_Completion_Block05_v0.5.0_2026-10-10/tests/GeometricBoundaryConsumers.lean:39:6: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a => Module.finrank ℂ _a = 2
+Error: Application type mismatch: The argument
+  Pi.addCommMonoid
+has type
+  AddCommMonoid (Fin 1 → ℂ[X] ⧸ Ideal.span {X ^ 2})
+but is expected to have type
+  AddCommMonoid _a
+in the application
+  @Module.finrank ℂ _a Complex.instSemiring Pi.addCommMonoid
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+⊢ Module.finrank ℂ JordanModule = 2
+/mnt/data/Komorebi_Paper_I_Completion_Block05_v0.5.0_2026-10-10/tests/GeometricBoundaryConsumers.lean:89:8: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  Subsingleton jordanPresentation.Index
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.

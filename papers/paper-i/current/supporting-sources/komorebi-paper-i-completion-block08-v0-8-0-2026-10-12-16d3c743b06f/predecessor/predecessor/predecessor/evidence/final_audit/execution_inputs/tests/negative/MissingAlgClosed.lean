@@ -1,0 +1,4 @@
+import GeometricBoundaryConsumers
+open Komorebi.PaperICompletion5.GeometricSeedFormula
+open PaperIBlock04Tests
+example := operator_seedFinrank_eq_geometricSeedMaximum squaredOperator
