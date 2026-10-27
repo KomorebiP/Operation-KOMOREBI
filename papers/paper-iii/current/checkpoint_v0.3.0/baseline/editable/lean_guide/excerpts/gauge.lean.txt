@@ -1,0 +1,12 @@
+def gauge (G : Gauge (R := R) (F := F)) : ReversibleConnection R X F where
+  transport a b := ((G a).symm.trans (C.transport a b)).trans (G b)
+  transport_self a := by
+    apply LinearEquiv.ext
+    intro x
+    rw [C.transport_self]
+    simp
+  transport_reverse a b := by
+    rw [C.transport_reverse a b]
+    apply LinearEquiv.ext
+    intro x
+    simp

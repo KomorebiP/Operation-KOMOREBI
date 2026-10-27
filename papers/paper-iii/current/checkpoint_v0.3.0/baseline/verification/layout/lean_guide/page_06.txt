@@ -1,0 +1,43 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+The name of a file and the namespace of its declarations need not coincide. For example, the packet-
+resolution primitives occur at the end of ReversibleConnections.lean under Komorebi.PaperII
+I.HolonomyBlocks. The complete map gives both the fully qualified name and the file and line.
+Follow that location when searching a source checkout.
+1.3 Notation that carries mathematical content
+Lean writes a linear map as M →l[R] N and a linear equivalence as M ≃l[R] N. The latter includes an
+inverse and its inverse laws. An arbitrary equivalence is X ≃Y. A function X →Y carries no linear
+structure. Replacing one of these types with another changes the claim.
+Bracketed arguments such as [Semiring R] are typeclass hypotheses. They supply operations
+and laws, not merely notation. Braced arguments such as \{R : Type u\} are implicit parameters
+inferred from use. Type u allows the object to live in a universe; different universe names allow
+different input, fiber, and coefficient types. autoImplicit false requires undeclared identifiers to
+be rejected rather than silently generalized.
+Fintype V supplies finite enumeration. DecidableEq V supplies a decision procedure for equality.
+Some definitions use classical so that a finite sum can be filtered by a proposition without de-
+manding a user-supplied decision procedure. This logical choice does not turn an abstract graph
+theorem into an efficient graph algorithm.
+Three composition conventions must remain distinct:
+Written expression
+Execution order
+B * A
+Matrix 𝐴acts first, then 𝐵.
+g.comp f
+Linear map 𝑓acts first, then 𝑔.
+e.trans f
+Equivalence 𝑒acts first, then 𝑓.
+A calculation translated from matrices to LinearEquiv.trans therefore reverses the written com-
+position pattern. The underlying maps still execute in the same order.
+1.4 What a short proof is doing
+rfl closes a definitional equality: the two sides reduce to the same expression. ext x or Linear
+Equiv.ext reduces equality of maps to equality at an arbitrary input. simp uses definitions and
+registered simplification rules, including inverse laws and zero laws. rw rewrites by an explicit
+equality. induction exposes a finite recursive object, such as a list or tree, and proves the conclusion
+from the smaller objects.
+The printed excerpts are exact source selections, not standalone files. Implicit variables, local in-
+stances, namespaces, and earlier lemmas may be outside a selection. Every exact UTF-8 excerpt
+has a source path, inclusive line range, and hashes in generated/excerpts.json. Copy the adja-
+cent .lean.txt file when exact tokens matter. The PDF display uses font fallbacks for otherwise
+unsupported characters.
+5

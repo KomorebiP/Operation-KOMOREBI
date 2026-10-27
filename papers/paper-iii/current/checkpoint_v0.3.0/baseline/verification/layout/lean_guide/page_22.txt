@@ -1,0 +1,53 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+structure PacketResolution (R : Type u) (M : Type v) (I : Type w)
+[CommRing R] [AddCommGroup M] [Module R M] [Fintype I] where
+projector : I →M →ₗ[R] M
+complete : ∑i, projector i = LinearMap.id
+idempotent : ∀i, (projector i).comp (projector i) = projector i
+Completeness is ∑𝑖𝑃𝑖= 𝐼. Idempotence is 𝑃2
+𝑖
+= 𝑃𝑖. The structure does not assert pairwise
+orthogonality. The block from input packet 𝜈to output packet 𝜇is
+𝐴𝜇𝜈= 𝑃𝜇𝐴𝑃𝜈.
+Reconstruction only needs completeness on both sides:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem sum_blocks (A : M →ₗ[R] M) :
+∑mu, ∑nu, P.block A mu nu = A := by
+have hcomplete (x : M) : ∑i, P.projector i x = x := by
+have hx := congrArg (fun L : M →ₗ[R] M ↦L x) P.complete
+simpa using hx
+ext x
+simp only [block, LinearMap.sum_apply, LinearMap.comp_apply]
+calc
+(∑mu, ∑nu, P.projector mu (A (P.projector nu x))) =
+∑mu, P.projector mu (A (∑nu, P.projector nu x)) := by
+apply Finset.sum_congr rfl
+intro mu _
+calc
+(∑nu, P.projector mu (A (P.projector nu x))) =
+P.projector mu (∑nu, A (P.projector nu x)) := by
+exact (map_sum (P.projector mu)
+(fun nu ↦A (P.projector nu x)) Finset.univ).symm
+_ = P.projector mu (A (∑nu, P.projector nu x)) := by
+congr 1
+exact (map_sum A
+(fun nu ↦P.projector nu x) Finset.univ).symm
+_ = ∑mu, P.projector mu (A x) := by rw [hcomplete x]
+_ = A x := hcomplete (A x)
+The proof converts the operator completeness equation to its pointwise form. It combines the
+finite inner sum using linearity, applies completeness at the input, and then uses completeness at
+the output. No orthogonality cancellation appears.
+All blocks vanish if and only if the map vanishes:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem blocks_zero_iff (A : M →ₗ[R] M) :
+(∀mu nu, P.block A mu nu = 0) ↔A = 0 := by
+constructor
+· intro h
+rw [←P.sum_blocks A]
+simp [h]
+· intro h mu nu
+simp [block, h]
+21

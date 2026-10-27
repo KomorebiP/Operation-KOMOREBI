@@ -1,0 +1,16 @@
+--- baseline/KomorebiPaperIII/HolonomyBlocks.lean
++++ formal/current/KomorebiPaperIII/HolonomyBlocks.lean
+@@ -30,8 +30,12 @@
+     (C.gauge G).triangleObstruction a b c =
+       (G a).toLinearMap.comp
+         ((C.triangleObstruction a b c).comp (G a).symm.toLinearMap) := by
++  unfold triangleObstruction
++  rw [C.gauge_triangleHolonomy]
+   ext value
+-  simp [triangleObstruction, gauge, triangleHolonomy]
++  simp only [LinearMap.sub_apply, LinearMap.id_apply, LinearMap.comp_apply,
++    LinearEquiv.coe_toLinearMap, LinearEquiv.trans_apply, map_sub,
++    LinearEquiv.apply_symm_apply]
+ 
+ end Komorebi.PaperIII.Transport.ReversibleConnection
+ 

@@ -1,0 +1,12 @@
+def wordOp [Fintype V] [DecidableEq V] [Semiring R]
+    (G : PacketGraph V E) (S : EdgeSystem G R) : List E → Matrix V V R
+  | [] => 1
+  | e :: rest => wordOp G S rest * edgeOp G S e
+
+@[simp] theorem wordOp_nil [Fintype V] [DecidableEq V] [Semiring R] :
+    wordOp G S [] = 1 :=
+  rfl
+
+@[simp] theorem wordOp_singleton [Fintype V] [DecidableEq V] [Semiring R]
+    (e : E) : wordOp G S [e] = edgeOp G S e := by
+  simp [wordOp]

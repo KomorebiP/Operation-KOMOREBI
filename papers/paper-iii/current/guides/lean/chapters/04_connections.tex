@@ -1,0 +1,64 @@
+\clearpage
+\section{Connections, defects, and holonomy}
+\subsection{The minimal interface separates a choice from a theorem}
+The minimal \code{Connection R M X} stores an equivalence for each ordered pair of vertices, together with the identity law at equal endpoints.
+\excerpt{Transport}{minimal_connection}
+Neither reversal by inversion nor the cocycle equation is a field. Both could fail for an instance. This makes the distinction from exact frame transport substantive: exact transport has a prescribed construction that forces the cocycle law, while a connection carries separately chosen pair maps.
+
+The minimal connection's defect is an equivalence. It compares the direct map with the route through an intermediate vertex by composing with an inverse:
+\excerpt{Transport}{minimal_defect}
+With ordinary function composition, this is
+\[
+ D_{a,b,c}=(\Gamma_{b,c}\Gamma_{a,b})\Gamma_{a,c}^{-1}.
+\]
+It is based at the target coordinate space. In this multiplicative model, absence of a defect means that the comparison is the \emph{identity}, rather than an additive zero map. Since the fibers here are homogeneous, the Lean type does not itself display which endpoint is the base. The definition fixes that interpretation.
+
+\subsection{A counterexample to automatic flatness in the source}
+\code{doubleEquiv} multiplies rational coordinates by two and divides by two for its inverse. The connection on three points chooses it for the directed edge $0\to1$ and chooses the identity for every other unequal pair.
+\excerpt{Transport}{twisted_connection}
+The loop $0\to1\to2\to0$ doubles the input one. Equality with the identity would therefore force $2=1$. The source proves nonidentity by applying the proposed equality of equivalences to that input:
+\excerpt{Transport}{nontrivial_loop}
+This is an example for the minimal connection interface. The reverse edge $1\to0$ is the identity, so it is not the inverse of doubling. The example must not be advertised as an instance of the stronger reversible interface.
+
+\subsection{Reversible connections use dependent fibers}
+The second interface assigns a module $F(a)$ to each vertex. Pair transport is a linear equivalence between the actual endpoint modules, and reverse transport is required to be its inverse.
+\excerpt{ReversibleConnections}{reversible}
+The hypotheses include a commutative ring, additive commutative groups on all fibers, and module structures. These permit subtraction of parallel linear maps. The cocycle law is still not a structural field. Thus reversible connections may have nontrivial triangle holonomy.
+
+The additive defect has a source and target visible in its type:
+\excerpt{ReversibleConnections}{additive_defect}
+Write
+\[
+ \Delta_{a,b,c}=\Gamma_{b,c}\Gamma_{a,b}-\Gamma_{a,c}
+ \quad:F(a)\longrightarrow F(c).
+\]
+The triangle holonomy is
+\[
+ H_{a,b,c}=\Gamma_{c,a}\Gamma_{b,c}\Gamma_{a,b}
+ \quad:F(a)\longrightarrow F(a),
+\]
+and the triangle obstruction is $O_{a,b,c}=H_{a,b,c}-I$. Unlike the minimal multiplicative defect, this $\Delta$ is a linear map that need not be invertible. Both APIs use the short name \code{cocycleDefect}, but they live in different namespaces and have different types.
+
+\subsection{The identity between defect and holonomy}
+\excerpt{ReversibleConnections}{defect_holonomy}
+Pointwise, the identity reads
+\[
+ (H-I)x=\Gamma_{c,a}\bigl(\Gamma_{b,c}\Gamma_{a,b}x
+                    -\Gamma_{a,c}x\bigr).
+\]
+Linearity moves the subtraction through $\Gamma_{c,a}$. The reverse law makes $\Gamma_{c,a}\Gamma_{a,c}$ the identity. The source proof uses exactly these two steps after unfolding the definitions.
+
+Because $\Gamma_{c,a}$ is injective, the obstruction is zero exactly when the defect is zero. Vanishing of the additive defect is the cocycle equation. Vanishing of holonomy minus identity means the holonomy is the identity. The theorem chain establishes these equivalences at a fixed ordered triple before quantifying over every triple.
+\excerpt{ReversibleConnections}{flat_criterion}
+Here \code{Flat} means the pair-cocycle law at every triple of vertices. It is a global algebraic condition on all pair transports. It is not a differential curvature condition obtained from a limiting process or a local chart cover.
+
+\subsection{Finite paths and their endpoint types}
+The path function on lists returns
+\code{F start ≃ₗ[R] F (pathEndpoint start vertices)}.
+The return type depends on the endpoint computed from the list. Flatness lets induction replace every remaining segment by direct transport, then collapse the next triangle by the cocycle law.
+
+The indexed alternative packages the endpoints in the path's type. \code{VertexPath X a b} is a finite path from $a$ to $b$. An empty path has equal endpoints. A constructor prefixes a step to a path from the intermediate vertex. Its transport theorem is:
+\excerpt{ReversibleConnections}{indexed_path}
+The loop corollary takes \code{path : VertexPath X a a}. Its output is then already an automorphism of \code{F a}, and the self law identifies it with the identity. This avoids an extra coercion between a computed endpoint and the initial vertex.
+
+The paths are finite syntax. Nothing here states that an infinite composition exists or that approximating finite paths converge. The finite endpoint theorem is exact on its stated domain.

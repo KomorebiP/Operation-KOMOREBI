@@ -1,0 +1,57 @@
+\clearpage
+\section{Edges, words, and reachable packets}
+\subsection{Graph orientation and finite enumeration}
+\code{PacketGraph V E} has two fields, \code{source : E → V} and \code{target : E → V}. Distinct values of \code{E} may share endpoints, so parallel edges are allowed. The structure itself does not carry a finite enumeration. The theorems that sum over vertices or edges request the appropriate \code{Fintype} instances separately. This makes the boundary visible in each declaration.
+
+The elementary scalar block is the matrix whose only potentially nonzero entry is in target row and source column.
+\excerpt{EdgeOperators}{packet_matrix}
+For a column vector $x$, this block sends the source coordinate to the target coordinate and multiplies it by the stored coefficient. \code{EdgeSystem G R} is a coefficient function \code{E → R}. It adds weights to graph edges without changing their endpoints.
+
+If $e:a\to b$ has coefficient $r$ and $f:b\to c$ has coefficient $s$, the product for the traversal $e$ followed by $f$ is $E_fE_e$, and its coefficient is $sr$. A semiring need not be commutative. That coefficient cannot in general be replaced by $rs$.
+\excerpt{EdgeOperators}{edge_product}
+The proof examines one matrix entry. The sum over intermediate vertices has at most one surviving term after support conditions are imposed. If the interface does not match, the companion theorem \code{edgeOp_mul_edgeOp_eq_zero} shows every intermediate term is zero. The zero conclusion depends on support, not on an assumed numerical cancellation.
+
+\subsection{Lists record chronological traversal}
+\code{Composable G} accepts the empty list and every singleton. A longer list must satisfy equality between the target of one edge and the source of the next at each step. The evaluator then places the first listed edge on the right:
+\excerpt{EdgeOperators}{word_operator}
+Thus \code{[e,f,g]} evaluates to $E_gE_fE_e$. The empty list evaluates to the identity matrix, including when the finite vertex type is empty. The formal definitions cover the empty case directly.
+
+The concatenation law gives a quick way to check the orientation:
+\excerpt{EdgeOperators}{word_append}
+The operator for \code{first ++ second} is the operator for \code{second} multiplied by the operator for \code{first}. The proof is list induction plus associativity. Its order is essential in a noncommutative coefficient system.
+
+The next theorem removes every word with a broken interface, not just a break at the start.
+\excerpt{EdgeOperators}{broken_word}
+The induction distinguishes a mismatch in the first pair from a mismatch in the tail. The former invokes the support result for two edges. The latter uses the induction hypothesis to make the tail operator zero. Empty and singleton words cannot satisfy the noncomposability hypothesis, so those branches eliminate a contradiction.
+
+\subsection{From a transfer power to a finite walk sum}
+The transfer operator is $T=\sum_{e\in E}E_e$. Four related objects are kept separate:
+\begin{enumerate}
+\item \code{wordExpansion} recursively multiplies on the left by $T$.
+\item \code{tupleWordOp} converts a tuple \code{Fin n → E} to an execution list.
+\item \code{explicitWordExpansion} sums over every tuple of length $n$.
+\item \code{walkExpansion} keeps precisely the composable tuples.
+\end{enumerate}
+At length zero there is one empty tuple, not zero tuples. Its contribution is the identity. This is why the explicit sum agrees with $T^0$.
+
+To pass from length $n$ to length $n+1$, the proof separates a tuple into its first $n$ entries and its final entry. \code{Fin.snocEquiv} supplies the finite indexing equivalence. Appending the final edge places its operator to the left of the prefix operator.
+\excerpt{EdgeOperators}{explicit_successor}
+This is a finite distributivity argument. It uses neither an infinite geometric series nor a convergence limit. The proof then identifies the recursive expansion with the explicit tuple sum by induction on $n$.
+
+Pruning the tuple sum uses the theorem for words with a broken interface, term by term:
+\excerpt{EdgeOperators}{walk_pruning}
+When a tuple is composable, the filtered term is unchanged. When it is not, its unfiltered operator was already zero. Combining this equality with the recursive power identity gives \code{transferOp_pow_eq_walkExpansion}.
+
+\subsection{Endpoint coefficients retain the empty path}
+\code{reverseCoefficient} recursively multiplies coefficients in operator order. \code{terminalTarget} records the last endpoint of a nonempty word. \code{Connects G source target word} combines the endpoint conditions with composability. For an empty word it means \code{source = target}.
+\excerpt{EdgeExtensions}{word_entry}
+This theorem includes both a nonempty composable word and the diagonal entry of the empty identity word. The endpoint sum is consequently valid for every natural length, including zero. The entry of $T^n$ at the chosen endpoints is the sum of the reverse coefficients of exactly those words of length $n$ connecting them.
+
+\subsection{What the support theorem implies}
+\code{Reachable G source target} means that some finite list connects the vertices. The empty list makes reachability reflexive. Absence of a walk of length $n$ forces the corresponding entry of $T^n$ to vanish. Absence of any walk gives this conclusion at every length.
+
+The source also handles a seed supported on a specified set:
+\excerpt{EdgeExtensions}{reachability}
+For each source vertex, the proof splits on membership in the support. Inside the support, the relevant transfer entry vanishes by unreachability. Outside it, the seed coordinate vanishes. Every term in the sum defining the matrix action is therefore zero.
+
+The direction cannot be reversed without extra assumptions. A graph may contain a path whose coefficient is zero. Distinct paths may cancel over a ring. Thus a zero orbit coordinate does not by itself prove that the target is unreachable. The Lean theorem uses unreachability as a hypothesis and returns zero as a conclusion.

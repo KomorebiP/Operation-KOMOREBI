@@ -1,0 +1,20 @@
+KomorebiPaperIII/PacketJetComposition.lean:60:2: error: Type mismatch: After simplification, term
+  congrArg (⇑(Q.projector gamma)) expansion
+ has type
+  @Eq Z
+    ((Q.projector gamma)
+      ((iteratedFDeriv K c.length g (f x)).toMultilinearMap fun a =>
+        (iteratedFDeriv K (c.partSize a) f x) fun k => ↑(xs (c.emb a k))))
+    (∑ x_1,
+      (Q.projector gamma)
+        ((iteratedFDeriv K c.length g (f x)).toMultilinearMap fun k =>
+          (M.projector (x_1 k)) ((iteratedFDeriv K (c.partSize k) f x) fun k_1 => ↑(xs (c.emb k k_1)))))
+but is expected to have type
+  @Eq Z
+    ((Q.projector gamma)
+      ((iteratedFDeriv K c.length g (f x)) fun m =>
+        (iteratedFDeriv K (c.partSize m) f x) ((fun k => ↑(xs k)) ∘ c.emb m)))
+    (∑ beta,
+      (Q.projector gamma)
+        ((iteratedFDeriv K c.length g (f x)) fun k =>
+          (M.projector (beta k)) ((iteratedFDeriv K (c.partSize k) f x) fun k_1 => ↑(xs (c.emb k k_1)))))

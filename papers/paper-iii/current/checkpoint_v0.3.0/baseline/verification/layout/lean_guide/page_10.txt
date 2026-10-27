@@ -1,0 +1,52 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+2.4 Endpoint coefficients retain the empty path
+reverseCoefficient recursively multiplies coefficients in operator order. terminalTarget records
+the last endpoint of a nonempty word. Connects G source target word combines the endpoint
+conditions with composability. For an empty word it means source = target.
+Source: KomorebiPaperIII/EdgeExtensions.lean.
+theorem wordOp_apply_eq_if_connects
+[Fintype V] [DecidableEq V] [Semiring R]
+(word : List E) (source target : V) :
+wordOp G S word target source =
+if Connects G source target word then reverseCoefficient G S word else 0 := by
+cases word with
+| nil =>
+by_cases h : source = target
+· subst target
+simp [wordOp, Connects, reverseCoefficient]
+· have hreverse : target ≠source := fun h' => h h'.symm
+simp [wordOp, Connects, h, hreverse]
+| cons first rest =>
+by_cases hwalk : Composable G (first :: rest)
+· rw [wordOp_eq_packetMatrix_of_composable G S first rest hwalk]
+simp [packetMatrix, Connects, hwalk, and_comm]
+· rw [wordOp_eq_zero_of_not_composable G S (first :: rest) hwalk]
+simp [Connects, hwalk]
+This theorem includes both a nonempty composable word and the diagonal entry of the empty
+identity word. The endpoint sum is consequently valid for every natural length, including zero.
+The coefficient of 𝑇𝑛is the sum of the reverse coefficients of exactly those length-𝑛words connect-
+ing the chosen endpoints.
+2.5 A support theorem, not a converse
+Reachable G source target means that some finite list connects the vertices. The empty list makes
+reachability reflexive. Absence of a length-𝑛walk forces the corresponding entry of 𝑇𝑛to vanish.
+Absence of any walk gives this conclusion at every length.
+The source also handles a seed supported on a specified set:
+Source: KomorebiPaperIII/EdgeExtensions.lean.
+theorem transferOp_pow_mulVec_apply_eq_zero_of_unreachable_support
+[Fintype E] [Fintype V] [DecidableEq V] [Semiring R]
+(n : ℕ) (x : V →R) (support : Set V) (target : V)
+(hx : ∀source, source ∉support →x source = 0)
+(hunreachable : ∀source, source ∈support →¬ Reachable G source target) :
+((transferOp G S ^ n) *ᵥx) target = 0 := by
+rw [Matrix.mulVec_apply_eq_sum]
+apply Finset.sum_eq_zero
+intro source _
+by_cases hsource : source ∈support
+· rw [transferOp_pow_apply_eq_zero_of_not_reachable G S n source target
+(hunreachable source hsource)]
+simp
+· rw [hx source hsource]
+simp
+9

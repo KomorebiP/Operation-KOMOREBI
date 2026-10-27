@@ -1,0 +1,45 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+The proof splits at every candidate intermediate packet. If the first relation fails, the first matrix
+entry is zero by the stored certificate. If it holds, absence of an entire supported path forces absence
+of a supported tail, and the induction hypothesis kills the tail sum. This is useful even when exact
+nonzero support would be expensive to decide.
+3.4 Exact frames point from coordinates to ambient space
+In Transport.lean, a frame synthesizes an ambient vector from its coordinate representation. The
+homogeneous model uses an automorphism of one module, so source and target types look alike,
+but the direction still matters:
+Source: KomorebiPaperIII/Transport.lean.
+def exactTransport (frame : X →M ≃ₗ[R] M) (a b : X) : M ≃ₗ[R] M :=
+(frame a).trans (frame b).symm
+@[simp] theorem exactTransport_apply (frame : X →M ≃ₗ[R] M)
+(a b : X) (x : M) :
+exactTransport frame a b x = (frame b).symm (frame a x) :=
+rfl
+If Ψ𝑎is the frame, this is Ψ−1
+𝑏Ψ𝑎. It first synthesizes through frame 𝑎, then analyzes through frame
+𝑏. Cancellation of the intervening frame proves the cocycle law:
+Source: KomorebiPaperIII/Transport.lean.
+theorem exactTransport_cocycle (frame : X →M ≃ₗ[R] M) (a b c : X) :
+(exactTransport frame a b).trans (exactTransport frame b c) =
+exactTransport frame a c := by
+apply LinearEquiv.ext
+intro x
+simp [exactTransport]
+The proof applies extensionality and simplifies an equivalence followed by its inverse. The self,
+round-trip, triangle, and finite-path results are consequences of the same cancellation. Exact trans-
+port obtained from one frame family cannot acquire a nontrivial loop merely by changing the path.
+3.5 Exact coordinate systems point the other way
+CoordinateNaturality.lean uses an equivalence X ≃Source from an ambient type to a coordinate
+type. This is an analysis map, inverse in direction to the frame convention above.
+Source: KomorebiPaperIII/CoordinateNaturality.lean.
+def exactCoordinateTransport
+{X : Type u} {Source : Type v} {Target : Type w}
+(source : X ≃Source) (target : X ≃Target) : Source ≃Target :=
+source.symm.trans target
+@[simp] theorem exactCoordinateTransport_apply
+{X : Type u} {Source : Type v} {Target : Type w}
+(source : X ≃Source) (target : X ≃Target) (value : Source) :
+exactCoordinateTransport source target value = target (source.symm value) :=
+rfl
+13

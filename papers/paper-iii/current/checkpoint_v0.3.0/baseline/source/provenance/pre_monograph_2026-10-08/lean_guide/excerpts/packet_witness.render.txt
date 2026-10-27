@@ -1,0 +1,15 @@
+theorem exists_packetWitness_of_block_ne_zero
+    (A : M →ₗ[R] M) (mu nu : I) (hne : P.block A mu nu ≠ 0) :
+    ∃ x, P.projector nu x = x ∧ P.projector mu (A x) ≠ 0 := by
+  classical
+  have hexists : ∃ y, P.block A mu nu y ≠ 0 := by
+    by_contra h
+    apply hne
+    ext y
+    by_contra hy
+    exact h ⟨y, hy⟩
+  rcases hexists with ⟨y, hy⟩
+  refine ⟨P.projector nu y, ?_, ?_⟩
+  · have hid := congrArg (fun L : M →ₗ[R] M ↦ L y) (P.idempotent nu)
+    simpa using hid
+  · simpa [block] using hy

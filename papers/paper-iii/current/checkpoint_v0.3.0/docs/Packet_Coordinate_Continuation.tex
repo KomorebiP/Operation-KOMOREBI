@@ -1,0 +1,152 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,longtable,microtype,fancyhdr,xcolor,hyperref}
+\hypersetup{hidelinks}
+\definecolor{ink}{RGB}{20,55,59}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily OPERATION KOMOREBI / PAPER III}
+\fancyhead[R]{\small\sffamily FORMAL CONTINUATION}
+\fancyfoot[C]{\small\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\newtheorem{theorem}{Theorem}
+\newcommand{\A}{\mathcal A}\newcommand{\Synthesis}{\mathcal S}
+\newcommand{\Pcal}{\mathcal P}\newcommand{\Qcal}{\mathcal Q}\newcommand{\Rcal}{\mathcal R}
+\begin{document}
+\thispagestyle{empty}
+{\small\sffamily\color{ink} REALIZATION CALCULUS\hfill CONTINUATION v0.2.0}\par
+\vspace{1.0em}
+{\LARGE\bfseries Exact packet coordinates\par}
+{\large Constructed ranges, arbitrary nonlinear maps, and a checked bridge to the manuscript\par}
+\vspace{0.5em}
+Komorebi P.\hfill 19 October 2026, America/Chicago
+
+\textbf{Scope.} This continuation checks the coordinate construction preceding Definition 16.1, Theorem 16.2, every listed clause of Corollary 16.3, and Proposition 16.4 of the recovered Paper III monograph. It is not a declaration that every statement in the expanded paper has been formalized. The original readers remain preserved as the October 8 baseline.
+
+\section{The construction that was missing from the bridge}
+The earlier finite development already established composition and naturality for arbitrary maps between supplied exact coordinate systems. That result is useful, but its input is an equivalence. The present continuation constructs the equivalence from the actual packet projectors and their ranges. It then identifies the resulting nonlinear map with the earlier interface by a literal Lean equality.
+
+Let $R$ be a semiring and $X$ an $R$ module. Let $I$ be finite and suppose that $P_i\colon X\to X$ are linear maps satisfying
+\[
+  P_i^2=P_i,\qquad P_iP_j=0\quad(i\ne j),\qquad \sum_{i\in I}P_i=\operatorname{id}_X.
+\]
+The orthogonality here is algebraic annihilation. It is not an inner product assumption. Scalar multiplication need not commute. The manuscript assumes a unital ring and nonzero projectors, so its stated case is included. The formal construction also permits zero projectors and the empty index type when completeness permits it.
+
+Define the actual coordinate module by
+\[
+ C_{\Pcal}=\prod_{i\in I}\operatorname{im}P_i,
+ \qquad \A_{\Pcal}(x)=(P_ix)_i,
+ \qquad \Synthesis_{\Pcal}((x_i)_i)=\sum_i x_i.
+\]
+The coordinate in slot $i$ is a vector in the ambient module, with a proof that it lies in the range of $P_i$. It is not an unrelated scalar label. The maps above are constructed linear maps.
+
+\begin{theorem}[Constructed packet equivalence]
+Analysis and synthesis satisfy
+\[
+ \Synthesis_{\Pcal}\A_{\Pcal}=\operatorname{id}_X,
+ \qquad
+ \A_{\Pcal}\Synthesis_{\Pcal}=\operatorname{id}_{C_{\Pcal}}.
+\]
+They therefore define a linear equivalence $X\simeq_R C_{\Pcal}$ without a supplied invertibility certificate.
+\end{theorem}
+\begin{proof}
+For $x\in X$, completeness gives $\sum_iP_ix=x$, which is the first identity. Now let $(x_j)_j\in C_{\Pcal}$. Because $x_j=P_jy_j$ for some $y_j$, idempotence gives $P_jx_j=x_j$. If $i\ne j$, orthogonality gives $P_ix_j=P_iP_jy_j=0$. Thus the $i$th component of analysis after synthesis is
+\[
+ P_i\Bigl(\sum_jx_j\Bigr)=\sum_jP_ix_j=x_i.
+\]
+This proves the second identity for every legal coordinate tuple, not merely for tuples already obtained from one analysis call.
+\end{proof}
+
+The source also proves that range membership is equivalent to being fixed by the corresponding projector. A separate module identifies $C_{\Pcal}$ with the literal finite algebraic direct sum $\bigoplus_i\operatorname{im}P_i$ used in the manuscript. Its component and inverse formulas are checked. The finite product is therefore a concrete implementation of the printed coordinate object, not an unexamined replacement.
+
+\section{The nonlinear coordinate layer}
+For any function $F\colon X\to Y$, define
+\[
+ F_{\Qcal\leftarrow\Pcal}=\A_{\Qcal}\circ F\circ\Synthesis_{\Pcal}.
+\]
+The full input tuple is synthesized before $F$ is applied. Nothing asserts that the output packets depend only on matching input packets.
+
+\textbf{Theorem 16.2.} The source proves both identities
+\[
+ \Synthesis_{\Qcal}\circ F_{\Qcal\leftarrow\Pcal}\circ\A_{\Pcal}=F,
+ \qquad
+ (G\circ F)_{\Rcal\leftarrow\Pcal}
+ =G_{\Rcal\leftarrow\Qcal}\circ F_{\Qcal\leftarrow\Pcal}.
+\]
+The proof substitutes the constructed inverse identities. In the composition law the middle factors $\Synthesis_{\Qcal}\A_{\Qcal}$ cancel. No linearity, continuity, differentiability, or packet independence of $F$ or $G$ is assumed. A further checked statement shows faithfulness: two ambient maps with equal packet representations are equal.
+
+\textbf{Corollary 16.3.} For a self map, analysis conjugates every finite iterate, including the zero iterate:
+\[
+ (F_{\Pcal\leftarrow\Pcal})^n(\A_{\Pcal}x)
+ =\A_{\Pcal}(F^nx).
+\]
+Injectivity of analysis yields the fixed point and prescribed return time equivalences. The full sets of return times coincide, so the identity is not limited to one chosen period. The formal source separately proves preservation and reflection of injectivity, surjectivity, and bijectivity. It also transports actual left and right inverses, covering the invertibility clause without silently omitting it.
+
+\textbf{Proposition 16.4.} For two packet systems on one ambient module, put $J_{\Qcal\leftarrow\Pcal}=\A_{\Qcal}\Synthesis_{\Pcal}$. Changes on both sides of an arbitrary function obey
+\[
+ F_{\Qcal'\leftarrow\Pcal'}
+ =J_{\Qcal'\leftarrow\Qcal}\circ F_{\Qcal\leftarrow\Pcal}
+   \circ J_{\Pcal\leftarrow\Pcal'}.
+\]
+The source proves the coordinate cocycle and triangle identities as well. These statements concern descriptions of the same ambient object. They do not assert that a separately supplied connection has trivial holonomy.
+
+\section{An oblique projector example}
+Here ``orthogonal'' in the projector axioms must not be confused with Euclidean self adjointness. On $\mathbb Q^2$, take
+\[
+ P_0=\begin{pmatrix}1&1\\0&0\end{pmatrix},\qquad
+ P_1=\begin{pmatrix}0&-1\\0&1\end{pmatrix}.
+\]
+Both are idempotent, both cross products vanish, and their sum is the identity. Neither is the usual Euclidean orthogonal projection onto its range. Analysis of $(2,3)$ is the actual pair
+\[
+ \A_{\Pcal}(2,3)=\bigl((5,0),(-3,3)\bigr),
+ \qquad (5,0)+(-3,3)=(2,3).
+\]
+For the manuscript's mixed map $F(x,y)=(xy,x^2+y)$, synthesis recovers $(2,3)$ before the map is evaluated. The output is $(6,7)$, whose packet tuple is $((13,0),(-7,7))$. Applying only the matching diagonal restrictions would instead give $(0,3)$. Exact coordinates retain the interaction that the diagonal model discards.
+
+The independent rational checker tests oblique projector families obtained by exact basis conjugation in dimensions one through four. It checks actual legal tuples, nonlinear composition, changes of packet systems, transported nonlinear inverses, finite iterates, and return times. Its \textbf{15,331 exact assertions} are bounded computational controls, not substitutes for the universal Lean statements.
+
+Two adverse examples check assumptions. Without completeness, the nonzero projector $(x,y)\mapsto(x,0)$ cannot reconstruct $(3,5)$. Without pairwise annihilation, three identical identity projectors over $\mathbb F_2$ are idempotent and sum to the identity, yet analysis after synthesis sends the legal tuple $(1,0,0)$ to $(1,1,1)$. These examples keep the two inverse identities and their hypotheses distinct.
+
+\section{What the verification establishes}
+The source line contains ten mathematical modules and two import roots. Three mathematical modules are new. The retained holonomy theorem has one proof implementation change, with its statement byte identical to the recovered predecessor. No other predecessor mathematical source is changed.
+
+A second run compiled all twelve production modules from an initially empty own project object directory. Every resulting production object was byte identical to the object accepted by the owning module audit and full closure replay. This binds the fresh source rebuild to the same checked logical input.
+
+The owning module audit inventories \textbf{572 declarations}, including \textbf{33 outside the project namespace}. It does not rely on a namespace prefix alone. The audit permits only the transitive logical axioms \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}.
+
+Fourteen inherited declarations are compiler generated partial runtime implementations of structurally recursive functions. Their exact names, types, and bodies are inventoried separately. They are not counted as logical proofs. Every logical production declaration is checked not to depend on them. Any unreviewed partial implementation remains a rejection.
+
+The kernel replay begins with upstream imports only. No Paper III production module is present in the starting environment, and no production declaration overlaps an upstream name. It rechecks \textbf{558 logical declarations}. The replayed names match the audited logical inventory exactly. Of the source owned declarations, 71 belong to the three new modules. That count includes definitions and generated supporting declarations and must not be described as 71 independent mathematical theorems.
+
+The compiler and audit control suite contains twelve expected outcomes: six positive outcomes and six deliberate rejections. These include a valid foreign namespace with a private supporting theorem, a custom axiom, an opaque declaration, an unsafe definition, an unreviewed partial definition, false arithmetic, and an admitted proof. A separate control injects an ill typed proof of $0=1$ into the kernel replay input. The final acceptance record binds the results to exact sources, objects, and logs.
+
+The original bounded companions were rerun without changing their source trees. All eleven expanded verification groups passed. The visual checker passed 124 exact checks and rejected four invalid controls. These companions include different evidence types. The expanded groups contain exact combinatorial examples and tolerance based numerical examples. Figure regeneration checks presentation reproducibility, not additional theorems.
+
+\section{Source authority and the next obligation}
+The interrupted prior working directory was absent. Its reported checks are not evidence for this continuation. The October 8 source ZIP was recovered independently, its archive integrity passed, and all 819 entries in its original manifest matched their lengths and SHA256 values. The portable runtime archive and the exact compiler binary identities were checked. All nine dependency revisions matched their pins.
+
+The recovered pinned environment is Lean 4.34.0-rc2 with mathlib revision
+\[\text{\ttfamily aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\]
+Imported upstream binary caches were retained rather than rebuilt. Replay uses the same pinned Lean kernel, not an independent proof assistant. The supplied WSL instructions are not a claim of a native Windows test.
+
+The delivered baseline copy excludes 77 font binaries. Their original paths and hashes remain in an exclusion record. The predecessor manifest is preserved as historical evidence, while the new distribution manifest describes the actual delivered files. No font binaries or compiler cache are included. Existing project license status is preserved.
+
+Paper III remains the active paper. The next mathematical block is Section 17: multilinear packet reconstruction, packet jet norm bounds, and the analytic bridges needed for derivative and composition statements. Later tree, lifting, correction, and convergence scopes need their own exact correspondence. The separate October 16 claim of 98+2 results and 2,693 declarations remains unaccepted because its matching production source and receipts have not been recovered. This continuation supplies checked new evidence instead of treating that claim as a completed proof.
+
+\section*{Evidence map}
+\begin{tabular}{@{}p{0.34\linewidth}p{0.62\linewidth}@{}}\toprule
+Question & Record in the source package \\\midrule
+Which statements are covered? & \path{coverage/SECTION16_CORRESPONDENCE.json} \\
+What was compiled? & \path{verification/PRODUCTION_REBUILD_final.json} \\
+What was logically replayed? & \path{verification/OWNED_REPLAY_CORRESPONDENCE.json} \\
+Which controls actually ran? & \path{verification/COMPILER_CONTROLS.json} and \path{verification/KERNEL_NEGATIVE_CONTROL.json} \\
+Which declaration bodies are runtime only? & \path{coverage/GENERATED_RUNTIME_HELPERS.json} \\
+What changed or failed? & \path{docs/FAILURES_AND_LIMITATIONS.md} and \path{verification/HOLONOMY_PROOF_DIFF.patch} \\
+Where does work resume? & \path{CONTINUE_HERE.md} and \path{PROGRESS_LEDGER_v0.2.0.json} \\
+\bottomrule\end{tabular}
+
+\vspace{1em}\small
+Source reference: Komorebi P., \emph{Projector Resolved Seed Calculus III: Typed transfer, nonlinear packets, and obstruction theory}, 8 October 2026 monograph, physical pages 35--37. Exact PDF and source hashes, original labels, and declaration targets are retained in the correspondence record. The historical readers and the current formal continuation are separately identified throughout the package.
+\end{document}

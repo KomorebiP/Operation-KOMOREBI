@@ -1,0 +1,12 @@
+theorem flat_iff_triangleHolonomy_eq_refl :
+    C.Flat ↔ ∀ a b c,
+      C.triangleHolonomy a b c = LinearEquiv.refl R (F a) := by
+  constructor
+  · intro hflat a b c
+    rw [← C.cocycleDefect_eq_zero_iff_triangleHolonomy_eq_refl a b c,
+      C.cocycleDefect_eq_zero_iff_cocycleAt]
+    exact hflat a b c
+  · intro hhol a b c
+    rw [← C.cocycleDefect_eq_zero_iff_cocycleAt,
+      C.cocycleDefect_eq_zero_iff_triangleHolonomy_eq_refl]
+    exact hhol a b c

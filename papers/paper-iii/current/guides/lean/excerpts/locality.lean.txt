@@ -1,0 +1,23 @@
+theorem eval_congr_on_inputs [DecidableEq Input]
+    (tree : OperationTree Input Constant Unary Binary)
+    (first second : Input → Value)
+    (constantValue : Constant → Value)
+    (unaryValue : Unary → Value → Value)
+    (binaryValue : Binary → Value → Value → Value)
+    (hagree : ∀ i ∈ tree.inputs, first i = second i) :
+    tree.eval first constantValue unaryValue binaryValue =
+      tree.eval second constantValue unaryValue binaryValue := by
+  induction tree with
+  | input i =>
+      exact hagree i (by simp [inputs])
+  | constant c =>
+      rfl
+  | unary op child ih =>
+      simp only [eval]
+      congr 1
+      exact ih fun i hi ↦ hagree i (by simpa [inputs] using hi)
+  | binary op left right ihLeft ihRight =>
+      simp only [eval]
+      congr 1
+      · exact ihLeft fun i hi ↦ hagree i (by simp [inputs, hi])
+      · exact ihRight fun i hi ↦ hagree i (by simp [inputs, hi])

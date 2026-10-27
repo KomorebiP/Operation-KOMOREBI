@@ -1,0 +1,42 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+4 Connections, defects, and holonomy
+4.1 The minimal interface separates a choice from a theorem
+The minimal Connection R M X stores an equivalence for each ordered pair of vertices and the
+identity law at equal endpoints.
+Source: KomorebiPaperIII/Transport.lean.
+structure Connection (R : Type u) (M : Type v) (X : Type w)
+[Semiring R] [AddCommMonoid M] [Module R M] where
+transport : X →X →M ≃ₗ[R] M
+transport_self : ∀x, transport x x = LinearEquiv.refl R M
+Neither reversal by inversion nor the cocycle equation is a field. Both could fail for an instance.
+This makes the distinction from exact frame transport substantive: exact transport has a prescribed
+construction that forces the cocycle law, while a connection carries separately chosen pair maps.
+The minimal connection’s defect is an equivalence. It compares the direct map with the two-step
+map by composing with an inverse:
+Source: KomorebiPaperIII/Transport.lean.
+def cocycleDefect (a b c : X) : M ≃ₗ[R] M :=
+(C.transport a c).symm.trans
+((C.transport a b).trans (C.transport b c))
+With ordinary function composition, this is
+𝐷𝑎,𝑏,𝑐= (Γ𝑏,𝑐Γ𝑎,𝑏)Γ−1
+𝑎,𝑐.
+It is based at the target coordinate space. The zero-defect condition in this multiplicative model is
+identity, not an additive zero map. Since the fibers here are homogeneous, the Lean type does not
+itself display which endpoint is the base. The definition fixes that interpretation.
+4.2 A source-level counterexample to automatic flatness
+doubleEquiv multiplies rational coordinates by two and divides by two for its inverse. The three-
+point connection chooses it for the directed edge 0 →1 and chooses the identity for every other
+unequal pair.
+Source: KomorebiPaperIII/Transport.lean.
+def twistedThreePointConnection : Connection ℚℚ(Fin 3) where
+transport a b :=
+if a = b then LinearEquiv.refl ℚℚ
+else if a = (0 : Fin 3) ∧b = (1 : Fin 3) then doubleEquiv
+else LinearEquiv.refl ℚℚ
+transport_self a := by simp
+The loop 0 →1 →2 →0 doubles the input one. Equality with the identity would therefore force
+2 = 1. The source proves nonidentity by applying the proposed equality of equivalences to that
+input:
+15

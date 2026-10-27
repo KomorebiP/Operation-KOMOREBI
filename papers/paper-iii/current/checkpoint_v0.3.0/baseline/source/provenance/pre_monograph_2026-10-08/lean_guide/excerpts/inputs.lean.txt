@@ -1,0 +1,6 @@
+def inputs [DecidableEq Input] :
+    OperationTree Input Constant Unary Binary → Finset Input
+  | .input i => {i}
+  | .constant _ => ∅
+  | .unary _ child => inputs child
+  | .binary _ left right => inputs left ∪ inputs right

@@ -1,0 +1,102 @@
+Mathematical interpretation of Paper III computations
+
+The mathematical claims concern packet coordinates, jets, tree expansions,
+refinement defects, obstructions, lifting, elimination, and transport. The
+implemented surrogate is a finite collection of illustrative objects, explicit
+formulas, and source checks. It neither decides the full research program nor
+supplies universal proofs.
+
+Implemented ranges in the strengthened verifier
+-----------------------------------------------
+1. Coordinates and jets: one polynomial map R^3 -> R^3, two input packets,
+   two output packets, one base point, and one pair of directions. Formula
+   reconstruction is evaluated with floating arithmetic.
+2. Faa di Bruno counts: enumerate set partitions of n=1,...,6, compare with
+   Stirling recurrence counts for packet-label counts 1, 2, 4. These counts
+   use exact integers. A scalar second derivative at x=0.37 is compared with
+   a finite difference of step 1e-5 and absolute threshold 2e-4.
+3. Tree majorants: a=0.08, b=0.7, Catalan sum terms n=1,...,19; one cubic
+   contraction iterated 100 times; zero forcing and zero quadratic-coefficient
+   boundary examples. Floating residual thresholds are explicit in the code.
+4. Graded operations: two 5x5 matrices from NumPy default_rng(2), split into
+   five cyclic-grade components; test all five output grades.
+5. Refinement defects: one nonlinear composition identity at a displayed
+   point; one scalar fixed-point mismatch with q=0.6 and epsilon=0.17.
+6. Obstruction and correction: the image of t -> (t,t), one compatible and
+   one incompatible residual, one 100-step scalar contraction, three quadratic
+   obstruction inputs, and diagonal/anti-diagonal packet projections.
+7. Filtered lifting: all seven lifts of 3 mod 7 for x^2=2 mod 49; all three
+   lifts of 0 mod 3 for x^2=3 and x^2=0 mod 9; all five correction digits
+   for representatives 1 and 6 of x^2=1 mod 5 to mod 25; one exact integer
+   Maurer-Cartan quadratic remainder at p=5, depth=2. These finite searches
+   and integer divisibility checks are exact.
+8. Schur elimination: one real block matrix with a 2-dimensional retained
+   block and 1-dimensional hidden block; one scalar nonlinear second-order
+   elimination example at finite-difference step 1e-4.
+9. Holonomy: three invertible 2x2 gauges and one change of root gauge drawn
+   with NumPy default_rng(4), determinant screening at absolute value 0.2;
+   one explicit diagonal-loop intertwiner example.
+10. Packet transport: rank-one planar rotating projections on [0,0.7] with
+    20,40,80,160 steps; a three-packet generator at steps 0.01,0.005,0.0025.
+    This tests the displayed examples. Four successful discretizations do
+    not establish a general convergence rate or a uniform theorem.
+11. Source integrity: unique labels, resolved references, selected required
+    assumptions/labels, proof-environment count, citation/Bib parity, and
+    formatting constraints of the preserved strengthened source. This checks
+    that original edition, not the newly edited final traditional paper.
+
+Most matrix checks use numpy.allclose with atol=rtol=1e-10. Several examples
+have their own absolute thresholds between 1e-15 and 2e-4. Float64 residual
+acceptance is not exact algebraic certification. Linear solves, eigendecompositions,
+and finite differences rely on installed NumPy/BLAS behavior. The computations
+are deterministic at the fixed seeds, but no cross-platform floating-byte
+identity is claimed.
+
+The visual checker, inherited but not rerun
+-----------------------------------------
+The visual models use SymPy integer/rational matrices and symbolic polynomial
+identities. The inherited 124 named records cover all 4^n words for n=0,...,6
+(5,461 words total), a fixed two-packet path example through length4, explicit
+rectangular products at lengths2 and3, three-frame cocycles over27 triples,
+all nine reverse pairs, 125 tree environments, and the remaining named fixed
+examples. Four controls reject swapped noncommuting coefficients, the false
+converse 'reachable implies nonzero', trace/determinant implying identity, and
+fixed-packet covariance without the needed commutation. Fresh matching hashes
+authenticate which source that old report names. They do not rerun its logic.
+
+Implementation review
+---------------------
+Before execution the original VERIFY.sh, existing example verifier, visual
+checker, model/generator interfaces, release report, and pinned requirements
+were inspected. The original shell integrity command was executed without
+--full, so it never entered its Lean/PDF rebuild stages. Its release manifest
+requires exact file-set parity and all33 hashes, parses map/audit/status source,
+matches saved transcript target order, checks version metadata, and scans for
+forbidden proof shortcuts. Its internal success message mentions historical
+namespace counts; the fresh conclusion is source/report consistency only.
+
+The strengthened verifier directly compares grade-product block expansions,
+enumerates set partitions independently of the Stirling recurrence, exhausts
+the small lifting digit sets, and evaluates explicit packet/holonomy identities.
+These are relevant orthogonal checks within the stated examples. The audit did
+not independently reimplement every numerical operation or every theorem.
+The original verifier uses Python assertions, so the supplied runner uses
+normal Python execution rather than optimized -O mode.
+
+Environment and differences
+--------------------------
+Python3.12.14; NumPy2.3.5; Matplotlib3.10.8; Pillow12.3.0.
+Matplotlib/Pillow match the canonical figure pins. The historical finite report
+used Python3.12.13; the historical visual report used Python3.13.5 and SymPy1.14.0.
+SymPy is unavailable now. PyMuPDF1.26.6 and pypdf6.10.0 are installed, differing
+from visual-document pins1.26.7 and5.9.0, but neither is used by this computation
+run. No Python library was successfully installed for this task.
+
+Disposition
+-----------
+Available bounded assertions reproduced successfully. Scientific verification
+is partial because exact visual rerun and TikZ regeneration were unavailable.
+The algebraic examples support the accompanying formulas in their stated
+ranges; the general claims still rely on mathematical proofs and the explicit
+scope of inherited Lean evidence. No additional larger test range was run,
+because no concrete unresolved implementation risk called for one.

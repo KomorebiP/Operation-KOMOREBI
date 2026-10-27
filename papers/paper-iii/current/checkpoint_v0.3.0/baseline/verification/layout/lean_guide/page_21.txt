@@ -1,0 +1,49 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+5.2 Reconstructing a flat connection from canonical transport
+Suppose a family of frames Ψ𝑎∶𝐹(𝑎) ≃𝑀and a base vertex 𝑜are supplied. The canonical
+connection is 𝐾𝑎,𝑏= Ψ−1
+𝑏Ψ𝑎. The source defines
+𝐺𝑎= Γ𝑜,𝑎𝐾𝑎,𝑜.
+Its type is a gauge on each fiber:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+def flatGauge (frame : ∀a, F a ≃ₗ[R] M) (o : X) :
+Gauge (R := R) (F := F) :=
+fun a ↦(canonicalTransport frame a o).trans (C.transport o a)
+The reconstruction theorem proves Γ𝑎,𝑏= 𝐺𝑏𝐾𝑎,𝑏𝐺−1
+𝑎
+under flatness.
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem flat_isGaugeOfCanonical
+(hflat : C.Flat) (frame : ∀a, F a ≃ₗ[R] M) (o a b : X) :
+C.transport a b =
+((C.flatGauge frame o a).symm.trans
+((canonicalConnection frame).transport a b)).trans
+(C.flatGauge frame o b) := by
+apply LinearEquiv.ext
+intro x
+have hg : (C.flatGauge frame o a).symm =
+(C.transport o a).symm.trans (canonicalTransport frame a o).symm := rfl
+rw [hg]
+have hcanonical_symm (p q : X) :
+(canonicalTransport frame p q).symm = canonicalTransport frame q p := rfl
+rw [hcanonical_symm]
+simp only [flatGauge, canonicalConnection, LinearEquiv.trans_apply]
+rw [show (C.transport o a).symm = C.transport a o by
+rw [C.transport_reverse o a]]
+simp only [canonicalTransport, LinearEquiv.trans_apply,
+LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
+have hao : (C.transport a o).trans (C.transport o b) = C.transport a b :=
+hflat a o b
+exact (congrArg (fun e : F a ≃ₗ[R] F b ↦e x) hao).symm
+The proof first exposes the inverse of the defined gauge, then cancels the canonical frame maps.
+What remains is Γ𝑜,𝑏Γ𝑎,𝑜= Γ𝑎,𝑏, the flatness equation at 𝑎, 𝑜, 𝑏.
+The theorem is relative to supplied frames and a supplied vertex. It does not silently choose a
+vertex from an empty type. Nor does this declaration prove a classification theorem for topological
+bundles. Its result is an explicit algebraic formula for a flat normalized reversible pair connection
+on the supplied data.
+5.3 A packet resolution need not be orthogonal
+The formal packet-resolution interface asks for a finite complete family of idempotent endomor-
+phisms.
+20

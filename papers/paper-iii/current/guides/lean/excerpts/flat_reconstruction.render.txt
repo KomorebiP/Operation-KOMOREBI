@@ -1,0 +1,22 @@
+theorem flat_isGaugeOfCanonical
+    (hflat : C.Flat) (frame : ∀ a, F a ≃ₗ[R] M) (o a b : X) :
+    C.transport a b =
+      ((C.flatGauge frame o a).symm.trans
+        ((canonicalConnection frame).transport a b)).trans
+          (C.flatGauge frame o b) := by
+  apply LinearEquiv.ext
+  intro x
+  have hg : (C.flatGauge frame o a).symm =
+      (C.transport o a).symm.trans (canonicalTransport frame a o).symm := rfl
+  rw [hg]
+  have hcanonical_symm (p q : X) :
+      (canonicalTransport frame p q).symm = canonicalTransport frame q p := rfl
+  rw [hcanonical_symm]
+  simp only [flatGauge, canonicalConnection, LinearEquiv.trans_apply]
+  rw [show (C.transport o a).symm = C.transport a o by
+    rw [C.transport_reverse o a]]
+  simp only [canonicalTransport, LinearEquiv.trans_apply,
+    LinearEquiv.symm_apply_apply, LinearEquiv.apply_symm_apply]
+  have hao : (C.transport a o).trans (C.transport o b) = C.transport a b :=
+    hflat a o b
+  exact (congrArg (fun e : F a ≃ₗ[R] F b ↦ e x) hao).symm

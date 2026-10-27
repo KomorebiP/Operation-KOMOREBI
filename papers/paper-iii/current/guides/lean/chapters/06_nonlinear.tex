@@ -1,0 +1,46 @@
+\clearpage
+\section{Operation trees and certificates for individual candidates}
+\subsection{The grammar does not assume algebraic laws}
+The nonlinear module starts with a finite syntax tree. Inputs, constants, unary labels, and binary labels can each have their own type.
+\excerpt{NonlinearObstructions}{operation_tree}
+To evaluate a tree, supply four functions: input values, constant values, unary semantics, and binary semantics. Unary and binary semantics are arbitrary functions on one common value type. They are not assumed additive, multilinear, differentiable, associative, or commutative. This generality is what makes the locality theorem applicable to any chosen semantics.
+
+Every tree has finitely many nodes. The input type itself need not be finite. The function \code{inputs} computes a finite set of names appearing in the tree:
+\excerpt{NonlinearObstructions}{inputs}
+A constant reads no input. A unary node reads exactly the names read by its child. A binary node reads the union of its two children's names. Because this is a set, repeated uses of one input are recorded once. The semantics may still depend nonlinearly on repeated occurrences.
+
+\subsection{The locality proof follows the syntax}
+\excerpt{NonlinearObstructions}{locality}
+In an input case, the agreement hypothesis applies to that input's singleton support. In a constant case, both evaluations are definitionally equal. At a unary node, the induction hypothesis identifies the child values, and applying the same unary function preserves equality. At a binary node, the two child induction hypotheses apply because each child's support lies in the union.
+
+The result states one implication: agreement on the syntactically named inputs gives equal evaluation. It does not claim every named input is semantically influential. For example, an operation may ignore one argument. The syntactic support remains a safe dependency set.
+
+If \code{tree.inputs = ∅}, agreement on the empty set is vacuous, so the value is independent of the input environment. The source proves this as \code{eval_eq_of_inputs_eq_empty}. Constants and semantics are held fixed between the two evaluations. Changing the semantics would require a different comparison theorem.
+
+\subsection{What the nonlinear extension adds outside this contract}
+The traditional companion develops stronger ordinary statements about typed or colored trees, multilinear packet expansions, composition defects, and higher-order structures. The finite Lean contract contains the common-value unary/binary grammar and its input-locality theorem. It does not contain the dependent colored-tree development or a tree-level Faà di Bruno theorem.
+
+This boundary is mathematical, not stylistic. A colored tree needs compatibility between node input and output types. A multilinear packet expansion needs algebraic hypotheses absent from arbitrary unary and binary semantics. The existing locality proof cannot certify these statements by a change of terminology.
+
+\subsection{Residuals and a fixed proposed solution}
+The obstruction API asks for a function
+\code{residual : Candidate → Packet → Residual}, with only \code{Zero Residual} assumed. A candidate is a solution when every packet residual is zero. A certificate stores one packet at which its residual is nonzero:
+\excerpt{NonlinearObstructions}{obstruction_packet}
+The candidate appears in the certificate's type. A certificate for one candidate cannot directly be passed as a certificate for a different one. The theorem \code{ObstructionPacket.not_isSolution} uses the stored packet to contradict the condition that every packet residual is zero.
+
+Classically, failure of the condition that every packet residual is zero supplies a nonempty certificate type. The combined equivalence is:
+\excerpt{NonlinearObstructions}{candidate_failure}
+The output is \code{Nonempty (ObstructionPacket residual candidate)}. This is a proposition asserting that the certificate type has an inhabitant. It is not a computable function that enumerates packets or finds one within a time bound.
+
+Neither \code{Packet} nor \code{Candidate} needs a finite enumeration for this logical equivalence. The adjective ``finite'' in the overall contract describes the walk sums, paths, packet resolutions, and operation-tree syntax where finiteness is imposed. It should not be misread as an extra \code{Fintype} assumption on this candidate theorem.
+
+\subsection{The quantifiers determine the conclusion}
+For one proposed candidate $c$, the theorem says
+\[
+ \neg\bigl(\forall p,\ r(c,p)=0\bigr)
+ \quad\Longleftrightarrow\quad
+ \text{a certificate of }r(c,p)\ne0\text{ exists}.
+\]
+To show that a global solution does not exist, one needs the additional assertion that \emph{every} candidate fails, or an argument producing an obstruction for each candidate. To prove existence of a global solution, one must produce a candidate with every residual zero. Neither conclusion follows merely from the certificate interface.
+
+Once a witness is supplied, the interface makes local failure portable and checkable. The formal type records the residual, the candidate, the packet, and the exact nonzero assertion. A later theorem can build on these data without confusing rejection of one candidate with a universal impossibility result.

@@ -1,0 +1,23 @@
+theorem sum_blocks (A : M →ₗ[R] M) :
+    ∑ mu, ∑ nu, P.block A mu nu = A := by
+  have hcomplete (x : M) : ∑ i, P.projector i x = x := by
+    have hx := congrArg (fun L : M →ₗ[R] M ↦ L x) P.complete
+    simpa using hx
+  ext x
+  simp only [block, LinearMap.sum_apply, LinearMap.comp_apply]
+  calc
+    (∑ mu, ∑ nu, P.projector mu (A (P.projector nu x))) =
+        ∑ mu, P.projector mu (A (∑ nu, P.projector nu x)) := by
+          apply Finset.sum_congr rfl
+          intro mu _
+          calc
+            (∑ nu, P.projector mu (A (P.projector nu x))) =
+                P.projector mu (∑ nu, A (P.projector nu x)) := by
+                  exact (map_sum (P.projector mu)
+                    (fun nu ↦ A (P.projector nu x)) Finset.univ).symm
+            _ = P.projector mu (A (∑ nu, P.projector nu x)) := by
+                  congr 1
+                  exact (map_sum A
+                    (fun nu ↦ P.projector nu x) Finset.univ).symm
+    _ = ∑ mu, P.projector mu (A x) := by rw [hcomplete x]
+    _ = A x := hcomplete (A x)

@@ -1,0 +1,35 @@
+{
+  "scope": "Paper III five build/assembly scripts only",
+  "analogous_source": "Completed Paper II build.py, assemble.py and scripts/build_pdfs.py",
+  "engine": "xelatex",
+  "changed_files": [
+    "editable/traditional/build.py",
+    "editable/visual_guide/build.py",
+    "editable/lean_guide/build.py",
+    "editable/traditional/assemble.py",
+    "scripts/build_pdfs.py",
+    "editable/traditional/BUILD_README.txt",
+    "editable/visual_guide/BUILD_README.txt",
+    "editable/lean_guide/BUILD_README.txt"
+  ],
+  "guard": "Legacy assemble.py requires --historical-output below editable/traditional/source/historical_assembly/. Authored master and chapters are not regenerated.",
+  "isolated_assets": "Each builder stages its entire source tree and preserves styles, fonts, chapters, PDF/vector figures, source plates and generated input tables. Only manuscript products, build logs, caches and historical assembly outputs are excluded.",
+  "legacy_compatibility": "Traditional build.py --assemble compiles the authored source without calling historical integration. All builders accept --output-directory and --output-dir; --check-only changes no delivered files.",
+  "validation": [
+    "traditional: mocked compiler dispatch ran four isolated XeLaTeX passes; BibTeX was used only for bibliography data; every non-product input was copied byte-identically; authored source tree stayed unchanged.",
+    "traditional: --check-only left delivered files unchanged.",
+    "visual_guide: mocked compiler dispatch ran four isolated XeLaTeX passes; BibTeX was used only for bibliography data; every non-product input was copied byte-identically; authored source tree stayed unchanged.",
+    "visual_guide: --check-only left delivered files unchanged.",
+    "lean_guide: mocked compiler dispatch ran four isolated XeLaTeX passes; BibTeX was used only for bibliography data; every non-product input was copied byte-identically; authored source tree stayed unchanged.",
+    "lean_guide: --check-only left delivered files unchanged.",
+    "Explicit historical assembly succeeded only in a temporary archival copy and left the copied authored master byte-identical.",
+    "Historical assembler imports without parsing CLI arguments or mutating files.",
+    "Package builder dispatched the authored builders and synchronized both PDF delivery directories after all three successful mocked builds.",
+    "Missing or non-archival --historical-output is rejected before the current master is touched."
+  ],
+  "mathematical_or_formal_changes": [],
+  "validation_boundary": "Compiler-dispatch/staging tests used explicitly mocked XeLaTeX and BibTeX. Historical integration was executed only on a temporary copied source tree. The root agent performs the actual integrated XeLaTeX build and visual QA.",
+  "syntax_validation": "AST parsing passed for all five modified scripts.",
+  "documentation": "Build command paragraphs now describe XeLaTeX, isolation, current authored sources, and the guarded archival assembly. Historical Lean BUILD_NOTES remains unchanged.",
+  "file_permissions": "Existing script permission mode 0644 retained after atomic replacements."
+}

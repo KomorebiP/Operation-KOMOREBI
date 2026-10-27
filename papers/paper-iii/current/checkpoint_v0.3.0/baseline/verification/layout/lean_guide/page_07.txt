@@ -1,0 +1,47 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+2 Edges, words, and reachable packets
+2.1 The graph stores orientation, not finiteness
+PacketGraph V E has two fields, source : E →V and target : E →V. Distinct values of E may share
+endpoints, so parallel edges are allowed. The structure itself does not carry a finite enumeration.
+The theorems that sum over vertices or edges request the appropriate Fintype instances separately.
+This makes the boundary visible in each declaration.
+The elementary scalar block is the matrix whose only potentially nonzero entry is in target row
+and source column.
+Source: KomorebiPaperIII/EdgeOperators.lean.
+def packetMatrix [Zero R] [DecidableEq V]
+(source target : V) (coefficient : R) : Matrix V V R :=
+fun row column ↦if row = target ∧column = source then coefficient else 0
+@[simp] theorem packetMatrix_apply [Zero R] [DecidableEq V]
+(source target row column : V) (coefficient : R) :
+packetMatrix source target coefficient row column =
+if row = target ∧column = source then coefficient else 0 :=
+rfl
+For a column vector 𝑥, this block sends the source coordinate to the target coordinate and multi-
+plies it by the stored coefficient. EdgeSystem G R is a coefficient function E →R. It adds weights to
+graph edges without changing their endpoints.
+If 𝑒∶𝑎→𝑏has coefficient 𝑟and 𝑓∶𝑏→𝑐has coefficient 𝑠, the product for the traversal 𝑒followed
+by 𝑓is 𝐸𝑓𝐸𝑒, and its coefficient is 𝑠𝑟. A semiring need not be commutative. There is no permission
+to replace this by 𝑟𝑠.
+Source: KomorebiPaperIII/EdgeOperators.lean.
+theorem edgeOp_mul_edgeOp_of_composable
+[Fintype V] [DecidableEq V] [Semiring R]
+(e f : E) (h : G.target e = G.source f) :
+edgeOp G S f * edgeOp G S e =
+packetMatrix (G.source e) (G.target f)
+(S.coefficient f * S.coefficient e) := by
+ext row column
+by_cases hrow : row = G.target f
+· by_cases hcolumn : column = G.source e
+· simp [edgeOp, packetMatrix, Matrix.mul_apply, h, hrow, hcolumn]
+· simp [edgeOp, packetMatrix, Matrix.mul_apply, h, hcolumn]
+· simp [edgeOp, packetMatrix, Matrix.mul_apply, hrow]
+The proof examines one matrix entry. The sum over intermediate vertices has at most one sur-
+viving term after support conditions are imposed. If the interface does not match, the companion
+theorem edgeOp_mul_edgeOp_eq_zero shows every intermediate term is zero. The zero conclusion
+depends on support, not on an assumed numerical cancellation.
+2.2 Lists record chronological traversal
+Composable G accepts the empty list and every singleton. A longer list must satisfy the adjacent
+target-source equality at each step. The evaluator then places the first listed edge on the right:
+6

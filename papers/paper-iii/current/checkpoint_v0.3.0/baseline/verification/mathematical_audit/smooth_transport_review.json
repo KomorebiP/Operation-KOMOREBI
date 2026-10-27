@@ -1,0 +1,289 @@
+{
+  "audit_type": "independent bounded raw proof audit",
+  "primary_verdict": "incomplete, with the smallest missing implications identified",
+  "source": "/workspace/scratch/a478a5fc4884/paper_iii_work/recovered/Paper_III/source/expanded/PSC_Paper_III_Annals_Human_Edition_Strengthened.tex",
+  "source_sha256": "20452d11443835ca9c0e0484250c01fa51e0456574c7f7c7f5549fbd0f934c89",
+  "region": [
+    1864,
+    2344
+  ],
+  "checked_named_block_count": 22,
+  "scope": "finite graph gauge classification and smooth Hilbert packet transport",
+  "source_modified": false,
+  "fresh_lean_compile": false,
+  "computational_verification": false,
+  "external_citation_validation": "outside scope; no unresolved citation-dependent leaf used",
+  "findings": [
+    {
+      "id": "F1",
+      "kind": "domain clarification",
+      "labels": [
+        "sec:kato_transport",
+        "lem:packet_commutator"
+      ],
+      "issue": "Orthogonal must mean self-adjoint Hilbert projections, rather than only pairwise annihilating idempotents.",
+      "minimal_repair": "Explicitly add P_alpha(t)^*=P_alpha(t)=P_alpha(t)^2.",
+      "counterexample_if_omitted": {
+        "H": "R^2",
+        "P(t)": "[[1,t],[0,0]]",
+        "Q(t)": "I-P(t)",
+        "K": "[[0,-1],[0,0]]",
+        "U(t)": "[[1,-t],[0,1]]",
+        "failure": "K is not skew-adjoint and U(t) is not unitary for t != 0."
+      }
+    },
+    {
+      "id": "F2",
+      "kind": "local proof omission",
+      "labels": [
+        "thm:kato_transport"
+      ],
+      "issue": "U*U=I gives only isometry in infinite dimension, but the proof immediately asserts unitarity and uses U inverse.",
+      "minimal_repair": "Invoke continuous bounded-ODE propagator invertibility U(t,s)^(-1)=U(s,t) before combining with U*U=I.",
+      "theorem_refuted": false
+    },
+    {
+      "id": "F3",
+      "kind": "multiplication convention",
+      "labels": [
+        "thm:gauge_classification"
+      ],
+      "issue": "Rightmost-first path transport is homomorphic only for a matching pi_1 multiplication convention.",
+      "minimal_repair": "Define gamma_2 gamma_1 to traverse gamma_1 first, then gamma_2."
+    },
+    {
+      "id": "F4",
+      "kind": "regularity dependency omission",
+      "labels": [
+        "cor:continuous_holonomy"
+      ],
+      "issue": "Only standing C1 hypotheses are present, but proof invokes C2 and Lipschitz convergence theorems.",
+      "minimal_repair": "Qualify convergence by hypotheses of the respective convergence theorems, or assume C2 for the corollary.",
+      "scope_preserving_alternative": "Under C1, use uniform o(h) expansions for direct polar rotation, exact propagator, and frozen exponential, then unitary telescoping. This proves convergence without O(mesh) rate.",
+      "theorem_refuted": false
+    },
+    {
+      "id": "F5",
+      "kind": "zero-object endpoint convention",
+      "labels": [
+        "cor:one_moving_subspace",
+        "prop:packet_direct_rotation"
+      ],
+      "issue": "P=0 or I gives a zero packet forbidden by earlier packet definition; zero H permits empty family and undefined maximum.",
+      "minimal_repair": "Omit zero projection summands; define delta=max({0} union {||P_alpha-Q_alpha||})."
+    },
+    {
+      "id": "F6",
+      "kind": "time interval clarification",
+      "labels": [
+        "sec:kato_transport",
+        "thm:direct_rotation_convergence",
+        "thm:sampled_transport_convergence"
+      ],
+      "issue": "Section begins without naming a parameter interval; strict partitions implicitly have positive duration.",
+      "minimal_repair": "Specify [0,T], T>=0; empty partition product is I when T=0."
+    }
+  ],
+  "blocks": [
+    {
+      "label": "def:gauge_change",
+      "title": "Gauge change",
+      "environment": "definition",
+      "line_start": 1882,
+      "line_end": 1887,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "prop:gauge_covariance",
+      "title": "Gauge covariance",
+      "environment": "proposition",
+      "line_start": 1889,
+      "line_end": 1901,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "thm:tree_normalization",
+      "title": "Spanning tree normalization",
+      "environment": "theorem",
+      "line_start": 1903,
+      "line_end": 1909,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "thm:cycle_gluing",
+      "title": "Cycle gluing criterion",
+      "environment": "theorem",
+      "line_start": 1911,
+      "line_end": 1917,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "cor:cycle_number",
+      "title": "Number of independent cycle tests",
+      "environment": "corollary",
+      "line_start": 1919,
+      "line_end": 1929,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "thm:holonomy_intertwining",
+      "title": "Fundamental holonomy intertwining criterion",
+      "environment": "theorem",
+      "line_start": 1939,
+      "line_end": 1964,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "cor:scalar_holonomy_bridge",
+      "title": "Scalar holonomy bridge",
+      "environment": "corollary",
+      "line_start": 1966,
+      "line_end": 1972,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "thm:gauge_classification",
+      "title": "Gauge classification of transports",
+      "environment": "theorem",
+      "line_start": 1974,
+      "line_end": 1988,
+      "status": "conditional",
+      "finding": "F3"
+    },
+    {
+      "label": "cor:abelian_holonomy_class",
+      "title": "Abelian cohomology class",
+      "environment": "corollary",
+      "line_start": 1990,
+      "line_end": 2002,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "cor:projective_transport",
+      "title": "Projective transport",
+      "environment": "corollary",
+      "line_start": 2004,
+      "line_end": 2010,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "ex:square_loop",
+      "title": "A square loop",
+      "environment": "example",
+      "line_start": 2012,
+      "line_end": 2014,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "lem:packet_commutator",
+      "title": "Complete packet commutator identity",
+      "environment": "lemma",
+      "line_start": 2034,
+      "line_end": 2071,
+      "status": "passed under intended Hilbert orthogonality",
+      "finding": "F1"
+    },
+    {
+      "label": "thm:kato_transport",
+      "title": "Canonical packet transport",
+      "environment": "theorem",
+      "line_start": 2073,
+      "line_end": 2100,
+      "status": "incomplete local proof step",
+      "finding": "F2"
+    },
+    {
+      "label": "cor:one_moving_subspace",
+      "title": "One moving subspace",
+      "environment": "corollary",
+      "line_start": 2102,
+      "line_end": 2112,
+      "status": "passed with zero-member convention",
+      "finding": "F5"
+    },
+    {
+      "label": "def:packet_direct_rotation",
+      "title": "Direct rotation of nearby packet systems",
+      "environment": "definition",
+      "line_start": 2115,
+      "line_end": 2127,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "prop:packet_direct_rotation",
+      "title": "Exact direct packet rotation",
+      "environment": "proposition",
+      "line_start": 2129,
+      "line_end": 2169,
+      "status": "passed with empty-family convention",
+      "finding": "F5"
+    },
+    {
+      "label": "lem:one_step_direct_rotation",
+      "title": "One step direct rotation estimate",
+      "environment": "lemma",
+      "line_start": 2171,
+      "line_end": 2217,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "thm:direct_rotation_convergence",
+      "title": "Direct rotations converge to packet transport",
+      "environment": "theorem",
+      "line_start": 2219,
+      "line_end": 2265,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "thm:sampled_transport_convergence",
+      "title": "Convergence of sampled transports",
+      "environment": "theorem",
+      "line_start": 2267,
+      "line_end": 2298,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "cor:continuous_holonomy",
+      "title": "Continuous holonomy from graph products",
+      "environment": "corollary",
+      "line_start": 2300,
+      "line_end": 2306,
+      "status": "incomplete regularity dependency",
+      "finding": "F4"
+    },
+    {
+      "label": "ex:rotating_line",
+      "title": "A rotating line",
+      "environment": "example",
+      "line_start": 2308,
+      "line_end": 2322,
+      "status": "passed",
+      "finding": null
+    },
+    {
+      "label": "fact:projected_curvature",
+      "title": "Curvature of a projected connection",
+      "environment": "standardfact",
+      "line_start": 2325,
+      "line_end": 2345,
+      "status": "passed",
+      "finding": null
+    }
+  ],
+  "strongest_safe_statement": "All 22 reviewed blocks support the conclusions after local domain/convention clarification, ODE invertibility justification, endpoint-corollary dependency repair, and zero-object conventions. C2 direct rotations and Lipschitz sampled exponentials have justified O(mesh) rates.",
+  "report": "smooth_transport_review.txt"
+}

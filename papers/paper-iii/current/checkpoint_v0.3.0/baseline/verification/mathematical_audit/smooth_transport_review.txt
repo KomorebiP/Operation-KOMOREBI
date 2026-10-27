@@ -1,0 +1,76 @@
+Paper III: independent bounded audit of finite gauge and smooth packet transport
+
+Primary verdict: incomplete, with the smallest missing implications identified below. The main finite graph, direct rotation, and convergence arguments check under their intended domains. No counterexample was found to those conclusions under finite self-adjoint Hilbert projections and the stated regularity. The omissions are local conventions, an infinite-dimensional invertibility justification, and an endpoint corollary's regularity dependency. This is not an audit of the rest of Paper III.
+
+Source: paper_iii_work/recovered/Paper_III/source/expanded/PSC_Paper_III_Annals_Human_Edition_Strengthened.tex
+SHA-256: 20452d11443835ca9c0e0484250c01fa51e0456574c7f7c7f5549fbd0f934c89
+Checked region: lines 1864–2344 inclusive, sections Finite transport and holonomy and Smooth projector transport. Twenty-two named blocks were read in full, including their proofs where present. The preceding standing conventions and packet definition were also read. Original sources were not edited.
+
+NORMALIZED CLAIMS
+
+Finite graph: on a finite connected nonempty graph, assign an element of a group G to each oriented edge, with inverse on reversal. A vertex gauge acts as T'_{vu}=G_v T_{vu} G_u^{-1}. Tree normalization removes exactly the tree edge data; the remaining b_1=|E|-|V|+1 values represent all gauge classes, modulo one simultaneous conjugation. A prescribed root isomorphism extends uniquely to an edge intertwiner precisely when it intertwines a fundamental set of based holonomies.
+
+Smooth transport: H is a real or complex Hilbert space. Each P_alpha(t) is a bounded self-adjoint projection; the finitely many projections are mutually orthogonal and sum to I. They vary in operator norm on a compact interval containing zero. For C1 paths, K=sum P'_alpha P_alpha is continuous and skew-adjoint, and the bounded ODE has a unitary propagator intertwining all packets. For nearby systems, delta<1 implies invertibility of S=sum Q_alpha P_alpha and its polar unitary exactly intertwines packets. C2 paths give uniform O(h^2) local direct-rotation error and O(mesh) global error. A Lipschitz K gives the analogous sampled-exponential rate. A closed packet path gives a block-diagonal endpoint unitary and packetwise holonomy.
+
+DEPENDENCY GRAPH
+
+Gauge covariance -> tree normalization -> cycle gluing and fundamental intertwining -> simultaneous-conjugacy classification -> abelian/projective specializations.
+Self-adjoint complete projections -> differentiated idempotence and orthogonality -> commutator identity and skew-adjoint K -> bounded ODE invertibility plus norm conservation -> canonical unitary transport.
+Nearby self-adjoint projections -> positive lower bounds for S*S and SS* -> invertible S -> polar functional calculus -> exact direct packet rotation.
+C2 compact path -> uniform Taylor remainder -> polar expansion -> local O(h^2) estimate -> unitary telescoping -> global O(mesh) estimate.
+Lipschitz K -> variation-of-constants local O(h^2) estimate -> unitary telescoping -> sampled convergence.
+Endpoint equality plus packet intertwining -> packet holonomy. Convergence of approximants additionally uses the regularity of the respective convergence theorem, or the C1/o(h) argument noted below.
+
+FINDINGS AND MINIMAL REPAIRS
+
+F1. Make Hilbert orthogonality explicit (section opening; lem:packet_commutator and descendants).
+The earlier packet definition contains only nonzero idempotence and algebraic pairwise annihilation. The smooth section calls its packets orthogonal, which naturally means self-adjoint Hilbert projections, but its displayed explanation repeats only pairwise annihilation and completeness. Add P_alpha(t)^*=P_alpha(t)=P_alpha(t)^2 explicitly. Without self-adjointness, the asserted skew-adjoint generator and unitary transport are false: on R^2, P(t)=[[1,t],[0,0]], Q(t)=I-P(t) are nonzero complementary idempotents. Their generator is K=[[0,-1],[0,0]], and U(t)=[[1,-t],[0,1]] intertwines them but is not orthogonal when t is nonzero. This is an ambiguity check, not a refutation under the usual Hilbert meaning of orthogonal projections.
+
+F2. Supply ODE invertibility in thm:kato_transport.
+The proof goes directly from d(U*U)/dt=0 to 'U is unitary,' then differentiates U^{-1}. On an infinite-dimensional Hilbert space U*U=I alone establishes only an isometry, not surjectivity. The claim is true because a continuous bounded generator yields a two-parameter propagator with U(t,s)^{-1}=U(s,t). Add this fact before claiming unitarity; then U*U=I and invertibility give U^{-1}=U*. Alternatively show UU*=I by uniqueness of W'=KW-WK, W(0)=I. This is a local proof completion, not a new hypothesis or a theorem failure.
+
+F3. State the based-loop multiplication convention in thm:gauge_classification.
+The displayed edge product acts rightmost first. Therefore T_{gamma_2 gamma_1}=T_{gamma_2}T_{gamma_1} when gamma_2 gamma_1 means first traverse gamma_1, then gamma_2. Add that convention. If instead the opposite traversal convention is used for pi_1, the raw holonomy assignment is an antihomomorphism and needs an inverse/opposite-group adjustment. All tree, gauge, and simultaneous-conjugacy identities themselves have the correct order.
+
+F4. Repair the proof dependency in cor:continuous_holonomy.
+The section starts with only C1 regularity, while the corollary cites thm:direct_rotation_convergence (C2) and thm:sampled_transport_convergence (Lipschitz K) without restating those assumptions. The simplest conservative wording is: 'Under the hypotheses of the respective convergence theorems, the products ... converge'; or assume C2 for this entire corollary, which also makes K Lipschitz on the compact interval. Endpoint packet preservation itself needs only C1.
+The stronger C1 convergence conclusion is also true, so this is not a counterexample: uniform continuity of P'_alpha gives S=I+hK+o(h) uniformly; skew-adjointness gives the polar direct rotation I+hK+o(h); the exact propagator and frozen exponential also equal I+hK+o(h). Unitary telescoping gives an error bounded by T times a remainder modulus tending to zero with the mesh. This retains C1 convergence but does not supply the O(mesh) rate. If preserving this scope is desired, append that short argument instead of strengthening the hypothesis.
+
+F5. Zero-object endpoint conventions (cor:one_moving_subspace; prop:packet_direct_rotation).
+The original packet definition requires each member nonzero. P and I-P fail that definition when P=0 or I, although the displayed transport formula remains true. State that zero members are omitted (they contribute zero to K), or explicitly allow zero projections in the smooth section. The zero Hilbert space permits an empty complete family; then max over an empty label set is undefined in the direct-rotation proposition. Use delta=max({0} union {||P_alpha-Q_alpha|| : alpha in I}), or assume a nonempty family. Taking max with zero preserves the trivial zero-space case.
+
+F6. Time interval convention (editorial clarification).
+State t in [0,T] with T>=0 at the smooth section opening; when T=0 use the empty partition product I. The nontrivial partition theorems otherwise implicitly concern T>0. Endpoint estimates for negative h in the one-step lemma already correctly require both t and t+h in the interval.
+
+OBLIGATION MATRIX
+
+def:gauge_change — passed: types and inverse orientation compatible.
+prop:gauge_covariance — passed: intermediate gauges cancel in displayed rightmost-first order.
+thm:tree_normalization — passed: G_v is inverse transport along root-to-v tree path; non-tree edges become based fundamental holonomies.
+thm:cycle_gluing — passed: both implications, including zero-cycle tree case.
+cor:cycle_number — passed: connected finite graph edge count; b_1 may be zero.
+thm:holonomy_intertwining — passed: tree propagation U_v=B_path U_r A_path^{-1}; every non-tree edge is exactly one fundamental relation; root value gives uniqueness.
+cor:scalar_holonomy_bridge — passed over the common underlying field and linear isomorphisms.
+thm:gauge_classification — conditional on explicit loop multiplication convention F3; simultaneous conjugation and surjectivity of classification check.
+cor:abelian_holonomy_class — passed: tree gauge computes C1/im(d:C0->C1)=A^{b_1}; no higher graph cells.
+cor:projective_transport — passed: proof uses only group operations, so applies directly to PGL without choosing linear lifts.
+ex:square_loop — passed.
+lem:packet_commutator — passed for self-adjoint projections; domain clarification F1.
+thm:kato_transport — incomplete proof step F2; theorem valid for stated bounded C1 setting with intended self-adjoint domain.
+cor:one_moving_subspace — passed algebraic reduction K=P'P-P'(I-P)=2P'P-P'=[P',P]; zero-member convention F5.
+def:packet_direct_rotation — passed: positive invertible S*S defines inverse square root.
+prop:packet_direct_rotation — passed for self-adjoint projections with delta<1; both S*S and SS* lower bounds are essential and supplied; empty-family convention F5.
+lem:one_step_direct_rotation — passed: compactness and finite packet set give uniform Taylor constants; skew-adjoint linear term cancels; positive spectral calculus bounds inverse square root; signed h and interval endpoints correct.
+thm:direct_rotation_convergence — passed: K is C1, local errors O(h_j^2), product order correct, unitarity prevents amplification, sum h_j^2<=T mesh.
+thm:sampled_transport_convergence — passed: Lipschitz K and skew-adjointness give local O(h_j^2); frozen exponentials are unitary; same ordered telescoping estimate.
+cor:continuous_holonomy — endpoint preservation passed; cited convergence implication incomplete at standing C1 regularity, F4.
+ex:rotating_line — passed: K is the constant rotation generator and the displayed U solves its ODE with U(0)=I.
+fact:projected_curvature — passed: P(dP)P=0; ds=(dP)s+P ds; form degree and composition order yield P(dP wedge dP)P on the range bundle.
+
+SOURCES AND COMPUTATION
+
+This was a raw mathematical review, not a numerical or Lean verification. Source and its standing conventions were read; no existing strengthening audit or prior verdict was used as evidence. No source modifications or Lean builds occurred. No external citation was needed for an unresolved source-dependent statement: graph normalization/classification and curvature were checked from the supplied proofs; the small bounded-ODE and positive-functional-calculus steps were identified explicitly. Existing bibliography accuracy and attribution are outside this bounded review. A failed attempt to read the skill checklist through the skill callback returned 'skill environment is not available for this callback'; the same checklist was then read successfully from its advertised local filesystem path. This did not affect source access or the mathematical review.
+
+STRONGEST SAFE STATEMENT
+
+After explicitly specifying self-adjoint projections and multiplication conventions, supplying bounded-ODE invertibility, and fixing the endpoint-corollary dependency and zero-object conventions, all 22 reviewed blocks support the claimed finite graph classification and smooth packet transport results. In particular the direct-rotation and sampled-exponential O(mesh) rates are justified under their respective stated C2 and Lipschitz assumptions. No broader Paper III theorem, empirical scope, novelty claim, or Lean coverage is certified by this report.

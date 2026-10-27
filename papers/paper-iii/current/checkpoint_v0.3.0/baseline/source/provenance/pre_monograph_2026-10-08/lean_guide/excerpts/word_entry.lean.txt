@@ -1,0 +1,18 @@
+theorem wordOp_apply_eq_if_connects
+    [Fintype V] [DecidableEq V] [Semiring R]
+    (word : List E) (source target : V) :
+    wordOp G S word target source =
+      if Connects G source target word then reverseCoefficient G S word else 0 := by
+  cases word with
+  | nil =>
+      by_cases h : source = target
+      · subst target
+        simp [wordOp, Connects, reverseCoefficient]
+      · have hreverse : target ≠ source := fun h' => h h'.symm
+        simp [wordOp, Connects, h, hreverse]
+  | cons first rest =>
+      by_cases hwalk : Composable G (first :: rest)
+      · rw [wordOp_eq_packetMatrix_of_composable G S first rest hwalk]
+        simp [packetMatrix, Connects, hwalk, and_comm]
+      · rw [wordOp_eq_zero_of_not_composable G S (first :: rest) hwalk]
+        simp [Connects, hwalk]

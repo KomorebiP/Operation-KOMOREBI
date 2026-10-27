@@ -1,0 +1,46 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+For analysis equivalences Φ𝑎∶𝑋→𝐴and Φ𝑏∶𝑋→𝐵, the transport is Φ𝑏Φ−1
+𝑎. Both conven-
+tions express the same synthesize-then-analyze operation. Confusing the type of the supplied
+equivalence produces an apparent inverse error.
+An arbitrary function 𝑓∶𝑋→𝑌has coordinate representative
+𝑓𝑎,𝑟= Φ𝑟𝑓Φ−1
+𝑎.
+The type is an ordinary function Source →Target. It need not be linear, invertible, continuous, or
+differentiable. Composition is preserved exactly:
+Source: KomorebiPaperIII/CoordinateNaturality.lean.
+theorem exactCoordinateMap_comp
+{X : Type u} {Y : Type v} {Z : Type w}
+{CX : Type x} {CY : Type y} {CZ : Type z}
+(xCoordinate : X ≃CX) (yCoordinate : Y ≃CY)
+(zCoordinate : Z ≃CZ) (first : X →Y) (second : Y →Z) :
+exactCoordinateMap xCoordinate zCoordinate (second ∘first) =
+exactCoordinateMap yCoordinate zCoordinate second ∘
+exactCoordinateMap xCoordinate yCoordinate first := by
+funext value
+simp [exactCoordinateMap]
+The middle coordinate analysis and synthesis cancel. The source proves equality of functions with
+funext, then simplifies at one value. No approximation is involved.
+3.6 The naturality square is a typed equality
+Source: KomorebiPaperIII/CoordinateNaturality.lean.
+theorem exactCoordinateMap_naturality
+{X : Type u} {Y : Type v}
+{XA : Type w} {XB : Type x} {YR : Type y} {YS : Type z}
+(sourceA : X ≃XA) (sourceB : X ≃XB)
+(targetR : Y ≃YR) (targetS : Y ≃YS) (map : X →Y) :
+exactCoordinateTransport targetR targetS ∘
+exactCoordinateMap sourceA targetR map =
+exactCoordinateMap sourceB targetS map ∘
+exactCoordinateTransport sourceA sourceB := by
+funext value
+simp [exactCoordinateTransport, exactCoordinateMap, Function.comp_def]
+On the left, represent the map in the first coordinate systems and then change target coordinates.
+On the right, change source coordinates first and then use the second representative. Both sides
+map XA to YS. Expanding them gives the same function.
+This exact set-level statement already applies to a nonlinear function. It does not imply differen-
+tiability, a chain rule for jets, or convergence of a formal series. Those stronger properties require
+additional structures and additional theorems. The formal contribution here is exact representa-
+tion and naturality for arbitrary functions under exact equivalences.
+14

@@ -1,0 +1,6 @@
+structure ReversibleConnection
+    (R : Type u) (X : Type v) (F : X → Type w)
+    [CommRing R] [∀ a, AddCommGroup (F a)] [∀ a, Module R (F a)] where
+  transport : ∀ a b, F a ≃ₗ[R] F b
+  transport_self : ∀ a, transport a a = LinearEquiv.refl R (F a)
+  transport_reverse : ∀ a b, transport b a = (transport a b).symm

@@ -1,0 +1,43 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Source: KomorebiPaperIII/Transport.lean.
+theorem twisted_triangleHolonomy_ne_refl :
+twistedThreePointConnection.triangleHolonomy
+(0 : Fin 3) (1 : Fin 3) (2 : Fin 3) ≠LinearEquiv.refl ℚℚ:= by
+intro h
+have happly := congrArg (fun e : ℚ≃ₗ[ℚ] ℚ↦e (1 : ℚ)) h
+norm_num [Connection.triangleHolonomy, twistedThreePointConnection,
+doubleEquiv] at happly
+This is an example for the minimal connection interface. The reverse edge 1 →0 is the identity, so
+it is not the inverse of doubling. The example must not be advertised as an instance of the stronger
+reversible interface.
+4.3 Reversible connections use dependent fibers
+The second interface assigns a module 𝐹(𝑎) to each vertex. Pair transport is a linear equivalence
+between the actual endpoint modules, and reverse transport is required to be its inverse.
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+structure ReversibleConnection
+(R : Type u) (X : Type v) (F : X →Type w)
+[CommRing R] [∀a, AddCommGroup (F a)] [∀a, Module R (F a)] where
+transport : ∀a b, F a ≃ₗ[R] F b
+transport_self : ∀a, transport a a = LinearEquiv.refl R (F a)
+transport_reverse : ∀a b, transport b a = (transport a b).symm
+The hypotheses include a commutative ring, additive commutative groups on all fibers, and mod-
+ule structures. These permit subtraction of parallel linear maps. The cocycle law is still not a
+structural field. Thus reversible connections may have nontrivial triangle holonomy.
+The additive defect has a source and target visible in its type:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+def cocycleDefect (a b c : X) : F a →ₗ[R] F c :=
+(C.transport b c).toLinearMap.comp (C.transport a b).toLinearMap -
+(C.transport a c).toLinearMap
+Write
+Δ𝑎,𝑏,𝑐= Γ𝑏,𝑐Γ𝑎,𝑏−Γ𝑎,𝑐
+∶𝐹(𝑎) ⟶𝐹(𝑐).
+The triangle holonomy is
+𝐻𝑎,𝑏,𝑐= Γ𝑐,𝑎Γ𝑏,𝑐Γ𝑎,𝑏
+∶𝐹(𝑎) ⟶𝐹(𝑎),
+and the triangle obstruction is 𝑂𝑎,𝑏,𝑐= 𝐻𝑎,𝑏,𝑐−𝐼. Unlike the minimal multiplicative defect, this Δ
+is a linear map that need not be invertible. Both APIs use the short name cocycleDefect, but they
+live in different namespaces and have different types.
+4.4 The defect-holonomy identity
+16
