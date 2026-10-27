@@ -1,0 +1,1 @@
+Riemann visual guide in preparation. Twenty four planned spreads. New figures will have a recorded computation contract and finite checks. Recovered xi values are used as audited inputs, not freshly evaluated zeros. All shifted zeros and rate curves are explicitly diagnostic models.

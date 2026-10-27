@@ -1,0 +1,77 @@
+# Komorebi Collatz All-Bounded-Deficit Checkpoint v0.6.0
+
+**Status: Lean-checked reduction. Collatz is not proved or disproved.**
+
+This checkpoint closes the entire **eventually bounded deficit** sub-branch of the permanent no-cross accelerated Collatz regime.
+
+## Main setup
+
+For a positive odd seed `n`, let `A` be the actual accelerated odd Collatz map
+
+`A(n) = (3*n+1) / 2^v2(3*n+1)`
+
+implemented through the checked `oddPart` recursion in `CollatzBlocks.lean`. Let `a_r` be the exact extracted dyadic exponent and
+
+`S_r = a_0 + ... + a_{r-1}`.
+
+The permanent no-cross hypothesis is
+
+`2^S_r <= 3^r` for every `r`.
+
+## New checked conclusion
+
+The theorem
+
+`CollatzAllBoundedDeficit.actual_no_cross_forces_unbounded_deficit`
+
+proves that under permanent no-crossing, for every finite `D` and every tail index `N`, there exists `r >= N` such that
+
+`2^(D+1) * 2^S_r <= 3^r`.
+
+Equivalently, if `H(r)` is the first exponent with `3^r < 2^H(r)`, then the no-cross deficit
+
+`d_r = H(r) - 1 - S_r`
+
+is unbounded on every tail. Thus **no permanently non-crossing positive odd accelerated orbit can eventually remain within any fixed finite deficit strip**.
+
+This strictly strengthens the v0.5.0 theorem, which excluded only eventual deficit `d_r <= 2`.
+
+## Main new ingredients
+
+1. **Packet Chernoff weight.** For a shortcut parity packet `p`, define
+
+   `W(p) = 3^(oddCount p) * 2^(depth p - oddCount p)`.
+
+   Even refinement multiplies this weight by 2 and odd refinement by 3, so the full depth-`J` level has total weight exactly `5^J`.
+
+2. **High-odd packet bound.** For depth `5m` packets with at least `3m` odd steps,
+
+   `H_m * 108^m <= 3125^m`.
+
+3. **Exact accelerated-to-shortcut bridge.** A block of `k` accelerated odd steps is proved to realize a shortcut packet with exactly `k` odd shortcut steps and shortcut depth equal to the accumulated extracted dyadic valuation.
+
+4. **Explicit scale selection.** For every finite deficit bound `D`, an explicit `m(D)` makes both the accelerated block fit under shortcut depth `5m` and the high-odd packet family sparse relative to modulus `2^(5m)`.
+
+5. **Finite cylinder packing contradiction.** Eventual bounded deficit supplies a linear real-size envelope and tail injectivity. Exact packet addresses place every sufficiently late state into one of too few depth-`5m` dyadic cylinders. A finite Fintype cardinality contradiction finishes the argument.
+
+## Important proof boundary
+
+This release does **not** eliminate the remaining no-cross branch with unbounded deficit. It also does **not** prove the global first-cross/address-gap theorem. Those are the two major remaining mathematical branches in the current reduction architecture.
+
+No claim of literature novelty or priority is made by this checkpoint.
+
+## Verification
+
+Pinned runtime: Lean 4.34.0-rc2 with Mathlib revision `aeb72f1e9981b6d35b426b16dca7759be3e7ba06`.
+
+Each new module compiled with warnings treated as errors. Source audit reports zero `sorry`, zero `admit`, and zero custom `axiom`/`constant` declarations. Representative `#print axioms` output contains only `propext`, `Classical.choice`, and `Quot.sound`.
+
+The new source modules are:
+
+- `CollatzPacketChernoff.lean`
+- `CollatzAcceleratedPacket.lean`
+- `CollatzAllDPacketPrep.lean`
+- `CollatzAllBoundedDeficit.lean`
+- `CollatzAllBoundedDeficitBridge.lean`
+
+Baseline sources needed to reproduce the import chain are included in the archive.

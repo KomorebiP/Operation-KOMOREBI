@@ -1,0 +1,971 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools,bm,aliascnt,enumitem,graphicx,booktabs,array}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2800
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else\edef\@subjects{Primary:~\@primarysubjects}\fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty\edef\@subjects{Secondary:~\@secondarysubjects}\else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}\fi
+  \fi
+  \ifpdf\hypersetup{pdfsubject=\@subjects}\fi
+  \if@aom@oldkeywords\else\@footnotetext{AMS Classification:~\@subjects.}\fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}\newtheorem{proposition}[proposition]{Proposition}\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}\newtheorem{lemma}[lemma]{Lemma}\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}\newtheorem{corollary}[corollary]{Corollary}\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}\newtheorem{definition}[definition]{Definition}\aliascntresetthe{definition}
+\newaliascnt{standardfact}{theorem}\newtheorem{standardfact}[standardfact]{Standard Fact}\aliascntresetthe{standardfact}
+\newaliascnt{problem}{theorem}\newtheorem{problem}[problem]{Problem}\aliascntresetthe{problem}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}\newtheorem{remark}[remark]{Remark}\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{problem}{problem}{problems}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\calZ}{\mathcal Z}
+\newcommand{\ThetaK}{\Theta}
+\newcommand{\deltaZ}{\delta_\zeta}
+\newcommand{\LambdaM}{\Lambda}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\refcode}[1]{\textnormal{[#1]}}
+\graphicspath{{figures/}}
+
+\title[Prime packet heat kernels]{Prime Packet Heat Kernels and a Two Point Criterion for the Riemann Hypothesis}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{11M26}
+\subject{secondary}{msc2020}{11M06}
+\subject{secondary}{msc2020}{42A82}
+\subject{secondary}{msc2020}{44A10}
+\keyword{Riemann hypothesis}
+\keyword{Weil criterion}
+\keyword{heat kernel}
+\keyword{prime packet}
+\keyword{positive definite function}
+\copyrightnote{}
+\doinumber{}
+
+\hypersetup{
+ pdftitle={Prime Packet Heat Kernels and a Two Point Criterion for the Riemann Hypothesis},
+ pdfauthor={Komorebi P.},
+ pdfsubject={A Gaussian heat kernel over zeta zeros, an exact prime packet formula, and equivalent boundedness and two point criteria for RH}
+}
+
+\begin{document}
+\begin{abstract}
+Let \(\rho\) range over the nontrivial zeros of the Riemann zeta function and put \(z_\rho=\rho-\tfrac12\). For one fixed heat time \(t>0\), define
+\[
+ \Theta_t(u)=\sum_\rho \exp\bigl(tz_\rho^2+uz_\rho\bigr).
+\]
+We prove that the Riemann hypothesis is equivalent to boundedness of \(\Theta_t\) on the real line. It is also equivalent to positive definiteness of this one translated Gaussian family and, more sharply, to the two point inequalities
+\[
+ \Theta_t(0)^2-\Theta_t(u)^2\geq0
+ \qquad(u\in\mathbb R).
+\]
+The exponential growth rate of the running maximum of \(\Theta_t\) is exactly the distance from the rightmost zeta zero to the critical line. A second criterion states that the on diagonal heat trace \(\Theta_t(0)\), viewed as a function of heat time, is completely monotone exactly under RH. The Guinand and Weil explicit formula gives an unconditional prime side expression for \(\Theta_t(u)\) as the discrepancy between a log Gaussian von Mangoldt packet and explicit pole and archimedean terms. Thus RH becomes one uniform localized prime packet inequality. Numerical tests match the prime and zero formulas and show immediate determinant failure after inserting a synthetic off line zero. The remaining task is the uniform prime packet bound itself.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+The explicit formula places prime powers and nontrivial zeta zeros on opposite sides of one Fourier identity. Weil's criterion turns that identity into a positivity criterion for the Riemann hypothesis \refcode{H1}, \refcode{H2}, \refcode{H3}. The criterion is exact but it is quantified over a large test function space.
+
+The purpose of this article is to reduce the test family to one Gaussian translation orbit. Let
+\[
+ z_\rho=\rho-\frac12
+\]
+for every nontrivial zero \(\rho\), counted with multiplicity. For a heat time \(t>0\), define
+\[
+ \Theta_t(u)
+ =
+ \sum_\rho
+ e^{tz_\rho^2+uz_\rho}.
+\]
+The Gaussian factor gives absolute convergence for every complex translation \(u\). On RH, \(z_\rho=i\gamma_\rho\), and therefore
+\[
+ \Theta_t(u)
+ =
+ \sum_\rho
+ e^{-t\gamma_\rho^2}e^{iu\gamma_\rho}.
+\]
+This is the Fourier transform of a positive finite measure. It is positive definite and bounded by its value at the origin.
+
+The converse is stronger than a density argument. If \(\Theta_t\) is bounded on one real half line, its Laplace transform is analytic in the right half plane. The same transform is also a meromorphic partial fraction expansion with poles at the centered zeros. Any zero to the right of the critical line would create a pole in the analytic half plane. Thus boundedness for one heat time forces RH.
+
+The main criterion is consequently
+\[
+ \boxed{
+ \mathrm{RH}
+ \iff
+ \abs{\Theta_t(u)}\leq\Theta_t(0)
+ \quad\text{for every }u\in\RR,
+ }
+\]
+for any one fixed \(t>0\). Since the kernel is real and even, this is equivalent to nonnegativity of one family of two by two determinants.
+
+The Guinand and Weil explicit formula turns the same kernel into
+\[
+ \Theta_t(u)
+ =
+ 2e^{t/4}\cosh\frac u2
+ +\mathfrak A_t(u)
+ -\mathfrak P_t(u),
+\]
+where \(\mathfrak A_t\) is explicit and archimedean, while \(\mathfrak P_t\) is a log Gaussian von Mangoldt packet. This produces a criterion containing primes only.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.98\textwidth]{01_architecture.pdf}
+\caption{One Gaussian translation family links the prime explicit formula to a two point positivity test.}
+\label{fig:architecture}
+\end{figure}
+
+The article also proves a heat front growth law, a complete monotonicity criterion, and a single time Stieltjes moment criterion expressed by two Hankel determinant hierarchies. The numerical section verifies the exact prime and zero formulas and inserts a synthetic off line zero to test the falsification mechanism. The final section records why the present prime packet decompositions do not yet supply the missing uniform bound.
+
+The adjacent literature is classical. Guinand and Weil established the explicit formula and positivity framework \refcode{H1}, \refcode{H2}. Burnol gives a modern explicit formula discussion and probabilistic interpretation \refcode{H3}. Bombieri surveys RH and Weil positivity \refcode{H4}. Connes studies the zeta heat trace under RH \refcode{H5}. Bernstein and Bochner supply the transform theorems used below \refcode{H6}, \refcode{H7}.
+
+\section{The centered zero heat kernel}\label{sec:kernel}
+
+Let \(\calZ\) denote the multiset of nontrivial zeta zeros. Write
+\[
+ \rho=\beta+i\gamma,
+ \qquad
+ z_\rho=\rho-\frac12.
+\]
+The functional equation and conjugation give the symmetries
+\[
+ z\longmapsto-z,
+ \qquad
+ z\longmapsto\overline z.
+\]
+
+\begin{definition}[Zero heat kernel]\label{def:heat_kernel}
+For \(t>0\) and \(u\in\CC\), define
+\[
+ \boxed{
+ \Theta_t(u)
+ =
+ \sum_{\rho\in\calZ}
+ \exp\bigl(tz_\rho^2+uz_\rho\bigr).
+ }
+\]
+Zeros are counted with multiplicity.
+\end{definition}
+
+\begin{proposition}[Convergence, symmetry, and heat flow]\label{prop:kernel_basic}
+For every \(t>0\), the series in \cref{def:heat_kernel} converges normally on compact subsets of the \(u\) plane. It defines an entire function satisfying
+\[
+ \boxed{
+ \partial_t\Theta_t(u)
+ =
+ \partial_u^2\Theta_t(u).
+ }
+\]
+For real \(u\), the function is real and even.
+\end{proposition}
+
+\begin{proof}
+For real \(u\),
+\[
+ \left|e^{tz_\rho^2+uz_\rho}\right|
+ =
+ \exp\left(
+ t\left((\beta-1/2)^2-\gamma^2\right)
+ +u(\beta-1/2)
+ \right).
+\]
+Since \(0<\beta<1\), this is at most
+\[
+ e^{t/4+|u|/2}e^{-t\gamma^2}.
+\]
+The zero counting estimate \(N(T)=O(T\log T)\) makes the Gaussian majorant summable \refcode{H9}. A complex translation contributes at most an additional exponential linear in \(|\gamma|\), still dominated by the Gaussian on compact sets. Termwise differentiation is therefore valid. The heat equation follows from
+\[
+ \partial_t e^{tz^2+uz}
+ =z^2e^{tz^2+uz}
+ =\partial_u^2e^{tz^2+uz}.
+\]
+The zero symmetries give reality and evenness.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{02_zero_geometry.pdf}
+\caption{Critical zeros give oscillatory heat modes. A hypothetical off line quartet adds exponentially growing and decaying modes in the translation variable.}
+\label{fig:zero_geometry}
+\end{figure}
+
+\section{The heat front theorem}\label{sec:front}
+
+Define the centered rightmost zero front
+\[
+ \boxed{
+ \delta_\zeta
+ =
+ \sup_{\rho\in\calZ}
+ \left(\Re\rho-\frac12\right).
+ }
+\]
+The functional equation gives \(0\leq\delta_\zeta\leq1/2\).
+
+For \(U\geq0\), put
+\[
+ M_t(U)
+ =
+ \max\left\{
+ 1,
+ \sup_{0\leq u\leq U}\abs{\Theta_t(u)}
+ \right\}.
+\]
+
+\begin{theorem}[Heat front growth law]\label{thm:heat_front}
+For every fixed \(t>0\),
+\[
+ \boxed{
+ \limsup_{U\to\infty}
+ \frac{\log M_t(U)}U
+ =
+ \delta_\zeta.
+ }
+\]
+Equivalently, \(\delta_\zeta\) is the infimum of the numbers \(a\geq0\) for which
+\[
+ \Theta_t(u)=O_{t,a}(e^{au})
+ \qquad(u\to+\infty).
+\]
+\end{theorem}
+
+\begin{proof}
+The absolute convergence estimate gives
+\[
+ \abs{\Theta_t(u)}
+ \leq
+ e^{\delta_\zeta u}
+ \sum_\rho
+ \exp\left(
+ t\left((\beta-1/2)^2-\gamma^2\right)
+ \right)
+\]
+for \(u\geq0\). This proves the upper bound.
+
+Suppose the lower bound fails. Then there is a real number \(a<\delta_\zeta\) such that
+\[
+ \Theta_t(u)=O(e^{au}).
+\]
+The Laplace transform
+\[
+ F_t(s)
+ =
+ \int_0^\infty
+ \Theta_t(u)e^{-su}\,du
+\]
+is analytic for \(\Re s>a\). For \(\Re s>1/2\), absolute convergence permits termwise integration and gives
+\[
+ F_t(s)
+ =
+ \sum_\rho
+ \frac{e^{tz_\rho^2}}{s-z_\rho}.
+\]
+The series on the right converges normally away from its poles and defines a meromorphic function on \(\CC\), with nonzero residue at every centered zero. Analytic continuation identifies the two functions on the half plane \(\Re s>a\) away from those poles. By the definition of \(\delta_\zeta\), a zero exists with \(\Re z_\rho>a\). The right side then has a nonremovable pole inside a domain where the Laplace transform is analytic, a contradiction.
+\end{proof}
+
+\begin{corollary}[Boundedness criterion]\label{cor:boundedness}
+For any one fixed \(t>0\),
+\[
+ \boxed{
+ \mathrm{RH}
+ \iff
+ \Theta_t\text{ is bounded on }\RR.
+ }
+\]
+It is enough to assume boundedness on \([0,\infty)\).
+\end{corollary}
+
+\begin{proof}
+The heat front growth exponent is zero exactly when \(\delta_\zeta=0\). The functional equation then forces every zero onto the critical line.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{07_heat_front_growth.pdf}
+\caption{A hypothetical displacement \(\delta\) from the critical line becomes the exponential translation growth rate of the heat kernel.}
+\label{fig:heat_front_growth}
+\end{figure}
+
+\section{A Gaussian two point Weil criterion}\label{sec:two_point}
+
+A continuous function \(K\) on \(\RR\) is positive definite when
+\[
+ \sum_{j,k}c_j\overline{c_k}K(u_j-u_k)\geq0
+\]
+for every finite choice of points and coefficients.
+
+\begin{theorem}[One Gaussian positive definite criterion]\label{thm:positive_definite}
+Fix any \(t>0\). The following statements are equivalent.
+
+\begin{enumerate}
+\item The Riemann hypothesis holds.
+\item The function \(u\mapsto\Theta_t(u)\) is positive definite on \(\RR\).
+\item
+\[
+ \boxed{
+ \abs{\Theta_t(u)}\leq\Theta_t(0)
+ }
+\]
+for every real \(u\).
+\item The function \(\Theta_t\) is bounded on \(\RR\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Under RH, write \(z_\rho=i\gamma_\rho\). Then
+\[
+ \Theta_t(u)
+ =
+ \sum_\rho
+ e^{-t\gamma_\rho^2}e^{iu\gamma_\rho},
+\]
+which is the Fourier transform of a positive finite discrete measure. Bochner's theorem gives positive definiteness. Every positive definite function satisfies the two point bound in the third statement. That bound gives boundedness. The converse is \cref{cor:boundedness}.
+\end{proof}
+
+\begin{corollary}[Two point determinant criterion]\label{cor:two_point_determinant}
+Fix any \(t>0\). Then
+\[
+ \boxed{
+ \mathrm{RH}
+ \iff
+ \Theta_t(0)^2-\Theta_t(u)^2\geq0
+ \quad\text{for every }u\in\RR.
+ }
+\]
+Thus a single negative two point determinant disproves RH.
+\end{corollary}
+
+\begin{proof}
+Under RH, use \cref{thm:positive_definite}. Conversely, the displayed inequality bounds \(\Theta_t\) by \(\abs{\Theta_t(0)}\), so \cref{cor:boundedness} applies.
+\end{proof}
+
+\begin{corollary}[Countable hierarchy]\label{cor:countable_hierarchy}
+It is enough to verify the determinant inequality for every rational \(u\).
+\end{corollary}
+
+\begin{proof}
+The kernel is continuous and the rationals are dense.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.78\textwidth]{11_two_point_geometry.pdf}
+\caption{The full Riemann hypothesis is equivalent to one scalar determinant inequality over all translations.}
+\label{fig:two_point_geometry}
+\end{figure}
+
+\section{Complete monotonicity of the diagonal heat trace}\label{sec:monotonicity}
+
+Define
+\[
+ H(t)=\Theta_t(0)
+ =
+ \sum_\rho e^{tz_\rho^2}.
+\]
+
+\begin{theorem}[Complete monotonicity criterion]\label{thm:complete_monotonicity}
+The Riemann hypothesis is equivalent to complete monotonicity of \(H\) on \((0,\infty)\). Equivalently,
+\[
+ \boxed{
+ (-1)^kH^{(k)}(t)\geq0
+ }
+\]
+for every integer \(k\geq0\) and every \(t>0\).
+\end{theorem}
+
+\begin{proof}
+Under RH,
+\[
+ (-1)^kH^{(k)}(t)
+ =
+ \sum_\rho
+ \gamma_\rho^{2k}e^{-t\gamma_\rho^2}
+ \geq0.
+\]
+
+Conversely, assume \(H\) is completely monotone. Bernstein's theorem gives a positive measure \(\mu\) on \([0,\infty)\) such that
+\[
+ H(t)=\int_0^\infty e^{-tx}\,d\mu(x).
+\]
+For sufficiently large \(\Re w\), Laplace transformation in \(t\) gives two representations:
+\[
+ \int_0^\infty e^{-wt}H(t)\,dt
+ =
+ \int_0^\infty\frac{d\mu(x)}{w+x}
+ =
+ \sum_\rho\frac1{w-z_\rho^2}.
+\]
+The middle expression is a Stieltjes transform and is analytic outside the nonpositive real axis. The last expression is meromorphic, and every distinct value \(z_\rho^2\) is a pole with nonzero total residue. Therefore every \(z_\rho^2\) lies on the negative real axis. Hence every \(z_\rho\) is purely imaginary, which is RH.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{09_complete_monotonicity.pdf}
+\caption{Under critical line zeros, every signed heat derivative is a positive Gaussian moment.}
+\label{fig:complete_monotonicity}
+\end{figure}
+
+\section{A single time Stieltjes moment criterion}\label{sec:stieltjes}
+
+Fix one heat time \(t_0>0\), and define the signed heat moments
+\[
+ \boxed{
+ m_k(t_0)
+ =
+ (-1)^kH^{(k)}(t_0)
+ =
+ \sum_{\rho\in\calZ}
+ e^{t_0z_\rho^2}(-z_\rho^2)^k.
+ }
+\]
+For \(N\geq0\), form the two Hankel matrices
+\[
+ \mathsf H_N^{(0)}(t_0)
+ =
+ \bigl(m_{j+k}(t_0)\bigr)_{0\leq j,k\leq N}
+\]
+and
+\[
+ \mathsf H_N^{(1)}(t_0)
+ =
+ \bigl(m_{j+k+1}(t_0)\bigr)_{0\leq j,k\leq N}.
+\]
+
+\begin{standardfact}[Stieltjes moment criterion]\label{fact:stieltjes_moment}
+A real sequence \((m_k)_{k\geq0}\) is the moment sequence of a positive measure on \([0,\infty)\) if and only if every finite Hankel matrix
+\[
+ (m_{j+k})_{j,k}
+ \quad\text{and}\quad
+ (m_{j+k+1})_{j,k}
+\]
+is positive semidefinite. We use this classical form of the Stieltjes moment theorem \refcode{H10}.
+\end{standardfact}
+
+\begin{theorem}[Single time Hankel criterion]\label{thm:single_time_hankel}
+Fix any one \(t_0>0\). The Riemann hypothesis is equivalent to
+\[
+ \boxed{
+ \mathsf H_N^{(0)}(t_0)\succeq0
+ \quad\text{and}\quad
+ \mathsf H_N^{(1)}(t_0)\succeq0
+ }
+\]
+for every \(N\geq0\).
+\end{theorem}
+
+\begin{proof}
+Under RH,
+\[
+ m_k(t_0)
+ =
+ \sum_\rho
+ e^{-t_0\gamma_\rho^2}\gamma_\rho^{2k}.
+\]
+Thus \((m_k(t_0))\) is the moment sequence of the positive discrete measure
+\[
+ \sum_\rho
+ e^{-t_0\gamma_\rho^2}
+ \delta_{\gamma_\rho^2}
+\]
+on \([0,\infty)\), and both Hankel families are positive semidefinite.
+
+Conversely, assume both families are positive semidefinite. By the Stieltjes moment criterion there is a positive measure \(\mu\) on \([0,\infty)\) such that
+\[
+ m_k(t_0)=\int_0^\infty x^k\,d\mu(x).
+\]
+The Taylor expansion of \(H\) around \(t_0\) gives, for \(0\leq s<t_0\),
+\[
+ H(t_0-s)
+ =
+ \sum_{k\geq0}\frac{m_k(t_0)}{k!}s^k.
+\]
+Every term is nonnegative. Monotone convergence therefore gives
+\[
+ H(t_0-s)
+ =
+ \int_0^\infty e^{sx}\,d\mu(x).
+\]
+Define
+\[
+ d\nu(x)=e^{t_0x}\,d\mu(x).
+\]
+Then
+\[
+ H(r)=\int_0^\infty e^{-rx}\,d\nu(x)
+\]
+for \(0<r\leq t_0\). Both sides are holomorphic on the half plane \(\Re r>0\). The integral is finite there because positive exponential moments of \(\mu\) exist up to every exponent below \(t_0\), while for \(\Re r\geq t_0\) the integrand is bounded by one. The identity theorem extends the equality to all \(r>0\). Hence \(H\) is completely monotone. Apply \cref{thm:complete_monotonicity}.
+\end{proof}
+
+\begin{corollary}[Polynomial Gaussian Weil basis]\label{cor:polynomial_gaussian_basis}
+Fix \(t_0>0\). RH is equivalent to the two inequalities
+\[
+ \boxed{
+ \sum_\rho
+ e^{t_0z_\rho^2}
+ P(-z_\rho^2)^2
+ \geq0
+ }
+\]
+and
+\[
+ \boxed{
+ \sum_\rho
+ e^{t_0z_\rho^2}
+ (-z_\rho^2)
+ P(-z_\rho^2)^2
+ \geq0
+ }
+\]
+for every real polynomial \(P\).
+\end{corollary}
+
+\begin{proof}
+Write \(P(x)=\sum_{j=0}^Nc_jx^j\). The two displayed quantities are the quadratic forms of \(\mathsf H_N^{(0)}(t_0)\) and \(\mathsf H_N^{(1)}(t_0)\) at the vector \((c_0,\ldots,c_N)\). Apply \cref{thm:single_time_hankel}.
+\end{proof}
+
+\begin{corollary}[Differential prime packet hierarchy]\label{cor:differential_hierarchy}
+Let \(D=-\partial_t\). For a real polynomial \(P\), put
+\[
+ \mathcal Q_{t,P}^{(0)}
+ =
+ P(D)^2H(t)
+\]
+and
+\[
+ \mathcal Q_{t,P}^{(1)}
+ =
+ D P(D)^2H(t).
+\]
+For one fixed \(t=t_0\), RH is equivalent to
+\[
+ \boxed{
+ \mathcal Q_{t_0,P}^{(0)}\geq0,
+ \qquad
+ \mathcal Q_{t_0,P}^{(1)}\geq0
+ }
+\]
+for every real polynomial \(P\). Through \cref{thm:prime_heat_formula} at \(u=0\), every member of this hierarchy has an explicit prime power formula obtained by differentiating one log Gaussian packet.
+\end{corollary}
+
+\begin{proof}
+The differential expressions expand into the two Hankel quadratic forms. The prime side statement follows by differentiating the normally convergent explicit formula.
+\end{proof}
+
+\begin{corollary}[Finite determinant falsification]\label{cor:hankel_falsification}
+One negative principal minor of either Hankel family disproves RH. Positivity of every finite principal minor of both families proves RH.
+\end{corollary}
+
+\begin{proof}
+This is the finite dimensional positive semidefiniteness criterion applied to \cref{thm:single_time_hankel}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.86\textwidth]{13_hankel_hierarchy.pdf}
+\caption{At one heat time, two interlaced Hankel families encode the Stieltjes moment condition. Any negative finite minor is a finite RH falsification certificate.}
+\label{fig:hankel_hierarchy}
+\end{figure}
+
+\section{The exact prime packet formula}\label{sec:explicit_formula}
+
+Let
+\[
+ \Psi_\infty(v)
+ =
+ -\log\pi
+ +
+ \Re\frac{\Gamma'}{\Gamma}
+ \left(\frac14+\frac{iv}{2}\right).
+\]
+For \(t>0\) and real \(u\), define
+\[
+ \mathfrak A_t(u)
+ =
+ \frac1{2\pi}
+ \int_{-\infty}^{\infty}
+ e^{-tv^2}\cos(uv)\Psi_\infty(v)\,dv
+\]
+and
+\[
+ \begin{aligned}
+ \mathfrak P_t(u)
+ ={}&
+ \frac1{2\sqrt{\pi t}}
+ \sum_{n\geq2}
+ \frac{\Lambda(n)}{\sqrt n}
+ \bigg[
+ e^{-(u-\log n)^2/(4t)}\\
+ &\hspace{42mm}
+ +e^{-(u+\log n)^2/(4t)}
+ \bigg].
+ \end{aligned}
+\]
+The prime series converges absolutely.
+
+\begin{standardfact}[Guinand and Weil explicit formula]\label{fact:guinand_weil}
+For a test function analytic in the required strip and rapidly decreasing on horizontal lines, the sum over nontrivial zeros equals the pole terms, the archimedean transform, and the von Mangoldt transform. We use the normalization in \refcode{H1}, \refcode{H2}, and \refcode{H8}.
+\end{standardfact}
+
+\begin{theorem}[Prime packet heat formula]\label{thm:prime_heat_formula}
+For every \(t>0\) and every real \(u\),
+\[
+ \boxed{
+ \Theta_t(u)
+ =
+ 2e^{t/4}\cosh\frac u2
+ +\mathfrak A_t(u)
+ -\mathfrak P_t(u).
+ }
+\]
+This identity is unconditional.
+\end{theorem}
+
+\begin{proof}
+Apply the Guinand and Weil formula to
+\[
+ h(v)=e^{-tv^2+iuv}.
+\]
+With the Fourier convention
+\[
+ g(x)=\frac1{2\pi}\int_{-\infty}^{\infty}h(v)e^{-ivx}\,dv,
+\]
+one has
+\[
+ g(x)=\frac1{2\sqrt{\pi t}}e^{-(x-u)^2/(4t)}.
+\]
+The values at the two poles are
+\[
+ h(i/2)+h(-i/2)
+ =2e^{t/4}\cosh\frac u2.
+\]
+The finite prime term is \(\mathfrak P_t(u)\), and the real place term is \(\mathfrak A_t(u)\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{03_prime_zero_match.pdf}
+\caption{The zero sum and the exact prime side formula agree numerically across the displayed translation interval.}
+\label{fig:prime_zero_match}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{04_component_cancellation.pdf}
+\caption{The pole and prime packet terms grow on the square root scale and cancel to the zero heat kernel.}
+\label{fig:component_cancellation}
+\end{figure}
+
+\section{A prime only form of RH}\label{sec:prime_criterion}
+
+For \(X>0\), put
+\[
+ \boxed{
+ \begin{aligned}
+ \mathfrak D_t(X)
+ ={}&
+ e^{t/4}\left(X^{1/2}+X^{-1/2}\right)
+ +\mathfrak A_t(\log X)\\
+ &-\mathfrak P_t(\log X).
+ \end{aligned}
+ }
+\]
+By \cref{thm:prime_heat_formula},
+\[
+ \mathfrak D_t(X)=\Theta_t(\log X).
+\]
+
+\begin{theorem}[Localized prime packet criterion]\label{thm:localized_prime_criterion}
+Fix any \(t>0\). The Riemann hypothesis is equivalent to
+\[
+ \boxed{
+ \abs{\mathfrak D_t(X)}
+ \leq
+ \mathfrak D_t(1)
+ \quad\text{for every }X>0.
+ }
+\]
+It is enough to test \(X=e^q\) for rational \(q\).
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:positive_definite,cor:countable_hierarchy} with \(u=\log X\).
+\end{proof}
+
+\begin{corollary}[Prime packet zero front]\label{cor:prime_packet_front}
+For
+\[
+ \mathfrak M_t(Y)
+ =
+ \max\left\{
+ 1,
+ \sup_{1\leq X\leq Y}
+ \abs{\mathfrak D_t(X)}
+ \right\},
+\]
+one has
+\[
+ \boxed{
+ \limsup_{Y\to\infty}
+ \frac{\log\mathfrak M_t(Y)}{\log Y}
+ =
+ \delta_\zeta.
+ }
+\]
+\end{corollary}
+
+\begin{proof}
+Substitute \(U=\log Y\) in \cref{thm:heat_front}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{10_localized_prime_packet.pdf}
+\caption{The von Mangoldt term is a packet localized near one multiplicative prime scale.}
+\label{fig:localized_packet}
+\end{figure}
+
+\section{Toeplitz matrices and finite falsification}\label{sec:toeplitz}
+
+For real points \(u_1,\ldots,u_m\), define the Toeplitz type Gram matrix
+\[
+ G_t(\bm u)
+ =
+ \left(\Theta_t(u_j-u_k)\right)_{j,k=1}^m.
+\]
+
+\begin{corollary}[Finite Gram hierarchy]\label{cor:gram_hierarchy}
+RH is equivalent to positive semidefiniteness of every matrix \(G_t(\bm u)\), for one fixed \(t>0\). It is already equivalent to the order two members of the hierarchy.
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:positive_definite,cor:two_point_determinant}.
+\end{proof}
+
+\begin{remark}[Falsification mechanism]\label{rem:falsification}
+If RH is false, \cref{thm:heat_front} makes \(\Theta_t\) unbounded. Therefore a finite translation \(u\) exists for which the two point determinant is negative. The criterion is genuinely two sided: one finite negative value disproves RH, while a proof of nonnegativity for every translation proves RH.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.76\textwidth]{08_gram_matrix.pdf}
+\caption{Under critical line zeros, translated Gaussian packets form a positive Toeplitz Gram matrix.}
+\label{fig:gram_matrix}
+\end{figure}
+
+\section{Why termwise prime positivity fails}\label{sec:no_go}
+
+The exact formula is a global cancellation identity. It does not split into positive contributions prime by prime.
+
+\begin{proposition}[Indefiniteness of one prime power kernel]\label{prop:prime_indefinite}
+Let \(\ell>0\), and define
+\[
+ K_{t,\ell}(u)
+ =
+ e^{-(u-\ell)^2/(4t)}
+ +e^{-(u+\ell)^2/(4t)}.
+\]
+This translation kernel is not positive definite.
+\end{proposition}
+
+\begin{proof}
+Its Fourier transform is a positive Gaussian factor multiplied by
+\[
+ 2\cos(\ell\xi).
+\]
+The cosine changes sign. Bochner's theorem therefore excludes positive definiteness.
+\end{proof}
+
+\begin{proposition}[Principal mode separation]\label{prop:principal_mode_separation}
+At every finite modulus, the principal packet mode is orthogonal to all nonprincipal Dirichlet character bands. Bounds involving only the nonprincipal bands cannot by linear algebra alone bound the principal prime discrepancy \(\psi(x)-x\).
+\end{proposition}
+
+\begin{proof}
+The Dirichlet characters form an orthogonal basis on the unit residue group. The principal character spans the constant vector. Every nonprincipal character has zero mean. Adding a common scalar to every residue packet changes only the principal coefficient and leaves every nonprincipal coefficient unchanged.
+\end{proof}
+
+\begin{proposition}[No finite Hankel truncation is decisive]\label{prop:no_finite_hankel}
+Fix \(t_0>0\) and an integer \(N\geq1\). Within the class of zero multisets invariant under
+\[
+ z\longmapsto-z,
+ \qquad
+ z\longmapsto\overline z,
+\]
+and satisfying the Gaussian summability used in \cref{prop:kernel_basic}, positivity of both Hankel families through order \(N\) does not force every point onto the imaginary axis.
+\end{proposition}
+
+\begin{proof}
+Start with a finite multiset of more than \(N+1\) distinct imaginary pairs. Its two Hankel matrices through order \(N\) are strictly positive definite because they are moment matrices of a positive measure supported on more than \(N+1\) positive points.
+
+Add one symmetric quartet
+\[
+ \pm(a+i\Gamma),
+ \qquad
+ \pm(a-i\Gamma),
+\]
+with \(a>0\). For every fixed moment index \(k\), the perturbation has size at most a constant times
+\[
+ \Gamma^{2k}e^{-t_0(\Gamma^2-a^2)},
+\]
+which tends to zero as \(\Gamma\to\infty\). Hence every matrix through order \(N\) remains positive definite for sufficiently large \(\Gamma\), while the enlarged multiset contains off line points.
+\end{proof}
+
+\begin{corollary}[Uniformity is essential]\label{cor:uniformity_essential}
+A proof based on the Hankel formulation must control all matrix orders by one uniform argument. Verifying any fixed finite collection, regardless of numerical precision, cannot establish RH without additional zeta specific input.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{prop:no_finite_hankel}.
+\end{proof}
+
+\begin{remark}\label{rem:no_go_meaning}
+The previous packet calculus resolves deterministic sieve geometry, nonprincipal character energy, and conductor interactions. RH lies in the remaining principal mode. A proof must control the global cancellation between the pole term and the localized von Mangoldt packet, or construct an equivalent positive factorization of the completed explicit formula.
+\end{remark}
+
+\section{Numerical diagnostics}\label{sec:numerics}
+
+The accompanying program evaluates \(\Theta_t\) from both sides of \cref{thm:prime_heat_formula}. At
+\[
+ t=0.01,
+ \qquad
+ 0\leq u\leq8,
+\]
+using the first sixty zeta zeros and prime powers through one million, the maximum absolute discrepancy between the two formulas was
+\[
+ \boxed{3.19\times10^{-14}.}
+\]
+
+The value at the origin was
+\[
+ \Theta_{0.01}(0)
+ =0.2993960225075590\ldots.
+\]
+The two point determinant was nonnegative on the numerical grid. Fifty random eight point Gram matrices had minimum eigenvalue at least
+\[
+ 4.40\times10^{-7}.
+\]
+
+A falsification control replaced the first critical pair by a quartet with horizontal displacement
+\[
+ \delta=0.05.
+\]
+The two point determinant became negative on the grid, first at approximately
+\[
+ u=4.45,
+\]
+and reached approximately
+\[
+ -0.03019
+\]
+on the tested interval.
+
+The same synthetic quartet was tested against the single time Hankel hierarchy. After diagonal scaling by \(t^j/j!\), the unshifted Hankel matrix first acquired a negative eigenvalue at order six. The shifted family first became negative at order seven. The critical zero model remained positive through order nine in the same computation.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{05_two_point_determinant.pdf}
+\caption{The two point determinant computed from the first sixty critical zeros remains nonnegative on the finite grid.}
+\label{fig:two_point_numerics}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{06_synthetic_violation.pdf}
+\caption{A synthetic off line quartet produces a finite negative determinant, confirming the predicted falsification mechanism.}
+\label{fig:synthetic_violation}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{14_hankel_numerics.pdf}
+\caption{The same synthetic quartet creates negative finite Hankel witnesses, while the truncated critical zero model remains positive in the tested range.}
+\label{fig:hankel_numerics}
+\end{figure}
+
+These calculations test the formulas and the sensitivity of the criterion. They do not verify the inequality for all translations and do not prove RH.
+
+\section{Research boundary}\label{sec:boundary}
+
+The work proves exact reductions, not the missing uniform estimate. The no finite truncation theorem shows that the required input must act uniformly across translation or moment order.
+
+\begin{problem}[Uniform prime packet bound]\label{prob:uniform_bound}
+Prove, for one fixed \(t>0\),
+\[
+ \boxed{
+ \abs{\mathfrak D_t(X)}
+ \leq
+ \mathfrak D_t(1)
+ \quad(X>0).
+ }
+\]
+By \cref{thm:localized_prime_criterion}, this is equivalent to RH.
+\end{problem}
+
+\begin{problem}[Positive completed factorization]\label{prob:factorization}
+Construct a Hilbert space, a unitary translation group \(U(u)\), and a vector \(v_t\) directly from prime packet data such that
+\[
+ \mathfrak D_t(e^u)
+ =
+ \langle U(u)v_t,v_t\rangle.
+\]
+Such a construction would prove positive definiteness and therefore RH.
+\end{problem}
+
+\begin{problem}[Complete monotonicity from primes]\label{prob:monotonicity}
+Prove the inequalities
+\[
+ (-1)^k\frac{d^k}{dt^k}\mathfrak D_t(1)\geq0
+\]
+for every \(k\geq0\) using the prime explicit formula. This is another exact route to RH by \cref{thm:complete_monotonicity}.
+\end{problem}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.86\textwidth]{12_exact_boundary.pdf}
+\caption{Every arrow is now exact. The only missing arrow is a uniform bound or positive factorization of the prime side discrepancy.}
+\label{fig:boundary}
+\end{figure}
+
+\section{Conclusion}\label{sec:conclusion}
+
+A single Gaussian translation family is sufficient for the Riemann hypothesis. For any fixed heat time, the centered zero heat kernel has exponential translation growth equal to the distance from the rightmost zero to the critical line. RH is equivalent to boundedness, positive definiteness, a two point determinant inequality, complete monotonicity of the diagonal heat trace, and positivity of two single time Hankel moment hierarchies.
+
+The Guinand and Weil formula identifies the same kernel with one explicit log Gaussian prime packet. Consequently RH is equivalent to a concrete localized prime inequality involving only the von Mangoldt function and known archimedean terms.
+
+The reduction is substantially smaller than the full Weil test function cone, but it does not itself prove the inequality. Prime by prime positivity is impossible in the displayed decomposition, and nonprincipal packet bands cannot control the principal mode by orthogonality alone. The remaining problem is therefore exact: construct the global positive factorization, or prove the uniform prime packet bound directly.
+
+\end{document}

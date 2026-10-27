@@ -1,0 +1,123 @@
+import CollatzFixedHorizonObstruction
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Linarith
+
+/-! An explicit family with an unbounded, exact first-descent time.
+    This is a family certificate, not a covering theorem for arbitrary inputs. -/
+set_option autoImplicit false
+namespace OperationKomorebi.CollatzUnboundedRunFamily
+open CollatzBlocks CollatzFixedHorizonObstruction
+
+/-- Elementary divisibility, proved by cubing rather than assuming an LTE result. -/
+theorem three_power_divides_int (j : Nat) :
+    (3 : Int)^(j+1) ∣ (2 : Int)^(3^j)+1 := by
+  induction j with
+  | zero => norm_num
+  | succ j ih =>
+    obtain ⟨q,hq⟩ := ih
+    have hx : (2 : Int)^(3^j) = 3^(j+1)*q-1 := by omega
+    have he : (2 : Int)^(3^(j+1)) = ((2 : Int)^(3^j))^3 := by
+      rw [Nat.pow_succ, pow_mul]
+    refine ⟨q*(3*(3^j)^2*q^2-3^(j+1)*q+1), ?_⟩
+    rw [he,hx]
+    simp only [pow_succ]
+    ring
+
+/-- The natural-number quotient is exact for every parameter. -/
+theorem three_power_divides (j : Nat) :
+    3^(j+1) ∣ 2^(3^j)+1 := by
+  exact_mod_cast three_power_divides_int j
+
+/-- Closed arithmetic parameter of the family; not an orbit-search result. -/
+def runQuotient (j : Nat) : Nat := (2^(3^j)+1) / 3^(j+1)
+
+def start (j : Nat) : Nat := 2^(j+1)*runQuotient j-1
+
+theorem quotient_equation (j : Nat) :
+    3^(j+1)*runQuotient j = 2^(3^j)+1 := by
+  exact Nat.mul_div_cancel' (three_power_divides j)
+
+theorem quotient_pos (j : Nat) : 0 < runQuotient j := by
+  have he := quotient_equation j
+  by_contra h
+  have hz : runQuotient j = 0 := by omega
+  rw [hz, Nat.mul_zero] at he
+  exact (Nat.succ_ne_zero _ he.symm)
+
+/-- The input is a positive odd integer above one for j > 0. -/
+theorem start_admissible (j : Nat) (hj : 0 < j) :
+    1 < start j ∧ start j % 2 = 1 := by
+  have hq := quotient_pos j
+  have hp : 2 ≤ 2^j := by
+    have h := Nat.pow_le_pow_right (n := 2) (by decide) hj
+    simpa using h
+  have hpq : 2 ≤ 2^j*runQuotient j := by
+    have h := Nat.mul_le_mul_left (2^j) hq
+    omega
+  unfold start
+  rw [Nat.pow_succ]
+  have he : 2^j*2*runQuotient j = 2*(2^j*runQuotient j) := by ring
+  rw [he]
+  omega
+
+/-- Exactly j growing accelerated steps, followed by the certified reset. -/
+theorem reaches_one_at (j : Nat) : it A (j+1) (start j) = 1 := by
+  exact run_compression j (runQuotient j) (3^j) 1
+    (quotient_pos j) (by decide) (by simpa using quotient_equation j)
+
+/-- No strict descent is possible during any of the first j steps. -/
+theorem no_descent_before (j t : Nat) (ht : t ≤ j) :
+    start j ≤ it A t (start j) := by
+  have he : t + (j-t) + 1 = j+1 := by omega
+  simpa only [he, start] using
+    growth_prefix_nondecreasing t (j-t) (runQuotient j) (quotient_pos j)
+
+/-- A fully explicit input-dependent first-descent certificate. -/
+theorem exact_first_descent (j : Nat) (hj : 0 < j) :
+    (∀ t ≤ j, start j ≤ it A t (start j)) ∧
+    it A (j+1) (start j) = 1 ∧ it A (j+1) (start j) < start j := by
+  refine ⟨fun t ht => no_descent_before j t ht, reaches_one_at j, ?_⟩
+  rw [reaches_one_at]
+  exact (start_admissible j hj).1
+
+/-- Unlike the old impossible finite fixed-step cover, this certificate has
+    nonempty instances with arbitrarily large, proved first-descent times. -/
+theorem arbitrarily_delayed_terminating_inputs (K : Nat) :
+    ∃ n t : Nat, 1 < n ∧ n % 2 = 1 ∧ K < t ∧ it A t n = 1 ∧
+      ∀ s < t, n ≤ it A s n := by
+  refine ⟨start (K+1), K+2, (start_admissible (K+1) (by omega)).1,
+    (start_admissible (K+1) (by omega)).2, by omega,
+    reaches_one_at (K+1), ?_⟩
+  intro s hs
+  exact no_descent_before (K+1) s (by omega)
+
+/-- Infinitely many parameters cannot silently name the same source: their
+    exact first-descent times distinguish every pair of positive parameters. -/
+theorem start_injective_on_positive {j k : Nat} (hj : 0 < j) (hk : 0 < k)
+    (h : start j = start k) : j = k := by
+  by_contra hne
+  rcases lt_or_gt_of_ne hne with hlt | hgt
+  · have hn := no_descent_before k (j+1) (by omega)
+    rw [← h, reaches_one_at] at hn
+    exact (Nat.not_le_of_lt (start_admissible j hj).1) hn
+  · have hn := no_descent_before j (k+1) (by omega)
+    rw [h, reaches_one_at] at hn
+    exact (Nat.not_le_of_lt (start_admissible k hk).1) hn
+
+/-- These terminating inputs penetrate the same residual packet that defeated
+    all fixed-horizon certificates. -/
+theorem family_in_residual_4095 (j : Nat) (hj : 11 ≤ j) :
+    start j % 4096 = 4095 := by
+  have hq := quotient_pos j
+  have hp : 0 < 2^(j-11) := Nat.pow_pos (by decide)
+  have he : j+1 = 12+(j-11) := by omega
+  unfold start
+  rw [he, Nat.pow_add]
+  norm_num
+  have hprod : 0 < 2^(j-11)*runQuotient j := Nat.mul_pos hp hq
+  have heq : 4096*2^(j-11)*runQuotient j = 4096*(2^(j-11)*runQuotient j) := by ring
+  rw [heq]
+  omega
+
+end OperationKomorebi.CollatzUnboundedRunFamily

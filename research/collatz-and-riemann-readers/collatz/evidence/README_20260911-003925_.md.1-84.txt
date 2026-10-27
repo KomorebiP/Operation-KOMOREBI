@@ -1,0 +1,84 @@
+# Komorebi Collatz bounded-deficit block v0.5.0 — checked
+
+**Status:** a new no-cross subcase is closed. **The Collatz conjecture is not proved or disproved.**
+
+## Exact checked result
+
+For the accelerated odd map
+
+`A(n) = oddPart(3*n + 1)`, 
+
+let `x_r = A^r(n)`.  `CollatzBoundedDeficitBridge.lean` extracts an exact dyadic
+exponent `a_r` at every accelerated step,
+
+`2^(a_r) * x_(r+1) = 3*x_r + 1`,
+
+and defines the cumulative dyadic depth `S_r = a_0 + ... + a_(r-1)`.
+
+The theorem
+
+`CollatzBoundedDeficitBridge.actual_no_eventual_strip2`
+
+proves, for every positive odd starting integer `n`, that the following two
+conditions cannot hold simultaneously:
+
+1. permanent no-crossing: `2^S_r <= 3^r` for every `r`;
+2. eventual strip-2 proximity: there is an `N` such that
+   `3^r < 8 * 2^S_r` for every `r >= N`.
+
+Equivalently, under permanent no-crossing, for every `N` there must be some
+`r >= N` with
+
+`8 * 2^S_r <= 3^r`.
+
+If one introduces the critical depth
+`H(r) = min {J : 3^r < 2^J}` and deficit `d_r = H(r)-1-S_r`, this arithmetic
+statement says that a no-cross orbit cannot eventually remain in deficit
+layers `d_r = 0,1,2`; it must reach `d_r >= 3` infinitely often.  The Lean file
+uses only the power inequalities above and does not depend on formalizing a
+logarithm.
+
+## Proof chain
+
+The checked proof contains:
+
+- exact accelerated affine law
+  `2^S_r*x_r = 3^r*n + C_r`;
+- no-cross offset budget `3*C_r <= r*3^r`;
+- pointwise strip growth bound `3*x_r < 8*(3*n+r)`;
+- uniqueness of dyadic exponent/odd quotient factorization;
+- repeated-state propagation of both states and valuation exponents;
+- a cycle coefficient lemma: a repeated accelerated block of length `d>0`
+  has `3^d < 2^A`;
+- an exact Bernoulli amplification showing repeated copies eventually violate
+  permanent no-crossing;
+- therefore injectivity on every eventual strip tail;
+- CRT-density packing via the facts that accelerated states are odd and every
+  post-step state is nonzero modulo 3;
+- a finite pigeonhole contradiction with cutoff
+  `R = 24*n + 8*N + 6`.
+
+The actual-map bridge also proves that `oddPart` removes exactly a power of two
+and that every accelerated endpoint is nonzero mod 3.
+
+## Proof boundary
+
+This release does **not** prove that a hypothetical no-cross orbit has bounded
+deficit, nor does it exclude deficit `>=3` infinitely often or unbounded
+deficit.  It also does not finish the separate global first-cross exclusion.
+Those are still open in this Collatz program.
+
+## Verification
+
+Pinned runtime:
+
+- Lean 4.34.0-rc2
+- commit `6a10ac8c22beadecabdbb0919c2b50214762f91d`
+- warnings treated as errors
+
+`STRICT_COMPILE_ALL.log` comes from compiling the self-contained
+`CollatzBoundedDeficit_All.lean` through the portable Mathlib runtime.
+`AXIOM_AUDIT.log` reports only standard Lean/Mathlib axioms
+`propext`, `Classical.choice`, and `Quot.sound` for the audited target theorems.
+`SOURCE_AUDIT.txt` records zero `sorry`, zero `admit`, and zero custom
+`axiom`/`constant` declarations.

@@ -1,0 +1,482 @@
+\section{The global question and the coordinates}
+The Collatz conjecture asks whether a simple arithmetic rule eventually returns every positive integer to the same small cycle. The rule is easy to evaluate. Its difficulty lies in the ordered pattern of multiplications and divisions that an orbit generates. A long sequence may grow, fall from a large peak, and still stay above its starting value. A useful reduction must preserve that distinction.
+
+This monograph presents the exact packet calculus developed in the Komorebi Collatz program. Its central objects are finite valuation words, their affine transfer laws, and the integer cylinders that realize them. These coordinates give uniform descent theorems for entire arithmetic progressions. They also expose why a finite table with a fixed maximum descent time cannot cover every source. A separate counting argument excludes every eventually bounded deficit regime under permanent coefficient noncrossing.
+
+The global conjecture remains open in this work. The mathematical results below have explicit proofs. The final chapter separates those proofs from the historical Lean receipts and the finite integer computations supplied with this edition. The purpose is to give a reader enough information to inspect the reductions and identify the precise theorem that would complete them.
+
+\begin{definition}[Classical, shortcut, and odd maps]\label{def:maps}
+For a positive integer $n$, define the classical map and its shortcut by
+\begin{equation}\label{eq:classical}
+\operatorname{Col}(n)=
+\begin{cases}3n+1,&n\text{ odd},\\n/2,&n\text{ even},\end{cases}
+\qquad
+T(n)=
+\begin{cases}(3n+1)/2,&n\text{ odd},\\n/2,&n\text{ even}.\end{cases}
+\end{equation}
+For a positive odd integer $n$, let
+\begin{equation}\label{eq:oddmap}
+a(n)=\nu_2(3n+1),\qquad A(n)=\frac{3n+1}{2^{a(n)}}.
+\end{equation}
+Here $\nu_2(m)$ is the largest exponent $a$ for which $2^a$ divides the positive integer $m$. Thus $a(n)\ge1$, and $A(n)$ is positive and odd.
+\end{definition}
+
+The map $A$ removes every factor of two after an odd multiplication. It is the odd acceleration, also called the Syracuse map. One application of $A$ corresponds to one odd shortcut step followed by the remaining even shortcut steps. These maps have different clocks. In particular, a statement about 37 applications of $A$ need not concern 37 applications of $T$.
+
+\begin{conjecture}[Collatz]\label{conj:collatz}
+For every positive odd integer $n$, there exists $r\ge0$ such that $A^r(n)=1$.
+\end{conjecture}
+
+This version is equivalent to the classical assertion. Every positive integer first reaches an odd integer by division by two. Conversely, each application of $A$ is a finite portion of the classical orbit. The fixed point $A(1)=1$ represents the classical cycle $1,4,2$.
+
+The almost everywhere results belong to a different level of quantification. Terras established a stopping time result, with a subsequent density clarification, and Tao proved that almost all orbits reach a value below any prescribed function tending to infinity. The latter uses logarithmic density. Neither assertion says that every orbit reaches 1. We use them for orientation, without importing their probabilistic arguments into the proofs below \cite{terras1976,terras1979,tao2026}.
+
+\section{Exact valuation packets}
+Fix a positive odd seed $n$, and write $x_r=A^r(n)$. Each step has the exact equation
+\begin{equation}\label{eq:onestep}
+2^{a_r}x_{r+1}=3x_r+1,\qquad a_r=a(x_r).
+\end{equation}
+The exponent records how much dyadic information is removed at that step. It is determined by the actual state, rather than chosen independently.
+
+\begin{definition}[Valuation word and offset]\label{def:word}
+A valuation word is a finite sequence $w=(a_0,\ldots,a_{k-1})$ of positive integers. Define its partial depths and offsets by
+\begin{equation}\label{eq:offsetrec}
+S_0=0,\quad S_j=\sum_{i<j}a_i,\qquad
+C_0=0,\quad C_{j+1}=3C_j+2^{S_j}.
+\end{equation}
+Its total depth is $S=S_k$ and its terminal offset is $C=C_k$. The word is realized by $n$ if these are the first $k$ valuations of the actual odd orbit from $n$.
+\end{definition}
+
+\begin{theorem}[Affine packet law]\label{thm:affine}
+If $n$ realizes $w$, then every prefix satisfies
+\begin{equation}\label{eq:affine}
+2^{S_j}x_j=3^j n+C_j.
+\end{equation}
+The terminal offset also has the explicit expression
+\begin{equation}\label{eq:offsetsum}
+C_k=\sum_{i=0}^{k-1}3^{k-1-i}2^{S_i}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+At $j=0$ the identity is $x_0=n$. If it holds at $j$, multiply \eqref{eq:onestep} by $2^{S_j}$ to obtain
+\[
+2^{S_{j+1}}x_{j+1}=3^{j+1}n+3C_j+2^{S_j}.
+\]
+This is the next identity by \eqref{eq:offsetrec}. Iterating the same offset recurrence gives \eqref{eq:offsetsum}.
+\end{proof}
+
+The formula is elementary, but it carries the entire ordered word. Two words may have the same length and total valuation while having different offsets. The positions of the divisions matter. Replacing an ordered word by only its average valuation discards precisely the term that decides marginal descent.
+
+\begin{theorem}[Exact integer cylinder]\label{thm:cylinder}
+Let $w$ be a nonempty valuation word of length $k$ and total depth $S$. A positive odd integer $n$ realizes $w$ if and only if
+\begin{equation}\label{eq:cylinder}
+3^k n+C_k\equiv 2^S\pmod{2^{S+1}}.
+\end{equation}
+Consequently the realizing integers form one odd residue class modulo $2^{S+1}$, whose residue is
+\begin{equation}\label{eq:address}
+u_w\equiv(2^S-C_k)(3^k)^{-1}\pmod{2^{S+1}}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+If the word is realized, \eqref{eq:affine} has an odd terminal quotient $x_k$. Multiplying an odd integer by $2^S$ gives exactly the congruence \eqref{eq:cylinder}.
+
+Conversely, define the rational candidates $x_j=(3^j n+C_j)/2^{S_j}$. We show that every candidate is a positive odd integer. The terminal congruence supplies this for $j=k$. For $0\le j<k$, split the offset sum at $j$:
+\[
+C_k=3^{k-j}C_j+2^{S_j}D_{j,k}.
+\]
+The integer $D_{j,k}$ is odd. Its first summand is $3^{k-1-j}$, while every later summand has an additional factor of two. Reducing \eqref{eq:cylinder} modulo $2^{S_j+1}$ gives
+\[
+3^{k-j}(3^j n+C_j)+2^{S_j}D_{j,k}\equiv0\pmod{2^{S_j+1}}.
+\]
+Every odd multiple of $2^{S_j}$ has the same residue modulo $2^{S_j+1}$. Since $3^{k-j}$ is invertible, it follows that
+\[
+3^j n+C_j\equiv2^{S_j}\pmod{2^{S_j+1}}.
+\]
+Thus $x_j$ is integral and odd. It is positive because $n>0$ and $C_j\ge0$. Finally the recurrence gives $3x_j+1=2^{a_j}x_{j+1}$. Oddness of $x_{j+1}$ makes $a_j$ the exact valuation. These candidates are therefore the actual orbit. Invertibility of $3^k$ yields a unique residue class. Its parity is odd because $C_k$ is odd.
+\end{proof}
+
+Every such cylinder contains infinitely many positive integers. It can have no representatives in a particular finite test interval. That finite absence must not be confused with an empty arithmetic cylinder. The additional endpoint bit in modulus $2^{S+1}$ is essential. Modulus $2^S$ certifies only integrality of the terminal quotient, while exact realization requires its oddness.
+
+\figplaceholder{collatz_residue_tree}{Valuation words give exact dyadic cylinders. The diagram labels the first two valuations by \(r_1=a_0\) and \(r_2=a_1\). Refinement reveals further valuation information. A bounded diagram displays finitely many branches of this infinite arithmetic structure.}
+
+\section{Composition and the descent budget}
+A realized word acts by the affine transformation
+\begin{equation}\label{eq:transfer}
+F_w(n)=\lambda_w n+c_w,\qquad
+\lambda_w=\frac{3^k}{2^S},\qquad c_w=\frac{C_k}{2^S}.
+\end{equation}
+The transfer law is evaluated only on the integer cylinder of the word. As a rational affine expression it is defined elsewhere, but there it need not describe an actual Collatz segment.
+
+\begin{proposition}[Concatenation]\label{prop:composition}
+Let a word $w$ have data $(k,S,C)$ and a following word $v$ have data $(\ell,U,D)$. Their concatenation has data
+\begin{equation}\label{eq:composition}
+(k+\ell,S+U,3^\ell C+2^S D).
+\end{equation}
+On every realizing source, its transfer is $F_v\circ F_w$.
+\end{proposition}
+\begin{proof}
+Substitute $2^S y=3^k n+C$ into $2^U z=3^\ell y+D$. Multiplication by $2^S$ gives
+\[
+2^{S+U}z=3^{k+\ell}n+3^\ell C+2^S D.
+\]
+The exact cylinder theorem identifies the admissible integer sources.
+\end{proof}
+
+\begin{theorem}[Exact descent criterion]\label{thm:descent}
+A realized word of positive length ends below its source if and only if
+\begin{equation}\label{eq:descent}
+(2^S-3^k)n>C_k.
+\end{equation}
+If $2^S\le3^k$, strict descent is impossible. If $2^S>3^k$, write $G=2^S-3^k$. The endpoint is at least the source if and only if
+\begin{equation}\label{eq:threshold}
+n\le\left\lfloor\frac{C_k}{G}\right\rfloor.
+\end{equation}
+\end{theorem}
+\begin{proof}
+The affine identity gives $2^S(x_k-n)=C_k-(2^S-3^k)n$. Its sign proves the assertions. Since $n$ is an integer, the inequality $Gn\le C_k$ is equivalent to \eqref{eq:threshold}.
+\end{proof}
+
+Coefficient contraction is therefore necessary for descent, but the offset remains part of the budget. A coefficient crossing means $2^S>3^k$. Actual descent requires the stronger source dependent inequality \eqref{eq:descent}. The real affine fixed point is $C_k/G$. The integer threshold is its floor. The threshold can differ from the real fixed point, and the two are equal when that fixed point is an integer.
+
+The composition formula also explains why a local fall need not resolve a global obstruction. If an expanding segment has data $(\lambda_g,c_g)$ and a following falling segment has $(\lambda_f,c_f)$, the final value is
+\[
+\lambda_f\lambda_g n+\lambda_f c_g+c_f.
+\]
+A comparison with the local peak controls only part of this expression. To prove descent below $n$, the entire expression must be compared with the same original source.
+
+\section{Why universal descent is the remaining theorem}
+\begin{theorem}[Universal descent equivalence]\label{thm:induction}
+Conjecture~\ref{conj:collatz} is equivalent to the assertion
+\begin{equation}\label{eq:universal}
+\text{for every odd }n>1\text{ there exists }r\ge1\text{ with }A^r(n)<n.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Convergence to 1 implies descent for each $n>1$. For the converse, use strong induction on positive odd integers. The case $n=1$ is immediate. For $n>1$, choose a descendant $m=A^r(n)<n$. It is positive and odd, so the induction hypothesis gives $A^s(m)=1$. Hence $A^{r+s}(n)=1$.
+\end{proof}
+
+The saved source contains this strong induction bridge as \texttt{collatz\_of\_universal\_descent} \cite{projectcollatzcore}. It is already available. A proof does not need an additional argument after universal descent has been established.
+
+Failure of convergence has an equally useful formulation. If there is a least positive odd seed that does not reach 1, none of its later states can be smaller than that seed. Such a state would converge by minimality, and convergence would transfer back to the source. Thus the conjecture can be attacked through an infinite actual orbit with a fixed source floor.
+
+This floor condition concerns values $x_r\ge n$. It does not imply that the cumulative affine coefficient remains at least one. An orbit can have a contracting coefficient and still remain above its source because of its positive offset. The coefficient split examined later is a split of the algebraic multiplier, rather than a replacement for the actual descent problem.
+
+\section{A complete finite example from 27}
+The seed 27 makes the distinction between the clocks and the floors visible. Its first ten odd accelerated steps are shown in Table~\ref{tab:27}. Each row is checked by multiplying the displayed state by $2^{S_r}$ and comparing it with $3^r\cdot27+C_r$.
+
+\begin{table}[htbp]\centering
+\caption{Exact odd packet coordinates for the first ten steps from 27.}\label{tab:27}
+\begin{tabular}{rrrrr}\toprule
+$r$&$x_r$&$a_{r-1}$&$S_r$&$C_r$\\\midrule
+0&27&--&0&0\\
+1&41&1&1&1\\
+2&31&2&3&5\\
+3&47&1&4&23\\
+4&71&1&5&85\\
+5&107&1&6&287\\
+6&161&1&7&925\\
+7&121&2&9&2903\\
+8&91&2&11&9221\\
+9&137&1&12&29711\\
+10&103&2&14&93229\\\bottomrule
+\end{tabular}
+\end{table}
+
+For example, the word $(1,2)$ has $S_2=3$ and $C_2=5$, so
+\[
+8\cdot31=9\cdot27+5.
+\]
+The corresponding cylinder is $n\equiv11\pmod{16}$. Writing $n=16t+11$ gives
+\[
+A(n)=24t+17,\qquad A^2(n)=18t+13.
+\]
+Every member of this progression grows over the two steps, even though the second step falls from $24t+17$ to $18t+13$. For $t=1$, the local fall is $41$ to $31$, while both states remain above 27. These identities are present in the recovered Lean source \cite{projectcollatzcore}.
+
+The fresh finite integer audit for this edition finds the first actual descent at accelerated time 37:
+\begin{equation}\label{eq:27descent}
+x_{37}=23,\qquad S_{37}=59,\qquad
+C_{37}=1100931843921811423.
+\end{equation}
+Thus
+\[
+2^{59}\cdot23=3^{37}\cdot27+1100931843921811423.
+\]
+The same segment has 59 shortcut steps. The historical serious audit separately records a Lean check of $T^{59}(27)=23$ \cite{projectcollatzaudit}. The two statements use different iteration counts and the same endpoint.
+
+\figplaceholder{collatz_orbit27}{The odd accelerated orbit from 27. The source floor stays at 27 while local peaks and falls occur above it. Exact finite iteration locates the first descent below that floor.}
+\figplaceholder{collatz_affine27}{The affine identity along the same finite orbit. The coefficient and the accumulated positive offset must be retained together when deciding actual descent.}
+
+This example is a complete certificate for one source. It also gives a precise cutoff for any full source floor trajectory starting at 27. Such a trajectory cannot contain the entire 59 step shortcut prefix, because that prefix ends at 23. It does not exclude all integers congruent to 27 modulo 4096. A congruence at one finite precision fixes only a finite portion of an itinerary, and longer words can require much higher precision.
+
+\section{Growing runs and exact first descent}
+The simplest valuation word is a run of ones. It already prevents any universal bound on the time needed for descent. These long runs are actual integer orbits, rather than arbitrary symbolic words.
+
+\begin{lemma}[A run of unit valuations]\label{lem:run}
+For integers $j\ge0$, $q\ge1$, and $0\le t\le j$, put $n=2^{j+1}q-1$. Then
+\begin{equation}\label{eq:run}
+A^t(n)=2^{j+1-t}3^t q-1.
+\end{equation}
+Every one of the first $j$ valuations is exactly 1. Moreover $A^t(n)\ge n$ for $0\le t\le j$.
+\end{lemma}
+\begin{proof}
+For $t<j$, the displayed state has the form $4u-1$ with $u>0$. Thus $3(4u-1)+1=2(6u-1)$, whose quotient is odd. This proves the next state and valuation by induction. The comparison with the source follows from $3^t\ge2^t$.
+\end{proof}
+
+\begin{theorem}[No finite universal descent horizon]\label{thm:horizon}
+For every integer $K\ge0$, there exists a positive odd $n>1$ such that $A^t(n)\ge n$ for every $0\le t\le K$. Consequently no finite collection of descent rules with fixed step counts can cover all odd sources above 1.
+\end{theorem}
+\begin{proof}
+Take $n=2^{K+2}-1$ and apply Lemma~\ref{lem:run} with $j=K+1$ and $q=1$. For the final assertion, a finite collection has a largest step count $K$. The constructed source violates every claimed strict descent at those step counts.
+\end{proof}
+
+The saved fixed horizon source proves this statement and its consequences for finite tables indexed by residues \cite{projectcollatzhorizon}. It does not obstruct a finite algorithm that chooses an unbounded, input dependent time. It obstructs a particular proof architecture in which finitely many rules each prescribe one fixed depth.
+
+\begin{theorem}[Compressed run exit]\label{thm:exit}
+Suppose $j\ge0$, $q\ge1$, $b\ge0$, and $m$ is positive odd, with
+\begin{equation}\label{eq:exitpremise}
+3^{j+1}q=2^b m+1.
+\end{equation}
+For $n=2^{j+1}q-1$, the exact exit is
+\begin{equation}\label{eq:exit}
+A^{j+1}(n)=m.
+\end{equation}
+If $m<n$, then $j+1$ is the exact first strict descent time.
+\end{theorem}
+\begin{proof}
+Lemma~\ref{lem:run} gives $A^j(n)=2\cdot3^j q-1$. Its next odd numerator is
+\[
+3(2\cdot3^j q-1)+1=2(3^{j+1}q-1)=2^{b+1}m.
+\]
+Oddness of $m$ proves the exact final valuation $b+1$ and the exit. Earlier states are at least $n$ by the lemma.
+\end{proof}
+
+The equation \eqref{eq:exitpremise} is an arithmetic condition on a proposed exit. It is not asserted with a universally favorable value of $b$. Long growth can end in a strong fall, a mild fall, or continued growth. Run compression records the actual alternative without deciding the global behavior of every source.
+
+\subsection{Explicit terminating seeds with unbounded delay}
+The program also constructs a closed family of sources whose first descent occurs arbitrarily late, yet whose first lower value is exactly 1 \cite{projectcollatzseeds}. Define
+\begin{equation}\label{eq:seeds}
+q_j=\frac{2^{3^j}+1}{3^{j+1}},\qquad n_j=2^{j+1}q_j-1.
+\end{equation}
+
+\begin{lemma}\label{lem:seeddiv}
+For every $j\ge0$, $q_j$ is a positive integer.
+\end{lemma}
+\begin{proof}
+At $j=0$ the numerator is 3. If $3^{j+1}$ divides $u+1$ for $u=2^{3^j}$, then
+\[
+2^{3^{j+1}}+1=u^3+1=(u+1)(u^2-u+1).
+\]
+Since $u\equiv-1\pmod3$, the second factor is divisible by 3. Induction proves divisibility by $3^{j+2}$. Positivity of the quotient is immediate.
+\end{proof}
+
+\begin{theorem}[Exact delayed termination]\label{thm:seeds}
+For every $j\ge1$, the seed $n_j$ is odd and greater than 1. It satisfies
+\begin{equation}\label{eq:seedresult}
+A^{j+1}(n_j)=1,\qquad A^t(n_j)\ge n_j\quad(0\le t\le j).
+\end{equation}
+The seeds with positive parameters are distinct.
+\end{theorem}
+\begin{proof}
+The source is at least $2^{j+1}-1\ge3$. The quotient equation is
+$3^{j+1}q_j=2^{3^j}+1$, so Theorem~\ref{thm:exit} applies with $b=3^j$ and $m=1$. If two positive parameters gave the same seed, that seed would have two different exact first descent times. The smaller time would contradict the other parameter's absence of earlier descent.
+\end{proof}
+
+The first examples are $n_1=3$ and $n_2=151$. The latter follows the exact odd orbit $151,227,341,1$. The family does more than show that some prefixes can grow. It certifies arbitrarily large first descent times while retaining termination. Such delays must therefore be allowed in any proposed global proof.
+
+\subsection{Lifting a certified exit to an infinite progression}
+\begin{theorem}[Uniform cylinder lift]\label{thm:lift}
+Under the hypotheses of Theorem~\ref{thm:exit}, define for integers $s\ge0$
+\begin{equation}\label{eq:lift}
+n(s)=2^{j+1}q-1+2^{j+b+2}s,\qquad
+m(s)=m+2\cdot3^{j+1}s.
+\end{equation}
+Then $A^{j+1}(n(s))=m(s)$. If additionally
+\begin{equation}\label{eq:slopes}
+m<2^{j+1}q-1,\qquad 3^{j+1}\le2^{j+b+1},
+\end{equation}
+every member has exact first strict descent time $j+1$.
+\end{theorem}
+\begin{proof}
+Replace $q$ by $q(s)=q+2^{b+1}s$. The exit equation becomes
+\[
+3^{j+1}q(s)=2^b\bigl(m+2\cdot3^{j+1}s\bigr)+1.
+\]
+The new target is odd, and Theorem~\ref{thm:exit} gives its exact exit. The initial target is strictly smaller than the initial source. The slope inequality gives $2\cdot3^{j+1}\le2^{j+b+2}$, so this strict comparison persists for every $s$. Lemma~\ref{lem:run} excludes earlier descent.
+\end{proof}
+
+For the terminating seed family, the slope condition is automatic. Indeed $j+1\le3^j$ by induction, hence
+\[
+3^{j+1}\le4^{j+1}=2^{2j+2}\le2^{j+3^j+1}.
+\]
+Thus, for every $j\ge1$, all inputs
+\begin{equation}\label{eq:seedprogressions}
+n_j+2^{j+3^j+2}s
+\end{equation}
+have exact first descent time $j+1$ and exit $1+2\cdot3^{j+1}s$. The case $s=0$ reaches 1 at that time. For $s>0$, the theorem certifies descent rather than termination of the exit. If an exit is independently known to terminate, termination transfers to the source with $j+1$ added steps.
+
+For $j\ge11$, both the seed and the entire progression in \eqref{eq:seedprogressions} are congruent to $4095$ modulo $4096$. The source has a factor $2^{j+1}$ before subtraction of 1, and the progression increment is divisible by $4096$. Consequently one unresolved coarse residue contains infinitely many sources with exact successful descent certificates. Residual status describes a chosen collection of rules, rather than the behavior of every individual integer in that class \cite{projectcollatzlifts,projectcollatzboundary}.
+
+\section{What a partial residue certificate establishes}
+Exact word cylinders are one way to prove a uniform rule. Another useful rule ends with an odd part rather than one fixed final valuation. This permits several finer cylinders to share the same descent estimate.
+
+\begin{example}[An entire progression modulo 4096]\label{ex:1087}
+For $n=4096t+1087$, with integer $t\ge0$, six exact applications of $A$ give
+\begin{align*}
+4096t+1087&\longmapsto6144t+1631\longmapsto9216t+2447\\
+&\longmapsto13824t+3671\longmapsto20736t+5507\\
+&\longmapsto31104t+8261\longmapsto5832t+1549.
+\end{align*}
+The valuations are $1,1,1,1,1,4$. The next numerator is
+\[
+3(5832t+1549)+1=2^3(2187t+581).
+\]
+Therefore
+\[
+A^7(n)=\operatorname{oddPart}(2187t+581)
+\le2187t+581<4096t+1087.
+\]
+The final valuation may exceed 3 for some parameters. The inequality remains valid because removing further factors of two only reduces the positive quotient. This proof is represented in the recovered deep residue certificate source.
+\end{example}
+
+The saved Proof Atlas v0.14 findings report coverage of 1804 among the 2048 odd classes modulo 4096, or 88.0859 percent, by the selected packet rules. Thirty seven newly selected packets have separately compiled uniform Lean descent theorems. The remaining 244 residues and the coverage count are finite computation evidence. They are not a Lean enumeration theorem, and the source explicitly retains an incomplete predicate \cite{projectcollatzresidues}.
+
+\figplaceholder{collatz_coverage}{Coverage of the selected residue certificate modulo 4096. Covered classes have specified uniform descent rules. Residual classes are outside this particular certificate, and are not counterexamples to Collatz.}
+
+There is a structural reason to keep this percentage separate from a percentage of the conjecture proved. Theorem~\ref{thm:horizon} excludes every complete finite collection of rules whose depths are fixed. Adding more such rules can certify more classes, but cannot turn that exact architecture into a complete cover. A viable global certificate must allow an unbounded time, use a recursive argument, or force a different global contradiction.
+
+\section{Permanent coefficient noncrossing}
+The next result concerns a particular hypothetical global regime. Its hypothesis is stronger than absence of actual descent. Throughout this section $x_r=A^r(n)$, and the valuations and depths come from the actual orbit.
+
+\begin{definition}[Coefficient ratio and deficit]\label{def:noncross}
+Define
+\begin{equation}\label{eq:rho}
+\rho_r=\frac{2^{S_r}}{3^r},\qquad
+d_r=\lfloor r\log_2 3\rfloor-S_r.
+\end{equation}
+Permanent coefficient noncrossing means $\rho_r\le1$ for every $r\ge0$. Under that hypothesis $d_r$ is a nonnegative integer.
+\end{definition}
+
+The reciprocal $1/\rho_r$ is the homogeneous coefficient of the prefix transfer. The deficit records distance below the critical dyadic depth. Outside the stated hypothesis, the displayed subtraction can be negative. The historical Lean deficit is a natural number subtraction, which truncates there. We use \eqref{eq:rho} only in its noncrossing domain.
+
+\begin{lemma}[Normalized offset and height]\label{lem:height}
+Under permanent noncrossing,
+\begin{equation}\label{eq:normalized}
+\rho_r x_r=n+\frac13\sum_{i<r}\rho_i\le n+\frac r3.
+\end{equation}
+At every time with $d_r\le D$, where $D\ge0$ is integral,
+\begin{equation}\label{eq:height}
+x_r<2^{D+1}\left(n+\frac r3\right).
+\end{equation}
+\end{lemma}
+\begin{proof}
+Divide the affine law by $3^r$ and use the offset sum. Noncrossing gives $\rho_i\le1$ for every preceding time, which is essential for the upper bound. From $d_r\le D$ we have $S_r\ge\lfloor r\log_2 3\rfloor-D>r\log_2 3-D-1$. Therefore $\rho_r>2^{-D-1}$, proving the height estimate.
+\end{proof}
+
+\begin{lemma}[Injectivity]\label{lem:injective}
+A permanently noncrossing positive odd orbit never repeats a state.
+\end{lemma}
+\begin{proof}
+Suppose $x_u=x_v$ with $v>u$. Put $k=v-u$ and $B=S_v-S_u$. The affine law for this positive length block gives
+\[
+(2^B-3^k)x_u=C_{u,v}>0.
+\]
+Hence $2^B/3^k>1$. Determinism makes the same states and valuations repeat, so
+$\rho_{u+hk}=\rho_u(2^B/3^k)^h$. This exceeds 1 for sufficiently large $h$, contrary to permanent noncrossing.
+\end{proof}
+
+Injectivity already implies that the orbit eventually leaves every bounded interval. A finite interval contains finitely many distinct natural numbers. This divergence conclusion alone does not exclude the orbit. The following theorem uses a second ingredient, an independently proved height bound in a hypothetical bounded deficit strip.
+
+\begin{theorem}[No eventually bounded noncrossing deficit]\label{thm:boundeddeficit}
+For a positive odd actual orbit with $\rho_r\le1$ at every time, the deficit is unbounded on every tail. More precisely, for every pair of integers $D,N\ge0$ there exists $r\ge N$ with
+\begin{equation}\label{eq:unboundeddeficit}
+2^{D+1}2^{S_r}\le3^r.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Assume instead that $d_r\le D$ for every $r\ge N$. At any such starting time, a local block of $k$ valuations has sum $s=S_{r+k}-S_r$ satisfying
+\[
+s<k\log_2 3+D+1.
+\]
+This follows from $\rho_{r+k}\le1$ and $\rho_r>2^{-D-1}$. Take $k=5\ell$, where $\ell\ge1$ is an integer. Since $3^5<2^8$, every local word has total valuation at most $h=8\ell+D+1$.
+
+Let $E_\ell$ be the union of integer cylinders for all length $5\ell$ words of total valuation at most $h$. Every state $x_r$ with $r\ge N$ belongs to this finite union. A word of total $s$ has one residue class modulo $2^{s+1}$ by Theorem~\ref{thm:cylinder}. Its number of positive representatives at most $H$ is bounded by $H/2^{s+1}+1$.
+
+There are $\binom{s-1}{5\ell-1}$ positive words of total $s$. If $W_\ell$ denotes the finite total number of selected words, summing the cylinder counts gives
+\[
+\#(E_\ell\cap[1,H])\le\varepsilon_\ell H+W_\ell,
+\qquad
+\varepsilon_\ell=\frac12\sum_{s=5\ell}^{h}
+\binom{s-1}{5\ell-1}2^{-s}.
+\]
+This count is arithmetic. It does not assume that orbit valuations are independent random variables.
+
+Set $z=3/4$. For $s\le h$, $2^{-s}\le z^{-h}(z/2)^s$. Summing over all positive words bounds the truncated sum by
+\[
+\varepsilon_\ell\le\frac12z^{-h}
+\left(\sum_{a\ge1}(z/2)^a\right)^{5\ell}
+=\frac12\left(\frac43\right)^{D+1}
+\left(\frac{65536}{84375}\right)^\ell.
+\]
+The exact rational factor is less than 1, so $\varepsilon_\ell$ tends to zero.
+
+For $R>N$, Lemmas~\ref{lem:height} and \ref{lem:injective} place the $R-N$ distinct states $x_N,\ldots,x_{R-1}$ in $E_\ell$ below
+$H_R=\lceil2^{D+1}(n+R/3)\rceil$. Thus
+\[
+R-N\le\varepsilon_\ell H_R+W_\ell.
+\]
+Fix $\ell$ and let $R$ tend to infinity. Division by $R$ yields
+$1\le\varepsilon_\ell2^{D+1}/3$. Choosing $\ell$ sufficiently large contradicts this inequality. No eventual bounded deficit strip exists.
+
+Finally, unbounded deficit on each tail supplies a time with $d_r\ge D+1$. Since $2^{\lfloor r\log_2 3\rfloor}\le3^r$, this gives \eqref{eq:unboundeddeficit}.
+\end{proof}
+
+The saved v0.6 checkpoint establishes the same conclusion through shortcut packet weights and finite cylinder packing \cite{projectcollatzbounded}. The proof here reconstructs the argument directly in valuation word coordinates. It is a written proof in this monograph. This edition does not claim a fresh Lean compilation of that reformulation.
+
+The quantifier on the conclusion matters. Unbounded deficit on every tail does not imply $d_r\to\infty$. The deficit could return to small values between increasingly deep excursions. Even convergence $d_r\to\infty$ would only imply $\rho_r\to0$, which is compatible with growing positive states. The present theorem closes every bounded strip, rather than the entire noncrossing branch.
+
+\section{The global obligations and the failed shortcuts}
+There are two coefficient cases for an infinite source floor candidate. If some $\rho_r>1$, it has a contracting prefix. A successful argument must still overcome the offset and prove eventual descent below the original seed. If $\rho_r\le1$ for every time, the preceding theorem supplies injectivity and unbounded deficit, but a further arithmetic contradiction is needed. These are the main unresolved branches in the corrected gap register \cite{projectcollatzgap}.
+
+\begin{conjecture}[Global packet descent]\label{conj:packetdescent}
+For every positive odd $n>1$, at least one actual prefix satisfies
+\[
+\left(2^{S_r}-3^r\right)n>C_r.
+\]
+\end{conjecture}
+By Theorems~\ref{thm:descent} and \ref{thm:induction}, this statement is exactly sufficient to prove Collatz. A completed certificate system must force such a prefix or provide a logically equivalent global argument. Its soundness alone is insufficient. Soundness says that a supplied certificate proves what it states. Completeness would say that every relevant source eventually supplies the needed certificate.
+
+The historical half contraction lane studies full source floor packets with homogeneous coefficient at most $1/2$. It restricts a least possible failure to a particular primitive annulus and supplies finite correction rules. The general exclusion remains open. Even that auxiliary exclusion would not automatically settle the whole range $1/2<\lambda<1$ or the permanent noncrossing branch \cite{projectcollatzaudit,projectcollatzgap}.
+
+Several attractive shortcuts fail for identifiable reasons. A local descending reset can stay above the original floor, as the orbit from 27 already illustrates. Exact dyadic source and triadic endpoint congruences are reductions of the same affine equation. They do not become independent constraints merely by being expressed in different completions. A proposed integer squeeze must provide an independent height bound as well as divisibility. Sparse cylinders can contain one rapidly growing orbit. Their rarity becomes contradictory only when enough distinct orbit states are proved to lie below the same height used for the cylinder count.
+
+The bounded deficit proof passes that last gate. It names the common height $H_R$, places $R-N$ distinct states below it, and proves a smaller admissible capacity. Once bounded deficit is removed, its linear height estimate is no longer available. Reusing only the cylinder rarity would omit the decisive half of the argument.
+
+\begin{proposition}[A same word merger obstruction]\label{prop:merger}
+Suppose two positive sources $n>m$ realize the same affine word with data $(k,S,C)$ and endpoints $y>x$. Then $n-m$ is a positive multiple of $2^S$. In particular, if $2^S\ge n$, no smaller positive source can share that word.
+\end{proposition}
+\begin{proof}
+Subtract the endpoint equations to obtain $3^k(n-m)=2^S(y-x)$. Coprimality of $3^k$ and $2^S$ forces $2^S\mid n-m$. A positive multiple of $2^S$ is at least $2^S$, so $m=n-(n-m)\le0$ when $2^S\ge n$.
+\end{proof}
+
+This is the obstruction behind pulling a smaller endpoint backward through an unchanged late prefix. A useful smaller source merger must eventually change the word. For two different transfers ending at the same $y$, elimination gives
+\[
+m=\frac{2^{S'}3^k n+2^{S'}C-2^S C'}{2^S3^{k'}}.
+\]
+The remaining task is to force a realizing alternative with $0<m<n$. The formula does not itself supply such an alternative. The saved route notes develop this direction while retaining its unproved universal existence step \cite{projectcollatzroutes}.
+
+Cycles have their own exact requirement. A positive cycle represented by a nonempty odd word must satisfy
+\[
+(2^S-3^k)n=C_k>0.
+\]
+The positive gap is therefore necessary, but its size alone does not eliminate the divisibility equation. The ordered offset must also be controlled. Repeating a contracting cycle reproduces this equality. An argument about an expanding word cannot be applied to it without changing the hypotheses.
+
+\section{Verification, scope, and continuation}
+The mathematical core of this edition consists of the written affine, cylinder, composition, descent, run, lift, and bounded deficit proofs. Their statements retain actual realization and the source floor distinctions. The worked finite orbits and figures are supported by exact integer computations supplied with the edition. They do not provide evidence for a universal asymptotic assertion merely by having no observed failure.
+
+Historical formal verification is a separate layer. The serious audit of the frozen v0.19 closure reports successful compilation of all 54 local modules using Lean 4.34.0 rc2 and the pinned Mathlib revision. It records 662 explicit theorem or lemma declarations and an expanded transitive axiom audit of 1612 local environment declarations. The audited axiom sets were contained in the ordinary logical foundations \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. Those counts describe that source closure. They are not counts of independent new discoveries, and they do not automatically certify later manuscripts \cite{projectcollatzaudit}.
+
+The newer Proof Atlas v0.17 boundary records final Lean builds for arithmetic progression lifts and exact first descent under the stated base and slope hypotheses. It explicitly withholds a universal applicability theorem, termination of arbitrary computed exits, and a global cover. It also distinguishes fresh compilation of its local closure from inherited historical records \cite{projectcollatzboundary}. This monograph does not claim to have rerun either historical Lean build.
+
+The surviving task is concrete. In the crossing lane, retain the entire original floor budget until a strict descent is forced. In the noncrossing lane, find an integer support restriction or a common height argument that remains valid when the deficit is unbounded. An adaptive certificate construction could address both lanes, provided its successful production is proved for every positive odd source.
+
+The program already supplies exact coordinates, actual realization tests, infinite descent families, an obstruction to fixed horizons, and a bounded deficit exclusion. Those results form a coherent partial theory. The global conjecture is neither hidden in a formal premise nor promoted from a coverage percentage. Its unresolved content is the forcing of one actual descent for every source.

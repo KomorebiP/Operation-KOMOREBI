@@ -1,0 +1,446 @@
+\section{The conjecture and the research boundary}
+
+The Riemann hypothesis asks whether every nontrivial zero of the Riemann zeta function has real part one half. Its statement is short, but the arithmetic condition it imposes is global. A finite list of zeros on the critical line does not settle it. Nor does a convenient identity between primes and zeros. An identity transfers the problem. A proof must control the transferred object for every scale.
+
+This monograph records the Komorebi approach through that distinction. The main objects are a Gaussian packet over the zeros, its exact expression in terms of prime powers, a stable Hermite resolution of the prime packet, and an equivalent classical sequence built from the Möbius function. The analytic changes of representation can be made explicit. They preserve the obstruction carried by a hypothetical zero away from the critical line. The unresolved step is a signed arithmetic estimate.
+
+The most concrete contribution presented here is a barrier theorem for one proposed route. An alternating cube of prime divisions reorganizes a Möbius sum exactly. If the remaining signs are then discarded, its full absolute majorant is too large to meet the Riemann hypothesis criterion. We give the proof with the squarefree support retained, so that the obstruction concerns the actual triangle inequality for the arithmetic sum.
+
+The barrier does not imply that the signed sum is large. It says that a sufficiently small signed sum needs a cancellation theorem which the cube identity itself does not provide. This is a useful boundary. It prevents improvements in bookkeeping, resolution, or transport from being mistaken for a solution of the arithmetic problem.
+
+The saved Komorebi work also reports focused Lean verification of several algebraic obstruction results and metric bookkeeping statements. Those historical certificates are described at the end. The analytic proofs and the revised barrier proof in this monograph are manuscript proofs. No new Lean verification is claimed.
+
+\section{The zeta function and its completed symmetry}
+
+For a complex number \(s\) with real part greater than one, the zeta function is
+\begin{equation}\label{rh:zeta}
+\zeta(s)=\sum_{n=1}^{\infty}n^{-s}
+=\prod_{p}(1-p^{-s})^{-1},
+\end{equation}
+where \(n\) ranges over positive integers and \(p\) ranges over primes. Analytic continuation extends it to a meromorphic function on the complex plane with a simple pole at \(s=1\). The completed function
+\begin{equation}\label{rh:xi}
+\xi(s)=\frac12s(s-1)\pi^{-s/2}\Gamma(s/2)\zeta(s)
+\end{equation}
+is entire and satisfies \(\xi(s)=\xi(1-s)\). Here \(\Gamma\) is the gamma function. These are classical facts, with the normalization in \eqref{rh:xi} fixed throughout this article \cite{DLMFZeta}.
+
+Let \(\mathcal Z\) be the multiset of nontrivial zeros, with every zero repeated according to its multiplicity. They lie in the strip \(0<\Re s<1\). Conjugation and the functional equation imply that a zero \(\rho\) is accompanied by \(\overline\rho\), \(1-\rho\), and \(1-\overline\rho\), allowing coincidences on the critical line \cite{DLMFZeros}.
+
+\begin{conjecture}[Riemann hypothesis]\label{rh:conjecture}
+Every \(\rho\in\mathcal Z\) satisfies \(\Re\rho=1/2\).
+\end{conjecture}
+
+Write \(\rho=\beta+i\gamma\), with real numbers \(\beta\) and \(\gamma\), and define its centered coordinate
+\begin{equation}\label{rh:centered}
+z_\rho=\rho-\frac12.
+\end{equation}
+The symmetries become \(z\mapsto-z\) and \(z\mapsto\overline z\). Under the conjecture, every centered coordinate is purely imaginary. Away from the line, the real part of \(z\) becomes an exponential growth parameter in the packet below.
+
+\figplaceholder{rh_xi}{A finite evaluation of the completed function on the critical line. The lower panel multiplies the normalized value by \(e^{\pi t/4}\), where \(t\) is the plotted height. The symmetry and normalization are exact classical facts. The plotted interval is a finite numerical illustration and supplies no conclusion about all zeros.}
+
+\section{A Gaussian packet which preserves the zero obstruction}
+
+\begin{definition}[Zero heat packet]\label{rh:heatdef}
+For a real heat parameter \(t>0\) and a complex translation \(u\), define
+\begin{equation}\label{rh:theta}
+\Theta_t(u)=\sum_{\rho\in\mathcal Z}
+\exp\bigl(tz_\rho^2+uz_\rho\bigr).
+\end{equation}
+\end{definition}
+
+This normalization agrees with the recovered Komorebi heat kernel manuscript \cite{KomorebiHeat}. It is an exact sum over the actual zeros. A hypothetical shifted mode used in a figure is a separate diagnostic model.
+
+The series converges normally on compact sets of translations and on compact intervals of positive heat times. Indeed, for real \(u\),
+\begin{equation}\label{rh:maj}
+\left|e^{tz_\rho^2+uz_\rho}\right|
+\le e^{t/4+|u|/2}e^{-t\gamma^2}.
+\end{equation}
+For complex \(u\), there is an additional exponential factor linear in \(|\gamma|\) on each compact set. Gaussian decay still dominates. The classical zero counting estimate \(N(Y)=O(Y\log Y)\), where \(N(Y)\) counts zeros with \(0<\Im\rho\le Y\), gives summability \cite[Section 2.4, equation (2.11)]{BondarenkoRadchenkoSeip}. The same domination permits differentiation. Consequently
+\begin{equation}\label{rh:heatflow}
+\partial_t\Theta_t=\partial_u^2\Theta_t.
+\end{equation}
+The zero symmetries make \(\Theta_t(u)\) real and even when \(u\) is real.
+
+Under the Riemann hypothesis the packet is
+\begin{equation}\label{rh:criticalpacket}
+\Theta_t(u)=\sum_{\rho\in\mathcal Z}e^{-t\gamma^2}e^{iu\gamma}.
+\end{equation}
+It is then the Fourier transform of a finite positive discrete measure. In particular, its magnitude is bounded by its value at the origin. The converse can be proved without estimating cancellation among different zeros.
+
+\begin{theorem}[One heat time criterion]\label{rh:bounded}
+For any fixed \(t>0\), the Riemann hypothesis is equivalent to boundedness of \(\Theta_t\) on \([0,\infty)\). It is also equivalent to
+\begin{equation}\label{rh:det}
+\Theta_t(0)^2-\Theta_t(u)^2\ge0
+\qquad\text{for every real }u.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Under the hypothesis, \eqref{rh:criticalpacket} gives the asserted bound and determinant inequality. Conversely, suppose the packet is bounded on the positive half line. Its Laplace transform
+\[
+F_t(w)=\int_0^{\infty}\Theta_t(u)e^{-wu}\,du
+\]
+is holomorphic for \(\Re w>0\). For \(\Re w>1/2\), absolute convergence gives
+\begin{equation}\label{rh:laplace}
+F_t(w)=\sum_{\rho\in\mathcal Z}
+\frac{e^{tz_\rho^2}}{w-z_\rho}.
+\end{equation}
+The series on the right is meromorphic, with normal convergence away from its poles. At each distinct centered zero its residue is its positive integer multiplicity times \(e^{tz_\rho^2}\), which is nonzero. Analytic continuation therefore excludes a centered zero with positive real part, since it would give a pole in the domain where the left side is holomorphic. Symmetry excludes negative real parts as well. Finally, \eqref{rh:det} itself bounds the packet by \(|\Theta_t(0)|\), so it also gives the converse.
+\end{proof}
+
+This criterion replaces an arbitrary collection of test functions by one Gaussian translation family. It still quantifies over every translation. Checking finitely many determinants tests a finite instance of the criterion.
+
+The packet also makes the obstruction quantitative. Define
+\begin{equation}\label{rh:delta}
+\delta_\zeta=\sup_{\rho\in\mathcal Z}(\Re\rho-1/2),
+\qquad
+M_t(U)=\max\left(1,\sup_{0\le u\le U}|\Theta_t(u)|\right).
+\end{equation}
+Then \(0\le\delta_\zeta\le1/2\). The same Laplace argument proves
+\begin{equation}\label{rh:front}
+\limsup_{U\to\infty}\frac{\log M_t(U)}{U}=\delta_\zeta.
+\end{equation}
+The upper bound follows from summing absolute values. If a smaller exponential rate held, the Laplace transform would be holomorphic beyond that rate, contradicting a pole at a zero further to the right. An off line zero may have a very large ordinate and a very small Gaussian coefficient. Its coefficient remains nonzero, so it eventually determines the possible exponential growth.
+
+\figplaceholder{rh_heatfront}{Amplitude envelopes of hypothetical centered modes. A displacement \(\delta\) gives amplitude growth \(e^{\delta u}\), with a fixed nonzero heat multiplier omitted in the illustration. These model curves illustrate the theorem's exponent and are not sampled off line zeta zeros or a complete symmetric zero packet.}
+
+\section{The exact prime formula and removal of explicit channels}
+
+Let \(\Lambda(n)\) denote the von Mangoldt function: it is \(\log p\) when \(n=p^k\) for a prime \(p\) and an integer \(k\ge1\), and it is zero otherwise. Let \(\psi=\Gamma'/\Gamma\) be the digamma function, and set
+\begin{equation}\label{rh:psiinf}
+\Psi_\infty(v)=-\log\pi+
+\Re\psi\left(\frac14+\frac{iv}{2}\right)
+\qquad(v\in\mathbb R).
+\end{equation}
+Define the archimedean term and prime packet by
+\begin{align}
+\mathfrak A_t(u)&=\frac1{2\pi}\int_{\mathbb R}
+e^{-tv^2}\cos(uv)\Psi_\infty(v)\,dv,
+\label{rh:arch}\\
+\mathfrak P_t(u)&=\frac1{2\sqrt{\pi t}}
+\sum_{n\ge2}\frac{\Lambda(n)}{\sqrt n}
+\left(e^{-(u-\log n)^2/(4t)}+
+e^{-(u+\log n)^2/(4t)}\right).
+\label{rh:primepacket}
+\end{align}
+The Gaussian makes the prime series absolutely convergent. The completed explicit formula gives
+\begin{equation}\label{rh:explicit}
+\Theta_t(u)=2e^{t/4}\cosh(u/2)+\mathfrak A_t(u)-\mathfrak P_t(u).
+\end{equation}
+We use the formula in the recovered normalization \cite{KomorebiHeat,BondarenkoRadchenkoSeip}. With Fourier convention
+\(g(x)=(2\pi)^{-1}\int h(v)e^{-ivx}\,dv\), the even test
+\(h(v)=e^{-tv^2}\cos(uv)\) has transform
+\[
+g(x)=\frac1{4\sqrt{\pi t}}
+\left(e^{-(x-u)^2/(4t)}+e^{-(x+u)^2/(4t)}\right).
+\]
+The zero symmetry identifies its spectral sum with \(\Theta_t(u)\).
+Its two pole evaluations give \(2e^{t/4}\cosh(u/2)\). The prime contribution uses \(g(\log n)+g(-\log n)\), which fixes the constants in \eqref{rh:primepacket}. The even archimedean integral reduces to its real digamma part, giving \eqref{rh:explicit} with the stated signs.
+
+The prime packet and pole term can each be large. Their exact difference is the zero packet. Bounding the prime packet alone by a positive estimate does not bound that difference at the required scale.
+
+\begin{definition}[Pole annihilated packet]\label{rh:polefree}
+Let \(L=1/4-\partial_u^2\), and define
+\begin{equation}\label{rh:tilde}
+\widetilde\Theta_t=L\Theta_t
+=\sum_{\rho\in\mathcal Z}\rho(1-\rho)
+e^{tz_\rho^2+uz_\rho}.
+\end{equation}
+\end{definition}
+
+The identity \(1/4-z_\rho^2=\rho(1-\rho)\) explains the weight. It is nonzero for every nontrivial zero. Thus the operator kills the explicit pole contribution in \eqref{rh:explicit} while retaining every zero mode. Differentiated normal convergence gives
+\begin{equation}\label{rh:tildeexplicit}
+\widetilde\Theta_t=\widetilde{\mathfrak A}_t-
+\widetilde{\mathfrak P}_t,
+\end{equation}
+where tildes on the right mean application of \(L\).
+
+The archimedean term has a uniform bound on every positive heat strip. A direct proof uses the classical digamma series \cite{DLMFDigamma}:
+\[
+\psi(a+iy)-\psi(a)=
+\sum_{k\ge0}\frac{iy}{(k+a)(k+a+iy)},
+\qquad a>0.
+\]
+Its absolute value is at most \(|y|\sum_{k\ge0}(k+a)^{-2}\). Therefore \(|\Psi_\infty(v)|\le C(1+|v|)\) for a fixed constant \(C\). Since
+\[
+\widetilde{\mathfrak A}_t(u)=\frac1{2\pi}
+\int_{\mathbb R}(1/4+v^2)e^{-tv^2}\cos(uv)
+\Psi_\infty(v)\,dv,
+\]
+its magnitude is bounded independently of \(u\) and \(t\in[t_0,T]\), whenever \(0<t_0<T<\infty\). Its energy on a unit translation band is consequently \(O(1)\). Removing this explicit channel is an analytic estimate, rather than the missing arithmetic cancellation.
+
+For a nonnegative quantity \(E_J\), call its growth subexponential when
+\begin{equation}\label{rh:subexp}
+\lim_{J\to\infty}\frac{\log(1+E_J)}J=0.
+\end{equation}
+Equivalently, for every \(\varepsilon>0\), there is a constant
+\(C_\varepsilon\) such that \(E_J\le C_\varepsilon e^{\varepsilon J}\)
+for all positive integers \(J\). This is an upper growth condition. It does
+not assert a positive lower bound.
+
+\begin{theorem}[Local energy criterion]\label{rh:energy}
+Fix \(0<t_0<T<\infty\). For positive integers \(J\), set
+\begin{equation}\label{rh:energydef}
+\widetilde E_J=\int_{t_0}^T\int_J^{J+1}
+|\widetilde\Theta_t(u)|^2\,du\,dt.
+\end{equation}
+The Riemann hypothesis is equivalent to subexponential growth of \(\widetilde E_J\).
+\end{theorem}
+
+\begin{proof}
+Under the hypothesis, \(\rho(1-\rho)=1/4+\gamma^2\). Absolute summation in \eqref{rh:tilde} gives a uniform bound on the strip, and hence \(\widetilde E_J=O(1)\).
+
+Conversely, regard \(u\mapsto\widetilde\Theta_\cdot(u)\) as a function taking values in \(H=L^2([t_0,T];\mathbb C)\). Cauchy Schwarz on each unit interval and the assumed energy bound imply
+\[
+\int_0^\infty\|\widetilde\Theta_\cdot(u)\|_H e^{-au}\,du<\infty
+\qquad(a>0).
+\]
+Its \(H\)-valued Laplace transform is holomorphic for \(\Re w>0\). Initially for \(\Re w>1/2\), it also equals the normally convergent meromorphic series with terms
+\[
+\frac{\rho(1-\rho)e^{t z_\rho^2}}{w-z_\rho}.
+\]
+The residue at a distinct centered zero is a nonzero function of \(t\) in \(H\). Indeed, the multiplicity and \(\rho(1-\rho)\) are nonzero, and the exponential never vanishes. A zero with positive real part would therefore give a nonremovable pole in the holomorphic domain. Symmetry now gives the hypothesis.
+\end{proof}
+
+The pole annihilator changes the weight but leaves the obstruction intact. Together with the bounded archimedean channel, this criterion locates the required estimate in the centered prime packet.
+
+\section{Stable resolution in the physical Gaussian metric}
+
+The prime packet is naturally expressed as a sum of translated Gaussians. Treating every integer translate as an independent coordinate produces an unstable frame at large integers. The centers \(\log n\) and \(\log(n+1)\) differ by about \(1/n\), much less than the fixed heat width. Their near coincidence is a coordinate problem which has an exact repair.
+
+For \(t>0\) and a real center \(a\), define the normalized Gaussian
+\begin{equation}\label{rh:gaussian}
+g_{t,a}(u)=(2\pi t)^{-1/4}e^{-(u-a)^2/(4t)}.
+\end{equation}
+It has norm one in \(L^2(\mathbb R,du)\). For a chosen center \(c\), let \(\psi_{r,t,c}\), \(r=0,1,2,\ldots\), be the orthonormal scaled Hermite functions
+\begin{equation}\label{rh:hermite}
+\psi_{r,t,c}(u)=
+\frac{(2\pi t)^{-1/4}}{\sqrt{2^r r!}}
+H_r\left(\frac{u-c}{\sqrt{2t}}\right)e^{-(u-c)^2/(4t)}.
+\end{equation}
+Here \(H_r(x)=(-1)^r e^{x^2}(d^r/dx^r)e^{-x^2}\) is the physicists' Hermite polynomial. If \(P_R\) is orthogonal projection onto indices \(0\le r\le R\), the coherent expansion gives
+\begin{align}
+g_{t,a}&=e^{-\lambda/2}
+\sum_{r\ge0}\frac{\sigma^r}{\sqrt{r!}}\psi_{r,t,c},
+\label{rh:coherent}\\
+\sigma&=\frac{a-c}{2\sqrt t},\qquad \lambda=\sigma^2,
+\notag\\
+\|(I-P_R)g_{t,a}\|_2^2
+&=e^{-\lambda}\sum_{r>R}\frac{\lambda^r}{r!}.
+\label{rh:poisson}
+\end{align}
+The last expression is a Poisson upper tail. These formulas and the compression estimates are recovered manuscript results \cite{KomorebiHermite}.
+
+Suppose a fixed positive width constant \(C>0\) is chosen and the active centers in a shell satisfy
+\(|a-c_J|\le C\sqrt J+O(1)\) and \(t\ge t_0>0\). Put
+\(\alpha=C^2/(4t_0)\). Then \(\lambda\le\alpha J+O(\sqrt J)\). For a fixed constant \(q>\alpha\), projection through \(R_J=\lceil qJ\rceil\) has norm error bounded by
+\begin{equation}\label{rh:rate}
+\exp\left(-\frac12 I(q\mid\alpha)J+o(J)\right),
+\qquad I(q\mid\alpha)=q\log(q/\alpha)-q+\alpha.
+\end{equation}
+The coefficient mass of the positive prime packet through
+\(X_J=\exp(J+O(\sqrt J))\) is at most
+\[
+\sum_{n\le X_J}\frac{\Lambda(n)}{\sqrt n}
+\le2\sqrt{X_J}\log X_J=\exp(J/2+o(J)).
+\]
+Thus \(I(q\mid\alpha)>1\) makes the aggregate compression error exponentially small. The pole annihilator adds only polynomial factors to the Hermite ladder and leaves this exponential conclusion unchanged.
+
+There are only \(O(J)\) retained coordinates, and they are orthogonal in the physical metric. This closes a conditioning problem. It does not make the arithmetic coefficients small.
+
+\figplaceholder{rh_hermite}{The first Hermite modes illustrate an orthogonal Gaussian resolution. The compression theorem concerns the scaled basis, a declared shell of centers, and its Poisson tail. The example basis plot does not measure the unresolved arithmetic coefficients.}
+
+The ground channel shows why the distinction matters. Direct integration gives
+\begin{equation}\label{rh:ground}
+\int_{\mathbb R}g_{s,c}(u)\widetilde\Theta_t(u)\,du
+=K_s\widetilde\Theta_{t+s}(c),
+\qquad K_s=2\sqrt{\pi s}(2\pi s)^{-1/4}.
+\end{equation}
+The Gaussian test makes this integral absolutely convergent even without the conjecture. It is a Gaussian pairing, with no assertion that the unweighted zero packet belongs to \(L^2(\mathbb R)\). Completing the square proves the identity term by term. Normal convergence and the Gaussian majorant justify summation \cite{KomorebiGround}.
+
+The coefficient of the lowest Gaussian mode is therefore another copy of the same zero field at a later heat time. A stable basis preserves the signal which must be controlled. Removing that coefficient without an exact recovery statement would remove part of the problem.
+
+\section{The classical Möbius packet and exact prime cubes}
+
+The Möbius function \(\mu(n)\) is zero when a square of a prime divides \(n\). Otherwise it equals \((-1)^k\), where \(k\) is the number of distinct prime divisors of \(n\), and \(\mu(1)=1\). For an integer \(K\ge1\), put
+\begin{equation}\label{rh:w}
+w_K(n)=\frac1{n^2}\left(1-\frac1{n^2}\right)^K,
+\qquad c_K=\sum_{n\ge1}\mu(n)w_K(n).
+\end{equation}
+The series is absolutely convergent. Its natural active scale is \(n\) of order \(M=\sqrt K\). The coefficient \(c_K\) is classical. Báez Duarte proved the following exact criterion \cite{BaezDuarte}.
+
+\begin{theorem}[Báez Duarte criterion]\label{rh:bd}
+The Riemann hypothesis holds if and only if, for every \(\varepsilon>0\),
+\begin{equation}\label{rh:bdcriterion}
+|c_K|=O_\varepsilon(K^{-3/4+\varepsilon}).
+\end{equation}
+Equivalently, for every \(\varepsilon>0\),
+\(|c_{M^2}|=O_\varepsilon(M^{-3/2+\varepsilon})\), with \(M\) restricted to square roots of positive integers.
+\end{theorem}
+
+The change in \(\varepsilon\) between these equivalent formulations is harmless because each is quantified over every positive \(\varepsilon\). We do not replace this with the stronger estimate having \(\varepsilon=0\).
+
+Let \(Q\) be a squarefree positive integer, and let \(d=\omega(Q)\) be its number of distinct prime divisors. Its alternating prime cube acts on the weight by
+\begin{equation}\label{rh:deltaq}
+\Delta_Qw_K(m)=\sum_{b\mid Q}\mu(b)w_K(bm).
+\end{equation}
+Here \(b\) ranges over all positive divisors of \(Q\). The result is a sum of \(2^d\) terms, one for each subset of the prime coordinates.
+
+\begin{proposition}[Exact cube decomposition]\label{rh:cube}
+For every \(K\ge1\) and squarefree \(Q\),
+\begin{equation}\label{rh:cubeidentity}
+c_K=\sum_{\substack{m\ge1\\(m,Q)=1}}
+\mu(m)\Delta_Qw_K(m).
+\end{equation}
+The condition \((m,Q)=1\) means that \(m\) and \(Q\) have greatest common divisor one.
+\end{proposition}
+
+\begin{proof}
+Every squarefree integer \(n\) has a unique expression \(n=bm\), where \(b\mid Q\) and \((m,Q)=1\). For these factors, \(\mu(n)=\mu(b)\mu(m)\). Integers which are not squarefree contribute zero. Splitting the absolutely convergent series according to this expression gives \eqref{rh:cubeidentity}.
+\end{proof}
+
+The cube creates an exact alternating difference, but the remaining bases still carry \(\mu(m)\). The next section measures what happens if those signs are removed.
+
+\section{A barrier for discarding the remaining signs}
+
+Define the full triangle majorant
+\begin{equation}\label{rh:majorant}
+\mathcal A_Q(M)=\sum_{\substack{m\ge1\\(m,Q)=1}}
+|\mu(m)|\,|\Delta_Qw_{M^2}(m)|.
+\end{equation}
+It is finite and satisfies \(|c_{M^2}|\le\mathcal A_Q(M)\). We retain the squarefree support through \(|\mu(m)|\). A lower bound on this majorant proves that this particular upper bound is insufficient. It gives no lower bound on \(|c_{M^2}|\).
+
+\begin{lemma}[Uniform positive cube tail]\label{rh:positive}
+For a fixed \(R>0\), put
+\begin{equation}\label{rh:cr}
+\kappa_R=\frac1{\zeta(2)}-\frac{\zeta(4)}{R^2}.
+\end{equation}
+For every squarefree \(Q\) and every integer \(m\ge RM\),
+\begin{equation}\label{rh:positivebound}
+\Delta_Qw_{M^2}(m)\ge\frac{\kappa_R}{m^2}.
+\end{equation}
+In particular, \(R=3\) gives \(\kappa_R>0\).
+\end{lemma}
+
+\begin{proof}
+The limiting divisor sum is
+\[
+\sum_{b\mid Q}\frac{\mu(b)}{b^2}
+=\prod_{p\mid Q}(1-p^{-2})\ge\zeta(2)^{-1}.
+\]
+For \(0\le x\le1\), Bernoulli's inequality gives
+\(0\le1-(1-x)^K\le Kx\). With \(K=M^2\), the error in replacing each power by one is at most
+\[
+\frac{M^2}{m^2}\sum_{b\mid Q}b^{-4}
+\le\frac{\zeta(4)}{R^2}.
+\]
+Multiplying the resulting lower bound by \(m^{-2}\) proves the lemma.
+\end{proof}
+
+To use this positive tail for the exact majorant, we must count squarefree coprime bases. Counting all coprime integers would include bases with zero Möbius coefficient and would not suffice.
+
+\begin{lemma}[Squarefree coprime bases]\label{rh:count}
+For fixed \(R>0\), the number \(N_{Q,R}(M)\) of squarefree integers \(m\) in \([RM,2RM]\) with \((m,Q)=1\) satisfies, uniformly in squarefree \(Q\),
+\begin{equation}\label{rh:countformula}
+N_{Q,R}(M)=RM\frac{\varphi(Q)}Q
+\prod_{p\nmid Q}(1-p^{-2})+O_R(2^d\sqrt M).
+\end{equation}
+Here \(\varphi(Q)\) is Euler's totient function, which counts the positive residues coprime to \(Q\).
+\end{lemma}
+
+\begin{proof}
+Use the exact identity \(\mu(m)^2=\sum_{\ell^2\mid m}\mu(\ell)\). In the coprime sector only \((\ell,Q)=1\) contributes. Inclusion and exclusion over the prime factors of \(Q\) counts the possible multiples of \(\ell^2\) in the interval with main term
+\(RM\ell^{-2}\varphi(Q)/Q\) and error \(O(2^d)\).
+There are \(O_R(\sqrt M)\) values of \(\ell\), so the summed error is \(O_R(2^d\sqrt M)\). Extending the main sum from \(\ell\le\sqrt{2RM}\) to all positive integers contributes only \(O_R(\sqrt M)\). Absolute convergence identifies the extended sum as \(\prod_{p\nmid Q}(1-p^{-2})\), giving \eqref{rh:countformula}.
+\end{proof}
+
+\begin{theorem}[Absolute cube barrier]\label{rh:barrier}
+Fix \(R\) with \(\kappa_R>0\). Suppose squarefree \(Q=Q(M)\) has \(d(M)=o(\log M)\) distinct prime divisors. For all sufficiently large \(M\),
+\begin{equation}\label{rh:barrierbound}
+\mathcal A_Q(M)\ge
+\frac{\kappa_R}{8R\zeta(2)}
+\frac{\varphi(Q)}{QM}
+\ge\frac{\kappa_R}{8R\zeta(2)M(d+1)}.
+\end{equation}
+Consequently \(\mathcal A_Q(M)\ge M^{-1-o(1)}\). It cannot itself satisfy the target bound in Theorem~\ref{rh:bd}.
+\end{theorem}
+
+\begin{proof}
+Order the prime divisors as \(p_1<\cdots<p_d\). Since \(p_i\ge i+1\),
+\[
+\frac{\varphi(Q)}Q=\prod_{i=1}^d(1-p_i^{-1})
+\ge\prod_{i=1}^d\frac i{i+1}=\frac1{d+1}.
+\]
+Also \(\prod_{p\nmid Q}(1-p^{-2})\ge1/\zeta(2)\).
+The error in \eqref{rh:countformula} is \(M^{1/2+o(1)}\), while its main term is at least \(RM/[\zeta(2)(d+1)]\). Therefore eventually
+\[
+N_{Q,R}(M)\ge\frac{RM}{2\zeta(2)}\frac{\varphi(Q)}Q.
+\]
+On every counted base, \(|\mu(m)|=1\), and Lemma~\ref{rh:positive} gives
+\(|\Delta_Qw_{M^2}(m)|\ge\kappa_R/(4R^2M^2)\).
+Their contribution is a lower bound for the full majorant. Multiplication gives \eqref{rh:barrierbound}.
+\end{proof}
+
+The dimension condition means that the cube size \(2^d\) is \(M^{o(1)}\). In this regime the target amplitude is \(M^{-3/2+o(1)}\), whereas the triangle majorant is at least \(M^{-1-o(1)}\). The missing factor is \(M^{-1/2+o(1)}\). It must arise from cancellation or another operation which retains and controls the signs.
+
+The theorem is specific to the exact majorant \eqref{rh:majorant}. It does not prohibit every possible use of a prime cube. A proof which estimates signed correlations between its remaining bases would be outside the barrier's hypothesis.
+
+\figplaceholder{rh_barrier}{The two exponents in the repaired cube barrier. The curves show theorem scales, rather than measured Möbius amplitudes. The absolute majorant has a lower bound of order \(M^{-1-o(1)}\), while the Báez Duarte criterion asks for the signed amplitude to be at most \(M^{-3/2+o(1)}\).}
+
+\section{Other mechanisms which preserve the obstruction}
+
+The saved program investigated several ways of creating contraction after the analytic reductions. Their failures are informative because each identifies a quantity that is preserved \cite{KomorebiFinalGap,KomorebiBoundary}.
+
+First, an exact prime high pass followed by exact coprime reconstruction preserves a power mode. If a mode has local multiplier \(1-p^{-\rho}\), reconstruction contributes the reciprocal multiplier whenever it is defined. Their product is one. The high pass alone can look smaller, but exact reconstruction restores the removed factor. The historical Lean module \texttt{HighpassReconstructionNoGo.lean} certifies this algebraic cancellation. It does not estimate a prime sum.
+
+Second, several diagonal filters of the same logarithmic generator do not create a mixing mechanism on a shared neutral vector. Every filter acts on that vector through its own scalar value, and a common preserved mode remains preserved under composition. The reported modules \texttt{DiagonalHypocoercivityNoGo.lean} and \texttt{NaturalScaleModeNoGo.lean} formalize this boundary in their declared algebraic settings. Their conclusion concerns those settings, rather than arbitrary arithmetic operators.
+
+Third, global Hardy norms on a prime torus are blind to the squarefree Möbius sign. For a finite prime set, a squarefree monomial is \(\prod_{p\in S}z_p\). Replacing every coordinate by \(-z_p\) multiplies it by \((-1)^{|S|}\), exactly its Möbius coefficient. The substitution preserves Haar measure on the torus. Every global \(L^q\) norm formed with that measure is consequently unchanged by this sign operation. A bound in that invariant norm cannot distinguish the signed packet from the corresponding unsigned squarefree polynomial. This statement does not say that local restrictions or correlations with a separate observable are invariant.
+
+Fourth, a raw positive fourth moment cannot lie below the square of its quadratic energy in a normalized probability space. If \(\nu\) is its probability measure and \(F\in L^4(\nu)\) is the packet, Cauchy Schwarz gives
+\[
+\int |F|^4\,d\nu\ge\left(\int |F|^2\,d\nu\right)^2.
+\]
+This is the precise obstruction to a strict saving below that scale for the raw moment. It does not assert positivity of every separately grouped collision term for arbitrary signed coefficients. A viable replacement would require a signed expression, a justified quotient, or an independently proved correlation estimate.
+
+The stable Hermite construction addresses another failure, the nearly dependent integer Gaussian frame. Its ground identity \eqref{rh:ground} then identifies what survives the repair. Taken together, these results reject particular insufficient operations. They do not establish that no approach to the conjecture can work.
+
+\section{The exact open conjecture in arithmetic coordinates}
+
+The prime cube identity permits an explicit formulation of the remaining signed estimate. It is independent of any unstated transport constant or choice of physical compression.
+
+\begin{conjecture}[Signed rough base bound]\label{rh:signed}
+For every \(\varepsilon>0\), there is a constant \(C_\varepsilon\) such that, for all integers \(K\ge1\) and every squarefree \(Q\),
+\begin{equation}\label{rh:signedbound}
+\left|\sum_{\substack{m\ge1\\(m,Q)=1}}
+\mu(m)\Delta_Qw_K(m)\right|
+\le C_\varepsilon K^{-3/4+\varepsilon}.
+\end{equation}
+\end{conjecture}
+
+\begin{proposition}[Exact conditional implication]\label{rh:conditional}
+Conjecture~\ref{rh:signed} is equivalent to the Riemann hypothesis. The same is true if \eqref{rh:signedbound} is required only along one declared choice \(Q=Q(K)\), including an admissible growing prime cube.
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{rh:cube}, the sum on the left is exactly \(c_K\), regardless of \(Q\). Theorem~\ref{rh:bd} supplies both implications. Its bound is independent of \(Q\) because its value is independent of \(Q\).
+\end{proof}
+
+This equivalence does not make the estimate easier by itself. It states precisely what must be proved in this coordinate system. A choice of \(Q\) is useful only if it exposes a provable signed estimate. The barrier theorem shows that an admissible cube followed by its absolute majorant does not do so.
+
+The heat formulation is equally precise: prove subexponential growth of \(\widetilde E_J\) in \eqref{rh:energydef}. The Hermite formulation places that task in stable physical coordinates. The saved program proposes a lower bound on prime detail energy, combined with a historical upper bound and a record argument, as one possible route. That lower bound is currently unproved. We do not promote it to an established estimate by writing it as a spectral gap.
+
+In particular, the expressions ``first prime channel'' and ``rough base channel'' describe where the arithmetic signs remain after the declared decompositions. They are not a claim that the Möbius and von Mangoldt packets are connected by a newly proved direct transfer identity. The two rigorous interfaces used here are the heat criterion and the classical Báez Duarte criterion. Each independently identifies a full Riemann hypothesis level bound.
+
+A future result should therefore answer three concrete questions. Does it retain the actual arithmetic signs? Does it control the principal observable, rather than only an average over auxiliary characters? Does its loss remain small enough at the same scale where the conjecture is tested? A numerical profile floor, a sign invariant norm, or an exact transport identity without a cancellation estimate answers none of these by itself.
+
+\section{Evidence, certification, and continuation}
+
+The recovered v0.13 report records four focused Lean modules checked in a pinned offline Lean \(4.34.0\) release candidate environment: physical metric bookkeeping, diagonal preservation, exact high pass reconstruction, and common normalized modes. It also records ordinary Mathlib logical foundations in the axiom audit and the rejection of two false controls. One rejected control exposed a missing nonnegativity hypothesis in a squared energy estimate, which was repaired in that checkpoint \cite{KomorebiFinalGap}.
+
+The master archive explicitly marks v0.10 verification as failed or incomplete and v0.11 and v0.12 Lean drafts as unverified. It reports 377 cumulative checkpoint entries and 104 distinct Lean source contents. These are source counts, not a count of independent theorems and not a cumulative certification result \cite{KomorebiMaster}. This monograph preserves those distinctions.
+
+The Hermite report records 144 coherent expansion checks and 27 ground overlap checks with residuals at ordinary floating point precision. The prime cube report records finite orbit decompositions, interval masses, and high precision continuum profile optimization \cite{KomorebiHermite,KomorebiParity}. Those experiments audit finite identities and implementation. They do not estimate the asymptotic cancellation in \eqref{rh:signedbound}.
+
+The revised barrier proof in this article makes two matters explicit. Its lower bound concerns the full absolute majorant, rather than treating one interval as an upper bound for the entire signed sum. It also counts squarefree coprime bases, so zero Möbius coefficients cannot inflate the claimed obstruction. The proofs of Lemma~\ref{rh:count} and Theorem~\ref{rh:barrier} supply that support correction. This is an ordinary proof added during consolidation, not a new historical certificate.
+
+The continuation target is therefore well defined. In arithmetic coordinates it is Conjecture~\ref{rh:signed}. In the physical zero packet it is the subexponential energy estimate of Theorem~\ref{rh:energy}. The existing work supplies exact representations, explicit analytic removals, a stable compression, and several boundaries on proposed closure mechanisms. The signed estimate remains open, and the Riemann hypothesis remains unproved.
