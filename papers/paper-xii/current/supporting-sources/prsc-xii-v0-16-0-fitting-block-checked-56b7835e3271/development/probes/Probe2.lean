@@ -1,0 +1,14 @@
+import PaperXII.DeterminantalIdeals
+#check Function.not_injective_iff
+#check Option.ne_none_iff_exists
+#check Option.ne_none_iff_exists'
+#check Fin.succAbove_ne
+#check Fin.succAbove_ne_zero
+#check Fin.succAbove_ne_self
+#check Fin.succAbove_injective
+#check Matrix.det_succ_row_zero
+#check Matrix.submatrix_submatrix
+#check Fin.cons
+#check Matrix.det_submatrix_equiv_self
+#check Fintype.card_le_of_injective
+#check Finset.sum_eq_single

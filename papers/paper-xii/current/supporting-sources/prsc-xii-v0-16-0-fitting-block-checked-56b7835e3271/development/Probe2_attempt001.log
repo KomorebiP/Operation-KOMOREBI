@@ -1,0 +1,20 @@
+Function.not_injective_iff.{u_1, u_2} {α : Sort u_1} {β : Sort u_2} {f : α → β} :
+  ¬Function.Injective f ↔ ∃ a b, f a = f b ∧ a ≠ b
+Option.ne_none_iff_exists.{u_1} {α✝ : Type u_1} {o : Option α✝} : o ≠ none ↔ ∃ x, some x = o
+Option.ne_none_iff_exists'.{u_1} {α✝ : Type u_1} {o : Option α✝} : o ≠ none ↔ ∃ x, o = some x
+Fin.succAbove_ne {n : ℕ} (p : Fin (n + 1)) (i : Fin n) : p.succAbove i ≠ p
+Fin.succAbove_ne_zero {n : ℕ} [NeZero n] {a : Fin (n + 1)} {b : Fin n} (ha : a ≠ 0) (hb : b ≠ 0) : a.succAbove b ≠ 0
+/mnt/data/xii_fitting/lean/Probe2.lean:7:7: error(lean.unknownIdentifier): Unknown constant `Fin.succAbove_ne_self`
+/mnt/data/xii_fitting/lean/Probe2.lean:8:7: error(lean.unknownIdentifier): Unknown constant `Fin.succAbove_injective`
+Matrix.det_succ_row_zero.{v} {R : Type v} [CommRing R] {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) :
+  A.det = ∑ j, (-1) ^ ↑j * A 0 j * (A.submatrix Fin.succ j.succAbove).det
+Matrix.submatrix_submatrix.{v, u_1, u_2, u_3, u_4, u_8, u_9} {l : Type u_1} {m : Type u_2} {n : Type u_3} {o : Type u_4}
+  {α : Type v} {l₂ : Type u_8} {o₂ : Type u_9} (A : Matrix m n α) (r₁ : l → m) (c₁ : o → n) (r₂ : l₂ → l)
+  (c₂ : o₂ → o) : (A.submatrix r₁ c₁).submatrix r₂ c₂ = A.submatrix (r₁ ∘ r₂) (c₁ ∘ c₂)
+Fin.cons.{u} {n : ℕ} {α : Fin (n + 1) → Sort u} (x : α 0) (p : (i : Fin n) → α i.succ) (i : Fin (n + 1)) : α i
+Matrix.det_submatrix_equiv_self.{v, u_1, u_2} {m : Type u_1} {n : Type u_2} [DecidableEq n] [Fintype n] [DecidableEq m]
+  [Fintype m] {R : Type v} [CommRing R] (e : n ≃ m) (A : Matrix m m R) : (A.submatrix ⇑e ⇑e).det = A.det
+Fintype.card_le_of_injective.{u_1, u_2} {α : Type u_1} {β : Type u_2} [Fintype α] [Fintype β] (f : α → β)
+  (hf : Function.Injective f) : Fintype.card α ≤ Fintype.card β
+Finset.sum_eq_single.{u_1, u_4} {ι : Type u_1} {M : Type u_4} [AddCommMonoid M] {s : Finset ι} {f : ι → M} (a : ι)
+  (h₀ : ∀ b ∈ s, b ≠ a → f b = 0) (h₁ : a ∉ s → f a = 0) : ∑ x ∈ s, f x = f a

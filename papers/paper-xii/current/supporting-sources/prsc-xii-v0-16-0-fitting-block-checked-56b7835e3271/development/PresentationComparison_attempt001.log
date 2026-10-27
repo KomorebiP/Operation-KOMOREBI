@@ -1,0 +1,110 @@
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:23:18: error(lean.invalidField): Invalid field `rangeRestrict_surjective`: The environment does not contain `LinearMap.rangeRestrict_surjective`, so it is not possible to project the field `rangeRestrict_surjective` from an expression
+  V.mulVecLin
+of type `(β → R) →ₗ[R] m → R`
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:27:88: error: Application type mismatch: The argument
+  x
+has type
+  α
+of sort `Type u_6` but is expected to have type
+  α → R
+of sort `Type (max u_1 u_6)` in the application
+  LinearMap.congr_fun hg x
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:29:30: error: Application type mismatch: The argument
+  Eq.le h
+has type
+  LinearMap.range.{u_1, u_1, max u_1 u_3, max u_1 u_2} A.mulVecLin ≤ B.mulVecLin.range
+but is expected to have type
+  LinearMap.range.{u_1, u_1, max u_1 u_6, max u_1 u_2} (mulVecLin ?m.316) ≤ (mulVecLin ?m.317).range
+in the application
+  factor ?m.316 ?m.317 (Eq.le h)
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:10:0: error: AddConstAsyncResult.commitConst: constant has level params [u_1, u_2, u_3, u_4, u_6, u_7] but expected [u_1, u_2, u_3, u_4]
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:45:54: error: unsolved goals
+R : Type u_1
+inst✝³ : CommRing R
+m : Type u_2
+n : Type u_3
+q : Type u_5
+inst✝² : Fintype m
+inst✝¹ : Fintype q
+inst✝ : DecidableEq q
+A : Matrix m n R
+C : Matrix m q R
+j : ℕ
+U : Matrix (m ⊕ q) (m ⊕ q) R := fromBlocks 1 (-C) 0 1
+V : Matrix (m ⊕ q) (m ⊕ q) R := fromBlocks 1 C 0 1
+hVU : V * U = 1
+⊢ 1 = 1
+Try this:
+  [apply] abel_nf
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:63:14: error: unsolved goals
+R : Type u_1
+inst✝² : CommRing R
+m : Type u_2
+n : Type u_3
+p : Type u_4
+q : Type u_5
+M : Type u_6
+inst✝¹ : AddCommGroup M
+inst✝ : Module R M
+π : (m → R) →ₗ[R] M
+ρ : (q → R) →ₗ[R] M
+x y : m ⊕ q → R
+⊢ ((π fun x_1 => x (Sum.inl x_1) + y (Sum.inl x_1)) + ρ fun x_1 => x (Sum.inr x_1) + y (Sum.inr x_1)) =
+    (π fun x_1 => x (Sum.inl x_1)) +
+      ((ρ fun x_1 => x (Sum.inr x_1)) + ((π fun x => y (Sum.inl x)) + ρ fun x => y (Sum.inr x)))
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:64:15: error: unsolved goals
+R : Type u_1
+inst✝² : CommRing R
+m : Type u_2
+n : Type u_3
+p : Type u_4
+q : Type u_5
+M : Type u_6
+inst✝¹ : AddCommGroup M
+inst✝ : Module R M
+π : (m → R) →ₗ[R] M
+ρ : (q → R) →ₗ[R] M
+a : R
+x : m ⊕ q → R
+⊢ ((π fun x_1 => a * x (Sum.inl x_1)) + ρ fun x_1 => a * x (Sum.inr x_1)) =
+    (a • π fun x_1 => x (Sum.inl x_1)) + a • ρ fun x_1 => x (Sum.inr x_1)
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:79:2: error: unsolved goals
+case mp
+R : Type u_1
+inst✝⁵ : CommRing R
+m : Type u_2
+n : Type u_3
+q : Type u_5
+M : Type u_6
+inst✝⁴ : AddCommGroup M
+inst✝³ : Module R M
+inst✝² : Fintype n
+inst✝¹ : Fintype q
+inst✝ : DecidableEq q
+A : Matrix m n R
+π : (m → R) →ₗ[R] M
+ρ : (q → R) →ₗ[R] M
+C : Matrix m q R
+hA : A.mulVecLin.range = π.ker
+hC : π ∘ₗ C.mulVecLin = ρ
+hπA : ∀ (x : n → R), π (A *ᵥ x) = 0
+hπC : ∀ (x : q → R), π (C *ᵥ x) = ρ x
+x : n ⊕ q → R
+⊢ ((π fun x_1 => (A *ᵥ fun x_2 => x (Sum.inl x_2)) x_1 + -(C *ᵥ fun x_2 => x (Sum.inr x_2)) x_1) +
+      ρ fun x_1 => x (Sum.inr x_1)) =
+    0
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:81:10: error: declaration uses `sorry`
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:82:25: error: This simp argument is unused:
+  hπA
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [commonMap, augment, Matrix.fromBlocks_mulVec, Function.comp_def, Matrix.neg_mulVec, hπC]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/xii_fitting/lean/PaperXII/PresentationComparison.lean:82:29: error: This simp argument is unused:
+  hπC
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [commonMap, augment, Matrix.fromBlocks_mulVec, Function.comp_def, Matrix.neg_mulVec, hπA]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

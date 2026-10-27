@@ -1,0 +1,42 @@
+TensorProduct.piScalarRight.{u_1, u_2, u_3, u_4} (R : Type u_1) [CommSemiring R] (S : Type u_2) [CommSemiring S]
+  [Algebra R S] (N : Type u_3) [AddCommMonoid N] [Module R N] [Module S N] [IsScalarTower R S N] (ι : Type u_4)
+  [Fintype ι] [DecidableEq ι] : TensorProduct R N (ι → R) ≃ₗ[S] ι → N
+TensorProduct.piScalarRight_apply.{u_1, u_2, u_3, u_4} (R : Type u_1) [CommSemiring R] (S : Type u_2) [CommSemiring S]
+  [Algebra R S] (N : Type u_3) [AddCommMonoid N] [Module R N] [Module S N] [IsScalarTower R S N] (ι : Type u_4)
+  [Fintype ι] [DecidableEq ι] (x : TensorProduct R N (ι → R)) :
+  (TensorProduct.piScalarRight R S N ι) x = (TensorProduct.piScalarRightHom R S N ι) x
+TensorProduct.piScalarRightHom_tmul.{u_1, u_2, u_3, u_4} (R : Type u_1) [CommSemiring R] (S : Type u_2) [CommSemiring S]
+  [Algebra R S] (N : Type u_3) [AddCommMonoid N] [Module R N] [Module S N] [IsScalarTower R S N] (ι : Type u_4) (x : N)
+  (f : ι → R) : (TensorProduct.piScalarRightHom R S N ι) (x ⊗ₜ[R] f) = fun j => f j • x
+LinearMap.baseChange_tmul.{u_1, u_2, u_4, u_5} {R : Type u_1} {A : Type u_2} {M : Type u_4} {N : Type u_5}
+  [CommSemiring R] [Semiring A] [Algebra R A] [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N]
+  (f : M →ₗ[R] N) (a : A) (x : M) : (LinearMap.baseChange A f) (a ⊗ₜ[R] x) = a ⊗ₜ[R] f x
+Function.Exact.{u_2, u_4, u_6} {M : Type u_2} {N : Type u_4} {P : Type u_6} (f : M → N) (g : N → P) [Zero P] : Prop
+Function.Exact.linearMap_ker_eq.{u_1, u_2, u_4, u_6} {R : Type u_1} {M : Type u_2} {N : Type u_4} {P : Type u_6}
+  [Semiring R] [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [Module R M] [Module R N] [Module R P]
+  {f : M →ₗ[R] N} {g : N →ₗ[R] P} (hfg : Function.Exact ⇑f ⇑g) : g.ker = f.range
+/mnt/data/xii_fitting/lean/Probe4.lean:10:7: error(lean.unknownIdentifier): Unknown constant `TensorProduct.lTensor_exact`
+LinearMap.exact_iff.{u_1, u_2, u_4, u_6} {R : Type u_1} {M : Type u_2} {N : Type u_4} {P : Type u_6} [Semiring R]
+  [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [Module R M] [Module R N] [Module R P] {f : M →ₗ[R] N}
+  {g : N →ₗ[R] P} : Function.Exact ⇑f ⇑g ↔ g.ker = f.range
+Function.Exact.iff_of_ladder_linearEquiv.{u_1, u_2, u_3, u_4, u_5, u_6, u_7} {R : Type u_1} {M : Type u_2}
+  {M' : Type u_3} {N : Type u_4} {N' : Type u_5} {P : Type u_6} {P' : Type u_7} [Semiring R] [AddCommMonoid M]
+  [AddCommMonoid M'] [AddCommMonoid N] [AddCommMonoid N'] [AddCommMonoid P] [AddCommMonoid P'] [Module R M]
+  [Module R M'] [Module R N] [Module R N'] [Module R P] [Module R P'] {f₁₂ : M →ₗ[R] N} {f₂₃ : N →ₗ[R] P}
+  {g₁₂ : M' →ₗ[R] N'} {g₂₃ : N' →ₗ[R] P'} {e₁ : M ≃ₗ[R] M'} {e₂ : N ≃ₗ[R] N'} {e₃ : P ≃ₗ[R] P'}
+  (h₁₂ : g₁₂ ∘ₗ ↑e₁ = ↑e₂ ∘ₗ f₁₂) (h₂₃ : g₂₃ ∘ₗ ↑e₂ = ↑e₃ ∘ₗ f₂₃) : Function.Exact ⇑g₁₂ ⇑g₂₃ ↔ Function.Exact ⇑f₁₂ ⇑f₂₃
+TensorProduct.ext.{u_1, u_2, u_6, u_7, u_11} {R : Type u_1} {R₂ : Type u_2} [CommSemiring R] [CommSemiring R₂]
+  {σ₁₂ : R →+* R₂} {M : Type u_6} {N : Type u_7} {P₂ : Type u_11} [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P₂]
+  [Module R M] [Module R N] [Module R₂ P₂] {g h : TensorProduct R M N →ₛₗ[σ₁₂] P₂}
+  (H : (TensorProduct.mk R M N).compr₂ₛₗ g = (TensorProduct.mk R M N).compr₂ₛₗ h) : g = h
+Module.finitePresentation_of_surjective.{u_1, u_2, u_3} {R : Type u_1} {M : Type u_2} {N : Type u_3} [Ring R]
+  [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N] [h : Module.FinitePresentation R M] (l : M →ₗ[R] N)
+  (hl : Function.Surjective ⇑l) (hl' : l.ker.FG) : Module.FinitePresentation R N
+LinearEquiv.restrictScalars.{u_1, u_4, u_5, u_7} (R : Type u_1) {S : Type u_4} {M : Type u_5} {M₂ : Type u_7}
+  [Semiring R] [Semiring S] [AddCommMonoid M] [AddCommMonoid M₂] [Module R M] [Module R M₂] [Module S M] [Module S M₂]
+  [LinearMap.CompatibleSMul M M₂ R S] (f : M ≃ₗ[S] M₂) : M ≃ₗ[R] M₂
+TensorProduct.rid.{u_1, u_4} (R : Type u_1) [CommSemiring R] (M : Type u_4) [AddCommMonoid M] [Module R M] :
+  TensorProduct R M R ≃ₗ[R] M
+/mnt/data/xii_fitting/lean/Probe4.lean:17:7: error(lean.unknownIdentifier): Unknown identifier `AlgebraTensorModule.rid`
+/mnt/data/xii_fitting/lean/Probe4.lean:18:7: error(lean.unknownIdentifier): Unknown identifier `AlgebraTensorModule.lift`
+/mnt/data/xii_fitting/lean/Probe4.lean:19:7: error(lean.unknownIdentifier): Unknown identifier `AlgebraTensorModule.cancelBaseChange`

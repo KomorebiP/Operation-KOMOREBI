@@ -1,0 +1,24 @@
+/mnt/data/xii_fitting/lean/PaperXII/FittingStrata.lean:25:6: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a => fittingIdeal R M j ≤ _a ↔ j < Module.finrank _a.ResidueField (_a.ResidueField ⊗[R] M)
+Error: Application type mismatch: The argument
+  p.isPrime
+has type
+  p.asIdeal.IsPrime
+but is expected to have type
+  _a.IsPrime
+in the application
+  @Ideal.ResidueField R inst✝³ _a ⋯
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+R : Type u_1
+M : Type u_2
+inst✝³ : CommRing R
+inst✝² : AddCommGroup M
+inst✝¹ : Module R M
+inst✝ : Module.FinitePresentation R M
+p : PrimeSpectrum R
+j : ℕ
+⊢ fittingIdeal R M j ≤ p.asIdeal ↔ j < Module.finrank p.asIdeal.ResidueField (p.asIdeal.ResidueField ⊗[R] M)

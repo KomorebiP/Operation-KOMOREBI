@@ -1,0 +1,33 @@
+Matrix.detRowAlternating.{v, u_2} {n : Type u_2} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R] :
+  (n → R) [⋀^n]→ₗ[R] R
+MultilinearMap.map_sum
+  ↑Matrix.detRowAlternating : ∀ (g : (i : ?m.7) → ?m.15 i → ?m.7 → ?m.9) [inst : DecidableEq ?m.7]
+  [inst_1 : Fintype ?m.7] [inst_2 : (i : ?m.7) → Fintype (?m.15 i)],
+  (↑Matrix.detRowAlternating fun i => ∑ j, g i j) = ∑ r, ↑Matrix.detRowAlternating fun i => g i (r i)
+AlternatingMap.map_smul_univ
+  Matrix.detRowAlternating : ∀ (c : ?m.6 → ?m.12) (m : ?m.6 → ?m.6 → ?m.12),
+  (Matrix.detRowAlternating fun i => c i • m i) = (∏ i, c i) • Matrix.detRowAlternating m
+↑Matrix.detRowAlternating : MultilinearMap ?m.11 (fun x => ?m.14 → ?m.11) ?m.11
+Matrix.det_succ_row.{v} {R : Type v} [CommRing R] {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin n.succ) :
+  A.det = ∑ j, (-1) ^ (↑i + ↑j) * A i j * (A.submatrix i.succAbove j.succAbove).det
+Matrix.det_succ_column.{v} {R : Type v} [CommRing R] {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (j : Fin n.succ) :
+  A.det = ∑ i, (-1) ^ (↑i + ↑j) * A i j * (A.submatrix i.succAbove j.succAbove).det
+Matrix.det_zero_of_row_eq.{v, u_2} {n : Type u_2} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
+  {M : Matrix n n R} {i j : n} (i_ne_j : i ≠ j) (hij : M i = M j) : M.det = 0
+Matrix.det_zero_of_column_eq.{v, u_2} {n : Type u_2} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
+  {M : Matrix n n R} {i j : n} (i_ne_j : i ≠ j) (hij : ∀ (k : n), M k i = M k j) : M.det = 0
+Ideal.map_span.{u, v, u_1} {R : Type u} {S : Type v} {F : Type u_1} [Semiring R] [Semiring S] [FunLike F R S] (f : F)
+  [RingHomClass F R S] (s : Set R) : Ideal.map f (Ideal.span s) = Ideal.span (⇑f '' s)
+Ideal.span_le.{u} {α : Type u} [Semiring α] {s : Set α} {I : Ideal α} : Ideal.span s ≤ I ↔ s ⊆ ↑I
+Ideal.subset_span.{u} {α : Type u} [Semiring α] {s : Set α} : s ⊆ ↑(Ideal.span s)
+Matrix.submatrix_mul.{v, u_1, u_2, u_3, u_4, u_7, u_8} {l : Type u_1} {m : Type u_2} {n : Type u_3} {o : Type u_4}
+  {α : Type v} [Fintype n] [Fintype o] [Mul α] [AddCommMonoid α] {p : Type u_7} {q : Type u_8} (M : Matrix m n α)
+  (N : Matrix n p α) (e₁ : l → m) (e₂ : o → n) (e₃ : q → p) (he₂ : Function.Bijective e₂) :
+  (M * N).submatrix e₁ e₃ = M.submatrix e₁ e₂ * N.submatrix e₂ e₃
+/mnt/data/xii_fitting/lean/Probe.lean:19:7: error(lean.unknownIdentifier): Unknown constant `Module.FinitePresentation`
+/mnt/data/xii_fitting/lean/Probe.lean:20:7: error(lean.unknownIdentifier): Unknown constant `Module.FinitePresentation.exists_fin`
+/mnt/data/xii_fitting/lean/Probe.lean:21:7: error(lean.unknownIdentifier): Unknown constant `LinearMap.rTensor_exact`
+Matrix.mulVecLin.{u_1, u_4, u_5} {R : Type u_1} [CommSemiring R] {m : Type u_4} {n : Type u_5} [Fintype n]
+  (M : Matrix m n R) : (n → R) →ₗ[R] m → R
+Matrix.toLin'.{u_1, u_4, u_5} {R : Type u_1} [CommSemiring R] {m : Type u_4} {n : Type u_5} [DecidableEq n]
+  [Fintype n] : Matrix m n R ≃ₗ[R] (n → R) →ₗ[R] m → R

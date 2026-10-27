@@ -1,0 +1,103 @@
+import PaperXII.ModuleSupport
+import PaperXII.QuotientSupport
+import PaperXII.SupportTransport
+import PaperXII.DeterminantalIdeals
+import PaperXII.DeterminantalStabilization
+import PaperXII.DeterminantalBlockStabilization
+import PaperXII.PresentationComparison
+import PaperXII.PresentationIndependence
+import PaperXII.IntrinsicFitting
+import PaperXII.FittingBaseChange
+import PaperXII.FittingTransport
+import PaperXII.FittingBoundaryChecks
+import PaperXII.FittingStrata
+
+#print axioms PaperXII.ModuleSupport.FullSupport
+#print axioms PaperXII.ModuleSupport.NearlyFaithful
+#print axioms PaperXII.ModuleSupport.support_eq_zeroLocus_annihilator
+#print axioms PaperXII.ModuleSupport.fullSupport_iff_localizations
+#print axioms PaperXII.ModuleSupport.fullSupport_iff_annihilator_le_nilradical
+#print axioms PaperXII.ModuleSupport.nearlyFaithful_iff_annihilator_le_nilradical
+#print axioms PaperXII.ModuleSupport.nearlyFaithful_iff_fullSupport
+#print axioms PaperXII.ModuleSupport.nontrivial_localization_of_nearlyFaithful
+#print axioms PaperXII.ModuleSupport.nearlyFaithful_iff_faithful_of_reduced
+#print axioms PaperXII.ModuleSupport.fullSupport_iff_faithful_of_reduced
+#print axioms PaperXII.QuotientSupport.mem_support_restrictScalars_iff
+#print axioms PaperXII.QuotientSupport.support_quotient_over_base
+#print axioms PaperXII.QuotientSupport.support_quotient_iff
+#print axioms PaperXII.QuotientSupport.support_quotient_eq_preimage
+#print axioms PaperXII.QuotientSupport.image_support_quotient
+#print axioms PaperXII.SupportTransport.mem_support_comap_iff
+#print axioms PaperXII.SupportTransport.spectrum_isHomeomorph
+#print axioms PaperXII.SupportTransport.image_support
+#print axioms PaperXII.SupportTransport.fullSupport_iff
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal
+#print axioms PaperXII.DeterminantalIdeals.minor_mem
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_le_iff
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_zero
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_map
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_transpose
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_succ_le
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_mul_le_right
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_mul_le_left
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_mul_left_eq
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_mul_right_eq
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_eq_of_mutual_factorization
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_submatrix_equiv
+#print axioms PaperXII.DeterminantalIdeals.det_submatrix_zero_of_not_injective_rows
+#print axioms PaperXII.DeterminantalIdeals.det_submatrix_zero_of_not_injective_cols
+#print axioms PaperXII.DeterminantalIdeals.stabilize
+#print axioms PaperXII.DeterminantalIdeals.stabilize_none_none
+#print axioms PaperXII.DeterminantalIdeals.stabilize_none_some
+#print axioms PaperXII.DeterminantalIdeals.stabilize_some_none
+#print axioms PaperXII.DeterminantalIdeals.stabilize_some_some
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_stabilize
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal_eq_top
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal_stabilize
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal_submatrix_equiv
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock_inl_inl
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock_inl_inr
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock_inr_inl
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock_inr_inr
+#print axioms PaperXII.DeterminantalIdeals.optionSumEquiv
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock_option
+#print axioms PaperXII.DeterminantalIdeals.stabilizeBlock_equiv
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal_stabilizeBlock
+#print axioms PaperXII.DeterminantalIdeals.exists_factor_of_range_le
+#print axioms PaperXII.DeterminantalIdeals.minorIdeal_eq_of_range_eq
+#print axioms PaperXII.DeterminantalIdeals.augment
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal_augment
+#print axioms PaperXII.DeterminantalIdeals.Presents
+#print axioms PaperXII.DeterminantalIdeals.commonMap
+#print axioms PaperXII.DeterminantalIdeals.range_augment_eq_ker
+#print axioms PaperXII.DeterminantalIdeals.mem_range_submatrix_rows
+#print axioms PaperXII.DeterminantalIdeals.presentationIdeal_independent
+#print axioms PaperXII.FiniteMatrixPresentation
+#print axioms PaperXII.finiteMatrixPresentation_nonempty
+#print axioms PaperXII.chosenPresentation
+#print axioms PaperXII.fittingIdeal
+#print axioms PaperXII.fittingIdeal_eq_presentation
+#print axioms PaperXII.fittingIdeal_eq_top_of_generator_bound
+#print axioms PaperXII.presents_comp_equiv
+#print axioms PaperXII.fittingIdeal_linearEquiv
+#print axioms PaperXII.baseChange_matrix_coordinates
+#print axioms PaperXII.baseChangeQuotient
+#print axioms PaperXII.presents_baseChange
+#print axioms PaperXII.fittingIdeal_baseChange
+#print axioms PaperXII.scalarTensorEquiv
+#print axioms PaperXII.fittingIdeal_transport
+#print axioms PaperXII.support_and_fitting_transport
+#print axioms PaperXII.support_and_fitting_transport_noetherian
+#print axioms PaperXII.minorIdeal_zero_matrix
+#print axioms PaperXII.fittingIdeal_free
+#print axioms PaperXII.fittingIdeal_zero_module
+#print axioms PaperXII.fittingIdeal_free_rank_one_zero
+#print axioms PaperXII.one_by_one_presentationIdeal
+#print axioms PaperXII.one_by_one_baseChange
+#print axioms PaperXII.fittingIdeal_field
+#print axioms PaperXII.fittingIdeal_le_prime_iff
+#print axioms PaperXII.support_eq_zeroLocus_fittingIdeal
+#print axioms PaperXII.higherFittingStrata
+#print axioms PaperXII.fitting_support_and_strata_noetherian

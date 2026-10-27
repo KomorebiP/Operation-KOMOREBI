@@ -1,0 +1,15 @@
+import PaperXII.FittingBoundaryChecks
+import Mathlib.RingTheory.LocalRing.Module
+#check Module.finBasis
+#check Basis.equivFun
+#check Ideal.map_eq_bot_iff_le_ker
+#check Ideal.map_eq_bot_iff
+#check Ideal.ResidueField.ker_algebraMap
+#check Ideal.ker_algebraMap_residueField
+#check Module.mem_support_iff_nontrivial_residueField_tensorProduct
+#check Module.finrank_pos_iff
+#check Module.finrank_pos_iff_of_free
+#check FiniteDimensional.finrank_pos_iff
+#check PrimeSpectrum.zeroLocus
+#check PrimeSpectrum.mem_zeroLocus
+#check Module.Finite.base_change
