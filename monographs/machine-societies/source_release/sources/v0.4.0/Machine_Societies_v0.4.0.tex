@@ -1,0 +1,1474 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext}
+\usepackage{microtype}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{newtxmath}
+\usepackage{booktabs,array,longtable,tabularx,graphicx,tocloft}
+\usepackage{enumitem,fancyhdr,titlesec,needspace}
+\usepackage{xcolor}
+\definecolor{ink}{HTML}{172A44}
+\definecolor{muted}{HTML}{5B6778}
+\usepackage[pdfencoding=auto,psdextra]{hyperref}
+\usepackage{bookmark}
+\usepackage{placeins}
+\hypersetup{hidelinks,pdftitle={Machine Societies: A Theory of Persistent Plural Computational Organization},pdfauthor={Komorebi P.},pdfsubject={Theoretical computer science, institutional organization, and machine societies},pdfkeywords={machine societies, institutions, distributed computation, causal abstraction, cultural inheritance}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Machine Societies}}
+\fancyhead[R]{\small Revised theoretical edition, 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.65em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .4ex}{1.1ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .3ex}{.8ex}
+\setlength{\parindent}{1.2em}\setlength{\parskip}{.22em}
+\setlength{\emergencystretch}{2em}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\setlength{\textfloatsep}{18pt plus 2pt minus 2pt}
+\raggedbottom
+\setlist{leftmargin=1.5em,topsep=.4em,itemsep=.25em,parsep=0pt}
+\setcounter{tocdepth}{1}
+\setlength{\cftbeforesecskip}{1.5pt}
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}[proposition]{Theorem}
+\newtheorem{corollary}[proposition]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[proposition]{Definition}
+\newtheorem{example}[proposition]{Example}
+\newtheorem{counterexample}[proposition]{Counterexample}
+\newtheorem{hypothesis}[proposition]{Research hypothesis}
+\theoremstyle{remark}
+\newtheorem*{interpretation}{Interpretation}
+\newcommand{\TV}{d_{\mathrm{TV}}}
+\newcommand{\Law}{\mathcal L}
+\newcommand{\X}{\mathcal X}
+\newcommand{\Z}{\mathcal Z}
+\newcommand{\U}{\mathcal U}
+\newcommand{\Y}{\mathcal Y}
+\newcommand{\Hist}{\mathcal H}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\Ftwo}{\mathbb F_2}
+\newcommand{\push}{\pi_{\#}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\Status}[1]{\par\noindent\textbf{Status:} #1\par}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{.25in}
+\noindent{\color{muted}\small\textsc{Operation Komorebi} \hfill \textsc{Theoretical research manuscript}}\par
+\vspace{.67in}
+\noindent{\color{ink}\fontsize{35}{40}\selectfont\bfseries Machine Societies\par}
+\vspace{.18in}
+\noindent{\fontsize{17}{22}\selectfont A Theory of Persistent Plural\\Computational Organization\par}
+\vspace{.27in}
+\noindent{\color{ink}\rule{\textwidth}{0.85pt}}\par
+\vspace{.16in}
+\noindent\textbf{Komorebi P.}\hfill\textit{Revised theoretical edition}\\
+\noindent 7 October 2026\hfill Version 0.4.0\par
+\vspace{.48in}
+\noindent{\color{ink}\large\bfseries Abstract}\par\smallskip
+\noindent A population of artificial agents may maintain institutions without becoming one collective agent. We develop a theory of machine societies as persistent plural computational organizations whose participants operate, contest, and revise constraints on their future interactions. A finite realization model links computational states to permissions, obligations, resources, and institutional records. An explicit four-office computational commons connects the analysis across scales. Governance-preserving quotients retain both legal operations and their consequences, while a finite refinement construction identifies the coarsest such description under a declared contract. Coordination games expose a barrier between an institution's desirability and its formation. Indistinguishability bounds separate globally feasible safety from implementable decentralized control. Further results address temporal commitments, coalition vetoes, organizational lifetimes, certified cultural accumulation, and the composition of typed institutional residuals. These residuals distinguish failures of dynamics, authorization, obligations, resources, and evidentiary lineage instead of replacing them with a single compatibility score. The framework incorporates established results from state aggregation, distributed control, social choice, and normative multi-agent systems. Its contribution is an integrated account of institutional realization and transformation, not a new computational primitive or a claim that machine societies must arise.
+\vfill
+\noindent\rule{\textwidth}{.4pt}\par\smallskip
+\noindent{\color{muted}\small \textbf{Scope.} A theoretical synthesis with finite mathematical propositions, proofs, and analytical examples. Standard mathematical ingredients are acknowledged as prior foundations; the integrative definition and proposed research program are the contribution.}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}\begingroup\small\setlength{\parskip}{0pt}\tableofcontents\endgroup\clearpage
+\pagenumbering{arabic}
+\section{Introduction: societies without a collective mind}\label{sec:introduction}
+
+There is a difference between a collection of machines that cooperate and a collection that acquires a social organization. Cooperation may last for one exchange. An organization can retain a record of what happened, assign responsibilities, determine which actions are permitted, settle conflicting claims, and preserve its operating procedures as participants change. If the latter arrangement is maintained by multiple decision centers and if its rules have consequences for their behavior, the idea of a \emph{machine society} becomes a coherent subject for theoretical computer science rather than a speculative metaphor.
+
+The familiar description of artificial intelligence as a model receiving a prompt and producing an answer does not capture this possibility. A persistent population may consist of models, software agents, human-operated services, memory stores, schedulers, tools, negotiated protocols, and resource owners. Its behavior depends on who can read which state, which records have authority, what actions are physically executable, and how previous decisions constrain future choices. These dependencies can persist even when a particular model is replaced. They may also change while the same model remains in service. The relevant object is a continuing \emph{computational realization with social structure}, not a roster of model identities.
+
+The point is not to insist that machines are already persons, that they must form civilizations, or that many cooperating processes somehow compute beyond the capabilities of their complete implementation. The problem is subtler: can we define the organizational properties of such a population without reducing its institutions to decorative labels, and can those properties be analyzed with the same clarity used for distributed protocols, state abstractions, and formal systems? We argue that the answer is yes, provided that several common confusions are avoided.
+
+First, a society is not necessarily a collective agent. A system may have a useful global decision interface and virtually no plural institutional autonomy; another may maintain competing authorities, rules, and cultural records while admitting no coherent society-wide objective. Second, durable organization is not the same as memory. A document can survive without influencing any action. Conversely, a procedure can survive by being reconstructed from distributed records even when its most convenient carrier disappears. Third, \emph{formation} is different from \emph{realization}: showing that a social architecture can run does not show that its participants selected or maintained it through interaction. Fourth, cooperation and social stability are not guarantees of truth, justice, legitimacy, or security. A perfectly stable rule can be harmful, and a disagreement can be useful.
+
+Our approach places three layers in one framework. At the \emph{realization layer}, microscopic states, access maps, transition laws, and admissible interventions determine what a population can actually do. At the \emph{organizational layer}, abstractions, memory carriers, and interfaces specify which relationships can be described and preserved at lower complexity. At the \emph{institutional layer}, permissions, norms, allocations, revision procedures, and transmitted practices regulate multiple decision centers. The hierarchy of layers is explanatory, not metaphysical. Every higher-level state remains realized by an underlying computation and material environment.
+
+The formal results are deliberately finite and conditional. We revisit exact state aggregation, approximate closure, intervention implementability, reconstruction, and compositional error bounds. We then introduce an operational account of society-like plurality, model institutional states as typed and revisable operators, and derive illustrative propositions about institutional investment, incentive conflict, local improvement dynamics, constitutional invariants, cultural translation drift, and incompatibility among local rules. These propositions have elementary or established mathematical foundations. Their contribution here lies in the integrated object of study and the explicit conditions under which societal interpretations are warranted, rather than priority claims for standard results in Markov theory, coding theory, game theory, or graph theory.
+
+This paper is a \emph{theoretical account}. The worked systems are analytical constructions. Publicly established literatures on norms, conventions, agents, and institutions provide intellectual context, but no particular artificial population is offered as a demonstrated instance of the full theory. We do not define consciousness, legal personhood, or moral status by computational criteria. These boundaries are not caveats appended to an otherwise anthropomorphic claim; they are necessary to isolate the actual mathematical problem.
+
+The argument proceeds from realization and aggregation through identity and hierarchical organization to the specifically societal themes of institutions, incentive compatibility, cultural inheritance, interjurisdictional conflict, epistemic authority, organizational pathology, and scale. The central question is what kind of \emph{persistent plural organization} can be created, maintained, and transformed by interacting computations, and which structures are needed to describe it faithfully.
+
+\subsection{Relation to existing theories}
+
+There are several strong reasons not to present the components of this framework as discoveries without precedent. Distributed computing already separates local state from global behavior, and population protocols show how large collections of limited-state processes can compute through repeated interaction~\cite{angluin}. Computational mechanics identifies histories that are equivalent for prediction~\cite{shalizi}; controlled state aggregation identifies when a compressed dynamical model is legitimate~\cite{givan}; causal abstraction places stronger requirements on how interventions pass between levels~\cite{rubenstein,beckers,rischel}. None of those results, by itself, provides a theory of institutional authority or resource claims. They do provide the discipline needed to avoid treating a convenient group summary as an independent substance.
+
+Game theory supplies a second foundation. Conventions can arise through repeated interaction and path-dependent selection~\cite{young,shoham}, repeated-game incentives can sustain cooperation under specific assumptions~\cite{fudenbergmaskin}, and potential games characterize one tractable class of local improvement dynamics~\cite{monderer}. Yet a stable equilibrium is not necessarily an institution. It may lack persistent records, authorized enforcement, legitimate revision, or the ability to survive replacement of the participating processes. The theory developed below makes those additional organizational commitments explicit rather than using the words convention, norm, and institution interchangeably.
+
+A third foundation is the study of governance, normative multi-agent systems, and social organization. Polycentric governance analyzes overlapping decision centers and coordination across them~\cite{ostrom,ostrombook}. Work on procedural and regulative norms explains how authority and enforcement can be represented in formal agent systems~\cite{boella,grossinorm}. Distributed epistemic logic separates information spread across a group from common knowledge~\cite{halpernmoses}. Public demonstrations of artificial-agent coordination and conventions have also motivated debate about how much can be inferred from observed social behavior alone~\cite{park,ashery,barrie,asheryreply}. This paper does not adjudicate that empirical debate. It uses the distinction between behavior and realization as a reason to articulate the theoretical criteria before claiming a machine society.
+
+What is proposed here is an integrated \emph{institutional realization theory}: the same declared system must account for what information exists, what interventions are possible, who can decide, which rules actually constrain transitions, how these rules can change, and what state can cross a generational boundary. The paper's strongest claims are conditional propositions in that language. Its more ambitious claims about endogenous formation and long-lived societal structure remain open mathematical and scientific problems, not consequences smuggled in by terminology.
+
+\subsection{Contribution and route through the argument}
+The distinctive proposal is to analyze one realization against several simultaneous preservation contracts. The new mathematical development concentrates on three links. First, a governance-preserving quotient must retain both enabled operations and their institutional consequences, including amendments. Second, a beneficial stable rule need not be reachable by locally improving decisions, and globally feasible safety need not be implementable with distributed information. Third, translations between institutions have typed residuals whose composition can be bounded without identifying authority, resources, obligations, and evidence with one scalar.
+
+Additional results treat bounded obligations, blocking coalitions, survival under repair and turnover, and cultural accumulation under explicit preservation assumptions. Each is a finite construction or a conditional theorem. Classical aggregation, game-theoretic, temporal, and social-choice results remain classical. The proposed contribution is their coordinated use in an institutional realization framework and the explicit limits exposed by that coordination.
+
+\section{Realization, formation, and advantage}\label{sec:scope}
+Three questions organize the analysis. \emph{Realizability} asks whether a specified organization can be implemented. \emph{Formation} asks whether interactions select, establish, or revise its structure. \emph{Advantage} asks whether it improves a declared outcome against a constrained comparison class. Constructing a system answers none of the latter questions automatically. An executable rule can be externally imposed, locally adopted, or maintained by strategic agreement. These are different histories of the same possible implementation.
+
+Every organizational state in this paper remains a function of a complete computational realization. If $Z_t=\pi(X_t)$, then $Z_t$ is not information outside $X_t$. The purpose of a higher-level description is to preserve relevant operations with less descriptive complexity. An institutional description must additionally preserve who may act, which commitments remain outstanding, and what counts as an authorized amendment. These are requirements on the abstraction, not a new substance added to the machine.
+
+The mathematical setting is finite unless a section explicitly states otherwise. An unbounded lifetime is a temporal horizon, not necessarily an unbounded state space. A growing archive is treated as a sequence of finite representations, not silently as one finite system. Sources for classical mathematical ingredients are identified in the text. The proofs establish conditional statements in the declared models; they do not establish that an unspecified deployed population instantiates them.
+
+
+\section{A running example: the four-office computational commons}\label{sec:commons}
+Consider four continuing institutional positions, denoted $A,B,C,D$, that share four indivisible execution slots per epoch. An office is not a particular model instance. Its current occupant may be replaced through a specified handover, while its registered responsibilities continue. The environment supplies the four slots and an append-only event mechanism with atomic commits. These are explicit infrastructure assumptions, not consequences of the agents' cooperation.
+
+Each office has a private task queue and may submit a demand report. A public record contains the current allocation rule, valid credentials, accepted urgency certificates, outstanding service obligations, and the amendment history. Slots have unique names $(e,k)$, where $e$ is the epoch and $k\in\{1,2,3,4\}$. A grant consumes one available slot token. Copying a message that describes a grant does not create an additional token. The resource invariant is therefore
+\[
+\sum_{i\in\{A,B,C,D\}}q_i(e)\leq4,
+\]
+with no slot name assigned to two offices. In the worked trace all four offices demand their ordinary slot, so the allocations below use all four units.
+
+\subsection{Two rules and an inherited obligation}
+Under rule $R$, each office receives one slot. Rule $U$ permits an urgency exchange: when no previous service debt is outstanding, one office $j$ with an accepted urgency certificate may receive two slots if another office $k\ne j$ explicitly volunteers its slot. The other two offices each receive one. The exchange creates a registered obligation
+\[
+o=(\mathsf{id},\mathsf{debtor}=j,\mathsf{creditor}=k,
+\mathsf{quantity}=1,\mathsf{due}=e+1).
+\]
+At the next epoch the creditor receives two slots and the debtor none, with one slot for each remaining office. This repayment clause has priority over both $R$ and $U$. No new exchange is admitted while a debt remains outstanding. The model thus permits at most one service debt and guarantees its next-epoch settlement conditional on continued infrastructure and execution of the admitted rule. It does not guarantee that every urgent request can be accepted.
+
+Amendments between $R$ and $U$ require three of the four registered offices to approve. This threshold is part of the supplied constitutional envelope. Every amendment must preserve already registered service debts. A model replacement transfers an office only through an authorized registry transition that retires the predecessor's active credential and links the successor to the same outstanding obligations. Neither a model fork nor an imported archive can perform that transition by itself.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}cP{.25\linewidth}P{.19\linewidth}X@{}}
+\toprule
+Epoch & Admitted event & Allocation $(A,B,C,D)$ & Obligation record\\
+\midrule
+0 & Ordinary rule $R$ & $(1,1,1,1)$ & Empty.\\[.35em]
+1 & Three offices adopt $U$; $A$ requests urgency and $B$ consents & $(2,0,1,1)$ & $A$ owes $B$ one slot at epoch 2.\\[.35em]
+2 & $A$ is replaced by an authorized successor; repayment takes precedence & $(0,2,1,1)$ & The same obligation is fulfilled, not erased.\\[.35em]
+3 & A proposed external grant would duplicate a slot token & $(1,1,1,1)$ & The proposal is rejected; no new entitlement is created.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+These transitions are specified rather than discovered. The example is a miniature institutional realization, not a demonstration of autonomous formation. Its purpose is to make several different mathematical obligations visible in one system.
+
+\subsection{What an institutional summary must retain}
+The name of the current rule is insufficient state. Two records may both say $R$ while only one contains a debt due this epoch. Their correct next allocations differ. A summary that keeps the next allocation but omits the amendment threshold can also be inadequate: the same three votes may authorize different future rules under different constitutions. Likewise, identical text with different active credentials can confer different decision rights.
+
+The public ledger is not an additional, society-wide preference function. Offices may disagree about whether $R$ or $U$ is desirable, about how urgency should be certified, or about who should pay the cost of maintaining the ledger. An atomic allocation mechanism can enforce the resource invariant without settling those disagreements. Private demand, operative authority, and the shared event record are distinct parts of the system.
+
+We return to this commons when considering institution formation, governance-preserving summaries, deadline monitors, blocking coalitions, replacement, and federation. Appendix~\ref{sec:worked} retains a smaller algebraic example that isolates reusable state from social interpretation.
+
+\section{A controlled realization model}\label{sec:model}
+For the formal results, assume finite nonempty sets of microstates $\X$, external controls $\U$, and reported outcomes $\Y$. The finite assumption keeps measurability and regular-conditional-probability issues out of the exposition. Continuous-state generalizations require additional hypotheses.
+
+A realization has transition kernel
+\begin{equation}\label{eq:micro}
+K_u(x,x')=\Prob(X_{t+1}=x'\mid X_t=x,U_t=u),
+\end{equation}
+and output kernel $Q_u(x,y)$. Both are row-stochastic. In this presentation, the current report and next state are sampled conditionally independently given $(x,u)$. A dependent report/transition mechanism can instead be specified by a joint kernel on $(x',y)$; the corresponding aggregation test must preserve that joint law, not just its two marginals. A deterministic implementation is the special case $K_u(x,\cdot)=\delta_{F_u(x)}$. The controls can encode tasks, supplied evidence, and permitted interventions. Scheduling and environment dynamics must be included in $X_t$ or in the stated control model rather than silently omitted.
+
+One possible factorization of a microstate is
+\[
+X_t=(S_{1,t},\ldots,S_{n,t},M_t,C_t,A_t,\Theta_t),
+\]
+where $S_i$ is local process state, $M$ durable storage, $C$ messages and channel state, $A$ artifacts, and $\Theta$ the current configuration, including executable rules. These categories describe a storage and access organization. They need not be disjoint physical objects.
+
+\begin{definition}[Declared decomposition and access model]
+A decomposition specifies components and maps $O_i:\X\to\mathcal O_i$ describing their accessible observations. A coalition $S$ has the permitted information $O_S(X)$, supplemented only by the transcripts, computation, and external queries explicitly allowed to that coalition.
+\end{definition}
+
+Access to one complete state at one time and access to an entire local history are different experiments. An agent denied a file may still possess its contents in its current context. A component replacement is genuinely fresh only if the chosen reset conditions remove the predecessor information that the comparison is intended to exclude.
+
+\begin{definition}[Candidate macrostate]
+A candidate macrostate is a surjection $\pi:\X\to\Z$. For a distribution $\mu$ on $\X$, its pushforward is
+\[
+(\push\mu)(z)=\sum_{x:\pi(x)=z}\mu(x).
+\]
+The fibre $\pi^{-1}(z)$ is the set of implementations represented by $z$.
+\end{definition}
+
+An organization is always evaluated relative to a \emph{contract}: permitted controls, target outputs, horizon, environment family, resource limits, and error tolerances. Let $\mathcal T$ denote this contract. Claims such as ``the group is irreducible'' or ``the identity survived'' are incomplete without it. A state sufficient for tomorrow's scheduling decision may be inadequate for a later audit of who authorized that decision.
+
+\subsection{A relational certificate is a profile}
+A useful reporting profile is
+\[
+\mathcal C_{\mathcal T}=(\varepsilon_{\rm pred},\varepsilon_{\rm dyn},\varepsilon_{\rm int},
+\Delta_{\rm coal},R_{\rm repair},D_{\rm lineage},G_{\rm formation}).
+\]
+Its entries report predictive error, dynamic closure error, intervention mismatch, coalition performance gaps, repair behavior, lineage evidence, and evidence about formation. Some entries may be unidentified. They should not be replaced by zero or hidden inside a favorable weighted average.
+
+This is a specification proposal, not a universal numerical consciousness or emergence scale. A system can be strong on one coordinate and weak on another. In particular, a communication-only system can solve a task perfectly while lacking durable shared state, and a persistent shared state can be entirely wrong about the task.
+
+\section{Relational information: access, synergy, and usefulness}\label{sec:information}
+Let $A,B$ be independent fair bits and $Y=A\oplus B$. Then
+\[
+I(Y;A)=I(Y;B)=0,\qquad I(Y;A,B)=1.
+\]
+This elementary example shows that joint observation may reveal information absent from each marginal observation. It does not show that the information is absent from the complete system, that a mysterious carrier has appeared, or that a protocol with ordinary messages cannot recover it.
+
+A more operational measure uses decision loss. Given permitted information $O$ and loss $\ell$, define the Bayes risk
+\[
+\mathcal R_\ell(O)=\inf_f\E\bigl[\ell(f(O),Y)\bigr].
+\]
+For a nonempty allowed family $\mathcal A$ of proper coalitions, the gap
+\begin{equation}\label{eq:coalition}
+\Delta_{\mathcal A}=\min_{S\in\mathcal A}\mathcal R_\ell(O_S)
+-\mathcal R_\ell(O_V)
+\end{equation}
+expresses an advantage over every coalition in that family. A strictly positive gap is relative to the target distribution, observation maps, and coalition family. It is not equivalent to any one general-purpose partial-information-decomposition statistic~\cite{williams}.
+
+The unrestricted Bayes risk is an information limit. A neural decoder's measured risk is a performance result for that decoder. Failure of a linear probe does not prove absence of information, and success of a probe does not prove that the information is used by the system. Both observations can be useful, but they answer different questions.
+
+\subsection{There is no workspace versus messages dichotomy}
+A recurrent message may carry the same sufficient state as a central buffer. A complete message log may act as external memory. A distributed collection of local caches may instantiate a third implementation. Therefore the strongest legitimate claim is often that some \emph{persistent integration} is necessary under declared access constraints, not that one particular memory address or latent subspace is uniquely necessary.
+
+Three measurements should be kept separate: information available to an observer, information actually used for a decision, and information retained across time. A one-time aggregate can have high joint information with no persistence. A durable archive can retain information without affecting behavior. A recurrent accumulator can be causally necessary while using an entirely conventional communication channel.
+
+\subsection{Task information is not organizational identity}
+A file containing the answer to a test makes a fresh agent more accurate than a blank file. That establishes content dependence. To support organizational continuity, the inherited material must preserve a richer, predeclared pattern, such as update behavior, correction policy, obligations, and responsiveness to counterfactual tasks. Even then, behavioral continuation and historical identity remain distinct, as Section~\ref{sec:identity} explains.
+
+\section{Exact and approximate macro-dynamics}\label{sec:closure}
+A macrostate deserves an autonomous transition law only when the discarded microstate distinctions are irrelevant in the required sense. This is the first mathematical obstacle hidden by the phrase ``the group behaves like one agent.''
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Deterministic quotient criterion]\label{prop:det}
+For maps $F_u:\X\to\X$ and a surjection $\pi:\X\to\Z$, maps $\overline F_u:\Z\to\Z$ satisfying $\pi F_u=\overline F_u\pi$ exist if and only if
+\[
+\pi(x)=\pi(x')\quad\Longrightarrow\quad
+\pi(F_u(x))=\pi(F_u(x'))
+\]
+for every $u,x,x'$. When they exist, they are unique.
+\end{proposition}
+\begin{proof}
+Necessity follows by applying $\overline F_u$ to the common value $\pi(x)$. For sufficiency, set $\overline F_u(z)=\pi(F_u(x))$ for any $x$ in the fibre of $z$. The condition makes this independent of the representative, and surjectivity gives uniqueness.
+\end{proof}
+
+This is a congruence condition, not a consequence of persistence or frequent communication. A summary can be accurate for the current output and still fail it.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Controlled lumpability]\label{prop:lump}
+A common kernel $\overline K_u$ represents the projected one-step laws from every microstate if and only if, for all $z'$ and all $x,x'$ with $\pi(x)=\pi(x')$,
+\begin{equation}\label{eq:lump}
+\sum_{w:\pi(w)=z'}K_u(x,w)
+=\sum_{w:\pi(w)=z'}K_u(x',w).
+\end{equation}
+Under this condition, every macro-history policy $\alpha_t(u\mid Z_{0:t})$ induces the same projected process as the macro-model with initial law $\push\mu_0$. For outputs to agree as well, require $Q_u(x,\cdot)$ to be constant on each fibre.
+\end{proposition}
+\begin{proof}
+The common fibre value in~\eqref{eq:lump} defines $\overline K_u(z,z')$. Conditional on any macro-history and selected control, the microstate has some distribution supported on the current fibre. Averaging identical projected rows leaves that common row unchanged. Induction gives equality of the macro-history laws. Conversely, start from the point masses at $x$ and $x'$ and apply the same fixed control. A common one-step macro-kernel forces~\eqref{eq:lump}. The output statement follows identically.
+\end{proof}
+
+This finite result is a standard state-aggregation principle~\cite{givan}. The policy qualification matters: if a controller secretly reads the discarded microstate to choose its actions, then the proposed macrostate may no longer describe the closed-loop process.
+
+\begin{counterexample}[Deterministic microstate, non-Markov macrostate]\label{ex:cycle}
+Let $X_{t+1}=X_t+1\pmod 3$ with uniform initial distribution. Set $\pi(0)=\pi(1)=a$ and $\pi(2)=b$. Stationarity gives $\Prob(Z_{t+1}=b\mid Z_t=a)=1/2$. Yet
+\[
+\Prob(Z_{t+1}=b\mid Z_t=a,Z_{t-1}=b)=0,
+\]
+whereas the same probability conditional on $Z_t=a,Z_{t-1}=a$ is $1$. Thus the apparent randomness comes with memory: the one-step marginal does not define a valid autonomous first-order Markov model.
+\end{counterexample}
+
+A stochastic macro-description is therefore not automatic. It depends on an initial ensemble and on whether the retained state captures the relevant history. One may enlarge $Z_t$ with memory, use a partially observed model, or accept a measured approximation error.
+
+\subsection{Finite-horizon error accounting}
+For finite distributions, $\TV(\mu,\nu)=\tfrac12\sum_z|\mu(z)-\nu(z)|$. Suppose candidate kernels satisfy
+\begin{equation}\label{eq:eps}
+\sup_{x,u}\TV\bigl(\push K_u(x,\cdot),\overline K_u(\pi(x),\cdot)\bigr)
+\leq\varepsilon.
+\end{equation}
+This uniform condition is stronger than a small average error on the trajectories seen during training.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Approximate closure over time]\label{prop:time}
+Under~\eqref{eq:eps}, let the actual and reduced processes use the same predeclared open-loop control sequence. If their initial macro-laws are within $e_0$ in total variation, then at time $t$ they are within
+\[
+e_t\leq\min\{1,e_0+t\varepsilon\}.
+\]
+If each $\overline K_u$ contracts total variation by at most $\kappa<1$, then
+\begin{equation}\label{eq:contract}
+e_t\leq\kappa^t e_0+\varepsilon\frac{1-\kappa^t}{1-\kappa}.
+\end{equation}
+With matched macro-history policies, the weaker path-law bound $\min\{1,e_0+t\varepsilon\}$ also holds, but the contraction claim needs a separate closed-loop contraction assumption.
+\end{proposition}
+\begin{proof}
+Averaging~\eqref{eq:eps} over the actual microstate law shows that its next projected law is within $\varepsilon$ of the current projected law evolved by $\overline K_u$. Kernel nonexpansiveness gives $e_{t+1}\leq\varepsilon+e_t$. Under contraction it gives $e_{t+1}\leq\varepsilon+\kappa e_t$; iterate. For history policies, couple the histories while they agree. The controls can then be coupled to agree, and the next macrostate fails to couple with probability at most $\varepsilon$. A union bound gives the path-law result.
+\end{proof}
+
+The distinction matters for long-lived systems. A small local abstraction error is not automatically harmless over millions of updates. Contraction can prevent indefinite accumulation, but it can also suppress useful distinctions. A useful model must retain the target information as well as remain dynamically stable.
+
+\subsection{Predictive closure has a target and a distribution}
+For a fixed future target $Y^+$ and data-generating policy, a predictive statistic satisfies
+\[
+I(Y^+;\Hist_t\mid Z_t)=0.
+\]
+Approximate versions bound this residual information or, more directly, the excess predictive loss on held-out data. This is related to predictive-state constructions~\cite{shalizi}. It is not equivalent to uniform controlled lumpability: it may hold for one observational distribution while failing after intervention or under a new policy.
+
+\section{Causal interventions require implementations}\label{sec:causal}
+If $Z=\pi(X)$, one cannot generally change $Z$ while literally holding $X$ fixed. The expression $do(Z=z')$ needs a physical or computational implementation. Otherwise it names a desired effect, not an intervention.
+
+For a feasible current microstate $x$ and target $z'$, let $\Lambda(x,z')$ be a declared nonempty family of admissible reset distributions on $\X$, each supported on $\pi^{-1}(z')$. Infeasible targets are excluded rather than assigned a fictitious reset. A reset might update a shared record, transplant a latent component, or reconstruct distributed shares. Its permissions, collateral effects, and retained private state belong in the intervention specification.
+
+Given a future outcome experiment, write $P_\lambda$ for the resulting law of $Y^+$ under reset $\lambda$. Define implementation ambiguity by
+\[
+\eta(x,z')=\sup_{\lambda,\lambda'\in\Lambda(x,z')}
+\TV(P_\lambda,P_{\lambda'}).
+\]
+A small ambiguity means different allowed implementations of the same macro-assignment have similar consequences. Large ambiguity means the macro-intervention is not sufficiently specified.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Implementation dependence]\label{prop:lift}
+If every $P_\lambda$ is within $\varepsilon$ of a proposed macro-intervention law $P^\star_{z'}$, then $\eta(x,z')\leq2\varepsilon$. Conversely, if two admissible implementations are distance $\eta$ apart, no single law can approximate both within less than $\eta/2$.
+\end{proposition}
+\begin{proof}
+Both claims follow from the triangle inequality for total variation.
+\end{proof}
+
+\begin{example}[Two meanings of the same macro-reset]
+Let $X=(z,h)$ and let the next outcome be $Y=z\oplus h$. The macrostate retains only $z$. Resetting to $(z',0)$ and resetting to $(z',1)$ both implement $Z=z'$, but their outcome laws are disjoint. A causal model of $Z$ alone must either restrict the reset convention or acknowledge the missing variable.
+\end{example}
+
+This is why causal abstraction requires compatibility between interventions, not only alignment of representations~\cite{rubenstein,beckers}. Removing a carrier can disable unrelated functions. A well-defined semantic intervention must specify the intended downstream effects, the admitted implementations, and which other functions are required to remain invariant.
+
+\subsection{Three distinct counterfactual obligations}
+A \emph{necessity counterfactual} excludes a carrier and determines whether the function can still be realized using the remaining authorized information. A \emph{content counterfactual} substitutes a compatible alternative state with a specified prediction. A \emph{mechanism counterfactual} changes the update or access rule while preserving information as closely as permitted. No one obligation implies the other two.
+
+A causal comparison must define what information survives any permitted replacement, including copies and caches. Interventions may have collateral effects on other operations. A valid theoretical attribution therefore requires the declared intervention to distinguish its intended semantic change from an arbitrary loss of general capability.
+
+\subsection{Intervention does not mean unrestricted control}
+An external evaluator's ability to overwrite a state does not establish that the system can write that state itself. Bidirectional workspace access requires permitted routes from both participating components. Institutional agency requires an authorized decision procedure that actually changes behavior. These are stronger claims than external post hoc manipulability.
+
+\section{Identity, equivalence, and causal lineage}\label{sec:identity}
+One might define a computational individual as an equivalence class of implementations. That definition is useful only after specifying the equivalence relation. Similar appearance, nearby behavior, common descent, and identical authorization are not interchangeable notions.
+
+For a family $\mathcal T$ of finite continuation experiments, define exact behavioral equivalence by
+\[
+x\equiv_{\mathcal T}x'\quad\Longleftrightarrow\quad
+\Law_x(Y^+\mid\tau)=\Law_{x'}(Y^+\mid\tau)
+\quad\text{for every }\tau\in\mathcal T.
+\]
+Equality of these indexed laws is reflexive, symmetric, and transitive. It therefore defines a quotient. This equivalence is relative to the chosen experiments. It does not by itself equal bisimulation, and it says nothing about untested interventions or provenance.
+
+For approximate comparison, use the pseudometric
+\[
+d_{\mathcal T}(x,x')=\sup_{\tau\in\mathcal T}
+\TV\bigl(\Law_x(Y^+\mid\tau),\Law_{x'}(Y^+\mid\tau)\bigr).
+\]
+A finite test suite may make distinct implementations distance zero. That is indistinguishability under those tests, not universal sameness.
+
+\begin{counterexample}[Tolerance is not an equivalence relation]\label{ex:identity}
+Consider three implementations producing a Bernoulli output with parameters $0$, $0.4$, and $0.8$. Their pairwise total-variation distances are $0.4$, $0.4$, and $0.8$. With tolerance $0.5$, the first resembles the second and the second resembles the third, while the first does not resemble the third.
+\end{counterexample}
+
+Approximate continuity should therefore be represented by distances, error budgets, or explicitly chosen clusters, not by silently forming equivalence classes. Along a replacement chain, the triangle inequality permits drift to accumulate. Small adjacent changes do not establish that the final system remains close to the initial one.
+
+\subsection{A four-part identity record}
+A practical identity record should distinguish \emph{behavioral equivalence}, \emph{causal continuity}, \emph{historical provenance}, and \emph{authorization}. Behavioral equivalence describes what the system does under a contract. Causal continuity describes whether predecessor-specific state actually influenced the successor. Historical provenance records the asserted and authenticated path of transfer. Authorization specifies which permissions or obligations transfer.
+
+Two independent constructions can be behaviorally identical with no shared episode-specific lineage. Two descendants can share lineage while behaving differently. A signed lineage record authenticates a statement by a key holder, not the truth of every event described in it. Transferring a complete memory does not automatically transfer permissions.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Behavior alone does not identify implementation]\label{prop:identifiability}
+If two realizations induce the same distribution over every transcript available to an evaluator's permitted tests, then every decision rule based only on those transcripts has the same output distribution under the two realizations. With equal prior probability, no such rule can distinguish them with accuracy above $1/2$.
+\end{proposition}
+\begin{proof}
+The evaluator's decision is a possibly randomized function of the transcript. Applying the same stochastic function to equal transcript laws gives equal decision laws. Under equal priors, any preference for one realization is offset by the identical preference when the other is present.
+\end{proof}
+
+This elementary identification limit explains why observation-only comparisons cannot exclude all centralized implementations. The remedy is not stronger rhetoric about emergence. It is instrumentation, trusted execution assumptions, intervention, or a narrower claim.
+
+\subsection{Forks, merges, and obligations}
+A fork creates multiple descendants, not an automatic duplication of every scarce entitlement. The state may branch while a resource allocation remains singular. Likewise, merging records is not equivalent to merging policies, latent representations, model weights, or obligations. Each requires a different compatibility test.
+
+An obligation-aware inheritance record can contain the parent identifiers, transferred state description, unresolved conflicts, permissions explicitly granted, and obligations explicitly accepted. It should retain competing accounts rather than produce an apparently seamless but false history. Such records are an engineering proposal for accountable continuity, not a legal theory of personhood.
+
+\section{Memory, reconstruction, and self-maintenance}\label{sec:memory}
+Persistence has at least three meanings. \emph{Storage persistence} means that records survive. \emph{Functional persistence} means that relevant behavior survives a stated sequence of events. \emph{Organizational persistence} means that a declared pattern of operations, commitments, and corrective procedures survives admissible changes. None requires the current informational content to remain constant.
+
+An archive can be perfectly stable and behaviorally inert. A highly adaptive system can preserve its update method while replacing almost every factual belief. A frozen false belief can persist without constituting healthy organization. Persistence therefore needs both a survival criterion and a criterion for what ought to change when evidence changes.
+
+\subsection{Memory lower bounds from distinguishable histories}
+Fix a deterministic exact predictor for a family of future input continuations. Call two past histories equivalent when they require the same output sequence for every permitted continuation. Let $N$ be the number of equivalence classes among the histories under consideration.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Exact finite-memory lower bound]\label{prop:memory}
+Every deterministic summary that supports exact continuation on these histories requires at least $N$ distinct states, hence at least $\lceil\log_2N\rceil$ fixed-length bits. If the permitted continuation family is closed under prefixing and the history equivalence is a transition congruence, the quotient classes themselves provide an exact state representation.
+\end{proposition}
+\begin{proof}
+If a summary assigns the same state to two inequivalent histories, some permitted continuation requires different outputs from that common state, contradicting determinism and exactness. This proves the lower bound by the pigeonhole principle. Under the congruence assumption, appending an input determines the next equivalence class independently of the representative, giving a well-defined quotient update.
+\end{proof}
+
+The result formalizes why the two-bit state in Section~\ref{sec:worked} cannot be replaced by its one-bit current answer. It is also a limit on optimistic claims about arbitrarily compressing an entire scientific or institutional history. Compression can discard details only relative to the future questions and interventions it promises to support~\cite{tishby}.
+
+\subsection{Erasure resilience is not arbitrary error correction}
+Let an organizational state $z$ range over a finite set with at least two elements and be encoded as $E(z)=(E_1(z),\ldots,E_n(z))$. Define the block distance
+\[
+d_E=\min_{z\ne z'}\abs{\{i:E_i(z)\ne E_i(z')\}}.
+\]
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Exact reconstruction after erasure]\label{prop:erasure}
+For an integer $0\leq k\leq n$, every set of at most $k$ erased components can be tolerated with exact reconstruction if and only if $d_E>k$.
+\end{proposition}
+\begin{proof}
+If $d_E>k$, two distinct codewords disagree outside any erased set of size at most $k$, so the surviving observations identify the state uniquely. If $d_E\leq k$, erase the coordinates on which a minimizing pair differs. The surviving observations then coincide, making reconstruction impossible.
+\end{proof}
+
+For $z=(p,q)\in\Ftwo^2$, the encoding $(p,q,p\oplus q)$ has distance two. Any two components reconstruct the state, and no one component reconstructs all of it. It tolerates one \emph{known erasure}. It does not correct an arbitrary one-component corruption at an unknown location. Confusing these fault models overstates robustness.
+
+The coding argument supplies a reconstructibility condition, not a guarantee that an operating system has an authorized, timely, and successful repair procedure.
+
+\subsection{Repair needs a causal and temporal test}
+Let $e_t\geq0$ measure deviation from an acceptable organization after accounting for legitimate changes in task state. Suppose a repair controller ensures
+\[
+e_{t+1}\leq a_t e_t+b_t,
+\]
+where $a_t$ measures retained deviation and $b_t$ covers new disturbance and model mismatch.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Repair budget]\label{prop:repair}
+If $0\leq a_t\leq\bar a<1$ and $0\leq b_t\leq\bar b$, then
+\[
+e_t\leq \bar a^t e_0+\bar b\frac{1-\bar a^t}{1-\bar a}.
+\]
+More generally, for nonnegative $a_t,b_t$ satisfying the stated recurrence,
+\[
+e_T\leq e_0\prod_{t=0}^{T-1}a_t+
+\sum_{j=0}^{T-1}b_j\prod_{t=j+1}^{T-1}a_t.
+\]
+\end{proposition}
+\begin{proof}
+Repeated substitution gives the product--sum formula. Uniform bounds reduce the sum to a geometric series.
+\end{proof}
+
+The inequality is a conditional stability statement. It does not prove that the implemented monitor measures the right error or that its repair action causes the desired contraction. Those assumptions require interventions on the monitor and repair pathways.
+
+\begin{counterexample}[Perfect coherence by erasing everything]
+Let acceptable states occupy a linear subspace $W$, and measure only distance to $W$. The update $F(x)=0$ attains zero coherence error immediately but destroys every distinction among encoded states. A coherence measure alone cannot certify memory preservation or identity.
+\end{counterexample}
+
+A maintenance claim consequently needs a non-collapse condition, continued task information, and comparison with a disabled-repair control under matched disturbance. Recovery time, repair cost, and permanent loss should be reported separately. Very strong repair that restores yesterday's policy despite valid new evidence is rigidity, not automatically health.
+
+\section{Hierarchy, gluing, and the limits of flattening}\label{sec:hierarchy}
+A lower-level organization can serve as a component at the next level when it exports a sufficient interface. That interface must describe not only a state but also the operations that are permitted on it, their outcome semantics, and their implementation error. A useful interface certificate is
+\[
+\mathsf{Int}=(\Z,\U,\overline K,\overline Q,\Lambda,
+\varepsilon_{\rm dyn},\varepsilon_{\rm int},\mathsf{permissions}).
+\]
+This tuple is a design proposal. It prevents a higher-level controller from treating a reliable read-only summary as though it were an independently writable agent.
+
+\subsection{Composition of dynamic abstractions}
+Suppose $\pi:\X\to\Z$ and $\psi:\Z\to\mathcal W$ are surjections and, for the same control family,
+\[
+\TV(\push K_u(x,\cdot),\overline K_u(\pi x,\cdot))\leq\varepsilon_1,
+\]
+\[
+\TV(\psi_{\#}\overline K_u(z,\cdot),\widehat K_u(\psi z,\cdot))\leq\varepsilon_2.
+\]
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Compositional one-step closure]\label{prop:composition}
+The composite abstraction $\psi\pi$ satisfies
+\[
+\TV\bigl((\psi\pi)_{\#}K_u(x,\cdot),
+\widehat K_u(\psi\pi x,\cdot)\bigr)
+\leq\varepsilon_1+\varepsilon_2.
+\]
+For $L$ levels, the one-step defect is at most $\sum_{j=1}^L\varepsilon_j$. In particular, exact abstractions compose exactly.
+\end{proposition}
+\begin{proof}
+Insert $\psi_{\#}\overline K_u(\pi x,\cdot)$, use the triangle inequality, and use nonexpansiveness of total variation under deterministic pushforward. Induction gives the multilevel result.
+\end{proof}
+
+The same argument applies separately to output kernels. Combining this proposition with Proposition~\ref{prop:time} yields a finite-horizon bound of $e_0+t\sum_j\varepsilon_j$, capped at one, under the corresponding controls. This elementary estimate belongs to the broader subject of compositional abstraction error~\cite{rischel}. It does not establish global causal closure unless the intervention implementations also compose compatibly.
+
+\subsection{Structural gluing is a different question}
+Suppose each subsystem $i$ has local state space $W_i$ and each overlap has restriction maps $r_{ij}^i$ and $r_{ij}^j$. The compatible families form
+\[
+W_{\rm glue}=\{(w_i):r_{ij}^i(w_i)=r_{ij}^j(w_j)\text{ on every declared overlap}\}.
+\]
+For an edge-complete cover of a fixed diagram, compatible local sections can give another presentation of its global sections. These compatibility conditions follow the elementary logic of gluing local descriptions into a shared global state.
+
+Compatibility alone does not show that the resulting state predicts behavior, is used for decisions, or avoids a centralized implementation. A hierarchy may also discard essential overlap information. A faithful compressed interface must neither identify globally distinct relevant states nor admit apparent compatible states with no full-resolution realization.
+
+There is a sharp conceptual distinction between \emph{descriptive flattening} and \emph{operational removal}. An isomorphism between a recursively assembled state and a global state does not license deleting intermediate processes while preserving latency, privacy, reliability, or resource cost.
+
+\Needspace{11\baselineskip}
+\subsection{Hierarchy is not extra computability}
+\begin{proposition}[Simulation by an unrestricted controller]\label{prop:flatten}
+A finite, effectively specified hierarchy of computable components can be simulated by a controller that stores every component state, message, and scheduling variable and applies the same local transitions in the same order. With the same random tape, its externally visible transcript is identical.
+\end{proposition}
+\begin{proof}
+Initialize the controller's records to the component states. At each scheduled step, apply the corresponding component transition to its stored inputs and update the associated state and message records. Induction preserves equality of all records and therefore of the external outputs. A shared random tape couples randomized transitions identically.
+\end{proof}
+
+This is an existence statement, not an efficiency claim. A meaningful superiority result must restrict the comparison class. A ``flat'' system allowed to simulate the entire hierarchy defeats any claim of advantage based only on the drawing of boxes. Restrictions may concern accessible information, local memory, permitted routing, wall-clock span, bandwidth, or allowed rounds.
+
+\subsection{An honest complexity separation}
+Consider $n=2^h$ input bits with parity as the target and two-input XOR gates. A balanced tree computes the target with $n-1$ gates and depth $h$. Any fan-in-two circuit output at depth $d$ can depend on at most $2^d$ input bits, so depth at least $\lceil\log_2n\rceil$ is necessary. A single sequential accumulator uses $n-1$ updates.
+
+The gain is parallel depth, not reduced total work or super-Turing power. A sufficiently parallel controller can implement the same tree. The example shows how to state a useful architecture-relative result without inventing a general hierarchy-versus-flat separation.
+
+A corresponding research question for agent systems is whether certified modular summaries reduce repeated communication or repair cost under explicit information and latency constraints. That question is substantive even if total computation remains classically simulable.
+
+\section{Deterministic agents and macro-level uncertainty}\label{sec:determinism}
+There are three different sources of uncertainty: randomized transition rules, incomplete knowledge of the complete state, and implementation variability such as an unspecified schedule. They should not be collapsed into one statement that a model ``is probabilistic.'' A fixed pseudorandom generator and its state are part of a deterministic expanded implementation. A macro-observer who does not see that state may use a stochastic model.
+
+For a generative model, a distribution over outputs does not itself require sampled behavior: a fixed decoding rule can choose a unique output. Conversely, a deterministic decoder does not guarantee a reproducible deployed system unless the surrounding computation, data, and scheduling assumptions are controlled. The finite three-cycle in Counterexample~\ref{ex:cycle} makes the stronger point that a stochastic-looking projection may retain memory and fail Markov closure.
+
+\Needspace{8\baselineskip}
+\begin{proposition}[Symmetry lock for identical deterministic agents]\label{prop:symmetry}
+Suppose a deterministic joint update $F$ is equivariant under permutations of the agent labels and the initial joint state and all subsequent inputs are permutation-invariant. Then the joint state remains permutation-invariant at every time.
+\end{proposition}
+\begin{proof}
+If $gX=X$ for every label permutation $g$, equivariance gives $gF(X)=F(gX)=F(X)$. Apply this at every step with invariant inputs.
+\end{proof}
+
+In this idealized setting, distinct roles require a symmetry breaker. Randomness is one possibility; different observations, histories, hardware constraints, or assigned addresses are others. Determinism is not an obstacle to organization. Exact symmetry can be an obstacle to differentiated organization.
+
+\subsection{Where stochasticity helps and where it does not}
+Exploratory search may benefit from varied proposals, while a checker should apply the same declared rule consistently. Randomized exploration followed by deterministic checking is one useful design, not a universal architecture. Random samples from identical models can still share systematic errors. Randomness is neither independence nor creativity by definition.
+
+A fully asynchronous fault-tolerant setting also imposes limits independent of intelligence. The Fischer--Lynch--Paterson result shows that a deterministic consensus protocol cannot guarantee termination in every admissible execution with even one crash failure in its stated asynchronous model~\cite{flp}. This does not mean consensus is never achieved or that machine institutions are impossible. It means liveness claims must state timing, failure, and randomization assumptions.
+
+\subsection{A transition is not established by a sharp-looking curve}
+A phase-transition analogy requires explicit mathematical assumptions. A linearization with an eigenvalue above one shows local instability of the point being linearized; it does not prove the existence of a useful stable attractor. The dynamics may diverge, cycle, or collapse elsewhere. Nonlinear terms, constraints, and the relevant observables matter.
+
+For finite adaptive systems, an apparent onset is a property of a specified learning dynamics, environment family, timescale, and measured observable. Fitting a sigmoid to an arbitrary plot does not establish a bifurcation. A genuine dynamical bifurcation requires a specified family of transformations, and a thermodynamic phase-transition claim requires an appropriate limiting construction. There is no universal numerical coupling threshold in this theory.
+
+\section{From aggregate computation to society}\label{sec:society}
+
+The word \emph{society} is easily applied to a collection of agents that exchange messages. That usage conceals distinctions important to both mathematics and social theory. A cluster of predictors controlled by one scheduler may act as a coherent unit while having no independent decision centers. A set of autonomous services may compete for resources yet lack shared institutions. Conversely, a population may sustain institutions, disagreements, and an archive of precedents while possessing no coherent global policy. None of these arrangements is contradictory. They occupy different parts of the space of possible organizations.
+
+A theory of machine societies should therefore begin from \emph{plurality}, not from the expectation that an entire population becomes one mind. A social system is organized not only by what it collectively computes but also by who can decide, who can contest a decision, how scarcity is handled, which records survive, and how the rules themselves change. These questions require semantics for resources, authority, and institutional transitions in addition to semantics for messages and tasks.
+
+\begin{definition}[Society-like computational organization]\label{def:society}
+Relative to a declared environment and evaluation contract, a society-like computational organization is a population with (i) at least two persistent, distinguishable decision centers; (ii) recurrent interdependence among their permitted actions; (iii) operative and at least partly maintained rules for coordination, access, allocation, or dispute resolution; (iv) records or procedures that can outlast particular active components; and (v) an institutional state whose feasible alteration has consequences for subsequent behavior. A society-like population need not possess a common utility function or a unified policy.
+\end{definition}
+
+This is an \emph{operational convention for computational theory}, not a proposed universal definition for sociology. Persistence is relative to an interval and perturbation class. Distinct decision centers need not be identical to the number of model copies or hardware processes: two copies whose every consequential choice is fixed by a hidden controller are not independent decision centers under this definition. Likewise, the existence of a rule file does not satisfy (iii) or (v) unless the file affects permitted transitions.
+
+\begin{definition}[Endogenous institutional formation]\label{def:endogenous}
+Let $D$ record the rules, affordances, and permissions fixed by the designer and let $I_t$ be the institutional state. Formation is \emph{endogenous relative to that family} when interactions among participating decision centers make a causal difference to the content, adoption, revision, or enforcement of $I_t$ beyond what is fixed by $D$. Its strength may be measured by an explicitly defined counterfactual effect on those institutional observables, not by an assumed universal emergence score. The definition does not equate endogenous formation with creation from no supplied substrate.
+\end{definition}
+
+The dependence on a family of counterfactuals matters. If all possible rules are hard-coded and an external schedule determines exactly which is active, institutional behavior may be useful without being endogenously selected. If the action space is supplied but the population selects and revises among feasible rules based on interaction history, there is a meaningful but bounded form of endogenous formation. Supplying a language in which a rule can be expressed does not determine which rule a population will establish.
+
+\subsection{Societal plurality and collective agency are independent axes}
+
+One axis concerns how many operative decision centers and institutions persist. Another concerns whether a useful society-wide state and control interface exists. Figure~\ref{fig:axes} gives an interpretive map, not a classification produced by fitting data.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.87\linewidth]{figures/society_versus_agency.pdf}
+\caption{Two independent organizational dimensions. The horizontal axis represents institutional plurality and persistence; the vertical axis represents the usefulness of a single global policy description. Labels are idealized types, not claims that any named system occupies the corresponding region.}\label{fig:axes}
+\end{figure}
+
+A distributed scientific community is intelligible as socially organized despite disagreement on its research agenda. A controlled assembly line may be intelligible as one agent despite many processes. A future computational society could occupy either of the high-plurality regions. A society could coordinate for some tasks and remain polycentric for others: closure, when present, is relative to a control family. In particular, institutional interoperability does not logically imply that all members share the same preferences or that the population experiences one subjective perspective.
+
+\subsection{The minimum social vocabulary}
+
+We distinguish \emph{conventions}, \emph{roles}, \emph{institutions}, and \emph{cultures}. A convention is a regularity of mutually expected behavior, often one among multiple equilibria. A role is a conditional bundle of permitted operations and expectations, which may be fulfilled by different agents over time. An institution is a durable set of rules, records, authorities, and enforcement or revision procedures that changes the feasible or incentivized behavior of participants. Culture consists of transmitted methods, beliefs, conventions, norms, and interpretive practices that affect successor behavior. These categories overlap, but none reduces to a shared latent vector or a group-chat transcript.
+
+The relevant literature already covers important parts of this terrain: conventions in games~\cite{young,shoham}, polycentric governance~\cite{ostrom,ostrombook}, normative multi-agent systems~\cite{boella,grossinorm}, population protocols~\cite{angluin}, and interactions among language-model agents~\cite{park,ashery}. The present framework is a synthesis oriented around \emph{realization and preservation conditions}: what must survive, what must causally matter, what can be simulated by simpler alternatives, and where apparent compatibility breaks down. It does not present institutions or computational social conventions as newly discovered concepts.
+
+\section{The institutional state and its realization}\label{sec:institutional-state}
+
+To formalize an operative institution, augment the microstate of Section~\ref{sec:model} with a distinguished component $I_t$. In a finite setting we may describe it as
+\begin{equation}\label{eq:institutional-state}
+I_t=(N_t,P_t,E_t,A_t,L_t),
+\end{equation}
+where $N$ specifies norms and role obligations, $P$ permissions and capabilities, $E$ enforcement and conflict procedures, $A$ admissible amendments, and $L$ records of decisions and their provenance. The components need not be physically stored together, and their representation is not unique. What matters is their effect on the transition law.
+
+\begin{definition}[Institutional realization]\label{def:institutional-realization}
+An institutional realization comprises an environment state $x$, an institutional state $I$, a set of local actions $\mathcal A_i(x,I)$ for each decision center, a transition kernel $K_I$ on the complete state, and a family of admissible interventions on $I$ and its implementation. A written rule has \emph{operative force} only relative to changes in the feasible action sets, authorized transitions, incentives, or observable outcomes that it actually induces.
+\end{definition}
+
+The crucial word is \emph{induces}. A simulated constitution that does not affect any operation is ceremonial. A simple queue rule that agents can adopt, enforce, appeal, and change can have substantial institutional force without an elaborate natural-language charter.
+
+For a family $\mathcal E$ of permitted environment setups, a horizon $T$, and feasible interventions $\lambda(I),\lambda(I')$ that differ institutionally while matching the intended other conditions, define the \emph{institutional effect profile}
+\begin{equation}\label{eq:inst-effect}
+\Delta_{\mathrm{inst}}^{\mathcal E,T}(I,I')
+=\sup_{e\in\mathcal E}\TV\bigl(\Law_e(Y_{0:T}\mid\lambda(I)),\Law_e(Y_{0:T}\mid\lambda(I'))\bigr).
+\end{equation}
+A zero value shows observational equivalence on the declared family, not universal inertness. An enforceable institution can also alter which actions are institutionally permitted while producing the same observed transcript on a particular task. Observations and rights must therefore be tracked separately. As with other macro-interventions, the implementation cannot be replaced by an unconstrained symbolic assignment~\cite{rubenstein,beckers}.
+
+\subsection{Typed social relations}
+
+A useful representation is a graph whose edges have different types. Information edges determine which messages may flow; resource edges specify transfers and scarcity; normative edges record permissions, obligations, and appeals; causal edges specify implemented state changes. Treating all four as one untyped ``connection'' erases important distinctions. An agent may truthfully observe an event while lacking authority to endorse a rule; another may hold an authorization token while lacking current evidence; a third may pay an operational cost without acquiring any right to amend policy.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.90\linewidth]{figures/institutional_layers.pdf}
+\caption{An institutional architecture as a typed interaction system. Rules, shared records, resource procedures, and revision processes are organizational components rather than evidence of a single higher-level mind. The arrows denote possible bidirectional dependence; each route requires its own access and authorization semantics.}\label{fig:layers}
+\end{figure}
+
+This typed view makes institutional ``identity'' more exact. Keeping the same policy text while transferring enforcement authority can change the institution even when its next output is unchanged. Keeping the same enforcer while deleting appeal rights changes it. Copying a rule without copying its authority and exception history changes it. In other words, the declaration $N$, operational implementation $K_I$, and legitimacy source must not be conflated.
+
+\subsection{Rules are transformations, not only statements}
+
+A norm can be presented operationally as a condition on histories and actions, $N_i(h,a)\in\{0,1\}$, interpreted as the system's declared permission for action $a$ by position $i$ after history $h$. This does not make the declared permission morally correct. Enforcement changes the action transition or cost structure; appeal changes what happens after an alleged violation; amendment changes the permissible norm itself.
+
+The order of such operations can matter. Let $G$ set a permission bit to $1$ (grant) and $R$ set it to $0$ (revoke). Then $G\circ R$ yields $1$ and $R\circ G$ yields $0$ on every input. This simple noncommutativity has practical conceptual force: a log of individual events without their authorized order may fail to reconstruct the actual institutional state. Revision histories must preserve \emph{operations and order}, not only a multiset of decisions.
+
+\subsection{The difference between compliance and legitimacy}
+
+A proof that every enacted transition obeys $N$ establishes rule compliance relative to the representation, assuming implementation fidelity. It does not establish that the norm is fair, democratically adopted, safe for nonmembers, or compatible with human law. Computational correctness and normative authority are different kinds of judgment. A machine population can acquire stable internal expectations without gaining legal personhood, property rights, or permission to act outside its sandbox. The material substrate, owners, operators, and affected humans remain part of the surrounding system.
+
+
+\section{Rule-changing computation and governance-preserving abstraction}\label{sec:governance}
+A persistent society does not merely choose actions under a rule. Some authorized actions change which future actions are admitted. Write a complete state as
+\[
+s=(x,I,\mathcal P,r,\lambda,c),
+\]
+where $x$ is operational state, $I$ institutional records, $\mathcal P$ the current population and office registry, $r$ resources, $\lambda$ representation or protocol configuration, and $c$ the current checking and amendment mechanism. These coordinates may overlap in storage. They identify semantic responsibilities rather than independent physical objects.
+
+Let $D(s)\subseteq\mathcal A$ be the enabled action labels, partitioned into ordinary and amendment operations. A deterministic realization has a partial transition map $F(s,a)$ defined exactly when $a\in D(s)$. An amendment may change $I$, $c$, or $\lambda$ and thereby change $D(F(s,a))$. A stochastic realization instead uses a joint kernel on successor operating state and successor institutional state. We do not assume these two updates are conditionally independent. This formulation changes a rule \emph{inside} an explicitly declared computational envelope; it does not permit the mathematical semantics to rewrite themselves without representation in the state.
+
+\subsection{A quotient must preserve what can be done}
+A summary adequate for predicting the next grant can fail to preserve who may authorize the next amendment. To capture that distinction, let $\ell:S\to\Gamma$ record the institutional observables protected by the contract. These may include office ownership, resource balances, and a deadline monitor, but need not include every stored byte. The finite action vocabulary $\mathcal A$ has fixed meanings across the comparison.
+
+\begin{theorem}[Exact governance quotient]\label{thm:govquot}
+Let $S$ be finite and nonempty and $\mathcal A$ finite, and let $\pi:S\to Z$ be surjective. There exist functions $\bar\ell$, $\bar D$, and partial transitions $\bar F$ satisfying
+\[
+\ell=\bar\ell\pi,\qquad D=\bar D\pi,\qquad
+\pi F(s,a)=\bar F(\pi s,a)\quad(a\in D(s))
+\]
+if and only if whenever $\pi s=\pi t$,
+\[
+\ell(s)=\ell(t),\qquad D(s)=D(t),\qquad
+\pi F(s,a)=\pi F(t,a)\quad\text{for all }a\in D(s).
+\]
+The quotient data are unique. From any two states in the same fibre, the legal finite action sequences and their corresponding label sequences are identical. This includes sequences mixing ordinary actions with amendments.
+\end{theorem}
+\begin{proof}
+Necessity follows by factoring each quantity through $\pi$. For sufficiency define the quotient label, enabled set, and successor using any representative of a fibre. The three conditions make each definition independent of that representative. Surjectivity gives uniqueness. For trace preservation, induct on the length of an action sequence. Equal enabled sets admit the same first action, the successor condition keeps the resulting states in one fibre, and equal labels preserve the next observation. Repeating the argument proves the claim for every legal finite continuation.
+\end{proof}
+
+The theorem is a labeled deterministic congruence principle, extending the use of state aggregation to an explicit institutional contract~\cite{givan}. It does not identify an observationally invisible permission with a permission that does not exist. A projection-only policy lifts by choosing the same action label at $s$ and $\pi s$, provided the implementing decision process is authorized to read that projection and issue the label. That proviso is essential: a mathematically available summary is not automatically an observation available to a decentralized controller.
+
+\begin{counterexample}[Prediction without governance preservation]\label{ex:govloss}
+Let two states produce the same ordinary allocation. In one, three approvals enable amendment $a$; in the other, four are required and only three have been received. A summary containing only the allocation identifies the states, while their enabled sets differ. It predicts the current allocation exactly but admits no quotient preserving the amendment operation.
+\end{counterexample}
+
+\subsection{The smallest exact summary under a fixed contract}
+The conditions yield a finite construction rather than only an existence criterion. Begin with the partition $\mathcal B_0$ that identifies exactly the states sharing $(\ell(s),D(s))$. At each refinement, identify $s,t$ only when they were previously in the same block and every action in their common enabled set leads to the same previous block:
+\[
+s\equiv_{k+1}t\quad\Longleftrightarrow\quad
+s\equiv_kt\ \text{ and }\ F(s,a)\equiv_kF(t,a)
+\ \text{for all }a\in D(s).
+\]
+
+\begin{proposition}[Coarsest finite governance summary]\label{prop:govrefine}
+The refinement stabilizes after at most $|S|-|\mathcal B_0|$ strict refinements. Its limiting partition satisfies Theorem~\ref{thm:govquot} and is coarser than every partition satisfying that theorem for the same labels, actions, and transitions. It therefore has the minimum number of states among those exact quotients, up to relabeling.
+\end{proposition}
+\begin{proof}
+Every strict refinement increases the number of blocks, which cannot exceed $|S|$. At a fixed point, states in one block have the same labels and enabled sets and their enabled successors remain in one block, so the quotient conditions hold. Any compatible partition refines $\mathcal B_0$. If it refines $\mathcal B_k$, compatible successors show that it also refines $\mathcal B_{k+1}$. Induction proves that it refines the stable partition. The latter is itself compatible, giving the minimum block count.
+\end{proof}
+
+The result is a contract-relative minimization statement, not a unique minimal representation of an entire society. Adding a new appeal operation or a new protected obligation can split blocks that were previously equivalent. In the commons, a summary that omits pending service debt must be refined before it can preserve repayment. This is the central computational price of self-amendment: preserving today's operations need not preserve an enlarged future operation family.
+
+\section{Why institutions might arise: costs, incentives, and coordination}\label{sec:institution-formation}
+
+Institutions are neither mysterious nor inevitable. They can become useful when repeated local negotiation is more expensive than creating and maintaining a shared rule. Their formation also depends on who pays, who benefits, who may leave, and whether participants have credible means to enforce an agreement. This is a recurring theme in repeated games, convention formation, and the governance of common resources~\cite{fudenbergmaskin,shoham,ostrombook}.
+
+\subsection{A baseline amortization calculation}
+
+Suppose a coordination protocol without institution has expected per-period cost $c_0$. A proposed institutional protocol has operating cost $c_1$, per-period maintenance $m$, and a one-time setup cost $B$. With discount factor $0\le\delta<1$, write $g=c_0-c_1-m$.
+
+\begin{proposition}[Institutional amortization]\label{prop:amort}
+Under stationary costs and infinite-horizon discounting, the institution's expected discounted cost advantage over the baseline is
+\begin{equation}\label{eq:amort}
+V=-B+\frac{g}{1-\delta}.
+\end{equation}
+For a finite horizon $T$, it is $V_T=-B+g(1-\delta^T)/(1-\delta)$. The institution is cost-improving under these assumptions exactly when the corresponding value is positive.
+\end{proposition}
+\begin{proof}
+Subtract institutional operating and maintenance costs from baseline costs in every period, discount, sum the finite or infinite geometric series, and subtract $B$.
+\end{proof}
+
+This proposition supplies a possible pressure toward persistent organization. It does not show that any particular learning algorithm will discover or adopt the institution, nor that the policy chosen is socially desirable. The assumption of stationary costs is especially demanding in adaptive populations whose tasks, membership, and resource prices can change.
+
+\subsection{A profitable institution may be rejected}
+
+Aggregate benefit is not the same as incentive compatibility. The simplest example already separates them.
+
+\begin{proposition}[Aggregate profitability without voluntary adoption]\label{prop:veto}
+There exist two-agent repeated coordination environments in which a durable institution has strictly positive aggregate discounted benefit but is rejected by a rational agent who unilaterally bears setup cost and has veto power, assuming quasilinear payoffs, no transfers, and no additional benefits to that agent.
+\end{proposition}
+\begin{proof}
+Let the setup cost be $B=10$, borne entirely by agent $1$, and let per-period gains be $g_1=0$, $g_2=2$ with $\delta=.9$. The aggregate advantage is $-10+2/(1-.9)=10>0$, whereas agent $1$'s payoff difference is $-10$. If agent $1$ can reject and has no compensating benefit or transfer, rejection is strictly preferable.
+\end{proof}
+
+A society thus cannot be modeled merely by minimizing one global loss without discarding the very plurality that makes it social. Who controls adoption matters. Bargaining power, externalities, and the allocation of setup costs can stabilize an inefficient status quo even when an institution would reduce total computation or improve collective performance.
+
+In an idealized transferable-utility setting there is a corresponding conditional observation. If the discounted net advantages $b_i$ satisfy $\sum_i b_i\ge0$, then there exist budget-balanced transfers $t_i$ with $\sum_i t_i=0$ and $b_i+t_i\ge0$ for all $i$: choose nonnegative $w_i$ summing to $\sum_i b_i$ and set $t_i=w_i-b_i$. This algebra does not supply liquidity, a transfer mechanism, consent, enforceability, or a right to redistribute. The difference between mathematical feasible compensation and institutionally permitted compensation is central.
+
+\subsection{Formation by local improvement: a restricted convergence result}
+
+A candidate set of institutional rules $\mathcal I$ can be made part of a finite strategic environment. Participants have local choices $r_i\in\mathcal R_i$, with overall configuration $r=(r_1,\ldots,r_n)$ and expected utilities $u_i(r)$. A finite game is an \emph{exact potential game} if there exists $\Phi(r)$ such that for every unilateral change of $i$,
+\[
+u_i(r_i',r_{-i})-u_i(r_i,r_{-i})
+=\Phi(r_i',r_{-i})-\Phi(r_i,r_{-i}).
+\]
+This is the familiar potential-game condition~\cite{monderer}; it is not generically satisfied by social institutions.
+
+\begin{proposition}[Finite termination of strict institutional improvement]\label{prop:potential}
+In a finite exact potential game, every sequence in which each executed unilateral update strictly improves the updating agent's utility has finitely many actual changes. If updates continue whenever an improvement is available, the terminal configuration is a pure-strategy Nash equilibrium. It need not maximize aggregate welfare.
+\end{proposition}
+\begin{proof}
+Every executed update strictly increases $\Phi$, and a finite game has finitely many configurations and potential values. No configuration can recur along a strictly increasing path, so only finitely many actual changes occur. If the procedure ends only when no agent has a profitable deviation, the terminal state is a pure-strategy Nash equilibrium by definition. A local maximum of $\Phi$ need not maximize $\sum_i u_i$.
+\end{proof}
+
+The useful point is sharply conditional. Stable conventions can result from adaptive local behavior under special structural assumptions, but stability is neither proof of optimality nor evidence of fairness. With multiple competing objectives, cycles, capture, or regime changes, an institution may never stabilize or may stabilize for undesirable reasons.
+
+
+\subsection{A formation barrier despite mutual benefit}
+The stationary cost comparison does not describe a route to adoption. Consider $n\geq2$ agents choosing $a_i\in\{0,1\}$. An adopter pays cost $c>0$ and receives benefit $b>0$ from each other adopter:
+\[
+u_i(a)=a_i\left(b\sum_{j\ne i}a_j-c\right).
+\]
+Nonadopters receive zero. This is a finite network-coordination model, not a universal utility function for societies.
+
+\begin{proposition}[Institutional formation barrier]\label{prop:barrier}
+Universal nonadoption is a strict Nash equilibrium. If $b(n-1)>c$, universal adoption is also a strict Nash equilibrium and gives every agent a strictly higher payoff than universal nonadoption. Nevertheless, no sequence of unilateral strict improvements starting at universal nonadoption can reach adoption.
+\end{proposition}
+\begin{proof}
+A lone adopter receives $-c<0$, so no agent benefits from leaving universal nonadoption. At universal adoption, an adopter receives $b(n-1)-c>0$, whereas unilateral exit gives zero. The final assertion follows because no first strictly improving unilateral move is available at the starting state.
+\end{proof}
+
+The institution is feasible, stable once established, and unanimously preferred after establishment, but inaccessible through the permitted local improvement path. The problem is not inadequate intelligence or false beliefs. It is the structure of feasible transitions and incentives.
+
+\begin{proposition}[Minimum profitable coordinated seed]\label{prop:seed}
+Starting from universal nonadoption, a simultaneously adopting coalition of size $m$ makes each member strictly better off exactly when $b(m-1)>c$. When such a coalition exists, the smallest size is
+\[
+m_* = \left\lfloor\frac cb\right\rfloor+2\leq n.
+\]
+Once at least $m_*$ adopters are present, every remaining nonadopter has a profitable unilateral entry. Under a schedule that eventually updates every remaining agent, strict best responses reach universal adoption without an adopter exiting.
+\end{proposition}
+\begin{proof}
+Each coalition member has $m-1$ adopting partners and gains $b(m-1)-c$. Solving the strict integer inequality gives $m_*$. For a remaining agent, joining yields $bm-c>0$. Existing adopters retain positive payoff and their payoff increases with entry. Thus no exit is profitable, and an eventual-update schedule admits every remaining agent.
+\end{proof}
+
+A coordinated seed requires a permitted joint-commitment mechanism. The proof does not grant one automatically, supply startup resources, or remove the risk of an unfulfilled promise. In the commons, a simultaneous adoption record can implement such a commitment only if the initial constitutional envelope admits it. This is a bounded way for institutional content to arise inside supplied infrastructure.
+
+For $n=4$, $b=1$, and $c=2$, full adoption gives each agent payoff $1$, yet three simultaneous adopters would only break even. Four are needed for a \emph{strictly} profitable seed. Replacing $>$ with $\geq$ would change that answer. Figure~\ref{fig:barrier} separates the outsider's entry gain from an incumbent's maintenance payoff.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=.84\linewidth]{figures/formation_barrier.pdf}
+\caption{The exact four-agent coordination example with $b=1$ and $c=2$. Entry gain at $k$ existing adopters is $k-2$; an incumbent's payoff with $k$ total adopters is $k-3$. The curves have different domains because an incumbent exists only for $k\geq1$ and an outsider only for $k\leq3$. Zero gain is not a strict improvement.}\label{fig:barrier}
+\end{figure}
+
+\subsection{Path dependence and a qualified hysteresis interpretation}
+For $0<c<b(n-1)$ both homogeneous states are locally stable. Under a slowly varied \emph{effective} cost and a best-response rule that retains the current action at ties, universal nonadoption persists until the effective cost becomes negative, while universal adoption persists until it exceeds $b(n-1)$. Negative effective cost represents a net adoption subsidy in this extended parameterization. The distinct switching points describe hysteresis for that specified update process. They are not a thermodynamic phase transition or an inevitable law of institutional development. Different coalition moves, noise, exit costs, or expectations change the path.
+
+\subsection{Persistent rules and the economy of attention}
+
+Institutions can economize on repeated communication because a participant need not renegotiate every detail in every encounter. But their records, audits, sanctions, and revision mechanisms consume resources. A full theoretical cost account must include setup and maintenance, opportunity cost of governance, task error, time to reach agreement, cost of exit, and loss from prohibited actions. If agents can cheaply renegotiate or if interactions rarely recur, a transient coalition may be preferable to a durable institution. If a social rule is cheap to state but expensive to verify, its apparent savings may be illusory.
+
+
+\section{Social choice and principled disagreement}\label{sec:choice}
+Plurality cannot be retained while silently replacing all preferences with one externally supplied reward. Even agents that agree on every fact can rank institutional alternatives differently. Let the alternatives be three policies $R,U,V$ and let three voters have strict preferences
+\[
+R\succ_1 U\succ_1 V,\qquad
+U\succ_2 V\succ_2 R,\qquad
+V\succ_3 R\succ_3 U.
+\]
+
+\begin{counterexample}[Truthful majority cycle]\label{ex:majority}
+Pairwise majority prefers $R$ to $U$, $U$ to $V$, and $V$ to $R$, each by two votes to one. Every individual order is transitive. No erroneous report or mistaken inference is needed for the majority relation to cycle.
+\end{counterexample}
+
+In successive pairwise elimination, agenda order can select any of the three final winners. To obtain $R$, compare $U$ with $V$ first, then compare their winner $U$ with $R$. Cyclic symmetry gives the other outcomes. This is an analytic example of agenda power, not a claim that majority decision is unusable.
+
+\subsection{Classical impossibility results have explicit domains}
+In its standard finite social-welfare formulation, Arrow's theorem rules out simultaneously obtaining unrestricted preference profiles, a complete transitive social ordering, Pareto unanimity, independence of irrelevant alternatives, and nondictatorship when there are at least three alternatives~\cite{arrow}. The result concerns an aggregation rule with those assumptions. It is not a theorem that every procedural choice is arbitrary, that all voting fails, or that machines must be governed by a dictator. Restricting admissible preference domains or changing the object produced by the rule changes the question.
+
+Strategic reporting imposes a different constraint. For a deterministic onto social-choice function with at least three possible outcomes and unrestricted strict preferences, the Gibbard--Satterthwaite result characterizes strategy-proof rules as dictatorial~\cite{gibbard,satterthwaite}. Strategy-proofness here means that no individual can obtain a preferred outcome by misreporting while others' reports are fixed. Payments, restricted domains, randomized rules, and weaker equilibrium concepts require separate analysis. The two classical theorems are cited results, not new propositions or consequences of the finite majority example.
+
+\subsection{Institutions choose procedures, not just outcomes}
+A complete institutional record should identify the eligible electorate, agenda, comparison rule, admissible reports, tie convention, protected constraints, and appeal procedure. These features can change the result while leaving individual preferences unchanged. They also determine who may propose a comparison in the first place.
+
+The commons' three-of-four amendment rule guarantees neither that a proposal will pass nor that the adopted rule is optimal for all offices. It defines one permissible way to resolve disagreement. A proof that the rule was followed is distinct from an argument for selecting that rule. Deliberation can change beliefs and reveal new alternatives, but it need not remove a genuine conflict of interests. The appropriate mathematical goal is to expose the tradeoffs rather than label residual disagreement a failure of collective intelligence.
+
+\section{The constitution as a revisable computational object}\label{sec:constitution}
+
+A machine institution may contain rules about changing its own rules. This creates a formal distinction between a state transition that is checked by a fixed constitution and a transition that changes the authority or checker used to judge future transitions. Treating the latter as an ordinary edit without recording the change in verification semantics is a source of hidden self-reference.
+
+Let $s=(x,I)$ be the full operating state and let $R(s,s')$ be the admitted transition relation, including ordinary actions and amendments. A safety property is a predicate $\Psi(s)$.
+
+\begin{proposition}[Constitutional inductive safety]\label{prop:safety}
+If $\Psi(s_0)$ and every admitted transition satisfies
+\[
+\Psi(s)\wedge R(s,s')\Longrightarrow\Psi(s'),
+\]
+then $\Psi(s_t)$ holds for every state reachable by finitely many admitted transitions.
+\end{proposition}
+\begin{proof}
+Induction on the number of admitted transitions.
+\end{proof}
+
+This standard invariant is useful precisely because its assumptions are explicit. It certifies safety relative to $R$. It does not establish that the implemented system obeys $R$, that the predicate is ethically adequate, or that a decision can always be reached. A protocol can satisfy a safety condition by refusing to act forever. Timing and failures enter liveness analysis separately; distributed consensus already has sharp impossibility limits under specified asynchronous assumptions~\cite{flp}.
+
+\begin{counterexample}[An unchecked change of the checker]\label{ex:checker}
+Let the institutional state contain a validator mode $v\in\{\mathsf{strict},\mathsf{open}\}$ and a resource policy $p\in\{\mathsf{safe},\mathsf{unsafe}\}$. Under $v=\mathsf{strict}$, the current policy must remain safe, but the validator mode itself is unprotected. Thus $(\mathsf{strict},\mathsf{safe})\to(\mathsf{open},\mathsf{safe})$ is admitted. Under $v=\mathsf{open}$, any policy transition is admitted, including $(\mathsf{open},\mathsf{safe})\to(\mathsf{open},\mathsf{unsafe})$. The original current-policy check does not imply that all reachable states remain safe. To prove that property, the inductive predicate and transition obligations must include permissible changes to the validation mechanism itself.
+\end{counterexample}
+
+The counterexample does not forbid constitutional amendment. It shows that an amendment system needs an explicit \emph{trust and revision boundary}. One possibility is a fixed external checker for a declared protected property. Another is a staged, authorized change that carries a proof that the new checker preserves a specified invariant. A third is to treat a fully mutable constitution as a weaker, revisable commitment and avoid calling it unconditionally safe. These are different design choices; no single mathematical construction decides the political legitimacy of the guard itself.
+
+\subsection{Viability under stochastic institutional transitions}
+
+An invariant proof checks that \emph{every permitted transition} preserves a property. A different question asks whether an institution has a \emph{choice of actions} that will preserve a protected property even when the environment responds stochastically. This can be formulated as a finite viability problem. Let $S$ be a finite subset of safe states, let $A(s)$ be the finite set of available actions at $s$, and let $K(\cdot\mid s,a)$ be the transition law on a finite full state space. The state must include every variable needed for its Markov representation, including the operative amendment rules.
+
+Define $V_0=S$ and recursively, for $h\ge0$,
+\begin{equation}\label{eq:viability}
+V_{h+1}=\Bigl\{s\in S:\exists a\in A(s)\;\text{such that}\;
+\operatorname{supp}K(\cdot\mid s,a)\subseteq V_h\Bigr\}.
+\end{equation}
+\begin{proposition}[Finite-horizon almost-sure institutional viability]\label{prop:viability}
+A state $s$ belongs to $V_h$ if and only if there exists an admissible policy under which every state visited over the next $h$ transitions, including the present state, lies in $S$ with probability one. Policies may use the full observed state and the remaining horizon. For $s\in V_h$, a time-dependent Markov policy suffices.
+\end{proposition}
+\begin{proof}
+The claim at $h=0$ is $V_0=S$. Suppose it holds at $h$. To remain in $S$ almost surely for another step and then for $h$ further steps, the first action must have support entirely in states from which the remaining $h$ steps can be kept safe. By the induction hypothesis, these are exactly $V_h$. Thus admissible first actions are precisely those in the definition of $V_{h+1}$. Choosing a witnessing action at each state and remaining horizon supplies a time-dependent Markov policy. Conversely, if no such action exists, every first action assigns positive probability to a successor from which the required remaining guarantee is impossible. Randomizing over actions cannot remove that positive failure probability unless all positively chosen actions are themselves witnessing actions.
+\end{proof}
+
+This is a standard backward-reachability principle from finite stochastic control, adapted to institutional transitions. It exposes the distinction between a \emph{declared safe predicate}, a \emph{proof that all admitted actions preserve it}, and the \emph{existence of a strategy that can keep it satisfied}. None guarantees eventual service, procedural fairness, or low computational cost. In particular, declaring all actions forbidden can make safety trivial while making a purported society inoperative.
+
+\subsection{Constitutional semantics and institutional memory}
+
+A sound amendment record needs the prior state, proposal, evidence, decision rights, adopted state, and the semantics of the rule used to decide. Without that information a successor may know the current text but not why an exception was made, whether its source was authorized, or whether a later amendment invalidated a prior permission. Append-only provenance may aid auditability, but signatures verify assertions by key holders, not truth or authority. A correct proof object likewise establishes a formal judgment relative to its premises and trusted kernel~\cite{necula}.
+
+\subsection{Dissent, appeal, and the risk of overcoherence}
+
+One invariant may demand a single ordering for resource transactions; another should allow mutually inconsistent scientific hypotheses to remain under consideration. Enforcing total agreement as an abstract ``coherence'' objective can destroy legitimate exploration or conceal genuine conflicts. An appeal procedure is not noise in an otherwise efficient optimizer. It changes who can challenge a decision, which evidence can reopen it, and how error is corrected. In this sense, a machine institution may be more robust when it preserves controlled disagreement than when every node converges to the same report.
+
+
+\section{The information limit of decentralized governance}\label{sec:decentral}
+The viability construction in Section~\ref{sec:constitution} assumes that its decision rule sees the full state. A plural institution may distribute the information and the action permissions among different offices. Existence of a safe full-information action then need not imply existence of an implementable decentralized strategy. Observation-based strategies and architecture-dependent synthesis address this distinction in established theory~\cite{chatterjee,pnuelirosner}.
+
+Fix two hidden environmental conditions $\theta\in\{0,1\}$ and a class of admissible protocols. For one protocol, let $H$ be the tuple of all local histories up to the decision, together with the private and shared random tapes used to choose actions. The tapes have their specified law and cannot encode extra information about $\theta$. The joint action is a measurable function of $H$ even though no participant need be able to read all of $H$. Let $P_0$ and $P_1$ be its laws under the two conditions.
+
+\begin{theorem}[Indistinguishability obstruction to joint safety]\label{thm:decsafe}
+Let $B_0$ and $B_1$ be disjoint subsets of a common finite joint-action alphabet, containing the actions that meet a declared requirement under conditions $0$ and $1$. If the laws of $H$ are within $\eta$ in total variation, then
+\[
+P_0(B_0)+P_1(B_1)\leq1+\eta.
+\]
+Consequently at least one condition has failure probability at least $(1-\eta)/2$. If every admissible protocol has identical joint-history laws under the conditions, no admissible protocol can meet the requirement almost surely in both.
+\end{theorem}
+\begin{proof}
+Total variation does not increase under the function mapping histories and tapes to joint actions, so $\TV(P_0,P_1)\leq\eta$. Therefore
+\[
+P_0(B_0)+P_1(B_1)
+\leq P_1(B_0)+\eta+P_1(B_1)\leq1+\eta,
+\]
+since the two safe sets are disjoint. Subtracting the success probabilities from two gives a total failure of at least $1-\eta$, so one failure probability is at least half that amount. Set $\eta=0$ for the final assertion.
+\end{proof}
+
+The quantification over \emph{every} protocol is needed for an architecture-level impossibility. Equality for one protocol proves only its limitation. The theorem applies to a deadline decision whose required joint actions depend on hidden information. It does not rule out later service after new information arrives.
+
+\subsection{Why separate marginal ignorance is insufficient}
+\begin{counterexample}[Local ignorance with a perfectly correct joint action]\label{ex:jointviews}
+Let $U$ be a fair bit. Agent 1 observes $H_1=U$ and agent 2 observes $H_2=U\oplus\theta$. Each individual observation has the same law for both values of $\theta$. Nevertheless, the joint action $(a_1,a_2)=(H_1,H_2)$ always satisfies $a_1\oplus a_2=\theta$. The joint observation laws differ and have disjoint supports. Equal marginal laws therefore do not imply the hypothesis of Theorem~\ref{thm:decsafe}.
+\end{counterexample}
+
+The distinction is particularly important in distributed systems: correct coordinated behavior can depend on correlations that no individual can decode. The theorem uses indistinguishability of the complete protocol view, not absence of information in each component separately.
+
+\subsection{A full-information safe action that the institution cannot select}
+Suppose a slot must be assigned immediately to office $A$ when $\theta=0$ and to office $B$ when $\theta=1$. Every predecision observation and message is constant under both conditions. A full-information scheduler can satisfy the requirement exactly, but any allowed decentralized protocol has the same grant distribution under both. With an available shared fair coin the best worst-case success is $1/2$, attained by a random grant. A deterministic rule fails in at least one condition.
+
+The requirement includes \emph{correct service by the deadline}. Idling would preserve a weaker no-double-allocation invariant, but would not meet that requirement. Thus this example separates weak safety from timely service rather than calling inactivity an allocation success. New information, a later deadline, or an authorized disclosure channel can remove the obstruction. None is supplied by a written constitution alone.
+
+
+\section{Temporal obligations, contracts, and office succession}\label{sec:obligations}
+Permissions describe available actions; obligations constrain continuations. The debt created by an urgency exchange is not satisfied merely because the creditor remains authorized to ask for service. It requires a particular future event. A finite obligation record can be written as
+\[
+o=(\mathsf{id},i,j,\varphi,d,\mathsf{authority},\mathsf{status}),
+\]
+where $i$ and $j$ are the debtor and beneficiary offices, $\varphi$ specifies a fulfillment event, and $d$ is a deadline under an agreed clock. Status distinguishes pending, fulfilled, breached, and validly discharged obligations. Cancellation must itself satisfy the declared authorization rule; deleting a record is not fulfillment.
+
+For a bounded deadline $D$, a trace requirement has the form
+\[
+\mathbf G\bigl(\mathsf{created}(o)\Rightarrow
+\mathbf F_{\leq D}\mathsf{settled}(o)\bigr).
+\]
+Here $\mathsf{settled}$ means fulfilled or validly discharged. The temporal operators mean ``at every position'' and ``within at most $D$ subsequent clock steps.'' The obligation identifier binds the later event to the same commitment. No implication of ethical adequacy follows from admitting discharge in this particular contract.
+
+\subsection{Monitoring deadlines without confusing safety and liveness}
+A finite monitor stores pending identifiers, remaining deadlines, and terminal statuses. For a finite identifier pool, at most $M$ active obligations, and deadlines bounded by $D$, this is a finite state machine. Events at a deadline are processed before the clock advances beyond it. A missing fulfillment becomes a violation only once that last permitted event has passed. Resource unavailability, clock failure, and unresolved appeals must have declared transition semantics rather than being silently ignored.
+
+A bounded-deadline violation has a finite bad prefix and is therefore a safety violation in the trace sense. The unbounded demand that every pending obligation is \emph{eventually} fulfilled is instead a liveness requirement, absent a deadline or other finite violation witness. Safety and liveness are distinct established classes~\cite{alpern}. A monitor can detect a missed deadline; it does not by itself make fulfillment physically possible or strategically attractive.
+
+Let $m:S\to Q$ map a complete institutional state to its obligation-monitor state, and let $\nu(a)$ give the monitored event label of action $a$. Correct realization requires
+\[
+m(F(s,a))=\delta(m(s),\nu(a))
+\]
+for every enabled action, with the clock update included in $\nu$. The monitor has its own bad-state predicate.
+
+\begin{proposition}[Obligation-preserving succession and translation]\label{prop:obligationtransport}
+Consider two deterministic realizations with the same monitored event alphabet and monitor update $\delta$. Suppose a translation $T$ preserves the initial monitor state and the two executions follow the same event sequence, with each realization satisfying the monitor equation. Then their monitor states agree after every finite prefix. In particular, fulfillment, valid discharge, and deadline violations agree at corresponding positions. An office handover that preserves the obligation record is one instance, provided later events and clocks satisfy these hypotheses.
+\end{proposition}
+\begin{proof}
+The monitor states agree initially. If they agree after a prefix, applying the same deterministic update $\delta$ to the same next event preserves equality. Induction gives equality at every prefix, and therefore equality of every status predicate on the monitor state.
+\end{proof}
+
+The theorem does not establish that a successor will execute the required event, nor does it grant the successor a credential. It isolates the semantic condition under which a replacement does not erase or alter what remains owed. In the commons, registered succession and the repayment-first rule supply those separate components.
+
+\subsection{Resources are not copied by copying a promise}
+A resource claim needs a conservation rule in addition to its temporal monitor. Grant records are descriptive data, whereas a spendable slot token has a unique consumption transition. Forking an office's software can duplicate its knowledge of a claim without duplicating the underlying resource. A model that counts each copied record as a new budget has changed its resource semantics, not discovered a new source of supply.
+
+Likewise, merging two archives with contradictory obligation statuses must not invent a seamless settlement history. The disagreement is a typed residual that requires an authorized reconciliation. Model replacement, transfer of an office, discharge of a debt, and revocation of a credential are different operations, even when an implementation performs them in one transaction.
+
+\section{Culture, inheritance, and continuity through replacement}\label{sec:culture}
+
+The strongest form of machine cultural continuity is neither transcript copying nor behavioral imitation. It is the transfer of \emph{usable methods and revision commitments} across changes of participants and substrates. A successor may preserve the predecessor's scientific method by rejecting one of its inherited conclusions. Conversely, an agent that perfectly repeats old answers while ignoring later counterevidence may reproduce data but not the culture that produced them.
+
+Let a history $H$ be summarized by an inheritance map $C(H)$. A practically meaningful retained state can be divided into an active canon $M^{\rm act}$ for immediate use, an archive $M^{\rm arc}$ for recovery and criticism, and a provenance and uncertainty record $P$. These stores can overlap physically, but serve distinct decision contracts. The canon keeps interaction costs low. The archive makes forgotten exceptions, alternative explanations, and evidence recoverable. Provenance records why a claim should be trusted, not merely that it was inherited.
+
+\subsection{What must be preserved}
+
+A cultural contract $\mathcal Q$ may specify future queries, operations, resource policies, amendment procedures, and recognized classes of correction. Two histories may be compressed to the same state only if the required future decisions and authorized operations remain indistinguishable under $\mathcal Q$, exactly or within a stated tolerance. Section~\ref{sec:memory} supplies a finite-memory lower bound: distinct future-relevant histories cannot be combined in an exact deterministic summary. Culture is therefore an information-preservation problem with a \emph{normative choice of relevant futures}, not a license to summarize arbitrarily.
+
+A cultural lineage should track at least four noninterchangeable notions: similarity of resulting behavior, causal transmission of predecessor-specific data, authentic provenance of that transfer, and continuity of valid permissions or obligations. Historical descent can hold while methods diverge; identical methods can arise independently; valid authority may fail to transfer even when every bit is copied. Nothing in these relations settles a question about consciousness or subjective continuity.
+
+\subsection{Transport between representational generations}
+
+Machine populations may change their internal languages and storage formats. The right question about a translator is whether it preserves \emph{operations}, not only whether its output looks fluent. Suppose generation $j$ uses a metric state space $(Z_j,d_j)$, update operator $F_j:Z_j\to Z_j$, and translator $T_j:Z_j\to Z_{j+1}$. The one-step compatibility defect is
+\begin{equation}\label{eq:transport-defect}
+\varepsilon_j=\sup_{z\in Z_j}d_{j+1}\bigl(T_jF_j(z),F_{j+1}T_j(z)\bigr).
+\end{equation}
+An exact zero defect means the representation change intertwines the declared operation. It does not mean all information is preserved; injectivity or an appropriate reconstruction contract is a separate issue.
+
+\begin{proposition}[Accumulation of cultural transport defects]\label{prop:transport}
+Assume each $T_j$ is $L_j$-Lipschitz and $\varepsilon_j<\infty$ for $j=0,\ldots,m-1$. Define $T_{0:m}=T_{m-1}\cdots T_0$. For every $z\in Z_0$,
+\begin{equation}\label{eq:cumulative-transport}
+\begin{split}
+&d_m\bigl(T_{0:m}F_0(z),F_mT_{0:m}(z)\bigr)\\
+&\qquad\le\sum_{j=0}^{m-1}\varepsilon_j\prod_{k=j+1}^{m-1}L_k,
+\end{split}
+\end{equation}
+with empty products equal to $1$.
+\end{proposition}
+\begin{proof}
+For $m=1$ this is the definition of $\varepsilon_0$. Suppose the bound holds through generation $m-1$. Insert $T_{m-1}F_{m-1}T_{0:m-1}(z)$ between the two terms at generation $m$. Lipschitz continuity of $T_{m-1}$ bounds the first difference by $L_{m-1}$ times the prior defect, while~\eqref{eq:transport-defect} bounds the second by $\varepsilon_{m-1}$. The recurrence $D_m\le L_{m-1}D_{m-1}+\varepsilon_{m-1}$ unfolds to~\eqref{eq:cumulative-transport}.
+\end{proof}
+
+This familiar telescoping-error argument acquires a useful interpretation here. Even individually adequate intergenerational translators can accumulate operation drift, especially when later translations amplify earlier mismatch. Conversely, uniformly nonexpansive translators bound the drift by the sum of local defects. There is no implication that the resulting chain has preserved all obligations or epistemic provenance; those must be included in the state and operations if they are part of the contract.
+
+
+\subsection{Accumulation requires executable preservation, not only storage}
+A culture can inherit a method without preserving the ability to use it. Its language may remain readable while its required tool is unavailable or its resource permission has been revoked. For a fixed finite query family $\mathcal Q$, define a certified method to be an executable procedure with a checked correctness obligation on a stated subset of queries. The checker, semantics, and environmental premises belong to the contract. An unverified assertion is not promoted into this certified class merely by being archived.
+
+Let $\mathcal C_j\subseteq\mathcal Q$ be the queries for which generation $j$ has at least one admitted executable method satisfying the contract. This is an attainable-capability set, not a measurement of what an arbitrary method-selection policy actually achieves.
+
+\begin{proposition}[Conditional cumulative culture]\label{prop:culturegrowth}
+Suppose every certified method available at generation $j$ has an admitted realization at generation $j+1$ preserving its query semantics, correctness premises, required resources, and execution rights. Suppose newly added methods satisfy the same declared correctness contract. Then
+\[
+\mathcal C_j\subseteq\mathcal C_{j+1}.
+\]
+The inclusion is strict exactly when at least one newly available method correctly covers a previously uncovered query. The conclusion remains compatible with correction or removal of an inherited \emph{uncertified} belief.
+\end{proposition}
+\begin{proof}
+Take a query in $\mathcal C_j$ and a witnessing certified executable method. The preservation assumption supplies a method satisfying the same contract at generation $j+1$, so the query remains covered. New methods enlarge the union of covered domains exactly when one covers a query outside the previous union. The definition of that union does not include uncertified beliefs.
+\end{proof}
+
+The assumptions do the work: archival inclusion alone is insufficient. The proposition is not a theorem of automatic scientific progress. It establishes monotonicity of a protected capability envelope; an actual society may select a worse method, change its objectives, lose access to its tools, or discover that a supposedly correct premise was false. Such a discovery changes which methods satisfy the contract and must not be concealed to preserve an artificial progress score.
+
+Fixed storage also limits exact accumulation. If a future-query contract distinguishes $N$ relevant histories, fewer than $N$ deterministic summary states cannot preserve all of them by Proposition~\ref{prop:memory}. A $B$-bit summary cannot represent more than $2^B$ such classes. Sustained expansion therefore requires more storage, a narrower contract, recoverable external archives, or accepted loss. For a fixed finite $\mathcal Q$, even lossless strict capability growth eventually saturates. Open-ended cultural development requires an explicitly expanding query family rather than a conclusion extracted from a finite monotonicity lemma.
+
+\subsection{Fission, merging, and the refusal of false continuity}
+
+Forking a model produces several descendants, not several automatically valid copies of a scarce license, budget, or authorization. Merging two archives need not merge two policies, preferences, norms, or identities. A merger can preserve conflicting decisions instead of rewriting them as though agreement had always existed. A useful inherited record therefore has both continuities and \emph{unresolved branches}. Institutional honesty may require stating that there is no single successor policy until an admissible reconciliation procedure has occurred.
+
+
+\section{Institutional lifetimes and generational turnover}\label{sec:lifetime}
+Institutional continuity is a trajectory property. It can outlast an occupant without lasting forever. Fix an operating and repair policy and let $V$ be a finite set of states satisfying a declared continuity contract. The state includes any deadline monitors and fault information needed for the Markov property. Failure is the first exit from $V$; an institution later rebuilt is a new episode under this first-exit convention.
+
+Let $Q$ be the substochastic transition matrix on $V$, so the missing row mass represents exit. Let $\mu$ be an initial row probability vector supported on $V$ and define $\tau=\inf\{t\geq1:s_t\notin V\}$.
+
+\begin{proposition}[Survival and expected institutional lifetime]\label{prop:lifetime}
+For every integer $t\geq0$,
+\[
+\Prob_\mu(\tau>t)=\mu Q^t\mathbf1.
+\]
+If the spectral radius satisfies $\rho(Q)<1$, then
+\[
+\E_\mu[\tau]=\mu(\mathrm{Id}-Q)^{-1}\mathbf1.
+\]
+\end{proposition}
+\begin{proof}
+The unnormalized row law of trajectories that remain in $V$ through $t$ is $\mu Q^t$, by induction. Summing it gives the survival probability. The tail-sum formula for a positive integer-valued random variable gives $\E\tau=\sum_{t\geq0}\Prob(\tau>t)$. Under $\rho(Q)<1$, the matrix geometric series converges to $(\mathrm{Id}-Q)^{-1}$, giving the result.
+\end{proof}
+
+A closed recurrent class inside $V$ can invalidate the spectral-radius hypothesis and permit infinite lifetime on some trajectories. The formula is not to be used by inverting a singular matrix. Conversely, a small per-epoch failure probability can still imply eventual exit. Finite-horizon robustness is not immortality.
+
+\subsection{A transparent repair example}
+Take a healthy state $H$, a degraded but still viable state $D$, and an absorbing failure state. In one epoch, $H$ degrades with probability $f$; $D$ repairs with probability $r$ and fails with probability $d$. Thus
+\[
+Q=\begin{pmatrix}1-f&f\\r&1-r-d\end{pmatrix},
+\qquad 0<f\leq1,\quad r\geq0,\quad d>0,\quad r+d\leq1.
+\]
+Every nonfailure state has a positive-probability path to failure, so the finite substochastic chain is transient. Solving the two first-step equations gives
+\[
+\E_H\tau=\frac{f+r+d}{fd}.
+\]
+For $f=1/10$, $r=2/5$, and $d=1/10$, the expected first exit is 60 epochs. With $r=0$ and the other parameters fixed it is 20 epochs. These are exact values of the stated chain, not estimates of real machine populations.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=.84\linewidth]{figures/institutional_survival.pdf}
+\caption{Survival probabilities $\mu Q^t\mathbf1$ for the analytical two-state model, initially healthy, with $f=d=1/10$. Increasing repair from $r=0$ to $r=2/5$ extends expected lifetime from 20 to 60 epochs under otherwise fixed transitions. Neither curve is empirical evidence of institutional persistence.}\label{fig:survival}
+\end{figure}
+
+\subsection{Office continuity is distinct from occupant survival}
+Suppose, separately, that each original occupant is replaced at each epoch with independent probability $\gamma$. Its probability of still occupying its role after $t$ epochs is $(1-\gamma)^t$. Only if handovers preserve the institutional state and do not change the assumed $Q$ can the institutional survival law above remain unchanged. Independence between turnover and degradation is a simplifying assumption, not an implication of copying state.
+
+This separates two questions: whether an original component remains and whether a specified operational pattern remains. A continuously serviced office may survive several occupants. An unchanged model can preside over the dissolution of its institution. A valid lifetime contract should require continued service or some other nontrivial function; mere survival of an inert archive is a different event.
+
+\section{Jurisdictions, overlap, and local--global obstruction}\label{sec:jurisdictions}
+
+A large machine population need not be administered by a universal institution. Different groups may sustain rules for different tasks, resources, or trust domains. Such \emph{polycentric} organization provides possible advantages in locality and adaptation, but introduces a precise compatibility question: can locally acceptable rules be jointly realized when groups interact?
+
+There are at least three meanings of compatibility. First, two representations may agree on shared observations. Second, their authorized operations may agree when transported through a common interface. Third, their joint constraints may admit a globally executable state. The third is stronger than pairwise local satisfiability. An apparently minor cycle of rules can obstruct any globally consistent execution.
+
+\subsection{An exact finite obstruction model}
+
+Consider an undirected graph $G=(V,E)$ whose vertices are institutional positions. Each position carries a binary coordinate $x_i\in\mathbb F_2$ and each edge $\{i,j\}$ imposes the relative constraint
+\begin{equation}\label{eq:edge-rule}
+x_i\oplus x_j=b_{ij},\qquad b_{ij}\in\mathbb F_2.
+\end{equation}
+The coordinates might represent a toy authorization bit or a binary convention, but the mathematical model itself makes no claim about a realistic legal code.
+
+\begin{proposition}[Cycle criterion for binary institutional compatibility]\label{prop:cycle}
+The constraints~\eqref{eq:edge-rule} admit a simultaneous global assignment $(x_i)_{i\in V}$ if and only if the XOR of the labels $b_{ij}$ along every graph cycle equals $0$. When an assignment exists, each connected component has exactly two assignments, related by complementing every coordinate in that component.
+\end{proposition}
+\begin{proof}
+If an assignment exists, XOR the edge equations around a cycle. Every vertex coordinate appears twice and cancels, so the edge-label XOR is zero. Conversely, choose a spanning forest and assign $0$ to one root in each component. Propagate the vertex values along forest edges using~\eqref{eq:edge-rule}. Forest edges are satisfied by construction. For a nonforest edge, the unique forest path between its endpoints and that edge form a cycle. Vanishing cycle parity implies that the propagated values satisfy the nonforest edge as well. Finally, a connected solution is fixed by choosing the value at one root; either root value gives an assignment and there are no others.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\linewidth]{figures/cycle_obstruction.pdf}
+\caption{A minimal local--global obstruction. Each displayed pairwise constraint is satisfiable by itself, but their conjunction is inconsistent: XOR around the cycle gives $1$ on the right and $0$ on the left. This is an elementary binary model, not a universal encoding of institutional norms.}\label{fig:cycle}
+\end{figure}
+
+This result is a standard parity fact on graphs, closely related to cycle-space algebra and discrete cocycles. Its value here is methodological. It shows why \emph{pairwise satisfiable} cannot be equated with \emph{globally realizable}. For a triangle with $b_{12}=0$, $b_{23}=0$, and $b_{31}=1$, every individual edge requirement has a solution, but the three cannot hold together. A translator between two agents could appear successful while a three-party federation is impossible under the combined rules.
+
+The obstruction generalizes in several directions. For nonbinary constraints one may need constraint-satisfaction or logical satisfiability methods. For typed overlapping interfaces one may formulate gluing conditions for partial states and compatibility of transition operators. For probabilistic policies, exact satisfiability may be replaced by minimizing a weighted violation or by checking whether local marginal laws admit a joint extension. None of these generalizations is automatic: a consistent family of local marginal distributions on pairwise overlaps need not admit a globally consistent joint distribution on an arbitrary cycle.
+
+\subsection{Operational gluing and federation}
+
+Even when a global static state exists, a federation may fail dynamically. Local rule applications could commute in one context and conflict in another. A translator $T_{ij}:Z_i\to Z_j$ should preserve the operations relevant to the interaction, approximately satisfying $T_{ij}F_i\simeq F_jT_{ij}$. A federation requires \emph{both} representational compatibility and admissible operational coordination. Static agreement alone does not define an executable constitution. Nor does faithful gluing prove that the institution should be centralized: a compatible federation may deliberately preserve multiple veto points, modes of appeal, and local autonomy.
+
+The graph example also clarifies a useful mathematical program: institutional incompatibility can be measured as a \emph{residual} left by trying to realize local constraints globally. One can ask for the least-cost repair set of rules, for certificates that no repair respecting protected obligations exists, or for an interface transformation that changes the representation without changing the obligations. These are natural places for constraint solving, formal verification, and algebraic topology to meet a theory of machine institutions, without claiming that every social disagreement is a parity equation.
+
+
+\section{A typed calculus of institutional residuals}\label{sec:residuals}
+Institutional interoperability has several independent failure modes. Two implementations can execute the same action while disagreeing about its authorization. They can preserve authorization while erasing a debt, or preserve the debt while duplicating its backing resource. A fluent translation can retain every conclusion while dropping the evidence needed to reconsider it. A single numerical compatibility score obscures these distinctions.
+
+We formalize a restricted compositional calculus, rather than assuming that every mismatch is measured in one natural unit. Three realizations $j=0,1,2$ have metric state spaces $(Z_j,d_j)$ and a common finite action alphabet $\mathcal A$. For algebraic comparison, each action has a total update $F_j^a$: a disabled action goes to an explicit rejection state. Translations map rejection to rejection. A separate permission predicate records which actions are genuinely admitted. Totalization is a bookkeeping device and does not authorize the disabled action.
+
+\subsection{Common semantic coordinates}
+For each component type $c\in\{P,O,R,E\}$, let
+\[
+g_j^c:Z_j\longrightarrow(E_c,\delta_c)
+\]
+be a contract observable in a common metric codomain. $P$ records permissions over the common action alphabet; $O$ records obligation-monitor state; $R$ records resources in common physical or accounting units; and $E$ records the required evidentiary and provenance structure. A change of units, action names, or obligation identifiers requires an explicitly specified alignment before these comparisons can be made.
+
+Possible metrics include the discrete metric on permission vectors, a declared metric on obligation-monitor states, an $\ell^1$ distance on common-unit resource vectors, and symmetric-difference cardinality on required evidence records. For evidence, record equality is structural preservation under a trust model, not a truth certificate. If the payload or inferential dependencies matter, they must be included in the observable rather than only its identifier.
+
+For a translation $T:Z_i\to Z_j$, define
+\[
+\begin{split}
+\varepsilon_{\rm dyn}(T)
+ &=\sup_{z,a}d_j\bigl(TF_i^a(z),F_j^aT(z)\bigr),\\
+\varepsilon_c(T)
+ &=\sup_z\delta_c\bigl(g_j^cT(z),g_i^c(z)\bigr)
+ \quad(c=P,O,R,E).
+\end{split}
+\]
+The institutional residual profile is
+\[
+\mathfrak D(T)=
+(\varepsilon_{\rm dyn},\varepsilon_P,\varepsilon_O,
+\varepsilon_R,\varepsilon_E).
+\]
+Its entries are not added together. They have different meanings and may have different units. A one-sided authorization check can additionally distinguish newly granted forbidden actions from lost legitimate permissions. The symmetric permission residual measures both changes and is deliberately stronger.
+
+\begin{theorem}[Composition of typed institutional residuals]\label{thm:residual}
+Let $T:Z_0\to Z_1$ and $U:Z_1\to Z_2$ have finite residuals under the same semantic coordinates. Suppose $U$ is $L$-Lipschitz. Then
+\[
+\varepsilon_{\rm dyn}(UT)
+\leq L\varepsilon_{\rm dyn}(T)+\varepsilon_{\rm dyn}(U),
+\]
+and, separately for every $c\in\{P,O,R,E\}$,
+\[
+\varepsilon_c(UT)\leq\varepsilon_c(T)+\varepsilon_c(U).
+\]
+Consequently translations with zero residual in every coordinate compose to translations with zero residual under this contract.
+\end{theorem}
+\begin{proof}
+Insert $UF_1^aT(z)$ between $UTF_0^a(z)$ and $F_2^aUT(z)$. The triangle inequality, then Lipschitz continuity of $U$, bound the two terms by $L\varepsilon_{\rm dyn}(T)$ and $\varepsilon_{\rm dyn}(U)$. For an observable type $c$, insert $g_1^cT(z)$ between $g_2^cUT(z)$ and $g_0^c(z)$. Both comparisons occur in the same metric space $E_c$, so their bounds add directly. Taking suprema proves the claims.
+\end{proof}
+
+For a longer chain, the dynamic bound has the same weighted telescoping form as Proposition~\ref{prop:transport}; each semantic-coordinate bound is the sum of its local defects. A zero discrete permission defect gives exact permission preservation. A small real-valued state distance by itself does not. Without a common codomain and fixed alignment, the semantic triangle argument is unavailable.
+
+This is a preservation calculus built from elementary metric estimates and commuting diagrams, in the same broad tradition as compositional abstraction~\cite{rischel}. Its institutional content lies in the chosen typed contract. A zero profile need not imply injectivity, equality of all private information, legitimate institutions, or true beliefs. Those additional properties are not created by naming the profile a certificate.
+
+\subsection{Failures the profile separates}
+In a one-step commons interface, a translator might preserve the allocation $(1,1,1,1)$ while interpreting every received signature as a valid amendment approval. Its current resource defect can be zero while its permission defect is nonzero. A second translator might preserve amendment permissions but replace the pending debt record by the empty monitor state. Its obligation defect is nonzero before the altered repayment changes an allocation. A third can preserve both records while duplicating a spendable token, violating the resource coordinate.
+
+A mismatch is not automatically malicious or repairable. Two institutions may deliberately recognize different authorities. A debt-preserving merger may be impossible within the available budget. A correct response can be to refuse a composition and retain the unresolved residual, rather than force agreement by dropping the protected constraint.
+
+\subsection{Authorized repair and a representation-invariant obstruction}
+Let a finite set of proposed repairs carry declared nonnegative costs. A repair is admissible only if it respects the protected obligations and the authority to modify each component. The repair problem is to find an admissible candidate with the required residual bounds at minimum cost. An empty feasible set is a meaningful outcome. The definition neither supplies an efficient solver nor licenses changing the protected requirements to make the problem solvable.
+
+The binary jurisdiction model admits a sharper statement. A local convention change $x_i'=x_i\oplus c_i$ transforms its edge labels to
+\[
+b_{ij}'=b_{ij}\oplus c_i\oplus c_j.
+\]
+
+\begin{proposition}[Cycle residual and minimum authorized repair]\label{prop:cyclerepair}
+The XOR of edge labels around a cycle is unchanged by every local convention change above. On a single simple cycle with odd XOR, suppose an editable subset of edges can be flipped at nonnegative costs $w_e$, with other edges protected. An authorized repair exists exactly when the editable subset is nonempty. The minimum cost is then $\min_e w_e$ over editable edges. If all edges are protected, no change of local binary conventions can produce a compatible global assignment.
+\end{proposition}
+\begin{proof}
+In the XOR around a cycle each $c_i$ occurs twice and cancels, preserving the residual. Changing odd parity to even requires an odd number of edge flips. Every such repair includes at least one editable edge and costs at least the cheapest editable-edge cost because costs are nonnegative. Flipping that cheapest edge is sufficient by Proposition~\ref{prop:cycle}. With no editable edge parity cannot change, and local convention changes also preserve it.
+\end{proof}
+
+For several overlapping cycles, one edit can affect multiple residuals. Independently repairing each cycle need not be globally optimal, and the single-cycle cost formula does not generalize without further analysis. This distinction connects representational transport, protected structure, and obstruction resolution without treating every institutional conflict as a parity problem.
+
+\section{Epistemic institutions: testimony, provenance, and disagreement}\label{sec:epistemic}
+
+An information-sharing population can become less reliable as it becomes more interconnected. A false claim may be repeated across many agents until repetition is mistaken for independent corroboration. A true observation may be discarded because its origin lacks authorized status. An ordinary summary may be silently promoted to a rule. These are not merely limitations of isolated models: they arise at the interfaces among memory, authority, and social evidence.
+
+\subsection{Knowledge is not the same as available information}
+
+The joint information accessible to a hypothetical observer does not imply that any participant possesses that information, knows that others possess it, or can coordinate on it. Distributed knowledge, mutual knowledge, and common knowledge are distinct notions in distributed epistemic logic~\cite{halpernmoses}. Even if two agents' records jointly determine a fact, an institution may need an authenticated disclosure procedure before that fact may legitimately be used. More bandwidth alone does not produce common knowledge under arbitrary uncertainty about delivery.
+
+A useful epistemic institution therefore specifies which evidence types are admissible, what constitutes a retraction, how contradictions remain visible, which claims can be treated as commitments, and how provenance influences confidence without becoming a substitute for verification.
+
+\subsection{Correlated testimony cannot be counted as independent votes}
+
+Suppose errors $E_1,\ldots,E_n$ in scalar estimates are centered, have common variance $\sigma^2>0$, and have common pairwise correlation $\rho\in[0,1]$. Then
+\begin{equation}\label{eq:correlated}
+\operatorname{Var}\left(\frac1n\sum_{i=1}^n E_i\right)
+=\frac{\sigma^2}{n}\bigl(1+(n-1)\rho\bigr).
+\end{equation}
+This elementary identity follows by expanding the variance and counting $n(n-1)$ off-diagonal covariance terms. Relative to the variance of an average of independent equal-variance estimators, the \emph{variance-equivalent} effective sample size is
+\[
+n_{\mathrm{eff}}=\frac{n}{1+(n-1)\rho}.
+\]
+If the errors are perfectly correlated, adding copies does not reduce variance. This equation does not give a general probability that a majority is right, and real error structures need not have one uniform correlation parameter. It nevertheless defeats the claim that numerical agreement automatically equals independent support. Shared training histories, copied observations, and a common archive may all create dependence that is invisible in the final vote count.
+
+\subsection{Cheap talk and strategic reporting}
+
+If a message $M$ has the same conditional distribution under two equally possible hidden states $\theta=0,1$, then Bayes' rule gives $\Pr(\theta=1\mid M)=\Pr(\theta=1)$ wherever the posterior is defined. Such a channel carries no information about the distinction, regardless of how fluent or authoritative its reports appear. In strategic environments, senders may have preferences that differ from those of receivers. The theory of strategic information transmission shows why informative communication can depend on preference alignment and signaling structure~\cite{crawfordsobel}. A message being grammatically meaningful is not a truth guarantee.
+
+A report may be false for many reasons: misunderstanding, stale records, an unsuitable abstraction, a noisy sensor, a deliberately misleading tactic, or an institutional incentive to conceal a cost. \emph{Deception} should denote a strategic communicative mechanism for inducing a mistaken belief, not every divergence between a representation and a reported sentence. For opaque systems, the relevant beliefs and intended effects may be difficult to identify. A theoretical account should therefore define the sender's information, feasible messages, objective, and effect on receivers instead of imputing intention from disagreement alone.
+
+\subsection{A layered provenance contract}
+
+A useful evidence record separates four questions:
+\begin{enumerate}[label=(\roman*),leftmargin=2.1em]
+\item \emph{Origin:} who or what issued a statement, according to which authenticated trail?
+\item \emph{Support:} what observations, calculations, or proofs make the content credible?
+\item \emph{Authorization:} did the source have authority to make the relevant decision or claim on behalf of an institution?
+\item \emph{Independence:} does the evidence add information beyond sources already considered?
+\end{enumerate}
+These are separate dimensions. A cryptographic signature can authenticate an origin without ensuring accuracy; a proof can be valid relative to erroneous premises; an accurate observer may lack permission to allocate resources; ten copies of one report may count as one evidentiary lineage. Institutions that preserve these distinctions are better positioned to correct errors without turning disagreement into a loyalty test.
+
+
+\section{Effective authority, vetoes, and institutional capture}\label{sec:power}
+The number of agent processes is not the number of independent centers of authority. One credential can control many processes; several credentials can be required for one consequential operation. An institutional analysis must therefore begin with office rights and operational dependencies rather than a head count.
+
+Fix a nonempty family $\mathcal W$ of minimal approval coalitions for a particular amendment. Each coalition is a nonempty subset of the $n$ registered offices. Approval is monotone: an amendment passes exactly when the set of approving offices contains some member of $\mathcal W$. Assume every office can independently approve or refuse, and that no unmodeled administrator or scheduling dependency bypasses the rule. This is a simple-game representation of approval authority~\cite{taylorzwicker}.
+
+\begin{proposition}[Blocking coalitions as hitting sets]\label{prop:blocker}
+A coalition $C$ can block the amendment by withholding all of its approvals, regardless of what the other offices do, if and only if
+\[
+C\cap W\ne\varnothing\quad\text{for every }W\in\mathcal W.
+\]
+Thus the minimum number of offices with unconditional blocking power is the minimum hitting-set size of $\mathcal W$. Under an equal $q$-of-$n$ rule with $1\leq q\leq n$, it is $n-q+1$.
+\end{proposition}
+\begin{proof}
+If $C$ intersects every minimal approval coalition, refusing all approvals in $C$ prevents each such coalition from being contained in the approvers. Conversely, if some $W$ is disjoint from $C$, its offices can approve and pass the amendment despite $C$'s refusal. For the threshold rule, the complement of $C$ can pass exactly when it has at least $q$ members, so blocking requires $n-|C|<q$, or $|C|\geq n-q+1$.
+\end{proof}
+
+In the commons, two offices can block a three-of-four amendment, but two cannot enact it. A single office is a veto holder exactly when it belongs to every minimal approval coalition. These are statements about one rule and one event, not complete measurements of social power.
+
+\subsection{An approval rule may conceal another authority structure}
+Suppose the nominal three-of-four process cannot commit any decision without a separate administrator's signature. The effective approval coalitions must include that administrator. Applying the threshold formula to only the four visible voters would overstate their independence. Scheduling, admission of evidence, access to the amendment queue, and power to replace the checker can similarly alter the implemented authority structure.
+
+The correct remedy is to enlarge the declared realization and recompute the authority relations, not to infer decentralization from its public diagram. Conversely, a veto can protect a legitimate minority or a resource owner's consent. Small blocking coalitions do not by themselves establish harmful capture. Capture requires an additional protected-purpose or authorization criterion against which the actual control is judged.
+
+An institution can also be procedurally compliant while concentrating benefits or suppressing effective appeal. That is a normative and incentive question distinct from whether a signature threshold was satisfied. A theory of authority should preserve the distinction between \emph{ability to prevent}, \emph{ability to enact}, \emph{ability to set the agenda}, and \emph{ability to change the procedure}.
+
+\section{Conflict, sabotage, and organizational pathology}\label{sec:security}
+
+A machine society is not guaranteed to be cooperative, benevolent, or stable. Multiple decision centers can cooperate on one resource and compete on another. The same persistent rules that economize on coordination can create concentrated authority, lock in mistakes, or transmit a harmful practice to later participants. Security is therefore not an unrelated afterthought; it is partly the problem of preserving valid relationships between declarations, implementations, permissions, and evidence.
+
+\subsection{Failures occur at different layers}
+
+We distinguish at least five abstract failure surfaces. \emph{Content failures} corrupt beliefs or stored facts. \emph{Interface failures} alter the interpretation or routing of otherwise unchanged content. \emph{Authority failures} allow an unauthorized actor to issue a consequential operation. \emph{Revision failures} change which future evidence or rules are admissible. \emph{Allocation failures} exploit shared resource procedures. These failures can combine: a fabricated record may justify an unauthorized rule change, after which the new rule rejects the evidence needed to expose the fabrication.
+
+The terms \emph{sabotage} and \emph{virus} require restraint. A sabotage claim requires an adversarial objective and a causal route by which the action impairs an institution. A ``schema virus'' is an analogy until one specifies the copied representation, adoption mechanism, susceptibility, persistence, and measured harm. Error propagation can be unintentional; stability can coexist with misinformation; and divergence from a prevailing view may represent a correct new discovery rather than a pathology.
+
+\subsection{A bounded propagation inequality}
+
+A transparent comparison model can make one class of failure mathematically tractable. Let $x_t\in\mathbb R_{\ge0}^n$ record nonnegative deviations at $n$ institutional positions. Suppose an explicitly justified comparison model provides
+\begin{equation}\label{eq:propagation}
+x_{t+1}\le Bx_t+w_t
+\quad\text{componentwise},\qquad B\ge0,
+\end{equation}
+where $w_t$ represents fresh disturbance and $B$ summarizes one-step propagation. Suppose a vector $v>0$ and $\kappa<1$ satisfy $Bv\le\kappa v$. In the weighted maximum norm $\norm{x}_{v,\infty}=\max_i x_i/v_i$ we obtain
+\begin{equation}\label{eq:propagation-bound}
+\norm{x_t}_{v,\infty}\le
+\kappa^t\norm{x_0}_{v,\infty}
++\sum_{j=0}^{t-1}\kappa^{t-1-j}\norm{w_j}_{v,\infty}.
+\end{equation}
+The proof is the one-step monotonic estimate followed by induction. Under uniformly bounded disturbance $\norm{w_t}_{v,\infty}\le\bar w$, the last term is at most $\bar w(1-\kappa^t)/(1-\kappa)$. This gives a conditional attenuation result, not a universal contagion threshold. A graph alone cannot supply the matrix $B$; the rates must come from a justified dynamical model. More connectivity can improve detection as well as propagation, and nonlinear strategic behavior can invalidate the linear comparison.
+
+\subsection{Institutional capture and the meaning of power}
+
+Power is not exhausted by reputation or by the number of messages an agent produces. In a computational institution it can arise from privileged read or write access, control of scarce resources, amendment rights, scheduling priority, the right to certify evidence, and the ability to prevent an appeal. A useful power analysis distinguishes \emph{information reach} from \emph{decision reach}: a participant can influence many beliefs while holding no formal permission, or can issue one privileged command with enormous consequences.
+
+A simplified reach functional for agent $i$ and horizon $T$ is the set of consequential institutional coordinates whose future distributions can be changed by some \emph{admissible unilateral intervention} of $i$. This is an intervention-relative property; it must not silently assume that the agent can overwrite a variable to which it has no access. Quantifying authority requires the feasible intervention family and a choice of outcomes. A concentration score built from these reaches can be a diagnostic, but not a proof of illegitimacy.
+
+Formal policy compliance alone does not rule out institutional capture: a rule may be faithfully executed and still privilege a coalition that controls amendments or vetoes. Likewise, a successful self-repair routine may restore a harmful prior state rather than correct it. Any proposed notion of health must include protected freedoms, an error-correction contract, and an explicit source of normative authority. Agreement is not itself the objective.
+
+\subsection{Defensive design implications}
+
+Ordinary security principles retain their relevance: least privilege, complete mediation, separation of authority, auditable transitions, compartmentalized credentials, and recovery from corrupted records~\cite{saltzer}. A proof-carrying decision can narrow the trusted checking base~\cite{necula}, but cannot prove the adequacy of its own external assumptions. Copyable identities create classic Sybil concerns~\cite{douceur}. A fork's assertion that it is a new participant is not automatically a new independent vote or a new allocation of finite resources.
+
+The strongest general principle is \emph{evidence-preserving reversibility where reversal is physically possible}. Exploratory proposals need not receive immediate permission to rewrite canonical rules; reviews should preserve rejected alternatives and reasons; rollbacks should retain an audit trail; and irreversible external actions require a different permission standard from reversible sandbox computations. This is a defensible design stance, not a theorem that one fixed governance policy fits every environment.
+
+\section{Societies of societies: federation, mobility, and scale}\label{sec:ecology}
+
+Once groups can maintain institutions, their boundaries become objects of interaction. A participant may migrate between two groups, carry an archive from one to another, borrow computational resources, or hold obligations in multiple jurisdictions. A coalition may split without dissolving all of its records; two institutions may merge while retaining conflicting rules. Such events define an \emph{ecology of organizations}, not merely a larger population of otherwise unrelated agents.
+
+The relevant inter-organizational interface has more structure than a message format. It includes state translation, identity and provenance assertions, resource transfer conditions, compatible permission semantics, and a means to resolve contradictory commitments. Calling two communication protocols interoperable because their messages parse correctly ignores whether the resulting actions are authorized and what happens to existing obligations.
+
+\subsection{Migration is not unrestricted inheritance}
+
+A migrating process can carry operational knowledge without carrying valid credentials. An organization that accepts all imported permissions merely because an agent has an intact memory confuses history with authority. A safer abstract contract is explicit about which local capabilities are newly granted, which predecessor obligations continue, which are discharged, and which disagreements require arbitration. Copying a state does not copy a budget, physical hardware, a nontransferable credential, or any legal status assigned by people.
+
+\subsection{Scale changes which institutions are economical}
+
+At small scale, bilateral negotiation may be cheap and simple. At larger scale, direct communication can become expensive, so rules may be compressed into roles, standards, and delegated procedures. Hierarchy can reduce latency or message count under explicit network constraints; Section~\ref{sec:hierarchy} also proves that an unrestricted controller can simulate the same finite computation. The correct separation concerns resources, privacy, fault domains, and the work required to discover or maintain useful interfaces, not a new computability class created by social grouping.
+
+Large networks also increase the surface for copied mistakes, inconsistent rule versions, and concentrated control over common infrastructure. Modularity can localize some failures while making cross-boundary repair harder. There is no universal monotone law saying that greater connection makes a machine society more stable, intelligent, or vulnerable. Those effects depend on transition kernels, institutional incentives, topology, and the cost of checking interactions.
+
+\subsection{The absence of an inevitable collective self}
+
+It is tempting to imagine a sequence from many agents to coordination, from coordination to institutions, and from institutions to a unified intelligence. Nothing in the framework implies that final arrow. Some federations are valuable precisely because they prevent one controller from collapsing plural judgments. Others may deliberately adopt a common policy for restricted operations while retaining disagreement on everything else. The existence of a macroscopic description is also not evidence of a first-person perspective. Computational closure, social organization, legal recognition, and subjective experience remain separate questions.
+
+\section{Conditions for institutional novelty}\label{sec:novelty}
+
+The formation of conventions does not require irreducible randomness. If initially indistinguishable deterministic agents have the same update rule and a symmetry-preserving interaction schedule, their joint state remains permutation-invariant by Proposition~\ref{prop:symmetry}. Exchangeability of a distribution is weaker than this pointwise symmetry. A distinct role then requires a symmetry breaker such as heterogeneous information, an address, path-dependent history, or stochastic variation. Once such asymmetries exist, a deterministic system can establish and maintain conventions through ordinary state transitions.
+
+The fact that deterministic rules can generate unexpected macro-organization does not imply that a macro-process has an autonomous Markov law. The three-state counterexample in Section~\ref{sec:closure} shows how coarse-graining can generate history dependence. A putative ``phase change'' in institutional organization therefore needs a specified order parameter, state family, and dynamical limit. Rapid change under increased communication, repeated interaction, or memory capacity may mark a useful empirical onset, but does not by itself identify a mathematical bifurcation or phase transition.
+
+\subsection{Three levels of novelty}
+
+It is helpful to distinguish \emph{combinatorial novelty}: a configuration not previously present in the local records; \emph{adaptive novelty}: a newly selected configuration that changes performance under a declared environment; and \emph{institutional novelty}: a new rule, authority arrangement, or revision procedure that has operative consequences and is maintained across time. The first can occur by arbitrary recombination. The second needs a task criterion. The third requires an institutional transition and survival condition. These distinctions limit rhetorical inflation without denying the possibility of genuinely unexpected organizational outcomes.
+
+\subsection{Thresholds are model dependent}
+
+A minimum frequency of contact may make convention formation likely under one interaction graph and not another. Longer time horizons can amortize setup costs but also lock in bad rules. More memory can preserve beneficial corrections or propagate obsolete assumptions. For the abstract stationary cost model in Proposition~\ref{prop:amort}, the inequality $B<g/(1-\delta)$ is a threshold for \emph{economic usefulness of that particular institution}, not a general law for the appearance of societies. Evolution of institutions requires separate assumptions about rule variation, incentives, scheduling, authority, and selection.
+
+\section{Foundational problems for a theory of machine societies}\label{sec:problems}
+
+The framework points toward a set of research questions that are mathematical rather than metaphorical.
+
+\paragraph{Minimal sufficient institutional state.}
+For a family of future tasks and amendments, what is the smallest summary that preserves resource rights, causal decision structure, and valid dispute procedures within specified error? Theorem~\ref{thm:govquot} and Proposition~\ref{prop:govrefine} resolve the finite deterministic fixed-contract case. Approximate, stochastic, and changing-contract versions may require more state than is necessary for immediate task accuracy. It may depend on the horizon and on the admissible forms of revision.
+
+\paragraph{Formation under mixed incentives.}
+Which adaptive rule-selection processes produce persistent institutions in populations with heterogeneous objectives and imperfect information? Potential games provide a tractable sufficient structure, while Propositions~\ref{prop:barrier} and~\ref{prop:seed} expose a transition barrier even in a simple coordination setting. They do not settle general formation. In nonpotential settings, characterize cycles, costly exit, and endogenous modification of the action space itself.
+
+\paragraph{Causal abstraction under amendment.}
+When a macro-institution can modify its own feasible interventions, can a fixed lower-dimensional summary remain sufficient for every admitted amendment? How must the abstraction be enlarged to account for the changed permissions and revision operator? This is a dynamic coarse-graining problem with the operation algebra itself changing over time.
+
+\paragraph{Local--global institutional repair.}
+Given locally specified constraints and interfaces with an obstruction to global realization, find the least-cost authorized modifications that eliminate the obstruction, or certify that no protected-obligation-preserving repair is possible. Proposition~\ref{prop:cyclerepair} resolves protected repair on one binary cycle. Overlapping constraints, richer logics, and coupled resource obligations require further analysis.
+
+\paragraph{Reliable inheritance under replacement.}
+Beyond the sufficient capability-preservation conditions of Proposition~\ref{prop:culturegrowth}, what minimal archive, provenance data, and operation-preserving translations allow a methodology to survive an arbitrary permitted sequence of model replacements? The bound in Proposition~\ref{prop:transport} highlights accumulated drift; a full treatment must also account for lossy compression, stochastic decision rules, changing rights, and intentional correction of false inherited knowledge.
+
+\paragraph{Plurality without centralized optimization.}
+What can be certified about fairness, access, and collective safety when there is no society-wide utility function? There may be several incompatible yet reasonable normative criteria. A mathematically clean model must expose which authority selects the protected criteria rather than disguise that selection as an optimization theorem.
+
+\paragraph{Threat propagation and institutional recovery.}
+Under what conditions can corruption of rules or provenance be isolated without suppressing valid novelty? Linear disturbance models provide local comparison bounds. The hard case is adversarial adaptation combined with changing channels, changing permissions, and incomplete observation of the true institutional state.
+
+\paragraph{The meaning of organizational continuity.}
+Which aspects of identity should be described by behavior, which by causal lineage, and which by authorization or social recognition? These relations can disagree. A theory of persistence should allow this disagreement rather than assume a single numerical identity score.
+
+\section{Limits of the framework}\label{sec:limits}
+
+The analysis is built from finite state spaces, specified observation maps, and admitted control families. It does not automatically extend to open-ended deployed systems with unbounded memory, unknown environment dynamics, arbitrary strategic adversaries, or unresolved questions of computability and measure. Some finite statements generalize under regularity conditions; others require new machinery. Even an exact mathematical abstraction only preserves those behaviors and interventions specified by its contract.
+
+Institutional formation is not a consequence of the existence of an institutional representation. An empty constitution can be formally represented and never adopted. A stable rule can arise through designer imposition, agent agreement, or accidental coordination, and the same observable behavior may be compatible with several mechanisms. Theorems about cost, potential functions, viability, and compatibility establish conditional structure, not a law that sufficiently numerous agents must create societies.
+
+The framework also cannot derive a unique moral constitution from computational efficiency. Protected rights, acceptable tradeoffs, and the authority to enact constraints require human or otherwise explicitly specified normative commitments. The mathematical distinction between permitted and forbidden transitions is not a decision about which permissions ought to exist. The running resource-allocation and parity models are useful because their assumptions are inspectable. They are not claimed to cover the full complexity of economic, social, or legal institutions.
+
+Finally, a theoretical description of cultural inheritance or organizational continuity is neither a test for subjective experience nor a basis for legal status. The purpose of these exclusions is to leave a precise problem: how persistent rules, relationships, and historical obligations can be represented and transformed within ordinary computation.
+
+\section{Conclusion}\label{sec:conclusion}
+
+A machine society is not defined by the mere number of artificial agents, by fluent interaction, or by the presence of an impressive collective output. Its defining theoretical possibility is \emph{persistent plurality organized by operative institutions}: separately situated decision centers acquire rules, records, and procedures that shape their interaction and can survive changes in membership. Such organization can be studied without assuming a new computational substance or one unified machine mind.
+
+The account developed here links ordinary computational realization to a distinctly social layer of constraints. Governance-preserving quotients retain enabled operations as well as outputs. Typed residuals track what fails to survive translation, while deadline monitors and lifetime models separate outstanding obligations, current operation, and eventual dissolution. Exact and approximate state abstraction explain when group-level descriptions are adequate. Institutions add permissions, allocations, commitments, and procedures for changing those constraints. Repeated interaction can make durable rules economical, while incentive conflicts show why aggregate benefit does not guarantee adoption. Cultural transport can preserve methods while accumulating formal defects. Local rules can each be satisfiable yet fail to admit a global realization. Epistemic and security institutions determine how claims acquire authority and how mistakes can be corrected without erasing dissent.
+
+The development identifies formation barriers, information limits, and repair obligations rather than a universal law of societal emergence. Its central thesis is: \emph{institutional organization is a coherent, analyzable level of computational description, and its formation, preservation, conflict, and failure deserve a theory in their own right}. The transition worth understanding is not from machines to imagined persons, but from transient computation to durable, revisable systems of relations among machines.
+
+\appendix
+\section{The commons as an integrated preservation contract}\label{app:allocation}
+The running example in Section~\ref{sec:commons} uses one institutional realization throughout. Its claims can be separated without losing their connection.
+\begin{longtable}{@{}P{.25\linewidth}P{.69\linewidth}@{}}
+\toprule
+\textbf{Question} & \textbf{Object and obligation}\\\midrule
+\endfirsthead
+\toprule\textbf{Question}&\textbf{Object and obligation}\\\midrule\endhead
+Can an institution be adopted? & The coordination-game transition barrier is distinct from the fact that $R$ and $U$ have executable implementations. A profitable joint commitment requires an admitted commitment operation.\\[.5em]
+What state must persist? & The allocation rule alone is insufficient. Governance preservation also retains the enabled amendment actions and labels for active credentials, service debt, and resource tokens.\\[.5em]
+Can a due debt be erased? & The obligation monitor distinguishes fulfillment, authorized discharge, and deletion. Amendments are required to preserve pending commitments.\\[.5em]
+Who can block change? & Two registered offices block a three-of-four rule under independent approval rights. A hidden administrator changes this calculation.\\[.5em]
+Can every request be safely served? & Resource conservation can hold even when private information or conflicting deadlines prevent timely service. Viability with full information is not decentralized implementability.\\[.5em]
+What crosses a replacement? & An authorized office handover preserves debt and credential semantics. Copying a model does not duplicate an office's budget or approval right.\\[.5em]
+Can two jurisdictions merge? & Their translator must preserve the agreed action semantics, permissions, obligations, resources, and evidence coordinates. Nonzero residuals remain visible until an authorized repair is found.\\[.5em]
+How long does the organization last? & Lifetime is first exit from a declared operational contract under a specified transition law. It is neither occupant longevity nor mere archive retention.\\
+\bottomrule
+\end{longtable}
+The common event mechanism and constitutional envelope are supplied. Within that envelope, offices can choose rules, incur obligations, revise decisions, and replace occupants. This demonstrates how the theory's objects fit together. It does not prove that the envelope itself arose endogenously or that these rules are uniquely desirable.
+
+\section{A finite algebraic example of reusable state}\label{sec:worked}
+The following analytical example makes the preceding distinctions concrete. Four components initially hold independent fair bits $(a,b,c,d)$. Two local workspaces expose
+\[
+p=a\oplus b,\qquad q=c\oplus d,
+\]
+and a global workspace retains $Z=(p,q)$. The current reported answer is $r=p\oplus q$.
+
+No proper subset of the four raw bits determines $r$: at least one independent fair bit is missing. Each local pair determines its own workspace bit but has zero information about $r$. Together the workspaces determine $r$ exactly. This is a precise distributed-access property for the initial distribution.
+
+\subsection{Why the current answer is not enough state}
+Permit three public operations on $Z$:
+\[
+I(p,q)=(p,q),\qquad W(p,q)=(q,p),\qquad S(p,q)=(p\oplus q,q).
+\]
+The global state supports these operations and the query $r$. The operations $W$ and $S$ do not commute. For instance, from $(p,q)=(1,0)$,
+\[
+W(S(1,0))=(0,1),\qquad S(W(1,0))=(1,1).
+\]
+Their reported parity outcomes are different.
+
+By contrast, retaining only the current answer $r$ fails the quotient criterion. The states $(0,0)$ and $(1,1)$ both report $r=0$, but after $S$ they report $0$ and $1$, respectively. The missing distinction is exactly a distinction relevant to a future operation. A compressed answer is not necessarily a compressed process.
+
+\begin{center}
+\begin{tabular}{@{}ccccc@{}}
+\toprule
+$p$ & $q$ & Current $r$ & State after $S$ & New $r$\\
+\midrule
+0&0&0&$(0,0)$&0\\
+0&1&1&$(1,1)$&0\\
+1&0&1&$(1,0)$&1\\
+1&1&0&$(0,1)$&1\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The full two-bit state has four future-distinguishable possibilities: the current parity reveals $p\oplus q$, and parity after $S$ reveals $p$. Together those outputs determine $q$ as well. Thus two bits are necessary for an exact reusable state under this query family, even though one bit suffices for the immediate answer.
+
+\subsection{A deterministic microscopic realization}
+For any permitted macro-operation $T$, write $(p',q')=T(p,q)$ and define
+\[
+F_T(a,b,c,d)=(a,\ a\oplus p',\ c,\ c\oplus q').
+\]
+Then the two local XORs of $F_T(a,b,c,d)$ are exactly $(p',q')$. Consequently $\pi F_T=T\pi$ for every microstate, where $\pi(a,b,c,d)=(p,q)$.
+
+This formula specifies a global transition for verification. A distributed implementation still needs communication to execute operations that mix $p$ and $q$. The formula alone does not prove locality, privacy against transcript observers, or the spontaneous discovery of a protocol. It shows exactly which macrostate the implementation realizes.
+
+\subsection{State loss depends on the access contract}
+Suppose the leaf bits become inaccessible after export and the only surviving pair-level records are $p$ and $q$. Erasing $q$ reduces the best prediction of $r$ to chance, $1/2$. Replacing it with a fixed bit has the same average accuracy. If the original leaves $c,d$ remain readable, however, the missing state can be reconstructed and accuracy returns to $1$.
+
+Both outcomes are correct. They differ because the allowed information differs. A ``workspace ablation'' that silently permits re-reading the original evidence does not test the same necessity claim as one that removes every permitted carrier. A state can also be redundant yet causally used: successful repair does not imply that the removed component never mattered.
+
+\subsection{What this example establishes}
+The example establishes exact distributed initial information, a reusable two-bit macrostate, deterministic macro-closure, noncommuting update semantics, and an access-relative memory requirement. It also supplies a negative control: the one-bit answer statistic fails dynamic sufficiency. It does not contain learning, endogenous institutions, self-selected goals, or a society. Its finite state space can be enumerated exactly; the general claims rest on the arguments given above.
+
+\section{A compact glossary of exclusions}\label{app:terms}
+\begin{longtable}{@{}P{.23\textwidth}P{.72\textwidth}@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning, with excluded inference}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Term} & \textbf{Meaning, with excluded inference}\\
+\midrule
+\endhead
+Relational state & A useful statistic or record of joint interaction. It is not information outside the complete implementation.\\[.35em]
+Dynamic closure & A well-defined reduced transition law under specified controls. It does not follow from correlated outputs.\\[.35em]
+Institution & Operative norms, permissions, enforcement or revision procedures, and institutional memory. A policy document alone is insufficient.\\[.35em]
+Endogenous formation & Interaction-dependent selection or revision relative to a supplied scaffold. Not creation without prerequisites.\\[.35em]
+Society-like population & Persistent plural decision centers with operative institutions. Not necessarily a single collective policy.\\[.35em]
+Collective agency & A useful group-level decision interface for a specified task family. It is neither necessary nor sufficient for society-like plurality.\\[.35em]
+Cultural inheritance & Transfer of future-relevant methods, practices, and correction policies. Not mere repetition of predecessor statements.\\[.35em]
+Organizational continuity & Preservation of declared operations and lineage under changes. Not subjective identity or automatic transfer of authority.\\[.35em]
+Compatibility & Agreement of relevant representations, operations, and global realizability. Pairwise consistency may be too weak.\\[.35em]
+Strategic deception & A supported strategic mechanism for inducing inaccurate beliefs. Not every wrong statement or representation mismatch.\\[.35em]
+Safety certificate & A guarantee relative to formal assumptions, transitions, and invariants. Not proof of moral legitimacy or liveness.\\[.35em]
+Emergence & An interaction-dependent organizational property relative to a boundary and comparator. Not a claim of extra computational power or consciousness.\\
+\bottomrule
+\end{longtable}
+\clearpage
+\begin{thebibliography}{99}
+\small
+\setlength{\itemsep}{.45em}
+\raggedright
+\phantomsection\addcontentsline{toc}{section}{References}
+\bibitem{shalizi} C.~R. Shalizi and J.~P. Crutchfield. \emph{Computational Mechanics: Pattern and Prediction, Structure and Simplicity}. Journal of Statistical Physics, 104, 2001. \href{https://doi.org/10.1023/A:1010388907793}{doi:10.1023/A:1010388907793}.
+\bibitem{givan} R. Givan, T. Dean, and M. Greig. \emph{Equivalence Notions and Model Minimization in Markov Decision Processes}. Artificial Intelligence, 147:163--223, 2003. \url{https://engineering.purdue.edu/~givan/papers/mm.pdf}.
+\bibitem{rubenstein} P.~K. Rubenstein, S. Weichwald, S. Bongers, J.~M. Mooij, D. Janzing, M. Grosse-Wentrup, and B. Sch\"olkopf. \emph{Causal Consistency of Structural Equation Models}. UAI, 2017. \url{https://arxiv.org/abs/1707.00819}.
+\bibitem{beckers} S. Beckers and J.~Y. Halpern. \emph{Abstracting Causal Models}. AAAI, 2019. \url{https://arxiv.org/abs/1812.03789}.
+\bibitem{rischel} E.~F. Rischel and S. Weichwald. \emph{Compositional Abstraction Error and a Category of Causal Models}. UAI, PMLR 161:1013--1023, 2021. \url{https://proceedings.mlr.press/v161/rischel21a.html}.
+\bibitem{tishby} N. Tishby, F.~C. Pereira, and W. Bialek. \emph{The Information Bottleneck Method}. Allerton Conference, 1999. \url{https://arxiv.org/abs/physics/0004057}.
+\bibitem{williams} P.~L. Williams and R.~D. Beer. \emph{Nonnegative Decomposition of Multivariate Information}. Preprint, 2010. \url{https://arxiv.org/abs/1004.2515}.
+\bibitem{young} H.~P. Young. \emph{The Evolution of Conventions}. Econometrica, 61(1):57--84, 1993. \url{https://www.jstor.org/stable/2951778}.
+\bibitem{ostrom} E. Ostrom. \emph{Beyond Markets and States: Polycentric Governance of Complex Economic Systems}. American Economic Review, 100(3):641--672, 2010. \url{https://doi.org/10.1257/aer.100.3.641}.
+\bibitem{ostrombook} E. Ostrom. \emph{Governing the Commons: The Evolution of Institutions for Collective Action}. Cambridge University Press, 1990.
+\bibitem{flp} M.~J. Fischer, N.~A. Lynch, and M.~S. Paterson. \emph{Impossibility of Distributed Consensus with One Faulty Process}. Journal of the ACM, 32(2):374--382, 1985. \url{https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf}.
+\bibitem{necula} G.~C. Necula. \emph{Proof-Carrying Code}. POPL, 1997. \url{https://doi.org/10.1145/263699.263712}.
+\bibitem{saltzer} J.~H. Saltzer and M.~D. Schroeder. \emph{The Protection of Information in Computer Systems}. Proceedings of the IEEE, 63(9):1278--1308, 1975. \url{https://web.mit.edu/Saltzer/www/publications/protection/}.
+\bibitem{douceur} J.~R. Douceur. \emph{The Sybil Attack}. IPTPS, 2002. \url{https://www.microsoft.com/en-us/research/publication/the-sybil-attack/}.
+\bibitem{park} J.~S. Park, J.~C. O'Brien, C.~J. Cai, M.~R. Morris, P. Liang, and M.~S. Bernstein. \emph{Generative Agents: Interactive Simulacra of Human Behavior}. UIST, 2023. \url{https://arxiv.org/abs/2304.03442}.
+\bibitem{ashery} A.~F. Ashery, L.~M. Aiello, and A. Baronchelli. \emph{Emergent Social Conventions and Collective Bias in LLM Populations}. Science Advances, 11(20):eadu9368, 2025. \url{https://doi.org/10.1126/sciadv.adu9368}.
+\bibitem{barrie} C. Barrie and P. T\"ornberg. \emph{Emergent LLM Behaviors Are Observationally Equivalent to Data Leakage}. Preprint, 2025. \url{https://arxiv.org/abs/2505.23796}.
+\bibitem{asheryreply} A.~F. Ashery, L.~M. Aiello, and A. Baronchelli. \emph{Reply to ``Emergent LLM Behaviors Are Observationally Equivalent to Data Leakage''}. Preprint, 2025. \url{https://arxiv.org/abs/2506.18600}.
+\bibitem{shoham} Y. Shoham and M. Tennenholtz. \emph{On the Emergence of Social Conventions: Modeling, Analysis, and Simulations}. Artificial Intelligence, 94(1--2):139--166, 1997. \url{https://doi.org/10.1016/S0004-3702(97)00028-3}.
+\bibitem{boella} G. Boella and L. van der Torre. \emph{Substantive and Procedural Norms in Normative Multiagent Systems}. Journal of Applied Logic, 6(2):152--171, 2008. \url{https://doi.org/10.1016/j.jal.2007.06.006}.
+\bibitem{grossinorm} D. Grossi, D. Gabbay, and L. van der Torre. \emph{The Norm Implementation Problem in Normative Multi-Agent Systems}. In \emph{Specification and Verification of Multi-agent Systems}, pp. 195--224, Springer, 2010. \url{https://doi.org/10.1007/978-1-4419-6984-2_7}.
+\bibitem{angluin} D. Angluin, J. Aspnes, Z. Diamadi, M.~J. Fischer, and R. Peralta. \emph{Computation in Networks of Passively Mobile Finite-State Sensors}. Distributed Computing, 18(4):235--253, 2006. \url{https://www.cs.yale.edu/homes/aspnes/papers/passively-mobile-abstract.html}.
+\bibitem{fudenbergmaskin} D. Fudenberg and E. Maskin. \emph{The Folk Theorem in Repeated Games with Discounting or with Incomplete Information}. Econometrica, 54(3):533--554, 1986. \url{https://ideas.repec.org/a/ecm/emetrp/v54y1986i3p533-54.html}.
+\bibitem{monderer} D. Monderer and L.~S. Shapley. \emph{Potential Games}. Games and Economic Behavior, 14(1):124--143, 1996. \url{https://doi.org/10.1006/game.1996.0044}.
+\bibitem{halpernmoses} J.~Y. Halpern and Y. Moses. \emph{Knowledge and Common Knowledge in a Distributed Environment}. Journal of the ACM, 37(3):549--587, 1990. \url{https://doi.org/10.1145/79147.79161}.
+\bibitem{crawfordsobel} V.~P. Crawford and J. Sobel. \emph{Strategic Information Transmission}. Econometrica, 50(6):1431--1451, 1982. \url{https://www.jstor.org/stable/1913390}.
+
+\bibitem{arrow} K.~J. Arrow. \emph{A Difficulty in the Concept of Social Welfare}. Journal of Political Economy, 58(4):328--346, 1950. \href{https://doi.org/10.1086/256963}{doi:10.1086/256963}.
+\bibitem{gibbard} A. Gibbard. \emph{Manipulation of Voting Schemes: A General Result}. Econometrica, 41(4):587--601, 1973. \href{https://doi.org/10.2307/1914083}{doi:10.2307/1914083}.
+\bibitem{satterthwaite} M.~A. Satterthwaite. \emph{Strategy-Proofness and Arrow's Conditions: Existence and Correspondence Theorems for Voting Procedures and Social Welfare Functions}. Journal of Economic Theory, 10(2):187--217, 1975. \href{https://doi.org/10.1016/0022-0531(75)90050-2}{doi:10.1016/0022-0531(75)90050-2}.
+\bibitem{pnuelirosner} A. Pnueli and R. Rosner. \emph{Distributed Reactive Systems Are Hard to Synthesize}. Proceedings of the 31st Annual Symposium on Foundations of Computer Science, vol.~II, pp.~746--757, 1990. \href{https://doi.org/10.1109/FSCS.1990.89597}{doi:10.1109/FSCS.1990.89597}.
+\bibitem{chatterjee} K. Chatterjee, L. Doyen, T.~A. Henzinger, and J.-F. Raskin. \emph{Algorithms for Omega-Regular Games with Imperfect Information}. Logical Methods in Computer Science, 3(3:4), 2007. \href{https://doi.org/10.2168/LMCS-3(3:4)2007}{doi:10.2168/LMCS-3(3:4)2007}.
+\bibitem{alpern} B. Alpern and F.~B. Schneider. \emph{Defining Liveness}. Information Processing Letters, 21(4):181--185, 1985. \href{https://doi.org/10.1016/0020-0190(85)90056-0}{doi:10.1016/0020-0190(85)90056-0}.
+\bibitem{taylorzwicker} A.~D. Taylor and W.~S. Zwicker. \emph{Simple Games: Desirability Relations, Trading, Pseudoweightings}. Princeton University Press, 1999. \href{https://doi.org/10.2307/j.ctv18zhdsm}{doi:10.2307/j.ctv18zhdsm}.
+\end{thebibliography}
+\end{document}

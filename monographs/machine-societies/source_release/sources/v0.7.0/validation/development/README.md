@@ -1,0 +1,1 @@
+These are development receipts, not the final evidence. The first build followed a failed integration anchor and used the unchanged staged source. `new_checks_initial.json` predates the four additional malformed-input assertions. Current results are in the parent validation directory.

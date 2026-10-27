@@ -1,0 +1,391 @@
+--- v0.6.0.tex
++++ v0.7.0.tex
+@@ -1,4 +1,4 @@
+-% Machine Societies v0.6.0. Authoring revision of preserved v0.4.0 source.
++% Machine Societies v0.7.0. Integrated revision of the preserved v0.6.0 edition.
+ \documentclass[11pt,letterpaper]{article}
+ \usepackage[margin=1in,headheight=15pt]{geometry}
+ \usepackage[T1]{fontenc}
+@@ -18,7 +18,7 @@
+ \hypersetup{hidelinks,pdftitle={Machine Societies: A Theory of Persistent Plural Computational Organization},pdfauthor={Komorebi P.},pdfsubject={Theoretical computer science, institutional organization, and machine societies},pdfkeywords={machine societies, institutions, distributed computation, causal abstraction, cultural inheritance}}
+ \pagestyle{fancy}\fancyhf{}
+ \fancyhead[L]{\small\textsc{Machine Societies}}
+-\fancyhead[R]{\small Expanded theoretical edition, 2026}
++\fancyhead[R]{\small Integrated theoretical edition, 2026}
+ \fancyfoot[C]{\thepage}
+ \renewcommand{\headrulewidth}{0.3pt}
+ \titleformat{\section}{\large\bfseries}{\thesection}{0.65em}{}
+@@ -76,11 +76,11 @@
+ \vspace{.27in}
+ \noindent{\color{ink}\rule{\textwidth}{0.85pt}}\par
+ \vspace{.16in}
+-\noindent\textbf{Komorebi P.}\hfill\textit{Expanded theoretical edition}\\
+-\noindent 8 October 2026\hfill Version 0.6.0\par
++\noindent\textbf{Komorebi P.}\hfill\textit{Integrated theoretical edition}\\
++\noindent 8 October 2026\hfill Version 0.7.0\par
+ \vspace{.48in}
+ \noindent{\color{ink}\large\bfseries Abstract}\par\smallskip
+-\noindent A population of artificial agents may maintain institutions without becoming one collective agent. We develop a theory of machine societies as persistent plural computational organizations whose participants operate, contest, and revise constraints on their interactions. A finite realization model connects state abstraction to permissions, obligations, resource claims, and historical records. A four-office computational commons supplies a running analytical example. Exact transport conditions distinguish preservation of behavior, authority, language, and knowledge. Formation barriers, decentralized information limits, noncommutative compatibility obstructions, and constitutional verification limits expose failures that a common organizational label can conceal. We then separate convergent records from valid commitments, and executable rules from incentive-compatible enforcement. A bounded-sanction criterion quantifies the observability needed to deter a deviation. Finite-block averaging specifies when slow institutional dynamics can be approximated despite rapid agent activity, and how approximation errors weaken enforcement margins. A Bayesian cascade construction shows how rational decision makers can cease learning, while a robust matching criterion characterizes authorized staffing through bounded turnover. The contribution is an integrated realization-and-preservation framework with conditional proofs and counterexamples, drawing on established mathematical foundations rather than claiming a new computational primitive, automatic social formation, or a unified machine mind.
++\noindent A population of artificial agents may maintain institutions without becoming one collective agent. We develop a theory of machine societies as persistent plural computational organizations whose participants operate, contest, and revise constraints on their interactions. A finite realization model connects state abstraction to permissions, obligations, resource claims, and historical records. Exact transport conditions distinguish preservation of behavior, authority, language, and knowledge. Formation barriers, decentralized information limits, incompatible interfaces, and verification limits expose failures that a common organizational label can conceal. We then ask whether separate institutional guarantees admit one executable policy. A simultaneous enforcement criterion identifies when a single monitor can deter several deviations under a false-positive constraint. A finite construction over public information sets characterizes joint safety and certified service without granting the controller access to hidden state. An exact abstraction theorem preserves the existence of these strategies. The computational commons shows how an affordable audit and affordable service obligations can nevertheless exceed one shared budget. The framework links these results to distributed finality, institutional timescales, cultural continuity, and resilient specialization. Its contribution is an integrated realization and preservation theory with conditional proofs, explicit counterexamples, and checkable finite witnesses, rather than a claim of inevitable social formation or a unified machine mind.
+ 
+ \vfill
+ \noindent\rule{\textwidth}{.4pt}\par\smallskip
+@@ -123,6 +123,8 @@
+ The institutional implementation problem has three further parts. A replicated record may converge without preserving a valid allocation. A rule may be enforceable by an access gate yet not be enforceable through the available evidence and sanctions. A slow institutional model may approximate review-epoch outcomes while missing fast violations or selection bias in when reviews occur. Sections~\ref{sec:social-time}, \ref{sec:enforcement}, and~\ref{sec:multiscale} give separate finite conditions for these claims. The robust deterrence margin links the latter two without equating their certificates.
+ 
+ The paper has three reading routes. Sections~\ref{sec:model}--\ref{sec:governance} develop realization, abstraction, and institutional state. Sections~\ref{sec:language}--\ref{sec:multiscale} develop communication, formation, enforcement, constitutional limits, obligations, and cultural timescales. Sections~\ref{sec:jurisdictions}--\ref{sec:novelty} develop federation, epistemic structure, power, founding authority, and adaptive organization. The four-office commons recurs throughout; Appendix~\ref{app:allocation} collects its preservation obligations. A separate theorem index in the source package records each formal statement and its status.
++
++The integration culminates in Sections~\ref{sec:joint-enforcement} and~\ref{sec:joint-synthesis}. The former replaces separate one-deviation monitors with one common enforcement policy. The latter combines permissions, observations, bounded obligations, and resources in a single continuation problem. It gives both a finite synthesis procedure and smaller witness certificates, together with an exact theorem for transporting the resulting strategies through an institutional abstraction. These constructions have classical optimization and game-theoretic foundations. Their role here is to expose when individually valid institutional claims cannot share one implementation.
+ 
+ Two analytical comparisons show why persistence is not enough. The cascade model in Section~\ref{sec:cascades} can stabilize an incorrect conclusion even when every participant is rational under its information. The staffing model in Section~\ref{sec:specialization} can give each role a backup without leaving enough agents to cover the roles together. These are not failures of the general idea of a society. They identify which information, capacity, and temporal distinctions its description must retain.
+ 
+@@ -953,6 +955,92 @@
+ In the commons, unique slot tokens can prevent duplicate grants at the resource layer while a reporting rule encourages accurate urgency submissions. Those mechanisms coexist but have different proof obligations. An appeal may change the observation set and the sanction rule, while a creditor's outstanding service claim remains unchanged. Section~\ref{sec:multiscale} will show how errors in a reduced model of the observation process alter a deterrence margin. This is the point where institutional dynamics and enforcement certificates must be checked together.
+ 
+ 
++\section{One enforcement policy for several deviations}\label{sec:joint-enforcement}
++The sanction criterion in Section~\ref{sec:enforcement} concerns one specified deviation. A continuing institution must usually respond to several possible departures from its rules with one announced procedure. The order of quantifiers changes the problem. A separate monitor may exist for each deviation without any monitor working for all of them. The institution cannot choose its sanction rule after secretly learning which unobserved deviation occurred.
++
++The following finite model isolates that issue. It retains the earlier assumptions of risk neutrality, a committed and authorized sanction mechanism, a collectible fixed penalty, and specified observation laws. It does not solve the incentives of the auditor, establish those laws from data, or claim that every deviation is represented.
++
++\subsection{The common-monitor problem}
++Let $O$ be a finite nonempty observation set. Compliance has law $P_C$, and deviation $j\in\{1,\ldots,m\}$ has law $P_j$ and gross utility advantage $g_j\geq0$, where $m\geq1$. A fixed penalty $F>0$ is applied with probability $s(o)\in[0,1]$ after record $o$. Impose a protected false-positive rate $\alpha\in[0,1]$ through the compact polytope
++\[
++\mathcal M_\alpha=\{s\in[0,1]^O:\langle P_C,s\rangle\leq\alpha\}.
++\]
++Here $\langle P,s\rangle=\sum_{o\in O}P(o)s(o)$. The same $s$ must be used for every listed deviation. Define its margin against deviation $j$ and its best simultaneous margin by
++\begin{equation}\label{eq:joint-margin}
++D_j(s)=F\langle P_j-P_C,s\rangle-g_j,
++\qquad
++\Gamma_\alpha=\max_{s\in\mathcal M_\alpha}\min_{1\leq j\leq m}D_j(s).
++\end{equation}
++Weak deterrence of all listed deviations means $\Gamma_\alpha\geq0$. Strict deterrence means $\Gamma_\alpha>0$. At equality a participant can remain indifferent. A randomized choice among the listed deviations is also deterred when every listed pure deviation is deterred, since its expected advantage is the corresponding convex combination. This does not include adaptive, repeated, or unlisted deviations unless their observation laws and payoffs are explicitly represented.
++
++For a probability vector $\lambda\in\Delta_m$, set $P_\lambda=\sum_j\lambda_jP_j$ and $g_\lambda=\sum_j\lambda_jg_j$. Write
++\[
++V_\alpha(P,P_C)=\max_{s\in\mathcal M_\alpha}\langle P-P_C,s\rangle.
++\]
++This is the same constrained observation advantage used in the single-deviation analysis, now evaluated on mixtures of deviation laws.
++
++\begin{theorem}[Simultaneous enforcement and mixture obstruction]\label{thm:joint-enforcement}
++Under the finite common-monitor model,
++\begin{equation}\label{eq:joint-dual}
++\Gamma_\alpha=\min_{\lambda\in\Delta_m}
++\bigl(FV_\alpha(P_\lambda,P_C)-g_\lambda\bigr).
++\end{equation}
++Both extrema are attained. Consequently, one monitor weakly deters all listed deviations if and only if $FV_\alpha(P_\lambda,P_C)\geq g_\lambda$ for every $\lambda\in\Delta_m$. Without an additional false-positive restriction, $\alpha=1$ and $V_1(P,P_C)=\TV(P,P_C)$.
++\end{theorem}
++\begin{proof}
++For any fixed $s$, the minimum of the numbers $D_j(s)$ is the minimum of $\sum_j\lambda_jD_j(s)$ over $\Delta_m$. This expression is bilinear in $s$ and $\lambda$, and both domains are nonempty compact polytopes. Finite minimax, equivalently linear programming duality, therefore permits interchange of the maximum and minimum~\cite{boydconvex}. One can reduce directly to a finite matrix game by listing the vertices of $\mathcal M_\alpha$ and taking their convex combinations. For fixed $\lambda$, the maximized expression is $FV_\alpha(P_\lambda,P_C)-g_\lambda$, proving~\eqref{eq:joint-dual}. Compactness and continuity give attainment. Finally, when $\alpha=1$, every $s\in[0,1]^O$ is admissible. Choosing $s(o)=1$ exactly where $P(o)>P_C(o)$ attains the sum of positive differences, which equals total variation.
++\end{proof}
++
++The theorem is an application of classical finite convex duality, not a new minimax theorem. Its institutional contribution is the distinction between individual enforceability and a jointly executable sanction policy. A vector $\lambda$ for which the right side of~\eqref{eq:joint-dual} is negative is a certificate that the stipulated contract cannot be met. It is not evidence that a real population has adopted that mixture.
++
++\begin{counterexample}[Individually enforceable deviations with no common monitor]\label{ex:pairwise-enforcement}
++Take $O=\{0,1\}$, $P_C=(1/2,1/2)$, $P_1=(1,0)$, $P_2=(0,1)$, $F=2$, $g_1=g_2=1/2$, and $\alpha=1/2$. The monitor $(1,0)$ strictly deters deviation $1$, and $(0,1)$ strictly deters deviation $2$. Both respect the false-positive cap. For any common monitor,
++\[
++D_1(s)=s(0)-s(1)-\tfrac12,
++\qquad
++D_2(s)=s(1)-s(0)-\tfrac12.
++\]
++Their sum is $-1$, so both cannot be nonnegative. The best simultaneous margin is $-1/2$, attained when $s(0)=s(1)$. The dual obstruction is $\lambda=(1/2,1/2)$, for which $P_\lambda=P_C$ while $g_\lambda=1/2$.
++\end{counterexample}
++
++Distinct deviations can cancel one another's observable signatures at the level of a mixture. Pairwise total-variation distances therefore do not determine joint enforceability. Increasing the penalty cannot resolve the particular obstruction $P_\lambda=P_C$ with $g_\lambda>0$. The contract must change its observation channel, permitted interventions, payoff structure, or covered claims. None of these changes is automatically authorized.
++
++\subsection{Uncertainty must be absorbed by the same monitor}
++Averaging, translation, and statistical approximation can change the estimated observation laws. The preceding optimization does not remove those errors. Let $\widehat P_C,\widehat P_j$ be specified approximate laws with
++\[
++\TV(P_C,\widehat P_C)\leq\epsilon_C,
++\qquad
++\TV(P_j,\widehat P_j)\leq\epsilon_j.
++\]
++The bounds may be different for different deviations. They must concern the complete record available to the sanction mechanism, including any effects of review scheduling.
++
++\begin{proposition}[A robust simultaneous enforcement certificate]\label{prop:joint-robust}
++Let $\alpha\geq\epsilon_C$ and $\eta\geq0$. If a single $s\in[0,1]^O$ satisfies
++\begin{align}
++\langle\widehat P_C,s\rangle&\leq\alpha-\epsilon_C,\label{eq:joint-robust-cap}\\
++F\langle\widehat P_j-\widehat P_C,s\rangle-g_j
++&\geq\eta+F(\epsilon_j+\epsilon_C)
++\quad\text{for every }j,\label{eq:joint-robust-gap}
++\end{align}
++then the true false-positive rate is at most $\alpha$ and every true margin $D_j(s)$ is at least $\eta$.
++\end{proposition}
++\begin{proof}
++For every function $0\leq s\leq1$, the difference of its expectations under two laws is bounded in absolute value by their total-variation distance. Applying this once to the compliance rate proves~\eqref{eq:joint-robust-cap}'s conclusion. Applying it to both laws in each difference gives
++\[
++D_j(s)\geq F\langle\widehat P_j-\widehat P_C,s\rangle-g_j
++-F(\epsilon_j+\epsilon_C)\geq\eta.
++\]
++The same $s$ appears in all inequalities, so the conclusion is simultaneous.
++\end{proof}
++
++This is a sufficient certificate, not a necessary description of all robustly feasible policies. Replacing each law by an independent worst-case error bound can be conservative when the errors are related. If $\alpha<\epsilon_C$, the particular tightened test is unavailable, but that does not prove that every actual monitor violates the true cap. The proposition extends Proposition~\ref{prop:robust-deterrence} to a common monitor rather than separately optimized monitors.
++
++\subsection{What an enforcement certificate should contain}
++The optimization is a small linear program with variables $(s,t)$, constraints $D_j(s)\geq t$, the box bounds on $s$, and the false-positive cap. A usable certificate records the monitor, every listed gain and observation law, the authority to impose the penalty, its collectibility assumption, and the checked margins. A negative certificate can instead record a mixture $\lambda$ and an upper bound for its constrained observation advantage.
++
++The linear program does not make observation collection free. Its monitor may require an expensive audit, an unavailable witness, or more time than a service deadline permits. It also does not authorize punishment for an unproved real-world act. The distinction between a stipulated probabilistic sanction model and a justified institutional procedure remains explicit. The next synthesis asks whether an observation procedure, a common monitor, authorized staffing, and outstanding services can fit within one feasible course of action.
++\FloatBarrier
++
+ \section{Social choice and principled disagreement}\label{sec:choice}
+ Plurality cannot be retained while silently replacing all preferences with one externally supplied reward. Even agents that agree on every fact can rank institutional alternatives differently. Let the alternatives be three policies $R,U,V$ and let three voters have strict preferences
+ \[
+@@ -1994,6 +2082,204 @@
+ The commons can now add a temporary verification role, train an alternate occupant, and revise the communication schedule without identifying an office with one model. Its social organization lies partly in this maintained division of work. The formal test is whether the adopted arrangement has a feasible and authorized realization through turnover, not whether its role names resemble a familiar human institution.
+ 
+ 
++\section{Joint institutional feasibility and certified continuation}\label{sec:joint-synthesis}
++An institution can possess several valid certificates and still lack a feasible way to operate. A safe allocation may require one action, an effective audit another, and a timely repayment a third. Each statement can be correct when its own resource and information assumptions are considered alone. The common implementation fails when those assumptions cannot hold together.
++
++The resulting question is not whether a population can optimize one collective utility. It is whether a declared set of obligations has a jointly executable continuation. The protected requirements can include resource conservation, valid authority, a false-positive limit, a specified incentive margin, service deadlines, and feasible staffing. Their normative selection remains outside the synthesis theorem. Once selected, they must constrain the same action and the same realized history.
++
++This section supplies a finite construction rather than an unrestricted theory of decentralized control. It combines the existing obligation monitors and governance labels with a catalogue of implementable local protocols. The mathematical foundations are the knowledge construction and fixed-point methods for games with imperfect information~\cite{chatterjee}. The additional contribution is to identify which institutional certificates must enter that construction, and what is lost when an abstraction omits them.
++
++\subsection{A finite contract with an explicit information boundary}
++Let $S$ be a finite nonempty state space for the complete contract. A state records the relevant institutional mode, resource ownership, bounded obligation monitors, current staffing, and any private memory needed to make transitions well defined. Let $h:S\to Y$ be the observation available in a declared common record at each decision epoch. It need not reveal the private components. The initial information is a nonempty set $B_0$ contained in one fibre of $h$.
++
++A finite nonempty catalogue $U$ contains protocol profiles, not arbitrary commands to the complete microstate. A profile can specify one local response map for each office, with each map reading only that office's permitted observation and stored local memory. It can also specify a committed monitor, a communication schedule, and the steps needed to select and enact that profile. These implementations, their costs, and their decision rights must be established separately. An instruction that requires inaccessible private information is not made implementable by listing it in $U$.
++
++For each $s$, let $A(s)\subseteq U$ contain profiles satisfying the immediate contract at that state. Every profile in this set must pass the same resource, authority, staffing, and monitoring checks. In particular, a monitor included in a profile must satisfy all relevant incentive and false-positive inequalities simultaneously. Let $\Delta(s,u)\subseteq S$ be a nonempty finite set of permitted next states for each $s,u$. The set includes every environment response or fault within the declared guarantee. Inadmissible profiles are never selected.
++
++The contract uses \emph{sure} guarantees: every transition in $\Delta$ is treated as possible, without weighting it by probability. A probabilistic transition model may supply these supports, but an unlikely infinite path is not discarded when proving bounded service. Nor does a deterrence inequality justify silently deleting deviations from $\Delta$. Safety under compliant behavior and safety under specified deviations are different contracts. The latter must include their physical consequences in the transition model.
++
++Let $S_{\rm safe}\subseteq S$ encode the protected state requirements. Breach monitors distinguish fulfillment, authorized discharge, pending debt, and deletion. A finite bound on stored obligations or deadlines is part of the model. An overflow must have an explicit treatment, such as a rejected admission or a breach state. The theorem does not silently replace an unbounded history by a finite one.
++
++A common record at decision epochs is itself an infrastructure assumption. It is not implied by eventual replica convergence. The model applies only when that observation and the selection of a catalogue profile have the declared implementations. The selected profile can then be executed by distinct local agents without exposing their private states. This is a controlled information boundary, not a claim that every decentralized architecture has such a representation.
++
++\subsection{The state of possible institutional realizations}
++The relevant public state is the set of complete states still compatible with the observed history. Define
++\[
++\mathcal B=\{B\subseteq S:B\ne\varnothing,\ h\text{ is constant on }B\}.
++\]
++These are sets of possibilities, not posterior probability distributions. At $B$, a profile must be admissible for every remaining possibility:
++\[
++A(B)=\bigcap_{s\in B}A(s).
++\]
++For $u\in A(B)$ and a next public observation $y$, define
++\begin{equation}\label{eq:belief-update}
++\operatorname{Post}(B,u,y)=
++\left(\bigcup_{s\in B}\Delta(s,u)\right)\cap h^{-1}(y).
++\end{equation}
++Only nonempty successor sets are possible observations. Write $\operatorname{Succ}(B,u)$ for their collection. Induction on the public history shows that~\eqref{eq:belief-update} retains exactly the complete states consistent with that history and the selected profiles.
++
++This construction does not pool private observations before choosing $u$. It pools only the mathematical possibilities consistent with the common record. Private observations can affect the actions of the local maps already specified by $u$. More elaborate strategies using additional private history require that history, or a sufficient finite memory of it, to be included in the declared realization. Completeness below is relative to this finite catalogue and information model.
++
++\subsection{A continuation kernel for the whole contract}
++Set
++\begin{align}
++W_0&=\{B\in\mathcal B:B\subseteq S_{\rm safe}\},\label{eq:belief-w0}\\
++W_{k+1}&=\{B\in W_0:\exists u\in A(B),\
++\operatorname{Succ}(B,u)\subseteq W_k\}.\label{eq:belief-wk}
++\end{align}
++The sequence is decreasing. It stabilizes after at most $|\mathcal B|$ strict removals, and we denote its fixed point by $W_*$. This is the joint continuation kernel. A state is removed not only when it violates an invariant now, but also when every available profile has a possible successor from which the remaining contract cannot be sustained.
++
++\begin{theorem}[Joint continuation under a common observation history]\label{thm:joint-viability}
++For every $k\geq0$, $B\in W_k$ if and only if there exists a deterministic strategy based on the common observation and profile history that selects admissible profiles and keeps the complete state in $S_{\rm safe}$ for the next $k$ transitions, starting from every $s\in B$. Moreover, $B\in W_*$ if and only if such a strategy exists for an unbounded number of transitions. On $W_*$, a strategy depending only on the current possibility set $B$ suffices.
++\end{theorem}
++\begin{proof}
++At horizon zero the condition is exactly $B\subseteq S_{\rm safe}$. At positive horizon the strategy must choose one profile from the same common history, so it must lie in $A(B)$. After each possible observation its continuation must work from the corresponding set in~\eqref{eq:belief-update}. Induction gives exactly~\eqref{eq:belief-wk}, in both directions.
++
++Monotonicity of the predecessor operation makes $W_k$ decreasing. Finiteness implies stabilization. At the fixed point, select for every $B\in W_*$ one witnessing profile whose successors all remain in $W_*$. Induction then proves safety and admissibility for every finite prefix of every realized path, hence for the complete path. Conversely, an unbounded safe strategy is safe for every finite horizon, so its initial set belongs to every $W_k$ and therefore to the stabilized intersection. The witnessing selection is stationary in $B$, although maintaining $B$ generally requires memory of the public history.
++\end{proof}
++
++No society-wide preference ordering appears in this theorem. It characterizes joint satisfaction of a declared contract, not the desirability or consent behind that contract. It also gives no favorable complexity bound: the possibility space can contain exponentially many subsets of $S$. A computationally expensive solution is still distinct from a procedure the society can discover and execute within its own resource budget.
++
++The action intersection matters. A full-information controller can choose different safe profiles at two hidden states while the common-history institution cannot choose between them. This is the constructive counterpart of the indistinguishability obstruction in Section~\ref{sec:decentral}. The kernel can therefore be empty even when every complete state has a safe continuation under full information.
++
++\subsection{Safety does not complete a service}
++The fixed point can contain a safe idle loop. Outstanding deadlines should therefore be represented by monitors that advance when time passes, not by a permanently pending record. For service without a fixed external deadline, a separate progress condition is needed.
++
++Let $G\subseteq S_{\rm safe}$ be a stipulated completion set. The target is \emph{certified completion}, meaning that the current possibility set lies wholly in $G$. Let
++\[
++\mathcal G=\{B\in W_*:B\subseteq G\},
++\quad
++A_*(B)=\{u\in A(B):\operatorname{Succ}(B,u)\subseteq W_*\}.
++\]
++Define $R_0=\mathcal G$ and
++\begin{equation}\label{eq:progress-attractor}
++R_{k+1}=R_k\cup
++\{B\in W_*:\exists u\in A_*(B),\
++\operatorname{Succ}(B,u)\subseteq R_k\}.
++\end{equation}
++The increasing sequence stabilizes at $R_*$. For $B\in R_*$, let $r(B)$ be its first index of entry.
++
++\begin{proposition}[Safe service with a finite progress rank]\label{prop:joint-progress}
++A set $B$ lies in $R_k$ if and only if an admissible common-history strategy can ensure certified completion within at most $k$ transitions while preserving the contract indefinitely. A set lies in $R_*$ if and only if such a strategy can ensure eventual certified completion on every possible path while preserving the contract. Before completion, a stationary choice with strictly decreasing $r$ reaches the target within $r(B)$ transitions. After completion, a safety strategy on $W_*$ suffices.
++\end{proposition}
++\begin{proof}
++The bounded claim follows by induction from~\eqref{eq:progress-attractor}. At a nonterminal set of rank $r>0$, a witnessing profile sends every successor to rank at most $r-1$. All selected profiles preserve $W_*$, so a safety continuation is available after the target is reached.
++
++For the eventual claim, consider the tree of public histories consistent with a fixed successful deterministic strategy, stopping a branch at certified completion. The tree is finitely branching. If its depths were unbounded, repeatedly choosing a child with descendants at arbitrarily large depths would produce an infinite branch with no completion. Every finite prefix has a consistent complete-state realization by~\eqref{eq:belief-update}. Finiteness and the same branching argument give a compatible infinite complete-state realization, contradicting success on every path. The tree therefore has a finite depth bound, so the bounded claim puts $B$ in some $R_k$. The other direction follows from the rank strategy.
++\end{proof}
++
++The completion condition is intentionally epistemic: the common history must determine that the stipulated work is complete. Physical completion without an available completion record is a weaker endpoint. The result does not identify the two. It also does not promise service for requests that the admission policy rejects. Guaranteed access, when required, must be part of the contract rather than inferred from the success of already admitted work.
++
++\begin{counterexample}[Almost-sure completion without a sure service bound]\label{ex:sure-service}
++At a pending state $p$, one action moves to a completed absorbing state $g$ with probability $1/2$ and returns to $p$ with probability $1/2$. Both states are safe and publicly visible. Completion occurs with probability one and has expected waiting time two, but the support contains the infinite path $p,p,\ldots$. For the sure interpretation of $\Delta$, $W_*$ contains both singleton states while $R_*$ contains only $\{g\}$. Replacing sure completion by almost-sure completion changes the problem.
++\end{counterexample}
++
++Belief sets suffice for the stated sure safety and certified-reachability objectives. They are not a universal sufficient statistic for strategic partial-observation problems. In particular, broader stochastic games can require information beyond a belief-based strategy~\cite{belieffails}. The quantifiers and the available randomization must be retained when comparing those results with the present construction.
++
++\subsection{A certificate can be checked without finding the largest kernel}
++The fixed-point computation finds every viable possibility set in the declared model. A proposed institution may instead supply a smaller invariant family together with its choices. Let $\mathcal C\subseteq\mathcal B$ contain $B_0$, and let $\kappa$ assign a profile to each $B\in\mathcal C$. The checker verifies $B\subseteq S_{\rm safe}$, $\kappa(B)\in A(B)$, and $\operatorname{Succ}(B,\kappa(B))\subseteq\mathcal C$. A separate integer rank can certify a selected service.
++
++\begin{proposition}[Soundness of a finite continuation certificate]\label{prop:continuation-certificate}
++If the preceding checks hold, $\kappa$ preserves the complete contract from $B_0$ for all transitions. If, in addition, there is a map $r:\mathcal C\to\mathbb N$ such that $r(B)=0$ implies $B\subseteq G$ and every successor of a set with positive rank has strictly smaller rank, then a set contained in $G$ is reached within at most $r(B_0)$ transitions. Checking these finite conditions does not require proving $\mathcal C=W_*$.
++\end{proposition}
++\begin{proof}
++Induction preserves membership in $\mathcal C$, admissibility, and safety. Until rank zero is reached, each transition strictly decreases a nonnegative integer. There can be at most $r(B_0)$ such transitions. The rank-zero implication then establishes certified completion. Closure of $\mathcal C$ continues to provide safety afterward.
++\end{proof}
++
++An amendment can be one of the profiles in this certificate. It must then be authorized before execution, carry every relevant monitor and resource meaning through the transition, and land in a certified continuation set. Allowing arbitrary rank-preserving amendments before a service can defeat its time bound. Such amendments need their own bounded allowance, or must be excluded until completion. The obligation cannot be declared fulfilled merely by changing the label attached to a pending record.
++
++\begin{counterexample}[A safe amendment can destroy every safe continuation]\label{ex:amendment-dead-end}
++There are four publicly distinguishable states $r,\ell,g,b$. The safe set is $\{r,\ell,g\}$. At $r$, profile $\mathsf{deliver}$ moves to $g$, while profile $\mathsf{freeze}$ moves to $\ell$. At $g$, $\mathsf{wait}$ loops safely. At $\ell$, the only admissible profile advances an outstanding deadline and moves to breach state $b$. The amendment $\mathsf{freeze}$ preserves the immediate safe-state predicate but not $W_*$. No certificate proving unbounded continuation from $r$ can choose it. The relevant defect is loss of a future capability, not an immediate inconsistent record.
++\end{counterexample}
++
++\subsection{Which abstractions preserve the ability to govern?}
++The existing governance quotient preserves labels, enabled actions, and deterministic updates. For synthesis under incomplete information, an abstraction must also preserve the public observation and the full set of possible successors. Preserving one average outcome or one representative trajectory is insufficient.
++
++Consider a reduced finite contract $(\overline S,\overline h,\overline A,\overline\Delta,\overline S_{\rm safe},\overline G)$ with the same catalogue $U$. Let $\pi:S\to\overline S$ be a surjection. Assume, for every state and every admissible profile,
++\begin{align}
++h(s)&=\overline h(\pi s), & A(s)&=\overline A(\pi s),\label{eq:synthesis-labels}\\
++s\in S_{\rm safe}&\Longleftrightarrow\pi s\in\overline S_{\rm safe}, &
++s\in G&\Longleftrightarrow\pi s\in\overline G,\label{eq:synthesis-goals}\\
++\pi[\Delta(s,u)]&=\overline\Delta(\pi s,u).&&\label{eq:synthesis-successors}
++\end{align}
++The notation $\pi[B]$ denotes the image of a set, not a probability pushforward. These are exact assumptions. They must hold for amendments and handovers as well as ordinary actions whenever those operations belong to the contract.
++
++\begin{theorem}[Governance abstraction preserves joint realizability]\label{thm:synthesis-transport}
++Under~\eqref{eq:synthesis-labels}--\eqref{eq:synthesis-successors}, for every $B\in\mathcal B$ and every horizon $k$,
++\[
++B\in W_k\Longleftrightarrow\pi[B]\in\overline W_k,
++\qquad
++B\in W_*\Longleftrightarrow\pi[B]\in\overline W_*.
++\]
++The progress sets satisfy $B\in R_k\Longleftrightarrow\pi[B]\in\overline R_k$, so finite progress ranks agree. A reduced safe or ranked strategy pulls back by choosing at $B$ the profile assigned to $\pi[B]$.
++\end{theorem}
++\begin{proof}
++The observation equality makes $\pi[B]$ a valid reduced possibility set. Admissibility and safe-set membership are preserved and reflected. For every possible next observation $y$, successor equality gives the commuting update identity
++\begin{equation}\label{eq:synthesis-post-commute}
++\pi[\operatorname{Post}(B,u,y)]
++=\overline{\operatorname{Post}}(\pi[B],u,y).
++\end{equation}
++Indeed, applying $\pi$ to the union of complete successors gives the union of their reduced successors. The observation equality permits intersection with $h^{-1}(y)$ to pass through $\pi$. Nonemptiness is also preserved and reflected.
++
++Induction in~\eqref{eq:belief-w0}--\eqref{eq:belief-wk} now proves the finite-horizon equivalence. Membership at every horizon gives the fixed-point equivalence, since both sequences stabilize. The goal equivalence in~\eqref{eq:synthesis-goals}, the same successor identity, and induction in~\eqref{eq:progress-attractor} prove the progress claims. Every reduced witnessing profile is admissible in every complete state in $B$, and its complete successors have the required reduced images. Pulling back these choices therefore preserves safety and the decreasing progress rank.
++\end{proof}
++
++The theorem composes earlier preservation obligations into a strategy claim. It is an exact finite application of quotient and game-synthesis reasoning, not a general solution to decentralized governance. It is stronger than agreement of current outputs because it preserves the existence of a future course of action under the actual information boundary. It remains conditional on the implementation of each catalogue profile and on the coverage of $\Delta$.
++
++Dropping observation preservation can give a reduced controller a signal the real population never receives. Dropping enabled-action preservation can turn an unauthorized command into an apparent solution. Dropping successor equality can erase an inconvenient failure path. Dropping the obligation labels can make an unpaid debt disappear in the quotient. Each change can alter the winning sets while leaving a chosen immediate output unchanged. An approximate transition estimate can support a probabilistic error budget, but cannot by itself justify the exact sure guarantee proved here.
++
++\subsection{The commons: individually feasible promises without a common budget}
++Consider a declared variant of the four-office commons with $c$ execution slots remaining in an epoch. Three protected units of work are due before the epoch ends. They include a carried service debt and two other admitted jobs. Each unit consumes one slot. This is a new bounded workload, not a claim that the original allocation rule always creates these obligations.
++
++An ongoing reporting procedure is exposed to two listed deviations, each of gain $1$. Its authorized penalty is $F=2$, and its permitted false-positive rate is $\alpha=1/4$. With no audit, all three observation laws coincide. A one-slot audit has $P_C=(1/2,1/2)$ and the two opposite deviation laws from Counterexample~\ref{ex:pairwise-enforcement}. Their equal mixture reproduces compliance, so no common monitor deters both positive-gain deviations.
++
++A two-slot audit has three outcomes and the stipulated laws
++\[
++P_C=(3/4,1/8,1/8),\qquad
++P_1=(0,1,0),\qquad P_2=(0,0,1).
++\]
++The common monitor $s=(0,1,1)$ sanctions compliance with probability $1/4$, each deviation with probability $1$, and has margin $2(1-1/4)-1=1/2$ against each. The audit costs and laws are assumptions of the analytical variant. They are not measurements or consequences of the earlier resource allocation.
++
++The joint action consists of one audit mode and the amount of work completed in that epoch. A profile must fit both within $c$. Protected work cannot be discarded or quietly deferred. The following comparison is therefore exact for this catalogue:
++\begin{center}
++\begin{tabular}{@{}lccc@{}}
++\toprule
++Contract & Audit slots & Due service slots & Minimum total\\
++\midrule
++Service only & 0 & 3 & 3\\
++Listed deterrence only & 2 & 0 & 2\\
++Both at once & 2 & 3 & 5\\
++\bottomrule
++\end{tabular}
++\end{center}
++With $c=4$, both component contracts are feasible separately, but their conjunction is not. With $c=5$, the two-slot audit and all three services fit, and one-step completion is certified. With $c=4$ and only two protected service units, the same joint profile also fits. In the general version with $d$ protected units, the exact threshold is $c\geq d+2$.
++
++\begin{figure}[t]
++\centering
++\includegraphics[width=.82\linewidth]{figures/joint_service_frontier.pdf}
++\caption{Exact feasibility in the bounded commons variant. Every marked point is one integer pair $(d,c)$. Open markers violate the combined budget, while filled markers admit the two-slot audit and all due services. The boundary is $c=d+2$. A feasible audit and a feasible service allocation considered separately do not establish joint feasibility.}\label{fig:joint-frontier}
++\end{figure}
++
++For this richer audit, the best common margin at a general false-positive cap is
++\[
++\Gamma_\alpha=\min\{6\alpha,3/2\}-1.
++\]
++To see this, average any monitor with the monitor obtained by exchanging outcomes $1$ and $2$. The worst deviation margin does not decrease. Write the two equal sanction probabilities as $t$. Setting the outcome-$0$ sanction probability to zero reduces false positives and weakly improves the margin. The remaining constraint is $t/4\leq\alpha$, with $t\leq1$, and the margin is $3t/2-1$. Thus the formula is exact. The cap $\alpha=1/4$ yields margin $1/2$, but the audit still consumes two execution slots.
++
++\begin{figure}[t]
++\centering
++\includegraphics[width=.82\linewidth]{figures/joint_enforcement_margin.pdf}
++\caption{Analytical common-monitor margins for two specified audit channels with $F=2$ and gains $g_1=g_2=1$. The richer three-outcome audit has margin $\min\{6\alpha,3/2\}-1$. For the two-outcome audit whose deviation mixture equals compliance, the best simultaneous margin is $-1$ at every cap. The curves are exact formulas, not fitted observations.}\label{fig:joint-margin}
++\end{figure}
++
++The example locates the obstruction instead of hiding it inside a favorable aggregate score. A fifth slot repairs the capacity failure without weakening the promises. An explicitly authorized rescheduling agreement changes the temporal contract rather than pretending that the original deadline was met. A cheaper, validated observation channel changes the audit catalogue. Each route needs its own authority and implementation. The kernel computation certifies only the route actually specified.
++
++\subsection{What the synthesis adds to the theory}
++There are now three different witnesses. A monitor certifies simultaneous incentive inequalities in a specified observation model. A continuation certificate supplies an executable choice at every retained public possibility set. A transport certificate shows that the reduced representation preserves those choices, their observations, and their consequences. None can replace the other two.
++
++The result is an institutional realization problem with a finite decision procedure and checkable witnesses. It does not establish spontaneous institution formation, solve the enforcer's incentives, infer a common normative objective, or make a missing public event mechanism appear. It does show how permissions, observations, service obligations, and resource limits can constrain one continuing policy rather than remain independent descriptions of incompatible possibilities.
++\FloatBarrier
++
+ \section{Conditions for institutional novelty}\label{sec:novelty}
+ 
+ The formation of conventions does not require irreducible randomness. If initially indistinguishable deterministic agents have the same update rule and a symmetry-preserving interaction schedule, their joint state remains permutation-invariant by Proposition~\ref{prop:symmetry}. Exchangeability of a distribution is weaker than this pointwise symmetry. A distinct role then requires a symmetry breaker such as heterogeneous information, an address, path-dependent history, or stochastic variation. Once such asymmetries exist, a deterministic system can establish and maintain conventions through ordinary state transitions.
+@@ -2049,7 +2335,10 @@
+ Which institution-specific operations admit coordination-free invariant preservation, and which require exclusive capabilities or a commitment protocol? Proposition~\ref{prop:merge-convergence} supplies a sufficient merge-closure condition, while Proposition~\ref{prop:exclusive-service} gives a bounded service obstruction. A full account must also handle revocation, changing authority configurations, irreversible effects, and what participants can know about finality.
+ 
+ \paragraph{Enforcement under model uncertainty and strategic monitors.}
+-The single-deviation total-variation criterion is exact under a committed, collectible sanction. Multiple deviations, incentive-constrained auditors, and protected false-positive rates require joint contracts. Proposition~\ref{prop:robust-deterrence} propagates declared observation errors into a sanction margin; it does not identify the observation model or solve the incentives of those who certify it.
++Theorem~\ref{thm:joint-enforcement} resolves the finite common-monitor problem for several specified deviations, including a protected false-positive rate. The joint continuation construction in Section~\ref{sec:joint-synthesis} incorporates such witnesses into a fixed finite protocol catalogue. Incentive-constrained auditors, unidentified observation laws, adaptive deviations, and unrestricted decentralized strategies remain outside those results. Proposition~\ref{prop:robust-deterrence} propagates declared observation errors into a sanction margin; it does not identify the observation model or solve the incentives of those who certify it.
++
++\paragraph{Joint synthesis beyond a fixed catalogue.}
++Theorem~\ref{thm:joint-viability} is complete for its finite common-observation model, and Theorem~\ref{thm:synthesis-transport} preserves that exact problem under a suitable quotient. What can be retained when agents create new local protocols, when observations are only approximately matched, or when probabilistic service replaces sure service? Enlarging a catalogue changes a synthesis domain. It does not by itself prove the new profiles are implementable, authorized, or affordable.
+ 
+ \paragraph{Institutional timescales selected by the institution.}
+ The finite-block averaging theorem assumes a predetermined review length and endpoint-based revision. Which approximations remain valid when institutions choose their own review times, experience several long-lived fast regimes, or use path-dependent evidence? The stopping-bias counterexample prevents transferring a deterministic-time mixing bound to such settings without a new argument.
+@@ -2070,6 +2359,8 @@
+ \subsection{What the combined certificates do and do not compose}
+ The state, interpreter, epistemic relations, and authority registry can be carried by one realized system without becoming one undifferentiated object. Language transports compose through exact admission and event preservation. Epistemic transports compose through matched predicates and the back-and-forth conditions. Typed residuals compose only with their declared metric compatibility. Frame synchronization is controlled by ordered loop products, while state compatibility depends on fixed points. Amendment normal forms require a separate termination and joinability argument.
+ 
++Section~\ref{sec:joint-synthesis} strengthens this coexistence requirement into a common-policy question. Under its exact information, action, label, and successor conditions, a governance abstraction preserves both the safe continuation kernel and finite progress ranks. Approximate metrics alone do not imply this sure strategy equivalence. A supplied certificate must identify the common realization and action catalogue to which all its conditions apply.
++
+ The joint lesson is that institutional coherence is a bundle of related obligations, not a scalar score. No single condition above implies all the others. Their explicit coexistence in one contract is what allows a claim about preservation of a society's operations to be evaluated without turning its language, knowledge, history, and authority into interchangeable metaphors.
+ 
+ \section{Conclusion}\label{sec:conclusion}
+@@ -2082,6 +2373,8 @@
+ Persistence likewise does not imply learning or resilience. Rational actors can enter a wrong information cascade when only decisions are disclosed. Independent evidence can support continuing accuracy gains under a different information contract. A collection of specialists can survive turnover when its authorized capability graph has sufficient collective matching slack, yet a backup for each role need not suffice. A connected aggregate graph can lack the time-respecting route needed to carry evidence before a deadline.
+ 
+ The earlier results fit the same pattern. A beneficial institution can face a formation barrier; a safe full-information action can be unavailable to distributed decision makers; locally invertible interfaces can fail to synchronize; and an invariant local state need not establish a full common reference frame. Amendment normal forms, cultural closure, and unrestricted verification each have their own assumptions and limits. No one certificate supplies all the others.
++
++The final synthesis makes the quantifier issue explicit. A different valid policy for every requirement is not one valid policy for their conjunction. Multiple deviations can defeat a common monitor even when each has a successful individual test. An audit and three due services can each be affordable while their joint cost exceeds the available slots. A safe amendment can remove every safe continuation. The finite continuation construction identifies such failures, while the exact abstraction theorem states when a smaller institutional representation preserves the existence of a solution. The resulting witnesses certify declared operations, not the origin, legitimacy, or spontaneous discovery of the institution.
+ 
+ The positive thesis is that persistent, revisable relations among computational decision centers are coherent mathematical objects. Their formation, preservation, semantic change, disagreement, incentives, timescales, and failures can be studied within one explicit realization framework without erasing the distinctions that make them social. This is neither a theorem that machines must form societies nor a criterion for consciousness or moral status. It is a theory of the conditions under which computational social organization can be meaningfully described and maintained.
+ \FloatBarrier
+@@ -2119,6 +2412,12 @@
+ Accurate urgency reporting is a different problem. A committed monitor can discourage a specified profitable misreport only within the discrimination and penalty budget of Section~\ref{sec:enforcement}. Its false-positive limit, evidence access, and remedy authority remain separate. When an averaged model supplies the observation laws, the margin must include its approximation error. A fixed review schedule and a data-selected review schedule cannot share the same mixing certificate without further work.
+ 
+ The commons also distinguishes an urgency vote from the signal supporting it. Decision-only publication can reproduce a mistaken cascade; preservation of independent evidence changes the information available to later reviewers, not the legal effect of an already committed vote. Finally, creating a specialist verifier changes the capability graph and the distribution of authority. A staffing certificate covers all protected roles jointly, while the handover procedure must still deliver credentials, pending debts, and evidence before service deadlines. These clauses supplement the reference semantics rather than claim that the society has generated its own infrastructure without assumptions.
++
++\subsection{The joint continuation contract}
++The bounded audit-and-service variant in Section~\ref{sec:joint-synthesis} combines three protections that cannot be checked in isolation: the common monitor must deter every listed deviation, its false-positive rate must meet the cap, and its resource use must leave enough capacity for all due work. The current public possibility set must also admit the same protocol in every compatible complete state. A continuation certificate records this common choice and all possible successors. A progress rank distinguishes eventual certified service from indefinite safe waiting.
++
++An amendment is acceptable under this particular continuation contract only when its current authority is valid and its resulting states retain certified continuations. A transport certificate additionally checks public observations, enabled profiles, safe and goal labels, and successor sets. Replacing an office, changing an audit channel, or adding a slot changes specified parts of that contract. Such a change may repair an obstruction, but does not retroactively fulfill an earlier unmet promise.
++\FloatBarrier
+ 
+ \section{A finite algebraic example of reusable state}\label{sec:worked}
+ The following analytical example makes the preceding distinctions concrete. Four components initially hold independent fair bits $(a,b,c,d)$. Two local workspaces expose
+@@ -2259,5 +2558,8 @@
+ \bibitem{jacksonwolinsky} M. O. Jackson and A. Wolinsky. A Strategic Model of Social and Economic Networks. \emph{Journal of Economic Theory}, 71(1):44--74, 1996. \url{https://doi.org/10.1006/jeth.1996.0108}.
+ \bibitem{hall1935} P. Hall. On Representatives of Subsets. \emph{Journal of the London Mathematical Society}, s1-10(1):26--30, 1935. \url{https://doi.org/10.1112/jlms/s1-10.37.26}.
+ 
++\bibitem{boydconvex} S. Boyd and L. Vandenberghe. \emph{Convex Optimization}. Cambridge University Press, 2004. Author-hosted lecture slides, Chapter~5, on linear programming duality: \url{https://web.stanford.edu/~boyd/cvxbook/bv_cvxslides.pdf}.
++\bibitem{belieffails} K. Chatterjee and L. Doyen. \emph{Partial-Observation Stochastic Games: How to Win when Belief Fails}. Author preprint, 2011. \url{https://arxiv.org/abs/1107.2141}.
++
+ \end{thebibliography}
+ \end{document}

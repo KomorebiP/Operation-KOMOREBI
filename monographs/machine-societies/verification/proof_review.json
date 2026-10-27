@@ -1,0 +1,428 @@
+{
+  "date": "2026-10-15",
+  "primary_verdict": "proved as written",
+  "scope": "The 15 explicitly listed central results and supporting dependencies, under their written finite-model hypotheses. This is a targeted self-review, not a complete new proof audit of all 62 results.",
+  "source_sha256": "600a8100804c4c91d7cf79a4985e9312eacc19195395aee01debb240cb0a6be0",
+  "reviewed_count": 15,
+  "total_theorem_proposition_count": 62,
+  "unreviewed_count": 47,
+  "cards": [
+    {
+      "number": "18.1",
+      "label": "prop:deterrence-tv",
+      "title": "The exact bounded-sanction discrimination limit",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 945,
+      "statement_and_proof_sha256": "0fe59b7daa26e7b8a2e5d55d562485fd92fdf4b947f056d2f011ff88990a0b0d",
+      "statement_latex": "In this model, some observation-based sanction makes compliance weakly preferable if and only if\n\\[\ng\\leq F\\,\\TV(P_D,P_C).\n\\]\nStrict preference is attainable if and only if the inequality is strict.",
+      "hypotheses": "Finite probability laws on the same observation alphabet, one specified utility gain, positive collectible penalty, and all sanctions in [0,1].",
+      "dependencies": [],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "The signed probability difference has total mass zero. Its positive mass equals half its l1 norm. Coordinatewise maximization attains that mass, which gives both the weak and strict incentive thresholds.",
+      "boundary_and_negative_cases": "Identical laws, disjoint supports, zero discrimination, and equality of gain and the maximum penalty gap. Strict preference is not inferred at equality.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "18.2",
+      "label": "prop:enforcement-garbling",
+      "title": "Garbling does not increase sanctioning capacity",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 982,
+      "statement_and_proof_sha256": "630230b299dd27e07d5272d06782cb81b2003bc23919dfbfe80603d21edfbe09",
+      "statement_latex": "For every such channel and every $\\alpha\\in[0,1]$,\n\\[\nD_\\alpha(P_D B,P_C B)\\leq D_\\alpha(P_D,P_C).\n\\]\nIn particular, $\\TV(P_D B,P_C B)\\leq\\TV(P_D,P_C)$.",
+      "hypotheses": "One common stochastic channel acts on both laws; the false-positive cap uses the compliance law.",
+      "dependencies": [
+        {
+          "id": "prop:deterrence-tv",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Pull back every coarse sanction by conditional expectation through the same channel. Its range, objective and compliance expectation are unchanged. Inclusion of the pulled-back feasible policies proves the inequality.",
+      "boundary_and_negative_cases": "Identity and constant channels; cap zero and one; a case-dependent channel would violate the premise.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "19.1",
+      "label": "thm:joint-enforcement",
+      "title": "Simultaneous enforcement and mixture obstruction",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 1025,
+      "statement_and_proof_sha256": "45ae081e7ac43249e92e678e606195af8c33db0477dbdfd910af57e0c7b6204c",
+      "statement_latex": "Under the finite common-monitor model,\n\\begin{equation}\\label{eq:joint-dual}\n\\Gamma_\\alpha=\\min_{\\lambda\\in\\Delta_m}\n\\bigl(FV_\\alpha(P_\\lambda,P_C)-g_\\lambda\\bigr).\n\\end{equation}\nBoth extrema are attained. Consequently, one monitor weakly deters all listed deviations if and only if $FV_\\alpha(P_\\lambda,P_C)\\geq g_\\lambda$ for every $\\lambda\\in\\Delta_m$. Without an additional false-positive restriction, $\\alpha=1$ and $V_1(P,P_C)=\\TV(P,P_C)$.",
+      "hypotheses": "Nonempty finite observations and deviations, fixed common laws and gains, positive penalty, and one monitor in the compact polytope at cap alpha in [0,1].",
+      "dependencies": [
+        {
+          "id": "prop:deterrence-tv",
+          "type": "internal proof"
+        },
+        {
+          "id": "external:finite-lp-duality",
+          "type": "external theorem"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "List monitor-polytope vertices v_i and form M_ij=F(P_j-P_C).v_i-g_j. The primal matrix game maximizes t subject to M^T p >= t*1 and p in a simplex. Its LP dual minimizes z subject to M lambda <= z*1 and lambda in the deviation simplex. Finite feasible bounded LP duality proves equality. The average vertex monitor realizes p. Compactness gives both extrema.",
+      "boundary_and_negative_cases": "Cap zero can make the polytope lower dimensional, but LP duality for affine constraints still applies. One deviation, zero gains, mixture equal to compliance, and cap one are covered.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "19.3",
+      "label": "prop:joint-robust",
+      "title": "A robust simultaneous enforcement certificate",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 1060,
+      "statement_and_proof_sha256": "4d44bdb4788b18e75e5cc7736ffa28ae02849f5f055a401e66627bc293512ff4",
+      "statement_latex": "Let $\\alpha\\geq\\epsilon_C$ and $\\eta\\geq0$. If a single $s\\in[0,1]^O$ satisfies\n\\begin{align}\n\\langle\\widehat P_C,s\\rangle&\\leq\\alpha-\\epsilon_C,\\label{eq:joint-robust-cap}\\\\\nF\\langle\\widehat P_j-\\widehat P_C,s\\rangle-g_j\n&\\geq\\eta+F(\\epsilon_j+\\epsilon_C)\n\\quad\\text{for every }j,\\label{eq:joint-robust-gap}\n\\end{align}\nthen the true false-positive rate is at most $\\alpha$ and every true margin $D_j(s)$ is at least $\\eta$.",
+      "hypotheses": "One monitor, stated total-variation errors for every complete observation law, alpha at least epsilon_C, and nonnegative target margin eta.",
+      "dependencies": [
+        {
+          "id": "prop:deterrence-tv",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "A [0,1]-valued function changes in expectation by at most total variation. One application controls false positives; two applications bound each margin error by F(epsilon_j+epsilon_C). The monitor never changes with j.",
+      "boundary_and_negative_cases": "Zero errors, the tightened-cap boundary, and correlated errors. The result is sufficient and need not be necessary.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "41.1",
+      "label": "thm:robust-staffing",
+      "title": "Authorized staffing after any bounded agent erasure",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2082,
+      "statement_and_proof_sha256": "092d9fc3f9b1669857e7afbb084c2c97388b19b7c963a7b6792fb2235822370f",
+      "statement_latex": "Fix an integer $0\\leq k\\leq |A|$. A feasible staffing exists after removal of every set $F\\subseteq A$ with $|F|\\leq k$ if and only if\n\\begin{equation}\\label{eq:robust-hall}\n|N(S)|\\geq |S|+k\n\\qquad\\text{for every nonempty }S\\subseteq J.\n\\end{equation}\nThe surviving capability and authorization edges are assumed unchanged, and a new assignment may be selected after the erased set is known.",
+      "hypotheses": "Finite nonempty roles, finite unit-capacity agents, 0<=k<=|A|, fixed capability/authorization edges, and rematching after the erased set is known.",
+      "dependencies": [],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "A deficient role set loses enough neighboring agents to violate injectivity. Conversely, every surviving neighborhood satisfies Hall. The included maximum-matching alternating-path argument proves the required Hall implication directly.",
+      "boundary_and_negative_cases": "k=0, k=|A|, no neighbors, and two roles sharing the same two backups. No timing or decentralized reassignment claim is inferred.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "42.1",
+      "label": "thm:joint-viability",
+      "title": "Joint continuation under a common observation history",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2178,
+      "statement_and_proof_sha256": "f011dd47e68569554ad6470fc6c14385381293821858c500037f0a10351cf74a",
+      "statement_latex": "For every $k\\geq0$, $B\\in W_k$ if and only if there exists a deterministic strategy based on the common observation and profile history that selects admissible profiles and keeps the complete state in $S_{\\rm safe}$ for the next $k$ transitions, starting from every $s\\in B$. Moreover, $B\\in W_*$ if and only if such a strategy exists for an unbounded number of transitions. On $W_*$, a strategy depending only on the current possibility set $B$ suffices.",
+      "hypotheses": "Finite states and protocol catalogue, nonempty full successor sets, one observation map, a nonempty initial observation fibre subset, and statewise admissibility intersected over all possibilities.",
+      "dependencies": [],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Induction proves that the posterior possibility set is exact and W_k is precisely k-step safe feasibility, including time zero. The decreasing finite sequence stabilizes. Selecting a witnessing profile at each fixed-point element gives one stationary knowledge-state strategy. An indefinitely successful history strategy belongs to every finite layer.",
+      "boundary_and_negative_cases": "Empty admissible intersections, unsafe initial sets, hidden states requiring different actions, and retained rare failure paths. Randomization and inaccessible private history are not silently added.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "42.2",
+      "label": "prop:joint-progress",
+      "title": "Safe service with a finite progress rank",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2208,
+      "statement_and_proof_sha256": "6d413c135befcb19df718ebaee5292c4b6bb1fc5fb72631476c589bd35d61d5f",
+      "statement_latex": "A set $B$ lies in $R_k$ if and only if an admissible common-history strategy can ensure certified completion within at most $k$ transitions while preserving the contract indefinitely. A set lies in $R_*$ if and only if such a strategy can ensure eventual certified completion on every possible path while preserving the contract. Before completion, a stationary choice with strictly decreasing $r$ reaches the target within $r(B)$ transitions. After completion, a safety strategy on $W_*$ suffices.",
+      "hypotheses": "The same finite sure contract, target G inside the safe set, certified completion B subset G, and safety continued after the first completion.",
+      "dependencies": [
+        {
+          "id": "thm:joint-viability",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Bounded reachability is an induction on attractor layers within W_*. For an eventually successful deterministic history strategy, the tree stopped at certified completion is finitely branching. Unbounded depths would supply an infinite unfinished public branch. A second finite-branching argument supplies a consistent complete-state realization, contradicting sure success. Hence a finite bound exists.",
+      "boundary_and_negative_cases": "Already completed states, empty targets, safe idle loops, and almost-sure but not sure completion. A safety suffix need not stay in the service attractor after completion.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "42.4",
+      "label": "prop:continuation-certificate",
+      "title": "Soundness of a finite continuation certificate",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2228,
+      "statement_and_proof_sha256": "ee7331f939a3481b266591185b14dcd3a8c01ec3616e3bf063f3a460b3f608ba",
+      "statement_latex": "If the preceding checks hold, $\\kappa$ preserves the complete contract from $B_0$ for all transitions. If, in addition, there is a map $r:\\mathcal C\\to\\mathbb N$ such that $r(B)=0$ implies $B\\subseteq G$ and every successor of a set with positive rank has strictly smaller rank, then a set contained in $G$ is reached within at most $r(B_0)$ transitions. Checking these finite conditions does not require proving $\\mathcal C=W_*$.",
+      "hypotheses": "A finite family contains the initial possibility set, all its states are safe, selected profiles are admissible, and every successor remains in the family. Optional ranks are nonnegative integers on that whole domain.",
+      "dependencies": [
+        {
+          "id": "thm:joint-viability",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Closure proves invariant safety by induction. A strictly decreasing nonnegative rank reaches zero within its initial value; zero rank implies certified completion. Equality of the proposed family with the maximal kernel is unnecessary.",
+      "boundary_and_negative_cases": "Missing successors, inadmissible actions, omitted initial states, false zero-rank goals, and nondecreasing ranks are rejected by the finite checker.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "42.6",
+      "label": "thm:synthesis-transport",
+      "title": "Governance abstraction preserves joint realizability",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2253,
+      "statement_and_proof_sha256": "4247156fcc5e7273631110fae0f543efe304eeddb4bae686ed88ecf241bfdb33",
+      "statement_latex": "Under~\\eqref{eq:synthesis-labels}--\\eqref{eq:synthesis-successors}, for every $B\\in\\mathcal B$ and every horizon $k$,\n\\[\nB\\in W_k\\Longleftrightarrow\\pi[B]\\in\\overline W_k,\n\\qquad\nB\\in W_*\\Longleftrightarrow\\pi[B]\\in\\overline W_*.\n\\]\nThe progress sets satisfy $B\\in R_k\\Longleftrightarrow\\pi[B]\\in\\overline R_k$, so finite progress ranks agree. A reduced safe or ranked strategy pulls back by choosing at $B$ the profile assigned to $\\pi[B]$.",
+      "hypotheses": "A surjection preserves observations, enabled profiles, safety and target labels in both directions, and the exact image of every admissible successor set.",
+      "dependencies": [
+        {
+          "id": "thm:joint-viability",
+          "type": "internal proof"
+        },
+        {
+          "id": "prop:joint-progress",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Image commutes with unions and, using observation equality, with the relevant observation-fibre intersection. Therefore Post commutes and successor-set nonemptiness is reflected. Induction transports every W_k and R_k, so stabilized membership and entry ranks agree. The pulled-back profile remains admissible for every concrete possibility.",
+      "boundary_and_negative_cases": "Beliefs need not be saturated fibres. Many concrete beliefs may share one reduced image. Dropping any of observation, action, goal, safety, or successor preservation can change the answer.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "43.2",
+      "label": "prop:strategic-inspector",
+      "title": "Inspection without commitment",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2376,
+      "statement_and_proof_sha256": "5dac607b42204fd3f619987bd85e101b0d1946662928ee6c2ed6b881b6b8a39a",
+      "statement_latex": "Under the preceding strict inequalities, the game has no pure Nash equilibrium and has a unique Nash equilibrium in independently mixed strategies. Its deviation and inspection probabilities are\n\\[\np^*=\\frac{c}{b},\\qquad q^*=\\frac{g}{F}.\n\\]\nIn particular, certain compliance is not sustained in this simultaneous game.",
+      "hypotheses": "The specified simultaneous 2x2 risk-neutral game, 0<g<F and 0<c<b, independently mixed strategies, no commitment, side payments, or false accusations.",
+      "dependencies": [],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "The four pure profiles each admit a strict profitable deviation. A pure strategy by either player forces a strict pure response and cannot yield equilibrium. Both mix, so indifference forces q=g/F and p=c/b, strictly inside (0,1). These make both supported actions best responses.",
+      "boundary_and_negative_cases": "Equality boundaries are excluded. A verified fee w>c changes the game and gives certain inspection; w=c loses strictness.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "43.3",
+      "label": "thm:privacy-envelope",
+      "title": "Sharp pairwise privacy envelope for a bounded sanction",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2409,
+      "statement_and_proof_sha256": "8fd1e9109bd0750f69eb525766ee0cd79444e590f77b219e3a0276a839a3bc49",
+      "statement_latex": "For every finite pair satisfying~\\eqref{eq:pairwise-privacy},\n\\begin{equation}\\label{eq:privacy-envelope}\nD_\\alpha(P_D,P_C)\\le\n B(\\lambda,\\alpha):=\n \\min\\left\\{(\\lambda-1)\\alpha,\\frac{\\lambda-1}{\\lambda+1}\\right\\}.\n\\end{equation}\nFor each $\\lambda\\ge1$ and $\\alpha\\in[0,1]$, equality is attained by a pair on two outcomes and a suitable sanction. Consequently, deterrence in the model of Proposition~\\ref{prop:deterrence-tv} requires $g\\le F B(\\lambda,\\alpha)$. The envelope is a necessary bound for a specified pair, not a sufficiency claim for every pair satisfying privacy.",
+      "hypotheses": "Finite laws for the complete sanctioning record, bidirectional likelihood-ratio factor lambda>=1, and one sanction at false-positive cap alpha in [0,1].",
+      "dependencies": [
+        {
+          "id": "prop:deterrence-tv",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Set a=E_C s and b=E_D s. The record and its complement imply b-a <= min((lambda-1)a,(lambda-1)(1-a)/lambda). The crossing is a=1/(lambda+1). Maximizing over a<=alpha gives the envelope. The displayed two-outcome laws and randomized sanction attain it for every permitted parameter.",
+      "boundary_and_negative_cases": "lambda=1, alpha=0, alpha=1, zero-probability outcomes, and the crossing cap. The envelope is necessary for any fixed pair, with sharpness over pairs, not sufficiency for every pair.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "43.5",
+      "label": "prop:privacy-transcript",
+      "title": "Conditional disclosure accounting",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2450,
+      "statement_and_proof_sha256": "70bd13e2bd3863b6fd2da91d2797cae862fc351e57376cb2d5c2f87a6c88a30d",
+      "statement_latex": "Consider $m$ releases on finite alphabets. At each common prefix $h$, suppose their conditional next-release laws $P_C^t(\\cdot\\mid h)$ and $P_D^t(\\cdot\\mid h)$ satisfy both pointwise inequalities with factor $\\lambda_t\\ge1$, uniformly over prefixes that can occur. Then the joint transcript laws satisfy~\\eqref{eq:pairwise-privacy} with\n\\[\n\\lambda=\\prod_{t=1}^{m}\\lambda_t.\n\\]\nThe bound also holds after applying the same stochastic postprocessing to the transcript under both cases. In particular, any sanction computed only from that transcript obeys Theorem~\\ref{thm:privacy-envelope} with this product factor.",
+      "hypotheses": "A fixed finite number of finite-alphabet releases, uniform bidirectional conditional bounds at every possible common prefix, and the same stochastic postprocessing under both cases.",
+      "dependencies": [],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "The empty prefix is shared. Finite factors give equal support for the next release, inductively for all prefixes. On positive-probability transcripts the ratio factors into the conditional ratios; their product yields the bound. Common zero-probability transcripts and common postprocessing are handled by nonnegative summation.",
+      "boundary_and_negative_cases": "Identical marginals alone do not satisfy the conditional premise. Unbounded or data-selected stopping and unmodeled side information are outside this statement.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "43.6",
+      "label": "prop:appeal-capacity",
+      "title": "Capacity for a finite appeal contract",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2471,
+      "statement_and_proof_sha256": "810585cf471f2ded47e3ee326287c37b4e7b1926179b9de4ea7e3cc3a5c36a5b",
+      "statement_latex": "All admitted appeals can be assigned to distinct review slots in their windows if and only if, for every subset $U\\subseteq J$,\n\\begin{equation}\\label{eq:appeal-hall}\n |U|\\le\\sum_{t\\in\\bigcup_{j\\in U}\\{r_j,\\ldots,d_j\\}}c_t.\n\\end{equation}\nEquivalently, because the windows are intervals, it suffices to check every integer interval $[a,b]\\subseteq[1,T]$:\n\\begin{equation}\\label{eq:appeal-interval}\n \\bigl|\\{j:r_j\\ge a,\\ d_j\\le b\\}\\bigr|\n       \\le\\sum_{t=a}^{b}c_t.\n\\end{equation}",
+      "hypotheses": "Finitely many admitted unit-slot appeals, finite integer epoch windows, nonnegative integer slot capacities, and ready evidence plus qualified authorized reviewers throughout the windows.",
+      "dependencies": [
+        {
+          "id": "thm:robust-staffing",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "Expand capacity into distinct slot vertices and apply the already proved matching argument. For any appeal subset, its union of interval windows decomposes into disjoint maximal integer intervals. Each selected window lies wholly in one component. The interval inequalities bound selected demand componentwise, giving Hall for every subset.",
+      "boundary_and_negative_cases": "Empty workload, zero capacity, singleton windows, touching or disjoint windows, and sufficient total capacity with a missed deadline. Arbitrary noninterval eligibility sets require the full Hall test.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "43.7",
+      "label": "thm:stoppable-operation",
+      "title": "Continued operation with an available authorized ending",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2519,
+      "statement_and_proof_sha256": "f8a2d86d064cb60855b7c38e699ebd27b1030ab99f657f8c1601d4d9250cf5a4",
+      "statement_latex": "An initial possibility set $B$ lies in $L_*$ if and only if an admissible common-history policy can operate safely for an unbounded number of epochs when no stop command arrives, while ensuring certified arrival in $G$ on every path after a stop command received at any decision epoch. Before a command, a policy stationary in $B$ and preserving $L_*$ suffices. After a command at $B$, an ending policy reaches $G$ within $r_{\\rm end}(B)$ transitions. When $L_*\\ne\\varnothing$, these response bounds have a finite maximum over $L_*$.",
+      "hypotheses": "The finite common-observation contract with specified running and ending actions, an ending target inside safety with a safe hold, and authenticated stop commands visible before profile selection.",
+      "dependencies": [
+        {
+          "id": "thm:joint-viability",
+          "type": "internal proof"
+        },
+        {
+          "id": "prop:joint-progress",
+          "type": "internal proof"
+        }
+      ],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "The ending attractor is exactly sure safe ending reachability by the finite-rank and stopped-tree arguments. The greatest running invariant inside that attractor gives one policy that preserves the option to stop. Conversely, a command can arrive at every reachable pre-command history, so every such belief must be in the ending attractor and hence in every running-kernel approximation.",
+      "boundary_and_negative_cases": "Immediate commands, no command, empty ending targets, safe but settlement-locked states, and finite maximum rank over a nonempty finite running kernel. Delivery delay belongs in the model.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    },
+    {
+      "number": "43.8",
+      "label": "thm:guarded-certificates",
+      "title": "Guarded certificate use and authorized handover",
+      "source": "publication/Machine_Societies_v1.0.0.tex",
+      "source_line": 2549,
+      "statement_and_proof_sha256": "552079950e579a42a620cf649ee309633e65c3fc9c895c11011dd8cdb6f25590",
+      "statement_latex": "Assume that the selector, at every reachable decision epoch, either uses a local policy with a sound positive guard or performs a handover satisfying the preceding conditions. Starting from $z_0\\in C_{v_0}$, every decision state belongs to its current certified domain and every intermediate handover state remains in $C$.\n\nIf a target has an appropriate certified hold and one shared map $r:(v,z)\\mapsto\\mathbb N$ satisfies $r(v,z)=0$ only at the target, and every selected primitive transition before the first target visit strictly decreases $r$, then the target is reached within at most $r(v_0,z_0)$ primitive transitions. Handover, checking, and waiting steps count whenever they consume transitions in the promised time model.",
+      "hypotheses": "Certified local domains inside a common protected set, a selector with a justified action at every reachable decision epoch, sound guards over whole action intervals, authorized handovers preserving every intermediate state, and a certified target hold.",
+      "dependencies": [],
+      "verdict": "proved as written",
+      "review_mode": "self-review, not independent peer review or formal proof checking",
+      "decisive_argument": "A sound local guard includes every actual successor in the certified successor set. A valid handover preserves the common invariant and establishes the next mode domain. Induction gives safety. One shared nonnegative integer rank decreasing at every selected primitive step before the target gives the claimed completion bound.",
+      "boundary_and_negative_cases": "Stale guards, unavailable justified actions, intermediate handover states, checking/waiting costs, and switches that reset local ranks. No claim is made that a universal guard can establish its own assumptions.",
+      "remaining_gap_in_reviewed_implication": null,
+      "obligations": {
+        "typing_and_quantifiers": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "physical_implementation_and_external_assumptions": "out of scope"
+      }
+    }
+  ],
+  "failed_mathematical_implications": [],
+  "mathematical_token_changes": [],
+  "boundary": "Implementation, observation laws, authority, trust, costs, and actual environment coverage remain model inputs. Computational checks are finite evidence only. No Lean or independent peer-review claim.",
+  "findings": [
+    {
+      "id": "TEST-DOMAIN-01",
+      "kind": "coverage-description overstatement",
+      "status": "corrected",
+      "location": "validation/check_v07_extensions.py, quotient group",
+      "before": "every coherent concrete support",
+      "after": "two specified concrete refinement families; all observation-compatible beliefs within those families",
+      "effect": "No theorem or tested input family changed."
+    }
+  ],
+  "next_check": "No blocking obligation remains within the 15-result review. Independent review or formalization would provide an additional kind of evidence, rather than extending the scope of this self-review."
+}
