@@ -1,0 +1,182 @@
+\clearpage
+\section{Exact Moving-Coset Search and the First-Order Barrier}
+
+\subsection{Obstruction cosets}
+Exclude $(1,1,2)$ throughout this section. Choose a section $x_0\in L$ with $\omega(x_0)=1$. Then
+\[
+ L
+ =
+ \bigsqcup_{k\in\Z}
+ (kx_0+L_0).
+\]
+For fixed $k$, the problem is a closest-vector problem to the moving target $-kx_0$ in the lattice $L_0$. The three-sector compression makes this search much more explicit.
+
+\subsection{Aggregate affine line}
+Write
+\[
+ u=P_ur_u,
+ \qquad
+ r_u=\rad(u),
+ \qquad
+ P_u=u/r_u.
+\]
+The sharp aggregate conditions are
+\[
+ P_at_a+P_bt_b=P_ct_c
+\]
+and
+\[
+ r_at_b-r_bt_a=kP_c.
+\]
+Since $\gcd(r_a,r_b)=1$, choose $s,t$ with
+\[
+ sr_a+tr_b=1.
+\]
+One solution is
+\[
+ t_a^{(0)}=-tkP_c,
+ \qquad
+ t_b^{(0)}=skP_c.
+\]
+Every aggregate solution is
+\[
+ \boxed{
+ \begin{aligned}
+ t_a(k,n)&=t_a^{(0)}+nr_a,\\
+ t_b(k,n)&=t_b^{(0)}+nr_b,\\
+ t_c(k,n)&=t_c^{(0)}+nr_c,
+ \end{aligned}
+ \qquad n\in\Z.
+ }
+\]
+When $a,b>1$, the global search in one obstruction coset is therefore one-dimensional. If $a=1$, the empty $a$-sector forces $t_a=0$ and fixes the coarse parameter, giving
+\[
+ (t_a,t_b,t_c)=(0,kP_c,kP_b).
+\]
+If $b=1$, the corresponding fixed triple is
+\[
+ (t_a,t_b,t_c)=(-kP_c,0,-kP_a).
+\]
+Thus a unit-sector coset has one aggregate candidate rather than a moving affine line.
+
+\subsection{Local CRT normal form}
+Fix one sector with primes
+\[
+ p_1,\ldots,p_m
+\]
+and radical
+\[
+ r=\prod_i p_i.
+\]
+For a nonempty sector, the local equation is
+\[
+ \sum_i\frac r{p_i}x_i=t.
+\]
+An empty unit sector has no prime coordinates and is feasible exactly when $t=0$.
+Modulo $p_i$, the coordinate $x_i$ is forced:
+\[
+ x_i
+ \equiv
+ t\left(\frac r{p_i}\right)^{-1}
+ \pmod{p_i}.
+\]
+Choose the centered residue $\xi_i$ and write
+\[
+ x_i=\xi_i+p_i z_i.
+\]
+Substitution gives one quotient equation
+\[
+ \sum_i z_i=q(t).
+\]
+For a box radius $H$, each $z_i$ lies in the interval
+\[
+ \ell_i(H)
+ =
+ \left\lceil\frac{-H-\xi_i}{p_i}\right\rceil
+ \le z_i\le
+ \left\lfloor\frac{H-\xi_i}{p_i}\right\rfloor
+ =u_i(H).
+\]
+The local lift exists exactly when
+\[
+ \boxed{
+ \ell_i(H)\le u_i(H)\ \text{for every }i,\qquad
+ \sum_i\ell_i(H)\le q(t)\le\sum_i u_i(H).
+ }
+\]
+Every coordinate interval must be nonempty. Once that condition holds, the sum of the integer intervals contains every integer between the sums of their endpoints. This proves the criterion. Summing endpoints alone is insufficient when one interval is empty.
+
+\subsection{Moving-interval theorem}
+Using the complete local criterion, including the individual nonemptiness guards, for fixed $k$ and $H$ the three sectors produce three integer intervals for the coarse parameter $n$. A packet of height at most $H$ exists if and only if those intervals share an integer.
+
+\begin{theorem}[Moving-interval theorem]
+For fixed obstruction multiple $k$ and radius $H$,
+\[
+ H(k)\le H
+\]
+if and only if
+\[
+ I_a(H,k)
+ \cap
+ I_b(H,k)
+ \cap
+ I_c(H,k)
+ \cap\Z
+ \neq\varnothing.
+\]
+\end{theorem}
+
+The first feasible $H$ gives the exact coset height. The preceding radius is an explicit no-smaller-box certificate.
+
+\subsection{Finite global stopping}
+The continuous lower bound gives
+\[
+ H(k)\ge k\overline H.
+\]
+If the best exact height found so far is $B$, then no coset with
+\[
+ k\overline H\ge B
+\]
+can improve it. Therefore only finitely many obstruction multiples must be searched:
+\[
+ \boxed{
+ 1\le k\le
+ \left\lfloor\frac{B-1}{\overline H}\right\rfloor.
+ }
+\]
+Every unsearched coset is excluded by a proved lower bound.
+
+\subsection{Phase and coarse separation}
+The local target has the form
+\[
+ t_u(k,n)=\alpha_uk+r_un.
+\]
+For a local prime $p\mid r_u$,
+\[
+ t_u(k,n)\equiv\alpha_uk\pmod p.
+\]
+Thus the obstruction multiple $k$ determines the finite phase packet. The coarse parameter $n$ changes only the quotient load. The exact search is a moving polyphase mechanism rather than a generic mixed-integer program.
+
+\subsection{Arithmetic correction and arbitrary precision}
+Some large high-quality triples exceed signed $64$-bit range, and intermediate quantities such as
+\[
+ ab,
+ \qquad
+ \frac{abc}{R},
+ \qquad
+ w\cdot x
+\]
+can overflow even when the input terms individually fit. Every public arithmetic entry point must therefore promote integer-like inputs to arbitrary-precision integers before multiplication. Floating-point values are display-only. All logical comparisons and stopping bounds are exact rational or integer computations.
+
+Several reported ratios are mathematically at least one:
+\[
+ \frac{\Phi}{\overline H}\ge1,
+ \qquad
+ \frac{\Phi}{k_*\overline H}\ge1,
+ \qquad
+ \frac{H(1)}{\Phi}\ge1.
+\]
+Values above one are not probability errors.
+
+\subsection{What the exact search proved}
+The moving search found nonprimitive optima on many finite examples. It also found increasingly deep phase resonances. This showed that a fixed cutoff in $k$ is unjustified. More importantly, the no-escape identity proved that even a complete exact search of the first-order invariant cannot imply $abc$ independently. The search became a diagnostic and classification engine rather than the final proof mechanism.

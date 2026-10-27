@@ -1,0 +1,91 @@
+\clearpage
+\section{A nonzero Hankel contact determinant}\label{sec:hankel}
+\subsection{Independent moment directions replace one filter}
+For an integer $r\ge1$, define
+\[
+ \mathcal H_r(t)=\det\bigl(\Li_{i+j+1}(t)\bigr)_{0\le i,j<r}.
+\]
+It uses weights one through $2r-1$. The expression is a formal series over $\Q$ and an analytic function for $|t|<1$. No algebraicity at a rational argument is assumed.
+
+For the first two ranks,
+\[
+ \mathcal H_1=\Li_1,\qquad
+ \mathcal H_2=\Li_1\Li_3-\Li_2^2.
+\]
+The rank-two determinant compares genuinely different moment directions. Its order-three contact is not inferred from the presence of weight three.
+
+\begin{theorem}[Cauchy--Binet expansion]\label{thm:hankel-expansion}
+\[
+ \mathcal H_r(t)=\sum_{1\le k_1<\cdots<k_r}
+ t^{k_1+\cdots+k_r}
+ \frac{\prod_{i<j}(k_j-k_i)^2}{\prod_{i=1}^r k_i^{2r-1}}.
+\]
+\end{theorem}
+\begin{proof}
+Write $v_k=(1,k^{-1},\ldots,k^{-(r-1)})^{\mathsf T}$. The moment matrix is
+\[
+ \sum_{k\ge1}\frac{t^k}{k}v_kv_k^{\mathsf T}.
+\]
+For a finite sum, Cauchy--Binet expands its determinant over $r$-element index subsets. The determinant of the chosen columns is a Vandermonde in $k_i^{-1}$. Squaring it and including the factors $t^{k_i}/k_i$ gives the stated coefficient. In detail,
+\[
+ \prod_{i<j}(k_j^{-1}-k_i^{-1})^2
+ =\frac{\prod_{i<j}(k_j-k_i)^2}{\prod_i k_i^{2(r-1)}}.
+\]
+Passing to the formal infinite sum is coefficientwise legitimate. At a fixed power of $t$, only finitely many index subsets occur.
+\end{proof}
+Every coefficient in this expansion is positive. The formal cancellation implicit in the determinant is now resolved into a manifestly nonzero expansion.
+
+\begin{theorem}[Exact contact and first coefficient]\label{thm:hankel-contact}
+Put $s_r=r(r+1)/2$. Then
+\[
+ \ord_0\mathcal H_r=s_r,\qquad
+ [t^{s_r}]\mathcal H_r=\prod_{k=1}^r k^{-(2k-1)}.
+\]
+\end{theorem}
+\begin{proof}
+The unique increasing $r$-tuple of positive indices with least sum is $(1,\ldots,r)$, of sum $s_r$. Its coefficient is nonzero. Its Vandermonde numerator is $\prod_{j=1}^{r-1}(j!)^2$. Dividing this by $\prod_{k=1}^r k^{2r-1}$ leaves exponent $2k-1$ in the denominator at each $k$, giving the formula.
+\end{proof}
+For $r=2$ the first coefficient is $1/8$. For $r=3$ it is $1/(2^3 3^5)$. The contact orders are $1,3,6,10,\ldots$, the triangular numbers.
+
+\figplaceholder{16_contact_order}{The Hankel rank produces an exact triangular contact order. The first nonzero coefficient is proved and remains separate from the highest polylogarithmic weight.}
+
+\subsection{Real positivity and a bound uniform in rank}
+\begin{theorem}[Positive real determinant]\label{thm:hankel-real}
+For every $r\ge1$ and every real $0<t<1$,
+\[
+ 0<\mathcal H_r(t)\le e^{1/4}[-\log(1-t)].
+\]
+\end{theorem}
+\begin{proof}
+The Cauchy--Binet expansion consists of positive terms and contains the nonzero term $(1,\ldots,r)$, so positivity follows. Equivalently, the real moment matrix is positive definite: a nonzero polynomial of degree below $r$ cannot vanish at all the distinct nodes $k^{-1}$.
+
+Hadamard's inequality for the positive matrix gives
+\[
+ \mathcal H_r(t)\le\prod_{i=0}^{r-1}\Li_{2i+1}(t)
+ \le[-\log(1-t)]\prod_{i=1}^{r-1}\zeta(2i+1).
+\]
+For the higher weights, $t^k\le1$ bounds the series by its zeta value. Since all summands are positive,
+\[
+ \sum_{i\ge1}(\zeta(2i+1)-1)
+ =\sum_{k\ge2}\frac1{k(k^2-1)}=\frac14.
+\]
+The last sum telescopes using
+\[
+ \frac1{k(k^2-1)}=\frac12\left(\frac1{k(k-1)}-\frac1{k(k+1)}\right).
+\]
+Finally $\log(1+x)\le x$ for $x\ge0$ bounds the zeta product by $e^{1/4}$, uniformly in its length.
+\end{proof}
+At $t=a/c$ and $t=b/c$, the bounds become $e^{1/4}\log(c/b)$ and $e^{1/4}\log(c/a)$. Thus these real period values are nonzero and have a simple logarithmic envelope. This is valuable analytic control. It is not an all-conjugate height theorem for an algebraic scalar.
+
+\subsection{The third complex chart has a branch boundary}
+For fixed rank and a consistent upper or lower boundary branch at $x=c/a>1$, the classical integer-weight inversion formula expresses each $\Li_j(x)$ as a fixed degree-$j$ polynomial in a chosen $\log(-x)$ plus a sign times $\Li_j(1/x)$~\cite{DLMFPolylog}. The latter is bounded by $\zeta(j)$ for $j\ge2$. For $j=1$, use $\Li_1(x)=-\log(1-x)$ and $x-1=b/a$.
+
+Since $|\log(b/a)|\le\log c$ and $\log(c/a)\le\log c$, every entry has a bound by a constant times $(1+\log c)^j$. A determinant term has total weight
+\[
+ \sum_{i=0}^{r-1}(i+\pi(i)+1)=r^2.
+\]
+Therefore
+\[
+ |\mathcal H_r(c/a)|\le C_r(1+\log c)^{r^2}
+\]
+for each of those consistent branches. The constant may depend on $r$. No nonvanishing assertion at every argument in this third chart follows from the positive expansion on $0<t<1$.

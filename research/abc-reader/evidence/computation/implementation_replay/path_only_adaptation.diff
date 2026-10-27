@@ -1,0 +1,19 @@
+--- authoritative final_code_audit.py
++++ portable_final_code_audit.py
+@@ -6,7 +6,7 @@
+ from pathlib import Path
+ import sympy as sp
+ 
+-ART=Path('/mnt/data/final_audit_artifacts')
++ART=Path(__file__).resolve().parent/'reference_code'
+ sys.path.insert(0,str(ART))
+ 
+ def load(name:str):
+@@ -107,6 +107,6 @@
+     assert sum(x*y for x,y in zip(g,vector,strict=True))%modulus==0
+ results['coherence']={'factorization':[rec.dyadic_sign_factor,rec.kummer_factor,rec.wieferich_factor,rec.coherence_factor],'row':list(row),'modulus':mod}
+ 
+-out=Path('/mnt/data/final_verification_work/final_code_audit_results.json')
++out=Path(__file__).resolve().parent/'final_code_audit_results.json'
+ out.write_text(json.dumps({'passed':True,'results':results},indent=2,default=str)+'\n')
+ print(json.dumps({'passed':True,'groups':len(results),'results':results},indent=2,default=str))

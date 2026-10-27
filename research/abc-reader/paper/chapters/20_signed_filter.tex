@@ -1,0 +1,125 @@
+\section{Signed arithmetic COS and the sparse spectral leaf}\label{sec:sparse}
+\subsection{What the finite assignment signal records}
+The spectral branch of the project asks which prime assignments realize a prescribed residue. Its exact object is a finite distribution. Fix a finite abelian group $G$ and $s$ eligible variable support primes. At the $j$th prime choose one of three permitted contributions, represented by $0,\gamma_j,-\gamma_j$ in additive group notation. The sum of the chosen contributions is the assignment residue.
+
+Let $N(x)$ count assignments producing $x\in G$. Repeated contributions remain separate assignments, so
+\[
+ M=\sum_{x\in G}N(x)=3^s,\qquad \mu(x)=N(x)/M.
+\]
+For a character $\chi\in\widehat G$, define
+\[
+ \widehat\mu(\chi)=\sum_x\mu(x)\chi(x)
+ =\prod_{j=1}^s\frac{1+\chi(\gamma_j)+\chi(-\gamma_j)}3.
+\]
+On a cyclic channel $G=\Z/n\Z$, this becomes
+\[
+ m(k)=\prod_{j=1}^s\frac{1+2\cos(2\pi k\gamma_j/n)}3.
+\]
+This is the discrete cosine or COS expression used in the project. It is an exact characteristic function. Individual cosine factors may be negative. No positivity of all Fourier samples is assumed.
+
+Character orthogonality gives the target count
+\[
+ N(h)=\frac M{|G|}\sum_{\chi\in\widehat G}\widehat\mu(\chi)\overline{\chi(h)}.
+\]
+The identity is finite and exact. It solves a representation question after the arithmetic channel and admissible contributions have been specified. It does not by itself bound the height of an integer triple that generated that channel.
+
+\subsection{Sparsity forces transverse energy}
+Let $E=\{x:N(x)>0\}$ and $r=|E|$. Always $r\le M$. Parseval yields
+\[
+ \sum_{\chi\in\widehat G}|\widehat\mu(\chi)|^2
+ =\frac{|G|}{M^2}\sum_xN(x)^2.
+\]
+Cauchy--Schwarz on the occupied support gives $\sum_xN(x)^2\ge M^2/r$. Hence
+\begin{proposition}[Sparse energy barrier]\label{prop:sparse-energy}
+\[
+ \sum_{\chi\ne1}|\widehat\mu(\chi)|^2
+ \ge\frac{|G|}{r}-1\ge\frac{|G|}{M}-1.
+\]
+\end{proposition}
+When few assignment atoms lie in a large group, substantial nontrivial Fourier energy is unavoidable. A failure of uniform mixing is therefore a structural feature of the signal, rather than evidence that the arithmetic assignment is invalid.
+
+\subsection{The hypothetical exception regime is sparse}
+For a primitive triple put $Q=abc/R$. Suppose $c>R^{1+\eps}$ for a fixed $\eps>0$. Since $a,b$ are positive with sum $c$, one has $ab\ge c-1$. Thus, for large $c$,
+\[
+ Q=\frac{abc}{R}\ge\frac{c(c-1)}R>\frac12R^{1+2\eps}.
+\]
+The unit group modulo $Q$ has order $\varphi(Q)$. For every $\delta>0$,
+\[
+ \frac Q{\varphi(Q)}\ll_\delta R^\delta,
+ \qquad 3^{\omega(R)}\ll_\delta R^\delta.
+\]
+Both elementary bounds follow by separating a finite set of small primes. For all sufficiently large primes, $(1-1/p)^{-1}\le p^\delta$ and $3\le p^\delta$. Every prime dividing $Q$ also divides $R$.
+
+If the assignment model has $M=3^s$ with $s\le\omega(R)$, choose $\delta=\eps/2$ in both estimates. Then
+\[
+ \frac{\varphi(Q)}M\gg_\eps R^{1+\eps}.
+\]
+Consequently a sufficiently large hypothetical exponent-gap exception, represented in this joint unit-group model, lies on the sparse side of the energy barrier. Uniform spectral mixing cannot be the universal finishing argument for this regime.
+
+The full unit group need not be cyclic. The preceding energy statement holds for any finite abelian group. The one-variable Prony argument below is specifically a theorem for a cyclic channel. It is not a claim that one character line automatically recovers all correlations in an arbitrary noncyclic product channel.
+
+\subsection{Exact innovation rank in a cyclic channel}
+Let $G=\Z/n\Z$, $\alpha_x=e^{2\pi ix/n}$ and
+\[
+ m(k)=\sum_{x\in E}\frac{N(x)}M\alpha_x^k.
+\]
+Form the shift matrix $S_d=(m(k+j))_{0\le k<n,\,0\le j\le d}$. It factors as a Fourier-column matrix times a Vandermonde matrix on the distinct occupied nodes. The Fourier columns are independent, and all weights $N(x)/M$ are nonzero. Therefore
+\[
+ \boxed{\operatorname{rank}S_d=\min(r,d+1).}
+\]
+Before degree $r$, a small singular value is a conditioning phenomenon, not an exact reduction in the number of occupied residues.
+
+\begin{theorem}[Exact cyclic Prony reconstruction]\label{thm:prony}
+The distribution on a cyclic channel with $r$ occupied residues is determined by the $2r$ exact consecutive samples $m(0),\ldots,m(2r-1)$.
+\end{theorem}
+\begin{proof}
+Write
+\[
+ A(z)=\prod_{x\in E}(z-\alpha_x)=z^r+\sum_{j=0}^{r-1}a_jz^j.
+\]
+For every $k$,
+\[
+ \sum_{j=0}^{r-1}a_jm(k+j)=-m(k+r).
+\]
+The coefficient matrix for $0\le k<r$ is the Hankel matrix $H=(m(i+j))_{0\le i,j<r}$. With $V=(\alpha_x^i)_{i,x}$ and $D=\operatorname{diag}(N(x)/M)$, one has $H=VDV^{\mathsf T}$. The square Vandermonde $V$ is invertible and every diagonal entry of $D$ is nonzero. Thus $H$ is invertible, and the $2r$ samples determine the monic annihilator $A$.
+
+Its distinct roots identify the occupied nodes. The first $r$ sample equations then give an invertible Vandermonde system for their weights. Multiplication by the known $M$ recovers every multiplicity.
+\end{proof}
+This is an exact reconstruction theorem. It does not promise numerical stability from approximate samples. Nor does a subpolynomial number of samples by itself imply a subpolynomial arithmetic height for the reconstructed assignment.
+
+\subsection{Polynomial target filters and exact count certificates}
+For a polynomial $P(z)=\sum_{j=0}^dc_jz^j$, define the collision quadratic form
+\[
+ \mathcal E_d(P)=\frac n{M^2}\sum_{x\in E}N(x)^2|P(\alpha_x)|^2.
+\]
+It can be written as a positive semidefinite Gram form in the coefficients of $P$. Let
+\[
+ \lambda_d(h)=\min\{\mathcal E_d(P):\deg P\le d,\ P(\alpha_h)=1\}.
+\]
+For every such filter, the target term is present with value $(n/M^2)N(h)^2$, so
+\[
+ N(h)\le\frac M{\sqrt n}\sqrt{\lambda_d(h)}.
+\]
+If the right-hand side is rigorously less than one, the integer count is zero. An approximate decimal below one is not a certificate without a proved error enclosure.
+
+If $h$ is absent, a degree-$r$ polynomial vanishes at every occupied node and takes value one at $\alpha_h$, so $\lambda_r(h)=0$. If $h$ is occupied, its degree-$(r-1)$ Lagrange polynomial isolates exactly that node. Thus
+\[
+ \lambda_{r-1}(h)=\frac n{M^2}N(h)^2.
+\]
+At the innovation degree the count bound is exact. The remaining computational issue is finding the needed filter with controlled exact coefficients and reliable arithmetic, rather than hoping for an unexplained asymptotic gain.
+
+\subsection{A Galois coordinate with a controlled denominator}
+For an occupied target define
+\[
+ \Delta_h(E)=\prod_{x\in E\setminus\{h\}}(\alpha_h-\alpha_x).
+\]
+This is a nonzero algebraic integer in $\Q(\zeta_n)$. For every unit $u$ modulo $n$, its conjugate is $\Delta_{uh}(uE)$. The absolute norm is a nonzero integer. Hence
+\[
+ \prod_{u\in(\Z/n\Z)^\times}|\Delta_{uh}(uE)|\ge1.
+\]
+At least one factor is at least one. In that coordinate, the Lagrange numerator has coefficient $\ell^1$ norm at most $2^{r-1}$, and dividing by the target denominator preserves that upper bound.
+
+This removes a catastrophically small denominator in at least one complex coordinate. It does not supply a uniform radical-scale bound for every conjugate or for the arithmetic height. Even if $r=R^{o(1)}$, the quantity $2^r$ need not be $R^{o(1)}$.
+
+\subsection{What the spectral branch leaves open}
+The valid endpoint is exact compression and extraction of a sparse arithmetic leaf. A further height theorem must exploit the arithmetic of that leaf, such as its simultaneous logarithmic, norm-form or $S$-unit constraints. The bounded representation count, exact innovation rank and finite Fourier identities do not prove the required inequality on $c/R$.

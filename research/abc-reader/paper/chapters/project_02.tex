@@ -1,0 +1,289 @@
+\clearpage
+\section{Valuation Words, Polyphase Refinement, and Local Lift Trees}
+
+\subsection{Replacing one exponent by a valuation word}
+The coefficient $v_p(n)$ compresses a run of valuation shells into one scalar. For a prime power $p^e$, define the valuation word
+\[
+ \boxed{
+ V_e(T)=1+T+\cdots+T^{e-1}.
+ }
+\]
+Set $V_0(T)=0$ for an absent prime. It obeys the concatenation identity
+\[
+ V_{e+f}(T)=V_e(T)+T^eV_f(T).
+\]
+The refined partial derivative
+\[
+ \partial_{p,T}(n)
+ =
+ \frac npV_{v_p(n)}(T)
+\]
+therefore satisfies the twisted product rule
+\[
+ \boxed{
+ \partial_{p,T}(mn)
+ =
+ n\partial_{p,T}(m)
+ +
+ mT^{v_p(m)}\partial_{p,T}(n).
+ }
+\]
+At $T=1$, the ordinary arithmetic partial derivative is recovered.
+
+\subsection{Finite polyphase rings}
+Fix an integer $N\ge2$ and work in
+\[
+ A_N=\Z[T]/(T^N-1).
+\]
+The residue of $V_e(T)$ records the number of valuation shells in each congruence class modulo $N$. Multiplication by $V_e$ is represented by a circulant matrix $C_{e,N}$.
+
+\begin{theorem}[Polyphase Smith normal form]
+If $\gcd(e,N)=1$, then
+\[
+ \boxed{
+ \SNF(C_{e,N})
+ =
+ \operatorname{diag}(1,\ldots,1,e).
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+ I_N=\ker\bigl(A_N\xrightarrow{\,T\mapsto1\,}\Z\bigr)
+\]
+be the augmentation ideal. It is a free abelian group of rank $N-1$, and multiplication by $V_e$ preserves it. After extension to $\C$, the eigenvalues on $I_N\otimes\C$ are
+\[
+ V_e(\zeta)
+ =
+ \frac{1-\zeta^e}{1-\zeta},
+ \qquad
+ \zeta^N=1,
+ \quad
+ \zeta\neq1.
+\]
+Because $\gcd(e,N)=1$, the map $\zeta\mapsto\zeta^e$ permutes the nontrivial $N$th roots. Therefore
+\[
+ \det\bigl(V_e\mid I_N\bigr)
+ =
+ \prod_{\substack{\zeta^N=1\\\zeta\neq1}}
+ \frac{1-\zeta^e}{1-\zeta}
+ =1.
+\]
+Thus multiplication by $V_e$ is an automorphism of the integral lattice $I_N$. On the quotient
+\[
+ A_N/I_N\cong\Z,
+\]
+it acts as multiplication by $V_e(1)=e$. Applying the snake lemma to
+\[
+ 0\longrightarrow I_N\longrightarrow A_N\longrightarrow\Z\longrightarrow0
+\]
+shows that the full map is injective and has cokernel $\Z/e\Z$. Hence its Smith normal form is
+\[
+ \operatorname{diag}(1,\ldots,1,e).
+\]
+\end{proof}
+
+The refined block has $N-1$ integrally invertible phase channels and one aggregate multiplicity channel. Every local denominator lies in the aggregate channel.
+
+\subsection{Dyadic and odd-adic primary lifts}
+Factor
+\[
+ e=2^\alpha\prod_{\ell\text{ odd}}\ell^{\alpha_\ell}.
+\]
+The cokernel of the valuation block is
+\[
+ \Z/e\Z
+ \cong
+ \Z/2^\alpha\Z
+ \times
+ \prod_{\ell\text{ odd}}
+ \Z/\ell^{\alpha_\ell}\Z.
+\]
+The primary factors specify the local lifting problems for the aggregate multiplicity channel. Its $2$-primary component must be treated $2$-adically, while the odd components admit the corresponding odd-adic lifts. The phase channels require no local denominator correction.
+
+This Smith decomposition identifies where separate $2$-primary bookkeeping first enters. The additional one-level shift in multiplicative principal-unit coordinates at the prime $2$ comes from the local $2$-adic logarithm and is established later. It is not a consequence of the Smith theorem alone.
+
+\subsection{Coarse and phase derivatives}
+Choose a polyphase order $N$ coprime to every active valuation exponent. After the Smith decomposition, each refined prime packet has one coarse coordinate and integrally invertible phase coordinates in the common augmentation lattice. The additive equation separates accordingly.
+
+The coarse equation recovers the original exponent-weighted row
+\[
+ \sum_{p\mid a}\frac{av_p(a)}p t_p
+ +
+ \sum_{p\mid b}\frac{bv_p(b)}p t_p
+ -
+ \sum_{p\mid c}\frac{cv_p(c)}p t_p
+ =0.
+\]
+The phase equation is exponent free:
+\[
+ \boxed{
+ \sum_{p\mid a}\frac ap y_p
+ +
+ \sum_{p\mid b}\frac bp y_p
+ -
+ \sum_{p\mid c}\frac cp y_p
+ =0.
+ }
+\]
+Define the phase derivative
+\[
+ D_y(n)=n\sum_{p\mid n}\frac{y_p}{p}.
+\]
+The same radical divisibility argument gives
+\[
+ \frac{abc}{R}\mid aD_y(b)-bD_y(a).
+\]
+
+Let
+\[
+ \sigma(a,b)
+ =
+ \sum_{p\mid a}\frac1p
+ +
+ \sum_{p\mid b}\frac1p.
+\]
+For primitive triples other than $(1,1,2)$, let $\Phi(a,b,c)$ be the shortest transverse phase packet. Then
+\[
+ \boxed{
+ c
+ \le
+ R\,\sigma(a,b)\,\Phi(a,b,c).
+ }
+\]
+This can be sharper than the exponent-weighted inequality on individual triples, but finite evidence still shows positive power growth rather than a subpolynomial law.
+
+\subsection{First-order no-free-refinement principle}
+The shell-refined factor
+\[
+ \prod_{r=0}^{e-1}
+ \left(1+\frac{T_r}{p}\right)
+\]
+has first-order expansion
+\[
+ 1+\frac1p\sum_rT_r+O(T^2).
+\]
+Only the shell sum appears. Every internal phase in the kernel of shell synthesis is invisible to both first-order additivity and the first-order Wronskian.
+
+\begin{theorem}[First-order no-free-polyphase principle]
+Let
+\[
+ S:(T_{p,r})_{p,r}\longmapsto
+ \left(\sum_rT_{p,r}\right)_p
+\]
+be shell synthesis. The first-order additive map and first-order Wronskian factor through $S$. Hence
+\[
+ \Ker S
+\]
+is contained in the kernels of both first-order maps.
+\end{theorem}
+
+Polyphase splitting may lower displayed child coordinates. Exact synthesis multiplies by the corresponding reconstruction norm. At first order, refinement cannot create a new obstruction direction.
+
+\subsection{Second-order phase energy}
+At second order,
+\[
+ \prod_{r=0}^{e-1}
+ \left(1+\frac{T_r}{p}\right)
+ =
+ 1+
+ \frac1p\sum_rT_r+
+ \frac1{p^2}\sum_{r<s}T_rT_s+
+ O(T^3).
+\]
+Let $\widehat T_j$ be the discrete Fourier transform of the shell coordinates. Parseval gives
+\[
+ \sum_{r<s}T_rT_s
+ =
+ \frac12\left[
+ \widehat T_0^2
+ -
+ \frac1e\sum_j
+ \widehat T_j\widehat T_{-j}
+ \right].
+\]
+For real coordinates,
+\[
+ \sum_{r<s}T_rT_s
+ =
+ \frac12\left[
+ \left(1-\frac1e\right)|\widehat T_0|^2
+ -
+ \frac1e\sum_{j\neq0}|\widehat T_j|^2
+ \right].
+\]
+Thus nonzero polyphase energy first becomes visible at second order. Later formal-smoothness results show that this curvature is not itself a lifting obstruction.
+
+\subsection{Exact local lift gauges}
+Let
+\[
+ r_u=\rad(u),
+ \qquad
+ P_u=\frac{u}{r_u}.
+\]
+A shell packet $y=(y_{p,r})$ produces
+\[
+ D_y(u)
+ =
+ u\sum_{p\mid u}\frac1p
+ \sum_{r=0}^{v_p(u)-1}y_{p,r}
+ =P_ut_u,
+\]
+where
+\[
+ t_u=
+ \sum_{p\mid u}
+ \frac{r_u}{p}
+ \sum_r y_{p,r}.
+\]
+Because
+\[
+ \gcd_{p\mid u}\frac{r_u}{p}=1,
+\]
+every integer $t_u$ is attainable when $u>1$.
+
+The shell lift gauge is
+\[
+ \rho_u^{\mathrm{sh}}(t)
+ =
+ \min\left\{
+ \norm{y}_\infty:
+ \sum_{p\mid u}
+ \frac{r_u}{p}
+ \sum_r y_{p,r}=t
+ \right\}.
+\]
+At the aggregate level,
+\[
+ P_at_a+P_bt_b=P_ct_c,
+\]
+and
+\[
+ W_y(a,b)
+ =
+ P_aP_b(r_at_b-r_bt_a).
+\]
+The radical divisor is attained sharply when
+\[
+ r_at_b-r_bt_a=P_c.
+\]
+When $a,b>1$, all sharp aggregate solutions form a one-parameter family
+\[
+ \begin{aligned}
+ t_a(n)&=t_a^{(0)}+nr_a,\\
+ t_b(n)&=t_b^{(0)}+nr_b,\\
+ t_c(n)&=t_c^{(0)}+nr_c.
+ \end{aligned}
+\]
+The unit-sector cases have no moving parameter. If $a=1$, then
+\[
+ (t_a,t_b,t_c)=(0,P_c,P_b),
+\]
+and if $b=1$, then
+\[
+ (t_a,t_b,t_c)=(-P_c,0,-P_a).
+\]
+For obstruction multiple $k$, these fixed triples are multiplied by $k$. Thus the high-dimensional sharp search reduces either to one integer parameter plus three local lift gauges, or to one fixed aggregate triple in a unit-sector case.
+

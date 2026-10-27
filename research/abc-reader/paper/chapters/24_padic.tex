@@ -1,0 +1,114 @@
+\clearpage
+\section{Exact local determinant valuation and denominator budget}\label{sec:padic}
+\subsection{Depletion gives an integral local matrix}
+Fix a prime $p$ and an integer $r\ge1$. Define
+\[
+ F_{s,p}(t)=\sum_{p\nmid k}\frac{t^k}{k^s},\qquad
+ \mathcal H_{r,p}(t)=\det(F_{i+j+1,p}(t))_{0\le i,j<r}.
+\]
+These series converge at every $t\in\Q_p$ with $v_p(t)>0$. They are integral power series. The Cauchy--Binet expansion from Section~\ref{sec:hankel} now ranges only over increasing $p$-unit indices.
+
+Let $u_1<\cdots<u_r$ be the first $r$ positive integers not divisible by $p$. Then
+\[
+ u_j=j+\left\lfloor\frac{j-1}{p-1}\right\rfloor,
+ \qquad S_{p,r}=\sum_{j=1}^r u_j.
+\]
+For $h\ge1$, put $s_h=(p-1)p^{h-1}$ and write
+\[
+ r=q_hs_h+b_h,\qquad 0\le b_h<s_h.
+\]
+Define the finite sum
+\[
+ E_{p,r}=\sum_{h\ge1}\left(s_h\binom{q_h}{2}+b_hq_h\right).
+\]
+The terms are zero once $s_h\ge r$.
+
+\subsection{The residue-class energy minimum}
+For $r$ distinct $p$-unit integers $k_1,\ldots,k_r$, the valuation of their Vandermonde product is
+\[
+ \sum_{i<j}v_p(k_j-k_i)
+ =\sum_{h\ge1}\#\{i<j:k_i\equiv k_j\pmod{p^h}\}.
+\]
+There are $s_h$ unit residue classes modulo $p^h$. If their occupation counts are $n_1,\ldots,n_{s_h}$, the number of coincident pairs is $\sum_j\binom{n_j}{2}$.
+
+For a fixed sum $r$, this quantity is minimized when the counts differ by at most one. If $n_i\ge n_j+2$, moving one item from class $i$ to class $j$ lowers the pair count by $n_i-n_j-1>0$. At the balanced minimum, $b_h$ classes have count $q_h+1$ and the others count $q_h$. The minimum is therefore
+\[
+ (s_h-b_h)\binom{q_h}{2}+b_h\binom{q_h+1}{2}
+ =s_h\binom{q_h}{2}+b_hq_h.
+\]
+The first $r$ positive $p$-units realize this minimum for every $h$ simultaneously. Ordered unit residues repeat in blocks modulo $p^h$, and each full block contains each unit class exactly once. A prefix adds at most one occurrence to each class. Hence their Vandermonde valuation is exactly $E_{p,r}$.
+
+\begin{theorem}[Exact depleted valuation]\label{thm:depleted-valuation}
+If $v_p(t)=e\ge1$, then
+\[
+ \boxed{v_p(\mathcal H_{r,p}(t))=eS_{p,r}+2E_{p,r}.}
+\]
+In particular, the depleted determinant is nonzero at every such argument.
+\end{theorem}
+\begin{proof}
+The denominators in the depleted expansion are $p$-units. Every $r$-element index subset has Vandermonde valuation at least $E_{p,r}$. The subset $(u_1,\ldots,u_r)$ uniquely minimizes the sum of its indices. Its term has valuation $eS_{p,r}+2E_{p,r}$. Every other subset has a strictly larger index sum and no smaller Vandermonde valuation, so its term has strictly larger valuation.
+
+The expansion converges $p$-adically. A unique term of minimum valuation cannot be cancelled by the remaining terms. Its valuation is therefore the valuation of the whole determinant.
+\end{proof}
+For rank two,
+\[
+ v_p(\mathcal H_{2,p}(t))=
+ \begin{cases}3e,&p\ne2,\\4e+2,&p=2.\end{cases}
+\]
+At two the first unit indices are $1,3$, of sum four, and their difference contributes one valuation before squaring. For $p>r$ in arbitrary rank, the first $r$ indices are $1,\ldots,r$ and all their differences are units. Thus the general formula reduces to $es_r$.
+
+\subsection{The universal undepleted expression at good primes}
+The raw $\mathcal H_r$ is one universal expression in ordinary polylogarithms. Its local power-series interpretation converges when $v_p(t)>0$, but its coefficients can have $p$-denominators. For fixed rank, the possible denominator loss grows only logarithmically with each index, whereas its numerator power of $t$ gives linearly growing valuation. Thus the terms tend to zero and the finite Cauchy--Binet expansions pass to the convergent local limit.
+\begin{theorem}[Exact good-prime valuation]\label{thm:good-valuation}
+If $p>3r-1$ and $v_p(t)=e\ge1$, then
+\[
+ v_p(\mathcal H_r(t))=e\,r(r+1)/2.
+\]
+\end{theorem}
+\begin{proof}
+Write $a_r=2r-1$ and $s_r=r(r+1)/2$. A term indexed by $k_1<\cdots<k_r$ has valuation
+\[
+ e\sum_i k_i+2\sum_{i<j}v_p(k_j-k_i)-a_r\sum_i v_p(k_i).
+\]
+For every $h\ge1$, the hypothesis gives $p^h-r>a_rh$. At $h=1$ this is $p-r>a_r$. Successive increments of $p^h$ exceed $a_r$, proving the inequality for all $h$.
+
+If $h_i=v_p(k_i)>0$, then $k_i-i\ge p^{h_i}-r>a_rh_i$. If $h_i=0$, then $k_i-i\ge0$ and there is no denominator loss. Thus every subset other than $(1,\ldots,r)$ has valuation strictly above $es_r$. The first subset has a unit coefficient because its indices and differences are smaller than $p$. Its term has valuation $es_r$, and a unique minimum again proves equality.
+\end{proof}
+The strict prime threshold is retained. A good-prime equality is stronger than the all-prime lower bound below.
+
+\subsection{An explicit fixed correction at the remaining primes}
+Put $a_r=2r-1$. For each prime $p$ and $1\le i\le r$, define
+\[
+ C_{r,p,i}=\max\!\left(0,\sup_{h\ge1}\left\{
+ a_rh-\left(p^h\left\lceil\frac i{p^h}\right\rceil-i\right)\right\}\right).
+\]
+This is a finite integer maximum because $p^h$ eventually grows faster than $h$. Put $C_{r,p}=\sum_{i=1}^rC_{r,p,i}$. The good-prime inequality just proved implies $C_{r,p}=0$ for $p>3r-1$. Hence
+\[
+ B_r=\prod_{p\le3r-1}p^{C_{r,p}}
+\]
+is a fixed positive integer depending only on the rank.
+
+\begin{theorem}[All-prime contact lower bound]\label{thm:budget}
+For every prime $p$ and $v_p(t)=e\ge1$,
+\[
+ \boxed{v_p(B_r\mathcal H_r(t))\ge es_r.}
+\]
+Here $v_p(0)=+\infty$. This theorem alone does not establish nonvanishing at the small primes.
+\end{theorem}
+\begin{proof}
+For an ordered index $k_i\ge i$ with $h_i=v_p(k_i)>0$, the smallest multiple of $p^{h_i}$ at least $i$ is $p^{h_i}\lceil i/p^{h_i}\rceil$. Therefore
+\[
+ a_rh_i-(k_i-i)\le C_{r,p,i}.
+\]
+For $h_i=0$, the same bound holds because its left side is nonpositive. The numerator Vandermonde only improves valuation. Since $e\ge1$, every term in the convergent expansion has valuation at least
+\[
+ es_r+\sum_i[(k_i-i)-a_rh_i]\ge es_r-C_{r,p}.
+\]
+The ultrametric inequality gives the same bound for the sum. Multiplication by $B_r$ restores the missing $C_{r,p}$.
+\end{proof}
+For rank two, $B_2=2^7\cdot3^3=3456$ is a valid budget. For instance, at $p=2$ the two component maxima, in index order $i=1,2$, are three and four. At $p=3$ they are one and two. The other primes contribute zero. The formula need not be minimal.
+
+The budget is a theorem about the explicitly defined local analytic series. It is not a theorem about the denominator of a motivic class, which has not been constructed here. Even a vanishing correction budget need not imply exact equality at a prime outside the good-prime range. Additional cancellation may raise the valuation.
+
+\subsection{The all-place comparison is still absent}
+These results give exact depleted nonvanishing, universal good-prime equality and universal all-prime lower contact. They do not identify the real value, the various $p$-adic values, or different sector arguments as the places of one nonzero algebraic number. An arithmetic realization and its norm maps remain separate requirements.

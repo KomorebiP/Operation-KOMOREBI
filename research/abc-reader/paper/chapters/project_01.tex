@@ -1,0 +1,333 @@
+\clearpage
+\section{Prime-Packet Differentials and Radical Divisibility}
+
+\subsection{The prime-coordinate module}
+Let
+\[
+ a+b=c,
+ \qquad
+ \gcd(a,b)=1.
+\]
+The three integers are pairwise coprime. Write
+\[
+ S=S_a\sqcup S_b\sqcup S_c
+ =\{p:p\mid abc\}.
+\]
+The first object of the calculus is the free prime-packet module
+\[
+ \Omega_S=\bigoplus_{p\in S}\Z\xi_p.
+\]
+First define the global free module over all primes, and restrict it to $\Omega_S$ for $S$-supported integers. For such a positive integer $n$, define the universal multiplicative differential
+\[
+ \boxed{
+ \mathrm dn
+ =
+ n\sum_{p\mid n}\frac{v_p(n)}p\,\xi_p.
+ }
+\]
+Every coefficient is an integer because $p\mid n$. The map obeys the exact Leibniz law
+\[
+ \mathrm d(mn)=m\,\mathrm dn+n\,\mathrm dm.
+\]
+The verification is local. For each prime $p$,
+\[
+ v_p(mn)=v_p(m)+v_p(n),
+\]
+so the $p$-coordinate of the right side is
+\[
+ mn\frac{v_p(m)+v_p(n)}p.
+\]
+
+A scalar packet is an integer vector
+\[
+ x=(x_p)_{p\in S}\in\Z^S.
+\]
+Pairing with $x$ gives the arithmetic derivative
+\[
+ \boxed{
+ \mathrm d_x(n)
+ =
+ n\sum_{p\mid n}\frac{v_p(n)}p x_p.
+ }
+\]
+The Leibniz rule survives scalarization.
+
+Arithmetic derivatives and their connection with $abc$ have an established literature. The present construction is organized here in prime-packet coordinates and later refined into filtered shell objects~\cite{PastenDerivatives,VojtaABC}.
+
+\subsection{The additive row}
+The condition
+\[
+ \mathrm d_x(a)+\mathrm d_x(b)=\mathrm d_x(c)
+\]
+is one integer equation. Define
+\[
+ \lambda_p=
+ \begin{cases}
+ \dfrac{a v_p(a)}p,&p\mid a,\\[6pt]
+ \dfrac{b v_p(b)}p,&p\mid b,\\[6pt]
+ -\dfrac{c v_p(c)}p,&p\mid c.
+ \end{cases}
+\]
+Then
+\[
+ \boxed{\lambda\cdot x=0.}
+\]
+The additive derivative lattice is
+\[
+ \boxed{
+ \mathcal T_{a,b,c}
+ =
+ \ker(\lambda)\cap\Z^S.
+ }
+\]
+Since the row is nonzero, its rank is $|S|-1$. The problem is not existence of additive derivatives. The problem is finding an additive derivative that remains transverse to the dependence direction introduced by $a$ and $b$.
+
+\subsection{The arithmetic Wronskian}
+Define
+\[
+ \boxed{
+ W_x(a,b)
+ =a\,\mathrm d_x(b)-b\,\mathrm d_x(a).
+ }
+\]
+Writing
+\[
+ \mu_p=
+ \begin{cases}
+ -\dfrac{v_p(a)}p,&p\mid a,\\[6pt]
+ \dfrac{v_p(b)}p,&p\mid b,\\[6pt]
+ 0,&p\mid c,
+ \end{cases}
+\]
+we obtain
+\[
+ W_x(a,b)=ab\,\mu\cdot x.
+\]
+An additive packet is \emph{transverse} when $W_x(a,b)\neq0$. It is degenerate when the two input terms remain derivative-proportional.
+
+Over $\R$, the additive projection is
+\[
+ P_{\mathrm{add}}
+ =
+ I-
+ \frac{\lambda\lambda^{\mathsf T}}{\norm{\lambda}_2^2}.
+\]
+The obstruction direction inside the additive hyperplane is
+\[
+ \mu_\perp=P_{\mathrm{add}}\mu.
+\]
+When $\mu_\perp\neq0$, the rank-one obstruction projector is
+\[
+ P_{\mathrm{obs}}
+ =
+ \frac{\mu_\perp\mu_\perp^{\mathsf T}}
+ {\norm{\mu_\perp}_2^2}.
+\]
+This is the first appearance of the projector-resolved pattern. A large ambient prime space is decomposed into one equation direction, one obstruction direction, and the remaining null packets.
+
+\subsection{Radical divisibility}
+Set
+\[
+ R=\rad(abc).
+\]
+The central first-order theorem is an exact divisibility law.
+
+\begin{theorem}[Wronskian divisibility]
+For every additive packet $x\in\mathcal T_{a,b,c}$,
+\[
+ \boxed{
+ \frac{abc}{R}\mid W_x(a,b).
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Let $p^e\parallel a$. Every term of $\mathrm d_x(a)$ is divisible by $p^{e-1}$. Since $p\nmid b$, the term $b\,\mathrm d_x(a)$ is divisible by $p^{e-1}$. Also $p^e\mid a$, so $a\,\mathrm d_x(b)$ is divisible by $p^e$, hence by $p^{e-1}$. Therefore
+\[
+ p^{e-1}\mid W_x(a,b).
+\]
+The same argument applies to primes dividing $b$.
+
+Now let $p^e\parallel c$. Additivity gives
+\[
+ \mathrm d_x(c)=\mathrm d_x(a)+\mathrm d_x(b).
+\]
+Using $c=a+b$,
+\[
+ \begin{aligned}
+ W_x(a,b)
+ &=a\,\mathrm d_x(b)-b\,\mathrm d_x(a)\\
+ &=a\bigl(\mathrm d_x(c)-\mathrm d_x(a)\bigr)-b\,\mathrm d_x(a)\\
+ &=a\,\mathrm d_x(c)-c\,\mathrm d_x(a).
+ \end{aligned}
+\]
+The first term is divisible by $p^{e-1}$ because $\mathrm d_x(c)$ is. The second is divisible by $p^e$. Hence $p^{e-1}\mid W_x(a,b)$.
+
+The prime supports of $a$, $b$, and $c$ are disjoint. Multiplying all local divisibilities gives
+\[
+ \prod_{p^e\parallel abc}p^{e-1}
+ =
+ \frac{abc}{R}
+ \mid W_x(a,b).
+\]
+\end{proof}
+
+For a transverse packet,
+\[
+ \boxed{
+ |W_x(a,b)|\ge\frac{abc}{R}.
+ }
+\]
+This is the integer analogue of the repeated-root divisor appearing in the polynomial Mason--Stothers theorem.
+
+\subsection{The master height inequality}
+For every positive $n$,
+\[
+ \begin{aligned}
+ |\mathrm d_x(n)|
+ &\le
+ n\norm{x}_\infty
+ \sum_{p\mid n}\frac{v_p(n)}p.
+ \end{aligned}
+\]
+Since $p\ge2$,
+\[
+ \frac1p\le\frac1{2\log2}\log p.
+\]
+Therefore
+\[
+ \sum_{p\mid n}\frac{v_p(n)}p
+ \le
+ \frac{\log n}{2\log2},
+\]
+and
+\[
+ |\mathrm d_x(n)|
+ \le
+ \frac{n\log n}{2\log2}\norm{x}_\infty.
+\]
+Consequently,
+\[
+ \begin{aligned}
+ |W_x(a,b)|
+ &\le
+ a|\mathrm d_x(b)|+b|\mathrm d_x(a)|\\
+ &\le
+ \frac{ab}{\log2}\norm{x}_\infty\log c.
+ \end{aligned}
+\]
+Combining this with radical divisibility gives
+\[
+ \boxed{
+ c
+ \le
+ \frac{R}{\log2}\norm{x}_\infty\log c.
+ }
+\]
+
+Except for $(1,1,2)$, define the shortest transverse packet
+\[
+ \boxed{
+ \Theta(a,b,c)
+ =
+ \min\left\{
+ \norm{x}_\infty:
+ x\in\mathcal T_{a,b,c},
+ W_x(a,b)\neq0
+ \right\}.
+ }
+\]
+Then
+\[
+ c
+ \le
+ \frac{R}{\log2}\Theta(a,b,c)\log c.
+\]
+The exceptional triple $(1,1,2)$ has zero input derivatives and is omitted from $\Theta$. It is absorbed into the constant in the conjecture. A subpolynomial estimate
+\[
+ \Theta(a,b,c)=c^{o(1)}
+\]
+would imply the strong $abc$ inequality. Later sections explain why this target is too close to the conjecture to be reached by generic lattice geometry alone.
+
+\subsection{Three-sector compression}
+For the empty unit sector, set $g_1=0$, $t_1=0$, and $\rho_1(0)=0$. Any nonzero target in that sector is infeasible. Within a nonempty $a$-sector, define the integer row
+\[
+ \lambda^{(a)}
+ =
+ \left(\frac{a v_p(a)}p\right)_{p\mid a}
+\]
+and let
+\[
+ g_a=\gcd\left\{\frac{a v_p(a)}p:p\mid a\right\}.
+\]
+Define $g_b$ and $g_c$ similarly. A one-row Smith normal form in each sector produces a unimodular coordinate system in which only one aggregate channel survives. The additive equation becomes
+\[
+ \boxed{
+ g_at_a+g_bt_b-g_ct_c=0.
+ }
+\]
+The Wronskian becomes
+\[
+ \boxed{
+ a g_bt_b-b g_at_a\neq0.
+ }
+\]
+All remaining sector coordinates are lift gauges. They matter only because they determine the cost of realizing an aggregate channel by an integral prime packet.
+
+For each term define
+\[
+ \rho_a(t)
+ =
+ \min\left\{
+ \norm{x^{(a)}}_\infty:
+ \lambda^{(a)}\cdot x^{(a)}=g_at
+ \right\},
+\]
+with analogous functions for $b$ and $c$. Then
+\[
+ \Theta(a,b,c)
+ =
+ \min
+ \max\{\rho_a(t_a),\rho_b(t_b),\rho_c(t_c)\}
+\]
+over aggregate solutions satisfying additivity and transversality.
+
+This reduction separates the global two-dimensional arithmetic geometry from the local lifting cost. It is the template used repeatedly later: compress first, then retain the exact synthesis norm of the discarded coordinates.
+
+\subsection{Worked example: \texorpdfstring{$3+125=128$}{3+125=128}}
+The prime packets are $3$, $5$, and $2$. The additive row is
+\[
+ \lambda=(1,75,-448).
+\]
+A shortest transverse packet is
+\[
+ x=(-2,6,1).
+\]
+It gives
+\[
+ \mathrm d_x(3)=-2,
+ \qquad
+ \mathrm d_x(125)=450,
+ \qquad
+ \mathrm d_x(128)=448.
+\]
+Thus additivity holds. The Wronskian is
+\[
+ W_x(3,125)
+ =3(450)-125(-2)
+ =1600.
+\]
+The radical is
+\[
+ R=2\cdot3\cdot5=30,
+\]
+and
+\[
+ \frac{3\cdot125\cdot128}{30}=1600.
+\]
+Hence the radical lower bound is attained exactly.
+
+The minimality is elementary. At height at most five, $|x_3+75x_5|\le380<448$, so additivity forces $x_2=0$. Then $x_3=-75x_5$ and the same height restriction force both coordinates to vanish. Thus no transverse packet has height below six, and the displayed packet proves $\Theta=6$.
+
+This example becomes a recurring calibration point. Every later refinement must explain why the sharp integer divisor is visible while the corresponding height bound remains nontrivial.
+
