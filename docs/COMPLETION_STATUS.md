@@ -4,7 +4,7 @@ Recorded 2026-10-27 · **Komorebi P.**
 
 Choose work by its completion stage below, then read its exact scope and evidence in the linked entry. **Publication completion, Lean coverage and confidence are separate fields.** A finished book may contain open research; a checked formal block may belong to an unfinished program.
 
-This is an editorial assessment of existing release/status records at [source revision `78f283e6277e`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/78f283e6277e92376f7c287b19ff6d3475e22a6f). It covers **84 primary components** and separately accounts for **69 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
+This is an editorial assessment of existing release/status records at [source revision `bb652081bcce`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/bb652081bcce3398a437dd02e43ed590395f0bce). It covers **84 primary components** and separately accounts for **69 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
@@ -16,10 +16,13 @@ This is an editorial assessment of existing release/status records at [source re
 | Reading edition complete | 40 | The stated manuscript or reader set is released; formal coverage, review depth and wider research can remain incomplete. |
 | Active development | 20 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
 | Experiment / prototype | 12 | A research instrument, implementation or experiment whose tested scope does not establish a general scientific endpoint. |
-| Needs assessment | 2 | Available material lacks a sufficient assessed source/status record for a stronger label. |
+| Reader available; source qualification pending | 2 | The PDF edition and reading scope have been identified; matching editable sources, full page review, and reproducible build qualification remain pending. |
+| Needs assessment | 0 | Available material lacks a sufficient assessed source/status record for a stronger label. |
 | Earlier checkpoint | 1 | A retained earlier edition; later admission records do not retroactively change its evidence. |
 
 These are work categories, not percentages or a ranking of mathematical importance. “Scoped release” means its declared finish line is recorded as complete. It does not mean every surrounding sentence, implementation, or broader conjecture is proved. “Reading edition complete” describes the editorial deliverable, not journal acceptance or a closed research program.
+
+“Reader available” identifies an inspected reading artifact whose editable source, complete page review, or reproducible build remains unqualified. It does not promote the artifact's mathematical confidence or imply a completed reading edition.
 
 ## Lean coverage
 
@@ -150,12 +153,17 @@ All executable software remains **beta / work in progress**, including implement
 | [PRISM-1](STATUS_CATALOG.md#research-prism-1) | No Lean claim | Experimental evidence |
 | [Universal Generative Deformation Calculus](STATUS_CATALOG.md#universal-generative-deformation) | No Lean claim | Experimental evidence |
 
-## Needs assessment (2)
+## Reader available; source qualification pending (2)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
 | [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) | Not assessed | Unassessed |
-| [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay) | Not assessed | Unassessed |
+| [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay) | No Lean claim | Unassessed |
+
+## Needs assessment (0)
+
+| Project and exact scope | Lean | Confidence basis |
+|---|---|---|
 
 ## Earlier checkpoint (1)
 

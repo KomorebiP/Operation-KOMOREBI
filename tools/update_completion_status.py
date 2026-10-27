@@ -18,7 +18,7 @@ from pathlib import Path
 
 REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
 STAGES = ('scoped_release', 'reading_release', 'development', 'prototype',
-          'unassessed', 'earlier_checkpoint')
+          'reader_available', 'unassessed', 'earlier_checkpoint')
 
 
 def table(headers, rows):
@@ -64,6 +64,8 @@ This is an editorial assessment of existing release/status records at [source re
                   [(labels['stage'][s][0], counts[s], labels['stage'][s][1]) for s in STAGES])
     text += '''
 These are work categories, not percentages or a ranking of mathematical importance. “Scoped release” means its declared finish line is recorded as complete. It does not mean every surrounding sentence, implementation, or broader conjecture is proved. “Reading edition complete” describes the editorial deliverable, not journal acceptance or a closed research program.
+
+“Reader available” identifies an inspected reading artifact whose editable source, complete page review, or reproducible build remains unqualified. It does not promote the artifact's mathematical confidence or imply a completed reading edition.
 
 ## Lean coverage
 
@@ -125,6 +127,8 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
         if 'current_counterpart' in row:
             c = by_id[row['current_counterpart']]
             catalogue += f"Current counterpart: [{c['title']}](#{c['id']}).\n\n"
+        if 'reader_guide' in row:
+            catalogue += link('Edition and reader guide', row['reader_guide'], page) + '\n\n'
         evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
         catalogue += link('Source directory', row['destination']+'/', page) + ' · ' + evidence + '\n\n'
     catalogue += '''## Supporting and historical collections
@@ -137,11 +141,11 @@ Every entry below is **Supporting / historical**, with **Lean: Not assessed** an
 
     queue = f'''# Cleanup and finalization queue
 
-Recorded {data['as_of']}. Status cleanup is separate from mathematical research, formalization and empirical qualification. The first two items are implemented by this status organization; the remaining gates are work to do. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
+Recorded {data['as_of']}. Status cleanup is separate from mathematical research, formalization and empirical qualification. Items marked done have completed their stated gate; progress on an open item does not close its remaining requirements. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
 
 Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
 '''
-    lanes = [('now', 'Completed status cleanup'), ('next', 'Next finishing work'),
+    lanes = [('now', 'Completed editorial cleanup'), ('next', 'Next finishing work'),
              ('review', 'Proof and submission review'), ('research', 'Formal, mathematical and empirical development')]
     for lane, title in lanes:
         queue += '\n## ' + title + '\n'
@@ -149,6 +153,8 @@ Recommended order: resolve edition/source correspondence and missing verificatio
             if task['lane'] != lane:
                 continue
             queue += f"\n### {task['id']} — {task['title']}\n\n**Status: {task['status']}**\n\n{task['reason']}\n\n**Done when:** {task['done_when']}\n\n"
+            if task.get('progress'):
+                queue += '**Progress:** ' + task['progress'] + '\n\n'
             ids = task['components']
             if len(ids) > 20:
                 queue += 'Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).\n'
@@ -184,12 +190,22 @@ def validate(root, data, git):
     assert len(records) == len({r['id'] for r in records}), 'Duplicate project status ID'
     assert set(available) == {r['id'] for r in records}, 'Source/status component mismatch'
     evidence = {}
+    maintained = set(data.get('maintained_documents', []))
+    for path in maintained:
+        assert path.startswith('docs/') and path.endswith('.md') and '..' not in path.split('/'), path
+        assert (root/path).is_file(), 'Missing maintained document: '+path
+    for path in data.get('assessment_records', []):
+        assert path.startswith('manifests/') and path.endswith('.json') and '..' not in path.split('/'), path
+        assert (root/path).is_file(), 'Missing assessment record: '+path
+        json.loads((root/path).read_text(encoding='utf-8'))
     for row in records:
         c = available[row['id']]
         assert row['destination'] == c['destination'] and row['import_role'] == c['role'], row['id']
         for key in ('stage', 'lean', 'confidence'):
             assert row[key] in data['labels'][key], (row['id'], key)
         assert row['scope'] and row['next_step'] and row['evidence'], row['id']
+        if 'reader_guide' in row:
+            assert row['reader_guide'] in maintained, 'Unregistered reader guide: '+row['id']
         if row['import_role'] == 'supporting':
             assert (row['stage'], row['lean'], row['confidence']) == ('supporting', 'unassessed', 'unassessed')
         if row['lean'] in ('source', 'none', 'unassessed'):
@@ -238,10 +254,12 @@ def main():
     source_state = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
     navigation = Renderer(root, source_state)
     navigation.reader_pages(); navigation.status_pages()
-    for path in ('README.md', 'docs/START_HERE.md', 'docs/COMPONENT_INDEX.md', 'docs/PUBLICATION_STATUS.md'):
+    for path in ('README.md', 'docs/START_HERE.md', 'research/README.md', 'docs/COMPONENT_INDEX.md', 'docs/PUBLICATION_STATUS.md'):
         outputs[path] = navigation.outputs[path]
-    known = set(tree) | set(outputs) | {'manifests/project-status.json'}
-    for path, content in outputs.items():
+    maintained = {p: (root/p).read_text(encoding='utf-8') for p in data.get('maintained_documents', [])}
+    documents = {**maintained, **outputs}
+    known = set(tree) | set(documents) | set(data.get('assessment_records', [])) | {'manifests/project-status.json'}
+    for path, content in documents.items():
         for target in re.findall(r'\]\(([^)]+)\)', content):
             if '://' in target:
                 continue
@@ -249,10 +267,11 @@ def main():
             resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), relative)) if relative else path
             resolved = resolved.rstrip('/')
             assert resolved in known or any(p.startswith(resolved+'/') for p in known), (path, target)
-            if anchor and resolved in outputs:
-                target_text = outputs[resolved]
+            if anchor and resolved in documents:
+                target_text = documents[resolved]
                 headings = [re.sub(r'[^\w\- ]', '', s.lower()).replace(' ', '-') for s in re.findall(r'^#+ (.+)$', target_text, re.M)]
                 assert f'id="{anchor}"' in target_text or anchor in headings, (path, target)
+    for path, content in outputs.items():
         if args.check:
             assert (root/path).read_text(encoding='utf-8') == content, 'Generated page is stale: '+path
         else:

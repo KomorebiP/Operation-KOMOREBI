@@ -10,6 +10,8 @@ Start with the [reading guide](docs/START_HERE.md), the [twelve core papers](pap
 
 Browse by [completion stage, Lean coverage and confidence](docs/COMPLETION_STATUS.md), or follow the [cleanup and finalization queue](docs/FINALIZATION_QUEUE.md). Each label links to its exact scope and recorded evidence.
 
+Read the [public project and authorship statement](docs/PROJECT_STATEMENT.md) for the project's purpose, pseudonym, human–AI collaboration, and standards of evidence.
+
 ## Foundations
 
 | Work | Subject |

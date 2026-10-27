@@ -776,13 +776,15 @@ Written FIR/operator identities and 395 finite exact assertions; no universal co
 
 ## Gaussian Elimination: collected guide
 
-**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+**Reader available; source qualification pending** · Lean: **Not assessed** · Confidence basis: **Unassessed**
 
-Reader asset is present; no sufficient accompanying completion or proof-evidence record was assessed for this classification.
+45-page collection compiled 7 October 2026 from four source PDFs and two reflowed arithmetic notes. Edition, source map, and rendered front matter inspected; the compilation explicitly reports no new source-experiment or Lean replay. Mathematical confidence remains unassessed.
 
-**Next gate:** Inventory the editable source and check/review records, then assign publication and evidence statuses.
+**Next gate:** Recover the exact editable assembly and matching source editions, reproduce the PDF, inspect every page, and reconcile source-specific proof and formal records (F07).
 
-[Source directory](../research/gaussian-elimination-guide) · [import receipt (availability only)](../manifests/source-imports/gaussian-elimination-guide.json)
+[Edition and reader guide](components/GAUSSIAN_ELIMINATION.md)
+
+[Source directory](../research/gaussian-elimination-guide) · [import receipt (availability only)](../manifests/source-imports/gaussian-elimination-guide.json) · [Komorebi_Gaussian_Elimination_Collected_Pages.pdf](../research/gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf)
 
 <a id="hilbert12-ambient-dual-slice"></a>
 
@@ -896,13 +898,15 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence; 
 
 ## The Possibility for a Machine Native Mathematics
 
-**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+**Reader available; source qualification pending** · Lean: **No Lean claim** · Confidence basis: **Unassessed**
 
-Reader asset is present; a sufficient source/review record was not assessed for this classification.
+29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected; no Lean verification claim for the essay or new mathematical review.
 
-**Next gate:** Locate the exact editable edition and its claim/review map before assigning a completion or confidence label.
+**Next gate:** Recover the exact editable v10 source, rebuild and inspect the full PDF, and map technical assertions to their source-specific evidence before final reader qualification (F07).
 
-[Source directory](../research/machine-native-mathematics-essay) · [import receipt (availability only)](../manifests/source-imports/machine-native-mathematics-essay.json)
+[Edition and reader guide](components/MACHINE_NATIVE_MATHEMATICS.md)
+
+[Source directory](../research/machine-native-mathematics-essay) · [import receipt (availability only)](../manifests/source-imports/machine-native-mathematics-essay.json) · [The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf](../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
 
 <a id="model-theory-normalization"></a>
 
@@ -982,11 +986,13 @@ Complete amended reading/source package; 75 components have mixed proved/importe
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Written analytic guarantees and bounded simulations across several versions; numerical validation is not a general proof or a completed clinical/statistical validation.
+Illustrated manuscript v0.8 and package marker 0.8.0, with a later v0.9 synthetic simulation continuation. Written analytic guarantees and bounded simulations; the recorded 31-test pass is historical and was not rerun during navigation cleanup.
 
-**Next gate:** Consolidate the current v0.9 scope versus older README headings and independently review the spectral-tail and simulation contracts.
+**Next gate:** Perform a pinned test/simulation replay, independently review the spectral-tail and simulation contracts, and harden the documented intermediate overflow calculation. External-cohort, logistic-calibration, and GPU qualification remain separate.
 
-[Source directory](../research/streaming-skat) · [README.md](../research/streaming-skat/README.md) · [README_V06.md](../research/streaming-skat/README_V06.md)
+[Edition and reader guide](components/STREAMING_SKAT.md)
+
+[Source directory](../research/streaming-skat) · [README.md](../research/streaming-skat/README.md) · [README_V06.md](../research/streaming-skat/README_V06.md) · [VERSION](../research/streaming-skat/VERSION) · [FINAL_MANUSCRIPT.tex](../research/streaming-skat/FINAL_MANUSCRIPT.tex) · [FINAL_MANUSCRIPT.pdf](../research/streaming-skat/FINAL_MANUSCRIPT.pdf) · [VERIFICATION_V09.md](../research/streaming-skat/VERIFICATION_V09.md) · [PROOF_AND_SIMULATION_AUDIT_V09.md](../research/streaming-skat/PROOF_AND_SIMULATION_AUDIT_V09.md)
 
 <a id="strong-artin-reader"></a>
 

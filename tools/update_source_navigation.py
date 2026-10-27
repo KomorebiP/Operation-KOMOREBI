@@ -156,13 +156,17 @@ class Renderer:
     def work(self, identifier, page, title=None):
         row = self.by_id.get(identifier)
         display = title or (row['title'] if row else humanize(identifier))
-        return link(display, row['destination']+'/', page) if row and row['available'] else display
+        return link(display, self.reader_path(row), page) if row and row['available'] else display
+
+    def reader_path(self, row):
+        """Prefer a maintained edition guide while retaining original source paths."""
+        return self.status_by_id.get(row['id'], {}).get('reader_guide', row['destination']+'/')
 
     def existing(self, path):
         return (self.root/path).exists()
 
     def rows(self, values, page, boundary=False):
-        return [(link(r['title'],r['destination']+'/',page), r['boundary'] if boundary else r['summary']) for r in values]
+        return [(link(r['title'],self.reader_path(r),page), r['boundary'] if boundary else r['summary']) for r in values]
 
     def group_page(self, page, heading, intro, values, *, boundary=False, extra=''):
         text = '# '+heading+'\n\n**Komorebi P.**\n\n'+intro+'\n'
@@ -187,6 +191,8 @@ Komorebi Space provides the ambient setting for those constructions. It brings r
 Start with the [reading guide](docs/START_HERE.md), the [twelve core papers](papers/README.md), or the [monographs](monographs/README.md).
 
 Browse by [completion stage, Lean coverage and confidence](docs/COMPLETION_STATUS.md), or follow the [cleanup and finalization queue](docs/FINALIZATION_QUEUE.md). Each label links to its exact scope and recorded evidence.
+
+Read the [public project and authorship statement](docs/PROJECT_STATEMENT.md) for the project's purpose, pseudonym, human–AI collaboration, and standards of evidence.
 
 ## Foundations
 
@@ -351,6 +357,8 @@ A successful file-integrity check identifies exact source bytes. Fresh Lean comp
 
 This collection studies how a construction can be represented, transformed, and checked while keeping track of the structure that makes it work. Realization Calculus develops operations on packets, coordinates, transfer blocks, and refinements. Komorebi Space supplies the ambient framework for comparing realizations, projections, compatibility, residuals, and obstructions.
 
+The [public project and authorship statement](PROJECT_STATEMENT.md) explains the project's purpose, authorship, and use of AI assistance.
+
 ## Choose a reading route
 
 For project readiness and remaining work, use the [completion and confidence guide](COMPLETION_STATUS.md) and [finalization queue](FINALIZATION_QUEUE.md).
@@ -423,7 +431,7 @@ All software is **beta and work in progress**. Cite **Komorebi P.**, the specifi
                         status=self.status_by_id.get(r['id'])
                         cells=status_cells(status,self.project_status['labels']) if status else ('Needs assessment','Not assessed','Unassessed')
                         completion=f"[{cells[0]}](STATUS_CATALOG.md#{r['id']})" if status else cells[0]
-                        rendered.append((link(r['title'],r['destination']+'/',page),completion,cells[1],cells[2],f"{r['file_count']:,}",link('file record',r['receipt'],page)))
+                        rendered.append((link(r['title'],self.reader_path(r),page),completion,cells[1],cells[2],f"{r['file_count']:,}",link('file record',r['receipt'],page)))
                     text+='\n## '+label+'\n\n'+table(['Component','Completion','Lean','Confidence basis','Source files','Receipt'],rendered)
                 else:
                     text+='\n## '+label+'\n\n'+table(['Component','Source files','Receipt'],[(link(r['title'],r['destination']+'/',page),f"{r['file_count']:,}",link('file record',r['receipt'],page)) for r in rows])

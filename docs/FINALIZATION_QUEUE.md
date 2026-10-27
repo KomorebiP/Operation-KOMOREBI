@@ -1,10 +1,10 @@
 # Cleanup and finalization queue
 
-Recorded 2026-10-27. Status cleanup is separate from mathematical research, formalization and empirical qualification. The first two items are implemented by this status organization; the remaining gates are work to do. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
+Recorded 2026-10-27. Status cleanup is separate from mathematical research, formalization and empirical qualification. Items marked done have completed their stated gate; progress on an open item does not close its remaining requirements. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
 
 Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
 
-## Completed status cleanup
+## Completed editorial cleanup
 
 ### F01 — Separate current and historical status
 
@@ -25,6 +25,18 @@ All primary components receive distinct stage, Lean, confidence, scope, evidence
 **Done when:** Every selected component is represented once; supporting sources remain separately classified.
 
 Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).
+
+### F09 — Consolidate Streaming SKAT version navigation
+
+**Status: done**
+
+A maintained edition guide now separates the v0.8 manuscript and 0.8.0 marker from the v0.9 simulation continuation and historical v0.5/v0.6 entry points.
+
+**Done when:** Create a current edition map and entry point, reconcile the current manuscript/tests, and preserve earlier records with their original dates.
+
+**Progress:** Linked the manuscript/source pair, theorem index, seven-suite historical 31-test census, copy-LD correction, and open numerical/empirical boundaries. The original source package is unchanged; no fresh test, simulation, or Lean replay is claimed.
+
+Applies to: [Streaming Polyphase Factor Decomposition / SKAT](STATUS_CATALOG.md#streaming-skat).
 
 ## Next finishing work
 
@@ -76,6 +88,8 @@ Availability alone does not establish an editorial or mathematical completion le
 
 **Done when:** Identify the edition, editable sources, claim scope and actual review/build records, then replace the unassessed labels.
 
+**Progress:** PDF identities, page counts, scope, and selected rendered front matter inspected; two reader guides and a hash-bound assessment record added. Both entries now distinguish reader availability from completed source/build qualification. Exact editable source recovery, complete page checks, and proof/review reconciliation remain open.
+
 Applies to: [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) · [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay).
 
 ### F08 — Close the Constructive Repair release-candidate checklist
@@ -87,16 +101,6 @@ The mathematical contract and kernel/Python distinction must survive package fin
 **Done when:** Repeat the documented package checks on supported platforms, publish an exact source-to-wheel mapping, and reference the current collection license.
 
 Applies to: [Constructive Repair](STATUS_CATALOG.md#constructive-repair).
-
-### F09 — Consolidate Streaming SKAT version navigation
-
-**Status: open**
-
-The root heading describes v0.5 while later sections document v0.7 and v0.9.
-
-**Done when:** Create a current edition map and entry point, reconcile the current manuscript/tests, and preserve earlier records with their original dates.
-
-Applies to: [Streaming Polyphase Factor Decomposition / SKAT](STATUS_CATALOG.md#streaming-skat).
 
 ## Proof and submission review
 
