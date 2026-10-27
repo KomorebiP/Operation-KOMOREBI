@@ -1,0 +1,32 @@
+\clearpage\section{Green reconstruction and finite paths}
+\label{sec:green}
+\subsection{The inverse is the literal inverse}
+\code{DiscreteGreen} builds the Dirichlet tridiagonal matrix on \code{Fin n}. It proves a second-difference identity for the kernel, treats both boundary terms, multiplies the matrix by that kernel, and then identifies the actual nonsingular inverse. The endpoint is short because the preceding multiplication identity carries the main work:
+\excerpt{DiscreteGreen}{green}
+For $h=1/(n+1)$ and $L_h=h^{-2}\operatorname{tridiag}(-1,2,-1)$, the precise scaling is
+\[
+h^{-1}(L_h^{-1})_{ij}=G(x_i,x_j),\qquad G(x,y)=\min(x,y)-xy.
+\]
+The formal statement uses zero-based \code{Fin n} indices and adds one to obtain the interior nodes:
+\excerpt{DiscreteGreen}{grid}
+This is an exact node identity. It is not by itself a uniform convergence theorem for an arbitrary continuous forcing function or a higher-dimensional mesh. Those quadrature and PDE estimates need the separate regularity assumptions stated in the traditional paper.
+
+\subsection{Low modes have an explicit error bound}
+\code{LowModeConvergence} proves a scalar sine-square estimate and substitutes it into the discrete eigenvalue formula. It gives
+\[
+0\le \omega^2-\frac{4}{h^2}\sin^2\!\left(\frac{\omega h}{2}\right)
+\le\frac{\omega^4h^2}{12},\qquad h\ne0.
+\]
+The Lean endpoint retains the nonzero-spacing hypothesis:
+\excerpt{LowModeConvergence}{low_mode}
+For a fixed low mode, set $\omega=k\pi$ and let positive $h$ tend to zero. The constant depends on that fixed $\omega$; this statement does not make high-frequency error uniform when $k$ grows with mesh resolution.
+
+\subsection{Probability columns and observable rows}
+For the finite path formula, $K_{ji}$ is the transition probability from $i$ to $j$. An observable $f$ propagates by $K^\top$, and the potential is evaluated at the departure state. Therefore the source transfer is
+\[
+F=\operatorname{diag}(e^{-V})K^\top.
+\]
+\excerpt{FeynmanKac}{fk_transfer}
+The path law is defined recursively for exactly $n$ steps. At $n=0$ there is an empty path, path probability one, zero accumulated potential, and the starting state as terminal state. Induction on the path length gives the matrix-power formula:
+\excerpt{FeynmanKac}{fk_path}
+The algebraic equality itself does not require stochastic hypotheses. To call the path weights a probability law, use the separate declarations proving nonnegativity and total mass one from entrywise nonnegative $K$ and unit column sums. Separate product, potential-sum, and terminal-index theorems ensure that the recursive law is the intended finite path expression. The continuous-time Feynman--Kac and product-slicing extensions retained in Parts II and III remain outside this discrete endpoint.

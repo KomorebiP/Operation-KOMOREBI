@@ -1,0 +1,14 @@
+theorem low_mode_error (w h : ℝ) (hh : h≠0) :
+    0 ≤ w^2-eigenvalue w h ∧ w^2-eigenvalue w h ≤ w^4/12*h^2 := by
+  have hs := sine_square_error (w*h/2)
+  have hpos : 0 ≤ 4/h^2 := by positivity
+  have he : w^2-eigenvalue w h=4/h^2*((w*h/2)^2-Real.sin (w*h/2)^2) := by
+    unfold eigenvalue
+    field_simp
+    ring
+  rw [he]
+  constructor
+  · exact mul_nonneg hpos hs.1
+  · calc
+      _ ≤ 4/h^2*((w*h/2)^4/3) := mul_le_mul_of_nonneg_left hs.2 hpos
+      _ = w^4/12*h^2 := by field_simp; ring

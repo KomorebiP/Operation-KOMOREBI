@@ -1,0 +1,22 @@
+Equiv.sum_comp.{u_1, u_2, u_3} {ι : Type u_1} {κ : Type u_2} {M : Type u_3} [Fintype ι] [Fintype κ] [AddCommMonoid M]
+  (e : ι ≃ κ) (g : κ → M) : ∑ i, g (e i) = ∑ i, g i
+Fin.consEquiv.{u_1} {n : ℕ} (α : Fin (n + 1) → Type u_1) : α 0 × ((i : Fin n) → α i.succ) ≃ ((i : Fin (n + 1)) → α i)
+Fintype.sum_prod_type.{u_3, u_4, u_5} {γ : Type u_3} {α₁ : Type u_4} {α₂ : Type u_5} [Fintype α₁] [Fintype α₂]
+  [AddCommMonoid γ] (f : α₁ × α₂ → γ) : ∑ x, f x = ∑ x, ∑ y, f (x, y)
+Fin.consEquiv_apply.{u_1} {n : ℕ} (α : Fin (n + 1) → Type u_1) (f : α 0 × ((i : Fin n) → α i.succ)) (i : Fin (n + 1)) :
+  (Fin.consEquiv α) f i = Fin.cons f.1 f.2 i
+NormedSpace.exp_eq_tsum.{u_1, u_2} (𝕂 : Type u_1) {𝔸 : Type u_2} [Field 𝕂] [Ring 𝔸] [Algebra 𝕂 𝔸] [TopologicalSpace 𝔸]
+  [IsTopologicalRing 𝔸] [CharZero 𝕂] : NormedSpace.exp = fun x => ∑' (n : ℕ), (↑n.factorial)⁻¹ • x ^ n
+/tmp/paper_vi_probe.lean:7:7: error(lean.unknownIdentifier): Unknown constant `Matrix.mulVec_tsum`
+/tmp/paper_vi_probe.lean:8:7: error(lean.unknownIdentifier): Unknown constant `Matrix.tsum_apply`
+/tmp/paper_vi_probe.lean:9:7: error(lean.unknownIdentifier): Unknown constant `Finset.sum_tsum`
+NormedSpace.expSeries_summable'.{u_1, u_2} {𝕂 : Type u_1} {𝔸 : Type u_2} [NontriviallyNormedField 𝕂] [CharZero 𝕂]
+  [ContinuousSMul ℚ 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸] (x : 𝔸) :
+  Summable fun n => (↑n.factorial)⁻¹ • x ^ n
+Matrix.exp_diagonal.{u_1, u_5} {m : Type u_1} {𝔸 : Type u_5} [Fintype m] [DecidableEq m] [Ring 𝔸] [TopologicalSpace 𝔸]
+  [IsTopologicalRing 𝔸] [T2Space 𝔸] [Algebra ℚ 𝔸] (v : m → 𝔸) :
+  NormedSpace.exp (Matrix.diagonal v) = Matrix.diagonal (NormedSpace.exp v)
+Matrix.exp_add_of_commute.{u_1, u_5} {m : Type u_1} {𝔸 : Type u_5} [Fintype m] [DecidableEq m] [NormedRing 𝔸]
+  [NormedAlgebra ℚ 𝔸] [CompleteSpace 𝔸] (A B : Matrix m m 𝔸) (h : Commute A B) :
+  NormedSpace.exp (A + B) = NormedSpace.exp A * NormedSpace.exp B
+Real.exp_eq_exp_ℝ : Real.exp = NormedSpace.exp

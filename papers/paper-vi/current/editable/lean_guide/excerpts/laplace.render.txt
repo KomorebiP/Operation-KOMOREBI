@@ -1,0 +1,27 @@
+theorem spectral_laplace_inverse (A : R) (z : ℂ)
+    (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) :
+    IntegrableOn (damped A z) (Ioi 0) ∧ IsUnit (algebraMap ℂ R z-A) ∧
+      (∫ t in Ioi 0,damped A z t)=Ring.inverse (algebraMap ℂ R z-A) := by
+  have hs := spectral_decay A z hz
+  let B := A-algebraMap ℂ R z
+  have he : damped A z=transfer B := funext (damped_eq_shifted A z)
+  rw [he] at hs ⊢
+  have hl := integral_Ioi_of_hasDerivAt_of_tendsto'
+    (fun t (_ : t∈Ici (0:ℝ)) => transfer_derivative_left B t)
+    ((ContinuousLinearMap.mul ℝ R B).integrable_comp hs.1) hs.2
+  have hr := integral_Ioi_of_hasDerivAt_of_tendsto'
+    (fun t (_ : t∈Ici (0:ℝ)) => transfer_derivative_right B t)
+    (((ContinuousLinearMap.mul ℝ R).flip B).integrable_comp hs.1) hs.2
+  rw [integral_const_mul_of_integrable hs.1,transfer_zero,zero_sub] at hl
+  rw [integral_mul_const_of_integrable hs.1,transfer_zero,zero_sub] at hr
+  have hn : algebraMap ℂ R z-A= -B := by dsimp [B]; abel
+  have hl' : (algebraMap ℂ R z-A)*(∫ t in Ioi 0,transfer B t)=1 := by
+    rw [hn,neg_mul,hl,neg_neg]
+  have hr' : (∫ t in Ioi 0,transfer B t)*(algebraMap ℂ R z-A)=1 := by
+    rw [hn,mul_neg,hr,neg_neg]
+  have hu : IsUnit (algebraMap ℂ R z-A) := ⟨⟨_,_,hl',hr'⟩,rfl⟩
+  refine ⟨hs.1,hu,?_⟩
+  calc
+    _ = Ring.inverse (algebraMap ℂ R z-A)*((algebraMap ℂ R z-A)*(∫ t in Ioi 0,transfer B t)) :=
+      (Ring.inverse_mul_cancel_left _ _ hu).symm
+    _ = _ := by rw [hl',mul_one]

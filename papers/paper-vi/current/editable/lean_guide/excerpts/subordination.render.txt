@@ -1,0 +1,10 @@
+theorem operator_subordination (P : I → R) (hP : ∑ i,P i=1)
+    (h : ∀ i j,P i*P j=if i=j then P i else 0) (lam : I → ℝ)
+    (hl : ∀ i,0 ≤ lam i) (t : ℝ) (ht : 0 < t) :
+    IntegrableOn (fun s => kernel t s • NormedSpace.exp ((-s) • resolve P lam)) (Ioi 0) ∧
+    NormedSpace.exp ((-t) • fractional P lam (1/2))=
+      ∫ s in Ioi 0,kernel t s • NormedSpace.exp ((-s) • resolve P lam) := by
+  simp only [operator_integrand P hP h lam]
+  refine ⟨finite_spectral_integrable P lam hl t ht,?_⟩
+  rw [finite_spectral_subordination P lam hl t ht,spectral_transfer_exponential P hP h]
+  simp only [spectralTransfer,resolve,Real.sqrt_eq_rpow]

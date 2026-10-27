@@ -1,0 +1,31 @@
+\clearpage\section{Canonical jets and holomorphic naturality}
+\label{sec:holomorphic}
+Core 15.1 closes a common source of ambiguity: what exactly is meant by $f(A)$ when $A$ is a nonnormal finite matrix and $f$ is holomorphic on a possibly disconnected neighborhood of the spectrum? The final layer defines a canonical finite-jet operator, proves uniqueness and intertwining, and identifies its coefficients with genuine local Cauchy integrals under analytic hypotheses.
+
+\subsection{The finite-jet definition}
+For coefficient data $a(\mu,k)$, the jet at $\mu$ is a polynomial in $A-\mu I$:
+\excerpt{CanonicalJets}{jet}
+The canonical operator applies this polynomial on each generalized eigenspace and reassembles the direct sum:
+\excerpt{CanonicalJets}{calculus}
+The decomposition is selected noncomputably, but the resulting operator is characterized uniquely by its action on each component. \code{HolomorphicFinite.canonical_unique} proves that characterization. ``Noncomputable'' means the definition uses classical constructions without an executable algorithm; it does not mean the proof is admitted.
+
+\subsection{Unequal dimensions require a common cutoff}
+If $CA=BC$, then $C$ takes a generalized eigenspace of $A$ into the corresponding one of $B$. Source and target may have different dimensions, so the naturality proof first extends both finite jets to a common maximum cutoff. Truncation stability makes that extension harmless:
+\excerpt{CanonicalJets}{jet_stable}
+The source then applies polynomial intertwining componentwise and uses the direct-sum extensionality principle:
+\excerpt{CanonicalJets}{naturality}
+This is an algebraic theorem about arbitrary coefficient data $a$. It is already enough to explain why the same local jets must be used on both sides of an intertwining equation.
+
+\subsection{Analyticity enters the interpretation}
+\code{CanonicalJets.holomorphic} substitutes the derivative coefficients $f^{(k)}(\mu)/k!$. The term exists for any function because Lean's derivative operations are totalized. The raw jet-naturality theorem therefore has no analyticity assumption. That fact must not be mistaken for a theorem that an arbitrary function has an analytic holomorphic functional calculus.
+
+For an analytic $f$, Cauchy's formula connects the derivative coefficient to an actual positive-radius circle integral:
+\excerpt{HolomorphicFinite}{cauchy}
+The radius is positive and $f$ is differentiable on the whole closed disk in this statement. A later theorem chooses suitable local disks inside any declared open neighborhood where $f$ is analytic:
+\excerpt{HolomorphicFinite}{local_circles}
+The local radius can depend on the spectral value. This supports disconnected analytic neighborhoods and avoids assuming a single globally convergent Taylor series. Equality of the Cauchy coefficients proves independence of the admissible local circles. General contour deformation in arbitrary Banach algebras is not the formal scope of this finite-dimensional construction.
+
+\subsection{The final literal matrix equation}
+\code{matrixFunction} transfers the finite-jet operator from linear maps back to matrices. The resulting equation is rectangular and uses the original matrix intertwining hypothesis:
+\excerpt{HolomorphicFinite}{matrix_naturality}
+Read this as naturality of the defined jet operator for arbitrary $f$, and as ordinary finite-dimensional holomorphic naturality when the preceding analytic hypotheses identify those jets with the desired holomorphic calculus. The bounded Banach reciprocal-family substitution moved from Paper IV has a broader setting and retains its own written proof in Part III. It has not acquired a new Lean endpoint by being moved into Paper VI.

@@ -1,0 +1,8 @@
+theorem grid_reconstruction (n : ℕ) (i j : Fin n) :
+    ((n:ℝ)+1)*(laplacian n)⁻¹ i j=
+      min (((i.val:ℝ)+1)/((n:ℝ)+1)) (((j.val:ℝ)+1)/((n:ℝ)+1))-
+        (((i.val:ℝ)+1)/((n:ℝ)+1))*(((j.val:ℝ)+1)/((n:ℝ)+1)) := by
+  rw [laplacian_inverse]
+  simp only [Matrix.smul_apply,smul_eq_mul,inverseKernel,green,Nat.cast_add,Nat.cast_one]
+  rw [min_div_div_right (by positivity)]
+  field_simp

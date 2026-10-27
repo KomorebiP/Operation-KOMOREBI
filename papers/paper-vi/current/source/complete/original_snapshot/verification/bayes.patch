@@ -1,0 +1,106 @@
+--- original/projector_transfer_semigroups/bayes.py
++++ companion/projector_transfer_semigroups/bayes.py
+@@ -8,8 +8,10 @@
+ 
+ def _normalize(probability: np.ndarray) -> np.ndarray:
+     p = np.asarray(probability, dtype=float)
++    if p.ndim != 1 or not np.all(np.isfinite(p)) or np.any(p < 0):
++        raise ValueError("prior must be a finite nonnegative vector")
+     total = float(np.sum(p))
+-    if total <= 0:
++    if not np.isfinite(total) or total <= 0:
+         raise ValueError("positive total mass required")
+     return p / total
+ 
+@@ -17,10 +19,10 @@
+ def bayes_update(prior: np.ndarray, likelihood: np.ndarray) -> np.ndarray:
+     p = _normalize(prior)
+     l = np.asarray(likelihood, dtype=float)
+-    if p.shape != l.shape or np.any(l < 0):
++    if p.shape != l.shape or not np.all(np.isfinite(l)) or np.any(l < 0):
+         raise ValueError("likelihood must be nonnegative and match the prior")
+     evidence = float(l @ p)
+-    if evidence <= 0:
++    if not np.isfinite(evidence) or evidence <= 0:
+         raise ValueError("positive evidence required")
+     return l * p / evidence
+ 
+@@ -33,6 +35,7 @@
+     posterior = bayes_update(prior, likelihood)
+     p = _normalize(prior)
+     l = np.asarray(likelihood, dtype=float)
++    groups = _validate_groups(groups, p.size)
+     packet_evidence = np.array([sum(l[i] * p[i] for i in group) for group in groups], dtype=float)
+     total = float(packet_evidence.sum())
+     packet_masses = packet_evidence / total
+@@ -94,7 +97,12 @@
+ 
+ 
+ def _validate_groups(groups: Sequence[Sequence[int]], size: int) -> tuple[tuple[int, ...], ...]:
+-    normalized = tuple(tuple(int(i) for i in group) for group in groups)
++    import operator
++
++    try:
++        normalized = tuple(tuple(operator.index(i) for i in group) for group in groups)
++    except TypeError as exc:
++        raise ValueError("state indices must be integers") from exc
+     flattened = [i for group in normalized for i in group]
+     if sorted(flattened) != list(range(size)):
+         raise ValueError("groups must form a partition of the state indices")
+@@ -123,7 +131,7 @@
+     """
+     p = _normalize(prior)
+     l = np.asarray(likelihood, dtype=float)
+-    if p.shape != l.shape or np.any(l < 0):
++    if p.shape != l.shape or not np.all(np.isfinite(l)) or np.any(l < 0):
+         raise ValueError("likelihood must be nonnegative and match the prior")
+     partition = _validate_groups(groups, p.size)
+     result = np.zeros(len(partition), dtype=float)
+@@ -146,7 +154,7 @@
+     l = np.asarray(likelihood, dtype=float)
+     partition = _validate_groups(groups, p.size)
+     coarse = np.asarray(coarse_likelihood, dtype=float)
+-    if coarse.shape != (len(partition),) or np.any(coarse < 0):
++    if coarse.shape != (len(partition),) or not np.all(np.isfinite(coarse)) or np.any(coarse < 0):
+         raise ValueError("coarse likelihood must be nonnegative and match the groups")
+ 
+     P = coarsen_probability(p, partition)
+@@ -187,8 +195,10 @@
+     atol: float = 0.0,
+ ) -> tuple[bool, np.ndarray]:
+     """Test blockwise constancy of one likelihood and return coarse values."""
+-    l = np.asarray(likelihood, dtype=float)
+-    if l.ndim != 1 or np.any(l < 0):
++    if not np.isfinite(atol) or atol < 0:
++        raise ValueError("atol must be finite and nonnegative")
++    l = np.asarray(likelihood, dtype=float)
++    if l.ndim != 1 or not np.all(np.isfinite(l)) or np.any(l < 0):
+         raise ValueError("likelihood must be a nonnegative vector")
+     partition = _validate_groups(groups, l.size)
+     coarse = np.zeros(len(partition), dtype=float)
+@@ -205,16 +215,20 @@
+     *,
+     atol: float = 0.0,
+ ) -> tuple[tuple[int, ...], ...]:
+-    """Coarsest finite partition sufficient for every likelihood in a family.
+-
+-    States lie in the same packet exactly when their complete likelihood
+-    profiles agree (within ``atol``).
++    """Coarsest likelihood-resolving partition when ``atol == 0``.
++
++    Exact packets are equality classes of complete likelihood profiles.
++    For positive ``atol``, this is greedy representative clustering, which
++    depends on state order; proximity within a tolerance is not an
++    equivalence relation and is not an exact Bayesian sufficiency claim.
+     """
++    if not np.isfinite(atol) or atol < 0:
++        raise ValueError("atol must be finite and nonnegative")
+     family = [np.asarray(likelihood, dtype=float) for likelihood in likelihood_family]
+     if not family:
+         raise ValueError("at least one likelihood is required")
+     size = family[0].size
+-    if any(l.ndim != 1 or l.size != size or np.any(l < 0) for l in family):
++    if any(l.ndim != 1 or l.size != size or not np.all(np.isfinite(l)) or np.any(l < 0) for l in family):
+         raise ValueError("likelihoods must be nonnegative vectors of equal length")
+ 
+     groups: list[list[int]] = []

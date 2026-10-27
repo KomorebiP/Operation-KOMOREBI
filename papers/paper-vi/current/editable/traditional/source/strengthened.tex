@@ -1,0 +1,3285 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools}
+\usepackage{bm}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2400
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else
+    \edef\@subjects{Primary:~\@primarysubjects}%
+  \fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty
+      \edef\@subjects{Secondary:~\@secondarysubjects}%
+    \else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}%
+    \fi
+  \fi
+  \ifpdf
+    \hypersetup{pdfsubject=\@subjects}%
+  \fi
+  \if@aom@oldkeywords\else
+    \@footnotetext{AMS Classification:~\@subjects.}%
+  \fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\Kcal}{\mathcal K}
+\newcommand{\Bcal}{\mathcal B}
+\newcommand{\Ecal}{\mathcal E}
+\newcommand{\Fcal}{\mathcal F}
+\newcommand{\Hcal}{\mathcal H}
+\newcommand{\Lcal}{\mathcal L}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Exp}{\mathbb E}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\osc}{\operatorname{osc}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\one}{\bm 1}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\simplex}{\mathop{\rm int}\Delta}
+
+\graphicspath{{figures/}}
+
+\title[Transfer semigroups and memory]{Transfer Semigroups, Probabilistic Refinement, Fractional Operators, and Memory}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{47D06}
+\subject{secondary}{msc2020}{60J27}
+\subject{secondary}{msc2020}{62F15}
+\subject{secondary}{msc2020}{26A33}
+\subject{secondary}{msc2020}{45D05}
+\subject{secondary}{msc2020}{65N06}
+\keyword{operator semigroup}
+\keyword{Markov lumping}
+\keyword{Bayesian sufficiency}
+\keyword{fractional power}
+\keyword{Green operator}
+\keyword{memory kernel}
+\copyrightnote{}
+\doinumber{}
+
+\pdfstringdefDisableCommands{\let\unskip\relax}
+\hypersetup{
+  pdftitle={Transfer Semigroups, Probabilistic Refinement, Fractional Operators, and Memory},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Packet resolved semigroups, stochastic refinement, Bayesian coarsening, fractional powers, Green operators, and exact memory}
+}
+
+\begin{document}
+\begin{abstract}
+A bounded generator and a finite packet system turn a semigroup into a matrix of transfer blocks. We prove convolution, differential, path, Laplace, resolvent, and defect formulas. Exact intertwining yields an inverse limit semigroup. Weighted summable adjacent defects give convergent reconstructed evolutions, while range leakage determines whether the limit remains a semigroup. For finite Markov chains we identify a canonical lumping obstruction and quantify its failure. Conditional expectations give orthogonal martingale packets, and the Ornstein Uhlenbeck semigroup gives a countable Hermite model. Bayesian updating is treated as normalized transfer. We characterize exact coarse sufficiency, determine the coarsest nontrivial fixed sufficient partition for a likelihood family when the common level sets are nontrivial, and split relative information into coarse and local terms. Positive fractional powers are handled through spectral, Balakrishnan, and subordination formulas. Green operators, finite differences, and finite state Feynman Kac formulas provide analytic realizations. Schur Feshbach elimination produces a rational self energy and an exact memory kernel. Every stable finite hidden system yields a polynomial exponential expansion, including Jordan blocks. A certified optimal primary block selection and a Volterra estimate control reduced trajectories. State dependent killing, survival laws, moments, and competing risks complete the finite theory.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+One parameter semigroups provide a common language for evolution equations, Markov processes, diffusion, and resolvent methods. Standard analytic foundations appear in \cite{Pazy1983,EngelNagel2000}. Finite Markov chains and their coarse descriptions are treated in \cite{KemenySnell1960,Norris1997,RogersPitman1981}. Conditional expectation and martingale difference decompositions are basic parts of probability theory \cite{Williams1991}. Gaussian transfer and Hermite expansions provide a spectral model for the Ornstein Uhlenbeck semigroup \cite{Janson1997}. Fractional powers of generators and subordinate semigroups belong to the functional calculus of positive and sectorial operators \cite{Balakrishnan1960,SchillingSongVondracek2012}. The Feynman Kac formula, projection methods, and phase type laws add three further views of transfer \cite{Kac1949,Feshbach1958,Zwanzig1961,Neuts1981}.
+
+These subjects share a simple operation. A state is propagated, resolved into declared components, compared across levels, and reconstructed. The same operation can be linear, as in a Markov semigroup, or normalized and nonlinear, as in Bayesian conditioning. Hidden components can be discarded from the state vector without disappearing from the dynamics. Their exact influence returns through a frequency dependent self energy or a time dependent memory kernel.
+
+The first part of the article treats bounded semigroups on Banach spaces. A finite packet system resolves every operator into input and output blocks. The semigroup law becomes block convolution. Splitting the generator into its packet diagonal and transfer part gives a convergent Dyson expansion over directed packet paths. For a coarse map \(C\), the generator defect
+\[
+\Delta=CA_f-A_cC
+\]
+produces the entire semigroup defect through a Duhamel integral. The same defect controls resolvents and holomorphic functions of the generators.
+
+The next question concerns refinement towers. Exact intertwining gives a coordinatewise semigroup on the bounded inverse limit. Approximate refinement is more delicate. Even if every adjacent defect is small, reconstruction from a fine level can introduce a second error because a coarse state need not remain inside the reconstructed fine subspace. We separate these two effects. Summability of adjacent defects gives a uniform limit of reconstructed coarse evolutions. An asymptotic closure condition is then sufficient for the limiting family to satisfy the semigroup law.
+
+The probabilistic part begins with finite Markov chains. Exact lumpability is the vanishing of a canonical obstruction on the kernel of aggregation. In coordinates, this is equality of the transition mass sent from any two states in the same source block into every target block. The usual finite horizon defect formula follows from telescoping. Conditional expectation is then treated as an orthogonal projector. A nested family of partitions produces mutually orthogonal martingale packets and an exact energy decomposition.
+
+Bayesian updating requires more care because normalization depends on the current prior. Given a partition, every fine update has an exact two stage description. The block masses are updated by prior dependent average likelihoods, while the conditional distribution inside each block is updated by its centered likelihood variation. A fixed coarse Bayesian rule works for every prior precisely when the likelihood is constant inside each block. This gives a finite and exact form of Bayesian sufficiency. For a family of likelihoods with at least two common level sets, those level sets form the unique coarsest nontrivial fixed sufficient partition. Relative entropy then separates exactly into information retained by the coarse packet masses and information carried by the local conditional changes. The same part derives perturbation bounds, the replicator flow, a variance identity for accumulated evidence, and stability estimates for hidden Markov filtering.
+
+For a positive operator \(L\), spectral packets define \(L^\alpha\) and \(\e^{-tL^\alpha}\). Exact intertwining passes to every fractional power. When both fine and coarse operators have a common positive lower bound \(m\), the Balakrishnan formula gives the quantitative estimate
+\[
+\norm{CL_f^\alpha-L_c^\alpha C}
+\leq
+\alpha m^{\alpha-1}
+\norm{CL_f-L_cC},
+\qquad 0<\alpha<1.
+\]
+A Duhamel argument then controls the fractional semigroup defect. This closes a finite version of fractional naturality under explicit spectral hypotheses.
+
+The final sections move from generators to source reconstruction and hidden variables. The one dimensional Dirichlet Green kernel is reproduced exactly by the scaled inverse of the second difference matrix at grid nodes. A discrete maximum principle gives a complete second order error estimate for smooth Poisson solutions. Finite state Feynman Kac transfer is proved in discrete and continuous time. Schur Feshbach elimination yields the exact projected resolvent, the retained memory equation, and the Laplace correspondence between memory and self energy. Every stable finite hidden system gives a polynomial exponential memory expansion. Primary blocks can be ranked optimally for the certified \(L^1\) bound, and a Volterra estimate carries kernel error to the retained solution. Survival, event density, moments, and competing risks are then read directly from a transient semigroup.
+
+Several claims are intentionally absent. No arbitrary unbounded operator is asserted to generate a semigroup. The inverse limit theorem uses bounded generators or an explicit uniform continuity condition. Bayesian sufficiency is proved for a finite partition and a fixed likelihood. The fractional defect estimate uses a common spectral gap. The Poisson estimate concerns the stated one dimensional scheme. Memory compression is controlled for the declared finite or integrable kernels. General stochastic differential equations, posterior consistency, nonlinear partial differential equations, and optimal model reduction remain outside the article.
+
+The same words have different meanings in the realizations below. The table records the object that is transferred and the condition that makes its coarse description exact.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.18\textwidth}>{\raggedright\arraybackslash}p{.29\textwidth}>{\raggedright\arraybackslash}p{.43\textwidth}}
+\toprule
+Realization & Transfer & Exact coarse condition \\
+\midrule
+Operator evolution & $\e^{tA}$ & generator intertwining \\
+Markov chain & $K^n$ or $\e^{tQ}$ & equality of aggregated transition masses \\
+Conditional expectation & $P_{\mathcal Q}$ & nesting of the underlying partitions \\
+Bayesian update & $\Bcal_\lambda$ & likelihood constant inside each coarse packet \\
+Fractional diffusion & $\e^{-tL^\alpha}$ & spectral or resolvent intertwining \\
+Hidden dynamics & projected resolvent & vanishing self energy, or an explicit memory state \\
+Survival law & transient semigroup & summation over all transient states \\
+\bottomrule
+\end{tabular}
+\caption{The transfer operations studied in the article and the condition that makes each coarse description exact.}
+\label{tab:transfer_dictionary}
+\end{table}
+
+\section{Packet resolved semigroups}\label{sec:packet_semigroups}
+
+Let \(X\) be a complex Banach space. A finite packet system is a family of bounded idempotents
+\[
+\Pcal=(P_\alpha)_{\alpha\in I}
+\]
+such that
+\[
+P_\alpha P_\beta=\delta_{\alpha\beta}P_\alpha,
+\qquad
+\sum_{\alpha\in I}P_\alpha=I_X.
+\]
+No orthogonality is needed in this section.
+
+\begin{definition}[Packet resolved transfer system]
+A packet resolved transfer system is a triple
+\[
+(X,A,\Pcal)
+\]
+consisting of a Banach state space, a bounded generator, and a finite packet system. A marked transfer system also includes an initial state or source $s\in X$. The topology and all limiting operations are supplied by the ambient Banach space structure.
+\end{definition}
+
+\begin{definition}[Packet blocks]
+For \(B\in\mathcal B(X)\), define
+\[
+B_{\beta\alpha}=P_\beta BP_\alpha.
+\]
+If \(A\in\mathcal B(X)\) and \(T(t)=\e^{tA}\), write
+\[
+T_{\beta\alpha}(t)=P_\beta T(t)P_\alpha.
+\]
+\end{definition}
+
+\begin{theorem}[Semigroup and packet convolution]\label{thm:packet_convolution}
+For every bounded operator \(A\), the family \(T(t)=\e^{tA}\) is a uniformly continuous group and
+\[
+T(s+t)=T(s)T(t).
+\]
+For every \(\alpha,\beta\in I\),
+\[
+T_{\beta\alpha}(s+t)
+=
+\sum_{\gamma\in I}
+T_{\beta\gamma}(s)T_{\gamma\alpha}(t).
+\]
+\end{theorem}
+
+\begin{proof}
+The exponential series converges in operator norm. Since every power of \(A\) commutes with every other power, the Cauchy product gives the group law. Inserting \(I_X=\sum_\gamma P_\gamma\) between the two factors gives the block formula.
+\end{proof}
+
+\begin{proposition}[Block differential system]\label{prop:block_differential}
+The packet blocks are differentiable in operator norm and satisfy
+\[
+\frac{\dd}{\dd t}T_{\beta\alpha}(t)
+=
+\sum_{\gamma\in I}
+A_{\beta\gamma}T_{\gamma\alpha}(t)
+=
+\sum_{\gamma\in I}
+T_{\beta\gamma}(t)A_{\gamma\alpha}.
+\]
+Their initial values are
+\[
+T_{\beta\alpha}(0)=\delta_{\beta\alpha}P_\alpha.
+\]
+\end{proposition}
+
+\begin{proof}
+Differentiate \(T(t)\) in operator norm and insert the packet resolution between \(A\) and \(T(t)\), then between \(T(t)\) and \(A\).
+\end{proof}
+
+\begin{theorem}[Laplace resolvent and packet transform]\label{thm:laplace_packet_resolvent}
+Let \(A\in\mathcal B(X)\), let \(T(t)=\e^{tA}\), and let
+\[
+\operatorname{Re}z>\norm A.
+\]
+Then the Bochner integral converges in operator norm and
+\[
+(zI-A)^{-1}
+=
+\int_0^\infty \e^{-zt}T(t)\dd t.
+\]
+For every pair of packets,
+\[
+P_\beta(zI-A)^{-1}P_\alpha
+=
+\int_0^\infty
+\e^{-zt}T_{\beta\alpha}(t)\dd t.
+\]
+\end{theorem}
+
+\begin{proof}
+The estimate \(\norm{T(t)}\leq\e^{t\norm A}\) gives absolute convergence of the operator valued integral. Let
+\[
+R(z)=\int_0^\infty\e^{-zt}T(t)\dd t.
+\]
+Since \(T'(t)=AT(t)=T(t)A\), integration by parts gives
+\[
+(zI-A)R(z)
+=
+-\int_0^\infty
+\frac{\dd}{\dd t}
+\bigl(\e^{-zt}T(t)\bigr)
+\dd t
+=I.
+\]
+The same calculation on the other side gives
+\(
+R(z)(zI-A)=I
+\).
+Multiplication by \(P_\beta\) and \(P_\alpha\) may be passed under the norm convergent integral, which gives the packet formula.
+\end{proof}
+
+\begin{corollary}[Resolvent expansion over packet paths]\label{cor:resolvent_packet_paths}
+With \(A=D+N\) as in the directed path decomposition, let
+\[
+R_D(z)=(zI-D)^{-1}.
+\]
+If
+\[
+\norm{R_D(z)N}<1,
+\]
+then
+\[
+(zI-A)^{-1}
+=
+\sum_{m=0}^\infty
+\bigl(R_D(z)N\bigr)^mR_D(z).
+\]
+After multiplication by \(P_\beta\) and \(P_\alpha\), the term of order \(m\) is a sum over directed packet paths of length \(m\) from \(\alpha\) to \(\beta\).
+\end{corollary}
+
+\begin{proof}
+Factor
+\[
+zI-A=(zI-D)(I-R_D(z)N)
+\]
+and expand the second inverse by its norm convergent Neumann series. The diagonal resolvent preserves each packet and every factor \(N\) changes the packet along an active transfer edge.
+\end{proof}
+
+\begin{theorem}[Reducing packet criterion]\label{thm:reducing_packets}
+The following conditions are equivalent.
+\begin{enumerate}
+\item \(AP_\alpha=P_\alpha A\) for every \(\alpha\).
+\item \(A_{\beta\alpha}=0\) whenever \(\beta\neq\alpha\).
+\item \(T_{\beta\alpha}(t)=0\) whenever \(\beta\neq\alpha\) and \(t\in\RR\).
+\item Every packet space \(P_\alpha X\) is invariant under \(T(t)\) for every \(t\).
+\end{enumerate}
+When these conditions hold,
+\[
+T(t)|_{P_\alpha X}
+=
+\e^{tA_{\alpha\alpha}}.
+\]
+\end{theorem}
+
+\begin{proof}
+The first two conditions are equivalent because the packet resolution gives
+\[
+AP_\alpha=\sum_\beta A_{\beta\alpha},
+\qquad
+P_\alpha A=\sum_\gamma A_{\alpha\gamma}.
+\]
+A block diagonal generator has block diagonal powers, so the second condition implies the third. Differentiating the off diagonal blocks at zero proves the converse. The equivalence with invariance follows from the definition of the blocks. The final identity follows by restricting the exponential series.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.31\textwidth]{packet_blocks_t0_0.pdf}\hfill
+\includegraphics[width=.31\textwidth]{packet_blocks_t0_8.pdf}\hfill
+\includegraphics[width=.31\textwidth]{packet_blocks_t2_0.pdf}
+\caption{Packet block norms at three times. Transfer appears in the off diagonal blocks as soon as the generator couples the two packet spaces.}
+\label{fig:packet_blocks}
+\end{figure}
+
+\subsection{Directed path expansion}
+
+Set
+\[
+D=\sum_{\alpha\in I}P_\alpha AP_\alpha,
+\qquad
+N=A-D.
+\]
+The operator \(D\) preserves every packet and \(N\) contains only transfers between distinct packets.
+
+\begin{theorem}[Dyson expansion over packet paths]\label{thm:dyson_paths}
+For \(t\geq0\),
+\[
+\begin{aligned}
+\e^{tA}
+={}&\e^{tD}
++
+\sum_{m=1}^{\infty}
+\int_{0<s_1<\cdots<s_m<t}
+\e^{(t-s_m)D}N\e^{(s_m-s_{m-1})D}
+\cdots
+N\e^{s_1D}
+\dd s_1\cdots\dd s_m.
+\end{aligned}
+\]
+The series converges absolutely in operator norm. After multiplication by \(P_\beta\) and \(P_\alpha\), the term of order \(m\) is a sum over directed packet paths of length \(m\) from \(\alpha\) to \(\beta\).
+\end{theorem}
+
+\begin{proof}
+Write the variation of constants identity
+\[
+\e^{tA}
+=
+\e^{tD}
++
+\int_0^t\e^{(t-s)D}N\e^{sA}\dd s.
+\]
+Iterating the identity gives the displayed series. The norm of the term of order \(m\) is at most
+\[
+\e^{t\norm D}\frac{(t\norm N)^m}{m!}.
+\]
+The majorant is summable. Inserting the packet resolution around every factor \(N\) leaves only products whose consecutive packet labels are joined by nonzero transfer blocks.
+\end{proof}
+
+\begin{corollary}[Termination on an acyclic transfer graph]\label{cor:acyclic_termination}
+Suppose the directed graph with an edge \(\alpha\to\beta\) whenever \(P_\beta NP_\alpha\neq0\) is acyclic. If its longest directed path has length \(q\), then every Dyson term of order greater than \(q\) vanishes.
+\end{corollary}
+
+\begin{proof}
+Every nonzero term of order \(m\) contains a directed transfer path of length \(m\). An acyclic graph has no path longer than \(q\).
+\end{proof}
+
+\section{Generator defects and functional calculus}\label{sec:defects}
+
+Let \(X_f\) and \(X_c\) be complex Banach spaces. Let \(A_f\in\mathcal B(X_f)\), \(A_c\in\mathcal B(X_c)\), and \(C\in\mathcal B(X_f,X_c)\). Define
+\[
+\Delta=CA_f-A_cC
+\]
+and
+\[
+\mathfrak D(t)=C\e^{tA_f}-\e^{tA_c}C.
+\]
+
+\begin{theorem}[Duhamel defect identity]\label{thm:duhamel_defect}
+For every \(t\geq0\),
+\[
+\mathfrak D(t)
+=
+\int_0^t
+\e^{(t-s)A_c}\Delta\e^{sA_f}
+\dd s.
+\]
+If
+\[
+\norm{\e^{tA_f}}\leq M_f\e^{\omega_f t},
+\qquad
+\norm{\e^{tA_c}}\leq M_c\e^{\omega_c t},
+\]
+then
+\[
+\norm{\mathfrak D(t)}
+\leq
+M_fM_c\norm\Delta
+\int_0^t
+\e^{\omega_c(t-s)+\omega_fs}
+\dd s.
+\]
+For contraction semigroups,
+\[
+\norm{\mathfrak D(t)}\leq t\norm\Delta.
+\]
+\end{theorem}
+
+\begin{proof}
+For fixed \(t\), set
+\[
+F(s)=\e^{(t-s)A_c}C\e^{sA_f}.
+\]
+Then
+\[
+F'(s)=\e^{(t-s)A_c}\Delta\e^{sA_f}.
+\]
+Integrating from zero to \(t\) gives the identity. The estimates follow by taking norms under the integral.
+\end{proof}
+
+\begin{proposition}[Infinitesimal recovery of the defect]\label{prop:infinitesimal_defect}
+The generator defect is the first order semigroup defect:
+\[
+\lim_{t\to0}
+\frac{\mathfrak D(t)}{t}
+=
+\Delta
+\]
+in operator norm. Consequently,
+\[
+C\e^{tA_f}=\e^{tA_c}C
+\quad\hbox{for every }t
+\]
+if and only if \(CA_f=A_cC\).
+\end{proposition}
+
+\begin{proof}
+The operator norm expansions
+\[
+\e^{tA_f}=I+tA_f+o(t),
+\qquad
+\e^{tA_c}=I+tA_c+o(t)
+\]
+give the limit. The equivalence follows from this limit and \cref{thm:duhamel_defect}.
+\end{proof}
+
+\begin{theorem}[Resolvent defect identity]\label{thm:resolvent_defect}
+Let \(z\) belong to the resolvent sets of \(A_f\) and \(A_c\). With
+\[
+R_f(z)=(zI-A_f)^{-1},
+\qquad
+R_c(z)=(zI-A_c)^{-1},
+\]
+one has
+\[
+CR_f(z)-R_c(z)C
+=
+R_c(z)\Delta R_f(z).
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the proposed identity on the left by \(zI-A_c\) and on the right by \(zI-A_f\). Both sides reduce to
+\[
+(zI-A_c)C-C(zI-A_f)=\Delta.
+\]
+\end{proof}
+
+\begin{theorem}[Holomorphic defect formula]\label{thm:holomorphic_defect}
+Let \(\Gamma\) be a finite union of positively oriented rectifiable Jordan curves enclosing the spectra of \(A_f\) and \(A_c\). If \(g\) is holomorphic on a neighborhood of the enclosed region, then
+\[
+Cg(A_f)-g(A_c)C
+=
+\frac{1}{2\pi\ii}
+\int_\Gamma
+ g(z)R_c(z)\Delta R_f(z)
+\dd z.
+\]
+In particular,
+\[
+\begin{aligned}
+\norm{Cg(A_f)-g(A_c)C}
+\leq{}&
+\frac{\operatorname{length}(\Gamma)}{2\pi}
+\sup_{z\in\Gamma}\abs{g(z)}
+\sup_{z\in\Gamma}\norm{R_c(z)}
+\sup_{z\in\Gamma}\norm{R_f(z)}
+\norm\Delta.
+\end{aligned}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the Dunford integral formula to both operators and use \cref{thm:resolvent_defect} under the contour integral. The norm estimate is immediate.
+\end{proof}
+
+\begin{corollary}[Exact naturality]\label{cor:exact_naturality}
+If \(CA_f=A_cC\), then
+\[
+Cg(A_f)=g(A_c)C
+\]
+for every holomorphic function covered by \cref{thm:holomorphic_defect}. The conclusion includes exponentials, resolvents, and polynomials.
+\end{corollary}
+
+\begin{proof}
+Set \(\Delta=0\) in \cref{thm:holomorphic_defect}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.68\textwidth]{duhamel_defect.pdf}
+\caption{A finite semigroup defect and a direct Duhamel bound. The bound is designed to be uniform rather than sharp in this example.}
+\label{fig:duhamel_defect}
+\end{figure}
+
+\section{Refinement towers and limiting evolution}\label{sec:refinement_towers}
+
+The exact inverse limit and the approximate completion problem require different hypotheses. Exact intertwining preserves the inverse limit coordinate by coordinate. Approximate intertwining gives a Cauchy family only after reconstruction maps are chosen.
+
+\subsection{Exact inverse limits}
+
+Let
+\[
+X_0\xleftarrow{C_0}X_1\xleftarrow{C_1}X_2\xleftarrow{}\cdots
+\]
+be Banach spaces with bounded connecting maps. Define the bounded inverse limit
+\[
+X_\infty
+=
+\left\{
+(x_\ell)_{\ell\geq0}:
+C_\ell x_{\ell+1}=x_\ell,
+\quad
+\sup_\ell\norm{x_\ell}<\infty
+\right\}
+\]
+with the supremum norm.
+
+\begin{lemma}[Completeness of the bounded inverse limit]\label{lem:inverse_limit_banach}
+The space \(X_\infty\) is Banach.
+\end{lemma}
+
+\begin{proof}
+The product of the spaces \(X_\ell\), equipped with the bounded supremum norm, is Banach. The equations \(C_\ell x_{\ell+1}=x_\ell\) define a closed linear subspace.
+\end{proof}
+
+\begin{theorem}[Exact projective limit semigroup]\label{thm:exact_projective_limit}
+For each \(\ell\), let \(T_\ell(t)\) be a strongly continuous semigroup on \(X_\ell\). Assume
+\[
+C_\ell T_{\ell+1}(t)=T_\ell(t)C_\ell
+\]
+for every \(\ell\) and \(t\geq0\), and assume the uniform bound
+\[
+\sup_\ell\norm{T_\ell(t)}\leq M\e^{\omega t}.
+\]
+Define
+\[
+T_\infty(t)(x_\ell)_\ell
+=
+(T_\ell(t)x_\ell)_\ell.
+\]
+Then \(T_\infty(t)\) is a bounded semigroup on \(X_\infty\). It is strongly continuous if
+\[
+\lim_{t\downarrow0}
+\sup_\ell
+\norm{T_\ell(t)x_\ell-x_\ell}=0
+\]
+for every \((x_\ell)_\ell\in X_\infty\).
+
+If \(T_\ell(t)=\e^{tA_\ell}\), the generators are bounded, and
+\[
+\sup_\ell\norm{A_\ell}<\infty,
+\qquad
+C_\ell A_{\ell+1}=A_\ell C_\ell,
+\]
+then the continuity condition holds and
+\[
+A_\infty(x_\ell)_\ell=(A_\ell x_\ell)_\ell
+\]
+is the bounded generator of \(T_\infty\).
+\end{theorem}
+
+\begin{proof}
+Exact intertwining shows that \((T_\ell(t)x_\ell)_\ell\) remains compatible. The uniform growth bound makes the coordinatewise operator bounded on the supremum norm. The semigroup law holds in every coordinate. The stated continuity condition is exactly strong continuity in the supremum norm.
+
+For bounded generators with common bound \(M_A\),
+\[
+\sup_\ell
+\norm{(\e^{tA_\ell}-I)x_\ell}
+\leq
+(\e^{tM_A}-1)\sup_\ell\norm{x_\ell}.
+\]
+This tends to zero with \(t\). Exact generator intertwining makes \((A_\ell x_\ell)_\ell\) compatible, and coordinatewise differentiation identifies the generator.
+\end{proof}
+
+\begin{remark}
+Strong continuity on each level does not by itself imply strong continuity in the supremum norm of the inverse limit. The additional uniform condition in \cref{thm:exact_projective_limit} cannot be omitted without replacing the topology.
+\end{remark}
+
+\subsection{Summable adjacent defects}
+
+Assume now that each \(C_\ell:X_{\ell+1}\to X_\ell\) has a bounded right inverse
+\[
+R_\ell:X_\ell\to X_{\ell+1},
+\qquad
+C_\ell R_\ell=I_{X_\ell}.
+\]
+For \(m<n\), set
+\[
+C_{m,n}=C_mC_{m+1}\cdots C_{n-1},
+\qquad
+R_{n,m}=R_{n-1}\cdots R_m.
+\]
+The empty products are
+\[
+C_{m,m}=I_{X_m},
+\qquad
+R_{m,m}=I_{X_m}.
+\]
+
+\begin{definition}[Reconstructed fine evolution]
+For a semigroup \(T_n(t)\) on \(X_n\), define the evolution seen from level \(m\) by
+\[
+U_{m,n}(t)=C_{m,n}T_n(t)R_{n,m}.
+\]
+\end{definition}
+
+\begin{theorem}[Weighted summable defect completion]\label{thm:summable_defect_completion}
+Define the adjacent semigroup defect
+\[
+E_n(t)=C_nT_{n+1}(t)-T_n(t)C_n.
+\]
+Fix a coarse level \(m\) and a time horizon \(T>0\). For \(n\geq m\), set
+\[
+w_{m,n}
+=
+\norm{C_{m,n}}\,
+\norm{R_nR_{n,m}}.
+\]
+If
+\[
+\sum_{n=m}^{\infty}
+w_{m,n}
+\sup_{0\leq t\leq T}\norm{E_n(t)}<\infty,
+\]
+then \(U_{m,n}(t)\) converges in operator norm uniformly for \(0\leq t\leq T\). Its limit is denoted by \(U_m(t)\), and
+\[
+\sup_{0\leq t\leq T}
+\norm{U_m(t)-U_{m,n}(t)}
+\leq
+\sum_{j=n}^{\infty}w_{m,j}
+\sup_{0\leq t\leq T}\norm{E_j(t)}.
+\]
+\end{theorem}
+
+\begin{proof}
+Since \(C_nR_n=I\),
+\[
+\begin{aligned}
+U_{m,n+1}(t)-U_{m,n}(t)
+={}&
+C_{m,n}
+\bigl(C_nT_{n+1}(t)-T_n(t)C_n\bigr)
+R_nR_{n,m}.
+\end{aligned}
+\]
+Therefore
+\[
+\norm{U_{m,n+1}(t)-U_{m,n}(t)}
+\leq
+w_{m,n}\norm{E_n(t)}.
+\]
+The weighted summability hypothesis makes the sequence uniformly Cauchy. Summing the tail estimates gives the stated bound.
+\end{proof}
+
+\begin{corollary}[Contractive summable defect completion]\label{cor:contractive_defect_completion}
+Assume
+\[
+\norm{C_\ell}\leq1,
+\qquad
+\norm{R_\ell}\leq1,
+\qquad
+\norm{T_\ell(t)}\leq1
+\]
+for every \(\ell\) and \(t\geq0\). If
+\[
+\sum_{\ell=0}^{\infty}
+\sup_{0\leq t\leq T}\norm{E_\ell(t)}<\infty,
+\]
+then the conclusion of \cref{thm:summable_defect_completion} holds, and
+\[
+\sup_{0\leq t\leq T}
+\norm{U_m(t)-U_{m,n}(t)}
+\leq
+\sum_{\ell=n}^{\infty}
+\sup_{0\leq t\leq T}\norm{E_\ell(t)}.
+\]
+\end{corollary}
+
+\begin{proof}
+Every weight \(w_{m,n}\) is at most one.
+\end{proof}
+
+\begin{corollary}[Generator defect criterion]\label{cor:generator_defect_completion}
+Assume
+\[
+\norm{C_\ell}\leq1,
+\qquad
+\norm{R_\ell}\leq1,
+\]
+and suppose \(T_\ell(t)=\e^{tA_\ell}\) are contraction semigroups with bounded generators. Set
+\[
+\Delta_\ell=C_\ell A_{\ell+1}-A_\ell C_\ell.
+\]
+If
+\[
+\sum_{\ell=0}^{\infty}\norm{\Delta_\ell}<\infty,
+\]
+then the conclusion of \cref{cor:contractive_defect_completion} holds on every bounded time interval, and
+\[
+\sup_{0\leq t\leq T}
+\norm{U_m(t)-U_{m,n}(t)}
+\leq
+T\sum_{\ell=n}^{\infty}\norm{\Delta_\ell}.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply the contraction estimate in \cref{thm:duhamel_defect} to every adjacent pair.
+\end{proof}
+
+The limit in \cref{thm:summable_defect_completion} need not satisfy the semigroup law. The obstruction comes from leaving the reconstructed fine subspace between two time steps.
+
+\begin{theorem}[Asymptotic closure criterion]\label{thm:asymptotic_closure}
+Assume the weighted convergence in \cref{thm:summable_defect_completion} holds for every bounded time interval, and define
+\[
+P_{m,n}=R_{n,m}C_{m,n}
+\]
+on \(X_n\). Suppose that for every \(T>0\),
+\[
+\rho_{m,n}(T)
+=
+\sup_{0\leq s,t\leq T}
+\norm{
+C_{m,n}T_n(s)(I-P_{m,n})T_n(t)R_{n,m}
+}
+\longrightarrow0.
+\]
+Then
+\[
+U_m(s+t)=U_m(s)U_m(t)
+\]
+for all \(s,t\geq0\). If the convergence in \cref{thm:summable_defect_completion} is locally uniform and every \(T_n\) is norm continuous, then \(U_m\) is a norm continuous semigroup.
+\end{theorem}
+
+\begin{proof}
+At a finite level,
+\[
+\begin{aligned}
+U_{m,n}(s)U_{m,n}(t)-U_{m,n}(s+t)
+={}&
+C_{m,n}T_n(s)
+(P_{m,n}-I)
+T_n(t)R_{n,m}.
+\end{aligned}
+\]
+Its norm is at most \(\rho_{m,n}(T)\) for \(s,t\leq T\). Pass to the limit using uniform convergence. Norm continuity follows from a uniform limit of norm continuous functions on compact intervals.
+\end{proof}
+
+\begin{remark}
+Summable generator defects control consistency between adjacent levels. The quantity \(\rho_{m,n}(T)\) controls closure of the reconstructed fine range under the fine evolution. These are different requirements.
+\end{remark}
+
+\begin{example}[Summable defects do not force a semigroup limit]\label{ex:summable_not_semigroup}
+Let \(X_0=\RR\) and let \(X_n=\RR^2\) for every \(n\geq1\). Set
+\[
+C_0(x,y)=x,
+\qquad
+R_0x=(x,0),
+\]
+and use identity connecting maps and reconstructions above level one. Let \(T_0(t)=I\) and let every higher level carry the rotation group
+\[
+T_n(t)
+=
+\begin{pmatrix}
+\cos t&-\sin t\\
+\sin t&\cos t
+\end{pmatrix}.
+\]
+Only the first adjacent defect is nonzero, so every defect sum is finite. Yet for \(n\geq1\),
+\[
+U_{0,n}(t)=C_0T_n(t)R_0=\cos t.
+\]
+The limiting family is not a semigroup because in general
+\[
+\cos(s+t)\neq\cos s\cos t.
+\]
+The failure is exactly the excursion from the reconstructed line into its orthogonal complement between two time steps.
+\end{example}
+
+\begin{proposition}[Range leakage criterion]\label{prop:range_leakage}
+Under the contractive assumptions of \cref{cor:contractive_defect_completion}, define
+\[
+\eta_{m,n}(T)
+=
+\sup_{0\leq t\leq T}
+\norm{(I-P_{m,n})T_n(t)R_{n,m}}.
+\]
+Then
+\[
+\rho_{m,n}(T)\leq\eta_{m,n}(T).
+\]
+Consequently, \(\eta_{m,n}(T)\to0\) for every \(T>0\) is sufficient for the limiting family \(U_m\) to satisfy the semigroup law.
+\end{proposition}
+
+\begin{proof}
+For \(s,t\leq T\), the contraction assumptions give
+\[
+\begin{aligned}
+&\norm{
+C_{m,n}T_n(s)(I-P_{m,n})T_n(t)R_{n,m}
+}\\
+&\qquad\leq
+\norm{(I-P_{m,n})T_n(t)R_{n,m}}.
+\end{aligned}
+\]
+Take the supremum and apply \cref{thm:asymptotic_closure}.
+\end{proof}
+
+\begin{theorem}[Generator control of range leakage]\label{thm:generator_range_leakage}
+Let \(T(t)=\e^{tA}\) on a Banach space \(X\), let \(P\) be a bounded projection, and set \(Q=I-P\). Assume
+\[
+\norm{T(t)}\leq M\e^{\omega t}
+\]
+and
+\[
+\norm{\e^{t(QAQ)|_{QX}}}
+\leq M_Q\e^{\omega_Qt}.
+\]
+Then
+\[
+\norm{QT(t)P}
+\leq
+M M_Q\norm P^2\norm{QAP}
+\int_0^t
+\e^{\omega_Q(t-s)+\omega s}
+\dd s.
+\]
+In particular, for orthogonal projections and contraction bounds,
+\[
+\sup_{0\leq t\leq T}
+\norm{QT(t)P}
+\leq
+T\norm{QAP}.
+\]
+\end{theorem}
+
+\begin{proof}
+For \(x\in PX\), write
+\[
+p(t)=PT(t)x,
+\qquad
+q(t)=QT(t)x.
+\]
+The hidden component satisfies
+\[
+q'(t)=QAQq(t)+QAPp(t),
+\qquad
+q(0)=0.
+\]
+Variation of constants gives
+\[
+q(t)=
+\int_0^t
+\e^{(t-s)(QAQ)|_{QX}}
+QAPp(s)
+\dd s.
+\]
+Since
+\(
+\norm{p(s)}\leq\norm P\norm{T(s)}\norm x
+\)
+and \(x=Px\), the first estimate follows. The contraction case is immediate.
+\end{proof}
+
+\begin{corollary}[A usable closure condition for refinement towers]\label{cor:generator_closure_tower}
+Assume the contractive summability hypothesis of \cref{cor:contractive_defect_completion} holds on every bounded time interval. Suppose every \(P_{m,n}\) is an orthogonal projection on a Hilbert space and \(T_n(t)=\e^{tA_n}\) is contractive. If, for every fixed \(m\),
+\[
+\norm{(I-P_{m,n})A_nP_{m,n}}
+\longrightarrow0,
+\]
+then the limiting family \(U_m\) is a semigroup.
+\end{corollary}
+
+\begin{proof}
+A bounded generator of a contraction semigroup on a Hilbert space is dissipative. If \(Q_{m,n}=I-P_{m,n}\) and \(y\in Q_{m,n}X_n\), then
+\[
+\operatorname{Re}\ip{Q_{m,n}A_nQ_{m,n}y}{y}
+=
+\operatorname{Re}\ip{A_ny}{y}
+\leq0.
+\]
+Hence the compressed hidden semigroup is contractive. Apply \cref{thm:generator_range_leakage} to \(P_{m,n}\). Since \(P_{m,n}R_{n,m}=R_{n,m}\),
+\[
+\eta_{m,n}(T)
+\leq
+T\norm{(I-P_{m,n})A_nP_{m,n}}
+\norm{R_{n,m}}.
+\]
+The right side tends to zero. Use \cref{prop:range_leakage}.
+\end{proof}
+
+\section{Finite Markov transfer and lumping}\label{sec:markov}
+
+Probability vectors are columns. A column stochastic matrix \(K\) has nonnegative entries and column sums one. A continuous time generator \(Q\) has nonnegative off diagonal entries and column sums zero.
+
+\begin{theorem}[Finite Markov semigroup]\label{thm:finite_markov}
+If \(Q\) is a finite Markov generator, then \(\e^{tQ}\) is column stochastic for every \(t\geq0\).
+\end{theorem}
+
+\begin{proof}
+Choose \(a\geq\max_i(-Q_{ii})\). The matrix \(Q+aI\) is nonnegative, so its exponential is nonnegative. Hence
+\[
+\e^{tQ}=\e^{-at}\e^{t(Q+aI)}
+\]
+is nonnegative. Since \(\one^TQ=0\), differentiation gives
+\[
+\one^T\e^{tQ}=\one^T.
+\]
+\end{proof}
+
+Let \(\{B_1,\ldots,B_m\}\) be a partition of the fine state set. Its aggregation matrix is
+\[
+C_{\alpha i}=\one_{\{i\in B_\alpha\}}.
+\]
+
+\begin{definition}[Canonical lumping obstruction]
+For a linear fine transition operator \(K\), define
+\[
+\Ob_C(K)
+=
+(CK)|_{\Ker C}
+\in
+\mathcal B(\Ker C,\RR^m).
+\]
+\end{definition}
+
+\begin{theorem}[Descent through an aggregation map]\label{thm:canonical_lumping_obstruction}
+Let \(C:X_f\to X_c\) be a surjective linear map between finite dimensional spaces. A unique operator \(\overline K:X_c\to X_c\) satisfying
+\[
+CK=\overline KC
+\]
+exists if and only if
+\[
+\Ob_C(K)=0.
+\]
+For any right inverse \(R\) of \(C\), the only possible coarse operator is
+\[
+\overline K=CKR,
+\]
+and
+\[
+CK-\overline KC
+=
+CK(I-RC).
+\]
+\end{theorem}
+
+\begin{proof}
+If \(CK=\overline KC\), then \(CK\) vanishes on \(\Ker C\). Conversely, suppose the obstruction vanishes and define
+\[
+\overline K(Cx)=CKx.
+\]
+If \(Cx=Cy\), then \(x-y\in\Ker C\), so the value does not depend on the representative. Surjectivity defines \(\overline K\) on all of \(X_c\), and the intertwining relation follows from the definition. It also gives uniqueness. If \(R\) is a right inverse, then
+\[
+\overline K=\overline KCR=CKR.
+\]
+Substitution gives the defect identity.
+\end{proof}
+
+\begin{corollary}[Coordinate form of the lumping obstruction]\label{cor:lumping_obstruction_coordinates}
+For the partition aggregation above, \(\Ker C\) is spanned by differences \(e_i-e_j\) with \(i\) and \(j\) in one source block. Also,
+\[
+\Ob_C(K)(e_i-e_j)
+=
+\left(
+\sum_{r\in B_\alpha}(K_{ri}-K_{rj})
+\right)_{\alpha=1}^m.
+\]
+\end{corollary}
+
+\begin{proof}
+Inside each block, the vectors with coordinate sum zero are spanned by differences of coordinate vectors. Applying \(CK\) gives the displayed aggregated column differences.
+\end{proof}
+
+\begin{theorem}[Characterization of exact discrete lumping]\label{thm:lumping_characterization}
+Let \(K\) be column stochastic. A coarse column stochastic matrix \(\overline K\) satisfying
+\[
+CK=\overline KC
+\]
+exists if and only if, for every source block \(B_\beta\), every pair \(i,j\in B_\beta\), and every target block \(B_\alpha\),
+\[
+\sum_{r\in B_\alpha}K_{ri}
+=
+\sum_{r\in B_\alpha}K_{rj}.
+\]
+When it exists, \(\overline K\) is unique and
+\[
+\overline K_{\alpha\beta}
+=
+\sum_{r\in B_\alpha}K_{ri}
+\]
+for any \(i\in B_\beta\).
+\end{theorem}
+
+\begin{proof}
+The \(j\)th column of \(CK\) records the transition mass from state \(j\) into every target block. The \(j\)th column of \(\overline KC\) is the column of \(\overline K\) indexed by the source block containing \(j\). Equality therefore holds exactly under the stated condition. The formula gives uniqueness. Summing over \(\alpha\) gives one, so the coarse matrix is column stochastic.
+\end{proof}
+
+\begin{corollary}[Continuous time lumping]\label{cor:continuous_lumping}
+A coarse Markov generator \(\overline Q\) satisfying
+\[
+CQ=\overline QC
+\]
+exists if and only if the aggregated rates
+\[
+\sum_{r\in B_\alpha}Q_{ri}
+\]
+depend only on the source block of \(i\). In that case
+\[
+C\e^{tQ}=\e^{t\overline Q}C
+\]
+for every \(t\geq0\).
+\end{corollary}
+
+\begin{proof}
+The characterization is the same column argument as in \cref{thm:lumping_characterization}. The off diagonal entries of \(\overline Q\) are nonnegative and its column sums are zero. Exact semigroup intertwining follows from \cref{prop:infinitesimal_defect}.
+\end{proof}
+
+\begin{theorem}[Finite horizon lumping defect]\label{thm:finite_horizon_lumping}
+For arbitrary fine and coarse operators \(K\) and \(\overline K\), with the fixed aggregation map \(C\), set
+\[
+\Delta_K=CK-\overline KC.
+\]
+Then
+\[
+CK^n-\overline K^nC
+=
+\sum_{j=0}^{n-1}
+\overline K^{n-1-j}\Delta_KK^j.
+\]
+If \(K\) and \(\overline K\) are column stochastic, then
+\[
+\norm{CK^n-\overline K^nC}_{1\to1}
+\leq
+n\norm{\Delta_K}_{1\to1}.
+\]
+For every probability vector \(p\), the total variation discrepancy is at most
+\[
+\frac n2\norm{\Delta_K}_{1\to1}.
+\]
+\end{theorem}
+
+\begin{proof}
+Sum the telescoping identities
+\[
+\overline K^{n-1-j}CK^{j+1}
+-
+\overline K^{n-j}CK^j
+=
+\overline K^{n-1-j}\Delta_KK^j.
+\]
+Stochastic matrices are contractions in the \(\ell^1\) norm. The last statement uses total variation equal to one half of the \(\ell^1\) distance.
+\end{proof}
+
+\begin{corollary}[Stationary mass descends]\label{cor:stationary_descends}
+If \(CK=\overline KC\) and \(Kp=p\), then
+\[
+\overline K(Cp)=Cp.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply the intertwining identity to \(p\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{markov_lumping.pdf}
+\caption{Exact lumping agrees at every horizon. A small violation of the block transition condition produces a visible but controlled discrepancy.}
+\label{fig:markov_lumping}
+\end{figure}
+
+\section{Conditional expectation and martingale packets}\label{sec:conditional_expectation}
+
+Let \(\Omega=\{1,\ldots,n\}\) have strictly positive probabilities \(\pi_i\). For a partition \(\mathcal Q\), let \(B(i)\) denote the block containing \(i\). Define
+\[
+(P_\mathcal Qf)_i
+=
+\frac{\sum_{j\in B(i)}\pi_jf_j}
+{\sum_{j\in B(i)}\pi_j}.
+\]
+Equip \(\CC^n\) with
+\[
+\ip{f}{g}_\pi
+=
+\sum_i\pi_if_i\overline{g_i}.
+\]
+
+\begin{theorem}[Finite conditional expectation]\label{thm:finite_conditional_expectation}
+The operator \(P_\mathcal Q\) is the orthogonal projector onto the functions that are constant on every block of \(\mathcal Q\). In particular,
+\[
+P_\mathcal Q^2=P_\mathcal Q,
+\qquad
+P_\mathcal Q^*=P_\mathcal Q.
+\]
+\end{theorem}
+
+\begin{proof}
+One application produces a block constant function, so a second application changes nothing. Expanding both weighted inner products block by block gives
+\[
+\ip{P_\mathcal Qf}{g}_\pi
+=
+\sum_{B\in\mathcal Q}
+\frac{
+\left(\sum_{i\in B}\pi_if_i\right)
+\overline{\left(\sum_{j\in B}\pi_jg_j\right)}
+}{\pi(B)}
+=
+\ip{f}{P_\mathcal Qg}_\pi.
+\]
+The range is exactly the block constant subspace.
+\end{proof}
+
+\begin{theorem}[Tower law and martingale packets]\label{thm:martingale_packets}
+Let $P_0,P_1,\ldots,P_r$ come from increasingly fine partitions, so that
+\[
+\Ran P_0\subseteq\Ran P_1\subseteq\cdots\subseteq\Ran P_r.
+\]
+Define
+\[
+D_0=P_0,
+\qquad
+D_j=P_j-P_{j-1}
+\quad(1\leq j\leq r).
+\]
+Then
+\[
+P_iP_j=P_{\min(i,j)},
+\qquad
+D_iD_j=\delta_{ij}D_j,
+\qquad
+P_r=\sum_{j=0}^rD_j.
+\]
+Every \(D_j\) is an orthogonal projector, and
+\[
+\norm{P_rf}_\pi^2
+=
+\sum_{j=0}^r\norm{D_jf}_\pi^2
+\]
+and
+\[
+\norm f_\pi^2
+=
+\sum_{j=0}^r\norm{D_jf}_\pi^2
++
+\norm{f-P_rf}_\pi^2.
+\]
+\end{theorem}
+
+\begin{proof}
+A coarse average of a fine average is the coarse average. A fine average leaves a coarse constant function unchanged. Hence \(P_iP_j=P_{\min(i,j)}\). Expanding products of the differences gives the orthogonality relations. The sum telescopes to \(P_r\). Orthogonal Pythagorean identities give the norm formulas.
+\end{proof}
+
+\begin{corollary}[Law of total variance]\label{cor:total_variance}
+For a real valued \(f\), let \(P_0f=\Exp_\pi[f]\one\). Then
+\[
+\Var_\pi(f)
+=
+\Var_\pi(P_\mathcal Qf)
++
+\norm{f-P_\mathcal Qf}_\pi^2.
+\]
+\end{corollary}
+
+\begin{proof}
+Subtract the mean and apply the orthogonal decomposition into the range of \(P_\mathcal Q\) and its orthogonal complement.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.68\textwidth]{martingale_packet_energy.pdf}
+\caption{Energy carried by the mean packet and three successive martingale difference packets in a finite weighted example.}
+\label{fig:martingale_energy}
+\end{figure}
+
+\begin{standardfact}[General conditional expectations]
+On a probability space, conditional expectation onto a sub sigma algebra is the orthogonal projector in \(L^2\). Nested sigma algebras satisfy the same tower law. Under the usual hypotheses, martingale convergence gives a limit in \(L^2\) and almost surely. Standard treatments include \cite{Williams1991}.
+\end{standardfact}
+
+\section{Gaussian transfer and Hermite packets}\label{sec:ou_hermite}
+
+Let \(\gamma\) be the standard Gaussian probability measure on \(\RR\). For \(t\geq0\), define the Ornstein Uhlenbeck transfer
+\[
+(\Ocal_t f)(x)
+=
+\int_\RR
+f\left(
+\e^{-t}x+\sqrt{1-\e^{-2t}}\,y
+\right)
+\gamma(\dd y).
+\]
+Let \(H_n\) be the probabilists' Hermite polynomial defined by
+\[
+\exp\left(ux-\frac{u^2}{2}\right)
+=
+\sum_{n=0}^\infty H_n(x)\frac{u^n}{n!},
+\]
+and set \(h_n=H_n/\sqrt{n!}\).
+
+\begin{theorem}[Ornstein Uhlenbeck semigroup]\label{thm:ou_semigroup}
+The operators \((\Ocal_t)_{t\geq0}\) form a positive Markov contraction semigroup on \(L^p(\gamma)\) for every \(1\leq p\leq\infty\). On \(L^2(\gamma)\), the semigroup is self adjoint and
+\[
+\Ocal_t h_n=\e^{-nt}h_n.
+\]
+The family \((h_n)_{n\geq0}\) is an orthonormal basis of \(L^2(\gamma)\).
+\end{theorem}
+
+\begin{proof}
+Positivity and preservation of constants follow from the integral formula. If \(X\) and \(Y\) are independent standard Gaussian variables, then
+\[
+\e^{-s}
+\left(
+\e^{-t}x+\sqrt{1-\e^{-2t}}X
+\right)
++
+\sqrt{1-\e^{-2s}}Y
+\]
+has the same distribution as
+\[
+\e^{-(s+t)}x
++
+\sqrt{1-\e^{-2(s+t)}}Z
+\]
+with \(Z\) standard Gaussian. This proves the semigroup law. Jensen's inequality and invariance of \(\gamma\) give the \(L^p\) contraction. The joint Gaussian pair
+\[
+\left(
+X,
+\e^{-t}X+\sqrt{1-\e^{-2t}}Y
+\right)
+\]
+is symmetric under interchange, which proves self adjointness.
+
+Apply \(\Ocal_t\) to the Hermite generating function. Gaussian integration gives
+\[
+\begin{aligned}
+\Ocal_t
+\exp\left(ux-\frac{u^2}{2}\right)
+&=
+\exp\left(
+\e^{-t}ux-
+\frac{\e^{-2t}u^2}{2}
+\right)\\
+&=
+\sum_{n=0}^\infty
+\e^{-nt}H_n(x)\frac{u^n}{n!}.
+\end{aligned}
+\]
+Comparison of coefficients proves the eigenvalue formula. The same generating function shows
+\[
+\int H_mH_n\dd\gamma=n!\delta_{mn}.
+\]
+The Hermite polynomials span all polynomials, and polynomials are dense in \(L^2(\gamma)\). Hence the normalized family is an orthonormal basis. See \cite{Janson1997} for the general Gaussian Hilbert space setting.
+\end{proof}
+
+\begin{corollary}[Hermite packet reconstruction]\label{cor:hermite_packets}
+Let \(P_n\) be the orthogonal projection onto \(\CC h_n\). Then
+\[
+I=\sum_{n=0}^\infty P_n
+\]
+in the strong operator topology and
+\[
+\Ocal_t
+=
+\sum_{n=0}^\infty\e^{-nt}P_n.
+\]
+For \(f\in L^2(\gamma)\),
+\[
+\norm{\Ocal_t f}_2^2
+=
+\sum_{n=0}^\infty
+\e^{-2nt}\norm{P_nf}_2^2.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Parseval's identity and the eigenvalue formula in \cref{thm:ou_semigroup}.
+\end{proof}
+
+\begin{proposition}[Generator and Dirichlet form]\label{prop:ou_generator}
+On the polynomial subspace, the infinitesimal generator of \((\Ocal_t)\) is the differential operator
+\[
+\Lcal f=f''-xf'.
+\]
+It satisfies
+\[
+\Lcal h_n=-nh_n.
+\]
+For every polynomial \(f\),
+\[
+\ip{-\Lcal f}{f}_{L^2(\gamma)}
+=
+\int_\RR\abs{f'(x)}^2\gamma(\dd x).
+\]
+\end{proposition}
+
+\begin{proof}
+Write
+\[
+\rho_t=\e^{-t}=1-t+O(t^2),
+\qquad
+\sigma_t^2=1-\e^{-2t}=2t+O(t^2).
+\]
+For a polynomial \(f\), Taylor expansion at \(x\) and Gaussian integration give
+\[
+\begin{aligned}
+\Ocal_tf(x)
+={}&f(x)
++f'(x)(\rho_t-1)x
++\frac12f''(x)\sigma_t^2
++o(t)\\
+={}&f(x)+t\bigl(f''(x)-xf'(x)\bigr)+o(t).
+\end{aligned}
+\]
+Every omitted term is a polynomial in the Gaussian variable multiplied by a quantity that is \(o(t)\), so the expansion may be integrated term by term. Therefore
+\[
+\left.\frac{\dd}{\dd t}\Ocal_tf\right|_{t=0}
+=f''-xf'.
+\]
+The Hermite eigenvalue identity also follows by differentiating
+\(
+\Ocal_th_n=\e^{-nt}h_n
+\)
+at zero. Gaussian integration by parts gives
+\[
+\int_\RR f'(x)\overline{g(x)}\gamma(\dd x)
+=
+\int_\RR f(x)\overline{xg(x)-g'(x)}\gamma(\dd x).
+\]
+Set \(g=f'\) and rearrange.
+\end{proof}
+
+\begin{corollary}[Gaussian spectral gap]\label{cor:ou_spectral_gap}
+If \(f\in L^2(\gamma)\) has mean zero, then
+\[
+\norm{\Ocal_tf}_2
+\leq
+\e^{-t}\norm f_2.
+\]
+For every polynomial \(f\),
+\[
+\Var_\gamma(f)
+\leq
+\int_\RR\abs{f'(x)}^2\gamma(\dd x).
+\]
+\end{corollary}
+
+\begin{proof}
+A mean zero function has no \(h_0\) component, so every surviving Hermite multiplier is at most \(\e^{-t}\). For a polynomial
+\[
+f-\Exp_\gamma f=\sum_{n\geq1}c_nh_n.
+\]
+Then
+\[
+\Var_\gamma(f)=\sum_{n\geq1}\abs{c_n}^2
+\leq
+\sum_{n\geq1}n\abs{c_n}^2
+=
+\ip{-\Lcal f}{f}.
+\]
+Apply \cref{prop:ou_generator}.
+\end{proof}
+
+\begin{corollary}[Fractional Hermite transfer]\label{cor:fractional_hermite}
+Let \(-\Lcal\) be the nonnegative Ornstein Uhlenbeck number operator with
+\[
+-\Lcal h_n=nh_n.
+\]
+For every \(\alpha>0\),
+\[
+\e^{-t(-\Lcal)^\alpha}f
+=
+\sum_{n=0}^\infty
+\e^{-tn^\alpha}P_nf.
+\]
+This is a contraction semigroup on \(L^2(\gamma)\).
+\end{corollary}
+
+\begin{proof}
+The spectral theorem applies to the orthonormal Hermite basis. Every multiplier has modulus at most one and obeys the scalar semigroup law.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{ou_hermite.pdf}
+\caption{Hermite packet multipliers for the Ornstein Uhlenbeck semigroup and two fractional powers of its number operator.}
+\label{fig:ou_hermite}
+\end{figure}
+
+\section{Bayesian transfer and evidence packets}\label{sec:bayesian_transfer}
+
+Let
+\[
+\Delta_{n-1}
+=
+\left\{p\in\RR^n:
+p_i\geq0,
+\quad
+\sum_ip_i=1
+\right\}
+\]
+be the probability simplex. Let \(\lambda\in[0,\infty)^n\) have positive evidence
+\[
+Z_\lambda(p)=\sum_i\lambda_ip_i.
+\]
+The Bayesian transfer is
+\[
+\Bcal_\lambda(p)
+=
+\frac{\lambda\odot p}{Z_\lambda(p)}.
+\]
+
+\begin{proposition}[Scale invariance and composition]\label{prop:bayes_composition}
+For every \(c>0\),
+\[
+\Bcal_{c\lambda}=\Bcal_\lambda.
+\]
+If all relevant evidences are positive, then
+\[
+\Bcal_\mu(\Bcal_\lambda(p))
+=
+\Bcal_{\lambda\odot\mu}(p).
+\]
+\end{proposition}
+
+\begin{proof}
+A common likelihood scale cancels between the numerator and denominator. In the second identity, the first evidence appears in both the numerator and the denominator of the second update and cancels.
+\end{proof}
+
+Let \(I=I_1\sqcup\cdots\sqcup I_m\) be a partition. Define packet evidences
+\[
+Z_\alpha
+=
+\sum_{i\in I_\alpha}\lambda_ip_i.
+\]
+For \(Z_\alpha>0\), define
+\[
+m_\alpha=\frac{Z_\alpha}{\sum_\beta Z_\beta},
+\qquad
+q_{\alpha,i}=\frac{\lambda_ip_i}{Z_\alpha}
+\quad(i\in I_\alpha).
+\]
+Packets with zero evidence receive posterior mass zero.
+
+\begin{theorem}[Bayesian packet reconstruction]\label{thm:bayesian_packet_reconstruction}
+The posterior is the disjoint packet synthesis
+\[
+\Bcal_\lambda(p)
+=
+\sum_{\alpha:Z_\alpha>0}
+m_\alpha q_\alpha.
+\]
+The local shape \(q_\alpha\) depends only on the prior and likelihood inside packet \(I_\alpha\). Coupling between different packets occurs through the normalization of the packet evidences.
+\end{theorem}
+
+\begin{proof}
+For \(i\in I_\alpha\),
+\[
+m_\alpha q_{\alpha,i}
+=
+\frac{Z_\alpha}{\sum_\beta Z_\beta}
+\frac{\lambda_ip_i}{Z_\alpha}
+=
+\frac{\lambda_ip_i}{Z_\lambda(p)}.
+\]
+The packet supports are disjoint.
+\end{proof}
+
+\begin{theorem}[Likelihood perturbation]\label{thm:likelihood_perturbation}
+Let \(\lambda,\mu\geq0\) have positive evidences under a fixed prior \(p\). Set
+\[
+d_p(\lambda,\mu)
+=
+\sum_i\abs{\lambda_i-\mu_i}p_i.
+\]
+Then
+\[
+\norm{\Bcal_\lambda(p)-\Bcal_\mu(p)}_1
+\leq
+\frac{2d_p(\lambda,\mu)}
+{\max\{Z_\lambda(p),Z_\mu(p)\}}.
+\]
+\end{theorem}
+
+\begin{proof}
+Add and subtract \(\mu\odot p/Z_\lambda(p)\). This gives
+\[
+\norm{\Bcal_\lambda(p)-\Bcal_\mu(p)}_1
+\leq
+\frac{2d_p(\lambda,\mu)}{Z_\lambda(p)}.
+\]
+Interchanging \(\lambda\) and \(\mu\) gives the same estimate with \(Z_\mu(p)\). Take the smaller of the two upper bounds.
+\end{proof}
+
+\begin{theorem}[Stability with respect to the prior]\label{thm:prior_stability}
+Assume
+\[
+0<a\leq\lambda_i\leq b
+\]
+for every \(i\). Then
+\[
+\norm{\Bcal_\lambda(p)-\Bcal_\lambda(q)}_1
+\leq
+\frac{2b}{a}\norm{p-q}_1
+\]
+for all priors \(p,q\in\Delta_{n-1}\).
+\end{theorem}
+
+\begin{proof}
+The evidences are at least \(a\). Add and subtract \(\lambda\odot q/Z_\lambda(p)\). The numerator difference is at most \(b\norm{p-q}_1\), and the evidence difference has the same bound. The two terms give the stated constant.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{bayesian_packets.pdf}
+\caption{A prior and posterior on two coarse packets. The likelihood is constant in the first packet and varies inside the second, so only the second local conditional distribution changes.}
+\label{fig:bayesian_packets}
+\end{figure}
+
+\section{Bayesian coarsening and finite sufficiency}\label{sec:bayesian_sufficiency}
+
+A fixed coarse description will be called sufficient when it reproduces the coarse posterior masses for every positive prior and leaves the conditional distribution inside every packet unchanged. This excludes a coarse rule that hides an unrecorded local update.
+
+Let \(C\) send a fine probability vector to its block masses
+\[
+(Cp)_\alpha
+=
+\sum_{i\in I_\alpha}p_i.
+\]
+Assume first that every block mass is positive. Write
+\[
+r_{\alpha,i}
+=
+\frac{p_i}{(Cp)_\alpha}
+\]
+for the prior conditional distribution inside packet \(I_\alpha\). Define the prior dependent packet average likelihood
+\[
+\overline\lambda_\alpha(p)
+=
+\sum_{i\in I_\alpha}\lambda_ir_{\alpha,i}.
+\]
+
+\begin{theorem}[Exact two stage Bayesian update]\label{thm:two_stage_bayes}
+For every strictly positive prior,
+\[
+C\Bcal_\lambda(p)
+=
+\Bcal_{\overline\lambda(p)}(Cp).
+\]
+For every packet with \(\overline\lambda_\alpha(p)>0\), the posterior conditional distribution is
+\[
+q_{\alpha,i}
+=
+\frac{\lambda_ir_{\alpha,i}}
+{\overline\lambda_\alpha(p)}.
+\]
+A packet with zero average likelihood has zero posterior mass. Thus a fine Bayesian update consists of a coarse update by packet average likelihoods followed by independent local updates inside the packets that survive.
+\end{theorem}
+
+\begin{proof}
+The posterior mass of packet \(I_\alpha\) is
+\[
+\frac{\sum_{i\in I_\alpha}\lambda_ip_i}
+{\sum_j\lambda_jp_j}
+=
+\frac{(Cp)_\alpha\overline\lambda_\alpha(p)}
+{\sum_\beta(Cp)_\beta\overline\lambda_\beta(p)}.
+\]
+This is the coarse Bayesian formula. Dividing the fine posterior coordinates by the packet mass gives the local formula.
+\end{proof}
+
+\begin{theorem}[Characterization of fixed coarse sufficiency]\label{thm:bayesian_sufficiency}
+Assume \(\lambda_i>0\) for every state. The following conditions are equivalent.
+\begin{enumerate}
+\item There is a positive coarse likelihood \(\ell\in(0,\infty)^m\) such that
+\[
+C\Bcal_\lambda(p)
+=
+\Bcal_\ell(Cp)
+\]
+for every strictly positive prior \(p\), and the posterior conditional distribution inside every packet equals its prior conditional distribution.
+\item The likelihood is constant on every packet.
+\end{enumerate}
+When these conditions hold, \(\ell_\alpha\) can be chosen as the common value of \(\lambda\) on \(I_\alpha\), and it is unique up to a common positive scale.
+\end{theorem}
+
+\begin{proof}
+If \(\lambda\) is constant on each packet, \cref{thm:two_stage_bayes} has packet averages independent of the prior and its local posterior formula gives \(q_\alpha=r_\alpha\). This proves the first condition.
+
+Conversely, fix any strictly positive prior. Equality of the local posterior and prior conditionals gives
+\[
+\frac{\lambda_i r_{\alpha,i}}
+{\overline\lambda_\alpha(p)}
+=
+r_{\alpha,i}
+\]
+for every \(i\in I_\alpha\). Positivity of the conditional prior implies
+\[
+\lambda_i=\overline\lambda_\alpha(p)
+\]
+for every state in the packet. Thus the likelihood is constant on every packet. If two positive coarse likelihoods define the same update for every positive coarse prior, comparison of any two posterior odds shows that their coordinate ratios agree. Hence they differ only by a common positive factor.
+\end{proof}
+
+\begin{theorem}[Coarsest fixed sufficient partition]\label{thm:coarsest_bayesian_partition}
+Let \(\mathcal L\) be a nonempty family of strictly positive likelihood vectors. Define
+\[
+i\sim_{\mathcal L}j
+\quad\Longleftrightarrow\quad
+\lambda_i=\lambda_j
+\quad\hbox{for every }\lambda\in\mathcal L.
+\]
+Let \(\mathcal Q_{\mathcal L}\) be the partition into equivalence classes. A partition \(\mathcal Q\) gives a fixed coarse sufficient description in the sense of \cref{thm:bayesian_sufficiency} for every \(\lambda\in\mathcal L\) if and only if every block of \(\mathcal Q\) is contained in a block of \(\mathcal Q_{\mathcal L}\). Hence \(\mathcal Q_{\mathcal L}\) is the unique coarsest partition with this property.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:bayesian_sufficiency} to every likelihood in the family. A fixed sufficient description exists exactly when each likelihood is constant on every block of \(\mathcal Q\). This is equivalent to every block of \(\mathcal Q\) being contained in one common level set of the family. The equivalence class partition is itself admissible, and every other admissible partition refines it.
+\end{proof}
+
+\begin{definition}[Within packet information loss]
+For a prior \(p\), define
+\[
+\eta_i(p)
+=
+\lambda_i-\overline\lambda_\alpha(p)
+\quad\hbox{when }i\in I_\alpha.
+\]
+Then
+\[
+\sum_{i\in I_\alpha}r_{\alpha,i}\eta_i(p)=0.
+\]
+\end{definition}
+
+\begin{proposition}[Exact local distortion]\label{prop:local_bayes_distortion}
+For every packet with positive mass and evidence,
+\[
+q_{\alpha,i}-r_{\alpha,i}
+=
+\frac{r_{\alpha,i}\eta_i(p)}
+{\overline\lambda_\alpha(p)}.
+\]
+Consequently,
+\[
+\norm{q_\alpha-r_\alpha}_1
+=
+\frac{
+\sum_{i\in I_\alpha}r_{\alpha,i}\abs{\eta_i(p)}
+}{\overline\lambda_\alpha(p)}.
+\]
+If \(\lambda\) is positive on the packet, then
+\[
+\norm{q_\alpha-r_\alpha}_1
+\leq
+\frac{\osc_{I_\alpha}(\lambda)}
+{\min_{i\in I_\alpha}\lambda_i}.
+\]
+\end{proposition}
+
+\begin{proof}
+Subtract \(r_{\alpha,i}\) from the local posterior formula in \cref{thm:two_stage_bayes}. The norm identity follows because the factor multiplying \(\eta_i\) is nonnegative. The last estimate uses
+\[
+\sum_i r_{\alpha,i}\abs{\eta_i}
+\leq
+\osc_{I_\alpha}(\lambda)
+\]
+and \(\overline\lambda_\alpha(p)\geq\min_{I_\alpha}\lambda\).
+\end{proof}
+
+\begin{theorem}[Approximate coarse Bayesian rule]\label{thm:approximate_coarse_bayes}
+Choose one positive number \(\ell_\alpha\) for every packet and define the block constant fine likelihood
+\[
+\widetilde\lambda_i=\ell_\alpha
+\quad(i\in I_\alpha).
+\]
+Then
+\[
+\norm{
+C\Bcal_\lambda(p)-\Bcal_\ell(Cp)
+}_1
+\leq
+\frac{
+2\sum_i p_i\abs{\lambda_i-\widetilde\lambda_i}
+}{
+\max\{Z_\lambda(p),Z_{\widetilde\lambda}(p)\}
+}.
+\]
+\end{theorem}
+
+\begin{proof}
+Block constancy gives
+\[
+C\Bcal_{\widetilde\lambda}(p)
+=
+\Bcal_\ell(Cp).
+\]
+Aggregation is an \(\ell^1\) contraction. Apply \cref{thm:likelihood_perturbation} to the two fine posteriors and then aggregate.
+\end{proof}
+
+\begin{definition}[Relative information]
+For probability vectors \(q\) and \(p\), define
+\[
+D(q\Vert p)
+=
+\sum_iq_i\log\frac{q_i}{p_i}.
+\]
+The convention is \(0\log0=0\). A term with \(q_i>0\) and \(p_i=0\) has value \(+\infty\).
+\end{definition}
+
+\begin{theorem}[Exact information decomposition]\label{thm:bayesian_information_chain}
+Let \(p\) and \(q\) be probability vectors on a finite partition \((I_\alpha)_\alpha\), and assume \(q_i=0\) whenever \(p_i=0\). Let
+\[
+m=Cp,
+\qquad
+n=Cq,
+\]
+and let \(p_\alpha\) and \(q_\alpha\) be the conditional distributions inside packet \(I_\alpha\) whenever the corresponding mass is positive. Then
+\[
+D(q\Vert p)
+=
+D(n\Vert m)
++
+\sum_{\alpha:n_\alpha>0}
+ n_\alpha D(q_\alpha\Vert p_\alpha).
+\]
+The first term is the information retained by the coarse masses. The second term is the exact information carried by changes inside the packets.
+\end{theorem}
+
+\begin{proof}
+For \(i\in I_\alpha\), write
+\[
+p_i=m_\alpha p_{\alpha,i},
+\qquad
+q_i=n_\alpha q_{\alpha,i}.
+\]
+Then
+\[
+\log\frac{q_i}{p_i}
+=
+\log\frac{n_\alpha}{m_\alpha}
++
+\log\frac{q_{\alpha,i}}{p_{\alpha,i}}.
+\]
+Multiply by \(q_i\), sum first inside each packet, and then sum over the packets. This is the finite relative entropy chain rule. Standard information theoretic treatments include \cite{CoverThomas2006}.
+\end{proof}
+
+\begin{corollary}[Coarse data processing and equality]\label{cor:coarse_data_processing}
+Under the assumptions of \cref{thm:bayesian_information_chain},
+\[
+D(Cq\Vert Cp)
+\leq
+D(q\Vert p).
+\]
+Equality holds if and only if
+\[
+q_\alpha=p_\alpha
+\]
+for every packet with positive posterior mass.
+\end{corollary}
+
+\begin{proof}
+Every conditional relative information term in \cref{thm:bayesian_information_chain} is nonnegative. It vanishes exactly when the two conditional distributions agree.
+\end{proof}
+
+\begin{corollary}[Information created by a Bayesian update]\label{cor:bayesian_information_gain}
+Let \(q=\Bcal_\lambda(p)\) with positive likelihood and positive prior. Then
+\[
+D(q\Vert p)
+=
+\sum_iq_i\log\lambda_i
+-
+\log Z_\lambda(p).
+\]
+Inside a packet,
+\[
+D(q_\alpha\Vert r_\alpha)
+=
+\sum_{i\in I_\alpha}
+q_{\alpha,i}
+\log\frac{\lambda_i}{\overline\lambda_\alpha(p)}.
+\]
+Hence
+\[
+D(q_\alpha\Vert r_\alpha)
+\leq
+\log
+\frac{\max_{i\in I_\alpha}\lambda_i}
+{\min_{i\in I_\alpha}\lambda_i}.
+\]
+\end{corollary}
+
+\begin{proof}
+The posterior ratio is
+\[
+\frac{q_i}{p_i}
+=
+\frac{\lambda_i}{Z_\lambda(p)}.
+\]
+The local ratio is
+\[
+\frac{q_{\alpha,i}}{r_{\alpha,i}}
+=
+\frac{\lambda_i}{\overline\lambda_\alpha(p)}.
+\]
+Insert these identities into the definition of relative entropy. The final estimate follows because both \(\lambda_i\) and the packet average lie between the packet minimum and maximum.
+\end{proof}
+
+\begin{corollary}[Information criterion for local sufficiency]\label{cor:information_sufficiency}
+For a fixed positive likelihood, the within packet term in \cref{thm:bayesian_information_chain} vanishes for every positive prior if and only if the likelihood is constant on every packet.
+\end{corollary}
+
+\begin{proof}
+If the likelihood is block constant, every local posterior equals its local prior. Conversely, choose any positive prior. Vanishing relative entropy gives \(q_\alpha=r_\alpha\). The local posterior formula then forces all likelihood values in that packet to equal their packet average. Repeat for every packet.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{bayesian_information_split.pdf}
+\caption{Relative information separated into a coarse packet contribution and conditional contributions inside the packets.}
+\label{fig:bayesian_information_split}
+\end{figure}
+
+\begin{remark}
+The exact coarse likelihood in \cref{thm:two_stage_bayes} depends on the conditional prior inside each packet. \Cref{thm:bayesian_sufficiency} identifies when that dependence disappears. \Cref{thm:bayesian_information_chain} measures what is lost when only the coarse posterior masses are retained.
+\end{remark}
+
+\section{Bayesian flows and hidden Markov recursion}\label{sec:bayesian_flows}
+
+Fix a score vector \(g\in\RR^n\). For \(t\geq0\), define
+\[
+\Phi_t(p)_i
+=
+\frac{\e^{tg_i}p_i}
+{\sum_j\e^{tg_j}p_j}.
+\]
+
+\begin{theorem}[Bayesian flow and replicator equation]\label{thm:bayesian_flow}
+The maps \(\Phi_t\) form a nonlinear semigroup:
+\[
+\Phi_{s+t}=\Phi_s\circ\Phi_t.
+\]
+Every coordinate satisfies
+\[
+\frac{\dd}{\dd t}p_i(t)
+=
+\bigl(g_i-\ip{g}{p(t)}\bigr)p_i(t).
+\]
+The support of \(p(t)\) is independent of \(t\), and for any two coordinates in the support,
+\[
+\frac{p_i(t)}{p_j(t)}
+=
+\e^{t(g_i-g_j)}
+\frac{p_i(0)}{p_j(0)}.
+\]
+\end{theorem}
+
+\begin{proof}
+The semigroup law follows from multiplication of the likelihoods \(\e^{sg}\) and \(\e^{tg}\). Differentiating the normalized formula gives the replicator equation. A coordinate that starts at zero remains zero, while a positive coordinate remains positive. Dividing two explicit coordinate formulas gives the odds identity.
+\end{proof}
+
+\begin{theorem}[Evidence cumulants and score monotonicity]\label{thm:evidence_cumulants}
+Set
+\[
+\psi(t)
+=
+\log\left(
+\sum_i\e^{tg_i}p_i(0)
+\right).
+\]
+Then
+\[
+\psi'(t)=\ip{g}{p(t)},
+\qquad
+\psi''(t)=\Var_{p(t)}(g)\geq0.
+\]
+Consequently,
+\[
+\frac{\dd}{\dd t}\ip{g}{p(t)}
+=
+\Var_{p(t)}(g).
+\]
+\end{theorem}
+
+\begin{proof}
+Differentiate the log normalizing constant once and twice. The second derivative is the centered second moment under the tilted distribution.
+\end{proof}
+
+\begin{corollary}[Concentration on the maximal score packet]\label{cor:bayes_flow_concentration}
+Let
+\[
+G=\max\{g_i:p_i(0)>0\}
+\]
+and let \(M\) be the set of supported indices with score \(G\). If \(M\) is the full support, then the conclusion below is immediate. Otherwise, suppose
+\[
+\delta
+=
+\min\{G-g_i:p_i(0)>0,
+\quad i\notin M\}>0.
+\]
+Then
+\[
+1-\sum_{i\in M}p_i(t)
+\leq
+\frac{1-p_M(0)}{p_M(0)}\e^{-\delta t},
+\]
+where \(p_M(0)=\sum_{i\in M}p_i(0)\).
+\end{corollary}
+
+\begin{proof}
+Factor \(\e^{tG}\) from the normalizing constant. The total weight outside \(M\) is at most \((1-p_M(0))\e^{-\delta t}\), while the weight on \(M\) is \(p_M(0)\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{bayesian_flow.pdf}
+\caption{A finite Bayesian flow. Mass concentrates on the states with the largest score, while every relative odds ratio follows an exact exponential law.}
+\label{fig:bayesian_flow}
+\end{figure}
+
+\subsection{Prediction and update}
+
+Let \(K\) be column stochastic and let \(\lambda^{(r)}\) be the likelihood of the \(r\)th observation. The hidden Markov filter is
+\[
+\widehat p_r=Kp_{r-1},
+\qquad
+p_r=\Bcal_{\lambda^{(r)}}(\widehat p_r).
+\]
+A standard account of finite hidden Markov models appears in \cite{Rabiner1989}.
+
+\begin{proposition}[Simplex preservation]\label{prop:hmm_preservation}
+Suppose \(p_{r-1}\) is a probability vector and the new evidence is positive. Prediction produces the probability vector \(\widehat p_r\), and normalization produces the probability vector \(p_r\).
+\end{proposition}
+
+\begin{proof}
+Column stochasticity preserves nonnegativity and total mass. Bayesian normalization then preserves the same properties.
+\end{proof}
+
+\begin{theorem}[One step filter stability]\label{thm:hmm_stability}
+Let \(K\) and \(\widetilde K\) be column stochastic. Assume
+\[
+0<a\leq\lambda_i\leq b.
+\]
+Then
+\[
+\norm{
+\Bcal_\lambda(Kp)-\Bcal_\lambda(\widetilde Kq)
+}_1
+\leq
+\frac{2b}{a}
+\left(
+\norm{p-q}_1
++
+\norm{K-\widetilde K}_{1\to1}
+\right).
+\]
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:prior_stability} to \(Kp\) and \(\widetilde Kq\). Then use
+\[
+\norm{Kp-\widetilde Kq}_1
+\leq
+\norm{K(p-q)}_1
++
+\norm{(K-\widetilde K)q}_1
+\]
+and the stochastic contraction property.
+\end{proof}
+
+\begin{example}[Beta binomial transfer]
+A beta prior with parameters \((a,b)\) and binomial data containing \(s\) successes in \(n\) trials gives the posterior parameters
+\[
+(a+s,b+n-s).
+\]
+The update is additive in the two exponent coordinates. This is a finite dimensional conjugate realization of likelihood composition. Standard Bayesian references include \cite{BernardoSmith1994}.
+\end{example}
+
+\section{Fractional functional calculus}\label{sec:fractional}
+
+Let \(H\) be a finite dimensional Hilbert space and let \(L=L^*\geq0\). Write its spectral resolution as
+\[
+L=\sum_j\lambda_jP_j.
+\]
+For \(\alpha>0\), define
+\[
+L^\alpha
+=
+\sum_j\lambda_j^\alpha P_j
+\]
+and
+\[
+T_\alpha(t)
+=
+\e^{-tL^\alpha}
+=
+\sum_j\e^{-t\lambda_j^\alpha}P_j.
+\]
+
+\begin{theorem}[Fractional packet calculus]\label{thm:fractional_packet_calculus}
+For \(\alpha,\beta>0\),
+\[
+L^\alpha L^\beta=L^{\alpha+\beta}.
+\]
+For \(s,t\geq0\),
+\[
+T_\alpha(s)T_\alpha(t)=T_\alpha(s+t).
+\]
+Every spectral packet \(P_jH\) reduces \(L^\alpha\) and \(T_\alpha(t)\).
+\end{theorem}
+
+\begin{proof}
+The claims hold on each spectral packet and the projectors are mutually orthogonal.
+\end{proof}
+
+\begin{theorem}[Balakrishnan formula in finite dimension]\label{thm:balakrishnan}
+For \(0<\alpha<1\),
+\[
+L^\alpha
+=
+\frac{\sin(\pi\alpha)}{\pi}
+\int_0^\infty
+s^{\alpha-1}L(sI+L)^{-1}
+\dd s.
+\]
+The integral converges in operator norm.
+\end{theorem}
+
+\begin{proof}
+It is enough to prove the formula on an eigenvector with eigenvalue \(x\geq0\). For \(x>0\), the substitution \(s=xu\) gives
+\[
+\frac{\sin(\pi\alpha)}{\pi}
+\int_0^\infty
+s^{\alpha-1}\frac{x}{s+x}\dd s
+=x^\alpha
+\frac{\sin(\pi\alpha)}{\pi}
+\int_0^\infty\frac{u^{\alpha-1}}{1+u}\dd u
+=x^\alpha.
+\]
+The value at \(x=0\) is zero. There are finitely many eigenvalues, so the operator integral converges. This is the finite spectral form of the fractional power construction in \cite{Balakrishnan1960}.
+\end{proof}
+
+\begin{theorem}[Exact fractional naturality]\label{thm:exact_fractional_naturality}
+Let \(L_f\) and \(L_c\) be finite dimensional positive self adjoint operators and let \(C\) satisfy
+\[
+CL_f=L_cC.
+\]
+Then, for every \(\alpha>0\) and \(t\geq0\),
+\[
+CL_f^\alpha=L_c^\alpha C
+\]
+and
+\[
+C\e^{-tL_f^\alpha}
+=
+\e^{-tL_c^\alpha}C.
+\]
+\end{theorem}
+
+\begin{proof}
+The union of the two finite spectra is a finite set. There is a polynomial that agrees with \(x^\alpha\) on that set, and another polynomial that agrees with \(\e^{-tx^\alpha}\). Exact intertwining passes to every polynomial by induction.
+\end{proof}
+
+\begin{theorem}[Fractional defect bound]\label{thm:fractional_defect}
+Let \(0<\alpha<1\). Suppose
+\[
+L_f\geq mI,
+\qquad
+L_c\geq mI
+\]
+for some \(m>0\). Define
+\[
+\Delta_L=CL_f-L_cC.
+\]
+Then
+\[
+\norm{CL_f^\alpha-L_c^\alpha C}
+\leq
+\alpha m^{\alpha-1}\norm{\Delta_L}.
+\]
+Consequently,
+\[
+\norm{
+C\e^{-tL_f^\alpha}
+-
+\e^{-tL_c^\alpha}C
+}
+\leq
+\alpha t m^{\alpha-1}\norm{\Delta_L}.
+\]
+\end{theorem}
+
+\begin{proof}
+Set
+\[
+R_f(s)=(sI+L_f)^{-1},
+\qquad
+R_c(s)=(sI+L_c)^{-1}.
+\]
+The resolvent identity gives
+\[
+CR_f(s)-R_c(s)C
+=
+-R_c(s)\Delta_LR_f(s).
+\]
+Since \(LR=I-sR\),
+\[
+CL_fR_f(s)-L_cR_c(s)C
+=
+sR_c(s)\Delta_LR_f(s).
+\]
+Insert this into \cref{thm:balakrishnan}. The spectral lower bound gives
+\[
+\norm{R_f(s)},\norm{R_c(s)}
+\leq
+\frac{1}{s+m}.
+\]
+Therefore
+\[
+\begin{aligned}
+\norm{CL_f^\alpha-L_c^\alpha C}
+&\leq
+\frac{\sin(\pi\alpha)}{\pi}
+\norm{\Delta_L}
+\int_0^\infty
+\frac{s^\alpha}{(s+m)^2}\dd s\\
+&=
+\alpha m^{\alpha-1}\norm{\Delta_L}.
+\end{aligned}
+\]
+The semigroup estimate follows from \cref{thm:duhamel_defect}, applied to the contraction generators \(-L_f^\alpha\) and \(-L_c^\alpha\).
+\end{proof}
+
+\begin{remark}
+The factor \(m^{\alpha-1}\) records the singular behavior of \(x^\alpha\) near zero. Without a common positive lower bound, a uniform Lipschitz estimate of this form cannot be expected.
+\end{remark}
+
+\begin{standardfact}[Stable subordination]\label{fact:stable_subordination}
+Let \(0<\alpha<1\) and \(t>0\). There is a probability measure \(\eta_{\alpha,t}\) on \([0,\infty)\) such that
+\[
+\int_0^\infty \e^{-s\lambda}\eta_{\alpha,t}(\dd s)
+=
+\e^{-t\lambda^\alpha}
+\]
+for every \(\lambda\geq0\). Consequently, for a finite dimensional positive self adjoint operator,
+\[
+\e^{-tL^\alpha}
+=
+\int_0^\infty
+\e^{-sL}\eta_{\alpha,t}(\dd s)
+\]
+in operator norm. The measures satisfy the convolution law
+\[
+\eta_{\alpha,s}*\eta_{\alpha,t}
+=
+\eta_{\alpha,s+t}.
+\]
+\end{standardfact}
+
+The existence of \(\eta_{\alpha,t}\) follows from complete monotonicity of \(\e^{-t\lambda^\alpha}\). The operator identity is obtained by applying the scalar Laplace transform on every spectral packet. This is the finite spectral form of Bochner subordination. See \cite{SchillingSongVondracek2012}.
+
+\begin{theorem}[Poisson subordination]\label{thm:poisson_subordination}
+For \(t>0\),
+\[
+\e^{-t\sqrt L}
+=
+\frac{t}{2\sqrt\pi}
+\int_0^\infty
+s^{-3/2}
+\e^{-t^2/(4s)}
+\e^{-sL}
+\dd s.
+\]
+The integral converges in operator norm.
+\end{theorem}
+
+\begin{proof}
+On a spectral packet with eigenvalue \(\lambda\), the formula reduces to
+\[
+\e^{-t\sqrt\lambda}
+=
+\frac{t}{2\sqrt\pi}
+\int_0^\infty
+s^{-3/2}\e^{-t^2/(4s)-\lambda s}\dd s.
+\]
+This scalar identity follows from the Gaussian integral. Recombine the finitely many spectral packets.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{fractional_multipliers.pdf}
+\caption{Fractional semigroup multipliers at time one. Smaller exponents preserve more of the high spectral range.}
+\label{fig:fractional_multipliers}
+\end{figure}
+
+\begin{remark}
+For sectorial and nonnormal operators, fractional powers require a resolvent or contour calculus together with domain control. The finite self adjoint theory proved here does not remove those analytic requirements. A broader account appears in \cite{SchillingSongVondracek2012}.
+\end{remark}
+
+\section{Green operators and finite difference transfer}\label{sec:green_pde}
+
+Consider
+\[
+-u''=f
+\quad\hbox{on }(0,1),
+\qquad
+u(0)=u(1)=0.
+\]
+The continuum Green kernel is
+\[
+G(x,y)=\min(x,y)-xy.
+\]
+Thus
+\[
+u(x)=\int_0^1G(x,y)f(y)\dd y.
+\]
+
+For \(n\) interior nodes, let
+\[
+h=\frac{1}{n+1},
+\qquad
+x_i=ih,
+\]
+and define
+\[
+L_h
+=
+\frac{1}{h^2}
+\begin{pmatrix}
+2&-1&&\\
+-1&2&\ddots&\\
+&\ddots&\ddots&-1\\
+&&-1&2
+\end{pmatrix}.
+\]
+
+\begin{theorem}[Exact nodal Green reconstruction]\label{thm:nodal_green}
+For \(1\leq i,j\leq n\),
+\[
+\frac{1}{h}(L_h^{-1})_{ij}
+=
+G(x_i,x_j).
+\]
+\end{theorem}
+
+\begin{proof}
+The inverse of the unscaled tridiagonal matrix has entry
+\[
+\frac{\min(i,j)(n+1-\max(i,j))}{n+1}.
+\]
+Multiplying by \(h^2\) and dividing by \(h\) gives
+\[
+h\min(i,j)
+\left(1-\frac{\max(i,j)}{n+1}\right)
+=
+\min(x_i,x_j)-x_ix_j.
+\]
+\end{proof}
+
+\begin{corollary}[Discrete Green quadrature]\label{cor:discrete_green_quadrature}
+If \(u^h\) solves
+\[
+L_hu^h=f^h,
+\]
+then every nodal value has the exact representation
+\[
+u_i^h
+=
+h\sum_{j=1}^nG(x_i,x_j)f_j^h.
+\]
+Thus the discrete Green operator is the nodal rectangle quadrature of the continuum Green kernel.
+\end{corollary}
+
+\begin{proof}
+By \cref{thm:nodal_green},
+\[
+(L_h^{-1})_{ij}=hG(x_i,x_j).
+\]
+Multiply the inverse matrix by the source vector.
+\end{proof}
+
+\begin{proposition}[Discrete maximum bound]\label{prop:discrete_inverse_bound}
+The inverse \(L_h^{-1}\) has nonnegative entries and
+\[
+\norm{L_h^{-1}}_{\infty\to\infty}
+=
+\max_{1\leq i\leq n}
+\frac{x_i(1-x_i)}{2}
+\leq
+\frac18.
+\]
+\end{proposition}
+
+\begin{proof}
+Nonnegativity follows from the entry formula in \cref{thm:nodal_green}. Let \(v_i=x_i(1-x_i)/2\). Since the second difference is exact on quadratics,
+\[
+L_hv=\one.
+\]
+Hence the \(i\)th row sum of \(L_h^{-1}\) is \(v_i\). For a nonnegative matrix, the infinity operator norm is the largest row sum.
+\end{proof}
+
+\begin{theorem}[Second order Poisson solution error]\label{thm:poisson_error}
+Suppose \(u\in C^4[0,1]\) solves the Dirichlet problem above. Let
+\[
+f^h_i=f(x_i)
+\]
+and let \(u^h\) solve
+\[
+L_hu^h=f^h.
+\]
+Then
+\[
+\max_i\abs{u^h_i-u(x_i)}
+\leq
+\frac{h^2}{96}
+\norm{u^{(4)}}_\infty.
+\]
+\end{theorem}
+
+\begin{proof}
+Taylor expansion with remainder gives
+\[
+\norm{L_h(u(x_i))_i-f^h}_\infty
+\leq
+\frac{h^2}{12}\norm{u^{(4)}}_\infty.
+\]
+Apply \(L_h^{-1}\) and use \cref{prop:discrete_inverse_bound}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{green_kernel.pdf}
+\caption{The continuum Dirichlet Green section and the scaled discrete inverse. The nodal values agree exactly.}
+\label{fig:green_kernel}
+\end{figure}
+
+The discrete eigenpairs are
+\[
+\lambda_{k,h}
+=
+\frac{4}{h^2}
+\sin^2\left(\frac{k\pi h}{2}\right),
+\qquad
+v_{k,h}(i)=\sin(k\pi x_i).
+\]
+
+\begin{theorem}[Low mode eigenvalue control]\label{thm:low_mode}
+For \(kh\leq1\),
+\[
+0\leq(k\pi)^2-\lambda_{k,h}
+\leq
+\frac{(k\pi)^4}{12}h^2.
+\]
+Consequently, for every fixed \(k\),
+\[
+\lambda_{k,h}=(k\pi)^2+O(h^2).
+\]
+\end{theorem}
+
+\begin{proof}
+Set \(x=k\pi h/2\). The condition \(kh\leq1\) gives \(0\leq x\leq\pi/2\). On this interval,
+\[
+\sin x\geq x-\frac{x^3}{6},
+\]
+so
+\[
+0\leq x^2-\sin^2x\leq\frac{x^4}{3}.
+\]
+Multiply by \(4/h^2\).
+\end{proof}
+
+\begin{corollary}[Heat and fractional mode transfer]\label{cor:mode_transfer}
+Let \(\lambda_k=(k\pi)^2\). For \(t\geq0\),
+\[
+0\leq
+\e^{-t\lambda_{k,h}}-\e^{-t\lambda_k}
+\leq
+\frac{t(k\pi)^4}{12}h^2\e^{-t\lambda_{k,h}}.
+\]
+For \(0<\alpha\leq1\) and fixed \(k\),
+\[
+\lambda_{k,h}^\alpha
+=
+\lambda_k^\alpha+O(h^2)
+\]
+and
+\[
+\e^{-t\lambda_{k,h}^\alpha}
+=
+\e^{-t\lambda_k^\alpha}+O(th^2)
+\]
+uniformly for \(t\) in bounded intervals.
+\end{corollary}
+
+\begin{proof}
+The ordinary heat estimate follows from the mean value theorem and \cref{thm:low_mode}. For fixed \(k\), the eigenvalues stay uniformly away from zero once \(h\) is small. The function \(x^\alpha\) is then Lipschitz on a common compact interval containing both eigenvalues. Apply the mean value theorem twice.
+\end{proof}
+
+Finite difference schemes and their stability theory are treated more broadly in \cite{Strikwerda2004}. The present result uses the special one dimensional Green structure to obtain an explicit constant.
+
+\section{Finite state Feynman Kac transfer}\label{sec:feynman_kac}
+
+Let \(K\) be column stochastic. Let \(V\) be a real potential on the states and let
+\[
+D_V=\diag(V).
+\]
+For functions written as columns, the backward Markov operator is \(K^T\).
+
+\begin{theorem}[Discrete Feynman Kac formula]\label{thm:discrete_feynman_kac}
+Define
+\[
+M_V=\diag(\e^{-V})K^T.
+\]
+For terminal data \(f\),
+\[
+(M_V^nf)_i
+=
+\Exp_i\left[
+\exp\left(
+-\sum_{r=0}^{n-1}V(X_r)
+\right)
+f(X_n)
+\right].
+\]
+\end{theorem}
+
+\begin{proof}
+For one step,
+\[
+(M_Vf)_i
+=
+\e^{-V(i)}\sum_jK_{ji}f_j.
+\]
+Iterating expands the matrix product over all paths. The product of transition entries is the path probability, and the diagonal factors give the exponential potential weight.
+\end{proof}
+
+\begin{theorem}[Continuous time finite state formula]\label{thm:continuous_feynman_kac}
+Let \(Q\) be a finite Markov generator and let \((X_t)_{t\geq0}\) be the corresponding chain. Then
+\[
+\left(
+\e^{t(Q^T-D_V)}f
+\right)_i
+=
+\Exp_i\left[
+\exp\left(
+-\int_0^tV(X_s)\dd s
+\right)
+f(X_t)
+\right].
+\]
+If \(V\geq v_0\), then
+\[
+\norm{\e^{t(Q^T-D_V)}}_{\infty\to\infty}
+\leq
+\e^{-v_0t}.
+\]
+\end{theorem}
+
+\begin{proof}
+Conditioning over the first small time interval gives the backward equation
+\[
+\dot u=(Q^T-D_V)u,
+\qquad
+u(0)=f.
+\]
+The finite system has a unique solution, namely the displayed matrix exponential. The expectation bound follows from
+\[
+\exp\left(-\int_0^tV(X_s)\dd s\right)
+\leq
+\e^{-v_0t}.
+\]
+This finite argument is the matrix form of the Feynman Kac principle originating in \cite{Kac1949}.
+\end{proof}
+
+\begin{theorem}[Alternating propagation and killing]\label{thm:feynman_kac_product}
+For every \(t\geq0\),
+\[
+\e^{t(Q^T-D_V)}
+=
+\lim_{n\to\infty}
+\left(
+\e^{-tD_V/n}\e^{tQ^T/n}
+\right)^n
+\]
+in operator norm. Each finite product alternates one Markov propagation step with one diagonal survival weight.
+\end{theorem}
+
+\begin{proof}
+Set \(B=-D_V\) and \(C=Q^T\). For bounded matrices,
+\[
+\e^{tB/n}\e^{tC/n}
+=
+I+\frac{t}{n}(B+C)+O(n^{-2})
+\]
+uniformly in operator norm. The standard telescoping comparison with
+\(
+(I+t(B+C)/n)^n
+\)
+shows that the product converges to \(\e^{t(B+C)}\). This is the displayed factor order, so the limit follows.
+\end{proof}
+
+\begin{corollary}[Positivity and composition]\label{cor:feynman_kac_semigroup}
+The operators
+\[
+F_V(t)=\e^{t(Q^T-D_V)}
+\]
+form a positive semigroup. If \(f\geq0\), then \(F_V(t)f\geq0\).
+\end{corollary}
+
+\begin{proof}
+Both claims follow from the expectation formula.
+\end{proof}
+
+\section{Schur Feshbach elimination}\label{sec:feshbach}
+
+Let \(X=X_P\oplus X_Q\) and write
+\[
+A=
+\begin{pmatrix}
+A_{PP}&A_{PQ}\\
+A_{QP}&A_{QQ}
+\end{pmatrix}.
+\]
+For \(zI-A_{QQ}\) invertible, define
+\[
+\Sigma_P(z)
+=
+A_{PQ}(zI-A_{QQ})^{-1}A_{QP}
+\]
+and
+\[
+F_P(z)
+=
+zI-A_{PP}-\Sigma_P(z).
+\]
+
+\begin{theorem}[Schur Feshbach resolvent]\label{thm:feshbach_resolvent}
+Assume \(zI-A_{QQ}\) is invertible. Then \(zI-A\) is invertible if and only if \(F_P(z)\) is invertible. In that case,
+\[
+P(zI-A)^{-1}P
+=
+F_P(z)^{-1}.
+\]
+In finite dimension,
+\[
+\det(zI-A)
+=
+\det(zI-A_{QQ})\det F_P(z).
+\]
+\end{theorem}
+
+\begin{proof}
+Set
+\[
+L_z=
+\begin{pmatrix}
+I&-A_{PQ}(zI-A_{QQ})^{-1}\\
+0&I
+\end{pmatrix}
+\]
+and
+\[
+S_z=
+\begin{pmatrix}
+F_P(z)&0\\
+-A_{QP}&zI-A_{QQ}
+\end{pmatrix}.
+\]
+Direct multiplication gives \(zI-A=L_zS_z\). The first factor is invertible. The claims follow from triangular inversion and the determinant of the second factor. This is the finite block form of the Feshbach reduction \cite{Feshbach1958}.
+\end{proof}
+
+\subsection{Time domain memory}
+
+For the homogeneous equation \(\dot x=Ax\), variation of constants gives
+\[
+x_Q(t)
+=
+\e^{tA_{QQ}}x_Q(0)
++
+\int_0^t
+\e^{(t-s)A_{QQ}}A_{QP}x_P(s)
+\dd s.
+\]
+Substitution into the retained equation gives
+\[
+\begin{aligned}
+\dot x_P(t)
+={}&
+A_{PP}x_P(t)
++
+A_{PQ}\e^{tA_{QQ}}x_Q(0)\\
+&+
+\int_0^t
+\Kcal(t-s)x_P(s)
+\dd s,
+\end{aligned}
+\]
+where
+\[
+\Kcal(t)
+=
+A_{PQ}\e^{tA_{QQ}}A_{QP}.
+\]
+
+\begin{theorem}[Memory and self energy]\label{thm:memory_self_energy}
+If \(z\) lies to the right of the spectrum of \(A_{QQ}\), then
+\[
+\int_0^\infty
+\e^{-zt}\Kcal(t)\dd t
+=
+\Sigma_P(z).
+\]
+If
+\[
+\norm{\e^{tA_{QQ}}}
+\leq
+M\e^{-\gamma t},
+\]
+then
+\[
+\norm{\Kcal(t)}
+\leq
+M\norm{A_{PQ}}\norm{A_{QP}}\e^{-\gamma t}
+\]
+and
+\[
+\norm{\Kcal}_{L^1(0,\infty)}
+\leq
+\frac{M}{\gamma}
+\norm{A_{PQ}}\norm{A_{QP}}.
+\]
+\end{theorem}
+
+\begin{proof}
+The Laplace transform of \(\e^{tA_{QQ}}\) is \((zI-A_{QQ})^{-1}\). Multiplication by the two coupling blocks gives the first identity. The remaining estimates follow directly from the assumed semigroup bound.
+\end{proof}
+
+\begin{theorem}[Criterion for exact local closure]\label{thm:local_closure}
+Assume \(x_Q(0)=0\). The following conditions are equivalent.
+\begin{enumerate}
+\item For every retained initial state,
+\[
+P\e^{tA}P
+=
+\e^{tA_{PP}}P
+\]
+for all \(t\geq0\).
+\item \(\Sigma_P(z)=0\) for every sufficiently large \(z\).
+\item \(\Kcal(t)=0\) for every \(t\geq0\).
+\item If \(d=\dim X_Q\), then
+\[
+A_{PQ}A_{QQ}^kA_{QP}=0
+\]
+for \(0\leq k<d\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By \cref{thm:laplace_packet_resolvent}, the Laplace transform of the projected propagator is the projected resolvent. By \cref{thm:feshbach_resolvent}, the first condition is equivalent to
+\[
+(zI-A_{PP}-\Sigma_P(z))^{-1}
+=
+(zI-A_{PP})^{-1}
+\]
+for all sufficiently large \(z\), which is equivalent to the second condition. The second and third conditions are equivalent by \cref{thm:memory_self_energy} and uniqueness of the Laplace transform.
+
+For large \(z\),
+\[
+\Sigma_P(z)
+=
+\sum_{k=0}^{\infty}
+\frac{A_{PQ}A_{QQ}^kA_{QP}}{z^{k+1}}.
+\]
+Thus the second condition implies the moment identities. Conversely, the first \(d\) identities imply all later ones by the Cayley Hamilton theorem, so the series vanishes.
+\end{proof}
+
+\begin{remark}
+A finite hidden block produces a strictly proper rational self energy. It tends to zero as \(z\) tends to infinity. Hence a nonzero constant self energy cannot arise from hidden dynamics alone. A constant correction must already be included in the retained generator.
+\end{remark}
+
+\section{Memory modes and controlled compression}\label{sec:memory_compression}
+
+Finite hidden systems produce rational self energies and finite modal memory. This is the state space viewpoint familiar from linear systems theory \cite{Kailath1980}. The same formulas also underlie the Mori Zwanzig representation of reduced dynamics \cite{Zwanzig1961,ChorinHaldKupferman2000}.
+
+\begin{theorem}[Polynomial exponential memory of a finite hidden system]\label{thm:modal_memory}
+Let \(X_Q\) be a finite dimensional complex space. Let \(\mu_1,\ldots,\mu_r\) be the distinct eigenvalues of \(A_{QQ}\), let \(Q_j\) be the corresponding primary spectral projections, and set
+\[
+N_j=(A_{QQ}-\mu_jI)Q_j.
+\]
+Let \(\nu_j\) be the least positive integer for which \(N_j^{\nu_j}=0\), and define
+\[
+B_{j,k}
+=
+A_{PQ}N_j^kQ_jA_{QP}
+\qquad
+(0\leq k<\nu_j).
+\]
+Then
+\[
+\Kcal(t)
+=
+\sum_{j=1}^r
+\e^{\mu_jt}
+\sum_{k=0}^{\nu_j-1}
+\frac{t^k}{k!}B_{j,k}
+\]
+and
+\[
+\Sigma_P(z)
+=
+\sum_{j=1}^r
+\sum_{k=0}^{\nu_j-1}
+\frac{B_{j,k}}{(z-\mu_j)^{k+1}}.
+\]
+Suppose \(\operatorname{Re}\mu_j<0\) for every \(j\). If \(J\subseteq\{1,\ldots,r\}\) and \(\Kcal_J\) retains the complete primary blocks indexed by \(J\), then
+\[
+\norm{\Kcal-\Kcal_J}_{L^1(0,\infty)}
+\leq
+\sum_{j\notin J}
+\sum_{k=0}^{\nu_j-1}
+\frac{\norm{B_{j,k}}}
+{(-\operatorname{Re}\mu_j)^{k+1}}.
+\]
+\end{theorem}
+
+\begin{proof}
+The primary decomposition gives
+\[
+A_{QQ}Q_j=\mu_jQ_j+N_j
+\]
+with commuting scalar and nilpotent parts on \(Q_jX_Q\). Therefore
+\[
+\e^{tA_{QQ}}Q_j
+=
+\e^{\mu_jt}
+\sum_{k=0}^{\nu_j-1}
+\frac{t^k}{k!}N_j^kQ_j.
+\]
+Multiplication by \(A_{PQ}\) and \(A_{QP}\) gives the memory formula. On the \(j\)th primary space, the nilpotent resolvent expansion is
+\[
+(zI-A_{QQ})^{-1}Q_j
+=
+\sum_{k=0}^{\nu_j-1}
+\frac{N_j^kQ_j}{(z-\mu_j)^{k+1}}.
+\]
+Multiplication by the coupling blocks gives the self energy formula for every \(z\) outside the hidden spectrum. Equivalently, on a right half plane it is the Laplace transform identity
+\[
+\int_0^\infty
+\e^{-zt}\e^{\mu_jt}
+\frac{t^k}{k!}
+\dd t
+=
+\frac{1}{(z-\mu_j)^{k+1}}.
+\]
+Under stability,
+\[
+\int_0^\infty
+\e^{\operatorname{Re}\mu_jt}
+\frac{t^k}{k!}
+\dd t
+=
+\frac{1}{(-\operatorname{Re}\mu_j)^{k+1}}.
+\]
+Sum the omitted terms.
+\end{proof}
+
+\begin{corollary}[Optimal selection for the certified primary block bound]\label{cor:optimal_primary_selection}
+Under the stable assumptions of \cref{thm:modal_memory}, define the primary block weights
+\[
+w_j
+=
+\sum_{k=0}^{\nu_j-1}
+\frac{\norm{B_{j,k}}}
+{(-\operatorname{Re}\mu_j)^{k+1}}.
+\]
+Among all sets \(J\) containing \(k\) primary blocks, the certified upper bound
+\[
+\sum_{j\notin J}w_j
+\]
+is minimized by retaining the \(k\) largest weights. If
+\[
+w_{(1)}\geq w_{(2)}\geq\cdots\geq w_{(r)},
+\]
+then the least number of retained primary blocks certified to give \(L^1\) error at most \(\varepsilon\) is the least \(k\) for which
+\[
+\sum_{j>k}w_{(j)}\leq\varepsilon.
+\]
+\end{corollary}
+
+\begin{proof}
+If a retained set contains a block with smaller weight than an omitted block, exchanging them reduces the omitted weight sum. Repeating the exchange gives the set of the \(k\) largest weights. The tolerance statement is the corresponding sorted tail condition.
+\end{proof}
+
+\begin{corollary}[Normal hidden dynamics]\label{cor:normal_modal_memory}
+Suppose \(X_Q\) is a finite dimensional Hilbert space. If \(A_{QQ}\) is normal with spectral resolution
+\[
+A_{QQ}=\sum_{j=1}^r\mu_jQ_j,
+\]
+then
+\[
+\Kcal(t)=\sum_{j=1}^r\e^{\mu_jt}B_j,
+\qquad
+\Sigma_P(z)=\sum_{j=1}^r\frac{B_j}{z-\mu_j},
+\]
+where
+\[
+B_j=A_{PQ}Q_jA_{QP}.
+\]
+If \(\operatorname{Re}\mu_j<0\), then
+\[
+\norm{\Kcal-\Kcal_J}_{L^1(0,\infty)}
+\leq
+\sum_{j\notin J}
+\frac{\norm{B_j}}{-\operatorname{Re}\mu_j}.
+\]
+\end{corollary}
+
+\begin{proof}
+Normality removes every nilpotent part, so \(\nu_j=1\). Apply \cref{thm:modal_memory}.
+\end{proof}
+
+\begin{corollary}[Pole order and hidden Jordan depth]\label{cor:pole_jordan_depth}
+Every finite hidden block produces a strictly proper rational self energy. At an eigenvalue \(\mu_j\), its pole order is at most the size of the largest Jordan block of \(A_{QQ}\) at \(\mu_j\). Equality holds when the corresponding highest coefficient \(B_{j,\nu_j-1}\) is nonzero.
+\end{corollary}
+
+\begin{proof}
+Read the pole order from the partial fraction expansion in \cref{thm:modal_memory}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{jordan_memory.pdf}
+\caption{A stable Jordan block produces a polynomial exponential memory mode. A diagonal hidden block produces only pure exponentials.}
+\label{fig:jordan_memory}
+\end{figure}
+
+\begin{corollary}[Finite auxiliary state realization]\label{cor:finite_auxiliary_realization}
+Every kernel of the form
+\[
+\Kcal(t)=B\e^{tD}C
+\]
+can be represented exactly by adjoining the finite auxiliary state
+\[
+\dot y=Dy+Cx_P,
+\qquad
+\dot x_P=A_{PP}x_P+By,
+\qquad
+y(0)=0.
+\]
+A nonzero auxiliary initial state adds the explicit forcing \(B\e^{tD}y(0)\). The self energy of the augmented system is
+\[
+B(zI-D)^{-1}C.
+\]
+\end{corollary}
+
+\begin{proof}
+Eliminate \(y\) by variation of constants or apply \cref{thm:feshbach_resolvent} to the augmented block matrix.
+\end{proof}
+
+\begin{theorem}[Volterra stability under kernel compression]\label{thm:volterra_compression}
+Let \(S(t)\) be a semigroup on a Banach space with
+\[
+\norm{S(t)}\leq M_T
+\quad(0\leq t\leq T).
+\]
+Let \(K,\widetilde K\in L^1((0,T),\mathcal B(X))\). Suppose \(x\) and \(\widetilde x\) solve the same mild equation with the same initial state and forcing, except that \(K\) is replaced by \(\widetilde K\):
+\[
+\begin{aligned}
+x(t)
+={}&S(t)x_0+
+\int_0^tS(t-s)g(s)\dd s\\
+&+
+\int_0^tS(t-s)
+\int_0^sK(s-r)x(r)\dd r\dd s.
+\end{aligned}
+\]
+Assume
+\[
+\sup_{0\leq t\leq T}\norm{\widetilde x(t)}\leq B.
+\]
+Set
+\[
+L=\norm K_{L^1(0,T)},
+\qquad
+\varepsilon=\norm{K-\widetilde K}_{L^1(0,T)}.
+\]
+Then
+\[
+\sup_{0\leq t\leq T}
+\norm{x(t)-\widetilde x(t)}
+\leq
+M_TBT\varepsilon
+\exp(M_TLT).
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+E(t)=\sup_{0\leq r\leq t}\norm{x(r)-\widetilde x(r)}.
+\]
+Subtract the two mild equations. Fubini's theorem and the triangle inequality give
+\[
+E(t)
+\leq
+M_TL\int_0^tE(r)\dd r
++
+M_TBt\varepsilon.
+\]
+For \(t\leq T\), replace the last factor \(t\) by \(T\) and apply Gronwall's inequality.
+\end{proof}
+
+\begin{corollary}[Trajectory bound for modal truncation]\label{cor:modal_trajectory_bound}
+Under the assumptions of \cref{thm:modal_memory,thm:volterra_compression}, replacing \(\Kcal\) by \(\Kcal_J\) changes the retained trajectory by at most
+\[
+M_TBT
+\exp(M_TLT)
+\sum_{j\notin J}
+\sum_{k=0}^{\nu_j-1}
+\frac{\norm{B_{j,k}}}
+{(-\operatorname{Re}\mu_j)^{k+1}}.
+\]
+\end{corollary}
+
+\begin{proof}
+Insert the \(L^1\) error from \cref{thm:modal_memory} into \cref{thm:volterra_compression}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{memory_compression.pdf}
+\caption{Full and truncated memory kernels with their pointwise difference. The bound uses integrated error.}
+\label{fig:memory_compression}
+\end{figure}
+
+\begin{remark}
+A finite hidden realization is exact for rational self energy. A general memory kernel may require infinitely many modes or a continuum of modes. The compression theorem gives a stability estimate once an \(L^1\) approximation has been supplied. The largest weight rule is optimal for the certified blockwise bound. It need not minimize the true kernel error when different modal terms cancel.
+\end{remark}
+
+\section{Survival, moments, and competing risks}\label{sec:survival}
+
+Let \(A\) be a transient state subgenerator. Its off diagonal entries are nonnegative and its column sums are nonpositive. Let \(p_0\) be a transient probability vector. Define
+\[
+p(t)=\e^{tA}p_0,
+\qquad
+S(t)=\one^Tp(t),
+\qquad
+a^T=-\one^TA.
+\]
+The row vector \(a^T\) contains the exit rates.
+
+\begin{theorem}[State dependent killing as survival]\label{thm:killing_survival}
+Let \(Q\) be a finite Markov generator, let \(V\geq0\), and set
+\[
+A=Q-D_V.
+\]
+For an initial distribution \(p_0\), define
+\[
+S_V(t)=\one^T\e^{tA}p_0.
+\]
+Then
+\[
+S_V(t)
+=
+\Exp_{p_0}
+\left[
+\exp\left(
+-\int_0^tV(X_s)\dd s
+\right)
+\right].
+\]
+Also,
+\[
+-S_V'(t)
+=
+\one^TD_V\e^{tA}p_0.
+\]
+The matrix \(A=Q-D_V\) has nonnegative off diagonal entries and nonpositive column sums, so it is the subgenerator of the transient killed chain. Thus the potential in the finite Feynman Kac formula is exactly a state dependent killing rate in the forward transient semigroup.
+\end{theorem}
+
+\begin{proof}
+Average \cref{thm:continuous_feynman_kac} with terminal function \(f=\one\) against the initial distribution. Transposition gives
+\[
+p_0^T\e^{t(Q^T-D_V)}\one
+=
+\one^T\e^{t(Q-D_V)}p_0.
+\]
+Since \(\one^TQ=0\), differentiation gives
+\[
+S_V'(t)
+=
+-\one^TD_V\e^{tA}p_0.
+\]
+\end{proof}
+
+\begin{theorem}[Survival and hazard identities]\label{thm:survival_hazard}
+The event density and hazard are
+\[
+f(t)=a^T\e^{tA}p_0=-S'(t),
+\qquad
+h(t)=\frac{f(t)}{S(t)}
+\]
+whenever \(S(t)>0\). The survival function is nonincreasing and
+\[
+S(t)
+=
+\exp\left(
+-\int_0^th(s)\dd s
+\right).
+\]
+\end{theorem}
+
+\begin{proof}
+Because \(A\) is a Metzler matrix, \(\e^{tA}\) is nonnegative. The column sum assumption makes \(a^T\) nonnegative. Differentiate \(S(t)\):
+\[
+S'(t)=\one^TA\e^{tA}p_0=-a^T\e^{tA}p_0.
+\]
+The remaining identity follows by integrating \((\log S)'=-h\).
+\end{proof}
+
+\begin{theorem}[Laplace transform and moments]\label{thm:survival_moments}
+Assume the spectrum of \(A\) lies in the open left half plane. Then absorption occurs with probability one. For \(s\geq0\),
+\[
+\Exp[\e^{-s\tau}]
+=
+a^T(sI-A)^{-1}p_0.
+\] For every integer \(m\geq1\),
+\[
+\Exp[\tau^m]
+=
+m!\one^T(-A)^{-m}p_0.
+\]
+\end{theorem}
+
+\begin{proof}
+The Laplace transform follows by integrating the density in \cref{thm:survival_hazard}. Stability of \(A\) gives
+\[
+\int_0^\infty
+\e^{-st}\e^{tA}\dd t
+=
+(sI-A)^{-1}.
+\]
+At \(s=0\),
+\[
+a^T(-A)^{-1}p_0
+=
+\one^Tp_0=1.
+\]
+For the moments,
+\[
+\int_0^\infty t^m\e^{tA}\dd t
+=
+m!(-A)^{-m-1}.
+\]
+Multiplying by \(a^T=\one^T(-A)\) gives the result. These are the standard matrix formulas for phase type laws \cite{Neuts1981,AsmussenNermanOlsson1996}.
+\end{proof}
+
+\begin{proposition}[Residual life as a restarted semigroup]\label{prop:residual_life}
+For \(S(t)>0\), define the conditional transient distribution
+\[
+p_t
+=
+\frac{\e^{tA}p_0}{S(t)}.
+\]
+Then
+\[
+\frac{S(t+s)}{S(t)}
+=
+\one^T\e^{sA}p_t.
+\]
+\end{proposition}
+
+\begin{proof}
+Use the semigroup law in the numerator \(S(t+s)=\one^T\e^{sA}\e^{tA}p_0\).
+\end{proof}
+
+\begin{theorem}[Competing risk packets]\label{thm:competing_risks}
+Suppose the exit row splits into nonnegative cause rows
+\[
+a^T
+=
+\sum_{r=1}^q a_r^T.
+\]
+Define
+\[
+f_r(t)=a_r^T\e^{tA}p_0.
+\]
+Then
+\[
+f(t)=\sum_{r=1}^qf_r(t).
+\]
+The cause specific hazard is
+\[
+h_r(t)=\frac{f_r(t)}{S(t)},
+\]
+and
+\[
+h(t)=\sum_{r=1}^qh_r(t).
+\]
+The eventual probability of cause \(r\) is
+\[
+\int_0^\infty f_r(t)\dd t
+=
+a_r^T(-A)^{-1}p_0.
+\]
+\end{theorem}
+
+\begin{proof}
+Every identity follows by linearity and the stable resolvent integral.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{survival_causes.pdf}
+\caption{Survival and two cause specific event densities from one transient semigroup.}
+\label{fig:survival_causes}
+\end{figure}
+
+\begin{remark}
+A finite phase type hazard need not be monotone. The semigroup formulas guarantee nonnegative density and decreasing survival, not monotonicity of the hazard.
+\end{remark}
+
+\section{Finite illustrations and computational checks}\label{sec:finite_checks}
+
+The figures in the article use small matrices chosen to make each mechanism visible. They are not evidence for claims outside the proved finite setting. The accompanying verification script recomputes the following identities with independently generated data.
+
+\begin{enumerate}
+\item Packet block convolution, the block differential system, and the Laplace resolvent formula.
+\item The Duhamel and resolvent defect identities.
+\item Exact and perturbed Markov lumping.
+\item Conditional expectation, tower laws, martingale packet energy, and Hermite multipliers.
+\item Bayesian reconstruction, sufficiency, local distortion, and information decomposition.
+\item The evidence variance identity along a Bayesian flow.
+\item The Balakrishnan formula and the fractional defect estimate.
+\item Nodal Green reconstruction and the Poisson error bound.
+\item Discrete Feynman Kac path enumeration.
+\item The Schur Feshbach resolvent and memory transform.
+\item Jordan memory modes, modal truncation, and the Volterra stability estimate.
+\item Feynman Kac killing, survival transforms, moments, and competing risk masses.
+\end{enumerate}
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lc}
+\toprule
+Identity & Typical residual \\
+\midrule
+Packet block convolution & below \(3\times10^{-14}\) \\
+Duhamel defect & below \(3\times10^{-12}\) \\
+Markov lumping & below \(3\times10^{-14}\) \\
+Bayesian reconstruction & below \(3\times10^{-15}\) \\
+Fractional spectral law & below \(3\times10^{-12}\) \\
+Nodal Green identity & below \(3\times10^{-13}\) \\
+Feynman Kac enumeration & below \(3\times10^{-14}\) \\
+Schur Feshbach resolvent & below \(3\times10^{-12}\) \\
+Memory Laplace identity & below \(3\times10^{-11}\) \\
+Survival moment formulas & below \(3\times10^{-11}\) \\
+\bottomrule
+\end{tabular}
+\caption{Numerical tolerances in the finite verification suite. The proofs do not depend on these computations.}
+\label{tab:verification_tolerances}
+\end{table}
+
+\section{Limits and further questions}\label{sec:limits}
+
+The bounded inverse limit theorem isolates one clean route to continuum evolution. Unbounded generators require graph norms, domain compatibility, and a generation theorem. The range leakage theorem converts the closure quantity into an off diagonal generator estimate for bounded orthogonal refinement models. Concrete discretizations still require a uniform estimate for that off diagonal block.
+
+The finite Bayesian sufficiency theorem is exact, but it concerns one likelihood and one fixed partition. The relative entropy chain rule measures both retained and discarded information for that update. Statistical sufficiency for a parametric family requires a common packet structure that preserves the full parameter dependence. In continuous models the corresponding object is a sufficient sigma algebra or statistic.
+
+The fractional defect theorem uses a common spectral gap. Removing that gap requires weaker norms or a Hölder estimate near the null space. For sectorial operators, the same calculation should be carried out through resolvent bounds on a sector, with domains tracked explicitly. The finite spectral statement does not settle those issues.
+
+The Green and Poisson results exploit a one dimensional second difference matrix. Higher dimensions, irregular meshes, and variable coefficients require a separate stability theory. The packet language remains useful only after coercivity, consistency, and boundary approximation have been established.
+
+Memory compression is exact once a finite hidden realization is known and quantitative once an integrable kernel approximation is supplied. The primary decomposition shows that a finite hidden block always produces polynomial exponential modes, including the effects of Jordan chains. Choosing a short approximation remains a different problem. Strongly nonnormal systems can exhibit transient growth and may require balanced or rational approximation methods. General Volterra kernels need not admit a short finite realization.
+
+Finally, Markov lumping, Bayesian sufficiency, and memory closure answer different questions. Lumpability asks whether coarse probabilities evolve autonomously. Bayesian sufficiency asks whether a fixed coarse likelihood reproduces the posterior packet masses without hiding a change in the conditional distribution inside a packet. Memory closure asks whether discarded dynamics can be represented without history. Similar notation should not obscure these distinctions.
+
+\section{Conclusion}\label{sec:conclusion}
+
+A bounded semigroup becomes a matrix of packet transfers once a finite packet system is fixed. The matrix obeys convolution in time, a closed differential system, a Laplace resolvent formula, and a directed path expansion. A generator defect propagates through Duhamel's formula and through the resolvent calculus. Exact compatibility gives a semigroup on the bounded inverse limit. Summable adjacent defects give convergent reconstructed evolutions. Range leakage, and in particular an off diagonal generator block, determines whether the limit retains the semigroup law.
+
+In probability, the same structure appears in several forms. Markov transfer is linear and exact lumpability is the vanishing of a canonical kernel obstruction. Conditional expectation is an orthogonal stochastic projector whose differences form martingale packets. The Ornstein Uhlenbeck semigroup resolves exactly into Hermite packets. Bayesian transfer is nonlinear because of evidence normalization. Its exact two stage decomposition separates coarse packet evidence from local conditional change. Relative entropy then records exactly how much information lies at each level. A fixed sufficient coarse description exists for every prior precisely when the likelihood is constant inside each packet. The common level sets of a likelihood family give its unique coarsest fixed sufficient partition.
+
+Positive fractional powers preserve exact intertwining. Under a common spectral gap, the Balakrishnan formula turns an ordinary generator defect into an explicit fractional defect. Green operators and finite differences show how source reconstruction fits the same transfer language. Feynman Kac weights Markov paths by a potential without leaving the semigroup framework.
+
+Hidden packets provide the final structural lesson. Exact elimination does not erase them. It returns them as a rational self energy in the resolvent and a causal memory kernel in time. The primary decomposition of the hidden generator produces every finite memory kernel as a finite sum of polynomial exponential modes. Stable blocks can be truncated with an integrated error certificate, and the Volterra estimate transfers that certificate to the retained trajectory. State dependent killing identifies the Feynman Kac potential with a survival mechanism. Survival and competing risks are then scalar reconstructions of a transient semigroup.
+
+The article therefore separates four operations that are often compressed into one informal idea of coarse dynamics:
+\[
+\begin{aligned}
+\text{intertwining}
+&\longrightarrow
+\text{refinement control}\\
+&\longrightarrow
+\text{statistical sufficiency}\\
+&\longrightarrow
+\text{memory closure}.
+\end{aligned}
+\]
+Each arrow has its own hypotheses and its own obstruction.
+
+
+\bibliographystyle{aomalpha}
+\bibliography{PSC_Paper_VI_Strengthened_Annals_Edition}
+
+\end{document}

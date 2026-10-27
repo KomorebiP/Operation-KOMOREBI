@@ -1,0 +1,11 @@
+theorem conditional_kernel_product (f : I → A) (g : A → B) (p : I → ℝ)
+    (hp : ∀ i, 0 < p i) :
+    kernel (g ∘ f) p*kernel f p=kernel (g ∘ f) p ∧
+      kernel f p*kernel (g ∘ f) p=kernel (g ∘ f) p := by
+  constructor
+  · apply Matrix.mulVec_injective
+    funext v
+    rw [← Matrix.mulVec_mulVec,← expect_matrix,← expect_matrix,coarse_after_fine f g p hp,expect_matrix]
+  · apply Matrix.mulVec_injective
+    funext v
+    rw [← Matrix.mulVec_mulVec,← expect_matrix,← expect_matrix,fine_after_coarse f g p hp,expect_matrix]

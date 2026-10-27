@@ -1,0 +1,40 @@
+KomorebiPaperVI/FractionalResolvent.lean:53:53: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∫ (a : ℝ) in Ioi 0,
+    ((ContinuousLinearMap.mul ℝ R) C) (cfcₙ ((↑p).rpowIntegrand₀₁ a) A) -
+      ((ContinuousLinearMap.mul ℝ R).flip C) (cfcₙ ((↑p).rpowIntegrand₀₁ a) B)
+in the target expression
+  C * CFC.nnrpow A p - CFC.nnrpow B p * C =
+    coefficient ↑p •
+      ∫ (x : ℝ) in Ioi 0, C * cfcₙ ((↑p).rpowIntegrand₀₁ x) A - cfcₙ ((↑p).rpowIntegrand₀₁ x) B * C ∂volume
+
+case right
+R : Type u_1
+inst✝² : CStarAlgebra R
+inst✝¹ : PartialOrder R
+inst✝ : StarOrderedRing R
+p : ℝ≥0
+hp : ↑p ∈ Ioo 0 1
+A B C : R
+hA : 0 ≤ A
+hB : 0 ≤ B
+hiA :
+  IntegrableOn (fun t => cfcₙ ((↑p).rpowIntegrand₀₁ t) A) (Ioi 0) volume ∧
+    CFC.nnrpow A p = coefficient ↑p • ∫ (t : ℝ) in Ioi 0, cfcₙ ((↑p).rpowIntegrand₀₁ t) A
+hiB :
+  IntegrableOn (fun t => cfcₙ ((↑p).rpowIntegrand₀₁ t) B) (Ioi 0) volume ∧
+    CFC.nnrpow B p = coefficient ↑p • ∫ (t : ℝ) in Ioi 0, cfcₙ ((↑p).rpowIntegrand₀₁ t) B
+hl : Integrable (fun a => ((ContinuousLinearMap.mul ℝ R) C) (cfcₙ ((↑p).rpowIntegrand₀₁ a) A)) (volume.restrict (Ioi 0))
+hr :
+  Integrable (fun a => ((ContinuousLinearMap.mul ℝ R).flip C) (cfcₙ ((↑p).rpowIntegrand₀₁ a) B))
+    (volume.restrict (Ioi 0))
+hd :
+  Integrable
+    ((fun a => ((ContinuousLinearMap.mul ℝ R) C) (cfcₙ ((↑p).rpowIntegrand₀₁ a) A)) - fun a =>
+      ((ContinuousLinearMap.mul ℝ R).flip C) (cfcₙ ((↑p).rpowIntegrand₀₁ a) B))
+    (volume.restrict (Ioi 0))
+he :
+  EqOn (fun t => C * cfcₙ ((↑p).rpowIntegrand₀₁ t) A - cfcₙ ((↑p).rpowIntegrand₀₁ t) B * C)
+    (fun t => t ^ ↑p • (PositiveResolvent.resolvent B t * (C * A - B * C) * PositiveResolvent.resolvent A t)) (Ioi 0)
+⊢ C * CFC.nnrpow A p - CFC.nnrpow B p * C =
+    coefficient ↑p •
+      ∫ (x : ℝ) in Ioi 0, C * cfcₙ ((↑p).rpowIntegrand₀₁ x) A - cfcₙ ((↑p).rpowIntegrand₀₁ x) B * C ∂volume

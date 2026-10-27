@@ -1,0 +1,20 @@
+  for target in targets do
+    match env.find? target with
+    | some (.thmInfo _) => pure ()
+    | _ => throwError "missing or non-theorem target: {target}"
+  let mut audited : Nat := 0
+  for (name, info) in env.checked.get.constants.toList do
+    if Name.isPrefixOf `KomorebiPaperVI name then
+      audited := audited + 1
+      if info.isUnsafe then
+        throwError "unsafe declaration: {name}"
+      match info with
+      | .axiomInfo _ => throwError "axiom declaration: {name}"
+      | .opaqueInfo _ => throwError "opaque declaration: {name}"
+      | _ => pure ()
+      let axioms ← Lean.collectAxioms name
+      for axiomName in axioms do
+        unless axiomName == ``propext || axiomName == ``Classical.choice ||
+            axiomName == ``Quot.sound do
+          throwError "unexpected axiom {axiomName} in {name}"
+  logInfo m!"PAPER_VI_TARGET_AUDIT_PASS: {targets.size} theorem targets; {audited} namespace declarations"

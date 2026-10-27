@@ -1,0 +1,91 @@
+Paper VI computation implementation audit
+Scope: verification/scripts/*.py, the original entry points they invoke, source
+and archive reconciliation, and current raw evidence. Read-only review after the
+successful run. No additional numerical range was introduced by this review.
+
+1. ISOLATION AND PRESERVATION
+The runner copies the complete three-branch source tree into a TemporaryDirectory.
+Original script paths, module imports and output locations point at those copies.
+The original source tree and downloads are read only. PYTHONDONTWRITEBYTECODE=1
+and -B suppress Python cache writes. A full tree SHA-256 map is compared before
+and after execution. Exact archive file sets and per-file hashes are checked,
+including all three branches and the original snapshot's 534-entry manifest.
+The recorded run passed all 739-file preservation checks. A disposable source
+copy was still visible after the orchestrator completed, despite the temporary
+directory context exiting. It was explicitly removed afterward and its absence
+was confirmed. The fresh reports and raw logs had already been retained outside
+that copy. No original input file was altered.
+
+2. DISPATCH AND ASSERTIONS
+The original source checker is called as verify.static_checks(copy_root), not
+through the full gated CLI. The original test_verifier.py is run unchanged under
+unittest. Its optimized-Python corruption control starts a separate -O subprocess
+and verifies rejection. The companion runner refuses optimized Python and invokes
+only the 37 zero-argument original test functions in the five pytest-free modules.
+The sixth module is not imported. Its 17 original parameterized/boundary cases are
+reproduced independently, with explicit expected exceptions and original numeric
+criteria. No pytest module is emulated. Both counts are separately reported.
+The original run_experiments function is invoked directly. The surrounding
+run_all.py figure generation is not claimed. All three historical Annals numerical
+scripts are dispatched unchanged as ordinary Python scripts against copied sources.
+
+3. MATHEMATICAL REPRESENTATION
+Probability transition matrices act on columns. The four-state generator has
+zero column sums, with the displayed Walsh spectral resolution. Conditional
+expectations are checked with W E = E^T W, not Euclidean symmetry. Bayesian
+zero-prior blocks use effective likelihood zero; division is only performed when
+block mass is positive. The denominator-four simplex is enumerated exactly, with
+35 priors including zero-mass packets. The Green inverse retains the factor h.
+The eight Feynman-Kac paths use departure-state weights. The Jordan resolvent
+retains N/(z+2)^2. Fraction inputs have no float conversion. Matrices have fixed
+known compatible dimensions in these examples. The small matrix helper is not a
+general linear-algebra library; arbitrary shape/error handling is not claimed.
+
+4. INDEPENDENCE AND COVERAGE
+The new Fraction implementation provides arithmetic independent of NumPy and
+SymPy for the listed finite models. Its input examples and target identities
+are selected from the visual appendix and its original models.py. It does not
+independently derive every theorem or authenticate every target equality.
+The original numerical tests exercise expm, quadrature, inverse, spectral,
+finite-difference and API paths. Many checks reuse the same libraries on both
+sides or test close variants of the same identity. For example, the strengthened
+polynomial-defect expression reuses an algebraically identical decomposition,
+and its acyclic-path witness checks nilpotency rather than arbitrary Dyson
+termination. These pass results are regression evidence, not independent proofs.
+The Annals Dyson check independently integrates truncated ODE terms, but it is
+still a finite, tolerance-dependent calculation.
+
+5. COUNTS, BOUNDS, AND TOLERANCES
+One exact assertion may compare a whole matrix, while historical numerical
+scripts often count each matrix entry. Other counted items are file references
+or editorial-source conditions. Numerical suite counts overlap and must not be
+summed as theorem counts. The 182 Fraction checks have their own enumeration and
+are neither a claimed replay nor a one-for-one subset of the original 204 SymPy
+checks. Four false controls test failure of tempting invalid identities.
+The 79 numeric output leaves all equal their inherited floating-point values.
+The historical comparison tolerance is also applied. This does not turn numeric
+quadratures into exact identities. Annals's largest reported group discrepancy,
+about 0.0011209165, is the stated 100-slice Trotter approximation and passes that
+script's explicit criterion. Survival finite differences likewise use their
+specified looser criterion. No global uniform 1e-12 accuracy is claimed.
+
+6. ENVIRONMENT AND RESOURCES
+Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.10.8 were available.
+SymPy, mpmath, pytest, Lean and lake were absent. No installer, network retrieval,
+or dependency substitution is called by the computation scripts. The bounded
+runner enforced a 900-second wall limit, 4 GiB per-process address-space limit,
+600-second per-process CPU limit and one CPU affinity. Numerical-library thread
+limits are cooperative environment settings. The full available run took about
+10.2 seconds. The manifest captures actual commands, logs and input/output hashes.
+Original random seeds are fixed in the copied scripts (20260727, 20260813, 260813,
+plus seeds 1 and 2 in the companion tests). The Fraction models are deterministic.
+
+7. RESULT AND REMAINING LIMITS
+Implementation and finite assertions were verified in the stated ranges. All
+available runs passed without a mathematical, implementation or environment
+failure. The original full pytest gate, Lean compiler/axiom audit and original
+SymPy visual gate remain unrun for the reasons in README.txt. Static token scans
+and pinned logs do not supply a fresh Lean elaboration. No universal statement,
+semantic Lean-to-prose audit, literature claim, or open conjecture was decided by
+these computations. Later PDF/package reviews must separately verify evidence
+wording and preservation after editing.

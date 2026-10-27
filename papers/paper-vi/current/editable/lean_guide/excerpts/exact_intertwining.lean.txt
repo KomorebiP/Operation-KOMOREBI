@@ -1,0 +1,7 @@
+theorem exact_rectangular_intertwining (A : E →L[ℝ] E) (B : F →L[ℝ] F)
+    (C : E →L[ℝ] F) (h : C.comp A=B.comp C) (t : ℝ) :
+    C.comp (transfer A t)=(transfer B t).comp C := by
+  have hd := duhamel_rectangular A B C t
+  simp only [h, sub_self, ContinuousLinearMap.zero_comp, ContinuousLinearMap.comp_zero,
+    intervalIntegral.integral_zero] at hd
+  exact sub_eq_zero.mp hd

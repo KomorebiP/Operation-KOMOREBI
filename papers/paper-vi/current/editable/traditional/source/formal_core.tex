@@ -1,0 +1,1642 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.90in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{bm}
+\usepackage{needspace}
+\usepackage{placeins}
+
+\graphicspath{{figures/}}
+\allowdisplaybreaks
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus VI},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Transfer semigroups, stochastic and Bayesian packets, fractional powers, Green operators, and PDE realizations},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Projector-Resolved Seed Calculus VI}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newtheorem{certificate}[theorem]{Numerical Certificate}
+\newtheorem{classical}[theorem]{Classical Input}
+
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\bbC}{\mathbb C}
+\newcommand{\bbR}{\mathbb R}
+\newcommand{\bbZ}{\mathbb Z}
+\newcommand{\bbN}{\mathbb N}
+\newcommand{\bbP}{\mathbb P}
+\newcommand{\Exp}{\mathbb E}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=7pt
+}
+
+\title{\textbf{Projector-Resolved Seed Calculus VI}\\[0.45em]
+\large Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations}
+\author{Komorebi P.}
+\date{Reviewed edition: 6 September 2026\\\small Fifth Lean-checked formalization block; all 33 results covered}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper develops the transfer-semigroup realization of the projector-resolved seed calculus. A seed is propagated by a one-parameter semigroup, a Markov kernel, a normalized Bayesian transfer, a fractional spectral power, a Green operator, or a potential-weighted Feynman--Kac operator. Exact packet projectors resolve every transfer into input-output blocks, and the semigroup law becomes block convolution over intermediate packets. Coarse and fine generators are compared by a refinement defect. A Duhamel identity proves that this generator-level defect is exactly the source of the corresponding semigroup defect and gives a quantitative stability bound. In the stochastic realization, point-mass seeds generate random walks and continuous-time Markov evolution; exact lumpability is the vanishing of the same refinement defect. Conditional expectation is treated as a weighted orthogonal packet projector, with nested partitions producing martingale-difference packets. Bayesian conditioning is a normalized nonlinear operator. Its independent-data composition law, packet-evidence decomposition, stability bound, conjugate updates, and continuous likelihood flow are proved explicitly.  The Bayesian refinement conjecture is resolved in finite dimensions: for strictly positive likelihoods and at least two coarse packets, exact commutation for every prior is equivalent to blockwise-constant likelihoods up to global scale, and every failure factors through an explicit information-loss packet. Fractional powers are constructed packetwise through the spectral projectors of a positive operator, and the square-root semigroup is recovered by subordination. The fractional-naturality conjecture is also resolved for bounded nonnegative self-adjoint refinement systems: the fractional intertwining defect has an exact resolvent integral, a gap-free Hölder certificate, a sharper common-gap estimate, and a Duhamel semigroup bound. Green kernels, finite-difference Poisson problems, and second-order low-mode convergence provide the PDE realization. A finite-state Feynman--Kac formula is proved by path enumeration. Exact Schur--Feshbach elimination shows that discarded latent packets return as a frequency-dependent self-energy and, in time coordinates, as a memory kernel. Survival and hazard functions are generated by transient semigroups. Nineteen code-generated figures, machine-readable results, the original thirty-seven automated tests, and seventeen added boundary-case checks accompany this reviewed edition. Five checked Lean blocks cover all 33 theorem-like results in Appendix~\ref{sec:lean-status}. Finite-dimensional theorems, classical infinite-dimensional extensions, numerical certificates, and open continuum claims are kept separate.
+\end{abstract}
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\textwidth}
+\textbf{Scope and claim boundary.} The paper proves the stated finite-dimensional semigroup, packet, Markov, Bayesian, conditional-expectation, fractional spectral, Green-kernel, Feynman--Kac, Schur--Feshbach, and survival identities. It also proves quantitative refinement-defect formulas under explicit norm hypotheses, including exact transfer of a bounded generator defect to every fractional power $0<\alpha<1$ for bounded nonnegative self-adjoint generators. It does not claim that an arbitrary infinite-dimensional operator generates a semigroup, that every stochastic process admits a finite packet representation, that every posterior family is conjugate, that finite Bayesian sufficiency automatically extends to infinite disintegrations, or that every PDE continuum limit follows from a finite test. Domain, closability, sectoriality, measurability, tightness, and compactness hypotheses remain necessary in their respective infinite-dimensional settings. Classical sources are retained in the separate end-of-series reference ledger rather than reproduced in this paper.
+\end{minipage}}
+\end{center}
+
+\tableofcontents
+\begingroup
+\small
+\listoffigures
+\listoftables
+\endgroup
+\clearpage
+
+\section{The transfer-semigroup realization}
+
+Let $X$ be a finite-dimensional real or complex vector space, let $A\in\operatorname{End}(X)$, and let $s\in X$ be a primitive seed. The basic continuous transfer is
+\[
+T(t)=e^{tA},\qquad t\ge 0,
+\]
+while a positive operator $L$ is more naturally written
+\[
+H(t)=e^{-tL}.
+\]
+Both satisfy the semigroup law. The sign convention changes with the domain: Markov generators and evolution equations are usually written with $e^{tA}$; positive diffusion and elliptic operators are usually written with $e^{-tL}$.
+
+The common operator chain is
+\[
+\boxed{
+\text{seed}\longrightarrow\text{transfer}\longrightarrow\text{project}
+\longrightarrow\text{condition}\longrightarrow\text{refine}
+\longrightarrow\text{complete}\longrightarrow\text{reconstruct}.
+}
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{01_transfer_semigroup_architecture.pdf}
+\caption{The common operator language used throughout the paper. Semigroups, resolvents, normalized Bayesian maps, and fractional powers are distinct realizations of the same transfer stage.}
+\label{fig:architecture}
+\end{figure}
+
+\begin{definition}[Transfer-semigroup seed system]
+A finite transfer-semigroup seed system is a tuple
+\[
+\mathfrak S=(X,s,A,\{P_\alpha\}_{\alpha\in I},\tau),
+\]
+where $X$ is the state space, $s$ is the seed, $A$ is a transfer generator, the $P_\alpha$ are pairwise orthogonal idempotents summing to the identity, and $\tau$ specifies the topology in which a completion or limit is interpreted.
+\end{definition}
+
+\begin{theorem}[Finite semigroup law]
+For every matrix $A$ and all $s,t\in\bbR$,
+\[
+\boxed{e^{(s+t)A}=e^{sA}e^{tA}.}
+\]
+Moreover, $T(0)=I$ and $T'(t)=AT(t)=T(t)A$.
+\end{theorem}
+
+\begin{proof}
+Both exponentials are absolutely convergent matrix power series. Since every power of $A$ commutes with every other power, the Cauchy product gives
+\[
+e^{sA}e^{tA}
+=\sum_{m,n\ge0}\frac{s^mt^n}{m!n!}A^{m+n}
+=\sum_{r\ge0}\frac{(s+t)^r}{r!}A^r.
+\]
+Termwise differentiation is valid in finite dimension and gives the derivative identities.
+\end{proof}
+
+\begin{boundary}[Infinite-dimensional generators]
+For an unbounded operator, writing $e^{tA}$ is not a definition unless a semigroup-generation theorem applies. The finite matrix identities in this paper remain algebraically correct models, but a continuum realization must state the operator domain, closure, growth bound, and topology of convergence.
+\end{boundary}
+
+\section{Packet blocks of a semigroup}
+
+Let
+\[
+P_\alpha P_\beta=\delta_{\alpha\beta}P_\alpha,
+\qquad
+\sum_{\alpha\in I}P_\alpha=I.
+\]
+For any operator $B$, define
+\[
+B_{\beta\alpha}=P_\beta BP_\alpha.
+\]
+Then
+\[
+B=\sum_{\alpha,\beta}B_{\beta\alpha}.
+\]
+For the semigroup, write
+\[
+T_{\beta\alpha}(t)=P_\beta e^{tA}P_\alpha.
+\]
+
+\begin{theorem}[Packet semigroup convolution]
+For every $s,t$ and every pair of packets $\alpha,\beta$,
+\[
+\boxed{
+T_{\beta\alpha}(s+t)
+=\sum_{\gamma\in I}T_{\beta\gamma}(s)T_{\gamma\alpha}(t).
+}
+\]
+Thus the semigroup law becomes ordinary matrix multiplication in the packet indices.
+\end{theorem}
+
+\begin{proof}
+Insert the resolution of the identity between the two semigroup factors:
+\[
+\begin{aligned}
+P_\beta e^{(s+t)A}P_\alpha
+&=P_\beta e^{sA}\left(\sum_\gamma P_\gamma\right)e^{tA}P_\alpha\\
+&=\sum_\gamma
+(P_\beta e^{sA}P_\gamma)(P_\gamma e^{tA}P_\alpha).
+\end{aligned}
+\]
+\end{proof}
+
+\begin{corollary}[Reducing packets]
+If $P_\beta AP_\alpha=0$ for every $\beta\ne\alpha$, then
+\[
+P_\beta e^{tA}P_\alpha=0
+\quad(\beta\ne\alpha)
+\]
+for every $t$. Each packet evolves independently under $P_\alpha AP_\alpha$.
+\end{corollary}
+
+\begin{proof}
+The hypothesis makes $A$ block diagonal. Every power $A^m$ is block diagonal with respect to the same projectors, and therefore so is the exponential series.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.66\textwidth]{02_packet_semigroup_blocks.pdf}
+\caption{Norms of the packet blocks $P_\beta e^{tA}P_\alpha$. Off-diagonal entries quantify transfer between packets.}
+\label{fig:packet-blocks}
+\end{figure}
+
+\begin{remark}[Path expansion]
+Expanding the exponential and inserting $I=\sum_\alpha P_\alpha$ between every pair of generators gives
+\[
+P_{\alpha_m}A^mP_{\alpha_0}
+=
+\sum_{\alpha_1,\ldots,\alpha_{m-1}}
+P_{\alpha_m}AP_{\alpha_{m-1}}\cdots P_{\alpha_1}AP_{\alpha_0}.
+\]
+Every coefficient is therefore a sum over packet-transfer paths. The numerical library verifies that truncating this path series converges to the ordinary matrix exponential.
+\end{remark}
+
+\section{Refinement defects and the Duhamel identity}
+
+Let $X_f$ and $X_c$ be fine and coarse spaces, with generators $A_f$ and $A_c$, and let
+\[
+C:X_f\to X_c
+\]
+be a coarsening map. Define the generator-level refinement defect
+\[
+\boxed{\Delta=CA_f-A_cC.}
+\]
+The corresponding semigroup defect is
+\[
+\mathfrak D(t)=Ce^{tA_f}-e^{tA_c}C.
+\]
+
+\begin{theorem}[Exact Duhamel refinement identity]
+For every $t\ge0$,
+\[
+\boxed{
+Ce^{tA_f}-e^{tA_c}C
+=
+\int_0^t e^{(t-r)A_c}\Delta e^{rA_f}\,dr.
+}
+\]
+In particular, $\Delta=0$ implies exact semigroup intertwining at every time.
+\end{theorem}
+
+\begin{proof}
+Set
+\[
+F(r)=e^{(t-r)A_c}Ce^{rA_f}.
+\]
+Then
+\[
+F'(r)=e^{(t-r)A_c}(CA_f-A_cC)e^{rA_f}.
+\]
+Integrating from $0$ to $t$ gives $F(t)-F(0)=Ce^{tA_f}-e^{tA_c}C$ and proves the formula.
+\end{proof}
+
+\begin{corollary}[Norm bound]
+Suppose
+\[
+\norm{e^{tA_f}}\le M_f e^{\omega_f t},
+\qquad
+\norm{e^{tA_c}}\le M_c e^{\omega_c t}.
+\]
+Then
+\[
+\norm{\mathfrak D(t)}
+\le
+M_fM_c\norm{\Delta}
+\int_0^t e^{\omega_c(t-r)}e^{\omega_fr}\,dr.
+\]
+For contraction semigroups,
+\[
+\boxed{\norm{\mathfrak D(t)}\le t\norm{\Delta}.}
+\]
+\end{corollary}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{14_semigroup_refinement_defect.pdf}
+\caption{Exact generator intertwining gives a vanishing semigroup defect. A controlled perturbation produces a nonzero defect propagated by the Duhamel identity.}
+\label{fig:semigroup-defect}
+\end{figure}
+
+\subsection{Resolvent form}
+
+For $z$ in the common resolvent set, let
+\[
+R_f(z)=(zI-A_f)^{-1},
+\qquad
+R_c(z)=(zI-A_c)^{-1}.
+\]
+
+\begin{theorem}[Resolvent refinement identity]
+\[
+\boxed{
+CR_f(z)-R_c(z)C
+=R_c(z)\Delta R_f(z).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the left side by $zI-A_c$ on the left and $zI-A_f$ on the right. The result is
+\[
+(zI-A_c)C-C(zI-A_f)=CA_f-A_cC=\Delta.
+\]
+Multiplication by the two resolvents recovers the stated identity.
+\end{proof}
+
+\section{Markov seeds and stochastic transfer}
+
+Use column probability vectors. A finite continuous-time Markov generator $Q$ has nonnegative off-diagonal entries and column sums zero. The stochastic semigroup is
+\[
+K(t)=e^{tQ}.
+\]
+
+\begin{theorem}[Finite Markov semigroup]
+If $Q$ has nonnegative off-diagonal entries and column sums zero, then $e^{tQ}$ has nonnegative entries and column sums one for every $t\ge0$.
+\end{theorem}
+
+\begin{proof}
+Choose $\lambda\ge\max_i(-Q_{ii})$. Then $B=Q+\lambda I$ has nonnegative entries, so $e^{tB}$ is entrywise nonnegative by its power series. Hence
+\[
+e^{tQ}=e^{-\lambda t}e^{tB}
+\]
+is nonnegative. Since $\bm 1^TQ=0$, differentiation gives
+\[
+\frac{d}{dt}\bm 1^Te^{tQ}=\bm 1^TQe^{tQ}=0,
+\]
+so $\bm 1^Te^{tQ}=\bm 1^T$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{03_random_walk_transfer.pdf}
+\caption{The point mass $\delta_0$ propagated by repeated symmetric random-walk transfer.}
+\label{fig:random-walk}
+\end{figure}
+
+\begin{example}[Symmetric random walk]
+Starting from $\delta_0$ and applying the transfer
+\[
+T=\frac12(S+S^{-1})
+\]
+for $n$ steps gives
+\[
+\bbP(X_n=k)=
+2^{-n}\binom{n}{(n+k)/2}
+\]
+when $k\equiv n\pmod2$, and zero otherwise. Hence
+\[
+\Exp[X_n]=0,
+\qquad
+\Var(X_n)=n.
+\]
+The parity packet is exact: all mass remains in the one residue class permitted by $n$.
+\end{example}
+
+\section{Markov lumping as exact refinement}
+
+Let $K$ be a column-stochastic fine transition matrix, let $C$ aggregate fine states into coarse packets, and let $\bar K$ be a coarse transition matrix. Define
+\[
+\Delta=CK-\bar KC.
+\]
+
+\begin{theorem}[Exact lumpability]
+If $\Delta=0$, then
+\[
+\boxed{CK^n=\bar K^nC}
+\]
+for every $n\ge0$. Thus fine evolution followed by coarse reconstruction equals coarse evolution from the beginning.
+\end{theorem}
+
+\begin{proof}
+The result is immediate for $n=0$. If $CK^n=\bar K^nC$, then
+\[
+CK^{n+1}=\bar K^nCK=\bar K^{n+1}C.
+\]
+\end{proof}
+
+\begin{theorem}[Finite-horizon defect formula]
+For arbitrary $\Delta=CK-\bar KC$,
+\[
+\boxed{
+CK^n-\bar K^nC
+=
+\sum_{j=0}^{n-1}\bar K^{n-1-j}\Delta K^j.
+}
+\]
+If $K$ and $\bar K$ are contractions in the chosen norm, then
+\[
+\norm{CK^n-\bar K^nC}\le n\norm{\Delta}.
+\]
+\end{theorem}
+
+\begin{proof}
+The identity follows by telescoping:
+\[
+\bar K^{n-1-j}CK^{j+1}-\bar K^{n-j}CK^j
+=\bar K^{n-1-j}(CK-\bar KC)K^j.
+\]
+Summing from $j=0$ to $n-1$ leaves $CK^n-\bar K^nC$. The norm bound follows termwise.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{04_markov_lumping.pdf}
+\caption{Exact lumping agrees at every horizon. A small generator-level or one-step defect creates a controlled coarse discrepancy.}
+\label{fig:lumping}
+\end{figure}
+
+\section{Conditional expectation as a stochastic projector}
+
+Let $\Omega=\{1,\ldots,n\}$ carry strictly positive probabilities $\pi_i$, and let $\mathcal Q=\{B_1,\ldots,B_m\}$ be a partition. Define
+\[
+(P_{\mathcal Q}f)_i
+=
+\frac{\sum_{j\in B(i)}\pi_jf_j}{\sum_{j\in B(i)}\pi_j},
+\]
+where $B(i)$ is the block containing $i$.
+
+\begin{theorem}[Finite conditional-expectation projector]
+With the weighted inner product
+\[
+\langle f,g\rangle_\pi=\sum_i\pi_if_i\overline{g_i},
+\]
+the operator $P_{\mathcal Q}$ satisfies
+\[
+P_{\mathcal Q}^2=P_{\mathcal Q},
+\qquad
+\langle P_{\mathcal Q}f,g\rangle_\pi
+=
+\langle f,P_{\mathcal Q}g\rangle_\pi.
+\]
+Its range is the space of functions constant on each partition block.
+\end{theorem}
+
+\begin{proof}
+After one application, the result is constant on every block, so applying the same block average again changes nothing. Weighted self-adjointness follows by expanding both inner products block by block; both equal
+\[
+\sum_{B\in\mathcal Q}
+\frac{1}{\pi(B)}
+\left(\sum_{i\in B}\pi_i f_i\right)
+\overline{\left(\sum_{j\in B}\pi_j g_j\right)}.
+\]
+\end{proof}
+
+\begin{theorem}[Tower law and martingale packets]
+If $\mathcal Q_c$ is coarser than $\mathcal Q_f$, then
+\[
+\boxed{
+P_cP_f=P_fP_c=P_c.
+}
+\]
+For a nested tower $P_0\le P_1\le\cdots\le P_r$, define
+\[
+D_0=P_0,
+\qquad
+D_j=P_j-P_{j-1}.
+\]
+Then
+\[
+D_iD_j=\delta_{ij}D_j,
+\qquad
+P_r=\sum_{j=0}^rD_j.
+\]
+\end{theorem}
+
+\begin{proof}
+A coarse-block average of a fine-block average is the coarse-block average, and a fine-block average of a coarse-constant function leaves it unchanged. The difference identities follow from $P_iP_j=P_{\min(i,j)}$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{08_hermite_packets.pdf}
+\caption{Hermite--Gaussian packets, which diagonalize the Ornstein--Uhlenbeck semigroup. The finite numerical release verifies their Gaussian orthogonality through quadrature.}
+\label{fig:hermite}
+\end{figure}
+
+\begin{classical}[Gaussian chaos realization]
+For the standard Gaussian measure, the normalized probabilists' Hermite polynomials form orthonormal chaos packets. The Ornstein--Uhlenbeck semigroup acts diagonally:
+\[
+T_tH_n=e^{-nt}H_n.
+\]
+Thus conditional expectation, martingale differences, and Gaussian chaos are all projector realizations of stochastic refinement.
+\end{classical}
+
+\section{Bayesian conditioning as a normalized nonlinear operator}
+
+Let $p=(p_i)$ be a probability vector and let $\lambda=(\lambda_i)$ be a nonnegative likelihood with positive evidence
+\[
+Z_\lambda(p)=\sum_i\lambda_ip_i.
+\]
+Define
+\[
+\boxed{
+\cB_\lambda(p)
+=
+\frac{\lambda\odot p}{Z_\lambda(p)}.
+}
+\]
+This map is nonlinear solely because of its scalar reconstruction factor.
+
+\begin{theorem}[Independent-likelihood composition]
+For nonnegative likelihoods $\lambda$ and $\mu$, assume $Z_\lambda(p)>0$ and $Z_{\lambda\odot\mu}(p)>0$. Equivalently, both successive updates have positive evidence. Then
+\[
+\boxed{
+\cB_\mu(\cB_\lambda(p))
+=
+\cB_{\lambda\odot\mu}(p).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The first normalization appears in both numerator and denominator of the second update and cancels:
+\[
+\frac{\mu_i(\lambda_ip_i/Z_\lambda)}{\sum_j\mu_j\lambda_jp_j/Z_\lambda}
+=
+\frac{\mu_i\lambda_ip_i}{\sum_j\mu_j\lambda_jp_j}.
+\]
+\end{proof}
+
+\subsection{Packet evidence and reconstruction}
+
+Let the state indices be partitioned into packets $I_\alpha$. Define
+\[
+Z_\alpha=\sum_{i\in I_\alpha}\lambda_ip_i,
+\qquad
+m_\alpha=\frac{Z_\alpha}{\sum_\beta Z_\beta},
+\qquad
+q_{\alpha,i}=\begin{cases}
+\lambda_ip_i/Z_\alpha,&Z_\alpha>0,\ i\in I_\alpha,\\
+0,&\text{otherwise}.
+\end{cases}
+\]
+
+\begin{theorem}[Bayesian packet reconstruction]
+\[
+\boxed{
+\cB_\lambda(p)
+=
+\sum_\alpha m_\alpha q_\alpha.
+}
+\]
+Only packets with positive evidence carry a conditional probability vector. A zero-evidence packet has zero posterior mass and contributes the zero vector. The nonlinear coupling between packets occurs only through the total evidence used to normalize the packet evidences.
+\end{theorem}
+
+\begin{proof}
+If $Z_\alpha=0$, nonnegativity implies $\lambda_i p_i=0$ for every $i\in I_\alpha$, so the reconstruction identity holds with both sides zero. For $Z_\alpha>0$ and $i\in I_\alpha$,
+\[
+m_\alpha q_{\alpha,i}
+=
+\frac{Z_\alpha}{Z}\frac{\lambda_ip_i}{Z_\alpha}
+=
+\frac{\lambda_ip_i}{Z}.
+\]
+The packet supports are disjoint, so summing reconstructs the full posterior.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{05_bayesian_packet_update.pdf}
+\caption{A finite prior and posterior split into two state packets. Evidence changes both the local packet shape and the global packet mass.}
+\label{fig:bayes-packet}
+\end{figure}
+
+\begin{theorem}[Likelihood perturbation bound]
+Let $p$ be fixed and let $\lambda,\mu\ge0$ have positive evidences $Z_\lambda,Z_\mu$. Then
+\[
+\boxed{
+\norm{\cB_\lambda(p)-\cB_\mu(p)}_1
+\le
+\frac{2\sum_i|\lambda_i-\mu_i|p_i}{\min(Z_\lambda,Z_\mu)}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Add and subtract $\mu\odot p/Z_\lambda$ and use the triangle inequality:
+\[
+\norm{\frac{\lambda\odot p}{Z_\lambda}-\frac{\mu\odot p}{Z_\mu}}_1
+\le
+\frac{\norm{(\lambda-\mu)\odot p}_1}{Z_\lambda}
++
+\norm{\mu\odot p}_1\left|\frac1{Z_\lambda}-\frac1{Z_\mu}\right|.
+\]
+The second term equals $|Z_\lambda-Z_\mu|/Z_\lambda$ and is bounded by the same weighted $L^1$ difference divided by $Z_\lambda$. Interchanging $\lambda$ and $\mu$ gives the minimum-evidence form.
+\end{proof}
+
+\section{Exact Bayesian refinement and information-loss packets}
+
+Let the fine state set $I$ be partitioned into nonempty coarse packets $I_a$, $a\in A$.  The coarsening map on probability vectors is
+\[
+(C_\pi p)_a=P_a=\sum_{i\in I_a}p_i.
+\]
+For a fine likelihood $\lambda=(\lambda_i)_{i\in I}$ and a prior $p$, define the effective coarse likelihood
+\[
+r_a(p)
+=
+\frac{\sum_{i\in I_a}\lambda_i p_i}{P_a}
+\qquad(P_a>0).
+\]
+Its value on a zero-mass packet is irrelevant and may be set to zero.
+
+\begin{theorem}[Exact effective-likelihood factorization]
+Whenever the fine evidence is positive,
+\[
+\boxed{
+C_\pi\cB_\lambda(p)
+=
+\cB_{r(p)}(C_\pi p).}
+\]
+Thus the only fine information needed for the coarse posterior, beyond the coarse prior masses, is the vector of conditional packet evidences $r(p)$.
+\end{theorem}
+
+\begin{proof}
+For $P=C_\pi p$ and $Z=\sum_i\lambda_ip_i=\sum_aP_ar_a(p)$,
+\[
+\bigl(C_\pi\cB_\lambda(p)\bigr)_a
+=
+\frac{\sum_{i\in I_a}\lambda_ip_i}{Z}
+=
+\frac{P_ar_a(p)}{\sum_bP_br_b(p)}
+=
+\bigl(\cB_{r(p)}(P)\bigr)_a.
+\]
+\end{proof}
+
+The next result gives the exact necessary and sufficient condition for a coarse likelihood to work for every prior.
+
+\begin{theorem}[Bayesian refinement criterion]
+Assume that the partition contains at least two coarse packets and that the fine and coarse likelihoods are strictly positive.  The identity
+\[
+\boxed{
+C_\pi\cB_\lambda(p)
+=
+\cB_{\bar\lambda}(C_\pi p)}
+\]
+holds for every fine prior $p$ if and only if there exists one scalar $c>0$ such that
+\[
+\boxed{
+\lambda_i=c\,\bar\lambda_a
+\qquad(i\in I_a).}
+\]
+Equivalently, the likelihood is constant on each coarse packet, with the coarse values determined up to the globally invisible Bayesian scaling $c$.
+\end{theorem}
+
+\begin{proof}
+If $\lambda_i=c\bar\lambda_a$ on $I_a$, then $P_a r_a(p)=c\bar\lambda_aP_a$ for every prior, including zero-mass packets, and the preceding theorem gives the desired identity because Bayesian normalization removes the common scalar $c$.
+
+Conversely, fix two fine states $i,i'\in I_a$ and one state $j\in I_b$ in another coarse packet.  Vary the distribution of a fixed coarse mass inside $I_a$ between $i$ and $i'$ while leaving every coarse packet mass unchanged.  The right side depends only on those coarse masses and is therefore unchanged.  The left-side posterior mass of packet $a$ depends on the conditional average of $\lambda_i$ and $\lambda_{i'}$.  It can be independent of that variation only if $\lambda_i=\lambda_{i'}$.  Hence $\lambda$ is constant on every packet; write the value on $I_a$ as $\lambda_a$.
+
+Now use priors supported on one state of packet $a$ and one state of packet $b$.  Equality of the two coarse posterior odds gives
+\[
+\frac{\lambda_a}{\lambda_b}
+=
+\frac{\bar\lambda_a}{\bar\lambda_b}.
+\]
+This holds for every pair of coarse packets, so $\lambda_a=c\bar\lambda_a$ for one common $c>0$.
+\end{proof}
+
+\begin{remark}[The one-packet boundary]
+If the coarse partition has only one packet, every posterior coarsens to the scalar $1$, so commutation is automatic and no within-packet likelihood information can be identified.  The nontrivial criterion begins with at least two coarse packets.
+\end{remark}
+
+When sufficiency fails, the defect still has an exact finite factorization.  Fix a declared coarse likelihood $\bar\lambda$, put
+\[
+P=C_\pi p,
+\qquad
+\delta(p)=r(p)-\bar\lambda,
+\qquad
+\bar b=\cB_{\bar\lambda}(P),
+\qquad
+Z_r=\langle r(p),P\rangle.
+\]
+
+\begin{theorem}[Bayesian information-loss packet]
+Assume nonnegative fine and declared coarse likelihoods, with both $Z_r>0$ and $Z_{\bar\lambda}>0$. The coarsening defect is
+\[
+\boxed{
+C_\pi\cB_\lambda(p)
+-
+\cB_{\bar\lambda}(P)
+=
+\frac{1}{Z_r}
+\left(\diag(P)-\bar bP^{\mathsf T}\right)
+\delta(p).}
+\]
+The factor matrix annihilates $\bar\lambda$.  This records the common-scale null direction at the declared coarse likelihood; the full exact defect remains homogeneous under simultaneous likelihood rescaling because the numerator and evidence denominator scale together.  Moreover,
+\[
+\boxed{
+\left\|C_\pi\cB_\lambda(p)-\cB_{\bar\lambda}(P)\right\|_1
+\le
+\frac{2\sum_aP_a|\delta_a(p)|}
+{\min\{Z_r,Z_{\bar\lambda}\}}}
+\]
+and
+\[
+\sum_aP_a|\delta_a(p)|
+\le
+\sum_i p_i\left|\lambda_i-\bar\lambda_{\pi(i)}\right|.
+\]
+\end{theorem}
+
+\begin{proof}
+The effective-likelihood theorem reduces the defect to
+\[
+\cB_{\bar\lambda+\delta}(P)-\cB_{\bar\lambda}(P).
+\]
+Since $Z_r=Z_{\bar\lambda}+P^{\mathsf T}\delta$, direct subtraction gives
+\[
+\frac{1}{Z_r}
+\left(\diag(P)-\bar bP^{\mathsf T}\right)\delta.
+\]
+Also,
+\[
+\left(\diag(P)-\bar bP^{\mathsf T}\right)\bar\lambda
+=P\odot\bar\lambda-\bar bZ_{\bar\lambda}=0.
+\]
+The first norm bound is the likelihood perturbation theorem applied on the coarse simplex. For a zero-mass packet, both sides of the following estimate vanish. For $P_a>0$,
+\[
+P_a|\delta_a|
+=
+P_a\left|\sum_{i\in I_a}\frac{p_i}{P_a}
+(\lambda_i-\bar\lambda_a)\right|
+\le
+\sum_{i\in I_a}p_i|\lambda_i-\bar\lambda_a|,
+\]
+and summing over $a$ proves the second inequality.
+\end{proof}
+
+\begin{corollary}[Nested Bayesian packet tower]
+Consider a nested finite packet tower with strictly positive likelihoods at every level. At each adjacent coarsening with at least two coarse packets, commutation for every prior is equivalent to the fine likelihood being blockwise proportional to the declared coarse likelihood, with one common positive proportionality factor. An adjacent coarsening to a single packet commutes automatically and imposes no such condition. Under these conditions, all composite coarsening squares commute.
+\end{corollary}
+
+\begin{proof}
+At each adjacent coarsening with at least two coarse packets, apply the refinement criterion. For a single coarse packet, both normalized posteriors equal 1. Composition of these commuting squares gives the full tower statement.
+\end{proof}
+
+\begin{corollary}[Canonical coarsest likelihood-resolving partition]
+For a finite family of likelihoods $\{\lambda^{(y)}\}_{y\in Y}$, define
+\[
+i\sim j
+\quad\Longleftrightarrow\quad
+\lambda_i^{(y)}=\lambda_j^{(y)}
+\text{ for every }y\in Y.
+\]
+The equivalence classes form the unique coarsest likelihood-resolving partition: every likelihood is constant on each packet. Every update therefore closes on this partition whenever its evidence is positive. If all likelihoods are strictly positive and there are at least two profile classes, this is also the unique coarsest nontrivial partition on which every update closes for every prior. The one-packet partition always closes, independently of the profiles, and is excluded from this last assertion.
+\end{corollary}
+
+\begin{proof}
+Equality of likelihood profiles is an equivalence relation. Its classes are likelihood-resolving by definition, and every likelihood-resolving partition refines them. Exact closure follows by summing the weighted masses in each fiber, including zero-mass fibers. Under strict positivity, the refinement criterion implies that every nontrivial all-prior closed partition is likelihood-resolving. When every profile is identical, all partitions close; there need not be a unique coarsest nontrivial partition.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{17_bayesian_refinement_square.pdf}
+\caption{For strictly positive likelihoods and at least two coarse packets, the Bayesian refinement square commutes for every prior exactly when the likelihood is constant on each coarsening fiber, up to one global scale.}
+\label{fig:bayes-refinement}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{18_bayesian_information_loss.pdf}
+\caption{When packet sufficiency fails, the exact defect factors through the difference between the conditional effective likelihood and the declared coarse likelihood.}
+\label{fig:bayes-loss}
+\end{figure}
+
+\begin{certificate}[Bayesian refinement]
+For the finite test partition $\{0,1\}\sqcup\{2,3\}$, a blockwise-constant likelihood gave commutation residual $1.11\times10^{-16}$.  A nonconstant likelihood produced an exact defect-factorization residual $7.29\times10^{-17}$.  Its measured $L^1$ defect was $4.8787\times10^{-2}$, below the certified bound $1.1016\times10^{-1}$.  Two priors with identical coarse masses but different hidden within-packet shapes produced coarse posteriors differing by $1.2400\times10^{-1}$, which is a direct necessity witness.
+\end{certificate}
+
+\begin{boundary}[Finite exact theorem]
+The conjectured Bayesian refinement law is therefore resolved for finite packet systems and arbitrary priors.  Infinite-dimensional disintegration, posterior consistency, and stability of data-dependent partitions require their own measure-theoretic and asymptotic hypotheses.
+\end{boundary}
+
+
+\section{Bayesian flows, conjugacy, and hidden states}
+
+Fix a score vector $g$. The likelihood flow is
+\[
+\lambda_i(t)=e^{tg_i},
+\]
+and the Bayesian flow is
+\[
+\Phi_t(p)_i
+=
+\frac{e^{tg_i}p_i}{\sum_je^{tg_j}p_j}.
+\]
+
+\begin{theorem}[Bayesian nonlinear semigroup]
+\[
+\boxed{
+\Phi_{s+t}=\Phi_s\circ\Phi_t.
+}
+\]
+Its generator is the centered multiplicative field
+\[
+\boxed{
+\frac{d}{dt}p_i(t)
+=
+\bigl(g_i-\langle g,p(t)\rangle\bigr)p_i(t).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The semigroup law is the likelihood-composition theorem with $e^{sg}e^{tg}=e^{(s+t)g}$. Differentiating the normalized exponential formula gives
+\[
+\dot p_i=g_ip_i-p_i\frac{\sum_jg_je^{tg_j}p_j(0)}{\sum_je^{tg_j}p_j(0)}.
+\]
+The quotient is $\langle g,p(t)\rangle$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{07_bayesian_flow.pdf}
+\caption{Continuous likelihood accumulation produces a nonlinear semigroup on the probability simplex.}
+\label{fig:bayesian-flow}
+\end{figure}
+
+\begin{example}[Beta--Binomial conjugate packet]
+A $\operatorname{Beta}(a,b)$ prior and $s$ successes in $n$ trials produce
+\[
+\operatorname{Beta}(a+s,b+n-s).
+\]
+The prior exponents are additive packets: the likelihood increments them by $(s,n-s)$. In the numerical example,
+\[
+(a,b)=(2,3),\quad (s,n)=(7,10),
+\]
+so the posterior is $\operatorname{Beta}(9,6)$ with mean $0.6$.
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{06_beta_binomial_conjugacy.pdf}
+\caption{A conjugate Bayesian update viewed as exact transfer of exponent packets.}
+\label{fig:beta-conjugacy}
+\end{figure}
+
+\subsection{Hidden Markov filtering}
+
+Let $K$ be column stochastic and let $\lambda^{(r)}$ be the likelihood associated with the $r$th observation. The filter recursion is
+\[
+\widehat p_r=Kp_{r-1},
+\qquad
+p_r=\cB_{\lambda^{(r)}}(\widehat p_r).
+\]
+
+\begin{proposition}[Prediction-update reconstruction]
+Every hidden Markov filtering step is the composition of a linear Markov transfer and a normalized nonlinear likelihood transfer. Assume a probability initial vector, a column-stochastic transition matrix, and nonnegative likelihoods with positive evidence at every step. Then every $p_r$ is a probability vector.
+\end{proposition}
+
+\begin{proof}
+Column stochasticity gives $\widehat p_r\ge0$ and $\bm1^T\widehat p_r=1$. Bayesian normalization then gives $p_r\ge0$ and $\bm1^Tp_r=1$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{15_hidden_markov_filter.pdf}
+\caption{A hidden Markov filter alternates a linear prediction semigroup with nonlinear Bayesian normalization.}
+\label{fig:hmm}
+\end{figure}
+
+\section{Fractional powers as spectral packet transfer}
+
+Let $L=L^*\ge0$ on a finite-dimensional Hilbert space. Its spectral resolution is
+\[
+L=\sum_j\lambda_jP_j.
+\]
+For $\alpha>0$, define
+\[
+\boxed{L^\alpha=\sum_j\lambda_j^\alpha P_j.}
+\]
+The associated fractional semigroup is
+\[
+T_\alpha(t)=e^{-tL^\alpha}
+=\sum_je^{-t\lambda_j^\alpha}P_j.
+\]
+
+\begin{theorem}[Fractional packet calculus]
+For $\alpha,\beta>0$,
+\[
+L^\alpha L^\beta=L^{\alpha+\beta},
+\]
+and for $s,t\ge0$,
+\[
+\boxed{T_\alpha(s)T_\alpha(t)=T_\alpha(s+t).}
+\]
+Every spectral packet $P_j$ reduces $L^\alpha$ and $T_\alpha(t)$.
+\end{theorem}
+
+\begin{proof}
+All statements hold coefficientwise on the mutually orthogonal spectral projectors. For example,
+\[
+L^\alpha L^\beta
+=\sum_{j,k}\lambda_j^\alpha\lambda_k^\beta P_jP_k
+=\sum_j\lambda_j^{\alpha+\beta}P_j.
+\]
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{09_fractional_semigroup.pdf}
+\caption{Different spectral exponents produce different transfer profiles from the same point seed.}
+\label{fig:fractional}
+\end{figure}
+
+\subsection{Square-root subordination}
+
+\begin{theorem}[Poisson subordination]
+For $t>0$ and $L\ge0$,
+\[
+\boxed{
+e^{-t\sqrt L}
+=
+\frac{t}{2\sqrt\pi}
+\int_0^\infty
+s^{-3/2}e^{-t^2/(4s)}e^{-sL}\,ds.
+}
+\]
+The integral converges in operator norm in finite dimension.
+\end{theorem}
+
+\begin{proof}
+By the spectral theorem it suffices to prove the scalar identity
+\[
+e^{-t\sqrt\lambda}
+=
+\frac{t}{2\sqrt\pi}
+\int_0^\infty
+s^{-3/2}e^{-t^2/(4s)-\lambda s}\,ds
+\]
+for $\lambda\ge0$. This is the classical Gaussian integral after the substitution $u=t/(2\sqrt s)$. Applying the identity to every eigenvalue and recombining the spectral projectors proves the operator formula.
+\end{proof}
+
+\subsection{Fractional naturality under a bounded refinement defect}
+
+Let $A\ge0$ act on a fine Hilbert space, let $B\ge0$ act on a coarse Hilbert space, and let $C$ be a bounded coarsening map.  Set
+\[
+D=CA-BC,
+\qquad
+D_\alpha=CA^\alpha-B^\alpha C,
+\qquad 0<\alpha<1.
+\]
+
+\begin{theorem}[Fractional intertwining theorem]\label{thm:fractional-naturality}
+For bounded nonnegative self-adjoint $A$ and $B$,
+\[
+\boxed{
+D_\alpha
+=
+\frac{\sin(\pi\alpha)}{\pi}
+\int_0^\infty
+ t^\alpha(tI+B)^{-1}D(tI+A)^{-1}\,dt.
+}
+\]
+The improper integral converges in operator norm.  Moreover,
+\[
+\boxed{
+\norm{D_\alpha}
+\le
+K_\alpha\norm{C}^{1-\alpha}\norm{D}^{\alpha},
+\qquad
+K_\alpha=
+\frac{2^{1-\alpha}\sin(\pi\alpha)}
+{\pi\alpha(1-\alpha)}.
+}
+\]
+If $A,B\ge mI$ for some $m>0$, then the stronger linear estimate holds:
+\[
+\boxed{
+\norm{D_\alpha}
+\le
+\alpha m^{\alpha-1}\norm{D}.
+}
+\]
+In particular, exact generator intertwining $CA=BC$ implies exact fractional intertwining $CA^\alpha=B^\alpha C$.
+\end{theorem}
+
+\begin{proof}
+For $0<\alpha<1$, the Balakrishnan formula gives
+\[
+A^\alpha
+=
+\frac{\sin(\pi\alpha)}{\pi}
+\int_0^\infty t^{\alpha-1}A(tI+A)^{-1}\,dt,
+\]
+and likewise for $B$.  Using
+\[
+A(tI+A)^{-1}=I-t(tI+A)^{-1}
+\]
+and the rectangular resolvent identity
+\[
+(tI+B)^{-1}C-C(tI+A)^{-1}
+=
+(tI+B)^{-1}(CA-BC)(tI+A)^{-1},
+\]
+the difference of the two Balakrishnan integrals becomes the displayed resolvent-defect formula.
+
+For small $t$,
+\[
+\norm{CA(tI+A)^{-1}-B(tI+B)^{-1}C}
+\le 2\norm C,
+\]
+because the two positive resolvent factors are contractions.  For large $t$, the resolvent identity gives the bound $\norm D/t$.  Splitting the integral at
+\[
+r=\frac{\norm D}{2\norm C}
+\]
+when $C$ and $D$ are nonzero yields
+\[
+\begin{aligned}
+\norm{D_\alpha}
+&\le
+\frac{\sin(\pi\alpha)}{\pi}
+\left(
+2\norm C\int_0^r t^{\alpha-1}\,dt
++
+\norm D\int_r^\infty t^{\alpha-2}\,dt
+\right)\\
+&=
+K_\alpha\norm C^{1-\alpha}\norm D^\alpha.
+\end{aligned}
+\]
+The zero cases are immediate.
+
+If $A,B\ge mI$, then both resolvents have norm at most $(t+m)^{-1}$, so
+\[
+\norm{D_\alpha}
+\le
+\frac{\sin(\pi\alpha)}{\pi}\norm D
+\int_0^\infty\frac{t^\alpha}{(t+m)^2}\,dt.
+\]
+After $t=mu$, the beta integral equals
+\[
+m^{\alpha-1}\frac{\alpha\pi}{\sin(\pi\alpha)},
+\]
+which gives the linear estimate.
+\end{proof}
+
+\begin{corollary}[Fractional semigroup refinement]\label{cor:fractional-semigroup-refinement}
+For $s\ge0$,
+\[
+\boxed{
+Ce^{-sA^\alpha}-e^{-sB^\alpha}C
+=
+-\int_0^s
+ e^{-(s-r)B^\alpha}D_\alpha e^{-rA^\alpha}\,dr.
+}
+\]
+Hence
+\[
+\norm{Ce^{-sA^\alpha}-e^{-sB^\alpha}C}
+\le s\norm{D_\alpha}.
+\]
+Under the common gap $A,B\ge mI$,
+\[
+\boxed{
+\norm{Ce^{-sA^\alpha}-e^{-sB^\alpha}C}
+\le
+s e^{-sm^\alpha}\alpha m^{\alpha-1}\norm D.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Differentiate
+\[
+r\longmapsto e^{-(s-r)B^\alpha}Ce^{-rA^\alpha}
+\]
+and integrate from $0$ to $s$.  Positive fractional semigroups are contractions; under the gap, the product of their two norm bounds is $e^{-sm^\alpha}$.
+\end{proof}
+
+\begin{corollary}[Fractional refinement towers]
+Let $D_\ell=C_\ell A_{\ell+1}-A_\ell C_\ell$ in a bounded nonnegative self-adjoint tower, with $\sup_\ell\norm{C_\ell}\le M$.  If
+\[
+\sum_\ell\norm{D_\ell}^{\alpha}<\infty,
+\]
+then the fractional defects
+\[
+C_\ell A_{\ell+1}^{\alpha}-A_\ell^{\alpha}C_\ell
+\]
+are summable.  If the tower has a uniform gap $m>0$, it is enough that $\sum_\ell\norm{D_\ell}<\infty$.  On every bounded time interval, the corresponding fractional-semigroup defects are summable as well.
+\end{corollary}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{19_fractional_naturality.pdf}
+\caption{A generator-level refinement defect transfers quantitatively to fractional powers and then to fractional semigroups.  The two upper curves are theorem certificates, not fitted error bars.}
+\label{fig:fractional-naturality}
+\end{figure}
+
+\begin{boundary}[Unbounded and nonnormal generators]
+The theorem resolves fractional naturality for bounded nonnegative self-adjoint refinement systems and gives the exact estimate needed for finite discretization towers.  For unbounded positive generators, the same resolvent argument requires a declared common-domain condition and a bounded extension of $CA-BC$.  Sectorial or nonnormal generators require their own contour calculus and resolvent bounds.  Those domain questions are not inferred from the finite certificates.
+\end{boundary}
+
+\begin{boundary}[Non-self-adjoint fractional powers]
+The spectral definition above is complete for finite self-adjoint positive operators. Sectorial and nonnormal operators require a resolvent or contour functional calculus; the same packet language can be used only after those analytic hypotheses are established.
+\end{boundary}
+
+\section{Green operators and the Poisson seed}
+
+On the interval $(0,1)$ with Dirichlet boundary conditions, the Green kernel for $-u''=f$ is
+\[
+\boxed{G(x,y)=\min(x,y)-xy.}
+\]
+Thus the point source $\delta_y$ generates the solution kernel, and a general source is reconstructed by
+\[
+u(x)=\int_0^1G(x,y)f(y)\,dy.
+\]
+
+For $n$ interior points with spacing $h=1/(n+1)$, define
+\[
+L_h=\frac1{h^2}
+\begin{pmatrix}
+2&-1&&\\
+-1&2&\ddots&\\
+&\ddots&\ddots&-1\\
+&&-1&2
+\end{pmatrix}.
+\]
+
+\begin{theorem}[Exact discrete Green reconstruction at grid nodes]
+Let $x_i=ih$. Then
+\[
+\boxed{
+\frac1h(L_h^{-1})_{ij}
+=G(x_i,x_j).
+}
+\]
+Thus the scaled discrete inverse reproduces the continuum Dirichlet Green kernel exactly at the grid nodes.
+\end{theorem}
+
+\begin{proof}
+The inverse of the unscaled tridiagonal matrix has entries
+\[
+\frac{\min(i,j)(n+1-\max(i,j))}{n+1}.
+\]
+Multiplying by $h^2$ and then dividing by $h$ gives
+\[
+h\min(i,j)\left(1-\frac{\max(i,j)}{n+1}\right)
+=\min(x_i,x_j)-x_ix_j.
+\]
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{10_poisson_green_kernel.pdf}
+\caption{A section of the continuum Green kernel and the scaled discrete inverse. They agree at the grid nodes.}
+\label{fig:green}
+\end{figure}
+
+\subsection{Low-mode convergence}
+
+The $k$th discrete eigenvalue is
+\[
+\lambda_{k,h}=\frac4{h^2}\sin^2\left(\frac{k\pi h}{2}\right),
+\]
+whereas the continuum eigenvalue is $(k\pi)^2$.
+
+\begin{theorem}[Second-order low-mode convergence]
+For fixed $k$,
+\[
+\lambda_{k,h}=(k\pi)^2+O(h^2).
+\]
+More precisely, for sufficiently small $h$,
+\[
+0\le (k\pi)^2-\lambda_{k,h}
+\le \frac{(k\pi)^4}{12}h^2.
+\]
+\end{theorem}
+
+\begin{proof}
+For $x\ge0$, $0\le x^2-\sin^2x\le x^4/3$. Set $x=k\pi h/2$ and multiply by $4/h^2$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{11_pde_refinement_convergence.pdf}
+\caption{The first finite-difference eigenvalue converges with observed order approximately two.}
+\label{fig:pde-convergence}
+\end{figure}
+
+\section{Finite-state Feynman--Kac transfer}
+
+Let $K$ be a column-stochastic matrix, let $V$ be a potential on the states, and let $f$ be terminal data. Define
+\[
+M_V=\diag(e^{-V})K^T.
+\]
+The backward Feynman--Kac value after $n$ steps is
+\[
+u_n=M_V^nf.
+\]
+
+\begin{theorem}[Discrete Feynman--Kac path formula]
+For an initial state $i$,
+\[
+\boxed{
+(u_n)_i
+=
+\Exp_i\left[
+\exp\left(-\sum_{r=0}^{n-1}V(X_r)\right)f(X_n)
+\right].
+}
+\]
+\end{theorem}
+
+\begin{proof}
+For $n=1$,
+\[
+(M_Vf)_i=e^{-V(i)}\sum_jK_{j i}f_j,
+\]
+which is the stated expectation. Iterating and expanding the matrix product sums over every path $(i=i_0,i_1,\ldots,i_n)$ with probability $\prod_rK_{i_{r+1},i_r}$ and weight $\prod_re^{-V(i_r)}$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{12_feynman_kac_transfer.pdf}
+\caption{Potential-weighted transfer values computed by the finite Feynman--Kac operator. Exhaustive path enumeration agrees with the matrix formula in the supplied tests.}
+\label{fig:feynman-kac}
+\end{figure}
+
+\section{Exact elimination of latent packets}
+
+Let $X=P X\oplus Q X$ and write
+\[
+A=
+\begin{pmatrix}
+A_{PP}&A_{PQ}\\
+A_{QP}&A_{QQ}
+\end{pmatrix}.
+\]
+
+\begin{theorem}[Schur--Feshbach projected resolvent]
+Assume both $zI-A$ and $zI-A_{QQ}$ are invertible. Define
+\[
+\boxed{
+F_P(z)
+=zI-A_{PP}-A_{PQ}(zI-A_{QQ})^{-1}A_{QP}.
+}
+\]
+Then
+\[
+\boxed{
+\left.P(zI-A)^{-1}\right|_{\Ran P}=F_P(z)^{-1}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Solve the hidden block equation
+\[
+(zI-A_{QQ})x_Q=A_{QP}x_P+y_Q
+\]
+for $x_Q$ and substitute it into the retained equation. The resulting retained coefficient is $F_P(z)$. Invertibility of the full operator and of the hidden block implies invertibility of this Schur complement. Setting $y_Q=0$ gives the stated identity as an operator on $\Ran P$. Equivalently, this is the block inverse formula.
+\end{proof}
+
+The self-energy
+\[
+\Sigma_P(z)=A_{PQ}(zI-A_{QQ})^{-1}A_{QP}
+\]
+contains the exact effect of the eliminated packets. A bare truncation $A_{PP}$ discards this term and is generally not exact.
+
+\subsection{Time-domain memory}
+
+For the homogeneous system $\dot x=Ax$, variation of constants gives
+\[
+x_Q(t)=e^{tA_{QQ}}x_Q(0)
++\int_0^te^{(t-r)A_{QQ}}A_{QP}x_P(r)\,dr.
+\]
+Substitution yields
+\[
+\dot x_P(t)
+=A_{PP}x_P(t)+A_{PQ}e^{tA_{QQ}}x_Q(0)
++\int_0^t\cK(t-r)x_P(r)\,dr,
+\]
+where
+\[
+\boxed{
+\cK(t)=A_{PQ}e^{tA_{QQ}}A_{QP}.
+}
+\]
+
+\begin{theorem}[Memory/self-energy correspondence]
+For finite complex block matrices, assume $\operatorname{Re}z>\operatorname{Re}\lambda$ for every $\lambda\in\sigma(A_{QQ})$. Then the following improper integral is absolutely convergent and
+\[
+\boxed{
+\int_0^\infty e^{-zt}\cK(t)\,dt
+=A_{PQ}(zI-A_{QQ})^{-1}A_{QP}
+=\Sigma_P(z).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Put $B=A_{QQ}$ and $T_z(t)=e^{-zt}e^{tB}=e^{t(B-zI)}$.
+The generalized-eigenspace decomposition in finite dimensions writes $T_z$ as a
+finite sum of constant matrix coefficients times $t^k e^{(\lambda-z)t}$.
+This follows by expanding the nilpotent part on each generalized eigenspace;
+equivalently, apply the decomposition to left multiplication by $B$ on the matrix
+algebra and evaluate the exponential at $I$.
+The strict spectral inequality makes every such term absolutely integrable on
+$(0,\infty)$ and forces it to tend to zero. Hence $T_z$ is Bochner integrable
+and $T_z(t)\to0$, including when $B$ is nonnormal.
+
+Let $J=\int_0^\infty T_z(t)\,dt$. Integrating both derivative identities
+$T_z'=(B-zI)T_z=T_z(B-zI)$ and using $T_z(0)=I$ gives
+\[
+(zI-B)J=J(zI-B)=I.
+\]
+Thus $J=(zI-B)^{-1}$. Continuous left and right multiplication carry the
+Bochner integral through the two rectangular transfer blocks, yielding the claim.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{13_latent_memory_kernel.pdf}
+\caption{The norm of the exact memory kernel produced by eliminated packets.}
+\label{fig:memory}
+\end{figure}
+
+\section{Survival and hazard semigroups}
+
+Let $A$ be a finite subgenerator: its off-diagonal entries are nonnegative and its column sums are nonpositive. These sign conditions alone allow nonabsorbing states; eventual absorption is a separate hypothesis. Let $p_0$ be an initial transient-state distribution. Define
+\[
+p(t)=e^{tA}p_0,
+\qquad
+S(t)=\bm1^Tp(t).
+\]
+The exit-rate row vector is
+\[
+a^T=-\bm1^TA\ge0.
+\]
+
+\begin{theorem}[Semigroup survival identities]
+For $t\ge0$, the finite-time exit density and, wherever $S(t)>0$, the hazard are
+\[
+\boxed{
+f(t)=a^Te^{tA}p_0=-S'(t),
+\qquad
+h(t)=\frac{f(t)}{S(t)}.
+}
+\]
+Consequently, $S$ is nonincreasing and
+\[
+S(t)=\exp\left(-\int_0^th(r)\,dr\right)
+\]
+whenever $S(t)>0$. The density may be defective: its total mass is $1-\lim_{t\to\infty}S(t)$. It is a probability density when absorption is eventual, so that this limit is zero.
+\end{theorem}
+
+\begin{proof}
+Differentiate:
+\[
+S'(t)=\bm1^TAe^{tA}p_0=-a^Te^{tA}p_0.
+\]
+The hazard identity is the definition of conditional instantaneous exit rate. Integrating $(\log S)'=-h$ gives the final formula.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{16_survival_hazard.pdf}
+\caption{Survival and instantaneous hazard produced by one transient transfer semigroup.}
+\label{fig:survival}
+\end{figure}
+
+\section{One common operator language}
+
+The preceding constructions are not identical, but they use the same packet operations. The domain dictionary is summarized in \cref{tab:dictionary}.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{0.17\textwidth} L{0.19\textwidth} Y Y}
+\toprule
+Realization & Seed & Transfer & Packet/reconstruction law\\
+\midrule
+Markov & point mass $\delta_i$ & $K^n$ or $e^{tQ}$ & state lumping and $CK^n=\bar K^nC$\\
+Conditional & random variable & $P_{\mathcal Q}$ & nested partitions and tower law\\
+Bayesian & prior $p$ & $\cB_\lambda$ & packet evidences and normalized synthesis\\
+Fractional & spectral source & $e^{-tL^\alpha}$ & spectral projectors $P_j$\\
+PDE & source $f$ or $\delta_y$ & resolvent/Green operator & eigenmode or spatial packet synthesis\\
+Feynman--Kac & terminal data $f$ & $(\diag(e^{-V})K^T)^n$ & weighted path reconstruction\\
+Latent system & retained state & Feshbach/self-energy & hidden packets return as memory\\
+Survival & initial transient law & $e^{tA}$ & sum over transient packets\\
+\bottomrule
+\end{tabularx}
+\caption{The transfer-semigroup dictionary in the common operator language.}
+\label{tab:dictionary}
+\end{table}
+
+For clarity, the finite-dimensional holomorphic calculus used below has the
+following canonical definition. For $A$ acting on $\mathbb C^d$, its generalized
+eigenspaces $E_\mu=\ker(A-\mu I)^d$ form a direct-sum decomposition over the
+eigenvalues. Define the unique linear operator $F(A)$ by
+\[
+\left.F(A)\right|_{E_\mu}
+=\left.\sum_{k=0}^{d-1}\frac{F^{(k)}(\mu)}{k!}(A-\mu I)^k\right|_{E_\mu}.
+\]
+The formula is independent of a basis and of increasing the truncation index:
+the extra nilpotent powers vanish. It depends only on the finite Taylor jets of
+$F$ at the spectrum. If $F$ is holomorphic on an open neighborhood $U$ of the
+spectrum, each eigenvalue admits a radius $r_\mu>0$ with
+$\overline{D(\mu,r_\mu)}\subset U$, and Cauchy's formula gives
+\[
+\frac{F^{(k)}(\mu)}{k!}
+=\frac{1}{2\pi i}\oint_{|z-\mu|=r_\mu}
+  \frac{F(z)}{(z-\mu)^{k+1}}\,dz.
+\]
+Consequently the same canonical operator is obtained from any such local
+Cauchy circles, even when $U$ is disconnected. This is the standard finite
+Taylor-jet definition of the holomorphic matrix function.
+
+\begin{theorem}[Naturality under exact intertwining]
+For finite complex matrices, let $F$ be holomorphic on a neighborhood of the union of the spectra of $A_f$ and $A_c$. Real matrices are treated by complexification. If
+\[
+CA_f=A_cC,
+\]
+then
+\[
+\boxed{CF(A_f)=F(A_c)C.}
+\]
+In particular, exact generator refinement propagates simultaneously to semigroups, resolvents, integer powers, and analytic transfer functions.
+\end{theorem}
+
+\begin{proof}
+The intertwining identity implies
+$C(A_f-\mu I)^k=(A_c-\mu I)^kC$ for every $k\ge0$.
+It therefore sends the generalized $\mu$-eigenspace of $A_f$ into that of $A_c$.
+Use a common truncation index at least as large as both dimensions in the
+canonical formula above. Multiplying its finite sum by $C$ now gives the desired
+identity on every generalized eigenspace. The direct-sum decomposition gives
+it on the full space. The argument covers nilpotent Jordan parts and uses only
+local spectral Taylor jets; it does not require one Taylor series to converge
+on both spectra. The zero-dimensional case is immediate.
+\end{proof}
+
+\begin{remark}[Where nonlinearity enters]
+Bayesian conditioning does not fit the preceding linear functional calculus because normalization depends on the current state. It nevertheless obeys an exact composition law and has a closed packet reconstruction. Paper III supplies the general nonlinear coordinate theorem; the Bayesian map is a particularly transparent probabilistic realization.
+\end{remark}
+
+\section{Numerical certificates}
+
+All calculations in this release were run on CPU. No GPU timing or performance claim is made. Floating-point residuals are implementation checks and are not substitutes for the symbolic proofs.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{L{0.56\textwidth} r}
+\toprule
+Certificate & Value\\
+\midrule
+Packet-block semigroup composition residual & $2.554\times10^{-15}$\\
+Operator reconstruction residual & $0$\\
+Random-walk mass error & $0$\\
+Exact Markov generator-lumping defect & $5.551\times10^{-17}$\\
+Exact finite-horizon lumping error & $2.220\times10^{-16}$\\
+Perturbed ten-step lumping error & $6.523\times10^{-3}$\\
+Linear defect bound for that example & $2.000\times10^{-1}$\\
+Bayesian composition residual & $5.551\times10^{-17}$\\
+Bayesian packet reconstruction residual & $0$\\
+Bayesian refinement commutation residual & $1.110\times10^{-16}$\\
+Bayesian defect-factorization residual & $7.286\times10^{-17}$\\
+Bayesian flow generator residual & $1.959\times10^{-11}$\\
+Conditional-expectation tower residual & $0$\\
+Hermite Gram residual & $9.992\times10^{-15}$\\
+Fractional semigroup residual & $2.082\times10^{-17}$\\
+Maximum square-root subordination error & $1.665\times10^{-16}$\\
+Exact fractional-naturality residual & $0$\\
+Fractional-power defect / gap certificate & $0.51059 / 0.95079$\\
+Fractional-semigroup defect / certificate & $0.12969 / 0.44480$\\
+Observed low-mode PDE convergence order & $1.999854$\\
+Feynman--Kac enumeration residual & $1.665\times10^{-16}$\\
+Feshbach projected-resolvent residual & $5.551\times10^{-17}$\\
+Memory Laplace-transform residual & $6.939\times10^{-18}$\\
+Duhamel refinement identity residual & $2.108\times10^{-16}$\\
+Survival monotonicity violation & $0$\\
+Hidden-Markov normalization error & $1.110\times10^{-16}$\\
+\bottomrule
+\end{tabular}
+\caption{Selected results from the machine-readable numerical record.}
+\label{tab:numerics}
+\end{table}
+
+\begin{certificate}[Test suite]
+The complete release passes
+\[
+\boxed{54/54\text{ automated tests}.}
+\]
+The tests cover projector reconstruction, packet-block semigroup composition, exact and approximate Markov lumping, Bayesian composition and flow, the exact Bayesian refinement criterion, information-loss factorization, likelihood-profile partitions, conditional-expectation towers, Hermite orthogonality, fractional semigroups, square-root subordination, fractional intertwining and semigroup-defect bounds, discrete Green kernels, PDE convergence, Feynman--Kac enumeration, Schur--Feshbach elimination, memory kernels, refinement defects, hidden Markov filtering, and survival curves.
+\end{certificate}
+
+\section{Remaining conjectural extensions}
+
+The finite theory closes several operator identities but does not settle the corresponding universal continuum questions.
+
+\begin{conjecture}[Transfer-semigroup realization]
+Every sufficiently regular realization of the seed calculus whose transfer stage is local in time admits a closed generator on a completed state space, and the packet analysis maps form a compatible system for its semigroup or evolution family.
+\end{conjecture}
+
+\begin{conjecture}[Uniform refinement control]
+For a nested family of physically or analytically meaningful discretizations, there exist norms and constants independent of resolution such that
+\[
+\norm{C_\ell e^{tA_{\ell+1}}-e^{tA_\ell}C_\ell}
+\le
+M\,t\,\norm{C_\ell A_{\ell+1}-A_\ell C_\ell}
+\]
+on every bounded time interval. Summable generator defects would then produce a coherent inverse-limit evolution.
+\end{conjecture}
+
+\begin{conjecture}[Latent-packet closure]
+For a stable infinite packet system, exact elimination of unresolved packets produces a causal memory kernel whose Laplace transform is the limiting packet self-energy. A Markovian closure exists precisely when this self-energy is constant, or can be represented by finitely many additional state packets.
+\end{conjecture}
+
+\begin{boundary}[What remains outside Paper VI]
+The following issues are not proved here:
+\begin{enumerate}[leftmargin=2em]
+\item existence and uniqueness for arbitrary stochastic differential equations;
+\item posterior consistency or asymptotic normality in infinite statistical models;
+\item domain invariance for unbounded fractional operators;
+\item tightness and compactness required for stochastic continuum limits;
+\item nonlinear PDE well-posedness beyond the stated finite and linear models;
+\item an optimal packet choice for a general Markov, Bayesian, or PDE problem.
+\end{enumerate}
+These belong to later realization-specific work or to external analytic theory.
+\end{boundary}
+
+\section{Computational implementation}
+
+The accompanying Python package implements the formulas and finite models used in the paper.
+\begin{center}
+\texttt{projector\_transfer\_semigroups}
+\end{center}
+The computational organization mirrors the paper:
+\[
+\begin{array}{c|l}
+\texttt{packets.py} & \text{projectors, blocks, reconstruction, block composition}\\
+\texttt{semigroup.py} & \text{matrix semigroups, defects, Feshbach operators, memory}\\
+\texttt{markov.py} & \text{random walks, exact lumping, survival}\\
+\texttt{bayes.py} & \text{normalized updates, packet evidence, conjugacy, flows, HMM}\\
+\texttt{conditional.py} & \text{conditional expectation and Gaussian chaos}\\
+\texttt{fractional.py} & \text{spectral powers, subordination, and fractional refinement certificates}\\
+\texttt{pde.py} & \text{Dirichlet Laplacians, Green kernels, eigenvalue error}\\
+\texttt{feynman\_kac.py} & \text{weighted transfer and exhaustive path enumeration}.
+\end{array}
+\]
+
+\subsection{Representative algorithms}
+
+\begin{lstlisting}[caption={Normalized finite Bayesian update.}]
+def bayes_update(prior, likelihood):
+    p = normalize(prior)
+    evidence = likelihood @ p
+    if evidence <= 0:
+        raise ValueError("positive evidence required")
+    return likelihood * p / evidence
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Packet block composition.}]
+def block_composition(left, right):
+    result = []
+    for beta in range(len(left)):
+        row = []
+        for alpha in range(len(left)):
+            value = sum(
+                left[beta][gamma] @ right[gamma][alpha]
+                for gamma in range(len(left))
+            )
+            row.append(value)
+        result.append(row)
+    return result
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Finite Schur-Feshbach effective operator.}]
+def feshbach_effective_operator(A, retained, z):
+    App, Apq, Aqp, Aqq = split_blocks(A, retained)
+    return z*I - App - Apq @ inv(z*I - Aqq) @ Aqp
+\end{lstlisting}
+
+The full implementation, tests, tables, figure-generation code, and exact numerical record are included with the release rather than embedded in the typeset paper.
+
+\section{Conclusion}
+
+The transfer-semigroup realization gives one common operator language to several subjects that are often presented separately. Markov propagation is linear transfer of a probability seed. Conditional expectation is stochastic projection. Bayesian conditioning is normalized nonlinear transfer, and its exact finite coarsening law is now characterized by packetwise likelihood sufficiency. Fractional calculus is spectral packet reweighting, and bounded positive refinement defects now transfer to fractional powers and fractional semigroups by explicit resolvent and Duhamel estimates. A Green operator reconstructs a field from source packets. Feynman--Kac propagation adds path weights to stochastic transfer. Schur--Feshbach elimination shows that hidden packets are not destroyed; they return through self-energy and memory. Survival and hazard are scalar reconstructions of a transient semigroup.
+
+The central structural identity is
+\[
+\boxed{
+\text{generator defect}
+\longrightarrow
+\text{Duhamel semigroup defect}
+\longrightarrow
+\text{controlled refinement error}.
+}
+\]
+Together with exact packet reconstruction, this makes the semigroup paper the natural bridge from the foundational calculus to the quantum, computational, and arithmetic realizations that follow.
+
+\input{lean_status.tex}
+\end{document}

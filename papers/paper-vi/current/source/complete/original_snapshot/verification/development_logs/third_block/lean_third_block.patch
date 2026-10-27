@@ -1,0 +1,1252 @@
+--- second_block/formalization/lean/KernelAudit.lean
++++ third_block/formalization/lean/KernelAudit.lean
+@@ -9,6 +9,9 @@
+ #print axioms KomorebiPaperVI.Algebra.intertwining_powers
+ #print axioms KomorebiPaperVI.Algebra.finite_horizon_defect
+ #print axioms KomorebiPaperVI.Algebra.rectangular_resolvent_identity
++#print axioms KomorebiPaperVI.BanachDefects.duhamel_derivative
++#print axioms KomorebiPaperVI.BanachDefects.duhamel
++#print axioms KomorebiPaperVI.BanachDefects.contraction_bound
+ #print axioms KomorebiPaperVI.BayesianFlow.positive_evidence
+ #print axioms KomorebiPaperVI.BayesianFlow.flow_probability
+ #print axioms KomorebiPaperVI.BayesianFlow.likelihood_add
+@@ -81,6 +84,19 @@
+ #print axioms KomorebiPaperVI.ConditionalTowers.nested_kernel_min
+ #print axioms KomorebiPaperVI.ConditionalTowers.martingale_packet_product
+ #print axioms KomorebiPaperVI.ConditionalTowers.martingale_packet_reconstruction
++#print axioms KomorebiPaperVI.ContourNaturality.circle_mul_left
++#print axioms KomorebiPaperVI.ContourNaturality.circle_mul_right
++#print axioms KomorebiPaperVI.ContourNaturality.resolvent_intertwines
++#print axioms KomorebiPaperVI.ContourNaturality.common_contour_naturality
++#print axioms KomorebiPaperVI.DiscreteGreen.green_zero
++#print axioms KomorebiPaperVI.DiscreteGreen.green_end
++#print axioms KomorebiPaperVI.DiscreteGreen.green_second_difference
++#print axioms KomorebiPaperVI.DiscreteGreen.sparse_sum
++#print axioms KomorebiPaperVI.DiscreteGreen.tridiagonal_mul
++#print axioms KomorebiPaperVI.DiscreteGreen.tridiagonal_inverse_kernel
++#print axioms KomorebiPaperVI.DiscreteGreen.inverse_eq_kernel
++#print axioms KomorebiPaperVI.DiscreteGreen.laplacian_inverse
++#print axioms KomorebiPaperVI.DiscreteGreen.grid_reconstruction
+ #print axioms KomorebiPaperVI.FeynmanKac.sum_paths_succ
+ #print axioms KomorebiPaperVI.FeynmanKac.transfer_entry
+ #print axioms KomorebiPaperVI.FeynmanKac.path_probability_nonnegative
+@@ -105,6 +121,21 @@
+ #print axioms KomorebiPaperVI.FiniteBayes.posterior_probability
+ #print axioms KomorebiPaperVI.FiniteBayes.prediction_probability
+ #print axioms KomorebiPaperVI.FiniteBayes.prediction_update_probability
++#print axioms KomorebiPaperVI.FractionalIntegral.common_measure_defect
++#print axioms KomorebiPaperVI.FractionalIntegral.scalar_normalizer_positive
++#print axioms KomorebiPaperVI.FractionalIntegral.scalar_normalized_representation
++#print axioms KomorebiPaperVI.FractionalSemigroup.power_nonnegative
++#print axioms KomorebiPaperVI.FractionalSemigroup.exponential_cfc
++#print axioms KomorebiPaperVI.FractionalSemigroup.exponential_contraction
++#print axioms KomorebiPaperVI.FractionalSemigroup.exponential_gap
++#print axioms KomorebiPaperVI.FractionalSemigroup.evolution_transfer
++#print axioms KomorebiPaperVI.FractionalSemigroup.fractional_duhamel
++#print axioms KomorebiPaperVI.FractionalSemigroup.fractional_contraction_bound
++#print axioms KomorebiPaperVI.FractionalSemigroup.fractional_gap_bound
++#print axioms KomorebiPaperVI.FractionalTowers.bounded_time_majorant
++#print axioms KomorebiPaperVI.FractionalTowers.time_defects_norm_summable
++#print axioms KomorebiPaperVI.FractionalTowers.time_defects_summable
++#print axioms KomorebiPaperVI.FractionalTowers.bounded_time_uniform_convergence
+ #print axioms KomorebiPaperVI.InformationLoss.lossMatrix_apply
+ #print axioms KomorebiPaperVI.InformationLoss.information_loss_matrix
+ #print axioms KomorebiPaperVI.InformationLoss.information_loss_null
+@@ -123,9 +154,42 @@
+ #print axioms KomorebiPaperVI.MarkovSemigroup.markov_probability
+ #print axioms KomorebiPaperVI.MartingalePackets.packet_product
+ #print axioms KomorebiPaperVI.MartingalePackets.packet_sum
++#print axioms KomorebiPaperVI.MemoryLaplace.decay_integrable
++#print axioms KomorebiPaperVI.MemoryLaplace.decay_tendsto_zero
++#print axioms KomorebiPaperVI.MemoryLaplace.integral_generator_transfer
++#print axioms KomorebiPaperVI.MemoryLaplace.shifted_laplace_right_inverse
++#print axioms KomorebiPaperVI.MemoryLaplace.memory_integral
+ #print axioms KomorebiPaperVI.OperatorBounds.growth_duhamel_bound
+ #print axioms KomorebiPaperVI.OperatorBounds.contraction_powers
+ #print axioms KomorebiPaperVI.OperatorBounds.finite_horizon_contraction
++#print axioms KomorebiPaperVI.PoissonKernel.inverse_half_square
++#print axioms KomorebiPaperVI.PoissonKernel.kernel_substitution
++#print axioms KomorebiPaperVI.PoissonKernel.kernel_integrable
++#print axioms KomorebiPaperVI.PoissonKernel.kernel_mass
++#print axioms KomorebiPaperVI.PoissonKernel.kernel_nonnegative
++#print axioms KomorebiPaperVI.PoissonKernel.heat_integrand_bounds
++#print axioms KomorebiPaperVI.PoissonKernel.heat_integrand_integrable
++#print axioms KomorebiPaperVI.PoissonKernel.zero_mode_subordination
++#print axioms KomorebiPaperVI.PoissonKernel.finite_spectral_integrable
++#print axioms KomorebiPaperVI.PoissonSubordination.scaled_reciprocal_gaussian
++#print axioms KomorebiPaperVI.PoissonSubordination.heat_substitution
++#print axioms KomorebiPaperVI.PoissonSubordination.scalar_subordination
++#print axioms KomorebiPaperVI.PoissonSubordination.finite_spectral_subordination
++#print axioms KomorebiPaperVI.PoissonSubordination.operator_integrand
++#print axioms KomorebiPaperVI.PoissonSubordination.operator_subordination
++#print axioms KomorebiPaperVI.ReciprocalGaussian.phi_derivative
++#print axioms KomorebiPaperVI.ReciprocalGaussian.phi_injective
++#print axioms KomorebiPaperVI.ReciprocalGaussian.phi_surjective
++#print axioms KomorebiPaperVI.ReciprocalGaussian.gaussian_jacobian_integrable
++#print axioms KomorebiPaperVI.ReciprocalGaussian.gaussian_jacobian_integral
++#print axioms KomorebiPaperVI.ReciprocalGaussian.reciprocal_derivative
++#print axioms KomorebiPaperVI.ReciprocalGaussian.reciprocal_image
++#print axioms KomorebiPaperVI.ReciprocalGaussian.reciprocal_injective
++#print axioms KomorebiPaperVI.ReciprocalGaussian.reciprocal_phi
++#print axioms KomorebiPaperVI.ReciprocalGaussian.reciprocal_gaussian_symmetry
++#print axioms KomorebiPaperVI.ReciprocalGaussian.phi_gaussian_integrable
++#print axioms KomorebiPaperVI.ReciprocalGaussian.phi_gaussian_integral
++#print axioms KomorebiPaperVI.ReciprocalGaussian.reciprocal_square_gaussian
+ #print axioms KomorebiPaperVI.ReducingPackets.generator_commutes
+ #print axioms KomorebiPaperVI.ReducingPackets.reducing_exponential
+ #print axioms KomorebiPaperVI.ReducingPackets.compressed_evolution
+@@ -152,6 +216,17 @@
+ #print axioms KomorebiPaperVI.SpectralPackets.spectral_transfer_add
+ #print axioms KomorebiPaperVI.SpectralPackets.fractional_reduces
+ #print axioms KomorebiPaperVI.SpectralPackets.spectral_transfer_reduces
++#print axioms KomorebiPaperVI.Survival.survival_zero
++#print axioms KomorebiPaperVI.Survival.state_nonnegative
++#print axioms KomorebiPaperVI.Survival.survival_positive
++#print axioms KomorebiPaperVI.Survival.density_nonnegative
++#print axioms KomorebiPaperVI.Survival.survival_derivative
++#print axioms KomorebiPaperVI.Survival.survival_antitone
++#print axioms KomorebiPaperVI.Survival.density_continuous
++#print axioms KomorebiPaperVI.Survival.survival_hazard
++#print axioms KomorebiPaperVI.Survival.survival_has_limit
++#print axioms KomorebiPaperVI.Survival.defective_density_mass
++#print axioms KomorebiPaperVI.Survival.eventual_absorption_density
+ 
+ open Lean Meta Elab Command
+ 
+@@ -167,6 +242,9 @@
+     `KomorebiPaperVI.Algebra.intertwining_powers,
+     `KomorebiPaperVI.Algebra.finite_horizon_defect,
+     `KomorebiPaperVI.Algebra.rectangular_resolvent_identity,
++    `KomorebiPaperVI.BanachDefects.duhamel_derivative,
++    `KomorebiPaperVI.BanachDefects.duhamel,
++    `KomorebiPaperVI.BanachDefects.contraction_bound,
+     `KomorebiPaperVI.BayesianFlow.positive_evidence,
+     `KomorebiPaperVI.BayesianFlow.flow_probability,
+     `KomorebiPaperVI.BayesianFlow.likelihood_add,
+@@ -239,6 +317,19 @@
+     `KomorebiPaperVI.ConditionalTowers.nested_kernel_min,
+     `KomorebiPaperVI.ConditionalTowers.martingale_packet_product,
+     `KomorebiPaperVI.ConditionalTowers.martingale_packet_reconstruction,
++    `KomorebiPaperVI.ContourNaturality.circle_mul_left,
++    `KomorebiPaperVI.ContourNaturality.circle_mul_right,
++    `KomorebiPaperVI.ContourNaturality.resolvent_intertwines,
++    `KomorebiPaperVI.ContourNaturality.common_contour_naturality,
++    `KomorebiPaperVI.DiscreteGreen.green_zero,
++    `KomorebiPaperVI.DiscreteGreen.green_end,
++    `KomorebiPaperVI.DiscreteGreen.green_second_difference,
++    `KomorebiPaperVI.DiscreteGreen.sparse_sum,
++    `KomorebiPaperVI.DiscreteGreen.tridiagonal_mul,
++    `KomorebiPaperVI.DiscreteGreen.tridiagonal_inverse_kernel,
++    `KomorebiPaperVI.DiscreteGreen.inverse_eq_kernel,
++    `KomorebiPaperVI.DiscreteGreen.laplacian_inverse,
++    `KomorebiPaperVI.DiscreteGreen.grid_reconstruction,
+     `KomorebiPaperVI.FeynmanKac.sum_paths_succ,
+     `KomorebiPaperVI.FeynmanKac.transfer_entry,
+     `KomorebiPaperVI.FeynmanKac.path_probability_nonnegative,
+@@ -263,6 +354,21 @@
+     `KomorebiPaperVI.FiniteBayes.posterior_probability,
+     `KomorebiPaperVI.FiniteBayes.prediction_probability,
+     `KomorebiPaperVI.FiniteBayes.prediction_update_probability,
++    `KomorebiPaperVI.FractionalIntegral.common_measure_defect,
++    `KomorebiPaperVI.FractionalIntegral.scalar_normalizer_positive,
++    `KomorebiPaperVI.FractionalIntegral.scalar_normalized_representation,
++    `KomorebiPaperVI.FractionalSemigroup.power_nonnegative,
++    `KomorebiPaperVI.FractionalSemigroup.exponential_cfc,
++    `KomorebiPaperVI.FractionalSemigroup.exponential_contraction,
++    `KomorebiPaperVI.FractionalSemigroup.exponential_gap,
++    `KomorebiPaperVI.FractionalSemigroup.evolution_transfer,
++    `KomorebiPaperVI.FractionalSemigroup.fractional_duhamel,
++    `KomorebiPaperVI.FractionalSemigroup.fractional_contraction_bound,
++    `KomorebiPaperVI.FractionalSemigroup.fractional_gap_bound,
++    `KomorebiPaperVI.FractionalTowers.bounded_time_majorant,
++    `KomorebiPaperVI.FractionalTowers.time_defects_norm_summable,
++    `KomorebiPaperVI.FractionalTowers.time_defects_summable,
++    `KomorebiPaperVI.FractionalTowers.bounded_time_uniform_convergence,
+     `KomorebiPaperVI.InformationLoss.lossMatrix_apply,
+     `KomorebiPaperVI.InformationLoss.information_loss_matrix,
+     `KomorebiPaperVI.InformationLoss.information_loss_null,
+@@ -281,9 +387,42 @@
+     `KomorebiPaperVI.MarkovSemigroup.markov_probability,
+     `KomorebiPaperVI.MartingalePackets.packet_product,
+     `KomorebiPaperVI.MartingalePackets.packet_sum,
++    `KomorebiPaperVI.MemoryLaplace.decay_integrable,
++    `KomorebiPaperVI.MemoryLaplace.decay_tendsto_zero,
++    `KomorebiPaperVI.MemoryLaplace.integral_generator_transfer,
++    `KomorebiPaperVI.MemoryLaplace.shifted_laplace_right_inverse,
++    `KomorebiPaperVI.MemoryLaplace.memory_integral,
+     `KomorebiPaperVI.OperatorBounds.growth_duhamel_bound,
+     `KomorebiPaperVI.OperatorBounds.contraction_powers,
+     `KomorebiPaperVI.OperatorBounds.finite_horizon_contraction,
++    `KomorebiPaperVI.PoissonKernel.inverse_half_square,
++    `KomorebiPaperVI.PoissonKernel.kernel_substitution,
++    `KomorebiPaperVI.PoissonKernel.kernel_integrable,
++    `KomorebiPaperVI.PoissonKernel.kernel_mass,
++    `KomorebiPaperVI.PoissonKernel.kernel_nonnegative,
++    `KomorebiPaperVI.PoissonKernel.heat_integrand_bounds,
++    `KomorebiPaperVI.PoissonKernel.heat_integrand_integrable,
++    `KomorebiPaperVI.PoissonKernel.zero_mode_subordination,
++    `KomorebiPaperVI.PoissonKernel.finite_spectral_integrable,
++    `KomorebiPaperVI.PoissonSubordination.scaled_reciprocal_gaussian,
++    `KomorebiPaperVI.PoissonSubordination.heat_substitution,
++    `KomorebiPaperVI.PoissonSubordination.scalar_subordination,
++    `KomorebiPaperVI.PoissonSubordination.finite_spectral_subordination,
++    `KomorebiPaperVI.PoissonSubordination.operator_integrand,
++    `KomorebiPaperVI.PoissonSubordination.operator_subordination,
++    `KomorebiPaperVI.ReciprocalGaussian.phi_derivative,
++    `KomorebiPaperVI.ReciprocalGaussian.phi_injective,
++    `KomorebiPaperVI.ReciprocalGaussian.phi_surjective,
++    `KomorebiPaperVI.ReciprocalGaussian.gaussian_jacobian_integrable,
++    `KomorebiPaperVI.ReciprocalGaussian.gaussian_jacobian_integral,
++    `KomorebiPaperVI.ReciprocalGaussian.reciprocal_derivative,
++    `KomorebiPaperVI.ReciprocalGaussian.reciprocal_image,
++    `KomorebiPaperVI.ReciprocalGaussian.reciprocal_injective,
++    `KomorebiPaperVI.ReciprocalGaussian.reciprocal_phi,
++    `KomorebiPaperVI.ReciprocalGaussian.reciprocal_gaussian_symmetry,
++    `KomorebiPaperVI.ReciprocalGaussian.phi_gaussian_integrable,
++    `KomorebiPaperVI.ReciprocalGaussian.phi_gaussian_integral,
++    `KomorebiPaperVI.ReciprocalGaussian.reciprocal_square_gaussian,
+     `KomorebiPaperVI.ReducingPackets.generator_commutes,
+     `KomorebiPaperVI.ReducingPackets.reducing_exponential,
+     `KomorebiPaperVI.ReducingPackets.compressed_evolution,
+@@ -309,7 +448,18 @@
+     `KomorebiPaperVI.SpectralPackets.spectral_transfer_exponential,
+     `KomorebiPaperVI.SpectralPackets.spectral_transfer_add,
+     `KomorebiPaperVI.SpectralPackets.fractional_reduces,
+-    `KomorebiPaperVI.SpectralPackets.spectral_transfer_reduces
++    `KomorebiPaperVI.SpectralPackets.spectral_transfer_reduces,
++    `KomorebiPaperVI.Survival.survival_zero,
++    `KomorebiPaperVI.Survival.state_nonnegative,
++    `KomorebiPaperVI.Survival.survival_positive,
++    `KomorebiPaperVI.Survival.density_nonnegative,
++    `KomorebiPaperVI.Survival.survival_derivative,
++    `KomorebiPaperVI.Survival.survival_antitone,
++    `KomorebiPaperVI.Survival.density_continuous,
++    `KomorebiPaperVI.Survival.survival_hazard,
++    `KomorebiPaperVI.Survival.survival_has_limit,
++    `KomorebiPaperVI.Survival.defective_density_mass,
++    `KomorebiPaperVI.Survival.eventual_absorption_density
+   ]
+   for target in targets do
+     match env.find? target with
+--- second_block/formalization/lean/KomorebiPaperVI/BanachDefects.lean
++++ third_block/formalization/lean/KomorebiPaperVI/BanachDefects.lean
+@@ -0,0 +1,47 @@
++import KomorebiPaperVI.Semigroups
++
++/-! Author: Komorebi P. Duhamel defects in a real Banach algebra. -/
++namespace KomorebiPaperVI.BanachDefects
++open KomorebiPaperVI.Semigroups
++variable {R : Type*} [NormedRing R] [NormedAlgebra ℝ R] [CompleteSpace R]
++
++theorem duhamel_derivative (A B C : R) (t r : ℝ) :
++    HasDerivAt (fun u => transfer B (t-u)*C*transfer A u)
++      (transfer B (t-r)*(C*A-B*C)*transfer A r) r := by
++  have hsub : HasDerivAt (fun u : ℝ => t-u) (-1) r := by
++    convert! (hasDerivAt_const r t).sub (hasDerivAt_id r) using 1
++    simp
++  have hB : HasDerivAt (fun u : ℝ => transfer B (t-u))
++      ((-1:ℝ) • (transfer B (t-r)*B)) r := (transfer_derivative_right B (t-r)).scomp r
++    hsub
++  convert! (hB.mul_const C).mul (transfer_derivative_left A r) using 1
++  simp only [neg_smul,one_smul]
++  noncomm_ring
++
++theorem duhamel (A B C : R) (t : ℝ) :
++    C*transfer A t-transfer B t*C=
++      ∫ r in 0..t,transfer B (t-r)*(C*A-B*C)*transfer A r := by
++  have hc : Continuous (fun r => transfer B (t-r)*(C*A-B*C)*transfer A r) := by fun_prop
++  have h := intervalIntegral.integral_eq_sub_of_hasDerivAt
++    (fun r _ => duhamel_derivative A B C t r) (hc.intervalIntegrable 0 t)
++  simpa only [sub_self,transfer_zero,zero_sub,sub_zero,one_mul,mul_one] using h.symm
++
++theorem contraction_bound (A B C : R) (t : ℝ) (ht : 0 ≤ t)
++    (hA : ∀ r,0 ≤ r → ‖transfer A r‖ ≤ 1)
++    (hB : ∀ r,0 ≤ r → ‖transfer B r‖ ≤ 1) :
++    ‖C*transfer A t-transfer B t*C‖ ≤ t*‖C*A-B*C‖ := by
++  rw [duhamel]
++  have hc : Continuous (fun r => transfer B (t-r)*(C*A-B*C)*transfer A r) := by fun_prop
++  calc
++    _ ≤ ∫ r in 0..t,‖transfer B (t-r)*(C*A-B*C)*transfer A r‖ :=
++      intervalIntegral.norm_integral_le_integral_norm ht
++    _ ≤ ∫ _ in 0..t,‖C*A-B*C‖ := by
++      apply intervalIntegral.integral_mono_on ht (hc.norm.intervalIntegrable 0 t) intervalIntegrable_const
++      intro r hr
++      calc
++        _ ≤ ‖transfer B (t-r)‖*‖C*A-B*C‖*‖transfer A r‖ := norm_mul_le_of_le (norm_mul_le _ _) le_rfl
++        _ ≤ 1*‖C*A-B*C‖*1 := by gcongr; exact hB (t-r) (by linarith [hr.2]); exact hA r hr.1
++        _ = _ := by ring
++    _ = _ := by simp [smul_eq_mul]
++
++end KomorebiPaperVI.BanachDefects
+--- second_block/formalization/lean/KomorebiPaperVI/ContourNaturality.lean
++++ third_block/formalization/lean/KomorebiPaperVI/ContourNaturality.lean
+@@ -0,0 +1,80 @@
++import KomorebiPaperVI.Algebra
++import Mathlib.MeasureTheory.Integral.CircleIntegral
++import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
++
++/-! Author: Komorebi P. Actual finite contour integrals of matrix resolvents.
++This module proves naturality for a supplied common contour representation. -/
++namespace KomorebiPaperVI.ContourNaturality
++open scoped BigOperators
++open Complex
++set_option backward.isDefEq.respectTransparency false
++variable {I J K : Type*} [Fintype I] [Fintype J] [Fintype K] [DecidableEq I] [DecidableEq J]
++
++noncomputable def resolvent (A : Matrix I I ℂ) (z : ℂ) : Matrix I I ℂ :=
++  (Matrix.scalar I z-A)⁻¹
++
++noncomputable def circleMatrix (F : ℂ → Matrix I J ℂ) (c : ℂ) (r : ℝ) : Matrix I J ℂ :=
++  fun i j => ∮ z in C(c,r),F z i j
++
++omit [DecidableEq I] [DecidableEq J] [Fintype J] [Fintype K] in
++theorem circle_mul_left (C : Matrix K I ℂ) (F : ℂ → Matrix I J ℂ) (c : ℂ) (r : ℝ)
++    (hF : ∀ i j,CircleIntegrable (fun z => F z i j) c r) :
++    C*circleMatrix F c r=circleMatrix (fun z => C*F z) c r := by
++  ext i j
++  simp only [Matrix.mul_apply,circleMatrix]
++  have hi (k : I) : CircleIntegrable (fun z => C i k*F z k j) c r := by
++    convert! (hF k j).const_smul (a := C i k) using 1
++  rw [circleIntegral.integral_fun_sum (fun k _ => hi k)]
++  simp only [circleIntegral.integral_const_mul]
++
++omit [DecidableEq I] [DecidableEq J] [Fintype I] [Fintype K] in
++theorem circle_mul_right (C : Matrix J K ℂ) (F : ℂ → Matrix I J ℂ) (c : ℂ) (r : ℝ)
++    (hF : ∀ i j,CircleIntegrable (fun z => F z i j) c r) :
++    circleMatrix F c r*C=circleMatrix (fun z => F z*C) c r := by
++  ext i j
++  simp only [Matrix.mul_apply,circleMatrix]
++  have hi (k : J) : CircleIntegrable (fun z => F z i k*C k j) c r := by
++    have hc : CircleIntegrable (fun z => C k j*F z i k) c r := by
++      convert! (hF i k).const_smul (a := C k j) using 1
++    simpa only [mul_comm] using hc
++  rw [circleIntegral.integral_fun_sum (fun k _ => hi k)]
++  simp only [mul_comm,circleIntegral.integral_const_mul]
++
++omit [Fintype K] in
++theorem resolvent_intertwines (C : Matrix J I ℂ) (A : Matrix I I ℂ) (B : Matrix J J ℂ)
++    (h : C*A=B*C) (z : ℂ) (hA : IsUnit (Matrix.scalar I z-A))
++    (hB : IsUnit (Matrix.scalar J z-B)) : C*resolvent A z=resolvent B z*C := by
++  have he := Algebra.rectangular_resolvent_identity C A B (resolvent A z) (resolvent B z) z
++    (fun i j => mul_comm _ _)
++    (Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det _).mp hA))
++    (Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det _).mp hB))
++  simpa only [h,sub_self,Matrix.mul_zero,Matrix.zero_mul,sub_eq_zero] using he
++
++noncomputable def calculus (A : Matrix I I ℂ) (f : ℂ → ℂ) (c : K → ℂ) (r : K → ℝ) :
++    Matrix I I ℂ := ((2*Real.pi:ℂ)*Complex.I)⁻¹ •
++      ∑ k,circleMatrix (fun z => f z • resolvent A z) (c k) (r k)
++
++theorem common_contour_naturality (C : Matrix J I ℂ) (A : Matrix I I ℂ) (B : Matrix J J ℂ)
++    (h : C*A=B*C) (f : ℂ → ℂ) (c : K → ℂ) (r : K → ℝ) (hr : ∀ k,0 ≤ r k)
++    (hA : ∀ k z,z∈Metric.sphere (c k) (r k) → IsUnit (Matrix.scalar I z-A))
++    (hB : ∀ k z,z∈Metric.sphere (c k) (r k) → IsUnit (Matrix.scalar J z-B))
++    (hiA : ∀ k i j,CircleIntegrable (fun z => f z*resolvent A z i j) (c k) (r k))
++    (hiB : ∀ k i j,CircleIntegrable (fun z => f z*resolvent B z i j) (c k) (r k)) :
++    C*calculus A f c r=calculus B f c r*C := by
++  unfold calculus
++  rw [Matrix.mul_smul,Matrix.smul_mul,Matrix.mul_sum,Matrix.sum_mul]
++  congr 1
++  apply Finset.sum_congr rfl
++  intro k _
++  have ha : ∀ i j,CircleIntegrable (fun z => (f z • resolvent A z) i j) (c k) (r k) := hiA k
++  have hb : ∀ i j,CircleIntegrable (fun z => (f z • resolvent B z) i j) (c k) (r k) := hiB k
++  rw [circle_mul_left C (fun z => f z • resolvent A z) _ _ ha,
++    circle_mul_right C (fun z => f z • resolvent B z) _ _ hb]
++  ext i j
++  apply circleIntegral.integral_congr (hr k)
++  intro z hz
++  have he := resolvent_intertwines C A B h z (hA k z hz) (hB k z hz)
++  change (C*(f z • resolvent A z)) i j=((f z • resolvent B z)*C) i j
++  rw [Matrix.mul_smul,Matrix.smul_mul,he]
++
++end KomorebiPaperVI.ContourNaturality
+--- second_block/formalization/lean/KomorebiPaperVI/DiscreteGreen.lean
++++ third_block/formalization/lean/KomorebiPaperVI/DiscreteGreen.lean
+@@ -0,0 +1,131 @@
++import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
++import Mathlib.Data.Matrix.Basic
++import Mathlib.Tactic
++
++/-! Author: Komorebi P. The literal Dirichlet tridiagonal inverse at every grid size. -/
++namespace KomorebiPaperVI.DiscreteGreen
++open scoped BigOperators
++set_option backward.isDefEq.respectTransparency false
++
++noncomputable def green (N : ℝ) (i j : ℕ) : ℝ :=
++  min (i:ℝ) (j:ℝ)-(i:ℝ)*(j:ℝ)/N
++
++theorem green_zero (N : ℝ) (j : ℕ) : green N 0 j=0 := by simp [green]
++
++theorem green_end (n j : ℕ) (hj : j  ≤  n+1) : green (n+1) (n+1) j=0 := by
++  have h : (j:ℝ)  ≤  n+1 := by exact_mod_cast hj
++  have hn : (n:ℝ)+1≠0 := by positivity
++  simp only [green,Nat.cast_add,Nat.cast_one,min_eq_right h]
++  field_simp
++  ring
++
++theorem green_second_difference (N : ℝ) (i j : ℕ) :
++    2*green N (i+1) j-green N i j-green N (i+2) j=if i+1=j then 1 else 0 := by
++  unfold green
++  by_cases ha : j  ≤  i
++  · have h0 : (j:ℝ) ≤ i := by exact_mod_cast ha
++    have h1 : (j:ℝ) ≤ (i+1:ℕ) := by exact_mod_cast (show j ≤ i+1 by omega)
++    have h2 : (j:ℝ) ≤ (i+2:ℕ) := by exact_mod_cast (show j ≤ i+2 by omega)
++    rw [min_eq_right h1,min_eq_right h0,min_eq_right h2,ite_eq_right (by omega)]
++    push_cast
++    ring
++  · by_cases hb : j=i+1
++    · subst j
++      have h0 : (i:ℝ) ≤ (i+1:ℕ) := by exact_mod_cast (show i ≤ i+1 by omega)
++      have h2 : ((i+1:ℕ):ℝ) ≤ (i+2:ℕ) := by exact_mod_cast (show i+1 ≤ i+2 by omega)
++      rw [min_self,min_eq_left h0,min_eq_right h2,ite_eq_left rfl]
++      push_cast
++      ring
++    · have h0 : (i:ℝ) ≤ j := by exact_mod_cast (show i ≤ j by omega)
++      have h1 : ((i+1:ℕ):ℝ) ≤ j := by exact_mod_cast (show i+1 ≤ j by omega)
++      have h2 : ((i+2:ℕ):ℝ) ≤ j := by exact_mod_cast (show i+2 ≤ j by omega)
++      rw [min_eq_left h1,min_eq_left h0,min_eq_left h2,ite_eq_right (by omega)]
++      push_cast
++      ring
++
++noncomputable def tridiagonal (n : ℕ) : Matrix (Fin n) (Fin n) ℝ := fun i j =>
++  (if i=j then 2 else 0)-(if j.val=i.val+1 then 1 else 0)-(if j.val+1=i.val then 1 else 0)
++
++noncomputable def inverseKernel (n : ℕ) : Matrix (Fin n) (Fin n) ℝ :=
++  fun i j => green (n+1) (i.val+1) (j.val+1)
++
++theorem sparse_sum (n q : ℕ) (v : Fin n → ℝ) :
++    (∑ k : Fin n, if k.val=q then v k else 0)=if h:q < n then v ⟨q,h⟩ else 0 := by
++  classical
++  split_ifs with h
++  · rw [Finset.sum_eq_single (⟨q,h⟩ : Fin n)]
++    · simp
++    · intro k _ hk
++      exact ite_eq_right (by intro he; apply hk; exact Fin.ext he)
++    · simp
++  · apply Finset.sum_eq_zero
++    intro k _
++    exact ite_eq_right (by omega)
++
++theorem tridiagonal_mul (n : ℕ) (M : Matrix (Fin n) (Fin n) ℝ) (i j : Fin n) :
++    (tridiagonal n*M) i j=2*M i j-
++      (if h:i.val+1 < n then M ⟨i.val+1,h⟩ j else 0)-
++      (if h:0 < i.val then M ⟨i.val-1,by omega⟩ j else 0) := by
++  classical
++  simp only [Matrix.mul_apply,tridiagonal,sub_mul,Finset.sum_sub_distrib,ite_mul,one_mul,zero_mul]
++  rw [Finset.sum_ite_eq,sparse_sum]
++  simp only [Finset.mem_univ,ite_true]
++  congr 1
++  by_cases h:0 < i.val
++  · rw [dite_eq_left h,Finset.sum_eq_single (⟨i.val-1,by omega⟩ : Fin n)]
++    · simp [show i.val-1+1=i.val by omega]
++    · intro k _ hk
++      exact ite_eq_right (by intro he; apply hk; apply Fin.ext; change k.val=i.val-1; omega)
++    · simp
++  · rw [dite_eq_right h]
++    apply Finset.sum_eq_zero
++    intro k _
++    exact ite_eq_right (by omega)
++
++theorem tridiagonal_inverse_kernel (n : ℕ) : tridiagonal n*inverseKernel n=1 := by
++  ext i j
++  rw [tridiagonal_mul]
++  have h := green_second_difference (n+1) i.val (j.val+1)
++  have hu : (if h:i.val+1 < n then inverseKernel n ⟨i.val+1,h⟩ j else 0)=
++      green (n+1) (i.val+2) (j.val+1) := by
++    split_ifs with hi
++    · rfl
++    · have he : i.val+2=n+1 := by omega
++      rw [he,green_end n (j.val+1) (by omega)]
++  have hd : (if h:0 < i.val then inverseKernel n ⟨i.val-1,by omega⟩ j else 0)=
++      green (n+1) i.val (j.val+1) := by
++    split_ifs with hi
++    · simp only [inverseKernel]
++      congr 1
++      omega
++    · have he : i.val=0 := by omega
++      rw [he,green_zero]
++  rw [hu,hd]
++  simp only [inverseKernel,Matrix.one_apply]
++  have he : (i.val+1=j.val+1) ↔ i=j := by constructor  <;> intro hh; exact Fin.ext (by omega); subst j; rfl
++  simp only [he] at h
++  linarith
++
++theorem inverse_eq_kernel (n : ℕ) : (tridiagonal n)⁻¹=inverseKernel n := by
++  exact Matrix.inv_eq_right_inv (tridiagonal_inverse_kernel n)
++
++noncomputable def laplacian (n : ℕ) : Matrix (Fin n) (Fin n) ℝ :=
++  ((n:ℝ)+1)^2 • tridiagonal n
++
++theorem laplacian_inverse (n : ℕ) :
++    (laplacian n)⁻¹=(((n:ℝ)+1)^2)⁻¹ • inverseKernel n := by
++  apply Matrix.inv_eq_right_inv
++  rw [laplacian,smul_mul_smul_comm,tridiagonal_inverse_kernel]
++  have hn : ((n:ℝ)+1)^2≠0 := by positivity
++  simp [hn]
++
++theorem grid_reconstruction (n : ℕ) (i j : Fin n) :
++    ((n:ℝ)+1)*(laplacian n)⁻¹ i j=
++      min (((i.val:ℝ)+1)/((n:ℝ)+1)) (((j.val:ℝ)+1)/((n:ℝ)+1))-
++        (((i.val:ℝ)+1)/((n:ℝ)+1))*(((j.val:ℝ)+1)/((n:ℝ)+1)) := by
++  rw [laplacian_inverse]
++  simp only [Matrix.smul_apply,smul_eq_mul,inverseKernel,green,Nat.cast_add,Nat.cast_one]
++  rw [min_div_div_right (by positivity)]
++  field_simp
++
++end KomorebiPaperVI.DiscreteGreen
+--- second_block/formalization/lean/KomorebiPaperVI/FractionalIntegral.lean
++++ third_block/formalization/lean/KomorebiPaperVI/FractionalIntegral.lean
+@@ -0,0 +1,41 @@
++import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.IntegralRepresentation
++import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
++
++/-! Author: Komorebi P. A common-measure integral for the actual CFC fractional defect.
++The explicit sine normalization and the manuscript norm constants remain to be identified. -/
++namespace KomorebiPaperVI.FractionalIntegral
++open Set MeasureTheory
++open scoped NNReal
++variable {R : Type*} [CStarAlgebra R] [PartialOrder R] [StarOrderedRing R]
++
++noncomputable def integrand (a : ℝ≥0) (t : ℝ) (A : R) : R :=
++  cfcₙ (Real.rpowIntegrand₀₁ a t) A
++
++theorem common_measure_defect (a : ℝ≥0) (ha : a∈Ioo 0 1) :
++    ∃ μ : Measure ℝ,∀ A B : R,0 ≤ A → 0 ≤ B → ∀ C : R,
++      IntegrableOn (fun t => C*integrand a t A-integrand a t B*C) (Ioi 0) μ ∧
++      C*CFC.nnrpow A a-CFC.nnrpow B a*C=
++        ∫ t in Ioi 0,C*integrand a t A-integrand a t B*C ∂μ := by
++  obtain ⟨μ,hμ⟩ := CFC.exists_measure_nnrpow_eq_integral_cfcₙ_rpowIntegrand₀₁ R ha
++  refine ⟨μ,?_⟩
++  intro A B hA hB C
++  have hiA : IntegrableOn (integrand a · A) (Ioi 0) μ := (hμ A hA).1
++  have hiB : IntegrableOn (integrand a · B) (Ioi 0) μ := (hμ B hB).1
++  have hl : IntegrableOn (fun t => C*integrand a t A) (Ioi 0) μ :=
++    (ContinuousLinearMap.mul ℝ R C).integrable_comp hiA
++  have hr : IntegrableOn (fun t => integrand a t B*C) (Ioi 0) μ :=
++    (ContinuousLinearMap.mul ℝ R).flip C |>.integrable_comp hiB
++  refine ⟨hl.sub hr,?_⟩
++  rw [integral_sub hl hr,integral_const_mul_of_integrable hiA,integral_mul_const_of_integrable hiB]
++  exact congrArg₂ (fun x y : R => C*x-y*C) (hμ A hA).2 (hμ B hB).2
++
++theorem scalar_normalizer_positive (a : ℝ) (ha : a∈Ioo 0 1) :
++    0 < ∫ t in Ioi 0,Real.rpowIntegrand₀₁ a t 1 :=
++  Real.integral_rpowIntegrand₀₁_one_pos ha
++
++theorem scalar_normalized_representation (a x : ℝ) (ha : a∈Ioo 0 1) (hx : 0 ≤ x) :
++    x^a=(∫ t in Ioi 0,Real.rpowIntegrand₀₁ a t 1)⁻¹*
++      ∫ t in Ioi 0,Real.rpowIntegrand₀₁ a t x :=
++  Real.rpow_eq_const_mul_integral ha hx
++
++end KomorebiPaperVI.FractionalIntegral
+--- second_block/formalization/lean/KomorebiPaperVI/FractionalSemigroup.lean
++++ third_block/formalization/lean/KomorebiPaperVI/FractionalSemigroup.lean
+@@ -0,0 +1,110 @@
++import KomorebiPaperVI.Semigroups
++import KomorebiPaperVI.BanachDefects
++import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.IntegralRepresentation
++import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
++import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
++import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.Rpow.Basic
++import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
++import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Isometric
++
++/-! Author: Komorebi P. Actual positive CFC powers and their exponential contraction. -/
++set_option backward.isDefEq.respectTransparency false
++namespace KomorebiPaperVI.FractionalSemigroup
++open KomorebiPaperVI.Semigroups
++attribute [local instance] IsStarNormal.instContinuousFunctionalCalculus
++variable {R : Type*} [CStarAlgebra R] [PartialOrder R] [StarOrderedRing R]
++
++noncomputable def power (A : R) (a : ℝ) : R := CFC.rpow A a
++
++theorem power_nonnegative (A : R) (a : ℝ) : 0 ≤ power A a := CFC.rpow_nonneg
++
++theorem exponential_cfc (A : R) (hA : 0 ≤ A) (a t : ℝ) (ha : 0 < a) :
++    NormedSpace.exp ((-t) • power A a)=
++      cfc (fun x : ℝ => Real.exp (-t*x^a)) A := by
++  have hp : IsSelfAdjoint (power A a) := (power_nonnegative A a).isSelfAdjoint
++  rw [← CFC.real_exp_eq_normedSpace_exp (by cfc_tac : IsSelfAdjoint ((-t) • power A a))]
++  rw [← cfc_comp_smul (-t) Real.exp (power A a)]
++  unfold power
++  have he : CFC.rpow A a=cfc (fun x : ℝ => x^a) A := CFC.rpow_eq_cfc_real hA
++  simp only [smul_eq_mul]
++  rw [he,← cfc_comp (fun x : ℝ => Real.exp (-t*x)) (fun x : ℝ => x^a) A hA.isSelfAdjoint (by fun_prop) (Real.continuous_rpow_const ha.le).continuousOn]
++  rfl
++
++theorem exponential_contraction (A : R) (hA : 0 ≤ A) (a t : ℝ) (ha : 0 < a) (ht : 0 ≤ t) :
++    ‖NormedSpace.exp ((-t) • power A a)‖ ≤ 1 := by
++  rw [exponential_cfc A hA a t ha]
++  apply norm_cfc_le (by norm_num)
++  intro x hx
++  have hx0 : 0 ≤ x := by grind
++  rw [Real.norm_of_nonneg (Real.exp_pos _).le,Real.exp_le_one_iff]
++  exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr ht) (Real.rpow_nonneg hx0 _)
++
++theorem exponential_gap (A : R) (hA : 0 ≤ A) (a t m : ℝ) (ha : 0 < a)
++    (ht : 0 ≤ t) (hm : 0 ≤ m) (hgap : algebraMap ℝ R m ≤ A) :
++    ‖NormedSpace.exp ((-t) • power A a)‖ ≤ Real.exp (-t*m^a) := by
++  rw [exponential_cfc A hA a t ha]
++  apply norm_cfc_le (Real.exp_pos _).le
++  intro x hx
++  have hx : m ≤ x := (algebraMap_le_iff_le_spectrum hA.isSelfAdjoint).mp hgap x hx
++  rw [Real.norm_of_nonneg (Real.exp_pos _).le,Real.exp_le_exp]
++  exact mul_le_mul_of_nonpos_left (Real.rpow_le_rpow hm hx ha.le) (neg_nonpos.mpr ht)
++
++noncomputable def defect (A B C : R) (a : ℝ) : R := C*power A a-power B a*C
++noncomputable def evolution (A : R) (a t : ℝ) : R := NormedSpace.exp ((-t) • power A a)
++
++theorem evolution_transfer (A : R) (a t : ℝ) : evolution A a t=transfer (-power A a) t := by
++  simp [evolution,transfer,smul_neg,neg_smul]
++
++theorem fractional_duhamel (A B C : R) (a t : ℝ) :
++    C*evolution A a t-evolution B a t*C=
++      -(∫ r in 0..t,evolution B a (t-r)*defect A B C a*evolution A a r) := by
++  simp only [evolution_transfer]
++  rw [BanachDefects.duhamel]
++  have he : C*(-power A a)-(-power B a)*C= -defect A B C a := by
++    simp only [defect,mul_neg,neg_mul]
++    abel
++  rw [he]
++  simp only [mul_neg,neg_mul,intervalIntegral.integral_neg]
++
++theorem fractional_contraction_bound (A B C : R) (hA : 0 ≤ A) (hB : 0 ≤ B)
++    (a t : ℝ) (ha : 0 < a) (ht : 0 ≤ t) :
++    ‖C*evolution A a t-evolution B a t*C‖ ≤ t*‖defect A B C a‖ := by
++  simp only [evolution_transfer]
++  have h := BanachDefects.contraction_bound (-power A a) (-power B a) C t ht
++    (fun r hr => by rw [← evolution_transfer]; exact exponential_contraction A hA a r ha hr)
++    (fun r hr => by rw [← evolution_transfer]; exact exponential_contraction B hB a r ha hr)
++  have he : C*(-power A a)-(-power B a)*C= -defect A B C a := by
++    simp only [defect,mul_neg,neg_mul]
++    abel
++  simpa only [he,norm_neg] using h
++
++theorem fractional_gap_bound (A B C : R) (hA : 0 ≤ A) (hB : 0 ≤ B)
++    (a t m : ℝ) (ha : 0 < a) (ht : 0 ≤ t) (hm : 0 ≤ m)
++    (hgA : algebraMap ℝ R m ≤ A) (hgB : algebraMap ℝ R m ≤ B) :
++    ‖C*evolution A a t-evolution B a t*C‖ ≤ t*Real.exp (-t*m^a)*‖defect A B C a‖ := by
++  rw [fractional_duhamel,norm_neg]
++  have hc : Continuous (fun r => evolution B a (t-r)*defect A B C a*evolution A a r) := by
++    simp only [evolution_transfer]
++    fun_prop
++  calc
++    _ ≤ ∫ r in 0..t,‖evolution B a (t-r)*defect A B C a*evolution A a r‖ :=
++      intervalIntegral.norm_integral_le_integral_norm ht
++    _ ≤ ∫ _ in 0..t,Real.exp (-t*m^a)*‖defect A B C a‖ := by
++      apply intervalIntegral.integral_mono_on ht (hc.norm.intervalIntegrable 0 t) intervalIntegrable_const
++      intro r hr
++      calc
++        _ ≤ ‖evolution B a (t-r)‖*‖defect A B C a‖*‖evolution A a r‖ :=
++          norm_mul_le_of_le (norm_mul_le _ _) le_rfl
++        _ ≤ Real.exp (-(t-r)*m^a)*‖defect A B C a‖*Real.exp (-r*m^a) := by
++          gcongr
++          · exact exponential_gap B hB a (t-r) m ha (by linarith [hr.2]) hm hgB
++          · exact exponential_gap A hA a r m ha hr.1 hm hgA
++        _ = _ := by
++          rw [mul_right_comm,← Real.exp_add]
++          congr 2
++          ring
++    _ = _ := by
++      simp only [intervalIntegral.integral_const,sub_zero,smul_eq_mul]
++      ring
++
++end KomorebiPaperVI.FractionalSemigroup
+--- second_block/formalization/lean/KomorebiPaperVI/FractionalTowers.lean
++++ third_block/formalization/lean/KomorebiPaperVI/FractionalTowers.lean
+@@ -0,0 +1,44 @@
++import KomorebiPaperVI.FractionalSemigroup
++import Mathlib.Analysis.Normed.Group.FunctionSeries
++
++/-! Author: Komorebi P. Uniform bounded-time control from summable actual fractional defects.
++The generator-to-fractional estimates remain the separate obligation of Theorem 10.3. -/
++namespace KomorebiPaperVI.FractionalTowers
++open Set
++open KomorebiPaperVI.FractionalSemigroup
++attribute [local instance] IsStarNormal.instContinuousFunctionalCalculus
++variable {R : Type*} [CStarAlgebra R] [PartialOrder R] [StarOrderedRing R]
++
++noncomputable def timeDefect (A C : ℕ → R) (a t : ℝ) (n : ℕ) : R :=
++  C n*evolution (A (n+1)) a t-evolution (A n) a t*C n
++
++theorem bounded_time_majorant (A C : ℕ → R) (hA : ∀ n,0 ≤ A n)
++    (a T : ℝ) (ha : 0 < a) (n : ℕ) (t : ℝ) (ht : t∈Icc 0 T) :
++    ‖timeDefect A C a t n‖ ≤ T*‖defect (A (n+1)) (A n) (C n) a‖ := by
++  exact (fractional_contraction_bound _ _ _ (hA (n+1)) (hA n) a t ha ht.1).trans
++    (mul_le_mul_of_nonneg_right ht.2 (norm_nonneg _))
++
++theorem time_defects_norm_summable (A C : ℕ → R) (hA : ∀ n,0 ≤ A n)
++    (a t : ℝ) (ha : 0 < a) (ht : 0 ≤ t)
++    (hs : Summable (fun n => ‖defect (A (n+1)) (A n) (C n) a‖)) :
++    Summable (fun n => ‖timeDefect A C a t n‖) := by
++  apply (hs.mul_left t).of_norm_bounded
++  intro n
++  rw [Real.norm_of_nonneg (norm_nonneg _)]
++  exact fractional_contraction_bound _ _ _ (hA (n+1)) (hA n) a t ha ht
++
++theorem time_defects_summable (A C : ℕ → R) (hA : ∀ n,0 ≤ A n)
++    (a t : ℝ) (ha : 0 < a) (ht : 0 ≤ t)
++    (hs : Summable (fun n => ‖defect (A (n+1)) (A n) (C n) a‖)) :
++    Summable (timeDefect A C a t) := (time_defects_norm_summable A C hA a t ha ht hs).of_norm
++
++theorem bounded_time_uniform_convergence (A C : ℕ → R) (hA : ∀ n,0 ≤ A n)
++    (a T : ℝ) (ha : 0 < a)
++    (hs : Summable (fun n => ‖defect (A (n+1)) (A n) (C n) a‖)) :
++    TendstoUniformlyOn (fun N t => ∑ n ∈ Finset.range N,timeDefect A C a t n)
++      (fun t => ∑' n,timeDefect A C a t n) Filter.atTop (Icc 0 T) := by
++  apply tendstoUniformlyOn_tsum_nat (hs.mul_left T)
++  intro n t ht
++  exact bounded_time_majorant A C hA a T ha n t ht
++
++end KomorebiPaperVI.FractionalTowers
+--- second_block/formalization/lean/KomorebiPaperVI/MemoryLaplace.lean
++++ third_block/formalization/lean/KomorebiPaperVI/MemoryLaplace.lean
+@@ -0,0 +1,59 @@
++import KomorebiPaperVI.Semigroups
++import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
++import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
++
++/-! Author: Komorebi P. Laplace inversion from an explicit exponential-growth bound.
++The spectral-abscissa-to-growth bridge for arbitrary finite matrices is not assumed proved. -/
++namespace KomorebiPaperVI.MemoryLaplace
++open Set Filter MeasureTheory
++open scoped Topology
++open KomorebiPaperVI.Semigroups
++variable {R : Type*} [NormedRing R] [NormedAlgebra ℝ R] [CompleteSpace R]
++
++theorem decay_integrable (B : R) (M d : ℝ) (hd : 0 < d)
++    (hB : ∀ t,0 ≤ t → ‖transfer B t‖ ≤ M*Real.exp (-d*t)) :
++    IntegrableOn (transfer B) (Ioi 0) := by
++  apply ((integrableOn_exp_mul_Ioi (a := -d) (by linarith) 0).const_mul M).mono'
++    (transfer_continuous B).aestronglyMeasurable
++  filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
++  exact hB t ht.le
++
++omit [CompleteSpace R] in
++theorem decay_tendsto_zero (B : R) (M d : ℝ) (hd : 0 < d)
++    (hB : ∀ t,0 ≤ t → ‖transfer B t‖ ≤ M*Real.exp (-d*t)) :
++    Tendsto (transfer B) atTop (𝓝 0) := by
++  apply tendsto_zero_iff_norm_tendsto_zero.mpr
++  have ht : Tendsto (fun t : ℝ => M*Real.exp (-d*t)) atTop (𝓝 0) := by
++    simpa using (Real.tendsto_exp_atBot.comp
++      (tendsto_id.const_mul_atTop_of_neg (by linarith : -d < 0))).const_mul M
++  apply squeeze_zero' (Eventually.of_forall (fun t => norm_nonneg (transfer B t))) ?_ ht
++  filter_upwards [eventually_ge_atTop (0:ℝ)] with t ht
++  exact hB t ht
++
++theorem integral_generator_transfer (B : R) (M d : ℝ) (hd : 0 < d)
++    (hB : ∀ t,0 ≤ t → ‖transfer B t‖ ≤ M*Real.exp (-d*t)) :
++    B*(∫ t in Ioi 0,transfer B t)=-1 := by
++  have hi := decay_integrable B M d hd hB
++  have hprod : IntegrableOn (fun t => B*transfer B t) (Ioi 0) :=
++    (ContinuousLinearMap.mul ℝ R B).integrable_comp hi
++  have hf := integral_Ioi_of_hasDerivAt_of_tendsto'
++    (fun t (_ : t∈Ici (0:ℝ)) => transfer_derivative_left B t)
++    hprod (decay_tendsto_zero B M d hd hB)
++  rw [integral_const_mul_of_integrable hi,transfer_zero,zero_sub] at hf
++  exact hf
++
++theorem shifted_laplace_right_inverse (A : R) (z M d : ℝ) (hd : 0 < d)
++    (hB : ∀ t,0 ≤ t → ‖transfer (A-z • 1) t‖ ≤ M*Real.exp (-d*t)) :
++    (z • 1-A)*(∫ t in Ioi 0,transfer (A-z • 1) t)=1 := by
++  have h := integral_generator_transfer (A-z • 1) M d hd hB
++  rw [show z • (1:R)-A=-(A-z • 1) by abel,neg_mul,h,neg_neg]
++
++theorem memory_integral (B U V : R) (M d : ℝ) (hd : 0 < d)
++    (hB : ∀ t,0 ≤ t → ‖transfer B t‖ ≤ M*Real.exp (-d*t)) :
++    (∫ t in Ioi 0,U*transfer B t*V)=U*(∫ t in Ioi 0,transfer B t)*V := by
++  have hi := decay_integrable B M d hd hB
++  have hu : IntegrableOn (fun t => U*transfer B t) (Ioi 0) :=
++    (ContinuousLinearMap.mul ℝ R U).integrable_comp hi
++  rw [integral_mul_const_of_integrable hu,integral_const_mul_of_integrable hi]
++
++end KomorebiPaperVI.MemoryLaplace
+--- second_block/formalization/lean/KomorebiPaperVI/PoissonKernel.lean
++++ third_block/formalization/lean/KomorebiPaperVI/PoissonKernel.lean
+@@ -0,0 +1,77 @@
++import KomorebiPaperVI.SpectralPackets
++import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
++
++/-! Author: Komorebi P. Normalized subordination density and convergence, including the zero mode.
++The positive-mode Laplace identity is proved in PoissonSubordination. -/
++namespace KomorebiPaperVI.PoissonKernel
++open Set MeasureTheory
++open scoped BigOperators
++
++noncomputable def kernel (t s : ℝ) : ℝ :=
++  t/(2*Real.sqrt Real.pi)*s^(-3/2:ℝ)*Real.exp (-t^2/(4*s))
++noncomputable def heatIntegrand (t lam s : ℝ) : ℝ := kernel t s*Real.exp (-s*lam)
++
++theorem inverse_half_square (s : ℝ) (hs : 0 ≤ s) : (s^(-1/2:ℝ))^2=s⁻¹ := by
++  rw [← Real.rpow_natCast,← Real.rpow_mul hs]
++  norm_num [Real.rpow_neg_one]
++
++theorem kernel_substitution (t s : ℝ) (hs : 0 ≤ s) :
++    kernel t s=t/Real.sqrt Real.pi *
++      ((|(-1/2:ℝ)| *s^((-1/2:ℝ)-1)) • Real.exp (-(t^2/4)*(s^(-1/2:ℝ))^2)) := by
++  unfold kernel
++  rw [inverse_half_square s hs]
++  norm_num
++  have he : -(t^2/4*s⁻¹)=-t^2/(4*s) := by ring
++  rw [he]
++  ring
++
++theorem kernel_integrable (t : ℝ) (ht : 0 < t) : IntegrableOn (kernel t) (Ioi 0) := by
++  have hg := (integrable_exp_neg_mul_sq (b := t^2/4) (by positivity)).integrableOn (s := Ioi 0)
++  have hi := (integrableOn_Ioi_comp_rpow_iff (fun u : ℝ => Real.exp (-(t^2/4)*u^2))
++    (p := -1/2) (by norm_num)).mpr hg
++  rw [integrableOn_congr_fun (fun s hs => kernel_substitution t s hs.le) measurableSet_Ioi]
++  exact hi.const_mul (t/Real.sqrt Real.pi)
++
++theorem kernel_mass (t : ℝ) (ht : 0 < t) : (∫ s in Ioi 0,kernel t s)=1 := by
++  rw [setIntegral_congr_fun measurableSet_Ioi (fun s hs => kernel_substitution t s hs.le)]
++  rw [integral_const_mul,integral_comp_rpow_Ioi (fun u : ℝ => Real.exp (-(t^2/4)*u^2)) (p := -1/2) (by norm_num),integral_gaussian_Ioi]
++  have hp : Real.sqrt Real.pi≠0 := (Real.sqrt_pos.mpr Real.pi_pos).ne'
++  rw [Real.sqrt_div Real.pi_pos.le,Real.sqrt_div (sq_nonneg t),Real.sqrt_sq_eq_abs,abs_of_pos ht]
++  norm_num
++  field_simp
++
++theorem kernel_nonnegative (t s : ℝ) (ht : 0 ≤ t) (hs : 0 ≤ s) : 0 ≤ kernel t s := by
++  unfold kernel
++  positivity
++
++theorem heat_integrand_bounds (t lam s : ℝ) (ht : 0 ≤ t) (hl : 0 ≤ lam) (hs : 0 ≤ s) :
++    0 ≤ heatIntegrand t lam s ∧ heatIntegrand t lam s ≤ kernel t s := by
++  have hk := kernel_nonnegative t s ht hs
++  constructor
++  · exact mul_nonneg hk (Real.exp_pos _).le
++  · exact mul_le_of_le_one_right hk (Real.exp_le_one_iff.mpr (by nlinarith))
++
++theorem heat_integrand_integrable (t lam : ℝ) (ht : 0 < t) (hl : 0 ≤ lam) :
++    IntegrableOn (heatIntegrand t lam) (Ioi 0) := by
++  have hc : ContinuousOn (heatIntegrand t lam) (Ioi 0) := by
++    intro s hs
++    unfold heatIntegrand kernel
++    apply ContinuousAt.continuousWithinAt
++    have hs0 : s≠0 := hs.ne'
++    fun_prop (disch := simp_all)
++  apply (kernel_integrable t ht).mono' (hc.aestronglyMeasurable measurableSet_Ioi)
++  filter_upwards [ae_restrict_mem measurableSet_Ioi] with s hs
++  rw [Real.norm_of_nonneg (heat_integrand_bounds t lam s ht.le hl hs.le).1]
++  exact (heat_integrand_bounds t lam s ht.le hl hs.le).2
++
++theorem zero_mode_subordination (t : ℝ) (ht : 0 < t) :
++    (∫ s in Ioi 0,heatIntegrand t 0 s)=Real.exp (-t*Real.sqrt 0) := by
++  simpa [heatIntegrand] using kernel_mass t ht
++
++variable {I E : Type*} [Fintype I] [NormedAddCommGroup E] [NormedSpace ℝ E]
++theorem finite_spectral_integrable (P : I → E) (lam : I → ℝ) (hl : ∀ i,0 ≤ lam i)
++    (t : ℝ) (ht : 0 < t) :
++    IntegrableOn (fun s => ∑ i,heatIntegrand t (lam i) s • P i) (Ioi 0) :=
++  integrable_finsetSum _ (fun i _ => (heat_integrand_integrable t (lam i) ht (hl i)).smul_const (P i))
++
++end KomorebiPaperVI.PoissonKernel
+--- second_block/formalization/lean/KomorebiPaperVI/PoissonSubordination.lean
++++ third_block/formalization/lean/KomorebiPaperVI/PoissonSubordination.lean
+@@ -0,0 +1,85 @@
++import KomorebiPaperVI.PoissonKernel
++import KomorebiPaperVI.ReciprocalGaussian
++
++/-! Author: Komorebi P. The improper subordination integral for every nonnegative spectral mode. -/
++namespace KomorebiPaperVI.PoissonSubordination
++open Set MeasureTheory
++open KomorebiPaperVI.PoissonKernel KomorebiPaperVI.ReciprocalGaussian
++
++theorem scaled_reciprocal_gaussian (t lam : ℝ) (ht : 0 < t) (hl : 0 ≤ lam) :
++    (∫ u in Ioi 0, Real.exp (-(t^2/4)*u^2-lam/u^2))=
++      Real.exp (-t*Real.sqrt lam)*Real.sqrt Real.pi/t := by
++  let a := t/2*Real.sqrt lam
++  have he : EqOn (fun u : ℝ => Real.exp (-(t^2/4)*u^2-lam/u^2))
++      (fun u => Real.exp (-(t/2*u)^2-a^2/(t/2*u)^2)) (Ioi 0) := by
++    intro u hu
++    dsimp only
++    congr 1
++    dsimp [a]
++    have hu0 : u ≠ 0 := ne_of_gt hu
++    field_simp [hu0,ht.ne']
++    nlinarith [Real.sq_sqrt hl]
++  rw [setIntegral_congr_fun measurableSet_Ioi he]
++  rw [integral_comp_mul_left_Ioi (fun u : ℝ => Real.exp (-u^2-a^2/u^2)) 0 (by positivity : 0 < t/2)]
++  simp only [mul_zero,smul_eq_mul]
++  rw [reciprocal_square_gaussian a (by dsimp [a]; positivity)]
++  have he : -2*a= -t*Real.sqrt lam := by dsimp [a]; ring
++  rw [he]
++  field_simp
++
++theorem heat_substitution (t lam s : ℝ) (hs : 0 < s) :
++    heatIntegrand t lam s=t/Real.sqrt Real.pi *
++      ((|(-1/2:ℝ)| *s^((-1/2:ℝ)-1)) •
++        Real.exp (-(t^2/4)*(s^(-1/2:ℝ))^2-lam/(s^(-1/2:ℝ))^2)) := by
++  unfold heatIntegrand
++  rw [kernel_substitution t s hs.le,inverse_half_square s hs.le]
++  simp only [smul_eq_mul]
++  rw [mul_assoc,mul_assoc,← Real.exp_add]
++  congr 3
++  field_simp
++  ring
++
++theorem scalar_subordination (t lam : ℝ) (ht : 0 < t) (hl : 0 ≤ lam) :
++    (∫ s in Ioi 0,heatIntegrand t lam s)=Real.exp (-t*Real.sqrt lam) := by
++  rw [setIntegral_congr_fun measurableSet_Ioi (fun s hs => heat_substitution t lam s hs)]
++  rw [integral_const_mul,integral_comp_rpow_Ioi
++    (fun u : ℝ => Real.exp (-(t^2/4)*u^2-lam/u^2)) (p := -1/2) (by norm_num)]
++  rw [scaled_reciprocal_gaussian t lam ht hl]
++  have hp : Real.sqrt Real.pi ≠ 0 := (Real.sqrt_pos.mpr Real.pi_pos).ne'
++  field_simp
++
++variable {I E : Type*} [Fintype I] [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
++theorem finite_spectral_subordination (P : I → E) (lam : I → ℝ) (hl : ∀ i,0 ≤ lam i)
++    (t : ℝ) (ht : 0 < t) :
++    (∫ s in Ioi 0,∑ i,heatIntegrand t (lam i) s • P i)=
++      ∑ i,Real.exp (-t*Real.sqrt (lam i)) • P i := by
++  rw [integral_finsetSum _ (fun i _ => (heat_integrand_integrable t (lam i) ht (hl i)).smul_const (P i))]
++  congr 1
++  funext i
++  rw [integral_smul_const,scalar_subordination t (lam i) ht (hl i)]
++
++open KomorebiPaperVI.SpectralPackets
++variable {R : Type*} [DecidableEq I] [NormedRing R] [NormedAlgebra ℝ R] [CompleteSpace R]
++
++omit [CompleteSpace R] in
++theorem operator_integrand (P : I → R) (hP : ∑ i,P i=1)
++    (h : ∀ i j,P i*P j=if i=j then P i else 0) (lam : I → ℝ) (t s : ℝ) :
++    kernel t s • NormedSpace.exp ((-s) • resolve P lam)=
++      ∑ i,heatIntegrand t (lam i) s • P i := by
++  have he : (-s) • resolve P lam=resolve P (fun i => -s*lam i) := by
++    simp [resolve,Finset.smul_sum,smul_smul]
++  rw [he,exp_resolution P hP h]
++  simp [resolve,Finset.smul_sum,smul_smul,heatIntegrand]
++
++theorem operator_subordination (P : I → R) (hP : ∑ i,P i=1)
++    (h : ∀ i j,P i*P j=if i=j then P i else 0) (lam : I → ℝ)
++    (hl : ∀ i,0 ≤ lam i) (t : ℝ) (ht : 0 < t) :
++    IntegrableOn (fun s => kernel t s • NormedSpace.exp ((-s) • resolve P lam)) (Ioi 0) ∧
++    NormedSpace.exp ((-t) • fractional P lam (1/2))=
++      ∫ s in Ioi 0,kernel t s • NormedSpace.exp ((-s) • resolve P lam) := by
++  simp only [operator_integrand P hP h lam]
++  refine ⟨finite_spectral_integrable P lam hl t ht,?_⟩
++  rw [finite_spectral_subordination P lam hl t ht,spectral_transfer_exponential P hP h]
++  simp only [spectralTransfer,resolve,Real.sqrt_eq_rpow]
++
++end KomorebiPaperVI.PoissonSubordination
+--- second_block/formalization/lean/KomorebiPaperVI/ReciprocalGaussian.lean
++++ third_block/formalization/lean/KomorebiPaperVI/ReciprocalGaussian.lean
+@@ -0,0 +1,145 @@
++import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
++
++/-! Author: Komorebi P. A reciprocal Gaussian substitution for the positive Poisson mode. -/
++namespace KomorebiPaperVI.ReciprocalGaussian
++open Set MeasureTheory
++noncomputable def phi (a x : ℝ) : ℝ := x-a/x
++
++theorem phi_derivative (a x : ℝ) (hx : x≠0) :
++    HasDerivAt (phi a) (1+a/x^2) x := by
++  convert! (hasDerivAt_id x).sub ((hasDerivAt_const x a).div (hasDerivAt_id x) hx) using 1
++  dsimp
++  ring
++
++theorem phi_injective (a : ℝ) (ha : 0 < a) : InjOn (phi a) (Ioi 0) := by
++  apply StrictMonoOn.injOn
++  intro x hx y hy hxy
++  unfold phi
++  have h : a/y < a/x := div_lt_div_of_pos_left ha hx hxy
++  linarith
++
++theorem phi_surjective (a : ℝ) (ha : 0 < a) : phi a '' Ioi 0=univ := by
++  apply eq_univ_of_forall
++  intro y
++  let r := Real.sqrt (y^2+4*a)
++  have hr : r^2=y^2+4*a := Real.sq_sqrt (by positivity)
++  have hr0 : 0 ≤ r := Real.sqrt_nonneg _
++  have hpos : 0 < (y+r)/2 := by nlinarith
++  refine ⟨(y+r)/2,hpos,?_⟩
++  unfold phi
++  apply (sub_eq_iff_eq_add).mpr
++  have hne : y+r≠0 := by linarith
++  field_simp [hne]
++  nlinarith
++
++theorem gaussian_jacobian_integrable (a : ℝ) (ha : 0 < a) :
++    IntegrableOn (fun x => (1+a/x^2)*Real.exp (-(phi a x)^2)) (Ioi 0) := by
++  have h := (integrableOn_image_iff_integrableOn_abs_deriv_smul measurableSet_Ioi
++    (fun x hx => (phi_derivative a x hx.ne').hasDerivWithinAt) (phi_injective a ha)
++    (fun u : ℝ => Real.exp (-u^2))).mp
++    (by rw [phi_surjective a ha]; simpa using integrable_exp_neg_mul_sq (b := 1) (by norm_num))
++  apply h.congr
++  filter_upwards [ae_restrict_mem measurableSet_Ioi] with x hx
++  simp only [smul_eq_mul,abs_of_pos (by positivity : 0 < 1+a/x^2)]
++
++theorem gaussian_jacobian_integral (a : ℝ) (ha : 0 < a) :
++    (∫ x in Ioi 0,(1+a/x^2)*Real.exp (-(phi a x)^2))=Real.sqrt Real.pi := by
++  have h := integral_image_eq_integral_abs_deriv_smul measurableSet_Ioi
++    (fun x hx => (phi_derivative a x hx.ne').hasDerivWithinAt) (phi_injective a ha)
++    (fun u : ℝ => Real.exp (-u^2))
++  rw [phi_surjective a ha,setIntegral_univ] at h
++  have hg : (∫ u : ℝ,Real.exp (-u^2))=Real.sqrt Real.pi := by
++    simpa using integral_gaussian (1:ℝ)
++  rw [hg] at h
++  rw [h]
++  apply setIntegral_congr_fun measurableSet_Ioi
++  intro x hx
++  simp only [smul_eq_mul,abs_of_pos (by positivity : 0 < 1+a/x^2)]
++
++theorem reciprocal_derivative (a x : ℝ) (hx : x≠0) :
++    HasDerivAt (fun u => a/u) (-a/x^2) x := by
++  convert! (hasDerivAt_const x a).div (hasDerivAt_id x) hx using 1
++  dsimp
++  ring
++
++theorem reciprocal_image (a : ℝ) (ha : 0 < a) : (fun x => a/x) '' Ioi 0=Ioi 0 := by
++  ext y
++  constructor
++  · rintro ⟨x,hx,rfl⟩
++    exact div_pos ha hx
++  · intro hy
++    refine ⟨a/y,div_pos ha hy,?_⟩
++    field_simp
++
++theorem reciprocal_injective (a : ℝ) (ha : 0 < a) : InjOn (fun x => a/x) (Ioi 0) := by
++  intro x hx y hy h
++  change 0 < x at hx
++  change 0 < y at hy
++  have hxy : a*y=a*x := (div_eq_div_iff hx.ne' hy.ne').mp h
++  nlinarith
++
++theorem reciprocal_phi (a x : ℝ) (ha : a≠0) (hx : x≠0) : phi a (a/x)= -phi a x := by
++  unfold phi
++  field_simp
++  ring
++
++theorem reciprocal_gaussian_symmetry (a : ℝ) (ha : 0 < a) :
++    (∫ x in Ioi 0,a/x^2*Real.exp (-(phi a x)^2))=
++      ∫ x in Ioi 0,Real.exp (-(phi a x)^2) := by
++  have h := integral_image_eq_integral_abs_deriv_smul measurableSet_Ioi
++    (fun x hx => (reciprocal_derivative a x hx.ne').hasDerivWithinAt)
++    (reciprocal_injective a ha) (fun x => Real.exp (-(phi a x)^2))
++  rw [reciprocal_image a ha] at h
++  rw [h]
++  apply setIntegral_congr_fun measurableSet_Ioi
++  intro x hx
++  dsimp only
++  rw [reciprocal_phi a x ha.ne' hx.ne',neg_sq]
++  simp only [smul_eq_mul,abs_div,abs_neg,abs_of_pos ha,abs_of_nonneg (sq_nonneg x)]
++
++theorem phi_gaussian_integrable (a : ℝ) (ha : 0 < a) :
++    IntegrableOn (fun x => Real.exp (-(phi a x)^2)) (Ioi 0) := by
++  have hc : ContinuousOn (fun x => Real.exp (-(phi a x)^2)) (Ioi 0) := by
++    intro x hx
++    apply ContinuousAt.continuousWithinAt
++    unfold phi
++    fun_prop (disch := exact hx.ne')
++  apply (gaussian_jacobian_integrable a ha).mono' (hc.aestronglyMeasurable measurableSet_Ioi)
++  filter_upwards [ae_restrict_mem measurableSet_Ioi] with x hx
++  rw [Real.norm_of_nonneg (Real.exp_pos _).le]
++  have h : 0 ≤ a/x^2 := by positivity
++  nlinarith [Real.exp_pos (-(phi a x)^2)]
++
++theorem phi_gaussian_integral (a : ℝ) (ha : 0 < a) :
++    (∫ x in Ioi 0,Real.exp (-(phi a x)^2))=Real.sqrt Real.pi/2 := by
++  have hi := phi_gaussian_integrable a ha
++  have hw : IntegrableOn (fun x => a/x^2*Real.exp (-(phi a x)^2)) (Ioi 0) := by
++    convert! (gaussian_jacobian_integrable a ha).sub hi using 1
++    funext x
++    dsimp only [Pi.sub_apply]
++    ring
++  have hj := gaussian_jacobian_integral a ha
++  have he : (fun x => (1+a/x^2)*Real.exp (-(phi a x)^2))=
++      fun x => Real.exp (-(phi a x)^2)+a/x^2*Real.exp (-(phi a x)^2) := by funext x; ring
++  rw [he,integral_add hi hw,reciprocal_gaussian_symmetry a ha] at hj
++  linarith
++
++theorem reciprocal_square_gaussian (a : ℝ) (ha : 0 ≤ a) :
++    (∫ x in Ioi 0,Real.exp (-x^2-a^2/x^2))=Real.exp (-2*a)*Real.sqrt Real.pi/2 := by
++  rcases ha.eq_or_lt with he | ha
++  · subst a
++    simpa using integral_gaussian_Ioi (1:ℝ)
++  · have he : EqOn (fun x => Real.exp (-x^2-a^2/x^2))
++        (fun x => Real.exp (-2*a)*Real.exp (-(phi a x)^2)) (Ioi 0) := by
++      intro x hx
++      dsimp only
++      rw [← Real.exp_add]
++      congr 1
++      unfold phi
++      have hx0 : x ≠ 0 := ne_of_gt hx
++      field_simp [hx0]
++      ring
++    rw [setIntegral_congr_fun measurableSet_Ioi he,integral_const_mul,phi_gaussian_integral a ha]
++    ring
++
++end KomorebiPaperVI.ReciprocalGaussian
+--- second_block/formalization/lean/KomorebiPaperVI/Survival.lean
++++ third_block/formalization/lean/KomorebiPaperVI/Survival.lean
+@@ -0,0 +1,137 @@
++import KomorebiPaperVI.MarkovSemigroup
++import KomorebiPaperVI.Semigroups
++import Mathlib.Analysis.SpecialFunctions.Log.Deriv
++import Mathlib.MeasureTheory.Integral.IntegralEqImproper
++import Mathlib.Topology.Order.MonotoneConvergence
++
++/-! Author: Komorebi P. Literal finite subgenerator survival, including defective exit mass. -/
++namespace KomorebiPaperVI.Survival
++open scoped BigOperators Matrix.Norms.Operator Topology
++open Set Filter MeasureTheory
++set_option backward.isDefEq.respectTransparency false
++variable {I : Type*} [Fintype I] [DecidableEq I]
++
++noncomputable def state (A : Matrix I I ℝ) (p : I → ℝ) (t : ℝ) : I → ℝ :=
++  (NormedSpace.exp (t • A)).mulVec p
++noncomputable def survival (A : Matrix I I ℝ) (p : I → ℝ) (t : ℝ) : ℝ := ∑ i, state A p t i
++noncomputable def exitRate (A : Matrix I I ℝ) (j : I) : ℝ := -∑ i, A i j
++noncomputable def density (A : Matrix I I ℝ) (p : I → ℝ) (t : ℝ) : ℝ :=
++  ∑ j, exitRate A j*state A p t j
++noncomputable def hazard (A : Matrix I I ℝ) (p : I → ℝ) (t : ℝ) : ℝ :=
++  density A p t/survival A p t
++
++theorem survival_zero (A : Matrix I I ℝ) (p : I → ℝ) : survival A p 0=∑ i,p i := by
++  simp [survival,state]
++
++theorem state_nonnegative (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (t : ℝ) (ht : 0 ≤ t) (i : I) : 0 ≤ state A p t i :=
++  Finset.sum_nonneg (fun j _ => mul_nonneg (MarkovSemigroup.markov_nonnegative A hA t ht i j) (hp j))
++
++theorem survival_positive (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (hs : ∑ i,p i=1) (t : ℝ) (ht : 0 ≤ t) :
++    0 < survival A p t := by
++  have hn := state_nonnegative A hA p hp t ht
++  have hnon : 0 ≤ survival A p t := Finset.sum_nonneg (fun i _ => hn i)
++  apply lt_of_le_of_ne hnon
++  intro he
++  have hz : state A p t=0 := by
++    funext i
++    have hle := Finset.single_le_sum (fun j _ => hn j) (Finset.mem_univ i)
++    change state A p t i=0
++    change state A p t i ≤ survival A p t at hle
++    linarith [hn i]
++  have hpz : p=0 := (Matrix.mulVec_injective_of_isUnit (Matrix.isUnit_exp (t • A)))
++    (by simpa [state] using hz)
++  rw [hpz] at hs
++  simp at hs
++
++theorem density_nonnegative (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (hc : ∀ j,∑ i,A i j ≤ 0) (p : I → ℝ) (hp : ∀ i,0 ≤ p i)
++    (t : ℝ) (ht : 0 ≤ t) : 0 ≤ density A p t :=
++  Finset.sum_nonneg (fun j _ => mul_nonneg (neg_nonneg.mpr (hc j))
++    (state_nonnegative A hA p hp t ht j))
++
++theorem survival_derivative (A : Matrix I I ℝ) (p : I → ℝ) (t : ℝ) :
++    HasDerivAt (survival A p) (-density A p t) t := by
++  have he := Semigroups.transfer_derivative_left A t
++  have hij (i j : I) : HasDerivAt (fun u => NormedSpace.exp (u • A) i j)
++      ((A*NormedSpace.exp (t • A)) i j) t := by
++    exact hasDerivAt_pi.mp (hasDerivAt_pi.mp he i) j
++  have h := HasDerivAt.fun_sum (fun i (_ : i∈Finset.univ) =>
++    HasDerivAt.fun_sum (fun j (_ : j∈Finset.univ) => (hij i j).mul_const (p j)))
++  change HasDerivAt (survival A p) (∑ i,(A*NormedSpace.exp (t • A)).mulVec p i) t at h
++  rw [← Matrix.mulVec_mulVec] at h
++  have hd : (∑ i,A.mulVec (state A p t) i)=-density A p t := by
++    simp [density,exitRate,Matrix.mulVec,dotProduct,Finset.sum_comm,← Finset.sum_mul]
++  change HasDerivAt (survival A p) (∑ i,A.mulVec (state A p t) i) t at h
++  rwa [hd] at h
++
++theorem survival_antitone (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (hc : ∀ j,∑ i,A i j ≤ 0) (p : I → ℝ) (hp : ∀ i,0 ≤ p i) :
++    AntitoneOn (survival A p) (Ici 0) := by
++  have hd : Differentiable ℝ (survival A p) := fun t => (survival_derivative A p t).differentiableAt
++  apply antitoneOn_of_deriv_nonpos (convex_Ici 0) hd.continuous.continuousOn hd.differentiableOn
++  intro t ht
++  rw [(survival_derivative A p t).deriv]
++  exact neg_nonpos.mpr (density_nonnegative A hA hc p hp t (interior_subset ht))
++
++theorem density_continuous (A : Matrix I I ℝ) (p : I → ℝ) : Continuous (density A p) := by
++  unfold density state
++  fun_prop
++
++theorem survival_hazard (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (hs : ∑ i,p i=1) (t : ℝ) (ht : 0 ≤ t) :
++    survival A p t=Real.exp (-∫ r in 0..t,hazard A p r) := by
++  have hd : ∀ r∈Icc 0 t, HasDerivAt (fun u => Real.log (survival A p u)) (-hazard A p r) r := by
++    intro r hr
++    simpa [hazard,neg_div] using (survival_derivative A p r).log
++      (survival_positive A hA p hp hs r hr.1).ne'
++  have hscont : Continuous (survival A p) :=
++    (show Differentiable ℝ (survival A p) from fun r => (survival_derivative A p r).differentiableAt).continuous
++  have hhcont : ContinuousOn (hazard A p) (Icc 0 t) :=
++    (density_continuous A p).continuousOn.div hscont.continuousOn
++      (fun r hr => (survival_positive A hA p hp hs r hr.1).ne')
++  have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt
++    (by simpa [uIcc_of_le ht] using hd)
++    (hhcont.neg.intervalIntegrable_of_Icc ht)
++  simp only [Pi.neg_apply,intervalIntegral.integral_neg,survival_zero,hs,Real.log_one,sub_zero] at hi
++  rw [hi,Real.exp_log (survival_positive A hA p hp hs t ht)]
++
++theorem survival_has_limit (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (hc : ∀ j,∑ i,A i j ≤ 0) (p : I → ℝ) (hp : ∀ i,0 ≤ p i) :
++    ∃ l,0 ≤ l ∧ Tendsto (survival A p) atTop (𝓝 l) := by
++  let f : ℝ → ℝ := fun t => survival A p (max t 0)
++  have hn (t : ℝ) : 0 ≤ f t := Finset.sum_nonneg
++    (fun i _ => state_nonnegative A hA p hp _ (le_max_right _ _) i)
++  have ha : Antitone f := fun s t hst => survival_antitone A hA hc p hp
++    (show max s 0∈Ici (0:ℝ) from le_max_right s 0)
++    (show max t 0∈Ici (0:ℝ) from le_max_right t 0) (max_le_max_right 0 hst)
++  have hb : BddBelow (range f) := ⟨0,by rintro _ ⟨t,rfl⟩; exact hn t⟩
++  refine ⟨⨅ t,f t,le_ciInf hn,?_⟩
++  apply (tendsto_atTop_ciInf ha hb).congr'
++  filter_upwards [eventually_ge_atTop (0:ℝ)] with t ht
++  simp [f,max_eq_left ht]
++
++theorem defective_density_mass (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (hc : ∀ j,∑ i,A i j ≤ 0) (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (hs : ∑ i,p i=1) :
++    ∃ l,0 ≤ l ∧ Tendsto (survival A p) atTop (𝓝 l) ∧
++      IntegrableOn (density A p) (Ioi 0) ∧ (∫ t in Ioi 0,density A p t)=1-l := by
++  obtain ⟨l,hl,ht⟩ := survival_has_limit A hA hc p hp
++  have hd := fun t (_ : t∈Ici (0:ℝ)) => survival_derivative A p t
++  have hn := fun t (ht : t∈Ioi (0:ℝ)) =>
++    neg_nonpos.mpr (density_nonnegative A hA hc p hp t ht.le)
++  have hi := integrableOn_Ioi_deriv_of_nonpos' hd hn ht
++  have he := integral_Ioi_of_hasDerivAt_of_nonpos' hd hn ht
++  refine ⟨l,hl,ht,integrable_neg_iff.mp hi,?_⟩
++  simp only [integral_neg,survival_zero,hs] at he
++  linarith
++
++theorem eventual_absorption_density (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
++    (hc : ∀ j,∑ i,A i j ≤ 0) (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (hs : ∑ i,p i=1)
++    (habs : Tendsto (survival A p) atTop (𝓝 0)) :
++    IntegrableOn (density A p) (Ioi 0) ∧ (∫ t in Ioi 0,density A p t)=1 := by
++  obtain ⟨l,_,hl,hi,hm⟩ := defective_density_mass A hA hc p hp hs
++  have he : l=0 := tendsto_nhds_unique hl habs
++  exact ⟨hi,by simpa [he] using hm⟩
++
++end KomorebiPaperVI.Survival
+--- second_block/formalization/lean/KomorebiPaperVI.lean
++++ third_block/formalization/lean/KomorebiPaperVI.lean
+@@ -1,4 +1,5 @@
+ import KomorebiPaperVI.Algebra
++import KomorebiPaperVI.BanachDefects
+ import KomorebiPaperVI.BayesianFlow
+ import KomorebiPaperVI.BayesianNecessity
+ import KomorebiPaperVI.BayesianPartitions
+@@ -6,14 +7,24 @@
+ import KomorebiPaperVI.Coarsening
+ import KomorebiPaperVI.ConditionalExpectation
+ import KomorebiPaperVI.ConditionalTowers
++import KomorebiPaperVI.ContourNaturality
++import KomorebiPaperVI.DiscreteGreen
+ import KomorebiPaperVI.FeynmanKac
+ import KomorebiPaperVI.FiniteBayes
++import KomorebiPaperVI.FractionalIntegral
++import KomorebiPaperVI.FractionalSemigroup
++import KomorebiPaperVI.FractionalTowers
+ import KomorebiPaperVI.InformationLoss
+ import KomorebiPaperVI.LowModeConvergence
+ import KomorebiPaperVI.MarkovSemigroup
+ import KomorebiPaperVI.MartingalePackets
++import KomorebiPaperVI.MemoryLaplace
+ import KomorebiPaperVI.OperatorBounds
++import KomorebiPaperVI.PoissonKernel
++import KomorebiPaperVI.PoissonSubordination
++import KomorebiPaperVI.ReciprocalGaussian
+ import KomorebiPaperVI.ReducingPackets
+ import KomorebiPaperVI.SchurFeshbach
+ import KomorebiPaperVI.Semigroups
+ import KomorebiPaperVI.SpectralPackets
++import KomorebiPaperVI.Survival

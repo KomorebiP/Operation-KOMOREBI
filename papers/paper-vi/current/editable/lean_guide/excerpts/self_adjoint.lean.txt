@@ -1,0 +1,14 @@
+theorem expect_self_adjoint (f : I → A) (p : I → ℝ) (v w : I → ℂ) :
+    weightedInner p (expect f p v) w=weightedInner p v (expect f p w) := by
+  rw [expect_matrix,expect_matrix]
+  simp only [weightedInner,Matrix.mulVec,dotProduct,Finset.mul_sum,Finset.sum_mul,
+    map_sum,map_mul]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro i _
+  apply Finset.sum_congr rfl
+  intro j _
+  have h := kernel_weighted_symmetry f p j i
+  calc
+    _ = ((p j:ℂ)*kernel f p j i)*v i*conj (w j) := by ring
+    _ = _ := by rw [h]; ring

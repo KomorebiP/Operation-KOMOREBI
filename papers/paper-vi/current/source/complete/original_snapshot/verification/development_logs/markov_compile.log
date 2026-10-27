@@ -1,0 +1,67 @@
+KomorebiPaperVI/MarkovSemigroup.lean:22:20: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (∑' (i : ℕ), (↑i.factorial)⁻¹ • M ^ i) ?m.43
+in the target expression
+  0 ≤ (fun x => ∑' (n : ℕ), (↑n.factorial)⁻¹ • x ^ n) M i j
+
+I : Type u_1
+inst✝¹ : Fintype I
+inst✝ : DecidableEq I
+M : Matrix I I ℝ
+hM : ∀ (i j : I), 0 ≤ M i j
+i j : I
+hm : Summable fun n => (↑n.factorial)⁻¹ • M ^ n
+⊢ 0 ≤ (fun x => ∑' (n : ℕ), (↑n.factorial)⁻¹ • x ^ n) M i j
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    (fun x => ∑' (n : ℕ), (↑n.factorial)⁻¹ • x ^ n) M i
+KomorebiPaperVI/MarkovSemigroup.lean:77:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ i, ∑' (b : ℕ), (↑b.factorial)⁻¹ * ((t • Q) ^ b) i j
+in the target expression
+  ∑ x, (∑' (n : ℕ), (↑n.factorial)⁻¹ • (t • Q) ^ n) x j = 1
+
+I : Type u_1
+inst✝¹ : Fintype I
+inst✝ : DecidableEq I
+Q : Matrix I I ℝ
+hQ : ∀ (j : I), ∑ i, Q i j = 0
+t : ℝ
+j : I
+hc : ∀ (j : I), ∑ i, (t • Q) i j = 0
+hm : Summable fun n => (↑n.factorial)⁻¹ • (t • Q) ^ n
+hs : ∀ (i : I), Summable fun n => (↑n.factorial)⁻¹ * ((t • Q) ^ n) i j
+⊢ ∑ x, (∑' (n : ℕ), (↑n.factorial)⁻¹ • (t • Q) ^ n) x j = 1
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    (∑' (n : ℕ), (↑n.factorial)⁻¹ • (t • Q) ^ n) x
+KomorebiPaperVI/MarkovSemigroup.lean:74:13: error: This simp argument is unused:
+  Pi.tsum_apply hm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Pi.tsum_apply (Pi.summable.mp hm _), Matrix.smul_apply, smul_eq_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPaperVI/MarkovSemigroup.lean:74:30: error: This simp argument is unused:
+  Pi.tsum_apply (Pi.summable.mp hm _)
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Pi.tsum_apply hm, Matrix.smul_apply, smul_eq_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPaperVI/MarkovSemigroup.lean:74:66: error: This simp argument is unused:
+  Matrix.smul_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Pi.tsum_apply hm, Pi.tsum_apply (Pi.summable.mp hm _), smul_eq_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPaperVI/MarkovSemigroup.lean:74:84: error: This simp argument is unused:
+  smul_eq_mul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Pi.tsum_apply hm, Pi.tsum_apply (Pi.summable.mp hm _), Matrix.smul_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

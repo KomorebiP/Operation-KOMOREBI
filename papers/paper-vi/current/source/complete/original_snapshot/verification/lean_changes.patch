@@ -1,0 +1,670 @@
+--- v0.4.0/formalization/lean/KernelAudit.lean
++++ v0.5.0/formalization/lean/KernelAudit.lean
+@@ -60,6 +60,14 @@
+ #print axioms KomorebiPaperVI.BetaNormalization.unit_gap_integral
+ #print axioms KomorebiPaperVI.BetaNormalization.gap_integral
+ #print axioms KomorebiPaperVI.BetaNormalization.normalized_gap_integral
++#print axioms KomorebiPaperVI.CanonicalJets.calculus_on_component
++#print axioms KomorebiPaperVI.CanonicalJets.power_kills
++#print axioms KomorebiPaperVI.CanonicalJets.jet_stable
++#print axioms KomorebiPaperVI.CanonicalJets.shift_intertwines
++#print axioms KomorebiPaperVI.CanonicalJets.power_intertwines
++#print axioms KomorebiPaperVI.CanonicalJets.jet_intertwines
++#print axioms KomorebiPaperVI.CanonicalJets.canonical_naturality
++#print axioms KomorebiPaperVI.CanonicalJets.holomorphic_naturality
+ #print axioms KomorebiPaperVI.Coarsening.coarsen_mass
+ #print axioms KomorebiPaperVI.Coarsening.coarsen_nonnegative
+ #print axioms KomorebiPaperVI.Coarsening.coarsen_probability
+@@ -180,6 +188,17 @@
+ #print axioms KomorebiPaperVI.HolomorphicContours.resolvent_continuousAt
+ #print axioms KomorebiPaperVI.HolomorphicContours.holomorphic_circle_integrable
+ #print axioms KomorebiPaperVI.HolomorphicContours.holomorphic_common_contour_naturality
++#print axioms KomorebiPaperVI.HolomorphicFinite.canonical_unique
++#print axioms KomorebiPaperVI.HolomorphicFinite.holomorphic_on_component
++#print axioms KomorebiPaperVI.HolomorphicFinite.component_mem_spectrum
++#print axioms KomorebiPaperVI.HolomorphicFinite.calculus_spectrum_congr
++#print axioms KomorebiPaperVI.HolomorphicFinite.cauchyCoefficient_eq
++#print axioms KomorebiPaperVI.HolomorphicFinite.cauchyCoefficient_independent
++#print axioms KomorebiPaperVI.HolomorphicFinite.admissible_circle
++#print axioms KomorebiPaperVI.HolomorphicFinite.canonical_cauchy_representation
++#print axioms KomorebiPaperVI.HolomorphicFinite.canonical_contours_exist
++#print axioms KomorebiPaperVI.HolomorphicFinite.canonical_contours_independent
++#print axioms KomorebiPaperVI.HolomorphicFinite.matrix_holomorphic_naturality
+ #print axioms KomorebiPaperVI.InformationLoss.lossMatrix_apply
+ #print axioms KomorebiPaperVI.InformationLoss.information_loss_matrix
+ #print axioms KomorebiPaperVI.InformationLoss.information_loss_null
+@@ -198,11 +217,20 @@
+ #print axioms KomorebiPaperVI.MarkovSemigroup.markov_probability
+ #print axioms KomorebiPaperVI.MartingalePackets.packet_product
+ #print axioms KomorebiPaperVI.MartingalePackets.packet_sum
++#print axioms KomorebiPaperVI.MatrixMemory.rectangular_memory_self_energy
+ #print axioms KomorebiPaperVI.MemoryLaplace.decay_integrable
+ #print axioms KomorebiPaperVI.MemoryLaplace.decay_tendsto_zero
+ #print axioms KomorebiPaperVI.MemoryLaplace.integral_generator_transfer
+ #print axioms KomorebiPaperVI.MemoryLaplace.shifted_laplace_right_inverse
+ #print axioms KomorebiPaperVI.MemoryLaplace.memory_integral
++#print axioms KomorebiPaperVI.NonnormalMemory.left_shift_power
++#print axioms KomorebiPaperVI.NonnormalMemory.component_spectrum
++#print axioms KomorebiPaperVI.NonnormalMemory.exp_mul_component
++#print axioms KomorebiPaperVI.NonnormalMemory.damped_mul_component
++#print axioms KomorebiPaperVI.NonnormalMemory.component_decay
++#print axioms KomorebiPaperVI.NonnormalMemory.spectral_decay
++#print axioms KomorebiPaperVI.NonnormalMemory.spectral_laplace_inverse
++#print axioms KomorebiPaperVI.NonnormalMemory.nonnormal_self_energy
+ #print axioms KomorebiPaperVI.NormalizedFractional.scalar_measure
+ #print axioms KomorebiPaperVI.NormalizedFractional.cfc_explicit_measure
+ #print axioms KomorebiPaperVI.NormalizedFractional.cfc_lebesgue_integral
+@@ -276,6 +304,9 @@
+ #print axioms KomorebiPaperVI.ReducingPackets.generator_commutes
+ #print axioms KomorebiPaperVI.ReducingPackets.reducing_exponential
+ #print axioms KomorebiPaperVI.ReducingPackets.compressed_evolution
++#print axioms KomorebiPaperVI.ScalarDecay.norm_exp_pow
++#print axioms KomorebiPaperVI.ScalarDecay.exp_pow_integrable
++#print axioms KomorebiPaperVI.ScalarDecay.exp_pow_tendsto_zero
+ #print axioms KomorebiPaperVI.SchurFeshbach.resolvent_blocks
+ #print axioms KomorebiPaperVI.SchurFeshbach.projected_resolvent
+ #print axioms KomorebiPaperVI.SchurFeshbach.schur_invertible
+@@ -376,6 +407,14 @@
+     `KomorebiPaperVI.BetaNormalization.unit_gap_integral,
+     `KomorebiPaperVI.BetaNormalization.gap_integral,
+     `KomorebiPaperVI.BetaNormalization.normalized_gap_integral,
++    `KomorebiPaperVI.CanonicalJets.calculus_on_component,
++    `KomorebiPaperVI.CanonicalJets.power_kills,
++    `KomorebiPaperVI.CanonicalJets.jet_stable,
++    `KomorebiPaperVI.CanonicalJets.shift_intertwines,
++    `KomorebiPaperVI.CanonicalJets.power_intertwines,
++    `KomorebiPaperVI.CanonicalJets.jet_intertwines,
++    `KomorebiPaperVI.CanonicalJets.canonical_naturality,
++    `KomorebiPaperVI.CanonicalJets.holomorphic_naturality,
+     `KomorebiPaperVI.Coarsening.coarsen_mass,
+     `KomorebiPaperVI.Coarsening.coarsen_nonnegative,
+     `KomorebiPaperVI.Coarsening.coarsen_probability,
+@@ -496,6 +535,17 @@
+     `KomorebiPaperVI.HolomorphicContours.resolvent_continuousAt,
+     `KomorebiPaperVI.HolomorphicContours.holomorphic_circle_integrable,
+     `KomorebiPaperVI.HolomorphicContours.holomorphic_common_contour_naturality,
++    `KomorebiPaperVI.HolomorphicFinite.canonical_unique,
++    `KomorebiPaperVI.HolomorphicFinite.holomorphic_on_component,
++    `KomorebiPaperVI.HolomorphicFinite.component_mem_spectrum,
++    `KomorebiPaperVI.HolomorphicFinite.calculus_spectrum_congr,
++    `KomorebiPaperVI.HolomorphicFinite.cauchyCoefficient_eq,
++    `KomorebiPaperVI.HolomorphicFinite.cauchyCoefficient_independent,
++    `KomorebiPaperVI.HolomorphicFinite.admissible_circle,
++    `KomorebiPaperVI.HolomorphicFinite.canonical_cauchy_representation,
++    `KomorebiPaperVI.HolomorphicFinite.canonical_contours_exist,
++    `KomorebiPaperVI.HolomorphicFinite.canonical_contours_independent,
++    `KomorebiPaperVI.HolomorphicFinite.matrix_holomorphic_naturality,
+     `KomorebiPaperVI.InformationLoss.lossMatrix_apply,
+     `KomorebiPaperVI.InformationLoss.information_loss_matrix,
+     `KomorebiPaperVI.InformationLoss.information_loss_null,
+@@ -514,11 +564,20 @@
+     `KomorebiPaperVI.MarkovSemigroup.markov_probability,
+     `KomorebiPaperVI.MartingalePackets.packet_product,
+     `KomorebiPaperVI.MartingalePackets.packet_sum,
++    `KomorebiPaperVI.MatrixMemory.rectangular_memory_self_energy,
+     `KomorebiPaperVI.MemoryLaplace.decay_integrable,
+     `KomorebiPaperVI.MemoryLaplace.decay_tendsto_zero,
+     `KomorebiPaperVI.MemoryLaplace.integral_generator_transfer,
+     `KomorebiPaperVI.MemoryLaplace.shifted_laplace_right_inverse,
+     `KomorebiPaperVI.MemoryLaplace.memory_integral,
++    `KomorebiPaperVI.NonnormalMemory.left_shift_power,
++    `KomorebiPaperVI.NonnormalMemory.component_spectrum,
++    `KomorebiPaperVI.NonnormalMemory.exp_mul_component,
++    `KomorebiPaperVI.NonnormalMemory.damped_mul_component,
++    `KomorebiPaperVI.NonnormalMemory.component_decay,
++    `KomorebiPaperVI.NonnormalMemory.spectral_decay,
++    `KomorebiPaperVI.NonnormalMemory.spectral_laplace_inverse,
++    `KomorebiPaperVI.NonnormalMemory.nonnormal_self_energy,
+     `KomorebiPaperVI.NormalizedFractional.scalar_measure,
+     `KomorebiPaperVI.NormalizedFractional.cfc_explicit_measure,
+     `KomorebiPaperVI.NormalizedFractional.cfc_lebesgue_integral,
+@@ -592,6 +651,9 @@
+     `KomorebiPaperVI.ReducingPackets.generator_commutes,
+     `KomorebiPaperVI.ReducingPackets.reducing_exponential,
+     `KomorebiPaperVI.ReducingPackets.compressed_evolution,
++    `KomorebiPaperVI.ScalarDecay.norm_exp_pow,
++    `KomorebiPaperVI.ScalarDecay.exp_pow_integrable,
++    `KomorebiPaperVI.ScalarDecay.exp_pow_tendsto_zero,
+     `KomorebiPaperVI.SchurFeshbach.resolvent_blocks,
+     `KomorebiPaperVI.SchurFeshbach.projected_resolvent,
+     `KomorebiPaperVI.SchurFeshbach.schur_invertible,
+--- /dev/null
++++ v0.5.0/formalization/lean/KomorebiPaperVI/CanonicalJets.lean
+@@ -0,0 +1,103 @@
++import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
++import Mathlib.Algebra.DirectSum.Decomposition
++import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
++import Mathlib.Analysis.Complex.Polynomial.Basic
++
++/-! Author: Komorebi P. Canonical finite-dimensional matrix functions from Taylor jets. -/
++namespace KomorebiPaperVI.CanonicalJets
++open Module
++set_option backward.isDefEq.respectTransparency false
++variable {V W : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
++  [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W]
++
++noncomputable instance decomposition (A : End ℂ V) :
++    DirectSum.Decomposition A.maxGenEigenspace := by
++  classical
++  exact (DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top
++    A.independent_maxGenEigenspace A.iSup_maxGenEigenspace_eq_top).chooseDecomposition
++
++noncomputable def jet (A : End ℂ V) (a : ℂ → ℕ → ℂ) (μ : ℂ) (n : ℕ) : End ℂ V :=
++  ∑ k ∈ Finset.range n, a μ k • (A-μ • 1)^k
++
++noncomputable def calculus (A : End ℂ V) (a : ℂ → ℕ → ℂ) : End ℂ V := by
++  classical
++  exact (DirectSum.toModule ℂ ℂ V (fun μ =>
++    (jet A a μ (finrank ℂ V)).comp (A.maxGenEigenspace μ).subtype)).comp
++    (DirectSum.decomposeLinearEquiv A.maxGenEigenspace).toLinearMap
++
++theorem calculus_on_component (A : End ℂ V) (a : ℂ → ℕ → ℂ) (μ : ℂ)
++    (x : V) (hx : x ∈ A.maxGenEigenspace μ) :
++    calculus A a x=jet A a μ (finrank ℂ V) x := by
++  classical
++  unfold calculus
++  dsimp only [LinearMap.comp_apply,LinearEquiv.coe_toLinearMap]
++  rw [DirectSum.decomposeLinearEquiv_apply_coe A.maxGenEigenspace μ ⟨x,hx⟩,
++    DirectSum.toModule_lof]
++  rfl
++
++theorem power_kills (A : End ℂ V) (μ : ℂ) (x : V)
++    (hx : x ∈ A.maxGenEigenspace μ) (k : ℕ) (hk : finrank ℂ V ≤ k) :
++    ((A-μ • 1)^k) x=0 := by
++  have h := A.genEigenspace_le_genEigenspace_finrank μ ⊤ hx
++  have h' : x ∈ A.genEigenspace μ k :=
++    (A.genEigenspace μ).monotone (by exact_mod_cast hk) h
++  exact LinearMap.mem_ker.mp (Module.End.mem_genEigenspace_nat.mp h')
++
++theorem jet_stable (A : End ℂ V) (a : ℂ → ℕ → ℂ) (μ : ℂ) (x : V)
++    (hx : x ∈ A.maxGenEigenspace μ) (n : ℕ) (hn : finrank ℂ V ≤ n) :
++    jet A a μ n x=jet A a μ (finrank ℂ V) x := by
++  classical
++  unfold jet
++  simp only [LinearMap.sum_apply,LinearMap.smul_apply]
++  symm
++  apply Finset.sum_subset (Finset.range_mono hn)
++  intro k _ hk
++  rw [power_kills A μ x hx k (by simpa using hk),smul_zero]
++
++omit [FiniteDimensional ℂ V] [FiniteDimensional ℂ W] in
++theorem shift_intertwines (A : End ℂ V) (B : End ℂ W) (C : V →ₗ[ℂ] W)
++    (h : B.comp C=C.comp A) (μ : ℂ) (x : V) :
++    C ((A-μ • 1) x)=(B-μ • 1) (C x) := by
++  have hh := LinearMap.congr_fun h x
++  simpa using hh.symm
++
++omit [FiniteDimensional ℂ V] [FiniteDimensional ℂ W] in
++theorem power_intertwines (A : End ℂ V) (B : End ℂ W) (C : V →ₗ[ℂ] W)
++    (h : B.comp C=C.comp A) (μ : ℂ) (k : ℕ) (x : V) :
++    C (((A-μ • 1)^k) x)=((B-μ • 1)^k) (C x) := by
++  induction k generalizing x with
++  | zero => simp
++  | succ k ih =>
++    rw [pow_succ',pow_succ',Module.End.mul_apply,Module.End.mul_apply,
++      shift_intertwines A B C h μ,ih]
++
++omit [FiniteDimensional ℂ V] [FiniteDimensional ℂ W] in
++theorem jet_intertwines (A : End ℂ V) (B : End ℂ W) (C : V →ₗ[ℂ] W)
++    (h : B.comp C=C.comp A) (a : ℂ → ℕ → ℂ) (μ : ℂ) (n : ℕ) (x : V) :
++    C (jet A a μ n x)=jet B a μ n (C x) := by
++  simp only [jet,LinearMap.sum_apply,LinearMap.smul_apply,map_sum,map_smul,
++    power_intertwines A B C h μ]
++
++theorem canonical_naturality (A : End ℂ V) (B : End ℂ W) (C : V →ₗ[ℂ] W)
++    (h : B.comp C=C.comp A) (a : ℂ → ℕ → ℂ) :
++    C.comp (calculus A a)=(calculus B a).comp C := by
++  apply DirectSum.decompose_lhom_ext A.maxGenEigenspace
++  intro μ
++  ext x
++  have hx := Module.End.mapsTo_genEigenspace_of_comp C h μ ⊤ x.property
++  change C (calculus A a x)=calculus B a (C x)
++  rw [calculus_on_component A a μ x x.property,
++    calculus_on_component B a μ (C x) hx,
++    ← jet_stable A a μ x x.property (max (finrank ℂ V) (finrank ℂ W)) (le_max_left _ _),
++    ← jet_stable B a μ (C x) hx (max (finrank ℂ V) (finrank ℂ W)) (le_max_right _ _)]
++  exact jet_intertwines A B C h a μ _ x
++
++noncomputable def holomorphic (A : End ℂ V) (f : ℂ → ℂ) : End ℂ V :=
++  calculus A (fun μ k => iteratedDeriv k f μ / k.factorial)
++
++theorem holomorphic_naturality (A : End ℂ V) (B : End ℂ W) (C : V →ₗ[ℂ] W)
++    (h : B.comp C=C.comp A) (f : ℂ → ℂ) :
++    C.comp (holomorphic A f)=(holomorphic B f).comp C :=
++  canonical_naturality A B C h _
++
++end KomorebiPaperVI.CanonicalJets
+--- v0.4.0/formalization/lean/KomorebiPaperVI/HolomorphicContours.lean
++++ v0.5.0/formalization/lean/KomorebiPaperVI/HolomorphicContours.lean
+@@ -3,7 +3,8 @@
+ import Mathlib.Analysis.Analytic.Basic
+ 
+ /-! Author: Komorebi P. Holomorphic input supplies integrability on common resolvent circles.
+-Canonical contour existence and independence are separate, unproved obligations. -/
++The canonical finite-dimensional construction and its local Cauchy-circle independence
++are supplied by HolomorphicFinite. -/
+ namespace KomorebiPaperVI.HolomorphicContours
+ open Set Complex
+ open KomorebiPaperVI.ContourNaturality
+--- /dev/null
++++ v0.5.0/formalization/lean/KomorebiPaperVI/HolomorphicFinite.lean
+@@ -0,0 +1,139 @@
++import KomorebiPaperVI.CanonicalJets
++import Mathlib.Analysis.Complex.CauchyIntegral
++import Mathlib.LinearAlgebra.Matrix.ToLin
++
++/-! Author: Komorebi P. Canonical holomorphic functions of finite complex matrices.
++The definition uses the unique finite Taylor-jet action on generalized eigenspaces.
++Cauchy's formula identifies each local coefficient with an actual circle integral. -/
++namespace KomorebiPaperVI.HolomorphicFinite
++open Module Complex Set
++open scoped Topology
++open KomorebiPaperVI.CanonicalJets
++set_option backward.isDefEq.respectTransparency false
++
++section Linear
++variable {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
++
++theorem canonical_unique (A : End ℂ V) (a : ℂ → ℕ → ℂ) (B : End ℂ V)
++    (hB : ∀ μ x,x∈A.maxGenEigenspace μ → B x=jet A a μ (finrank ℂ V) x) :
++    B=calculus A a := by
++  apply DirectSum.decompose_lhom_ext A.maxGenEigenspace
++  intro μ
++  ext x
++  exact (hB μ x x.property).trans (calculus_on_component A a μ x x.property).symm
++
++theorem holomorphic_on_component (A : End ℂ V) (f : ℂ → ℂ) (μ : ℂ)
++    (x : V) (hx : x∈A.maxGenEigenspace μ) :
++    holomorphic A f x=∑ k ∈ Finset.range (finrank ℂ V),
++      (iteratedDeriv k f μ/(k.factorial:ℂ)) • (((A-μ • 1)^k) x) := by
++  rw [holomorphic,calculus_on_component A _ μ x hx]
++  simp [jet]
++
++omit [FiniteDimensional ℂ V] in
++theorem component_mem_spectrum (A : End ℂ V) (μ : ℂ) (x : V)
++    (hx : x∈A.maxGenEigenspace μ) (hne : x≠0) : μ∈spectrum ℂ A := by
++  have hv : A.HasUnifEigenvector μ ⊤ x := ⟨hx,hne⟩
++  exact (hv.hasUnifEigenvalue.lt zero_lt_one).mem_spectrum
++
++theorem calculus_spectrum_congr (A : End ℂ V) (a b : ℂ → ℕ → ℂ)
++    (h : ∀ μ∈spectrum ℂ A,∀ k∈Finset.range (finrank ℂ V),a μ k=b μ k) :
++    calculus A a=calculus A b := by
++  apply DirectSum.decompose_lhom_ext A.maxGenEigenspace
++  intro μ
++  ext x
++  change calculus A a x=calculus A b x
++  by_cases hx : (x:V)=0
++  · simp [hx]
++  rw [calculus_on_component A a μ x x.property,calculus_on_component A b μ x x.property]
++  simp only [jet,LinearMap.sum_apply,LinearMap.smul_apply]
++  apply Finset.sum_congr rfl
++  intro k hk
++  rw [h μ (component_mem_spectrum A μ x x.property hx) k hk]
++
++end Linear
++
++noncomputable def cauchyCoefficient (f : ℂ → ℂ) (μ : ℂ) (r : ℝ) (k : ℕ) : ℂ :=
++  (2*Real.pi*I)⁻¹ * ∮ z in C(μ,r),f z/(z-μ)^(k+1)
++
++theorem cauchyCoefficient_eq (f : ℂ → ℂ) (μ : ℂ) (r : ℝ) (hr : 0 < r)
++    (hf : DifferentiableOn ℂ f (Metric.closedBall μ r)) (k : ℕ) :
++    cauchyCoefficient f μ r k=iteratedDeriv k f μ/(k.factorial:ℂ) := by
++  have hh := hf.circleIntegral_one_div_sub_center_pow_smul hr k
++  simp only [smul_eq_mul,one_div] at hh
++  unfold cauchyCoefficient
++  have he : (fun z => f z/(z-μ)^(k+1))=(fun z => ((z-μ)^(k+1))⁻¹*f z) := by
++    ext z
++    simp [div_eq_mul_inv,mul_comm]
++  rw [he,hh]
++  field_simp
++
++theorem cauchyCoefficient_independent (f : ℂ → ℂ) (μ : ℂ) (r s : ℝ)
++    (hr : 0 < r) (hs : 0 < s)
++    (hf : DifferentiableOn ℂ f (Metric.closedBall μ r))
++    (hg : DifferentiableOn ℂ f (Metric.closedBall μ s)) (k : ℕ) :
++    cauchyCoefficient f μ r k=cauchyCoefficient f μ s k := by
++  rw [cauchyCoefficient_eq f μ r hr hf,cauchyCoefficient_eq f μ s hs hg]
++
++theorem admissible_circle (f : ℂ → ℂ) (U : Set ℂ) (hU : IsOpen U)
++    (hf : AnalyticOnNhd ℂ f U) (μ : ℂ) (hμ : μ∈U) :
++    ∃ r : ℝ,0 < r ∧ Metric.closedBall μ r ⊆ U ∧
++      ∀ k,cauchyCoefficient f μ r k=iteratedDeriv k f μ/(k.factorial:ℂ) := by
++  obtain ⟨r,hr,hsub⟩ := Metric.nhds_basis_closedBall.mem_iff.mp (hU.mem_nhds hμ)
++  exact ⟨r,hr,hsub,fun k => cauchyCoefficient_eq f μ r hr
++    (fun z hz => (hf z (hsub hz)).differentiableAt.differentiableWithinAt) k⟩
++
++section LocalRepresentation
++variable {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V]
++
++theorem canonical_cauchy_representation (A : End ℂ V) (f : ℂ → ℂ) (r : ℂ → ℝ)
++    (hr : ∀ μ∈spectrum ℂ A,0 < r μ)
++    (hf : ∀ μ∈spectrum ℂ A,DifferentiableOn ℂ f (Metric.closedBall μ (r μ))) :
++    calculus A (fun μ k => cauchyCoefficient f μ (r μ) k)=holomorphic A f := by
++  apply calculus_spectrum_congr
++  intro μ hμ k _
++  exact cauchyCoefficient_eq f μ (r μ) (hr μ hμ) (hf μ hμ) k
++
++theorem canonical_contours_exist (A : End ℂ V) (f : ℂ → ℂ) (U : Set ℂ)
++    (hU : IsOpen U) (hf : AnalyticOnNhd ℂ f U) (hA : spectrum ℂ A ⊆ U) :
++    ∃ r : ℂ → ℝ,(∀ μ∈spectrum ℂ A,0 < r μ ∧ Metric.closedBall μ (r μ) ⊆ U) ∧
++      calculus A (fun μ k => cauchyCoefficient f μ (r μ) k)=holomorphic A f := by
++  classical
++  have he (μ : ℂ) : ∃ r : ℝ,0 < r ∧
++      (μ∈spectrum ℂ A → Metric.closedBall μ r ⊆ U) := by
++    by_cases hm : μ∈spectrum ℂ A
++    · obtain ⟨r,hr,hsub,_⟩ := admissible_circle f U hU hf μ (hA hm)
++      exact ⟨r,hr,fun _ => hsub⟩
++    · exact ⟨1,zero_lt_one,fun h => (hm h).elim⟩
++  choose r hr hsub using he
++  refine ⟨r,fun μ hμ => ⟨hr μ,hsub μ hμ⟩,?_⟩
++  apply canonical_cauchy_representation A f r (fun μ _ => hr μ)
++  intro μ hμ z hz
++  exact (hf z (hsub μ hμ hz)).differentiableAt.differentiableWithinAt
++
++theorem canonical_contours_independent (A : End ℂ V) (f : ℂ → ℂ) (r s : ℂ → ℝ)
++    (hr : ∀ μ∈spectrum ℂ A,0 < r μ) (hs : ∀ μ∈spectrum ℂ A,0 < s μ)
++    (hf : ∀ μ∈spectrum ℂ A,DifferentiableOn ℂ f (Metric.closedBall μ (r μ)))
++    (hg : ∀ μ∈spectrum ℂ A,DifferentiableOn ℂ f (Metric.closedBall μ (s μ))) :
++    calculus A (fun μ k => cauchyCoefficient f μ (r μ) k)=
++      calculus A (fun μ k => cauchyCoefficient f μ (s μ) k) := by
++  rw [canonical_cauchy_representation A f r hr hf,canonical_cauchy_representation A f s hs hg]
++
++end LocalRepresentation
++
++section Matrix
++variable {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
++
++noncomputable def matrixFunction (A : Matrix I I ℂ) (f : ℂ → ℂ) : Matrix I I ℂ :=
++  LinearMap.toMatrix' (holomorphic A.toLin' f)
++
++theorem matrix_holomorphic_naturality (A : Matrix I I ℂ) (B : Matrix J J ℂ)
++    (C : Matrix J I ℂ) (h : C*A=B*C) (f : ℂ → ℂ) :
++    C*matrixFunction A f=matrixFunction B f*C := by
++  have hh : B.toLin'.comp C.toLin'=C.toLin'.comp A.toLin' := by
++    rw [← Matrix.toLin'_mul,← Matrix.toLin'_mul,h]
++  have hc := holomorphic_naturality A.toLin' B.toLin' C.toLin' hh f
++  have hm := congrArg LinearMap.toMatrix' hc
++  simpa only [LinearMap.toMatrix'_comp,LinearMap.toMatrix'_toLin',matrixFunction] using hm
++
++end Matrix
++end KomorebiPaperVI.HolomorphicFinite
+--- /dev/null
++++ v0.5.0/formalization/lean/KomorebiPaperVI/MatrixMemory.lean
+@@ -0,0 +1,37 @@
++import KomorebiPaperVI.NonnormalMemory
++import Mathlib.Analysis.CStarAlgebra.Matrix
++
++/-! Author: Komorebi P. The literal rectangular matrix memory/self-energy identity. -/
++namespace KomorebiPaperVI.MatrixMemory
++open Set MeasureTheory
++open KomorebiPaperVI.Semigroups KomorebiPaperVI.ComplexMemory
++open scoped Matrix.Norms.L2Operator
++set_option backward.isDefEq.respectTransparency false
++variable {I J : Type*} [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J]
++
++noncomputable def sandwich (U : Matrix I J ℂ) (V : Matrix J I ℂ) :
++    Matrix J J ℂ →L[ℂ] Matrix I I ℂ :=
++  ( { toFun := fun B => U*B*V
++      map_add' := fun A B => by simp [Matrix.mul_add,Matrix.add_mul]
++      map_smul' := fun c A => by simp [Matrix.mul_smul,Matrix.smul_mul] } :
++    Matrix J J ℂ →ₗ[ℂ] Matrix I I ℂ).toContinuousLinearMap
++
++theorem rectangular_memory_self_energy (A : Matrix J J ℂ)
++    (U : Matrix I J ℂ) (V : Matrix J I ℂ) (z : ℂ)
++    (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) :
++    IntegrableOn (fun t : ℝ => Complex.exp (-z*t) • (U*transfer A t*V)) (Ioi 0) ∧
++    (∫ t : ℝ in Ioi 0,Complex.exp (-z*t) • (U*transfer A t*V))=
++      U*(Matrix.scalar J z-A)⁻¹*V := by
++  have h := NonnormalMemory.spectral_laplace_inverse A z hz
++  have he : (fun t : ℝ => Complex.exp (-z*t) • (U*transfer A t*V))=
++      (fun t => sandwich U V (damped A z t)) := by
++    ext t i j
++    simp [sandwich,damped]
++  rw [he]
++  refine ⟨(sandwich U V).integrable_comp h.1,?_⟩
++  rw [(sandwich U V).integral_comp_comm h.1,h.2.2]
++  change U*Ring.inverse (algebraMap ℂ (Matrix J J ℂ) z-A)*V=_
++  rw [Matrix.nonsing_inv_eq_ringInverse]
++  rfl
++
++end KomorebiPaperVI.MatrixMemory
+--- /dev/null
++++ v0.5.0/formalization/lean/KomorebiPaperVI/NonnormalMemory.lean
+@@ -0,0 +1,158 @@
++import KomorebiPaperVI.ComplexMemory
++import KomorebiPaperVI.CanonicalJets
++import KomorebiPaperVI.ScalarDecay
++import Mathlib.Algebra.Algebra.Bilinear
++
++/-! Author: Komorebi P. Spectral half-plane Laplace inversion for arbitrary finite-dimensional
++complex algebras. Generalized eigenspaces, including nilpotent Jordan parts, supply the decay. -/
++namespace KomorebiPaperVI.NonnormalMemory
++open Module Set Filter MeasureTheory NormedSpace
++open scoped Topology
++open KomorebiPaperVI.Semigroups KomorebiPaperVI.ComplexMemory
++set_option backward.isDefEq.respectTransparency false
++variable {R : Type*} [CStarAlgebra R] [FiniteDimensional ℂ R]
++
++omit [FiniteDimensional ℂ R] in
++theorem left_shift_power (A : R) (μ : ℂ) (k : ℕ) (x : R) :
++    ((LinearMap.mulLeft ℂ A-μ • 1)^k) x=(A-μ • 1)^k*x := by
++  have he : LinearMap.mulLeft ℂ A-μ • 1=LinearMap.mulLeft ℂ (A-μ • 1) := by
++    ext y
++    simp [sub_mul,Algebra.smul_mul_assoc]
++  rw [he,LinearMap.pow_mulLeft,LinearMap.mulLeft_apply]
++
++omit [FiniteDimensional ℂ R] in
++theorem component_spectrum (A : R) (μ : ℂ) (x : R)
++    (hx : x ∈ (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A)) μ) (hne : x ≠ 0) :
++    μ ∈ spectrum ℂ A := by
++  have hv : (Module.End.HasUnifEigenvector (LinearMap.mulLeft ℂ A)) μ ⊤ x := ⟨hx,hne⟩
++  have he : (Module.End.HasEigenvalue (LinearMap.mulLeft ℂ A)) μ :=
++    (Module.End.hasUnifEigenvalue_iff_hasUnifEigenvalue_one (by simp : (0:ℕ∞)<⊤)).mp hv.hasUnifEigenvalue
++  obtain ⟨y,hy⟩ := he.exists_hasEigenvector
++  rw [spectrum.mem_iff]
++  rintro ⟨u,hu⟩
++  have hz : (u:R)*y=0 := by
++    rw [hu,sub_mul,Algebra.algebraMap_eq_smul_one,Algebra.smul_mul_assoc,one_mul]
++    exact sub_eq_zero.mpr hy.apply_eq_smul.symm
++  exact hy.2 ((Units.mul_right_eq_zero u).mp hz)
++
++theorem exp_mul_component (A : R) (μ : ℂ) (x : R)
++    (hx : x ∈ (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A)) μ) (t : ℝ) :
++    transfer A t*x=Complex.exp (μ*t) •
++      ∑ k ∈ Finset.range (finrank ℂ R),((t:ℂ)^k/(k.factorial:ℂ)) • ((A-μ • 1)^k*x) := by
++  classical
++  let : NormedAlgebra ℚ R := NormedAlgebra.restrictScalars ℚ ℝ R
++  let D := A-μ • 1
++  have hkill (k : ℕ) (hk : finrank ℂ R ≤ k) : D^k*x=0 := by
++    rw [← left_shift_power]
++    exact CanonicalJets.power_kills _ μ x hx k hk
++  have hs := (exp_series_hasSum_exp' (𝕂 := ℂ) ((t:ℂ) • D)).mul_right x
++  have he : exp ((t:ℂ) • D)*x=
++      ∑ k ∈ Finset.range (finrank ℂ R),((t:ℂ)^k/(k.factorial:ℂ)) • (D^k*x) := by
++    have hs' : HasSum (fun k : ℕ => ((t:ℂ)^k/(k.factorial:ℂ)) • (D^k*x))
++        (exp ((t:ℂ) • D)*x) := by
++      simpa only [smul_pow,Algebra.smul_mul_assoc,smul_smul,div_eq_mul_inv,mul_comm] using hs
++    exact hs'.unique (hasSum_sum_of_ne_finset_zero (fun k hk => by
++      rw [hkill k (by simpa using hk),smul_zero]))
++  have ht : t • A=algebraMap ℂ R (μ*t)+(t:ℂ) • D := by
++    simp only [D,smul_sub,Algebra.algebraMap_eq_smul_one,smul_smul]
++    rw [RCLike.real_smul_eq_coe_smul (K := ℂ),mul_comm μ (t:ℂ)]
++    abel
++  rw [transfer,ht,exp_add_of_commute (Algebra.commutes _ _),
++    ← algebraMap_exp_comm,← Complex.exp_eq_exp_ℂ,Algebra.algebraMap_eq_smul_one,
++    Algebra.smul_mul_assoc,one_mul,Algebra.smul_mul_assoc,he]
++
++theorem damped_mul_component (A : R) (z μ : ℂ) (x : R)
++    (hx : x ∈ (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A)) μ) (t : ℝ) :
++    damped A z t*x=∑ k ∈ Finset.range (finrank ℂ R),
++      (Complex.exp ((μ-z)*t)*(t:ℂ)^k) • ((k.factorial:ℂ)⁻¹ • ((A-μ • 1)^k*x)) := by
++  rw [damped,Algebra.smul_mul_assoc,exp_mul_component A μ x hx,
++    smul_smul,Finset.smul_sum]
++  apply Finset.sum_congr rfl
++  intro k _
++  have he : -z*(t:ℂ)+μ*t=(μ-z)*t := by ring
++  simp only [smul_smul,div_eq_mul_inv]
++  rw [← Complex.exp_add,he,mul_assoc]
++
++theorem component_decay (A : R) (z : ℂ)
++    (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) (μ : ℂ) (x : R)
++    (hx : x ∈ (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A)) μ) :
++    IntegrableOn (fun t => damped A z t*x) (Ioi 0) ∧
++    Tendsto (fun t => damped A z t*x) atTop (𝓝 0) := by
++  classical
++  by_cases hne : x=0
++  · subst x
++    simp
++  have hμ : (μ-z).re < 0 := by
++    have hh := hz μ (component_spectrum A μ x hx hne)
++    simp only [Complex.sub_re]
++    linarith
++  have he : (fun t => damped A z t*x)=(fun t : ℝ => ∑ k ∈ Finset.range (finrank ℂ R),
++      (Complex.exp ((μ-z)*t)*(t:ℂ)^k) • ((k.factorial:ℂ)⁻¹ • ((A-μ • 1)^k*x))) :=
++    funext (damped_mul_component A z μ x hx)
++  rw [he]
++  constructor
++  · exact integrable_finsetSum _ (fun k _ => (ScalarDecay.exp_pow_integrable _ hμ k).smul_const _)
++  · simpa using tendsto_finsetSum (Finset.range (finrank ℂ R))
++      (fun k _ => (ScalarDecay.exp_pow_tendsto_zero _ hμ k).smul_const
++        ((k.factorial:ℂ)⁻¹ • ((A-μ • 1)^k*x)))
++
++theorem spectral_decay (A : R) (z : ℂ) (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) :
++    IntegrableOn (damped A z) (Ioi 0) ∧ Tendsto (damped A z) atTop (𝓝 0) := by
++  have h (x : R) : IntegrableOn (fun t => damped A z t*x) (Ioi 0) ∧
++      Tendsto (fun t => damped A z t*x) atTop (𝓝 0) := by
++    apply Submodule.iSup_induction (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A))
++      (x := x) (motive := fun x => IntegrableOn (fun t : ℝ => damped A z t*x) (Ioi 0) volume ∧
++        Tendsto (fun t => damped A z t*x) atTop (𝓝 0))
++      (by rw [Module.End.iSup_maxGenEigenspace_eq_top]; trivial)
++    · exact component_decay A z hz
++    · simp
++    · intro x y hx hy
++      simpa only [Pi.add_def,mul_add,add_zero] using And.intro (hx.1.add hy.1) (hx.2.add hy.2)
++  simpa using h 1
++
++
++theorem spectral_laplace_inverse (A : R) (z : ℂ)
++    (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) :
++    IntegrableOn (damped A z) (Ioi 0) ∧ IsUnit (algebraMap ℂ R z-A) ∧
++      (∫ t in Ioi 0,damped A z t)=Ring.inverse (algebraMap ℂ R z-A) := by
++  have hs := spectral_decay A z hz
++  let B := A-algebraMap ℂ R z
++  have he : damped A z=transfer B := funext (damped_eq_shifted A z)
++  rw [he] at hs ⊢
++  have hl := integral_Ioi_of_hasDerivAt_of_tendsto'
++    (fun t (_ : t∈Ici (0:ℝ)) => transfer_derivative_left B t)
++    ((ContinuousLinearMap.mul ℝ R B).integrable_comp hs.1) hs.2
++  have hr := integral_Ioi_of_hasDerivAt_of_tendsto'
++    (fun t (_ : t∈Ici (0:ℝ)) => transfer_derivative_right B t)
++    (((ContinuousLinearMap.mul ℝ R).flip B).integrable_comp hs.1) hs.2
++  rw [integral_const_mul_of_integrable hs.1,transfer_zero,zero_sub] at hl
++  rw [integral_mul_const_of_integrable hs.1,transfer_zero,zero_sub] at hr
++  have hn : algebraMap ℂ R z-A= -B := by dsimp [B]; abel
++  have hl' : (algebraMap ℂ R z-A)*(∫ t in Ioi 0,transfer B t)=1 := by
++    rw [hn,neg_mul,hl,neg_neg]
++  have hr' : (∫ t in Ioi 0,transfer B t)*(algebraMap ℂ R z-A)=1 := by
++    rw [hn,mul_neg,hr,neg_neg]
++  have hu : IsUnit (algebraMap ℂ R z-A) := ⟨⟨_,_,hl',hr'⟩,rfl⟩
++  refine ⟨hs.1,hu,?_⟩
++  calc
++    _ = Ring.inverse (algebraMap ℂ R z-A)*((algebraMap ℂ R z-A)*(∫ t in Ioi 0,transfer B t)) :=
++      (Ring.inverse_mul_cancel_left _ _ hu).symm
++    _ = _ := by rw [hl',mul_one]
++
++theorem nonnormal_self_energy (A U V : R) (z : ℂ)
++    (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) :
++    IntegrableOn (fun t : ℝ => Complex.exp (-z*t) • (U*transfer A t*V)) (Ioi 0) ∧
++    (∫ t : ℝ in Ioi 0,Complex.exp (-z*t) • (U*transfer A t*V))=
++      U*Ring.inverse (algebraMap ℂ R z-A)*V := by
++  have h := spectral_laplace_inverse A z hz
++  have he : (fun t : ℝ => Complex.exp (-z*t) • (U*transfer A t*V))=
++      (fun t => U*damped A z t*V) := by
++    ext t
++    simp [damped,Algebra.mul_smul_comm,Algebra.smul_mul_assoc]
++  rw [he]
++  have hu : IntegrableOn (fun t => U*damped A z t) (Ioi 0) :=
++    (ContinuousLinearMap.mul ℝ R U).integrable_comp h.1
++  refine ⟨((ContinuousLinearMap.mul ℝ R).flip V).integrable_comp hu,?_⟩
++  rw [integral_mul_const_of_integrable hu,integral_const_mul_of_integrable h.1,h.2.2]
++
++end KomorebiPaperVI.NonnormalMemory
+--- /dev/null
++++ v0.5.0/formalization/lean/KomorebiPaperVI/ScalarDecay.lean
+@@ -0,0 +1,34 @@
++import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
++import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
++import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
++
++/-! Author: Komorebi P. Complex exponential-polynomial decay and actual integrability. -/
++namespace KomorebiPaperVI.ScalarDecay
++open Set Filter MeasureTheory
++open scoped Topology
++set_option backward.isDefEq.respectTransparency false
++
++theorem norm_exp_pow (a : ℂ) (k : ℕ) (t : ℝ) (ht : 0 ≤ t) :
++    ‖Complex.exp (a*t)*(t:ℂ)^k‖=t^k*Real.exp (a.re*t) := by
++  simp [Complex.norm_exp,Complex.mul_re,Complex.norm_real,Real.norm_eq_abs,
++    abs_of_nonneg ht,mul_comm]
++
++theorem exp_pow_integrable (a : ℂ) (ha : a.re < 0) (k : ℕ) :
++    IntegrableOn (fun t : ℝ => Complex.exp (a*t)*(t:ℂ)^k) (Ioi 0) := by
++  have hi := integrableOn_rpow_mul_exp_neg_mul_rpow
++    (s := (k:ℝ)) (p := (1:ℝ)) (b := -a.re) (by linarith [Nat.cast_nonneg (α := ℝ) k]) zero_lt_one (by linarith)
++  simp only [Real.rpow_natCast,Real.rpow_one,neg_neg] at hi
++  apply hi.mono' (by fun_prop)
++  filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
++  rw [norm_exp_pow a k t ht.le]
++
++theorem exp_pow_tendsto_zero (a : ℂ) (ha : a.re < 0) (k : ℕ) :
++    Tendsto (fun t : ℝ => Complex.exp (a*t)*(t:ℂ)^k) atTop (𝓝 0) := by
++  apply tendsto_zero_iff_norm_tendsto_zero.mpr
++  have hh := tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero (k:ℝ) (-a.re) (by linarith)
++  simp only [Real.rpow_natCast,neg_neg] at hh
++  apply hh.congr'
++  filter_upwards [eventually_ge_atTop (0:ℝ)] with t ht
++  exact (norm_exp_pow a k t ht).symm
++
++end KomorebiPaperVI.ScalarDecay
+--- v0.4.0/formalization/lean/KomorebiPaperVI.lean
++++ v0.5.0/formalization/lean/KomorebiPaperVI.lean
+@@ -5,6 +5,7 @@
+ import KomorebiPaperVI.BayesianPartitions
+ import KomorebiPaperVI.BayesianTowers
+ import KomorebiPaperVI.BetaNormalization
++import KomorebiPaperVI.CanonicalJets
+ import KomorebiPaperVI.Coarsening
+ import KomorebiPaperVI.ComplexMemory
+ import KomorebiPaperVI.ComplexSemigroups
+@@ -21,11 +22,14 @@
+ import KomorebiPaperVI.FractionalSemigroup
+ import KomorebiPaperVI.FractionalTowers
+ import KomorebiPaperVI.HolomorphicContours
++import KomorebiPaperVI.HolomorphicFinite
+ import KomorebiPaperVI.InformationLoss
+ import KomorebiPaperVI.LowModeConvergence
+ import KomorebiPaperVI.MarkovSemigroup
+ import KomorebiPaperVI.MartingalePackets
++import KomorebiPaperVI.MatrixMemory
+ import KomorebiPaperVI.MemoryLaplace
++import KomorebiPaperVI.NonnormalMemory
+ import KomorebiPaperVI.NormalizedFractional
+ import KomorebiPaperVI.OperatorBounds
+ import KomorebiPaperVI.PoissonKernel
+@@ -36,6 +40,7 @@
+ import KomorebiPaperVI.RectangularSemigroup
+ import KomorebiPaperVI.RectangularTowers
+ import KomorebiPaperVI.ReducingPackets
++import KomorebiPaperVI.ScalarDecay
+ import KomorebiPaperVI.SchurFeshbach
+ import KomorebiPaperVI.Semigroups
+ import KomorebiPaperVI.SpectralPackets
+--- v0.4.0/formalization/lean/lakefile.toml
++++ v0.5.0/formalization/lean/lakefile.toml
+@@ -1,5 +1,5 @@
+ name = "KomorebiPaperVI"
+-version = "0.4.0"
++version = "0.5.0"
+ defaultTargets = ["KomorebiPaperVI"]
+ moreLeanArgs = ["-DwarningAsError=true"]
+ 

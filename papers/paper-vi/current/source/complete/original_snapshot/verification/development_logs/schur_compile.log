@@ -1,0 +1,46 @@
+KomorebiPaperVI/SchurFeshbach.lean:30:82: error: Application type mismatch: The argument
+  he
+has type
+  (scalar (P ⊕ Q)) z - fromBlocks App Apq Aqp Aqq = fromBlocks ((scalar P) z - App) (-Apq) (-Aqp) ((scalar Q) z - Aqq)
+but is expected to have type
+  fromBlocks A (-Apq) (-Aqp) D = ?m.112
+in the application
+  Invertible.copy ?m.114 (fromBlocks A (-Apq) (-Aqp) D) he
+KomorebiPaperVI/SchurFeshbach.lean:36:13: error(lean.unknownIdentifier): Unknown constant `Matrix.fromBlocks_submatrix_inl_inl`
+KomorebiPaperVI/SchurFeshbach.lean:26:55: error: unsolved goals
+P : Type u_1
+Q : Type u_2
+inst✝⁵ : Fintype P
+inst✝⁴ : Fintype Q
+inst✝³ : DecidableEq P
+inst✝² : DecidableEq Q
+App : Matrix P P ℂ
+Apq : Matrix P Q ℂ
+Aqp : Matrix Q P ℂ
+Aqq : Matrix Q Q ℂ
+z : ℂ
+inst✝¹ : Invertible ((scalar Q) z - Aqq)
+inst✝ : Invertible ((scalar (P ⊕ Q)) z - fromBlocks App Apq Aqp Aqq)
+D : Matrix Q Q ℂ := (scalar Q) z - Aqq
+A : Matrix P P ℂ := (scalar P) z - App
+he :
+  (scalar (P ⊕ Q)) z - fromBlocks App Apq Aqp Aqq = fromBlocks ((scalar P) z - App) (-Apq) (-Aqp) ((scalar Q) z - Aqq)
+this✝ : Invertible (fromBlocks A (-Apq) (-Aqp) D) := inst✝.copy (fromBlocks A (-Apq) (-Aqp) D) ⋯
+this : Invertible (A - -Apq * ⅟D * -Aqp) := A.invertibleOfFromBlocks₂₂Invertible (-Apq) (-Aqp) D
+hinv :
+  ⅟(fromBlocks A (-Apq) (-Aqp) D) =
+    fromBlocks (⅟(A - -Apq * ⅟D * -Aqp)) (-(⅟(A - -Apq * ⅟D * -Aqp) * -Apq * ⅟D))
+      (-(⅟D * -Aqp * ⅟(A - -Apq * ⅟D * -Aqp))) (⅟D + ⅟D * -Aqp * ⅟(A - -Apq * ⅟D * -Aqp) * -Apq * ⅟D)
+hs : A - -Apq * ⅟D * -Aqp = schur App Apq Aqp Aqq z
+⊢ (fromBlocks (A - -Apq * D⁻¹ * -Aqp)⁻¹ (-((A - -Apq * D⁻¹ * -Aqp)⁻¹ * -Apq * D⁻¹))
+          (-(D⁻¹ * -Aqp * (A - -Apq * D⁻¹ * -Aqp)⁻¹))
+          (D⁻¹ + D⁻¹ * -Aqp * (A - -Apq * D⁻¹ * -Aqp)⁻¹ * -Apq * D⁻¹)).submatrix
+      Sum.inl Sum.inl =
+    (schur App Apq Aqp Aqq z)⁻¹
+KomorebiPaperVI/SchurFeshbach.lean:36:49: error: This simp argument is unused:
+  hs
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Matrix.fromBlocks_submatrix_inl_inl, Matrix.invOf_eq_nonsing_inv]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

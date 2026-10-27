@@ -1,0 +1,1 @@
+Development attempts and intermediate module builds for the third block. Some failed before the final repairs; some passed individually. The authoritative whole-project results are ../../lean_build.log, ../../lean_axiom_audit.log and ../../verification_status.json.

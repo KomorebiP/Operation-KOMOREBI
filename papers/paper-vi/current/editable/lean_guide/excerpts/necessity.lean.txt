@@ -1,0 +1,19 @@
+theorem refinement_iff (f : I → A) (hf : Function.Surjective f) [Nontrivial A]
+    (l : I → ℝ) (k : A → ℝ) (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a) :
+    AllPriorCommutes f l k ↔ ∃ c : ℝ, 0 < c ∧ ∀ i, l i=c*k (f i) := by
+  constructor
+  · intro h
+    obtain ⟨a⟩ := (inferInstance : Nonempty A)
+    obtain ⟨i,hi⟩ := hf a
+    refine ⟨l i/k (f i), div_pos (hl i) (hk (f i)), ?_⟩
+    intro j
+    have he := all_packet_ratio f hf l k hl hk h j i
+    apply (eq_div_iff (ne_of_gt (hk (f i)))).mpr at he
+    calc
+      l j = (l i*k (f j))/k (f i) := he
+      _ = _ := by ring
+  · rintro ⟨c,hc,he⟩ p hp
+    have heq : l=fun i => c*k (f i) := funext he
+    rw [heq]
+    exact scaled_blockwise_sufficiency f p k c hc.ne'
+      (positive_evidence p (k ∘ f) hp (fun i => hk (f i))).ne'

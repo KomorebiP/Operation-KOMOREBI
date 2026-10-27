@@ -1,0 +1,16 @@
+theorem canonical_contours_exist (A : End ℂ V) (f : ℂ → ℂ) (U : Set ℂ)
+    (hU : IsOpen U) (hf : AnalyticOnNhd ℂ f U) (hA : spectrum ℂ A ⊆ U) :
+    ∃ r : ℂ → ℝ,(∀ μ∈spectrum ℂ A,0 < r μ ∧ Metric.closedBall μ (r μ) ⊆ U) ∧
+      calculus A (fun μ k => cauchyCoefficient f μ (r μ) k)=holomorphic A f := by
+  classical
+  have he (μ : ℂ) : ∃ r : ℝ,0 < r ∧
+      (μ∈spectrum ℂ A → Metric.closedBall μ r ⊆ U) := by
+    by_cases hm : μ∈spectrum ℂ A
+    · obtain ⟨r,hr,hsub,_⟩ := admissible_circle f U hU hf μ (hA hm)
+      exact ⟨r,hr,fun _ => hsub⟩
+    · exact ⟨1,zero_lt_one,fun h => (hm h).elim⟩
+  choose r hr hsub using he
+  refine ⟨r,fun μ hμ => ⟨hr μ,hsub μ hμ⟩,?_⟩
+  apply canonical_cauchy_representation A f r (fun μ _ => hr μ)
+  intro μ hμ z hz
+  exact (hf z (hsub μ hμ hz)).differentiableAt.differentiableWithinAt

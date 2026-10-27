@@ -1,0 +1,68 @@
+✖ [3490/3492] Building KomorebiPaperVI.ContourNaturality (9.4s)
+trace: .> LEAN_PATH=/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_V_v0.2.0_Second_Block/formalization/lean/.lake/packages/mathlib/.lake/build/lib/lean:/workspace/scratch/fe4ae932f33b/work/PRSC_VI_v0.3.0_Checked_Third_Block/formalization/lean/.lake/build/lib/lean /workspace/scratch/fe4ae932f33b/runtime/lean-4.34.0-rc2-linux/bin/lean -DwarningAsError=true /workspace/scratch/fe4ae932f33b/work/PRSC_VI_v0.3.0_Checked_Third_Block/formalization/lean/KomorebiPaperVI/ContourNaturality.lean -o /workspace/scratch/fe4ae932f33b/work/PRSC_VI_v0.3.0_Checked_Third_Block/formalization/lean/.lake/build/lib/lean/KomorebiPaperVI/ContourNaturality.olean -i /workspace/scratch/fe4ae932f33b/work/PRSC_VI_v0.3.0_Checked_Third_Block/formalization/lean/.lake/build/lib/lean/KomorebiPaperVI/ContourNaturality.ilean -c /workspace/scratch/fe4ae932f33b/work/PRSC_VI_v0.3.0_Checked_Third_Block/formalization/lean/.lake/build/ir/KomorebiPaperVI/ContourNaturality.c --setup /workspace/scratch/fe4ae932f33b/work/PRSC_VI_v0.3.0_Checked_Third_Block/formalization/lean/.lake/build/ir/KomorebiPaperVI/ContourNaturality.setup.json --json
+error: KomorebiPaperVI/ContourNaturality.lean:25:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∮ (z : ℂ) in C(c, r), ∑ i_1 ∈ ?m.36, (C i i_1 • fun z => F z i_1 j) z
+in the target expression
+  ∑ x, C i x * ∮ (z : ℂ) in C(c, r), F z x j = ∮ (z : ℂ) in C(c, r), ∑ j_1, C i j_1 * F z j_1 j
+
+I : Type u_1
+J : Type u_2
+K : Type u_3
+inst✝² : Fintype I
+inst✝¹ : Fintype J
+inst✝ : Fintype K
+C : Matrix K I ℂ
+F : ℂ → Matrix I J ℂ
+c : ℂ
+r : ℝ
+hF : ∀ (i : I) (j : J), CircleIntegrable (fun z => F z i j) c r
+i : K
+j : J
+⊢ ∑ x, C i x * ∮ (z : ℂ) in C(c, r), F z x j = ∮ (z : ℂ) in C(c, r), ∑ j_1, C i j_1 * F z j_1 j
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    C i
+error: KomorebiPaperVI/ContourNaturality.lean:35:4: Type mismatch: After simplification, term
+  CircleIntegrable.const_smul (hF i k)
+ has type
+  @CircleIntegrable ℂ NonUnitalNormedRing.toNormedAddCommGroup (C k j • fun z => F z i k) c r
+but is expected to have type
+  @CircleIntegrable ℂ instNormedAddCommGroup (fun z => C k j * F z i k) c r
+error: KomorebiPaperVI/ContourNaturality.lean:65:6: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  C * circleMatrix (fun z i j => f z * resolvent A z i j) (c k) (r k)
+in the target expression
+  C * circleMatrix (fun z => f z • resolvent A z) (c k) (r k) =
+    circleMatrix (fun z => f z • resolvent B z) (c k) (r k) * C
+
+case e_a
+I : Type u_1
+J : Type u_2
+K : Type u_3
+inst✝⁴ : Fintype I
+inst✝³ : Fintype J
+inst✝² : Fintype K
+inst✝¹ : DecidableEq I
+inst✝ : DecidableEq J
+C : Matrix J I ℂ
+A : Matrix I I ℂ
+B : Matrix J J ℂ
+h : C * A = B * C
+f : ℂ → ℂ
+c : K → ℂ
+r : K → ℝ
+hr : ∀ (k : K), 0 ≤ r k
+hA : ∀ (k : K), ∀ z ∈ Metric.sphere (c k) (r k), IsUnit ((Matrix.scalar I) z - A)
+hB : ∀ (k : K), ∀ z ∈ Metric.sphere (c k) (r k), IsUnit ((Matrix.scalar J) z - B)
+hiA : ∀ (k : K) (i j : I), CircleIntegrable (fun z => f z * resolvent A z i j) (c k) (r k)
+hiB : ∀ (k : K) (i j : J), CircleIntegrable (fun z => f z * resolvent B z i j) (c k) (r k)
+k : K
+a✝ : k ∈ Finset.univ
+⊢ C * circleMatrix (fun z => f z • resolvent A z) (c k) (r k) =
+    circleMatrix (fun z => f z • resolvent B z) (c k) (r k) * C
+✔ [3491/3492] Built KomorebiPaperVI.MemoryLaplace (9.8s)
+✔ [3492/3492] Built KomorebiPaperVI.Survival (11s)
+Some required targets logged failures:
+- KomorebiPaperVI.ContourNaturality
+error: build failed

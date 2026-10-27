@@ -1,0 +1,25 @@
+theorem exp_mul_component (A : R) (μ : ℂ) (x : R)
+    (hx : x ∈ (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A)) μ) (t : ℝ) :
+    transfer A t*x=Complex.exp (μ*t) •
+      ∑ k ∈ Finset.range (finrank ℂ R),((t:ℂ)^k/(k.factorial:ℂ)) • ((A-μ • 1)^k*x) := by
+  classical
+  let : NormedAlgebra ℚ R := NormedAlgebra.restrictScalars ℚ ℝ R
+  let D := A-μ • 1
+  have hkill (k : ℕ) (hk : finrank ℂ R ≤ k) : D^k*x=0 := by
+    rw [← left_shift_power]
+    exact CanonicalJets.power_kills _ μ x hx k hk
+  have hs := (exp_series_hasSum_exp' (\CodeSymbol{1D542} := ℂ) ((t:ℂ) • D)).mul_right x
+  have he : exp ((t:ℂ) • D)*x=
+      ∑ k ∈ Finset.range (finrank ℂ R),((t:ℂ)^k/(k.factorial:ℂ)) • (D^k*x) := by
+    have hs' : HasSum (fun k : ℕ => ((t:ℂ)^k/(k.factorial:ℂ)) • (D^k*x))
+        (exp ((t:ℂ) • D)*x) := by
+      simpa only [smul_pow,Algebra.smul_mul_assoc,smul_smul,div_eq_mul_inv,mul_comm] using hs
+    exact hs'.unique (hasSum_sum_of_ne_finset_zero (fun k hk => by
+      rw [hkill k (by simpa using hk),smul_zero]))
+  have ht : t • A=algebraMap ℂ R (μ*t)+(t:ℂ) • D := by
+    simp only [D,smul_sub,Algebra.algebraMap_eq_smul_one,smul_smul]
+    rw [RCLike.real_smul_eq_coe_smul (K := ℂ),mul_comm μ (t:ℂ)]
+    abel
+  rw [transfer,ht,exp_add_of_commute (Algebra.commutes _ _),
+    ← algebraMap_exp_comm,← Complex.exp_eq_exp_ℂ,Algebra.algebraMap_eq_smul_one,
+    Algebra.smul_mul_assoc,one_mul,Algebra.smul_mul_assoc,he]

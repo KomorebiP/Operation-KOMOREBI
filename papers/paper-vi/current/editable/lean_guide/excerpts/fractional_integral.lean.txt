@@ -1,0 +1,14 @@
+theorem literal_resolvent_integral (p : ℝ≥0) (hp : (p:ℝ)∈Ioo 0 1)
+    (A : E →L[ℂ] E) (B : F →L[ℂ] F) (C : E →L[ℂ] F) (hA : 0 ≤ A) (hB : 0 ≤ B) :
+    let f := fun t : ℝ => t^(p:ℝ) • (Ring.inverse (algebraMap ℝ (F →L[ℂ] F) t+B)).comp
+      ((defect A B C).comp (Ring.inverse (algebraMap ℝ (E →L[ℂ] E) t+A)))
+    IntegrableOn f (Ioi 0) ∧ fractionalDefect A B C p=coefficient p • ∫ t in Ioi 0,f t := by
+  dsimp only
+  have he : (fun t : ℝ => t^(p:ℝ) • (Ring.inverse (algebraMap ℝ (F →L[ℂ] F) t+B)).comp
+      ((defect A B C).comp (Ring.inverse (algebraMap ℝ (E →L[ℂ] E) t+A))))
+      =ᵐ[volume.restrict (Ioi 0)] integrand A B C p := by
+    filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
+    rw [literal_integrand p t hp ht A B C hA hB,
+      PositiveResolvent.resolvent_inverse A hA t ht,PositiveResolvent.resolvent_inverse B hB t ht]
+  have h := normalized_integral p hp A B C hA hB
+  exact ⟨h.1.congr he.symm,h.2.trans (congrArg (coefficient p • ·) (integral_congr_ae he.symm))⟩

@@ -1,0 +1,15 @@
+theorem likelihood_perturbation_bound (p l k : I → ℝ)
+    (hp : ∀ i, 0 ≤ p i) (_hl : ∀ i, 0 ≤ l i) (hk : ∀ i, 0 ≤ k i)
+    (hZl : 0 < evidence p l) (hZk : 0 < evidence p k) :
+    l1 (fun i => update p l i-update p k i) ≤
+      2*(∑ i, |l i-k i| *p i)/min (evidence p l) (evidence p k) := by
+  have he : l1 (fun i => l i*p i-k i*p i) = ∑ i, |l i-k i| *p i := by
+    simp only [l1, ← sub_mul, abs_mul, abs_of_nonneg (hp _)]
+  have h := normalized_l1_bound_left (fun i => l i*p i) (fun i => k i*p i)
+    (fun i => mul_nonneg (hk i) (hp i)) hZl hZk
+  change l1 (fun i => update p l i-update p k i) ≤
+    2*l1 (fun i => l i*p i-k i*p i)/evidence p l at h
+  rw [he] at h
+  exact h.trans (div_le_div_of_nonneg_left
+    (mul_nonneg (by norm_num) (Finset.sum_nonneg (fun i _ => mul_nonneg (abs_nonneg _) (hp i))))
+    (lt_min hZl hZk) (min_le_left _ _))

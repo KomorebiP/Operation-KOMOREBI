@@ -1,0 +1,10 @@
+theorem duhamel_rectangular (A : E →L[ℝ] E) (B : F →L[ℝ] F)
+    (C : E →L[ℝ] F) (t : ℝ) :
+    C.comp (transfer A t)-(transfer B t).comp C =
+      ∫ r in 0..t, (transfer B (t-r)).comp ((C.comp A-B.comp C).comp (transfer A r)) := by
+  have hc : Continuous (fun r => (transfer B (t-r)).comp
+      ((C.comp A-B.comp C).comp (transfer A r))) := by
+    fun_prop
+  have h := intervalIntegral.integral_eq_sub_of_hasDerivAt
+    (fun r _ => duhamel_integrand_derivative A B C t r) (hc.intervalIntegrable 0 t)
+  simpa [transfer_zero, ContinuousLinearMap.one_def] using h.symm

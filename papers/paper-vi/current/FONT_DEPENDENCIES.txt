@@ -1,0 +1,32 @@
+PAPER VI — EXTERNAL FONT DEPENDENCIES
+
+No font binaries are bundled. Font license notices remain as provenance.
+Install the required fonts through your operating system or TeX distribution
+before building. The builders do not install or download dependencies and do
+not silently substitute a different font. XeLaTeX, kpsewhich and BibTeX must
+be available on PATH; BibTeX is invoked only when the source requests it.
+
+Every reader requires these exact font files, resolved with kpsewhich:
+P052-Roman.otf, P052-Bold.otf, P052-Italic.otf, P052-BoldItalic.otf
+NimbusSans-Regular.otf, NimbusSans-Bold.otf, NimbusSans-Italic.otf,
+NimbusSans-BoldItalic.otf
+lmmono10-regular.otf, lmmono10-italic.otf, latinmodern-math.otf
+
+The Lean guide additionally requires:
+DejaVuSansMono.ttf, DejaVuSansMono-Bold.ttf, DejaVuSansMono-Oblique.ttf,
+DejaVuSansMono-BoldOblique.ttf
+
+These are the URW P052/Nimbus Sans, Latin Modern Mono/Math, and DejaVu Sans
+Mono families. Each source builder resolves and hashes the exact files,
+then copies them only into fonts/ inside its private temporary build tree.
+The original relative TeX font paths are retained. Temporary font copies are
+removed when the build ends. No font binaries are written to this release
+or copied to the output directory. FONT_DEPENDENCIES.json records the actual
+resolved filenames, locations, sizes and SHA-256 hashes for each successful
+output. This record describes the executed environment, not a cross-platform
+guarantee.
+
+Optional Lean documentation generation through assemble.py also resolves the
+installed DejaVu Sans Mono file when choosing reversible glyph escapes. It
+does not copy font files or execute Lean. It regenerates documentation and
+should be run only when that operation is intended.

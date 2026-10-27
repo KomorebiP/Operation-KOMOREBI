@@ -1,0 +1,8 @@
+theorem matrix_holomorphic_naturality (A : Matrix I I ℂ) (B : Matrix J J ℂ)
+    (C : Matrix J I ℂ) (h : C*A=B*C) (f : ℂ → ℂ) :
+    C*matrixFunction A f=matrixFunction B f*C := by
+  have hh : B.toLin'.comp C.toLin'=C.toLin'.comp A.toLin' := by
+    rw [← Matrix.toLin'_mul,← Matrix.toLin'_mul,h]
+  have hc := holomorphic_naturality A.toLin' B.toLin' C.toLin' hh f
+  have hm := congrArg LinearMap.toMatrix' hc
+  simpa only [LinearMap.toMatrix'_comp,LinearMap.toMatrix'_toLin',matrixFunction] using hm

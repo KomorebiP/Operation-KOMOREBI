@@ -1,0 +1,10 @@
+theorem generator_gap_bound (A : E →L[ℂ] E) (B : F →L[ℂ] F) (C : E →L[ℂ] F)
+    (hA : 0 ≤ A) (hB : 0 ≤ B) (p : ℝ≥0) (hp : (p:ℝ)∈Ioo 0 1) (t m : ℝ) (ht : 0 ≤ t) (hm : 0 < m)
+    (hgA : algebraMap ℝ (E →L[ℂ] E) m ≤ A) (hgB : algebraMap ℝ (F →L[ℂ] F) m ≤ B) :
+    ‖timeDefect A B C p t‖ ≤ t*Real.exp (-t*m^(p:ℝ))*(p:ℝ)*m^((p:ℝ)-1)*‖defect A B C‖ := by
+  calc
+    _ ≤ t*Real.exp (-t*m^(p:ℝ))*‖fractionalDefect A B C p‖ :=
+      fractional_gap_bound A B C hA hB p hp.1 t m ht hm.le hgA hgB
+    _ ≤ t*Real.exp (-t*m^(p:ℝ))*((p:ℝ)*m^((p:ℝ)-1)*‖defect A B C‖) :=
+      mul_le_mul_of_nonneg_left (common_gap_estimate p hp m hm A B C hA hB hgA hgB) (by positivity)
+    _ = _ := by ring

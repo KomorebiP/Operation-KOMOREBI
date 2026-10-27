@@ -1,0 +1,48 @@
+\clearpage\section{Reproduction and evidence review}
+\label{sec:reproduction}
+\subsection{The producing environment is pinned}
+The production source declares Lean \code{leanprover/lean4:v4.34.0-rc2}, project release \code{0.5.0}, and Mathlib revision
+\begin{center}\code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+The nine exact package revisions are listed in Appendix~\ref{sec:imports}. The Lake configuration disables both automatic and relaxed automatic implicits and treats warnings as errors. The original verifier checks the expected file set, source hashes, imports, theorem inventory, and kernel-audit target coverage before attempting the compiler gates.
+
+The producing September environment used a small runtime self-location adapter because a particular process-path lookup was restricted. The preserved \code{verification/runtime/RUNTIME.md} explains that adapter and its positive and negative controls. The compiler, kernel, and dependency sources were recorded as unmodified. The adapter is not required by a normal installation, and compiler binaries and dependency caches are not included in the source archive.
+
+\subsection{The inherited kernel evidence}
+The historical record has timestamp \code{2026-09-06T06:00:38.447662+00:00}. It records a successful production build, 341 explicit theorem targets, and 782 inspected namespace declarations. The permitted axiom set is
+\[
+\{\texttt{propext},\ \texttt{Classical.choice},\ \texttt{Quot.sound}\}.
+\]
+These are standard foundational axioms used by the project. The source verifier rejects placeholder and unregistered unsafe mechanisms, and the namespace audit checks the resulting declarations. A source-token scan alone cannot establish these semantic properties; it is one gate preceding actual elaboration and kernel checking.
+
+The complete historical files remain under the preserved original snapshot: \code{verification/verification_status.json}, \code{verification/lean_build.log}, \code{verification/lean_axiom_audit.log}, and \code{verification/source_contract.json}. The guide's provenance JSON records their hashes, so the documentation is tied to a specific evidence revision.
+
+\subsection{Fresh checks for the October 5 edition}
+The current available-gates run took place on October 6 UTC, during the October 5 America/Chicago edition date. It preserved and verified 739 recovered source files. The static source contract reconciled all 33 scoped records, 341 theorem declarations, and 47 modules. Six original verifier controls passed.
+
+Because \code{pytest} was unavailable, the current run executed 37 unchanged companion test functions directly and separately implemented 17 boundary cases. These are reported as two distinct count units, not as a fresh run of the historical 54-case pytest suite. The 79 regenerated numerical fields matched the saved comparison data. Three broader numerical suites also passed their own mixed finite-comparison and source-assertion tallies; those tallies overlap and are not added into an independent-result count. Independent rational witnesses passed 182 checks and four false controls.
+
+Lean and Lake were unavailable, so no current compiler build or namespace axiom audit was run. SymPy was also unavailable, so the original 204 symbolic visual assertions and 11 controls were not rerun. The new rational witnesses have only their recorded finite scope. Historical visual results remain dated inherited evidence. The current report lists every skipped gate and its reason.
+
+The guide's own assembly checks that all source-contract hashes agree, all ledger targets resolve, all 341 inherited axiom records correspond to the target set, and every displayed raw excerpt is copied from its recorded source span. PDF review checks page layout, extraction of every target name, and glyph rendering. None of these documentation checks claims a new mathematical theorem or a new kernel run.
+
+\subsection{Commands on an already provisioned system}
+Use a disposable copy of the original snapshot when reproducing the original verifier: it writes new reports beside its input. Do not overwrite the preserved historical evidence. On a system that already has the declared toolchain, pinned dependencies, and documented Python packages, run from that copy:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+python3 verification/verify.py
+\end{Verbatim}
+This is the full original gate, including Python tests, verifier controls, the Lean build, dependency revision and cleanliness checks, and the namespace axiom audit. The \code{--static-only} option still dispatches Python tests and controls; it is not a guarantee of a dependency-free run. The current edition's portable verification scripts separately document the available subset used here.
+
+To inspect the production theorem namespace in an already provisioned Lean checkout, the original underlying commands are:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+lake build KomorebiPaperVI
+lake env lean -DwarningAsError=true KernelAudit.lean
+\end{Verbatim}
+Running those commands successfully against a different toolchain or different dependency revision would create a new evidence revision. Preserve its logs and provenance rather than relabeling the inherited record.
+
+\subsection{Building this reading guide}
+From the editable Lean-guide directory, run \code{python3 build.py}. It compiles the supplied TeX and excerpt files with XeLaTeX and does not invoke Lean or regenerate mathematical evidence. It requires the fonts named in \code{preamble.tex}; no installation is performed by the script. \code{verify_pdf.py} performs the documented PDF checks and renders all pages into contact sheets.
+
+\code{assemble.py} is a separate documentation-generation step. It reads the preserved source snapshot, exact source contract, selected excerpt list, and a current verification report. It accepts \code{--source} and \code{--verification} paths so these inputs need not reside in the development directory layout. Its generated tables are already supplied for ordinary PDF reproduction.
+
+\subsection{When a reuse needs a new proof}
+Before adapting an endpoint, check the scalar field, finite versus bounded setting, positivity notion, time domain, evidence condition, and domain/codomain of every operator. Changing a hypothesis is not a formatting edit. A new theorem about unbounded generators, general statistical sufficiency, infinite hidden-state elimination, or unrestricted Banach holomorphic calculus requires its own proof and correspondence review. The preserved project supplies a precise starting point for that work.

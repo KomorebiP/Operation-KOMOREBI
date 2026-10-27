@@ -1,0 +1,1470 @@
+--- first-block/formalization/lean/KernelAudit.lean
++++ second-block/formalization/lean/KernelAudit.lean
+@@ -17,6 +17,31 @@
+ #print axioms KomorebiPaperVI.BayesianFlow.likelihood_derivative
+ #print axioms KomorebiPaperVI.BayesianFlow.evidence_derivative
+ #print axioms KomorebiPaperVI.BayesianFlow.flow_derivative
++#print axioms KomorebiPaperVI.BayesianNecessity.pair_weighted_sum
++#print axioms KomorebiPaperVI.BayesianNecessity.pair_probability
++#print axioms KomorebiPaperVI.BayesianNecessity.pair_fiber_weight
++#print axioms KomorebiPaperVI.BayesianNecessity.pair_coarsen
++#print axioms KomorebiPaperVI.BayesianNecessity.pair_coarse_posterior
++#print axioms KomorebiPaperVI.BayesianNecessity.cross_packet_ratio
++#print axioms KomorebiPaperVI.BayesianNecessity.all_packet_ratio
++#print axioms KomorebiPaperVI.BayesianNecessity.positive_evidence
++#print axioms KomorebiPaperVI.BayesianNecessity.refinement_iff
++#print axioms KomorebiPaperVI.BayesianPartitions.packetMap_surjective
++#print axioms KomorebiPaperVI.BayesianPartitions.packetLikelihood_apply
++#print axioms KomorebiPaperVI.BayesianPartitions.packet_eq_iff
++#print axioms KomorebiPaperVI.BayesianPartitions.packetLikelihood_positive
++#print axioms KomorebiPaperVI.BayesianPartitions.canonical_coarsening
++#print axioms KomorebiPaperVI.BayesianPartitions.canonical_unique_factor
++#print axioms KomorebiPaperVI.BayesianPartitions.all_prior_family_iff_resolves
++#print axioms KomorebiPaperVI.BayesianPartitions.canonical_coarsest_nontrivial
++#print axioms KomorebiPaperVI.BayesianPartitions.canonical_nontrivial
++#print axioms KomorebiPaperVI.BayesianTowers.coarsen_comp
++#print axioms KomorebiPaperVI.BayesianTowers.singleton_commutes
++#print axioms KomorebiPaperVI.BayesianTowers.adjacent_criterion
++#print axioms KomorebiPaperVI.BayesianTowers.compose_commutes
++#print axioms KomorebiPaperVI.BayesianTowers.coarsen_id
++#print axioms KomorebiPaperVI.BayesianTowers.tower_commutes
++#print axioms KomorebiPaperVI.BayesianTowers.tower_criterion
+ #print axioms KomorebiPaperVI.Coarsening.coarsen_mass
+ #print axioms KomorebiPaperVI.Coarsening.coarsen_nonnegative
+ #print axioms KomorebiPaperVI.Coarsening.coarsen_probability
+@@ -38,6 +63,34 @@
+ #print axioms KomorebiPaperVI.Profiles.profile_equivalence
+ #print axioms KomorebiPaperVI.Profiles.likelihood_resolving_iff_refines
+ #print axioms KomorebiPaperVI.Profiles.exact_profile_factorization
++#print axioms KomorebiPaperVI.ConditionalExpectation.fiber_mass_cast
++#print axioms KomorebiPaperVI.ConditionalExpectation.fiber_pull
++#print axioms KomorebiPaperVI.ConditionalExpectation.fiber_mass_ne
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_constant
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_block_constant
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_idempotent
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_fixes_iff
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_range
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_matrix
++#print axioms KomorebiPaperVI.ConditionalExpectation.kernel_weighted_symmetry
++#print axioms KomorebiPaperVI.ConditionalExpectation.expect_self_adjoint
++#print axioms KomorebiPaperVI.ConditionalTowers.weighted_inner_separates
++#print axioms KomorebiPaperVI.ConditionalTowers.fine_after_coarse
++#print axioms KomorebiPaperVI.ConditionalTowers.coarse_after_fine
++#print axioms KomorebiPaperVI.ConditionalTowers.conditional_kernel_product
++#print axioms KomorebiPaperVI.ConditionalTowers.nested_kernel_min
++#print axioms KomorebiPaperVI.ConditionalTowers.martingale_packet_product
++#print axioms KomorebiPaperVI.ConditionalTowers.martingale_packet_reconstruction
++#print axioms KomorebiPaperVI.FeynmanKac.sum_paths_succ
++#print axioms KomorebiPaperVI.FeynmanKac.transfer_entry
++#print axioms KomorebiPaperVI.FeynmanKac.path_probability_nonnegative
++#print axioms KomorebiPaperVI.FeynmanKac.path_probability_mass
++#print axioms KomorebiPaperVI.FeynmanKac.path_expectation_zero
++#print axioms KomorebiPaperVI.FeynmanKac.path_expectation_step
++#print axioms KomorebiPaperVI.FeynmanKac.feynman_kac_path_formula
++#print axioms KomorebiPaperVI.FeynmanKac.path_probability_product
++#print axioms KomorebiPaperVI.FeynmanKac.path_potential_sum
++#print axioms KomorebiPaperVI.FeynmanKac.terminal_last
+ #print axioms KomorebiPaperVI.FiniteBayes.normalized_mass
+ #print axioms KomorebiPaperVI.FiniteBayes.posterior_mass
+ #print axioms KomorebiPaperVI.FiniteBayes.posterior_nonnegative
+@@ -52,6 +105,33 @@
+ #print axioms KomorebiPaperVI.FiniteBayes.posterior_probability
+ #print axioms KomorebiPaperVI.FiniteBayes.prediction_probability
+ #print axioms KomorebiPaperVI.FiniteBayes.prediction_update_probability
++#print axioms KomorebiPaperVI.InformationLoss.lossMatrix_apply
++#print axioms KomorebiPaperVI.InformationLoss.information_loss_matrix
++#print axioms KomorebiPaperVI.InformationLoss.information_loss_null
++#print axioms KomorebiPaperVI.InformationLoss.fiber_loss_bound
++#print axioms KomorebiPaperVI.InformationLoss.total_loss_bound
++#print axioms KomorebiPaperVI.InformationLoss.information_loss_norm
++#print axioms KomorebiPaperVI.LowModeConvergence.sine_square_error
++#print axioms KomorebiPaperVI.LowModeConvergence.low_mode_error
++#print axioms KomorebiPaperVI.MarkovSemigroup.matrix_powers_nonnegative
++#print axioms KomorebiPaperVI.MarkovSemigroup.exponential_nonnegative
++#print axioms KomorebiPaperVI.MarkovSemigroup.shifted_generator_nonnegative
++#print axioms KomorebiPaperVI.MarkovSemigroup.scalar_exponential
++#print axioms KomorebiPaperVI.MarkovSemigroup.markov_nonnegative
++#print axioms KomorebiPaperVI.MarkovSemigroup.generator_power_columns
++#print axioms KomorebiPaperVI.MarkovSemigroup.markov_column_sum
++#print axioms KomorebiPaperVI.MarkovSemigroup.markov_probability
++#print axioms KomorebiPaperVI.MartingalePackets.packet_product
++#print axioms KomorebiPaperVI.MartingalePackets.packet_sum
++#print axioms KomorebiPaperVI.OperatorBounds.growth_duhamel_bound
++#print axioms KomorebiPaperVI.OperatorBounds.contraction_powers
++#print axioms KomorebiPaperVI.OperatorBounds.finite_horizon_contraction
++#print axioms KomorebiPaperVI.ReducingPackets.generator_commutes
++#print axioms KomorebiPaperVI.ReducingPackets.reducing_exponential
++#print axioms KomorebiPaperVI.ReducingPackets.compressed_evolution
++#print axioms KomorebiPaperVI.SchurFeshbach.resolvent_blocks
++#print axioms KomorebiPaperVI.SchurFeshbach.projected_resolvent
++#print axioms KomorebiPaperVI.SchurFeshbach.schur_invertible
+ #print axioms KomorebiPaperVI.Semigroups.transfer_zero
+ #print axioms KomorebiPaperVI.Semigroups.transfer_add
+ #print axioms KomorebiPaperVI.Semigroups.transfer_derivative_right
+@@ -63,6 +143,15 @@
+ #print axioms KomorebiPaperVI.Semigroups.duhamel_rectangular
+ #print axioms KomorebiPaperVI.Semigroups.exact_rectangular_intertwining
+ #print axioms KomorebiPaperVI.Semigroups.contraction_duhamel_bound
++#print axioms KomorebiPaperVI.SpectralPackets.resolve_mul
++#print axioms KomorebiPaperVI.SpectralPackets.resolve_left_packet
++#print axioms KomorebiPaperVI.SpectralPackets.resolve_right_packet
++#print axioms KomorebiPaperVI.SpectralPackets.exp_resolution
++#print axioms KomorebiPaperVI.SpectralPackets.fractional_add
++#print axioms KomorebiPaperVI.SpectralPackets.spectral_transfer_exponential
++#print axioms KomorebiPaperVI.SpectralPackets.spectral_transfer_add
++#print axioms KomorebiPaperVI.SpectralPackets.fractional_reduces
++#print axioms KomorebiPaperVI.SpectralPackets.spectral_transfer_reduces
+ 
+ open Lean Meta Elab Command
+ 
+@@ -86,6 +175,31 @@
+     `KomorebiPaperVI.BayesianFlow.likelihood_derivative,
+     `KomorebiPaperVI.BayesianFlow.evidence_derivative,
+     `KomorebiPaperVI.BayesianFlow.flow_derivative,
++    `KomorebiPaperVI.BayesianNecessity.pair_weighted_sum,
++    `KomorebiPaperVI.BayesianNecessity.pair_probability,
++    `KomorebiPaperVI.BayesianNecessity.pair_fiber_weight,
++    `KomorebiPaperVI.BayesianNecessity.pair_coarsen,
++    `KomorebiPaperVI.BayesianNecessity.pair_coarse_posterior,
++    `KomorebiPaperVI.BayesianNecessity.cross_packet_ratio,
++    `KomorebiPaperVI.BayesianNecessity.all_packet_ratio,
++    `KomorebiPaperVI.BayesianNecessity.positive_evidence,
++    `KomorebiPaperVI.BayesianNecessity.refinement_iff,
++    `KomorebiPaperVI.BayesianPartitions.packetMap_surjective,
++    `KomorebiPaperVI.BayesianPartitions.packetLikelihood_apply,
++    `KomorebiPaperVI.BayesianPartitions.packet_eq_iff,
++    `KomorebiPaperVI.BayesianPartitions.packetLikelihood_positive,
++    `KomorebiPaperVI.BayesianPartitions.canonical_coarsening,
++    `KomorebiPaperVI.BayesianPartitions.canonical_unique_factor,
++    `KomorebiPaperVI.BayesianPartitions.all_prior_family_iff_resolves,
++    `KomorebiPaperVI.BayesianPartitions.canonical_coarsest_nontrivial,
++    `KomorebiPaperVI.BayesianPartitions.canonical_nontrivial,
++    `KomorebiPaperVI.BayesianTowers.coarsen_comp,
++    `KomorebiPaperVI.BayesianTowers.singleton_commutes,
++    `KomorebiPaperVI.BayesianTowers.adjacent_criterion,
++    `KomorebiPaperVI.BayesianTowers.compose_commutes,
++    `KomorebiPaperVI.BayesianTowers.coarsen_id,
++    `KomorebiPaperVI.BayesianTowers.tower_commutes,
++    `KomorebiPaperVI.BayesianTowers.tower_criterion,
+     `KomorebiPaperVI.Coarsening.coarsen_mass,
+     `KomorebiPaperVI.Coarsening.coarsen_nonnegative,
+     `KomorebiPaperVI.Coarsening.coarsen_probability,
+@@ -107,6 +221,34 @@
+     `KomorebiPaperVI.Profiles.profile_equivalence,
+     `KomorebiPaperVI.Profiles.likelihood_resolving_iff_refines,
+     `KomorebiPaperVI.Profiles.exact_profile_factorization,
++    `KomorebiPaperVI.ConditionalExpectation.fiber_mass_cast,
++    `KomorebiPaperVI.ConditionalExpectation.fiber_pull,
++    `KomorebiPaperVI.ConditionalExpectation.fiber_mass_ne,
++    `KomorebiPaperVI.ConditionalExpectation.expect_constant,
++    `KomorebiPaperVI.ConditionalExpectation.expect_block_constant,
++    `KomorebiPaperVI.ConditionalExpectation.expect_idempotent,
++    `KomorebiPaperVI.ConditionalExpectation.expect_fixes_iff,
++    `KomorebiPaperVI.ConditionalExpectation.expect_range,
++    `KomorebiPaperVI.ConditionalExpectation.expect_matrix,
++    `KomorebiPaperVI.ConditionalExpectation.kernel_weighted_symmetry,
++    `KomorebiPaperVI.ConditionalExpectation.expect_self_adjoint,
++    `KomorebiPaperVI.ConditionalTowers.weighted_inner_separates,
++    `KomorebiPaperVI.ConditionalTowers.fine_after_coarse,
++    `KomorebiPaperVI.ConditionalTowers.coarse_after_fine,
++    `KomorebiPaperVI.ConditionalTowers.conditional_kernel_product,
++    `KomorebiPaperVI.ConditionalTowers.nested_kernel_min,
++    `KomorebiPaperVI.ConditionalTowers.martingale_packet_product,
++    `KomorebiPaperVI.ConditionalTowers.martingale_packet_reconstruction,
++    `KomorebiPaperVI.FeynmanKac.sum_paths_succ,
++    `KomorebiPaperVI.FeynmanKac.transfer_entry,
++    `KomorebiPaperVI.FeynmanKac.path_probability_nonnegative,
++    `KomorebiPaperVI.FeynmanKac.path_probability_mass,
++    `KomorebiPaperVI.FeynmanKac.path_expectation_zero,
++    `KomorebiPaperVI.FeynmanKac.path_expectation_step,
++    `KomorebiPaperVI.FeynmanKac.feynman_kac_path_formula,
++    `KomorebiPaperVI.FeynmanKac.path_probability_product,
++    `KomorebiPaperVI.FeynmanKac.path_potential_sum,
++    `KomorebiPaperVI.FeynmanKac.terminal_last,
+     `KomorebiPaperVI.FiniteBayes.normalized_mass,
+     `KomorebiPaperVI.FiniteBayes.posterior_mass,
+     `KomorebiPaperVI.FiniteBayes.posterior_nonnegative,
+@@ -121,6 +263,33 @@
+     `KomorebiPaperVI.FiniteBayes.posterior_probability,
+     `KomorebiPaperVI.FiniteBayes.prediction_probability,
+     `KomorebiPaperVI.FiniteBayes.prediction_update_probability,
++    `KomorebiPaperVI.InformationLoss.lossMatrix_apply,
++    `KomorebiPaperVI.InformationLoss.information_loss_matrix,
++    `KomorebiPaperVI.InformationLoss.information_loss_null,
++    `KomorebiPaperVI.InformationLoss.fiber_loss_bound,
++    `KomorebiPaperVI.InformationLoss.total_loss_bound,
++    `KomorebiPaperVI.InformationLoss.information_loss_norm,
++    `KomorebiPaperVI.LowModeConvergence.sine_square_error,
++    `KomorebiPaperVI.LowModeConvergence.low_mode_error,
++    `KomorebiPaperVI.MarkovSemigroup.matrix_powers_nonnegative,
++    `KomorebiPaperVI.MarkovSemigroup.exponential_nonnegative,
++    `KomorebiPaperVI.MarkovSemigroup.shifted_generator_nonnegative,
++    `KomorebiPaperVI.MarkovSemigroup.scalar_exponential,
++    `KomorebiPaperVI.MarkovSemigroup.markov_nonnegative,
++    `KomorebiPaperVI.MarkovSemigroup.generator_power_columns,
++    `KomorebiPaperVI.MarkovSemigroup.markov_column_sum,
++    `KomorebiPaperVI.MarkovSemigroup.markov_probability,
++    `KomorebiPaperVI.MartingalePackets.packet_product,
++    `KomorebiPaperVI.MartingalePackets.packet_sum,
++    `KomorebiPaperVI.OperatorBounds.growth_duhamel_bound,
++    `KomorebiPaperVI.OperatorBounds.contraction_powers,
++    `KomorebiPaperVI.OperatorBounds.finite_horizon_contraction,
++    `KomorebiPaperVI.ReducingPackets.generator_commutes,
++    `KomorebiPaperVI.ReducingPackets.reducing_exponential,
++    `KomorebiPaperVI.ReducingPackets.compressed_evolution,
++    `KomorebiPaperVI.SchurFeshbach.resolvent_blocks,
++    `KomorebiPaperVI.SchurFeshbach.projected_resolvent,
++    `KomorebiPaperVI.SchurFeshbach.schur_invertible,
+     `KomorebiPaperVI.Semigroups.transfer_zero,
+     `KomorebiPaperVI.Semigroups.transfer_add,
+     `KomorebiPaperVI.Semigroups.transfer_derivative_right,
+@@ -131,7 +300,16 @@
+     `KomorebiPaperVI.Semigroups.duhamel_integrand_derivative,
+     `KomorebiPaperVI.Semigroups.duhamel_rectangular,
+     `KomorebiPaperVI.Semigroups.exact_rectangular_intertwining,
+-    `KomorebiPaperVI.Semigroups.contraction_duhamel_bound
++    `KomorebiPaperVI.Semigroups.contraction_duhamel_bound,
++    `KomorebiPaperVI.SpectralPackets.resolve_mul,
++    `KomorebiPaperVI.SpectralPackets.resolve_left_packet,
++    `KomorebiPaperVI.SpectralPackets.resolve_right_packet,
++    `KomorebiPaperVI.SpectralPackets.exp_resolution,
++    `KomorebiPaperVI.SpectralPackets.fractional_add,
++    `KomorebiPaperVI.SpectralPackets.spectral_transfer_exponential,
++    `KomorebiPaperVI.SpectralPackets.spectral_transfer_add,
++    `KomorebiPaperVI.SpectralPackets.fractional_reduces,
++    `KomorebiPaperVI.SpectralPackets.spectral_transfer_reduces
+   ]
+   for target in targets do
+     match env.find? target with
+--- first-block/formalization/lean/KomorebiPaperVI.lean
++++ second-block/formalization/lean/KomorebiPaperVI.lean
+@@ -1,5 +1,19 @@
+ import KomorebiPaperVI.Algebra
++import KomorebiPaperVI.BayesianFlow
++import KomorebiPaperVI.BayesianNecessity
++import KomorebiPaperVI.BayesianPartitions
++import KomorebiPaperVI.BayesianTowers
++import KomorebiPaperVI.Coarsening
++import KomorebiPaperVI.ConditionalExpectation
++import KomorebiPaperVI.ConditionalTowers
++import KomorebiPaperVI.FeynmanKac
+ import KomorebiPaperVI.FiniteBayes
++import KomorebiPaperVI.InformationLoss
++import KomorebiPaperVI.LowModeConvergence
++import KomorebiPaperVI.MarkovSemigroup
++import KomorebiPaperVI.MartingalePackets
++import KomorebiPaperVI.OperatorBounds
++import KomorebiPaperVI.ReducingPackets
++import KomorebiPaperVI.SchurFeshbach
+ import KomorebiPaperVI.Semigroups
+-import KomorebiPaperVI.Coarsening
+-import KomorebiPaperVI.BayesianFlow
++import KomorebiPaperVI.SpectralPackets
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/BayesianNecessity.lean
+@@ -0,0 +1,132 @@
++import KomorebiPaperVI.Coarsening
++
++/-! Author: Komorebi P. All-prior necessity is derived from actual two-state priors. -/
++namespace KomorebiPaperVI.BayesianNecessity
++open KomorebiPaperVI.FiniteBayes KomorebiPaperVI.Coarsening
++open scoped BigOperators
++variable {I A : Type*} [Fintype I] [Fintype A] [DecidableEq I] [DecidableEq A]
++
++noncomputable def pairPrior (i j : I) (x : I) : ℝ :=
++  (if x=i then 1/2 else 0)+(if x=j then 1/2 else 0)
++
++omit [Fintype A] [DecidableEq A] in
++theorem pair_weighted_sum (i j : I) (w : I → ℝ) :
++    (∑ x, w x*pairPrior i j x)=(w i+w j)/2 := by
++  simp [pairPrior, mul_add, Finset.sum_add_distrib]
++  ring
++
++omit [Fintype A] [DecidableEq A] in
++theorem pair_probability (i j : I) : IsProbability (pairPrior i j) := by
++  constructor
++  · intro x; unfold pairPrior; split_ifs <;> norm_num
++  · simpa [IsProbability, mass] using pair_weighted_sum i j (fun _ => 1)
++
++omit [Fintype A] in
++theorem pair_fiber_weight (f : I → A) (i j : I) (w : I → ℝ) (a : A) :
++    coarsen f (fun x => w x*pairPrior i j x) a =
++      ((if f i=a then w i else 0)+(if f j=a then w j else 0))/2 := by
++  have he : coarsen f (fun x => w x*pairPrior i j x) a =
++      ∑ x, (if f x=a then w x else 0)*pairPrior i j x := by
++    apply Finset.sum_congr rfl
++    intro x _; split_ifs <;> simp
++  rw [he, pair_weighted_sum]
++
++omit [Fintype A] in
++theorem pair_coarsen (f : I → A) (i j : I) :
++    coarsen f (pairPrior i j)=pairPrior (f i) (f j) := by
++  funext a
++  have he := pair_fiber_weight f i j (fun _ => 1) a
++  simp only [one_mul] at he
++  rw [he]
++  rw [add_div]
++  have h1 : (if f i=a then (1:ℝ) else 0)/2=(if a=f i then 1/2 else 0) := by
++    by_cases hi : f i=a
++    · simp [hi]
++    · simp [hi, Ne.symm hi]
++  have h2 : (if f j=a then (1:ℝ) else 0)/2=(if a=f j then 1/2 else 0) := by
++    by_cases hj : f j=a
++    · simp [hj]
++    · simp [hj, Ne.symm hj]
++  rw [h1,h2]
++  rfl
++
++omit [Fintype A] in
++theorem pair_coarse_posterior (f : I → A) (l : I → ℝ) (i j : I) (hij : f i≠f j) :
++    coarsen f (update (pairPrior i j) l) (f i)=l i/(l i+l j) := by
++  simp only [coarsen_posterior]
++  rw [pair_fiber_weight]
++  have he : evidence (pairPrior i j) l=(l i+l j)/2 := pair_weighted_sum i j l
++  rw [he]
++  simp only [ite_true, ite_eq_right hij.symm, add_zero]
++  rw [div_div_div_comm]
++  norm_num
++
++def AllPriorCommutes (f : I → A) (l : I → ℝ) (k : A → ℝ) : Prop :=
++  ∀ p, IsProbability p → coarsen f (update p l)=update (coarsen f p) k
++
++theorem cross_packet_ratio (f : I → A) (l : I → ℝ) (k : A → ℝ)
++    (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a)
++    (h : AllPriorCommutes f l k) (i j : I) (hij : f i≠f j) :
++    l i*k (f j)=l j*k (f i) := by
++  have he := congrFun (h (pairPrior i j) (pair_probability i j)) (f i)
++  rw [pair_coarse_posterior f l i j hij, pair_coarsen] at he
++  have hco : update (pairPrior (f i) (f j)) k (f i)=k (f i)/(k (f i)+k (f j)) := by
++    dsimp [update]
++    rw [show evidence (pairPrior (f i) (f j)) k=(k (f i)+k (f j))/2 from
++      pair_weighted_sum _ _ _]
++    simp only [pairPrior, ite_true, ite_eq_right hij, add_zero]
++    rw [mul_div_assoc, div_div_div_comm]
++    norm_num [div_eq_mul_inv]
++  rw [hco] at he
++  have hc := (div_eq_div_iff (ne_of_gt (add_pos (hl i) (hl j)))
++    (ne_of_gt (add_pos (hk (f i)) (hk (f j))))).mp he
++  nlinarith
++
++theorem all_packet_ratio (f : I → A) (hf : Function.Surjective f) [Nontrivial A]
++    (l : I → ℝ) (k : A → ℝ) (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a)
++    (h : AllPriorCommutes f l k) (i j : I) : l i*k (f j)=l j*k (f i) := by
++  by_cases hij : f i=f j
++  · obtain ⟨b,hb⟩ := exists_ne (f i)
++    obtain ⟨u,hu⟩ := hf b
++    have hiu : f i≠f u := by rw [hu]; exact hb.symm
++    have hju : f j≠f u := by rw [← hij]; exact hiu
++    have h1 := cross_packet_ratio f l k hl hk h i u hiu
++    have h2 := cross_packet_ratio f l k hl hk h j u hju
++    rw [← hij] at h2
++    have heq : l i=l j := by nlinarith [hk (f u)]
++    rw [hij, heq]
++  · exact cross_packet_ratio f l k hl hk h i j hij
++
++omit [DecidableEq I] in
++theorem positive_evidence (p l : I → ℝ) (hp : IsProbability p) (hl : ∀ i, 0 < l i) :
++    0 < evidence p l := by
++  have hex : ∃ i, 0 < p i := by
++    by_contra h
++    push Not at h
++    have hz : mass p=0 := Finset.sum_eq_zero (fun i _ => le_antisymm (h i) (hp.1 i))
++    linarith [hp.2]
++  obtain ⟨i,hi⟩ := hex
++  exact Finset.sum_pos' (fun j _ => mul_nonneg (hl j).le (hp.1 j))
++    ⟨i,Finset.mem_univ i,mul_pos (hl i) hi⟩
++
++theorem refinement_iff (f : I → A) (hf : Function.Surjective f) [Nontrivial A]
++    (l : I → ℝ) (k : A → ℝ) (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a) :
++    AllPriorCommutes f l k ↔ ∃ c : ℝ, 0 < c ∧ ∀ i, l i=c*k (f i) := by
++  constructor
++  · intro h
++    obtain ⟨a⟩ := (inferInstance : Nonempty A)
++    obtain ⟨i,hi⟩ := hf a
++    refine ⟨l i/k (f i), div_pos (hl i) (hk (f i)), ?_⟩
++    intro j
++    have he := all_packet_ratio f hf l k hl hk h j i
++    apply (eq_div_iff (ne_of_gt (hk (f i)))).mpr at he
++    calc
++      l j = (l i*k (f j))/k (f i) := he
++      _ = _ := by ring
++  · rintro ⟨c,hc,he⟩ p hp
++    have heq : l=fun i => c*k (f i) := funext he
++    rw [heq]
++    exact scaled_blockwise_sufficiency f p k c hc.ne'
++      (positive_evidence p (k ∘ f) hp (fun i => hk (f i))).ne'
++
++end KomorebiPaperVI.BayesianNecessity
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/BayesianPartitions.lean
+@@ -0,0 +1,96 @@
++import KomorebiPaperVI.BayesianNecessity
++
++/-! Author: Komorebi P. Quotient likelihood-profile partitions and their universal property. -/
++namespace KomorebiPaperVI.BayesianPartitions
++open KomorebiPaperVI.FiniteBayes KomorebiPaperVI.Coarsening
++open KomorebiPaperVI.Profiles KomorebiPaperVI.BayesianNecessity
++variable {I Y A : Type*} [Fintype I]
++
++def profileSetoid (l : Y → I → ℝ) : Setoid I := ⟨sameProfile l,profile_equivalence l⟩
++abbrev Packet (l : Y → I → ℝ) := Quotient (profileSetoid l)
++def packetMap (l : Y → I → ℝ) (i : I) : Packet l := Quotient.mk (profileSetoid l) i
++
++omit [Fintype I] in
++theorem packetMap_surjective (l : Y → I → ℝ) : Function.Surjective (packetMap l) :=
++  Quotient.mk_surjective
++
++noncomputable instance packetFintype (l : Y → I → ℝ) : Fintype (Packet l) :=
++  by classical exact Fintype.ofSurjective (packetMap l) (packetMap_surjective l)
++
++def packetLikelihood (l : Y → I → ℝ) (y : Y) : Packet l → ℝ :=
++  Quotient.lift (l y) (fun _ _ h => h y)
++
++omit [Fintype I] in
++theorem packetLikelihood_apply (l : Y → I → ℝ) (y : Y) (i : I) :
++    packetLikelihood l y (packetMap l i)=l y i := rfl
++
++omit [Fintype I] in
++theorem packet_eq_iff (l : Y → I → ℝ) (i j : I) :
++    packetMap l i=packetMap l j ↔ ∀ y, l y i=l y j :=
++  Quotient.eq
++
++omit [Fintype I] in
++theorem packetLikelihood_positive (l : Y → I → ℝ) (hl : ∀ y i, 0 < l y i)
++    (y : Y) (q : Packet l) : 0 < packetLikelihood l y q := by
++  induction q using Quotient.inductionOn with
++  | h i => exact hl y i
++
++theorem canonical_coarsening (l : Y → I → ℝ) [DecidableEq (Packet l)] (y : Y) (p : I → ℝ) :
++    coarsen (packetMap l) (update p (l y)) =
++      update (coarsen (packetMap l) p) (packetLikelihood l y) := by
++  have he : packetLikelihood l y ∘ packetMap l=l y := rfl
++  rw [← he]
++  exact blockwise_sufficiency (packetMap l) p (packetLikelihood l y)
++
++omit [Fintype I] in
++theorem canonical_unique_factor (l : Y → I → ℝ) (f : I → A) (hf : Function.Surjective f)
++    (h : ∀ y i j, f i=f j → l y i=l y j) :
++    ∃! u : A → Packet l, ∀ i, u (f i)=packetMap l i := by
++  classical
++  let u := fun a => packetMap l (hf a).choose
++  have hu : ∀ i, u (f i)=packetMap l i := by
++    intro i
++    apply (packet_eq_iff l _ _).mpr
++    intro y
++    exact h y _ _ (hf (f i)).choose_spec
++  refine ⟨u,hu,?_⟩
++  intro v hv
++  funext a
++  obtain ⟨i,rfl⟩ := hf a
++  exact (hv i).trans (hu i).symm
++
++variable [Fintype A] [DecidableEq A] [DecidableEq I]
++
++def FamilyCloses (l : Y → I → ℝ) (f : I → A) : Prop :=
++  ∀ y, ∃ k : A → ℝ, (∀ a, 0 < k a) ∧ AllPriorCommutes f (l y) k
++
++theorem all_prior_family_iff_resolves (l : Y → I → ℝ) (hl : ∀ y i, 0 < l y i)
++    (f : I → A) (hf : Function.Surjective f) [Nontrivial A] :
++    FamilyCloses l f ↔ ∀ y i j, f i=f j → l y i=l y j := by
++  constructor
++  · intro h y i j hij
++    obtain ⟨k,hk,hc⟩ := h y
++    obtain ⟨c,_,he⟩ := (refinement_iff f hf (l y) k (hl y) hk).mp hc
++    rw [he i, he j,hij]
++  · intro h y
++    let k := fun a => l y (hf a).choose
++    have he : l y=k ∘ f := by
++      funext i
++      exact h y i _ (hf (f i)).choose_spec.symm
++    refine ⟨k,fun a => hl y _,?_⟩
++    intro p _
++    rw [he]
++    exact blockwise_sufficiency f p k
++
++theorem canonical_coarsest_nontrivial (l : Y → I → ℝ) (hl : ∀ y i, 0 < l y i)
++    (f : I → A) (hf : Function.Surjective f) [Nontrivial A] (h : FamilyCloses l f) :
++    ∃! u : A → Packet l, ∀ i, u (f i)=packetMap l i :=
++  canonical_unique_factor l f hf ((all_prior_family_iff_resolves l hl f hf).mp h)
++
++omit [Fintype I] [DecidableEq I] in
++theorem canonical_nontrivial (l : Y → I → ℝ)
++    (h : ∃ i j y, l y i≠l y j) : Nontrivial (Packet l) := by
++  obtain ⟨i,j,y,hij⟩ := h
++  exact ⟨⟨packetMap l i,packetMap l j,fun he => hij ((packet_eq_iff l i j).mp he y)⟩⟩
++
++end KomorebiPaperVI.BayesianPartitions
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/BayesianTowers.lean
+@@ -0,0 +1,87 @@
++import KomorebiPaperVI.BayesianNecessity
++
++/-! Author: Komorebi P. Variable-state finite towers with explicit singleton boundaries. -/
++namespace KomorebiPaperVI.BayesianTowers
++open KomorebiPaperVI.FiniteBayes KomorebiPaperVI.Coarsening
++open KomorebiPaperVI.BayesianNecessity
++open scoped BigOperators
++variable {I A B : Type*} [Fintype I] [Fintype A] [Fintype B]
++    [DecidableEq I] [DecidableEq A] [DecidableEq B]
++
++omit [DecidableEq I] [Fintype B] in
++theorem coarsen_comp (f : I → A) (g : A → B) (p : I → ℝ) :
++    coarsen g (coarsen f p)=coarsen (g ∘ f) p := by
++  funext b
++  dsimp [coarsen]
++  have hi (q : Prop) [Decidable q] (v : I → ℝ) :
++      (if q then ∑ i, v i else 0)=∑ i, if q then v i else 0 := by
++    split_ifs <;> simp
++  simp_rw [hi]
++  rw [Finset.sum_comm]
++  apply Finset.sum_congr rfl
++  intro i _
++  have he : (fun a => if g a=b then (if f i=a then p i else 0) else 0)=
++      (fun a => if f i=a then (if g a=b then p i else 0) else 0) := by
++    funext a; split_ifs <;> rfl
++  rw [he]
++  simp
++
++omit [DecidableEq I] in
++theorem singleton_commutes (f : I → A) (l : I → ℝ) (k : A → ℝ)
++    (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a) [Subsingleton A] :
++    AllPriorCommutes f l k := by
++  intro p hp
++  funext a
++  have hs (v : A → ℝ) : mass v=v a :=
++    Finset.sum_eq_single a (fun b _ hb => False.elim (hb (Subsingleton.elim b a))) (by simp)
++  have h1 : mass (coarsen f (update p l))=1 :=
++    (coarsen_mass f _).trans (posterior_mass p l (positive_evidence p l hp hl).ne')
++  have h2 := posterior_mass (coarsen f p) k
++    (positive_evidence _ k (coarsen_probability f p hp) hk).ne'
++  exact (hs _).symm.trans (h1.trans (h2.symm.trans (hs _)))
++
++theorem adjacent_criterion (f : I → A) (hf : Function.Surjective f)
++    (l : I → ℝ) (k : A → ℝ) (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a) :
++    AllPriorCommutes f l k ↔
++      Subsingleton A ∨ ∃ c : ℝ, 0 < c ∧ ∀ i, l i=c*k (f i) := by
++  cases subsingleton_or_nontrivial A with
++  | inl h =>
++    let := h
++    exact ⟨fun _ => Or.inl h,fun _ => singleton_commutes f l k hl hk⟩
++  | inr h =>
++    let := h
++    rw [refinement_iff f hf l k hl hk]
++    simp only [not_subsingleton, false_or]
++
++omit [DecidableEq I] in
++theorem compose_commutes (f : I → A) (g : A → B) (l : I → ℝ) (k : A → ℝ) (m : B → ℝ)
++    (hf : AllPriorCommutes f l k) (hg : AllPriorCommutes g k m) :
++    AllPriorCommutes (g ∘ f) l m := by
++  intro p hp
++  rw [← coarsen_comp f g, hf p hp, hg (coarsen f p) (coarsen_probability f p hp),coarsen_comp]
++
++section Tower
++variable {X : ℕ → Type*} [∀ n, Fintype (X n)] [∀ n, DecidableEq (X n)]
++
++def towerMap (f : ∀ n, X n → X (n+1)) (s : ℕ) : (n : ℕ) → X s → X (s+n)
++  | 0 => id
++  | n+1 => f (s+n) ∘ towerMap f s n
++
++theorem coarsen_id (p : I → ℝ) : coarsen id p=p := by
++  funext i; simp [coarsen]
++
++theorem tower_commutes (f : ∀ n, X n → X (n+1)) (l : ∀ n, X n → ℝ)
++    (h : ∀ n, AllPriorCommutes (f n) (l n) (l (n+1))) (s n : ℕ) :
++    AllPriorCommutes (towerMap f s n) (l s) (l (s+n)) := by
++  induction n with
++  | zero => intro p _; simp [towerMap,coarsen_id]
++  | succ n ih => exact compose_commutes (towerMap f s n) (f (s+n)) _ _ _ ih (h (s+n))
++
++theorem tower_criterion (f : ∀ n, X n → X (n+1)) (hf : ∀ n, Function.Surjective (f n))
++    (l : ∀ n, X n → ℝ) (hl : ∀ n i, 0 < l n i) :
++    (∀ n, AllPriorCommutes (f n) (l n) (l (n+1))) ↔
++      ∀ n, Subsingleton (X (n+1)) ∨ ∃ c : ℝ, 0 < c ∧ ∀ i, l n i=c*l (n+1) (f n i) := by
++  exact forall_congr' (fun n => adjacent_criterion (f n) (hf n) _ _ (hl n) (hl (n+1)))
++
++end Tower
++end KomorebiPaperVI.BayesianTowers
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/ConditionalExpectation.lean
+@@ -0,0 +1,120 @@
++import KomorebiPaperVI.Coarsening
++import Mathlib.Analysis.Complex.Basic
++
++/-! Author: Komorebi P. Literal finite complex weighted conditional expectations. -/
++namespace KomorebiPaperVI.ConditionalExpectation
++open KomorebiPaperVI.Coarsening
++open scoped BigOperators ComplexConjugate
++variable {I A B : Type*} [Fintype I]
++    [DecidableEq A] [DecidableEq B]
++
++def fiber (f : I → A) (v : I → ℂ) (a : A) : ℂ := ∑ i, if f i=a then v i else 0
++noncomputable def average (f : I → A) (p : I → ℝ) (v : I → ℂ) (a : A) : ℂ :=
++  fiber f (fun i => (p i:ℂ)*v i) a / (coarsen f p a:ℂ)
++noncomputable def expect (f : I → A) (p : I → ℝ) (v : I → ℂ) (i : I) : ℂ :=
++  average f p v (f i)
++
++theorem fiber_mass_cast (f : I → A) (p : I → ℝ) (a : A) :
++    fiber f (fun i => (p i:ℂ)) a=(coarsen f p a:ℂ) := by
++  simp only [fiber,coarsen,Complex.ofReal_sum]
++  apply Finset.sum_congr rfl
++  intro i _; split_ifs <;> simp
++
++theorem fiber_pull (f : I → A) (w : I → ℂ) (v : A → ℂ) (a : A) :
++    fiber f (fun i => w i*v (f i)) a=fiber f w a*v a := by
++  simp only [fiber,Finset.sum_mul]
++  apply Finset.sum_congr rfl
++  intro i _
++  by_cases hi : f i=a
++  · simp [hi]
++  · simp [hi]
++
++theorem fiber_mass_ne (f : I → A) (p : I → ℝ) (hp : ∀ i, 0 < p i) (i : I) :
++    (coarsen f p (f i):ℂ)≠0 := by
++  intro h
++  have hr : coarsen f p (f i)=0 := by exact_mod_cast h
++  have hz := zero_packet_component f p (fun j => (hp j).le) (f i) hr i rfl
++  exact (hp i).ne' hz
++
++theorem expect_constant (f : I → A) (p : I → ℝ) (hp : ∀ i, 0 < p i) (v : A → ℂ) :
++    expect f p (v ∘ f)=v ∘ f := by
++  funext i
++  dsimp [expect,average,Function.comp_def]
++  rw [fiber_pull,fiber_mass_cast]
++  exact mul_div_cancel_left₀ _ (fiber_mass_ne f p hp i)
++
++theorem expect_block_constant (f : I → A) (p : I → ℝ) (v : I → ℂ) (i j : I)
++    (h : f i=f j) : expect f p v i=expect f p v j := by simp only [expect,h]
++
++theorem expect_idempotent (f : I → A) (p : I → ℝ) (hp : ∀ i, 0 < p i) (v : I → ℂ) :
++    expect f p (expect f p v)=expect f p v :=
++  expect_constant f p hp (average f p v)
++
++theorem expect_fixes_iff (f : I → A) (p : I → ℝ) (hp : ∀ i, 0 < p i) (v : I → ℂ) :
++    expect f p v=v ↔ ∀ i j, f i=f j → v i=v j := by
++  constructor
++  · intro h i j hij
++    rw [← h]
++    exact expect_block_constant f p v i j hij
++  · intro h
++    funext i
++    have he : fiber f (fun j => (p j:ℂ)*v j) (f i)=
++        (coarsen f p (f i):ℂ)*v i := by
++      rw [← fiber_mass_cast]
++      simp only [fiber,Finset.sum_mul]
++      apply Finset.sum_congr rfl
++      intro j _
++      by_cases hj : f j=f i
++      · simp [hj,h j i hj]
++      · simp [hj]
++    dsimp [expect,average]
++    rw [he]
++    exact mul_div_cancel_left₀ _ (fiber_mass_ne f p hp i)
++
++theorem expect_range (f : I → A) (p : I → ℝ) (hp : ∀ i, 0 < p i) :
++    Set.range (expect f p) = {v | ∀ i j, f i=f j → v i=v j} := by
++  ext v
++  constructor
++  · rintro ⟨w,rfl⟩; exact expect_block_constant f p w
++  · intro h; exact ⟨v,(expect_fixes_iff f p hp v).mpr h⟩
++
++noncomputable def kernel (f : I → A) (p : I → ℝ) : Matrix I I ℂ :=
++  fun i j => if f j=f i then (p j:ℂ)/(coarsen f p (f i):ℂ) else 0
++
++theorem expect_matrix (f : I → A) (p : I → ℝ) (v : I → ℂ) :
++    expect f p v=(kernel f p).mulVec v := by
++  funext i
++  simp only [expect,average,fiber,Matrix.mulVec,dotProduct,Finset.sum_div,kernel]
++  apply Finset.sum_congr rfl
++  intro j _
++  by_cases hj : f j=f i
++  · simp only [hj,ite_true]; ring
++  · simp [hj]
++
++theorem kernel_weighted_symmetry (f : I → A) (p : I → ℝ) (i j : I) :
++    (p i:ℂ)*kernel f p i j=(p j:ℂ)*conj (kernel f p j i) := by
++  by_cases hij : f j=f i
++  · simp only [kernel,hij,ite_true,div_eq_mul_inv]
++    simp only [map_mul,map_inv₀,Complex.conj_ofReal]
++    ring
++  · simp [kernel,hij,Ne.symm hij]
++
++noncomputable def weightedInner (p : I → ℝ) (v w : I → ℂ) : ℂ :=
++  ∑ i, (p i:ℂ)*v i*conj (w i)
++
++theorem expect_self_adjoint (f : I → A) (p : I → ℝ) (v w : I → ℂ) :
++    weightedInner p (expect f p v) w=weightedInner p v (expect f p w) := by
++  rw [expect_matrix,expect_matrix]
++  simp only [weightedInner,Matrix.mulVec,dotProduct,Finset.mul_sum,Finset.sum_mul,
++    map_sum,map_mul]
++  rw [Finset.sum_comm]
++  apply Finset.sum_congr rfl
++  intro i _
++  apply Finset.sum_congr rfl
++  intro j _
++  have h := kernel_weighted_symmetry f p j i
++  calc
++    _ = ((p j:ℂ)*kernel f p j i)*v i*conj (w j) := by ring
++    _ = _ := by rw [h]; ring
++
++end KomorebiPaperVI.ConditionalExpectation
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/ConditionalTowers.lean
+@@ -0,0 +1,77 @@
++import KomorebiPaperVI.ConditionalExpectation
++import KomorebiPaperVI.Algebra
++import KomorebiPaperVI.MartingalePackets
++
++/-! Author: Komorebi P. Concrete conditional-expectation towers and martingale packets. -/
++namespace KomorebiPaperVI.ConditionalTowers
++open KomorebiPaperVI.ConditionalExpectation
++open scoped BigOperators ComplexConjugate
++variable {I A B : Type*} [Fintype I] [DecidableEq A] [DecidableEq B]
++
++theorem weighted_inner_separates (p : I → ℝ) (hp : ∀ i, 0 < p i) (v w : I → ℂ)
++    (h : ∀ z, weightedInner p v z=weightedInner p w z) : v=w := by
++  classical
++  funext i
++  have he := h (fun j => if j=i then 1 else 0)
++  simp [weightedInner] at he
++  exact he.resolve_right (hp i).ne'
++
++theorem fine_after_coarse (f : I → A) (g : A → B) (p : I → ℝ) (hp : ∀ i, 0 < p i)
++    (v : I → ℂ) : expect f p (expect (g ∘ f) p v)=expect (g ∘ f) p v := by
++  apply (expect_fixes_iff f p hp _).mpr
++  intro i j hij
++  apply expect_block_constant
++  simp only [Function.comp_apply,hij]
++
++theorem coarse_after_fine (f : I → A) (g : A → B) (p : I → ℝ) (hp : ∀ i, 0 < p i)
++    (v : I → ℂ) : expect (g ∘ f) p (expect f p v)=expect (g ∘ f) p v := by
++  apply weighted_inner_separates p hp
++  intro w
++  rw [expect_self_adjoint,expect_self_adjoint,fine_after_coarse f g p hp,
++    ← expect_self_adjoint]
++
++section Matrix
++variable [DecidableEq I]
++
++omit [DecidableEq I] in
++theorem conditional_kernel_product (f : I → A) (g : A → B) (p : I → ℝ)
++    (hp : ∀ i, 0 < p i) :
++    kernel (g ∘ f) p*kernel f p=kernel (g ∘ f) p ∧
++      kernel f p*kernel (g ∘ f) p=kernel (g ∘ f) p := by
++  constructor
++  · apply Matrix.mulVec_injective
++    funext v
++    rw [← Matrix.mulVec_mulVec,← expect_matrix,← expect_matrix,coarse_after_fine f g p hp,expect_matrix]
++  · apply Matrix.mulVec_injective
++    funext v
++    rw [← Matrix.mulVec_mulVec,← expect_matrix,← expect_matrix,fine_after_coarse f g p hp,expect_matrix]
++
++
++variable {J : ℕ → Type*} [∀ n, DecidableEq (J n)]
++
++omit [DecidableEq I] in
++theorem nested_kernel_min (f : ∀ n, I → J n) (p : I → ℝ) (hp : ∀ i, 0 < p i)
++    (hf : ∀ m n, m ≤ n → ∃ g : J n → J m, f m=g ∘ f n) (m n : ℕ) :
++    kernel (f m) p*kernel (f n) p=kernel (f (min m n)) p := by
++  by_cases hmn : m ≤ n
++  · obtain ⟨g,hg⟩ := hf m n hmn
++    rw [Nat.min_eq_left hmn,hg]
++    exact (conditional_kernel_product (f n) g p hp).1
++  · have hnm : n ≤ m := by omega
++    obtain ⟨g,hg⟩ := hf n m hnm
++    rw [Nat.min_eq_right hnm,hg]
++    exact (conditional_kernel_product (f m) g p hp).2
++
++theorem martingale_packet_product (f : ∀ n, I → J n) (p : I → ℝ) (hp : ∀ i, 0 < p i)
++    (hf : ∀ m n, m ≤ n → ∃ g : J n → J m, f m=g ∘ f n) (m n : ℕ) :
++    MartingalePackets.packet (fun k => kernel (f k) p) m *
++      MartingalePackets.packet (fun k => kernel (f k) p) n =
++        if m=n then MartingalePackets.packet (fun k => kernel (f k) p) n else 0 :=
++  MartingalePackets.packet_product _ (nested_kernel_min f p hp hf) m n
++
++theorem martingale_packet_reconstruction (f : ∀ n, I → J n) (p : I → ℝ) (n : ℕ) :
++    ∑ j ∈ Finset.range (n+1), MartingalePackets.packet (fun k => kernel (f k) p) j=kernel (f n) p :=
++  MartingalePackets.packet_sum _ n
++
++end Matrix
++end KomorebiPaperVI.ConditionalTowers
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/FeynmanKac.lean
+@@ -0,0 +1,112 @@
++import Mathlib.Analysis.SpecialFunctions.Exp
++import Mathlib.Data.Fintype.BigOperators
++import Mathlib.LinearAlgebra.Matrix.ToLin
++import Mathlib.Tactic
++
++/-! Author: Komorebi P. Enumerated finite path law and the actual potential-weighted matrix. -/
++namespace KomorebiPaperVI.FeynmanKac
++open scoped BigOperators
++variable {I : Type*} [Fintype I] [DecidableEq I]
++
++noncomputable def pathProbability (K : Matrix I I ℝ) : (n : ℕ) → I → (Fin n → I) → ℝ
++  | 0, _, _ => 1
++  | n+1, i, x => K (x 0) i*pathProbability K n (x 0) (Fin.tail x)
++
++noncomputable def pathPotential (V : I → ℝ) : (n : ℕ) → I → (Fin n → I) → ℝ
++  | 0, _, _ => 0
++  | n+1, i, x => V i+pathPotential V n (x 0) (Fin.tail x)
++
++def terminal : (n : ℕ) → I → (Fin n → I) → I
++  | 0, i, _ => i
++  | n+1, _, x => terminal n (x 0) (Fin.tail x)
++
++noncomputable def pathExpectation (K : Matrix I I ℝ) (V f : I → ℝ) (n : ℕ) (i : I) : ℝ :=
++  ∑ x : Fin n → I, pathProbability K n i x*Real.exp (-pathPotential V n i x)*f (terminal n i x)
++
++noncomputable def transfer (K : Matrix I I ℝ) (V : I → ℝ) : Matrix I I ℝ :=
++  Matrix.diagonal (fun i => Real.exp (-V i))*K.transpose
++
++omit [DecidableEq I] in
++theorem sum_paths_succ (n : ℕ) (F : (Fin (n+1) → I) → ℝ) :
++    (∑ x, F x)=∑ i, ∑ y : Fin n → I, F (Fin.cons i y) := by
++  have h := (Fin.consEquiv (fun _ : Fin (n+1) => I)).sum_comp F
++  change (∑ x : I × (Fin n → I), F (Fin.cons x.1 x.2))=∑ x : Fin (n+1) → I, F x at h
++  rw [Fintype.sum_prod_type] at h
++  exact h.symm
++
++theorem transfer_entry (K : Matrix I I ℝ) (V : I → ℝ) (i j : I) :
++    transfer K V i j=Real.exp (-V i)*K j i := by simp [transfer]
++
++omit [Fintype I] [DecidableEq I] in
++theorem path_probability_nonnegative (K : Matrix I I ℝ) (hK : ∀ i j, 0 ≤ K i j)
++    (n : ℕ) (i : I) (x : Fin n → I) : 0 ≤ pathProbability K n i x := by
++  induction n generalizing i with
++  | zero => exact zero_le_one
++  | succ n ih => exact mul_nonneg (hK _ _) (ih _ _)
++
++omit [DecidableEq I] in
++theorem path_probability_mass (K : Matrix I I ℝ) (hK : ∀ j, ∑ i, K i j=1)
++    (n : ℕ) (i : I) : (∑ x : Fin n → I, pathProbability K n i x)=1 := by
++  induction n generalizing i with
++  | zero => simp [pathProbability]
++  | succ n ih =>
++    rw [sum_paths_succ]
++    simp only [pathProbability,Fin.cons_zero,Fin.tail_cons,← Finset.mul_sum,ih,mul_one,hK]
++
++omit [DecidableEq I] in
++theorem path_expectation_zero (K : Matrix I I ℝ) (V f : I → ℝ) (i : I) :
++    pathExpectation K V f 0 i=f i := by simp [pathExpectation,pathProbability,pathPotential,terminal]
++
++omit [DecidableEq I] in
++theorem path_expectation_step (K : Matrix I I ℝ) (V f : I → ℝ) (n : ℕ) (i : I) :
++    pathExpectation K V f (n+1) i=
++      Real.exp (-V i)*∑ j, K j i*pathExpectation K V f n j := by
++  unfold pathExpectation
++  rw [sum_paths_succ]
++  simp only [pathProbability,pathPotential,terminal,Fin.cons_zero,Fin.tail_cons,neg_add,
++    Real.exp_add,Finset.mul_sum]
++  apply Finset.sum_congr rfl
++  intro j _
++  apply Finset.sum_congr rfl
++  intro x _
++  ring
++
++theorem feynman_kac_path_formula (K : Matrix I I ℝ) (V f : I → ℝ) (n : ℕ) :
++    (transfer K V ^ n).mulVec f=pathExpectation K V f n := by
++  induction n with
++  | zero => funext i; simp [path_expectation_zero]
++  | succ n ih =>
++    rw [pow_succ',← Matrix.mulVec_mulVec,ih]
++    funext i
++    rw [path_expectation_step]
++    simp only [Matrix.mulVec,dotProduct,transfer_entry,Finset.mul_sum,mul_assoc]
++
++omit [Fintype I] [DecidableEq I] in
++theorem path_probability_product (K : Matrix I I ℝ) (n : ℕ) (i : I) (x : Fin n → I) :
++    pathProbability K n i x = ∏ r : Fin n,
++      K ((Fin.cons i x : Fin (n+1) → I) r.succ) ((Fin.cons i x : Fin (n+1) → I) r.castSucc) := by
++  induction n generalizing i with
++  | zero => simp [pathProbability]
++  | succ n ih =>
++    rw [pathProbability,ih,Fin.prod_univ_succ]
++    simp [Fin.castSucc_succ,Fin.cons_self_tail,Fin.tail]
++
++omit [Fintype I] [DecidableEq I] in
++theorem path_potential_sum (V : I → ℝ) (n : ℕ) (i : I) (x : Fin n → I) :
++    pathPotential V n i x = ∑ r : Fin n, V ((Fin.cons i x : Fin (n+1) → I) r.castSucc) := by
++  induction n generalizing i with
++  | zero => simp [pathPotential]
++  | succ n ih =>
++    rw [pathPotential,ih,Fin.sum_univ_succ]
++    simp [Fin.castSucc_succ,Fin.cons_self_tail]
++
++omit [Fintype I] [DecidableEq I] in
++theorem terminal_last (n : ℕ) (i : I) (x : Fin n → I) :
++    terminal n i x = (Fin.cons i x : Fin (n+1) → I) (Fin.last n) := by
++  induction n generalizing i with
++  | zero => simp [terminal]
++  | succ n ih =>
++    rw [terminal,ih,← Fin.succ_last]
++    simp
++
++end KomorebiPaperVI.FeynmanKac
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/InformationLoss.lean
+@@ -0,0 +1,80 @@
++import KomorebiPaperVI.Coarsening
++
++/-! Author: Komorebi P. Literal information-loss matrix and the fine-to-coarse loss estimate. -/
++namespace KomorebiPaperVI.InformationLoss
++open KomorebiPaperVI.FiniteBayes KomorebiPaperVI.Coarsening
++open scoped BigOperators
++variable {I A : Type*} [Fintype I] [Fintype A] [DecidableEq A]
++
++def lossMatrix (P b : A → ℝ) : Matrix A A ℝ :=
++  fun a j => (if a=j then P a else 0)-b a*P j
++
++theorem lossMatrix_apply (P b d : A → ℝ) (a : A) :
++    (lossMatrix P b).mulVec d a=P a*d a-b a*(∑ j, P j*d j) := by
++  simp [lossMatrix, Matrix.mulVec, dotProduct, sub_mul, Finset.sum_sub_distrib,
++    ite_mul, mul_assoc, ← Finset.mul_sum]
++
++theorem information_loss_matrix (f : I → A) (p l : I → ℝ) (k : A → ℝ)
++    (hp : ∀ i, 0 ≤ p i) (hz : evidence p l ≠ 0)
++    (hk : evidence (coarsen f p) k ≠ 0) (a : A) :
++    coarsen f (update p l) a-update (coarsen f p) k a =
++      (lossMatrix (coarsen f p) (update (coarsen f p) k)).mulVec
++        (fun j => effective f p l j-k j) a/evidence p l := by
++  rw [effective_factorization f p l hp, lossMatrix_apply]
++  have he := posterior_difference (coarsen f p) (effective f p l) k
++    (by rwa [effective_evidence f p l hp]) hk a
++  simpa only [effective_evidence f p l hp] using he
++
++theorem information_loss_null (P k : A → ℝ) (hk : evidence P k ≠ 0) :
++    (lossMatrix P (update P k)).mulVec k=0 := by
++  funext a
++  rw [lossMatrix_apply]
++  exact scale_null_direction P k hk a
++
++omit [Fintype A] in
++theorem fiber_loss_bound (f : I → A) (p l : I → ℝ) (k : A → ℝ)
++    (hp : ∀ i, 0 ≤ p i) (a : A) :
++    coarsen f p a*|effective f p l a-k a| ≤
++      coarsen f (fun i => p i*|l i-k (f i)|) a := by
++  have he : (effective f p l a-k a)*coarsen f p a =
++      ∑ i, if f i=a then p i*(l i-k (f i)) else 0 := by
++    rw [sub_mul,effective_weight f p l hp]
++    simp only [coarsen, Finset.mul_sum, ← Finset.sum_sub_distrib]
++    apply Finset.sum_congr rfl
++    intro i _
++    by_cases hi : f i=a
++    · simp only [hi,ite_true]; ring
++    · simp [hi]
++  calc
++    _ = |(effective f p l a-k a)*coarsen f p a| := by
++      rw [abs_mul, abs_of_nonneg (coarsen_nonnegative f p hp a), mul_comm]
++    _ ≤ ∑ i, |if f i=a then p i*(l i-k (f i)) else 0| := by
++      rw [he]; exact Finset.abs_sum_le_sum_abs _ _
++    _ = _ := by
++      apply Finset.sum_congr rfl
++      intro i _
++      by_cases hi : f i=a
++      · simp [hi, abs_mul, abs_of_nonneg (hp i)]
++      · simp [hi]
++
++theorem total_loss_bound (f : I → A) (p l : I → ℝ) (k : A → ℝ)
++    (hp : ∀ i, 0 ≤ p i) :
++    (∑ a, coarsen f p a*|effective f p l a-k a|) ≤ ∑ i, p i*|l i-k (f i)| := by
++  calc
++    _ ≤ ∑ a, coarsen f (fun i => p i*|l i-k (f i)|) a :=
++      Finset.sum_le_sum (fun a _ => fiber_loss_bound f p l k hp a)
++    _ = _ := coarsen_mass f _
++
++theorem information_loss_norm (f : I → A) (p l : I → ℝ) (k : A → ℝ)
++    (hp : ∀ i, 0 ≤ p i) (hl : ∀ i, 0 ≤ l i) (hk : ∀ a, 0 ≤ k a)
++    (hz : 0 < evidence p l) (hzk : 0 < evidence (coarsen f p) k) :
++    l1 (fun a => coarsen f (update p l) a-update (coarsen f p) k a) ≤
++      2*(∑ a, coarsen f p a*|effective f p l a-k a|)/
++        min (evidence p l) (evidence (coarsen f p) k) := by
++  rw [effective_factorization f p l hp]
++  have he := likelihood_perturbation_bound (coarsen f p) (effective f p l) k
++    (coarsen_nonnegative f p hp) (effective_nonnegative f p l hp hl) hk
++    (by rwa [effective_evidence f p l hp]) hzk
++  simpa only [effective_evidence f p l hp, mul_comm] using he
++
++end KomorebiPaperVI.InformationLoss
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/LowModeConvergence.lean
+@@ -0,0 +1,40 @@
++import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
++import Mathlib.Analysis.Asymptotics.Defs
++import Mathlib.Tactic
++
++/-! Author: Komorebi P. The printed second-order estimate, with its exact constant. -/
++namespace KomorebiPaperVI.LowModeConvergence
++
++theorem sine_square_error (x : ℝ) :
++    0 ≤ x^2-Real.sin x^2 ∧ x^2-Real.sin x^2 ≤ x^4/3 := by
++  have hlo : 0 ≤ x^2-Real.sin x^2 := sub_nonneg.mpr Real.sin_sq_le_sq
++  have hp : |x+Real.sin x| ≤ 2*|x| :=
++    (abs_add_le _ _).trans (by linarith [Real.abs_sin_le_abs (x := x)])
++  have h := mul_le_mul (Real.abs_sub_sin_le x) hp (abs_nonneg _) (by positivity)
++  rw [← abs_mul] at h
++  have he : (x-Real.sin x)*(x+Real.sin x)=x^2-Real.sin x^2 := by ring
++  rw [he,abs_of_nonneg hlo] at h
++  constructor
++  · exact hlo
++  · calc
++      _ ≤ |x|^3/6*(2*|x|) := h
++      _ = x^4/3 := by rw [show |x|^3/6*(2*|x|)=|x|^4/3 by ring, (show Even (4:ℕ) by decide).pow_abs]
++
++noncomputable def eigenvalue (w h : ℝ) : ℝ := 4/h^2*Real.sin (w*h/2)^2
++
++theorem low_mode_error (w h : ℝ) (hh : h≠0) :
++    0 ≤ w^2-eigenvalue w h ∧ w^2-eigenvalue w h ≤ w^4/12*h^2 := by
++  have hs := sine_square_error (w*h/2)
++  have hpos : 0 ≤ 4/h^2 := by positivity
++  have he : w^2-eigenvalue w h=4/h^2*((w*h/2)^2-Real.sin (w*h/2)^2) := by
++    unfold eigenvalue
++    field_simp
++    ring
++  rw [he]
++  constructor
++  · exact mul_nonneg hpos hs.1
++  · calc
++      _ ≤ 4/h^2*((w*h/2)^4/3) := mul_le_mul_of_nonneg_left hs.2 hpos
++      _ = w^4/12*h^2 := by field_simp; ring
++
++end KomorebiPaperVI.LowModeConvergence
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/MarkovSemigroup.lean
+@@ -0,0 +1,94 @@
++import Mathlib.Analysis.Normed.Algebra.MatrixExponential
++import Mathlib.Analysis.SpecialFunctions.Exponential
++import Mathlib.Tactic
++
++/-! Author: Komorebi P. Entrywise positivity and column conservation for actual matrix exponentials. -/
++namespace KomorebiPaperVI.MarkovSemigroup
++open scoped BigOperators Matrix.Norms.Operator
++open NormedSpace
++set_option backward.isDefEq.respectTransparency false
++variable {I : Type*} [Fintype I] [DecidableEq I]
++
++theorem matrix_powers_nonnegative (M : Matrix I I ℝ) (hM : ∀ i j, 0 ≤ M i j)
++    (n : ℕ) (i j : I) : 0 ≤ (M^n) i j := by
++  induction n generalizing i j with
++  | zero => simp only [pow_zero,Matrix.one_apply]; split_ifs <;> norm_num
++  | succ n ih =>
++    rw [pow_succ,Matrix.mul_apply]
++    exact Finset.sum_nonneg (fun k _ => mul_nonneg (ih i k) (hM k j))
++
++theorem exponential_nonnegative (M : Matrix I I ℝ) (hM : ∀ i j, 0 ≤ M i j) (i j : I) :
++    0 ≤ exp M i j := by
++  have hm := expSeries_summable' (𝕂 := ℝ) M
++  rw [exp_eq_tsum ℝ]
++  change 0 ≤ (∑' n : ℕ, ((n.factorial:ℝ)⁻¹) • M^n) i j
++  rw [Pi.tsum_apply hm,Pi.tsum_apply (Pi.summable.mp hm i)]
++  simp only [Matrix.smul_apply,smul_eq_mul]
++  exact tsum_nonneg (fun n => mul_nonneg (by positivity) (matrix_powers_nonnegative M hM n i j))
++
++theorem shifted_generator_nonnegative (Q : Matrix I I ℝ)
++    (hQ : ∀ i j, i≠j → 0 ≤ Q i j) :
++    ∀ i j, 0 ≤ (Q+(∑ k, |Q k k|) • (1 : Matrix I I ℝ)) i j := by
++  intro i j
++  by_cases hij : i=j
++  · subst j
++    have h := Finset.single_le_sum (fun k _ => abs_nonneg (Q k k)) (Finset.mem_univ i)
++    simp only [Matrix.add_apply,Matrix.smul_apply,Matrix.one_apply_eq,smul_eq_mul,mul_one]
++    linarith [neg_le_abs (Q i i)]
++  · simpa [hij] using hQ i j hij
++
++theorem scalar_exponential (s : ℝ) : exp (s • (1 : Matrix I I ℝ))=Real.exp s • 1 := by
++  have he : s • (1 : Matrix I I ℝ)=Matrix.diagonal (fun _ => s) := by
++    ext i j; by_cases hij : i=j <;> simp [hij,Matrix.diagonal]
++  rw [he,Matrix.exp_diagonal]
++  ext i j
++  simp only [Pi.coe_exp,← Real.exp_eq_exp_ℝ,Matrix.diagonal_apply,Matrix.smul_apply,Matrix.one_apply,smul_eq_mul]
++  split_ifs <;> simp
++
++theorem markov_nonnegative (Q : Matrix I I ℝ) (hQ : ∀ i j, i≠j → 0 ≤ Q i j)
++    (t : ℝ) (ht : 0 ≤ t) (i j : I) : 0 ≤ exp (t • Q) i j := by
++  let a := ∑ k, |Q k k|
++  let B := Q+a • (1 : Matrix I I ℝ)
++  have hb : ∀ i j, 0 ≤ (t • B) i j :=
++    fun i j => mul_nonneg ht (shifted_generator_nonnegative Q hQ i j)
++  have he : t • Q=(-t*a) • (1 : Matrix I I ℝ)+t • B := by
++    dsimp [B]
++    module
++  have hc : Commute ((-t*a) • (1 : Matrix I I ℝ)) (t • B) :=
++    (Commute.one_left _).smul_left _
++  rw [he,Matrix.exp_add_of_commute _ _ hc,scalar_exponential]
++  simp only [Algebra.smul_mul_assoc,one_mul,Matrix.smul_apply,smul_eq_mul]
++  exact mul_nonneg (Real.exp_pos _).le (exponential_nonnegative (t • B) hb i j)
++
++theorem generator_power_columns (Q : Matrix I I ℝ) (hQ : ∀ j, ∑ i, Q i j=0)
++    (n : ℕ) (j : I) : (∑ i, (Q^n) i j)=if n=0 then 1 else 0 := by
++  cases n with
++  | zero => simp [Matrix.one_apply]
++  | succ n =>
++    simp only [pow_succ',Matrix.mul_apply,Finset.sum_comm,← Finset.sum_mul,hQ,zero_mul,
++      Finset.sum_const_zero,Nat.add_eq_zero_iff,Nat.one_ne_zero,and_false,ite_false]
++
++theorem markov_column_sum (Q : Matrix I I ℝ) (hQ : ∀ j, ∑ i, Q i j=0)
++    (t : ℝ) (j : I) : (∑ i, exp (t • Q) i j)=1 := by
++  have hc : ∀ j, ∑ i, (t • Q) i j=0 := by
++    intro j; simp [Matrix.smul_apply,smul_eq_mul,← Finset.mul_sum,hQ]
++  have hm := expSeries_summable' (𝕂 := ℝ) (t • Q)
++  rw [exp_eq_tsum ℝ]
++  simp only [Pi.tsum_apply hm,Pi.tsum_apply (Pi.summable.mp hm _),Matrix.smul_apply,smul_eq_mul]
++  have hs (i : I) : Summable (fun n : ℕ => ((n.factorial:ℝ)⁻¹)*((t • Q)^n) i j) := by
++    exact Pi.summable.mp (Pi.summable.mp hm i) j
++  rw [← Summable.tsum_finsetSum (s := Finset.univ) (fun i _ => hs i)]
++  simp only [← Finset.mul_sum,generator_power_columns _ hc]
++  simp
++
++theorem markov_probability (Q : Matrix I I ℝ) (hpos : ∀ i j, i≠j → 0 ≤ Q i j)
++    (hcol : ∀ j, ∑ i, Q i j=0) (p : I → ℝ) (hp : ∀ i, 0 ≤ p i)
++    (hpsum : ∑ i, p i=1) (t : ℝ) (ht : 0 ≤ t) :
++    (∀ i, 0 ≤ (exp (t • Q)).mulVec p i) ∧ ∑ i, (exp (t • Q)).mulVec p i=1 := by
++  constructor
++  · intro i
++    exact Finset.sum_nonneg (fun j _ => mul_nonneg (markov_nonnegative Q hpos t ht i j) (hp j))
++  · simp only [Matrix.mulVec,dotProduct,Finset.sum_comm,← Finset.sum_mul,markov_column_sum Q hcol,
++      one_mul,hpsum]
++
++end KomorebiPaperVI.MarkovSemigroup
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/MartingalePackets.lean
+@@ -0,0 +1,45 @@
++import KomorebiPaperVI.Algebra
++
++/-! Author: Komorebi P. All pairwise difference identities for a nested projector tower. -/
++namespace KomorebiPaperVI.MartingalePackets
++open scoped BigOperators
++variable {R : Type*} [Ring R]
++
++def packet (P : ℕ → R) : ℕ → R
++  | 0 => P 0
++  | n+1 => P (n+1)-P n
++
++theorem packet_product (P : ℕ → R) (h : ∀ i j, P i*P j=P (min i j)) (i j : ℕ) :
++    packet P i*packet P j=if i=j then packet P j else 0 := by
++  cases i with
++  | zero =>
++    cases j with
++    | zero => simp [packet,h]
++    | succ j => simp [packet,mul_sub,h]
++  | succ i =>
++    cases j with
++    | zero => simp [packet,sub_mul,h]
++    | succ j =>
++      by_cases hij : i=j
++      · subst j
++        simp only [packet,sub_mul,mul_sub,h,Nat.min_self,ite_true,
++          Nat.min_eq_left (Nat.le_succ i),Nat.min_eq_right (Nat.le_succ i)]
++        abel
++      · rcases lt_or_gt_of_ne hij with hij' | hji'
++        · have h1 : i+1 ≤ j := hij'
++          have h2 : i+1 ≤ j+1 := by omega
++          have h3 : i ≤ j+1 := by omega
++          simp [packet,sub_mul,mul_sub,h,Nat.min_eq_left h1,Nat.min_eq_left h2,
++            Nat.min_eq_left h3,Nat.min_eq_left hij'.le,hij]
++        · have h1 : j+1 ≤ i := hji'
++          have h2 : j+1 ≤ i+1 := by omega
++          have h3 : j ≤ i+1 := by omega
++          simp [packet,sub_mul,mul_sub,h,Nat.min_eq_right h1,Nat.min_eq_right h2,
++            Nat.min_eq_right h3,Nat.min_eq_right hji'.le,hij]
++
++theorem packet_sum (P : ℕ → R) (n : ℕ) : ∑ j ∈ Finset.range (n+1), packet P j=P n := by
++  induction n with
++  | zero => simp [packet]
++  | succ n ih => rw [Finset.sum_range_succ,ih,packet]; abel
++
++end KomorebiPaperVI.MartingalePackets
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/OperatorBounds.lean
+@@ -0,0 +1,72 @@
++import KomorebiPaperVI.Semigroups
++
++/-! Author: Komorebi P. General growth and finite-horizon contraction bounds. -/
++namespace KomorebiPaperVI.OperatorBounds
++open KomorebiPaperVI.Semigroups
++open scoped BigOperators
++variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
++    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
++
++theorem growth_duhamel_bound (A : E →L[ℝ] E) (B : F →L[ℝ] F) (C : E →L[ℝ] F)
++    (Mf Mc wf wc t : ℝ) (ht : 0 ≤ t)
++    (hA : ∀ u, 0 ≤ u → ‖transfer A u‖ ≤ Mf*Real.exp (wf*u))
++    (hB : ∀ u, 0 ≤ u → ‖transfer B u‖ ≤ Mc*Real.exp (wc*u)) :
++    ‖C.comp (transfer A t)-(transfer B t).comp C‖ ≤
++      Mf*Mc*‖C.comp A-B.comp C‖ * ∫ r in 0..t, Real.exp (wc*(t-r))*Real.exp (wf*r) := by
++  let D := C.comp A-B.comp C
++  let f := fun r => (transfer B (t-r)).comp (D.comp (transfer A r))
++  let g := fun r => Mf*Mc*‖D‖*(Real.exp (wc*(t-r))*Real.exp (wf*r))
++  have hf : Continuous f := by dsimp [f]; fun_prop
++  have hg : Continuous g := by dsimp [g]; fun_prop
++  rw [duhamel_rectangular]
++  change ‖∫ r in 0..t, f r‖ ≤ _
++  calc
++    _ ≤ ∫ r in 0..t, ‖f r‖ := intervalIntegral.norm_integral_le_integral_norm ht
++    _ ≤ ∫ r in 0..t, g r := by
++      apply intervalIntegral.integral_mono_on ht (hf.norm.intervalIntegrable 0 t) (hg.intervalIntegrable 0 t)
++      intro r hr
++      have ha := hA r hr.1
++      have hb := hB (t-r) (sub_nonneg.mpr hr.2)
++      calc
++        _ ≤ ‖transfer B (t-r)‖*‖D.comp (transfer A r)‖ := ContinuousLinearMap.opNorm_comp_le _ _
++        _ ≤ (Mc*Real.exp (wc*(t-r)))*(‖D‖*(Mf*Real.exp (wf*r))) :=
++          mul_le_mul hb ((ContinuousLinearMap.opNorm_comp_le _ _).trans
++            (mul_le_mul_of_nonneg_left ha (norm_nonneg _)))
++            (norm_nonneg _) ((norm_nonneg _).trans hb)
++        _ = g r := by dsimp [g]; ring
++    _ = _ := by dsimp [g,D]; rw [intervalIntegral.integral_const_mul]
++
++omit [CompleteSpace E] in
++theorem contraction_powers (A : E →L[ℝ] E) (hA : ‖A‖ ≤ 1) (n : ℕ) : ‖A^n‖ ≤ 1 := by
++  induction n with
++  | zero =>
++    simp only [pow_zero]
++    exact ContinuousLinearMap.norm_id_le
++  | succ n ih =>
++    rw [pow_succ]
++    exact (norm_mul_le _ _).trans (by nlinarith [norm_nonneg (A^n),norm_nonneg A])
++
++omit [CompleteSpace E] [CompleteSpace F] in
++theorem finite_horizon_contraction (A : E →L[ℝ] E) (B : F →L[ℝ] F) (C : E →L[ℝ] F)
++    (hA : ‖A‖ ≤ 1) (hB : ‖B‖ ≤ 1) (n : ℕ) :
++    ‖C.comp (A^n)-(B^n).comp C‖ ≤ (n:ℝ)*‖C.comp A-B.comp C‖ := by
++  induction n with
++  | zero => simp [ContinuousLinearMap.one_def]
++  | succ n ih =>
++    have he : C.comp (A^(n+1))-(B^(n+1)).comp C =
++        B.comp (C.comp (A^n)-(B^n).comp C)+(C.comp A-B.comp C).comp (A^n) := by
++      ext x
++      simp [pow_succ', mul_apply_eq_comp, ContinuousLinearMap.comp_apply]
++    rw [he]
++    calc
++      _ ≤ ‖B.comp (C.comp (A^n)-(B^n).comp C)‖+
++          ‖(C.comp A-B.comp C).comp (A^n)‖ := norm_add_le _ _
++      _ ≤ 1*((n:ℝ)*‖C.comp A-B.comp C‖)+‖C.comp A-B.comp C‖*1 := by
++        apply add_le_add
++        · exact (ContinuousLinearMap.opNorm_comp_le _ _).trans
++            (mul_le_mul hB ih (norm_nonneg _) (by norm_num))
++        · exact (ContinuousLinearMap.opNorm_comp_le _ _).trans
++            (mul_le_mul_of_nonneg_left (contraction_powers A hA n) (norm_nonneg _))
++      _ = _ := by push_cast; ring
++
++end KomorebiPaperVI.OperatorBounds
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/ReducingPackets.lean
+@@ -0,0 +1,52 @@
++import KomorebiPaperVI.Semigroups
++
++/-! Author: Komorebi P. From vanishing generator blocks to independent exponential evolution. -/
++namespace KomorebiPaperVI.ReducingPackets
++open KomorebiPaperVI.Semigroups
++open scoped BigOperators
++variable {R I : Type*} [Fintype I]
++
++section Ring
++variable [Ring R]
++
++theorem generator_commutes (P : I → R) (hP : ∑ a, P a=1) (A : R)
++    (h : ∀ b a, b≠a → P b*A*P a=0) (a : I) : P a*A=A*P a := by
++  classical
++  have hl : A*P a=P a*A*P a := by
++    calc
++      _ = (∑ b, P b)*A*P a := by rw [hP,one_mul]
++      _ = ∑ b, P b*A*P a := by rw [Finset.sum_mul,Finset.sum_mul]
++      _ = _ := Finset.sum_eq_single a (fun b _ hb => h b a hb) (by simp)
++  have hr : P a*A=P a*A*P a := by
++    calc
++      _ = P a*A*(∑ b, P b) := by rw [hP,mul_one]
++      _ = ∑ b, P a*A*P b := by rw [Finset.mul_sum]
++      _ = _ := Finset.sum_eq_single a (fun b _ hb => h a b hb.symm) (by simp)
++  exact hr.trans hl.symm
++
++end Ring
++
++section Exponential
++variable [NormedRing R] [NormedAlgebra ℝ R] [CompleteSpace R]
++
++theorem reducing_exponential (P : I → R) (hP : ∑ a, P a=1)
++    (ho : ∀ b a, b≠a → P b*P a=0) (A : R)
++    (h : ∀ b a, b≠a → P b*A*P a=0) (t : ℝ) (b a : I) (hba : b≠a) :
++    P b*transfer A t*P a=0 := by
++  rw [transfer_intertwining (P b) A A (generator_commutes P hP A h b) t,
++    mul_assoc,ho b a hba,mul_zero]
++
++theorem compressed_evolution (P : I → R) (hP : ∑ a, P a=1)
++    (hi : ∀ a, P a*P a=P a) (A : R)
++    (h : ∀ b a, b≠a → P b*A*P a=0) (t : ℝ) (a : I) :
++    P a*transfer A t*P a=transfer (P a*A*P a) t*P a := by
++  have hc := generator_commutes P hP A h a
++  have he : P a*A=(P a*A*P a)*P a := by
++    calc
++      _ = A*(P a*P a) := by rw [hi, hc]
++      _ = P a*A*P a := by rw [← mul_assoc,← hc]
++      _ = _ := by rw [mul_assoc (P a*A),hi]
++  rw [transfer_intertwining (P a) A (P a*A*P a) he t,mul_assoc,hi]
++
++end Exponential
++end KomorebiPaperVI.ReducingPackets
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/SchurFeshbach.lean
+@@ -0,0 +1,48 @@
++import Mathlib.LinearAlgebra.Matrix.SchurComplement
++import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
++import Mathlib.Tactic
++
++/-! Author: Komorebi P. Literal retained blocks of the full matrix resolvent. -/
++namespace KomorebiPaperVI.SchurFeshbach
++open Matrix
++variable {P Q : Type*} [Fintype P] [Fintype Q] [DecidableEq P] [DecidableEq Q]
++
++noncomputable def schur (App : Matrix P P ℂ) (Apq : Matrix P Q ℂ)
++    (Aqp : Matrix Q P ℂ) (Aqq : Matrix Q Q ℂ) (z : ℂ) : Matrix P P ℂ :=
++  Matrix.scalar P z-App-Apq*(Matrix.scalar Q z-Aqq)⁻¹*Aqp
++
++theorem resolvent_blocks (App : Matrix P P ℂ) (Apq : Matrix P Q ℂ)
++    (Aqp : Matrix Q P ℂ) (Aqq : Matrix Q Q ℂ) (z : ℂ) :
++    Matrix.scalar (P ⊕ Q) z-Matrix.fromBlocks App Apq Aqp Aqq =
++      Matrix.fromBlocks (Matrix.scalar P z-App) (-Apq) (-Aqp) (Matrix.scalar Q z-Aqq) := by
++  ext i j
++  cases i <;> cases j <;> simp [Matrix.fromBlocks,Matrix.scalar,Matrix.diagonal]
++
++theorem projected_resolvent (App : Matrix P P ℂ) (Apq : Matrix P Q ℂ)
++    (Aqp : Matrix Q P ℂ) (Aqq : Matrix Q Q ℂ) (z : ℂ)
++    [Invertible (Matrix.scalar Q z-Aqq)]
++    [Invertible (Matrix.scalar (P ⊕ Q) z-Matrix.fromBlocks App Apq Aqp Aqq)] :
++    ((Matrix.scalar (P ⊕ Q) z-Matrix.fromBlocks App Apq Aqp Aqq)⁻¹).submatrix
++      Sum.inl Sum.inl = (schur App Apq Aqp Aqq z)⁻¹ := by
++  let D := Matrix.scalar Q z-Aqq
++  let A := Matrix.scalar P z-App
++  have he := resolvent_blocks App Apq Aqp Aqq z
++  let : Invertible (Matrix.fromBlocks A (-Apq) (-Aqp) D) := Invertible.copy ‹_› _ he.symm
++  let : Invertible (A-(-Apq)*⅟D*(-Aqp)) := Matrix.invertibleOfFromBlocks₂₂Invertible A (-Apq) (-Aqp) D
++  have hinv := Matrix.invOf_fromBlocks₂₂_eq A (-Apq) (-Aqp) D
++  have hs : A-(-Apq)*⅟D*(-Aqp)=schur App Apq Aqp Aqq z := by
++    simp only [Matrix.neg_mul,Matrix.mul_neg,neg_neg,Matrix.invOf_eq_nonsing_inv,schur,D,A]
++  rw [he,← Matrix.invOf_eq_nonsing_inv,hinv]
++  change ⅟(A-(-Apq)*⅟D*(-Aqp))=(schur App Apq Aqp Aqq z)⁻¹
++  rw [Matrix.invOf_eq_nonsing_inv]
++  congr 1
++
++theorem schur_invertible (App : Matrix P P ℂ) (Apq : Matrix P Q ℂ)
++    (Aqp : Matrix Q P ℂ) (Aqq : Matrix Q Q ℂ) (z : ℂ)
++    [Invertible (Matrix.scalar Q z-Aqq)] :
++    IsUnit (Matrix.scalar (P ⊕ Q) z-Matrix.fromBlocks App Apq Aqp Aqq) ↔
++      IsUnit (schur App Apq Aqp Aqq z) := by
++  rw [resolvent_blocks, Matrix.isUnit_fromBlocks_iff_of_invertible₂₂]
++  simp only [Matrix.neg_mul,Matrix.mul_neg,neg_neg,Matrix.invOf_eq_nonsing_inv,schur]
++
++end KomorebiPaperVI.SchurFeshbach
+--- /dev/null
++++ second-block/formalization/lean/KomorebiPaperVI/SpectralPackets.lean
+@@ -0,0 +1,102 @@
++import KomorebiPaperVI.Semigroups
++import Mathlib.Analysis.SpecialFunctions.Pow.Real
++
++/-! Author: Komorebi P. Finite spectral resolution, including the actual exponential bridge. -/
++namespace KomorebiPaperVI.SpectralPackets
++open scoped BigOperators
++variable {I R : Type*} [Fintype I] [DecidableEq I] [NormedRing R] [NormedAlgebra ℝ R] [CompleteSpace R]
++
++noncomputable def resolve (P : I → R) (c : I → ℝ) : R := ∑ i, c i • P i
++
++omit [CompleteSpace R] in
++theorem resolve_mul (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (c d : I → ℝ) : resolve P c*resolve P d=resolve P (fun i => c i*d i) := by
++  classical
++  simp only [resolve,Finset.sum_mul,Finset.mul_sum,smul_mul_smul_comm,h]
++  simp [smul_ite]
++
++omit [CompleteSpace R] in
++theorem resolve_left_packet (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (c : I → ℝ) (j : I) : P j*resolve P c=c j • P j := by
++  classical
++  simp [resolve,Finset.mul_sum,Algebra.mul_smul_comm,h,smul_ite]
++
++omit [CompleteSpace R] in
++theorem resolve_right_packet (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (c : I → ℝ) (j : I) : resolve P c*P j=c j • P j := by
++  classical
++  simp [resolve,Finset.sum_mul,Algebra.smul_mul_assoc,h,smul_ite]
++
++noncomputable def resolutionHom (P : I → R) (hP : ∑ i, P i=1)
++    (h : ∀ i j, P i*P j=if i=j then P i else 0) : (I → ℝ) →+* R where
++  toFun := resolve P
++  map_zero' := by simp [resolve]
++  map_one' := by simpa [resolve] using hP
++  map_add' c d := by simp [resolve,add_smul,Finset.sum_add_distrib]
++  map_mul' c d := (resolve_mul P h c d).symm
++
++omit [CompleteSpace R] in
++theorem exp_resolution (P : I → R) (hP : ∑ i, P i=1)
++    (h : ∀ i j, P i*P j=if i=j then P i else 0) (c : I → ℝ) :
++    NormedSpace.exp (resolve P c)=resolve P (fun i => Real.exp (c i)) := by
++  let : NormedAlgebra ℚ R := NormedAlgebra.restrictScalars ℚ ℝ R
++  have hc : Continuous (resolutionHom P hP h) := by
++    change Continuous (resolve P)
++    unfold resolve
++    fun_prop
++  have he := NormedSpace.map_exp (resolutionHom P hP h) hc c
++  change resolve P (NormedSpace.exp c)=NormedSpace.exp (resolve P c) at he
++  simpa only [Pi.exp_def,← Real.exp_eq_exp_ℝ] using he.symm
++
++noncomputable def fractional (P : I → R) (lam : I → ℝ) (a : ℝ) : R :=
++  resolve P (fun i => (lam i)^a)
++
++noncomputable def spectralTransfer (P : I → R) (lam : I → ℝ) (a t : ℝ) : R :=
++  resolve P (fun i => Real.exp (-t*(lam i)^a))
++
++omit [CompleteSpace R] in
++theorem fractional_add (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (lam : I → ℝ) (hl : ∀ i, 0 ≤ lam i) (a b : ℝ) (ha : 0 < a) (hb : 0 < b) :
++    fractional P lam a*fractional P lam b=fractional P lam (a+b) := by
++  unfold fractional
++  rw [resolve_mul P h]
++  congr 1
++  funext i
++  exact (Real.rpow_add' (hl i) (add_pos ha hb).ne').symm
++
++omit [CompleteSpace R] in
++theorem spectral_transfer_exponential (P : I → R) (hP : ∑ i, P i=1)
++    (h : ∀ i j, P i*P j=if i=j then P i else 0) (lam : I → ℝ) (a t : ℝ) :
++    NormedSpace.exp ((-t) • fractional P lam a)=spectralTransfer P lam a t := by
++  have hs : (-t) • fractional P lam a=resolve P (fun i => -t*(lam i)^a) := by
++    simp [fractional,resolve,Finset.smul_sum,smul_smul]
++  rw [hs,exp_resolution P hP h]
++  rfl
++
++omit [CompleteSpace R] in
++theorem spectral_transfer_add (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (lam : I → ℝ) (a s t : ℝ) :
++    spectralTransfer P lam a s*spectralTransfer P lam a t=spectralTransfer P lam a (s+t) := by
++  unfold spectralTransfer
++  rw [resolve_mul P h]
++  congr 1
++  funext i
++  rw [← Real.exp_add]
++  congr 1
++  ring
++
++omit [CompleteSpace R] in
++theorem fractional_reduces (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (lam : I → ℝ) (a : ℝ) (j : I) :
++    P j*fractional P lam a=(lam j)^a • P j ∧
++      fractional P lam a*P j=(lam j)^a • P j :=
++  ⟨resolve_left_packet P h _ j,resolve_right_packet P h _ j⟩
++
++omit [CompleteSpace R] in
++theorem spectral_transfer_reduces (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
++    (lam : I → ℝ) (a t : ℝ) (j : I) :
++    P j*spectralTransfer P lam a t=Real.exp (-t*(lam j)^a) • P j ∧
++      spectralTransfer P lam a t*P j=Real.exp (-t*(lam j)^a) • P j :=
++  ⟨resolve_left_packet P h _ j,resolve_right_packet P h _ j⟩
++
++end KomorebiPaperVI.SpectralPackets
+--- first-block/formalization/lean/lakefile.toml
++++ second-block/formalization/lean/lakefile.toml
+@@ -1,5 +1,5 @@
+ name = "KomorebiPaperVI"
+-version = "0.1.0"
++version = "0.2.0"
+ defaultTargets = ["KomorebiPaperVI"]
+ moreLeanArgs = ["-DwarningAsError=true"]
+ 

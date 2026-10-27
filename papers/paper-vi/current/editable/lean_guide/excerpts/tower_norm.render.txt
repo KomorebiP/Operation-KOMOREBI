@@ -1,0 +1,9 @@
+theorem bounded_time_uniform_convergence (A : ∀ n,H n →L[ℂ] H n) (C : ∀ n,H (n+1) →L[ℂ] H n)
+    (hA : ∀ n,0 ≤ A n) (p : ℝ≥0) (hp : 0 < p) (T : ℝ)
+    (hs : Summable (fractionalNorm A C p)) :
+    TendstoUniformlyOn (fun N t => ∑ n ∈ Finset.range N,timeNorm A C p t n)
+      (fun t => ∑' n,timeNorm A C p t n) Filter.atTop (Icc 0 T) := by
+  apply tendstoUniformlyOn_tsum_nat (hs.mul_left T)
+  intro n t ht
+  rw [Real.norm_of_nonneg (show 0 ≤ timeNorm A C p t n from norm_nonneg _)]
+  exact bounded_time_majorant A C hA p hp T t ht n

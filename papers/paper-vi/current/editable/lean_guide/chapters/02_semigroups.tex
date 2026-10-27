@@ -1,0 +1,23 @@
+\clearpage\section{Semigroups and rectangular defects}
+\label{sec:semigroups}
+The algebraic layer begins with finite packet blocks $P_bAP_a$ in a ring. It proves reconstruction, multiplication through intermediate packets, and telescoping formulas without assuming stochasticity or self-adjointness. The analytic layer then uses the actual algebra exponential. The definition is short because convergence and differentiation are supplied by the imported analysis library and the ambient Banach-algebra structure.
+\excerpt{Semigroups}{transfer}
+\excerpt{Semigroups}{semigroup}
+
+\subsection{Reconstruction is stronger than a diagram}
+If $\sum_aP_a=1$, every input/output block participates in reconstruction. Idempotence supplies the block product identity. Pairwise reduction requires additional hypotheses on the off-diagonal generator blocks. It does not follow merely from writing $A$ in blocks. The endpoint for core 2.1 uses the actual exponential law:
+\excerpt{Semigroups}{packet_convolution}
+For core 2.2, \code{ReducingPackets.generator_commutes} derives commutation from vanishing off-diagonal generator blocks. The subsequent theorems prove vanishing exponential cross blocks and equality with the compressed evolution. A projection that is not reducing can produce a memory term when its complement is eliminated. The later memory chapter explains why.
+
+\subsection{The domain of the refinement map is explicit}
+Let $A:E\to E$, $B:F\to F$, and $C:E\to F$. Define $D=CA-BC$. The real Banach-space theorem differentiates $e^{(t-r)B}Ce^{rA}$ and integrates that derivative. Rectangular types enforce the order of every composition.
+\excerpt{Semigroups}{duhamel}
+The identity itself is valid for every real $t$ as an oriented interval integral. Bounds such as $\|Ce^{tA}-e^{tB}C\|\le t\|D\|$ additionally assume $t\ge0$ and contraction estimates for both semigroups. The general growth estimate lives in \code{OperatorBounds.growth_duhamel_bound}. The exact case specializes the same identity to $D=0$:
+\excerpt{Semigroups}{exact_intertwining}
+
+\subsection{Discrete time and resolvents}
+Core 5.2 is an exact finite sum before a norm estimate is applied. Horizon zero is included by the empty sum. Its source uses ring-valued literal matrices with independently typed row and column spaces:
+\excerpt{Algebra}{finite_horizon}
+The resolvent identity requires one inverse equation on each side. This is deliberate: the proof does not invoke a vague invertibility claim when only the relevant cancellations are needed. The scalar must commute with the entries of $C$ in the general ring statement.
+\excerpt{Algebra}{resolvent}
+For ordinary complex matrices the scalar commutation is automatic. For core 3.3 the specified inverse equations are supplied by the actual resolvents. The broad Banach-space and contour extensions in the traditional paper have their own domains and hypotheses. The literal matrix interface is the formal endpoint recorded in this ledger entry.

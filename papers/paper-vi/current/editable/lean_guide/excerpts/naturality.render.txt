@@ -1,0 +1,13 @@
+theorem canonical_naturality (A : End ℂ V) (B : End ℂ W) (C : V →ₗ[ℂ] W)
+    (h : B.comp C=C.comp A) (a : ℂ → ℕ → ℂ) :
+    C.comp (calculus A a)=(calculus B a).comp C := by
+  apply DirectSum.decompose_lhom_ext A.maxGenEigenspace
+  intro μ
+  ext x
+  have hx := Module.End.mapsTo_genEigenspace_of_comp C h μ ⊤ x.property
+  change C (calculus A a x)=calculus B a (C x)
+  rw [calculus_on_component A a μ x x.property,
+    calculus_on_component B a μ (C x) hx,
+    ← jet_stable A a μ x x.property (max (finrank ℂ V) (finrank ℂ W)) (le_max_left _ _),
+    ← jet_stable B a μ (C x) hx (max (finrank ℂ V) (finrank ℂ W)) (le_max_right _ _)]
+  exact jet_intertwines A B C h a μ _ x

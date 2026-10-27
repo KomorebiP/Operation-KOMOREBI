@@ -1,0 +1,18 @@
+\clearpage\section{Markov mass and conditional expectation}
+\label{sec:probability}
+\subsection{Column conservation}
+\code{MarkovSemigroup} proves nonnegativity of the actual matrix exponential by shifting a Metzler generator by a scalar identity, expanding a nonnegative matrix exponential, and then undoing the scalar shift. Conservation follows from zero column sums of the generator. The final probability statement combines these two independent facts.
+\excerpt{MarkovSemigroup}{markov}
+Here $Q_{ij}$ is the rate from state $j$ to state $i$. Off-diagonal nonnegativity and zero column sums are the generator hypotheses; $t\ge0$ is essential for the positivity argument. Exact discrete lumpability is core 5.1's rectangular identity $CK^n=\bar K^nC$. The complete quotient obstruction and detailed coordinate characterization in Part II are related written results, not additional completed Lean ledger entries.
+
+\subsection{Weighted projection on observables}
+For a partition map $f:I\to A$, \code{Coarsening.coarsen} sums probability mass over fibers. In contrast, \code{ConditionalExpectation.expect} returns a function on the original fine space. It averages an observable within each fiber with respect to finite weights $p_i$. Strict positivity guarantees that the occupied fiber denominator at each fine point is nonzero.
+\excerpt{ConditionalExpectation}{conditional}
+The source also proves that the range is exactly the block-constant functions and that the expectation equals a literal kernel matrix applied to the observable. Self-adjointness is with respect to the weighted inner product, not ordinarily the unweighted Euclidean inner product:
+\excerpt{ConditionalExpectation}{self_adjoint}
+The displayed self-adjoint identity is algebraic and its signature has no positivity premise. Calling the pairing a positive-definite inner product, or deriving range separation from it, uses the strict positivity hypotheses elsewhere in the module. Reuse the endpoint matching the intended claim rather than adding an interpretation that its type does not supply.
+
+\subsection{Towers and martingale packets}
+Composing $f:I\to A$ with $g:A\to B$ makes a coarser partition. Both products of the corresponding conditional kernels equal the coarse kernel:
+\excerpt{ConditionalTowers}{tower}
+The module extends this to arbitrary pairs in a nested family: the product is the kernel at the coarser index. \code{MartingalePackets} then supplies the abstract difference-projector algebra, and \code{ConditionalTowers} applies it to concrete kernels. The differences are pairwise annihilating idempotents and sum to the terminal projector. The formal scope is finite weighted conditional expectation; a general measure-theoretic conditional-expectation tower is a separate classical extension in the traditional exposition.

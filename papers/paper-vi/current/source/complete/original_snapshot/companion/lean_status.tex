@@ -1,0 +1,102 @@
+\clearpage
+\appendix
+\section{Lean verification and scope}\label{sec:lean-status}
+\noindent\textbf{Fifth checked block, 6 September 2026.}
+The release contains 341 explicit Lean theorem declarations across 47 proof modules,
+including 31 additional declarations since the fourth checked block. The full
+build and namespace audit pass with Lean 4.34.0-rc2 and pinned mathlib. The audit
+inspects 782 declarations, including definitions and generated auxiliaries; only
+\texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound} are allowed.
+These are different counting units from the paper's 33 theorem-like results.
+
+The ledger has \textbf{33 complete, zero partial and zero pending results}.
+The last two results, 13.2 and 15.1, are now complete. The three separately stated
+conjectures remain open and are excluded from this count.
+
+``Complete'' means the stated scope follows from the named checked targets
+and the ordinary specializations recorded in the ledger. Prose-to-Lean correspondence
+is manually reviewed. The fractional targets use complex Hilbert spaces;
+complexification for real operators is an ordinary mathematical specialization,
+not a separately checked Lean construction. Completion of the theorem ledger does
+not certify every prose sentence, numerical figure or open conjecture.
+
+\small
+\begin{longtable}{@{}p{0.08\textwidth}p{0.68\textwidth}p{0.17\textwidth}@{}}
+\toprule Result & Manuscript statement & Lean scope\\
+\midrule\endfirsthead
+\toprule Result & Manuscript statement & Lean scope\\\midrule\endhead
+\bottomrule\endfoot
+1.2 & Finite semigroup law & Complete\\
+2.1 & Packet semigroup convolution & Complete\\
+2.2 & Reducing packets & Complete\\
+3.1 & Exact Duhamel refinement identity & Complete\\
+3.2 & Norm bound & Complete\\
+3.3 & Resolvent refinement identity & Complete\\
+4.1 & Finite Markov semigroup & Complete\\
+5.1 & Exact lumpability & Complete\\
+5.2 & Finite-horizon defect formula & Complete\\
+6.1 & Finite conditional-expectation projector & Complete\\
+6.2 & Tower law and martingale packets & Complete\\
+7.1 & Independent-likelihood composition & Complete\\
+7.2 & Bayesian packet reconstruction & Complete\\
+7.3 & Likelihood perturbation bound & Complete\\
+8.1 & Exact effective-likelihood factorization & Complete\\
+8.2 & Bayesian refinement criterion & Complete\\
+8.4 & Bayesian information-loss packet & Complete\\
+8.5 & Nested Bayesian packet tower & Complete\\
+8.6 & Canonical coarsest likelihood-resolving partition & Complete\\
+9.1 & Bayesian nonlinear semigroup & Complete\\
+9.3 & Prediction-update reconstruction & Complete\\
+10.1 & Fractional packet calculus & Complete\\
+10.2 & Poisson subordination & Complete\\
+10.3 & Fractional intertwining theorem & Complete\\
+10.4 & Fractional semigroup refinement & Complete\\
+10.5 & Fractional refinement towers & Complete\\
+11.1 & Exact discrete Green reconstruction at grid nodes & Complete\\
+11.2 & Second-order low-mode convergence & Complete\\
+12.1 & Discrete Feynman--Kac path formula & Complete\\
+13.1 & Schur--Feshbach projected resolvent & Complete\\
+13.2 & Memory/self-energy correspondence & Complete\\
+14.1 & Semigroup survival identities & Complete\\
+15.1 & Naturality under exact intertwining & Complete\\
+\end{longtable}
+\normalsize
+
+\paragraph{General nonnormal memory (13.2).}
+The actual damped exponential is decomposed into finitely many terms of the form
+$t^k e^{(\mu-z)t}$. Integrability and convergence to zero follow from
+$\operatorname{Re}\mu<\operatorname{Re}z$. The formal proof uses generalized
+eigenspaces of left multiplication on the matrix algebra, so nilpotent Jordan
+parts are included. Both inverse identities follow by integrating the two
+exponential derivative formulas. A continuous linear sandwich map gives the
+literal rectangular matrix memory integral and the actual inverse. No normality
+or externally supplied growth bound is required.
+
+\paragraph{Canonical holomorphic naturality (15.1).}
+The standard finite Taylor-jet calculus defined before the theorem is constructed
+using the direct sum of generalized eigenspaces. Uniqueness, cutoff stability and
+exact rectangular naturality are proved. Cauchy's formula identifies the local
+coefficients with actual circle integrals; admissible radii exist in every stated
+open holomorphic neighborhood, and changing them leaves the canonical operator
+unchanged. The argument permits disconnected neighborhoods and different matrix
+dimensions. It makes no assertion about general Banach-algebra contour deformation.
+
+\paragraph{Fractional results (10.3--10.5).}
+The inherited fourth block proves the scalar beta normalization, the Lebesgue
+integral representation of actual positive fractional powers, the literal
+resolvent-defect formula, both printed norm constants and exact intertwining.
+The rectangular complex-Hilbert-space semigroup proof substitutes those constants
+into Duhamel's identity. The varying-space tower proof gives summability of
+fractional-defect norms and uniform convergence of time-defect norm series on
+bounded time intervals. Here ``summable'' means summable in norm. Operators with
+unrelated codomains are not added together; a separate fixed-space theorem proves
+operator-series convergence when such a sum is defined.
+
+\paragraph{Verification and numerical evidence.}
+The full pinned build, project-wide axiom audit, all 54 companion tests and six
+verifier controls pass. The 54 tests comprise the original 37 and 17 added boundary
+and validation cases. The 19 numerical figure pairs are unchanged. The earlier
+79-field numerical comparison remains historical evidence, not a rerun in this
+block. Machine-readable source contracts, exact theorem targets, full logs and
+previous checked ledgers accompany the source archive. Numerical tests are finite
+regressions and are not substitutes for the Lean proofs.

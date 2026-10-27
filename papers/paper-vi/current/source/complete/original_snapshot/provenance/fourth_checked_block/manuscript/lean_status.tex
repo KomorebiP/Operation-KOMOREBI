@@ -1,0 +1,165 @@
+\clearpage
+\appendix
+\section{Lean verification and remaining scope}\label{sec:lean-status}
+\noindent\textbf{Fourth checked block, 6 September 2026.}
+The release contains 310 explicit Lean theorem declarations across 42 proof modules,
+including 83 added declarations since the third checked block. The complete
+build and namespace audit pass with Lean 4.34.0-rc2 and pinned mathlib.
+The audit inspects 710 declarations, including definitions and generated auxiliaries;
+only \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound} are allowed.
+These are different counting units from the paper's 33 theorem-like results.
+
+Three of the last five outstanding results are now complete: 10.3, 10.4 and 10.5.
+The ledger has \textbf{31 complete and 2 partial results}.
+The three open conjectures are unchanged and excluded from these counts.
+This edition does not claim full-paper formalization.
+
+``Complete'' means the scoped statement follows from the named checked targets
+and the ordinary specializations recorded in the ledger. Prose-to-Lean correspondence
+is manually reviewed. The fractional targets use complex Hilbert spaces;
+complexification for real operators is a mathematical specialization, not a separately
+checked Lean construction. ``Partial'' means a stated clause or connection remains.
+
+\small
+\begin{longtable}{@{}p{0.08\textwidth}p{0.68\textwidth}p{0.17\textwidth}@{}}
+\toprule Result & Manuscript statement & Lean scope\\
+\midrule\endfirsthead
+\toprule Result & Manuscript statement & Lean scope\\\midrule\endhead
+\bottomrule\endfoot
+1.2 & Finite semigroup law & Complete\\
+2.1 & Packet semigroup convolution & Complete\\
+2.2 & Reducing packets & Complete\\
+3.1 & Exact Duhamel refinement identity & Complete\\
+3.2 & Norm bound & Complete\\
+3.3 & Resolvent refinement identity & Complete\\
+4.1 & Finite Markov semigroup & Complete\\
+5.1 & Exact lumpability & Complete\\
+5.2 & Finite-horizon defect formula & Complete\\
+6.1 & Finite conditional-expectation projector & Complete\\
+6.2 & Tower law and martingale packets & Complete\\
+7.1 & Independent-likelihood composition & Complete\\
+7.2 & Bayesian packet reconstruction & Complete\\
+7.3 & Likelihood perturbation bound & Complete\\
+8.1 & Exact effective-likelihood factorization & Complete\\
+8.2 & Bayesian refinement criterion & Complete\\
+8.4 & Bayesian information-loss packet & Complete\\
+8.5 & Nested Bayesian packet tower & Complete\\
+8.6 & Canonical coarsest likelihood-resolving partition & Complete\\
+9.1 & Bayesian nonlinear semigroup & Complete\\
+9.3 & Prediction-update reconstruction & Complete\\
+10.1 & Fractional packet calculus & Complete\\
+10.2 & Poisson subordination & Complete\\
+10.3 & Fractional intertwining theorem & Complete\\
+10.4 & Fractional semigroup refinement & Complete\\
+10.5 & Fractional refinement towers & Complete\\
+11.1 & Exact discrete Green reconstruction at grid nodes & Complete\\
+11.2 & Second-order low-mode convergence & Complete\\
+12.1 & Discrete Feynman--Kac path formula & Complete\\
+13.1 & Schur--Feshbach projected resolvent & Complete\\
+13.2 & Memory/self-energy correspondence & Partial\\
+14.1 & Semigroup survival identities & Complete\\
+15.1 & Naturality under exact intertwining & Partial\\
+\end{longtable}
+\normalsize
+
+\subsection*{The three completed fractional connections}
+\paragraph{Exact normalization and literal resolvents (10.3).}
+For $0<\alpha<1$, the change of variables $x=t/(1+t)$ and Euler's reflection
+formula give
+\[
+\int_0^\infty\frac{t^{\alpha-1}}{1+t}\,dt
+=B(\alpha,1-\alpha)=\frac{\pi}{\sin(\pi\alpha)}.
+\]
+The weighted beta integral also gives
+\[
+\frac{\sin(\pi\alpha)}{\pi}
+\int_0^\infty\frac{t^\alpha}{(t+m)^2}\,dt
+=\alpha m^{\alpha-1},\qquad m>0.
+\]
+Both scalar evaluations are proved in Lean. They are not normalization hypotheses.
+The CFC representation uses the explicit positive measure
+$(\sin(\pi\alpha)/\pi)\,dt$; its nonzero density transfers integrability to
+Lebesgue measure. The positive resolvent is identified with the actual inverse
+of $tI+A$, with both inverse laws and bounds $(t+m)^{-1}$ under an operator-order gap.
+
+For $C:H_f\to H_c$, continuous bilinear composition passes through the Bochner
+integrals. The rectangular resolvent identity gives the literal integrand
+$t^\alpha(tI+B)^{-1}D(tI+A)^{-1}$, where $D=CA-BC$.
+Its low- and high-parameter bounds are
+\[
+2\norm C\,t^{\alpha-1},\qquad \norm D\,t^{\alpha-2}.
+\]
+Splitting at $r=\norm D/(2\norm C)$ when both norms are positive gives exactly
+$K_\alpha=2^{1-\alpha}\sin(\pi\alpha)/(\pi\alpha(1-\alpha))$.
+The cases $C=0$ and $D=0$ are included. The weighted integral gives the exact
+common-gap constant, and $D=0$ implies $D_\alpha=0$.
+The integral, estimates and intertwining statements use actual nonnegative CFC powers.
+
+\paragraph{Semigroup refinement (10.4).}
+The real-time derivative of rectangular complex operator composition is proved
+using the continuous bilinear composition map restricted to real scalars.
+The fundamental theorem of calculus yields the stated negative Duhamel integral.
+CFC proves contraction of $e^{-tA^\alpha}$ and the gap bound $e^{-tm^\alpha}$.
+Substituting the checked estimate from 10.3 therefore gives
+\[
+\norm{Ce^{-tA^\alpha}-e^{-tB^\alpha}C}
+\le t e^{-tm^\alpha}\alpha m^{\alpha-1}\norm D.
+\]
+No bound on the fractional defect is assumed in place of the generator bound.
+
+\paragraph{Varying-space towers (10.5).}
+The Hilbert space may depend on the level. Uniformly bounded coarsening maps and
+$\sum_\ell\norm{D_\ell}^{\alpha}<\infty$ imply
+$\sum_\ell\norm{D_{\alpha,\ell}}<\infty$ by the checked H\"older estimate.
+Under a uniform positive gap, $\sum_\ell\norm{D_\ell}<\infty$ suffices instead.
+For $t\in[0,T]$,
+\[
+\norm{C_\ell e^{-tA_{\ell+1}^\alpha}-e^{-tA_\ell^\alpha}C_\ell}
+\le T\norm{D_{\alpha,\ell}}.
+\]
+This is a summable majorant independent of $t$, and Lean proves uniform convergence
+of the real norm series. In a declared common operator space, the inherited
+fixed-space theorem additionally proves convergence of the operator-valued series.
+An operator sum across unrelated spaces is not asserted.
+
+\clearpage
+\subsection*{The two remaining partial results}
+\paragraph{Memory and self-energy (13.2).}
+The new complex proof establishes
+\[
+e^{-zt}e^{tA}=e^{t(A-zI)}
+\]
+and, if $\norm{e^{tA}}\le M e^{\omega t}$ with $\Re z>\omega$, proves Bochner
+integrability, both inverse identities, and
+\[
+\int_0^\infty e^{-zt}Ue^{tA}V\,dt=U(zI-A)^{-1}V.
+\]
+For a normal operator, CFC derives the growth estimate from
+$\Re\lambda\le\omega$ on the spectrum. For arbitrary finite \emph{nonnormal}
+matrices, deriving growth from the spectral-abscissa condition remains unproved,
+as does the final retained/hidden rectangular specialization. The stronger supplied
+growth hypothesis is explicitly recorded; it does not complete the printed general theorem.
+
+\paragraph{Holomorphic naturality (15.1).}
+Continuity of the literal finite matrix resolvent and holomorphicity on the declared
+neighborhood now supply integrability on each chosen common resolvent circle.
+The actual contour integrals satisfy rectangular naturality. What remains is to
+construct an admissible common contour in an arbitrary neighborhood of both spectra,
+and prove contour independence and identification with the canonical holomorphic
+functional calculus. The general statement therefore remains partial.
+
+\subsection*{Retained checks and reproducibility}
+The preceding blocks' Poisson subordination, exact discrete Green inverse,
+survival/hazard, Bayesian and packet proofs remain imported and are included in the
+fresh complete build and audit. The 54 companion tests and six verifier controls
+pass again. The first block's 79-field numerical comparison and nineteen figure
+pairs are retained evidence; those numerical experiments were not repeated here.
+Finite regression tests are distinct from universal Lean proofs.
+
+The archive supplies exact theorem targets, source hashes, the full ledger,
+compiler/audit logs, development attempts and prior provenance. The producing
+runtime's executable-self-location adapter is documented; it does not alter the
+compiler, kernel or dependency sources. An adapted Mathlib integral proof retains
+its attribution and Apache 2.0 license. Reproduction commands are in
+\texttt{REVIEW.md}; PDF inspection details are recorded in
+\texttt{verification/pdf\_validation.json}.

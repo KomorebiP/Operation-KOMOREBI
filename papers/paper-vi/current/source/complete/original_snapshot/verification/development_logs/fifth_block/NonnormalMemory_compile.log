@@ -1,0 +1,32 @@
+KomorebiPaperVI/NonnormalMemory.lean:23:0: error: automatically included section variable(s) unused in theorem `KomorebiPaperVI.NonnormalMemory.component_spectrum`:
+  [FiniteDimensional ℂ R]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℂ R] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+KomorebiPaperVI/NonnormalMemory.lean:71:26: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ?a₁ • ?a₂ • ?b
+in the target expression
+  (Complex.exp (-z * ↑t) * Complex.exp (μ * ↑t) * (↑t ^ k / ↑k.factorial)) • ((A - μ • 1) ^ k * x) =
+    (Complex.exp ((μ - z) * ↑t) * ↑t ^ k * (↑k.factorial)⁻¹) • ((A - μ • 1) ^ k * x)
+
+R : Type u_1
+inst✝¹ : CStarAlgebra R
+inst✝ : FiniteDimensional ℂ R
+A : R
+z μ : ℂ
+x : R
+hx : x ∈ End.maxGenEigenspace (LinearMap.mulLeft ℂ A) μ
+t : ℝ
+k : ℕ
+a✝ : k ∈ Finset.range (finrank ℂ R)
+⊢ (Complex.exp (-z * ↑t) * Complex.exp (μ * ↑t) * (↑t ^ k / ↑k.factorial)) • ((A - μ • 1) ^ k * x) =
+    (Complex.exp ((μ - z) * ↑t) * ↑t ^ k * (↑k.factorial)⁻¹) • ((A - μ • 1) ^ k * x)
+KomorebiPaperVI/NonnormalMemory.lean:111:6: error: Type mismatch: After simplification, term
+  ⟨IntegrableOn.add hx.left hy.left, Tendsto.add hx.right hy.right⟩
+ has type
+  And (IntegrableOn ((fun t => damped A z t * x) + fun t => damped A z t * y) (Ioi 0) volume)
+    (Tendsto (fun x_1 => damped A z x_1 * x + damped A z x_1 * y) atTop (𝓝 0))
+but is expected to have type
+  And (IntegrableOn (fun t => damped A z t * x + damped A z t * y) (Ioi 0) volume)
+    (Tendsto (fun t => damped A z t * x + damped A z t * y) atTop (𝓝 0))

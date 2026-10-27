@@ -1,0 +1,1 @@
+These are retained intermediate fifth-block compilation logs, some containing errors subsequently repaired. The final evidence is the full root build and namespace axiom audit in ../../lean_build.log, ../../lean_axiom_audit.log, and ../../verification_status.json.
