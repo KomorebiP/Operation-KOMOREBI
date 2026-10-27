@@ -1,0 +1,778 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{newtxtext,newtxmath}
+\usepackage[scaled=.93]{helvet}
+\usepackage[margin=1in,headheight=15pt]{geometry}
+\usepackage{microtype,booktabs,longtable,array,needspace}
+\usepackage{xcolor,enumitem,fancyhdr,titlesec}
+\usepackage{tikz-cd}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\definecolor{ink}{HTML}{163044}
+\definecolor{muted}{HTML}{53616A}
+\definecolor{wash}{HTML}{F2F5F7}
+\hypersetup{colorlinks=true,linkcolor=ink,citecolor=ink,urlcolor=ink,
+  pdftitle={Komorebi Resolution Semantics},pdfauthor={Komorebi P.},
+  pdfsubject={Transport, invariant observables, residuals, and mathematical worlds}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily KOMOREBI RESOLUTION SEMANTICS}
+\fancyhead[R]{\small\sffamily v0.1.0}
+\fancyfoot[L]{\small\sffamily Research note \textbar\ September 26, 2026}
+\fancyfoot[R]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\titleformat{\section}{\large\sffamily\bfseries\color{ink}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{\thesubsection}{.65em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .5ex}{1ex}
+\titlespacing*{\subsection}{0pt}{1.6ex plus .3ex}{.7ex}
+\setlength{\parindent}{0pt}\setlength{\parskip}{.48em}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,leftmargin=1.6em}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\Bool}{\mathbf{Bool}}
+\newcommand{\Pow}{\mathcal P}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\ev}{\operatorname{ev}}
+\newcommand{\Ev}{\operatorname{Ev}}
+\newcommand{\CH}{\mathsf{CH}}
+\newcommand{\ZFC}{\mathsf{ZFC}}
+\newcommand{\KRS}{\mathsf{KRS}}
+\newcommand{\Inv}{\mathcal I}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Sat}{\operatorname{Sat}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\bnorm}[1]{\left\llbracket #1\right\rrbracket}
+\newtcolorbox{scopebox}{colback=wash,colframe=ink,boxrule=.45pt,arc=0pt,left=9pt,right=9pt,top=7pt,bottom=7pt}
+\begin{document}
+\thispagestyle{empty}
+{\sffamily\small\color{muted} OPERATION KOMOREBI \hfill FOUNDATIONS / RESOLUTION THEORY}\par
+\vspace{1.2cm}
+{\sffamily\bfseries\color{ink}\fontsize{29}{34}\selectfont Komorebi\\Resolution Semantics\par}
+\vspace{.35cm}
+{\sffamily\Large An algebra of mathematical worlds\\and their transformations\par}
+\vspace{.6cm}
+{\large Komorebi P.}\par
+{\sffamily\small Version 0.1.0 \quad September 26, 2026}
+\vspace{.65cm}
+\begin{abstract}
+\noindent We develop the proposal that mathematical worlds can be studied as related resolutions rather than as an unstructured collection of competing universes. A small category of worlds, a functor of Boolean algebras, and a family of semantic valuations define a transport defect. This defect obeys an additive law, a twisted product rule, and an exact composition law. Its kernel is an invariant Boolean subalgebra, while its quotient is naturally an additive object.
+
+A finite resolution theorem classifies every Boolean retraction onto the invariant sector and identifies canonical lower and upper envelopes when no canonical retraction exists. A two-world obstruction shows that even the smallest symmetric system need not admit a symmetry-preserving Boolean projector. Graph integrability gives an exact reconstruction criterion, and a separate real-valued realization recovers orthogonal multiresolution projectors. We also prove that any set-indexed family of first-order models admits a common Boolean-valued presentation, while explaining why this fact alone does not identify a shared generative structure.
+
+The algebraic results are proved in the note and supported by reproducible exact checks. Forcing supplies a conditional set-theoretic interpretation, not a proof of new independence, consistency, or universe-existence claims. The framework is a precise research language and a collection of proved structural statements, not a completed extension of ZFC.
+\end{abstract}
+\vspace{.3cm}
+\begin{scopebox}
+\textbf{Central distinction.} A world may be a resolution of richer data without being merely a change of coordinates of another world. Invariant content, residual disagreement, and the existence of a common presentation are three different mathematical questions.
+\end{scopebox}
+\vfill
+{\small\color{muted} Included with this note: editable \LaTeX, an exact Python checker, machine-readable verification results, a proof-boundary ledger, and an explicitly uncompiled Lean source scaffold.}
+\newpage
+\setcounter{tocdepth}{1}
+\tableofcontents
+\newpage
+
+\section{The claim worth formalizing}
+The motivating idea is not that different models of set theory are secretly identical. It is that a family of models may possess a meaningful transformation structure, and that this structure deserves its own calculus. The primitive question changes from ``Which world is the correct one?'' to the more local and testable question
+\[
+\text{Which observables are preserved, and what exactly changes along a specified transformation?}
+\]
+This does not replace the ordinary semantics of a model. It organizes comparisons between models.
+
+The phrase \emph{worlds as resolutions} has three strengths. The weakest says that a family of worlds can be encoded in one object. The middle claim says that there are explicit evaluation maps from richer data to individual worlds. The strongest says that a restricted transformation grammar explains the worlds, compresses their relationships, and reconstructs their differences. Theorem~\ref{thm:product} establishes the middle claim for arbitrary set-indexed model families, but does not establish the strongest one.
+
+The development below makes five substantive improvements to the original proposal. It separates Boolean and additive quotients, corrects the relationship between invariant observables and coherent sections, classifies finite projectors, replaces an unjustified demand for canonicity by canonical bounds, and distinguishes genuine transport information from a truth differential that is exact by construction.
+
+The elementary algebra here is not claimed as a new alternative to the existing foundations of forcing, modal logic, Boolean-valued models, or rough sets. These are essential precedents \cite{hamkinslowe,hamkinsseabold,pawlak}. The candidate Komorebi contribution is the explicit combination of typed transport, invariant extraction, residual recording, and reconstruction under auditable contracts. A claim of mathematical novelty for that combination requires a broader comparison than this note supplies.
+
+\section{Worlds, presentations, and the ambient theory}\label{sec:worlds}
+Fix a first-order language $L$ and an $L$-theory $T$. The intended case is the membership language with $T=\ZFC$, but the algebraic results do not depend on that choice. Work in an external metatheory sufficient to discuss sets, categories, and satisfaction for \emph{set-sized} structures.
+
+A world is an $L$-structure $M\models T$. A chosen system of worlds is a small category $\mathcal C$. Its arrows are specified transformations, not automatically elementary embeddings, isomorphisms, or inclusions. Their meaning must be supplied by an instance of the framework.
+
+Forcing extensions, inner-model inclusions, elementary embeddings, and interpretations have different preservation properties. They cannot be put into one untyped class of ``equivalences.'' A diagram must record which kind of arrow is present and which formulas and parameters may be compared.
+
+\begin{proposition}[Coordinate changes preserve truth]\label{prop:coordinates}
+If $h:M\cong N$ is an isomorphism of $L$-structures, then for every formula $\varphi(\vec x)$ and tuple $\vec a$ in $M$,
+\[
+M\models\varphi(\vec a)\quad\Longleftrightarrow\quad
+N\models\varphi(h\vec a).
+\]
+Consequently, two worlds that disagree on an $L$-sentence are not related by a mere isomorphic change of coordinates in that language.
+\end{proposition}
+\begin{proof}
+Induct on formulas. Atomic relations are preserved by the definition of an isomorphism. Boolean connectives commute with the induction. For existential quantification, transport a witness through $h$ in one direction and through $h^{-1}$ in the other.
+\end{proof}
+
+There is an equally important distinction between transformation and information refinement. In the information order on $\{\bot,0,1\}$, where $\bot\leq0$ and $\bot\leq1$ but $0$ and $1$ are incomparable, a monotone refinement cannot change a settled $0$ into a settled $1$. A truth-changing world transformation is therefore not a monotone refinement of a fixed partial truth assignment. It may instead change the quantifier domain, the admissible objects, or the semantic realization.
+
+\subsection{Existence is a separate obligation}
+All world theorems in this note are conditional on the models and transformations under discussion. ZFC does not acquire a proof that a set-sized model of ZFC exists merely because we introduce notation for one. Nor does a formal development of the algebra prove the existence of a countable transitive model, a generic extension with prescribed extra properties, or a universe containing all worlds.
+
+Satisfaction for a set-sized structure is an external, stratified construction. We do not add a self-applicable truth predicate for the ambient universe. The limited algebraic construction can be expressed by ordinary definitions. An additional assertion that a nonempty diagram of ZFC worlds exists has a different logical status.
+
+\section{A common presentation exists, but need not explain anything}
+\begin{theorem}[Boolean product presentation]\label{thm:product}
+Assume the axiom of choice in the metatheory. Let $I$ be a nonempty set and let $(M_i)_{i\in I}$ be a set-indexed family of nonempty $L$-structures. There is a full $\Pow(I)$-valued structure $\mathcal M$ such that for each $i\in I$, quotienting at the principal ultrafilter
+\[
+U_i=\{S\subseteq I:i\in S\}
+\]
+recovers $M_i$ up to isomorphism. If every $M_i\models T$, every axiom of $T$ has Boolean value $I$ in $\mathcal M$.
+\end{theorem}
+\begin{proof}
+Take the domain $X=\prod_{i\in I}|M_i|$. Interpret function symbols coordinatewise. Set
+\[
+\bnorm{x=y}=\{i:x_i=y_i\},\qquad
+\bnorm{R(\vec x)}=\{i:M_i\models R(\vec x_i)\}.
+\]
+The equality and substitution axioms hold coordinatewise. Extend the semantics by complements, intersections, and joins in $\Pow(I)$. An induction on formulas gives
+\begin{equation}\label{eq:productsemantics}
+\bnorm{\varphi(\vec x)}=\{i:M_i\models\varphi(\vec x_i)\}.
+\end{equation}
+Only the quantifier step requires comment. A coordinate $i$ belongs to $\bigcup_{y\in X}\bnorm{\varphi(y,\vec x)}$ precisely when a witness exists in $M_i$. To see this from right to left, fill the other coordinates using a chosen family of default elements. To obtain fullness, choose witnesses simultaneously at every coordinate where one exists, and default elements elsewhere. The resulting $y\in X$ attains the Boolean value of the existential formula.
+
+Modulo $U_i$, equality is exactly equality of the $i$th coordinate. The map $[x]_{U_i}\mapsto x_i$ is well-defined, injective, and surjective. It preserves functions and relations, so it is an isomorphism to $M_i$. Equation~\eqref{eq:productsemantics} also gives Boolean value $I$ to each axiom satisfied by every coordinate structure.
+\end{proof}
+
+This is a standard Boolean-valued product construction, included here with its proof because it puts the central intuition on an exact footing. Boolean-valued structures and their quotients are treated systematically in \cite{hamkinsseabold}.
+
+\begin{corollary}\label{cor:resolution-not-explanation}
+Every supplied set-indexed family of models of $T$ can be regarded as a family of two-valued resolutions of a richer Boolean-valued structure. This conclusion alone imposes no transformation relation on distinct models in the family.
+\end{corollary}
+\begin{proof}
+The construction requires only the family of structures. It does not use any maps between them. Consequently, its existence cannot by itself establish additional relationships among the coordinates.
+\end{proof}
+
+The theorem supplies a useful warning against overinterpretation. A product can contain unrelated structures. It is not a proof that all worlds share one economical source, that their disagreements are representational artifacts, or that they are forcing extensions of a common ground. The stronger Komorebi question is whether a \emph{constrained} presentation and a \emph{restricted} grammar explain relations that a raw product merely stores.
+
+\section{The resolution differential}\label{sec:differential}
+We first give a fixed-observable version. This is sufficient for sentences in a common language and isolates the algebra from the existence of particular worlds.
+
+\begin{definition}[Resolution datum]\label{def:datum}
+A resolution datum consists of a small category $\mathcal C$, a unital Boolean algebra $A$, a functor
+\[
+B:\mathcal C\longrightarrow\Bool,
+\]
+and a unital Boolean homomorphism $v_M:A\to B_M$ for each object $M$. Write $B_f:B_M\to B_N$ for the map attached to $f:M\to N$.
+\end{definition}
+The category $\Bool$ here uses ordinary Boolean homomorphisms. It does \emph{not} require preservation of arbitrary joins. In Boolean-ring notation, $+$ is symmetric difference, multiplication is conjunction, and $\neg a=1+a$. In particular, $a+a=0$.
+
+For sentences, $A$ can be the Lindenbaum Boolean algebra of $L$-sentences modulo provable equivalence over $T$. An ordinary model gives $B_M=\F$ and $v_M([\varphi])=1$ precisely when $M\models\varphi$. The datum can also be studied without claiming that its valuations arise from models of ZFC.
+
+\begin{definition}[Transport defect]
+For $f:M\to N$ define
+\begin{equation}\label{eq:defect}
+D_f(a)=B_f(v_M(a))+v_N(a)\in B_N.
+\end{equation}
+\end{definition}
+The terms on the right live in the same algebra. A proposed residual without this typing condition is not a mathematical definition.
+
+\begin{theorem}[Defect calculus]\label{thm:calculus}
+Put $u=B_f\circ v_M$ and $w=v_N$. Then
+\begin{align}
+D_f(0)&=D_f(1)=0,\qquad D_f(\neg a)=D_f(a),\\
+D_f(a+b)&=D_f(a)+D_f(b),\\
+D_f(ab)&=D_f(a)u(b)+w(a)D_f(b).\label{eq:leibniz}
+\end{align}
+For composable arrows $M\xrightarrow{f}N\xrightarrow{g}P$,
+\begin{equation}\label{eq:cocycle}
+D_{gf}(a)=B_g(D_f(a))+D_g(a),\qquad D_{\id_M}(a)=0.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Both $u$ and $w$ preserve $0$, $1$, addition, and multiplication. The first identities follow immediately, including
+\[
+D_f(1+a)=(1+u(a))+(1+w(a))=D_f(a).
+\]
+For the product rule, expand
+\[
+(u(a)+w(a))u(b)+w(a)(u(b)+w(b))
+=u(a)u(b)+w(a)w(b).
+\]
+The mixed terms cancel in characteristic two. For composition, functoriality and additivity give
+\begin{align*}
+B_g(D_f(a))+D_g(a)
+&=B_gB_fv_M(a)+B_gv_N(a)+B_gv_N(a)+v_P(a)\\
+&=B_{gf}v_M(a)+v_P(a).
+\end{align*}
+The identity case follows from $B_{\id_M}=\id$.
+\end{proof}
+
+The product rule is a twisted derivation identity between two homomorphisms. It does not make $D_f$ a ring homomorphism or an ordinary derivation relative to one fixed algebra action.
+
+\begin{proposition}[Product telescope]\label{prop:producttelescope}
+For $a_1,\ldots,a_n\in A$,
+\[
+D_f\left(\prod_{i=1}^n a_i\right)
+=\sum_{k=1}^n\left(\prod_{i<k}w(a_i)\right)
+D_f(a_k)\left(\prod_{i>k}u(a_i)\right).
+\]
+\end{proposition}
+\begin{proof}
+Expand $D_f(a_k)=u(a_k)+w(a_k)$. Every intermediate product occurs twice, once with transition index $k$ and once with transition index $k+1$. They cancel, leaving the all-$u$ product plus the all-$w$ product. This also gives an induction on $n$, with the empty product case equal to $D_f(1)=0$.
+\end{proof}
+
+\subsection{Transported syntax and parameters}
+For parameters or changing languages, replace $A$ by a functor $A_M$ with translation maps $\alpha_f:A_M\to A_N$. The correct defect is
+\begin{equation}\label{eq:typeddefect}
+D_f(a)=B_fv_M(a)+v_N\alpha_f(a),\qquad a\in A_M.
+\end{equation}
+Assuming both transport systems are functorial, the composition law becomes
+\[
+D_{gf}(a)=B_gD_f(a)+D_g(\alpha_f(a)).
+\]
+The same cancellation proves it. The fixed-$A$ theory is the special case $\alpha_f=\id$. A single aggregate quotient of $A$ will only be used in that special case. This prevents a silent comparison of formulas whose parameters have no specified transport.
+
+\section{What the invariant core actually is}\label{sec:core}
+For the fixed-$A$ datum set
+\[
+C^0=\prod_{M\in\Ob(\mathcal C)}B_M,\qquad
+C^1=\prod_{f\in\Mor(\mathcal C)}B_{\operatorname{target}(f)}.
+\]
+As additive groups these are vector spaces over $\F$. Define
+\[
+(d^0c)_f=B_f(c_M)+c_N,\qquad
+\Ev(a)=(v_M(a))_M,\qquad D=d^0\Ev.
+\]
+Here $\Ev$ is a Boolean homomorphism, while $d^0$ is generally only additive.
+
+\Needspace{12\baselineskip}
+\begin{theorem}[Invariant algebra and residual quotient]\label{thm:exactsequence}
+The set
+\[
+\Inv=\ker D=\bigcap_f\{a:B_fv_M(a)=v_N(a)\}
+\]
+is a unital Boolean subalgebra of $A$. There is a natural exact sequence of $\F$-vector spaces
+\begin{equation}\label{eq:exactsequence}
+0\longrightarrow\Inv\longrightarrow A\xrightarrow{D}\im D\longrightarrow0,
+\end{equation}
+and therefore a natural additive isomorphism
+\[
+A/\Inv\ \cong\ \im D.
+\]
+Two observables have the same residual profile exactly when their symmetric difference belongs to $\Inv$.
+\end{theorem}
+\begin{proof}
+Each defining condition for $\Inv$ is an equalizer of two Boolean homomorphisms. Equalizers are closed under $0$, $1$, addition, multiplication, and complement. Additivity of $D$ gives the exact sequence and the first isomorphism theorem for vector spaces. Finally $D(a)=D(b)$ holds exactly when $D(a+b)=0$.
+\end{proof}
+
+\textbf{The quotient in \eqref{eq:exactsequence} is not a Boolean-algebra quotient.} The subalgebra $\Inv$ contains $1$. Unless $\Inv=A$, it cannot be an ideal, since an ideal containing $1$ is the whole ring. In particular, a nonzero residual profile does not inherit a well-defined conjunction from this quotient.
+
+An immediate information loss is $D(a)=D(\neg a)$. A residual detects change, not its absolute orientation. It cannot replace the original observable without boundary data or invariant information.
+
+\begin{proposition}[Generating transformations suffice]\label{prop:generators}
+If a family $\Gamma$ generates the arrows of $\mathcal C$ under composition, then
+\[
+\Inv=\bigcap_{f\in\Gamma}\ker D_f.
+\]
+Adding admissible transformations can only shrink the invariant core.
+\end{proposition}
+\begin{proof}
+The composition law propagates vanishing along finite composites. Identity defects vanish. The monotonicity statement is an immediate property of intersections.
+\end{proof}
+
+\subsection{Coherent sections and definability}
+The limit $\varprojlim_{\mathcal C}B$ consists of families $(b_M)_M$ satisfying $B_f(b_M)=b_N$. Thus $a\in\Inv$ precisely when $\Ev(a)$ is a coherent family. But not every coherent family need be represented by a sentence, and distinct sentences can have the same evaluations.
+
+\begin{proposition}[The precise section statement]\label{prop:sections}
+Let $K=\bigcap_M\ker v_M$. Then $K$ is a Boolean ideal contained in $\Inv$, and
+\[
+\Inv/K\ \cong\ \im\bigl(\Ev|_{\Inv}\bigr)
+\ \subseteq\ \varprojlim_{\mathcal C}B
+\]
+as Boolean algebras.
+\end{proposition}
+\begin{proof}
+The kernel of a Boolean-ring homomorphism is an ideal. An observable whose evaluations are all zero has zero defect, so $K\subseteq\Inv$. Restrict $\Ev$ to $\Inv$ and apply the Boolean-ring first isomorphism theorem.
+\end{proof}
+
+For example, a countable sentence algebra cannot cover all coherent families over a countably infinite \emph{discrete} diagram with $B_M=\F$, since that limit is $\F^{\mathbb N}$ and is uncountable. The correct phrase is therefore \emph{definable coherent observables}, not ``all global sections.'' No sheaf has yet been defined. A sheaf additionally requires a site and a gluing condition, neither of which follows from a limit alone.
+
+\section{Finite integrability and reconstruction}\label{sec:graph}
+Let $G=(W,E)$ be a finite simple undirected graph. Edges record which worlds are directly compared. Choose an orientation only to index them. For $a\in\F^W$ set
+\[
+(da)_{\{u,v\}}=a_u+a_v.
+\]
+Unlike the semantic algebra $A$, the space $\F^W$ contains every binary labeling. An actual family of models and a selected language may realize only a proper subalgebra of these labelings.
+
+\begin{theorem}[Finite residual integrability]\label{thm:integrability}
+Suppose $G$ has $n$ vertices, $m$ edges, and $c$ connected components.
+\begin{enumerate}
+\item $\ker d$ consists exactly of the componentwise constant labelings and has dimension $c$.
+\item An edge field $r\in\F^E$ equals $da$ for some $a$ if and only if its sum around every cycle is zero.
+\item Every integrable $r$ has exactly $2^c$ reconstructions. Fixing one vertex value per component makes the reconstruction unique.
+\item $\dim\im d=n-c$ and $\dim(\F^E/\im d)=m-n+c$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+If $da=0$, endpoints of every edge have equal values, so values agree along each path. Conversely componentwise constants have zero derivative. This proves the first statement.
+
+For any cycle, summing $da$ counts every vertex on the cycle twice, hence gives zero. Conversely choose a spanning forest and a root value in each tree. Define $a_v$ by adding the edge values along the unique tree path from its root. This gives $da=r$ on tree edges. A non-tree edge and the tree path between its endpoints form a cycle. Its zero-sum condition gives the desired equation on that edge as well.
+
+The difference of any two reconstructions lies in $\ker d$. There are $2^c$ such differences. The rank and quotient-dimension statements now follow from rank-nullity.
+\end{proof}
+
+The quotient $\F^E/\im d$ is the first graph cohomology group when the graph is regarded as a one-dimensional complex. A nonzero class obstructs integrating \emph{proposed} edge data. This does not make an observed truth differential curved: an observed differential already lies in $\im d$ and has zero class.
+
+\subsection{A worked diamond}
+Take edges $01,02,13,23$ and a labeling
+\[
+a=(0,1,0,1).
+\]
+Then
+\[
+da=(1,0,0,1).
+\]
+The path $0\to1\to3$ has accumulated defect $1+0=1$. The path $0\to2\to3$ has defect $0+1=1$. The unique cycle has sum $1+0+1+0=0$.
+
+With root value $a_0=0$ the labeling above is recovered. With root value $a_0=1$ the reconstruction is $(1,0,1,0)$. The derivative cannot distinguish these two complementary labelings. That ambiguity is exactly the one-dimensional invariant sector of this connected graph.
+
+By contrast, assigning $r=(1,0,0)$ around a triangle is impossible. The cycle sum is $1$. No collection of vertex truth values has that derivative.
+
+\subsection{Reconstruction with nontrivial transport}
+For a path $M_0\xrightarrow{f_1}\cdots\xrightarrow{f_n}M_n$, repeated use of \eqref{eq:defect} gives
+\begin{equation}\label{eq:pathreconstruction}
+v_{M_n}(a)=B_{f_n\cdots f_1}v_{M_0}(a)
++\sum_{k=1}^n B_{f_n\cdots f_{k+1}}D_{f_k}(a),
+\end{equation}
+where the empty tail transport is the identity. This formula needs no inverse transport maps. It reconstructs a reachable target from a source value and the transported residuals on a directed path. It does not claim that every target has such a path or that a general arrow can be reversed.
+
+\section{Projectors: existence, obstruction, and a canonical substitute}\label{sec:projectors}
+The formula $a=P(a)+R(a)$ is meaningful only after the type and existence of $P$ have been established.
+
+\begin{proposition}[Additive splitting]\label{prop:additivesplit}
+Over a metatheory with choice, the inclusion $\Inv\subseteq A$ always admits an $\F$-linear retraction $r:A\to\Inv$. For $P=\iota r$ and $R=\id+P$,
+\[
+P^2=P,\quad R^2=R,\quad PR=RP=0,\quad a=P(a)+R(a).
+\]
+This is a vector-space decomposition. The retraction need not preserve multiplication or be canonical.
+\end{proposition}
+\begin{proof}
+Choose a vector-space basis of $\Inv$ and extend it to a basis of $A$. Let $r$ fix the first basis and kill the added vectors. Then $P^2=P$. In characteristic two,
+$(\id+P)^2=\id+P$, and $P(\id+P)=(\id+P)P=0$.
+\end{proof}
+
+If $r$ is a Boolean retraction, its kernel is an ideal $J$ and the additive decomposition is $A=\Inv\oplus J$. In these coordinates multiplication is
+\[
+(i,x)(j,y)=(ij,\,iy+jx+xy).
+\]
+It is not generally a direct-product multiplication. Writing a direct sum symbol must not silently erase these cross terms.
+
+\begin{example}[Completeness of the ambient algebra is not enough]\label{ex:noretraction}
+Let $A=\Pow(\mathbb N)$ and let $\Inv$ be the finite-cofinite subalgebra. There is no Boolean retraction $r:A\to\Inv$ fixing $\Inv$.
+Indeed, for every $S\subseteq\mathbb N$ and $n\in\mathbb N$,
+\[
+r(S)\cap\{n\}=r(S\cap\{n\})=S\cap\{n\}.
+\]
+Thus $r(S)$ has exactly the same members as $S$, so $r(S)=S$. An infinite coinfinite $S$ gives a contradiction.
+\end{example}
+
+This example can occur as an invariant core of a resolution datum, rather than merely as an arbitrary subalgebra. Take worlds to be the nonprincipal ultrafilters on $\mathbb N$, join every ordered pair by an arrow, and use $v_U(S)=1$ iff $S\in U$. All these worlds agree on finite and cofinite sets. Every infinite coinfinite set belongs to some nonprincipal ultrafilter and has its complement in another, by the ultrafilter extension argument. Hence the invariant core is exactly the finite-cofinite algebra. These worlds are propositional valuations, not asserted models of ZFC.
+
+Completeness of the ambient algebra therefore does not solve the Boolean retraction problem. Neither completeness of the invariant core nor a canonical choice of retraction follows from the definition of a resolution datum. Even when an additional hypothesis supplies a Boolean retraction, canonicity remains a separate question.
+
+\subsection{A two-world obstruction}
+\begin{theorem}[No symmetric Boolean projector]\label{thm:nocanonical}
+Let $A=\F^2$ and $\Inv=\{(0,0),(1,1)\}$. There is no Boolean retraction $P:A\to\Inv$ that commutes with swapping the two coordinates. There is not even a swap-equivariant additive retraction onto $\Inv$.
+\end{theorem}
+\begin{proof}
+Write $e_1=(1,0)$ and $e_2=(0,1)$. Swapping coordinates fixes every element of $\Inv$, so equivariance forces $P(e_1)=P(e_2)$. Additivity then gives
+\[
+P(1,1)=P(e_1+e_2)=P(e_1)+P(e_2)=0,
+\]
+contrary to the retraction condition $P(1,1)=(1,1)$. Every Boolean retraction is additive, so both claims follow.
+\end{proof}
+
+A demand for a projector determined only by a symmetric two-world structure is therefore inconsistent with these requirements. Adding an ordering, a distinguished representative, weights, or a different output type changes the problem. It does not retroactively make the original Boolean projector canonical.
+
+\subsection{The finite resolution envelope theorem}
+Let $\Pi$ be a partition of a finite nonempty set $W$. Let $\Inv_\Pi\subseteq\F^W$ be the Boolean algebra of functions constant on each block. For $w\in C\in\Pi$ define
+\[
+L_\Pi(a)_w=\bigwedge_{u\in C}a_u,\qquad
+U_\Pi(a)_w=\bigvee_{u\in C}a_u.
+\]
+These lower and upper approximations are the classical equivalence-relation rough-set operators \cite{pawlak}. Here they give a precise replacement for a missing canonical projector.
+
+\begin{theorem}[Finite resolution envelope]\label{thm:envelope}
+Every Boolean retraction $P:\F^W\to\Inv_\Pi$ is obtained by choosing one representative $s(C)\in C$ per block and setting
+\begin{equation}\label{eq:selector}
+P_s(a)_w=a_{s(C)}\quad(w\in C).
+\end{equation}
+For each fixed observable $a$, its possible projected values are exactly
+\begin{equation}\label{eq:envelope}
+\{P_s(a):s\text{ chooses one point in each block}\}
+=\{b\in\Inv_\Pi:L_\Pi(a)\leq b\leq U_\Pi(a)\}.
+\end{equation}
+Consequently,
+\[
+L_\Pi(a)=\bigwedge_sP_s(a),\qquad
+U_\Pi(a)=\bigvee_sP_s(a).
+\]
+If $a$ is mixed on exactly $k$ blocks, there are exactly $2^k$ possible invariant outputs for that $a$.
+\end{theorem}
+\begin{proof}
+A unital Boolean homomorphism $h:\F^W\to\F$ must evaluate at exactly one point. To see this, the singleton indicators are pairwise disjoint and their join is $1$. Their images are disjoint elements of $\F$ whose join is $1$, so exactly one is $1$. The image of every subset is then determined by whether it contains that point.
+
+For a retraction $P$, evaluation of its output on a block $C$ is such a homomorphism, hence selects a point $s(C)\in W$. Since $P$ fixes the indicator of $C$, this point must belong to $C$. This proves the classification. Conversely every choice in \eqref{eq:selector} gives a Boolean homomorphism that fixes blockwise constants.
+
+For fixed $a$, a selected value on $C$ lies between its minimum and maximum there. Conversely, take $b\in\Inv_\Pi$ in that interval. When $a$ is constant on $C$, $b$ has that same value. When $a$ is mixed, choose a point of $C$ at which $a$ has the value prescribed by $b$. These independent choices produce $P_s(a)=b$. Each mixed block allows precisely two outputs and every other block allows only one.
+\end{proof}
+
+The extrema are canonical even though an individual retraction need not be. They preserve order and satisfy
+\[
+L_\Pi(a)\leq a\leq U_\Pi(a),\qquad
+L_\Pi(\neg a)=\neg U_\Pi(a).
+\]
+The lower map preserves meets and the upper map preserves joins. Neither generally preserves both Boolean operations. Their role is a certified interval of invariant summaries, not a new binary truth valuation.
+
+\begin{proposition}[Adjoint characterization]\label{prop:adjoints}
+For $b\in\Inv_\Pi$,
+\[
+U_\Pi(a)\leq b\ \Longleftrightarrow\ a\leq b,\qquad
+b\leq L_\Pi(a)\ \Longleftrightarrow\ b\leq a.
+\]
+Thus $U_\Pi$ is left adjoint to the inclusion and $L_\Pi$ is right adjoint to it, in the order-theoretic sense.
+\end{proposition}
+\begin{proof}
+$U_\Pi(a)$ is exactly the smallest union of blocks containing the support of $a$. Dually $L_\Pi(a)$ is the largest union of blocks contained in that support.
+\end{proof}
+
+\begin{theorem}[Residual support determines ambiguity]\label{thm:ambiguity}
+Take $\Pi$ to be the connected components of a finite graph $G$. Define
+\[
+\mathcal A_\Pi(a)=U_\Pi(a)+L_\Pi(a).
+\]
+Then $\mathcal A_\Pi(a)$ is the indicator of the union of components containing a nonzero edge of $da$:
+\[
+\supp\mathcal A_\Pi(a)=\Sat_\Pi(\supp da).
+\]
+Here edge support is saturated by taking all vertices in components containing a supported edge.
+\end{theorem}
+\begin{proof}
+A component is ambiguous exactly when it contains both truth values. If it contains an edge with unequal endpoint values, it is mixed. Conversely a path from a $0$ vertex to a $1$ vertex must contain an edge where the value changes. This proves both implications.
+\end{proof}
+
+The three objects now have distinct roles: $da$ locates transitions, $(L_\Pi(a),U_\Pi(a))$ describes all invariant Boolean summaries, and a chosen base value or selector supplies reconstruction data. None of the three should be silently substituted for the others.
+
+\section{A real-valued realization of Komorebi multiresolution}\label{sec:real}
+The Boolean obstruction does not prohibit a canonical projector after extra structure and a different codomain are supplied. Let $W$ be finite and assign positive weights $\mu_w$. On $\mathbb R^W$ use
+\[
+\langle f,g\rangle_\mu=\sum_{w\in W}\mu_w f_wg_w.
+\]
+For a partition $\Pi$, define
+\[
+(E_\Pi f)_w=
+\frac{\sum_{u\in C}\mu_u f_u}{\sum_{u\in C}\mu_u}
+\quad(w\in C\in\Pi).
+\]
+
+\begin{theorem}[Weighted invariant projection]\label{thm:weighted}
+$E_\Pi$ is the unique orthogonal projector onto the real vector space of blockwise constant functions. It is positive, fixes $1$, and is equivariant under weight-preserving permutations that preserve the partition. For binary $a$,
+\[
+L_\Pi(a)\leq E_\Pi(a)\leq U_\Pi(a).
+\]
+\end{theorem}
+\begin{proof}
+The formula is blockwise constant and fixes such functions. For every blockwise constant $g$,
+\[
+\langle f-E_\Pi f,g\rangle_\mu
+=\sum_{C\in\Pi}g_C\sum_{w\in C}\mu_w(f_w-(E_\Pi f)_w)=0.
+\]
+This characterizes the orthogonal projector uniquely. Positivity, equivariance, and the interval bounds follow directly from a positive weighted average.
+\end{proof}
+
+This average is not a Boolean truth assignment. With equal weights on two points, $(0,1)$ projects to $(1/2,1/2)$. Also, for the disjoint singleton indicators $e_1,e_2$, one has $E(e_1e_2)=0$ while $(Ee_1)(Ee_2)$ is the constant $1/4$. Conjunction is not preserved.
+
+\begin{theorem}[Nested resolution decomposition]\label{thm:multiresolution}
+Let $\Pi_0,\ldots,\Pi_m$ be successively finer partitions, using the same weights. Write $E_k=E_{\Pi_k}$ and $Q_k=E_k-E_{k-1}$ for $1\leq k\leq m$. Then
+\[
+E_iE_j=E_{\min(i,j)},\qquad Q_k^2=Q_k,\qquad Q_kQ_l=0\ (k\ne l),
+\]
+and every $f\in\mathbb R^W$ has the orthogonal decomposition
+\begin{equation}\label{eq:multiresolution}
+f=E_0f+\sum_{k=1}^mQ_kf+(\id-E_m)f.
+\end{equation}
+In particular the squared norm is the sum of the squared norms of these terms.
+\end{theorem}
+\begin{proof}
+The blockwise constant subspaces are nested. Orthogonal projection onto nested subspaces gives $E_iE_j=E_i$ for $i\leq j$, and the reverse product agrees by self-adjointness. Expanding products proves the projector and orthogonality identities for the $Q_k$. Equation~\eqref{eq:multiresolution} telescopes. The norm identity is the Pythagorean theorem for these orthogonal summands.
+\end{proof}
+
+This is a genuine projector/detail calculus. Its hypotheses make the Komorebi analogy exact, but the result is a standard nested-projection construction, not a new theorem about ZFC. The weights and partition sequence are part of the input. Their existence does not establish a preferred measure or scale on a set-theoretic multiverse.
+
+For the original Boolean bounds, finer partitions instead give monotone information:
+\[
+L_{\Pi_0}(a)\leq L_{\Pi_1}(a)\leq\cdots\leq a
+\leq\cdots\leq U_{\Pi_1}(a)\leq U_{\Pi_0}(a).
+\]
+The ambiguity support shrinks as blocks are refined. This is an order-theoretic resolution process, not an additive Boolean detail expansion.
+
+\section{Stabilization requires a path quantifier}\label{sec:stability}
+For a path $M_0\to M_1\to\cdots$ with two-valued observations, write $a_n=v_{M_n}(a)$. Along that path, eventual stability means
+\[
+\exists N\ \forall n\geq N\quad a_n=a_N,
+\]
+equivalently $a_n+a_{n+1}=0$ eventually. This differs from requiring stability on every continuation from some reachable world.
+
+On a reflexive accessibility relation, $\Diamond\Box\varphi$ says that a world can be reached from which every later accessible world satisfies $\varphi$. A path that happens to stay at a $\varphi$-world does not establish this. A two-state switch system with arrows in both directions and identity loops already separates the notions.
+
+\begin{theorem}[Finite all-path stability criterion]\label{thm:stability}
+Let $G$ be a finite directed graph with a binary vertex labeling. Every infinite directed path is eventually constant in label if and only if every strongly connected component is monochromatic. When this holds, every path has at most $k-1$ label changes, where $k$ is the number of strongly connected components.
+\end{theorem}
+\begin{proof}
+If one strongly connected component contains both labels, travel from a $0$ vertex to a $1$ vertex and back. Repeating the resulting closed walk gives an infinite path with infinitely many changes.
+
+Conversely, a path can leave a strongly connected component only by moving forward in the finite acyclic condensation graph. It can never return to a component it has left. There are at most $k-1$ such transitions. Within each component the label is constant. Hence an infinite path eventually has constant label and has at most the asserted number of changes.
+\end{proof}
+
+There need not be a uniform \emph{time index} for the last change. A path may remain at a self-looped $0$ vertex for arbitrarily many steps before moving once to an absorbing $1$ vertex. Thus a bound on the number of residual events is not a bound on when the last residual occurs.
+
+A transformation grammar also needs an explicit cost before a ``resolution depth'' is meaningful. Subdividing one arrow into many arrows changes step counts without changing the underlying semantics. Minimum cost to change truth, stabilization time on one path, maximum number of changes, and robust modal stabilization are different invariants.
+
+\section{Forcing as a conditional set-theoretic instance}\label{sec:forcing}
+Fix externally a countable transitive $M\models\ZFC$. Let $\mathbb B\in M$ be a Boolean algebra that $M$ regards as complete, and let $G$ be an $M$-generic ultrafilter. For a sentence $\varphi$ with names $\vec\tau$, the standard forcing truth lemma gives
+\begin{equation}\label{eq:truthlemma}
+M[G]\models\varphi(\vec\tau_G)
+\quad\Longleftrightarrow\quad
+\bnorm{\varphi(\vec\tau)}_{\mathbb B}^{M}\in G.
+\end{equation}
+Boolean-valued forcing and the role of generic quotient models are developed in \cite{hamkinsseabold}. The completeness assumption here is internal to $M$. The map $b\mapsto\mathbf1_{b\in G}$ is a Boolean homomorphism but need not preserve every externally given infinite join.
+
+Equation~\eqref{eq:truthlemma} is a precise local instance of ``richer data resolved into ordinary truth.'' It is not permission to replace $G$ by an arbitrary ultrafilter and still claim an ordinary generic extension of the same ground model. Nor is the atomic product presentation of Section~3 the same construction as a forcing extension.
+
+\subsection{A changing observable and an invariant fragment}
+Taking two-valued fibers and an arrow $M\to M[G]$ gives
+\[
+D_f(\varphi)=\mathbf1_{M\models\varphi}
++\mathbf1_{M[G]\models\varphi}.
+\]
+For suitable forcing, CH can change, so it is not invariant under unrestricted forcing. Both CH and its negation are forceable in the relevant forcing setting \cite{asperoviale}. This is not a contradiction: the quantifiers of CH are interpreted in worlds with different available sets.
+
+There is also a direct invariant fragment that requires no new theorem.
+\begin{proposition}[Bounded-formula invariance]\label{prop:delta0}
+If $M\subseteq N$ are transitive membership structures and all parameters belong to $M$, they agree on every bounded formula, namely a formula whose quantifiers are all of the form $\exists x\in y$ or $\forall x\in y$.
+\end{proposition}
+\begin{proof}
+Induct on the formula. Atomic membership and equality are the same actual relations in both structures. Boolean connectives preserve agreement. A bounded quantifier over $y\in M$ ranges over the same elements in both structures, because transitivity puts every member of $y$ in $M$.
+\end{proof}
+This gives zero defect for the specified formulas and parameter transports. Stronger generic-absoluteness results require their own hypotheses and semantic fragments. They are not consequences of merely naming an invariant core.
+
+\subsection{Modal structure is established prior mathematics}
+The modal interpretation of forcing uses $\Diamond\varphi$ for forceability and $\Box\varphi$ for truth in every forcing extension. Assuming consistency, the ZFC-provably valid modal principles for unrestricted forcing are exactly S4.2 \cite{hamkinslowe}. Restricted forcing classes have different structural behavior \cite{hamkinsleibmanlowe}. KRS does not reprove these results. It records individual transport defects and their reconstruction alongside the existing modal language.
+
+\subsection{Why universal gluing is not an admissible default}
+Specified generic extensions need not have a common further extension in the same generic multiverse. Nonamalgamation is a genuine structural phenomenon, not missing notation. The generic multiverse can encode finite patterns of absent upper bounds \cite{blockchains}.
+
+Thus the axiom ``every pair of worlds has a common refinement'' is not automatically valid for forcing worlds. Modal reachability of sentences is also weaker than amalgamating particular generic objects already supplied. A correct resolution atlas must record the domain on which amalgamation is available, rather than silently declaring the entire diagram directed.
+
+\section{Where nontrivial transport geometry can enter}\label{sec:geometry}
+For constant $\F$ fibers, a truth differential is a coboundary. On every closed comparison cycle its sum is zero. This is an exact identity, not evidence that every richer world system is geometrically trivial.
+
+To retain information about structures rather than just truth values, give each world a fiber $X_M$ and each arrow an actual transport map $T_f:X_M\to X_N$. Parallel paths $p,q:M\to N$ can then be compared only because their source and target types agree. For linear fibers define the path discrepancy
+\[
+\Delta_{p,q}=T_p-T_q.
+\]
+If the paths are declared to be the \emph{same morphism} in the source category and $T$ is a functor, this discrepancy must vanish. A nonzero value means that the paths are distinct morphisms, or that a claimed relation is not respected. It cannot be described as curvature of an already commuting strict functor square.
+
+\begin{example}[Nontrivial holonomy with an exact defect]\label{ex:holonomy}
+Let the one-object category be the group with generator $s$ and relation $s^2=1$. Put $X=\F^2$ and let $T_s$ swap coordinates. This is a valid nontrivial action. Its invariant vectors are $(0,0)$ and $(1,1)$.
+For $x=(1,0)$,
+\[
+T_sx+x=(1,1)\ne0,
+\]
+but
+\[
+T_s(T_sx+x)+(T_sx+x)=0.
+\]
+The second equation is the transported composition law for $s^2=1$. Thus nontrivial fiber transport is compatible with an exact defect. No contradiction or unexplained curvature is involved.
+\end{example}
+
+This suggests a useful stratification. Binary observations carry change profiles. Rich fibers carry witnesses, parameters, embeddings, and transport actions. A site or descent datum, when actually specified, carries gluing obligations. These layers should interact through explicit maps rather than by identifying them.
+
+\section{A strengthened research program, with explicit obligations}\label{sec:program}
+The defensible version of the central idea is now:
+\begin{scopebox}
+A chosen family of mathematical worlds can be equipped with typed transformations and richer presentations. An invariant/residual calculus then classifies the observable effects of those transformations. Whether the presentation is explanatory, canonical, economical, or generative is an additional mathematical question.
+\end{scopebox}
+
+A useful \emph{resolution atlas} should specify the following data in one contract: a class of admissible worlds, local presentation objects, evaluation maps to their resolved worlds, a grammar of transformations, comparison maps on observables and witnesses, and the exact equations certified for those maps. It must also distinguish a failed comparison from a comparison that is undefined.
+
+The next substantive target is not another name for the multiverse. It is a theorem for a specific nontrivial sector stating that a controlled set of generators determines the transport behavior of a rich observable family, with exact reconstruction and a recognizable obstruction to extension. The finite results here show the shape such a theorem could have.
+
+\subsection{Three concrete problems}
+\textbf{Presentation sensitivity.} Identify conditions under which equivalent presentations of the same typed resolution system induce the same invariant quotient and canonical bounds. For a finite partition system this follows under a bijection preserving blocks. The nontrivial case is a change of presentation that is not merely a relabeling.
+
+\textbf{Restricted forcing reconstruction.} Choose a particular forcing class and a precise language fragment. Determine whether a structured family of residual certificates classifies transport on that fragment more economically than a list of all truth changes. This requires real preservation and nonamalgamation theorems, not just the abstract cocycle law.
+
+\textbf{Witness-sensitive invariants.} Replace truth profiles by parameter and witness transport. Find an invariant that distinguishes diagrams with identical sentence-level defects. Example~\ref{ex:holonomy} shows why richer fibers can contain information that binary truth alone loses.
+
+\subsection{What would count as a new foundational axiom}
+The definitions and conditional algebra above do not assert a new set-theoretic existence principle. A new axiom would arise only when one requires that certain worlds, generics, coherent witnesses, or canonical structures exist. Its consistency strength and interaction with known obstructions must then be analyzed independently.
+
+In particular, neither universal amalgamation nor a universal symmetry-preserving Boolean projector is available as an unrestricted default. The first conflicts with the forcing phenomena just cited. The second already fails in Theorem~\ref{thm:nocanonical}. A productive extension must respect these obstructions rather than declare them away.
+
+\section{Verification and proof boundary}\label{sec:verification}
+The accompanying checker uses only Python's standard library and exact arithmetic. It does not use floating point, random sampling, or a satisfiability oracle. The precise run records and source hash are in \texttt{results/VERIFICATION.json}.
+
+\begin{center}
+\begin{tabular}{p{.45\linewidth}r p{.25\linewidth}}
+\toprule
+Check & Count & Range or meaning\\
+\midrule
+Boolean polynomial identities & 12 & Exact normal forms\\
+Monomial multiplication evaluations & 4,096 & Four variables\\
+Simple undirected graphs & 1,099 & One to five vertices\\
+Vertex truth assignments & 33,866 & Every graph above\\
+Edge residual assignments & 59,809 & Every graph above\\
+Partitions & 75 & One to five points\\
+Observable inputs for partitions & 1,954 & All binary labelings\\
+Selector evaluations & 7,022 & All block representatives\\
+Independent coordinate maps & 3,984 & Up to four points\\
+Directed labeled systems & 4,164 & Up to three vertices\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The graph tests compare direct enumeration of all gradients with an independent propagation-based integrator and with Gaussian elimination over $\F$. They verify reconstruction counts, kernel dimension, and ambiguity support. The partition tests compare every selector output with the interval in Theorem~\ref{thm:envelope}, and independently enumerate coordinate homomorphisms through four points. The two-world test enumerates all functions $\F^2\to\F$ and finds exactly two Boolean retractions, neither swap-equivariant.
+
+\subsection{Why the symbolic checks support universal identities}
+A Boolean polynomial is represented as a finite sum of squarefree monomials over $\F$. Addition cancels duplicate monomials. Multiplication unions their variable supports, using $x_i^2=x_i$. These rules are valid in every Boolean ring. A polynomial identity whose difference reduces to the empty normal form therefore has an algebraic certificate applicable to every Boolean-ring substitution.
+
+This statement uses the displayed algebraic reduction rules and their mathematical justification. The Python checker is not a replacement for a trusted proof-assistant kernel. The arbitrary-length product telescope is proved in the note by cancellation or induction, rather than inferred from the six product lengths tested by code.
+
+The graph, partition, and stability computations remain bounded checks. Their universal conclusions come from the proofs in Sections~\ref{sec:graph}, \ref{sec:projectors}, and \ref{sec:stability}. No finite graph in the test suite is claimed to be a verified model of ZFC or a realized forcing diagram.
+
+\subsection{Lean status and the actual failure}
+\textbf{No Lean compilation was completed for this release.} No Lean or Lake executable was found in the inspected runtime paths. A pinned Lean 4.19.0 download failed because the runtime could not resolve \texttt{github.com}. The external download route also did not provide the release asset. The failure was environmental, not a failed mathematical theorem check.
+
+The bundle contains a small \texttt{formal/KRS\_Core.lean} scaffold for two-valued identities and profile invariance. It has no intended placeholders, but it is explicitly \emph{uncompiled}. It is not counted as verified proof evidence. No earlier Komorebi Lean checkpoint is imported, modified, or represented as verifying this note.
+
+\subsection{Claim ledger}
+\begin{longtable}{p{.32\linewidth}p{.33\linewidth}p{.27\linewidth}}
+\toprule
+Claim & Evidence in this release & Boundary\\
+\midrule
+\endfirsthead
+\toprule Claim & Evidence in this release & Boundary\\\midrule\endhead
+Common Boolean presentation & Theorem~\ref{thm:product}, full proof & Supplied set-indexed models and choice\\
+Defect calculus & Theorem~\ref{thm:calculus}, symbolic checks & Boolean homomorphism hypotheses\\
+Invariant algebra and quotient & Theorem~\ref{thm:exactsequence} & Quotient is additive\\
+Coherent-observable description & Proposition~\ref{prop:sections} & Only definable coherent sections\\
+Finite integration & Theorem~\ref{thm:integrability}, exhaustive tests & Arbitrary finite graphs, not forcing realizability\\
+Finite projector classification & Theorem~\ref{thm:envelope}, exhaustive tests & Full finite powerset algebra\\
+Canonical Boolean projector & Refuted in Theorem~\ref{thm:nocanonical} & Extra structure or a different output type is needed\\
+Canonical invariant interval & Theorem~\ref{thm:envelope} & Rough-set bounds, not a truth valuation\\
+Weighted multiresolution & Theorems~\ref{thm:weighted}--\ref{thm:multiresolution} & Real fibers with fixed positive weights\\
+All-path stability & Theorem~\ref{thm:stability}, finite checks & Finite directed systems\\
+Forcing interpretation & Conditional use of established forcing results & No new forcing theorem is claimed\\
+Lean verification & Not run & Compiler unavailable and download failed\\
+New axiom or consistency result & Not established & Separate foundational research obligation\\
+\bottomrule
+\end{longtable}
+
+\section{Conclusion}
+The original intuition survives, but in a more discriminating form. Worlds can genuinely be presented as resolutions of richer Boolean-valued data. That fact is too general, by itself, to explain why the worlds are related. The mathematical content lies in the transformation grammar, typed comparison maps, preserved observables, and reconstruction constraints.
+
+The resulting calculus has a proved additive core. Its finite realization has an exact integration theorem, a classification of all Boolean invariant projections, and canonical envelopes when symmetry forbids a preferred projection. After passing to weighted real observables, it has a genuine orthogonal multiresolution decomposition. These are compatible realizations with different contracts, not one flattened notion of truth.
+
+The most useful central equation is therefore conditional rather than rhetorical:
+\[
+\boxed{\text{transported source data}+\text{certified residual}=\text{target data}.}
+\]
+When an invariant projector exists, it gives a stronger decomposition. When it does not, the theory retains canonical bounds and records the obstruction. This is the foundation of a workable resolution semantics, and a precise starting point for testing a broader Komorebi calculus of mathematical worlds.
+
+\appendix
+\section{Reproduction and artifact contents}
+From the extracted release directory, run
+\begin{verbatim}
+python checks/verify_krs.py
+pdflatex -interaction=nonstopmode -halt-on-error \
+  Komorebi_Resolution_Semantics.tex
+pdflatex -interaction=nonstopmode -halt-on-error \
+  Komorebi_Resolution_Semantics.tex
+\end{verbatim}
+The checker recreates its JSON evidence. A local Lean installation can separately be used to attempt
+\begin{verbatim}
+lean formal/KRS_Core.lean
+\end{verbatim}
+That last command is a reproduction target, not a command that succeeded in this release. The source scaffold only covers a limited two-valued core, not the full categorical, graph, or forcing development.
+
+The package includes the PDF, its \LaTeX\ source, executable checks, results, a theorem ledger, a failure log, and checksums. Compiler binaries and font files are not distributed. This is the first versioned note produced from the discussion, not an update to an unseen earlier archive.
+
+\section{Notation and distinctions at a glance}
+\begin{longtable}{p{.22\linewidth}p{.70\linewidth}}
+\toprule
+Symbol & Meaning\\\midrule
+\endfirsthead
+\toprule Symbol & Meaning\\\midrule\endhead
+$M\models T$ & A supplied model, not an assertion that the ambient theory proves such a model exists.\\
+$\mathcal C$ & A small category of typed world transformations.\\
+$A$ & A Boolean algebra of observables, often sentences modulo provable equivalence.\\
+$B_M$ & The Boolean algebra of values at one world.\\
+$v_M$ & Semantic evaluation of observables.\\
+$D_f$ & Additive defect between transported source evaluation and target evaluation.\\
+$\Inv$ & Zero-defect observables. A subalgebra, generally not an ideal.\\
+$K$ & Observables vanishing at every world. An ideal.\\
+$A/\Inv$ & Additive residual quotient. Not a Boolean quotient in general.\\
+$\Inv/K$ & Definable coherent evaluations, a Boolean algebra.\\
+$L_\Pi,U_\Pi$ & Canonical lower and upper invariant approximations.\\
+$P_s$ & Boolean retraction determined by a representative in each finite block.\\
+$E_\Pi$ & Weighted real orthogonal projection. Not a Boolean homomorphism.\\
+$Q_k$ & Real multiresolution detail projector for nested partitions.\\
+$\Delta_{p,q}$ & Typed discrepancy between parallel transport paths.\\
+\bottomrule
+\end{longtable}
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem{hamkinslowe}
+J. D. Hamkins and B. L\"owe.
+\emph{The modal logic of forcing}.
+Transactions of the American Mathematical Society 360 (2008), 1793--1817.
+\href{https://arxiv.org/abs/math/0509616}{arXiv:math/0509616}.
+
+\bibitem{hamkinsseabold}
+J. D. Hamkins and D. E. Seabold.
+\emph{Well-founded Boolean ultrapowers as large cardinal embeddings}.
+2012.
+\href{https://arxiv.org/abs/1206.6075}{arXiv:1206.6075}.
+Sections 1--3 provide the Boolean-valued model and quotient background.
+
+\bibitem{pawlak}
+Z. Pawlak.
+\emph{Rough sets}.
+International Journal of Computer \& Information Sciences 11 (1982), 341--356.
+\href{https://doi.org/10.1007/BF01001956}{doi:10.1007/BF01001956}.
+
+\bibitem{hamkinsleibmanlowe}
+J. D. Hamkins, G. Leibman, and B. L\"owe.
+\emph{Structural connections between a forcing class and its modal logic}.
+2012 preprint.
+\href{https://arxiv.org/abs/1207.5841}{arXiv:1207.5841}.
+
+\bibitem{blockchains}
+M. E. Habi\v{c}, J. D. Hamkins, L. D. Klausner, J. Verner, and K. J. Williams.
+\emph{Set-Theoretic Blockchains}.
+Archive for Mathematical Logic 58 (2019), 965--997.
+\href{https://arxiv.org/abs/1808.01509}{arXiv:1808.01509}.
+
+\bibitem{asperoviale}
+D. Asper\'o and M. Viale.
+\emph{Incompatible bounded category forcing axioms}.
+2021 preprint, version 1.
+\href{https://arxiv.org/abs/2101.03132}{arXiv:2101.03132}.
+The introduction explicitly distinguishes generic absoluteness from unrestricted CH-changing forcing.
+\end{thebibliography}
+\end{document}
