@@ -14,7 +14,7 @@ The three canonical repositories are public:
 
 ## Browsable source files
 
-The current source-import receipts cover **91 primary components**, **75 supporting source collections**, and **139,002 distinct files**. These are ordinary repository files. The [component index](COMPONENT_INDEX.md) links their directories and exact receipts.
+The current source-import receipts cover **91 primary components**, **75 supporting source collections**, and **139,002 distinct files**. These are ordinary repository files. The [component index](COMPONENT_INDEX.md) links their directories and exact receipts. The [source coverage crosswalk](SOURCE_COVERAGE.md) maps the 74 named inventory entries and records the remaining source-availability limits.
 
 | Primary component category | Available components |
 |---|---|
