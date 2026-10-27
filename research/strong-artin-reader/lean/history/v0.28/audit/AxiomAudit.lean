@@ -1,0 +1,98 @@
+import ContinuousLocalConstraintComplex
+import LocalLiftMismatch
+import SimultaneousLocalLiftCriterion
+import ContinuousLocalGluingCokernel
+import FiniteKernelConjugacy
+import FiniteLocalFamilyUpToConjugacy
+import LocalGluingCapstone
+import LocalGluingCounterexample
+import TameStrictVersusConjugateExample
+
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localOneCochains
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.restrictOne
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraintPairs
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraintDifferential
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.LocalConstraintH2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraintClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraintClass_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraintClass_eq_of_boundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.pullbackDatum
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.pullback_action
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCorrection
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCorrection_val
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCorrection_boundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.correctedLift_at_local_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCorrection_continuous
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.prescribedLocalPair
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.simultaneousLocalObstruction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.simultaneousLocalObstruction_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.continuous_simultaneous_local_lifts_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.simultaneous_zero_implies_absolute_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.continuous_local_family_lifts_iff_constructed_obstruction_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.globalOneCocycles
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localOneCocycles
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.restrictOneCocycles
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.StrictLocalGluingCokernel
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localMismatchAfterPrimitive
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strictGluingObstruction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strictGluingObstruction_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraint_zero_iff_gluing_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strictGluingObstruction_independent_primitive
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConstraint_zero_of_surjective_restriction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernelUnit_conjugation
+#print axioms Komorebi.StrongArtin.SquareZeroH2.same_residue_representations_kernel_conjugate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.finite_quotient_lift_matching_local_family_up_to_conjugacy
+#print axioms Komorebi.StrongArtin.SquareZeroH2.continuous_finite_quotient_local_family_up_to_conjugacy
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.simultaneous_lifts_iff_gluing_obstruction_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.simultaneous_lifts_of_absolute_zero_and_surjective_restriction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.finite_matrix_lift_matching_local_family_up_to_conjugacy
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.C2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.G
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.A
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.B
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.q
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.q_surjective
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.q_squareZero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.axisOne
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.axisTwo
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.diagonal
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.sign
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.firstSign
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.secondSign
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.loc
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.prescribed
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.candidate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.rho
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.prescribed_residue
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.prescriptions_agree_on_overlaps
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.every_pair_has_global_lift
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.generator
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.no_simultaneous_representation
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.datum
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.datum_continuous
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.absolute_obstruction_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.simultaneousClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.simultaneous_obstruction_nonzero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.absolute_primitive_exists_with_nonzero_gluing_class
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.no_simultaneous_lift_even_up_to_local_conjugacy
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.C2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.G
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.M9
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.M3
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.reduction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.matrixReduction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.a
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.b
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.conjugator
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.conjugator_reduces_to_one
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.local_involutions_same_residue
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.local_involutions_kernel_conjugate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.local_involutions_do_not_commute
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.group_order_isUnit
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.signA
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.signB
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.globalCandidate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.explicit_simultaneous_local_conjugacy
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.explicit_local_residue_compatibility
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.generator
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.no_literal_global_lift

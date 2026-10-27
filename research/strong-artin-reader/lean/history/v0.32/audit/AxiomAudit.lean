@@ -1,0 +1,65 @@
+import OperatorNormPolynomial
+import NilpotentPolynomialImage
+import PrimaryBlockNorm
+import NonsemisimpleFrobeniusLifting
+import GeneralDualMatrixNorm
+import UnipotentNormExamples
+
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.operatorNorm
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_mul_X_sub_one
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.aeval_normPolynomial
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.operatorNorm_zero
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.operatorNorm_succ
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_primePower
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.operatorNorm_primePower
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.operatorNorm_prime
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_mixed_degree
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.operatorNorm_mixed_degree
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.end_unit_bijective
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.aeval_isUnit_of_primary
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.aeval_range_ker_of_root_factor
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_eval
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_eval_one
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_eval_zero_of_root
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_eval_ne_zero
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_simple_root_factor
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.resonanceExponent
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.normPolynomial_exact_root_factor
+#print axioms Komorebi.StrongArtin.NonsemisimpleNorm.primary_norm_range_ker
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates.conjugate_pow_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates.norm_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates.prescribed_power_iff_operator_image
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates.prescribed_primePower_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates.prescribed_primary_power_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusLinearCoordinates.prescribed_primePower_gauge_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.D
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.Dual
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.upperFrobenius
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.conjugationOperator
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.conjugation_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.linearModel
+#print axioms Komorebi.StrongArtin.SquareZeroH2.GeneralDualMatrix.matrix_prescribed_primePower_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.k
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.n
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.Mat
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.D
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.F
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.upper
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.lower
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.diagonalError
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.T
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.nilpotent_square_apply
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.nilpotent_cube_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.nilpotent_square_nonzero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.norm_three_apply
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.norm_image_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.upperF
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.target
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.target_residue
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.target_mismatch
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.actual_unipotent_cube_lift_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.nonzero_upper_mismatch_lifts
+#print axioms Komorebi.StrongArtin.SquareZeroH2.UnipotentNormExamples.diagonal_mismatch_does_not_lift

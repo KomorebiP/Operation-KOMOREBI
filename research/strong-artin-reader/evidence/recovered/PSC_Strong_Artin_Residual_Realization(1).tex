@@ -1,0 +1,1990 @@
+\documentclass{aomart}
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools,bm,aliascnt,enumitem,graphicx,booktabs,array,longtable}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2700
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else\edef\@subjects{Primary:~\@primarysubjects}\fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty\edef\@subjects{Secondary:~\@secondarysubjects}\else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}\fi
+  \fi
+  \ifpdf\hypersetup{pdfsubject=\@subjects}\fi
+  \if@aom@oldkeywords\else\@footnotetext{AMS Classification:~\@subjects.}\fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}\newtheorem{proposition}[proposition]{Proposition}\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}\newtheorem{lemma}[lemma]{Lemma}\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}\newtheorem{corollary}[corollary]{Corollary}\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}\newtheorem{definition}[definition]{Definition}\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}\newtheorem{example}[example]{Example}\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}\newtheorem{standardfact}[standardfact]{Standard Fact}\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}\newtheorem{remark}[remark]{Remark}\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\Adele}{\mathbb A}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\Frob}{\operatorname{Frob}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\Irr}{\operatorname{Irr}}
+\newcommand{\rec}{\operatorname{rec}}
+\newcommand{\BC}{\operatorname{BC}}
+\newcommand{\AI}{\operatorname{AI}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\calJ}{\mathcal J}
+\newcommand{\calX}{\mathcal X}
+\newcommand{\calE}{\mathcal E}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\calP}{\mathcal P}
+\newcommand{\calQ}{\mathcal Q}
+\newcommand{\muP}{\boldsymbol\mu_p}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\frakl}{\mathfrak l}
+\newcommand{\calA}{\mathcal A}
+\newcommand{\calB}{\mathcal B}
+\newcommand{\calF}{\mathcal F}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\graphicspath{{figures/}}
+
+\title[Residual realization and Strong Artin]{Finite Trace Alphabets, Residual Realization, and the Strong Artin Gate}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{11R42}
+\subject{secondary}{msc2020}{11F70}
+\subject{secondary}{msc2020}{20C15}
+\subject{secondary}{msc2020}{11M41}
+\keyword{Strong Artin conjecture}
+\keyword{cyclic base change}
+\keyword{Clifford theory}
+\keyword{Artin L function}
+\keyword{automorphic descent}
+\keyword{Satake parameter}
+\copyrightnote{}
+\doinumber{}
+
+\hypersetup{
+ pdftitle={Finite Trace Alphabets, Residual Realization, and the Strong Artin Gate},
+ pdfauthor={Komorebi P.},
+ pdfsubject={Cyclic descent, finite trace alphabets, residual Galois realization, finite Satake rigidity, and Strong Artin}
+}
+
+\begin{document}
+\begin{abstract}
+We sharpen the solvable Strong Artin reduction at an invariant cyclic step. The Galois extensions of one irreducible restriction and the cuspidal automorphic descents form torsors under the same quotient character group. Local extension spectra give an exact finite alignment criterion, while total automorphic induction is proved to be blind to the torsor offset. At the quotient prime all extension labels collapse and every descent is residually congruent to the target. Away from finitely many primes, one residual realization determines the characteristic zero offset. We prove that a semisimple finite subgroup of \(\GL_n\) with \(t\) trace values has order at most \(t^{n^2}\) in characteristic greater than \(n\). Consequently, one sufficiently large residual realization of a finite polynomial alphabet lifts to a finite complex representation with the exact Frobenius polynomials. We also prove that one semisimple l adic realization with finitely many Frobenius traces has finite image. Algebraic central characters and highly ramified epsilon twists are shown to be blind when the quotient prime divides the rank. The unresolved core is reduced to producing one residual or l adic realization, or proving a nonregular quotient prime lifting theorem. Full Strong Artin is not claimed.
+\end{abstract}
+\maketitle
+\makeatletter\gdef\addresses{}\makeatother
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+The Strong Artin conjecture predicts that every nontrivial irreducible finite image complex Galois representation
+\[
+ \rho:G_F\longrightarrow\GL_n(\CC)
+\]
+should correspond to a cuspidal automorphic representation of \(\GL_n(\Adele_F)\) with matching local parameters. It is known in large special sectors, including monomial cases obtained from class field theory and automorphic induction, the odd two dimensional theorem over the rational field, and several further solvable families \cite{Langlands1980,Tunnell1981,ArthurClozel1989,Ramakrishnan2002}. The general finite image problem remains open.
+
+A solvable image suggests induction along a composition series. Clifford theory makes that idea exact. At a prime cyclic step, restriction of an irreducible representation either splits into a full orbit, in which case induction handles the step, or remains invariant, in which case one must choose an extension through the cyclic quotient. The first operation is mirrored by automorphic induction. The second operation is the difficult one.
+
+The automorphic analogue is supplied by cyclic base change. An invariant cuspidal representation over a cyclic extension descends, and the fibre of the base change map is controlled by the character group of the cyclic quotient \cite{ArthurClozel1989,ClozelRajan2020}. The Galois extensions of an invariant irreducible representation form a torsor under the same character group. The missing theorem is not the existence of either torsor. It is the identification of the correct offset between them.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.98\textwidth]{01_artin_architecture.pdf}
+\caption{The recursive solvable strategy leaves one cyclic attachment gate after restriction, known automorphy over the extension field, and automorphic descent.}
+\label{fig:architecture}
+\end{figure}
+
+The first goal of this article is to make that offset finite and explicit. Let \(H\triangleleft G\) with \(G/H\cong C_p\). For every irreducible \(H\) type fixed by \(G\), an extension to \(G\) converts its multiplicity space into a representation of \(C_p\). We record the multiplicities of the quotient characters in a polynomial
+\[
+ P_{\tau,V}(z)
+ =
+ \sum_{a\in\ZZ/p\ZZ}m_{\tau,a}(V)z^a.
+\]
+Twisting \(V\) by the quotient character multiplies every such polynomial by the same power of \(z\). This produces an exact criterion for when two semisimple extensions of the same \(H\) representation differ by one quotient character.
+
+Applied at each completion \(F_v\), this gives a local alignment set \(\calJ_v\subseteq\ZZ/p\ZZ\). A global cyclic attachment exists exactly when one global quotient twist belongs to every local alignment set after localization. The infinite looking attachment problem has therefore been reduced to a family of finite spectral congruences.
+
+The second goal is to extract all information that cyclic base change already forces on an arbitrary automorphic descent. Suppose a descent \(\pi\) becomes an Artin type representation after base change to \(E\). The local Langlands parameter of \(\pi_v\) restricts to a finite image representation of \(W_{E_w}\). Since \(W_{E_w}\) has finite index in \(W_{F_v}\), the full local parameter also has finite image. Thus every local component of \(\pi\) is already of Artin type.
+
+At an unramified place, if the base change parameter has exponent \(M\), every Satake root of \(\pi_v\) lies in a finite group of roots of unity. For a finite Galois extension of degree \(d\), all roots lie in \(\mu_{dM}\). Hecke polynomials are therefore integral and their coefficients lie in one cyclotomic number field. These conclusions remove two of the most visible obstacles in automorphic to Artin realization criteria such as the work of Kim and Yamauchi \cite{KimYamauchi2016}. The remaining obstruction is genuinely global: constructing a finite image Galois representation from the weight zero automorphic object and proving compatibility with its Galois conjugates and required functorial lifts.
+
+The present strengthening introduces two coefficient prime arguments. A separating prime avoids every collision among the finitely many Hecke and Artin polynomials and preserves absolute irreducibility of the restricted representation. At such a prime, one residual Galois realization of the automorphic descent determines the characteristic zero cyclic offset exactly.
+
+A finite trace theorem makes this criterion independent of the target representation. In residual characteristic larger than the rank, a semisimple finite matrix group whose trace assumes only \(t\) values has order at most \(t^{n^2}\). At a sufficiently large coefficient prime, the representation is therefore in cross characteristic. It lifts to characteristic zero, and reduction injectivity on a finite cyclotomic polynomial alphabet forces the lifted Frobenius polynomials to equal the automorphic polynomials exactly.
+
+A different phenomenon occurs at the quotient prime itself. If the cyclic extension has degree \(p\), then the order \(p\) quotient characters become trivial modulo the prime above \(p\). At an inert unramified place, base change compares the \(p\)th powers of the two Frobenius classes. In characteristic \(p\), coefficientwise Frobenius is injective. The original Hecke polynomials are therefore congruent. Hence every cyclic extension step is automatically residually automorphic at the quotient prime. The unresolved problem becomes a weight zero lifting theorem, not residual modularity.
+
+A third new ingredient concerns ordinary l adic realizations. We prove that a semisimple l adic representation whose Frobenius traces lie in one finite set on a density one set of places has finite image. The finite Satake hypothesis is more than enough. Thus any standard l adic realization theorem already proves the Artin realization principle in its range.
+
+Two negative results locate the remaining information. When the quotient prime divides the rank, every determinant character obtained from an algebraic representation of \(\GL_n\) is invariant under the quotient twist. Deligne and Henniart stability also shows that sufficiently ramified auxiliary epsilon twists are insensitive to the same ambiguity. The missing label must therefore be detected by bounded depth noncentral local data or by a global realization theorem.
+
+A fourth goal is analytic. Brauer induction always gives meromorphic continuation of Artin \(L\) functions, but signed coefficients prevent direct holomorphy. We formulate a positive saturation criterion: if a positive multiple of an irreducible character lies in the additive monoid generated by packets whose Artin \(L\) functions are already entire, then its Artin \(L\) function is entire. This is elementary but useful as a finite certificate. It belongs to the same landscape as generalized monomial and almost monomial methods \cite{Konig2010,CimpoeasNicolae2020}, and is not presented as a replacement for those theories.
+
+The resulting picture has two routes. The automorphy route attacks the cyclic attachment spectrum. The analytic route attacks Artin holomorphy directly. Neither route is declared complete in general.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.96\textwidth]{11_two_artin_routes.pdf}
+\caption{The automorphy route and the direct holomorphy route share the same finite representation data but have different remaining gates.}
+\label{fig:two_routes}
+\end{figure}
+
+\section{Cyclic extension and descent torsors}\label{sec:torsors}
+
+Let \(G\) be a group, let \(H\triangleleft G\), and assume
+\[
+ G/H\cong C_p
+\]
+for a prime \(p\). Let \(X=\Hom(G/H,\CC^\times)\), which is cyclic of order \(p\).
+
+\begin{proposition}[Galois extension torsor]\label{prop:galois_torsor}
+Let \(\tau\) be an irreducible complex representation of \(H\) that is invariant under \(G\), and suppose \(\tau\) extends to an irreducible representation of \(G\). Then the set of isomorphism classes of extensions of \(\tau\) to \(G\) is an \(X\) torsor under tensor product.
+\end{proposition}
+
+\begin{proof}
+Fix one extension \(\rho\). Every \(\chi\in X\) is trivial on \(H\), so \(\rho\otimes\chi\) restricts to \(\tau\). Conversely, let \(\rho'\) be another extension. Since both restrictions are irreducible and isomorphic, Schur's lemma shows that after one choice of an \(H\) intertwiner, the ratio between the two actions is scalar on each coset. Those scalars define a character of \(G/H\), so \(\rho'\cong\rho\otimes\chi\).
+
+The action is free. If \(\rho\cong\rho\otimes\chi\), an intertwiner restricts to a scalar on \(H\). Commuting it through one element outside \(H\) gives \(\chi=1\).
+\end{proof}
+
+\begin{standardfact}[Cyclic base change fibre]\label{fact:base_change_fibre}
+Let \(E/F\) be cyclic, and let \(\Pi\) be a unitary cuspidal representation of \(\GL_n(\Adele_E)\) that descends cuspidally to \(F\). The cuspidal descents with base change \(\Pi\) form a torsor under the characters of \(C_F\) that correspond to \(\Gal(E/F)\). Distinct nontrivial quotient twists remain distinct when the base change is cuspidal \cite{ArthurClozel1989,ClozelRajan2020,Rajan2002}.
+\end{standardfact}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{02_cyclic_torsors.pdf}
+\caption{Strong Artin at one invariant cyclic step asks for the correct identification of two torsors under the same quotient character group.}
+\label{fig:torsors}
+\end{figure}
+
+\begin{definition}[Attached cyclic descent]\label{def:attached_descent}
+Let \(E/F\) be cyclic of prime degree \(p\), and let \(\rho\) be an irreducible finite image representation of \(G_F\) whose restriction \(\tau=\rho|_{G_E}\) is irreducible. Suppose \(\tau\) is automorphic with cuspidal representation \(\Pi\) of \(\GL_n(\Adele_E)\). An attached cyclic descent is a cuspidal descent \(\pi\) of \(\Pi\) such that
+\[
+ \rec_{F_v}(\pi_v)
+ \cong
+ \rho|_{W_{F_v}}
+\]
+for every place \(v\) of \(F\).
+\end{definition}
+
+\begin{proposition}[One attachment determines the whole fibre]\label{prop:one_attachment}
+If one attached cyclic descent exists, then every Galois extension in the torsor of \cref{prop:galois_torsor} is attached to the corresponding quotient twist of that descent.
+\end{proposition}
+
+\begin{proof}
+Local class field theory identifies a quotient character \(\chi\in X\) with the corresponding Hecke character. Local Langlands is compatible with character twisting, so
+\[
+ \rec(\pi_v\otimes\chi_v)
+ \cong
+ \rec(\pi_v)\otimes\chi_v
+ \cong
+ \rho_v\otimes\chi_v.
+\]
+The result holds at every place.
+\end{proof}
+
+\begin{corollary}[Clifford recursion reduction]\label{cor:clifford_reduction}
+Suppose a finite solvable image representation is followed down a prime cyclic Clifford tower. Every induction step is handled by automorphic induction. If attached cyclic descent holds at every invariant extension step, then the original representation satisfies Strong Artin.
+\end{corollary}
+
+\begin{proof}
+Start at a one dimensional bottom constituent, which is automorphic by class field theory. Move upward through the tower. Use automorphic induction at each induction step and attached cyclic descent at each invariant extension step. The local parameters remain those of the Galois representation at every stage.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{09_clifford_recursion.pdf}
+\caption{The solvable recursion separates known induction steps from the cyclic attachment steps that require new Strong Artin input.}
+\label{fig:clifford_recursion}
+\end{figure}
+
+\section{Coefficient selectors in a cyclic fibre}\label{sec:selectors}
+
+Let \(\xi\) be a generator of \(X\), and identify its values with \(p\)th roots of unity. For a matrix \(A\in\GL_n(\CC)\), write
+\[
+ \det(TI-A)
+ =
+ \sum_{k=0}^{n}(-1)^k e_k(A)T^{n-k}.
+\]
+
+\begin{proposition}[Coefficient rotation]\label{prop:coefficient_rotation}
+For \(\zeta\in\CC^\times\),
+\[
+ \boxed{
+ e_k(\zeta A)=\zeta^k e_k(A).
+ }
+\]
+\end{proposition}
+
+\begin{proof}
+The coefficient \(e_k(A)\) is the trace of \(\bigwedge^k A\). Scalar multiplication by \(\zeta\) acts on \(\bigwedge^k\CC^n\) by \(\zeta^k\).
+\end{proof}
+
+\begin{definition}[Active coefficient degrees]\label{def:active_degrees}
+Define
+\[
+ S(A)=\{k\in\{1,\ldots,n\}:e_k(A)\neq0\}.
+\]
+\end{definition}
+
+\begin{theorem}[One polynomial separator]\label{thm:one_polynomial_separator}
+Let \(\zeta\) range over \(\mu_p\). The twists \(\zeta A\) have pairwise distinct characteristic polynomials exactly when \(S(A)\) contains a degree not divisible by \(p\).
+\end{theorem}
+
+\begin{proof}
+By \cref{prop:coefficient_rotation}, the stabilizer of the characteristic polynomial is
+\[
+ \{\zeta\in\mu_p:\zeta^k=1\text{ for every }k\in S(A)\}.
+\]
+Since \(p\) is prime, a nontrivial \(p\)th root satisfies \(\zeta^k=1\) exactly when \(p\mid k\).
+\end{proof}
+
+\begin{corollary}[Trace and determinant selectors]\label{cor:trace_det_selector}
+A nonzero trace separates all cyclic twists. The determinant separates all cyclic twists when \(p\nmid n\).
+\end{corollary}
+
+\begin{proof}
+Use degree one for the trace and degree \(n\) for the determinant in \cref{thm:one_polynomial_separator}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.70\textwidth]{03_coefficient_rotations.pdf}
+\caption{A quotient twist rotates the coefficient of exterior degree \(k\) by the \(k\)th power of the quotient character.}
+\label{fig:coefficient_rotations}
+\end{figure}
+
+\begin{theorem}[Determinant selector for extension torsors]\label{thm:determinant_selector}
+Assume \(p\nmid n\). In the Galois extension torsor of an \(n\) dimensional irreducible representation, the determinant distinguishes all \(p\) extensions. In the automorphic descent torsor, the central character distinguishes all \(p\) descents. Both transformations are equivariant under the \(n\)th power map on \(X\).
+\end{theorem}
+
+\begin{proof}
+For a quotient character \(\chi\),
+\[
+ \det(\rho\otimes\chi)=\det(\rho)\chi^n.
+\]
+The central character satisfies the identical formula
+\[
+ \omega_{\pi\otimes\chi}=\omega_\pi\chi^n.
+\]
+Since \(X\) has prime order \(p\) and \(p\nmid n\), the map \(\chi\mapsto\chi^n\) is an automorphism of \(X\).
+\end{proof}
+
+\begin{theorem}[Unique determinant matched descent]\label{thm:determinant_matched_descent}
+Use the cyclic Artin setup of \cref{def:attached_descent}, and assume \(p\nmid n\). Let \(\pi_0\) be any cuspidal descent of \(\Pi\). Then there is a unique quotient character \(\chi\in X\) such that
+\[
+ \boxed{
+ \omega_{\pi_0\otimes\chi}
+ =
+ \det\rho
+ }
+\]
+under global class field theory.
+\end{theorem}
+
+\begin{proof}
+The base change of \(\omega_{\pi_0}\) is the central character of \(\Pi\). Since \(\Pi\) is attached to \(\tau=\rho|_{G_E}\), that character equals \(\det\tau\). The base change of \(\det\rho\) is also \(\det\tau\). Hence
+\[
+ \delta=(\det\rho)\omega_{\pi_0}^{-1}
+\]
+is a character killed by base change to \(E\), so \(\delta\in X\). We need \(\chi^n=\delta\). Since \(X\) has order \(p\) and \(p\nmid n\), the \(n\)th power map on \(X\) is bijective. Thus there is one and only one such \(\chi\).
+\end{proof}
+
+\begin{corollary}[Rank prime sieve]\label{cor:rank_prime_sieve}
+At a cyclic prime step of degree \(p\), determinant data leaves no torsor ambiguity unless \(p\mid n\). The only quotient primes invisible to determinant selection are prime divisors of the rank.
+\end{corollary}
+
+\begin{proof}
+This is \cref{thm:determinant_selector}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{10_rank_prime_sieve.pdf}
+\caption{The determinant ambiguity is concentrated at quotient primes dividing the representation rank. This does not by itself prove attachment.}
+\label{fig:rank_sieve}
+\end{figure}
+
+\begin{remark}\label{rem:determinant_not_attachment}
+Matching determinant and central character selects a unique candidate descent when \(p\nmid n\). It does not prove that the remaining local characteristic polynomials match. The selection theorem removes the finite torsor ambiguity, not the global realization problem.
+\end{remark}
+
+\section{Two no go theorems for invisible cyclic twists}\label{sec:no_go}
+
+The determinant selector is optimal among algebraic central characters. When the quotient prime divides the rank, applying more algebraic functors does not repair it.
+
+\begin{proposition}[Determinant character of an algebraic representation]\label{prop:algebraic_det_character}
+Let
+\[
+ r:\GL_n(\CC)\longrightarrow\GL_N(\CC)
+\]
+be an irreducible algebraic representation. Suppose the center acts with weight \(w\), so
+\[
+ r(zI_n)=z^wI_N.
+\]
+There is an integer \(a\) such that
+\[
+\boxed{
+ \det r(g)=\det(g)^a
+}
+\]
+and
+\[
+\boxed{
+ wN=an.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Every algebraic character of \(\GL_n\) is an integral power of the determinant. Thus \(\det\circ r=\det^a\) for one integer \(a\). Evaluate both sides at \(zI_n\). The left side is \(z^{wN}\), while the right side is \(z^{an}\).
+\end{proof}
+
+\begin{theorem}[Algebraic central characters are blind when \(p\mid n\)]\label{thm:central_character_no_go}
+Let \(\chi\) have order \(p\), and assume \(p\mid n\). For every irreducible algebraic representation \(r\) of \(\GL_n\),
+\[
+\boxed{
+ \det r(\rho\otimes\chi)=\det r(\rho).
+}
+\]
+The same statement holds on every irreducible summand of an arbitrary finite dimensional algebraic representation.
+\end{theorem}
+
+\begin{proof}
+The scalar twist acts on \(r(\rho)\) by \(\chi^w\). Hence its determinant changes by \(\chi^{wN}\). By \cref{prop:algebraic_det_character}, \(wN=an\), which is divisible by \(p\). Thus \(\chi^{wN}=1\). Apply the argument to each irreducible summand.
+\end{proof}
+
+\begin{corollary}[Optimality of the rank prime sieve]\label{cor:rank_sieve_optimal}
+When \(p\mid n\), no finite collection of determinant or central character tests obtained from algebraic functors on \(\GL_n\) can distinguish the order \(p\) scalar extension twists.
+\end{corollary}
+
+\begin{proof}
+Every test in the collection is invariant by \cref{thm:central_character_no_go}.
+\end{proof}
+
+\begin{standardfact}[Stability of epsilon factors]\label{fact:epsilon_stability}
+Let \(V\) be a finite dimensional Weil representation and let \(\Psi\) be a nontrivial additive character. For every sufficiently ramified character \(\eta\), the epsilon factor of \(V\otimes\eta\) depends only on \(\dim V\), \(\det V\), \(\eta\), and \(\Psi\). In the standard normalization,
+\[
+ \epsilon(V\otimes\eta,\Psi)
+ =
+ \det V(c_{\eta,\Psi})^{-1}
+ \epsilon(\eta,\Psi)^{\dim V}.
+\]
+This is the stability theorem of Deligne and Henniart \cite{Deligne1973,DeligneHenniart1981}.
+\end{standardfact}
+
+\begin{theorem}[Highly ramified epsilon twists are blind]\label{thm:epsilon_no_go}
+Let \(V' = V\otimes\chi\), where \(\chi\) has order \(p\), and assume \(p\mid\dim V\). Then \(V\) and \(V'\) have the same determinant. For every sufficiently ramified auxiliary character \(\eta\),
+\[
+\boxed{
+ \epsilon(V\otimes\eta,\Psi)
+ =
+ \epsilon(V'\otimes\eta,\Psi).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The determinant changes by \(\chi^{\dim V}=1\). The two representations have the same dimension and determinant. Apply \cref{fact:epsilon_stability}.
+\end{proof}
+
+\begin{remark}\label{rem:no_go_boundary}
+When the quotient prime divides the rank, neither algebraic central characters nor sufficiently ramified epsilon twists see the cyclic label. Any complete attachment theorem must use bounded depth noncentral local data, a genuine Galois realization, or an automorphy lifting theorem that controls the corresponding local component.
+\end{remark}
+
+\begin{theorem}[The total induced object is torsor blind]\label{thm:total_induction_blind}
+Let \(H\triangleleft G\) with cyclic quotient character group \(X\), and let \(V\) be an extension of an \(H\) representation. Then
+\[
+\boxed{
+ \bigoplus_{\chi\in X}
+ V\otimes\chi
+ \cong
+ \Ind_H^G\Res_HV.
+}
+\]
+The left side is unchanged when \(V\) is replaced by another member of its extension torsor. Likewise, for cyclic base change,
+\[
+\boxed{
+ \mathop{\boxplus}_{\chi\in X}
+ \pi\otimes\chi
+ \cong
+ \AI_{E/F}(\BC_{E/F}\pi)
+}
+\]
+inside the established automorphic induction formalism. Therefore comparison of the total induced objects cannot determine the cyclic attachment offset.
+\end{theorem}
+
+\begin{proof}
+The restriction of every quotient character to \(H\) is trivial. The regular representation of \(G/H\) decomposes as the direct sum of all characters in \(X\). Hence
+\[
+ \Ind_H^G\Res_HV
+ \cong
+ V\otimes\CC[G/H]
+ \cong
+ \bigoplus_{\chi\in X}V\otimes\chi.
+\]
+Replacing \(V\) by \(V\otimes\chi_0\) only permutes the summands. The automorphic identity is the cyclic automorphic induction and base change analogue. It has the same permutation invariance.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.90\textwidth]{20_no_go_filters.pdf}
+\caption{Central characters, highly ramified epsilon twists, and the total induced object all lose the cyclic offset in their stated ranges.}
+\label{fig:no_go_filters}
+\end{figure}
+
+\section{Local extension spectra}\label{sec:extension_spectra}
+
+The determinant is only one aggregate of the local cyclic extension labels. Clifford theory gives the complete finite invariant.
+
+Let \(G/H\cong C_p\), and choose a quotient character \(\xi\). Let \(V\) be a finite dimensional semisimple representation of \(G\).
+
+\begin{definition}[Stable and moving types]\label{def:stable_moving}
+An irreducible representation \(\tau\in\Irr(H)\) is stable when \(\tau^g\cong\tau\) for every \(g\in G\). Otherwise its orbit has size \(p\) and is called moving.
+\end{definition}
+
+\begin{lemma}[Extension of a stable type]\label{lem:stable_extension}
+Every stable irreducible complex representation of \(H\) extends to \(G\).
+\end{lemma}
+
+\begin{proof}
+A stable irreducible representation gives a projective action of \(G/H\) on its space. The obstruction lies in
+\[
+ H^2(C_p,\CC^\times).
+\]
+The coefficient group \(\CC^\times\) is divisible, and the cyclic obstruction vanishes. Thus the projective action can be rescaled to a linear extension \cite{Brown1982,Isaacs1976}.
+\end{proof}
+
+Fix one extension \(\widetilde\tau\) for every stable \(\tau\).
+
+\begin{definition}[Extension spectrum polynomial]\label{def:extension_spectrum}
+For a stable type \(\tau\), the multiplicity space
+\[
+ M_\tau(V)=\Hom_H(\tau,V)
+\]
+becomes a representation of \(G/H\) after comparing the action on \(V\) with \(\widetilde\tau\). Write
+\[
+ M_\tau(V)
+ \cong
+ \bigoplus_{a\in\ZZ/p\ZZ}
+ (\xi^a)^{\oplus m_{\tau,a}(V)}.
+\]
+Define
+\[
+ \boxed{
+ P_{\tau,V}(z)
+ =
+ \sum_{a\in\ZZ/p\ZZ}
+ m_{\tau,a}(V)z^a
+ }
+\]
+in \(\ZZ[z]/(z^p-1)\).
+\end{definition}
+
+\begin{proposition}[Effect of quotient twisting]\label{prop:spectrum_twist}
+For every \(j\in\ZZ/p\ZZ\),
+\[
+ \boxed{
+ P_{\tau,V\otimes\xi^j}(z)
+ =
+ z^jP_{\tau,V}(z).
+ }
+\]
+Moving orbit blocks are unchanged up to isomorphism by quotient twisting.
+\end{proposition}
+
+\begin{proof}
+The quotient character acts only on the multiplicity space, shifting every character label by \(j\). For a moving type, its inertia group is \(H\), and the corresponding irreducible block is induced from \(H\). Tensoring an induced representation by a character trivial on \(H\) produces an isomorphic induced representation.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{04_extension_spectra.pdf}
+\caption{Stable types carry quotient character multiplicities. Moving orbit blocks are induced and do not record a quotient extension label.}
+\label{fig:extension_spectra}
+\end{figure}
+
+\begin{theorem}[Cyclic extension spectrum criterion]\label{thm:extension_spectrum_criterion}
+Let \(V\) and \(W\) be semisimple representations of \(G\) with
+\[
+ \Res_HV\cong\Res_HW.
+\]
+Then
+\[
+ \boxed{
+ W\cong V\otimes\xi^j
+ }
+\]
+for some \(j\in\ZZ/p\ZZ\) if and only if, for every stable irreducible \(H\) type \(\tau\),
+\[
+ \boxed{
+ P_{\tau,W}(z)
+ =
+ z^jP_{\tau,V}(z).
+ }
+\]
+The moving orbit blocks require no additional condition.
+\end{theorem}
+
+\begin{proof}
+Decompose the restriction to \(H\) into \(G\) orbits of irreducible types. For a moving orbit, Clifford theory gives one irreducible induced block, with multiplicity determined by the restriction. Quotient twisting fixes its isomorphism class.
+
+For a stable type \(\tau\), the full \(\tau\) isotypic contribution is
+\[
+ \widetilde\tau\otimes M_\tau(V).
+\]
+The corresponding contribution for \(W\) is determined by \(M_\tau(W)\). Tensoring by \(\xi^j\) shifts every quotient character in every stable multiplicity space by the same \(j\). Thus the displayed polynomial identities are necessary and sufficient on each stable block. Direct sum over all blocks gives the result.
+\end{proof}
+
+\begin{definition}[Alignment set]\label{def:alignment_set}
+For \(V,W\) with the same restriction to \(H\), define
+\[
+ \boxed{
+ \calJ_H(V,W)
+ =
+ \{j\in\ZZ/p\ZZ:
+ P_{\tau,W}=z^jP_{\tau,V}
+ \text{ for every stable }\tau\}.
+ }
+\]
+\end{definition}
+
+\begin{corollary}[Structure of the alignment set]\label{cor:alignment_coset}
+The alignment set is empty or a coset of the common rotational stabilizer
+\[
+ \bigcap_\tau
+ \{j:z^jP_{\tau,V}=P_{\tau,V}\}.
+\]
+In particular, one stable type with aperiodic spectrum makes the alignment index unique whenever it exists.
+\end{corollary}
+
+\begin{proof}
+If \(j_0\) is one solution, every other solution differs from it by a rotation stabilizing every spectrum polynomial. The converse is immediate.
+\end{proof}
+
+\begin{example}[Irreducible stable restriction]\label{ex:irreducible_stable}
+If \(\Res_HV\) is irreducible, its multiplicity polynomial is one monomial. Hence \(\calJ_H(V,W)\) is a singleton. This recovers the ordinary extension torsor of \cref{prop:galois_torsor}.
+\end{example}
+
+
+
+\subsection{Fourier coordinates of an extension spectrum}
+
+Fix a primitive \(p\)th root \(\zeta\). For
+\[
+ P(z)=\sum_{a\in\ZZ/p\ZZ}m_az^a,
+\]
+define
+\[
+ \widehat P(r)
+ =
+ \sum_{a\in\ZZ/p\ZZ}m_a\zeta^{ar},
+ \qquad
+ r\in\ZZ/p\ZZ.
+\]
+
+\begin{proposition}[Fourier trace interpretation]\label{prop:fourier_trace}
+Let \(g\) be a lift of a generator of \(G/H\). For a stable type \(\tau\),
+\[
+ \boxed{
+ \widehat P_{\tau,V}(r)
+ =
+ \Tr\left(g^r\mid M_\tau(V)\right).
+ }
+\]
+If \(V\) is twisted by \(\xi^j\), then
+\[
+ \boxed{
+ \widehat P_{\tau,V\otimes\xi^j}(r)
+ =
+ \zeta^{jr}\widehat P_{\tau,V}(r).
+ }
+\]
+\end{proposition}
+
+\begin{proof}
+The quotient generator acts on the \(\xi^a\) summand by \(\zeta^a\). Taking the trace of its \(r\)th power gives the Fourier sum. The twist multiplies the action of \(g^r\) by \(\zeta^{jr}\).
+\end{proof}
+
+\begin{corollary}[Fourier attachment test]\label{cor:fourier_attachment}
+Suppose \(\Res_HV\cong\Res_HW\). Then \(W\cong V\otimes\xi^j\) if and only if
+\[
+ \boxed{
+ \widehat P_{\tau,W}(r)
+ =
+ \zeta^{jr}\widehat P_{\tau,V}(r)
+ }
+\]
+for every stable type \(\tau\) and every \(r\in\ZZ/p\ZZ\).
+\end{corollary}
+
+\begin{proof}
+The discrete Fourier transform on \(\ZZ/p\ZZ\) is invertible. Thus the Fourier identities are equivalent to the polynomial shift identities in \cref{thm:extension_spectrum_criterion}.
+\end{proof}
+
+\begin{corollary}[One nonzero Fourier mode selects the shift]\label{cor:one_fourier_mode}
+Let \(r\neq0\) modulo \(p\). If
+\[
+ \widehat P_{\tau,V}(r)\neq0,
+\]
+then any possible attachment shift is uniquely determined by the ratio
+\[
+ \boxed{
+ \frac{\widehat P_{\tau,W}(r)}{\widehat P_{\tau,V}(r)}
+ =
+ \zeta^{jr}.
+ }
+\]
+\end{corollary}
+
+\begin{proof}
+Since \(p\) is prime, multiplication by the nonzero index \(r\) is invertible modulo \(p\). Thus \(\zeta^{jr}\) uniquely determines \(j\).
+\end{proof}
+
+\begin{definition}[Local spectral obstruction]\label{def:local_spectral_obstruction}
+The local spectral obstruction vanishes when all nonzero Fourier ratios in \cref{cor:fourier_attachment} are powers \(\zeta^{jr}\) for one common \(j\). If no such \(j\) exists, the obstruction is nonzero.
+\end{definition}
+
+\begin{corollary}[Finite local decision procedure]\label{cor:finite_local_decision}
+At one cyclic local step, attachment up to quotient twist is decided by finitely many traces on the stable multiplicity spaces.
+\end{corollary}
+
+\begin{proof}
+There are finitely many stable types and \(p\) Fourier modes. Apply \cref{cor:fourier_attachment}.
+\end{proof}
+
+\subsection{Two basic extension spectrum examples}
+
+\begin{example}[A stable cyclic type]\label{ex:stable_cyclic_type}
+Let
+\[
+ G=C_3\times C_2,
+ \qquad
+ H=C_3.
+\]
+Fix a nontrivial character \(\tau\) of \(H\). It is stable under \(G\). After choosing the extension with trivial \(C_2\) coordinate, the two one dimensional extensions have spectra
+\[
+ P_{\tau,V_0}(z)=1,
+ \qquad
+ P_{\tau,V_1}(z)=z.
+\]
+The alignment set is the singleton containing the unique quotient twist carrying one extension to the other.
+\end{example}
+
+\begin{proof}
+The quotient \(C_2\) has the trivial and sign characters. The multiplicity space is one dimensional, so its quotient character is the complete extension label.
+\end{proof}
+
+\begin{example}[A moving type and self twist]\label{ex:S3_moving_type}
+Let \(G=S_3\), let \(H=A_3\), and let \(V\) be the standard two dimensional representation. Its restriction is
+\[
+ \Res_HV=\tau\oplus\tau^{-1}
+\]
+for the two nontrivial characters of \(C_3\). These characters form one moving orbit under \(G/H\cong C_2\). Hence there is no stable extension spectrum, and
+\[
+ V\otimes\operatorname{sgn}\cong V.
+\]
+\end{example}
+
+\begin{proof}
+The standard representation is induced from either nontrivial character of \(A_3\). Quotient twisting is trivial on the inducing subgroup, so it preserves the induced representation.
+\end{proof}
+
+\section{Strong Artin as global spectrum alignment}\label{sec:global_alignment}
+
+Let \(E/F\) be cyclic of prime degree \(p\). Let \(\epsilon\) be the corresponding idele class character. Suppose \(\rho\) is an irreducible finite image representation of \(G_F\), its restriction \(\tau\) to \(G_E\) is irreducible, and \(\Pi\) is an automorphic representation attached to \(\tau\). Let \(\pi_0\) be one cuspidal descent of \(\Pi\).
+
+For each place \(v\) of \(F\), put
+\[
+ R_v=\rho|_{W_{F_v}},
+ \qquad
+ A_v=\rec_{F_v}(\pi_{0,v}).
+\]
+Cyclic base change compatibility gives
+\[
+ \Res_{W_{E_w}}R_v
+ \cong
+ \Res_{W_{E_w}}A_v.
+\]
+
+\begin{definition}[Local attachment set]\label{def:local_attachment_set}
+When the local quotient has order \(p\), define
+\[
+ \calJ_v
+ =
+ \{j\in\ZZ/p\ZZ:
+ A_v\otimes\epsilon_v^j\cong R_v\}.
+\]
+At a split place, set \(\calJ_v=\ZZ/p\ZZ\).
+\end{definition}
+
+\begin{theorem}[Local computability of attachment]\label{thm:local_attachment_spectrum}
+Every set \(\calJ_v\) is computed by the extension spectrum criterion of \cref{thm:extension_spectrum_criterion} applied to the finite quotient through which the two local parameters factor.
+\end{theorem}
+
+\begin{proof}
+The restrictions of \(A_v\) and \(R_v\) to \(W_{E_w}\) are isomorphic. Their common restriction has finite image because \(R_v\) does. The parameter \(A_v\) also has finite image by \cref{thm:local_artin_descent} below, so both factor through one finite quotient after replacing it by a common finite quotient. Apply \cref{thm:extension_spectrum_criterion}.
+\end{proof}
+
+\begin{theorem}[Global cyclic attachment criterion]\label{thm:global_attachment_criterion}
+With the preceding notation, the descent \(\pi_0\otimes\epsilon^j\) is attached to \(\rho\) if and only if
+\[
+ \boxed{
+ j\in\bigcap_v\calJ_v.
+ }
+\]
+Consequently, the cyclic Strong Artin step succeeds exactly when this intersection is nonempty.
+\end{theorem}
+
+\begin{proof}
+Local Langlands is compatible with character twists. Hence
+\[
+ \rec(\pi_{0,v}\otimes\epsilon_v^j)
+ \cong
+ A_v\otimes\epsilon_v^j.
+\]
+The global descent is attached exactly when this is isomorphic to \(R_v\) for every place \(v\), which is the displayed condition.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.80\textwidth]{05_global_alignment.pdf}
+\caption{Each place imposes a finite set of allowed cyclic offsets. Strong Artin at the step is equivalent to a common global offset.}
+\label{fig:global_alignment}
+\end{figure}
+
+\begin{corollary}[Determinant chosen candidate]\label{cor:det_candidate}
+If \(p\nmid n\), determinant and central character select one candidate \(j_{\det}\). The cyclic Strong Artin step is then equivalent to
+\[
+ \boxed{
+ j_{\det}\in\calJ_v
+ \quad\text{for every }v.
+ }
+\]
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:determinant_selector,thm:global_attachment_criterion}.
+\end{proof}
+
+\begin{remark}\label{rem:finite_not_finished}
+The local spectra are finite, but there are infinitely many places. A theorem forcing all local alignment sets to contain the same global index would prove the cyclic attachment step. The present reduction identifies that theorem precisely but does not prove it.
+\end{remark}
+
+\section{Every descent of an Artin base change is locally Artin}\label{sec:local_artin}
+
+The automorphic descent has much stronger local structure than a general cusp form.
+
+\begin{theorem}[Local Artin descent]\label{thm:local_artin_descent}
+Let \(E/F\) be a finite extension, let \(\pi\) be an automorphic representation of \(\GL_n(\Adele_F)\), and suppose its base change \(\Pi\) to \(E\) exists with local compatibility. Assume every local Weil Deligne parameter of \(\Pi\) has zero monodromy and finite Weil image. Then the same is true for every local parameter of \(\pi\).
+\end{theorem}
+
+\begin{proof}
+Fix \(v\) and \(w\mid v\), and write the local Weil Deligne parameter as \((\phi_v,N_v)\). Base change restricts \(\phi_v\) to \(W_{E_w}\) and keeps the monodromy operator. Since the parameter of \(\Pi_w\) has zero monodromy, \(N_v=0\).
+
+The image of \(W_{E_w}\) under \(\phi_v\) is finite. The subgroup \(W_{E_w}\) has finite index in \(W_{F_v}\). Choose finitely many coset representatives. The full image \(\phi_v(W_{F_v})\) is contained in the union of the corresponding finitely many cosets of the finite subgroup \(\phi_v(W_{E_w})\). Hence it is finite.
+\end{proof}
+
+\begin{corollary}[Tempered local descent]\label{cor:tempered_local_descent}
+Under the hypotheses of \cref{thm:local_artin_descent}, every local parameter is bounded. Thus every local component of \(\pi\) is tempered in the normalized local Langlands correspondence.
+\end{corollary}
+
+\begin{proof}
+A finite subgroup of \(\GL_n(\CC)\) is bounded. Local Langlands for general linear groups identifies bounded parameters with tempered representations \cite{Henniart2000}.
+\end{proof}
+
+\begin{corollary}[Artin infinity type]\label{cor:artin_infinity}
+If the base change is attached to a finite image global Galois representation, every archimedean local parameter of the descent has finite image.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:local_artin_descent} at the archimedean Weil groups. The subgroup corresponding to the extension has finite index.
+\end{proof}
+
+\section{Finite Satake descent}\label{sec:finite_satake}
+
+Let \(E/F\) be a finite Galois extension of degree \(d\). Suppose \(\pi\) base changes to an automorphic representation \(\Pi\) attached to a finite image Artin representation \(\tau\). Let \(M\) be the exponent of the finite image of \(\tau\).
+
+\begin{theorem}[Finite Satake roots]\label{thm:finite_satake_roots}
+At every finite place \(v\) where \(E/F\), \(\pi\), and \(\Pi\) are unramified, every normalized Satake root of \(\pi_v\) belongs to
+\[
+ \boxed{
+ \mu_{dM}.
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Choose \(w\mid v\) and let \(f=f(w/v)\). If the normalized Satake roots of \(\pi_v\) are \(\alpha_1,\ldots,\alpha_n\), unramified base change replaces the Satake conjugacy class by its \(f\)th power. Hence the roots of \(\Pi_w\) are \(\alpha_i^f\). Since \(\Pi_w\) is attached to a representation of exponent dividing \(M\),
+\[
+ (\alpha_i^f)^M=1.
+\]
+Thus \(\alpha_i\in\mu_{fM}\). Since \(f\mid d\), this group is contained in \(\mu_{dM}\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{06_finite_satake.pdf}
+\caption{A finite image base change constrains every descended unramified Satake root to one finite cyclotomic set.}
+\label{fig:finite_satake}
+\end{figure}
+
+\begin{corollary}[Integral Hecke polynomials]\label{cor:integral_hecke}
+Every unramified normalized Hecke polynomial of \(\pi\) has coefficients in
+\[
+ \boxed{
+ \ZZ[\mu_{dM}].
+ }
+\]
+In particular, all of its coefficients are algebraic integers.
+\end{corollary}
+
+\begin{proof}
+The coefficients are elementary symmetric polynomials in roots of unity from \(\mu_{dM}\).
+\end{proof}
+
+\begin{corollary}[Finite Hecke field]\label{cor:finite_hecke_field}
+The field generated by all normalized unramified Hecke coefficients of \(\pi\) is a number field contained in
+\[
+ \boxed{
+ \QQ(\mu_{dM}).
+ }
+\]
+There are only finitely many possible normalized Hecke polynomials of degree \(n\).
+\end{corollary}
+
+\begin{proof}
+Every coefficient belongs to the fixed cyclotomic field by \cref{cor:integral_hecke}. Every root lies in the finite set \(\mu_{dM}\), so only finitely many multisets of \(n\) roots, and therefore only finitely many Hecke polynomials, can occur.
+\end{proof}
+
+\begin{corollary}[Finite order central character]\label{cor:finite_central_char}
+The central character of \(\pi\) has finite order.
+\end{corollary}
+
+\begin{proof}
+Outside a finite set of places, \cref{thm:finite_satake_roots} puts every determinant value in the fixed finite group \(\mu_{dM}\). At the remaining finitely many finite and archimedean places, \cref{thm:local_artin_descent} gives a finite local determinant image. A common multiple of these finitely many local orders and \(dM\) kills every local component of the central character. Hence the global idele class character has finite order.
+\end{proof}
+
+\begin{definition}[Finite Satake cusp form]\label{def:finite_satake_cusp}
+A cuspidal representation of \(\GL_n(\Adele_F)\) is finite Satake when its normalized unramified Satake roots lie in one finite subgroup of \(\CC^\times\).
+\end{definition}
+
+\begin{corollary}[Cyclic Artin descent is finite Satake]\label{cor:cyclic_finite_satake}
+Every cuspidal cyclic descent of an automorphic Artin representation is finite Satake.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:finite_satake_roots}.
+\end{proof}
+
+
+\subsection{Cyclotomic rigidity}
+
+\begin{proposition}[Finite number of unramified Hecke polynomials]\label{prop:finite_number_hecke}
+Under the hypotheses of \cref{thm:finite_satake_roots}, put \(N=dM\). The number of possible normalized unramified Hecke polynomials of degree \(n\) is at most
+\[
+ \boxed{
+ \binom{N+n-1}{n}.
+ }
+\]
+\end{proposition}
+
+\begin{proof}
+A polynomial is determined by the multiset of its \(n\) Satake roots. Those roots lie in the \(N\) element set \(\mu_N\). The number of multisets of size \(n\) selected from \(N\) elements is the displayed binomial coefficient.
+\end{proof}
+
+\begin{corollary}[Finite trace alphabet]\label{cor:finite_trace_alphabet}
+The normalized unramified Hecke traces of \(\pi\) belong to a finite subset of \(\ZZ[\mu_{dM}]\).
+\end{corollary}
+
+\begin{proof}
+Each trace is a sum of \(n\) roots from the fixed finite set \(\mu_{dM}\).
+\end{proof}
+
+\begin{corollary}[Unramified Ramanujan property]\label{cor:unramified_ramanujan}
+Every normalized unramified Satake root has complex absolute value one.
+\end{corollary}
+
+\begin{proof}
+Every root is a root of unity by \cref{thm:finite_satake_roots}.
+\end{proof}
+
+
+\section{Finite polynomial alphabets and separating primes}\label{sec:separating_primes}
+
+Let \(K\) be a number field containing the normalized unramified Hecke coefficients of a finite Satake descent, the character values of the target Artin representation, and the values of the quotient character. Let \(\OO_K\) be its ring of integers.
+
+\begin{definition}[Finite polynomial alphabet]\label{def:finite_alphabet}
+The finite polynomial alphabet of the cyclic attachment problem is the union
+\[
+\calA
+=
+\calA_{\pi}
+\cup
+\calA_{\rho},
+\]
+where \(\calA_{\pi}\) is the set of normalized unramified Hecke polynomials occurring for \(\pi\), and \(\calA_{\rho}\) is the set of characteristic polynomials occurring for the finitely many twists
+\[
+\rho\otimes\epsilon^j,
+\qquad
+j\in\ZZ/p\ZZ.
+\]
+\end{definition}
+
+\begin{proposition}[Finiteness of the alphabet]\label{prop:finite_alphabet}
+The set \(\calA\) is finite and is contained in \(\OO_K[T]\).
+\end{proposition}
+
+\begin{proof}
+The descent alphabet is finite by \cref{thm:finite_satake_roots,prop:finite_number_hecke}. The Artin image and the quotient twist group are finite, so only finitely many characteristic polynomials occur on that side. Every root is a root of unity, so every coefficient is an algebraic integer.
+\end{proof}
+
+\begin{definition}[Separating coefficient prime]\label{def:separating_prime}
+A finite place \(\lambda\) of \(K\) is separating for \(\calA\) when reduction modulo \(\lambda\) is injective on \(\calA\).
+\end{definition}
+
+\begin{theorem}[Existence of separating primes]\label{thm:separating_primes}
+All but finitely many finite places of \(K\) are separating for \(\calA\).
+\end{theorem}
+
+\begin{proof}
+For every ordered pair of distinct polynomials \(P,Q\in\calA\), choose one nonzero coefficient difference. Only finitely many finite places divide one of these finitely many nonzero algebraic integers. Outside their union, no two polynomials have the same reduction.
+\end{proof}
+
+\begin{lemma}[Good reduction of an absolutely irreducible finite representation]\label{lem:good_irreducible_reduction}
+Let \(\tau\) be an absolutely irreducible representation of a finite group over a number field \(K\). After choosing a stable \(\OO_K\) lattice, its reduction is absolutely irreducible at all but finitely many finite places of \(K\).
+\end{lemma}
+
+\begin{proof}
+Burnside's theorem gives group elements \(g_1,\ldots,g_{n^2}\) whose matrices form a \(K\) basis of \(M_n(K)\). Choose a stable lattice and vectorize these integral matrices. Their determinant is a nonzero element of \(K\). Outside the finite set of primes dividing its denominator or numerator, the reduced matrices still span the full matrix algebra. Hence the reduced representation remains absolutely irreducible after every residue field extension.
+\end{proof}
+
+\begin{definition}[Good separating prime]\label{def:good_separating_prime}
+A finite place \(\lambda\) is good for the cyclic attachment problem when
+
+\begin{enumerate}
+\item it is separating for \(\calA\)
+\item its residue characteristic is different from \(p\)
+\item the reduction of \(\tau=\rho|_{G_E}\) is absolutely irreducible.
+\end{enumerate}
+\end{definition}
+
+\begin{corollary}[Abundance of good primes]\label{cor:abundant_good_primes}
+All but finitely many finite places of \(K\) are good.
+\end{corollary}
+
+\begin{proof}
+Combine \cref{thm:separating_primes,lem:good_irreducible_reduction} and exclude the finitely many places above \(p\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{12_separating_alphabet.pdf}
+\caption{A good coefficient prime separates the finite characteristic zero alphabet and preserves the irreducibility needed to compare two extensions.}
+\label{fig:separating_alphabet}
+\end{figure}
+
+\section{Finite trace alphabets in residual characteristic}\label{sec:finite_trace_bound}
+
+The next theorem gives an explicit bound for a finite residual image using only its trace alphabet.
+
+\begin{theorem}[Finite trace image bound]\label{thm:finite_trace_image_bound}
+Let \(k\) be an algebraically closed field of characteristic \(\ell>n\). Let
+\[
+ \Gamma\subseteq\GL_n(k)
+\]
+be finite, and assume the defining \(k\Gamma\) module is semisimple. Put
+\[
+ t=
+ \#\{\Tr(\gamma):\gamma\in\Gamma\}.
+\]
+Then
+\[
+\boxed{
+ \abs\Gamma\leq t^{n^2}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(A\subseteq M_n(k)\) be the image of the group algebra. Since the defining module is semisimple and \(A\) acts faithfully, the Jacobson radical of \(A\) is zero. Thus
+\[
+ A\cong\bigoplus_iM_{d_i}(k).
+\]
+As an \(A\) module,
+\[
+ k^n\cong\bigoplus_i(k^{d_i})^{\oplus m_i}
+\]
+with every \(m_i\geq1\) and \(m_i\leq n<\ell\).
+
+The trace pairing
+\[
+ B(x,y)=\Tr_{k^n}(xy)
+\]
+is the direct sum of the forms
+\[
+ m_i\Tr(XY)
+\]
+on the matrix blocks. Every \(m_i\) is nonzero in \(k\), so \(B\) is nondegenerate.
+
+The matrices in \(\Gamma\) span \(A\). Choose a basis
+\[
+ \gamma_1,\ldots,\gamma_d\in\Gamma,
+ \qquad
+ d=\dim_kA\leq n^2.
+\]
+Define
+\[
+ \Phi:\Gamma\longrightarrow k^d,
+ \qquad
+ \Phi(\gamma)
+ =
+ \bigl(
+ \Tr(\gamma\gamma_1),\ldots,\Tr(\gamma\gamma_d)
+ \bigr).
+\]
+Every coordinate belongs to the trace alphabet because \(\gamma\gamma_i\in\Gamma\). If \(\Phi(\gamma)=\Phi(\gamma')\), then
+\[
+ B(\gamma-\gamma',a)=0
+\]
+for every \(a\in A\). Nondegeneracy gives \(\gamma=\gamma'\). Hence \(\Phi\) is injective and
+\[
+ \abs\Gamma\leq t^d\leq t^{n^2}.
+\]
+\end{proof}
+
+\begin{remark}[Historical position of the trace bound]\label{rem:trace_bound_history}
+The proof is elementary once the semisimple image algebra and its trace pairing are written down. No claim of historical priority is made. The theorem should be compared with modular Jordan type bounds and with the literature on finite trace sets in Galois representations.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.86\textwidth]{18_trace_alphabet_bound.pdf}
+\caption{A finite trace alphabet embeds the residual image into a finite Cartesian power of that alphabet once the trace pairing is nondegenerate.}
+\label{fig:trace_alphabet_bound}
+\end{figure}
+
+\begin{corollary}[Uniform bound for a residual Galois image]\label{cor:residual_image_bound}
+Let
+\[
+ \overline r:G_F\longrightarrow\GL_n(\overline\FF_{\ell})
+\]
+be continuous and semisimple, with \(\ell>n\). If its Frobenius traces belong to a set of size at most \(t\) on a Chebotarev dense set, then
+\[
+\boxed{
+ \abs{\im\overline r}\leq t^{n^2}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Continuity gives finite image. Chebotarev shows that every conjugacy class of the finite image occurs as an unramified Frobenius class. Apply \cref{thm:finite_trace_image_bound}.
+\end{proof}
+
+\begin{standardfact}[Cross characteristic lifting]\label{fact:cross_characteristic_lifting}
+Let \(\Gamma\) be finite and let \(\ell\nmid\abs\Gamma\). Every semisimple representation of \(\Gamma\) over an algebraically closed field of characteristic \(\ell\) is the reduction of a characteristic zero representation after a finite extension of coefficient fields. Irreducible representations lift to irreducible representations, and characteristic polynomials reduce compatibly. This is the nonmodular case of Brauer character theory \cite{BrauerNesbitt1941,CurtisReiner1962,Serre1977}.
+\end{standardfact}
+
+\begin{definition}[Universal bounded cyclotomic alphabet]\label{def:bounded_cyclotomic_alphabet}
+For positive integers \(n\) and \(B\), let \(\calQ_{n,B}\) be the finite set of monic degree \(n\) polynomials whose roots are roots of unity of order at most \(B\).
+\end{definition}
+
+\begin{theorem}[One large residual realization gives an Artin representation]\label{thm:large_residual_realization}
+Let \(K\) be a number field, let \(S\) be a finite set of places of \(F\), and let \(\calP\subseteq\OO_K[T]\) be a finite set of monic degree \(n\) polynomials. Assume every root of every polynomial in \(\calP\) is a root of unity. For every \(v\notin S\), choose \(P_v\in\calP\).
+
+There is a finite set \(\Sigma(\calP)\) of rational primes with the following property. Let \(\lambda\) have residue characteristic \(\ell\notin\Sigma(\calP)\). Suppose there is a continuous semisimple representation
+\[
+ \overline r_\lambda:G_F\longrightarrow\GL_n(\overline\FF_\ell)
+\]
+unramified outside \(S\) and the places above \(\ell\), with
+\[
+ \det
+ \left(
+ T-\overline r_\lambda(\Frob_v)
+ \right)
+ =
+ \overline{P_v}(T)
+\]
+for every allowed unramified \(v\). Then there is a finite image semisimple complex representation
+\[
+ r:G_F\longrightarrow\GL_n(\CC)
+\]
+whose characteristic polynomial is \(P_v\) for every \(v\) outside \(S\) and the places above \(\ell\). If \(\overline r_\lambda\) is absolutely irreducible, then \(r\) is irreducible.
+\end{theorem}
+
+\begin{proof}
+Let \(t\) be the number of trace values occurring in \(\calP\), and put
+\[
+ B=t^{n^2}.
+\]
+Enlarge the exceptional set so that \(\ell>\max\{n,B\}\). By \cref{cor:residual_image_bound}, the finite image \(\Gamma\) of \(\overline r_\lambda\) has order at most \(B\). Hence \(\ell\nmid\abs\Gamma\), and \cref{fact:cross_characteristic_lifting} gives a characteristic zero lift \(r\).
+
+Fix an embedding
+\[
+ \iota:\overline\QQ\longrightarrow\overline\QQ_{\ell}
+\]
+extending the place \(\lambda\) of \(K\). Choose a splitting \(\ell\) modular system compatible with \(\iota\). The cross characteristic lift may then be chosen as an ordinary representation over \(\overline\QQ\) with an integral lattice whose reduction is \(\overline r_\lambda\).
+
+Every eigenvalue of this finite image lift has order dividing \(\abs\Gamma\), so every Frobenius polynomial belongs to \(\calQ_{n,B}\). Let \(L\) be a finite normal extension of \(\QQ\) containing \(K\), all roots of unity of order dividing
+\[
+ \operatorname{lcm}(1,\ldots,B),
+\]
+and all coefficients of the chosen lift. The union of all \(\Gal(L/\QQ)\) conjugates of the finite set
+\[
+ \calP\cup\calQ_{n,B}
+\]
+is finite. Exclude the finitely many rational primes lying below a place that divides a nonzero coefficient difference between two distinct polynomials in this enlarged finite set. At every remaining \(\ell\), reduction at every place of \(L\) above \(\ell\) is injective on that set.
+
+The Frobenius polynomial of the lift and \(P_v\) have the same reduction at the place induced by \(\iota\). Injectivity forces equality in characteristic zero. If the chosen embedding identifies \(K\) with a conjugate copy, apply the inverse field automorphism to the lifted representation. This returns the original polynomials \(P_v\) simultaneously for every \(v\). Irreducibility is preserved by the nonmodular lifting correspondence.
+\end{proof}
+
+\begin{corollary}[Large residual realization of a finite Satake cusp form]\label{cor:large_residual_finite_satake}
+Let \(\pi\) be a finite Satake cuspidal representation whose normalized Hecke polynomials lie in \(K\). If one sufficiently large residual Galois realization with the expected unramified polynomials exists, then \(\pi\) has a finite image complex Galois realization. Absolute irreducibility of the residual realization gives an irreducible Artin representation.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:large_residual_realization} to the finite Hecke polynomial alphabet of \(\pi\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.90\textwidth]{19_large_residual_realization.pdf}
+\caption{One sufficiently large residual realization has bounded image, lifts in cross characteristic, and is forced back onto the exact finite polynomial alphabet.}
+\label{fig:large_residual_realization}
+\end{figure}
+
+\section{One prime residual attachment}\label{sec:one_prime_attachment}
+
+\begin{definition}[Residual realization of a descent]\label{def:residual_realization}
+Let \(\lambda\) be a finite place of the coefficient field. A residual realization of \(\pi\) at \(\lambda\) is a continuous semisimple representation
+\[
+\overline r_{\pi,\lambda}:G_F\longrightarrow\GL_n(\overline k_{\lambda})
+\]
+whose characteristic polynomial at every unramified place outside a finite set is the reduction of the normalized Hecke polynomial of \(\pi\).
+\end{definition}
+
+\begin{theorem}[One prime residual attachment]\label{thm:one_prime_attachment}
+Use the cyclic Artin setup of \cref{def:attached_descent}. Let \(\lambda\) be a good separating prime. Suppose \(\pi\) has a residual realization \(\overline r_{\pi,\lambda}\). Then there is a unique index
+\[
+j_{\lambda}\in\ZZ/p\ZZ
+\]
+such that
+\[
+\boxed{
+P_{\pi,v}(T)
+=
+P_{\rho\otimes\epsilon^{j_{\lambda}},v}(T)
+}
+\]
+for every finite place \(v\) outside a finite set. Consequently,
+\[
+\pi\otimes\epsilon^{-j_{\lambda}}
+\]
+is weakly attached to \(\rho\).
+\end{theorem}
+
+\begin{proof}
+Restrict the residual realization to \(G_E\). At every unramified place \(w\) of \(E\) above a good place \(v\) of \(F\), cyclic base change identifies the characteristic polynomial of the restriction with the reduction of the Hecke polynomial of \(\Pi_w\). Since \(\Pi\) is attached to \(\tau\), this is the characteristic polynomial of \(\overline\tau(\Frob_w)\). Chebotarev density and Brauer Nesbitt give
+\[
+\left(
+\overline r_{\pi,\lambda}|_{G_E}
+\right)^{\mathrm{ss}}
+\cong
+\overline\tau.
+\]
+The right side is absolutely irreducible and has the full dimension \(n\). Hence the restriction itself has one composition factor and is irreducible, so it is isomorphic to \(\overline\tau\).
+
+The representations \(\overline r_{\pi,\lambda}\) and \(\overline\rho\) are therefore two extensions of the same absolutely irreducible representation of \(G_E\). Their ratio is a character of \(G_F/G_E\). Since the residue characteristic is different from \(p\), the reduced quotient character has order \(p\), and there is a unique index \(j_{\lambda}\) with
+\[
+\overline r_{\pi,\lambda}
+\cong
+\overline\rho\otimes\overline\epsilon^{j_{\lambda}}.
+\]
+At every good unramified place,
+\[
+P_{\pi,v}
+\equiv
+P_{\rho\otimes\epsilon^{j_{\lambda}},v}
+\pmod\lambda.
+\]
+Both polynomials belong to the finite alphabet \(\calA\). The prime is separating, so the congruence is equality in characteristic zero. Uniqueness follows from the freeness of the extension torsor.
+\end{proof}
+
+\begin{corollary}[Only finitely many local checks remain]\label{cor:finitely_many_local_checks}
+Under \cref{thm:one_prime_attachment}, full local attachment to \(\rho\) is equivalent to checking the index \(-j_{\lambda}\) in the finitely many ramified local attachment sets.
+\end{corollary}
+
+\begin{proof}
+The theorem gives equality at every unramified place outside a finite set. At the remaining places, use the exact local criterion in \cref{thm:extension_spectrum_criterion,thm:global_attachment_criterion}.
+\end{proof}
+
+\begin{corollary}[Infinitely many residual realizations suffice]\label{cor:infinitely_many_residual}
+If residual realizations of \(\pi\) exist at infinitely many coefficient places, then one of them is good, and \(\pi\) is weakly attached after one quotient twist.
+\end{corollary}
+
+\begin{proof}
+Only finitely many coefficient places are not good by \cref{cor:abundant_good_primes}. Apply \cref{thm:one_prime_attachment} at any good place carrying a residual realization.
+\end{proof}
+
+\begin{corollary}[A congruent cohomological eigensystem suffices]\label{cor:congruent_cohomological}
+Let \(\lambda\) be good. Suppose the reduction of the Hecke eigensystem of \(\pi\) occurs in a setting that supplies a semisimple residual Galois representation with the expected unramified characteristic polynomials. Then the conclusion of \cref{thm:one_prime_attachment} holds.
+\end{corollary}
+
+\begin{proof}
+The supplied representation is a residual realization in the sense of \cref{def:residual_realization}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{13_one_prime_funnel.pdf}
+\caption{One residual realization at one good separating prime determines the characteristic zero cyclic offset at every unramified place.}
+\label{fig:one_prime_funnel}
+\end{figure}
+
+\section{Representation theoretic collapse at the quotient prime}\label{sec:residual_collapse}
+
+Let \(K\) be a number field containing the values of the order \(p\) quotient characters, let \(\lambda_p\) be a place above \(p\), and let \(\OO\) be the corresponding valuation ring.
+
+\begin{theorem}[Semisimple collapse of cyclic extension labels]\label{thm:semisimple_label_collapse}
+Let \(H\triangleleft G\) with \(G/H\cong C_p\). Let \(V\) and \(W\) be semisimple finite image representations over \(K\) such that
+\[
+ \Res_HV\cong\Res_HW.
+\]
+Choose stable \(\OO\) lattices. Then their semisimplified reductions satisfy
+\[
+\boxed{
+ \overline V^{\mathrm{ss}}
+ \cong
+ \overline W^{\mathrm{ss}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Decompose the common restriction into \(G\) orbits of irreducible \(H\) types. A moving orbit gives an induced block that is already independent of quotient twisting.
+
+For a stable type \(\tau\), fix one extension \(\widetilde\tau\). Its isotypic contribution is
+\[
+ \widetilde\tau\otimes M
+\]
+for a representation \(M\) of \(C_p\). The corresponding contribution for \(W\) has a quotient representation \(M'\) of the same dimension because the restrictions to \(H\) agree. In residue characteristic \(p\), the cyclic group \(C_p\) has one simple representation, the trivial representation. Therefore
+\[
+ \overline M^{\mathrm{ss}}
+ \cong
+ \one^{\oplus\dim M}
+ \cong
+ \overline {M'}^{\mathrm{ss}}.
+\]
+The stable contributions and the moving contributions agree after semisimplification. Summing the blocks proves the theorem.
+\end{proof}
+
+\begin{corollary}[Residual collapse of the two cyclic torsors]\label{cor:two_torsor_residual_collapse}
+At the quotient prime, every Galois extension of the fixed irreducible restriction and every local automorphic extension parameter has the same semisimplified residual representation.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:semisimple_label_collapse} to any two members of either extension fibre and then across the two fibres after local base change identifies their restrictions.
+\end{proof}
+
+\section{The quotient prime residual congruence}\label{sec:quotient_prime}
+
+Let \(\lambda_p\) be a finite place of the coefficient field above the cyclic degree \(p\), chosen after adjoining the values of the quotient character. Then
+\[
+\epsilon\equiv1\pmod{\lambda_p}.
+\]
+
+\begin{definition}[Frobenius transform of a polynomial]\label{def:frobenius_transform}
+If
+\[
+P(T)=\prod_{i=1}^{n}(T-\alpha_i),
+\]
+define
+\[
+P^{[p]}(T)
+=
+\prod_{i=1}^{n}(T-\alpha_i^p).
+\]
+This is a polynomial expression in the coefficients of \(P\).
+\end{definition}
+
+\begin{lemma}[Frobenius transform after reduction]\label{lem:frobenius_transform}
+Let \(P\) have integral coefficients at a place of residue characteristic \(p\). Then
+\[
+\boxed{
+\overline{P^{[p]}}(T)
+=
+\operatorname{Frob}\bigl(\overline P(T)\bigr),
+}
+\]
+where Frobenius raises every coefficient to its \(p\)th power. In particular, the map
+\[
+\overline P\longmapsto\overline{P^{[p]}}
+\]
+is injective over the residue field.
+\end{lemma}
+
+\begin{proof}
+Over an algebraic closure of the residue field,
+\[
+\overline{P^{[p]}}(T)
+=
+\prod_i(T-\overline\alpha_i^p).
+\]
+The elementary symmetric functions of the \(p\)th powers are the \(p\)th powers of the elementary symmetric functions in characteristic \(p\). Finite residue fields are perfect, so Frobenius is injective.
+\end{proof}
+
+\begin{theorem}[Canonical quotient prime congruence]\label{thm:quotient_prime_congruence}
+Use the cyclic Artin setup of \cref{def:attached_descent}. For every finite place \(v\) outside a finite set,
+\[
+\boxed{
+P_{\pi,v}(T)
+\equiv
+P_{\rho,v}(T)
+\pmod{\lambda_p}.
+}
+\]
+Thus the semisimplified reduction of \(\rho\) is residually automorphic with the mod \(\lambda_p\) Hecke eigensystem of every cuspidal descent of \(\Pi\).
+\end{theorem}
+
+\begin{proof}
+Assume first that \(v\) splits in \(E\). Local base change is the identity at every place above \(v\), so the two polynomials agree before reduction.
+
+Assume that \(v\) is unramified and nonsplit. Since the extension has prime degree, its residue degree is \(p\). Unramified base change raises the Satake conjugacy class of \(\pi_v\) to its \(p\)th power. Restriction of \(\rho_v\) to \(W_{E_w}\) does the same to its Frobenius class. Since \(\Pi_w\) is attached to \(\rho|_{W_{E_w}}\),
+\[
+P_{\pi,v}^{[p]}(T)
+=
+P_{\rho,v}^{[p]}(T).
+\]
+Reduce modulo \(\lambda_p\) and use \cref{lem:frobenius_transform}. Injectivity of residue Frobenius gives the desired congruence. The finitely many ramified and excluded places do not affect residual attachment.
+\end{proof}
+
+\begin{corollary}[All cyclic twists collapse residually]\label{cor:twists_collapse_residually}
+For every \(j\in\ZZ/p\ZZ\),
+\[
+\overline{\rho\otimes\epsilon^j}
+\cong
+\overline\rho
+\]
+at the semisimple character level modulo \(\lambda_p\). Likewise, all automorphic descents have the same mod \(\lambda_p\) unramified Hecke eigensystem.
+\end{corollary}
+
+\begin{proof}
+The values of \(\epsilon\) are \(p\)th roots of unity and reduce to one at \(\lambda_p\). Apply \cref{thm:quotient_prime_congruence} to every descent twist.
+\end{proof}
+
+\begin{definition}[Quotient prime lifting gate]\label{def:quotient_prime_lifting}
+The quotient prime lifting gate is the assertion that the residual automorphy supplied by \cref{thm:quotient_prime_congruence}, together with the local deformation conditions of \(\rho\), lifts to characteristic zero automorphy of \(\rho\).
+\end{definition}
+
+\begin{theorem}[Quotient prime reduction of a cyclic step]\label{thm:quotient_prime_reduction}
+If the quotient prime lifting gate holds for the cyclic step, then the target representation \(\rho\) is automorphic. Hence Strong Artin for all finite solvable images follows if this gate holds at every invariant extension step of every solvable Clifford tower.
+\end{theorem}
+
+\begin{proof}
+The residual automorphy input is \cref{thm:quotient_prime_congruence}. The first conclusion is the definition of the lifting gate. The second follows by the Clifford recursion in \cref{cor:clifford_reduction}.
+\end{proof}
+
+\begin{remark}\label{rem:quotient_prime_difficulty}
+The quotient prime often divides the residual image order, and the resulting residual representation can be nonadequate or nonregular. The congruence theorem solves residual automorphy. It does not supply the required weight raising, local component control, or nonregular automorphy lifting theorem.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{14_quotient_prime_congruence.pdf}
+\caption{At the quotient prime, the \(p\)th power base change identity descends through residue Frobenius to the original Hecke polynomial.}
+\label{fig:quotient_prime_congruence}
+\end{figure}
+
+\section{Finite Satake rigidity for l adic realizations}\label{sec:ladic_rigidity}
+
+\begin{theorem}[Finite Frobenius trace rigidity]\label{thm:finite_trace_ladic_rigidity}
+Let \(L\) be a finite extension of \(\QQ_\ell\), and let
+\[
+ r:G_F\longrightarrow\GL_n(L)
+\]
+be continuous, semisimple, and unramified outside a finite set. Suppose the traces
+\[
+ \Tr r(\Frob_v)
+\]
+belong to one finite set for a density one set of unramified places. Then
+\[
+\boxed{
+ r(G_F)\text{ is finite}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(H\) be the compact image. A density one set of primes meets every Chebotarev class in every finite quotient, because each nonempty class has positive density. Thus the selected Frobenius conjugacy classes are dense in \(H\). Since trace is continuous and conjugacy invariant, its values on all of \(H\) belong to the same finite set.
+
+Let \(\mathbf G\) be the Zariski closure of \(H\). Semisimplicity of \(r\) makes \(\mathbf G\) reductive. If the finite trace set is \(\{a_1,\ldots,a_t\}\), then the regular function
+\[
+ \prod_{j=1}^{t}
+ \left(
+ \Tr-a_j
+ \right)
+\]
+vanishes on the Zariski dense subgroup \(H\) and hence on \(\mathbf G\). Therefore trace is constant on every connected component. On the identity component it equals \(n\).
+
+Let \(T\) be a maximal torus of \(\mathbf G^0\). If the weights of its action on \(L^n\) are \(\chi_1,\ldots,\chi_n\), then
+\[
+ \chi_1+\cdots+\chi_n=n
+\]
+as regular functions on \(T\). Distinct characters of a torus are linearly independent, so every \(\chi_i\) is trivial. Thus every maximal torus acts trivially. Semisimple elements are Zariski dense in the connected reductive group \(\mathbf G^0\), so \(\mathbf G^0\) acts trivially. The inclusion in \(\GL_n\) is faithful, hence \(\mathbf G^0=1\). Therefore \(\mathbf G\) is zero dimensional and finite. The image \(H\) is finite.
+\end{proof}
+
+\begin{corollary}[Cyclotomic Frobenius rigidity]\label{thm:cyclotomic_ladic_rigidity}
+Let \(r\) be as in \cref{thm:finite_trace_ladic_rigidity}. If every Frobenius eigenvalue on a density one set belongs to one fixed finite group \(\mu_N\), then \(r\) has finite image.
+\end{corollary}
+
+\begin{proof}
+The Frobenius traces belong to the finite set of sums of \(n\) members of \(\mu_N\). Apply \cref{thm:finite_trace_ladic_rigidity}.
+\end{proof}
+
+\begin{theorem}[One l adic realization is enough]\label{thm:one_ladic_realization}
+Let \(\pi\) be a finite Satake cuspidal representation. Suppose that for one coefficient prime \(\lambda\) there is a continuous Frobenius semisimple l adic representation whose unramified characteristic polynomials equal those of \(\pi\). Then that representation has finite image. After an abstract embedding of its finite coefficient field into \(\CC\), it gives a finite image complex representation weakly attached to \(\pi\).
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:cyclotomic_ladic_rigidity}. Fix an algebraic closure \(\overline\QQ\) together with embeddings into \(\overline\QQ_\ell\) and \(\CC\). A finite image representation has cyclotomic character values and can be defined over a number field inside \(\overline\QQ\). Its Frobenius polynomials equal the given algebraic Hecke polynomials under the l adic embedding, and therefore remain equal after the complex embedding.
+\end{proof}
+
+\begin{corollary}[Finite Satake forms in existing realization ranges]\label{cor:existing_realization_ranges}
+In every automorphic setting where a Frobenius semisimple l adic representation with the expected unramified polynomials is known to exist, finite Satake implies an Artin realization.
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:one_ladic_realization}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{15_ladic_rigidity.pdf}
+\caption{A fixed cyclotomic Frobenius spectrum forces the l adic algebraic monodromy group to have zero tangent space and hence finite image.}
+\label{fig:ladic_rigidity}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{21_finite_trace_ladic.pdf}
+\caption{A finite Frobenius trace alphabet forces the connected l adic monodromy group to be trivial.}
+\label{fig:finite_trace_ladic}
+\end{figure}
+
+\section{Cohomological and weight raising realization gates}\label{sec:cohomological_gates}
+
+\begin{standardfact}[Torsion cohomology Galois representations]\label{fact:scholze_torsion}
+For locally symmetric spaces of \(\GL_n\) over totally real or CM fields, suitable mod \(\lambda\) Hecke eigensystems in cohomology have associated residual Galois representations with the expected unramified characteristic polynomials \cite{Scholze2015}.
+\end{standardfact}
+
+\begin{standardfact}[Holomorphic limit realizations]\label{fact:goldring_shin}
+In the unitary group setting treated by Goldring and Shin, cuspidal automorphic representations whose archimedean component is a holomorphic limit of discrete series have associated l adic Galois representations \cite{GoldringShin2014}.
+\end{standardfact}
+
+\begin{corollary}[Torsion cohomology closes a cyclic step at a separating prime]\label{cor:scholze_attachment}
+Use the cyclic Artin setup. If the mod \(\lambda\) eigensystem of one descent occurs in the torsion cohomology setting of \cref{fact:scholze_torsion} for one good separating prime \(\lambda\), then the cyclic step is weakly attached after one quotient twist.
+\end{corollary}
+
+\begin{proof}
+The torsion cohomology theorem supplies the residual realization required by \cref{thm:one_prime_attachment}.
+\end{proof}
+
+\begin{corollary}[Holomorphic limit finite Satake forms are Artin]\label{cor:goldring_shin_artin}
+In the range of \cref{fact:goldring_shin}, a finite Satake automorphic representation has a finite image Galois realization.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:one_ladic_realization} to the l adic representation supplied by Goldring and Shin.
+\end{proof}
+
+\begin{standardfact}[Parallel weight one companion method]\label{fact:weight_one_companion}
+For parallel weight one Hilbert modular forms, companion form and Hasse invariant methods can produce mod \(p\) Galois representations and weight raising under explicit hypotheses. In particular, Gee and Kassaei show that the relevant form of Serre modularity implies Artin for totally odd two dimensional representations over the totally real field in their setting \cite{GeeKassaei2013,DimitrovWiese2020}.
+\end{standardfact}
+
+\begin{remark}\label{rem:known_gate_examples}
+These results demonstrate two ways to close the new gates. Torsion or coherent cohomology supplies a separating residual realization. Hasse invariant methods raise the quotient prime congruence to a setting where Galois representations and lifting theorems are available. Neither construction is presently known for every rank and every finite Satake descent.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{16_realization_gates.pdf}
+\caption{The strengthened attack replaces one broad finite Satake conjecture by three concrete realization mechanisms.}
+\label{fig:realization_gates}
+\end{figure}
+
+
+\subsection{A p adic family realization gate}
+
+\begin{definition}[Pseudocharacter family gate]\label{def:pseudo_family_gate}
+A pseudocharacter family gate for a finite Satake descent \(\pi\) consists of a reduced p adic analytic space \(X\), a point \(x\in X\) corresponding to \(\pi\), and a continuous dimension \(n\) pseudorepresentation
+\[
+D_X:G_F\longrightarrow\mathcal O(X)
+\]
+whose unramified characteristic polynomials specialize at \(x\) to those of \(\pi\).
+\end{definition}
+
+\begin{theorem}[A pseudocharacter family closes finite Satake realization]\label{thm:pseudo_family_closes}
+If a finite Satake descent has a pseudocharacter family gate, then it has a finite image semisimple Galois realization.
+\end{theorem}
+
+\begin{proof}
+Specialize \(D_X\) at \(x\). Characteristic zero pseudorepresentation theory gives a semisimple l adic representation with the specialized characteristic polynomials \cite{Chenevier2014}. Those polynomials have roots in one finite cyclotomic group. Apply \cref{thm:cyclotomic_ladic_rigidity}.
+\end{proof}
+
+\begin{corollary}[Eigenvariety interpolation criterion]\label{cor:eigenvariety_interpolation}
+Suppose a finite Satake descent lies on a p adic eigenvariety or completed Hecke space carrying a continuous Galois pseudorepresentation interpolated from a dense set of classical points. Then the descent has a finite image Galois realization.
+\end{corollary}
+
+\begin{proof}
+The interpolated pseudorepresentation is a pseudocharacter family gate. Apply \cref{thm:pseudo_family_closes}.
+\end{proof}
+
+\begin{remark}\label{rem:eigenvariety_boundary}
+The formal specialization theorem is complete. The unresolved geometric problem is to place every finite Satake descent on a space carrying such a pseudorepresentation. Weight one and holomorphic limit constructions prove this in important low weight settings, but no theorem presently covers every rank and every solvable cyclic descent.
+\end{remark}
+
+\section{A strengthened recursive Strong Artin theorem}\label{sec:strengthened_recursion}
+
+\begin{definition}[Realization gate at an extension step]\label{def:realization_gate_step}
+At an invariant cyclic extension step, a realization gate is any one of the following inputs for one cuspidal descent:
+
+\begin{enumerate}
+\item a residual realization at one good separating prime
+\item a Frobenius semisimple l adic realization, including one obtained by a pseudocharacter family gate
+\item a quotient prime weight raising and automorphy lifting theorem for the target Artin representation.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Realization gates imply solvable Strong Artin]\label{thm:gates_imply_solvable_artin}
+Let \(\rho\) be an irreducible finite image representation with solvable image. Follow it through a prime cyclic Clifford tower. Suppose every invariant extension step admits a realization gate in the sense of \cref{def:realization_gate_step}. Then \(\rho\) is weakly automorphic. If the finitely many ramified local extension spectra align at every step, then the automorphic representation is attached at every place.
+\end{theorem}
+
+\begin{proof}
+Begin with the one dimensional bottom representation and use class field theory. At every induction step, use automorphic induction. At an invariant extension step, choose a descent of the already automorphic restriction.
+
+A separating residual realization gives the required characteristic zero quotient twist by \cref{thm:one_prime_attachment}. A sufficiently large residual realization gives a finite image complex representation by \cref{thm:large_residual_realization}. An l adic realization has finite image by \cref{thm:one_ladic_realization}. Its restriction is identified with the lower Artin representation by Chebotarev, so it lies in the extension torsor and one quotient twist selects the target. The quotient prime lifting gate gives the target directly by \cref{thm:quotient_prime_reduction}. Iteration gives weak automorphy at the top. The finite ramified local checks upgrade weak attachment to all place attachment by \cref{cor:finitely_many_local_checks}.
+\end{proof}
+
+\begin{corollary}[A single residual theorem target]\label{cor:single_residual_target}
+Strong Artin for every finite solvable image would follow from a theorem supplying, at every cyclic extension step, one residual realization of a descent at one good separating coefficient prime.
+\end{corollary}
+
+\begin{proof}
+Use the first realization gate in \cref{thm:gates_imply_solvable_artin}.
+\end{proof}
+
+\begin{corollary}[A single l adic theorem target]\label{cor:single_ladic_target}
+Strong Artin for every finite solvable image would follow from a theorem supplying one Frobenius semisimple l adic realization for every finite Satake cuspidal descent.
+\end{corollary}
+
+\begin{proof}
+Use the second realization gate in \cref{thm:gates_imply_solvable_artin}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.96\textwidth]{17_strengthened_recursion.pdf}
+\caption{Every invariant Clifford step can now be closed by one of three sharply stated realization gates.}
+\label{fig:strengthened_recursion}
+\end{figure}
+
+\section{The weight zero realization bottleneck}\label{sec:realization}
+
+The local finiteness theorem shows that the descended automorphic object already has the local shape of an Artin representation. The remaining problem is global realization.
+
+\begin{standardfact}[Automorphic to Artin criterion of Kim and Yamauchi]\label{fact:kim_yamauchi}
+Kim and Yamauchi give a conditional construction of a unique Artin representation attached to a cuspidal representation of \(\GL_n(\Adele_\QQ)\). Their hypotheses include integrality of Hecke polynomials, the existence of suitable mod \(\ell\) Galois representations, and exterior power functoriality through the required degrees \cite{KimYamauchi2016}.
+\end{standardfact}
+
+\begin{theorem}[Automatic finite Satake inputs over the rational field]\label{thm:automatic_KY_inputs}
+Let \(E/\QQ\) be finite, and let \(\pi\) be a cuspidal representation of \(\GL_n(\Adele_\QQ)\) whose base change to \(E\) is attached to a finite image Artin representation. Then the following inputs in the Kim and Yamauchi strategy are automatic:
+
+\begin{enumerate}
+\item normalized Hecke polynomials are integral
+\item the normalized Hecke field is finite.
+\end{enumerate}
+
+The remaining hypotheses concern the global Galois realization, its conjugates, and the required exterior power functoriality.
+\end{theorem}
+
+\begin{proof}
+The first two statements are \cref{cor:integral_hecke,cor:finite_hecke_field}. The description of the remaining inputs is the content of \cref{fact:kim_yamauchi}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.90\textwidth]{07_finite_satake_funnel.pdf}
+\caption{Finite base change automatically supplies the cyclotomic and integrality inputs. The global realization inputs remain.}
+\label{fig:KY_funnel}
+\end{figure}
+
+
+\subsection{A complex pseudocharacter realization gate}
+
+\begin{lemma}[Complex representations of profinite groups have finite image]\label{lem:complex_profinite_finite}
+Let \(G\) be profinite and let
+\[
+ r:G\longrightarrow\GL_n(\CC)
+\]
+be continuous for the usual complex topology. Then \(r(G)\) is finite.
+\end{lemma}
+
+\begin{proof}
+The image is compact because \(G\) is compact. After conjugation, a compact subgroup of \(\GL_n(\CC)\) lies in a unitary group. It is therefore a compact Lie group. Since it is a continuous image of a totally disconnected group, it is totally disconnected. A compact Lie group with trivial identity component is finite.
+\end{proof}
+
+\begin{standardfact}[Characteristic zero pseudocharacters]\label{fact:pseudocharacter_realization}
+Over an algebraically closed field of characteristic zero, a semisimple pseudocharacter of dimension \(n\) is the trace of a unique semisimple \(n\) dimensional representation up to isomorphism. We use this standard pseudocharacter realization principle in the form needed below \cite{Chenevier2014}.
+\end{standardfact}
+
+\begin{theorem}[Complex pseudocharacter gate]\label{thm:complex_pseudo_gate}
+Let \(\pi\) be a finite Satake cuspidal representation of \(\GL_n(\Adele_F)\). Suppose there exists a continuous complex semisimple pseudocharacter \(T\) of \(G_F\) whose characteristic polynomials at almost all unramified Frobenius elements equal the normalized Hecke polynomials of \(\pi\). Then \(\pi\) has an associated finite image semisimple Galois representation with the same almost everywhere local polynomials.
+\end{theorem}
+
+\begin{proof}
+By \cref{fact:pseudocharacter_realization}, \(T\) is realized by a continuous semisimple complex representation \(r\). Its image is finite by \cref{lem:complex_profinite_finite}. The Frobenius polynomial equality is part of the hypothesis.
+\end{proof}
+
+\begin{corollary}[Pseudocharacter form of the realization bottleneck]\label{cor:pseudo_bottleneck}
+For a finite Satake descent, constructing one continuous characteristic zero pseudocharacter with the prescribed Hecke polynomials is enough to produce the missing Artin representation.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:complex_pseudo_gate}.
+\end{proof}
+
+\begin{definition}[Finite Satake realization principle]\label{def:finite_satake_principle}
+The finite Satake realization principle asserts that a cuspidal representation of \(\GL_n(\Adele_F)\) with finite local Langlands image at every place and finite Satake data globally is attached to a finite image complex Galois representation.
+\end{definition}
+
+\begin{theorem}[Finite Satake realization implies solvable Strong Artin]\label{thm:FS_implies_solvable_artin}
+Assume the finite Satake realization principle over every number field and in every rank. Then Strong Artin holds for every irreducible finite image Galois representation with solvable image.
+\end{theorem}
+
+\begin{proof}
+Proceed up a prime cyclic Clifford tower. At an induction step, use automorphic induction. At an invariant extension step, the already automorphic restriction gives a Galois invariant cuspidal representation over the extension field. Cyclic base change descent supplies a cuspidal descent over the smaller field. By \cref{thm:local_artin_descent,cor:cyclic_finite_satake}, that descent satisfies the finite Satake realization principle, so it has a finite image Galois representation.
+
+Base change of the realized representation has the same unramified Frobenius polynomials as \(\tau\). Chebotarev density and semisimplicity identify its restriction to \(G_E\) with \(\tau\). Since \(\tau\) is irreducible, the realized representation is irreducible and lies in the finite extension torsor. By \cref{prop:one_attachment}, twisting the automorphic descent by a quotient character selects the prescribed extension at that step. Iteration reaches the original representation.
+\end{proof}
+
+\begin{corollary}[A single new theorem target]\label{cor:single_target}
+Strong Artin for all finite solvable images would follow from a global theorem realizing every finite Satake cuspidal representation as an Artin representation.
+\end{corollary}
+
+\begin{proof}
+This is \cref{thm:FS_implies_solvable_artin}.
+\end{proof}
+
+\begin{remark}\label{rem:FS_scope}
+The finite Satake realization principle is not proved here. It is a focused weight zero automorphic to Galois problem. The point of \cref{thm:FS_implies_solvable_artin} is that it replaces a separate attachment theorem at every solvable cyclic extension step by one global realization theorem.
+\end{remark}
+
+\section{A finite character separator on the Galois torsor}\label{sec:galois_separator}
+
+The Galois extension torsor itself always admits a degree one separator.
+
+\begin{theorem}[Trace separator for irreducible extensions]\label{thm:galois_trace_separator}
+Let \(H\triangleleft G\) with \(G/H\cong C_p\), and let \(\rho\) be an irreducible extension of an irreducible \(G\) invariant representation of \(H\). Then there exists \(g\in G\setminus H\) such that
+\[
+ \boxed{
+ \Tr\rho(g)\neq0.
+ }
+\]
+Consequently, the \(p\) quotient twists of \(\rho\) are distinguished by their traces at \(g\).
+\end{theorem}
+
+\begin{proof}
+The \(p\) extensions \(\rho\otimes\xi^j\) are pairwise nonisomorphic by \cref{prop:galois_torsor}. Their characters agree on \(H\). If \(\Tr\rho(g)=0\) for every \(g\notin H\), then all \(p\) characters would agree on every element of \(G\), contradicting their pairwise nonisomorphism. Thus some \(g\notin H\) has nonzero trace. At that element,
+\[
+ \Tr(\rho\otimes\xi^j)(g)
+ =
+ \xi(g)^j\Tr\rho(g),
+\]
+and these values are distinct.
+\end{proof}
+
+\begin{corollary}[Chebotarev trace separator]\label{cor:chebotarev_separator}
+Let the finite image of \(\rho\) cut out a finite Galois extension. There is an unramified finite place \(v\) whose Frobenius element lies outside \(H\) and satisfies
+\[
+ \Tr\rho(\Frob_v)\neq0.
+\]
+At that place, the Galois extension torsor is separated by the first Hecke coefficient.
+\end{corollary}
+
+\begin{proof}
+Choose the conjugacy class of the element from \cref{thm:galois_trace_separator} and apply Chebotarev density \cite{Neukirch1999}.
+\end{proof}
+
+\begin{remark}\label{rem:separator_mismatch}
+The existence of a Galois trace separator does not show that the same prime is a trace separator for an arbitrary automorphic descent. Aligning these finite separators is another expression of the attachment problem.
+\end{remark}
+
+\section{Automorphic fibre separators}\label{sec:automorphic_separator}
+
+\begin{theorem}[Existence of an automorphic coefficient separator]\label{thm:automorphic_separator}
+Let \(E/F\) be cyclic of prime degree \(p\). Let \(\pi\) be cuspidal and assume its base change to \(E\) is cuspidal. Let \(\epsilon\) be the quotient character. Then there is an unramified finite place \(v\) and an index \(k\) with \(p\nmid k\) such that the degree \(k\) coefficient of the normalized Hecke polynomial of \(\pi_v\) is nonzero and \(\epsilon_v(\Frob_v)\neq1\).
+\end{theorem}
+
+\begin{proof}
+The representations \(\pi\) and \(\pi\otimes\epsilon\) are distinct by the fibre theorem in \cref{fact:base_change_fibre}. Strong multiplicity one implies that their unramified local components differ at some finite place \(v\). If \(\epsilon_v(\Frob_v)=1\), the two unramified components are identical, so the selected place has nontrivial quotient value.
+
+Let \(A_v\) be the normalized Satake matrix. Twisting scales it by \(\zeta=\epsilon_v(\Frob_v)\), a nontrivial \(p\)th root. Since the characteristic polynomials differ, \cref{thm:one_polynomial_separator} gives an active coefficient degree \(k\) not divisible by \(p\).
+\end{proof}
+
+\begin{corollary}[Finite separator on both torsors]\label{cor:both_torsor_separators}
+Both the Galois extension torsor and the automorphic descent torsor admit a finite unramified coefficient test that separates all quotient twists.
+\end{corollary}
+
+\begin{proof}
+Use \cref{cor:chebotarev_separator,thm:automorphic_separator}.
+\end{proof}
+
+\begin{remark}\label{rem:separator_offset}
+The remaining issue is not finite separability of either torsor. Each torsor is already finitely separable. The issue is proving that the finite labels chosen on the two sides have the same offset.
+\end{remark}
+
+\section{Positive saturation and Artin holomorphy}\label{sec:positive_cone}
+
+Strong Artin is stronger than the Artin holomorphy conjecture. A separate positive method can prove holomorphy without constructing an automorphic representation.
+
+Let \(K/F\) be finite Galois with group \(G\). For a complex character \(\theta\) of a subgroup, write \(L(s,\theta)\) for the corresponding Artin \(L\) function.
+
+\begin{definition}[Entire packet set]\label{def:entire_packet_set}
+An entire packet set \(\calE\) is a collection of characters of subgroups of \(G\) whose Artin \(L\) functions are known to be entire.
+\end{definition}
+
+Examples include nontrivial one dimensional characters and characters already known to satisfy Strong Artin with nontrivial cuspidal automorphic image.
+
+\begin{theorem}[Positive saturation criterion]\label{thm:positive_saturation}
+Let \(\chi\) be a nontrivial irreducible character of \(G\). Suppose there are a positive integer \(m\), nonnegative integers \(a_i\), subgroups \(H_i\), and characters \(\theta_i\in\calE\) such that
+\[
+ \boxed{
+ m\chi
+ =
+ \sum_i
+ a_i\Ind_{H_i}^G\theta_i.
+ }
+\]
+Then \(L(s,\chi)\) is entire.
+\end{theorem}
+
+\begin{proof}
+Artin formalism gives
+\[
+ L(s,\chi)^m
+ =
+ \prod_iL(s,\theta_i)^{a_i}.
+\]
+The right side is entire by hypothesis. Brauer induction implies that \(L(s,\chi)\) is meromorphic \cite{Brauer1947}. If it had a pole at any point, its \(m\)th power would have a pole there. Thus it has no poles and is entire.
+\end{proof}
+
+\begin{definition}[Entire induction cone]\label{def:entire_cone}
+Fix finitely many known entire induced packets \(\Theta_1,\ldots,\Theta_r\) in the character lattice of \(G\). Define
+\[
+ C_{\calE}
+ =
+ \left\{
+ \sum_{i=1}^ra_i\Theta_i:
+ a_i\in\ZZ_{\geq0}
+ \right\}.
+\]
+Its saturation is
+\[
+ \operatorname{Sat}(C_{\calE})
+ =
+ \{x:\text{some }m>0\text{ has }mx\in C_{\calE}\}.
+\]
+\end{definition}
+
+\begin{corollary}[Finite cone certificate]\label{cor:cone_certificate}
+If an irreducible character \(\chi\) belongs to \(\operatorname{Sat}(C_{\calE})\), then its Artin \(L\) function is entire. Membership is an integer feasibility problem once a character table and the generator decompositions are known.
+\end{corollary}
+
+\begin{proof}
+Saturation gives precisely the relation in \cref{thm:positive_saturation}. The coefficient equality is a finite system of linear Diophantine equations in the irreducible character basis.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.78\textwidth]{08_positive_cone.pdf}
+\caption{A positive saturation certificate proves holomorphy because no negative Artin exponent is introduced.}
+\label{fig:positive_cone}
+\end{figure}
+
+\begin{remark}[Relation with monomial generalizations]\label{rem:positive_literature}
+Positive multiple and separation conditions on induced characters have a substantial literature. Generalized monomial groups and almost monomial groups were introduced precisely to study Artin holomorphy \cite{Konig2010,CimpoeasNicolae2020}. The cone formulation packages the same analytic principle while allowing the generator set to include any independently known entire packet. Historical novelty should therefore be assessed against that literature rather than inferred from the formulation alone.
+\end{remark}
+
+\begin{remark}[Why signed Brauer induction is insufficient]\label{rem:brauer_signed}
+Brauer induction permits negative coefficients. Those coefficients place Artin \(L\) functions in denominators and yield meromorphic continuation, not holomorphy. The positivity in \cref{thm:positive_saturation} is the essential analytic input.
+\end{remark}
+
+\section{Attempted completion routes and exact failure mechanisms}\label{sec:attempted_routes}
+
+The preceding theorems arise from several distinct attempts to close the cyclic gate. Recording the failed routes is mathematically useful because each failure isolates information that a complete theorem must add.
+
+\subsection{Total automorphic induction}
+
+The automorphic induction of the attached representation over \(E\) is already attached to
+\[
+ \Ind_{G_E}^{G_F}\tau
+ \cong
+ \bigoplus_{j=0}^{p-1}
+ \rho\otimes\epsilon^j.
+\]
+It is also the isobaric sum of all descents. By \cref{thm:total_induction_blind}, this total object is invariant under rotating either torsor. It proves the direct sum correspondence but cannot identify one constituent with the target extension.
+
+\subsection{Central and stable local invariants}
+
+Determinant and central character select the candidate when \(p\nmid n\). When \(p\mid n\), \cref{thm:central_character_no_go} shows that every algebraic central character is invariant. Deligne and Henniart stability gives the analogous blindness for sufficiently ramified character twists. The missing information is therefore carried by bounded depth noncentral extension spectra.
+
+\subsection{Functional equation comparison}
+
+Brauer induction gives meromorphic continuation and functional equations for the target Artin functions. Automorphic theory gives the corresponding statements for the descents. Base change identifies the product over all cyclic twists. The product identity is a norm identity and is invariant under a cyclic permutation of the factors. Without holomorphy, a converse theorem, or a primitive factorization theorem strong enough to isolate the factors, it does not determine the offset.
+
+\subsection{Cohomological regularization}
+
+Torsion cohomology, coherent cohomology, Hasse invariants, and eigenvarieties provide residual or l adic realizations in important ranges. A general finite Satake descent has singular weight zero infinity type and need not lie in any presently available cohomological realization theorem. The missing global step is therefore not local finiteness. It is placement of the weight zero eigensystem in a geometric or p adic family carrying a pseudorepresentation.
+
+\subsection{The surviving routes}
+
+After these tests, three routes remain genuinely viable:
+
+\begin{enumerate}
+\item construct one residual representation at a good separating prime
+\item construct one semisimple l adic representation with the expected Frobenius polynomials
+\item raise and lift the canonical quotient prime congruence while controlling the target local component.
+\end{enumerate}
+
+The first two routes become Artin automatically by \cref{thm:large_residual_realization,thm:one_ladic_realization}. The third is the natural nonregular automorphy lifting problem.
+
+\section{Three focused theorems that would close the solvable case}\label{sec:focused_conjecture}
+
+The broad finite Satake realization principle is no longer the only route. The present analysis isolates three independent sufficient theorems.
+
+\begin{definition}[Separating residual realization principle]\label{def:SRRP}
+Every finite Satake cyclic descent has a residual Galois realization at one good separating coefficient prime.
+\end{definition}
+
+\begin{definition}[Finite Satake l adic realization principle]\label{def:FSLR}
+Every finite Satake cuspidal representation has one Frobenius semisimple l adic realization with the expected unramified characteristic polynomials.
+\end{definition}
+
+\begin{definition}[Quotient prime lifting principle]\label{def:QPLP}
+At every invariant cyclic Artin step, the quotient prime residual congruence of \cref{thm:quotient_prime_congruence} can be raised and lifted to the target characteristic zero Artin representation.
+\end{definition}
+
+\begin{theorem}[Any one principle closes solvable Strong Artin]\label{thm:any_principle_closes}
+Each of the principles in \cref{def:SRRP,def:FSLR,def:QPLP}, if valid over every number field and in every rank, implies Strong Artin for every finite solvable image representation in the almost everywhere sense.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:gates_imply_solvable_artin} with the corresponding gate at every invariant extension step.
+\end{proof}
+
+\begin{remark}\label{rem:three_target_scope}
+The separating residual principle is the weakest input at one fixed cyclic step because the target Artin representation is already known. The l adic principle is more intrinsic and realizes a finite Satake cusp form without a preselected target. The quotient prime principle is arithmetically canonical but confronts the hardest residual image and weight zero lifting issues.
+\end{remark}
+
+\section{What has actually been reduced}\label{sec:reduction_ledger}
+
+\begin{table}[t]
+\centering
+\caption{The Strong Artin reduction after the maximal cyclic analysis.}
+\label{tab:reduction_ledger}
+\begin{tabular}{>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}}
+\toprule
+Block & Status & Remaining issue\\
+\midrule
+Monomial induction & established & none inside its hypotheses\\
+Solvable Clifford recursion & finite and exact & invariant extension steps\\
+Local extension spectra & exact finite criterion & finitely many ramified checks after weak attachment\\
+Finite Satake alphabet & proved finite & none\\
+Separating coefficient primes & all but finitely many & one residual realization\\
+One prime residual attachment & proved & supply the residual representation\\
+Quotient prime residual congruence & automatic & weight raising and nonregular lifting\\
+l adic cyclotomic rigidity & proved & supply one l adic realization\\
+Torsion cohomology route & available in declared cohomological settings & occurrence of the descent eigensystem\\
+Holomorphic limit route & available in the declared unitary setting & transfer of the target descent into that setting\\
+Positive Artin cone & exact sufficient criterion & finding positive certificates beyond known classes\\
+General solvable Strong Artin & three conditional reductions & residual, l adic, or lifting realization gate\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The main unconditional gain is that a cyclic extension step is never missing residual automorphy. At the quotient prime, residual congruence is forced by base change. Exact characteristic zero attachment requires either a second separating residual realization, an ordinary l adic realization, or a weight zero lifting theorem from the quotient prime congruence.
+
+\section{Verification}\label{sec:verification}
+
+The accompanying verification programs test the finite claims used in the theorem chain, including the trace alphabet bound, cross characteristic toy lifts, quotient prime collapse, and the no go identities. It checks cyclic torsor rotations, coefficient selectors, extension spectrum shifts, determinant selection, finite Satake root bounds, local alignment intersections, and positive cone certificates on declared small examples. It also checks labels, citations, proof counts, and source integrity.
+
+Finite verification cannot prove the global automorphic theorems imported from the literature and does not establish the cyclic attachment conjecture. Its purpose is to detect algebraic and transcription errors in the finite reductions.
+
+\section{Exact boundary}\label{sec:boundary}
+
+The article does not prove Strong Artin for every solvable image. The full force audit ruled out several natural shortcuts and strengthened the residual and l adic realization gates. It proves a canonical residual congruence at every cyclic step, a one prime exact attachment theorem, and l adic finite image rigidity.
+
+The following remain open in full generality:
+
+\begin{enumerate}
+\item producing one residual realization of every finite Satake descent at a separating coefficient prime
+\item producing one Frobenius semisimple l adic realization of every finite Satake descent
+\item raising the quotient prime congruence to a regular or otherwise liftable automorphic setting in arbitrary rank
+\item proving the required nonregular automorphy lifting and classicality theorems
+\item aligning the finitely many ramified local extension spectra when the realization theorem supplies only almost everywhere compatibility
+\item extending the argument from solvable finite images to arbitrary finite images
+\item proving Artin holomorphy for arbitrary irreducible finite image representations.
+\end{enumerate}
+
+Scholze's torsion cohomology theorem, Goldring and Shin's holomorphic limit theorem, and parallel weight one companion methods show that each realization gate is achievable in substantial arithmetic settings \cite{Scholze2015,GoldringShin2014,GeeKassaei2013,DimitrovWiese2020}. The missing result is a theorem covering every finite Satake descent created by solvable Clifford recursion.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The cyclic attachment obstruction has been reduced further. A good separating coefficient prime converts one residual Galois realization into exact characteristic zero agreement at every unramified place. The cyclic quotient prime supplies a different unconditional statement: every descent is congruent to the target Artin representation. Thus the residual automorphy input exists before any lifting theorem is invoked.
+
+Finite Satake rigidity gives a third reduction. An ordinary Frobenius semisimple l adic realization of a finite Satake cusp form is automatically finite image. No separate finite image theorem is required once the l adic realization exists.
+
+The remaining solvable Strong Artin problem is therefore concentrated in one arithmetic realization question. At every invariant cyclic step, one must either construct one residual realization away from the quotient prime, construct one l adic realization, or lift the canonical quotient prime congruence. These are sharper and more accessible targets than the original unrestricted attachment problem. They are not proved uniformly here.
+
+\section*{Language model contribution}
+An OpenAI language model assisted with organization, finite Clifford calculations, the extension spectrum formulation, the separating prime argument, the quotient prime Frobenius congruence, the l adic rigidity argument, the positive saturation formulation, and preparation of verification code and figures. The author is responsible for checking every statement, proof, computation, citation, and claim of applicability. The model is not an author.
+
+\bibliographystyle{amsplain}
+\bibliography{PSC_Strong_Artin_Residual_Realization}
+\end{document}

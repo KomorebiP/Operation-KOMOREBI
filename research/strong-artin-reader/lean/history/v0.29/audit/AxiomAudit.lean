@@ -1,0 +1,79 @@
+import ContinuousGaugeCoboundaries
+import ContinuousLocalGaugeComplex
+import KernelGaugeCorrection
+import ContinuousGaugeLiftCriterion
+import LocalGaugeInvariance
+import ContinuousH1GluingObstruction
+import LocalGaugeExactSequence
+import LocalGaugeObstructionExamples
+
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugeCoboundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugeCoboundary_apply
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.globalGaugeCoboundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.restrict_globalGaugeCoboundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.GaugeGlobalH1
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.GaugeLocalH1
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.gaugeRestrictionH1
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.gaugeRestrictionH1_mk
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugePair
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugeDifferential
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.LocalGaugeH2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugeClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugeClass_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strict_boundary_is_gauge_boundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strictToGaugeH2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strictToGaugeH2_surjective
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strict_zero_implies_gauge_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGaugeClass_eq_of_boundary
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernelUnit_add
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.every_residual_one_unit_is_kernelUnit
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernel_conjugation_correctedLift
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernel_conjugation_at_local_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.continuous_lift_has_correcting_primitive
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConjugacyObstruction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConjugacyObstruction_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.continuous_local_conjugacy_lifts_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.local_conjugacy_zero_implies_absolute_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.strict_prescription_zero_implies_local_conjugacy_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.continuous_local_conjugacy_lifts_iff_constructed_class_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCorrection_kernel_conjugate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConjugacyObstruction_eq_of_kernel_conjugate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localConjugacyObstruction_eq_of_residual_one_conjugate
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.LocalH1GluingCokernel
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingProjection
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingProjection_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingProjection_restrict
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingObstruction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGauge_zero_iff_h1Gluing_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingObstruction_independent_primitive
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localGauge_zero_of_surjective_h1_restriction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.local_conjugacy_lifts_iff_h1_gluing_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.zeroGlobalLocalPair
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCocycleToGaugeH2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localCocycleToGaugeH2_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.localH1ToGaugeH2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingToGaugeH2
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingToGaugeH2_projection
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingProjection_surjective
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1GluingToGaugeH2_injective
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.gaugePairToAbsolute
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.gaugeForgetAbsolute
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.gaugeForgetAbsolute_localCocycle
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.h1Gluing_image_eq_absolute_kernel
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.gaugeClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.gauge_obstruction_nonzero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.absolute_zero_does_not_force_local_gauge_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.LocalGluingExample.actual_h1_localization_cokernel_class_nonzero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeTestLoc
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeTestPrescribed
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeTestRho
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.matrixReduction_surjective
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.matrixReduction_squareZero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeDatum
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeDatum_continuous
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeTestPrescribed_residue
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.strictGaugeTestClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gaugeTestClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.strict_gauge_test_class_nonzero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.gauge_test_class_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.TameGluingExample.strict_nonzero_but_gauge_zero

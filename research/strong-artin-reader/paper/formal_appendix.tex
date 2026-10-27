@@ -1,0 +1,737 @@
+\section{Formal mechanisms and their exact hypotheses}
+\label{sec:formal-mechanisms}
+
+The formal work is most useful when its hypotheses remain visible. A theorem
+that identifies an obstruction is different from a theorem that makes that
+obstruction vanish. A theorem that reconstructs a matrix from compatible
+residues is different from a theorem that attaches a Galois representation to
+an automorphic object. This section develops the algebra behind the checked
+interfaces, including examples where an attractive stronger statement fails.
+The purpose is to make the output of each mechanism clear enough to use in a
+future arithmetic argument.
+
+The coefficient rings, groups, and local restrictions below are part of the
+input. Their connection to a particular number field or automorphic packet
+requires additional theorems. Nothing here constructs a global automorphic
+carrier. The matrix results do give actual integral matrices, rather than a
+formal symbol for a proposed limit. Their scope is therefore substantial, but
+local and explicit.
+
+\subsection{A cyclic cocycle is constrained by the norm}
+
+Let $C_e=\langle\gamma\rangle$ be a finite cyclic group of order $e$, acting
+linearly on a module $M$. Write $T$ for the action of $\gamma$ and set
+\[
+ N=1+T+\cdots+T^{e-1}.
+\]
+The relation $T^e=1$ implies $N(T-1)=(T-1)N=0$. These identities explain why
+the image of $T-1$ lies in the kernel of $N$, but they do not identify the two
+spaces.
+
+A one-cocycle is a function $a:C_e\to M$ satisfying
+\[
+ a(gh)=a(g)+g\cdot a(h).
+\]
+Putting $g=h=1$ gives $a(1)=0$. If $x=a(\gamma)$, repeated application of the
+cocycle equation gives
+\[
+ a(\gamma^r)=\sum_{j=0}^{r-1}T^j x\qquad(1\le r\le e).
+\]
+The group relation $\gamma^e=1$ therefore forces $Nx=0$. Conversely, if
+$Nx=0$, this formula defines a cocycle. Whenever exponents wrap around $e$,
+the discrepancy is a translate of $Nx$, which is zero. Thus evaluating at
+the chosen generator identifies cocycles with $\ker N$.
+
+For a zero-cochain $y\in M$, its coboundary at $\gamma$ is $(T-1)y$. Taking
+the quotient by these changes gives the precise presentation
+\begin{equation}
+ H^1(C_e,M)\simeq \ker N/\operatorname{im}(T-1).
+ \label{eq:appendix-cyclic-H1}
+\end{equation}
+If the norm operator is identically zero, this reduces to
+$M/\operatorname{im}(T-1)$. That reduction has a hypothesis. Dropping the
+kernel from the general formula introduces classes that cannot satisfy the
+cyclic relation.
+
+Suppose now that $e$ is invertible in the coefficient ring. Define
+$S=\sum_{j=0}^{e-1}jT^j$. A direct coefficient calculation gives
+\[
+ (T-1)S=e-N.
+\]
+For $x\in\ker N$, take $y=e^{-1}Sx$. Then $(T-1)y=x$, so every cocycle is
+a coboundary and $H^1(C_e,M)=0$. The averaging argument uses division by
+$e$ at its decisive step. In residue characteristic dividing $e$, the same
+display remains an identity but no longer constructs $y$.
+
+\begin{example}[The same generator action gives different cyclic cohomology]
+Over $\mathbb F_3$, let $M=\operatorname{Mat}_2(\mathbb F_3)$ and let $T$
+be conjugation by $F=\operatorname{diag}(1,-1)$. The diagonal entries of a
+matrix form the $+1$ eigenspace of $T$. The off-diagonal entries form its
+$-1$ eigenspace. Both spaces have dimension two.
+
+For $C_2$, the norm $1+T$ is multiplication by $2$ on the diagonal space and
+zero on the off-diagonal space. Hence its kernel is the off-diagonal space.
+The operator $T-1$ is invertible on that space and zero on the diagonal
+space. Formula~\eqref{eq:appendix-cyclic-H1} gives $H^1(C_2,M)=0$.
+
+Let instead the generator of $C_6$ act by the same $T$. On the diagonal
+space, its norm is multiplication by $6=0$ in $\mathbb F_3$. On the
+off-diagonal space, the alternating six-term sum is also zero. Now $N=0$
+on all of $M$, while the image of $T-1$ is still only the off-diagonal
+space. Therefore $H^1(C_6,M)$ has dimension two. The generator matrix
+alone does not determine this cohomology without the order and coefficient
+characteristic.
+\end{example}
+
+In Frobenius coordinates the relevant action is often $T(X)=FXF^{-1}$.
+The images of $T-1$ and $1-T$ coincide, since multiplication of a source
+vector by $-1$ exchanges the signs. This is the bridge to the concrete
+quotient by Frobenius coboundaries. The recovered v0.18 source proves that
+bridge under the explicit zero-norm hypothesis. It does not claim that every
+Frobenius quotient is automatically an arithmetic local cohomology group.
+One must first identify the acting group and the coefficient module.
+
+\subsection{A square-zero defect gives a genuine obstruction class}
+
+Let $q:R'\to R$ be a ring map with kernel $I$, and assume $I^2=0$. Let
+$\rho:G\to R^\times$ be a group representation. Choose unit-valued lifts
+$r_g\in (R')^\times$ with $q(r_g)=\rho(g)$ and $r_1=1$. Such a choice is
+an input to this calculation. It is not already a multiplicative lift.
+Define its normalized defect by
+\begin{equation}
+ c(g,h)=(r_gr_h-r_{gh})r_{gh}^{-1}\in I.
+ \label{eq:appendix-normalized-defect}
+\end{equation}
+Equivalently, $r_gr_h=(1+c(g,h))r_{gh}$. The coefficients are elements of
+the actual ring kernel, with its additive group, rather than an unrelated
+vector space of the same dimension.
+
+The action of $G$ on $I$ is $g\cdot x=r_gxr_g^{-1}$. It is independent of
+the chosen unit lift. Indeed, any other unit lift has the form $(1+b)r_g$
+with $b\in I$. Since $(1+b)^{-1}=1-b$ and products of two elements of $I$
+vanish, conjugating $x\in I$ by $1+b$ leaves $x$ unchanged. The same
+observation shows that the defect in the multiplication of the $r_g$ does
+not prevent these conjugations from forming a genuine group action on $I$.
+
+Compute $(r_gr_h)r_\ell$ and $r_g(r_hr_\ell)$. After expressing both in
+terms of $r_{gh\ell}$, the first is
+\[
+ (1+c(g,h)+c(gh,\ell))r_{gh\ell},
+\]
+while the second is
+\[
+ (1+g\cdot c(h,\ell)+c(g,h\ell))r_{gh\ell}.
+\]
+All omitted cross products belong to $I^2$. Associativity therefore yields
+\begin{equation}
+ g\cdot c(h,\ell)-c(gh,\ell)+c(g,h\ell)-c(g,h)=0.
+ \label{eq:appendix-cocycle}
+\end{equation}
+This is the usual inhomogeneous two-cocycle identity. Normalization at the
+identity follows from $r_1=1$.
+
+Change the chosen lifts to $r'_g=(1+b(g))r_g$, where $b:G\to I$ and
+$b(1)=0$. Expanding without commuting the factors gives
+\[
+ r'_gr'_h
+ =(1+b(g)+g\cdot b(h)+c(g,h))r_{gh}.
+\]
+To compare with $r'_{gh}$, multiply by $1-b(gh)$. The new defect is
+\begin{equation}
+ c'(g,h)=c(g,h)+g\cdot b(h)-b(gh)+b(g).
+ \label{eq:appendix-defect-change}
+\end{equation}
+Thus changing the section adds a two-coboundary. The class $[c]\in H^2(G,I)$
+does not depend on the section.
+
+\begin{proposition}[Exact lifting criterion]
+With the hypotheses above, a unit-valued representation lifting $\rho$
+exists if and only if $[c]=0$.
+\end{proposition}
+
+\begin{proof}
+If $c=\delta b$, replace $r_g$ by $(1-b(g))r_g$. Equation
+\eqref{eq:appendix-defect-change} shows that the corrected defect is zero.
+The corrected units are therefore multiplicative and reduce to $\rho$.
+The equality $c(1,1)=0$ forces $b(1)=0$ for a primitive in the displayed
+normalization. Conversely, a multiplicative unit lift has zero defect.
+Its difference from the original section is a kernel-valued one-cochain,
+so the same change formula proves that the original class is zero.
+\end{proof}
+
+The cocycle identity proves compatibility of the defect. It does not prove
+that its cohomology class vanishes. This distinction is indispensable when
+an obstruction is used as the target of a resolution argument.
+
+\begin{example}[An obstruction that really does not vanish]
+Reduce $\mathbb Z/27\mathbb Z$ to $\mathbb Z/9\mathbb Z$. Its kernel is
+$9\mathbb Z/27\mathbb Z$, whose square is zero. Map a generator of $C_3$
+to the unit $4$ modulo $9$. This defines a representation because
+$4^3=1$ modulo $9$.
+
+A lift of the generator must be $4+9t$ modulo $27$, for $t=0,1,2$.
+Direct expansion gives
+\[
+ (4+9t)^3\equiv 4^3\equiv 10\pmod {27}.
+\]
+None has cube $1$. Hence no representation lift exists and the obstruction
+class is nonzero. Conjugation is trivial in this scalar example. The
+kernel is additively $\mathbb F_3$, and the standard cyclic resolution gives
+$H^2(C_3,\mathbb F_3)=\mathbb F_3$ for the trivial action. This is a
+failure of lifting, rather than a failure to find a convenient section.
+
+The defect can also be seen without an existence argument. Choose the
+section $r_1=1$, $r_\gamma=4$, and $r_{\gamma^2}=16$ modulo $27$. These
+reduce to the required units modulo $9$. The products of consecutive
+powers have no defect until the exponent passes through three. At that
+point $4^3=10=1+9$ modulo $27$. Consequently the normalized defect is
+$9$ when the exponents wrap around and zero otherwise. Under the
+identification $I\simeq\mathbb F_3$, this is the ordinary carry cocycle.
+
+For a proposed correction $b$, sum the equations
+$c(\gamma^i,\gamma)=b(\gamma)-b(\gamma^{i+1})+b(\gamma^i)$ for
+$i=0,1,2$. The right side telescopes to $3b(\gamma)=0$, using
+$b(1)=0$ and the trivial action. The left side is $9\ne0$ in $I$.
+There is therefore no primitive. This explicit calculation recovers the
+nonzero obstruction class directly from its normalized representative.
+\end{example}
+
+For topological groups the cochains and correcting primitives must belong
+to the required continuous complex. An abstract primitive need not be
+continuous. The recovered continuous modules impose continuous sections and
+local restrictions, with a discrete coefficient ring. They preserve those
+hypotheses through their lifting criteria. Replacing continuous cohomology
+by abstract group cohomology would require a separate comparison.
+
+\subsection{Local conjugacy leaves a second gluing obstruction}
+
+Suppose an absolute two-cocycle has been cancelled by a continuous
+one-cochain $b_0$. Prescribed local lifts need not agree with the resulting
+global lift. Their remaining differences are local one-cocycles. Changing
+$b_0$ to another absolute primitive changes these differences by the
+restriction of a global one-cocycle. Conjugating the local lift at index
+$i$ by a unit $1+x_i$, with $x_i\in I$, changes the local cocycle by a
+local coboundary. The conjugators $x_i$ are independently chosen at each
+local index. Requiring one common conjugator is a stronger problem.
+
+After taking the local coboundary quotients, the remaining class belongs to
+\begin{equation}
+ \operatorname{coker}\left(
+ H^1_{\mathrm{cont}}(G,I)\longrightarrow
+ \prod_i H^1_{\mathrm{cont}}(G_i,I)\right).
+ \label{eq:appendix-gauge-cokernel}
+\end{equation}
+Here the local groups, their maps into $G$, and the precise continuous
+coefficient action must be supplied. The recovered source constructs the
+corresponding quotients directly in its square-zero data.
+
+To see the criterion, let $a_i$ be the local mismatch after $b_0$. A match
+up to the allowed local conjugations exists exactly when
+\[
+ a_i=\operatorname{res}_i(z)+\delta x_i
+\]
+for a global continuous one-cocycle $z$ and kernel elements $x_i$. This is
+exactly the assertion that the image of $(a_i)_i$ in
+\eqref{eq:appendix-gauge-cokernel} is zero. If $b_1$ is another absolute
+primitive, then $b_1-b_0$ is a global cocycle. Its restriction disappears in
+the cokernel, so the remaining class does not depend on which primitive
+was used.
+
+The v0.29 exact sequence identifies this secondary cokernel with the kernel
+of the map that forgets local gauge data from the relative obstruction
+space. Exactness at that position does not make the forgetting map
+surjective. It also does not make the localization map in
+\eqref{eq:appendix-gauge-cokernel} surjective. These are separate arithmetic
+questions. In particular, solving the absolute $H^2$ obstruction does not
+by itself solve a family of prescribed local conditions.
+
+\subsection{The reachable equation target is determined by syzygies}
+
+Let $J:V\to W$ be a linear map over a field $k$. The correction equation
+$Ju+e=0$ has a solution precisely when $e\in\operatorname{im}J$. A useful
+description of this image uses all the dual relations among the equations.
+Let
+\[
+ S=\ker(J^*:W^*\to V^*),\qquad
+ C=\{w\in W:\phi(w)=0\text{ for every }\phi\in S\}.
+\]
+Every $Ju$ belongs to $C$. Conversely, if $w$ does not belong to
+$\operatorname{im}J$, its nonzero class in $W/\operatorname{im}J$ is
+detected by an algebraic linear functional. Pulling that functional back
+to $W$ gives an element of $S$ that does not annihilate $w$. Hence
+\begin{equation}
+ \operatorname{im}J=C.
+ \label{eq:appendix-compatible-target}
+\end{equation}
+This algebraic dual argument works without a finite-dimensional hypothesis.
+It makes no assertion about continuous duals in a different topology.
+
+Corestricting $J$ to $C$ makes it surjective onto its actual reachable
+target. The equations have not changed. By contrast, adjoining variables
+that absorb arbitrary errors changes the system unless their removal is
+proved. A solution of an augmented equation is not automatically a solution
+of the original equation. The original target and the quotient that records
+unreachable errors must be kept separate.
+
+\begin{example}[A reachable target with a visible failed correction]
+Let $V=k^2$, $W=k^3$, and
+$J(u,v)=(u,v,u+v)$. Its image is the plane $w_3=w_1+w_2$. The dual
+kernel is generated by the functional
+$\phi(w_1,w_2,w_3)=w_3-w_1-w_2$. The error $(1,2,3)$ is compatible
+in every characteristic and is cancelled by $(u,v)=(-1,-2)$. The error
+$(0,0,1)$ is incompatible in every field, since its value under $\phi$
+is $1$. No choice of the two correction variables can cancel it.
+
+If a third variable $t$ is added so that the derivative becomes
+$J'(u,v,t)=(u,v,u+v+t)$, the enlarged map is surjective. It cancels the
+second error with $(u,v,t)=(0,0,-1)$. But the nonzero value of $t$ records
+exactly the failed original relation. This enlarged solution cannot be
+declared a solution of the original equations by forgetting $t$. One must
+show that the additional variable is removable, or that the target error
+already lies in the original compatible plane.
+\end{example}
+
+For a nonlinear system $F(x)=0$, a relation among the residual Jacobian
+rows is only a first-order identity. Consider
+\[
+ F(x)=(x,x^2),\qquad J_x(h)=(h,2xh).
+\]
+At the origin the derivative has horizontal image. The functional selecting
+the second coordinate is a residual syzygy, but it does not annihilate
+$F(x)$ for general $x$. The exact relation is the moving relation
+\[
+ (-x,1)F(x)=0.
+\]
+Furthermore,
+\[
+ F(x+h)-F(x)-J_x(h)=(0,h^2).
+\]
+Modulo $8$, taking $x=0$ and $h=2$ gives remainder $(0,4)$, outside the
+horizontal target. Keeping only the syzygy at the origin would therefore
+lose a genuine nonlinear error even within the same residual fibre.
+
+The graded correction argument retains an exact moving relation
+$B_xF(x)=0$ and a residual exactness statement
+\begin{equation}
+ \operatorname{im}\overline J=\ker\overline B.
+ \label{eq:appendix-residual-exactness}
+\end{equation}
+If $F(x)=\pi^r e$, the moving identity gives $\pi^r B_xe=0$. A faithful
+leading layer allows this equality to imply
+$\overline B\,\overline e=0$. Equation
+\eqref{eq:appendix-residual-exactness} then supplies a residual correction
+$\overline u$ with $\overline J\,\overline u=-\overline e$. Lift
+$\overline u$ to $u$ and put $x'=x+\pi^r u$. The linear part of $F(x')$
+is divisible by $\pi^{r+1}$. For polynomial systems the remainder contains
+at least two copies of $\pi^r$, so it is divisible by $\pi^{2r}$ and hence
+by $\pi^{r+1}$ when $r\ge1$. This produces the next layer.
+
+Over a suitable truncated principal coefficient ring, iteration terminates
+at $\pi^N=0$ and produces a root of the original system. The recovered
+v0.25 modules derive the necessary faithful-layer property under their
+stated principal residue and nilpotence hypotheses. They still require
+the moving identity and exactness. Equality of selected dimensions alone
+does not prove either one. A correct dimension count can help prove
+exactness after an inclusion is established, but cannot replace that
+inclusion.
+
+The normalization by $\pi^r$ deserves care. Writing
+$F(x)=\pi^r e$ need not determine $e$ uniquely in a ring with torsion.
+If $e'$ is another choice, then $\pi^r(e-e')=0$. The faithful leading
+layer used by the theorem ensures that $e-e'$ has zero residue below the
+terminal cutoff. Thus the residue correction problem is independent of
+the chosen normalized error. The same hypothesis converts
+$\pi^r B_xe=0$ into the residue relation needed for exactness. These are
+two concrete reasons why the coefficient-ring condition is part of the
+theorem. Formal cancellation of $\pi^r$ in a ring where it is a zero
+divisor would be invalid.
+
+The moving relation is evaluated at the current approximate root, rather
+than at the initial point alone. The residual class of that root is kept
+fixed during every correction, so its residual derivative and residual
+relation operator remain the same. The exact relation changes over the
+coefficient ring as the root changes. This is how the iteration retains
+the full nonlinear equations while continuing to solve one fixed
+residual linear problem. The distinction between a fixed residual
+operator and a fixed integral operator is the mechanism that permits
+redundant equations without an assumed integral right inverse.
+
+There is also an integral warning. In $R=\mathbb Z/4\mathbb Z$, the
+submodule $C=2R$ contains $2$, and $2$ is divisible by $2$ in $R$. Yet
+$2$ is not divisible by $2$ inside $C$, since $2C=0$. Thus an ambient
+divisibility statement need not be an internal divisibility statement in a
+compatible target. An integral splitting cannot be inferred from the
+residual vector-space picture. The graded argument avoids silently
+assuming such a splitting by working with the normalized residue of each
+actual error.
+
+\subsection{Ordered powers have a uniform ultrametric remainder}
+
+Let $E$ be a complete normed ring with $\norm{1}=1$, a submultiplicative
+norm, and the ultrametric inequality
+\[
+ \norm{x+y}\le\max(\norm{x},\norm{y}).
+\]
+Assume $\norm A\le1$. For a nonnegative integer $d$, define
+\begin{align}
+ D_{A,d}(h)&=\sum_{i=0}^{d-1}A^ihA^{d-1-i},
+ \label{eq:appendix-ordered-derivative}\\
+ R_{A,d}(h)&=(A+h)^d-A^d-D_{A,d}(h).
+ \label{eq:appendix-ordered-remainder}
+\end{align}
+For $d=0$ the sum is empty and both maps are zero. The order of the
+factors in \eqref{eq:appendix-ordered-derivative} matters. Replacing this
+operator by $dA^{d-1}h$ requires $A$ and $h$ to commute. The replacement
+is invalid for general matrices.
+
+The recursive identities are
+\begin{align*}
+ D_{A,d+1}(h)&=D_{A,d}(h)A+A^dh,\\
+ R_{A,d+1}(h)&=R_{A,d}(h)(A+h)+D_{A,d}(h)h.
+\end{align*}
+They follow by multiplying $(A+h)^d$ on the right by $A+h$ and collecting
+the terms with zero, one, and at least two occurrences of $h$. This
+derivation does not rearrange any noncommuting factors.
+
+For degree three, the linear term is
+\[
+ D_{A,3}(h)=A^2h+AhA+hA^2,
+\]
+and the nonlinear remainder is
+\[
+ R_{A,3}(h)=Ah^2+hAh+h^2A+h^3.
+\]
+The middle word $hAh$ cannot be absorbed into $Ah^2$ in a matrix ring.
+The remainder estimate keeps all four words and bounds each by its
+norm, so it respects the ordered expansion. This also explains why the
+estimate is not an assertion of commutative binomial calculus in
+disguise. The scalar bound remains uniform because the norm of a finite
+ultrametric sum is controlled by its largest summand, rather than by the
+number of summands.
+
+\begin{lemma}[Uniform remainder estimate]
+For $0\le r\le1$ and $\norm h,\norm k\le r$,
+\[
+ \norm{D_{A,d}(h)}\le\norm h,
+ \qquad
+ \norm{R_{A,d}(h)-R_{A,d}(k)}\le r\norm{h-k}.
+\]
+In particular $\norm{R_{A,d}(h)}\le r\norm h$.
+\end{lemma}
+
+\begin{proof}
+The recursive formula for $D$ shows its additivity. Each term of its
+ordered sum has norm at most $\norm h$, because every power of $A$ has
+norm at most one. A finite ultrametric sum has norm at most the largest
+term, proving the first estimate without a factor $d$.
+
+Induct on $d$ for the second estimate. The case $d=0$ is immediate. Write
+$D_d=D_{A,d}$ and $R_d=R_{A,d}$. Subtracting the remainder recursions gives
+\begin{align*}
+ R_{d+1}(h)-R_{d+1}(k)
+ ={}&(R_d(h)-R_d(k))(A+h)\\
+ &+R_d(k)(h-k)\\
+ &+(D_d(h)-D_d(k))h+D_d(k)(h-k).
+\end{align*}
+The first term has norm at most $r\norm{h-k}$ by induction and
+$\norm{A+h}\le1$. Taking $h=k$ and the other argument zero in the
+inductive estimate gives $\norm{R_d(k)}\le r\norm k\le r$, so the
+second term has the same bound. Additivity gives
+$\norm{D_d(h)-D_d(k)}\le\norm{h-k}$, which bounds the third term.
+Finally $\norm{D_d(k)}\le\norm k\le r$ bounds the fourth term.
+Ultrametricity bounds their sum by the same maximum. Since $R_{A,d}(0)=0$,
+taking $k=0$ gives the final claim.
+\end{proof}
+
+For $E=\operatorname{Mat}_n(\mathbb Q_p)$ use the entrywise supremum norm
+and normalize $\abs p_p=p^{-1}$. Matrix multiplication satisfies
+\[
+ \abs{(XY)_{ij}}_p
+ =\left|\sum_tX_{it}Y_{tj}\right|_p
+ \le\max_t\abs{X_{it}}_p\abs{Y_{tj}}_p
+ \le\norm X\norm Y.
+\]
+Taking the maximum over the finite set of entries proves
+submultiplicativity. The same ultrametric calculation removes a matrix
+dimension factor. Completeness is inherited from the finite product of
+copies of $\mathbb Q_p$. These are the hypotheses required by the actual
+matrix application, rather than properties borrowed from a complex matrix
+norm.
+
+\subsection{An exact inverse turns the local image into one finite test}
+
+Assume that $D=D_{A,d}$ has an additive two-sided inverse $Q$, and that
+$\norm{Qz}\le K\norm z$, with $K\ge0$. Choose $0\le r\le1$ with $Kr<1$. For a
+target $U$, set $\Delta=U-A^d$. The proposed correction map is
+\begin{equation}
+ \Phi(h)=Q(\Delta-R_{A,d}(h)).
+ \label{eq:appendix-contraction-map}
+\end{equation}
+Both inverse identities will be used. $DQ=1$ turns a fixed point into a
+root. $QD=1$ proves the necessary condition from an existing root.
+
+\begin{theorem}[Exact image of a small power ball]
+Under these hypotheses, there exists a unique $h$ with $\norm h\le r$
+and $(A+h)^d=U$ if and only if $\norm{Q\Delta}\le r$.
+\label{thm:appendix-local-image}
+\end{theorem}
+
+\begin{proof}
+Suppose $\norm{Q\Delta}\le r$. On the closed $r$-ball, the remainder
+estimate and ultrametricity give
+\[
+ \norm{\Phi(h)}
+ \le\max\bigl(\norm{Q\Delta},K\norm{R_{A,d}(h)}\bigr)
+ \le\max(r,Kr\norm h)\le r.
+\]
+For $h,k$ in that ball,
+\[
+ \norm{\Phi(h)-\Phi(k)}\le Kr\norm{h-k}.
+\]
+The ball is complete and $Kr<1$. The contraction theorem gives a unique
+fixed point $h$. Apply $D$ to its equation to obtain
+$Dh=\Delta-R_{A,d}(h)$, which is exactly $(A+h)^d=U$.
+
+Conversely, a root in the ball satisfies $\Delta=Dh+R_{A,d}(h)$. Applying
+$Q$ gives
+\[
+ Q\Delta=h+QR_{A,d}(h).
+\]
+Its norm is at most $r$, since the second summand has norm at most
+$Kr\norm h\le r$. Any such root is a fixed point of
+\eqref{eq:appendix-contraction-map}, so the contraction also proves
+uniqueness among all roots in this ball.
+\end{proof}
+
+The proof gives a controlled approximation process. Start at $h_0=0$ and
+iterate $h_{j+1}=\Phi(h_j)$. Then $h_1=Q\Delta$, and
+\[
+ \norm{h_{j+1}-h_j}\le (Kr)^j\norm{h_1}.
+\]
+For $t>j$, ultrametricity bounds $\norm{h_t-h_j}$ by the largest of
+the intervening increments, which is at most $(Kr)^j\norm{h_1}$. The
+limit therefore satisfies the same bound for its distance from $h_j$.
+With $r=p^{-m}$ and $K=p^s$, every iteration gains at least $m-s$
+digits in this estimate. This is a quantitative consequence after the
+inverse and target test have been certified. It is not a search over
+unrelated roots at successively deeper levels.
+
+Uniqueness is restricted to the chosen ball. Two different balls can each
+contain a root of the same target. A failed target congruence rules out
+the specified residue prefix, while an accepted congruence determines
+one root with that prefix. Covering all possible prefixes requires a
+separate argument, especially near centers where the derivative is
+singular or where the available precision is too shallow.
+
+For integral matrices suppose the inverse has the certified form
+\[
+ Q=p^{-s}B,\qquad s\in\mathbb N,
+\]
+where $B$ is an integral linear operator on the matrix entries. In a fixed
+ordering of the $n^2$ entries it is an $n^2$ by $n^2$ matrix over
+$\mathbb Z_p$. This is an operator on the matrix space, not ordinary
+left multiplication by an $n$ by $n$ matrix. Integral coefficients imply
+$\norm{Bz}\le\norm z$, so $K=p^s$ is a valid bound.
+
+There is a finite exact certificate for the inverse. For every matrix unit
+$E_{ij}$ check
+\[
+ QD(E_{ij})=E_{ij},\qquad DQ(E_{ij})=E_{ij}.
+\]
+Linearity and the matrix-unit basis extend both identities to every matrix
+over $\mathbb Q_p$. These equalities are exact in the coefficient field.
+They are not merely congruences modulo $p$. In particular, an operator
+singular over $\mathbb Q_p$ cannot satisfy them.
+
+Take $r=p^{-m}$ with $m>s$. Then $Kr=p^{s-m}<1$, and
+\begin{align}
+ \norm{Q(U-A^d)}\le p^{-m}
+ &\Longleftrightarrow \norm{B(U-A^d)}\le p^{-(m+s)}\notag\\
+ &\Longleftrightarrow
+ B\operatorname{vec}(U-A^d)=0\pmod {p^{m+s}}.
+ \label{eq:appendix-finite-criterion}
+\end{align}
+The last congruence is entrywise. It depends only on the reductions of the
+target, center, and integral operator modulo $p^{m+s}$. The theorem
+therefore decides the existence and uniqueness of a root in
+$A+p^m\operatorname{Mat}_n(\mathbb Z_p)$ by one finite target test, once
+the exact inverse certificate is supplied.
+
+The root constructed over $\mathbb Q_p$ is integral. Its center is
+integral, and every correction entry has norm at most $p^{-m}\le1$.
+If $d>0$ and $U$ is a unit, the root $F$ is also a unit. Indeed, $F$
+commutes with $U=F^d$ and hence with $U^{-1}$, and
+$F^{d-1}U^{-1}$ is a two-sided inverse of $F$. Thus the unit version has
+an actual output in $\operatorname{GL}_n(\mathbb Z_p)$.
+
+The value of $s$ measures denominators of the whole inverse derivative.
+It is not automatically $v_p(d)$. The proof makes no statement about
+shallow balls with $m\le s$, where its contraction estimate is insufficient.
+It also does not provide automatic certificate discovery for arbitrary
+$p$-adic input. Exact rational examples can supply certificates by ordinary
+linear algebra, but a general certified implementation is an additional
+task.
+
+\subsection{A noncommuting unipotent square example}
+
+Work over $\mathbb Z_2$ and take
+\[
+ A=\begin{pmatrix}1&1\\0&1\end{pmatrix},\qquad d=2.
+\]
+For $X=\begin{pmatrix}a&b\\c&e\end{pmatrix}$, the ordered derivative is
+\[
+ D_{A,2}(X)=AX+XA
+ =\begin{pmatrix}2a+c&a+2b+e\\2c&c+2e\end{pmatrix}.
+\]
+Using the entry order $(a,b,c,e)$, its matrix and a scaled inverse are
+\[
+ J=\begin{pmatrix}
+ 2&0&1&0\\1&2&0&1\\0&0&2&0\\0&0&1&2
+ \end{pmatrix},\qquad
+ B=\begin{pmatrix}
+ 2&0&-1&0\\-1&2&1&-1\\0&0&2&0\\0&0&-1&2
+ \end{pmatrix}.
+\]
+Direct multiplication gives $BJ=JB=4I_4$. Therefore $Q=\tfrac14 B$
+is the exact inverse and $s=2$. The entry $\tfrac14$ in this inverse
+prevents clearing its denominators with only one factor of $2$.
+
+The residual derivative is singular. In characteristic two,
+$D_{A,2}(I_2)=2A=0$, while $I_2\ne0$. Nevertheless $J$ is invertible
+over $\mathbb Q_2$, with determinant $16$. Residual singularity and
+singularity over the fraction field are different tests.
+
+Choose $m=3$, so the local root ball is $A+8\operatorname{Mat}_2(\mathbb Z_2)$
+and the finite target test is modulo $2^{m+s}=32$. Consider
+\[
+ F=\begin{pmatrix}1&1\\8&1\end{pmatrix},\qquad
+ U=F^2=\begin{pmatrix}9&2\\16&9\end{pmatrix}.
+\]
+Here
+\[
+ AF=\begin{pmatrix}9&2\\8&1\end{pmatrix},\qquad
+ FA=\begin{pmatrix}1&2\\8&9\end{pmatrix},
+\]
+so the root does not commute with the center. Since
+$A^2=\begin{pmatrix}1&2\\0&1\end{pmatrix}$, the target difference has
+entry vector $(8,0,16,8)$. Applying $B$ gives
+\[
+ B\operatorname{vec}(U-A^2)=(0,0,32,0).
+\]
+The congruence modulo $32$ passes. The theorem supplies uniqueness in the
+specified ball, beyond the direct multiplication that exhibits this root.
+
+For a negative control, take
+\[
+ U_{\mathrm{bad}}=\begin{pmatrix}1&10\\0&1\end{pmatrix}.
+\]
+The difference from $A^2$ is $(0,8,0,0)$ in entry coordinates, and $B$
+sends it to $(0,16,0,0)$. This is nonzero modulo $32$, so no square root
+of $U_{\mathrm{bad}}$ lies in that ball. This is a failure for the
+specified prefix. It is not a claim that the target has no square root
+anywhere in a larger coefficient field.
+
+The recovered exact checker compares the finite image with the finite
+criterion. Its unipotent square case tests $256$ corrections at the
+stated horizon and $4096$ corrections one level deeper. Both give the same
+$16$ target residues as the criterion. These are bounded corroborating
+calculations. Infinite existence and uniqueness follow from the general
+contraction proof and its exact hypotheses.
+
+There is a genuinely singular contrast. Let
+$A_0=\operatorname{diag}(1,-1)$ over $\mathbb Q_p$. Then
+$D_{A_0,2}(E_{12})=0$, although $E_{12}\ne0$. Thus this derivative has
+no inverse over the fraction field, including when $p$ is odd and $2$ is
+a unit. The certificate theorem cannot cover this center. A universal
+claim that invertible centers always have invertible power derivatives
+would be false.
+
+\subsection{Finite levels give a coherent branch only for a joint problem}
+
+Let $X_r$ be finite sets with genuine reduction maps
+$\pi_{r,t}:X_t\to X_r$ for $r\le t$. Assume identity and composition
+laws for these maps. Let $P_r\subseteq X_r$ be solution sets, and assume
+reduction preserves solutions. Then
+\begin{equation}
+ \left(\forall r,\ P_r\ne\varnothing\right)
+ \Longleftrightarrow
+ \left(\exists (x_r)_r,\ x_r\in P_r\text{ and }
+ \pi_{r,t}(x_t)=x_r\text{ for }r\le t\right).
+ \label{eq:appendix-branch-criterion}
+\end{equation}
+The nontrivial implication is finite branch compactness. For each depth,
+a solution at that depth gives a finite path of solutions at all earlier
+depths. There are arbitrarily long paths. The resulting tree has finite
+branching because every level is finite. An infinite branch follows from
+the finite-branch form of K\"onig's lemma. The reduction maps on the
+solution sets need not be surjective. Compactness selects persistent
+choices instead of extending a previously chosen node at every step.
+
+This matters for simultaneous matrix prescriptions. At level $r$, a node
+can contain a shared matrix $F_r$ together with one local conjugator
+$z_{i,r}$ for each member of a finite family. The equations are
+\[
+ z_{i,r}F_r^{d_i}z_{i,r}^{-1}=U_i\pmod {p^r},
+\]
+with the prescribed prefix of $F_r$ and prescribed residual identity for
+each conjugator. These are a single joint predicate on a finite tuple.
+The arithmetic equations and prefixes are preserved by reduction.
+Compactness therefore produces compatible towers for the shared matrix
+and for all local conjugators, provided this joint problem is nonempty at
+every depth.
+
+An individual solution for each prescription is weaker. Even the scalar
+requirements $F=1$ and $F=-1$ modulo an odd prime have solutions
+separately, but have no common solution. Likewise, solving every member
+of a family at each depth with a different shared matrix does not establish
+the premise of \eqref{eq:appendix-branch-criterion}. The compatible branch
+must come from one family of jointly satisfiable nodes.
+
+Nor does a successful shallow node necessarily extend. For example, the
+scalar prefix $F=4$ modulo $9$ satisfies $F^3=1$ there. Its lifts modulo
+$27$ are $4,13,22$, all with cube $10$. That branch stops at the next
+level. Merely checking a finite number of successful levels gives no
+all-depth conclusion without another theorem.
+
+Conversely, for a downward-closed tower of finite solution sets indexed
+by all natural-number levels, absence of an infinite branch implies that
+some finite level is empty. This gives a finite
+obstruction witness in principle. It supplies no uniform computable bound
+on the depth of that witness. The matrix inverse theorem above provides
+an explicit horizon only in its certified nonsingular sector with $m>s$.
+It removes the all-depth premise for one local power problem in that sector.
+It does not remove the joint all-depth premise for arbitrary simultaneous
+prescriptions.
+
+Finally, compatible integral matrix residues determine an actual matrix
+over $\mathbb Z_p$ entry by entry. Compatible inverse residues determine
+its inverse when the nodes are units. Equality of all reductions then
+implies equality of the integral matrices. These reconstruction steps turn
+the selected branch into a genuine integral solution. The remaining
+arithmetic attachment is not part of that reconstruction.
+
+\subsection{What the formal receipts establish}
+
+The recovered archives preserve the source statements and historical
+verification receipts. The v0.38 receipt records a successful build of its
+seven new modules against the pinned Mathlib environment. The earlier
+interfaces described here are drawn from their recovered source files and
+their recorded histories. Archive authentication verifies the recovered
+bytes. It is not a new compilation of the mathematical statements.
+
+A fresh Lean replay was attempted during preparation of this edition, but
+the portable kit could not be recovered because its download returned
+HTTP 403. No fresh compiler invocation was therefore completed for this
+edition. The accompanying coverage report records that failure and
+distinguishes it from the historical successful receipt. The new exact
+finite controls also have their own tested domains. They do not substitute
+for a kernel replay or extend a conditional theorem to a missing
+arithmetic hypothesis.
+
+The formal program supplies explicit cocycle quotients, exact obstruction
+criteria, careful nonlinear correction interfaces, compatible tower
+reconstruction, and an effective finite criterion for a substantial local
+matrix sector. To reach Strong Artin, these mechanisms still need the
+arithmetic identifications and global existence arguments stated in the
+research boundary. Their mathematical value comes from making those
+remaining premises visible, while proving the local implications in full.

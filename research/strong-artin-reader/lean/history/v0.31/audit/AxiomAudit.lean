@@ -1,0 +1,71 @@
+import FrobeniusSingleRestriction
+import FrobeniusSpectralNorm
+import PrimeDegreeFrobeniusNorm
+import DiagonalMatrixNormModel
+import SimultaneousSpectralRestriction
+import ProcyclicSpectralNormCapstone
+import FrobeniusNormResonanceExamples
+
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.unitMismatch_kernel_perturbed
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.one_power_gauge_iff_strict
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.power_lifting_iff_norm_image
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.one_power_matching_iff_norm_image
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight_one
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight_of_ne_one
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.conjugate_pow_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.norm_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.norm_image_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.prescribed_power_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.prescribed_power_lifts_of_nonresonance
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.no_prescribed_power_of_resonant_mismatch
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight_prime_eq
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight_prime_zero_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.prime_norm_image_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.prescribed_prime_power_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.prescribed_prime_gauge_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.Dual
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.reduction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.reduction_squareZero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.datum
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.kernelCoordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.scalarUnit
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.diagonalFrobenius
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.diagonal_conjugation_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.spectralModel
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.matrix_prescribed_power_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.eigenvalue_ratio_one_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.matrix_prescribed_prime_power_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.matrix_prescribed_power_lifts_of_no_new_collisions
+#print axioms Komorebi.StrongArtin.SquareZeroH2.DiagonalModel.exists_prescribed_prime_power_obstruction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.normWeight_mul_one_sub
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.localization_coordinates
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.simultaneous_norm_image_iff
+#print axioms Komorebi.StrongArtin.SquareZeroH2.FrobeniusSpectralCoordinates.matchingClass_zero_iff
+#print axioms Komorebi.StrongArtin.Procyclic.continuous_gauge_obstruction_zero_iff_spectral_compatibility
+#print axioms Komorebi.StrongArtin.Procyclic.continuous_prescribed_degree_lift_of_nonresonance
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.k
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.n
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.D
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.lambda
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.F
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.offDiagonal
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.target
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.target_residue
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.target_mismatch
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.degree_unit_does_not_prevent_resonant_obstruction
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.characteristic_three_offDiagonal_cube_lifts
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.every_compatible_fifth_power_lifts
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.repeatedLambda
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.repeatedF
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.trace_zero_does_not_suffice_for_prime_power_lifting
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.familyDegree
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.diagonalError
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.familyError
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.familyTarget
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.family_residue
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.each_family_prescription_lifts
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.shared_family_matching_class_nonzero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.NormExamples.individual_lifts_do_not_imply_simultaneous_local_gauge_matching

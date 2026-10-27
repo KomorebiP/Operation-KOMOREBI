@@ -1,0 +1,77 @@
+import FrobeniusRestrictionNorm
+import ProfiniteCyclicGenerator
+import ProcyclicFrobeniusLifting
+import UnramifiedSquareZeroLifting
+import UnramifiedQuotientDescent
+import UnramifiedGaugeObstruction
+import FrobeniusLocalizationCokernel
+import UnramifiedObstructionExamples
+
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernelUnit_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernelUnit_injective
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.unit_commute_kernelUnit
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.frobeniusNorm
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.frobeniusNorm_zero
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.frobeniusNorm_succ
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.kernel_perturbed_power
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.conjugate_kernel_perturbed_power
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.unitMismatch
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.unitMismatch_spec
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.local_power_lifting_iff_norm_image
+#print axioms Komorebi.StrongArtin.Procyclic.Integers
+#print axioms Komorebi.StrongArtin.Procyclic.Zhat
+#print axioms Komorebi.StrongArtin.Procyclic.integerMap
+#print axioms Komorebi.StrongArtin.Procyclic.frobenius
+#print axioms Komorebi.StrongArtin.Procyclic.integerMap_one
+#print axioms Komorebi.StrongArtin.Procyclic.integerMap_dense
+#print axioms Komorebi.StrongArtin.Procyclic.integerPowers
+#print axioms Komorebi.StrongArtin.Procyclic.integerPowers_generator
+#print axioms Komorebi.StrongArtin.Procyclic.integerHom_ext
+#print axioms Komorebi.StrongArtin.Procyclic.fromFrobenius
+#print axioms Komorebi.StrongArtin.Procyclic.fromFrobenius_integer
+#print axioms Komorebi.StrongArtin.Procyclic.fromFrobenius_frobenius
+#print axioms Komorebi.StrongArtin.Procyclic.hom_ext
+#print axioms Komorebi.StrongArtin.Procyclic.frobeniusEquiv
+#print axioms Komorebi.StrongArtin.Procyclic.fromFrobenius_naturality
+#print axioms Komorebi.StrongArtin.Procyclic.exists_unique_lift_with_frobenius
+#print axioms Komorebi.StrongArtin.Procyclic.exists_lift_of_surjective
+#print axioms Komorebi.StrongArtin.Procyclic.degreeMap
+#print axioms Komorebi.StrongArtin.Procyclic.degreeMap_frobenius
+#print axioms Komorebi.StrongArtin.Procyclic.degreeMap_one
+#print axioms Komorebi.StrongArtin.Procyclic.restrict_degreeMap
+#print axioms Komorebi.StrongArtin.Procyclic.conjugacy_iff_frobenius
+#print axioms Komorebi.StrongArtin.Procyclic.local_family_lifts_iff_frobenius_power_system
+#print axioms Komorebi.StrongArtin.Procyclic.unitReduction
+#print axioms Komorebi.StrongArtin.Procyclic.unitReduction_val
+#print axioms Komorebi.StrongArtin.Procyclic.unitReduction_surjective
+#print axioms Komorebi.StrongArtin.Procyclic.procyclic_representation_lifts
+#print axioms Komorebi.StrongArtin.Procyclic.procyclic_continuous_obstruction_zero
+#print axioms Komorebi.StrongArtin.Procyclic.unramified_pullback_lifts
+#print axioms Komorebi.StrongArtin.Procyclic.procyclic_matrix_representation_lifts
+#print axioms Komorebi.StrongArtin.Procyclic.factor_through_procyclic_of_kernel_trivial
+#print axioms Komorebi.StrongArtin.Procyclic.unramified_lift_preserving_inertia
+#print axioms Komorebi.StrongArtin.Procyclic.local_gauge_obstruction_zero_iff_frobenius_system
+#print axioms Komorebi.StrongArtin.Procyclic.inertia_preserving_lift_in_obstruction_form
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.frobeniusLocalization
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.frobeniusLocalization_apply
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.FrobeniusLocalizationCokernel
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.frobeniusMatchingClass
+#print axioms Komorebi.StrongArtin.SquareZeroH2.Datum.simultaneous_frobenius_matching_iff_class_zero
+#print axioms Komorebi.StrongArtin.Procyclic.gauge_obstruction_zero_iff_explicit_norm_class_zero
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.toC3
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.oldCharacter
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.inflatedCharacter
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.upperFrobenius
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.liftedCharacter
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.inflated_frobenius_value
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.lifted_frobenius_value
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.inflated_character_lifts
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.inflated_continuous_obstruction_zero
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.no_lift_through_original_C3
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.upper_cube_is_ten
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.upper_ninth_power_is_one
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.residual_degree_three_trivial
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.trivial_local_prescription_residue
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.prescribedTrivialGaugeClass
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.prescribed_degree_three_gauge_obstruction_nonzero
+#print axioms Komorebi.StrongArtin.Procyclic.Examples.prescribed_degree_three_norm_class_nonzero

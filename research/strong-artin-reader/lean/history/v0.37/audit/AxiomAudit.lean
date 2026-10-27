@@ -1,0 +1,31 @@
+import EffectivePadicHensel
+import ResonantScalarHorizon
+import DiagonalResonantHorizon
+import EffectiveResonanceControls
+
+#print axioms Komorebi.StrongArtin.EffectiveResonance.polynomial_norm_difference
+#print axioms Komorebi.StrongArtin.EffectiveResonance.polynomial_ball_root_iff
+#print axioms Komorebi.StrongArtin.EffectiveResonance.reduction_eq_iff_norm
+#print axioms Komorebi.StrongArtin.EffectiveResonance.polynomial_prefix_root_iff
+#print axioms Komorebi.StrongArtin.EffectiveResonance.nat_degree_norm
+#print axioms Komorebi.StrongArtin.EffectiveResonance.power_derivative_norm
+#print axioms Komorebi.StrongArtin.EffectiveResonance.reduction_mono
+#print axioms Komorebi.StrongArtin.EffectiveResonance.unit_of_same_positive_prefix
+#print axioms Komorebi.StrongArtin.EffectiveResonance.scalar_deep_prefix_root_iff
+#print axioms Komorebi.StrongArtin.EffectiveResonance.scalarHorizon
+#print axioms Komorebi.StrongArtin.EffectiveResonance.le_scalarHorizon
+#print axioms Komorebi.StrongArtin.EffectiveResonance.scalar_root_iff_finite_horizon
+#print axioms Komorebi.StrongArtin.EffectiveResonance.scalar_no_root_iff_horizon_obstruction
+#print axioms Komorebi.StrongArtin.EffectiveResonance.scalar_horizon_iff_all_deeper_levels
+#print axioms Komorebi.StrongArtin.EffectiveResonance.scalar_deep_prefix_exists_iff
+#print axioms Komorebi.StrongArtin.EffectiveResonance.diagonal_root_iff_finite_horizon
+#print axioms Komorebi.StrongArtin.EffectiveResonance.exists_diagonal_matrix_unit_root
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.cube_horizon_at_residue
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.square_horizon_at_depth_four
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.nine_power_horizon
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.cube_ten_above_four
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.no_cube_one_above_four
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.no_square_one_above_nine
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.horizon_witness_is_finite_root
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.horizon_witness_can_die
+#print axioms Komorebi.StrongArtin.EffectiveResonance.Controls.diagonal_cube_example

@@ -1,0 +1,77 @@
+import FrobeniusNormRigidity
+import MixedCharacteristicUniqueStep
+import PrimePowerCoefficientTower
+import CompatibleFrobeniusRoots
+import PadicMatrixTowerLimit
+import PadicFrobeniusRoot
+import SimultaneousPadicFrobenius
+import FrobeniusTowerControls
+
+#print axioms Komorebi.StrongArtin.FrobeniusTower.power_fibre_injective
+#print axioms Komorebi.StrongArtin.FrobeniusTower.exists_unique_power_lift
+#print axioms Komorebi.StrongArtin.FrobeniusTower.adjoint
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Nonresonant
+#print axioms Komorebi.StrongArtin.FrobeniusTower.nonresonant_of_unipotent_adjoint
+#print axioms Komorebi.StrongArtin.FrobeniusTower.adjoint_one
+#print axioms Komorebi.StrongArtin.FrobeniusTower.nonresonant_identity
+#print axioms Komorebi.StrongArtin.FrobeniusTower.conjugate_power_coord
+#print axioms Komorebi.StrongArtin.FrobeniusTower.layer_norm_coordinates
+#print axioms Komorebi.StrongArtin.FrobeniusTower.layer_norm_bijective
+#print axioms Komorebi.StrongArtin.FrobeniusTower.mixed_unique_power_lift
+#print axioms Komorebi.StrongArtin.FrobeniusTower.modulus
+#print axioms Komorebi.StrongArtin.FrobeniusTower.modulus_zero
+#print axioms Komorebi.StrongArtin.FrobeniusTower.modulus_succ
+#print axioms Komorebi.StrongArtin.FrobeniusTower.modulus_eq_pow
+#print axioms Komorebi.StrongArtin.FrobeniusTower.prime_dvd_modulus
+#print axioms Komorebi.StrongArtin.FrobeniusTower.modulus_ne_zero
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Coeff
+#print axioms Komorebi.StrongArtin.FrobeniusTower.MatrixUnits
+#print axioms Komorebi.StrongArtin.FrobeniusTower.coefficientDown
+#print axioms Komorebi.StrongArtin.FrobeniusTower.coefficientResidue
+#print axioms Komorebi.StrongArtin.FrobeniusTower.coefficientResidue_zero
+#print axioms Komorebi.StrongArtin.FrobeniusTower.coefficientResidue_down
+#print axioms Komorebi.StrongArtin.FrobeniusTower.down
+#print axioms Komorebi.StrongArtin.FrobeniusTower.red
+#print axioms Komorebi.StrongArtin.FrobeniusTower.red_zero
+#print axioms Komorebi.StrongArtin.FrobeniusTower.red_down
+#print axioms Komorebi.StrongArtin.FrobeniusTower.layer_residualFrobenius
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unique_next_root
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Compatible
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unique_root_at_every_level
+#print axioms Komorebi.StrongArtin.FrobeniusTower.exists_unique_compatible_root_tower
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unipotent_adjoint_unique_tower
+#print axioms Komorebi.StrongArtin.FrobeniusTower.identity_residue_unique_tower
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicCoefficient
+#print axioms Komorebi.StrongArtin.FrobeniusTower.integralRepresentatives
+#print axioms Komorebi.StrongArtin.FrobeniusTower.representative_compatibility
+#print axioms Komorebi.StrongArtin.FrobeniusTower.scalarLimit
+#print axioms Komorebi.StrongArtin.FrobeniusTower.scalarLimit_spec
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicCoefficient_ext
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicCoefficient_down
+#print axioms Komorebi.StrongArtin.FrobeniusTower.matrixLimit
+#print axioms Komorebi.StrongArtin.FrobeniusTower.matrixLimit_spec
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicMatrix_ext
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicUnitReduction
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicUnitReduction_compatible
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padicUnit_ext
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unitValues_compatible
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unitInverses_compatible
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unitLimit
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unitLimit_spec
+#print axioms Komorebi.StrongArtin.FrobeniusTower.exists_unique_padic_frobenius_root
+#print axioms Komorebi.StrongArtin.FrobeniusTower.identity_residue_unique_padic_root
+#print axioms Komorebi.StrongArtin.FrobeniusTower.unipotent_adjoint_unique_padic_root
+#print axioms Komorebi.StrongArtin.FrobeniusTower.padic_power_injective_on_residue
+#print axioms Komorebi.StrongArtin.FrobeniusTower.simultaneous_padic_roots_iff
+#print axioms Komorebi.StrongArtin.FrobeniusTower.identity_family_padic_roots_iff
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.k
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.n
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.unipotent
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.unipotent_adjoint_cube
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.unipotent_unique_padic_square_root
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.reduce27to9
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.reduce9to3
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.partial_cube_branch
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.partial_branch_has_no_next_lift
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.no_padic_cube_root_above_four
+#print axioms Komorebi.StrongArtin.FrobeniusTower.Controls.target_has_a_different_full_root
