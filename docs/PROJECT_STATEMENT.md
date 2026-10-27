@@ -8,6 +8,14 @@ The work has developed through human–AI collaboration. Existing contribution r
 
 Komorebi P. is the named author and retains responsibility for the published claims, release decisions, and corrections. AI systems are credited as assistance in the production process. Their output does not supply independent mathematical validation. This statement does not assert that every proof has received separate personal approval, independent human review, or external certification.
 
+## Current state and publication circumstances
+
+The following note records the author’s account of the circumstances, added at the author’s request on 27 October 2026:
+
+> This work remains in progress and has, in many respects, been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
+
+This context accompanies the project’s public release. Editing, source reconciliation, proof reproduction, software qualification, and review remain ongoing where indicated in the [finalization queue](FINALIZATION_QUEUE.md). Completion and confidence labels continue to depend on each component’s recorded evidence. All executable software remains **beta / work in progress**.
+
 ## Why the work uses a pseudonym
 
 The existing author note in *The Possibility for a Machine-Native Mathematics*, September 2026, page 1, states:
@@ -26,7 +34,7 @@ The purpose of making the collection public is to make its claims and methods av
 
 ## Sources and editorial provenance
 
-This page is a consolidated public statement prepared on 27 October 2026 from existing project material. The author note above is reproduced from the published essay; the surrounding text consolidates the project overview and disclosures. It is not presented as the recovery of a previously separate statement file.
+This page is a consolidated public statement prepared on 27 October 2026 from existing project material. The pseudonym note above is reproduced from the published essay; the surrounding text consolidates the project overview and disclosures. The note on publication circumstances was added directly at the author’s request on the same date. This consolidated statement is not presented as the recovery of a previously separate statement file.
 
 - [Project overview](../README.md) and [reading guide](START_HERE.md).
 - [Machine-Native Mathematics author note and reader guide](components/MACHINE_NATIVE_MATHEMATICS.md).

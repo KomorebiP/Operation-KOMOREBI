@@ -4,7 +4,7 @@
 
 This collection studies how a construction can be represented, transformed, and checked while keeping track of the structure that makes it work. Realization Calculus develops operations on packets, coordinates, transfer blocks, and refinements. Komorebi Space supplies the ambient framework for comparing realizations, projections, compatibility, residuals, and obstructions.
 
-The [public project and authorship statement](PROJECT_STATEMENT.md) explains the project's purpose, authorship, and use of AI assistance.
+The [public project and authorship statement](PROJECT_STATEMENT.md) explains the project's purpose, authorship, use of AI assistance, and publication circumstances. The collection remains a work in progress. For setup and check commands, use the [verification guide](VERIFICATION.md).
 
 ## Choose a reading route
 

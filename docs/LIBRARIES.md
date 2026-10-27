@@ -9,6 +9,8 @@
 
 The [package index](../packages/README.md) covers software in this collection. The [experimental laboratories](../experiments/README.md) and [research programs](../research/README.md) contain further implementations and protocols.
 
+The [collection verification guide](VERIFICATION.md) provides Git checkout instructions, a small standard-library example, and commands for source and navigation checks. For a concrete package record, see [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md): its engine and installed cases passed on the recorded Windows environment, while full release qualification remains incomplete.
+
 ## Reproduce a result
 
 1. Select a source revision and read its supported platform and dependency requirements.
