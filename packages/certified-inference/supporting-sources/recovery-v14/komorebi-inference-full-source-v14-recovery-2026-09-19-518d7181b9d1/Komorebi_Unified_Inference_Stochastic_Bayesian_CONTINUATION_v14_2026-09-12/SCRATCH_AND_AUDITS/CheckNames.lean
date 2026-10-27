@@ -1,0 +1,15 @@
+import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.Kernel.Posterior
+#check MeasureTheory.Measure.ext_of_lintegral
+#check MeasureTheory.Measure.lintegral_bind
+#check MeasureTheory.lintegral_conv
+#check MeasureTheory.Measure.lintegral_conv
+#check MeasureTheory.Measure.gaussianReal_conv_gaussianReal
+#check ProbabilityTheory.gaussianReal_conv_gaussianReal
+#check ProbabilityTheory.gaussianReal_map_const_add
+#check MeasureTheory.lintegral_map
+#check MeasureTheory.Measure.compProd_withDensity
+#check MeasureTheory.Measure.withDensity_compProd_withDensity
+#check MeasureTheory.Measure.compProd_const
+#check ProbabilityTheory.ae_eq_posterior_of_compProd_eq
+#check ProbabilityTheory.ae_eq_posterior_of_compProd_eq_swap_comp

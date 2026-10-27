@@ -1,0 +1,51 @@
+Komorebi/RationalSolverSearch.lean:54:4: error: Type mismatch: After simplification, term
+  have this := rfl;
+  this
+ has type
+  True
+but is expected to have type
+  (if checkCandidate M Q D (exactCandidate M Q D B) = true ∧ checkTolerance M (exactCandidate M Q D B) ε = true then
+      some (exactCandidate M Q D B)
+    else none) =
+    some (exactCandidate M Q D B)
+Komorebi/RationalSolverSearch.lean:60:37: error: unsolved goals
+ι : Type u_1
+κ : Type u_2
+υ : Type u_3
+ω : Type u_4
+α : Type u_5
+β : Type u_6
+inst✝⁹ : Fintype ι
+inst✝⁸ : Fintype κ
+inst✝⁷ : Fintype υ
+inst✝⁶ : Fintype ω
+inst✝⁵ : Fintype α
+inst✝⁴ : Fintype β
+inst✝³ : DecidableEq ι
+inst✝² : DecidableEq κ
+inst✝¹ : DecidableEq α
+inst✝ : DecidableEq β
+M : RationalModel ι κ υ ω
+Q : α → Matrix ι ι ℚ
+D : β → Matrix κ κ ℚ
+ε : ℚ
+n : ℕ
+ih :
+  ∀ (B : Matrix ι κ ℚ),
+    checkCandidate M Q D (exactCandidate M Q D (M.solverGain B n)) = true ∧
+        checkTolerance M (exactCandidate M Q D (M.solverGain B n)) ε = true →
+      ∃ c, solveGainFuel M Q D ε n B = some c
+B : Matrix ι κ ℚ
+hlast :
+  checkCandidate M Q D (exactCandidate M Q D (M.solverGain B (n + 1))) = true ∧
+    checkTolerance M (exactCandidate M Q D (M.solverGain B (n + 1))) ε = true
+hnow : checkCandidate M Q D (exactCandidate M Q D B) = true ∧ checkTolerance M (exactCandidate M Q D B) ε = true
+⊢ (if True ∧ True then some (exactCandidate M Q D B) else solveGainFuel M Q D ε n (B + M.solverStep • M.residual B)) =
+    some (exactCandidate M Q D B)
+Komorebi/RationalSolverSearch.lean:60:72: error: This simp argument is unused:
+  ↓reduceIte
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [solveGainFuel, hnow]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

@@ -1,0 +1,32 @@
+Komorebi/RoundedSolverSearch.lean:37:36: error: unsolved goals
+ι : Type u_1
+κ : Type u_2
+υ : Type u_3
+ω : Type u_4
+α : Type u_5
+β : Type u_6
+inst✝⁹ : Fintype ι
+inst✝⁸ : Fintype κ
+inst✝⁷ : Fintype υ
+inst✝⁶ : Fintype ω
+inst✝⁵ : Fintype α
+inst✝⁴ : Fintype β
+inst✝³ : DecidableEq ι
+inst✝² : DecidableEq κ
+inst✝¹ : DecidableEq α
+inst✝ : DecidableEq β
+M : RationalModel ι κ υ ω
+hs : 0 < M.noiseFloor
+Q : α → Matrix ι ι ℚ
+D : β → Matrix κ κ ℚ
+hQ : RationalPacketsValid Q
+hD : RationalPacketsValid D
+ε : ℚ
+hε : 0 < ε
+probes : List ℕ
+B : Matrix ι κ ℚ
+hscore : M.residualScore B ≤ ε ^ 2 / 4
+p : ℕ := sufficientPrecision M Q D B (ε ^ 2 / 4)
+hm : candidateScore M (exactCandidate M Q D B) + ε ^ 2 / 4 ≤ ε ^ 2
+hr : certifyRounded p M Q D B ε = some (roundedCandidate p M Q D B)
+⊢ p ∈ probes ∨ p = sufficientPrecision M Q D B (ε ^ 2 / 4)

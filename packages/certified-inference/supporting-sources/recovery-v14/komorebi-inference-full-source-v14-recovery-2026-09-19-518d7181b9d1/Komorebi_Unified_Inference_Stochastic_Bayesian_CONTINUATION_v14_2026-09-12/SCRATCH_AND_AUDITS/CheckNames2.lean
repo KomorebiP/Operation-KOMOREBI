@@ -1,0 +1,6 @@
+import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.Kernel.Composition.WithDensity
+#check ProbabilityTheory.gaussianPDF_lt_top
+#check ProbabilityTheory.Kernel.IsSFiniteKernel.withDensity
+#check ProbabilityTheory.IsSFiniteKernel.withDensity
+#check ProbabilityTheory.Kernel.isSFiniteKernel_withDensity_of_isFiniteKernel

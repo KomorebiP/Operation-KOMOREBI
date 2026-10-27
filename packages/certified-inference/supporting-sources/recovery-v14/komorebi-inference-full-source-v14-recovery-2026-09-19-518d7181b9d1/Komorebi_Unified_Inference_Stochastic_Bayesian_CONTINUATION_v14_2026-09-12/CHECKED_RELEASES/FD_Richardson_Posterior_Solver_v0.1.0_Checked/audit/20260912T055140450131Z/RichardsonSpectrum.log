@@ -1,0 +1,24 @@
+Komorebi/RichardsonSpectrum.lean:67:48: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ⟪(IsHermitian.eigenvectorBasis ?hS) ?i, (matrixCLM ?S) ?x⟫
+in the target expression
+  ⟪hS.eigenvectorBasis i, x⟫ - Λ⁻¹ * ⟪hS.eigenvectorBasis i, WithLp.toLp 2 (S *ᵥ x.ofLp)⟫ =
+    (1 - hS.eigenvalues i / Λ) * ⟪hS.eigenvectorBasis i, x⟫
+
+κ : Type u_1
+inst✝¹ : Fintype κ
+inst✝ : DecidableEq κ
+S : Matrix κ κ ℝ
+hS : S.IsHermitian
+σ Λ : ℝ
+hΛ : 0 < Λ
+hlo : ∀ (i : κ), σ ≤ hS.eigenvalues i
+hhi : ∀ (i : κ), hS.eigenvalues i ≤ Λ
+x : EuclideanSpace ℝ κ
+b : OrthonormalBasis κ ℝ (EuclideanSpace ℝ κ) := hS.eigenvectorBasis
+i : κ
+a✝ : i ∈ Finset.univ
+hl : 0 ≤ 1 - hS.eigenvalues i / Λ
+hu : 1 - hS.eigenvalues i / Λ ≤ 1 - σ / Λ
+hsquare : (1 - hS.eigenvalues i / Λ) ^ 2 ≤ (1 - σ / Λ) ^ 2
+⊢ ⟪hS.eigenvectorBasis i, x⟫ - Λ⁻¹ * ⟪hS.eigenvectorBasis i, WithLp.toLp 2 (S *ᵥ x.ofLp)⟫ =
+    (1 - hS.eigenvalues i / Λ) * ⟪hS.eigenvectorBasis i, x⟫

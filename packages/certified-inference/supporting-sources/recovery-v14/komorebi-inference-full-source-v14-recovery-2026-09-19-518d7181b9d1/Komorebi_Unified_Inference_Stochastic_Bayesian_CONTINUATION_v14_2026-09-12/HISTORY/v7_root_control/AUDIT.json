@@ -1,0 +1,158 @@
+{
+  "checkpoint_local": "2026-09-11; v7 series label; actual UTC run times recorded in receipts",
+  "program": "Komorebi Unified Inference / Stochastic / Bayesian",
+  "active_release": "CHECKED_RELEASES/FD_Exact_Posterior_Certificates_v0.1.0_Checked",
+  "verification_environment": {
+    "lean_version": "Lean (version 4.34.0-rc2, x86_64-unknown-linux-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+    "platform": "Linux-6.18.35-x86_64-with-glibc2.41",
+    "warning_as_error": true,
+    "threads_per_lean_process": 1
+  },
+  "restoration": {
+    "status": "PASS",
+    "source_archive": "Komorebi_Unified_Inference_Stochastic_Bayesian_CONTINUATION_v5_2026-09-11.zip",
+    "source_sha256": "f34ec1c0ac1454e09c7803c784158fd5632e6ab11b5e4bd2be51aaa12c3449fd",
+    "source_manifest_entries": 677,
+    "unchanged_inherited_checked_files": 588,
+    "mismatches": []
+  },
+  "historical_evidence": "HISTORY/v5_root_control preserves the prior ledger. All 588 inherited CHECKED_RELEASES files remain unchanged. Thirty active retained modules were freshly rebuilt; no full historical rebuild is claimed.",
+  "new_closed_checked": [
+    {
+      "id": "finite_dimensional_gaussian_conditioning",
+      "assumptions": [
+        "Arbitrary finite real state and observation index types",
+        "P positive semidefinite; singular prior permitted",
+        "R positive definite",
+        "Canonical kernel equality is evidence-almost everywhere"
+      ],
+      "theorems": [
+        "fd_joint_disintegration",
+        "fd_observation_evidence",
+        "fdPosteriorKernel_eq_canonical",
+        "canonicalPosterior_eq_multivariateGaussian",
+        "canonicalPosterior_eq_josephGaussian"
+      ],
+      "source": "CHECKED_RELEASES/FD_Gaussian_Bayesian_Conditioning_v0.1.0_Checked/Komorebi/FDGaussianConditioning.lean",
+      "receipt": "CHECKED_RELEASES/FD_Gaussian_Bayesian_Conditioning_v0.1.0_Checked/FINAL_VERIFICATION_RECEIPT.json",
+      "main_source_sha256": "668a6bc4d2c78ca5dbbcdd967c715eae1d31a7757f8b4a9baa60d75894bd2772"
+    },
+    {
+      "id": "finite_dimensional_multiscale_posterior_semantic_bridge",
+      "status": "CLOSED_CHECKED",
+      "assumptions": [
+        "Two models on shared finite Euclidean state and observation spaces; the state and observation dimensions may differ.",
+        "Both prior covariances positive semidefinite; both observation-noise covariances positive definite.",
+        "Explicit posterior versions compared pointwise for arbitrary y and y0.",
+        "Canonical-kernel corollary uses nested almost-everywhere quantifiers under each model own evidence law.",
+        "Exact finite pairwise-annihilating idempotent projector families and fiber refinement; contractivity separately assumed for the final global-budget block bound."
+      ],
+      "main_theorem": "Komorebi.FiniteDimensionalGaussianKalman.GaussianModel.multiscale_posterior_certificate",
+      "source": "CHECKED_RELEASES/FD_Multiscale_Posterior_Semantic_Bridge_v0.1.0_Checked/Komorebi/FDPosteriorCertificate.lean",
+      "receipt": "CHECKED_RELEASES/FD_Multiscale_Posterior_Semantic_Bridge_v0.1.0_Checked/FINAL_VERIFICATION_RECEIPT.json",
+      "main_source_sha256": "6d651e8902e8820f6a441e1fbd6f98c815304f511a5a050dfa400b023b38090a",
+      "modules": 38,
+      "declarations": 138,
+      "new_declarations": 48,
+      "axiom_audit": "all 138 active theorem/lemma declarations; propext, Classical.choice, Quot.sound only"
+    },
+    {
+      "id": "posterior_distribution_coupling_and_gain_residual_certificate",
+      "status": "CLOSED_CHECKED",
+      "assumptions": [
+        "Arbitrary finite real Euclidean spaces; P positive semidefinite and R positive definite",
+        "Inexact gain B is arbitrary; its Joseph Gaussian is an approximation, not assumed exact conditioning",
+        "Noise floor sigma>0 is an explicit quadratic-form bound, when invoking the inverse-free stopping certificate",
+        "Two-model factor comparison uses declared compatible prior/noise latent coordinate types",
+        "Explicit posterior versions compared pointwise; canonical equality remains evidence-almost everywhere"
+      ],
+      "main_theorems": [
+        "posterior_wasserstein2Sq_le_gain_residual",
+        "posterior_wasserstein2Sq_le_residual_energy",
+        "posterior_wasserstein2_le_of_residual_tolerance",
+        "FactoredGaussianModel.posterior_wasserstein2Sq_le_factors"
+      ],
+      "source": "CHECKED_RELEASES/FD_Posterior_Coupling_v0.1.0_Checked/Komorebi/FDResidualEnergyCertificate.lean",
+      "receipt": "CHECKED_RELEASES/FD_Posterior_Coupling_v0.1.0_Checked/FINAL_VERIFICATION_RECEIPT.json",
+      "modules": 31,
+      "declarations": 119,
+      "new_declarations": 66,
+      "axiom_audit": "all 119 active theorem/lemma declarations; propext, Classical.choice, Quot.sound only"
+    },
+    {
+      "id": "finite_self_adjoint_packet_energy_posterior_certificates",
+      "status": "CLOSED_CHECKED",
+      "assumptions": [
+        "Finite real Euclidean input and output spaces, possibly different dimensions.",
+        "Explicit symmetric, idempotent, pairwise-annihilating packet matrices.",
+        "Completeness in both spaces for total energy; local parent refinements do not require global completeness.",
+        "The retained Gaussian hypotheses and explicit-versus-canonical scope are unchanged.",
+        "Positive noise floor for the inverse-free residual stopping corollary."
+      ],
+      "main_theorems": [
+        "Komorebi.PacketEnergy.matrixEnergy_eq_sum_blocks",
+        "Komorebi.PacketEnergy.parent_energy_eq_descendants",
+        "Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2_le_of_packet_majorants",
+        "Komorebi.FiniteDimensionalGaussianKalman.FactoredGaussianModel.factorCoupling_cost_eq_packets"
+      ],
+      "source": "CHECKED_RELEASES/FD_Packet_Energy_v0.1.0_Checked/Komorebi/FDResidualPacketCertificate.lean",
+      "receipt": "CHECKED_RELEASES/FD_Packet_Energy_v0.1.0_Checked/FINAL_VERIFICATION_RECEIPT.json",
+      "modules": 41,
+      "declarations": 165,
+      "new_declarations": 46,
+      "axiom_audit": "all 165 active theorem/lemma declarations; only propext, Classical.choice, Quot.sound",
+      "source_sha256": "8a50f948c2e0ba67b33df60baa52414989a32b0ced9c3b164442d9a7fe84ea6b"
+    },
+    {
+      "id": "exact_rational_posterior_checking_and_sound_finite_acceptance",
+      "status": "CLOSED_CHECKED",
+      "assumptions": [
+        "Exact rational factor-coded model P=L L^T, R=N N^T+sigma I with checked sigma>0.",
+        "Complete exact rational self-adjoint packet families.",
+        "Each local residual-energy upper bound and innovation-energy upper bound is checked by finite rational arithmetic.",
+        "Fixed model and packets during candidate selection; a checked initial incumbent.",
+        "Explicit actual posterior version at the exactly represented observation; canonical a.e. scope unchanged."
+      ],
+      "main_theorems": [
+        "Komorebi.ExactPosterior.checked_score_bounds_posterior",
+        "Komorebi.ExactPosterior.checked_tolerance_bounds_posterior",
+        "Komorebi.ExactPosterior.selected_batch_bounds_posterior",
+        "Komorebi.ExactPosterior.selected_batch_preserves_posterior_tolerance"
+      ],
+      "source": "CHECKED_RELEASES/FD_Exact_Posterior_Certificates_v0.1.0_Checked/Komorebi/RationalPosteriorCertificate.lean",
+      "receipt": "CHECKED_RELEASES/FD_Exact_Posterior_Certificates_v0.1.0_Checked/FINAL_VERIFICATION_RECEIPT.json",
+      "modules": 51,
+      "declarations": 232,
+      "new_declarations": 67,
+      "unchanged_inherited_active_modules": 40,
+      "axiom_audit": "All 232 theorem/lemma declarations; propext, Classical.choice, Quot.sound only",
+      "source_sha256": "4c0f5ad71cb89d999d56c8e9c29c09bce1ec5d2b251447a58264c1630b881c41"
+    }
+  ],
+  "remaining_open": [
+    "Solver-specific gain-residual contraction and finite-iteration posterior-tolerance guarantee.",
+    "Interval/uncertain-real inputs and directed-rounding or formally verified floating-point enclosures.",
+    "Automatic factor/noise-floor witness discovery and formal parser/serializer fidelity.",
+    "Model-changing or packet-changing acceptance policies, strict progress and optimality.",
+    "Factor alignment and conversion from primitive covariance errors to factor errors.",
+    "Finite-horizon sequential filtering probability-kernel recursion and propagated certificates.",
+    "Sharper four-term covariance identity from the review remains unformalized.",
+    "General Wasserstein metric axioms, optimal plans, singular innovation, general Ito and nonlinear extensions; literature-priority audit."
+  ],
+  "null_set_boundary": "Explicit versions pointwise; canonical comparison separately evidence-a.e. No common exceptional set or diagonal a.e. comparison across distinct evidence measures is inferred.",
+  "norm_boundary": "Squared Frobenius/Hilbert-Schmidt and Euclidean vector energy under explicit self-adjoint packet geometry. No operator-norm Pythagoras or inferred self-adjointness of the older algebraic record.",
+  "no_literature_priority_claim": true,
+  "sealed_at_utc": "2026-09-12T05:19:59.917854+00:00",
+  "centering_boundary": "centeredCovOp is defined from covarianceBilin. Pinned Mathlib covarianceOperator is uncentered and is not substituted.",
+  "no_cancellation_boundary": "Posterior covariance-error blocks are isolated. This does not identify primitive model defects from posterior agreement.",
+  "transport_boundary": "The release defines the standard extended all-plan infimum and root, proves probability-plan normalization and actual posterior coupling upper bounds. It is not merely a selected-coupling cost. Full general metric axioms and optimality are separate.",
+  "numerical_boundary": "Exact rational factor-coded inputs, finite checking and real posterior interpretation are verified. Python success alone is not a proof. Uncertain real data, binary floating-point enclosures and automatic witness discovery remain open.",
+  "refinement_boundary": "Grouping/re-accounting for a fixed residual preserves total energy. It is not a proof of model improvement or algorithm termination.",
+  "acceptance_boundary": "For a fixed model and packets, finite acceptance retains a valid incumbent and non-increasing certificate score. It does not imply true-error monotonicity, strict progress, solver convergence or optimality.",
+  "preservation_v7": {
+    "v6_archive_sha256": "df2e5bc88427c115e52e5ad3889acb4de0c3f445c7201424c3d5aab918263c80",
+    "unchanged_checked_release_files": 797,
+    "no_extra_full_predecessor_zip_added": true
+  }
+}

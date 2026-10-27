@@ -1,0 +1,90 @@
+Komorebi/FDGaussianTransport.lean:16:8: error: automatically included section variable(s) unused in theorem `Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_apply`:
+  [DecidableEq κ]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq κ] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+Komorebi/FDGaussianTransport.lean:25:18: error: This simp argument is unused:
+  WithLp.ofLp_toLp
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [matrixCLM_apply, EuclideanSpace.inner_eq_star_dotProduct, star_trivial]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Komorebi/FDGaussianTransport.lean:29:0: error: automatically included section variable(s) unused in theorem `Komorebi.FiniteDimensionalGaussianKalman.imageCov_posSemidef`:
+  [DecidableEq ι]
+  [DecidableEq κ]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [DecidableEq ι] [DecidableEq κ] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+Komorebi/FDGaussianTransport.lean:41:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∫ (x : ?m.56), x ∂Measure.map ⇑?m.82 ?m.67
+in the target expression
+  ∫ (x : EuclideanSpace ℝ κ), id x ∂Measure.map (⇑(matrixCLM A)) (multivariateGaussian m P) =
+    ∫ (x : EuclideanSpace ℝ κ), id x ∂multivariateGaussian ((matrixCLM A) m) (A * P * Aᵀ)
+
+case hm
+ι : Type u_1
+κ : Type u_2
+inst✝³ : Fintype ι
+inst✝² : Fintype κ
+inst✝¹ : DecidableEq ι
+inst✝ : DecidableEq κ
+A : Matrix κ ι ℝ
+m : EuclideanSpace ℝ ι
+P : Matrix ι ι ℝ
+hP : P.PosSemidef
+⊢ ∫ (x : EuclideanSpace ℝ κ), id x ∂Measure.map (⇑(matrixCLM A)) (multivariateGaussian m P) =
+    ∫ (x : EuclideanSpace ℝ κ), id x ∂multivariateGaussian ((matrixCLM A) m) (A * P * Aᵀ)
+Komorebi/FDGaussianTransport.lean:48:34: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ?x ᵥ* ?Aᵀ
+in the target expression
+  (Aᵀ *ᵥ x.ofLp) ᵥ* P ⬝ᵥ Aᵀ *ᵥ y.ofLp = x.ofLp ⬝ᵥ (A * P * Aᵀ) *ᵥ y.ofLp
+
+case hv
+ι : Type u_1
+κ : Type u_2
+inst✝³ : Fintype ι
+inst✝² : Fintype κ
+inst✝¹ : DecidableEq ι
+inst✝ : DecidableEq κ
+A : Matrix κ ι ℝ
+m : EuclideanSpace ℝ ι
+P : Matrix ι ι ℝ
+hP : P.PosSemidef
+x y : EuclideanSpace ℝ κ
+⊢ (Aᵀ *ᵥ x.ofLp) ᵥ* P ⬝ᵥ Aᵀ *ᵥ y.ofLp = x.ofLp ⬝ᵥ (A * P * Aᵀ) *ᵥ y.ofLp
+Komorebi/FDGaussianTransport.lean:41:46: error: Application type mismatch: The argument
+  IsGaussian.integrable_id
+has type
+  Integrable id ?m.78
+of sort `Prop` but is expected to have type
+  ?m.55 →L[?m.54] ?m.56
+of sort `Type (max ?u.48 ?u.47)` in the application
+  ContinuousLinearMap.integral_id_map ?m.72 IsGaussian.integrable_id
+Komorebi/FDGaussianTransport.lean:57:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∫ (a : ?m.83), ?m.82 + id a ∂?m.88
+in the target expression
+  ∫ (x : EuclideanSpace ℝ ι), id (c + x) ∂multivariateGaussian m P =
+    ∫ (x : EuclideanSpace ℝ ι), id x ∂multivariateGaussian (c + m) P
+
+case hm
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+c m : EuclideanSpace ℝ ι
+P : Matrix ι ι ℝ
+⊢ ∫ (x : EuclideanSpace ℝ ι), id (c + x) ∂multivariateGaussian m P =
+    ∫ (x : EuclideanSpace ℝ ι), id x ∂multivariateGaussian (c + m) P
+Komorebi/FDGaussianTransport.lean:63:4: error: unsolved goals
+case neg
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : DecidableEq ι
+c m : EuclideanSpace ℝ ι
+P : Matrix ι ι ℝ
+x y : EuclideanSpace ℝ ι
+hP : ¬P.PosSemidef
+⊢ ((covarianceBilinDual (Measure.dirac m)) ((innerSL ℝ) x)) ((innerSL ℝ) y) =
+    ((covarianceBilinDual (Measure.dirac (c + m))) ((innerSL ℝ) x)) ((innerSL ℝ) y)

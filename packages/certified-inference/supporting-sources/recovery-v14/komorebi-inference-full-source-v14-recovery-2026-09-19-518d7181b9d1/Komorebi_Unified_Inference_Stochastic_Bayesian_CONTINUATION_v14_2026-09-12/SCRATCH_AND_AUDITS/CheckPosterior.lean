@@ -1,0 +1,8 @@
+import Mathlib.Probability.Distributions.Gaussian.Real
+import Mathlib.Probability.Kernel.Posterior
+#check ProbabilityTheory.ae_eq_posterior_of_compProd_eq
+#check ProbabilityTheory.ae_eq_posterior_of_compProd_eq_swap_comp
+#check ProbabilityTheory.compProd_posterior_eq_map_swap
+#check MeasureTheory.withDensity_congr_ae
+#check Measure.map_congr
+#check Filter.Eventually.of_forall
