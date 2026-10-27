@@ -1,0 +1,689 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+from dataclasses import asdict, dataclass
+from fractions import Fraction
+from pathlib import Path
+from typing import Iterable
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from sympy import Matrix, factorint
+from sympy.matrices.normalforms import hermite_normal_form
+
+PAPER = "#FAFAF7"
+INK = "#18212A"
+MUTED = "#5B6770"
+BLUE = "#2E86AB"
+TEAL = "#2A9D8F"
+ORANGE = "#F4A261"
+MAGENTA = "#A23E8C"
+RED = "#D65A4A"
+GRID = "#C8D0D5"
+COLORS = [BLUE, TEAL, ORANGE, MAGENTA, RED, "#6C8EBF", "#8AB17D"]
+
+
+def exact_int(value: object, name: str = "value") -> int:
+    try:
+        out = int(value)
+    except Exception as exc:
+        raise TypeError(f"{name} must be integer-like") from exc
+    if hasattr(value, "item") and int(value.item()) != out:
+        raise ValueError(f"{name} cannot be converted exactly")
+    return out
+
+
+def factor(n: int) -> dict[int, int]:
+    n = exact_int(n, "n")
+    if n < 1:
+        raise ValueError("n must be positive")
+    return {int(p): int(e) for p, e in factorint(n).items()}
+
+
+def radical(n: int) -> int:
+    out = 1
+    for p in factor(n):
+        out *= p
+    return out
+
+
+def ray_persistence_order(n: int) -> int:
+    """Order of ker((Z/nZ)^* -> (Z/rad(n)Z)^*)."""
+    n = exact_int(n, "n")
+    return n // radical(n)
+
+
+def local_ray_order(p: int, e: int) -> int:
+    p = exact_int(p, "p")
+    e = exact_int(e, "e")
+    if p < 2 or e < 1:
+        raise ValueError("require p >= 2 and e >= 1")
+    return p ** (e - 1)
+
+
+def local_layer_sizes(p: int, e: int) -> list[int]:
+    """Successive sizes |U^r/U^(r+1)| for 1 <= r < e."""
+    p = exact_int(p, "p")
+    e = exact_int(e, "e")
+    return [p for _ in range(max(0, e - 1))]
+
+
+def exact_character_conductor_counts(p: int, e: int) -> dict[int, int]:
+    """Characters in the persistence dual by exact conductor exponent.
+
+    Key 0 is the trivial character.  For j >= 2, the key j counts
+    characters of exact conductor p^j with trivial tame component.
+    """
+    p = exact_int(p, "p")
+    e = exact_int(e, "e")
+    if p < 2 or e < 1:
+        raise ValueError("require p >= 2 and e >= 1")
+    counts = {0: 1}
+    for j in range(2, e + 1):
+        counts[j] = (p - 1) * p ** (j - 2)
+    if sum(counts.values()) != p ** (e - 1):
+        raise AssertionError("character count does not reconstruct ray persistence")
+    return counts
+
+
+def steinberg_twist_conductor_exponent(character_conductor_exponent: int) -> int:
+    j = exact_int(character_conductor_exponent, "character conductor exponent")
+    if j < 0:
+        raise ValueError("conductor exponent must be nonnegative")
+    return 1 if j == 0 else 2 * j
+
+
+def local_twist_conductor_sum(p: int, e: int) -> int:
+    counts = exact_character_conductor_counts(p, e)
+    return sum(count * p ** steinberg_twist_conductor_exponent(j) for j, count in counts.items())
+
+
+def local_twist_conductor_average(p: int, e: int) -> Fraction:
+    return Fraction(local_twist_conductor_sum(p, e), local_ray_order(p, e))
+
+
+def local_twist_closed_form(p: int, e: int) -> int:
+    p = exact_int(p, "p")
+    e = exact_int(e, "e")
+    if e == 1:
+        return p
+    return p + (p - 1) * p**4 * (p ** (3 * (e - 1)) - 1) // (p**3 - 1)
+
+
+def global_twist_average(discriminant: int) -> Fraction:
+    value = Fraction(1, 1)
+    for p, e in factor(discriminant).items():
+        value *= local_twist_conductor_average(p, e)
+    return value
+
+
+def verify_ray_identity(n: int) -> bool:
+    n = exact_int(n, "n")
+    # phi(n) / phi(rad(n)) = n / rad(n), computed prime by prime.
+    left = math.prod(p ** (e - 1) for p, e in factor(n).items())
+    return left == ray_persistence_order(n)
+
+
+def hnf_basis(vectors: list[list[int]]) -> Matrix:
+    if not vectors:
+        raise ValueError("need at least one vector")
+    rows = len(vectors[0])
+    if any(len(v) != rows for v in vectors):
+        raise ValueError("all vectors must have the same length")
+    matrix = Matrix.hstack(*[Matrix([exact_int(x) for x in vector]) for vector in vectors])
+    if matrix.rank() < rows:
+        return matrix
+    return hermite_normal_form(matrix)
+
+
+def lattice_member(basis: Matrix, vector: Iterable[int]) -> bool:
+    vector_matrix = Matrix([exact_int(x) for x in vector])
+    if basis.rows != vector_matrix.rows or basis.cols != basis.rows:
+        return False
+    coefficients = basis.inv() * vector_matrix
+    return all(value.q == 1 for value in coefficients)
+
+
+def coordinatewise_product(left: Iterable[int], right: Iterable[int]) -> list[int]:
+    return [exact_int(a) * exact_int(b) for a, b in zip(left, right, strict=True)]
+
+
+def integral_algebra_closure(generators: list[list[int]], max_iterations: int = 30) -> tuple[Matrix, int]:
+    """Integral subalgebra of Z^r generated by diagonal eigenvalue vectors."""
+    if not generators:
+        raise ValueError("need generators")
+    r = len(generators[0])
+    vectors = [[exact_int(x) for x in vector] for vector in generators]
+    one = [1] * r
+    if one not in vectors:
+        vectors.insert(0, one)
+    basis = hnf_basis(vectors)
+    for iteration in range(max_iterations + 1):
+        if basis.cols == r:
+            base = [[int(basis[i, j]) for i in range(r)] for j in range(r)]
+        else:
+            base = vectors[:]
+        new_vectors: list[list[int]] = []
+        for left in base:
+            for right in base:
+                product = coordinatewise_product(left, right)
+                if not lattice_member(basis, product):
+                    new_vectors.append(product)
+        if not new_vectors:
+            return basis, iteration
+        vectors = base + new_vectors
+        basis = hnf_basis(vectors)
+    raise RuntimeError("algebra closure did not stabilize")
+
+
+def projector_denominator(basis: Matrix, target: int) -> tuple[int, list[int]]:
+    """Minimal eta with eta*e_target in the integral eigenvalue order."""
+    if basis.rows != basis.cols:
+        raise ValueError("basis must span the full rational eigenpacket space")
+    r = basis.rows
+    target = exact_int(target, "target")
+    if target < 0 or target >= r:
+        raise IndexError("target outside packet range")
+    coordinate = basis.inv() * Matrix([1 if index == target else 0 for index in range(r)])
+    eta = 1
+    for value in coordinate:
+        eta = math.lcm(eta, int(value.q))
+    coefficients = [int(value * eta) for value in coordinate]
+    filtered = basis * Matrix(coefficients)
+    expected = Matrix([eta if index == target else 0 for index in range(r)])
+    if filtered != expected:
+        raise AssertionError("integral filter synthesis failed")
+    if eta > 1 and lattice_member(basis, [eta - 1 if index == target else 0 for index in range(r)]):
+        raise AssertionError("projector denominator is not minimal")
+    return eta, coefficients
+
+
+def projector_denominators(basis: Matrix) -> list[int]:
+    return [projector_denominator(basis, target)[0] for target in range(basis.rows)]
+
+
+def congruence_module_order(basis: Matrix, target: int) -> int:
+    """Order of T/(I_f + Ann(I_f)) in a split diagonal order."""
+    eta, _ = projector_denominator(basis, target)
+    return eta
+
+
+def synthetic_congruence_order(modulus: int, packets: int = 2) -> Matrix:
+    """Order generated by 1 and modulus times all but the first coordinate axes."""
+    modulus = exact_int(modulus, "modulus")
+    packets = exact_int(packets, "packets")
+    if modulus < 1 or packets < 2:
+        raise ValueError("invalid synthetic order")
+    vectors = [[1] * packets]
+    for index in range(1, packets):
+        vector = [0] * packets
+        vector[index] = modulus
+        vectors.append(vector)
+    return hnf_basis(vectors)
+
+
+def frey_mod4_trace_residual(prime: int, trace: int) -> int:
+    prime = exact_int(prime, "prime")
+    trace = exact_int(trace, "trace")
+    return (trace - (prime + 1)) % 4
+
+
+@dataclass(frozen=True)
+class FingerprintOrderRow:
+    radical: int
+    source_rows: int
+    rational_packets: int
+    hecke_primes: int
+    order_index: int
+    min_denominator: int
+    median_denominator: float
+    max_denominator: int
+    max_quality: float
+    max_output_persistence: int
+    denominator_to_persistence: float
+
+
+def sampled_fingerprint_orders(csv_path: Path, max_packets: int = 8, max_primes: int = 12) -> tuple[pd.DataFrame, pd.DataFrame]:
+    data = pd.read_csv(csv_path)
+    prime_columns = sorted(
+        [column for column in data.columns if column.startswith("a_")],
+        key=lambda column: int(column.split("_")[1]),
+    )
+    summary_rows: list[dict[str, object]] = []
+    target_rows: list[dict[str, object]] = []
+    for radical_value, group in data.groupby("radical"):
+        usable = [column for column in prime_columns if not group[column].isna().any()][:max_primes]
+        if len(usable) < 2:
+            continue
+        distinct = group.drop_duplicates(subset=usable).copy()
+        if len(distinct) < 2 or len(distinct) > max_packets:
+            continue
+        generators = [[1] * len(distinct)]
+        for column in usable:
+            generators.append([exact_int(value) for value in distinct[column]])
+        basis, iterations = integral_algebra_closure(generators)
+        if basis.rows != basis.cols:
+            continue
+        denominators = projector_denominators(basis)
+        order_index = abs(int(basis.det()))
+        max_persistence = 1
+        for record in distinct.itertuples():
+            persistence = exact_int(record.c) // radical(exact_int(record.c))
+            max_persistence = max(max_persistence, persistence)
+        summary = FingerprintOrderRow(
+            radical=exact_int(radical_value),
+            source_rows=len(group),
+            rational_packets=len(distinct),
+            hecke_primes=len(usable),
+            order_index=order_index,
+            min_denominator=min(denominators),
+            median_denominator=float(np.median(denominators)),
+            max_denominator=max(denominators),
+            max_quality=float(distinct.quality.max()),
+            max_output_persistence=max_persistence,
+            denominator_to_persistence=max(denominators) / max_persistence,
+        )
+        row = asdict(summary)
+        row["closure_iterations"] = iterations
+        summary_rows.append(row)
+        for target, (record, eta) in enumerate(zip(distinct.itertuples(), denominators, strict=True)):
+            target_rows.append({
+                "radical": exact_int(radical_value),
+                "target": target,
+                "a": exact_int(record.a),
+                "b": exact_int(record.b),
+                "c": exact_int(record.c),
+                "quality": float(record.quality),
+                "output_persistence": exact_int(record.c) // radical(exact_int(record.c)),
+                "sampled_projector_denominator": eta,
+                "ratio": eta / max(1, exact_int(record.c) // radical(exact_int(record.c))),
+            })
+    summary_frame = pd.DataFrame(summary_rows).sort_values(["rational_packets", "radical"], ascending=[False, True])
+    target_frame = pd.DataFrame(target_rows).sort_values(["radical", "target"])
+    return summary_frame, target_frame
+
+
+def verify_fingerprint_mod4(csv_path: Path) -> int:
+    data = pd.read_csv(csv_path)
+    checks = 0
+    for column in [column for column in data.columns if column.startswith("a_")]:
+        prime = int(column.split("_")[1])
+        for value in data[column].dropna():
+            if frey_mod4_trace_residual(prime, exact_int(value)) != 0:
+                raise AssertionError(f"mod-4 Frey congruence failed at p={prime}")
+            checks += 1
+    return checks
+
+
+def save_figure(fig: plt.Figure, out: Path, stem: str) -> None:
+    fig.savefig(out / f"{stem}.pdf", bbox_inches="tight")
+    fig.savefig(out / f"{stem}.png", dpi=220, bbox_inches="tight")
+    plt.close(fig)
+
+
+def diagram_axes(figsize: tuple[float, float] = (13.0, 6.2)) -> tuple[plt.Figure, plt.Axes]:
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    return fig, ax
+
+
+def box(ax: plt.Axes, xy: tuple[float, float], wh: tuple[float, float], text: str, color: str, fontsize: float = 11.0, weight: str = "normal") -> None:
+    patch = FancyBboxPatch(xy, wh[0], wh[1], boxstyle="round,pad=.012,rounding_size=.018", facecolor=color + "18", edgecolor=color, lw=1.8)
+    ax.add_patch(patch)
+    ax.text(xy[0] + wh[0] / 2, xy[1] + wh[1] / 2, text, ha="center", va="center", fontsize=fontsize, weight=weight, color=INK)
+
+
+def arrow(ax: plt.Axes, start: tuple[float, float], end: tuple[float, float], color: str = INK, text: str | None = None, offset: tuple[float, float] = (0, 0.035)) -> None:
+    patch = FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=13, lw=1.7, color=color)
+    ax.add_patch(patch)
+    if text:
+        ax.text((start[0] + end[0]) / 2 + offset[0], (start[1] + end[1]) / 2 + offset[1], text, ha="center", va="center", fontsize=10, color=color)
+
+
+def figure_ray_chain(out: Path) -> None:
+    fig, ax = diagram_axes()
+    ax.text(0.5, 0.94, "The persistence packet already globalizes on the GL(1) side", ha="center", fontsize=20, weight="bold")
+    entries = [
+        (0.03, "local unit depth\n$U_p^1/U_p^{e_p}$", BLUE),
+        (0.27, "CRT ray-unit packet\n$\\mathcal{R}_E$", TEAL),
+        (0.51, "finite Fourier dual\n$\\widehat{\\mathcal{R}_E}$", ORANGE),
+        (0.75, "automorphic twists\n$\\pi_E\\otimes\\chi$", MAGENTA),
+    ]
+    for x, text, color in entries:
+        box(ax, (x, 0.57), (0.20, 0.19), text, color, fontsize=12, weight="bold")
+    for left, right in zip(entries[:-1], entries[1:], strict=True):
+        arrow(ax, (left[0] + 0.20, 0.665), (right[0], 0.665))
+    box(ax, (0.13, 0.18), (0.29, 0.18), "exact size\n$|\\mathcal{R}_E|=|\\Delta_E|/N_E$", TEAL, fontsize=12)
+    box(ax, (0.58, 0.18), (0.29, 0.18), "new barrier\ntwist conductor grows quadratically", RED, fontsize=11.5, weight="bold")
+    arrow(ax, (0.37, 0.57), (0.28, 0.36), color=TEAL)
+    arrow(ax, (0.85, 0.57), (0.72, 0.36), color=RED)
+    ax.text(0.5, 0.07, "Occupancy is exact in ray-class characters.  Conductor-efficient coupling to the Frey channel is not.", ha="center", fontsize=11, color=MUTED)
+    save_figure(fig, out, "01_ray_class_signal_chain")
+
+
+def figure_local_filtration(out: Path) -> None:
+    p, e = 3, 7
+    fig, ax = diagram_axes((13.0, 5.9))
+    ax.text(0.5, 0.94, "The local persistence group is a perfect-reconstruction depth filtration", ha="center", fontsize=19, weight="bold")
+    xs = np.linspace(0.07, 0.88, e)
+    labels = [r"$U^1$"] + [rf"$U^{j}$" for j in range(2, e + 1)]
+    for index, (x, label) in enumerate(zip(xs, labels, strict=True)):
+        color = COLORS[index % len(COLORS)]
+        box(ax, (x, 0.55), (0.08, 0.12), label, color, fontsize=12, weight="bold")
+        if index < e - 1:
+            arrow(ax, (x + 0.08, 0.61), (xs[index + 1], 0.61), color=INK, text=rf"$\mathbf{{F}}_{{{p}}}$", offset=(0, 0.055))
+    ax.text(0.5, 0.38, rf"$|U^1/U^{e}|={p}^{{{e-1}}}$", ha="center", fontsize=17, color=TEAL, weight="bold")
+    ax.text(0.5, 0.20, "Every layer contributes one p-ary phase packet.  The dyadic branch has the same filtration size but a different internal group law.", ha="center", fontsize=11, color=MUTED)
+    save_figure(fig, out, "02_local_unit_filtration")
+
+
+def figure_character_spectrum(out: Path) -> None:
+    p, e = 3, 8
+    counts = exact_character_conductor_counts(p, e)
+    exponents = list(counts)
+    values = [counts[j] for j in exponents]
+    fig, ax = plt.subplots(figsize=(8.8, 5.4))
+    ax.bar(range(len(exponents)), values, color=[COLORS[i % len(COLORS)] for i in range(len(values))], edgecolor=INK)
+    labels = ["trivial" if j == 0 else rf"$3^{j}$" for j in exponents]
+    ax.set_xticks(range(len(labels)), labels)
+    ax.set_yscale("log")
+    ax.set_ylabel("number of characters")
+    ax.set_xlabel("exact conductor")
+    ax.set_title("Exact conductor spectrum of one ray-unit packet", weight="bold")
+    ax.grid(axis="y", alpha=0.18, which="both")
+    ax.text(0.98, 0.95, rf"total $=3^{{{e-1}}}$", transform=ax.transAxes, ha="right", va="top", color=MUTED)
+    fig.tight_layout()
+    save_figure(fig, out, "03_character_conductor_spectrum")
+
+
+def figure_twist_barrier(out: Path) -> None:
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.9))
+    for p, color in [(2, BLUE), (3, TEAL), (5, ORANGE)]:
+        exponents = np.arange(2, 10)
+        persistence = np.array([local_ray_order(p, int(e)) for e in exponents], dtype=float)
+        averages = np.array([float(local_twist_conductor_average(p, int(e))) for e in exponents])
+        axes[0].loglog(persistence, averages, marker="o", color=color, lw=2, label=f"p={p}")
+        axes[1].plot(exponents, averages / (p**2 * persistence**2), marker="s", color=color, lw=2, label=f"p={p}")
+    axes[0].set_xlabel("local persistence size")
+    axes[0].set_ylabel("average conductor of Steinberg twists")
+    axes[0].set_title("Twist coupling pays a quadratic conductor cost", weight="bold")
+    axes[0].grid(alpha=0.18, which="both")
+    axes[0].legend()
+    axes[1].set_xlabel("valuation depth e")
+    axes[1].set_ylabel(r"average / $p^2|\mathcal{R}_p|^2$")
+    axes[1].set_title("Normalized cost stays between fixed local bounds", weight="bold")
+    axes[1].grid(alpha=0.18)
+    axes[1].legend()
+    fig.suptitle("The full ray-character bank globalizes, but not at conductor scale", fontsize=17, weight="bold")
+    fig.tight_layout(rect=[0, 0, 1, 0.91])
+    save_figure(fig, out, "04_quadratic_twist_conductor_barrier")
+
+
+def figure_hecke_projector(out: Path) -> None:
+    fig, ax = diagram_axes()
+    ax.text(0.5, 0.94, "The same-sign Hecke leakage is one exact congruence module", ha="center", fontsize=20, weight="bold")
+    box(ax, (0.04, 0.58), (0.20, 0.18), "integral Hecke order\n$\\mathrm{T}_\\varepsilon$", BLUE, fontsize=12, weight="bold")
+    box(ax, (0.31, 0.58), (0.20, 0.18), "target character\n$\\lambda_f$", TEAL, fontsize=12, weight="bold")
+    box(ax, (0.58, 0.58), (0.20, 0.18), "rational idempotent\n$e_f$", ORANGE, fontsize=12, weight="bold")
+    box(ax, (0.78, 0.18), (0.18, 0.18), "integral filter\n$\\eta_f e_f$", MAGENTA, fontsize=12, weight="bold")
+    arrow(ax, (0.24, 0.67), (0.31, 0.67))
+    arrow(ax, (0.51, 0.67), (0.58, 0.67))
+    arrow(ax, (0.68, 0.58), (0.84, 0.36), color=MAGENTA)
+    box(ax, (0.12, 0.18), (0.28, 0.18), "congruence module\n$\\mathrm{T}/(I_f+J_f)$", RED, fontsize=11.5)
+    box(ax, (0.47, 0.18), (0.23, 0.18), "exact order\n$\\mathbf{Z}/\\eta_f\\mathbf{Z}$", TEAL, fontsize=12)
+    arrow(ax, (0.34, 0.58), (0.26, 0.36), color=RED)
+    arrow(ax, (0.40, 0.27), (0.47, 0.27), color=TEAL)
+    arrow(ax, (0.70, 0.27), (0.78, 0.27), color=MAGENTA)
+    ax.text(0.5, 0.07, "The projector denominator, congruence exponent, and integral synthesis cost are the same integer at the Hecke-algebra level.", ha="center", fontsize=10.8, color=MUTED)
+    save_figure(fig, out, "05_hecke_congruence_projector")
+
+
+def figure_local_leakage(out: Path) -> None:
+    eta = 2**5 * 3**2 * 11
+    factors = factor(eta)
+    fig, ax = diagram_axes((12.5, 5.8))
+    ax.text(0.5, 0.94, "Dyadic and odd-adic leakage packets reconstruct the global denominator", ha="center", fontsize=19, weight="bold")
+    box(ax, (0.05, 0.56), (0.19, 0.18), f"global filter\n$\\eta={eta}$", BLUE, fontsize=12, weight="bold")
+    xs = [0.34, 0.56, 0.78]
+    for x, (p, e), color in zip(xs, factors.items(), [MAGENTA, TEAL, ORANGE], strict=True):
+        box(ax, (x, 0.56), (0.16, 0.18), f"{p}-adic packet\n${p}^{e}e_f$", color, fontsize=11.5, weight="bold")
+        arrow(ax, (0.24, 0.65), (x, 0.65), color=color)
+    box(ax, (0.30, 0.18), (0.40, 0.17), "Chinese-remainder synthesis\nrecovers the minimal global integral filter", RED, fontsize=12)
+    for x, (_, _), color in zip(xs, factors.items(), [MAGENTA, TEAL, ORANGE], strict=True):
+        arrow(ax, (x + 0.08, 0.56), (0.5, 0.35), color=color)
+    ax.text(0.5, 0.065, "Local lift existence is exact.  The unresolved problem is a conductor-scale upper bound for the assembled denominator.", ha="center", fontsize=10.8, color=MUTED)
+    save_figure(fig, out, "06_dyadic_odd_adic_leakage")
+
+
+def figure_filter_search(out: Path) -> None:
+    fig, ax = diagram_axes((13.0, 6.4))
+    ax.text(0.5, 0.94, "Exact multi-Hecke filter search", ha="center", fontsize=20, weight="bold")
+    items = [
+        (0.025, 0.17, "Hecke eigenvalue\nvectors", BLUE),
+        (0.225, 0.17, "integral algebra\nclosure", TEAL),
+        (0.425, 0.17, "Hermite basis\nof the order", ORANGE),
+        (0.625, 0.17, "Smith membership\nfor $\\eta e_f$", MAGENTA),
+        (0.825, 0.15, "minimal integral\nfilter", RED),
+    ]
+    for x, width, text, color in items:
+        box(ax, (x, 0.58), (width, 0.18), text, color, fontsize=10.5, weight="bold")
+    for left, right in zip(items[:-1], items[1:], strict=True):
+        arrow(ax, (left[0] + left[1], 0.67), (right[0], 0.67))
+    box(ax, (0.14, 0.20), (0.29, 0.17), "minimality certificate\nall smaller denominators fail", TEAL, fontsize=11.2)
+    box(ax, (0.57, 0.20), (0.29, 0.17), "filter response\n$(0,\\ldots,0,\\eta,0,\\ldots)$", MAGENTA, fontsize=11.2)
+    arrow(ax, (0.90, 0.58), (0.715, 0.37), color=MAGENTA)
+    arrow(ax, (0.90, 0.58), (0.285, 0.37), color=TEAL)
+    ax.text(0.5, 0.075, "The search returns the exact denominator and a proof that every smaller integral filter fails.", ha="center", fontsize=10.8, color=MUTED)
+    save_figure(fig, out, "07_exact_hecke_filter_search")
+
+
+def figure_synthetic_orders(out: Path) -> None:
+    moduli = np.array([2, 3, 4, 5, 8, 9, 16, 25, 32])
+    measured = []
+    for modulus in moduli:
+        basis = synthetic_congruence_order(int(modulus), packets=4)
+        measured.append(projector_denominator(basis, 0)[0])
+    fig, ax = plt.subplots(figsize=(7.8, 5.2))
+    ax.plot(moduli, moduli, color=INK, ls="--", lw=1.5, label="exact denominator")
+    ax.scatter(moduli, measured, color=BLUE, s=65, edgecolor=INK, label="recovered by filter search")
+    ax.set_xscale("log", base=2)
+    ax.set_yscale("log", base=2)
+    ax.set_xlabel("declared congruence modulus")
+    ax.set_ylabel("recovered projector denominator")
+    ax.set_title("The exact filter recovers the congruence modulus", weight="bold")
+    ax.grid(alpha=0.18, which="both")
+    ax.legend()
+    fig.tight_layout()
+    save_figure(fig, out, "08_synthetic_congruence_orders")
+
+
+def figure_mod4(out: Path, fingerprints: pd.DataFrame) -> None:
+    columns = sorted([column for column in fingerprints.columns if column.startswith("a_")], key=lambda column: int(column.split("_")[1]))
+    primes = []
+    residues = []
+    counts = []
+    for column in columns[:18]:
+        prime = int(column.split("_")[1])
+        values = [exact_int(value) for value in fingerprints[column].dropna()]
+        primes.append(prime)
+        residues.append(sorted(set(value % 4 for value in values)))
+        counts.append(len(values))
+    fig, ax = plt.subplots(figsize=(11.5, 5.4))
+    expected = [(prime + 1) % 4 for prime in primes]
+    ax.scatter(range(len(primes)), expected, color=BLUE, s=np.array(counts) * 0.7 + 28, edgecolor=INK)
+    ax.set_xticks(range(len(primes)), [str(prime) for prime in primes], rotation=45)
+    ax.set_yticks(range(4))
+    ax.set_ylim(-0.4, 3.4)
+    ax.set_xlabel("good prime")
+    ax.set_ylabel(r"common residue of $a_p$ modulo 4")
+    ax.set_title("Full rational 2-torsion forces a universal dyadic Hecke congruence", weight="bold")
+    ax.grid(alpha=0.18)
+    fig.tight_layout()
+    save_figure(fig, out, "09_frey_mod4_congruence")
+
+
+def figure_sampled_denominators(out: Path, summary: pd.DataFrame) -> None:
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.9))
+    values = summary.max_denominator.to_numpy(dtype=int)
+    unique, counts = np.unique(values, return_counts=True)
+    axes[0].bar(np.arange(len(unique)), counts, color=[COLORS[i % len(COLORS)] for i in range(len(unique))], edgecolor=INK)
+    axes[0].set_xticks(np.arange(len(unique)), [str(value) for value in unique])
+    axes[0].set_xlabel("maximum sampled projector denominator")
+    axes[0].set_ylabel("radical groups")
+    axes[0].set_title("Finite Frey fingerprint packets", weight="bold")
+    axes[0].grid(axis="y", alpha=0.18)
+    axes[1].scatter(summary.max_output_persistence, summary.max_denominator, c=summary.max_quality, cmap="viridis", s=52, edgecolor=INK, linewidth=0.4)
+    axes[1].set_xscale("log")
+    axes[1].set_yscale("log", base=2)
+    axes[1].set_xlabel("largest output persistence in group")
+    axes[1].set_ylabel("sampled Hecke denominator")
+    axes[1].set_title("Sampled leakage does not track persistence scale", weight="bold")
+    axes[1].grid(alpha=0.18, which="both")
+    fig.suptitle("A finite rational-newform fingerprint experiment", fontsize=17, weight="bold")
+    fig.tight_layout(rect=[0, 0, 1, 0.91])
+    save_figure(fig, out, "10_sampled_hecke_denominators")
+
+
+def figure_final_target(out: Path) -> None:
+    fig, ax = diagram_axes((13.0, 6.4))
+    ax.text(0.5, 0.95, "The remaining route must keep depth in coefficients, not in twist level", ha="center", fontsize=19.5, weight="bold")
+    box(ax, (0.04, 0.59), (0.21, 0.18), "ray-unit persistence\n$\\mathcal{R}_E$", BLUE, fontsize=12, weight="bold")
+    box(ax, (0.31, 0.59), (0.23, 0.18), "Iwasawa or filtered\ncoefficient packet", TEAL, fontsize=11.5, weight="bold")
+    box(ax, (0.60, 0.59), (0.22, 0.18), "fixed-level integral\nHecke cohomology", ORANGE, fontsize=11.5, weight="bold")
+    box(ax, (0.78, 0.20), (0.18, 0.18), "Fitting ideal\nand size bound", MAGENTA, fontsize=11.5, weight="bold")
+    arrow(ax, (0.25, 0.68), (0.31, 0.68))
+    arrow(ax, (0.54, 0.68), (0.60, 0.68))
+    arrow(ax, (0.71, 0.59), (0.87, 0.38), color=MAGENTA)
+    box(ax, (0.10, 0.20), (0.25, 0.18), "avoid the failed route\nfull twist bank at level $N D^2$", RED, fontsize=11)
+    box(ax, (0.42, 0.20), (0.25, 0.18), "desired theorem\n$D/N$ divides a conductor-scale module", TEAL, fontsize=11.2)
+    arrow(ax, (0.42, 0.68), (0.22, 0.38), color=RED)
+    arrow(ax, (0.71, 0.59), (0.55, 0.38), color=TEAL)
+    ax.text(0.5, 0.065, "The GL(1) occupancy problem is solved.  The open step is fixed-level integral transfer into the Frey eigenchannel.", ha="center", fontsize=10.8, color=MUTED)
+    save_figure(fig, out, "11_fixed_level_coefficient_target")
+
+
+def write_tables(base: Path, summary: pd.DataFrame, targets: pd.DataFrame) -> None:
+    tables = base / "tables"
+    tables.mkdir(exist_ok=True)
+    summary.to_csv(tables / "sampled_hecke_orders.csv", index=False)
+    targets.to_csv(tables / "sampled_hecke_targets.csv", index=False)
+    local_rows = []
+    for p in [2, 3, 5, 7]:
+        for e in range(1, 9):
+            average = local_twist_conductor_average(p, e)
+            local_rows.append({
+                "p": p,
+                "e": e,
+                "ray_order": local_ray_order(p, e),
+                "character_counts": json.dumps(exact_character_conductor_counts(p, e), sort_keys=True),
+                "twist_conductor_sum": local_twist_conductor_sum(p, e),
+                "twist_conductor_average_num": average.numerator,
+                "twist_conductor_average_den": average.denominator,
+                "normalized_average": float(average / (p**2 * local_ray_order(p, e) ** 2)),
+            })
+    pd.DataFrame(local_rows).to_csv(tables / "local_ray_twist_spectrum.csv", index=False)
+
+
+def run(base: Path) -> dict[str, object]:
+    figures = base / "figures"
+    figures.mkdir(exist_ok=True)
+    fingerprint_path = base / "source_data" / "hecke_fingerprints.csv"
+    fingerprints = pd.read_csv(fingerprint_path)
+    summary, targets = sampled_fingerprint_orders(fingerprint_path)
+
+    checks = 0
+    for n in [1, 4, 8, 12, 72, 625, 2401, 59049, 2**20 * 3**7 * 5**3]:
+        if not verify_ray_identity(n):
+            raise AssertionError("ray identity failed")
+        checks += 1
+    for p in [2, 3, 5, 7, 11]:
+        for e in range(1, 10):
+            if local_twist_conductor_sum(p, e) != local_twist_closed_form(p, e):
+                raise AssertionError("closed conductor sum failed")
+            average = local_twist_conductor_average(p, e)
+            ray = local_ray_order(p, e)
+            lower = Fraction((p - 1) * p ** (2 * e), p * 1)
+            upper = Fraction(p ** (2 * e), 1)
+            if e >= 2 and not (lower <= average <= upper):
+                raise AssertionError("quadratic conductor bound failed")
+            checks += 1
+    for modulus in [2, 3, 4, 5, 8, 9, 16, 25, 32, 81]:
+        for packets in [2, 3, 5]:
+            basis = synthetic_congruence_order(modulus, packets)
+            den = projector_denominators(basis)
+            if den != [modulus] * packets:
+                raise AssertionError("synthetic congruence denominator failed")
+            checks += 1
+    mod4_checks = verify_fingerprint_mod4(fingerprint_path)
+    checks += mod4_checks
+    if summary.empty or targets.empty:
+        raise AssertionError("sampled Hecke computation produced no rows")
+    if int(summary.max_denominator.max()) > 64:
+        raise AssertionError("unexpected sampled denominator explosion")
+    checks += len(targets)
+
+    figure_ray_chain(figures)
+    figure_local_filtration(figures)
+    figure_character_spectrum(figures)
+    figure_twist_barrier(figures)
+    figure_hecke_projector(figures)
+    figure_local_leakage(figures)
+    figure_filter_search(figures)
+    figure_synthetic_orders(figures)
+    figure_mod4(figures, fingerprints)
+    figure_sampled_denominators(figures, summary)
+    figure_final_target(figures)
+    write_tables(base, summary, targets)
+
+    results: dict[str, object] = {
+        "title": "Projector-Resolved ABC Attack VII",
+        "status": "exact structural theorems and finite experiments. abc not proved",
+        "ray_identity_examples": 9,
+        "local_prime_depth_checks": 45,
+        "synthetic_congruence_checks": 30,
+        "frey_mod4_trace_checks": mod4_checks,
+        "sampled_order_groups": int(len(summary)),
+        "sampled_target_packets": int(len(targets)),
+        "sampled_denominator_values": sorted(int(value) for value in summary.max_denominator.unique()),
+        "sampled_max_denominator": int(summary.max_denominator.max()),
+        "sampled_median_denominator": float(targets.sampled_projector_denominator.median()),
+        "sampled_max_persistence": int(summary.max_output_persistence.max()),
+        "total_checks": checks,
+        "figure_pairs": 11,
+        "central_exact_result": "|ker((Z/DZ)^* -> (Z/rad(D)Z)^*)| = D/rad(D)",
+        "hecke_exact_result": "T/(I_f + Ann(I_f)) is cyclic of order equal to the minimal eigenprojector denominator",
+        "roadblock": "Ray-class occupancy is exact, but coupling by all character twists has average conductor on the square of the persistence scale. A fixed-level integral coefficient transfer remains open.",
+    }
+    results_dir = base / "results"
+    results_dir.mkdir(exist_ok=True)
+    (results_dir / "attack_vii_results.json").write_text(json.dumps(results, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return results
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base", type=Path, default=Path(__file__).resolve().parent)
+    args = parser.parse_args()
+    results = run(args.base)
+    print(json.dumps(results, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

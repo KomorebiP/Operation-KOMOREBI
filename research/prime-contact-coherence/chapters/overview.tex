@@ -1,0 +1,986 @@
+\frontmatter
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{0.52in}
+{\Large\color{Blue}\bfseries PROJECTOR-RESOLVED PRIME-CONTACT COHERENCE CALCULUS\par}
+\vspace{0.22in}
+{\Huge\bfseries Sparse Additive Relations, Prime-Power Contact, and Adelic Coherence\par}
+\vspace{0.20in}
+{\Large\color{Muted}Prime packets, valuation refinement, filtered contact, Kummer classes, polylogarithmic paths, coherence lattices, and applications in Diophantine arithmetic\par}
+\vspace{0.50in}
+\begin{minipage}{0.88\textwidth}
+\large
+This paper develops a single calculus for sparse additive relations with repeated prime-power depth. The construction begins with prime-coordinate differentials and exact obstruction lattices, passes through valuation words, filtered contact modules, Kummer globalization, and polylogarithmic path packets, and culminates in an adelic coherence character built from simultaneous $p$-adic logarithms of the actual input primes. Exact theorems, finite calculations, conditional implications, and structural limitations are distinguished throughout.
+\end{minipage}
+\vfill
+{\Large\bfseries Komorebi P.\par}
+\vspace{0.30in}
+{\large July 2026\par}
+\end{titlepage}
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+Let
+\[
+ a+b=c,
+ \qquad
+ \gcd(a,b)=1,
+ \qquad
+ R=\rad(abc).
+\]
+This paper develops a prime-contact coherence calculus for the interaction between sparse addition, squarefree prime support, and repeated valuation depth. The first layer is a prime-packet differential whose additive row and arithmetic Wronskian yield the exact divisibility
+\[
+ \frac{abc}{R}\mid W.
+\]
+Valuation words and polyphase refinement separate aggregate multiplicity from dyadic and odd-adic phase data. Smith reduction identifies the exact obstruction torsion, while a moving-interval search computes the first-order optimum and proves that the corresponding master inequality cannot fall below its real relaxation.
+
+The nonlinear layers preserve information that the first-order lattice discards. Prime-shell signals distinguish support energy from depth energy. The marked Frey curve separates conductor support from discriminant depth. Filtered cusp-contact modules retain prime-power carries, truncated Witt vectors encode their typed local structure, and Kummer theory globalizes the contact packet with at most logarithmic loss. A Fermat lift and a depth-three polylogarithmic packet preserve the additive three-point relation, while exact synthesis estimates show where geometric or integral cost reappears.
+
+For each output prime, simultaneous $p$-adic logarithms of the input primes define a finite filter row. After removing the dyadic sign layer, common Kummer powers, and entrywise logarithmic defects, the residual rows combine into a cyclic coherence character
+\[
+ \chi_{\mathrm{coh}}:\Z^{S_{ab}}\longrightarrow\Z/C\Z
+\]
+whose kernel contains the normalized signed exponent vector. The output powerful part factors exactly as
+\[
+ \frac{c}{\rad(c)}=\epsilon_2KWC.
+\]
+The remaining uniform problem is an arithmetic bound on the local logarithmic defect $W$ and coherence conductor $C$. The paper proves the exact reductions and finite identities used to reach this object. It does not prove the $abc$ conjecture or the other major conjectures discussed in the applications.
+
+\chapter*{Statement types}
+\addcontentsline{toc}{chapter}{Statement types}
+\begin{longtable}{L{0.18\textwidth}L{0.72\textwidth}}
+\toprule
+Label & Meaning\\
+\midrule
+\endfirsthead
+\toprule
+Label & Meaning\\
+\midrule
+\endhead
+\textbf{Exact} & A theorem or identity is proved under the stated hypotheses.\\
+\textbf{Finite verification} & An exact or high-precision calculation is reproduced on a declared finite data set. It is not an asymptotic theorem.\\
+\textbf{Conditional} & A theorem proves that a stated estimate would imply $abc$ or another target, while the estimate itself remains open.\\
+\textbf{Structural limitation} & A theorem proves that a proposed class of methods cannot supply the required gain without an additional ingredient.\\
+\bottomrule
+\end{longtable}
+
+\BoundaryBox{\textbf{Scope.} No major open conjecture is asserted as proved. All conjectural estimates and all uses of finite evidence are labeled explicitly.}
+
+\chapter*{Organization}
+\addcontentsline{toc}{chapter}{Organization}
+The paper is organized by mathematical dependency rather than by chronology. The opening part states the principal objects and exact implications. The next three parts give the detailed theory of prime packets, signal and automorphic structures, filtered contact, Kummer and Fermat packets, polylogarithmic paths, and the final coherence lattice. The final part contains worked examples, exact computational methods, prime-theory applications, and the unresolved arithmetic theorems.
+
+Three reading paths are useful.
+\begin{enumerate}[leftmargin=1.5em]
+\item \textbf{Structural path.} Read the opening chapter, object comparison, coherence factorization, and central open theorems.
+\item \textbf{Proof path.} Read the detailed parts in order, beginning with prime-packet divisibility and ending with the coherence lattice.
+\item \textbf{Applications path.} Read the general functor, computational methods, and the sections on Wieferich networks, exceptional $abc$, generalized Fermat, Hall--Pillai, and Bernoulli--Witt problems.
+\end{enumerate}
+
+\tableofcontents
+\mainmatter
+
+\PartChapter{Foundations and Main Results}{Architecture and Principal Results}
+
+\section{Layered construction}
+The calculus is organized as a chain of exact objects. Each transition either preserves a required invariant, identifies a precise loss, or proves that a broader class of transformations cannot create the desired arithmetic gain.
+
+\begin{center}
+\begin{tikzpicture}[
+ node distance=7mm and 8mm,
+ every node/.style={font=\small,align=center},
+ box/.style={draw,rounded corners,minimum width=28mm,minimum height=13mm,text width=27mm,inner sep=3mm},
+ arr/.style={-{Latex[length=2.1mm]},thick}
+]
+\node[box,fill=PaleBlue] (i) {prime derivative\\and Wronskian};
+\node[box,fill=PaleBlue,right=of i] (ii) {valuation words\\and polyphase};
+\node[box,fill=PaleTeal,right=of ii] (iii) {obstruction complex\\and formal geometry};
+\node[box,fill=PaleTeal,right=of iii] (iv) {exact moving search\\and real floor};
+
+\node[box,fill=PaleMagenta,below=of i] (viii) {filtered contact\\and carry structure};
+\node[box,fill=PaleMagenta,right=of viii] (vii) {integral projectors\\and cotangent data};
+\node[box,fill=PaleOrange,right=of vii] (vi) {divisor persistence\\and Hecke filters};
+\node[box,fill=PaleOrange,right=of vi] (v) {prime-shell signal\\and Frey transform};
+
+\node[box,fill=PaleBlue,below=of viii] (ix) {Witt--Kummer\\and Fermat packet};
+\node[box,fill=PaleBlue,right=of ix] (x) {polylog path\\and integral cost};
+\node[box,fill=PaleTeal,right=of x] (xi) {adelic logarithms\\and coherence lattice};
+\node[box,fill=PaleRed,right=of xi] (open) {open arithmetic\\conductor bound};
+
+\draw[arr] (i)--(ii);\draw[arr] (ii)--(iii);\draw[arr] (iii)--(iv);
+\draw[arr] (iv.south)--(v.north);
+\draw[arr] (v.west)--(vi.east);\draw[arr] (vi.west)--(vii.east);\draw[arr] (vii.west)--(viii.east);
+\draw[arr] (viii.south)--(ix.north);
+\draw[arr] (ix)--(x);\draw[arr] (x)--(xi);\draw[arr] (xi)--(open);
+\end{tikzpicture}
+\end{center}
+
+\begingroup\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{L{0.17\textwidth}L{0.22\textwidth}L{0.29\textwidth}L{0.23\textwidth}}
+\toprule
+Layer & Principal object & Exact conclusion & Remaining limitation\\
+\midrule
+\endfirsthead
+\toprule
+Layer & Principal object & Exact conclusion & Remaining limitation\\
+\midrule
+\endhead
+Prime differential & Additive lattice and arithmetic Wronskian & Radical divisibility, master height inequality, sector compression & Uniform small transversality is not automatic\\
+Valuation refinement & Valuation words and phase packets & Circulant Smith form, exponent-free phases, separate dyadic and odd-adic lifts & Local liftability does not control global height\\
+Obstruction theory & Joint integer complex & Exact torsion, formal smoothness, all-order local lifting & The surviving obstruction is metric\\
+Exact search & Moving obstruction cosets & CRT interval search, finite stopping, complete first-order optimum & The inequality equals the real floor times overhead\\
+Signal layer & Prime-shell signal and Frey transform & Exact energy identities, unitary no-gain, marked automorphic data & Rational spectral data forgets integral depth\\
+Persistence layer & Divisor packets and Hecke sign filters & Perfect exponent reconstruction and integral Walsh filters & Same-sign integral separation remains arithmetic\\
+Filtered contact & Cusp-contact and Witt modules & Carries restored, cyclic transfer law, typed local depth & A global filtered transfer is not constructed\\
+Kummer--Fermat & Kummer class and Fermat point & Near-lossless globalization and exact character bank & Full geometric carrier is too large\\
+Polylogarithmic path & Depth-three three-point packet & Fixed complex packet and exact distribution relations & Integral synthesis cost remains\\
+Coherence lattice & Simultaneous logarithmic character & Exact factorization $M=\epsilon_2KWC$ and cyclic kernel lattice & Radical-scale bound for $WC$ remains open\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\section{Structural transitions}
+Each major transition changes the category of the object being measured.
+\begin{enumerate}[leftmargin=1.5em]
+\item A short derivative vector is replaced by a joint obstruction complex.
+\item Local lift trees are replaced by a global branch carrying an archimedean metric.
+\item First-order optimization is solved exactly and separated from the uniform arithmetic estimate.
+\item Shell energy is enriched by a marked integral automorphic packet.
+\item Split residue layers are replaced by filtered contact modules when carry extensions matter.
+\item Filtered contact is globalized by a Kummer class.
+\item The full Fermat character bank is compressed to a fixed-depth polylogarithmic path packet.
+\item The remaining finite depth is encoded by one simultaneous logarithmic coherence character.
+\end{enumerate}
+
+\ResultBox{The final structure is not selected by notation. Each surviving object is forced by an exact theorem showing which information the preceding object retained and which information it lost.}
+
+\section{Reusable core}
+The construction extends to primitive sparse additive relations beyond three terms:
+\[
+\boxed{
+\begin{aligned}
+\text{prime support}
+&\longrightarrow
+\text{filtered contact}
+\longrightarrow
+\text{Kummer globalization}\\
+&\longrightarrow
+\text{cross-prime logarithmic coherence}
+\longrightarrow
+\text{equation-specific global geometry}.
+\end{aligned}
+}
+\]
+The general functorial form is developed after the three-term case.
+
+\chapter{Common notation and the master object}
+
+\section{Primitive sparse additive relations}
+Let
+\[
+\epsilon_1n_1+\cdots+\epsilon_rn_r=0,
+\qquad
+\epsilon_i\in\{\pm1\},
+\]
+be primitive in the sense that the integers have no common prime divisor. The $abc$ relation is the case
+\[
+a+b-c=0.
+\]
+For each term define
+\[
+R_i=\rad(n_i),
+\qquad
+M_i=\frac{n_i}{R_i}.
+\]
+The radical $R_i$ records activated prime support. The powerful part $M_i$ records repeated valuation depth.
+
+\section{Filtered contact packets}
+For a prime power
+\[
+p^e\parallel n_i,
+\]
+define the local filtered contact packet
+\[
+\Jcal_{i,p}=p\Z_p/p^e\Z_p.
+\]
+Its order is
+\[
+\abs{\Jcal_{i,p}}=p^{e-1}.
+\]
+Its associated graded is
+\[
+\gr\Jcal_{i,p}\cong(\F_p)^{e-1}.
+\]
+The distinction is essential. The filtered packet is cyclic. The associated graded has $p$-rank $e-1$. The non-split extensions between successive grades are the arithmetic carries.
+
+Globally, the contact packet of one term is
+\[
+\Jcal_{n_i}
+=
+R_i\Z/n_i\Z
+\cong
+\Z/M_i\Z.
+\]
+
+\begin{theorem}[Exact contact quotient]
+For every positive integer $n$,
+\[
+\boxed{
+\rad(n)\Z/n\Z
+\cong
+\Z/(n/\rad(n))\Z.
+}
+\]
+Its associated graded is
+\[
+\boxed{
+\gr\left(\rad(n)\Z/n\Z\right)
+\cong
+\bigoplus_{p^e\parallel n}(\F_p)^{e-1}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Multiplication by $\rad(n)$ identifies $\Z/(n/\rad(n))\Z$ with $\rad(n)\Z/n\Z$. The primary filtration is the product of the filtrations $p^j\Z_p/p^e\Z_p$. Each consecutive quotient is one-dimensional over $\F_p$.
+\end{proof}
+
+\section{Witt coordinates}
+The local packet has a natural $p$-typical coordinate description
+\[
+\Jcal_{i,p}
+\cong
+W_{e-1}(\F_p)
+\]
+as an additive filtered object. Frobenius and Verschiebung make the prime type explicit. The dyadic branch uses the same additive depth but a shifted multiplicative logarithm coordinate on principal units.
+
+\section{Kummer globalization}
+Let
+\[
+x=\prod_{q\in S}q^{\nu_q}\in\Q^\times
+\]
+and fix a modulus $M$. The Kummer class of $x$ lies in
+\[
+H^1(\Q,\mu_M)
+\cong
+\Q^\times/(\Q^\times)^M.
+\]
+Its order is controlled exactly by the valuation vector.
+
+\begin{theorem}[Kummer order from the valuation vector]
+Assume $x>0$. Then
+\[
+\boxed{
+\ord([x])
+=
+\frac{M}{\gcd(M,\{\nu_q\}_{q\in S})}.
+}
+\]
+For a negative rational number and even $M$, one additional dyadic sign layer may occur.
+\end{theorem}
+
+\begin{proof}
+The class $[x]^k$ is trivial exactly when every $k\nu_q$ is divisible by $M$. The least positive such $k$ is the least common multiple of $M/\gcd(M,\nu_q)$, which is $M/\gcd(M,\{\nu_q\})$.
+\end{proof}
+
+\section{Cross-prime logarithmic filters}
+Let $Q$ be a set of input primes and $P$ a set of output primes. At odd $p\in P$, define
+\[
+L_{p,q}
+=
+\frac1p\log_p\langle q\rangle_p
+\]
+with the appropriate finite-depth truncation. At $p=2$, use the weighted principal-unit coordinate together with a separate sign bit.
+
+The matrix
+\[
+\Lcal_{P,Q}=(L_{p,q})
+\]
+is a cross-prime signal operator. A sparse additive relation supplies a short signed valuation vector $\nu$ satisfying deep congruences in every output row.
+
+\section{The coherence lattice}
+After removing common Kummer powers and local logarithmic image defects, the surviving rows combine by the Chinese remainder theorem into a primitive cyclic character
+\[
+\chi_{\mathrm{coh}}:\Z^Q\longrightarrow\Z/C\Z.
+\]
+The coherence lattice is
+\[
+\boxed{
+\Lambda_{\mathrm{coh}}
+=
+\Ker\chi_{\mathrm{coh}}.
+}
+\]
+When the row is primitive,
+\[
+[\Z^Q:\Lambda_{\mathrm{coh}}]=C.
+\]
+The normalized exponent vector of the relation lies in this kernel.
+
+\section{The optional global realization}
+The same prime-contact data may be lifted further when the Diophantine equation supplies additional geometry. Possible carriers include:
+\begin{itemize}[leftmargin=1.5em]
+\item a Frey elliptic curve or higher-dimensional Frey variety
+\item a hypergeometric motive
+\item a Fermat or superelliptic cover
+\item a polylogarithmic path torsor on a punctured projective line
+\item a Hecke, deformation, Selmer, or syntomic complex
+\end{itemize}
+The finite contact and coherence layers exist before any such lift. The global realization is equation-dependent.
+
+\section{The prime-contact coherence data structure}
+The reusable data attached to a primitive sparse relation is
+\[
+\boxed{
+\mathfrak A(\mathbf n,\boldsymbol\epsilon)
+=
+\left(
+\mathbf R,
+\mathbf M,
+\Witt_{\mathbf n},
+\kappa_{\mathbf n},
+\Lcal_{\mathbf n},
+\Lambda_{\mathrm{coh}},
+\chi_{\mathrm{coh}},
+\mathcal G_{\mathbf n}
+\right).
+}
+\]
+The calculus consists of exact transformations among these layers, plus the norm and determinant questions required to compare them globally.
+
+\chapter{Exact Results and Structural Limitations}
+
+\section{Prime-packet derivative and radical divisibility}
+For a primitive triple
+\[
+a+b=c,
+\qquad
+R=\rad(abc),
+\]
+the prime-packet construction attaches one coordinate to every prime dividing $abc$. An arithmetic derivative produces an additivity row, while an arithmetic Wronskian produces a nondegeneracy row. The key local divisibility theorem is
+\[
+\boxed{
+\frac{abc}{R}
+\mid
+W_x(a,b)
+}
+\]
+for every additive packet $x$. A nonzero Wronskian therefore satisfies
+\[
+\abs{W_x(a,b)}\ge\frac{abc}{R}.
+\]
+Combining this with the derivative-size bound yields a valid master inequality involving the shortest transverse packet. The theorem is exact. The missing estimate on the packet size was not proved.
+
+\section{Valuation-word Smith form}
+For the valuation word
+\[
+V_e(T)=1+T+\cdots+T^{e-1}
+\]
+acting on
+\[
+\Z[T]/(T^N-1),
+\]
+the phase/coarse block has Smith form
+\[
+\boxed{
+\SNF(C_{e,N})
+=
+\operatorname{diag}(1,\ldots,1,e)
+}
+\]
+when $\gcd(e,N)=1$. Thus all nonconstant phase channels are integrally invertible and the entire multiplicity is concentrated in one aggregate channel. The proof uses the augmentation ideal: multiplication by $V_e$ has determinant one on that integral rank-$N-1$ lattice and acts as multiplication by $e$ on the quotient.
+
+The aggregate obstruction then factors into a weighted dyadic lift and the odd-adic lifts. This proves exact local solvability. It does not prove a small global archimedean representative.
+
+\section{Exact obstruction complex}
+The exponent-free phase, or shell-synthesis, additivity and Wronskian rows define an integer matrix whose Smith form is
+\[
+\boxed{
+\operatorname{diag}\left(1,\frac{abc}{R}\right).
+}
+\]
+This two-row statement applies whenever at least two prime sectors are nonempty. The degenerate triple $(1,1,2)$ has rank one. On the additive phase lattice $L$, the normalized Wronskian gives an exact sequence
+\[
+0\longrightarrow L_0
+\longrightarrow L
+\longrightarrow\Z
+\longrightarrow0.
+\]
+The sequence splits as an exact sequence of abelian groups, and all local lift equations are solvable. The full shell deformation is formally smooth over $\Z$. Every compatible first-order tangent extends to all formal orders.
+
+This proves that the obstruction is not a failure of local lifting or higher formal continuation.
+
+\section{Exact first-order moving search}
+The moving-coset search solves
+\[
+H(k)
+=
+\min\{\norm{x}_\infty:x\in L,\ \omega(x)=k\}
+\]
+exactly for every supplied factored triple. Sector compression and the Chinese remainder theorem reduce each fixed-$k$ problem to the overlap of three integer intervals. A real lower bound supplies a finite stopping rule in $k$.
+
+The decisive identity is
+\[
+\boxed{
+\overline H
+=
+\frac{c}{R\Delta}
+}
+\]
+for the exact real relaxation. The master inequality
+\[
+c\le R\Delta\Phi
+\]
+therefore becomes
+\[
+\boxed{
+c
+\le
+c\frac{\Phi}{\overline H},
+\qquad
+\frac{\Phi}{\overline H}\ge1.
+}
+\]
+The first-order search is complete and cannot create a new $abc$ gain.
+
+\section{Prime-shell energy identities}
+For
+\[
+n=\prod_pp^{e_p},
+\]
+define the shell signal
+\[
+\Psi_n(p,r)=\sqrt{\log p}\,\mathbf 1_{0\le r<e_p}.
+\]
+Then
+\[
+\boxed{
+\norm{\Psi_n}_2^2=\log n.
+}
+\]
+If $P_{\mathrm{act}}$ retains only the first shell at every active prime, then
+\[
+\boxed{
+\norm{P_{\mathrm{act}}\Psi_n}_2^2
+=
+\log\rad(n).
+}
+\]
+For the direct-sum signal of an $abc$ triple, the standard quality is the output-sector energy divided by activated bandwidth.
+
+Every unitary transform in the depth coordinate preserves this energy ratio. Fourier, wavelet, and unitary polyphase analysis can reorganize the shell signal but cannot by themselves create the radical saving.
+
+\section{Divisor-polyphase perfect reconstruction}
+For
+\[
+n=\prod_pp^{e_p},
+\]
+define
+\[
+B_d(n)=\prod_{p\mid n,\ d\mid e_p}p.
+\]
+Then
+\[
+\boxed{
+n=\prod_{d\ge1}B_d(n)^{\varphi(d)}
+}
+\]
+and
+\[
+\boxed{
+\frac{n}{\rad(n)}
+=
+\prod_{d\ge2}B_d(n)^{\varphi(d)}.
+}
+\]
+This is an exact multiplicative polyphase decomposition of prime-power persistence.
+
+\section{Filtered contact correction}
+The split module
+\[
+\bigoplus_{p^e\parallel c}(\F_p)^{e-1}
+\]
+is the associated graded of the cyclic contact module
+\[
+\boxed{
+R_c\Z/c\Z
+\cong
+\Z/(c/R_c)\Z.
+}
+\]
+The direct split-to-cyclic rank obstruction is therefore a theorem about the graded approximation, not the filtered source.
+
+For cyclic packets of orders $m$ and $\eta$, the largest possible image has order
+\[
+\gcd(m,\eta).
+\]
+The exact source loss is
+\[
+\boxed{
+\frac{m}{\gcd(m,\eta)}.
+}
+\]
+Thus the correct cyclic obstruction is prime-power depth shortfall.
+
+\section{Witt--Kummer globalization}
+The local contact packet is naturally a truncated Witt packet
+\[
+W_{e-1}(\F_p).
+\]
+Globally, the Kummer map
+\[
+\kappa_c:\Z/M\Z\longrightarrow H^1(\Q,\mu_M),
+\qquad
+k\longmapsto[c^k]
+\]
+has exact kernel
+\[
+\boxed{
+\gcd(M,e_1,\ldots,e_r)
+}
+\]
+when
+\[
+c=\prod_ip_i^{e_i}.
+\]
+The kernel is at most $\log_2c$. Therefore most of the contact packet is already a global Galois class.
+
+\section{Fermat lift and full-plane line-bundle cost}
+Choose
+\[
+u^M=\frac ac,
+\qquad
+v^M=\frac bc.
+\]
+Then
+\[
+u^M+v^M=1.
+\]
+The point $[u:v:1]$ on the Fermat curve has exact projective height
+\[
+\boxed{
+\frac{\log c}{M}.
+}
+\]
+However
+\[
+K_{F_M}\cong\mathcal O_{F_M}(M-3).
+\]
+For compatible Weil-height normalizations,
+\[
+h_{K_{F_M}}(P_M)
+=
+\frac{M-3}{M}\log c+O(1).
+\]
+Thus the full plane-curve polarization reintroduces a factor of order $M$. This observation concerns the complete Fermat model with its induced line bundle and does not exclude a lower-complexity quotient with a different arithmetic metric.
+
+\section{Polylogarithmic path compression}
+The root-of-unity distribution identity
+\[
+\boxed{
+\sum_{j=0}^{M-1}\operatorname{Li}_n(\zeta_M^ju)
+=
+M^{1-n}\operatorname{Li}_n(u^M)
+}
+\]
+compresses an $M$-branch orbit to one weight-$n$ coordinate. Through weights one, two, and three, the synthesis gains multiply to
+\[
+M^3.
+\]
+The complex depth-three path packet has at most cubic logarithmic growth. A fixed-rank integral presentation carrying order $M$ must nevertheless have a large coefficient, denominator, degree, or covolume. Small complex periods are not enough.
+
+\section{Adelic coherence factorization}
+For the balanced input ratio, the output contact modulus factors exactly as
+\[
+\boxed{
+M=\epsilon_2KWC.
+}
+\]
+Here $\epsilon_2$ is the weighted dyadic sign layer, $K$ is the common Kummer power, $W$ is the residual local logarithmic image defect, and $C$ is the genuine cross-prime coherence quotient.
+
+The coherence quotient is the index of an explicit lattice
+\[
+\Lambda_{\mathrm{coh}}
+\subset
+\Z^{S_{ab}}.
+\]
+The normalized input exponent vector lies in this lattice. The corresponding dual character has order $C$.
+
+\section{No-go theorem: abstract lattice geometry}
+Let $v\in\Z^s$ be primitive with $s\ge2$. For every prescribed modulus $C$, one can choose a primitive row modulo $C$ whose kernel contains $v$. Therefore a fixed short primitive relation can lie in a primitive congruence lattice of arbitrarily large index.
+
+\[
+\boxed{
+\text{Short vector plus large lattice index is possible abstractly at every scale.}
+}
+\]
+The arithmetic origin of the logarithmic row is essential.
+
+\section{No-go theorem: direct positive contact}
+If positive integers $A$ and $B$ satisfy
+\[
+c\mid A+B,
+\]
+then
+\[
+A+B\ge c
+\]
+and
+\[
+\boxed{
+\max(A,B)\ge\frac c2.
+}
+\]
+A direct positive $S$-unit relation divisible by $c$ is already at the scale one is trying to bound.
+
+\section{No-go theorem: linear Hecke averaging}
+In the local Tate model, the $\ell+1$ isogeny branches multiply contact depth by
+\[
+\ell,
+\quad
+\underbrace{\ell^{-1},\ldots,\ell^{-1}}_{\ell\text{ branches}}.
+\]
+Uniform averaging preserves the linear mean exactly. Typical logarithmic depth falls, but rare deep branches retain the mean. Linear Hecke averaging is redistribution rather than contraction.
+
+\chapter{Signal Theory and Integral Automorphic Aliasing}
+
+\section{Information retained by signal transforms}
+The signal representation asks which transforms retain the squarefree support, repeated valuation depth, additive marking, and integral normalization needed by the $abc$ inequality. The conclusions are sharp.
+
+\begin{itemize}[leftmargin=1.5em]
+\item The prime-shell representation retains radical support and valuation depth exactly.
+\item Unitary transforms of shell depth preserve the decisive energy ratio and cannot create a saving.
+\item The Frey curve is a nonlinear encoder separating conductor support from discriminant depth.
+\item A rational automorphic eigen-signal is insufficient because integral representatives in one isogeny or twist family can have different marked heights.
+\item The relevant automorphic packet must contain the eigen-signal, an integral lattice, local depth, differential normalization, marking, and a synthesis map.
+\end{itemize}
+
+\section{Prime-shell signals}
+For a positive integer
+\[
+n=\prod_pp^{e_p},
+\]
+the shell signal
+\[
+\Psi_n(p,r)=\sqrt{\log p}\,\mathbf1_{0\le r<e_p}
+\]
+is a rectangular pulse of length $e_p$ in each prime channel.
+
+Its depth Fourier transform is a Dirichlet packet:
+\[
+\widehat\Psi_{n,p}(\theta)
+=
+\sqrt{\log p}\,
+\exp\left(-\frac{i(e_p-1)\theta}{2}\right)
+\frac{\sin(e_p\theta/2)}{\sin(\theta/2)}.
+\]
+The zero phase records the exponent. Nonzero phases record the endpoint and residue geometry of the valuation run.
+
+This explains why polyphase refinement was natural. It also proves why a unitary depth transform is not enough. Parseval preserves the total shell energy
+\[
+\log n
+\]
+and the activated first-shell energy
+\[
+\log\rad(n).
+\]
+The transform changes coordinates, not the underlying imbalance.
+
+\section{The Frey curve as a nonlinear signal transform}
+Attach the marked Frey curve
+\[
+E_{a,b,c}:y^2=x(x-a)(x+b).
+\]
+Its discriminant is
+\[
+\Delta_E=16a^2b^2c^2.
+\]
+At odd primes dividing $abc$, the conductor records the activated channel while the minimal discriminant records the local depth. Thus the Frey transform converts the prime-shell split into a standard automorphic split:
+\[
+\begin{aligned}
+\text{conductor}
+&\longleftrightarrow
+\text{activated bandwidth},\\
+\text{minimal discriminant}
+&\longleftrightarrow
+\text{persistence depth}.
+\end{aligned}
+\]
+
+The associated newform provides a global Hecke-frequency signal and a Langlands-theoretic realization of the arithmetic packet.
+
+\section{Information loss inside an isogeny channel}
+Curves in the same rational isogeny class share the same rational newform. The rational Hecke signal therefore does not determine the marked integral representative that arose from the original triple.
+
+A useful exact family appears when $u>v>0$ are coprime odd integers. Define
+\[
+T_0
+=
+\left(v^2,u^2-v^2,u^2\right)
+\]
+and
+\[
+T_1
+=
+\left(
+uv,
+\left(\frac{u-v}{2}\right)^2,
+\left(\frac{u+v}{2}\right)^2
+\right).
+\]
+Both are primitive additive triples. They have the same radical
+\[
+\rad\bigl(uv(u-v)(u+v)\bigr),
+\]
+while the second output is smaller:
+\[
+\left(\frac{u+v}{2}\right)^2<u^2.
+\]
+
+Their Legendre parameters are linked by the standard dyadic Landen transformation. If
+\[
+\lambda_0=\left(\frac vu\right)^2,
+\]
+then the complementary child parameter is
+\[
+\lambda_1
+=
+\frac{4uv}{(u+v)^2}
+=
+\frac{4\sqrt{\lambda_0}}{(1+\sqrt{\lambda_0})^2}.
+\]
+This is the exact two-isogeny refinement law behind the family.
+
+The family shows that one rational automorphic channel can contain several integral representatives with the same radical and different additive heights. Ordinary eigenvalues alone do not encode the $abc$ quantity.
+
+\section{The integral automorphic packet}
+The resulting integral automorphic object is
+\[
+\boxed{
+\Acal^{\sharp}(E,\iota)
+=
+\left(
+ f_E,
+ \Lambda_E,
+ \omega_E,
+ \{q_p\}_{p\mid N_E},
+ \iota,
+ \phi_E
+\right).
+}
+\]
+The components are:
+\begin{itemize}[leftmargin=1.5em]
+\item the rational Hecke eigen-signal $f_E$
+\item an integral Hecke, modular-symbol, or homology lattice $\Lambda_E$
+\item the minimal N\'eron differential $\omega_E$
+\item local Tate-depth packets $q_p$
+\item the marking $\iota$ of the three rational two-torsion differences
+\item the modular synthesis map $\phi_E$
+\end{itemize}
+
+The newform is one coordinate of the object rather than the entire object.
+
+\section{Exact automorphic analysis--synthesis identity}
+Let
+\[
+\phi_E:X_0(N_E)\longrightarrow E
+\]
+be an optimal modular parametrization, and write
+\[
+\phi_E^*\omega_E
+=
+2\pi i\,c_Ef_E(z)\,dz.
+\]
+If
+\[
+A(E)
+=
+\frac{i}{2}
+\int_{E(\C)}\omega_E\wedge\overline{\omega_E},
+\]
+then change of variables under the finite map gives
+\[
+\boxed{
+\deg(\phi_E)A(E)
+=
+4\pi^2c_E^2\norm{f_E}_{\mathrm{Pet}}^2.
+}
+\]
+This is an exact analysis--synthesis energy identity.
+
+For a marked Frey representative, the scaling from the normalized Legendre shape to the integral curve introduces the additive height. Schematically,
+\[
+\boxed{
+\text{height}
+=
+\text{shape factor}
+\times
+\frac{\text{synthesis multiplicity}}
+{\text{integral normalization}\times\text{spectral energy}}.
+}
+\]
+The formula explains why modular degree, Manin constant, N\'eron scaling, and Petersson energy all enter the integral synthesis identity.
+
+\section{Integral separation problem}
+The signal representation isolates the central integral question:
+
+\begin{quote}
+Can the Frey eigenchannel be isolated and synthesized inside the integral automorphic lattice with cost almost linear in its conductor bandwidth?
+\end{quote}
+
+Divisor-polyphase persistence makes the local depth explicit. Integral projector theory separates sign filtering from same-sign congruence. Filtered contact restores the carry structure that a split residue packet would lose. The resulting requirement is precise: a valid global carrier must preserve marked local depth, integral eigenline data, and the synthesis metric simultaneously.
+
+\chapter{The Prime-Contact Coherence Calculus}
+
+\section{Definition of the calculus}
+A prime-contact coherence system attached to a primitive sparse additive relation consists of the data
+\[
+\boxed{
+\mathfrak A(\mathbf n,\boldsymbol\epsilon)
+=
+\left(
+\mathbf R,
+\mathbf M,
+\Witt_{\mathbf n},
+\kappa_{\mathbf n},
+\Lcal_{\mathbf n},
+\Lambda_{\mathrm{coh}},
+\chi_{\mathrm{coh}},
+\mathcal G_{\mathbf n}
+\right).
+}
+\]
+Here:
+\begin{itemize}[leftmargin=1.5em]
+\item $\mathbf R$ records squarefree prime support
+\item $\mathbf M$ records powerful parts
+\item $\Witt_{\mathbf n}$ is the product of filtered Witt contact crystals
+\item $\kappa_{\mathbf n}$ is the system of global Kummer classes
+\item $\Lcal_{\mathbf n}$ is the cross-prime logarithmic filter matrix
+\item $\Lambda_{\mathrm{coh}}$ is the simultaneous congruence kernel
+\item $\chi_{\mathrm{coh}}$ is the dual cyclic coherence character
+\item $\mathcal G_{\mathbf n}$ is an optional equation-specific geometric or automorphic realization
+\end{itemize}
+
+The calculus is the collection of exact transformations among these layers, together with the norm and determinant questions required to compare them globally.
+
+\section{Canonical operations}
+The following operations are exact.
+
+\subsection{Permutation}
+Permuting the terms or the prime coordinates permutes the corresponding packet components and leaves all invariant factors unchanged.
+
+\subsection{Sign reversal}
+Multiplying the full relation by $-1$ changes the signed exponent vector but not the contact depths, Kummer orders, or coherence indices.
+
+\subsection{Primitive reduction}
+Dividing a nonprimitive relation by the common gcd removes a support layer shared by every term. The primitive relation is the correct input to the calculus because pairwise support separation is then visible.
+
+\subsection{Primary decomposition}
+Every filtered contact object decomposes exactly into its $p$-primary components. The dyadic branch may require a shifted multiplicative coordinate, but the additive filtered length remains $e-1$.
+
+\subsection{Polyphase refinement}
+A valuation word can be refined into residue phases. Exact synthesis must be retained when comparing norms. Phase-coordinate shrinkage without synthesis normalization is not an intrinsic gain.
+
+\subsection{Kummer quotient}
+Common divisibility in the valuation vector produces an exact cyclic quotient of the contact modulus. The quotient kernel is computed by a gcd.
+
+\subsection{Logarithmic normalization}
+Local image defects of the logarithmic row can be factored before measuring cross-channel coherence. This separates individual Wieferich-type degeneration from collective cancellation.
+
+\section{The master factorization for an output term}
+For the three-term $abc$ relation, the final exact factorization is
+\[
+\boxed{
+M=\epsilon_2KWC.
+}
+\]
+The factors distinguish four mechanisms.
+
+\begin{longtable}{L{0.14\textwidth}L{0.28\textwidth}L{0.48\textwidth}}
+\toprule
+Factor & Name & Meaning\\
+\midrule
+\endfirsthead
+\toprule
+Factor & Name & Meaning\\
+\midrule
+\endhead
+$\epsilon_2$ & Dyadic sign layer & The separate weighted two-adic sign contribution\\
+$K$ & Kummer preload & Depth removed by a common power in the signed input valuation vector\\
+$W$ & Local logarithmic defect & Depth already present because every active logarithmic coefficient is exceptionally divisible\\
+$C$ & Coherence quotient & Depth created by genuine simultaneous cancellation among the normalized cross-prime logarithmic channels\\
+\bottomrule
+\end{longtable}
+
+In the finite data set, the Kummer and Wieferich layers were usually trivial. Most difficult triples placed their repeated depth in $C$.
+
+\section{The simultaneous coherence problem}
+Let $Q$ be the input prime set and $P$ the repeated output prime set. After normalization, each output row is primitive modulo its remaining prime-power depth. The rows assemble into one cyclic map
+\[
+\chi_{\mathrm{coh}}:\Z^Q\longrightarrow\Z/C\Z.
+\]
+The exponent packet of the additive relation lies in the kernel.
+
+The missing theorem is not a generic short-vector theorem. It is an arithmetic conductor estimate for a row whose entries are reductions of $p$-adic logarithms of the actual input primes and whose kernel vector is forced by the additive equation.
+
+A model target is
+\[
+\boxed{
+WC
+\le
+C_\eps
+R_{\mathrm{in}}R^\eps,
+}
+\]
+where $R_{\mathrm{in}}$ is the activated input bandwidth. For $abc$, $R_{\mathrm{in}}=R_aR_b$.
+
+\section{A general contact functor}
+The construction extends to a sparse relation
+\[
+\sum_{j=1}^{r}\epsilon_jn_j=0.
+\]
+Choose one or more output terms whose repeated depth is to be explained. The assignment
+\[
+(\mathbf n,\boldsymbol\epsilon)
+\longmapsto
+\mathfrak A(\mathbf n,\boldsymbol\epsilon)
+\]
+is canonical under permutations, sign reversal, primitive reduction, and primary decomposition. The optional geometric lift depends on the equation, but the support, contact, Kummer, and logarithmic layers do not.
+
+A complete categorical theory would additionally specify morphisms between relations and prove compatibility under gluing. The present volume records the object-level theory and the exact transformations already used.
+
+\section{Why the calculus is broader than abc}
+The construction needs only:
+\begin{enumerate}[leftmargin=1.5em]
+\item a sparse additive relation
+\item factorization into prime support and depth
+\item one or more output terms whose repeated depth is to be explained
+\item multiplicative ratios connecting the input and output terms
+\end{enumerate}
+A Frey curve or automorphic representation is optional. The prime-contact and coherence layers exist for every sparse relation.
+
+\begin{center}
+\resizebox{0.98\textwidth}{!}{%
+\begin{tikzpicture}[
+ node distance=10mm and 12mm,
+ every node/.style={font=\small,align=center},
+ box/.style={draw,rounded corners,text width=29mm,minimum height=15mm,inner sep=3mm},
+ arr/.style={-{Latex[length=2.1mm]},thick}
+]
+\node[box,fill=PaleBlue] (rel) {sparse additive relation};
+\node[box,fill=PaleBlue,right=of rel] (supp) {radical support\\and powerful depth};
+\node[box,fill=PaleTeal,right=of supp] (cont) {filtered contact\\and Witt carries};
+\node[box,fill=PaleOrange,right=of cont] (kum) {global Kummer\\packet};
+
+\node[box,fill=PaleRed,below=of rel] (glob) {optional motive,\\Frey object, or regulator};
+\node[box,fill=PaleMagenta,right=of glob] (coh) {coherence character\\and kernel lattice};
+\node[box,fill=PaleMagenta,right=of coh] (log) {cross-prime\\logarithmic filters};
+\draw[arr] (rel)--(supp);\draw[arr] (supp)--(cont);\draw[arr] (cont)--(kum);
+\draw[arr] (kum.south)--(log.north);\draw[arr] (log.west)--(coh.east);\draw[arr] (coh.west)--(glob.east);
+\end{tikzpicture}%
+}
+\end{center}
+

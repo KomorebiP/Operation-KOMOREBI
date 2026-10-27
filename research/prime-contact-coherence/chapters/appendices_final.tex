@@ -1,0 +1,415 @@
+\chapter{Primewise Derivation of the Final Coherence Factorization}
+
+\section{Sequential normalization}
+Let
+\[
+ p^e\parallel c.
+\]
+The local output contact packet has order
+\[
+ p^{e-1}.
+\]
+The final factorization separates this depth into distinct mechanisms. The separation must be sequential because the same prime-power depth can otherwise be counted more than once.
+
+Start with the signed input exponent vector
+\[
+ \nu=(\nu_q)_{q\mid ab},
+ \qquad
+ \nu_q=v_q(b)-v_q(a).
+\]
+Let $K_p$ be the $p$-primary part of the common Kummer factor. Divide the exponent vector and the local modulus by this common power. The normalized vector is primitive relative to the remaining modulus.
+
+For odd $p$, form the logarithmic row
+\[
+ \ell_{p,e}(q)
+ =
+ \frac1p\log_p\langle q\rangle_p
+ \pmod{p^{e-1}}.
+\]
+Let
+\[
+ w_p
+ =
+ \min_{q\mid ab}
+ v_p(\ell_{p,e}(q))
+\]
+after Kummer normalization. Divide the row and the modulus by $p^{w_p}$. The remaining row is primitive modulo the residual power $p^{\chi_p}$.
+
+The local residual character is
+\[
+ \chi_p(x)
+ =
+ \exp\left(
+ \frac{2\pi i}{p^{\chi_p}}g_p\cdot x
+ \right).
+\]
+Its kernel contains the normalized exponent vector. The local factors are therefore
+\[
+ K_p,
+ \qquad
+ W_p=p^{w_p},
+ \qquad
+ C_p=p^{\chi_p}.
+\]
+At two, one sign layer $\epsilon_{2,p}$ is removed before the weighted logarithmic row is formed.
+
+Multiplying over output primes gives
+\[
+ \boxed{
+ M=\epsilon_2KWC.
+ }
+\]
+The equality follows because the local exponents partition the original contact depth:
+\[
+ e-1
+ =
+ v_p(\epsilon_2)
+ +
+ v_p(K)
+ +
+ v_p(W)
+ +
+ v_p(C).
+\]
+
+\section{Why the Kummer layer comes first}
+Suppose every input exponent is divisible by $p^k$. Then the balanced rational packet is already a $p^k$th power in the valuation lattice. The corresponding output contact depth should not also be attributed to a local logarithm defect.
+
+Dividing the exponent vector first removes this preload. The logarithmic row is then evaluated on a primitive packet. Its common coefficient depth measures a genuine degeneration of the logarithm operator rather than a common power already present in the input.
+
+This is the same normalization principle used in regulator theory: separate the algebraic divisibility of the vector before measuring the determinant of the linear form.
+
+\section{Odd-prime coefficient depth}
+Let $q\neq p$ be prime. Write
+\[
+ q=\omega(q)\langle q\rangle_p,
+\]
+where $\omega(q)$ is the Teichm\"uller factor. Since
+\[
+ \langle q\rangle_p^{p-1}=q^{p-1},
+\]
+we have
+\[
+ \log_p\langle q\rangle_p
+ =
+ \frac1{p-1}\log_p(q^{p-1}).
+\]
+If
+\[
+ s=v_p(q^{p-1}-1)>0,
+\]
+then
+\[
+ v_p(\log_p(q^{p-1}))=s.
+\]
+Therefore
+\[
+ v_p\left(\frac1p\log_p\langle q\rangle_p\right)
+ =s-1.
+\]
+Truncating at the available contact depth gives
+\[
+ v_p(\ell_{p,e}(q))
+ =
+ \min\{e-1,s-1\}.
+\]
+
+\section{Dyadic coefficient depth}
+For odd $q$, separate the sign by writing
+\[
+ q=(-1)^{(q-1)/2}\langle q\rangle_2,
+ \qquad
+ \langle q\rangle_2\in1+4\Z_2.
+\]
+Then
+\[
+ \langle q\rangle_2^2=q^2.
+\]
+The weighted coefficient is
+\[
+ \ell_{2,e}(q)
+ =
+ \frac14\log_2\langle q\rangle_2.
+\]
+If
+\[
+ s=v_2(q^2-1),
+\]
+then
+\[
+ v_2(\ell_{2,e}(q))=s-3,
+\]
+truncated at $e-2$. The missing first layer is the separate sign bit. This is the final form of the weighted dyadic branch.
+
+\section{CRT synthesis of the global row}
+The local residual moduli $C_p$ are pairwise coprime. Let
+\[
+ C=\prod_{p\mid c}C_p.
+\]
+For each input coordinate $q$, the Chinese remainder theorem gives a unique residue
+\[
+ g_q\pmod C
+\]
+whose reduction modulo $C_p$ is the local coefficient $g_{p,q}$.
+
+The resulting row
+\[
+ g=(g_q)_{q\mid ab}
+\]
+is primitive modulo $C$ because every local row is primitive. Its character
+\[
+ \chi_{\mathrm{coh}}(x)
+ =
+ e^{2\pi i g\cdot x/C}
+\]
+has exact order $C$. The coherence lattice is its kernel.
+
+\section{A determinant viewpoint}
+When several independent exponent packets are available, replace the one-row character by an exterior-power regulator. Let $L$ be a normalized cross-prime logarithm matrix. A nonzero $r\times r$ minor
+\[
+ \det L_{I,J}
+\]
+measures the failure of $r$ input packets to cancel simultaneously across $r$ output channels.
+
+The one-row coherence quotient is the rank-one case. A higher-rank determinant theorem may be stronger because it can use several relations or several independent row constraints at once.
+
+\chapter{Exact Smith and CRT Calculations}
+
+\section{One-row Smith normal form}
+For an integer row
+\[
+ a=(a_1,\ldots,a_s),
+\]
+let
+\[
+ d=\gcd(a_1,\ldots,a_s).
+\]
+There exists a unimodular matrix $U\in\mathrm{GL}_s(\Z)$ such that
+\[
+ aU=(d,0,\ldots,0).
+\]
+Therefore the image of the row is $d\Z$, the kernel has rank $s-1$, and the quotient by the kernel is infinite cyclic scaled by $d$.
+
+This elementary fact drives sector compression, local lift gauges, and the primitive-gradient formal-smoothness theorem.
+
+\section{Two-row Smith data}
+For a two-row matrix $M$, the first Smith factor is the gcd of all entries. The product of the two factors is the gcd of all nonzero $2\times2$ minors. This allows the obstruction torsion to be computed without constructing the full unimodular reduction.
+
+For the exponent-free phase obstruction matrix, every nonzero cross-sector minor is
+\[
+ \pm\frac{abc}{pq}
+ =
+ \pm\frac{abc}{R}\frac{R}{pq}.
+\]
+All such minors are divisible by $abc/R$. For each prime $\ell\mid R$, choose one column with $p=\ell$ and one column from a different nonempty sector. The reduced minor $R/(pq)$ is then not divisible by $\ell$. Hence the gcd of the reduced minors is one and the second Smith factor is exactly $abc/R$.
+
+\section{Local CRT lift in closed form}
+Let
+\[
+ r=\prod_{i=1}^{m}p_i,
+ \qquad
+ w_i=r/p_i.
+\]
+The equation
+\[
+ \sum_iw_ix_i=t
+\]
+has a solution because
+\[
+ \gcd(w_1,\ldots,w_m)=1.
+\]
+Modulo $p_i$,
+\[
+ x_i\equiv t w_i^{-1}\pmod{p_i}.
+\]
+Let $\xi_i$ be the centered residue. Then
+\[
+ \sum_iw_i\xi_i-t
+\]
+is divisible by $r$. Set
+\[
+ q=\frac{t-\sum_iw_i\xi_i}{r}.
+\]
+Writing $x_i=\xi_i+p_i z_i$ gives
+\[
+ \sum_i z_i=q.
+\]
+
+For a box $|x_i|\le H$, the permitted $z_i$ form intervals. The sum of independent integer intervals is every integer between the sum of lower endpoints and the sum of upper endpoints. This proves the exact feasibility test.
+
+\section{Binary search certificate}
+The lower and upper endpoint sums are monotone in $H$. Therefore the least feasible height is found by binary search. The result includes both:
+
+\begin{enumerate}[leftmargin=1.5em]
+\item a witness at height $H$
+\item an interval-separation certificate at height $H-1$
+\end{enumerate}
+
+This is stronger than an optimization routine returning a candidate. It certifies global minimality for the local lift.
+
+\section{Polyphase circulant determinant}
+For the valuation word
+\[
+ V_e(T)=1+T+\cdots+T^{e-1}
+\]
+in $A_N=\Z[T]/(T^N-1)$, multiplication is circulant. Its determinant is
+\[
+ \prod_{\zeta^N=1}V_e(\zeta).
+\]
+Let $I_N$ be the augmentation ideal of $A_N$. When $\gcd(e,N)=1$, the nontrivial roots are permuted by $\zeta\mapsto\zeta^e$, so multiplication by $V_e$ has determinant one on the integral lattice $I_N$ and is therefore an automorphism of it. On $A_N/I_N\cong\Z$, the map is multiplication by $e$. The exact sequence for $I_N\subset A_N$ then gives cokernel $\Z/e\Z$ and Smith form $\operatorname{diag}(1,\ldots,1,e)$.
+
+\section{Synthesis-normalized refinement}
+Suppose a coarse integer $t$ is split into $e$ shell coordinates. The minimum child sup norm is roughly $|t|/e$. The shell-sum synthesis map has norm $e$. The product of analysis norm and synthesis norm remains at least one. Any claimed gain must therefore be stated in a synthesis-normalized norm.
+
+\section{Exact ratio semantics}
+Three ratios recur in the computation:
+\[
+ \frac{\Phi}{\overline H},
+ \qquad
+ \frac{\Phi}{k_*\overline H},
+ \qquad
+ \frac{H(1)}{\Phi}.
+\]
+They are all at least one by definition. A value greater than one is a discrete overhead, not an error. Exact rational strings should accompany decimal displays when the integers are large.
+
+\chapter{Finite Data and Interpretation Rules}
+
+\section{What the finite data record}
+A useful data row contains at least:
+
+\begin{longtable}{p{0.24\textwidth}p{0.65\textwidth}}
+\toprule
+Field & Meaning\\
+\midrule
+$a,b,c$ & primitive additive triple\\
+prime factorizations & exact valuation data for all three terms\\
+$R$ & global radical\\
+$q$ & standard quality\\
+$M=c/R_c$ & output contact modulus\\
+$\Theta,\Phi$ & coarse and phase packet heights when computed\\
+$H(1),k_*,H(k_*)$ & exact moving-search data\\
+$\epsilon_2,K,W,C$ & sequential final factorization\\
+$\nu_0$ & normalized input exponent vector\\
+local rows & normalized odd and dyadic logarithmic filters\\
+coherence row & CRT-combined primitive character\\
+certificates & witnesses, empty-box bounds, and exact residual checks\\
+\bottomrule
+\end{longtable}
+
+\section{What a high-quality row does not prove}
+A large $C$, a short relation vector, or a striking phase resonance in one row does not imply a uniform law. The row can suggest a mechanism. A theorem requires a family definition and a proof that the mechanism persists or is rare.
+
+\section{Recommended finite experiments}
+The most informative next experiments are not simply larger bounds on $c$. They should stratify by mechanism.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item Fix the number of input primes and vary output depth.
+\item Fix the output prime and search for large local coefficient defects.
+\item Separate $W>1$ rows from $W=1$ coherence rows.
+\item Measure normalized logarithmic minors rather than only one coherence quotient.
+\item Search families generated by recurrences or perfect powers.
+\item Compare exact lattice invariants before and after gluing two relations.
+\end{enumerate}
+
+\section{Diagnostic interpretation}
+Every computational test should state what conclusion it does and does not support.
+
+\begin{longtable}{p{0.28\textwidth}p{0.61\textwidth}}
+\toprule
+Failure type & Diagnostic\\
+\midrule
+Kummer preload & common gcd of modulus and valuation vector\\
+entrywise logarithmic defect & large generalized Wieferich coefficient depth\\
+collective coherence & large residual quotient with ordinary coefficients\\
+rank collapse & small logarithmic minors\\
+archimedean cost & large period, degree, or synthesis norm\\
+integral cost & large denominator, covolume, or congruence exponent\\
+out-of-scope object & contact depth not represented in the chosen global carrier\\
+\bottomrule
+\end{longtable}
+
+\section{From finite observation to theorem}
+A finite observation should pass through four mathematical levels.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item Numerical observation on a declared finite range.
+\item Exact symbolic identity on each tested row.
+\item Structural conjecture stated independently of the data.
+\item Proof or a precise counterexample family.
+\end{enumerate}
+
+This protocol prevents a finite pattern from being described as an established theorem.
+
+\chapter{Theorem Summary and Structural Limitations}
+
+\section{Exact theorem summary}
+The exact core can be compressed to the following list.
+
+\begin{enumerate}[leftmargin=1.5em]
+\item Prime-packet Leibniz rule.
+\item One-row additive lattice.
+\item Arithmetic Wronskian and radical divisibility.
+\item Three-sector Smith compression.
+\item Polyphase Smith form with one aggregate invariant.
+\item Joint obstruction torsion $abc/R$.
+\item Exact lattice extension $0\to L_0\to L\to\Z\to0$.
+\item Exact real stable height.
+\item Formal smoothness and all-order integral jet extension.
+\item Exact moving-interval search and finite stopping.
+\item Prime-shell energy identities.
+\item Divisor-polyphase perfect reconstruction.
+\item Atkin--Lehner scaled Walsh bank.
+\item Integral projector denominator theorem.
+\item Filtered contact quotient and carry correction.
+\item Exact cyclic gcd transfer.
+\item Witt realization of contact depth.
+\item Exact Kummer kernel and logarithmic bound.
+\item Fermat height compression and character bank.
+\item Full-plane Fermat line-bundle cost.
+\item Polylogarithmic distribution and three-point closure.
+\item Exact finite-place logarithmic notch.
+\item Exact Kummer--Wieferich--coherence factorization.
+\item Coherence lattice index and cyclic quotient.
+\item Arbitrary-index limitation theorem.
+\item Direct positive divisibility lower bound.
+\item Mean-preserving Hecke cascade.
+\end{enumerate}
+
+\section{Conditional implications}
+The strongest conditional routes are:
+
+\begin{enumerate}[leftmargin=1.5em]
+\item small transverse packet implies $abc$
+\item filtered cusp-to-Hecke transfer with two size bounds implies $abc$
+\item sparse Kummer--Jacobi quotient with two size bounds implies $abc$
+\item coherence conductor bound implies $abc$
+\item suitable adelic logarithmic minor bound implies $abc$
+\end{enumerate}
+
+The final two are the most direct endpoints.
+
+\section{Structural limitations}
+The following routes are closed without a new ingredient:
+
+\begin{enumerate}[leftmargin=1.5em]
+\item more exact search of the same first-order invariant
+\item more local lift existence
+\item unitary shell transforms
+\item raw coordinate splitting
+\item direct split persistence into one cyclic quotient
+\item the full Fermat character bank
+\item small complex periods without integral control
+\item abstract lattice reduction without arithmetic row structure
+\item direct positive contact relations
+\item linear Hecke averaging
+\end{enumerate}
+
+\section{Arithmetic endpoint}
+The arithmetic endpoint is the coherence character
+\[
+ \chi_{\mathrm{coh}}:
+ \Z^{S_{ab}}\to\Z/C\Z
+\]
+whose row is built from simultaneous logarithms of the actual input primes and whose kernel contains the normalized exponent vector forced by $a+b=c$.
+
+The missing theorem is not generic. It must exploit the shared arithmetic origin of all local rows and the exact identity of the output primes as divisors of the sum.
