@@ -1,0 +1,368 @@
+\chapter{From arithmetic depth to a Gamma shape calculus}
+\label{chap:shape-core}
+
+Volumes IV--VI follow one continuous
+route. A signed number-basis amplitude has a positive time-averaged Gram
+kernel. Large depth fixes the shape and centering of a log-Gamma window. Exact
+transforms of that window then produce a phase-space kernel, orthogonal
+polynomial coordinates, shape refinement, and coherent smoothing. This chapter
+introduces the shared objects once. Source references identify the original
+volume and claim title. Elementary identities are rederived here. The
+arithmetic asymptotic and classical orthogonal-polynomial inputs retain their
+original hypotheses and evidence scope.
+
+\section{The arithmetic seed and its positive lift}
+
+Retain Chapter 1's signed transfer $C_{a,\beta,\chi}(k,t)$, with
+$\beta>0$, $a>1$, and $\chi$ modulo $q$. Put $d_n=1-n^{-\beta}$.
+The zero-depth convention retains $n=1$. We now add a two-depth positive kernel.
+The positive companion is defined already for $a>1/2$:
+\[
+ \mathcal K_q(k,\ell;\tau)
+ =\sum_{\substack{n\geq1\\(n,q)=1}}
+ \mu(n)^2 n^{-2a-i\tau}d_n^{k+\ell}.
+\]
+
+\begin{proposition}[Time-average Gram lift]
+For $a>1$, the long-time cross-correlation satisfies
+\[
+ \lim_{T\to\infty}\frac1{2T}\int_{-T}^{T}
+ C_{a,\beta,\chi}(k,t+\tau)\overline{C_{a,\beta,\chi}(\ell,t)}\,dt
+ =\mathcal K_q(k,\ell;\tau).
+\]
+For $a>1/2$, the kernel
+$\mathcal K_q(k,\ell;t-s)$ is positive definite on depth-time pairs.
+\end{proposition}
+
+\begin{proof}
+Absolute convergence for $a>1$ permits expansion of the correlation into a
+double series and passage through the time average. A term with indices $n,m$
+contains $e^{-it(\log n-\log m)}$. Its mean is one for $n=m$ and tends to zero
+otherwise. This leaves the displayed squarefree diagonal.
+For positivity, set
+$v_{k,t}(n)=\mu(n)\chi(n)n^{-a}d_n^k n^{-it}$.
+These vectors are square summable for $a>1/2$, and the kernel is
+$\sum_n v_{k,t}(n)\overline{v_{\ell,s}(n)}$.
+Every finite kernel matrix is a Gram matrix.
+\end{proof}
+
+This is Paper IV, ``Exact time-average identity'' and ``Positive-definite packet
+kernel.'' Time averaging retains the positive diagonal power and removes the
+off-diagonal frequency interference. It does not bound the original signed
+amplitude at a particular time.
+
+Define
+\[
+ \alpha=\frac{2a-1}{\beta},\qquad
+ \delta_q=\frac1{\zeta(2)}\prod_{p\mid q}\frac{p}{p+1}.
+\]
+The fixed-modulus squarefree counting input is
+$\sum_{n\leq X,(n,q)=1}\mu(n)^2=\delta_q X+O_q(X^{1/2})$.
+Paper IV, ``Uniform complex packet asymptotic,'' uses partial summation to obtain
+\[
+ \mathcal K_q(k,\ell;\tau)
+ \sim\frac{\delta_q}{\beta}\Gamma(\alpha+i\tau/\beta)
+ (k+\ell)^{-\alpha-i\tau/\beta}.
+\]
+Paper V, ``Joint arithmetic phase-space limit,'' combines the diagonal
+normalizations. Uniformly when $k/\ell$ stays in a compact subset of
+$(0,\infty)$ and $\tau$ stays in a compact real interval, with
+$h=\log(k/\ell)$ and $\eta=\tau/\beta$,
+\begin{equation}
+ e^{i\eta\log(2\sqrt{k\ell})}
+ \frac{\mathcal K_q(k,\ell;\tau)}
+ {\sqrt{\mathcal K_q(k,k;0)\mathcal K_q(\ell,\ell;0)}}
+ \longrightarrow
+ \frac{\Gamma(\alpha+i\eta)}{\Gamma(\alpha)}
+ \operatorname{sech}^{\alpha+i\eta}(h/2).
+ \label{eq:shape-arithmetic-limit}
+\end{equation}
+The positive domain is $a>1/2$. The signed series above and its absolute
+time-average derivation use the stronger condition $a>1$.
+
+\section{One window and its exact phase-space kernel}
+
+For an independent shape $\alpha>0$, define
+\[
+ g_\alpha(y)=\Gamma(\alpha)^{-1/2}
+ \exp\left(\frac{\alpha y}{2}-\frac{e^y}{2}\right),
+ \qquad y\in\mathbb R.
+\]
+The substitution $u=e^y$ gives
+$\int |g_\alpha|^2dy=\Gamma(\alpha)^{-1}
+\int_0^\infty u^{\alpha-1}e^{-u}du=1$.
+Thus $|g_\alpha|^2$ is a log-Gamma density. Its shape is fixed by the arithmetic
+limit in \eqref{eq:shape-arithmetic-limit}, but the exact window theory makes
+sense for every positive shape.
+
+Use a second shape $\gamma$ to distinguish shape composition from the arithmetic
+scale exponent. The centered cross-ambiguity convention is
+\[
+ A_{\alpha,\gamma}(h,\eta)
+ =\int_{\mathbb R}g_\alpha(y+h/2)g_\gamma(y-h/2)e^{i\eta y}\,dy.
+\]
+
+\begin{theorem}[Cross-shape Gamma--sech identity]
+For $\alpha,\gamma>0$ and real $h,\eta$, with $\lambda=(\alpha+\gamma)/2$,
+\begin{equation}
+ A_{\alpha,\gamma}(h,\eta)
+ =e^{(\alpha-\gamma)h/4}
+ \frac{\Gamma(\lambda+i\eta)}{\sqrt{\Gamma(\alpha)\Gamma(\gamma)}}
+ \operatorname{sech}^{\lambda+i\eta}(h/2).
+ \label{eq:shape-cross-ambiguity}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Multiplication of the shifted windows leaves the constant prefactor
+$e^{(\alpha-\gamma)h/4}/\sqrt{\Gamma(\alpha)\Gamma(\gamma)}$
+and the integrand
+$\exp((\lambda+i\eta)y-e^y\cosh(h/2))$.
+The substitution $u=e^y\cosh(h/2)$ evaluates the remaining integral as
+$\Gamma(\lambda+i\eta)\cosh^{-\lambda-i\eta}(h/2)$.
+\end{proof}
+
+This is Paper VI, ``Cross-shape Gamma--sech formula.'' At equal shapes it is
+Paper V, ``Exact ambiguity formula,'' and precisely the arithmetic limit.
+The Gamma function has no zeros and $\cosh(h/2)>0$ on the real line, so this
+cross-ambiguity is nonzero on real phase space. At $h=\eta=0$ its value is
+\[
+ F(\alpha,\gamma)=
+ \frac{\Gamma((\alpha+\gamma)/2)}{\sqrt{\Gamma(\alpha)\Gamma(\gamma)}}.
+\]
+Cauchy--Schwarz gives $0<F\leq1$, with equality only for equal shapes.
+Indeed, the ratio of the two positive windows is a constant times
+$e^{(\alpha-\gamma)y/2}$ and can be constant only when $\alpha=\gamma$.
+
+\section{Fourier density and additive shape}
+
+Under the unitary convention
+$\widehat f(\omega)=(2\pi)^{-1/2}\int f(y)e^{-i\omega y}dy$, the same
+Gamma integral gives
+\[
+ \widehat g_\alpha(\omega)=
+ \frac{2^{\alpha/2-i\omega}\Gamma(\alpha/2-i\omega)}
+ {\sqrt{2\pi\Gamma(\alpha)}}.
+\]
+Its squared modulus is the symmetric Meixner density
+\[
+ \rho_\alpha(\omega)=
+ \frac{2^{\alpha-1}}{\pi\Gamma(\alpha)}
+ |\Gamma(\alpha/2+i\omega)|^2.
+\]
+The Fourier autocorrelation identity and the zero-modulation ambiguity slice
+give
+\[
+ \int_{\mathbb R}\rho_\alpha(\omega)e^{ih\omega}d\omega
+ =\operatorname{sech}^{\alpha}(h/2).
+\]
+Consequently Fourier uniqueness proves the shape convolution law
+\[
+ \rho_{s+t}=\rho_s*\rho_t,\qquad s,t>0.
+\]
+These are Paper V, ``Fourier transform of the log-Gamma packet'' and ``Exact
+characteristic function,'' followed by Paper VI, ``Meixner shape semigroup.''
+
+The cross-ambiguity energy also separates exactly:
+\begin{equation}
+ \frac{|A_{\alpha,\gamma}(h,\eta)|^2}{2\pi}
+ =p_{\alpha,\gamma}(h)\rho_{\alpha+\gamma}(\eta),
+ \qquad
+ p_{\alpha,\gamma}(h)=
+ \frac{\Gamma(\alpha+\gamma)e^{(\alpha-\gamma)h/2}}
+ {2^{\alpha+\gamma}\Gamma(\alpha)\Gamma(\gamma)}
+ \operatorname{sech}^{\alpha+\gamma}(h/2).
+ \label{eq:shape-factorization}
+\end{equation}
+Direct cancellation of constants proves the formula. Setting
+$u=e^h/(1+e^h)$ transforms $p_{\alpha,\gamma}(h)dh$ into the
+Beta$(\alpha,\gamma)$ probability law. Both factors are normalized. This is
+Paper VI, ``Exact cross-spectrogram factorization.''
+
+\section{Polynomial refinement and the common ladder}
+
+The classical Meixner--Pollaczek polynomial input is specified by its generating
+function, rather than by an implicit choice of sign or phase:
+\[
+ \sum_{n\geq0}P_{n,s}(x)z^n
+ =(1-iz)^{-s/2+ix}(1+iz)^{-s/2-ix},\qquad |z|<1.
+\]
+Let $(s)_n=\Gamma(s+n)/\Gamma(s)$ and put
+\[
+ p_{n,s}(x)=\sqrt{\frac{n!}{(s)_n}}P_{n,s}(x).
+\]
+Classical orthogonality makes these a normalized polynomial basis in
+$L^2(\rho_s(x)dx)$. The degree $n$ and shape $s$ are separate coordinates.
+
+\begin{theorem}[Normalized two-child refinement]
+For $\alpha,\gamma>0$,
+\[
+ p_{n,\alpha+\gamma}(x+y)
+ =\sum_{r=0}^{n}
+ \sqrt{\binom nr\frac{(\alpha)_r(\gamma)_{n-r}}
+ {(\alpha+\gamma)_n}}
+ p_{r,\alpha}(x)p_{n-r,\gamma}(y).
+\]
+The squared coefficients sum to one.
+\end{theorem}
+
+\begin{proof}
+Multiplying the generating functions with shapes $\alpha,\gamma$ produces the
+one with shape $\alpha+\gamma$ and argument $x+y$. Coefficient comparison gives
+the unnormalized addition formula, and the displayed normalizations give the
+square roots. The coefficient identity
+$\sum_r\binom nr(\alpha)_r(\gamma)_{n-r}=(\alpha+\gamma)_n$
+follows by comparing coefficients in
+$(1-z)^{-\alpha}(1-z)^{-\gamma}=(1-z)^{-\alpha-\gamma}$.
+\end{proof}
+
+Paper VI, ``Two-child packet refinement,'' interprets the coefficient squares
+as a beta-binomial law. For many children they become the
+Dirichlet-multinomial coefficients
+\[
+ C_{n,\mathbf r}^{\mathbf s}
+ =\sqrt{\frac{n!\prod_j(s_j)_{r_j}}
+ {(\sum_js_j)_n\prod_jr_j!}},\qquad \sum_jr_j=n.
+\]
+Multiplication of generating functions proves this extension. Intermediate
+Pochhammer factors cancel along every binary refinement tree, establishing the
+coassociativity recorded in Paper VI.
+
+There is a complementary position basis. Classical Laguerre orthogonality gives
+\[
+ L_{n,\alpha}^{\mathrm{packet}}(y)
+ =\sqrt{\frac{n!}{\Gamma(n+\alpha)}}
+ e^{\alpha y/2-e^y/2}L_n^{(\alpha-1)}(e^y).
+\]
+Paper V, ``Laguerre--Meixner Fourier duality,'' evaluates its transform as
+\[
+ \widehat{L_{n,\alpha}^{\mathrm{packet}}}(\omega)
+ =i^n\widehat g_\alpha(\omega)p_{n,\alpha}(\omega).
+\]
+The phase $i^n$ is part of the identity. The polynomial frequency basis and the
+Fourier-transformed position basis therefore differ by degree-dependent phases.
+
+On an abstract orthonormal basis $e_n$, define
+\[
+ K_0e_n=(n+\alpha/2)e_n,\quad
+ K_+e_n=\sqrt{(n+1)(n+\alpha)}e_{n+1},\quad
+ K_-e_n=\sqrt{n(n+\alpha-1)}e_{n-1}.
+\]
+On its finite linear span, direct calculation gives
+\[
+ [K_0,K_+]=K_+,\quad [K_0,K_-]=-K_-,\quad
+ [K_-,K_+]=2K_0,
+\]
+and the Casimir is $\frac\alpha2(\frac\alpha2-1)I$.
+The Laguerre multiplication recurrence has matrix
+$2K_0-K_+-K_-$; the real polynomial Meixner frequency recurrence has matrix
+$(K_++K_-)/2$. These are two coordinate realizations of one ladder. A Fourier
+comparison must retain the degree phases above. This is Paper V,
+``$\mathfrak{su}(1,1)$ relations.''
+
+\section{Shape transfer and its exact contraction spectrum}
+
+Let $X_s$ have law $\rho_s$ and let $Y_t$ be an independent increment with law
+$\rho_t$. Shape convolution gives $X_s+Y_t\sim\rho_{s+t}$. Conditioning the
+refinement identity on $X_s$ removes all positive-degree increment polynomials
+by orthogonality. Thus
+\[
+ \mathbb E[p_{n,s+t}(X_s+Y_t)\mid X_s]
+ =\sigma_n(s,t)p_{n,s}(X_s),\qquad
+ \sigma_n(s,t)=\sqrt{\frac{(s)_n}{(s+t)_n}}.
+\]
+For the transfer
+$T_{s,t}:L^2(\rho_{s+t})\to L^2(\rho_s)$ given by
+$T_{s,t}f(x)=\int f(x+y)\rho_t(y)dy$, these are its singular values in the
+classical complete polynomial bases. They satisfy
+\[
+ \sigma_n(s,t)\sigma_n(s+t,u)=\sigma_n(s,t+u),\qquad
+ \sigma_n(s,t)\sim
+ \sqrt{\frac{\Gamma(s+t)}{\Gamma(s)}}n^{-t/2}.
+\]
+The transfer is compact for every $t>0$ and belongs to $S_p$ precisely when
+$pt>2$. Its mean-zero operator norm is $\sqrt{s/(s+t)}$. These are Paper VI,
+``Polynomial martingale law'' and ``Cocycle and compactness.'' The completeness
+input matters for a statement about the entire operator, rather than only its
+polynomial restriction.
+
+\section{Coherent smoothing and its Gaussian limit}
+
+Take the inner product conjugate-linear in its first argument. The centered
+Weyl states are
+\[
+ \psi_{\alpha,u,\eta}(y)=e^{i\eta(y-u/2)}g_\alpha(y-u).
+\]
+Their exact overlap is
+\[
+ \langle\psi_{\alpha,u,\eta},\psi_{\gamma,v,\nu}\rangle
+ =e^{i(\nu u-\eta v)/2}A_{\alpha,\gamma}(v-u,\nu-\eta).
+\]
+The Moyal identity for the normalized window gives the continuous tight frame
+\[
+ \frac1{2\pi}\int_{\mathbb R^2}
+ |\langle\psi_{\alpha,u,\eta},f\rangle|^2du\,d\eta=\|f\|_2^2.
+\]
+Its coherent transform has a reproducing kernel equal to this overlap.
+These are Paper VI, ``Cross-shape coherent overlap'' and ``Continuous tight
+frame.''
+
+The lower symbol of the associated anti-Wick operator is convolution with
+\[
+ B_\alpha(h,\eta)=\frac{|A_{\alpha,\alpha}(h,\eta)|^2}{2\pi}
+ =p_\alpha(h)\rho_{2\alpha}(\eta),\qquad
+ p_\alpha(h)=\frac{\Gamma(\alpha+1/2)}{2\sqrt\pi\Gamma(\alpha)}
+ \operatorname{sech}^{2\alpha}(h/2).
+\]
+Its ordinary two-dimensional Fourier multiplier is
+\[
+ \widehat B_\alpha(\xi,x)
+ =\frac{|\Gamma(\alpha+i\xi)|^2}{\Gamma(\alpha)^2}
+ \operatorname{sech}^{2\alpha}(x/2).
+\]
+It is strictly positive on real dual space and tends to zero at infinity.
+Therefore the Berezin convolution is injective on $L^2$ but has an unbounded
+inverse on its range, as Paper VI states in ``Injectivity and ill-posed
+inversion.'' Exact recoverability is not a stability bound.
+
+For independent $H_\alpha\sim p_\alpha$ and
+$\Omega_\alpha\sim\rho_{2\alpha}$, the standardized variables
+\[
+ Z_\alpha=\sqrt{\alpha/2}\,H_\alpha,\qquad
+ W_\alpha=\sqrt{2/\alpha}\,\Omega_\alpha
+\]
+converge to independent standard Gaussians. For position this follows from the
+Gamma-ratio characteristic function with argument
+$\xi\sqrt{\alpha/2}$; for frequency it follows from
+$\operatorname{sech}^{2\alpha}(x/\sqrt{2\alpha})\to e^{-x^2/2}$.
+Paper VI, ``Gaussian marginal limits,'' proves this distributional limit.
+Its stronger ``Heat-operator limit'' also uses controlled moments and
+multiplier derivatives to assert Schwartz-seminorm convergence of the
+rescaled convolution to $e^{\Delta/2}$. That stronger source claim is not
+inferred here solely from convergence in distribution or a finite-grid plot.
+
+\section{The signed branch and its retained boundary}
+
+The positive shape calculus does not replace the signed arithmetic problem.
+For $a>1$ the signed generating function is
+\[
+ \mathcal C_{a,\beta,\chi}(z,t)
+ =\sum_{n\geq1}\frac{\mu(n)\chi(n)n^{-a-it}}{1-z(1-n^{-\beta})}.
+\]
+Paper IV continues it off the physical cut and proves
+\[
+ (1-z)\mathcal C_{a,\beta,\chi}(z,t)
+ +z\mathcal C_{a+\beta,\beta,\chi}(z,t)=L(a+it,\chi)^{-1}.
+\]
+Its nonzero Hankel determinant supplies a unique rational Pad\'e matching
+function with degree bounds $\deg P\leq m-1$, $\deg Q\leq m$ and
+$Q(0)=1$, preserving the first $2m$ Taylor coefficients. An ordinary
+$m$-term simple-packet decomposition additionally follows when $\deg Q=m$
+and $Q$ has $m$ simple zeros. This chapter makes no universal claim of full
+denominator degree, nonbreakdown, physical-interval signed nodes, or stable
+inversion.
+
+The principal signed coherence target and its exact RH equivalence are
+stated once in Chapter 1. The shape windows, convolution laws, refinement
+coefficients, and coherent frames provide positive structure; that open target
+still concerns cancellation of the original M\"obius signs.

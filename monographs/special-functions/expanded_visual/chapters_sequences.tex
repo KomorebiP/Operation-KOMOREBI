@@ -1,0 +1,112 @@
+\startvolume{Sequence atlas}{OEIS families and exact transforms}
+\lesson{SEQUENCES / 01}{Two seeds, one Fibonacci recurrence}{S01_fibonacci_lucas}
+{F_{n+2}=F_{n+1}+F_n,\quad L_{n+2}=L_{n+1}+L_n,\quad L_n^2-5F_n^2=4(-1)^n}
+{The two families share the same recurrence and have different seeds: $(F_0,F_1)=(0,1)$ and $(L_0,L_1)=(2,1)$. The right panel uses the same index in both families. Its alternating defect stays exactly four in magnitude.}
+{At $n=7$, $F_7=13$ and $L_7=29$. Thus $29^2-5\cdot13^2=841-845=-4$. Comparing terms at different indices would destroy this identity.}
+{A recurrence operator and its initial state are separate parts of the sequence specification.}
+{OEIS A000045 and A000032, indexed from zero. Exact recurrence and common-index identity; the plotted prefix ends at $n=12$.}
+
+\lesson{SEQUENCES / 02}{Longer recurrence memory}{S02_tribonacci_tetranacci}
+{T_n=T_{n-1}+T_{n-2}+T_{n-3},\qquad Q_n=\sum_{j=1}^{4}Q_{n-j}}
+{The seed table fixes the OEIS convention. Tribonacci starts $0,0,1$; tetranacci starts $0,0,0,1$. The curves use $\log_{10}(1+a_n)$ so that zeros and rapidly growing terms fit together. The transform changes the plotted scale, not the integer sequence.}
+{Tribonacci gives $T_5=2+1+1=4$. Tetranacci gives $Q_7=4+2+1+1=8$. The recurrence first applies at $n=3$ for $T$ and $n=4$ for $Q$.}
+{These finite-memory recurrences have three and four feedback taps. The seed length must match the memory.}
+{OEIS A000073 and A000078, both indexed from zero. Exact integer terms through $n=16$; logarithmic ordinate explicitly labeled.}
+
+\lesson{SEQUENCES / 03}{Jacobsthal separates two modes}{S03_jacobsthal}
+{J_0=0,\quad J_1=1,\quad J_{n+2}=J_{n+1}+2J_n=\frac{2^{n+2}-(-1)^{n+2}}{3}}
+{The rising bars are Jacobsthal numbers. The right panel removes their growing mode: $2^n-3J_n=(-1)^n$. What remains is an alternating mode of constant magnitude. Both modes belong to the same second-order recurrence.}
+{At $n=6$, $J_6=21$ and $2^6-3\cdot21=1$. At $n=7$, $J_7=43$ and $2^7-3\cdot43=-1$.}
+{A recurrence can combine growth and oscillation. Splitting the modes explains the parity correction.}
+{OEIS A001045, indexed from zero. Direct closed form and exact recurrence agree for $0\le n\le18$.}
+
+\lesson{SEQUENCES / 04}{A Pell pair shares one unit}{S04_sqrt3_pell}
+{x_n+y_n\sqrt3=(2+\sqrt3)^n,\qquad x_n^2-3y_n^2=1}
+{The table keeps both coordinates at the same index. Multiplication by $2+\sqrt3$ advances the pair using the displayed integer update. Its determinant is one, and it preserves the quadratic norm. The zero-index pair is $(1,0)$.}
+{Starting from $(x_2,y_2)=(7,4)$ gives $(x_3,y_3)=(2\cdot7+3\cdot4,7+2\cdot4)=(26,15)$. The norm is $26^2-3\cdot15^2=1$.}
+{A shared recurrence state can retain an exact invariant while both coordinates grow.}
+{OEIS A001075 and A001353, indexed from zero. Integer matrix iteration and the norm are checked through $n=18$.}
+
+\lesson{SEQUENCES / 05}{Normalize central binomial coefficients}{S05_binomial_catalan}
+{B_n=\binom{2n}{n},\qquad C_n=\frac{B_n}{n+1}}
+{Each table column shows one central binomial coefficient and its Catalan normalization. The curves extend the comparison through index fourteen on a base-ten logarithmic axis. Division by $n+1$ is exact here and gives an integer at every index.}
+{For $n=4$, $B_4=\binom84=70$ and $C_4=70/5=14$. For $n=5$, $252/6=42$. The divisor changes with the index.}
+{Normalization is an operator on coefficients. It need not be a fixed convolution or a constant tap weight.}
+{OEIS A000984 and A000108, indexed from zero. Binomial formulas and integrality checked through $n=18$.}
+
+\lesson{SEQUENCES / 06}{Catalan convolution rebuilds the next term}{S06_catalan_convolution}
+{C_{n+1}=\sum_{k=0}^{n}C_kC_{n-k},\qquad C(z)=1+zC(z)^2}
+{The five bars are the five products contributing to $C_5$. The input indices add to four, and their sum supplies the next coefficient. Here $C(z)=\sum_{n\ge0}C_nz^n$ is an ordinary generating function.}
+{The contributions are $1\cdot14$, $1\cdot5$, $2\cdot2$, $5\cdot1$, and $14\cdot1$. Their sum is $14+5+4+5+14=42=C_5$.}
+{A nonlinear generating-function equation becomes an exact convolution identity among coefficients.}
+{OEIS A000108. All convolution identities with $0\le n\le17$ are checked against the binomial definition.}
+
+\lesson{SEQUENCES / 07}{Bell numbers are Stirling row sums}{S07_bell_stirling}
+{B_n=\sum_{k=0}^{n}S(n,k),\qquad \sum_{n\ge0}B_n\frac{t^n}{n!}=\exp(e^t-1)}
+{Each matrix row contains Stirling numbers of the second kind, counting partitions into $k$ nonempty blocks. Summing across the row gives the Bell number at its right. The generating function is exponential, so its coefficient is $B_n/n!$.}
+{The fifth row contains $0,1,15,25,10,1$. Its sum is $52=B_5$. Equivalently, apply the Stirling transform to the constant input sequence $1,1,1,\ldots$.}
+{A triangular transform uses all relevant input positions. It is not automatically a fixed-length tap filter.}
+{OEIS A000110. Stirling recurrence and an independent binomial Bell recurrence agree through $n=18$; the figure shows rows zero through seven.}
+
+\lesson{SEQUENCES / 08}{Factorial weights order the blocks}{S08_fubini_factorial}
+{A_n=\sum_{k=0}^{n}k!S(n,k),\qquad \sum_{n\ge0}A_n\frac{t^n}{n!}=\frac{1}{2-e^t}}
+{The same Stirling row now receives factorial weights. Ordering $k$ blocks gives $k!$ arrangements. The upper table shows the factors at $n=5$; the bars show their products. The sum is the ordered Bell, or Fubini, number.}
+{At $n=5$, the weighted contributions are $1,30,150,240,120$, totaling $541$. The unweighted row sums to only $52$. The weights encode a different combinatorial operation.}
+{Changing the transform's input from one to $k!$ changes the output family while retaining the same triangular kernel.}
+{OEIS A000670 and A000142, indexed from zero. Integer Stirling sums and an independent ordered-partition recurrence agree through $n=18$.}
+
+\lesson{SEQUENCES / 09}{Derangements show signed cancellation}{S09_derangements}
+{D_n=n!\sum_{k=0}^{n}\frac{(-1)^k}{k!},\qquad D_n=(n-1)(D_{n-1}+D_{n-2})\quad(n\ge2)}
+{Positive and negative bars are the inclusion-exclusion contributions at $n=6$. Their large magnitudes cancel to a smaller integer. The dashed line records the final sum rather than an individual contribution. Here $D_0=1$ and $D_1=0$.}
+{The sum is $720-720+360-120+30-6+1=265$. The recurrence independently gives $D_6=5(44+9)=265$.}
+{Signed transforms must retain cancellation. Magnitudes alone do not determine the result.}
+{OEIS A000166. Factorial sum, variable-coefficient recurrence, and brute-force permutation counts through $n=8$ agree; exact formulas checked through $n=18$.}
+
+\lesson{SEQUENCES / 10}{Secant and tangent interleave}{S10_euler_updown}
+{\sum_{n\ge0}E_n\frac{t^n}{n!}=\sec t+\tan t,\quad E_{2m}=s_m,\quad E_{2m+1}=\tau_m}
+{The coefficient table separates even and odd positions of the Euler up/down family. Even positions are positive secant numbers. Odd positions are tangent numbers. The factorial row makes clear that these are exponential-generating-function numbers, not ordinary Taylor coefficients.}
+{At degree four, $E_4=5$ contributes $5t^4/4!$ to secant. At degree five, $E_5=16$ contributes $16t^5/5!$ to tangent. The first tangent entry corresponds to degree one.}
+{Parity packets can identify familiar functions, provided the factorial normalization and sequence offset are kept.}
+{OEIS A000111, A000364, and A000182. The tangent entry has OEIS initial index one; $\tau_m$ denotes its degree-$2m+1$ value. Exact series checked through degree eighteen.}
+
+\lesson{SEQUENCES / 11}{Bernoulli data need both coordinates}{S11_bernoulli_pair}
+{\frac{t}{e^t-1}=\sum_{n\ge0}B_n\frac{t^n}{n!},\qquad B_n=\frac{p_n}{q_n},\quad q_n>0}
+{The top panel shows signed numerators on a symmetric logarithmic scale. The lower panel shows positive denominators on a logarithmic scale. Fractions are reduced. A zero Bernoulli number is stored as $0/1$, and this guide uses $B_1=-1/2$.}
+{At $n=10$, $p_{10}=5$ and $q_{10}=66$, so $B_{10}=5/66$. Its Taylor coefficient is $(5/66)/10!$. At $n=12$, $B_{12}=-691/2730$.}
+{An OEIS integer numerator sequence does not by itself specify the rational family or its generating-function coefficient.}
+{OEIS A027641 and A027642, indexed from zero. Exact rational recurrence and multiplication by $(e^t-1)/t$ checked through degree eighteen.}
+
+\lesson{SEQUENCES / 12}{Partitions multiply reciprocal factors}{S12_partition_product}
+{P(z)=\prod_{j\ge1}\frac{1}{1-z^j}=\sum_{n\ge0}p(n)z^n}
+{A factor indexed by $j$ chooses how many parts of size $j$ occur. The left table lists the five partitions of four. The right bars show the first nineteen partition numbers. This is an ordinary generating function with integer coefficients.}
+{The partitions of four are $4$, $3+1$, $2+2$, $2+1+1$, and $1+1+1+1$. Thus $p(4)=5$. To find coefficients through degree eighteen, only factors with $j\le18$ are needed.}
+{Reciprocal factors turn independent multiplicities into a coefficient-counting product. The finite prefix can be reconstructed exactly.}
+{OEIS A000041. Product coefficients computed by integer dynamic programming, independently checked by partition enumeration through $n=10$.}
+
+\lesson{SEQUENCES / 13}{Apéry uses taps that depend on the index}{S13_apery_recurrence}
+{(n+1)^3A_{n+1}=(2n+1)(17n^2+17n+5)A_n-n^3A_{n-1}}
+{The prefix annotation begins the Apéry sequence defined by $A_n=\sum_{k=0}^{n}\binom nk^2\binom{n+k}{k}^2$. The curves show its growth through index fourteen on a base-ten logarithmic scale. The lower diagram evaluates the recurrence at $n=2$.}
+{Using $A_1=5$ and $A_2=73$ gives $27A_3=535\cdot73-8\cdot5=39015$. Therefore $A_3=1445$. The recurrence applies for $n\ge1$, with $A_0=1$.}
+{This is a three-term recurrence with polynomial coefficients. Its weights change with $n$, so it is not a constant-tap filter.}
+{OEIS A005259. Exact binomial sums and the displayed polynomial-coefficient recurrence agree for $1\le n\le17$.}
+
+\lesson{SEQUENCES / 14}{Divisor convolution changes the address rule}{S14_divisor_convolution}
+{\sum_{d\mid n}\mu(d)=\mathbf1_{n=1},\qquad \sum_{d\mid n}\varphi(d)=n}
+{The figure places the six divisors of twelve in matching columns. Möbius contributions sum to zero; totient contributions sum to twelve. The address rule is divisibility. This differs from the additive index splitting used by ordinary power-series convolution.}
+{For $n=12$, $\mu(1),\mu(2),\mu(3),\mu(4),\mu(6),\mu(12)$ are $1,-1,-1,0,1,0$. The totient values are $1,1,2,2,2,4$. Their sums are zero and twelve.}
+{Choose the convolution law before identifying a transform. Divisor packets and residue packets organize different relations.}
+{OEIS A008683 and A000010, both indexed from one. Prime-factor definitions and both divisor sums checked for $1\le n\le60$.}
+
+\lesson{SEQUENCES / 15}{One binary statistic creates three families}{S15_binary_families}
+{w(n)=\operatorname{popcount}(n),\quad t(n)=w(n)\bmod2,\quad g(n)=2^{w(n)}}
+{Each column has a four-bit address, its binary weight, its Thue--Morse parity, and its Gould value. Reading a final zero bit preserves weight; reading a final one adds one. Parity toggles and the Gould value doubles in the latter case.}
+{The address $13=1101_2$ has weight three, so $t(13)=1$ and $g(13)=8$. Address $12=1100_2$ has weight two, parity zero, and Gould value four.}
+{The same state statistic can feed several exact outputs. Binary refinement gives simple even and odd channel recurrences.}
+{OEIS A000120, A010060, and A001316, indexed from zero. Binary formulas and even/odd recurrences checked for $0\le n\le63$; figure shows zero through fifteen.}
+
+\lesson{SEQUENCES / 16}{Sums and differences form a polynomial ladder}{S16_polynomial_ladder}
+{T_n=\sum_{j=1}^{n}j,\quad H_n=\sum_{j=1}^{n}T_j,\quad \Delta T_n=n,\quad \Delta H_n=T_n}
+{The upper table follows positive integers into triangular and tetrahedral numbers. Squares and cubes occupy the lower rows for comparison. The arrows reverse prefix sums by backward differences, $\Delta f_n=f_n-f_{n-1}$. All plotted values use their displayed common index.}
+{At $n=4$, $T_4=10$ and $H_4=20$. The differences are $10-6=4$ and $20-10=10$. Separately, $4^2-3^2=7$ and $4^3-3^3=37$.}
+{Prefix summation raises polynomial degree; differencing lowers it. These are exact operators with boundary values at zero; the displayed difference identities apply for $n\ge1$.}
+{OEIS A000027, A000217, A000292, A000290, and A000578. Positive integers start at one; the other four families include index zero. Identities checked through $n=18$.}

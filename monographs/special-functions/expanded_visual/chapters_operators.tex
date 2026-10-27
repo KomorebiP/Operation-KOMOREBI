@@ -1,0 +1,26 @@
+\startvolume{Operator contracts}{Normalization, translation, and boundaries}
+
+\lesson{OPERATOR / 01}{Transport the operator with the normalization}{O01_factorial_transport}
+{\begin{gathered}(Na)_n=\frac{a_n}{n!},\qquad (Hb)_n=\sum_{k=0}^{\min(K,n)}h_kb_{n-k},\\
+(N^{-1}HN a)_n=\sum_{k=0}^{\min(K,n)}h_k(n)_k a_{n-k},\qquad (n)_k=\frac{n!}{(n-k)!}\end{gathered}}
+{The same stationary taps $(1,-1)$ are applied in two different coefficient coordinates. The top pair uses integer counts; the middle pair uses Taylor coefficients. Returning the latter output to count coordinates gives the bottom row. Its operator has index-dependent weights, rather than the original stationary taps.}
+{Start with $a_n=1$ for all $n\ge0$, so $b_n=1/n!$ and the EGF is $e^z$. Filtering the counts gives $(1,0,0,\ldots)$ and EGF $1$. Filtering the Taylor coefficients gives $(1-z)e^z$. Its count coordinates are $1-n$, beginning $1,0,-1,-2,\ldots$.}
+{A stationary Taylor FIR pulls back to counts as $N^{-1}HN$. Applying the same stationary weights in both coordinates is a different operation.}
+{Exact formal coefficient identity over $\mathbb Q$, $\mathbb R$, or $\mathbb C$; $n,K\ge0$ are integers and $h_0,\ldots,h_K$ are finite taps. Counts transported in the opposite direction use $NHN^{-1}$ with weights $h_k/(n)_k$ for $n\ge k$. Prefixes are not finite input cutoffs.}
+
+\lesson{OPERATOR / 02}{Bernoulli resolves a discrete antiderivative}{O02_bernoulli_antiderivative}
+{\begin{gathered}B_4(x)=x^4-2x^3+x^2-\frac1{30},\qquad B_4(x+1)-B_4(x)=4x^3,\\
+\frac{B_4(N)-B_4(0)}4=\sum_{k=0}^{N-1}k^3\qquad(N\ge0)\end{gathered}}
+{Each bar is a forward translation gap divided by four. The taps compare the polynomial at arguments $k+1$ and $k$; they do not shift its order or its Taylor-coefficient index. Adding the five visible gaps cancels all interior endpoint values. The two remaining Bernoulli endpoints determine the sum.}
+{For $N=5$, the gaps are $0,1,8,27,64$, totaling $100$. Also $B_4(5)=11999/30$ and $B_4(0)=-1/30$, so their difference is $400$. Division by four recovers exactly the same sum.}
+{Translation taps can turn a special function into an exact discrete primitive. Its additive constant disappears under differencing.}
+{Bernoulli-polynomial normalization from Paper I and sequence lesson S11, with $B_1=-1/2$. Expanding the stated polynomial proves its difference identity for every real or complex $x$; telescoping proves the integer sum. Exact sample checks cover $0\le N\le50$.}
+
+\lesson{OPERATOR / 03}{The boundary changes what an inverse can recover}{O03_boundary_inversion}
+{D_{\rm per}x[n]=x[n]-x[(n-1)\bmod4],\quad
+\ker D_{\rm per}=\langle\boldsymbol1\rangle,\quad
+\operatorname{im}D_{\rm per}=\left\{y:\sum_{n=0}^3y[n]=0\right\}}
+{The periodic cycle places two possible amplitudes at every node. Both inputs give the same edge differences because adding a constant changes no periodic difference. The causal panel uses the same taps $(1,-1)$ with zero extension. Its initial output and flushed tail retain the boundary information.}
+{The four-value inputs $(1,3,2,0)$ and $(6,8,7,5)$ both have periodic output $(1,2,-1,-2)$. Their causal outputs, including one zero flush, are $(1,2,-1,-2,0)$ and $(6,2,-1,-2,-5)$. In the periodic problem, fixing $x[0]=1$ reconstructs the first input uniquely.}
+{A periodic inverse requires zero-sum output and one initial value. Causal summation instead recovers the zero-extended input from its full difference stream.}
+{Exact four-periodic linear algebra over $\mathbb Q$ or $\mathbb R$. In the causal panel each four-value vector is zero outside indices $0$--$3$; adding five affects those stored values only. Equal periodic differences force a constant difference, while telescoping gives the zero-sum condition.}

@@ -1,0 +1,11 @@
+I–III final-PDF page review — complete
+
+All 36 assigned physical pages 14–49 (lessons 9–44) pass rendered visual QA at 110 dpi. The final PDF SHA-256 was independently read from the file: `3334d18814f2752ebd9a76ec965bf3165ea77119534b04896132d4ebabf4d530`.
+
+The initial review covered every assigned page through the nine contact sheets, with individual full-page inspection of physical pages 17, 18, 20, 23, 25, 28, 35, 36, 37, 40, 43, 44, 45, 47, 48, 49. Checks covered header/lesson sequence, figure labels and panel layout, central formulas, explanatory and worked-example text, carry-forward boxes, and source/scope footers. No clipping, formula overlap, missing footer, carry-box overflow, or further mathematical/scope defect was found. The zero atom, actual-modulus convention, Gaussian support interval, negative z-residues, all-moment bridge, fixed-degree limits, conditional cusp, and truncation-only scope remain visible.
+
+The sole minor issue was title crowding on physical page 17 (I04, lesson 12). Root authorized shorter subplot titles. Only I04 was regenerated; its numerical facts exactly match the prior audit. The final PDF page 17 was opened individually and now has clearly separated titles, readable labels, and correctly fitting formula/body/carry/footer. The issue is resolved; no open issue remains in this scope.
+
+The original reviewed render was identified by root with PDF SHA-256 `af226548d44092993141d7ca0794b5f82eaa13a7a20c6e5646b60dcf42e5832f`. `FINAL_RENDER_EQUIVALENCE.json` records the final render continuity. An independent decoded-RGB comparison of all 36 original/final page PNGs verified that pages 14–16 and 18–49 are pixel-identical. Their initial visual reviews therefore transfer to the final PDF; page 17 received the separate final recheck. Every final page-PNG hash also matched the equivalence report.
+
+This is rendered visual QA and conservative formula/source reading, not a new universal proof certification or a physical print proof. The contact overview covers every assigned page; individual inspection covers the listed dense or ambiguous pages. Truncation bands do not certify floating-point rounding, and readability at every display scale was not tested.

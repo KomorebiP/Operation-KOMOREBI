@@ -1,0 +1,47 @@
+\startvolume{Worked capstone}{One record through channels, residuals, and repair}
+
+\lesson{CAPSTONE / 01}{A finite record leaves endpoint impulses}{C01_finite_residual}
+{(1-z-z^2)P_N(z)=z-F_Nz^N-F_{N-1}z^{N+1},\qquad N\ge2}
+{The record is $x=(0,1,1,2,3,5,8,13)$ at indices zero through seven, with zero elsewhere. Apply the causal taps $(1,-1,-1)$ and retain all ten output positions. The green strip marks the surviving seed. The warm strip marks the two impulses created by ending the record.}
+{Write $P_8(z)=\sum_{n=0}^{7}F_nz^n$. Interior coefficients cancel by the Fibonacci recurrence. At index eight, the input has ended, so the output is $0-13-8=-21$. At index nine it is $0-0-13=-13$. Thus the complete output is $z-21z^8-13z^9$.}
+{A finite cutoff has a boundary residual even when every interior recurrence step is exact.}
+{Direct coefficient derivation, $P_N=\sum_{n=0}^{N-1}F_nz^n$, $F_0=0,F_1=1$. OEIS A000045 supplies the record. Exact finite checks cover $N=2$--$20$; the displayed general identity follows by collecting coefficients, not by extrapolating those checks.}
+
+\lesson{CAPSTONE / 02}{Transfer the whole residual into three channels}{C02_three_phase_residual}
+{A(C_3)=\begin{pmatrix}1&-u&-u\\-1&1&-u\\-1&-1&1\end{pmatrix},\qquad
+ A(C_3)f=\begin{pmatrix}-13u^3\\1\\-21u^2\end{pmatrix}}
+{Split the same eight input values into residues zero, one, and two. Each box holds an ordinary generating polynomial in the internal index. The matrix represents $A(z)=1-z-z^2$. Its factors of $u$ retain the coarse delay when a fine tap crosses a block boundary. Rows are output phases; columns are input phases.}
+{The input bank is $f=(2u+8u^2,\,1+3u+13u^2,\,1+5u)^T$. In row zero, subtracting $u$ times the other two channels leaves $-13u^3$. Synthesis of the output bank gives $-13z^9+z-21z^8$, precisely the scalar output in C01.}
+{Scalar filtering and full packet filtering agree, including the endpoint impulses.}
+{Direct carry calculation, $A(C_3)=I-C_3-C_3^2$, with $u=z^3$ under synthesis. Exact integer polynomial arithmetic checks the complete three-channel result and all ten synthesized output coefficients. No channel is discarded.}
+
+\lesson{CAPSTONE / 03}{An interior perturbation has its own signature}{C03_interior_defect}
+{Q=P_8+z^5,\qquad A(z)(Q-P_8)=z^5-z^6-z^7}
+{Change only the sample at index five from five to six. The top row shows that changed record. The bottom row shows the change in the filtered output, not the full output. A single input impulse meets three taps and therefore changes three consecutive residual positions. The seed and endpoint residuals stay unchanged.}
+{At index five, the perturbed output is $6-3-2=1$. At index six it is $8-6-3=-1$, and at index seven it is $13-8-6=-1$. The full output becomes $z+z^5-z^6-z^7-21z^8-13z^9$.}
+{Distinguish an interior model defect from the declared finite-record boundary.}
+{Exact one-sample perturbation experiment over the integers. The identity follows by linearity of multiplication by $A(z)$. This example identifies the consequences of its specified change; an arbitrary residual alone does not decide whether data or an assumed recurrence model is wrong.}
+
+\lesson{CAPSTONE / 04}{A discarded channel returns through the next operation}{C04_projection_obstruction}
+{\mathcal R_{2,0}(Q-P_8)=0,\qquad
+ \mathcal R_{2,0}\bigl(A(z)(Q-P_8)\bigr)=-u^3}
+{Switch from C02's three-phase bank to the modulus-two observation retaining even indices only. The two records from C03 have identical observed inputs. After the same filter, their even outputs differ at index six. A contribution from the discarded odd sample has crossed into a retained output.}
+{Both retained inputs are $u+3u^2+8u^3$. For $P_8$, the retained output is $-21u^4$. For $Q$, it is $-u^3-21u^4$. The coefficient of $u^3$ changes because the tap $-z$ carries the perturbation at index five to index six.}
+{A projection must retain the information needed by the next operator.}
+{Explicit finite counterexample, with $u=z^2$ under synthesis: no map $U$ on even input channels can satisfy $\mathcal R_{2,0}(A(z)P)=U(\mathcal R_{2,0}P)$ for every finite integer polynomial $P$. Equal arguments would force equal values. This does not rule out recovery under an additional model.}
+
+\lesson{CAPSTONE / 05}{Repair with a declared recurrence model}{C05_model_repair}
+{\begin{gathered}E_m=x[2m],\qquad a=E_0,\quad b=E_1-E_0,\\
+ E_2=3E_1-E_0,\qquad E_3=3E_2-E_1\end{gathered}}
+{Keep the modulus-two observation, and require the eight-value record to obey $x[n+2]=x[n+1]+x[n]$ for $n=0,\ldots,5$, with unknown seeds $(a,b)$. The first two even observations determine those seeds. The remaining two must pass the displayed consistency checks. The model then supplies the missing odd values.}
+{For $E=(0,1,3,8)$, the inferred seeds are $(0,1)$. The checks give $3\cdot1-0=3$ and $3\cdot3-1=8$. Rebuilding from the seeds gives odd values $(1,2,5,13)$ and restores C01's record. The perturbed $Q$ has the same observations but lies outside this recurrence family.}
+{A recovery hypothesis changes what the retained coordinates can identify.}
+{Direct finite-state derivation: the even values are $(a,a+b,2a+3b,5a+8b)$. The two checks are necessary and sufficient for a unique completion inside this length-eight recurrence family. Exact tests cover 49 integer seed pairs and 196 inconsistent observation cases. No claim of recovery for arbitrary records or noisy observations is made.}
+
+\lesson{CAPSTONE / 06}{Keep the history and the phase clock}{C06_streaming_clock}
+{S_n=(x[n-2],x[n-1];\ n\bmod3),\qquad
+ y[n]=x[n]-x[n-1]-x[n-2]}
+{Return to the modulus-three output bank and execute the same filter in chunks of lengths two, three, and three. Before processing fine index $n$, the state holds the two preceding samples and the phase receiving $y[n]$. Dashed lines are chunk boundaries. The shaded tail comes from two explicit zero inputs after the last real sample.}
+{After eight inputs, the history is $(8,13)$ and the next index is eight, phase two. The first zero gives $-21$ in phase two. The next gives $-13$ at index nine, phase zero. Continuing the clock yields output banks $(0,0,0,-13)$, $(1,0,0)$, and $(0,0,-21)$, exactly as in C02.}
+{A chunk boundary changes storage, while the filter history and global address continue.}
+{Exact direct-form streaming and output routing, with zero history initially. All 128 positive chunk compositions of this eight-value record are checked against whole-record convolution and routing, including the two-zero flush. The stated history describes this implementation; resetting the phase clock changes output addresses even if the arithmetic samples remain correct.}

@@ -1,0 +1,248 @@
+\startvolume{Paper V}{The log-Gamma phase-space atlas}
+
+\lesson{PAPER V / V01}{Normalize the log-Gamma window}{V01_log_gamma}
+{g_\alpha(y)=\Gamma(\alpha)^{-1/2}e^{\alpha y/2-e^y/2},\qquad
+ \int_{\mathbb R}|g_\alpha(y)|^2dy=1}
+{Read amplitude on the left and probability density on the right. A taller curve
+need not have more total probability. Changing the positive shape moves the
+active log position and changes its width, while the full squared integral
+stays one. The curves are unrenormalized crops: the shape $0.5$ window has a
+visible left tail beyond the page.}
+{For $\alpha=1.5$, substitute $u=e^y$. The norm becomes
+$\Gamma(1.5)^{-1}\int_0^\infty u^{0.5}e^{-u}du=1$.
+The mode is $y=\log(1.5)$, whereas the mean is
+$\psi(1.5)\approx0.036490$. Those two positions differ because the
+log-Gamma law is asymmetric. Its variance is approximately $0.934802$.}
+{Use the normalized window as the common input to every later transform.}
+{V Definition 2.1 and Proposition 2.2, source lines 339 and 369. Shapes
+$0.5,1.5,4$, $y\in[-7,3]$. Exact Gamma-CDF crop probabilities are recorded in
+the evidence ledger; the displayed crop is not the full norm.}
+
+\lesson{PAPER V / V02}{Build an ambiguity integral}{V02_ambiguity_integral}
+{A_\alpha(h,\eta)=\int g_\alpha(y+h/2)g_\alpha(y-h/2)e^{i\eta y}dy
+ =\frac{\Gamma(\alpha+i\eta)}{\Gamma(\alpha)}
+ \operatorname{sech}^{\alpha+i\eta}(h/2)}
+{First multiply the shifted windows. Their product localizes the integral
+before modulation is applied. The second panel separates the cosine and sine
+contributions to its complex value. Negative real or imaginary contributions
+are phases of the integrand, not negative probability weights. Integrating both
+components yields one centered ambiguity value.}
+{Take $\alpha=1.5$, $h=1.4$, and $\eta=0.8$. The closed formula gives
+approximately $0.536116-0.048326i$. Direct quadrature of the displayed
+definition agrees. At zero modulation the sine contribution vanishes; at zero
+displacement the two windows coincide and the remaining integral is the
+log-Gamma characteristic function. Neither operation changes the Fourier
+convention.}
+{Translation and modulation are joined by one precisely centered integral.}
+{V Theorem 3.1, ``Exact ambiguity formula,'' source line 404. Quadrature uses
+$y\in[-30,6]$, tolerance $2\times10^{-13}$; analytic omitted-amplitude bounds
+and numerical error estimates are recorded separately.}
+
+\lesson{PAPER V / V03}{Separate magnitude from wrapped phase}{V03_phase_space}
+{A_\alpha(h,\eta)=\frac{\Gamma(\alpha+i\eta)}{\Gamma(\alpha)}
+ e^{-(\alpha+i\eta)\log\cosh(h/2)}\ne0
+ \quad(h,\eta\in\mathbb R)}
+{The left panel measures overlap strength. The right panel records the
+argument modulo $2\pi$, so its sharp color transitions may be phase wraps.
+They do not indicate a zero or discontinuity of the complex function.
+Increasing displacement suppresses magnitude through the hyperbolic factor.
+Increasing modulation introduces the separate Gamma envelope and its phase.}
+{At the origin the value is exactly one. At $h=\log4$ and $\eta=0$, its
+value is $(4/5)^{3/2}\approx0.715542$. At nonzero modulation, use the same
+formula with a complex exponent. The real logarithm of $\cosh(h/2)$ fixes
+that exponent without a branch ambiguity on the real plane. The Gamma
+function has no zeros, which supplies the nonvanishing proof.}
+{A phase wrap is a plotting convention; a zero is a mathematical event.}
+{V Theorem 3.1 and Corollary 3.2, source lines 404 and 447. Shape $1.5$;
+101-by-101 samples on $[-5,5]\times[-4,4]$. A positive sampled minimum is
+finite evidence, not the universal nonvanishing argument.}
+
+\lesson{PAPER V / V04}{Raise shape and read its differential equation}{V04_shift_differential}
+{\begin{aligned}
+ A_{\alpha+1}&=\frac{\alpha+i\eta}{\alpha}
+ \operatorname{sech}(h/2)A_\alpha,\qquad \nu=\alpha+i\eta,\\
+ [-4\partial_h^2-\nu(\nu+1)\operatorname{sech}^2(h/2)]A_\alpha
+ &=-\nu^2A_\alpha.
+ \end{aligned}}
+{The first panel compares two constructions of the raised shape: direct
+evaluation and the Gamma recurrence. The second shows the potential coefficient
+in the differential equation. Both its real and imaginary parts matter when
+modulation is nonzero. This complex equation should not be silently read as a
+self-adjoint Hamiltonian with a real energy.}
+{For $\alpha=1.5$ and $\eta=0.8$, raising shape multiplies the kernel by
+$(1.5+0.8i)\operatorname{sech}(h/2)/1.5$. At $h=1.4$, the result is
+approximately $0.447661+0.189299i$. Differentiate
+$\operatorname{sech}^{\nu}(h/2)$ twice to obtain the displayed equation.
+The Gamma prefactor is independent of $h$, so it survives unchanged in
+this derivative calculation.}
+{One recurrence and one differential equation describe the same kernel.}
+{V Proposition 3.3 and Theorem 3.4, source lines 466 and 491.
+$h\in[-5,5]$; derivatives are evaluated analytically. The residual checks
+floating-point evaluation of the identity, not a discretized spectral problem.}
+
+\lesson{PAPER V / V05}{Transform the window into a Gamma envelope}{V05_fourier_gamma}
+{\widehat g_\alpha(\omega)=
+ \frac{2^{\alpha/2-i\omega}\Gamma(\alpha/2-i\omega)}
+ {\sqrt{2\pi\Gamma(\alpha)}},\qquad
+ \rho_\alpha(\omega)=|\widehat g_\alpha(\omega)|^2}
+{Keep the unitary convention
+$\widehat f=(2\pi)^{-1/2}\int f(y)e^{-i\omega y}dy$ beside the plot.
+The Fourier amplitude has real and imaginary parts, even though the starting
+window is real. Squaring its magnitude removes the carrier phase and gives
+the positive Meixner density. The second panel compares these equivalent
+density constructions.}
+{Set $u=e^y$. The transform becomes the Gamma integral with exponent
+$\alpha/2-i\omega$ and scale $1/2$. For $\alpha=1.5$, evaluating this
+integral at frequencies $-2,0,2$ agrees with the closed envelope. Conjugating
+the value at $2$ gives the value at $-2$, as required for a real position
+window. The positive density is consequently symmetric in frequency.}
+{Preserve the Fourier sign before comparing phases or polynomial bases.}
+{V Theorem 4.1, source line 540. Frequency crop $[-5,5]$. Independent
+quadrature uses $y\in[-30,6]$ with explicit amplitude-tail bounds. The
+ledger separates the quadrature estimate from the omitted integral.}
+
+\lesson{PAPER V / V06}{Read depth overlap as a characteristic function}{V06_meixner_overlap}
+{\rho_\alpha(\omega)=\frac{2^{\alpha-1}}{\pi\Gamma(\alpha)}
+ |\Gamma(\alpha/2+i\omega)|^2,\qquad
+ \int\rho_\alpha(\omega)e^{ih\omega}d\omega
+ =\operatorname{sech}^{\alpha}(h/2)}
+{The two panels express one probability law in frequency and characteristic
+coordinates. Larger shape broadens the frequency density because its variance
+is $\alpha/4$. Its characteristic function then narrows in displacement.
+The right curve is also the zero-modulation ambiguity slice, so it has the
+same depth-overlap interpretation as the arithmetic limit.}
+{Take $\alpha=1.5$ and a four-to-one depth ratio. Then $h=\log4$ and
+$\cosh(h/2)=5/4$. The exact overlap is
+$(4/5)^{3/2}\approx0.715542$. This is a transform identity for the
+continuous window. A finite squarefree arithmetic packet approaches it under
+the compact ratio and time hypotheses of V Theorem 1.1; the identity alone
+does not give a finite-depth error bound.}
+{The arithmetic scale overlap becomes an exact Meixner characteristic law.}
+{V Corollary 4.2, source line 582. Shapes $0.5,1.5,4$. Density crop
+$[-5,5]$ is not renormalized. Full-line adaptive cosine quadrature checks
+$h=0,\log4$ with declared numerical tolerance.}
+
+\lesson{PAPER V / V07}{Resolve the negative Wigner lobes}{V07_wigner_negative}
+{W_\alpha(y,\omega)=\frac1{2\pi}\int
+ g_\alpha(y+h/2)g_\alpha(y-h/2)e^{-i\omega h}dh
+ =\frac{2e^{\alpha y}}{\pi\Gamma(\alpha)}K_{2i\omega}(e^y)}
+{The left panel shows three exact position slices. The right enlarges the
+small lobes around zero. A negative value is meaningful here: the Wigner
+function records phase-space interference and is not a pointwise probability
+density. Its frequency symmetry does not remove those negative regions.
+Changing position changes where the oscillatory Bessel lobes appear.}
+{For $\alpha=1.5$, $y=0$, and $\omega=2$, the exact expression is
+$2K_{4i}(1)/(\pi\Gamma(1.5))\approx-0.00155215$.
+The integral remains real because its sine part is odd in the displacement
+variable. Negative phase-space values therefore coexist with real-valued
+Wigner slices. Integrating over an entire coordinate produces positive
+marginals, which is the next lesson's separate statement.}
+{Wigner negativity and positive probability marginals are compatible.}
+{V Theorem 5.1, source line 615. Shape $1.5$; $y=-1,0,1$ and 241
+frequency samples on $[0,4]$. Modified Bessel values use 60-digit working
+precision; smooth lines connect finite samples.}
+
+\lesson{PAPER V / V08}{Project Wigner onto its probability marginals}{V08_wigner_marginals}
+{\int_{\mathbb R}W_\alpha(y,\omega)d\omega=|g_\alpha(y)|^2,
+ \qquad
+ \int_{\mathbb R}W_\alpha(y,\omega)dy=\rho_\alpha(\omega)}
+{Integrating over frequency leaves the position density; integrating over
+position leaves the frequency density. The figure draws these proved exact
+marginals directly. It does not integrate a cropped Wigner image, which would
+discard part of an oscillatory integral. The shaded regions show only the
+probability mass inside the visible windows.}
+{At shape $1.5$, the position mean is
+$\psi(1.5)\approx0.036490$ and the frequency mean is zero. The position
+variance is $\psi_1(1.5)\approx0.934802$, while the frequency variance is
+$1.5/4=0.375$. Thus the two marginal widths differ. The negative value from
+the previous lesson disappears only after complete marginal integration,
+not because the Wigner function has become pointwise positive.}
+{A projection can be positive even when the joint phase-space representation is not.}
+{V Corollary 5.2, source line 649. Position crop $[-7,3]$, frequency crop
+$[-5,5]$. Gamma-CDF position mass and adaptively integrated frequency mass
+are recorded; no truncated-image marginal identity is asserted.}
+
+\lesson{PAPER V / V09}{Compare uncertainty with orbit geometry}{V09_uncertainty_metric}
+{\Delta Y\Delta P=\tfrac12\sqrt{\alpha\psi_1(\alpha)}>\tfrac12,
+ \qquad g_{uu}=\alpha/4,\qquad
+ g_{\eta\eta}=\psi_1(\alpha)}
+{Follow the uncertainty curve toward the dashed lower bound. It approaches
+that bound with increasing shape but remains strictly above it at every
+finite shape. The second panel reads the same position and momentum variances
+as metric coefficients of a fixed-shape Weyl orbit. Translation sensitivity
+increases while modulation sensitivity decreases.}
+{At $\alpha=1.5$, the momentum variance is $0.375$ and the position
+variance is approximately $0.934802$. Their square-root product is
+$0.592073$, greater than $1/2$. The quantum Fisher coefficients in these
+two orbit directions are four times the metric, namely $1.5$ and
+approximately $3.739209$. These are local parameter sensitivities, not a
+claim that the packet is Gaussian at finite shape.}
+{Uncertainty and geometric sensitivity use the same exact packet variances.}
+{V Theorem 6.1 and Proposition 6.2, source lines 678 and 748.
+Shapes $0.2\leq\alpha\leq30$. This is the translation/modulation metric
+at fixed shape; mixed coefficients involving changing shape are not inferred.}
+
+\lesson{PAPER V / V10}{Create orthogonal Laguerre packets}{V10_laguerre_gram}
+{\Lambda_{n,\alpha}(y)=\sqrt{\frac{n!}{\Gamma(n+\alpha)}}
+ e^{\alpha y/2-e^y/2}L_n^{(\alpha-1)}(e^y),\qquad
+ \int\Lambda_{n,\alpha}\Lambda_{m,\alpha}dy=\delta_{nm}}
+{Each degree adds oscillations around the same envelope. A point where two
+curves cross does not determine their inner product. Orthogonality is the
+weighted integral over the entire position line. The second panel displays
+the degree-zero through degree-four Gram matrix, computed in the transformed
+Gamma coordinate rather than by integrating the cropped curves.}
+{Use $u=e^y$. The inner product becomes a generalized Laguerre integral
+with weight $u^{\alpha-1}e^{-u}$. At $\alpha=1.5$, products of the shown
+polynomials have degree at most eight. A 48-node generalized Gauss--Laguerre
+rule integrates such polynomial products exactly in mathematical arithmetic.
+Its small recorded residual measures floating-point implementation, whereas
+the full orthogonality theorem covers all degrees.}
+{A common envelope becomes an orthogonal basis through its natural weight.}
+{V Theorem 7.1, source line 803. Shape $1.5$, degrees $0$ through $4$;
+position curves cropped to $[-5,3]$. The Gram uses 48 weighted nodes,
+whose exact polynomial range extends through degree 95.}
+
+\lesson{PAPER V / V11}{Keep Fourier phases in the common ladder}{V11_fourier_ladder}
+{\begin{aligned}
+ \widehat\Lambda_{n,\alpha}(\omega)&=i^n\widehat g_\alpha(\omega)
+ p_{n,\alpha}(\omega),\\
+ J_L&=2K_0-K_+-K_-,\qquad J_M=(K_++K_-)/2.
+ \end{aligned}}
+{The first panel retains the degree phase $i^n$. Dropping it would replace
+the actual Fourier-transformed position basis with a different frequency
+basis. The second compares neighbor weights of the two real polynomial
+recurrences. Their coefficients come from one abstract ladder, although
+their signs and scaling differ between coordinate realizations.}
+{At shape $1.5$, the first raising coefficient is
+$\sqrt{1.5}$. The Laguerre neighbor has its negative, while the real
+Meixner polynomial recurrence uses half that magnitude. Test
+$[K_-,K_+]=2K_0$ on a finite-support basis vector below the truncation
+boundary. A six-dimensional cut satisfies the interior calculation but has
+a top-row defect because its last raising operation was removed.}
+{Coordinate changes retain degree phases and infinite-basis boundary conditions.}
+{V Theorems 8.1 and 9.1, source lines 855 and 917. Shape $1.5$; four
+Fourier packet curves and a six-dimensional ladder cut. The audit records
+both the small interior residual and the nonzero top-boundary defect.}
+
+\lesson{PAPER V / V12}{Extend the arithmetic depth continuously}{V12_fractional_depth}
+{C_{a,\beta}(r,0)=\sum_{j\geq0}(-1)^j\binom rj
+ \zeta(a+\beta j)^{-1}
+ =\sum_{j\geq0}(-1)^j\binom rj
+ [\zeta(a+\beta j)^{-1}-1],\quad r>0}
+{The left curve embeds the integer signed orbit in a smooth positive-depth
+parameter. The right measures differences from a finite $J=80$ reference for
+two equivalent infinite binomial coordinates.
+The original finite partial sum retains an artificial remainder from the
+unit packet. Subtracting one removes that packet and accelerates the displayed
+finite reconstruction. These are signed amplitudes, not positive densities.}
+{Choose arithmetic parameters $a=\beta=2$ and depth $r=2.5$. The direct
+sieve sums $\mu(n)n^{-2}(1-n^{-2})^{2.5}$ through $N=200000$.
+For $r>0$, the full generalized binomial coefficient sum is zero, which
+justifies the centered reciprocal-zeta series. At integer depths that series
+terminates. Increasing its last index improves the plotted comparison but
+does not constitute a universal infinite-series error certificate.}
+{Continuous arithmetic depth preserves the unit-packet boundary and signed character.}
+{V Theorems 10.1 and 10.2, source lines 995 and 1020. $a>1$ is required
+for the stated absolute exchanges. Direct cutoff tail is at most $1/N$;
+the reference is an 80-index binomial sum at 60-digit precision. The log plot
+floors differences at $10^{-18}$.}

@@ -1,0 +1,56 @@
+\startvolume{Foundations}{Read the packet language}
+\lesson{FOUNDATIONS / 01}{An exponent becomes an address}{F01_coefficient_addresses}
+{n=Mm+r,\qquad F_{M,r}(u)=\sum_{m\ge0}a_{Mm+r}u^m}
+{Read each row as a residue class and each column as its internal index. The figure lists the first eighteen exponents at modulus three. Every number occurs once. The row selects a packet; the column tells that packet where the coefficient belongs.}
+{For exponent $14$, divide by three: $14=3\cdot4+2$. Its coefficient is the coefficient of $u^4$ in $F_{3,2}$. Multiplying this term by $z^2$ and substituting $u=z^3$ restores $a_{14}z^{14}$. No coefficient has been averaged or discarded.}
+{A packet address is a reversible coordinate for a coefficient. It is useful before any special-function identification is made.}
+{Paper I, ``Residue-section functions'' and ``Exact polyphase reconstruction.'' The displayed address table is exact integer arithmetic.}
+
+\lesson{FOUNDATIONS / 02}{Refinement preserves every address}{F02_refinement_addresses}
+{F_{M,r}(u)=\sum_{\ell=0}^{L-1}u^\ell F_{LM,r+M\ell}(u^L)}
+{Start at either parent on the left and follow its three arrows. Refining modulus two by three produces modulus six. The children of the even parent are addresses $0,2,4$; those of the odd parent are $1,3,5$. The factor $u^\ell$ keeps the child offset.}
+{Take $M=2$, $r=1$, and parent index $m=7$. Split $7=3\cdot2+1$. The original exponent is $2\cdot7+1=15$, and its refined address is $6\cdot2+3=15$. The coefficient passes to child $r+M\ell=3$ at internal index two.}
+{Refinement reorganizes the same coefficients. Parent and child indices must be tracked together.}
+{Paper I, ``Parent-child refinement'' and the coefficient refinement identity in the consolidated manuscript. This diagram uses $M=2$, $L=3$.}
+
+\lesson{FOUNDATIONS / 03}{Multiplication carries between packets}{F03_carry_matrix}
+{C_3(u)=\begin{pmatrix}0&0&u\\1&0&0\\0&1&0\end{pmatrix},\qquad \mathcal S_3(C_3 f)=z\mathcal S_3(f)}
+{Read matrix columns as input addresses and rows as output addresses. Multiplication by $z$ advances addresses zero to one and one to two. Address two wraps to zero, bringing one factor of $u=z^3$. The right panel evaluates this carry at $u=0.4$.}
+{For the constant packet vector $(1,2,3)^T$, synthesis gives $1+2z+3z^2$. The carried vector is $(3u,1,2)^T$, whose synthesis is $3z^3+z+2z^2$. This is exactly $z(1+2z+3z^2)$. At $u=2/5$, its entries are $(6/5,1,2)$.}
+{A scalar operation can become a small matrix operation, with the wrap recorded explicitly.}
+{Paper I, ``Intertwining laws.'' The matrix and polynomial identity are exact; the bars evaluate one rational parameter.}
+
+\lesson{FOUNDATIONS / 04}{A detail bank separates average and variation}{F04_unitary_detail_bank}
+{W_j=L^{-1/2}\sum_{\ell=0}^{L-1}e^{-2\pi i j\ell/L}b_\ell,\qquad \sum_j|W_j|^2=\sum_\ell|b_\ell|^2}
+{The left panel has four child amplitudes. The right shows their unitary discrete Fourier channel energies. Channel zero is the aggregate; the other channels encode variation among children. Because the transform is unitary, energy is preserved, even though the original real amplitudes can become complex.}
+{For $b=(1,2,4,1)$, the channels are $4$, $(-3-i)/2$, $1$, and $(-3+i)/2$. Their energies are $16$, $5/2$, $1$, and $5/2$, totaling $22$. The inverse transform restores all four children. Keeping only channel zero would discard the details.}
+{A reversible detail bank needs all channels. Aggregation alone is a projection.}
+{Paper I, the unitary child bank. This four-child example uses exact integer inputs and algebraic DFT values; numerical Parseval is also checked.}
+
+\lesson{FOUNDATIONS / 05}{Separate routing error from truncation error}{F05_identity_and_truncation}
+{P_{12}(z)=\sum_{n=0}^{12}\frac{z^n}{n!},\qquad |e^z-P_{12}(z)|\le e^2\frac{2^{13}}{13!}\quad(0\le z\le2)}
+{The first panel overlays the exponential and its degree-twelve truncation. The second enlarges the small remainder and its Taylor bound. Reconstructing the finite polynomial from three packets introduces no mathematical routing error. Approximating the infinite exponential by that polynomial does introduce a remainder.}
+{The three finite packets use exactly the coefficients with $3m+r\le12$. Their synthesized sum is $P_{12}$. At real $z=2$, Taylor's theorem bounds the omitted tail by $e^2 2^{13}/13!$, about $9.72\times10^{-6}$. The figure plots the actual remainder in millionths.}
+{An exact coordinate identity can coexist with a numerical approximation. Report the approximation at the stage where it enters.}
+{Paper I reconstruction, illustrated with $F=e^z$. Degree twelve, real domain $[0,2]$; the remainder bound is the elementary Taylor bound.}
+
+\lesson{FOUNDATIONS / 06}{Positive energy does not retain interference}{F06_phase_and_power}
+{\left|\frac45+\frac35e^{i\phi}\right|^2=1+\frac{24}{25}\cos\phi}
+{The solid curve is coherent power as the relative phase changes. The dashed line keeps only the sum of the two component energies. The latter is constant, while the coherent value can be almost canceled or almost doubled. Removing cross terms changes the information being represented.}
+{Both component energies sum to $(4/5)^2+(3/5)^2=1$. At phase zero the coherent power is $49/25$. At phase $\pi$ it is $1/25$. Averaging uniformly over a full phase period gives one because the cosine term has zero mean.}
+{A positive diagonal lift is valuable, but a bound on it alone does not recover a signed or coherent cancellation estimate.}
+{An exact two-component teaching model for the distinction used in Papers I, IV, VII, and VIII. It is not an arithmetic cancellation theorem.}
+
+\lesson{FOUNDATIONS / 07}{One measure creates a sequence of moments}{F07_measure_and_moments}
+{E_k=\sum_jw_jx_j^k,\qquad c^THc=\sum_jw_j\left(\sum_rc_rx_j^r\right)^2\ge0}
+{The left panel shows three atoms and their positive weights. The right plots nine moments of this same measure. Higher powers favor atoms nearer one. The zero atom contributes to $E_0$ and disappears from positive moments, so discarding it would change the starting value.}
+{Use nodes $(0,2/5,17/20)$ and weights $(1/5,3/10,1/2)$. Then $E_0=1$, $E_1=109/200$, and $E_2=1637/4000$. The three-by-three Hankel matrix is positive definite because a nonzero quadratic cannot vanish at all three distinct atoms. The four-by-four matrix is singular because this toy support has only three points.}
+{Strict positivity at every size requires enough support. The arithmetic source measure has infinitely many distinct atoms.}
+{Papers II--III positive-moment construction. This explicitly finite teaching measure has rank three; its moments and determinant are computed with rational arithmetic.}
+
+\lesson{FOUNDATIONS / 08}{Parameters have different mathematical jobs}{F08_parameter_domains}
+{\alpha=\frac{2a-1}{\beta}>0,\qquad \kappa=\frac\alpha2}
+{The curves convert arithmetic decay $a$ and scale exponent $\beta$ into a positive Gamma shape. The shaded strip marks $1/2<a\le1$: positive energy is defined there, while the absolutely convergent signed transfer uses $a>1$. The table continues each shape to its ordinary ladder label.}
+{For $a=2$ and $\beta=2$, the shape is $\alpha=3/2$ and the ladder parameter is $\kappa=3/4$. This parameter choice differs from the half-shape recoupling example $\kappa=1/2$. Also distinguish an integer character modulus from the real deformation parameter $0<q\le1$ used in Paper VIII.}
+{Follow the declared parameter domain whenever a formula crosses from arithmetic packets to continuous shapes or finite recoupling.}
+{Consolidated Chapters 1--3; Papers II, V, and VII. The table is exact rational arithmetic, and the curves show the stated parameter map.}

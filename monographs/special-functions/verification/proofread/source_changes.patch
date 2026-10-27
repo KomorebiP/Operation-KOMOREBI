@@ -1,0 +1,1556 @@
+--- before/monograph/evidence_notes.tex
++++ after/monograph/evidence_notes.tex
+@@ -10,17 +10,18 @@
+ Scalar examples and the explicit real type constants are displayed at
+ high precision separately from exact assertions.
+ 
+-The finite checks do not prove a universal analytic theorem, normal
+-convergence, or historical novelty. Those depend on the proofs in Appendix~A. No
+-numerical type-limit fit is presented as evidence that a limit exists.
++The finite checks do not establish universal analytic conclusions.
++The growth and convergence results depend on the proofs in Appendix~A.
++Historical priority is a separate literature question. No numerical fit is
++presented as evidence that a type limit exists.
+ 
+ The earlier moving-width lower argument used a fixed \(\alpha<1\); it
+ proved orders below \(\rho\) and then recovered the order by
+ \(\alpha\uparrow1\), but did not establish positive lower type at
+ \(\rho\). This is a limitation of that argument, not a counterexample.
+ The fixed-width comparison closes precisely that missing implication.
+-Any execution failure of the new finite checks is recorded with its
+-cause and retained run metadata rather than erased.
++The evidence archive retains execution failures, their causes and the
++subsequent corrected runs.
+ 
+ 
+ \hypertarget{v11-coupled_growth_full-proof-provenance-and-remaining-questions}{%
+@@ -40,7 +41,7 @@
+ premise. The displayed rational Taylor coefficients were evaluated
+ directly from the exact recurrence with Python
+ \texttt{fractions.Fraction} as a transcription check. Their independent
+-formal residual checks belong to the release's exact computation record.
++algebraic residual checks belong to the archived exact computation record.
+ 
+ Remaining questions include the existence and value of ordinary type
+ limits, possible oscillations, zeros, angular growth, connection
+@@ -49,11 +50,11 @@
+ here. This route makes no historical priority claim and no claim of a
+ Lean formalization.
+ 
+-Self-review coverage: this entire file. Routine checks: consistent
+-coefficient and eigenvector notation, domains for every logarithm and
+-power, seed and child interval endpoints, and both vector orientations.
+-No unresolved mathematical gap was identified in the author's
+-self-review. Independent review remains a separate record.
++The preserved self-review checked coefficient and eigenvector notation,
++logarithm and power domains, seed and child interval endpoints, and both
++vector orientations. Its recorded conclusion was that no unresolved gap had
++been identified in that argument. This is a statement about the scope and
++outcome of that review, not a substitute for independent verification.
+ 
+ 
+ \hypertarget{v11-coupled_inverse_full-verification-scope}{%
+--- before/monograph/main.tex
++++ after/monograph/main.tex
+@@ -59,7 +59,7 @@
+ 
+ \claim{An established diagonal antecedent}
+ The equation $f_q'(z)=1+f_q(qz)^2$, $f_q(0)=0$, is already present in
+-Miguel A. M\'endez's 2024 path-length paper, Example 2.4. It remains an
++M\'endez~\cite[Example~2.4]{Mendez2024}. It remains an
+ important baseline, but its definition is not a discovery of this project.
+ The asymmetric extension keeps two separate contractions and permits a
+ proved distinction from every amplitude/argument rescaling of that baseline.
+@@ -70,7 +70,7 @@
+ implementations within recorded ranges. None of these three forms of evidence
+ establishes historical priority by itself.
+ 
+-The source files preserve extended arguments, independent reviews, negative controls, and open questions. A separate evidence register records the exact files and calculations reviewed.
++The source archive preserves extended arguments, earlier review records, negative controls, and open questions. The evidence register distinguishes those records from the checks performed for this edition.
+ 
+ 
+ \mainmatter
+@@ -108,8 +108,8 @@
+ \[
+ \boxed{\rho(T_{q,r})=\rho\quad\text{where}\quad q^\rho+r^\rho=1.}
+ \]
+-Here $\rho(f)=\limsup_{R\to\infty}\log\log M_f(R)/\log R$ is entire-function
+-order. Moreover $\log M_{T}(R)=O(R^\rho)$: the upper type is finite.
++Here $M_f(R)=\max_{|z|=R}|f(z)|$ and
++$\rho(f)=\limsup_{R\to\infty}\log\log M_f(R)/\log R$ is the order of an entire function. Moreover $\log M_{T}(R)=O(R^\rho)$: the upper type is finite.
+ \smallfig{02_order_atlas}{The displayed values numerically solve the proved
+ characteristic equation. Colors saturate at order 7; the upper corner contains
+ larger orders. The dashed diagonal is the previously known one-scale family.}
+@@ -133,7 +133,7 @@
+ Comparison with $CR^\rho$ proves the upper bound; comparison with
+ $cR^{\rho_\alpha}$, where $(\alpha q)^{\rho_\alpha}+
+ (\alpha r)^{\rho_\alpha}=1$, proves the lower bound. Letting $\alpha\uparrow1$
+-gives the same order. A complete interval-induction proof is in the source route.
++gives the same order. The complete interval-induction proof is given in Appendix~\ref{app:growth}.
+ 
+ \input{sections/dilation_growth.tex}
+ 
+@@ -159,7 +159,7 @@
+ \frac{p^3(3-p^2)}{315}\quad\text{and}\quad\frac{11p^3}{1260}.
+ \]
+ Their equality forces $p=1/2$ and again $(q-r)^2=u-2p=0$.
+-This handles the exceptional order rather than assuming it away.
++This completes the exceptional-order case.
+ 
+ \claim{A worked order-one member}
+ \[
+@@ -184,7 +184,7 @@
+ This is a precise separation result from one authenticated antecedent.
+ It does not prove that no earlier author studied the asymmetric equation.
+ 
+-\pageheading{FAMILY 1\; /\; TAPS}{Feedback banks and weak-channel sensitivity}
++\pageheading{FAMILY 1\; /\; TAPS}{Feedback banks and weak-channel sensitivity}\label{sec:banks}
+ Choose finitely many channels $j=1,\ldots,J$, with $h_j>0$, $\sum_jh_j=1$,
+ and $0<q_j,r_j<1$. Define
+ \[
+@@ -200,7 +200,7 @@
+ \[
+ \boxed{\rho(F_\Theta)=\max_{j\text{ active}}\rho_j.}
+ \]
+-The positive weights alter local coefficients; the most expansive active
++The positive weights alter local coefficients. The most expansive active
+ channel determines the asymptotic order. A zero-weight channel is removed
+ before taking the maximum.
+ \fig{07_weak_tap}{A two-channel example: scales $(1/4,1/4)$ with weight
+@@ -232,15 +232,23 @@
+ \mu(n)^2n^{-2a}(1-n^{-\beta})^{2s},\qquad s\in\mathbb C.}
+ \]
+ The complex power uses the real logarithm of $1-n^{-\beta}>0$.
+-The atom $n=1$ is excluded because it has no such logarithm. Thus positive
+-integer depths match the inherited energy, while $A(0)=E(0)-1$.
++The atom $n=1$ is excluded because its logarithm is undefined. At positive
++integer depths its omitted contribution would be zero. At depth zero the
++corresponding mass-one atom is absent. In particular, $A(0)=Z_Q(2a)-1$, where
++\[
++Z_Q(v)=\sum_{\substack{n\ge1\\(n,Q)=1}}\mu(n)^2n^{-v}
++=\frac{\zeta(v)}{\zeta(2v)}\prod_{p\mid Q}(1+p^{-v})^{-1},\qquad v>1.
++\]
+ \fig{03_complex_depth}{Left: $a=\beta=2$ at real depths, using the exact
+ zeta--Newton representation at 90-digit working precision. Right: initial
+ squarefree frequencies and weights for $Q=1$. Only finitely many atoms are
+ shown; the proof uses the infinite support.}
+-Set $\lambda_n=-2\log(1-n^{-\beta})$. Then
+-$A(s)=\sum w_ne^{-\lambda_ns}$, $w_n=\mu(n)^2n^{-2a}$.
+-The weights are summable, and the distinct frequencies decrease to zero.
++Let $\mathcal S_Q=\{n\ge2:\mu(n)^2=1,\ (n,Q)=1\}$ and
++$\lambda_n=-2\log(1-n^{-\beta})$. Then
++\[
++A(s)=\sum_{n\in\mathcal S_Q}w_ne^{-\lambda_ns},\qquad w_n=n^{-2a}.
++\]
++The positive weights are summable, and the distinct support frequencies decrease to zero.
+ If $p_*$ is the least prime not dividing $Q$, then
+ \[
+ \tau=-2\log(1-p_*^{-\beta}),\qquad M=\Z(2a)-1,
+@@ -253,11 +261,8 @@
+ and exponential type $\tau$.
+ 
+ \pageheading{FAMILY 2\; /\; CALCULUS}{Closed shifts, infinite differential complexity}
+-Write
+-\[
+-\Z(v)=\frac{\zeta(v)}{\zeta(2v)}\prod_{p\mid Q}(1+p^{-v})^{-1},\qquad v>1.
+-\]
+-Only $\operatorname{rad}(Q)$ matters. Expansion of the depth factor gives
++The Euler product for $Z_Q$ shows that only
++$\operatorname{rad}(Q)=\prod_{p\mid Q}p$ matters. Expansion of the depth factor gives
+ \[
+ \boxed{\A(s+1)=\A(s)-2A_{a+\beta/2,\beta,Q}(s)
+ +A_{a+\beta,\beta,Q}(s).}
+@@ -274,7 +279,7 @@
+ decay geometrically. The subtraction of one is essential at noninteger depth.
+ 
+ \claim{No polynomial-coefficient linear ODE}
+-Suppose $\sum_{j=0}^{r}P_j(s)A^{(j)}(s)=0$ with polynomial $P_j$.
++Suppose $\sum_{j=0}^{r}P_j(s)A^{(j)}(s)=0$, where the $P_j$ are polynomials and are not all zero.
+ At $s=-t$, divide by the exponential of the first support atom. The remaining
+ tail is exponentially smaller, so the polynomial
+ $\sum_jP_j(-t)(-\lambda_{p_*})^j$ tends to zero exponentially and must vanish
+@@ -306,7 +311,7 @@
+ \delta_Q=\frac1{\zeta(2)}\prod_{p\mid Q}\frac{p}{p+1}.
+ \]
+ As $|s|\to\infty$ in any closed sector
+-$|\arg s|\le\pi/2-\epsilon$ with $\epsilon>0$,
++$|\arg s|\le\pi/2-\epsilon$ with $0<\epsilon<\pi/2$,
+ \[
+ \boxed{\A(s)=\frac{\delta_Q}{\beta}B(\alpha,2s+1)
+ +O_{a,\beta,Q,\epsilon}\left(|s|^{-(2a-1/2)/\beta}\right).}
+@@ -381,8 +386,12 @@
+ norms, real simple zeros in $(0,1)$, and interlacing.
+ 
+ \pageheading{FAMILY 3\; /\; BOUNDARY}{Finite positivity can conceal a signed defect}
+-Split $\nu_{p,\lambda}=\nu_{\mathrm{non}p}+(1+\lambda)\nu_p$.
+-Let $A_m,B_m$ be their order-$m$ Hankel matrices. Both are positive definite.
++Let $\nu_{\mathrm{non}p}$ and $\nu_p$ be the restrictions of the
++undeformed measure $\nu_{p,0}$ to indices not divisible by $p$ and divisible
++by $p$, respectively. Then
++$\nu_{p,\lambda}=\nu_{\mathrm{non}p}+(1+\lambda)\nu_p$.
++Let $A_m,B_m$ be the order-$m$ Hankel matrices of these two unscaled
++positive measures. Both are positive definite.
+ Thus
+ \[
+ \tau_m(\lambda)=\det(A_m+(1+\lambda)B_m)
+@@ -396,7 +405,7 @@
+ violates positivity even though it can pass low-order checks.}
+ The nearest root is $-1-\delta_m$, with
+ \[
+-\delta_m=\min_{0\ne f,\,\deg f<m}
++\delta_m=\min_{\substack{f\in\mathbb R[x]\setminus\{0\}\\\deg f<m}}
+ \frac{\int f^2\dd\nu_{\mathrm{non}p}}{\int f^2\dd\nu_p}>0,
+ \qquad\delta_m\downarrow0.
+ \]
+@@ -419,7 +428,7 @@
+ P_m^{(k+1)}(x)=\frac{P_{m+1}^{(k)}(x)
+ -[P_{m+1}^{(k)}(0)/P_m^{(k)}(0)]P_m^{(k)}(x)}{x}.
+ \]
+-The numerator vanishes at zero; all roots are positive, so the displayed
++The numerator vanishes at zero. All roots are positive, so the displayed
+ denominator coefficient is nonzero. For shifted Hankel determinants $\tau_m^{(k)}=\det[M_{k+i+j}]_{i,j<m}$,
+ with $\tau_0^{(k)}=1$,
+ \[
+@@ -431,7 +440,9 @@
+ 
+ \claim{An endpoint mass is numerically delicate}
+ For the undeformed depth-zero measure, set $\nu_\theta=\nu+\theta\delta_0$,
+-$\theta\ge-1$. If $K_m(x,y)=\sum_{j=0}^{m}P_j(x)P_j(y)/h_j$, the Uvarov formula is
++$\theta\ge-1$. Write $h_j=\int P_j(x)^2\dd\nu(x)$ and
++$K_m(x,y)=\sum_{j=0}^{m}P_j(x)P_j(y)/h_j$.
++The Uvarov formula~\cite{Uvarov1969} is
+ \[
+ P_m^{[\theta]}(x)=P_m(x)-
+ \frac{\theta P_m(0)}{1+\theta K_{m-1}(0,0)}K_{m-1}(x,0),
+@@ -440,19 +451,19 @@
+ \[
+ 1\le\frac1{K_m(0,0)}\le1+(M_0-1)(7/16)^{2m}.
+ \]
+-The lower bound comes from the mass-one zero atom. The test polynomial
++The lower bound comes from the zero atom, whose mass is one. The test polynomial
+ $(1-x)^m$ gives the upper bound since every other node is at least $9/16$.
+ At finite degree $K_m(0,0)<1$, because no nonzero polynomial can vanish at
+ all the other infinitely many nodes. Complete mass removal is valid, while
+ $1-K_m(0,0)$ becomes very small. This explains the conditioning problem.
+ 
+ \claim{The resolvent is non-D-finite}
+-The Stieltjes function $S_{p,\lambda}(z)=\int(z-x)^{-1}\dd\nu_{p,\lambda}(x)$
++For $\lambda\ge-1$, the Stieltjes function $S_{p,\lambda}(z)=\int(z-x)^{-1}\dd\nu_{p,\lambda}(x)$
+ has infinitely many isolated poles at the positive-weight nodes $x_n\to1$.
+ A solution of a finite rational-coefficient linear ODE has only finitely many
+ possible finite singular points. The germ at $z=2$ therefore is not D-finite.
+ This is a general infinite-atomic-resolvent mechanism, specialized here to
+-arithmetic data; it is not a priority claim.
++arithmetic data.
+ 
+ The full packet sequence also cannot be an affine copy of a continuous Jacobi
+ sequence: compact moment determinacy would equate a purely atomic measure with
+@@ -465,7 +476,7 @@
+ \MonographPart{III}{Orbit spectra and exact coordinates}{Spectral continuation and the coefficient language of polyphase transforms.}
+ \chapter{Spectral functions of zero orbits}\label{ch:spectra}
+ \pageheading{FAMILY 4}{One spectral address for each rotation orbit}
+-For integer $N\ge2$, define the known Mittag--Leffler seed
++For integer $N\ge2$, define the classical Mittag--Leffler seed~\cite[\S10.46]{DLMF}
+ \[
+ d_N(w)=\sum_{n\ge0}\frac{(-1)^nw^n}{(Nn)!}=E_{N,1}(-w),
+ \qquad D_N(z)=d_N(z^N).
+@@ -560,82 +571,23 @@
+ 
+ \backmatter
+ \FrontChapter{Evidence and limitations}\label{evidence}
+-Inherited entire existence, nonrescaling, arithmetic non-D-finiteness,
+-one-prime transport, and base orbit convergence are developed in the visual
+-chapters and in the preserved baseline routes. The preceding proofs were independently reviewed. The foundational audit pins Appendices
+-A--E and their exact API. The coupled-family audit pins the coupled proofs,
+-resolution certificates, and exact APIs underlying Appendices F--J.
++The main chapters develop entire existence, nonrescaling, arithmetic
++non-D-finiteness, one-prime transport and base orbit convergence.
++Appendices A--J supply the extended arguments. The preserved foundational
++review records cover Appendices A--E and their exact API. The coupled-family
++records cover the proofs, resolution certificates and exact APIs underlying
++Appendices F--J. These are project review records, not claims of external
++peer review or kernel certification.
+ 
+ Classical external leaves are named explicitly. In particular, ordinary
+ orthogonal-polynomial theory, Hadamard factorization, Laplace uniqueness,
+ and spectral Mellin regularization are established machinery. The local
+ proofs verify their application and do not presume historical novelty.
+ 
++\input{proofread_verification.tex}
+ \input{sections_v11/release_status.tex}
+ \input{sections/release_status.tex}
+ \input{evidence_notes.tex}
+ \input{notation.tex}
+-\FrontChapter{References}\label{references}
+-\section*{Primary sources and comparisons}
+-\textbf{M\'endez, Miguel A.} \textit{Combinatorial differential operators in: Fa\`a di Bruno formula, enumeration of ballot paths, enriched rooted trees and increasing rooted trees},\;
+-\textit{Australasian Journal of Combinatorics} 89 (2024), 350--384.
+-Example 2.4, printed p.356, contains $f'=1+f(qz)^2$.
+-\url{https://ajc.maths.uq.edu.au/pdf/89/ajc_v89_p350.pdf}
+-
+-\textbf{Dascaliuc, Pham, Thomann, Waymire.} Primary treatment of the
+-$\alpha$-Riccati equation $u'=-u+u(\alpha t)^2$, an adjacent feedback model.
+-Its equation is not asserted identical to the asymmetric model here.
+-\url{https://arxiv.org/html/2411.00629v2}
+-
+-\textbf{Coffey, Mark W.} \textit{On the coefficients of the B\'aez-Duarte
+-criterion for the Riemann hypothesis and their extensions} (2006).
+-Signed M\"obius kernels and Newton methods are close antecedents. Their
+-signed weight differs from the positive squarefree weight used here.
+-\url{https://arxiv.org/pdf/math-ph/0608050}
+-
+-\textbf{NIST DLMF.} \S16.8, equation 16.8.3, and \S16.21, equation 16.21.1,
+-give the differential equations used for the limited D-finite comparison.
+-\url{https://dlmf.nist.gov/16.8}\quad
+-\url{https://dlmf.nist.gov/16.21}
+-
+-\textbf{NIST DLMF.} \S18.2 gives general orthogonal-polynomial theory;
+-\S10.46, equation 10.46.3, defines the Mittag--Leffler seed.
+-\url{https://dlmf.nist.gov/18.2}\quad
+-\url{https://dlmf.nist.gov/10.46}
+-
+-\textbf{Uvarov, V. B.} \textit{The connection between systems of polynomials
+-that are orthogonal with respect to different distribution functions} (1969).
+-Original metadata was verified; the mass-modification formula is also proved
+-locally in the route file.
+-\url{https://doi.org/10.1016/0041-5553(69)90124-4}
+-
+-\textbf{Elkies, Noam D.} Harvard Math 259 notes on finite-order entire
+-functions and Hadamard products. The genus-zero theorem supports the orbit
+-factorization, with multiplicities retained.
+-\url{https://people.math.harvard.edu/~elkies/M259.02/prod.pdf}
+-
+-\textbf{Byrnes, Jiu, Moll, Vignat.} \textit{Recursion Rules for the
+-Hypergeometric Zeta Function} (2013). Hypergeometric zero spectra and
+-coefficient recursions provide adjacent prior machinery.
+-\url{https://arxiv.org/pdf/1305.1892}
+-
+-\textbf{Voros, Andr\'e.} \textit{Zeta functions for the Riemann zeros},
+-Annales de l'Institut Fourier 53(3) (2003), 665--699. Sections 2.1--2.2
+-describe canonical products, Mellin continuation, and regularization for
+-general sequences. The present orbit proof verifies its own hypotheses.
+-\url{https://www.numdam.org/article/AIF_2003__53_3_665_0.pdf}
+-
+-\textbf{OEIS.} A000182 records the tangent-number anchor. Candidate sequence
+-exports retain parameter, normalization, and regime labels; no OEIS submission
+-or unmatched-prefix novelty claim is made.
+-\url{https://oeis.org/A000182}
+-
+-This literature comparison is bounded rather than exhaustive.
+-The source archive retains the search record and source classifications. The absence of a located antecedent is not evidence of priority.
+-
+-The integer arithmetic seed and its real-depth Gamma--Laguerre comparisons
+-are inherited project material. Their reuse is identified rather than counted
+-again as a discovery.
+-
+-\input{sections_v11/references.tex}
++\input{references.tex}
+ \end{document}
+--- before/monograph/monograph-design.tex
++++ after/monograph/monograph-design.tex
+@@ -72,9 +72,9 @@
+ \newcommand{\pageheading}[2]{\if@mainmatter\section{#2}\else\section*{#2}\fi}
+ \makeatother
+ \newcommand{\claim}[1]{\par\Needspace{4\baselineskip}\vspace{7pt}{\normalfont\bfseries\color{RCPlum}#1}\par\nobreak\vspace{1pt}}
+-\newcommand{\fig}[2]{\par\addvspace{11pt}\noindent\begin{minipage}{\linewidth}\centering\includegraphics[width=\linewidth]{figures/#1.pdf}\captionof{figure}{#2}\end{minipage}\par\addvspace{11pt}}
+-\newcommand{\smallfig}[3][.82]{\par\addvspace{11pt}\noindent\begin{minipage}{\linewidth}\centering\includegraphics[width=#1\linewidth]{figures/#2.pdf}\captionof{figure}{#3}\end{minipage}\par\addvspace{11pt}}
+-\newcommand{\vfig}[3][.96]{\par\addvspace{11pt}\noindent\begin{minipage}{\linewidth}\centering\includegraphics[width=#1\linewidth]{figures_v11/#2.pdf}\captionof{figure}{#3}\end{minipage}\par\addvspace{11pt}}
++\newcommand{\fig}[2]{\par\addvspace{11pt}\noindent\begin{minipage}{\linewidth}\centering\includegraphics[width=\linewidth]{figures/#1.pdf}\captionof{figure}{#2}\label{fig:#1}\end{minipage}\par\addvspace{11pt}}
++\newcommand{\smallfig}[3][.82]{\par\addvspace{11pt}\noindent\begin{minipage}{\linewidth}\centering\includegraphics[width=#1\linewidth]{figures/#2.pdf}\captionof{figure}{#3}\label{fig:#2}\end{minipage}\par\addvspace{11pt}}
++\newcommand{\vfig}[3][.96]{\par\addvspace{11pt}\noindent\begin{minipage}{\linewidth}\centering\includegraphics[width=#1\linewidth]{figures_v11/#2.pdf}\captionof{figure}{#3}\label{fig:#2}\end{minipage}\par\addvspace{11pt}}
+ \newcommand{\FrontChapter}[1]{\cleardoublepage\chapter*{#1}\phantomsection\addcontentsline{toc}{chapter}{#1}\gdef\CurrentChapter{#1}}
+ \newcommand{\MonographCover}{%
+  \hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup
+--- before/monograph/notation.tex
++++ after/monograph/notation.tex
+@@ -1,19 +1,78 @@
+ \FrontChapter{Notation and glossary}\label{glossary}
+-The notation is introduced where each family is defined. The entries here collect the conventions used across the five parts.
++Notation is defined locally when each family is introduced. The same letter
++can serve different roles in separate chapters. In particular, $a$ is an
++arithmetic weight parameter in Chapter~\ref{ch:arithmetic}, a contraction in
++Chapter~\ref{ch:coupled}, and a spectral shift in Appendix~\ref{app:spectral}.
+ 
+ \begin{description}
+-\setlength{\itemsep}{10pt}
+-\item[Contracted feedback $T_{q,r}$.] The normalized odd entire function determined by $T'_{q,r}(z)=1+T_{q,r}(qz)T_{q,r}(rz)$ and $T_{q,r}(0)=0$, for $0<q,r<1$.
+-\item[Feedback bank $F_{\Theta}$.] A weighted finite family of contraction channels whose evaluations enter the defining nonlinear differential equation.
+-\item[Coupled pair $(U,V)$.] Two normalized entire functions satisfying $U'=1+U(qz)V(rz)$ and $V'=1+U(az)V(bz)$, with strict positive contractions $q,r,a,b$.
+-\item[Entire order $\rho(f)$.] For an entire nonpolynomial function, the limsup of $\log\log M_f(R)/\log R$ as $R\to\infty$, with $M_f(R)=\max_{|z|=R}|f(z)|$.
+-\item[Arithmetic depth $A_{a,\beta,Q}$.] A complex parameter family formed from squarefree coefficients, positive logarithmic frequencies, and exclusion of integers sharing prime factors with the modulus $Q$.
+-\item[M\"obius function $\mu$.] The arithmetic function for which $\mu(n)^2$ selects squarefree integers.
+-\item[Prime-sieve measure $\nu_{F,\boldsymbol\lambda}$.] An atomic arithmetic measure whose masses are modified at primes in a finite set $F$. Signed parameter choices may invalidate positive definiteness.
+-\item[Hankel matrix.] A moment matrix $H_d=(M_{i+j})_{0\le i,j\le d}$. The positivity of every such matrix differs from positivity at any fixed degree.
+-\item[Orbit spectral zeta $\mathcal Z_N$.] The sum over nonzero zero orbits of the seed $d_N(w)=\sum_{n\ge0}(-1)^nw^n/(Nn)!$, with the stated branch and multiplicity conventions.
+-\item[Polyphase section.] A decomposition of a coefficient sequence by residue class, with carry terms required when finite taps cross class boundaries.
+-\item[Resolution certificate.] An explicit bound or rational witness quantifying which structural distinction is detectable at a finite radius, precision, or polynomial degree.
++\setlength{\itemsep}{8pt}
++\item[Contracted feedback $T_{q,r}$.] The normalized odd entire solution of
++$T'_{q,r}(z)=1+T_{q,r}(qz)T_{q,r}(rz)$, $T_{q,r}(0)=0$, for $0<q,r<1$.
++The diagonal notation is $f_q=T_{q,q}$.
++\item[Feedback bank $F_\Theta$.] A finite collection of channels with
++$h_j\ge0$, $\sum_jh_j=1$ and $0<q_j,r_j<1$, entering
++$F_\Theta'=1+\sum_jh_jF_\Theta(q_jz)F_\Theta(r_jz)$.
++Zero-weight channels are removed before taking an active-channel maximum.
++\item[Maximum modulus and entire order.] $M_f(R)=\max_{|z|=R}|f(z)|$.
++For a nonpolynomial entire function,
++\[
++\rho(f)=\limsup_{R\to\infty}\frac{\log\log M_f(R)}{\log R}.
++\]
++At positive finite order $\rho$, the lower and upper types used here are the
++liminf and limsup of $\log M_f(R)/R^\rho$. Their equality is not assumed.
++\item[Coupled pair $(U,V)$.] The normalized entire solution of
++$U'=1+U(qz)V(rz)$, $V'=1+U(az)V(bz)$ and $U(0)=V(0)=0$,
++with $q,r,a,b\in(0,1)$.
++\item[Perron balance.] $\operatorname{spr}P$ denotes the spectral radius of
++a matrix. The characteristic exponent satisfies
++$\operatorname{spr}\begin{pmatrix}q^\rho&r^\rho\\a^\rho&b^\rho\end{pmatrix}=1$.
++A positive right eigenvector gives the proportions of the two type vectors.
++\item[Arithmetic depth $A_{a,\beta,Q}$.] The entire sum
++$\sum_{n\ge2,\ (n,Q)=1}\mu(n)^2n^{-2a}(1-n^{-\beta})^{2s}$, with
++$a>1/2$, $\beta>0$, $Q\ge1$ integer and the real logarithm in the complex power.
++The atom $n=1$ is excluded at every depth.
++\item[Möbius function and modulus radical.] $\mu(1)=1$.
++For a product of $k$ distinct primes, $\mu(n)=(-1)^k$.
++If a prime square divides $n$, then $\mu(n)=0$.
++The radical $\operatorname{rad}(Q)=\prod_{p\mid Q}p$ records the excluded
++prime set, with $\operatorname{rad}(1)=1$.
++\item[Squarefree Dirichlet sum.] For $v>1$,
++$Z_Q(v)=\zeta(v)\zeta(2v)^{-1}\prod_{p\mid Q}(1+p^{-v})^{-1}$.
++The unrestricted notation is $D(v)=Z_1(v)$. Thus
++$A_{a,\beta,Q}(0)=Z_Q(2a)-1$.
++\item[Prime-sieve measure.] $\nu_{F,\boldsymbol\lambda}$ is the arithmetic
++atomic measure obtained by multiplying the mass at $x_n=(1-n^{-2})^2$ by
++$\prod_{p\in F}(1+\lambda_p\mathbf1_{p\mid n})$.
++It is positive exactly when every real strength satisfies $\lambda_p\ge-1$.
++\item[Hankel order and polynomial degree.] For moments $M_j=\int x^j\dd\nu$,
++the order-$m$ matrix is $H_m=[M_{i+j}]_{0\le i,j<m}$.
++It tests quadratic forms of real polynomials of degree at most $m-1$.
++At depth $k$, the matrix is $[M_{k+i+j}]_{0\le i,j<m}$.
++An order-five test therefore covers degree four, not degree five.
++\item[Signed quadratic form.] For real polynomials,
++$Q_\nu(f)=\int f(x)^2\dd\nu(x)$. On a positive measure it is a squared
++norm. On a signed measure it may be negative and is not a norm.
++\item[Orbit spectral zeta $\mathcal Z_N$.] Let
++$d_N(w)=\sum_{n\ge0}(-1)^nw^n/(Nn)!$ and $D_N(z)=d_N(z^N)$, $N\ge2$.
++The series $\mathcal Z_N(s)=\sum_jw_j^{-s}$ initially runs over the zeros
++$w_j$ of $d_N$, counted with multiplicity, for $\Re s>1/N$.
++Each $w_j$ represents one $N$-fold rotation orbit of zeros of $D_N$.
++Powers use $\operatorname{Arg}w\in(-\pi,\pi]$.
++\item[Rising factorial.] $(s)_k=s(s+1)\cdots(s+k-1)$ for $k\ge1$, and
++$(s)_0=1$. It occurs in the shifted spectral residues.
++\item[Coefficient conventions.] An ordinary generating function uses
++$\sum_na_nz^n$. An exponential generating function uses
++$\sum_na_nz^n/n!$. Their product and shift rules differ.
++\item[Polyphase section and finite taps.] Polyphase splits a coefficient
++sequence by residue class. Finite impulse response (FIR) taps act by finite
++ordinary convolution. A phase matrix must retain the carry delay when a tap
++crosses a residue-class boundary. This is not the Hurwitz product of
++exponential generating functions.
++\item[Resolution certificate.] An explicit bound or rational witness for a
++structural distinction at a specified radius, precision or polynomial
++degree. A sufficient threshold need not be optimal.
+ \end{description}
+ 
+-The same word \emph{packet} can describe different analytic, arithmetic, and spectral representations. Its meaning is fixed by the ambient objects and maps in each construction, not by a claim that these families are automatically equivalent.
++The word \emph{packet} describes several analytic, arithmetic and spectral
++representations. Its meaning is fixed by the objects and maps in each
++construction, not by an assumed equivalence among the families.
+--- before/monograph/proofread_verification.tex
++++ after/monograph/proofread_verification.tex
+@@ -0,0 +1,26 @@
++\section*{Checks accompanying the proofread edition}
++The complete manuscript was reviewed for prose, definitions, hypotheses,
++notation, cross-references and agreement between chapter summaries and proof
++appendices. Corrections include the Hankel order convention, zero-orbit
++notation, the real-polynomial domain of signed quadratic forms and several
++missing definitions. The chapter text now includes both finite-test
++nonconvexity examples proved in Appendix~C.
++
++Fresh execution covered all ten foundational check scripts and the three
++coupled and resolution scripts. The foundational scripts passed
++\textbf{19,871 exact and 5,576 numerical assertion statements}. The coupled
++scripts passed \textbf{5,272 exact and 26 numerical assertion statements},
++with 13 separate operational guards. All 14 coupled and resolution figure
++pairs were regenerated. Counts describe executed finite assertions, not
++independent theorems or exhaustive parameter coverage.
++
++The first foundational orchestration attempt reached the execution time
++limit after nine scripts had recorded passing results. The final script was
++then run separately against the same isolated input snapshot and passed.
++The retained logs distinguish this recovered execution failure from a
++mathematical or numerical assertion failure.
++
++The editorial change log, exact source diff and fresh execution records are
++included in the package. No Lean build was performed. Analytic conclusions
++continue to rest on the written proofs and their stated hypotheses.
++
+--- before/monograph/references.tex
++++ after/monograph/references.tex
+@@ -0,0 +1,111 @@
++\FrontChapter{References}\label{references}
++The references below identify classical definitions, proof inputs and adjacent
++constructions. They do not constitute an exhaustive priority review. The
++arithmetic seed and the Gamma--Laguerre comparisons inherited from the
++project are documented in the preserved research archive.
++
++\begingroup
++\makeatletter
++\patchcmd{\thebibliography}{\chapter*{\bibname}}{}{}{\PackageError{RC}{Bibliography heading patch failed}{}}
++\makeatother
++\begin{thebibliography}{15}
++\setlength{\itemsep}{11pt}
++\setlength{\parskip}{3pt}
++\bibitem{Mendez2024} Miguel A. Méndez.
++\emph{Combinatorial differential operators in: Faà di Bruno formula,
++enumeration of ballot paths, enriched rooted trees and increasing rooted trees}.
++Australasian Journal of Combinatorics 89(3) (2024), 350--384.
++Example 2.4 contains the diagonal feedback equation.
++\url{https://ajc.maths.uq.edu.au/pdf/89/ajc_v89_p350.pdf}
++
++\bibitem{Dascaliuc2025} Radu Dascaliuc, Tuan N. Pham, Enrique Thomann and Edward C. Waymire.
++\emph{Transformation of Stochastic Recursions and Critical Phenomena in the
++Analysis of the Aldous-Shields-Athreya Cascade and Related Mean Flow Equations}.
++arXiv:2411.00629v2 (2025).
++The nonlinear equation $u'=-u+u(\alpha t)^2$ is an adjacent model, not the
++equation studied here.
++\url{https://arxiv.org/abs/2411.00629v2}
++
++\bibitem{Coffey2006} Mark W. Coffey.
++\emph{On the coefficients of the Baez-Duarte criterion for the Riemann
++hypothesis and their extensions}. arXiv:math-ph/0608050 (2006).
++Its signed Möbius weights differ from the positive squarefree weights used here.
++\url{https://arxiv.org/abs/math-ph/0608050}
++
++\bibitem{DLMF} NIST Digital Library of Mathematical Functions.
++Sections 5.5 and 5.12 give the gamma reflection and beta identities.
++Section 10.46 defines the Mittag--Leffler function. Sections 16.8 and 16.21
++give the generalized hypergeometric and Meijer $G$ differential equations.
++Section 18.2 develops general orthogonal-polynomial theory.
++\url{https://dlmf.nist.gov/}
++
++\bibitem{Uvarov1969} V. B. Uvarov.
++\emph{The connection between systems of polynomials that are orthogonal
++with respect to different distribution functions}.
++USSR Computational Mathematics and Mathematical Physics 9(6) (1969), 25--36.
++\url{https://doi.org/10.1016/0041-5553(69)90124-4}
++
++\bibitem{Elkies} Noam D. Elkies.
++\emph{Functions of finite order: product formula and logarithmic derivative}.
++Harvard Math 259 course notes. The finite-order Hadamard theorem supplies the
++classical factorization input.
++\url{https://people.math.harvard.edu/~elkies/M259.02/prod.pdf}
++
++\bibitem{Byrnes2013} Alyssa Byrnes, Lin Jiu, Victor H. Moll and Christophe Vignat.
++\emph{Recursion Rules for the Hypergeometric Zeta Functions}.
++arXiv:1305.1892 (2013). Hypergeometric zero spectra and coefficient recursions
++provide related constructions.
++\url{https://arxiv.org/abs/1305.1892}
++
++\bibitem{Voros2003} André Voros.
++\emph{Zeta functions for the Riemann zeros}.
++Annales de l'Institut Fourier 53(3) (2003), 665--699.
++Sections 2.1--2.2 develop related canonical-product and Mellin methods.
++\url{https://doi.org/10.5802/aif.1955}
++
++\bibitem{Voros2004} André Voros.
++\emph{Erratum: Zeta functions for the Riemann zeros}.
++Annales de l'Institut Fourier 54(4) (2004), 1139.
++\url{https://doi.org/10.5802/aif.2046}
++
++\bibitem{OEIS} The OEIS Foundation Inc.
++\emph{The On-Line Encyclopedia of Integer Sequences}, sequence A000182.
++This is the tangent-number anchor. No unmatched-prefix novelty claim or
++submission to OEIS is asserted.
++\url{https://oeis.org/A000182}
++
++\bibitem{Alrabaiah2020} Hussam Alrabaiah, Israr Ahmad, Kamal Shah and Ghaus Ur Rahman.
++\emph{Qualitative analysis of nonlinear coupled pantograph differential
++equations of fractional order with integral boundary conditions}.
++Boundary Value Problems 2020, article 138.
++This is a coupled fractional boundary-value system with different hypotheses.
++\url{https://doi.org/10.1186/s13661-020-01432-2}
++
++\bibitem{Blasiak2011} Pawel Blasiak and Philippe Flajolet.
++\emph{Combinatorial Models of Creation--Annihilation}.
++Séminaire Lotharingien de Combinatoire 65 (2011), B65c.
++Proposition 24 and Note 25 discuss multitype increasing trees and differential systems.
++\url{https://arxiv.org/abs/1010.0354v3}
++
++\bibitem{Mauldin1988} R. Daniel Mauldin and S. C. Williams.
++\emph{Hausdorff Dimension in Graph Directed Constructions}.
++Transactions of the American Mathematical Society 309(2) (1988), 811--829.
++Its spectral-radius balance describes a geometric dimension. The analytic
++order law here requires its own proof.
++\url{https://sites.math.unt.edu/~mauldin/papers/no67.pdf}
++
++\bibitem{Knessl2006} Charles Knessl and Wojciech Szpankowski.
++\emph{Binary Trees, Left and Right Paths, WKB Expansions, and Painlevé Transcendents}.
++Proceedings of ANALCO (2006), 198--204.
++The ordinary generating-function identity has different normalization and
++coefficient rules from the differential system here.
++\url{https://www.cs.purdue.edu/homes/spa/papers/analco06.pdf}
++
++\bibitem{Schilling2010} René L. Schilling, Renming Song and Zoran Vondraček.
++\emph{Bernstein Functions: Theory and Applications}.
++First edition. De Gruyter, 2010. ISBN 978-3-11-021530-4.
++Proposition 1.2 and Theorem 1.4 give the classical Laplace uniqueness and
++Bernstein representation results.
++\url{https://doi.org/10.1515/9783110215311}
++\end{thebibliography}
++\endgroup
+--- before/monograph/sections/arithmetic_full.tex
++++ after/monograph/sections/arithmetic_full.tex
+@@ -1,7 +1,7 @@
+ \hypertarget{arithmetic-depth-an-exact-inverse-its-conditioning-and-character-resolution}{%
+ \chapter[Arithmetic inverse and character resolution]{Arithmetic depth: an exact inverse, its conditioning, and
+ character
+-resolution}\label{arithmetic-depth-an-exact-inverse-its-conditioning-and-character-resolution}}
++resolution}\label{app:arithmetic}\label{arithmetic-depth-an-exact-inverse-its-conditioning-and-character-resolution}}
+ 
+ 
+ 
+@@ -12,8 +12,7 @@
+ particular arithmetic application.
+ 
+ \hypertarget{claim-card-and-conventions}{%
+-\section{Claim card and
+-conventions}\label{claim-card-and-conventions}}
++\section{Definitions and conventions}\label{claim-card-and-conventions}}
+ 
+ For real \(a>1/2\), real \(\beta>0\), and integer \(Q\ge1\), write
+ 
+@@ -43,7 +42,7 @@
+ \hypertarget{exact-inverse-theorem}{%
+ \section{Exact inverse theorem}\label{exact-inverse-theorem}}
+ 
+-\textbf{Theorem AI-1.} Two admissible parameter triples define the same
++\textbf{Theorem B.1 (AI-1).} Two admissible parameter triples define the same
+ analytic germ if and only if
+ 
+ \[
+@@ -219,7 +218,7 @@
+ \section{What finite negative-depth measurements can
+ recover}\label{what-finite-negative-depth-measurements-can-recover}}
+ 
+-\textbf{Theorem AI-2, gap bound.} Suppose the first \(j-1\) atoms have
++\textbf{Theorem B.2 (AI-2), gap bound.} Suppose the first \(j-1\) atoms have
+ already been removed exactly, put
+ \(\Delta_j=\lambda_j-\lambda_{j+1}>0\), and fix \(h>0\). Define
+ 
+@@ -313,7 +312,7 @@
+ \section{Exact uniqueness does not imply uniform prime
+ recovery}\label{exact-uniqueness-does-not-imply-uniform-prime-recovery}}
+ 
+-\textbf{Theorem AI-3, bounded-window instability.} Let \(p\) be a prime
++\textbf{Theorem B.3 (AI-3), bounded-window instability.} Let \(p\) be a prime
+ not dividing \(Q\), and let \(R\ge0\). For every integer \(k\ge0\),
+ 
+ \[
+@@ -368,7 +367,7 @@
+  (Uc)(s)=\sum_{j\ge1}c_j\sqrt{w_j}\,e^{-\lambda_js}.
+ \]
+ 
+-Cauchy and Schwarz give uniform convergence on bounded complex sets and
++The Cauchy--Schwarz inequality gives uniform convergence on bounded complex sets and
+ 
+ \[
+  |(Uc)(s)|\le\|c\|_{\ell^2}\sqrt{A(2\Re s)}.
+@@ -434,7 +433,7 @@
+ where its Euler product converges absolutely and is nonzero. No unproved
+ zero-free-region hypothesis is used.
+ 
+-\textbf{Theorem AI-4, character sector decay.} Fix \(a>1/2,\beta>0,Q\),
++\textbf{Theorem B.4 (AI-4), character sector decay.} Fix \(a>1/2,\beta>0,Q\),
+ and a closed sector \(|\arg s|\le\pi/2-\varepsilon\),
+ \(0<\varepsilon<\pi/2\). If \(\chi\ne\psi\), then uniformly in that
+ sector,
+@@ -493,36 +492,20 @@
+ \section{Classical comparison and limits of
+ novelty}\label{classical-comparison-and-limits-of-novelty}}
+ 
+-The general fact that a positive measure is determined by its Laplace
+-transform is classical. The primary publisher-distributed preview of
+-René L. Schilling, Renming Song, and Zoran Vondraček, \emph{Bernstein
+-Functions: Theory and Applications}, first edition, de Gruyter, 2010,
+-ISBN 978-3-11-021530-4 / electronic ISBN 978-3-11-021531-1, was checked
+-in the reviewed source:
+-
+-\url{https://api.pageplace.de/preview/DT0400.9783110215311_A15706968/preview-9783110215311_A15706968.pdf}
+-
+-Proposition 1.2, printed page 2 / PDF page 14 under one-based indexing,
+-states uniqueness of a measure on \([0,\infty)\) from its Laplace
+-transform and proves recovery from all derivatives. Theorem 1.4, printed
+-page 3 / PDF page 15, is the Bernstein representation theorem.
+-Translation here: the source's measure is
+-\(\sum_jw_j\delta_{\lambda_j}\), its transform variable is the present
+-real depth \(s>0\), and its finiteness condition holds because
+-\(\sum_jw_j<\infty\). Classification: general uniqueness is
+-\textbf{known after translation of notation}. The exact extraction of
+-\(a,\beta,\operatorname{rad}(Q)\), the rank asymptotic, and the
+-displayed large-prime instability are proved locally rather than claimed
+-as results of that book.
+-
+-The Hilbert feature-space construction and finite Prony mechanism are
+-also classical constructions. They are explicit realizations for this
+-arithmetic spectrum, with no priority claim. The parameter-specific
+-inverse theorem and character extension are not asserted historically
+-new. The limited searches do not settle whether these results have
+-appeared together for this exact positive squarefree family.
+-
+-The source archive retains the bounded discovery queries and retrieval record. The elementary inverse and character proofs do not rely on an unchecked external statement.
++Uniqueness of a positive measure from its Laplace transform is classical.
++Schilling, Song and Vondraček~\cite[Proposition~1.2 and Theorem~1.4]{Schilling2010}
++give the uniqueness and Bernstein representation results. Here the measure is
++$\sum_jw_j\delta_{\lambda_j}$, the transform variable is real depth $s>0$,
++and finiteness follows from $\sum_jw_j<\infty$.
++The exact recovery of $a$, $\beta$ and $\operatorname{rad}(Q)$, the rank
++asymptotic and the large-prime instability estimates are proved above.
++They are not attributed to that reference.
++
++The Hilbert feature-space construction and finite Prony reconstruction are
++also classical. This chapter supplies their realization for the arithmetic
++spectrum. It does not claim historical priority for these mechanisms or for
++the parameter-specific inverse and character results. A bounded literature
++comparison cannot establish the absence of earlier work.
+ 
+ \hypertarget{computation-contract-and-handoff}{%
+ \section{Computational verification}\label{computation-contract-and-handoff}}
+@@ -546,12 +529,11 @@
+ reported. Numerical values and floating-point endpoints are
+ illustrations, not ball-arithmetic certificates.
+ 
+-Run from the source directory with
+-\texttt{\small python checks/arithmetic\_inverse.py}; the project dependency
+-fallback is discovered by the script in this session, while a portable
+-environment needs \texttt{mpmath}. Results are written to
++From the package's \texttt{research/} directory, run
++\texttt{\small python checks/arithmetic\_inverse.py} in a Python environment
++with \texttt{mpmath} installed. Results are written to
+ \path{evidence/arithmetic_inverse_checks.json}, including
+ input/source hashes, arithmetic conventions, tested ranges, software
+-versions, elapsed time, and the source-retrieval failure. Universal
+-conclusions AI-1 through AI-4 rest on the local proofs above. Historical
++versions and elapsed time. Earlier retrieval failures remain in the archived
++run history. Theorems B.1--B.4 rest on the local proofs above. Historical
+ priority remains unresolved.
+--- before/monograph/sections/dilation_full.tex
++++ after/monograph/sections/dilation_full.tex
+@@ -1,8 +1,8 @@
+ \hypertarget{positive-lower-type-and-quantitative-tap-continuity}{%
+ \chapter[Growth and tap continuity]{Positive lower type and quantitative tap
+-continuity}\label{positive-lower-type-and-quantitative-tap-continuity}}
+-
+-This chapter sharpens the entire-growth theorem for nonlinear contraction families. The symmetric definition has an established antecedent. Historical priority of the asymmetric extension is not claimed.
++continuity}\label{app:growth}\label{positive-lower-type-and-quantitative-tap-continuity}}
++
++This chapter sharpens the entire-growth theorem for nonlinear contraction families. The symmetric definition has the antecedent identified in the reading map.
+ 
+ \hypertarget{the-exact-growth-exponent-has-positive-lower-type}{%
+ \section{The exact growth exponent has positive lower
+@@ -25,7 +25,7 @@
+ The inherited coefficient recurrence gives nonnegative coefficients,
+ entire extension, and \(M(R)=\max_{|z|=R}|F(z)|=F(R)\ge R\) for \(R>0\).
+ 
+-\textbf{Theorem 1.} There are explicit constants \(0<c_-\le c_+<\infty\)
++\textbf{Theorem A.1.} There are explicit constants \(0<c_-\le c_+<\infty\)
+ such that
+ 
+ \[
+@@ -165,7 +165,7 @@
+ \]
+ 
+ Dividing the two bounds by \(R^\rho\), then taking logarithms of their
+-positive logarithmic-growth bounds, proves all assertions of Theorem 1.
++positive logarithmic-growth bounds, proves all assertions of Theorem A.1.
+ The theorem leaves open whether \(\log M(R)/R^\rho\) has a limit.
+ Lattice resonances or logarithmic oscillations are possible research
+ directions, not results here.
+--- before/monograph/sections/dilation_growth.tex
++++ after/monograph/sections/dilation_growth.tex
+@@ -1,6 +1,12 @@
+ \pageheading{DILATION\; /\; GROWTH THEOREM}{The exact order has positive lower type}
+-The order theorem can now be strengthened. For every finite positive bank,
+-with $\rho=\max_{h_j>0}\rho_j$,
++The single-channel result extends to finite positive feedback banks. Here a
++bank has weights $h_j>0$ with $\sum_jh_j=1$, contractions
++$0<q_j,r_j<1$, and normalized solution
++\[
++F'(z)=1+\sum_jh_jF(q_jz)F(r_jz),\qquad F(0)=0.
++\]
++Write $M(R)=M_F(R)$ and let $q_j^{\rho_j}+r_j^{\rho_j}=1$.
++Then, with $\rho=\max_j\rho_j$,
+ \[
+ \boxed{0<\liminf_{R\to\infty}\frac{\log M(R)}{R^\rho}
+ \le\limsup_{R\to\infty}\frac{\log M(R)}{R^\rho}<\infty.}
+@@ -10,7 +16,7 @@
+ \[
+ \lim_{R\to\infty}\frac{\log\log M(R)}{\log R}=\rho.
+ \]
+-The ratio $\log M(R)/R^\rho$ itself need not have a proved limit here.
++The theorem does not assert that $\log M(R)/R^\rho$ has a limit.
+ \fig{08_growth_type}{Finite-radius logarithmic growth and its proved lower
+ comparison. The normalized curves illustrate scale dependence; the plot is
+ not a proof of convergence to a type constant. Analytic truncation envelopes
+--- before/monograph/sections/multi_prime.tex
++++ after/monograph/sections/multi_prime.tex
+@@ -44,6 +44,12 @@
+ $(-17,-82)$ has zero mass. Thus the parameter set passing the order-one
+ positive-definiteness test is nonconvex. This particular midpoint argument
+ does not establish nonconvexity of the semidefinite test, which permits zero.
++For that test, take the two points $(0,0)$ and $(-34,-246)$.
++The normalized masses $M_0/(105\pi^{-4})$ there are $1$ and $2$.
++Their convex combination with weights $3/5$ and $2/5$ is
++$(-68/5,-492/5)$, where the normalized mass is $-1/25$.
++Thus the order-one semidefinite feasible set is also nonconvex,
++by a separate counterexample.
+ 
+ \claim{A separate additive family has different geometry}
+ For weights $1+\sum_{p\in F}\gamma_p\mathbf1_{p\mid n}$, positivity is
+@@ -93,7 +99,7 @@
+ Thus every one-variable determinant fiber has exact degree $m$ and all
+ roots real below $-1$. Its nearest margin satisfies
+ \[
+-\delta_m=\min_{0\ne f,\deg f<m}
++\delta_m=\min_{\substack{f\in\mathbb R[x]\setminus\{0\}\\\deg f<m}}
+ \frac{\int f^2\dd\nu_{p\text{-free}}}
+ {\int f^2\dd\nu_{p\text{-divisible}}},\qquad\delta_m\downarrow0.
+ \]
+--- before/monograph/sections/release_status.tex
++++ after/monograph/sections/release_status.tex
+@@ -12,13 +12,14 @@
+ Integer coefficient and exact polyphase/tap machinery & Historical priority of the candidate extensions\\
+ \bottomrule\end{tabular}
+ 
+-\claim{The strongest direct function candidate}
+-The asymmetric dilation extension remains the strongest direct discovery
+-candidate: its parameters are intrinsic, its off-diagonal members cannot be
+-rescaled from the known diagonal, and its nonnegative real scale regime has now been
+-mapped. The arithmetic inverse and signed-resolution results add structural
+-depth. The orbit continuation is a worked application of established spectral
+-methods, with its exact seed and branch conventions verified locally.
++\claim{Structural distinctions among the families}
++The asymmetric dilation family has intrinsic parameters, and its off-diagonal
++members cannot be obtained by rescaling the diagonal family. Its nonnegative
++real scale regimes are classified in Appendix~\ref{app:sequence}.
++The arithmetic inverse and signed-resolution results address different
++questions about parameter recovery and finite detection. The orbit
++continuation applies established spectral methods to a specified seed,
++with the branch conventions and hypotheses checked locally.
+ 
+ \claim{A common finite-resolution lesson}
+ A weak tap can change asymptotic order while preserving compact convergence.
+@@ -28,8 +29,10 @@
+ These are three different proved mechanisms. Their shared resolution theme
+ does not make them identical constructions.
+ 
++\Needspace{13\baselineskip}
+ \pageheading{EVIDENCE / EXACT CHECKS}{Evidence with declared ranges}
+-The independent audit reconstructed five proof chapters and examined their mathematical statements. The release runner executed ten scripts once, with
++The archived foundational review reconstructed five proof chapters and examined
++their mathematical statements. The recorded release run executed ten scripts, with
+ 25 pinned inputs and byte-identical isolated snapshots. All inputs remained
+ unchanged, every declared result was present, and the schema validator passed.
+ 
+@@ -42,7 +45,7 @@
+ guards are excluded. Counts are assertion statements, not counts of theorems
+ or every scalar operation inside a grouped assertion.
+ 
+-The API contributes 8,038 exact assertions and 18 catalog rows through index
++In that recorded run, the API contributes 8,038 exact assertions and 18 catalog rows through index
+ 12. Dilation type and continuity add 6,091 exact checks. Arithmetic inverse
+ examples include rank 10,000, negative depth 500, and large excluded primes.
+ The multiple-prime run tests 102 positive parameter/depth cases, 1,395
+@@ -63,19 +66,22 @@
+ The universal conclusions rely on the proofs, not on the number of checks.
+ 
+ \pageheading{EVIDENCE / REPRODUCIBILITY}{A reproducible research package}
+-The preserved source archive includes its manuscript, all 18 vector figures and PNG
+-previews, figure generators, exact API, JSON/CSV catalog, inherited baseline
+-routes, the five new proof chapters, independent audit, and bounded release
+-evidence with input and output hashes.
++The package preserves the research manuscripts, code, catalogs, review records
++and bounded execution evidence. The typeset monograph uses 32 vector figures:
++18 for the foundational families and 14 for coupled systems and finite
++resolution. The corresponding generators and preview images remain in the
++research archive. Input and output hashes identify the retained evidence.
+ 
+ The source files preserve the earlier claim ledger and open questions as provenance. Later proof chapters supersede the earlier statements where a new argument supplies a closed result. The distinction is recorded in the verification documents rather than folded into the mathematical theorem count.
+ 
+ \claim{Reproduce the work}
+-Use the versions listed in \texttt{requirements.txt}; execute
+-\texttt{checks/run\_release.py} in a fresh output directory. The checked
+-instructions give the bounded-run invocation and validator. Figure scripts
+-then rebuild the atlas from formulas and recorded numerical examples.
+-The manuscript is typeset with LaTeX. The build script resolves the contents and cross references through successive passes.
++Build the book with \texttt{python monograph/build.py} from the package root.
++The script requires XeLaTeX and resolves contents, citations and cross-references
++through successive passes. Research commands are run from the
++\texttt{research/} directory, whose \texttt{requirements.txt} records the
++scientific dependencies. The package README supplies complete commands for
++the isolated foundational and coupled verification suites. Figure generators
++rebuild the atlas from formulas and recorded numerical examples.
+ 
+ The standard-library API is portable. Numerical checks additionally require
+ mpmath. No network access, external submission, or dependency installation is
+@@ -86,4 +92,4 @@
+ for dilation, precision-controlled arithmetic inversion within bounded
+ parameter classes, sharper sieve-root asymptotics, and spectral weighted sums.
+ They remain research questions rather than hidden dependencies of the
+-completed release claims.
++proved statements in this volume.
+--- before/monograph/sections/sequence_full.tex
++++ after/monograph/sections/sequence_full.tex
+@@ -1,12 +1,13 @@
+ \hypertarget{exact-sequence-polyphase-and-tap-laboratory}{%
+ \chapter[Sequence and polyphase laboratory]{Exact sequence, polyphase and tap
+-laboratory}\label{exact-sequence-polyphase-and-tap-laboratory}}
++laboratory}\label{app:sequence}\label{exact-sequence-polyphase-and-tap-laboratory}}
+ 
+ 
+ 
+ This chapter connects the nonlinear family to exact sequences and finite
+-filter algebra. It supplies reusable code without replacing the analytic
+-proofs in \path{routes/asymmetric_dilation.md}. All mathematical
++filter algebra. Its reusable code implements finite calculations. The
++analytic results are proved in Chapter~\ref{ch:feedback} and
++Appendix~\ref{app:growth}. All mathematical
+ sequence indices begin at zero. All finite arrays are zero extended
+ beyond their displayed support. The catalog contains explicit candidates
+ for OEIS lookup. This chapter does not assert an OEIS accession or
+@@ -228,7 +229,7 @@
+ Therefore \(\log\log M(R)/\log R\to\infty\), which proves infinite
+ order. \(\square\)
+ 
+-For positive parameters this gives a complete analytic/formal phase
++For nonnegative parameters this gives a complete analytic/formal phase
+ chart:
+ 
+ \begin{longtable}[]{@{}
+@@ -346,8 +347,7 @@
+ the function's defining equation and its derivative recurrence. Ordinary
+ FIR taps are a linear transformation of an already defined coefficient
+ sequence. Both are useful, but they operate on different objects. The
+-intrinsic-bank growth theorem belongs to
+-\path{routes/asymmetric_dilation.md}.
++intrinsic-bank growth theorem is proved in Appendix~\ref{app:growth}.
+ 
+ \hypertarget{the-exact-finite-polyphase-tap-matrix}{%
+ \section{The exact finite polyphase tap
+@@ -388,7 +388,7 @@
+ \hypertarget{reuse-and-evidence}{%
+ \section{Reuse and evidence}\label{reuse-and-evidence}}
+ 
+-From the project directory, standard Python is enough:
++From the package\textquotesingle s \texttt{research/} directory, standard Python is enough:
+ 
+ \begin{verbatim}
+ python family_lab.py coefficients --q 1/4 --r 3/4 --n 8
+@@ -420,7 +420,7 @@
+   checked for integer positivity, symmetry, parity and the degree bound.
+ \item
+   Tangent coefficients independently obtained by division of sine and
+-  cosine, plus hyperbolic tangent, scaled sine and linear anchors.
++  cosine, plus hyperbolic tangent, scaled hyperbolic sine and linear anchors.
+ \item
+   Root-filter multipliers reduced exactly in cyclotomic fields for bases
+   one through seven and indices zero through 31.
+@@ -440,10 +440,9 @@
+ 
+ The bounded checks validate the implemented paths in the recorded
+ ranges. The universal polynomial, degree, clearing, root-filter and
+-phase-matrix statements follow from the proofs above. The finite checks
+-do not establish entire continuation, growth order, or historical
+-novelty. Those claims are separately proved or explicitly left
+-unresolved in the project.
++phase-matrix statements follow from the proofs above. Entire continuation and growth order require the analytic proofs, not these
++finite checks. Historical identification of a catalog row requires a
++separate literature comparison.
+ 
+ \path{evidence/family_lab_checks.json} records software version,
+ code hashes, exact arithmetic, bounds, category counts and run time. It
+--- before/monograph/sections/sieve_full.tex
++++ after/monograph/sections/sieve_full.tex
+@@ -1,10 +1,10 @@
+ \hypertarget{finite-prime-sieve-families-and-explicit-detection-of-signed-atoms}{%
+ \chapter[Prime sieves and signed-atom detection]{Finite-prime sieve families and explicit detection of signed
+-atoms}\label{finite-prime-sieve-families-and-explicit-detection-of-signed-atoms}}
+-
+-The construction extends the one-prime setting to a finite-prime parameter family. The results below are local
+-mathematical derivations. They do not assert historical priority.
+-Classical orthogonal-polynomial mechanisms are identified as such.
++atoms}\label{app:sieve}\label{finite-prime-sieve-families-and-explicit-detection-of-signed-atoms}}
++
++The construction extends the one-prime setting to a finite-prime parameter
++family. The arguments below identify where classical orthogonal-polynomial
++mechanisms enter the arithmetic construction.
+ 
+ \hypertarget{definition-and-exact-coordinates}{%
+ \section{Definition and exact
+@@ -76,7 +76,7 @@
+ \section{The exact positivity
+ domain}\label{the-exact-positivity-domain}}
+ 
+-\textbf{Theorem 1.} For real strengths, \(\nu_{F,\boldsymbol\lambda}\)
++\textbf{Theorem C.1.} For real strengths, \(\nu_{F,\boldsymbol\lambda}\)
+ is a positive measure if and only if \(\lambda_p\ge-1\) for every
+ \(p\in F\). On this closed orthant, every finite Hankel matrix of every
+ nonnegative integer depth is strictly positive definite.
+@@ -98,7 +98,7 @@
+ finite-degree statement; the next theorem explains why no common
+ enlargement of the positivity domain works at all degrees.
+ 
+-Together, Theorems 1 and 2 also prove the exact equivalence: every
++Together, Theorems C.1 and C.2 also prove the exact equivalence: every
+ finite Hankel matrix is positive semidefinite if and only if every
+ strength is at least \(-1\). Thus this is a complete positivity-domain
+ result, not only a sufficient condition.
+@@ -136,7 +136,7 @@
+ \tag{3}
+ \]
+ 
+-\textbf{Theorem 2.} If \(\lambda_p<-1\), then
++\textbf{Theorem C.2.} If \(\lambda_p<-1\), then
+ 
+ \[
+ \int f_{p,m}(x)^2\,d\nu_{F,\boldsymbol\lambda}(x)
+@@ -199,7 +199,7 @@
+ integers \(p\ell\), with primes \(\ell\) outside \(F\). This remains
+ true at every deletion endpoint of the other strengths.
+ 
+-\textbf{Theorem 3.} The one-variable fiber
++\textbf{Theorem C.3.} The one-variable fiber
+ 
+ \[
+ \tau_m(\lambda_p)=\det\bigl(A_m+(1+\lambda_p)B_m\bigr)
+@@ -276,7 +276,7 @@
+ unrestricted real parameter set passing the order-one
+ positive-definiteness test is therefore nonconvex. This is a concrete
+ warning about a finite test, while the true positivity domain in Theorem
+-1 is a convex closed orthant.
++C.1 is a convex closed orthant.
+ 
+ The positive-semidefinite feasible set is nonconvex as well: the points
+ \((0,0)\) and \((-34,-246)\) have positive mass factors 1 and 2, while
+@@ -326,7 +326,7 @@
+ mass 1 at zero fixes the normalization constant. Finally, the atom at
+ each prime \(p\) reads off \(1+\lambda_p\), whereas a one-prime
+ deformation changes at most one such atom. This is a precise separator
+-from the existing one-prime family, not a global novelty certificate. It
++from the one-prime family. It
+ does not address arbitrary affine variable changes.
+ 
+ The multi-prime Stieltjes kernel also retains infinitely many isolated
+@@ -413,7 +413,7 @@
+ sufficient orders are not asserted to be minimal. In the \(p=7\)
+ example, the other strengths are
+ \(\lambda_2=1/2,\lambda_3=-1,\lambda_5=2\), and \(\lambda_7=-1.0001\);
+-the exact rational upper bound on the detector norm is approximately
++the exact rational upper bound on the detector quadratic form is approximately
+ \(-9.74271\times10^{-9}\).
+ 
+ \hypertarget{computation-contract}{%
+@@ -425,7 +425,7 @@
+ detection criterion (5). It separately evaluates the infinite moments at
+ high precision, tests positive orthogonality grids, compares them with a
+ direct finite squarefree sum plus a proved tail envelope, calculates
+-conditional definite-pencil roots, and evaluates signed detector norms.
++conditional definite-pencil roots, and evaluates signed detector quadratic forms.
+ These decimal checks are not interval certificates. Universal positivity
+ and negativity conclusions follow from the displayed proofs and exact
+ rational bounds.
+--- before/monograph/sections/spectral_full.tex
++++ after/monograph/sections/spectral_full.tex
+@@ -1,13 +1,12 @@
+ \hypertarget{orbit-spectral-zeta-continuation-trace-zeros-and-regularized-product}{%
+ \chapter[Spectral continuation and regularization]{Orbit spectral zeta: continuation, trace zeros, and regularized
+-product}\label{orbit-spectral-zeta-continuation-trace-zeros-and-regularized-product}}
++product}\label{app:spectral}\label{orbit-spectral-zeta-continuation-trace-zeros-and-regularized-product}}
+ 
+ This chapter extends the previously defined orbit family with a self-contained continuation proof.
+-The Mittag-Leffler seed and Mellin continuation mechanism are classical.
+-Historical priority for this exact specialization is not established.
++The Mittag--Leffler seed and Mellin continuation mechanism are classical.
+ 
+ \hypertarget{the-completed-result}{%
+-\section{The completed result}\label{the-completed-result}}
++\section{The continuation theorem}\label{the-completed-result}}
+ 
+ Let \(N\ge2\) be an integer, and put \(\alpha=1/N\). Define
+ 
+@@ -418,7 +417,7 @@
+ \(G_{N,a}\) is analytic since \(H_N(a)>0\); subtracting any finite
+ Taylor polynomial there extends the other side, with apparent poles only
+ at positive integers. Such Taylor poles cancel against \(\sin(\pi s)\),
+-just as in Section 4. Choosing arbitrarily large subtractions at both
++just as in Section~\ref{global-continuation-and-the-only-pole}. Choosing arbitrarily large subtractions at both
+ ends covers every \(s\in\mathbb C\). The resulting continuations agree
+ on overlaps because all added terms are exactly the integrals of the
+ terms removed.
+@@ -501,66 +500,32 @@
+ \section{Source comparison and bounded
+ search}\label{source-comparison-and-bounded-search}}
+ 
+-No external global-continuation theorem is required by the local proof above beyond the
+-finite-order Hadamard product and the elementary beta/reflection
+-identities. The Mellin subtraction mechanism itself is established.
+-
+-\begin{itemize}
+-\tightlist
+-\item
+-  NIST DLMF 10.46.3: the definition of \(E_{a,b}\) identifies this seed
+-  with the classical Mittag-Leffler function. Source:
+-  \url{https://dlmf.nist.gov/10.46}.
+-\item
+-  NIST DLMF 5.12.1 and 5.5.3: Euler's beta integral and the gamma
+-  reflection identity supply (S10), with the project's exponents
+-  obtained by \(a=1-s,b=s\). Sources: \url{https://dlmf.nist.gov/5.12} and
+-  \url{https://dlmf.nist.gov/5.5}. The extension to complex \(w\) and the
+-  uniform branch-gap argument are supplied locally above.
+-\item
+-  Noam Elkies, finite-order-function teaching notes, first Hadamard
+-  theorem: supplies the genus-zero product for an entire function of
+-  order below one. Source:
+-  \url{https://people.math.harvard.edu/~elkies/M259.02/prod.pdf}.
+-  The constant factor and zero-count consequences are established in the preceding sections.
+-\item
+-  Andre Voros, \textbf{Zeta functions for the Riemann zeros},
+-  \emph{Annales de l'Institut Fourier} 53(3) (2003), 665--699. The
+-  authenticated journal PDF, rather than an evolving preprint, was
+-  checked. Section 2.1 specifies general admissible zero sequences of
+-  order below one and logarithmic asymptotics; Section 2.2 derives
+-  global meromorphic continuation by Mellin subtraction,
+-  positive-integer cancellations, and origin trace constants. Source:
+-  \url{https://www.numdam.org/article/AIF_2003__53_3_665_0.pdf}. This
+-  authenticates the shared method. It does not state this particular
+-  Mittag-Leffler packet theorem verbatim. All hypotheses needed here,
+-  including the complex-zero branch and domination conditions, were
+-  established independently in Sections 1--4. Classification:
+-  \textbf{known mechanism after translation, with a worked seed-specific
+-  specialization}.
+-\item
+-  A separate Voros preprint, \url{https://arxiv.org/pdf/math/0311029} was
+-  compared as a secondary reference. For method attribution this monograph relies on the fixed 2003 journal article cited above.
+-\end{itemize}
+-
+-The bounded discovery searches used both available search engines, with
+-the exact and adjacent terms ``Mittag Leffler zeros zeta function E\_n,1
+-analytic continuation spectral zeta log n'', ``hyper Bessel zeta
+-function analytic continuation Mittag Leffler zeros integer order sin pi
+-n'', ``Mittag-Leffler zeta zeros spectral meromorphic'', ``hyper-Bessel
+-zeta function continuation'', and ``E\_\{N,1\} zeros zeta''. The closest
+-authenticated result inspected was Voros's general framework. Search
+-results referring to the unrelated Mittag-Leffler theorem or Helson zeta
+-were discarded. Specialist book coverage and a complete backward/forward
+-citation search were not exhausted. No global-priority claim follows
+-from this search.
++The continuation proof uses the finite-order Hadamard product and the beta
++and reflection identities. DLMF~\cite[\S\S5.5, 5.12 and 10.46]{DLMF}
++provides the special-function identities and identifies the seed as a
++Mittag--Leffler function. The finite-order factorization theorem is also
++summarized in Elkies's notes~\cite{Elkies}. The normalization, zero counts,
++complex branch gap and domination estimates needed here were proved in
++Sections~\ref{the-exponential-packet-and-its-exact-asymptotic}--\ref{global-continuation-and-the-only-pole}.
++
++Mellin subtraction and spectral regularization are established methods.
++Voros~\cite[\S\S2.1--2.2]{Voros2003}, with its published erratum~\cite{Voros2004},
++provides a related framework. The present proof checks the hypotheses for
++this Mittag--Leffler seed directly and does not import a theorem about
++Riemann zeros. The coefficient approach also has antecedents in the
++hypergeometric zero spectra of Byrnes, Jiu, Moll and Vignat~\cite{Byrnes2013}.
++
++This comparison establishes methodological context, not priority for the
++particular specialization. The archived research notes preserve the broader
++search record. A complete historical review of Mittag--Leffler and
++hyper-Bessel zero-zeta functions remains outside the scope of this volume.
+ 
+ \hypertarget{scope-and-remaining-questions}{%
+ \section{Scope and remaining
+ questions}\label{scope-and-remaining-questions}}
+ 
+-The global continuation gap for this unweighted orbit family, and for
+-its nonnegative real shifts, is closed by the local proof. A functional
++The local proof establishes global continuation for the unweighted orbit
++family and its nonnegative real shifts. A functional
+ equation is not supplied or presumed. The only-pole theorem concerns the
+ unshifted case; positive shifts have the full pole ladder in (T7). The
+ pole and trace-zero theorems follow from the exact positive-axis
+@@ -569,6 +534,6 @@
+ convergence analysis. A historical comparison against all Mittag-Leffler
+ and hyper-Bessel zero-zeta literature remains open.
+ 
+-No mathematical counterexample was found during this route. Any
+-computational failure and its repair, if encountered, must remain
+-recorded in the evidence history rather than silently erased.
++The evidence archive distinguishes exact identities, numerical checks and
++previously corrected implementation failures. None of the open questions
++listed above is assumed in the continuation proof.
+--- before/monograph/sections_v11/coupled_growth_full.tex
++++ after/monograph/sections_v11/coupled_growth_full.tex
+@@ -1,6 +1,6 @@
+ \hypertarget{v11-coupled_growth_full-coupled-contraction-functions-and-their-perron-growth-law}{%
+ \chapter[Coupled growth and Perron type]{Coupled contraction functions and their Perron growth
+-law}\label{v11-coupled_growth_full-coupled-contraction-functions-and-their-perron-growth-law}}
++law}\label{app:coupled-growth}\label{v11-coupled_growth_full-coupled-contraction-functions-and-their-perron-growth-law}}
+ 
+ \hypertarget{v11-coupled_growth_full-definition-and-exact-coefficient-construction}{%
+ \section{Definition and exact coefficient
+@@ -22,7 +22,7 @@
+ \end{aligned}}
+ \]
+ 
+-\textbf{Theorem 1.} There is a unique pair of entire solutions. Both
++\textbf{Theorem F.1.} There is a unique pair of entire solutions. Both
+ functions are odd and have strictly positive coefficients at every odd
+ degree. Write
+ 
+@@ -177,7 +177,7 @@
+ \overline\tau_i=\limsup_{R\to\infty}\frac{\log M_{F_i}(R)}{R^\rho}.
+ \]
+ 
+-\textbf{Theorem 2.} Both functions have order \(\rho\), positive lower
++\textbf{Theorem F.2.} Both functions have order \(\rho\), positive lower
+ type and finite upper type. More precisely, the explicit constants below
+ satisfy
+ 
+@@ -289,7 +289,7 @@
+ These constants require only the parameters and the uniquely defined
+ root \(\rho\). They require no evaluation of an unknown solution.
+ 
+-To bound a seed interval, the coefficient majorant from Theorem 1 gives
++To bound a seed interval, the coefficient majorant from Theorem F.1 gives
+ \(F_i(1)\le2\). Put \(R_k=Q^{-k}\), \(Z_0=2\), and
+ 
+ \[
+@@ -357,7 +357,7 @@
+ The explicit constants above are conservative. There is nevertheless an
+ exact statement about the relative types of the two components.
+ 
+-\textbf{Theorem 3.} There exist positive finite constants
++\textbf{Theorem F.3.} There exist positive finite constants
+ \(\underline\tau\le\overline\tau\) such that
+ 
+ \[
+@@ -391,7 +391,7 @@
+ Here \(p(R-1)\) tends to infinity continuously and
+ \([p(R-1)]^\rho/R^\rho\to p^\rho\), which justifies each scaled liminf.
+ The liminf of a sum is at least the sum of the liminfs. All quantities
+-are positive and finite by Theorem 2.
++are positive and finite by Theorem F.2.
+ 
+ The full-integral inequality
+ 
+@@ -434,7 +434,7 @@
+ 
+ For sufficiency, the scalar solution \(T_{q,r}\) from
+ \path{routes/asymmetric_dilation.md} makes \((T_{q,r},T_{q,r})\)
+-solve the coupled equations. Theorem 1 gives uniqueness. For necessity,
++solve the coupled equations. Theorem F.1 gives uniqueness. For necessity,
+ equality at degree three gives \(qr=ab=p>0\). Equality at degree five
+ then gives \(q^2+r^2=a^2+b^2\). The two positive unordered pairs have
+ the same product and the same sum \(\sqrt{q^2+r^2+2p}\), so they
+--- before/monograph/sections_v11/coupled_inverse_full.tex
++++ after/monograph/sections_v11/coupled_inverse_full.tex
+@@ -1,6 +1,6 @@
+ \hypertarget{v11-coupled_inverse_full-when-the-pair-reduces-and-when-its-parameters-are-intrinsic}{%
+ \chapter[Reduction and intrinsic parameters]{When the pair reduces, and when its parameters are
+-intrinsic}\label{v11-coupled_inverse_full-when-the-pair-reduces-and-when-its-parameters-are-intrinsic}}
++intrinsic}\label{app:coupled-inverse}\label{v11-coupled_inverse_full-when-the-pair-reduces-and-when-its-parameters-are-intrinsic}}
+ 
+ Throughout, \(q,r,a,b\in(0,1)\). Let the normalized coupled solution be
+ 
+@@ -38,7 +38,7 @@
+ \section{Exact classification of component
+ rescaling}\label{v11-coupled_inverse_full-exact-classification-of-component-rescaling}}
+ 
+-\textbf{Theorem.} The following statements are equivalent:
++\textbf{Theorem G.1.} The following statements are equivalent:
+ 
+ \begin{enumerate}
+ \def\labelenumi{\arabic{enumi}.}
+@@ -102,11 +102,9 @@
+ does not exclude every representation using previously known functions.
+ 
+ \hypertarget{v11-coupled_inverse_full-seven-derivatives-recover-all-four-ordered-scales-away-from-reduction}{%
+-\section{Seven derivatives recover all four ordered scales away
+-from
+-reduction}\label{v11-coupled_inverse_full-seven-derivatives-recover-all-four-ordered-scales-away-from-reduction}}
++\section{Derivatives through order seven recover the scales}\label{v11-coupled_inverse_full-seven-derivatives-recover-all-four-ordered-scales-away-from-reduction}}
+ 
+-\textbf{Theorem.} If \(D\ne0\), the six coefficients
++\textbf{Theorem G.2.} If \(D\ne0\), the six coefficients
+ \((u_1,v_1,u_2,v_2,u_3,v_3)\) uniquely determine the ordered tuple
+ \((q,r,a,b)\) within \((0,1)^4\). Consequently, equality of the two
+ labeled normalized germs implies equality of these parameters in this
+--- before/monograph/sections_v11/coupled_lab_full.tex
++++ after/monograph/sections_v11/coupled_lab_full.tex
+@@ -1,6 +1,6 @@
+ \hypertarget{v11-coupled_lab_full-exact-laboratory-and-certified-evaluation}{%
+ \chapter[Exact laboratory and certified evaluation]{Exact laboratory and certified
+-evaluation}\label{v11-coupled_lab_full-exact-laboratory-and-certified-evaluation}}
++evaluation}\label{app:laboratory}\label{v11-coupled_lab_full-exact-laboratory-and-certified-evaluation}}
+ 
+ The reusable module \path{coupled_lab.py} uses Python's standard
+ library and imports the existing exact coefficient, phase and tap
+@@ -110,7 +110,7 @@
+ displayed decimals are rounded illustrations. The returned fractions are
+ the actual certificate.
+ 
+-Run the independent checks and regenerate figures from the project root:
++Run the independent checks and regenerate figures from the package\textquotesingle s \texttt{research/} directory:
+ 
+ \begin{verbatim}
+ python3 checks/coupled_v11.py
+--- before/monograph/sections_v11/coupled_structure_full.tex
++++ after/monograph/sections_v11/coupled_structure_full.tex
+@@ -1,6 +1,6 @@
+ \hypertarget{v11-coupled_structure_full-constant-linear-coordinates-and-coupled-dilation}{%
+ \chapter[Constant linear coordinates]{Constant linear coordinates and coupled
+-dilation}\label{v11-coupled_structure_full-constant-linear-coordinates-and-coupled-dilation}}
++dilation}\label{app:coupled-structure}\label{v11-coupled_structure_full-constant-linear-coordinates-and-coupled-dilation}}
+ 
+ \hypertarget{v11-coupled_structure_full-exact-meaning-of-decoupling}{%
+ \section{Exact meaning of
+@@ -41,7 +41,7 @@
+ \section{Classification of autonomous linear
+ projections}\label{v11-coupled_structure_full-classification-of-autonomous-linear-projections}}
+ 
+-\textbf{Theorem S1.} For positive nonzero scales, a nonzero row \(c\)
++\textbf{Theorem H.1.} For positive nonzero scales, a nonzero row \(c\)
+ satisfies (S2) if and only if
+ 
+ \[
+@@ -150,7 +150,7 @@
+ \]
+ 
+ of rank two, whereas a square of one linear coordinate has rank one.
+-Rank is then the appropriate obstruction. The fiber proof in Theorem S1
++Rank is then the appropriate obstruction. The fiber proof in Theorem H.1
+ handles node coincidences and cancellations without mixing these two
+ cases.
+ 
+@@ -158,7 +158,7 @@
+ \section{Particular solutions and degenerate
+ parameters}\label{v11-coupled_structure_full-particular-solutions-and-degenerate-parameters}}
+ 
+-Theorem S1 is an operator statement. It does not exclude coincident
++Theorem H.1 is an operator statement. It does not exclude coincident
+ components for particular initial data, algebraic relations along a
+ solution, elimination into a scalar equation of higher order, nonlinear
+ coordinate changes, or identities with other named special functions.
+@@ -170,7 +170,7 @@
+ \((a,b)=(r,q)\): \((T,T)\) solves both equations because multiplication
+ is commutative, and uniqueness identifies the normalized solution. For
+ \(q\ne r\), this reversed-pair case has no autonomous scalar operator
+-projection by Theorem S1, despite having \(U=V\) along its normalized
++projection by Theorem H.1, despite having \(U=V\) along its normalized
+ solution. This is a concrete reason the two notions must remain
+ distinct.
+ 
+@@ -200,11 +200,11 @@
+ This triangular system is not a completely decoupled operator. The
+ normalized solution lies in the invariant subspace \(d=0\).
+ 
+-Zero scales lie outside Theorem S1. On zero-constant inputs, a product
++Zero scales lie outside Theorem H.1. On zero-constant inputs, a product
+ vanishes identically if either of its scales is zero. If both products
+ vanish, both equations are already \(u'=v'=1\). If only the first
+ product vanishes, the projection \(u\) is autonomous, regardless of
+-whether the second pair agrees with the first. Thus extending Theorem S1
++whether the second pair agrees with the first. Thus extending Theorem H.1
+ to zero scales would be false. Scale one and positive scales greater
+ than one do not affect the algebraic operator theorem, although the
+ contraction-domain entire growth theorems do not automatically extend to
+@@ -214,7 +214,7 @@
+ \hypertarget{v11-coupled_structure_full-claim-status}{%
+ \section{Claim status}\label{v11-coupled_structure_full-claim-status}}
+ 
+-Theorem S1 and (S7) are proved above. The proof is elementary and
++Theorem H.1 and (S7) are proved above. The proof is elementary and
+ independent of the coupled growth theorem. Historical priority for these
+ precise operator statements is not asserted. The theorem provides a
+ specified nondecoupling result, not a universal assertion that the
+--- before/monograph/sections_v11/extension_overview.tex
++++ after/monograph/sections_v11/extension_overview.tex
+@@ -27,7 +27,7 @@
+ Example & Observation & What the certificate gives\\\midrule
+ Weak feedback tap & Values on a complex disk & An explicit compact error and a sufficient radius for separation\\
+ Excluded prime & Values and derivatives & Exact disk bounds and a negative-depth visibility bracket\\
+-Negative sieve atom & All polynomial tests up to a degree & Positive norms through degree four and a negative degree-seven witness\\
++Negative sieve atom & All polynomial tests up to a degree & Positive quadratic forms through degree four and a negative degree-seven witness\\
+ \bottomrule
+ \end{tabular}
+ \end{center}
+--- before/monograph/sections_v11/release_status.tex
++++ after/monograph/sections_v11/release_status.tex
+@@ -13,7 +13,7 @@
+ \end{tabular}
+ 
+ \claim{Verification and reproducibility}
+-The coupled-system finite suite passes \textbf{5,272 exact assertions and 26 numerical
++The archived coupled-system run records \textbf{5,272 exact assertions and 26 numerical
+ assertions}. Thirteen input and resource guards are recorded separately.
+ The exact inverse is checked on 256 rational parameter tuples. The coupled
+ API is compared with an independent dense Picard construction and classical
+@@ -21,8 +21,8 @@
+ These counts are separate from the earlier four-family evidence of 19,871 exact
+ and 5,576 numerical assertions.
+ 
+-Independent mathematical review reconstructs the proof implications and the
+-preserved source files. It corrected an initial-segment quantifier in the
++The preserved coupled-family review reconstructs the proof implications and
++the source files. It corrected an initial-segment quantifier in the
+ detector theorem. The worked certificate already used that initial segment.
+ The source package records the correction, the repair of a figure label, and the successful checks.
+ 
+--- before/monograph/sections_v11/resolution_full.tex
++++ after/monograph/sections_v11/resolution_full.tex
+@@ -1,6 +1,6 @@
+ \hypertarget{v11-resolution_full-a-visual-atlas-of-finite-resolution}{%
+ \chapter[Finite-resolution certificates]{A visual atlas of finite
+-resolution}\label{v11-resolution_full-a-visual-atlas-of-finite-resolution}}
++resolution}\label{app:resolution}\label{v11-resolution_full-a-visual-atlas-of-finite-resolution}}
+ 
+ A structural change need not produce a large change in the measurements
+ we can make. A tiny feedback tap can change the order of an entire
+@@ -40,11 +40,12 @@
+ Arithmetic depth & The excluded prime set changes & Values or finitely
+ many derivatives on a disk & A bracket for the negative depth needed to
+ reach an absolute tolerance \\
+-Signed sieve & One prime shelf has negative mass & All squared
+-polynomial norms up to a given degree & An explicit rational polynomial
+-with negative norm \\
++Signed sieve & One prime shelf has negative mass & All polynomial
++quadratic forms up to a given degree & An explicit rational polynomial
++with negative quadratic form \\
+ \end{longtable}
+ 
++\Needspace{9\baselineskip}
+ \hypertarget{v11-resolution_full-a-weak-tap-that-changes-global-growth}{%
+ \section{A weak tap that changes global
+ growth}\label{v11-resolution_full-a-weak-tap-that-changes-global-growth}}
+@@ -124,8 +125,7 @@
+ consistent with both functions throughout the disk. This is an ambiguity
+ under a stated noise allowance, not equality of their exact values.
+ 
+-\emph{The corresponding figure appears in the resolution visual
+-chapter.}
++See Figure~\ref{fig:resolution_01_weak_tap} in Chapter~\ref{ch:resolution}.
+ 
+ \textbf{How to read the figure.} The left curves divide the difference
+ by the tap weight, so the relevant small quantity is the plotted height
+@@ -139,7 +139,7 @@
+ \subsection{A radius at which a difference is
+ guaranteed}\label{v11-resolution_full-a-radius-at-which-a-difference-is-guaranteed}}
+ 
+-The base lower-type theorem supplies, for every \(\varepsilon>0\),
++The base lower-type theorem supplies, for every \(0<\varepsilon\le1\),
+ 
+ \[
+ \log F_\varepsilon(R)\ge c_\varepsilon(R+3/\varepsilon)^\rho
+@@ -209,8 +209,7 @@
+ formula grows proportionally to \(\varepsilon^{-\rho/(\rho-1/2)}\) as
+ the tap vanishes.
+ 
+-\emph{The corresponding figure appears in the resolution visual
+-chapter.}
++See Figure~\ref{fig:resolution_02_growth_resolution} in Chapter~\ref{ch:resolution}.
+ 
+ \hypertarget{v11-resolution_full-an-excluded-prime-and-the-precision-needed-to-see-it}{%
+ \section{An excluded prime and the precision needed to see
+@@ -278,8 +277,7 @@
+ 10007 & \(1.330\times10^{-16}\) \\
+ \end{longtable}
+ 
+-\emph{The corresponding figure appears in the resolution visual
+-chapter.}
++See Figure~\ref{fig:resolution_03_prime_precision} in Chapter~\ref{ch:resolution}.
+ 
+ \hypertarget{v11-resolution_full-increasing-negative-depth-gives-a-two-sided-threshold-bracket}{%
+ \subsection{Increasing negative depth gives a two-sided threshold
+@@ -369,8 +367,7 @@
+ full functions at those enormous depths. The logarithmic bound is
+ computed directly without forming those functions.
+ 
+-\emph{The corresponding figure appears in the resolution visual
+-chapter.}
++See Figure~\ref{fig:resolution_04_prime_depth} in Chapter~\ref{ch:resolution}.
+ 
+ \hypertarget{v11-resolution_full-a-negative-atom-that-every-low-degree-test-misses}{%
+ \section{A negative atom that every low-degree test
+@@ -385,10 +382,10 @@
+ -\delta\sum_{\substack{n\ge1\\\mu(n)^2=1\\n\text{ even}}}n^{-4}f(x_n)^2.
+ \]
+ 
+-Every even squarefree atom has negative mass. We will certify that all
+-polynomials through degree four nevertheless have positive norm for
++Every even squarefree atom has negative mass. We will certify that all nonzero real
++polynomials through degree four nevertheless have positive quadratic form for
+ \(\delta=10^{-12}\), and then construct a degree-seven polynomial of
+-negative norm. This is an assertion about every polynomial in a
++negative quadratic form. This is an assertion about every polynomial in a
+ finite-dimensional space, not a plot of a few test vectors.
+ 
+ \hypertarget{v11-resolution_full-a-rational-certificate-for-every-polynomial-through-a-chosen-degree}{%
+@@ -441,7 +438,7 @@
+ \]
+ 
+ The inequality is checked as an exact rational comparison. Therefore
+-every nonzero polynomial of degree at most four has positive norm in the
++every nonzero polynomial of degree at most four has positive quadratic form in the
+ chosen signed measure.
+ 
+ \hypertarget{v11-resolution_full-a-shorter-detector-by-killing-the-first-positive-shelves}{%
+@@ -511,8 +508,7 @@
+ 21 for this defect. Using the known sign pattern and killing later
+ positive shelves reduces the exhibited degree to seven.
+ 
+-\emph{The corresponding figure appears in the resolution visual
+-chapter.}
++See Figure~\ref{fig:resolution_05_signed_detector} in Chapter~\ref{ch:resolution}.
+ 
+ The fifth-order Hankel matrix is therefore positive definite, while the
+ eighth-order matrix is not positive semidefinite. The two intervening
+@@ -541,11 +537,12 @@
+ no historical novelty claim for interpolation, spectral peeling, or the
+ use of isolating polynomials.
+ 
++\Needspace{11\baselineskip}
+ \hypertarget{v11-resolution_full-reproduction-and-evidence}{%
+ \section{Reproduction and
+ evidence}\label{v11-resolution_full-reproduction-and-evidence}}
+ 
+-Run from the release root:
++Run from the package\textquotesingle s \texttt{research/} directory:
+ 
+ \begin{verbatim}
+ python checks/resolution_v11.py
+@@ -557,7 +554,7 @@
+ checks}, with source hashes and exact certificate numerators and
+ denominators. It tests interpolation identities in the monomial basis,
+ all selected root values, sample envelope inequalities, exact negative
+-norms for finite sums, coefficient continuity bounds and each displayed
++quadratic forms for finite sums, coefficient continuity bounds and each displayed
+ certificate. The universal analytic conclusions rely on the proofs
+ above, rather than on the finite count.
+ 
+--- before/monograph/sections_v11/resolution_visual.tex
++++ after/monograph/sections_v11/resolution_visual.tex
+@@ -144,7 +144,7 @@
+ 
+ \pageheading{RESOLUTION ATLAS\; /\; NEGATIVE ATOMS}{A degree-seven witness exposes a signed defect}
+ Let $x_n=(1-n^{-2})^2$, and change the prime-two sieve strength to
+-$\lambda_2=-1-\delta$. For a real polynomial $f$, its squared norm is
++$\lambda_2=-1-\delta$. For a real polynomial $f$, the associated quadratic form is
+ \[
+ Q_\delta(f)=\sum_{\substack{n\ge1\\\mu(n)^2=1\\n\text{ odd}}}
+  \frac{f(x_n)^2}{n^4}
+@@ -183,7 +183,7 @@
+ \pageheading{RESOLUTION ATLAS\; /\; ALL LOW DEGREES}{Passing every coarse test can still miss the defect}
+ The previous witness would be less informative without a converse guarantee
+ at lower resolution. For the same defect $\delta=10^{-12}$, every nonzero
+-polynomial of degree at most four has strictly positive norm. This quantifies
++polynomial of degree at most four has strictly positive quadratic form. This quantifies
+ the information that the coarse test actually misses.
+ 
+ \vfig{resolution_06_degree_gap}{The blue boundary certifies positivity

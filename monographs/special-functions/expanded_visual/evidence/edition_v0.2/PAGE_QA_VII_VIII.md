@@ -1,0 +1,11 @@
+# Final page QA: Papers VII–VIII
+
+Passed bounded visual review of all 24 assigned physical pages 86–109, corresponding to lessons 81–104. No unresolved clipping, collision, missing glyph, or source-footer layout issue was found.
+
+The reviewed renders came from the 116-page PDF with SHA256 `af226548d44092993141d7ca0794b5f82eaa13a7a20c6e5646b60dcf42e5832f`, independently verified against both PDF copies before outside-range cover/I04 edits. Final binding is sealed to SHA256 `3334d18814f2752ebd9a76ec965bf3165ea77119534b04896132d4ebabf4d530`. All 24 assigned pages were independently compared against their final renders and are pixel-identical; the root equivalence evidence is `FINAL_RENDER_EQUIVALENCE.json`. Pages were rendered at requested 110 dpi; PNG metadata reports approximately 109.982 dpi, with 935×1210 pixel pages. Exact page and contact filenames, hashes, lesson mappings, and inspection modes are recorded in `PAGE_QA_VII_VIII.json`.
+
+All six contact sheets were inspected. Physical pages 88, 93, 100, 104, 108, and 109 also received individual full-size rechecks. The 3D axis caption and gutter are clear; long gauge and seed equations fit within margins; corrected ket glyphs and the entropy annotation render cleanly. The final scalar duality notation and scalar-domain source footers on pages 108–109 are readable and separated from page numbering. Plot titles, legends, colorbars, carry boxes, chapter tags, and printed lesson numbers are clear and ordered throughout the range.
+
+This is a rendered-layout and visible-consistency review at 110 dpi. It is not a new proof audit, computation rerun, validation of every source citation, or physical print proof. Primary chapter-page coverage is physical pages 86–109; additional mesh checks cover physical pages 64 and 76. Evidence applies to the final PDF hash recorded above. Later changes affecting reviewed pages require rechecking.
+
+Final master pages 64 and 76 also received individual full-size 110-dpi checks after the PDF mesh fix. The white tiled-mesh crosshatching is absent in both; the magnitude/phase fields, axes, labels, colorbars, equations, and source/footer layout are clear. Their exact final render hashes are included in the JSON.

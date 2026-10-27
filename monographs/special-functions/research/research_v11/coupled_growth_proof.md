@@ -1,0 +1,528 @@
+# Coupled contraction functions and their Perron growth law
+
+Checkpoint: **SF-DISCOVERY-110**. Base: **SF-DISCOVERY-100**, source archive
+SHA256 `ca4debff6f9653b784b849ccc7519fcf2493a7a24e814658a950a936e8513f21`.
+This route extends the scalar fixed-width argument in
+`new_results/dilation_type.md`. Its exact target and strict parameter domain
+are recorded in `research_v11/TARGET_CONTRACT.json`. Owner:
+`/root/coupled_growth_proof`. The author's mathematical proof is complete.
+Independent review is recorded separately by the coordinating release.
+
+## 1. Definition and exact coefficient construction
+
+Fix real parameters
+
+\[
+0<q,r,a,b<1.
+\]
+
+Consider the normalized pair
+
+\[
+\boxed{\begin{aligned}
+U'(z)&=1+U(qz)V(rz),\\
+V'(z)&=1+U(az)V(bz),\\
+U(0)&=V(0)=0.
+\end{aligned}}
+\]
+
+**Theorem 1.** There is a unique pair of entire solutions. Both functions are
+odd and have strictly positive coefficients at every odd degree. Write
+
+\[
+U(z)=\sum_{n\ge0}u_nz^{2n+1},\qquad
+V(z)=\sum_{n\ge0}v_nz^{2n+1}.
+\]
+
+Then \(u_0=v_0=1\), and, for \(n\ge1\),
+
+\[
+\begin{aligned}
+u_n&=\frac1{2n+1}\sum_{i=0}^{n-1}
+ q^{2i+1}r^{2(n-1-i)+1}u_i v_{n-1-i},\\
+v_n&=\frac1{2n+1}\sum_{i=0}^{n-1}
+ a^{2i+1}b^{2(n-1-i)+1}u_i v_{n-1-i}.
+\end{aligned}
+\]
+
+**Proof.** Comparing successive coefficients in the differential equations
+determines the coefficient of degree \(k+1\) from coefficients of degrees at
+most \(k\). Thus the formal pair is unique. The displayed recurrence constructs
+an odd formal pair satisfying both equations. Formal uniqueness excludes any
+additional even coefficients. Strict positivity follows by induction.
+
+The elementary bounds
+
+\[
+0<u_n\le2^{-n},\qquad 0<v_n\le2^{-n}
+\]
+
+hold by simultaneous induction. If they hold below \(n\), each product in
+either recurrence is at most \(2^{-(n-1)}\), and there are \(n\) products.
+The resulting bound is
+\(n2^{-(n-1)}/(2n+1)<2^{-n}\). Hence the two series converge on
+\(|z|<\sqrt2\), and define a holomorphic solution there.
+
+Put \(Q=\max(q,r,a,b)<1\). If the pair is already defined on \(|z|<R\),
+then
+
+\[
+\int_0^z[1+U(qw)V(rw)]\,dw,\qquad
+\int_0^z[1+U(aw)V(bw)]\,dw
+\]
+
+define holomorphic extensions on \(|z|<R/Q\). The integrands are
+holomorphic on that disk. On the old disk the new functions agree with the
+old pair because their derivatives and values at zero agree. On the larger
+disk, every contracted argument still lies in the old disk, so the extensions
+satisfy the same equations. Iterating exhausts the complex plane. Any other
+entire solution agrees with the unique germ and therefore everywhere. \(\square\)
+
+In particular,
+
+\[
+\begin{aligned}
+U(z)&=z+\frac{qr}{3}z^3
+ +\frac{qr(qr\,q^2+ab\,r^2)}{15}z^5+O(z^7),\\
+V(z)&=z+\frac{ab}{3}z^3
+ +\frac{ab(qr\,a^2+ab\,b^2)}{15}z^5+O(z^7).
+\end{aligned}
+\]
+
+The factorial coefficients \(A_n=(2n+1)!u_n\) and
+\(B_n=(2n+1)!v_n\) satisfy
+
+\[
+\begin{aligned}
+A_n&=\sum_{i=0}^{n-1}\binom{2n}{2i+1}
+ q^{2i+1}r^{2(n-1-i)+1}A_iB_{n-1-i},\\
+B_n&=\sum_{i=0}^{n-1}\binom{2n}{2i+1}
+ a^{2i+1}b^{2(n-1-i)+1}A_iB_{n-1-i}.
+\end{aligned}
+\]
+
+Thus \(A_n,B_n\) are polynomials with nonnegative integer coefficients in the
+four scales. These formulas are exact algebraic constructions. Finite checks of
+them do not replace the analytic proof.
+
+## 2. The characteristic exponent and its positive vector
+
+For \(s>0\), let
+
+\[
+P(s)=\begin{pmatrix}q^s&r^s\\a^s&b^s\end{pmatrix}.
+\]
+
+There is a unique \(\rho>0\) with
+
+\[
+\boxed{(1-q^\rho)(1-b^\rho)=(ar)^\rho.}
+\]
+
+Indeed, the left side strictly increases continuously from zero to one, while
+the right side strictly decreases continuously from one to zero. This equation
+is precisely \(\det(I-P(\rho))=0\). Define
+
+\[
+\widetilde w=(r^\rho,1-q^\rho)^T,
+\qquad
+w=\frac{\widetilde w}{\max(r^\rho,1-q^\rho)}.
+\]
+
+Both coordinates of \(w\) are positive, \(\max(w_1,w_2)=1\), and direct
+multiplication gives
+
+\[
+P(\rho)w=w.
+\]
+
+The other eigenvalue is \(q^\rho+b^\rho-1\), whose absolute value is strictly
+less than one. Consequently
+
+\[
+\boxed{\operatorname{spr}P(\rho)=1.}
+\]
+
+Conversely, a positive matrix of this form having spectral radius one has
+eigenvalue one and satisfies the determinant equation. This proves the proposed
+spectral characterization without requiring a numerical eigensolver. A positive
+left eigenvector is
+
+\[
+\ell=(a^\rho,1-q^\rho)^T,\qquad \ell^TP(\rho)=\ell^T.
+\]
+
+The notation \(w\) for the growth vector is deliberately different from
+\(v_n\), the coefficients of \(V\).
+
+## 3. Exact order and explicit positive type bounds
+
+For \(R>0\), positivity gives
+
+\[
+M_U(R)=\max_{|z|=R}|U(z)|=U(R),\qquad
+M_V(R)=V(R).
+\]
+
+Set \(F_1=U\), \(F_2=V\), and
+\(H_i(R)=\log F_i(R)\). Since \(F_i(R)\ge R\), these logarithms are positive
+for \(R>1\). The type convention used here is
+
+\[
+\underline\tau_i=\liminf_{R\to\infty}\frac{\log M_{F_i}(R)}{R^\rho},
+\qquad
+\overline\tau_i=\limsup_{R\to\infty}\frac{\log M_{F_i}(R)}{R^\rho}.
+\]
+
+**Theorem 2.** Both functions have order \(\rho\), positive lower type and
+finite upper type. More precisely, the explicit constants below satisfy
+
+\[
+0<c_-w_i\le\underline\tau_i\le\overline\tau_i\le c_+w_i<\infty,
+\qquad i=1,2.
+\]
+
+Moreover,
+
+\[
+\lim_{R\to\infty}\frac{\log\log M_{F_i}(R)}{\log R}=\rho.
+\]
+
+This radial exponent limit is stronger than the limsup used to define order.
+It does not assert that either type has a limit or that growth is uniform in
+the angular variable.
+
+### 3.1 Explicit lower comparison
+
+Let
+
+\[
+m=\min(q,r,a,b),\qquad Q=\max(q,r,a,b),
+\]
+
+\[
+C=\frac{Q}{1-Q},\qquad B=1+\frac2m,
+\qquad c_-=\frac{\log2}{(B+C)^\rho}.
+\]
+
+We prove the stronger statement
+
+\[
+\boxed{H_i(R)\ge c_-w_i(R+C)^\rho\quad(R\ge2,\ i=1,2).}
+\]
+
+On \(2\le R\le B\), its right side is at most \(\log2\), because
+\(w_i\le1\), whereas \(H_i(R)\ge\log R\ge\log2\).
+
+For the first equation, integrate only over the final unit interval to obtain,
+when \(R\ge B\),
+
+\[
+U(R)\ge\int_{R-1}^R U(qt)V(rt)\,dt
+\ge U(q(R-1))V(r(R-1)).
+\]
+
+The second equation gives the same inequality with \((q,r)\) replaced by
+\((a,b)\) and \(U(R)\) replaced by \(V(R)\). All four child radii are at
+least two. Every scale \(p\in\{q,r,a,b\}\) satisfies
+
+\[
+p(R-1)+C\ge p(R+C),
+\]
+
+because \((1-p)C\ge p\). If the comparison already holds at the child
+radii, then
+
+\[
+\begin{aligned}
+H_1(R)&\ge c_-\{w_1[q(R-1)+C]^\rho
+                     +w_2[r(R-1)+C]^\rho\}\\
+&\ge c_-(q^\rho w_1+r^\rho w_2)(R+C)^\rho
+=c_-w_1(R+C)^\rho.
+\end{aligned}
+\]
+
+The second row of \(P(\rho)w=w\) proves the second component in exactly
+the same way.
+
+For a formal propagation, put
+
+\[
+d=(1-Q)B+Q>0.
+\]
+
+Every child of \(R\ge B\) is at most
+\(Q(R-1)\le R-d\). Simultaneous induction over the intervals
+\([B+kd,B+(k+1)d]\), starting with the established seed interval, therefore
+proves both comparisons for every \(R\ge2\). Continuity handles shared
+endpoints. The argument uses only monotonicity of positive powers and works
+unchanged when \(0<\rho<1\).
+
+### 3.2 Explicit upper comparison
+
+Set
+
+\[
+\Delta=\log(1/m),\qquad
+D=\max\left(\log\frac1{qr},\log\frac1{ab}\right)+\log2.
+\]
+
+Choose any integer \(N\ge0\) satisfying \(Q^{-N}\ge3/m\), and define
+
+\[
+W_N=(2^{N+1}-1)\log2
+ +(2^{N+1}-N-2)\log(1/Q),
+\]
+
+\[
+S=W_N+1+\Delta+D,\qquad
+c_+=\frac{e^{-\rho}S}{\min(w_1,w_2)}.
+\]
+
+These constants require only the parameters and the uniquely defined root
+\(\rho\). They require no evaluation of an unknown solution.
+
+To bound a seed interval, the coefficient majorant from Theorem 1 gives
+\(F_i(1)\le2\). Put \(R_k=Q^{-k}\), \(Z_0=2\), and
+
+\[
+Z_k=Q^{-k}(1+Z_{k-1}^2).
+\]
+
+Monotonicity of the positive functions and the integral equations give
+\(F_i(R_k)\le Z_k\) simultaneously. As \(Z_k\ge1\),
+
+\[
+\log Z_k\le k\log(1/Q)+\log2+2\log Z_{k-1}.
+\]
+
+Summing this elementary recurrence gives \(\log Z_N\le W_N\). Therefore
+\(H_i(e^t)\le W_N\) throughout \(1\le t\le1+\Delta\), since
+\(e^t\le e/m<3/m\le R_N\).
+
+Now let
+
+\[
+G_i(t)=H_i(e^t)+t+D.
+\]
+
+For \(t\ge1+\Delta\), all child radii are at least \(e\), so their
+function values are at least one. The full integral gives
+
+\[
+H_1(e^t)\le t+\log2
+ +H_1(e^{t-\log(1/q)})+H_2(e^{t-\log(1/r)}).
+\]
+
+The definition of \(D\) converts this into
+
+\[
+G_1(t)\le G_1(t-\log(1/q))+G_2(t-\log(1/r)).
+\]
+
+Similarly,
+
+\[
+G_2(t)\le G_1(t-\log(1/a))+G_2(t-\log(1/b)).
+\]
+
+On the seed interval, \(G_i(t)\le S\le c_+w_i e^{\rho t}\). The
+Perron equation propagates this comparison: substituting the bounds at the
+children in the first inequality gives
+\(c_+e^{\rho t}(q^\rho w_1+r^\rho w_2)=c_+w_1e^{\rho t}\), and the second
+row works likewise. All logarithmic delays belong to
+\([\log(1/Q),\Delta]\). Induction in intervals of length
+\(\log(1/Q)>0\), after the seed interval, therefore proves
+
+\[
+\boxed{H_i(R)\le c_+w_iR^\rho-\log R-D\quad(R\ge e).}
+\]
+
+The lower and upper comparisons imply the asserted positive, finite types.
+Taking logarithms of these bounds for sufficiently large \(R\) gives the
+claimed radial exponent limits and hence exact orders. \(\square\)
+
+## 4. The two type vectors have exactly the Perron proportions
+
+The explicit constants above are conservative. There is nevertheless an exact
+statement about the relative types of the two components.
+
+**Theorem 3.** There exist positive finite constants
+\(\underline\tau\le\overline\tau\) such that
+
+\[
+\boxed{\begin{aligned}
+(\underline\tau_1,\underline\tau_2)^T&=\underline\tau\,w,\\
+(\overline\tau_1,\overline\tau_2)^T&=\overline\tau\,w.
+\end{aligned}}
+\]
+
+In particular,
+
+\[
+\frac{\underline\tau_1}{\underline\tau_2}
+=\frac{\overline\tau_1}{\overline\tau_2}
+=\frac{r^\rho}{1-q^\rho}
+=\frac{1-b^\rho}{a^\rho}.
+\]
+
+Either both ordinary type limits exist or neither does. When they exist,
+their vector is a positive multiple of \(w\).
+
+**Proof.** Use the final-unit integral inequality from the lower proof and
+divide by \(R^\rho\). Taking the liminf gives
+
+\[
+\underline t\ge P(\rho)\underline t,
+\qquad
+\underline t=(\underline\tau_1,\underline\tau_2)^T.
+\]
+
+Here \(p(R-1)\) tends to infinity continuously and
+\([p(R-1)]^\rho/R^\rho\to p^\rho\), which justifies each scaled liminf.
+The liminf of a sum is at least the sum of the liminfs. All quantities are
+positive and finite by Theorem 2.
+
+The full-integral inequality
+
+\[
+H_1(R)\le\log R+\log2+H_1(qR)+H_2(rR)
+\]
+
+and its second-row counterpart imply, on taking the limsup,
+
+\[
+\overline t\le P(\rho)\overline t.
+\]
+
+The terms \((\log R+\log2)/R^\rho\) vanish. Dotting either componentwise
+inequality with the strictly positive left eigenvector \(\ell\) from
+Section 2 shows that its nonnegative difference vector has zero positive
+weighted sum. Every coordinate of that difference is therefore zero. Thus
+both type vectors are fixed by \(P(\rho)\). Its eigenvalue-one space is
+one dimensional, so each is a positive multiple of \(w\).
+
+If one component has an ordinary type limit, its lower and upper types are
+equal. Because that coordinate of \(w\) is positive, this forces
+\(\underline\tau=\overline\tau\), and the other component also has a type
+limit. \(\square\)
+
+This theorem does not assert a limit for
+\(\log U(R)/\log V(R)\) when type oscillations persist. It also does not
+identify the scalar values of either type or prove their equality.
+
+## 5. Reductions, a worked unequal pair, and parameter structure
+
+**Exact scalar reduction.** The components coincide if and only if the
+unordered pairs of scales coincide:
+
+\[
+U=V\quad\Longleftrightarrow\quad\{q,r\}=\{a,b\}.
+\]
+
+For sufficiency, the scalar solution \(T_{q,r}\) from
+`routes/asymmetric_dilation.md` makes \((T_{q,r},T_{q,r})\) solve the coupled
+equations. Theorem 1 gives uniqueness. For necessity, equality at degree three
+gives \(qr=ab=p>0\). Equality at degree five then gives
+\(q^2+r^2=a^2+b^2\). The two positive unordered pairs have the same product
+and the same sum \(\sqrt{q^2+r^2+2p}\), so they coincide. This characterizes
+equality of the normalized components. A stronger assertion about all possible
+changes of variables requires its own nonreduction theorem.
+
+On either scalar reduction locus, the characteristic equation is equivalent
+to \(q^\rho+r^\rho=1\), recovering the scalar order theorem. At
+\(q=r=a=b=1/2\),
+
+\[
+U(z)=V(z)=\sqrt2\sinh(z/\sqrt2),\qquad \rho=1.
+\]
+
+**A genuinely unequal order-one pair.** Set
+
+\[
+(q,r,a,b)=\left(\frac15,\frac25,\frac35,\frac7{10}\right).
+\]
+
+The determinant identity at \(\rho=1\) is
+\((1-1/5)(1-7/10)=(3/5)(2/5)=6/25\). Thus the exact order is one, and
+
+\[
+w=(1/2,1)^T.
+\]
+
+The first terms are
+
+\[
+\begin{aligned}
+U(z)&=z+\frac2{75}z^3+\frac{88}{234375}z^5
+ +\frac{18814}{8544921875}z^7+O(z^9),\\
+V(z)&=z+\frac7{50}z^3+\frac{8211}{1250000}z^5
+ +\frac{85664601}{625000000000}z^7+O(z^9).
+\end{aligned}
+\]
+
+Both lower and upper exponential types of \(V\) are exactly twice the
+corresponding types of \(U\). The row sums of \(P(1)\) are \(3/5\) and
+\(13/10\). Consequently neither an unweighted average row condition nor the maximum
+of the two scalar row orders yields this example's coupled order. The positive
+eigenvector accounts for the exchange of growth between the components.
+
+For this example the elementary lower constants are
+\(m=1/5\), \(Q=7/10\), \(C=7/3\), \(B=11\), and
+\(c_-=3\log2/40\). Hence, for every \(R\ge2\),
+
+\[
+\log U(R)\ge\frac{3\log2}{80}\left(R+\frac73\right),\qquad
+\log V(R)\ge\frac{3\log2}{40}\left(R+\frac73\right).
+\]
+
+**Dependence of the order on the scales.** The determinant equation shows
+that the order depends on the self scales \(q,b\) and the product \(ar\)
+of the two cross scales. Changing \(a\) and \(r\) while keeping their
+product fixed leaves the order fixed, provided both remain in \((0,1)\).
+The Perron vector and the normalized functions generally change.
+
+For any prescribed \(s>0\) and any \(q,r\in(0,1)\), choices satisfying
+
+\[
+a^s r^s=(1-q^s)(1-b^s),\qquad 0<a,b<1,
+\]
+
+lie on the order-\(s\) surface. For instance, one may select \(q,r,b\)
+with \((1-q^s)(1-b^s)<r^s\), then define
+
+\[
+a=\frac{[(1-q^s)(1-b^s)]^{1/s}}{r}.
+\]
+
+This constructs exact order surfaces without fitting growth from truncated
+series.
+
+## 6. Proof provenance and remaining questions
+
+The decisive extension is from a scalar positive comparison to a comparison
+weighted by a positive eigenvector. The fixed-width integral controls the
+lower type at the exact exponent. A fixed proportional interval
+\([\alpha R,R]\), with \(\alpha<1\), would only give a smaller exponent
+through \(\alpha^sP(s)\). Letting \(\alpha\) tend to one recovers exact
+order but does not, by itself, yield positive lower type. This is a limitation
+of that alternative route, not a failure of the theorem.
+
+The complete proofs above close the target on the strictly positive
+contraction domain. No computed example is used as a universal analytic
+premise. The displayed rational Taylor coefficients were evaluated directly
+from the exact recurrence with Python `fractions.Fraction` as a transcription
+check. Their independent formal residual checks belong to the release's exact
+computation record.
+
+Remaining questions include the existence and value of ordinary type limits,
+possible oscillations, zeros, angular growth, connection formulas, and regimes
+with zero, negative, complex, or noncontracting scales. Positivity and strict
+contraction are hypotheses of the results here. This route makes no historical
+priority claim and no claim of a Lean formalization.
+
+Self-review coverage: this entire file. Routine checks: consistent coefficient
+and eigenvector notation, domains for every logarithm and power, seed and child
+interval endpoints, and both vector orientations. No unresolved mathematical
+gap was identified in the author's self-review. Independent review remains a
+separate record.

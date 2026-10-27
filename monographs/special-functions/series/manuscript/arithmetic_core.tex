@@ -1,0 +1,353 @@
+\chapter{An exact packet spine for special functions}
+
+The first three volumes have a common mathematical spine: exact analysis and synthesis, refinement of an analytic seed, arithmetic scale transfer, a positive moment measure, and its spectral realizations. This chapter consolidates that spine while retaining the distinction between proved coordinate identities, classical asymptotic inputs, and the unresolved signed estimate. Source references name the original volume and claim title. They provide provenance rather than a new certification of every source proof.
+
+\section{Coefficient packets and ordered differential transport}
+
+Let $F(z)=\sum_{n\ge0}a_nz^n$ be an analytic germ at the origin and let $M\ge2$ be an integer. Its coefficient packets are
+\[
+F_{M,r}(u)=\sum_{m\ge0}a_{Mm+r}u^m,
+\qquad 0\le r<M.
+\]
+These are analytic germs in $u$. This construction is Volume I, ``Residue-section functions'' and ``Exact polyphase reconstruction.''
+
+\begin{proposition}[Exact packet reconstruction and refinement]
+Where the defining series converge,
+\[
+F(z)=\sum_{r=0}^{M-1}z^rF_{M,r}(z^M).
+\]
+For an integer $L\ge1$, refinement satisfies
+\[
+F_{M,r}(u)=\sum_{\ell=0}^{L-1}u^\ell
+F_{LM,r+M\ell}(u^L).
+\]
+\end{proposition}
+\begin{proof}
+The first identity partitions each exponent uniquely as $n=Mm+r$. In the second identity, partition the packet index as $m=Lj+\ell$. Then
+$Mm+r=LMj+r+M\ell$, and the corresponding term is
+$a_{LMj+r+M\ell}u^{Lj+\ell}$. Both identities preserve every coefficient.
+\end{proof}
+
+Write $\boldsymbol F_M=(F_{M,0},\ldots,F_{M,M-1})^T$. Define the carry matrix by
+\[
+C_M(u)_{0,M-1}=u,
+\qquad C_M(u)_{r,r-1}=1\quad(1\le r<M),
+\]
+with all other entries zero, and define
+\[
+\Theta_M=Mu\frac{d}{du}I_M+
+\operatorname{diag}(0,1,\ldots,M-1).
+\]
+The synthesis map $\mathcal S_M\boldsymbol f(z)=\sum_rz^rf_r(z^M)$ is injective on analytic packet germs. Multiplication and the Euler derivative intertwine as
+\[
+\mathcal S_M(C_M\boldsymbol f)=z\mathcal S_M\boldsymbol f,
+\qquad
+\mathcal S_M(\Theta_M\boldsymbol f)=
+z\frac{d}{dz}\mathcal S_M\boldsymbol f.
+\]
+Indeed, multiplication advances the residue address and wraps the last address with one factor $u$; the Euler operator multiplies $u^m$ in address $r$ by $Mm+r$. Consequently
+\[
+[\Theta_M,C_M]=C_M.
+\]
+For every ordered polynomial differential expression $\mathcal L(z,\theta)$, where $\theta=z\,d/dz$,
+\[
+\mathcal L(z,\theta)F=0
+\quad\Longrightarrow\quad
+\mathcal L(C_M,\Theta_M)\boldsymbol F_M=0.
+\]
+Intertwine each ordered monomial and apply injectivity. This is Volume I, ``Intertwining laws,'' ``Weyl commutator,'' and ``Differential lift.'' The order of operator factors is part of the statement.
+
+\section{Bernoulli--Hurwitz refinement}
+
+For a real translation parameter $a>0$, define
+\[
+\mathfrak B(z;a)=-z\zeta(1-z,a),
+\qquad
+\mathfrak B_{M,r}(z;a)=
+-zM^{z-1}\zeta\!\left(1-z,\frac{a+r}{M}\right).
+\]
+The order variable is $z\in\mathbb C$. The removable values are
+$\mathfrak B(0;a)=1$ and $\mathfrak B_{M,r}(0;a)=1/M$.
+The pole at $z=0$ is the only Hurwitz-zeta pole in this variable, so these functions are entire in $z$.
+
+\begin{proposition}[Exact Bernoulli reconstruction and refinement]
+For integers $M,L\ge1$ and $0\le r<M$,
+\[
+\mathfrak B(z;a)=\sum_{r=0}^{M-1}\mathfrak B_{M,r}(z;a),
+\qquad
+\mathfrak B_{M,r}(z;a)=
+\sum_{\ell=0}^{L-1}\mathfrak B_{LM,r+\ell M}(z;a).
+\]
+For each positive integer $n$,
+\[
+\mathfrak B_{M,r}(n;a)=
+M^{n-1}B_n\!\left(\frac{a+r}{M}\right).
+\]
+\end{proposition}
+\begin{proof}
+For $\operatorname{Re}s>1$, partition the Hurwitz series into residue classes to obtain
+\[
+\sum_{r=0}^{M-1}\zeta\!\left(s,\frac{a+r}{M}\right)
+=M^s\zeta(s,a).
+\]
+Meromorphic continuation preserves this identity. Set $s=1-z$ and multiply by $-zM^{z-1}$. Apply the same identity to the children of a fixed parent to obtain refinement. The integer formula uses the classical special value $\zeta(1-n,x)=-B_n(x)/n$.
+\end{proof}
+
+These are Volume I, ``Reconstruction,'' ``Parent-child refinement,'' and ``Integer samples.'' Integer polynomial samples can also be evaluated at $a=0$, but the entire complex-order family above retains $a>0$.
+
+Let $b_\ell=\mathfrak B_{LM,r+\ell M}(z;a)$ and $\omega_L=e^{2\pi i/L}$. The unitary child transform
+\[
+W_j=\frac1{\sqrt L}\sum_{\ell=0}^{L-1}
+\omega_L^{-j\ell}b_\ell
+\]
+has the exact inverse $b_\ell=L^{-1/2}\sum_j\omega_L^{j\ell}W_j$ and preserves $\sum_\ell|b_\ell|^2$. Its DC channel is $W_0=\mathfrak B_{M,r}/\sqrt L$. Volume I derives the Lerch closed form, and Volume II derives the local Stieltjes expansion and scalar detail invariants from this same bank. These analytic invariants do not require the positive arithmetic measure introduced next.
+
+\section{Signed arithmetic transfer and positive energy}
+
+Let $q\ge1$ be an integer and $\chi$ a Dirichlet character modulo $q$. Throughout this section $\beta>0$ and $k$ is a nonnegative integer. At zero depth, use the moment convention $0^0=1$.
+
+\begin{definition}[Arithmetic transfer and packet energy]
+For $a>1$ and $t\in\mathbb R$, define the signed transfer
+\[
+C_{a,\beta,\chi}(k,t)=
+\sum_{n\ge1}\frac{\mu(n)\chi(n)}{n^{a+it}}
+(1-n^{-\beta})^k.
+\]
+For $a>1/2$, define the positive energy
+\[
+E_{a,\beta,q}(k)=
+\sum_{\substack{n\ge1\\(n,q)=1}}
+\frac{\mu(n)^2}{n^{2a}}(1-n^{-\beta})^{2k}.
+\]
+\end{definition}
+
+The signed series is absolutely convergent in its stated range. The energy uses $|\chi(n)|^2=\boldsymbol 1_{(n,q)=1}$ and therefore depends on the modulus rather than the character values.
+
+\begin{proposition}[Two exact finite-difference coordinates]
+For $a>1$,
+\[
+C_{a,\beta,\chi}(k,t)=
+\sum_{j=0}^{k}(-1)^j\binom{k}{j}
+\frac1{L(a+\beta j+it,\chi)}.
+\]
+For $a>1/2$, set
+\[
+D_q(s)=\frac{\zeta(s)}{\zeta(2s)}
+\prod_{p\mid q}(1+p^{-s})^{-1},\qquad \operatorname{Re}s>1.
+\]
+Then
+\[
+E_{a,\beta,q}(k)=
+\sum_{j=0}^{2k}(-1)^j\binom{2k}{j}D_q(2a+\beta j).
+\]
+\end{proposition}
+\begin{proof}
+The absolutely convergent reciprocal Euler product gives
+$L(s,\chi)^{-1}=\sum_n\mu(n)\chi(n)n^{-s}$.
+The squarefree Dirichlet series has Euler factors $1+p^{-s}$ for $p\nmid q$, so it is $D_q(s)$. Expanding the corresponding powers of $1-n^{-\beta}$ and interchanging each finite sum with its absolutely convergent series proves both identities.
+\end{proof}
+
+The source claims are Volume I, ``M\"obius form,'' and Volume II, ``Exact zeta-ratio finite difference,'' repeated in Volume III. Their parallel form does not remove the arithmetic signs from $C$.
+
+Put
+\[
+w_n=\mu(n)^2\boldsymbol 1_{(n,q)=1}n^{-2a},
+\qquad x_n=(1-n^{-\beta})^2,
+\qquad \nu=\sum_{n\ge1}w_n\delta_{x_n}.
+\]
+This is a finite positive measure, with atoms in $[0,1)$ and infinitely many distinct positive atoms. In particular the zero atom at $n=1$ is retained. Its moments satisfy $E_k=\int x^k\,d\nu(x)$.
+
+\begin{proposition}[Positive moment and resolvent laws]
+For $m,k\ge0$,
+\[
+(-1)^m\Delta^mE_k=\int x^k(1-x)^m\,d\nu(x)\ge0.
+\]
+Every finite Hankel matrix $(E_{i+j})_{0\le i,j\le d}$ is positive definite. The resolvent
+\[
+\mathcal E(z)=\int\frac{d\nu(x)}{1-zx}
+\]
+is analytic and zero-free on $\mathbb C\setminus[1,\infty)$, and for $|z|<1$ it equals $\sum_{k\ge0}E_kz^k$.
+\end{proposition}
+\begin{proof}
+Finite differences act on $x^k$ by multiplication by $(x-1)^m$. For a nonzero coefficient vector $c$, the Hankel quadratic form is
+\[
+\int\left|\sum_{j=0}^dc_jx^j\right|^2d\nu(x)>0,
+\]
+because a nonzero polynomial cannot vanish at infinitely many distinct atoms. On every compact subset of the slit plane, $|1-zx|$ has a positive lower bound for $x\in[0,1]$, proving analyticity. For real $z<1$ the integrand is positive. For $\operatorname{Im}z>0$ its imaginary part is
+\[
+\frac{x\operatorname{Im}z}{|1-zx|^2},
+\]
+whose integral is strictly positive; the sign reverses below the real axis. A zero is impossible.
+\end{proof}
+
+These are Volume II, ``Complete monotonicity,'' ``Strict finite Hankel positivity,'' and ``Zero-free slit plane.'' Volume III further proves strict positivity of every generalized Hankel minor with strictly increasing nonnegative row and column exponents.
+
+\section{Energy asymptotics and the all-moment bridge}
+
+The classical squarefree counting input is
+\[
+\sum_{\substack{n\le X\\(n,q)=1}}\mu(n)^2
+=\delta_qX+O_q(\sqrt X),
+\qquad
+\delta_q=\frac1{\zeta(2)}\prod_{p\mid q}\frac{p}{p+1}.
+\]
+The following asymptotic implication is the source result Volume II, ``Packet-energy asymptotic,'' also stated in Volumes I and III. It depends on that classical counting law.
+
+\begin{proposition}[Source energy law]
+Let $a>1/2$, $\beta>0$, and $\alpha=(2a-1)/\beta$. Then
+\[
+E_{a,\beta,q}(k)\sim
+\frac{\delta_q}{\beta}\Gamma(\alpha)(2k)^{-\alpha}.
+\]
+\end{proposition}
+\begin{proof}
+The density part of Stieltjes summation is evaluated exactly by
+\[
+\delta_q\int_1^\infty x^{-2a}(1-x^{-\beta})^{2k}\,dx
+=\frac{\delta_q}{\beta}\mathrm B(\alpha,2k+1).
+\]
+The counting remainder contributes at most a constant times
+\[
+\int_1^\infty\sqrt x
+\left|\frac{d}{dx}\left[x^{-2a}(1-x^{-\beta})^{2k}\right]\right|dx
+=O_{a,\beta,q}\left(k^{-(2a-1/2)/\beta}\right).
+\]
+This is lower order than $k^{-\alpha}$. The beta-function asymptotic gives the stated leading term. This records the source reduction to the classical counting input, rather than an independent re-audit of that input.
+\end{proof}
+
+For $k\ge1$, normalize the weights $w_nx_n^k/E_k$ into a probability law and put
+\[
+U_k=2k\,n^{-\beta},
+\qquad
+u_k=k(1-x_n)=U_k-\frac{U_k^2}{4k}.
+\]
+The first coordinate is Volume II's Gamma scaling coordinate, and the second is Volume III's endpoint coordinate.
+
+\begin{proposition}[All-moment compatibility of the two coordinates]
+For every nonnegative integer $m$,
+\[
+\mathbb E_k[U_k^m]
+=(2k)^m\frac{E_{a+\beta m/2,\beta,q}(k)}{E_{a,\beta,q}(k)}
+\longrightarrow\frac{\Gamma(\alpha+m)}{\Gamma(\alpha)}.
+\]
+The moments of $u_k$ have the same limits.
+\end{proposition}
+\begin{proof}
+Multiplication by $n^{-\beta m}$ shifts the exponent $2a$ to $2a+\beta m$, proving the exact identity. Apply the source energy law to numerator and denominator. For $m\ge1$, $0\le u_k\le U_k$ and
+\[
+0\le U_k^m-u_k^m\le
+\frac{m}{4k}U_k^{m+1}.
+\]
+The already proved $(m+1)$st moment convergence bounds the expectation on the right by $O(1/k)$. Thus every fixed moment transfers to the endpoint coordinate.
+\end{proof}
+
+These limits are the moments of $\operatorname{Gamma}(\alpha,1)$. The classical method of moments, using determinacy of the Gamma law, yields weak convergence as well. The all-moment conclusion is the required bridge to the polynomial and determinant results; bounded-test-function weak convergence alone would not supply it.
+
+\section{Laguerre and finite spectral realizations}
+
+Let $P_m^{(k)}$ be the monic orthogonal polynomial of degree $m$ for the law of $u_k$. Volume III, ``Fixed-degree Laguerre universality,'' identifies the limit
+\[
+P_m^{(k)}(u)\longrightarrow
+(-1)^m m!L_m^{(\alpha-1)}(u)
+\]
+coefficientwise and locally uniformly for each fixed $m$. To see the implication, write orthogonality of
+$u^m+\sum_{j<m}c_ju^j$ as a linear system in the first $2m$ moments. The limiting Gamma moment matrix is positive definite. The all-moment bridge and continuity of the inverse matrix therefore give convergence of the coefficients. The classical identification of Gamma orthogonal polynomials supplies the displayed Laguerre formula. Their squared monic norms under the normalized Gamma law are $m!(\alpha)_m$.
+
+At fixed parameters, normalize $\nu$ by its mass $E_0$ and let $J_m$ be the leading $m\times m$ Jacobi matrix of its orthonormal polynomials. The classical Gaussian quadrature theorem gives the source result Volume III, ``Moment-exact packet reduction'': there are nodes $\xi_j\in(0,1)$ and positive weights $\lambda_j$ summing to one such that
+\[
+E_r=E_0\sum_{j=1}^m\lambda_j\xi_j^r
+=E_0e_1^TJ_m^re_1,
+\qquad 0\le r\le2m-1.
+\]
+The nodes belong to the interval spanned by the measure; they need not equal its discrete atoms. The reduced resolvent
+\[
+\mathcal E_m(z)=E_0\sum_{j=1}^m
+\frac{\lambda_j}{1-z\xi_j}
+\]
+matches these first $2m$ Taylor coefficients and has poles on $(1,\infty)$. Its spectral weights are positive. In the $z$ coordinate, its residue at $z=1/\xi_j$ is $-E_0\lambda_j/\xi_j$.
+
+Volume III develops the corresponding fixed-degree Jacobi, kernel, quadrature and shifted-Hankel limits. They depend on the all-moment implication above and classical orthogonal-polynomial identities. The principal cusp has a direct Abelian proof from the energy coefficients, supplied next.
+
+
+\section{The principal cusp from the energy coefficients}
+
+The following Abelian argument replaces the informal discrete-density passage
+in Volume III, ``Principal edge cusp.'' It uses only the energy law already
+stated above.
+
+\begin{lemma}[An elementary square-root Abelian passage]
+Let $c_k\ge0$ and $c_k\sim A k^{-3/2}$, where $A>0$. For
+$F(z)=\sum_{k\ge0}c_kz^k$, one has $F(1)<\infty$ and
+\[
+F(1)-F(z)\sim2\sqrt\pi A\sqrt{1-z}
+\qquad(z\uparrow1\text{ through real values}).
+\]
+\end{lemma}
+\begin{proof}
+Put $t=-\log z$ and
+$S(t)=\sum_{k\ge1}k^{-3/2}(1-e^{-tk})$.
+The function
+\[
+f(u)=u^{-3/2}(1-e^{-u})
+=u^{-1/2}\int_0^1e^{-su}\,ds
+\]
+is positive and decreasing. It is integrable at both endpoints. Thus
+\[
+\int_t^\infty f(u)\,du
+\le t\sum_{k\ge1}f(tk)
+\le\int_0^\infty f(u)\,du=2\sqrt\pi,
+\]
+where integration by parts gives the last integral. Since
+$\int_0^t f(u)du\le2\sqrt t$, it follows that
+$S(t)=2\sqrt\pi\sqrt t+O(t)$.
+
+Write $r_k=c_k-Ak^{-3/2}$ for $k\ge1$. For each $\varepsilon>0$, choose $K$
+such that $|r_k|\le\varepsilon k^{-3/2}$ for $k\ge K$. Then
+\[
+|F(1)-F(e^{-t})-AS(t)|
+\le t\sum_{1\le k<K}k|r_k|+\varepsilon S(t).
+\]
+Divide by $\sqrt t$, let $t\downarrow0$, and then let $\varepsilon\downarrow0$.
+Finally, $t\sim1-z$. The coefficient hypothesis also guarantees summability.
+\end{proof}
+
+For the principal energy $a=\beta=2$, $q=1$, the coefficient law gives
+$A=3/(2^{5/2}\pi^{3/2})$. Therefore the source cusp is
+\[
+\mathcal E(1)-\mathcal E(z)
+\sim\frac{3}{2^{3/2}\pi}\sqrt{1-z}.
+\]
+This proof supplies the missing local implication. The actual coefficient
+asymptotic warrants an $o(\sqrt{1-z})$ remainder; it does not by itself supply
+an $O(1-z)$ remainder. The Abelian lemma received a separate neutral review
+in this consolidation, conditional on the source energy asymptotic.
+
+\section{The remaining signed arithmetic estimate}
+
+For the principal parameters $a=\beta=2$ and $q=1$, write
+\[
+c_k=\sum_{n\ge1}\frac{\mu(n)}{n^2}(1-n^{-2})^k,
+\qquad
+E_k=\sum_{n\ge1}\frac{\mu(n)^2}{n^4}(1-n^{-2})^{2k}.
+\]
+The positive theory gives
+\[
+E_k\sim\frac{3}{2^{5/2}\pi^{3/2}}k^{-3/2}.
+\]
+The classical B\'aez-Duarte theorem (Theorem 1.1, 2005, checked in the published source) is the external input
+\[
+\mathrm{RH}\quad\Longleftrightarrow\quad
+c_k=O_\varepsilon(k^{-3/4+\varepsilon})
+\quad\text{for every }\varepsilon>0.
+\]
+It is cited in Volume I, ``Coherence form of the B\'aez-Duarte criterion,'' and Volume II, ``Normalized principal coherence criterion.'' Consequently, defining $\Gamma_k=|c_k|^2/E_k$,
+\[
+\mathrm{RH}\quad\Longleftrightarrow\quad
+\Gamma_k=O_\varepsilon(k^\varepsilon)
+\quad\text{for every }\varepsilon>0.
+\]
+Indeed, square the amplitude bound and divide by the energy law; in the reverse direction multiply by the energy law and take square roots. The arbitrary positive exponent can be renamed in either direction.
+
+This is an equivalence with an open arithmetic estimate. The positive moment measure determines the normalization and supports exact finite models. The estimate still concerns cancellation of the signs $\mu(n)$ inside the principal transfer. Volume II's cross-character decoherence concerns a different Gram entry with coefficients $\mu(n)^2\chi(n)\overline{\psi(n)}$ for distinct characters modulo one fixed modulus. Its cancellation theorem does not estimate $c_k$.
+
+The common construction therefore separates three achievements precisely: exact packet identities, positive spectral and scaling laws, and a signed coherence target whose truth is equivalent to RH. Consolidation preserves all three without treating the third as a consequence of the first two.

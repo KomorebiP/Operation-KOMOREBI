@@ -1,0 +1,31 @@
+import CoupledFormal
+
+#print axioms Komorebi.SpecialFunctions.Coupled.positive_pair_recovery
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.defect_factor
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.defect_eq_zero_iff
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.positive_square_injective
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.seven_jet_injective
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_solution
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.nextCoefficient_congr
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficient_solution_unique
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficient_solution_exists_unique
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_zero
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_one
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_two
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_three
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.nextCoefficient_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.nextCoefficient_le_geometric
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficients_le_geometric
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.odd_series_norm_bound
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.odd_series_norm_summable
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.odd_series_summable
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.coefficient_series_absolutely_convergent
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.odd_series_tail_bound
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.sameJet_of_coefficients_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.parameters_of_jet_through_degree_seven
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.parameters_of_formal_pair_eq
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.workedScales_positive
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.workedScales_defect
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.workedScales_recoverable
+#print axioms Komorebi.SpecialFunctions.Coupled.Scales.boundary_collision

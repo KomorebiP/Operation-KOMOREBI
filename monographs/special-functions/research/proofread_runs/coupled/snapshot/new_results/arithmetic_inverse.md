@@ -1,0 +1,361 @@
+# Arithmetic depth: an exact inverse, its conditioning, and character resolution
+
+Checkpoint: SF-DISCOVERY-100. Attribution: Komorebi P.
+
+The entire squarefree depth function determines its arithmetic parameters exactly, with one precise equivalence: powers of the primes in the modulus are invisible. This is a local mathematical theorem. It does not assert historical priority for Laplace inversion or for this particular arithmetic application.
+
+## Claim card and conventions
+
+For real \(a>1/2\), real \(\beta>0\), and integer \(Q\ge1\), write
+
+\[
+ A_{a,\beta,Q}(s)=\sum_{\substack{n\ge2\\ \mu(n)^2=1\\ (n,Q)=1}}
+ n^{-2a}\exp(-\lambda_n s),\qquad
+ \lambda_n=-2\log(1-n^{-\beta}).
+\]
+
+The logarithm is real. The omitted \(n=1\) atom is not restored in any inverse formula. Let
+\(n_1<n_2<\cdots\) be the support integers, and abbreviate
+\(\lambda_j=\lambda_{n_j}\), \(w_j=n_j^{-2a}\).
+Then \(\lambda_1>\lambda_2>\cdots>0\), \(\lambda_j\to0\), and
+\(\sum_jw_j=M=Z_Q(2a)-1<\infty\), where
+
+\[
+ Z_Q(v)=\frac{\zeta(v)}{\zeta(2v)}
+          \prod_{p\mid Q}(1+p^{-v})^{-1},\qquad v>1.
+\]
+
+Here a germ means the complete exact analytic germ, equivalently all exact derivatives at a point, rather than a finite Taylor polynomial or noisy measurements. The base route proves that this germ has a unique entire continuation, with
+\(|A(s)|\le M\exp(\lambda_1\max\{-\Re s,0\})\).
+
+## 1. Exact inverse theorem
+
+**Theorem AI-1.** Two admissible parameter triples define the same analytic germ if and only if
+
+\[
+ a=a',\qquad \beta=\beta',\qquad
+ \operatorname{rad}(Q)=\operatorname{rad}(Q').
+\]
+
+The function itself therefore encodes the weight exponent, the depth exponent, and the finite excluded prime set. It does not encode valuations \(v_p(Q)\).
+
+### Step 1: recover the ordered spectral atoms
+
+Starting with \(R_1=A\), define successively
+
+\[
+ \lambda_j=\lim_{t\to\infty}\frac{\log R_j(-t)}t,
+ \qquad
+ w_j=\lim_{t\to\infty}e^{-\lambda_jt}R_j(-t),
+ \qquad
+ R_{j+1}(s)=R_j(s)-w_je^{-\lambda_js}.
+\]
+
+Every limit exists and recovers exactly the \(j\)-th support frequency and weight. Indeed, if \(M_{j+1}=\sum_{k>j}w_k\), then for every \(t\ge0\),
+
+\[
+ R_j(-t)=w_je^{\lambda_jt}(1+r_j(t)),\qquad
+ 0\le r_j(t)\le\frac{M_{j+1}}{w_j}
+                    e^{-(\lambda_j-\lambda_{j+1})t}.
+\]
+
+The bound follows by replacing every tail frequency by its largest value \(\lambda_{j+1}\). Taking logarithms and dividing by \(t\) proves the first limit. Multiplying by \(e^{-\lambda_jt}\) proves the second. Removing this exact entire atom leaves the same hypotheses for the next step. Thus the complete ordered atom list is intrinsic to the entire function.
+
+No approximation to a large negative-depth value is used in this uniqueness proof. It is an exact limiting argument.
+
+### Step 2: recover \(\beta\) without knowing the integer support
+
+Put
+
+\[
+ \delta_Q=\frac1{\zeta(2)}\prod_{p\mid Q}\frac{p}{p+1}>0.
+\]
+
+The base route establishes the elementary counting estimate
+
+\[
+ N_Q(x):=\#\{2\le n\le x:\mu(n)^2=1,(n,Q)=1\}
+       =\delta_Qx+O_Q(\sqrt{x}).
+\]
+
+Since \(N_Q(n_j)=j\), it follows that
+
+\[
+ n_j=\frac{j}{\delta_Q}\left(1+O_Q(j^{-1/2})\right),
+ \quad
+ \lambda_j=2\delta_Q^{\beta}j^{-\beta}
+     \left(1+O_{Q,\beta}(j^{-1/2}+j^{-\beta})\right).
+\]
+
+For completeness, the first estimate follows initially from \(j=\delta_Qn_j+O_Q(\sqrt{n_j})\), which gives \(n_j\asymp_Qj\); substituting this back improves the error to \(O_Q(\sqrt j)\). The second uses
+\(-\log(1-u)=u(1+O(u))\) as \(u\downarrow0\).
+
+Consequently the already recovered frequencies determine
+
+\[
+ \boxed{\displaystyle
+ \beta=-\lim_{j\to\infty}\frac{\log\lambda_j}{\log j}.}
+\]
+
+A rank ratio avoids the slowly decaying constant divided by \(\log j\): for every fixed real \(c>1\),
+
+\[
+ -\frac{\log(\lambda_{\lfloor cj\rfloor}/\lambda_j)}{\log c}
+ =\beta+O_{Q,\beta,c}(j^{-1/2}+j^{-\beta}).
+\]
+
+The floor contributes an additional \(O(j^{-1})\), which is absorbed by the displayed error. These are fixed-parameter asymptotics. They do not give a constant uniform in arbitrary moduli.
+
+### Step 3: recover the support integers and the weight exponent
+
+Once \(\beta\) is known, every spectral atom gives its exact integer label:
+
+\[
+ \boxed{\displaystyle
+ n_j=(1-e^{-\lambda_j/2})^{-1/\beta},\qquad
+ a=-\frac{\log w_j}{2\log n_j}.}
+\]
+
+The recovered real number in the first formula is an integer by the family definition; rounding is not part of the exact theorem. Since \(n_j\ge2\), the denominator in the second formula is nonzero. Every recovered atom yields the same value of \(a\).
+
+### Step 4: recover the excluded primes
+
+A prime \(p\) lies in the recovered integer support exactly when \(p\nmid Q\): primes are squarefree, and no other restriction is imposed. Hence
+
+\[
+ \boxed{\displaystyle
+ \operatorname{rad}(Q)=\prod_{\substack{p\ \mathrm{prime}\\
+                                      p\notin\{n_j:j\ge1\}}}p.}
+\]
+
+The product is finite because the parameters are assumed to come from this family. This formula is an exact reconstruction from infinite data, not an algorithm that can certify completion of the prime list after finitely many observations. Conversely, equal \(a,\beta\) and equal radicals produce exactly the same terms. This proves both directions of AI-1.
+
+### A constructive counting envelope
+
+The rank asymptotic can be made effective without an RH input. Write
+\(\omega(Q)=\#\{p:p\mid Q\}\). For real \(x\ge4\), inclusion and exclusion gives
+
+\[
+ |N_Q(x)-\delta_Qx|\le C_Q\sqrt x+1,
+ \qquad C_Q=2^{\omega(Q)}+2\frac{\varphi(Q)}Q.
+\]
+
+To verify the constants, expand \(\mu(n)^2=\sum_{d^2\mid n}\mu(d)\).
+For \((d,Q)=1\), the number of \(m\le x/d^2\) coprime to \(Q\) differs from
+\((\varphi(Q)/Q)x/d^2\) by at most \(2^{\omega(Q)}\). Summing over at most \(\sqrt x\) values of \(d\) gives the first part of \(C_Q\). The omitted main-term tail is at most
+\((\varphi(Q)/Q)x/\lfloor\sqrt x\rfloor\le2(\varphi(Q)/Q)\sqrt x\).
+Removing \(n=1\) adds one. The main-term density is
+\((\varphi(Q)/Q)\sum_{(d,Q)=1}\mu(d)d^{-2}=\delta_Q\) by its absolutely convergent Euler product.
+
+For \(j\ge3\), therefore,
+
+\[
+ \left(\frac{\sqrt{C_Q^2+4\delta_Q(j-1)}-C_Q}{2\delta_Q}\right)^2
+ \le n_j\le
+ \left(\frac{\sqrt{C_Q^2+4\delta_Q(j+1)}+C_Q}{2\delta_Q}\right)^2.
+\]
+
+The lower and upper bounds are the positive solutions of the corresponding quadratic inequalities in \(\sqrt{n_j}\). At \(j\ge3\), all possible supports have \(n_j\ge5\), so the \(x\ge4\) counting envelope applies.
+
+## 2. What finite negative-depth measurements can recover
+
+**Theorem AI-2, gap bound.** Suppose the first \(j-1\) atoms have already been removed exactly, put
+\(\Delta_j=\lambda_j-\lambda_{j+1}>0\), and fix \(h>0\). Define
+
+\[
+ \widehat\lambda_j(t,h)
+ =\frac{\log R_j(-t-h)-\log R_j(-t)}h.
+\]
+
+Then for every \(t\ge0\),
+
+\[
+ 0\le\lambda_j-\widehat\lambda_j(t,h)
+ \le\frac1h\log\!\left(1+\frac{M_{j+1}}{w_j}e^{-\Delta_jt}\right),
+\]
+
+and
+
+\[
+ 0\le e^{-\lambda_jt}R_j(-t)-w_j
+     \le M_{j+1}e^{-\Delta_jt}.
+\]
+
+**Proof.** The preceding positive remainder formula gives
+\(\widehat\lambda_j=\lambda_j+h^{-1}[\log(1+r_j(t+h))-\log(1+r_j(t))]\).
+Each tail factor decreases, so \(0\le r_j(t+h)\le r_j(t)\). The two inequalities now follow from the bound on \(r_j(t)\). For the amplitude, multiply the positive tail bound by \(e^{-\lambda_jt}\).
+
+In particular, to guarantee frequency error at most \(\varepsilon>0\) from exact residual values, it suffices to take
+
+\[
+ t\ge\max\left\{0,\frac1{\Delta_j}
+      \log\frac{M_{j+1}}{w_j(e^{h\varepsilon}-1)}\right\}.
+\]
+
+The parameters in this certificate are properties of the true tail. If they are only estimated from data, this is a conditional recovery bound rather than an independent numerical certificate.
+
+### Positive tail envelopes for reproducible examples
+
+For integer \(L\ge n_j\), a direct sum through \(n\le L\) at depth \(-t\), \(t\ge0\), omits at most
+
+\[
+ E_L(t)=e^{t\lambda_{L+1}}\frac{L^{1-2a}}{2a-1}.
+\]
+
+Indeed all omitted frequencies are at most \(\lambda_{L+1}\), and
+\(\sum_{n>L}n^{-2a}\le\int_L^\infty x^{-2a}\,dx\). Ignoring squarefreeness and coprimality makes this a valid upper bound. If \(r_0,r_1\) are the two positive truncated residual sums at \(t,t+h\), the true secant belongs to
+
+\[
+ \left[
+ \frac{\log r_1-\log(r_0+E_L(t))}h,
+ \frac{\log(r_1+E_L(t+h))-\log r_0}h
+ \right].
+\]
+
+This interval treats truncation exactly at the mathematical level. Its displayed floating-point endpoints are not directed-rounding certificates.
+
+### Cancellation is a real limitation
+
+Evaluating a residual by subtracting previous atoms is different from evaluating its known positive series. If an observation of \(A(-t)\) has relative error at most \(\eta\) and the previous atoms are exact, then the residual error can have relative size
+
+\[
+ \eta\,\kappa_j(t),\qquad
+ \kappa_j(t)=\frac{A(-t)}{R_j(-t)}
+ \sim\frac{w_1}{w_j}e^{(\lambda_1-\lambda_j)t}.
+\]
+
+Thus the large negative depth that separates nearby atoms also worsens cancellation for later atoms. Uncertain previously subtracted frequencies introduce further error. The computation evaluates residuals as positive sums and reports \(\log_{10}\kappa_j\) so this conditioning cost remains visible.
+
+## 3. Exact uniqueness does not imply uniform prime recovery
+
+**Theorem AI-3, bounded-window instability.** Let \(p\) be a prime not dividing \(Q\), and let \(R\ge0\). For every integer \(k\ge0\),
+
+\[
+ \boxed{\displaystyle
+ \sup_{|s|\le R}|A_{a,\beta,Q}^{(k)}(s)-A_{a,\beta,Qp}^{(k)}(s)|
+ \le \lambda_p^k e^{R\lambda_p}
+      \frac{Z_Q(2a)}{p^{2a}+1}.}
+\]
+
+Consequently adding larger and larger excluded primes gives convergence in every derivative on every bounded complex-depth window, even though the recovered radical changes each time.
+
+**Proof.** The difference consists exactly of the squarefree integers divisible by \(p\) and coprime to \(Q\), all of which satisfy \(n\ge p\). Their frequencies are at most \(\lambda_p\). The Euler factor at \(p\) shows that their total weight is
+
+\[
+ \sum_{\substack{n\ge1\\\mu(n)^2=1,(n,Q)=1\\p\mid n}}n^{-2a}
+ =\frac{Z_Q(2a)}{p^{2a}+1}.
+\]
+
+There is no \(n=1\) term in this difference. Bound the \(k\)-th derivative of every exponential by \(\lambda_p^ke^{R\lambda_p}\) and sum. Since \(\lambda_p\to0\) and \(p^{-2a}\to0\), the bound tends to zero. This proves the derivative convergence and the claimed instability.
+
+More explicitly, for any bounded window and positive measurement tolerance, two distinct radicals in this family can produce functions closer than that tolerance throughout the window. This defeats a recovery guarantee uniform over unbounded excluded primes. It does not refute recovery under an a priori modulus bound or from complete exact analytic data.
+
+For \(a=\beta=2,Q=1\), the mass removed by \(p\) is exactly
+\(105/[\pi^4(p^4+1)]\). The examples \(p=101,1009,10007\) quantify how quickly large-prime distinctions disappear on \(|s|\le5\).
+
+## 4. The function as an arithmetic Hilbert feature space
+
+This section spells out the classical feature-space construction for this arithmetic spectrum. It supplies a precise space in which the complex-depth packets live.
+
+For \(c=(c_j)\in\ell^2\), define
+
+\[
+ (Uc)(s)=\sum_{j\ge1}c_j\sqrt{w_j}\,e^{-\lambda_js}.
+\]
+
+Cauchy and Schwarz give uniform convergence on bounded complex sets and
+
+\[
+ |(Uc)(s)|\le\|c\|_{\ell^2}\sqrt{A(2\Re s)}.
+\]
+
+The map is injective: \(\sum|c_j|\sqrt{w_j}\le\|c\|\sqrt M<\infty\), so the same spectral peeling argument, now for complex coefficients, forces the first coefficient and then every coefficient to vanish whenever \(Uc=0\). Positivity was needed to recover unknown frequencies in AI-1; injectivity here only needs absolute summability and the known ordered support. Specifically, after dividing by the largest remaining exponential, the tail is bounded by \(e^{-\Delta_jt}\sum_{k>j}|c_k|\sqrt{w_k}\), which tends to zero.
+
+The image \(\mathcal H_{a,\beta,Q}=U\ell^2\), with \(\|Uc\|_{\mathcal H}=\|c\|_{\ell^2}\), is therefore a complete Hilbert space of entire functions. Its reproducing kernel is
+
+\[
+ K(s,t)=A(s+\overline t).
+\]
+
+Using an inner product linear in the first argument, the coefficient vector of \(K(\cdot,t)\) is \((\sqrt{w_j}e^{-\lambda_j\overline t})_j\), so
+\(\langle Uc,K(\cdot,t)\rangle=(Uc)(t)\). This also verifies the sign and conjugation convention directly. Arbitrarily large finite Gram matrices at distinct complex depths are strictly positive, as proved in the base route. Thus the feature space has infinite rank, not a finite-dimensional Prony model.
+
+The monomial moment matrices also have infinite rank:
+\(m_k=(-1)^kA^{(k)}(0)=\sum_jw_j\lambda_j^k\), and for every nonzero polynomial \(P\),
+\(\sum_jw_j|P(\lambda_j)|^2>0\), because a nonzero polynomial cannot vanish at infinitely many distinct frequencies. All finite derivative Hankel matrices are strictly positive definite.
+
+## 5. Complete fixed-modulus character resolution
+
+Let \(\chi,\psi\) be Dirichlet characters modulo the same fixed integer \(Q\), extended by zero outside the units, and put \(\eta=\chi\overline\psi\). The base extension is
+
+\[
+ A_{\chi,\psi}(s)=\sum_{n\ge2}\mu(n)^2
+            \eta(n)n^{-2a}(1-n^{-\beta})^{2s}.
+\]
+
+The endpoint subtraction in its Newton expansion is still exactly one:
+
+\[
+ A_{\chi,\psi}(s)
+ =\sum_{j\ge0}(-1)^j\binom{2s}{j}
+ \left[\frac{L(2a+j\beta,\eta)}
+              {L(4a+2j\beta,\eta^2)}-1\right].
+\]
+
+Every character takes the value one at \(n=1\); at primes dividing \(Q\), it is zero. The Euler product identity is valid even when \(\eta\) is imprimitive, because the actual Dirichlet character and its actual modulus are retained. All arguments of \(L\) lie in \(\Re v>1\), where its Euler product converges absolutely and is nonzero. No unproved zero-free-region hypothesis is used.
+
+**Theorem AI-4, character sector decay.** Fix \(a>1/2,\beta>0,Q\), and a closed sector
+\(|\arg s|\le\pi/2-\varepsilon\), \(0<\varepsilon<\pi/2\). If \(\chi\ne\psi\), then uniformly in that sector,
+
+\[
+ A_{\chi,\psi}(s)
+ =O_{a,\beta,Q,\varepsilon}\bigl(|s|^{-(2a-1/2)/\beta}\bigr),
+ \qquad
+ \frac{A_{\chi,\psi}(s)}{A_{a,\beta,Q}(s)}
+ =O_{a,\beta,Q,\varepsilon}\bigl(|s|^{-1/(2\beta)}\bigr).
+\]
+
+These statements are uniform over the finite character set of this fixed modulus. They are not uniform as \(Q\) grows.
+
+**Proof.** Distinct characters give a nonprincipal \(\eta\). Its sum over a complete period is zero, so \(|\sum_{m\le y}\eta(m)|\le Q\). Hence
+
+\[
+ \sum_{n\le x}\mu(n)^2\eta(n)
+ =\sum_{d\le\sqrt x}\mu(d)\eta(d)^2
+     \sum_{m\le x/d^2}\eta(m)=O_Q(\sqrt x).
+\]
+
+Use partial integration against
+\(g_s(x)=x^{-2a}(1-x^{-\beta})^{2s}\), whose endpoint values vanish when \(\Re s>0\). The counting bound reduces the magnitude to a constant times
+\(\int_1^\infty\sqrt x\,|g_s'(x)|\,dx\). Writing \(u=\Re s\) and \(\gamma=(2a-1/2)/\beta>0\), direct substitution \(y=x^{-\beta}\) bounds its two derivative terms by
+
+\[
+ \frac{2a}{\beta}B(\gamma,2u+1)
+ +2|s|B(\gamma+1,2u),
+\]
+
+which is \(O_{a,\beta,\varepsilon}(|s|^{-\gamma})\) because \(u\ge |s|\sin\varepsilon\). The principal diagonal has the nonzero leading term
+\(\delta_Q\Gamma(\alpha)\beta^{-1}(2s)^{-\alpha}\),
+\(\alpha=(2a-1)/\beta\), by the base sector theorem. Its modulus is bounded below by a positive fixed-sector multiple of \(|s|^{-\alpha}\) for sufficiently large \(|s|\). Division gives the second bound, since \(\gamma-\alpha=1/(2\beta)\).
+
+At real positive depth, the matrix \((A_{\chi,\psi}(s))\) on any \(d\) distinct characters is positive semidefinite and has identical diagonal \(A_{a,\beta,Q}(s)\). Its normalized matrix tends to \(I_d\), with operator norm error \(O_{a,\beta,Q,d}(s^{-1/(2\beta)})\). Indeed, the off-diagonal entry bound controls the maximum row and column sums, and thus the operator norm. This gives quantitative separation of a fixed character bank. It is consistent with a complex or signed off-diagonal entry and makes no complete-monotonicity assertion for that entry.
+
+## 6. Classical comparison and limits of novelty
+
+The general fact that a positive measure is determined by its Laplace transform is classical. The primary publisher-distributed preview of René L. Schilling, Renming Song, and Zoran Vondraček, *Bernstein Functions: Theory and Applications*, first edition, de Gruyter, 2010, ISBN 978-3-11-021530-4 / electronic ISBN 978-3-11-021531-1, was checked on 2026-10-08 UTC:
+
+https://api.pageplace.de/preview/DT0400.9783110215311_A15706968/preview-9783110215311_A15706968.pdf
+
+Proposition 1.2, printed page 2 / PDF page 14 under one-based indexing, states uniqueness of a measure on \([0,\infty)\) from its Laplace transform and proves recovery from all derivatives. Theorem 1.4, printed page 3 / PDF page 15, is the Bernstein representation theorem. Translation here: the source's measure is \(\sum_jw_j\delta_{\lambda_j}\), its transform variable is the present real depth \(s>0\), and its finiteness condition holds because \(\sum_jw_j<\infty\). Classification: general uniqueness is **known after translation of notation**. The exact extraction of \(a,\beta,\operatorname{rad}(Q)\), the rank asymptotic, and the displayed large-prime instability are proved locally rather than claimed as results of that book.
+
+The Hilbert feature-space construction and finite Prony mechanism are also classical constructions. They are explicit realizations for this arithmetic spectrum, with no priority claim. The parameter-specific inverse theorem and character extension are not asserted historically new. The limited searches do not settle whether these results have appeared together for this exact positive squarefree family.
+
+Bounded discovery queries were `squarefree Laplace transform inverse identification parameters spectral measure arithmetic` and `Bernstein functions theorem 1.4 completely monotone uniquely determines measure Schilling Song Vondracek pdf`. The direct de Gruyter chapter URL returned an internal retrieval error. The publisher-distributed preview supplied the needed theorem and full proof instead. No conclusion depends on the failed URL, and no locally cached publisher PDF is included in the release. The elementary inverse and character proofs do not require this external source as an unchecked leaf.
+
+## 7. Computation contract and handoff
+
+`checks/arithmetic_inverse.py` is deterministic. Its exact checks use rational finite atomic surrogates with \(2a=4\), integer \(\beta=1,2,3\), \(Q=1,2,6,30\), and one through five atoms. They independently construct the annihilating polynomial from moments and from its known rational nodes, verify the positive Vandermonde formula for Hankel determinants, reconstruct weights, recover integer labels at known \(\beta\), and test further exact recurrence moments. These surrogates do not turn the infinite family's Hankel matrices into finite-rank matrices.
+
+The high-precision examples use 180 decimal digits. They show two-rank \(\beta\) estimates at ranks 100, 1000, and 10000, conditional negative-depth peeling for the first three atoms at \(t=20,100,500\), and large-prime bounded-window envelopes. Positive direct sums use \(n\le5000\), with the analytic omitted-tail envelope above. Rank enumeration uses \(n\le100000\). Actual cancellation factors are reported. Numerical values and floating-point endpoints are illustrations, not ball-arithmetic certificates.
+
+Run from the release root with `python checks/arithmetic_inverse.py`; the project dependency fallback is discovered by the script in this session, while a portable environment needs `mpmath`. Results are written to `evidence/arithmetic_inverse_checks.json`, including input/source hashes, arithmetic conventions, tested ranges, software versions, elapsed time, and the source-retrieval failure. Universal conclusions AI-1 through AI-4 rest on the local proofs above. Historical priority remains unresolved.

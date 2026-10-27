@@ -1,0 +1,58 @@
+\usepackage[letterpaper,margin=0.7in,headheight=15pt]{geometry}
+
+
+\usepackage{microtype,amsmath,amssymb,mathtools}
+\usepackage{graphicx,xcolor,booktabs,array,enumitem,fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\definecolor{Ink}{HTML}{20303A}
+\definecolor{Accent}{HTML}{226B66}
+\definecolor{Muted}{HTML}{637680}
+\definecolor{Pale}{HTML}{EAF2F1}
+\color{Ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.32em}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{Muted}Realization Calculus}
+\fancyhead[R]{\small\color{Muted}Special Functions / Visual guide}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\newcounter{lesson}
+\newcommand{\pendingvolume}{}
+\newcommand{\startvolume}[2]{\gdef\pendingvolume{#1: #2}}
+\newcommand{\lesson}[8]{%
+  \clearpage
+  \stepcounter{lesson}%
+  \phantomsection
+  \ifx\pendingvolume\empty\else
+    \addcontentsline{toc}{section}{\pendingvolume}%
+    \global\let\pendingvolume\empty
+  \fi
+  \phantomsection
+  \addcontentsline{toc}{subsection}{\protect\numberline{\thelesson}#2}%
+  {\small\sffamily\bfseries\color{Accent}#1\hfill LESSON \thelesson\par}%
+  \vspace{0.16in}
+  {\LARGE\rmfamily\color{RCPlum}#2\par}%
+  \vspace{0.08in}
+  \begin{center}
+    \includegraphics[width=\linewidth,height=3.65in,keepaspectratio]{figures/#3.pdf}
+  \end{center}
+  \vspace{-0.03in}
+  {\color{Accent}\[#4\]}%
+  {\bfseries Read the figure.} #5\par
+  \vspace{0.05in}
+  {\bfseries Work an example.} #6\par
+  \vspace{0.05in}
+  \noindent\colorbox{Pale}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\small\textbf{Carry forward.} #7}}\par
+  \vfill
+  {\footnotesize\color{Muted}\textbf{Source and scope.} #8\par}%
+}
+
+% One bookmark per lesson and one per thematic group.
+\makeatletter
+\def\toclevel@section{0}
+\def\toclevel@subsection{1}
+\makeatother

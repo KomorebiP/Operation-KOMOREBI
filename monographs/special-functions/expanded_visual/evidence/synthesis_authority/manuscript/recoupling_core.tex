@@ -1,0 +1,283 @@
+\chapter{Recoupling packets and their q-deformation}
+
+The recoupling papers share one mathematical chain: a tensor excitation space is reduced to a lowest-weight multiplicity space, intermediate Casimirs select coordinate atlases, and their overlap supplies both reversible amplitudes and a measured stochastic channel. Four-factor tree atlases add a loop identity, and every finite overlap admits a rotation compiler. This chapter presents that chain once, with the ordinary theory as the specialization $q=1$.
+
+The direct finite identities are separated from the classical representation-theoretic inputs. The name Racah records the classical identification of a recoupling matrix. An explicit comparison with a scalar polynomial requires additional parameter, normalization, and phase data.
+
+\section{A single ladder and coproduct convention}
+
+The ordinary ladder in Chapter 2 is recovered with $\kappa=\alpha/2$ and $q=1$. In this chapter, $q$ denotes the real deformation coordinate rather than the integer character modulus of Chapters 1--2. Let $0<q\leq1$ and let every shape $\kappa_r$ be positive. Define
+\[
+[x]_q=\frac{q^x-q^{-x}}{q-q^{-1}}\quad(q\ne1),
+\qquad [x]_1=x.
+\]
+Equivalently, for $q=e^{-\theta}$, $[x]_q=\sinh(x\theta)/\sinh\theta$. In particular, $[x]_q>0$ for $x>0$.
+
+\begin{definition}[Positive shape ladder]
+On the algebraic finite-support span of an orthonormal basis $\{|n\rangle:n\geq0\}$, set
+\[
+K_0|n\rangle=(n+\kappa)|n\rangle,
+\]
+\[
+K_+|n\rangle=\sqrt{[n+1]_q[2\kappa+n]_q}|n+1\rangle,
+\qquad
+K_-|n\rangle=\sqrt{[n]_q[2\kappa+n-1]_q}|n-1\rangle,
+\]
+where $K_-|0\rangle=0$. Tensor factors retain their declared order. Their coproduct is
+\[
+\Delta K_0=K_0\otimes I+I\otimes K_0,
+\qquad
+\Delta K_\pm=K_\pm\otimes q^{K_0}+q^{-K_0}\otimes K_\pm.
+\]
+\end{definition}
+
+\noindent\emph{Source: VII, ``Positive shape packet''; VIII, ``Local q-algebra'' and ``Coassociative packet routing.'' Evidence: direct algebraic identities.}
+
+The ladder obeys $[K_0,K_\pm]=\pm K_\pm$ and $[K_-,K_+]=[2K_0]_q$. The second identity follows from
+\[
+[x+1]_q[y]_q-[x]_q[y-1]_q=[x+y]_q.
+\]
+The coproduct preserves these relations: the mixed commutators cancel using $q^{K_0}K_\pm q^{-K_0}=q^{\pm1}K_\pm$, and the diagonal terms use $[x+y]_q=[x]_q q^y+q^{-x}[y]_q$. Since $q^{\Delta K_0}=q^{K_0}\otimes q^{K_0}$, either order of a three-factor iteration gives
+\[
+K_\pm\otimes q^{K_0}\otimes q^{K_0}
++q^{-K_0}\otimes K_\pm\otimes q^{K_0}
++q^{-K_0}\otimes q^{-K_0}\otimes K_\pm.
+\]
+Thus the displayed routing is coassociative.
+
+The Casimir is
+\[
+C_q=[K_0]_q[K_0-1]_q-K_+K_-.
+\]
+Direct substitution on $|n\rangle$ yields $C_q=[\kappa]_q[\kappa-1]_q I$. The identity $[x+1]_q[x]_q-[x]_q[x-1]_q=[2x]_q$ also shows that $C_q$ commutes with the ladder generators. For an intermediate contiguous tensor block, this centrality supplies a real symmetric block Casimir commuting with the total lowering map. Contiguous blocks are sufficient for every planar tree used below.
+
+\section{Excitation reduction and the two-factor seed}
+
+For $m\geq2$ ordered factors and $N\geq0$, define
+\[
+H_N^{(m)}=\operatorname{span}\{|n_1,\ldots,n_m\rangle:\textstyle\sum_r n_r=N\},
+\qquad
+M_N^{(m)}=\ker(K_-^{[m]}|_{H_N^{(m)}}).
+\]
+These are finite spaces even though the local ladders are infinite.
+
+\begin{proposition}[Multiplicity dimension]
+\[
+\dim H_N^{(m)}=\binom{N+m-1}{m-1},
+\qquad
+\dim M_N^{(m)}=\binom{N+m-2}{m-2}.
+\]
+\end{proposition}
+
+\begin{proof}
+The first count is the weak-composition count. For $N>0$, associate to each target composition $t$ of $N-1$ the source $t+e_m$. Its last-factor lowering coefficient is nonzero. Every earlier-factor lowering from that source has a larger last coordinate than $t$. Ordering by this coordinate gives a triangular square submatrix with nonzero diagonal. The lowering map is onto, and rank-nullity gives the second count. At $N=0$, the lowering map has zero target and both dimensions are one.
+\end{proof}
+
+\noindent\emph{Source: VII, ``Multiplicity dimension''; VIII, ``Multiplicity dimension.'' Evidence: direct finite proof, using VIII's explicit rank argument.}
+
+Let $Q_N$ be an orthonormal frame for $M_N^{(m)}$. A Casimir acting on a contiguous intermediate block restricts to $Q_N^{\mathsf T}C_AQ_N$. The ratio of full to reduced dimension is $(N+m-1)/(m-1)$. This is an exact dimensional reduction. It does not assert a universal floating-point accuracy or runtime bound.
+
+The two-factor kernel has dimension one. For $|\Omega_N\rangle=\sum_{n=0}^N c_n|n,N-n\rangle$, the lowering equation gives
+\[
+\frac{c_{n+1}}{c_n}
+=-q^{-(N-1+\kappa_1+\kappa_2)}
+\sqrt{\frac{[N-n]_q[2\kappa_2+N-n-1]_q}
+{[n+1]_q[2\kappa_1+n]_q}}.
+\]
+For example, writing $\lambda=q^{-(N-1+\kappa_1+\kappa_2)}$, a normalized solution is
+\[
+c_n=Z_N^{-1/2}(-\lambda)^n
+\sqrt{\frac{[N]_q!}{[n]_q![N-n]_q!}
+\frac{\prod_{r=0}^{n-1}[2\kappa_2+N-n+r]_q}
+{\prod_{r=0}^{n-1}[2\kappa_1+r]_q}}.
+\]
+Here empty products and $[0]_q!$ are one, and $Z_N$ is the positive sum of the displayed squared unnormalized coefficients. The ratio proves the formula. The scalar q-Hahn identification of general coupled coefficients is a classical representation-theoretic input.
+
+\noindent\emph{Source: VIII, ``Explicit q-Hahn lowest packet.'' Evidence: direct finite recurrence and normalization.}
+
+\section{Atlases, recoupling, and recurrence gauges}
+
+For three factors, $\dim M_N^{(3)}=N+1$. Choose orthonormal eigenbases $L_N$ and $R_N$ of the restricted pair Casimirs $C_{12}$ and $C_{23}$, with columns expressed in the same multiplicity frame. Define the signed overlap
+\[
+\mathcal R_N=L_N^{\mathsf T}R_N.
+\]
+
+\begin{theorem}[Finite reconstruction]
+\[
+\mathcal R_N^{\mathsf T}\mathcal R_N
+=\mathcal R_N\mathcal R_N^{\mathsf T}=I_{N+1}.
+\]
+Consequently, either atlas analyzes and synthesizes every vector in the same multiplicity space exactly.
+\end{theorem}
+
+\begin{proof}
+Both basis matrices are orthogonal in the common frame. Multiplying their overlap and its transpose gives the identity.
+\end{proof}
+
+\noindent\emph{Source: VII, ``Perfect recoupling reconstruction''; VIII, ``Exact analysis and synthesis.'' Evidence: direct linear algebra.}
+
+The usual positive-series decomposition gives the intermediate pair eigenvalues
+\[
+\lambda_j^{ab}=[\kappa_a+\kappa_b+j]_q
+[\kappa_a+\kappa_b+j-1]_q,\qquad 0\leq j\leq N.
+\]
+Their occurrence and the Racah/q-Racah identification are classical representation-theoretic inputs cited by VII and VIII. The release reconstructs the matrices and checks their spectra in bounded examples. It does not supply the full scalar parameter and normalization map in the symmetric q convention.
+
+\begin{proposition}[Recurrence with an explicit gauge]
+Suppose the opposing Casimir
+\[
+J=\mathcal R_N\operatorname{diag}(\lambda_m^{23})\mathcal R_N^{\mathsf T}
+\]
+is irreducibly tridiagonal in its prescribed label order. Its entries give
+\[
+J_{j,j-1}\mathcal R_N(j-1,m)+J_{jj}\mathcal R_N(j,m)
++J_{j,j+1}\mathcal R_N(j+1,m)
+=\lambda_m^{23}\mathcal R_N(j,m),
+\]
+with outside endpoint terms omitted. A row-sign gauge can make every adjacent coefficient positive.
+\end{proposition}
+
+\begin{proof}
+The recurrence is the matrix eigen-equation. Choose $s_0=1$ and $s_{j+1}=s_j\operatorname{sign}(J_{j,j+1})$. For $S=\operatorname{diag}(s_j)$, the matrix $SJS$ has adjacent entries $|J_{j,j+1}|$, and the rephased overlap is $S\mathcal R_N$.
+\end{proof}
+
+\noindent\emph{Source: VII, ``Finite three-term packet recurrence''; VIII, ``Two intermediate q-Casimir atlases.'' Evidence: direct implication conditional on the cited irreducible-tridiagonal input.}
+
+The positivity gauge need not equal the gauge making the first row and column of $\mathcal R_N$ positive. The signed coefficients in an explicitly printed matrix must therefore be retained unless its basis is rephased.
+
+\section{An exact two-channel deformation}
+
+Take $\kappa_1=\kappa_2=\kappa_3=1/2$ and $N=1$. In the ordered basis $|100\rangle,|010\rangle,|001\rangle$, the lowest-weight plane is
+\[
+qx_1+x_2+q^{-1}x_3=0.
+\]
+Set $S=1+q^2$ and $T=1+q^2+q^4$. The following normalized columns give two pair-Casimir atlases:
+\[
+\ell_0=\frac{(q,1,-qS)^{\mathsf T}}{\sqrt{ST}},
+\quad\ell_1=\frac{(1,-q,0)^{\mathsf T}}{\sqrt S},
+\]
+\[
+r_0=\frac{(S,-q^3,-q^2)^{\mathsf T}}{\sqrt{ST}},
+\quad r_1=\frac{(0,1,-q)^{\mathsf T}}{\sqrt S}.
+\]
+Every column lies in the plane. Within each pair the columns are orthonormal. Direct substitution into the pair Casimirs gives the ordered eigenvalues $0,q+q^{-1}$. Their overlap is
+\[
+\mathcal R_q=
+\begin{pmatrix}c_q&s_q\\s_q&-c_q\end{pmatrix},
+\qquad c_q=\frac{q}{1+q^2},\qquad
+s_q=\frac{\sqrt{1+q^2+q^4}}{1+q^2}.
+\]
+Thus the displayed transform has both a matrix derivation and an exact orthogonality check. It tends to
+\[
+\mathcal R_1=\begin{pmatrix}1/2&\sqrt3/2\\\sqrt3/2&-1/2\end{pmatrix}
+\quad\text{as }q\to1,
+\qquad
+\begin{pmatrix}0&1\\1&0\end{pmatrix}
+\quad\text{as }q\downarrow0.
+\]
+At $q=1$, its opposing Casimir has adjacent entry $-\sqrt3/2$, illustrating why the recurrence gauge matters.
+
+\noindent\emph{Source: VIII, ``Closed two-channel q-Racah transform''; VII, ``One excitation as a shape beam splitter.'' Evidence: direct finite calculation.}
+
+\section{Measurement, entropy, and deformation transport}
+
+\begin{theorem}[Measured recoupling channel]
+For any real orthogonal overlap $\mathcal R$, the matrix $P_{jm}=|\mathcal R_{jm}|^2$ is doubly stochastic. For every probability row vector $p$, its measured output $pP$ satisfies
+\[
+H(pP)\geq H(p),\qquad H(p)=-\sum_jp_j\log p_j,
+\]
+with $0\log0=0$.
+\end{theorem}
+
+\begin{proof}
+Row and column sums are the squared norms of the orthogonal rows and columns. For each column $m$, concavity of $h(x)=-x\log x$ gives
+$h(\sum_jP_{jm}p_j)\geq\sum_jP_{jm}h(p_j)$,
+because that column sums to one. Sum over $m$ and use the row sums.
+\end{proof}
+
+\noindent\emph{Source: VII, ``Bistochastic Racah kernel'' and ``Entropy monotonicity''; VIII, ``Bistochastic q-Racah channel.'' Evidence: direct finite proof.}
+
+The channel describes a distribution diagonal in one atlas, followed by measurement in the other. The coherent overlap retains its inverse $\mathcal R^{\mathsf T}$, while the measured distribution has discarded phase information.
+
+For the exact two-channel example, the smaller row probability is $p(q)=q^2/(1+q^2)^2$, increasing from zero to $1/4$. Its binary row entropy increases with q. The channel eigenvalues are $1$ and $2p(q)-1$, so its absolute spectral mixing gap is $2p(q)$. These statements concern this model. VIII's higher-excitation negative control prevents a universal monotonicity claim as q varies.
+
+For a differentiable, continuously gauged overlap $\mathcal R(\theta)$, define
+\[
+A(\theta)=\mathcal R(\theta)^{\mathsf T}\partial_\theta\mathcal R(\theta).
+\]
+Differentiating $\mathcal R^{\mathsf T}\mathcal R=I$ proves
+\[
+A^{\mathsf T}=-A,\qquad
+\partial_\theta\mathcal R=\mathcal R A.
+\]
+The coefficient $g(\theta)=\tfrac12\|A(\theta)\|_F^2$ records squared speed in the declared parameter and is invariant under constant orthogonal atlas changes. A parameter-dependent gauge adds its own derivative terms. Discontinuous sign choices must be aligned before numerical differentiation.
+
+\noindent\emph{Source: VIII, ``Monotone one-excitation mixing,'' ``No universal entropy monotonicity in q,'' and ``Skew deformation generator.'' Evidence: direct two-channel and tangent identities; bounded numerical negative control.}
+
+\section{Tree overlaps, loop closure, and compilation}
+
+Four factors have $\binom{N+2}{2}$ lowest-weight coordinates. The five planar trees are
+\[
+(((12)3)4),\quad((1(23))4),\quad(1((23)4)),
+\quad(1(2(34))),\quad((12)(34)).
+\]
+Their intermediate contiguous blocks are nested or disjoint. The corresponding Casimirs commute, so each tree admits an orthonormal joint eigenbasis in the same multiplicity space.
+
+\begin{theorem}[Common-space loop identity]
+For complete orthonormal tree frames $B_0,\ldots,B_4$, define $U_{r,r+1}=B_r^{\mathsf T}B_{r+1}$, with indices modulo five. Then
+\[
+U_{01}U_{12}U_{23}U_{34}U_{40}=I.
+\]
+\end{theorem}
+
+\begin{proof}
+Each $B_rB_r^{\mathsf T}$ is the identity on their common space. Substitution cancels every intermediate frame and leaves $B_0^{\mathsf T}B_0=I$.
+\end{proof}
+
+\noindent\emph{Source: VII, ``Pentagon closure''; VIII, ``Finite q-pentagon certificate.'' Evidence: direct overlap identity.}
+
+This loop closes for any complete orthonormal atlases of a common space. Consistent phases and label permutations cancel, and a common wrong subspace can also pass. Closure therefore checks overlap composition. Verifying the intended Casimir construction separately requires lowering-kernel residuals, dimensions, spectra, eigen-equations, and joint diagonalization. Comparing independently constructed local Racah edge blocks would provide a stronger associator implementation check.
+
+\begin{theorem}[Finite rotation compiler]
+Every real orthogonal $d\times d$ overlap has a factorization
+\[
+\mathcal R=G_1^{\mathsf T}\cdots G_L^{\mathsf T}D,
+\qquad L\leq d(d-1)/2,
+\]
+where each $G_r$ is a two-coordinate Givens rotation and $D$ is diagonal with entries $\pm1$.
+\end{theorem}
+
+\begin{proof}
+Row rotations eliminate successive entries below the diagonal. An upper triangular orthogonal matrix is diagonal with unit-magnitude diagonal entries. Reverse the rotations.
+\end{proof}
+
+\noindent\emph{Source: VII, ``Givens packet compilation''; VIII, ``Finite rotation compiler.'' Evidence: direct finite linear algebra.}
+
+The compiler acts on the multiplicity coordinate dimension. This supplies a finite reconstruction circuit without asserting hardware locality or gate optimality.
+
+\section{Scalar bridge and its remaining comparison}
+
+For $0<q<1$, define $(a;q)_k=\prod_{r=0}^{k-1}(1-aq^r)$. For nonnegative integers $n,y$ and parameters for which every denominator in the finite sum is nonzero, the scalar q-Racah expression is
+\[
+R_n(\mu(y);\alpha,\beta,\gamma,\delta\mid q)
+=\sum_{k=0}^{n}
+\frac{(q^{-n};q)_k(\alpha\beta q^{n+1};q)_k
+(q^{-y};q)_k(\gamma\delta q^{y+1};q)_k}
+{(\alpha q;q)_k(\beta\delta q;q)_k(\gamma q;q)_k(q;q)_k}\,q^k,
+\]
+where $\mu(y)=q^{-y}+\gamma\delta q^{y+1}$. Under these conditions, swapping $(n,\alpha,\beta)$ with $(y,\gamma,\delta)$ leaves the finite expression unchanged. The sums may be restricted to $k\leq\min(n,y)$ because the additional numerator terms vanish.
+
+If $\alpha=q^a,\beta=q^b,\gamma=q^c,\delta=q^d$, termwise passage to $q\to1$ gives
+\[
+{}_4F_3\!\left(
+\begin{matrix}-n,n+a+b+1,-y,y+c+d+1\\a+1,b+d+1,c+1\end{matrix};1\right),
+\]
+provided its finite denominator Pochhammer factors are nonzero, or any exceptional cancellation is separately justified.
+
+\noindent\emph{Source: VIII, ``q-Racah duality'' and ``Termwise classical limit.'' Evidence: direct finite identities on the nonsingular domain.}
+
+A condition such as $\gamma q=q^{-N}$ selects finite support when $0\leq n,y\leq N$. Positive orthogonality additionally requires an admissible nondegenerate lattice, nonzero norms, and positive weights. Termination alone does not establish those requirements. At $N=1$, $q=1/2$, $\alpha=\beta=1/2$, $\gamma=4$, $\delta=1$, one has $\gamma q=q^{-1}$ but $\mu(0)=\mu(1)=3$ and $R_0=R_1=(1,1)$.
+
+The remaining explicit comparison is a shape-to-scalar formula with the correct basic-hypergeometric base, parameters, weights, norms, label orientation, and phase factors. VII and VIII cite the classical identification but do not provide this full comparison in their convention. Their separately generated scalar tables do not establish it.
+
+VIII also evaluates the normalized terminating Askey--Wilson polynomial and its classical q-difference eigenfunction identity. This provides a scalar continuous-variable bridge. A continuous-series packet transform, its spectral measure, and an exact lift from the finite matrix construction remain separate work. The consolidated operational object is already exact at the finite matrix level: the reduced space, observables, atlases, signed overlaps, measured kernels, deformation tangent, tree graph, and finite compiler.

@@ -1,0 +1,113 @@
+\startvolume{Polyphase atlas}{Channels, refinement, and transfer}
+
+\lesson{POLYPHASE / 01}{Split Fibonacci into three actual streams}{P01_fibonacci_streams}
+{F_{3,r}(u)=\sum_{m\ge0}F_{3m+r}u^m,\qquad r=0,1,2}
+{The large numbers are Fibonacci coefficients, not exponent labels. Each column advances one step inside a channel, which advances three steps in the original sequence. The smaller label underneath records the original index. The three colors together account for every index from zero to seventeen.}
+{The first channel begins $0,2,8,34,144,610$. The second begins $1,3,13,55,233,987$, and the third begins $1,5,21,89,377,1597$. Thus the coefficient of $u^4$ in channel two is $F_{14}=377$.}
+{Declare the starting index before splitting a sequence. Here $F_0=0$, $F_1=1$, and channel indices start at $m=0$.}
+{Fibonacci: OEIS A000045. Exact integer coefficients; the displayed prefix ends at index seventeen. The splitting definition is valid for the full formal series.}
+
+\lesson{POLYPHASE / 02}{Weave the three streams back together}{P02_interleave}
+{\sum_{n\ge0}F_nz^n=F_{3,0}(z^3)+zF_{3,1}(z^3)+z^2F_{3,2}(z^3)}
+{Read the top rows horizontally to see each internal stream. Read the lower row in increasing original index to see the reconstruction. Its colors repeat zero, one, two. Synthesis restores both the coefficient and the place where it belongs.}
+{The channel terms $2u$, $3u$, and $5u$ become $2z^3$, $3z^4$, and $5z^5$. Interleaving the four displayed terms from each channel produces precisely the first twelve Fibonacci coefficients, ending with $F_{11}=89$.}
+{Splitting followed by synthesis is a change of coordinates. It does not smooth, average, or estimate the sequence.}
+{OEIS A000045; Paper I, exact polyphase reconstruction. Equality follows coefficient by coefficient from the unique division $n=3m+r$. The numerical example is finite.}
+
+\lesson{POLYPHASE / 03}{Two Fibonacci channels share one denominator}{P03_fibonacci_block}
+{E(u)=\frac{u}{1-3u+u^2},\quad O(u)=\frac{1-u}{1-3u+u^2},\quad B=\begin{pmatrix}1&1\\1&2\end{pmatrix}}
+{Each box is the adjacent pair $(F_{2m},F_{2m+1})$. The same block matrix advances every box by two original indices. Both channel series therefore obey the same second-order recurrence, although they have different starting coefficients.}
+{The initial pair is $(0,1)$. Applying $B$ gives $(1,2)$, then $(3,5)$, then $(8,13)$. Consequently $E=0+u+3u^2+8u^3+\cdots$ and $O=1+2u+5u^2+13u^3+\cdots$.}
+{A shared recurrence does not imply identical channels. Initial values and numerator data retain the residue information.}
+{OEIS A000045. Here $B=T^2$ for $T=\left(\begin{smallmatrix}0&1\\1&1\end{smallmatrix}\right)$. The denominator is a formal-series identity, equivalently a rational identity near zero.}
+
+\lesson{POLYPHASE / 04}{Every Fibonacci stride has a jump recurrence}{P04_jump_recurrences}
+{g_m=F_{Mm+r},\qquad g_{m+2}=L_Mg_{m+1}-(-1)^M g_m\quad(M\ge1)}
+{Each table row chooses a stride $M$. The trace of $T^M$ is the Lucas number $L_M$, while its determinant is $(-1)^M$. The last three columns use the same starting offset $r=1$ and show the two initial values and the next value.}
+{For $M=3$, start with $g_0=F_1=1$ and $g_1=F_4=3$. Since $L_3=4$ and the determinant is $-1$, the next value is $4\cdot3+1=13=F_7$. For $M=4$, the sign changes: $7\cdot5-1=34$.}
+{The stride determines the recurrence. The starting offset determines $g_0=F_r$ and $g_1=F_{M+r}$. A residue channel uses $0\le r<M$.}
+{OEIS A000045 and A000032, with $L_0=2$, $L_1=1$. Here $M$ is a positive integer and $m,r\ge0$. The formula follows from Cayley--Hamilton for $T^M$; the table displays strides one through six at offset one.}
+
+\lesson{POLYPHASE / 05}{Complex phases select one residue}{P05_root_selector}
+{z^rF_{M,r}(z^M)=\frac1M\sum_{j=0}^{M-1}\zeta^{-rj}F(\zeta^jz),\qquad \zeta=e^{2\pi i/M}}
+{The triangle places the three cube roots of unity in the complex plane. The selection grid shows the resulting coefficient mask: an exponent survives in exactly one row. Individual evaluations can be complex even when the original coefficients and the reconstructed residue series are real.}
+{At $M=3$, the coefficient $F_7=13$ survives the selector for $r=1$ because $7-1$ is divisible by three. The sum of its three phase factors is three. For $r=0$ or $r=2$, those phase factors sum to zero.}
+{This selector uses a characteristic-zero field containing the required roots of unity, here the complex numbers. Address splitting itself needs no such extension.}
+{Paper I, roots-of-unity filters; $M$ is a positive integer and $0\le r<M$. OEIS A000045 supplies the example. Exact cancellation is checked in $\mathbb Q[\zeta]/(\zeta^2+\zeta+1)$, not inferred from floating-point cancellation.}
+
+\lesson{POLYPHASE / 06}{Refine even and odd into six coefficient streams}{P06_refined_coefficients}
+{F_{2,r}(u)=\sum_{\ell=0}^2u^\ell F_{6,r+2\ell}(u^3),\qquad r=0,1}
+{The parent color identifies even or odd original indices. The child address is $r+2\ell$, so the even parent has children zero, two, four and the odd parent has children one, three, five. Each child row lists three actual Fibonacci coefficients.}
+{Inside the even parent, coefficient $55$ occurs at internal index five: $F_{10}=55$. Splitting $5=3\cdot1+2$ sends it to child four at index one. Its reconstructed exponent is $6\cdot1+4=10$.}
+{A child address alone is insufficient. Carry its internal index and the factor $u^\ell$ through the refinement.}
+{OEIS A000045; Paper I parent--child refinement. The rows use exact values through $F_{17}$; the identity follows from splitting the parent index $m=3j+\ell$.}
+
+\lesson{POLYPHASE / 07}{Different refinement orders reach the same coefficient}{P07_refinement_routes}
+{17=2(3\cdot2+2)+1=3(2\cdot2+1)+2=6\cdot2+5}
+{Follow the left path through modulus two and the right path through modulus three. The intermediate residues differ. Both paths arrive at the same modulus-six address, with the same internal index and the same Fibonacci coefficient.}
+{Left: $17=2\cdot8+1$, then $8=3\cdot2+2$, giving child $1+2\cdot2=5$. Right: $17=3\cdot5+2$, then $5=2\cdot2+1$, giving child $2+3\cdot1=5$. Both retain $F_{17}=1597$.}
+{Refinement orders agree after the address permutation is accounted for. Their intermediate labels need not agree.}
+{Paper I refinement identity, illustrated with OEIS A000045. The two routes are exact Euclidean division; the full coefficient check uses indices zero through seventeen.}
+
+\lesson{POLYPHASE / 08}{Three carries produce one block delay}{P08_three_carries}
+{C_3(u)=\begin{pmatrix}0&0&u\\1&0&0\\0&1&0\end{pmatrix},\qquad C_3(u)^3=uI_3}
+{Columns show successive multiplication by $z$ for the finite Fibonacci polynomial $P=z+z^2+2z^3+3z^4+5z^5$. Rows keep the three residue addresses. After three carries, every packet has returned to its row and acquired exactly one block delay.}
+{Initially the packets are $(2u,1+3u,1+5u)$. One carry gives $(u+5u^2,2u,1+3u)$. Three carries give $(2u^2,u+3u^2,u+5u^2)$, which synthesize to $z^3P$.}
+{Wrapping adds a power of $u$. It does not silently erase the coefficient at the end of a displayed prefix.}
+{Paper I intertwining law. The matrix identity is algebraic over a polynomial ring; the displayed six-coefficient example retains its full output support.}
+
+\lesson{POLYPHASE / 09}{Polynomial multiplication has visible residue carries}{P09_product_carries}
+{h_t(u)=\sum_{\substack{0\le r,s<M\\r+s\equiv t\!\!\pmod M}}u^{\lfloor(r+s)/M\rfloor}f_r(u)g_s(u)}
+{Each cell multiplies one residue coefficient from $f=1+2z+3z^2$ by one from $g=4+5z+6z^2$. Its color records the output residue. The cells beyond the diagonal wrap to a lower residue and carry a factor of $u$.}
+{At modulus three, the product packets are $h_0=4+27u$, $h_1=13+18u$, and $h_2=28$. They synthesize to $4+13z+28z^2+27z^3+18z^4$, exactly the ordinary polynomial product.}
+{Residue convolution must retain carry factors. Multiplying only equal-address channels omits cross terms.}
+{Worked finite-polynomial example over the integers. The general formula follows from $r+s=M\lfloor(r+s)/M\rfloor+(r+s\bmod M)$ in a commutative coefficient ring.}
+
+\lesson{POLYPHASE / 10}{An exponential generating function changes the weights}{P10_ogf_egf}
+{\sum_{n\ge0}\frac{a_nz^n}{n!}=\sum_{r=0}^{M-1}z^r\sum_{m\ge0}\frac{a_{Mm+r}}{(Mm+r)!}(z^M)^m}
+{The same Fibonacci values appear on both sides of the table. Ordinary generating-function coefficients retain the integers. Exponential generating-function coefficients divide by the factorial of the original index before channel routing. The denominator does not reset inside a channel.}
+{The even coefficient $F_6=8$ becomes $8/6!=1/90$ in the exponential series, at channel index three. Dividing by $3!$ instead would give $4/3$, a different series. The odd coefficient $F_7=13$ becomes $13/5040$.}
+{State whether a channel holds sequence values or normalized series coefficients. This choice changes every operator using those coefficients.}
+{OEIS A000045 supplies the values. Exact rational normalization; the reconstruction formula is a coefficient identity over a characteristic-zero field. It is not a claim that the channel itself is an EGF in $u$.}
+
+\lesson{POLYPHASE / 11}{Parity separates secant and tangent counts}{P11_secant_tangent}
+{\sec z=\sum_{m\ge0}\frac{A_{2m}z^{2m}}{(2m)!},\qquad \tan z=\sum_{m\ge0}\frac{A_{2m+1}z^{2m+1}}{(2m+1)!}}
+{The combined up/down stream $A_n$ splits into a secant row and a tangent row. The figure displays the integer counts, with the factorial denominator underneath each value. Thus the parity split is applied to the coefficients of $\sec z+\tan z$ with their original-index normalization intact.}
+{At internal index two, the secant term is $5z^4/4!$ and the tangent term is $16z^5/5!$. The tangent row starts $1,2,16,272,7936$ at exponents $1,3,5,7,9$. These are positive counts, not signed Euler numbers.}
+{The tangent OEIS sequence starts at native index one. Here its first term is explicitly reindexed to channel index $m=0$.}
+{OEIS A000111, A000364, A000182. The finite check independently divides the formal sine and cosine series and compares counts through exponent eleven.}
+
+\lesson{POLYPHASE / 12}{Thue--Morse refines by copying and complementing}{P12_thue_morse}
+{t(2m)=t(m),\quad t(2m+1)=1-t(m),\quad T(z)=(1-z)T(z^2)+\frac{z}{1-z^2}}
+{Each parent bit creates two children. Its even child copies the parent, while its odd child complements it. The two-row child bank reconstructs the first sixteen bits when interleaved. No statistical fitting is involved: the binary digit rule determines every entry.}
+{For $m=5$, the binary expansion is $101$ and its digit sum is two, so $t(5)=0$. Its children are $t(10)=0$ and $t(11)=1$. In the generating identity, the complement contributes the constant stream $1/(1-z^2)$.}
+{A refinement operator may be affine. Omitting the constant term changes the odd channel.}
+{OEIS A010060, offset zero. $t(n)$ is the binary digit sum modulo two. The universal recurrence follows by appending a binary zero or one; exact checks cover $0\le n<256$.}
+
+\lesson{POLYPHASE / 13}{Binary weight keeps the affine increment}{P13_binary_weight}
+{s_2(2m)=s_2(m),\quad s_2(2m+1)=s_2(m)+1,\quad W(z)=(1+z)W(z^2)+\frac{z}{1-z^2}}
+{The left bars show the binary weights of eight parents. On the right, even children preserve each height and odd children add one. These are integer digit counts. Reducing their values modulo two recovers the previous lesson's Thue--Morse bits.}
+{The parent $m=7$ has binary form $111$, so its weight is three. Appending zero gives $14=1110$ with weight three. Appending one gives $15=1111$ with weight four. The odd increment is visible in every pair.}
+{An affine update becomes linear on the augmented state $(s_2(m),1)^T$. The odd update matrix is $\left(\begin{smallmatrix}1&1\\0&1\end{smallmatrix}\right)$.}
+{OEIS A000120, offset zero. The recurrence and generating identity follow from binary appending. Exact checks cover $0\le n<256$; the bars display only parents zero through seven.}
+
+\lesson{POLYPHASE / 14}{A Haar bank preserves average and detail together}{P14_haar_bank}
+{\binom{a}{d}=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix}\binom{x}{y},\qquad x^2+y^2=a^2+d^2}
+{Group the four input amplitudes into adjacent pairs. The right bars show the normalized average and detail channels for each pair. A negative detail is meaningful: it records which member of the pair is larger. Keeping both channels permits the inverse transform.}
+{For $(1,3,2,0)$, the averages are $(2\sqrt2,\sqrt2)$ and the details are $(-\sqrt2,\sqrt2)$. Their energies are ten and four, totaling the original energy fourteen. Inverting the first pair gives $x=(a+d)/\sqrt2=1$ and $y=(a-d)/\sqrt2=3$.}
+{These are normalized filtering taps on paired amplitudes. They are distinct from recurrence coefficients or an unnormalized arithmetic mean.}
+{Exact Haar two-channel teaching example over $\mathbb R$; amplitudes lie in $\mathbb Q(\sqrt2)$. The plotted bars are numerical renderings of the stated exact algebraic values.}
+
+\lesson{POLYPHASE / 15}{One retained channel cannot identify the original}{P15_discarded_channel}
+{\mathcal R_{2,0}(1+2z+3z^2+4z^3)=\mathcal R_{2,0}(1+9z+3z^2-7z^3)=1+3u}
+{The two input polynomials share their even coefficients but differ at both odd positions. The right panel overlays the identical retained channel. The missing odd channel prevents the two inputs from being distinguished after projection.}
+{Their difference is $7z-11z^3$, whose even channel is zero. Full two-channel routing would retain odd channels $2+4u$ and $9-7u$ and would reconstruct each input exactly. Discarding those channels loses this distinction.}
+{Exact routing is reversible only while the complete channel state is retained. A projection needs a separate recovery hypothesis.}
+{Explicit finite counterexample over the integers. This proves noninjectivity of retaining only the even channel, rather than estimating reconstruction quality on a sample.}
+
+\lesson{POLYPHASE / 16}{A complete operation agrees along both routes}{P16_commuting_operation}
+{\mathcal R_2((1+z)P)=\begin{pmatrix}1&u\\1&1\end{pmatrix}\mathcal R_2(P),\qquad \mathcal S_2\mathcal R_2=I}
+{Follow either side of the square. The left route operates on the scalar polynomial first and then splits it. The right route splits first and applies the channel matrix. The two bottom states encode exactly the same seven output coefficients.}
+{For $P=z+z^2+2z^3+3z^4+5z^5$, the input channels are $E=u+3u^2$, $O=1+2u+5u^2$. The output channels are $E'=2u+5u^2+5u^3$, $O'=1+3u+8u^2$. Their synthesis ends with $5z^6$, retained from the finite input boundary.}
+{A complete contract declares the input support, channel convention, operator, and output support. Equality of those states is the check.}
+{Paper I intertwining, worked on a finite prefix of OEIS A000045. The universal matrix identity follows from the two-phase carry; exact integer checks retain the whole output polynomial.}

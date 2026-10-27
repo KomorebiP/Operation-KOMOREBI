@@ -1,0 +1,1037 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "T01--T16 author exact finite checks and bounded numerical illustrations",
+  "claim_id": "T01--T16 causal FIR routing, reconstruction, and stream implementation",
+  "repository": {
+    "commit": null,
+    "dirty": true,
+    "revision_note": "Unversioned artifact workspace; input file hashes recorded below."
+  },
+  "scientific_contract": "Causal zero extension; fine OGF delay z, coarse OGF delay u. Exact algebra supports routing/reconstruction identities. Finite runs verify the shown implementation and examples, not universal recurrence assertions for unrelated sequences.",
+  "command": "env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python figures_taps.py",
+  "software": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8"
+  },
+  "arithmetic": {
+    "finite_witnesses": "Python integers and fractions.Fraction",
+    "frequency_curves": "NumPy float64 / complex128"
+  },
+  "elapsed_seconds": 7.5830595520019415,
+  "generator_sha256": "692a7faad81ef9ea4aa8304c305d2e7d5deb4c977f47883a27176cfc22bde0ab",
+  "checks": [
+    {
+      "name": "Fibonacci direct convolution first 12",
+      "status": "PASS",
+      "details": {
+        "input": [
+          0,
+          1,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21,
+          34,
+          55,
+          89
+        ],
+        "taps": [
+          1,
+          2,
+          1
+        ],
+        "output": [
+          0,
+          1,
+          3,
+          5,
+          8,
+          13,
+          21,
+          34,
+          55,
+          89,
+          144,
+          233
+        ]
+      }
+    },
+    {
+      "name": "Two-phase matrix coefficients",
+      "status": "PASS",
+      "details": {
+        "matrix_coefficients": [
+          [
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        ],
+        "row_order": [
+          "even",
+          "odd"
+        ],
+        "column_order": [
+          "even",
+          "odd"
+        ]
+      }
+    },
+    {
+      "name": "Four-phase five-tap matrix",
+      "status": "PASS",
+      "details": {
+        "taps": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "matrix_coefficients": [
+          [
+            [
+              1,
+              5
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              2
+            ]
+          ],
+          [
+            [
+              2
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            [
+              3
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              0,
+              4
+            ]
+          ],
+          [
+            [
+              4
+            ],
+            [
+              3
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              5
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Tap composition exact convolution and matrix multiplication",
+      "status": "PASS",
+      "details": {
+        "first_taps": [
+          1,
+          2,
+          1
+        ],
+        "second_taps": [
+          1,
+          -1
+        ],
+        "combined_taps": [
+          1,
+          1,
+          -1,
+          -1
+        ],
+        "product_coefficients": [
+          [
+            [
+              1,
+              -1
+            ],
+            [
+              0,
+              1,
+              -1
+            ]
+          ],
+          [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              -1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "name": "Finite differences of squared integers",
+      "status": "PASS",
+      "details": {
+        "input": [
+          0,
+          1,
+          4,
+          9,
+          16,
+          25,
+          36,
+          49,
+          64,
+          81,
+          100
+        ],
+        "first_difference": [
+          0,
+          1,
+          3,
+          5,
+          7,
+          9,
+          11,
+          13,
+          15,
+          17,
+          19
+        ],
+        "second_difference": [
+          0,
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "boundary": "negative input indices zero"
+      }
+    },
+    {
+      "name": "Fibonacci annihilator including causal initial residual",
+      "status": "PASS",
+      "details": {
+        "taps": [
+          1,
+          -1,
+          -1
+        ],
+        "tested_indices": [
+          0,
+          23
+        ],
+        "residual": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Even and odd Fibonacci recurrence residuals",
+      "status": "PASS",
+      "details": {
+        "denominator_taps": [
+          1,
+          -3,
+          1
+        ],
+        "tested_coarse_indices": [
+          0,
+          23
+        ],
+        "even_residual": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "odd_residual": [
+          1,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Finite numerator taps acting on infinite reciprocal prefix",
+      "status": "PASS",
+      "details": {
+        "H_prefix": [
+          1,
+          3,
+          8,
+          21,
+          55,
+          144,
+          377,
+          987,
+          2584,
+          6765
+        ],
+        "numerator_even": [
+          0,
+          1
+        ],
+        "numerator_odd": [
+          1,
+          -1
+        ],
+        "checked_terms": 24
+      }
+    },
+    {
+      "name": "Frequency illustration compared with closed magnitude",
+      "status": "PASS",
+      "details": {
+        "arithmetic": "NumPy float64 / complex128",
+        "grid_samples": 801,
+        "omega_interval": [
+          0,
+          3.141592653589793
+        ],
+        "maximum_absolute_error": 1.3322676295501878e-15,
+        "exact_DC_gain": 4,
+        "exact_pi_zero": "1-2+1=0"
+      }
+    },
+    {
+      "name": "Symmetric three-tap phase illustration off the zero",
+      "status": "PASS",
+      "details": {
+        "omega_grid": "801 interior samples of 803 endpoints-inclusive samples on [-pi,pi]",
+        "endpoint_zeros_excluded": true,
+        "maximum_phase_error": 2.6645352591003757e-14,
+        "maximum_demodulated_amplitude_error": 7.109564432312261e-16
+      }
+    },
+    {
+      "name": "Haar sum/difference exact perfect reconstruction",
+      "status": "PASS",
+      "details": {
+        "arithmetic": "integers and fractions; common sqrt(2) factored symbolically",
+        "pairs_checked": 121,
+        "pair_range": [
+          -5,
+          5
+        ],
+        "normalized_matrix": "(1/sqrt(2))*[[1,1],[1,-1]]"
+      }
+    },
+    {
+      "name": "Signed finite predict/update exact invertibility",
+      "status": "PASS",
+      "details": {
+        "arithmetic": "integers/Fractions",
+        "filter_pairs_checked": 16,
+        "negative_coarse_indices": "zero",
+        "example_predict_taps": [
+          1,
+          -1
+        ],
+        "example_update_taps": [
+          0,
+          -1
+        ],
+        "input_even": [
+          3,
+          -1,
+          4,
+          0,
+          2,
+          -5,
+          1,
+          2
+        ],
+        "input_odd": [
+          1,
+          2,
+          -2,
+          4,
+          0,
+          3,
+          -1,
+          5
+        ],
+        "output_S": [
+          3,
+          1,
+          -2,
+          7,
+          -6,
+          -3,
+          -9,
+          9
+        ],
+        "output_D": [
+          -2,
+          6,
+          -7,
+          8,
+          -2,
+          10,
+          -7,
+          4
+        ]
+      }
+    },
+    {
+      "name": "Rational resampling 3/2 exact routing",
+      "status": "PASS",
+      "details": {
+        "input": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "upsampled": [
+          1,
+          0,
+          0,
+          2,
+          0,
+          0,
+          3,
+          0,
+          0,
+          4
+        ],
+        "taps": [
+          1,
+          2,
+          1
+        ],
+        "filtered": [
+          1,
+          2,
+          1,
+          2,
+          4,
+          2,
+          3,
+          6,
+          3,
+          4,
+          8,
+          4
+        ],
+        "downsampled": [
+          1,
+          1,
+          4,
+          3,
+          3,
+          8
+        ],
+        "phase_order": [
+          0,
+          2,
+          1,
+          0,
+          2,
+          1
+        ],
+        "input_indices": [
+          0,
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        "interpretation": "routing equality only; no anti-alias specification"
+      }
+    },
+    {
+      "name": "Exact chunk streaming and tail flush",
+      "status": "PASS",
+      "details": {
+        "filter_lengths_checked": [
+          1,
+          5
+        ],
+        "input_length": 41,
+        "chunk_partitions_per_length": 4,
+        "cases_checked": 20,
+        "example_chunks": [
+          4,
+          5,
+          3
+        ],
+        "example_state_snapshots_oldest_first": [
+          [
+            1,
+            2
+          ],
+          [
+            13,
+            21
+          ],
+          [
+            55,
+            89
+          ]
+        ],
+        "example_output_full": [
+          0,
+          1,
+          3,
+          5,
+          8,
+          13,
+          21,
+          34,
+          55,
+          89,
+          144,
+          233,
+          233,
+          89
+        ],
+        "required_state": "L-1 input samples for this direct-form FIR implementation"
+      }
+    },
+    {
+      "name": "General causal FIR phase-routing formula bounded exact tests",
+      "status": "PASS",
+      "details": {
+        "arithmetic": "Python integers",
+        "moduli": [
+          2,
+          6
+        ],
+        "tap_lengths": [
+          1,
+          9
+        ],
+        "input_length": 31,
+        "cases_checked": 45,
+        "negative_index_convention": "zero",
+        "full_tail_checked": true
+      }
+    }
+  ],
+  "figure_count": 16,
+  "figures": [
+    {
+      "path": "figures/T01_taps.pdf",
+      "bytes": 17138,
+      "sha256": "8ce184b0dcfc9ce6a9416ad49aabeb070a4313ef44d11410c771e5e89e55655c"
+    },
+    {
+      "path": "figures/T01_taps.png",
+      "bytes": 71604,
+      "sha256": "102aaa6151e3fa3c589f6152b13ecc8e27076a7fdf068de1bc5e06428a7ef91c"
+    },
+    {
+      "path": "figures/T02_taps.pdf",
+      "bytes": 16855,
+      "sha256": "fcd4c13b51e25eab13aa51062438c35fbb354cf57a88c9e21b890830686b4eea"
+    },
+    {
+      "path": "figures/T02_taps.png",
+      "bytes": 68267,
+      "sha256": "1f9469e2a291fc74d80fa87e4027517759a5132d1ea4eb58cfe32ce9cc7aad16"
+    },
+    {
+      "path": "figures/T03_taps.pdf",
+      "bytes": 14958,
+      "sha256": "28cfc9657e818f39cfc94b07812a32f22a3d67cb8791ec7a021f4671982f99cb"
+    },
+    {
+      "path": "figures/T03_taps.png",
+      "bytes": 64929,
+      "sha256": "4eae02ff9d72d216de6aba8bed833dbf03dbd55b9c2f307b260c3a93100cadd4"
+    },
+    {
+      "path": "figures/T04_taps.pdf",
+      "bytes": 15693,
+      "sha256": "9424601d82ede95642d295f8999c603632f3c5047c904fc25f82c4bea5f206cf"
+    },
+    {
+      "path": "figures/T04_taps.png",
+      "bytes": 74071,
+      "sha256": "9e83fcf6d58bf17cce68654ab0455d0808b4a8c5961f8284bc9e4d22cbb0637f"
+    },
+    {
+      "path": "figures/T05_taps.pdf",
+      "bytes": 15546,
+      "sha256": "9f88631ce5949d23f302703d002e08b0a20cbcea5b2d286c06aacfcbe6721ff7"
+    },
+    {
+      "path": "figures/T05_taps.png",
+      "bytes": 59185,
+      "sha256": "287e4d3ffafd8123f5c06c106427fa3c5d9b6b7192133afb95b44265c6192dac"
+    },
+    {
+      "path": "figures/T06_taps.pdf",
+      "bytes": 17279,
+      "sha256": "8169926c29035ad7459885a71511990b412d75501c005256c79ab6332b8d7ef8"
+    },
+    {
+      "path": "figures/T06_taps.png",
+      "bytes": 65272,
+      "sha256": "1c785eb2a0b8464f5b78dab76973885d8f889598634c2958c59017d84c646466"
+    },
+    {
+      "path": "figures/T07_taps.pdf",
+      "bytes": 16631,
+      "sha256": "554e0bc14840fb150293f392ecc5a9ce4f43458886c2a17a68bd00dc73def6e5"
+    },
+    {
+      "path": "figures/T07_taps.png",
+      "bytes": 65203,
+      "sha256": "5903e10e93830f9a9b5ddbf80191b78936eb452550c5326e2ef13db21b304277"
+    },
+    {
+      "path": "figures/T08_taps.pdf",
+      "bytes": 12402,
+      "sha256": "d80b7551a863e652a37d215eb1b61bc1c43ca658eb998170a8b3a8b0afbc4380"
+    },
+    {
+      "path": "figures/T08_taps.png",
+      "bytes": 54878,
+      "sha256": "6ba06c03ac2e4dbbc9a00dc741857edaead798efdec28cf8d3f9d00c17d02289"
+    },
+    {
+      "path": "figures/T09_taps.pdf",
+      "bytes": 15388,
+      "sha256": "6dcf551b0ea9f24bfd812f3d8410da7b902c6b4d839608e291a66a48b7b8edb9"
+    },
+    {
+      "path": "figures/T09_taps.png",
+      "bytes": 42535,
+      "sha256": "d26c141d81210ac6434bab413eebaee0620e210654e51e8a0dfc0da16c4108de"
+    },
+    {
+      "path": "figures/T10_taps.pdf",
+      "bytes": 11806,
+      "sha256": "47ddf42ac276034e11fe2b7ed421b38ab194205683b4638f00340c8aa0e8eed8"
+    },
+    {
+      "path": "figures/T10_taps.png",
+      "bytes": 55502,
+      "sha256": "aec63515c1811e45249f1bb78a2647a487c9feba7a9bf0f918241f668126913d"
+    },
+    {
+      "path": "figures/T11_taps.pdf",
+      "bytes": 16364,
+      "sha256": "9283b5561a14aae48f5e2c55e41afa9e9c2817b23b9735231f6ee26efa8dc572"
+    },
+    {
+      "path": "figures/T11_taps.png",
+      "bytes": 61942,
+      "sha256": "92652d060d893f87b1cce20f2351db3569b8448d106c42c34bce92de423425ed"
+    },
+    {
+      "path": "figures/T12_taps.pdf",
+      "bytes": 17694,
+      "sha256": "ce486b6850750bd4268dd23857c1eed97af32176821404d87c66e8986dbcf6e2"
+    },
+    {
+      "path": "figures/T12_taps.png",
+      "bytes": 112576,
+      "sha256": "42a9ba8b5b0de87b2abfcf141f5d02d03e276afe7dd57aaa6ec92ed9642d14b9"
+    },
+    {
+      "path": "figures/T13_taps.pdf",
+      "bytes": 16775,
+      "sha256": "f8505605e0be3cccbc4fda7132daaaafd2f279678ad8f5f0ee27d47fc58439e1"
+    },
+    {
+      "path": "figures/T13_taps.png",
+      "bytes": 57208,
+      "sha256": "1a94e98980c125a43ea7f7edc73c814054dd4fa124464e42f9baa1c53e18141c"
+    },
+    {
+      "path": "figures/T14_taps.pdf",
+      "bytes": 13376,
+      "sha256": "66d3a8f956c17ab3e08e37fe22eed0f9bf0b699fdb56e7ef91f2d16b044c45f4"
+    },
+    {
+      "path": "figures/T14_taps.png",
+      "bytes": 50493,
+      "sha256": "a491d5e09d6a08bdfe4f18725702fff4a6f1bfe12d956f5dcea4484225b2bc1d"
+    },
+    {
+      "path": "figures/T15_taps.pdf",
+      "bytes": 15934,
+      "sha256": "9225807c610625f2b1d925c3f4f878b8eb86d8b8f5cc2bdd069b91f387223575"
+    },
+    {
+      "path": "figures/T15_taps.png",
+      "bytes": 78310,
+      "sha256": "1513552bf9b16a02fc8688ced079445c76c1ca22564bb17305c7a92355fb1eb0"
+    },
+    {
+      "path": "figures/T16_taps.pdf",
+      "bytes": 14762,
+      "sha256": "af5a698fcbf0d405d8bc4dc97f815c23b0fd920aa2e10a58d43dee2df9bab7af"
+    },
+    {
+      "path": "figures/T16_taps.png",
+      "bytes": 93435,
+      "sha256": "561d9d15ab2648e668061d6103e6cd9b6566cc01a6d96778356a00f55d9576c8"
+    }
+  ],
+  "nonclaims": [
+    "No ideal anti-aliasing performance is asserted for the chosen resampling taps.",
+    "No constant-coefficient finite annihilator is asserted for all OEIS sequences.",
+    "The reciprocal response H is infinite, although its denominator and numerator taps are finite.",
+    "No boundary-free recurrence is asserted at causal initial indices."
+  ],
+  "environment": {
+    "software": [
+      {
+        "name": "python",
+        "version": "3.12.14"
+      },
+      {
+        "name": "numpy",
+        "version": "2.3.5"
+      },
+      {
+        "name": "matplotlib",
+        "version": "3.10.8"
+      }
+    ],
+    "hardware": "x86_64; CPU-only Matplotlib; 9 logical CPUs",
+    "cooperative_thread_caps": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1"
+    },
+    "machine_enforced_limits": "No per-process memory/CPU cap; bounded loops and fixed figure sizes."
+  },
+  "mathematics": {
+    "assertion_tested": "Causal zero extension; fine OGF delay z, coarse OGF delay u. Exact algebra supports routing/reconstruction identities. Finite runs verify the shown implementation and examples, not universal recurrence assertions for unrelated sequences.",
+    "coefficient_domain": "Python integers and Fraction for algebra; NumPy float64/complex128 for the frequency illustration only.",
+    "conventions": "Version 1: n>=0, zero extension at negative indices; fine delay z, coarse delay u; matrix rows output phases, columns input phases; blockwise Haar pairing.",
+    "inputs": [
+      "Fibonacci prefixes",
+      "Signed deterministic finite input vectors",
+      "Finite tap polynomials",
+      "801-point frequency grids"
+    ],
+    "bounds": {
+      "routing_moduli": [
+        2,
+        6
+      ],
+      "routing_tap_lengths": [
+        1,
+        9
+      ],
+      "routing_input_length": 31,
+      "routing_cases": 45,
+      "Haar_integer_pair_range": [
+        -5,
+        5
+      ],
+      "Haar_pairs": 121,
+      "lifting_filter_pairs": 16,
+      "streaming_filter_lengths": [
+        1,
+        5
+      ],
+      "streaming_cases": 20,
+      "frequency_samples": 801
+    },
+    "non_claims": [
+      "No ideal anti-aliasing performance is asserted for the chosen resampling taps.",
+      "No constant-coefficient finite annihilator is asserted for all OEIS sequences.",
+      "The reciprocal response H is infinite, although its denominator and numerator taps are finite.",
+      "No boundary-free recurrence is asserted at causal initial indices."
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "not used",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-10-08T00:25:40.014550+00:00",
+    "runtime_seconds": 7.5830595520019415,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "figures/T01_taps.pdf",
+      "sha256": "8ce184b0dcfc9ce6a9416ad49aabeb070a4313ef44d11410c771e5e89e55655c"
+    },
+    {
+      "path": "figures/T01_taps.png",
+      "sha256": "102aaa6151e3fa3c589f6152b13ecc8e27076a7fdf068de1bc5e06428a7ef91c"
+    },
+    {
+      "path": "figures/T02_taps.pdf",
+      "sha256": "fcd4c13b51e25eab13aa51062438c35fbb354cf57a88c9e21b890830686b4eea"
+    },
+    {
+      "path": "figures/T02_taps.png",
+      "sha256": "1f9469e2a291fc74d80fa87e4027517759a5132d1ea4eb58cfe32ce9cc7aad16"
+    },
+    {
+      "path": "figures/T03_taps.pdf",
+      "sha256": "28cfc9657e818f39cfc94b07812a32f22a3d67cb8791ec7a021f4671982f99cb"
+    },
+    {
+      "path": "figures/T03_taps.png",
+      "sha256": "4eae02ff9d72d216de6aba8bed833dbf03dbd55b9c2f307b260c3a93100cadd4"
+    },
+    {
+      "path": "figures/T04_taps.pdf",
+      "sha256": "9424601d82ede95642d295f8999c603632f3c5047c904fc25f82c4bea5f206cf"
+    },
+    {
+      "path": "figures/T04_taps.png",
+      "sha256": "9e83fcf6d58bf17cce68654ab0455d0808b4a8c5961f8284bc9e4d22cbb0637f"
+    },
+    {
+      "path": "figures/T05_taps.pdf",
+      "sha256": "9f88631ce5949d23f302703d002e08b0a20cbcea5b2d286c06aacfcbe6721ff7"
+    },
+    {
+      "path": "figures/T05_taps.png",
+      "sha256": "287e4d3ffafd8123f5c06c106427fa3c5d9b6b7192133afb95b44265c6192dac"
+    },
+    {
+      "path": "figures/T06_taps.pdf",
+      "sha256": "8169926c29035ad7459885a71511990b412d75501c005256c79ab6332b8d7ef8"
+    },
+    {
+      "path": "figures/T06_taps.png",
+      "sha256": "1c785eb2a0b8464f5b78dab76973885d8f889598634c2958c59017d84c646466"
+    },
+    {
+      "path": "figures/T07_taps.pdf",
+      "sha256": "554e0bc14840fb150293f392ecc5a9ce4f43458886c2a17a68bd00dc73def6e5"
+    },
+    {
+      "path": "figures/T07_taps.png",
+      "sha256": "5903e10e93830f9a9b5ddbf80191b78936eb452550c5326e2ef13db21b304277"
+    },
+    {
+      "path": "figures/T08_taps.pdf",
+      "sha256": "d80b7551a863e652a37d215eb1b61bc1c43ca658eb998170a8b3a8b0afbc4380"
+    },
+    {
+      "path": "figures/T08_taps.png",
+      "sha256": "6ba06c03ac2e4dbbc9a00dc741857edaead798efdec28cf8d3f9d00c17d02289"
+    },
+    {
+      "path": "figures/T09_taps.pdf",
+      "sha256": "6dcf551b0ea9f24bfd812f3d8410da7b902c6b4d839608e291a66a48b7b8edb9"
+    },
+    {
+      "path": "figures/T09_taps.png",
+      "sha256": "d26c141d81210ac6434bab413eebaee0620e210654e51e8a0dfc0da16c4108de"
+    },
+    {
+      "path": "figures/T10_taps.pdf",
+      "sha256": "47ddf42ac276034e11fe2b7ed421b38ab194205683b4638f00340c8aa0e8eed8"
+    },
+    {
+      "path": "figures/T10_taps.png",
+      "sha256": "aec63515c1811e45249f1bb78a2647a487c9feba7a9bf0f918241f668126913d"
+    },
+    {
+      "path": "figures/T11_taps.pdf",
+      "sha256": "9283b5561a14aae48f5e2c55e41afa9e9c2817b23b9735231f6ee26efa8dc572"
+    },
+    {
+      "path": "figures/T11_taps.png",
+      "sha256": "92652d060d893f87b1cce20f2351db3569b8448d106c42c34bce92de423425ed"
+    },
+    {
+      "path": "figures/T12_taps.pdf",
+      "sha256": "ce486b6850750bd4268dd23857c1eed97af32176821404d87c66e8986dbcf6e2"
+    },
+    {
+      "path": "figures/T12_taps.png",
+      "sha256": "42a9ba8b5b0de87b2abfcf141f5d02d03e276afe7dd57aaa6ec92ed9642d14b9"
+    },
+    {
+      "path": "figures/T13_taps.pdf",
+      "sha256": "f8505605e0be3cccbc4fda7132daaaafd2f279678ad8f5f0ee27d47fc58439e1"
+    },
+    {
+      "path": "figures/T13_taps.png",
+      "sha256": "1a94e98980c125a43ea7f7edc73c814054dd4fa124464e42f9baa1c53e18141c"
+    },
+    {
+      "path": "figures/T14_taps.pdf",
+      "sha256": "66d3a8f956c17ab3e08e37fe22eed0f9bf0b699fdb56e7ef91f2d16b044c45f4"
+    },
+    {
+      "path": "figures/T14_taps.png",
+      "sha256": "a491d5e09d6a08bdfe4f18725702fff4a6f1bfe12d956f5dcea4484225b2bc1d"
+    },
+    {
+      "path": "figures/T15_taps.pdf",
+      "sha256": "9225807c610625f2b1d925c3f4f878b8eb86d8b8f5cc2bdd069b91f387223575"
+    },
+    {
+      "path": "figures/T15_taps.png",
+      "sha256": "1513552bf9b16a02fc8688ced079445c76c1ca22564bb17305c7a92355fb1eb0"
+    },
+    {
+      "path": "figures/T16_taps.pdf",
+      "sha256": "af5a698fcbf0d405d8bc4dc97f815c23b0fd920aa2e10a58d43dee2df9bab7af"
+    },
+    {
+      "path": "figures/T16_taps.png",
+      "sha256": "561d9d15ab2648e668061d6103e6cd9b6566cc01a6d96778356a00f55d9576c8"
+    }
+  ],
+  "input_artifacts": [
+    {
+      "path": "figures_taps.py",
+      "sha256": "692a7faad81ef9ea4aa8304c305d2e7d5deb4c977f47883a27176cfc22bde0ab",
+      "sha256_after": "692a7faad81ef9ea4aa8304c305d2e7d5deb4c977f47883a27176cfc22bde0ab"
+    },
+    {
+      "path": "guide_style.py",
+      "sha256": "263beef53ed35e5061e42192487cbf48c62fe198e864defd72c8e01cb024117f",
+      "sha256_after": "263beef53ed35e5061e42192487cbf48c62fe198e864defd72c8e01cb024117f"
+    },
+    {
+      "path": "chapters_taps.tex",
+      "sha256": "dc7f212cae5068741b4dadafe0406dd6e4d917061f739e886e3d89958ce52867",
+      "sha256_after": "dc7f212cae5068741b4dadafe0406dd6e4d917061f739e886e3d89958ce52867"
+    },
+    {
+      "path": "source_context/PSC_V_convolution_extract.txt",
+      "sha256": "12e4a0bb9ac253a91fe70d71d31e1dadeca45fa76ea1b3b4ff74ca4320b5496d",
+      "sha256_after": "12e4a0bb9ac253a91fe70d71d31e1dadeca45fa76ea1b3b4ff74ca4320b5496d"
+    }
+  ],
+  "result": "Implementation and finite assertions verified in the stated ranges; frequency illustrations agree with their closed formulas within the recorded numerical tolerance.",
+  "residual_risks": [
+    "Finite witnesses do not replace the elementary coefficient-index derivation or authenticated source theorem.",
+    "Frequency error bounds are observed floating-point residuals on the plotted grids, not interval-certified estimates for every real frequency.",
+    "Legacy schema version 1 has no machine-checkable resource-limit record; input hashes are supplied as an additional provenance field."
+  ]
+}

@@ -1,0 +1,257 @@
+\startvolume{Paper I}{Exact lifts, Bernoulli refinement, and signed transfer}
+
+\lesson{PAPER I / 01}{A scalar germ has exact coefficient addresses}{I01_coefficient_addresses}
+{F(z)=\sum_{r=0}^{M-1}z^rF_{M,r}(z^M),\qquad F_{M,r}(u)=\sum_{m\ge0}a_{Mm+r}u^m.}
+{Follow each colored row horizontally. The label on a dot is the original Taylor exponent, while its row is the residue address. The three rows cover every exponent once. Moving from the scalar function to packets changes coordinates and preserves all coefficients; synthesis restores each packet's residue factor. This diagram shows addresses, not the magnitudes of the coefficients.}
+{For $e^z$ and $M=3$, the first packets begin $E_{3,0}=1+u/6+\cdots$, $E_{3,1}=1+u/24+\cdots$, and $E_{3,2}=1/2+u/120+\cdots$. The term $u/120$ in address 2 reconstructs to $z^2z^3/120=z^5/5!$.}
+{An exact packet is a coefficient address together with its synthesis rule.}
+{Volume I, Chapter 1, Definition 1.1 and Theorem 1.2, ``Exact polyphase reconstruction.'' Analytic germs at zero; the series identities hold in their convergence domains.}
+
+\lesson{PAPER I / 02}{Multiplication creates a carry}{I02_carry_matrix}
+{C_3(u)=\begin{pmatrix}0&0&u\\1&0&0\\0&1&0\end{pmatrix},\qquad \mathcal S_3(C_3\boldsymbol f)=z\mathcal S_3\boldsymbol f.}
+{Read a matrix column as an input address and a row as an output address. Multiplication advances addresses 0 and 1 by one position. Address 2 wraps to address 0 and acquires a factor $u$. The left panel evaluates that matrix at $u=1/2$ only to make its entries visible; the algebraic matrix retains the variable $u$.}
+{The scalar term $z^2u^m$ represents exponent $3m+2$. After multiplication it becomes $z^3u^m=u^{m+1}$ in address 0. The factor $u$ at the matrix's upper-right corner records exactly this carry. Without it, the exponent and coefficient reconstruction would both fail.}
+{Carry is part of multiplication, so it must be transported with the packets.}
+{Volume I, Chapter 2, Proposition 2.1, ``Intertwining laws.'' The matrix acts on analytic packet germs. The displayed numerical heatmap is an illustrative evaluation, not a fitted operator.}
+
+\lesson{PAPER I / 03}{The Euler operator remembers the full exponent}{I03_euler_addresses}
+{\Theta_M=Mu\frac{d}{du}I_M+\operatorname{diag}(0,\ldots,M-1),\qquad \Theta_M(u^me_r)=(Mm+r)u^me_r.}
+{Choose a column to fix the packet degree $m$, then move between rows to change address $r$. Each cell returns the original scalar exponent $3m+r$. Differentiating only in $u$ would recover $3m$ and lose the address contribution. The diagonal term restores it. The table is exact integer arithmetic.}
+{For $m=2$ in address $r=1$, synthesis gives $z^1(z^3)^2=z^7$. The operator $3u\,d/du+1$ multiplies that packet monomial by $3\cdot2+1=7$, just as $z\,d/dz$ multiplies $z^7$ by 7. Apply multiplication once more and the eigenvalue rises to 8.}
+{The transported Euler and carry operators satisfy $[\Theta_M,C_M]=C_M$.}
+{Volume I, Chapter 2, Proposition 2.1 and Corollary 2.2, ``Weyl commutator.'' Addresses and packet degrees are nonnegative integers; operator ordering is retained.}
+
+\lesson{PAPER I / 04}{A differential equation survives the lift}{I04_exponential_system}
+{\Theta_3\boldsymbol E_3=C_3\boldsymbol E_3,\qquad 3uE_{3,0}'(u)=uE_{3,2}(u).}
+{The left panel plots 22-term samples of the three exponential sections. The right panel compares the two sides of the first lifted row. Their agreement expresses a coefficient identity inherited from $\theta e^z=ze^z$. The scalar differential equation becomes a coupled matrix system, with the same ordered operator products.}
+{For $m\ge1$, a term $u^m/(3m)!$ in $E_{3,0}$ contributes $3m\,u^m/(3m)!=u^m/(3m-1)!$. This is the term obtained from $uE_{3,2}$ by using packet degree $m-1$. At $u=0$ both sides of this row vanish.}
+{Transport an equation by intertwining its ordered operators, rather than approximating its solutions.}
+{Volume I, Chapter 2, Theorem 2.3, ``Differential lift,'' and Chapter 3, exponential example. On $0\le u\le8$, each 22-term packet tail is below $10^{-60}$; recorded bounds also include the unmatched last finite row term. Floating-point rounding is separate.}
+
+\lesson{PAPER I / 05}{Integer Bernoulli values sit inside an entire family}{I05_bernoulli_interpolation}
+{\mathfrak B(z;a)=-z\zeta(1-z,a),\quad \mathfrak B(0;a)=1,\quad \mathfrak B(n;a)=B_n(a)\ (n\ge1).}
+{The curve varies the order continuously while keeping $a=1/2$. The dots mark positive-integer Bernoulli-polynomial samples and the removable value at zero. A family indexed by complex order carries more local information than its integer samples. The order-zero value is defined by removal of the zeta pole, not by evaluating an undefined product directly.}
+{At order four, $B_4(1/2)=7/240$. At every odd integer $n\ge3$, reflection symmetry gives $B_n(1/2)=0$. These isolated samples fit inside the continuous curve. The order-one value is also zero at this translation parameter.}
+{Keep the translation parameter and order variable distinct when taking derivatives or refinements.}
+{Volume I, Chapter 4, ``Complex-order Bernoulli interpolation.'' The complex-order family requires $a>0$; the plot uses 100-digit function evaluations at sampled real orders. Classical Hurwitz special values supply the integer interpolation.}
+
+\lesson{PAPER I / 06}{A parent is exactly the sum of its children}{I06_parent_child_refinement}
+{\mathfrak B_{M,r}(z;a)=\sum_{\ell=0}^{L-1}\mathfrak B_{LM,r+\ell M}(z;a).}
+{The parent curve and the dashed sum coincide, although the two child curves differ substantially. Here the parent has address $(M,r)=(2,1)$ and is refined to addresses $(4,1)$ and $(4,3)$ at integer order four. Refinement does not approximate the parent or reduce its size; it exposes an exact decomposition that later supports detail channels.}
+{At $a=1/3$, the parent is $8B_4(2/3)=52/405$. Its children are $64B_4(1/3)=416/405$ and $64B_4(5/6)=-364/405$. Their exact rational sum is $52/405$. The larger child magnitudes show why complete reconstruction matters.}
+{Information in separate children can disappear when only their parent sum is retained.}
+{Volume I, Chapter 5, Theorem 5.1, ``Parent-child refinement,'' with Theorem 5.2, ``Integer samples.'' The general complex-order identity uses $a>0$ and the classical Hurwitz multiplication formula.}
+
+\lesson{PAPER I / 07}{Detail phases preserve complete information}{I07_unitary_details}
+{W_j=L^{-1/2}\sum_{\ell=0}^{L-1}\omega_L^{-j\ell}b_\ell,\qquad \sum_j|W_j|^2=\sum_\ell|b_\ell|^2.}
+{The left panel shows four real child values. The right panel places their transformed channels in the complex plane. A nonreal channel is a phase coordinate, not a lost child. The normalized Fourier transform has an inverse and preserves the total squared magnitude. The DC channel is the parent divided by $\sqrt L$; the other channels record differences between children.}
+{Here $L=4$, $n=4$, and $a=1/3$. Applying the inverse formula $b_\ell=L^{-1/2}\sum_j\omega_L^{j\ell}W_j$ reconstructs each individual child. Real input also gives conjugate channels $W_3=\overline{W_1}$, while the DC and Nyquist channels are real.}
+{A detail bank should come with inverse synthesis and a normalization certificate.}
+{Volume I, Chapter 6, Definition 6.1, ``Cyclotomic detail,'' and the subsequent inverse-transform and Parseval identities. Finite integer-order polynomial data; the figure uses normalized channels, not unnormalized resultant evaluations.}
+
+\lesson{PAPER I / 08}{Bernoulli and Euler share one channel bank}{I08_bernoulli_euler_bank}
+{W_{2,0}(n;a)=\frac{B_n(a)}{\sqrt2},\qquad W_{2,1}(n;a)=-\frac{n}{2\sqrt2}E_{n-1}(a).}
+{Compare the two panels at the same translation parameter. The left pair consists of Bernoulli children; the right pair consists of their sum and difference channels. The low-pass output is a Bernoulli polynomial and the high-pass output is an Euler polynomial with the displayed scale factor. Both pairs carry the same information. The plotted curves have order four.}
+{At order three and $a=1/2$, the children are $3/16$ and $-3/16$. Their DC output vanishes and their detail output is $3/(8\sqrt2)$. This agrees with $E_2(1/2)=-1/4$ in the high-pass formula.}
+{Classical special functions can occur as complementary outputs of one exact refinement.}
+{Volume I, Chapter 8, Theorem 8.1, ``Two-channel identity.'' Positive integer orders; endpoint $a=0$ in this figure uses the Bernoulli-polynomial extension, not a zero-argument complex-order Hurwitz evaluation.}
+
+\lesson{PAPER I / 09}{A Wronskian can reject a broad conjecture}{I09_wronskian_negative_control}
+{\mathcal W_4(a)=\frac{a(a-1)}5\bigl(5a^4-10a^3+5a-2\bigr).}
+{The real graph is positive between zero and one, but its complete zero set tells a more precise story. The right panel includes two nonreal roots. A favorable sign on one real interval therefore does not imply universal real-rootedness. The shaded interval highlights a valid local feature, while the root plot supplies the negative control against a stronger claim.}
+{The nonreal pair is $\frac12\pm i\sqrt{(2\sqrt{65}-15)/20}$. The other four roots are $0$, $1$, and $\frac12\pm\sqrt{(15+2\sqrt{65})/20}$. At $a=1/2$, the value is $7/320>0$. These exact formulas explain both panels.}
+{A zero diagnostic is useful when it records counterexamples as carefully as positive cases.}
+{Volume I, Chapter 9, Worked example 9.2, ``Orders two through four,'' and Boundary 9.3. The plot uses the exact degree-six polynomial and algebraic roots; no general interlacing theorem is inferred.}
+
+\lesson{PAPER I / 10}{Third-root norms remember parity}{I10_cyclotomic_norm_parity}
+{N_n=\begin{cases}[3^{n-1}(B_n-B_n(1/3))]^2,&n\ge2\text{ even},\\3[3^{n-1}B_n(1/3)]^2,&n\ge3\text{ odd}.\end{cases}}
+{The equal second and third children in the left panel collapse the even-order primitive detail to a rational number. The right panel divides each norm by its corresponding rational square. The ratio is one at even orders and three at odd orders. The rational square factor has different definitions in the two cases, supplied by Bernoulli reflection.}
+{At $n=8$, the children are $-729/10$, $1093/30$, and $1093/30$. Because $\omega_3+\omega_3^2=-1$, the unnormalized primitive detail is $-328/3$. Its field norm is $107584/9$. At odd order three, the primitive detail is purely imaginary and its norm is $1/3$.}
+{A cyclotomic norm combines exact arithmetic with the symmetry of its channel orbit.}
+{Volume I, Chapter 10, Theorem 10.1, ``Parity law for the third-root detail norm,'' and Chapter 21, order-eight example. Integer Bernoulli-polynomial samples at $a=0$; unnormalized details are used.}
+
+\lesson{PAPER I / 11}{Scale filters select an arithmetic window}{I11_kernel_localization}
+{f_k(x)=x^{-2}(1-x^{-2})^k,\qquad x_*(k)=\sqrt{k+1}.}
+{Each curve divides the kernel by its own maximum and the horizontal coordinate by its exact maximizing location. The maxima align at one. The curves become similar as the packet order rises, but their finite-order forms remain distinct. Small integers are suppressed by the filter and large integers by the power weight, producing an active window.}
+{For $k=160$, the center is $\sqrt{161}\approx12.689$. More generally, the kernel $x^{-a}(1-x^{-\beta})^k$ has center $(1+\beta k/a)^{1/\beta}$. Differentiating its logarithm identifies the center directly. Here all plotted points satisfy $x\ge1$ and the normalized coordinate ranges from 0.18 to 4.}
+{A scale center is a localization statement, not yet a cancellation estimate for signs.}
+{Volume I, Chapter 14, ``Scale localization and the Mertens wavelet.'' Continuous kernels at $k=40,160,640$; this is an exact elementary kernel calculation. Zero-mean wavelet statements in that chapter require $k\ge1$.}
+
+\lesson{PAPER I / 12}{Coherence has a proved scale and an open estimate}{I12_signed_coherence_boundary}
+{\Gamma_k=\frac{|c_k|^2}{E_k},\qquad \mathrm{RH}\iff\Gamma_k=O_\varepsilon(k^\varepsilon)\ \text{for every }\varepsilon>0.}
+{The left panel compares the signed amplitude, the square root of positive energy, and the amplitude with all arithmetic signs made positive. These are different quantities. The right panel plots finite principal coherence and an absolute truncation-tail band. Finite small values do not establish the required asymptotic bound. The denominator scale is proved; the remaining assertion concerns Möbius cancellation.}
+{At $k=1200$ and cutoff $N=200000$, the finite calculation gives $|c_k|\approx1.1153\times10^{-5}$ and $E_k\approx2.3091\times10^{-6}$. Their ratio is about $5.3868\times10^{-5}$. The omitted amplitude is bounded absolutely by $1/N$, and the omitted energy by $1/(3N^3)$.}
+{Positive energy controls normalization; the signed estimate remains RH-equivalent.}
+{Volume I, Theorems 15.1 and 16.1; Chapter 22's finite example. The RH equivalence imports the classical Báez-Duarte theorem. Bands control truncation only, not interval-certified floating-point rounding.}
+
+\startvolume{Paper II}{Local germs, positive moments, and character geometry}
+
+\lesson{PAPER II / 01}{Stieltjes constants encode a detail's local slope}{II01_stieltjes_tangent}
+{G_{1,0}(1)=\sqrt2\log2,\qquad W_1'(0;1)=-\frac{\log2}{\sqrt2}.}
+{The first panel compares the two-channel detail near its removable zero with its exact tangent. The second removes the tangent and displays the remaining curvature. Generalized Stieltjes constants are Taylor data for the Hurwitz-zeta Laurent expansion. Their finite Fourier transform therefore supplies the local expansion of a Bernoulli detail, rather than just its integer values.}
+{For $L=2,M=1,a=1$, the child Hurwitz arguments are $1/2$ and 1. Their zeroth Stieltjes difference is $\gamma_0(1/2)-\gamma_0(1)=2\log2$. Dividing by $\sqrt2$ gives $G_{1,0}$. The derivative formula adds the factor $-1/2$, giving the slope about $-0.490129$.}
+{Local derivatives and integer samples probe different information in the same entire function.}
+{Volume II, Chapter 2, Theorem 2.2, ``Complete local packet expansion,'' and Example 2.3. Fixed $a=1>0$; sampled real orders $-0.2\le z\le0.3$ evaluated at 100-digit precision.}
+
+\lesson{PAPER II / 02}{A character packet returns an L-value}{II02_character_stieltjes}
+{\sum_{r=1}^{q}\chi(r)\gamma_0(r/q)=qL(1,\chi)\qquad(\chi\text{ nonprincipal}).}
+{The first two bars are signed contributions and the third is their sum. The character removes the pole term of the Hurwitz-zeta representation. What remains is a finite transform of local constants that equals the value of the nonprincipal L-function at one. Cancellation of the common pole is essential to this formula.}
+{For the character modulo four, $\chi_4(1)=1$, $\chi_4(3)=-1$, and the even residues contribute zero. Since $\gamma_0(x)=-\psi(x)$, digamma reflection gives $\gamma_0(1/4)-\gamma_0(3/4)=\pi$. Thus $4L(1,\chi_4)=\pi$, agreeing with the classical Dirichlet-beta value.}
+{The higher Stieltjes packets recover the whole derivative sequence $L^{(m)}(1,\chi)$.}
+{Volume II, Chapter 3, Theorem 3.2, ``Character transform at $s=1$.'' This example fixes actual modulus $q=4$ and a nonprincipal character; the principal character needs separate pole treatment.}
+
+\lesson{PAPER II / 03}{Detail variance measures child disagreement}{II03_detail_variance}
+{\mathcal V_L=\sum_\ell(b_\ell-\bar b)^2=\frac1L\sum_{\ell<m}(b_\ell-b_m)^2,\quad \bar b=L^{-1}\sum_\ell b_\ell.}
+{The first panel compares three real child values with their common mean. The second shows their squared deviations. Replacing the complete child vector by its mean removes exactly these deviations. For real children the variance also equals the summed squared magnitudes of non-DC unitary channels. For complex children, the holomorphic formula uses squares and paired channels, not absolute values.}
+{At $L=3,n=4,a=0$, the integer-polynomial children are $-9/10,13/30,13/30$, with mean $-1/90$. The pairwise form has two nonzero differences of magnitude $4/3$. Hence $\mathcal V_3=(1/3)\cdot2(4/3)^2=32/27$.}
+{A scalar invariant can quantify lost detail while complete synthesis retains every child.}
+{Volume II, Chapter 4, Theorem 4.2, ``Three exact forms,'' and Chapter 5, Example 5.2. The displayed children are real integer-order polynomial samples; complex holomorphic variance is not a positive norm.}
+
+\lesson{PAPER II / 04}{A resultant compresses primitive detail channels}{II04_primitive_resultants}
+{\mathcal N_3=\operatorname{Res}(X^2+X+1,P(X))=P(\omega_3)P(\omega_3^2)=3W_1W_2.}
+{Each curve evaluates the child polynomial on the entire unit circle. Highlighted points evaluate it at primitive third roots. Their product is the resultant. The order-three pair is imaginary and conjugate; the order-four pair coincides on the real axis. The construction compresses the primitive orbit into one scalar, while the plotted curve retains more detail.}
+{At order three, $P(X)=(X-X^2)/3$ and the primitive product is $1/3$. At order four, $P(X)=-9/10+(13/30)(X+X^2)$; each primitive value is $-4/3$, so the resultant is $16/9$. The factor 3 appears because $W_j$ is normalized by $1/\sqrt3$.}
+{Separate field-resultant normalization from unitary-channel normalization.}
+{Volume II, Chapter 6, Definition 6.1 and Theorem 6.2, ``Primitive collapse criterion.'' Here $a=0$ is used only for positive-integer Bernoulli-polynomial samples. No complete global zero classification is claimed.}
+
+\lesson{PAPER II / 05}{The energy is a positive moment measure}{II05_positive_measure}
+{\nu=\sum_nw_n\delta_{x_n},\quad w_n=\mu(n)^2n^{-4},\quad x_n=(1-n^{-2})^2,\quad E_k=\int x^k\,d\nu.}
+{The left panel retains the large atom at $x_1=0$. The right magnifies the remaining weights on a logarithmic scale. The weights are positive at squarefree integers and vanish elsewhere. Atom locations approach one while their masses decay. This produces a finite measure with infinite support, the structural source of the later positivity and spectral results.}
+{At $n=1$, the atom has weight 1 and contributes to $E_0$ under the moment convention $0^0=1$. At $n=2$, $x_2=9/16$ and $w_2=1/16$. The total mass is exactly $E_0=\zeta(4)/\zeta(8)=105/\pi^4$.}
+{Keep the zero atom when forming moments and the resolvent.}
+{Volume II, Chapter 7, ``The squarefree packet energy.'' Principal parameters $a=\beta=2,q=1$. The picture shows positive atoms through $n=60$; the mathematical measure has infinitely many atoms.}
+
+\lesson{PAPER II / 06}{Every alternating difference layer is positive}{II06_complete_monotonicity}
+{(-1)^m\Delta^mE_k=\sum_nw_nx_n^k(1-x_n)^m\ge0.}
+{The horizontal direction changes packet depth and the vertical direction changes difference order. Color records the logarithm of a direct positive sum. The figure does not form large differences of nearly equal numerical energies. The moment representation supplies the positive expression first, making the sign transparent at every displayed depth and difference order.}
+{For $m=1$, $E_k-E_{k+1}=\sum_nw_nx_n^k(1-x_n)$. For $m=2$, $E_k-2E_{k+1}+E_{k+2}=\sum_nw_nx_n^k(1-x_n)^2$. Both are positive because the measure has positive mass away from the endpoints. The same mechanism continues to every integer $m\ge0$.}
+{Complete monotonicity is an exact representation, not a pattern inferred from a heatmap.}
+{Volume II, Chapter 7, Theorem 7.1, ``Complete monotonicity.'' Plot: $1\le k\le30$, $0\le m\le6$, $N=200000$. Omitted layer $m$ is at most $2^m/[(3+2m)N^{3+2m}]$; rounding is separate.}
+
+\lesson{PAPER II / 07}{Hankel positivity is a Gram-space statement}{II07_hankel_gram}
+{c^*H_dc=\int\left|\sum_{j=0}^{d}c_jx^j\right|^2d\nu(x)>0\qquad(c\ne0).}
+{The first panel normalizes the entries of a three-by-three Hankel matrix to show correlations among monomials. The second plots its positive eigenvalues using high-precision low-order moments. Very unequal eigenvalues do not contradict positivity. The proof uses infinitely many distinct atoms: a nonzero polynomial cannot vanish at all of them.}
+{For the two-by-two matrix, strict positivity reads $E_0E_2-E_1^2>0$. With principal parameters it is about $0.03026887920$. This follows from the nonconstant function $x$ having positive variance under the normalized measure, and independently agrees with the exact zeta-ratio evaluations.}
+{Finite numerical eigenvalues illustrate an exact Gram argument and must respect conditioning.}
+{Volume II, Chapter 8, Theorem 8.1, ``Strict finite Hankel positivity.'' Displayed moments and eigenvalues use 100-digit arithmetic. The claim is strict positivity for every finite degree, not just the displayed matrix.}
+
+\lesson{PAPER II / 08}{Positive mass gives a zero-free slit resolvent}{II08_zero_free_resolvent}
+{\operatorname{Im}\mathcal E(z)=\operatorname{Im}z\int\frac{x\,d\nu(x)}{|1-zx|^2},\qquad z\notin[1,\infty).}
+{The upper half-plane has positive imaginary part and the lower half-plane negative imaginary part. The dark segment marks the excluded physical cut, not a line of proved zeros. On the real axis below one, the resolvent is positive. These three regions exclude zero everywhere in the slit domain. The proof uses positive mass on $x>0$, not signed Möbius cancellation.}
+{At $z=0$, $\mathcal E(0)=E_0>0$. At $z=i$, every positive atom contributes a positive imaginary part $w_nx_n/(1+x_n^2)$. The zero atom adds a real constant and therefore cannot cancel that imaginary part.}
+{Zero-freeness here belongs to the positive resolvent family.}
+{Volume II, Chapter 8, Theorem 8.3, ``Zero-free slit plane.'' Grid: $-2\le\Re z\le2$, $|\Im z|\le1.5$, $N=2000$. The audit bounds omitted terms using the minimum denominator distance on each retained sampled point; the cut is masked.}
+
+\lesson{PAPER II / 09}{A zeta-ratio stencil exactly recovers the energy}{II09_zeta_ratio_stencil}
+{E_k=\sum_{j=0}^{2k}(-1)^j\binom{2k}{j}\frac{\zeta(4+2j)}{\zeta(8+4j)}.}
+{The first panel overlays the exact finite stencil with a direct truncated positive sum. The second resolves the small difference between them. This difference is the omitted positive tail, not disagreement between two mathematical definitions. The stencil comes from expanding the packet filter and interchanging a finite sum with an absolutely convergent Dirichlet series.}
+{At $k=1$, the stencil has three terms: $E_1=D(4)-2D(6)+D(8)$, where $D(s)=\zeta(s)/\zeta(2s)$. It gives approximately $0.04780461034$. Direct summation through $N=2000$ undershoots the infinite value by at most $1/(3N^3)$.}
+{Exact coordinate changes can require extra numerical precision when their coefficients alternate.}
+{Volume II, Chapter 9, Theorem 9.1, ``Exact zeta-ratio finite difference.'' Principal parameters; $0\le k\le6$. Stencil values use 100-digit arithmetic, and the finite sums use the explicit absolute tail bound.}
+
+\lesson{PAPER II / 10}{Squarefree counting fixes the energy scale}{II10_energy_asymptotic}
+{E_k\sim A k^{-3/2},\qquad A=\frac{3}{2^{5/2}\pi^{3/2}}.}
+{Multiplying by $k^{3/2}$ removes the leading power decay. The finite arithmetic curve approaches the horizontal constant. The dashed curve is the density contribution expressed by a beta integral. The remaining difference includes arithmetic counting error. The asymptotic theorem uses the classical squarefree counting estimate; the graph displays its finite behavior.}
+{For the principal parameters, the density term is $(3/\pi^2)\mathrm B(3/2,2k+1)$. The beta-function asymptotic yields $A\approx0.09524045390$. At general $a>1/2,\beta>0$, the exponent is $\alpha=(2a-1)/\beta$ and the leading constant also contains the coprime squarefree density for the actual modulus.}
+{Record which counting theorem supplies an asymptotic result and which data merely illustrate it.}
+{Volume II, Chapter 10, Theorem 10.1, ``Packet-energy asymptotic.'' Plot: $10\le k\le100000$, $N=200000$; absolute energy tail $\le1/(3N^3)$. Classical counting and beta asymptotics are source inputs.}
+
+\lesson{PAPER II / 11}{The active coordinate approaches a Gamma law}{II11_gamma_packet_law}
+{U_k=\frac{2k}{n^2}\Longrightarrow\operatorname{Gamma}(3/2,1),\qquad \mathbb E[U^m]=\frac{\Gamma(3/2+m)}{\Gamma(3/2)}.}
+{The distribution curves describe where the normalized positive energy lives in inverse-scale coordinates. Different packet depths approach the same Gamma cumulative distribution. The second panel checks two moments at a large finite depth. The law is weighted by packet energy; it is not the unweighted histogram of integers or squarefree labels.}
+{The limiting mean is $3/2$ and the limiting second moment is $15/4$. For each integer $m\ge0$, the finite-depth identity shifts the energy parameter: $\mathbb E_k[U_k^m]=(2k)^mE_{2+m,2,1}(k)/E_{2,2,1}(k)$. Applying the energy law gives those Gamma moments.}
+{The moment identity supplies more information than weak convergence alone.}
+{Volume II, Chapter 11, Theorem 11.1, ``Gamma scaling limit.'' $k=100,1000,10000$, $N=200000$; CDFs sampled on $0\le U\le9$. Omitted normalized probability is bounded by $1/(3N^3E_k^{(N)})$.}
+
+\lesson{PAPER II / 12}{Distinct characters decohere at a fixed modulus}{II12_character_decoherence}
+{\frac{G_{\chi,\psi}(k)}{E_{a,\beta,q}(k)}=O_{a,\beta,q}(k^{-1/(2\beta)})\qquad(\chi\ne\psi\bmod q).}
+{The diagonal of the normalized character Gram matrix stays one. The off-diagonal entries measure overlap between distinct multiplicative phases. The second panel follows the largest such overlap as depth increases. Its reference line shows the theorem's rate shape, anchored at the first point; it is not a proved numerical upper envelope. All four characters are represented with the same actual modulus five.}
+{Here $a=\beta=2$, so the normalized source rate is $k^{-1/4}$. The product $\chi\overline\psi$ is nonprincipal when the two characters differ. Its squarefree weighted partial sums are $O_q(\sqrt X)$, which supplies the off-diagonal estimate after partial summation.}
+{Cross-character cancellation differs from cancellation inside the signed principal Möbius amplitude.}
+{Volume II, Chapter 12, Lemma 12.1 and Theorem 12.2, ``Character decoherence.'' $N=200000$, $20\le k\le100000$, fixed modulus $q=5$. The audit records a normalized-entry truncation bound. No character-uniform GRH estimate is inferred.}
+
+\startvolume{Paper III}{Jacobi models, endpoint limits, and the spectral edge}
+
+\lesson{PAPER III / 01}{The zero packet belongs to the positive contraction}{III01_zero_atom_contraction}
+{T|n\rangle=x_n|n\rangle,\qquad E_k=\langle v,T^kv\rangle,\qquad \|T\|=1.}
+{The left panel distinguishes zero depth from positive depth. The atom at $x_1=0$ contributes its unit mass to $E_0$ and vanishes from $E_k$ for $k\ge1$. The right panel shows the spectral gap of each integer node approaching zero. Individual nodes lie below one, but their supremum is one; there is no uniform gap for the infinite contraction.}
+{At $n=2$, $x_2=9/16$ and $1-x_2=7/16$. Along squarefree primes tending to infinity, $1-x_n=2/n^2-1/n^4\to0$. The logarithmic scale operator $-\log(1-n^{-2})$ is defined on $n\ge2$; the zero packet is retained separately.}
+{A zero-depth identity must preserve the endpoint atom and state its convention.}
+{Volume III, Chapters 2 and 13, ``Positive contraction realization'' and ``Number-basis realization.'' Figure uses principal parameters. The gap panel shows all integer nodes; squarefree nodes select an infinite subsequence with the same limiting norm.}
+
+\lesson{PAPER III / 02}{Generalized Hankel minors are strictly positive}{III02_generalized_minors}
+{\det[E_{r_i+s_j}]_{i,j=0}^{d}>0\qquad(r_0<\cdots<r_d,\ s_0<\cdots<s_d).}
+{Choose a row label and a column label to specify two strictly increasing exponent sets. Each colored cell is a two-by-two generalized minor, which need not be a principal minor of a symmetric matrix. High-precision values show several such witnesses. The proof expands the determinant into products of generalized Vandermonde determinants at ordered positive support nodes.}
+{For row exponents $(0,1)$ and column exponents $(0,2)$, the minor is $E_0E_3-E_1E_2$. For rows and columns both $(1,3)$, it is $E_2E_6-E_4^2$. The infinite support contains enough positive nodes to make the relevant Vandermonde contribution strictly positive.}
+{Total positivity is stronger than positivity of principal Hankel quadratic forms.}
+{Volume III, Chapter 3, Theorem 3.1, ``Strict total positivity.'' Nonnegative, strictly increasing integer exponent sets; low-order values here use 100-digit exact zeta-ratio moments. The theorem covers all finite sizes, not only this grid.}
+
+\lesson{PAPER III / 03}{One measure determines a Jacobi recurrence}{III03_global_jacobi}
+{\begin{gathered}xp_m(x)=b_{m+1}p_{m+1}(x)+a_mp_m(x)+b_mp_{m-1}(x),\\ b_m>0\ (m\ge1),\qquad b_0=0,\qquad p_{-1}=0.\end{gathered}}
+{The matrix panel shows only nearest-neighbor couplings in the orthogonal-polynomial basis. The coefficient panel separates diagonal positions from off-diagonal couplings. This Jacobi system represents the same positive measure that was diagonal in the integer basis. Its coefficients are determined by moments rather than selected as free fitting parameters. The displayed global system is distinct from the later tilted, scaled system.}
+{The first diagonal coefficient is $a_0=\int x\,d\nu/\int d\nu=E_1/E_0$. The first off-diagonal coefficient is the square root of the normalized variance of $x$. Both therefore follow directly from the first three moments. Higher coefficients continue the orthogonalization.}
+{Changing basis makes a diagonal arithmetic operator into a canonical tridiagonal transfer.}
+{Volume III, Chapter 4, ``The zero-free Stieltjes-Jacobi function,'' recurrence and Jacobi matrix after Theorem 4.1. The leading six-by-six block is computed from 100-digit moment data.}
+
+\lesson{PAPER III / 04}{A Gaussian node can lie between arithmetic atoms}{III04_gaussian_support_gap}
+{\xi_1=\frac{E_1}{E_0},\qquad 0<\xi_1<\frac5{48}<\frac9{16}.}
+{The colored atoms lie on the horizontal support line. The diamond is the one-node Gaussian location. It is a weighted mean inside the interval spanned by the measure and lies in a gap of the discrete arithmetic spectrum. Gaussian compression therefore does not preserve the individual atom addresses. The shaded region isolates the simplest exact counterexample to that stronger claim.}
+{For principal parameters, $\xi_1\approx0.04434860610$, while the first positive arithmetic atom is $9/16=0.5625$. Since $E_0\ge1$ and $E_1<\sum_{n\ge2}n^{-4}<5/48$, the gap statement follows without numerical computation. The one-node rule matches moments zero and one.}
+{Use the support interval for Gaussian nodes, rather than claiming membership in the discrete spectrum.}
+{Volume III, Chapter 5, Theorem 5.1, ``Moment-exact packet reduction.'' This is the consolidation correction to the original abstract's spectrum wording. The displayed mean uses 100-digit exact moments.}
+
+\lesson{PAPER III / 05}{Four nodes preserve exactly eight moments}{III05_exact_moment_contract}
+{E_r=E_0\sum_{j=1}^{m}\lambda_j\xi_j^r=E_0e_1^TJ_m^re_1,\qquad 0\le r\le2m-1.}
+{Bars before the vertical divider lie below the display floor; they witness the exact moment contract numerically at high precision. Bars after the divider show the first moments beyond that contract. The divider marks degree seven for a four-node rule. Matching early moments is a precise finite statement, not equality of the complete infinite measure and reduced model.}
+{With $m=4$, degrees $0,1,\ldots,7$ are exact by Gaussian quadrature. Degree eight is outside that guarantee and displays a nonzero residual. The degree-zero equality states that positive normalized weights sum to one, while the degree-one equality preserves the measure's mean.}
+{State which moments a reduction preserves and where its guarantee ends.}
+{Volume III, Chapter 5, Theorem 5.1, ``Moment-exact packet reduction.'' Gaussian nodes and weights use 100-digit arithmetic; residuals are plotted with floor $10^{-60}$. This is a numerical witness of the source theorem, not a new universal proof.}
+
+\lesson{PAPER III / 06}{Positive spectral weights have negative z-residues}{III06_poles_and_residue_signs}
+{\mathcal E_m(z)=E_0\sum_j\frac{\lambda_j}{1-z\xi_j},\qquad \operatorname{Res}_{z=1/\xi_j}\mathcal E_m=-\frac{E_0\lambda_j}{\xi_j}<0.}
+{The first panel places positive weights at their physical-cut poles. The second records the residues in the variable $z$. Their signs are negative because differentiating the denominator contributes $-\xi_j$. The weights remain positive. This distinction depends on the coordinate and should not be hidden under the word positivity. The logarithmic pole axis keeps distant poles visible.}
+{For a one-node model, the pole is about $22.54862301$ and the residue about $-24.30579519$. For the plotted four-node model, each node lies strictly in $(0,1)$, so each pole lies strictly above one. No exact Gaussian node equals the zero atom.}
+{Identify whether positivity refers to weights, moments, or coefficients in a chosen coordinate.}
+{Volume III, Chapter 5, Corollary 5.2, corrected in consolidation. Four-node values use 100-digit moments. The formula repairs the original ``positive residues'' wording while preserving its positive-measure content.}
+
+\lesson{PAPER III / 07}{The two Gamma coordinates share all moment limits}{III07_all_moment_bridge}
+{u_k=U_k-\frac{U_k^2}{4k},\qquad 0\le U_k^m-u_k^m\le\frac{m}{4k}U_k^{m+1}\quad(m\ge1).}
+{Solid and dashed curves use $U_k=2k/n^2$ and $u_k=k(1-x_n)$, with $x_n=(1-n^{-2})^2$, and compare their first three moments with Gamma targets. They approach the same targets without being equal at finite depth. The displayed inequality supplies the bridge: convergence of the next $U$ moment bounds the discrepancy in the current moment. Weak convergence against bounded test functions alone would not provide this conclusion.}
+{For $m=1$, the exact difference is $\mathbb E[U_k]-\mathbb E[u_k]=\mathbb E[U_k^2]/(4k)$. Its limiting numerator is $15/4$, so the discrepancy is asymptotic to $15/(16k)$. Both means still tend to $3/2$.}
+{All-moment control is the needed input for polynomial and determinant convergence.}
+{Volume II, Theorem 11.1's shifted-energy identity; Volume III, Theorems 6.1 and 7.1; explicit consolidation bridge. $N=200000$, $20\le k\le10000$; the audit records absolute normalized-moment truncation bounds.}
+
+\lesson{PAPER III / 08}{Fixed-degree packet polynomials become Laguerre}{III08_laguerre_polynomials}
+{P_m^{(k)}(u)\longrightarrow\Lambda_m(u)=(-1)^m m!L_m^{(1/2)}(u)\quad(m\text{ fixed}).}
+{Each panel fixes polynomial degree and changes packet depth. The dashed curve is the classical monic Laguerre limit. The finite packet polynomials are monic and come from the tilted arithmetic measure. They are generally different at finite depth. All-moment convergence gives convergence of their coefficient systems; fixing degree is essential to that implication. The plot does not claim convergence uniform in degree.}
+{At degree two the limit is $u^2-5u+15/4$, with roots approximately $0.91886117$ and $4.08113883$. At degree three it is $u^3-(21/2)u^2+(105/4)u-105/8$. These coefficients follow from orthogonality under the normalized Gamma-$3/2$ law.}
+{Polynomial universality follows from a moment bridge and a nonsingular limiting Gram system.}
+{Volume III, Chapter 7, Theorem 7.1, ``Fixed-degree Laguerre universality,'' with the consolidated all-moment justification. Degrees two and three, $k=100,10000$, $N=200000$, displayed on $0\le u\le8$.}
+
+\lesson{PAPER III / 09}{The scaled Jacobi coefficients have a fixed point}{III09_jacobi_fixed_point}
+{a_m(k)\to2m+\alpha,\qquad b_{m+1}(k)\to\sqrt{(m+1)(m+\alpha)},\qquad \alpha=3/2.}
+{The left panel follows diagonal recurrence coefficients and the right follows nearest-neighbor couplings. At larger depth the arithmetic Jacobi block approaches the Gamma--Laguerre block. These coefficients belong to the endpoint coordinate $u$, so they should not be compared directly with the unscaled global Jacobi coefficients on $x\in[0,1]$. Only each fixed leading block is asserted to converge.}
+{For $m=0,1,2$, the limiting diagonal is $3/2,7/2,11/2$. The first three off-diagonal entries are $\sqrt{3/2},\sqrt5,\sqrt{21/2}$. They determine the first leading block and its Gaussian rule.}
+{Specify both the coordinate and the fixed-degree range of a recurrence limit.}
+{Volume III, Chapter 7, Corollary 7.2, ``Jacobi fixed point.'' Principal shape $\alpha=3/2$; first five coefficients at $k=100,10000$, $N=200000$. Finite Lanczos computations use reorthogonalization.}
+
+\lesson{PAPER III / 10}{A shifted determinant has an explicit leading constant}{III10_shifted_hankel_asymptotic}
+{\Delta_d(k)\sim A^{d+1}\!\prod_{j=0}^d j!(3/2)_j\;k^{-3(d+1)/2-d(d+1)}\quad(d\text{ fixed}).}
+{Each curve divides a shifted Hankel determinant by its predicted leading term. The ratios approach one. The computation changes basis to the endpoint coordinate before evaluating a determinant, avoiding subtraction of nearly equal shifted energies. This numerical method follows the exact affine basis-change argument used in the proof. The plot illustrates fixed determinant orders one, two, and three.}
+{For $d=1$, the determinant is $E_kE_{k+2}-E_{k+1}^2$. Its leading term is $(3/2)A^2k^{-5}$. The factor $k^{-2}$ beyond the two energy factors comes from the affine transformation of the two monomial bases.}
+{Small determinants need a stable coordinate representation as well as an asymptotic formula.}
+{Volume III, Chapter 8, Theorem 8.1, ``Complete leading Hankel asymptotic.'' $30\le k\le10000$, $N=200000$. Underlying moment tails are recorded; this plot is not a certified determinant-error interval.}
+
+\lesson{PAPER III / 11}{The kernel and Gaussian rule share the same limit}{III11_kernel_quadrature_limit}
+{K_d^{(k)}\to K_d^{(3/2)},\qquad (\xi_j^{(k)},\lambda_j^{(k)})\to(\xi_j^{\mathrm{GL}},\lambda_j^{\mathrm{GL}})\quad(d,m\text{ fixed}).}
+{The left panel sums three orthonormal polynomial squares on the diagonal of a fixed-degree kernel. The right compares the associated three-node Gaussian rule with its normalized Gauss--Laguerre limit. Their common input is the converging finite Jacobi block. Kernel convergence and quadrature convergence are separate outputs of the same moment and recurrence structure.}
+{The limiting three-node locations are approximately $0.66632591$, $2.80077505$, and $7.03289904$. Their positive weights integrate the normalized Gamma density, so they sum to one. This differs from unnormalized generalized-Laguerre weights, whose sum is $\Gamma(3/2)$.}
+{State the measure normalization when comparing kernels or quadrature weights.}
+{Volume III, Chapters 9--10, Theorems 9.1 and 10.1, ``Fixed-degree kernel convergence'' and ``Quadrature fixed point.'' $d=2,m=3,k=10000,N=200000$. Sampled diagonal kernels on $0\le u\le8$ illustrate the stronger local-uniform source result.}
+
+\lesson{PAPER III / 12}{The edge cusp follows conditionally from energy decay}{III12_principal_edge_cusp}
+{\mathcal E(1)-\mathcal E(z)\sim2\sqrt\pi A\sqrt{1-z}=\frac3{2^{3/2}\pi}\sqrt{1-z}\qquad(z\uparrow1).}
+{Read the horizontal axis toward the right: $\varepsilon=1-z$ decreases. Dividing the positive resolvent difference by $\sqrt\varepsilon$ exposes the cusp constant. The shaded band adds a positive omitted-tail bound. The asymptotic implication follows from the source energy law through the consolidation's Abelian argument; it does not require an informal continuous density for a discrete measure.}
+{Write the difference as $\sum_{k\ge0}E_k(1-z^k)$. Conditional on $E_k\sim Ak^{-3/2}$, set $t=-\log z$ and use the integrable profile $u^{-3/2}(1-e^{-u})$. Its integral is $2\sqrt\pi$, giving the displayed constant. Terms away from the endpoint contribute lower-order corrections.}
+{A repaired analytic passage should name its source input and preserve its exact conclusion.}
+{Volume III, Chapter 11, Theorem 11.1, ``Principal edge cusp,'' with the consolidation Abelian repair. $N=200000$, $10^{-5}\le\varepsilon\le0.1$; omitted difference $\le1/N$. The band controls truncation, not interval-certified rounding; no RH bound follows.}

@@ -1,0 +1,42 @@
+% Realization Calculus companion design. Fonts are system dependencies.
+\usepackage{fontspec,mathpazo,tikz,titlesec}
+\usetikzlibrary{calc}
+\IfFileExists{/usr/share/fonts/opentype/urw-base35/P052-Roman.otf}{
+ \setmainfont{P052-Roman.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf,Ligatures=TeX]
+}{\setmainfont{TeX Gyre Pagella}[Ligatures=TeX]}
+\IfFileExists{/usr/share/fonts/opentype/urw-base35/NimbusSans-Regular.otf}{
+ \setsansfont{NimbusSans-Regular.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
+}{\setsansfont{TeX Gyre Heros}[Scale=.94]}
+\IfFontExistsTF{DejaVu Sans Mono}{\setmonofont{DejaVu Sans Mono}[Scale=.82]}{\setmonofont{Latin Modern Mono}[Scale=.86]}
+\definecolor{RCPlum}{HTML}{39263F}
+\definecolor{RCGold}{HTML}{A78A50}
+\definecolor{RCMuted}{HTML}{68616C}
+\definecolor{RCPale}{HTML}{DDD6DF}
+\colorlet{Ink}{black!85}
+\colorlet{Accent}{RCPlum}
+\colorlet{Muted}{RCMuted}
+\colorlet{Pale}{RCPlum!5}
+\colorlet{ink}{Ink}\colorlet{accent}{RCPlum}\colorlet{warm}{RCGold}
+\color{Ink}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\addfontfeatures{LetterSpace=5}\fontsize{7.1}{10}\selectfont\color{Muted}REALIZATION CALCULUS}
+\fancyhead[R]{\sffamily\fontsize{7.1}{10}\selectfont\color{Muted}\AtlasRunningTitle}
+\fancyfoot[R]{\rmfamily\fontsize{10}{12}\selectfont\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[R]{\rmfamily\fontsize{10}{12}\selectfont\thepage}\renewcommand{\headrulewidth}{0pt}}
+\titleformat{\section}{\normalfont\Large\color{RCPlum}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\normalfont\large\color{RCPlum}}{\thesubsection}{.7em}{}
+\hypersetup{colorlinks=true,linkcolor=RCPlum,citecolor=RCPlum,urlcolor=RCPlum,pdfauthor={Komorebi P.},pdfdisplaydoctitle=true,bookmarksopen=true,bookmarksopenlevel=0}
+\newcommand{\AtlasCover}[3]{%
+ \hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup
+ \begin{tikzpicture}[remember picture,overlay]
+ \fill[RCPlum] (current page.south west) rectangle (current page.north east);
+ \node[anchor=north west,text=white,font=\sffamily\addfontfeatures{LetterSpace=16}\fontsize{9}{12}\selectfont] at ([xshift=.9in,yshift=-1in]current page.north west) {REALIZATION CALCULUS};
+ \draw[RCGold,line width=.8pt] ([xshift=.92in,yshift=-1.52in]current page.north west) -- ++(.56in,0);
+ \node[anchor=north west,text=white,align=left,inner sep=0pt,font=\rmfamily\fontsize{52}{60}\selectfont] at ([xshift=.88in,yshift=-1.92in]current page.north west) {#1};
+ \node[anchor=north west,text=white,align=left,inner sep=0pt,font=\rmfamily\fontsize{23}{29}\selectfont] at ([xshift=.92in,yshift=-4.32in]current page.north west) {#2};
+ \node[anchor=north west,text=RCPale,align=left,inner sep=0pt,font=\rmfamily\fontsize{13}{19}\selectfont] at ([xshift=.92in,yshift=-5.53in]current page.north west) {#3};
+ \draw[white!25!RCPlum,line width=.45pt] ([xshift=.92in,yshift=1.29in]current page.south west) -- ([xshift=-.88in,yshift=1.29in]current page.south east);
+ \node[anchor=south west,text=white,inner sep=0pt,font=\rmfamily\fontsize{14}{18}\selectfont] at ([xshift=.92in,yshift=.82in]current page.south west) {Komorebi P.};
+ \end{tikzpicture}\null\endgroup\clearpage\hypersetup{pageanchor=true}
+}

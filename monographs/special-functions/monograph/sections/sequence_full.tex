@@ -1,0 +1,458 @@
+\hypertarget{exact-sequence-polyphase-and-tap-laboratory}{%
+\chapter[Sequence and polyphase laboratory]{Exact sequence, polyphase and tap
+laboratory}\label{app:sequence}\label{exact-sequence-polyphase-and-tap-laboratory}}
+
+
+
+This chapter connects the nonlinear family to exact sequences and finite
+filter algebra. Its reusable code implements finite calculations. The
+analytic results are proved in Chapter~\ref{ch:feedback} and
+Appendix~\ref{app:growth}. All mathematical
+sequence indices begin at zero. All finite arrays are zero extended
+beyond their displayed support. The catalog contains explicit candidates
+for OEIS lookup. This chapter does not assert an OEIS accession or
+historical priority for an unsearched row.
+
+\hypertarget{the-integer-polynomial-object}{%
+\section{The integer polynomial
+object}\label{the-integer-polynomial-object}}
+
+Write the unique odd formal solution as
+
+\[
+T_{q,r}(z)=\sum_{n\ge0}c_n(q,r)z^{2n+1}
+          =\sum_{n\ge0}A_n(q,r)\frac{z^{2n+1}}{(2n+1)!}.
+\]
+
+The two coefficient systems are related by \(A_n=(2n+1)!c_n\). In
+particular, \(A_n\) is the derivative of order \(2n+1\) at zero. The
+coefficient \(c_n\), the derivative \(A_n\), and the full EGF sequence
+\(a_m\) with \(a_{2n+1}=A_n, a_{2n}=0\) are different objects. None of
+the code silently substitutes one for another.
+
+The nonlinear differential equation gives the recurrence
+
+\[
+\boxed{
+A_0=1,\qquad
+A_n=\sum_{i=0}^{n-1}\binom{2n}{2i+1}
+ q^{2i+1}r^{2(n-1-i)+1}A_i A_{n-1-i},\quad n\ge1.}
+\]
+
+\textbf{Proof.} Multiply the ordinary Taylor recurrence by \((2n+1)!\).
+The factor attached to \(A_iA_j\), where \(i+j=n-1\), is
+\((2n)!/[(2i+1)!(2j+1)!]=\binom{2n}{2i+1}\). This also proves the
+recurrence directly in the EGF convention. \(\square\)
+
+\textbf{Polynomial theorem.} For every \(n\), \(A_n\in\mathbb Z[q,r]\),
+all its nonzero coefficients are positive integers, and
+\(A_n(q,r)=A_n(r,q)\). Every monomial \(q^u r^v\) satisfies
+
+\[
+u,v\ge n,\qquad u\equiv v\equiv n\pmod2,\qquad u+v\le n(n+1).
+\]
+
+\textbf{Proof.} The recurrence is an induction using positive integer
+binomial coefficients. Swapping \(q,r\) and replacing \(i\) by \(n-1-i\)
+leaves the sum unchanged. If child indices are \(i,j\), their exponent
+pairs receive the shifts \((2i+1,2j+1)\). The lower bounds follow from
+\(i+j+1=n\). The two parities are the parity of \(i+j+1\), also \(n\).
+For the degree bound, a recurrence term has total degree at most
+
+\[
+2n+i(i+1)+j(j+1)\le n(n+1),\qquad i+j=n-1,
+\]
+
+since \(i(i+1)+j(j+1)\) is largest at \((i,j)=(0,n-1)\) or its swap. The
+base \(A_0=1\) satisfies every assertion. \(\square\)
+
+The first four polynomials are
+
+\[
+\begin{aligned}
+A_0={}&1,\\
+A_1={}&2qr,\\
+A_2={}&8q^2r^2(q^2+r^2),\\
+A_3={}&q^3r^3\bigl[48(q^2+r^2)(q^4+r^4)+80q^2r^2\bigr].
+\end{aligned}
+\]
+
+Consequently each integer pair \((q,r)\) gives an integer sequence for
+all \(n\), independently of whether its formal Taylor series converges.
+For example, the first values of \(A_n(1,2)\) are
+\(1,4,160,35200,38041600\).
+
+\hypertarget{rational-feedback-banks-also-admit-integer-sequences}{%
+\subsection{Rational feedback banks also admit integer
+sequences}\label{rational-feedback-banks-also-admit-integer-sequences}}
+
+For rational channel tuples \((h_t,q_t,r_t)\), use
+
+\[
+F'(z)=1+\sum_t h_tF(q_tz)F(r_tz),\qquad F(0)=0.
+\]
+
+The preceding recurrence is summed over channels with the factor
+\(h_t\). In the universal polynomial over the weights and contractions,
+every term of \(A_n\) has weight degree exactly \(n\) and total
+contraction degree at most \(n(n+1)\). The weight statement follows from
+one new weight at each recurrence step and \(1+i+j=n\); the contraction
+bound uses the same induction.
+
+Let \(H\) be a common denominator for all channel weights, and \(D\) a
+common denominator for all channel contractions. Then
+
+\[
+\boxed{B_n=H^nD^{n(n+1)}A_n\in\mathbb Z\quad\hbox{for all }n.}
+\]
+
+This is a proved normalization, even with signed rational weights. It is
+usually not the smallest possible denominator clearing. The catalog
+records both \(A_n\) and \(B_n\), and the exact multiplier, so that a
+proposed sequence lookup can state its normalization honestly.
+
+\hypertarget{a-sharp-distinction-between-sequences-and-analytic-germs}{%
+\section{A sharp distinction between sequences and analytic
+germs}\label{a-sharp-distinction-between-sequences-and-analytic-germs}}
+
+The entire-function theorem uses \(0<q,r<1\). Specializations with large
+positive integers produce valid formal and integer sequences but do not
+necessarily produce analytic functions near zero.
+
+\textbf{Zero-radius theorem.} If \(q>0\) and \(r>1\), the formal series
+for \(T_{q,r}\) has radius of convergence zero. The same holds after
+swapping the parameters.
+
+\textbf{Proof.} Every coefficient is positive. In the ordinary
+recurrence keep only the term \(i=0\). This gives
+
+\[
+c_n\ge\frac{q r^{2n-1}}{2n+1}c_{n-1}
+\quad\Longrightarrow\quad
+c_n\ge\frac{q^n r^{n^2}}{3\cdot5\cdots(2n+1)}.
+\]
+
+Since the denominator is at most \((2n+1)^n\),
+
+\[
+c_n^{1/(2n+1)}\ge
+q^{n/(2n+1)}r^{n^2/(2n+1)}(2n+1)^{-n/(2n+1)}\longrightarrow\infty.
+\]
+
+The Cauchy--Hadamard criterion therefore gives radius zero. \(\square\)
+
+More generally, a positive feedback bank with a channel satisfying
+\(h>0,q>0,r>1\) has the same obstruction, replacing \(q^n\) by
+\((hq)^n\). Positivity prevents cancellation. No conclusion of this form
+is asserted for a bank with signed weights.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}P{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}P{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}P{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameters or bank
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+First five \(A_n\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Mathematical status
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\((1,1)\) & \(1\), \(2\), \(16\), \(272\), \(7936\) & Known tangent derivatives \\
+\((0,1)\) & \(1\), \(0\), \(0\), \(0\), \(0\) & Known linear boundary \\
+\((1,-1)\) & \(1\), \(-2\), \(16\), \(-272\), \(7936\) & Known hyperbolic tangent
+derivatives \\
+\((1,2)\) & \(1\), \(4\), \(160\), \(35200\), \(38041600\) & Integer sequence, radius
+zero \\
+\((1/2,1/2)\) & \(1\), \(1/2\), \(1/4\), \(1/8\), \(1/16\) & Known scaled hyperbolic sine \\
+\((1/4,3/4)\) & \(1\), \(3/8\), \(45/256\), \(21465/262144\), \(39833775/1073741824\) &
+Entire asymmetric family, order one \\
+\end{longtable}
+
+The complete catalog contains \textbf{18 rows}, each through \(n=12\):
+three classical or degenerate integer anchors, eight positive integer
+formal specializations, four rational contractions, one entire edge case
+of infinite order, and two normalized feedback banks. Integer
+integrality and rational clearing are established by the preceding
+proofs, not merely inferred from the finite sample.
+
+\hypertarget{the-uncontracted-boundary-is-entire-of-infinite-order}{%
+\subsection{The uncontracted boundary is entire of infinite
+order}\label{the-uncontracted-boundary-is-entire-of-infinite-order}}
+
+\textbf{Boundary theorem.} For \(0<q<1\), the normalized formal solution
+of
+
+\[
+T'(z)=1+T(qz)T(z),\qquad T(0)=0
+\]
+
+extends to an entire function of infinite order. The swapped boundary
+has the same property.
+
+\textbf{Proof of entire extension.} The tangent-coefficient majorant
+gives an initial holomorphic germ. Suppose \(T\) is known on \(|z|<R\).
+The function \(T(qz)\) is known on \(|z|<R/q\). On this larger disk
+solve the linear ODE \(U'=1+T(qz)U\), \(U(0)=0\). Explicitly,
+
+\[
+U(z)=e^{B(z)}\int_0^z e^{-B(w)}\,dw,
+\qquad B(z)=\int_0^zT(qw)\,dw.
+\]
+
+The integrals are path independent on the disk. Linear-ODE uniqueness
+shows \(U=T\) on the previous disk, and there \(T(qz)\) equals the newly
+extended function at \(qz\). Thus the same nonlinear equation holds on
+the enlarged disk. Iterating \(R\mapsto R/q\) exhausts the plane.
+
+\textbf{Proof of infinite order.} Positive coefficients imply
+\(T(x)\ge x\) for \(x>0\) and \(M(x)=T(x)\). The logarithmic derivative
+obeys
+
+\[
+\frac{d}{dx}\log T(x)=\frac1{T(x)}+T(qx)\ge qx.
+\]
+
+Integrating from one, with \(T(1)\ge1\), gives
+\(T(x)\ge\exp(q(x^2-1)/2)\) for \(x\ge1\). For \(R\ge2/q\), integrate
+the same logarithmic derivative over \([R/2,R]\). Since \(T(R/2)\ge1\),
+
+\[
+\boxed{
+\log M(R)\ge\frac R2\exp\left(\frac{q^3R^2}{8}-\frac q2\right).}
+\]
+
+Therefore \(\log\log M(R)/\log R\to\infty\), which proves infinite
+order. \(\square\)
+
+For nonnegative parameters this gives a complete analytic/formal phase
+chart:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}P{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}P{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Parameter region
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Normalized solution
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(0<q,r<1\) & Entire, finite order defined by \(q^\rho+r^\rho=1\) \\
+One parameter equals one, the other lies in \((0,1)\) & Entire, infinite
+order \\
+\(q=r=1\) & Tangent, meromorphic with its usual poles \\
+\(q>0,r>0,\max(q,r)>1\) & Formal solution with radius zero \\
+One parameter equals zero & Linear solution \(z\), regardless of the
+other scale \\
+\end{longtable}
+
+The finite-order formula applies in the open contraction square. It does
+not assign a finite order to the edge, where its defining scale equation
+has no positive root.
+
+\hypertarget{exact-root-filter-sections}{%
+\section{Exact root-filter
+sections}\label{exact-root-filter-sections}}
+
+For an EGF \(G(z)=\sum_{m\ge0}a_m z^m/m!\), an integer base \(b\ge1\), a
+residue \(0\le j<b\), and \(\omega=e^{2\pi i/b}\), define
+
+\[
+\boxed{
+\mathcal P_{b,j}G(z)=\frac1b\sum_{k=0}^{b-1}\omega^{-jk}G(\omega^kz)
+=\sum_{m\equiv j\,(b)}a_m\frac{z^m}{m!}.}
+\]
+
+This holds as a formal series and wherever the original series
+converges. Indeed the coefficient multiplier is the geometric sum
+\(b^{-1}\sum_{k=0}^{b-1}\omega^{k(m-j)}\), equal to one or zero
+according to the residue. It proves all the projector identities
+
+\[
+\sum_{j=0}^{b-1}\mathcal P_{b,j}=I,\qquad
+\mathcal P_{b,j}\mathcal P_{b,l}=\delta_{jl}\mathcal P_{b,j}.
+\]
+
+The full-position section and the decimated lane are distinct arrays. A
+section keeps the original positions, inserting zeros outside the
+residue. A lane \(x_j[n]=a_{bn+j}\) changes the index to \(n\).
+
+For an \textbf{ordinary} generating function \(X(z)=\sum_ma_m z^m\),
+define \(X_j(w)=\sum_na_{bn+j}w^n\). Then
+
+\[
+X(z)=\sum_{j=0}^{b-1}z^jX_j(z^b).
+\]
+
+For an EGF the corresponding exact reconstruction is
+
+\[
+G(z)=\sum_{j=0}^{b-1}z^j
+ \sum_{n\ge0}\frac{a_{bn+j}}{(bn+j)!}(z^b)^n.
+\]
+
+One must retain \((bn+j)!\). Replacing it by \(n!\) gives a different
+function. The root-filter section identity has no such factorial
+ambiguity.
+
+\hypertarget{ordinary-taps-egf-multiplication-and-differentiation}{%
+\section{Ordinary taps, EGF multiplication and
+differentiation}\label{ordinary-taps-egf-multiplication-and-differentiation}}
+
+Let \(h_0,\ldots,h_{L-1}\) be a finite tap vector and let \(a_m=0\) for
+\(m<0\). Ordinary taps form
+
+\[
+b_m=\sum_{t=0}^{L-1}h_ta_{m-t}.
+\]
+
+For OGFs this is multiplication by \(H(z)=\sum_th_tz^t\):
+\(B(z)=H(z)X(z)\). For EGFs it is a sum of repeated zero-constant
+antiderivatives:
+
+\[
+\boxed{B_{\rm EGF}(z)=\sum_{t=0}^{L-1}h_t I^tG(z),\qquad
+IG(z)=\int_0^zG(w)\,dw.}
+\]
+
+\textbf{Proof.} The EGF of the delayed sequence is
+\(\sum_{m\ge t}a_{m-t}z^m/m!=I^tG(z)\). Summing taps gives the formula.
+Conversely, \(G^{(t)}\) has coefficient sequence \(a_{m+t}\), so
+derivatives sample future coefficients and do not implement these past
+delays. \(\square\)
+
+For two EGFs \(G_a,G_h\), ordinary function multiplication instead gives
+the \textbf{Hurwitz product}
+
+\[
+G_a(z)G_h(z)=\sum_m\left[
+\sum_{t=0}^m\binom mt h_ta_{m-t}\right]\frac{z^m}{m!}.
+\]
+
+This is a binomial convolution. For example, with \(a_m=1\) and taps
+\(h=(1,1)\), ordinary taps give \(b_2=2\), while the Hurwitz product
+gives \(b_2=3\). This explicit negative control catches a common
+normalization error.
+
+\textbf{Intrinsic nonlinear feedback taps} are the parameters
+\((h_t,q_t,r_t)\) inside \(F'=1+\sum_th_tF(q_tz)F(r_tz)\). They change
+the function's defining equation and its derivative recurrence. Ordinary
+FIR taps are a linear transformation of an already defined coefficient
+sequence. Both are useful, but they operate on different objects. The
+intrinsic-bank growth theorem is proved in Appendix~\ref{app:growth}.
+
+\hypertarget{the-exact-finite-polyphase-tap-matrix}{%
+\section{The exact finite polyphase tap
+matrix}\label{the-exact-finite-polyphase-tap-matrix}}
+
+For an OGF sequence \(a_m\), define lanes \(x_l[n]=a_{bn+l}\) and
+\(X_l(w)=\sum_nx_l[n]w^n\). Apply finite ordinary taps and obtain
+\(y_j[n]=b_{bn+j}\). Then the exact matrix identity is
+
+\[
+\boxed{Y_j(w)=\sum_{l=0}^{b-1}H_{jl}(w)X_l(w),\qquad
+H_{jl}(w)=\sum_{\substack{0\le t<L\\t+l\equiv j\,(b)}}
+h_t w^{(t+l-j)/b}.}
+\]
+
+Every exponent is a nonnegative integer. It records the carry across
+phase boundaries, rather than erasing it.
+
+\textbf{Proof.} A term \(h_t a_{bn+j-t}\) is in phase \(l\) exactly when
+\(t+l\equiv j\pmod b\). Write \(d=(t+l-j)/b\). That term is
+\(h_t x_l[n-d]\), whose OGF is \(h_tw^dX_l(w)\) by zero extension.
+Summing over taps and phases gives the matrix. \(\square\)
+
+For two phases and two taps,
+
+\[
+\begin{pmatrix}Y_0\\Y_1\end{pmatrix}
+=\begin{pmatrix}h_0&h_1w\\h_1&h_0\end{pmatrix}
+\begin{pmatrix}X_0\\X_1\end{pmatrix}.
+\]
+
+The upper-right factor \(w\) is necessary: a delay from odd phase to
+even phase crosses one block. A diagonal-only phase operation cannot
+implement this filter. The code constructs the sparse matrix for any
+finite base and tap vector and checks that recombination gives the full
+direct convolution.
+
+\hypertarget{reuse-and-evidence}{%
+\section{Reuse and evidence}\label{reuse-and-evidence}}
+
+From the package\textquotesingle s \texttt{research/} directory, standard Python is enough:
+
+\begin{verbatim}
+python family_lab.py coefficients --q 1/4 --r 3/4 --n 8
+python family_lab.py catalog --n 12 --output-dir examples
+python checks/family_lab_checks.py
+\end{verbatim}
+
+The reusable functions include \path{asymmetric_odd_derivatives},
+\path{feedback_odd_derivatives}, \path{asymmetric_polynomials},
+\texttt{section}, \path{phase_lanes}, \path{merge_lanes},
+\path{ordinary_taps}, \path{hurwitz_product},
+\path{derivative_shift}, \path{integral_shift},
+\path{polyphase_tap_matrix}, and \path{apply_polyphase_matrix}.
+All core arithmetic is \texttt{fractions.Fraction} or integer
+arithmetic. The phase and tap API applies to any finite rational
+sequence, not just the special-function catalog.
+
+The final completed run passed \textbf{8,038 exact assertions} and is
+recorded in \path{evidence/family_lab_checks.json}. Its scope
+includes:
+
+\begin{itemize}
+\tightlist
+\item
+  18 catalog rows through \(A_{12}\), independently compared with dense
+  formal Picard iteration through degree 25.
+\item
+  Bivariate polynomials through \(A_8\), with 540 nonzero monomials
+  checked for integer positivity, symmetry, parity and the degree bound.
+\item
+  Tangent coefficients independently obtained by division of sine and
+  cosine, plus hyperbolic tangent, scaled hyperbolic sine and linear anchors.
+\item
+  Root-filter multipliers reduced exactly in cyclotomic fields for bases
+  one through seven and indices zero through 31.
+\item
+  Direct FIR convolution compared with phase-matrix convolution for 26
+  input lengths, seven bases and four tap vectors, including signed
+  rational taps.
+\item
+  The antiderivative interpretation of EGF taps and the factorial
+  conversion of Hurwitz products, independently compared with ordinary
+  Taylor products.
+\item
+  Negative controls for omitted phase carries, aliasing lanes by
+  concatenation, silent truncation, derivative/delay confusion and
+  Hurwitz/FIR confusion.
+\end{itemize}
+
+The bounded checks validate the implemented paths in the recorded
+ranges. The universal polynomial, degree, clearing, root-filter and
+phase-matrix statements follow from the proofs above. Entire continuation and growth order require the analytic proofs, not these
+finite checks. Historical identification of a catalog row requires a
+separate literature comparison.
+
+\path{evidence/family_lab_checks.json} records software version,
+code hashes, exact arithmetic, bounds, category counts and run time. It
+reports no failed assertion in this run. Independent audit identified
+two API input-validation defects: a fractional residue was accepted by
+the section operator, and an empty phase matrix accepted base zero. Both
+are now rejected and have passing regression checks. These defects
+affected invalid inputs, not the displayed identities. A draft prose
+example initially transcribed \(A_3(1,2)\) and \(A_4(1,2)\) incorrectly;
+the exact catalog comparison exposed the mismatch and corrected them to
+\(35200\) and \(38041600\). The code result did not change. Larger
+numerical evidence is unnecessary for these algebraic identities; an
+independent mathematical audit should examine the reductions.

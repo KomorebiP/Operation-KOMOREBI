@@ -1,0 +1,130 @@
+\startvolume{Tap atlas}{Finite weights and exact execution}
+
+\lesson{TAPS / T01}{Read a tap as a delayed contribution}{T01_taps}
+{y[n]=\sum_{k=0}^{L-1}h[k]x[n-k],\qquad h=(1,2,1),\quad x[n]=0\ (n<0)}
+{The stem height is a weight, and its horizontal position is a delay. The right panel applies the three weights to three different input samples before adding. A tap specifies which delayed value contributes and with what weight.}
+{At $n=5$, the three inputs are $x[5],x[4],x[3]$. Their contribution is $x[5]+2x[4]+x[3]$. At $n=0$, the two delayed inputs are zero under our causal convention.}
+{Keep the weight, the delay, and the input sample separate.}
+{New worked FIR example. Integer indices $n\ge0$; every input is zero at negative indices. The finite tap list has length $L=3$. This convention applies throughout the tap atlas.}
+
+\lesson{TAPS / T02}{Execute the taps on Fibonacci numbers}{T02_taps}
+{F_0=0,\ F_1=1,\qquad y[n]=F_n+2F_{n-1}+F_{n-2}}
+{Read the two rows at the same fine index. The input follows its recurrence, while the output comes from a separate weighted convolution. The output is larger because two nearby values contribute in addition to the current value.}
+{At $n=5$, the result is $5+2\cdot3+2=13$. At $n=11$, it is $89+2\cdot55+34=233$. The first twelve displayed outputs are computed with integers, including the zero-extended initial positions.}
+{A sequence recurrence and an applied tap filter are different operations.}
+{Fibonacci convention $F_0=0,F_1=1$; OEIS A000045 as verified in the sequence atlas. New tap example. Indices $0$--$11$; exact inputs and outputs are recorded in \texttt{evidence/tap\_checks.json}.}
+
+\lesson{TAPS / T03}{Turn three taps into a two-phase matrix}{T03_taps}
+{\begin{gathered}\begin{pmatrix}Y_0\\Y_1\end{pmatrix}
+ =\begin{pmatrix}1+u&2u\\2&1+u\end{pmatrix}
+ \begin{pmatrix}E\\O\end{pmatrix},\\
+ E=\sum_{m\ge0}x[2m]u^m,\quad O=\sum_{m\ge0}x[2m+1]u^m\end{gathered}}
+{Each arrow is one matrix entry. The same-phase contributions use $1+u$, and the cross-phase contributions differ by a coarse delay. Here $u$ shifts an entire pair of fine samples, so it must not be read as a single fine-sample delay.}
+{The even output is $E_m+2O_{m-1}+E_{m-1}$. The odd output is $O_m+2E_m+O_{m-1}$. Summing each channel as an ordinary generating function gives the displayed matrix exactly.}
+{Polyphase representation reorganizes the original convolution.}
+{PSC Paper V, Theorem 4.2 and Corollary 4.5, specialized to $M=2$ and $h=(1,2,1)$; new exact derivation. Rows are output phases, columns are input phases. Causal zero extension fixes the initial positions.}
+
+\lesson{TAPS / T04}{Locate the delay when a tap wraps a block}{T04_taps}
+{y[2m]=E_m+2O_{m-1}+E_{m-1},\qquad
+ y[2m+1]=O_m+2E_m+O_{m-1}}
+{Follow the middle tap in both panels. Subtracting one from the even fine index reaches the odd phase of the previous block. Subtracting one from the odd fine index reaches the even phase of the current block. That single index calculation explains the asymmetry.}
+{For $m=2$, $y[4]$ reads $x[4],x[3],x[2]$, whereas $y[5]$ reads $x[5],x[4],x[3]$. The first middle contribution has a factor $u$ in its generating function; the second does not.}
+{Assign a coarse delay only after solving the fine-index equation.}
+{PSC Paper V, Theorem 4.2. New per-tap expansion of the matrix in T03. The labels $E_m,O_m$ denote phase coefficients, while $E(u),O(u)$ denote their OGFs.}
+
+\lesson{TAPS / T05}{Route a finite filter through four phases}{T05_taps}
+{P_{rs}(u)=\sum_{\substack{k\ge0\\0\le Mk+r-s<L}}h[Mk+r-s]u^k,
+ \qquad 0\le r,s<M}
+{Rows are output phases and columns are input phases. For the five taps $(1,2,3,4,5)$, a same-phase contribution combines tap zero with tap four. Warm cells cross the block boundary and therefore carry one coarse delay.}
+{At $M=4$, the first row is $(1+5u,4u,3u,2u)$. For example, $y[4m]$ receives $4x[4m-3]=4X_{1,m-1}$ from tap three. That contribution belongs to column one and has coefficient $4u$.}
+{The index equation supplies every matrix entry for any finite tap length.}
+{PSC Paper V, Theorem 4.2, Corollary 4.5, and Example 4.6. The plotted matrix uses $M=4,L=5$. Exact routing also checked for moduli $2$--$6$ and tap lengths $1$--$9$; these finite tests verify the implementation.}
+
+\lesson{TAPS / T06}{Compose filters before or after phase splitting}{T06_taps}
+{h=(1,2,1),\quad g=(1,-1),\quad g*h=(1,1,-1,-1),
+ \qquad P_2(g)P_2(h)=P_2(g*h)}
+{The combined tap list is the convolution of the two finite lists. The bottom identity describes the same composition after splitting into even and odd channels. Matrix multiplication retains the delays that are easy to lose in a verbal description.}
+{The combined fine-delay polynomial is $(1-z)(1+2z+z^2)=1+z-z^2-z^3$. Its two-phase matrix is $\bigl(\begin{smallmatrix}1-u&u-u^2\\1-u&1-u\end{smallmatrix}\bigr)$, obtained independently by routing the four combined taps.}
+{Composition is represented faithfully in both coefficient and phase coordinates.}
+{PSC Paper V, Proposition 4.4 and Corollary 4.5; new signed-filter example. The rightmost matrix acts first. Exact polynomial convolution and exact matrix multiplication agree in the check ledger.}
+
+\lesson{TAPS / T07}{Use signed taps as finite differences}{T07_taps}
+{\Delta x[n]=x[n]-x[n-1],\qquad
+ \Delta(n^2)=2n-1\ (n\ge1),\quad \Delta^2(n^2)=2\ (n\ge2)}
+{The first signed filter turns a quadratic sequence into an increasing linear sequence. Applying it again gives a constant after the initial boundary. The shaded positions show why a polynomial identity on unrestricted integer arguments is not automatically the zero-extended causal identity at the start.}
+{At $n=3$, $9-4=5$. A second difference gives $5-3=2$. At $n=1$, the causal second difference is $1$, because the missing negative-index input was defined to be zero.}
+{State the boundary before calling a filter an annihilator.}
+{New exact finite-difference example, tap list $(1,-1)$, input $x[n]=n^2$ for $n\ge0$. Indices $0$--$10$ checked exactly. This lesson does not claim a finite constant-coefficient annihilator for arbitrary sequences.}
+
+\lesson{TAPS / T08}{Let recurrence taps expose initial data}{T08_taps}
+{(1-z-z^2)F(z)=z,\qquad
+ F(z)=\sum_{n\ge0}F_nz^n,\qquad ((1,-1,-1)*F)[n]=\delta_{n,1}}
+{The negative taps subtract the two previous Fibonacci values. Every recurrence position cancels, but the initial value $F_1=1$ survives as one impulse. The generating-function numerator records precisely that surviving initial information.}
+{At $n=4$, $3-2-1=0$. At $n=1$, $1-0-0=1$. Thus the filter annihilates the recurrence tail while leaving the initial impulse visible. Here $\delta_{n,j}$ is one at $n=j$ and zero otherwise.}
+{An initial numerator is part of the exact recurrence representation.}
+{Fibonacci recurrence with causal zero extension; new tap presentation. Twenty-four coefficients checked exactly. The polynomial $1-z-z^2$ uses the fine-delay variable $z$, unlike the coarse variable $u$ in T09.}
+
+\lesson{TAPS / T09}{Give the two Fibonacci phases different numerators}{T09_taps}
+{E(u)=\frac{u}{1-3u+u^2},\qquad
+ O(u)=\frac{1-u}{1-3u+u^2},\qquad E_m=F_{2m},\ O_m=F_{2m+1}}
+{The two phase channels share a recurrence denominator, but their initial impulses differ. Applying the taps $(1,-3,1)$ gives one impulse in the even channel and two signed impulses in the odd channel. Those residuals are the two displayed numerators.}
+{The first even terms are $0,1,3,8$, giving residuals $0,1,0,0$. The first odd terms are $1,2,5,13$, giving $1,-1,0,0$. The coarse recurrence holds from $m=2$ onward in both channels.}
+{Shared denominator does not mean identical phase initialization.}
+{Fibonacci phase extraction and exact recurrence calculation. Twenty-four coefficients in each channel checked. Residual notation: $\delta_1$ and $\delta_0-\delta_1$ on the coarse index.}
+
+\lesson{TAPS / T10}{Separate finite taps from an infinite reciprocal response}{T10_taps}
+{H(u)=\frac1{1-3u+u^2}=1+3u+8u^2+21u^3+\cdots,
+ \qquad E=uH,\quad O=(1-u)H}
+{The long row is an infinite impulse response. The two boxes below it are finite numerator tap lists acting on that response. The denominator taps are finite too, but taking their reciprocal creates a response with infinitely many nonzero coefficients.}
+{The even numerator $(0,1)$ shifts the response to $0,1,3,8,\ldots$. The odd numerator $(1,-1)$ subtracts successive response coefficients to give $1,2,5,13,\ldots$. Applying $(1,-3,1)$ directly to $H$ leaves $\delta_0$.}
+{Finite numerator and denominator polynomials do not make their reciprocal FIR.}
+{New formal-OGF reconstruction of T09. Twenty-four coefficients checked exactly. The reciprocal identity is formal around $u=0$; the plate makes no claim about convergence at every complex value of $u$.}
+
+\lesson{TAPS / T11}{Read frequency response from the tap polynomial}{T11_taps}
+{H(e^{-i\omega})=1+2e^{-i\omega}+e^{-2i\omega},\qquad
+ |H(e^{-i\omega})|=4\cos^2(\omega/2)}
+{The tap polynomial becomes a frequency response by substituting a unit complex delay. Its value at zero frequency is the sum of the weights. The endpoint at $\pi$ cancels because adjacent samples alternate signs there.}
+{A constant input is multiplied by $1+2+1=4$ away from its causal starting boundary. At $\omega=\pi$, the three contributions are $1,-2,1$ and sum to zero. The plotted curve agrees with the exact magnitude formula on the stated grid.}
+{A frequency curve describes these taps; it is not a performance guarantee.}
+{New FIR frequency example. NumPy complex128 on 801 samples of $[0,\pi]$. The endpoint and DC identities are algebraic; the sampled error is recorded separately. No ideal anti-aliasing claim is made.}
+
+\lesson{TAPS / T12}{Expose the delay carried by symmetric taps}{T12_taps}
+{H(e^{-i\omega})=e^{-i\omega}(2+2\cos\omega),\qquad
+ \arg H(e^{-i\omega})=-\omega\quad(-\pi<\omega<\pi)}
+{The symmetric taps factor into one sample of delay and a nonnegative real amplitude. Removing the delay leaves the second panel. At the endpoint zeros the complex number vanishes, so its phase is undefined rather than a meaningful continuation of the plotted straight line.}
+{At $\omega=\pi/2$, the amplitude is $2$ and the delayed response is $-2i$. More generally, a symmetric list of length $L$ factors a delay $(L-1)/2$; the remaining real factor may change sign, introducing phase jumps.}
+{Linear phase needs its sign and zero conventions stated.}
+{New symmetric FIR example. The displayed formula is exact. The numerical phase check uses 801 interior samples and excludes $\pm\pi$. A phase value supplied by floating-point arithmetic at a zero is not used as evidence.}
+
+\lesson{TAPS / T13}{Reconstruct exactly with Haar analysis and synthesis}{T13_taps}
+{A=\frac1{\sqrt2}\begin{pmatrix}1&1\\1&-1\end{pmatrix},\qquad
+ \begin{pmatrix}c_m\\d_m\end{pmatrix}
+ =A\begin{pmatrix}x[2m]\\x[2m+1]\end{pmatrix},\qquad A^{\mathsf T}A=I}
+{Analysis combines one nonoverlapping pair into a normalized sum and difference. Synthesis reverses that change of coordinates. This plate fixes the pair convention explicitly, avoiding the extra shifts that appear under other convolution-and-decimation conventions.}
+{The pair $(3,5)$ gives $(c,d)=(4\sqrt2,-\sqrt2)$. Reconstruction yields $((c+d)/\sqrt2,(c-d)/\sqrt2)=(3,5)$. Both the normalization and the difference sign are necessary.}
+{Perfect reconstruction is an operator identity with a fixed convention.}
+{Standard Haar pair transform, independently verified by direct matrix algebra. Exact sum/difference witnesses cover all 121 integer pairs in $[-5,5]^2$, with the common square-root factor canceled symbolically.}
+
+\lesson{TAPS / T14}{Reverse signed prediction and update steps}{T14_taps}
+{D=O-PE,\quad S=E+UD,\qquad E=S-UD,\quad O=D+PE}
+{Forward lifting first predicts the odd channel from the even channel, then updates the even channel using the residual. Reverse lifting undoes those two steps in the opposite order. Neither step needs an inverse filter for $P$ or $U$.}
+{Use the signed causal taps $P=1-u$ and $U=-u$. The combined matrix is $\bigl(\begin{smallmatrix}1+u-u^2&-u\\-1+u&1\end{smallmatrix}\bigr)$ and has determinant one. Any finite predict and update polynomials admit the displayed algebraic reversal.}
+{Invertibility comes from the triangular steps, not from a special predictor.}
+{New exact lifting example over rational coefficients. Negative coarse indices are zero in both directions. Sixteen signed filter-pair witnesses checked with integers and fractions. Streaming use must retain the histories needed by both filters.}
+
+\lesson{TAPS / T15}{Resample at rate three over two by exact routing}{T15_taps}
+{\begin{gathered}y[m]=\sum_n h[2m-3n]x[n]
+ =\sum_{k\ge0}h_{r_m}[k]x[\ell_m-k],\\
+ r_m=2m\bmod3,\quad \ell_m=\lfloor2m/3\rfloor\end{gathered}}
+{First insert two zeros between input samples, convolve on the fine grid, and keep every second result. The table expresses those same kept values through three tap phases: $h_r[k]=h[3k+r]$. The phase selector changes with the output index.}
+{For $x=(1,2,3,4)$ and $h=(1,2,1)$, the selected phases are $0,2,1,0,2,1$. The six outputs are $(1,1,4,3,3,8)$. Each method includes the full finite convolution tail.}
+{Rational rate conversion can be implemented without materializing inserted zeros.}
+{New small-filter $3/2$ example. Exact zero insertion, convolution, downsampling, and phase routing agree. The filter demonstrates indexing only; no passband, stopband, or alias-suppression specification is claimed.}
+
+\lesson{TAPS / T16}{Carry the needed state across chunk boundaries}{T16_taps}
+{\text{direct-form FIR state: }L-1\text{ previous input samples},
+ \qquad y_{\mathrm{chunks}}[n]=y_{\mathrm{whole}}[n]}
+{The dashed lines mark chunk boundaries, not restarts of the filter. The lower boxes hold the two input samples needed by the next chunk. The shaded tail is produced by an explicit two-zero flush after the final real sample.}
+{For $(1,2,1)$, after twelve Fibonacci samples the saved state is $(55,89)$, oldest first. Feeding zero twice produces tail outputs $233$ and $89$. Resetting state at an interior chunk boundary would lose delayed contributions.}
+{Boundary handling is part of the mathematical execution contract.}
+{New direct-form FIR streaming example. Twenty signed-filter cases cover lengths $1$--$5$, four chunk partitions, and complete flushed tails. The $L-1$ rule describes this implementation, rather than a universal lower bound on every filter realization.}

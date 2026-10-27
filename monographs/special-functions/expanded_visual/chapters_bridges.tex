@@ -1,0 +1,29 @@
+\startvolume{Operator bridges}{Seeds, responses, and coefficient transforms}
+
+\lesson{BRIDGE / 01}{Seeds choose which modes survive}{B01_surviving_modes}
+{a_{n+2}=3a_{n+1}-2a_n,\qquad A(z)=\frac{a_0+(a_1-3a_0)z}{(1-z)(1-2z)}}
+{Every row uses the same recurrence denominator. The seeds change its numerator, which can cancel a denominator factor. Filled marks are poles that remain after reducing the rational function; crosses mark factors that cancel. The two candidate modes are $1$ and $2^n$.}
+{Seeds $(1,2)$ give numerator $1-z$, leaving $A(z)=1/(1-2z)$ and coefficients $2^n$. Seeds $(1,1)$ instead cancel $1-2z$, leaving the constant sequence. Seeds $(0,1)$ retain both modes and give $2^n-1$.}
+{A recurrence denominator lists candidate modes. The numerator determines which are present in the specified sequence.}
+{New elementary rational-series example, $n\ge0$. Numerator residuals and all three mode formulas are checked through index eighteen. Cancellations are exact; this is not a robustness claim for perturbed seeds or hidden states.}
+
+\lesson{BRIDGE / 02}{Compile taps against an exact recurrence}{B02_recurrence_tap_reduction}
+{\begin{gathered}D=1-z-z^2,\quad F=z/D,\quad h=(1+z)^2=(2+z)-D,\\ hF=(2+z)F-z\end{gathered}}
+{The top panels compare the original three taps with a shorter list. The table shows why the shorter list needs an initial correction: its output differs at index one. Subtracting that impulse makes every coefficient agree, including the causal boundary. Here $F_n=0$ for $n<0$.}
+{The reduced formula is $y_n=2F_n+F_{n-1}-\delta_{n,1}$. At $n=1$, it gives $2-1=1$; at $n=5$, it gives $2\cdot5+3=13$. If $DF=N$ and polynomial division gives $h=qD+r$, then $hF=rF+qN$.}
+{The recurrence can simplify an operator while its numerator carries the remaining boundary contribution.}
+{OEIS A000045, $F_0=0,F_1=1$, with new exact polynomial algebra. The coefficient check runs through index eighteen; finite-input tails are checked with $N=DF$, including terminal residuals. The reduction is for this recurrence input; it does not replace the original filter on arbitrary signals.}
+
+\lesson{BRIDGE / 03}{A formal reciprocal need not be a stable filter}{B03_reciprocal_stability}
+{H_r(z)=\frac1{1-rz}=\sum_{n\ge0}r^nz^n,\qquad |z|<1/|r|\quad(r\ne0)}
+{The disks show where each causal series converges. The dashed unit circle lies inside the disk for $r=1/2$ and outside it for $r=2$. The right panel applies both responses to the same bounded input $x[n]=1$ and uses a logarithmic output axis.}
+{For $r=1/2$, $y_n=2-2^{-n}$ tends to two, and every bounded input satisfies $|y_n|\le2\|x\|_\infty$. For $r=2$, $y_n=2^{n+1}-1$ grows without bound even though the input stays one.}
+{A formal-series identity, an analytic convergence domain, and bounded-input stability have distinct contracts.}
+{New causal geometric-response examples, $n\ge0$, with zero input at negative indices. Exact rational convolutions checked through index eighteen. The unstable rational expression can be evaluated on the unit circle, but its causal Fourier series there does not converge.}
+
+\lesson{BRIDGE / 04}{Coefficient division becomes an area average}{B04_catalan_integration}
+{B(z)=\frac1{\sqrt{1-4z}},\qquad C(z)=\frac1z\int_0^z B(t)\,dt=\frac{1-\sqrt{1-4z}}{2z}}
+{The shaded area under the central-binomial generating function is divided by the interval length. The dashed line is that average, the Catalan generating function at $z=1/8$. The table shows the coefficient operation: integrating raises the exponent and divides by $n+1$; dividing by $z$ restores its address.}
+{At index four, $70z^4$ integrates to $14z^5$, then becomes $14z^4$ after division by $z$. At $z=1/8$, the area is $(2-\sqrt2)/4$, so its average is $4-2\sqrt2$.}
+{An index-dependent coefficient normalization can come from a familiar continuous operator.}
+{OEIS A000984 and A000108; new elementary integral derivation. The square-root branch equals one at zero, $C(0)=1$ by removal, and the analytic identities hold on $|z|<1/4$. Coefficient identities also hold over formal rational series; exact checks cover indices zero through eighteen.}
