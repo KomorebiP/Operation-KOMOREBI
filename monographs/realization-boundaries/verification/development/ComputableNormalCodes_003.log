@@ -1,0 +1,21 @@
+RealizationBoundaries/ComputableNormalCodes.lean:81:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  Nat.rec (Part.some (b (Nat.unpair n).1))
+    (fun y IH => IH.bind fun i => Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair y i)))) k
+in the target expression
+  Nat.rec (Part.some (b (Nat.unpair n).1))
+      (fun y IH => IH.bind fun i => Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair y i)))) (k + 1) =
+    Part.some (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) (k + 1))
+
+case succ
+X : ℕ → Bool
+b s : ℕ → ℕ
+hb : OracleComputable X b
+hs : OracleComputable X s
+n k : ℕ
+ih :
+  Nat.rec (Part.some (b (Nat.unpair n).1))
+      (fun y IH => IH.bind fun i => Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair y i)))) k =
+    Part.some (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) k)
+⊢ Nat.rec (Part.some (b (Nat.unpair n).1))
+      (fun y IH => IH.bind fun i => Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair y i)))) (k + 1) =
+    Part.some (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) (k + 1))

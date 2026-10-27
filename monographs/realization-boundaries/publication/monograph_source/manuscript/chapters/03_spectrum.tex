@@ -1,0 +1,103 @@
+\chapter{Prime spectra and finite descriptions}
+\label{ch:spectrum}
+\chapterintro{The direct sum has a completely transparent subgroup universe. It separates the complexity of selecting prime components from the complexity of performing the group operation.}
+
+\section{The entire subgroup lattice}
+For $B\subseteq\N$, set
+\[
+D_B=\bigoplus_{i\in B}C_{p_i}\le D.
+\]
+A prime spectrum records which prime orders occur. Define $\sigma_p(M)=1$ when $M$ contains a nonzero element annihilated by $p$, and set it to zero otherwise. Since $p$ is prime, a nonzero such element has order exactly $p$.
+
+\begin{theorem}[Subgroup and isomorphism classification]
+\label{thm:subD}
+The map $B\mapsto D_B$ is an order isomorphism from $\mathcal P(\N)$ onto $\Sub(D)$. Every subgroup is fully invariant under all endomorphisms of $D$, and
+\[
+D_B\cong D_C\quad\Longleftrightarrow\quad B=C.
+\]
+\end{theorem}
+\begin{proof}
+Let $H\le D$ and let $x\in H$. Its support is a finite set $F$ of primes. For $p\in F$, choose by the Chinese remainder theorem an integer $k$ that is one modulo $p$ and zero modulo every other prime in $F$. Then $kx$ is supported only at $p$, where it is nonzero. It generates the entire $C_p$ coordinate. Thus $H$ contains every coordinate factor appearing in one of its elements.
+
+Let $B$ be the set of indices of these factors. Every element of $H$ lies in $D_B$, and every finite sum of the factors in $B$ lies in $H$. Hence $H=D_B$. Uniqueness follows by testing membership of $e_{p_i}$. Proposition~\ref{thm:endD} proves full invariance. Finally $\sigma_{p_i}(D_B)=1$ exactly when $i\in B$, and these values are isomorphism invariants.
+\end{proof}
+The lattice operations have literal set-theoretic descriptions:
+\[
+D_B+D_C=D_{B\cup C},\qquad D_B\cap D_C=D_{B\cap C},
+\qquad D=D_B\oplus D_{\N\setminus B}.
+\]
+The infinite support choice is therefore already visible in an elementary algebraic lattice. No exotic group operation is required.
+
+Give $\Sub(D)$ the topology inherited from $\{0,1\}^D$ by its membership functions. Membership of a vector with finite support depends on finitely many selector bits. Conversely, membership of $e_{p_i}$ recovers the $i$th bit. Consequently the order isomorphism above is also a homeomorphism from Cantor space $\bits$ to $\Sub(D)$.
+
+\begin{corollary}[Finite observations leave continuum many possibilities]
+\label{thm:finiteviews}
+Fix finitely many prime indices and their membership values. There are continuum many pairwise nonisomorphic $D_B$ consistent with those values. A full compatible sequence of finite membership patterns determines one $B$, but no fixed finite prefix does.
+\end{corollary}
+\begin{proof}
+The unspecified bits form a countably infinite set of independent binary choices. Distinct completions give nonisomorphic groups by Theorem~\ref{thm:subD}. A full compatible family fixes every coordinate and hence fixes the subset.
+\end{proof}
+
+\section{Enumeration is enough for a computable copy}
+A subset of $\N$ is computably enumerable if a program can list exactly its elements. The program need not decide that an element will never appear. All these notions relativize to an oracle $X$.
+
+\begin{theorem}[The prime-spectrum criterion]
+\label{thm:spectrumce}
+For every oracle $X$,
+\[
+D_B\text{ has an }X\text{-computable copy}
+\quad\Longleftrightarrow\quad
+B\text{ is computably enumerable relative to }X.
+\]
+\end{theorem}
+\begin{proof}
+Suppose first that a copy is computable in $X$. For each $i$, search its domain for a nonzero element $x$ with $p_i x=0$. Each individual test is decidable relative to $X$. Such a witness exists exactly when $i\in B$. Dovetailing the searches enumerates $B$.
+
+Conversely, suppose $B$ is infinite and enumerable in $X$. List its distinct elements as $b_0,b_1,\ldots$. To compute $b_j$, wait for the $(j+1)$st distinct enumerated value. This procedure terminates for every $j$. Use canonical finite tuples with the $j$th coordinate in $\F_{p_{b_j}}$. Coordinatewise addition, normalization, and equality are computable in $X$. If $B$ is finite, $D_B$ is a finite group and has a computable copy. This last existence statement does not require a uniform way to decide when a finite enumeration has finished.
+\end{proof}
+This construction is classical. Montalb\'an gives the prime direct-sum example and its enumeration-degree interpretation explicitly \cite[Example III.39]{Montalban}. It is included here because its contrast with the later common-completion family is mathematically informative.
+
+A noncomputable enumerable selector can therefore produce a group with computable multiplication and equality. The computable copy labels coordinates by their order of discovery. It does not supply a decision procedure for membership in the original selector.
+
+\section{A finite definition without computable equality}
+Let $K=\{n:\text{program }n\text{ halts on input }n\}$ be the diagonal halting set. It is enumerable. It is not decidable: a decision procedure would permit a program that halts on its own index precisely when the decision procedure says it does not. Its complement is not enumerable either, since simultaneous enumeration of a set and its complement decides membership.
+
+Define
+\[
+B_K=\{2n:n\in\N\}\cup\{2n+1:n\notin K\},
+\qquad H=D_{B_K}.
+\]
+This is an explicit mathematical definition of a countably infinite, locally cyclic abelian group.
+
+\begin{corollary}
+\label{thm:noncompD}
+The group $H$ has no computable copy. It nevertheless has an effectively enumerable infinite list of generators and relators.
+\end{corollary}
+\begin{proof}
+If $B_K$ were enumerable, filtering its odd entries would enumerate the complement of $K$. Theorem~\ref{thm:spectrumce} therefore excludes a computable copy.
+
+For the relator description, introduce a commuting generator $x_i$ for each prime index, impose $p_i x_i=0$, and impose $x_{2n+1}=0$ whenever program $n$ is observed to halt on input $n$. The resulting quotient retains exactly the prime factors indexed by $B_K$. All relators are effectively enumerable. Deciding whether an odd generator has become trivial is not supplied by this enumeration.
+\end{proof}
+The conclusion is not absolute finite indescribability. The displayed definition is finite. What fails is the stronger contract of a countable copy with computable operations and decidable equality.
+
+\section{A purely finite-state boundary}
+Consider a restricted grammar in which a finite automaton reads the unary word $1^n$ and selects the factor $C_{p_n}$ exactly when it accepts.
+
+\begin{theorem}[Unary selector classification]
+\label{thm:unary}
+A group $D_B$ is realizable by this unary-selector grammar if and only if $B$ is ultimately periodic.
+\end{theorem}
+\begin{proof}
+On a unary input, the state after $n$ letters is obtained by iterating a single map of a finite state set. The orbit eventually repeats a state, and from that point it is periodic. Its acceptance sequence is therefore ultimately periodic.
+
+Conversely, any finite prefix followed by a periodic binary pattern is recognized by a finite directed path entering a cycle. The prime-spectrum isomorphism criterion ensures that a different accepted set cannot accidentally realize an isomorphic $D_B$.
+\end{proof}
+
+\begin{example}[A computable group outside the unary grammar]
+Let $B=\{2^k:k\ge0\}$. It is decidable and enumerable, so $D_B$ has a computable copy. It is not ultimately periodic. Indeed, if $d>0$ were an eventual period, choose $2^k$ beyond the threshold with $2^k>d$. Periodicity would force $2^k+d$ to be a power of two, although it lies strictly between $2^k$ and $2^{k+1}$. Thus $D_B$ is outside the unary grammar. A binary-input automaton recognizes the strings $10^k$, so changing the input representation removes this particular obstruction.
+\end{example}
+
+\section{What the first family does not accomplish}
+The groups $D_B$ have distinct prime spectra, and those differences are already detectable by finite quotients. They do not yet show a failure of reconstruction from the full unmarked finite-quotient system. They isolate a simpler issue: which prime factors have been admitted in the first place.
+
+The main family keeps every prime torsion factor present. It then places the selector in the divisibility of infinite-order elements instead. As a result, all finite quotients remain fixed while the effective cost of the source group varies. The rational space $P/D$ is the mechanism that permits this stronger separation.

@@ -1,0 +1,14 @@
+# Development incidents — v0.6.0
+
+No printed mathematical statement was weakened or corrected. Failed draft compilations and preliminary audit data remain outside the accepted evidence.
+
+1. The stored portable kit was reconstructed successfully from the five mounted ZIP parts. Its concatenated archive hash matched the recorded value. No download, dependency upgrade or upstream rebuild was used.
+2. Initial root proofs elaborated but strict lint rejected an unnecessary `change` and proof-local `letI` usage. The proof text was corrected rather than disabling the lint policy.
+3. A count theorem using a classical `if` needed its decidability scope at statement elaboration, not only inside the proof. An initial placement after a documentation comment also caused a parser error. The corrected scoped declaration compiles with the exact original proposition.
+4. CRT drafts used unavailable field-style ring cast lemmas and an incorrect scalar-composition orientation. They were replaced by actual Mathlib APIs and explicit equalities. A quotient commuting-square draft also attempted definitional cancellation where an equivalence inverse law was needed. The final proof uses proved inverse laws and a named coordinate-compatibility theorem.
+5. The finite-target bijection proof needed the actual finite divisor-coordinate instance. That instance is obtained from the positive cardinal of the target group, not supplied as an extra mathematical assumption.
+6. Direct `decide` and a generic normalization tactic did not reduce the finite prime-factor product in numerical contract tests. The final proofs use prime-power/multiplication factorization lemmas and exact arithmetic. No native-decision axiom was introduced. Concrete additive equivalences use explicit modulus transport rather than a failed simplifier-only type conversion. A marked-element cardinal test likewise uses equality composition rather than the failed simplification of a wrapper.
+7. The development review found that `CyclicWithoutSquarefree` stopped at a `Nat.card`-to-literal type conversion before its intended rejection. A preliminary full verifier had just started; it was stopped, and its receipt is explicitly INTERRUPTED under `verification/development_runs/preacceptance_stop_v0.6.0`. It is not accepted evidence. The control was repaired using the proved cardinal equality. Because the interrupted clean rebuild had removed test objects, an immediate retry encountered a missing import; that retry was rejected as evidence. A full development rebuild restored all dependencies before reviewing the controls again.
+8. Only the subsequent fresh clean verifier receipt with all gate statuses PASS is authoritative. Expected negative controls must fail for their specified diagnostic, without timeout or missing-import/runtime failures.
+
+The imported compiler/cache trust boundary remains unchanged. Same-kernel replay is not an independent verifier.

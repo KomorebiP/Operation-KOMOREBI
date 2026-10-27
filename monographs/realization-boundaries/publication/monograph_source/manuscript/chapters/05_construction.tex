@@ -1,0 +1,132 @@
+\chapter{The paired-prime groups}
+\label{ch:construction}
+\chapterintro{A binary selector chooses one prime from each pair. Its indicator determines a rational line in the ambient quotient, and an explicit finite cocycle turns that line into a countable group.}
+
+\section{Choosing a rational line}
+Let $A\subseteq\N$, write $a_n=\one_A(n)$, and define
+\[
+S_A=\{p_{2n+a_n}:n\in\N\}.
+\]
+Exactly one prime from each pair is selected. Both $S_A$ and its complement are infinite. Let $u_A\in P$ be its indicator:
+\[
+(u_A)_p=\begin{cases}1,&p\in S_A,\\0,&p\notin S_A.\end{cases}
+\]
+Because $u_A$ has infinite support, $q(u_A)\ne0$. We can therefore define a rational line and its preimage by
+\[
+W_A=\Q q(u_A),\qquad G_A=q^{-1}(W_A).
+\]
+This definition produces an actual group for every set $A$. It does not claim an effective method for obtaining the selector bits of an arbitrary $A$.
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=\textwidth]{\figfile{02_prime_pairs.pdf}}
+\caption{Each bit selects exactly one prime from its pair. A filled point is selected. The torsion factor $C_p$ is present in $G_A$ whether or not $p$ is selected. Selection controls the infinite-order lift and its divisibility, not the presence of the torsion factor.}
+\label{fig:primepairs}
+\end{figure}
+
+\section{A section with finite arithmetic defects}
+For a reduced rational $r=a/b$, with $b>0$, define
+\begin{equation}
+\label{eq:section}
+(s_A(a/b))_p=
+\begin{cases}
+a b^{-1}\pmod p,&p\in S_A\text{ and }p\nmid b,\\
+0,&p\notin S_A\text{ or }p\mid b.
+\end{cases}
+\end{equation}
+The inverse is used only when the denominator is a unit in $\F_p$. The convention at denominator primes is essential. It is a choice of representatives, not a claim that division by $p$ is defined in $C_p$.
+
+The difference $b s_A(a/b)-a u_A$ is supported on the prime divisors of $b$. It follows that
+\[
+q(s_A(r))=r q(u_A).
+\]
+Thus every element of $G_A$ is $s_A(r)+d$ for some $r\in\Q$ and $d\in D$.
+
+\begin{theorem}[Unique normal form]
+\label{thm:normalform}
+Every element of $G_A$ has a unique expression
+\[
+g=s_A(r)+d,\qquad (r,d)\in\Q\times D.
+\]
+Consequently $G_A$ is countably infinite, with a countable normal-form domain that does not depend on the selector.
+\end{theorem}
+\begin{proof}
+Existence follows from the preimage definition and the displayed quotient identity. If two forms are equal, applying $q$ gives $(r-r')q(u_A)=0$. The vector $q(u_A)$ is nonzero in a rational vector space, so $r=r'$. The finite-support terms are then equal. Both $\Q$ and $D$ are countable, while the quotient is the infinite group $\Q$.
+\end{proof}
+The domain can be named without knowing $A$. The group operation on those names will contain the selector information.
+
+\section{The cocycle law}
+Define
+\[
+c_A(r,t)=s_A(r)+s_A(t)-s_A(r+t).
+\]
+The sum is taken in $P$, but its value belongs to $D$.
+
+\begin{lemma}[A finite support bound]
+\label{thm:cocyclesupport}
+For all $r,t\in\Q$,
+\[
+\supp c_A(r,t)\subseteq
+\{p:p\mid\den(r)\den(t)\}.
+\]
+\end{lemma}
+\begin{proof}
+At a prime not dividing either denominator, all three rationals have well-defined reductions. On a selected coordinate, reduction respects addition, so the defect is zero. On an unselected coordinate, all section values are zero. The reduced denominator of $r+t$ has no prime divisor absent from the two original denominators.
+\end{proof}
+
+\begin{theorem}[Explicit group law]
+\label{thm:cocyclelaw}
+In normal-form coordinates, addition is
+\begin{equation}
+\label{eq:grouplaw}
+(r,d)+(t,e)=(r+t,d+e+c_A(r,t)).
+\end{equation}
+The identity is $(0,0)$ and the inverse of $(r,d)$ is $(-r,-d)$. The law is associative and commutative, and the map $(r,d)\mapsto s_A(r)+d$ is an isomorphism onto the subgroup $G_A\le P$.
+\end{theorem}
+\begin{proof}
+Substitution into addition in $P$ gives the formula. The section satisfies $s_A(0)=0$ and $s_A(-r)=-s_A(r)$, so $c_A(r,0)=0$ and $c_A(r,-r)=0$. These identities give the stated identity and inverse.
+
+Symmetry is immediate. The cocycle equation
+\[
+c_A(r,t)+c_A(r+t,v)=c_A(t,v)+c_A(r,t+v)
+\]
+follows by expanding and cancelling the section terms. Expanding the two associations in \eqref{eq:grouplaw} now proves associativity. Uniqueness of normal forms makes the ambient map bijective, and the addition formula makes it a homomorphism.
+\end{proof}
+This is the standard symmetric cocycle construction of an abelian extension \cite[Section 3.2]{Lupini}. Here the particular section makes each individual correction finitely supported and exactly computable from finitely many selector queries.
+
+\begin{proposition}[One cocycle value reads one coordinate]
+\label{thm:cocyclebit}
+For every prime $p$,
+\[
+c_A(1/p,(p-1)/p)=-\one_{S_A}(p)e_p.
+\]
+\end{proposition}
+\begin{proof}
+The support bound leaves only the coordinate $p$. At that coordinate both fractional lifts are zero, and the lift of their sum, which is one, is $\one_{S_A}(p)$.
+\end{proof}
+Dropping the cocycle is therefore not a harmless simplification. The direct product operation on $\Q\times D$ removes exactly these defects and gives a different, split extension.
+
+\section{Structure of the extension}
+By Chapter~\ref{ch:purity}, the group is pure in $P$, reduced, residually finite, and dense. Its torsion is $D$, and the rational coordinate gives the exact sequence
+\begin{equation}
+\label{eq:extension}
+0\longrightarrow D\longrightarrow G_A\xrightarrow{\rho_A}\Q\longrightarrow0,
+\qquad \rho_A(s_A(r)+d)=r.
+\end{equation}
+It does not split.
+
+There is an equivalent cocycle obstruction. Suppose a function $b:\Q\to D$ modified the section to an additive map $r\mapsto s_A(r)+b(r)$. Then
+\[
+c_A(r,t)+b(r)+b(t)-b(r+t)=0
+\]
+for every $r,t$. The modified section would split \eqref{eq:extension}. Hence no such function exists. The cocycle is the defect of a section into $P$, but it is not removable by a correction valued in $D$.
+
+\begin{proposition}[Finitely generated subgroups]
+\label{thm:fgsubgroups}
+Every finitely generated subgroup of $G_A$ is either finite cyclic or isomorphic to $\Z\oplus C_m$ for a squarefree positive integer $m$, with $C_1$ trivial.
+\end{proposition}
+\begin{proof}
+Let $L\le G_A$ be generated by finitely many elements. Its image in $\Q$ is a finitely generated subgroup of $\Q$, hence either zero or infinite cyclic. If it is zero, then $L\le D$ and its finite support places it inside a finite cyclic group.
+
+Otherwise choose a lift $x\in L$ of a generator of its rational image. Subtracting suitable integer multiples of $x$ from the given generators produces finitely many elements of $D$. They generate the kernel of $L\to\rho_A(L)$, which is finite cyclic of squarefree order. The subgroup $\langle x\rangle$ intersects that torsion kernel trivially, giving the direct sum.
+\end{proof}
+The extensions over finitely generated rational images split, but the extension over all of $\Q$ does not. This is another exact distinction between finite algebraic stages and the global realization.

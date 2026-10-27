@@ -1,0 +1,34 @@
+tests/ClosureContracts.lean:37:84: error: Tactic `decide` failed for proposition
+  certifiedRootSolver (fun p => decide (↑p = 2)) 1 [] 2 = Except.error 2
+because its `Decidable` instance
+  instDecidableEqExcept_batteries (certifiedRootSolver (fun p => decide (↑p = 2)) 1 [] 2) (Except.error 2)
+did not reduce to `isTrue` or `isFalse`.
+
+After unfolding the instances `decEq`, `decidable_of_decidable_of_iff`, `decidable_of_iff`, `decidable_of_iff'`, `instDecidableAnd`, `instDecidableEqBool`, `instDecidableEqExcept_batteries`, `instDecidableEqFin`, `instDecidableEqNat`, `instDecidableNot`, `Bool.decEq`, `Int.decLe`, `Int.decNonneg`, `Nat.decEq`, `Nat.decLe`, `Nat.decidableBallLT`, `Nat.decidableLoHi`, `Nat.decidablePrime`, `Nat.decidable_dvd`, `ZMod.decidableEq`, `instDecidableEqExcept_batteries.decEq`, and `ZMod.decidableEq._aux_3`, reduction got stuck at the `Decidable` instance
+  match certifiedRootSolver (fun p => decide (↑p = 2)) 1 [] 2, Except.error 2 with
+  | Except.error a, Except.error b => if h : a = b then h ▸ isTrue ⋯ else isFalse ⋯
+  | Except.error a, Except.ok a_1 => isFalse ⋯
+  | Except.ok a, Except.error a_1 => isFalse ⋯
+  | Except.ok a, Except.ok b => if h : a = b then h ▸ isTrue ⋯ else isFalse ⋯
+tests/ClosureContracts.lean:38:78: error: Tactic `decide` failed for proposition
+  rootCorrectionCode (fun x => false) 0 [0, 0, 0, 1] 2 = [0, 0, 0, 2]
+because its `Decidable` instance
+  instDecidableEqList (rootCorrectionCode (fun x => false) 0 [0, 0, 0, 1] 2) [0, 0, 0, 2]
+did not reduce to `isTrue` or `isFalse`.
+
+After unfolding the instances `instDecidableEqBool`, `instDecidableEqList`, `Bool.decEq`, and `Nat.decLe`, reduction got stuck at the `Decidable` instance
+  match rootCorrectionCode (fun x => false) 0 [0, 0, 0, 1] 2 with
+  | [] =>
+    match [0, 0, 0, 2] with
+    | [] => isTrue ⋯
+    | head :: tail => isFalse ⋯
+  | a :: as =>
+    match [0, 0, 0, 2] with
+    | [] => isFalse ⋯
+    | b :: bs =>
+      match decEq a b with
+      | isTrue hab =>
+        match as.hasDecEq bs with
+        | isTrue habs => isTrue ⋯
+        | isFalse nabs => isFalse ⋯
+      | isFalse nab => isFalse ⋯

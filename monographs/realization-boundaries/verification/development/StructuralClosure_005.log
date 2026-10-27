@@ -1,0 +1,30 @@
+RealizationBoundaries/StructuralClosure.lean:85:12: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  rationalSection S (↑1 / ↑↑p) p
+in the target expression
+  rationalSection S (1 / ↑↑p) p + rationalSection S (↑(↑p - 1) / ↑↑p) p - rationalSection S 1 p =
+    ↑(-⟨cut {p} (indicator S), ⋯⟩) p
+
+case pos
+S : Set Prime
+p : Prime
+hc : (↑p - 1).Coprime ↑p
+hs : 1 / ↑↑p + ↑(↑p - 1) / ↑↑p = 1
+⊢ rationalSection S (1 / ↑↑p) p + rationalSection S (↑(↑p - 1) / ↑↑p) p - rationalSection S 1 p =
+    ↑(-⟨cut {p} (indicator S), ⋯⟩) p
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    p
+  has type
+    Prime
+  but is expected to have type
+    { p // Nat.Prime p }
+  in the application
+    ↑p
+RealizationBoundaries/StructuralClosure.lean:100:4: error: Type mismatch: After simplification, term
+  hz
+ has type
+  sectionDefect S (1 / ↑↑p) (↑(↑p - 1) / ↑↑p) q = 0
+but is expected to have type
+  sectionDefect S (1 / ↑↑p) (↑(↑p - 1) / ↑↑p) q = ↑(-⟨cut {p} (indicator S), ⋯⟩) q

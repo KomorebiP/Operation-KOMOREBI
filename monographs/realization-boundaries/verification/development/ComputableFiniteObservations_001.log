@@ -1,0 +1,125 @@
+RealizationBoundaries/ComputableFiniteObservations.lean:30:51: error: Application type mismatch: The argument
+  hi
+has type
+  i ∈ Finset.range n
+but is expected to have type
+  i ∈ Finset.range i
+in the application
+  Finset.mem_range.mp hi
+RealizationBoundaries/ComputableFiniteObservations.lean:65:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  IsRelPrime ?m.23 ?m.24
+in the target expression
+  Function.onFun IsRelPrime Subtype.val p q
+
+case hs
+n : ℕ
+p : Prime
+a✝¹ : p ∈ ↑(observationPrimes n)
+q : Prime
+a✝ : q ∈ ↑(observationPrimes n)
+hpq : p ≠ q
+⊢ Function.onFun IsRelPrime Subtype.val p q
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    Subtype.val
+  has type
+    { p // Nat.Prime p } → ℕ
+  but is expected to have type
+    Prime → ℕ
+  in the application
+    Function.onFun IsRelPrime Subtype.val
+RealizationBoundaries/ComputableFiniteObservations.lean:83:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  Nat.rec 1 (fun y IH => (y, IH).2 * ↑(primeAt (y, IH).1)) (id n)
+in the target expression
+  Nat.rec 1 (fun i r => r * ↑(primeAt i)) n * ↑(primeAt n) = observationModulus (n + 1)
+
+case succ
+hstep : Computable₂ fun x p => p.2 * ↑(primeAt p.1)
+n : ℕ
+ih : Nat.rec 1 (fun y IH => (y, IH).2 * ↑(primeAt (y, IH).1)) (id n) = observationModulus n
+⊢ Nat.rec 1 (fun i r => r * ↑(primeAt i)) n * ↑(primeAt n) = observationModulus (n + 1)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    primeAt i
+  has type
+    Prime
+  but is expected to have type
+    { p // Nat.Prime p }
+  in the application
+    ↑(primeAt i)
+RealizationBoundaries/ComputableFiniteObservations.lean:115:4: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  Decidable (observationValid (Nat.unpair k).1 (Nat.unpair k).2)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+RealizationBoundaries/ComputableFiniteObservations.lean:152:2: error: Type mismatch
+  (ZMod.finEquiv (observationModulus n)).symm
+has type
+  ZMod (observationModulus n) ≃+* Fin (observationModulus n)
+but is expected to have type
+  Fin (observationModulus n) ≃ ZMod (observationModulus n)
+RealizationBoundaries/ComputableFiniteObservations.lean:180:14: error: unsolved goals
+n : ℕᵒᵈ
+x : ↑(FiniteAddGrp.of (ZMod (observationModulus (OrderDual.ofDual n)))).toAddGrp
+⊢ (ConcreteCategory.hom (FiniteAddGrp.ofHom (AddMonoidHom.id (ZMod (observationModulus (OrderDual.ofDual n)))))) x = x
+RealizationBoundaries/ComputableFiniteObservations.lean:184:18: error: unsolved goals
+X✝ Y✝ Z✝ : ℕᵒᵈ
+f : X✝ ⟶ Y✝
+g : Y✝ ⟶ Z✝
+x : ↑(FiniteAddGrp.of (ZMod (observationModulus (OrderDual.ofDual X✝)))).toAddGrp
+⊢ (ConcreteCategory.hom (FiniteAddGrp.ofHom ↑(ZMod.castHom ⋯ (ZMod (observationModulus (OrderDual.ofDual Z✝)))))) x =
+    (ConcreteCategory.hom (FiniteAddGrp.ofHom ↑(ZMod.castHom ⋯ (ZMod (observationModulus (OrderDual.ofDual Z✝))))))
+      ((ConcreteCategory.hom (FiniteAddGrp.ofHom ↑(ZMod.castHom ⋯ (ZMod (observationModulus (OrderDual.ofDual Y✝))))))
+        x)
+RealizationBoundaries/ComputableFiniteObservations.lean:227:60: error: unsolved goals
+m n : ℕ
+h : m ≤ n
+x : ZMod (observationModulus n)
+p : ↥(OrderDual.ofDual (observationPrimes m))
+⊢ ↑x.val ⟨↑p, ⋯⟩ = (observationCrtEquiv m) (↑(ZMod.castHom ⋯ (ZMod (observationModulus m))) ↑x.val) p
+RealizationBoundaries/ComputableFiniteObservations.lean:232:4: error: This simp argument is unused:
+  observationCrtEquiv_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [finiteCoordinateRestriction, AddMonoidHom.coe_mk, ZeroHom.coe_mk, observationRestriction,
+    RingHom.toAddMonoidHom_eq_coe, RingHom.coe_coe, map_natCast]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ComputableFiniteObservations.lean:233:4: error: This simp argument is unused:
+  RingHom.coe_coe
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [finiteCoordinateRestriction, AddMonoidHom.coe_mk, ZeroHom.coe_mk, observationCrtEquiv_natCast,
+    observationRestriction, RingHom.toAddMonoidHom_eq_coe, map_natCast]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ComputableFiniteObservations.lean:233:21: error: This simp argument is unused:
+  map_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [finiteCoordinateRestriction, AddMonoidHom.coe_mk, ZeroHom.coe_mk, observationCrtEquiv_natCast,
+    observationRestriction, RingHom.toAddMonoidHom_eq_coe, RingHom.coe_coe]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ComputableFiniteObservations.lean:246:4: error: Type mismatch
+  Eq.symm (congrFun (observationCrtEquiv_restriction (Quiver.Hom.le f) x) ?m.147)
+has type
+  (observationCrtEquiv m) ((observationRestriction ⋯) x) ?m.147 =
+    (finiteCoordinateRestriction ⋯) ((observationCrtEquiv n) x) ?m.147
+but is expected to have type
+  (ConcreteCategory.hom
+        (computableObservation.map f ≫
+          { hom := FiniteAddGrp.ofHom (observationCrtEquiv (OrderDual.ofDual m)).toAddMonoidHom,
+              inv := FiniteAddGrp.ofHom (observationCrtEquiv (OrderDual.ofDual m)).symm.toAddMonoidHom, hom_inv_id := ⋯,
+              inv_hom_id := ⋯ }.hom))
+      x =
+    (ConcreteCategory.hom
+        ({ hom := FiniteAddGrp.ofHom (observationCrtEquiv (OrderDual.ofDual n)).toAddMonoidHom,
+              inv := FiniteAddGrp.ofHom (observationCrtEquiv (OrderDual.ofDual n)).symm.toAddMonoidHom, hom_inv_id := ⋯,
+              inv_hom_id := ⋯ }.hom ≫
+          (observationPrefixFunctor ⋙ coordinateObservation).map f))
+      x
+RealizationBoundaries/ComputableFiniteObservations.lean:254:3: error(lean.unknownIdentifier): Unknown identifier `isoWhiskerLeft`

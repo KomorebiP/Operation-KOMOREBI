@@ -1,0 +1,133 @@
+\chapter{Classification, morphisms, and seed rank}
+\label{ch:classification}
+\chapterintro{The finite quotients are fixed, but the original groups are not. Divisibility classifies their isomorphism types, and the coordinate structure determines every homomorphism.}
+
+\section{The signature of an infinite-order element}
+The rational coordinate of a normal form detects torsion: $s_A(r)+d$ has infinite order exactly when $r\ne0$.
+
+\begin{lemma}[Tail signature]
+\label{thm:tailsignature}
+If $g=s_A(r)+d$ has infinite order, then for all but finitely many primes,
+\[
+p\mid_{G_A}g\quad\Longleftrightarrow\quad p\notin S_A.
+\]
+An explicit exception set consists of the primes dividing the nonzero numerator or denominator of $r$, together with $\supp(d)$.
+\end{lemma}
+\begin{proof}
+Outside that set, the reduction of $r$ is defined and nonzero. The coordinate of $g$ is therefore nonzero exactly at the selected primes. Apply Theorem~\ref{thm:rootcertificate} with multiplier $p$.
+\end{proof}
+The full signature of the distinguished element is exact. The signature of an arbitrary infinite-order element is exact only in the tail. This finite discrepancy is what determines the correct unmarked classification.
+
+\section{Isomorphism means eventual agreement}
+\begin{theorem}[Unmarked isomorphism classification]
+\label{thm:isoclass}
+For all $A,B\subseteq\N$,
+\[
+G_A\cong G_B\quad\Longleftrightarrow\quad A\eqfin B.
+\]
+When $A\eqfin B$, the two groups are equal as subgroups of the fixed product $P$.
+\end{theorem}
+\begin{proof}
+Suppose $f:G_A\to G_B$ is an isomorphism. The image of $u_A$ has infinite order. An isomorphism preserves the existence of a $p$th root for every prime $p$. Combining the exact signature \eqref{eq:markroot} with Lemma~\ref{thm:tailsignature} for $f(u_A)$ gives $S_A\eqfin S_B$. Since each set chooses exactly one prime from each pair, the corresponding sets of bits differ finitely.
+
+Conversely, suppose $A\eqfin B$. For every rational $r$, the vectors $s_A(r)$ and $s_B(r)$ differ only on the finitely many prime pairs where the selectors differ. Thus their difference belongs to $D$. The descriptions $G_A=s_A(\Q)+D$ and $G_B=s_B(\Q)+D$ define the same subset of $P$.
+\end{proof}
+The normal forms need not be identical. Their coordinate change is
+\begin{equation}
+\label{eq:transport}
+(r,d)\longmapsto
+\bigl(r,d+s_A(r)-s_B(r)\bigr).
+\end{equation}
+It fixes the represented ambient element. The correction is finite exactly because the selectors differ only finitely.
+
+\begin{corollary}[Marked classification]
+\label{thm:markedclass}
+An isomorphism $(G_A,u_A)\cong(G_B,u_B)$ exists if and only if $A=B$.
+\end{corollary}
+\begin{proof}
+A marked isomorphism preserves the exact two-prime root test \eqref{eq:evenroot}--\eqref{eq:oddroot} at every index. Therefore every bit agrees. The converse is the identity map.
+\end{proof}
+
+\begin{example}[The same group with a different marked point]
+Let $A=\varnothing$ and $B=\{0\}$. Only the first prime pair changes. Then $G_A=G_B$ inside $P$, but $u_A-u_B=e_2-e_3$. The distinguished element is not preserved. In particular, the statement $G_A\cong G_B\iff A=B$ would be false for unmarked groups.
+\end{example}
+
+\section{All homomorphisms are diagonal}
+The product $P$ is also a commutative ring under coordinatewise multiplication. Multiplication by any $\lambda\in P$ preserves $D$, so it induces an additive endomorphism $\overline M_\lambda$ of $V$. Because division in $V$ is unique, this induced endomorphism is $\Q$-linear.
+
+\begin{theorem}[Complete homomorphism description]
+\label{thm:allhom}
+Every homomorphism $f:G_A\to G_B$ has the form
+\[
+f(g)_p=\lambda_p g_p\qquad(p\text{ prime})
+\]
+for a unique $\lambda\in P$. Conversely, coordinate multiplication by $\lambda$ defines such a homomorphism exactly when
+\begin{equation}
+\label{eq:homcondition}
+q(\lambda u_A)\in\Q q(u_B).
+\end{equation}
+Equivalently, there is a rational $r$ for which $\lambda u_A-s_B(r)$ has finite support.
+\end{theorem}
+\begin{proof}
+For a homomorphism $f$, the composite $G_A\to G_B\to C_p$ kills $pG_A$. The quotient $G_A/pG_A$ is canonically $C_p$. Every endomorphism of this cyclic additive group is multiplication by a unique scalar $\lambda_p$. Hence the displayed coordinate rule holds. Uniqueness also follows by evaluating $f(e_p)$.
+
+Conversely, multiplication by any $\lambda$ is a group endomorphism of $P$ and preserves $D$. Since its induced map on $V$ is rational-linear, it carries $\Q q(u_A)$ into $\Q q(u_B)$ exactly when it carries the generating vector into that line. This is \eqref{eq:homcondition}. Taking preimages proves that the restriction maps $G_A$ into $G_B$. The equivalent finite-support condition follows from the definition of the quotient.
+\end{proof}
+No continuity assumption was imposed. Every resulting homomorphism is nevertheless continuous for the induced profinite topologies, because each output coordinate depends only on the corresponding input coordinate. Its extension to the completion is the same coordinatewise scalar map on $P$.
+
+\begin{theorem}[Torsion-image obstruction]
+\label{thm:homobstruction}
+If $A\neqfin B$, every homomorphism $G_A\to G_B$ has image contained in $D$. Consequently neither group embeds in the other, and neither is a quotient of the other.
+\end{theorem}
+\begin{proof}
+A homomorphism preserves torsion and induces a map $\Q\to\Q$ on the quotients, necessarily multiplication by a rational $r$. If $r=0$, its image lies in $D$.
+
+Assume $r\ne0$. Then $f(u_A)$ has the tail signature of $S_B$. For every $p\notin S_A$, the element $u_A$ has a $p$th root, and its image has a $p$th root as well. Lemma~\ref{thm:tailsignature} implies that $S_B\setminus S_A$ is finite. Each differing prime pair contributes one element to this difference, so $A\eqfin B$, contrary to the assumption.
+
+An embedding cannot send an infinite-order element to torsion. A surjection onto $G_B$ cannot have torsion image, since $G_B/D\cong\Q\ne0$.
+\end{proof}
+A useful precise consequence of Theorem~\ref{thm:allhom} is that, when $A\neqfin B$, the possible diagonal sequences are exactly those for which $\lambda_p=0$ at all but finitely many primes of $S_A$. Their values on the complementary primes are unrestricted. These maps can be nonzero, and their torsion images need not be finite.
+
+\section{The endomorphism ring and its units}
+Write $\overline r_p$ for reduction of a rational $r$ at a prime not dividing its denominator. The phrase ``for almost every selected prime'' below means outside a finite set, which may include those denominator primes.
+
+\begin{corollary}[Endomorphism ring]
+\label{thm:endGA}
+Under coordinate multiplication,
+\[
+\End(G_A)\cong
+E_A=\{\lambda\in P:\exists r\in\Q,\ 
+\lambda_p=\overline r_p\text{ for almost every }p\in S_A\}.
+\]
+The rational $r$ is unique. It is the scalar induced on $G_A/D$, and the map $E_A\to\Q$ sending $\lambda$ to $r$ is a surjective ring homomorphism.
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:allhom} with $B=A$. At unselected coordinates, both $\lambda u_A$ and $s_A(r)$ vanish. At selected coordinates the finite-support condition is exactly the displayed eventual equality.
+
+If two different rationals agreed modulo almost every selected prime, their nonzero difference would have a numerator divisible by infinitely many primes, which is impossible. Thus $r$ is unique. Addition and composition induce addition and multiplication of the quotient scalars, giving a ring homomorphism. The diagonal sequence $s_A(r)$ realizes every rational $r$, proving surjectivity.
+\end{proof}
+The arbitrary coordinates outside $S_A$ show why the endomorphism ring may contain infinitely specified operators. The seed-rank obstruction below remains true even when all these operators are available.
+
+\begin{corollary}[Automorphisms]
+\label{thm:autGA}
+An endomorphism with diagonal $\lambda\in E_A$ is an automorphism if and only if every coordinate $\lambda_p$ is nonzero. In that case its rational quotient scalar is nonzero, and its inverse has diagonal $\lambda_p^{-1}$.
+\end{corollary}
+\begin{proof}
+An automorphism restricts to an automorphism of each torsion factor, so every scalar is nonzero. Conversely, if every scalar is nonzero, the eventual rational scalar cannot be zero because $S_A$ is infinite. Outside finitely many selected primes, the inverse diagonal is reduction of its reciprocal. Thus the inverse diagonal belongs to $E_A$ and defines an inverse endomorphism.
+\end{proof}
+
+\section{Infinite seed rank before completion}
+\begin{theorem}[Seed-rank separation]
+\label{thm:rankGA}
+For every $A$,
+\[
+\srank_{\End(G_A)}(G_A)=\aleph_0.
+\]
+No finite family topologically generates $G_A$, even after arbitrary endomorphisms are admitted. Yet its completion has ordinary topological generating rank one.
+\end{theorem}
+\begin{proof}
+Each element $s_A(r)+d$ has only finitely many nonzero coordinates outside $S_A$. A finite family therefore omits infinitely many unselected prime coordinates. By Theorem~\ref{thm:allhom}, every endomorphism preserves a zero coordinate as zero. Finite sums of orbit elements still vanish at any omitted prime $p$. The projection onto $C_p$ is a non-generation certificate, since $e_p\in G_A$ has nonzero projection. Its kernel is closed, so taking closure does not repair the failure.
+
+Countably many seeds suffice because $G_A$ is countable. For ordinary topological generation, the coordinate vectors already generate the dense subgroup $D$. Finally, the completion is $P$, whose all-one vector is a topological generator by Theorem~\ref{thm:procyclic}.
+\end{proof}
+The same infinite seed rank occurs for every selector. It does not measure the varying effective complexity. Algebraic generation, finite description, and computable presentation remain separate invariants.

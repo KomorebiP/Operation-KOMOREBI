@@ -1,0 +1,38 @@
+RealizationBoundaries.computable_observationModulus : Computable observationModulus
+RealizationBoundaries.computable_observationValid :
+  Computable fun k => decide (observationValid (Nat.unpair k).1 (Nat.unpair k).2)
+RealizationBoundaries.computable_observationEquality : Computable fun k => decide ((Nat.unpair k).1 = (Nat.unpair k).2)
+RealizationBoundaries.computable_observationIndexRelation :
+  Computable fun k => decide ((Nat.unpair k).2 ≤ (Nat.unpair k).1)
+RealizationBoundaries.computable_observationAddCode :
+  Computable fun k =>
+    observationAddCode (Nat.unpair k).1 (Nat.unpair (Nat.unpair k).2).1 (Nat.unpair (Nat.unpair k).2).2
+RealizationBoundaries.computable_observationNegCode :
+  Computable fun k => observationNegCode (Nat.unpair k).1 (Nat.unpair k).2
+RealizationBoundaries.computable_observationRestrictionCode :
+  Computable fun k => observationRestrictionCode (Nat.unpair k).1 (Nat.unpair k).2
+RealizationBoundaries.observationNames (n : ℕ) : Fin (observationModulus n) ≃ ZMod (observationModulus n)
+RealizationBoundaries.observationAddCode_spec (n x y : ℕ) : ↑(observationAddCode n x y) = ↑x + ↑y
+RealizationBoundaries.observationNegCode_spec (n x : ℕ) : ↑(observationNegCode n x) = -↑x
+RealizationBoundaries.observationRestrictionCode_spec {m n : ℕ} (h : m ≤ n) (x : ℕ) :
+  ↑(observationRestrictionCode m x) = (observationRestriction h) ↑x
+RealizationBoundaries.observationModulus_squarefree (n : ℕ) : Squarefree (observationModulus n)
+RealizationBoundaries.observationPrefixFunctor_initial : observationPrefixFunctor.Initial
+RealizationBoundaries.computableObservationIso :
+  computableObservation ≅ observationPrefixFunctor.comp coordinateObservation
+RealizationBoundaries.computableObservationQuotientIso (W : Submodule ℚ TailSpace) :
+  observationPrefixFunctor.comp
+      ((coordinateIndexFunctor W).comp
+        (ProfiniteAddGrp.ProfiniteCompletion.finiteAddGrpDiagram (AddGrpCat.of ↥(preimage W)))) ≅
+    computableObservation
+RealizationBoundaries.allFiniteObservation_fixed_computable (W : Submodule ℚ TailSpace) :
+  CommonCofinalObservation (allFiniteObservation W) fixedComputableObservation
+'RealizationBoundaries.computable_observationModulus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.allFiniteObservation_fixed_computable' depends on axioms: [propext, Classical.choice, Quot.sound]
+1
+2
+210
+1
+208
+5
+false

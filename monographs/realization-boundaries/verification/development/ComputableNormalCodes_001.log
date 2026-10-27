@@ -1,0 +1,141 @@
+RealizationBoundaries/ComputableNormalCodes.lean:28:8: error: Tactic `contradiction` failed
+
+case pos
+a : ℕ → Bool
+p : Prime
+hindex : primeAt (Nat.count Nat.Prime ↑p) = p
+hm : ¬a (Nat.count Nat.Prime ↑p / 2) = true
+h✝ : 0 = Nat.count Nat.Prime ↑p % 2
+h : 1 = 1
+⊢ chosenIndex a (Nat.count Nat.Prime ↑p / 2) = Nat.count Nat.Prime ↑p
+RealizationBoundaries/ComputableNormalCodes.lean:29:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  chosenIndex a (Nat.count Nat.Prime ↑p / 2)
+in the target expression
+  (fun n => primeAt (chosenIndex a n)) (Nat.count Nat.Prime ↑p / 2) = p
+
+case mp
+a : ℕ → Bool
+p : Prime
+hindex : primeAt (Nat.count Nat.Prime ↑p) = p
+h : pairedMask a ↑p = 1
+he : chosenIndex a (Nat.count Nat.Prime ↑p / 2) = Nat.count Nat.Prime ↑p
+⊢ (fun n => primeAt (chosenIndex a n)) (Nat.count Nat.Prime ↑p / 2) = p
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    p
+  has type
+    Prime
+  but is expected to have type
+    { p // Nat.Prime p }
+  in the application
+    ↑p
+RealizationBoundaries/ComputableNormalCodes.lean:30:2: error: unsolved goals
+case mpr.true
+a : ℕ → Bool
+p : Prime
+hindex : primeAt (Nat.count Nat.Prime ↑p) = p
+n : ℕ
+hn : (fun n => primeAt (chosenIndex a n)) n = p
+hi : Nat.count Nat.Prime ↑p = chosenIndex a n
+ha : a n = true
+⊢ a ((2 * n + 1) / 2) = true
+RealizationBoundaries/ComputableNormalCodes.lean:35:59: error: This simp argument is unused:
+  Nat.mul_mod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [chosenIndex, ha, Nat.add_mod]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ComputableNormalCodes.lean:42:17: error: Application type mismatch: The argument
+  Primrec₂.to_comp Primrec.nat_add
+has type
+  Computable₂ fun x1 x2 => x1 + x2
+but is expected to have type
+  Computable ?m.7
+in the application
+  of_computable (Primrec₂.to_comp Primrec.nat_add)
+RealizationBoundaries/ComputableNormalCodes.lean:43:17: error: `simp` made no progress
+RealizationBoundaries/ComputableNormalCodes.lean:47:17: error: Application type mismatch: The argument
+  Primrec₂.to_comp Primrec.nat_sub
+has type
+  Computable₂ fun x1 x2 => x1 - x2
+but is expected to have type
+  Computable ?m.7
+in the application
+  of_computable (Primrec₂.to_comp Primrec.nat_sub)
+RealizationBoundaries/ComputableNormalCodes.lean:48:17: error: `simp` made no progress
+RealizationBoundaries/ComputableNormalCodes.lean:52:17: error: Application type mismatch: The argument
+  Primrec₂.to_comp Primrec.nat_mod
+has type
+  Computable₂ fun x1 x2 => x1 % x2
+but is expected to have type
+  Computable ?m.7
+in the application
+  of_computable (Primrec₂.to_comp Primrec.nat_mod)
+RealizationBoundaries/ComputableNormalCodes.lean:53:17: error: `simp` made no progress
+RealizationBoundaries/ComputableNormalCodes.lean:71:63: error: Tactic `rfl` failed: The left-hand side
+  (Part.some (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) k)).bind fun i =>
+    Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair k i)))
+is not definitionally equal to the right-hand side
+  Part.some
+    (s
+      (Nat.pair (Nat.unpair n).1
+        (Nat.pair k (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) k))))
+
+case succ
+X : ℕ → Bool
+b s : ℕ → ℕ
+hb : OracleComputable X b
+hs : OracleComputable X s
+n k : ℕ
+ih :
+  Nat.rec (Part.some (b (Nat.unpair n).1))
+      (fun y IH => IH.bind fun i => Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair y i)))) k =
+    Part.some (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) k)
+⊢ ((Part.some (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) k)).bind fun i =>
+      Part.some (s (Nat.pair (Nat.unpair n).1 (Nat.pair k i)))) =
+    Part.some
+      (s
+        (Nat.pair (Nat.unpair n).1
+          (Nat.pair k (Nat.rec (b (Nat.unpair n).1) (fun k r => s (Nat.pair (Nat.unpair n).1 (Nat.pair k r))) k))))
+RealizationBoundaries/ComputableNormalCodes.lean:71:28: error: This simp argument is unused:
+  Nat.unpair_pair
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only at ih ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ComputableNormalCodes.lean:87:57: error: Application type mismatch: The argument
+  List ℕ
+has type
+  Type
+of sort `Type 1` but is expected to have type
+  ℕ
+of sort `Type` in the application
+  Encodable.decode (List ℕ)
+RealizationBoundaries/ComputableNormalCodes.lean:89:96: error: unsolved goals
+d : List ℕ
+⊢ sorry () = d
+RealizationBoundaries/ComputableNormalCodes.lean:90:8: error: declaration uses `sorry`
+RealizationBoundaries/ComputableNormalCodes.lean:90:24: error: This simp argument is unused:
+  Encodable.encodek
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [decodeResidues]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ComputableNormalCodes.lean:93:2: error: Type mismatch
+  Primrec₂.comp Primrec.option_getD Primrec.decode (Primrec.const [])
+has type
+  Primrec fun a => (Encodable.decode a).getD []
+but is expected to have type
+  Primrec decodeResidues
+RealizationBoundaries/ComputableNormalCodes.lean:103:14: error: unsolved goals
+case succ
+f : ℕ → ℕ
+input N : ℕ
+ih : residueLoop f input N = List.ofFn fun i => f (Nat.pair input ↑i)
+⊢ (List.ofFn fun i => f (Nat.pair input ↑i)) ++ [f (Nat.pair input N)] =
+    (List.ofFn fun i => f (Nat.pair input ↑i.castSucc)) ++ [f (Nat.pair input ↑(Fin.last N))]

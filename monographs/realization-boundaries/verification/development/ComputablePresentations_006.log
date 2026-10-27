@@ -1,0 +1,37 @@
+RealizationBoundaries/ComputablePresentations.lean:136:12: error: Type mismatch
+  c.zero_spec
+has type
+  c.names c.zero = 0
+but is expected to have type
+  c.names (c.multiple 0 y) = 0 • c.names y
+RealizationBoundaries/ComputablePresentations.lean:137:17: error: Tactic `assumption` failed
+
+case succ
+X : ℕ → Bool
+H : Type u_1
+inst✝ : AddGroup H
+c : OracleGroupCopy X H
+y m : ℕ
+ih : c.names (c.multiple m y) = m • c.names y
+⊢ c.names y + c.names (Nat.rec c.zero (fun x z => c.add y z) m) = m • c.names y + c.names y
+RealizationBoundaries/ComputablePresentations.lean:154:17: error: Tactic `assumption` failed
+
+case succ
+X : ℕ → Bool
+H : Type u_1
+inst✝ : AddGroup H
+c : OracleGroupCopy X H
+step : OracleComputable X fun k => c.add (Nat.unpair k).1 (Nat.unpair (Nat.unpair k).2).2
+n m : ℕ
+ih :
+  Nat.rec (Part.some c.zero)
+      (fun y IH =>
+        IH.bind fun i =>
+          Part.some
+            (c.add (Nat.unpair (Nat.pair (Nat.unpair n).1 (Nat.pair y i))).1
+              (Nat.unpair (Nat.unpair (Nat.pair (Nat.unpair n).1 (Nat.pair y i))).2).2))
+      m =
+    Part.some (c.multiple m (Nat.unpair n).1)
+⊢ ((Nat.rec (Part.some c.zero) (fun y IH => IH.bind fun i => Part.some (c.add (Nat.unpair n).1 i)) m).bind fun i =>
+      Part.some (c.add (Nat.unpair n).1 i)) =
+    Part.some (c.add (Nat.unpair n).1 (Nat.rec c.zero (fun x z => c.add (Nat.unpair n).1 z) m))

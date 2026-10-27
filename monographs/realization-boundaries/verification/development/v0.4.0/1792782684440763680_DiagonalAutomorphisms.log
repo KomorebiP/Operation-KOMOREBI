@@ -1,0 +1,59 @@
+RealizationBoundaries/DiagonalAutomorphisms.lean:68:4: error: Try `simp at he'` instead of `simpa using he'`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+RealizationBoundaries/DiagonalAutomorphisms.lean:129:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑(?f ?x)
+in the target expression
+  (diagonal (inverseDiagonal (homDiagonal (selectorLine S) (selectorLine T) f))) ↑(f x) = ↑x
+
+S T : Set Prime
+hS : S.Infinite
+f : ↥(selectorGroup S) →+ ↥(selectorGroup T)
+hn : ∀ (p : Prime), homDiagonal (selectorLine S) (selectorLine T) f p ≠ 0
+x : ↥(selectorGroup S)
+⊢ (diagonal (inverseDiagonal (homDiagonal (selectorLine S) (selectorLine T) f))) ↑(f x) = ↑x
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    f
+  has type
+    @AddMonoidHom (↥(selectorGroup S)) (↥(selectorGroup T))
+      (AddSubmonoidClass.toAddZeroClass (selectorGroup S)).toAddZero
+      (AddSubmonoidClass.toAddZeroClass (selectorGroup T)).toAddZero
+  but is expected to have type
+    @AddMonoidHom (↥(preimage (selectorLine S))) (↥(preimage (selectorLine T)))
+      (AddSubmonoidClass.toAddZeroClass (preimage (selectorLine S))).toAddZero
+      (AddSubmonoidClass.toAddZeroClass (preimage (selectorLine T))).toAddZero
+  in the application
+    homDiagonal (selectorLine S) (selectorLine T) f
+RealizationBoundaries/DiagonalAutomorphisms.lean:133:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑(?f ?x)
+in the target expression
+  ↑(f
+        ((diagonalRestriction (selectorLine T) (selectorLine S)
+            (inverseDiagonal (homDiagonal (selectorLine S) (selectorLine T) f)) ⋯)
+          y)) =
+    ↑y
+
+S T : Set Prime
+hS : S.Infinite
+f : ↥(selectorGroup S) →+ ↥(selectorGroup T)
+hn : ∀ (p : Prime), homDiagonal (selectorLine S) (selectorLine T) f p ≠ 0
+y : ↥(selectorGroup T)
+⊢ ↑(f
+        ((diagonalRestriction (selectorLine T) (selectorLine S)
+            (inverseDiagonal (homDiagonal (selectorLine S) (selectorLine T) f)) ⋯)
+          y)) =
+    ↑y
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    i
+  has type
+    Prime
+  but is expected to have type
+    { p // Nat.Prime p }
+  in the application
+    ↑i

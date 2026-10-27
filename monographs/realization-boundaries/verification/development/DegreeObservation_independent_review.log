@@ -1,0 +1,52 @@
+RealizationBoundaries.computable_observationModulus : Computable observationModulus
+RealizationBoundaries.computable_observationValid :
+  Computable fun k => decide (observationValid (Nat.unpair k).1 (Nat.unpair k).2)
+RealizationBoundaries.computable_observationAddCode :
+  Computable fun k =>
+    observationAddCode (Nat.unpair k).1 (Nat.unpair (Nat.unpair k).2).1 (Nat.unpair (Nat.unpair k).2).2
+RealizationBoundaries.computable_observationNegCode :
+  Computable fun k => observationNegCode (Nat.unpair k).1 (Nat.unpair k).2
+RealizationBoundaries.computable_observationRestrictionCode :
+  Computable fun k => observationRestrictionCode (Nat.unpair k).1 (Nat.unpair k).2
+RealizationBoundaries.observationNames (n : ℕ) : Fin (observationModulus n) ≃ ZMod (observationModulus n)
+RealizationBoundaries.observationAddCode_valid (n x y : ℕ) : observationValid n (observationAddCode n x y)
+RealizationBoundaries.observationNegCode_valid (n x : ℕ) : observationValid n (observationNegCode n x)
+RealizationBoundaries.observationRestrictionCode_valid (m x : ℕ) : observationValid m (observationRestrictionCode m x)
+RealizationBoundaries.observationAddCode_spec (n x y : ℕ) : ↑(observationAddCode n x y) = ↑x + ↑y
+RealizationBoundaries.observationNegCode_spec (n x : ℕ) : ↑(observationNegCode n x) = -↑x
+RealizationBoundaries.observationRestrictionCode_spec {m n : ℕ} (h : m ≤ n) (x : ℕ) :
+  ↑(observationRestrictionCode m x) = (observationRestriction h) ↑x
+RealizationBoundaries.observationPrimes_cofinal (s : Finset RealizationBoundaries.Prime) : ∃ n, s ⊆ observationPrimes n
+RealizationBoundaries.observationPrefixFunctor_initial : observationPrefixFunctor.Initial
+RealizationBoundaries.observationCrtEquiv_restriction {m n : ℕ} (h : m ≤ n) (x : ZMod (observationModulus n)) :
+  (finiteCoordinateRestriction ⋯) ((observationCrtEquiv n) x) = (observationCrtEquiv m) ((observationRestriction h) x)
+RealizationBoundaries.computableObservationIso :
+  computableObservation ≅ observationPrefixFunctor.comp coordinateObservation
+RealizationBoundaries.computableObservationIndex_initial (W : Submodule ℚ TailSpace) :
+  (observationPrefixFunctor.comp (coordinateIndexFunctor W)).Initial
+RealizationBoundaries.allFiniteObservation_fixed_computable (W : Submodule ℚ TailSpace) :
+  CommonCofinalObservation (allFiniteObservation W) fixedComputableObservation
+RealizationBoundaries.paired_least_presentation_degree (a : ℕ → Bool) :
+  HasLeastPresentationDegree (↥(pairedGroup a)) (selectorTuringDegree a)
+RealizationBoundaries.paired_degree_reduced.{u_1} (a : ℕ → Bool) (E : Type u_1) [AddGroup E] [Nontrivial E]
+  (hdiv : ∀ (m : ℕ), 0 < m → ∀ (x : E), ∃ y, m • y = x) (f : E →+ ↥(pairedGroup a)) : ¬Function.Injective ⇑f
+RealizationBoundaries.every_set_degree_with_fixed_computable_observation (d : SetTuringDegree) :
+  ∃ a,
+    selectorTuringDegree a = ↑d ∧
+      HasLeastPresentationDegree ↥(pairedGroup a) ↑d ∧
+        Countable ↥(pairedGroup a) ∧
+          Infinite ↥(pairedGroup a) ∧
+            IsReducedAddGroup ↥(pairedGroup a) ∧
+              AddGroup.ResiduallyFinite ↥(pairedGroup a) ∧
+                Nonempty (↑(CanonicalCompletion (selectorLine (pairedSelector a))).toProfinite.toTop ≃ₜ+ Ambient) ∧
+                  CommonCofinalObservation (allFiniteObservation (selectorLine (pairedSelector a)))
+                    fixedComputableObservation
+'RealizationBoundaries.computable_observationModulus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.computable_observationValid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.computable_observationAddCode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.computable_observationNegCode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.computable_observationRestrictionCode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.allFiniteObservation_fixed_computable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.every_set_degree_with_fixed_computable_observation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

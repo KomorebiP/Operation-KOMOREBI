@@ -1,0 +1,37 @@
+RealizationBoundaries.OracleGraphSearch.pair {X : ℕ → Bool} {f g : ℕ →. ℕ} (sf : OracleGraphSearch X f)
+  (sg : OracleGraphSearch X g) : OracleGraphSearch X fun n => (f n).bind fun u => Part.map (Nat.pair u) (g n)
+RealizationBoundaries.OracleGraphSearch.comp {X : ℕ → Bool} {f g : ℕ →. ℕ} (sf : OracleGraphSearch X f)
+  (sg : OracleGraphSearch X g) : OracleGraphSearch X fun n => (g n).bind f
+RealizationBoundaries.OracleGraphSearch.prec {X : ℕ → Bool} {f g : ℕ →. ℕ} (sf : OracleGraphSearch X f)
+  (sg : OracleGraphSearch X g) : OracleGraphSearch X fun p => oraclePartialRec f g (Nat.unpair p).1 (Nat.unpair p).2
+RealizationBoundaries.OracleGraphSearch.rfind {X : ℕ → Bool} {f : ℕ →. ℕ} (sf : OracleGraphSearch X f) :
+  OracleGraphSearch X fun a => Nat.rfind fun i => (fun m => decide (m = 0)) <$> f (Nat.pair a i)
+RealizationBoundaries.OracleGraphSearch.recTest_correct {X : ℕ → Bool} {f g : ℕ →. ℕ} (sf : OracleGraphSearch X f)
+  (sg : OracleGraphSearch X g) (a n y t : ℕ) :
+  sf.recTest sg (Nat.pair (Nat.pair a n) (Nat.pair y t)) = 0 ↔
+    sf.test (Nat.pair a (Nat.pair (OracleGraphSearch.traceState t 0) (OracleGraphSearch.traceProof t 0))) = 0 ∧
+      (∀ i < n,
+          sg.test
+              (Nat.pair (Nat.pair a (Nat.pair i (OracleGraphSearch.traceState t i)))
+                (Nat.pair (OracleGraphSearch.traceState t (i + 1)) (OracleGraphSearch.traceProof t (i + 1)))) =
+            0) ∧
+        OracleGraphSearch.traceState t n = y
+RealizationBoundaries.OracleGraphSearch.minTest_correct {X : ℕ → Bool} {f : ℕ →. ℕ} (sf : OracleGraphSearch X f)
+  (a y t : ℕ) :
+  sf.minTest (Nat.pair a (Nat.pair y t)) = 0 ↔
+    (∀ i ≤ y,
+        sf.test
+            (Nat.pair (Nat.pair a i) (Nat.pair (OracleGraphSearch.traceState t i) (OracleGraphSearch.traceProof t i))) =
+          0) ∧
+      (∀ i < y, OracleGraphSearch.traceState t i ≠ 0) ∧ OracleGraphSearch.traceState t y = 0
+RealizationBoundaries.recursiveIn_has_graphSearch (X : ℕ → Bool) (f : ℕ →. ℕ)
+  (hf : Nat.RecursiveIn {selectorOracle X} f) : Nonempty (OracleGraphSearch X f)
+RealizationBoundaries.oracleEnumerable_has_total_search (X : ℕ → Bool) (A : Set ℕ) (hA : OracleEnumerable X A) :
+  ∃ test, OracleComputable X test ∧ ∀ (n : ℕ), n ∈ A ↔ ∃ t, test (Nat.pair n t) = 0
+'RealizationBoundaries.recursiveIn_has_graphSearch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.oracleEnumerable_has_total_search' depends on axioms: [propext, Classical.choice, Quot.sound]
+0
+true
+true
+0
+true

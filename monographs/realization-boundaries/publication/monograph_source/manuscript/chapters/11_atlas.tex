@@ -1,0 +1,122 @@
+\chapter{A worked arithmetic atlas}
+\label{ch:atlas}
+\chapterintro{The examples below retain the infinite definition while calculating only the finite coordinates that a particular operation needs. They make the cocycle and the root certificates visible.}
+
+\section{The empty selector}
+Take $A=\varnothing$. The selected primes are
+\[
+S_A=\{2,5,11,17,23,31,41,47,\ldots\},
+\]
+namely the even-indexed primes. The first coordinates of three rational lifts are
+\begin{center}
+\begin{tabular}{@{}crrrrrr@{}}
+\toprule
+$p$&2&3&5&7&11&13\\\midrule
+$u_A=s_A(1)$&1&0&1&0&1&0\\
+$s_A(1/2)$&0&0&3&0&6&0\\
+$s_A(1/3)$&1&0&2&0&4&0\\\bottomrule
+\end{tabular}
+\end{center}
+Each residue is exact. At $p=2$, the lift of $1/2$ is set to zero because the denominator is not invertible. At $p=5$, its value is $3$ because $2\cdot3=1$ in $\F_5$.
+
+Doubling the half-lift agrees with $u_A$ at every prime except $2$. Therefore
+\[
+2(1/2,0)=(1,e_2).
+\]
+The element $u_A$ has no half in the group: there is no $y$ with $2y=u_A$, because its $2$-coordinate is nonzero. The apparent candidate $(1/2,0)$ misses by precisely the certificate coordinate.
+
+At the unselected prime $3$, the coordinate of $u_A$ is zero. In this case
+\[
+3(1/3,0)=(1,0).
+\]
+The three roots are
+\[
+(1/3,0),\qquad(1/3,e_3),\qquad(1/3,2e_3).
+\]
+Their differences form $G_A[3]=C_3$, as predicted by Proposition~\ref{thm:rootfiber}.
+
+\section{A successful composite-root calculation}
+Let
+\[
+g=s_A(1)+e_2=(1,e_2).
+\]
+Its coordinate at $2$ is $1+1=0$, and its coordinate at $3$ is zero. Thus the multiplier $6$ has no obstructing coordinate.
+
+The rational candidate is $t=1/6$. At a selected prime other than $2$, multiplication by $6$ recovers the coordinate of $u_A$ because the denominator is invertible, except possibly at $3$, which is unselected. At $2$, both sides are zero. Hence
+\[
+6(1/6,0)=(1,e_2)=g.
+\]
+Every other root is obtained by adding an arbitrary element of $C_2\oplus C_3$. There are exactly six roots. This calculation exhibits a positive certificate without searching an unbounded domain.
+
+Now contrast $u_A$ itself. The same multiplier $6$ fails at the prime $2$. No change at the $3$-coordinate and no choice of rational representative can repair that obstruction while keeping the target fixed.
+
+\section{A torsion correction that cannot be discarded}
+Take the purely torsion target $e_3$ and multiplier $2$. The root criterion succeeds because the target has zero $2$-coordinate. Its rational part is zero, but the answer is not the zero element:
+\[
+2(0,2e_3)=(0,e_3).
+\]
+In $\F_3$, multiplication by $2$ sends $2$ to $1$. This is the simplest example showing why the finite correction in the root algorithm is necessary even when the rational coordinate causes no difficulty.
+
+\section{Finite quotient representatives}
+For any target $g$ and positive multiplier $m$, define the finite vector
+\[
+d_m(g)=\sum_{p\mid m}g_p e_p.
+\]
+Then $g-d_m(g)$ has zero coordinates at every prime dividing $m$. The root theorem provides a witness that it belongs to $mG_A$. Thus $d_m(g)$ is an exact finite representative of the coset of $g$.
+
+For $m=12$, only coordinates $2$ and $3$ matter. The six representatives are
+\[
+0,\ e_2,\ e_3,\ 2e_3,\ e_2+e_3,\ e_2+2e_3.
+\]
+The vector $e_2+e_3$ generates this quotient, which is $C_6$, not $C_{12}$. Repeated prime powers in the multiplier do not create additional coordinates.
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=\textwidth]{\figfile{07_squarefree_quotients.pdf}}
+\caption{The exact order of $G_A/mG_A$ for $1\le m\le30$ is $\rad(m)$. The values are independent of the selector. This plot evaluates the theorem's arithmetic formula, rather than estimating the size of an unknown quotient.}
+\label{fig:radical}
+\end{figure}
+
+\section{Changing one selector bit}
+Let $B=\{0\}$, so the first pair changes from selecting $2$ to selecting $3$. The groups $G_A$ and $G_B$ are equal as subgroups of $P$. Their half-lift coordinates differ, however:
+\[
+s_A(1/2)-s_B(1/2)=e_3.
+\]
+At $p=2$, both half-lifts are zero. At $p=3$, the $B$ lift is $2$, so its negative is $1$. Therefore the same ambient element has normal forms
+\[
+(1/2,0)_A=(1/2,e_3)_B.
+\]
+Doubling the right-hand side in the $B$ group gives
+\[
+(1,2e_3)_B,
+\]
+which is the transported form of $(1,e_2)_A$. The correction in \eqref{eq:transport} is required to compare the two group laws. Merely reusing the same pair $(r,d)$ under a new selector changes the represented element.
+
+\section{A finite tail exception}
+Consider an infinite-order element
+\[
+x=s_A(5/6)+2e_7.
+\]
+An exception set for its signature is $\{2,3,5,7\}$. Outside these primes, the denominator is invertible, the numerator is nonzero, and the torsion correction vanishes. Thus the root pattern of $x$ agrees with that of $u_A$ in every later prime pair.
+
+This example illustrates the nonuniform step in Theorem~\ref{thm:degree}. In known normal-form coordinates the exception set is computable. In an arbitrary unmarked copy, a reduction may use a finite exception bound without uniformly discovering it from the copy.
+
+\section{Reproducing the examples}
+From the package root, the following uses the supplied standard-library implementation:
+\begin{lstlisting}[language=Python]
+from fractions import Fraction
+from src.dense_lift_groups import DenseLiftGroup, Element
+
+G = DenseLiftGroup(lambda n: False)
+u = Element.make(1)
+half = Element.make(Fraction(1, 2))
+
+assert G.scale(2, half) == Element.make(1, {2: 1})
+assert G.root(u, 2).obstructing_prime == 2
+third = G.root(u, 3).root
+assert third is not None and G.scale(3, third) == u
+
+x = Element.make(1, {2: 1})
+sixth = G.root(x, 6).root
+assert sixth is not None and G.scale(6, sixth) == x
+\end{lstlisting}
+Only computable selector examples are executed. A callable supplied as an oracle is assumed to return the correct selector bit. The implementation does not pretend to evaluate the halting set or an arbitrary noncomputable parameter.

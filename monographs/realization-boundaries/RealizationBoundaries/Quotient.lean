@@ -1,0 +1,109 @@
+import RealizationBoundaries.Ambient
+import Mathlib.GroupTheory.DivisibleHull
+import Mathlib.Algebra.Module.TransferInstance
+import Mathlib.Algebra.Module.Rat
+
+/-!
+# Unique division in the actual quotient P/D
+
+The rational module structure is transported only after the concrete quotient
+has been proved uniquely divisible. No rational-space witness is postulated.
+-/
+set_option autoImplicit false
+set_option backward.isDefEq.respectTransparency false
+noncomputable section
+namespace RealizationBoundaries
+
+def TailSpace := Ambient ⧸ finiteSupport
+
+instance tailAddCommGroup : AddCommGroup TailSpace :=
+  QuotientAddGroup.Quotient.addCommGroup finiteSupport
+
+def quotientMap : Ambient →+ TailSpace := QuotientAddGroup.mk' finiteSupport
+
+@[simp] theorem quotientMap_eq_zero_iff (x : Ambient) :
+    quotientMap x = 0 ↔ x ∈ finiteSupport :=
+  QuotientAddGroup.eq_zero_iff x
+
+theorem quotientMap_surjective : Function.Surjective quotientMap :=
+  QuotientAddGroup.mk'_surjective finiteSupport
+
+theorem quotientMap_eq_iff (x y : Ambient) :
+    quotientMap x = quotientMap y ↔ x - y ∈ finiteSupport := by
+  rw [← sub_eq_zero, ← map_sub, quotientMap_eq_zero_iff]
+
+/-- Coordinate division is zero at the exceptional primes because inverse zero is zero. -/
+def coordinateDivide (m : ℕ) (x : Ambient) : Ambient :=
+  fun p => (m : Coordinate p)⁻¹ * x p
+
+/-- Division has a genuinely finite error in the infinite product. -/
+theorem division_defect_finite {m : ℕ} (hm : 0 < m) (x : Ambient) :
+    m • coordinateDivide m x - x ∈ finiteSupport := by
+  apply (exceptional_finite hm).subset
+  intro p hp
+  by_contra hn
+  have hcast : (m : Coordinate p) ≠ 0 := (coordinate_cast_eq_zero m p).not.mpr hn
+  apply hp
+  rw [Pi.sub_apply, coordinate_nsmul]
+  change (m : Coordinate p) * ((m : Coordinate p)⁻¹ * x p) - x p = 0
+  rw [mul_inv_cancel_left₀ hcast, sub_self]
+
+theorem tail_nsmul_surjective {m : ℕ} (hm : 0 < m) :
+    Function.Surjective (fun v : TailSpace => m • v) := by
+  intro v
+  obtain ⟨x, rfl⟩ := quotientMap_surjective v
+  refine ⟨quotientMap (coordinateDivide m x), ?_⟩
+  change m • quotientMap (coordinateDivide m x) = quotientMap x
+  rw [← map_nsmul]
+  exact (quotientMap_eq_iff _ _).mpr (division_defect_finite hm x)
+
+theorem tail_nsmul_injective {m : ℕ} (hm : 0 < m) :
+    Function.Injective (fun v : TailSpace => m • v) := by
+  intro v w hvw
+  obtain ⟨x, rfl⟩ := quotientMap_surjective v
+  obtain ⟨y, rfl⟩ := quotientMap_surjective w
+  apply (quotientMap_eq_iff x y).mpr
+  apply finiteSupport_of_nsmul hm
+  apply (quotientMap_eq_zero_iff _).mp
+  change m • quotientMap x = m • quotientMap y at hvw
+  rw [map_nsmul, map_sub, nsmul_sub, hvw, sub_self]
+
+/-- Monograph Theorem 2.6: every positive integer acts bijectively on P/D. -/
+theorem tail_nsmul_bijective {m : ℕ} (hm : 0 < m) :
+    Function.Bijective (fun v : TailSpace => m • v) :=
+  ⟨tail_nsmul_injective hm, tail_nsmul_surjective hm⟩
+
+instance : IsAddTorsionFree TailSpace where
+  nsmul_right_injective := by
+    intro n hn
+    exact tail_nsmul_injective (Nat.pos_of_ne_zero hn)
+
+/-- The divisible hull contributes no new points after unique division is established. -/
+theorem tail_to_divisibleHull_surjective :
+    Function.Surjective (DivisibleHull.coeAddMonoidHom TailSpace : TailSpace →+ DivisibleHull TailSpace) := by
+  intro z
+  induction z using DivisibleHull.ind with
+  | mk v n =>
+    obtain ⟨w, hw⟩ := tail_nsmul_surjective n.property v
+    refine ⟨w, ?_⟩
+    change DivisibleHull.mk w 1 = DivisibleHull.mk v n
+    rw [DivisibleHull.mk_eq_mk_iff_smul_eq_smul]
+    convert! hw using 1
+    simp
+
+def tailDivisibleEquiv : TailSpace ≃+ DivisibleHull TailSpace :=
+  AddEquiv.ofBijective (DivisibleHull.coeAddMonoidHom TailSpace)
+    ⟨DivisibleHull.coe_injective, tail_to_divisibleHull_surjective⟩
+
+instance tailRationalModule : Module ℚ TailSpace := tailDivisibleEquiv.module ℚ
+
+/-- The rational action is uniquely determined by the underlying quotient group. -/
+theorem tail_rational_module_unique : Subsingleton (Module ℚ TailSpace) := inferInstance
+
+/-- Clearing a positive denominator in the installed rational action is valid. -/
+theorem tail_denominator_clear {m : ℕ} (hm : 0 < m) (v : TailSpace) :
+    m • ((m : ℚ)⁻¹ • v) = v := by
+  rw [← Nat.cast_smul_eq_nsmul ℚ, smul_smul]
+  simp [Nat.ne_of_gt hm]
+
+end RealizationBoundaries

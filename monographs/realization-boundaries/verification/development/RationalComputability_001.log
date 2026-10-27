@@ -1,0 +1,68 @@
+RealizationBoundaries/RationalComputability.lean:46:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  c.denominator * e.denominator - Nat.succ 0 + Nat.succ 0
+in the target expression
+  (↑(c.1.1 * (e.2 + 1) + e.1.1 * (c.2 + 1)) - ↑(c.1.2 * (e.2 + 1) + e.1.2 * (c.2 + 1))) /
+      ↑((c.2 + 1) * (e.2 + 1) - 1 + 1) =
+    (↑c.1.1 - ↑c.1.2) / ↑(c.2 + 1) + (↑e.1.1 - ↑e.1.2) / ↑(e.2 + 1)
+
+c e : RationalCode
+hd : 0 < c.denominator * e.denominator
+⊢ (↑(c.1.1 * (e.2 + 1) + e.1.1 * (c.2 + 1)) - ↑(c.1.2 * (e.2 + 1) + e.1.2 * (c.2 + 1))) /
+      ↑((c.2 + 1) * (e.2 + 1) - 1 + 1) =
+    (↑c.1.1 - ↑c.1.2) / ↑(c.2 + 1) + (↑e.1.1 - ↑e.1.2) / ↑(e.2 + 1)
+RealizationBoundaries/RationalComputability.lean:82:33: error: typeclass instance problem is stuck
+  Primcodable ?m.18
+
+Note: Lean will not try to resolve this typeclass instance problem because the type argument to `Primcodable` is a metavariable. This argument must be fully determined before Lean will try to resolve the typeclass.
+
+Hint: Adding type annotations and supplying implicit arguments to functions can give Lean more information for typeclass resolution. For example, if you have a variable `x` that you intend to be a `Nat`, but Lean reports it as having an unresolved type like `?m`, replacing `x` with `(x : Nat)` can get typeclass resolution un-stuck.
+RealizationBoundaries/RationalComputability.lean:96:33: error: typeclass instance problem is stuck
+  Primcodable ?m.18
+
+Note: Lean will not try to resolve this typeclass instance problem because the type argument to `Primcodable` is a metavariable. This argument must be fully determined before Lean will try to resolve the typeclass.
+
+Hint: Adding type annotations and supplying implicit arguments to functions can give Lean more information for typeclass resolution. For example, if you have a variable `x` that you intend to be a `Nat`, but Lean reports it as having an unresolved type like `?m`, replacing `x` with `(x : Nat)` can get typeclass resolution un-stuck.
+RealizationBoundaries/RationalComputability.lean:125:6: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 0
+  a ≥ 0
+  a ≥ 1
+  a - b ≤ 0
+where
+ a := ↑n
+ b := ↑((fun x1 x2 => x1 + x2) p.1 p.2)
+RealizationBoundaries/RationalComputability.lean:162:11: error: Application type mismatch: The argument
+  rfl
+has type
+  ?m.50 = ?m.50
+but is expected to have type
+  True
+in the application
+  And.intro rfl
+RealizationBoundaries/RationalComputability.lean:176:10: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  -↑(c.negative - c.positive) / ↑c.divisor
+in the target expression
+  -↑(c.negative - c.positive) / ↑(c.denominator.gcd (c.negative - c.positive)) =
+    -↑((c.negative - c.positive) / c.denominator.gcd (c.negative - c.positive))
+
+case neg.left
+c : RationalCode
+h : ¬c.negative ≤ c.positive
+hle : c.positive ≤ c.negative
+hsub : c.positive - c.negative = 0
+he : ↑c.positive - ↑c.negative = -↑(c.negative - c.positive)
+hdvd : ↑c.divisor ∣ ↑(c.negative - c.positive)
+⊢ -↑(c.negative - c.positive) / ↑(c.denominator.gcd (c.negative - c.positive)) =
+    -↑((c.negative - c.positive) / c.denominator.gcd (c.negative - c.positive))
+RealizationBoundaries/RationalComputability.lean:177:6: error: Tactic `rfl` failed: Expected the goal to be a binary relation
+
+Hint: Reflexivity tactics can only be used on goals of the form `x ~ x` or `R x x`
+
+case neg.right
+c : RationalCode
+h : ¬c.negative ≤ c.positive
+hle : c.positive ≤ c.negative
+hsub : c.positive - c.negative = 0
+he : ↑c.positive - ↑c.negative = -↑(c.negative - c.positive)
+hdvd : ↑c.divisor ∣ ↑(c.negative - c.positive)
+⊢ True

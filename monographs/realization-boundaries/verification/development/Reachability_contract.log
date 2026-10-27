@@ -1,0 +1,27 @@
+RealizationBoundaries.finite_description_outputs_countable.{u, v} {Alphabet : Type u} {Target : Type v}
+  [Countable Alphabet] (g : FiniteDescriptionGrammar Alphabet Target) : g.outputs.Countable
+RealizationBoundaries.finite_description_cardinal_bound.{u, v} {Alphabet : Type u} {Target : Type v}
+  [Countable Alphabet] (g : FiniteDescriptionGrammar Alphabet Target) : Cardinal.mk ↑g.outputs ≤ Cardinal.aleph0
+RealizationBoundaries.graphReach_iff_finite_path.{u} {I : Type u} (E : I → I → Prop) (F : Set I) (j : I) :
+  GraphReach E F j ↔ ∃ i ∈ F, Relation.ReflTransGen E i j
+RealizationBoundaries.operator_hull_reachable.{u, v} {I : Type u} (M : I → Type v) [(i : I) → AddCommGroup (M i)]
+  (E : I → I → Prop) (O : Set (AddMonoid.End ↥(packetSum M))) (S : Set ↥(packetSum M))
+  (hO : ∀ T ∈ O, ∀ (i j : I), ¬E i j → ∀ (a : M i), packetTransfer M T i j a = 0) :
+  primitiveOperatorHull O S ≤ supportedPackets M {j | GraphReach E (seedPackets M S) j}
+RealizationBoundaries.unreachable_packet_obstructs.{u, v} {I : Type u} (M : I → Type v) [(i : I) → AddCommGroup (M i)]
+  (E : I → I → Prop) (O : Set (AddMonoid.End ↥(packetSum M))) (S : Set ↥(packetSum M))
+  (hO : ∀ T ∈ O, ∀ (i j : I), ¬E i j → ∀ (a : M i), packetTransfer M T i j a = 0) (j : I)
+  (hj : ¬GraphReach E (seedPackets M S) j) [Nontrivial (M j)] :
+  (∀ x ∈ primitiveOperatorHull O S, ↑x j = 0) ∧ primitiveOperatorHull O S ≠ ⊤
+RealizationBoundaries.unreachable_packet_obstructs_topological.{u, v} {I : Type u} (M : I → Type v)
+  [(i : I) → AddCommGroup (M i)] (E : I → I → Prop) (O : Set (AddMonoid.End ↥(packetSum M))) (S : Set ↥(packetSum M))
+  (hO : ∀ T ∈ O, ∀ (i j : I), ¬E i j → ∀ (a : M i), packetTransfer M T i j a = 0) (j : I)
+  (hj : ¬GraphReach E (seedPackets M S) j) [Nontrivial (M j)] [TopologicalSpace ↥(packetSum M)]
+  [IsTopologicalAddGroup ↥(packetSum M)] [TopologicalSpace (M j)] [T2Space (M j)]
+  (hcontinuous : Continuous ⇑(packetProjection M j)) :
+  (∀ x ∈ (primitiveOperatorHull O S).topologicalClosure, ↑x j = 0) ∧ (primitiveOperatorHull O S).topologicalClosure ≠ ⊤
+'RealizationBoundaries.finite_description_cardinal_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.operator_hull_reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.unreachable_packet_obstructs_topological' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

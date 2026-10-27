@@ -1,0 +1,72 @@
+\chapter{Escaping a fixed finite grammar}
+\label{ch:grammar}
+\chapterintro{A relative diagonal argument can be carried out entirely inside one common-completion class. Because finite selector changes leave the group unchanged, the diagonal must disagree infinitely often.}
+
+\section{Fix the semantics before diagonalizing}
+Let $\mathfrak G$ be a grammar with countably many finite, parameter-free descriptions. Each valid description has one group isomorphism type as its semantics. Enumerate the strings as
+\[
+d_0,d_1,d_2,\ldots
+\]
+and write $R_j$ for the semantic output. Invalid strings may be assigned a fixed dummy group. No decidability assumption is made about validity or evaluation.
+
+For each $j$ whose output lies in the family, choose $B_j\subseteq\N$ such that $R_j\cong G_{B_j}$. For other $j$, set $B_j=\varnothing$. This is a set-theoretic choice of representatives. It is not a procedure for deciding whether an arbitrary description denotes a group in the family.
+
+The isomorphism criterion says that a selector must avoid the whole eventual-equivalence class of $B_j$, not merely disagree at one coordinate. A naive Cantor diagonal with one disagreement for each $j$ would not establish that requirement.
+
+\section{Repeated diagonal coding}
+Fix a computable pairing bijection $\langle j,k\rangle:\N^2\to\N$. For a freely chosen set $C\subseteq\N$, define a new selector $A_C$ by
+\begin{align}
+\one_{A_C}(2\langle j,k\rangle)
+ &=1-\one_{B_j}(2\langle j,k\rangle),\label{eq:diageven}\\
+\one_{A_C}(2\langle j,k\rangle+1)
+ &=\one_C(j).\label{eq:diagodd}
+\end{align}
+Every natural number has exactly one of these forms, so the rules define a total subset. The even positions defeat grammar outputs. The odd positions retain an independent continuum of choices, with each chosen bit repeated infinitely often.
+
+\begin{theorem}[Escape within one profinite-completion class]
+\label{thm:escape}
+For every $C\subseteq\N$, the group $G_{A_C}$ is not isomorphic to any output of $\mathfrak G$. Distinct $C$ give pairwise nonisomorphic groups, with no embeddings in either direction. Every group is countable, reduced, residually finite, and has profinite completion $P$.
+\end{theorem}
+\begin{proof}
+Fix a description index $j$. If $R_j$ is outside the family, it cannot be isomorphic to $G_{A_C}$. Otherwise rule \eqref{eq:diageven} makes $A_C$ disagree with $B_j$ at every index $2\langle j,k\rangle$. These are infinitely many distinct indices, so $A_C\neqfin B_j$. Theorem~\ref{thm:isoclass} excludes the isomorphism.
+
+If $C\ne C'$, choose $j$ at which they differ. Rule \eqref{eq:diagodd} makes $A_C$ and $A_{C'}$ differ at infinitely many odd indices. Theorems~\ref{thm:isoclass} and \ref{thm:homobstruction} then give nonisomorphism and nonembeddability. The remaining properties hold for every paired-prime group.
+\end{proof}
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=\textwidth]{\figfile{06_repeated_diagonal.pdf}}
+\caption{Two infinite coordinate blocks are allocated to every $j$. On the even block the selector opposes the representative $B_j$ forever. On the odd block it repeats the free bit $C(j)$ forever. Both repetitions are necessary to survive the quotient by finite changes.}
+\label{fig:diagonal}
+\end{figure}
+
+\section{The complexity consequence}
+The theorem implies
+\[
+K_{\mathfrak G}(G_{A_C})=+\infty
+\]
+for every $C$. It produces continuum many distinct isomorphism types outside the grammar while preserving all the finite quotient data.
+
+This is a statement relative to a specified language and semantics. The definition of $A_C$ may use the entire semantic table of that language in the surrounding mathematical theory. It does not yield an effective evaluator for the table. Nor does it produce a paradox by defining in one paragraph an object claimed to be beyond every possible finite definition. The object escapes the fixed internal grammar, not all larger metatheories.
+
+The same distinction applies to a language extended by a new constant. A constant naming one previously absent group enlarges the language. If it is only a semantic constant, it need not give algorithms for that group's operations. A new realization rule must be assessed under its actual semantic and effective contract.
+
+\section{Monotonicity under grammar extension}
+\begin{proposition}[Admissible expansion]
+\label{thm:grammarextension}
+Suppose every valid description in $\mathfrak G$ translates to a valid description in $\mathfrak H$ with the same semantic group. Then every $\mathfrak G$-realizable group is $\mathfrak H$-realizable. If every translated description has length at most $f(\lvert d\rvert)$, then
+\[
+K_{\mathfrak H}(G)\le f(K_{\mathfrak G}(G))
+\]
+whenever $K_{\mathfrak G}(G)$ is finite.
+\end{proposition}
+\begin{proof}
+Translate a shortest valid $\mathfrak G$ description of $G$. Its semantic output remains $G$, and its length has the stated bound.
+\end{proof}
+An obstruction to a small grammar can therefore disappear after an admissible expansion. The power-of-two selector from Chapter~\ref{ch:spectrum} illustrates this concretely: a unary finite-state selector fails, while a binary one succeeds. Such a result characterizes a boundary rather than discrediting the larger realization program.
+
+\section{Uniform families and individual instances}
+The expression $A\mapsto G_A$ is one uniform mathematical construction. It is not a finite description of each arbitrary instance unless the selector is also described. A single family can contain uncountably many values even though a parameter-free finite syntax has only countably many strings.
+
+For computable selectors, a program for $A$ provides a finite effective input to the normal-form construction. For noncomputable but finitely definable selectors, one obtains a finite semantic description without an effective copy. For selectors outside a chosen finite-description language, the family formula still proves existence relative to that selector, but does not internalize it into that language.
+
+These are exact distinctions between a construction schema, its parameters, and an individual realized object. They are the appropriate replacement for an absolute label such as ``non-Komorebi group.''

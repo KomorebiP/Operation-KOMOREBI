@@ -1,0 +1,39 @@
+RealizationBoundaries/ClassificationConsequences.lean:25:40: error: This simp argument is unused:
+  ha
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [toggleBit]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/ClassificationConsequences.lean:100:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (pairedCommonCompletionEquiv a b) (ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(pairedGroup a)) x)
+in the target expression
+  (pairedCommonCompletionEquiv a b)
+      (ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(preimage (selectorLine (pairedSelector a)))) x) =
+    (pairedCommonCompletionEquiv a b)
+      (ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(preimage (selectorLine (pairedSelector a)))) y)
+
+a b : ℕ → Bool
+h : {n | a n ≠ b n}.Infinite
+f : ↥(pairedGroup a) →+ ↥(pairedGroup b)
+hf :
+  ∀ (x : ↥(pairedGroup a)),
+    (pairedCommonCompletionEquiv a b) (ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(pairedGroup a)) x) =
+      ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(pairedGroup b)) (f x)
+x y : ↥(pairedGroup a)
+hxy : f x = f y
+⊢ (pairedCommonCompletionEquiv a b)
+      (ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(preimage (selectorLine (pairedSelector a)))) x) =
+    (pairedCommonCompletionEquiv a b)
+      (ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(preimage (selectorLine (pairedSelector a)))) y)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    x
+  has type
+    ↥(pairedGroup a)
+  but is expected to have type
+    ↑(AddGrpCat.of ↥(preimage (selectorLine (pairedSelector a))))
+  in the application
+    ProfiniteAddGrp.ProfiniteCompletion.etaFn (AddGrpCat.of ↥(preimage (selectorLine (pairedSelector a)))) x

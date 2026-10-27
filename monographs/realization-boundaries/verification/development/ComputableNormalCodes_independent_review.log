@@ -1,0 +1,20 @@
+false
+false
+false
+false
+true
+true
+RealizationBoundaries.nativeNormalValue_surjective (a : ℕ → Bool) : Function.Surjective (nativeNormalValue a)
+RealizationBoundaries.nativeNormalEqual_exact (a : ℕ → Bool) (c e : NativeNormalCode) :
+  nativeNormalEqual c e = true ↔ nativeNormalValue a c = nativeNormalValue a e
+RealizationBoundaries.primrec_nativeNormalEqual : Primrec₂ nativeNormalEqual
+RealizationBoundaries.normalAddCell_cast (a : ℕ → Bool) (c e : NativeNormalCode) (p : RealizationBoundaries.Prime) :
+  ↑(normalAddCell a (Nat.pair (Nat.pair (Encodable.encode c) (Encodable.encode e)) ↑p)) =
+    finiteCodeValue c.2 p + finiteCodeValue e.2 p + sectionDefect (pairedSelector a) c.1.value e.1.value p
+RealizationBoundaries.normalAddResidues_exact (a : ℕ → Bool) (c e : NativeNormalCode) :
+  finiteCodeValue (normalAddResidues a c e) =
+    finiteCodeValue c.2 + finiteCodeValue e.2 + sectionDefect (pairedSelector a) c.1.value e.1.value
+RealizationBoundaries.nativeNormalAdd_exact (a : ℕ → Bool) (c e : NativeNormalCode) :
+  nativeNormalValue a (nativeNormalAdd a c e) = nativeNormalValue a c + nativeNormalValue a e
+'RealizationBoundaries.nativeNormalEqual_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.nativeNormalAdd_exact' depends on axioms: [propext, Classical.choice, Quot.sound]

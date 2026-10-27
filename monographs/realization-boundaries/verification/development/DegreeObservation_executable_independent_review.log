@@ -1,0 +1,36 @@
+[2, 3, 5, 7, 11, 13, 17, 19]
+[1, 2, 6, 30, 210, 2310]
+true
+false
+1
+29
+5
+0
+RealizationBoundaries.observationPrimeProgram_eq (n : ℕ) : observationPrimeProgram n = ↑(primeAt n)
+RealizationBoundaries.observationModulusProgram_eq (n : ℕ) : observationModulusProgram n = observationModulus n
+RealizationBoundaries.observationValidProgram_eq (n x : ℕ) : observationValidProgram n x = decide (observationValid n x)
+RealizationBoundaries.observationAddProgram_eq (n x y : ℕ) : observationAddProgram n x y = observationAddCode n x y
+RealizationBoundaries.observationNegProgram_eq (n x : ℕ) : observationNegProgram n x = observationNegCode n x
+RealizationBoundaries.observationRestrictionProgram_eq (m x : ℕ) :
+  observationRestrictionProgram m x = observationRestrictionCode m x
+RealizationBoundaries.computable_observationIndexRelation :
+  Computable fun k => decide ((Nat.unpair k).2 ≤ (Nat.unpair k).1)
+RealizationBoundaries.computable_observationEquality : Computable fun k => decide ((Nat.unpair k).1 = (Nat.unpair k).2)
+RealizationBoundaries.IsReducedAddGroup.{u_1} (H : Type u_1) [AddGroup H] : Prop
+RealizationBoundaries.paired_isReduced (a : ℕ → Bool) : IsReducedAddGroup ↥(pairedGroup a)
+RealizationBoundaries.every_set_degree_with_fixed_computable_observation (d : SetTuringDegree) :
+  ∃ a,
+    selectorTuringDegree a = ↑d ∧
+      HasLeastPresentationDegree ↥(pairedGroup a) ↑d ∧
+        Countable ↥(pairedGroup a) ∧
+          Infinite ↥(pairedGroup a) ∧
+            IsReducedAddGroup ↥(pairedGroup a) ∧
+              AddGroup.ResiduallyFinite ↥(pairedGroup a) ∧
+                Nonempty (↑(CanonicalCompletion (selectorLine (pairedSelector a))).toProfinite.toTop ≃ₜ+ Ambient) ∧
+                  CommonCofinalObservation (allFiniteObservation (selectorLine (pairedSelector a)))
+                    fixedComputableObservation
+'RealizationBoundaries.observationPrimeProgram_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.observationModulusProgram_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RealizationBoundaries.every_set_degree_with_fixed_computable_observation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

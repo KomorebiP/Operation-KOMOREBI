@@ -1,0 +1,39 @@
+RealizationBoundaries/RootAlgorithm.lean:221:4: error: Tactic `rfl` failed: The left-hand side
+  ↑(((if h : Nat.Prime 0 then ZMod.val (↑x ⟨0, h⟩) else 0) ::
+            List.ofFn fun i => if h : Nat.Prime (↑i + 1) then ZMod.val (↑x ⟨↑i + 1, ⋯⟩) else 0)[↑p]?.getD
+      0)
+is not definitionally equal to the right-hand side
+  ↑x p
+
+case pos
+x : ↥finiteSupport
+hf : ↑x ∈ finiteSupport := x.property
+s : Finset Prime := Set.Finite.toFinset hf
+N : ℕ := s.sup Subtype.val + 1
+d : List ℕ := List.ofFn fun i => if h : Nat.Prime ↑i then ZMod.val (↑x ⟨↑i, h⟩) else 0
+p : Prime
+hp : ↑p < N
+⊢ ↑(((if h : Nat.Prime 0 then ZMod.val (↑x ⟨0, h⟩) else 0) ::
+              List.ofFn fun i => if h : Nat.Prime (↑i + 1) then ZMod.val (↑x ⟨↑i + 1, ⋯⟩) else 0)[↑p]?.getD
+        0) =
+    ↑x p
+RealizationBoundaries/RootAlgorithm.lean:228:40: error: Type mismatch: After simplification, term
+  Nat.le_of_not_gt hp
+ has type
+  N ≤ ↑p
+but is expected to have type
+  s.sup Subtype.val < ↑p
+RealizationBoundaries/RootAlgorithm.lean:220:30: error: This simp argument is unused:
+  hp
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [finiteCodeValue, d, p.property]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/RootAlgorithm.lean:220:34: error: This simp argument is unused:
+  p.property
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [finiteCodeValue, d, hp]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

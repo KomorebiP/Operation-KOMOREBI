@@ -1,0 +1,28 @@
+RealizationBoundaries/RootAlgorithm.lean:222:4: error: Tactic `rfl` failed: The left-hand side
+  ↑((if h : True then some (ZMod.val (↑x ⟨↑p, ⋯⟩)) else none).getD 0)
+is not definitionally equal to the right-hand side
+  ↑x p
+
+case pos
+x : ↥finiteSupport
+hf : ↑x ∈ finiteSupport := x.property
+s : Finset Prime := Set.Finite.toFinset hf
+N : ℕ := s.sup Subtype.val + 1
+d : List ℕ := List.ofFn fun i => if h : Nat.Prime ↑i then ZMod.val (↑x ⟨↑i, h⟩) else 0
+p : Prime
+hp : ↑p < N
+⊢ ↑((if h : True then some (ZMod.val (↑x ⟨↑p, ⋯⟩)) else none).getD 0) = ↑x p
+RealizationBoundaries/RootAlgorithm.lean:221:6: error: This simp argument is unused:
+  Option.getD_some
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [finiteCodeValue, d, List.getElem?_ofFn, hp, dite_eq_left p.property, ZMod.natCast_zmod_val]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+RealizationBoundaries/RootAlgorithm.lean:221:24: error: This simp argument is unused:
+  ZMod.natCast_zmod_val
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [finiteCodeValue, d, List.getElem?_ofFn, hp, dite_eq_left p.property, Option.getD_some]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

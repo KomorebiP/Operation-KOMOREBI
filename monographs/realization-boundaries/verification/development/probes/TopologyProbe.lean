@@ -1,0 +1,12 @@
+import RealizationBoundaries.CompletionConsequences
+open RealizationBoundaries
+#check ContinuousAddEquiv.toHomeomorph
+#check Homeomorph.isEmbedding
+#check Topology.IsEmbedding.comp
+#check Topology.IsEmbedding.isInducing
+#check Topology.IsInducing.eq_induced
+#check isEmbedding_subtype_val
+#check AddEquiv.subgroupCongr
+#check AddEquiv.ofEq
+#check AddMonoidHom.congr
+#check TopologicalSpace.induced_compose

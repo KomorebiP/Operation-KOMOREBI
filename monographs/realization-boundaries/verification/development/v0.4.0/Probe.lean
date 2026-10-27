@@ -1,0 +1,19 @@
+import RealizationBoundaries.CompletionConsequences
+import RealizationBoundaries.DiagonalAutomorphisms
+open CategoryTheory RealizationBoundaries
+#check ProfiniteAddGrp.profiniteCompletion
+#check ProfiniteAddGrp.ProfiniteCompletion.lift
+#check ProfiniteAddGrp.ProfiniteCompletion.lift_eta
+#check ProfiniteAddGrp.ProfiniteCompletion.lift_unique
+#check ProfiniteAddGrp.ofHom
+#check AddGrpCat.ofHom
+#check ContinuousAddMonoidHom.comp
+#check ContinuousAddEquiv.toContinuousAddMonoidHom
+#check AddMonoid.End
+#check AddEquiv.conj
+#check CategoryTheory.Functor.map_isIso
+#check ConcreteCategory.congr_hom
+#check Topology.IsEmbedding.continuous_iff
+#check AddGrpCat.comp_apply
+#check CategoryTheory.ConcreteCategory.isIso_iff_bijective
+#check ProfiniteAddGrp.isIso_iff_bijective
