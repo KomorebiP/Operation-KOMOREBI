@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Upgrade packaging tools
+        run: python -m pip install --upgrade pip
+      - name: Install project
+        run: python -m pip install -e ".[test]"
+      - name: Compile source and examples
+        run: python -m compileall -q src examples
+      - name: Run core tests
+        run: python -m pytest -q -m "not local_suite"
+      - name: Run exact reconstruction example
+        run: python examples/exact_reconstruction.py
+      - name: Run adaptive refinement example
+        run: python examples/adaptive_refinement.py
+
+  build:
+    name: Build wheel
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Upgrade packaging tools
+        run: python -m pip install --upgrade pip
+      - name: Build wheel
+        run: python -m pip wheel . --no-deps --wheel-dir dist
+      - name: Verify wheel in isolated target
+        run: |
+          python -m pip install --target wheel-test dist/*.whl
+          PYTHONPATH=wheel-test python -c "import komorebi_pr_lasm as p; print(p.__version__)"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: komorebi-pr-lasm-wheel
+          path: dist/*.whl
+          if-no-files-found: error

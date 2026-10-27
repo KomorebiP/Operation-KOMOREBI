@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "komorebi-arc2-entry"
+version = "0.4.0"
+description = "Bayesian projector-resolved large signal model and auditable ARC-AGI-2 entry"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Komorebi P."}]
+dependencies = ["numpy>=1.24"]
+keywords = [
+  "ARC-AGI-2",
+  "Bayesian program synthesis",
+  "projector calculus",
+  "large signal model",
+  "Kaggle",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "nbformat>=5", "nbclient>=0.10", "build>=1.2"]
+
+[project.scripts]
+komorebi-arc2 = "komorebi_arc2.entry:main"
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+komorebi_arc2 = ["data/*.json", "py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
