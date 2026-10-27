@@ -1,0 +1,18 @@
+/-- The universal one-seed presentation map, `a ↦ a • x`. -/
+def oneSeedMap (x : M) : A →ₗ[A] M :=
+  LinearMap.toSpanSingleton A M x
+
+@[simp]
+theorem oneSeedMap_apply (x : M) (a : A) :
+    oneSeedMap A M x a = a • x := by
+  rfl
+
+/-- The image of the one-seed map is exactly the cyclic submodule it spans. -/
+theorem range_oneSeedMap (x : M) :
+    LinearMap.range (oneSeedMap A M x) = Submodule.span A \{x\} := by
+  exact LinearMap.range_toSpanSingleton x
+
+/-- A seed generates exactly when its presentation map is surjective. -/
+theorem generates_singleton_iff_surjective (x : M) :
+    Generates A M \{x\} ↔ Function.Surjective (oneSeedMap A M x) := by
+  rw [Generates, ← range_oneSeedMap A M x, LinearMap.range_eq_top]

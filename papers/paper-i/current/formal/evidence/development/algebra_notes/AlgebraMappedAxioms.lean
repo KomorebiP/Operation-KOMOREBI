@@ -1,0 +1,68 @@
+import PaperIRelease.TensorPackets
+import PaperIRelease.AlgebraSupport
+import PaperIRelease.AlgebraDiagonal
+import PaperIRelease.AlgebraTransfer
+import PaperIRelease.GraphReachability
+import PaperIRelease.AlgebraPreorder
+import PaperIRelease.AlgebraQuotient
+import PaperIRelease.AlgebraClassGrouping
+import PaperIRelease.GraphSourceCount
+
+#print axioms Komorebi.PaperIRelease.tensorPackets
+#print axioms Komorebi.PaperIRelease.tensor_packet_range
+#print axioms Komorebi.PaperIRelease.tensorPacketRangeEquiv
+#print axioms Komorebi.PaperIRelease.tensorFactorCoordinates
+#print axioms Komorebi.PaperIRelease.tensorPacketDirectSumCoordinates
+#print axioms Komorebi.PaperIRelease.dualPackets
+#print axioms Komorebi.PaperIRelease.dualPacketRangeEquiv
+#print axioms Komorebi.PaperIRelease.dualPacketCoordinates
+#print axioms Komorebi.PaperIRelease.dualPacketDirectSumCoordinates
+#print axioms Komorebi.PaperIRelease.tensor_transfer_blocks
+#print axioms Komorebi.PaperIRelease.transferBlock_word
+#print axioms Komorebi.PaperIRelease.packetWordSum
+#print axioms Komorebi.PaperIRelease.target_coordinate_active_sum
+#print axioms Komorebi.PaperIRelease.packetSupport_image_subset
+#print axioms Komorebi.PaperIRelease.packetSupport_image_eq_of_noncancellation
+#print axioms Komorebi.PaperIRelease.packetSupport_image_eq_of_single_active
+#print axioms Komorebi.PaperIRelease.diagonalProjection
+#print axioms Komorebi.PaperIRelease.diagonalProjection_idempotent
+#print axioms Komorebi.PaperIRelease.commutes_iff_diagonalProjection
+#print axioms Komorebi.PaperIRelease.commutes_iff_offdiagonal_zero
+#print axioms Komorebi.PaperIRelease.diagonalProjection_range
+#print axioms Komorebi.PaperIRelease.supportSubmodule
+#print axioms Komorebi.PaperIRelease.operatorSupported_iff_ambient
+#print axioms Komorebi.PaperIRelease.supportSubalgebra
+#print axioms Komorebi.PaperIRelease.support_pattern_algebra_criterion
+#print axioms Komorebi.PaperIRelease.packetGeneratedAlgebra
+#print axioms Komorebi.PaperIRelease.generatedAlgebra_le_reachability
+#print axioms Komorebi.PaperIRelease.generatedAlgebra_block_zero
+#print axioms Komorebi.PaperIRelease.generatedAlgebra_hull_le_reachable
+#print axioms Komorebi.PaperIRelease.generatedAlgebra_unreachable_obstruction
+#print axioms Komorebi.PaperIRelease.packetSupport
+#print axioms Komorebi.PaperIRelease.PacketPure
+#print axioms Komorebi.PaperIRelease.packetPure_zero
+#print axioms Komorebi.PaperIRelease.packetPure_of_mem_range
+#print axioms Komorebi.PaperIRelease.packetPure_mem_range
+#print axioms Komorebi.PaperIRelease.packetPure_iff_zero_or_range
+#print axioms Komorebi.PaperIRelease.strictSupportIdeal
+#print axioms Komorebi.PaperIRelease.strictSupport_iff_same_class_zero
+#print axioms Komorebi.PaperIRelease.maximalStrictSteps
+#print axioms Komorebi.PaperIRelease.maximalStrictSteps_attained
+#print axioms Komorebi.PaperIRelease.strictSupportIdeal_pow_eq_bot
+#print axioms Komorebi.PaperIRelease.PreorderClasses
+#print axioms Komorebi.PaperIRelease.classPacketFamily
+#print axioms Komorebi.PaperIRelease.class_maximalStrictSteps
+#print axioms Komorebi.PaperIRelease.preorderDiagonalHom
+#print axioms Komorebi.PaperIRelease.preorderDiagonalHom_surjective
+#print axioms Komorebi.PaperIRelease.preorderDiagonal_kernel_eq
+#print axioms Komorebi.PaperIRelease.preorderStrictIdealQuotientEquiv
+#print axioms Komorebi.PaperIRelease.preorderClassRangeEquiv
+#print axioms Komorebi.PaperIRelease.preorderQuotientDirectSumEquiv
+#print axioms Komorebi.PaperIRelease.PacketCornerCyclic
+#print axioms Komorebi.PaperIRelease.PacketPropagating
+#print axioms Komorebi.PaperIRelease.packetPureSeedRank_le_source_count
+#print axioms Komorebi.PaperIRelease.one_le_source_localPureSeedRank
+#print axioms Komorebi.PaperIRelease.generating_set_meets_source
+#print axioms Komorebi.PaperIRelease.source_count_le_packetPureSeedRank
+#print axioms Komorebi.PaperIRelease.packetPureSeedRank_eq_source_count
+#print axioms Komorebi.PaperIRelease.packetPureSeedRank_eq_source_card

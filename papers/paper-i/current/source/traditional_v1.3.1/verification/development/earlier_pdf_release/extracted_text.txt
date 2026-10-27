@@ -1,0 +1,1939 @@
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES I
+JOURNAL EDITION / v1.3.0
+Projector-resolved
+seed calculus I
+Typed seeds, operator grammars,
+and exact reconstruction
+Komorebi P.
+12 September 2026
+ABSTRACT
+A generating family is meaningful only relative to a specified operator algebra. We develop a common framework for
+generation and reconstruction in which a module is equipped with a fixed operator grammar, relations, and a finite
+family of pairwise annihilating idempotents. The projectors give exact analysis and synthesis maps, while the blocks
+𝑃𝛽𝑇𝑃𝛼encode operator composition and transfer between packet spaces. We study the minimum number of module
+generators, called seed rank relative to the grammar, and its behavior under quotients, direct sums, tensor products,
+coordinate changes, and intertwining maps.
+For a supplied split semisimple presentation, the generator count is max𝑖⌈𝑚𝑖/𝑑𝑖⌉. For a single operator with explicit
+primary data, it is the largest certified block multiplicity. These formulas are proved from the stated decomposition and
+quotient data, not from new classification theorems. Bounded projectors extend the coordinate calculus to normed
+spaces and completions. Worked models include a quadratic coordinate algebra, a bilateral shift, matrix modules, a
+typed quiver, and path and cycle adjacency operators.
+The accompanying Lean development checks 35 registered claims at their stated scope, including three mathematical
+algorithm specifications. The source-to-statement map separates these results from the classical existence theorems used
+to supply their hypotheses and from the finite computations in the Python companion.
+Keywords. Module generators; idempotent decompositions; block operators; cyclic vectors; formal verification.
+1 The foundational problem
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+1.1 Generation relative to a fixed grammar
+Fix a unital operator algebra A acting on a vector space 𝑋. The question whether a family 𝑆generates 𝑋depends on this
+action: the same vector may be cyclic for one algebra and fail to be cyclic for another. Choosing an operator separately
+for each target would conceal rather than solve the generation problem. The operator grammar must therefore be
+specified before the target is chosen.
+Our aim is to keep the generating action and a decomposition of 𝑋in the same description. A finite family of
+idempotents gives packet coordinates; each operator then has a table of packet-to-packet blocks. Module generators
+answer which vectors can be reached, and the blocks describe how the operators move between the chosen components.
+Relations and topology enter when the realization is a quotient or a completion.
+The resulting language combines standard module theory with explicit coordinate and transport identities. The
+term seed rank records the minimum number of generators relative to the declared action. It is not a replacement for
+the classical module invariant. The contribution here is to develop these ingredients together, with proofs, worked
+realizations, and a precise correspondence to a formal library.
+seed
+address
+operate
+project
+constrain
+complete
+reconstruct
+Organization of the seed and reconstruction data
+Figure 1. Schematic organization of the seed, operator, relation, and reconstruction data. This is a guide to the presentation, not
+an additional formal theorem.
+1.2 What is proved here
+The paper develops the following results:
+(i) exact packet analysis and synthesis for finite idempotent decompositions;
+(ii) the transfer-block decomposition and its composition law;
+(iii) coordinate invariance under conjugation and functorial descent under intertwiners;
+(iv) free one-seed and multi-seed presentations by operator words and relations;
+(v) seed-rank bounds for quotients, independent direct sums, shared direct sums, and tensor products;
+(vi) the semisimple multiplicity formula from chosen split algebra and module equivalences;
+(vii) the single-operator and diagonalizable multiplicity formulas from explicit block, quotient, polynomial, and
+eigenbasis certificates;
+Projector-resolved seed calculus
+2
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+(viii) exact worked models in coordinate algebras, bounded shift systems, matrix modules, a finite typed quiver, paths,
+and cycles.
+1.3 Scope and conventions
+The core is linear. Packet families are finite unless a mode of convergence is specified, and pairwise annihilation does not
+mean orthogonality for an inner product. Normed-space statements use bounded linear operators over a nontrivially
+normed field; the Hilbert-space statements use R or C. Unless stated otherwise, the algebraic ground ring is a field k.
+For the semiring-valued generator inequalities, a generated hull means the subsemimodule spanned by the seed family.
+Classification results enter only through explicit data. In particular, a chosen split algebra and module equivalence,
+primary generators, polynomial projectors, scalar quotient maps, or an eigenbasis must be supplied where the theorem
+requires them. Their existence is a separate classical input. The formal development does not include a general Jordan
+or Wedderburn construction, an exact eigensolver, or the projective geometry of the coordinate-ring example. These
+boundaries are recorded again, claim by claim, in the verification ledger.
+2 Typed operator grammars
+2.1 Types, arrows, and paths
+A typed grammar is most naturally described by a directed graph. The vertices record object types, and the arrows record
+primitive operators that are permitted to move one type into another.
+Definition 2.1 (Typed linear grammar). A typed linear grammar over a field k consists of a finite quiver 𝑄= (𝑄0, 𝑄1)
+and, for each arrow 𝑎: 𝑣→𝑤, a declared linear operation of type 𝑣→𝑤. A realization 𝑋assigns a vector space 𝑋𝑣to
+each vertex and a linear map
+𝑋𝑎: 𝑋𝑣−→𝑋𝑤
+to each arrow.
+Every directed path
+𝑝= 𝑎𝑟· · · 𝑎1
+defines an address operator
+𝑋𝑝= 𝑋𝑎𝑟· · · 𝑋𝑎1.
+The trivial path 𝑒𝑣acts as the identity on 𝑋𝑣. Linear combinations of paths form the path algebra k𝑄. For quiver
+representations, path algebras, and bound quiver algebras, see [1].
+Definition 2.2 (Relations). A relation is a k-linear combination of paths with common initial and terminal vertices. A
+relation ideal 𝐼⊆k𝑄is a two-sided ideal generated by declared relations. A realization satisfies the relations when every
+element of 𝐼acts as zero.
+Thus a realization of the finite typed grammar satisfying the relations is a module over the path algebra with relations
+k𝑄/𝐼.
+Composition of typed operations is represented by path multiplication.
+Because 𝑄0 is finite,
+1k𝑄=
+∑︁
+𝑣∈𝑄0
+𝑒𝑣.
+Infinite-vertex quivers require locally unital path-algebra and module language. That extension is not used in Paper I.
+Projector-resolved seed calculus
+3
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+2.2 The one-space operator core
+Most theorems can be stated more transparently after collecting all types into one direct sum
+𝑋=
+Ê
+𝑣∈𝑄0
+𝑋𝑣.
+The vertex idempotent 𝑒𝑣acts as the projector onto 𝑋𝑣, and every arrow becomes a block operator on 𝑋. The realized
+path algebra generates a unital subalgebra
+A ⊆Endk(𝑋).
+For topological realizations, 𝑋is a Hausdorff topological vector space and A consists of continuous operators.
+Definition 2.3 (Linear seed system). A linear seed system is a tuple
+𝔖= (𝑋, 𝑆, A, R, P, 𝜏),
+where 𝑋is the ambient space, 𝑆⊆𝑋is a finite or controlled seed family, A is a fixed unital operator algebra, R is a
+relation system or presentation, P is a finite packet system, and 𝜏is a topology or completion rule.
+The seed family may contain one element. It is nevertheless important to allow several seeds, because the minimal
+required number is itself a structural invariant.
+2.3 Generated hulls
+Definition 2.4 (Algebraic hull). For 𝑆⊆𝑋, define
+HullA(𝑆) = spank{𝐴𝑠: 𝐴∈A, 𝑠∈𝑆}.
+It is the smallest A-invariant subspace containing 𝑆. We write HullA(𝑠) for HullA({𝑠}).
+Definition 2.5 (Topological hull). If 𝑋is topological, define
+HullA,𝜏(𝑆) = HullA(𝑆)
+𝜏.
+The seed family is topologically generating when this closure equals 𝑋.
+For a finite-dimensional Hausdorff topological vector space over R or C, the algebraic hull is closed, so the algebraic
+and topological hulls agree. In infinite-dimensional examples, the topology is part of the theorem, not an optional
+afterthought.
+Definition 2.6 (Natural presentation). A seed presentation is called natural relative to a declared grammar when:
+(a) the primitive operators are selected independently of the target element;
+(b) the relations are finite or effectively enumerable;
+(c) the topology is intrinsic to the realization;
+(d) no primitive operator directly stores the complete target;
+(e) the presentation exposes a reusable theorem, computation, or invariant.
+Remark 2.7. The last condition is deliberately methodological rather than categorical. It prevents a technically valid but
+mathematically empty choice of a target-dependent operator 𝐴𝑥with 𝐴𝑥𝑠= 𝑥.
+Projector-resolved seed calculus
+4
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+3 Free presentations by seeds and relations
+3.1 The universal one-seed presentation
+Let 𝐹= k⟨𝑧1, . . . , 𝑧𝑟⟩be the free associative algebra. Given operators 𝑇1, . . . ,𝑇𝑟∈End(𝑋) and a seed 𝑠∈𝑋, define
+Φ𝑠: 𝐹−→𝑋,
+𝑓↦−→𝑓(𝑇1, . . . ,𝑇𝑟)𝑠.
+The image is the operator hull of 𝑠.
+Theorem 3.1 (Universal one-seed presentation). The kernel
+𝐼𝑠= ker Φ𝑠
+is a left ideal of 𝐹, and there is a canonical isomorphism of left 𝐹-modules
+𝐹/𝐼𝑠 Hull𝐹(𝑠).
+The seed 𝑠generates 𝑋if and only if Φ𝑠is surjective. For the completion clause, let k be a nontrivially normed ﬁeld, let 𝑋
+be a Banach space over k, and suppose that 𝐹/𝐼𝑠has been supplied with a norm for which the induced map
+¯Φ𝑠: 𝐹/𝐼𝑠−→𝑋
+is a continuous linear isometry with dense range. Then ¯Φ𝑠extends uniquely to a continuous linear equivalence
+
+𝐹/𝐼𝑠≃𝐿𝑋.
+If bounded operators 𝐴on 𝐹/𝐼𝑠and 𝐵on 𝑋satisfy ¯Φ𝑠𝐴= 𝐵¯Φ𝑠, then the completed operator 𝐴∧is intertwined with 𝐵
+by this equivalence.
+Proof. For 𝑔∈𝐹and 𝑓∈𝐼𝑠,
+Φ𝑠(𝑔𝑓) = (𝑔𝑓)(𝑇)𝑠= 𝑔(𝑇) 𝑓(𝑇)𝑠= 0,
+so 𝐼𝑠is a left ideal. The first isomorphism theorem gives
+𝐹/𝐼𝑠 im Φ𝑠= Hull𝐹(𝑠).
+Surjectivity is exactly the generating condition. For the final statement, a linear isometry extends uniquely from a normed
+space to its completion. Its extended range is dense because ¯Φ𝑠has dense range, and closed because the extension is an
+isometry into a Banach space; hence the extension is surjective and is a continuous linear equivalence. The two bounded
+intertwining maps agree on the dense embedded copy of 𝐹/𝐼𝑠, so continuity makes them equal on the completion.
+□
+Remark 3.2. The annihilator of a vector is generally a left ideal, not a two-sided ideal. It becomes a two-sided relation
+ideal in important special cases, such as a coordinate algebra generated from its multiplicative identity.
+Projector-resolved seed calculus
+5
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+3.2 Several seeds
+Theorem 3.3 (Multi-seed presentation). Let 𝑆= (𝑠1, . . . , 𝑠𝑚). Deﬁne
+Φ𝑆: 𝐹𝑚−→𝑋,
+( 𝑓1, . . . , 𝑓𝑚) ↦−→
+𝑚
+∑︁
+𝑗=1
+𝑓𝑗(𝑇)𝑠𝑗.
+Then 𝑁𝑆= ker Φ𝑆is a left 𝐹-submodule and
+𝐹𝑚/𝑁𝑆 Hull𝐹(𝑆).
+In particular, if 𝑋is ﬁnitely generated as an 𝐹-module, its natural-valued seed rank is the least 𝑛∈N for which there is a
+surjective 𝐹-linear map
+𝐹({1,...,𝑛}) ↠𝑋.
+This is the classical minimal number of module generators, commonly denoted 𝜇𝐹(𝑋); see [6]. For an arbitrary generating
+family indexed by 𝐽, the same presentation uses the direct-sum free module 𝐹(𝐽).
+Proof. The map Φ𝑆is 𝐹-linear. The first isomorphism theorem for modules gives the claimed quotient. A surjection
+from 𝐹𝑛is determined by the images of its 𝑛standard generators, and those images generate its target. Conversely, every
+𝑛-element generating family defines such a surjection. Taking the least 𝑛proves the final assertion.
+□
+3.3 Algebra generation and module generation
+Two notions must not be confused.
+• An algebra may require several algebra generators.
+• The same algebra, regarded as a module over itself, is generated by its unit.
+For example, k[𝑥, 𝑦] requires the two algebra generators 𝑥and 𝑦, but it has module seed rank one under the
+multiplication algebra because every polynomial is obtained by applying a multiplication operator to 1.
+This distinction will recur throughout the series. A small module seed does not imply that the operator grammar is
+small; both quantities must be recorded.
+4 Seed rank
+4.1 Definition and cyclicity
+Definition 4.1 (Seed rank). The seed rank of an A-module 𝑋is the least cardinal
+srankA(𝑋) = min
+
+|𝑆| : 𝑆⊆𝑋, HullA(𝑆) = 𝑋
+	
+.
+For a topological module, the topological seed rank is defined analogously by
+srankA,𝜏(𝑋) = min
+
+|𝑆| : 𝑆⊆𝑋, HullA(𝑆)
+𝜏= 𝑋
+	
+.
+These minima exist because 𝑋itself generates under a unital action. We set
+srankA(0) = srankA,𝜏(0) = 0.
+Projector-resolved seed calculus
+6
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+For finitely generated modules the algebraic rank is a nonnegative integer; otherwise it may be an infinite cardinal.
+Algebraically, this is the standard invariant 𝜇A(𝑋), with the term seed rank retaining the declared operator algebra as
+part of the datum [6]. A vector 𝑠is cyclic when HullA(𝑠) = 𝑋.
+Proposition 4.2 (Cyclic characterization). For a nonzero module 𝑋,
+srankA(𝑋) = 1
+⇐⇒
+𝑋contains a cyclic vector.
+Proof. A cyclic vector gives a one-element generating set. Conversely, a generating set of cardinality one consists of a
+cyclic vector. Since 𝑋is nonzero, the empty family does not generate.
+□
+4.2 Functorial bounds
+Theorem 4.3 (Quotient monotonicity). Let 𝜑: A →B be an algebra homomorphism and let Φ : 𝑋↠𝑌be a
+surjective 𝜑-semilinear map, so that
+Φ(𝐴𝑥) = 𝜑(𝐴)Φ(𝑥)
+for all 𝐴∈A and 𝑥∈𝑋. Then
+srankB(𝑌) ≤srankA(𝑋).
+Proof. If 𝑆generates 𝑋, then every 𝑦∈𝑌has the form 𝑦= Φ(𝑥) with
+𝑥=
+∑︁
+𝑗
+𝐴𝑗𝑠𝑗.
+Therefore
+𝑦=
+∑︁
+𝑗
+𝜑(𝐴𝑗)Φ(𝑠𝑗),
+so Φ(𝑆) generates𝑌.
+□
+Corollary 4.4 (Isomorphism invariance over the image algebra). If Φ : 𝑋→𝑌is a linear isomorphism satisfying the
+hypotheses of theorem 4.3, then
+srank𝜑(A) (𝑌) = srankA(𝑋).
+In particular, seed rank relative to B is preserved when 𝜑: A →B is an algebra isomorphism.
+Proof. For every 𝑆⊆𝑋, the intertwining identity gives
+Φ HullA(𝑆) = Hull𝜑(A) (Φ𝑆).
+Because Φ bijects generating families and preserves their cardinalities, taking the two minima gives the equality. Equality
+relative to the full target algebra B requires 𝜑(A) = B.
+□
+Projector-resolved seed calculus
+7
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Proposition 4.5 (Shared direct-sum bound). If one algebra A acts diagonally on 𝑋⊕𝑌, then
+srankA(𝑋⊕𝑌) ≤srankA(𝑋) + srankA(𝑌).
+Proof. Embed a generating family for 𝑋as vectors (𝑥𝑖, 0) and a generating family for𝑌as vectors (0, 𝑦𝑗). Their union
+generates the direct sum.
+□
+Theorem 4.6 (Independent direct-sum formula). Let A act on 𝑋and B act on𝑌. Under the product algebra A × B,
+srankA×B(𝑋⊕𝑌) = max{srankA(𝑋), srankB(𝑌)}.
+Proof. Projection onto either summand is an intertwining quotient, so the seed rank of the direct sum is at least the
+maximum. Conversely, let 𝑟be the maximum cardinal. Choose generating families realizing the two minima, embed
+their index sets into a common index set 𝐾of cardinality𝑟, and pad the missing positions with zero. If (𝑥𝑘)𝑘∈𝐾generates
+𝑋and (𝑦𝑘)𝑘∈𝐾generates𝑌, then the 𝑟vectors (𝑥𝑘, 𝑦𝑘) generate 𝑋⊕𝑌, because elements of A × B act independently
+on the two coordinates.
+□
+Proposition 4.7 (Tensor-product bound). Let k be a commutative semiring, let A and B be k-algebras, and let 𝑋and
+𝑌carry compatible k-module and respectively A-module and B-module structures, including the usual scalar-tower and
+commuting-action laws. All tensor products below are over k. Under the natural action determined by
+(𝑎⊗𝑏)(𝑥⊗𝑦) = (𝑎𝑥) ⊗(𝑏𝑦),
+srankA⊗B(𝑋⊗𝑌) ≤srankA(𝑋) srankB(𝑌).
+Proof. Choose generating families (𝑥𝑖)𝑖∈𝐼for 𝑋and (𝑦𝑗) 𝑗∈𝐽for 𝑌. For arbitrary 𝑥∈𝑋and 𝑦∈𝑌, there are finite
+subsets 𝐼0 ⊆𝐼and 𝐽0 ⊆𝐽and operators 𝐴𝑖∈A, 𝐵𝑗∈B such that
+𝑥=
+∑︁
+𝑖∈𝐼0
+𝐴𝑖𝑥𝑖,
+𝑦=
+∑︁
+𝑗∈𝐽0
+𝐵𝑗𝑦𝑗.
+Therefore
+𝑥⊗𝑦=
+∑︁
+𝑖∈𝐼0
+∑︁
+𝑗∈𝐽0
+(𝐴𝑖⊗𝐵𝑗)(𝑥𝑖⊗𝑦𝑗).
+Since simple tensors span 𝑋⊗𝑌, the family {𝑥𝑖⊗𝑦𝑗: (𝑖, 𝑗) ∈𝐼× 𝐽} generates. Minimizing over the two generating
+families gives the stated cardinal bound.
+□
+Boundary 4.8. The tensor bound need not be an equality. Its value depends on the acting algebra and on relations
+among the tensor factors; no refinement hypothesis enters the foundational inequality.
+4.3 Quotient witnesses and lower bounds
+Quotients provide a systematic way to prove that a proposed seed family is too small.
+Definition 4.9 (Seed-rank witness). An intertwining quotient Φ : 𝑋↠𝑌is a seed-rank witness of order 𝑟when
+srank(𝑌) = 𝑟. By quotient monotonicity it certifies
+srank(𝑋) ≥𝑟.
+Projector-resolved seed calculus
+8
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Proposition 4.10 (Scalar quotient obstruction). Let 𝜒: A →k k be a character, let𝑌be a ﬁnite-dimensional k-space,
+and suppose there is a surjective 𝜒-semilinear map Φ : 𝑋↠𝑌. Equivalently,
+Φ(𝐴𝑥) = 𝜒(𝐴)Φ(𝑥).
+If 𝑟= dimk 𝑌, then
+srankA(𝑋) ≥𝑟.
+Proof. The orbit of a vector in𝑌is contained in its span, which has dimension at most one, because all operators act
+scalarly. Therefore 𝑟independent quotient directions require at least 𝑟image seeds. Apply quotient monotonicity.
+□
+Example 4.11 (Primary quotient). In the classical finite-dimensional primary decomposition, the quotient
+𝑋𝜆/(𝑇−𝜆𝐼)𝑋𝜆
+is a scalar k[𝑇]-module. A chosen identification of this quotient with k𝑚𝜆supplies the surjective scalar-quotient map
+used in theorem 6.1. For Jordan data, classical canonical-form theory identifies 𝑚𝜆with both the number of blocks at 𝜆
+and dim ker(𝑇−𝜆𝐼). That identification is an input when the formal certificate is instantiated, rather than a conclusion
+of the kernel-checked declaration.
+Remark4.12. ThisformulationisusefulbeyondJordantheory.Toprovealowerbound,onedoesnotneedtounderstand
+the entire generated object. It is enough to identify a quotient in which the operator grammar loses its ability to mix
+independent directions.
+5 The semisimple multiplicity theorem
+The first substantial closed formula for seed rank appears once a split-product decomposition has been fixed. The
+classical Wedderburn–Artin theorem and the standard description of modules over full matrix algebras provide such
+data in the usual finite-dimensional split-semisimple setting [5][6]. The theorem below makes the data explicit: it proves
+the formula after an algebra equivalence and a compatible module equivalence have been supplied; it does not assert the
+classification theorem that produces them.
+Theorem 5.1 (Semisimple multiplicity formula). Let 𝐼be a nonempty ﬁnite index set, let k be a ﬁeld, and let A be a
+unital k-algebra acting on 𝑋. Suppose there is a chosen k-algebra equivalence
+𝜃: A ≃k
+Ö
+𝑖∈𝐼
+𝑀𝑑𝑖(k)
+and a chosen 𝜃-semilinear equivalence
+𝐸: 𝑋≃𝜃
+Ö
+𝑖∈𝐼
+𝑀𝑑𝑖×𝑚𝑖(k).
+Assume 𝑑𝑖≥1 for every 𝑖. Then
+srankA(𝑋) = max
+𝑖∈𝐼
+𝑚𝑖
+𝑑𝑖
+
+.
+Proof. Transport along 𝜃and 𝐸, so it is enough to work in the displayed literal product. A vector in its 𝑖th component is
+a 𝑑𝑖× 𝑚𝑖matrix 𝑉. The orbit 𝑀𝑑𝑖(k)𝑉consists of matrices whose row space lies in the row space of 𝑉. Consequently
+one seed can expose at most 𝑑𝑖independent directions in the multiplicity space k𝑚𝑖.
+Projector-resolved seed calculus
+9
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+If 𝑟vectors generate 𝑋𝑖, the union of their row spaces must span k𝑚𝑖. Its dimension is at most 𝑟𝑑𝑖, so
+𝑟≥
+𝑚𝑖
+𝑑𝑖
+
+.
+This gives the lower bound after taking the maximum over 𝑖.
+For the converse, let
+𝑟= max
+𝑖
+𝑚𝑖
+𝑑𝑖
+
+.
+For each 𝑖, choose 𝑟matrices whose combined row spaces span k𝑚𝑖; this is possible because 𝑟𝑑𝑖≥𝑚𝑖. Combine the
+𝑗th chosen matrix from every component into one vector of the product. The product algebra acts independently on
+the components, so these 𝑟vectors generate the product module. Seed rank is invariant under the supplied compatible
+semilinear equivalence, which transports the equality back to 𝑋.
+□
+Boundary 5.2 (Classification input). Over an algebraically closed field, finite-dimensional split semisimple algebras and
+their finite-dimensional modules admit equivalences of the displayed form by classical structure theory. That existence
+statement is cited background. The kernel-checked theorem begins with the particular equivalences 𝜃and 𝐸as input.
+Corollary 5.3 (Full matrix algebra). For any ﬁeld k and 𝑛≥1, the natural module k𝑛over 𝑀𝑛(k) satisﬁes
+srank𝑀𝑛(k) (k𝑛) = 1.
+More strongly, every nonzero vector is cyclic.
+Proof. If 𝑣≠0 and 𝑤∈k𝑛, choose a linear functional 𝜙with 𝜙(𝑣) = 1. The rank-one operator 𝑤𝜙sends 𝑣to 𝑤, so 𝑣
+is cyclic. Since the module is nonzero, its seed rank is one.
+□
+Corollary 5.4 (Multiplicity obstruction). For 𝑑≥1 and 𝑚≥0, the diagonal action of 𝑀𝑑(k) on (k𝑑)⊕𝑚satisﬁes
+srank =
+l𝑚
+𝑑
+m
+.
+Thus repeated copies of one irreducible packet create a genuine lower bound even though each individual copy is cyclic.
+Remark 5.5 (Non-algebraically-closed fields). The stated theorem works over any field once the displayed split matrix-
+algebra and module equivalences are supplied. A general semisimple algebra over a non-splitting field can instead involve
+nontrivial division algebras of endomorphisms, and its intrinsic formula must use dimensions over those division
+algebras; see [5].
+Projector-resolved seed calculus
+10
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+1
+3
+5
+7
+9
+11
+13
+15
+17
+19
+21
+23
+multiplicity m
+1
+2
+3
+4
+5
+6
+7
+8
+simple-module dimension d
+Semisimple multiplicity law: ⌈m/d⌉
+5
+10
+15
+20
+minimal number of seeds
+Figure 2. The semisimple multiplicity formula for one simple block. A seed can expose at most 𝑑independent multiplicity
+directions, so 𝑚copies require ⌈𝑚/𝑑⌉seeds.
+6 One operator and the cyclic-vector theorem
+A single linear operator 𝑇generates the commutative algebra k[𝑇]. The generator argument can be separated cleanly
+from the classification theorem that produces primary or Jordan data. We therefore state the kernel-checked result from
+an explicit certificate. Classical k[𝑡]-module, primary-decomposition, and canonical-form theory explains how such
+certificates arise in the standard finite-dimensional setting [7]; see also [4].
+Theorem 6.1 (Single-operator seed number from primary data). Let k be a ﬁeld, let 𝑇∈Endk(𝑋), and let Λ be a
+nonempty ﬁnite label set. Suppose the following data are supplied:
+(i) numbers 𝑚𝜆∈N, scalars 𝑎𝜆∈k, and vectors 𝑣𝜆, 𝑗∈𝑋for 1 ≤𝑗≤𝑚𝜆such that
+𝑋= spank{𝑝(𝑇)𝑣𝜆, 𝑗: 𝜆∈Λ, 1 ≤𝑗≤𝑚𝜆, 𝑝∈k[𝑡]};
+(ii) a number 𝑅∈N with 𝑚𝜆≤𝑅for all 𝜆and 𝑚𝜆∗= 𝑅for some 𝜆∗∈Λ;
+(iii) padded vectors
+𝑤𝑗=
+∑︁
+𝜆: 𝑗≤𝑚𝜆
+𝑣𝜆, 𝑗,
+1 ≤𝑗≤𝑅,
+and, for every admissible (𝜆, 𝑗), a polynomial 𝑒𝜆, 𝑗∈k[𝑡] satisfying
+𝑒𝜆, 𝑗(𝑇)𝑤𝑗= 𝑣𝜆, 𝑗;
+Projector-resolved seed calculus
+11
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+(iv) surjective linear maps 𝑞𝜆: 𝑋↠k𝑚𝜆satisfying
+𝑞𝜆
+ 𝑝(𝑇)𝑥 = 𝑝(𝑎𝜆)𝑞𝜆(𝑥)
+(𝑝∈k[𝑡], 𝑥∈𝑋).
+Then 𝑅is the least natural number 𝑟for which 𝑟polynomial-orbit seeds generate 𝑋:
+𝑅= min
+(
+𝑟∈N : there exist 𝑢1, . . . , 𝑢𝑟∈𝑋with
+𝑋= spank{𝑝(𝑇)𝑢𝑗: 𝑝∈k[𝑡], 1 ≤𝑗≤𝑟}
+)
+.
+Moreover, for the genuine image algebra
+k[𝑇] = algk⟨𝑇⟩⊆Endk(𝑋),
+polynomial-orbit generation is exactly module generation, and therefore
+𝜇k[𝑇](𝑋) = 𝑅,
+srankk[𝑇](𝑋) = (𝑅: Cardinal).
+Proof. The extraction polynomials recover every 𝑣𝜆, 𝑗from the padded family (𝑤𝑗)𝑅
+𝑗=1. The joint-generation hypothesis
+therefore shows that these 𝑅vectors generate 𝑋. Conversely, suppose 𝑟vectors generate. Their images under 𝑞𝜆generate
+k𝑚𝜆, but the displayed intertwining identity makes every polynomial act there by a scalar. Hence 𝑚𝜆≤𝑟for every 𝜆.
+Applying this at 𝜆∗gives 𝑅≤𝑟. Finally, the algebra generated by 𝑇is the range of polynomial evaluation 𝑝↦→𝑝(𝑇).
+Hence the k[𝑇]-span of any seed family, after restriction to k, equals its polynomial-orbit span. This identifies the least
+natural number with the canonical module seed finrank and cardinal seed rank.
+□
+Corollary 6.2 (Certified cyclic matrix criterion). Assume the hypotheses of theorem 6.1, that 𝑋is ﬁnite-dimensional, and
+that 𝑚𝜆> 0 for every 𝜆. Supply block counts 𝑏𝜆∈N together with the two canonical-form bridges
+𝑚𝜆= 𝑏𝜆
+(𝜆∈Λ),
+𝑚𝑇(𝑡) = 𝜒𝑇(𝑡)
+⇐⇒
+𝑏𝜆= 1 for every 𝜆,
+where 𝑚𝑇and 𝜒𝑇are the minimal and characteristic polynomials. Then the following four conditions are equivalent:
+(i) 𝑇has a cyclic vector;
+(ii) 𝑚𝜆= 1 for every 𝜆;
+(iii) 𝑏𝜆= 1 for every 𝜆;
+(iv) 𝑚𝑇= 𝜒𝑇.
+Proof. By theorem 6.1, cyclicity is equivalent to 𝑅= 1. Positivity, the bounds 𝑚𝜆≤𝑅, and the equality 𝑚𝜆∗= 𝑅make
+this equivalent to 𝑚𝜆= 1 for every 𝜆. The first supplied bridge identifies this with one block per label, and the second
+identifies that condition with 𝑚𝑇= 𝜒𝑇.
+□
+Boundary 6.3 (Canonical-form input). For a finite-dimensional operator over an algebraically closed field, classical
+primary and Jordan theory supplies the preceding certificate with 𝑚𝜆= dim ker(𝑇−𝜆𝐼) and supplies the polynomial
+bridge. Consequently the usual geometric-multiplicity formula and four-way nonderogatory criterion follow classically.
+The Lean declarations verify the generator inequalities, extraction argument, and certified cyclicity criterion; they do
+not construct the Jordan decomposition or prove those identifications from the bare hypotheses on 𝑇.
+Projector-resolved seed calculus
+12
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Example 6.4 (Companion operator). For a companion matrix of size 𝑛≥1, use the convention in which 𝑒1 is the first
+coordinate vector and
+𝑒1,𝑇𝑒1, . . . ,𝑇𝑛−1𝑒1
+is a basis. This Krylov basis proves cyclicity over the ground field, without a splitting hypothesis. It does not by itself
+supply the scalar primary data of theorem 6.1. The nilpotent companion used in the computational example has one
+primary block at zero, so it also admits that theorem’s certificate with 𝑅= 1.
+Example 6.5 (Repeated primary blocks). Let 𝑚≥1 and
+𝑇= 𝐽𝑚(𝜆) ⊕𝐽𝑚(𝜆).
+Then
+dim ker(𝑇−𝜆𝐼) = 2,
+and the standard primary certificate has 𝑚𝜆= 2. Its scalar quotient forces at least two seeds, while the two block
+generators supply the matching upper bound. A single vector with nonzero components in both blocks produces only
+a linked combination of their two chains and cannot separate them.
+1
+2
+3
+4
+5
+6
+7
+8
+Krylov word length
+1
+2
+3
+4
+5
+6
+7
+8
+generated span dimension
+One seed succeeds or stalls according to the operator module
+cyclic companion operator
+two equal Jordan blocks
+Figure 3. Krylov rank profiles for a cyclic companion operator and for two equal primary blocks. The second orbit stalls before
+reaching the ambient dimension because one seed cannot separate the repeated blocks.
+Projector-resolved seed calculus
+13
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+7 Exact packet systems
+7.1 Idempotent coordinates
+Definition 7.1 (Finite packet system). A finite packet system on 𝑋is a family indexed by a finite set 𝐼,
+P = {𝑃𝛼}𝛼∈𝐼⊆End(𝑋)
+satisfying
+𝑃𝛼𝑃𝛽= 𝛿𝛼𝛽𝑃𝛼,
+∑︁
+𝛼∈𝐼
+𝑃𝛼= 𝐼.
+The packet space is 𝑋𝛼= 𝑃𝛼𝑋.
+Orthogonality with respect to an inner product is useful but not required. Pairwise annihilation and completeness
+already imply the algebraic direct sum
+𝑋=
+Ê
+𝛼∈𝐼
+𝑋𝛼.
+Definition 7.2 (Analysis and synthesis). Define
+AP : 𝑋−→
+Ê
+𝛼
+𝑋𝛼,
+AP𝑥= (𝑃𝛼𝑥)𝛼,
+and
+SP :
+Ê
+𝛼
+𝑋𝛼−→𝑋,
+SP(𝑥𝛼)𝛼=
+∑︁
+𝛼
+𝑥𝛼.
+Theorem 7.3 (Exact packet coordinates). For every ﬁnite packet system,
+SPAP = 𝐼𝑋,
+APSP = 𝐼⊕𝑋𝛼.
+Hence analysis and synthesis are inverse coordinate maps.
+Proof. Completeness gives
+SPAP𝑥=
+∑︁
+𝛼
+𝑃𝛼𝑥= 𝑥.
+If 𝑥𝛼∈𝑋𝛼, then
+𝑃𝛽
+∑︁
+𝛼
+𝑥𝛼=
+∑︁
+𝛼
+𝑃𝛽𝑃𝛼𝑥𝛼= 𝑥𝛽.
+Therefore the analysis of the synthesis returns the original packet tuple.
+□
+Corollary 7.4 (Packetwise equality). Two vectors 𝑥, 𝑦∈𝑋are equal if and only if
+𝑃𝛼𝑥= 𝑃𝛼𝑦
+for every packet 𝛼.
+Boundary 7.5 (Infinite packet systems). For infinitely many packets, the equation
+∑︁
+𝛼
+𝑃𝛼= 𝐼
+requires a declared mode of convergence. Strong, weak, unconditional, formal, and 𝑝-adic convergence are different
+statements. Paper I uses finite packets or explicitly convergent examples.
+Projector-resolved seed calculus
+14
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+7.2 Continuous packets and closed ranges
+The finite packet theorem extends cleanly to Banach and Hilbert spaces when the projectors are bounded. We use
+standard conventions for continuous linear maps, closed subspaces, and completion [8][3].
+Theorem 7.6 (Topological packet isomorphism). Let 𝑋be a Banach space and let (𝑃𝑖)𝑖∈𝐼be a ﬁnite family of bounded
+pairwise annihilating idempotents with sum 𝐼. Then each packet 𝑋𝑖= 𝑃𝑖𝑋is closed, and analysis is a continuous linear
+equivalence
+AP : 𝑋≃𝐿
+Ö
+𝑖∈𝐼
+𝑋𝑖
+for the standard ﬁnite dependent-product norm, with inverse the ﬁnite-sum synthesis map SP.
+Proof. Since
+𝑋𝑖= im 𝑃𝑖= ker(𝐼−𝑃𝑖),
+and 𝐼−𝑃𝑖is continuous, 𝑋𝑖is closed. Each coordinate of analysis is bounded, and synthesis is a finite sum of bounded
+coordinate inclusions. The algebraic inverse identities from theorem 7.3 therefore package these maps as the displayed
+continuous linear equivalence.
+□
+Corollary 7.7 (Completion preserves a finite packet split). Let 𝑋be a normed space, let 𝑀⊆𝑋be a dense linear
+subspace, and let 𝑃𝑖be a bounded idempotent. Then
+𝑃𝑖𝑀= 𝑃𝑖𝑋.
+For a ﬁnite bounded packet family this holds for every packet, so packet extraction commutes with completion in this precise
+sense. No invariance hypothesis 𝑃𝑖𝑀⊆𝑀is needed for the equality.
+Proof. Because 𝑃𝑖𝑋= ker(𝐼−𝑃𝑖) is closed and contains 𝑃𝑖𝑀, one has 𝑃𝑖𝑀⊆𝑃𝑖𝑋. Conversely, approximate any
+𝑥∈𝑋by elements of 𝑀and use continuity of 𝑃𝑖to obtain 𝑃𝑖𝑥∈𝑃𝑖𝑀.
+□
+Remark 7.8. This corollary is the precise reason the bilateral-shift example may be proved on finite-support sequences
+and then completed in ℓ2. It also records a limitation: if the projectors are unbounded or the packet sum is infinite and
+conditional, completion need not commute with packet extraction.
+7.3 Transfer blocks
+The following formulas are ordinary block-matrix identities relative to 𝑋= É
+𝛼𝑋𝛼, written in packet notation;
+compare [4].
+Definition 7.9 (Transfer block). For 𝑇∈End(𝑋) define
+𝑇𝛽𝛼= 𝑃𝛽𝑇𝑃𝛼.
+It maps the input packet 𝑋𝛼into the output packet 𝑋𝛽.
+Projector-resolved seed calculus
+15
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Theorem 7.10 (Exact operator reconstruction). Every operator has the exact decomposition
+𝑇=
+∑︁
+𝛼,𝛽
+𝑇𝛽𝛼.
+Proof. Insert the identity on both sides of 𝑇:
+𝑇=
+ ∑︁
+𝛽
+𝑃𝛽
+!
+𝑇
+ ∑︁
+𝛼
+𝑃𝛼
+!
+=
+∑︁
+𝛼,𝛽
+𝑃𝛽𝑇𝑃𝛼.
+□
+Theorem 7.11 (Packet matrix multiplication). If 𝑆,𝑇∈End(𝑋), then
+(𝑆𝑇)𝛾𝛼=
+∑︁
+𝛽
+𝑆𝛾𝛽𝑇𝛽𝛼.
+Thus packet blocks compose by ordinary matrix multiplication over operator-valued entries.
+Proof. Insert completeness between the two operators:
+𝑃𝛾𝑆𝑇𝑃𝛼= 𝑃𝛾𝑆
+ ∑︁
+𝛽
+𝑃𝛽
+!
+𝑇𝑃𝛼=
+∑︁
+𝛽
+(𝑃𝛾𝑆𝑃𝛽)(𝑃𝛽𝑇𝑃𝛼).
+□
+Corollary 7.12 (Packet powers). For 𝑚≥1,
+(𝑇𝑚)𝛽𝛼=
+∑︁
+𝛼=𝛼0,...,𝛼𝑚=𝛽
+𝑇𝛼𝑚𝛼𝑚−1 · · ·𝑇𝛼1𝛼0.
+The sum is over all packet paths of length 𝑚from 𝛼to 𝛽.
+Proof. Iterate theorem 7.11.
+□
+Corollary 7.13 (Adjoint reversal). If 𝑋is a Hilbert space, the projectors are orthogonal, and 𝑇: 𝑋→𝑋is bounded, then
+(𝑇𝛽𝛼)∗= (𝑇∗)𝛼𝛽.
+Proof. Use 𝑃∗
+𝛼= 𝑃𝛼:
+(𝑃𝛽𝑇𝑃𝛼)∗= 𝑃𝛼𝑇∗𝑃𝛽.
+□
+Projector-resolved seed calculus
+16
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Theorem 7.14 (Algebraic full block representation). Restriction of the transfer blocks gives an algebra isomorphism
+Endk(𝑋) 
+Ö
+𝛽,𝛼
+Homk(𝑋𝛼, 𝑋𝛽),
+where the dependent family on the right carries the transported algebra structure, and its multiplication is exactly the
+output-ﬁrst block law
+(𝐵𝐶)𝛾𝛼=
+∑︁
+𝛽
+𝐵𝛾𝛽𝐶𝛽𝛼.
+Proof. The map from an operator to its block restrictions is injective by exact reconstruction. Given an arbitrary family
+of maps 𝐵𝛽𝛼: 𝑋𝛼→𝑋𝛽, define
+𝑇
+ ∑︁
+𝛼
+𝑥𝛼
+!
+=
+∑︁
+𝛼,𝛽
+𝐵𝛽𝛼𝑥𝛼.
+The sum is finite and therefore defines an operator with the prescribed blocks. Compatibility with multiplication is
+theorem 7.11.
+□
+Remark 7.15 (Bounded block representation). If 𝑋is Banach and the finite packet projectors are bounded, bounded
+operators correspond to finite matrices of bounded packet maps. Arbitrary algebraic block maps need not define
+bounded operators.
+Corollary 7.16 (Dimension count). If 𝑋is ﬁnite-dimensional and 𝑑𝛼= dim 𝑋𝛼, then
+dim End(𝑋) =
+∑︁
+𝛼,𝛽
+𝑑𝛼𝑑𝛽=
+ ∑︁
+𝛼
+𝑑𝛼
+!2
+.
+Definition 7.17 (Support relation). For a relation 𝑅⊆𝐼× 𝐼, let
+M𝑅= {𝑇∈End(𝑋) : 𝑇𝛽𝛼= 0 whenever (𝛼, 𝛽) ∉𝑅}.
+Theorem 7.18 (When an algebraic packet support pattern is an algebra). Assume every packet space is nonzero. The
+space M𝑅contains the identity precisely when 𝑅is reﬂexive. It is closed under multiplication for all allowed block maps
+precisely when 𝑅is transitive. Hence reﬂexive transitive relations, or packet preorders, are exactly the universal zero patterns
+deﬁning unital block-support algebras.
+Proof. The identity has nonzero diagonal block 𝐼𝑋𝛼, so all pairs (𝛼, 𝛼) must belong to 𝑅. If 𝑅is transitive and 𝑆,𝑇are
+supported on 𝑅, then a nonzero term
+𝑆𝛾𝛽𝑇𝛽𝛼
+can occur only when (𝛼, 𝛽) and (𝛽, 𝛾) belong to 𝑅, hence (𝛼, 𝛾) ∈𝑅. The block-composition formula gives closure.
+Conversely, if transitivity fails, choose (𝛼, 𝛽), (𝛽, 𝛾) ∈𝑅with (𝛼, 𝛾) ∉𝑅. Since the packet spaces are nonzero,
+choose rank-one maps 𝑇: 𝑋𝛼→𝑋𝛽and 𝑆: 𝑋𝛽→𝑋𝛾with 𝑆𝑇≠0. Then 𝑆,𝑇∈M𝑅but 𝑆𝑇∉M𝑅.
+□
+Remark 7.19. The converse is algebraic. In a category of bounded or continuous operators, it additionally requires
+enough continuous rank-one maps to detect a failed composite edge.
+Projector-resolved seed calculus
+17
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+0
+1
+2
+input packet alpha
+0
+1
+2
+output packet beta
+Operator resolved into transfer blocks
+5.0
+5.5
+6.0
+6.5
+7.0
+7.5
+8.0
+Frobenius norm of embedded block
+Figure 4. An operator represented by its packet-to-packet block norms. The diagonal entries preserve packets; off-diagonal entries
+transfer information between packets.
+7.4 Transfer graphs and reachability
+Definition 7.20 (Transfer graph). For a generating operator family O, the transfer graph has packet vertices 𝐼and an
+edge
+𝛼−→𝛽
+when
+𝑃𝛽𝑂𝑃𝛼≠0
+for at least one 𝑂∈O.
+Proposition 7.21 (Reachability obstruction). Let 𝐻be the algebraic word-orbit hull of a seed family supported in packets
+belonging to 𝑆0 ⊆𝐼. Then 𝐻lies in the submodule supported on the reﬂexive-transitive set of vertices reachable from 𝑆0. In
+particular, if a nonzero packet is not reachable, then 𝐻≠𝑋.
+For the topological extension, let the realization be normed and let 𝑄be a nonzero bounded packet projector. Once the
+algebraic argument has established 𝐻⊆ker 𝑄, continuity gives
+𝐻⊆ker 𝑄,
+𝐻≠𝑋.
+Proof. Induction on an operator word shows that reachable support is invariant under every grammar operator.
+Spanning the word orbit therefore gives the algebraic inclusion. A nonzero unreachable projector annihilates that
+Projector-resolved seed calculus
+18
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+support, so the hull is proper. In the topological clause, ker 𝑄is closed because 𝑄is bounded. It contains 𝐻, hence also
+𝐻; if 𝐻= 𝑋, then 𝑄would vanish identically, contradicting 𝑄≠0.
+□
+Remark 7.22. A seed may have components in several packets. A count of source strongly connected components
+therefore gives a lower bound only when each seed is supported in a single packet and every counted component contains
+a nonzero packet. Reachability alone does not determine the minimum size of an unrestricted seed family.
+8 Coordinate transport and naturality
+8.1 Conjugate packet systems
+Let 𝑈: 𝑋→𝑌be an isomorphism. Transport the packet system and an operator by
+𝑄𝛼= 𝑈𝑃𝛼𝑈−1,
+𝑇𝑈= 𝑈𝑇𝑈−1.
+Theorem 8.1 (Coordinate transport). The family {𝑄𝛼} is a packet system on𝑌, and its transfer blocks satisfy
+𝑄𝛽𝑇𝑈𝑄𝛼= 𝑈(𝑃𝛽𝑇𝑃𝛼)𝑈−1.
+Thus packet identities, every zero/nonzero transfer edge, and reﬂexive-transitive reachability are invariant under coordinate
+transport.
+Proof. Conjugation preserves products and sums:
+𝑄𝛼𝑄𝛽= 𝑈𝑃𝛼𝑃𝛽𝑈−1 = 𝛿𝛼𝛽𝑄𝛼,
+while
+∑︁
+𝛼
+𝑄𝛼= 𝑈𝐼𝑈−1 = 𝐼.
+The block formula follows by direct multiplication.
+□
+8.2 Intertwining morphisms
+Definition 8.2 (Strict morphism of seed systems). Let (𝑋, A, (𝑃𝛼)𝛼∈𝐼) and (𝑌, B, (𝑄𝛾)𝛾∈𝐽) be seed systems. A
+strict morphism consists of a linear map Φ : 𝑋→𝑌, an algebra homomorphism 𝜑: A →B, and a declared injective
+packet-label map 𝑓: 𝐼↩→𝐽such that
+Φ𝐴= 𝜑(𝐴)Φ
+for every 𝐴∈A, and
+Φ𝑃𝛼= 𝑄𝑓(𝛼)Φ
+for every 𝛼∈𝐼. Packet merging requires a separate fibre-sum definition and is not included in a strict morphism.
+Projector-resolved seed calculus
+19
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+0
+1
+2
+transported packet
+0
+1
+2
+transported packet
+Products of transported projectors
+0
+2
+4
+6
+8
+10
+12
+14
+16
+norm of product
+Figure 5. Numerical certificate for a nonorthogonal transported packet system. The diagonal products retain idempotent size
+while off-diagonal products remain at roundoff level.
+Theorem 8.3 (Naturality of generation and packets). For a strict morphism of ﬁnite-dimensional seed systems and every
+𝑆⊆𝑋,
+Φ HullA(𝑆) = Hull𝜑(A) (Φ𝑆).
+Moreover,
+Φ(𝑃𝛼𝑥) = 𝑄𝑓(𝛼)Φ(𝑥).
+If 𝑇∈Endk(𝑋) and 𝑇′ ∈Endk(𝑌) satisfy Φ𝑇= 𝑇′Φ, then, writing
+𝑇𝛽𝛼= 𝑃𝛽𝑇𝑃𝛼,
+𝑇′
+𝛿𝛾= 𝑄𝛿𝑇′𝑄𝛾,
+one has
+Φ(𝑇𝛽𝛼𝑥) = 𝑇′
+𝑓(𝛽), 𝑓(𝛼)Φ(𝑥).
+When 𝑇∈A, one may take 𝑇′ = 𝜑(𝑇). If Φ is surjective, then srankB(𝑌) ≤srankA(𝑋). If Φ and 𝜑are isomorphisms
+and 𝑓is bijective, seed rank is preserved, and the blocks and zero pattern of every intertwined operator correspond under Φ.
+Proof. For every 𝐴∈A and 𝑠∈𝑆,
+Φ(𝐴𝑠) = 𝜑(𝐴)Φ(𝑠),
+so the image of the generated hull is contained in the hull of the image seeds. Conversely, every generator 𝜑(𝐴)Φ(𝑠) of
+the latter is the image of 𝐴𝑠, proving equality. Packet compatibility is part of the morphism definition. For blocks,
+Φ𝑃𝛽𝑇𝑃𝛼= 𝑄𝑓(𝛽)Φ𝑇𝑃𝛼= 𝑄𝑓(𝛽)𝑇′Φ𝑃𝛼= 𝑄𝑓(𝛽)𝑇′𝑄𝑓(𝛼)Φ.
+Projector-resolved seed calculus
+20
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+The seed-rank statements follow from theorems 4.3 and 4.4. Bijectivity of 𝑓prevents packet labels from being discarded
+when the complete transfer graph is compared.
+□
+Remark 8.4 (The realization principle). A realization is structurally faithful when it preserves the operations in theo-
+rem 8.3. The meaningful comparison is not that two domain objects are literally equal; it is that operation, projection,
+and reconstruction commute with their realization maps.
+8.3 Completion and dense realizations
+The algebraic naturality theorem has the following bounded-operator extension.
+Theorem 8.5 (Dense realization theorem). Let 𝑋and𝑌be normed spaces over a nontrivially normed ﬁeld, let A and
+B be families of bounded operators on 𝑋and 𝑌, and let Φ : 𝑋→𝑌be a surjective continuous linear map. Suppose an
+assignment 𝜑sends every member of A into B and satisﬁes
+Φ𝐴= 𝜑(𝐴)Φ
+(𝐴∈A).
+Here HullA(𝑆) denotes the span of ﬁnite word orbits in the operator family, including the empty word. If
+HullA(𝑆) = 𝑋,
+then
+HullB(Φ(𝑆)) = 𝑌.
+Separately, if bounded operators 𝑃on 𝑋and 𝑄on𝑌satisfy Φ𝑃= 𝑄Φ, then
+Φ(𝑃𝑋) = 𝑄𝑌.
+Proof. Intertwining each generator intertwines every finite word, so the image of the algebraic source hull lies in the
+target hull. By continuity, Φ(HullA(𝑆)) lies in the closure of that image. The former set is𝑌by density and surjectivity,
+which proves the first conclusion.
+For the range identity, intertwining gives Φ(𝑃𝑋) ⊆𝑄𝑌. Conversely, take 𝑦∈𝑄𝑌and write 𝑦= 𝑄𝑧with 𝑧∈𝑌.
+Choose 𝑥∈𝑋with Φ𝑥= 𝑧. Then
+𝑦= 𝑄𝑧= 𝑄Φ𝑥= Φ𝑃𝑥.
+Thus 𝑄𝑌⊆Φ(𝑃𝑋). No idempotence assumption on 𝑃or 𝑄is used in this argument.
+□
+Boundary 8.6. Surjectivity yields both conclusions as stated. Dense range of Φ would suffice for the density conclusion
+alone, but does not in general give the exact range identity. Neither openness nor completeness of 𝑋or𝑌is required.
+Identifying a completed presentation with a Banach target, as in theorem 3.1, separately requires the isometry and
+completeness hypotheses stated there.
+Projector-resolved seed calculus
+21
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+9 A typed quiver model
+The path-algebra language can be seen in a small model that also displays a genuine missing-packet obstruction.
+Let the quiver have vertices 𝑈,𝑉and arrows
+𝑅: 𝑈→𝑈,
+𝐴: 𝑈→𝑉,
+𝐵: 𝑉→𝑈,
+with the path-algebra relation
+𝐵𝐴= 𝑒𝑈,
+whose realization is the operator identity 𝐵𝐴= 𝐼𝑈. Realize
+𝑈= k2,
+𝑉= k3,
+by
+𝑅=
+0
+−1
+1
+0
+
+,
+𝐴(𝑢1, 𝑢2) = (𝑢1, 𝑢2, 0),
+𝐵(𝑣1, 𝑣2, 𝑣3) = (𝑣1, 𝑣2).
+Starting from the seed 𝑒1 ∈𝑈, the 𝑅-orbit spans 𝑈, and 𝐴carries it onto the first two coordinates of 𝑉. Any path
+from 𝑈to 𝑉ends with 𝐴and therefore lands in im 𝐴. The third coordinate, which is ker 𝐵, is unreachable from a seed
+supported only at 𝑈. Therefore the generated representation is
+𝑈⊕span{(1, 0, 0), (0, 1, 0)} ⊊𝑈⊕𝑉.
+Adding the seed (0, 0, 1) ∈𝑉generates the full representation.
+Proposition 9.1 (Typed reachability certificate). In the preceding quiver realization, no seed supported at 𝑈can generate
+the full representation, whereas the two seeds
+𝑒1 ∈𝑈,
+𝑒3 ∈𝑉
+do generate it.
+Proof. The first claim follows because every path that starts at 𝑈and ends in 𝑉has final arrow 𝐴, so its image lies in
+im 𝐴. For the second, 𝑒1 and 𝑅𝑒1 span 𝑈; their 𝐴-images span im 𝐴; and 𝑒3 spans ker 𝐵, the missing complementary
+direction in 𝑉.
+□
+This example shows why a typed grammar is more than a notational convenience. The obstruction lies in the subspace
+ker 𝐵⊂𝑉, which is unreachable from seeds supported at 𝑈, and is visible before any coordinate calculation.
+10 Worked algebraic model: an elliptic coordinate ring
+Let char k ≠2 and let
+𝐴= k[𝑥, 𝑦]/(𝑦2 −𝑥3 + 𝑥).
+The affine equation 𝑦2 = 𝑥3 −𝑥has classical discriminant 64, which is nonzero under this hypothesis; standard algebraic
+geometry then identifies its smooth projective completion as an elliptic curve [9]. The Lean development checks the
+algebraic implication 2 ≠0 ⇒64 ≠0, the quotient normal form, and the operator identities below. It does not
+formalize projective smoothness, genus, or the geometric identification of the discriminant. The packet computation
+itself uses only the displayed quotient-ring relation. Every class has a unique normal form
+𝑓(𝑥, 𝑦) = 𝑎(𝑥) + 𝑦𝑏(𝑥).
+Projector-resolved seed calculus
+22
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Indeed, 𝑦2 −(𝑥3 −𝑥) is monic of degree two in 𝑦, so division in k[𝑥][𝑦] gives a unique remainder of degree less than
+two in 𝑦. Concretely, every power 𝑦𝑚with 𝑚≥2 can be reduced using
+𝑦2 = 𝑥3 −𝑥.
+10.1 One module seed and two address operators
+Take the seed
+𝑠= 1
+and let 𝑀𝑥, 𝑀𝑦be multiplication by 𝑥and 𝑦. Then
+𝑀𝑖
+𝑥𝑀𝑗
+𝑦𝑠= 𝑥𝑖𝑦𝑗,
+so the algebra, regarded as a module over its multiplication algebra, is generated by one seed.
+The two packet spaces are
+𝐴0 = k[𝑥],
+𝐴1 = 𝑦k[𝑥].
+Let
+𝑃0(𝑎+ 𝑦𝑏) = 𝑎,
+𝑃1(𝑎+ 𝑦𝑏) = 𝑦𝑏.
+These are k-linear pairwise annihilating idempotents and satisfy 𝑃0 + 𝑃1 = 𝐼. They are not 𝐴-linear module maps:
+multiplication by 𝑦exchanges the two packets.
+Identify the packet coefficients by
+𝐴0 ⊕𝐴1 −→k[𝑥] ⊕k[𝑥],
+(𝑎, 𝑦𝑏) ↦−→(𝑎, 𝑏).
+In these ordered coefficient coordinates, with 𝑀𝑥and 𝑀𝑥3−𝑥denoting multiplication on k[𝑥],
+𝑀𝑥=
+𝑀𝑥
+0
+0
+𝑀𝑥
+
+,
+𝑀𝑦=
+0
+𝑀𝑥3−𝑥
+𝐼
+0
+
+.
+The relation is reconstructed as an operator identity:
+𝑀2
+𝑦= 𝑀3
+𝑥−𝑀𝑥.
+10.2 Exact product law
+Write
+𝑓= 𝑎0 + 𝑦𝑎1,
+𝑔= 𝑏0 + 𝑦𝑏1.
+Then
+𝑓𝑔=  𝑎0𝑏0 + (𝑥3 −𝑥)𝑎1𝑏1
+ + 𝑦 𝑎0𝑏1 + 𝑎1𝑏0
+.
+This is a two-packet convolution law. It is already visible at the linear operator level because multiplication by a fixed
+element is a transfer operator.
+Projector-resolved seed calculus
+23
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+even input
+odd input
+even output
+odd output
+Packet transfer for My in k[x, y]/(y2 −x3 + x)
+0
+1
+nonzero block of multiplication by y
+Figure 6. Multiplication by 𝑦exchanges the even and odd packets. The odd-to-even transfer carries the relation weight 𝑥3 −𝑥.
+Example 10.1 (Worked reduction). Take
+𝑓= 𝑥2 + 𝑦,
+𝑔= 𝑥−𝑦.
+Then
+𝑓𝑔= 𝑥3 −𝑥2𝑦+ 𝑥𝑦−𝑦2
+= 𝑥3 −𝑥2𝑦+ 𝑥𝑦−(𝑥3 −𝑥)
+= 𝑥+ (𝑥−𝑥2)𝑦.
+Thus
+𝑃0( 𝑓𝑔) = 𝑥,
+𝑃1( 𝑓𝑔) = (𝑥−𝑥2)𝑦.
+The symbolic certificate in the companion code performs the same quotient reduction exactly.
+10.3 What this example establishes
+The coordinate ring illustrates four distinct parts of the calculus:
+(i) the unit is a module seed;
+(ii) 𝑀𝑥and 𝑀𝑦are address operators;
+(iii) the curve equation is an operator relation;
+(iv) parity in 𝑦gives exact packet analysis, transfer, and reconstruction.
+It does not imply that every algebra has a one-generator algebra presentation. It shows instead that unital algebras are
+cyclic as modules over their full multiplication algebra.
+Projector-resolved seed calculus
+24
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+11 Worked signal model: a bilateral shift
+Let F ∈{R, C} and let
+𝑋= ℓ2(Z; F)
+with the explicit integer-indexed family of bounded reindexing operators
+(𝑆𝑚𝑥)[𝑛] = 𝑥[𝑛−𝑚]
+(𝑚, 𝑛∈Z).
+Thus 𝑆0 = 𝐼, 𝑆𝑚+𝑟= 𝑆𝑚𝑆𝑟, and 𝑆1 is the usual bilateral shift. We use the standard Hilbert-space and bounded-operator
+conventions of [3]. The impulse 𝛿0 satisfies
+𝑆𝑚𝛿0 = 𝛿𝑚
+for every 𝑚∈Z. Therefore finite-support sequences lie in its algebraic orbit hull and are dense in ℓ2(Z).
+Proposition 11.1 (Shift seed). For 𝑛∈N, let 𝐺(𝑛) mean that some 𝑛-element ﬁnite seed set has dense hull under the
+declared family {𝑆𝑚: 𝑚∈Z}. Then
+1 = min{𝑛∈N : 𝐺(𝑛)}.
+Equivalently, one seed suﬃces and no empty seed family generates densely.
+Proof. The orbit of 𝛿0 contains every standard basis vector. Their finite linear span is dense, so 𝐺(1) holds. The hull of
+the empty seed set is zero, while ℓ2(Z; F) is nonzero, so 𝐺(0) fails. Therefore 1 is the least admissible finite cardinality.
+□
+For 𝑁≥1, define residue projectors
+(𝑃𝑁, 𝑗𝑥)[𝑛] =
+(
+𝑥[𝑛],
+𝑛≡𝑗
+(mod 𝑁),
+0,
+otherwise.
+They form an orthogonal packet system and satisfy
+𝑆1𝑃𝑁, 𝑗= 𝑃𝑁, 𝑗+1𝑆1,
+with indices modulo 𝑁. The shift is therefore a cyclic transfer between residue packets.
+Boundary 11.2. This section uses residue packets only to demonstrate the foundational transfer algebra. Nested refine-
+ment and filter-bank structures require additional definitions and are outside Paper I.
+Projector-resolved seed calculus
+25
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+0
+1
+2
+3
+4
+5
+input residue packet
+0
+1
+2
+3
+4
+5
+output residue packet
+Finite periodic shift: 24 coordinates, 6 residue packets
+0
+1
+nonzero transfer
+Figure 7. Residue-packet support in the 24-coordinate periodic shift model with six packets. Each input residue transfers into the
+next output residue. The infinite bilateral-shift theorem is established separately in the text.
+12 Worked matrix models
+12.1 The full matrix algebra
+Let 𝑋= k𝑛and let A = 𝑀𝑛(k) = Endk(𝑋), with the full matrix algebra declared before a seed or target is chosen. By
+theorem 5.3, every nonzero seed is cyclic. This is the maximal linear grammar on 𝑋, not a compression result; under a
+smaller declared operator algebra, the same vector need not be cyclic.
+12.2 Companion and repeated-block operators
+For one operator 𝑇, theorem 6.1 turns verified primary data into an exact minimum-seed certificate. The numerical
+companion compares:
+(a) a nilpotent companion operator with one Jordan chain, for which the Krylov rank is 1, 2, . . . , 𝑛;
+(b) two equal Jordan blocks, for which one diagonal seed produces a chain only as long as one block and then stalls.
+The observed stall is not numerical failure. The associated two-dimensional scalar quotient is the lower-bound
+certificate in theorem 6.1; the identification of that quotient with the geometric-multiplicity space is the classical Jordan
+input stated above.
+Projector-resolved seed calculus
+26
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+13 Worked graph model: adjacency algebras
+Let 𝐺be a nonempty finite graph with adjacency matrix 𝐴𝐺, and regard k𝑉(𝐺) as a module over k[𝐴𝐺]. The kernel-
+checked general result starts from an exact spectral certificate rather than deriving one from graph symmetry.
+Corollary 13.1 (Certified graph seed number). Let k be a ﬁeld and let Λ be a nonempty ﬁnite set. Suppose there are
+pairwise distinct scalars 𝑎𝜆∈k, multiplicities 𝑚𝜆∈N, and an eigenbasis
+{𝑏𝜆, 𝑗: 𝜆∈Λ, 1 ≤𝑗≤𝑚𝜆}
+of k𝑉(𝐺) satisfying
+𝐴𝐺𝑏𝜆, 𝑗= 𝑎𝜆𝑏𝜆, 𝑗.
+If 𝑚𝜆≤𝑅for all 𝜆and 𝑚𝜆∗= 𝑅for some 𝜆∗, then 𝑅is the least natural number of adjacency seeds:
+𝑅= min
+(
+𝑟∈N : there exist 𝑠1, . . . , 𝑠𝑟with
+k𝑉(𝐺) = spank{𝑝(𝐴𝐺)𝑠𝑗: 𝑝∈k[𝑡], 1 ≤𝑗≤𝑟}
+)
+.
+Proof. The distinct eigenvalue labels give Lagrange polynomials that project onto the individual eigenspace packets.
+Padding one basis vector from every packet into each of 𝑅seeds gives the upper bound. Projection to the 𝑚𝜆eigenspace
+coordinates is a surjective scalar quotient, so any generating family has at least 𝑚𝜆members for every 𝜆. The label 𝜆∗
+gives the matching lower bound 𝑅.
+□
+Boundary 13.2 (Spectral-classification input). For a finite undirected graph over C, the real-symmetric spectral theorem
+classically supplies a certificate of the displayed kind, and the numbers 𝑚𝜆are the usual eigenvalue multiplicities; see [2].
+The formal declaration verifies the seed-number formula from the supplied eigenbasis and distinct eigenvalue labels. It
+does not derive diagonalizability from symmetry or implement an eigensolver.
+13.1 Path graphs
+For every field k and every 𝑛≥1, an endpoint of 𝑃𝑛is a cyclic vector for the adjacency operator. Consequently one is
+the least finite adjacency-seed number:
+1 = min
+
+𝑟∈N : ∃𝑠1, . . . , 𝑠𝑟,
+k𝑛= spank{𝑝(𝐴𝑃𝑛)𝑠𝑗: 𝑝∈k[𝑡], 1 ≤𝑗≤𝑟}
+	
+.
+Over C, the familiar spectral description has the distinct eigenvalues
+𝜆𝑘= 2 cos 𝑘𝜋
+𝑛+ 1,
+1 ≤𝑘≤𝑛,
+and the normalized eigenvectors have endpoint coordinate proportional to
+sin 𝑘𝜋
+𝑛+ 1 ≠0.
+The all-field, kernel-checked certificate is instead combinatorial. Let
+𝐾𝑛= [𝑒1, 𝐴𝑒1, . . . , 𝐴𝑛−1𝑒1].
+Its (𝑖, 𝑗) entry counts walks of length 𝑗−1 from the first vertex to vertex 𝑖. This entry is zero when 𝑖> 𝑗, while the
+diagonal entry is one because there is a unique shortest walk of length 𝑖−1 from vertex 1 to vertex 𝑖. Hence 𝐾𝑛is upper
+triangular with unit diagonal, so
+det 𝐾𝑛= 1
+(𝑛≥1).
+Thus the endpoint is cyclic for every path size, not merely for the tested range.
+Projector-resolved seed calculus
+27
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+2
+5
+10
+15
+20
+number of vertices
+1
+adjacency-algebra seed rank
+Path graphs have one adjacency seed
+Figure 8. The endpoint Krylov certificate gives every nonempty path one adjacency seed.
+13.2 Cycle graphs
+Two adjacent vertex vectors generate the adjacency module of every simple cycle. Over C, a primitive-root Fourier
+quotient supplies a matching two-dimensional scalar obstruction. Hence, for every 𝑛≥3, two is the least finite
+adjacency-seed number:
+2 = min
+
+𝑟∈N : ∃𝑠1, . . . , 𝑠𝑟,
+C𝑛= spanC{𝑝(𝐴𝐶𝑛)𝑠𝑗: 𝑝∈C[𝑡], 1 ≤𝑗≤𝑟}
+	
+.
+To see the upper bound directly, index the vertices modulo 𝑛. The identity 𝐴𝑒𝑗= 𝑒𝑗−1 + 𝑒𝑗+1 recovers successive vertex
+vectors from 𝑒0 and 𝑒1, over any field. For the lower bound over C, let 𝜁be a primitive 𝑛th root of unity and define
+𝑞(𝑥) =
+ 𝑛−1
+∑︁
+𝑗=0
+𝜁𝑗𝑥𝑗,
+𝑛−1
+∑︁
+𝑗=0
+𝜁−𝑗𝑥𝑗
+!
+.
+Then 𝑞(𝐴𝑥) = (𝜁+ 𝜁−1)𝑞(𝑥). The images of 𝑒0 and 𝑒1 are (1, 1) and (𝜁, 𝜁−1), which are independent because 𝜁≠𝜁−1
+for 𝑛≥3. Thus 𝑞is a two-dimensional scalar quotient, and theorem 4.10 gives the matching lower bound.
+The usual spectral description writes the eigenvalues as
+𝜆𝑘= 2 cos 2𝜋𝑘
+𝑛,
+0 ≤𝑘< 𝑛.
+The values for 𝑘and 𝑛−𝑘coincide. Apart from the simple characters at 𝑘= 0 and, for even 𝑛, 𝑘= 𝑛/2, the eigenspaces
+occur in pairs. Therefore the maximum eigenspace multiplicity is two, although some eigenspaces have multiplicity one,
+and the certified minimum above is two.
+The path and cycle examples use nearly identical local operators. Their kernel-checked minimum finite seed num-
+bers differ because the path has an endpoint Krylov basis, whereas the cycle has a two-dimensional Fourier quotient
+obstruction.
+Projector-resolved seed calculus
+28
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+3
+5
+10
+15
+20
+number of vertices
+2
+adjacency-algebra seed rank
+Cycle graphs require two adjacency seeds
+Figure 9. Cycle graphs have maximum adjacency-eigenspace multiplicity two and therefore require two adjacency seeds, although
+one or two exceptional eigenspaces are simple.
+14 The common operator language
+The preceding examples can be written without changing the foundational notation.
+Table 1. Foundational realizations of the common operator language.
+Realization
+Seed
+Operator grammar
+Packets
+Completion or
+quotient
+Coordinate
+ring
+1
+𝑀𝑥, 𝑀𝑦
+even/odd 𝑦degree
+quotient by
+𝑦2 −𝑥3 + 𝑥
+Shift system
+𝛿0
+(𝑆𝑚)𝑚∈Z
+residue classes of 𝑛
+ℓ2 closure
+Full matrix
+module
+𝑠≠0
+𝑀𝑛(k)
+chosen idempotents
+finite-dimensional
+Single
+operator
+𝑠1, . . . , 𝑠𝑟
+k[𝑇]
+primary or spectral
+finite-dimensional
+Graph
+adjacency
+vertex seeds
+k[𝐴𝐺]
+eigenspaces
+finite-dimensional
+Typed
+grammar
+vertex seeds
+path algebra k𝑄/𝐼
+vertex idempotents
+relation quotient
+Projector-resolved seed calculus
+29
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+The invariant content is:
+generated hull: HullA(𝑆),
+seed complexity: srankA(𝑋),
+packet coordinates: 𝑥↔(𝑃𝛼𝑥)𝛼,
+operator coordinates: 𝑇↔(𝑃𝛽𝑇𝑃𝛼)𝛽,𝛼,
+relations: 𝐹𝑚/𝑁𝑆,
+coordinate invariance: 𝑃𝛼↦→𝑈𝑃𝛼𝑈−1,
+realization: Φ𝐴= 𝜑(𝐴)Φ.
+fixed operator
+grammar
+hulls and
+presentations
+generator counts
+and bounds
+finite projector
+system
+analysis and
+synthesis
+blocks and
+transport
+worked
+realizations
+Two proof families meet in the worked realizations
+Figure 10. Structural overview of the two proof families. The generator and packet arguments meet in the worked realizations.
+This diagram is not an exhaustive graph of Lean declaration dependencies.
+15 Computational certificates
+The accompanying Python package is not used as a substitute for proof. It provides exact symbolic checks and finite
+numerical regression tests for formulas already proved. The computed ranges and random seeds are recorded explicitly.
+These checks do not extend a theorem beyond its hypotheses or certify an unrestricted numerical implementation.
+The journal companion also tests integer counts beyond floating-point precision and rejects the unsupported complex-
+symmetric spectral shortcut.
+15.1 Test suite
+The test suite checks:
+(i) projector idempotence, annihilation, and completeness;
+(ii) exact vector analysis and synthesis;
+(iii) exact operator reconstruction from all transfer blocks;
+(iv) coordinate transport under a dense random similarity transform;
+Projector-resolved seed calculus
+30
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+(v) cyclicity of a companion operator;
+(vi) the two-seed obstruction for repeated Jordan blocks;
+(vii) the semisimple multiplicity formula in representative cases;
+(viii) full orbit dimension for two representative nonzero seeds under the full matrix algebra;
+(ix) exact reduction and packet multiplication in the elliptic coordinate ring;
+(x) seed ranks of path and cycle adjacency modules over the reported finite ranges;
+(xi) the cyclic residue transfer pattern of a finite shift.
+15.2 Recorded results
+Table 2. Representative computed checks from the journal-edition run.
+Quantity
+Result
+Projector idempotence residual
+0
+Projector annihilation residual
+0
+Projector completeness residual
+0
+Operator reconstruction residual
+0
+Transported-projector residual, maximum
+1.85 × 10−15
+Companion seed rank
+1
+Two equal Jordan blocks, seed rank
+2
+𝑀3(C) acting on seven copies, seed rank
+3
+Sampled path graph seed ranks, 2 ≤𝑛≤12
+1
+Sampled cycle graph seed ranks, 3 ≤𝑛≤12
+2
+Full 𝑀4(R) orbit dimensions for two sampled nonzero seeds
+4, 4
+Automated tests
+33/33 passed
+The finite shift pattern recovered by the experiment is
+©­­­
+«
+0
+0
+0
+1
+1
+0
+0
+0
+0
+1
+0
+0
+0
+0
+1
+0
+ª®®®
+¬
+,
+which is the exact packet adjacency of a cyclic four-phase transfer.
+15.3 Algorithms
+The Lean component proves mathematical specifications for the following finite constructions. These statements
+establish termination and correctness at the level of subspaces, block tables, and exact certificates; they do not assert
+code extraction or a particular backend’s performance.
+Projector-resolved seed calculus
+31
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Construction 15.1 (Orbit-hull closure specification). Let 𝑉be finite-dimensional, let (𝑂𝑖)𝑖∈𝐼be a finite operator
+family, and let 𝑆⊆𝑉. Define
+𝑊0 = spank 𝑆,
+𝑊𝑛+1 = 𝑊𝑛+
+∑︁
+𝑖∈𝐼
+𝑂𝑖(𝑊𝑛).
+Then there is an 𝑛∈N such that
+𝑊𝑛+1 = 𝑊𝑛
+and
+𝑊𝑛= Hull(𝑂𝑖) (𝑆),
+where the right side is the least subspace containing 𝑆and invariant under every 𝑂𝑖. Thus the ascending subspace
+iteration terminates and its stable value is exactly the finite operator hull.
+Construction 15.2 (Transfer-block table specification). Given finite projector systems (𝑃𝑖)𝑖∈𝐼and (𝑄𝑗) 𝑗∈𝐽and a
+linear map 𝑇, form the table
+𝐵𝑗𝑖= 𝑄𝑗𝑇𝑃𝑖.
+Its assembly reconstructs the input map exactly,
+∑︁
+𝑗∈𝐽
+∑︁
+𝑖∈𝐼
+𝐵𝑗𝑖= 𝑇,
+and its reported support relation is exactly {(𝑖, 𝑗) : 𝐵𝑗𝑖≠0}. The latter equality is the specification of the transfer-graph
+output, not a claim that Lean extracts a decidable edge-list routine for every coefficient field.
+Construction 15.3 (Certified exact graph seed-rank specification). For a finite square matrix 𝐴over a field 𝐾, define the
+noncomputable exact spectral quantity
+𝑟spec(𝐴) =
+max
+𝜇∈Spec𝐾(𝐴) dim𝐾ker(𝐴−𝜇𝐼),
+with value zero for an empty spectrum. Suppose an exact certificate supplies a finite eigenbasis indexed by labels and
+multiplicities, the eigenvalue equations, a multiplicity bound attained by one label, projector polynomials that extract
+the padded eigenbasis generators, coverage of every spectral value by a label, equality of the declared and actual eigenspace
+dimensions, and membership of the maximizing eigenvalue in the spectrum. Then 𝑟spec(𝐴) is the least natural number
+of polynomial-orbit seeds for 𝐴.
+This is a verified certificate checker/specification. It does not construct the eigenbasis, prove that a symmetric matrix
+is diagonalizable, or implement an exact eigensolver. The companion Python code performs symbolic computations in
+the reported finite graph range; the all-size path and cycle results are proved separately above.
+16 Formal verification record
+The accompanying formal development uses Lean 4.34.0-rc2 [10] and a pinned Mathlib revision [11]. Its 35-row contract
+links 32 registered mathematical claims and three mathematical algorithm specifications to 84 named targets. Some
+targets are construction definitions rather than theorem declarations; the target count is not a count of 84 independent
+theorems. The map records the hypotheses and exclusions of each result in formalization/lean/LEAN_THEOREM_
+MAP_v1.0.2.md.
+Projector-resolved seed calculus
+32
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+For this journal edition, the project sources were rebuilt in a fresh object directory using a focused import module.
+The eight former blanket Mathlib imports were replaced, but no existing formal statement or proof body was changed.
+This reduces the memory required to check the development. The pinned Mathlib dependency cache was reused, not
+independently rebuilt.
+Table 3. Principal modules in the accompanying Lean development.
+Module
+Representative declaration
+Checked scope
+SeedRankBasics;
+SeedRankOperations
+cyclic_iff_seedRank_eq_one;
+seedRank_tensorProduct_le_
+mul
+Cardinal seed rank, free presentations, cyclicity,
+semilinear functoriality, image-algebra
+invariance, direct sums, tensor products, and
+scalar quotients.
+SemisimpleSeedRank;
+SemisimpleCompletion
+semisimple_seedRank_eq_
+maxCeilDiv_of_equivalences
+One-block and finite-product generator
+formulas, transport through chosen split
+algebra and compatible module equivalences,
+full matrices, and multiplicity obstruction.
+SingleOperatorGraph
+singleOperator_seedNumber_
+isLeast_of_primary_
+decomposition
+Certified primary and diagonalizable least-seed
+formulas, cyclicity wrappers, every nonempty
+path, and every complex cycle of size at least
+three.
+ExactCoordinates;
+PaperIBlockCompletion
+exactPacketCoordinates;
+transferBlock_comp_
+linearMap
+Exact packet coordinates, operator
+reconstruction, block composition, and
+support identities.
+PacketNaturality
+Completion
+strict_naturality_package
+Packetwise equality, all finite powers, full
+dependent block algebra, dimension,
+reachability, conjugation, strict naturality, and
+the typed quiver certificate.
+TopologicalCompletion
+topological_packet_
+isomorphism;
+concreteBilateralShift_
+seedCardinality_isLeast
+Closed packet ranges, standard product-norm
+equivalence, completion, adjoints, closure
+obstruction, dense transport, packet descent,
+and the concrete bilateral shift.
+EllipticAlgorithms
+My_sq_eq_Mx_cube_sub_Mx;
+orbitHull_algorithm_
+terminates_and_correct
+Quotient normal form, coordinate projectors
+and product law, the unit seed, operator
+relation, orbit iteration, transfer table, and
+certified spectral-rank specification.
+KernelAudit
+84 mapped #print axioms
+commands; fail-closed namespace
+command
+Concrete smoke tests, complete
+mapped-declaration reports, and a
+namespace-wide trust gate.
+The fresh checks compile all 20 local modules, resolve all 84 mapped targets, and run the fail-closed audit over
+1,126 project declarations, including definitions and generated helpers. The reported transitive axiom dependencies
+are confined to propext, Classical.choice, and Quot.sound. Separate negative controls require Lean to reject a
+false natural-number equality and to reject a theorem placeholder when warnings are treated as errors. Commands,
+source hashes, type signatures, and unedited compiler output are included in the verification supplement.
+The earlier v1.2.1 record reported an 8,883-job aggregate build. That is historical evidence, not the job count of this
+audit. The present checks establish acceptance of the accompanying local declarations relative to the pinned imported
+library. They do not certify every sentence of exposition, independent mathematical novelty, or a general executable
+eigensolver.
+Projector-resolved seed calculus
+33
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+The certificate boundary is material. Lean checks the implications from chosen split decompositions, primary data,
+eigenbases, projector polynomials, quotient maps, and spectrum-coverage certificates. It does not construct those
+certificates from Wedderburn–Artin, Jordan, the spectral theorem, graph symmetry, or an eigensolver. Likewise, the
+Lean elliptic-coordinate module checks the quotient algebra and operator identities, not projective smoothness or
+genus.
+17 Classical inputs, new organization, and claim boundary
+17.1 Classical mathematical inputs
+The following are established ingredients:
+• modules over associative algebras and path algebras;
+• cyclic modules and companion matrices;
+• Jordan decomposition and primary decomposition;
+• Wedderburn’s structure theorem for finite-dimensional semisimple algebras;
+• direct-sum and tensor-product constructions;
+• idempotent decompositions and block matrices;
+• spectral theory of symmetric graph adjacency matrices.
+These facts are not renamed as new theorems. In the kernel-checked statements, their outputs appear as explicit
+inputs: a chosen split algebra equivalence, a compatible module equivalence, primary block generators, extraction
+polynomials, scalar quotient maps, an eigenbasis, or exact spectrum-coverage data. Lean verifies the conclusions from
+those certificates. It does not, in this release, derive the certificates from the classification theorems themselves. This
+distinction is part of the formal claim boundary rather than a hidden implementation detail.
+17.2 Claim-status ledger
+In table 5, P means that a proof is supplied in this paper, without implying historical novelty; C means classical or
+reformulated from established theory; I means that the companion package checks finite computed instances; and L
+means that the stated scope has been checked in the accompanying Lean component. Each of the 35 registered rows
+carries L at its specified scope. A Lean entry applies only to the scope named in the final column; exact declaration names
+appear in formalization/lean/LEAN_THEOREM_MAP_v1.0.2.md.
+The full ledger appears in Appendix D. Its row identifiers are unchanged from the v1.2.1 contract, so the journal
+article and the archived formal record can be compared without renumbering results.
+17.3 Framework-level contribution
+The organizing choice is to keep the acting algebra, generated module, relations, projector coordinates, and realization
+maps explicit throughout. The same seed-rank and transfer identities can then be used in each worked model without
+changing their meaning. The definitions and formulas retain their classical module-theoretic content; the common
+presentation and source-linked proofs make their hypotheses easier to compare and reuse.
+Projector-resolved seed calculus
+34
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+This is a framework and formalization contribution. It is not a priority claim for minimal generator numbers,
+idempotent decompositions, or cyclic module theory. A broader comparison with systems theory, quiver representations,
+and multiresolution methods requires separate treatment.
+17.4 Roadmap boundary
+Nested refinement, nonlinear packet maps, and domain-specific realizations are roadmap items. They are not used to
+justify any theorem in Paper I, and no Paper I result depends on a conjecture.
+18 Conclusion
+A fixed operator algebra turns a generation claim into a question about a module. A finite projector family gives exact
+coordinates on that module, and the transfer blocks recover both the operator and its composition law. Relations
+determine the presentation; topology determines which closures or completions are justified.
+The multiplicity formulas show why these distinctions matter. A cyclic component may require several generators
+when it is repeated under a shared action. A path has an endpoint Krylov basis, whereas a complex cycle has a two-
+dimensional scalar quotient that prevents one-seed generation. The number of seeds is therefore a property of the action,
+not of a preferred coordinate description.
+The results collected here provide a common starting point for subsequent realizations: a specified grammar, a
+generated module, a minimum generator count, packet coordinates, and exact transport identities. The formal record
+preserves the assumptions on which those statements depend. Extensions can build on this core without confusing a
+chosen decomposition with a proof that such a decomposition exists.
+A Notation and status conventions
+Table 4. Notation used throughout Paper I.
+Symbol
+Meaning
+𝑄
+quiver of operator types and primitive typed operations
+k𝑄/𝐼
+path algebra with declared relations
+𝑋
+ambient module or topological vector space
+𝑆
+seed family
+A
+unital operator algebra acting on 𝑋
+HullA(𝑆)
+algebraic operator hull
+srankA(𝑋)
+minimal number of module seeds
+𝑃𝛼
+packet projector
+𝑋𝛼= 𝑃𝛼𝑋
+packet space
+𝑇𝛽𝛼= 𝑃𝛽𝑇𝑃𝛼
+transfer block
+AP
+packet analysis map
+SP
+packet synthesis map
+Φ𝐴= 𝜑(𝐴)Φ
+intertwining condition
+Projector-resolved seed calculus
+35
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Environment labels describe a statement’s local role; the independent proof and machine-evidence classifications
+are the P/C/I/L codes in table 5. A boundary records something intentionally not claimed. Roadmap items are not
+theorems, and no theorem in Paper I is marked conjectural.
+B Proof dependency map
+The logical order is:
+typed grammar and path algebra
+⇓
+generated hull and free presentation
+⇓
+seed rank and functorial bounds
+⇓
+semisimple and single-operator formulas,
+while independently
+idempotent packet system
+⇓
+analysis/synthesis and transfer blocks
+⇓
+coordinate transport and naturality.
+The two branches meet in the worked models, where the generated module is explicitly resolved into packet coordinates.
+C Reproducibility layout
+The journal source package is organized as follows:
+Komorebi_Paper_I_Journal_v1.3.0/
+README.md
+SHA256SUMS.txt
+paper/
+LaTeX source, PDF, figures
+formalization/lean/
+pinned Lean sources and claim map
+code/python/
+symbolic and numerical companion
+results/
+regenerated examples and figure record
+verification/
+compiler logs, types, tests, environment
+review/
+corrections and source comparisons
+provenance/
+original release record
+scripts/
+repeatable verification and build tools
+The verification supplement records the exact source hashes and observed outcomes of each executed check. The
+Python figure-and-example command records only the outputs it produces; it does not report that Lean, tests, or PDF
+review have passed merely because those checks passed in a previous release. Test results, compiler acceptance, and visual
+inspection have separate records.
+The formal development is pinned by lean-toolchain and lake-manifest.json. The fresh audit reuses
+matching dependency objects and rebuilds the local sources. Reproducing the full dependency build is a distinct
+Projector-resolved seed calculus
+36
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+operation. The manuscript’s written proofs, the source-to-statement correspondence, and the compiler checks likewise
+remain separate parts of the review.
+D Claim-status ledger
+Table 5. Status and verification scope of the principal claims in Paper I.
+Section
+Claim
+Status
+Verification scope
+Free presentations
+Universal one-seed presentation C/P/L
+Exact algebraic quotient and generation criterion;
+dense-isometric completion and bounded
+intertwining are also checked.
+Free presentations
+Multi-seed presentation
+C/P/L
+Exact free-module quotient plus the least finite
+free-rank characterization for finite modules.
+Seed rank
+Cyclic characterization
+C/P/L
+Exact unrestricted nonzero cardinal-valued
+equivalence, with the zero-module convention
+separate.
+Seed rank
+Quotient monotonicity
+C/P/L
+Exact for a surjective semilinear map along an
+arbitrary scalar homomorphism.
+Seed rank
+Isomorphism invariance over
+the image algebra
+C/P/L
+Exact for the literal image algebra; full target
+equality requires scalar-map surjectivity.
+Seed rank
+Shared direct-sum bound
+C/P/L
+Exact cardinal bound for the diagonal action of
+one algebra.
+Seed rank
+Independent direct-sum
+formula
+C/P/L
+Exact cardinal equality for the coordinatewise
+product-algebra action.
+Seed rank
+Tensor-product bound
+C/P/L
+Exact over a common commutative base with the
+stated scalar-tower action.
+Seed rank
+Scalar quotient obstruction
+C/P/L
+Exact for a character and a surjective semilinear
+map to a finite scalar module.
+Semisimple modules Semisimple multiplicity formula C/P/L
+Exact from chosen split algebra and compatible
+semilinear module equivalences; classification
+existence is external.
+Semisimple modules Full matrix algebra
+C/P/L
+Exact seed rank one and constructive cyclicity of
+every nonzero vector.
+Semisimple modules Multiplicity obstruction
+C/P/L
+Exact cardinal formula ⌈𝑚/𝑑⌉for the diagonal
+full-matrix action.
+One operator
+Certified single-operator seed
+number
+C/P/L
+Exact least polynomial-orbit count and canonical
+k[𝑇] seed rank from explicit primary certificates.
+One operator
+Certified cyclic matrix criterion
+C/P/L
+Stronger four-condition chain once the
+geometric/block and minpoly/charpoly bridges
+are supplied: the checked implication does not
+need the separately inherited finite-label
+hypothesis.
+Packet coordinates
+Exact packet coordinates
+C/P/L
+Exact two-sided analysis–synthesis equivalence
+for finite projector families.
+Packet coordinates
+Packetwise equality
+C/P/L
+Exact iff: equality is detected by all packet
+projectors.
+Topological packets
+Topological packet
+isomorphism
+C/P/L
+Exact closed ranges and continuous linear
+equivalence for the standard finite product norm.
+Projector-resolved seed calculus
+37
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+Section
+Claim
+Status
+Verification scope
+Topological packets
+Completion preserves a finite
+packet split
+C/P/L
+Exact: 𝑃𝑖𝑀= 𝑃𝑖𝑋for any bounded idempotent,
+with no invariance of 𝑀required.
+Transfer blocks
+Exact operator reconstruction
+C/P/L
+Exact operator identity.
+Transfer blocks
+Packet matrix multiplication
+C/P/L
+Exact composition identity.
+Transfer blocks
+Packet powers
+C/P/L
+Exact finite path expansion for every natural
+power, including the zeroth power.
+Transfer blocks
+Adjoint reversal
+C/P/L
+Stronger: bounded self-adjoint packet maps
+suffice; orthogonal-projector structure is not
+otherwise used.
+Transfer blocks
+Algebraic full block
+representation
+C/P/L
+Exact dependent block-algebra equivalence,
+arbitrary-block synthesis, and output-first
+multiplication law.
+Transfer blocks
+Dimension count
+C/P/L
+Exact finite-dimensional packet-sum and square
+formulas.
+Transfer support
+Algebraic packet support
+pattern
+C/P/L
+Exact reflexivity and transitivity iff statements for
+arbitrary nontrivial packet ranges.
+Reachability
+Reachability obstruction
+C/P/L
+Exact algebraic reachable-support theorem and
+bounded-projector closure corollary.
+Coordinate
+transport
+Coordinate transport
+C/P/L
+Exact blocks, edges, and reachability under
+conjugation.
+Naturality
+Naturality of generation and
+packets
+C/P/L
+Exact strict package; full edge/zero-pattern
+correspondence uses bijective structure maps.
+Dense realizations
+Dense realization theorem
+C/P/L
+Exact for normed spaces, bounded operator
+families, and a surjective continuous intertwiner;
+packet range descends separately.
+Typed quiver
+Typed reachability certificate
+P/L
+Exact displayed finite model: 𝐵𝐴= 𝐼, missing
+kernel direction, no 𝑈-only generation, and
+two-seed generation.
+Bilateral shift
+Shift seed
+C/P/L
+Exact explicit integer-power grammar on ℓ2(Z);
+least finite dense-generating cardinality is one.
+Graph model
+Certified spectral seed number
+C/P/L
+Exact from a supplied distinct-label eigenbasis;
+path one and complex-cycle two are
+unconditional all-size theorems.
+Algorithms
+Orbit-hull iteration
+C/P/I/L
+Exact stabilization and least-invariant-hull
+specification in finite dimension; no extraction or
+performance claim.
+Algorithms
+Transfer-block table
+C/P/I/L
+Exact table reconstruction and definitional
+support specification; no edge-list
+implementation claim.
+Algorithms
+Certified exact graph rank
+C/P/I/L
+Exact noncomputable spectrum maximum from
+supplied spectral certificates; no verified
+eigensolver claim.
+Projector-resolved seed calculus
+38
+
+JOURNAL OF KOMOREBI MATHEMATICS
+CORE SERIES / I
+References
+[1] I. Assem, D. Simson, and A. Skowroński, Elements of the Representation Theory of Associative Algebras, Volume 1: Techniques
+of Representation Theory, London Mathematical Society Student Texts 65, Cambridge University Press, Cambridge, 2006.
+doi:10.1017/CBO9780511614309.
+[2] A. E. Brouwer and W. H. Haemers, Spectra of Graphs, Universitext, Springer, New York, 2012. doi:10.1007/978-1-4614-1939-6.
+[3] J. B. Conway, A Course in Functional Analysis, second edition, Graduate Texts in Mathematics 96, Springer, New York, 1990.
+doi:10.1007/978-1-4757-4383-8.
+[4] R. A. Horn and C. R. Johnson, Matrix Analysis, second edition, Cambridge University Press, Cambridge, 2012.
+doi:10.1017/CBO9781139020411.
+[5] T. Y. Lam, A First Course in Noncommutative Rings, second edition, Graduate Texts in Mathematics 131, Springer, New York,
+2001. doi:10.1007/978-1-4419-8616-0.
+[6] T. Y. Lam, Lectures on Modules and Rings, Graduate Texts in Mathematics 189, Springer, New York, 1999. doi:10.1007/978-1-
+4612-0525-8.
+[7] S. Roman, Advanced Linear Algebra, third edition, Graduate Texts in Mathematics 135, Springer, New York, 2008.
+doi:10.1007/978-0-387-72831-5.
+[8] H. H. Schaefer and M. P. Wolff, Topological Vector Spaces, second edition, Graduate Texts in Mathematics 3, Springer, New
+York, 1999. doi:10.1007/978-1-4612-1468-7.
+[9] J. H. Silverman, The Arithmetic of Elliptic Curves, second edition, Graduate Texts in Mathematics 106, Springer, New York,
+2009. doi:10.1007/978-0-387-09494-6.
+[10] L. de Moura and S. Ullrich, The Lean 4 Theorem Prover and Programming Language, in Automated Deduction—CADE 28,
+Lecture Notes in Computer Science 12699, Springer, Cham, 2021, pp. 625–635. doi:10.1007/978-3-030-79876-5_37.
+[11] The mathlib Community, The Lean Mathematical Library, in Proceedings of the 9th ACM SIGPLAN International
+Conference on Certified Programs and Proofs, ACM, 2020, pp. 367–381. doi:10.1145/3372885.3373824.
+Projector-resolved seed calculus
+39

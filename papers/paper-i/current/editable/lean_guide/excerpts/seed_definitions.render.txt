@@ -1,0 +1,27 @@
+variable (A : Type u) (M : Type v)
+variable [Semiring A] [AddCommMonoid M] [Module A M]
+
+/-- A set of seeds generates `M` when its `A`-linear span is all of `M`. -/
+def Generates (s : Set M) : Prop :=
+  Submodule.span A s = ⊤
+
+/-- A family generates when its range is a generating set. -/
+def FamilyGenerates \{ι : Type w\} (v : ι → M) : Prop :=
+  Generates A M (Set.range v)
+
+/-- A module is cyclic when one element generates it. -/
+def Cyclic : Prop :=
+  ∃ x : M, Generates A M \{x\}
+
+/--
+The seed rank is the least cardinality of a set whose `A`-span is `M`.
+
+Because it is cardinal-valued, it remains meaningful for modules that are not
+finitely generated.  In particular, the zero module has seed rank zero.
+-/
+noncomputable def seedRank : Cardinal :=
+  (⊤ : Submodule A M).spanRank
+
+/-- The natural-valued minimum used for finite-generation corollaries. -/
+noncomputable def seedFinrank : ℕ :=
+  (⊤ : Submodule A M).spanFinrank

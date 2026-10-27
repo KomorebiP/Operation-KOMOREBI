@@ -1,0 +1,25 @@
+import PaperIRelease.TopologyCategories
+import PaperIRelease.CategoryUniversal
+import PaperIRelease.CategoryExport
+import PaperIRelease.CategoryPackets
+import PaperIRelease.GrammarIdeal
+import PaperIRelease.GrammarPaths
+import PaperIRelease.GrammarFactorization
+
+set_option autoImplicit false
+
+#check Komorebi.PaperIRelease.CategoryExport.transportLimit
+#check Komorebi.PaperIRelease.CategoryExport.transportColimit
+#check Komorebi.PaperIRelease.CategoryExport.additive_equation_transport
+#check Komorebi.PaperIRelease.GrammarAlgebra.typedIdealModuleEquivalence
+#check Komorebi.PaperIRelease.GrammarAlgebra.typedPathRelationModuleEquivalence
+#check Komorebi.PaperIRelease.CategoryPackets.transferBlock_naturality
+#print axioms Komorebi.PaperIRelease.CategoryExport.transportLimit
+#print axioms Komorebi.PaperIRelease.CategoryExport.transportColimit
+
+#check Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_closedHull
+#check Komorebi.PaperIRelease.TopologyCategories.seedCategory
+#print axioms Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_closedHull
+#print axioms Komorebi.PaperIRelease.TopologyCategories.seedCategory
+#print axioms Komorebi.PaperIRelease.CategoryExport.transportInitial_underlying
+#print axioms Komorebi.PaperIRelease.CategoryExport.transportTerminal_underlying

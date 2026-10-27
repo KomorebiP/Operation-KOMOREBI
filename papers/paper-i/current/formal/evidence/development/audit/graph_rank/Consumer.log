@@ -1,0 +1,31 @@
+Komorebi.PaperIRelease.packetPureSeedRank_bounds.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : LinearProjectorFamily 𝕜 X I) (hPA : ∀ (i : I), P.proj i ∈ A) :
+  Komorebi.SeedRankBasics.seedRank (↥A) X ≤ packetPureSeedRank A P ∧
+    packetPureSeedRank A P ≤
+      Cardinal.sum fun i =>
+        Komorebi.SeedRankBasics.seedRank ↥(packetCornerAlgebra A (P.proj i) ⋯ ⋯) ↥(LinearMap.range (P.proj i))
+Komorebi.PaperIRelease.source_component_pureSeedRank.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] [DecidableEq I] (P : LinearProjectorFamily 𝕜 X I) (ops : Set (Module.End 𝕜 X))
+  (hedges : EdgeSurjective P ops) :
+  packetPureSeedRank (packetGeneratedAlgebra P ops) P =
+    Cardinal.sum fun C => localPureSeedRank (packetGeneratedAlgebra P ops) P ⋯ (component (TransferEdge P ops)) ↑C
+Komorebi.PaperIRelease.packetPureSeedRank_eq_source_card.{u} {K X I : Type u} [Field K] [AddCommGroup X] [Module K X]
+  [Fintype I] (P : LinearProjectorFamily K X I) (ops : Set (Module.End K X))
+  [∀ (i : I), Nontrivial ↥(LinearMap.range (P.proj i))] (hpropagating : PacketPropagating P ops) :
+  packetPureSeedRank (packetGeneratedAlgebra P ops) P = ↑(Fintype.card (Sources (TransferEdge P ops)))
+Komorebi.PaperIRelease.local_proj_zero_iff.{u} {𝕜 X I J : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X] [Fintype I]
+  [Fintype J] [DecidableEq J] (P : LinearProjectorFamily 𝕜 X I) (hP : ∀ (i : I), P.proj i ≠ 0) (σ : I → J) (C : J)
+  (i : I) : (localPacketFamily P σ C).proj i = 0 ↔ σ i ≠ C
+Komorebi.PaperIRelease.packetPureSeedRank_discardZeros.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : LinearProjectorFamily 𝕜 X I) :
+  packetPureSeedRank A P.discardZeros = packetPureSeedRank A P
+'Komorebi.PaperIRelease.BoundedSupport.adjoint_closed_iff_symmetric' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Komorebi.PaperIRelease.BoundedSupport.star_subalgebra_iff_equivalence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Komorebi.PaperIRelease.packetPureSeedRank_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Komorebi.PaperIRelease.source_component_pureSeedRank' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Komorebi.PaperIRelease.packetPureSeedRank_eq_source_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IndependentGraphRankAudit.empty_source_count_rank' depends on axioms: [propext, Classical.choice, Quot.sound]

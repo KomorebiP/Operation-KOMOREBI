@@ -1,0 +1,13 @@
+import PaperIRelease.TopologySemilinearRank
+import PaperIRelease.TopologyCategories
+#print axioms PaperIRelease.TopologySemilinearRank.rank_attained
+#print axioms PaperIRelease.TopologySemilinearRank.generates_image
+#print axioms PaperIRelease.TopologySemilinearRank.rank_le_of_continuous_additive_surjective
+#print axioms PaperIRelease.TopologySemilinearRank.rank_eq_of_continuous_semilinear_equiv
+#print axioms PaperIRelease.TopologySemilinearRank.operatorHull_eq_moduleSpan
+#print axioms PaperIRelease.TopologySemilinearRank.moduleSeedRank_eq_operatorSeedRank
+#print axioms Komorebi.PaperIRelease.TopologyCategories.operator_mem_closedHull
+#print axioms Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_closedHull
+#print axioms Komorebi.PaperIRelease.TopologyCategories.packetCategory
+#print axioms Komorebi.PaperIRelease.TopologyCategories.seedCategory
+#print axioms Komorebi.PaperIRelease.TopologyCategories.seeded_surjection_generates

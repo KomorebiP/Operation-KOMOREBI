@@ -1,0 +1,12 @@
+import PaperIRelease.TopologyTransport
+import Mathlib.Topology.Algebra.GroupCompletion
+import Mathlib.Topology.Algebra.Module.LocallyConvex
+#check @IsUniformInducing
+#check @UniformContinuousConstSMul
+#check @IsUniformAddGroup
+#check @LocallyConvexSpace
+#check IsUniformAddGroup.comap
+#check IsUniformInducing.isUniformAddGroup
+#check IsUniformInducing.uniformContinuousConstSMul
+#check ContinuousLinearMap.uniformContinuous
+#check @ContinuousLinearMap

@@ -1,0 +1,77 @@
+CATEGORY AND TYPED GRAMMAR RELEASE CONTRIBUTION
+
+Production modules (dependency order)
+CategoryExport, CategoryPackets, GrammarAlgebra, GrammarTyped, GrammarModules,
+GrammarEquivalence, GrammarIdeal, GrammarPaths, GrammarFactorization,
+CategoryBoundaries.
+
+PSC-I-D-TYPED-GRAMMAR
+  GrammarAlgebra.Grammar, TypedData, TypedRealization, TypedHom,
+  TypedPath, PathCombination, grammarFromPathRelations, idealGrammar.
+  Finite vertex set, arbitrary arrow set, typed arrow maps, actual homogeneous
+  finite linear path relations. The result also handles arbitrary two-sided ideals.
+PSC-I-D-COLLAPSED-REALIZATION
+  TypedData.total, TypedData.vertexOperator, TypedData.arrowOperator,
+  TypedRealization.collapse, TypedData.path_action,
+  TypedData.pathCombination_action.
+  The finite product represents the finite direct sum. Every actual path acts
+  as its source/target block, with the path map composed from the arrow maps.
+PSC-I-T-TYPED-MODULE-EQUIVALENCE
+  typedModuleEquivalence, typedIdealModuleEquivalence,
+  typedPathRelationModuleEquivalence, idealPresentationEquiv.
+  These are genuine mathlib CategoryTheory.Equivalence objects with ordinary
+  ModuleCat as target. Collapse is proved full, faithful and essentially
+  surjective. The comparison isomorphism is explicit vertex-range analysis
+  and finite-sum synthesis, not an assumed equivalence.
+  The path algebra is defined by its standard vertex/arrow presentation:
+  complete orthogonal vertex idempotents and source/target arrow corners.
+  GrammarIdeal proves the equivalence with the literal quotient of this path
+  algebra by TwoSidedIdeal. GrammarPaths ties the presentation to typed paths
+  and their finite homogeneous linear combinations. No independent convolution
+  path-algebra implementation or path-basis theorem is claimed.
+PSC-I-P-ACTION-FACTORIZATION
+  CollapsedRealization.span_imageAlgebra_eq,
+  CollapsedRealization.seedRank_imageAlgebra_eq.
+  Literal equality of the submodule spans as sets and equality of actual
+  cardinal-valued seed ranks under the constructed grammar action and its image.
+PSC-I-D-PACKET-MORPHISM
+  CategoryPackets.PacketObject, PacketMorphism, fiberProjector.
+  Object packets are nonzero. Label maps may merge labels or omit target labels.
+PSC-I-D-SEED-MORPHISM
+  CategoryPackets.SeedObject, SeedMorphism, hull_eq_span.
+  Algebraic part complete. The continuous/topological variant is owned by the
+  topology worker; this file does not silently treat it as algebraic.
+PSC-I-T-NATURALITY
+  CategoryPackets.hull_natural, imageHull_le, imageHull_eq_top,
+  transferBlock_naturality, seeded_surjection_generates.
+  Exact image-algebra hull, full noninjective double-fibre block sum and seeded
+  generating corollary. No injectivity/surjectivity label restriction.
+PSC-I-P-SEED-SYSTEM-CATEGORY
+  CategoryPackets.packetCategory, seedCategory.
+  Actual mathlib Category instances with proved closure and laws.
+PSC-I-T-REALIZATION-EXPORT / PSC-I-P-REALIZATION-EXPORT
+  CategoryExport.Expression, evaluate_transport, equation_transport,
+  additive_equation_transport, transportLimit, transportColimit.
+  Structural induction over primitive morphisms, identities, zero maps, sums,
+  negatives, scalar multiplication and composition. Limit/colimit transport
+  uses the actual PreservesLimit/PreservesColimit classes. Analytic, tensor,
+  completion or domain-specific hypotheses are not manufactured by this module;
+  any construction-specific interpretation retains its declared preservation
+  assumptions as the manuscript requires.
+
+VALIDATION
+Fresh compilation with the common pinned-runtime wrapper, warningAsError,
+autoImplicit=false and relaxedAutoImplicit=false. Exact final source/object
+hashes and exit codes are in final_compile.json. All key declarations report
+only propext, Classical.choice and Quot.sound (equation_transport uses propext).
+No sorry/admit, new axioms, native_decide or unsafe declarations in production.
+
+Positive boundaries: an actual noninjective two-to-one packet merge, full block
+naturality for that merge, empty-vertex path algebra forced to the zero ring.
+Negative controls: claiming the two merged labels differ is rejected; omitting
+the identity-sum law for a zero projector on Q is rejected.
+
+REVIEW BOUNDARY
+The precise standard presentation chosen for kQ must be stated in the release
+formal guide. Independent semantic review should verify this translation and
+all stable-ID mappings before upgrading publication coverage.

@@ -1,0 +1,6 @@
+import PaperIRelease.GraphSourceBoundary
+#print axioms Komorebi.PaperIRelease.FiniteDigraph.source_iff_no_incoming_edge
+#print axioms Komorebi.PaperIRelease.FiniteDigraph.exists_source_reaching
+#print axioms Komorebi.PaperIRelease.submodule_eq_top_of_sources
+#print axioms Komorebi.PaperIRelease.reachable_range_le_in_component
+#print axioms Komorebi.PaperIRelease.sourceProjection_compression

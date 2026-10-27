@@ -1,0 +1,28 @@
+theorem singleOperator_seedNumber_isLeast_of_primary_decomposition
+    (T : Module.End k X) (R : ℕ)
+    (multiplicity : Λ → ℕ) (eigenvalue : Λ → k)
+    (blockGenerator : ∀ eigen : Λ, Fin (multiplicity eigen) → X)
+    (hbound : ∀ eigen, multiplicity eigen ≤ R)
+    (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+    (hblocks : FamilyGenerates T
+      (fun z : Σ eigen : Λ, Fin (multiplicity eigen) =>
+        blockGenerator z.1 z.2))
+    (hextract : ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ∃ p : k[X],
+        aeval T p
+          (paddedBlockSum R multiplicity blockGenerator
+            ⟨j.val, lt_of_lt_of_le j.isLt (hbound eigen)⟩) =
+          blockGenerator eigen j)
+    (q : ∀ eigen : Λ, X →ₗ[k] (Fin (multiplicity eigen) → k))
+    (hq : ∀ eigen, Function.Surjective (q eigen))
+    (hqT : ∀ (eigen : Λ) (p : k[X]) (x : X),
+      q eigen (aeval T p x) = p.eval (eigenvalue eigen) • q eigen x) :
+    IsLeast \{r : ℕ | SeedNumberLE T r\} R := by
+  constructor
+  · exact ⟨paddedBlockSum R multiplicity blockGenerator,
+      paddedBlockSums_generate T R multiplicity blockGenerator hbound hblocks hextract⟩
+  · intro r hr
+    obtain ⟨v, hv⟩ := hr
+    have hle := multiplicity_le_of_generates T v (multiplicity maxEigen)
+      (q maxEigen) (hq maxEigen) (eigenvalue maxEigen) (hqT maxEigen) hv
+    simpa [hmax] using hle

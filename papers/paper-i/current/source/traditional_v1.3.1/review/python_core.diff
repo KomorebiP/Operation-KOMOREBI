@@ -1,0 +1,68 @@
+--- upstream/code/python/seed_calculus/core.py
++++ journal/code/python/seed_calculus/core.py
+@@ -2,7 +2,7 @@
+ 
+ from collections import deque
+ from collections.abc import Sequence
+-from math import ceil
++from operator import index as integer_index
+ from typing import Iterable
+ 
+ import numpy as np
+@@ -19,7 +19,7 @@
+ 
+ 
+ def analysis(projectors: Sequence[Array], vector: Sequence[complex]) -> list[Array]:
+-    """Apply an exact finite packet analysis map."""
++    """Numerically evaluate finite packet analysis in ambient coordinates."""
+     if not projectors:
+         raise ValueError("at least one projector is required")
+     v = np.asarray(vector, dtype=complex).reshape(-1)
+@@ -94,7 +94,9 @@
+     """Compute a numerical basis for the finite-dimensional operator hull.
+ 
+     The operators are repeatedly applied to newly discovered directions.  The
+-    returned columns form a maximal numerically independent orbit family.
++    returned columns form a numerically independent orbit family. If a supplied
++    max_rounds limit stops the search early, the returned span can be proper.
++    Numerical tolerance decisions are not exact mathematical certificates.
+     """
+     if not seeds:
+         raise ValueError("at least one seed is required")
+@@ -164,17 +166,28 @@
+ 
+ 
+ def semisimple_seed_rank(block_dimensions: Sequence[int], multiplicities: Sequence[int]) -> int:
+-    """Minimal number of module generators for sum_i (k^{d_i})^{m_i}.
+-
+-    The acting algebra is the product sum_i M_{d_i}(k), and the field is assumed
+-    algebraically closed.  The theorem proved in the paper gives
+-        max_i ceil(m_i / d_i).
++    """Return the exact generator count for a supplied split matrix module.
++
++    For the coordinatewise product action of M_{d_i}(k) on the modules
++    (k^{d_i})^{m_i}, this is max_i ceil(m_i / d_i). The field need not be
++    algebraically closed once this split presentation is supplied. This
++    integer calculation does not construct a semisimple decomposition.
+     """
+-    ds = [int(d) for d in block_dimensions]
+-    ms = [int(m) for m in multiplicities]
++    def natural(value: int, label: str) -> int:
++        if isinstance(value, (bool, np.bool_)):
++            raise ValueError(f"{label} must be an integer, not a boolean")
++        try:
++            return integer_index(value)
++        except TypeError as exc:
++            raise ValueError(f"{label} must be an exact integer") from exc
++
++    ds = [natural(d, "block dimension") for d in block_dimensions]
++    ms = [natural(m, "multiplicity") for m in multiplicities]
+     if not ds or len(ds) != len(ms) or any(d <= 0 for d in ds) or any(m < 0 for m in ms):
+         raise ValueError("positive block dimensions and nonnegative matching multiplicities are required")
+-    return max((ceil(m / d) for d, m in zip(ds, ms, strict=True)), default=0)
++    # Never divide through float: counts beyond 2**53 must remain exact.
++    return max((m + d - 1) // d for d, m in zip(ds, ms, strict=True))
++
+ 
+ 
+ def _nullity(matrix: sp.Matrix) -> int:

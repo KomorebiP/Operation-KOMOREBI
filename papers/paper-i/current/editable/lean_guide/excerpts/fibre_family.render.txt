@@ -1,0 +1,10 @@
+/-- Every finite address map induces a complete orthogonal projector family. -/
+def fibreLinearProjectorFamily
+    [Semiring R] [AddCommMonoid M] [Module R M]
+    [DecidableEq β] [Fintype β]
+    (address : α → β) :
+    Komorebi.Foundation.LinearProjectorFamily R (α → M) β where
+  proj := fibreLinearProj (R := R) address
+  idempotent b x := fibreProj_idempotent address b x
+  orthogonal hbc x := fibreProj_orthogonal address hbc x
+  complete x := fibreProj_reconstruction address x

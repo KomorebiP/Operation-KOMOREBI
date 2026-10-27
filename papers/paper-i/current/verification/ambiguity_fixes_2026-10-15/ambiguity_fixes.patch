@@ -1,0 +1,64 @@
+--- before/02_foundations.tex
++++ after/02_foundations.tex
+@@ -805,24 +805,26 @@
+ \end{microexample}
+ 
+ 
++\Needspace{16\baselineskip}
+ \begin{corollary}[Algebraically closed multiplicity formula]
+ \label{cor:algebraically-closed-formula}
+-If $\bbk$ is algebraically closed,
+-\[
+-A\cong\prod_iM_{d_i}(\bbk),
++Let $\bbk$ be algebraically closed, let $A$ be a unital algebra of finite dimension over $\bbk$, put $J=\Jac(A)$, and let $M$ be a finitely generated left module over $A$.  Assume compatible decompositions indexed by an integer $q\geq0$:
++\[
++A/J\cong\prod_{i=1}^{q}M_{d_i}(\bbk),
+ \qquad
+-M/JM\cong\bigoplus_i(\bbk^{d_i})^{\oplus m_i},
+-\]
+-then
+-\[
+-\srank_A(M)=\max_i\left\lceil\frac{m_i}{d_i}\right\rceil.
+-\]
++M/JM\cong\bigoplus_{i=1}^{q}(\bbk^{d_i})^{\oplus m_i},
++\]
++where the $d_i$ are positive integers and the $m_i$ are nonnegative integers.  The first isomorphism is an isomorphism of algebras over $\bbk$.  The second is an isomorphism of left modules over $A/J$, using the natural column module for each matrix factor and zero action from the other factors.  Then
++\[
++\srank_A(M)=\max_{1\leq i\leq q}\left\lceil\frac{m_i}{d_i}\right\rceil,
++\]
++with $\max\varnothing=0$ when $q=0$.
+ \end{corollary}
+ \RecordID{PSC-I-C-ALGEBRAICALLY-CLOSED-FORMULA}
+-\Depends{PSC-I-T-SEMISIMPLE-SEED-RANK.}
+-
+-\begin{proof}
+-Take every $D_i=\bbk$ in \cref{thm:semisimple-seed-rank}.
++\Depends{PSC-I-T-MODULE-TOP and PSC-I-T-SEMISIMPLE-SEED-RANK.}
++
++\begin{proof}
++By \cref{thm:module-top}, $\srank_A(M)=\srank_{A/J}(M/JM)$.  Apply \cref{thm:semisimple-seed-rank} to the displayed decompositions of $A/J$ and $M/JM$, with every $D_i=\bbk$.  This gives the stated maximum.  If $q=0$, the unital $A/J$-module $M/JM$ is zero, and \cref{thm:module-top} gives seed rank zero.
+ \end{proof}
+ 
+ \begin{corollary}[Full matrix algebra]
+--- before/05_worked_models.tex
++++ after/05_worked_models.tex
+@@ -434,7 +434,8 @@
+ \bottomrule
+ \end{longtable}
+ 
+-The invariant content is:
++\Needspace{16\baselineskip}
++For a finite ordered seed family $S=(s_1,\ldots,s_r)$, let $\varepsilon_S:\cA^{\oplus r}\to X$ be the seed evaluation map of \cref{def:seed-evaluation}.  Its kernel is the relation module.  The free module modulo that kernel presents the generated hull by \cref{thm:free-presentation}.  The invariant content is:
+ \[
+ {
+ \begin{aligned}
+@@ -442,7 +443,8 @@
+ &\text{seed complexity: }\srank_{\cA}(X),\\
+ &\text{packet coordinates: }x\leftrightarrow(P_{\alpha}x)_{\alpha},\\
+ &\text{operator coordinates: }T\leftrightarrow(P_{\beta}TP_{\alpha})_{\beta,\alpha},\\
+-&\text{relations: }F^m/N_S,\\
++&\text{relation module: }N_S:=\Ker\varepsilon_S\leq\cA^{\oplus r},\\
++&\text{free presentation: }\cA^{\oplus r}/N_S\cong\Hull_{\cA}(S),\\
+ &\text{coordinate invariance: }P_{\alpha}\mapsto UP_{\alpha}U^{-1},\\
+ &\text{realization: }\Phi A=\varphi(A)\Phi.
+ \end{aligned}

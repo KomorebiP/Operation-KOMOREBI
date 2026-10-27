@@ -1,0 +1,337 @@
+import KomorebiVerification
+set_option pp.universes true
+#check Komorebi.SeedRankBasics.oneSeedQuotientEquivRange
+set_option pp.universes false
+#print axioms Komorebi.SeedRankBasics.oneSeedQuotientEquivRange
+set_option pp.universes true
+#check Komorebi.SeedRankBasics.oneSeedQuotientEquivRange_apply_mk
+set_option pp.universes false
+#print axioms Komorebi.SeedRankBasics.oneSeedQuotientEquivRange_apply_mk
+set_option pp.universes true
+#check Komorebi.SeedRankBasics.generates_singleton_iff_surjective
+set_option pp.universes false
+#print axioms Komorebi.SeedRankBasics.generates_singleton_iff_surjective
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_intertwines
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_intertwines
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_unique
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_unique
+set_option pp.universes true
+#check Komorebi.SeedRankBasics.multiSeedQuotientEquivRange
+set_option pp.universes false
+#print axioms Komorebi.SeedRankBasics.multiSeedQuotientEquivRange
+set_option pp.universes true
+#check Komorebi.SeedRankBasics.multiSeedQuotientEquivRange_apply_mk
+set_option pp.universes false
+#print axioms Komorebi.SeedRankBasics.multiSeedQuotientEquivRange_apply_mk
+set_option pp.universes true
+#check Komorebi.SeedRankBasics.multiSeedQuotientEquiv
+set_option pp.universes false
+#print axioms Komorebi.SeedRankBasics.multiSeedQuotientEquiv
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.seedFinrank_isLeast_free_surjection
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.seedFinrank_isLeast_free_surjection
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.cyclic_iff_seedRank_eq_one
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.cyclic_iff_seedRank_eq_one
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.seedRank_le_of_surjective_semilinear
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.seedRank_le_of_surjective_semilinear
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.seedRank_imageAlgebra_eq
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.seedRank_imageAlgebra_eq
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.seedRank_prod_le_add
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.seedRank_prod_le_add
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.seedRank_prod_productAlgebra
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.seedRank_prod_productAlgebra
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.tensorOperator_smul_tmul
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.tensorOperator_smul_tmul
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.seedRank_tensorProduct_le_mul
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.seedRank_tensorProduct_le_mul
+set_option pp.universes true
+#check Komorebi.SeedRankOperations.finrank_le_seedRank_of_scalar_quotient
+set_option pp.universes false
+#print axioms Komorebi.SeedRankOperations.finrank_le_seedRank_of_scalar_quotient
+set_option pp.universes true
+#check Komorebi.SemisimpleCompletion.semisimple_seedRank_eq_maxCeilDiv_of_equivalences
+set_option pp.universes false
+#print axioms Komorebi.SemisimpleCompletion.semisimple_seedRank_eq_maxCeilDiv_of_equivalences
+set_option pp.universes true
+#check Komorebi.SemisimpleCompletion.splitProduct_seedRank_eq_maxCeilDiv
+set_option pp.universes false
+#print axioms Komorebi.SemisimpleCompletion.splitProduct_seedRank_eq_maxCeilDiv
+set_option pp.universes true
+#check Komorebi.SemisimpleCompletion.fullMatrix_every_nonzero_vector_generates
+set_option pp.universes false
+#print axioms Komorebi.SemisimpleCompletion.fullMatrix_every_nonzero_vector_generates
+set_option pp.universes true
+#check Komorebi.SemisimpleCompletion.fullMatrix_seedRank_eq_one
+set_option pp.universes false
+#print axioms Komorebi.SemisimpleCompletion.fullMatrix_seedRank_eq_one
+set_option pp.universes true
+#check Komorebi.SemisimpleCompletion.multiplicity_obstruction
+set_option pp.universes false
+#print axioms Komorebi.SemisimpleCompletion.multiplicity_obstruction
+set_option pp.universes true
+#check Komorebi.SemisimpleCompletion.multiplicity_seedRank_formula
+set_option pp.universes false
+#print axioms Komorebi.SemisimpleCompletion.multiplicity_seedRank_formula
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.singleOperator_seedNumber_isLeast_of_primary_decomposition
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.singleOperator_seedNumber_isLeast_of_primary_decomposition
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.singleOperator_operatorAlgebra_seedRanks_eq_of_primary_decomposition
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.singleOperator_operatorAlgebra_seedRanks_eq_of_primary_decomposition
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.cyclic_matrix_criterion_of_primary_decomposition
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.cyclic_matrix_criterion_of_primary_decomposition
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.cyclic_matrix_four_way_iff_of_primary_decomposition
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.cyclic_matrix_four_way_iff_of_primary_decomposition
+set_option pp.universes true
+#check Komorebi.Foundation.LinearProjectorFamily.rangeSynthesis_rangeAnalysis
+set_option pp.universes false
+#print axioms Komorebi.Foundation.LinearProjectorFamily.rangeSynthesis_rangeAnalysis
+set_option pp.universes true
+#check Komorebi.Foundation.LinearProjectorFamily.rangeAnalysis_rangeSynthesis
+set_option pp.universes false
+#print axioms Komorebi.Foundation.LinearProjectorFamily.rangeAnalysis_rangeSynthesis
+set_option pp.universes true
+#check Komorebi.Foundation.LinearProjectorFamily.exactPacketCoordinates
+set_option pp.universes false
+#print axioms Komorebi.Foundation.LinearProjectorFamily.exactPacketCoordinates
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.Packets.eq_iff_projectors_eq
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.Packets.eq_iff_projectors_eq
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_packet_isomorphism
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_packet_isomorphism
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetEquiv
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetEquiv
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.idempotentRange_eq_closure_map
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.idempotentRange_eq_closure_map
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetRange_eq_closure_map
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetRange_eq_closure_map
+set_option pp.universes true
+#check Komorebi.Foundation.transferBlock_reconstruction_linearMap
+set_option pp.universes false
+#print axioms Komorebi.Foundation.transferBlock_reconstruction_linearMap
+set_option pp.universes true
+#check Komorebi.Foundation.transferBlock_reconstruction_end
+set_option pp.universes false
+#print axioms Komorebi.Foundation.transferBlock_reconstruction_end
+set_option pp.universes true
+#check Komorebi.Foundation.transferBlock_comp_linearMap
+set_option pp.universes false
+#print axioms Komorebi.Foundation.transferBlock_comp_linearMap
+set_option pp.universes true
+#check Komorebi.Foundation.transferBlock_comp_end
+set_option pp.universes false
+#print axioms Komorebi.Foundation.transferBlock_comp_end
+set_option pp.universes true
+#check Komorebi.Foundation.end_comp_eq_sum_transferBlock_comps
+set_option pp.universes false
+#print axioms Komorebi.Foundation.end_comp_eq_sum_transferBlock_comps
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.Packets.transferBlock_pow_eq_packetPathSum
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.Packets.transferBlock_pow_eq_packetPathSum
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.adjoint_transferBlock
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.adjoint_transferBlock
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.fullBlockAlgEquiv
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.fullBlockAlgEquiv
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks_synthesizeBlocks
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks_synthesizeBlocks
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks_restrictBlocks
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks_restrictBlocks
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.packetBlockAlgebra_mul_eq_blockMul
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.packetBlockAlgebra_mul_eq_blockMul
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.end_finrank_eq_packet_sum_eq_square
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.end_finrank_eq_packet_sum_eq_square
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.finrank_eq_sum_packet_finrank
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.finrank_eq_sum_packet_finrank
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.identity_blocks_supported_iff_reflexive
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.identity_blocks_supported_iff_reflexive
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.FullBlocks.blockMulClosed_iff_transitive
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.FullBlocks.blockMulClosed_iff_transitive
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull_le_reachable_support
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull_le_reachable_support
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.Reachability.unreachable_nonzero_packet_obstruction
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.Reachability.unreachable_nonzero_packet_obstruction
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.closure_le_ker_of_le_ker
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.closure_le_ker_of_le_ker
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_reachability_obstruction
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_reachability_obstruction
+set_option pp.universes true
+#check Komorebi.Foundation.LinearProjectorFamily.conjugate
+set_option pp.universes false
+#print axioms Komorebi.Foundation.LinearProjectorFamily.conjugate
+set_option pp.universes true
+#check Komorebi.Foundation.conjugate_transferBlock
+set_option pp.universes false
+#print axioms Komorebi.Foundation.conjugate_transferBlock
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.Reachability.conjugate_transferEdge_iff
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.Reachability.conjugate_transferEdge_iff
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.Reachability.conjugate_reachableFrom_iff
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.Reachability.conjugate_reachableFrom_iff
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.StrictNaturality.generatedHull_natural
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.StrictNaturality.generatedHull_natural
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_naturality_package
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_naturality_package
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_le
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_le
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_eq_of_bijective
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_eq_of_bijective
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.StrictNaturality.full_transfer_edge_zero_pattern_correspondence
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.StrictNaturality.full_transfer_edge_zero_pattern_correspondence
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.dense_operatorHull_image
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.dense_operatorHull_image
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.map_packetRange_eq
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.map_packetRange_eq
+set_option pp.universes true
+#check Komorebi.PacketNaturalityCompletion.TypedQuiver.typed_reachability_certificate
+set_option pp.universes false
+#print axioms Komorebi.PacketNaturalityCompletion.TypedQuiver.typed_reachability_certificate
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower_apply
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower_apply
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_topologicallyCyclic
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_topologicallyCyclic
+set_option pp.universes true
+#check KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_seedCardinality_isLeast
+set_option pp.universes false
+#print axioms KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_seedCardinality_isLeast
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity_of_distinct
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity_of_distinct
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.operatorAlgebra_seedFinrank_eq_of_seedNumber_isLeast
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.operatorAlgebra_seedFinrank_eq_of_seedNumber_isLeast
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.operatorAlgebra_seedRank_eq_of_seedNumber_isLeast
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.operatorAlgebra_seedRank_eq_of_seedNumber_isLeast
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.path_endpoint_seedNumber_isLeast_one
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.path_endpoint_seedNumber_isLeast_one
+set_option pp.universes true
+#check Komorebi.SingleOperatorGraph.complex_cycle_seedNumber_isLeast_two
+set_option pp.universes false
+#print axioms Komorebi.SingleOperatorGraph.complex_cycle_seedNumber_isLeast_two
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.orbitHull_algorithm_terminates_and_correct
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.orbitHull_algorithm_terminates_and_correct
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.orbitClosureIter_eq_orbitHull_of_stop
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.orbitClosureIter_eq_orbitHull_of_stop
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.transferBlockTable
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.transferBlockTable
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.assembleTransferBlockTable
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.assembleTransferBlockTable
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.transferBlock_algorithm_correct
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.transferBlock_algorithm_correct
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.transferGraph_iff_block_ne_zero
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.transferGraph_iff_block_ne_zero
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.exactGraphSeedRank
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.exactGraphSeedRank
+set_option pp.universes true
+#check Komorebi.FiniteAlgorithms.exactGraphSeedRank_isLeast
+set_option pp.universes false
+#print axioms Komorebi.FiniteAlgorithms.exactGraphSeedRank_isLeast

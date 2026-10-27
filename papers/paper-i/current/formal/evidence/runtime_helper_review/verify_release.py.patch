@@ -1,0 +1,74 @@
+--- before/verify_release.py
++++ after/verify_release.py
+@@ -48,7 +48,7 @@
+     assert any('/mathlib/' in p for p in upstream),'Use run.sh with the pinned Lake environment'
+     out.mkdir(parents=True);obj=out/'objects';obj.mkdir();env=os.environ.copy();env['LEAN_PATH']=os.pathsep.join([str(obj)]+upstream)
+     flags=['-j1','-DwarningAsError=true','-DautoImplicit=false','-DrelaxedAutoImplicit=false','-DmaxSynthPendingDepth=3']
+-    report={'status':'RUNNING','started_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'manifest_sha256':sha(manifest),'checks':[],'source_files':[],'flags':flags,'lean_path':env['LEAN_PATH'],'limits':['Pinned upstream cache reused, not rebuilt.','Replay uses Lean own kernel, not an independent verifier.','Prose-to-theorem coverage remains a separate semantic audit.','The seven inventoried generated partial runtime helpers are excluded from logical proof replay.']}
++    report={'status':'RUNNING','started_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'manifest_sha256':sha(manifest),'checks':[],'source_files':[],'flags':flags,'lean_path':env['LEAN_PATH'],'limits':['Pinned upstream cache reused, not rebuilt.','Replay uses Lean own kernel, not an independent verifier.','Prose-to-theorem coverage remains a separate semantic audit.','The exact reviewed generated partial runtime helpers are inventoried separately and excluded from logical proof replay; the actual count is recorded below.']}
+     started=time.monotonic()
+     def save():(out/'verification.json').write_text(json.dumps(report,indent=2)+'\n')
+     def run(label,args,*,reject=False,pattern=None,extra=None,cwd=None,timeout=1800):
+@@ -77,6 +77,19 @@
+     try:
+         frozen=out/'execution_inputs';shutil.copytree(audit,frozen/'audit',ignore=shutil.ignore_patterns('__pycache__'));shutil.copy2(manifest,frozen/'release_modules.json')
+         report['audit_inputs']=[{'path':str(p.relative_to(audit)),'sha256':sha(p)} for p in sorted(audit.rglob('*')) if p.is_file() and '__pycache__' not in p.parts]
++        helper_review=json.loads((audit/'reviewed_runtime_helpers.json').read_text())
++        assert helper_review['status']=='REVIEWED'
++        reviewed_helpers=helper_review['helpers'];reviewed_names={h['name'] for h in reviewed_helpers}
++        assert len(reviewed_names)==len(reviewed_helpers)==helper_review['helper_count']
++        template_text=(audit/'OwnedAudit.template.lean').read_text()
++        whitelist_text=re.search(r'let generatedRuntime : Array Name := (#\[[^\n]*\])',template_text).group(1)
++        assert set(re.findall(r'`([\w.]+)',whitelist_text))==reviewed_names
++        manifest_modules={r['module'] for r in rows}
++        for item in helper_review['source_modules']:
++            if item['module'] in manifest_modules:assert sha(root/item['source'])==item['sha256'],item['module']
++        for item in helper_review['evidence']:assert sha(audit/item['path'])==item['sha256'],item['path']
++        report['reviewed_runtime_helpers_receipt_sha256']=sha(audit/'reviewed_runtime_helpers.json')
++        report['reviewed_runtime_helper_count']=len(reviewed_names)
+         binding=json.loads((audit/'runtime_bindings.json').read_text())
+         for row in binding['files']:assert sha(kit/row['path'])==row['sha256'],row['path']
+         report['runtime_files_authenticated']=len(binding['files'])
+@@ -87,11 +100,30 @@
+         reuse={}
+         if a.base_fresh:
+             bpath=a.base_fresh.resolve();b=json.loads((bpath/'verification.json').read_text());assert b['status']=='PASS';assert b['flags']==flags
++            embedded=frozen/'prior_compilation';embedded.mkdir()
++            shutil.copy2(bpath/'verification.json',embedded/'verification.json')
++            if b.get('schema')=='paper-i-successful-compilation-component/1':
++                parent=json.loads((bpath/'parent_verification.json').read_text())
++                assert sha(bpath/'parent_verification.json')==b['parent_audit']['sha256']
++                assert parent['status']==b['parent_audit']['status']=='FAIL'
++                assert parent['failure']==b['parent_audit']['failure']=='owned_audit'
++                original_sources={r['module']:r for r in parent['source_files']}
++                original_checks={r['label']:r for r in parent['checks']}
++                for r in b['modules']:
++                    old=original_sources[r['module']];check=original_checks['compile_'+r['module'].replace('.','_')]
++                    assert check['passed'] and check['exit']==0
++                    assert old['source_sha256']==r['source_sha256'] and old['object_sha256']==r['object_sha256']
++                    assert check['command']==r['command'] and check['log_sha256']==r['log_sha256']
++                shutil.copy2(bpath/'parent_verification.json',embedded/'parent_verification.json')
++                shutil.copy2(bpath/'parent_owned_audit.log',embedded/'parent_owned_audit.log')
+             for row in b['modules']:
+                 assert row['passed'] and row['exit']==0
++                assert sha(bpath/row['log'])==row['log_sha256']
++                shutil.copy2(bpath/row['log'],embedded/row['log'])
+                 assert sha(bpath/row['object'])==row['object_sha256'];assert sha(bpath/'source_snapshots'/row['source'])==row['source_sha256']
+                 reuse[row['module']]=row
+-            report['prior_fresh_compile_report']={'path':str(bpath/'verification.json'),'sha256':sha(bpath/'verification.json'),'module_count':len(reuse)}
++            report['prior_fresh_compile_report']={'path':str(bpath/'verification.json'),'sha256':sha(bpath/'verification.json'),'module_count':len(reuse),'scope':b.get('scope'),'component_schema':b.get('schema'),'parent_audit':b.get('parent_audit'),'embedded_record':str((embedded/'verification.json').relative_to(out))}
++            assert len(reuse)==b.get('fresh_production_module_count',len(reuse))
+         empties=[]
+         for row in rows:
+             module=row['module'];rel=Path(*module.split('.'));src=(root/rel).with_suffix('.lean');assert sha(src)==row['source_sha256'],module
+@@ -116,6 +148,10 @@
+         source=templ.replace('__IMPORTS__','\n'.join('import '+m for m in mods)).replace('__MODULES__',arr(mods)).replace('__EMPTY_MODULES__',arr(empties))
+         ownedfile=out/'OwnedAudit.lean';ownedfile.write_text(source)
+         owned=owned_parse(lean('owned_audit',ownedfile,pattern=r'OWNED_AUDIT_PASS \d+'))
++        expected_runtime_names={h['name'] for h in reviewed_helpers if h['module'] in mods}
++        actual_runtime_names={r['name'] for r in owned if r['runtime_only']}
++        assert actual_runtime_names==expected_runtime_names,{'unexpected_runtime':sorted(actual_runtime_names-expected_runtime_names),'missing_reviewed_runtime':sorted(expected_runtime_names-actual_runtime_names)}
++        report['runtime_exact_reviewed_name_match']=True
+         (out/'owned_declarations.json').write_text(json.dumps(owned,indent=2)+'\n');report.update(owned_total=len(owned),owned_logical_total=sum(not r['runtime_only'] for r in owned),owned_runtime_only=sum(r['runtime_only'] for r in owned),axioms=sorted({ax for r in owned for ax in r['axioms']}));save()
+         for name in ['InjectedAxiom','InjectedPlaceholder','ForeignClean']:
+             lean('compile_control_'+name,audit/'fixtures'/(name+'.lean'),target=obj/(name+'.olean'),cwd=audit/'fixtures',warning=name!='InjectedPlaceholder')

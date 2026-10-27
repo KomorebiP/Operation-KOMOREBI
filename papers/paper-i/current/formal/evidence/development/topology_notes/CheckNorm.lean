@@ -1,0 +1,11 @@
+import KomorebiVerification.TopologicalCompletion
+import Mathlib.Analysis.Normed.Group.Seminorm
+#print AddGroupNorm
+#check AddGroupNorm.toNormedAddCommGroup
+#print NormedSpace
+#check LinearEquiv.toContinuousLinearEquivOfBounds
+#check LinearEquiv.toContinuousLinearEquiv
+#check UniformEquiv.completeSpace_iff
+#check ContinuousLinearEquiv.completeSpace_iff
+#check CompleteSpace.of_isUniformEmbedding
+#check IsUniformInducing.completeSpace_congr

@@ -1,0 +1,2181 @@
+IsSemisimpleRing.isSemisimpleModule.{u_2, u_4} {R : Type u_2} [Ring R] {M : Type u_4} [AddCommGroup M] [Module R M]
+  [IsSemisimpleRing R] : IsSemisimpleModule R M
+Komorebi.FiniteAlgorithms.assembleTransferBlockTable.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι] [Fintype κ]
+  (B : κ → ι → M →ₗ[R] N) : M →ₗ[R] N
+Komorebi.FiniteAlgorithms.exactGraphSeedRank.{u, v} {K : Type u} {ν : Type v} [Field K] [Fintype ν] [DecidableEq ν]
+  (A : Matrix ν ν K) : ℕ
+Komorebi.FiniteAlgorithms.exactGraphSeedRank_isLeast.{u, v, w} {K : Type u} {ν : Type v} [Field K] [Fintype ν]
+  [DecidableEq ν] {Λ : Type w} [Fintype Λ] (A : Matrix ν ν K) (R : ℕ) (multiplicity : Λ → ℕ) (eigenvalue : Λ → K)
+  (eigenbasis : Module.Basis ((eigen : Λ) × Fin (multiplicity eigen)) K (ν → K))
+  (hEigen :
+    ∀ (z : (eigen : Λ) × Fin (multiplicity eigen)), (Matrix.toLin' A) (eigenbasis z) = eigenvalue z.fst • eigenbasis z)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (projectorPolynomial : Λ → Polynomial K)
+  (hproject :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ((Polynomial.aeval (Matrix.toLin' A)) (projectorPolynomial eigen))
+          (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity (fun e j => eigenbasis ⟨e, j⟩) ⟨↑j, ⋯⟩) =
+        eigenbasis ⟨eigen, j⟩)
+  (hSpectrumCover : ∀ μ ∈ spectrum K A, ∃ eigen, eigenvalue eigen = μ)
+  (hMultiplicity :
+    ∀ (eigen : Λ), Komorebi.FiniteAlgorithms.graphEigenMultiplicity A (eigenvalue eigen) = multiplicity eigen)
+  (hMaxSpectrum : eigenvalue maxEigen ∈ spectrum K A) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Matrix.toLin' A) r}
+    (Komorebi.FiniteAlgorithms.exactGraphSeedRank A)
+Komorebi.FiniteAlgorithms.orbitClosureIter_eq_orbitHull_of_stop.{u, v, w} {k : Type u} {V : Type v} {ι : Type w}
+  [Field k] [AddCommGroup V] [Module k V] [Fintype ι] (operators : ι → Module.End k V) (seeds : Set V) (n : ℕ)
+  (hStop :
+    Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds (n + 1) =
+      Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n) :
+  Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n = Komorebi.FiniteAlgorithms.orbitHull operators seeds
+Komorebi.FiniteAlgorithms.orbitHull_algorithm_terminates_and_correct.{u, v, w} {k : Type u} {V : Type v} {ι : Type w}
+  [Field k] [AddCommGroup V] [Module k V] [Fintype ι] [FiniteDimensional k V] (operators : ι → Module.End k V)
+  (seeds : Set V) :
+  ∃ n,
+    Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds (n + 1) =
+        Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n ∧
+      Komorebi.FiniteAlgorithms.orbitClosureIter operators seeds n = Komorebi.FiniteAlgorithms.orbitHull operators seeds
+Komorebi.FiniteAlgorithms.transferBlockTable.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι] [Fintype κ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (Q : Komorebi.Foundation.LinearProjectorFamily R N κ)
+  (T : M →ₗ[R] N) : κ → ι → M →ₗ[R] N
+Komorebi.FiniteAlgorithms.transferBlock_algorithm_correct.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w}
+  {ι : Type x} {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  [Fintype κ] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : M →ₗ[R] N) :
+  Komorebi.FiniteAlgorithms.assembleTransferBlockTable (Komorebi.FiniteAlgorithms.transferBlockTable P Q T) = T
+Komorebi.FiniteAlgorithms.transferGraph_iff_block_ne_zero.{u, v, w, x, y} {R : Type u} {M : Type v} {N : Type w}
+  {ι : Type x} {κ : Type y} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  [Fintype κ] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : M →ₗ[R] N) (j : κ) (i : ι) :
+  Komorebi.FiniteAlgorithms.transferGraph P Q T j i ↔ Komorebi.Foundation.transferBlock P Q T j i ≠ 0
+Komorebi.Foundation.LinearProjectorFamily.conjugate.{u, v, w, x} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) :
+  Komorebi.Foundation.LinearProjectorFamily R N ι
+Komorebi.Foundation.LinearProjectorFamily.descendTo.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) : Komorebi.Foundation.LinearProjectorFamily R (M ⧸ K) ι
+Komorebi.Foundation.LinearProjectorFamily.descendTo_intertwines.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) (i : ι) : K.mkQ ∘ₗ P.proj i = (P.descendTo K hK).proj i ∘ₗ K.mkQ
+Komorebi.Foundation.LinearProjectorFamily.descendTo_proj_mkQ.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) (i : ι) (x : M) : ((P.descendTo K hK).proj i) (K.mkQ x) = K.mkQ ((P.proj i) x)
+Komorebi.Foundation.LinearProjectorFamily.descendTo_unique.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) (i : ι) (Q : Module.End R (M ⧸ K)) (hQ : Q ∘ₗ K.mkQ = K.mkQ ∘ₗ P.proj i) :
+  Q = (P.descendTo K hK).proj i
+Komorebi.Foundation.LinearProjectorFamily.descendedPacketEquivSumQuotient.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) (i : ι) :
+  ↥(LinearMap.range ((P.descendTo K hK).proj i)) ≃ₗ[R]
+    ↥(LinearMap.range (P.proj i) ⊔ K) ⧸ Submodule.comap (LinearMap.range (P.proj i) ⊔ K).subtype K
+Komorebi.Foundation.LinearProjectorFamily.discardZeros_proj_ne_zero.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (i : P.NonzeroIndex) : P.discardZeros.proj i ≠ 0
+Komorebi.Foundation.LinearProjectorFamily.exactPacketCoordinates.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) :
+  M ≃ₗ[R] P.PacketSpace
+Komorebi.Foundation.LinearProjectorFamily.exactPacketDirectSumCoordinates.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Ring R] [AddCommGroup M] [Module R M] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) : M ≃ₗ[R] DirectSum ι fun i => ↥(LinearMap.range (P.proj i))
+Komorebi.Foundation.LinearProjectorFamily.nonzeroQuotient.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) : Komorebi.Foundation.LinearProjectorFamily R (M ⧸ K) (P.descendTo K hK).NonzeroIndex
+Komorebi.Foundation.LinearProjectorFamily.nonzeroRestriction.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) : Komorebi.Foundation.LinearProjectorFamily R (↥K) (P.restrictTo K hK).NonzeroIndex
+Komorebi.Foundation.LinearProjectorFamily.packetCoordinateInclusion_natural.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) :
+  P.packetCoordinateInclusion K hK ∘ₗ (P.restrictTo K hK).rangeAnalysis = P.rangeAnalysis ∘ₗ K.subtype
+Komorebi.Foundation.LinearProjectorFamily.packetCoordinateQuotient_natural.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) :
+  P.packetCoordinateQuotient K hK ∘ₗ P.rangeAnalysis = (P.descendTo K hK).rangeAnalysis ∘ₗ K.mkQ
+Komorebi.Foundation.LinearProjectorFamily.packetCoordinate_shortExact.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) :
+  Function.Injective ⇑(P.packetCoordinateInclusion K hK) ∧
+    (P.packetCoordinateInclusion K hK).range = (P.packetCoordinateQuotient K hK).ker ∧
+      Function.Surjective ⇑(P.packetCoordinateQuotient K hK)
+Komorebi.Foundation.LinearProjectorFamily.packetQuotientEquiv.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) (i : ι) :
+  (↥(LinearMap.range (P.proj i)) ⧸ Submodule.comap (LinearMap.range (P.proj i)).subtype K) ≃ₗ[R]
+    ↥(LinearMap.range ((P.descendTo K hK).proj i))
+Komorebi.Foundation.LinearProjectorFamily.packet_shortExact.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) (i : ι) :
+  Function.Injective ⇑(P.packetInclusion K hK i) ∧
+    (P.packetInclusion K hK i).range = (P.packetQuotientMap K hK i).ker ∧
+      Function.Surjective ⇑(P.packetQuotientMap K hK i)
+Komorebi.Foundation.LinearProjectorFamily.rangeAnalysis_rangeSynthesis.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (packets : P.PacketSpace) : P.rangeAnalysis (P.rangeSynthesis packets) = packets
+Komorebi.Foundation.LinearProjectorFamily.rangeSynthesis_rangeAnalysis.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (x : M) : P.rangeSynthesis (P.rangeAnalysis x) = x
+Komorebi.Foundation.LinearProjectorFamily.restrictTo.{u, v, w} {R : Type u} {M : Type v} {ι : Type w} [Ring R]
+  [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (K : Submodule R M)
+  (hK : P.Preserves K) : Komorebi.Foundation.LinearProjectorFamily R (↥K) ι
+Komorebi.Foundation.LinearProjectorFamily.restrictTo_range_in_ambient.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) (i : ι) :
+  Submodule.map K.subtype (LinearMap.range ((P.restrictTo K hK).proj i)) = K ⊓ LinearMap.range (P.proj i)
+Komorebi.Foundation.LinearProjectorFamily.transferBlock_descends.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) (T : Module.End R M) (hT : ∀ x ∈ K, T x ∈ K) (j i : ι) :
+  K.mkQ ∘ₗ Komorebi.Foundation.transferBlock P P T j i =
+    Komorebi.Foundation.transferBlock (P.descendTo K hK) (P.descendTo K hK) (K.mapQ K T hT) j i ∘ₗ K.mkQ
+Komorebi.Foundation.LinearProjectorFamily.transferBlock_preserves_packet.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Ring R] [AddCommGroup M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (K : Submodule R M) (hK : P.Preserves K) (T : Module.End R M) (hT : ∀ x ∈ K, T x ∈ K) (j i : ι) {x : M}
+  (hx : x ∈ K ⊓ LinearMap.range (P.proj i)) :
+  (Komorebi.Foundation.transferBlock P P T j i) x ∈ K ⊓ LinearMap.range (P.proj j)
+Komorebi.Foundation.conjugate_transferBlock.{u, v, w, x} {R : Type u} {M : Type v} {N : Type w} {ι : Type x}
+  [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (T : Module.End R M) (j i : ι) :
+  Komorebi.Foundation.transferBlock (P.conjugate U) (P.conjugate U) (Komorebi.Foundation.conjugateEnd U T) j i =
+    Komorebi.Foundation.conjugateEnd U (Komorebi.Foundation.transferBlock P P T j i)
+Komorebi.Foundation.end_comp_eq_sum_transferBlock_comps.{u, v, y} {R : Type u} {M : Type v} {ι : Type y} [Semiring R]
+  [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (T U : Module.End R M) :
+  U ∘ₗ T = ∑ k, ∑ i, ∑ j, Komorebi.Foundation.transferBlock P P U k j ∘ₗ Komorebi.Foundation.transferBlock P P T j i
+Komorebi.Foundation.transferBlock_comp_end.{u, v, y} {R : Type u} {M : Type v} {ι : Type y} [Semiring R]
+  [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (T U : Module.End R M) (k i : ι) :
+  Komorebi.Foundation.transferBlock P P (U ∘ₗ T) k i =
+    ∑ j, Komorebi.Foundation.transferBlock P P U k j ∘ₗ Komorebi.Foundation.transferBlock P P T j i
+Komorebi.Foundation.transferBlock_comp_linearMap.{u, v, w, x, y, z, u_1} {R : Type u} {M : Type v} {N : Type w}
+  {L : Type x} {ι : Type y} {κ : Type z} {τ : Type u_1} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N]
+  [Module R N] [AddCommMonoid L] [Module R L] [Fintype ι] [Fintype κ] [Fintype τ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (Q : Komorebi.Foundation.LinearProjectorFamily R N κ)
+  (S : Komorebi.Foundation.LinearProjectorFamily R L τ) (T : M →ₗ[R] N) (U : N →ₗ[R] L) (k : τ) (i : ι) :
+  Komorebi.Foundation.transferBlock P S (U ∘ₗ T) k i =
+    ∑ j, Komorebi.Foundation.transferBlock Q S U k j ∘ₗ Komorebi.Foundation.transferBlock P Q T j i
+Komorebi.Foundation.transferBlock_reconstruction_end.{u, v, y} {R : Type u} {M : Type v} {ι : Type y} [Semiring R]
+  [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (T : Module.End R M) : ∑ j, ∑ i, Komorebi.Foundation.transferBlock P P T j i = T
+Komorebi.Foundation.transferBlock_reconstruction_linearMap.{u, v, w, y, z} {R : Type u} {M : Type v} {N : Type w}
+  {ι : Type y} {κ : Type z} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [Fintype ι]
+  [Fintype κ] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : M →ₗ[R] N) :
+  ∑ j, ∑ i, Komorebi.Foundation.transferBlock P Q T j i = T
+Komorebi.Packet.fibreLinearProj_refinement.{u, v, w, x, u_1} {R : Type u} {M : Type v} {α : Type w} {β : Type x}
+  {γ : Type u_1} [Semiring R] [AddCommMonoid M] [Module R M] [DecidableEq β] [DecidableEq γ] [Fintype γ] (fine : α → γ)
+  (merge : γ → β) (b : β) :
+  Komorebi.Packet.fibreLinearProj (fun a => merge (fine a)) b =
+    ∑ c, if merge c = b then Komorebi.Packet.fibreLinearProj fine c else 0
+Komorebi.PacketNaturalityCompletion.FullBlocks.blockMulClosed_iff_transitive.{u, v, w} {ι : Type w} [Fintype ι]
+  [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) [∀ (i : ι), Nontrivial ↥(LinearMap.range (P.proj i))]
+  (rel : ι → ι → Prop) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.BlockMulClosed P rel ↔ ∀ (a c b : ι), rel a c → rel c b → rel a b
+Komorebi.PacketNaturalityCompletion.FullBlocks.end_finrank_eq_packet_sum_eq_square.{u, v, w} {ι : Type w} [Fintype ι]
+  [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) :
+  Module.finrank K (Module.End K V) =
+      ∑ b, ∑ a, Module.finrank K ↥(LinearMap.range (P.proj a)) * Module.finrank K ↥(LinearMap.range (P.proj b)) ∧
+    ∑ b, ∑ a, Module.finrank K ↥(LinearMap.range (P.proj a)) * Module.finrank K ↥(LinearMap.range (P.proj b)) =
+      (∑ a, Module.finrank K ↥(LinearMap.range (P.proj a))) ^ 2
+Komorebi.PacketNaturalityCompletion.FullBlocks.finrank_eq_sum_packet_finrank.{u, v, w} {ι : Type w} [Fintype ι]
+  [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) :
+  Module.finrank K V = ∑ a, Module.finrank K ↥(LinearMap.range (P.proj a))
+Komorebi.PacketNaturalityCompletion.FullBlocks.fullBlockAlgEquiv.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) :
+  Module.End R M ≃ₐ[R] Komorebi.PacketNaturalityCompletion.FullBlocks.PacketBlockAlgebra P
+Komorebi.PacketNaturalityCompletion.FullBlocks.identity_blocks_supported_iff_reflexive.{u, v, w} {ι : Type w}
+  [Fintype ι] [DecidableEq ι] {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V]
+  (P : Komorebi.Foundation.LinearProjectorFamily K V ι) [∀ (i : ι), Nontrivial ↥(LinearMap.range (P.proj i))]
+  (rel : ι → ι → Prop) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.BlocksSupported P rel
+      (Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks P 1) ↔
+    ∀ (a : ι), rel a a
+Komorebi.PacketNaturalityCompletion.FullBlocks.packetBlockAlgebra_mul_eq_blockMul.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (B C : Komorebi.PacketNaturalityCompletion.FullBlocks.PacketBlockAlgebra P) :
+  B * C = Komorebi.PacketNaturalityCompletion.FullBlocks.blockMul P B C
+Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks_synthesizeBlocks.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (B : Komorebi.PacketNaturalityCompletion.FullBlocks.PacketBlocks P) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks P
+      (Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks P B) =
+    B
+Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks_restrictBlocks.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [CommSemiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (T : Module.End R M) :
+  Komorebi.PacketNaturalityCompletion.FullBlocks.synthesizeBlocks P
+      (Komorebi.PacketNaturalityCompletion.FullBlocks.restrictBlocks P T) =
+    T
+Komorebi.PacketNaturalityCompletion.Packets.eq_iff_projectors_eq.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (x y : M) : x = y ↔ ∀ (i : ι), (P.proj i) x = (P.proj i) y
+Komorebi.PacketNaturalityCompletion.Packets.transferBlock_pow_eq_packetPathSum.{u, v, w} {R : Type u} {M : Type v}
+  {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] [DecidableEq ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (T : Module.End R M) (m : ℕ) (b a : ι) :
+  Komorebi.Foundation.transferBlock P P (T ^ m) b a =
+    Komorebi.PacketNaturalityCompletion.Packets.packetPathSum P T m b a
+Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (ops : Set (Module.End R M)) (S₀ : Set ι) (b : ι) : Prop
+Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge.{u, v, w} {R : Type u} {M : Type v} {ι : Type w}
+  [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] (P : Komorebi.Foundation.LinearProjectorFamily R M ι)
+  (ops : Set (Module.End R M)) (a b : ι) : Prop
+Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull_le_reachable_support.{u, v, w} {R : Type u}
+  {M : Type v} {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (ops : Set (Module.End R M)) (S₀ : Set ι) (seeds : Set M)
+  (hseeds : ∀ s ∈ seeds, Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P S₀ s) :
+  Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull ops seeds ≤
+    Komorebi.PacketNaturalityCompletion.Reachability.supportedSubmodule P
+      (Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀)
+Komorebi.PacketNaturalityCompletion.Reachability.conjugate_reachableFrom_iff.{u, v, w, u_1} {R : Type u} {M : Type v}
+  {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] {N : Type u_1} [AddCommMonoid N] [Module R N]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (ops : Set (Module.End R M)) (S₀ : Set ι)
+  (b : ι) :
+  Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom (P.conjugate U)
+      (Komorebi.Foundation.conjugateEnd U '' ops) S₀ b ↔
+    Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀ b
+Komorebi.PacketNaturalityCompletion.Reachability.conjugate_transferBlock_ne_zero_iff.{u, v, w, u_1} {R : Type u}
+  {M : Type v} {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] {N : Type u_1} [AddCommMonoid N]
+  [Module R N] (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (T : Module.End R M) (b a : ι) :
+  Komorebi.Foundation.transferBlock (P.conjugate U) (P.conjugate U) (Komorebi.Foundation.conjugateEnd U T) b a ≠ 0 ↔
+    Komorebi.Foundation.transferBlock P P T b a ≠ 0
+Komorebi.PacketNaturalityCompletion.Reachability.conjugate_transferEdge_iff.{u, v, w, u_1} {R : Type u} {M : Type v}
+  {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] {N : Type u_1} [AddCommMonoid N] [Module R N]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (U : M ≃ₗ[R] N) (ops : Set (Module.End R M)) (a b : ι) :
+  Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge (P.conjugate U)
+      (Komorebi.Foundation.conjugateEnd U '' ops) a b ↔
+    Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops a b
+Komorebi.PacketNaturalityCompletion.Reachability.unreachable_nonzero_packet_obstruction.{u, v, w} {R : Type u}
+  {M : Type v} {ι : Type w} [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (ops : Set (Module.End R M)) (S₀ : Set ι) (seeds : Set M)
+  (hseeds : ∀ s ∈ seeds, Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P S₀ s) (b : ι)
+  (hb : ¬Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀ b)
+  [Nontrivial ↥(LinearMap.range (P.proj b))] :
+  Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull ops seeds ≠ ⊤
+Komorebi.PacketNaturalityCompletion.StrictNaturality.full_transfer_edge_zero_pattern_correspondence.{u, v, w, x, y}
+  {K : Type u} {M : Type v} {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M]
+  [AddCommGroup N] [Module K N] [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)}
+  {B : Subalgebra K (Module.End K N)} {P : Komorebi.Foundation.LinearProjectorFamily K M ι}
+  {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q)
+  (hΦ : Function.Bijective ⇑F.linearMap) (hφ : Function.Bijective ⇑F.algebraMap)
+  (hpacket : Function.Bijective F.packetMap) :
+  Function.Bijective (Prod.map F.packetMap F.packetMap) ∧
+    Prod.map F.packetMap F.packetMap ⁻¹'
+          Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraTransferPattern B Q =
+        Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraTransferPattern A P ∧
+      Prod.map F.packetMap F.packetMap ⁻¹' Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraZeroPattern B Q =
+        Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraZeroPattern A P
+Komorebi.PacketNaturalityCompletion.StrictNaturality.generatedHull_natural.{u, v, w, x, y} {K : Type u} {M : Type v}
+  {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
+  [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q) (S : Set M) :
+  Submodule.map F.linearMap (Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull A S) =
+    Komorebi.PacketNaturalityCompletion.StrictNaturality.MappedGeneratedHull F S
+Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_naturality_package.{u, v, w, x, y} {K : Type u} {M : Type v}
+  {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
+  [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q) (S : Set M) :
+  Submodule.map F.linearMap (Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull A S) =
+      Komorebi.PacketNaturalityCompletion.StrictNaturality.MappedGeneratedHull F S ∧
+    (∀ (a : ι) (x : M), F.linearMap ((P.proj a) x) = (Q.proj (F.packetMap a)) (F.linearMap x)) ∧
+      (∀ (T : ↥A) (b a : ι),
+          F.linearMap ∘ₗ Komorebi.Foundation.transferBlock P P (↑T) b a =
+            Komorebi.Foundation.transferBlock Q Q (↑(F.algebraMap T)) (F.packetMap b) (F.packetMap a) ∘ₗ F.linearMap) ∧
+        Function.Injective F.packetMap
+Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_eq_of_bijective.{u, v, w, x, y} {K : Type u}
+  {M : Type v} {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N]
+  [Module K N] [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q)
+  (hΦ : Function.Bijective ⇑F.linearMap) (hφ : Function.Bijective ⇑F.algebraMap) :
+  Cardinal.lift.{w, v} (Komorebi.SeedRankBasics.seedRank (↥A) M) =
+    Cardinal.lift.{v, w} (Komorebi.SeedRankBasics.seedRank (↥B) N)
+Komorebi.PacketNaturalityCompletion.StrictNaturality.strict_seedRank_le.{u, v, w, x, y} {K : Type u} {M : Type v}
+  {N : Type w} {ι : Type x} {κ : Type y} [Field K] [AddCommGroup M] [Module K M] [AddCommGroup N] [Module K N]
+  [Fintype ι] [Fintype κ] {A : Subalgebra K (Module.End K M)} {B : Subalgebra K (Module.End K N)}
+  {P : Komorebi.Foundation.LinearProjectorFamily K M ι} {Q : Komorebi.Foundation.LinearProjectorFamily K N κ}
+  (F : Komorebi.PacketNaturalityCompletion.StrictNaturality.StrictSeedMorphism A B P Q)
+  (hΦ : Function.Surjective ⇑F.linearMap) :
+  Cardinal.lift.{v, w} (Komorebi.SeedRankBasics.seedRank (↥B) N) ≤
+    Cardinal.lift.{w, v} (Komorebi.SeedRankBasics.seedRank (↥A) M)
+Komorebi.PacketNaturalityCompletion.TypedQuiver.typed_reachability_certificate.{u} {K : Type u} [Field K] :
+  Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowB ∘ₗ Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowA =
+      LinearMap.id ∧
+    Komorebi.PacketNaturalityCompletion.TypedQuiver.eV₃ ∈ Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowB.ker ∧
+      Komorebi.PacketNaturalityCompletion.TypedQuiver.eV₃ ∉
+          Komorebi.PacketNaturalityCompletion.TypedQuiver.arrowA.range ∧
+        (∀ (seeds : Set (Komorebi.PacketNaturalityCompletion.TypedQuiver.X K)),
+            (∀ s ∈ seeds, s.2 = 0) →
+              Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull
+                  Komorebi.PacketNaturalityCompletion.TypedQuiver.quiverOps seeds ≠
+                ⊤) ∧
+          Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull
+              Komorebi.PacketNaturalityCompletion.TypedQuiver.quiverOps
+              Komorebi.PacketNaturalityCompletion.TypedQuiver.certificateSeeds =
+            ⊤
+Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber.{u, v, w} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]
+  (e : X ≃L[𝕜] Y) : ℝ
+Komorebi.PaperICompletion.ConditionedCoordinates.norm_coordinateOperator_le.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] (e : X ≃L[𝕜] Y) (T : X →L[𝕜] X) :
+  ‖Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator e T‖ ≤
+    Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e * ‖T‖
+Komorebi.PaperICompletion.ConditionedCoordinates.norm_le_conditionNumber_mul_coordinateOperator.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] (e : X ≃L[𝕜] Y) (T : X →L[𝕜] X) :
+  ‖T‖ ≤
+    Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e *
+      ‖Komorebi.PaperICompletion.ConditionedCoordinates.coordinateOperator e T‖
+Komorebi.PaperICompletion.ConditionedCoordinates.one_le_conditionNumber.{u, v, w} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type w} [NormedAddCommGroup Y]
+  [NormedSpace 𝕜 Y] [Nontrivial X] (e : X ≃L[𝕜] Y) :
+  1 ≤ Komorebi.PaperICompletion.ConditionedCoordinates.conditionNumber e
+Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber_eq.{u, v, u_1} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {ι : Type u_1} [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) :
+  Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber P = ‖P.analysis‖ * ‖P.synthesis‖
+Komorebi.PaperICompletion.ConditionedCoordinates.packet_conditioned_coordinate_bounds.{u, v, u_1} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {ι : Type u_1} [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) (T : X →L[𝕜] X) :
+  ‖P.analysis ∘SL T ∘SL P.synthesis‖ ≤ Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber P * ‖T‖ ∧
+    ‖T‖ ≤ Komorebi.PaperICompletion.ConditionedCoordinates.packetConditionNumber P * ‖P.analysis ∘SL T ∘SL P.synthesis‖
+Komorebi.PaperICompletion.CyclicClassification.cyclic_four_way_without_polynomial_certificate.{u, v, u_1} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {Λ : Type u_1} (T : Module.End k V)
+  (R : ℕ) (geometricMultiplicity blockMultiplicity : Λ → ℕ) (hpositive : ∀ (eigen : Λ), 0 < geometricMultiplicity eigen)
+  (hbound : ∀ (eigen : Λ), geometricMultiplicity eigen ≤ R) (maxEigen : Λ) (hmax : geometricMultiplicity maxEigen = R)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R)
+  (hgeometric_eq_blocks : ∀ (eigen : Λ), geometricMultiplicity eigen = blockMultiplicity eigen) :
+  (Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+      Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity) ∧
+    (Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity ↔
+        Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity) ∧
+      (Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity ↔ minpoly k T = LinearMap.charpoly T)
+Komorebi.PaperICompletion.CyclicClassification.exists_full_annihilator_vector.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ x,
+    (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+      Module.annihilator (Polynomial k) (Module.AEval' T)
+Komorebi.PaperICompletion.CyclicClassification.hasCyclicVector_iff_minpoly_eq_charpoly.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ minpoly k T = LinearMap.charpoly T
+Komorebi.PaperICompletion.CyclicClassification.minpolyQuotientEquivOrbit.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx :
+    (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+      Module.annihilator (Polynomial k) (Module.AEval' T)) :
+  (Polynomial k ⧸ Ideal.span {minpoly k T}) ≃ₗ[Polynomial k]
+    ↥(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).range
+Komorebi.PaperICompletion.CyclicClassification.operatorAlgebra_seedRank_eq_one_iff_minpoly_eq_charpoly.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V]
+  (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = 1 ↔
+    minpoly k T = LinearMap.charpoly T
+Komorebi.PaperICompletion.CyclicClassification.orbitMap_ker_eq_annihilator_of_surjective.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx : Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)) :
+  (Komorebi.PaperICompletion.CyclicClassification.orbitMap T x).ker =
+    Module.annihilator (Polynomial k) (Module.AEval' T)
+Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_operatorAlgebra_seedRanks.{u, v} {𝕜 : Type u} [RCLike 𝕜]
+  {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+      Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+        (Komorebi.PaperICompletion.SpectralCertificates.spectralList T hT) ∧
+    Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+      ↑(Komorebi.PaperICompletion.SpectralCertificates.maxEigenMultiplicity
+          (Komorebi.PaperICompletion.SpectralCertificates.spectralList T hT))
+Komorebi.PaperICompletion.SpectralCertificates.selfAdjoint_seedRank_eq_max_eigenspace_finrank.{u, v} {𝕜 : Type u}
+  [RCLike 𝕜] {V : Type v} [NormedAddCommGroup V] [InnerProductSpace 𝕜 V] [FiniteDimensional 𝕜 V] (T : Module.End 𝕜 V)
+  (hT : LinearMap.IsSymmetric T) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Finset.univ.sup fun value => Module.finrank 𝕜 ↥(T.eigenspace ↑value))
+Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactorProduct_seedNumber_isLeast.{u} {k : Type u} [Field k]
+  {r : ℕ} (f : Fin r → Polynomial k) (hf : ∀ (i : Fin r), 0 < (f i).natDegree)
+  (hchain : ∀ (i j : Fin r), i ≤ j → f i ∣ f j) :
+  IsLeast
+    {n | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates (Polynomial k) ((i : Fin r) → Polynomial k ⧸ Ideal.span {f i}) s}
+    r
+Komorebi.PaperICompletion3.InvariantFactorCount.invariantFactor_operator_seedRanks.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) {r : ℕ} (f : Fin r → Polynomial k)
+  (hf : ∀ (i : Fin r), 0 < (f i).natDegree) (hchain : ∀ (i j : Fin r), i ≤ j → f i ∣ f j)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] (i : Fin r) → Polynomial k ⧸ Ideal.span {f i}) :
+  IsLeast {n | Komorebi.SingleOperatorGraph.SeedNumberLE T n} r ∧
+    Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = r ∧
+      Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = ↑r
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.cyclic_iff_label_injective.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ Function.Injective D.label
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.label_injective_iff_minpoly_eq_charpoly.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) :
+  Function.Injective D.label ↔ minpoly k T = LinearMap.charpoly T
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation.maxCount_eq.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D E : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) : D.maxCount = E.maxCount
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.operator_seedRank_eq_primaryGeneratorCount.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryGeneratorCount T)
+Komorebi.PaperICompletion3.OperatorPrimaryAPI.primaryPresentation_nonempty.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Nonempty (Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T)
+Komorebi.PaperICompletion3.PrimarySeedFormula.exists_operator_primary_seed_formula.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ ι x p,
+    ∃ (_ : ∀ (i : ι), Irreducible (p i)),
+      ∃ e,
+        ∃ (_ : ∀ (i : ι), 0 < e i),
+          ∃ _f,
+            IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r}
+                (Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i}) ∧
+              (Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+                  Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i}) ∧
+                Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+                  ↑(Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity fun i => Ideal.span {p i})
+Komorebi.PaperICompletion3.PrimarySeedFormula.exists_positive_primaryProduct_equiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ ι x p,
+    ∃ (_ : ∀ (i : ι), Irreducible (p i)),
+      ∃ e,
+        ∃ (_ : ∀ (i : ι), 0 < e i),
+          Nonempty (Module.AEval' T ≃ₗ[Polynomial k] (i : ι) → Polynomial k ⧸ Ideal.span {p i ^ e i})
+Komorebi.PaperICompletion3.PrimarySeedFormula.primaryProduct_seedNumber_isLeast.{u, v} {R : Type u} [CommRing R]
+  {ι : Type v} [Fintype ι] (I P : ι → Ideal R) (hIP : ∀ (i : ι), I i ≤ P i) (hmax : ∀ (i : ι), (P i).IsMaximal)
+  (hcoprime : ∀ (i j : ι), P i ≠ P j → IsCoprime (I i) (I j)) :
+  IsLeast {r | ∃ s, Komorebi.SeedRankBasics.FamilyGenerates R ((i : ι) → R ⧸ I i) s}
+    (Komorebi.PaperICompletion3.PrimarySeedFormula.maxMultiplicity P)
+Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap_surjective.{u, v} {R : Type u} [CommRing R] {ι : Type v}
+  (I P : ι → Ideal R) (hIP : ∀ (i : ι), I i ≤ P i) (a : Ideal R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion3.PrimarySeedFormula.residueFiberMap I P hIP a)
+Komorebi.PaperICompletion4.GroupedPrimary.groupedPrimaryEquiv.{u, v} {R : Type u} [CommRing R] [IsDomain R]
+  [IsPrincipalIdealRing R] {ι : Type v} [Fintype ι] (q : ι → R) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ) (p : R)
+  (hp : Irreducible p) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule ((i : ι) → R ⧸ Ideal.span {q i ^ e i}) p) ≃ₗ[R]
+    (i : { i // Ideal.span {q i} = Ideal.span {p} }) → R ⧸ Ideal.span {q ↑i ^ e ↑i}
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryQuotientEquivGlobal.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R) :
+  Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient
+      (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p)) p ≃ₗ[R ⧸ Ideal.span {p}]
+    Komorebi.PaperICompletion4.ResidueQuotient.ScalarQuotient M p
+Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule_eq_idealPrimary.{u, v} {R : Type u} [CommRing R]
+  (M : Type v) [AddCommGroup M] [Module R M] (p : R) :
+  Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p = Ideal.primaryComponent M (Ideal.span {p})
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_ker.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] (p : R) : (Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p).ker = p • ⊤
+Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal_surjective.{u, v} {R : Type u} [CommRing R] (M : Type v)
+  [AddCommGroup M] [Module R M] [IsArtinian R M] (p : R) :
+  Function.Surjective ⇑(Komorebi.PaperICompletion4.IntrinsicPrimary.primaryToGlobal M p)
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_card_of_component_decomposition.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] {ι : Type v} [Fintype ι] (T : Module.End k V)
+  (p : Polynomial k) (hp : Irreducible p) (q : ι → Polynomial k) (hq : ∀ (i : ι), Irreducible (q i)) (e : ι → ℕ)
+  (he : ∀ (i : ι), 0 < e i) (hlabel : ∀ (i : ι), Ideal.span {q i} = Ideal.span {p})
+  (f :
+    ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+      (i : ι) → Polynomial k ⧸ Ideal.span {q i ^ e i}) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p = Fintype.card ι
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity_eq_fiber.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p})
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum_attained.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  ∃ p,
+    p.Monic ∧
+      Irreducible p ∧
+        Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T p =
+          Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryComponentEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) ≃ₗ[Polynomial k]
+    (i : { i // D.label i = Ideal.span {p} }) → Polynomial k ⧸ Ideal.span {D.prime ↑i ^ D.exponent ↑i}
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operatorPrimaryQuotientEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.IntrinsicPrimaryQuotient T p ≃ₗ[Polynomial k ⧸ Ideal.span {p}]
+    { i // D.label i = Ideal.span {p} } → Polynomial k ⧸ Ideal.span {p}
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_primary_membership.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Module.AEval'.of T) x ∈ Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p ↔
+    ∃ n, ((Polynomial.aeval T) p ^ n) x = 0
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_scalarImage_membership.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (x : V) :
+  (Module.AEval'.of T) x ∈ p • ⊤ ↔ ∃ y, ((Polynomial.aeval T) p) y = x
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedFinrank_eq_intrinsicSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.operator_seedRank_eq_intrinsicSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicSeedMaximum T)
+Komorebi.PaperICompletion4.OperatorIntrinsicFormula.primary_fiber_presentation_invariant.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] {T : Module.End k V}
+  (D E : Komorebi.PaperICompletion3.OperatorPrimaryAPI.PrimaryPresentation T) (p : Polynomial k) (hp : Irreducible p) :
+  Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity D.label (Ideal.span {p}) =
+    Komorebi.PaperICompletion3.PrimarySeedFormula.fiberMultiplicity E.label (Ideal.span {p})
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.cyclicMinpolyQuotientEquiv.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (x : V)
+  (hx : Function.Surjective ⇑(Komorebi.PaperICompletion.CyclicClassification.orbitMap T x)) :
+  Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {minpoly k T}
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_all_spectral_multiplicities_one.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.hasCyclicVector_iff_minpoly_quotient_presentation.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    Nonempty (Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {minpoly k T})
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.minpoly_eq_charpoly_iff_all_spectral_multiplicities_one.{u, v}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k]
+  [Nontrivial V] (T : Module.End k V) :
+  minpoly k T = LinearMap.charpoly T ↔ ∀ a ∈ spectrum k T, Module.finrank k ↥(T.eigenspace a) = 1
+Komorebi.PaperICompletion5.CyclicGeometricCriterion.spectralSeedMaximum_attained.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] [Nontrivial V]
+  (T : Module.End k V) :
+  ∃ a ∈ spectrum k T,
+    Module.finrank k ↥(T.eigenspace a) = Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T
+Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedFinrank_eq_spectralSeedMaximum.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T
+Komorebi.PaperICompletion5.GeometricSeedFormula.operator_seedRank_eq_spectralSeedMaximum.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [IsAlgClosed k] (T : Module.End k V) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V =
+    ↑(Komorebi.PaperICompletion5.GeometricSeedFormula.spectralSeedMaximum T)
+Komorebi.PaperICompletion5.LinearPrimaryEigenspace.intrinsicMultiplicity_X_sub_C_eq_eigenspace.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (a : k) :
+  Komorebi.PaperICompletion4.OperatorIntrinsicFormula.intrinsicMultiplicity T (Polynomial.X - Polynomial.C a) =
+    Module.finrank k ↥(T.eigenspace a)
+Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) : Prop
+Komorebi.PaperICompletion6.OneInvariantFactor.exists_companion_basis_of_cyclic.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V)
+  (h : Komorebi.SingleOperatorGraph.HasCyclicVector T) :
+  ∃ b, (LinearMap.toMatrix b b) T = Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix (minpoly k T)
+Komorebi.PaperICompletion6.OneInvariantFactor.factor_eq_minpoly.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] (T : Module.End k V) (p : Polynomial k) (hp : p.Monic)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}) : p = minpoly k T
+Komorebi.PaperICompletion6.OneInvariantFactor.hasCyclicVector_iff_oneInvariantFactor.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor T
+Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv_intertwines.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}) (x : AdjoinRoot p) :
+  T ((Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv T p E) x) =
+    (Komorebi.PaperICompletion6.OneInvariantFactor.quotientVectorEquiv T p E) (AdjoinRoot.root p * x)
+Komorebi.PaperICompletion6.OneInvariantFactor.toMatrix_quotientCompanionBasis.{u, v} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (T : Module.End k V) (p : Polynomial k) (hp : p.Monic)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] Polynomial k ⧸ Ideal.span {p}) :
+  (LinearMap.toMatrix (Komorebi.PaperICompletion6.OneInvariantFactor.quotientCompanionBasis T p hp E)
+        (Komorebi.PaperICompletion6.OneInvariantFactor.quotientCompanionBasis T p hp E))
+      T =
+    Komorebi.PaperICompletion6.OneInvariantFactor.companionMatrix p
+Komorebi.PaperICompletion6.PrimaryCyclicCriterion.hasCyclicVector_iff_nonzero_primary_cyclic.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    ∀ (p : Polynomial k),
+      Irreducible p →
+        Nontrivial ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+          Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+            ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p)
+Komorebi.PaperICompletion6.PrimaryCyclicCriterion.hasCyclicVector_iff_polynomialModule_cyclic.{u, v} {k : Type u}
+  [Field k] {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ Komorebi.SeedRankBasics.Cyclic (Polynomial k) (Module.AEval' T)
+Komorebi.PaperICompletion6.PrimaryCyclicCriterion.submodule_cyclic_of_hasCyclicVector.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (T : Module.End k V) (hT : Komorebi.SingleOperatorGraph.HasCyclicVector T)
+  (P : Submodule (Polynomial k) (Module.AEval' T)) : Komorebi.SeedRankBasics.Cyclic (Polynomial k) ↥P
+Komorebi.PaperICompletion6.ScalarExtension.hasCyclicVector_baseChange_iff.{u, v, w} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (K : Type w) [Field K] [Algebra k K] [FiniteDimensional k V] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector (LinearMap.baseChange K T) ↔
+    Komorebi.SingleOperatorGraph.HasCyclicVector T
+Komorebi.PaperICompletion6.ScalarExtension.hasCyclicVector_iff_extended_spectral_multiplicities_one.{u, v, w}
+  {k : Type u} [Field k] {V : Type v} [AddCommGroup V] [Module k V] (K : Type w) [Field K] [Algebra k K]
+  [FiniteDimensional k V] [Nontrivial V] [IsAlgClosed K] (T : Module.End k V) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    ∀ a ∈ spectrum K (LinearMap.baseChange K T),
+      Module.finrank K ↥(Module.End.eigenspace (LinearMap.baseChange K T) a) = 1
+Komorebi.PaperICompletion6.ScalarExtension.minpoly_baseChange.{u, v, w} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (K : Type w) [Field K] [Algebra k K] [FiniteDimensional k V] (T : Module.End k V) :
+  minpoly K (LinearMap.baseChange K T) = Polynomial.map (algebraMap k K) (minpoly k T)
+Komorebi.PaperICompletion6.ScalarExtension.minpoly_eq_charpoly_baseChange_iff.{u, v, w} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] (K : Type w) [Field K] [Algebra k K] [FiniteDimensional k V]
+  (T : Module.End k V) :
+  minpoly K (LinearMap.baseChange K T) = (LinearMap.baseChange K T).charpoly ↔ minpoly k T = LinearMap.charpoly T
+Komorebi.PaperICompletion6.ScalarExtension.minpoly_natDegree_baseChange.{u, v, w} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] (K : Type w) [Field K] [Algebra k K] [FiniteDimensional k V] (T : Module.End k V) :
+  (minpoly K (LinearMap.baseChange K T)).natDegree = (minpoly k T).natDegree
+Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_iff_invariantFactor_count_one.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] (T : Module.End k V) {r : ℕ}
+  (p : Fin r → Polynomial k) (hp : ∀ (i : Fin r), 0 < (p i).natDegree) (hchain : ∀ (i j : Fin r), i ≤ j → p i ∣ p j)
+  (E : Module.AEval' T ≃ₗ[Polynomial k] (i : Fin r) → Polynomial k ⧸ Ideal.span {p i}) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔ r = 1
+Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_six_way.{u, v, w} {k : Type u} [Field k] {V : Type v}
+  [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] (K : Type w) [Field K] [Algebra k K]
+  [IsAlgClosed K] (T : Module.End k V) :
+  [Komorebi.SingleOperatorGraph.HasCyclicVector T,
+      Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = 1,
+      ∀ (p : Polynomial k),
+        Irreducible p →
+          Nontrivial ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+            Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+              ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p),
+      Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor T, minpoly k T = LinearMap.charpoly T,
+      ∀ a ∈ spectrum K (LinearMap.baseChange K T),
+        Module.finrank K ↥(Module.End.eigenspace (LinearMap.baseChange K T) a) = 1].TFAE
+Komorebi.PaperICompletion6.SixWayCyclicCriterion.cyclic_six_way_algebraicClosure.{u, v} {k : Type u} [Field k]
+  {V : Type v} [AddCommGroup V] [Module k V] [FiniteDimensional k V] [Nontrivial V] (T : Module.End k V) :
+  [Komorebi.SingleOperatorGraph.HasCyclicVector T,
+      Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) V = 1,
+      ∀ (p : Polynomial k),
+        Irreducible p →
+          Nontrivial ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p) →
+            Komorebi.SeedRankBasics.Cyclic (Polynomial k)
+              ↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule (Module.AEval' T) p),
+      Komorebi.PaperICompletion6.OneInvariantFactor.HasOneInvariantFactor T, minpoly k T = LinearMap.charpoly T,
+      ∀ a ∈ spectrum (AlgebraicClosure k) (LinearMap.baseChange (AlgebraicClosure k) T),
+        Module.finrank (AlgebraicClosure k) ↥(Module.End.eigenspace (LinearMap.baseChange (AlgebraicClosure k) T) a) =
+          1].TFAE
+Komorebi.PaperICompletion7.LocalResidue.jacobson_isMaximal.{u} {R : Type u} [Ring R] [IsLocalRing R] :
+  (Ring.jacobson R).IsMaximal
+Komorebi.PaperICompletion7.LocalResidue.maximal_left_ideal_unique.{u} {R : Type u} [Ring R] [IsLocalRing R]
+  (I J : Ideal R) (hI : I.IsMaximal) (hJ : J.IsMaximal) : I = J
+Komorebi.PaperICompletion7.LocalResidue.proper_sup_ne_top.{u} {R : Type u} [Ring R] [IsLocalRing R] (I J : Ideal R)
+  (hI : I ≠ ⊤) (hJ : J ≠ ⊤) : I ⊔ J ≠ ⊤
+Komorebi.PaperICompletion7.LocalResidue.residueDivisionRing.{u} (R : Type u) [Ring R] [IsLocalRing R] :
+  DivisionRing (R ⧸ Ring.jacobson R)
+Komorebi.PaperICompletion7.LocalResidue.seedFinrank_eq_residue_finrank.{u, v} {R : Type u} [Ring R] [IsLocalRing R]
+  {M : Type v} [AddCommGroup M] [Module R M] [Module.Finite R M] :
+  Komorebi.SeedRankBasics.seedFinrank R M =
+    Module.finrank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+Komorebi.PaperICompletion7.LocalResidue.seedRank_eq_residue_dimension.{u, v} {R : Type u} [Ring R] [IsLocalRing R]
+  {M : Type v} [AddCommGroup M] [Module R M] [Module.Finite R M] :
+  Komorebi.SeedRankBasics.seedRank R M =
+    Module.rank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+Komorebi.PaperICompletion7.ModuleTop.RadicalTop.{u, v} (R : Type u) (M : Type v) [Ring R] [AddCommGroup M]
+  [Module R M] : Type v
+Komorebi.PaperICompletion7.ModuleTop.family_generates_iff.{u, v, w} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) {ι : Type w} (x : ι → M) :
+  Komorebi.SeedRankBasics.FamilyGenerates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+      (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I) ∘ x) ↔
+    Komorebi.SeedRankBasics.FamilyGenerates R M x
+Komorebi.PaperICompletion7.ModuleTop.generates_iff_radicalTop.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (s : Set M) :
+  Komorebi.SeedRankBasics.Generates R M s ↔
+    Komorebi.SeedRankBasics.Generates (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+      (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap (Ring.jacobson R)) '' s)
+Komorebi.PaperICompletion7.ModuleTop.idealTop_finite.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) :
+  Module.Finite (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+Komorebi.PaperICompletion7.ModuleTop.image_generates_iff.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) (s : Set M) :
+  Komorebi.SeedRankBasics.Generates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+      (⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I) '' s) ↔
+    Komorebi.SeedRankBasics.Generates R M s
+Komorebi.PaperICompletion7.ModuleTop.lifts_generate.{u, v, w} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) {ι : Type w}
+  (x : ι → Komorebi.PaperICompletion7.Nakayama.IdealTop I M) (y : ι → M)
+  (hxy : ∀ (i : ι), (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) (y i) = x i)
+  (hx : Komorebi.SeedRankBasics.FamilyGenerates (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M) x) :
+  Komorebi.SeedRankBasics.FamilyGenerates R M y
+Komorebi.PaperICompletion7.ModuleTop.quotient_basis_lifts_generate.{u, v, w} {R : Type u} {M : Type v} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) {ι : Type w}
+  (b : Module.Basis ι (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)) (x : ι → M)
+  (hx : ∀ (i : ι), (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) (x i) = b i) :
+  Komorebi.SeedRankBasics.FamilyGenerates R M x
+Komorebi.PaperICompletion7.ModuleTop.seedFinrank_eq_idealTop.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) :
+  Komorebi.SeedRankBasics.seedFinrank R M =
+    Komorebi.SeedRankBasics.seedFinrank (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+Komorebi.PaperICompletion7.ModuleTop.seedFinrank_eq_radicalTop.{u, v} {R : Type u} {M : Type v} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] :
+  Komorebi.SeedRankBasics.seedFinrank R M =
+    Komorebi.SeedRankBasics.seedFinrank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_idealTop.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) :
+  Komorebi.SeedRankBasics.seedRank R M =
+    Komorebi.SeedRankBasics.seedRank (R ⧸ I) (Komorebi.PaperICompletion7.Nakayama.IdealTop I M)
+Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] :
+  Komorebi.SeedRankBasics.seedRank R M =
+    Komorebi.SeedRankBasics.seedRank (R ⧸ Ring.jacobson R) (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+Komorebi.PaperICompletion7.Nakayama.IdealTop.{u, v} {R : Type u} [Ring R] (I : Ideal R) (M : Type v) [AddCommGroup M]
+  [Module R M] : Type v
+Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_ideal_smul.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) (hI : I ≤ Ring.jacobson R) (N : Submodule R M) (h : N ⊔ I • ⊤ = ⊤) :
+  N = ⊤
+Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_jacobson_smul.{u, v} {R : Type u} {M : Type v} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] (N : Submodule R M) (h : N ⊔ Ring.jacobson R • ⊤ = ⊤) : N = ⊤
+Komorebi.PaperICompletion7.Nakayama.eq_top_of_sup_module_jacobson.{u, v} {R : Type u} {M : Type v} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] (N : Submodule R M) (h : N ⊔ Module.jacobson R M = ⊤) : N = ⊤
+Komorebi.PaperICompletion7.Nakayama.idealTopMap.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M] [Module R M]
+  (I : Ideal R) [I.IsTwoSided] : M →ₛₗ[Ideal.Quotient.mk I] Komorebi.PaperICompletion7.Nakayama.IdealTop I M
+Komorebi.PaperICompletion7.Nakayama.idealTopMap_apply.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] (I : Ideal R) [I.IsTwoSided] (x : M) :
+  (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) x = Submodule.Quotient.mk x
+Komorebi.PaperICompletion7.Nakayama.idealTopMap_ker.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] (I : Ideal R) [I.IsTwoSided] : (Komorebi.PaperICompletion7.Nakayama.idealTopMap I).ker = I • ⊤
+Komorebi.PaperICompletion7.Nakayama.idealTopMap_smul.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] (I : Ideal R) [I.IsTwoSided] (a : R) (x : M) :
+  (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) (a • x) =
+    (Ideal.Quotient.mk I) a • (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) x
+Komorebi.PaperICompletion7.Nakayama.idealTopMap_surjective.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] (I : Ideal R) [I.IsTwoSided] : Function.Surjective ⇑(Komorebi.PaperICompletion7.Nakayama.idealTopMap I)
+Komorebi.PaperICompletion7.Nakayama.map_eq_top_iff.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M]
+  [Module R M] [Module.Finite R M] (I : Ideal R) [I.IsTwoSided] (hI : I ≤ Ring.jacobson R) (N : Submodule R M) :
+  Submodule.map (Komorebi.PaperICompletion7.Nakayama.idealTopMap I) N = ⊤ ↔ N = ⊤
+Komorebi.PaperICompletion8.DivisionBlock.oneBlock_seedRank_eq_ceilDiv.{u} {k : Type u} [DivisionRing k] {d m : ℕ}
+  (hd : 0 < d) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionBlock.BlockAlgebra d)
+      (Komorebi.PaperICompletion8.DivisionBlock.BlockModule d m) =
+    ↑(m ⌈/⌉ d)
+Komorebi.PaperICompletion8.DivisionProduct.divisionProduct_seedRank_eq_maxCeilDiv.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+      (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) =
+    ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.DivisionProduct.exists_divisionProduct_generators_iff_coordinate_bounds.{u, v} {I : Type v}
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) {r : ℕ} (hd : ∀ (i : I), 0 < d i) :
+  (∃ v,
+      Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+        (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductModule d m) v) ↔
+    ∀ (i : I), m i ≤ r * d i
+Komorebi.PaperICompletion8.DivisionRows.exists_leftGenerators_of_le.{u} {k : Type u} [DivisionRing k] {r d m : ℕ}
+  (hd : 0 < d) (h : m ≤ r * d) : ∃ v, Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v
+Komorebi.PaperICompletion8.DivisionRows.leftGenerates_iff_rowsSpan.{u} {k : Type u} [DivisionRing k] {r d m : ℕ}
+  (hd : 0 < d) (v : Fin r → Matrix (Fin d) (Fin m) k) :
+  Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v ↔ Komorebi.PaperICompletion8.DivisionRows.RowsSpan v
+Komorebi.PaperICompletion8.DivisionRows.multiplicity_le_of_leftGenerates.{u} {k : Type u} [DivisionRing k] {r d m : ℕ}
+  (hd : 0 < d) {v : Fin r → Matrix (Fin d) (Fin m) k} (hgen : Komorebi.PaperICompletion8.DivisionRows.LeftGenerates v) :
+  m ≤ r * d
+Komorebi.PaperICompletion8.ProductPresentation.exists_multiplicity_presentation.{u, v, w} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ) (M : Type w) [AddCommGroup M]
+  [Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) M]
+  [Module.Finite (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) M] (hd : ∀ (i : I), 0 < d i) :
+  ∃ m,
+    Nonempty
+      (M ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+        Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d m)
+Komorebi.PaperICompletion8.ProductPresentation.regroupSimpleFactors.{u, v, w} {I : Type v} [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ) {J : Type w} [Fintype J] (f : J → I) :
+  ((j : J) →
+      Komorebi.PaperICompletion8.RegularMultiplicity.Simple d
+        (f j)) ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+    Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d fun i => Fintype.card { j // f j = i }
+Komorebi.PaperICompletion8.ProductPresentation.simple_equiv_natural.{u, v, w} {I : Type v} [Fintype I] [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ) (S : Type w) [AddCommGroup S]
+  [Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) S]
+  [IsSimpleModule (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) S] (hd : ∀ (i : I), 0 < d i) :
+  ∃ i,
+    Nonempty
+      (S ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+        Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+Komorebi.PaperICompletion8.RegularMultiplicity.directSum_seedRank.{u, v} {I : Type v} [Fintype I] [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+      (DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) =
+    ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.RegularMultiplicity.multiplicityDirectSumEquiv.{u, v} {I : Type v} [Fintype I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) :
+  Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d
+      m ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+    DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i
+Komorebi.PaperICompletion8.RegularMultiplicity.naturalCopies_seedRank.{u} {D : Type u} [DivisionRing D] (d m : ℕ)
+  (hd : 0 < d) : Komorebi.SeedRankBasics.seedRank (Matrix (Fin d) (Fin d) D) (Fin m → Fin d → D) = ↑(m ⌈/⌉ d)
+Komorebi.PaperICompletion8.RegularMultiplicity.naturalDirectSum_seedRank.{u} {D : Type u} [DivisionRing D] (d m : ℕ)
+  (hd : 0 < d) :
+  Komorebi.SeedRankBasics.seedRank (Matrix (Fin d) (Fin d) D) (DirectSum (Fin m) fun x => Fin d → D) = ↑(m ⌈/⌉ d)
+Komorebi.PaperICompletion8.RegularMultiplicity.natural_nonzero_generates.{u} {D : Type u} [DivisionRing D] {n : ℕ}
+  {x : Fin n → D} (hx : x ≠ 0) : Komorebi.SeedRankBasics.Generates (Matrix (Fin n) (Fin n) D) (Fin n → D) {x}
+Komorebi.PaperICompletion8.RegularMultiplicity.natural_seedRank_eq_one.{u} {D : Type u} [DivisionRing D] {n : ℕ}
+  (hn : 0 < n) : Komorebi.SeedRankBasics.seedRank (Matrix (Fin n) (Fin n) D) (Fin n → D) = 1
+Komorebi.PaperICompletion8.RegularMultiplicity.other_factor_smul_zero.{u, v} {I : Type v} [Fintype I] [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ) (i j : I) (hji : j ≠ i)
+  (a : Matrix (Fin (d j)) (Fin (d j)) (D j)) (x : Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) :
+  Pi.single j a • x = 0
+Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv.{u, v} {I : Type v} {D : I → Type u}
+  [(i : I) → DivisionRing (D i)] (d : I → ℕ) :
+  Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra
+      d ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+    Komorebi.PaperICompletion8.RegularMultiplicity.MultiplicityModule d d
+Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv_apply.{u, v} {I : Type v} [Fintype I] [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ)
+  (a : Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) (i : I) (j r : Fin (d i)) :
+  (Komorebi.PaperICompletion8.RegularMultiplicity.regularColumnsEquiv d) a i j r = a i r j
+Komorebi.PaperICompletion8.RegularMultiplicity.regularDirectSumEquiv.{u, v} {I : Type v} [Fintype I] {D : I → Type u}
+  [(i : I) → DivisionRing (D i)] (d : I → ℕ) :
+  Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra
+      d ≃ₗ[Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d]
+    DirectSum I fun i => Fin (d i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i
+Komorebi.PaperICompletion8.RegularMultiplicity.simpleModule.{u, v} {I : Type v} {D : I → Type u}
+  [(i : I) → DivisionRing (D i)] (d : I → ℕ) (i : I) :
+  Module (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+    (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+Komorebi.PaperICompletion8.RegularMultiplicity.simple_isSimple.{u, v} {I : Type v} [Fintype I] [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ) (i : I) (hd : 0 < d i) :
+  IsSimpleModule (Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+    (Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+Komorebi.PaperICompletion8.RegularMultiplicity.simple_smul.{u, v} {I : Type v} [Fintype I] [DecidableEq I]
+  {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ)
+  (a : Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) (i : I)
+  (x : Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) : a • x = Matrix.mulVec (a i) x
+Komorebi.PaperICompletion8.RegularMultiplicity.singleColumnsEquiv.{u} {D : Type u} [DivisionRing D] (d m : ℕ) :
+  Matrix (Fin d) (Fin m) D ≃ₗ[Matrix (Fin d) (Fin d) D] Fin m → Fin d → D
+Komorebi.PaperICompletion8.SemisimpleExistence.exists_artinian_radicalTop_seed_formula.{u} (R M : Type u) [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] [IsArtinianRing R] :
+  ∃ q D d m x,
+    (∀ (i : Fin q), 0 < d i) ∧
+      ∃ eR,
+        Nonempty
+            (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+              DirectSum (Fin q) fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) ∧
+          Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.SemisimpleExistence.exists_compatible_presentation.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d : I → ℕ) {R M : Type (max u v)} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M]
+  (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d) (hd : ∀ (i : I), 0 < d i) :
+  ∃ m, Nonempty (M ≃ₛₗ[↑eR] DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+Komorebi.PaperICompletion8.SemisimpleExistence.exists_finiteAlgebra_seed_formula.{u} (R M : Type u) [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] (k : Type u) [Field k] [Algebra k R] [Module.Finite k R] :
+  ∃ q D d m x,
+    (∀ (i : Fin q), 0 < d i) ∧
+      ∃ eR,
+        Nonempty
+            (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+              DirectSum (Fin q) fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) ∧
+          Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.SemisimpleExistence.exists_semisimple_seed_formula.{u} (R M : Type u) [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] [IsSemisimpleRing R] :
+  ∃ q D d m x,
+    (∀ (i : Fin q), 0 < d i) ∧
+      ∃ eR,
+        Nonempty
+            (M ≃ₛₗ[↑eR]
+              DirectSum (Fin q) fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i) ∧
+          Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.SemisimpleFormula.exists_finite_simple_decomposition.{u} (R M : Type u) [Ring R]
+  [AddCommGroup M] [Module R M] [IsSemisimpleRing R] [Module.Finite R M] :
+  ∃ n S, Nonempty (M ≃ₗ[R] DirectSum (Fin n) fun i => ↥(S i)) ∧ ∀ (i : Fin n), IsSimpleModule R ↥(S i)
+Komorebi.PaperICompletion8.SemisimpleFormula.exists_wedderburn_decomposition.{u} (R : Type u) [Ring R]
+  [IsSemisimpleRing R] :
+  ∃ q D d x, (∀ (i : Fin q), NeZero (d i)) ∧ Nonempty (R ≃+* ((i : Fin q) → Matrix (Fin (d i)) (Fin (d i)) (D i)))
+Komorebi.PaperICompletion8.SemisimpleFormula.finiteAlgebra_radicalQuotient_decomposition.{u} (R : Type u) [Ring R]
+  (k : Type u) [Field k] [Algebra k R] [Module.Finite k R] :
+  ∃ q D d x,
+    (∀ (i : Fin q), NeZero (d i)) ∧
+      Nonempty (R ⧸ Ring.jacobson R ≃+* ((i : Fin q) → Matrix (Fin (d i)) (Fin (d i)) (D i)))
+Komorebi.PaperICompletion8.SemisimpleFormula.finiteAlgebra_radicalQuotient_isSemisimple.{u} (R : Type u) [Ring R]
+  (k : Type u) [Field k] [Algebra k R] [Module.Finite k R] : IsSemisimpleRing (R ⧸ Ring.jacobson R)
+Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedFinrank_of_decompositions.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) {R M : Type (max u v)} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M]
+  (eR : R ⧸ Ring.jacobson R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+  (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedFinrank R M = Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m
+Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedRank_of_decompositions.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) {R M : Type (max u v)} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M]
+  (eR : R ⧸ Ring.jacobson R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+  (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.SemisimpleFormula.seedRank_eq_radicalTop_restricted.{u} {R M : Type u} [Ring R]
+  [AddCommGroup M] [Module R M] [Module.Finite R M] :
+  Komorebi.SeedRankBasics.seedRank R M =
+    Komorebi.SeedRankBasics.seedRank R (Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M)
+Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedFinrank_of_decompositions.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) {R M : Type (max u v)} [Ring R]
+  [AddCommGroup M] [Module R M] (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM : M ≃ₛₗ[↑eR] DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+  (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedFinrank R M = Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m
+Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] {D : I → Type u} [(i : I) → DivisionRing (D i)] (d m : I → ℕ) {R M : Type (max u v)} [Ring R]
+  [AddCommGroup M] [Module R M] (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM : M ≃ₛₗ[↑eR] DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+  (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.SemisimpleFormula.split_originalRing_top_seedRank.{u, v} {I : Type v} [Fintype I]
+  [DecidableEq I] (k : Type u) [Field k] (d m : I → ℕ) {R M : Type (max u v)} [Ring R] [AddCommGroup M] [Module R M]
+  [Module.Finite R M] (eR : R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+  (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperICompletion8.SemisimpleFormula.split_radicalTop_seedRank.{u, v} {I : Type v} [Fintype I] [DecidableEq I]
+  (k : Type u) [Field k] (d m : I → ℕ) {R M : Type (max u v)} [Ring R] [AddCommGroup M] [Module R M] [Module.Finite R M]
+  (eR : R ⧸ Ring.jacobson R ≃+* Komorebi.PaperICompletion8.DivisionProduct.DivisionProductAlgebra d)
+  (eM :
+    Komorebi.PaperICompletion7.ModuleTop.RadicalTop R M ≃ₛₗ[↑eR]
+      DirectSum I fun i => Fin (m i) → Komorebi.PaperICompletion8.RegularMultiplicity.Simple d i)
+  (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank R M = ↑(Komorebi.PaperICompletion8.DivisionProduct.maxCeilDiv d m)
+Komorebi.PaperIRelease.BoundedSupport.adjoint_closed_iff_symmetric.{u, v, w} {K : Type u} [RCLike K] {X : Type v}
+  [NormedAddCommGroup X] [InnerProductSpace K X] [CompleteSpace X] {I : Type w} [Fintype I]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily K X I)
+  (hself : ∀ (i : I), ContinuousLinearMap.adjoint (P.proj i) = P.proj i) [∀ (i : I), Nontrivial ↥(P.packet i)]
+  (rel : I → I → Prop) :
+  (∀ (T : X →L[K] X),
+      Komorebi.PaperIRelease.BoundedSupport.Supported P rel T →
+        Komorebi.PaperIRelease.BoundedSupport.Supported P rel (ContinuousLinearMap.adjoint T)) ↔
+    ∀ ⦃a b : I⦄, rel a b → rel b a
+Komorebi.PaperIRelease.BoundedSupport.star_subalgebra_iff_equivalence.{u, v, w} {K : Type u} [RCLike K] {X : Type v}
+  [NormedAddCommGroup X] [InnerProductSpace K X] [CompleteSpace X] {I : Type w} [Fintype I] [DecidableEq I]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily K X I)
+  (hself : ∀ (i : I), ContinuousLinearMap.adjoint (P.proj i) = P.proj i) [∀ (i : I), Nontrivial ↥(P.packet i)]
+  (rel : I → I → Prop) :
+  (∃ A, ∀ (T : X →L[K] X), T ∈ A ↔ Komorebi.PaperIRelease.BoundedSupport.Supported P rel T) ↔ Equivalence rel
+Komorebi.PaperIRelease.CategoryExport.Expression.{u, v, w, r} (R : Type r) (C : Type u) (G : C → C → Type w) :
+  C → C → Type (max u v w r)
+Komorebi.PaperIRelease.CategoryExport.additive_equation_transport.{u, v, w, u', v', u_1, u_2} {C₀ : Type u}
+  {D₀ : Type u'} [CategoryTheory.Category.{v, u} C₀] [CategoryTheory.Category.{v', u'} D₀]
+  [CategoryTheory.Preadditive C₀] [CategoryTheory.Preadditive D₀] (F : CategoryTheory.Functor C₀ D₀) [F.Additive]
+  {G₀ : C₀ → C₀ → Type w} (g : {X Y : C₀} → G₀ X Y → (X ⟶ Y)) {X Y : C₀}
+  (a : Komorebi.PaperIRelease.CategoryExport.Expression ℤ C₀ G₀ X Y)
+  (b : Komorebi.PaperIRelease.CategoryExport.Expression ℤ C₀ G₀ X Y)
+  (h :
+    Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) a =
+      Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) b) :
+  Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) a =
+    Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) b
+Komorebi.PaperIRelease.CategoryExport.equation_transport.{u, v, w, u', v', r, u_1, u_2} {R : Type r} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] [Semiring R] [CategoryTheory.Preadditive C] [CategoryTheory.Linear R C]
+  {G : C → C → Type w} {D : Type u'} [CategoryTheory.Category.{v', u'} D] [CategoryTheory.Preadditive D]
+  [CategoryTheory.Linear R D] (F : CategoryTheory.Functor C D) [F.Additive] [CategoryTheory.Functor.Linear R F]
+  (g : {X Y : C} → G X Y → (X ⟶ Y)) {X Y : C} (a : Komorebi.PaperIRelease.CategoryExport.Expression R C G X Y)
+  (b : Komorebi.PaperIRelease.CategoryExport.Expression R C G X Y)
+  (h :
+    Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) a =
+      Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) b) :
+  Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) a =
+    Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) b
+Komorebi.PaperIRelease.CategoryExport.evaluate_transport.{u, v, w, u', v', r, u_1} {R : Type r} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] [Semiring R] [CategoryTheory.Preadditive C] [CategoryTheory.Linear R C]
+  {G : C → C → Type w} {D : Type u'} [CategoryTheory.Category.{v', u'} D] [CategoryTheory.Preadditive D]
+  [CategoryTheory.Linear R D] (F : CategoryTheory.Functor C D) [F.Additive] [CategoryTheory.Functor.Linear R F]
+  (g : {X Y : C} → G X Y → (X ⟶ Y)) {X Y : C} (e : Komorebi.PaperIRelease.CategoryExport.Expression R C G X Y) :
+  F.map (Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) e) =
+    Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) e
+Komorebi.PaperIRelease.CategoryExport.transportColimit.{u, v, u', v', u_1, u_2} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] {J : Type u_1}
+  [CategoryTheory.Category.{u_2, u_1} J] (K : CategoryTheory.Functor J C) (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesColimit K F] (c : CategoryTheory.Limits.Cocone K)
+  (h : CategoryTheory.Limits.IsColimit c) : CategoryTheory.Limits.IsColimit (F.mapCocone c)
+Komorebi.PaperIRelease.CategoryExport.transportInitial.{u, v, u', v'} {C : Type u} [CategoryTheory.Category.{v, u} C]
+  {D : Type u'} [CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesColimit (CategoryTheory.Functor.empty C) F] {X : C}
+  (hX : CategoryTheory.Limits.IsInitial X) : CategoryTheory.Limits.IsInitial (F.obj X)
+Komorebi.PaperIRelease.CategoryExport.transportInitial_map.{u, v, u', v'} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesColimit (CategoryTheory.Functor.empty C) F] {X : C}
+  (hX : CategoryTheory.Limits.IsInitial X) (Y : C) :
+  F.map (hX.to Y) = (Komorebi.PaperIRelease.CategoryExport.transportInitial F hX).to (F.obj Y)
+Komorebi.PaperIRelease.CategoryExport.transportInitial_underlying.{u, v, u', v', uS, vS, uT, vT} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] {S : Type uS}
+  [CategoryTheory.Category.{vS, uS} S] {T : Type uT} [CategoryTheory.Category.{vT, uT} T]
+  (F : CategoryTheory.Functor C D) (US : CategoryTheory.Functor S C) (UT : CategoryTheory.Functor T D)
+  (G : CategoryTheory.Functor S T) [CategoryTheory.Limits.PreservesColimit (CategoryTheory.Functor.empty S) G]
+  (comparison : G.comp UT ≅ US.comp F) {X : S} (hX : CategoryTheory.Limits.IsInitial X) (Y : S) :
+  CategoryTheory.CategoryStruct.comp
+      (UT.map ((Komorebi.PaperIRelease.CategoryExport.transportInitial G hX).to (G.obj Y))) (comparison.hom.app Y) =
+    CategoryTheory.CategoryStruct.comp (comparison.hom.app X) (F.map (US.map (hX.to Y)))
+Komorebi.PaperIRelease.CategoryExport.transportLimit.{u, v, u', v', u_1, u_2} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] {J : Type u_1}
+  [CategoryTheory.Category.{u_2, u_1} J] (K : CategoryTheory.Functor J C) (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesLimit K F] (c : CategoryTheory.Limits.Cone K) (h : CategoryTheory.Limits.IsLimit c) :
+  CategoryTheory.Limits.IsLimit (F.mapCone c)
+Komorebi.PaperIRelease.CategoryExport.transportTerminal.{u, v, u', v'} {C : Type u} [CategoryTheory.Category.{v, u} C]
+  {D : Type u'} [CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesLimit (CategoryTheory.Functor.empty C) F] {X : C}
+  (hX : CategoryTheory.Limits.IsTerminal X) : CategoryTheory.Limits.IsTerminal (F.obj X)
+Komorebi.PaperIRelease.CategoryExport.transportTerminal_map.{u, v, u', v'} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesLimit (CategoryTheory.Functor.empty C) F] {X : C}
+  (hX : CategoryTheory.Limits.IsTerminal X) (Y : C) :
+  F.map (hX.from Y) = (Komorebi.PaperIRelease.CategoryExport.transportTerminal F hX).from (F.obj Y)
+Komorebi.PaperIRelease.CategoryExport.transportTerminal_underlying.{u, v, u', v', uS, vS, uT, vT} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] {S : Type uS}
+  [CategoryTheory.Category.{vS, uS} S] {T : Type uT} [CategoryTheory.Category.{vT, uT} T]
+  (F : CategoryTheory.Functor C D) (US : CategoryTheory.Functor S C) (UT : CategoryTheory.Functor T D)
+  (G : CategoryTheory.Functor S T) [CategoryTheory.Limits.PreservesLimit (CategoryTheory.Functor.empty S) G]
+  (comparison : G.comp UT ≅ US.comp F) {X : S} (hX : CategoryTheory.Limits.IsTerminal X) (Y : S) :
+  CategoryTheory.CategoryStruct.comp
+      (UT.map ((Komorebi.PaperIRelease.CategoryExport.transportTerminal G hX).from (G.obj Y))) (comparison.hom.app X) =
+    CategoryTheory.CategoryStruct.comp (comparison.hom.app Y) (F.map (US.map (hX.from Y)))
+Komorebi.PaperIRelease.CategoryPackets.PacketMorphism.{u} {K : Type u} [Field K]
+  (X Y : Komorebi.PaperIRelease.CategoryPackets.PacketObject K) : Type u
+Komorebi.PaperIRelease.CategoryPackets.PacketMorphism.comp.{u} {K : Type u} [Field K]
+  {X Y Z : Komorebi.PaperIRelease.CategoryPackets.PacketObject K}
+  (f : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Y)
+  (g : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism Y Z) :
+  Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Z
+Komorebi.PaperIRelease.CategoryPackets.PacketObject.{u} (K : Type u) [Field K] : Type (u + 1)
+Komorebi.PaperIRelease.CategoryPackets.SeedMorphism.{u} {K : Type u} [Field K]
+  (X Y : Komorebi.PaperIRelease.CategoryPackets.SeedObject) : Type u
+Komorebi.PaperIRelease.CategoryPackets.SeedMorphism.comp.{u} {K : Type u} [Field K]
+  {X Y Z : Komorebi.PaperIRelease.CategoryPackets.SeedObject}
+  (f : Komorebi.PaperIRelease.CategoryPackets.SeedMorphism X Y)
+  (g : Komorebi.PaperIRelease.CategoryPackets.SeedMorphism Y Z) :
+  Komorebi.PaperIRelease.CategoryPackets.SeedMorphism X Z
+Komorebi.PaperIRelease.CategoryPackets.SeedObject.{u} {K : Type u} [Field K] : Type (u + 1)
+Komorebi.PaperIRelease.CategoryPackets.fiberProjector.{u} {K : Type u} [Field K]
+  (X : Komorebi.PaperIRelease.CategoryPackets.PacketObject K) {J : Type u} (σ : X.index → J) (j : J) :
+  Module.End K X.carrier
+Komorebi.PaperIRelease.CategoryPackets.hull_eq_span.{u} {K : Type u} [Field K]
+  (X : Komorebi.PaperIRelease.CategoryPackets.PacketObject K) (S : Set X.carrier) :
+  ↑(Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull X.algebra S) =
+    ↑(Submodule.span (↥X.algebra) S)
+Komorebi.PaperIRelease.CategoryPackets.hull_natural.{u} {K : Type u} [Field K]
+  {X Y : Komorebi.PaperIRelease.CategoryPackets.PacketObject K}
+  (f : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Y) (S : Set X.carrier) :
+  Submodule.map f.linearMap (Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull X.algebra S) =
+    Komorebi.PaperIRelease.CategoryPackets.ImageHull f S
+Komorebi.PaperIRelease.CategoryPackets.imageHull_eq_top.{u} {K : Type u} [Field K]
+  {X Y : Komorebi.PaperIRelease.CategoryPackets.PacketObject K}
+  (f : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Y) (S : Set X.carrier)
+  (hS : Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull X.algebra S = ⊤)
+  (hf : Function.Surjective ⇑f.linearMap) : Komorebi.PaperIRelease.CategoryPackets.ImageHull f S = ⊤
+Komorebi.PaperIRelease.CategoryPackets.imageHull_le.{u} {K : Type u} [Field K]
+  {X Y : Komorebi.PaperIRelease.CategoryPackets.PacketObject K}
+  (f : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Y) (S : Set X.carrier) :
+  Komorebi.PaperIRelease.CategoryPackets.ImageHull f S ≤
+    Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull Y.algebra (⇑f.linearMap '' S)
+Komorebi.PaperIRelease.CategoryPackets.packetCategory.{u} {K : Type u} [Field K] :
+  CategoryTheory.Category.{u, u + 1} (Komorebi.PaperIRelease.CategoryPackets.PacketObject K)
+Komorebi.PaperIRelease.CategoryPackets.seedCategory.{u} {K : Type u} [Field K] :
+  CategoryTheory.Category.{u, u + 1} Komorebi.PaperIRelease.CategoryPackets.SeedObject
+Komorebi.PaperIRelease.CategoryPackets.seeded_surjection_generates.{u} {K : Type u} [Field K]
+  {X Y : Komorebi.PaperIRelease.CategoryPackets.SeedObject}
+  (f : Komorebi.PaperIRelease.CategoryPackets.SeedMorphism X Y) (hf : Function.Surjective ⇑f.linearMap)
+  (hX : Submodule.span (↥X.algebra) X.seeds = ⊤) : Submodule.span (↥Y.algebra) Y.seeds = ⊤
+Komorebi.PaperIRelease.CategoryPackets.transferBlock_naturality.{u} {K : Type u} [Field K]
+  {X Y : Komorebi.PaperIRelease.CategoryPackets.PacketObject K}
+  (f : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Y) (T : ↥X.algebra) (j i : Y.index) :
+  Komorebi.Foundation.transferBlock Y.packets Y.packets (↑(f.algebraMap T)) j i ∘ₗ f.linearMap =
+    ∑ b,
+      if f.packetMap b = j then
+        ∑ a,
+          if f.packetMap a = i then f.linearMap ∘ₗ Komorebi.Foundation.transferBlock X.packets X.packets (↑T) b a else 0
+      else 0
+Komorebi.PaperIRelease.CoordinateTransport.packetRangeEquiv.{u, v, w, x} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type x} [Fintype I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (U : X ≃ₗ[K] Y) (i : I) :
+  ↥(LinearMap.range (P.proj i)) ≃ₗ[K] ↥(LinearMap.range ((P.conjugate U).proj i))
+Komorebi.PaperIRelease.CoordinateTransport.packet_rank_invariant.{u, v, w, x} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type x} [Fintype I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (U : X ≃ₗ[K] Y) (i : I) :
+  Cardinal.lift.{w, v} (Module.rank K ↥(LinearMap.range (P.proj i))) =
+    Cardinal.lift.{v, w} (Module.rank K ↥(LinearMap.range ((P.conjugate U).proj i)))
+Komorebi.PaperIRelease.CoordinateTransport.support_pattern_invariant.{u, v, w, x} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type x} [Fintype I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (U : X ≃ₗ[K] Y) (rel : I → I → Prop) (T : Module.End K X) :
+  Komorebi.PaperIRelease.OperatorSupported (P.conjugate U) rel (Komorebi.Foundation.conjugateEnd U T) ↔
+    Komorebi.PaperIRelease.OperatorSupported P rel T
+Komorebi.PaperIRelease.EdgeSurjective.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X)) : Prop
+Komorebi.PaperIRelease.FiniteDigraph.no_reach_into_source.{w} {I : Type w} (edge : I → I → Prop)
+  (C : Komorebi.PaperIRelease.FiniteDigraph.Sources edge) {a b : I}
+  (hb : Komorebi.PaperIRelease.FiniteDigraph.component edge b = ↑C)
+  (hab : Komorebi.PaperIRelease.FiniteDigraph.Reach edge a b) :
+  Komorebi.PaperIRelease.FiniteDigraph.component edge a = ↑C
+Komorebi.PaperIRelease.FiniteDigraph.source_iff_no_incoming_edge.{w} {I : Type w} (edge : I → I → Prop)
+  (C : Komorebi.PaperIRelease.FiniteDigraph.SCC edge) :
+  Komorebi.PaperIRelease.FiniteDigraph.Source edge C ↔
+    ∀ (D : Komorebi.PaperIRelease.FiniteDigraph.SCC edge),
+      ¬Komorebi.PaperIRelease.FiniteDigraph.CondensationEdge edge D C
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber.{u_1, u_2} {X : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup X] [NormedAddCommGroup Y] (A : NormedAddGroupHom X Y) (S : NormedAddGroupHom Y X) : ℝ
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditioned_coordinate_bounds.{u_1, u_2} {X : Type u_1}
+  {Y : Type u_2} [NormedAddCommGroup X] [NormedAddCommGroup Y] (A : NormedAddGroupHom X Y) (S : NormedAddGroupHom Y X)
+  (hSA : ∀ (x : X), S (A x) = x) (T : NormedAddGroupHom X X) :
+  ‖Komorebi.PaperIRelease.GeneralConditionedCoordinates.coordinateOperator A S T‖ ≤
+      Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber A S * ‖T‖ ∧
+    ‖T‖ ≤
+      Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber A S *
+        ‖Komorebi.PaperIRelease.GeneralConditionedCoordinates.coordinateOperator A S T‖
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.equivalent_norm_conditioned_coordinates.{u_1, u_2, u_3, u_4}
+  {X : Type u_1} {Y : Type u_2} [NormedAddCommGroup X] [NormedAddCommGroup Y] {𝕜 : Type u_3} {I : Type u_4}
+  [NormedField 𝕜] [NormedSpace 𝕜 X] [Fintype I] [NormedSpace 𝕜 Y] [Nontrivial X]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X I)
+  (hb : ∀ (i : I), IsBoundedLinearMap 𝕜 ⇑(P.proj i)) (e : ((i : I) → ↥(P.packet i)) ≃ₗ[𝕜] Y) (C D : ℝ)
+  (hC : ∀ (z : (i : I) → ↥(P.packet i)), ‖e z‖ ≤ C * ‖z‖) (hD : ∀ (y : Y), ‖e.symm y‖ ≤ D * ‖y‖) :
+  ∃ A S,
+    (∀ (x : X), A x = e (P.analysis x)) ∧
+      (∀ (y : Y), S y = P.synthesis (e.symm y)) ∧
+        1 ≤ Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber A S ∧
+          ∀ (T : X →ₗ[𝕜] X) (hT : IsBoundedLinearMap 𝕜 ⇑T),
+            ‖Komorebi.PaperIRelease.GeneralConditionedCoordinates.coordinateOperator A S
+                    (Komorebi.PaperIRelease.GeneralConditionedCoordinates.ofBoundedLinear T hT)‖ ≤
+                Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber A S *
+                  ‖Komorebi.PaperIRelease.GeneralConditionedCoordinates.ofBoundedLinear T hT‖ ∧
+              ‖Komorebi.PaperIRelease.GeneralConditionedCoordinates.ofBoundedLinear T hT‖ ≤
+                Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber A S *
+                  ‖Komorebi.PaperIRelease.GeneralConditionedCoordinates.coordinateOperator A S
+                      (Komorebi.PaperIRelease.GeneralConditionedCoordinates.ofBoundedLinear T hT)‖
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.ofBoundedLinear.{u_1, u_2, u_3} {X : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup X] [NormedAddCommGroup Y] {𝕜 : Type u_3} [Semiring 𝕜] [Module 𝕜 X] [Module 𝕜 Y] (f : X →ₗ[𝕜] Y)
+  (h : IsBoundedLinearMap 𝕜 ⇑f) : NormedAddGroupHom X Y
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.one_le_conditionNumber.{u_1, u_2} {X : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup X] [NormedAddCommGroup Y] [Nontrivial X] (A : NormedAddGroupHom X Y) (S : NormedAddGroupHom Y X)
+  (hSA : ∀ (x : X), S (A x) = x) : 1 ≤ Komorebi.PaperIRelease.GeneralConditionedCoordinates.conditionNumber A S
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.packetAnalysis.{u_1, u_3, u_4} {X : Type u_1}
+  [NormedAddCommGroup X] {𝕜 : Type u_3} {I : Type u_4} [NormedField 𝕜] [NormedSpace 𝕜 X] [Fintype I]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X I)
+  (hb : ∀ (i : I), IsBoundedLinearMap 𝕜 ⇑(P.proj i)) : NormedAddGroupHom X ((i : I) → ↥(P.packet i))
+Komorebi.PaperIRelease.GeneralConditionedCoordinates.packetSynthesis.{u_1, u_3, u_4} {X : Type u_1}
+  [NormedAddCommGroup X] {𝕜 : Type u_3} {I : Type u_4} [NormedField 𝕜] [NormedSpace 𝕜 X] [Fintype I]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X I) :
+  NormedAddGroupHom ((i : I) → ↥(P.packet i)) X
+Komorebi.PaperIRelease.GeneralFiniteCompletion.extendPacketFamily.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2}
+  {ι : Type u_3} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι] (M : Submodule 𝕜 X)
+  (hM : M.topologicalClosure = ⊤) (P : ι → X →L[𝕜] X)
+  (Q : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 (↥M) ι)
+  (hext : ∀ (i : ι) (x : ↥M), (P i) ↑x = ↑((Q.proj i) x)) :
+  Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X ι
+Komorebi.PaperIRelease.GeneralFiniteCompletion.extended_packet_range.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2}
+  {ι : Type u_3} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι] (M : Submodule 𝕜 X)
+  (hM : M.topologicalClosure = ⊤) (P : ι → X →L[𝕜] X)
+  (Q : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 (↥M) ι)
+  (hext : ∀ (i : ι) (x : ↥M), (P i) ↑x = ↑((Q.proj i) x)) (i : ι) :
+  (Submodule.map (↑(P i)) M).topologicalClosure = (↑(P i)).range
+Komorebi.PaperIRelease.GeneralFiniteCompletion.extension_unique.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2}
+  {ι : Type u_3} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι] (M : Submodule 𝕜 X)
+  (hM : M.topologicalClosure = ⊤) (P R : ι → X →L[𝕜] X)
+  (Q : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 (↥M) ι)
+  (hP : ∀ (i : ι) (x : ↥M), (P i) ↑x = ↑((Q.proj i) x)) (hR : ∀ (i : ι) (x : ↥M), (R i) ↑x = ↑((Q.proj i) x)) : P = R
+Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily.analysis_isBounded.{u_1, u_2, u_4} {𝕜 : Type u_1}
+  {X : Type u_2} {I : Type u_4} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype I]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X I)
+  (hb : ∀ (i : I), IsBoundedLinearMap 𝕜 ⇑(P.proj i)) : IsBoundedLinearMap 𝕜 ⇑P.analysis
+Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily.equivalent_norm_packet_bounds.{u_1, u_2, u_3, u_4}
+  {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3} {I : Type u_4} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] [Fintype I]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X I)
+  (hb : ∀ (i : I), IsBoundedLinearMap 𝕜 ⇑(P.proj i)) (e : ((i : I) → ↥(P.packet i)) ≃ₗ[𝕜] Y) (C D : ℝ)
+  (hC : ∀ (z : (i : I) → ↥(P.packet i)), ‖e z‖ ≤ C * ‖z‖) (hD : ∀ (y : Y), ‖e.symm y‖ ≤ D * ‖y‖) :
+  (∀ (i : I), IsClosed ↑(P.packet i)) ∧
+    (IsBoundedLinearMap 𝕜 fun x => e (P.analysis x)) ∧
+      (IsBoundedLinearMap 𝕜 fun y => P.synthesis (e.symm y)) ∧
+        (Function.LeftInverse (fun y => P.synthesis (e.symm y)) fun x => e (P.analysis x)) ∧
+          Function.RightInverse (fun y => P.synthesis (e.symm y)) fun x => e (P.analysis x)
+Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily.isClosed_packet.{u_1, u_2, u_3} {𝕜 : Type u_1}
+  {X : Type u_2} {ι : Type u_3} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X ι) (i : ι) : IsClosed ↑(P.packet i)
+Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily.synthesis_isBounded.{u_1, u_2, u_4} {𝕜 : Type u_1}
+  {X : Type u_2} {I : Type u_4} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype I]
+  (P : Komorebi.PaperIRelease.GeneralNormedPackets.ContinuousProjectorFamily 𝕜 X I) : IsBoundedLinearMap 𝕜 ⇑P.synthesis
+Komorebi.PaperIRelease.GeneralPacketTopology.banach_packet_shortExact.{u, v, w} {𝕜 : Type u} {X : Type v} {ι : Type w}
+  [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (hP : ∀ (i : ι), IsBoundedLinearMap 𝕜 ⇑(P.proj i))
+  (K : Submodule 𝕜 X) (hK : P.Preserves K) [hclosed : IsClosed ↑K] [CompleteSpace X] (i : ι) :
+  CompleteSpace ↥(LinearMap.range ((P.restrictTo K hK).proj i)) ∧
+    CompleteSpace ↥(LinearMap.range (P.proj i)) ∧
+      CompleteSpace ↥(LinearMap.range ((P.descendTo K hK).proj i)) ∧
+        IsBoundedLinearMap 𝕜 ⇑(P.packetInclusion K hK i) ∧
+          IsBoundedLinearMap 𝕜 ⇑(P.packetQuotientMap K hK i) ∧
+            Function.Injective ⇑(P.packetInclusion K hK i) ∧
+              (P.packetInclusion K hK i).range = (P.packetQuotientMap K hK i).ker ∧
+                Function.Surjective ⇑(P.packetQuotientMap K hK i) ∧ IsBoundedLinearMap 𝕜 ⇑((P.descendTo K hK).proj i)
+Komorebi.PaperIRelease.GeneralPacketTopology.packetInclusion_bounded.{u, v, w} {𝕜 : Type u} {X : Type v} {ι : Type w}
+  [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (K : Submodule 𝕜 X) (hK : P.Preserves K) (i : ι) :
+  IsBoundedLinearMap 𝕜 ⇑(P.packetInclusion K hK i)
+Komorebi.PaperIRelease.GeneralPacketTopology.packetQuotient_bounded.{u, v, w} {𝕜 : Type u} {X : Type v} {ι : Type w}
+  [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (K : Submodule 𝕜 X) (hK : P.Preserves K) (i : ι) :
+  IsBoundedLinearMap 𝕜 ⇑(P.packetQuotientMap K hK i)
+Komorebi.PaperIRelease.GeneralPacketTopology.packet_spaces_complete.{u, v, w} {𝕜 : Type u} {X : Type v} {ι : Type w}
+  [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (hP : ∀ (i : ι), IsBoundedLinearMap 𝕜 ⇑(P.proj i))
+  (K : Submodule 𝕜 X) (hK : P.Preserves K) [hclosed : IsClosed ↑K] [CompleteSpace X] (i : ι) :
+  CompleteSpace ↥(LinearMap.range ((P.restrictTo K hK).proj i)) ∧
+    CompleteSpace ↥(LinearMap.range (P.proj i)) ∧ CompleteSpace ↥(LinearMap.range ((P.descendTo K hK).proj i))
+Komorebi.PaperIRelease.GeneralPacketTopology.quotientProjector_bounded.{u, v, w} {𝕜 : Type u} {X : Type v} {ι : Type w}
+  [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (hP : ∀ (i : ι), IsBoundedLinearMap 𝕜 ⇑(P.proj i))
+  (K : Submodule 𝕜 X) (hK : P.Preserves K) (i : ι) : IsBoundedLinearMap 𝕜 ⇑((P.descendTo K hK).proj i)
+Komorebi.PaperIRelease.GeneralPacketTopology.quotient_bound_operatorNorm.{u, v, w} {𝕜 : Type u} {X : Type v}
+  {ι : Type w} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (hP : ∀ (i : ι), IsBoundedLinearMap 𝕜 ⇑(P.proj i))
+  (K : Submodule 𝕜 X) (hK : P.Preserves K) (i : ι) (z : X ⧸ K) :
+  ‖(Komorebi.PaperIRelease.GeneralPacketTopology.quotientProjectorCLM P hP K hK i) z‖ ≤
+    ‖Komorebi.PaperIRelease.GeneralPacketTopology.projectorNormedHom P hP i‖ * ‖z‖
+Komorebi.PaperIRelease.GeneralPacketTopology.restrictedProjector_bounded.{u, v, w} {𝕜 : Type u} {X : Type v}
+  {ι : Type w} [NormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X ι) (hP : ∀ (i : ι), IsBoundedLinearMap 𝕜 ⇑(P.proj i))
+  (K : Submodule 𝕜 X) (hK : P.Preserves K) (i : ι) : IsBoundedLinearMap 𝕜 ⇑((P.restrictTo K hK).proj i)
+Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization.action.{u} {K V E : Type u} [Field K] [Fintype V]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E} {M : Type u} [AddCommGroup M] [Module K M]
+  (X : Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization G M) :
+  Komorebi.PaperIRelease.GrammarAlgebra.Algebra G →ₐ[K] Module.End K M
+Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization.seedRank_imageAlgebra_eq.{u} {K V E M : Type u} [Field K]
+  [Fintype V] [AddCommGroup M] [Module K M] {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E}
+  (X : Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization G M) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.PaperIRelease.GrammarAlgebra.Algebra G) M =
+    Komorebi.SeedRankBasics.seedRank (↥X.action.range) M
+Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization.span_imageAlgebra_eq.{u} {K V E M : Type u} [Field K]
+  [Fintype V] [AddCommGroup M] [Module K M] {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E}
+  (X : Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization G M) (S : Set M) :
+  ↑(Submodule.span (Komorebi.PaperIRelease.GrammarAlgebra.Algebra G) S) = ↑(Submodule.span (↥X.action.range) S)
+Komorebi.PaperIRelease.GrammarAlgebra.Grammar.{u} (K V E : Type u) [Field K] : Type u
+Komorebi.PaperIRelease.GrammarAlgebra.TypedData.pathCombination_action.{u} {K V E : Type u} [Field K] [Fintype V]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E} (X : Komorebi.PaperIRelease.GrammarAlgebra.TypedData G)
+  {v w : V} (p : Komorebi.PaperIRelease.GrammarAlgebra.PathCombination G.source G.target v w) :
+  X.freeAction (Komorebi.PaperIRelease.GrammarAlgebra.pathCombinationWord p) =
+    Finsupp.sum p fun q c => c • LinearMap.single K X.space w ∘ₗ X.pathMap q ∘ₗ LinearMap.proj v
+Komorebi.PaperIRelease.GrammarAlgebra.TypedData.path_action.{u} {K V E : Type u} [Field K] [Fintype V]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E} (X : Komorebi.PaperIRelease.GrammarAlgebra.TypedData G)
+  {v w : V} (p : Komorebi.PaperIRelease.GrammarAlgebra.TypedPath G.source G.target v w) :
+  X.freeAction p.word = LinearMap.single K X.space w ∘ₗ X.pathMap p ∘ₗ LinearMap.proj v
+Komorebi.PaperIRelease.GrammarAlgebra.TypedData.total.{u} {K V E : Type u} [Field K]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E} (X : Komorebi.PaperIRelease.GrammarAlgebra.TypedData G) :
+  Type u
+Komorebi.PaperIRelease.GrammarAlgebra.TypedHom.{u} {K V E : Type u} [Field K]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E}
+  (X Y : Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization) : Type u
+Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization.{u} {K V E : Type u} [Field K]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E} : Type (u + 1)
+Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization.collapse.{u} {K V E : Type u} [Field K] [Fintype V]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E}
+  (X : Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization) :
+  Komorebi.PaperIRelease.GrammarAlgebra.CollapsedRealization G X.total
+Komorebi.PaperIRelease.GrammarAlgebra.grammarFromPathRelations.{u} {K V E : Type u} [Field K] (s t : E → V)
+  (relations : (v w : V) → Set (Komorebi.PaperIRelease.GrammarAlgebra.PathCombination s t v w)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E
+Komorebi.PaperIRelease.GrammarAlgebra.idealGrammar.{u} {K V E : Type u} [Field K] [Fintype V] (s t : E → V)
+  (I : TwoSidedIdeal (Komorebi.PaperIRelease.GrammarAlgebra.PathAlgebra s t)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E
+Komorebi.PaperIRelease.GrammarAlgebra.idealPresentationEquiv.{u} {K V E : Type u} [Field K] [Fintype V] (s t : E → V)
+  (I : TwoSidedIdeal (Komorebi.PaperIRelease.GrammarAlgebra.PathAlgebra s t)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.Algebra (Komorebi.PaperIRelease.GrammarAlgebra.idealGrammar s t I) ≃ₐ[K]
+    Komorebi.PaperIRelease.GrammarAlgebra.IdealQuotient s t I
+Komorebi.PaperIRelease.GrammarAlgebra.splitActionIso.{u} {K V E : Type u} [Field K] [Fintype V]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E}
+  (X : Komorebi.PaperIRelease.GrammarModules.ActionObject K (Komorebi.PaperIRelease.GrammarAlgebra.Algebra G)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.collapseFunctor.obj
+      (Komorebi.PaperIRelease.GrammarAlgebra.ofAction X.action).split ≅
+    X
+Komorebi.PaperIRelease.GrammarAlgebra.typedIdealModuleEquivalence.{u} {K V E : Type u} [Field K] [Fintype V]
+  (s t : E → V) (I : TwoSidedIdeal (Komorebi.PaperIRelease.GrammarAlgebra.PathAlgebra s t)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization ≌
+    ModuleCat (Komorebi.PaperIRelease.GrammarAlgebra.IdealQuotient s t I)
+Komorebi.PaperIRelease.GrammarAlgebra.typedModuleEquivalence.{u} {K V E : Type u} [Field K] [Fintype V]
+  {G : Komorebi.PaperIRelease.GrammarAlgebra.Grammar K V E} :
+  Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization ≌ ModuleCat (Komorebi.PaperIRelease.GrammarAlgebra.Algebra G)
+Komorebi.PaperIRelease.GrammarAlgebra.typedPathRelationModuleEquivalence.{u} {K V E : Type u} [Field K] [Fintype V]
+  (s t : E → V) (relations : (v w : V) → Set (Komorebi.PaperIRelease.GrammarAlgebra.PathCombination s t v w)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization ≌
+    ModuleCat
+      (Komorebi.PaperIRelease.GrammarAlgebra.Algebra
+        (Komorebi.PaperIRelease.GrammarAlgebra.grammarFromPathRelations s t relations))
+Komorebi.PaperIRelease.GrammarModules.actionModuleEquivalence.{u} {K A : Type u} [Field K] [Ring A] [Algebra K A] :
+  Komorebi.PaperIRelease.GrammarModules.ActionObject K A ≌ ModuleCat A
+Komorebi.PaperIRelease.OperatorSupported.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (rel : I → I → Prop)
+  (T : Module.End K X) : Prop
+Komorebi.PaperIRelease.PacketAggregation.groupedFamily.{u, v, w, x} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {ι : Type w} [Fintype ι] {κ : Type x} [Fintype κ] [DecidableEq κ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (σ : ι → κ) : Komorebi.Foundation.LinearProjectorFamily R M κ
+Komorebi.PaperIRelease.PacketAggregation.groupedProjection.{u, v, w, x} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {ι : Type w} [Fintype ι] {κ : Type x} [DecidableEq κ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (σ : ι → κ) (j : κ) : Module.End R M
+Komorebi.PaperIRelease.PacketAggregation.groupedRangeDirectSumEquiv.{u, v, w, x} {R : Type u} [CommSemiring R]
+  {M : Type v} [AddCommMonoid M] [Module R M] {ι : Type w} [Fintype ι] {κ : Type x} [Fintype κ] [DecidableEq κ]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (σ : ι → κ) (j : κ) :
+  ↥(LinearMap.range ((Komorebi.PaperIRelease.PacketAggregation.groupedFamily P σ).proj j)) ≃ₗ[R]
+    DirectSum { i // σ i = j } fun i => ↥(LinearMap.range (P.proj ↑i))
+Komorebi.PaperIRelease.PacketCornerCyclic.{u} {K X I : Type u} [Field K] [AddCommGroup X] [Module K X] [Fintype I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X)) : Prop
+Komorebi.PaperIRelease.PacketPropagating.{u} {K X I : Type u} [Field K] [AddCommGroup X] [Module K X] [Fintype I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X)) : Prop
+Komorebi.PaperIRelease.PacketPure.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (x : X) : Prop
+Komorebi.PaperIRelease.PacketUniversal.assembleIn.{u, v, w, x} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {N : Type w} [AddCommMonoid N] [Module R N] {ι : Type x} [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (f : (i : ι) → N →ₗ[R] ↥(LinearMap.range (P.proj i))) :
+  N →ₗ[R] M
+Komorebi.PaperIRelease.PacketUniversal.assembleOut.{u, v, w, x} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {N : Type w} [AddCommMonoid N] [Module R N] {ι : Type x} [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (f : (i : ι) → ↥(LinearMap.range (P.proj i)) →ₗ[R] N) :
+  M →ₗ[R] N
+Komorebi.PaperIRelease.PacketUniversal.block_intertwining_iff.{u, v, w, x, y} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {N : Type w} [AddCommMonoid N] [Module R N] {ι : Type x} [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) {κ : Type y} [Fintype κ]
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (T : Module.End R M) (S : Module.End R N) (U : M →ₗ[R] N) :
+  U ∘ₗ T = S ∘ₗ U ↔
+    ∀ (j : κ) (i : ι),
+      ∑ b, Komorebi.Foundation.transferBlock P Q U j b ∘ₗ Komorebi.Foundation.transferBlock P P T b i =
+        ∑ d, Komorebi.Foundation.transferBlock Q Q S j d ∘ₗ Komorebi.Foundation.transferBlock P Q U d i
+Komorebi.PaperIRelease.PacketUniversal.transferBlock_ext.{u, v, w, x, y} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {N : Type w} [AddCommMonoid N] [Module R N] {ι : Type x} [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) {κ : Type y} [Fintype κ]
+  (Q : Komorebi.Foundation.LinearProjectorFamily R N κ) (U V : M →ₗ[R] N)
+  (h : ∀ (j : κ) (i : ι), Komorebi.Foundation.transferBlock P Q U j i = Komorebi.Foundation.transferBlock P Q V j i) :
+  U = V
+Komorebi.PaperIRelease.PacketUniversal.unique_packet_extension.{u, v, w, x} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {N : Type w} [AddCommMonoid N] [Module R N] {ι : Type x} [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (f : (i : ι) → ↥(LinearMap.range (P.proj i)) →ₗ[R] N) :
+  ∃! g, ∀ (i : ι) (m : ↥(LinearMap.range (P.proj i))), g ↑m = (f i) m
+Komorebi.PaperIRelease.PacketUniversal.unique_packet_lift.{u, v, w, x} {R : Type u} [CommSemiring R] {M : Type v}
+  [AddCommMonoid M] [Module R M] {N : Type w} [AddCommMonoid N] [Module R N] {ι : Type x} [Fintype ι]
+  (P : Komorebi.Foundation.LinearProjectorFamily R M ι) (f : (i : ι) → N →ₗ[R] ↥(LinearMap.range (P.proj i))) :
+  ∃! g, ∀ (i : ι) (n : N), (Komorebi.PaperIRelease.PacketUniversal.packetProjection P i) (g n) = (f i) n
+Komorebi.PaperIRelease.PolynomialModule.exists_positive_primary_decomposition.{u, v} (k : Type u) [Field k] (M : Type v)
+  [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M] [FiniteDimensional k M] :
+  ∃ ι x p,
+    ∃ (_ : ∀ (i : ι), Irreducible (p i)),
+      ∃ e, ∃ (_ : ∀ (i : ι), 0 < e i), Nonempty (M ≃ₗ[Polynomial k] (i : ι) → Polynomial k ⧸ Ideal.span {p i ^ e i})
+Komorebi.PaperIRelease.PolynomialModule.finitely_many_monic_primary_components.{u, v} (k : Type u) [Field k]
+  (M : Type v) [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M]
+  [FiniteDimensional k M] : {p | Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M ↑p ≠ ⊥}.Finite
+Komorebi.PaperIRelease.PolynomialModule.finitely_many_primary_components.{u, v} (k : Type u) [Field k] (M : Type v)
+  [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M] [FiniteDimensional k M] :
+  {p | Ideal.primaryComponent M p.asIdeal ≠ ⊥}.Finite
+Komorebi.PaperIRelease.PolynomialModule.intrinsic_primary_finite_power_sum.{u, v} (k : Type u) [Field k] (M : Type v)
+  [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M] [FiniteDimensional k M]
+  (p : Polynomial k) (hp : Irreducible p) :
+  ∃ ι x e,
+    (∀ (i : ι), 0 < e i) ∧
+      Nonempty
+        (↥(Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M p) ≃ₗ[Polynomial k]
+          DirectSum ι fun i => Polynomial k ⧸ Ideal.span {p ^ e i})
+Komorebi.PaperIRelease.PolynomialModule.monicSpectrumEquiv.{u} (k : Type u) [Field k] :
+  Komorebi.PaperIRelease.PolynomialModule.MonicIrreducibles k ≃ IsDedekindDomain.HeightOneSpectrum (Polynomial k)
+Komorebi.PaperIRelease.PolynomialModule.monic_primary_internal_decomposition.{u, v} (k : Type u) [Field k] (M : Type v)
+  [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M] [FiniteDimensional k M] :
+  DirectSum.IsInternal fun p => Komorebi.PaperICompletion4.IntrinsicPrimary.primarySubmodule M ↑p
+Komorebi.PaperIRelease.PolynomialModule.polynomialModule_isTorsion.{u, v} (k : Type u) [Field k] (M : Type v)
+  [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M] [FiniteDimensional k M] :
+  Module.IsTorsion (Polynomial k) M
+Komorebi.PaperIRelease.PolynomialModule.primary_internal_decomposition.{u, v} (k : Type u) [Field k] (M : Type v)
+  [AddCommGroup M] [Module k M] [Module (Polynomial k) M] [IsScalarTower k (Polynomial k) M] [FiniteDimensional k M] :
+  DirectSum.IsInternal fun p => Ideal.primaryComponent M p.asIdeal
+Komorebi.PaperIRelease.PureGenerates.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X] [Fintype I]
+  (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) (S : Set X) : Prop
+Komorebi.PaperIRelease.ScalarExtension.one_tmul_generates.{u} (k K A M : Type u) [Field k] [Field K] [Algebra k K]
+  [Ring A] [Algebra k A] [AddCommGroup M] [Module k M] [Module A M] [IsScalarTower k A M] [SMulCommClass k A M]
+  (s : Set M) (hs : Komorebi.SeedRankBasics.Generates A M s) :
+  Komorebi.SeedRankBasics.Generates (TensorProduct k K A) (TensorProduct k K M) ((fun m => 1 ⊗ₜ[k] m) '' s)
+Komorebi.PaperIRelease.ScalarExtension.scalar_extension_seedRank_le.{u} (k K A M : Type u) [Field k] [Field K]
+  [Algebra k K] [Ring A] [Algebra k A] [AddCommGroup M] [Module k M] [Module A M] [IsScalarTower k A M]
+  [SMulCommClass k A M] :
+  Komorebi.SeedRankBasics.seedRank (TensorProduct k K A) (TensorProduct k K M) ≤ Komorebi.SeedRankBasics.seedRank A M
+Komorebi.PaperIRelease.ScalarExtension.tensorOperator_smul_tmul.{u} (k A B X Y : Type u) [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid X] [Module k X] [Module A X] [IsScalarTower k A X]
+  [SMulCommClass k A X] [AddCommMonoid Y] [Module k Y] [Module B Y] [IsScalarTower k B Y] [SMulCommClass k B Y] (a : A)
+  (b : B) (x : X) (y : Y) : a ⊗ₜ[k] b • x ⊗ₜ[k] y = (a • x) ⊗ₜ[k] (b • y)
+Komorebi.PaperIRelease.SeedOperations.annihilator_isTwoSided_iff.{u, v} {A : Type u} [Ring A] {M : Type v}
+  [AddCommGroup M] [Module A M] (s : M) :
+  (Komorebi.PaperIRelease.SeedOperations.vectorAnnihilator s).IsTwoSided ↔
+    ∀ a ∈ Komorebi.PaperIRelease.SeedOperations.vectorAnnihilator s, ∀ m ∈ A ∙ s, a • m = 0
+Komorebi.PaperIRelease.SeedOperations.cyclic_annihilator_eq_module_iff.{u, v} {A : Type u} [Ring A] {M : Type v}
+  [AddCommGroup M] [Module A M] (s : M) (hs : Komorebi.SeedRankBasics.Generates A M {s}) :
+  (Komorebi.PaperIRelease.SeedOperations.vectorAnnihilator s).IsTwoSided ↔
+    Komorebi.PaperIRelease.SeedOperations.vectorAnnihilator s = Module.annihilator A M
+Komorebi.PaperIRelease.SeedOperations.regular_generates_one.{u} (A : Type u) [Semiring A] :
+  Komorebi.SeedRankBasics.Generates A A {1}
+Komorebi.PaperIRelease.SeedOperations.regular_seedRank.{u} (A : Type u) [Semiring A] [Nontrivial A] :
+  Komorebi.SeedRankBasics.seedRank A A = 1
+Komorebi.PaperIRelease.SeedOperations.shared_direct_sum_bounds.{u} (A M N : Type u) [Semiring A] [AddCommMonoid M]
+  [Module A M] [AddCommMonoid N] [Module A N] :
+  max (Komorebi.SeedRankBasics.seedRank A M) (Komorebi.SeedRankBasics.seedRank A N) ≤
+      Komorebi.SeedRankBasics.seedRank A (M × N) ∧
+    Komorebi.SeedRankBasics.seedRank A (M × N) ≤
+      Komorebi.SeedRankBasics.seedRank A M + Komorebi.SeedRankBasics.seedRank A N
+Komorebi.PaperIRelease.SeedOperations.vectorAnnihilator.{u, v} {A : Type u} [Ring A] {M : Type v} [AddCommGroup M]
+  [Module A M] (s : M) : Ideal A
+Komorebi.PaperIRelease.TopologyCategories.PacketMorphism.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  (X Y : Komorebi.PaperIRelease.TopologyCategories.PacketObject K) : Type u
+Komorebi.PaperIRelease.TopologyCategories.PacketObject.{u} (K : Type u) [Field K] [TopologicalSpace K] : Type (u + 1)
+Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  (X Y : Komorebi.PaperIRelease.TopologyCategories.SeedObject) : Type u
+Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.comp.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  {X Y Z : Komorebi.PaperIRelease.TopologyCategories.SeedObject}
+  (f : Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X Y)
+  (g : Komorebi.PaperIRelease.TopologyCategories.SeedMorphism Y Z) :
+  Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X Z
+Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.identity.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  (X : Komorebi.PaperIRelease.TopologyCategories.SeedObject) :
+  Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X X
+Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_closedHull.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  {X Y : Komorebi.PaperIRelease.TopologyCategories.SeedObject}
+  (f : Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X Y) {x : X.carrier}
+  (hx : x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull X.toContinuousPacketObject X.seeds) :
+  f.linearMap x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull Y.toContinuousPacketObject Y.seeds
+Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_hull.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  {X Y : Komorebi.PaperIRelease.TopologyCategories.SeedObject}
+  (f : Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X Y) {x : X.carrier}
+  (hx : x ∈ Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull X.algebra X.seeds) :
+  f.linearMap x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull Y.toContinuousPacketObject Y.seeds
+Komorebi.PaperIRelease.TopologyCategories.SeedObject.{u} {K : Type u} [Field K] [TopologicalSpace K] : Type (u + 1)
+Komorebi.PaperIRelease.TopologyCategories.closedHull.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  (X : Komorebi.PaperIRelease.TopologyCategories.PacketObject K) (S : Set X.carrier) : Submodule K X.carrier
+Komorebi.PaperIRelease.TopologyCategories.operator_mem_closedHull.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  (X : Komorebi.PaperIRelease.TopologyCategories.PacketObject K) (S : Set X.carrier) (T : ↥X.algebra) {x : X.carrier}
+  (hx : x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull X S) :
+  ↑T x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull X S
+Komorebi.PaperIRelease.TopologyCategories.packetCategory.{u} {K : Type u} [Field K] [TopologicalSpace K] :
+  CategoryTheory.Category.{u, u + 1} (Komorebi.PaperIRelease.TopologyCategories.PacketObject K)
+Komorebi.PaperIRelease.TopologyCategories.seedCategory.{u} {K : Type u} [Field K] [TopologicalSpace K] :
+  CategoryTheory.Category.{u, u + 1} Komorebi.PaperIRelease.TopologyCategories.SeedObject
+Komorebi.PaperIRelease.TopologyCategories.seeded_surjection_generates.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  {X Y : Komorebi.PaperIRelease.TopologyCategories.SeedObject}
+  (f : Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X Y) (hf : Function.Surjective ⇑f.linearMap)
+  (hX : Komorebi.PaperIRelease.TopologyCategories.closedHull X.toContinuousPacketObject X.seeds = ⊤) :
+  Komorebi.PaperIRelease.TopologyCategories.closedHull Y.toContinuousPacketObject Y.seeds = ⊤
+Komorebi.PaperIRelease.class_maximalStrictSteps.{w} {I : Type w} [Fintype I] [DecidableEq I] [Preorder I] :
+  Komorebi.PaperIRelease.maximalStrictSteps I =
+    Komorebi.PaperIRelease.maximalStrictSteps (Komorebi.PaperIRelease.PreorderClasses I)
+Komorebi.PaperIRelease.commutes_iff_diagonalProjection.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (T : Module.End K X) :
+  (∀ (i : I), T ∘ₗ P.proj i = P.proj i ∘ₗ T) ↔ (Komorebi.PaperIRelease.diagonalProjection P) T = T
+Komorebi.PaperIRelease.commutes_iff_offdiagonal_zero.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (T : Module.End K X) :
+  (∀ (i : I), T ∘ₗ P.proj i = P.proj i ∘ₗ T) ↔ ∀ (b a : I), b ≠ a → Komorebi.Foundation.transferBlock P P T b a = 0
+Komorebi.PaperIRelease.corner_one_eq_projector.{u} {𝕜 X : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (e : Module.End 𝕜 X) (heA : e ∈ A) (he : ∀ (x : X), e (e x) = e x)
+  (x : ↥(LinearMap.range e)) : ↑(1 • x) = e ↑x
+Komorebi.PaperIRelease.diagonalProjection.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) : Module.End K (Module.End K X)
+Komorebi.PaperIRelease.diagonalProjection_idempotent.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (T : Module.End K X) :
+  (Komorebi.PaperIRelease.diagonalProjection P) ((Komorebi.PaperIRelease.diagonalProjection P) T) =
+    (Komorebi.PaperIRelease.diagonalProjection P) T
+Komorebi.PaperIRelease.diagonalProjection_range.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  LinearMap.range (Komorebi.PaperIRelease.diagonalProjection P) =
+    Subalgebra.toSubmodule (Komorebi.PaperIRelease.blockDiagonalSubalgebra P)
+Komorebi.PaperIRelease.dualPacketDirectSumCoordinates.{u, v, v'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type v'} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  Module.Dual K X ≃ₗ[K] DirectSum I fun i => Module.Dual K ↥(LinearMap.range (P.proj i))
+Komorebi.PaperIRelease.dualPacketRangeEquiv.{u, v, v'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type v'} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (i : I) :
+  ↥(LinearMap.range ((Komorebi.PaperIRelease.dualPackets P).proj i)) ≃ₗ[K] Module.Dual K ↥(LinearMap.range (P.proj i))
+Komorebi.PaperIRelease.dualPackets.{u, v, v'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type v'} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  Komorebi.Foundation.LinearProjectorFamily K (Module.Dual K X) I
+Komorebi.PaperIRelease.exists_pure_generating_set_card_eq.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) :
+  ∃ S, Komorebi.PaperIRelease.PureGenerates A P S ∧ Cardinal.mk ↑S = Komorebi.PaperIRelease.packetPureSeedRank A P
+Komorebi.PaperIRelease.generatedAlgebra_block_zero.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (ops : Set (Module.End K X)) {T : Module.End K X} (hT : T ∈ Komorebi.PaperIRelease.packetGeneratedAlgebra P ops)
+  {a b : I} (hab : ¬Relation.ReflTransGen (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops) a b) :
+  Komorebi.Foundation.transferBlock P P T b a = 0
+Komorebi.PaperIRelease.generatedAlgebra_hull_le_reachable.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (ops : Set (Module.End K X)) (S₀ : Set I) (seeds : Set X)
+  (hseeds : ∀ x ∈ seeds, Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P S₀ x) :
+  Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull
+      (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) seeds ≤
+    Komorebi.PacketNaturalityCompletion.Reachability.supportedSubmodule P
+      (Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀)
+Komorebi.PaperIRelease.generatedAlgebra_le_reachability.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (ops : Set (Module.End K X)) :
+  Komorebi.PaperIRelease.packetGeneratedAlgebra P ops ≤ Komorebi.PaperIRelease.packetReachabilityAlgebra P ops
+Komorebi.PaperIRelease.generatedAlgebra_source_obstruction.{u, v, w} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {I : Type w} [Fintype I] [DecidableEq I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X))
+  (C :
+    Komorebi.PaperIRelease.FiniteDigraph.Sources (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops))
+  (seeds : Set X)
+  (hseeds :
+    ∀ s ∈ seeds,
+      Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P
+        {a |
+          Komorebi.PaperIRelease.FiniteDigraph.component
+              (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops) a ≠
+            ↑C}
+        s)
+  {x : X} (hx : x ≠ 0)
+  (hxC :
+    Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P
+      {a |
+        Komorebi.PaperIRelease.FiniteDigraph.component
+            (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops) a =
+          ↑C}
+      x) :
+  x ∉
+    Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull
+      (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) seeds
+Komorebi.PaperIRelease.generatedAlgebra_unreachable_obstruction.{u, v, w} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {I : Type w} [Fintype I] [DecidableEq I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X)) (S₀ : Set I) (seeds : Set X)
+  (hseeds : ∀ x ∈ seeds, Komorebi.PacketNaturalityCompletion.Reachability.VectorSupported P S₀ x) {b : I}
+  (hb : ¬Komorebi.PacketNaturalityCompletion.Reachability.ReachableFrom P ops S₀ b) {x : X} (hx : (P.proj b) x ≠ 0) :
+  x ∉
+    Komorebi.PacketNaturalityCompletion.StrictNaturality.AlgebraGeneratedHull
+      (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) seeds
+Komorebi.PaperIRelease.localPacketFamily.{u} {𝕜 X I J : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X] [Fintype I]
+  [Fintype J] [DecidableEq J] (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) (σ : I → J) (C : J) :
+  Komorebi.Foundation.LinearProjectorFamily 𝕜
+    (↥(LinearMap.range ((Komorebi.PaperIRelease.PacketAggregation.groupedFamily P σ).proj C))) I
+Komorebi.PaperIRelease.localPureSeedRank.{u} {𝕜 X I J : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X] [Fintype I]
+  [Fintype J] [DecidableEq J] (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I)
+  (hPA : ∀ (i : I), P.proj i ∈ A) (σ : I → J) (C : J) : Cardinal.{u}
+Komorebi.PaperIRelease.local_proj_zero_iff.{u} {𝕜 X I J : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X] [Fintype I]
+  [Fintype J] [DecidableEq J] (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) (hP : ∀ (i : I), P.proj i ≠ 0)
+  (σ : I → J) (C : J) (i : I) : (Komorebi.PaperIRelease.localPacketFamily P σ C).proj i = 0 ↔ σ i ≠ C
+Komorebi.PaperIRelease.maximalStrictSteps.{w} (I : Type w) [Fintype I] [DecidableEq I] [Preorder I] : ℕ
+Komorebi.PaperIRelease.maximalStrictSteps_attained.{w} {I : Type w} [Fintype I] [DecidableEq I] [Preorder I]
+  [Nonempty I] : ∃ a b, Komorebi.PaperIRelease.StrictPath (Komorebi.PaperIRelease.maximalStrictSteps I) a b
+Komorebi.PaperIRelease.operatorSupported_iff_ambient.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (rel : I → I → Prop)
+  (T : Module.End K X) :
+  Komorebi.PaperIRelease.OperatorSupported P rel T ↔
+    ∀ (b a : I), ¬rel a b → Komorebi.Foundation.transferBlock P P T b a = 0
+Komorebi.PaperIRelease.packetCornerAlgebra.{u} {𝕜 X : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (e : Module.End 𝕜 X) (heA : e ∈ A) (he : ∀ (x : X), e (e x) = e x) :
+  Subalgebra 𝕜 (Module.End 𝕜 ↥(LinearMap.range e))
+Komorebi.PaperIRelease.packetGeneratedAlgebra.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (ops : Set (Module.End K X)) : Subalgebra K (Module.End K X)
+Komorebi.PaperIRelease.packetPureSeedRank.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X] [Fintype I]
+  (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) : Cardinal.{u}
+Komorebi.PaperIRelease.packetPureSeedRank_bounds.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I)
+  (hPA : ∀ (i : I), P.proj i ∈ A) :
+  Komorebi.SeedRankBasics.seedRank (↥A) X ≤ Komorebi.PaperIRelease.packetPureSeedRank A P ∧
+    Komorebi.PaperIRelease.packetPureSeedRank A P ≤
+      Cardinal.sum fun i =>
+        Komorebi.SeedRankBasics.seedRank ↥(Komorebi.PaperIRelease.packetCornerAlgebra A (P.proj i) ⋯ ⋯)
+          ↥(LinearMap.range (P.proj i))
+Komorebi.PaperIRelease.packetPureSeedRank_discardZeros.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] (A : Subalgebra 𝕜 (Module.End 𝕜 X)) (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) :
+  Komorebi.PaperIRelease.packetPureSeedRank A P.discardZeros = Komorebi.PaperIRelease.packetPureSeedRank A P
+Komorebi.PaperIRelease.packetPureSeedRank_eq_source_card.{u} {K X I : Type u} [Field K] [AddCommGroup X] [Module K X]
+  [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X))
+  [∀ (i : I), Nontrivial ↥(LinearMap.range (P.proj i))]
+  (hpropagating : Komorebi.PaperIRelease.PacketPropagating P ops) :
+  Komorebi.PaperIRelease.packetPureSeedRank (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) P =
+    ↑(Fintype.card
+        (Komorebi.PaperIRelease.FiniteDigraph.Sources
+          (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops)))
+Komorebi.PaperIRelease.packetPureSeedRank_eq_source_count.{u} {K X I : Type u} [Field K] [AddCommGroup X] [Module K X]
+  [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ops : Set (Module.End K X))
+  [∀ (i : I), Nontrivial ↥(LinearMap.range (P.proj i))]
+  (hpropagating : Komorebi.PaperIRelease.PacketPropagating P ops) :
+  Komorebi.PaperIRelease.packetPureSeedRank (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) P =
+    Cardinal.mk
+      (Komorebi.PaperIRelease.FiniteDigraph.Sources
+        (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops))
+Komorebi.PaperIRelease.packetPure_iff_zero_or_range.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (x : X) :
+  Komorebi.PaperIRelease.PacketPure P x ↔ x = 0 ∨ ∃ i, x ∈ LinearMap.range (P.proj i)
+Komorebi.PaperIRelease.packetSupport.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (x : X) : Set I
+Komorebi.PaperIRelease.packetSupport_image_eq_of_noncancellation.{u, v, w} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (T : Module.End K X) (x : X)
+  (h :
+    ∀ b ∈ Komorebi.PaperIRelease.activeTargets P T x,
+      ∑ a ∈ Komorebi.PaperIRelease.activeSources P T x b, (Komorebi.Foundation.transferBlock P P T b a) ((P.proj a) x) ≠
+        0) :
+  Komorebi.PaperIRelease.packetSupport P (T x) = Komorebi.PaperIRelease.activeTargets P T x
+Komorebi.PaperIRelease.packetSupport_image_eq_of_single_active.{u, v, w} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (T : Module.End K X) (x : X)
+  (h :
+    ∀ b ∈ Komorebi.PaperIRelease.activeTargets P T x,
+      ∃ a,
+        Komorebi.PaperIRelease.activeSources P T x b = {a} ∧
+          (Komorebi.Foundation.transferBlock P P T b a) ((P.proj a) x) ≠ 0) :
+  Komorebi.PaperIRelease.packetSupport P (T x) = Komorebi.PaperIRelease.activeTargets P T x
+Komorebi.PaperIRelease.packetSupport_image_subset.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (T : Module.End K X)
+  (x : X) : Komorebi.PaperIRelease.packetSupport P (T x) ⊆ Komorebi.PaperIRelease.activeTargets P T x
+Komorebi.PaperIRelease.preorderClassRangeEquiv.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [Preorder I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (C : Komorebi.PaperIRelease.PreorderClasses I) :
+  ↥(LinearMap.range ((Komorebi.PaperIRelease.classPacketFamily P).proj C)) ≃ₗ[K]
+    DirectSum { i // Komorebi.PaperIRelease.packetClass i = C } fun i => ↥(LinearMap.range (P.proj ↑i))
+Komorebi.PaperIRelease.preorderDiagonalHom_surjective.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] [Preorder I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  Function.Surjective ⇑(Komorebi.PaperIRelease.preorderDiagonalHom P)
+Komorebi.PaperIRelease.preorderDiagonal_kernel_eq.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] [Preorder I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  RingHom.ker (Komorebi.PaperIRelease.preorderDiagonalHom P).toRingHom =
+    TwoSidedIdeal.asIdeal (Komorebi.PaperIRelease.strictSupportIdeal P)
+Komorebi.PaperIRelease.preorderQuotientDirectSumEquiv.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] [Preorder I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  (↥(Komorebi.PaperIRelease.preorderSupportAlgebra P) ⧸
+      TwoSidedIdeal.asIdeal (Komorebi.PaperIRelease.strictSupportIdeal P)) ≃ₐ[K]
+    (C : Komorebi.PaperIRelease.PreorderClasses I) →
+      Module.End K (DirectSum { i // Komorebi.PaperIRelease.packetClass i = C } fun i => ↥(LinearMap.range (P.proj ↑i)))
+Komorebi.PaperIRelease.seedRank_le_add_of_exact.{u} {A L M N : Type u} [Ring A] [AddCommGroup L] [Module A L]
+  [AddCommGroup M] [Module A M] [AddCommGroup N] [Module A N] (f : L →ₗ[A] M) (g : M →ₗ[A] N) (hexact : f.range = g.ker)
+  (hg : Function.Surjective ⇑g) :
+  Komorebi.SeedRankBasics.seedRank A M ≤ Komorebi.SeedRankBasics.seedRank A L + Komorebi.SeedRankBasics.seedRank A N
+Komorebi.PaperIRelease.shortExact_seedRank_bounds.{u} {A L M N : Type u} [Ring A] [AddCommGroup L] [Module A L]
+  [AddCommGroup M] [Module A M] [AddCommGroup N] [Module A N] (f : L →ₗ[A] M) (g : M →ₗ[A] N)
+  (_hf : Function.Injective ⇑f) (hexact : f.range = g.ker) (hg : Function.Surjective ⇑g) :
+  Komorebi.SeedRankBasics.seedRank A N ≤ Komorebi.SeedRankBasics.seedRank A M ∧
+    Komorebi.SeedRankBasics.seedRank A M ≤ Komorebi.SeedRankBasics.seedRank A L + Komorebi.SeedRankBasics.seedRank A N
+Komorebi.PaperIRelease.source_component_pureSeedRank.{u} {𝕜 X I : Type u} [Field 𝕜] [AddCommGroup X] [Module 𝕜 X]
+  [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily 𝕜 X I) (ops : Set (Module.End 𝕜 X))
+  (hedges : Komorebi.PaperIRelease.EdgeSurjective P ops) :
+  Komorebi.PaperIRelease.packetPureSeedRank (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) P =
+    Cardinal.sum fun C =>
+      Komorebi.PaperIRelease.localPureSeedRank (Komorebi.PaperIRelease.packetGeneratedAlgebra P ops) P ⋯
+        (Komorebi.PaperIRelease.FiniteDigraph.component
+          (Komorebi.PacketNaturalityCompletion.Reachability.TransferEdge P ops))
+        ↑C
+Komorebi.PaperIRelease.strictPath_le_maximal.{w} {I : Type w} [Fintype I] [DecidableEq I] [Preorder I] {n : ℕ} {a b : I}
+  (h : Komorebi.PaperIRelease.StrictPath n a b) : n ≤ Komorebi.PaperIRelease.maximalStrictSteps I
+Komorebi.PaperIRelease.strictSupportIdeal.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] [DecidableEq I] [Preorder I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  TwoSidedIdeal ↥(Komorebi.PaperIRelease.preorderSupportAlgebra P)
+Komorebi.PaperIRelease.strictSupportIdeal_pow_eq_bot.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] [Preorder I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) :
+  TwoSidedIdeal.asIdeal (Komorebi.PaperIRelease.strictSupportIdeal P) ^
+      (Komorebi.PaperIRelease.maximalStrictSteps I + 1) =
+    ⊥
+Komorebi.PaperIRelease.strictSupport_iff_same_class_zero.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] [Preorder I]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (T : ↥(Komorebi.PaperIRelease.preorderSupportAlgebra P)) :
+  Komorebi.PaperIRelease.OperatorSupported P (fun x1 x2 => x1 < x2) ↑T ↔
+    ∀ (a b : I), AntisymmRel (fun x1 x2 => x1 ≤ x2) a b → Komorebi.Foundation.transferBlock P P (↑T) b a = 0
+Komorebi.PaperIRelease.supportSubmodule.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (rel : I → I → Prop) :
+  Submodule K (Module.End K X)
+Komorebi.PaperIRelease.support_mul_closed_iff.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (rel : I → I → Prop) :
+  (∀ (S T : Module.End K X),
+      Komorebi.PaperIRelease.OperatorSupported P rel S →
+        Komorebi.PaperIRelease.OperatorSupported P rel T → Komorebi.PaperIRelease.OperatorSupported P rel (S * T)) ↔
+    Komorebi.PacketNaturalityCompletion.FullBlocks.BlockMulClosed P rel
+Komorebi.PaperIRelease.support_pattern_algebra_criterion.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {I : Type w} [Fintype I] [DecidableEq I] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  [∀ (i : I), Nontrivial ↥(LinearMap.range (P.proj i))] (rel : I → I → Prop) :
+  (∃ A, ∀ (T : Module.End K X), T ∈ A ↔ Komorebi.PaperIRelease.OperatorSupported P rel T) ↔
+    (∀ (a : I), rel a a) ∧ ∀ (a c b : I), rel a c → rel c b → rel a b
+Komorebi.PaperIRelease.tensorPacketDirectSumCoordinates.{u, v, w, v', w'} {K : Type u} [Field K] {X : Type v}
+  [AddCommGroup X] [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type v'} [Fintype I] {J : Type w'}
+  [Fintype J] (P : Komorebi.Foundation.LinearProjectorFamily K X I)
+  (Q : Komorebi.Foundation.LinearProjectorFamily K Y J) :
+  TensorProduct K X Y ≃ₗ[K]
+    DirectSum (I × J) fun ij => TensorProduct K ↥(LinearMap.range (P.proj ij.1)) ↥(LinearMap.range (Q.proj ij.2))
+Komorebi.PaperIRelease.tensorPacketRangeEquiv.{u, v, w, v', w'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type v'} [Fintype I] {J : Type w'} [Fintype J]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (Q : Komorebi.Foundation.LinearProjectorFamily K Y J) (i : I)
+  (j : J) :
+  TensorProduct K ↥(LinearMap.range (P.proj i)) ↥(LinearMap.range (Q.proj j)) ≃ₗ[K]
+    ↥(LinearMap.range ((Komorebi.PaperIRelease.tensorPackets P Q).proj (i, j)))
+Komorebi.PaperIRelease.tensorPackets.{u, v, w, v', w'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type v'} [Fintype I] {J : Type w'} [Fintype J]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (Q : Komorebi.Foundation.LinearProjectorFamily K Y J) :
+  Komorebi.Foundation.LinearProjectorFamily K (TensorProduct K X Y) (I × J)
+Komorebi.PaperIRelease.tensor_packet_range.{u, v, w, v', w'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type v'} [Fintype I] {J : Type w'} [Fintype J]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (Q : Komorebi.Foundation.LinearProjectorFamily K Y J) (i : I)
+  (j : J) :
+  LinearMap.range ((Komorebi.PaperIRelease.tensorPackets P Q).proj (i, j)) =
+    Submodule.map₂ (TensorProduct.mk K X Y) (LinearMap.range (P.proj i)) (LinearMap.range (Q.proj j))
+Komorebi.PaperIRelease.tensor_transfer_blocks.{u, v, w, v', w'} {K : Type u} [Field K] {X : Type v} [AddCommGroup X]
+  [Module K X] {Y : Type w} [AddCommGroup Y] [Module K Y] {I : Type v'} [Fintype I] {J : Type w'} [Fintype J]
+  (P : Komorebi.Foundation.LinearProjectorFamily K X I) (Q : Komorebi.Foundation.LinearProjectorFamily K Y J)
+  (S : Module.End K X) (T : Module.End K Y) (b a : I) (d c : J) :
+  Komorebi.Foundation.transferBlock (Komorebi.PaperIRelease.tensorPackets P Q)
+      (Komorebi.PaperIRelease.tensorPackets P Q) (TensorProduct.map S T) (b, d) (a, c) =
+    TensorProduct.map (Komorebi.Foundation.transferBlock P P S b a) (Komorebi.Foundation.transferBlock Q Q T d c)
+Komorebi.PaperIRelease.transferBlock_word.{u, v, w} {K : Type u} [Field K] {X : Type v} [AddCommGroup X] [Module K X]
+  {I : Type w} [Fintype I] (P : Komorebi.Foundation.LinearProjectorFamily K X I) (ts : List (Module.End K X))
+  (b a : I) :
+  Komorebi.Foundation.transferBlock P P (Komorebi.PaperIRelease.operatorWord ts) b a =
+    Komorebi.PaperIRelease.packetWordSum P ts b a
+Komorebi.SeedRankBasics.generates_singleton_iff_surjective.{u, v} (A : Type u) (M : Type v) [Semiring A]
+  [AddCommMonoid M] [Module A M] (x : M) :
+  Komorebi.SeedRankBasics.Generates A M {x} ↔ Function.Surjective ⇑(Komorebi.SeedRankBasics.oneSeedMap A M x)
+Komorebi.SeedRankBasics.multiSeedQuotientEquiv.{u, v, w} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] {ι : Type w} (v : ι → M) (hv : Komorebi.SeedRankBasics.FamilyGenerates A M v) :
+  ((ι →₀ A) ⧸ (Komorebi.SeedRankBasics.multiSeedMap A M v).ker) ≃ₗ[A] M
+Komorebi.SeedRankBasics.multiSeedQuotientEquivRange.{u, v, w} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] {ι : Type w} (v : ι → M) :
+  ((ι →₀ A) ⧸ (Komorebi.SeedRankBasics.multiSeedMap A M v).ker) ≃ₗ[A]
+    ↥(Komorebi.SeedRankBasics.multiSeedMap A M v).range
+Komorebi.SeedRankBasics.multiSeedQuotientEquivRange_apply_mk.{u, v, w} (A : Type u) (M : Type v) [Ring A]
+  [AddCommGroup M] [Module A M] {ι : Type w} (v : ι → M) (c : ι →₀ A) :
+  (Komorebi.SeedRankBasics.multiSeedQuotientEquivRange A M v) (Submodule.Quotient.mk c) =
+    ⟨(Finsupp.linearCombination A v) c, ⋯⟩
+Komorebi.SeedRankBasics.oneSeedQuotientEquivRange.{u, v} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] (x : M) :
+  (A ⧸ (Komorebi.SeedRankBasics.oneSeedMap A M x).ker) ≃ₗ[A] ↥(Komorebi.SeedRankBasics.oneSeedMap A M x).range
+Komorebi.SeedRankBasics.oneSeedQuotientEquivRange_apply_mk.{u, v} (A : Type u) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] (x : M) (a : A) :
+  (Komorebi.SeedRankBasics.oneSeedQuotientEquivRange A M x) (Submodule.Quotient.mk a) = ⟨a • x, ⋯⟩
+Komorebi.SeedRankOperations.cyclic_iff_seedRank_eq_one.{u} (A M : Type u) [Semiring A] [AddCommMonoid M] [Module A M]
+  [Nontrivial M] : Komorebi.SeedRankBasics.Cyclic A M ↔ Komorebi.SeedRankBasics.seedRank A M = 1
+Komorebi.SeedRankOperations.finrank_le_seedRank_of_scalar_quotient.{u} (k A X Y : Type u) [Field k] [Semiring A]
+  [Algebra k A] [AddCommMonoid X] [Module A X] [AddCommGroup Y] [Module k Y] [Module.Finite k Y] (χ : A →ₐ[k] k)
+  (f : X →ₛₗ[χ.toRingHom] Y) (hf : Function.Surjective ⇑f) :
+  ↑(Module.finrank k Y) ≤ Komorebi.SeedRankBasics.seedRank A X
+Komorebi.SeedRankOperations.seedFinrank_isLeast_free_surjection.{u} (A M : Type u) [Semiring A] [AddCommMonoid M]
+  [Module A M] [Module.Finite A M] : IsLeast {n | ∃ f, Function.Surjective ⇑f} (Komorebi.SeedRankBasics.seedFinrank A M)
+Komorebi.SeedRankOperations.seedRank_imageAlgebra_eq.{u} {k A B M N : Type u} [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] (φ : A →ₐ[k] B)
+  (f : M →ₛₗ[φ.toRingHom] N) (hf : Function.Bijective ⇑f) :
+  Komorebi.SeedRankBasics.seedRank A M = Komorebi.SeedRankBasics.seedRank (↥φ.range) N
+Komorebi.SeedRankOperations.seedRank_le_of_surjective_semilinear.{u} {A B M N : Type u} [Semiring A] [Semiring B]
+  [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] {σ : A →+* B} (f : M →ₛₗ[σ] N)
+  (hf : Function.Surjective ⇑f) : Komorebi.SeedRankBasics.seedRank B N ≤ Komorebi.SeedRankBasics.seedRank A M
+Komorebi.SeedRankOperations.seedRank_prod_le_add.{u} (A M N : Type u) [Semiring A] [AddCommMonoid M] [Module A M]
+  [AddCommMonoid N] [Module A N] :
+  Komorebi.SeedRankBasics.seedRank A (M × N) ≤
+    Komorebi.SeedRankBasics.seedRank A M + Komorebi.SeedRankBasics.seedRank A N
+Komorebi.SeedRankOperations.seedRank_prod_productAlgebra.{u} (A B M N : Type u) [Semiring A] [Semiring B]
+  [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module B N] :
+  Komorebi.SeedRankBasics.seedRank (A × B) (M × N) =
+    max (Komorebi.SeedRankBasics.seedRank A M) (Komorebi.SeedRankBasics.seedRank B N)
+Komorebi.SeedRankOperations.seedRank_tensorProduct_le_mul.{u} (k A B X Y : Type u) [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid X] [Module k X] [Module A X] [IsScalarTower k A X]
+  [SMulCommClass k A X] [AddCommMonoid Y] [Module k Y] [Module B Y] [IsScalarTower k B Y] [SMulCommClass k B Y] :
+  Komorebi.SeedRankBasics.seedRank (TensorProduct k A B) (TensorProduct k X Y) ≤
+    Komorebi.SeedRankBasics.seedRank A X * Komorebi.SeedRankBasics.seedRank B Y
+Komorebi.SeedRankOperations.tensorOperator_smul_tmul.{u} (k A B X Y : Type u) [CommSemiring k] [Semiring A]
+  [Algebra k A] [Semiring B] [Algebra k B] [AddCommMonoid X] [Module k X] [Module A X] [IsScalarTower k A X]
+  [SMulCommClass k A X] [AddCommMonoid Y] [Module k Y] [Module B Y] [IsScalarTower k B Y] [SMulCommClass k B Y] (a : A)
+  (b : B) (x : X) (y : Y) : a ⊗ₜ[k] b • x ⊗ₜ[k] y = (a • x) ⊗ₜ[k] (b • y)
+Komorebi.SemisimpleCompletion.fullMatrix_every_nonzero_vector_generates.{u} {k : Type u} [Field k] {n : ℕ}
+  {x : Fin n → k} (hx : x ≠ 0) : Komorebi.SeedRankBasics.Generates (Matrix (Fin n) (Fin n) k) (Fin n → k) {x}
+Komorebi.SemisimpleCompletion.fullMatrix_seedRank_eq_one.{u} {k : Type u} [Field k] {n : ℕ} (hn : 0 < n) :
+  Komorebi.SeedRankBasics.seedRank (Matrix (Fin n) (Fin n) k) (Fin n → k) = 1
+Komorebi.SemisimpleCompletion.multiplicity_obstruction.{u} {k : Type u} [Field k] {r d m : ℕ} (hd : 0 < d)
+  {v : Fin r → Komorebi.SemisimpleCompletion.BlockModule d m}
+  (hv :
+    Komorebi.SeedRankBasics.FamilyGenerates (Komorebi.SemisimpleCompletion.BlockAlgebra d)
+      (Komorebi.SemisimpleCompletion.BlockModule d m) v) :
+  m ⌈/⌉ d ≤ r
+Komorebi.SemisimpleCompletion.multiplicity_seedRank_formula.{u} {k : Type u} [Field k] {d m : ℕ} (hd : 0 < d) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.SemisimpleCompletion.BlockAlgebra d)
+      (Komorebi.SemisimpleCompletion.BlockModule d m) =
+    ↑(m ⌈/⌉ d)
+Komorebi.SemisimpleCompletion.semisimple_seedRank_eq_maxCeilDiv_of_equivalences.{u} {k : Type u} [Field k] {I : Type u}
+  [Fintype I] [DecidableEq I] (d m : I → ℕ) {A X : Type u} [Semiring A] [Algebra k A] [AddCommMonoid X] [Module A X]
+  (algebraEquiv : A ≃ₐ[k] Komorebi.SemisimpleCompletion.SplitProductAlgebra d)
+  (moduleEquiv : X ≃ₛₗ[↑algebraEquiv.toRingEquiv] Komorebi.SemisimpleCompletion.SplitProductModule d m)
+  (hd : ∀ (i : I), 0 < d i) : Komorebi.SeedRankBasics.seedRank A X = ↑(Komorebi.SemisimpleCompletion.maxCeilDiv d m)
+Komorebi.SemisimpleCompletion.splitProduct_seedRank_eq_maxCeilDiv.{u, v} {k : Type u} [Field k] {I : Type v} [Fintype I]
+  [DecidableEq I] (d m : I → ℕ) (hd : ∀ (i : I), 0 < d i) :
+  Komorebi.SeedRankBasics.seedRank (Komorebi.SemisimpleCompletion.SplitProductAlgebra d)
+      (Komorebi.SemisimpleCompletion.SplitProductModule d m) =
+    ↑(Komorebi.SemisimpleCompletion.maxCeilDiv d m)
+Komorebi.SingleOperatorGraph.complex_cycle_seedNumber_isLeast_two (n : ℕ) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Komorebi.SingleOperatorGraph.cycleAdjacency n) r} 2
+Komorebi.SingleOperatorGraph.cyclic_matrix_criterion_of_primary_decomposition.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [FiniteDimensional k X] (T : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (hpositive : ∀ (eigen : Λ), 0 < multiplicity eigen)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R)
+  (hpoly : minpoly k T = LinearMap.charpoly T ↔ ∀ (eigen : Λ), multiplicity eigen = 1) :
+  Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+    (∀ (eigen : Λ), multiplicity eigen = 1) ∧ minpoly k T = LinearMap.charpoly T
+Komorebi.SingleOperatorGraph.cyclic_matrix_four_way_iff_of_primary_decomposition.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [FiniteDimensional k X] (T : Module.End k X) (R : ℕ)
+  (geometricMultiplicity blockMultiplicity : Λ → ℕ) (hpositive : ∀ (eigen : Λ), 0 < geometricMultiplicity eigen)
+  (hbound : ∀ (eigen : Λ), geometricMultiplicity eigen ≤ R) (maxEigen : Λ) (hmax : geometricMultiplicity maxEigen = R)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R)
+  (hgeometric_eq_blocks : ∀ (eigen : Λ), geometricMultiplicity eigen = blockMultiplicity eigen)
+  (hpoly :
+    minpoly k T = LinearMap.charpoly T ↔ Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity) :
+  (Komorebi.SingleOperatorGraph.HasCyclicVector T ↔
+      Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity) ∧
+    (Komorebi.SingleOperatorGraph.AllGeometricMultiplicitiesOne geometricMultiplicity ↔
+        Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity) ∧
+      (Komorebi.SingleOperatorGraph.OneJordanBlockPerEigenvalue blockMultiplicity ↔ minpoly k T = LinearMap.charpoly T)
+Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (adjacency : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (eigenbasis : Module.Basis ((eigen : Λ) × Fin (multiplicity eigen)) k X)
+  (hEigen : ∀ (z : (eigen : Λ) × Fin (multiplicity eigen)), adjacency (eigenbasis z) = eigenvalue z.fst • eigenbasis z)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (projectorPolynomial : Λ → Polynomial k)
+  (hproject :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ((Polynomial.aeval adjacency) (projectorPolynomial eigen))
+          (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity (fun e j => eigenbasis ⟨e, j⟩) ⟨↑j, ⋯⟩) =
+        eigenbasis ⟨eigen, j⟩) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE adjacency r} R
+Komorebi.SingleOperatorGraph.graph_seedNumber_eq_max_eigenspace_multiplicity_of_distinct.{u, v, w} {k : Type u}
+  [Field k] {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (adjacency : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (eigenbasis : Module.Basis ((eigen : Λ) × Fin (multiplicity eigen)) k X)
+  (hEigen : ∀ (z : (eigen : Λ) × Fin (multiplicity eigen)), adjacency (eigenbasis z) = eigenvalue z.fst • eigenbasis z)
+  (heigenvalue : Function.Injective eigenvalue) (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ)
+  (hmax : multiplicity maxEigen = R) : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE adjacency r} R
+Komorebi.SingleOperatorGraph.operatorAlgebra_seedFinrank_eq_of_seedNumber_isLeast.{u, v} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] (T : Module.End k X) (R : ℕ)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = R
+Komorebi.SingleOperatorGraph.operatorAlgebra_seedRank_eq_of_seedNumber_isLeast.{u, v} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] (T : Module.End k X) (R : ℕ)
+  (hLeast : IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R) :
+  Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = ↑R
+Komorebi.SingleOperatorGraph.path_endpoint_seedNumber_isLeast_one.{u} {k : Type u} [Field k] (n : ℕ) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE (Komorebi.PathGraphKrylov.pathStep k n) r} 1
+Komorebi.SingleOperatorGraph.singleOperator_operatorAlgebra_seedRanks_eq_of_primary_decomposition.{u, v, w} {k : Type u}
+  [Field k] {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (T : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (blockGenerator : (eigen : Λ) → Fin (multiplicity eigen) → X)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (hblocks : Komorebi.SingleOperatorGraph.FamilyGenerates T fun z => blockGenerator z.fst z.snd)
+  (hextract :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ∃ p,
+        ((Polynomial.aeval T) p) (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity blockGenerator ⟨↑j, ⋯⟩) =
+          blockGenerator eigen j)
+  (q : (eigen : Λ) → X →ₗ[k] Fin (multiplicity eigen) → k) (hq : ∀ (eigen : Λ), Function.Surjective ⇑(q eigen))
+  (hqT :
+    ∀ (eigen : Λ) (p : Polynomial k) (x : X),
+      (q eigen) (((Polynomial.aeval T) p) x) = Polynomial.eval (eigenvalue eigen) p • (q eigen) x) :
+  Komorebi.SeedRankBasics.seedFinrank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = R ∧
+    Komorebi.SeedRankBasics.seedRank (↥(Komorebi.SingleOperatorGraph.operatorAlgebra T)) X = ↑R
+Komorebi.SingleOperatorGraph.singleOperator_seedNumber_isLeast_of_primary_decomposition.{u, v, w} {k : Type u} [Field k]
+  {X : Type v} [AddCommGroup X] [Module k X] {Λ : Type w} [Fintype Λ] (T : Module.End k X) (R : ℕ)
+  (multiplicity : Λ → ℕ) (eigenvalue : Λ → k) (blockGenerator : (eigen : Λ) → Fin (multiplicity eigen) → X)
+  (hbound : ∀ (eigen : Λ), multiplicity eigen ≤ R) (maxEigen : Λ) (hmax : multiplicity maxEigen = R)
+  (hblocks : Komorebi.SingleOperatorGraph.FamilyGenerates T fun z => blockGenerator z.fst z.snd)
+  (hextract :
+    ∀ (eigen : Λ) (j : Fin (multiplicity eigen)),
+      ∃ p,
+        ((Polynomial.aeval T) p) (Komorebi.SingleOperatorGraph.paddedBlockSum R multiplicity blockGenerator ⟨↑j, ⋯⟩) =
+          blockGenerator eigen j)
+  (q : (eigen : Λ) → X →ₗ[k] Fin (multiplicity eigen) → k) (hq : ∀ (eigen : Λ), Function.Surjective ⇑(q eigen))
+  (hqT :
+    ∀ (eigen : Λ) (p : Polynomial k) (x : X),
+      (q eigen) (((Polynomial.aeval T) p) x) = Polynomial.eval (eigenvalue eigen) p • (q eigen) x) :
+  IsLeast {r | Komorebi.SingleOperatorGraph.SeedNumberLE T r} R
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower_apply.{u_6}
+  {𝕂 : Type u_6} [RCLike 𝕂] (m n : ℤ) (x : ↥(lp (fun x => 𝕂) 2)) :
+  ↑((KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concretePower m) x)
+      n =
+    ↑x (n - m)
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.adjoint_transferBlock.{u_4, u_5} {𝕂 : Type u_4}
+  {E : Type u_5} [RCLike 𝕂] [NormedAddCommGroup E] [InnerProductSpace 𝕂 E] [CompleteSpace E] (Pα Pβ T : E →L[𝕂] E)
+  (hα : ContinuousLinearMap.adjoint Pα = Pα) (hβ : ContinuousLinearMap.adjoint Pβ = Pβ) :
+  ContinuousLinearMap.adjoint
+      (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.transferBlock Pβ T Pα) =
+    KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.transferBlock Pα (ContinuousLinearMap.adjoint T)
+      Pβ
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.closure_le_ker_of_le_ker.{u_1, u_2} {𝕜 : Type u_1}
+  {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : X →L[𝕜] X)
+  (H : Submodule 𝕜 X) (hH : H ≤ (↑Q).ker) : H.topologicalClosure ≤ (↑Q).ker
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense.{u_1, u_4, u_5}
+  {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {Y : Type u_4} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] {α : Type u_5}
+  [NormedAddCommGroup α] [NormedSpace 𝕜 α] [CompleteSpace Y] (f : α →L[𝕜] Y) (hiso : Isometry ⇑f)
+  (hdense : DenseRange ⇑f) : UniformSpace.Completion α ≃L[𝕜] Y
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_intertwines.{u_1, u_4,
+    u_5}
+  {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {Y : Type u_4} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] {α : Type u_5}
+  [NormedAddCommGroup α] [NormedSpace 𝕜 α] [CompleteSpace Y] (f : α →L[𝕜] Y) (hiso : Isometry ⇑f)
+  (hdense : DenseRange ⇑f) (A : α →L[𝕜] α) (B : Y →L[𝕜] Y) (hintertwine : f ∘SL A = B ∘SL f) :
+  ↑(KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense f hiso hdense) ∘SL
+      A.completion =
+    B ∘SL
+      ↑(KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense f hiso hdense)
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense_unique.{u_1, u_4, u_5}
+  {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {Y : Type u_4} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] {α : Type u_5}
+  [NormedAddCommGroup α] [NormedSpace 𝕜 α] [CompleteSpace Y] (f : α →L[𝕜] Y) (hiso : Isometry ⇑f)
+  (hdense : DenseRange ⇑f) (g : UniformSpace.Completion α →L[𝕜] Y) (hg : ∀ (x : α), g ↑x = f x) :
+  g = ↑(KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.completionEquivOfIsometryDense f hiso hdense)
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_seedCardinality_isLeast.{u_6}
+  {𝕂 : Type u_6} [RCLike 𝕂] :
+  IsLeast
+    {n |
+      KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.GeneratesWithNSeeds
+        (Set.range
+          KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concrete.power)
+        n}
+    1
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.concreteBilateralShift_topologicallyCyclic.{u_6}
+  {𝕂 : Type u_6} [RCLike 𝕂] :
+  KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.TopologicallyCyclic
+    (Set.range
+      KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.BilateralShiftRepresentation.concrete.power)
+    (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.delta 0)
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.dense_operatorHull_image.{u_1, u_2, u_4}
+  {𝕜 : Type u_1} {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type u_4}
+  [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (f : X →L[𝕜] Y) (hf : Function.Surjective ⇑f) (φ : (X →L[𝕜] X) → Y →L[𝕜] Y)
+  (A : Set (X →L[𝕜] X)) (B : Set (Y →L[𝕜] Y)) (S : Set X) (hφ : ∀ T ∈ A, φ T ∈ B)
+  (hintertwine : ∀ T ∈ A, f ∘SL T = φ T ∘SL f)
+  (hgenerate :
+    (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.operatorHull A S).topologicalClosure = ⊤) :
+  (KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.operatorHull B (⇑f '' S)).topologicalClosure = ⊤
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.idempotentRange_eq_closure_map.{u_1, u_2}
+  {𝕜 : Type u_1} {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : X →L[𝕜] X)
+  (hQ : ∀ (x : X), Q (Q x) = Q x) (M : Submodule 𝕜 X) (hM : M.topologicalClosure = ⊤) :
+  (Submodule.map (↑Q) M).topologicalClosure = (↑Q).range
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.map_packetRange_eq.{u_1, u_2, u_4} {𝕜 : Type u_1}
+  {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] {Y : Type u_4}
+  [NormedAddCommGroup Y] [NormedSpace 𝕜 Y] (f : X →L[𝕜] Y) (hf : Function.Surjective ⇑f) (P : X →L[𝕜] X) (Q : Y →L[𝕜] Y)
+  (hintertwine : f ∘SL P = Q ∘SL f) : Submodule.map (↑f) (↑P).range = (↑Q).range
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetEquiv.{u_1, u_2, u_3} {𝕜 : Type u_1}
+  {X : Type u_2} {ι : Type u_3} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] [Fintype ι]
+  (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) : X ≃L[𝕜] (i : ι) → ↥(P.packet i)
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.packetRange_eq_closure_map.{u_1, u_2, u_3}
+  {𝕜 : Type u_1} {X : Type u_2} {ι : Type u_3} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  [Fintype ι] (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) (M : Submodule 𝕜 X)
+  (hM : M.topologicalClosure = ⊤) (i : ι) : (Submodule.map (↑(P.proj i)) M).topologicalClosure = P.packet i
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_packet_isomorphism.{u_1, u_2, u_3}
+  {𝕜 : Type u_1} {X : Type u_2} {ι : Type u_3} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  [Fintype ι] [CompleteSpace X] (P : KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily 𝕜 X ι) :
+  (∀ (i : ι), IsClosed ↑(P.packet i)) ∧ ∃ e, ↑e = P.analysis ∧ ↑e.symm = P.synthesis
+KomorebiVerification.TopologicalCompletion.BoundedProjectorFamily.topological_reachability_obstruction.{u_1, u_2}
+  {𝕜 : Type u_1} {X : Type u_2} [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : X →L[𝕜] X)
+  (H : Submodule 𝕜 X) (hQ : Q ≠ 0) (hH : H ≤ (↑Q).ker) : H.topologicalClosure ≠ ⊤
+PaperIRelease.TopologyCountablePackets.Projectors.analysis.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) : X →ₗ[𝕜] P.PacketSpace
+PaperIRelease.TopologyCountablePackets.Projectors.analysis_synthesis.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) (x : P.PacketSpace) : P.analysis (P.synthesis x) = x
+PaperIRelease.TopologyCountablePackets.Projectors.countableUnconditionalPacketEquiv.{u_1, u_2} {𝕜 : Type u_1}
+  {X : Type u_2} [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) : X ≃L[𝕜] P.closedPackets.Space
+PaperIRelease.TopologyCountablePackets.Projectors.countable_analysis_norm_le.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) :
+  ‖↑P.countableUnconditionalPacketEquiv‖ ≤ P.K
+PaperIRelease.TopologyCountablePackets.Projectors.countable_synthesis_norm_le.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) :
+  ‖↑P.countableUnconditionalPacketEquiv.symm‖ ≤ 1
+PaperIRelease.TopologyCountablePackets.Projectors.generalSpaceIsometry.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) :
+  P.PacketSpace ≃ₗᵢ[𝕜] P.closedPackets.Space
+PaperIRelease.TopologyCountablePackets.Projectors.multiplierNorms.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (P : ℕ → X →L[𝕜] X) : Set ℝ
+PaperIRelease.TopologyCountablePackets.Projectors.ofSupBound.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (P : ℕ → X →L[𝕜] X)
+  (hid : ∀ (i : ℕ) (x : X), (P i) ((P i) x) = (P i) x) (hann : ∀ {i j : ℕ}, i ≠ j → ∀ (x : X), (P i) ((P j) x) = 0)
+  (hsum : ∀ (x : X), HasSum (fun i => (P i) x) x)
+  (hbound : BddAbove (PaperIRelease.TopologyCountablePackets.Projectors.multiplierNorms P)) :
+  PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X
+PaperIRelease.TopologyCountablePackets.Projectors.packetCompleteSpace.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) [CompleteSpace X] : CompleteSpace P.PacketSpace
+PaperIRelease.TopologyCountablePackets.Projectors.packetEquiv.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) : X ≃L[𝕜] P.PacketSpace
+PaperIRelease.TopologyCountablePackets.Projectors.synthesis.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) : P.PacketSpace →ₗ[𝕜] X
+PaperIRelease.TopologyCountablePackets.Projectors.synthesis_analysis.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [NontriviallyNormedField 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+  (P : PaperIRelease.TopologyCountablePackets.Projectors 𝕜 X) (x : X) : P.synthesis (P.analysis x) = x
+PaperIRelease.TopologyDenseCompletion.completedAction_apply_coe.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [UniformSpace E] [IsUniformAddGroup E]
+  [UniformContinuousConstSMul 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] [IsUniformAddGroup X]
+  [UniformContinuousConstSMul 𝕜 X] [CompleteSpace X] [T0Space X] (j : E →ₗ[𝕜] X) (hj : IsUniformInducing ⇑j)
+  (hd : DenseRange ⇑j) (T : E →ₗ[𝕜] E) (B : X →L[𝕜] X) (hintertwine : ∀ (x : E), j (T x) = B (j x)) (x : E) :
+  (PaperIRelease.TopologyDenseCompletion.completedAction j hj hd B) ↑x = ↑(T x)
+PaperIRelease.TopologyDenseCompletion.completedFreePresentation.{u_1, u_2} {A : Type u_1} {X : Type u_2} [Ring A]
+  [AddCommGroup X] [Module A X] [UniformSpace X] [IsUniformAddGroup X] [UniformContinuousConstSMul A X]
+  [CompleteSpace X] [T0Space X] (r : ℕ) (s : Fin r → X) (hS : Dense ↑(Submodule.span A (Set.range s))) :
+  UniformSpace.Completion ((Fin r →₀ A) ⧸ (Komorebi.SeedRankBasics.multiSeedMap A X s).ker) ≃L[A] X
+PaperIRelease.TopologyDenseCompletion.completedQuotientEquiv.{u_1, u_2, u_3} {𝕜 : Type u_1} {F : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup F] [Module 𝕜 F] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X]
+  [IsUniformAddGroup X] [UniformContinuousConstSMul 𝕜 X] [CompleteSpace X] [T0Space X] (f : F →ₗ[𝕜] X)
+  (hd : DenseRange ⇑f) : UniformSpace.Completion (F ⧸ f.ker) ≃L[𝕜] X
+PaperIRelease.TopologyDenseCompletion.completedQuotientEquiv_apply_mk.{u_1, u_2, u_3} {𝕜 : Type u_1} {F : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup F] [Module 𝕜 F] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X]
+  [IsUniformAddGroup X] [UniformContinuousConstSMul 𝕜 X] [CompleteSpace X] [T0Space X] (f : F →ₗ[𝕜] X)
+  (hd : DenseRange ⇑f) (x : F) :
+  (PaperIRelease.TopologyDenseCompletion.completedQuotientEquiv f hd) ↑(f.ker.mkQ x) = f x
+PaperIRelease.TopologyDenseCompletion.completedRestrictedQuotient.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2}
+  {Y : Type u_3} [Ring 𝕜] [AddCommGroup X] [Module 𝕜 X] [AddCommGroup Y] [Module 𝕜 Y] [UniformSpace Y]
+  [IsUniformAddGroup Y] [UniformContinuousConstSMul 𝕜 Y] [CompleteSpace Y] [T0Space Y] (f : X →ₗ[𝕜] Y)
+  (D : Submodule 𝕜 X) (hd : Dense (⇑f '' ↑D)) : UniformSpace.Completion (↥D ⧸ (f ∘ₗ D.subtype).ker) ≃L[𝕜] Y
+PaperIRelease.TopologyDenseCompletion.completionLinearEquiv.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2} {X : Type u_3}
+  [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [UniformSpace E] [IsUniformAddGroup E] [UniformContinuousConstSMul 𝕜 E]
+  [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] [IsUniformAddGroup X] [UniformContinuousConstSMul 𝕜 X]
+  [CompleteSpace X] [T0Space X] (j : E →ₗ[𝕜] X) (hj : IsUniformInducing ⇑j) (hd : DenseRange ⇑j) :
+  UniformSpace.Completion E ≃L[𝕜] X
+PaperIRelease.TopologyDenseCompletion.completionLinearEquiv_unique.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [UniformSpace E] [IsUniformAddGroup E]
+  [UniformContinuousConstSMul 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] [IsUniformAddGroup X]
+  [UniformContinuousConstSMul 𝕜 X] [CompleteSpace X] [T0Space X] (j : E →ₗ[𝕜] X) (hj : IsUniformInducing ⇑j)
+  (hd : DenseRange ⇑j) (g : UniformSpace.Completion E → X) (hg : Continuous g) (hext : ∀ (x : E), g ↑x = j x) :
+  g = ⇑(PaperIRelease.TopologyDenseCompletion.completionLinearEquiv j hj hd)
+PaperIRelease.TopologyDenseCompletion.completion_intertwines.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [UniformSpace E] [IsUniformAddGroup E]
+  [UniformContinuousConstSMul 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] [IsUniformAddGroup X]
+  [UniformContinuousConstSMul 𝕜 X] [CompleteSpace X] [T0Space X] (j : E →ₗ[𝕜] X) (hj : IsUniformInducing ⇑j)
+  (hd : DenseRange ⇑j) (B : X →L[𝕜] X) :
+  ↑(PaperIRelease.TopologyDenseCompletion.completionLinearEquiv j hj hd) ∘SL
+      PaperIRelease.TopologyDenseCompletion.completedAction j hj hd B =
+    B ∘SL ↑(PaperIRelease.TopologyDenseCompletion.completionLinearEquiv j hj hd)
+PaperIRelease.TopologyDenseCompletion.dense_free_evaluation.{u_1, u_2, u_3} {A : Type u_1} {X : Type u_2} [Ring A]
+  [AddCommGroup X] [Module A X] [UniformSpace X] {ι : Type u_3} (s : ι → X)
+  (hS : Dense ↑(Submodule.span A (Set.range s))) : DenseRange ⇑(Komorebi.SeedRankBasics.multiSeedMap A X s)
+PaperIRelease.TopologyDenseCompletion.presentation_action_uniformContinuous.{u_1, u_2, u_3} {𝕜 : Type u_1}
+  {E : Type u_2} {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [UniformSpace E] [AddCommGroup X] [Module 𝕜 X]
+  [UniformSpace X] [IsUniformAddGroup X] (j : E →ₗ[𝕜] X) (hj : IsUniformInducing ⇑j) (T : E →ₗ[𝕜] E) (B : X →L[𝕜] X)
+  (hintertwine : ∀ (x : E), j (T x) = B (j x)) : UniformContinuous ⇑T
+PaperIRelease.TopologyDenseCompletion.quotientEmbedding_injective.{u_1, u_2, u_3} {𝕜 : Type u_1} {F : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup F] [Module 𝕜 F] [AddCommGroup X] [Module 𝕜 X] (f : F →ₗ[𝕜] X) :
+  Function.Injective ⇑(PaperIRelease.TopologyDenseCompletion.quotientEmbedding f)
+PaperIRelease.TopologyDenseCompletion.restricted_dense.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3}
+  [Ring 𝕜] [AddCommGroup X] [Module 𝕜 X] [AddCommGroup Y] [Module 𝕜 Y] [UniformSpace Y] (f : X →ₗ[𝕜] Y)
+  (D : Submodule 𝕜 X) (hd : Dense (⇑f '' ↑D)) : DenseRange ⇑(f ∘ₗ D.subtype)
+PaperIRelease.TopologyDenseCompletion.restricted_kernel.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3}
+  [Ring 𝕜] [AddCommGroup X] [Module 𝕜 X] [AddCommGroup Y] [Module 𝕜 Y] (f : X →ₗ[𝕜] Y) (D : Submodule 𝕜 X) :
+  (f ∘ₗ D.subtype).ker = Submodule.comap D.subtype f.ker
+PaperIRelease.TopologyDenseCompletion.transportedUniformity.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2} {X : Type u_3}
+  [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] (j : E →ₗ[𝕜] X) : UniformSpace E
+PaperIRelease.TopologyDenseCompletion.transported_isUniformInducing.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] (j : E →ₗ[𝕜] X) :
+  have this := PaperIRelease.TopologyDenseCompletion.transportedUniformity j;
+  IsUniformInducing ⇑j
+PaperIRelease.TopologyDenseCompletion.transported_locallyConvex.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X] [PartialOrder 𝕜]
+  [IsOrderedRing 𝕜] [LocallyConvexSpace 𝕜 X] (j : E →ₗ[𝕜] X) :
+  have this := PaperIRelease.TopologyDenseCompletion.transportedUniformity j;
+  LocallyConvexSpace 𝕜 E
+PaperIRelease.TopologyDenseCompletion.transported_uniformAddGroup.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X]
+  [IsUniformAddGroup X] (j : E →ₗ[𝕜] X) :
+  have this := PaperIRelease.TopologyDenseCompletion.transportedUniformity j;
+  IsUniformAddGroup E
+PaperIRelease.TopologyDenseCompletion.transported_uniformConstSMul.{u_1, u_2, u_3} {𝕜 : Type u_1} {E : Type u_2}
+  {X : Type u_3} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup X] [Module 𝕜 X] [UniformSpace X]
+  [UniformContinuousConstSMul 𝕜 X] (j : E →ₗ[𝕜] X) :
+  have this := PaperIRelease.TopologyDenseCompletion.transportedUniformity j;
+  UniformContinuousConstSMul 𝕜 E
+PaperIRelease.TopologySemilinearRank.Generates.{v, u_1} (A : Type u_1) {M : Type v} [Ring A] [AddCommGroup M]
+  [Module A M] [TopologicalSpace M] (S : Set M) : Prop
+PaperIRelease.TopologySemilinearRank.generates_image.{u, v, w} {A : Type u} {B : Type w} {M N : Type v} [Ring A]
+  [Ring B] [AddCommGroup M] [Module A M] [AddCommGroup N] [Module B N] [TopologicalSpace M] [TopologicalSpace N]
+  {φ : A →+* B} (f : M →ₛₗ[φ] N) (hf : Function.Surjective ⇑f) (hcont : Continuous ⇑f) {S : Set M}
+  (hS : PaperIRelease.TopologySemilinearRank.Generates A S) : PaperIRelease.TopologySemilinearRank.Generates B (⇑f '' S)
+PaperIRelease.TopologySemilinearRank.moduleSeedRank.{v, u_1} (A : Type u_1) (M : Type v) [Ring A] [AddCommGroup M]
+  [Module A M] [TopologicalSpace M] : Cardinal.{v}
+PaperIRelease.TopologySemilinearRank.moduleSeedRank_eq_operatorSeedRank.{u, v} {A : Type u} {M : Type v} [Ring A]
+  [AddCommGroup M] [Module A M] [TopologicalSpace M] [IsTopologicalAddGroup M] [ContinuousConstSMul A M] :
+  PaperIRelease.TopologySemilinearRank.moduleSeedRank A M =
+    PaperIRelease.TopologyTransport.topologicalSeedRank PaperIRelease.TopologySemilinearRank.actingOperators
+PaperIRelease.TopologySemilinearRank.rank_attained.{u, v} {A : Type u} {M : Type v} [Ring A] [AddCommGroup M]
+  [Module A M] [TopologicalSpace M] :
+  ∃ S,
+    PaperIRelease.TopologySemilinearRank.Generates A S ∧
+      Cardinal.mk ↑S = PaperIRelease.TopologySemilinearRank.moduleSeedRank A M
+PaperIRelease.TopologySemilinearRank.rank_eq_of_continuous_semilinear_equiv.{u, v, w} {A : Type u} {B : Type w}
+  {M N : Type v} [Ring A] [Ring B] [AddCommGroup M] [Module A M] [AddCommGroup N] [Module B N] [TopologicalSpace M]
+  [TopologicalSpace N] {φ : A →+* B} {ψ : B →+* A} [RingHomInvPair φ ψ] [RingHomInvPair ψ φ] (e : M ≃ₛₗ[φ] N)
+  (hc : Continuous ⇑e) (hci : Continuous ⇑e.symm) :
+  PaperIRelease.TopologySemilinearRank.moduleSeedRank A M = PaperIRelease.TopologySemilinearRank.moduleSeedRank B N
+PaperIRelease.TopologySemilinearRank.rank_le_of_continuous_additive_surjective.{u, v, w} {A : Type u} {B : Type w}
+  {M N : Type v} [Ring A] [Ring B] [AddCommGroup M] [Module A M] [AddCommGroup N] [Module B N] [TopologicalSpace M]
+  [TopologicalSpace N] (φ : A →+* B) (f : M →+ N) (hf : Function.Surjective ⇑f) (hcont : Continuous ⇑f)
+  (hsmul : ∀ (a : A) (x : M), f (a • x) = φ a • f x) :
+  PaperIRelease.TopologySemilinearRank.moduleSeedRank B N ≤ PaperIRelease.TopologySemilinearRank.moduleSeedRank A M
+PaperIRelease.TopologySemilinearRank.rank_le_of_continuous_semilinear_surjective.{u, v, w} {A : Type u} {B : Type w}
+  {M N : Type v} [Ring A] [Ring B] [AddCommGroup M] [Module A M] [AddCommGroup N] [Module B N] [TopologicalSpace M]
+  [TopologicalSpace N] {φ : A →+* B} (f : M →ₛₗ[φ] N) (hf : Function.Surjective ⇑f) (hcont : Continuous ⇑f) :
+  PaperIRelease.TopologySemilinearRank.moduleSeedRank B N ≤ PaperIRelease.TopologySemilinearRank.moduleSeedRank A M
+PaperIRelease.TopologyTransport.dense_operatorHull_image.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3}
+  [Ring 𝕜] [TopologicalSpace 𝕜] [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [AddCommGroup Y] [Module 𝕜 Y]
+  [TopologicalSpace Y] [ContinuousAdd X] [ContinuousSMul 𝕜 X] [ContinuousAdd Y] [ContinuousSMul 𝕜 Y] (f : X →L[𝕜] Y)
+  (hf : Function.Surjective ⇑f) (φ : (X →L[𝕜] X) → Y →L[𝕜] Y) (A : Set (X →L[𝕜] X)) (B : Set (Y →L[𝕜] Y)) (S : Set X)
+  (hφ : ∀ T ∈ A, φ T ∈ B) (hintertwine : ∀ T ∈ A, f ∘SL T = φ T ∘SL f)
+  (hgenerate : (PaperIRelease.TopologyTransport.operatorHull A S).topologicalClosure = ⊤) :
+  (PaperIRelease.TopologyTransport.operatorHull B (⇑f '' S)).topologicalClosure = ⊤
+PaperIRelease.TopologyTransport.exists_generating_set_card_eq_seedRank.{u, v} {𝕜 : Type u} {X : Type v} [Ring 𝕜]
+  [TopologicalSpace 𝕜] [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [ContinuousAdd X] [ContinuousSMul 𝕜 X]
+  (A : Set (X →L[𝕜] X)) (hA : ContinuousLinearMap.id 𝕜 X ∈ A) :
+  ∃ S,
+    PaperIRelease.TopologyTransport.TopologicallyGenerates A S ∧
+      Cardinal.mk ↑S = PaperIRelease.TopologyTransport.topologicalSeedRank A
+PaperIRelease.TopologyTransport.map_aggregated_packetRange_eq.{u_1, u_2, u_3, u_4, u_5} {𝕜 : Type u_1} {X : Type u_2}
+  {Y : Type u_3} [Ring 𝕜] [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [AddCommGroup Y] [Module 𝕜 Y]
+  [TopologicalSpace Y] [ContinuousAdd X] {ι : Type u_4} {κ : Type u_5} [Fintype ι] [DecidableEq κ] (f : X →L[𝕜] Y)
+  (hf : Function.Surjective ⇑f) (σ : ι → κ) (P : ι → X →L[𝕜] X) (Q : κ → Y →L[𝕜] Y)
+  (hintertwine : ∀ (j : κ), f ∘SL ∑ i with σ i = j, P i = Q j ∘SL f) (j : κ) :
+  Submodule.map (↑f) (↑(∑ i with σ i = j, P i)).range = (↑(Q j)).range
+PaperIRelease.TopologyTransport.map_operatorHull_le.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3}
+  [Ring 𝕜] [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [AddCommGroup Y] [Module 𝕜 Y] [TopologicalSpace Y]
+  (f : X →L[𝕜] Y) (φ : (X →L[𝕜] X) → Y →L[𝕜] Y) (A : Set (X →L[𝕜] X)) (B : Set (Y →L[𝕜] Y)) (S : Set X)
+  (hφ : ∀ T ∈ A, φ T ∈ B) (hintertwine : ∀ T ∈ A, f ∘SL T = φ T ∘SL f) :
+  Submodule.map (↑f) (PaperIRelease.TopologyTransport.operatorHull A S) ≤
+    PaperIRelease.TopologyTransport.operatorHull B (⇑f '' S)
+PaperIRelease.TopologyTransport.map_packetRange_eq.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3} [Ring 𝕜]
+  [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [AddCommGroup Y] [Module 𝕜 Y] [TopologicalSpace Y] (f : X →L[𝕜] Y)
+  (hf : Function.Surjective ⇑f) (P : X →L[𝕜] X) (Q : Y →L[𝕜] Y) (hintertwine : f ∘SL P = Q ∘SL f) :
+  Submodule.map (↑f) (↑P).range = (↑Q).range
+PaperIRelease.TopologyTransport.operatorHull.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [Ring 𝕜] [AddCommGroup X]
+  [Module 𝕜 X] [TopologicalSpace X] (A : Set (X →L[𝕜] X)) (S : Set X) : Submodule 𝕜 X
+PaperIRelease.TopologyTransport.quotientEquiv.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3} [Ring 𝕜]
+  [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [AddCommGroup Y] [Module 𝕜 Y] [TopologicalSpace Y] (f : X →L[𝕜] Y)
+  (hf : Topology.IsQuotientMap ⇑f) : (X ⧸ (↑f).ker) ≃L[𝕜] Y
+PaperIRelease.TopologyTransport.quotientEquiv_apply_mk.{u_1, u_2, u_3} {𝕜 : Type u_1} {X : Type u_2} {Y : Type u_3}
+  [Ring 𝕜] [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [AddCommGroup Y] [Module 𝕜 Y] [TopologicalSpace Y]
+  (f : X →L[𝕜] Y) (hf : Topology.IsQuotientMap ⇑f) (x : X) :
+  (PaperIRelease.TopologyTransport.quotientEquiv f hf) ((↑f).ker.mkQ x) = f x
+PaperIRelease.TopologyTransport.seedRank_mono_algebra.{u, v} {𝕜 : Type u} {X : Type v} [Ring 𝕜] [TopologicalSpace 𝕜]
+  [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [ContinuousAdd X] [ContinuousSMul 𝕜 X] {A B : Set (X →L[𝕜] X)}
+  (hA : ContinuousLinearMap.id 𝕜 X ∈ A) (hAB : A ⊆ B) :
+  PaperIRelease.TopologyTransport.topologicalSeedRank B ≤ PaperIRelease.TopologyTransport.topologicalSeedRank A
+PaperIRelease.TopologyTransport.topologicalSeedRank.{u, v} {𝕜 : Type u} {X : Type v} [Ring 𝕜] [TopologicalSpace 𝕜]
+  [AddCommGroup X] [Module 𝕜 X] [TopologicalSpace X] [ContinuousAdd X] [ContinuousSMul 𝕜 X] (A : Set (X →L[𝕜] X)) :
+  Cardinal.{v}
+PaperIRelease.TopologyUnconditional.ClosedPackets.Space.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X) : Type u_2
+PaperIRelease.TopologyUnconditional.ClosedPackets.coordinate_cauchy.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X) (u : ℕ → Q.Space)
+  (hu : CauchySeq u) (n : ℕ) : CauchySeq fun k => ↑(u k) n
+PaperIRelease.TopologyUnconditional.ClosedPackets.finiteSum_limit_bound.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X)
+  (u : ℕ → Q.Space) (y : ℕ → X) (hy : ∀ (n : ℕ), Filter.Tendsto (fun k => ↑(u k) n) Filter.atTop (nhds (y n))) (N m : ℕ)
+  (ε : ℝ) (hN : ∀ k ≥ N, ‖u k - u m‖ < ε) (c : PaperIRelease.TopologyUnconditional.Coefficients 𝕜) :
+  ‖PaperIRelease.TopologyUnconditional.finiteSum (fun n => y n - ↑(u m) n) c‖ ≤ ε
+PaperIRelease.TopologyUnconditional.ClosedPackets.finiteSum_uniform_limit.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X)
+  (u : ℕ → Q.Space) (hu : CauchySeq u) (y : ℕ → X)
+  (hy : ∀ (n : ℕ), Filter.Tendsto (fun k => ↑(u k) n) Filter.atTop (nhds (y n))) (ε : ℝ) :
+  ε > 0 →
+    ∃ N,
+      ∀ m ≥ N,
+        ∀ (c : PaperIRelease.TopologyUnconditional.Coefficients 𝕜),
+          ‖PaperIRelease.TopologyUnconditional.finiteSum (fun n => y n - ↑(u m) n) c‖ ≤ ε
+PaperIRelease.TopologyUnconditional.ClosedPackets.sequences.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X) :
+  Submodule 𝕜 (ℕ → X)
+PaperIRelease.TopologyUnconditional.ClosedPackets.spaceCompleteSpace.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X)
+  [CompleteSpace X] : CompleteSpace Q.Space
+PaperIRelease.TopologyUnconditional.ClosedPackets.spaceNormedAddCommGroup.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X) :
+  NormedAddCommGroup Q.Space
+PaperIRelease.TopologyUnconditional.ClosedPackets.spaceNormedSpace.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X) :
+  NormedSpace 𝕜 Q.Space
+PaperIRelease.TopologyUnconditional.ClosedPackets.summable_coordinate_limit.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2}
+  [RCLike 𝕜] [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X)
+  [CompleteSpace X] (u : ℕ → Q.Space) (hu : CauchySeq u) (y : ℕ → X)
+  (hy : ∀ (n : ℕ), Filter.Tendsto (fun k => ↑(u k) n) Filter.atTop (nhds (y n))) : Summable y
+PaperIRelease.TopologyUnconditional.ClosedPackets.unconditionalNorm.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (Q : PaperIRelease.TopologyUnconditional.ClosedPackets 𝕜 X) (x : Q.Space) : ℝ
+PaperIRelease.TopologyUnconditional.summable_finiteSum_bounded.{u_1, u_2} {𝕜 : Type u_1} {X : Type u_2} [RCLike 𝕜]
+  [NormedAddCommGroup X] [NormedSpace 𝕜 X] (x : ℕ → X) (hx : Summable x) :
+  ∃ C,
+    ∀ (c : PaperIRelease.TopologyUnconditional.Coefficients 𝕜), ‖PaperIRelease.TopologyUnconditional.finiteSum x c‖ ≤ C

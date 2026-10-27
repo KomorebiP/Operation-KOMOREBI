@@ -1,0 +1,323 @@
+{
+  "schema": "paper-i-package-audit/1",
+  "reviewer": "/root/audit_release_package",
+  "timestamp_utc": "2026-10-15T08:14:51.390988+00:00",
+  "status": "PASS",
+  "scope": "Read-only independent consistency and reproducibility review of the release package; no new mathematical proof audit and no independent implementation of the Lean kernel.",
+  "checked": {
+    "formal_manifest_sources": 116,
+    "formal_unmanifested_sources": 0,
+    "formal_missing_sources": 0,
+    "formal_hash_mismatches": 0,
+    "semantic_source_hash_references_checked": 69,
+    "semantic_distinct_source_files_checked": 64,
+    "semantic_source_hash_mismatches": 0,
+    "statement_text_hash_and_locator_matches": 108,
+    "proof_text_hash_and_locator_matches": 69,
+    "generator_outputs_reproduced_in_memory": 21,
+    "mapped_declaration_references": 659,
+    "mapped_unique_declarations": 468,
+    "mapped_project_owned_unique": 467,
+    "mapped_pinned_upstream_unique": 1,
+    "mapped_runtime_only_entries": 0,
+    "aggregate_transitive_module_reachability": 116,
+    "audited_modules_including_boundary": 117,
+    "source_owned_declarations": 3513,
+    "logical_declarations_checked": 3500,
+    "logical_new_name_replay": 3499,
+    "upstream_duplicate_body_rechecks": 1,
+    "runtime_only_helpers": 13,
+    "negative_controls_rejected": 12,
+    "runtime_specification_canonical_files_including_license": 6,
+    "python_original_execution_inputs_hash_bound": 22,
+    "python_result_and_log_outputs_hash_bound": 8,
+    "current_record_pdf_destinations": 108,
+    "historical_tutorial_pdf_destinations": 35,
+    "current_document_count": 3,
+    "current_total_pdf_pages": 249,
+    "delivered_current_pdf_copies": 9,
+    "final_entrypoint_check_declarations": 468,
+    "landing_page_local_links_resolve": true,
+    "release_facing_stale_current_claims": 0,
+    "deduplicated_evidence_objects": 116,
+    "dedup_roundtrip_original_files_matched": 351
+  },
+  "verifier_review": {
+    "result": "No blocking defect found in inspected verifier.",
+    "observations": [
+      "Fresh output directory is mandatory; local object path is isolated and project imports are supplied only from that directory.",
+      "All listed source hashes are checked before and after compilation; verifier, manifest, and object hashes are postchecked.",
+      "Owned audit enumerates every declaration belonging to project modules, independent of namespace.",
+      "Owned audit rejects axioms, opaque constants, unsafe declarations, unexpected partial definitions and any transitive axiom outside propext/Classical.choice/Quot.sound.",
+      "Replay starts from upstream-only imports. Exactly one fully identical upstream theorem receives an explicit kernel check of its unchanged proof body under a verified fresh audit name; all other logical names are replayed. The disjoint union exactly matches the source-owned logical inventory.",
+      "Thirteen specifically inventoried generated runtime helpers are excluded from logical replay; six additions were independently reviewed after the initial fail-closed audit detected them.",
+      "Twelve negative controls are rejected, including the original corrupted kernel proof and an actual kernel type mismatch after corrupting the fresh-name duplicate proof. Replay and the fresh-name body check use the official Lean kernel, not an independent checker.",
+      "The upstream cache is pinned and reused, not rebuilt or independently audited."
+    ]
+  },
+  "resolved_findings": [
+    {
+      "finding": "Standalone machine builder regenerated companion data without accepted verification metadata by default.",
+      "resolution": "Companion owner added default metadata loading both to the standalone builder and shared data generator."
+    },
+    {
+      "finding": "Guide README retained an unscoped unresolved expanded-record note.",
+      "resolution": "Companion owner labeled it historical tutorial scope and directed readers to the current map."
+    },
+    {
+      "finding": "Original seven-name runtime-helper allowlist rejected the six newly generated structural recursion helpers.",
+      "resolution": "Reviewed all six parent source definitions and all 13-helper logical dependency separation; endorsed exact six-name additions, without relaxing rejection for any other partial or unsafe declaration."
+    },
+    {
+      "finding": "The aggregate entrypoint omitted predecessor aggregate imports and KernelAudit.",
+      "resolution": "Root repaired only PaperIRelease.lean imports. Its final transitive closure reaches all 116 frozen modules, and the corrected aggregate compiled freshly in v4."
+    },
+    {
+      "finding": "Three negative fixtures used a stale boundary module import.",
+      "resolution": "Self-contained production-import fixtures retain the intended false conclusions. Targeted logs and final v4 show mathematical type-mismatch rejection, with no missing-import/identifier failure accepted as evidence."
+    },
+    {
+      "finding": "One compiler-generated theorem occurs identically in both a project module and pinned upstream.",
+      "resolution": "Exact name/type/universe/all-list/value and upstream ownership are checked. Its unchanged proof body passes Kernel.Environment.addDeclCore under a fresh name, separately counted from 3499 ordinary replays. The corrupt-body negative control is rejected by the kernel."
+    },
+    {
+      "finding": "The current small runtime configuration was not directly supplied in formal/.",
+      "resolution": "Root added byte-identical launcher, workspace configuration, compatibility adapter source and license under formal/runtime_specification, with hashes and explicit external-binary/cache scope."
+    },
+    {
+      "finding": "Publication builder did not previously regenerate shared data and synchronize all current PDF copies.",
+      "resolution": "The publication entrypoint delegates to the current PDF builder, which prepares accepted-receipt prose, regenerates the shared catalog/index and synchronizes public and editable PDF copies. All current copies are identical."
+    },
+    {
+      "finding": "Historical root visual and monograph reports could be mistaken for current pagination or execution scope.",
+      "resolution": "Explicit historical banners now point to the current release report and PDF QA. Original historical report contents are preserved."
+    },
+    {
+      "finding": "Original Python run wrappers were referenced by recorded manifests but absent from the package.",
+      "resolution": "Both byte-identical wrappers are preserved under verification/python/provenance. INPUT_PATH_MAP.json binds all 22 original execution inputs to packaged files. README provides direct current reproduction commands and distinguishes them from recorded executions."
+    }
+  ],
+  "pending": [],
+  "scope_clarification": "The five targeted semantic reports cover 47 proof-level records; 22 retain accepted predecessor correspondence. All 69 current proof-level records are covered at the exact recorded scopes. This package consistency audit is not a new independent audit of every mathematical proof, an independent Lean kernel, an upstream rebuild or a universal validation of Python.",
+  "reviewed_inputs": {
+    "formal/current/release_modules.json": "ab5eea4c79ef3c9df7a67f82b9db120b74ad839bef873a5a4297ae3f7e505074",
+    "formal/coverage/COVERAGE_108.json": "655c8a91b4f727d415eeddb1d188b766a88544a3d60883157b0b180607e71d55",
+    "formal/scripts/release_audit/verify_release.py": "746223781eda9bab796d72ccf8ec48e45a2f3606605b6de86d965e44770285b4",
+    "formal/scripts/release_audit/OwnedAudit.template.lean": "62c3b028f6cdb293e9f35c4680ec2d5f38ade842f6455d454ec4f053e9a13005",
+    "formal/scripts/release_audit/ReplayClosure.lean": "181fae1b65bf246e0e582991a00935b02afe40728265edc5067d1d01ab9223dc",
+    "formal/current/PaperIRelease.lean": "9d64d25e637d05019cad6f01686d14013a7a61a135d6e52b5d630280132cad8e",
+    "formal/evidence/RELEASE_VERIFICATION.json": "0ee3e7d2f123f803a0fcabc02550300c8a7366a870152b869f012b1b34960f6e",
+    "formal/evidence/whole_closure/verification.json": "4831cd4fc8f1d5e261d01750d5144dc6282224c8e1747ffe23b813fff9592875",
+    "formal/evidence/whole_closure/replayed_constants.json": "746a623f243afba8e106d70de530be26e11a843f6e17ff16dc4fa8e6dbff3c74",
+    "formal/evidence/whole_closure/upstream_duplicate_body_rechecks.json": "42657f9e8882190547b6d9e32b013e4746ffe87eb9efa6ffaba80c39da3b5350",
+    "formal/runtime_specification/SOURCE_HASHES.json": "1104d0bbd6a9e6db1edba8735c41b98a1462014009853557db9fd091458eb16d",
+    "scripts/build_pdfs.py": "3188599f0c862bc51898a82eb1e60d565a963e8256b5108b6c1e749c41599660",
+    "scripts/prepare_companion_evidence.py": "3303cd4796830bc2fdadf597ef9ea1e290ed7957f622cee3ae3cfbad096d5f9c",
+    "scripts/finalize_publication.py": "c2e34c24065d48a48ddd265a9c48285b1cdfa64c516bae33a569c371870040e3",
+    "publication/build_publication.py": "a319a9e6ec97440ab4e3ff861542b51415b38aa9a7e59571cdd026884e0ac645",
+    "verification/PUBLICATION_QA.json": "f6e496ccdd4ec6a2cbd1860ae3e2c931f7d368b71700f230accb847fadd5fbf9",
+    "verification/CURRENT_RELEASE_CHECKS.json": "69d9d3935c253497e2777741b672369f21e5689d06b41ae87a196ecbb655a24d",
+    "verification/COMPANION_EVIDENCE.json": "5d0242c98beaa659339d7368ccab853f98122e15e31c530c5f8d8cc8cb7899d7",
+    "verification/python/provenance/INPUT_PATH_MAP.json": "ce959fd3889c7e45b0dae063b54dc6f3d97a84a2849207a262f81a035de343bb",
+    "verification/python/README.txt": "01b1e28b08c6193cd511f109a07310f07f6ebc11b89893af5c627eba0cf3a9bb",
+    "COMPANION_CROSSWALK.json": "3e6cbb0eb10394612448180937b48bd255f6f140af124c146869e787c1049832",
+    "CURRENT_PUBLICATION_LOCATORS.json": "82bcc8ff81097e170a3723b96a8c629aebcfa5ac4ffbf95d8bb9ec8259c4543d",
+    "RELEASE_SUMMARY.json": "00ec3f0eba5700894f26e2578a665d5be0dc3d98b2007a44a0346378e37e5764",
+    "RELEASE_REPORT.txt": "aebc7497d9c179846c1dfc6f95b321c4ada1dce69ace25fa1772f45a5af09ed2",
+    "README.txt": "1c79c915fe2eac2706ea16073989a3e0716aacb0715cc5f0ca674abbd999e962",
+    "START_HERE.html": "83da4a6087beb7d506b485ef6c440f7422a2f29ad6be0a2b86b17f830f6c879a",
+    "publication/CURRENT_PUBLICATION_MANIFEST.json": "61d5709b8d29d5b3e32f22794356a698605cef43323715dda5d28cd3d826aaf2",
+    "formal/README.txt": "031fc7f7d91230e4551f4da3bd8d620afa7b22f00abbca0f8dfc1bb061126971",
+    "formal/runtime_specification/README.txt": "c7b75b6176cc74f015b8611b6c46b56d138fe4f6a7e4291c7a257ac4dcd57482",
+    "editable/lean_guide/generated/release_current.tex": "17c43766828c53d4b720acb03d4658d15899682b4ed189bbe38e6850c22bc087",
+    "editable/lean_guide/generated/release_data_identity.json": "82282a6ece3380eb12b256715dc621c3988fb0d1e95245f3cec3c674211d4024",
+    "editable/machine/generated/release_catalog.tex": "93fab2af7e06a3221c0559488a08a23368746718893eba911d29869b69b4f8fc",
+    "editable/machine/generated/release_verification.tex": "699853f338369b9541106863958cd306b67105bbe891d5f325322416b1583b90",
+    "editable/machine/generated/release_data_identity.json": "82282a6ece3380eb12b256715dc621c3988fb0d1e95245f3cec3c674211d4024",
+    "formal/evidence/entrypoint_consumer/coverage_declarations_final_entry.json": "e70b7c7ddeed9389f17bc8985488a229bc702e62f6568910d52ddb1cc922920f",
+    "formal/evidence/entrypoint_consumer/CoverageDeclarations.lean": "190c8af9149a9ad001955c6228ab191e455a3ac3471e12a6eebc20a389437d59",
+    "formal/evidence/entrypoint_consumer/coverage_declarations_final_entry.log": "b689bb282ffdfadeac1c70e446ec0c4ddd6d95209a442f3172c39e42fbf6409c",
+    "formal/evidence/source_compilation/OBJECT_LOCATIONS.json": "e1328737bd2d85bbefe12620b18e5ebf31456f78692ac708bc0c8abb3789d3c9",
+    "formal/evidence/source_compilation/README.txt": "b622ad4cc266b11c2418cde6f752c344eb7c98b2dc859f9db1cba13a20e52be4",
+    "formal/evidence/source_compilation/materialize_compilation_component.py": "590e2b0698935b9d690cbbd6d42e86f1f58ee2efdefbdcfd2052a97f1730f0b6",
+    "DELIVERY_README.txt": "0f126988c86ab92ec744f6e8b4924186ad01e20337fbe55cf4ce9b5e4c499f33",
+    "scripts/assemble_release.py": "4be2aceb8dbffb2ad7fe9cecd4571f3eaf1855c77ab8c8521aebd261a52a1dc9"
+  },
+  "runtime_helper_review": {
+    "status": "ACCEPTED_FINAL_AUDIT_PASS",
+    "source_owned_diagnostic_entries": 3513,
+    "runtime_helper_total": 13,
+    "unsafe_entries": 0,
+    "logical_type_or_value_helper_references": 0,
+    "new_helpers": [
+      "Komorebi.PaperIRelease.CategoryExport.evaluateTransported._unsafe_rec",
+      "Komorebi.PaperIRelease.operatorWord._unsafe_rec",
+      "Komorebi.PaperIRelease.GrammarAlgebra.TypedData.pathMap._unsafe_rec",
+      "Komorebi.PaperIRelease.StrictPath._unsafe_rec",
+      "Komorebi.PaperIRelease.CategoryExport.evaluate._unsafe_rec",
+      "Komorebi.PaperIRelease.GrammarAlgebra.TypedPath.word._unsafe_rec"
+    ],
+    "reason": "Each parent is an ordinary total structurally recursive definition on Expression, List, Nat or TypedPath. Every recursive call uses a direct subterm. All six helpers are compiler-generated definition constants; none is a theorem or a logical type/value dependency. Exact-name exclusions retain their separate runtime-only scope.",
+    "sources": {
+      "release_work/formal/PaperIRelease/CategoryExport.lean": "a894ef0ed550c9f3b580240de2545f25dca5f07231bac496b74c88b9ddba779a",
+      "release_work/formal/PaperIRelease/AlgebraTransfer.lean": "1d142eef86bf35f2c0c7ba615a0380d988324e6897430c953801013cbc085d78",
+      "release_work/formal/PaperIRelease/AlgebraPreorder.lean": "62ba1126d572e8717cbb049b182d0cc54146f86f1601cb1b3b1e0a9db018419c",
+      "release_work/formal/PaperIRelease/GrammarPaths.lean": "9bea3ecde58cf1fb92e0204e3877f9087b696d9c900eddeda8d143a4f3619c0c"
+    },
+    "evidence": {
+      "release_work/runtime/partial_helper_review/inventory.json": "3c34f370235b5b6e136da16b90d986fcdd45abc864f6bdd5db9a109c2271039f",
+      "release_work/runtime/partial_helper_review/DependencySeparation.lean": "02adefaf9ca132de6e7459f7f8bf62c68062d9bc8fd7dcd6461f21204fe39bc6",
+      "release_work/runtime/partial_helper_review/dependency_separation.log": "da7f3457ff88b0f3beaa314bc4f509f13ddcee3c8c4e3c7797d70c66c0916ff3",
+      "release_work/runtime/partial_helper_review/parent_bodies.json": "8828f00ee83c4e15bbd9f7637299f468912596cf653913200b99d88c38cdc07e",
+      "release_work/runtime/partial_helper_review/parent_bodies.log": "a667f760eb5457a71dea1b974a32323adc838b8b0b9e44289d46b399f2f70714"
+    },
+    "parent_body_diagnostic_exit": 0
+  },
+  "mapping_binding": {
+    "status": "PASS",
+    "owned_inventory": "formal/evidence/whole_closure/owned_declarations.json",
+    "owned_inventory_sha256": "c57c045699fbe014e17e9bb3b700b4271ecfe1624eae53753770f9835d317e73",
+    "upstream_exception": {
+      "name": "IsSemisimpleRing.isSemisimpleModule",
+      "record_ordinal": 34,
+      "source": "Mathlib/RingTheory/SimpleModule/Basic.lean",
+      "source_sha256": "c9cf6c9a7404708f34525952b1d436a477ae309a9129898f0729442d5cd7b80c"
+    },
+    "unbound_names": []
+  },
+  "remaining_findings": [],
+  "final_formal_binding": {
+    "master_receipt": "formal/evidence/RELEASE_VERIFICATION.json",
+    "master_receipt_sha256": "0ee3e7d2f123f803a0fcabc02550300c8a7366a870152b869f012b1b34960f6e",
+    "whole_closure_receipt": "formal/evidence/whole_closure/verification.json",
+    "whole_closure_receipt_sha256": "4831cd4fc8f1d5e261d01750d5144dc6282224c8e1747ffe23b813fff9592875",
+    "coverage_status": "ACCEPTED_CURRENT_RELEASE",
+    "coverage_sha256": "655c8a91b4f727d415eeddb1d188b766a88544a3d60883157b0b180607e71d55",
+    "logical_union_exact": true,
+    "replay_and_duplicate_recheck_sets_disjoint": true,
+    "all_116_source_object_snapshot_hashes_match": true,
+    "all_108_statement_and_69_proof_slices_equal_current_source": true
+  },
+  "publication_binding": {
+    "status": "PASS",
+    "qa_receipt": "verification/PUBLICATION_QA.json",
+    "qa_receipt_sha256": "f6e496ccdd4ec6a2cbd1860ae3e2c931f7d368b71700f230accb847fadd5fbf9",
+    "qa_scope": "Visual review by the publication companion reviewer; this independent package audit verified receipt identity, actual PDF page counts and destinations, file-copy identity, source identity and generated metadata consistency.",
+    "documents": {
+      "traditional": {
+        "path": "papers/Paper_I_Traditional_Final.pdf",
+        "sha256": "35f0f7511ed0fbeffac16977ec50028c0e93e5da57c1e6c7748cee89c70a5183",
+        "pages": 105,
+        "critical_tex_warnings": [],
+        "out_of_page_text_blocks": [],
+        "public_copies_identical": true,
+        "editable_copy_identical": true,
+        "all_delivered_copies_identical": true,
+        "all_pages_visually_reviewed": true
+      },
+      "lean_guide": {
+        "path": "papers/Paper_I_Lean_Guide_Final.pdf",
+        "sha256": "cc516c7a40b78121d07dccf7aec258920c499efe7bbf4937754f0e272420e509",
+        "pages": 44,
+        "critical_tex_warnings": [],
+        "out_of_page_text_blocks": [],
+        "public_copies_identical": true,
+        "editable_copy_identical": true,
+        "all_delivered_copies_identical": true,
+        "all_pages_visually_reviewed": true
+      },
+      "machine": {
+        "path": "papers/Paper_I_Machine_Native_Final.pdf",
+        "sha256": "0b4e83e43951770451384bd0f843e5913ce49e29a25bb0210e627d107e04ede7",
+        "pages": 100,
+        "critical_tex_warnings": [],
+        "out_of_page_text_blocks": [],
+        "public_copies_identical": true,
+        "editable_copy_identical": true,
+        "all_delivered_copies_identical": true,
+        "all_pages_visually_reviewed": true
+      }
+    },
+    "same_named_copies_identical_in": [
+      "papers/",
+      "publication/pdfs/",
+      "editable/",
+      "build/"
+    ],
+    "current_record_destinations_match_actual_pdfs": 108,
+    "historical_tutorial_destinations_match_actual_pdf": 35,
+    "generated_file_reproduction": "All 21 outputs of prepare_companion_evidence.py, build_release_companion_data.py and finalize_publication.py reproduced byte-for-byte in memory without modifying release files."
+  },
+  "entrypoint_consumer": {
+    "status": "PASS",
+    "receipt": "formal/evidence/entrypoint_consumer/coverage_declarations_final_entry.json",
+    "unique_declarations": 468,
+    "scope": "The final consumer imports only PaperIRelease and checks exactly all 468 unique mapped declaration names against final v4 objects. Its source, log and accepted-receipt hashes were independently verified."
+  },
+  "packaging_handoff": {
+    "package_consistency_gate": "PASS",
+    "unresolved_blockers": [],
+    "subsequent_root_checks": [
+      "Copy the updated review and regenerate the complete release checksum manifest.",
+      "Create the standard-DEFLATE core ZIP with exactly the historical predecessor archive omitted.",
+      "Verify the core member set, member hashes and CRC, and bind the external historical part in the partition receipt.",
+      "Provide both downloads and DELIVERY_README instructions for complete-tree assembly."
+    ],
+    "scope_note": "Final archive creation, checksum-manifest generation and saving the deliverable occur after this read-only review; no final ZIP identity is asserted here."
+  },
+  "storage_deduplication_addendum": {
+    "status": "PASS",
+    "reviewed_at_utc": "2026-10-15T08:05:10.949750+00:00",
+    "scope": "Evidence storage deduplication only; no mathematical source, PDF, proof result or original receipt changed.",
+    "location_map": "formal/evidence/source_compilation/OBJECT_LOCATIONS.json",
+    "relocated_object_count": 116,
+    "production_object_count": 115,
+    "boundary_object_count": 1,
+    "duplicate_object_bytes_removed": 46844856,
+    "unique_object_bytes_lost": 0,
+    "original_nonobject_files_preserved_byte_identically": 235,
+    "exact_map_matches_both_receipts": true,
+    "component_receipt_sha256": "7589266fe53ab2569928f939a05d92a84f0fa7fe4e54534c2e55c355570d4788",
+    "whole_closure_receipt_sha256": "4831cd4fc8f1d5e261d01750d5144dc6282224c8e1747ffe23b813fff9592875",
+    "materializer": "formal/evidence/source_compilation/materialize_compilation_component.py",
+    "materializer_review": "Checks receipt hashes, exact complete unique original path set, canonical locations, regular nonsymlink targets, sizes and both-receipt object hashes before copying. Requires a new destination outside the release tree and hash-checks restored objects.",
+    "restoration_roundtrip": {
+      "status": "PASS",
+      "exit": 0,
+      "original_component_files_reconstructed_byte_identically": 351,
+      "restored_object_count": 116,
+      "execution_storage": "Temporary directory under /dev/shm",
+      "temporary_copy_removed": true
+    },
+    "reproduction_effect": "Default formal/verify.sh still recompiles sources and ignores evidence objects. Optional --base-fresh requires the included materializer to restore the original component layout first.",
+    "verification_rerun": "No Lean or mathematical tests rerun: original accepted evidence is unchanged and all removed files remain byte-identically available at recorded canonical locations."
+  },
+  "two_part_delivery_addendum": {
+    "status": "PASS",
+    "reviewed_at_utc": "2026-10-15T08:14:51.390988+00:00",
+    "scope": "Two-part transport layout, extraction instructions, assembly helper and partition packager source only. The existing proof, publication and storage-deduplication reviews remain frozen.",
+    "delivery_parts": [
+      "Komorebi_Paper_I_Release_Core_2026-10-15.zip",
+      "Komorebi_Paper_I_Completion_Block08_v0.8.0_2026-10-12.zip"
+    ],
+    "compression": "Standard ZIP DEFLATE for both delivery parts; no ZIP-LZMA requirement.",
+    "sole_omitted_core_member": {
+      "release_relative_path": "source/predecessor/Komorebi_Paper_I_Completion_Block08_v0.8.0_2026-10-12.zip",
+      "bytes": 58279775,
+      "sha256": "16d3c743b06fa8ceadc3d2499a52c96247a55bc03ea5ec2844d6f0d363d318cc"
+    },
+    "library_identity_reported_by_root": {
+      "library_file_id": "libfile_0bc30970f734819186920e67c03e5895",
+      "file_id": "file_000000002a2c822fb7768c5349e54453",
+      "version_id": null
+    },
+    "assembly_helper_review": "Accepts the historical download under any filename; authenticates its exact size and SHA-256; copies the ZIP intact to the original relative path; refuses an existing mismatched destination; accepts an already-correct destination; invokes full release integrity verification. Uses portable chunked hashlib hashing.",
+    "manifest_policy": "Retain the complete release manifest, including the historical archive. Regenerate it to include the delivery instructions and assembly helper. The core is explicitly one part until assembled.",
+    "packager_review": "Exactly the named predecessor member is omitted from the core. Every other release file and the full manifest are included. The packager checks duplicate names, archive CRC and decompressed member hashes. An external partition receipt binds core identity, historical part identity and full manifest hash without a self-reference.",
+    "reviewed_packager_source": {
+      "path": "release_work/scripts/package_release.py",
+      "sha256": "39a38f297b4c4300639d950d9472693f88073387a3b332cc6f644ab8c74a8ea5"
+    },
+    "final_transport_verification": "The final core ZIP member union and hashes are checked after packaging and recorded separately; this source review does not assert an identity for a not-yet-built core ZIP."
+  }
+}

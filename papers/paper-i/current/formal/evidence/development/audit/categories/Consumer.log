@@ -1,0 +1,59 @@
+Komorebi.PaperIRelease.CategoryExport.transportLimit.{u, v, u', v', u_1, u_2} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] {J : Type u_1}
+  [CategoryTheory.Category.{u_2, u_1} J] (K : CategoryTheory.Functor J C) (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesLimit K F] (c : CategoryTheory.Limits.Cone K) (h : CategoryTheory.Limits.IsLimit c) :
+  CategoryTheory.Limits.IsLimit (F.mapCone c)
+Komorebi.PaperIRelease.CategoryExport.transportColimit.{u, v, u', v', u_1, u_2} {C : Type u}
+  [CategoryTheory.Category.{v, u} C] {D : Type u'} [CategoryTheory.Category.{v', u'} D] {J : Type u_1}
+  [CategoryTheory.Category.{u_2, u_1} J] (K : CategoryTheory.Functor J C) (F : CategoryTheory.Functor C D)
+  [CategoryTheory.Limits.PreservesColimit K F] (c : CategoryTheory.Limits.Cocone K)
+  (h : CategoryTheory.Limits.IsColimit c) : CategoryTheory.Limits.IsColimit (F.mapCocone c)
+Komorebi.PaperIRelease.CategoryExport.additive_equation_transport.{u, v, w, u', v', u_1, u_2} {C₀ : Type u}
+  {D₀ : Type u'} [CategoryTheory.Category.{v, u} C₀] [CategoryTheory.Category.{v', u'} D₀]
+  [CategoryTheory.Preadditive C₀] [CategoryTheory.Preadditive D₀] (F : CategoryTheory.Functor C₀ D₀) [F.Additive]
+  {G₀ : C₀ → C₀ → Type w} (g : {X Y : C₀} → G₀ X Y → (X ⟶ Y)) {X Y : C₀}
+  (a : Komorebi.PaperIRelease.CategoryExport.Expression ℤ C₀ G₀ X Y)
+  (b : Komorebi.PaperIRelease.CategoryExport.Expression ℤ C₀ G₀ X Y)
+  (h :
+    Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) a =
+      Komorebi.PaperIRelease.CategoryExport.evaluate (fun {X Y} => g) b) :
+  Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) a =
+    Komorebi.PaperIRelease.CategoryExport.evaluateTransported F (fun {X Y} => g) b
+Komorebi.PaperIRelease.GrammarAlgebra.typedIdealModuleEquivalence.{u} {K V E : Type u} [Field K] [Fintype V]
+  (s t : E → V) (I : TwoSidedIdeal (Komorebi.PaperIRelease.GrammarAlgebra.PathAlgebra s t)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization ≌
+    ModuleCat (Komorebi.PaperIRelease.GrammarAlgebra.IdealQuotient s t I)
+Komorebi.PaperIRelease.GrammarAlgebra.typedPathRelationModuleEquivalence.{u} {K V E : Type u} [Field K] [Fintype V]
+  (s t : E → V) (relations : (v w : V) → Set (Komorebi.PaperIRelease.GrammarAlgebra.PathCombination s t v w)) :
+  Komorebi.PaperIRelease.GrammarAlgebra.TypedRealization ≌
+    ModuleCat
+      (Komorebi.PaperIRelease.GrammarAlgebra.Algebra
+        (Komorebi.PaperIRelease.GrammarAlgebra.grammarFromPathRelations s t relations))
+Komorebi.PaperIRelease.CategoryPackets.transferBlock_naturality.{u} {K : Type u} [Field K]
+  {X Y : Komorebi.PaperIRelease.CategoryPackets.PacketObject K}
+  (f : Komorebi.PaperIRelease.CategoryPackets.PacketMorphism X Y) (T : ↥X.algebra) (j i : Y.index) :
+  Komorebi.Foundation.transferBlock Y.packets Y.packets (↑(f.algebraMap T)) j i ∘ₗ f.linearMap =
+    ∑ b,
+      if f.packetMap b = j then
+        ∑ a,
+          if f.packetMap a = i then f.linearMap ∘ₗ Komorebi.Foundation.transferBlock X.packets X.packets (↑T) b a else 0
+      else 0
+'Komorebi.PaperIRelease.CategoryExport.transportLimit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Komorebi.PaperIRelease.CategoryExport.transportColimit' depends on axioms: [propext, Classical.choice, Quot.sound]
+Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_closedHull.{u} {K : Type u} [Field K] [TopologicalSpace K]
+  {X Y : Komorebi.PaperIRelease.TopologyCategories.SeedObject}
+  (f : Komorebi.PaperIRelease.TopologyCategories.SeedMorphism X Y) {x : X.carrier}
+  (hx : x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull X.toContinuousPacketObject X.seeds) :
+  f.linearMap x ∈ Komorebi.PaperIRelease.TopologyCategories.closedHull Y.toContinuousPacketObject Y.seeds
+Komorebi.PaperIRelease.TopologyCategories.seedCategory.{u} {K : Type u} [Field K] [TopologicalSpace K] :
+  CategoryTheory.Category.{u, u + 1} Komorebi.PaperIRelease.TopologyCategories.SeedObject
+'Komorebi.PaperIRelease.TopologyCategories.SeedMorphism.map_closedHull' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Komorebi.PaperIRelease.TopologyCategories.seedCategory' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Komorebi.PaperIRelease.CategoryExport.transportInitial_underlying' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Komorebi.PaperIRelease.CategoryExport.transportTerminal_underlying' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

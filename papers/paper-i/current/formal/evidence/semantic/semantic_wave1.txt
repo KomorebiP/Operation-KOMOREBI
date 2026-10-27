@@ -1,0 +1,350 @@
+Independent semantic audit wave1: proved as written
+
+12 current records, 46 declarations. Exact hashes and typed compiler/axiom output in semantic_wave1.json.
+
+25 PSC-I-T-EXACT-SEQUENCE-BOUNDS — proved as written
+Claim: \begin{theorem}[Short exact sequence bounds]
+\label{thm:exact-sequence-bounds}
+Let
+\[
+0\longrightarrow L\xrightarrow{\iota}M\xrightarrow{\pi}N\longrightarrow0
+\]
+be a short exact sequence of left modules over $A$.  Then
+\[
+\boxed{
+\srank_A(N)\leq\srank_A(M)
+\leq\srank_A(L)+\srank_A(N).
+}
+\]
+\end{theorem}
+Dependency/object audit: Actual linear f,g with injectivity, range f=ker g and surjectivity; canonical seedRank=top.spanRank. Minimum generators of N are lifted and combined with images of minimum generators of L. The proof derives generation of M and the cardinal upper bound; the lower bound is surjective monotonicity. No splitting, finite generation or desired bound is assumed.
+Boundary/universe: Includes zero and infinitely generated modules and cardinal addition. A,L,M,N use a common universe envelope.
+Declaration map:
+  Komorebi.PaperIRelease.shortExact_seedRank_bounds
+  Komorebi.PaperIRelease.seedRank_le_add_of_exact
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+38 PSC-I-T-SEMISIMPLE-SEED-RANK — proved as written
+Claim: \begin{theorem}[Semisimple seed rank formula over arbitrary division rings]
+\label{thm:semisimple-seed-rank}
+Let
+\[
+A\cong\prod_{i=1}^{q}M_{d_i}(D_i)
+\]
+be semisimple Artinian and let
+\[
+M\cong\bigoplus_{i=1}^{q}S_i^{\oplus m_i}
+\]
+be a finitely generated left module over $A$.  Then
+\[
+\boxed{
+\srank_A(M)
+=
+\max_{1\leq i\leq q}
+\left\lceil\frac{m_i}{d_i}\right\rceil.
+}
+\]
+If $A$ is any algebra of finite dimension over a field, the same formula applied to the decomposition of $M/\Jac(A)M$ over $A/\Jac(A)$ computes $\srank_A(M)$.
+\end{theorem}
+Dependency/object audit: Actual product matrix ring with left multiplication and natural column modules acted on through the matching factor. Semilinear eM along eR enforces compatibility. DivisionRows proves left generation iff row spanning and m<=r*d; standard rows prove sufficiency. Product assembly, column rearrangement and seed-rank invariance prove the formula. RadicalTop is literally M/(Jac(R) smul top); existence constructs decompositions.
+Boundary/universe: Arbitrary noncommutative division rings, positive matrix sizes, natural multiplicities. q=0 and zero multiplicities work: global max-empty=0 is foundations line12. No side/opposite mismatch. Common max universe envelope. No supplied desired conclusion.
+Declaration map:
+  Komorebi.PaperICompletion8.SemisimpleFormula.semisimple_seedRank_of_decompositions
+  Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedRank_of_decompositions
+  Komorebi.PaperICompletion8.SemisimpleExistence.exists_compatible_presentation
+  Komorebi.PaperICompletion8.SemisimpleExistence.exists_semisimple_seed_formula
+  Komorebi.PaperICompletion8.SemisimpleExistence.exists_finiteAlgebra_seed_formula
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+39 PSC-I-C-ALGEBRAICALLY-CLOSED-FORMULA — proved as written
+Claim: \begin{corollary}[Algebraically closed multiplicity formula]
+\label{cor:algebraically-closed-formula}
+Let $\bbk$ be algebraically closed, let $A$ be a unital algebra of finite dimension over $\bbk$, put $J=\Jac(A)$, and let $M$ be a finitely generated left module over $A$.  Assume compatible decompositions indexed by an integer $q\geq0$:
+\[
+A/J\cong\prod_{i=1}^{q}M_{d_i}(\bbk),
+\qquad
+M/JM\cong\bigoplus_{i=1}^{q}(\bbk^{d_i})^{\oplus m_i},
+\]
+where the $d_i$ are positive integers and the $m_i$ are nonnegative integers.  The first isomorphism is an isomorphism of algebras over $\bbk$.  The second is an isomorphism of left modules over $A/J$, using the natural column module for each matrix factor and zero action from the other factors.  Then
+\[
+\srank_A(M)=\max_{1\leq i\leq q}\left\lceil\frac{m_i}{d_i}\right\rceil,
+\]
+with $\max\varnothing=0$ when $q=0$.
+\end{corollary}
+Dependency/object audit: Correct public map uses decomposition of A/J, not A. The supplied algebra equivalence forgets to a ring equivalence, and the module decomposition stays compatible. Specializing the exact radical-top theorem to all D_i=k gives the current statement.
+Boundary/universe: Finite generation retained. Algebraic closure and finite dimension are unnecessary once the exact displayed decompositions are supplied; this is a valid strengthening. Empty q yields zero.
+Declaration map:
+  Komorebi.PaperICompletion8.SemisimpleFormula.split_radicalTop_seedRank
+  Komorebi.PaperICompletion8.SemisimpleFormula.radicalTop_seedRank_of_decompositions
+  Komorebi.PaperICompletion7.ModuleTop.seedRank_eq_radicalTop
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+49 PSC-I-L-PACKET-AGGREGATION — proved as written
+Claim: \begin{lemma}[Finite packet aggregation]
+\label{lem:packet-aggregation}
+Let $\sigma:I\twoheadrightarrow J$ be a surjection and define
+\[
+Q_j:=\sum_{\sigma(\alpha)=j}P_\alpha.
+\]
+Then $(Q_j)_{j\in J}$ is a finite packet system and
+\[
+Q_jX=\bigoplus_{\sigma(\alpha)=j}X_\alpha.
+\]
+\end{lemma}
+Dependency/object audit: Q_j is the actual filtered sum of P_i. Computing P_a Q_j proves the laws. Actual range analysis/synthesis over the literal fibre subtype are inverse, and the finite product/direct-sum equivalence gives the printed conclusion.
+Boundary/universe: Fintype J follows from the finite I and manuscript surjection. Zero packets allowed by definition. Empty I forces empty J and zero module. Independent scalar/module/index universes.
+Declaration map:
+  Komorebi.PaperIRelease.PacketAggregation.groupedProjection
+  Komorebi.PaperIRelease.PacketAggregation.groupedFamily
+  Komorebi.PaperIRelease.PacketAggregation.groupedRangeDirectSumEquiv
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+53 PSC-I-C-PACKET-UNIVERSAL-PROPERTY — proved as written
+Claim: \begin{corollary}[Universal mapping property of finite packet coordinates]
+\label{cor:packet-universal-property}
+Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(Y\) be a vector space over \(\bbk\).
+\begin{enumerate}
+\item Every family of linear maps \(f_\alpha:X_\alpha\to Y\) determines a unique linear map \(f:X\to Y\) with \(f|_{X_\alpha}=f_\alpha\), namely
+\[
+f=\sum_\alpha f_\alpha P_\alpha.
+\]
+\item Every family of linear maps \(g_\alpha:Y\to X_\alpha\) determines a unique linear map \(g:Y\to X\) with \(P_\alpha g=g_\alpha\), namely
+\[
+g=\sum_\alpha g_\alpha.
+\]
+\end{enumerate}
+Equivalently,
+\[
+\Hom(X,Y)\cong\prod_\alpha\Hom(X_\alpha,Y),
+\qquad
+\Hom(Y,X)\cong\prod_\alpha\Hom(Y,X_\alpha),
+\]
+where the products are finite.
+\end{corollary}
+Dependency/object audit: Outgoing extension is the finite sum of f_i after actual rangeRestrict projections. Incoming assembly is actual rangeSynthesis after LinearMap.pi. Packet laws give restrictions/projections and completeness gives uniqueness. These universal properties induce the displayed Hom equivalences.
+Boundary/universe: Arbitrary dimensions and independent universes. Empty packet index forces zero source packet module and uniqueness on both sides. No extension, inverse or desired equation is assumed.
+Declaration map:
+  Komorebi.PaperIRelease.PacketUniversal.assembleOut
+  Komorebi.PaperIRelease.PacketUniversal.unique_packet_extension
+  Komorebi.PaperIRelease.PacketUniversal.assembleIn
+  Komorebi.PaperIRelease.PacketUniversal.unique_packet_lift
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+54 PSC-I-T-TENSOR-PACKET-SYSTEM — proved as written
+Claim: \begin{theorem}[Tensor product packet systems]
+\label{thm:tensor-packet-system}
+Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be a finite packet system on \(Y\).  Then
+\[
+\Pcal\boxtimes\Qcal
+:=
+(P_\alpha\otimes Q_\gamma)_{(\alpha,\gamma)\in I\times J}
+\]
+is a finite packet system on the algebraic tensor product \(X\otimes_{\bbk}Y\), with packet spaces
+\[
+(P_\alpha\otimes Q_\gamma)(X\otimes Y)
+=X_\alpha\otimes Y_\gamma.
+\]
+Hence
+\[
+\boxed{
+X\otimes Y
+\cong
+\bigoplus_{(\alpha,\gamma)\in I\times J}
+X_\alpha\otimes Y_\gamma.
+}
+\]
+\end{theorem}
+Dependency/object audit: Actual TensorProduct.map projectors satisfy all laws by tensor induction. Tensor products of range inclusions have the tensor products of projections as left inverses; range_map identifies the actual packet range. This proves the canonical embedded interpretation of the printed range equality. Exact coordinates then give the literal DirectSum.
+Boundary/universe: Arbitrary dimensions, zero packets and empty index types. Independent universes. No nonzero or finite-dimensional assumptions.
+Declaration map:
+  Komorebi.PaperIRelease.tensorPackets
+  Komorebi.PaperIRelease.tensor_packet_range
+  Komorebi.PaperIRelease.tensorPacketRangeEquiv
+  Komorebi.PaperIRelease.tensorPacketDirectSumCoordinates
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+55 PSC-I-P-DUAL-PACKET-SYSTEM — proved as written
+Claim: \begin{proposition}[Dual packet systems]
+\label{prop:dual-packet-system}
+Let \(X\) be finite dimensional and let \(\Pcal=(P_\alpha)\) be a finite packet system.  The algebraic dual maps
+\[
+P_\alpha^*:X^*\to X^*,
+\qquad
+P_\alpha^*(\varphi)=\varphi\circ P_\alpha,
+\]
+form a finite packet system on \(X^*\).  Its packet with index \(\alpha\) is canonically isomorphic to \(X_\alpha^*\), and
+\[
+X^*\cong\bigoplus_\alpha X_\alpha^*.
+\]
+\end{proposition}
+Dependency/object audit: Actual dualMap means precomposition. Composition reverses indices and orthogonality uses the reversed inequality correctly. Restriction and precomposition with the actual packet projection are inverse, giving the stated packet duals and literal finite DirectSum.
+Boundary/universe: Stronger than manuscript: finite-dimensionality not needed for this finite algebraic-dual construction. No topological dual or infinite direct-sum duality asserted. Zero/empty cases included.
+Declaration map:
+  Komorebi.PaperIRelease.dualPackets
+  Komorebi.PaperIRelease.dualPacketRangeEquiv
+  Komorebi.PaperIRelease.dualPacketDirectSumCoordinates
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+70 PSC-I-C-TENSOR-TRANSFER-BLOCKS — proved as written
+Claim: \begin{corollary}[Tensor product transfer blocks]
+\label{cor:tensor-transfer-blocks}
+Let \(S\in\End(X)\) and \(T\in\End(Y)\), with packet systems \(\Pcal\) and \(\Qcal\).  Relative to the tensor product packet system of \cref{thm:tensor-packet-system},
+\[
+\boxed{
+(S\otimes T)_{(\beta,\delta),(\alpha,\gamma)}
+=
+S_{\beta\alpha}\otimes T_{\delta\gamma}.
+}
+\]
+\end{corollary}
+Dependency/object audit: Actual transfer blocks factor by tensor-map composition in exactly the (target,source) order printed. Both sides are actual endomorphisms of X tensor Y; no factorization witness is an input.
+Boundary/universe: All finite indices and arbitrary dimensions; empty-index claims vacuous.
+Declaration map:
+  Komorebi.PaperIRelease.tensor_transfer_blocks
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+71 PSC-I-T-BLOCK-INTERTWINING — proved as written
+Claim: \begin{theorem}[Blockwise intertwining equations]
+\label{thm:block-intertwining}
+Let \(T\in\End(X)\), \(S\in\End(Y)\), let \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be finite packet systems, and let \(U:X\to Y\) be linear.  Define
+\[
+T_{\beta\alpha}=P_\beta TP_\alpha,
+\qquad
+S_{\gamma\delta}=Q_\gamma SQ_\delta,
+\qquad
+U_{\gamma\alpha}=Q_\gamma UP_\alpha.
+\]
+Then
+\[
+\boxed{UT=SU}
+\]
+if and only if, for every \(\gamma\in J\) and \(\alpha\in I\),
+\[
+\boxed{
+\sum_{\beta\in I}U_{\gamma\beta}T_{\beta\alpha}
+=
+\sum_{\delta\in J}S_{\gamma\delta}U_{\delta\alpha}.
+}
+\]
+\end{theorem}
+Dependency/object audit: U is any linear map, not an intertwiner structure. Forward direction inserts middle projector sums; reverse direction reconstructs UT and SU from all equal blocks. Distinct source/target index sets are retained.
+Boundary/universe: No bijectivity or surjectivity of U. Independent universes and empty source/target packet families allowed; corresponding zero module ensures iff remains valid.
+Declaration map:
+  Komorebi.PaperIRelease.PacketUniversal.block_intertwining_iff
+  Komorebi.PaperIRelease.PacketUniversal.transferBlock_ext
+  Komorebi.Foundation.transferBlock_comp_linearMap
+  Komorebi.Foundation.transferBlock_reconstruction_linearMap
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+95 PSC-I-T-PACKET-EXACT-SEQUENCE — proved as written
+Claim: \begin{theorem}[Packet exact sequence for an invariant subspace]
+\label{thm:packet-exact-sequence}
+Let $K\leq X$ satisfy $P_\alpha K\subseteq K$ for every $\alpha$.  Define
+\[
+K_\alpha:=P_\alpha K=K\cap X_\alpha
+\]
+and
+\[
+\overline P_\alpha(x+K):=P_\alpha x+K.
+\]
+Then:
+\begin{enumerate}[label=(\roman*)]
+\item The nonzero restrictions $P_\alpha|_K$ form a packet system on $K$.
+\item The nonzero $\overline P_\alpha$ form a packet system on $X/K$.
+\item For every $\alpha$ there is a short exact sequence
+\[
+0\longrightarrow K_\alpha
+\longrightarrow X_\alpha
+\longrightarrow \overline P_\alpha(X/K)
+\longrightarrow0,
+\]
+and
+\[
+\overline P_\alpha(X/K)
+\cong
+X_\alpha/(X_\alpha\cap K)
+\cong
+(X_\alpha+K)/K.
+\]
+\item The full exact sequence decomposes packetwise as the direct sum of these short exact sequences.
+\end{enumerate}
+\end{theorem}
+Dependency/object audit: K is an actual invariant submodule. Restriction/quotient projectors are constructed; restricted range equals K intersect X_i. Actual packet inclusion is injective, its range equals the actual quotient-map kernel, and quotient map is onto. First/second quotient isomorphisms use denominator comaps in the correct ambient type. Pointwise coordinate maps intertwine with original inclusion/quotient and form a short exact sequence; exact direct-sum coordinates give the full decomposition.
+Boundary/universe: K=0, K=X and empty family compile in boundary tests. Removing zero restrictions/quotients uses their respective finite subtypes. Independent universes; no finite-dimensionality or splitting.
+Declaration map:
+  Komorebi.Foundation.LinearProjectorFamily.restrictTo
+  Komorebi.Foundation.LinearProjectorFamily.restrictTo_range_in_ambient
+  Komorebi.Foundation.LinearProjectorFamily.nonzeroRestriction
+  Komorebi.Foundation.LinearProjectorFamily.descendTo
+  Komorebi.Foundation.LinearProjectorFamily.nonzeroQuotient
+  Komorebi.Foundation.LinearProjectorFamily.packet_shortExact
+  Komorebi.Foundation.LinearProjectorFamily.packetQuotientEquiv
+  Komorebi.Foundation.LinearProjectorFamily.descendedPacketEquivSumQuotient
+  Komorebi.Foundation.LinearProjectorFamily.packetCoordinateInclusion_natural
+  Komorebi.Foundation.LinearProjectorFamily.packetCoordinateQuotient_natural
+  Komorebi.Foundation.LinearProjectorFamily.packetCoordinate_shortExact
+  Komorebi.Foundation.LinearProjectorFamily.exactPacketDirectSumCoordinates
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+96 PSC-I-T-QUOTIENT-PACKET-DESCENT — proved as written
+Claim: \begin{theorem}[Packet descent through an invariant quotient]
+\label{thm:quotient-packet-descent}
+Under the hypotheses of \cref{thm:packet-exact-sequence}, the operators
+\[
+\overline P_\alpha(x+K)=P_\alpha x+K
+\]
+are well defined pairwise annihilating idempotents with sum $I_{X/K}$, and the quotient map satisfies
+\[
+\boxed{\pi P_\alpha=\overline P_\alpha\pi.}
+\]
+After zero packets are removed, they form the canonical quotient packet system.
+\end{theorem}
+Dependency/object audit: Actual mapQ uses invariance of K. Quotient representative calculations prove the laws and commuting identity. Zero removal preserves completeness. Quotient surjectivity proves uniqueness of every descended operator, so canonicity is established.
+Boundary/universe: K=X gives zero quotient and empty nonzero subtype. K=0 and empty original family allowed. No induced projector/desired commuting identity supplied.
+Declaration map:
+  Komorebi.Foundation.LinearProjectorFamily.descendTo
+  Komorebi.Foundation.LinearProjectorFamily.descendTo_proj_mkQ
+  Komorebi.Foundation.LinearProjectorFamily.descendTo_intertwines
+  Komorebi.Foundation.LinearProjectorFamily.nonzeroQuotient
+  Komorebi.Foundation.LinearProjectorFamily.discardZeros_proj_ne_zero
+  Komorebi.Foundation.LinearProjectorFamily.descendTo_unique
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+97 PSC-I-C-QUOTIENT-PACKET-DESCENT — proved as written
+Claim: \begin{corollary}[Restriction and quotient of transfer blocks]
+\label{cor:block-descent}
+Under the hypotheses of \cref{thm:packet-exact-sequence}, let $T\in\End(X)$ preserve $K$.  Then every block $T_{\beta\alpha}$ maps $K_\alpha$ into $K_\beta$, and the induced quotient operator $\overline T$ satisfies
+\[
+\boxed{
+\overline T_{\beta\alpha}\,\pi
+=
+\pi T_{\beta\alpha},
+}
+\]
+where $\pi:X\twoheadrightarrow X/K$.
+\end{corollary}
+Dependency/object audit: Invariance under P_i,T,P_j proves preservation of K and membership in the target packet. Tbar is actual K.mapQ K T hT, and representative calculation proves the quotient-block identity. Lean orientation is the symmetric equality of the printed formula.
+Boundary/universe: Zero/whole K and zero/empty packets allowed. T-invariance is explicit and necessary; coordinate-swap boundary example proves failure without it. No desired intertwining assumption.
+Declaration map:
+  Komorebi.Foundation.LinearProjectorFamily.transferBlock_preserves_packet
+  Komorebi.Foundation.LinearProjectorFamily.transferBlock_descends
+Obligations: exact_statement=passed, quantifiers=passed, actual_objects=passed, actions_variance=passed, zero_empty=passed, no_supplied_conclusion=passed, kernel_typecheck=passed
+Remaining implication: none.
+
+Source check: pinned primary local mathlib declarations inspected; exact hypotheses and notation translation recorded in JSON.
+Strongest safe statement: all 12 selected exact current claims are covered.
+Limit: not a separate clean build of every imported dependency.
+Cheapest next check: root clean full-release build and hash freeze.
+
+Later source revalidation: after record42 monic clarification, all 12 wave1 statements and proof hashes are unchanged. Historical source hashes above remain preserved; current per-record locators/hashes are in JSON later_source_revalidation.

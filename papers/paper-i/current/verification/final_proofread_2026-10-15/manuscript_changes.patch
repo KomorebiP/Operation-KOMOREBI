@@ -1,0 +1,261 @@
+--- before/01_orientation.tex
++++ after/01_orientation.tex
+@@ -13,7 +13,7 @@
+ \end{tabularx}
+ \end{center}
+ 
+-\noindent\textbf{Companion volumes.} The Lean guide explains the formal development, its build procedure, theorem mapping, and the hypotheses of each verified contract. The machine companion exposes the stable records, dependencies, and executable evidence interfaces. The mathematics below retains the full scope of its stated classical inputs and written proofs.
++\noindent\textbf{Companion volumes.} The preserved Lean guide explains the earlier 35-row formal component, its build procedure, theorem mapping, and the hypotheses of each verified contract. Later Paper I formalization is tracked separately in the Block 08 progress records. The machine companion exposes the stable records, dependencies, and executable evidence interfaces. The mathematics below retains the full scope of its stated classical inputs and written proofs.
+ 
+ 
+ \begin{readerroadmap}
+@@ -51,13 +51,14 @@
+ \end{center}
+ 
+ \subsection*{Notation map}
++\begingroup\small
+ \begin{center}
+ \begin{longtable}{@{}p{0.19\textwidth}p{0.27\textwidth}p{0.48\textwidth}@{}}
+ \toprule
+ \textbf{Symbol} & \textbf{Name} & \textbf{Meaning}\\
+ \midrule
+ \endhead
+-\(\mathfrak G=(Q,I)\) & Typed grammar & A finite quiver and a two-sided ideal of source and target compatible relations.\\
++\(\mathfrak G=(Q,I)\) & Typed grammar & A quiver with finite vertex set and a two-sided ideal of source and target compatible relations.\\
+ \(\Lambda_{\mathfrak G}\) & Grammar algebra & The quotient path algebra \(\bbk Q/I\).\\
+ \(\A_X\) & Realized algebra & The image of the grammar algebra in \(\End_{\bbk}(|X|)\).\\
+ \(S\subseteq M\) & Seed family & The vectors from which the operator orbit is generated.\\
+@@ -73,6 +74,7 @@
+ \bottomrule
+ \end{longtable}
+ \end{center}
++\endgroup
+ 
+ \subsection*{Small examples to keep in view}
+ The following small systems recur throughout the explanatory boxes. The worked models and visual atlas later develop these ideas in complete calculations.
+@@ -96,7 +98,7 @@
+ \qquad
+ P_2=\begin{pmatrix}0&1\\0&1\end{pmatrix}.
+ \]
+-Then \(P_i^2=P_i\), \(P_1P_2=P_2P_1=0\), and \(P_1+P_2=I\).  The ranges form a direct sum, but the projectors are not orthogonal in the Euclidean inner product.  Exact reconstruction and numerical conditioning are therefore separate questions.
++Then \(P_i^2=P_i\), \(P_1P_2=P_2P_1=0\), and \(P_1+P_2=I\).  The ranges form a direct sum, but over \(\mathbb R\) the projectors are not orthogonal in the Euclidean inner product.  Exact reconstruction and numerical conditioning are therefore separate questions.
+ \end{microexample}
+ 
+ \begin{microexample}[title={R4: a directed packet system}]
+@@ -108,7 +110,7 @@
+ \item For the minimal algebraic foundation, read Sections 1 to 5, then Sections 7 and 8.
+ \item For finite dimensional representation theory, concentrate on Sections 4 to 6.
+ \item For signal, wavelet, or quantum applications, read Sections 7 and 8 and the results on tensor products carefully.
+-\item For graph and applications involving residual transport, read Sections 8 to 10.
++\item For graphs and applications involving residual transport, read Sections 8 to 10.
+ \item For later categorical claims, read Sections 10 and 11 together with the final semantic-realization criterion.
+ \end{itemize}
+ 
+--- before/02_foundations.tex
++++ after/02_foundations.tex
+@@ -775,7 +775,7 @@
+ \left\lceil\frac{m_i}{d_i}\right\rceil.
+ }
+ \]
+-If $A$ is any algebra of finite dimension over a field, the same formula applied to the decomposition of $M/J(A)M$ over $A/J(A)$ computes $\srank_A(M)$.
++If $A$ is any algebra of finite dimension over a field, the same formula applied to the decomposition of $M/\Jac(A)M$ over $A/\Jac(A)$ computes $\srank_A(M)$.
+ \end{theorem}
+ \RecordID{PSC-I-T-SEMISIMPLE-SEED-RANK}
+ \Depends{PSC-I-T-MODULE-TOP, PSC-I-CI-WEDDERBURN-ARTIN, PSC-I-L-REGULAR-MODULE-MULTIPLICITIES, and PSC-I-C-MINIMAL-FREE-COVER.}
+@@ -791,7 +791,7 @@
+ m_i\leq rd_i
+ \qquad\text{for every }i.
+ \]
+-The smallest such $r$ is the displayed maximum.  For a nonsemisimple algebra of finite dimension, \cref{thm:module-top} reduces the calculation to the semisimple module $M/J(A)M$ over $A/J(A)$.
++The smallest such $r$ is the displayed maximum.  For a nonsemisimple algebra of finite dimension, \cref{thm:module-top} reduces the calculation to the semisimple module $M/\Jac(A)M$ over $A/\Jac(A)$.
+ \end{proof}
+ 
+ \begin{interpretation}
+--- before/03_packets_and_graphs.tex
++++ after/03_packets_and_graphs.tex
+@@ -147,11 +147,11 @@
+ \label{cor:packet-universal-property}
+ Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(Y\) be a vector space over \(\bbk\).
+ \begin{enumerate}
+-\item Every family \(f_\alpha:X_\alpha\to Y\) determines a unique linear map \(f:X\to Y\) with \(f|_{X_\alpha}=f_\alpha\), namely
++\item Every family of linear maps \(f_\alpha:X_\alpha\to Y\) determines a unique linear map \(f:X\to Y\) with \(f|_{X_\alpha}=f_\alpha\), namely
+ \[
+ f=\sum_\alpha f_\alpha P_\alpha.
+ \]
+-\item Every family \(g_\alpha:Y\to X_\alpha\) determines a unique linear map \(g:Y\to X\) with \(P_\alpha g=g_\alpha\), namely
++\item Every family of linear maps \(g_\alpha:Y\to X_\alpha\) determines a unique linear map \(g:Y\to X\) with \(P_\alpha g=g_\alpha\), namely
+ \[
+ g=\sum_\alpha g_\alpha.
+ \]
+@@ -479,7 +479,7 @@
+ \RecordID{PSC-I-B-INFINITE-PACKET-TOPOLOGY}
+ 
+ \begin{sectionrecap}
+-Finite packet systems give exact coordinates in a direct sum, with no orthogonality requirement.  Their universal property assembles arbitrary packetwise maps uniquely.  Tensor products and duals preserve packet structure.  In Banach spaces, the analysis and synthesis norms control conditioning.  The countable theory developed here uses unconditional convergence and a uniform bound on finite partial sums with signs.
++Finite packet systems give exact coordinates in a direct sum, with no orthogonality requirement.  Their universal property assembles arbitrary packetwise linear maps uniquely.  Tensor products and duals preserve packet structure.  In Banach spaces, the analysis and synthesis norms control conditioning.  The countable theory developed here uses unconditional convergence and a uniform bound on finite partial sums with signs.
+ \end{sectionrecap}
+ 
+ 
+@@ -622,7 +622,7 @@
+ 
+ \begin{theorem}[Blockwise intertwining equations]
+ \label{thm:block-intertwining}
+-Let \(T\in\End(X)\), \(S\in\End(Y)\), let \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be finite packet systems, and let \(U:X\to Y\).  Define
++Let \(T\in\End(X)\), \(S\in\End(Y)\), let \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be finite packet systems, and let \(U:X\to Y\) be linear.  Define
+ \[
+ T_{\beta\alpha}=P_\beta TP_\alpha,
+ \qquad
+@@ -689,7 +689,7 @@
+ \nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION}.}
+ 
+ \begin{proof}
+-Injectivity follows from exact reconstruction.  Given arbitrary maps $B_{\beta\alpha}:X_\alpha\to X_\beta$, define
++Injectivity follows from exact reconstruction.  Given arbitrary linear maps $B_{\beta\alpha}:X_\alpha\to X_\beta$, define
+ \[
+ T\left(\sum_\alpha x_\alpha\right)
+ :=
+@@ -713,8 +713,8 @@
+ \]
+ Equality holds whenever, for every target \(\beta\) in the set on the right, the active contributions
+ \[
+-\bigl\{T_{\beta\alpha}P_\alpha x:
+-\alpha\in\Supp_{\Pcal}(x),\ T_{\beta\alpha}\neq0\bigr\}
++\bigl(T_{\beta\alpha}P_\alpha x:
++\alpha\in\Supp_{\Pcal}(x),\ T_{\beta\alpha}\neq0\bigr)
+ \]
+ have nonzero sum.  In particular, equality holds if at most one active source packet feeds each such \(\beta\) and that source coordinate does not lie in the kernel of the corresponding block.
+ \end{corollary}
+@@ -780,7 +780,7 @@
+ so (iii) implies (i).
+ \end{proof}
+ 
+-\begin{microexample}[title={Upper triangular support}]
++\begin{microexample}[title={Lower triangular support}]
+ Take three packets of dimension one.  Permit the diagonal blocks and transfers from a source with a lower index to a target with a higher index.  The support relation is a total preorder.  The blocks outside the diagonal form a nilpotent ideal, and every product of three strict transfers vanishes.  This finite algebraic example anticipates the weighted triangular inverses developed in Paper II.
+ \end{microexample}
+ 
+--- before/04_transport.tex
++++ after/04_transport.tex
+@@ -283,7 +283,7 @@
+ 
+ \begin{corollary}[Topological packet exact sequence]
+ \label{cor:topological-packet-exact-sequence}
+-If $X$ is Banach, the $P_\alpha$ are bounded, and $K$ is closed and packet invariant, then every packet sequence in \cref{thm:packet-exact-sequence} is a short exact sequence of Banach spaces with bounded maps, and the quotient packets are bounded.
++If $X$ is Banach, the $P_\alpha$ are bounded, and $K$ is closed and packet invariant, then every packet sequence in \cref{thm:packet-exact-sequence} is a short exact sequence of Banach spaces with bounded maps, and the quotient projectors are bounded.
+ \end{corollary}
+ \RecordID{PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE}
+ \Depends{\nolinkurl{PSC-I-T-PACKET-EXACT-SEQUENCE} and
+--- before/05_worked_models.tex
++++ after/05_worked_models.tex
+@@ -30,7 +30,7 @@
+ \qquad
+ B(v_1,v_2,v_3)=(v_1,v_2).
+ \]
+-Starting from the seed $e_1\in U$, repeated application of $R$ spans $U$, and $A$ carries that span onto the first two coordinates of $V$. Any path from $U$ to $V$ ends with $A$ and therefore lands in $\im A$. The third coordinate, which is $\ker B$, is unreachable from a seed supported only at $U$. Therefore the generated representation is
++Starting from the seed $e_1\in U$, repeated application of $R$ spans $U$, and $A$ carries that span onto the first two coordinates of $V$. Any path from $U$ to $V$ ends with $A$ and therefore lands in $\im A$. The third coordinate direction, which spans $\ker B$, is unreachable from a seed supported only at $U$. Therefore the generated representation is
+ \[
+ U\oplus\Span\{(1,0,0),(0,1,0)\}
+ \subsetneq U\oplus V.
+@@ -274,7 +274,7 @@
+ Let $G$ be a nonempty finite graph with adjacency matrix $A_G$, and regard
+ $\bbk^{V(G)}$ as a module over $\bbk[A_G]$.  The general result applies directly to a spectral certificate. For a symmetric real adjacency matrix, the classical spectral theorem supplies such data.
+ 
+-Within one eigenspace, every polynomial in the adjacency operator acts by a scalar. A seed therefore supplies only one vector direction in that eigenspace. Distinct eigenvalues can be separated by projector polynomials, so the same seed may supply one direction to each of several eigenspaces. With a complete eigenbasis, the largest eigenspace determines how many seeds are needed, rather than the number of distinct eigenvalues.
++Within one eigenspace, every polynomial in the adjacency operator acts by a scalar. A seed therefore supplies at most one vector direction in that eigenspace. Distinct eigenvalues can be separated by projector polynomials, so the same seed may supply one direction to each of several eigenspaces. With a complete eigenbasis, the largest eigenspace determines how many seeds are needed, rather than the number of distinct eigenvalues.
+ 
+ \begin{corollary}[Certified graph seed number]
+ \label{cor:graph-rank}
+@@ -396,7 +396,7 @@
+ \lambda_k=2\cos\frac{2\pi k}{n},
+ \qquad 0\le k<n.
+ \]
+-The values for $k$ and $n-k$ coincide. Apart from the simple characters at $k=0$ and, for even $n$, $k=n/2$, the eigenspaces occur in pairs. Therefore the maximum eigenspace multiplicity is two, although some eigenspaces have multiplicity one, and
++The values for $k$ and $n-k$ coincide. Apart from the simple characters at $k=0$ and, for even $n$, $k=n/2$, the remaining Fourier characters occur in pairs. Therefore the maximum eigenspace multiplicity is two, although some eigenspaces have multiplicity one, and
+ the certified minimum above is two.
+ 
+ \begin{figure}[htbp]
+--- before/Paper_I_Monograph.tex
++++ after/Paper_I_Monograph.tex
+@@ -185,7 +185,7 @@
+ \renewcommand{\KomorebiSubtitle}{Typed operator systems, seed rank, and exact packet coordinates}
+ \renewcommand{\KomorebiSeries}{Core series I}
+ \renewcommand{\KomorebiKind}{Monograph edition}
+-\renewcommand{\KomorebiEdition}{Modern Monograph / 8 October 2026}
++\renewcommand{\KomorebiEdition}{Final proofreading edition / 15 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper I}
+ \renewcommand{\KomorebiTitleSize}{33}
+ \renewcommand{\KomorebiTitleLeading}{39}
+--- before/Paper_I_Traditional_Final.tex
++++ after/Paper_I_Traditional_Final.tex
+@@ -185,7 +185,7 @@
+ \renewcommand{\KomorebiSubtitle}{Typed operator systems, seed rank, and exact packet coordinates}
+ \renewcommand{\KomorebiSeries}{Core series I}
+ \renewcommand{\KomorebiKind}{Monograph edition}
+-\renewcommand{\KomorebiEdition}{Modern Monograph / 8 October 2026}
++\renewcommand{\KomorebiEdition}{Final proofreading edition / 15 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper I}
+ \renewcommand{\KomorebiTitleSize}{33}
+ \renewcommand{\KomorebiTitleLeading}{39}
+--- before/komorebi-monograph.sty
++++ after/komorebi-monograph.sty
+@@ -40,13 +40,13 @@
+   \captionsetup{font={small,sf},labelfont={bf,sf},labelsep=period,skip=7pt}%
+   \hypersetup{colorlinks=true,linkcolor=accent,citecolor=accent,urlcolor=accent,pdfauthor={Komorebi P.},pdftitle={\KomorebiTitle},pdfsubject={Realization Calculus / Paper I / Modern Monograph}}%
+   \tcbset{monographpanel/.style={enhanced,breakable,sharp corners,boxrule=0pt,frame hidden,colback=light,borderline west={1.4pt}{0pt}{accent},left=10pt,right=8pt,top=7pt,bottom=5pt,before skip=8pt,after skip=8pt,fonttitle=\sffamily\bfseries\small,coltitle=accent,colbacktitle=light,attach title to upper={\par\smallskip},title filled=false}}%
+-  \renewtcolorbox{readerroadmap}[1][]{monographpanel,title={A route through this section},##1}%
+-  \renewtcolorbox{keyidea}[1][]{monographpanel,title={The central idea},##1}%
+-  \renewtcolorbox{interpretation}[1][]{monographpanel,colback=black!2,title={How to read the result},##1}%
+-  \renewtcolorbox{microexample}[1][]{monographpanel,title={A small example},##1}%
+-  \renewtcolorbox{hypothesisguide}[1][]{monographpanel,colback=white,title={Why the hypotheses matter},##1}%
+-  \renewtcolorbox{sectionrecap}[1][]{monographpanel,colback=white,title={What we have established},##1}%
+-  \renewtcolorbox{warningbox}[1][]{monographpanel,colback=black!2,title={Scope of the argument},##1}%
++  \renewtcolorbox{readerroadmap}[1][]{monographpanel,breakable=false,title={A route through this section},##1}%
++  \renewtcolorbox{keyidea}[1][]{monographpanel,breakable=false,title={The central idea},##1}%
++  \renewtcolorbox{interpretation}[1][]{monographpanel,breakable=false,colback=black!2,title={How to read the result},##1}%
++  \renewtcolorbox{microexample}[1][]{monographpanel,breakable=false,title={A small example},##1}%
++  \renewtcolorbox{hypothesisguide}[1][]{monographpanel,breakable=false,colback=white,title={Why the hypotheses matter},##1}%
++  \renewtcolorbox{sectionrecap}[1][]{monographpanel,breakable=false,colback=white,title={What we have established},##1}%
++  \renewtcolorbox{warningbox}[1][]{monographpanel,breakable=false,colback=black!2,title={Scope of the argument},##1}%
+   \tcolorboxenvironment{theorem}{monographpanel}%
+   \tcolorboxenvironment{definition}{monographpanel,colback=light!65!white}%
+   \renewcommand{\abstractname}{Overview}%
+@@ -70,7 +70,7 @@
+   A linear foundation for generating objects from seeds, resolving them into packets, and tracking the operators between those packets.\par}
+   \vfill
+   {\sffamily\fontsize{11}{14}\selectfont Komorebi P.}\par
+-  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}Modern Monograph\quad\textbullet\quad8 October 2026}\par
++  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}Final proofreading edition\quad\textbullet\quad15 October 2026}\par
+   \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{ink}\normalfont
+ }
+ \endinput
+--- before/visual_atlas.tex
++++ after/visual_atlas.tex
+@@ -346,7 +346,7 @@
+ \head{Several split simple blocks}
+ If the acting algebra and module are supplied in compatible product coordinates, the row budget is computed separately in each block and the formula for independent actions takes the maximum. For block data $(d,m)=(2,5)$ and $(3,4)$, the result is $\max(3,2)=3$, not $3+2$.
+ 
+-\takeaway{The formula measures multiplicity directions per seed. Producing the split algebra and module equivalences is a separate classification input in the formal contract.}
++\takeaway{The formula measures multiplicity directions per seed. In the formal contract documented by the preserved Lean guide, producing the split algebra and module equivalences is a separate classification input.}
+ 
+ \vpage{14}{Distinct labels let one polynomial separate chains}{PRIMARY DATA / AN ACTUAL EXTRACTION CERTIFICATE}{Main text: \cref{thm:single-operator,cor:invariant-factor-count}}
+ Keep the model in six dimensions, but compare two different operators:
+--- before/visual_graphics/linked_chains.tex
++++ after/visual_graphics/linked_chains.tex
+@@ -20,5 +20,5 @@
+ \node[] at (4.0000,-0.9200) {$be_1+bf_1$};
+ \draw[dashed,black!50] (7.0000,0.4800) -- (7.0000,1.0200);
+ \node[] at (7.0000,-0.9200) {$ce_2+cf_2$};
+-\node[font=\sffamily\small] at (4.0000,2.4500) {$N e_j=e_{j+1},\qquad N f_j=f_{j+1}$};
++\node[font=\sffamily\small] at (4.0000,2.4500) {$N e_j=e_{j+1},\qquad N f_j=f_{j+1}\quad(j=0,1)$};
+ \end{tikzpicture}
+--- before/visual_model_sources/generate_graphics.py
++++ after/visual_model_sources/generate_graphics.py
+@@ -48,7 +48,7 @@
+ for j,coef in enumerate(['a','b','c']):
+     L.append(line(1+3*j,.48,1+3*j,1.02,'dashed,black!50'))
+     L.append(node(1+3*j,-.92,rf'${coef}e_{j}+{coef}f_{j}$'))
+-L.append(node(4,2.45,r'$N e_j=e_{j+1},\qquad N f_j=f_{j+1}$','font=\\sffamily\\small'))
++L.append(node(4,2.45,r'$N e_j=e_{j+1},\qquad N f_j=f_{j+1}\quad(j=0,1)$','font=\\sffamily\\small'))
+ save('linked_chains',L)
+ L=grid(d['Q'],c=.85,labels=['e_0','e_1','e_2','f_0','f_1','f_2'],top='The quotient keeps only the two chain heads')
+ L.append(node(2.55,-2.18,r'$q(a_0,a_1,a_2,b_0,b_1,b_2)=(a_0,b_0)$'))

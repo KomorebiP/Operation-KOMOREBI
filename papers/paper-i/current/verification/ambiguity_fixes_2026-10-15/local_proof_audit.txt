@@ -1,0 +1,170 @@
+Bounded Paper I ambiguity audit, 2026-10-15
+
+Normalized claim and primary verdict
+====================================
+The algebraically closed multiplicity claim is a formula for the generator
+number of a finitely generated unital LEFT A-module M, computed from its
+top M/JM as a LEFT A/J-module, where J=Jac(A). The common-language relation
+claim is a LEFT MODULE quotient presenting the algebraic generated hull.
+
+Primary verdict on the CURRENT CORRECTED two passages: proved as written,
+by the existing internal dependencies described below.
+
+The original passages had typing/hypothesis ambiguities: the corollary left J
+and finite-generation implicit and displayed
+A rather than the intended A/J; the summary used undeclared F and m and called
+the quotient itself "relations". These are local typing/hypothesis ambiguities,
+not counterexamples to the properly formulated generator formula.
+
+The root's final revised passages are mathematically sound. The exact corrected
+wording below states integer domains and makes the split decompositions
+explicitly assumed. No new external theorem is needed.
+
+Scope and source locators
+========================
+Source root:
+/workspace/scratch/9f53d520971c/paper1_work/monograph/Komorebi_Paper_I_Monograph_2026-10-08/editable/traditional
+
+Read 02_foundations.tex: coefficient regimes and empty-family convention;
+seed evaluation, finite free presentation, and minimal free cover; module-top
+theorem; regular multiplicities; semisimple seed-rank theorem; algebraically
+closed corollary. Read 05_worked_models.tex: common-operator-language section.
+Also reviewed the root-created verification/ambiguity_fixes_2026-10-15/
+ambiguity_fixes.patch at the monograph root. No source file edited by auditor.
+No applicable AGENTS.md found in the inspected source ancestry.
+
+The CURRENT CORRECTED files read for the final audit have SHA256:
+02_foundations.tex:
+2997af7fa92c7fd9891e7d5c74df394327cb3a1244e049fa10b37f37338d4817
+05_worked_models.tex:
+1c0cb362b7be7dab16a9b2de3bc83f249ec9b07d4540dc6786ad16dd14ae4fb9
+These hashes include the final integer-domain, explicit-assumption, and quotient-
+antecedent refinements and the subsequent layout-only additions.
+Layout-only refresh: \Needspace{16\baselineskip} was added before the corollary (02_foundations.tex:808) and before the summary paragraph (05_worked_models.tex:437); the substantive verdict is unchanged.
+
+Exact current corrected corollary
+=====================================
+\begin{corollary}[Algebraically closed multiplicity formula]
+\label{cor:algebraically-closed-formula}
+Let $\bbk$ be algebraically closed, let $A$ be a unital algebra of finite dimension over $\bbk$, put $J=\Jac(A)$, and let $M$ be a finitely generated left module over $A$.  Assume compatible decompositions indexed by an integer $q\geq0$:
+\[
+A/J\cong\prod_{i=1}^{q}M_{d_i}(\bbk),
+\qquad
+M/JM\cong\bigoplus_{i=1}^{q}(\bbk^{d_i})^{\oplus m_i},
+\]
+where the $d_i$ are positive integers and the $m_i$ are nonnegative integers.  The first isomorphism is an isomorphism of algebras over $\bbk$.  The second is an isomorphism of left modules over $A/J$, using the natural column module for each matrix factor and zero action from the other factors.  Then
+\[
+\srank_A(M)=\max_{1\leq i\leq q}\left\lceil\frac{m_i}{d_i}\right\rceil,
+\]
+with $\max\varnothing=0$ when $q=0$.
+\end{corollary}
+\RecordID{PSC-I-C-ALGEBRAICALLY-CLOSED-FORMULA}
+\Depends{PSC-I-T-MODULE-TOP and PSC-I-T-SEMISIMPLE-SEED-RANK.}
+
+\begin{proof}
+By \cref{thm:module-top}, $\srank_A(M)=\srank_{A/J}(M/JM)$.  Apply \cref{thm:semisimple-seed-rank} to the displayed decompositions of $A/J$ and $M/JM$, with every $D_i=\bbk$.  This gives the stated maximum.  If $q=0$, the unital $A/J$-module $M/JM$ is zero, and \cref{thm:module-top} gives seed rank zero.
+\end{proof}
+
+Exact current common-language replacement
+==============================================
+Replace the introductory sentence "The invariant content is:" by:
+
+For a finite ordered seed family $S=(s_1,\ldots,s_r)$, let $\varepsilon_S:\cA^{\oplus r}\to X$ be the seed evaluation map of \cref{def:seed-evaluation}.  Its kernel is the relation module.  The free module modulo that kernel presents the generated hull by \cref{thm:free-presentation}.  The invariant content is:
+
+Replace the single relation line by these two lines, retaining the other
+aligned rows exactly as they stand:
+
+&\text{relation module: }N_S:=\Ker\varepsilon_S\leq\cA^{\oplus r},\\
+&\text{free presentation: }\cA^{\oplus r}/N_S\cong\Hull_{\cA}(S),\\
+
+Types and actions
+=================
+The A/J-action is (a+J)(m+JM)=am+JM. Under the chosen algebra isomorphism,
+the i-th matrix factor acts by usual LEFT multiplication on column vectors,
+diagonally on the m_i copies; every other factor acts by zero there. No
+opposite-ring convention, right-module convention, or dualization is used.
+
+For the summary, cA acts on cA^{oplus r} by componentwise LEFT multiplication.
+The evaluation map sends (a_1,...,a_r) to sum a_j s_j. Its kernel N_S is a
+LEFT submodule. Its quotient is a LEFT module, not necessarily an algebra.
+This quotient is the algebraic hull, including in examples with a topology.
+Topological closure/completion requires the already separate completion theorem.
+
+Dependency graph
+================
+Corollary:
+  fg unital left A-module M + J=Jac(A)
+    -> module-top theorem [existing internal result]
+    -> srank_A(M)=srank_{A/J}(M/JM).
+  compatible split A/J algebra decomposition + top module decomposition
+    -> semisimple seed-rank theorem [existing internal result]
+    -> srank_{A/J}(M/JM)=max_i ceil(m_i/d_i).
+  Combine the two equalities.
+
+Summary:
+  finite ordered S + unital left cA-action
+    -> seed evaluation [existing definition]
+    -> free-presentation theorem [existing internal result]
+    -> N_S=ker evaluation and cA^{oplus r}/N_S isomorphic to Hull_cA(S).
+
+The reviewed internal proofs ultimately use the already declared Nakayama
+classical input, regular-module decomposition, minimal free covers, and the
+first isomorphism theorem. This audit verifies only the local specialization
+and typing, not a new external-source verification of those standing inputs.
+There is no new external-source leaf in either correction.
+
+Obligation matrix
+=================
+  Exact quotient algebra A/J rather than A: passed after correction.
+  J explicitly Jac(A): passed after correction.
+  M finitely generated: passed after correction; needed for module-top.
+  A/J-module structure on top: passed after correction.
+  Algebra isomorphism over k, not merely vector-space isomorphism: passed.
+  Natural simple modules and zero action of other factors: passed.
+  Finite index and integer multiplicities: passed in current corrected wording.
+  d_i positive, so all displayed quotients are defined: passed.
+  M=0: passed; all m_i=0 and maximum is zero.
+  q=0: passed; empty product is zero algebra, top is zero, module-top gives
+       seed rank zero (and hence M=0).
+  r=0 in presentation: passed; source and kernel are zero, empty hull is zero,
+       and quotient 0/0 is the zero module.
+  Left-module quotient versus algebra quotient: passed.
+  Algebraic hull versus closure: passed; no completion silently asserted.
+  Derivation of splitting merely from k algebraically closed: not addressed by
+       existing internal statements; deliberately retained as explicit hypothesis.
+  New numerical computation: out of scope and unnecessary.
+  Full TeX/PDF build: root reports successful final XeLaTeX 3-pass build;
+       execution and log review were not duplicated in this audit.
+
+Split decomposition: assume it for this bounded repair
+====================================================
+The printed Wedderburn--Artin input produces matrix rings over division rings
+D_i. It does not itself state or prove that D_i=k when the original algebra is
+finite dimensional over an algebraically closed field. The elementary proof
+would use linear dependence of powers of an element and factorization of its
+annihilating polynomial, but that additional argument is absent from the
+current internal statements. Therefore the narrowest repair is to ASSUME the
+displayed compatible split decomposition, exactly as the current text does.
+This keeps the proof entirely within the two cited internal theorems. Once the
+split decomposition is explicit, algebraic closure and finite dimension are
+stronger than logically necessary; retaining them preserves the intended local
+corollary and does not invalidate it. Do not claim that the corrected proof has
+also established the existence of splitting from algebraic closure.
+
+Decisive checks and remaining gap
+================================
+No counterexample remains under the corrected hypotheses. The critical equality
+is the composition of two internal theorem conclusions, with their coefficient
+ring and module replaced consistently by A/J and M/JM. The summary is a literal
+instance of the free-presentation theorem under A=cA. No mathematical gap remains
+in either bounded correction. The final source wording has been inspected and
+root reports a successful final 3-pass build; no new theorem or numerical test
+is required.
+
+Independent pass
+================
+A fresh-context subagent /root/audit_ambiguity_fixes/check_split_formula read the
+raw source, reconstructed the quotient action and two-step proof, and confirmed
+the same positive-size/empty-product cases and the need either to assume splitting
+or add a separate elementary lemma. This is corroborating review, not a substitute
+for the argument above.

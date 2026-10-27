@@ -1,0 +1,9 @@
+import KomorebiVerification.ExactCoordinates
+#check Fintype.sum_subtype
+#check Finset.sum_subtype
+#check Finset.sum_subtype_eq_sum_filter
+#check Finset.sum_filter
+#check LinearMap.rangeRestrict
+#check LinearEquiv.ofLinear
+#check Submodule.isInternal
+#check LinearMap.pi

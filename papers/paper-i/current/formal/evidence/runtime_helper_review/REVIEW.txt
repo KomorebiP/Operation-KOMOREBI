@@ -1,0 +1,31 @@
+Reviewed generated runtime helpers for Paper I release
+
+The prior full build compiled116 production modules and the boundary consumer successfully, then correctly rejected an unreviewed compiler-generated partial helper during the strict owned-declaration audit. Its FAIL status and original verification.json are preserved unchanged. No production source was edited by this review.
+
+The separate diagnostic enumerated every source-owned ConstantInfo in the117-module closure. It found3513 owned entries:3500 logical declarations,13 compiler-generated partial definitions, and0 unsafe declarations. Seven partial definitions were previously inventoried; six belong to the current release:
+
+- CategoryExport.evaluate._unsafe_rec and evaluateTransported._unsafe_rec: total source definitions recurse on direct Expression subterms. Their logical definitions use Expression.brecOn.
+- operatorWord._unsafe_rec: total source definition recurses on the tail of a List. Its logical definition uses List.brecOn.
+- StrictPath._unsafe_rec: total source definition decreases a natural number from n+1 to n. Its logical definition uses Nat.brecOn. Returning Prop does not change its classification: the runtime helper is distinct from the total logical definition of the predicate.
+- GrammarAlgebra.TypedPath.word._unsafe_rec and TypedData.pathMap._unsafe_rec: source recursion uses a direct typed subpath. Their compiled logical ._unary auxiliaries use WellFounded.Nat.fix with sizeOf the path.
+
+Each new logical parent is partial=false and unsafe=false. Each generated helper is a definition, partial=true and unsafe=false. All recorded axiom dependencies belong to propext, Classical.choice and Quot.sound. Full parent/helper declarations and the well-founded auxiliaries were printed in parent_bodies.log; that diagnostic exited0. The first diagnostic printing attempt had an unused-variable warning and is preserved separately in parent_bodies_attempt1.*.
+
+The logical-dependency diagnostic enumerated all source-owned logical declarations and searched their complete type/value constant sets against all13 exact helper names. It found0 references. The final kernel replay remains required and will independently check the logical closure with those runtime helpers excluded.
+
+The independent package auditor reviewed the six source parents and the logical-dependency diagnostic and endorsed the exact six additions. The audit template now allows exactly13 reviewed names; it continues to reject every unlisted partial declaration and every unsafe declaration. reviewed_runtime_helpers.json binds the exact names to their source-module hashes, declaration metadata and diagnostic evidence. The Python verifier cross-checks its template whitelist against that receipt and requires exact equality between expected and observed runtime-helper name sets. Its formerly hardcoded seven-helper limitation is now generic, with actual counts in the report.
+
+Compiling source again is unnecessary for115 unchanged modules. A separate successful compilation-only component was extracted from the preserved failed parent, retaining every original compilation command, exit, timing, log hash, source hash and object hash. It does not promote the parent audit to PASS. Root's repaired aggregate entrypoint PaperIRelease is explicitly excluded from reuse and must be compiled freshly by the next run. The boundary consumer is also compiled freshly. Component artifacts use hardlinks for frozen objects and source snapshots to avoid duplicate disk allocation; hashes are checked again before reuse.
+
+The verifier authenticates the component receipt against the preserved failed-parent report, checks every successful compile stage and log hash, and copies the prior compilation receipts/logs into the new audit evidence. The new unified run must pass owned declaration auditing, all negative controls and wholeclosure kernel replay. It has NOT been started by this review task.
+
+Prepared evidence:
+  inventory.json / inventory.log
+  parent_bodies.json / parent_bodies.log
+  dependency_separation.json / dependency_separation.log
+  reviewed_runtime_helpers.json
+  PREPARED_REVIEW.json
+  prepared_audit_hashes.json
+  verify_release.py.patch
+  OwnedAudit.template.lean.patch
+  ../fresh115_compilation_component/verification.json

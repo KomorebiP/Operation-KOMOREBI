@@ -1,0 +1,1156 @@
+\section{Exact finite and countable packet coordinates}
+
+
+
+\begin{readerroadmap}
+Packets give exact coordinates through idempotent maps.  For finitely many packets, the reconstruction is algebraic.  For countably many packets, we must also specify how the series converges and bound the coordinate maps.  We begin with finite reconstruction, then consider packet support, tensor products, duality, and the universal mapping property before turning to convergence.
+\end{readerroadmap}
+\subsection{Finite exact packets}
+
+\begin{definition}[Finite packet system]
+\label{def:packet-system}
+A finite packet system on a vector space $X$ over $\bbk$ is a family
+\[
+\Pcal=(P_\alpha)_{\alpha\in I}\subseteq\End_{\bbk}(X)
+\]
+satisfying
+\[
+P_\alpha^2=P_\alpha,
+\qquad
+P_\alpha P_\beta=0\quad(\alpha\neq\beta),
+\qquad
+\sum_{\alpha\in I}P_\alpha=I_X.
+\]
+Set $X_\alpha=P_\alpha X$.  Zero packet spaces may be removed without changing any identity.  No orthogonality is assumed unless stated.
+\end{definition}
+\RecordID{PSC-I-D-PACKET-SYSTEM}
+
+\begin{definition}[Packet support and packet pure vectors]
+\label{def:packet-support}
+For a finite packet system \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(x\in X\), define
+\[
+\Supp_{\Pcal}(x)
+:=
+\{\alpha\in I:P_\alpha x\neq0\}.
+\]
+The vector \(x\) is \emph{packet pure} if \(|\Supp_{\Pcal}(x)|\leq1\).  A finite family is packet pure if each of its members is packet pure, although different members may lie in different packets.
+\end{definition}
+\RecordID{PSC-I-D-PACKET-SUPPORT}
+
+\begin{interpretation}
+Packet support records which packet coordinates are present.  A seed may lie in one packet, have coordinates in several packets, or be zero.  Later, when we count the seeds needed for generation, this distinction matters because a seed with several nonzero coordinates can meet several graph sources at once.
+\end{interpretation}
+
+
+\begin{lemma}[Finite packet aggregation]
+\label{lem:packet-aggregation}
+Let $\sigma:I\twoheadrightarrow J$ be a surjection and define
+\[
+Q_j:=\sum_{\sigma(\alpha)=j}P_\alpha.
+\]
+Then $(Q_j)_{j\in J}$ is a finite packet system and
+\[
+Q_jX=\bigoplus_{\sigma(\alpha)=j}X_\alpha.
+\]
+\end{lemma}
+\RecordID{PSC-I-L-PACKET-AGGREGATION}
+\Depends{PSC-I-D-PACKET-SYSTEM.}
+
+\begin{proof}
+Pairwise annihilation of the $P_\alpha$ gives
+\[
+Q_j^2=Q_j,
+\qquad
+Q_jQ_k=0\quad(j\neq k).
+\]
+Summing over $j$ recovers $\sum_\alpha P_\alpha=I$.  The range statement follows from the directness forced by pairwise annihilation.
+\end{proof}
+
+\begin{definition}[Packet analysis and synthesis]
+\label{def:analysis-synthesis}
+For a finite packet system, define
+\[
+\mathcal A_{\Pcal}:X\longrightarrow\bigoplus_{\alpha\in I}X_\alpha,
+\qquad
+x\longmapsto(P_\alpha x)_\alpha,
+\]
+and
+\[
+\mathcal S_{\Pcal}:\bigoplus_{\alpha\in I}X_\alpha\longrightarrow X,
+\qquad
+(x_\alpha)_\alpha\longmapsto\sum_\alpha x_\alpha.
+\]
+\end{definition}
+\RecordID{PSC-I-D-ANALYSIS-SYNTHESIS}
+
+\begin{theorem}[Exact packet coordinate isomorphism]
+\label{thm:exact-packet-coordinates}
+For every finite packet system,
+\[
+\boxed{
+\mathcal S_{\Pcal}\mathcal A_{\Pcal}=I_X,
+\qquad
+\mathcal A_{\Pcal}\mathcal S_{\Pcal}=I_{\oplus X_\alpha}.
+}
+\]
+Hence
+\[
+\boxed{X\cong\bigoplus_{\alpha\in I}X_\alpha.}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-EXACT-PACKET-COORDINATES}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-D-ANALYSIS-SYNTHESIS.}
+\Exports{Every exact packet reconstruction in the series.}
+
+\begin{proof}
+For $x\in X$,
+\[
+\mathcal S_{\Pcal}\mathcal A_{\Pcal}x
+=
+\sum_\alpha P_\alpha x
+=x.
+\]
+If $x_\alpha\in X_\alpha$, then $P_\beta x_\alpha=\delta_{\alpha\beta}x_\alpha$, so
+\[
+\mathcal A_{\Pcal}\mathcal S_{\Pcal}(x_\alpha)_\alpha
+=
+\left(P_\beta\sum_\alpha x_\alpha\right)_\beta
+=(x_\beta)_\beta.
+\]
+Thus analysis and synthesis are inverse linear maps.
+\end{proof}
+
+\begin{keyidea}
+Analysis records every packet coordinate and synthesis adds them back.  The theorem gives an exact change of coordinates.  Its proof uses the idempotent identities and does not require orthogonality.  Questions about norms, energy, and conditioning require further structure.
+\end{keyidea}
+
+
+\begin{corollary}[Packetwise equality]
+\label{cor:packetwise-equality}
+For $x,y\in X$,
+\[
+x=y
+\quad\Longleftrightarrow\quad
+P_\alpha x=P_\alpha y\text{ for every }\alpha.
+\]
+\end{corollary}
+\RecordID{PSC-I-C-PACKETWISE-EQUALITY}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+
+\begin{proof}
+The forward implication is immediate.  For the reverse implication, sum the packet equalities and use $\sum_\alpha P_\alpha=I$.
+\end{proof}
+
+
+
+\begin{corollary}[Universal mapping property of finite packet coordinates]
+\label{cor:packet-universal-property}
+Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(Y\) be a vector space over \(\bbk\).
+\begin{enumerate}
+\item Every family \(f_\alpha:X_\alpha\to Y\) determines a unique linear map \(f:X\to Y\) with \(f|_{X_\alpha}=f_\alpha\), namely
+\[
+f=\sum_\alpha f_\alpha P_\alpha.
+\]
+\item Every family \(g_\alpha:Y\to X_\alpha\) determines a unique linear map \(g:Y\to X\) with \(P_\alpha g=g_\alpha\), namely
+\[
+g=\sum_\alpha g_\alpha.
+\]
+\end{enumerate}
+Equivalently,
+\[
+\Hom(X,Y)\cong\prod_\alpha\Hom(X_\alpha,Y),
+\qquad
+\Hom(Y,X)\cong\prod_\alpha\Hom(Y,X_\alpha),
+\]
+where the products are finite.
+\end{corollary}
+\RecordID{PSC-I-C-PACKET-UNIVERSAL-PROPERTY}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Assembly of packetwise operators, channels, corrections, and local transport data.}
+
+\begin{proof}
+For \(x=\sum_\alpha P_\alpha x\), any extension of the \(f_\alpha\) must satisfy
+\[
+f(x)=\sum_\alpha f_\alpha(P_\alpha x),
+\]
+which proves both existence and uniqueness of the first formula.  For the second, the sum \(g=\sum_\alpha g_\alpha\) satisfies
+\[
+P_\beta g
+=\sum_\alpha P_\beta g_\alpha
+=g_\beta
+\]
+because \(g_\alpha(Y)\subseteq X_\alpha\).  Uniqueness follows from \(\sum_\alpha P_\alpha=I\).
+\end{proof}
+
+
+\subsection{Tensor products and dual packets}
+
+\begin{theorem}[Tensor product packet systems]
+\label{thm:tensor-packet-system}
+Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be a finite packet system on \(Y\).  Then
+\[
+\Pcal\boxtimes\Qcal
+:=
+(P_\alpha\otimes Q_\gamma)_{(\alpha,\gamma)\in I\times J}
+\]
+is a finite packet system on the algebraic tensor product \(X\otimes_{\bbk}Y\), with packet spaces
+\[
+(P_\alpha\otimes Q_\gamma)(X\otimes Y)
+=X_\alpha\otimes Y_\gamma.
+\]
+Hence
+\[
+\boxed{
+X\otimes Y
+\cong
+\bigoplus_{(\alpha,\gamma)\in I\times J}
+X_\alpha\otimes Y_\gamma.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-TENSOR-PACKET-SYSTEM}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Tensor refinement for quantum, signal, arithmetic, and multivariate realizations.}
+
+\begin{proof}
+For every pair of packet indices,
+\[
+(P_\alpha\otimes Q_\gamma)^2
+=P_\alpha^2\otimes Q_\gamma^2
+=P_\alpha\otimes Q_\gamma.
+\]
+If \((\alpha,\gamma)\neq(\beta,\delta)\), then either \(P_\alpha P_\beta=0\) or \(Q_\gamma Q_\delta=0\), so the corresponding tensor idempotents annihilate each other.  Finally,
+\[
+\sum_{\alpha,\gamma}P_\alpha\otimes Q_\gamma
+=
+\left(\sum_\alpha P_\alpha\right)
+\otimes
+\left(\sum_\gamma Q_\gamma\right)
+=I_X\otimes I_Y.
+\]
+The range is generated by pure tensors \(P_\alpha x\otimes Q_\gamma y\), hence equals \(X_\alpha\otimes Y_\gamma\).  Exact reconstruction follows from \cref{thm:exact-packet-coordinates}.
+\end{proof}
+
+\begin{proposition}[Dual packet systems]
+\label{prop:dual-packet-system}
+Let \(X\) be finite dimensional and let \(\Pcal=(P_\alpha)\) be a finite packet system.  The algebraic dual maps
+\[
+P_\alpha^*:X^*\to X^*,
+\qquad
+P_\alpha^*(\varphi)=\varphi\circ P_\alpha,
+\]
+form a finite packet system on \(X^*\).  Its packet with index \(\alpha\) is canonically isomorphic to \(X_\alpha^*\), and
+\[
+X^*\cong\bigoplus_\alpha X_\alpha^*.
+\]
+\end{proposition}
+\RecordID{PSC-I-P-DUAL-PACKET-SYSTEM}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Dual observables, covectors, trace pairings, and adjoint packet calculations.}
+
+\begin{proof}
+Because dualization reverses products,
+\[
+P_\alpha^*P_\beta^*=(P_\beta P_\alpha)^*
+=\delta_{\alpha\beta}P_\alpha^*.
+\]
+Also \(\sum_\alpha P_\alpha^*=I_{X^*}\).  Thus the dual maps form a packet system.  Restriction gives a map from \(P_\alpha^*X^*\) to \(X_\alpha^*\).  It is injective because a covector in the range of \(P_\alpha^*\) vanishes on every other packet, and it is surjective because any covector on \(X_\alpha\) extends to \(X\) through the direct sum decomposition.
+\end{proof}
+
+\begin{microexample}[title={Tensoring the oblique packet split}]
+Tensor the two oblique packets in Running Example R3 with the coordinate packets of \(\bbk^3\).  The result has six exact packets.  No orthogonality is created by tensoring, but the analysis and synthesis identities remain exact because they are idempotent identities.
+\end{microexample}
+
+\subsection{Banach stability and coordinate conditioning}
+Exact reconstruction answers whether the coordinates retain the whole vector.  Stability asks how errors in those coordinates affect the reconstructed vector.  A finite packet system answers the first question through its idempotent identities.  On a Banach space, boundedness of analysis and synthesis answers the second.  The chosen norm on the coordinate space matters, so we fix it before comparing operator sizes.
+
+\begin{theorem}[Finite Banach packet isomorphism]
+\label{thm:banach-packets}
+Let $X$ be Banach and let $(P_\alpha)_{\alpha\in I}$ be a finite family of bounded pairwise annihilating idempotents with sum $I_X$.  Then every range $X_\alpha=P_\alpha X$ is closed.  For any finite product norm equivalent to the maximum norm on $\bigoplus_\alpha X_\alpha$, packet analysis and synthesis are bounded inverse operators.
+\end{theorem}
+\RecordID{PSC-I-T-BANACH-PACKET-ISOMORPHISM}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+
+\begin{proof}
+The range of a bounded idempotent is its space of fixed points,
+\[
+P_\alpha X=\Ker(I-P_\alpha),
+\]
+which is closed.  Because $I$ is finite, analysis and synthesis are bounded for the maximum and sum norms, respectively, and therefore for every equivalent finite product norm.  Their inverse identities are algebraic and were proved in \cref{thm:exact-packet-coordinates}.
+\end{proof}
+
+\begin{definition}[Packet coordinate condition number]
+\label{def:packet-condition-number}
+Fix a finite product norm on $\bigoplus_\alpha X_\alpha$ equivalent to the maximum norm, as in \cref{thm:banach-packets}. Define
+\[
+\kappa(\Pcal):=
+\|\mathcal A_{\Pcal}\|\,
+\|\mathcal S_{\Pcal}\|.
+\]
+\end{definition}
+\RecordID{PSC-I-D-PACKET-CONDITION-NUMBER}
+
+\begin{proposition}[Conditioned coordinate transport]
+\label{prop:conditioned-coordinates}
+For a finite Banach packet system with $X\ne0$,
+\[
+\kappa(\Pcal)\geq1.
+\]
+If $T\in\mathcal B(X)$ and
+\[
+[T]_{\Pcal}:=\mathcal A_{\Pcal}T\mathcal S_{\Pcal},
+\]
+then
+\[
+\boxed{
+\|[T]_{\Pcal}\|
+\leq\kappa(\Pcal)\|T\|,
+\qquad
+\|T\|
+\leq\kappa(\Pcal)\|[T]_{\Pcal}\|.
+}
+\]
+\end{proposition}
+\RecordID{PSC-I-P-CONDITIONED-COORDINATES}
+\Depends{PSC-I-T-BANACH-PACKET-ISOMORPHISM.}
+
+\begin{proof}
+Since $I=\mathcal S_{\Pcal}\mathcal A_{\Pcal}$,
+\[
+1=\|I\|\leq\|\mathcal S_{\Pcal}\|\|\mathcal A_{\Pcal}\|.
+\]
+The first displayed estimate follows from submultiplicativity.  The inverse identity
+\[
+T=\mathcal S_{\Pcal}[T]_{\Pcal}\mathcal A_{\Pcal}
+\]
+gives the second estimate.
+\end{proof}
+
+\begin{interpretation}
+The quantity \(\kappa(\Pcal)\) measures how strongly the chosen packet coordinates can amplify perturbations.  An orthogonal Hilbert decomposition has the best possible behavior in the natural \(\ell^2\) sum norm.  An oblique packet system can reconstruct every vector exactly and still have a large condition number.
+\end{interpretation}
+
+
+\begin{corollary}[Completion preserves a finite packet split]
+\label{cor:completion-packet-split}
+Let $M$ be a dense normed subspace of a Banach space $X$.  Suppose every bounded $P_\alpha$ leaves $M$ invariant and the restricted projectors form a packet system on $M$.  Then
+\[
+P_\alpha X=\cl{P_\alpha M}
+\]
+and the packet decomposition of $M$ extends uniquely to the completion $X$.
+\end{corollary}
+\RecordID{PSC-I-C-COMPLETION-PACKET-SPLIT}
+\Depends{PSC-I-T-BANACH-PACKET-ISOMORPHISM.}
+
+\begin{proof}
+For $x\in X$, choose $m_n\in M$ with $m_n\to x$.  Continuity gives $P_\alpha m_n\to P_\alpha x$, so $P_\alpha X\subseteq\cl{P_\alpha M}$.  The reverse inclusion follows because $P_\alpha X$ is closed and contains $P_\alpha M$.  The bounded extensions remain pairwise annihilating idempotents whose finite sum is the identity.
+\end{proof}
+
+\subsection{Countable packets and unconditional convergence}
+For a finite family, synthesis adds a fixed number of coordinates.  For a countable family, it must also take a limit.  The algebraic idempotent identities still separate the coordinates, but they do not by themselves guarantee that the sum converges.  The next definition includes unconditional convergence in the coordinate space itself, so synthesis is defined on precisely the sequences whose packet sums can be assembled in this way.
+
+\begin{definition}[Unconditional packet sum space]
+\label{def:unconditional-packet-space}
+Let $(X_n)_{n\geq1}$ be closed subspaces of a real or complex Banach space $X$.  Define
+\[
+\bigoplus_{n\geq1}^{u}X_n
+\]
+to be the space of sequences $x=(x_n)$ with $x_n\in X_n$ for which $\sum_nx_n$ converges unconditionally in $X$.  Equip it with
+\[
+\|x\|_u
+:=
+\sup_{F\Subset\mathbb N}
+\sup_{|a_n|\leq1}
+\left\|\sum_{n\in F}a_nx_n\right\|.
+\]
+\end{definition}
+\RecordID{PSC-I-D-UNCONDITIONAL-PACKET-SPACE}
+
+\begin{lemma}[Completeness of the unconditional packet sum]
+\label{lem:unconditional-completeness}
+The normed space $\bigoplus_{n\geq1}^{u}X_n$ in \cref{def:unconditional-packet-space} is Banach.
+\end{lemma}
+\RecordID{PSC-I-L-UNCONDITIONAL-COMPLETENESS}
+\Depends{PSC-I-D-UNCONDITIONAL-PACKET-SPACE.}
+
+\begin{proof}
+Let $x^{(k)}=(x_n^{(k)})$ be Cauchy in $\|\cdot\|_u$.  For every fixed $n$,
+\[
+\|x_n^{(k)}-x_n^{(\ell)}\|
+\leq
+\|x^{(k)}-x^{(\ell)}\|_u,
+\]
+so $x_n^{(k)}$ converges to some $x_n\in X_n$ because $X_n$ is closed.  Given $\varepsilon>0$, choose $k_0$ such that
+\[
+\|x^{(k)}-x^{(\ell)}\|_u<\varepsilon
+\qquad(k,\ell\geq k_0).
+\]
+For finite $F$ and $|a_n|\leq1$, pass $\ell\to\infty$ in the finite sum to obtain
+\[
+\left\|\sum_{n\in F}a_n(x_n^{(k)}-x_n)\right\|
+\leq\varepsilon
+\qquad(k\geq k_0).
+\]
+Hence $\|x^{(k)}-x\|_u\leq\varepsilon$ once $x$ is known to be unconditionally summable.
+
+Choose such a $k\geq k_0$.  Since $x^{(k)}$ is unconditionally summable, there is a finite $F_0$ such that every finite $F\subseteq\mathbb N\setminus F_0$ and every $|a_n|\leq1$ satisfy
+\[
+\left\|\sum_{n\in F}a_nx_n^{(k)}\right\|<\varepsilon.
+\]
+The preceding uniform estimate then gives
+\[
+\left\|\sum_{n\in F}a_nx_n\right\|<2\varepsilon.
+\]
+Thus the tails of $\sum_nx_n$ are uniformly small under bounded scalar changes, which is the unconditional Cauchy criterion.  Therefore $x\in\bigoplus^uX_n$, and the earlier estimate proves $x^{(k)}\to x$ in $\|\cdot\|_u$.
+\end{proof}
+
+\begin{theorem}[Countable unconditional packet isomorphism]
+\label{thm:countable-packets}
+Let $X$ be a real or complex Banach space and let $(P_n)_{n\geq1}\subseteq\mathcal B(X)$ satisfy
+\[
+P_nP_m=\delta_{nm}P_n
+\]
+and
+\[
+x=\sum_{n\geq1}P_nx
+\]
+unconditionally for every $x\in X$.  Assume
+\[
+K:=
+\sup_{F\Subset\mathbb N}
+\sup_{|a_n|\leq1}
+\left\|\sum_{n\in F}a_nP_n\right\|<\infty.
+\]
+Then analysis and synthesis define inverse Banach space isomorphisms
+\[
+\boxed{
+X\cong\bigoplus_{n\geq1}^{u}P_nX.
+}
+\]
+More precisely,
+\[
+\|\mathcal A_{\Pcal}\|\leq K,
+\qquad
+\|\mathcal S_{\Pcal}\|\leq1.
+\]
+\end{theorem}
+\RecordID{PSC-I-T-COUNTABLE-UNCONDITIONAL-PACKETS}
+\Depends{PSC-I-D-UNCONDITIONAL-PACKET-SPACE and PSC-I-L-UNCONDITIONAL-COMPLETENESS.}
+\Exports{Countable analytic packet decompositions under explicit convergence control.}
+
+\begin{proof}
+Each $P_nX=\Ker(I-P_n)$ is closed.  For $x\in X$,
+\[
+\|\mathcal A_{\Pcal}x\|_u
+=
+\sup_{F,a}
+\left\|\sum_{n\in F}a_nP_nx\right\|
+\leq K\|x\|.
+\]
+For $y=(y_n)\in\bigoplus^uP_nX$, define
+\[
+\mathcal S_{\Pcal}y=\sum_ny_n.
+\]
+Since the finite partial sums with every coefficient equal to one are among those used in $\|y\|_u$,
+\[
+\|\mathcal S_{\Pcal}y\|
+\leq\|y\|_u.
+\]
+The assumed expansion gives $\mathcal S_{\Pcal}\mathcal A_{\Pcal}x=x$.  Conversely, boundedness of $P_m$ permits termwise application to the unconditionally convergent series:
+\[
+P_m\mathcal S_{\Pcal}y
+=
+\sum_nP_my_n
+=y_m.
+\]
+Thus $\mathcal A_{\Pcal}\mathcal S_{\Pcal}=I$.  Completeness of the coordinate space is \cref{lem:unconditional-completeness}.
+\end{proof}
+
+\begin{remark}[Uniform boundedness]
+\label{rem:uniform-boundedness}
+If every expansion $\sum_nP_nx$ is unconditional, the operators obtained from finite partial sums with signs form a pointwise bounded family.  The uniform boundedness principle therefore yields a finite constant $K$.  We retain this constant explicitly in \cref{thm:countable-packets} because later estimates use it to bound the coordinate map.
+\end{remark}
+\RecordID{PSC-I-R-UNIFORM-BOUNDEDNESS}
+
+\begin{boundary}[Infinite packet sums]
+\label{bnd:infinite-packet-topology}
+For an infinite family, an identity such as $\sum_\alpha P_\alpha=I$ requires a declared convergence mode and the corresponding uniform boundedness statement.  Pointwise, strong, norm, weak, and unconditional convergence are not interchangeable.
+\end{boundary}
+\RecordID{PSC-I-B-INFINITE-PACKET-TOPOLOGY}
+
+\begin{sectionrecap}
+Finite packet systems give exact coordinates in a direct sum, with no orthogonality requirement.  Their universal property assembles arbitrary packetwise maps uniquely.  Tensor products and duals preserve packet structure.  In Banach spaces, the analysis and synthesis norms control conditioning.  The countable theory developed here uses unconditional convergence and a uniform bound on finite partial sums with signs.
+\end{sectionrecap}
+
+
+\section{Transfer block algebra and support patterns}
+\begin{readerroadmap}
+Once vectors are resolved into packets, every operator becomes a matrix of maps between packet spaces.  To multiply operators, we sum over the possible intermediate packets.  The blocks permitted to be nonzero define a relation on the packet indices.  When that relation is a preorder, the resulting algebra has a triangular structure and a nilpotent ideal of strict transfers.
+\end{readerroadmap}
+\subsection{Exact operator coordinates}
+
+\begin{definition}[Transfer block]
+\label{def:transfer-block}
+For $T\in\End_{\bbk}(X)$ and a finite packet system $\Pcal$, define
+\[
+T_{\beta\alpha}:=P_\beta TP_\alpha
+\in\Hom_{\bbk}(X_\alpha,X_\beta).
+\]
+\end{definition}
+\RecordID{PSC-I-D-TRANSFER-BLOCK}
+
+\begin{theorem}[Exact operator reconstruction]
+\label{thm:operator-reconstruction}
+Every $T\in\End_{\bbk}(X)$ satisfies
+\[
+\boxed{T=\sum_{\alpha,\beta\in I}T_{\beta\alpha}.}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-OPERATOR-RECONSTRUCTION}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+
+\begin{proof}
+Insert the finite packet identity on both sides:
+\[
+T=
+\left(\sum_\beta P_\beta\right)
+T
+\left(\sum_\alpha P_\alpha\right)
+=
+\sum_{\alpha,\beta}P_\beta TP_\alpha.
+\]
+\end{proof}
+
+\begin{interpretation}
+Operator reconstruction inserts the identity on both sides of \(T\).  The source index \(\alpha\) records where a vector begins, and the target index \(\beta\) records where its image lands.  The resulting matrix is exact, and each entry is itself a linear map.
+\end{interpretation}
+
+
+\begin{theorem}[Packet matrix multiplication]
+\label{thm:block-multiplication}
+For $S,T\in\End_{\bbk}(X)$,
+\[
+\boxed{
+(ST)_{\gamma\alpha}
+=
+\sum_{\beta\in I}S_{\gamma\beta}T_{\beta\alpha}.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-BLOCK-MULTIPLICATION}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-D-TRANSFER-BLOCK.}
+\Exports{All packet path expansions.}
+
+\begin{proof}
+Insert $I=\sum_\beta P_\beta$ between $S$ and $T$:
+\[
+P_\gamma STP_\alpha
+=
+\sum_\beta
+P_\gamma SP_\beta TP_\alpha.
+\]
+\end{proof}
+
+\begin{keyidea}
+The intermediate packet index in block multiplication plays the role of a summed matrix index.  Repeated multiplication therefore becomes a sum over packet paths.  Paper II adds weights and filtrations to this path expansion.  Paper III adds nonlinear trees.
+\end{keyidea}
+
+
+\begin{corollary}[Packet powers and paths]
+\label{cor:block-powers}
+For $m\geq1$,
+\[
+(T^m)_{\beta_m\beta_0}
+=
+\sum_{\beta_1,\ldots,\beta_{m-1}}
+T_{\beta_m\beta_{m-1}}
+\cdots
+T_{\beta_1\beta_0}.
+\]
+The same formula holds for a product of nonidentical operators with the corresponding blocks in temporal order.
+\end{corollary}
+\RecordID{PSC-I-C-BLOCK-POWERS}
+\Depends{PSC-I-T-BLOCK-MULTIPLICATION.}
+
+\begin{proof}
+Induct on $m$ using \cref{thm:block-multiplication}.  For a product of different operators, use the same induction with the specified operator at each step.
+\end{proof}
+
+\begin{corollary}[Adjoint reversal]
+\label{cor:adjoint-reversal}
+If $X$ is Hilbert, every $P_\alpha$ is orthogonal, and $T\in\mathcal B(X)$, then
+\[
+\boxed{(T_{\beta\alpha})^*=(T^*)_{\alpha\beta}.}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-ADJOINT-REVERSAL}
+\Depends{PSC-I-D-TRANSFER-BLOCK.}
+
+\begin{proof}
+Because $P_\alpha^*=P_\alpha$,
+\[
+(P_\beta TP_\alpha)^*=P_\alpha T^*P_\beta.
+\]
+\end{proof}
+
+\subsection{The full block algebra and intertwining equations}
+
+\begin{corollary}[Tensor product transfer blocks]
+\label{cor:tensor-transfer-blocks}
+Let \(S\in\End(X)\) and \(T\in\End(Y)\), with packet systems \(\Pcal\) and \(\Qcal\).  Relative to the tensor product packet system of \cref{thm:tensor-packet-system},
+\[
+\boxed{
+(S\otimes T)_{(\beta,\delta),(\alpha,\gamma)}
+=
+S_{\beta\alpha}\otimes T_{\delta\gamma}.
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-TENSOR-TRANSFER-BLOCKS}
+\Depends{PSC-I-T-TENSOR-PACKET-SYSTEM and PSC-I-D-TRANSFER-BLOCK.}
+\Exports{Tensor network, quantum circuit, and multivariate packet calculations.}
+
+\begin{proof}
+By definition,
+\begin{align*}
+(S\otimes T)_{(\beta,\delta),(\alpha,\gamma)}
+&=(P_\beta\otimes Q_\delta)(S\otimes T)(P_\alpha\otimes Q_\gamma)\\
+&=(P_\beta SP_\alpha)\otimes(Q_\delta TQ_\gamma)\\
+&=S_{\beta\alpha}\otimes T_{\delta\gamma}.
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Blockwise intertwining equations]
+\label{thm:block-intertwining}
+Let \(T\in\End(X)\), \(S\in\End(Y)\), let \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be finite packet systems, and let \(U:X\to Y\).  Define
+\[
+T_{\beta\alpha}=P_\beta TP_\alpha,
+\qquad
+S_{\gamma\delta}=Q_\gamma SQ_\delta,
+\qquad
+U_{\gamma\alpha}=Q_\gamma UP_\alpha.
+\]
+Then
+\[
+\boxed{UT=SU}
+\]
+if and only if, for every \(\gamma\in J\) and \(\alpha\in I\),
+\[
+\boxed{
+\sum_{\beta\in I}U_{\gamma\beta}T_{\beta\alpha}
+=
+\sum_{\delta\in J}S_{\gamma\delta}U_{\delta\alpha}.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-BLOCK-INTERTWINING}
+\Depends{PSC-I-T-OPERATOR-RECONSTRUCTION and PSC-I-T-BLOCK-MULTIPLICATION.}
+\Exports{Packetwise equivalence, gluing, symmetry, and local representation comparison.}
+
+\begin{proof}
+Apply \(Q_\gamma\) on the left and \(P_\alpha\) on the right.  Inserting \(I_X=\sum_\beta P_\beta\) gives
+\[
+Q_\gamma UTP_\alpha
+=
+\sum_\beta Q_\gamma UP_\beta TP_\alpha
+=
+\sum_\beta U_{\gamma\beta}T_{\beta\alpha}.
+\]
+Inserting \(I_Y=\sum_\delta Q_\delta\) gives
+\[
+Q_\gamma SUP_\alpha
+=
+\sum_\delta Q_\gamma SQ_\delta UP_\alpha
+=
+\sum_\delta S_{\gamma\delta}U_{\delta\alpha}.
+\]
+Thus \(UT=SU\) implies every block equation.  Conversely, if every block equation holds, then all blocks of \(UT-SU\) vanish.  Exact operator reconstruction yields \(UT-SU=0\).
+\end{proof}
+
+\begin{interpretation}
+A global intertwiner is equivalent to a coupled finite system of packet equations.  Later arguments about holonomy and representations use this theorem after the local blocks have been constructed.  The equations state the exact compatibility those blocks must satisfy.
+\end{interpretation}
+
+
+\begin{theorem}[Full block algebra representation]
+\label{thm:block-algebra}
+The map
+\[
+\Theta_{\Pcal}:\End_{\bbk}(X)
+\longrightarrow
+\prod_{\beta,\alpha\in I}\Hom_{\bbk}(X_\alpha,X_\beta),
+\qquad
+T\longmapsto(T_{\beta\alpha})_{\beta,\alpha},
+\]
+is an algebra isomorphism when the codomain is equipped with matrix multiplication whose entries are operators.
+\end{theorem}
+\RecordID{PSC-I-T-BLOCK-ALGEBRA}
+\Depends{\nolinkurl{PSC-I-T-OPERATOR-RECONSTRUCTION} and
+\nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION}.}
+
+\begin{proof}
+Injectivity follows from exact reconstruction.  Given arbitrary maps $B_{\beta\alpha}:X_\alpha\to X_\beta$, define
+\[
+T\left(\sum_\alpha x_\alpha\right)
+:=
+\sum_{\alpha,\beta}B_{\beta\alpha}x_\alpha.
+\]
+The packet decomposition is unique and the index set is finite, so this defines a linear operator whose blocks are the prescribed maps.  Thus $\Theta_{\Pcal}$ is surjective.  Compatibility with multiplication is \cref{thm:block-multiplication}.
+\end{proof}
+
+
+
+\begin{corollary}[Propagation of packet support]
+\label{cor:packet-support-propagation}
+Let \(T\in\End(X)\) and \(x\in X\).  Then
+\[
+\boxed{
+\Supp_{\Pcal}(Tx)
+\subseteq
+\left\{\beta:\exists\alpha\in\Supp_{\Pcal}(x)
+\text{ with }T_{\beta\alpha}\neq0\right\}.
+}
+\]
+Equality holds whenever, for every target \(\beta\) in the set on the right, the active contributions
+\[
+\bigl\{T_{\beta\alpha}P_\alpha x:
+\alpha\in\Supp_{\Pcal}(x),\ T_{\beta\alpha}\neq0\bigr\}
+\]
+have nonzero sum.  In particular, equality holds if at most one active source packet feeds each such \(\beta\) and that source coordinate does not lie in the kernel of the corresponding block.
+\end{corollary}
+\RecordID{PSC-I-C-PACKET-SUPPORT-PROPAGATION}
+\Depends{PSC-I-D-PACKET-SUPPORT and PSC-I-T-OPERATOR-RECONSTRUCTION.}
+\Exports{Graph reachability, leakage bounds, and support pruning.}
+
+\begin{proof}
+For every target packet \(\beta\),
+\[
+P_\beta Tx
+=
+\sum_{\alpha\in\Supp_{\Pcal}(x)}T_{\beta\alpha}P_\alpha x.
+\]
+If every block in this sum is zero, then the coordinate with index \(\beta\) vanishes.  This proves the inclusion.  Equality is exactly the assertion that the displayed active sum is nonzero for every target in the set on the right.  The final sufficient condition leaves at most one nonzero summand at each target, and kernel avoidance makes that summand nonzero.
+\end{proof}
+
+
+\begin{corollary}[Dimension count]
+\label{cor:dimension-count}
+If $X$ is finite dimensional and $d_\alpha=\dim X_\alpha$, then
+\[
+\dim\End_{\bbk}(X)
+=
+\sum_{\alpha,\beta}d_\alpha d_\beta
+=
+\left(\sum_\alpha d_\alpha\right)^2.
+\]
+\end{corollary}
+\RecordID{PSC-I-C-DIMENSION-COUNT}
+\Depends{PSC-I-T-BLOCK-ALGEBRA.}
+
+\begin{proof}
+Take dimensions in the block algebra isomorphism and use $\dim\Hom(X_\alpha,X_\beta)=d_\alpha d_\beta$.
+\end{proof}
+
+\begin{proposition}[Block diagonal projection and packet commutant]
+\label{prop:block-diagonal-projection}
+Define
+\[
+\Delta_{\Pcal}(T):=\sum_{\alpha}P_\alpha TP_\alpha.
+\]
+Then $\Delta_{\Pcal}$ is a linear idempotent on $\End(X)$ whose range is the block diagonal subalgebra.  For $T\in\End(X)$, the following are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item $TP_\alpha=P_\alpha T$ for every $\alpha$.
+\item $T_{\beta\alpha}=0$ whenever $\beta\neq\alpha$.
+\item $\Delta_{\Pcal}(T)=T$.
+\end{enumerate}
+\end{proposition}
+\RecordID{PSC-I-P-BLOCK-DIAGONAL-COMMUTANT}
+\Depends{PSC-I-T-OPERATOR-RECONSTRUCTION.}
+\Exports{Symmetry sector invariance and packet leakage decompositions.}
+
+\begin{proof}
+Pairwise annihilation gives $\Delta_{\Pcal}^2=\Delta_{\Pcal}$ and identifies its range with diagonal block families.  If $T$ commutes with all $P_\alpha$, then for $\beta\neq\alpha$,
+\[
+P_\beta TP_\alpha=P_\beta P_\alpha T=0.
+\]
+Thus (i) implies (ii).  Exact reconstruction shows (ii) implies (iii).  If $T=\sum_\alpha P_\alpha TP_\alpha$, then
+\[
+TP_\gamma=P_\gamma TP_\gamma=P_\gamma T,
+\]
+so (iii) implies (i).
+\end{proof}
+
+\begin{microexample}[title={Upper triangular support}]
+Take three packets of dimension one.  Permit the diagonal blocks and transfers from a source with a lower index to a target with a higher index.  The support relation is a total preorder.  The blocks outside the diagonal form a nilpotent ideal, and every product of three strict transfers vanishes.  This finite algebraic example anticipates the weighted triangular inverses developed in Paper II.
+\end{microexample}
+
+
+\subsection{Support patterns, preorders, and triangular structure}
+\begin{definition}[Support relation and support space]
+\label{def:support-relation}
+For a relation $R\subseteq I\times I$, with $(\beta,\alpha)$ interpreted as an allowed transfer $\alpha\to\beta$, define
+\[
+\mathfrak M_R
+:=
+\{T\in\End(X):T_{\beta\alpha}=0\text{ whenever }(\beta,\alpha)\notin R\}.
+\]
+\end{definition}
+\RecordID{PSC-I-D-SUPPORT-RELATION}
+
+\begin{theorem}[Support pattern algebra criterion]
+\label{thm:support-pattern}
+Assume $X_\alpha\neq0$ for every $\alpha\in I$.  Then:
+\begin{enumerate}[label=(\roman*)]
+\item $I_X\in\mathfrak M_R$ if and only if $R$ is reflexive.
+\item $\mathfrak M_R\mathfrak M_R\subseteq\mathfrak M_R$ if and only if $R$ is transitive.
+\item $\mathfrak M_R$ is a unital subalgebra if and only if $R$ is a preorder.
+\end{enumerate}
+\end{theorem}
+\RecordID{PSC-I-T-SUPPORT-PATTERN-ALGEBRA}
+\Depends{PSC-I-T-BLOCK-MULTIPLICATION.}
+
+\begin{proof}
+The identity has diagonal blocks $I_{X_\alpha}$ and no blocks outside the diagonal, so it belongs to $\mathfrak M_R$ exactly when $(\alpha,\alpha)\in R$ for every $\alpha$.
+
+Assume $R$ is transitive.  If a summand
+\[
+S_{\gamma\beta}T_{\beta\alpha}
+\]
+in the $(\gamma,\alpha)$ block of $ST$ is nonzero, then $(\gamma,\beta)$ and $(\beta,\alpha)$ lie in $R$.  Transitivity gives $(\gamma,\alpha)\in R$, so every forbidden block of $ST$ vanishes.
+
+Conversely, suppose transitivity fails.  Choose $\alpha,\beta,\gamma$ with
+\[
+(\beta,\alpha)\in R,
+\qquad
+(\gamma,\beta)\in R,
+\qquad
+(\gamma,\alpha)\notin R.
+\]
+Choose nonzero vectors $u\in X_\alpha$, $v\in X_\beta$, and $w\in X_\gamma$.  Choose linear functionals $f\in X_\alpha^*$ and $g\in X_\beta^*$ with $f(u)=g(v)=1$.  Let $T$ have the sole block $x\mapsto f(x)v$ from $X_\alpha$ to $X_\beta$, and let $S$ have the sole block $y\mapsto g(y)w$ from $X_\beta$ to $X_\gamma$.  Then $S,T\in\mathfrak M_R$, but $ST$ has a nonzero forbidden $(\gamma,\alpha)$ block.  This proves necessity.  Combining reflexivity and transitivity gives (iii).
+\end{proof}
+
+\begin{corollary}[Bounded support patterns closed under $*$]
+\label{cor:star-support}
+Let $X$ be Hilbert, let the packet projectors be orthogonal, assume $X_\alpha\neq0$ for every $\alpha\in I$, and put
+\[
+\mathfrak M_R^{\mathrm b}:=\mathfrak M_R\cap\mathcal B(X).
+\]
+Then $\mathfrak M_R^{\mathrm b}$ is closed under adjoints if and only if $R$ is symmetric.  Hence $\mathfrak M_R^{\mathrm b}$ is a unital $*$ subalgebra of $\mathcal B(X)$ if and only if $R$ is an equivalence relation.
+\end{corollary}
+\RecordID{PSC-I-C-SUPPORT-PATTERN-STAR}
+\Depends{PSC-I-C-ADJOINT-REVERSAL and PSC-I-T-SUPPORT-PATTERN-ALGEBRA.}
+
+\begin{proof}
+Adjoint reversal sends an allowed $(\beta,\alpha)$ block to an $(\alpha,\beta)$ block.  Symmetry is therefore sufficient.  If symmetry fails, choose a nonzero map of rank one in an allowed nonsymmetric block.  Its adjoint occupies the forbidden reverse block, proving necessity.  A reflexive, transitive, symmetric relation is an equivalence relation.
+\end{proof}
+
+\begin{theorem}[Preorder support algebra decomposition]
+\label{thm:preorder-decomposition}
+Let $R$ be a preorder on the finite set $I$.  Define
+\[
+\alpha\sim\beta
+\quad\Longleftrightarrow\quad
+(\beta,\alpha)\in R\text{ and }(\alpha,\beta)\in R.
+\]
+Let $\overline I=I/{\sim}$, which carries the induced partial order, and put
+\[
+X_C:=\bigoplus_{\alpha\in C}X_\alpha.
+\]
+Let $\mathfrak N_R\subseteq\mathfrak M_R$ consist of operators whose blocks vanish whenever source and target belong to the same equivalence class.  Then:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak N_R$ is a nilpotent ideal on both sides.
+\item If $h$ is the maximal number of strict steps in a chain of $\overline I$, then
+\[
+\mathfrak N_R^{\,h+1}=0.
+\]
+\item The map to the diagonal classes induces an algebra isomorphism
+\[
+\boxed{
+\mathfrak M_R/\mathfrak N_R
+\cong
+\prod_{C\in\overline I}\End_{\bbk}(X_C).
+}
+\]
+\end{enumerate}
+\end{theorem}
+\RecordID{PSC-I-T-PREORDER-ALGEBRA-DECOMPOSITION}
+\Depends{PSC-I-T-BLOCK-MULTIPLICATION and PSC-I-T-SUPPORT-PATTERN-ALGEBRA.}
+\Exports{Filtered transfer algebras and triangular packet inverses in Paper II.}
+
+\begin{proof}
+A nonzero block in $\mathfrak N_R$ moves from one equivalence class to a strictly larger class in the quotient partial order.  The block multiplication law shows that products concatenate such moves.  Therefore left or right multiplication by an element of $\mathfrak M_R$ preserves the property of having no blocks within a single class, so $\mathfrak N_R$ is an ideal on both sides.  A product of $h+1$ elements of $\mathfrak N_R$ would require a strict chain of $h+1$ steps in $\overline I$, which does not exist.  This proves nilpotence.
+
+Let $P_C=\sum_{\alpha\in C}P_\alpha$.  Define
+\[
+\rho:\mathfrak M_R\longrightarrow\prod_C\End(X_C),
+\qquad
+\rho(T)=(P_CTP_C)_C.
+\]
+If an intermediate class $D$ contributes to $P_CSTP_C$, then the preorder contains transfers $C\to D$ and $D\to C$, forcing $C=D$ in the quotient poset.  Hence
+\[
+P_CSTP_C=(P_CSP_C)(P_CTP_C),
+\]
+so $\rho$ is an algebra homomorphism.  Every collection of endomorphisms of the $X_C$ defines an allowed operator that is block diagonal with respect to the classes, so $\rho$ is surjective.  Its kernel is exactly $\mathfrak N_R$.  The first isomorphism theorem gives the quotient formula.
+\end{proof}
+
+\begin{sectionrecap}
+Every operator has an exact packet matrix.  Products sum over intermediate packet indices, tensor products factor blockwise, and global intertwiners are equivalent to coupled block equations.  A support pattern is closed under multiplication precisely when its relation is transitive.  For a preorder pattern, the quotient is block diagonal and the ideal of strict transfers is nilpotent.
+\end{sectionrecap}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{02_transfer_block_norms.pdf}
+\caption{An operator represented by the norms of its blocks between packets. The diagonal entries preserve packets. Entries outside the diagonal describe transfers between packets.}
+\label{fig:transfer-blocks}
+\end{figure}
+
+\section{Transfer graphs and directed packet generation}
+
+
+
+\begin{readerroadmap}
+The transfer graph records which blocks between packets occur in a declared generating family.  Reachability constrains every word in that family.  To obtain an exact seed count from the graph, we also need hypotheses that let generation propagate along its edges.
+\end{readerroadmap}
+\subsection{Graphs generated by declared operators}
+
+\begin{definition}[Transfer graph of a family generating the algebra]
+\label{def:transfer-graph}
+Let $\Pcal=(P_\alpha)_{\alpha\in I}$ be a finite packet system on $X$ with every $P_\alpha\in\A$.  Let $\mathcal G\subseteq\A$ satisfy
+\[
+\A=\alg_{\bbk}\bigl(\{P_\alpha:\alpha\in I\}\cup\mathcal G\bigr),
+\]
+where $\alg_{\bbk}(E)$ denotes the unital subalgebra over $\bbk$ generated by $E$.  The transfer graph $\Gamma(\mathcal G,\Pcal)$ has vertex set $I$ and an arrow
+\[
+\alpha\longrightarrow\beta
+\]
+when
+\[
+P_\beta GP_\alpha\neq0
+\]
+for at least one $G\in\mathcal G$.  Reachability includes paths of length zero.
+\end{definition}
+\RecordID{PSC-I-D-TRANSFER-GRAPH}
+
+\begin{theorem}[Reachability support of the generated algebra]
+\label{thm:algebra-reachability-support}
+For every $A\in\A$,
+\[
+P_\beta AP_\alpha=0
+\qquad\text{whenever }\beta\notin\Reach(\alpha).
+\]
+Equivalently,
+\[
+\A\subseteq\mathfrak M_{R_\Gamma},
+\qquad
+R_\Gamma:=\{(\beta,\alpha):\beta\in\Reach(\alpha)\}.
+\]
+\end{theorem}
+\RecordID{PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT}
+\Depends{PSC-I-D-TRANSFER-GRAPH and PSC-I-C-BLOCK-POWERS.}
+
+\begin{proof}
+It is enough to treat a word in the generators and packet projectors.  Insert
+\[
+I=\sum_{\gamma\in I}P_\gamma
+\]
+between consecutive nonprojector generators.  Every resulting $(\beta,\alpha)$ block is a finite sum of products
+\[
+P_\beta G_mP_{\gamma_{m-1}}
+G_{m-1}\cdots
+P_{\gamma_1}G_1P_\alpha.
+\]
+A nonzero product requires every consecutive block to be nonzero, hence gives a directed path
+\[
+\alpha\to\gamma_1\to\cdots\to\gamma_{m-1}\to\beta.
+\]
+Packet projectors only insert stationary steps.  Thus a word has no block from $\alpha$ to an unreachable $\beta$.  Linear combinations preserve the same zero pattern.
+\end{proof}
+
+\begin{interpretation}
+The graph belongs to the declared generating family within \(\End(X)\).  Multiplying its generators concatenates paths, so a word in them cannot create a block outside graph reachability.  Reachability alone gives less information in the other direction.  A nonzero edge block may reach only a proper subspace of its target packet.
+\end{interpretation}
+
+
+A path records a possible sequence of transfers.  It does not guarantee that the composed transfer is nonzero.  The image of one block may lie in the kernel of the next, and different path contributions may cancel when they are added.  The reachability theorem therefore gives a restriction on support.  To prove that a target packet is generated, we must also examine what the blocks do to vectors.  Surjectivity along edges will provide that additional information below.
+
+\subsection{Reachability obstructions for seeds}
+\begin{proposition}[Reachability obstruction for generated hulls]
+\label{prop:reachability-obstruction}
+Let $I_0\subseteq I$ and let
+\[
+S\subseteq\bigoplus_{\alpha\in I_0}X_\alpha.
+\]
+Then
+\[
+\boxed{
+\Hull_{\A}(S)
+\subseteq
+\bigoplus_{\beta\in\Reach(I_0)}X_\beta.
+}
+\]
+In particular, no seed supported outside a source strongly connected component can generate a nonzero vector in that source component.
+\end{proposition}
+\RecordID{PSC-I-P-REACHABILITY-OBSTRUCTION}
+\Depends{PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT.}
+
+\begin{proof}
+For $s\in S$, write $s=\sum_{\alpha\in I_0}P_\alpha s$.  If $\beta$ is unreachable from $I_0$, then for every $A\in\A$,
+\[
+P_\beta As
+=
+\sum_{\alpha\in I_0}P_\beta AP_\alpha s
+=0
+\]
+by \cref{thm:algebra-reachability-support}.  The same holds for every finite linear combination of orbit vectors.
+\end{proof}
+
+\subsection{Packet pure generation and source components}
+A strongly connected component groups packets that can reach one another.  The condensation graph replaces each such group by a single vertex.  It has no directed cycles between distinct components.  A source component has no incoming edge from another component, so generation there must begin with seed coordinates already present in that component.  The rank below records the effect of requiring each seed to lie in a single packet.
+
+\begin{definition}[Packet pure seed rank]
+\label{def:directed-seed-rank}
+A vector is packet pure when it lies in one packet space $X_\alpha$.  Define
+\[
+\psrank_{\A,\Pcal}(X)
+:=
+\min\{|S|:S\text{ is packet-pure and }\A S=X\}.
+\]
+For $C\subseteq I$, put
+\[
+P_C:=\sum_{\alpha\in C}P_\alpha,
+\qquad
+X_C:=P_CX,
+\qquad
+\A_C:=P_C\A P_C,
+\]
+and define the local packet pure rank
+\[
+r_C:=\psrank_{\A_C,\Pcal|_C}(X_C).
+\]
+\end{definition}
+\RecordID{PSC-I-D-DIRECTED-SEED-RANK}
+
+\begin{proposition}[Basic packet pure rank bounds]
+\label{prop:packet-pure-rank-bounds}
+For every $A$ module resolved into packets with $P_\alpha\in A$,
+\[
+\boxed{
+\srank_A(X)
+\leq
+\psrank_{A,\Pcal}(X)
+\leq
+\sum_{\alpha\in I}
+\srank_{P_\alpha A P_\alpha}(X_\alpha).
+}
+\]
+The corner algebra on the right is unital on $X_\alpha$ with identity $P_\alpha$.
+\end{proposition}
+\RecordID{PSC-I-P-PACKET-PURE-RANK-BOUNDS}
+\Depends{PSC-I-D-SEED-RANK and PSC-I-D-DIRECTED-SEED-RANK.}
+
+\begin{proof}
+Every packet pure generating family is an unrestricted generating family, which gives the first inequality.  For each $\alpha$, choose a minimal generating family $S_\alpha\subseteq X_\alpha$ for the corner action $P_\alpha A P_\alpha$.  The union $S=\bigcup_\alpha S_\alpha$ is packet pure.  Since every $x\in X$ has the unique decomposition $x=\sum_\alpha x_\alpha$ and every $x_\alpha$ lies in $(P_\alpha A P_\alpha)S_\alpha\subseteq AS$, the union generates $X$.  Its cardinality is the displayed sum.
+\end{proof}
+
+\begin{definition}[Packet system surjective along edges]
+\label{def:edge-surjective}
+The module resolved into packets is surjective along edges relative to $\Gamma(\mathcal G,\Pcal)$ when, for every graph edge $\alpha\to\beta$, there exists $B\in\A$ such that the pure block
+\[
+P_\beta BP_\alpha:X_\alpha\twoheadrightarrow X_\beta
+\]
+is surjective.
+\end{definition}
+\RecordID{PSC-I-D-EDGE-SURJECTIVE}
+
+\begin{theorem}[Source component formula for packet pure seed rank]
+\label{thm:source-component-rank}
+Assume $I$ is finite, every packet space is nonzero, and the module resolved into packets is surjective along edges.  Let $\mathfrak C_0$ be the set of source strongly connected components of the condensation graph of $\Gamma(\mathcal G,\Pcal)$.  Then
+\[
+\boxed{
+\psrank_{\A,\Pcal}(X)
+=
+\sum_{C\in\mathfrak C_0}r_C.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-SOURCE-COMPONENT-SEED-RANK}
+\Depends{PSC-I-P-REACHABILITY-OBSTRUCTION and PSC-I-D-EDGE-SURJECTIVE.}
+\Exports{Residual transport forests and directed source rank calculations.}
+
+\begin{proof}
+Let $S$ be a packet pure generating family for $X$ and fix a source component $C$.  Seeds outside $C$ cannot reach $C$ by \cref{prop:reachability-obstruction}.  Moreover, for $s\in X_C$ and $A\in\A$,
+\[
+P_CAs=(P_CAP_C)s\in\A_Cs.
+\]
+Thus the seeds of $S$ lying in $X_C$ must generate $X_C$ under $\A_C$, and there are at least $r_C$ of them.  Summing over disjoint source components gives
+\[
+\psrank_{\A,\Pcal}(X)
+\geq
+\sum_{C\in\mathfrak C_0}r_C.
+\]
+
+For the reverse inequality, choose for each source component $C$ a packet pure family $S_C$ of size $r_C$ generating $X_C$ under $\A_C$, and put $S=\bigcup_CS_C$.  Then every source component lies in $\A S$.  Traverse the finite condensation graph in a topological order.  Suppose all components preceding a component $D$ that is not a source have already been shown to lie in $\A S$.  Choose an incoming condensation edge from such a component to $D$, represented by a graph edge $\alpha\to\beta$ with $\alpha$ already generated and $\beta\in D$.  Surjectivity along edges gives a pure block
+\[
+B_{\beta\alpha}:X_\alpha\twoheadrightarrow X_\beta.
+\]
+Because $X_\alpha\subseteq\A S$ and $\A S$ is invariant under $\A$, surjectivity implies $X_\beta\subseteq\A S$.  For any other vertex $\gamma\in D$, choose a directed path inside the strongly connected component from $\beta$ to $\gamma$.  Successive surjective edge blocks propagate the full packet space along the path, so $X_\gamma\subseteq\A S$.  Hence $X_D\subseteq\A S$.  Induction over the condensation graph gives $X=\A S$, proving the upper bound.
+\end{proof}
+
+\begin{hypothesisguide}
+The formula for source components uses local generation inside those components and surjectivity along the edges.  Local generation supplies the starting packet spaces.  Surjectivity then propagates their full spaces through the condensation graph.  Without it, a path may exist while its blocks reach only a proper subspace.
+\end{hypothesisguide}
+
+
+\begin{definition}[Packet propagating system]
+\label{def:packet-propagating}
+A packet system that is surjective along edges is called packet propagating when every packet space $X_\alpha$ is cyclic under its diagonal corner algebra
+\[
+P_\alpha\A P_\alpha.
+\]
+\end{definition}
+\RecordID{PSC-I-D-PACKET-PROPAGATING}
+
+\begin{corollary}[Unweighted source component count]
+\label{cor:source-component-count}
+Assume the module resolved into packets is packet propagating and $X_\alpha\neq0$ for every $\alpha\in I$.  If $c_0$ denotes the number of source strongly connected components, then
+\[
+\boxed{
+\psrank_{\A,\Pcal}(X)=c_0.
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-SOURCE-COMPONENT-COUNT}
+\Depends{PSC-I-T-SOURCE-COMPONENT-SEED-RANK.}
+
+\begin{proof}
+Fix a source component $C$ and a vertex $\alpha\in C$.  Choose a cyclic vector $s\in X_\alpha$ for $P_\alpha\A P_\alpha$.  It generates all of $X_\alpha$.  Strong connectivity and surjectivity along edges then propagate the whole packet space to every vertex of $C$.  Thus $r_C=1$ for every source component.  Apply \cref{thm:source-component-rank}.
+\end{proof}
+
+\begin{boundary}[Mixed support seeds can merge source requirements]
+\label{bnd:packet-pure-boundary}
+The source component formulas concern packet pure seeds.  They do not give the unrestricted seed rank.  For example, let
+\[
+\A=\bbk\times\bbk,
+\qquad
+X=\bbk\oplus\bbk
+\]
+with the coordinate action and the two coordinate packet projectors.  The transfer graph has two source components and
+\[
+\psrank_{\A,\Pcal}(X)=2,
+\]
+but the mixed vector $(1,1)$ is cyclic, so
+\[
+\srank_{\A}(X)=1.
+\]
+\end{boundary}
+\RecordID{PSC-I-B-PACKET-PURE-BOUNDARY}
+
+\begin{microexample}[title={Why mixed seeds change the answer}]
+Let the acting algebra be diagonal on \(X=X_1\oplus X_2\), with no transfer between the packets.  Generation by packet pure seeds requires one seed in each source component, so \(\psrank=2\).  A single mixed vector \(x_1+x_2\) may generate both packets of dimension one under the diagonal action, so unrestricted seed rank can be \(1\).
+\end{microexample}
+
+\begin{sectionrecap}
+Graph reachability restricts which blocks can be nonzero in the algebra generated by the declared operators.  Source components give the exact rank for packet pure seeds under the stated local generation and edge propagation hypotheses.  Seeds with several nonzero packet coordinates have a different minimum count and may meet several source requirements at once.
+\end{sectionrecap}
+
+

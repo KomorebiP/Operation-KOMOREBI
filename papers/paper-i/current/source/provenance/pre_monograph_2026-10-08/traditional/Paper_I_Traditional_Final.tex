@@ -1,0 +1,3951 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=23mm,includeheadfoot,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{aliascnt}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[table]{xcolor}
+\usepackage{setspace}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage{multicol}
+\usepackage{makecell}
+\usepackage{graphicx,tikz,titlesec,bookmark,caption,etoolbox,tocloft}
+\setlength{\cftbeforesecskip}{4pt}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\graphicspath{{figures/}}
+\definecolor{accent}{HTML}{137668}\definecolor{muted}{HTML}{536568}
+\frenchspacing\emergencystretch=2em\clubpenalty=10000\widowpenalty=10000\raggedbottom
+\titleformat{\section}{\sffamily\bfseries\large\color{accent}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize}{\thesubsection}{.7em}{}
+\titlespacing*{\section}{0pt}{1.4\baselineskip}{.55\baselineskip}
+\captionsetup{font=small,labelfont={sf,bf},labelsep=period}
+\pretocmd{\section}{\Needspace{7\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\cA}{\mathcal A}\newcommand{\cB}{\mathcal B}\newcommand{\cP}{\mathcal P}
+\newcommand{\R}{\mathbb R}\newcommand{\C}{\mathbb C}\newcommand{\Z}{\mathbb Z}\newcommand{\N}{\mathbb N}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\rank}{\operatorname{rank}}\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\closure}[1]{\overline{#1}}
+
+
+\allowdisplaybreaks
+\setstretch{1.055}
+\setlength{\parskip}{0.30em}
+\setlength{\parindent}{1.35em}
+\setlist[itemize]{topsep=0.35em,itemsep=0.15em,leftmargin=1.6em}
+\setlist[enumerate]{topsep=0.35em,itemsep=0.15em,leftmargin=1.8em}
+\definecolor{PSCBlue}{RGB}{44,83,118}
+\definecolor{PSCLightBlue}{RGB}{242,247,251}
+\definecolor{PSCGreen}{RGB}{49,105,83}
+\definecolor{PSCLightGreen}{RGB}{243,249,246}
+\definecolor{PSCAmber}{RGB}{132,91,21}
+\definecolor{PSCLightAmber}{RGB}{252,248,238}
+\definecolor{PSCGray}{RGB}{90,96,102}
+\definecolor{PSCLightGray}{RGB}{247,247,247}
+
+\newtcolorbox{readerroadmap}[1][]{
+  enhanced,breakable,colback=PSCLightBlue,colframe=PSCBlue,
+  boxrule=0.65pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Reader roadmap},#1}
+\newtcolorbox{keyidea}[1][]{
+  enhanced,breakable,colback=PSCLightGreen,colframe=PSCGreen,
+  boxrule=0.65pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Key idea},#1}
+\newtcolorbox{interpretation}[1][]{
+  enhanced,breakable,colback=PSCLightGray,colframe=PSCGray,
+  boxrule=0.55pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Interpretation},#1}
+\newtcolorbox{microexample}[1][]{
+  enhanced,breakable,colback=PSCLightAmber,colframe=PSCAmber,
+  boxrule=0.55pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Running example},#1}
+\newtcolorbox{hypothesisguide}[1][]{
+  enhanced,breakable,colback=white,colframe=black!45,
+  boxrule=0.5pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Why the hypotheses matter},#1}
+\newtcolorbox{sectionrecap}[1][]{
+  enhanced,breakable,colback=white,colframe=PSCBlue,
+  borderline west={2pt}{0pt}{PSCBlue},boxrule=0pt,arc=0mm,
+  left=2mm,right=1mm,top=0.8mm,bottom=0.8mm,
+  fonttitle=\bfseries,title={Section recap},#1}
+\newtcolorbox{warningbox}[1][]{
+  enhanced,breakable,colback=PSCLightAmber,colframe=PSCAmber,
+  boxrule=0.65pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Do not conflate},#1}
+\newcommand{\ProofMap}[1]{\begin{interpretation}[title={Proof map}]#1\end{interpretation}}
+\newcommand{\ConceptChain}[1]{\begin{center}\fbox{\begin{minipage}{0.92\textwidth}\centering #1\end{minipage}}\end{center}}
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Expanded symbolic and expository foundation},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}KOMOREBI MATHEMATICS / PAPER I}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{muted}TRADITIONAL PAPER}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}Projector-resolved seed calculus}\fancyfoot[R]{\sffamily\small\color{accent}\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{classicalinput}{theorem}
+\newtheorem{classicalinput}[classicalinput]{Classical Input}
+\aliascntresetthe{classicalinput}
+\theoremstyle{remark}
+\newaliascnt{boundary}{theorem}
+\newtheorem{boundary}[boundary]{Boundary}
+\aliascntresetthe{boundary}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\theoremstyle{definition}\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{classicalinput}{classical input}{classical inputs}
+\crefname{boundary}{boundary}{boundaries}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\bbk}{\Bbbk}
+\newcommand{\A}{\mathcal A}
+\newcommand{\B}{\mathcal B}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Qcal}{\mathcal Q}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\psrank}{\operatorname{psrank}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Jac}{\operatorname{Jac}}
+\newcommand{\Irr}{\operatorname{Irr}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\alg}{\operatorname{alg}}
+\newcommand{\Reach}{\operatorname{Reach}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\cl}[1]{\overline{#1}}
+\newcommand{\RecordID}[1]{\label{record:#1}}
+\newcommand{\Depends}[1]{}
+\newcommand{\Exports}[1]{}
+\newcommand{\BoundaryNote}[1]{\par\noindent\begingroup\footnotesize\color{PSCGray}\raggedright\textbf{Boundary.} #1\par\endgroup}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+
+\newcommand{\OO}{\mathcal O}\newcommand{\FF}{\mathbb F}\newcommand{\QQ}{\mathbb Q}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}\newcommand{\CC}{\mathbb C}\newcommand{\kk}{\Bbbk}
+\renewcommand{\AA}{\mathcal A}\newcommand{\BB}{\mathcal B}
+\newcommand{\Fitt}{\operatorname{Fitt}}\newcommand{\Ann}{\operatorname{Ann}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\whot}{\mathbin{\widehat\otimes}}\newcommand{\m}{\mathfrak m}\newcommand{\p}{\mathfrak p}
+\newcommand{\head}[1]{\par\vspace{2pt}{\sffamily\bfseries\normalsize #1}\par\vspace{1pt}}
+\newcommand{\atlasCaption}[1]{\par\noindent{\footnotesize\color{black!70}#1\par}}
+\newtcolorbox{insight}{colback=black!3,colframe=accent,boxrule=0pt,leftrule=1.1pt,arc=0pt,left=10pt,right=10pt,top=5pt,bottom=5pt,before skip=6pt,after skip=5pt}
+\newcommand{\takeaway}[1]{\begin{insight}\textbf{Read this as:}\ #1\end{insight}}
+\newcommand{\vfig}[2][.92]{\par\begingroup\centering\resizebox{#1\linewidth}{!}{\input{visual_graphics/#2.tex}}\par\endgroup\vspace{2pt}}
+\newcommand{\vpage}[4]{\clearpage\hypertarget{visual:#1}{}\pdfbookmark[2]{V#1. #2}{PIA.visual#1}{\sffamily\small\bfseries\color{accent}PLATE #1 / #3\par}\vspace{5pt}{\sffamily\bfseries\fontsize{22}{25}\selectfont #2\par}\vspace{5pt}{\sffamily\fontsize{8.7}{11}\selectfont\color{black!65}#4\par}\vspace{6pt}}
+\newcommand{\pagerefV}[1]{\hyperlink{visual:#1}{Plate~#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Projector-Resolved Seed Calculus I}
+\renewcommand{\KomorebiSubtitle}{Typed operator systems, seed rank, and exact packet coordinates}
+\renewcommand{\KomorebiSeries}{Core series I}
+\renewcommand{\KomorebiKind}{Traditional paper}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper I}
+\renewcommand{\KomorebiTitleSize}{31}
+\renewcommand{\KomorebiTitleLeading}{36}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\begin{abstract}
+This paper develops the complete linear foundation of the projector-resolved seed calculus and presents it in a form intended to be read, audited, and reused.  The theory begins with a typed operator grammar, passes to a concrete realized operator algebra, studies generation from one or more seeds, and then resolves both vectors and operators into exact packet coordinates.  The resulting transfer-block language supports graph constraints, quotient descent, completion, and functorial transport into later realizations.
+
+Every theorem, proposition, lemma, and corollary is proved under explicit hypotheses.  The central generator results include finite free presentations, detection of the minimal generator number modulo the Jacobson radical, the semisimple multiplicity formula over arbitrary division rings, and the single-operator formula over arbitrary fields.  The central coordinate results include exact finite packet reconstruction, a countable unconditional extension, tensor-product and dual packet systems, complete transfer-block multiplication, support-preorder algebras, packet-pure source-component generation, blockwise intertwining equations, invariant quotient descent, and semantic theorem transport through realization functors.
+
+The presentation combines the complete symbolic foundation with worked quiver, coordinate-ring, matrix, and graph models, an analytic shift example, exact computational specifications, and a visual atlas. Stable statement identifiers connect the traditional argument to the machine-native companion. The separate Lean guide records precisely which statements and certificate scopes have kernel-checked counterparts.
+\end{abstract}
+
+\clearpage
+\begingroup\small\setstretch{1.0}\tableofcontents\endgroup
+\clearpage
+
+\section*{Reader's orientation}
+\addcontentsline{toc}{section}{Reader's orientation}
+\begin{center}
+\begin{tabularx}{0.96\textwidth}{@{}lY@{}}
+\toprule
+\textbf{Status class} & \textbf{Meaning}\\
+\midrule
+Definition & Introduced structure or notation.\\
+Theorem, proposition, corollary, lemma & Proved in this manuscript under the printed hypotheses.\\
+Classical input & Imported standard theorem, stated explicitly because later proofs depend on it.\\
+Boundary & A limitation, counterexample, or non-implication that is part of the formal scope.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\noindent\textbf{Companion volumes.} The Lean guide explains the formal development, its build procedure, theorem mapping, and the hypotheses of each verified contract. The machine-native paper exposes the stable records, dependencies, and executable evidence interfaces. The mathematics below retains the full scope of its stated classical inputs and written proofs.
+
+
+\begin{readerroadmap}
+The paper has four layers.  They should be read in order at least once.
+\begin{enumerate}
+\item \textbf{Grammar and realization.}  Specify which compositions of operators are legal, then distinguish that abstract syntax from the operators that actually act on a chosen space.
+\item \textbf{Generation.}  Choose one or more seeds and ask which part of the realization is generated by their operator orbits.  The minimal number of required seeds is the seed rank.
+\item \textbf{Packet coordinates.}  Resolve the space by a complete family of idempotents.  Every vector and every operator then has exact packet coordinates.
+\item \textbf{Transport.}  Study how those coordinates behave under products, graphs, morphisms, quotients, completion, and realization functors.
+\end{enumerate}
+The first two layers describe what can be generated.  The last two describe how the generated object is resolved and transported.
+\end{readerroadmap}
+
+\subsection*{The basic conceptual chain}
+\ConceptChain{\(\begin{gathered}
+\text{typed grammar}\longrightarrow\text{realized algebra}\longrightarrow\text{seed hull}\\[.45em]
+\longrightarrow\text{seed rank}\longrightarrow\text{packet coordinates}\\[.45em]
+\longrightarrow\text{transfer blocks}\longrightarrow\text{functorial realization}.
+\end{gathered}\)}
+
+The words in this chain have deliberately different meanings.  A grammar is a presentation of allowed operator words.  A realized algebra is the image of that grammar in an endomorphism algebra.  A seed hull is an orbit span inside one particular module.  A packet system is an exact coordinate decomposition and need not be orthogonal.  A realization functor is required to preserve a declared mathematical profile, not merely the vocabulary.
+
+\subsection*{Four questions answered by Paper I}
+\begin{center}
+\begin{tabularx}{0.96\textwidth}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}Y Y@{}}
+\toprule
+\textbf{Question} & \textbf{Formal object} & \textbf{Principal answer}\\
+\midrule
+What operations are legal? & Quiver with relations or a unital operator algebra & Typed realizations are modules over the quotient path algebra.\\
+What can a finite seed family generate? & Evaluation map \(A^{\oplus r}\to M\) & The generated hull is a quotient of a finite free module.\\
+How many seeds are required? & \(\srank_A(M)\) & Pass to \(M/\Jac(A)M\), then compute multiplicities in the semisimple top.\\
+How are vectors and operators resolved? & Complete idempotents \((P_\alpha)\) & \(X\cong\bigoplus_\alpha P_\alpha X\) and \(T\leftrightarrow(P_\beta TP_\alpha)\).\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection*{Notation map}
+\begin{center}
+\begin{longtable}{@{}p{0.19\textwidth}p{0.27\textwidth}p{0.48\textwidth}@{}}
+\toprule
+\textbf{Symbol} & \textbf{Name} & \textbf{Meaning}\\
+\midrule
+\endhead
+\(\mathfrak G=(Q,I)\) & Typed grammar & A finite quiver and a two-sided ideal of source-target compatible relations.\\
+\(\Lambda_{\mathfrak G}\) & Grammar algebra & The quotient path algebra \(\bbk Q/I\).\\
+\(\A_X\) & Realized algebra & The image of the grammar algebra in \(\End_{\bbk}(|X|)\).\\
+\(S\subseteq M\) & Seed family & The vectors from which the operator orbit is generated.\\
+\(\Hull_A(S)\) & Generated hull & The submodule \(AS\), or its declared topological closure.\\
+\(\srank_A(M)\) & Seed rank & The minimal cardinality of a finite generating family.\\
+\(\Pcal=(P_\alpha)\) & Packet system & Pairwise annihilating idempotents summing to the identity.\\
+\(X_\alpha\) & Packet space & The range \(P_\alpha X\).\\
+\(\mathcal A_{\Pcal}\) & Analysis & The map \(x\mapsto(P_\alpha x)_\alpha\).\\
+\(\mathcal S_{\Pcal}\) & Synthesis & The map \((x_\alpha)\mapsto\sum_\alpha x_\alpha\).\\
+\(T_{\beta\alpha}\) & Transfer block & The source-target block \(P_\beta TP_\alpha:X_\alpha\to X_\beta\).\\
+\(\Supp_{\Pcal}(x)\) & Packet support & The packet indices on which \(x\) has a nonzero coordinate.\\
+\(\psrank\) & Packet-pure seed rank & The minimal number of generating seeds each supported in a single packet.\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\subsection*{Running micro-examples}
+The following small systems recur throughout the explanatory boxes. The worked models and visual atlas later develop these ideas in complete calculations.
+
+\begin{microexample}[title={R1: one operator with several primary blocks}]
+Let \(T\) act on a finite-dimensional vector space.  Regard \(X\) as a \(\bbk[t]\)-module by \(t\cdot x=Tx\).  If \(T\) has three Jordan blocks for the same eigenvalue, then three seeds are necessary and sufficient for that primary component.  The largest number of blocks over any irreducible polynomial is the seed rank.
+\end{microexample}
+
+\begin{microexample}[title={R2: a matrix algebra with multiplicity}]
+Let \(A=M_2(\bbk)\) act diagonally on \(M=(\bbk^2)^{\oplus3}\).  One seed can contribute at most two independent multiplicity directions, because the regular module contains two copies of the simple module.  Hence
+\[
+\srank_A(M)=\left\lceil\frac{3}{2}\right\rceil=2.
+\]
+This is the simplest nontrivial instance of the semisimple multiplicity formula.
+\end{microexample}
+
+\begin{microexample}[title={R3: an exact but oblique packet split}]
+On \(X=\bbk^2\), set
+\[
+P_1=\begin{pmatrix}1&-1\\0&0\end{pmatrix},
+\qquad
+P_2=\begin{pmatrix}0&1\\0&1\end{pmatrix}.
+\]
+Then \(P_i^2=P_i\), \(P_1P_2=P_2P_1=0\), and \(P_1+P_2=I\).  The ranges form a direct sum, but the projectors are not orthogonal in the Euclidean inner product.  Exact reconstruction and numerical conditioning are therefore separate questions.
+\end{microexample}
+
+\begin{microexample}[title={R4: a directed packet system}]
+Let \(X=X_1\oplus X_2\oplus X_3\).  Suppose the generating operators permit transfers \(1\to2\) and \(2\to3\), with no path entering packet \(1\).  Packet \(1\) is the unique source component.  Under the packet-propagation hypotheses of \cref{thm:source-component-rank}, one packet-pure seed in \(X_1\) can generate all three packets.
+\end{microexample}
+
+\subsection*{Suggested reading paths}
+\begin{itemize}
+\item For the minimal algebraic foundation, read Sections 1--5, then Sections 7--8.
+\item For finite-dimensional representation theory, concentrate on Sections 4--6.
+\item For signal, wavelet, or quantum applications, read Sections 7--8 and the tensor-product additions carefully.
+\item For graph and residual-transport applications, read Sections 8--10.
+\item For later categorical claims, read Sections 10--11 together with the final semantic-realization criterion.
+\end{itemize}
+
+\begin{warningbox}
+The paper does not claim that every useful decomposition is automatically discovered, that every packet split is numerically stable, or that exact coordinates solve a nonlinear problem.  Paper I establishes the linear language and its exact transport laws.  Refinement, obstruction theory, nonlinear trees, arithmetic valuations, and continuum limits belong to later papers.
+\end{warningbox}
+
+\section{Coefficient conventions, logical status, and scope}
+\begin{readerroadmap}
+This short section fixes the logical contract for the entire paper.  It says when a statement is algebraic, when topology is present, which results are imported, and what the stable record IDs mean.  Many later ambiguities disappear once these regimes are kept separate.
+\end{readerroadmap}
+\subsection{Ambient regimes and theorem records}
+
+\begin{definition}[Coefficient and module regimes]
+\label{def:coefficient-regime}
+All modules are left modules unless stated otherwise.  The algebraic regime consists of a unital ring $A$ and a unital left $A$-module $M$.  When linear dimensions, tensor products, quivers, or operator blocks are used, $A$ is a unital $\bbk$-algebra over a field $\bbk$ and $M$ is a $\bbk$-vector space.  The topological regime consists of a Hausdorff topological vector space over a complete valued field, together with a unital algebra of continuous linear operators.  Every infinite sum, completion, quotient topology, and closure below is interpreted only in the regime explicitly declared in its statement.
+\end{definition}
+\RecordID{PSC-I-D-COEFFICIENT-REGIME}
+\paragraph{Empty-family conventions.} For finite families of nonnegative integers we use $\max\varnothing=0$. The height of an empty finite partially ordered set is $0$, as is the height of a nonempty poset with no strict comparable pair. Thus the height in the support-preorder theorem counts strict steps.
+
+\begin{definition}[Canonical theorem record]
+\label{def:theorem-record}
+A canonical theorem record is the tuple
+\[
+(\mathrm{ID},\mathrm{status},\mathrm{hypotheses},\mathrm{statement},
+\mathrm{dependencies},\mathrm{proof},\mathrm{exports},\mathrm{boundary}).
+\]
+A downstream paper cites the stable record ID.  A domain specialization may add domain hypotheses, but it does not repeat a generic proof from this paper.
+\end{definition}
+\RecordID{PSC-I-D-THEOREM-RECORD}
+
+\begin{boundary}[Symbolic scope]
+\label{bnd:symbolic-scope}
+This edition proves the algebraic and topological statements printed below.  It does not assert historical novelty, independent external certification, automatic discovery of useful packet systems, nonlinear obstruction theory, multilevel refinement, arithmetic congruences, quantum gravity, automorphy, or local or global Langlands reciprocity.
+\end{boundary}
+\RecordID{PSC-I-B-SYMBOLIC-SCOPE}
+
+\section{Typed operator grammars, realizations, and seed systems}
+\begin{readerroadmap}
+The goal is to separate syntax from action.  A grammar lists legal typed compositions.  A realization assigns vector spaces and operators.  The realized algebra is the image of that syntax in the endomorphism algebra.  Seeds live only after a realization has been chosen.
+\end{readerroadmap}
+\subsection{Typed syntax and module realizations}
+
+\begin{definition}[Typed operator grammar]
+\label{def:typed-grammar}
+Let $Q=(Q_0,Q_1,s,t)$ be a quiver with finite vertex set.  A typed operator grammar over $\bbk$ is a pair
+\[
+\mathfrak G=(Q,I),
+\]
+where $I\triangleleft \bbk Q$ is a two-sided ideal generated by $\bbk$-linear combinations of paths having common source and common target.  Write
+\[
+\Lambda_{\mathfrak G}:=\bbk Q/I.
+\]
+A realization of $\mathfrak G$ is a family $(X_v)_{v\in Q_0}$ and linear maps
+\[
+X_a:X_{s(a)}\longrightarrow X_{t(a)}
+\qquad(a\in Q_1)
+\]
+that annihilate every relation in $I$.  A morphism $f:X\to Y$ of realizations is a family of linear maps $f_v:X_v\to Y_v$ satisfying
+\[
+f_{t(a)}X_a=Y_af_{s(a)}
+\qquad(a\in Q_1).
+\]
+\end{definition}
+\RecordID{PSC-I-D-TYPED-GRAMMAR}
+
+\begin{definition}[Collapsed one-space realization]
+\label{def:collapsed-realization}
+For a typed realization $X$, define its collapsed one-space object by
+\[
+|X|:=\bigoplus_{v\in Q_0}X_v.
+\]
+Every vertex idempotent acts as a coordinate projector on $|X|$, and every path acts as a source-target block operator.
+\end{definition}
+\RecordID{PSC-I-D-COLLAPSED-REALIZATION}
+
+\begin{theorem}[Typed realization and module equivalence]
+\label{thm:typed-module-equivalence}
+The category of realizations of $\mathfrak G$ is equivalent to the category of unital left $\Lambda_{\mathfrak G}$-modules.  Explicitly, a realization $X$ determines the collapsed space $|X|$ of \cref{def:collapsed-realization}
+with the vertex idempotent $e_v$ acting as the coordinate projector onto $X_v$ and each arrow acting in its declared source-target block.  Conversely, a unital $\Lambda_{\mathfrak G}$-module $M$ determines the realization
+\[
+M_v=e_vM,
+\qquad
+M_a(x)=ax.
+\]
+The two constructions are inverse up to canonical natural isomorphism.
+\end{theorem}
+\RecordID{PSC-I-T-TYPED-MODULE-EQUIVALENCE}
+\Depends{PSC-I-D-TYPED-GRAMMAR.}
+
+\begin{proof}
+Because $Q_0$ is finite, $1=\sum_{v\in Q_0}e_v$ in $\bbk Q$, the $e_v$ are pairwise orthogonal, and the same identities hold in $\Lambda_{\mathfrak G}$.  Given a realization, define the action of a path by composition of its arrow maps and extend linearly.  Every element of $I$ acts as zero, so the action factors through $\Lambda_{\mathfrak G}$.  The vertex idempotents give
+\[
+|X|=\bigoplus_v e_v|X|=\bigoplus_vX_v.
+\]
+Conversely, if $M$ is unital, then
+\[
+M=1M=\sum_ve_vM.
+\]
+Orthogonality makes the sum direct.  For an arrow $a:v\to w$, the identities $a=e_wae_v$ imply
+\[
+a(e_vM)\subseteq e_wM.
+\]
+The relations in $I$ act as zero because $M$ is a $\Lambda_{\mathfrak G}$-module.  Applying both constructions returns the original vertex spaces and arrow maps, or the original module decomposition, through the evident identity maps.  These identifications commute with morphisms, giving an equivalence of categories.
+\end{proof}
+
+\begin{interpretation}
+The equivalence does not claim that a quiver presentation is unique.  It says that once a grammar is fixed, working with typed arrows and working with a module over the quotient path algebra carry the same information.  The typed description is often easier for constructing an operator system.  The module description is often easier for proving generation and quotient theorems.
+\end{interpretation}
+
+\begin{microexample}[title={A two-vertex grammar}]
+Take two vertices and one arrow \(a:1\to2\).  A realization is simply a pair of spaces and a linear map
+\[
+X_1\xrightarrow{\,X_a\,}X_2.
+\]
+After collapse, \(|X|=X_1\oplus X_2\), the vertex idempotents are the two coordinate projectors, and \(a\) is a single off-diagonal block.  This elementary case already contains the packet and transfer-block viewpoint used later.
+\end{microexample}
+
+
+\subsection{The realized action and faithful reduction}
+\begin{definition}[Realized operator algebra]
+\label{def:realized-algebra}
+For a realization $X$, the realized operator algebra is
+\[
+\A_X:=\im\!\left(\Lambda_{\mathfrak G}\longrightarrow\End_{\bbk}(|X|)\right).
+\]
+It records the actual operators in the realization and may be a proper quotient of the abstract grammar algebra.
+\end{definition}
+\RecordID{PSC-I-D-REALIZED-ALGEBRA}
+
+\begin{proposition}[Action factorization and hull invariance]
+\label{prop:action-factorization}
+Let $S\subseteq |X|$.  The generated submodule under the grammar algebra equals the generated submodule under the realized operator algebra:
+\[
+\Lambda_{\mathfrak G}S=\A_XS.
+\]
+Consequently, every seed-rank statement depends only on the realized action, not on redundant relations in a chosen presentation of the grammar.
+\end{proposition}
+\RecordID{PSC-I-P-ACTION-FACTORIZATION}
+\Depends{PSC-I-D-REALIZED-ALGEBRA.}
+
+\begin{proof}
+The action map $\rho:\Lambda_{\mathfrak G}\twoheadrightarrow\A_X$ is surjective by definition and satisfies $\lambda s=\rho(\lambda)s$.  Hence every grammar orbit vector lies in $\A_XS$.  The reverse inclusion holds because every element of $\A_X$ is $\rho(\lambda)$ for some $\lambda$.
+\end{proof}
+
+\begin{keyidea}
+Replacing the abstract grammar algebra by its image \(\A_X\) removes syntax that acts as zero.  This is a faithful reduction of the action.  It does not change any orbit, hull, or seed-rank computation.
+\end{keyidea}
+
+
+\subsection{Seeds, addressed hulls, and natural presentations}
+\begin{definition}[Linear seed system]
+\label{def:seed-system}
+A linear seed system is a tuple
+\[
+\mathfrak S=(X,\A,S,\Pcal,\tau),
+\]
+where $X$ is a unital left $\A$-module, $\A$ is fixed independently of the target element, $S=(s_1,\ldots,s_r)$ is a finite distinguished seed family, $\Pcal$ is either empty or a declared packet system, and $\tau$ is either the algebraic convention or a specified Hausdorff topology in which the declared operator action is continuous.
+\end{definition}
+\RecordID{PSC-I-D-SEED-SYSTEM}
+
+\begin{definition}[Generated hull]
+\label{def:generated-hull}
+For $S\subseteq X$, define
+\[
+\Hull_{\A}(S):=\sum_{s\in S}\A s.
+\]
+In the topological regime define
+\[
+\Hull_{\A,\tau}(S):=\cl{\Hull_{\A}(S)}^{\,\tau}.
+\]
+For a singleton $S=\{s\}$, write $\Hull_{\A}(s)$.
+\end{definition}
+\RecordID{PSC-I-D-GENERATED-HULL}
+
+\begin{definition}[Natural presentation]
+\label{def:natural-presentation}
+A seed presentation is natural relative to a declared grammar when the primitive operators and relations are fixed independently of the target, the relation system is finite or effectively enumerable, the topology is intrinsic to the realization, no primitive operator directly stores the complete target, and the presentation exposes a reusable invariant, theorem, or computation not encoded by a target-dependent primitive.
+\end{definition}
+\RecordID{PSC-I-D-NATURAL-PRESENTATION}
+
+\begin{proposition}[Algebra generation and module generation are distinct]
+\label{prop:algebra-module-generation}
+Every nonzero unital algebra $A$, regarded as a left module over itself, has
+\[
+\srank_A(A)=1,
+\]
+with cyclic seed $1_A$.  This conclusion is independent of the number of algebra generators required to present $A$ as an algebra.
+\end{proposition}
+\RecordID{PSC-I-P-ALGEBRA-MODULE-GENERATION}
+\Depends{PSC-I-D-GENERATED-HULL.}
+
+\begin{proof}
+For every $a\in A$, one has $a=a1_A$.  Hence $A1_A=A$.  The number of operations needed to generate $A$ as an algebra is a different invariant and does not enter the module calculation.
+\end{proof}
+
+\begin{boundary}[Target-dependent operators]
+\label{bnd:target-dependent-operators}
+For a fixed seed $s$ and target $x$, the existence of a specially defined operator $A_x$ satisfying $A_xs=x$ does not establish a natural seed calculus unless $A_x$ belongs to a target-independent grammar satisfying \cref{def:natural-presentation}.
+\end{boundary}
+\RecordID{PSC-I-B-TARGET-DEPENDENT-OPERATORS}
+
+\begin{warningbox}
+An operator may be chosen because it sends the current seed to a desired target.  Such a choice proves only an existence statement for that one target unless the operator already belongs to the fixed algebra.  The algebra must be declared before the seed-rank question is asked.  Otherwise the acting system changes with the answer one wants to obtain.
+\end{warningbox}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{01_seed_operator_grammar.pdf}
+\caption{Schematic organization of the seed, operator, relation, and reconstruction data. This is a guide to the presentation, not an additional formal theorem.}
+\label{fig:grammar}
+\end{figure}
+
+\section{Free presentations by seeds and relations}
+\begin{readerroadmap}
+A seed family gives a canonical map from a finite free module.  The generated hull is exactly its image, and the relations among addressed seeds form the kernel.  This converts orbit generation into a presentation problem.
+\end{readerroadmap}
+\subsection{Finite free covers}
+\begin{definition}[Seed evaluation map]
+\label{def:seed-evaluation}
+Let $A$ be a unital ring, let $M$ be a left $A$-module, and let $S=(s_1,\ldots,s_r)\in M^r$.  Define the $A$-linear map
+\[
+\varepsilon_S:A^{\oplus r}\longrightarrow M,
+\qquad
+(a_1,\ldots,a_r)\longmapsto\sum_{j=1}^{r}a_js_j.
+\]
+\end{definition}
+\RecordID{PSC-I-D-SEED-EVALUATION}
+
+\begin{theorem}[Finite free presentation]
+\label{thm:free-presentation}
+For the map in \cref{def:seed-evaluation},
+\[
+\im\varepsilon_S=\Hull_A(S),
+\qquad
+N_S:=\Ker\varepsilon_S\leq A^{\oplus r},
+\]
+and the induced map is an isomorphism of left $A$-modules
+\[
+\boxed{A^{\oplus r}/N_S\cong\Hull_A(S).}
+\]
+Consequently, $S$ generates $M$ if and only if $\varepsilon_S$ is surjective.
+\end{theorem}
+\RecordID{PSC-I-T-FREE-PRESENTATION}
+\Depends{PSC-I-D-SEED-EVALUATION and the first isomorphism theorem.}
+\Exports{All later free seed presentations.}
+
+\begin{proof}
+The image consists exactly of finite sums $\sum_ja_js_j$, which is $\Hull_A(S)$.  Because $\varepsilon_S$ is $A$-linear, its kernel is a left submodule.  The first isomorphism theorem gives
+\[
+A^{\oplus r}/N_S\cong\im\varepsilon_S=\Hull_A(S).
+\]
+The final equivalence is the equality $\im\varepsilon_S=M$.
+\end{proof}
+
+\begin{interpretation}
+The theorem converts the geometric language of addressed seed orbits into the algebraic language of generators and relations.  A word in the operators is represented by an element of the free module.  Two addressed expressions represent the same vector exactly when their difference lies in the kernel.  The generated hull is therefore not merely spanned by the free module.  It is its canonical quotient.
+\end{interpretation}
+
+\begin{microexample}[title={A cyclic nilpotent chain}]
+Let \(A=\bbk[t]\) and \(M=\bbk[t]/(t^3)\).  The residue class \(s=[1]\) is one seed and
+\[
+\varepsilon_s:A\to M,
+\qquad
+f(t)\mapsto f(t)[1]
+\]
+has kernel \((t^3)\).  Hence \(M\cong A/(t^3)\), and the addressed vectors \(s,ts,t^2s\) are the visible orbit chain.
+\end{microexample}
+
+
+\begin{corollary}[Minimal free-cover characterization]
+\label{cor:minimal-free-cover}
+For every finitely generated left $A$-module $M$,
+\[
+\boxed{
+\srank_A(M)=\min\{r\geq0:\text{there exists a surjection }A^{\oplus r}\twoheadrightarrow M\}.
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-MINIMAL-FREE-COVER}
+\Depends{PSC-I-T-FREE-PRESENTATION.}
+
+\begin{proof}
+A seed family of size $r$ gives a surjection by \cref{thm:free-presentation}.  Conversely, the images of the standard basis vectors under any surjection $A^{\oplus r}\twoheadrightarrow M$ form a generating family of size at most $r$.
+\end{proof}
+
+\begin{corollary}[One-seed presentation]
+\label{cor:one-seed-presentation}
+For $s\in M$, the annihilator
+\[
+\operatorname{Ann}_A(s):=\{a\in A:as=0\}
+\]
+is a left ideal and
+\[
+\boxed{A/\operatorname{Ann}_A(s)\cong\Hull_A(s).}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-ONE-SEED-PRESENTATION}
+\Depends{PSC-I-T-FREE-PRESENTATION.}
+
+\begin{proof}
+The one-seed evaluation map is $a\mapsto as$.  Its kernel is $\operatorname{Ann}_A(s)$, which is therefore a left ideal, and \cref{thm:free-presentation} gives the quotient isomorphism.
+\end{proof}
+
+\subsection{One seed and the distinction between left and two-sided relations}
+\begin{proposition}[Two-sided annihilator criterion]
+\label{prop:two-sided-annihilator}
+For $s\in M$, the left ideal $L=\operatorname{Ann}_A(s)$ is two-sided if and only if
+\[
+L\,\Hull_A(s)=0.
+\]
+If $s$ is cyclic, these conditions are equivalent to
+\[
+\operatorname{Ann}_A(s)=\operatorname{Ann}_A(M).
+\]
+\end{proposition}
+\RecordID{PSC-I-P-ANNIHILATOR-TWO-SIDED}
+\Depends{PSC-I-C-ONE-SEED-PRESENTATION.}
+
+\begin{proof}
+The left ideal $L$ is two-sided exactly when $ab\in L$ for every $a\in L$ and $b\in A$.  This is equivalent to
+\[
+0=(ab)s=a(bs)
+\qquad(a\in L,\ b\in A).
+\]
+By additivity, the last identity is equivalent to $L\Hull_A(s)=0$.
+
+If $s$ is cyclic, then $\Hull_A(s)=M$.  Hence the preceding condition is $L\subseteq\operatorname{Ann}_A(M)$.  The reverse inclusion always holds because an operator annihilating all of $M$ annihilates $s$.  Thus equality follows.  Conversely, $\operatorname{Ann}_A(M)$ is a two-sided ideal, so equality implies that $L$ is two-sided.
+\end{proof}
+
+\begin{microexample}[title={Why the annihilator need not be two-sided}]
+Let \(A=M_2(\bbk)\) act on \(M=\bbk^2\), and let \(s=e_1\).  Then \(\operatorname{Ann}_A(s)\) consists of matrices whose first column is zero.  It is a left ideal because left multiplication preserves a zero first column.  It is not generally a right ideal.  Thus the natural one-seed quotient is a quotient of the left regular module, not automatically a quotient algebra.
+\end{microexample}
+
+
+\subsection{Topological completion of a presentation}
+\begin{theorem}[Completion of a dense free presentation]
+\label{thm:completed-presentation}
+Let $X$ be a complete Hausdorff locally convex space, let $\A\subseteq\End(X)$ act continuously, and let $S=(s_1,\ldots,s_r)$.  Put
+\[
+E:=\A^{\oplus r}/N_S
+\]
+algebraically and let $j:E\to X$ be the injective map induced by $\varepsilon_S$.  Give $E$ the locally convex topology transported from $j(E)$, equivalently the topology generated by
+\[
+\widetilde p(e):=p(j(e))
+\]
+for the continuous seminorms $p$ on $X$.  Every $a\in\A$ acts continuously on $E$ in the transported topology and therefore extends to $\widehat E$.  If $\Hull_{\A}(S)$ is dense in $X$, then $j$ extends uniquely to a topological $\A$-module isomorphism
+\[
+\boxed{\widehat E\cong X.}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-COMPLETED-PRESENTATION}
+\Depends{PSC-I-T-FREE-PRESENTATION and uniqueness of Hausdorff completion.}
+
+\begin{proof}
+By \cref{thm:free-presentation}, $j$ is an algebraic $\A$-module isomorphism from $E$ onto $\Hull_{\A}(S)$.  The transported seminorms make it a topological isomorphism onto that subspace.  For $a\in\A$ and a continuous seminorm $p$ on $X$, continuity of $a:X\to X$ supplies continuous seminorms controlling $p(aj(e))$, so the induced action on $E$ is continuous and extends uniquely to $\widehat E$.  The subspace is dense by hypothesis.  A Cauchy net in $E$ is mapped to a Cauchy net in $X$, which converges because $X$ is complete.  This defines a continuous extension $\widehat j:\widehat E\to X$.  For any $x\in X$, choose a net $(e_\lambda)$ in $E$ with $j(e_\lambda)\to x$.  The transported topology makes $(e_\lambda)$ Cauchy, so it converges to some $\xi\in\widehat E$, and continuity gives $\widehat j(\xi)=x$.  Thus $\widehat j$ is surjective.  If $\widehat j(\xi)=0$, represent $\xi$ by a Cauchy net $(e_\lambda)$.  Then $j(e_\lambda)\to0$, so every defining seminorm $\widetilde p(e_\lambda)$ tends to zero.  Thus $e_\lambda\to0$ in the completion and $\xi=0$.  Hence $\widehat j$ is bijective.  Its inverse is continuous by the universal property of completion, or directly because the topology on $E$ was transported from $X$.
+\end{proof}
+
+\begin{sectionrecap}
+A seed family always gives a free presentation of its hull.  The kernel stores all linear relations among addressed seed words.  One seed gives a cyclic module, but only special annihilators permit an algebra quotient.  Dense generation is handled by completing the presented image rather than by silently replacing algebraic span with closure.
+\end{sectionrecap}
+
+\section{Seed rank and functorial calculus}
+
+
+
+\begin{readerroadmap}
+Seed rank is the minimal size of a finite generating family.  This section establishes the operations that can only decrease it, the constructions that add or bound it, and the quotient witnesses that prove lower bounds.
+\end{readerroadmap}
+\subsection{Definition, cyclicity, and monotonicity}
+
+\begin{definition}[Seed rank]
+\label{def:seed-rank}
+For a unital left $A$-module $M$, define
+\[
+\srank_A(M):=\min\{|S|:AS=M\}.
+\]
+For a topological module $(X,\tau)$, define
+\[
+\srank_{\A,\tau}(X):=\min\{|S|:\cl{\A S}^{\,\tau}=X\}.
+\]
+Set $\srank_A(0)=0$.  When the value is finite, it is the minimal number of module generators.
+\end{definition}
+\RecordID{PSC-I-D-SEED-RANK}
+
+\begin{proposition}[Cyclic characterization]
+\label{prop:cyclic-characterization}
+For $M\neq0$,
+\[
+\srank_A(M)=1
+\quad\Longleftrightarrow\quad
+M\text{ contains a cyclic vector}.
+\]
+\end{proposition}
+\RecordID{PSC-I-P-CYCLIC-CHARACTERIZATION}
+\Depends{PSC-I-D-SEED-RANK.}
+
+\begin{proof}
+Both conditions say that there is $m\in M$ with $Am=M$.
+\end{proof}
+
+\begin{proposition}[Monotonicity under enlargement of the acting algebra]
+\label{prop:acting-algebra-monotonicity}
+Let $B\subseteq A\subseteq\End_{\bbk}(X)$ be unital operator algebras with the same identity.  Then
+\[
+\boxed{\srank_A(X)\leq\srank_B(X).}
+\]
+The same statement holds for topological seed rank when both algebras act continuously.
+\end{proposition}
+\RecordID{PSC-I-P-ACTING-ALGEBRA-MONOTONICITY}
+\Depends{PSC-I-D-SEED-RANK.}
+
+\begin{proof}
+For every $S\subseteq X$, one has $BS\subseteq AS$.  Hence every $B$-generating family is also an $A$-generating family.  Taking closures gives the topological statement.
+\end{proof}
+
+\begin{interpretation}
+Enlarging the acting algebra can only create more orbit directions, so it can only lower the number of seeds required.  This is why every seed-rank statement must name the acting algebra.  The same vector space may be cyclic for a large algebra and require many seeds for a smaller one.
+\end{interpretation}
+
+
+\subsection{Quotients, isomorphisms, and exact sequences}
+\begin{theorem}[Quotient monotonicity]
+\label{thm:quotient-monotonicity}
+Let $\varphi:A\to B$ be a unital ring homomorphism and let
+\[
+\Phi:M\twoheadrightarrow N
+\]
+be a surjective additive map satisfying
+\[
+\Phi(am)=\varphi(a)\Phi(m)
+\qquad(a\in A,\ m\in M).
+\]
+Then
+\[
+\boxed{\srank_B(N)\leq\srank_A(M).}
+\]
+If $M$ and $N$ are topological modules, $\Phi$ is continuous and surjective, and the actions are continuous, then
+\[
+\srank_{B,\tau_N}(N)\leq\srank_{A,\tau_M}(M).
+\]
+\end{theorem}
+\RecordID{PSC-I-T-QUOTIENT-MONOTONICITY}
+\Depends{PSC-I-D-GENERATED-HULL and PSC-I-D-SEED-RANK.}
+\Exports{All quotient lower bounds and realization inequalities.}
+
+\begin{proof}
+Let $S$ generate $M$.  For every $n\in N$, choose $m\in M$ with $\Phi(m)=n$ and write $m=\sum_ia_is_i$.  Then
+\[
+n=\sum_i\varphi(a_i)\Phi(s_i),
+\]
+so $\Phi(S)$ generates $N$.
+
+For the topological statement, let $S$ generate $M$ densely.  Given $n=\Phi(m)$, choose a net $m_\lambda\in AS$ converging to $m$.  Continuity gives
+\[
+\Phi(m_\lambda)\longrightarrow n,
+\]
+and every $\Phi(m_\lambda)$ lies in $B\Phi(S)$.  Thus $B\Phi(S)$ is dense in $N$.
+\end{proof}
+
+\begin{microexample}[title={A quotient can strictly lower seed rank}]
+Let \(A=\bbk\) act by scalars on \(M=\bbk^3\).  Then \(\srank_A(M)=3\).  Quotienting by a one-dimensional subspace gives a two-dimensional scalar module, whose seed rank is \(2\).  Quotient monotonicity is therefore often strict.
+\end{microexample}
+
+
+\begin{corollary}[Isomorphism invariance]
+\label{cor:isomorphism-invariance}
+An intertwining module isomorphism preserves algebraic seed rank.  A topological intertwining isomorphism preserves topological seed rank.
+\end{corollary}
+\RecordID{PSC-I-C-ISOMORPHISM-INVARIANCE}
+\Depends{PSC-I-T-QUOTIENT-MONOTONICITY.}
+
+\begin{proof}
+Apply \cref{thm:quotient-monotonicity} to the isomorphism and its inverse.
+\end{proof}
+
+\begin{theorem}[Short exact sequence bounds]
+\label{thm:exact-sequence-bounds}
+Let
+\[
+0\longrightarrow L\xrightarrow{\iota}M\xrightarrow{\pi}N\longrightarrow0
+\]
+be a short exact sequence of left $A$-modules.  Then
+\[
+\boxed{
+\srank_A(N)\leq\srank_A(M)
+\leq\srank_A(L)+\srank_A(N).
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-EXACT-SEQUENCE-BOUNDS}
+\Depends{PSC-I-T-QUOTIENT-MONOTONICITY.}
+
+\begin{proof}
+The lower inequality is quotient monotonicity.  For the upper inequality, choose generators $\ell_1,\ldots,\ell_r$ of $L$ and generators $n_1,\ldots,n_s$ of $N$.  Choose lifts $m_j\in M$ with $\pi(m_j)=n_j$.  For $m\in M$, express
+\[
+\pi(m)=\sum_{j=1}^sa_jn_j.
+\]
+Then $m-\sum_ja_jm_j\in\iota(L)$ and is an $A$-linear combination of the $\iota(\ell_i)$.  Hence the $r+s$ displayed vectors generate $M$.
+\end{proof}
+
+\begin{hypothesisguide}
+For a short exact sequence, a generating family for \(M\) always maps to a generating family for the quotient.  It does not automatically generate the submodule \(K\).  The lower bound involving \(K\) is therefore tied to the restriction or lifting hypotheses printed in the theorem.  This is one place where a compact slogan can hide a real module-theoretic distinction.
+\end{hypothesisguide}
+
+
+\subsection{Direct sums under shared and independent actions}
+\begin{proposition}[Shared direct-sum bounds]
+\label{prop:shared-direct-sum}
+If one algebra $A$ acts diagonally on $M\oplus N$, then
+\[
+\boxed{
+\max\{\srank_A(M),\srank_A(N)\}
+\leq\srank_A(M\oplus N)
+\leq\srank_A(M)+\srank_A(N).
+}
+\]
+\end{proposition}
+\RecordID{PSC-I-P-SHARED-DIRECT-SUM}
+\Depends{PSC-I-T-QUOTIENT-MONOTONICITY.}
+
+\begin{proof}
+The coordinate projections are intertwining quotients and give the lower bound.  For the upper bound, embed generators of $M$ as $(m_i,0)$ and generators of $N$ as $(0,n_j)$.
+\end{proof}
+
+\begin{theorem}[Independent direct-sum formula]
+\label{thm:independent-direct-sum}
+Let $M$ be a left $A$-module and $N$ a left $B$-module.  Under the product-algebra action
+\[
+(a,b)(m,n)=(am,bn),
+\]
+one has
+\[
+\boxed{
+\srank_{A\times B}(M\oplus N)
+=
+\max\{\srank_A(M),\srank_B(N)\}.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-INDEPENDENT-DIRECT-SUM}
+\Depends{PSC-I-T-QUOTIENT-MONOTONICITY.}
+
+\begin{proof}
+The coordinate projections give the lower bound.  Let $r$ be the maximum on the right.  Pad shorter generating lists by zeros and write them as $(m_1,\ldots,m_r)$ and $(n_1,\ldots,n_r)$.  For arbitrary $m\in M$ and $n\in N$, choose $a_i\in A$ and $b_i\in B$ with
+\[
+m=\sum_ia_im_i,
+\qquad
+n=\sum_ib_in_i.
+\]
+Then
+\[
+(m,n)=\sum_{i=1}^r(a_i,b_i)(m_i,n_i),
+\]
+so the $r$ paired vectors generate.
+\end{proof}
+
+\subsection{Tensor generation and lower-bound witnesses}
+\begin{proposition}[Tensor-product bound]
+\label{prop:tensor-bound}
+Let $A$ and $B$ be unital $\bbk$-algebras, let $M$ be a left $A$-module, and let $N$ be a left $B$-module.  Under the natural $A\otimes_{\bbk}B$ action,
+\[
+\boxed{
+\srank_{A\otimes B}(M\otimes_{\bbk}N)
+\leq
+\srank_A(M)\srank_B(N).
+}
+\]
+\end{proposition}
+\RecordID{PSC-I-P-TENSOR-BOUND}
+\Depends{PSC-I-D-SEED-RANK.}
+
+\begin{proof}
+If $m_1,\ldots,m_r$ generate $M$ and $n_1,\ldots,n_s$ generate $N$, then every simple tensor is a sum of vectors of the form
+\[
+(am_i)\otimes(bn_j)=(a\otimes b)(m_i\otimes n_j).
+\]
+Since simple tensors span the tensor product, the $rs$ tensors $m_i\otimes n_j$ generate.
+\end{proof}
+
+\begin{interpretation}
+The tensor-product bound is constructive.  Tensor the chosen seed families and act independently in the two factors.  Equality can fail because a single tensor seed may contain several useful components, or because the tensor-product algebra acquires additional relations.  Later quantum applications should therefore cite the bound, not assume multiplicativity.
+\end{interpretation}
+
+
+\begin{boundary}[Tensor rank is not generally multiplicative]
+\label{bnd:tensor-nonequality}
+The inequality in \cref{prop:tensor-bound} can be strict.  Equality requires additional hypotheses on the acting algebras and their module multiplicities and is not exported as a universal law.
+\end{boundary}
+\RecordID{PSC-I-B-TENSOR-NONEQUALITY}
+
+
+
+\begin{proposition}[Scalar-extension monotonicity]
+\label{prop:scalar-extension}
+Let \(K/\bbk\) be a field extension, let \(A\) be a unital \(\bbk\)-algebra, and let \(M\) be a finitely generated left \(A\)-module.  Set
+\[
+A_K:=K\otimes_{\bbk}A,
+\qquad
+M_K:=K\otimes_{\bbk}M.
+\]
+Then
+\[
+\boxed{
+\srank_{A_K}(M_K)\leq\srank_A(M).
+}
+\]
+Every generating family \(S\subseteq M\) extends to the generating family \(1\otimes S\subseteq M_K\).
+\end{proposition}
+\RecordID{PSC-I-P-SCALAR-EXTENSION-MONOTONICITY}
+\Depends{PSC-I-D-SEED-RANK.}
+\Exports{Coefficient-field extension in the arithmetic, quantum, and representation-theoretic realizations.}
+
+\begin{proof}
+Let \(S=\{s_1,\ldots,s_r\}\) generate \(M\).  Every pure tensor \(\lambda\otimes m\in M_K\) has an expression
+\[
+m=\sum_{i=1}^r a_is_i,
+\]
+so
+\[
+\lambda\otimes m
+=
+\sum_{i=1}^r(\lambda\otimes a_i)(1\otimes s_i).
+\]
+Pure tensors span \(M_K\), hence \(1\otimes S\) generates \(M_K\) over \(A_K\).  Taking the minimum over \(S\) proves the inequality.
+\end{proof}
+
+\begin{hypothesisguide}
+The proposition is one-way.  A smaller generating family found after extending scalars need not descend to the original field.  Descent requires additional structure.  The paper therefore exports monotonicity, not an unconditional equality.
+\end{hypothesisguide}
+
+
+\subsection{Quotient witnesses for lower bounds}
+\begin{definition}[Seed-rank witness]
+\label{def:seed-rank-witness}
+A surjective intertwiner $\Phi:M\twoheadrightarrow N$ is a seed-rank witness of order $r$ when $\srank(N)=r$.  It certifies $\srank(M)\geq r$.
+\end{definition}
+\RecordID{PSC-I-D-SEED-RANK-WITNESS}
+
+\begin{proposition}[Scalar quotient witness]
+\label{prop:scalar-quotient}
+Let $M$ be an $A$-module over a field $\bbk$.  Suppose $M$ has an $r$-dimensional quotient $N$ on which $A$ acts through a character
+\[
+\chi:A\longrightarrow\bbk.
+\]
+Then
+\[
+\boxed{\srank_A(M)\geq r.}
+\]
+\end{proposition}
+\RecordID{PSC-I-P-SCALAR-QUOTIENT-WITNESS}
+\Depends{PSC-I-T-QUOTIENT-MONOTONICITY.}
+
+\begin{proof}
+For every $n\in N$, the cyclic submodule $An$ is contained in the one-dimensional space $\bbk n$.  Therefore $q$ seed images span a subspace of dimension at most $q$.  Generating the $r$-dimensional quotient requires at least $r$ seeds.  Quotient monotonicity transfers the lower bound to $M$.
+\end{proof}
+
+\begin{sectionrecap}
+Seed rank is functorial under quotients and isomorphisms, subadditive across extensions, exactly additive for independent product actions, and bounded above under tensor products.  Lower bounds come from quotients on which the action simplifies.  Scalar extension cannot increase seed rank, but descent of a reduced seed family is a separate problem.
+\end{sectionrecap}
+
+\section{Generator number modulo the Jacobson radical}
+
+
+
+\begin{readerroadmap}
+The radical contains the part of the algebra that cannot create new simple top-level directions.  Nakayama's lemma therefore reduces the minimal-generator problem to the semisimple top.  This is the main computational engine for finite-dimensional algebras.
+\end{readerroadmap}
+\subsection{Reduction to the module top}
+
+\begin{classicalinput}[Nakayama lemma]
+\label{ci:nakayama}
+Let $A$ be a unital ring, let $J\subseteq\Jac(A)$, and let $M$ be a finitely generated left $A$-module.  If $M=N+JM$ for a submodule $N\leq M$, then $M=N$.
+\end{classicalinput}
+\RecordID{PSC-I-CI-NAKAYAMA}
+
+\begin{theorem}[Generator number is detected modulo the Jacobson radical]
+\label{thm:module-top}
+Let $A$ be a unital ring, let $J=\Jac(A)$, and let $M$ be a finitely generated left $A$-module.  A family $S\subseteq M$ generates $M$ if and only if its image generates $M/JM$ as an $A/J$-module.  When $A/J$ is semisimple Artinian, this quotient is the usual semisimple top; no semisimplicity of $A/J$ is required for the general equality.  Consequently,
+\[
+\boxed{
+\srank_A(M)=\srank_{A/J}(M/JM).
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-MODULE-TOP}
+\Depends{PSC-I-CI-NAKAYAMA and PSC-I-T-QUOTIENT-MONOTONICITY.}
+\Exports{Finite-dimensional generator formulas, quantum multiplicity calculations, and residual deformation modules.}
+
+\begin{proof}
+If $S$ generates $M$, its image generates every quotient.  Conversely, suppose the image of $S$ generates $M/JM$ and put $N=AS$.  Then
+\[
+M=N+JM.
+\]
+Nakayama's lemma gives $M=N$.  Thus the same finite families generate before and after passage to the top, and the minimal cardinalities agree.
+\end{proof}
+
+\begin{interpretation}
+The theorem says that nilpotent or radical directions can lengthen orbit chains but cannot reduce the number of independent top-level directions that must be seeded.  Once the images of the seeds span \(M/JM\), Nakayama's lemma forces the entire module to be generated.
+\end{interpretation}
+
+\begin{microexample}[title={A local nilpotent algebra}]
+Let \(A=\bbk[\varepsilon]/(\varepsilon^3)\) and \(M=A^{\oplus2}\).  The radical is \(J=(\varepsilon)\), and
+\[
+M/JM\cong\bbk^2.
+\]
+Therefore two seeds are necessary and sufficient.  The extra nilpotent layers \(\varepsilon M\) and \(\varepsilon^2M\) are generated automatically once the two top directions are seeded.
+\end{microexample}
+
+
+\begin{corollary}[Local algebra formula]
+\label{cor:local-algebra-formula}
+Let $A$ be a local ring with Jacobson radical $J$ and division-ring residue algebra $D=A/J$.  For every finitely generated left $A$-module $M$,
+\[
+\boxed{
+\srank_A(M)=\dim_D(M/JM),
+}
+\]
+where the dimension is the left $D$-dimension.
+\end{corollary}
+\RecordID{PSC-I-C-LOCAL-ALGEBRA-FORMULA}
+\Depends{PSC-I-T-MODULE-TOP.}
+
+\begin{proof}
+The $A/J$-module $M/JM$ is a left vector space over $D$.  Its minimal number of generators is its $D$-dimension.
+\end{proof}
+
+\subsection{Semisimple multiplicity calculus}
+\begin{classicalinput}[Wedderburn--Artin decomposition]
+\label{ci:wedderburn}
+Every semisimple Artinian ring is isomorphic to a finite product
+\[
+A\cong\prod_{i=1}^{q}M_{d_i}(D_i)
+\]
+of full matrix rings over division rings.
+\end{classicalinput}
+\RecordID{PSC-I-CI-WEDDERBURN-ARTIN}
+
+\begin{lemma}[Regular-module multiplicities]
+\label{lem:regular-multiplicities}
+Let
+\[
+A=\prod_{i=1}^{q}M_{d_i}(D_i)
+\]
+and let $S_i=D_i^{d_i}$ denote the natural simple left module for the $i$th factor, extended by zero across the other factors.  Then, as a left $A$-module,
+\[
+\boxed{A\cong\bigoplus_{i=1}^{q}S_i^{\oplus d_i}.}
+\]
+\end{lemma}
+\RecordID{PSC-I-L-REGULAR-MODULE-MULTIPLICITIES}
+\Depends{PSC-I-CI-WEDDERBURN-ARTIN.}
+
+\begin{proof}
+For one factor $M_d(D)$, let $e_{jj}$ be the diagonal matrix units.  The left regular module decomposes as
+\[
+M_d(D)=\bigoplus_{j=1}^{d}M_d(D)e_{jj}.
+\]
+Each minimal left ideal $M_d(D)e_{jj}$ is isomorphic to the natural column module $D^d$.  Taking the direct product of factors gives the stated decomposition.
+\end{proof}
+
+\begin{theorem}[Semisimple seed-rank formula over arbitrary division rings]
+\label{thm:semisimple-seed-rank}
+Let
+\[
+A\cong\prod_{i=1}^{q}M_{d_i}(D_i)
+\]
+be semisimple Artinian and let
+\[
+M\cong\bigoplus_{i=1}^{q}S_i^{\oplus m_i}
+\]
+be a finitely generated left $A$-module.  Then
+\[
+\boxed{
+\srank_A(M)
+=
+\max_{1\leq i\leq q}
+\left\lceil\frac{m_i}{d_i}\right\rceil.
+}
+\]
+If $A$ is any finite-dimensional algebra over a field, the same formula applied to the decomposition of $M/J(A)M$ over $A/J(A)$ computes $\srank_A(M)$.
+\end{theorem}
+\RecordID{PSC-I-T-SEMISIMPLE-SEED-RANK}
+\Depends{PSC-I-T-MODULE-TOP, PSC-I-CI-WEDDERBURN-ARTIN, PSC-I-L-REGULAR-MODULE-MULTIPLICITIES, and PSC-I-C-MINIMAL-FREE-COVER.}
+\Exports{Every finite-dimensional semisimple seed-rank calculation in the series.}
+
+\begin{proof}
+By \cref{cor:minimal-free-cover}, $M$ is generated by $r$ elements exactly when it is a quotient of $A^{\oplus r}$.  By \cref{lem:regular-multiplicities},
+\[
+A^{\oplus r}\cong\bigoplus_iS_i^{\oplus rd_i}.
+\]
+Every short exact sequence of modules over a semisimple ring splits.  Therefore a quotient isomorphic to $M$ exists if and only if
+\[
+m_i\leq rd_i
+\qquad\text{for every }i.
+\]
+The smallest such $r$ is the displayed maximum.  For a finite-dimensional nonsemisimple algebra, \cref{thm:module-top} reduces the calculation to the semisimple module $M/J(A)M$ over $A/J(A)$.
+\end{proof}
+
+\begin{interpretation}
+For the factor \(M_{d_i}(D_i)\), one free generator contributes \(d_i\) copies of the corresponding simple module.  If the top of \(M\) contains \(m_i\) copies, at least \(\lceil m_i/d_i\rceil\) free generators are required.  The worst simple type controls the global answer.
+\end{interpretation}
+
+\begin{microexample}[title={Multiplicity consumes seed capacity}]
+For \(A=M_2(\bbk)\) acting on \((\bbk^2)^{\oplus3}\), the regular module contributes two copies of the natural simple module per generator.  One generator cannot cover all three multiplicity directions.  Two can, giving seed rank \(2\).
+\end{microexample}
+
+
+\begin{corollary}[Algebraically closed multiplicity formula]
+\label{cor:algebraically-closed-formula}
+If $\bbk$ is algebraically closed,
+\[
+A\cong\prod_iM_{d_i}(\bbk),
+\qquad
+M/JM\cong\bigoplus_i(\bbk^{d_i})^{\oplus m_i},
+\]
+then
+\[
+\srank_A(M)=\max_i\left\lceil\frac{m_i}{d_i}\right\rceil.
+\]
+\end{corollary}
+\RecordID{PSC-I-C-ALGEBRAICALLY-CLOSED-FORMULA}
+\Depends{PSC-I-T-SEMISIMPLE-SEED-RANK.}
+
+\begin{proof}
+Take every $D_i=\bbk$ in \cref{thm:semisimple-seed-rank}.
+\end{proof}
+
+\begin{corollary}[Full matrix algebra]
+\label{cor:full-matrix}
+For the natural module $S=D^d$ over $M_d(D)$,
+\[
+\srank_{M_d(D)}(S)=1.
+\]
+More strongly, every nonzero vector of $S$ is cyclic.
+\end{corollary}
+\RecordID{PSC-I-C-FULL-MATRIX}
+\Depends{PSC-I-T-SEMISIMPLE-SEED-RANK.}
+
+\begin{proof}
+The formula gives $\lceil1/d\rceil=1$.  Directly, let $v\neq0$ and choose a coordinate $v_j\neq0$.  For any target $w=(w_i)$, the matrix whose $j$th column has entries $w_iv_j^{-1}$ and whose other columns vanish sends $v$ to $w$.
+\end{proof}
+
+\begin{corollary}[Multiplicity obstruction]
+\label{cor:multiplicity-obstruction}
+For the diagonal action of $M_d(D)$ on $S^{\oplus m}$,
+\[
+\boxed{
+\srank_{M_d(D)}(S^{\oplus m})
+=
+\left\lceil\frac{m}{d}\right\rceil.
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-MULTIPLICITY-OBSTRUCTION}
+\Depends{PSC-I-T-SEMISIMPLE-SEED-RANK.}
+
+\begin{proof}
+Apply \cref{thm:semisimple-seed-rank} to the single simple type with multiplicity $m$.
+\end{proof}
+
+\begin{sectionrecap}
+For finitely generated modules, the minimal number of seeds is detected on the Jacobson-radical quotient.  In the semisimple top, each generator has a fixed multiplicity capacity \(d_i\) in the \(i\)-th simple type, and the largest capacity ratio determines the exact seed rank.
+\end{sectionrecap}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.84\textwidth]{04_semisimple_seed_rank.pdf}
+\caption{The semisimple multiplicity formula for one simple block. A seed can expose at most $d$ independent multiplicity directions, so $m$ copies require $\lceil m/d\rceil$ seeds.}
+\label{fig:semisimple}
+\end{figure}
+
+\section{Single-operator modules over arbitrary fields}
+
+
+
+\begin{readerroadmap}
+One operator is equivalent to a module over \(\bbk[t]\).  Primary decomposition isolates the irreducible polynomial sectors, and the quotient by \(p(T)\) counts how many cyclic chains begin in each sector.
+\end{readerroadmap}
+\subsection{Primary components and generator counts}
+
+\begin{classicalinput}[Primary decomposition for polynomial modules]
+\label{ci:primary-decomposition}
+Every finite-dimensional $\bbk[t]$-module $X$ decomposes as
+\[
+X=\bigoplus_{p\in\Irr(\bbk[t])}X_p,
+\]
+where only finitely many components are nonzero and every nonzero $X_p$ is a finite direct sum of modules $\bbk[t]/(p^e)$.
+\end{classicalinput}
+\RecordID{PSC-I-CI-PID-PRIMARY-DECOMPOSITION}
+
+\begin{theorem}[Single-operator seed rank]
+\label{thm:single-operator}
+Let $X$ be finite-dimensional over $\bbk$ and let $T\in\End_{\bbk}(X)$.  Regard $X$ as a $\bbk[t]$-module by $t\cdot x=Tx$.  For every monic irreducible $p$, let $X_p$ be the $p$-primary component and set
+\[
+\mu_p(T):=
+\dim_{\bbk[t]/(p)}\bigl(X_p/p(T)X_p\bigr).
+\]
+Then
+\[
+\boxed{
+\srank_{\bbk[T]}(X)=\max_p\mu_p(T).
+}
+\]
+Moreover, $\mu_p(T)$ is the number of cyclic $p$-primary summands in the elementary-divisor decomposition of $X_p$.
+\end{theorem}
+\RecordID{PSC-I-T-SINGLE-OPERATOR}
+\Depends{\nolinkurl{PSC-I-CI-PID-PRIMARY-DECOMPOSITION},
+\nolinkurl{PSC-I-C-LOCAL-ALGEBRA-FORMULA}, and
+\nolinkurl{PSC-I-T-INDEPENDENT-DIRECT-SUM}.}
+\Exports{Companion, recurrence, and residue-subsequence systems.}
+
+\begin{proof}
+Let the minimal polynomial be
+\[
+m_T(t)=\prod_{p}p(t)^{e_p}.
+\]
+The acting algebra is
+\[
+\bbk[T]\cong\bbk[t]/(m_T)
+\cong\prod_pR_p,
+\qquad
+R_p:=\bbk[t]/(p^{e_p}),
+\]
+by the Chinese remainder theorem.  The factor $R_p$ acts on $X_p$ and annihilates every other primary component.  Hence the independent direct-sum formula gives
+\[
+\srank_{\bbk[T]}(X)=\max_p\srank_{R_p}(X_p).
+\]
+Each $R_p$ is local with maximal ideal generated by the class of $p$ and residue division field $K_p=\bbk[t]/(p)$.  By \cref{cor:local-algebra-formula},
+\[
+\srank_{R_p}(X_p)
+=
+\dim_{K_p}X_p/p(T)X_p
+=
+\mu_p(T).
+\]
+Finally, every summand $\bbk[t]/(p^e)$ contributes one copy of $K_p$ after quotienting by $p$, so the dimension equals the number of elementary-divisor summands.
+\end{proof}
+
+\begin{interpretation}
+For one operator, the quotient \(X_p/p(T)X_p\) counts the number of independent primary chains for the irreducible polynomial \(p\).  Over an algebraic closure these become Jordan chains.  The seed rank is the largest chain count among the primary sectors, not the largest chain length.
+\end{interpretation}
+
+\begin{microexample}[title={Block count versus block size}]
+A nilpotent operator with Jordan block sizes \((5,1,1)\) has seed rank \(3\), even though its largest block has length \(5\).  Three seeds are needed because there are three independent chains.  Once their initial vectors are chosen, repeated application of \(T\) generates every position in those chains.
+\end{microexample}
+
+
+\subsection{Invariant factors, Jordan blocks, and cyclicity}
+\begin{corollary}[Invariant-factor count]
+\label{cor:invariant-factor-count}
+If $X\neq0$ and the rational canonical decomposition is written with nonconstant invariant factors
+\[
+X\cong\bigoplus_{j=1}^{r}\bbk[t]/(f_j),
+\qquad
+f_1\mid f_2\mid\cdots\mid f_r,
+\]
+then
+\[
+\boxed{\srank_{\bbk[T]}(X)=r.}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-INVARIANT-FACTOR-COUNT}
+\Depends{PSC-I-T-SINGLE-OPERATOR.}
+
+\begin{proof}
+For each irreducible $p$, the number of invariant factors divisible by $p$ equals the number of $p$-primary elementary divisors.  Because $f_1\mid\cdots\mid f_r$ and $f_1\neq1$ after zero summands are removed, some irreducible divisor of $f_1$ divides all $r$ invariant factors.  Hence $\max_p\mu_p(T)=r$.
+\end{proof}
+
+\begin{corollary}[Geometric-multiplicity formula]
+\label{cor:geometric-multiplicity}
+If $\bbk$ is algebraically closed, then
+\[
+\boxed{
+\srank_{\bbk[T]}(X)
+=
+\max_{\lambda\in\operatorname{Spec}(T)}
+\dim_{\bbk}\Ker(T-\lambda I).
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-ALGEBRAICALLY-CLOSED-SINGLE-OPERATOR}
+\Depends{PSC-I-T-SINGLE-OPERATOR.}
+
+\begin{proof}
+The irreducibles are $p=t-\lambda$.  On the $\lambda$-primary component, the quotient by $(T-\lambda I)X_\lambda$ has dimension equal to the number of Jordan blocks, which is also $\dim\Ker(T-\lambda I)$.
+\end{proof}
+
+\begin{corollary}[Cyclic-matrix criterion]
+\label{cor:cyclic-matrix}
+For finite-dimensional $X$, the following are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item $T$ has a cyclic vector.
+\item $\srank_{\bbk[T]}(X)=1$.
+\item Every $p$-primary component is cyclic.
+\item The rational canonical form has one invariant factor.
+\item The minimal polynomial equals the characteristic polynomial.
+\item After scalar extension to an algebraic closure, every eigenvalue has geometric multiplicity one.
+\end{enumerate}
+\end{corollary}
+\RecordID{PSC-I-C-CYCLIC-MATRIX}
+\Depends{PSC-I-T-SINGLE-OPERATOR, PSC-I-C-INVARIANT-FACTOR-COUNT, and PSC-I-P-CYCLIC-CHARACTERIZATION.}
+
+\begin{proof}
+The equivalence of (i) and (ii) is \cref{prop:cyclic-characterization}.  By \cref{thm:single-operator}, (ii) holds exactly when every $\mu_p(T)$ equals one, which is (iii).  Relatively prime primary cyclic modules combine into one cyclic module by the Chinese remainder theorem, so (iii) is equivalent to (iv).  In rational canonical form, one invariant factor means that the unique invariant factor is both the minimal and characteristic polynomial, proving (iv)$\Leftrightarrow$(v).  Scalar extension preserves the equality of minimal and characteristic polynomials.  Over an algebraic closure, that equality is equivalent to one Jordan block for each eigenvalue, which is (vi).
+\end{proof}
+
+\begin{sectionrecap}
+A single operator is cyclic exactly when each primary sector has one cyclic chain.  Over an algebraic closure this is equivalent to one Jordan block per eigenvalue and to equality of the minimal and characteristic polynomials.
+\end{sectionrecap}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.79\textwidth]{03_cyclic_rank_profiles.pdf}
+\caption{Krylov rank profiles for a cyclic companion operator and for two equal primary blocks. The second orbit stalls before reaching the ambient dimension because one seed cannot separate the repeated blocks.}
+\label{fig:krylov}
+\end{figure}
+
+\section{Exact finite and countable packet coordinates}
+
+
+
+\begin{readerroadmap}
+Packets are exact idempotent coordinates.  The finite theory is purely algebraic.  The countable theory requires an explicit convergence mode and a uniform bound.  This section also adds packet support, tensor products, duality, and the universal mapping property of the packet decomposition.
+\end{readerroadmap}
+\subsection{Finite exact packets}
+
+\begin{definition}[Finite packet system]
+\label{def:packet-system}
+A finite packet system on a $\bbk$-vector space $X$ is a family
+\[
+\Pcal=(P_\alpha)_{\alpha\in I}\subseteq\End_{\bbk}(X)
+\]
+satisfying
+\[
+P_\alpha^2=P_\alpha,
+\qquad
+P_\alpha P_\beta=0\quad(\alpha\neq\beta),
+\qquad
+\sum_{\alpha\in I}P_\alpha=I_X.
+\]
+Set $X_\alpha=P_\alpha X$.  Zero packet spaces may be removed without changing any identity.  No orthogonality is assumed unless stated.
+\end{definition}
+\RecordID{PSC-I-D-PACKET-SYSTEM}
+
+\begin{definition}[Packet support and packet-pure vectors]
+\label{def:packet-support}
+For a finite packet system \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(x\in X\), define
+\[
+\Supp_{\Pcal}(x)
+:=
+\{\alpha\in I:P_\alpha x\neq0\}.
+\]
+The vector \(x\) is \emph{packet-pure} if \(|\Supp_{\Pcal}(x)|\leq1\).  A finite family is packet-pure if each of its members is packet-pure, although different members may lie in different packets.
+\end{definition}
+\RecordID{PSC-I-D-PACKET-SUPPORT}
+
+\begin{interpretation}
+Packet support is coordinate support, not geometric support in the original domain.  A seed may be localized in one packet, spread across many packets, or zero.  The distinction becomes decisive in the source-component theorem because one mixed-support seed can meet several graph sources at once.
+\end{interpretation}
+
+
+\begin{lemma}[Finite packet aggregation]
+\label{lem:packet-aggregation}
+Let $\sigma:I\twoheadrightarrow J$ be a surjection and define
+\[
+Q_j:=\sum_{\sigma(\alpha)=j}P_\alpha.
+\]
+Then $(Q_j)_{j\in J}$ is a finite packet system and
+\[
+Q_jX=\bigoplus_{\sigma(\alpha)=j}X_\alpha.
+\]
+\end{lemma}
+\RecordID{PSC-I-L-PACKET-AGGREGATION}
+\Depends{PSC-I-D-PACKET-SYSTEM.}
+
+\begin{proof}
+Pairwise annihilation of the $P_\alpha$ gives
+\[
+Q_j^2=Q_j,
+\qquad
+Q_jQ_k=0\quad(j\neq k).
+\]
+Summing over $j$ recovers $\sum_\alpha P_\alpha=I$.  The range statement follows from the directness forced by pairwise annihilation.
+\end{proof}
+
+\begin{definition}[Packet analysis and synthesis]
+\label{def:analysis-synthesis}
+For a finite packet system, define
+\[
+\mathcal A_{\Pcal}:X\longrightarrow\bigoplus_{\alpha\in I}X_\alpha,
+\qquad
+x\longmapsto(P_\alpha x)_\alpha,
+\]
+and
+\[
+\mathcal S_{\Pcal}:\bigoplus_{\alpha\in I}X_\alpha\longrightarrow X,
+\qquad
+(x_\alpha)_\alpha\longmapsto\sum_\alpha x_\alpha.
+\]
+\end{definition}
+\RecordID{PSC-I-D-ANALYSIS-SYNTHESIS}
+
+\begin{theorem}[Exact packet-coordinate isomorphism]
+\label{thm:exact-packet-coordinates}
+For every finite packet system,
+\[
+\boxed{
+\mathcal S_{\Pcal}\mathcal A_{\Pcal}=I_X,
+\qquad
+\mathcal A_{\Pcal}\mathcal S_{\Pcal}=I_{\oplus X_\alpha}.
+}
+\]
+Hence
+\[
+\boxed{X\cong\bigoplus_{\alpha\in I}X_\alpha.}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-EXACT-PACKET-COORDINATES}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-D-ANALYSIS-SYNTHESIS.}
+\Exports{Every exact packet reconstruction in the series.}
+
+\begin{proof}
+For $x\in X$,
+\[
+\mathcal S_{\Pcal}\mathcal A_{\Pcal}x
+=
+\sum_\alpha P_\alpha x
+=x.
+\]
+If $x_\alpha\in X_\alpha$, then $P_\beta x_\alpha=\delta_{\alpha\beta}x_\alpha$, so
+\[
+\mathcal A_{\Pcal}\mathcal S_{\Pcal}(x_\alpha)_\alpha
+=
+\left(P_\beta\sum_\alpha x_\alpha\right)_\beta
+=(x_\beta)_\beta.
+\]
+Thus analysis and synthesis are inverse linear maps.
+\end{proof}
+
+\begin{keyidea}
+Analysis records every packet coordinate and synthesis adds them back.  The theorem is therefore an exact change of coordinates.  Orthogonality is unnecessary for algebraic reconstruction.  It matters only for norm, energy, and conditioning statements.
+\end{keyidea}
+
+
+\begin{corollary}[Packetwise equality]
+\label{cor:packetwise-equality}
+For $x,y\in X$,
+\[
+x=y
+\quad\Longleftrightarrow\quad
+P_\alpha x=P_\alpha y\text{ for every }\alpha.
+\]
+\end{corollary}
+\RecordID{PSC-I-C-PACKETWISE-EQUALITY}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+
+\begin{proof}
+The forward implication is immediate.  For the reverse implication, sum the packet equalities and use $\sum_\alpha P_\alpha=I$.
+\end{proof}
+
+
+
+\begin{corollary}[Universal mapping property of finite packet coordinates]
+\label{cor:packet-universal-property}
+Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(Y\) be a \(\bbk\)-vector space.
+\begin{enumerate}
+\item Every family \(f_\alpha:X_\alpha\to Y\) determines a unique linear map \(f:X\to Y\) with \(f|_{X_\alpha}=f_\alpha\), namely
+\[
+f=\sum_\alpha f_\alpha P_\alpha.
+\]
+\item Every family \(g_\alpha:Y\to X_\alpha\) determines a unique linear map \(g:Y\to X\) with \(P_\alpha g=g_\alpha\), namely
+\[
+g=\sum_\alpha g_\alpha.
+\]
+\end{enumerate}
+Equivalently,
+\[
+\Hom(X,Y)\cong\prod_\alpha\Hom(X_\alpha,Y),
+\qquad
+\Hom(Y,X)\cong\prod_\alpha\Hom(Y,X_\alpha),
+\]
+where the products are finite.
+\end{corollary}
+\RecordID{PSC-I-C-PACKET-UNIVERSAL-PROPERTY}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Assembly of packetwise operators, channels, corrections, and local transport data.}
+
+\begin{proof}
+For \(x=\sum_\alpha P_\alpha x\), any extension of the \(f_\alpha\) must satisfy
+\[
+f(x)=\sum_\alpha f_\alpha(P_\alpha x),
+\]
+which proves both existence and uniqueness of the first formula.  For the second, the sum \(g=\sum_\alpha g_\alpha\) satisfies
+\[
+P_\beta g
+=\sum_\alpha P_\beta g_\alpha
+=g_\beta
+\]
+because \(g_\alpha(Y)\subseteq X_\alpha\).  Uniqueness follows from \(\sum_\alpha P_\alpha=I\).
+\end{proof}
+
+
+\subsection{Tensor products and dual packets}
+
+\begin{theorem}[Tensor-product packet systems]
+\label{thm:tensor-packet-system}
+Let \(\Pcal=(P_\alpha)_{\alpha\in I}\) be a finite packet system on \(X\), and let \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be a finite packet system on \(Y\).  Then
+\[
+\Pcal\boxtimes\Qcal
+:=
+(P_\alpha\otimes Q_\gamma)_{(\alpha,\gamma)\in I\times J}
+\]
+is a finite packet system on the algebraic tensor product \(X\otimes_{\bbk}Y\), with packet spaces
+\[
+(P_\alpha\otimes Q_\gamma)(X\otimes Y)
+=X_\alpha\otimes Y_\gamma.
+\]
+Hence
+\[
+\boxed{
+X\otimes Y
+\cong
+\bigoplus_{(\alpha,\gamma)\in I\times J}
+X_\alpha\otimes Y_\gamma.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-TENSOR-PACKET-SYSTEM}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Tensor refinement for quantum, signal, arithmetic, and multivariate realizations.}
+
+\begin{proof}
+For every pair of packet indices,
+\[
+(P_\alpha\otimes Q_\gamma)^2
+=P_\alpha^2\otimes Q_\gamma^2
+=P_\alpha\otimes Q_\gamma.
+\]
+If \((\alpha,\gamma)\neq(\beta,\delta)\), then either \(P_\alpha P_\beta=0\) or \(Q_\gamma Q_\delta=0\), so the corresponding tensor idempotents annihilate each other.  Finally,
+\[
+\sum_{\alpha,\gamma}P_\alpha\otimes Q_\gamma
+=
+\left(\sum_\alpha P_\alpha\right)
+\otimes
+\left(\sum_\gamma Q_\gamma\right)
+=I_X\otimes I_Y.
+\]
+The range is generated by pure tensors \(P_\alpha x\otimes Q_\gamma y\), hence equals \(X_\alpha\otimes Y_\gamma\).  Exact reconstruction follows from \cref{thm:exact-packet-coordinates}.
+\end{proof}
+
+\begin{proposition}[Dual packet systems]
+\label{prop:dual-packet-system}
+Let \(X\) be finite dimensional and let \(\Pcal=(P_\alpha)\) be a finite packet system.  The algebraic dual maps
+\[
+P_\alpha^*:X^*\to X^*,
+\qquad
+P_\alpha^*(\varphi)=\varphi\circ P_\alpha,
+\]
+form a finite packet system on \(X^*\).  Its \(\alpha\)-packet is canonically isomorphic to \(X_\alpha^*\), and
+\[
+X^*\cong\bigoplus_\alpha X_\alpha^*.
+\]
+\end{proposition}
+\RecordID{PSC-I-P-DUAL-PACKET-SYSTEM}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Dual observables, covectors, trace pairings, and adjoint packet calculations.}
+
+\begin{proof}
+Because dualization reverses products,
+\[
+P_\alpha^*P_\beta^*=(P_\beta P_\alpha)^*
+=\delta_{\alpha\beta}P_\alpha^*.
+\]
+Also \(\sum_\alpha P_\alpha^*=I_{X^*}\).  Thus the dual maps form a packet system.  Restriction gives a map from \(P_\alpha^*X^*\) to \(X_\alpha^*\).  It is injective because a covector in the range of \(P_\alpha^*\) vanishes on every other packet, and it is surjective because any covector on \(X_\alpha\) extends to \(X\) through the direct-sum decomposition.
+\end{proof}
+
+\begin{microexample}[title={Tensoring the oblique packet split}]
+Tensor the two oblique packets in Running Example R3 with the coordinate packets of \(\bbk^3\).  The result has six exact packets.  No orthogonality is created by tensoring, but the analysis and synthesis identities remain exact because they are idempotent identities.
+\end{microexample}
+
+\subsection{Banach stability and coordinate conditioning}
+\begin{theorem}[Finite Banach packet isomorphism]
+\label{thm:banach-packets}
+Let $X$ be Banach and let $(P_\alpha)_{\alpha\in I}$ be a finite family of bounded pairwise annihilating idempotents with sum $I_X$.  Then every range $X_\alpha=P_\alpha X$ is closed.  For any finite product norm equivalent to the maximum norm on $\bigoplus_\alpha X_\alpha$, packet analysis and synthesis are bounded inverse operators.
+\end{theorem}
+\RecordID{PSC-I-T-BANACH-PACKET-ISOMORPHISM}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+
+\begin{proof}
+The range of a bounded idempotent is its fixed-point space,
+\[
+P_\alpha X=\Ker(I-P_\alpha),
+\]
+which is closed.  Because $I$ is finite, analysis and synthesis are bounded for the maximum and sum norms, respectively, and therefore for every equivalent finite product norm.  Their inverse identities are algebraic and were proved in \cref{thm:exact-packet-coordinates}.
+\end{proof}
+
+\begin{definition}[Packet-coordinate condition number]
+\label{def:packet-condition-number}
+Fix a Banach direct-sum norm on $\bigoplus_\alpha X_\alpha$.  Define
+\[
+\kappa(\Pcal):=
+\|\mathcal A_{\Pcal}\|\,
+\|\mathcal S_{\Pcal}\|.
+\]
+\end{definition}
+\RecordID{PSC-I-D-PACKET-CONDITION-NUMBER}
+
+\begin{proposition}[Conditioned coordinate transport]
+\label{prop:conditioned-coordinates}
+For a finite Banach packet system,
+\[
+\kappa(\Pcal)\geq1.
+\]
+If $T\in\mathcal B(X)$ and
+\[
+[T]_{\Pcal}:=\mathcal A_{\Pcal}T\mathcal S_{\Pcal},
+\]
+then
+\[
+\boxed{
+\|[T]_{\Pcal}\|
+\leq\kappa(\Pcal)\|T\|,
+\qquad
+\|T\|
+\leq\kappa(\Pcal)\|[T]_{\Pcal}\|.
+}
+\]
+\end{proposition}
+\RecordID{PSC-I-P-CONDITIONED-COORDINATES}
+\Depends{PSC-I-T-BANACH-PACKET-ISOMORPHISM.}
+
+\begin{proof}
+Since $I=\mathcal S_{\Pcal}\mathcal A_{\Pcal}$,
+\[
+1=\|I\|\leq\|\mathcal S_{\Pcal}\|\|\mathcal A_{\Pcal}\|.
+\]
+The first displayed estimate follows from submultiplicativity.  The inverse identity
+\[
+T=\mathcal S_{\Pcal}[T]_{\Pcal}\mathcal A_{\Pcal}
+\]
+gives the second estimate.
+\end{proof}
+
+\begin{interpretation}
+The quantity \(\kappa(\Pcal)\) measures how strongly the chosen packet coordinates can amplify perturbations.  An orthogonal Hilbert decomposition has the best possible behavior in the natural \(\ell^2\) sum norm.  An oblique packet system may still be exact while having a large condition number.
+\end{interpretation}
+
+
+\begin{corollary}[Completion preserves a finite packet split]
+\label{cor:completion-packet-split}
+Let $M$ be a dense normed subspace of a Banach space $X$.  Suppose every bounded $P_\alpha$ leaves $M$ invariant and the restricted projectors form a packet system on $M$.  Then
+\[
+P_\alpha X=\cl{P_\alpha M}
+\]
+and the packet decomposition of $M$ extends uniquely to the completion $X$.
+\end{corollary}
+\RecordID{PSC-I-C-COMPLETION-PACKET-SPLIT}
+\Depends{PSC-I-T-BANACH-PACKET-ISOMORPHISM.}
+
+\begin{proof}
+For $x\in X$, choose $m_n\in M$ with $m_n\to x$.  Continuity gives $P_\alpha m_n\to P_\alpha x$, so $P_\alpha X\subseteq\cl{P_\alpha M}$.  The reverse inclusion follows because $P_\alpha X$ is closed and contains $P_\alpha M$.  The bounded extensions remain pairwise annihilating idempotents whose finite sum is the identity.
+\end{proof}
+
+\subsection{Countable packets and unconditional convergence}
+\begin{definition}[Unconditional packet sum space]
+\label{def:unconditional-packet-space}
+Let $(X_n)_{n\geq1}$ be closed subspaces of a real or complex Banach space $X$.  Define
+\[
+\bigoplus_{n\geq1}^{u}X_n
+\]
+to be the space of sequences $x=(x_n)$ with $x_n\in X_n$ for which $\sum_nx_n$ converges unconditionally in $X$.  Equip it with
+\[
+\|x\|_u
+:=
+\sup_{F\Subset\mathbb N}
+\sup_{|a_n|\leq1}
+\left\|\sum_{n\in F}a_nx_n\right\|.
+\]
+\end{definition}
+\RecordID{PSC-I-D-UNCONDITIONAL-PACKET-SPACE}
+
+\begin{lemma}[Completeness of the unconditional packet sum]
+\label{lem:unconditional-completeness}
+The normed space $\bigoplus_{n\geq1}^{u}X_n$ in \cref{def:unconditional-packet-space} is Banach.
+\end{lemma}
+\RecordID{PSC-I-L-UNCONDITIONAL-COMPLETENESS}
+\Depends{PSC-I-D-UNCONDITIONAL-PACKET-SPACE.}
+
+\begin{proof}
+Let $x^{(k)}=(x_n^{(k)})$ be Cauchy in $\|\cdot\|_u$.  For every fixed $n$,
+\[
+\|x_n^{(k)}-x_n^{(\ell)}\|
+\leq
+\|x^{(k)}-x^{(\ell)}\|_u,
+\]
+so $x_n^{(k)}$ converges to some $x_n\in X_n$ because $X_n$ is closed.  Given $\varepsilon>0$, choose $k_0$ such that
+\[
+\|x^{(k)}-x^{(\ell)}\|_u<\varepsilon
+\qquad(k,\ell\geq k_0).
+\]
+For finite $F$ and $|a_n|\leq1$, pass $\ell\to\infty$ in the finite sum to obtain
+\[
+\left\|\sum_{n\in F}a_n(x_n^{(k)}-x_n)\right\|
+\leq\varepsilon
+\qquad(k\geq k_0).
+\]
+Hence $\|x^{(k)}-x\|_u\leq\varepsilon$ once $x$ is known to be unconditionally summable.
+
+Choose such a $k\geq k_0$.  Since $x^{(k)}$ is unconditionally summable, there is a finite $F_0$ such that every finite $F\subseteq\mathbb N\setminus F_0$ and every $|a_n|\leq1$ satisfy
+\[
+\left\|\sum_{n\in F}a_nx_n^{(k)}\right\|<\varepsilon.
+\]
+The preceding uniform estimate then gives
+\[
+\left\|\sum_{n\in F}a_nx_n\right\|<2\varepsilon.
+\]
+Thus the tails of $\sum_nx_n$ are uniformly small under bounded scalar changes, which is the unconditional Cauchy criterion.  Therefore $x\in\bigoplus^uX_n$, and the earlier estimate proves $x^{(k)}\to x$ in $\|\cdot\|_u$.
+\end{proof}
+
+\begin{theorem}[Countable unconditional packet isomorphism]
+\label{thm:countable-packets}
+Let $X$ be a real or complex Banach space and let $(P_n)_{n\geq1}\subseteq\mathcal B(X)$ satisfy
+\[
+P_nP_m=\delta_{nm}P_n
+\]
+and
+\[
+x=\sum_{n\geq1}P_nx
+\]
+unconditionally for every $x\in X$.  Assume
+\[
+K:=
+\sup_{F\Subset\mathbb N}
+\sup_{|a_n|\leq1}
+\left\|\sum_{n\in F}a_nP_n\right\|<\infty.
+\]
+Then analysis and synthesis define inverse Banach-space isomorphisms
+\[
+\boxed{
+X\cong\bigoplus_{n\geq1}^{u}P_nX.
+}
+\]
+More precisely,
+\[
+\|\mathcal A_{\Pcal}\|\leq K,
+\qquad
+\|\mathcal S_{\Pcal}\|\leq1.
+\]
+\end{theorem}
+\RecordID{PSC-I-T-COUNTABLE-UNCONDITIONAL-PACKETS}
+\Depends{PSC-I-D-UNCONDITIONAL-PACKET-SPACE and PSC-I-L-UNCONDITIONAL-COMPLETENESS.}
+\Exports{Countable analytic packet decompositions under explicit convergence control.}
+
+\begin{proof}
+Each $P_nX=\Ker(I-P_n)$ is closed.  For $x\in X$,
+\[
+\|\mathcal A_{\Pcal}x\|_u
+=
+\sup_{F,a}
+\left\|\sum_{n\in F}a_nP_nx\right\|
+\leq K\|x\|.
+\]
+For $y=(y_n)\in\bigoplus^uP_nX$, define
+\[
+\mathcal S_{\Pcal}y=\sum_ny_n.
+\]
+Since the all-one finite partial sums are among those used in $\|y\|_u$,
+\[
+\|\mathcal S_{\Pcal}y\|
+\leq\|y\|_u.
+\]
+The assumed expansion gives $\mathcal S_{\Pcal}\mathcal A_{\Pcal}x=x$.  Conversely, boundedness of $P_m$ permits termwise application to the unconditionally convergent series:
+\[
+P_m\mathcal S_{\Pcal}y
+=
+\sum_nP_my_n
+=y_m.
+\]
+Thus $\mathcal A_{\Pcal}\mathcal S_{\Pcal}=I$.  Completeness of the coordinate space is \cref{lem:unconditional-completeness}.
+\end{proof}
+
+\begin{remark}[Uniform boundedness]
+\label{rem:uniform-boundedness}
+If every expansion $\sum_nP_nx$ is unconditional, the family of signed finite partial-sum operators is pointwise bounded.  The uniform boundedness principle therefore yields a finite constant $K$.  It is retained explicitly in \cref{thm:countable-packets} because it is the quantitative coordinate bound exported downstream.
+\end{remark}
+\RecordID{PSC-I-R-UNIFORM-BOUNDEDNESS}
+
+\begin{boundary}[Infinite packet sums]
+\label{bnd:infinite-packet-topology}
+No identity $\sum_\alpha P_\alpha=I$ is used for an infinite family unless the convergence mode and the corresponding uniform boundedness statement are declared.  Pointwise, strong, norm, weak, and unconditional convergence are not interchangeable.
+\end{boundary}
+\RecordID{PSC-I-B-INFINITE-PACKET-TOPOLOGY}
+
+\begin{sectionrecap}
+Finite packet systems are exact direct-sum coordinates with no orthogonality requirement.  Their universal property permits arbitrary packetwise maps to be assembled uniquely.  Tensor products and duals preserve packet structure.  In Banach spaces, conditioning is controlled by the analysis and synthesis norms.  Countable packet systems require unconditional convergence and a uniform signed-partial-sum bound.
+\end{sectionrecap}
+
+
+\section{Transfer-block algebra and support patterns}
+\begin{readerroadmap}
+Once vectors are resolved into packets, every operator becomes a matrix of maps between packet spaces.  Operator multiplication becomes block convolution.  Zero patterns become relations on the packet index set, and preorder patterns produce triangular algebras with nilpotent strict-transfer ideals.
+\end{readerroadmap}
+\subsection{Exact operator coordinates}
+
+\begin{definition}[Transfer block]
+\label{def:transfer-block}
+For $T\in\End_{\bbk}(X)$ and a finite packet system $\Pcal$, define
+\[
+T_{\beta\alpha}:=P_\beta TP_\alpha
+\in\Hom_{\bbk}(X_\alpha,X_\beta).
+\]
+\end{definition}
+\RecordID{PSC-I-D-TRANSFER-BLOCK}
+
+\begin{theorem}[Exact operator reconstruction]
+\label{thm:operator-reconstruction}
+Every $T\in\End_{\bbk}(X)$ satisfies
+\[
+\boxed{T=\sum_{\alpha,\beta\in I}T_{\beta\alpha}.}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-OPERATOR-RECONSTRUCTION}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+
+\begin{proof}
+Insert the finite packet identity on both sides:
+\[
+T=
+\left(\sum_\beta P_\beta\right)
+T
+\left(\sum_\alpha P_\alpha\right)
+=
+\sum_{\alpha,\beta}P_\beta TP_\alpha.
+\]
+\end{proof}
+
+\begin{interpretation}
+Operator reconstruction inserts the identity on both sides of \(T\).  The source index \(\alpha\) records where a vector begins, and the target index \(\beta\) records where the image lands.  This is an exact operator matrix whose entries are themselves linear maps.
+\end{interpretation}
+
+
+\begin{theorem}[Packet matrix multiplication]
+\label{thm:block-multiplication}
+For $S,T\in\End_{\bbk}(X)$,
+\[
+\boxed{
+(ST)_{\gamma\alpha}
+=
+\sum_{\beta\in I}S_{\gamma\beta}T_{\beta\alpha}.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-BLOCK-MULTIPLICATION}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-D-TRANSFER-BLOCK.}
+\Exports{All packet path expansions.}
+
+\begin{proof}
+Insert $I=\sum_\beta P_\beta$ between $S$ and $T$:
+\[
+P_\gamma STP_\alpha
+=
+\sum_\beta
+P_\gamma SP_\beta TP_\alpha.
+\]
+\end{proof}
+
+\begin{keyidea}
+The intermediate packet index in block multiplication plays the role of a summed matrix index.  Repeated multiplication therefore becomes a sum over packet paths.  Paper II adds weights and filtrations to this path expansion.  Paper III adds nonlinear trees.
+\end{keyidea}
+
+
+\begin{corollary}[Packet powers and paths]
+\label{cor:block-powers}
+For $m\geq1$,
+\[
+(T^m)_{\beta_m\beta_0}
+=
+\sum_{\beta_1,\ldots,\beta_{m-1}}
+T_{\beta_m\beta_{m-1}}
+\cdots
+T_{\beta_1\beta_0}.
+\]
+The same formula holds for a product of nonidentical operators with the corresponding blocks in temporal order.
+\end{corollary}
+\RecordID{PSC-I-C-BLOCK-POWERS}
+\Depends{PSC-I-T-BLOCK-MULTIPLICATION.}
+
+\begin{proof}
+Induct on $m$ using \cref{thm:block-multiplication}.  The mixed-operator statement is the same induction with a different operator at each step.
+\end{proof}
+
+\begin{corollary}[Adjoint reversal]
+\label{cor:adjoint-reversal}
+If $X$ is Hilbert, every $P_\alpha$ is orthogonal, and $T\in\mathcal B(X)$, then
+\[
+\boxed{(T_{\beta\alpha})^*=(T^*)_{\alpha\beta}.}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-ADJOINT-REVERSAL}
+\Depends{PSC-I-D-TRANSFER-BLOCK.}
+
+\begin{proof}
+Because $P_\alpha^*=P_\alpha$,
+\[
+(P_\beta TP_\alpha)^*=P_\alpha T^*P_\beta.
+\]
+\end{proof}
+
+\subsection{The full block algebra and intertwining equations}
+
+\begin{corollary}[Tensor-product transfer blocks]
+\label{cor:tensor-transfer-blocks}
+Let \(S\in\End(X)\) and \(T\in\End(Y)\), with packet systems \(\Pcal\) and \(\Qcal\).  Relative to the tensor-product packet system of \cref{thm:tensor-packet-system},
+\[
+\boxed{
+(S\otimes T)_{(\beta,\delta),(\alpha,\gamma)}
+=
+S_{\beta\alpha}\otimes T_{\delta\gamma}.
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-TENSOR-TRANSFER-BLOCKS}
+\Depends{PSC-I-T-TENSOR-PACKET-SYSTEM and PSC-I-D-TRANSFER-BLOCK.}
+\Exports{Tensor-network, quantum-circuit, and multivariate packet calculations.}
+
+\begin{proof}
+By definition,
+\begin{align*}
+(S\otimes T)_{(\beta,\delta),(\alpha,\gamma)}
+&=(P_\beta\otimes Q_\delta)(S\otimes T)(P_\alpha\otimes Q_\gamma)\\
+&=(P_\beta SP_\alpha)\otimes(Q_\delta TQ_\gamma)\\
+&=S_{\beta\alpha}\otimes T_{\delta\gamma}.
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Blockwise intertwining equations]
+\label{thm:block-intertwining}
+Let \(T\in\End(X)\), \(S\in\End(Y)\), let \(\Pcal=(P_\alpha)_{\alpha\in I}\) and \(\Qcal=(Q_\gamma)_{\gamma\in J}\) be finite packet systems, and let \(U:X\to Y\).  Define
+\[
+T_{\beta\alpha}=P_\beta TP_\alpha,
+\qquad
+S_{\gamma\delta}=Q_\gamma SQ_\delta,
+\qquad
+U_{\gamma\alpha}=Q_\gamma UP_\alpha.
+\]
+Then
+\[
+\boxed{UT=SU}
+\]
+if and only if, for every \(\gamma\in J\) and \(\alpha\in I\),
+\[
+\boxed{
+\sum_{\beta\in I}U_{\gamma\beta}T_{\beta\alpha}
+=
+\sum_{\delta\in J}S_{\gamma\delta}U_{\delta\alpha}.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-BLOCK-INTERTWINING}
+\Depends{PSC-I-T-OPERATOR-RECONSTRUCTION and PSC-I-T-BLOCK-MULTIPLICATION.}
+\Exports{Packetwise equivalence, gluing, symmetry, and local representation comparison.}
+
+\begin{proof}
+Apply \(Q_\gamma\) on the left and \(P_\alpha\) on the right.  Inserting \(I_X=\sum_\beta P_\beta\) gives
+\[
+Q_\gamma UTP_\alpha
+=
+\sum_\beta Q_\gamma UP_\beta TP_\alpha
+=
+\sum_\beta U_{\gamma\beta}T_{\beta\alpha}.
+\]
+Inserting \(I_Y=\sum_\delta Q_\delta\) gives
+\[
+Q_\gamma SUP_\alpha
+=
+\sum_\delta Q_\gamma SQ_\delta UP_\alpha
+=
+\sum_\delta S_{\gamma\delta}U_{\delta\alpha}.
+\]
+Thus \(UT=SU\) implies every block equation.  Conversely, if every block equation holds, then all blocks of \(UT-SU\) vanish.  Exact operator reconstruction yields \(UT-SU=0\).
+\end{proof}
+
+\begin{interpretation}
+A global intertwiner is equivalent to a coupled finite system of packet equations.  Later holonomy and representation-theoretic arguments use this theorem after local blocks have been constructed.  The theorem does not construct those local blocks.  It states the exact compatibility they must satisfy.
+\end{interpretation}
+
+
+\begin{theorem}[Full block-algebra representation]
+\label{thm:block-algebra}
+The map
+\[
+\Theta_{\Pcal}:\End_{\bbk}(X)
+\longrightarrow
+\prod_{\beta,\alpha\in I}\Hom_{\bbk}(X_\alpha,X_\beta),
+\qquad
+T\longmapsto(T_{\beta\alpha})_{\beta,\alpha},
+\]
+is an algebra isomorphism when the codomain is equipped with operator-valued block-matrix multiplication.
+\end{theorem}
+\RecordID{PSC-I-T-BLOCK-ALGEBRA}
+\Depends{\nolinkurl{PSC-I-T-OPERATOR-RECONSTRUCTION} and
+\nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION}.}
+
+\begin{proof}
+Injectivity follows from exact reconstruction.  Given arbitrary maps $B_{\beta\alpha}:X_\alpha\to X_\beta$, define
+\[
+T\left(\sum_\alpha x_\alpha\right)
+:=
+\sum_{\alpha,\beta}B_{\beta\alpha}x_\alpha.
+\]
+The packet decomposition is unique and the index set is finite, so this defines a linear operator whose blocks are the prescribed maps.  Thus $\Theta_{\Pcal}$ is surjective.  Compatibility with multiplication is \cref{thm:block-multiplication}.
+\end{proof}
+
+
+
+\begin{corollary}[Propagation of packet support]
+\label{cor:packet-support-propagation}
+Let \(T\in\End(X)\) and \(x\in X\).  Then
+\[
+\boxed{
+\Supp_{\Pcal}(Tx)
+\subseteq
+\left\{\beta:\exists\alpha\in\Supp_{\Pcal}(x)
+\text{ with }T_{\beta\alpha}\neq0\right\}.
+}
+\]
+Equality holds whenever, for every target \(\beta\) in the displayed right-hand set, the active contributions
+\[
+\bigl\{T_{\beta\alpha}P_\alpha x:
+\alpha\in\Supp_{\Pcal}(x),\ T_{\beta\alpha}\neq0\bigr\}
+\]
+have nonzero sum.  In particular, equality holds if at most one active source packet feeds each such \(\beta\) and that source coordinate does not lie in the kernel of the corresponding block.
+\end{corollary}
+\RecordID{PSC-I-C-PACKET-SUPPORT-PROPAGATION}
+\Depends{PSC-I-D-PACKET-SUPPORT and PSC-I-T-OPERATOR-RECONSTRUCTION.}
+\Exports{Graph reachability, leakage bounds, and support pruning.}
+
+\begin{proof}
+For every target packet \(\beta\),
+\[
+P_\beta Tx
+=
+\sum_{\alpha\in\Supp_{\Pcal}(x)}T_{\beta\alpha}P_\alpha x.
+\]
+If every block in this sum is zero, then the \(\beta\)-coordinate vanishes.  This proves the inclusion.  Equality is exactly the assertion that the displayed active sum is nonzero for every target in the right-hand set.  The final sufficient condition leaves at most one nonzero summand at each target, and kernel avoidance makes that summand nonzero.
+\end{proof}
+
+
+\begin{corollary}[Dimension count]
+\label{cor:dimension-count}
+If $X$ is finite-dimensional and $d_\alpha=\dim X_\alpha$, then
+\[
+\dim\End_{\bbk}(X)
+=
+\sum_{\alpha,\beta}d_\alpha d_\beta
+=
+\left(\sum_\alpha d_\alpha\right)^2.
+\]
+\end{corollary}
+\RecordID{PSC-I-C-DIMENSION-COUNT}
+\Depends{PSC-I-T-BLOCK-ALGEBRA.}
+
+\begin{proof}
+Take dimensions in the block-algebra isomorphism and use $\dim\Hom(X_\alpha,X_\beta)=d_\alpha d_\beta$.
+\end{proof}
+
+\begin{proposition}[Block-diagonal projection and packet commutant]
+\label{prop:block-diagonal-projection}
+Define
+\[
+\Delta_{\Pcal}(T):=\sum_{\alpha}P_\alpha TP_\alpha.
+\]
+Then $\Delta_{\Pcal}$ is a linear idempotent on $\End(X)$ whose range is the block-diagonal subalgebra.  For $T\in\End(X)$, the following are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item $TP_\alpha=P_\alpha T$ for every $\alpha$.
+\item $T_{\beta\alpha}=0$ whenever $\beta\neq\alpha$.
+\item $\Delta_{\Pcal}(T)=T$.
+\end{enumerate}
+\end{proposition}
+\RecordID{PSC-I-P-BLOCK-DIAGONAL-COMMUTANT}
+\Depends{PSC-I-T-OPERATOR-RECONSTRUCTION.}
+\Exports{Symmetry-sector invariance and packet leakage decompositions.}
+
+\begin{proof}
+Pairwise annihilation gives $\Delta_{\Pcal}^2=\Delta_{\Pcal}$ and identifies its range with diagonal block families.  If $T$ commutes with all $P_\alpha$, then for $\beta\neq\alpha$,
+\[
+P_\beta TP_\alpha=P_\beta P_\alpha T=0.
+\]
+Thus (i) implies (ii).  Exact reconstruction shows (ii) implies (iii).  If $T=\sum_\alpha P_\alpha TP_\alpha$, then
+\[
+TP_\gamma=P_\gamma TP_\gamma=P_\gamma T,
+\]
+so (iii) implies (i).
+\end{proof}
+
+\begin{microexample}[title={Upper-triangular support}]
+Take three one-dimensional packets and permit blocks only from a lower-index source to a higher-index target, together with the diagonal.  The support relation is a total preorder.  The strict off-diagonal blocks form a nilpotent ideal, and every product of three strict transfers vanishes.  This is the finite algebraic prototype for the weighted triangular inverses developed in Paper II.
+\end{microexample}
+
+
+\subsection{Support patterns, preorders, and triangular structure}
+\begin{definition}[Support relation and support space]
+\label{def:support-relation}
+For a relation $R\subseteq I\times I$, with $(\beta,\alpha)$ interpreted as an allowed transfer $\alpha\to\beta$, define
+\[
+\mathfrak M_R
+:=
+\{T\in\End(X):T_{\beta\alpha}=0\text{ whenever }(\beta,\alpha)\notin R\}.
+\]
+\end{definition}
+\RecordID{PSC-I-D-SUPPORT-RELATION}
+
+\begin{theorem}[Support-pattern algebra criterion]
+\label{thm:support-pattern}
+Assume $X_\alpha\neq0$ for every $\alpha\in I$.  Then:
+\begin{enumerate}[label=(\roman*)]
+\item $I_X\in\mathfrak M_R$ if and only if $R$ is reflexive.
+\item $\mathfrak M_R\mathfrak M_R\subseteq\mathfrak M_R$ if and only if $R$ is transitive.
+\item $\mathfrak M_R$ is a unital subalgebra if and only if $R$ is a preorder.
+\end{enumerate}
+\end{theorem}
+\RecordID{PSC-I-T-SUPPORT-PATTERN-ALGEBRA}
+\Depends{PSC-I-T-BLOCK-MULTIPLICATION.}
+
+\begin{proof}
+The identity has diagonal blocks $I_{X_\alpha}$ and no off-diagonal blocks, so it belongs to $\mathfrak M_R$ exactly when $(\alpha,\alpha)\in R$ for every $\alpha$.
+
+Assume $R$ is transitive.  If a summand
+\[
+S_{\gamma\beta}T_{\beta\alpha}
+\]
+in the $(\gamma,\alpha)$ block of $ST$ is nonzero, then $(\gamma,\beta)$ and $(\beta,\alpha)$ lie in $R$.  Transitivity gives $(\gamma,\alpha)\in R$, so every forbidden block of $ST$ vanishes.
+
+Conversely, suppose transitivity fails.  Choose $\alpha,\beta,\gamma$ with
+\[
+(\beta,\alpha)\in R,
+\qquad
+(\gamma,\beta)\in R,
+\qquad
+(\gamma,\alpha)\notin R.
+\]
+Choose nonzero vectors $u\in X_\alpha$, $v\in X_\beta$, and $w\in X_\gamma$.  Choose linear functionals $f\in X_\alpha^*$ and $g\in X_\beta^*$ with $f(u)=g(v)=1$.  Let $T$ have the sole block $x\mapsto f(x)v$ from $X_\alpha$ to $X_\beta$, and let $S$ have the sole block $y\mapsto g(y)w$ from $X_\beta$ to $X_\gamma$.  Then $S,T\in\mathfrak M_R$, but $ST$ has a nonzero forbidden $(\gamma,\alpha)$ block.  This proves necessity.  Combining reflexivity and transitivity gives (iii).
+\end{proof}
+
+\begin{corollary}[$*$-closed bounded support patterns]
+\label{cor:star-support}
+Let $X$ be Hilbert, let the packet projectors be orthogonal, assume $X_\alpha\neq0$ for every $\alpha\in I$, and put
+\[
+\mathfrak M_R^{\mathrm b}:=\mathfrak M_R\cap\mathcal B(X).
+\]
+Then $\mathfrak M_R^{\mathrm b}$ is closed under adjoints if and only if $R$ is symmetric.  Hence $\mathfrak M_R^{\mathrm b}$ is a unital $*$-subalgebra of $\mathcal B(X)$ if and only if $R$ is an equivalence relation.
+\end{corollary}
+\RecordID{PSC-I-C-SUPPORT-PATTERN-STAR}
+\Depends{PSC-I-C-ADJOINT-REVERSAL and PSC-I-T-SUPPORT-PATTERN-ALGEBRA.}
+
+\begin{proof}
+Adjoint reversal sends an allowed $(\beta,\alpha)$ block to an $(\alpha,\beta)$ block.  Symmetry is therefore sufficient.  If symmetry fails, choose a nonzero rank-one map in an allowed nonsymmetric block.  Its adjoint occupies the forbidden reverse block, proving necessity.  A reflexive, transitive, symmetric relation is an equivalence relation.
+\end{proof}
+
+\begin{theorem}[Preorder support algebra decomposition]
+\label{thm:preorder-decomposition}
+Let $R$ be a preorder on the finite set $I$.  Define
+\[
+\alpha\sim\beta
+\quad\Longleftrightarrow\quad
+(\beta,\alpha)\in R\text{ and }(\alpha,\beta)\in R.
+\]
+Let $\overline I=I/{\sim}$, which carries the induced partial order, and put
+\[
+X_C:=\bigoplus_{\alpha\in C}X_\alpha.
+\]
+Let $\mathfrak N_R\subseteq\mathfrak M_R$ consist of operators whose blocks vanish whenever source and target belong to the same equivalence class.  Then:
+\begin{enumerate}[label=(\roman*)]
+\item $\mathfrak N_R$ is a two-sided nilpotent ideal.
+\item If $h$ is the maximal number of strict steps in a chain of $\overline I$, then
+\[
+\mathfrak N_R^{\,h+1}=0.
+\]
+\item The diagonal-class map induces an algebra isomorphism
+\[
+\boxed{
+\mathfrak M_R/\mathfrak N_R
+\cong
+\prod_{C\in\overline I}\End_{\bbk}(X_C).
+}
+\]
+\end{enumerate}
+\end{theorem}
+\RecordID{PSC-I-T-PREORDER-ALGEBRA-DECOMPOSITION}
+\Depends{PSC-I-T-BLOCK-MULTIPLICATION and PSC-I-T-SUPPORT-PATTERN-ALGEBRA.}
+\Exports{Filtered transfer algebras and triangular packet inverses in Paper II.}
+
+\begin{proof}
+A nonzero block in $\mathfrak N_R$ moves from one equivalence class to a strictly larger class in the quotient partial order.  The block multiplication law shows that products concatenate such moves.  Therefore left or right multiplication by an element of $\mathfrak M_R$ preserves the property of having no same-class blocks, so $\mathfrak N_R$ is a two-sided ideal.  A product of $h+1$ elements of $\mathfrak N_R$ would require a strict chain of $h+1$ steps in $\overline I$, which does not exist.  This proves nilpotence.
+
+Let $P_C=\sum_{\alpha\in C}P_\alpha$.  Define
+\[
+\rho:\mathfrak M_R\longrightarrow\prod_C\End(X_C),
+\qquad
+\rho(T)=(P_CTP_C)_C.
+\]
+If an intermediate class $D$ contributes to $P_CSTP_C$, then the preorder contains transfers $C\to D$ and $D\to C$, forcing $C=D$ in the quotient poset.  Hence
+\[
+P_CSTP_C=(P_CSP_C)(P_CTP_C),
+\]
+so $\rho$ is an algebra homomorphism.  Every collection of endomorphisms of the $X_C$ defines an allowed block-diagonal-class operator, so $\rho$ is surjective.  Its kernel is exactly $\mathfrak N_R$.  The first isomorphism theorem gives the quotient formula.
+\end{proof}
+
+\begin{sectionrecap}
+Every operator is exactly a packet matrix.  Products sum over intermediate packet indices, tensor products factor blockwise, and global intertwiners are equivalent to coupled block equations.  A support pattern is multiplicatively closed precisely when its relation is transitive.  Preorder patterns have a block-diagonal quotient and a nilpotent strict-transfer ideal.
+\end{sectionrecap}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{02_transfer_block_norms.pdf}
+\caption{An operator represented by its packet-to-packet block norms. The diagonal entries preserve packets; off-diagonal entries transfer information between packets.}
+\label{fig:transfer-blocks}
+\end{figure}
+
+\section{Transfer graphs and directed packet generation}
+
+
+
+\begin{readerroadmap}
+The transfer graph records which packet-to-packet blocks occur in a declared generating family.  Reachability constrains every word in that family.  Under stronger propagation hypotheses, source strongly connected components exactly determine packet-pure seed rank.
+\end{readerroadmap}
+\subsection{Graphs generated by declared operators}
+
+\begin{definition}[Transfer graph of an algebra-generating family]
+\label{def:transfer-graph}
+Let $\Pcal=(P_\alpha)_{\alpha\in I}$ be a finite packet system on $X$ with every $P_\alpha\in\A$.  Let $\mathcal G\subseteq\A$ satisfy
+\[
+\A=\alg_{\bbk}\bigl(\{P_\alpha:\alpha\in I\}\cup\mathcal G\bigr),
+\]
+where $\alg_{\bbk}(E)$ denotes the unital $\bbk$-subalgebra generated by $E$.  The transfer graph $\Gamma(\mathcal G,\Pcal)$ has vertex set $I$ and an arrow
+\[
+\alpha\longrightarrow\beta
+\]
+when
+\[
+P_\beta GP_\alpha\neq0
+\]
+for at least one $G\in\mathcal G$.  Reachability includes paths of length zero.
+\end{definition}
+\RecordID{PSC-I-D-TRANSFER-GRAPH}
+
+\begin{theorem}[Reachability support of the generated algebra]
+\label{thm:algebra-reachability-support}
+For every $A\in\A$,
+\[
+P_\beta AP_\alpha=0
+\qquad\text{whenever }\beta\notin\Reach(\alpha).
+\]
+Equivalently,
+\[
+\A\subseteq\mathfrak M_{R_\Gamma},
+\qquad
+R_\Gamma:=\{(\beta,\alpha):\beta\in\Reach(\alpha)\}.
+\]
+\end{theorem}
+\RecordID{PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT}
+\Depends{PSC-I-D-TRANSFER-GRAPH and PSC-I-C-BLOCK-POWERS.}
+
+\begin{proof}
+It is enough to treat a word in the generators and packet projectors.  Insert
+\[
+I=\sum_{\gamma\in I}P_\gamma
+\]
+between consecutive nonprojector generators.  Every resulting $(\beta,\alpha)$ block is a finite sum of products
+\[
+P_\beta G_mP_{\gamma_{m-1}}
+G_{m-1}\cdots
+P_{\gamma_1}G_1P_\alpha.
+\]
+A nonzero product requires every consecutive block to be nonzero, hence gives a directed path
+\[
+\alpha\to\gamma_1\to\cdots\to\gamma_{m-1}\to\beta.
+\]
+Packet projectors only insert stationary steps.  Thus a word has no block from $\alpha$ to an unreachable $\beta$.  Linear combinations preserve the same zero pattern.
+\end{proof}
+
+\begin{interpretation}
+The graph is attached to a declared generating family, not to every operator in \(\End(X)\).  Multiplying generators concatenates paths.  Therefore a word in the generators cannot create a block outside graph reachability.  The converse requires more than reachability because a nonzero edge block need not be surjective or generate the entire target packet.
+\end{interpretation}
+
+
+\subsection{Reachability obstructions for seeds}
+\begin{proposition}[Reachability obstruction for generated hulls]
+\label{prop:reachability-obstruction}
+Let $I_0\subseteq I$ and let
+\[
+S\subseteq\bigoplus_{\alpha\in I_0}X_\alpha.
+\]
+Then
+\[
+\boxed{
+\Hull_{\A}(S)
+\subseteq
+\bigoplus_{\beta\in\Reach(I_0)}X_\beta.
+}
+\]
+In particular, no seed supported outside a source strongly connected component can generate a nonzero vector in that source component.
+\end{proposition}
+\RecordID{PSC-I-P-REACHABILITY-OBSTRUCTION}
+\Depends{PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT.}
+
+\begin{proof}
+For $s\in S$, write $s=\sum_{\alpha\in I_0}P_\alpha s$.  If $\beta$ is unreachable from $I_0$, then for every $A\in\A$,
+\[
+P_\beta As
+=
+\sum_{\alpha\in I_0}P_\beta AP_\alpha s
+=0
+\]
+by \cref{thm:algebra-reachability-support}.  The same holds for every finite linear combination of orbit vectors.
+\end{proof}
+
+\subsection{Packet-pure generation and source components}
+\begin{definition}[Packet-pure seed rank]
+\label{def:directed-seed-rank}
+A vector is packet-pure when it lies in one packet space $X_\alpha$.  Define
+\[
+\psrank_{\A,\Pcal}(X)
+:=
+\min\{|S|:S\text{ is packet-pure and }\A S=X\}.
+\]
+For $C\subseteq I$, put
+\[
+P_C:=\sum_{\alpha\in C}P_\alpha,
+\qquad
+X_C:=P_CX,
+\qquad
+\A_C:=P_C\A P_C,
+\]
+and define the local packet-pure rank
+\[
+r_C:=\psrank_{\A_C,\Pcal|_C}(X_C).
+\]
+\end{definition}
+\RecordID{PSC-I-D-DIRECTED-SEED-RANK}
+
+\begin{proposition}[Basic packet-pure rank bounds]
+\label{prop:packet-pure-rank-bounds}
+For every packet-resolved $A$-module with $P_\alpha\in A$,
+\[
+\boxed{
+\srank_A(X)
+\leq
+\psrank_{A,\Pcal}(X)
+\leq
+\sum_{\alpha\in I}
+\srank_{P_\alpha A P_\alpha}(X_\alpha).
+}
+\]
+The right-hand corner algebra is unital on $X_\alpha$ with identity $P_\alpha$.
+\end{proposition}
+\RecordID{PSC-I-P-PACKET-PURE-RANK-BOUNDS}
+\Depends{PSC-I-D-SEED-RANK and PSC-I-D-DIRECTED-SEED-RANK.}
+
+\begin{proof}
+Every packet-pure generating family is an unrestricted generating family, which gives the first inequality.  For each $\alpha$, choose a minimal generating family $S_\alpha\subseteq X_\alpha$ for the corner action $P_\alpha A P_\alpha$.  The union $S=\bigcup_\alpha S_\alpha$ is packet-pure.  Since every $x\in X$ has the unique decomposition $x=\sum_\alpha x_\alpha$ and every $x_\alpha$ lies in $(P_\alpha A P_\alpha)S_\alpha\subseteq AS$, the union generates $X$.  Its cardinality is the displayed sum.
+\end{proof}
+
+\begin{definition}[Edge-surjective packet system]
+\label{def:edge-surjective}
+The packet-resolved module is edge-surjective relative to $\Gamma(\mathcal G,\Pcal)$ when, for every graph edge $\alpha\to\beta$, there exists $B\in\A$ such that the pure block
+\[
+P_\beta BP_\alpha:X_\alpha\twoheadrightarrow X_\beta
+\]
+is surjective.
+\end{definition}
+\RecordID{PSC-I-D-EDGE-SURJECTIVE}
+
+\begin{theorem}[Source-component formula for packet-pure seed rank]
+\label{thm:source-component-rank}
+Assume $I$ is finite, every packet space is nonzero, and the packet-resolved module is edge-surjective.  Let $\mathfrak C_0$ be the set of source strongly connected components of the condensation graph of $\Gamma(\mathcal G,\Pcal)$.  Then
+\[
+\boxed{
+\psrank_{\A,\Pcal}(X)
+=
+\sum_{C\in\mathfrak C_0}r_C.
+}
+\]
+\end{theorem}
+\RecordID{PSC-I-T-SOURCE-COMPONENT-SEED-RANK}
+\Depends{PSC-I-P-REACHABILITY-OBSTRUCTION and PSC-I-D-EDGE-SURJECTIVE.}
+\Exports{Residual transport forests and directed source-rank calculations.}
+
+\begin{proof}
+Let $S$ be a packet-pure generating family for $X$ and fix a source component $C$.  Seeds outside $C$ cannot reach $C$ by \cref{prop:reachability-obstruction}.  Moreover, for $s\in X_C$ and $A\in\A$,
+\[
+P_CAs=(P_CAP_C)s\in\A_Cs.
+\]
+Thus the seeds of $S$ lying in $X_C$ must generate $X_C$ under $\A_C$, and there are at least $r_C$ of them.  Summing over disjoint source components gives
+\[
+\psrank_{\A,\Pcal}(X)
+\geq
+\sum_{C\in\mathfrak C_0}r_C.
+\]
+
+For the reverse inequality, choose for each source component $C$ a packet-pure family $S_C$ of size $r_C$ generating $X_C$ under $\A_C$, and put $S=\bigcup_CS_C$.  Then every source component lies in $\A S$.  Traverse the finite condensation graph in a topological order.  Suppose all components preceding a non-source component $D$ have already been shown to lie in $\A S$.  Choose an incoming condensation edge from such a component to $D$, represented by a graph edge $\alpha\to\beta$ with $\alpha$ already generated and $\beta\in D$.  Edge-surjectivity gives a pure block
+\[
+B_{\beta\alpha}:X_\alpha\twoheadrightarrow X_\beta.
+\]
+Because $X_\alpha\subseteq\A S$ and $\A S$ is $\A$-invariant, surjectivity implies $X_\beta\subseteq\A S$.  For any other vertex $\gamma\in D$, choose a directed path inside the strongly connected component from $\beta$ to $\gamma$.  Successive surjective edge blocks propagate the full packet space along the path, so $X_\gamma\subseteq\A S$.  Hence $X_D\subseteq\A S$.  Induction over the condensation graph gives $X=\A S$, proving the upper bound.
+\end{proof}
+
+\begin{hypothesisguide}
+The source-component formula is deliberately stronger than a graph-theoretic lower bound.  It requires local generation inside source components and enough edge transfer to propagate generation through the condensation graph.  Without those hypotheses, a path can exist while its operator blocks reach only a proper subspace.
+\end{hypothesisguide}
+
+
+\begin{definition}[Packet-propagating system]
+\label{def:packet-propagating}
+An edge-surjective packet system is packet-propagating when every packet space $X_\alpha$ is cyclic under its diagonal corner algebra
+\[
+P_\alpha\A P_\alpha.
+\]
+\end{definition}
+\RecordID{PSC-I-D-PACKET-PROPAGATING}
+
+\begin{corollary}[Unweighted source-component count]
+\label{cor:source-component-count}
+Assume the packet-resolved module is packet-propagating and $X_\alpha\neq0$ for every $\alpha\in I$.  If $c_0$ denotes the number of source strongly connected components, then
+\[
+\boxed{
+\psrank_{\A,\Pcal}(X)=c_0.
+}
+\]
+\end{corollary}
+\RecordID{PSC-I-C-SOURCE-COMPONENT-COUNT}
+\Depends{PSC-I-T-SOURCE-COMPONENT-SEED-RANK.}
+
+\begin{proof}
+Fix a source component $C$ and a vertex $\alpha\in C$.  Choose a cyclic vector $s\in X_\alpha$ for $P_\alpha\A P_\alpha$.  It generates all of $X_\alpha$.  Strong connectivity and edge-surjectivity then propagate the whole packet space to every vertex of $C$.  Thus $r_C=1$ for every source component.  Apply \cref{thm:source-component-rank}.
+\end{proof}
+
+\begin{boundary}[Mixed-support seeds can merge source requirements]
+\label{bnd:packet-pure-boundary}
+The source-component formulas concern packet-pure seeds.  They do not give the unrestricted seed rank.  For example, let
+\[
+\A=\bbk\times\bbk,
+\qquad
+X=\bbk\oplus\bbk
+\]
+with the coordinate action and the two coordinate packet projectors.  The transfer graph has two source components and
+\[
+\psrank_{\A,\Pcal}(X)=2,
+\]
+but the mixed vector $(1,1)$ is cyclic, so
+\[
+\srank_\A(X)=1.
+\]
+\end{boundary}
+\RecordID{PSC-I-B-PACKET-PURE-BOUNDARY}
+
+\begin{microexample}[title={Why mixed seeds change the answer}]
+Let the acting algebra be diagonal on \(X=X_1\oplus X_2\), with no transfer between the packets.  Packet-pure generation requires one seed in each source component, so \(\psrank=2\).  A single mixed vector \(x_1+x_2\) may generate both one-dimensional packets under the diagonal action, so unrestricted seed rank can be \(1\).
+\end{microexample}
+
+\begin{sectionrecap}
+Graph reachability gives a universal zero-pattern restriction for the algebra generated by declared operators.  Packet-pure generation is controlled by source components only after local cyclicity and edge propagation have been proved.  Mixed-support seeds belong to a different optimization problem and may merge several source requirements.
+\end{sectionrecap}
+
+
+\section{Coordinate transport, morphisms, invariant exact sequences, and completion}
+\begin{readerroadmap}
+This section answers how packet data move between spaces.  Coordinate changes transport idempotents, morphisms transport blocks, invariant subspaces inherit and pass packet systems to quotients, and appropriate topological hypotheses preserve the same identities after completion.
+\end{readerroadmap}
+\subsection{Coordinate changes and packet-compatible morphisms}
+
+\begin{theorem}[Coordinate transport]
+\label{thm:coordinate-transport}
+Let $U:X\to Y$ be a vector-space isomorphism and let $\Pcal=(P_\alpha)$ be a packet system on $X$.  Define
+\[
+Q_\alpha:=UP_\alpha U^{-1}.
+\]
+Then $\Qcal=(Q_\alpha)$ is a packet system on $Y$.  For $\widetilde T=UTU^{-1}$,
+\[
+\boxed{
+Q_\beta\widetilde TQ_\alpha
+=
+U(P_\beta TP_\alpha)U^{-1}.
+}
+\]
+Hence packet dimensions, zero patterns, and support preorders are invariant under coordinate transport.  If a declared algebra-generating family $\mathcal G$ is transported to $U\mathcal G U^{-1}$, then its transfer graph and reachability relation are also preserved.
+\end{theorem}
+\RecordID{PSC-I-T-COORDINATE-TRANSPORT}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-D-TRANSFER-BLOCK.}
+
+\begin{proof}
+Conjugation preserves products and sums, so
+\[
+Q_\alpha Q_\beta
+=UP_\alpha P_\beta U^{-1}
+=\delta_{\alpha\beta}Q_\alpha,
+\qquad
+\sum_\alpha Q_\alpha=I_Y.
+\]
+The block identity is direct multiplication:
+\[
+Q_\beta\widetilde TQ_\alpha
+=UP_\beta TP_\alpha U^{-1}.
+\]
+All listed invariants are determined by these transported blocks.
+\end{proof}
+
+\begin{interpretation}
+Coordinate transport by an isomorphism changes the packet realization without changing the abstract direct-sum structure.  The transported projectors are conjugates, and the transported operator blocks are conjugates of the original blocks.  This is the linear prototype for later gauge changes.
+\end{interpretation}
+
+
+\begin{definition}[Packet-compatible operator morphism]
+\label{def:packet-morphism}
+Let $(X,\A,\Pcal)$ and $(Y,\B,\Qcal)$ be packet-resolved operator modules with packet index sets $I$ and $J$.  A packet-compatible operator morphism is a triple
+\[
+(\Phi,\varphi,\sigma)
+\]
+consisting of a unital algebra homomorphism $\varphi:\A\to\B$, a linear map $\Phi:X\to Y$ satisfying
+\[
+\Phi(Ax)=\varphi(A)\Phi(x),
+\]
+and a map $\sigma:I\to J$ satisfying
+\[
+Q_j\Phi
+=
+\Phi P_{\sigma^{-1}(j)},
+\qquad
+P_{\sigma^{-1}(j)}:=
+\sum_{\sigma(\alpha)=j}P_\alpha.
+\]
+An empty fiber is interpreted as the zero projector.
+\end{definition}
+\RecordID{PSC-I-D-PACKET-MORPHISM}
+
+\begin{definition}[Morphism of seeded systems]
+\label{def:seed-morphism}
+A morphism
+\[
+(X,\A,S,\Pcal)\longrightarrow(Y,\B,S',\Qcal)
+\]
+is a packet-compatible operator morphism satisfying the seed condition
+\[
+\Phi(S)\subseteq\Hull_\B(S').
+\]
+In the topological category all maps and actions are required to be continuous and the seed condition uses the topological hull when declared.
+\end{definition}
+\RecordID{PSC-I-D-SEED-MORPHISM}
+
+\begin{theorem}[Naturality of generated hulls and transfer blocks]
+\label{thm:naturality}
+Let $(\Phi,\varphi,\sigma)$ be a packet-compatible operator morphism.  For every subset $S\subseteq X$,
+\[
+\boxed{
+\Phi(\Hull_\A(S))
+=
+\Hull_{\varphi(\A)}(\Phi(S))
+\subseteq
+\Hull_\B(\Phi(S)).
+}
+\]
+For $T\in\A$ and $i,j\in J$,
+\[
+\boxed{
+Q_j\varphi(T)Q_i\Phi
+=
+\sum_{\substack{\sigma(\beta)=j\\\sigma(\alpha)=i}}
+\Phi P_\beta TP_\alpha.
+}
+\]
+If $\Phi$ is surjective and $S$ generates $X$, then $\Phi(S)$ generates $Y$ under $\varphi(\A)$ and hence under $\B$.  If, in addition, the morphism is seeded, then $S'$ generates $Y$.
+\end{theorem}
+\RecordID{PSC-I-T-NATURALITY}
+\Depends{PSC-I-D-PACKET-MORPHISM and PSC-I-T-BLOCK-MULTIPLICATION.}
+\Exports{The canonical naturality theorem for every later realization.}
+
+\begin{proof}
+Every element of $\Phi(\Hull_\A(S))$ is a finite sum of vectors
+\[
+\Phi(As)=\varphi(A)\Phi(s),
+\]
+so it belongs to $\Hull_{\varphi(\A)}(\Phi(S))$.  Conversely, every generator $\varphi(A)\Phi(s)$ equals $\Phi(As)$, giving equality.
+
+For the block formula, use intertwining and packet compatibility twice:
+\begin{align*}
+Q_j\varphi(T)Q_i\Phi
+&=Q_j\varphi(T)\Phi P_{\sigma^{-1}(i)}\\
+&=Q_j\Phi TP_{\sigma^{-1}(i)}\\
+&=\Phi P_{\sigma^{-1}(j)}TP_{\sigma^{-1}(i)}\\
+&=\sum_{\substack{\sigma(\beta)=j\\\sigma(\alpha)=i}}
+\Phi P_\beta TP_\alpha.
+\end{align*}
+If $\Phi$ is surjective and $\Hull_\A(S)=X$, the hull equality gives $Y=\Hull_{\varphi(\A)}(\Phi(S))$.  If $\Phi(S)\subseteq\Hull_\B(S')$, then $\Hull_\B(\Phi(S))\subseteq\Hull_\B(S')$, so $S'$ generates $Y$.
+\end{proof}
+
+\begin{keyidea}
+Naturality is the statement that ``analyze, apply the morphism, then compare packets'' agrees with ``transport the object first, then analyze.''  This is stronger than having two similar formulas in different domains.
+\end{keyidea}
+
+
+\begin{proposition}[Category of seeded packet systems]
+\label{prop:seed-category}
+Packet-compatible operator morphisms compose, seeded morphisms compose, and identity morphisms satisfy both definitions.  Thus packet-resolved operator modules form a category $\mathbf{PktMod}$ and seeded packet systems form a category $\mathbf{SeedSys}$.
+\end{proposition}
+\RecordID{PSC-I-P-SEED-SYSTEM-CATEGORY}
+\Depends{\nolinkurl{PSC-I-D-PACKET-MORPHISM},
+\nolinkurl{PSC-I-D-SEED-MORPHISM}, and
+\nolinkurl{PSC-I-T-NATURALITY}.}
+
+\begin{proof}
+Let $(\Phi,\varphi,\sigma):(X,\A,\Pcal)\to(Y,\B,\Qcal)$ and $(\Psi,\psi,\tau):(Y,\B,\Qcal)\to(Z,\Ccal,\Rcal)$ be morphisms.  Intertwining is preserved because
+\[
+\Psi\Phi(Ax)
+=
+\Psi(\varphi(A)\Phi x)
+=
+(\psi\circ\varphi)(A)\Psi\Phi x.
+\]
+For $k$ in the target packet set,
+\begin{align*}
+R_k\Psi\Phi
+&=\Psi Q_{\tau^{-1}(k)}\Phi\\
+&=\Psi\Phi
+\sum_{\tau(\sigma(\alpha))=k}P_\alpha.
+\end{align*}
+Thus the composite packet map is $\tau\circ\sigma$.  If the morphisms are seeded, then
+\[
+\Phi(S)\subseteq\Hull_\B(S'),
+\qquad
+\Psi(S')\subseteq\Hull_\Ccal(S'').
+\]
+By \cref{thm:naturality},
+\[
+\Psi\Phi(S)
+\subseteq
+\Psi(\Hull_\B(S'))
+\subseteq
+\Hull_\Ccal(\Psi(S'))
+\subseteq
+\Hull_\Ccal(S'').
+\]
+Identity maps satisfy the definitions with identity algebra and packet maps.
+\end{proof}
+
+\subsection{Invariant subspaces and quotient packets}
+\begin{theorem}[Packet exact sequence for an invariant subspace]
+\label{thm:packet-exact-sequence}
+Let $K\leq X$ satisfy $P_\alpha K\subseteq K$ for every $\alpha$.  Define
+\[
+K_\alpha:=P_\alpha K=K\cap X_\alpha
+\]
+and
+\[
+\overline P_\alpha(x+K):=P_\alpha x+K.
+\]
+Then:
+\begin{enumerate}[label=(\roman*)]
+\item The nonzero restrictions $P_\alpha|_K$ form a packet system on $K$.
+\item The nonzero $\overline P_\alpha$ form a packet system on $X/K$.
+\item For every $\alpha$ there is a short exact sequence
+\[
+0\longrightarrow K_\alpha
+\longrightarrow X_\alpha
+\longrightarrow \overline P_\alpha(X/K)
+\longrightarrow0,
+\]
+and
+\[
+\overline P_\alpha(X/K)
+\cong
+X_\alpha/(X_\alpha\cap K)
+\cong
+(X_\alpha+K)/K.
+\]
+\item The full exact sequence decomposes packetwise as the direct sum of these short exact sequences.
+\end{enumerate}
+\end{theorem}
+\RecordID{PSC-I-T-PACKET-EXACT-SEQUENCE}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Packetwise subobject and quotient constructions.}
+
+\begin{proof}
+Restriction preserves idempotency, pairwise annihilation, and the identity sum on $K$.  If $x\in K\cap X_\alpha$, then $x=P_\alpha x\in P_\alpha K$, proving $K_\alpha=K\cap X_\alpha$.
+
+The quotient operator is well-defined because replacing $x$ by $x+k$ changes $P_\alpha x$ by $P_\alpha k\in K$.  The idempotent and annihilation identities descend, and the sum is the identity on $X/K$.  The map $X_\alpha\to X/K$ has image $(X_\alpha+K)/K$ and kernel $X_\alpha\cap K$, giving the short exact sequence and the quotient isomorphisms.  Exact packet coordinates identify the original sequence with the direct sum over $\alpha$.
+\end{proof}
+
+\begin{microexample}[title={Packet descent to a quotient}]
+Let \(X=X_1\oplus X_2\) and let \(K\subseteq X_1\) be a subspace.  The quotient has packets \(X_1/K\) and \(X_2\).  Any operator preserving \(K\) descends with exactly the same block pattern, except that blocks entering or leaving the first packet are replaced by their induced quotient maps.
+\end{microexample}
+
+
+\begin{theorem}[Packet descent through an invariant quotient]
+\label{thm:quotient-packet-descent}
+Under the hypotheses of \cref{thm:packet-exact-sequence}, the operators
+\[
+\overline P_\alpha(x+K)=P_\alpha x+K
+\]
+are well-defined pairwise annihilating idempotents with sum $I_{X/K}$, and the quotient map satisfies
+\[
+\boxed{\pi P_\alpha=\overline P_\alpha\pi.}
+\]
+After zero packets are removed, they form the canonical quotient packet system.
+\end{theorem}
+\RecordID{PSC-I-T-QUOTIENT-PACKET-DESCENT}
+\Depends{PSC-I-T-PACKET-EXACT-SEQUENCE.}
+
+\begin{proof}
+All assertions are the quotient part of \cref{thm:packet-exact-sequence}.  The intertwining identity follows directly from the definition:
+\[
+\overline P_\alpha\pi(x)=P_\alpha x+K=\pi P_\alpha(x).
+\]
+\end{proof}
+
+\begin{corollary}[Restriction and quotient of transfer blocks]
+\label{cor:block-descent}
+Under the hypotheses of \cref{thm:packet-exact-sequence}, let $T\in\End(X)$ preserve $K$.  Then every block $T_{\beta\alpha}$ maps $K_\alpha$ into $K_\beta$, and the induced quotient operator $\overline T$ satisfies
+\[
+\boxed{
+\overline T_{\beta\alpha}\,\pi
+=
+\pi T_{\beta\alpha},
+}
+\]
+where $\pi:X\twoheadrightarrow X/K$.
+\end{corollary}
+\RecordID{PSC-I-C-QUOTIENT-PACKET-DESCENT}
+\Depends{PSC-I-T-PACKET-EXACT-SEQUENCE.}
+
+\begin{proof}
+If $x\in K_\alpha$, then $Tx\in K$, so
+\[
+T_{\beta\alpha}x=P_\beta Tx\in K\cap X_\beta=K_\beta.
+\]
+On the quotient,
+\[
+\overline T_{\beta\alpha}\pi
+=
+\overline P_\beta\overline T\overline P_\alpha\pi
+=
+\pi P_\beta TP_\alpha.
+\]
+\end{proof}
+
+\begin{corollary}[Topological packet exact sequence]
+\label{cor:topological-packet-exact-sequence}
+If $X$ is Banach, the $P_\alpha$ are bounded, and $K$ is closed and packet invariant, then every packet sequence in \cref{thm:packet-exact-sequence} is a short exact sequence of Banach spaces with bounded maps, and the quotient packets are bounded.
+\end{corollary}
+\RecordID{PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE}
+\Depends{\nolinkurl{PSC-I-T-PACKET-EXACT-SEQUENCE} and
+\nolinkurl{PSC-I-T-BANACH-PACKET-ISOMORPHISM}.}
+
+\begin{proof}
+Closedness of $K$ makes $X/K$ Banach.  The restricted projectors are bounded, and the quotient projectors are bounded because
+\[
+\|\overline P_\alpha(x+K)\|_{X/K}
+\leq
+\|P_\alpha\|\,\|x+K\|_{X/K}.
+\]
+The packet spaces are closed ranges of bounded idempotents.
+\end{proof}
+
+\subsection{Dense images, quotient topology, and completion}
+\begin{theorem}[Dense realization theorem]
+\label{thm:dense-realization}
+Let $X$ and $Y$ be Hausdorff topological vector spaces, let $\Phi:X\to Y$ be continuous, surjective, and $\varphi$-intertwining, and let $S$ topologically generate $X$.  Then $\Phi(S)$ topologically generates $Y$.  If finite continuous packet systems satisfy
+\[
+Q_j\Phi=\Phi P_{\sigma^{-1}(j)},
+\]
+then
+\[
+\boxed{
+Q_jY=\Phi(P_{\sigma^{-1}(j)}X)
+}
+\]
+for every $j$.
+\end{theorem}
+\RecordID{PSC-I-T-DENSE-REALIZATION}
+\Depends{PSC-I-T-NATURALITY.}
+
+\begin{proof}
+Given $y=\Phi(x)$, choose a net $x_\lambda\in\Hull_\A(S)$ converging to $x$.  Then
+\[
+\Phi(x_\lambda)\to y,
+\]
+and naturality places every $\Phi(x_\lambda)$ in $\Hull_\B(\Phi(S))$.  Hence the latter hull is dense.  For packets, one inclusion follows from compatibility.  Conversely, if $y=Q_jy$, choose $x$ with $\Phi(x)=y$.  Then
+\[
+y=Q_j\Phi(x)=\Phi P_{\sigma^{-1}(j)}x.
+\]
+\end{proof}
+
+\begin{theorem}[Quotient topology and completed realization]
+\label{thm:quotient-topology}
+Let $\Phi:X\twoheadrightarrow Y$ be a continuous linear quotient map between Hausdorff topological vector spaces, and put $K=\Ker\Phi$.  Then the induced map
+\[
+\widetilde\Phi:X/K\longrightarrow Y
+\]
+is a topological isomorphism.  If $D\subseteq X$ is a linear subspace whose image $\Phi(D)$ is dense in a complete space $Y$, then the completion of
+\[
+D/(D\cap K)
+\]
+in the topology transported from $Y$ is canonically isomorphic to $Y$.
+\end{theorem}
+\RecordID{PSC-I-T-QUOTIENT-TOPOLOGY-COMPLETION}
+\Depends{PSC-I-T-COMPLETED-PRESENTATION, the definition of quotient topology, and uniqueness of completion.}
+
+\begin{proof}
+The algebraic first isomorphism theorem gives a bijection $\widetilde\Phi$.  By definition of the quotient topology, a set $U\subseteq X/K$ is open exactly when its preimage in $X$ is open.  Because $\Phi$ is a quotient map, this is equivalent to $\widetilde\Phi(U)$ being open in $Y$.  Thus $\widetilde\Phi$ is a homeomorphism.  The second statement applies the dense completion argument of \cref{thm:completed-presentation} to the injective map $D/(D\cap K)\to Y$.
+\end{proof}
+
+\begin{boundary}[Continuous surjections and quotient topology]
+\label{bnd:topological-quotient}
+Continuity and surjectivity transport density as in \cref{thm:dense-realization}.  They do not by themselves identify the given topology on $Y$ with the quotient topology from $X$.  The stronger conclusion in \cref{thm:quotient-topology} requires the quotient-map hypothesis or an equivalent open-mapping condition.
+\end{boundary}
+\RecordID{PSC-I-B-TOPOLOGICAL-QUOTIENT}
+
+\begin{warningbox}
+A continuous surjective linear map need not be a quotient map in arbitrary topological vector spaces.  The algebraic first isomorphism theorem gives a bijection on the quotient.  A topological isomorphism requires the quotient topology to agree with the target topology.  Banach-space open mapping theorems often provide this automatically, but the hypothesis must still be named.
+\end{warningbox}
+
+\begin{sectionrecap}
+Packet systems transport by conjugation, form a category under packet-compatible seeded morphisms, restrict to invariant subspaces, descend to invariant quotients, and survive completion under explicit boundedness and quotient-topology hypotheses.
+\end{sectionrecap}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{09_coordinate_transport.pdf}
+\caption{Numerical certificate for a nonorthogonal transported packet system. The diagonal products retain idempotent size while off-diagonal products remain at roundoff level.}
+\label{fig:coordinate-transport}
+\end{figure}
+
+\section{Realization functors and semantic theorem transport}
+\begin{readerroadmap}
+A later domain is a genuine realization only when the relevant structures and identities are preserved.  The purpose of this section is to replace informal analogy by a precise preservation profile.
+\end{readerroadmap}
+\subsection{Preservation profiles}
+
+\begin{definition}[Realization functor and preservation profile]
+\label{def:realization-functor}
+Let $\mathbf{SeedSys}_{\mathrm{abs}}$ be an abstract category of seed systems and let $\mathbf C_D$ be a domain category.  A realization functor is a functor
+\[
+\mathsf{Ev}_D:\mathbf{SeedSys}_{\mathrm{abs}}\longrightarrow\mathbf C_D
+\]
+with a declared preservation profile specifying which of the following structures are preserved:
+\[
+\begin{gathered}
+0,\ I,\ \text{finite sums},\ \text{composition},\ \text{biproducts},\\
+\text{kernels},\ \text{cokernels},\ \text{quotients},\ \text{tensor products},\\
+\text{packet idempotents},\ \text{transfer blocks},\ \text{topological completions}.
+\end{gathered}
+\]
+Preservation of a structure means preservation of its defining identity or universal property, not merely a similarity of notation.
+\end{definition}
+\RecordID{PSC-I-D-REALIZATION-FUNCTOR}
+
+\begin{theorem}[Equational realization principle]
+\label{thm:realization-export}
+Let $F:\mathbf C\to\mathbf D$ be an additive functor between preadditive categories.  Any equality of morphisms constructed from declared generating morphisms by finite sums, additive inverses, identities, zero maps, and composition is preserved by $F$.  Scalar multiplication by a coefficient ring is also preserved when the categories are enriched over that ring and $F$ is linear for the declared enrichment.  If a proof additionally uses a chosen biproduct, kernel, cokernel, quotient, tensor product, or completion and $F$ preserves that construction in its declared profile, then the corresponding proof diagram is transported to $\mathbf D$.
+\end{theorem}
+\RecordID{PSC-I-T-REALIZATION-EXPORT}
+\Depends{PSC-I-D-REALIZATION-FUNCTOR.}
+\Exports{The formal criterion for semantic cross-domain transfer.}
+
+\begin{proof}
+Functoriality gives
+\[
+F(I)=I,
+\qquad
+F(g\circ f)=F(g)\circ F(f),
+\]
+and additivity gives
+\[
+F(0)=0,
+\qquad
+F(f+g)=F(f)+F(g),
+\qquad
+F(-f)=-F(f).
+\]
+If the declared enrichment is present, linearity additionally gives $F(af)=aF(f)$ for every coefficient $a$.  A structural induction on the construction of a morphism expression therefore carries every permitted equational proof to its image under $F$.  If a step invokes a universal construction, preservation means that the image diagram satisfies the same universal property.  The uniquely induced morphism in the source proof is therefore carried to the uniquely induced morphism in the target proof.  Repeating this argument through the finite proof diagram transports the conclusion.
+\end{proof}
+
+\begin{interpretation}
+The equational principle covers identities built from operations the functor actually preserves.  Additive identities require additivity.  Scalar-weighted identities require linear enrichment.  Quotients, tensor products, completions, kernels, or limits require their own preservation assumptions.  The preservation profile is therefore part of the theorem, not metadata that may be omitted.
+\end{interpretation}
+
+
+\subsection{From equation transport to semantic realization}
+\begin{proposition}[Realization export principle]
+\label{prop:realization-export}
+Every canonical Paper I identity whose proof uses only the operations listed in a realization functor's verified preservation profile remains valid after applying that functor.  If the proof uses a domain-specific hypothesis not encoded by the functor, that hypothesis must be verified separately before the transported statement is promoted to a theorem.
+\end{proposition}
+\RecordID{PSC-I-P-REALIZATION-EXPORT}
+\Depends{PSC-I-T-REALIZATION-EXPORT.}
+
+\begin{proof}
+The first assertion is \cref{thm:realization-export}.  The second is a logical boundary: a functor transports established identities and preserved universal constructions, but it does not create an unverified analytic, topological, positivity, finiteness, or integrality hypothesis.
+\end{proof}
+
+\begin{definition}[Semantic realization criterion]
+\label{def:semantic-realization}
+A domain theorem is a semantic realization of a canonical seed-calculus theorem only when:
+\begin{enumerate}[label=(\roman*)]
+\item an explicit realization functor or intertwining construction is given;
+\item the preservation profile covers every construction used in the canonical proof;
+\item every additional analytic, finiteness, convergence, positivity, or integrality hypothesis is verified in the domain;
+\item the resulting conclusion is stated in the domain's native objects.
+\end{enumerate}
+Reuse of the words ``seed'', ``packet'', or ``transfer'' without these data is only syntactic reuse.
+\end{definition}
+\RecordID{PSC-I-D-SEMANTIC-REALIZATION}
+
+\begin{warningbox}
+A change of nouns is not a realization theorem.  Calling a frequency band, a ramification sector, and a symmetry sector a ``packet'' is only terminology until one exhibits the idempotents, proves reconstruction, identifies the transfer blocks, and checks that the relevant morphisms or limits preserve those structures.
+\end{warningbox}
+
+\begin{sectionrecap}
+Semantic theorem transport is controlled by a declared preservation profile.  Equations transport only through operations preserved by the realization.  This gives later papers a test for genuine cross-domain transfer rather than parallel notation.
+\end{sectionrecap}
+
+
+\section{Canonical export interface and claim boundary}
+\begin{readerroadmap}
+The purpose of an export interface is to prevent later papers from repeating the foundational proofs.  Each downstream paper should cite the stable record ID, add its domain hypotheses, and prove only the new specialization-specific step.
+\end{readerroadmap}
+
+\begin{definition}[Worked realization interface]
+\label{def:reserved-example-slots}
+The foundational calculus is illustrated by four canonical algebraic realizations:
+\begin{enumerate}[label=(\roman*)]
+\item a typed quiver reachability model;
+\item an algebraic coordinate-ring presentation;
+\item a companion and repeated-primary single-operator model;
+\item path and cycle adjacency models.
+\end{enumerate}
+The worked-model sections below instantiate these four interfaces. A bilateral-shift example records the analytic completion mechanism also used in Paper V. Computational specifications connect the proofs with the verification companion and are not premises of the foundational theorems.
+\end{definition}
+\RecordID{PSC-I-ALG-EXAMPLE-SLOTS}
+
+\begin{definition}[Paper I export object]
+\label{def:paper-one-export}
+The canonical Paper I export is
+\[
+\boxed{
+\mathsf{PSC}_I=
+\left(
+\begin{array}{c}
+\text{typed grammars and realized operator algebras},\\
+\text{seed systems, free presentations, and seed rank},\\
+\text{module-top, semisimple, and single-operator formulas},\\
+\text{finite and unconditional packet coordinates},\\
+\text{transfer blocks and support algebras},\\
+\text{reachability and packet-pure source generation},\\
+\text{morphisms, invariant exact sequences, quotients, completions},\\
+\text{realization functors and equational theorem transport}
+\end{array}
+\right).
+}
+\]
+\end{definition}
+\RecordID{PSC-I-EXPORT}
+
+
+
+\subsection{Cross-paper use map}
+\begin{center}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.49\textwidth}@{}}
+\toprule
+\textbf{Paper I export} & \textbf{Primary users} & \textbf{Later role}\\
+\midrule
+\endhead
+Typed grammar and module equivalence & II--XII & Gives each domain a legal operator syntax and a concrete module realization.\\
+Free seed presentation & IV, IX, X & Converts generated families into quotient presentations and relation modules.\\
+Jacobson-top seed rank & VII, X, XII & Computes minimal generators from semisimple multiplicity data.\\
+Single-operator formula & IV, VI, IX & Resolves recurrence, companion, and spectral-chain generator counts.\\
+Exact packet coordinates & II--XII & Supplies analysis, synthesis, and packetwise equality.\\
+Tensor and dual packet systems & V, VII, VIII, XI & Controls product systems, observables, and paired representations.\\
+Transfer-block multiplication & II--XII & Converts operator composition into sums over packet paths.\\
+Block intertwining equations & III, VII, XI & Expresses global equivalence or gluing as local packet equations.\\
+Support-preorder algebra & II, VIII, X & Produces triangular transfer structure and nilpotent strict-transfer ideals.\\
+Source-component seed rank & VIII, X & Identifies the packet-pure source requirements under propagation hypotheses.\\
+Packet exact sequences and quotient descent & III, VI, X, XII & Carries packets through constraints, reductions, and deformation quotients.\\
+Semantic realization criterion & IV--XII & Specifies when a domain theorem is a true realization of the common calculus.\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+
+\begin{boundary}[Exact limits of Paper I]
+\label{bnd:final-claim-boundary}
+The existence of an exact packet decomposition does not imply that the decomposition is computationally discoverable, numerically well conditioned, statistically identifiable, dynamically invariant, or mathematically useful.  The condition number in \cref{def:packet-condition-number} quantifies only coordinate stability once the packets are supplied.  Refinement towers, filtered transfer, nonlinear obstruction objects, automatic packet recovery, continuum limits, arithmetic lifts, and automorphic occupancy require additional theorems in later papers.
+\end{boundary}
+\RecordID{PSC-I-B-FINAL-CLAIM-BOUNDARY}
+
+
+
+\section{A typed quiver model}
+
+The path-algebra language can be seen in a small model that also displays a genuine missing-packet obstruction.
+
+Let the quiver have vertices $U,V$ and arrows
+\[
+R:U\to U,
+\qquad
+A:U\to V,
+\qquad
+B:V\to U,
+\]
+with the path-algebra relation
+\[
+BA=e_U,
+\]
+whose realization is the operator identity $BA=I_U$.
+Realize
+\[
+U=\bbk^2,
+\qquad
+V=\bbk^3,
+\]
+by
+\[
+R=
+\begin{pmatrix}0&-1\\1&0\end{pmatrix},
+\qquad
+A(u_1,u_2)=(u_1,u_2,0),
+\qquad
+B(v_1,v_2,v_3)=(v_1,v_2).
+\]
+Starting from the seed $e_1\in U$, the $R$-orbit spans $U$, and $A$ carries it onto the first two coordinates of $V$. Any path from $U$ to $V$ ends with $A$ and therefore lands in $\im A$. The third coordinate, which is $\ker B$, is unreachable from a seed supported only at $U$. Therefore the generated representation is
+\[
+U\oplus\Span\{(1,0,0),(0,1,0)\}
+\subsetneq U\oplus V.
+\]
+Adding the seed $(0,0,1)\in V$ generates the full representation.
+
+\begin{proposition}[Typed reachability certificate]
+\label{prop:typed-reachability}
+In the preceding quiver realization, no seed supported at $U$ can generate the full representation, whereas the two seeds
+\[
+e_1\in U,
+\qquad
+e_3\in V
+\]
+do generate it.
+\end{proposition}
+
+\begin{proof}
+The first claim follows because every path that starts at $U$ and ends in $V$ has final arrow $A$, so its image lies in $\im A$. For the second, $e_1$ and $Re_1$ span $U$; their $A$-images span $\im A$; and $e_3$ spans $\ker B$, the missing complementary direction in $V$.
+\end{proof}
+
+This example shows why a typed grammar is more than a notational convenience. The obstruction lies in the subspace $\ker B\subset V$, which is unreachable from seeds supported at $U$, and is visible before any coordinate calculation.
+
+\section{Worked algebraic model: an elliptic coordinate ring}
+
+Let $\operatorname{char}\bbk\ne2$ and let
+\[
+A=\bbk[x,y]/(y^2-x^3+x).
+\]
+The affine equation $y^2=x^3-x$ has classical discriminant $64$, which is nonzero under this hypothesis; standard algebraic geometry then identifies its smooth projective completion as an elliptic curve \cite{silverman2009}. The Lean development checks the algebraic implication $2\ne0\Rightarrow64\ne0$, the quotient normal form, and the operator identities below. It does not formalize projective smoothness, genus, or the geometric identification of the discriminant. The packet computation itself uses only the displayed quotient-ring relation.
+Every class has a unique normal form
+\[
+f(x,y)=a(x)+y b(x).
+\]
+Indeed, $y^2-(x^3-x)$ is monic of degree two in $y$, so division in $\bbk[x][y]$ gives a unique remainder of degree less than two in $y$. Concretely, every power $y^m$ with $m\ge2$ can be reduced using
+\[
+y^2=x^3-x.
+\]
+
+\subsection{One module seed and two address operators}
+
+Take the seed
+\[
+s=1
+\]
+and let $M_x,M_y$ be multiplication by $x$ and $y$. Then
+\[
+M_x^iM_y^js=x^iy^j,
+\]
+so the algebra, regarded as a module over its multiplication algebra, is generated by one seed.
+
+The two packet spaces are
+\[
+A_0=\bbk[x],
+\qquad
+A_1=y\bbk[x].
+\]
+Let
+\[
+P_0(a+yb)=a,
+\qquad
+P_1(a+yb)=yb.
+\]
+These are $\bbk$-linear pairwise annihilating idempotents and satisfy $P_0+P_1=I$. They are not $A$-linear module maps: multiplication by $y$ exchanges the two packets.
+
+Identify the packet coefficients by
+\[
+A_0\oplus A_1\longrightarrow\bbk[x]\oplus\bbk[x],
+\qquad
+(a,yb)\longmapsto(a,b).
+\]
+In these ordered coefficient coordinates, with $M_x$ and $M_{x^3-x}$ denoting multiplication on $\bbk[x]$,
+\[
+{
+M_x=
+\begin{pmatrix}
+M_x&0\\
+0&M_x
+\end{pmatrix},
+\qquad
+M_y=
+\begin{pmatrix}
+0&M_{x^3-x}\\
+I&0
+\end{pmatrix}.
+}
+\]
+The relation is reconstructed as an operator identity:
+\[
+M_y^2=M_x^3-M_x.
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.61\textwidth]{08_elliptic_packet_transfer.pdf}
+\caption{Multiplication by $y$ exchanges the even and odd packets. The odd-to-even transfer carries the relation weight $x^3-x$.}
+\label{fig:elliptic-transfer}
+\end{figure}
+
+\subsection{Exact product law}
+
+Write
+\[
+f=a_0+ya_1,
+\qquad
+g=b_0+yb_1.
+\]
+Then
+\[
+{
+fg
+=
+\bigl(a_0b_0+(x^3-x)a_1b_1\bigr)
++
+y\bigl(a_0b_1+a_1b_0\bigr).
+}
+\]
+This is a two-packet convolution law. It is already visible at the linear operator level because multiplication by a fixed element is a transfer operator.
+
+\begin{example}[Worked reduction]
+Take
+\[
+f=x^2+y,
+\qquad
+g=x-y.
+\]
+Then
+\[
+\begin{aligned}
+fg
+&=x^3-x^2y+xy-y^2\\
+&=x^3-x^2y+xy-(x^3-x)\\
+&=x+(x-x^2)y.
+\end{aligned}
+\]
+Thus
+\[
+P_0(fg)=x,
+\qquad
+P_1(fg)=(x-x^2)y.
+\]
+The symbolic certificate in the companion code performs the same quotient reduction exactly.
+\end{example}
+
+\subsection{What this example establishes}
+
+The coordinate ring illustrates four distinct parts of the calculus:
+\begin{enumerate}[label=(\roman*)]
+\item the unit is a module seed;
+\item $M_x$ and $M_y$ are address operators;
+\item the curve equation is an operator relation;
+\item parity in $y$ gives exact packet analysis, transfer, and reconstruction.
+\end{enumerate}
+It does not imply that every algebra has a one-generator algebra presentation. It shows instead that unital algebras are cyclic as modules over their full multiplication algebra.
+
+\section{Worked signal model: a bilateral shift}
+
+Let $\mathbb{F}\in\{\R,\C\}$ and let
+\[
+X=\ell^2(\Z;\mathbb F)
+\]
+with the explicit integer-indexed family of bounded reindexing operators
+\[
+(S_mx)[n]=x[n-m]
+\qquad(m,n\in\Z).
+\]
+Thus $S_0=I$, $S_{m+r}=S_mS_r$, and $S_1$ is the usual bilateral shift. We use the standard Hilbert-space and bounded-operator conventions of \cite{conway1990}.
+The impulse $\delta_0$ satisfies
+\[
+S_m\delta_0=\delta_m
+\]
+for every $m\in\Z$. Therefore finite-support sequences lie in its algebraic orbit hull and are dense in $\ell^2(\Z)$.
+
+\begin{proposition}[Shift seed]
+\label{prop:shift-seed}
+For $n\in\N$, let $G(n)$ mean that some $n$-element finite seed set has dense hull under the declared family $\{S_m:m\in\Z\}$. Then
+\[
+{
+1=\min\{n\in\N:G(n)\}.
+}
+\]
+Equivalently, one seed suffices and no empty seed family generates densely.
+\end{proposition}
+
+\begin{proof}
+The orbit of $\delta_0$ contains every standard basis vector. Their finite linear span is dense, so $G(1)$ holds. The hull of the empty seed set is zero, while $\ell^2(\Z;\mathbb F)$ is nonzero, so $G(0)$ fails. Therefore $1$ is the least admissible finite cardinality.
+\end{proof}
+
+For $N\ge1$, define residue projectors
+\[
+(P_{N,j}x)[n]
+=
+\begin{cases}
+x[n],&n\equiv j\pmod N,\\0,&\text{otherwise.}\end{cases}
+\]
+They form an orthogonal packet system and satisfy
+\[
+S_1P_{N,j}=P_{N,j+1}S_1,
+\]
+with indices modulo $N$. The shift is therefore a cyclic transfer between residue packets.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.66\textwidth]{07_shift_packet_transfer.pdf}
+\caption{Residue-packet support in the 24-coordinate periodic shift model with six packets. Each input residue transfers into the next output residue. The infinite bilateral-shift theorem is established separately in the text.}
+\label{fig:shift-transfer}
+\end{figure}
+
+\begin{boundary}
+This section uses residue packets only to demonstrate the foundational transfer algebra. Nested refinement and filter-bank structures require additional definitions and are outside Paper I.
+\end{boundary}
+
+\section{Worked matrix models}
+
+\subsection{The full matrix algebra}
+
+Let $X=\bbk^n$ and let $\cA=M_n(\bbk)=\End_{\bbk}(X)$, with the full matrix algebra declared before a seed or target is chosen. By \cref{cor:full-matrix}, every nonzero seed is cyclic. This is the maximal linear grammar on $X$, not a compression result; under a smaller declared operator algebra, the same vector need not be cyclic.
+
+\subsection{Companion and repeated-block operators}
+
+For one operator $T$, \cref{thm:single-operator} turns verified primary data
+into an exact minimum-seed certificate.  The numerical companion compares:
+\begin{enumerate}[label=(\alph*)]
+\item a nilpotent companion operator with one Jordan chain, for which the Krylov rank is $1,2,\ldots,n$;
+\item two equal Jordan blocks, for which one diagonal seed produces a chain only as long as one block and then stalls.
+\end{enumerate}
+
+The observed stall is not numerical failure.  The associated
+two-dimensional scalar quotient is the lower-bound certificate in
+\cref{thm:single-operator}; the identification of that quotient with the
+geometric-multiplicity space is the classical Jordan input stated above.
+
+\section{Worked graph model: adjacency algebras}
+
+Let $G$ be a nonempty finite graph with adjacency matrix $A_G$, and regard
+$\bbk^{V(G)}$ as a module over $\bbk[A_G]$.  The general result applies directly to a spectral certificate. For a symmetric real adjacency matrix, the classical spectral theorem supplies such data.
+
+\begin{corollary}[Certified graph seed number]
+\label{cor:graph-rank}
+Let $\bbk$ be a field and let $\Lambda$ be a nonempty finite set.  Suppose
+there are pairwise distinct scalars $a_{\lambda}\in\bbk$, multiplicities
+$m_{\lambda}\in\N$, and an eigenbasis
+\[
+\{b_{\lambda,j}:\lambda\in\Lambda,\ 1\le j\le m_{\lambda}\}
+\]
+of $\bbk^{V(G)}$ satisfying
+\[
+A_Gb_{\lambda,j}=a_{\lambda}b_{\lambda,j}.
+\]
+If $m_{\lambda}\le R$ for all $\lambda$ and
+$m_{\lambda_*}=R$ for some $\lambda_*$, then $R$ is the least natural number
+of adjacency seeds:
+\[
+{
+R=\min\left\{r\in\N:
+\begin{array}{l}
+\text{there exist }s_1,\ldots,s_r\text{ with}\\[2pt]
+\bbk^{V(G)}=\Span_{\bbk}
+  \{p(A_G)s_j:p\in\bbk[t],\ 1\le j\le r\}
+\end{array}
+\right\}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The distinct eigenvalue labels give Lagrange polynomials that project onto
+the individual eigenspace packets.  Padding one basis vector from every
+packet into each of $R$ seeds gives the upper bound.  Projection to the
+$m_{\lambda}$ eigenspace coordinates is a surjective scalar quotient, so any
+generating family has at least $m_{\lambda}$ members for every $\lambda$.
+The label $\lambda_*$ gives the matching lower bound $R$.
+\end{proof}
+
+\begin{boundary}[Spectral-classification input]
+For a finite undirected graph over $\C$, the real-symmetric spectral theorem
+classically supplies a certificate of the displayed kind, and the numbers
+$m_{\lambda}$ are the usual eigenvalue multiplicities; see
+\cite{brouwerHaemers2012}.  The formal declaration verifies the
+seed-number formula from the supplied eigenbasis and distinct eigenvalue
+labels.  It does not derive diagonalizability from symmetry or implement an
+eigensolver.
+\end{boundary}
+
+\subsection{Path graphs}
+
+For every field $\bbk$ and every $n\ge1$, an endpoint of $P_n$ is a cyclic
+vector for the adjacency operator.  Consequently one is the least finite
+adjacency-seed number:
+\[
+{
+1=\min\left\{r\in\N:
+\exists s_1,\ldots,s_r,\quad
+\bbk^n=\Span_{\bbk}\{p(A_{P_n})s_j:p\in\bbk[t],\ 1\le j\le r\}
+\right\}.
+}
+\]
+Over $\C$, the familiar spectral description has the distinct eigenvalues
+\[
+\lambda_k=2\cos\frac{k\pi}{n+1},
+\qquad 1\le k\le n,
+\]
+and the normalized eigenvectors have endpoint coordinate proportional to
+\[
+\sin\frac{k\pi}{n+1}\ne0.
+\]
+There is also an all-field combinatorial proof.  Let
+\[
+K_n=[e_1,Ae_1,\ldots,A^{n-1}e_1].
+\]
+Its $(i,j)$ entry counts walks of length $j-1$ from the first vertex to vertex $i$. This entry is zero when $i>j$, while the diagonal entry is one because there is a unique shortest walk of length $i-1$ from vertex $1$ to vertex $i$. Hence $K_n$ is upper triangular with unit diagonal, so
+\[
+\det K_n=1
+\qquad(n\ge1).
+\]
+Thus the endpoint is cyclic for every path size, not merely for the tested range.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{05_path_graph_seed_rank.pdf}
+\caption{The endpoint Krylov certificate gives every nonempty path one adjacency seed.}
+\label{fig:path-rank}
+\end{figure}
+
+\subsection{Cycle graphs}
+
+Two adjacent vertex vectors generate the adjacency module of every simple
+cycle.  Over $\C$, a primitive-root Fourier quotient supplies a matching
+two-dimensional scalar obstruction.  Hence, for every $n\ge3$, two is the
+least finite adjacency-seed number:
+\[
+{
+2=\min\left\{r\in\N:
+\exists s_1,\ldots,s_r,\quad
+\C^n=\Span_{\C}\{p(A_{C_n})s_j:p\in\C[t],\ 1\le j\le r\}
+\right\}.
+}
+\]
+To see the upper bound directly, index the vertices modulo $n$.
+The identity $Ae_j=e_{j-1}+e_{j+1}$ recovers successive vertex vectors
+from $e_0$ and $e_1$, over any field. For the lower bound over $\C$, let
+$\zeta$ be a primitive $n$th root of unity and define
+\[
+q(x)=\left(\sum_{j=0}^{n-1}\zeta^j x_j,
+             \sum_{j=0}^{n-1}\zeta^{-j}x_j\right).
+\]
+Then $q(Ax)=(\zeta+\zeta^{-1})q(x)$. The images of $e_0$ and $e_1$
+are $(1,1)$ and $(\zeta,\zeta^{-1})$, which are independent because
+$\zeta\ne\zeta^{-1}$ for $n\ge3$. Thus $q$ is a two-dimensional
+scalar quotient, and \cref{prop:scalar-quotient} gives the
+matching lower bound.
+
+The usual spectral description writes the eigenvalues as
+\[
+\lambda_k=2\cos\frac{2\pi k}{n},
+\qquad 0\le k<n.
+\]
+The values for $k$ and $n-k$ coincide. Apart from the simple characters at $k=0$ and, for even $n$, $k=n/2$, the eigenspaces occur in pairs. Therefore the maximum eigenspace multiplicity is two, although some eigenspaces have multiplicity one, and
+the certified minimum above is two.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{06_cycle_graph_seed_rank.pdf}
+\caption{Cycle graphs have maximum adjacency-eigenspace multiplicity two and therefore require two adjacency seeds, although one or two exceptional eigenspaces are simple.}
+\label{fig:cycle-rank}
+\end{figure}
+
+The path and cycle examples use nearly identical local operators.  Their
+minimum finite seed numbers differ because the path has an
+endpoint Krylov basis, whereas the cycle has a two-dimensional Fourier
+quotient obstruction.
+
+\section{The common operator language}
+
+The preceding examples can be written without changing the foundational notation.
+
+\begin{longtable}{L{0.12\textwidth}L{0.13\textwidth}L{0.19\textwidth}L{0.17\textwidth}L{0.16\textwidth}}
+\caption{Foundational realizations of the common operator language.}\label{tab:dictionary}\\
+\toprule
+Realization & Seed & Operator grammar & Packets & Completion or quotient \\
+\midrule
+\endfirsthead
+\toprule
+Realization & Seed & Operator grammar & Packets & Completion or quotient \\
+\midrule
+\endhead
+Coordinate ring & $1$ & $M_x,M_y$ & even/odd $y$ degree & quotient by $y^2-x^3+x$ \\
+Shift system & $\delta_0$ & $(S_m)_{m\in\Z}$ & residue classes of $n$ & $\ell^2$ closure \\
+Full matrix module & $s\ne0$ & $M_n(\bbk)$ & chosen idempotents & finite-dimensional \\
+Single operator & $s_1,\ldots,s_r$ & $\bbk[T]$ & primary or spectral & finite-dimensional \\
+Graph adjacency & vertex seeds & $\bbk[A_G]$ & eigenspaces & finite-dimensional \\
+Typed grammar & vertex seeds & path algebra $\bbk Q/I$ & vertex idempotents & relation quotient \\
+\bottomrule
+\end{longtable}
+
+The invariant content is:
+\[
+{
+\begin{aligned}
+&\text{generated hull: }\Hull_{\cA}(S),\\
+&\text{seed complexity: }\srank_{\cA}(X),\\
+&\text{packet coordinates: }x\leftrightarrow(P_{\alpha}x)_{\alpha},\\
+&\text{operator coordinates: }T\leftrightarrow(P_{\beta}TP_{\alpha})_{\beta,\alpha},\\
+&\text{relations: }F^m/N_S,\\
+&\text{coordinate invariance: }P_{\alpha}\mapsto UP_{\alpha}U^{-1},\\
+&\text{realization: }\Phi A=\varphi(A)\Phi.
+\end{aligned}
+}
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{10_theorem_dependency.pdf}
+\caption{Structural overview of the two proof families. The generator and packet arguments meet in the worked realizations. This diagram is not an exhaustive graph of Lean declaration dependencies.}
+\label{fig:dependency}
+\end{figure}
+
+\section{Computational certificates}
+
+The accompanying Python package is not used as a substitute for proof. It provides exact symbolic checks and finite numerical regression tests for formulas already proved. The computed ranges and random seeds are recorded explicitly. These checks do not extend a theorem beyond its hypotheses or certify an unrestricted numerical implementation. The journal companion also tests integer counts beyond floating-point precision and rejects the unsupported complex-symmetric spectral shortcut.
+
+\subsection{Test suite}
+
+The test suite checks:
+\begin{enumerate}[label=(\roman*)]
+\item projector idempotence, annihilation, and completeness;
+\item exact vector analysis and synthesis;
+\item exact operator reconstruction from all transfer blocks;
+\item coordinate transport under a dense random similarity transform;
+\item cyclicity of a companion operator;
+\item the two-seed obstruction for repeated Jordan blocks;
+\item the semisimple multiplicity formula in representative cases;
+\item full orbit dimension for two representative nonzero seeds under the full matrix algebra;
+\item exact reduction and packet multiplication in the elliptic coordinate ring;
+\item seed ranks of path and cycle adjacency modules over the reported finite ranges;
+\item the cyclic residue transfer pattern of a finite shift.
+\end{enumerate}
+
+\subsection{Recorded results}
+
+\begin{table}[htbp]
+\centering
+\caption{Archived representative checks from the v1.3.1 journal-edition run. Fresh companion runs are reported separately in the release verification record.}
+\label{tab:results}
+\begin{tabular}{L{0.57\textwidth}r}
+\toprule
+Quantity & Result \\
+\midrule
+Projector idempotence residual & $0$ \\
+Projector annihilation residual & $0$ \\
+Projector completeness residual & $0$ \\
+Operator reconstruction residual & $0$ \\
+Transported-projector residual, maximum & $1.85\times10^{-15}$ \\
+Companion seed rank & $1$ \\
+Two equal Jordan blocks, seed rank & $2$ \\
+$M_3(\C)$ acting on seven copies, seed rank & $3$ \\
+Sampled path graph seed ranks, $2\le n\le12$ & $1$ \\
+Sampled cycle graph seed ranks, $3\le n\le12$ & $2$ \\
+Full $M_4(\R)$ orbit dimensions for two sampled nonzero seeds & $4,4$ \\
+Automated tests & $33/33$ passed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The finite shift pattern recovered by the experiment is
+\[
+\begin{pmatrix}
+0&0&0&1\\
+1&0&0&0\\
+0&1&0&0\\
+0&0&1&0
+\end{pmatrix},
+\]
+which is the exact packet adjacency of a cyclic four-phase transfer.
+
+\subsection{Algorithms}
+
+The following finite constructions state mathematical specifications for the companion. Their Lean counterparts and exact scope are listed in the separate guide. They do not assert code extraction or a particular backend's performance.
+
+\begin{construction}[Orbit-hull closure specification]
+\label{con:orbit-hull-algorithm}
+Let $V$ be finite-dimensional, let $(O_i)_{i\in I}$ be a finite operator
+family, and let $S\subseteq V$.  Define
+\[
+W_0=\Span_{\bbk}S,
+\qquad
+W_{n+1}=W_n+\sum_{i\in I}O_i(W_n).
+\]
+Then there is an $n\in\N$ such that
+\[
+W_{n+1}=W_n
+\qquad\text{and}\qquad
+W_n=\Hull_{(O_i)}(S),
+\]
+where the right side is the least subspace containing $S$ and invariant under
+every $O_i$.  Thus the ascending subspace iteration terminates and its stable
+value is exactly the finite operator hull.
+\end{construction}
+
+\begin{construction}[Transfer-block table specification]
+\label{con:transfer-block-algorithm}
+Given finite projector systems $(P_i)_{i\in I}$ and $(Q_j)_{j\in J}$ and a
+linear map $T$, form the table
+\[
+B_{ji}=Q_jTP_i.
+\]
+Its assembly reconstructs the input map exactly,
+\[
+\sum_{j\in J}\sum_{i\in I}B_{ji}=T,
+\]
+and its reported support relation is exactly
+$\{(i,j):B_{ji}\ne0\}$.  The latter equality is the specification of the
+transfer-graph output, not a claim that Lean extracts a decidable edge-list
+routine for every coefficient field.
+\end{construction}
+
+\begin{construction}[Certified exact graph seed-rank specification]
+\label{con:exact-graph-seed-rank}
+For a finite square matrix $A$ over a field $K$, define the noncomputable exact
+spectral quantity
+\[
+r_{\mathrm{spec}}(A)
+=
+\max_{\mu\in\Spec_K(A)}
+\dim_K\ker(A-\mu I),
+\]
+with value zero for an empty spectrum.  Suppose an exact certificate supplies
+a finite eigenbasis indexed by labels and multiplicities, the eigenvalue
+equations, a multiplicity bound attained by one label, projector polynomials
+that extract the padded eigenbasis generators, coverage of every spectral
+value by a label, equality of the declared and actual eigenspace dimensions,
+and membership of the maximizing eigenvalue in the spectrum.  Then
+$r_{\mathrm{spec}}(A)$ is the least natural number of polynomial-orbit seeds
+for $A$.
+
+This is a verified certificate checker/specification.  It does not construct
+the eigenbasis, prove that a symmetric matrix is diagonalizable, or implement
+an exact eigensolver.  The companion Python code performs symbolic
+computations in the reported finite graph range; the all-size path and cycle
+results are proved separately above.
+\end{construction}
+
+
+\section{Reading guide: common confusions and diagnostic questions}
+
+\subsection{Common confusions}
+\begin{center}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.68\textwidth}@{}}
+\toprule
+\textbf{Do not conflate} & \textbf{Correct distinction}\\
+\midrule
+\endhead
+Grammar with realized algebra & The grammar may contain relations or words that act as zero.  Seed rank depends only on the image action.\\
+Seed with basis vector & A seed is a generator under an algebra action.  One seed may generate a high-dimensional module.\\
+Cyclic vector with eigenvector & A cyclic vector must generate the whole module under operator words.  It is usually not an eigenvector.\\
+Packet with orthogonal subspace & A packet is the range of an idempotent in a complete annihilating family.  Orthogonality is optional.\\
+Exact reconstruction with good conditioning & Algebraic inverse identities may coexist with large analysis and synthesis norms.\\
+Nonzero transfer edge with surjective transfer & A nonzero block can have small rank.  Graph reachability alone does not prove generation.\\
+Packet-pure seed rank with unrestricted seed rank & Mixed-support seeds may meet several source components simultaneously.\\
+Continuous surjection with quotient isomorphism & The target topology must agree with the quotient topology.\\
+Repeated notation with semantic realization & A true realization must preserve a declared collection of operations and identities.\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\subsection{Diagnostic questions for a new application}
+Before claiming that a new subject is a realization of Paper I, answer the following.
+\begin{enumerate}
+\item What is the fixed operator grammar or acting algebra?
+\item What is the concrete realization space or module?
+\item Which seeds are declared before the target is chosen?
+\item Is generation algebraic, topological, probabilistic, or approximate?
+\item What are the idempotent packets, and in what sense do they sum to the identity?
+\item Are the packets finite, countable unconditional, or merely formal?
+\item What are the transfer blocks, and which blocks are known to vanish?
+\item Which morphisms preserve the packet system?
+\item Which quotient, completion, tensor, or limit operations must be preserved?
+\item What exact theorem from Paper I is being specialized, and what new domain theorem remains to be proved?
+\end{enumerate}
+
+\subsection{One-page theorem spine}
+\ConceptChain{
+\(
+\begin{array}{c}
+\text{free seed presentation}\\[0.25em]
+\Downarrow\\[-0.1em]
+\text{minimal generator number}\\[0.25em]
+\Downarrow\\[-0.1em]
+\text{Jacobson-radical reduction}\\[0.25em]
+\Downarrow\\[-0.1em]
+\text{semisimple or primary computation}
+\end{array}
+\qquad\qquad
+\begin{array}{c}
+\text{packet idempotents}\\[0.25em]
+\Downarrow\\[-0.1em]
+\text{exact analysis/synthesis}\\[0.25em]
+\Downarrow\\[-0.1em]
+\text{transfer-block algebra}\\[0.25em]
+\Downarrow\\[-0.1em]
+\text{graphs, quotients, and realization}
+\end{array}
+\)
+}
+
+\section{Notation and convention ledger}
+\begin{multicols}{2}
+\begin{description}[style=nextline,font=\normalfont\bfseries]
+\item[Address.] An operator word applied to a seed.
+\item[Analysis.] The map sending an object to all packet coordinates.
+\item[Block support.] The set of packet pairs \((\beta,\alpha)\) for which \(P_\beta TP_\alpha\neq0\).
+\item[Collapsed realization.] The direct sum of all typed vertex spaces.
+\item[Condensation graph.] The acyclic graph obtained by collapsing strongly connected components.
+\item[Generated hull.] The submodule generated by a seed family, or its declared closure.
+\item[Grammar.] A typed quiver and relation ideal describing legal operator words.
+\item[Packet.] The range of one idempotent in a complete annihilating family.
+\item[Packet-pure.] Supported in at most one packet.
+\item[Preservation profile.] The operations a realization functor is required to preserve.
+\item[Realized algebra.] The image of the grammar algebra in the endomorphism algebra of a realization.
+\item[Seed rank.] The minimal size of a finite generating family.
+\item[Source component.] A strongly connected component with no incoming edge in the condensation graph.
+\item[Synthesis.] The map adding packet coordinates into the original object.
+\item[Transfer block.] The map from one packet space to another obtained by sandwiching an operator between packet projectors.
+\item[Transfer graph.] The directed graph formed from nonzero blocks of a declared algebra-generating family.
+\end{description}
+\end{multicols}
+
+\begin{sectionrecap}[title={How to use the paper after the first reading}]
+For a concrete calculation, first reduce the action to the realized algebra.  Next compute or bound seed rank using quotients, the module top, or primary decomposition.  Then declare the packet system and use exact analysis and synthesis.  Finally move all operator equations into transfer blocks, where support, graph, quotient, and functorial constraints become explicit.
+\end{sectionrecap}
+
+
+\section{Proof dependency spine}
+
+\small
+\begin{longtable}{@{}p{0.42\textwidth}p{0.52\textwidth}@{}}
+\toprule
+\textbf{Canonical record} & \textbf{Immediate proof dependencies}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Canonical record} & \textbf{Immediate proof dependencies}\\
+\midrule
+\endhead
+\texttt{PSC-I-T-TYPED-MODULE-EQUIVALENCE} & Typed grammar and path-algebra action.\\
+\texttt{PSC-I-T-FREE-PRESENTATION} & Seed evaluation map and first isomorphism theorem.\\
+\texttt{PSC-I-T-COMPLETED-PRESENTATION} & Free presentation and uniqueness of completion.\\
+\texttt{PSC-I-T-QUOTIENT-MONOTONICITY} & Intertwining identity and generated hull.\\
+\texttt{PSC-I-T-EXACT-SEQUENCE-BOUNDS} & Quotient monotonicity and lifting generators.\\
+\texttt{PSC-I-T-MODULE-TOP} & Nakayama lemma.\\
+\texttt{PSC-I-T-SEMISIMPLE-SEED-RANK} & Module-top theorem and regular-module multiplicities.\\
+\texttt{PSC-I-T-SINGLE-OPERATOR} & Primary decomposition, local formula, and product action.\\
+\texttt{PSC-I-T-EXACT-PACKET-COORDINATES} & Complete finite idempotent family.\\
+\texttt{PSC-I-T-COUNTABLE-}\newline\texttt{UNCONDITIONAL-PACKETS} & Completeness of the unconditional coordinate space.\\
+\texttt{PSC-I-T-BLOCK-ALGEBRA} & Reconstruction and block multiplication.\\
+\texttt{PSC-I-T-SUPPORT-PATTERN-ALGEBRA} & Block multiplication and rank-one necessity tests.\\
+\texttt{PSC-I-T-PREORDER-}\newline\texttt{ALGEBRA-DECOMPOSITION} & Preorder support criterion and finite-chain nilpotence.\\
+\texttt{PSC-I-T-ALGEBRA-}\newline\texttt{REACHABILITY-SUPPORT} & Generator-word packet expansion.\\
+\texttt{PSC-I-T-SOURCE-COMPONENT-SEED-RANK} & Reachability obstruction and edge-surjective propagation.\\
+\texttt{PSC-I-T-NATURALITY} & Intertwining and packet aggregation.\\
+\texttt{PSC-I-T-PACKET-EXACT-SEQUENCE} & Invariant packet projectors and first isomorphism theorem.\\
+\texttt{PSC-I-T-DENSE-REALIZATION} & Continuity and naturality of hulls.\\
+\texttt{PSC-I-T-REALIZATION-EXPORT} & Additive functor axioms and preserved universal constructions.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\clearpage\section{Conclusions and further use}
+
+The main structural conclusions can be collected in the following form:
+\begin{enumerate}[label=\textbf{I.\arabic*.},leftmargin=*,itemsep=0.3em,topsep=0.4em]
+\item The two-sided annihilator criterion is proved in \cref{prop:two-sided-annihilator}.
+\item Generator detection modulo the Jacobson radical is proved in \cref{thm:module-top}.
+\item The arbitrary-division-ring semisimple formula is proved in \cref{thm:semisimple-seed-rank} without a left-right row-rank ambiguity.
+\item The arbitrary-field single-operator formula and all cyclic criteria are proved in \cref{thm:single-operator,cor:cyclic-matrix}.
+\item The countable unconditional packet theorem is proved in \cref{thm:countable-packets}.
+\item The $*$-support classification is proved in \cref{cor:star-support}.
+\item The source-component theorem is strengthened to the weighted formula in \cref{thm:source-component-rank}.
+\item Seed-system composition, packet exact sequences, quotient block descent, dense realization, quotient completion, and semantic theorem transport are proved in \cref{prop:seed-category,thm:packet-exact-sequence,cor:block-descent,thm:dense-realization,thm:quotient-topology,thm:realization-export}.
+\item Additional omitted structure is supplied by \cref{thm:exact-sequence-bounds,prop:acting-algebra-monotonicity,prop:conditioned-coordinates,prop:block-diagonal-projection,thm:preorder-decomposition}.
+\end{enumerate}
+
+\clearpage\appendix
+\section{Stable statement concordance}\label{app:stable-concordance}
+These identifiers preserve the expanded foundation's 108-record namespace. The display numbers refer to this edition. They identify mathematical statements, not a count of Lean-verified theorems. The worked-model statements added after the foundation retain their source labels and are mapped separately by the Lean guide.
+\small\begin{longtable}{@{}p{.44\textwidth}p{.07\textwidth}p{.41\textwidth}@{}}
+\toprule Stable identifier & No. & Statement\\\midrule\endhead
+\nolinkurl{PSC-I-D-COEFFICIENT-REGIME} & \ref{def:coefficient-regime} & Coefficient and module regimes \\
+\nolinkurl{PSC-I-D-THEOREM-RECORD} & \ref{def:theorem-record} & Canonical theorem record \\
+\nolinkurl{PSC-I-B-SYMBOLIC-SCOPE} & \ref{bnd:symbolic-scope} & Symbolic scope \\
+\nolinkurl{PSC-I-D-TYPED-GRAMMAR} & \ref{def:typed-grammar} & Typed operator grammar \\
+\nolinkurl{PSC-I-D-COLLAPSED-REALIZATION} & \ref{def:collapsed-realization} & Collapsed one-space realization \\
+\nolinkurl{PSC-I-T-TYPED-MODULE-EQUIVALENCE} & \ref{thm:typed-module-equivalence} & Typed realization and module equivalence \\
+\nolinkurl{PSC-I-D-REALIZED-ALGEBRA} & \ref{def:realized-algebra} & Realized operator algebra \\
+\nolinkurl{PSC-I-P-ACTION-FACTORIZATION} & \ref{prop:action-factorization} & Action factorization and hull invariance \\
+\nolinkurl{PSC-I-D-SEED-SYSTEM} & \ref{def:seed-system} & Linear seed system \\
+\nolinkurl{PSC-I-D-GENERATED-HULL} & \ref{def:generated-hull} & Generated hull \\
+\nolinkurl{PSC-I-D-NATURAL-PRESENTATION} & \ref{def:natural-presentation} & Natural presentation \\
+\nolinkurl{PSC-I-P-ALGEBRA-MODULE-GENERATION} & \ref{prop:algebra-module-generation} & Algebra generation and module generation are distinct \\
+\nolinkurl{PSC-I-B-TARGET-DEPENDENT-OPERATORS} & \ref{bnd:target-dependent-operators} & Target-dependent operators \\
+\nolinkurl{PSC-I-D-SEED-EVALUATION} & \ref{def:seed-evaluation} & Seed evaluation map \\
+\nolinkurl{PSC-I-T-FREE-PRESENTATION} & \ref{thm:free-presentation} & Finite free presentation \\
+\nolinkurl{PSC-I-C-MINIMAL-FREE-COVER} & \ref{cor:minimal-free-cover} & Minimal free-cover characterization \\
+\nolinkurl{PSC-I-C-ONE-SEED-PRESENTATION} & \ref{cor:one-seed-presentation} & One-seed presentation \\
+\nolinkurl{PSC-I-P-ANNIHILATOR-TWO-SIDED} & \ref{prop:two-sided-annihilator} & Two-sided annihilator criterion \\
+\nolinkurl{PSC-I-T-COMPLETED-PRESENTATION} & \ref{thm:completed-presentation} & Completion of a dense free presentation \\
+\nolinkurl{PSC-I-D-SEED-RANK} & \ref{def:seed-rank} & Seed rank \\
+\nolinkurl{PSC-I-P-CYCLIC-CHARACTERIZATION} & \ref{prop:cyclic-characterization} & Cyclic characterization \\
+\nolinkurl{PSC-I-P-ACTING-ALGEBRA-MONOTONICITY} & \ref{prop:acting-algebra-monotonicity} & Monotonicity under enlargement of the acting algebra \\
+\nolinkurl{PSC-I-T-QUOTIENT-MONOTONICITY} & \ref{thm:quotient-monotonicity} & Quotient monotonicity \\
+\nolinkurl{PSC-I-C-ISOMORPHISM-INVARIANCE} & \ref{cor:isomorphism-invariance} & Isomorphism invariance \\
+\nolinkurl{PSC-I-T-EXACT-SEQUENCE-BOUNDS} & \ref{thm:exact-sequence-bounds} & Short exact sequence bounds \\
+\nolinkurl{PSC-I-P-SHARED-DIRECT-SUM} & \ref{prop:shared-direct-sum} & Shared direct-sum bounds \\
+\nolinkurl{PSC-I-T-INDEPENDENT-DIRECT-SUM} & \ref{thm:independent-direct-sum} & Independent direct-sum formula \\
+\nolinkurl{PSC-I-P-TENSOR-BOUND} & \ref{prop:tensor-bound} & Tensor-product bound \\
+\nolinkurl{PSC-I-B-TENSOR-NONEQUALITY} & \ref{bnd:tensor-nonequality} & Tensor rank is not generally multiplicative \\
+\nolinkurl{PSC-I-P-SCALAR-EXTENSION-MONOTONICITY} & \ref{prop:scalar-extension} & Scalar-extension monotonicity \\
+\nolinkurl{PSC-I-D-SEED-RANK-WITNESS} & \ref{def:seed-rank-witness} & Seed-rank witness \\
+\nolinkurl{PSC-I-P-SCALAR-QUOTIENT-WITNESS} & \ref{prop:scalar-quotient} & Scalar quotient witness \\
+\nolinkurl{PSC-I-CI-NAKAYAMA} & \ref{ci:nakayama} & Nakayama lemma \\
+\nolinkurl{PSC-I-T-MODULE-TOP} & \ref{thm:module-top} & Generator number is detected modulo the Jacobson radical \\
+\nolinkurl{PSC-I-C-LOCAL-ALGEBRA-FORMULA} & \ref{cor:local-algebra-formula} & Local algebra formula \\
+\nolinkurl{PSC-I-CI-WEDDERBURN-ARTIN} & \ref{ci:wedderburn} & Wedderburn--Artin decomposition \\
+\nolinkurl{PSC-I-L-REGULAR-MODULE-MULTIPLICITIES} & \ref{lem:regular-multiplicities} & Regular-module multiplicities \\
+\nolinkurl{PSC-I-T-SEMISIMPLE-SEED-RANK} & \ref{thm:semisimple-seed-rank} & Semisimple seed-rank formula over arbitrary division rings \\
+\nolinkurl{PSC-I-C-ALGEBRAICALLY-CLOSED-FORMULA} & \ref{cor:algebraically-closed-formula} & Algebraically closed multiplicity formula \\
+\nolinkurl{PSC-I-C-FULL-MATRIX} & \ref{cor:full-matrix} & Full matrix algebra \\
+\nolinkurl{PSC-I-C-MULTIPLICITY-OBSTRUCTION} & \ref{cor:multiplicity-obstruction} & Multiplicity obstruction \\
+\nolinkurl{PSC-I-CI-PID-PRIMARY-DECOMPOSITION} & \ref{ci:primary-decomposition} & Primary decomposition for polynomial modules \\
+\nolinkurl{PSC-I-T-SINGLE-OPERATOR} & \ref{thm:single-operator} & Single-operator seed rank \\
+\nolinkurl{PSC-I-C-INVARIANT-FACTOR-COUNT} & \ref{cor:invariant-factor-count} & Invariant-factor count \\
+\nolinkurl{PSC-I-C-ALGEBRAICALLY-CLOSED-SINGLE-OPERATOR} & \ref{cor:geometric-multiplicity} & Geometric-multiplicity formula \\
+\nolinkurl{PSC-I-C-CYCLIC-MATRIX} & \ref{cor:cyclic-matrix} & Cyclic-matrix criterion \\
+\nolinkurl{PSC-I-D-PACKET-SYSTEM} & \ref{def:packet-system} & Finite packet system \\
+\nolinkurl{PSC-I-D-PACKET-SUPPORT} & \ref{def:packet-support} & Packet support and packet-pure vectors \\
+\nolinkurl{PSC-I-L-PACKET-AGGREGATION} & \ref{lem:packet-aggregation} & Finite packet aggregation \\
+\nolinkurl{PSC-I-D-ANALYSIS-SYNTHESIS} & \ref{def:analysis-synthesis} & Packet analysis and synthesis \\
+\nolinkurl{PSC-I-T-EXACT-PACKET-COORDINATES} & \ref{thm:exact-packet-coordinates} & Exact packet-coordinate isomorphism \\
+\nolinkurl{PSC-I-C-PACKETWISE-EQUALITY} & \ref{cor:packetwise-equality} & Packetwise equality \\
+\nolinkurl{PSC-I-C-PACKET-UNIVERSAL-PROPERTY} & \ref{cor:packet-universal-property} & Universal mapping property of finite packet coordinates \\
+\nolinkurl{PSC-I-T-TENSOR-PACKET-SYSTEM} & \ref{thm:tensor-packet-system} & Tensor-product packet systems \\
+\nolinkurl{PSC-I-P-DUAL-PACKET-SYSTEM} & \ref{prop:dual-packet-system} & Dual packet systems \\
+\nolinkurl{PSC-I-T-BANACH-PACKET-ISOMORPHISM} & \ref{thm:banach-packets} & Finite Banach packet isomorphism \\
+\nolinkurl{PSC-I-D-PACKET-CONDITION-NUMBER} & \ref{def:packet-condition-number} & Packet-coordinate condition number \\
+\nolinkurl{PSC-I-P-CONDITIONED-COORDINATES} & \ref{prop:conditioned-coordinates} & Conditioned coordinate transport \\
+\nolinkurl{PSC-I-C-COMPLETION-PACKET-SPLIT} & \ref{cor:completion-packet-split} & Completion preserves a finite packet split \\
+\nolinkurl{PSC-I-D-UNCONDITIONAL-PACKET-SPACE} & \ref{def:unconditional-packet-space} & Unconditional packet sum space \\
+\nolinkurl{PSC-I-L-UNCONDITIONAL-COMPLETENESS} & \ref{lem:unconditional-completeness} & Completeness of the unconditional packet sum \\
+\nolinkurl{PSC-I-T-COUNTABLE-UNCONDITIONAL-PACKETS} & \ref{thm:countable-packets} & Countable unconditional packet isomorphism \\
+\nolinkurl{PSC-I-R-UNIFORM-BOUNDEDNESS} & \ref{rem:uniform-boundedness} & Uniform boundedness \\
+\nolinkurl{PSC-I-B-INFINITE-PACKET-TOPOLOGY} & \ref{bnd:infinite-packet-topology} & Infinite packet sums \\
+\nolinkurl{PSC-I-D-TRANSFER-BLOCK} & \ref{def:transfer-block} & Transfer block \\
+\nolinkurl{PSC-I-T-OPERATOR-RECONSTRUCTION} & \ref{thm:operator-reconstruction} & Exact operator reconstruction \\
+\nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION} & \ref{thm:block-multiplication} & Packet matrix multiplication \\
+\nolinkurl{PSC-I-C-BLOCK-POWERS} & \ref{cor:block-powers} & Packet powers and paths \\
+\nolinkurl{PSC-I-C-ADJOINT-REVERSAL} & \ref{cor:adjoint-reversal} & Adjoint reversal \\
+\nolinkurl{PSC-I-C-TENSOR-TRANSFER-BLOCKS} & \ref{cor:tensor-transfer-blocks} & Tensor-product transfer blocks \\
+\nolinkurl{PSC-I-T-BLOCK-INTERTWINING} & \ref{thm:block-intertwining} & Blockwise intertwining equations \\
+\nolinkurl{PSC-I-T-BLOCK-ALGEBRA} & \ref{thm:block-algebra} & Full block-algebra representation \\
+\nolinkurl{PSC-I-C-PACKET-SUPPORT-PROPAGATION} & \ref{cor:packet-support-propagation} & Propagation of packet support \\
+\nolinkurl{PSC-I-C-DIMENSION-COUNT} & \ref{cor:dimension-count} & Dimension count \\
+\nolinkurl{PSC-I-P-BLOCK-DIAGONAL-COMMUTANT} & \ref{prop:block-diagonal-projection} & Block-diagonal projection and packet commutant \\
+\nolinkurl{PSC-I-D-SUPPORT-RELATION} & \ref{def:support-relation} & Support relation and support space \\
+\nolinkurl{PSC-I-T-SUPPORT-PATTERN-ALGEBRA} & \ref{thm:support-pattern} & Support-pattern algebra criterion \\
+\nolinkurl{PSC-I-C-SUPPORT-PATTERN-STAR} & \ref{cor:star-support} & $*$-closed bounded support patterns \\
+\nolinkurl{PSC-I-T-PREORDER-ALGEBRA-DECOMPOSITION} & \ref{thm:preorder-decomposition} & Preorder support algebra decomposition \\
+\nolinkurl{PSC-I-D-TRANSFER-GRAPH} & \ref{def:transfer-graph} & Transfer graph of an algebra-generating family \\
+\nolinkurl{PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT} & \ref{thm:algebra-reachability-support} & Reachability support of the generated algebra \\
+\nolinkurl{PSC-I-P-REACHABILITY-OBSTRUCTION} & \ref{prop:reachability-obstruction} & Reachability obstruction for generated hulls \\
+\nolinkurl{PSC-I-D-DIRECTED-SEED-RANK} & \ref{def:directed-seed-rank} & Packet-pure seed rank \\
+\nolinkurl{PSC-I-P-PACKET-PURE-RANK-BOUNDS} & \ref{prop:packet-pure-rank-bounds} & Basic packet-pure rank bounds \\
+\nolinkurl{PSC-I-D-EDGE-SURJECTIVE} & \ref{def:edge-surjective} & Edge-surjective packet system \\
+\nolinkurl{PSC-I-T-SOURCE-COMPONENT-SEED-RANK} & \ref{thm:source-component-rank} & Source-component formula for packet-pure seed rank \\
+\nolinkurl{PSC-I-D-PACKET-PROPAGATING} & \ref{def:packet-propagating} & Packet-propagating system \\
+\nolinkurl{PSC-I-C-SOURCE-COMPONENT-COUNT} & \ref{cor:source-component-count} & Unweighted source-component count \\
+\nolinkurl{PSC-I-B-PACKET-PURE-BOUNDARY} & \ref{bnd:packet-pure-boundary} & Mixed-support seeds can merge source requirements \\
+\nolinkurl{PSC-I-T-COORDINATE-TRANSPORT} & \ref{thm:coordinate-transport} & Coordinate transport \\
+\nolinkurl{PSC-I-D-PACKET-MORPHISM} & \ref{def:packet-morphism} & Packet-compatible operator morphism \\
+\nolinkurl{PSC-I-D-SEED-MORPHISM} & \ref{def:seed-morphism} & Morphism of seeded systems \\
+\nolinkurl{PSC-I-T-NATURALITY} & \ref{thm:naturality} & Naturality of generated hulls and transfer blocks \\
+\nolinkurl{PSC-I-P-SEED-SYSTEM-CATEGORY} & \ref{prop:seed-category} & Category of seeded packet systems \\
+\nolinkurl{PSC-I-T-PACKET-EXACT-SEQUENCE} & \ref{thm:packet-exact-sequence} & Packet exact sequence for an invariant subspace \\
+\nolinkurl{PSC-I-T-QUOTIENT-PACKET-DESCENT} & \ref{thm:quotient-packet-descent} & Packet descent through an invariant quotient \\
+\nolinkurl{PSC-I-C-QUOTIENT-PACKET-DESCENT} & \ref{cor:block-descent} & Restriction and quotient of transfer blocks \\
+\nolinkurl{PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE} & \ref{cor:topological-packet-exact-sequence} & Topological packet exact sequence \\
+\nolinkurl{PSC-I-T-DENSE-REALIZATION} & \ref{thm:dense-realization} & Dense realization theorem \\
+\nolinkurl{PSC-I-T-QUOTIENT-TOPOLOGY-COMPLETION} & \ref{thm:quotient-topology} & Quotient topology and completed realization \\
+\nolinkurl{PSC-I-B-TOPOLOGICAL-QUOTIENT} & \ref{bnd:topological-quotient} & Continuous surjections and quotient topology \\
+\nolinkurl{PSC-I-D-REALIZATION-FUNCTOR} & \ref{def:realization-functor} & Realization functor and preservation profile \\
+\nolinkurl{PSC-I-T-REALIZATION-EXPORT} & \ref{thm:realization-export} & Equational realization principle \\
+\nolinkurl{PSC-I-P-REALIZATION-EXPORT} & \ref{prop:realization-export} & Realization export principle \\
+\nolinkurl{PSC-I-D-SEMANTIC-REALIZATION} & \ref{def:semantic-realization} & Semantic realization criterion \\
+\nolinkurl{PSC-I-ALG-EXAMPLE-SLOTS} & \ref{def:reserved-example-slots} & Worked realization interface \\
+\nolinkurl{PSC-I-EXPORT} & \ref{def:paper-one-export} & Paper I export object \\
+\nolinkurl{PSC-I-B-FINAL-CLAIM-BOUNDARY} & \ref{bnd:final-claim-boundary} & Exact limits of Paper I \\
+\bottomrule\end{longtable}\normalsize
+\clearpage\section{Visual atlas}\label{app:visual-atlas}
+The following twenty-two plates give exact finite models, explanatory diagrams, and one analytic density example. All graphics are generated from mathematical source. Cross-references are aligned with this edition. The atlas illustrates the proofs and hypotheses in the main text.
+
+\medskip
+\begin{longtable}{@{}p{.08\textwidth}p{.82\textwidth}@{}}
+\toprule Plate & Route through the examples\\\midrule\endhead
+1--2 & Fixed grammars, seed power, and the objects of the calculus.\\
+3--4 & Two linked chains and a quotient proving the minimum seed count.\\
+5--6 & Left-ideal relations and typed reachability with a missing direction.\\
+7--8 & Oblique exact coordinates and complete transfer-block multiplication.\\
+9--10 & Cancellation along paths and the algebra of admissible zero patterns.\\
+11--12 & Coordinate transport, shared action, and independent control.\\
+13--14 & Semisimple multiplicity budgets and primary extraction polynomials.\\
+15--16 & Path endpoints and the cycle's two-dimensional quotient obstruction.\\
+17 & A coordinate-ring relation as a two-packet product rule.\\
+18--19 & Dense shift generation, residue coordinates, and address carry.\\
+20--21 & Exact orbit-hull stabilization and all tensor cross terms.\\
+22 & The scope of mathematical, formal, and computational evidence.\\
+\bottomrule\end{longtable}
+
+The seed examples can be read consecutively, while the packet and graph plates form independent entry points. The displayed matrices are exact. Numerical illustrations in the earlier figures retain their explicitly stated finite ranges. Every diagram is accompanied by the equation or obstruction it represents.
+\begingroup\fontsize{10.2}{11.6}\selectfont\setstretch{1.0}\setlength{\parindent}{0pt}\setlength{\parskip}{2pt}\setlength{\abovedisplayskip}{7pt}\setlength{\belowdisplayskip}{7pt}\input{visual_atlas.tex}\endgroup
+
+\clearpage
+\begin{thebibliography}{99}
+
+\bibitem{assemSimsonSkowronski2006}
+I.~Assem, D.~Simson, and A.~Skowro{\'n}ski,
+\emph{Elements of the Representation Theory of Associative Algebras, Volume 1: Techniques of Representation Theory},
+London Mathematical Society Student Texts 65,
+Cambridge University Press, Cambridge, 2006.
+\href{https://doi.org/10.1017/CBO9780511614309}{doi:10.1017/CBO9780511614309}.
+
+\bibitem{brouwerHaemers2012}
+A.~E.~Brouwer and W.~H.~Haemers,
+\emph{Spectra of Graphs},
+Universitext, Springer, New York, 2012.
+\href{https://doi.org/10.1007/978-1-4614-1939-6}{doi:10.1007/978-1-4614-1939-6}.
+
+\bibitem{conway1990}
+J.~B.~Conway,
+\emph{A Course in Functional Analysis},
+second edition, Graduate Texts in Mathematics 96,
+Springer, New York, 1990.
+\href{https://doi.org/10.1007/978-1-4757-4383-8}{doi:10.1007/978-1-4757-4383-8}.
+
+\bibitem{hornJohnson2012}
+R.~A.~Horn and C.~R.~Johnson,
+\emph{Matrix Analysis},
+second edition, Cambridge University Press, Cambridge, 2012.
+\href{https://doi.org/10.1017/CBO9781139020411}{doi:10.1017/CBO9781139020411}.
+
+\bibitem{lam2001noncommutative}
+T.~Y.~Lam,
+\emph{A First Course in Noncommutative Rings},
+second edition, Graduate Texts in Mathematics 131,
+Springer, New York, 2001.
+\href{https://doi.org/10.1007/978-1-4419-8616-0}{doi:10.1007/978-1-4419-8616-0}.
+
+\bibitem{lam1999modules}
+T.~Y.~Lam,
+\emph{Lectures on Modules and Rings},
+Graduate Texts in Mathematics 189,
+Springer, New York, 1999.
+\href{https://doi.org/10.1007/978-1-4612-0525-8}{doi:10.1007/978-1-4612-0525-8}.
+
+\bibitem{roman2008}
+S.~Roman,
+\emph{Advanced Linear Algebra},
+third edition, Graduate Texts in Mathematics 135,
+Springer, New York, 2008.
+\href{https://doi.org/10.1007/978-0-387-72831-5}{doi:10.1007/978-0-387-72831-5}.
+
+\bibitem{schaeferWolff1999}
+H.~H.~Schaefer and M.~P.~Wolff,
+\emph{Topological Vector Spaces},
+second edition, Graduate Texts in Mathematics 3,
+Springer, New York, 1999.
+\href{https://doi.org/10.1007/978-1-4612-1468-7}{doi:10.1007/978-1-4612-1468-7}.
+
+\bibitem{silverman2009}
+J.~H.~Silverman,
+\emph{The Arithmetic of Elliptic Curves},
+second edition, Graduate Texts in Mathematics 106,
+Springer, New York, 2009.
+\href{https://doi.org/10.1007/978-0-387-09494-6}{doi:10.1007/978-0-387-09494-6}.
+
+
+\bibitem{demouraUllrich2021}
+L. de Moura and S. Ullrich,
+\emph{The Lean 4 Theorem Prover and Programming Language},
+in Automated Deduction---CADE 28, Lecture Notes in Computer Science 12699,
+Springer, Cham, 2021, pp. 625--635.
+\href{https://doi.org/10.1007/978-3-030-79876-5_37}{doi:10.1007/978-3-030-79876-5\_37}.
+
+\bibitem{mathlib2020}
+The mathlib Community,
+\emph{The Lean Mathematical Library},
+in Proceedings of the 9th ACM SIGPLAN International Conference on Certified
+Programs and Proofs, ACM, 2020, pp. 367--381.
+\href{https://doi.org/10.1145/3372885.3373824}{doi:10.1145/3372885.3373824}.
+
+\end{thebibliography}
+\end{document}

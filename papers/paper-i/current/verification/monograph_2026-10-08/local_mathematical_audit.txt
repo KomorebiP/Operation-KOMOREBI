@@ -1,0 +1,400 @@
+PAPER I — BOUNDED INDEPENDENT MATHEMATICAL AUDIT
+Date: 2026-10-08 (UTC)
+
+Normalized target: the algebraic seed-rank cyclicity, exact-sequence,
+shared/independent direct-sum and tensor bounds; the finite-dimensional cyclic
+matrix criterion; finite Banach packet conditioning; and the unnumbered packet
+quotient microexample immediately before quotient-packet descent.
+
+PRIMARY BASELINE VERDICT: refuted, with the smallest valid counterexamples.
+The baseline's cyclic-matrix criterion omits a necessary nonzero-space
+hypothesis; its conditioning lower bound omits the same hypothesis; and its
+quotient microexample incorrectly promises unchanged nonzero block support.
+The principal seed-rank formulas themselves are correct, including cardinal
+ranks, but three raw proofs are written only for finite generating lists.
+
+This is a read-only, bounded independent derivation by a delegated auditor.
+It is not an audit of every Paper I claim, a novelty review, a new certification
+of the Lean package, or a review of the companion papers. No manuscript was
+edited by this auditor. A second delegation attempt was unavailable because
+all team slots were occupied. The derivations below were made directly from
+the supplied definitions and raw proof text, not from dashboard verdicts.
+
+AUTHORITATIVE BASELINE
+Path: /workspace/scratch/963fbb80f50e/paper_input/current/Komorebi_Paper_I_Final_Edition_2026-10-05/editable/traditional/Paper_I_Traditional_Final.tex
+SHA-256: 3e45b1d2fccc847645178a8cbdac6777f4114ec22e6f962e1913cf958d95b352
+No applicable AGENTS.md was found on the source's ancestor directories.
+No .mathbox ledger is present in the supplied working tree.
+Skill: mathbox:proof-audit, exact text relayed by root to tmp/proof_audit_skill.md;
+canonical URI:
+skill://mathbox@openai-curated-remote/root/.codex/plugins/cache/openai-curated-remote/mathbox/3.2.0/skills/proof-audit/SKILL.md
+Relevant general-logic, category/action, representation, and source-check
+obligations were read from tmp/obligation-checklists.md.
+
+1. EXACT SOURCE CARDS AND BASELINE VERDICTS
+
+A. prop:cyclic-characterization, lines 708–722
+Record: PSC-I-P-CYCLIC-CHARACTERIZATION
+Objects: unital ring A and nonzero unital left A-module M.
+Conclusion: srank_A(M)=1 iff some m has Am=M.
+Verdict: proved as written.
+A one-element generating set gives rank at most 1. Rank cannot be 0 for
+nonzero M, because the empty hull is 0. Conversely a minimum set of cardinality
+1 is a singleton and is a cyclic vector. No finite-generation assumption must
+be added: a rank-one module is already finitely generated. If M=0 were included,
+0 would generate but srank(0)=0; the printed M != 0 assumption correctly
+handles this boundary.
+
+B. thm:exact-sequence-bounds, lines 799–827
+Record: PSC-I-T-EXACT-SEQUENCE-BOUNDS
+The requested alias thm:exact-sequence-rank does not occur; this is the actual
+label of the exact-sequence seed bounds.
+Objects: any algebraic short exact sequence 0 -> L -> M -> N -> 0 of left
+A-modules, over a unital ring, with no finiteness or topology assumption.
+Conclusion: srank_A(N) <= srank_A(M) <= srank_A(L)+srank_A(N).
+Verdict on raw argument: incomplete, with the smallest missing implication
+being the treatment of arbitrary cardinal-sized generating families.
+The formula is true for the full stated domain. The printed upper proof
+chooses lists l_1,...,l_r and n_1,...,n_s, so literally proves the finite-rank
+case. Safe completion: choose minimum generating sets indexed by I and J;
+lift each quotient generator; their union generates M. Every particular
+pi(m) uses only a finite subset F of J. Subtract the same finite combination
+of chosen lifts; the remainder lies in iota(L) and uses finitely many
+l_i. The generating set has cardinality at most |I|+|J|. The quotient lower
+bound follows from the already proved quotient monotonicity.
+Boundary checks: L=0 gives M isomorphic to N; N=0 gives M isomorphic to L;
+both zero give 0 <= 0 <= 0. Infinite scalar modules k^(I) and k^(J) give
+rank |I|+|J| for their scalar direct sum, consistently with cardinal addition.
+No topological exact-sequence assertion is made or obtained by this proof.
+
+The nearby hypothesis guide incorrectly mentions a lower bound involving K
+and restriction/lifting hypotheses supposedly printed in this theorem. There
+is no such lower bound. Safe wording: the quotient gives a lower bound;
+L needs its own generators for the upper bound. Minimal warning example:
+A=k[x,y], M=A, L=(x,y), N=A/L. M and N have rank 1 while L has rank 2. Indeed
+L/(x,y)L has basis x,y, so one generator cannot generate L. No general
+srank(L) <= srank(M) should be introduced.
+
+C. prop:shared-direct-sum, lines 830–846
+Record: PSC-I-P-SHARED-DIRECT-SUM
+Objects: a single A acting diagonally on M direct-sum N.
+Conclusion: max(r_M,r_N) <= rank_A(M direct-sum N) <= r_M+r_N.
+Verdict: proved as written, once 'generators' is read as arbitrary indexed
+families, as permitted by the definition. Coordinate projections give the
+lower bound, and embedded minimum generating sets give the upper bound.
+The zero cases pass. For scalar A=k and M=N=k, rank of the sum is 2 although
+the component ranks are 1; hence the maximum lower bound can be strict.
+
+D. thm:independent-direct-sum, lines 848–878
+Record: PSC-I-T-INDEPENDENT-DIRECT-SUM
+The requested alias thm:direct-sum-rank does not occur; this is the actual
+label for the independent direct-sum formula.
+Objects: left A-module M, left B-module N; product-ring action
+(a,b)(m,n)=(am,bn) on the finite direct sum.
+Conclusion: rank_(A x B)(M direct-sum N)=max(rank_A(M),rank_B(N)).
+Verdict on raw argument: incomplete, with the missing implication being
+cardinal indexing rather than a finite list of length r.
+The formula is true as stated. Choose an index set I of cardinality the
+maximum, inject both minimal generating index sets into I, and extend each
+family by zeros. For a pair (m,n), take the finite union F of the supports
+used in its two expressions. Then
+(m,n)=sum_(i in F) (a_i,b_i)(m_i,n_i).
+Thus the paired family generates and has cardinality at most |I|. The lower
+bound is the two semilinear coordinate projections. Cardinal comparisons and
+choices here are the ordinary classical set-theoretic convention also used
+in the project's existing Lean definitions. If both ranks are 0, I is empty
+and the module is 0. If just one is 0, pair its zero family with the other
+family. Infinite cardinal ranks use finite supports for each vector and do
+not require any infinite sum or completion.
+
+The section recap at baseline line 981 says 'exactly additive for independent
+product actions'. This is false and contradicts the displayed theorem.
+Smallest nonzero example: A=B=k and M=N=k have independent-product rank 1,
+not 1+1=2, because (1,1) generates using coefficients in k x k. Replace
+'additive' with 'given by the maximum'. The single-operator proof correctly
+uses the maximum; it must retain that formula.
+
+E. prop:tensor-bound, lines 881–901
+Record: PSC-I-P-TENSOR-BOUND
+Objects: unital k-algebras A,B over a field, and left modules M,N; algebraic
+tensor product with (a tensor b)(m tensor n)=am tensor bn.
+Conclusion: rank_(A tensor B)(M tensor N) <= rank_A(M) rank_B(N).
+Verdict on raw argument: incomplete, with the missing implication being
+arbitrary cardinal-indexed generating sets.
+The formula is true. Choose generating families indexed by I,J of minimum
+cardinality. Bilinearity and the finite expressions for m,n express each
+simple tensor as a finite sum of (a tensor b)(m_i tensor n_j). Simple tensors
+span the algebraic tensor product, so the I x J family generates. Its image
+cardinality is at most |I||J|. If either module is 0, its rank is 0, the
+product family is empty, the tensor product is 0, and cardinal multiplication
+0 times any cardinal is 0. This does not prove a completed tensor bound.
+
+The stated warning against universal equality is correct. A concrete strict
+example follows from the project's semisimple formula: take A=B=M_2(k),
+M=k^2, N=(k^2)^3. The factor ranks are 1 and 2. A tensor B is M_4(k), and
+M tensor N is three copies of its natural four-dimensional simple module,
+so its rank is ceil(3/4)=1 < 2. This example is not a new dependency of the
+bound and need not be added to the manuscript.
+
+F. cor:cyclic-matrix, lines 1310–1328
+Record: PSC-I-C-CYCLIC-MATRIX
+Objects in raw statement: finite-dimensional X over arbitrary k, with T in
+End_k(X) as established in the section; no X != 0 assumption.
+Conclusion: equivalence of cyclic vector, rank 1, cyclic primary components,
+one invariant factor, minpoly=charpoly, and geometric multiplicity 1 at every
+eigenvalue after scalar extension to an algebraic closure.
+Verdict: refuted, with the smallest valid counterexample X=0 and T=0.
+The empty family generates X and its seed rank is 0, so item (ii) is false.
+The zero vector generates X, so (i) is true under the actual cyclic definition.
+There are no nonzero primary components and no eigenvalues, making (iii)
+and (vi) vacuous. Rational canonical form has zero nonconstant invariant
+factors, so (iv) is false. With the standard zero-space convention, both
+polynomials are 1, making (v) true. The equivalence already fails from (i)
+and (ii), independently of any convention on minpoly.
+
+Least correction: require X != 0. Specify item (iii) as 'Every nonzero
+p-primary component is cyclic.' Correct the proof sentence 'every mu_p(T)
+equals one' to 'every mu_p(T) belonging to a nonzero primary component equals
+one'. An absent component has mu_p=0. This is a proof quantifier repair even
+when X != 0. Example: T=0 on k has mu_t=1 and mu_(t-1)=0, yet is cyclic.
+The corrected criterion passes one-dimensional cases, repeated same-primary
+blocks (rank at least 2), and distinct primary cyclic summands (rank 1 by
+Chinese remainder combination). No algebraic-closure, separability, or
+algebraic-closed base field restriction should be added. The existing theorem
+correctly concerns arbitrary fields and then a scalar extension.
+
+G. prop:conditioned-coordinates, lines 1630–1659
+Record: PSC-I-P-CONDITIONED-COORDINATES
+Objects: Banach X and a finite bounded packet system. Analysis A_P and
+synthesis S_P are inverse bounded maps for a finite product norm equivalent
+to the maximum norm; this is the exact cited thm:banach-packets contract.
+Conclusion: kappa=||A_P||||S_P|| >= 1; both coordinate-operator norm estimates
+have factor kappa.
+Verdict: refuted, with the smallest valid counterexample X=0.
+Take one packet P_1=0=I_X (or the permitted empty packet family). Both maps
+are the zero maps between zero spaces, so both norms and kappa are 0. Thus
+kappa >= 1 is false. The proof's equality ||I||=1 requires X != 0.
+Both norm estimates themselves remain valid at zero: all terms are 0.
+For nonzero X the inverse identities and submultiplicativity give precisely
+the stated estimates and kappa >= 1; zero packet summands cause no problem.
+Least correction: add X != 0 to the lower-bound claim, or to the whole
+proposition if uniform local scope is preferred. Clarify the condition-number
+definition's 'Banach direct-sum norm' as the equivalent finite product norm
+of thm:banach-packets, so boundedness uses the actual named norm contract.
+An orthogonal Hilbert sum in its usual l2 norm gives kappa=1, consistent with
+the interpretation. No orthogonality hypothesis is needed for the theorem.
+
+H. Unnumbered 'Packet descent to a quotient' microexample, lines 2709–2712,
+immediately before thm:quotient-packet-descent
+Objects: X=X_1 direct-sum X_2, K subset X_1, and T preserving K.
+Conclusion in raw explanation: quotient packets are X_1/K,X_2, and T descends
+with 'exactly the same block pattern', using induced quotient blocks.
+Verdict: refuted, if 'block pattern' denotes the pattern of nonzero blocks,
+as it does in the surrounding support discussion.
+Smallest counterexample that retains both quotient packets nonzero:
+X_1=k e_1 direct-sum k e_2, X_2=k e_3, K=k e_1,
+T(e_3)=e_1, T(e_1)=T(e_2)=0.
+Then T preserves K; the original source-2 target-1 block is nonzero; but all
+induced quotient blocks are zero. The quotient still has the two nonzero
+one-dimensional packets represented by e_2 and e_3. Thus the failure is not
+just removal of a zero packet. In dimension 2 the analogous example with
+K=X_1 already contradicts literal preservation, but removes a packet.
+Safe corrected statement: source/target organization and every prescribed
+zero block descend; a nonzero block may vanish, so support can shrink.
+For retained quotient indices, Supp(overline T) is contained in Supp(T).
+K=0 gives unchanged blocks; K=X gives a zero quotient; K=X_1 removes the
+first packet. The quotient-packet theorem and block-descent corollary
+immediately after the example are already correct: packet invariance and
+T(K) subset K make all induced maps well defined, and
+bar T_(beta alpha) pi = pi T_(beta alpha)
+is exactly the correct statement. No reverse nonvanishing implication
+follows from this identity.
+
+2. DEFINITION AND CARDINALITY CONTRACT
+
+Baseline def:generated-hull, lines 484–495: Hull_A(S)=sum_(s in S) A s for
+S subset X. This is the submodule sum, so each element is a FINITE linear
+combination even when S is infinite.
+Baseline def:seed-rank, lines 694–705: min{|S|:AS=M}, with no finite-set
+restriction; the text explicitly says 'When the value is finite'. The
+analogous topological definition minimizes sets whose hull closure is X.
+These definitions are cardinal-valued. A minimum exists under ordinary
+classical set theory because S=M is a generating set and cardinalities are
+well ordered. The zero module is generated by the empty set.
+
+Contradictory baseline exposition occurs at the notation table (line 275),
+seed-rank section roadmap (line 690), and compact glossary (line 3671), each
+calling rank the minimum size of a FINITE family. For k^(N) with scalar
+A=k, rank is aleph_0; no finite generating family exists. A fortiori no
+finite minimum is defined there. Change this prose to cardinality and
+state that a finite value is the usual minimal number of generators.
+The finite distinguished family in def:seed-system is a separate valid
+choice of object; it does not restrict the general module rank definition.
+Do not silently replace the rank by N union {infinity} or add finite-
+generation hypotheses to general formulas: that changes the actual source
+contract and loses the distinctions between infinite cardinal ranks.
+
+Project-local corroboration, inspected directly (no new Lean build):
+- source/traditional_v1.3.1/formalization/lean/KomorebiVerification/SeedRankBasics.lean:
+  seedRank := top.spanRank is Cardinal; seedFinrank is a distinct natural-valued
+  notion; seedRank_eq_zero_iff and seedRank_lt_aleph0_iff cover zero and infinite
+  ranks; multiSeedMap uses arbitrary Finsupp indexing.
+- SeedRankOperations.lean: cyclic_iff_seedRank_eq_one; seedRank_prod_le_add;
+  seedRank_prod_productAlgebra; tensor_familyGenerates and
+  seedRank_tensorProduct_le_mul. The product and tensor proofs use arbitrary
+  generating sets, cardinal comparisons/products, and finite combinations.
+- verification/lean_guide/theorem_map.json rows 3, 6, 7, 8 explicitly identify
+  the unrestricted cardinal cyclicity, shared bound, independent maximum,
+  and tensor bound. This independently confirms the intended definitions.
+These source inspections establish scope compatibility, not execution of
+formal checks in this turn.
+
+3. DEPENDENCY GRAPH AND OBLIGATION MATRIX
+
+Internal graph:
+1. hull as finite combinations + minimum generator cardinality -> cyclicity.
+2. hull + surjective intertwiner -> quotient lower bound.
+3. quotient lower bound + independently chosen L-generators and N-lifts ->
+   exact-sequence upper bound; disjoint union gives cardinal addition.
+4. projections + separate embedded families -> shared direct-sum bounds.
+5. semilinear projections + coordinatewise product-ring coefficients +
+   common padded cardinal index -> independent maximum.
+6. tensor action + bilinearity + spanning by simple tensors + Cartesian
+   product of generating sets -> cardinal tensor upper bound.
+7. primary decomposition/local chain-count formula -> maximum primary count;
+   nonzero space + nonzero sectors -> cyclic criterion; rational canonical
+   form, CRT and the scalar-extension/Jordan polynomial bridge finish it.
+8. finite bounded packet isomorphism + nonzero X gives ||I||=1 -> conditioning;
+   inverse identities + submultiplicativity give both norm estimates.
+9. invariant projectors + T(K) subset K -> well-defined quotient blocks;
+   commuting quotient identities preserve zeros, not nonzero support.
+No circular dependency appears in these bounded implications.
+
+Obligations:
+- Left-module handedness and product/tensor action types: PASSED.
+- Arbitrary cardinal seed-rank definition: PASSED; finite-only exposition FAILED.
+- Raw finite-list proofs in B,D,E on infinite domains: FAILED as written;
+  cardinal-family completions above resolve exactly the missing implication.
+- Zero rank, empty generating families, zero factors: PASSED for A–E.
+- Shared versus independent action distinction: PASSED in formulas;
+  independent-action recap additive claim FAILED.
+- Zero-dimensional cyclic criterion: FAILED; corrected nonzero domain PASSED.
+- Absent primary sectors in cyclic proof: FAILED quantifier; corrected
+  nonzero-sector qualification PASSED.
+- Norm contract and bounded coordinate operators: PASSED under the cited
+  maximum-equivalent norm contract; explicit norm wording recommended.
+- Zero-dimensional conditioning lower bound: FAILED; nonzero correction PASSED.
+- Quotient well-definedness, invariance and block descent: PASSED.
+- Nonzero block-pattern preservation through quotient: FAILED; containment PASSED.
+- Topological exact sequences or completed tensor claims: OUT OF SCOPE.
+- Global theorem status, historical novelty, full Lean certification: OUT OF SCOPE.
+
+The cyclic criterion still uses the baseline's declared classical inputs
+(primary decomposition, rational canonical form, CRT, and Jordan form). The
+project's formal cyclic_matrix_*_of_primary_decomposition declarations
+explicitly supply canonical-form polynomial bridges as assumptions and use a
+positive realized multiplicity and a realized maximum eigenvalue. They do
+not independently formalize the entire arbitrary-field classification. This
+audit does not upgrade that formal coverage. External exact-text verification
+of the canonical-form literature is NOT ADDRESSED; the source dependency is
+retained as a named classical input. No external-source lookup was essential
+to identify or fix the demonstrated boundary failures, so no browsing was
+performed. No claim depends on numerical sampling or a computed finite range.
+
+4. SAFE CORRECTIONS AND BLAST RADIUS
+
+Required local corrections:
+- Preserve def:seed-rank and every displayed rank formula.
+- Recast exact-sequence, independent direct-sum, and tensor proofs using
+  minimum arbitrary-indexed families and finite support per vector.
+- Clarify shared-bound generating families likewise.
+- Correct finite-only descriptions in orientation, seed-rank roadmap and
+  glossary. Keep finite seed-system and finite free-cover hypotheses intact.
+- Replace independent-action recap 'additive' by 'maximum'.
+- Replace the stale exact-sequence guide by the actual quotient/lift logic.
+- Add X != 0 at cor:cyclic-matrix; qualify item (iii) and its mu_p proof.
+- Add X != 0 to prop:conditioned-coordinates (or just its kappa lower bound);
+  clarify the norm definition by the thm:banach-packets contract.
+- Correct the quotient microexample to allow nonzero blocks to vanish and
+  zero quotient packets to be removed. Preserve the theorem and corollary.
+
+Stable identifiers and labels should stay unchanged. Cardinal proof repairs
+and cardinality prose agree with the existing formal sources; no Lean edit
+is required. The two nonzero restrictions change their local mathematical
+contracts and must be recorded as corrections to the expanded statements,
+not as merely typography. The mu_p sentence corrects proof quantification.
+Quotient support wording narrows an unnumbered explanation to the identity
+already proved by block descent; that theorem needs no strengthening.
+The single-operator theorem depends on the independent maximum and remains
+valid; no exported rank formula is changed. Stable concordance references
+remain valid. The read-only baseline record above must not be overwritten
+with a verdict belonging to an edited manuscript.
+
+Cheapest next check: inspect the final exact label blocks, revised glossary,
+and quotient microexample; verify the concrete zero/support counterexamples
+are either excluded or described correctly; pin the corrected source hashes.
+No new tests that merely mirror these formulas are needed.
+
+5. SOURCE AND COMPUTATION CHECKS
+
+Commands: targeted rg -n searches for actual labels and conventions; sed -n
+reads of exact raw statement/dependency/proof blocks and their definitions;
+sha256sum of the authoritative baseline; targeted reads of the existing Lean
+source and theorem map; an ancestor-path AGENTS.md check.
+The prior project bounded-audit report was inspected for scope and known
+failed versions. Its older audit treats other named foundation claims and
+does not resolve these newly targeted cyclic/conditioning/quotient boundaries.
+No build, numerical experiment, random search, symbolic surrogate, or external
+source fetch was used to infer universal correctness in this audit.
+
+6. APPENDED CORRECTED-SOURCE RECHECK (2026-10-08)
+
+Corrected scoped verdict: proved as written for the inspected corrected
+contracts, with the same declared canonical-form classical inputs retained.
+This verdict applies only to the targets below. It does not certify other
+parts of the monograph or the build/rendered publication.
+
+Read exact current files:
+- monograph/source/02_foundations.tex, lines 365–396, 475–579, 989–1006.
+- monograph/source/03_packets_and_graphs.tex, lines 265–330.
+- monograph/source/04_transport.tex, lines 185–274.
+- monograph/source/01_orientation.tex, notation row near line 65.
+- monograph/source/06_reference.tex, glossary row near line 15.
+
+Rechecks:
+1. Cyclic-characterization retains its M != 0 hypothesis; PASSED.
+2. Exact-sequence proof chooses least-cardinality families I,J, lifts each
+   n_j, and uses finite F for each vector; PASSED including empty/infinite cases.
+3. Shared direct-sum proof uses arbitrary minimum families and finite sums;
+   PASSED, with both displayed bounds unchanged.
+4. Independent product proof treats r as a cardinal, uses a common index I,
+   pads by zeros, takes common finite support F, and handles both zero modules;
+   PASSED, with displayed maximum unchanged.
+5. Tensor proof uses I x J, finite expansions and the algebraic tensor product,
+   and explicitly handles an empty factor; PASSED.
+6. Seed-rank definition unchanged; orientation/glossary now say cardinality;
+   roadmap accurately specializes its introductory description to finitely
+   generated modules; PASSED.
+7. Exact-sequence guide now describes independently chosen L generators and
+   lifted quotient generators. Recap now says independent maximum; PASSED.
+8. Cyclic-matrix criterion now says X != 0 of finite dimension, and item (iii)
+   and its proof concern only nonzero primary components; PASSED. The original
+   zero-space counterexample is excluded without adding a field restriction.
+9. Packet condition-number definition explicitly cites a finite product norm
+   equivalent to maximum; conditioning proposition assumes X != 0; PASSED.
+   The original zero-space counterexample is excluded. The stronger norm
+   comparisons happen also to hold at zero, but the corrected proposition
+   conservatively states all conclusions under one nonzero contract.
+10. Quotient microexample now says the source/target organization persists,
+    induced nonzero blocks can become zero, support can shrink, and zero
+    packets are removed. Quotient theorem/block corollary remain unchanged
+    except editorial phrasing; PASSED against the explicit e_3 -> e_1 example.
+
+Corrected-file SHA-256 values at this recheck:
+e35820c311c316103884a59c00b3c5a4dc9744765a45327fa684e8d1f66636f1  /workspace/scratch/963fbb80f50e/monograph/source/02_foundations.tex
+b03d2ee5af6b58a0931d3e85538d4e2e2e60a27b13decb423240e6d47f4d579d  /workspace/scratch/963fbb80f50e/monograph/source/03_packets_and_graphs.tex
+b0d9c9e8cac6f35094f83270c539ea90539a178e7baf7d4f341db7f6c03e7023  /workspace/scratch/963fbb80f50e/monograph/source/04_transport.tex
+1dac0aaaac228cdae0be1499ba7c6cb1b7e75d504934685d726f984984835282  /workspace/scratch/963fbb80f50e/monograph/source/01_orientation.tex
+51d27f7f963f81401048336f4178fafb82f3af8e7357bfec2f1d1922dea1ef34  /workspace/scratch/963fbb80f50e/monograph/source/06_reference.tex
+
+The baseline hash was checked again before writing this report and is unchanged.
