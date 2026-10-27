@@ -1,0 +1,12 @@
+import Komorebi
+
+#print axioms Komorebi.ResidualSystem.krr_iff_krr0_of_flattenable
+#print axioms Komorebi.ResidualSystem.exists_positive_depth_obstruction_of_krr_not_krr0
+#print axioms Komorebi.FirstOrderResidual.schema_iff_compactness
+#print axioms Komorebi.FirstOrderResidual.schema
+#print axioms Komorebi.SizedResidualSystem.exists_positive_depth_obstruction_at
+#print axioms Komorebi.FirstOrderResidual.sizedSystem_krr0_aleph0
+#print axioms Komorebi.FirstOrderResidual.sizedSystem_krr_of_aleph0_le
+#print axioms Komorebi.AbstractLogic.krr0Schema_iff_kappaCompact
+#print axioms Komorebi.FirstOrderResidual.abstractLogic_kappaCompact_aleph0
+#print axioms Komorebi.FirstOrderResidual.abstractLogic_krr0Schema_aleph0
