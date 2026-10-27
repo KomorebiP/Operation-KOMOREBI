@@ -1,0 +1,659 @@
+% Canonical theoretical draft. Small exact illustrations are separate from proofs.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,microtype}
+\usepackage{amsmath,amsthm,mathtools,newtxmath}
+\usepackage{booktabs,array,tabularx,longtable,graphicx,tocloft}
+\usepackage{fancyhdr,titlesec,needspace,placeins,enumitem}
+\usepackage{xcolor}
+\definecolor{ink}{HTML}{172A44}\definecolor{muted}{HTML}{5B6778}
+\usepackage[pdfencoding=auto,psdextra]{hyperref}\usepackage{bookmark}
+\hypersetup{hidelinks,pdftitle={Grounded Abstraction: Identifiability, Representation Change, and the Limits of Learning},pdfauthor={Komorebi P.},pdfsubject={A theoretical account of evidence-relative abstraction, correction memory, and calibrated continuation}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Grounded Abstraction}}\fancyhead[R]{\small Theoretical draft, 2026}
+\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{.3pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{.65em}{}
+\titleformat{\part}[display]{\Large\bfseries}{\partname\ \thepart}{.4em}{}
+\titlespacing*{\part}{0pt}{0pt}{1.6em}
+\titlespacing*{\section}{0pt}{2.5ex plus .4ex}{1.2ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus .3ex}{.8ex}
+\setlength{\parindent}{1.2em}\setlength{\parskip}{.24em}\setlength{\emergencystretch}{2em}
+\clubpenalty=10000\widowpenalty=10000\displaywidowpenalty=10000\raggedbottom
+\setlength{\textfloatsep}{18pt plus 2pt minus 2pt}
+\setlist{leftmargin=1.5em,topsep=.4em,itemsep=.25em,parsep=0pt}
+\setcounter{tocdepth}{1}\setlength{\cftbeforesecskip}{2pt}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{counterexample}[theorem]{Counterexample}
+\newcommand{\X}{\mathcal X}\newcommand{\Y}{\mathcal Y}\newcommand{\Z}{\mathcal Z}
+\newcommand{\A}{\mathcal A}\newcommand{\C}{\mathcal C}\newcommand{\E}{\mathcal E}
+\newcommand{\Hh}{\mathcal H}\newcommand{\Pp}{\mathcal P}\newcommand{\TV}{d_{\mathrm{TV}}}
+\newcommand{\im}{\operatorname{im}}\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Span}{\operatorname{span}}\newcommand{\Pow}{\mathcal P}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}\thispagestyle{empty}
+\vspace*{.25in}
+\noindent{\color{muted}\small\textsc{Operation Komorebi}\hfill\textsc{Theoretical research manuscript}}\par
+\vspace{.65in}
+\noindent{\color{ink}\fontsize{36}{41}\selectfont\bfseries Grounded Abstraction\par}
+\vspace{.20in}
+\noindent{\fontsize{17}{22}\selectfont Identifiability, Representation Change,\\and the Limits of Learning\par}
+\vspace{.28in}\noindent{\color{ink}\rule{\textwidth}{.85pt}}\par
+\vspace{.16in}
+\noindent\textbf{Komorebi P.}\hfill\textit{First theoretical draft}\\
+\noindent 9 October 2026\hfill Version 0.1.0\par
+\vspace{.46in}
+\noindent{\large\bfseries Abstract}\par\smallskip
+\noindent A useful abstraction need not identify the system that realizes it. It must, however, be justified by the information available to its user. This paper studies that requirement through a finite evidence contract, an exact memory theory for later correction, and a linear model of partially calibrated operations. We distinguish identification from a probability law, identification from one finite record, and the existence of one executable predictive representation. For reusable finite dynamics, accessible evidence must separate the behavioral states required by future operations. When the question changes, a nondestructive diagnostic interface yields an exact distinction between reinterpretation, acquisition of new information, and impossibility within the unchanged interface. Destructive experiments show why pairwise distinguishability need not compose into one investigation. A correction signature characterizes the smallest retained state that preserves every admitted future elimination of candidate models. For partition evidence, its size is determined by attainable evidence--target pairs, rather than by either marginal alone. With noisy data, ambiguity radius, model discrepancy, and numerical error have distinct roles. Finally, exact linear calibration determines a maximal invariant domain on which every finite operation sequence is identifiable even when the global operators are not. The results connect evidence, representation, memory, and continuation without requiring a large agent implementation. The mathematical arguments are supported by small exact illustrations, not by neural training or an unrestricted claim of machine understanding.
+\vfill
+\noindent\rule{\textwidth}{.4pt}\par\smallskip
+\noindent{\color{muted}\small\textbf{Scope.} Finite models and finite-dimensional linear systems, with explicit assumptions and self-contained proofs. Established ingredients are acknowledged. This draft does not claim independent peer review, a learned physical-semantic interface, or proof-assistant verification.}
+\end{titlepage}
+\hypersetup{pageanchor=true}\pagenumbering{roman}
+\begingroup\small\setlength{\parskip}{0pt}\tableofcontents\endgroup
+\clearpage
+\section*{Reading the draft}\addcontentsline{toc}{section}{Reading the draft}
+The central object is not an internal vector considered in isolation. It is a representation together with the evidence available to initialize it, the operations it supports, the questions it answers, and the future corrections it must permit. The paper asks which of those obligations can be met simultaneously.
+
+Part I distinguishes identification of a hidden realization from justification of a reusable predictive state. Part II studies new questions, the cost of acquiring missing distinctions, and memory that preserves later correction. Part III separates exact certainty from noisy evidence and gives a quantitative uncertainty certificate. Part IV determines what partial linear calibration can justify over arbitrarily long operation sequences.
+
+\paragraph{Relation to the existing collection.}
+\emph{Machine Understanding} develops supplied representations, explanatory artifacts, correction transport, and their common resource contracts~\cite{understanding}. \emph{Self-Improving Intelligence} studies finite repair discovery and changes to discovery procedures~\cite{selfimproving}. \emph{Sufficient Resolution} treats behavioral quotients, hidden memory, reconstruction, and calibration~\cite{resolution}. The present contribution is organized around a different source of uncertainty: the evidence may leave several underlying realizations possible. A representation is justified only to the extent that its intended uses survive that ambiguity. Earlier manuscripts are source relationships, not claims that every result here is already formally verified.
+
+\paragraph{What is and is not proposed.}
+Behavioral quotients, testing bounds, compatible-model arguments, invariant subspaces, and set-intersection updates have established mathematical foundations. Their appearance here is not a claim of priority. The proposed synthesis makes evidence access, corrective memory, and the identifiable continuation domain parts of the same representation contract. The exact correction-memory count and calibrated-domain construction are derived in full within their stated models. A broader novelty assessment remains separate.
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}\toprule
+Symbol & Meaning\\\midrule
+$\omega\in\Omega$ & A candidate world, including any fixed model or historical tag.\\
+$K^\pi(h\mid\omega)$ & Probability of observable record $h$ under one permitted protocol.\\
+$r:X\to Z$ & Retained evidence or an available initial code. Its access is explicit.\\
+$F_a$, $q$ & A state transition and the task observation it must preserve.\\
+$x\sim_{\C}y$ & Equality of every task observation after every permitted finite word.\\
+$V\subseteq\Omega$ & A set of candidate worlds, including the possible empty set.\\
+$E\in\E$ & An admitted evidence event used to filter $V$.\\
+$\Sigma(V)$ & The complete signature of future task-valued corrections.\\
+$U$, $S_a$ & A calibrated input subspace and a known operator restriction.\\
+$U_\infty$ & The maximal domain on which calibrated continuation is determined.\\\bottomrule
+\end{tabularx}\end{center}
+\clearpage\pagenumbering{arabic}
+\part{Evidence before representation}
+\section{What does experience justify?}\label{sec:introduction}
+A device displays a bit. A reasoner learns to predict that display perfectly, including what happens when a permitted switch is pressed. It still may not know which physical bit the display describes. The code linking the display to the physical state could be reversed. A second, equally accurate reasoner might use the opposite internal convention. Prediction is real, yet the interpretation remains underdetermined.
+
+That observation does not force a choice between calling every representation meaningless and treating every successful prediction as a complete understanding. It suggests a more precise question. What claims are common to all systems compatible with the evidence? Which of those claims can be realized by one representation that the observer can actually initialize and update? What additional information becomes necessary when the questions change?
+
+\subsection{Three separations}
+Identification of an underlying system, identification of a task-relevant property, and acquisition of a usable representation are distinct. A nuisance parameter can remain unknown while every required prediction is fixed. Conversely, knowing that some accurate representation exists in each possible world does not supply one representation that can be selected from the observer's record.
+
+There is a second separation between a probability law and a finite observation drawn from that law. Two candidate models can have different laws while sharing every finite record in their supports. In that setting the models are identifiable at the level of their laws, but an individual finite record cannot yield error-free discrimination.
+
+The third separation concerns time. A summary may preserve everything required for a present decision while losing the relationship needed to interpret a later measurement. More data arriving tomorrow need not repair what the memory policy erased today. This paper treats that relationship as part of the retained mathematical state.
+
+\subsection{Position among existing theories}
+Classical statistical identification separates parameters that induce different observational laws~\cite{rothenberg}. Predictive state representations use action-conditional predictions as a state description~\cite{psr}. Query learning makes the teacher and the information it returns explicit~\cite{angluin}. These are neighboring answers to different parts of the present problem, not interchangeable definitions of grounding.
+
+Data informativity is especially close to our organizing principle. It asks whether one property or one controller is justified for every system consistent with the data, without necessarily identifying a unique system~\cite{informativity}. Our later linear construction uses this compatible-extension viewpoint for the exact domain of repeated prediction. It is not offered as a replacement for data-driven control theory.
+
+Causal abstraction concerns faithful relationships between mechanisms and their higher-level descriptions~\cite{causal}. Here we ask what evidence makes such a description selectable and which continuations remain determined when parts of the underlying mechanism are unknown. We do not derive a learned encoder from the existence of a commuting equation. State-identification theory also distinguishes individually separable states from a realizable adaptive test~\cite{stateid}. That distinction will matter when measurements alter the system.
+
+\subsection{The intended contribution}
+The main results form a connected argument. Exact grounding is an information factorization through a behavioral quotient. New task distinctions are classified relative to an actual diagnostic interface. Future correction requires a richer memory signature than present target uncertainty. Partial operator calibration can nevertheless justify every future composition on a computable invariant domain. Approximate claims require both a local discrepancy and a bound on the dynamics that may amplify it.
+
+The positive message is not that the observer must recover everything. It is that the observer can often recover exactly the structure its intended operations need, provided the evidence contract is stated honestly. The negative message is that an attractive coordinate system cannot manufacture missing distinctions, missing experiments, or missing bounds.
+
+\section{A calibrated bit with an irrelevant hidden register}\label{sec:sensor}
+Consider eight possible worlds
+\[
+\omega=(s,\theta,k)\in\{0,1\}^3.
+\]
+The physical bit is $s$. The sensor convention is $\theta$, and $k$ is a nuisance bit that none of the admitted operations or questions uses. The display is
+\[
+y=s\oplus\theta.
+\]
+The ordinary action $F$ flips $s$ and leaves the other bits fixed. Its effect on the display is exactly $y\mapsto1-y$, whatever the unknown convention. Reading the current display therefore initializes a two-state representation that predicts every finite sequence of flips.
+
+Neither $s$ nor $\theta$ is identified separately. The two worlds $(0,0,k)$ and $(1,1,k)$ both display zero, and every flip sequence produces the same display in both. That ambiguity is harmless for the original display-prediction contract.
+
+\subsection{A new question}
+Now ask for the physical bit $s$ as well as the display. The old representation is insufficient. The two previously equivalent worlds require different answers. A permitted nondestructive reference measurement returning $\theta$ makes the physical bit recoverable by $s=y\oplus\theta$. The enriched representation can retain $(y,\theta)$, or equivalently $(s,\theta)$. It has four states, not eight. The nuisance bit remains unidentified because no required continuation can detect it.
+
+A new field named ``sensor convention'' does not provide the reference measurement. Nor does repeatedly flipping the physical bit resolve the ambiguity: the complete display history remains the same in the two worlds. Acquisition depends on an additional information channel, not merely a larger memory allocation.
+
+\subsection{A state-changing measurement}
+A different operation $Z$ sets $s$ to zero and then reports the new display. The report is $\theta$. If the old display $y_{\mathrm{old}}$ was retained, then
+\[
+s_{\mathrm{old}}=y_{\mathrm{old}}\oplus y_{\mathrm{after}\ Z}.
+\]
+The current physical state is zero, not $s_{\mathrm{old}}$. A correct account distinguishes the recovered historical value from the new state it will act on.
+
+If the old display was discarded, worlds with opposite old physical bits but the same $\theta$ reach the same current state and give the same future reports. The old physical bit is then irrecoverable through this unchanged interface. A known present state has replaced, rather than identified, the unknown past.
+
+\begin{figure}[tbp]\centering
+\includegraphics[width=.95\linewidth]{figures/sensor_grounding.pdf}
+\caption{One finite sensor model supports different exact abstractions. The current display and flip action need two behavioral states. Adding the physical-bit question requires four, but not the irrelevant nuisance register. Calibration is an information source. Resetting is a physical change.}\label{fig:sensor}
+\end{figure}
+
+\section{Laws, records, and reusable predictive state}\label{sec:grounding}
+\begin{definition}[Finite evidence contract]\label{def:evidence}
+A finite evidence contract has a nonempty candidate set $\Omega$, a family $\Pi$ of permitted protocols, a finite record space $H_\pi$ for each protocol, and kernels $K^\pi(h\mid\omega)$. A target $t:\Omega\to Y$ states what is to be identified. Any hidden model index that is fixed during a protocol is included in $\omega$. The protocol's action choices are functions of its permitted records and independent randomization, not of the unobserved world.
+\end{definition}
+
+Define $\omega\sim_\Pi\omega'$ when their record laws agree for every $\pi\in\Pi$. This relation concerns the complete records, including action choices when those are observable. Equality of individual observation marginals is insufficient.
+
+\begin{proposition}[Law identification and finite-record identification]\label{prop:law}
+The target is a function of the complete family of protocol laws if and only if it is constant on the $\sim_\Pi$ classes. For a fixed protocol $\pi$, an error-free rule $d:H_\pi\to Y$ exists if and only if $t$ is constant on every nonempty support set
+\[
+B_\pi(h)=\{\omega:K^\pi(h\mid\omega)>0\}.
+\]
+Allowing a randomized output rule does not weaken this condition for probability-one correctness in every world.
+\end{proposition}
+\begin{proof}
+For the first claim, factor $t$ through the map sending a world to its tuple of protocol laws. A factor exists precisely when worlds with the same tuple have the same target. For the second claim, a record with positive probability in two worlds must be given the same output. Distinct targets on its support therefore prevent certainty. Conversely, assign each attainable record its support's common target. Every record generated in a world receives that world's target. A randomized error-free rule must place probability one on the required target at every positive-probability record. It cannot do so for two distinct targets at the same record.
+\end{proof}
+
+This elementary factorization does not supply the laws to the learner or bound the sample cost of estimating them. The two clauses answer different questions. A family of distinct laws can be identifiable in the first sense while every available short record remains ambiguous in the second.
+
+\subsection{A canonical meaning for an operational state}
+Let $X$ be a finite nonempty set, let $\A$ be a finite operation alphabet, and let each $F_a:X\to X$ be total and deterministic. Let $q:X\to Y$ be a finite vector of required observations. Different candidate models can be included by taking a disjoint union of their state sets and preserving each model tag under every action.
+
+For a word $w=a_1\cdots a_m$, $F_w$ applies $a_1$ first and $a_m$ last. The empty word is the identity. Define
+\[
+x\sim_\C x'\quad\Longleftrightarrow\quad
+q(F_wx)=q(F_wx')\quad\text{for every finite }w.
+\]
+This is a comparison in a common observation language. It does not require that different models share arbitrary latent coordinates. The behavioral class is a canonical response profile even when its implementation is not identifiable.
+
+\begin{definition}[Exact initialization from available evidence]\label{def:initialization}
+Given an available initial code $r:X\to H$, an exact reusable predictor consists of a finite state set $Z$, an initialization $d:H\to Z$, updates $G_a:Z\to Z$, and an output map $\bar q:Z\to Y$ such that
+\[
+\bar q\,G_w\,d\,r(x)=q(F_wx)
+\]
+for all $x$ and all finite words. After initialization the predictor receives the operation names, but no additional world observations or hidden state.
+\end{definition}
+
+\begin{theorem}[Evidence sufficient for one exact predictive realization]\label{thm:grounding}
+An exact reusable predictor exists if and only if
+\[
+r(x)=r(x')\quad\Longrightarrow\quad x\sim_\C x'.\tag{1}
+\]
+When it exists, the behavioral quotient $X/{\sim_\C}$ supplies a predictor with the fewest initialized states. Every predictor initialized for all $x\in X$ requires at least $|X/{\sim_\C}|$ distinct values in $d(r(X))$.
+\end{theorem}
+\begin{proof}
+Equal initial codes yield equal initialized states. The same operation sequence must then produce equal predicted outputs. Exactness forces equality of all true continuation outputs, proving necessity.
+
+For sufficiency, note that $x\sim_\C x'$ implies $F_ax\sim_\C F_ax'$ because any subsequent word can be prefixed by $a$. The quotient consequently supports $G_a([x])=[F_ax]$ and $\bar q([x])=q(x)$. Condition (1) makes $d(r(x))=[x]$ well defined on the attained initial codes. Arbitrary unused codes can be assigned any quotient state. Induction on word length gives the required equality. Finally, two behaviorally different states cannot have the same initialized predictor state, or a distinguishing continuation would receive the same prediction. Thus the number of initialized values is at least the quotient cardinality.
+\end{proof}
+
+The underlying quotient argument is classical and is developed elsewhere in the collection~\cite{understanding,resolution}. Here its role is to attach a separate initialization condition to a common predictor across the surviving candidate worlds. A quotient can exist while the available record fails to initialize it.
+
+\subsection{Finite checking does not require an infinite list of words}
+Begin with the partition by $q$. Split any block whose members have successors in different current blocks under some action. A strict split increases the number of nonempty blocks, so at most $|X|-|q(X)|$ strict rounds occur. At a fixed point the quotient updates are well defined and preserve every later observation by induction. Any operation-stable refinement of the original output partition refines each round, so the terminal partition is the behavioral equivalence above. This supplies a finite computation when the complete candidate tables are given. It does not make their empirical acquisition free.
+
+\subsection{State identity is relative to the chosen questions}
+In the sensor example, $r=y$ satisfies (1) for display prediction. The quotient has two states even though eight worlds remain in the candidate universe. Adding physical-bit output refines the quotient to four classes and invalidates (1) for that same initial code. Adding the nuisance bit to the target would refine again to eight, but no admitted sensor action reveals it.
+
+Only adding requirements yields a refinement relation automatically. Replacing one task with a different task can produce crossing partitions rather than a finer version of the old one. For example, the partition by display and the partition by physical bit are neither finer nor coarser than one another. A claim of cumulative learning must specify which old questions remain protected.
+
+\subsection{An available predictor is stronger than a worldwise predictor}
+Consider two immutable worlds, one with a permanently zero output and one with a permanently one output. The available initial record is the same symbol in both. Within each world separately, a one-state predictor exists: it simply prints that world's output. There is nevertheless no predictor that can be initialized from the common record and be correct in both. The obstruction is the order of quantifiers,
+\[
+\forall\omega\ \exists P_\omega
+\qquad\text{versus}\qquad
+\exists P\ \forall\omega.
+\]
+The first does not provide a selector for the second. The behavioral quotient of the combined family has two states, but the evidence cannot choose between them. Adding an output observation repairs the initialization problem without changing the mathematical existence of either predictor.
+
+Likewise, a coordinate convention is not an observation. Relabeling a latent state and conjugating its updates can leave every operational prediction unchanged. Without a separately meaningful reference, evidence about those predictions need not favor one coordinate system. A canonical response profile avoids claiming that an arbitrary coordinate name was discovered as a physical entity. It does not prove that the reasoner's actual implementation uses the inferred profile causally.
+
+Thus two distinct questions remain after fitting a predictor. Is it a common valid representation of the possible worlds, and does the observer possess the evidence needed to initialize it? The theorem answers their exact conjunction in a finite model. Efficient acquisition and causal attribution require further premises.
+
+
+\FloatBarrier\clearpage
+\part{New questions and the memory needed to correct them}
+\section{Reinterpretation, acquisition, and irrecoverable distinctions}\label{sec:trichotomy}
+A revised task often invites the vague instruction to learn a better representation. That instruction hides three different possibilities. The old code may already contain everything needed. A new observation may be required. Or the remaining interface may be unable to recover the needed distinction at all.
+
+We first separate these cases in a setting where observations do not interfere with one another. Let $\Omega$ be finite, let $r:\Omega\to Z$ be retained evidence, and let $t:\Omega\to Y$ be the revised target. Let $\E=\{e_1,\ldots,e_m\}$ be a finite family of total, deterministic, nondestructive tests. Each test reads the same fixed world and leaves it unchanged. All tests remain available throughout the investigation. Equivalently, a reset may be allowed if it genuinely restores the same unknown world, including the relevant history. Resetting into a new known state does not satisfy this premise.
+
+For $J\subseteq\{1,\ldots,m\}$, write
+\[
+R_J(\omega)=\bigl(r(\omega),(e_j(\omega))_{j\in J}\bigr).
+\]
+Let the unresolved target pairs be
+\[
+D=\{\{\omega,\omega'\}:r(\omega)=r(\omega'),\ t(\omega)\ne t(\omega')\}.
+\]
+A test covers such a pair when it gives different reports in the two worlds.
+
+\begin{theorem}[Exact revision trichotomy for a reusable test interface]\label{thm:trichotomy}
+Exactly one of the following applies.
+\begin{enumerate}
+\item $D$ is empty. A new decoder of the old code recovers $t$ without new observations.
+\item $D$ is nonempty, but every pair in $D$ is separated by at least one admitted test. Executing all tests recovers $t$, and a selected nonadaptive set $J$ suffices exactly when it covers $D$.
+\item Some pair in $D$ has identical reports under every admitted test. No finite adaptive protocol using this unchanged test interface and $r$ guarantees $t$ in every world.
+\end{enumerate}
+If test $j$ has nonnegative fixed cost $c_j$, the minimum cost of one fixed nonadaptive test set, used for all initial codes in case 2, is precisely
+\[
+\min_{J:\,J\text{ covers }D}\ \sum_{j\in J}c_j.\tag{2}
+\]
+This is not a claim that an optimal adaptive protocol has the same cost.
+\end{theorem}
+\begin{proof}
+If $D$ is empty, the target is constant on each old-code fibre, giving a decoder. Otherwise a set $J$ permits a decoder exactly when no pair with the same old code and different target remains equal on all its test reports. That is exactly pair coverage. In particular, the full finite test family succeeds when every unresolved pair has a separating test.
+
+If a pair survives every test, induction on an adaptive history shows that the two worlds give the same report after each chosen action. The protocol chooses the same next test because its available history is the same. Its stopping decision and output are therefore the same, so it cannot be correct on both targets. Independent randomization does not restore a probability-one guarantee, by conditioning on its random tape. The three cases are exclusive and exhaustive. Formula (2) follows from the equivalence between successful nonadaptive test sets and covers, with exactly the stated additive charges.
+\end{proof}
+
+The cover formulation exposes a concrete resource question without making a large learner part of the theorem. It also identifies what a negative certificate says. An uncovered pair is impossible to resolve through the declared interface. It is not impossible to resolve after a new sensor, retained record, or physical intervention changes that interface. Finding the cheapest cover can itself be difficult. Its formulation is not an efficient universal discovery algorithm.
+
+\subsection{Why experimentwise evidence need not compose}
+\begin{counterexample}[Pairwise separation without a successful investigation]\label{ce:destructive}
+There are three possible initial cases $0,1,2$. Test $a$ reports whether the case is $0$, and test $b$ reports whether it is $1$. Either first test then destroys the accessible case state. Every later test returns a fixed zero report. The target remains the initial case, stored only as an inaccessible historical tag.
+
+Every pair is distinguishable by some permitted first test. Yet beginning with $a$ leaves cases $1$ and $2$ indistinguishable whenever its answer is no. Beginning with $b$ leaves cases $0$ and $2$ indistinguishable. No finite adaptive protocol identifies every initial case. Randomizing the first test cannot guarantee success in every case either.
+\end{counterexample}
+
+The missing premise is not intelligence. It is the ability to combine evidence from mutually destructive inquiries. State-identification work studies related restrictions on adaptive tests~\cite{stateid}. The example makes clear why the target map, physical transition, and record cannot be separated in a general acquisition problem. The full state-changing repair constructions in \emph{Self-Improving Intelligence} address that different model~\cite{selfimproving}.
+
+\subsection{The sensor revisited}
+For physical-bit recovery, an old display and a nondestructive reference measurement satisfy case 2. Without the reference, flip sequences leave the convention ambiguity unresolved. For recovery of the pre-reset physical bit after losing the old display, the surviving states can have the same current physical state, convention, and every future sensor response while having opposite historical targets. That is case 3 relative to the post-reset interface.
+
+A learner should record which kind of failure occurred. A failed search over decoders cannot establish that no new experiment would help. Conversely, repeatedly searching for a decoder cannot reconstruct a target that is not a function of its inputs. Formula length and information access are separate resources.
+
+\section{A minimal memory for future correction}\label{sec:memory}
+The old record can matter even when it does not change today's set of possible answers. The essential information may lie in a relation between a possible answer and an observation that will arrive later.
+
+Let $\Omega$ be a finite model set and $t:\Omega\to Y$ a fixed target. For a candidate set $V\subseteq\Omega$, let
+\[
+Q(V)=t(V)=\{t(\omega):\omega\in V\}.
+\]
+The empty set is permitted. It represents a contradiction between the admitted model family and the evidence, not a successful identification. Let $\E\subseteq\Pow(\Omega)$ be a finite family of evidence events containing $\Omega$ and closed under intersections. Filtering by $E$ sends $V$ to $V\cap E$. The events are known, truthfully interpreted, and do not change the underlying model in this section.
+
+\begin{definition}[Correction signature]\label{def:signature}
+The correction signature of $V$ is
+\[
+\Sigma_{\E,t}(V)=\bigl(Q(V\cap E)\bigr)_{E\in\E}.\tag{3}
+\]
+Two candidate sets have the same signature when every admitted evidence filter leaves the same possible target values, including whether no candidate remains.
+\end{definition}
+
+\begin{theorem}[The coarsest exact memory for admitted corrections]\label{thm:correction}
+Equality of correction signatures is a congruence for all updates $V\mapsto V\cap E_0$. The signature therefore supports well-defined updates and a readout of $Q(V)$. It preserves that readout after every finite sequence of admitted filters.
+
+Conversely, any retained representation with deterministic filter updates and a readout reproducing $Q$ after every such sequence must distinguish every two candidate sets with different signatures. Thus the image of $\Sigma_{\E,t}$ is the smallest exact state space, in cardinality, for this correction contract on all candidate subsets.
+\end{theorem}
+\begin{proof}
+If $\Sigma(V)=\Sigma(W)$, then for every $E\in\E$,
+\[
+Q((V\cap E_0)\cap E)=Q(V\cap(E_0\cap E))
+=Q(W\cap(E_0\cap E)).
+\]
+Intersection closure puts $E_0\cap E$ in $\E$, so the equality is available from the original signatures. It proves $\Sigma(V\cap E_0)=\Sigma(W\cap E_0)$. The $E=\Omega$ coordinate gives $Q(V)$, and induction gives all finite filter sequences.
+
+If two signatures differ, one event $E$ produces different target sets. A retained representation that merged the two candidate sets would update identically on that event and return the same readout, contradicting exactness. Every distinct signature therefore requires a distinct retained value. The signature itself attains that count with the updates just constructed.
+\end{proof}
+
+This is a behavioral quotient of a powerset system. It preserves later task-valued correction, not merely the present prediction. Candidate identities can be discarded when no admitted correction distinguishes them. Contradiction with the entire candidate set remains observable.
+
+\subsection{An exact count when evidence identifies a partition cell}
+Suppose $A_1,\ldots,A_m$ are a partition of $\Omega$ into nonempty cells, and $\E$ consists exactly of all unions of those cells. Define the attainable evidence--target pairs
+\[
+D_t=\{(i,y): y\in t(A_i)\},\qquad r=|D_t|=\sum_i|t(A_i)|.
+\]
+A candidate set induces an occupancy record
+\[
+O(V)=\{(i,t(\omega)):\omega\in V\cap A_i\}.
+\]
+
+\begin{corollary}[Exact correction-memory size for partition evidence]\label{cor:occupancy}
+Two candidate sets have equal correction signatures if and only if their occupancy records agree. On the domain of all subsets $V\subseteq\Omega$, there are exactly $2^r$ distinct signatures. A fixed-length exact binary memory therefore requires at least $r$ bits, and an $r$-bit occupancy vector attains this bound.
+\end{corollary}
+\begin{proof}
+Filtering by cell $A_i$ returns exactly the target values occurring in the $i$th part of $O(V)$. Thus equal signatures imply equal occupancy. Conversely, the target set after filtering by any union of cells is the union of their occupied target values, so occupancy determines every signature coordinate.
+
+Every subset of $D_t$ is realized: for each included pair choose one world in its nonempty intersection $A_i\cap t^{-1}(y)$, and choose no worlds for excluded pairs. These intersections are disjoint for different pairs. Hence the occupancy map has $2^r$ values. Distinct values need distinct memory states by the preceding theorem. Binary counting gives the lower bound, and direct occupancy bits attain it.
+\end{proof}
+
+A particular inquiry may reach fewer candidate sets, reducing the number of attained occupancy records. The bound counts logical states, not interpreter bytes, update work, or evidence acquisition.
+
+The exact evidence family matters. Two worlds $a,b$ in one cell with the same target have identical singleton occupancies. Adding the event $\{a\}$ distinguishes them: one filtered singleton retains the target and the other is empty. A new event that splits a cell can therefore require finer memory.
+
+\subsection{Association can be the missing state}
+\begin{counterexample}[Equal marginals with different corrected answers]\label{ce:marginals}
+In the sensor model, let
+\[
+V_0=\{(s,\theta,k):s\oplus\theta=0\},\qquad
+V_1=\{(s,\theta,k):s\oplus\theta=1\}.
+\]
+Take the target to be $s$ and the evidence cells to be the two values of $\theta$. Both candidate sets currently allow physical bits $\{0,1\}$, and both allow conventions $\{0,1\}$. Yet after the reference reports $\theta=0$, $V_0$ requires $s=0$ and $V_1$ requires $s=1$.
+
+Retaining both marginal possibility sets loses the association needed to use the next measurement. Their equality is not a sufficient criterion for merging the records.
+\end{counterexample}
+
+Here the nuisance bit duplicates every attainable $(\theta,s)$ pair. There are $2^8=256$ raw candidate subsets, but only $2^4=16$ correction signatures. Four occupancy bits preserve every admitted future correction. The present physical-target set alone has only four possibilities, requiring two bits, but that smaller code is inadequate for the correction contract.
+
+Four association bits suffice where eight raw membership bits are redundant and two marginal bits are inadequate.
+
+\begin{figure}[tbp]\centering
+\includegraphics[width=.88\linewidth]{figures/correction_association.pdf}
+\caption{Two evidence histories preserve identical physical-bit and convention marginals. Their joint possibility patterns differ. A reference report selects a column, producing opposite physical-bit conclusions. The nuisance bit is omitted because it changes neither pattern.}\label{fig:association}
+\end{figure}
+
+\subsection{Correction memory has a scope}
+The signature is minimal for its specified target and evidence family. New targets, events, candidate models, state-changing observations, or revised event meanings can split its classes. Old minimality remains a statement about the old contract.
+
+If a future question asks for $k$, the occupancy is insufficient. When every available measurement ignores $k$, expanding the code cannot recover it. A finer signature can exist mathematically without being obtainable from the current interface.
+
+\FloatBarrier\clearpage
+\part{Noisy evidence and quantitative justification}
+\section{Identifiable does not mean certainly identified}\label{sec:noise}
+The earlier exact filters remove a world only when it cannot produce the observation. With noisy channels that criterion can retain every candidate indefinitely. A statistical procedure may nevertheless become increasingly reliable. These are different guarantees, not contradictory descriptions of learning.
+
+For a fixed protocol, let two worlds with different targets generate finite transcript laws $P_0$ and $P_1$. An estimator sees only that transcript and independent randomness. Its average success under equal prior probabilities is bounded by the discrimination in the entire record.
+
+\begin{proposition}[A finite-record discrimination bound]\label{prop:testing}
+For two distinct target values and equal world probabilities, every transcript-based estimator has average success at most
+\[
+\frac{1+\TV(P_0,P_1)}{2},\qquad
+\TV(P_0,P_1)=\frac12\sum_h|P_0(h)-P_1(h)|.\tag{4}
+\]
+A deterministic function or a common stochastic processing channel applied to the transcript cannot increase this upper bound.
+\end{proposition}
+\begin{proof}
+Convert the estimator into a binary test by reporting world zero when it outputs the first target and world one otherwise. A correct target output always gives a correct binary decision. If $f(h)\in[0,1]$ is the test's chance of declaring world zero, its success is
+\[
+\frac12\left(1+\sum_h f(h)(P_0(h)-P_1(h))\right).
+\]
+The sum is at most the sum of positive differences, which equals total variation. This proves (4). If $B(h,z)$ is a common processing channel and $g(z)\in[0,1]$ a processed-record test, then $f(h)=\sum_zB(h,z)g(z)$ is a raw-record test with the same two expectations. Thus every processed decision was already available from the original record.
+\end{proof}
+
+This is an elementary testing and data-processing argument, related to the classical comparison of experiments~\cite{blackwell}. It does not identify the best protocol, establish the correctness of a sensor model, or make independent randomness into additional evidence. If an adaptive protocol is compared, its complete history must be the transcript in (4).
+
+\begin{counterexample}[Distinct laws with no finite certain identification]\label{ce:bernoulli}
+Let the unknown world be $\omega\in\{0,1\}$. A repeated observation is conditionally independent Bernoulli with success probability $1/4$ in world zero and $3/4$ in world one. The two one-observation laws differ, so the world is identified by its law. Every finite binary string nevertheless has positive probability under both worlds. No fixed finite sample supplies an error-free world classifier.
+
+For odd $n$, majority voting is the likelihood-ratio rule. Its error in either world is
+\[
+e_n=\sum_{j=0}^{(n-1)/2}\binom{n}{j}(3/4)^j(1/4)^{n-j}.
+\]
+The first values are $e_1=1/4$, $e_3=5/32$, and $e_5=53/512$. These are exact analytical probabilities, not observed error rates from an agent experiment.
+\end{counterexample}
+
+The example illustrates why logical candidate elimination and statistical confidence should not share a Boolean field named ``known.'' Both candidate worlds remain in the support of every fixed finite record. Their relative likelihoods can become very different. Treating the most likely world as certain discards the distinction that the exact support test preserves.
+
+\begin{figure}[tbp]\centering
+\includegraphics[width=.88\linewidth]{figures/noisy_identification.pdf}
+\caption{Exact majority-test error for two stipulated Bernoulli worlds. The laws differ, and repeated independent evidence reduces error, but every finite record remains compatible with both worlds. The curve is evaluated from the displayed binomial formula.}\label{fig:noise}
+\end{figure}
+
+\subsection{Identifiability is not a uniform rate}
+Distinct models may induce arbitrarily similar laws. Unless a model class imposes a separation condition, a bounded number of observations need not distinguish every pair reliably. The total-variation term exposes that obstruction directly. A data-dependent summary cannot increase the discrimination contained in the actual record.
+
+Conversely, a small class with known, well-separated distributions can admit a useful finite-sample procedure even when exact certainty is impossible. The statistical question is then how much error is acceptable and which assumptions justify its probability bound. We do not add a sample-complexity claim merely by labeling a model family finite. Separation, admissible protocols, and the sampling law have to enter the argument.
+
+\section{An explicit radius for what remains unknown}\label{sec:radius}
+A set of candidate worlds may disagree on some future outputs while agreeing closely on others. It is useful to quantify that disagreement without selecting one world as if it had been identified.
+
+Let $v:\Omega\to\mathbb R^d$ record a fixed finite collection of target quantities, where $d\ge1$. These can be future predictions on specified operation words. For a nonempty $B\subseteq\Omega$, define
+\[
+\ell_j(B)=\min_{\omega\in B}v_j(\omega),\qquad
+u_j(B)=\max_{\omega\in B}v_j(\omega),
+\]
+\[
+m_j(B)=\frac{\ell_j(B)+u_j(B)}2,\qquad
+\rho(B)=\frac12\max_j\bigl(u_j(B)-\ell_j(B)\bigr).\tag{5}
+\]
+The radius concerns coordinatewise prediction in a common frame. It is not an uncertainty measure invariant under arbitrary nonlinear reparameterization.
+
+\begin{theorem}[Ambiguity radius and an explicit prediction certificate]\label{thm:radius}
+For every nonempty finite $B$,
+\[
+\inf_{z\in\mathbb R^d}\ \max_{\omega\in B}\|z-v(\omega)\|_\infty=\rho(B),
+\]
+and $m(B)$ attains the infimum. If $B'\subseteq B$ is nonempty then $\rho(B')\le\rho(B)$.
+
+Fix nonnegative tolerances $\eta,\varepsilon$ and $\delta_{\mathrm{id}},\delta_{\mathrm{model}}\in[0,1]$. Suppose a data record $H$ produces a candidate set $B(H)$ with
+\[
+\Pr\{\omega_*\in B(H)\}\ge1-\delta_{\mathrm{id}}.
+\]
+Suppose a second event, of probability at least $1-\delta_{\mathrm{model}}$, guarantees
+\[
+\sup_{\omega\in B(H)}\|v(\omega)-\widehat v_H(\omega)\|_\infty\le\eta.
+\]
+Read the last supremum as zero when $B(H)$ is empty. When $B(H)$ is nonempty, form the midpoint $\widehat m$ and radius $\widehat\rho$ from $\widehat v_H$. If the returned numerical vector $z$ satisfies $\|z-\widehat m\|_\infty\le\varepsilon$, then
+\[
+\|z-v(\omega_*)\|_\infty\le\widehat\rho+\eta+\varepsilon\tag{6}
+\]
+on an event of probability at least $1-\delta_{\mathrm{id}}-\delta_{\mathrm{model}}$. The rule abstains on an empty candidate set. No independence between the two stated events is required.
+\end{theorem}
+\begin{proof}
+For each coordinate $j$, any point $z_j$ is at distance at least $(u_j-\ell_j)/2$ from one of the two extremes. Taking the largest coordinate width gives the lower bound. The midpoint is within half of every coordinate's width of every candidate, so it attains that bound. Inclusion can only narrow the coordinate ranges.
+
+On the intersection of the coverage and model-accuracy events, the true world lies in the nonempty set and
+\[
+\|z-v(\omega_*)\|_\infty
+\le\|z-\widehat m\|_\infty
++\|\widehat m-\widehat v_H(\omega_*)\|_\infty
++\|\widehat v_H(\omega_*)-v(\omega_*)\|_\infty.
+\]
+The three terms are bounded by $\varepsilon$, $\widehat\rho$, and $\eta$. The union bound gives the probability statement.
+\end{proof}
+
+The center is allowed to be any vector in $\mathbb R^d$. Requiring it to be the prediction of one admissible model can increase the optimum. Nor does a coordinatewise midpoint automatically define a coherent stochastic process or preserve logical invariants. Those are additional constraints on the permitted approximation, not consequences of (5).
+
+\subsection{Three errors and two failure probabilities}
+The radius measures unresolved disagreement among retained candidates. The model discrepancy controls how well their represented predictions match the intended quantities. Numerical error concerns the computation of the returned answer. The coverage probabilities express the chance that the premises fail. They are not added to the numerical tolerance as if they had the same units.
+
+The probability assertion is unconditional over the stated evidence procedure. It is not automatically the same bound conditional on a rare event such as issuance of a certificate. Likewise, repeatedly changing the candidate family or stopping rule requires a validity argument for the actual procedure. A confidence set cannot be assumed valid merely because its contents look plausible.
+
+\subsection{What compression does to the candidate set}
+For a fixed raw-record channel, let $B(h)$ be its exact support set. If only $c(h)$ is retained, the correct support is
+\[
+B_c(z)=\bigcup_{h:c(h)=z}B(h).
+\]
+Indeed, a world can produce the coarse record exactly when it can produce at least one raw record in that fibre. Thus $B(h)\subseteq B_c(c(h))$, and the ambiguity radius cannot decrease for the same target vector. This is an information statement, not a command to retain every byte. The correction signature in Section~\ref{sec:memory} identifies one principled way to compress while retaining the specified future uses.
+
+For general confidence sets rather than exact supports, taking the same union still preserves the original coverage guarantee. It may be conservative. Selecting a smaller coarse-record set requires a new coverage argument, not the assertion that compression should make the model simpler.
+
+\begin{counterexample}[Agreement inside a misspecified family]\label{ce:misspec}
+Suppose every candidate in a supplied family predicts zero for the target, but the actual unmodeled process produces one. The family has radius zero, and its internal arithmetic can be exact. The conclusion is nevertheless wrong because the true process is outside the represented family. Neither a narrow interval nor a successful proof about the family establishes that membership premise.
+\end{counterexample}
+
+This is why model adequacy is not treated as a reward for confidence. In the present paper it is a stated premise, or a separate statistical event, rather than an automatic consequence of a concentrated representation.
+
+\FloatBarrier\clearpage
+\part{Grounded continuation without complete identification}
+\section{What a partial operator calibration determines}\label{sec:linear}
+The finite-world examples show that complete identification can be unnecessary. A linear setting makes the positive result more structural. We will determine the exact domain on which every future operation sequence is already fixed by partial calibration data.
+
+Let $V$ be a finite-dimensional vector space over a field, and let $\A$ be a finite nonempty set of operation names. The unknown operations are linear maps $T_a:V\to V$. Calibration supplies input vectors $x_1,\ldots,x_m$ and exact outputs $y_{a,1},\ldots,y_{a,m}$ for every $a$. The operator family is fixed, rather than being reselected after each action. Let
+\[
+U=\Span\{x_1,\ldots,x_m\}.
+\]
+The calibration is consistent precisely when every linear relation among the inputs is respected by the outputs, for each action. Under that condition it defines maps $S_a:U\to V$ with $S_ax_i=y_{a,i}$. Every $S_a$ has linear extensions to $V$ by extending a basis. Unless stated otherwise, \emph{all} such extensions are admissible. There is no hidden norm bound, symmetry, invertibility condition, or preferred matrix completion.
+
+The compatible-model viewpoint is shared with the data-informativity literature~\cite{informativity}. Our goal here is exact full-state prediction from a known initial vector, not stabilization, optimal control, or prediction from an unmeasured initial condition.
+
+\begin{proposition}[One-step identification from exact calibration]\label{prop:onestep}
+For a fixed action $a$, the value $T_av$ is the same for every linear extension of $S_a$ if and only if $v\in U$. The common value is then $S_av$.
+\end{proposition}
+\begin{proof}
+If $v\in U$, all extensions agree by definition. If $v\notin U$, choose a linear functional $\ell$ that vanishes on $U$ and satisfies $\ell(v)=1$, and choose a nonzero vector $b\in V$. Given any extension $T_a$, the map $T_a'(x)=T_a(x)+\ell(x)b$ is another extension, but $T_a'v=T_av+b\ne T_av$. Such a functional exists by extending a basis of $U$ with $v$.
+\end{proof}
+
+The proposition uses the complete unrestricted extension class. A justified structural prior can determine more. For example, knowing an operator belongs to a smaller parametric family can constrain its action outside $U$. Those constraints must be included as prior information, not inferred from the calibration span alone.
+
+\subsection{A known first step can leave the known domain}
+Even if $v\in U$, the vector $S_av$ can lie outside $U$. A second action then acts at an input whose response was not calibrated. One-step accuracy is therefore insufficient for reusable operator meaning.
+
+Define a descending sequence of subspaces
+\[
+U_0=U,\qquad
+U_{j+1}=\{v\in U:S_av\in U_j\text{ for every }a\in\A\}.\tag{7}
+\]
+The sequence is descending by induction. Every strict inclusion decreases dimension, so a fixed point is reached after at most $\dim U$ strict drops. Denote it by $U_\infty$.
+
+\begin{theorem}[The maximal calibrated continuation domain]\label{thm:core}
+For every integer $n\ge1$ and every $v\in V$, the values $T_wv$ for all operation words of length at most $n$ are independent of the chosen compatible extension family if and only if
+\[
+v\in U_{n-1}.
+\]
+Consequently, every finite full-state continuation is identifiable exactly on $U_\infty$. This is the largest subspace $L\subseteq U$ such that $S_aL\subseteq L$ for every $a$. On this subspace the known restrictions themselves realize the complete operation family.
+\end{theorem}
+\begin{proof}
+Membership in $U_{n-1}$ means that every path of at most $n-1$ calibrated operations stays inside $U$. This follows by induction from (7), beginning with $U_0=U$. All inputs on which the first $n$ operations must act are consequently calibrated. Their outputs are determined by the $S_a$, independently of every completion outside $U$.
+
+For necessity, suppose $v\notin U_{n-1}$. If $v\notin U$, the one-step proposition supplies two extensions that disagree within one action. Otherwise the recursive definition gives a word of length $j\le n-1$ with a first exit from $U$. Its intermediate vectors before exit lie in $U$, so its exit vector $z\notin U$ is the same under every compatible extension family. Choose any next action $b$. Two extensions of $S_b$ can be made to disagree on $z$ by adding a linear map that vanishes on $U$. Keep the other action maps the same. Even if action $b$ occurred earlier, that modification has no effect before the exit because the earlier inputs lie in $U$. The two fixed extension families therefore produce different vectors after the exit word followed by $b$, whose total length is at most $n$. This contradicts uniform continuation identification.
+
+At a fixed point, (7) gives $S_aU_\infty\subseteq U_\infty$. If $L\subseteq U$ is invariant under every restriction, induction gives $L\subseteq U_j$ for every $j$, so $L\subseteq U_\infty$. Applying the finite-horizon equivalence at all $n$ proves the all-word assertion.
+\end{proof}
+
+This theorem supplies an identifiable \emph{domain}, not necessarily an identified whole operator. It is exact for the stated completion class and full-state output. If only a smaller observation $q(T_wv)$ matters, more vectors can be predictable even when the full state is not. Determining that output-relative domain is a separate question. Similarly, a learned nonlinear latent representation may compress the identifiable core further for its own tasks, but that is not part of this linear result.
+
+\subsection{A two-dimensional calibration with a one-dimensional reusable core}
+\begin{counterexample}[Calibration does not close under continuation]\label{ce:linear}
+Let $V$ have basis $e_1,e_2,e_3$, let $U=\Span(e_1,e_2)$, and let the single calibrated operation satisfy
+\[
+Se_1=e_1,\qquad Se_2=e_3.
+\]
+The first continuation is known on all of $U$. The next calibrated domain is $U_1=\Span(e_1)$, which is already invariant. One completion has $T_0e_3=0$ and another has $T_1e_3=e_1$. Both agree on every supplied calibration. Starting from $e_2$, their first outputs agree at $e_3$, but their second outputs are respectively zero and $e_1$.
+\end{counterexample}
+
+Every continuation from $e_1$ is nevertheless determined. The system can ground a genuinely reusable operation on that line while remaining unable to predict repeated operations from $e_2$. A new exact calibration of $e_3$ expands the known input span to $V$ and identifies the whole operator. Obtaining that calibration is a new experiment, not an algebraic consequence of the old data.
+
+\begin{figure}[tbp]\centering
+\includegraphics[width=.95\linewidth]{figures/calibrated_core.pdf}
+\caption{A partial calibration can support unlimited exact continuation on a proper invariant core. The known image of $e_2$ leaves the calibrated input subspace, so its next image is unrestricted. Agreement with every supplied one-step calibration is not agreement on two-step behavior.}\label{fig:core}
+\end{figure}
+
+\subsection{Several operators and the scope of the initial vector}
+With several actions, (7) retains only vectors that remain calibrated under \emph{every} permitted word. An added action can therefore shrink the core even if the old operators and data are unchanged. Restricting the permitted grammar to a specific sequence can enlarge the domain of predictable use. The full free-word contract is deliberately stronger than one selected trajectory.
+
+The initial vector $v$ is known to the predictor in this section. If the actual input is hidden behind an evidence code, its initialization must satisfy an additional factorization condition like (1). A calibrated operation and an unobserved initial state are different missing inputs. They cannot be exchanged merely because both appear as uncertainty about the next output.
+
+\section{Why small local error needs an ambient growth bound}\label{sec:approx}
+Exact calibration can justify a sharp domain. Approximate calibration needs a quantitative statement about errors that leave it. Let $V$ be a normed vector space and $L\subseteq V$ a linear subspace invariant under known bounded linear maps $S_a:L\to L$. Suppose the actual bounded linear maps $T_a:V\to V$ satisfy
+\[
+\|T_a\|\le A,\qquad \|S_a\|\le B,\qquad
+\|(T_a-S_a)v\|\le\eta\|v\|\quad(v\in L),\tag{8}
+\]
+for common nonnegative bounds $A,B,\eta$. The norm on $T_a$ is an ambient bound. Its purpose is to control propagation of errors outside $L$, not only behavior on calibrated inputs.
+
+\begin{proposition}[Approximate continuation with explicit leakage control]\label{prop:approx}
+For every $v\in L$ and every word $w$ of length $n\ge1$,
+\[
+\|T_wv-S_wv\|
+\le\eta\|v\|\sum_{j=0}^{n-1}A^{n-1-j}B^j.\tag{9}
+\]
+For the empty word the discrepancy is zero. Integer zero powers in the displayed finite sum have their usual value one. The conclusion does not require the actual trajectory to remain in $L$.
+\end{proposition}
+\begin{proof}
+Write $z_j=S_{a_j}\cdots S_{a_1}v\in L$ and $x_j=T_{a_j}\cdots T_{a_1}v$. For the next operation,
+\[
+\|x_{j+1}-z_{j+1}\|
+\le A\|x_j-z_j\|+\eta\|z_j\|
+\le A\|x_j-z_j\|+\eta B^j\|v\|.
+\]
+The initial discrepancy is zero. Iterating this scalar recurrence gives (9). Ambient boundedness applies to $x_j-z_j$ even when that error has left $L$.
+\end{proof}
+
+This is a telescoping error estimate, not a new perturbation principle. Similar continuation bounds already appear in the collection~\cite{understanding,resolution}. Its role here is to identify a premise that calibration on a proper subspace cannot certify by itself.
+
+\begin{counterexample}[An uncalibrated direction amplifies a small residual]\label{ce:growth}
+Let $L=\Span(e_1)$, let $Se_1=e_1$, and in the $\ell^1$ norm define
+\[
+T=\begin{pmatrix}1&0\\ \eta&M\end{pmatrix},\qquad \eta>0,\ M\ge0.
+\]
+The one-step error on the unit calibrated vector is $\eta$, independent of $M$. After two steps the error is $\eta(1+M)$. It can be arbitrarily large while the local calibration error is fixed. For $n$ steps the second coordinate is $\eta\sum_{j=0}^{n-1}M^j$.
+\end{counterexample}
+
+A learned model can therefore match calibrated transitions closely and still fail rapidly under repetition. Increasing one-step accuracy helps only in relation to the length of use and the growth of the unseen directions. A measured small residual does not imply an ambient norm bound. The bound can come from a declared operator class, a separate global calibration argument, or a stronger structural certificate, but not from renaming the local fit ``stable meaning.''
+
+\section{A common theoretical contract for grounded revision}\label{sec:integration}
+The results do not combine into one universal scalar score. They address different parts of a continuing claim.
+
+An evidence contract says what the observer receives and which worlds remain possible. A predictive contract says what outputs must remain correct after which operations. A correction contract says which relationships between future evidence and target values must remain available. A calibration contract says where an operation is determined, and a quantitative contract controls any approximation and its growth.
+
+A combined statement needs one representation and consistent premises. An unavailable input prevents initialization. An uncalibrated continuation prevents exact prediction. A lost association prevents correction. A narrow confidence set does not establish its own coverage.
+
+\subsection{The complete sensor argument}
+The eight-world sensor illustrates the chain without a large implementation. Initially the display and flip operation admit a two-state exact predictor. That predictor is grounded by the current display, even though the physical bit and sensor convention are not separately identified. Adding the physical-bit question refines the needed behavioral state, and the old code fails the initialization condition. A reference measurement repairs the information deficit while leaving the nuisance bit irrelevant.
+
+Before calibration, the records corresponding to the two possible display values have the same marginal physical uncertainty. They must not be merged if later reference evidence is expected to identify the physical bit. The correction-memory theorem identifies the missing association. Resetting supplies convention information only after changing the physical state. Recovering the original state then depends on the retained old record. If that record is gone, the unchanged future interface cannot reconstruct it.
+
+Noise changes the strength of the conclusion. A highly probable physical bit is not an exact state certificate. A quantitative response set can carry the remaining ambiguity into a tolerance, but only under coverage and model-accuracy premises. Every clause refers to the same task and same record history.
+
+\subsection{What this adds to the machine theory}
+The framework does not demand that an agent identify every detail of a world before it can reason. It gives restricted positive conditions for doing less. An unidentifiable physical realization can support an identified predictive quotient. An underdetermined operator can support a fully determined invariant domain. A large candidate set can be compressed exactly for future correction without preserving every candidate identity.
+
+The additional discipline is that each reduction is indexed by what it preserves. One cannot transfer the word ``grounded'' from a successful prediction to an unrelated physical interpretation, from an exact model to a learned approximation, or from a present decision to every later correction. Such transfers require new evidence or a proved bridge.
+
+\section{Open theoretical problems and scope}\label{sec:open}
+The first priority is output-relative calibrated continuation. The linear theorem preserves the full vector. A smaller observation can hide uncertain directions without making them irrelevant forever. A useful extension would characterize the largest initial domain on which every observed continuation agrees across all compatible extensions, rather than simply intersecting kernels for one selected completion.
+
+A second problem is approximate correction memory. The exact signature preserves every possible target set after every admitted filter. For noisy likelihood updates, an economical memory should preserve the posterior or decisions within a stated metric. Average information loss, worst-record error, and rare-event amplification are different optimization targets. A general rate for learning such a memory is not proved here.
+
+Third, state-changing acquisition should preserve enough information for later revisions. The cover theorem assumes compatible nondestructive tests. Existing finite tree constructions address physical effects, but do not provide a low-complexity general answer for inquiry with continuing memory obligations.
+
+Fourth, model-class expansion can restore consistency while invalidating an old memory signature or uncertainty radius. A theory of justified expansion should specify which evidence remains interpretable and which exclusions remain valid. The empty version set must not disappear through an unrecorded change of models.
+
+Finally, the derived abstractions need not be computationally economical. The existence of a small quotient does not bound the cost of constructing it, computing its encoder, or identifying its correct semantic frame from data. Those questions require a complexity and learning theory with declared model classes, priors, interaction budgets, and representation languages. They are future mathematical work, not a requirement to train a broad agent before the present conditional results count as complete.
+
+\section{Conclusion}\label{sec:conclusion}
+Grounded abstraction is a relationship among a task, its possible realizations, the observer's evidence, and the operations the retained state must support. It is not a property of an attractive latent coordinate system alone.
+
+The theory gives several constructive separations. Experience can justify a predictive abstraction without identifying its underlying implementation. New questions can call for reinterpretation, additional information, or recognition of an interface-relative impossibility. Corrective memory can be much smaller than a raw candidate set while still larger than a present-answer summary. Partial calibration can identify all finite compositions on an invariant core, even when the surrounding operators remain undetermined. Approximation adds a different obligation: errors require bounds on the dynamics that propagate them.
+
+The common requirement is that the representation retain the distinctions needed by its declared future. When those distinctions are missing, more elaborate syntax is not an observation. When they are present, recovering every irrelevant detail is unnecessary. The resulting research program concerns the exact boundary between what experience leaves unknown and what a continuing reasoner can nonetheless justify.
+
+\FloatBarrier\clearpage\appendix
+\section{Statement map and source relationships}\label{app:claims}
+\begin{small}\begin{longtable}{@{}P{.13\linewidth}P{.44\linewidth}P{.35\linewidth}@{}}\toprule
+Result & Mathematical role & Status and boundary\\\midrule\endhead
+\ref{prop:law} & Law-level and support-level identification. & Elementary factorization, proved here. No sample-rate claim.\\
+\ref{thm:grounding} & One evidence-initialized exact predictive realization. & Classical quotient argument with explicit initialization. Finite declared models.\\
+\ref{thm:trichotomy} & Reinterpretation, acquisition, impossibility, and nonadaptive cost. & Exact for total nondestructive finite tests. Destructive tests excluded.\\
+\ref{thm:correction} & Coarsest memory preserving every admitted correction. & A powerset behavioral quotient. Evidence family is intersection closed.\\
+\ref{cor:occupancy} & Exact memory count for partition evidence. & All candidate subsets and exactly the atom-union evidence algebra. Logical states, not byte-optimal code.\\
+\ref{prop:testing} & Finite-record error and information processing. & Classical two-point bound, proved here. Fixed actual protocol.\\
+\ref{thm:radius} & Minimax coordinate ambiguity and a coverage certificate. & Unconstrained real-vector center. Coverage and model accuracy are premises.\\
+\ref{prop:onestep} & Linear response identifiable exactly on the calibration span. & All linear extensions admissible. Exact inputs and outputs.\\
+\ref{thm:core} & Maximal domain of identifiable full-state continuation. & Finite-dimensional common calibration span and fixed extension families.\\
+\ref{prop:approx} & Error propagation from a nominal invariant domain. & Local discrepancy plus a separate ambient growth bound.\\\bottomrule
+\end{longtable}\end{small}
+
+The new manuscript does not claim that these ten statements are ten new mathematical discoveries. The linear continuation domain and correction-memory construction are the principal connecting results in this exposition. Their proofs are self-contained, while comparisons with all neighboring formulations remain a separate priority review. No theorem in this manuscript inherits a Lean certificate merely because a related source in the collection contains formal work.
+
+\section{Small exact illustrations and reproduction}\label{app:checks}
+The companion checks eight finite groups using sets, exact rational numbers, and small vector spaces over $\mathbb F_2$. Domains and results are recorded in JSON. The counts are an implementation inventory, not evidence of generality.
+
+The correction-memory illustration enumerates all 256 candidate subsets of the eight-world sensor. The linear illustration enumerates all completions of small calibrated maps and compares their word responses with the invariant-domain recursion. The noisy example compares exact binomial sums with direct finite outcome enumeration. These are cross-checks using different elementary calculations, not external independent replication.
+
+Four analytical figures use floating point only for drawing. No agent training or broad implementation is included. The primary deliverable is the theoretical manuscript.
+
+Run \texttt{python code/exact\_checks.py} for the finite illustrations. The supplied build scripts compile the LaTeX using the included vector figures. The review notes state the actual execution and rendering scope. The source map records which references were inspected in full or in part, and which were available only as publication metadata.
+
+\clearpage\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{10}\small
+\bibitem{understanding} Komorebi P. \emph{Machine Understanding: Representation, Explanation, and Transfer}. First consolidated edition, version 1.0.0, Operation Komorebi, 8 October 2026. Supplied project manuscript and source archive.
+\bibitem{selfimproving} Komorebi P. \emph{Self-Improving Intelligence: Representation, Discovery, and Recursive Revision}. First consolidated edition, version 1.0.0, Operation Komorebi, 8 October 2026. Supplied project manuscript and source archive.
+\bibitem{resolution} Komorebi P. \emph{Sufficient Resolution}. Standardized traditional paper, Operation Komorebi, 2026. Finite behavioral models, hidden memory, reconstruction, and calibration. Source inspected in the project Library.
+\bibitem{rothenberg} T. J. Rothenberg. Identification in parametric models. \emph{Econometrica} 39(3):577--591, 1971. \href{https://www.jstor.org/stable/1913267}{doi:10.2307/1913267}.
+\bibitem{psr} M. L. Littman, R. S. Sutton, and S. Singh. Predictive representations of state. \emph{Advances in Neural Information Processing Systems 14}, 1555--1561. Conference 2001, proceedings 2002. \href{https://papers.nips.cc/paper_files/paper/2001/hash/1e4d36177d71bbb3558e43af9577d70e-Abstract.html}{Proceedings record}.
+\bibitem{angluin} D. Angluin. Learning regular sets from queries and counterexamples. \emph{Information and Computation} 75(2):87--106, 1987. \href{https://doi.org/10.1016/0890-5401(87)90052-6}{doi:10.1016/0890-5401(87)90052-6}.
+\bibitem{informativity} H. J. van Waarde, J. Eising, H. L. Trentelman, and M. K. Camlibel. Data informativity: a new perspective on data-driven analysis and control. \emph{IEEE Transactions on Automatic Control} 65(11):4753--4768, 2020. \href{https://arxiv.org/abs/1908.00468}{arXiv:1908.00468}.
+\bibitem{causal} A. Geiger, D. Ibeling, A. Zur, M. Chaudhary, S. Chauhan, J. Huang, A. Arora, Z. Wu, N. Goodman, C. Potts, and T. Icard. Causal abstraction: a theoretical foundation for mechanistic interpretability. \emph{Journal of Machine Learning Research} 26(83):1--64, 2025. \href{https://jmlr.org/papers/v26/23-0058.html}{Publication record}.
+\bibitem{stateid} P. van den Bos and F. Vaandrager. State identification for labeled transition systems with inputs and outputs. 2019. \href{https://arxiv.org/abs/1907.11034}{arXiv:1907.11034}. Cited for the testing framework, not as a source of the present three-case construction.
+\bibitem{blackwell} D. Blackwell. Equivalent comparisons of experiments. \emph{Annals of Mathematical Statistics} 24(2):265--272, 1953. \href{https://doi.org/10.1214/aoms/1177729032}{doi:10.1214/aoms/1177729032}.
+\end{thebibliography}
+\end{document}
