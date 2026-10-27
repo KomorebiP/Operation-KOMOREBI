@@ -1,0 +1,44 @@
+{
+  "nodes": [
+    {
+      "id": "product",
+      "op": "learned.channel_42",
+      "args": {
+        "a": "a",
+        "b": "b"
+      }
+    },
+    {
+      "id": "a_is_greater",
+      "op": "number.greater",
+      "args": {
+        "a": "a",
+        "b": "b"
+      }
+    },
+    {
+      "id": "maximum",
+      "select": {
+        "condition": "a_is_greater",
+        "then": "a",
+        "else": "b"
+      }
+    },
+    {
+      "id": "rollout",
+      "repeat": {
+        "op": "advance",
+        "state": "start",
+        "count": "count",
+        "bindings": {
+          "delta": "delta"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "product": "product",
+    "maximum": "maximum",
+    "accumulated": "rollout"
+  }
+}

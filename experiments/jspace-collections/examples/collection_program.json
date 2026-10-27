@@ -1,0 +1,94 @@
+{
+  "nodes": [
+    {
+      "id": "objects",
+      "op": "grid.components",
+      "args": {
+        "scene": "scene",
+        "background": "background",
+        "connectivity": "connectivity"
+      }
+    },
+    {
+      "id": "areas",
+      "map": {
+        "op": "object.area",
+        "items": "objects",
+        "bindings": {}
+      }
+    },
+    {
+      "id": "selected",
+      "filter": {
+        "op": "keep_large",
+        "items": "objects",
+        "bindings": {
+          "minimum": "minimum"
+        }
+      }
+    },
+    {
+      "id": "shifted",
+      "map": {
+        "op": "object.translate",
+        "items": "selected",
+        "bindings": {
+          "offset": "offset"
+        }
+      }
+    },
+    {
+      "id": "cleared",
+      "fold": {
+        "op": "object.erase",
+        "items": "selected",
+        "state": "scene",
+        "bindings": {
+          "background": "background"
+        }
+      }
+    },
+    {
+      "id": "placed",
+      "fold": {
+        "op": "object.paint",
+        "items": "shifted",
+        "state": "cleared",
+        "bindings": {
+          "background": "background",
+          "overwrite": "overwrite"
+        }
+      }
+    },
+    {
+      "id": "selected_count",
+      "op": "objects.count",
+      "args": {
+        "items": "selected"
+      }
+    },
+    {
+      "id": "changed",
+      "op": "grid.changed",
+      "args": {
+        "a": "scene",
+        "b": "placed"
+      }
+    },
+    {
+      "id": "change_count",
+      "op": "mask.count",
+      "args": {
+        "mask": "changed"
+      }
+    }
+  ],
+  "outputs": {
+    "result": "placed",
+    "original": "scene",
+    "objects": "objects",
+    "areas": "areas",
+    "selected_count": "selected_count",
+    "changed_cells": "change_count"
+  }
+}

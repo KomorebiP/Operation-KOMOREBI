@@ -1,0 +1,139 @@
+[
+  {
+    "name": "copy_pattern",
+    "parameters": {
+      "scene": "grid",
+      "source_color": "color",
+      "target_color": "color",
+      "zero": "color",
+      "turns": "index",
+      "transparent": "flag"
+    },
+    "body": {
+      "nodes": [
+        {
+          "id": "source_mask",
+          "op": "grid.color_mask",
+          "args": {
+            "scene": "scene",
+            "color": "source_color"
+          }
+        },
+        {
+          "id": "source_box",
+          "op": "mask.bounds",
+          "args": {
+            "mask": "source_mask"
+          }
+        },
+        {
+          "id": "patch",
+          "op": "grid.crop",
+          "args": {
+            "scene": "scene",
+            "region": "source_box"
+          }
+        },
+        {
+          "id": "turned",
+          "op": "grid.rotate",
+          "args": {
+            "patch": "patch",
+            "turns": "turns"
+          }
+        },
+        {
+          "id": "target_mask",
+          "op": "grid.color_mask",
+          "args": {
+            "scene": "scene",
+            "color": "target_color"
+          }
+        },
+        {
+          "id": "destination",
+          "op": "mask.origin",
+          "args": {
+            "mask": "target_mask"
+          }
+        },
+        {
+          "id": "cleared",
+          "op": "grid.paint",
+          "args": {
+            "scene": "scene",
+            "mask": "target_mask",
+            "color": "zero"
+          }
+        },
+        {
+          "id": "placed",
+          "op": "grid.paste",
+          "args": {
+            "scene": "cleared",
+            "patch": "turned",
+            "at": "destination",
+            "transparent": "transparent"
+          }
+        }
+      ],
+      "outputs": {
+        "result": "placed"
+      }
+    },
+    "origin": "authored_function"
+  },
+  {
+    "name": "advance",
+    "parameters": {
+      "state": "scalar",
+      "delta": "scalar"
+    },
+    "body": {
+      "nodes": [
+        {
+          "id": "next",
+          "op": "learned.channel_91",
+          "args": {
+            "a": "state",
+            "b": "delta"
+          }
+        }
+      ],
+      "outputs": {
+        "result": "next"
+      }
+    },
+    "origin": "authored_function"
+  },
+  {
+    "name": "keep_large",
+    "parameters": {
+      "item": "object",
+      "minimum": "index"
+    },
+    "body": {
+      "nodes": [
+        {
+          "id": "area",
+          "op": "object.area",
+          "args": {
+            "item": "item"
+          }
+        },
+        {
+          "id": "keep",
+          "op": "index.at_least",
+          "args": {
+            "a": "area",
+            "b": "minimum"
+          }
+        }
+      ],
+      "outputs": {
+        "result": "keep"
+      }
+    },
+    "origin": "authored_function"
+  }
+]

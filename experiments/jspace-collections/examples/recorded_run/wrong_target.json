@@ -1,0 +1,4105 @@
+{
+  "status": "rejected",
+  "receipt": {
+    "proposal_id": "e7d271450e91cf8044c7e5efc286056f8745c3eff577a98518d8a66c745127d5",
+    "payload": {
+      "schema": "komorebi_workspace_proposal_v0.7",
+      "author": "Komorebi P.",
+      "workspace": "objects",
+      "base_revision": "r000002",
+      "base_snapshot_identity": "64571f9b770293f20ad6747e5c09990ac569bdb507b94893cf79a47f051abd38",
+      "registry_identity": "9d82ee1ab3e031e2ed6f18ca495d26531f57e281b9e5220cbc84febc9a4eea4c",
+      "candidate": {
+        "program": {
+          "nodes": [
+            {
+              "id": "objects",
+              "op": "grid.components",
+              "args": {
+                "scene": "scene",
+                "background": "background",
+                "connectivity": "connectivity"
+              }
+            },
+            {
+              "id": "areas",
+              "map": {
+                "op": "object.area",
+                "items": "objects",
+                "bindings": {}
+              }
+            },
+            {
+              "id": "selected",
+              "filter": {
+                "op": "keep_large",
+                "items": "objects",
+                "bindings": {
+                  "minimum": "minimum"
+                }
+              }
+            },
+            {
+              "id": "shifted",
+              "map": {
+                "op": "object.translate",
+                "items": "selected",
+                "bindings": {
+                  "offset": "offset"
+                }
+              }
+            },
+            {
+              "id": "cleared",
+              "fold": {
+                "op": "object.erase",
+                "items": "selected",
+                "state": "scene",
+                "bindings": {
+                  "background": "background"
+                }
+              }
+            },
+            {
+              "id": "placed",
+              "fold": {
+                "op": "object.paint",
+                "items": "shifted",
+                "state": "cleared",
+                "bindings": {
+                  "background": "background",
+                  "overwrite": "overwrite"
+                }
+              }
+            },
+            {
+              "id": "selected_count",
+              "op": "objects.count",
+              "args": {
+                "items": "selected"
+              }
+            },
+            {
+              "id": "changed",
+              "op": "grid.changed",
+              "args": {
+                "a": "scene",
+                "b": "placed"
+              }
+            },
+            {
+              "id": "change_count",
+              "op": "mask.count",
+              "args": {
+                "mask": "changed"
+              }
+            }
+          ],
+          "outputs": {
+            "result": "placed",
+            "original": "scene",
+            "objects": "objects",
+            "areas": "areas",
+            "selected_count": "selected_count",
+            "changed_cells": "change_count"
+          }
+        },
+        "inputs": {
+          "scene": {
+            "kind": "grid",
+            "data": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                2,
+                0,
+                0,
+                8,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                4,
+                4,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          },
+          "background": {
+            "kind": "color",
+            "data": 0
+          },
+          "connectivity": {
+            "kind": "index",
+            "data": 4
+          },
+          "minimum": {
+            "kind": "index",
+            "data": 2
+          },
+          "offset": {
+            "kind": "point",
+            "data": [
+              0,
+              1
+            ]
+          },
+          "overwrite": {
+            "kind": "flag",
+            "data": false
+          }
+        }
+      },
+      "predicted_outputs": {
+        "result": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "original": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "objects": {
+          "kind": "list[object]",
+          "data": [
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    1,
+                    1,
+                    2
+                  ],
+                  [
+                    1,
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    1,
+                    2
+                  ]
+                ]
+              }
+            },
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "6ae5581e7ca198bb382a0460c3e5333a186f36a33031fd73d21c7ee1e5621053",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    1,
+                    5,
+                    8
+                  ]
+                ]
+              }
+            },
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    4,
+                    4,
+                    4
+                  ],
+                  [
+                    4,
+                    5,
+                    4
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "areas": {
+          "kind": "list[index]",
+          "data": [
+            {
+              "kind": "index",
+              "data": 3
+            },
+            {
+              "kind": "index",
+              "data": 1
+            },
+            {
+              "kind": "index",
+              "data": 2
+            }
+          ]
+        },
+        "selected_count": {
+          "kind": "index",
+          "data": 2
+        },
+        "changed_cells": {
+          "kind": "index",
+          "data": 6
+        }
+      },
+      "constraints": {
+        "targets": {
+          "result": {
+            "kind": "grid",
+            "data": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                2,
+                2,
+                8,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                4,
+                4,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "locked_outputs": [
+          "original"
+        ],
+        "require_target_match": true,
+        "atol": 1e-09
+      },
+      "eligible": false
+    }
+  },
+  "locks": {
+    "all_preserved": true,
+    "outputs": {
+      "original": true
+    }
+  },
+  "residual_before": {
+    "provided": true,
+    "all_matched": false,
+    "outputs": {
+      "result": {
+        "matched": false,
+        "kind": "grid",
+        "mismatched_cells": 10,
+        "total_cells": 70,
+        "coordinates": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            4,
+            7
+          ]
+        ],
+        "coordinates_truncated": false
+      }
+    }
+  },
+  "residual_after": {
+    "provided": true,
+    "all_matched": false,
+    "outputs": {
+      "result": {
+        "matched": false,
+        "kind": "grid",
+        "mismatched_cells": 6,
+        "total_cells": 70,
+        "coordinates": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            7
+          ]
+        ],
+        "coordinates_truncated": false
+      }
+    }
+  },
+  "changes": {
+    "outputs": {
+      "changed_cells": {
+        "status": "changed",
+        "before": {
+          "kind": "index",
+          "data": 0
+        },
+        "after": {
+          "kind": "index",
+          "data": 6
+        },
+        "delta": 6
+      },
+      "result": {
+        "status": "changed",
+        "before": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "after": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "changed_cells": 6,
+        "coordinates": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "coordinates_truncated": false
+      }
+    },
+    "values": {
+      "root/change_count": {
+        "status": "changed",
+        "before": {
+          "kind": "index",
+          "data": 0
+        },
+        "after": {
+          "kind": "index",
+          "data": 6
+        },
+        "delta": 6
+      },
+      "root/changed": {
+        "status": "changed",
+        "before": {
+          "kind": "mask",
+          "data": [
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          ]
+        },
+        "after": {
+          "kind": "mask",
+          "data": [
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              true,
+              false,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              true,
+              false,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          ]
+        },
+        "changed_cells": 6,
+        "coordinates": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "coordinates_truncated": false
+      },
+      "root/offset": {
+        "status": "changed",
+        "before": {
+          "kind": "point",
+          "data": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "kind": "point",
+          "data": [
+            0,
+            1
+          ]
+        }
+      },
+      "root/placed": {
+        "status": "changed",
+        "before": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "after": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "changed_cells": 6,
+        "coordinates": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "coordinates_truncated": false
+      },
+      "root/placed/item_0": {
+        "status": "changed",
+        "before": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "after": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "changed_cells": 4,
+        "coordinates": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "coordinates_truncated": false
+      },
+      "root/placed/item_1": {
+        "status": "changed",
+        "before": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "after": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "changed_cells": 6,
+        "coordinates": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "coordinates_truncated": false
+      },
+      "root/shifted": {
+        "status": "changed",
+        "before": {
+          "kind": "list[object]",
+          "data": [
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    1,
+                    1,
+                    2
+                  ],
+                  [
+                    1,
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    1,
+                    2
+                  ]
+                ]
+              }
+            },
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    4,
+                    4,
+                    4
+                  ],
+                  [
+                    4,
+                    5,
+                    4
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "after": {
+          "kind": "list[object]",
+          "data": [
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    1,
+                    2,
+                    2
+                  ],
+                  [
+                    1,
+                    3,
+                    2
+                  ],
+                  [
+                    2,
+                    2,
+                    2
+                  ]
+                ]
+              }
+            },
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    4,
+                    5,
+                    4
+                  ],
+                  [
+                    4,
+                    6,
+                    4
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "length_before": 2,
+        "length_after": 2,
+        "changed_indices": [
+          0,
+          1
+        ]
+      },
+      "root/shifted/item_0": {
+        "status": "changed",
+        "before": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                2,
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        "after": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                1,
+                3,
+                2
+              ],
+              [
+                2,
+                2,
+                2
+              ]
+            ]
+          }
+        }
+      },
+      "root/shifted/item_1": {
+        "status": "changed",
+        "before": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                4,
+                4
+              ],
+              [
+                4,
+                5,
+                4
+              ]
+            ]
+          }
+        },
+        "after": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                5,
+                4
+              ],
+              [
+                4,
+                6,
+                4
+              ]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "trace": [
+    {
+      "path": "root/objects",
+      "event": "call",
+      "operation": "grid.components",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:grid.components",
+      "arguments": {
+        "scene": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "background": {
+          "kind": "color",
+          "data": 0
+        },
+        "connectivity": {
+          "kind": "index",
+          "data": 4
+        }
+      },
+      "result": {
+        "kind": "list[object]",
+        "data": [
+          {
+            "kind": "object",
+            "data": {
+              "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+              "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+              "shape": [
+                7,
+                10
+              ],
+              "pixels": [
+                [
+                  1,
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  2,
+                  2
+                ],
+                [
+                  2,
+                  1,
+                  2
+                ]
+              ]
+            }
+          },
+          {
+            "kind": "object",
+            "data": {
+              "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+              "origin_id": "6ae5581e7ca198bb382a0460c3e5333a186f36a33031fd73d21c7ee1e5621053",
+              "shape": [
+                7,
+                10
+              ],
+              "pixels": [
+                [
+                  1,
+                  5,
+                  8
+                ]
+              ]
+            }
+          },
+          {
+            "kind": "object",
+            "data": {
+              "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+              "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+              "shape": [
+                7,
+                10
+              ],
+              "pixels": [
+                [
+                  4,
+                  4,
+                  4
+                ],
+                [
+                  4,
+                  5,
+                  4
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_0/area",
+      "event": "call",
+      "operation": "object.area",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.area",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                2,
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 3
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_0/keep",
+      "event": "call",
+      "operation": "index.at_least",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:index.at_least",
+      "arguments": {
+        "a": {
+          "kind": "index",
+          "data": 3
+        },
+        "b": {
+          "kind": "index",
+          "data": 2
+        }
+      },
+      "result": {
+        "kind": "flag",
+        "data": true
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_0",
+      "event": "call",
+      "operation": "keep_large",
+      "origin": "authored_function",
+      "operation_identity": "475f707f26692a127fb152821955679a5ffe0701d2c9cbd941fca9f394bfb69b",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                2,
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        "minimum": {
+          "kind": "index",
+          "data": 2
+        }
+      },
+      "result": {
+        "kind": "flag",
+        "data": true
+      },
+      "cached": false
+    },
+    {
+      "path": "root/selected/item_1/area",
+      "event": "call",
+      "operation": "object.area",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.area",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "6ae5581e7ca198bb382a0460c3e5333a186f36a33031fd73d21c7ee1e5621053",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                5,
+                8
+              ]
+            ]
+          }
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 1
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_1/keep",
+      "event": "call",
+      "operation": "index.at_least",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:index.at_least",
+      "arguments": {
+        "a": {
+          "kind": "index",
+          "data": 1
+        },
+        "b": {
+          "kind": "index",
+          "data": 2
+        }
+      },
+      "result": {
+        "kind": "flag",
+        "data": false
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_1",
+      "event": "call",
+      "operation": "keep_large",
+      "origin": "authored_function",
+      "operation_identity": "475f707f26692a127fb152821955679a5ffe0701d2c9cbd941fca9f394bfb69b",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "6ae5581e7ca198bb382a0460c3e5333a186f36a33031fd73d21c7ee1e5621053",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                5,
+                8
+              ]
+            ]
+          }
+        },
+        "minimum": {
+          "kind": "index",
+          "data": 2
+        }
+      },
+      "result": {
+        "kind": "flag",
+        "data": false
+      },
+      "cached": false
+    },
+    {
+      "path": "root/selected/item_2/area",
+      "event": "call",
+      "operation": "object.area",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.area",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                4,
+                4
+              ],
+              [
+                4,
+                5,
+                4
+              ]
+            ]
+          }
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 2
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_2/keep",
+      "event": "call",
+      "operation": "index.at_least",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:index.at_least",
+      "arguments": {
+        "a": {
+          "kind": "index",
+          "data": 2
+        },
+        "b": {
+          "kind": "index",
+          "data": 2
+        }
+      },
+      "result": {
+        "kind": "flag",
+        "data": true
+      },
+      "cached": true
+    },
+    {
+      "path": "root/selected/item_2",
+      "event": "call",
+      "operation": "keep_large",
+      "origin": "authored_function",
+      "operation_identity": "475f707f26692a127fb152821955679a5ffe0701d2c9cbd941fca9f394bfb69b",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                4,
+                4
+              ],
+              [
+                4,
+                5,
+                4
+              ]
+            ]
+          }
+        },
+        "minimum": {
+          "kind": "index",
+          "data": 2
+        }
+      },
+      "result": {
+        "kind": "flag",
+        "data": true
+      },
+      "cached": false
+    },
+    {
+      "path": "root/selected",
+      "event": "filter",
+      "items": 3,
+      "kept": 2,
+      "decisions": [
+        true,
+        false,
+        true
+      ]
+    },
+    {
+      "path": "root/shifted/item_0",
+      "event": "call",
+      "operation": "object.translate",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.translate",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                2,
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        "offset": {
+          "kind": "point",
+          "data": [
+            0,
+            1
+          ]
+        }
+      },
+      "result": {
+        "kind": "object",
+        "data": {
+          "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+          "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+          "shape": [
+            7,
+            10
+          ],
+          "pixels": [
+            [
+              1,
+              2,
+              2
+            ],
+            [
+              1,
+              3,
+              2
+            ],
+            [
+              2,
+              2,
+              2
+            ]
+          ]
+        }
+      },
+      "cached": false
+    },
+    {
+      "path": "root/shifted/item_1",
+      "event": "call",
+      "operation": "object.translate",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.translate",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                4,
+                4
+              ],
+              [
+                4,
+                5,
+                4
+              ]
+            ]
+          }
+        },
+        "offset": {
+          "kind": "point",
+          "data": [
+            0,
+            1
+          ]
+        }
+      },
+      "result": {
+        "kind": "object",
+        "data": {
+          "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+          "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+          "shape": [
+            7,
+            10
+          ],
+          "pixels": [
+            [
+              4,
+              5,
+              4
+            ],
+            [
+              4,
+              6,
+              4
+            ]
+          ]
+        }
+      },
+      "cached": false
+    },
+    {
+      "path": "root/shifted",
+      "event": "map",
+      "items": 2
+    },
+    {
+      "path": "root/cleared/item_0",
+      "event": "call",
+      "operation": "object.erase",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.erase",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                2,
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        "background": {
+          "kind": "color",
+          "data": 0
+        },
+        "state": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "result": {
+        "kind": "grid",
+        "data": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            4,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "cached": true
+    },
+    {
+      "path": "root/cleared/item_1",
+      "event": "call",
+      "operation": "object.erase",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.erase",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                4,
+                4
+              ],
+              [
+                4,
+                5,
+                4
+              ]
+            ]
+          }
+        },
+        "background": {
+          "kind": "color",
+          "data": 0
+        },
+        "state": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "result": {
+        "kind": "grid",
+        "data": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "cached": true
+    },
+    {
+      "path": "root/cleared",
+      "event": "fold",
+      "items": 2
+    },
+    {
+      "path": "root/placed/item_0",
+      "event": "call",
+      "operation": "object.paint",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.paint",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                1,
+                3,
+                2
+              ],
+              [
+                2,
+                2,
+                2
+              ]
+            ]
+          }
+        },
+        "background": {
+          "kind": "color",
+          "data": 0
+        },
+        "overwrite": {
+          "kind": "flag",
+          "data": false
+        },
+        "state": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "result": {
+        "kind": "grid",
+        "data": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            2,
+            0,
+            8,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "cached": false
+    },
+    {
+      "path": "root/placed/item_1",
+      "event": "call",
+      "operation": "object.paint",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.paint",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                5,
+                4
+              ],
+              [
+                4,
+                6,
+                4
+              ]
+            ]
+          }
+        },
+        "background": {
+          "kind": "color",
+          "data": 0
+        },
+        "overwrite": {
+          "kind": "flag",
+          "data": false
+        },
+        "state": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "result": {
+        "kind": "grid",
+        "data": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            2,
+            0,
+            8,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            4,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      },
+      "cached": false
+    },
+    {
+      "path": "root/placed",
+      "event": "fold",
+      "items": 2
+    },
+    {
+      "path": "root/areas/item_0",
+      "event": "call",
+      "operation": "object.area",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.area",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                2
+              ],
+              [
+                2,
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 3
+      },
+      "cached": true
+    },
+    {
+      "path": "root/areas/item_1",
+      "event": "call",
+      "operation": "object.area",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.area",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "6ae5581e7ca198bb382a0460c3e5333a186f36a33031fd73d21c7ee1e5621053",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                1,
+                5,
+                8
+              ]
+            ]
+          }
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 1
+      },
+      "cached": true
+    },
+    {
+      "path": "root/areas/item_2",
+      "event": "call",
+      "operation": "object.area",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:object.area",
+      "arguments": {
+        "item": {
+          "kind": "object",
+          "data": {
+            "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+            "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+            "shape": [
+              7,
+              10
+            ],
+            "pixels": [
+              [
+                4,
+                4,
+                4
+              ],
+              [
+                4,
+                5,
+                4
+              ]
+            ]
+          }
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 2
+      },
+      "cached": true
+    },
+    {
+      "path": "root/areas",
+      "event": "map",
+      "items": 3
+    },
+    {
+      "path": "root/selected_count",
+      "event": "call",
+      "operation": "objects.count",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:objects.count",
+      "arguments": {
+        "items": {
+          "kind": "list[object]",
+          "data": [
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "edb777642a06c69677d738ff96862c6177311c40163a8607e2381c112c9b0357",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    1,
+                    1,
+                    2
+                  ],
+                  [
+                    1,
+                    2,
+                    2
+                  ],
+                  [
+                    2,
+                    1,
+                    2
+                  ]
+                ]
+              }
+            },
+            {
+              "kind": "object",
+              "data": {
+                "source": "1591343d2a027f70d607729357e535c4c50694c1cc4a0d24d078b303e083cb61",
+                "origin_id": "d711dda80741e80ce940624506fbf7e8dc60bc2326cebd1561650f31d240039a",
+                "shape": [
+                  7,
+                  10
+                ],
+                "pixels": [
+                  [
+                    4,
+                    4,
+                    4
+                  ],
+                  [
+                    4,
+                    5,
+                    4
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 2
+      },
+      "cached": true
+    },
+    {
+      "path": "root/changed",
+      "event": "call",
+      "operation": "grid.changed",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:grid.changed",
+      "arguments": {
+        "a": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "b": {
+          "kind": "grid",
+          "data": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              2,
+              0,
+              8,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "result": {
+        "kind": "mask",
+        "data": [
+          [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ],
+          [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          ]
+        ]
+      },
+      "cached": false
+    },
+    {
+      "path": "root/change_count",
+      "event": "call",
+      "operation": "mask.count",
+      "origin": "supplied",
+      "operation_identity": "02eb9c9c403ada932e739e2eb14878ae55dc8909118cae9d2b2771af7a34fadd:mask.count",
+      "arguments": {
+        "mask": {
+          "kind": "mask",
+          "data": [
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              true,
+              false,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              true,
+              false,
+              true,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          ]
+        }
+      },
+      "result": {
+        "kind": "index",
+        "data": 6
+      },
+      "cached": false
+    }
+  ],
+  "reason": "target_mismatch"
+}
