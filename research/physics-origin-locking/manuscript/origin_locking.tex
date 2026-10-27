@@ -1,0 +1,466 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=7.5in,paperheight=10.5in,inner=.79in,outer=.72in,top=.79in,bottom=.78in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsthm}
+\usepackage{newpxtext,newpxmath,microtype}
+\usepackage{booktabs,array,graphicx,xcolor,fancyhdr,titlesec,hyperref,enumitem,needspace,float}
+\usepackage[section]{placeins}
+\definecolor{navy}{HTML}{142D40}\definecolor{teal}{HTML}{176974}\definecolor{copper}{HTML}{A67B50}
+\hypersetup{colorlinks=true,linkcolor=teal,citecolor=teal,urlcolor=teal,pdftitle={Origin Locking and Cosmological Energy Exchange},pdfauthor={Komorebi P.},pdfsubject={Finite quantum backreaction, vacuum matching, and expanding-space energy balance}}
+\graphicspath{{../figures/}}
+\setlength{\headheight}{15pt}\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\scriptsize\color{teal}KOMOREBI PHYSICS}
+\fancyhead[R]{\sffamily\scriptsize ORIGIN LOCKING AND ENERGY EXCHANGE}
+\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{.3pt}
+\titleformat{\section}{\Large\bfseries\color{navy}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{.65em}{}
+\titlespacing*{\section}{0pt}{2.0ex plus .4ex}{1.0ex}
+\titlespacing*{\subsection}{0pt}{1.5ex plus .4ex}{.6ex}
+\setlength{\parskip}{.35em}\setlength{\parindent}{1.1em}
+\setlength{\emergencystretch}{2em}\renewcommand{\arraystretch}{1.12}
+\newtheorem{theorem}{Theorem}[section]\newtheorem{proposition}[theorem]{Proposition}\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}\newtheorem{definition}[theorem]{Definition}
+\newcommand{\dd}{\mathrm d}\newcommand{\Tr}{\mathcal T}\newcommand{\Ezero}{E_0}
+\newcommand{\fig}[3]{\begin{figure}[H]\centering\includegraphics[width=\linewidth]{#1}\caption{#2}\label{#3}\end{figure}}
+\begin{document}
+\thispagestyle{empty}
+{\sffamily\small\color{teal}REALIZATION CALCULUS\hfill MATHEMATICAL PHYSICS\par}
+\vspace{1.0in}
+{\fontsize{29}{33}\selectfont\bfseries\color{navy}Origin Locking and\par Cosmological Energy\par Exchange\par}
+\vspace{.25in}
+{\Large Vacuum constraints and a finite expanding-space calculation\par}
+\vspace{.25in}{\color{copper}\rule{1.2in}{1pt}\par}
+\vspace{.2in}
+\noindent A study of the distinction between density locking, empty-sector vacuum matching, and conserved energy transfer in a regulated quantum model.\par
+\vspace{.38in}
+\noindent\textbf{Komorebi P.}\par
+\vfill
+\noindent\textbf{Results and scope.} The density-locked branch of the source theory lies at the origin. Its local incoherent-matter stability condition is controlled by $\rho_\chi-3p_\chi$. The origin-matched Gaussian potential retains that condition, but its empty-sector minima release only about $1.14\times10^{-12}$ of the reference vacuum energy in the tested tower. A finite expanding-space action gives an exact pressure-work balance and a working numerical implementation. Momentum-cutoff independence fails in the accelerated-expansion stress test. These findings do not recover the original cosmological production benchmark.\par
+\vspace{.25in}
+\noindent{\small Original prose and figures: CC BY 4.0. Original accompanying software: MIT. Mathematical proofs, finite numerical checks, and unestablished physical interpretations are identified separately. No new Lean certification is claimed.}
+\clearpage
+
+\section{The physical question and its correct location}
+The source cosmological model proposes density locking of the average scalar at $\phi=0$ \cite{bridge,cosmology}. The minima $\phi=\pm v$ belong instead to its empty-sector tree potential. With the dimensionless coordinate
+\begin{equation}
+q=\sqrt\gamma\,\phi/v,\qquad \gamma=S=16,
+\end{equation}
+the locked point is $q=0$ and the empty-sector tree vacua are $q=\pm4$. These are different physical questions. Accessibility of $q=4$ does not decide whether matter can stabilize the origin.
+
+The finite production studies established energy conservation for specified oscillator systems and showed why an imposed crossing spectrum cannot be treated as a closed event when its energy exceeds the background reservoir \cite{energy,matched}. They also found a large change in the potential after matching vacuum energy, mass, and quartic coupling at the origin. The resulting energy barrier at $q=4$ is a restriction on the old empty-sector potential. It is not a prohibition on origin locking.
+
+This distinction organizes the present study. First, the local locking condition is derived for a stated incoherent distribution and compared with the coherent mode dynamics. Second, the empty-sector fate of the same matched potential is determined. Third, the quantum modes and background are evolved with a scale factor, pressure, and a conserved Friedmann constraint. Finally, alternative matching data are examined as changes of theory, not as renormalization tricks that leave the physical model unchanged.
+
+The classical covariant action and its FLRW exchange identity already appear in the source bridge \cite[Sections 2.4--2.7]{bridge}. The new numerical work here extends the explicitly regulated quantum calculation. It does not claim that classical stress conservation was previously missing.
+
+\subsection{Fixed model and units}
+Let $L$ denote the number of physical tower levels. This avoids confusing tower depth with the Hubble parameter $H$. Define
+\begin{equation}
+y_h=x2^h,\qquad d_h=2^{h-1},\qquad x=10^{-4},\qquad
+B_L=\frac{1}{64\pi^2}\sum_{h=1}^{L}d_hy_h^4.
+\end{equation}
+Time is $\tau=At$, energies are densities divided by $A^4$, and a dot below denotes $\dd/\dd\tau$ after setting the lapse to one. The initial numerical scale factor is $a=1$. In conditional comparisons with the stored cosmology, this corresponds to the historical production scale $a_\star=10^{-6}$, so the cosmological scale factor is $10^{-6}a$.
+
+The inherited origin-matched potential is
+\begin{align}
+V_R(q)&=D(1-q^2/S)^2+B_LF(q^2),\label{eq:Vorigin}\\
+F(s)&=(1+s)^2\log(1+s)-s-\tfrac32s^2,\label{eq:F}\\
+D&=4.65190089919765\times10^{-18}.
+\end{align}
+The nominal Gaussian family sets
+\begin{equation}
+C=2S_E/\epsilon,\quad \Ezero=C/2,\quad S_E=2.18498795564.
+\end{equation}
+At $\epsilon=0.01$, $C=436.997591128$ and $\Ezero=218.498795564$. The parameter $\epsilon$ does not assert an actual conversion efficiency. The main branch uses $L=15$, for which $B_{15}=3086.94039766$. The input parameters are inherited reference data, not a new observational fit.
+
+\section{Origin locking and the stress trace}
+\subsection{A conditional incoherent distribution}
+Fix finitely many positive weights $w_j$, masses $y_j>0$, comoving momenta $k_j$, and nonnegative conserved occupations $f_j$. The weights include degeneracies and momentum quadrature. Assume an incoherent or phase-averaged gas at the origin. Define
+\begin{align}
+E_j(a)&=\sqrt{k_j^2/a^2+y_j^2},\\
+\rho_\chi(a)&=a^{-3}\sum_jw_jE_j(a)f_j,\\
+p_\chi(a)&=a^{-3}\sum_jw_j\frac{k_j^2f_j}{3a^2E_j(a)},\\
+\Tr(a)&=a^{-3}\sum_jw_j\frac{y_j^2f_j}{E_j(a)}.
+\end{align}
+These definitions describe a conditional transport problem. They do not assert that an instantaneous occupation from a coherent production calculation is already a relic distribution.
+
+\begin{theorem}[Local locking criterion and dilution]\label{thm:trace}
+For the above gas,
+\begin{equation}
+\Tr=\rho_\chi-3p_\chi.
+\end{equation}
+At fixed occupations and fixed $a$, the curvature of the effective background potential at the origin is
+\begin{equation}
+\boxed{\kappa_{\rm eff}(a)=\rho_\chi(a)-3p_\chi(a)-\frac{4D}{S}.}\label{eq:locking}
+\end{equation}
+If at least one $w_jf_j$ is positive, $\Tr(a)$ is strictly decreasing to zero. Each nonzero summand has logarithmic slope between $-3$ and $-2$. If $\Tr(a_i)>4D/S$, there is exactly one later $a$ at which the local curvature vanishes.
+\end{theorem}
+\begin{proof}
+The identity follows term by term from $E_j^2-k_j^2/a^2=y_j^2$. The matter energy away from the origin is obtained by replacing $E_j$ with
+$[k_j^2/a^2+y_j^2(1+q^2)]^{1/2}$. Its first $q$ derivative vanishes at zero and its second derivative is $y_j^2/E_j$. Also $F(q^2)=q^6/3+O(q^8)$, so the matched determinant contributes no quadratic term at the origin. Differentiating the tree term gives $-4D/S$, proving \eqref{eq:locking}.
+
+Write a nonzero trace summand as
+\[
+T_j(a)=w_jy_j^2f_j\,a^{-2}(k_j^2+a^2y_j^2)^{-1/2}.
+\]
+Then
+\begin{equation}
+\frac{\dd\log T_j}{\dd\log a}=-2-\frac{a^2y_j^2}{k_j^2+a^2y_j^2}.
+\end{equation}
+This is strictly negative and lies in $[-3,-2]$. The finite sum is continuous, strictly decreases, and tends to zero. The intermediate value theorem gives existence and strict monotonicity gives uniqueness of the threshold crossing.
+\end{proof}
+
+Positive curvature is a local energetic criterion. It is not by itself a proof of capture from a passing trajectory, asymptotic attraction, or stability under a time-dependent coherent drive. At the origin the leading background kinetic coefficient is $C$, so the corresponding local squared frequency is $\kappa_{\rm eff}/C$.
+
+For $a\ge a_i$ the slope bounds also give
+\begin{equation}
+\Tr(a_i)(a_i/a)^3\le\Tr(a)\le\Tr(a_i)(a_i/a)^2.
+\end{equation}
+Thus the threshold lies between the cube-root and square-root dilution estimates based on the initial trace. For a finite set of massive modes the cold limit is
+\begin{equation}
+\Tr(a)=a^{-3}\sum_jw_jy_jf_j+O(a^{-5}).\label{eq:cold}
+\end{equation}
+The pressure correction therefore matters before the distribution becomes cold.
+
+\subsection{Why coherence cannot be omitted}
+In the quantum kinetic variables used below, the exact force contains $n_j+u_j/2$, not just $n_j$. Linearizing its explicit $q$ dependence at the origin adds
+\begin{equation}
+\kappa_{\rm coh}=\frac{1}{2a^3}\sum_jw_j\frac{y_j^2}{E_j}u_j
+\end{equation}
+to the occupation contribution. The trace criterion in Theorem~\ref{thm:trace} therefore does not substitute for the full coherent calculation.
+
+For a held origin and a held scale factor, $u_j(t)=u_j(0)\cos(2E_jt)-v_j(0)\sin(2E_jt)$. Direct integration gives the useful bound
+\begin{equation}
+\left|\frac1T\int_0^T\kappa_{\rm coh}(t)\,\dd t\right|
+\le\frac{1}{2a^3T}\sum_jw_j\frac{y_j^2}{E_j^2}\sqrt{u_j(0)^2+v_j(0)^2}.
+\end{equation}
+This follows because the modulus of the integral of $e^{2iE_jt}$ is at most $1/E_j$. It is a fixed-background averaging bound. It is not a Floquet stability theorem or a derivation of cosmological decoherence.
+
+\section{The empty-sector fate of the matched potential}
+Origin matching preserves the local quadratic condition but changes the potential away from the origin. The location and energy of its empty-sector minima can be determined without integrating the production equations.
+
+\begin{theorem}[Unique positive-radius vacuum]\label{thm:min}
+For $D,B_L,S>0$, the potential \eqref{eq:Vorigin} has exactly one minimum in $s=q^2>0$. It is the global minimum on $s\ge0$. The two background minima are $q=\pm\sqrt{s_*}$.
+\end{theorem}
+\begin{proof}
+As a function of $s$,
+\begin{align}
+V_s&=-\frac{2D}{S}+\frac{2Ds}{S^2}
+ +2B_L[(1+s)\log(1+s)-s],\\
+V_{ss}&=\frac{2D}{S^2}+2B_L\log(1+s)>0.
+\end{align}
+Hence $V_s$ is strictly increasing, starts negative, and tends to infinity. It has a unique zero. The potential decreases before that zero and increases afterward. It also tends to infinity. This proves the assertion, including the two symmetric minima in $q$.
+\end{proof}
+
+For the current hierarchy $D/B_L$ is extremely small. Expanding the stationary equation gives
+\begin{equation}
+s_*\sim\sqrt{\frac{2D}{B_LS}},\qquad
+1-\frac{V_R(\sqrt{s_*})}{D}\sim\frac{4s_*}{3S}.
+\end{equation}
+These estimates are supported by simple bounds. With $\alpha=2D/(B_LS)$, the inequality
+$s^2/(1+s)\le F'(s)\le s^2$ implies that $s_*$ lies between the positive roots of
+$s^2+(\alpha/S)s-\alpha=0$ and $s^2-\alpha s-\alpha=0$.
+
+A 70-digit stationary-point calculation for $L=15$ gives
+\begin{align}
+q_*&=3.70470008878\times10^{-6},\\
+\frac{V_R(q_*)}{D}&=0.9999999999988562664,\\
+\boxed{\frac{D-V_R(q_*)}{D}=1.14373356231\times10^{-12}.}\label{eq:drop}
+\end{align}
+Extra arithmetic digits do not express physical parameter accuracy. They prevent cancellation from obscuring the very small difference of two potential energies.
+
+\fig{near_origin_vacuum.pdf}{The origin-matched empty-sector minima are very close to zero. The plotted vertical scale resolves a fractional vacuum-energy decrease of order $10^{-12}$, not a decrease to zero.}{fig:min}
+
+This separates two conclusions. Matter can still supply the positive curvature needed to stabilize the origin. But after that curvature disappears, the empty-sector vacuum of this specified theory does not release the original height $D$. A positive vacuum energy remains almost unchanged. Recovering the source model's intended post-release relaxation therefore needs additional physical matching data or a different completion, even if origin locking itself is achieved.
+
+\section{What inherited crossings can and cannot predict}
+The saved flat-space trajectory in the preceding study contains 39 crossings. Three exact event states were selected without altering their occupations or their remaining background kinetic energy. At each state we asked a deliberately conditional question: what would happen if the instantaneous $n_j$ were now an incoherent, conserved comoving distribution?
+
+\begin{table}[htbp]\centering\small
+\begin{tabular}{@{}rrrrr@{}}\toprule
+Crossing & $\rho_\chi/\Ezero$ & $K_q/\Ezero$ & conditional $\rho_{\chi,0}/D$ & conditional $a_{\rm rel}$\\\midrule
+1 & 0.0285398 & 0.9714602 & 0.961962 & 1.56701\\
+20 & 0.459011 & 0.540989 & 13.4682 & 3.77680\\
+39 & 0.699922 & 0.300078 & 21.8476 & 4.43767\\\bottomrule
+\end{tabular}
+\caption{Conditional transport only. The last two columns use $a_\star=10^{-6}$ and the threshold in \eqref{eq:locking}. They are not derived late-time abundances or release forecasts. Background kinetic energy is explicitly retained as unresolved.}
+\end{table}
+
+The numerical trace identity $\rho_\chi-3p_\chi=\Tr$ agrees to a maximum scaled discrepancy of $3.17\times10^{-16}$ on the tested moments. That verifies moment arithmetic, not the physical applicability of the incoherent assumption. At the first crossing the dephased trace is approximately $3.3883$, whereas the coherent curvature correction is approximately $446.288$. Coherence is not negligible merely because the field passes through zero.
+
+\fig{conditional_locking.pdf}{Conditional trace histories obtained from three different saved crossings. Each curve assumes conserved incoherent occupations from that point onward. Their disagreement exposes the missing physical matching time and out-state prescription.}{fig:trace}
+
+The source cosmology's conditional release scale, approximately $1.14807$, came from its stipulated spectrum. It cannot be transferred unchanged to these different distributions. Conversely, none of the three new values is a replacement prediction. The calculation has not established when production ends, whether the field is captured, how coherence becomes irrelevant, or where the remaining scalar kinetic energy goes.
+
+\section{An expanding finite system from one action}
+\subsection{Regulator, lapse, and subtraction}
+Choose a finite comoving momentum quadrature with positive weights $w_j$. For each mode,
+\begin{equation}
+\Omega_j^2(a,q)=k_j^2/a^2+y_j^2(1+q^2).
+\end{equation}
+Let $Z(a,q)>0$ be a specified kinetic coefficient. The reduced homogeneous action per unit comoving volume is
+\begin{align}
+L={}&-\frac{3M^2a\dot a^2}{N}
+ +Na^3\left[\frac{Z}{2}\left(\frac{\dot q}{N}\right)^2-U(q)\right]
+ -\frac{N\rho_{r0}}{a}\nonumber\\
+&+\sum_jw_j\left[\frac{a^3}{2N}|\dot f_j|^2
+ -\frac{Na^3\Omega_j^2}{2}|f_j|^2+\frac{N\Omega_j}{2}\right].\label{eq:action}
+\end{align}
+Here $N$ is the lapse and $M^2=(M_{\rm Pl}/A)^2$ for the physical conversion. The radiation term has density $\rho_r=\rho_{r0}a^{-4}$. The last mode term specifies an instantaneous finite subtraction. The static matched potential is already included in $U$.
+
+Equation~\eqref{eq:action} defines a finite, time-reparametrization-invariant homogeneous model. Its explicit regulator and $a$ dependence are not asserted to arise from a complete local covariant quantum effective action. In particular, a conserved finite reduced action is not a substitute for the curvature-dependent subtractions needed by a renormalized stress tensor \cite{molina,ferreiro}.
+
+After variation and $N=1$, a mode obeys
+\begin{equation}
+\ddot f_j+3H\dot f_j+\Omega_j^2f_j=0,\qquad H=\dot a/a,
+\end{equation}
+with preserved normalization
+\begin{equation}
+a^3(f_j\dot f_j^*-f_j^*\dot f_j)=i.
+\end{equation}
+Use real variables
+\begin{align}
+n_j&=\frac{a^3(|\dot f_j|^2+\Omega_j^2|f_j|^2)}{2\Omega_j}-\frac12,\\
+u_j&=a^3\left(\Omega_j|f_j|^2-\frac{|\dot f_j|^2}{\Omega_j}\right),\\
+v_j&=-2a^3\operatorname{Re}(f_j^*\dot f_j).
+\end{align}
+Direct differentiation yields
+\begin{align}
+\dot n_j&=\tfrac12W_ju_j,&
+\dot u_j&=W_j(1+2n_j)-2\Omega_jv_j,&
+\dot v_j&=2\Omega_ju_j,\label{eq:kinetic}\\
+W_j&=3H+\frac{\dot\Omega_j}{\Omega_j}
+=3H+\frac{y_j^2q\dot q-Hk_j^2/a^2}{\Omega_j^2}.\label{eq:W}
+\end{align}
+The $3H$ term follows from the expanding mode normalization. Dropping it while leaving the rest of the system unchanged is an incorrect finite model.
+
+\subsection{Force and pressure}
+The same action gives
+\begin{align}
+\rho_\chi&=a^{-3}\sum_jw_j\Omega_jn_j,\label{eq:rhomode}\\
+p_\chi&=a^{-3}\sum_jw_j\left[\frac{k_j^2n_j}{3a^2\Omega_j}
+-\left(\frac{\Omega_j}{2}-\frac{k_j^2}{6a^2\Omega_j}\right)u_j\right],\label{eq:pmode}\\
+\mathcal F&=a^{-3}\sum_jw_j\Omega_{j,q}(n_j+u_j/2).\label{eq:force}
+\end{align}
+The coherent term in pressure is as necessary as the coherent term in the reaction force. The background equation is
+\begin{equation}
+Z\ddot q+H(3Z+aZ_a)\dot q+\frac12Z_q\dot q^2+U_q+\mathcal F=0.\label{eq:background}
+\end{equation}
+Its density and pressure are
+\begin{equation}
+\rho_q=\frac12Z\dot q^2+U,\qquad
+p_q=\frac12Z\dot q^2-U+\frac16aZ_a\dot q^2.\label{eq:scalarstress}
+\end{equation}
+The last term follows by differentiating $a^3Z\dot q^2/2$ with respect to $a$ before fixing the metric. It is not optional when the retained kinetic coefficient depends on the scale factor.
+
+\begin{theorem}[Finite exchange and the gravitational constraint]\label{thm:flrw}
+On any regular solution of \eqref{eq:kinetic} and \eqref{eq:background} with $a>0$ and $Z>0$,
+\begin{align}
+\dot\rho_\chi+3H(\rho_\chi+p_\chi)&=\dot q\,\mathcal F,\\
+\dot\rho_q+3H(\rho_q+p_q)&=-\dot q\,\mathcal F.
+\end{align}
+After adding separately conserved radiation, the total density and pressure obey
+\begin{equation}
+\boxed{\dot\rho+3H(\rho+p)=0.}\label{eq:continuity}
+\end{equation}
+If $\dot H=-(\rho+p)/(2M^2)$ and $3M^2H^2=\rho$ initially, the Friedmann constraint remains satisfied. In addition,
+\begin{equation}
+\boxed{a^3(\tau)\rho(\tau)+\int_0^\tau3Ha^3p\,\dd t=\rho(0)}\label{eq:work}
+\end{equation}
+when $a(0)=1$.
+\end{theorem}
+\begin{proof}
+Differentiate \eqref{eq:rhomode}. Insert $\dot n_j=W_ju_j/2$ and
+$\dot\Omega_j=(y_j^2q\dot q-Hk_j^2/a^2)/\Omega_j$.
+The terms multiplying $Hn_j$ and $Hu_j$ cancel against $3H(\rho_\chi+p_\chi)$ using \eqref{eq:pmode}. The remaining term is $\dot q\mathcal F$.
+
+For the background,
+\[
+\dot\rho_q=Z\dot q\ddot q+\tfrac12(Z_q\dot q+aHZ_a)\dot q^2+U_q\dot q.
+\]
+Substitute \eqref{eq:background}. The terms involving $Z_q$ and $U_q$ cancel, leaving
+$-\dot q\mathcal F-3HZ\dot q^2-\tfrac12aHZ_a\dot q^2$.
+This is $-\dot q\mathcal F-3H(\rho_q+p_q)$. Radiation adds zero to the total divergence.
+
+Differentiating $3M^2H^2-\rho$ now gives
+$6M^2H\dot H+3H(\rho+p)=0$. Finally, multiply \eqref{eq:continuity} by $a^3$ and integrate. This gives \eqref{eq:work}.
+\end{proof}
+
+The mode equations also preserve
+$(1+2n_j)^2-u_j^2-v_j^2=1$.
+For a normalized pure initial state on the positive sheet, continuity keeps $1+2n_j\ge1$, so $n_j\ge0$. This proves positivity in the exact finite equations. Floating-point preservation is a separate numerical check.
+
+There is no assertion of global existence for arbitrary expanding solutions in this theorem. It applies while the finite solution remains regular. Nor does positivity of the instantaneous mode energy make that energy an asymptotic particle yield.
+
+\section{The kinetic tail and what expansion adds}
+\subsection{The retained term}
+The flat-space calculation retained the leading kinetic response of momentum modes above the explicit cutoff. The present finite action carries that same term at the evolving physical cutoff. For level $h$, let
+\begin{equation}
+K_h^2(a)=y_hz_{\max}^2/a^2,\quad
+A_h=\left[\frac{K_h^2}{K_h^2+y_h^2(1+q^2)}\right]^{3/2}.
+\end{equation}
+The coefficient used in the solver is
+\begin{equation}
+Z(a,q)=C+\sum_{h=1}^L\frac{d_hy_h^2}{48\pi^2}
+\frac{q^2}{1+q^2}(1-A_h).\label{eq:tail}
+\end{equation}
+It is positive. Its $q$ and $a$ derivatives enter both \eqref{eq:background} and \eqref{eq:scalarstress}. The explicit modes and this omitted-momentum term do not overlap in their declared momentum ranges.
+
+\subsection{A diagnostic for missing terms}
+The leading adiabatic response of \eqref{eq:kinetic} has
+$v_j\simeq W_j/(2\Omega_j)$ and $n_j\simeq W_j^2/(16\Omega_j^2)$, with $u_j$ at higher derivative order. Thus the corresponding second-order mode density is
+\begin{equation}
+\rho_\chi^{(2)}\simeq\frac{1}{16a^3}\sum_j\frac{w_j}{\Omega_j}
+\left[\frac{\Omega_{j,q}}{\Omega_j}\dot q+
+\left(3-\frac{k_j^2}{a^2\Omega_j^2}\right)H\right]^2.\label{eq:adiabatic}
+\end{equation}
+This contains terms proportional to $\dot q^2$, $H\dot q$, and $H^2$. Equation~\eqref{eq:tail} retains only the flat-background $\dot q^2$ response. Including its scale-factor derivative correctly preserves the chosen finite action, but does not supply the other terms.
+
+At large physical momentum and $\dot q=0$, $W\simeq2H$. With the continuum measure $k_{\rm phys}^2\dd k_{\rm phys}/(2\pi^2)$, the leading contribution per species behaves as
+\begin{equation}
+\rho^{(2)}\sim \frac{H^2K_{\rm phys}^2}{16\pi^2}.
+\end{equation}
+This asymptotic diagnostic is not inserted as an isolated numerical subtraction. A consistent subtraction must also determine pressure, force, and gravitational terms. Full stress-tensor regularization requires the appropriate curvature and higher adiabatic contributions \cite{ferreiro}. Initial-state regularity must be treated at the same time \cite{baacke}. The present test does not isolate all cutoff sensitivity into one cause.
+
+\section{Numerical comparisons and rejected controls}
+\subsection{Independent variables and exact budgets}
+The real kinetic solver was compared with an independently coded complex mode solver. In a finite $L=14$ expansion stress test, their maximum background-position difference is $1.34\times10^{-11}$ and their maximum mode-energy difference is $3.31\times10^{-9}\Ezero$. The complex representation's maximum Wronskian residual is $4.44\times10^{-12}$. These are cross-checks of the same finite model, not independent cosmological evidence.
+
+The stress test sets the initial dimensionless Hubble rate to $0.02$ by changing the gravitational coupling at fixed initial densities. It is deliberately not the inherited physical cosmology. A representative $L=15$, $z_{\max}=16$, 128-node run gives
+\begin{align}
+\max_\tau\left|\frac{a^3\rho+W_p}{\rho(0)}-1\right|&=4.75\times10^{-14},\\
+\max_\tau\left|\frac{H^2}{H_i^2}-\frac{\rho}{\rho(0)}\right|&=3.77\times10^{-14},
+\end{align}
+where $W_p=\int3Ha^3p\,\dd\tau$. The Friedmann constraint is evolved, not reset algebraically at each step.
+
+\fig{expansion_work.pdf}{Finite expansion stress test. Comoving energy alone is not constant. The pressure-work term completes the budget. The deliberately accelerated expansion is not an observational model.}{fig:work}
+
+Four incorrect versions were also integrated. They omit a term while retaining the rest of the closed finite system.
+\begin{table}[htbp]\centering\small
+\begin{tabular}{@{}lr@{}}\toprule
+Incorrect modification & maximum relative work-balance defect\\\midrule
+Omit coherent mode pressure & $1.34148\times10^{-2}$\\
+Omit the volume-squeezing term in $W$ & $1.13805\times10^{-2}$\\
+Omit the $aZ_a$ pressure term & $3.42649\times10^{-5}$\\
+Omit coherence from the background force & $2.92396\times10^{-3}$\\\bottomrule
+\end{tabular}
+\caption{Intentional negative controls. Their failure detects inconsistent equations, not a failure of the correct finite identity.}
+\end{table}
+
+\subsection{Quadrature converges, the expansion cutoff does not}
+At fixed cutoff, increasing the quadrature from 64 to 128 nodes leaves the first-crossing mode-energy fraction stable to about $5.83\times10^{-13}$. Holding 128 nodes and doubling the momentum cutoff instead gives
+\begin{center}
+\begin{tabular}{@{}rrr@{}}\toprule
+$z_{\max}$ & nodes per segment & first-crossing $\rho_\chi/\Ezero$\\\midrule
+16 & 128 & 0.4198449952\\
+32 & 128 & 2.1854778816\\\bottomrule
+\end{tabular}
+\end{center}
+The relative shift is $4.20544$, or about $421\%$. The declared acceptance threshold of $10^{-3}$ is not met. This is a failed scientific gate, not a quadrature failure hidden by an energy check.
+
+\fig{expansion_cutoff_failure.pdf}{The two lower curves overlap after quadrature refinement at fixed cutoff. Increasing the cutoff changes the result strongly. Each correct finite system still satisfies its pressure-work balance.}{fig:cutoff}
+
+A mode density above the initial scalar budget is not by itself the original flat-space overdraw: total radiation and pressure work are explicitly present, and the subtracted coherent pressure need not satisfy a positive-pressure condition. It is also not validated cosmological production. The large cutoff response, incomplete metric subtraction, and chosen initial state prevent that interpretation.
+
+\subsection{The actual microscopic expansion scale}
+With the stored cosmological conversion inputs, the origin branch has $A\simeq49.2467$ eV and
+\begin{equation}
+\frac{H_i}{A}=3.35456\times10^{-25}.
+\end{equation}
+Here $H_i$ in the numerator is the dimensionful physical rate. The dimensionless solver uses that ratio. Over $0\le\tau\le12$, the accumulated $\log a$ is about $4.03\times10^{-24}$. The largest background-position difference from the flat-space run is $3.57\times10^{-15}$.
+
+This finite comparison confirms that the inherited microscopic scale does not produce substantial Hubble damping during a few crossings. It does not permit extrapolation to cosmological times. The accelerated stress test deliberately makes expansion large enough to expose structural errors in the finite prescription.
+
+\section{Alternative vacuum matching is a different problem}
+\subsection{An exact restriction on quartic counterterms}
+The origin locking problem does not require the old empty-sector vacuum at $q=4$ to remain intact. Nevertheless, preserving that vacuum is a useful separate test of the intended late-time theory.
+
+Set $s=q^2$ and $G(s)=(1+s)^2\log(1+s)$. The most general static potential with this Gaussian determinant and polynomial counterterms through $q^4$ is
+\begin{equation}
+U(s)=a_0+b_0s+c_0s^2+B_LG(s).
+\end{equation}
+Here $a_0,b_0,c_0$ are polynomial coefficients, not the scale factor or the stored crossing parameter. Suppose $U_s(S)=0$. Let
+$\Delta=U(0)-U(S)$ and $\kappa=U_{qq}(\sqrt S)$. Define
+\begin{equation}
+J(S)=\tfrac12S^2-S+\log(1+S),\quad
+K(S)=\tfrac12S^2+S-(1+S)\log(1+S).
+\end{equation}
+
+\begin{theorem}[Barrier, curvature, and origin restriction]\label{thm:matching}
+Every such quartic-matched potential satisfies
+\begin{equation}
+\boxed{\Delta=\frac{S\kappa}{8}-B_LJ(S),\qquad
+U_{qq}(0)=\frac{4}{S}[B_LK(S)-\Delta].}\label{eq:invariants}
+\end{equation}
+Consequently, retaining an origin maximum and a stationary vacuum at $\sqrt S$ requires $\Delta>B_LK(S)$.
+\end{theorem}
+\begin{proof}
+Stationarity gives $b_0=-2c_0S-B_LG'(S)$. Substitute this into
+$\Delta=-b_0S-c_0S^2+B_L[G(0)-G(S)]$ and
+$\kappa=4S[2c_0+B_LG''(S)]$. Eliminating $c_0$ gives the first identity. Substitution into $U_{qq}(0)=2[b_0+B_LG'(0)]$ gives the second. An origin maximum requires negative curvature, yielding the strict inequality.
+\end{proof}
+
+At $L=15$ and the inherited budget, $B_LK(S)/\Ezero\simeq1353.96$. Matching the old tiny vacuum curvature instead places the origin below the proposed vacuum by about $1622.36\Ezero$. Keeping the old barrier requires an empty-vacuum curvature roughly $7.62\times10^{22}$ times its tree value. These are different specified matching choices. None is a compensated change of convention that preserves all the original physical data.
+
+\subsection{A constructive but altered branch}
+The restriction also gives a constructive family. Let
+\begin{align}
+R_S(s)&=G(s)-G(S)-G'(S)(s-S)-\tfrac12G''(S)(s-S)^2,\\
+U_\Delta(s)&=\frac{\Delta+B_LJ(S)}{S^2}(s-S)^2+B_LR_S(s).
+\end{align}
+Then $U_\Delta(S)=U_{\Delta,s}(S)=0$ and $U_\Delta(0)=\Delta$.
+
+\begin{proposition}[An accessible double well under changed matching]
+If $B_LK(S)<\Delta<\Ezero$, $U_\Delta(q^2)$ is nonnegative, has its only global minima at $q=\pm\sqrt S$, and has an origin maximum. The origin barrier lies within the declared budget.
+\end{proposition}
+\begin{proof}
+Theorem~\ref{thm:matching} gives $U_s(0)<0$. Also $U_s(S)=0$ and
+$U_{ss}(S)=2[\Delta+B_LJ(S)]/S^2>0$. The function $U_s$ is strictly convex because $U_{sss}=2B_L/(1+s)>0$. On $0<s<S$ it lies below its chord between a negative value and zero, so it is negative. For $s>S$, $U_{ss}$ increases from a positive value, so $U_s>0$. The potential decreases to its zero at $S$ and then increases. The final budget statement follows from $U(0)=\Delta<\Ezero$.
+\end{proof}
+
+\fig{matching_window.pdf}{Counterfactual tower changes. The original depth-15 content fails the displayed barrier window. A shallower theory can pass it, but removes most of the stipulated production weight and requires a new calibration. This is not selection of a physical cutoff.}{fig:window}
+
+For an explicit comparison, truncating to $L=12$ retains about $20.0724\%$ of the old Gaussian production energy. Recalibrating that stipulated family gives $\Ezero=43.8579$ and $B_{12}K(S)=9.02826$. Choosing $\Delta=0.3\Ezero=13.1574$ satisfies the window. This changes the species content, physical mass scale, and background matching. It is a counterfactual model, not a recovery of the original cosmology.
+
+Finite runs of this branch cross the origin. A tighter run through $\tau=300$ has 23 crossings and has not settled into a vacuum. Its total energy balance is excellent, but a separate absolute mode-normalization check fails at large occupation. The comparison is retained to show both the constructive matching possibility and its current numerical boundary.
+
+\section{Verification, failures, and the research boundary}
+The delivered study contains 29 finite configurations. Twenty-five use the stated full equations and four are deliberate negative controls. The aggregate audit records \textbf{19 passing gates and two failed gates}. Four selected configurations were independently replayed in the same pinned numerical environment and reproduced their final background positions at stored precision.
+
+The first failed gate is momentum-cutoff acceptance in the expansion stress test. The second is absolute preservation of the mode hyperboloid in highly occupied altered-model runs. The tight altered-model run reaches occupation of order $10^5$. Evaluating
+$(1+2n)^2-u^2-v^2-1$ then subtracts large terms to resolve a value near zero. Its maximum absolute residual is $6.84738\times10^{-4}$, above the declared $10^{-5}$ gate. Tightening the integration tolerance did not repair this diagnostic. It remains a failure rather than being converted into a pass by switching to a scaled norm. A structure-preserving or higher-precision representation is the appropriate next check for that secondary branch.
+
+The accepted origin calculations pass this absolute normalization criterion. All correct finite runs have maximum sampled work-balance defects below $10^{-8}$. The saved-state audit independently reconstructs density and pressure-work combinations from exact sampled full mode states. The supplied diagnostics do not constitute interval-certified error bounds.
+
+\subsection{What is established}
+The finite study establishes the corrected distinction between origin locking and the empty-sector vacuum, proves a local trace criterion under explicit incoherent assumptions, locates the matched empty-sector minima, and constructs a pressure-consistent finite expanding model. It also proves matching restrictions within a stated Gaussian quartic class. Those are mathematical results at their stated scope.
+
+The computations cross-check those constructions, reproduce the flat limit, test the physical short-time scale, and expose a genuine ultraviolet failure under appreciable expansion. They do not establish a covariantly renormalized cosmology, an incoming state derived from a cosmic history, a captured late-time branch, a relic abundance, or the old post-release vacuum relaxation.
+
+\subsection{The next construction}
+The continuation should keep the original target at the origin. The background force, energy density, pressure, and metric terms need a common curvature-dependent subtraction prescription through the order required for the stress tensor. The initial state must have compatible adiabatic regularity. The $H^2$ and mixed terms in \eqref{eq:adiabatic} identify missing structure but cannot be subtracted alone while leaving the rest of the action unchanged.
+
+After that construction, the same physical matching data should be held fixed while momentum and time resolution are varied. Only a controlled late-time state can justify replacing coherent dynamics by the trace transport law. Residual scalar energy must remain in the budget. Separately, the empty-sector potential must support the intended release of vacuum energy. The original energy excess is therefore not repaired by this study, but the remaining obligations are no longer confused with a barrier at the wrong locking point.
+
+\appendix
+\section{Reproducibility and source correspondence}
+The software modules are \texttt{matching.py}, \texttt{locking.py}, \texttt{expansion.py}, \texttt{audit.py}, and \texttt{verify.py}. Every finite configuration has a JSON settings record, dense saved diagnostic series, final modes, and 21 exact sampled full mode states. The sampled states are not interpolated. The full continuously sampled mode trajectory is not claimed to be stored. The inherited 39-crossing event data used by the conditional transport comparison are included separately and identified by hashes.
+
+\texttt{verify.py --replay} audits the delivered arrays and reruns four configurations. Failed scientific gates remain present in the machine-readable report. The original benchmark input has SHA-256
+\begin{quote}\ttfamily\footnotesize
+7a08c0964796a8cd607b2a59ed8b2bfb6cfb8e4df31b7b03627c8201bc2c796e.
+\end{quote}
+The reference numerical environment is Python 3.13.5, NumPy 2.3.5, SciPy 1.17.0, SymPy 1.14.0, and mpmath 1.3.0. Runtime settings and exact software versions are recorded with the verification results. No Lean compiler run was performed for this supplement.
+
+The source bridge's Sections 2.6 and 2.7 identify locking at the origin and give the classical exchange and stability laws. The source cosmology's Section 9.8 describes density locking and conditional release. The accompanying correction note explicitly repairs the earlier interpretation that confused this state with $q=4$. The preceding papers and main monograph are preserved rather than silently overwritten.
+
+\begin{thebibliography}{9}\small
+\bibitem{bridge} Komorebi P. \emph{Covariant Refinement-Fiber Dynamics}. Source bridge, Sections 2.4--2.7 and Chapter 6. Original PDF pages 15--16 for the action, exchange identity, and locked origin.
+\bibitem{cosmology} Komorebi P. \emph{Cosmology, Dark Sectors and Structure Formation}. Source Volume II, Section 9.8. Original PDF pages 55--56 for conditional locking and release.
+\bibitem{energy} Komorebi P. \emph{Energy-Conserving Production: A finite-depth backreaction study}. Companion research manuscript.
+\bibitem{matched} Komorebi P. \emph{Vacuum Matching and Dynamical Energy Transfer}. Companion research manuscript and numerical source package.
+\bibitem{molina} C. Molina-Par\'is, P. R. Anderson, and S. A. Ramsey. One-loop $\lambda\phi^4$ theory in Robertson--Walker spacetimes: adiabatic regularization and analytic approximation. \emph{Physical Review D} \textbf{61}, 127501 (2000). arXiv:gr-qc/9908037.
+\bibitem{ferreiro} A. Ferreiro, S. Monin, and F. Torrenti. Physical scale adiabatic regularization in cosmological spacetimes. arXiv:2311.08986, version 2 (2024).
+\bibitem{baacke} J. Baacke, K. Heitmann, and C. P\"atzold. On the choice of initial states in nonequilibrium dynamics. \emph{Physical Review D} \textbf{57}, 6398--6405 (1998). arXiv:hep-th/9711144.
+\end{thebibliography}
+\end{document}

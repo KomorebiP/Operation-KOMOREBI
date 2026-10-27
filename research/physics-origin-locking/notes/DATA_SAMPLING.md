@@ -1,0 +1,3 @@
+# Delivered mode-state sampling
+
+Each finite configuration includes its complete saved diagnostic time series, final mode occupations and coherence variables, and 21 exact sampled full mode states for independent auditing. Intermediate working files had 101 full mode snapshots. The delivered subset was selected by integer indices without interpolation. Solver settings, dense diagnostic series, recorded crossing values, invariant residual series, and final modes are unchanged. This is file-size reduction, not a new integration or an accuracy improvement. Replay code saves the same 21-state format. The complete continuously sampled mode solution is not claimed to be stored.
