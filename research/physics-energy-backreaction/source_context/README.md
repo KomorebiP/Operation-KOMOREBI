@@ -1,0 +1,1 @@
+These four unchanged source chapters provide context for the inherited benchmark and its failure. They are fragments from the preceding book, not standalone compilable documents. Their references and figures rely on that parent package. They do not describe the new finite study.
