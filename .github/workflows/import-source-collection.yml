@@ -1,0 +1,85 @@
+name: Import source collection
+run-name: Import source collection / ${{ inputs.batch }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: Committed source batch to import
+        required: true
+        default: public-initial
+        type: string
+      expected_base:
+        description: Exact current main commit expected before import
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-collection-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    if: github.repository == 'KomorebiP/Operation-KOMOREBI'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      IMPORT_BATCH: ${{ inputs.batch }}
+      EXPECTED_BASE: ${{ inputs.expected_base }}
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - name: Validate dispatch inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF" == "refs/heads/main" ]] || {
+            printf '%s\n' 'This workflow must be dispatched on main.' >&2
+            exit 1
+          }
+          [[ "$IMPORT_BATCH" =~ ^[a-z0-9][a-z0-9_-]{0,63}$ ]] || {
+            printf '%s\n' 'Invalid source batch identifier.' >&2
+            exit 1
+          }
+          [[ "$EXPECTED_BASE" =~ ^[0-9a-f]{40}$ ]] || {
+            printf '%s\n' 'expected_base must be a complete lowercase commit SHA.' >&2
+            exit 1
+          }
+
+      - name: Check out main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: true
+          lfs: false
+          submodules: false
+
+      - name: Confirm the exact base
+        shell: bash
+        run: |
+          set -euo pipefail
+          import_checked_out_sha="$(git rev-parse HEAD)"
+          [[ "$import_checked_out_sha" == "$EXPECTED_BASE" ]] || {
+            printf '%s\n' 'main changed before checkout. No import was started.' >&2
+            exit 1
+          }
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+
+      - name: Import, verify, and publish the selected source batch
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -B tools/import_source_collection.py \
+            --batch "$IMPORT_BATCH" \
+            --expected-base "$EXPECTED_BASE" \
+            --publish
