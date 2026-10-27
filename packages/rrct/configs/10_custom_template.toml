@@ -1,0 +1,70 @@
+[run]
+name = "custom_experiment"
+seed = 581001
+output_root = "runs"
+repetitions = 1
+save_rows = true
+save_models = false
+make_plots = true
+fail_on_unused_setting = false
+
+[runtime]
+backend = "auto"
+device = "auto"
+dtype = "float32"
+threads = 0
+
+[experiment]
+family = "single_agent_closure"
+episodes = 1000
+calibration_episodes = 512
+holdout_episodes = 1024
+sequence_length = 6
+agent_count = 4
+state_dim = 16
+noise_std = 0.05
+
+[features]
+workspace = true
+self_model = true
+provenance = true
+planner_binding = true
+recurrence = true
+metacognition = true
+
+[workspace]
+mode = "global"
+dimension = 8
+packet_count = 4
+capacity = 4
+hierarchy_depth = 1
+persistent_across_steps = true
+persistent_across_episodes = false
+bidirectional = true
+membership_mode = "softmax"
+temperature = 1.0
+formation_cost = 0.12
+
+[training]
+enabled = false
+steps = 1000
+batch_size = 256
+learning_rate = 0.003
+hidden_width = 32
+
+[interventions]
+workspace_cut = false
+provenance_cut = false
+planner_binding_cut = false
+recurrence_cut = false
+message_shuffle = false
+hardening = false
+
+[safety]
+network_access = false
+external_tools = false
+autonomous_persistence = false
+self_preservation_reward = false
+valence_model = false
+negative_welfare_state = false
+unrestricted_file_write = false

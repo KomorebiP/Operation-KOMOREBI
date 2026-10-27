@@ -1,0 +1,31 @@
+[run]
+name = "fuzzy_temperature_hardening"
+seed = 582101
+output_root = "runs/sweeps"
+save_rows = false
+make_plots = false
+
+[experiment]
+family = "fuzzy_coalitions"
+agent_count = 4
+holdout_episodes = 2048
+
+[features]
+fuzzy_packets = true
+
+[training]
+enabled = true
+steps = 1200
+batch_size = 256
+hidden_width = 48
+
+[sweep]
+enabled = true
+execute = true
+parallel_workers = 1
+
+[sweep.grid]
+"workspace.temperature" = [0.1, 0.25, 0.5, 1.0, 2.0]
+"workspace.entropy_penalty" = [0.0, 0.001, 0.01]
+"workspace.idempotence_penalty" = [0.0, 0.001, 0.01]
+"interventions.hardening" = [false, true]

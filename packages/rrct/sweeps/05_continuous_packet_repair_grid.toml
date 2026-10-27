@@ -1,0 +1,47 @@
+[run]
+name = "continuous_packet_repair_grid"
+seed = 590501
+output_root = "runs"
+overwrite = true
+strict_feature_contract = true
+fail_on_unused_setting = true
+
+[experiment]
+family = "continuous_open_set_runtime"
+observation_dim = 12
+
+[features]
+fuzzy_packets = true
+dynamic_formation = true
+cost_regularization = true
+continuous_event_fabric = true
+open_set_change_detection = true
+dynamic_packet_birth = true
+dynamic_packet_death = true
+self_model_repair = true
+memory_quarantine = true
+
+[workspace]
+allow_new_packets = true
+max_packets = 10
+formation_cost = 0.20
+
+[continuous]
+steps = 512
+calibration_steps = 12
+event_interval = 12
+checkpoint_interval = 32
+
+[sweep]
+enabled = true
+execute = true
+parallel_workers = 4
+resume = true
+retry_failures = 1
+max_runs = 0
+
+[sweep.grid]
+"workspace.temperature" = [0.5, 0.8, 1.2]
+"workspace.birth_threshold" = [0.45, 0.60]
+"continuous.repair_rate" = [0.5, 0.8]
+"interventions.packet_birth_cut" = [false, true]

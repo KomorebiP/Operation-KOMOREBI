@@ -1,0 +1,52 @@
+[run]
+name = "jspace_intervention_ladder"
+seed = 600801
+output_root = "runs/sweeps"
+overwrite = true
+save_rows = false
+strict_feature_contract = true
+fail_on_unused_setting = true
+
+[runtime]
+device = "cpu"
+threads = 1
+
+[experiment]
+family = "persistent_fuzzy_j_workspace"
+
+[features]
+workspace = true
+fuzzy_packets = true
+dynamic_formation = true
+cost_regularization = true
+jacobian_workspace = true
+moving_j_lens = true
+sparse_cone = true
+provenance = true
+planner_binding = true
+recurrence = true
+
+[jspace]
+residual_dimension = 32
+frame_rank = 4
+active_directions = 2
+steps = 192
+calibration_steps = 32
+event_interval = 12
+random_baselines = 4
+checkpoint_interval = 24
+
+[sweep]
+enabled = true
+execute = true
+parallel_workers = 4
+resume = true
+retry_failures = 1
+
+[sweep.grid]
+"interventions.membership_shuffle" = [false, true]
+"interventions.jspace_cut" = [false, true]
+"interventions.broadcast_cut" = [false, true]
+"interventions.provenance_cut" = [false, true]
+"interventions.planner_binding_cut" = [false, true]
+"interventions.feedback_cut" = [false, true]

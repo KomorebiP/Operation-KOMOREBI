@@ -1,0 +1,47 @@
+[run]
+name = "jspace_rank_sparsity_frontier"
+seed = 600701
+output_root = "runs/sweeps"
+overwrite = true
+save_rows = false
+strict_feature_contract = true
+fail_on_unused_setting = true
+
+[runtime]
+device = "cpu"
+threads = 1
+
+[experiment]
+family = "persistent_fuzzy_j_workspace"
+
+[features]
+workspace = true
+fuzzy_packets = true
+dynamic_formation = true
+cost_regularization = true
+jacobian_workspace = true
+moving_j_lens = true
+sparse_cone = true
+provenance = true
+planner_binding = true
+recurrence = true
+
+[jspace]
+residual_dimension = 32
+steps = 192
+calibration_steps = 32
+event_interval = 12
+random_baselines = 4
+checkpoint_interval = 24
+
+[sweep]
+enabled = true
+execute = true
+parallel_workers = 4
+resume = true
+retry_failures = 1
+
+[sweep.grid]
+"jspace.frame_rank" = [2, 3, 4]
+"jspace.active_directions" = [1, 2]
+
