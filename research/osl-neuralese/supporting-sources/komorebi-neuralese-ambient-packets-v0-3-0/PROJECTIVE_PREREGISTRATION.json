@@ -1,0 +1,84 @@
+{
+  "schema": "komorebi.neuralese.projective_training.preregistration.v1",
+  "version": "0.2.0",
+  "status": "developmental-thresholds-frozen-after-initial-two-seed-screen",
+  "primary_question": "Does positive-ray normalization during terminal-only training improve long-depth causal operator execution without relation labels, intermediate targets, or an exact anchor compiler?",
+  "allowed_training_inputs": [
+    "exposed episode operator tables",
+    "visible randomized operator-slot sequence",
+    "start state",
+    "terminal target"
+  ],
+  "forbidden_training_inputs": [
+    "canonical operator identity",
+    "family label",
+    "episode conjugation phi",
+    "true intermediate states",
+    "named D4 relations",
+    "null-cycle evaluator words",
+    "anchor-closed B P B^-1 targets"
+  ],
+  "sole_architectural_change": "Normalize the hidden vector to unit Euclidean norm after every learned linear operator application.",
+  "profiles": {
+    "smoke": {
+      "seeds": [0],
+      "steps": 120,
+      "batch_size": 64,
+      "examples": 256,
+      "eval_batch_size": 128,
+      "lengths": [1, 4, 8, 16, 32, 64],
+      "families": ["d4", "c8"],
+      "null_repeats": [0, 1, 2],
+      "null_examples": 128,
+      "intervention_examples": 128,
+      "intervention_length": 16
+    },
+    "pilot": {
+      "seeds": [0, 1],
+      "steps": 1600,
+      "batch_size": 256,
+      "examples": 2048,
+      "eval_batch_size": 512,
+      "lengths": [1, 2, 3, 4, 8, 12, 32, 64, 128, 256],
+      "families": ["d4", "c8", "mixed_cycle", "random"],
+      "null_repeats": [0, 1, 2, 4, 8, 16],
+      "null_examples": 1024,
+      "intervention_examples": 1024,
+      "intervention_length": 64
+    },
+    "confirmatory": {
+      "seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      "steps": 5000,
+      "batch_size": 256,
+      "examples": 8192,
+      "eval_batch_size": 1024,
+      "lengths": [1, 2, 3, 4, 8, 16, 32, 64, 128, 256, 512],
+      "families": ["d4", "c8", "mixed_cycle", "random"],
+      "null_repeats": [0, 1, 2, 4, 8, 16, 32],
+      "null_examples": 8192,
+      "intervention_examples": 8192,
+      "intervention_length": 128
+    }
+  },
+  "pilot_developmental_gates": {
+    "train_range": ">= 0.98 per seed",
+    "D4_depth64": ">= 0.98 per seed",
+    "D4_depth128": ">= 0.95 per seed",
+    "D4_depth256_mean": ">= 0.80",
+    "D4_depth256_seed_floor": ">= 0.75",
+    "D4_depth256_advantage": ">= 0.50 over paired raw parent",
+    "finite_fraction": "== 1.0",
+    "deep_state_and_operator_patch": ">= 0.90",
+    "matched_random_controls": "<= 0.40",
+    "null_cycle_accuracy": ">= 0.90",
+    "cross_seed_transport": ">= 0.70",
+    "random_transport_control": "<= 0.40"
+  },
+  "claim_boundary": [
+    "Pilot thresholds are developmental because the D4 depth behavior was screened before they were frozen.",
+    "OOD-family metrics are exploratory and have no pilot success gate.",
+    "Normalization is an architectural inductive bias, so success is not unconstrained spontaneous emergence.",
+    "Behavioral null-cycle closure does not imply an exact ambient matrix representation.",
+    "A confirmatory claim requires fresh seeds and thresholds frozen before those outcomes."
+  ]
+}
