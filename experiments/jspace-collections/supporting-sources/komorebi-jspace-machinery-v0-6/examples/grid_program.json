@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    {
+      "id": "copy",
+      "op": "copy_pattern",
+      "args": {
+        "scene": "scene",
+        "source_color": "source_color",
+        "target_color": "target_color",
+        "zero": "zero",
+        "turns": "turns",
+        "transparent": "transparent"
+      }
+    },
+    {
+      "id": "chosen",
+      "select": {
+        "condition": "enabled",
+        "then": "copy",
+        "else": "scene"
+      }
+    },
+    {
+      "id": "changed",
+      "op": "grid.changed",
+      "args": {
+        "a": "scene",
+        "b": "chosen"
+      }
+    },
+    {
+      "id": "change_count",
+      "op": "mask.count",
+      "args": {
+        "mask": "changed"
+      }
+    }
+  ],
+  "outputs": {
+    "result": "chosen",
+    "original": "scene",
+    "changed_mask": "changed",
+    "changed_cells": "change_count"
+  }
+}
