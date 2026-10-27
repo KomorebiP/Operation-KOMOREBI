@@ -1,0 +1,377 @@
+\chapter{An exact computation workbook}
+\label{app:computation-workbook}
+
+This appendix gives calculations that a reader can reproduce without trusting a status flag. The objects are the normalized coefficients of $\Delta$, the auxiliary shell polynomials, and one rational transfer certificate at $31$. Each calculation ends at its actual mathematical boundary. Agreement of finite outputs does not supply the missing all-prime nonvanishing argument.
+
+The complete integer inputs and outputs are in the companion evidence archive. Paths below are relative to its extracted project root. A JSON integer remains an integer even when it has many digits. An encoded rational pair $[a,b]$ means $a/b$, with a nonzero denominator. Converting these objects to floating point before checking an equality changes the contract.
+
+\section{Three engines and one coefficient shift}
+\label{sec:workbook-engines}
+
+Write
+\[
+ F(q)=\frac{\Delta(q)}q=\prod_{k\ge1}(1-q^k)^{24}
+      =\sum_{m\ge0}f_mq^m.
+\]
+Then $f_0=1$ and $\tau(n)=f_{n-1}$. This shift is essential. A program that stores $\tau(0)=0$ as a sentinel must not confuse that entry with the constant coefficient $f_0$.
+
+For direct product expansion, terms of degree at most $m$ depend only on factors with $k\le m$. The exact binomial expansion
+\[
+ (1-q^k)^{24}=\sum_{j=0}^{24}(-1)^j\binom{24}{j}q^{kj}
+\]
+therefore supplies a finite algorithm for each desired coefficient. Three short calculations are
+\begin{align*}
+ f_1&=-24,\\
+ f_2&=\binom{24}{2}-24=276-24=252,\\
+ f_3&=-\binom{24}{3}+(-24)(-24)-24\\
+    &=-2024+576-24=-1472.
+\end{align*}
+The last line comes respectively from the $q^3$ term in the first factor, the product of its $q$ term with the second factor's $q^2$ term, and the third factor's $q^3$ term. Thus it computes $\tau(4)$, not $\tau(3)$.
+
+The logarithmic derivative provides a different exact engine. With $\sigma_1(j)=\sum_{d\mid j}d$, comparison of coefficients in
+\[
+ q\frac{F'(q)}{F(q)}=-24\sum_{j\ge1}\sigma_1(j)q^j
+\]
+gives
+\begin{equation}
+ m f_m=-24\sum_{j=1}^{m}\sigma_1(j)f_{m-j}
+ \qquad(m\ge1).
+ \label{eq:workbook-divisor-recurrence}
+\end{equation}
+For $m=3$, the divisor sums are $1,3,4$. Hence
+\[
+ f_3=-8\bigl(252+3(-24)+4\bigr)=-8\cdot184=-1472.
+\]
+An implementation should check that the numerator in \eqref{eq:workbook-divisor-recurrence} is divisible by $m$, rather than rounding the quotient.
+
+Jacobi gives a third engine. Put $T_j=j(j+1)/2$ and $a_j=(-1)^j(2j+1)$. The series
+\[
+ A(q)=\prod_{k\ge1}(1-q^k)^3=1+\sum_{j\ge1}a_jq^{T_j}
+\]
+satisfies $F=A^8$. The identity $AqF'=8FqA'$ yields
+\begin{equation}
+ m f_m=\sum_{\substack{j\ge1\\T_j\le m}}
+          a_j(9T_j-m)f_{m-T_j}.
+ \label{eq:workbook-triangular-recurrence}
+\end{equation}
+At $m=3$, only $T_1=1$, $T_2=3$ contribute. Its numerator is
+\[
+ (-3)(9-3)(252)+5(27-3)(1)=-4536+120=-4416.
+\]
+Division by $3$ again gives $-1472$. The direct product, divisor recurrence and triangular recurrence reach the same integer through different algebraic operations.
+
+\Needspace{11\baselineskip}
+\begin{center}
+\begin{tabular}{r r r r}
+\toprule
+$m$ & $f_m=\tau(m+1)$ & $m$ & $f_m=\tau(m+1)$\\
+\midrule
+0 & $1$ & 5 & $-6048$\\
+1 & $-24$ & 6 & $-16744$\\
+2 & $252$ & 7 & $84480$\\
+3 & $-1472$ & 8 & $-113643$\\
+4 & $4830$ & 9 & $-115920$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The current independent comparison covers every $\tau(n)$ for $1\le n\le512$. The historical final-arithmetic run's direct-product comparison stopped at $128$, while the packet-tree run compared through $512$. These are different documented ranges. The new three-engine table supplies its own bound and does not infer one from an older summary.
+
+\section{Reconstructing the auxiliary polynomial}
+\label{sec:workbook-polynomial}
+
+For a packet $v$, set $c_i=(v_i-i)/5$ and form
+\[
+ P_v(T)=\prod_{0\le i<j\le4}\bigl((i-j)+T(c_i-c_j)\bigr).
+\]
+Its physical value is $P_v(5)=288W(v)$. Summing the full shell gives
+\[
+ P_n(T)=\sum_{v\in\Vn}P_v(T)=\sum_{j=0}^{10}B_jT^j,
+ \qquad P_n(5)=288\tau(n).
+\]
+The polynomial has a different variable from the prime index. A root in $T$ or in a rescaled variable does not represent a nearby prime coefficient.
+
+For a nonzero $P_n$, use the convention $v_5(0)=+\infty$ and define
+\[
+ \mu_n=\min_j\bigl(j+v_5(B_j)\bigr),\qquad
+ G_n(U)=5^{-\mu_n}P_n(5U)=\sum_{j=0}^{10}C_jU^j.
+\]
+Every $C_j=B_j5^{j-\mu_n}$ is an integer. The power of $5$ should be removed only after verifying divisibility for each coefficient. Since $288$ is a $5$-adic unit,
+\begin{equation}
+ v_5(\tau(n))=\mu_n+v_5(G_n(1)).
+ \label{eq:workbook-normalized-valuation}
+\end{equation}
+All coefficients in the next two tables are exact integers from the freshly reproduced shell data. They allow a reader to check the normalization and every displayed residue without re-enumerating a large shell.
+
+\section{The simple branch at 499}
+\label{sec:workbook-499}
+
+At $n=499$ the shell has $500$ packets. Of their weights, $262$ are positive and $238$ negative. Their sum is
+\[
+ \tau(499)=-108877719272500.
+\]
+The minimum layer valuation is $\mu_{499}=3$.
+
+\Needspace{17\baselineskip}
+\begin{center}
+\begingroup\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{r r r r}
+\toprule
+$j$ & $B_j$ in $P_{499}$ & $C_j$ in $G_{499}$ & $j+v_5(B_j)$\\
+\midrule
+0 & $144000$ & $1152$ & 3\\
+1 & $-360000$ & $-14400$ & 5\\
+2 & $1063040$ & $212608$ & 3\\
+3 & $28418240$ & $28418240$ & 4\\
+4 & $-148872808$ & $-744364040$ & 4\\
+5 & $209474504$ & $5236862600$ & 5\\
+6 & $2422451240$ & $302806405000$ & 7\\
+7 & $16445000$ & $10278125000$ & 11\\
+8 & $8107402848$ & $25335633900000$ & 8\\
+9 & $-11893316304$ & $-185833067250000$ & 9\\
+10 & $-1160632800$ & $-90674437500000$ & 12\\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{center}
+
+Summing the second coefficient column and using the normalization checks gives
+\begin{align*}
+ P_{499}(5)&=-31356783150480000=288\tau(499),\\
+ G_{499}(1)&=-250854265203840.
+\end{align*}
+Reducing the normalized coefficients gives
+\begin{align*}
+ G_{499}(U)&\equiv2+3U^2\pmod5,\\
+ G_{499}(U)&\equiv2+8U^2+15U^3+10U^4\pmod{25}.
+\end{align*}
+The first polynomial has the simple roots $1$ and $4$ modulo $5$. At $U=1$, the exact sum is $10$ modulo $25$ and its derivative is $1$ modulo $5$. Consequently
+\[
+ G_{499}(1+5h)\equiv10+5h\pmod{25}.
+\]
+The five possibilities are $10,15,20,0,5$ as $h$ runs from $0$ to $4$. The root in the branch $U\equiv1\pmod5$ therefore lifts to $U=16\pmod{25}$.
+
+This lifted root is not the physical target. The target remains $U=1$, where $v_5(G_{499}(1))=1$. Formula \eqref{eq:workbook-normalized-valuation} gives $v_5(\tau(499))=3+1=4$.
+
+The following exact root history records both simple branches. Each entry lies between $0$ and $5^k-1$ and evaluates to zero modulo $5^k$. Consecutive entries agree modulo the preceding power. These conditions are stronger than displaying an approximate root.
+
+\Needspace{18\baselineskip}
+\begin{center}
+\begin{tabular}{r r r r}
+\toprule
+$k$ & $5^k$ & Root reducing to $1$ & Root reducing to $4$\\
+\midrule
+1 & 5 & 1 & 4\\
+2 & 25 & 16 & 4\\
+3 & 125 & 41 & 54\\
+4 & 625 & 541 & 554\\
+5 & 3125 & 3041 & 2429\\
+6 & 15625 & 9291 & 14929\\
+7 & 78125 & 9291 & 77429\\
+8 & 390625 & 165541 & 233679\\
+9 & 1953125 & 1337416 & 1014929\\
+10 & 9765625 & 7196791 & 1014929\\
+11 & 48828125 & 7196791 & 20546179\\
+12 & 244140625 & 153681166 & 215858679\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The fixed degree $10$ does not impose a universal ceiling on the valuation of polynomial values at varying inputs. A simple $5$-adic root supplies arbitrarily accurate integer approximations. That observation concerns the auxiliary variable. It neither changes the value at $1$ nor supplies interpolation of the prime-indexed family.
+
+\section{The double branch at 16249}
+\label{sec:workbook-16249}
+
+At $16249$ the shell contains $16250$ packets, with $8284$ positive and $7966$ negative weights. The exact coefficient is
+\[
+ \tau(16249)=133116215274958169206250.
+\]
+Here $\mu_{16249}=4$. The full coefficient table is as follows.
+
+\Needspace{17\baselineskip}
+\begin{center}
+\begingroup\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{r r r r}
+\toprule
+$j$ & $B_j$ in $P_{16249}$ & $C_j$ in $G_{16249}$ & $j+v_5(B_j)$\\
+\midrule
+0 & $4680000$ & $7488$ & 4\\
+1 & $-13320000$ & $-106560$ & 5\\
+2 & $-199541600$ & $-7981664$ & 4\\
+3 & $-26375464320$ & $-5275092864$ & 4\\
+4 & $737398074300$ & $737398074300$ & 6\\
+5 & $-39838758304992$ & $-199193791524960$ & 5\\
+6 & $-746041848478320$ & $-18651046211958000$ & 7\\
+7 & $-6990990388478280$ & $-873873798559785000$ & 8\\
+8 & $21389931029028020$ & $13368706893142512500$ & 9\\
+9 & $-64003552771660728$ & $-200011102411439775000$ & 9\\
+10 & $3937759175521630080$ & $61527487117525470000000$ & 11\\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{center}
+
+The exact sums are
+\begin{align*}
+ P_{16249}(5)&=38337469999187952731400000,\\
+ G_{16249}(1)&=61339951998700724370240.
+\end{align*}
+The first equals $288\tau(16249)$, and the second equals the first divided by $625$. Modulo $5$, the normalized polynomial is
+\[
+ 3+U^2+U^3=(U-1)^2(U-2).
+\]
+Modulo $25$, the table gives
+\[
+ G_{16249}(U)\equiv13+15U+11U^2+11U^3+15U^5.
+\]
+Thus $G_{16249}(1)\equiv15\pmod{25}$ while $G'_{16249}(1)\equiv0\pmod5$. For every integer or $5$-adic integer $h$, polynomial Taylor expansion gives
+\[
+ G_{16249}(1+5h)\equiv G_{16249}(1)+5hG'_{16249}(1)
+                    \equiv15\pmod{25}.
+\]
+Terms of order at least two have a factor $25$. This is a uniform obstruction throughout that residue branch, not merely the observation that five trial inputs fail. Every input congruent to $1$ modulo $5$ has normalized valuation exactly $1$.
+
+The other residual root should not be discarded. At $U=2$, the normalized value is $5$ modulo $25$ and its derivative is $1$ modulo $5$. That simple branch lifts to $22$ modulo $25$. The conclusion is that the double branch at $1$ does not lift, rather than that the polynomial has no $5$-adic roots anywhere.
+
+At the physical input $1$, the coefficient valuation is $4+1=5$. The two examples have different root geometry but both settle their actual target value by an exact modulo-$25$ calculation.
+
+\section{A first failure needs a domain}
+\label{sec:workbook-valuation-domain}
+
+The tested auxiliary equality was
+\[
+ v_\ell(\tau(p))=v_\ell(p+1),
+ \qquad p\ne\ell,\quad\ell\mid(p+1),\quad p\text{ prime}.
+\]
+The complete search through $150000$ contains $13848$ primes. The following counts refer to the indicated candidate sets, not to every prime without a residue condition.
+
+\Needspace{11\baselineskip}
+\begin{center}
+\begingroup\small
+\begin{tabular}{r r r r r r}
+\toprule
+$\ell$ & First $p$ & $v_\ell(\tau(p))$ & $v_\ell(p+1)$ & Candidates & Discrepancies\\
+\midrule
+2 & 81919 & 20 & 14 & 13847 & 1\\
+3 & 8747 & 8 & 7 & 6941 & 5\\
+5 & 499 & 4 & 3 & 3451 & 50\\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{center}
+
+The exact decisive values, including the discrepancy in the opposite $5$-adic direction, are
+\begin{align*}
+ \tau(499)&=-108877719272500,\\
+ \tau(1249)&=27757672778617250,\\
+ \tau(8747)&=348766170858826454196,\\
+ \tau(81919)&=-904107824789465028682055680.
+\end{align*}
+For example, $1250=2\cdot5^4$, while the second integer has $5$-adic valuation $3$. Hence a proposed one-sided lift $v_5(\tau(p))\ge v_5(p+1)$ also fails at this actual prime.
+
+These four coefficients were checked independently by the Eisenstein convolution. If $\sigma_r(n)=\sum_{d\mid n}d^r$, the coefficient of $(E_4E_8-E_6^2)/1728$ is obtained from
+\begin{align*}
+1728\tau(n)={}&240\sigma_3(n)+480\sigma_7(n)+1008\sigma_5(n)\\
+ &+115200\sum_{k=1}^{n-1}\sigma_3(k)\sigma_7(n-k)\\
+ &-254016\sum_{k=1}^{n-1}\sigma_5(k)\sigma_5(n-k).
+\end{align*}
+This computes the selected integers without the triangular recurrence. The numerator is divided exactly by $1728$. The replay checks this independent formula for $1\le n\le128$ and at the four displayed primes, giving $132$ checks.
+
+The phrase ``first failure'' has two limits. It concerns the ordered search in its declared candidate set, and its exhaustive range ends at $150000$. A larger prime may supply another failure. The displayed nonzero integers refute an auxiliary valuation identity, not Lehmer's conjecture.
+
+\section{Reading the rational transfer at 31}
+\label{sec:workbook-transfer}
+
+The degree-at-most-$22$ certificate has six coarse sectors and sixteen fine sectors. Both correction matrices have eighteen columns. Let
+\[
+ A\in\Z^{6\times16},\quad
+ M_c\in\Z^{6\times18},\quad M_f\in\Z^{16\times18}.
+\]
+The fine-to-coarse parent map completely specifies $A$: its column $j$ has a $1$ in the parent row and zero elsewhere. The original fine masses are given below. Let $s_f$ denote their sixteen-entry column vector. Indices start at $0$.
+
+\Needspace{15\baselineskip}
+\begin{center}
+\begin{tabular}{r r r @{\qquad} r r r}
+\toprule
+$j$ & Parent & Fine mass & $j$ & Parent & Fine mass\\
+\midrule
+0 & 0 & $2354352$ & 8 & 0 & $-11844448$\\
+1 & 2 & $-19467448$ & 9 & 1 & $-7162848$\\
+2 & 4 & $-832048$ & 10 & 0 & $-31156048$\\
+3 & 4 & $15074752$ & 11 & 2 & $4356352$\\
+4 & 4 & $1881152$ & 12 & 2 & $32821152$\\
+5 & 5 & $4248552$ & 13 & 2 & $1262352$\\
+6 & 5 & $7759752$ & 14 & 0 & $-7455448$\\
+7 & 4 & $-31808448$ & 15 & 3 & $-12874848$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For instance, row $0$ aggregates fine indices $0,8,10,14$:
+\[
+ 2354352-11844448-31156048-7455448=-48101592.
+\]
+The six coarse masses are therefore
+\[
+ s_c=(-48101592,-7162848,18972408,
+      -12874848,-15684592,12008304)^t.
+\]
+Their sum, and the sum of the fine masses, is $-52843168$. These original masses differ in order from the lexicographic orbit bars because the certificate orders the residue-sector keys.
+
+The full machine certificate is
+\begin{center}\small
+\path{evidence/computation/replays/transport/p31_transport_certificate.json}.
+\end{center}
+It supplies an $18\times13$ rational matrix $N$ whose columns form a basis of $\ker M_c$, and the detail matrix $B=M_fN$ of size $16\times13$. The basic exact checks are
+\[
+ AM_f=M_c,\quad As_f=s_c,\quad M_cN=0,
+ \quad B=M_fN,\quad AB=0.
+\]
+The last equation shows that a detail correction changes no coarse mass.
+
+The rational row-reduction results are
+\[
+ \rank M_c=5,\qquad\rank M_f=15,\qquad\rank B=10.
+\]
+An independent check obtains the same lower bounds over both prime fields $\mathbb F_{65537}$ and $\mathbb F_{1000003}$. Every denominator used in a reduction is invertible there. A nonzero minor in either field proves a nonzero rational minor after clearing denominators.
+
+The corresponding upper bounds have direct structural explanations. Each correction matrix has column sum zero, giving bounds $5$ and $15$. Every row of $A$ has a nonempty, disjoint support, so $\rank A=6$ and $\dim\ker A=10$. Since $AB=0$, the detail rank is at most $10$. The upper and lower bounds establish the displayed ranks exactly.
+
+The coarse coefficient vector $a\in\Q^{18}$ makes
+\[
+ x=s_f+M_fa,\qquad Ax=(0,0,0,0,0,-52843168)^t.
+\]
+The certificate then chooses a coefficient vector $d\in\ker M_c$. Its final fine vector $y=x+M_fd$ is zero except at index $6$, where it equals $-52843168$.
+
+One parent gives a concrete view of this second stage. Parent $5$ has fine children $5,6$. Just after the coarse stage their values are
+\begin{align*}
+ x_5&=-\frac{161598180629860124657534386744}
+                 {23300823161076013875625},\\
+ x_6&=-\frac{1069691132209170737342448593256}
+                 {23300823161076013875625}.
+\end{align*}
+Their exact sum is $-52843168$. The detail stage adds $-x_5$ to child $5$ and $x_5$ to child $6$, giving $(0,-52843168)$ in that parent. All other parents retain their zero totals. This is a rational conservation calculation, not a numerical near-zero test.
+
+To verify the whole certificate, parse the rational pairs, check the matrix dimensions, verify all five identities, and compare both stored stages entry by entry. Then check $M_cd=0$ and the single surviving final entry. The script \path{code/check_transport_certificate.py} performs the independent equality and prime-field checks.
+
+This example does not assume a uniform rank theorem. Nor does full rank prove a uniformly nonzero survivor. At a shell whose original total were zero, complete zero-total transfer could still leave every final mass zero. At $31$ the separately computed exact total is nonzero, so the displayed survivor is authenticated for this one shell.
+
+\section{Reproducing a run and interpreting its record}
+\label{sec:workbook-manifests}
+
+From the extracted source-set root, a new independent coefficient run is requested with
+\begin{lstlisting}[basicstyle=\ttfamily\small,breaklines=true,frame=single,rulecolor=\color{Soft}]
+python3 code/run_replays.py tau_independent \
+  --output-root evidence/computation/reader_coefficients
+\end{lstlisting}
+The destination must be fresh. The launcher refuses to replace an existing run directory. Omitting the suite name requests the complete declared sequence of suites. For that complete reproduction, use a fresh destination such as \path{evidence/computation/reproduced}. The large modular comparison consumes the newly generated dyadic result in that same destination, so these dependent suites belong in their declared order.
+
+A version $2$ manifest records the actual argument vector, exact arithmetic domain, semantic bounds, software versions and executed limits. Its \texttt{input\_artifacts} contain input checksums before and after execution. Its \texttt{declared\_results} name the scientific files the child must create. Output checksums cover those files and the execution logs.
+
+Three questions remain separate. Did execution finish within its limits with unchanged inputs and all required outputs? Does the code implement the intended finite assertion? Does a proof show that the finite assertion decides the universal claim? An exit code of zero answers only part of the first question.
+
+The count $704$ means $22$ selected modulus examples times $32$ exponents, not $704$ distinct primes. Of $24$ selected moduli, $11$ and $19$ had no observed matching prime through $10000$. That finite absence does not contradict positive density. The $24576$ synthetic cases mean $256$ moduli times three trace parameters times $32$ exponents. Their parameter $p=5M-1$ need not be prime, and their trace is not asserted to equal $\tau(p)$.
+
+A checksum pins bytes. Run provenance records execution. A timeout records an execution limit. A reproduced obstruction can refute its stated auxiliary implication while leaving Lehmer unchanged. Attach each exact calculation to a claim of the correct scope.

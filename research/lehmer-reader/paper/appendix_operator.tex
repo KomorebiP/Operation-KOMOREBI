@@ -1,0 +1,221 @@
+\chapter{The symmetric Laplacian in coordinates}\label{app:operator}
+
+The universal null construction depends on an exact differential operator. This appendix derives that operator from the Euclidean metric, rather than treating its power-sum formulas as a black box. It also explains the Newton reductions used by the implementation and gives two low-degree harmonic checks. All polynomial identities are on the hyperplane $H=\{v\in\R^5:\sum_i v_i=0\}$, with its induced Euclidean metric. The modularity and valence contracts remain the ones stated in Chapters~\ref{ch:theta} and~\ref{ch:nulls}.
+
+Write $s_m=\sum_{i=0}^4v_i^m$, with $s_0=5$ and $s_1=0$, and let $D=\prod_{i<j}(v_i-v_j)$. We distinguish the ordinary Laplacian $\Delta_H$ from the conjugated operator $\mathcal L$ defined by $\Delta_H(DQ)=D\mathcal LQ$. The factor $D$ changes radial coefficients substantially. Confusing the two operators would invalidate the harmonicity test.
+
+\section{Two descriptions of the same metric}
+The orthogonal projection from $\R^5$ to $H$ is
+\begin{equation}\label{appop:projection}
+P=I_5-\frac15\mathbf1\mathbf1^T,
+\end{equation}
+where $\mathbf1=(1,1,1,1,1)^T$. Indeed, subtracting the coordinate mean leaves a zero coordinate sum. The matrix is symmetric, satisfies $P^2=P$, and has image $H$. For an ambient polynomial $F$, its gradient along $H$ is $P\nabla F$. Its Laplacian along $H$ is
+\begin{equation}\label{appop:ambientlap}
+\Delta_H(F|_H)
+=\left(\sum_{i=0}^4\partial_i^2F
+-\frac15\left(\sum_{i=0}^4\partial_i\right)^2F\right)\Big|_H.
+\end{equation}
+Only tangential derivatives enter. Thus this expression is independent of the polynomial extension away from $H$.
+
+For direct symbolic computation, use four coordinates $x_0,\ldots,x_3$ and substitute
+\[
+v=(x_0,x_1,x_2,x_3,-x_0-x_1-x_2-x_3).
+\]
+The coordinate tangent vectors are $b_a=e_a-e_4$. Their Gram matrix and its inverse are
+\begin{equation}\label{appop:chartmetric}
+G=I_4+\mathbf1\mathbf1^T,
+\qquad G^{-1}=I_4-\frac15\mathbf1\mathbf1^T,
+\end{equation}
+now with a four-entry vector $\mathbf1$. Matrix multiplication verifies the inverse. The factor $1/5$ remains because the missing fifth coordinate is determined by the four chosen coordinates.
+
+The chart Laplacian is consequently
+\begin{equation}\label{appop:chartlap}
+\Delta_H=\sum_{a,b=0}^3
+\left(\delta_{ab}-\frac15\right)\frac{\partial^2}{\partial x_a\partial x_b}.
+\end{equation}
+The coordinates $x_a$ are not orthonormal. Using only the four diagonal second derivatives would use a different metric. As a normalization check, $s_2=x^TGx$, so its Hessian is $2G$ and
+\[
+\Delta_Hs_2=\operatorname{tr}(G^{-1}2G)=8.
+\]
+The rank of the Euclidean space is four, giving twice that rank. Later we obtain $\mathcal Ls_2=48$, an intentionally different number.
+
+\section{Conjugating by the Vandermonde}
+The Vandermonde is alternating under coordinate permutations. Since $\Delta_H$ commutes with those permutations, $\Delta_HD$ is alternating of degree eight. Every alternating polynomial vanishes on each hyperplane $v_i=v_j$. In the polynomial ring of $H$, the ten corresponding linear factors are distinct and divide it. Their product has degree ten. Therefore $\Delta_HD=0$.
+
+On the open set where $D\ne0$, the product rule gives
+\begin{equation}\label{appop:conjugation}
+\frac{\Delta_H(DQ)}{D}
+=\Delta_HQ+2\nabla_H\log D\cdot\nabla_HQ.
+\end{equation}
+Here $\nabla\log D$ denotes the rational logarithmic derivative $\nabla D/D$. It does not require choosing a complex logarithm or assuming that $D$ is positive. For symmetric $Q$, the apparent poles cancel and the right side extends to a polynomial on all of $H$.
+
+There is a second explanation of the extension. The polynomial $\Delta_H(DQ)$ is alternating, so $D$ divides it. Its quotient is symmetric. Thus the operator $\mathcal L$ is well defined on symmetric polynomials even at coordinate collisions. The packet shell itself has no collisions because its residues are distinct. The polynomial extension is nevertheless needed when constructing and comparing symbolic identities.
+
+Translation invariance of $D$ gives
+\[
+\sum_i\frac{\partial_iD}{D}=0,
+\qquad
+\frac{\partial_iD}{D}=\sum_{j\ne i}\frac1{v_i-v_j}.
+\]
+Its ambient logarithmic gradient is already tangential. This removes a potential extra projection term in the derivation below.
+
+\section{Deriving the power-sum operator}
+For $m\ge2$, differentiation and projection give
+\begin{align}
+(\nabla_Hs_m)_i
+ &=m\left(v_i^{m-1}-\frac15s_{m-1}\right),\label{appop:gradsm}\\
+\Delta_Hs_m
+ &=\frac45m(m-1)s_{m-2}.\label{appop:lapsm}
+\end{align}
+In the logarithmic term, the coordinate-mean subtraction vanishes because the logarithmic gradient has zero sum. Pair the ordered indices $i,j$ and $j,i$ to obtain
+\[
+2\nabla_H\log D\cdot\nabla_Hs_m
+=2m\sum_{i<j}\frac{v_i^{m-1}-v_j^{m-1}}{v_i-v_j}.
+\]
+The divided difference is the finite polynomial
+\[
+\frac{v_i^{m-1}-v_j^{m-1}}{v_i-v_j}
+=\sum_{a=0}^{m-2}v_i^av_j^{m-2-a}.
+\]
+The sum over $a$ is symmetric in the two coordinates. Hence twice the sum over $i<j$ equals the sum over $i\ne j$. For each $a$, that ordered sum is $s_as_{m-2-a}-s_{m-2}$. There are $m-1$ values of $a$. We obtain
+\[
+2\nabla_H\log D\cdot\nabla_Hs_m
+=m\sum_{a=0}^{m-2}s_as_{m-2-a}
+-m(m-1)s_{m-2}.
+\]
+Adding \eqref{appop:lapsm} proves
+\begin{equation}\label{appop:lsm}
+\boxed{\mathcal Ls_m
+=m\sum_{a=0}^{m-2}s_as_{m-2-a}
+-\frac{m(m-1)}5s_{m-2}.}
+\end{equation}
+This formula is asserted for $m\ge2$. The boundary values are separately $\mathcal Ls_0=0$ and $\mathcal Ls_1=0$, since $s_0$ is constant and $s_1$ vanishes on $H$. No negative-index power sum is introduced.
+
+The first values are
+\begin{equation}\label{appop:firstoperator}
+\mathcal Ls_2=48,\qquad
+\mathcal Ls_3=0,\qquad
+\mathcal Ls_4=\frac{188}{5}s_2,\qquad
+\mathcal Ls_5=46s_3.
+\end{equation}
+For example, at $m=2$ the first term is $2s_0^2=50$, while the subtraction is $2s_0/5=2$. The additional $40$ compared with $\Delta_Hs_2=8$ comes from differentiating the degree-ten factor $D$.
+
+\section{The chain-rule metric and polynomial assembly}
+The same projected gradients give
+\begin{equation}\label{appop:chainmetric}
+\Gamma_{mn}:=\nabla_Hs_m\cdot\nabla_Hs_n
+=mn\left(s_{m+n-2}-\frac15s_{m-1}s_{n-1}\right).
+\end{equation}
+Expanding the product in \eqref{appop:gradsm} gives the first power sum once and the coordinate-mean product with coefficient $-1/5$. This identity includes $m,n\ge1$, with the evident zero tangential gradient for $s_1$.
+
+If $Q=F(s_2,s_3,s_4,s_5)$, the ordinary second-order chain rule and \eqref{appop:conjugation} yield
+\begin{equation}\label{appop:chainrule}
+\mathcal LQ
+=\sum_{m=2}^5\frac{\partial F}{\partial s_m}\mathcal Ls_m
++\sum_{m,n=2}^5
+\frac{\partial^2F}{\partial s_m\partial s_n}\Gamma_{mn}.
+\end{equation}
+The second sum runs over ordered pairs. Thus a mixed derivative contributes twice when $m\ne n$. If one instead sums over $m\le n$, the off-diagonal terms require a factor two. These are two equivalent conventions, but their factors must not be mixed.
+
+Useful instances are
+\begin{align}
+\mathcal L(s_2^2)&=104s_2,\label{appop:lradialtwo}\\
+\mathcal L(s_2^3)&=168s_2^2,\label{appop:lradialthree}\\
+\mathcal L(s_2s_4)&=64s_4+\frac{188}{5}s_2^2,\label{appop:ls2s4}\\
+\mathcal L(s_3^2)&=18s_4-\frac{18}{5}s_2^2.\label{appop:ls3square}
+\end{align}
+For the first identity, $2s_2\mathcal Ls_2+2\Gamma_{22}=96s_2+8s_2$. For the mixed product, $s_4\mathcal Ls_2+s_2\mathcal Ls_4+2\Gamma_{24}$ gives the displayed coefficients. Each calculation is a check of the ordered-pair convention.
+
+The metric formula may produce $s_6,s_7,s_8$. They are not new independent variables. The invariant ring on $H$ is generated by $s_2,s_3,s_4,s_5$, and Newton's identities reduce higher indices exactly.
+
+\section{Newton reductions with zero first power sum}
+Let $e_j$ be the elementary symmetric polynomials in the five coordinates. Their characteristic polynomial is
+\[
+\prod_i(T-v_i)=T^5+e_2T^3-e_3T^2+e_4T-e_5,
+\]
+because $e_1=s_1=0$. The first Newton identities give
+\begin{align}
+e_2&=-\frac12s_2,& e_3&=\frac13s_3,\label{appop:e23}\\
+e_4&=\frac18s_2^2-\frac14s_4,&
+e_5&=\frac15s_5-\frac16s_2s_3.\label{appop:e45}
+\end{align}
+For instance, the degree-five identity is $s_5+e_2s_3-e_3s_2-5e_5=0$. The two middle terms combine to $-5s_2s_3/6$, fixing the sign in $e_5$.
+
+Every coordinate satisfies its characteristic polynomial. Multiplying that equality by $v_i^{k-5}$ and summing, for $k\ge6$, gives
+\begin{equation}\label{appop:newtonrec}
+s_k=-e_2s_{k-2}+e_3s_{k-3}-e_4s_{k-4}+e_5s_{k-5}.
+\end{equation}
+This recurrence uses only lower indices. Substitution at $k=6,7$ yields
+\begin{align}
+s_6&=\frac34s_2s_4+\frac13s_3^2-\frac18s_2^3,\label{appop:s6}\\
+s_7&=\frac7{10}s_2s_5+\frac7{12}s_3s_4
+-\frac7{24}s_2^2s_3.\label{appop:s7}
+\end{align}
+The same rule gives
+\begin{equation}\label{appop:s8}
+s_8=\frac14s_4^2+\frac14s_2^2s_4
+-\frac1{16}s_2^4+\frac8{15}s_3s_5.
+\end{equation}
+Each term has the required invariant degree. This supplies a useful local check before substitution into a larger operator expression.
+
+At the first packet $v=(0,1,2,-2,-1)$, the first power sums are $s_2=10$, $s_3=0$, $s_4=34$, $s_5=0$. Formula \eqref{appop:s6} gives $255-125=130$, matching the direct sum of sixth powers. Formula \eqref{appop:s7} gives zero, matching cancellation of the opposite coordinates. Formula \eqref{appop:s8} gives $514$. These examples fix normalizations. The polynomial recurrences, rather than these examples, establish the identities on every vector in $H$.
+
+\section{Radial factors and harmonic projection}
+Let $h_\ell$ be homogeneous harmonic of degree $\ell$ on the rank-four space $H$. Euler's identity is $v\cdot\nabla_Hh_\ell=\ell h_\ell$. The product rule for the radial factor $s_2^j$ gives
+\begin{equation}\label{appop:radial}
+\Delta_H(s_2^jh_\ell)
+=4j(\ell+j+1)s_2^{j-1}h_\ell,\qquad j\ge1.
+\end{equation}
+At $j=0$ the left side is zero. At $j=1,\ell=0$ the coefficient is $8$, agreeing with $\Delta_Hs_2$. At $j=1,\ell=10$ it is $48$, agreeing with $\Delta_H(s_2D)=48D$.
+
+For a homogeneous polynomial $P$ of degree $M$, a concrete top-degree harmonic projection in dimension four is
+\begin{equation}\label{appop:hprojection}
+\mathcal H_M(P)=\sum_{j=0}^{\lfloor M/2\rfloor}
+\frac{(-1)^j(M-j)!}{4^j j!M!}\,s_2^j\Delta_H^jP.
+\end{equation}
+For $M=0$ or $1$ the sum contains only $j=0$. In general, if $a_j$ denotes its coefficient, the product rule gives the cancellation condition
+\[
+a_j+4(j+1)(M-j)a_{j+1}=0.
+\]
+The factorial coefficients satisfy this condition. The last possible iterated Laplacian has no further nonzero derivative, so the resulting polynomial is harmonic. Its difference from $P$ is divisible by $s_2$.
+
+Repeating the construction on that lower-degree quotient produces the harmonic decomposition
+\begin{equation}\label{appop:decomposition}
+P=\sum_{j=0}^{\lfloor M/2\rfloor}s_2^jh_{M-2j}.
+\end{equation}
+It is unique. If such a sum were zero, apply the Laplacian as many times as the largest occupied radial exponent. All smaller-exponent terms vanish. Formula \eqref{appop:radial} leaves a nonzero scalar times the last harmonic polynomial, so that polynomial must be zero. Descending removes every term.
+
+When $P=DQ$ is alternating, each projected harmonic component is alternating because the Laplacian and multiplication by $s_2$ commute with permutations. Each nonzero component is divisible by $D$ and has degree at least ten. Thus for a correction of homogeneous degree $d$, only $j\le d/2$ can occur. This is the degree bound used in the quasimodular argument for nonhomogeneous content conservation.
+
+Harmonic projection is not preservation of shell values. The elementary counterexample is $P=s_2D$, of degree $12$. Since $\Delta_HP=48D$ and the next Laplacian is zero,
+\[
+\mathcal H_{12}(s_2D)=s_2D-\frac1{48}s_2(48D)=0.
+\]
+Yet on $\Vn$ the original polynomial equals $10nD$, which is nonzero at every packet. The operation removes radial information. It cannot silently turn a shell interpolant into a universally null polynomial with the same values.
+
+\section{Two explicit harmonic moment checks}
+The degree-four correction
+\[
+K_4=130s_4-47s_2^2
+\]
+has
+\[
+\mathcal LK_4
+=130\frac{188}{5}s_2-47(104s_2)=0.
+\]
+Thus $DK_4$ is harmonic. At the first packet, $W=1$ and $K_4=130\cdot34-47\cdot100=-280$. Its theta form has weight $16$, whose cusp space is spanned by $\Delta E_4$ with first coefficient one. Consequently the theta form is $-280\Delta E_4$, giving the moment identity already stated in Chapter~\ref{ch:nulls}.
+
+Likewise, set
+\[
+K_6=90s_2s_4-27s_2^3-320s_3^2.
+\]
+Using \eqref{appop:lradialthree}--\eqref{appop:ls3square}, its operator image is
+\begin{align*}
+\mathcal LK_6={}&(5760-5760)s_4\\
+&+(3384-4536+1152)s_2^2=0.
+\end{align*}
+At the first packet its value is $90\cdot10\cdot34-27\cdot1000=3600$. The weight-$18$ cusp space is spanned by $\Delta E_6$, again normalized with first coefficient one. Its theta form is therefore $3600\Delta E_6$.
+
+These checks have different roles from the null certificates. Both polynomials are harmonic, but neither is universally null: their first coefficients are nonzero. Harmonicity supplies a modular-form space. The initial coefficients then identify the form or, when enough initial coefficients vanish, force it to be zero by valence. Skipping that second step would misidentify a nonzero moment as a permitted null correction.
+
+The retained programs organize these same operations using sparse rational polynomials. A direct four-coordinate implementation can instead substitute $v_4=-\sum_{a=0}^3x_a$ into $DQ$ and apply \eqref{appop:chartlap}. Agreement between these organizations checks the symbolic construction through different algebraic representations. The universal justification remains the metric calculation, the exact polynomial identities and the stated harmonic theta and valence contracts. None of those statements alone excludes the unresolved zero prime parameter of $\Delta$.

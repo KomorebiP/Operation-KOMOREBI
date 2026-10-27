@@ -1,0 +1,209 @@
+\chapter{Five-core packets and signed integral geometry}\label{ch:packets}
+\section{From hooks to an integral shell}
+A partition is a finite weakly decreasing list of positive integers. Its Young diagram has one box for each unit in the sum of its parts. The hook of a box consists of that box, the boxes to its right and the boxes below it. A $5$-core is a partition with no hook length divisible by $5$. Equivalently, it has no hook of length $5$, the criterion relevant to the specialization below.
+
+The Nekrasov--Okounkov identity in Han's formulation is
+\begin{equation}\label{eq:hookidentity}
+\prod_{m\ge1}(1-q^m)^{z-1}
+=\sum_\lambda q^{|\lambda|}\prod_{h\in H(\lambda)}\left(1-\frac z{h^2}\right).
+\end{equation}
+At $z=25$, a partition having a hook of length $5$ contributes zero. The surviving terms are the $5$-cores. Multiplication by $q$ shows that the coefficient $\tau(n)$ is the sum of the hook products over $5$-cores of size $n-1$.
+
+Han's V-coding identifies these cores with
+\begin{equation}\label{eq:shell}
+\Vn=\left\{v\in\Z^5:
+v_i\equiv i\pmod5,\quad\sum_{i=0}^4v_i=0,\quad
+\sum_{i=0}^4v_i^2=10n\right\}.
+\end{equation}
+The shift by $1$ in the partition size is important: the coding formula is $|\lambda|=\|v\|^2/10-1$. Define
+\begin{equation}\label{eq:weight}
+D(v)=\prod_{0\le i<j\le4}(v_i-v_j),\qquad W(v)=\frac{D(v)}{288}.
+\end{equation}
+Here $288=1!2!3!4!$. The hook product becomes $W(v)$, with positive prefactor for $t=5$. Therefore
+\begin{equation}\label{eq:packettau}
+\boxed{\tau(n)=\sum_{v\in\Vn}W(v).}
+\end{equation}
+This is a classical identity with translated conventions, authenticated against Han's Theorems 1.1 and 1.2 \cite{Han}. The finite shell is a new arena for the same coefficient, not a new coefficient definition.
+
+\figplaceholder{fivecore_hooks}{The hook specialization retains $5$-cores and annihilates partitions with a hook of length $5$. The displayed size-$6$ examples illustrate the exact mechanism behind the coefficient shift $|\lambda|=n-1$.}
+
+\section{Every packet is nonzero and integral}
+Distinct coordinate residues guarantee $v_i\ne v_j$ for $i\ne j$. Hence $D(v)$ and $W(v)$ are nonzero. Their signs can differ from packet to packet.
+
+Integrality follows from an integer-valued basis. For every integer $x$, including negative integers, the generalized binomial coefficient $\binom{x}{j}$ is an integer. Its leading coefficient as a polynomial in $x$ is $1/j!$. Thus
+\begin{equation}
+\det\left[\binom{v_i}{j}\right]_{0\le i,j\le4}
+=\frac{\prod_{i<j}(v_j-v_i)}{\prod_{j=0}^4j!}.
+\end{equation}
+There are ten pairs, so reversing every difference changes the sign by $(-1)^{10}=1$. The determinant is $W(v)$ and is integral. This proof is independent of the fact that the total in \eqref{eq:packettau} is an integer.
+
+Modulo $5$, the denominator $288$ is a unit and every difference has the fixed residue $i-j$. Hence
+\begin{equation}\label{eq:packetmod5}
+W(v)\equiv\frac{\prod_{i<j}(i-j)}{288}=1\pmod5.
+\end{equation}
+Every individual contribution is therefore a $5$-adic unit. A total divisible by $5$ arises from cancellation of those units, including their multiplicities.
+
+\section{Counting packets and restricting a possible zero}
+Let $\chifive$ be the quadratic character modulo $5$, extended by zero at multiples of $5$. The classical $5$-core count \cite{GKS}, Theorem 4 and equation (5.3), gives
+\begin{equation}\label{eq:packetcount}
+|\Vn|=\sum_{d\mid n}\chifive(d)\frac nd.
+\end{equation}
+At a prime,
+\[
+|\mathcal V_p|=p+\chifive(p).
+\]
+Together with \eqref{eq:packetmod5}, this gives
+\begin{equation}\label{eq:primemod5}
+\tau(p)\equiv p+\chifive(p)\pmod5.
+\end{equation}
+For $p\ne5$, $\chifive(p)\equiv p^2\pmod5$, so this is also the familiar congruence $\tau(p)\equiv p(1+p)\pmod5$ \cite{BCO}. It excludes zeros at primes congruent to $1,2,3$ modulo $5$. Since $\tau(5)=4830\ne0$, the unexcluded prime family is
+\[
+p\equiv4\pmod5.
+\]
+The restriction is substantial but still leaves infinitely many primes.
+
+The formula for the unweighted count must not be confused with the weighted sum. At $p=1249$ there are $1250$ packets, whose count has $5$-adic valuation $4$. The weighted coefficient has valuation $3$. At $p=499$, the count has valuation $3$ while the weighted coefficient has valuation $4$. Weights that are all $1$ modulo $5$ recover the first residue, but not all higher divisibility.
+
+\section{A complete shell enumerator}
+The shell is finite because every coordinate has absolute value at most $\sqrt{10n}$. Enumeration can reduce its dimension without discarding any solution. Choose $v_0,v_1,v_2$ in their residue classes within the bound. The remaining coordinates $x=v_3$, $y=v_4$ must satisfy
+\[
+x+y=S=-v_0-v_1-v_2,\qquad
+x^2+y^2=T=10n-v_0^2-v_1^2-v_2^2.
+\]
+Then
+\[
+(x-y)^2=2T-S^2.
+\]
+The right side must be a nonnegative square. For each permitted sign of its square root, the formulas $x=(S+(x-y))/2$ and $y=(S-(x-y))/2$ give the candidates. Their integrality and residues modulo $5$ are checked directly. This is a complete quadratic solution, rather than a sampling procedure.
+
+A second enumerator can loop through four coordinates and solve the fifth from the sum. Agreement between these independent organizations is a useful bounded control. The historical packet-tree verifier compared them through $n=32$. Shell sums were then compared with an independent tau engine at a larger finite scope.
+
+\figplaceholder{shell_coordinates}{The shell $\mathcal V_2$ is a concrete intersection of a zero-sum hyperplane, an integral residue condition and a sphere. Coordinates are labeled by their residues modulo $5$. A shell point is a packet, with its separate nonzero integral Vandermonde weight.}
+
+\section{The index-prime unit obstruction}
+If $p>20$ is prime and $v\in\mathcal V_p$, then for each pair
+\[
+0<(v_i-v_j)^2\le2(v_i^2+v_j^2)\le20p<p^2.
+\]
+Thus $p$ divides none of the differences and does not divide $288$. We obtain
+\begin{proposition}\label{prop:indexunit}
+For every prime $p>20$ and every $v\in\mathcal V_p$, one has $v_p(W(v))=0$.
+\end{proposition}
+All packets are units at the index prime. There is no increasing termwise $p$-adic depth automatically built into this representation. At $p=2411$, for example, all $2412$ packet weights are $2411$-adic units while their sum has valuation $1$. The divisibility belongs to the cancellation, not to an individually deeper term.
+
+This rules out importing a termwise filtration without constructing it. Groupings may still have useful divisibility, and new transformations may still reveal structure. The identity itself does not provide such a filtration.
+
+\chapter{A genuine auxiliary polynomial and its local roots}\label{ch:auxiliary}
+\section{A polynomial at each fixed shell}
+Write $v_i=i+5c_i$ for $v\in\Vn$. Define
+\begin{equation}\label{eq:pn}
+P_n(T)=\sum_{v\in\Vn}\prod_{i<j}\bigl[(i-j)+T(c_i-c_j)\bigr]
+=\sum_{j=0}^{10}B_j(n)T^j.
+\end{equation}
+For a fixed $n$, this is an integral polynomial of degree at most ten. It is obtained by summing products of ten linear factors. Evaluation at $T=5$ returns the Vandermonde numerators:
+\begin{equation}\label{eq:pn5}
+P_n(5)=288\tau(n),\qquad B_0(n)=288|\Vn|.
+\end{equation}
+The variable $T$ is auxiliary. Nothing in the construction says that $\tau(p)$ is one analytic function of the prime index $p$ in a $p$-adic or real variable.
+
+Normalize the coefficient valuations by
+\[
+\mu_n=\min_{B_j(n)\ne0}\bigl(j+v_5(B_j(n))\bigr),\qquad
+G_n(U)=5^{-\mu_n}P_n(5U).
+\]
+Every coefficient of $G_n$ is integral, and at least one is a unit. Because $288$ is a $5$-adic unit,
+\begin{equation}\label{eq:gnvaluation}
+v_5(\tau(n))=\mu_n+v_5(G_n(1)).
+\end{equation}
+This formula remains meaningful if $\tau(n)=0$, with valuation $\infty$. The normalization does not assume nonvanishing: its constant coefficient comes from a positive packet count on a nonempty shell.
+
+The bounded factorization experiment found all $300$ aggregate polynomials at primes $7\le p\le2000$ irreducible over $\Q$. This observation is unused in the universal arguments. Excluding $U=1$ throughout the prime family still requires further arithmetic restrictions on the moments $B_j(p)$.
+
+\section{A simple root at \texorpdfstring{$p=499$}{p=499}}
+The exact coefficients $B_0,\ldots,B_{10}$ at $499$ are
+\begin{align*}
+(&144000,-360000,1063040,28418240,-148872808,\\
+&209474504,2422451240,16445000,8107402848,\\
+&-11893316304,-1160632800).
+\end{align*}
+Their weighted valuations are
+\[
+(3,5,3,4,4,5,7,11,8,9,12).
+\]
+Hence $\mu_{499}=3$ and reduction gives
+\[
+\overline G_{499}(U)=2+3U^2=3(U-1)(U+1)\quad\text{in }\mathbf F_5[U].
+\]
+At the relevant value $U=1$,
+\[
+G_{499}(1)\equiv10\pmod{25},\qquad G'_{499}(1)\equiv1\pmod5.
+\]
+Substitute $U=1+5d$. The integral Taylor identity gives
+\[
+G_{499}(1+5d)\equiv10+5d\pmod{25}.
+\]
+The root in this residue class is therefore $\rho\equiv16\pmod{25}$. Hensel's lemma lifts it uniquely to $\Z_5$. The divided difference $(G(U)-G(\rho))/(U-\rho)$ is a unit on $U\equiv1\pmod5$, since its reduction is $G'(1)\ne0$. Thus
+\[
+v_5(G_{499}(U))=v_5(U-\rho)
+\]
+on that residue class. At $U=1$ the difference from $\rho$ has valuation $1$, giving
+\[
+v_5(\tau(499))=3+1=4.
+\]
+The root has been located in the auxiliary variable. This proves a finite coefficient valuation, without suggesting that $499$ is near a root in the prime-index variable.
+
+\section{A double residual root with no lift}
+At $p=16249$, the shell has $16250$ packets. The weighted coefficient valuations of $P_p(5U)$ are
+\[
+(4,5,4,4,6,5,7,8,9,9,11),
+\]
+so $\mu_p=4$. The reduction is
+\[
+\overline G_p(U)=3+U^2+U^3=(U-1)^2(U-2)\pmod5.
+\]
+The residual root at $1$ is double. Exact coefficient reduction gives
+\[
+G_p(1)\equiv15\pmod{25},\qquad G'_p(1)\equiv0\pmod5.
+\]
+For every $y\in\Z_5$, polynomial Taylor expansion has an integral remainder:
+\[
+G_p(1+5y)=G_p(1)+5yG'_p(1)+25y^2H(y),\qquad H\in\Z_5[y].
+\]
+Consequently
+\begin{equation}\label{eq:nolift}
+G_p(1+5y)\equiv15\pmod{25}\quad\text{for every }y\in\Z_5.
+\end{equation}
+No point in this entire residue class is a root. Its valuation is exactly $1$, and
+\[
+v_5(\tau(16249))=4+1=5.
+\]
+The exact coefficient is $133116215274958169206250$. The universal statement in \eqref{eq:nolift} follows from the Taylor identity and the two residues. A finite test at $625$ choices of $y$ is only a secondary code check.
+
+\figplaceholder{auxiliary_roots}{Two exact auxiliary root certificates. At $499$, the simple residual root near $1$ lifts and sits one $5$-adic digit away from the evaluation point. At $16249$, the double residual root has no lift in the class $1\bmod5$, by an integral Taylor congruence. These are roots in $U$, not roots in the prime index.}
+
+\section{What a degree bound does not control}
+The comparison cases are
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+$p$&Packets&$\mu_p$&$v_5(G_p(1))$&$v_5(\tau(p))$\\
+\midrule
+499&500&3&1&4\\
+1249&1250&3&0&3\\
+2999&3000&3&1&4\\
+4999&5000&3&0&3\\
+16249&16250&4&1&5\\
+18749&18750&3&0&3\\
+\bottomrule
+\end{tabular}
+\end{center}
+The degree-$10$ bound controls the number of roots over an algebraic closure, counted with multiplicity. It does not give a uniform bound for a value's valuation. Even the degree-one polynomial $U-(1+5^k)$ has valuation $k$ at $U=1$. A root can lie arbitrarily close to the evaluation point as the polynomial changes.
+
+Individual packet polynomials have rational finite roots in $[-4,4]$, since each root is $-(i-j)/(c_i-c_j)$ with a nonzero integer denominator. The aggregate polynomial need not retain that root region. Exact values at $p=31$ are
+\[
+P_{31}(10)=-56767541184<0,\qquad
+P_{31}(11)=4645170845280>0.
+\]
+It has a real root between $10$ and $11$. Summing signed real-rooted factors does not preserve their root bounds.
+
+

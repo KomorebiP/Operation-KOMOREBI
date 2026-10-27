@@ -1,0 +1,213 @@
+\chapter{A fixed modular form and an exact question}\label{ch:target}
+\section{The coefficient that must not disappear}
+For $|q|<1$ the product defining $\Delta$ converges. As a formal power series it is even simpler: the coefficient of $q^N$ depends only on the first $N$ product factors. Thus each $\tau(n)$ is an unambiguously defined integer. The opening terms are
+\begin{align}
+\Delta(q)={}&q-24q^2+252q^3-1472q^4+4830q^5-6048q^6\notag\\
+&-16744q^7+84480q^8-113643q^9-115920q^{10}+\cdots.
+\end{align}
+The signs already change repeatedly. Nonvanishing cannot be inferred from positivity of the defining product, since positivity of a function at a real argument does not require positivity, or nonvanishing, of its Taylor coefficients.
+
+\begin{conjecture}[Lehmer]
+For every integer $n\ge1$, one has $\tau(n)\ne0$.
+\end{conjecture}
+
+The conjecture concerns Ramanujan's tau function. It is distinct from the conjecture bearing Lehmer's name about Mahler measure and from questions about Euler's totient. Throughout this book there is one fixed weight-$12$ cusp form, one fixed coefficient sequence and one fixed universal target. Auxiliary sequences introduced later will be explicitly named and will not silently replace $\tau$.
+
+Lehmer's 1947 paper records the multiplicative and prime-power structure that makes the prime version of the problem decisive \cite{Lehmer}. Modern verified ranges are extraordinarily large. For example, Derickx, van Hoeij and Zeng proved nonvanishing for
+\[
+0<n<816212624008487344127999
+\]
+in their 2014 source \cite{DHZ}. This is a source-certified historical range. It is not a range recomputed for this edition, and it is not asserted here to be the latest record. Its logical role is still finite: no finite endpoint reaches every positive integer.
+
+\section{Upper bounds and lower bounds}
+Deligne's theorem gives
+\begin{equation}\label{eq:deligne}
+|\tau(p)|\le2p^{11/2}
+\end{equation}
+at a prime $p$ \cite{DeligneWeil}. The exponent $11/2$ comes from weight $12$: the associated Frobenius eigenvalues have weight $11$. An upper bound confines a possible coefficient to an interval. It does not remove zero from that interval.
+
+Integrality makes a residue argument useful. If $x\in\Z$, $|x|<L$ and $L\mid x$, then $x=0$. If instead a nonzero residue modulo $L$ is established, then $x\ne0$ without any size estimate. At primes $p\ge5$, \eqref{eq:deligne} yields
+\[
+2p^{11/2}<p^6.
+\]
+Therefore
+\begin{equation}\label{eq:p6}
+\tau(p)=0\quad\Longleftrightarrow\quad p^6\mid\tau(p),\qquad p\ge5.
+\end{equation}
+This is an exact criterion. It replaces equality to zero by a divisibility condition with a modulus depending on $p$. It does not show that the divisibility condition fails.
+
+For a nonzero actual coefficient, the same comparison gives $v_p(\tau(p))\le5$. A hypothetical assertion $v_p(\tau(p))\le3$ would be stronger than needed, and hence sufficient, but requires its own proof. One must not obtain such a valuation bound merely by rewriting the coefficient as another exact sum.
+
+\section{What a successful certificate must contain}
+There are several legitimate ways to prove a particular coefficient survives. An exact expansion can evaluate it. A congruence can show it is nonzero modulo a specified integer. A sign certificate can rewrite it as a sum of one weak sign with at least one nonzero term. A valuation certificate can identify a uniquely least-valued summand in a nonarchimedean field. Each method has two parts: an identity connecting the certificate to the actual $\tau(p)$, and an independently proved property that forces the identity's value away from zero.
+
+The second part is the delicate one. If a correction is chosen using the already known total, equalizing the summands can be circular as a uniform argument. If a modular form identity introduces a new cusp coefficient, its nonvanishing is a new obligation. If an enlarged correction space can express every total-preserving change, that completeness does not determine whether the preserved total is zero.
+
+\begin{openproblem}[The exact prime obligation]
+Prove $\tau(p)\ne0$ for every prime $p$, using information about the actual fixed form $\Delta$ that does not already assume this conclusion. A verified actual prime with $\tau(p)=0$ would instead disprove the conjecture.
+\end{openproblem}
+
+The developments below are organized around this obligation. Some routes yield stronger identities or cleaner decompositions. Some proposed final steps fail by explicit examples. Both outcomes are useful when they identify precisely what has and has not been supplied.
+
+\chapter{Exact coefficient engines}\label{ch:engines}
+\section{The product and a logarithmic recurrence}
+Let $\sigma_j(n)=\sum_{d\mid n}d^j$ and write $\sigma=\sigma_1$. Logarithmic differentiation of the product gives
+\begin{equation}\label{eq:logdelta}
+\DQ\Delta=\left(1-24\sum_{m\ge1}\sigma(m)q^m\right)\Delta,
+\qquad \DQ=q\frac{d}{dq}.
+\end{equation}
+Indeed, the contribution from the factor $(1-q^r)^{24}$ is
+\[
+-24\frac{rq^r}{1-q^r}=-24\sum_{k\ge1}rq^{rk}.
+\]
+Collecting the terms with $rk=m$ gives $-24\sigma(m)$. The leading factor $q$ contributes $1$.
+
+Comparing coefficients of $q^n$ in \eqref{eq:logdelta}, for $n>1$, yields
+\begin{equation}\label{eq:logrec}
+(n-1)\tau(n)=-24\sum_{m=1}^{n-1}\sigma(m)\tau(n-m),
+\qquad \tau(1)=1.
+\end{equation}
+This recurrence uses only smaller indices. Division by $n-1$ is exact because the recurrence came from the integral product, although an implementation should still check divisibility rather than silently round a quotient. It is a convenient independent coefficient engine at a moderate range.
+
+For example,
+\[
+\tau(2)=-24\sigma(1)\tau(1)=-24.
+\]
+At $n=3$, the right side is $-24(-24+3)=504$, and division by $2$ gives $252$. These tiny checks fix the normalization, especially the leading $q$ and the exponent $24$.
+
+\section{Jacobi's triangular series}
+Jacobi's identity is
+\begin{equation}\label{eq:jacobi}
+\prod_{m\ge1}(1-q^m)^3
+=\sum_{j\ge0}(-1)^j(2j+1)q^{j(j+1)/2}.
+\end{equation}
+Raising this series to the eighth power and multiplying by $q$ gives $\Delta$. The sparse triangular exponents make it useful for coefficient calculations. The source check in \cite{BCO} also uses this identity to establish the parity criterion discussed below. It is an exact formal series identity, not a numerical approximation.
+
+Two independent routes to the same coefficients matter because a shared normalization error can pass many internal tests. An implementation of a triangular recurrence can be checked against a direct truncated product. A logarithmic recurrence uses a different algebraic derivation. A modular identity involving Eisenstein series gives another convolution. Agreement between distinct formulations authenticates the finite result more effectively than running the same recurrence twice.
+
+The edition's independent replay compares a defining-product calculation and a logarithmic recurrence through $n=512$. The historical arithmetic branch used the triangular engine through $10000$ and a separate product check through $128$. The historical packet-tree branch carried its own product comparison through $512$. These are different bounded contracts, and their endpoints must not be merged into an invented universal verification.
+
+\section{Eisenstein coefficients}
+With the standard constant-one normalization,
+\begin{align}
+E_4(q)&=1+240\sum_{n\ge1}\sigma_3(n)q^n,\\
+E_6(q)&=1-504\sum_{n\ge1}\sigma_5(n)q^n,
+\end{align}
+and
+\begin{equation}\label{eq:deltaeisen}
+\Delta=\frac{E_4^3-E_6^2}{1728}.
+\end{equation}
+Since $E_8=E_4^2$, one may equivalently write $(E_4E_8-E_6^2)/1728$. This last form supplies an independent divisor-sum convolution for selected large coefficients in the valuation branch. The denominator $1728$ is exact, and an integer implementation can test the required divisibility before extracting a coefficient.
+
+The first coefficient of $E_4^3$ is $720$, whereas that of $E_6^2$ is $-1008$. Their difference is $1728$, so the leading coefficient of the quotient is $1$. A constant-one Eisenstein series is essential here. Some modular-form texts use a scaled Eisenstein basis. The normalization must be translated before coefficient identities are used.
+
+\section{Parity from the actual product}
+Modulo $2$, the Frobenius identity gives
+\[
+\prod_{m\ge1}(1-q^m)^{24}
+\equiv\prod_{m\ge1}(1-q^{8m})^3.
+\]
+Using \eqref{eq:jacobi}, whose coefficients $2j+1$ are odd, gives
+\[
+\Delta(q)\equiv\sum_{j\ge0}q^{1+4j(j+1)}
+=\sum_{j\ge0}q^{(2j+1)^2}\pmod2.
+\]
+Distinct nonnegative $j$ give distinct exponents. Therefore
+\begin{equation}\label{eq:parity}
+\tau(n)\text{ is odd}\quad\Longleftrightarrow\quad n\text{ is an odd square}.
+\end{equation}
+In particular, $\tau(p)$ is even at every odd prime. This elementary global property will later make the primitive odd-block multiplier odd. It is useful arithmetic, but is consistent with a zero at an odd prime because zero is even.
+
+\figplaceholder{coefficients512}{The exact coefficients through $512$ on a signed logarithmic scale. The plotted ordinate is $\sgn(\tau(n))\log_{10}(1+|\tau(n)|)$. Sign changes and large values are visible, while every plotted coefficient is nonzero. This finite plot does not establish the conjecture.}
+
+\section{A replay is an assertion with a domain}
+A finite coefficient engine should report its formula, exact range, input hashes, output hashes and runtime. The value of a large coefficient is a mathematical assertion. The statement that a checker passed is an execution assertion. Both require provenance, but they are not interchangeable. A recorded result without replay may still be a retained historical certificate. A fresh replay provides new execution evidence for the same finite statement. Neither establishes an unbounded theorem by accumulation.
+
+The source bundle retains these distinctions. It includes the original packages unchanged, release replay records and the independent coefficient comparison. This makes numerical examples in the text inspectable without replacing their algebraic proofs by a count of successful assertions.
+
+\chapter{Why the problem lives at primes}\label{ch:prime}
+\section{The Hecke contracts}
+The normalized form $\Delta$ is a Hecke eigenform. Its coefficients satisfy
+\begin{align}
+\tau(mn)&=\tau(m)\tau(n),&&\gcd(m,n)=1,\label{eq:mult}\\
+\tau(p^{r+1})&=\tau(p)\tau(p^r)-p^{11}\tau(p^{r-1}),&&r\ge1.\label{eq:hecke}
+\end{align}
+The exponent $11$ again records weight $12$. The constant term for the local recurrence is $\tau(1)=1$, and the first parameter is $a=\tau(p)$. These classical statements occur in Lehmer's original paper and in the modern source \cite{Lehmer,BCO}.
+
+For a fixed prime put $T_r=\tau(p^r)$ and $b=p^{11}$. The generating series is
+\begin{equation}\label{eq:heckegen}
+\sum_{r\ge0}T_rX^r=\frac1{1-aX+bX^2}.
+\end{equation}
+Multiplication by the denominator gives $T_0=1$, $T_1=a$ and the recurrence. Thus this is a formal identity over $\Z[[X]]$. No analytic continuation in the prime index is involved.
+
+The first local blocks are
+\[
+T_2=a^2-b,\qquad T_3=a^3-2ab,\qquad
+T_4=a^4-3a^2b+b^2.
+\]
+Even if $a\ne0$, it is not formally obvious from these expressions that none vanishes. The reduction to primes needs a short arithmetic argument.
+
+\section{The two roots and a root of unity}
+Let $\alpha,\beta$ be the complex roots of
+\[
+X^2-aX+p^{11}=0.
+\]
+They are nonzero because their product is $p^{11}$. They are distinct: equality would require $a^2=4p^{11}$, but the $p$-adic valuation of the right side is odd for odd $p$, and is $13$ for $p=2$.
+
+Solving the recurrence gives
+\begin{equation}\label{eq:rootrec}
+T_r=\frac{\alpha^{r+1}-\beta^{r+1}}{\alpha-\beta}
+=\sum_{j=0}^r\alpha^{r-j}\beta^j.
+\end{equation}
+If $T_r=0$ for some $r\ge1$, then $\zeta=\alpha/\beta$ is a root of unity with $\zeta^{r+1}=1$. Consequently
+\begin{equation}\label{eq:rootunity}
+\frac{a^2}{p^{11}}
+=\frac{(\alpha+\beta)^2}{\alpha\beta}
+=2+\zeta+\zeta^{-1}.
+\end{equation}
+The left side is rational. The right side is an algebraic integer, because roots of unity are algebraic integers. A rational algebraic integer is an integer. It is real and lies between $0$ and $4$. Thus
+\[
+\frac{a^2}{p^{11}}\in\{0,1,2,3,4\}.
+\]
+This argument uses the root-of-unity consequence of a zero, rather than assuming that an arbitrary ratio of Hecke roots is a root of unity.
+
+\section{Excluding the nonzero integer cases}
+For $p\ge5$, every $c\in\{1,2,3,4\}$ is prime to $p$. The equality $a^2=cp^{11}$ would give an odd $p$-adic valuation on a square. It is impossible. Hence the only possible value in \eqref{eq:rootunity} is $0$, and $a=0$.
+
+At $p=2,3$, the actual parameters are
+\[
+\tau(2)=-24,\qquad\tau(3)=252.
+\]
+Their quotients $a^2/p^{11}$ are not integers. Thus no prime power of $2$ or $3$ vanishes. We obtain the exact local criterion:
+\begin{equation}\label{eq:tzero}
+\tau(p^r)=0\quad\Longleftrightarrow\quad
+\tau(p)=0\text{ and }r\text{ is odd}.
+\end{equation}
+The forward implication is what we just proved. For the reverse implication and the even case, set $a=0$ in the recurrence:
+\[
+T_{2m}=(-p^{11})^m,\qquad T_{2m+1}=0.
+\]
+
+\begin{theorem}[Prime reduction]\label{thm:primereduction}
+For every positive integer $n$,
+\[
+\begin{aligned}
+\tau(n)=0\quad\Longleftrightarrow\quad &
+\text{some prime }p\text{ occurs to an odd exponent in }n\\
+&\text{and }\tau(p)=0.
+\end{aligned}
+\]
+In particular, Lehmer's conjecture is equivalent to nonvanishing at every prime.
+\end{theorem}
+\begin{proof}
+Factor $n=\prod_p p^{r_p}$. Multiplicativity expresses $\tau(n)$ as a finite product of local blocks. An integral product is zero exactly when one factor is zero. Apply \eqref{eq:tzero} to each factor.
+\end{proof}
+
+One immediate corollary is that $\tau(s^2)\ne0$ for every $s$. This square theorem does not rely on the truth of Lehmer at primes. A possible prime zero would propagate only through odd exponents. Later the primitive residual will have the same zero criterion but a different proof of its square nonvanishing.
+
+\figplaceholder{prime_bound}{Actual prime coefficients through $512$, normalized by $2p^{11/2}$. Deligne's bound confines the values to $[-1,1]$. The bound is universal, whereas these plotted coefficients form a finite set. The permitted interval includes zero.}
+
+\section{A local parameter is not the global form}
+The recurrence makes sense for every integer $a$. Setting $a=0$ gives a consistent sequence at one prime. Thus the recurrence alone cannot disallow a zero parameter. The actual modular form chooses its parameters through global geometry and modularity. A proof of Lehmer must use some part of that actual structure to forbid the parameter $a=0$ at every prime.
+
+This distinction will recur in the local filtered-module construction and in the global arithmetic countermodel. They test whether the properties retained by a proposed argument already distinguish the actual $\Delta$. When they admit zero parameters, they expose a missing premise rather than produce a counterexample to the conjecture.

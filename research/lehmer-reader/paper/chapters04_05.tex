@@ -1,0 +1,149 @@
+\chapter{The differential residual that survives extraction}\label{ch:differential}
+\section{A divisor convolution with the original cusp term}
+Define the fourth divisor moment
+\[
+S_4(n)=\sum_{k=1}^{n-1}k^4\sigma(k)\sigma(n-k).
+\]
+It is a positive integer when $n>1$. The weights $k^4$ and the two divisor sums suggest a route through elementary arithmetic. The exact identity, however, retains the cusp coefficient:
+\begin{equation}\label{eq:s4general}
+840S_4(n)=n^4\bigl[50\sigma_3(n)+(35-84n)\sigma(n)\bigr]-\tau(n).
+\end{equation}
+Thus the difference between two explicit divisor expressions is exactly $\tau(n)$. Positivity of $S_4(n)$ does not imply that this difference is nonzero.
+
+At a prime $p$, $\sigma(p)=1+p$ and $\sigma_3(p)=1+p^3$. Put
+\[
+C(p)=85-49p-84p^2+50p^3.
+\]
+Equation \eqref{eq:s4general} becomes
+\begin{equation}\label{eq:s4prime}
+\tau(p)=p^4C(p)-840S_4(p).
+\end{equation}
+For $p>7$, the coefficient $840$ is a $p$-adic unit. Reducing modulo $p^4$ gives
+\begin{equation}\label{eq:p4equiv}
+p^4\mid S_4(p)\quad\Longleftrightarrow\quad p^4\mid\tau(p).
+\end{equation}
+The proposed assertion that $p^4$ never divides $S_4(p)$ would therefore assert a uniform bound $v_p(\tau(p))\le3$. It is a sufficient strengthening of Lehmer, not a consequence of the displayed convolution.
+
+\section{Deriving the identity in the differential ring}
+Set
+\[
+A(q)=\sum_{n\ge1}\sigma(n)q^n,\qquad
+B(q)=\sum_{n\ge1}\sigma_3(n)q^n.
+\]
+Then $E_2=1-24A$ and $E_4=1+240B$. The Ramanujan differential relations are
+\begin{align}
+\DQ E_2&=(E_2^2-E_4)/12,\\
+\DQ E_4&=(E_2E_4-E_6)/3,\\
+\DQ E_6&=(E_2E_6-E_4^2)/2.
+\end{align}
+These normalized relations are recorded in \cite{Fonseca}, and the constant-one formula for $\Delta$ is checked in \cite{Stein}. They define a derivation on the polynomial ring $\Q[E_2,E_4,E_6]$. Repeated differentiation and collection of terms yield
+\begin{align}
+E_2\DQ^2E_2&=4\DQ^3E_2+\frac3{10}\DQ^2E_4,\label{eq:d2}\\
+E_2\DQ^4E_2&=\frac{12}{5}\DQ^5E_2+\frac17\DQ^4E_4-\frac{24}{35}\Delta.\label{eq:d4}
+\end{align}
+These are polynomial identities in the differential ring. They can be verified by expanding each derivative using the three relations and checking a zero rational remainder. The cusp term in \eqref{eq:d4} is essential.
+
+Substituting $E_2=1-24A$, $E_4=1+240B$ into \eqref{eq:d4} gives
+\[
+-24\DQ^4A+576A\DQ^4A
+=-\frac{288}{5}\DQ^5A+\frac{240}{7}\DQ^4B-\frac{24}{35}\Delta.
+\]
+Multiplication by $-35/24$ and rearrangement gives
+\begin{equation}\label{eq:projector}
+\Delta=50\DQ^4B+35\DQ^4A-84\DQ^5A-840A\DQ^4A.
+\end{equation}
+The coefficient of $A\DQ^4A$ at $q^n$ is precisely $S_4(n)$ after the summation variable is reversed if necessary. Coefficient extraction proves \eqref{eq:s4general}.
+
+For completeness, $\Delta=(E_4^3-E_6^2)/1728$ has the expected product normalization. The differential relations imply $\DQ\Delta=E_2\Delta$. The product in Chapter~\ref{ch:engines} satisfies the same equation by logarithmic differentiation. Both begin with $q$. Coefficient recursion therefore identifies them as formal power series. This avoids treating a matching first coefficient as sufficient on its own.
+
+\section{The exact forbidden residue}
+Combine \eqref{eq:p6} and \eqref{eq:s4prime}. For $p>7$,
+\begin{equation}\label{eq:forbiddenconvolution}
+\tau(p)=0\quad\Longleftrightarrow\quad
+840S_4(p)\equiv p^4C(p)\pmod{p^6}.
+\end{equation}
+If $p^4\mid S_4(p)$, division by $p^4$ is legitimate as an integer operation, and the same condition is
+\[
+840\frac{S_4(p)}{p^4}\equiv85-49p\pmod{p^2}.
+\]
+The terms $-84p^2$ and $50p^3$ have disappeared modulo $p^2$. This is a compact description of the remaining residue problem. It is not a contradiction. A successful proof through this formula must establish that the displayed residue is never attained by the actual convolution.
+
+At $p=2411$, retained exact values are
+\[
+\tau(p)=4542041100095889012,\qquad
+S_4(p)=28168797627693083506845.
+\]
+Both have $p$-adic valuation $1$. The normalized residues are
+\[
+\frac{\tau(p)}p\equiv150\pmod p,\qquad
+\frac{S_4(p)}p\equiv947\pmod p.
+\]
+They satisfy $-840\cdot947\equiv150\pmod p$. This example shows that substantial cancellation can coexist with a clean exact identity. It neither refutes the stronger $p^4$ bound nor supplies it.
+
+\section{Why a projector does not finish the proof}
+A differential projector can remove Eisenstein components and isolate a cusp component. That is a structural accomplishment: it explains where the coefficient sits in the algebra. But a projector selecting $\Delta$ also selects its unknown prime coefficient. The coefficient $-1/840$ in \eqref{eq:s4general} is a $p$-adic unit for $p>7$. There is no automatic extra factor of $p$ left behind.
+
+The retained symbolic verification checks the differential identities exactly and checks their Fourier consequences at finite indices. The universal identity is justified by the differential-ring calculation. The finite checks authenticate the implementation and normalization. The all-prime residue exclusion remains a separate mathematical task.
+
+\chapter{Trace moments and a unit triangular inversion}\label{ch:trace}
+\section{The Hurwitz-moment description}
+Another exact route uses Hurwitz class numbers. Let $H(D)$ denote the conventional weighted Hurwitz class number for a positive discriminant parameter $D$, with the standard exceptional automorphism weights. At a prime $p$ define
+\begin{equation}
+s_{2j}(p)=\frac12\sum_{|t|<2\sqrt p}t^{2j}H(4p-t^2).
+\end{equation}
+Here the symbol $s_{2j}(p)$ is a trace moment and is unrelated to the coordinate power sums $s_j(v)$ introduced later. The argument of $H$ is positive in the displayed range. The normalization, including the factor $1/2$, must be kept fixed when a trace formula is imported.
+
+The Eichler--Selberg trace identities give, for $r\ge1$,
+\begin{equation}\label{eq:traceidentity}
+\sum_{j=0}^r(-1)^{r-j}\binom{r+j}{r-j}p^{r-j}s_{2j}(p)
+=-1-\Tr T_{2r+2}(p),
+\end{equation}
+together with $s_0(p)=p$. Here $T_k(p)$ is the Hecke operator at $p$ on $S_k(SL_2(\Z))$. It is distinct from the scalar recurrence notation $T_r=\tau(p^r)$ at a fixed prime. The trace normalization and Catalan inversion are checked against \cite{LRTrace}, Sections 4--6. The cusp spaces in weights $4,6,8,10$ are zero. The weight-$12$ cusp space is spanned by $\Delta$, so its Hecke trace is $\tau(p)$.
+
+This leads to a lower triangular system for the moments. Its diagonal entries are all $1$. The inversion can recover the moments exactly, but the unit last diagonal also means that the last cusp trace survives with a unit coefficient.
+
+\section{The Catalan inverse}
+The inverse matrix has coefficients
+\begin{equation}\label{eq:catalan}
+\left[\binom{2r}{r-j}-\binom{2r}{r-j-1}\right]p^{r-j},
+\qquad0\le j\le r,
+\end{equation}
+where a binomial coefficient outside its usual range is zero. The bracket is a ballot-number form of the Catalan triangle. It is an integer, and at $j=r$ it is $1$.
+
+The resulting first moments are
+\begin{align}
+s_2(p)&=p^2-1,\\
+s_4(p)&=2p^3-3p-1,\\
+s_6(p)&=5p^4-9p^2-5p-1,\\
+s_8(p)&=14p^5-28p^3-20p^2-7p-1,\\
+s_{10}(p)&=42p^6-90p^4-75p^3-35p^2-9p-1-\tau(p).
+\label{eq:s10}
+\end{align}
+The integer $42$ is the fifth Catalan number. It records the contribution from $s_0(p)=p$ after inversion. The lower-degree terms come from the constant $-1$ in the trace formula. The coefficient of $\tau(p)$ is $-1$ because the last diagonal entry is $1$.
+
+One can check the inversion without computing class numbers. Multiply the lower triangular matrices symbolically after factoring the appropriate powers of $p$. The binomial identities give the identity matrix. The retained exact test checks both products through size $32$, which is an implementation test for the universal binomial inversion rather than its proof.
+
+\section{A worked first row}
+At $r=1$, \eqref{eq:traceidentity} reads
+\[
+-ps_0+s_2=-1.
+\]
+Since $s_0=p$, this gives $s_2=p^2-1$. At $r=2$ it reads
+\[
+p^2s_0-3ps_2+s_4=-1.
+\]
+Substitution gives $s_4=2p^3-3p-1$. The same triangular procedure produces the next three rows. At the fifth row, the right side is $-1-\tau(p)$ rather than $-1$. The inversion has not supplied a reason for that extra term to be nonzero.
+
+This small calculation reveals the general mechanism. The early vanishing cusp spaces make the early moments polynomial in $p$. The first nonzero cusp space introduces the actual modular coefficient. That distinction is geometric, not a numerical defect of the inversion.
+
+\section{An exact reformulation can retain the hard part}
+Equation \eqref{eq:s10} can be read as a formula for $\tau(p)$ in terms of a weighted class-number moment. Setting its last term formally equal to zero is consistent with the triangular linear system. To exclude a zero one needs an additional arithmetic restriction on the actual Hurwitz sum, beyond the identities used to obtain the system.
+
+For example, positivity of $H(D)$ makes $s_{10}(p)$ nonnegative. The polynomial on the right of \eqref{eq:s10} with $\tau(p)$ omitted is also compatible with nonnegativity for large $p$. A positivity statement of this general kind does not separate the two possible values. A useful inequality would have to be quantitatively strict in a way that excludes the exact polynomial value for every prime.
+
+The historical check independently enumerated reduced positive definite binary quadratic forms for all primes through $499$ and for $p=2411$. There are $96$ prime rows in that scope. The resulting moments agree with the tau coefficients from the separate triangular engine. This gives exact evidence for the normalization and finite rows. It is not an exhaustive class-number theorem at all primes.
+
+\section{Two residuals, one obligation}
+The differential formula and the trace formula look different. One uses divisor convolutions and quasimodular differentiation. The other uses class numbers and Hecke traces. Both isolate the cusp coefficient with a unit coefficient. The original nonvanishing problem has therefore survived both extractions.
+
+
