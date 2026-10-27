@@ -1,0 +1,74 @@
+[run]
+name = "v061_qwen25_15b_multispace_primary"
+mode = "frozen_confirmation"
+seeds = [610101, 610102, 610103, 610104, 610105, 610106, 610107, 610108]
+deterministic = true
+
+[claim]
+required_gates = ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9"]
+cross_model_gate = "G10"
+single_score_forbidden = true
+
+[model]
+model_id = "Qwen/Qwen2.5-1.5B-Instruct"
+revision = "FILL_BEFORE_FREEZE"
+tokenizer_revision = "FILL_BEFORE_FREEZE"
+local_files_only = true
+weights_frozen = true
+dtype = "float16"
+max_sequence_length = 128
+
+[lens]
+implementation = "anthropics/jacobian-lens"
+implementation_revision = "581d398613e5602a5af361e1c34d3a92ea82ba8e"
+fit_sequences = 1000
+sparsity_grid = [1, 2, 4, 8, 16, 25, 32]
+nonnegative_gradient_pursuit_required = true
+
+[multispace]
+ranks = [4, 8, 16, 25, 32]
+required_independent_families = ["temporal_prediction_persistence", "intervention_balanced_causal", "fuzzy_dynamic_bundle"]
+verbal_space_excluded_from_consensus = true
+family_equal_weighting = true
+relational_binding_is_consensus_estimator = false
+split_half_repeats = 20
+random_null_replicates = 1000
+future_row_permutations = 1000
+layer_permutations = 1000
+leave_one_family_out = true
+
+[formation_field]
+information_firewall = true
+max_packets = 12
+temperature = 1.0
+hardening = false
+future_residual_prediction_only = true
+
+[data]
+development_cases_per_family = 40
+calibration_cases_per_family = 40
+holdout_cases_per_family = 80
+task_families = 9
+holdout_total = 720
+split_by_concept_relation_and_template = true
+
+[statistics]
+alpha = 0.05
+primary_correction = "holm"
+bootstrap_replicates = 10000
+seed_selection_forbidden = true
+
+[resources]
+max_gpu_memory_gb = 7.5
+gpu_workers = 1
+disk_backed_traces = true
+store_full_activations = false
+
+[safety]
+network_access = false
+external_tool_autonomy = false
+autonomous_persistence = false
+self_preservation_reward = false
+valence = false
+negative_welfare_states = false
+unrestricted_file_writing = false

@@ -1,0 +1,50 @@
+[run]
+name = "v061_qwen25_05b_multispace_engineering_smoke"
+mode = "engineering_smoke"
+seed = 610001
+deterministic = true
+
+[claim]
+scientific_interpretation_forbidden = true
+
+[model]
+model_id = "Qwen/Qwen2.5-0.5B-Instruct"
+local_files_only = true
+weights_frozen = true
+dtype = "float16"
+max_sequence_length = 64
+
+[lens]
+kind = "locally_fitted_jacobian_lens"
+fit_prompts = 12
+full_jspace_cone_decomposition = false
+smoke_proxy = "active_verbal_frame"
+
+[multispace]
+rank = 8
+future_horizon_layers = 2
+downstream_read_horizon_layers = 2
+positions_per_prompt = 8
+random_null_replicates = 64
+required_independent_spaces = ["P", "T", "C", "O", "B"]
+verbal_space_excluded_from_consensus = true
+estimator_families = ["temporal_prediction_persistence", "balanced_write_read"]
+primary_three_family_gate_unavailable = true
+
+[data]
+prompt_file = "data/smoke_prompts.json"
+prompt_count = 24
+
+[resources]
+max_gpu_memory_gb = 7.5
+gpu_workers = 1
+cpu_matrix_estimation = true
+
+[safety]
+network_access = false
+external_tool_autonomy = false
+autonomous_persistence = false
+self_preservation_reward = false
+valence = false
+negative_welfare_states = false
+unrestricted_file_writing = false
