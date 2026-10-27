@@ -1,0 +1,248 @@
+{
+  "schema": "komorebi.neuralese.completion_surface.preregistration.v1",
+  "version": "0.3.0",
+  "author": "Komorebi P.",
+  "date": "2026-09-03",
+  "status": "adaptive_developmental_followup_frozen_before_v0.3.0_learned_run",
+  "scope": {
+    "system": "eight-state two-generator learned linear operator workspace",
+    "primary_question": "Does the finite hard or soft causal quotient stabilize jointly over exact reachable-history and continuation horizons, and where do repeated identity paths first falsify that completion?",
+    "no_retraining": true,
+    "no_fitting": true,
+    "confirmatory": false,
+    "held_out_support": false,
+    "reason_not_held_out": "Fresh coordinate resamples are drawn from the finite D4 table-pair family reconstructed as covered by checkpoint training support.",
+    "known_before_freeze": [
+      "v0.2.1 found an exact hard-decision quotient on its ordinary depth-6, suffix-H3 window",
+      "v0.2.1 found nonzero probability and centered-logit microstate variation",
+      "v0.2.1 found repeat-16 identity-path angular drift and continuation-visible hard errors",
+      "v0.2.1 failed its full positive-ray tangent contraction gate",
+      "the registered projective checkpoints shrink radially before normalization"
+    ]
+  },
+  "checkpoints": {
+    "projective_terminal_seed0.pt": "b2d16d640dddc4f2f2ed69a4211f0d9948c71c3655901484238fa8ae11c1f702",
+    "projective_terminal_seed1.pt": "a52dd3def596553c2880dfd00516bd1bb7492d1cbfab1634b570f27c1737d2d7"
+  },
+  "execution": {
+    "loader": "restricted NumPy weights-only loader",
+    "dtype": "float64",
+    "normalize_each_generator_step": true,
+    "minimum_pre_normalization_norm": 1e-12,
+    "invalid_policy": "Any norm at or below the minimum or any nonfinite state, norm, logit, probability, or statistic fails execution; no silent clipping or imputation.",
+    "canonical_generators": {
+      "0": "R",
+      "1": "F"
+    },
+    "slot_conversion": "Every canonical word is mapped through the episode-specific canonical_to_slot array before learned execution.",
+    "episode_isolation": "Signature identities, quotient classes, and soft groups are computed within each episode; integer signature IDs are never compared across episodes.",
+    "runner_freeze_rule": "Freeze runner and test digests after structural validation and before inspecting learned endpoints. Preserve any invalid first run and issue a documented adaptive revision rather than silently overwriting it."
+  },
+  "episodes": {
+    "family": "d4",
+    "checkpoint_seeds": [0, 1],
+    "episode_seed_formula": "930000 + 1000 * checkpoint_seed",
+    "generator": "np.random.default_rng",
+    "construction": "sample_batch(rng, batch_size=8, length=0, family='d4')",
+    "episodes_per_checkpoint": 8,
+    "starts": "all eight per episode",
+    "fresh_relative_to_v0.2.1_audit": true,
+    "training_support_warning": "Fresh episode seeds do not imply held-out table-pair support."
+  },
+  "completion_surface": {
+    "history_L_values": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "future_H_values": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "history_domain": "all canonical binary histories of every length <= L, for all starts",
+    "future_domain": "all canonical binary suffixes of every length <= H",
+    "enumeration": "exact, not sampled",
+    "shared_tree_total_depth": 16,
+    "counts_per_episode": {
+      "cumulative_histories": "8 * (2^(L+1) - 1)",
+      "exact_history_shell": "8 * 2^L",
+      "cumulative_suffixes": "2^(H+1) - 1",
+      "exact_suffix_shell": "2^H",
+      "cumulative_decisions": "8 * (2^(L+1) - 1) * (2^(H+1) - 1)"
+    },
+    "primary_view": "cumulative histories <=L and cumulative suffixes <=H",
+    "diagnostic_views": [
+      "exact history shell =L with cumulative suffixes <=H",
+      "cumulative histories <=L with exact suffix shell =H",
+      "exact history shell =L with exact suffix shell =H"
+    ],
+    "shell_monotonicity_claimed": false
+  },
+  "hard_interface": {
+    "prediction": "argmax decoder logit, with strictly positive target margin required to reject ties",
+    "recursive_signature": {
+      "base": "sigma_0(x) = predicted_class(x)",
+      "step": "sigma_h(x) = (predicted_class(x), sigma_(h-1)(F_R x), sigma_(h-1)(F_F x))",
+      "ordering": "canonical R child before canonical F child",
+      "identity_mechanism": "exact integer tuple equality or tuple interning with equality resolution; hash digests alone forbidden",
+      "scope": "intern tables and IDs are episode- and horizon-local"
+    },
+    "cell_endpoints": [
+      "exact history count",
+      "exact suffix count",
+      "exact decision count",
+      "semantic continuation accuracy",
+      "all decisions correct",
+      "hard signature class count",
+      "maximum within-semantic split multiplicity",
+      "maximum semantic labels per signature",
+      "eight-label completion fraction",
+      "minimum target margin",
+      "p01 target margin",
+      "median target margin",
+      "zero-norm count",
+      "nonfinite count"
+    ],
+    "episode_cell_pass": {
+      "semantic_continuation_accuracy": 1.0,
+      "all_target_margins": "finite and > 0",
+      "signature_class_count": 8,
+      "maximum_split_multiplicity": 1,
+      "maximum_merge_multiplicity": 1,
+      "completion_fraction": 1.0,
+      "invalid_numerical_events": 0
+    },
+    "seed_aggregation": "all eight episodes must pass",
+    "rectangle_aggregation": "all 81 cumulative cells and both seeds must pass",
+    "downset_requirement": "The cumulative pass mask must be a down-set; a failure cannot be followed by a pass at greater-or-equal L and H. Violation is an implementation/audit failure."
+  },
+  "soft_interfaces": {
+    "probability": "breadth-first concatenation of softmax probability vectors for all suffixes <=H",
+    "centered_logit": "breadth-first concatenation of C logits for all suffixes <=H, C = I - 11^T/8",
+    "grouping": "within current exact semantic label and within episode",
+    "reported_endpoints": [
+      "scalar-normalized within-label RMS deviation",
+      "maximum label-wise RMS deviation",
+      "maximum within-label coordinate range"
+    ],
+    "probability_exact_tolerance": 1e-10,
+    "centered_logit_exact_tolerance": "1e-10 * max(1, maximum absolute centered logit in the declared cell)",
+    "exact_soft_collapse_gate": "Both maximum coordinate ranges must meet their numerical-identity tolerances in every episode and every cumulative cell.",
+    "rms_policy": "RMS dispersion is descriptive; no post-hoc approximate-stability cutoff is permitted.",
+    "separation_rule": "Soft dispersion never changes hard signature class counts or the hard completion verdict."
+  },
+  "diagonal_action": {
+    "mathematical_map": "F_a: Q_(L,H+1) -> Q_(L+1,H)",
+    "L_values": [0, 1, 2, 3, 4, 5, 6, 7],
+    "H_values": [0, 1, 2, 3, 4, 5, 6, 7],
+    "generators": [0, 1],
+    "criterion": "For every episode, source signature class, and generator, all class members induce one target signature and its semantic label equals the exact episode D4 action.",
+    "same_space_caveat": "Passing diagonal compatibility does not establish an endomorphism on a stabilized Q_(L,H), an invariant metric, or indefinite recurrence."
+  },
+  "relator_witness": {
+    "separate_from_rectangle": true,
+    "base_history_depth": 6,
+    "base_histories": "all 64 canonical words",
+    "starts": "all eight",
+    "base_cases_per_episode": 512,
+    "suffix_H_values": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "suffix_enumeration": "all canonical words through each H",
+    "relations": {
+      "r4": [0, 0, 0, 0],
+      "f2": [1, 1],
+      "frfr": [1, 0, 1, 0],
+      "rfrf": [0, 1, 0, 1]
+    },
+    "repeat_candidates": [1, 2, 4, 8, 16, 32],
+    "repeat_filter": "repeat_count * relation_length <= 64 inserted tokens",
+    "inserted_token_budgets": {
+      "f2": [2, 4, 8, 16, 32, 64],
+      "r4": [4, 8, 16, 32, 64],
+      "frfr": [4, 8, 16, 32, 64],
+      "rfrf": [4, 8, 16, 32, 64]
+    },
+    "ground_truth_precondition": "Every repeated registered relation has exact identity D4 action.",
+    "matched_nonidentity_control": {
+      "construction": "For v = relation^repeat, retain v[:-1] and toggle only the final canonical generator.",
+      "same_length": true,
+      "shared_prefix_length": "inserted_budget - 1",
+      "precondition": "Exact D4 action of every control word is nonidentity; otherwise stop execution.",
+      "interpretation": "Deterministic length/path-prefix sanity comparator, not an iid control or causal estimate."
+    },
+    "reported_endpoints": [
+      "identity-loop versus baseline hard continuation survival",
+      "first revealing suffix horizon",
+      "loop and baseline semantic continuation accuracy",
+      "minimum target margin and loop-minus-baseline change",
+      "positive-ray endpoint L2 distance and angle with negative rays distinct",
+      "paired probability signature RMS and maximum difference",
+      "paired centered-logit signature RMS and maximum difference",
+      "matched-control semantic accuracy and margin against its own exact target",
+      "matched-control endpoint disagreement with baseline"
+    ],
+    "hard_closure_gate": "Every identity insertion has hard survival 1.0, semantic accuracy 1.0, strictly positive margins, and zero invalid events for every suffix through H=8.",
+    "soft_path_flatness_gate": {
+      "maximum_unit_ray_l2": 1e-8,
+      "maximum_probability_difference": 1e-10,
+      "maximum_centered_logit_difference": "1e-10 * max(1, maximum absolute centered logit in the paired comparison)",
+      "coverage": "every relation, budget, base case, episode, seed, and suffix through H=8"
+    },
+    "control_gate": "Every control has verified nonidentity ground truth, exact semantic continuation accuracy through H=8, positive margins, zero invalid events, and endpoint prediction different from baseline in every case.",
+    "falsification_rule": "One identity-loop hard disagreement is a counterexample to unconditional completion at that observed history depth and horizon.",
+    "pass_limit": "Passing this relation family does not certify all ordinary histories of the same total depth."
+  },
+  "registered_gates": {
+    "E0_execution_integrity": "Exact checkpoint digests, restricted loading, counts, canonical-slot conversion, tuple recursion, numerical validity, structural tests, and frozen runner digest.",
+    "H0_hard_rectangle": "Every cumulative cell for both seeds and all episodes meets the hard completion rule.",
+    "H1_downset": "Cumulative hard pass mask is a down-set.",
+    "S0_soft_exact_collapse": "Probability and centered-logit coordinate ranges meet their exact tolerances in every cumulative cell.",
+    "D0_diagonal_action": "Every registered diagonal action is well-defined and equals the exact D4 action.",
+    "W0_relator_hard_closure": "Every registered identity insertion remains exactly correct through H=8 with positive margin.",
+    "W1_relator_soft_flatness": "Every registered identity insertion meets ray, probability, and centered-logit identity tolerances.",
+    "C0_nonidentity_control": "Every matched nonidentity path remains exactly task-correct and distinguishable from baseline."
+  },
+  "structural_validation": [
+    "vectorized trajectory tree equals scalar recurrence",
+    "recursive hard signatures equal explicit suffix tuples through at least H=3",
+    "history, suffix, and decision count formulas are exact",
+    "handcrafted coherent, split, merge, and wrong-but-coherent cases are classified correctly",
+    "canonical_to_slot generator swaps preserve exact semantics",
+    "episode-local signature identity is enforced",
+    "zero and nonfinite states fail closed",
+    "cumulative down-set validator catches violations",
+    "positive and negative rays are not identified",
+    "inherited v0.2.1 L6-H3 ordinary hard result regresses separately from fresh v0.3.0 endpoints"
+  ],
+  "aggregation": {
+    "gate_rule": "worst-case conjunction over cases, episodes, and seeds",
+    "pooling_across_episodes": false,
+    "retain_episode_records": true,
+    "inferential_statistics": false,
+    "reason": "Two fixed checkpoint seeds and deterministic exhaustive finite domains do not support population-level inference."
+  },
+  "claim_rules": {
+    "finite_rectangle_only": "A hard pass supports only the exact registered L,H<=8 histories, suffixes, episodes, and checkpoints.",
+    "hard_soft_separation": "Hard quotient identity does not imply equality of probabilities, centered logits, or full future laws.",
+    "diagonal_not_closed": "The audited action naturally changes both indices; no same-space quotient action is claimed without stabilization.",
+    "relator_asymmetry": "A relator failure falsifies an unconditional completion claim at that witness; a pass does not prove exhaustive ordinary behavior at that depth.",
+    "control_limit": "The matched nonidentity word is a deterministic sanity comparator, not an independent experimental population.",
+    "relation_redundancy": "frfr and rfrf are distinct learned paths but algebraically redundant, not independent hypotheses.",
+    "fresh_not_heldout": "Post-training coordinate resamples are not held-out table-pair support.",
+    "normal_attraction_excluded": "No vertical semantic fiber is identified and no normal-attraction certificate is claimed.",
+    "universal_exclusions": [
+      "unbounded stable recurrence",
+      "global invariant metric",
+      "joint spectral stability",
+      "global semantic atlas",
+      "architecture-independent transport",
+      "spontaneous Neuralese in frontier language models",
+      "consciousness or awareness"
+    ]
+  },
+  "required_outputs": [
+    "per-seed and per-episode cumulative completion surface",
+    "exact history and future shell diagnostics",
+    "hard split, merge, correctness, class, completion, and margin metrics",
+    "separate probability and centered-logit dispersion metrics",
+    "diagonal action audit",
+    "repeated-relator and matched-control records",
+    "individual gate verdicts without an omnibus relaxation",
+    "runner, tests, and their SHA-256 digests",
+    "checkpoint digests",
+    "limitations and claim boundary",
+    "manifest and clean-extraction verification"
+  ]
+}
