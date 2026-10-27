@@ -1,0 +1,33 @@
+/mnt/data/ix_continue/work/formalization/AllResidueEuler.lean:74:24: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑(packetLift ?p ?N ?f ?hf ?n)
+in the target expression
+  ↑(packetLift p (m * p) (unnormalizedSeries (m * p) ⋯ j) ⋯ n) = ↑(Congruential.unnormalized (m * p) j n)
+
+p : ℕ
+inst✝ : Fact (Nat.Prime p)
+m j n : ℕ
+hm : m ∣ p - 1
+hmpos : 0 < m
+hj : j < m * p
+⊢ ↑(packetLift p (m * p) (unnormalizedSeries (m * p) ⋯ j) ⋯ n) = ↑(Congruential.unnormalized (m * p) j n)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    unnormalizedLift._proof_2 p m j hm hmpos hj
+  has type
+    @Membership.mem ℚ_[p]⟦X⟧ (Subring ℚ_[p]⟦X⟧) SetLike.instMembership (integralSeries p)
+      ((DworkAlgebra.B (d⁄dX ℚ_[p]) p ^ 0) (rationalMap p (unnormalizedSeries (m * p) ⋯ j)))
+  but is expected to have type
+    @Membership.mem ℚ_[p]⟦X⟧ (Subring ℚ_[p]⟦X⟧) SetLike.instMembership (integralSeries p)
+      (rationalMap p (unnormalizedSeries (m * p) ⋯ j))
+  in the application
+    packetLift p (m * p) (unnormalizedSeries (m * p) ⋯ j) ⋯
+/mnt/data/ix_continue/work/formalization/AllResidueEuler.lean:83:41: error: Application type mismatch: The argument
+  hd
+has type
+  ℕ
+of sort `Type` but is expected to have type
+  ¬m * p ∣ d
+of sort `Prop` in the application
+  unnormalized_support (m * p) ?m.65 j d hd

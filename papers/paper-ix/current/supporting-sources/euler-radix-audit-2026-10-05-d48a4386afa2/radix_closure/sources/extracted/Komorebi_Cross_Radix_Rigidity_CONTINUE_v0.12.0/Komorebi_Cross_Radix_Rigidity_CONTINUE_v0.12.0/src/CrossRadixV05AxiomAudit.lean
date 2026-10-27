@@ -1,0 +1,14 @@
+import CrossRadixSectionReynolds
+import CrossRadixDFTShellAgreement
+
+#print axioms KomorebiCrossRadix.reynoldsProjector_comp_lcm
+#print axioms KomorebiCrossRadix.reynoldsProjector_range_inf
+#print axioms KomorebiCrossRadix.subgroupReynoldsAverage_eq_reynoldsProjector
+#print axioms KomorebiCrossRadix.dft_subgroupReynoldsAverage
+#print axioms KomorebiCrossRadix.sectionReynolds_comp_lcm
+#print axioms KomorebiCrossRadix.sectionReynolds_lcmList_range
+#print axioms KomorebiCrossRadix.affineSection_decoder_AB
+#print axioms KomorebiCrossRadix.affineSection_decoder_ABA
+#print axioms KomorebiCrossRadix.affineSection_decoder_BAB
+#print axioms KomorebiCrossRadix.rawShellMask_mobius_agrees_with_certified
+#print axioms KomorebiCrossRadix.dftShellProjector_orthogonal

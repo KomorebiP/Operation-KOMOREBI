@@ -1,0 +1,56 @@
+/mnt/data/ix_continuation/formalization/SingularNormalizedSection.lean:15:2: error: Type mismatch: After simplification, term
+  eq_X_mul_shift_add_const (log ℚ_[p])
+ has type
+  @Eq ℚ_[p]⟦X⟧ (log ℚ_[p]) (X * mk fun p_1 => (coeff (p_1 + 1)) (log ℚ_[p]))
+but is expected to have type
+  @Eq ℚ_[p]⟦X⟧ (log ℚ_[p]) (X * logUnit p)
+/mnt/data/ix_continuation/formalization/SingularNormalizedSection.lean:18:17: error: This simp argument is unused:
+  coeff_one_log
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [logUnit]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/ix_continuation/formalization/SingularNormalizedSection.lean:58:46: error: unsolved goals
+p : ℕ
+hp : Fact (Nat.Prime p)
+N : ℕ
+hN : N ≠ 0
+c : ℕ
+⊢ constantCoeff ((map (Rat.castHom ℚ_[p])) (Congruential.sectionKernel N c)) = 1
+/mnt/data/ix_continuation/formalization/SingularNormalizedSection.lean:82:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (MvPowerSeries.map ?m.50) (subst (log ?m.47) ?f)
+in the target expression
+  (map (Rat.castHom ℚ_[p])) (subst (log ℚ) (sectionSeries N ↑c)) =
+    C (1 / ↑c.factorial) * X ^ c * normalizedUnit p N hN c
+
+p : ℕ
+hp : Fact (Nat.Prime p)
+N : ℕ
+hN : N ≠ 0
+c : ℕ
+hc : c < N
+⊢ (map (Rat.castHom ℚ_[p])) (subst (log ℚ) (sectionSeries N ↑c)) =
+    C (1 / ↑c.factorial) * X ^ c * normalizedUnit p N hN c
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+/mnt/data/ix_continuation/formalization/SingularNormalizedSection.lean:105:48: error: unsolved goals
+p : ℕ
+hp : Fact (Nat.Prime p)
+N : ℕ
+hN : N ≠ 0
+hdiv : N ∣ p * (p - 1)
+a : ℕ
+ha : a * p < N
+d : ℕ
+hh : Integral p (↑p ^ (d / p + a) * (coeff (d + a * p)) (sectionPadic p N (↑a * ↑p)))
+he : (d + a * p) / p = d / p + a
+z : ℕ
+hz : (a * p).factorial = p ^ a * z
+hz' : ↑(a * p).factorial = ↑p ^ a * ↑z
+⊢ ↑p ^ (d / p) * ↑p ^ a * ↑z * (coeff (a * p + d)) (sectionPadic p N ↑(a * p)) =
+    ↑p ^ (d / p) * ↑p ^ a * ↑z * (coeff (a * p + d)) (sectionPadic p N (↑a * ↑p))

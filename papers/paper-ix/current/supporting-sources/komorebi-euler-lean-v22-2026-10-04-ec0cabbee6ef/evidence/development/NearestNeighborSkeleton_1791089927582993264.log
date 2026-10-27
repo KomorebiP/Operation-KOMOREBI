@@ -1,0 +1,57 @@
+Euler/NearestNeighborSkeleton.lean:13:2: error: Type mismatch
+  map_prod Polynomial.coeToPowerSeries.ringHom f s
+has type
+  Polynomial.coeToPowerSeries.ringHom (∏ x ∈ s, f x) = ∏ x ∈ s, Polynomial.coeToPowerSeries.ringHom (f x)
+but is expected to have type
+  ∏ i ∈ s, ↑(f i) = ∏ i ∈ s, ↑(f i)
+Euler/NearestNeighborSkeleton.lean:97:2: error: Tactic `apply` failed: could not unify the conclusion of `@fourScaled_prod`
+  FourScaled (∏ i ∈ ?s, ?f i)
+with the goal
+  FourScaled ↑(∏ l ∈ Finset.range j, (Polynomial.C (2 * ↑i - ↑(2 * l + 1)) + Polynomial.C (2 ^ (k + 1)) * Polynomial.X))
+
+Note: The full type of `@fourScaled_prod` is
+  ∀ {ι : Type ?u.12} (s : Finset ι) (f : ι → Series), (∀ i ∈ s, FourScaled (f i)) → FourScaled (∏ i ∈ s, f i)
+
+j i k : ℕ
+hk : 1 ≤ k
+⊢ FourScaled ↑(∏ l ∈ Finset.range j, (Polynomial.C (2 * ↑i - ↑(2 * l + 1)) + Polynomial.C (2 ^ (k + 1)) * Polynomial.X))
+Euler/NearestNeighborSkeleton.lean:96:34: error: This simp argument is unused:
+  series_coe_poly_prod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [skeletonOddCompanion]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Euler/NearestNeighborSkeleton.lean:123:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∏ h ∈ Finset.range i, ↑(skeletonPlusFactor (skeletonDepth j i) (h + 1))
+in the target expression
+  ↑(∏ n ∈ Finset.range i, skeletonPlusFactor (skeletonDepth j i) (n + 1)) *
+        ↑(∏ n ∈ Finset.range (j - 1 - i), skeletonMinusFactor (skeletonDepth j i) (n + 1)) *
+      ↑(skeletonOddCompanion j i (skeletonDepth j i)) =
+    nearestSkeletonFactor j i * (rescale 4) (e * f * g)
+
+j i : ℕ
+hk : 2 ≤ skeletonDepth j i
+e : Series
+he :
+  ∏ h ∈ Finset.range i, ↑(skeletonPlusFactor (skeletonDepth j i) (h + 1)) =
+    (if 2 ^ (skeletonDepth j i - 1) ≤ i then 1 + C 2 * X else 1) * (rescale 4) e
+f : Series
+hf :
+  ∏ h ∈ Finset.range (j - 1 - i), ↑(skeletonMinusFactor (skeletonDepth j i) (h + 1)) =
+    (if 2 ^ (skeletonDepth j i - 1) ≤ j - 1 - i then 1 - C 2 * X else 1) * (rescale 4) f
+g : Series
+hg : ↑(skeletonOddCompanion j i (skeletonDepth j i)) = (rescale 4) g
+⊢ ↑(∏ n ∈ Finset.range i, skeletonPlusFactor (skeletonDepth j i) (n + 1)) *
+        ↑(∏ n ∈ Finset.range (j - 1 - i), skeletonMinusFactor (skeletonDepth j i) (n + 1)) *
+      ↑(skeletonOddCompanion j i (skeletonDepth j i)) =
+    nearestSkeletonFactor j i * (rescale 4) (e * f * g)
+Euler/NearestNeighborSkeleton.lean:122:50: error: This simp argument is unused:
+  series_coe_poly_prod
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [skeletonLocalUnit, Polynomial.coe_mul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+
+EXIT 1

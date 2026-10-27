@@ -1,0 +1,57 @@
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+Euler/CubicUnitObstruction.lean:21:60: error: unsolved goals
+f : Series
+hf : Restricted f
+x : D
+n : ℕ
+hb : (n + 3) * (n + 2).choose 2 = (n + 3).choose 3 * 3
+hd : (↑n + 3) * ↑((n + 2).choose 2) = ↑((n + 3).choose 3) * 3
+⊢ ↑((2 + n).choose 2) * ↑(3 + n) * (coeff (3 + n)) f =
+    ↑((2 + n).choose 2) * (coeff (3 + n)) f * 3 + ↑((2 + n).choose 2) * (coeff (3 + n)) f * ↑n
+Euler/CubicUnitObstruction.lean:77:4: error: Type mismatch: After simplification, term
+  hh
+ has type
+  ‖reval (hasseSeries 1 T) x - reval (hasseSeries 1 T) ρ - (x - ρ) * ((↑1 + 1) * reval (hasseSeries (1 + 1) T) ρ) -
+        (x - ρ) ^ 2 * (3 * reval (hasseSeries 3 T) ρ)‖ ≤
+    ‖x - ρ‖ ^ 3
+but is expected to have type
+  ‖reval (hasseSeries 1 T) x - reval (hasseSeries 1 T) ρ - (x - ρ) * (2 * reval (hasseSeries 2 T) ρ) -
+        (x - ρ) ^ 2 * (3 * reval (hasseSeries 3 T) ρ)‖ ≤
+    ‖x - ρ‖ ^ 3
+Euler/CubicUnitObstruction.lean:122:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  rjet 1 (cubicCoreSeries a b c (↑u) R) (cubicInflectionPoint c u R hR)
+in the target expression
+  ∃ z,
+    (have F := cubicCoreSeries a b c (↑u) R;
+      have ρ := cubicInflectionPoint c u R hR;
+      4 * rjet 1 F ρ ^ 3 + 27 * rjet 3 F ρ * reval F ρ ^ 2) =
+      16 * (x - cubicInflectionPoint c u R hR) ^ 7 * z
+
+a b c : D
+u : Dˣ
+R : Series
+hR : Restricted R
+x : D
+hx : CriticalZero (qeval (cubicCoreSeries a b c (↑u) R)) ↑x
+e f : D
+hA :
+  rjet 1 (cubicCoreSeries a b c (↑u) R) (cubicInflectionPoint c u R hR) =
+    -3 * rjet 3 (cubicCoreSeries a b c (↑u) R) (cubicInflectionPoint c u R hR) *
+        (x - cubicInflectionPoint c u R hR) ^ 2 -
+      4 * (x - cubicInflectionPoint c u R hR) ^ 3 * e
+hz : reval (cubicCoreSeries a b c (↑u) R) x = 0
+hC :
+  reval (cubicCoreSeries a b c (↑u) R) (cubicInflectionPoint c u R hR) =
+    2 * rjet 3 (cubicCoreSeries a b c (↑u) R) (cubicInflectionPoint c u R hR) *
+        (x - cubicInflectionPoint c u R hR) ^ 3 +
+      4 * (x - cubicInflectionPoint c u R hR) ^ 4 * (e - f)
+⊢ ∃ z,
+    (have F := cubicCoreSeries a b c (↑u) R;
+      have ρ := cubicInflectionPoint c u R hR;
+      4 * rjet 1 F ρ ^ 3 + 27 * rjet 3 F ρ * reval F ρ ^ 2) =
+      16 * (x - cubicInflectionPoint c u R hR) ^ 7 * z

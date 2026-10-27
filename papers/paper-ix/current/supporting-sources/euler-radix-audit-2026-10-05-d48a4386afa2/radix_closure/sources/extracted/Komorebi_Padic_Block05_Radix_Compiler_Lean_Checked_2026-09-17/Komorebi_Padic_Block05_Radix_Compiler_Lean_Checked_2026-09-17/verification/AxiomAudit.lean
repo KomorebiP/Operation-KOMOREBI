@@ -1,0 +1,57 @@
+import KomorebiPadic
+
+namespace KomorebiPadic
+
+#print axioms activeAt_implies_visible_cost_lt
+#print axioms activeAt_implies_le_coarseK
+#print axioms visible_cost_lt_of_le_coarseK
+#print axioms activeAt_mono_carry
+#print axioms activeAt_zero_carry_iff
+#print axioms min_padicValNat_le_add
+#print axioms binomial_padic_pascalPred
+#print axioms binomial_padic_targets_form_initial_interval
+#print axioms radixCostSet_nonempty
+#print axioms minRadixBarrierCost_lt_iff
+#print axioms binomialPadic_crossesBarrier_iff_minCost
+#print axioms radixCompilerCrosses_eq_true_iff
+#print axioms isTarget_pred
+#print axioms isTarget_sub
+#print axioms isTarget_of_between
+#print axioms target_interval_property
+#print axioms target_lt_barrier_of_not_crosses
+#print axioms not_crosses_of_all_targets_lt
+#print axioms not_crosses_iff_all_targets_lt
+#print axioms isTarget_mono_quotient
+#print axioms previous_barrier_reaches_next
+#print axioms stable_quotient_corridor
+#print axioms crossesBarrier_iff_diagonal
+#print axioms binomialPadic_crossesBarrier_iff
+#print axioms no_crossing_of_diagonal_orders_large
+#print axioms binomialPadic_no_crossing_of_coarseK_lt
+#print axioms digitSum_add_mul
+#print axioms digitSum_mul_sub_one
+#print axioms barrier_complement_decomp
+#print axioms binomial_padic_radix_descent_of_decomp
+#print axioms binomial_padic_radix_descent
+#print axioms quotient_eq_of_radix_block
+#print axioms radixRepresentative_gt_lower
+#print axioms radixRepresentative_le_Q
+#print axioms radixRepresentative_le_ceiling
+#print axioms radixRepresentative_pos
+#print axioms radixRepresentative_quotient
+#print axioms barrier_choose_symm
+#print axioms barrierCarry_radix_descent
+#print axioms barrierCarry_representative
+#print axioms branchCost_mono_order
+#print axioms le_radixRepresentative
+#print axioms barrierBranchCost_representative_min
+#print axioms activeAt_radixRepresentative_of_block
+#print axioms radix_block_nonempty_iff
+#print axioms binomialPadic_crossesBarrier_iff_radix
+#print axioms binomialPadic_crossesBarrier_iff_radix_range
+#print axioms valuationEdge_predecessor
+#print axioms firstQuotient_target
+#print axioms firstQuotient_reaches_coarseK
+#print axioms valuation_targets_form_initial_interval
+
+end KomorebiPadic

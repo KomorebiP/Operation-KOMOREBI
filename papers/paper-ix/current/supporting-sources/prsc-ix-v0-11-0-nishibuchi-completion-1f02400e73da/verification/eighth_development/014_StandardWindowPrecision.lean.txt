@@ -1,0 +1,70 @@
+module
+
+public import StandardWindowDwork
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.StandardWindowPrecision
+
+open Mahler WindowIndependence GlobalEulerBoundary StandardWindowDwork
+
+variable (p : ℕ) [Fact p.Prime]
+
+/-- Explicit bridge from integral ideal divisibility to zero-safe valuation of the original rational. -/
+theorem rational_precision_of_divisibility (x : ℤ_[p]) (q : ℚ)
+    (hq : (x:ℚ_[p])=(q:ℚ_[p])) (L : ℕ) (h : (p:ℤ_[p])^L∣x) :
+    precision p (L:ℤ) q := by
+  by_cases hx : x=0
+  · left
+    have hz : (q:ℚ_[p])=0 := by rw [← hq, hx]; rfl
+    exact Rat.cast_injective (by simpa using hz)
+  · have ho := (PadicBounds.nat_le_order_iff p x L).mpr h
+    rw [PadicBounds.order_nonzero p x hx, Nat.cast_le] at ho
+    right
+    have hv : (x.valuation:ℤ)=padicValRat p q := by
+      rw [← PadicInt.valuation_coe, hq, Padic.valuation_ratCast]
+    rw [← hv]
+    exact_mod_cast ho
+
+/-- The saturated bound stated literally for the original rational coefficient function. -/
+theorem normalized_window_precision (m j u k n : ℕ)
+    (hm : m∣p-1) (hmpos : 0<m) (hj : j<p) :
+    precision p (min k (m*n):ℤ)
+      (difference (u*((p-1)/m)) k (Congruential.coeff (m*p) j) n) := by
+  apply rational_precision_of_divisibility p
+    (difference (u*((p-1)/m)) k (coeffPadic p m j hj) n)
+    _ (lifted_difference_coe p m j _ k n hj)
+  exact standard_window_global_bound p m j u k n hm hmpos hj
+
+/-- The paper's unnormalized factorial convention, proved unconditionally throughout the window. -/
+theorem unnormalized_window_precision (m j u k n : ℕ)
+    (hm : m∣p-1) (hmpos : 0<m) (hj : j<p) :
+    precision p (min k (m*n):ℤ)
+      (difference (u*((p-1)/m)) k (Congruential.unnormalized (m*p) j) n) := by
+  have H := normalized_window_precision p m j u k n hm hmpos hj
+  rw [unnormalized_difference]
+  rcases H with H | H
+  · left; rw [H,mul_zero]
+  · by_cases hx : difference (u*((p-1)/m)) k (Congruential.coeff (m*p) j) n=0
+    · left; rw [hx,mul_zero]
+    · right
+      rw [padicValRat.mul (by exact_mod_cast Nat.factorial_ne_zero j) hx, padicValRat.of_nat]
+      have hz : padicValNat p j.factorial=0 :=
+        padicValNat.eq_zero_of_not_dvd (StandardWindow.factorial_unit_window p j hj)
+      simpa [hz] using H
+
+/-- For m=1 the standard window is every permissible residue: this subcase is complete. -/
+theorem modulus_p_complete_family (j u k n : ℕ) (hj : j<p) :
+    precision p (min k n:ℤ)
+      (difference (u*(p-1)) k (Congruential.unnormalized p j) n) := by
+  simpa using unnormalized_window_precision p 1 j u k n (one_dvd _) (by omega) hj
+
+/-- Full residue-zero family for every admissible m, with the actual rational coefficients. -/
+theorem residue_zero_complete_bound (m u k n : ℕ) (hm : m∣p-1) (hmpos : 0<m) :
+    precision p (min k (m*n):ℤ)
+      (difference (u*((p-1)/m)) k (Congruential.unnormalized (m*p) 0) n) :=
+  unnormalized_window_precision p m 0 u k n hm hmpos (Fact.out : p.Prime).pos
+
+end KomorebiPaperIX.StandardWindowPrecision

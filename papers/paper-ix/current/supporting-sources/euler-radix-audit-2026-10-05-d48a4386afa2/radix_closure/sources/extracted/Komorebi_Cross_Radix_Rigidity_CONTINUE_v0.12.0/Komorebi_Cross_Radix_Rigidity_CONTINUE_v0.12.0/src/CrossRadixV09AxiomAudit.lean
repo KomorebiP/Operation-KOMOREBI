@@ -1,0 +1,10 @@
+import CrossRadixShellJetClassification
+
+#print axioms KomorebiCrossRadix.dftAffinePrecomp
+#print axioms KomorebiCrossRadix.nonzero_section_coord_has_source
+#print axioms KomorebiCrossRadix.ExplicitShellJetClosure_mask_invariant
+#print axioms KomorebiCrossRadix.invariant_mask_shell_upward
+#print axioms KomorebiCrossRadix.invariant_mask_jet_downward
+#print axioms KomorebiCrossRadix.InvariantShellJetSet_eq_explicitClosure
+#print axioms KomorebiCrossRadix.InvariantShellJetEnvelope_finrank_explicit
+#print axioms KomorebiCrossRadix.mem_allowedFreqJet_invariant_iff

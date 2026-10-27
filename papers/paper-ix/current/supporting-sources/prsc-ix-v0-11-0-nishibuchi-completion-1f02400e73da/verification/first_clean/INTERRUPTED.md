@@ -1,0 +1,1 @@
+The outer interactive command was terminated before completion. Seven module log files show success, but the complete gate and audit were not reached. This directory is not a successful release run. A separately named clean cumulative run follows.

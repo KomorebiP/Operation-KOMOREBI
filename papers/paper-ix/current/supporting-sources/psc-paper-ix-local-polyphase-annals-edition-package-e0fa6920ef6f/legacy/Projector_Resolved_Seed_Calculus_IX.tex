@@ -1,0 +1,1407 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.90in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{bm}
+\usepackage{needspace}
+\usepackage{placeins}
+\usepackage{siunitx}
+
+\graphicspath{{figures/}}
+\allowdisplaybreaks
+\sisetup{scientific-notation=true,round-mode=places,round-precision=4}
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus IX},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Arithmetic packet calculus, Euler families, filtered supercongruences, weighted dyadic reconstruction, Mahler coordinates, and recurrence packets},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Projector-Resolved Seed Calculus IX}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newtheorem{certificate}[theorem]{Numerical Certificate}
+\newtheorem{classical}[theorem]{Classical Input}
+
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cR}{\mathcal R}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\cX}{\mathfrak X}
+\newcommand{\bbC}{\mathbb C}
+\newcommand{\bbQ}{\mathbb Q}
+\newcommand{\bbR}{\mathbb R}
+\newcommand{\bbZ}{\mathbb Z}
+\newcommand{\bbN}{\mathbb N}
+\newcommand{\bbF}{\mathbb F}
+\newcommand{\Zp}{\mathbb Z_p}
+\newcommand{\Qp}{\mathbb Q_p}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\vp}{v_p}
+\newcommand{\vTwo}{v_2}
+\newcommand{\fall}[2]{(#1)_{#2}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=7pt
+}
+
+\title{\textbf{Projector-Resolved Seed Calculus IX}\\[0.45em]
+\large Arithmetic Packet Calculus: Euler Families, Supercongruences, and Weighted $p$-Adic Reconstruction}
+\author{Komorebi P.}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper develops the arithmetic realization of the projector-resolved seed calculus. Integer and rational sequences are treated as coefficient objects acted on by residue projectors, shifts, finite differences, exponential-generating-function convolution, triangular coordinate changes, and $p$-adic completion. The analytic families introduced earlier are reorganized in a single proof-normalized arithmetic notation. Congruential Euler packets are shown to satisfy exact lower-triangular inverse systems with explicit denominator clearing. For every odd prime $p$, the alternating odd-power coordinates
+\[
+S_n(p)=\sum_{a=0}^{p-1}(-1)^a(2a+1)^n
+\]
+recover the even Euler numbers through an explicit unit-triangular transform whose $m$th off-diagonal carries $p^{2m}$. Truncation at depth $M$ therefore yields a uniform congruence modulo $p^{2M+2}$. The dyadic sector is developed separately. A new exact coordinate system
+\[
+R_n=\frac{3^{n+2}-1}{4(n+1)(n+2)}
+\]
+for even $n$ is inverted by the coefficients of $z^2/\sinh^2z$ after the rescaling $z=2t$. Both coordinate and inverse coefficients are $2$-adically integral, and the depth-$M$ reconstruction is uniform modulo $2^{2M+2}$. Lucas reduction gives a standard-window theorem for congruential packets with modulus $mp$, while Mahler coordinates convert finite differences into coefficient shifts and expose valuation gains packet by packet. Companion-matrix jumps produce exact arithmetic subsequence recurrences, illustrated by Fibonacci and Lucas packets. Sixteen code-generated figures, an exact formula registry, 291 supercongruence and dyadic reconstruction checks, and twenty-nine automated tests accompany the paper. The proved filtered identities, finite certificates, and unresolved uniform packet conjectures are kept separate throughout.
+\end{abstract}
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\textwidth}
+\textbf{Scope and claim boundary.} The paper proves the exact packet identities, triangular inverse laws, odd-prime Euler coordinate theorem, odd-prime supercongruence ladder, weighted dyadic Euler reconstruction, dyadic tail bound, Lucas standard-window reduction, Mahler difference identities, and recurrence-packet formulas stated below. The observed standard-window tail periods are reported as finite certificates rather than promoted to a uniform theorem. The proposed full finite-difference bound for congruential Euler packets remains conjectural. Classical ingredients such as Lucas' theorem, Mahler expansion, Bernoulli numbers, the Chinese remainder theorem, and companion-matrix recurrence theory are identified as inputs. Historical and OEIS priority review is reserved for the consolidated end-of-series bibliography and external audit.
+\end{minipage}}
+\end{center}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+
+\section{Arithmetic realization of the seed calculus}
+
+The common operator chain becomes
+\[
+\boxed{
+\begin{gathered}
+\text{coefficient seed}
+\longrightarrow
+\text{index address}
+\longrightarrow
+\text{residue projection}\\
+\longrightarrow
+\text{triangular transfer}
+\longrightarrow
+\text{valuation filtration}
+\longrightarrow
+\text{completion}
+\longrightarrow
+\text{reconstruction}.
+\end{gathered}}
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{01_arithmetic_seed_architecture.pdf}
+\caption{The arithmetic realization. The same coefficient object may be addressed by degree, residue, finite-difference order, recurrence state, or $p$-adic depth.}
+\label{fig:architecture}
+\end{figure}
+
+\begin{definition}[Arithmetic seed system]
+An arithmetic seed system is a tuple
+\[
+\cS_{\mathrm{arith}}
+=
+(A,\,a_0,\,\cO,\,\cR,\,\{P_{N,j}\},\,w,\,\tau_p),
+\]
+where $A$ is a coefficient ring or module, $a_0$ is a seed coefficient object, $\cO$ contains allowed operators such as shift, multiplication, differentiation, finite difference, convolution, and recurrence jump, $\cR$ is the relation system, $P_{N,j}$ are residue projectors, $w$ is a valuation or depth weight, and $\tau_p$ is a $p$-adic, product, or formal topology.
+\end{definition}
+
+For a sequence $a=(a_n)_{n\ge0}$, define
+\[
+(P_{N,j}a)_n
+=
+\mathbf 1_{n\equiv j\,({\rm mod}\,N)}a_n.
+\]
+For an exponential generating function
+\[
+A(t)=\sum_{n\ge0}a_n\frac{t^n}{n!},
+\]
+the same projector is
+\[
+(P_{N,j}A)(t)
+=
+\sum_{n\equiv j\,({\rm mod}\,N)}a_n\frac{t^n}{n!}.
+\]
+
+\begin{theorem}[Exact arithmetic packet reconstruction]
+For every $N\ge1$,
+\[
+P_{N,i}P_{N,j}=\delta_{ij}P_{N,j},
+\qquad
+\sum_{j=0}^{N-1}P_{N,j}=I.
+\]
+Hence every coefficient sequence and every formal or convergent EGF reconstructs exactly:
+\[
+\boxed{
+a=\sum_{j=0}^{N-1}P_{N,j}a,
+\qquad
+A(t)=\sum_{j=0}^{N-1}(P_{N,j}A)(t).
+}
+\]
+If $N\mid M$, then
+\[
+\boxed{
+P_{N,j}
+=
+\sum_{\substack{0\le r<M\\r\equiv j\,({\rm mod}\,N)}}P_{M,r}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Each nonnegative index lies in exactly one residue class modulo $N$. The first two identities follow coefficient by coefficient. When $N\mid M$, the residue class $j$ modulo $N$ is the disjoint union of the residues $r$ modulo $M$ satisfying $r\equiv j\pmod N$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{02_residue_packet_matrix.pdf}
+\caption{The coefficient selector matrix for six arithmetic residue packets. Every column belongs to exactly one packet.}
+\label{fig:residue-packets}
+\end{figure}
+
+\begin{remark}[What is arithmetic here]
+The projector is algebraic. Arithmetic enters when the packets carry divisibility, congruence, recurrence, or completion information. The same residue split may be tautological over $\bbQ$ and decisive over $\Zp$ because different packet transfers acquire different valuations.
+\end{remark}
+
+\section{Unit-triangular arithmetic coordinates}
+
+Let
+\[
+A(t)=\sum_{n\ge0}A_n\frac{t^n}{n!}
+\]
+be a coefficient germ and let
+\[
+H(t)=1+\sum_{r\ge1}h_r\frac{t^r}{r!}
+\]
+be a unit EGF. Define new coordinates by
+\[
+S(t)=H(t)A(t).
+\]
+
+\begin{theorem}[Unit EGF coordinate change]
+Let
+\[
+K(t)=H(t)^{-1}=\sum_{r\ge0}k_r\frac{t^r}{r!},
+\qquad k_0=1.
+\]
+Then
+\[
+\boxed{
+S_n=\sum_{r=0}^{n}\binom nr h_rA_{n-r},
+\qquad
+A_n=\sum_{r=0}^{n}\binom nr k_rS_{n-r}.
+}
+\]
+The corresponding lower-triangular operator $U_H$ has unit diagonal and is invertible. Under the coordinate change, every packet projector transports by conjugation:
+\[
+\boxed{
+\widehat P_{N,j}=U_HP_{N,j}U_H^{-1}.
+}
+\]
+The transported projectors remain idempotent, orthogonal, and reconstructive.
+\end{theorem}
+
+\begin{proof}
+The two coefficient identities are the EGF product rule applied to $S=HA$ and $A=KS$. Since $H(0)=1$, the diagonal entries are one. Conjugation preserves all polynomial identities satisfied by the projectors.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.76\textwidth]{03_congruential_triangular_matrix.pdf}
+\caption{A typical arithmetic coordinate matrix. The triangular geometry makes exact inversion and denominator tracking explicit.}
+\label{fig:triangular}
+\end{figure}
+
+The existence of an invertible matrix alone has little content. The useful coordinate changes are those with an explicit kernel, a finite rule, packet compatibility, and a filtration that controls truncation.
+
+\begin{theorem}[Filtered triangular reconstruction]
+Let $p$ be prime and suppose
+\[
+A(t)=K_p(t)S(t),
+\qquad
+K_p(t)=\sum_{r\ge0}c_rp^{w(r)}\frac{t^r}{r!},
+\]
+where $c_r\in\Zp$, $w(r)\in\bbN\cup\{\infty\}$, and $w(r)\to\infty$. Assume $S_n\in\Zp$. Then
+\[
+A_n=\sum_{r=0}^{n}\binom nr c_rp^{w(r)}S_{n-r}.
+\]
+For every precision $L$,
+\[
+\boxed{
+A_n\equiv
+\sum_{\substack{0\le r\le n\\w(r)<L}}
+\binom nr c_rp^{w(r)}S_{n-r}
+\pmod {p^L}.
+}
+\]
+The modulus depends only on the omitted weight, not on a special row $n$.
+\end{theorem}
+
+\begin{proof}
+Every omitted summand contains $p^{w(r)}$ with $w(r)\ge L$. All remaining factors are $p$-integral, so the omitted tail belongs to $p^L\Zp$.
+\end{proof}
+
+\begin{boundary}[Coordinate freedom]
+An arbitrary invertible triangular matrix can encode an arbitrary sequence and produces no meaningful theorem. In this paper a coordinate change is retained only when its kernel is explicit, its diagonal is controlled, its packet action is known, and its filtration produces verifiable divisibility.
+\end{boundary}
+
+\section{Congruential Euler packets}
+
+Define the exponential section
+\[
+\cE_{N,j}(t)
+=
+\sum_{n\ge0}\frac{t^{Nn+j}}{(Nn+j)!},
+\qquad 0\le j<N.
+\]
+It vanishes to order $j$. Removing the forced factor gives a unit germ.
+
+\begin{definition}[Congruential Euler packet]
+Define
+\[
+\boxed{
+\cC_{N,j}(t)
+=
+\frac{t^j/j!}{\cE_{N,j}(t)}
+=
+\sum_{n\ge0}C_{N,j}(n)\frac{t^{Nn}}{(Nn)!}.
+}
+\]
+\end{definition}
+
+\begin{theorem}[Triangular congruential inverse]
+The coefficients satisfy $C_{N,j}(0)=1$ and
+\[
+\boxed{
+\sum_{q=0}^{n}
+\binom{Nn+j}{Nq}C_{N,j}(q)
+=
+\delta_{n0}.
+}
+\]
+For $n\ge1$,
+\[
+\boxed{
+C_{N,j}(n)
+=-
+\frac{\displaystyle\sum_{q=0}^{n-1}\binom{Nn+j}{Nq}C_{N,j}(q)}
+{\displaystyle\binom{Nn+j}{Nn}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply $\cC_{N,j}(t)$ by $\cE_{N,j}(t)$ and compare the coefficient of $t^{Nn+j}/(Nn+j)!$. The diagonal coefficient is nonzero, so the system has a unique solution.
+\end{proof}
+
+\begin{proposition}[Universal denominator clearing]
+Set
+\[
+D_{N,j}(n)
+=
+\prod_{r=1}^{n}\binom{Nr+j}{Nr},
+\qquad D_{N,j}(0)=1.
+\]
+Then
+\[
+\boxed{
+D_{N,j}(n)C_{N,j}(n)\in\bbZ
+}
+\]
+for every $n\ge0$.
+\end{proposition}
+
+\begin{proof}
+Proceed by induction on $n$. Every earlier coefficient $C_{N,j}(q)$ has denominator dividing $D_{N,j}(q)$, which divides $D_{N,j}(n-1)$. Multiplying the recurrence by $D_{N,j}(n)=D_{N,j}(n-1)\binom{Nn+j}{Nn}$ clears the new diagonal denominator and all earlier ones.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{04_congruential_euler_heatmap.pdf}
+\caption{Congruential Euler packets for $2\le N\le6$. The family contains the Euler and Bernoulli boundaries but is not limited to them.}
+\label{fig:congruential}
+\end{figure}
+
+\begin{example}[Euler boundary]
+For $(N,j)=(2,0)$,
+\[
+\cE_{2,0}(t)=\cosh t,
+\qquad
+\cC_{2,0}(t)=\sech t.
+\]
+Thus
+\[
+C_{2,0}(n)=E_{2n},
+\]
+where
+\[
+\sech t=\sum_{n\ge0}E_n\frac{t^n}{n!}.
+\]
+The first even coefficients are
+\[
+1,-1,5,-61,1385,-50521,\ldots.
+\]
+\end{example}
+
+\begin{example}[Bernoulli boundary]
+For $(N,j)=(2,1)$,
+\[
+\cC_{2,1}(t)=\frac{t}{\sinh t}.
+\]
+If $B_n$ are the Bernoulli numbers with $B_1=-1/2$, then
+\[
+\boxed{
+C_{2,1}(n)
+=
+2\left(1-2^{2n-1}\right)B_{2n},
+\qquad n\ge0,
+}
+\]
+where $2^{-1}$ is interpreted rationally at $n=0$.
+\end{example}
+
+\begin{proof}
+Use
+\[
+\frac{t}{\sinh t}
+=
+\frac{2te^{-t}}{1-e^{-2t}}
+\]
+and the Bernoulli-polynomial generating function, or compare the standard Bernoulli expansion term by term.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{14_bernoulli_boundary.pdf}
+\caption{Exact agreement between the triangular packet inverse and the Bernoulli closed form. The plotted residual is identically zero.}
+\label{fig:bernoulli}
+\end{figure}
+
+\section{The uniform odd-prime Euler coordinate theorem}
+
+Let $p$ be an odd prime and define the alternating odd-power coordinates
+\[
+\boxed{
+S_n(p)
+=
+\sum_{a=0}^{p-1}(-1)^a(2a+1)^n.
+}
+\]
+Their EGF is elementary but carries the entire coordinate change.
+
+\begin{lemma}[Odd-power generating function]
+For odd $p$,
+\[
+\boxed{
+\sum_{n\ge0}S_n(p)\frac{t^n}{n!}
+=
+\frac{1+e^{2pt}}2\sech t.
+}
+\]
+Its even part is
+\[
+\boxed{
+\sum_{n\ge0}S_{2n}(p)\frac{t^{2n}}{(2n)!}
+=
+\cosh^2(pt)\sech t.
+}
+\]
+\end{lemma}
+
+\begin{proof}
+Sum the finite geometric progression
+\[
+\sum_{a=0}^{p-1}(-1)^ae^{(2a+1)t}
+=
+e^t\frac{1-(-e^{2t})^p}{1+e^{2t}}.
+\]
+Because $p$ is odd, the numerator is $1+e^{2pt}$. The first formula follows from $2e^t/(1+e^{2t})=\sech t$. Averaging the expression at $t$ and $-t$ gives the even part, and
+\[
+\frac{1+\cosh(2pt)}2=\cosh^2(pt).
+\]
+\end{proof}
+
+Let $Z_n$ denote the Euler zigzag numbers,
+\[
+\sec x+\tan x
+=
+\sum_{n\ge0}Z_n\frac{x^n}{n!}.
+\]
+Differentiating $\tanh x$ gives
+\[
+\boxed{
+\sech^2x
+=
+\sum_{m\ge0}(-1)^mZ_{2m+1}\frac{x^{2m}}{(2m)!}.
+}
+\]
+
+\begin{theorem}[Odd-prime Euler reconstruction]
+For every odd prime $p$ and every even $n\ge0$,
+\[
+\boxed{
+E_n
+=
+\sum_{m=0}^{n/2}
+(-1)^mZ_{2m+1}
+\binom n{2m}
+ p^{2m}
+ S_{n-2m}(p).
+}
+\]
+The coordinate matrix on the even indices is lower triangular with diagonal one.
+\end{theorem}
+
+\begin{proof}
+The even-part identity gives
+\[
+\sech t
+=
+\sech^2(pt)
+\sum_{r\ge0}S_{2r}(p)\frac{t^{2r}}{(2r)!}.
+\]
+Insert the EGF expansion of $\sech^2(pt)$ and compare the coefficient of $t^n/n!$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.80\textwidth]{05_odd_prime_coordinate_valuations.pdf}
+\caption{The $5$-adic valuation of the odd-power-to-Euler coordinate matrix. Moving one packet step away from the diagonal contributes at least two powers of $5$.}
+\label{fig:odd-matrix}
+\end{figure}
+
+\begin{corollary}[Uniform odd-prime supercongruence ladder]
+For every $M\ge0$,
+\[
+\boxed{
+E_n
+\equiv
+\sum_{m=0}^{\min(M,n/2)}
+(-1)^mZ_{2m+1}
+\binom n{2m}
+ p^{2m}
+ S_{n-2m}(p)
+\pmod {p^{2M+2}}.
+}
+\]
+The statement is uniform in the even row $n$.
+\end{corollary}
+
+\begin{proof}
+Every omitted term has $m\ge M+1$, hence contains $p^{2m}$ with $2m\ge2M+2$. All remaining factors are integers.
+\end{proof}
+
+\begin{example}[The row $n=8$ at $p=5$]
+The necessary coordinates are
+\[
+S_0=1,
+\quad S_2=49,
+\quad S_4=4705,
+\quad S_6=428689,
+\quad S_8=37665985.
+\]
+The exact row is
+\begin{align*}
+E_8={}&S_8-56p^2S_6+1120p^4S_4\\
+&-7616p^6S_2+7936p^8S_0.
+\end{align*}
+At $p=5$ this equals $1385$. Truncating after $M=2$ gives
+\[
+T_2=2731001385,
+\]
+and
+\[
+E_8-T_2=-2731000000,
+\qquad
+v_5(E_8-T_2)=6.
+\]
+Thus the guaranteed modulus $5^6$ is attained exactly in this row.
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.83\textwidth]{06_odd_supercongruence_ladder.pdf}
+\caption{Actual omitted-tail valuations and the proved lower bound for one odd-prime Euler row. The bound depends on truncation depth, not on a specially selected row.}
+\label{fig:odd-ladder}
+\end{figure}
+
+\section{Weighted dyadic Euler reconstruction}
+
+The odd-prime formula cannot be specialized by writing $p=2$. The dyadic unit group, sign packet, denominators, and natural filtration are different. We therefore construct a separate coordinate system.
+
+For even $n\ge0$, define
+\[
+\boxed{
+R_n
+=
+\frac{3^{n+2}-1}{4(n+1)(n+2)}.
+}
+\]
+Its EGF is
+\[
+\boxed{
+\sum_{\substack{n\ge0\\n\text{ even}}}
+R_n\frac{t^n}{n!}
+=
+\frac{\sinh(2t)\sinh t}{2t^2}.
+}
+\]
+Indeed,
+\[
+\frac{\sinh(2t)\sinh t}{2t^2}
+=
+\frac{\cosh(3t)-\cosh t}{4t^2}.
+\]
+
+Define $\beta_m$ by the ordinary-power expansion
+\[
+\boxed{
+\frac{z^2}{\sinh^2z}
+=
+\sum_{m\ge0}\beta_mz^{2m}.
+}
+\]
+Equivalently,
+\[
+\beta_0=1,
+\qquad
+\boxed{
+\beta_m
+=-\frac{2^{2m}(2m-1)B_{2m}}{(2m)!}
+\quad(m\ge1).
+}
+\]
+The first values are
+\[
+1,-\frac13,\frac1{15},-\frac2{189},\frac1{675},\ldots.
+\]
+
+\begin{lemma}[Dyadic integrality of the inverse coefficients]
+For every $m\ge0$,
+\[
+\boxed{\beta_m\in\bbZ_2.}
+\]
+\end{lemma}
+
+\begin{proof}
+Write
+\[
+\left(\frac{\sinh z}{z}\right)^2
+=
+\frac{\cosh(2z)-1}{2z^2}
+=
+\sum_{m\ge0}
+\frac{2^{2m+1}}{(2m+2)!}z^{2m}.
+\]
+For every $m$,
+\[
+v_2((2m+2)!)\le2m+1,
+\]
+so every coefficient belongs to $\bbZ_2$. The constant coefficient is one. The inverse of a unit power series over $\bbZ_2$ again has coefficients in $\bbZ_2$, and that inverse is $z^2/\sinh^2z$.
+\end{proof}
+
+\begin{lemma}[Dyadic integrality of the source]
+For every even $n\ge0$,
+\[
+\boxed{R_n\in\bbZ_2.}
+\]
+\end{lemma}
+
+\begin{proof}
+Let $k=n+2$, which is even. The lifting-the-exponent identity gives
+\[
+v_2(3^k-1)=v_2(3-1)+v_2(3+1)+v_2(k)-1=2+v_2(k).
+\]
+The denominator $4(n+1)(n+2)$ has the same $2$-adic valuation because $n+1$ is odd. Hence the quotient is $2$-adically integral.
+\end{proof}
+
+\begin{theorem}[Exact weighted dyadic Euler coordinate theorem]
+For every even $n\ge0$,
+\[
+\boxed{
+E_n
+=
+\sum_{m=0}^{n/2}
+\beta_m2^{2m}
+\fall{n}{2m}
+R_{n-2m},
+}
+\]
+where
+\[
+\fall{n}{2m}=\frac{n!}{(n-2m)!}.
+\]
+\end{theorem}
+
+\begin{proof}
+Substitute $z=2t$ into the inverse series:
+\[
+\frac{4t^2}{\sinh^2(2t)}
+=
+\sum_{m\ge0}\beta_m2^{2m}t^{2m}.
+\]
+Multiplying by the source EGF gives
+\[
+\frac{4t^2}{\sinh^2(2t)}
+\frac{\sinh(2t)\sinh t}{2t^2}
+=
+\frac{2\sinh t}{\sinh(2t)}
+=
+\sech t.
+\]
+Coefficient extraction converts the ordinary factor $t^{2m}$ into the falling factorial $\fall{n}{2m}$.
+\end{proof}
+
+\begin{corollary}[Weighted dyadic supercongruence]
+For every $M\ge0$,
+\[
+\boxed{
+E_n
+\equiv
+\sum_{m=0}^{\min(M,n/2)}
+\beta_m2^{2m}\fall{n}{2m}R_{n-2m}
+\pmod {2^{2M+2}}
+}
+\]
+in $\bbZ_2$.
+\end{corollary}
+
+\begin{proof}
+The preceding lemmas show that $\beta_m$, $\fall{n}{2m}$, and $R_{n-2m}$ are $2$-adically integral. Each omitted term has $m\ge M+1$ and therefore carries the factor $2^{2m}\in2^{2M+2}\bbZ_2$.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{07_dyadic_beta_valuations.pdf}
+\caption{The inverse coefficients are $2$-adically integral. Their extra valuations strengthen some rows, but the uniform theorem uses only the visible factor $2^{2m}$.}
+\label{fig:dyadic-beta}
+\end{figure}
+
+\begin{example}[The dyadic row $n=8$]
+The exact decomposition is
+\[
+\begin{aligned}
+E_8={}&\frac{7381}{45}
+-\frac{6560}{3}
++\frac{163072}{15}
+-\frac{204800}{9}
++\frac{229376}{15}\\
+={}&1385.
+\end{aligned}
+\]
+The first truncation has error
+\[
+1385-\frac{7381}{45}=\frac{54944}{45},
+\qquad
+v_2\left(\frac{54944}{45}\right)=5,
+\]
+which is stronger than the uniform depth-zero bound $2$. After three transfer levels, the error is
+\[
+\frac{229376}{15},
+\qquad
+v_2\left(\frac{229376}{15}\right)=15,
+\]
+against the guaranteed bound $8$.
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.83\textwidth]{08_dyadic_reconstruction_ladder.pdf}
+\caption{The weighted dyadic ladder. The proved lower bound is uniform; additional valuation comes from the inverse coefficients and falling factorials.}
+\label{fig:dyadic-ladder}
+\end{figure}
+
+\section{Why the dyadic and odd-adic coordinates differ}
+
+\begin{classical}[Unit-group decomposition]
+For odd $p$,
+\[
+\bbZ_p^\times
+\cong
+\mu_{p-1}\times(1+p\bbZ_p).
+\]
+At $p=2$,
+\[
+\bbZ_2^\times
+\cong
+\{\pm1\}\times(1+4\bbZ_2).
+\]
+The analytic principal-unit coordinate therefore begins one level deeper in the dyadic case, and the sign packet is invisible modulo $2$.
+\end{classical}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{09_unit_coordinate_split.pdf}
+\caption{Finite representatives of the odd-prime and dyadic unit decompositions. The first dyadic decision is a sign packet; the principal unit begins modulo $4$.}
+\label{fig:unit-split}
+\end{figure}
+
+\begin{proposition}[Finite unit decomposition certificates]
+Let $p$ be odd and $L\ge1$. Every unit $a\pmod {p^L}$ admits a factorization
+\[
+a\equiv\omega(a)\langle a\rangle\pmod {p^L},
+\]
+where
+\[
+\omega(a)^{p-1}\equiv1\pmod {p^L},
+\qquad
+\langle a\rangle\equiv1\pmod p.
+\]
+For $L\ge2$, every odd $a\pmod {2^L}$ admits
+\[
+a\equiv\varepsilon(a)\langle a\rangle_2\pmod {2^L},
+\]
+where
+\[
+\varepsilon(a)\in\{\pm1\},
+\qquad
+\langle a\rangle_2\equiv1\pmod4.
+\]
+\end{proposition}
+
+\begin{proof}
+For odd $p$, reduce $a$ modulo $p$ and consider $X^{p-1}-1$. Every nonzero residue is a simple root because $(p-1)X^{p-2}$ is a unit modulo $p$. Hensel lifting therefore gives a unique root $\omega(a)$ modulo $p^L$ congruent to $a$ modulo $p$. Setting $\langle a\rangle=a\omega(a)^{-1}$ gives the required principal unit.
+
+For $p=2$, put $\varepsilon(a)=1$ when $a\equiv1\pmod4$ and $\varepsilon(a)=-1$ when $a\equiv3\pmod4$. Then $\langle a\rangle_2=\varepsilon(a)a$ is congruent to $1$ modulo $4$, and $a=\varepsilon(a)\langle a\rangle_2$ because $\varepsilon(a)^2=1$. The sign is uniquely determined by the residue modulo $4$.
+\end{proof}
+
+\begin{remark}
+The dyadic distinction is not cosmetic. Character averages, sign projectors, logarithmic coordinates, trace splittings, and spectral resultants can all introduce powers of two that are absent at odd primes. The weighted theorem in the previous section avoids pretending that one prime-independent formula controls every integral lattice.
+\end{remark}
+
+\section{Mahler coordinates and finite-difference packets}
+
+Let $\Delta f(n)=f(n+1)-f(n)$. The binomial polynomials are adapted to this operator:
+\[
+\Delta\binom{x}{r}=\binom{x}{r-1}.
+\]
+
+\begin{classical}[Mahler coordinate system]
+A suitable continuous function on $\bbZ_p$ has an expansion
+\[
+f(x)=\sum_{r\ge0}c_r\binom xr,
+\]
+with $c_r\to0$ $p$-adically. At the finite polynomial level used below, the identity is purely algebraic and requires no convergence theorem.
+\end{classical}
+
+\begin{theorem}[Finite Mahler reconstruction]
+For values $f(0),\ldots,f(N)$, define
+\[
+c_r=\Delta^rf(0),
+\qquad0\le r\le N.
+\]
+Then for every $0\le n\le N$,
+\[
+\boxed{
+f(n)=\sum_{r=0}^{n}c_r\binom nr.
+}
+\]
+More generally,
+\[
+\boxed{
+\Delta^sf(n)
+=
+\sum_{r\ge s}c_r\binom n{r-s}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The Newton interpolation formula gives the first identity. Applying $\Delta^s$ and using the binomial shift law gives the second.
+\end{proof}
+
+\begin{corollary}[Weighted difference bound]
+If $c_r\in\bbZ_p$ and $v_p(c_r)\ge w(r)$, then
+\[
+\boxed{
+v_p(\Delta^sf(n))
+\ge
+\min_{\substack{r\ge s\\\binom n{r-s}\ne0}}
+\left(w(r)+v_p\binom n{r-s}\right).
+}
+\]
+In particular,
+\[
+v_p(\Delta^sf(n))\ge\inf_{r\ge s}w(r).
+\]
+\end{corollary}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.84\textwidth]{12_mahler_coefficients.pdf}
+\caption{Finite-difference coordinates of a polynomial arithmetic seed. The coefficient tail vanishes exactly after the polynomial degree.}
+\label{fig:mahler}
+\end{figure}
+
+\begin{theorem}[Unit-mode valuation gain]
+Let $p$ be prime, let $u\in\bbZ_p^\times$, and set $h=p-1$ for odd $p$. For
+\[
+f(n)=u^n,
+\]
+we have
+\[
+\boxed{
+\Delta_h^sf(n)
+=
+u^n(u^{p-1}-1)^s.
+}
+\]
+Hence
+\[
+\boxed{
+v_p(\Delta_h^sf(n))\ge s.
+}
+\]
+The same lower bound holds for every finite $\bbZ_p$-linear combination of such unit modes.
+\end{theorem}
+
+\begin{proof}
+One $h$-step difference multiplies $u^n$ by $u^h-1$. Iteration gives the exact formula. Fermat reduction implies $u^{p-1}-1\in p\bbZ_p$.
+\end{proof}
+
+\begin{boundary}[From kernel modes to full inverse packets]
+The preceding theorem proves the valuation gain for the exponential unit modes and their finite integral sums. Passing from those modes through a nontrivial triangular inverse can consume valuation. Any full-sequence bound must account for that loss explicitly rather than simply inheriting the kernel estimate.
+\end{boundary}
+
+\section{Standard windows and Lucas reduction}
+
+Let $p$ be prime, $m\ge1$, $0\le j<p$, and set $N=mp$. The congruential Euler recurrence becomes
+\[
+\sum_{q=0}^{n}
+\binom{mpn+j}{mpq}C_{mp,j}(q)
+=
+\delta_{n0}.
+\]
+
+\begin{classical}[Lucas theorem]
+If $a_i,b_i$ are the base-$p$ digits of $a,b$, then
+\[
+\binom ab
+\equiv
+\prod_i\binom{a_i}{b_i}
+\pmod p.
+\]
+\end{classical}
+
+\begin{theorem}[Standard-window row reduction]
+For every $0\le q\le n$,
+\[
+\boxed{
+\binom{mpn+j}{mpq}
+\equiv
+\binom{mn}{mq}
+\pmod p.
+}
+\]
+In particular,
+\[
+\boxed{
+\binom{mpn+j}{mpn}\equiv1\pmod p,
+}
+\]
+so the standard-window diagonal is a $p$-adic unit.
+\end{theorem}
+
+\begin{proof}
+Write
+\[
+mpn+j=p(mn)+j,
+\qquad
+mpq=p(mq)+0.
+\]
+Lucas' theorem separates the low digit:
+\[
+\binom{mpn+j}{mpq}
+\equiv
+\binom j0\binom{mn}{mq}
+\equiv
+\binom{mn}{mq}
+\pmod p.
+\]
+The diagonal follows by taking $q=n$.
+\end{proof}
+
+\begin{corollary}[Residue independence in the standard window]
+Let $e_n^{(m,p)}$ be the unique sequence modulo $p$ satisfying
+\[
+\sum_{q=0}^{n}\binom{mn}{mq}e_q^{(m,p)}=\delta_{n0}.
+\]
+Then
+\[
+\boxed{
+C_{mp,j}(n)\equiv e_n^{(m,p)}\pmod p
+}
+\]
+for every $0\le j<p$. Thus the first residual inverse is independent of the window address $j$.
+\end{corollary}
+
+\begin{proof}
+The row-reduction theorem turns every standard-window recurrence into the same lower-triangular system modulo $p$. Its diagonal is one, so the solution is unique.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{10_lucas_standard_window.pdf}
+\caption{The residual difference between the full standard-window matrix and its Lucas-reduced matrix is identically zero.}
+\label{fig:lucas}
+\end{figure}
+
+Let $m\mid p-1$ and $h=(p-1)/m$. The reduced inverse exhibits an apparent tail period $h$ in every tested case.
+
+\begin{certificate}[Finite standard-window period certificate]
+For every divisor $m\mid p-1$, every prime
+\[
+p\in\{3,5,7,11,13,17,19\},
+\]
+and all computed rows through $n=100$, exact modular extraction gives
+\[
+e_{n+h}^{(m,p)}=e_n^{(m,p)}
+\qquad(n\ge1).
+\]
+Thirty parameter pairs were tested. This is a finite certificate, not the proof of a uniform theorem for all primes and all rows.
+\end{certificate}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth]{11_standard_window_periods.pdf}
+\caption{Several exact finite-field period certificates. Their use as evidence is separated from the proved Lucas reduction.}
+\label{fig:periods}
+\end{figure}
+
+\begin{conjecture}[Uniform standard-window period]
+If $p$ is odd, $m\mid p-1$, and $h=(p-1)/m$, then the reduced inverse satisfies
+\[
+\boxed{
+e_{n+h}^{(m,p)}=e_n^{(m,p)}
+\quad\text{in }\bbF_p,
+\qquad n\ge1.
+}
+\]
+A proof should be given directly in the divided-power or packet algebra and should not rely on an unbounded computation.
+\end{conjecture}
+
+\section{Arithmetic recurrence packets}
+
+A linear recurrence is naturally a first-order operator system. Let
+\[
+v_{n+1}=Cv_n
+\]
+with $C\in M_d(R)$. For a step $N$ and residue $j$, the packet state is
+\[
+u_m^{(j)}=v_{Nm+j}.
+\]
+
+\begin{theorem}[Companion jump theorem]
+The packet states satisfy
+\[
+\boxed{
+u_m^{(j)}=C^j(C^N)^mv_0.
+}
+\]
+Consequently every packet subsequence satisfies the order-$d$ recurrence determined by the characteristic polynomial of $C^N$.
+\end{theorem}
+
+\begin{proof}
+The first identity is $v_n=C^nv_0$ with $n=Nm+j$. The Cayley-Hamilton theorem applied to $C^N$ produces the packet recurrence.
+\end{proof}
+
+\begin{corollary}[Fibonacci packet recurrence]
+Let $F_n$ and $L_n$ denote the Fibonacci and Lucas numbers. For
+\[
+u_m=F_{Nm+j},
+\]
+we have
+\[
+\boxed{
+u_{m+2}=L_Nu_{m+1}-(-1)^Nu_m.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The Fibonacci companion matrix has eigenvalues $\alpha,\beta$ with $\alpha\beta=-1$. The jump matrix $C^N$ has trace $L_N$ and determinant $(-1)^N$.
+\end{proof}
+
+\begin{example}
+For $N=3$,
+\[
+L_3=4,
+\qquad
+(-1)^3=-1,
+\]
+so every residue packet satisfies
+\[
+\boxed{u_{m+2}=4u_{m+1}+u_m.}
+\]
+For $j=2$, the packet begins
+\[
+1,5,21,89,377,1597,\ldots.
+\]
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{13_fibonacci_packets.pdf}
+\caption{Three Fibonacci packets. The numerical values differ, but all are generated by the same jump operator $C^3$.}
+\label{fig:fibonacci}
+\end{figure}
+
+\section{Dyadic-odd arithmetic polyphase reconstruction}
+
+Let
+\[
+N=2^aM,
+\qquad M\text{ odd}.
+\]
+The coefficient address modulo $N$ has one dyadic coordinate and one odd coordinate.
+
+\begin{theorem}[Arithmetic CRT packet factorization]
+The map
+\[
+\boxed{
+\bbZ/N\bbZ
+\longrightarrow
+\bbZ/2^a\bbZ\times\bbZ/M\bbZ,
+\qquad
+r\longmapsto(r\bmod2^a,r\bmod M)
+}
+\]
+is a bijection. Therefore
+\[
+\boxed{
+P_{N,r}
+=
+P_{2^a,r_2}P_{M,r_o},
+}
+\]
+where $(r_2,r_o)$ is the CRT address of $r$.
+\end{theorem}
+
+\begin{proof}
+This is the Chinese remainder theorem applied to the coprime factors $2^a$ and $M$. The projector identity follows because an index satisfies the combined congruence exactly when it satisfies both component congruences.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{15_crt_arithmetic_packets.pdf}
+\caption{The forty coefficient packets modulo $40$ reconstructed from their mod-$8$ and mod-$5$ addresses.}
+\label{fig:crt}
+\end{figure}
+
+\begin{remark}[Factorization does not imply equal weights]
+The coefficient address factors exactly, but the integral separation weight need not factor uniformly. A character projector may be integral in the odd coordinate and require additional dyadic depth. The CRT theorem organizes addresses; the weighted theory determines when those addresses are visible on a chosen lattice.
+\end{remark}
+
+\section{Numerical certificates and exact test program}
+
+All computations in this paper use exact integers or rational numbers except for the plotting layer. The test program does not use floating-point approximations to decide a congruence.
+
+\begin{table}[htbp]
+\centering
+\caption{Exact certificate summary.}
+\label{tab:certificates}
+\begin{tabularx}{0.95\textwidth}{Yrr}
+\toprule
+Certificate & Count or residual & Status\\
+\midrule
+Residue-packet reconstruction & $0$ & exact\\
+Odd-prime reconstruction and truncation checks & $180$ & all passed\\
+Weighted dyadic reconstruction and truncation checks & $111$ & all passed\\
+Standard-window parameter pairs & $30$ & all finite checks passed\\
+Mahler reconstruction residual & $0$ & exact\\
+CRT address checks & $192$ & all passed\\
+Fibonacci packet recurrence residual & $0$ & exact\\
+Automated tests & $29/29$ & passed\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{certificate}[Odd-prime range]
+The exact program checked every even $n\le20$, every depth through $\min(4,n/2)$, and every prime $p\in\{3,5,7,11\}$ in the packaged experiment table. A larger test suite extends the identity and congruence checks through even $n<34$ and primes through $19$.
+\end{certificate}
+
+\begin{certificate}[Dyadic range]
+The exact program checked every even $n\le40$ and every depth through $\min(5,n/2)$ in the packaged experiment table. The test suite extends exact reconstruction through even $n<60$ and the uniform tail bound through even $n<52$.
+\end{certificate}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\textwidth]{16_proof_status.pdf}
+\caption{The proof boundary. Finite certificates are not silently promoted to uniform theorems, and historical priority remains external.}
+\label{fig:status}
+\end{figure}
+
+\section{Formula registry and data boundary}
+
+\begin{longtable}{L{0.09\textwidth}L{0.29\textwidth}L{0.22\textwidth}L{0.29\textwidth}}
+\caption{Arithmetic formula registry.}\label{tab:registry}\\
+\toprule
+ID & Family & Internal status & Boundary\\
+\midrule
+\endfirsthead
+\toprule
+ID & Family & Internal status & Boundary\\
+\midrule
+\endhead
+AR-01 & Arithmetic residue packets & Proved framework & The selector is classical; the common operator role belongs to the series.\\
+AR-02 & Unit EGF coordinate change & Proved & Meaningful only with an explicit structured kernel.\\
+AR-03 & Congruential Euler packets & Proved derived family & Historical priority remains external.\\
+AR-04 & Odd-power Euler coordinates & Proved & Odd prime and even Euler row.\\
+AR-05 & Odd supercongruence ladder & Proved & Modulus follows from the visible $p^{2m}$ filtration.\\
+AR-06 & Weighted dyadic Euler coordinates & Proved & Separate construction; not a substitution into AR-04.\\
+AR-07 & Dyadic inverse coefficients & Proved $2$-integral & Coefficients use an ordinary-power expansion.\\
+AR-08 & Mahler difference packets & Finite identities proved & Infinite $\bbZ_p$ expansion requires standard convergence hypotheses.\\
+AR-09 & Standard-window packets & Lucas reduction proved & Tail period is only finitely certified here.\\
+AR-10 & Unit-mode differences & Proved & Finite integral sums inherit the bound.\\
+AR-11 & Fibonacci jump packets & Proved & General companion-matrix theorem.\\
+AR-12 & Bernoulli boundary & Proved identity & Zeta interpretation is a classical input.\\
+AR-13 & Dyadic-odd CRT packets & Proved & Visibility weights can differ by prime.\\
+AR-14 & Full Euler difference bound & Conjecture & Not inferred from finite tests.\\
+\bottomrule
+\end{longtable}
+
+The machine-readable registry records definitions, status, and boundaries. A live literature and OEIS priority comparison is deliberately not embedded in this paper. Known canonical sequences such as the Euler zigzag, signed secant, Fibonacci, and Lucas families are used as validation anchors; candidate general packet families remain unnamed in the historical sense until the external review is complete.
+
+\section{Open arithmetic problems native to the calculus}
+
+\begin{conjecture}[Full congruential Euler difference bound]
+Let $p$ be odd, $m\mid p-1$, $h=(p-1)/m$, and let $C_{mp,j}(n)$ be the congruential Euler packet. A natural target is
+\[
+\boxed{
+ v_p\left(\Delta_h^sC_{mp,j}(n)\right)
+ \ge
+ \min(mn,s).
+}
+\]
+The row-kernel theorem supplies $s$ powers before triangular packet losses. A proof must control those losses uniformly.
+\end{conjecture}
+
+\begin{conjecture}[Canonical arithmetic obstruction packet]
+Every failed lift from precision $p^L$ to $p^{L+1}$ in a finitely presented arithmetic seed system is carried by a canonically defined finite obstruction packet whose vanishing is necessary and sufficient for continuation.
+\end{conjecture}
+
+\begin{conjecture}[Prime-independent arithmetic spine]
+For a family admitting compatible $2$-adic and odd-adic realizations, there is a smallest common packet spine $\mathfrak C$ such that
+\[
+\cX
+\cong
+\cX_2^{\mathrm{wt}}
+\times_{\mathfrak C}
+\prod_{p>2}'\cX_p.
+\]
+The common spine should record the prime-independent recurrence, spectral, or Frobenius data, while allowing the local separation weights to differ.
+\end{conjecture}
+
+\begin{boundary}[What Paper IX does not prove]
+The arithmetic packet calculus does not prove every classical or modern supercongruence, does not establish new OEIS priority by itself, and does not imply unrestricted Galois or automorphic reciprocity. It supplies exact transforms, filtrations, and obstruction coordinates that later papers can use. Global deformation forests and automorphic occupancy belong to Papers X and XII.
+\end{boundary}
+
+\section{Implementation map}
+
+\begin{table}[htbp]
+\centering
+\caption{Companion implementation.}
+\label{tab:implementation}
+\begin{tabularx}{0.95\textwidth}{L{0.29\textwidth}Y}
+\toprule
+Module & Responsibility\\
+\midrule
+\texttt{packets.py} & Residue projection, exact reconstruction, nested refinement, and CRT addresses.\\
+\texttt{euler.py} & Bernoulli, Euler, zigzag, congruential, odd-prime, and weighted dyadic formulas.\\
+\texttt{padic.py} & Valuations, Lucas reduction, Mahler coefficients, finite differences, unit decompositions, and finite standard-window certificates.\\
+\texttt{recurrences.py} & Companion jumps, Fibonacci and Lucas packets, and packet recurrence residuals.\\
+\texttt{experiments.py} & Machine-readable exact certificate bundle.\\
+\texttt{visuals.py} & Sixteen code-generated figure pairs.\\
+\texttt{tests/} & Twenty-nine automated tests across exact packet, transform, valuation, and recurrence identities.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A representative exact call is
+\begin{lstlisting}
+from projector_seed_arithmetic.euler import odd_euler_truncation
+from projector_seed_arithmetic.padic import vp_int
+
+exact, truncated, difference = odd_euler_truncation(5, 8, 2)
+assert exact == 1385
+assert vp_int(difference, 5) >= 6
+\end{lstlisting}
+
+The corresponding dyadic calculation is
+\begin{lstlisting}
+from projector_seed_arithmetic.euler import dyadic_euler_truncation
+from projector_seed_arithmetic.padic import vp_fraction
+
+exact, truncated, difference = dyadic_euler_truncation(8, 2)
+assert exact == 1385
+assert vp_fraction(difference, 2) >= 6
+\end{lstlisting}
+
+\section{Conclusion}
+
+The arithmetic realization is not a list of unrelated congruences. It is one operator system:
+\[
+\boxed{
+\begin{gathered}
+\text{coefficient seed}
+\longrightarrow
+\text{residue packet}
+\longrightarrow
+\text{triangular coordinates}\\
+\longrightarrow
+\text{weighted inverse}
+\longrightarrow
+\text{difference packet}
+\longrightarrow
+\text{$p$-adic completion}\\
+\longrightarrow
+\text{exact reconstruction}.
+\end{gathered}}
+\]
+
+For odd primes, alternating odd-power coordinates give an explicit Euler transform with a two-unit valuation gain at every transfer level. At the dyadic prime, a different coordinate system and inverse are required; their exact generating-function product recovers the same Euler seed, while the natural visible weight is again two per transfer level. Congruential Euler packets place both constructions inside a common triangular family. Lucas reduction explains the first standard window, Mahler coordinates expose finite-difference weights, companion jumps control recurrence packets, and CRT addresses recombine dyadic and odd phases without pretending that their integral denominators are identical.
+
+The result is a proof-normalized arithmetic packet calculus: exact where the coordinate and valuation laws are proved, finite where only computation is available, and conjectural where a genuinely uniform packet theorem remains to be established.
+
+\appendix
+\section{Selected exact rows}
+
+\subsection{Odd-prime row \texorpdfstring{$n=8$}{n=8}}
+For $p=3$ the depth sequence of omitted-tail valuations is
+\[
+2,4,6,8,
+\]
+which meets the bound at every displayed depth. For $p=5$ the corresponding values are
+\[
+2,9,6,8.
+\]
+The nonmonotonic middle behavior is harmless: the theorem requires the lower bounds
+\[
+2,4,6,8,
+\]
+not monotonic improvement beyond them.
+
+\subsection{Dyadic row \texorpdfstring{$n=12$}{n=12}}
+The first five truncated values are
+\[
+\frac{597871}{91},
+\quad
+-\frac{46567427}{273},
+\quad
+\frac{2604301169}{1365},
+\quad
+-\frac{15406834831}{1365},
+\quad
+\frac{47275432817}{1365}.
+\]
+Their error valuations are
+\[
+4,7,13,15,20,
+\]
+against the uniform bounds
+\[
+2,4,6,8,10.
+\]
+
+\section{Proof-status ledger}
+
+\begin{longtable}{L{0.32\textwidth}L{0.18\textwidth}L{0.40\textwidth}}
+\toprule
+Statement & Status & Reason\\
+\midrule
+\endfirsthead
+\toprule
+Statement & Status & Reason\\
+\midrule
+\endhead
+Arithmetic packet reconstruction & Theorem & Coefficient partition.\\
+Unit EGF coordinate change & Theorem & Exact EGF convolution and inversion.\\
+Congruential triangular inverse & Theorem & Coefficient extraction.\\
+Universal denominator clearing & Proposition & Induction on the triangular row.\\
+Odd-power Euler reconstruction & Theorem & Exact even-part generating function.\\
+Odd-prime supercongruence ladder & Corollary & Every omitted term contains $p^{2M+2}$.\\
+Dyadic source and inverse integrality & Lemmas & LTE and inversion in $\bbZ_2[[z^2]]$.\\
+Weighted dyadic reconstruction & Theorem & Exact generating-function product.\\
+Weighted dyadic congruence & Corollary & Every omitted term contains $2^{2M+2}$.\\
+Mahler finite-difference formulas & Theorem & Newton interpolation and binomial shifts.\\
+Standard-window Lucas reduction & Theorem & Base-$p$ digit separation.\\
+Standard-window period & Finite certificate/conjecture & Checked in finite ranges; no uniform proof asserted.\\
+Full congruential Euler difference bound & Conjecture & Packet-loss control remains incomplete.\\
+Historical and OEIS priority & External task & Deliberately deferred to series bibliography audit.\\
+\bottomrule
+\end{longtable}
+
+\end{document}

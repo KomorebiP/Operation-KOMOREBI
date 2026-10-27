@@ -1,0 +1,19 @@
+'KomorebiPaperIX.Theorem75.global_finite_difference' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.Theorem75.precision_at_threshold' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.AllResidueEuler.global_unnormalized_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.AllResidueEuler.global_normalized_precision' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.AllRatiosDwork.all_ratios_flat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.RatioRiccati.next_ratio_flat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.RiccatiFlatPropagation.riccati_solution_flat' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiPaperIX.Theorem75.global_finite_difference : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)] (m j u k n : ℕ),
+  m ∣ p - 1 →
+    0 < m →
+      j < m * p →
+        ↑(KomorebiPaperIX.Congruential.unnormalized (m * p) j n) ∈ PadicInt.subring p ∧
+          KomorebiPaperIX.GlobalEulerBoundary.precision p (↑(min k (m * n)))
+              (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k
+                (KomorebiPaperIX.Congruential.unnormalized (m * p) j) n) ∧
+            KomorebiPaperIX.GlobalEulerBoundary.precision p (↑(min k (m * n)) - ↑(padicValNat p j.factorial))
+              (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k (KomorebiPaperIX.Congruential.coeff (m * p) j) n)

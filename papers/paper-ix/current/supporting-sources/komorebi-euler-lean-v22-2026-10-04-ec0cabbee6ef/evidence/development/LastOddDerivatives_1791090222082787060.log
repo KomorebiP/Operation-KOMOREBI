@@ -1,0 +1,28 @@
+Euler/LastOddDerivatives.lean:82:4: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  iteratedDeriv ?k (qeval f) ↑?x
+in the target expression
+  ↑s ^ n * iteratedDeriv n (qeval g) ↑(a + s * x) = ↑c * ↑n.factorial * ↑(rjet n f x)
+
+g f : Series
+hg : Restricted g
+hf : Restricted f
+a s c : D
+he : ∀ (y : D), reval g (a + s * y) = c * reval f y
+n : ℕ
+x : D
+hfun : (fun y => qeval g (↑a + ↑s * y)) =ᶠ[𝓝 ↑x] fun y => ↑c * qeval f y
+hh : ↑s ^ n * iteratedDeriv n (qeval g) ↑(a + s * x) = ↑c * ↑n.factorial * ↑(rjet n f x)
+⊢ ↑s ^ n * iteratedDeriv n (qeval g) ↑(a + s * x) = ↑c * iteratedDeriv n (qeval f) ↑x
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    s
+  has type
+    D
+  but is expected to have type
+    { x // ‖x‖ ≤ 1 }
+  in the application
+    ↑s
+
+EXIT 1

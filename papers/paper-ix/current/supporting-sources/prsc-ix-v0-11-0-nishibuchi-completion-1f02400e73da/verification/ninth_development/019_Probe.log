@@ -1,0 +1,25 @@
+ZMod.natCast_eq_natCast_iff (a b c : ℕ) : ↑a = ↑b ↔ a ≡ b [MOD c]
+ZMod.natCast_mod (a n : ℕ) : ↑(a % n) = ↑a
+PowerSeries.constantCoeff_subst_of_constantCoeff_zero.{u_2, u_3, u_4} {R : Type u_2} [CommRing R] {τ : Type u_3}
+  {S : Type u_4} [CommRing S] [Algebra R S] {a : MvPowerSeries τ S} (ha : MvPowerSeries.constantCoeff a = 0)
+  (f : PowerSeries R) :
+  MvPowerSeries.constantCoeff (PowerSeries.subst a f) = (algebraMap R S) (PowerSeries.constantCoeff f)
+PowerSeries.constantCoeff_expand.{u_2} {R : Type u_2} [CommRing R] (p : ℕ) (hp : p ≠ 0) (φ : PowerSeries R) :
+  PowerSeries.constantCoeff ((PowerSeries.expand p hp) φ) = PowerSeries.constantCoeff φ
+PowerSeries.map_subst.{u_2, u_3, u_4} {R : Type u_2} [CommRing R] {τ : Type u_3} {S : Type u_4} [CommRing S]
+  {a : MvPowerSeries τ R} (ha : PowerSeries.HasSubst a) {h : R →+* S} (f : PowerSeries R) :
+  (MvPowerSeries.map h) (PowerSeries.subst a f) = PowerSeries.subst ((MvPowerSeries.map h) a) ((PowerSeries.map h) f)
+PowerSeries.coeff_X_pow_mul.{u_1} {R : Type u_1} [Semiring R] (p : PowerSeries R) (n d : ℕ) :
+  (PowerSeries.coeff (d + n)) (PowerSeries.X ^ n * p) = (PowerSeries.coeff d) p
+PowerSeries.subst_C.{u_3, u_4} {τ : Type u_3} {S : Type u_4} [CommRing S] {a : MvPowerSeries τ S} (r : S) :
+  PowerSeries.subst a (PowerSeries.C r) = MvPowerSeries.C r
+PowerSeries.subst_mul.{u_2, u_3, u_4} {R : Type u_2} [CommRing R] {τ : Type u_3} {S : Type u_4} [CommRing S]
+  [Algebra R S] {a : MvPowerSeries τ S} (ha : PowerSeries.HasSubst a) (f g : PowerSeries R) :
+  PowerSeries.subst a (f * g) = PowerSeries.subst a f * PowerSeries.subst a g
+PowerSeries.subst_pow.{u_2, u_3, u_4} {R : Type u_2} [CommRing R] {τ : Type u_3} {S : Type u_4} [CommRing S]
+  [Algebra R S] {a : MvPowerSeries τ S} (ha : PowerSeries.HasSubst a) (f : PowerSeries R) (n : ℕ) :
+  PowerSeries.subst a (f ^ n) = PowerSeries.subst a f ^ n
+padicValNat_factorial_mul {p : ℕ} (n : ℕ) [hp : Fact (Nat.Prime p)] :
+  padicValNat p (p * n).factorial = padicValNat p n.factorial + n
+Nat.mul_div_cancel (m : ℕ) {n : ℕ} (H : 0 < n) : m * n / n = m
+Nat.add_mul_div_left (x z : ℕ) {y : ℕ} (H : 0 < y) : (x + y * z) / y = x / y + z

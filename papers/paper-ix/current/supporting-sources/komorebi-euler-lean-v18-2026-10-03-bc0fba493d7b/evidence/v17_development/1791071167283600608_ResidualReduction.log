@@ -1,0 +1,47 @@
+Euler/ResidualReduction.lean:26:8: error: `if_pos` has been deprecated: Use `ite_eq_left` instead
+Euler/ResidualReduction.lean:32:8: error: `if_neg` has been deprecated: Use `ite_eq_right` instead
+Euler/ResidualReduction.lean:61:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑((coeff ?n) (eulerNormalizedResidual ?r ?hr))
+in the target expression
+  (fun a => ↑a) ((coeff n) (eulerNormalizedResidual r hr)) =
+    (fun a => ↑a) (∑' (q : ℕ), (coeff n) (normalizedResidualPacket r hr q))
+
+r : ℕ
+hr : 0 < r
+n : ℕ
+⊢ (fun a => ↑a) ((coeff n) (eulerNormalizedResidual r hr)) =
+    (fun a => ↑a) (∑' (q : ℕ), (coeff n) (normalizedResidualPacket r hr q))
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    (coeff n) (eulerNormalizedResidual r hr)
+  has type
+    D
+  but is expected to have type
+    { x // ‖x‖ ≤ 1 }
+  in the application
+    (fun a => ↑a) ((coeff n) (eulerNormalizedResidual r hr))
+Euler/ResidualReduction.lean:80:8: error: `if_pos` has been deprecated: Use `ite_eq_left` instead
+Euler/ResidualReduction.lean:83:6: error: Type mismatch: After simplification, term
+  h
+ has type
+  ∑' (n : ℕ), (coeff n) (sourceShift a) * 0 ^ n = ∑' (n : ℕ), (coeff n) eulerSource * a ^ n
+but is expected to have type
+  constantCoeff (sourceShift a) = ∑' (n : ℕ), (coeff n) eulerSource * a ^ n
+Euler/ResidualReduction.lean:85:8: error: `if_neg` has been deprecated: Use `ite_eq_right` instead
+Euler/ResidualReduction.lean:98:36: error: unsolved goals
+q : ℕ
+ih : Polynomial.map red (eulerPacket q) = descPochhammer F₂ q
+⊢ 2 = 0 ∨ ↑q = 0
+Euler/ResidualReduction.lean:99:10: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑(2 * q + 1)
+in the target expression
+  Polynomial.C 0 * Polynomial.X - Polynomial.map red ↑(2 * q + 1) = 1
+
+q : ℕ
+ih : Polynomial.map red (eulerPacket q) = descPochhammer F₂ q
+hq : ↑(2 * q + 1) = 1
+⊢ Polynomial.C 0 * Polynomial.X - Polynomial.map red ↑(2 * q + 1) = 1
+Euler/ResidualReduction.lean:127:12: error(lean.unknownIdentifier): Unknown constant `PadicInt.continuous_toZMod`
+Euler/ResidualReduction.lean:138:2: error: `simp` made no progress

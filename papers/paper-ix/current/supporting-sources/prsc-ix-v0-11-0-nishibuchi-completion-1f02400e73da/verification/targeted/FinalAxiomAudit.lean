@@ -1,0 +1,10 @@
+module
+public import Theorem75
+#print axioms KomorebiPaperIX.Theorem75.global_finite_difference
+#print axioms KomorebiPaperIX.Theorem75.precision_at_threshold
+#print axioms KomorebiPaperIX.AllResidueEuler.global_unnormalized_bound
+#print axioms KomorebiPaperIX.AllResidueEuler.global_normalized_precision
+#print axioms KomorebiPaperIX.AllRatiosDwork.all_ratios_flat
+#print axioms KomorebiPaperIX.RatioRiccati.next_ratio_flat
+#print axioms KomorebiPaperIX.RiccatiFlatPropagation.riccati_solution_flat
+#check @KomorebiPaperIX.Theorem75.global_finite_difference

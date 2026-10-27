@@ -1,0 +1,79 @@
+Euler/PacketDerivatives.lean:50:4: error: Type mismatch: After simplification, term
+  HasDerivAt.comp (↑x) hs (HasDerivAt.add_const (↑a) (hasDerivAt_id ↑x))
+ has type
+  @HasDerivAt ℚ_[2] Padic.instNontriviallyNormedField ℚ_[2]
+    Padic.instNontriviallyNormedField.toDivisionRing.toAddCommGroup (NormedAlgebra.toNormedSpace ℚ_[2]).toModule
+    PseudoMetricSpace.toUniformSpace.toTopologicalSpace ⋯
+    (qeval eulerSource ∘ Quot.lift (fun a₁ => Quotient.lift (fun y => ⟦a₁ + y⟧) ⋯ ↑a) ⋯) ↑(rjet 1 eulerSource (x + a))
+    ↑x
+but is expected to have type
+  @HasDerivAt ℚ_[2] Padic.instNontriviallyNormedField ℚ_[2] (instAddCommGroupPadic 2) Semiring.toModule
+    PseudoMetricSpace.toUniformSpace.toTopologicalSpace ⋯ (fun y => qeval eulerSource (y + ↑a))
+    ↑(rjet 1 eulerSource (x + a)) ↑x
+Euler/PacketDerivatives.lean:52:8: error(lean.unknownIdentifier): Unknown constant `PadicInt.coe_injective`
+Euler/PacketDerivatives.lean:68:2: error: Tactic `rfl` failed: The left-hand side
+  residualNumeratorTap r q *
+    (Polynomial.eval x (Polynomial.derivative (eulerPacket q)) * reval eulerSource (x + -↑q) +
+      Polynomial.eval x (eulerPacket q) * rjet 1 eulerSource (x + -↑q))
+is not definitionally equal to the right-hand side
+  residualPacketSlope r q x
+
+r q : ℕ
+x : D
+⊢ residualNumeratorTap r q *
+      (Polynomial.eval x (Polynomial.derivative (eulerPacket q)) * reval eulerSource (x + -↑q) +
+        Polynomial.eval x (eulerPacket q) * rjet 1 eulerSource (x + -↑q)) =
+    residualPacketSlope r q x
+Euler/PacketDerivatives.lean:77:9: error: Application type mismatch: The argument
+  eulerPacket q
+has type
+  Polynomial D
+but is expected to have type
+  Polynomial ℚ_[2]
+in the application
+  Polynomial.eval (↑x) (eulerPacket q)
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+Euler/PacketDerivatives.lean:77:78: error: unsolved goals
+r q : ℕ
+x : D
+⊢ (↑(eulerBeta r))⁻¹ * ↑(residualNumeratorTap r q) * ↑(Polynomial.eval x (eulerPacket q)) *
+      ↑(reval eulerSource (x - ↑q)) =
+    (↑(eulerBeta r))⁻¹ * ↑(residualNumeratorTap r q) * ↑(reval eulerSource (x - ↑q)) * Polynomial.eval ↑x sorry
+Euler/PacketDerivatives.lean:95:10: error: Application type mismatch: The argument
+  Polynomial.derivative (eulerPacket q)
+has type
+  Polynomial D
+but is expected to have type
+  Polynomial ℚ_[2]
+in the application
+  Polynomial.eval (↑x) (Polynomial.derivative (eulerPacket q))
+Euler/PacketDerivatives.lean:97:9: error: Application type mismatch: The argument
+  eulerPacket q
+has type
+  Polynomial D
+but is expected to have type
+  Polynomial ℚ_[2]
+in the application
+  Polynomial.eval (↑x) (eulerPacket q)
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+Euler/PacketDerivatives.lean:98:62: error: unsolved goals
+r q : ℕ
+x : D
+hs : deriv (qeval eulerSource) (↑x - ↑q) = ↑(rjet 1 eulerSource (x - ↑q))
+⊢ ↑(residualNumeratorTap r q) * ↑(Polynomial.eval x (Polynomial.derivative (eulerPacket q))) *
+          ↑(reval eulerSource (x - ↑q)) *
+        (↑(eulerBeta r))⁻¹ +
+      ↑(residualNumeratorTap r q) * ↑(Polynomial.eval x (eulerPacket q)) * ↑(rjet 1 eulerSource (x - ↑q)) *
+        (↑(eulerBeta r))⁻¹ =
+    ↑(residualNumeratorTap r q) * ↑(reval eulerSource (x - ↑q)) * (↑(eulerBeta r))⁻¹ * Polynomial.eval ↑x sorry +
+      ↑(residualNumeratorTap r q) * ↑(rjet 1 eulerSource (x - ↑q)) * (↑(eulerBeta r))⁻¹ * Polynomial.eval ↑x sorry

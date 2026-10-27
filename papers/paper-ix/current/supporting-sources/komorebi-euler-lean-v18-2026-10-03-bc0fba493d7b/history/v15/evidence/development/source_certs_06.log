@@ -1,0 +1,20 @@
+Euler/SourceCertificates.lean:114:4: error: Tactic `decide` failed for proposition
+  (Polynomial.hasseDeriv 1) sourceResidue8 = Polynomial.C 2
+because its `Decidable` instance
+  Polynomial.instDecidableEq (ZMod 8) ((Polynomial.hasseDeriv 1) sourceResidue8) (Polynomial.C 2)
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  ⋯ ▸
+    (Quot.lift
+        (Quot.indep fun a =>
+          (fun a =>
+              Quot.recOnSubsingleton
+                (AddMonoidAlgebra.coeffEquiv ((Polynomial.toFinsuppIso (ZMod 8)).toEquiv (Polynomial.C 2))).support.val
+                fun a_1 => (fun x x_1 => decidable_of_iff' (x ≈ x_1) ⋯) a a_1)
+            a)
+        ⋯
+        (AddMonoidAlgebra.coeffEquiv
+              ((Polynomial.toFinsuppIso (ZMod 8)).toEquiv ((Polynomial.hasseDeriv 1) sourceResidue8))).support.val).snd
+
+Hint: Reduction got stuck on `▸` (Eq.rec), which suggests that one of the `Decidable` instances is defined using tactics such as `rw` or `simp`. To avoid tactics, make use of functions such as `«inferInstanceAs»` or `decidable_of_decidable_of_iff` to alter a proposition.

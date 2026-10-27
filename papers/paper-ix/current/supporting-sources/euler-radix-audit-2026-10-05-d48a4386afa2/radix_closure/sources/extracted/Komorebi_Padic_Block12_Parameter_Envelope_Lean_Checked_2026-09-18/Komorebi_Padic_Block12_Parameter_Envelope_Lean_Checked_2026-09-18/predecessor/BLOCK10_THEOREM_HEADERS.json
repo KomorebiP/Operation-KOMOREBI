@@ -1,0 +1,634 @@
+{
+  "authoritative_predecessor": "/mnt/data/padic_block11_work/Komorebi_Padic_COMPLETE_2026-09-18_Block10_Closed_Budget_Lean_Checked/blocks/Block10",
+  "headers": {
+    "activeAt_implies_le_coarseK": {
+      "file": "lean/KomorebiPadic/Arithmetic.lean",
+      "header": "theorem activeAt_implies_le_coarseK {r h k carry : \u2115} (ha : ActiveAt r h k carry) : k \u2264 coarseK r h"
+    },
+    "activeAt_implies_visible_cost_lt": {
+      "file": "lean/KomorebiPadic/Arithmetic.lean",
+      "header": "theorem activeAt_implies_visible_cost_lt {r h k carry : \u2115} (ha : ActiveAt r h k carry) : k * (h + 1) < r"
+    },
+    "activeAt_mono_carry": {
+      "file": "lean/KomorebiPadic/Arithmetic.lean",
+      "header": "theorem activeAt_mono_carry {r h k c\u2081 c\u2082 : \u2115} (hc : c\u2081 \u2264 c\u2082) (ha : ActiveAt r h k c\u2082) : ActiveAt r h k c\u2081"
+    },
+    "activeAt_radixRepresentative_of_block": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem activeAt_radixRepresentative_of_block {p r h Q a q : \u2115} (hp : p.Prime) (hblock : p * a < Q) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) (hlower : p * a < q) (hupper : q \u2264 p * (a + 1)) (hactive : ActiveAt r h (p * Q - q) (barrierCarry p Q q)) : ActiveAt r h (p * Q - radixRepresentative p Q a) (padicValNat p ((Q - 1).choose a))"
+    },
+    "activeAt_zero_carry_iff": {
+      "file": "lean/KomorebiPadic/Arithmetic.lean",
+      "header": "theorem activeAt_zero_carry_iff {r h k : \u2115} : ActiveAt r h k 0 \u2194 k * (h + 1) < r"
+    },
+    "barrierBranchCost_representative_min": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem barrierBranchCost_representative_min {p h Q a q : \u2115} (hp : p.Prime) (hblock : p * a < Q) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) (hlower : p * a < q) (hupper : q \u2264 p * (a + 1)) : barrierBranchCost p h Q (radixRepresentative p Q a) \u2264 barrierBranchCost p h Q q"
+    },
+    "barrierCarry_radix_descent": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem barrierCarry_radix_descent {p Q q : \u2115} (hp : p.Prime) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) : barrierCarry p Q q = padicValNat p ((Q - 1).choose ((q - 1) / p))"
+    },
+    "barrierCarry_representative": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem barrierCarry_representative {p Q a : \u2115} (hp : p.Prime) (hblock : p * a < Q) : barrierCarry p Q (radixRepresentative p Q a) = padicValNat p ((Q - 1).choose a)"
+    },
+    "barrierRepresentativeTestCount_le_searchBoundBudget": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem barrierRepresentativeTestCount_le_searchBoundBudget {p r h : \u2115} (hp : p.Prime) : barrierRepresentativeTestCount p r h \u2264 radixRepresentativeBudget p (quotientSearchBound p r h)"
+    },
+    "barrierRepresentativeTestCount_le_searchBound_sq": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem barrierRepresentativeTestCount_le_searchBound_sq {p r h : \u2115} (hp : p.Prime) : barrierRepresentativeTestCount p r h \u2264 quotientSearchBound p r h * quotientSearchBound p r h"
+    },
+    "barrierRepresentativeTestCount_le_stableBudget": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem barrierRepresentativeTestCount_le_stableBudget (p r h : \u2115) : barrierRepresentativeTestCount p r h \u2264 radixRepresentativeBudget p (stableQuotient p r h)"
+    },
+    "barrierRepresentativeTestCount_le_stableQuotient_sq": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem barrierRepresentativeTestCount_le_stableQuotient_sq {p r h : \u2115} : barrierRepresentativeTestCount p r h \u2264 stableQuotient p r h * stableQuotient p r h"
+    },
+    "barrier_choose_symm": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem barrier_choose_symm {p Q q : \u2115} (hp : 0 < p) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) : (p * Q - 1).choose (p * Q - q) = (p * Q - 1).choose (q - 1)"
+    },
+    "barrier_complement_decomp": {
+      "file": "lean/KomorebiPadic/RadixDescent.lean",
+      "header": "theorem barrier_complement_decomp {p Q q a b : \u2115} (hp : 1 < p) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) (hdecomp : q - 1 = p * a + b) (hb : b < p) : p * Q - q = (p - 1 - b) + p * (Q - 1 - a)"
+    },
+    "binomialPadic_crossesBarrier_iff": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem binomialPadic_crossesBarrier_iff {p r h Q : \u2115} (hp : 1 < p) : CrossesBarrier (binomialPadicEdgeSystem p r h hp) p Q \u2194 \u2203 q : \u2115, 1 \u2264 q \u2227 q \u2264 Q \u2227 ActiveAt r h (p * Q - q) (padicValNat p ((p * Q - 1).choose (p * Q - q)))"
+    },
+    "binomialPadic_crossesBarrier_iff_minCost": {
+      "file": "lean/KomorebiPadic/FiniteCompiler.lean",
+      "header": "theorem binomialPadic_crossesBarrier_iff_minCost {p r h Q : \u2115} (hp : p.Prime) (hQ : 0 < Q) : CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p Q \u2194 minRadixBarrierCost p h Q < r"
+    },
+    "binomialPadic_crossesBarrier_iff_radix": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem binomialPadic_crossesBarrier_iff_radix {p r h Q : \u2115} (hp : p.Prime) : CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p Q \u2194 \u2203 a : \u2115, p * a < Q \u2227 radixBarrierCost p h Q a < r"
+    },
+    "binomialPadic_crossesBarrier_iff_radix_range": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem binomialPadic_crossesBarrier_iff_radix_range {p r h Q : \u2115} (hp : p.Prime) (hQ : 0 < Q) : CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p Q \u2194 \u2203 a : \u2115, a \u2264 (Q - 1) / p \u2227 radixBarrierCost p h Q a < r"
+    },
+    "binomialPadic_no_crossing_of_coarseK_lt": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem binomialPadic_no_crossing_of_coarseK_lt {p r h Q : \u2115} (hp : 1 < p) (hlarge : coarseK r h < (p - 1) * Q) : \u00ac CrossesBarrier (binomialPadicEdgeSystem p r h hp) p Q"
+    },
+    "binomial_padic_pascalPred": {
+      "file": "lean/KomorebiPadic/ConcreteBinomialModel.lean",
+      "header": "theorem binomial_padic_pascalPred {p q k : \u2115} (hp : 1 < p) (hq : 1 < q) (hk : 0 < k) : padicValNat p ((q + (k - 1) - 1).choose (k - 1)) \u2264 padicValNat p ((q + k - 1).choose k) \u2228 padicValNat p (((q - 1) + k - 1).choose k) \u2264 padicValNat p ((q + k - 1).choose k)"
+    },
+    "binomial_padic_radix_descent": {
+      "file": "lean/KomorebiPadic/RadixDescent.lean",
+      "header": "theorem binomial_padic_radix_descent {p Q q : \u2115} (hp : p.Prime) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) : padicValNat p ((p * Q - 1).choose (q - 1)) = padicValNat p ((Q - 1).choose ((q - 1) / p))"
+    },
+    "binomial_padic_radix_descent_of_decomp": {
+      "file": "lean/KomorebiPadic/RadixDescent.lean",
+      "header": "theorem binomial_padic_radix_descent_of_decomp {p Q q a b : \u2115} (hp : p.Prime) (hq1 : 1 \u2264 q) (hqQ : q \u2264 Q) (hdecomp : q - 1 = p * a + b) (hb : b < p) : padicValNat p ((p * Q - 1).choose (q - 1)) = padicValNat p ((Q - 1).choose a)"
+    },
+    "binomial_padic_targets_form_initial_interval": {
+      "file": "lean/KomorebiPadic/ConcreteBinomialModel.lean",
+      "header": "theorem binomial_padic_targets_form_initial_interval {p r h Q M : \u2115} (hp : 1 < p) (hM : IsTarget (binomialPadicEdgeSystem p r h hp) Q M) : \u2200 s : \u2115, 1 \u2264 s \u2192 s \u2264 M \u2192 IsTarget (binomialPadicEdgeSystem p r h hp) Q s"
+    },
+    "branchCost_mono_order": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem branchCost_mono_order {h k\u2081 k\u2082 carry : \u2115} (hk : k\u2082 \u2264 k\u2081) : branchCost h k\u2082 carry \u2264 branchCost h k\u2081 carry"
+    },
+    "coarseK_lt_diagonal_at_searchBound": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem coarseK_lt_diagonal_at_searchBound {p r h : \u2115} (hp : p.Prime) : coarseK r h < (p - 1) * quotientSearchBound p r h"
+    },
+    "crossesBarrier_iff_diagonal": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem crossesBarrier_iff_diagonal (G : PredecessorEdgeSystem) {p Q : \u2115} (hp : 0 < p) : CrossesBarrier G p Q \u2194 \u2203 q : \u2115, 1 \u2264 q \u2227 q \u2264 Q \u2227 G.edge q (p * Q - q)"
+    },
+    "crossesBarrier_of_lt_firstNoncrossing": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem crossesBarrier_of_lt_firstNoncrossing {p r h q : \u2115} (hp : p.Prime) (hq : 0 < q) (hlt : q < firstNoncrossingQuotient p r h) : CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p q"
+    },
+    "digitSum_add_mul": {
+      "file": "lean/KomorebiPadic/RadixDescent.lean",
+      "header": "theorem digitSum_add_mul {p a b : \u2115} (hp : 1 < p) (hb : b < p) : (p.digits (b + p * a)).sum = b + (p.digits a).sum"
+    },
+    "digitSum_mul_sub_one": {
+      "file": "lean/KomorebiPadic/RadixDescent.lean",
+      "header": "theorem digitSum_mul_sub_one {p Q : \u2115} (hp : 1 < p) (hQ : 0 < Q) : (p.digits (p * Q - 1)).sum = (p - 1) + (p.digits (Q - 1)).sum"
+    },
+    "exactMaximumLayer_fixedPoint_spec": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem exactMaximumLayer_fixedPoint_spec {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : quotientOfLayer p (exactMaximumLayer p r h) = stableQuotient p r h \u2227 IsMaximumTarget (binomialPadicEdgeSystem p r h hp.one_lt) (stableQuotient p r h) (exactMaximumLayer p r h)"
+    },
+    "exactMaximumLayer_isTarget": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem exactMaximumLayer_isTarget {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : IsTarget (binomialPadicEdgeSystem p r h hp.one_lt) (stableQuotient p r h) (exactMaximumLayer p r h)"
+    },
+    "exactMaximumLayer_le_finalFiberUpper": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem exactMaximumLayer_le_finalFiberUpper {p r h : \u2115} (hp : p.Prime) : exactMaximumLayer p r h \u2264 finalFiberUpper p r h"
+    },
+    "exactMaximumLayer_spec": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem exactMaximumLayer_spec {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : IsMaximumTarget (binomialPadicEdgeSystem p r h hp.one_lt) (stableQuotient p r h) (exactMaximumLayer p r h)"
+    },
+    "finalFiberBoundaryLayer_eq_exactMaximumLayer": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryLayer_eq_exactMaximumLayer {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : finalFiberBoundaryLayer p r h = exactMaximumLayer p r h"
+    },
+    "finalFiberBoundaryResult_spec": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryResult_spec {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : FirstTrueDescendingSpec (targetCompiler p r h (stableQuotient p r h)) (finalFiberLower p r h) (finalFiberUpper p r h) (finalFiberBoundaryResult p r h)"
+    },
+    "finalFiberBoundaryTestCount_bounds": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryTestCount_bounds {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : 1 \u2264 finalFiberBoundaryTestCount p r h \u2227 finalFiberBoundaryTestCount p r h \u2264 p"
+    },
+    "finalFiberBoundaryTestCount_eq_distance": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryTestCount_eq_distance {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : finalFiberBoundaryTestCount p r h = finalFiberUpper p r h - finalFiberBoundaryLayer p r h + 1"
+    },
+    "finalFiberBoundaryTestCount_eq_exactDistance": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryTestCount_eq_exactDistance {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : finalFiberBoundaryTestCount p r h = finalFiberUpper p r h - exactMaximumLayer p r h + 1"
+    },
+    "finalFiberBoundaryTestCount_le_width": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryTestCount_le_width {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : finalFiberBoundaryTestCount p r h \u2264 finalFiberWidth p r h"
+    },
+    "finalFiberBoundaryTestCount_pos": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberBoundaryTestCount_pos {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : 0 < finalFiberBoundaryTestCount p r h"
+    },
+    "finalFiberCandidateSet_nonempty": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberCandidateSet_nonempty (p r h : \u2115) : (finalFiberCandidateSet p r h).Nonempty"
+    },
+    "finalFiberLower_isTarget": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberLower_isTarget {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : IsTarget (binomialPadicEdgeSystem p r h hp.one_lt) (stableQuotient p r h) (finalFiberLower p r h)"
+    },
+    "finalFiberLower_le_exactMaximumLayer": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberLower_le_exactMaximumLayer (p r h : \u2115) : finalFiberLower p r h \u2264 exactMaximumLayer p r h"
+    },
+    "finalFiberLower_le_upper": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberLower_le_upper {p r h : \u2115} (hp : p.Prime) : finalFiberLower p r h \u2264 finalFiberUpper p r h"
+    },
+    "finalFiberTerminal_eq_lower": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberTerminal_eq_lower {p r h : \u2115} (hp : p.Prime) : finalFiberUpper p r h + 1 - finalFiberWidth p r h = finalFiberLower p r h"
+    },
+    "finalFiberTestCount_eq": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberTestCount_eq (p r h : \u2115) : finalFiberTestCount p r h = finalFiberUpper p r h + 1 - finalFiberLower p r h"
+    },
+    "finalFiberTestCount_pos": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberTestCount_pos {p r h : \u2115} (hp : p.Prime) : 0 < finalFiberTestCount p r h"
+    },
+    "finalFiberWidth_le_base": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberWidth_le_base {p r h : \u2115} (hp : p.Prime) : finalFiberWidth p r h \u2264 p"
+    },
+    "finalFiberWidth_le_upper_succ": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberWidth_le_upper_succ (p r h : \u2115) : finalFiberWidth p r h \u2264 finalFiberUpper p r h + 1"
+    },
+    "finalFiberWidth_pos": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem finalFiberWidth_pos {p r h : \u2115} (hp : p.Prime) : 0 < finalFiberWidth p r h"
+    },
+    "firstFalseResultAux_bounds": {
+      "file": "lean/KomorebiPadic/SequentialSearch.lean",
+      "header": "theorem firstFalseResultAux_bounds (pred : \u2115 \u2192 Bool) {q fuel : \u2115} (hfuel : 0 < fuel) (hterminal : pred (q + fuel - 1) = false) : q \u2264 (firstFalseResultAux pred q fuel).value \u2227 (firstFalseResultAux pred q fuel).value < q + fuel"
+    },
+    "firstFalseResultAux_spec": {
+      "file": "lean/KomorebiPadic/SequentialSearch.lean",
+      "header": "theorem firstFalseResultAux_spec (pred : \u2115 \u2192 Bool) {q fuel : \u2115} (hfuel : 0 < fuel) (hterminal : pred (q + fuel - 1) = false) : FirstFalseSpec pred q fuel (firstFalseResultAux pred q fuel)"
+    },
+    "firstFalseResultAux_tested": {
+      "file": "lean/KomorebiPadic/SequentialSearch.lean",
+      "header": "theorem firstFalseResultAux_tested (pred : \u2115 \u2192 Bool) {q fuel : \u2115} (hfuel : 0 < fuel) (hterminal : pred (q + fuel - 1) = false) : (firstFalseResultAux pred q fuel).tested = (firstFalseResultAux pred q fuel).value - q + 1"
+    },
+    "firstNoncrossingQuotient_le_bound": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem firstNoncrossingQuotient_le_bound {p r h : \u2115} (hp : p.Prime) : firstNoncrossingQuotient p r h \u2264 quotientSearchBound p r h"
+    },
+    "firstNoncrossingQuotient_not_crosses": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem firstNoncrossingQuotient_not_crosses {p r h : \u2115} (hp : p.Prime) : \u00ac CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p (firstNoncrossingQuotient p r h)"
+    },
+    "firstNoncrossingQuotient_pos": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem firstNoncrossingQuotient_pos {p r h : \u2115} (hp : p.Prime) : 0 < firstNoncrossingQuotient p r h"
+    },
+    "firstNoncrossingQuotient_spec": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem firstNoncrossingQuotient_spec {p r h : \u2115} (hp : p.Prime) : (\u00ac CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p (firstNoncrossingQuotient p r h)) \u2227 \u2200 q : \u2115, 0 < q \u2192 q < firstNoncrossingQuotient p r h \u2192 CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p q"
+    },
+    "firstQuotient_reaches_coarseK": {
+      "file": "lean/KomorebiPadic/ValuationModel.lean",
+      "header": "theorem firstQuotient_reaches_coarseK (V : PascalValuationModel) {r h Q k : \u2115} (hr : 0 < r) (hQ : 1 \u2264 Q) (hk : k \u2264 coarseK r h) : IsTarget (valuationEdgeSystem V r h) Q (k + 1)"
+    },
+    "firstQuotient_target": {
+      "file": "lean/KomorebiPadic/ValuationModel.lean",
+      "header": "theorem firstQuotient_target (V : PascalValuationModel) {r h Q k : \u2115} (hQ : 1 \u2264 Q) (hcost : k * (h + 1) < r) : IsTarget (valuationEdgeSystem V r h) Q (k + 1)"
+    },
+    "firstTrueDescendingAux_bounds": {
+      "file": "lean/KomorebiPadic/DescendingSearch.lean",
+      "header": "theorem firstTrueDescendingAux_bounds (pred : \u2115 \u2192 Bool) {upper fuel : \u2115} (hfuel : 0 < fuel) (hfit : fuel \u2264 upper + 1) (hterminal : pred (upper + 1 - fuel) = true) : upper + 1 - fuel \u2264 (firstTrueDescendingAux pred upper fuel).value \u2227 (firstTrueDescendingAux pred upper fuel).value \u2264 upper"
+    },
+    "firstTrueDescendingAux_spec": {
+      "file": "lean/KomorebiPadic/DescendingSearch.lean",
+      "header": "theorem firstTrueDescendingAux_spec (pred : \u2115 \u2192 Bool) {upper fuel : \u2115} (hfuel : 0 < fuel) (hfit : fuel \u2264 upper + 1) (hterminal : pred (upper + 1 - fuel) = true) : FirstTrueDescendingSpec pred (upper + 1 - fuel) upper (firstTrueDescendingAux pred upper fuel)"
+    },
+    "firstTrueDescendingAux_tested": {
+      "file": "lean/KomorebiPadic/DescendingSearch.lean",
+      "header": "theorem firstTrueDescendingAux_tested (pred : \u2115 \u2192 Bool) {upper fuel : \u2115} (hfuel : 0 < fuel) (hfit : fuel \u2264 upper + 1) (hterminal : pred (upper + 1 - fuel) = true) : (firstTrueDescendingAux pred upper fuel).tested = upper - (firstTrueDescendingAux pred upper fuel).value + 1"
+    },
+    "fullDescendingScanAux_attained": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScanAux_attained (cost : \u2115 \u2192 \u2115) (n best : \u2115) : fullDescendingScanAux cost n best = best \u2228 \u2203 i : \u2115, i < n \u2227 fullDescendingScanAux cost n best = cost i"
+    },
+    "fullDescendingScanAux_eq_of_le": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScanAux_eq_of_le (cost : \u2115 \u2192 \u2115) {n best : \u2115} (h : \u2200 i : \u2115, i < n \u2192 best \u2264 cost i) : fullDescendingScanAux cost n best = best"
+    },
+    "fullDescendingScanAux_le_best": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScanAux_le_best (cost : \u2115 \u2192 \u2115) (n best : \u2115) : fullDescendingScanAux cost n best \u2264 best"
+    },
+    "fullDescendingScanAux_le_cost_of_lt": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScanAux_le_cost_of_lt (cost : \u2115 \u2192 \u2115) {n best i : \u2115} (hi : i < n) : fullDescendingScanAux cost n best \u2264 cost i"
+    },
+    "fullDescendingScan_eq_minImage": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScan_eq_minImage (cost : \u2115 \u2192 \u2115) (A : \u2115) : fullDescendingScan cost A = ((Finset.range (A + 1)).image cost).min' (by refine \u27e8cost A, ?_\u27e9 exact Finset.mem_image.2 \u27e8A, by simp, rfl\u27e9)"
+    },
+    "fullDescendingScan_le_cost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScan_le_cost (cost : \u2115 \u2192 \u2115) {A i : \u2115} (hi : i \u2264 A) : fullDescendingScan cost A \u2264 cost i"
+    },
+    "fullDescendingScan_mem_image_range": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem fullDescendingScan_mem_image_range (cost : \u2115 \u2192 \u2115) (A : \u2115) : fullDescendingScan cost A \u2208 (Finset.range (A + 1)).image cost"
+    },
+    "fullRepresentativeCount_le_quotient": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem fullRepresentativeCount_le_quotient {p Q : \u2115} (hQ : 0 < Q) : (Q - 1) / p + 1 \u2264 Q"
+    },
+    "isTarget_iff_le_exactMaximumLayer": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem isTarget_iff_le_exactMaximumLayer {p r h t : \u2115} (hp : p.Prime) (hr : 0 < r) : IsTarget (binomialPadicEdgeSystem p r h hp.one_lt) (stableQuotient p r h) t \u2194 1 \u2264 t \u2227 t \u2264 exactMaximumLayer p r h"
+    },
+    "isTarget_le_exactMaximumLayer": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem isTarget_le_exactMaximumLayer {p r h t : \u2115} (hp : p.Prime) (ht : IsTarget (binomialPadicEdgeSystem p r h hp.one_lt) (stableQuotient p r h) t) : t \u2264 exactMaximumLayer p r h"
+    },
+    "isTarget_mono_quotient": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem isTarget_mono_quotient (G : PredecessorEdgeSystem) {Q\u2081 Q\u2082 t : \u2115} (ht : IsTarget G Q\u2081 t) (hQ : Q\u2081 \u2264 Q\u2082) : IsTarget G Q\u2082 t"
+    },
+    "isTarget_of_between": {
+      "file": "lean/KomorebiPadic/IntervalGraph.lean",
+      "header": "theorem isTarget_of_between (G : PredecessorEdgeSystem) {Q s t : \u2115} (ht : IsTarget G Q t) (hs : 1 \u2264 s) (hst : s \u2264 t) : IsTarget G Q s"
+    },
+    "isTarget_pred": {
+      "file": "lean/KomorebiPadic/IntervalGraph.lean",
+      "header": "theorem isTarget_pred (G : PredecessorEdgeSystem) {Q t : \u2115} (ht : IsTarget G Q t) (ht1 : 1 < t) : IsTarget G Q (t - 1)"
+    },
+    "isTarget_sub": {
+      "file": "lean/KomorebiPadic/IntervalGraph.lean",
+      "header": "theorem isTarget_sub (G : PredecessorEdgeSystem) {Q t n : \u2115} (ht : IsTarget G Q t) (hn : n \u2264 t - 1) : IsTarget G Q (t - n)"
+    },
+    "le_radixRepresentative": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem le_radixRepresentative {p Q a q : \u2115} (hqQ : q \u2264 Q) (hupper : q \u2264 p * (a + 1)) : q \u2264 radixRepresentative p Q a"
+    },
+    "maximumLayerCompilerBudgetBound_eq_closedBudgetBound": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem maximumLayerCompilerBudgetBound_eq_closedBudgetBound (p r h : \u2115) : maximumLayerCompilerBudgetBound p r h = maximumLayerCompilerClosedBudgetBound p r h"
+    },
+    "maximumLayerCompilerBudgetBound_le_testBound": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem maximumLayerCompilerBudgetBound_le_testBound {p r h : \u2115} : maximumLayerCompilerBudgetBound p r h \u2264 maximumLayerCompilerTestBound p r h"
+    },
+    "maximumLayerCompilerTotalTests_le_bound": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem maximumLayerCompilerTotalTests_le_bound {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : maximumLayerCompilerTotalTests p r h \u2264 maximumLayerCompilerTestBound p r h"
+    },
+    "maximumLayerCompilerTotalTests_le_budgetBound": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem maximumLayerCompilerTotalTests_le_budgetBound {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : maximumLayerCompilerTotalTests p r h \u2264 maximumLayerCompilerBudgetBound p r h"
+    },
+    "maximumLayerCompilerTotalTests_le_closedBudgetBound": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem maximumLayerCompilerTotalTests_le_closedBudgetBound {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : maximumLayerCompilerTotalTests p r h \u2264 maximumLayerCompilerClosedBudgetBound p r h"
+    },
+    "maximumLayerCompiler_finalFiberTests_bounds": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem maximumLayerCompiler_finalFiberTests_bounds {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : let out"
+    },
+    "maximumLayerCompiler_spec": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem maximumLayerCompiler_spec {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : let out"
+    },
+    "minRadixBarrierCost_lt_iff": {
+      "file": "lean/KomorebiPadic/FiniteCompiler.lean",
+      "header": "theorem minRadixBarrierCost_lt_iff {p r h Q : \u2115} : minRadixBarrierCost p h Q < r \u2194 \u2203 a : \u2115, a \u2264 (Q - 1) / p \u2227 radixBarrierCost p h Q a < r"
+    },
+    "min_padicValNat_le_add": {
+      "file": "lean/KomorebiPadic/ConcreteBinomialModel.lean",
+      "header": "theorem min_padicValNat_le_add {p a b : \u2115} (hp : p \u2260 1) (ha : a \u2260 0) (hb : b \u2260 0) : min (padicValNat p a) (padicValNat p b) \u2264 padicValNat p (a + b)"
+    },
+    "no_crossing_of_diagonal_orders_large": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem no_crossing_of_diagonal_orders_large (G : PredecessorEdgeSystem) {p Q K : \u2115} (hp : 0 < p) (hlarge : K < (p - 1) * Q) (hedgeOrder : \u2200 {q k : \u2115}, 1 \u2264 q \u2192 q \u2264 Q \u2192 G.edge q k \u2192 k \u2264 K) : \u00ac CrossesBarrier G p Q"
+    },
+    "not_crosses_iff_all_targets_lt": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem not_crosses_iff_all_targets_lt (G : PredecessorEdgeSystem) {p Q : \u2115} (hp : 0 < p) (hQ : 0 < Q) : (\u00ac CrossesBarrier G p Q) \u2194 \u2200 t : \u2115, IsTarget G Q t \u2192 t < p * Q"
+    },
+    "not_crosses_of_all_targets_lt": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem not_crosses_of_all_targets_lt (G : PredecessorEdgeSystem) {p Q : \u2115} (hbelow : \u2200 t : \u2115, IsTarget G Q t \u2192 t < p * Q) : \u00ac CrossesBarrier G p Q"
+    },
+    "previous_barrier_reaches_next": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem previous_barrier_reaches_next (G : PredecessorEdgeSystem) {p Q : \u2115} (hQ : 1 < Q) (hprev : CrossesBarrier G p (Q - 1)) : IsTarget G Q (p * (Q - 1))"
+    },
+    "quotientOf_exactMaximumLayer": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem quotientOf_exactMaximumLayer {p r h : \u2115} (hp : p.Prime) : quotientOfLayer p (exactMaximumLayer p r h) = stableQuotient p r h"
+    },
+    "quotientSearchBound_not_crosses": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem quotientSearchBound_not_crosses {p r h : \u2115} (hp : p.Prime) : \u00ac CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p (quotientSearchBound p r h)"
+    },
+    "quotientSearchBound_pos": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem quotientSearchBound_pos (p r h : \u2115) : 0 < quotientSearchBound p r h"
+    },
+    "quotientTestCount_le_searchBound": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem quotientTestCount_le_searchBound {p r h : \u2115} (hp : p.Prime) : quotientTestCount p r h \u2264 quotientSearchBound p r h"
+    },
+    "quotient_eq_of_radix_block": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem quotient_eq_of_radix_block {p a q : \u2115} (hp : 0 < p) (hlower : p * a < q) (hupper : q \u2264 p * (a + 1)) : (q - 1) / p = a"
+    },
+    "radixBarrierCost_eq_splitCost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem radixBarrierCost_eq_splitCost (p h Q a : \u2115) : radixBarrierCost p h Q a = splitCost (radixVisibleCost p h Q) (radixCarryCost p Q) a"
+    },
+    "radixCompilerCrosses_eq_true_iff": {
+      "file": "lean/KomorebiPadic/FiniteCompiler.lean",
+      "header": "theorem radixCompilerCrosses_eq_true_iff {p r h Q : \u2115} (hp : p.Prime) (hQ : 0 < Q) : radixCompilerCrosses p r h Q = true \u2194 CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p Q"
+    },
+    "radixCostSet_nonempty": {
+      "file": "lean/KomorebiPadic/FiniteCompiler.lean",
+      "header": "theorem radixCostSet_nonempty (p h Q : \u2115) : (radixCostSet p h Q).Nonempty"
+    },
+    "radixRepresentativeBudget_eq_closedForm": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem radixRepresentativeBudget_eq_closedForm (p B : \u2115) : radixRepresentativeBudget p B = radixRepresentativeBudgetClosedForm p B"
+    },
+    "radixRepresentativeBudget_eq_closedForm_explicit": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem radixRepresentativeBudget_eq_closedForm_explicit (p B : \u2115) : radixRepresentativeBudget p B = let d"
+    },
+    "radixRepresentativeBudget_eq_lastBlockForm": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem radixRepresentativeBudget_eq_lastBlockForm (p B : \u2115) : radixRepresentativeBudget p B = radixRepresentativeBudgetLastBlockForm p B"
+    },
+    "radixRepresentativeBudget_eq_qrClosedForm": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem radixRepresentativeBudget_eq_qrClosedForm (p B : \u2115) : radixRepresentativeBudget p B = radixRepresentativeBudgetQRClosedForm p B"
+    },
+    "radixRepresentativeBudget_le_sq": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem radixRepresentativeBudget_le_sq {p B : \u2115} : radixRepresentativeBudget p B \u2264 B * B"
+    },
+    "radixRepresentativeBudget_mono": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem radixRepresentativeBudget_mono {p A B : \u2115} (hAB : A \u2264 B) : radixRepresentativeBudget p A \u2264 radixRepresentativeBudget p B"
+    },
+    "radixRepresentativeBudget_one_base": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "@[simp] theorem radixRepresentativeBudget_one_base (B : \u2115) : radixRepresentativeBudget 1 B = B * (B + 1) / 2"
+    },
+    "radixRepresentativeBudget_succ": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "theorem radixRepresentativeBudget_succ (p B : \u2115) : radixRepresentativeBudget p (B + 1) = radixRepresentativeBudget p B + B / p + 1"
+    },
+    "radixRepresentativeBudget_zero_base": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "@[simp] theorem radixRepresentativeBudget_zero_base (B : \u2115) : radixRepresentativeBudget 0 B = B"
+    },
+    "radixRepresentativeBudget_zero_endpoint": {
+      "file": "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean",
+      "header": "@[simp] theorem radixRepresentativeBudget_zero_endpoint (p : \u2115) : radixRepresentativeBudget p 0 = 0"
+    },
+    "radixRepresentative_gt_lower": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem radixRepresentative_gt_lower {p Q a : \u2115} (hp : 0 < p) (hblock : p * a < Q) : p * a < radixRepresentative p Q a"
+    },
+    "radixRepresentative_le_Q": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem radixRepresentative_le_Q (p Q a : \u2115) : radixRepresentative p Q a \u2264 Q"
+    },
+    "radixRepresentative_le_ceiling": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem radixRepresentative_le_ceiling (p Q a : \u2115) : radixRepresentative p Q a \u2264 p * (a + 1)"
+    },
+    "radixRepresentative_mono": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem radixRepresentative_mono {p Q a b : \u2115} (hab : a \u2264 b) : radixRepresentative p Q a \u2264 radixRepresentative p Q b"
+    },
+    "radixRepresentative_pos": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem radixRepresentative_pos {p Q a : \u2115} (hp : 0 < p) (hblock : p * a < Q) : 0 < radixRepresentative p Q a"
+    },
+    "radixRepresentative_quotient": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem radixRepresentative_quotient {p Q a : \u2115} (hp : 0 < p) (hblock : p * a < Q) : (radixRepresentative p Q a - 1) / p = a"
+    },
+    "radixVisibleCost_antitone": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem radixVisibleCost_antitone (p h Q : \u2115) : Antitone (radixVisibleCost p h Q)"
+    },
+    "radix_block_nonempty_iff": {
+      "file": "lean/KomorebiPadic/RepresentativeCompiler.lean",
+      "header": "theorem radix_block_nonempty_iff {p Q a : \u2115} (hp : 0 < p) (hQ : 0 < Q) : p * a < Q \u2194 a \u2264 (Q - 1) / p"
+    },
+    "splitCost_ge_best_of_visible_stop": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem splitCost_ge_best_of_visible_stop (visible carry : \u2115 \u2192 \u2115) (hvisible : Antitone visible) {n best i : \u2115} (hstop : best \u2264 visible n) (hi : i \u2264 n) : best \u2264 splitCost visible carry i"
+    },
+    "stableFiberLower_eq_previous_barrier": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem stableFiberLower_eq_previous_barrier {p Q : \u2115} (hp : 0 < p) (hQ : 1 < Q) : stableFiberLower p Q = p * (Q - 1)"
+    },
+    "stableFiberLower_le_upper": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem stableFiberLower_le_upper {p Q : \u2115} (hp : 1 < p) (hQ : 0 < Q) : stableFiberLower p Q \u2264 stableFiberUpper p Q"
+    },
+    "stableFiberLower_one": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem stableFiberLower_one (p : \u2115) : stableFiberLower p 1 = 1"
+    },
+    "stableQuotientSearchResult_spec": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem stableQuotientSearchResult_spec {p r h : \u2115} (hp : p.Prime) : FirstFalseSpec (suffixCompilerCrosses p r h) 1 (quotientSearchBound p r h) (stableQuotientSearchResult p r h)"
+    },
+    "stableQuotientSearchResult_tested": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem stableQuotientSearchResult_tested {p r h : \u2115} (hp : p.Prime) : (stableQuotientSearchResult p r h).tested = firstNoncrossingQuotient p r h"
+    },
+    "stable_quotient_corridor": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem stable_quotient_corridor (G : PredecessorEdgeSystem) {p Q : \u2115} (hp : 0 < p) (hQ : 1 < Q) (hprev : CrossesBarrier G p (Q - 1)) (hstop : \u00ac CrossesBarrier G p Q) : IsTarget G Q (p * (Q - 1)) \u2227 \u2200 t : \u2115, IsTarget G Q t \u2192 t \u2264 p * Q - 1"
+    },
+    "suffixCompilerCrosses_eq_false_iff": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem suffixCompilerCrosses_eq_false_iff {p r h Q : \u2115} (hp : p.Prime) (hQ : 0 < Q) : suffixCompilerCrosses p r h Q = false \u2194 \u00ac CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p Q"
+    },
+    "suffixCompilerCrosses_eq_radixCompilerCrosses": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixCompilerCrosses_eq_radixCompilerCrosses (p r h Q : \u2115) : suffixCompilerCrosses p r h Q = radixCompilerCrosses p r h Q"
+    },
+    "suffixCompilerCrosses_eq_true_iff": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixCompilerCrosses_eq_true_iff {p r h Q : \u2115} (hp : p.Prime) (hQ : 0 < Q) : suffixCompilerCrosses p r h Q = true \u2194 CrossesBarrier (binomialPadicEdgeSystem p r h hp.one_lt) p Q"
+    },
+    "suffixCompiler_false_at_searchBound": {
+      "file": "lean/KomorebiPadic/StableQuotient.lean",
+      "header": "theorem suffixCompiler_false_at_searchBound {p r h : \u2115} (hp : p.Prime) : suffixCompilerCrosses p r h (quotientSearchBound p r h) = false"
+    },
+    "suffixRadixBarrierCost_eq_minRadixBarrierCost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixRadixBarrierCost_eq_minRadixBarrierCost (p h Q : \u2115) : suffixRadixBarrierCost p h Q = minRadixBarrierCost p h Q"
+    },
+    "suffixRadixBarrierResult_cost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixRadixBarrierResult_cost (p h Q : \u2115) : (suffixRadixBarrierResult p h Q).cost = suffixRadixBarrierCost p h Q"
+    },
+    "suffixRadixBarrierResult_cost_eq_minRadixBarrierCost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixRadixBarrierResult_cost_eq_minRadixBarrierCost (p h Q : \u2115) : (suffixRadixBarrierResult p h Q).cost = minRadixBarrierCost p h Q"
+    },
+    "suffixRadixBarrierResult_tested_bounds": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixRadixBarrierResult_tested_bounds (p h Q : \u2115) : 1 \u2264 (suffixRadixBarrierResult p h Q).tested \u2227 (suffixRadixBarrierResult p h Q).tested \u2264 (Q - 1) / p + 1"
+    },
+    "suffixRadixBarrierResult_tested_le_fullCount": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem suffixRadixBarrierResult_tested_le_fullCount (p h Q : \u2115) : (suffixRadixBarrierResult p h Q).tested \u2264 (Q - 1) / p + 1"
+    },
+    "suffixRadixBarrierResult_tested_le_quotient": {
+      "file": "lean/KomorebiPadic/CompilerComplexity.lean",
+      "header": "theorem suffixRadixBarrierResult_tested_le_quotient {p h Q : \u2115} (hQ : 0 < Q) : (suffixRadixBarrierResult p h Q).tested \u2264 Q"
+    },
+    "suffixWindowResultAux_cost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowResultAux_cost (visible carry : \u2115 \u2192 \u2115) (n best tested : \u2115) : (suffixWindowResultAux visible carry n best tested).cost = suffixWindowScanAux visible carry n best"
+    },
+    "suffixWindowResultAux_tested_lower": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowResultAux_tested_lower (visible carry : \u2115 \u2192 \u2115) (n best tested : \u2115) : tested \u2264 (suffixWindowResultAux visible carry n best tested).tested"
+    },
+    "suffixWindowResultAux_tested_upper": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowResultAux_tested_upper (visible carry : \u2115 \u2192 \u2115) (n best tested : \u2115) : (suffixWindowResultAux visible carry n best tested).tested \u2264 tested + n"
+    },
+    "suffixWindowResult_cost": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowResult_cost (visible carry : \u2115 \u2192 \u2115) (A : \u2115) : (suffixWindowResult visible carry A).cost = suffixWindowScan visible carry A"
+    },
+    "suffixWindowResult_cost_eq_minImage": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowResult_cost_eq_minImage (visible carry : \u2115 \u2192 \u2115) (hvisible : Antitone visible) (A : \u2115) : (suffixWindowResult visible carry A).cost = ((Finset.range (A + 1)).image (splitCost visible carry)).min' (by refine \u27e8splitCost visible carry A, ?_\u27e9 exact Finset.mem_image.2 \u27e8A, by simp, rfl\u27e9)"
+    },
+    "suffixWindowResult_tested_bounds": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowResult_tested_bounds (visible carry : \u2115 \u2192 \u2115) (A : \u2115) : 1 \u2264 (suffixWindowResult visible carry A).tested \u2227 (suffixWindowResult visible carry A).tested \u2264 A + 1"
+    },
+    "suffixWindowScanAux_eq_fullDescendingScanAux": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowScanAux_eq_fullDescendingScanAux (visible carry : \u2115 \u2192 \u2115) (hvisible : Antitone visible) (n best : \u2115) : suffixWindowScanAux visible carry n best = fullDescendingScanAux (splitCost visible carry) n best"
+    },
+    "suffixWindowScan_eq_fullDescendingScan": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowScan_eq_fullDescendingScan (visible carry : \u2115 \u2192 \u2115) (hvisible : Antitone visible) (A : \u2115) : suffixWindowScan visible carry A = fullDescendingScan (splitCost visible carry) A"
+    },
+    "suffixWindowScan_eq_minImage": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem suffixWindowScan_eq_minImage (visible carry : \u2115 \u2192 \u2115) (hvisible : Antitone visible) (A : \u2115) : suffixWindowScan visible carry A = ((Finset.range (A + 1)).image (splitCost visible carry)).min' (by refine \u27e8splitCost visible carry A, ?_\u27e9 exact Finset.mem_image.2 \u27e8A, by simp, rfl\u27e9)"
+    },
+    "targetCompiler_eq_false_iff_not_isTarget": {
+      "file": "lean/KomorebiPadic/TargetCompiler.lean",
+      "header": "theorem targetCompiler_eq_false_iff_not_isTarget {p r h Q t : \u2115} (hp : 1 < p) : targetCompiler p r h Q t = false \u2194 \u00ac IsTarget (binomialPadicEdgeSystem p r h hp) Q t"
+    },
+    "targetCompiler_eq_true_iff_isTarget": {
+      "file": "lean/KomorebiPadic/TargetCompiler.lean",
+      "header": "theorem targetCompiler_eq_true_iff_isTarget {p r h Q t : \u2115} (hp : 1 < p) : targetCompiler p r h Q t = true \u2194 IsTarget (binomialPadicEdgeSystem p r h hp) Q t"
+    },
+    "targetCompiler_eq_true_iff_nonempty": {
+      "file": "lean/KomorebiPadic/TargetCompiler.lean",
+      "header": "theorem targetCompiler_eq_true_iff_nonempty {p r h Q t : \u2115} : targetCompiler p r h Q t = true \u2194 (targetWitnessSet p r h Q t).Nonempty"
+    },
+    "targetCompiler_finalFiberLower_true": {
+      "file": "lean/KomorebiPadic/MaximumLayerCompiler.lean",
+      "header": "theorem targetCompiler_finalFiberLower_true {p r h : \u2115} (hp : p.Prime) (hr : 0 < r) : targetCompiler p r h (stableQuotient p r h) (finalFiberLower p r h) = true"
+    },
+    "target_interval_property": {
+      "file": "lean/KomorebiPadic/IntervalGraph.lean",
+      "header": "theorem target_interval_property (G : PredecessorEdgeSystem) {Q M : \u2115} (hM : IsTarget G Q M) : \u2200 s : \u2115, 1 \u2264 s \u2192 s \u2264 M \u2192 IsTarget G Q s"
+    },
+    "target_lt_barrier_of_not_crosses": {
+      "file": "lean/KomorebiPadic/QuotientBarrier.lean",
+      "header": "theorem target_lt_barrier_of_not_crosses (G : PredecessorEdgeSystem) {p Q t : \u2115} (hp : 0 < p) (hQ : 0 < Q) (hstop : \u00ac CrossesBarrier G p Q) (ht : IsTarget G Q t) : t < p * Q"
+    },
+    "valuationEdge_predecessor": {
+      "file": "lean/KomorebiPadic/ValuationModel.lean",
+      "header": "theorem valuationEdge_predecessor (V : PascalValuationModel) (r h : \u2115) {q k : \u2115} (hq1 : 1 \u2264 q) (hedge : valuationEdge V r h q k) (htarget : 1 < q + k) : (0 < k \u2227 valuationEdge V r h q (k - 1)) \u2228 (1 < q \u2227 valuationEdge V r h (q - 1) k)"
+    },
+    "valuation_targets_form_initial_interval": {
+      "file": "lean/KomorebiPadic/ValuationModel.lean",
+      "header": "theorem valuation_targets_form_initial_interval (V : PascalValuationModel) {r h Q M : \u2115} (hM : IsTarget (valuationEdgeSystem V r h) Q M) : \u2200 s : \u2115, 1 \u2264 s \u2192 s \u2264 M \u2192 IsTarget (valuationEdgeSystem V r h) Q s"
+    },
+    "visibleStop_fullScan_exact": {
+      "file": "lean/KomorebiPadic/SuffixWindow.lean",
+      "header": "theorem visibleStop_fullScan_exact (visible carry : \u2115 \u2192 \u2115) (hvisible : Antitone visible) {n best : \u2115} (hstop : best \u2264 visible n) : fullDescendingScanAux (splitCost visible carry) (n + 1) best = best"
+    },
+    "visible_cost_lt_of_le_coarseK": {
+      "file": "lean/KomorebiPadic/Arithmetic.lean",
+      "header": "theorem visible_cost_lt_of_le_coarseK {r h k : \u2115} (hr : 0 < r) (hk : k \u2264 coarseK r h) : k * (h + 1) < r"
+    }
+  },
+  "schema": "komorebi-padic-block10-theorem-snapshot-v1",
+  "source_files": {
+    "lean/KomorebiPadic.lean": "a2017ba68c1498ede7fc67dbccddf6aea6865af133e840d2b4c5b36008954dbe",
+    "lean/KomorebiPadic/Arithmetic.lean": "cf6a0c772a1ec38987d651f12563fdadb02bf8bf038e4705b7360a092964710e",
+    "lean/KomorebiPadic/CompilerComplexity.lean": "4ac0b7af3988ee93129aa68d2d022fa181fa6c6962f7a307d9bb29e3e1f063a6",
+    "lean/KomorebiPadic/ConcreteBinomialModel.lean": "c8eac754bbf85d1a06977d10930d522e7fbecbbc7189f300c5a7f7dd6e03eb59",
+    "lean/KomorebiPadic/DescendingSearch.lean": "1340b3f94dd66ec5ebd53d945639fe1dfd1bb9504a03e9e22196af7bfc522b30",
+    "lean/KomorebiPadic/FiniteCompiler.lean": "93b3cb6cc44c7fe3925d2e4fef2f078ef26744b57bb33d8f185836167b0d1f93",
+    "lean/KomorebiPadic/IntervalGraph.lean": "e391e4bc15a7f1511475b84ffd59792e2637d79b308b8f123e8b0c1d9e41547b",
+    "lean/KomorebiPadic/MaximumLayerCompiler.lean": "1076038cfd0584349c6ba0e38ea39a010bfe44eeb4fa0b052dbc377bdc394229",
+    "lean/KomorebiPadic/QuotientBarrier.lean": "144a66df9e95439a962e79e73f94dc5eb1ad134aadec2aa31ff52181ce8efea0",
+    "lean/KomorebiPadic/RadixDescent.lean": "79d2ff08d59cc792a28a71ef41f23e4330658b85c8411a21e6d5be78fe0f0109",
+    "lean/KomorebiPadic/RepresentativeBudgetClosedForm.lean": "fc5d284e75fe09a2beeb4ce660f505b624fd69cafeb29868e06c426ede2dff6d",
+    "lean/KomorebiPadic/RepresentativeCompiler.lean": "065702b24da99acbb01739436b1e0dfc80bdf19e6f9ec12d185ea2540fe601ab",
+    "lean/KomorebiPadic/SequentialSearch.lean": "96c74b86f411bc9717fbef1c699c25e26bbb7a7cff484be2f6e87d31b2b9aa0d",
+    "lean/KomorebiPadic/StableQuotient.lean": "d2fcbaf6489533fd97a22418a5b0cd904c40452255200d8d39a84f61dd48b28f",
+    "lean/KomorebiPadic/SuffixWindow.lean": "17ed1de3a5be79ec83585c4d4b93bd9fcba96fd274607bde738ee8e570d6a0d2",
+    "lean/KomorebiPadic/TargetCompiler.lean": "41dabbccdead1f195cc25a886bc975448c0806147db6abf6194693382127e15d",
+    "lean/KomorebiPadic/ValuationModel.lean": "0be0dddfda62f5b9b8c0b9200e50075889a59be582a246d07c2eb040d2821635"
+  },
+  "theorem_count": 152
+}

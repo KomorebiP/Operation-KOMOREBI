@@ -1,0 +1,156 @@
+module
+
+public import DyadicIntegrality
+public import EulerCoefficients
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.DyadicSeries
+
+open PowerSeries OddPower EulerCoefficients KomorebiPaperIX.Dyadic
+
+/-- Restoring the even powers gives the actual series in the variable z. -/
+def fullKernel : PowerSeries ℚ := expand 2 (by decide) kernel
+
+def inverseSeries : PowerSeries ℚ := expand 2 (by decide) kernel⁻¹
+
+/-- The source has zero odd coefficients and the manuscript's literal even rational coordinates. -/
+def sourceSeries : PowerSeries ℚ :=
+  EGF.encode (fun n => if Even n then sourceEven (n/2) else 0)
+
+def sinhAt (a : ℚ) : PowerSeries ℚ := C (1/2) * (expAt a - expAt (-a))
+
+@[simp] theorem inverse_even_coefficient (m : ℕ) : coeff (2*m) inverseSeries = beta m := by
+  simp [inverseSeries, beta]
+
+theorem inverse_odd_coefficient (m : ℕ) : coeff (2*m+1) inverseSeries = 0 := by
+  exact coeff_expand_of_not_dvd 2 (by decide) kernel⁻¹ (by omega)
+
+@[simp] theorem source_even_coefficient (m : ℕ) :
+    coeff (2*m) sourceSeries = sourceEven m / (2*m).factorial := by simp [sourceSeries]
+
+theorem source_odd_coefficient (m : ℕ) : coeff (2*m+1) sourceSeries = 0 := by simp [sourceSeries]
+
+/-- Exact identity after clearing the forced double zero, with no inverse of X. -/
+theorem kernel_shift_identity :
+    X^2 * fullKernel = C (1/2:ℚ) * (coshAt 2 - 1) := by
+  ext n
+  cases n with
+  | zero => simp
+  | succ n =>
+    cases n with
+    | zero => norm_num [coeff_X_pow_mul', cosh_coeff, coeff_one]
+    | succ n =>
+      change coeff (n+2) (X^2 * fullKernel) = _
+      rw [coeff_X_pow_mul, coeff_C_mul, map_sub, cosh_coeff, coeff_one]
+      rw [if_neg (by omega : n+1+1 ≠ 0), sub_zero]
+      by_cases hn : Even n
+      · obtain ⟨m,hm⟩ := even_iff_two_dvd.mp hn
+        subst n
+        have hp : Even (2*m+2) := ⟨m+1,by omega⟩
+        rw [ite_eq_left hp]
+        simp only [fullKernel, coeff_expand_mul, kernel, coeff_mk, kernelCoeff]
+        rw [show 2*m+2 = (2*m+1)+1 by omega, pow_succ]
+        ring
+      · have hnd : ¬ 2 ∣ n := by simpa [even_iff_two_dvd] using hn
+        have hnp : ¬ Even (n+2) := by rw [Nat.even_iff] at hn ⊢; omega
+        rw [ite_eq_right hnp, mul_zero]
+        exact coeff_expand_of_not_dvd 2 (by decide) kernel hnd
+
+/-- Algebraic hyperbolic identity from the actual exponential multiplication law. -/
+theorem sinh_square_identity (a : ℚ) :
+    sinhAt a ^2 = C (1/2:ℚ) * (coshAt (2*a)-1) := by
+  have hpp : expAt a * expAt a = expAt (2*a) := by rw [expAt_mul]; congr 1; ring
+  have hnn : expAt (-a)*expAt (-a) = expAt (-(2*a)) := by rw [expAt_mul]; congr 1; ring
+  have hpn : expAt a * expAt (-a) = 1 := by rw [expAt_mul]; simp
+  have hc2 := congrArg (C (R:=ℚ)) (show (1/2:ℚ)*(1/2)*2=1/2 by norm_num)
+  simp only [map_mul, map_ofNat] at hc2
+  unfold sinhAt coshAt
+  calc
+    _ = (C (1/2)*C (1/2)) *
+      (expAt a*expAt a - 2*(expAt a*expAt (-a)) + expAt (-a)*expAt (-a)) := by ring
+    _ = _ := by rw [hpp,hnn,hpn]; linear_combination -hc2
+
+/-- The reciprocal series is precisely the normalized z^2/sinh(z)^2 germ. -/
+theorem beta_original_generating_function : inverseSeries * sinhAt 1 ^ 2 = X^2 := by
+  have hk : X^2*fullKernel = sinhAt 1 ^2 := by
+    rw [kernel_shift_identity, sinh_square_identity]; norm_num
+  have hi : inverseSeries * fullKernel = 1 := by
+    unfold inverseSeries fullKernel
+    rw [← map_mul, PowerSeries.inv_mul_cancel kernel (by simp), map_one]
+  rw [← hk]
+  calc
+    _ = X^2 * (inverseSeries*fullKernel) := by ring
+    _ = _ := by rw [hi,mul_one]
+
+/-- The source EGF is (cosh(3t)-cosh(t))/(4t^2), with removable zeros cleared. -/
+theorem source_shift_identity :
+    X^2 * sourceSeries = C (1/4:ℚ) * (coshAt 3-coshAt 1) := by
+  ext n
+  cases n with
+  | zero => simp
+  | succ n =>
+    cases n with
+    | zero => norm_num [coeff_X_pow_mul', cosh_coeff]
+    | succ n =>
+      change coeff (n+2) (X^2 * sourceSeries) = _
+      rw [coeff_X_pow_mul, coeff_C_mul, map_sub, cosh_coeff, cosh_coeff]
+      by_cases hn : Even n
+      · obtain ⟨m,hm⟩ := even_iff_two_dvd.mp hn
+        subst n
+        have hp : Even (2*m+2) := ⟨m+1,by omega⟩
+        rw [source_even_coefficient, ite_eq_left hp]
+        simp only [one_pow]
+        unfold sourceEven
+        rw [show 2*m+2=(2*m+1)+1 by omega, Nat.factorial_succ, Nat.factorial_succ]
+        push_cast
+        ring
+      · have hp : ¬ Even (n+2) := by rw [Nat.even_iff] at hn ⊢; omega
+        simp [sourceSeries,hn,hp]
+
+/-- The special triple-angle relation needed by this dyadic coordinate change. -/
+theorem cosh_product_identity :
+    (coshAt 3-coshAt 1)*coshAt 1 = C (1/2:ℚ)*(coshAt 4-1) := by
+  have h31 : expAt 3*expAt 1 = expAt 4 := by rw [expAt_mul]; norm_num
+  have h3n : expAt 3*expAt (-1) = expAt 2 := by rw [expAt_mul]; norm_num
+  have hn1 : expAt (-3)*expAt 1 = expAt (-2) := by rw [expAt_mul]; norm_num
+  have hnn : expAt (-3)*expAt (-1) = expAt (-4) := by rw [expAt_mul]; norm_num
+  have h11 : expAt 1*expAt 1 = expAt 2 := by rw [expAt_mul]; norm_num
+  have h1n : expAt 1*expAt (-1) = 1 := by rw [expAt_mul]; norm_num
+  have hnn1 : expAt (-1)*expAt (-1) = expAt (-2) := by rw [expAt_mul]; norm_num
+  have hc2 := congrArg (C (R:=ℚ)) (show (1/2:ℚ)*(1/2)*2=1/2 by norm_num)
+  simp only [map_mul, map_ofNat] at hc2
+  unfold coshAt
+  calc
+    _ = (C (1/2)*C (1/2)) *
+      (expAt 3*expAt 1+expAt 3*expAt (-1)+expAt (-3)*expAt 1+expAt (-3)*expAt (-1)-
+       expAt 1*expAt 1-2*(expAt 1*expAt (-1))-expAt (-1)*expAt (-1)) := by ring
+    _ = _ := by rw [h31,h3n,hn1,hnn,h11,h1n,hnn1]; linear_combination -hc2
+
+/-- Comparing the two explicitly constructed series gives the exact forward coordinates. -/
+theorem source_times_cosh : sourceSeries * coshAt 1 = rescale 2 fullKernel := by
+  have hk := congrArg (rescale (2:ℚ)) kernel_shift_identity
+  simp only [map_mul, map_pow, rescale_X, rescale_constant, map_sub, rescale_cosh, map_one] at hk
+  norm_num at hk
+  apply (X_pow_mul_injective (k:=2))
+  change X^2 * (sourceSeries * coshAt 1) = X^2 * rescale 2 fullKernel
+  rw [← mul_assoc, source_shift_identity, mul_assoc, cosh_product_identity]
+  have hc4 := congrArg (C (R:=ℚ)) (show (1/4:ℚ)*2^2=1 by norm_num)
+  simp only [map_mul, map_pow, map_ofNat, map_one] at hc4
+  calc
+    _ = C (1/4:ℚ) * (C (1/2:ℚ) * (coshAt 4-1)) := rfl
+    _ = C (1/4:ℚ) * ((C 2 * X)^2 * rescale 2 fullKernel) := by rw [hk]
+    _ = _ := by linear_combination hc4 * (X^2 * rescale 2 fullKernel)
+
+/-- Theorem 5.3 at the level of complete formal series, before coefficient extraction. -/
+theorem dyadic_reconstruction_series : rescale 2 inverseSeries * sourceSeries = sech := by
+  have hi : rescale (2:ℚ) inverseSeries * rescale 2 fullKernel = 1 := by
+    rw [← map_mul]
+    unfold inverseSeries fullKernel
+    rw [← map_mul, PowerSeries.inv_mul_cancel kernel (by simp), map_one, map_one]
+  apply (PowerSeries.eq_inv_iff_mul_eq_one (by simp)).mpr
+  rw [mul_assoc, source_times_cosh, hi]
+
+end KomorebiPaperIX.DyadicSeries

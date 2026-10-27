@@ -1,0 +1,8 @@
+import CrossRadixGeneratorComplexitySeparation
+
+#print axioms KomorebiCrossRadix.lagrangeShellFormula_eq_shell
+#print axioms KomorebiCrossRadix.spectralLabel_adjoin_eq_top
+#print axioms KomorebiCrossRadix.emptyGenerator_adjoin_ne_top
+#print axioms KomorebiCrossRadix.unrestricted_generator_number_one
+#print axioms KomorebiCrossRadix.generatorComplexitySeparation
+#print axioms KomorebiCrossRadix.crossRadix_complexity_ledger

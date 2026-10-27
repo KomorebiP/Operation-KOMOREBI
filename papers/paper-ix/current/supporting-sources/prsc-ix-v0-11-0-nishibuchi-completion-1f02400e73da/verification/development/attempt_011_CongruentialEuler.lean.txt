@@ -1,0 +1,139 @@
+module
+
+public import Triangular
+public import EGFCoordinates
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.Congruential
+
+open PowerSeries
+
+/-- The exact integer row matrix of the normalized Euler packet. -/
+def row (N j n q : ℕ) : ℤ := (N*n+j).choose (N*q)
+
+def rhs (n : ℕ) : ℚ := if n=0 then 1 else 0
+
+def coeff (N j : ℕ) : ℕ → ℚ :=
+  Triangular.solve (fun n q => (row N j n q : ℚ)) rhs
+
+theorem diagonal_positive (N j n : ℕ) : 0 < row N j n n := by
+  exact_mod_cast (Nat.choose_pos (Nat.le_add_right (N*n) j))
+
+theorem diagonal_ne_zero (N j n : ℕ) : row N j n n ≠ 0 := ne_of_gt (diagonal_positive N j n)
+
+@[simp] theorem coeff_zero (N j : ℕ) : coeff N j 0 = 1 := by
+  simp [coeff, row, rhs]
+
+theorem coefficient_step (N j n : ℕ) :
+    coeff N j n = (rhs n - ∑ q ∈ Finset.range n, (row N j n q : ℚ)*coeff N j q) /
+      (row N j n n : ℚ) := by
+  rw [coeff, Triangular.solve_step, Fin.sum_univ_eq_sum_range]
+
+theorem triangular_inverse (N j n : ℕ) :
+    ∑ q ∈ Finset.range (n+1), ((N*n+j).choose (N*q) : ℚ)*coeff N j q = rhs n := by
+  have h := Triangular.solve_row (fun n q => (row N j n q : ℚ)) rhs
+    (fun k => Int.cast_ne_zero.mpr (diagonal_ne_zero N j k)) n
+  simpa only [← coeff, Fin.sum_univ_eq_sum_range, row, Int.cast_natCast,
+    Finset.sum_range_succ] using h
+
+theorem coefficient_recurrence (N j : ℕ) {n : ℕ} (hn : 0 < n) :
+    coeff N j n = -(∑ q ∈ Finset.range n, ((N*n+j).choose (N*q) : ℚ)*coeff N j q) /
+      ((N*n+j).choose (N*n) : ℚ) := by
+  rw [coefficient_step]
+  simp [rhs, Nat.ne_of_gt hn, row]
+
+theorem coefficient_unique (N j : ℕ) (a : ℕ → ℚ)
+    (ha : ∀ n, ∑ q ∈ Finset.range (n+1), ((N*n+j).choose (N*q) : ℚ)*a q = rhs n) :
+    a = coeff N j := by
+  apply Triangular.solve_unique
+  · intro n
+    exact Int.cast_ne_zero.mpr (diagonal_ne_zero N j n)
+  · intro n
+    simpa only [Fin.sum_univ_eq_sum_range, row, Int.cast_natCast, Finset.sum_range_succ]
+      using ha n
+
+/-- The original exponential section after removing t^j/j!, in the variable z=t^N. -/
+def sectionKernel (N j : ℕ) : PowerSeries ℚ :=
+  PowerSeries.mk (fun n => (j.factorial : ℚ) / ((N*n+j).factorial : ℚ))
+
+/-- The normalized block EGF, again in z=t^N. -/
+def packetSeries (N j : ℕ) : PowerSeries ℚ :=
+  PowerSeries.mk (fun n => coeff N j n / ((N*n).factorial : ℚ))
+
+@[simp] theorem kernel_constant_one (N j : ℕ) : constantCoeff (sectionKernel N j) = 1 := by
+  simp [sectionKernel, Nat.factorial_ne_zero]
+
+@[simp] theorem packet_series_coeff (N j n : ℕ) :
+    PowerSeries.coeff n (packetSeries N j) = coeff N j n / ((N*n).factorial : ℚ) := by
+  simp [packetSeries]
+
+theorem factorial_coefficient_identity (N j n q : ℕ) (hq : q ≤ n) (c : ℚ) :
+    c / ((N*q).factorial : ℚ) * ((j.factorial : ℚ) / ((N*(n-q)+j).factorial : ℚ)) =
+      ((j.factorial : ℚ) / ((N*n+j).factorial : ℚ)) *
+        (((N*n+j).choose (N*q) : ℚ)*c) := by
+  have hmul : N*q ≤ N*n := Nat.mul_le_mul_left N hq
+  have hsub : N*n+j-N*q = N*(n-q)+j := by
+    rw [Nat.mul_sub_left_distrib]
+    omega
+  rw [Nat.cast_choose ℚ (by omega), hsub]
+  have hfac : ((N*n+j).factorial : ℚ) ≠ 0 := by positivity
+  field_simp
+
+/-- Establishes the formal reciprocal identity from the solved coefficient equations. -/
+theorem packet_times_kernel (N j : ℕ) : packetSeries N j * sectionKernel N j = 1 := by
+  ext n
+  rw [PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
+  simp only [packet_series_coeff, sectionKernel, PowerSeries.coeff_mk]
+  have hs : (∑ q ∈ Finset.range (n+1), coeff N j q / ((N*q).factorial : ℚ) *
+      ((j.factorial : ℚ) / ((N*(n-q)+j).factorial : ℚ))) =
+      ((j.factorial : ℚ) / ((N*n+j).factorial : ℚ)) * rhs n := by
+    calc
+      _ = ∑ q ∈ Finset.range (n+1), ((j.factorial : ℚ) / ((N*n+j).factorial : ℚ)) *
+        (((N*n+j).choose (N*q) : ℚ)*coeff N j q) := by
+          apply Finset.sum_congr rfl
+          intro q hq
+          exact factorial_coefficient_identity N j n q (Finset.mem_range_succ_iff.mp hq) _
+      _ = _ := by rw [← Finset.mul_sum, triangular_inverse]
+  rw [hs]
+  by_cases hn : n=0
+  · subst n
+    simp [rhs, Nat.factorial_ne_zero]
+  · simp [rhs, hn, PowerSeries.coeff_one]
+
+theorem packet_is_actual_inverse (N j : ℕ) : packetSeries N j = (sectionKernel N j)⁻¹ := by
+  apply (PowerSeries.eq_inv_iff_mul_eq_one (by simp)).mpr
+  exact packet_times_kernel N j
+
+/-- The denominator product in Proposition 3.3, including its empty-product endpoint. -/
+def clearing (N j : ℕ) : ℕ → ℤ
+  | 0 => 1
+  | n+1 => clearing N j n * row N j (n+1) (n+1)
+
+theorem clearing_equals_generic (N j n : ℕ) : clearing N j n = Triangular.denominator (row N j) n := by
+  induction n with
+  | zero => simp [clearing, row]
+  | succ n ih => rw [clearing, Triangular.denominator_succ, ih]
+
+theorem clearing_product (N j n : ℕ) :
+    clearing N j n = ∏ r : Fin n, row N j (r+1) (r+1) := by
+  induction n with
+  | zero => simp [clearing]
+  | succ n ih => simp only [clearing, ih, Fin.prod_univ_castSucc, Fin.val_castSucc, Fin.val_last]
+
+theorem universal_denominator_clearing (N j n : ℕ) :
+    Triangular.Integral ((clearing N j n : ℚ) * coeff N j n) := by
+  rw [clearing_equals_generic]
+  have h := Triangular.solve_denominator_integral (row N j)
+    (fun n => if n=0 then 1 else 0) (diagonal_ne_zero N j) n
+  simpa only [Int.cast_ite, Int.cast_one, Int.cast_zero] using h
+
+/-- The unnormalized convention differs by the fixed factorial j!. -/
+def unnormalized (N j n : ℕ) : ℚ := (j.factorial : ℚ) * coeff N j n
+
+@[simp] theorem unnormalized_zero (N j : ℕ) : unnormalized N j 0 = j.factorial := by
+  simp [unnormalized]
+
+end KomorebiPaperIX.Congruential

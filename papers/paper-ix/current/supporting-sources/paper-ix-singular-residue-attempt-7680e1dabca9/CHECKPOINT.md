@@ -1,0 +1,1 @@
+Partial research checkpoint. Two newly constructed modules passed Lean 4.34.0-rc2 with warnings as errors. This is NOT a completed proof of Paper IX Theorem 7.5. New axiom audit and connection to the actual source coefficients remain to be completed. Compilation logs and unsuccessful drafts are retained.

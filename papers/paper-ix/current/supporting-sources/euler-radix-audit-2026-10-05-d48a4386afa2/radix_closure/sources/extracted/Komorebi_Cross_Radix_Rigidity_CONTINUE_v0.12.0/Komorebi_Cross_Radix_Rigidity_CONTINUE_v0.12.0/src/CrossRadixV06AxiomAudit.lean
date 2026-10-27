@@ -1,0 +1,9 @@
+import CrossRadixRankNullity
+
+#print axioms KomorebiCrossRadix.boundedAffineSection_rank
+#print axioms KomorebiCrossRadix.boundedAffineSection_nullity
+#print axioms KomorebiCrossRadix.projectorSectionNormalForm_range
+#print axioms KomorebiCrossRadix.boundedReynoldsProjector_finrank_range
+#print axioms KomorebiCrossRadix.widthSupport_card
+#print axioms KomorebiCrossRadix.affinePolynomial_collapse_of_char_dvd
+#print axioms KomorebiCrossRadix.natCast_ne_zero_of_char_not_dvd

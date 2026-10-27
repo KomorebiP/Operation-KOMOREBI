@@ -1,0 +1,32 @@
+PowerSeries.coeff_subst'.{u_2, u_4} {R : Type u_2} [CommRing R] {S : Type u_4} [CommRing S] [Algebra R S]
+  {b : PowerSeries S} (hb : PowerSeries.HasSubst b) (f : PowerSeries R) (e : ℕ) :
+  (PowerSeries.coeff e) (PowerSeries.subst b f) = ∑ᶠ (d : ℕ), (PowerSeries.coeff d) f • (PowerSeries.coeff e) (b ^ d)
+/mnt/data/ix_continuation/formalization/Probe.lean:5:7: error(lean.unknownIdentifier): Unknown constant `PowerSeries.coeff_subst_of_constantCoeff_zero`
+/mnt/data/ix_continuation/formalization/Probe.lean:6:7: error(lean.unknownIdentifier): Unknown constant `PowerSeries.coeff_subst_eq_sum`
+/mnt/data/ix_continuation/formalization/Probe.lean:7:7: error(lean.unknownIdentifier): Unknown constant `PowerSeries.coeff_pow_eq_zero`
+/mnt/data/ix_continuation/formalization/Probe.lean:8:7: error(lean.unknownIdentifier): Unknown constant `PowerSeries.coeff_pow_eq_zero_of_lt`
+PowerSeries.coeff_pow.{u_2} {R : Type u_2} [CommSemiring R] (k n : ℕ) (φ : PowerSeries R) :
+  (PowerSeries.coeff n) (φ ^ k) =
+    ∑ l ∈ (Finset.range k).finsuppAntidiag n, ∏ i ∈ Finset.range k, (PowerSeries.coeff (l i)) φ
+PowerSeries.coeff_expand.{u_2} {R : Type u_2} [CommRing R] (p : ℕ) (hp : p ≠ 0) (φ : PowerSeries R) {n : ℕ} :
+  (PowerSeries.coeff n) ((PowerSeries.expand p hp) φ) = if p ∣ n then (PowerSeries.coeff (n / p)) φ else 0
+PowerSeries.coeff_expand_mul.{u_2} {R : Type u_2} [CommRing R] (p : ℕ) (hp : p ≠ 0) (φ : PowerSeries R) (m : ℕ) :
+  (PowerSeries.coeff (p * m)) ((PowerSeries.expand p hp) φ) = (PowerSeries.coeff m) φ
+PowerSeries.coeff_expand_of_not_dvd.{u_2} {R : Type u_2} [CommRing R] (p : ℕ) (hp : p ≠ 0) (φ : PowerSeries R) {m : ℕ}
+  (h : ¬p ∣ m) : (PowerSeries.coeff m) ((PowerSeries.expand p hp) φ) = 0
+PowerSeries.coeff_one.{u_1} {R : Type u_1} [Semiring R] (n : ℕ) : (PowerSeries.coeff n) 1 = if n = 0 then 1 else 0
+PowerSeries.coeff_mk.{u_1} {R : Type u_1} [Semiring R] (n : ℕ) (f : ℕ → R) :
+  (PowerSeries.coeff n) (PowerSeries.mk f) = f n
+PowerSeries.coeff_log.{u_1} {A : Type u_1} [CommRing A] [Algebra ℚ A] (n : ℕ) :
+  (PowerSeries.coeff n) (PowerSeries.log A) = if n = 0 then 0 else (algebraMap ℚ A) ((-1) ^ (n + 1) / ↑n)
+PowerSeries.coeff_mul.{u_1} {R : Type u_1} [Semiring R] (n : ℕ) (φ ψ : PowerSeries R) :
+  (PowerSeries.coeff n) (φ * ψ) = ∑ p ∈ Finset.antidiagonal n, (PowerSeries.coeff p.1) φ * (PowerSeries.coeff p.2) ψ
+PowerSeries.coeff_inv.{u_2} {k : Type u_2} [Field k] (n : ℕ) (φ : PowerSeries k) :
+  (PowerSeries.coeff n) φ⁻¹ =
+    if n = 0 then (PowerSeries.constantCoeff φ)⁻¹
+    else
+      -(PowerSeries.constantCoeff φ)⁻¹ *
+        ∑ x ∈ Finset.antidiagonal n, if x.2 < n then (PowerSeries.coeff x.1) φ * (PowerSeries.coeff x.2) φ⁻¹ else 0
+PowerSeries.expand_mul.{u_2} {R : Type u_2} [CommRing R] (p : ℕ) (hp : p ≠ 0) (q : ℕ) (hq : q ≠ 0) (φ : PowerSeries R) :
+  (PowerSeries.expand (p * q) ⋯) φ = (PowerSeries.expand p hp) ((PowerSeries.expand q hq) φ)
+PowerSeries.expand.{u_2} {R : Type u_2} [CommRing R] (p : ℕ) (hp : p ≠ 0) : PowerSeries R →ₐ[R] PowerSeries R

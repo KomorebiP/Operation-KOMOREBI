@@ -1,0 +1,25 @@
+IsUltrametricDist.norm_tsum_le_of_forall_le.{u_1, u_2} {M : Type u_1} {ι : Type u_2} [SeminormedAddCommGroup M]
+  [IsUltrametricDist M] [Nonempty ι] {f : ι → M} {C : ℝ} (h : ∀ (i : ι), ‖f i‖ ≤ C) : ‖∑' (i : ι), f i‖ ≤ C
+HasSum.norm_le_of_bounded.{u_1, u_3} {ι : Type u_1} {E : Type u_3} [SeminormedAddCommGroup E] {f : ι → E} {g : ι → ℝ}
+  {a : E} {b : ℝ} (hf : HasSum f a) (hg : HasSum g b) (h : ∀ (i : ι), ‖f i‖ ≤ g i) : ‖a‖ ≤ b
+tsum_eq_zero_of_not_summable.{u_1, u_2} {α : Type u_1} {β : Type u_2} [AddCommMonoid α] [TopologicalSpace α]
+  {L : SummationFilter β} {f : β → α} (h : ¬Summable f L) : ∑'[L] (b : β), f b = 0
+Finset.HasAntidiagonal.sigmaAntidiagonalEquivProd.{u_1} {A : Type u_1} [Add A] [Finset.HasAntidiagonal A] :
+  (n : A) × ↥(Finset.antidiagonal n) ≃ A × A
+Equiv.summable_iff.{u_1, u_2, u_3} {α : Type u_1} {β : Type u_2} {γ : Type u_3} [AddCommMonoid α] [TopologicalSpace α]
+  {f : β → α} (e : γ ≃ β) : Summable (f ∘ ⇑e) ↔ Summable f
+Equiv.tsum_eq.{u_1, u_2, u_3} {α : Type u_1} {β : Type u_2} {γ : Type u_3} [AddCommMonoid α] [TopologicalSpace α]
+  (e : γ ≃ β) (f : β → α) : ∑' (c : γ), f (e c) = ∑' (b : β), f b
+Summable.tsum_sigma'.{u_1, u_2, u_4} {α : Type u_1} {β : Type u_2} [AddCommMonoid α] [TopologicalSpace α]
+  [ContinuousAdd α] [T3Space α] {γ : β → Type u_4} {f : (b : β) × γ b → α} (h₁ : ∀ (b : β), Summable fun c => f ⟨b, c⟩)
+  (h₂ : Summable f) : ∑' (p : (b : β) × γ b), f p = ∑' (b : β) (c : γ b), f ⟨b, c⟩
+tendsto_tsum_of_dominated_convergence.{u_1, u_2, u_3} {α : Type u_1} {β : Type u_2} {G : Type u_3} {𝓕 : Filter α}
+  [NormedAddCommGroup G] [CompleteSpace G] {f : α → β → G} {g : β → G} {bound : β → ℝ} (h_sum : Summable bound)
+  (hab : ∀ (k : β), Filter.Tendsto (fun x => f x k) 𝓕 (nhds (g k)))
+  (h_bound : ∀ᶠ (n : α) in 𝓕, ∀ (k : β), ‖f n k‖ ≤ bound k) :
+  Filter.Tendsto (fun x => ∑' (k : β), f x k) 𝓕 (nhds (∑' (k : β), g k))
+Probe.lean:13:7: error(lean.unknownIdentifier): Unknown identifier `summable_of_norm_bounded`
+Polynomial.eval₂_at_apply.{u, u_1} {R : Type u} [Semiring R] {p : Polynomial R} {S : Type u_1} [Semiring S]
+  (f : R →+* S) (r : R) : Polynomial.eval₂ f (f r) p = f (Polynomial.eval r p)
+summable_nat_add_iff.{u_2} {G : Type u_2} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] {f : ℕ → G}
+  (k : ℕ) : (Summable fun n => f (n + k)) ↔ Summable f

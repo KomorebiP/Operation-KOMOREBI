@@ -1,0 +1,11 @@
+import CrossRadixCyclotomicShellIntegralLattice
+
+#print axioms KomorebiCrossRadix.shellCommonDenom_factorization
+#print axioms KomorebiCrossRadix.shellCommonDenom_padicValNat
+#print axioms KomorebiCrossRadix.shellCommonDenom_dvd_period
+#print axioms KomorebiCrossRadix.mem_ProjectorGoodLatticeOn_iff
+#print axioms KomorebiCrossRadix.projectorDefectEquivOn
+#print axioms KomorebiCrossRadix.mem_CyclotomicShellGoodLattice_iff
+#print axioms KomorebiCrossRadix.cyclotomicShellDefectEquiv
+#print axioms KomorebiCrossRadix.cyclotomicShellDefect_annihilated_by_period
+#print axioms KomorebiCrossRadix.cyclotomicShellSmithNormalForm

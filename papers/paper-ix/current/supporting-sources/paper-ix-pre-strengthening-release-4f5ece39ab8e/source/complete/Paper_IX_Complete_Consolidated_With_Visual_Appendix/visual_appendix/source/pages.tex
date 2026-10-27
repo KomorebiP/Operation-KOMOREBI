@@ -1,0 +1,522 @@
+\vpage{1}{Three meanings of more digits}{READER'S MAP}{Main text: scope and conventions, pp. 1--2.}
+This appendix follows two kinds of objects through the same arithmetic discipline: coefficient sequences and polynomial equations. In the first, a valuation tells us which terms can be discarded at a chosen precision. In the second, a residual digit tells us whether an approximate root can be corrected. The common word ``depth'' does not make their indices interchangeable.
+\vfig{01_three_precisions}
+\head{One sustained route through the paper}
+Start with the Euler family defined by an actual reciprocal series. Keep track of the normalization, learn to read a finite difference table, and then use valuation bounds to obtain periods and truncations. The four dyadic packets provide an unusually sharp case: both their least periods and their completed images are known.
+
+Next, replace a coefficient difference with the residual of a polynomial. A Jacobian image decides one lifting step. Its kernel describes the choices of digit. Compatibility and a nonsingularity hypothesis then connect finite steps to an exact root and a local parameter chart.
+\par
+\begin{tabularx}{\linewidth}{@{}lY@{}}\toprule
+Reading route & Pages in this appendix\\\midrule
+Coordinates and precision & \pagerefV{2}--\pagerefV{9}\\
+Euler congruences and sharp dyadic structure & \pagerefV{10}--\pagerefV{18}\\
+Obstructions, root charts, and deformation & \pagerefV{19}--\pagerefV{27}\\
+Completion, synthesis, and evidence & \pagerefV{28}--\pagerefV{30}\\\bottomrule
+\end{tabularx}
+\par
+\takeaway{A picture here is tied to a formula or an enumerable example. The finite checks do not replace the paper's general proofs, and the new appendix does not enlarge its Lean contract.}
+
+\vpage{2}{Keep the objects separate}{OBJECT ATLAS}{Main text: Sections 2--5; notation begins on pp. 1--2 and 10--11.}
+The most useful reading aid is a stable distinction between an object, its coordinates, and the precision at which those coordinates are observed. The symbols below recur in both halves of the paper.
+\par
+\begin{tabularx}{\linewidth}{@{}lY@{}}\toprule
+Symbol & Object and role\\\midrule
+$P_{N,j}$ & A residue selector on the original coefficient index set. It keeps degrees congruent to $j$ modulo $N$.\\
+$E_d^{(N,j)}$ & The original degree-$d$ coefficient of the reciprocal family. Only degrees divisible by $N$ can be nonzero.\\
+$U_{N,j}(n)$ & The original Euler coefficient at degree $Nn$. Its row-zero value is $j!$.\\
+$C_{N,j}(n)$ & The normalized packet $U_{N,j}(n)/j!$, with row-zero value $1$.\\
+$\Delta_h^k f(n)$ & A finite difference of order $k$ and row step $h$, based at row $n$.\\
+$v_p,\ |\cdot|_p$ & Arithmetic order and distance, with $v_p(0)=\infty$ and $|a|_p=p^{-v_p(a)}$ for $a\ne0$.\\
+$T_M(n)$ & A depth-$M$ classical dyadic truncation, approximating $E_{2n}$, not $U_{4,j}(n)$.\\
+$F,\ x,\ r_x$ & A polynomial system, an approximate root, and its normalized residual $F(x)/p^L$.\\
+$J_x$ & The reduced Jacobian. Its image determines correctable residuals; its kernel determines digit ambiguity.\\
+$\mathcal O_x$ & The finite quotient of residual values by the Jacobian image. It contains a distinguished obstruction class.\\
+$J,\ K$ & In a prescribed split $(Y,T)$, the solved-variable and parameter blocks of the Jacobian.\\
+$s$ & An inverse-denominator bound: $p^sJ^{-1}$ is integral. It is not automatically the determinant valuation.\\\bottomrule
+\end{tabularx}
+\par
+\head{Two easy confusions to prevent}
+The family address $j$ is a denominator parameter. It is not the residue class of the nonzero output degrees: the reciprocal has support at $d=Nn$. Also, the notation $P_{N,j}$ for a selector is distinct from any similarly named source series in the arithmetic proof.
+
+Whenever a formula moves by $T$ packet rows, write the corresponding degree shift $NT$ beside it. Whenever a normalized coefficient is compared with an original coefficient, write $U=j!C$ before taking valuations.
+\takeaway{Read the ambient ring before the divisibility symbol. In the field $\Qp$, every nonzero scalar divides every scalar. Precision means ideal membership in $\Zp$, or an explicitly stated valuation bound.}
+
+\vpage{3}{Closeness means shared residues}{ARITHMETIC DISTANCE}{Main text: valuation and congruence conventions, pp. 1--2.}
+In a $p$-adic metric, two integers are close when their difference has many factors of $p$. Their ordinary sizes are irrelevant. A depth-$L$ ball consists of numbers with the same residue modulo $p^L$.
+\[
+ a+p^L\Zp=\{b:v_p(b-a)\ge L\},\qquad
+ a\equiv b\pmod{p^L}\Longleftrightarrow |a-b|_p\le p^{-L}.
+\]
+\vfig{03_residue_balls}
+\captiontext{Digits are displayed low-order first. The drawing records congruence information; horizontal or vertical distances on the page are not $2$-adic distances.}
+\head{Read the first disagreement}
+The binary digits of $1$ and $9$ first disagree at the $2^3$ position. Their difference therefore has order three. The digits of $1$ and $13$ first disagree at the $2^2$ position, so these numbers are farther apart in the dyadic metric, although $13$ and $9$ look close on an ordinary number line.
+
+Each ball modulo $p^L$ splits into $p$ residue balls modulo $p^{L+1}$. A compatible lifting path chooses one child at each stage. A theorem guaranteeing a child at the current stage need not guarantee a child at every future stage.
+\head{Zero has unlimited precision}
+The value $v_p(0)$ is not zero. The mathematical convention is infinity. In the example checker, infinity is stored by a separate value rather than a large cutoff. Thus an empty omitted tail is exactly zero, not merely ``very divisible.''
+\takeaway{More matching low-order digits means smaller $p$-adic distance. Every precision claim in the appendix can be read as a claim about a shared residue ball.}
+
+\vpage{4}{Select, refine, synchronize}{RESIDUE ADDRESSES}{Main text: Theorems 2.1 and 2.11, pp. 4 and 9.}
+A residue selector keeps a coefficient at its original location or replaces it by zero. Exactly one standard selector retains each coefficient. This gives idempotence, orthogonality, and reconstruction without a convergence argument:
+\[
+ P_{N,j}^2=P_{N,j},\qquad P_{N,i}P_{N,j}=0\ (i\ne j),
+ \qquad\sum_{j=0}^{N-1}P_{N,j}=I.
+\]
+\vfig{04_selectors}
+\captiontext{The table contains the unique residue modulo twelve with each specified pair of residues modulo four and three. It is a complete finite Chinese-remainder calculation.}
+\head{Refinement keeps all children}
+An odd coefficient lies in either address one or address three modulo four. Keeping both children reconstructs the odd selector. Keeping only one child is not refinement of the same object; it is an additional restriction.
+
+The selector $P_{12,7}$ is simultaneously the address-three selector modulo four and the address-one selector modulo three. The moduli are coprime, so all twelve pairs occur independently. This is finite arithmetic synchronization, not a theorem that arbitrary data at infinitely many primes come from one integer.
+\head{Selection is not compression of the index}
+The compressed subsequence $b_q=a_{Nq+j}$ is useful, but its index is $q$, not $Nq+j$. A shift by one in the compressed subsequence advances by $N$ in the original sequence. The recurrence-packet theorem explicitly uses the jump matrix $C^N$ for precisely this reason.
+\takeaway{Exact reconstruction requires a complete address family. Finite CRT solves a finite congruence problem; global descent is a different question, revisited on \pagerefV{28}.}
+
+\vpage{5}{The product carries its weights}{HURWITZ COORDINATES}{Main text: Theorems 2.2--2.3, pp. 5--6.}
+Ordinary generating coefficients and exponential generating coefficients use different multiplication laws. If $E(a)=\sum a_nt^n/n!$ in characteristic zero, multiplying two series and decoding gives the Hurwitz product
+\[
+ (a\star b)_n=\sum_{r=0}^n\binom nr a_rb_{n-r}.
+\]
+\vfig{05_hurwitz}
+\head{Why the binomial coefficient appears}
+The ordinary coefficient product contributes $a_rb_{n-r}/(r!(n-r)!)$. Multiplication by $n!$ contributes the factor $\binom nr$. This is not an optional normalization. With every input coefficient equal to one, ordinary convolution gives $n+1$, whereas Hurwitz convolution gives $2^n$.
+
+The Hurwitz formula itself is defined over every commutative ring. It can therefore be used in characteristic $p$ even though division by $n!$ cannot generally be performed there. The sequence operation is primary in that setting; a nonexistent factorial inverse must not be used as a shortcut.
+\head{Differentiation becomes a shift}
+Let $(Da)_n=a_{n+1}$. In characteristic zero this corresponds to differentiating $E(a)$. The higher product rule remains a binomial identity for sequences. In characteristic $p$, its middle coefficients vanish at order $p$:
+\[
+ D^p(a\star b)=(D^pa)\star b+a\star(D^pb).
+\]
+The checked examples verify this law directly modulo several primes. Their finite truncation only tests output coefficients whose complete input windows are available.
+\takeaway{A characteristic-zero encoding can explain the weights, but the integral coefficient law is what survives reduction modulo a prime.}
+
+\vpage{6}{A reciprocal becomes a triangle}{THE ACTUAL EULER FAMILY}{Main text: Definition 3.1 and Proposition 3.2, pp. 10--11.}
+The paper does not begin with an arbitrary sequence that happens to satisfy a congruence. Its Euler coefficients come from the reciprocal
+\[
+ \sum_{d\ge0}E_d^{(N,j)}\frac{t^d}{d!}
+ =\left(\sum_{n\ge0}\frac{t^{Nn}}{(Nn+j)!}\right)^{-1}.
+\]
+The denominator has constant coefficient $1/j!$. The normalized packet $C_{N,j}=U_{N,j}/j!$ consequently starts at one.
+\vfig{06_triangular}
+\head{Solve the rows in order}
+Clearing the factorials in the reciprocal identity yields
+\[
+ \sum_{q=0}^n\binom{Nn+j}{Nq}C_{N,j}(q)=\delta_{n0}.
+\]
+At row $n>0$, the earlier coefficients are already known. Divide their negative weighted sum by the positive diagonal coefficient. The example uses $(N,j)=(6,3)$, whose first three diagonal entries are $1,84,455$.
+
+The new checker computes these values twice: once from this triangular recurrence and once by ordinary formal-series inversion followed by factorial decoding. Agreement confirms that the visual example represents the intended reciprocal, rather than a similar-looking recurrence.
+\head{A denominator bound is not integrality}
+The product of diagonal entries through row $n$ clears the denominator of $C_{N,j}(n)$. This does not mean that the original denominator was prime to every $p$. At address three and prime three, the first nontrivial normalized coefficient is already nonintegral.
+\takeaway{The reciprocal, the triangular system, and the packet coefficients are three descriptions of one object. Changing the normalization changes the arithmetic precision.}
+
+\vpage{7}{One factorial costs one digit}{A NECESSARY CORRECTION}{Main text: Example 3.8 and Theorem 3.7, pp. 13--15.}
+Take $p=3$, $m=2$, $N=6$, and the address $j=3$. This address lies outside the standard window $j<p$. The exact recurrence gives
+\[
+ C_{6,3}(1)=-\frac1{84},\qquad
+ C_{6,3}(2)=\frac{703}{5460}.
+\]
+\vfig{07_normalization}
+\head{The unnormalized theorem still holds}
+Subtracting gives $64/455$, which has no factor of three. Multiplying by $3!=6$ gives $384/455$, which has exactly one factor of three. The factor $455$ is a unit at three, so both valuation calculations are immediate integer factorizations.
+
+For the divisor branch, with $h=(p-1)/m$, the paper proves a bound for $U$ and then converts it to $C$:
+\[
+ v_p(\Delta_{uh}^k C_{mp,j}(n))
+ \ge \min(k,mn)-v_p(j!).
+\]
+Here $n=k=u=h=1$. The normalized bound is zero and is attained. Removing the factorial-loss term would require order at least one, contradicted by the displayed fraction.
+\head{This is a theorem boundary, not rounding error}
+The failure is exact. Increasing numerical precision cannot repair it. The mathematical statement must retain the normalization factor. Inside $j<p$, the factorial is a $p$-adic unit, so this particular loss disappears; outside that window it cannot be silently ignored.
+\takeaway{Before transferring a congruence from $U$ to $C$, subtract $v_p(j!)$. A bound for an unnormalized family is not automatically the same bound for its normalized coordinates.}
+
+\vpage{8}{Read the left edge of the triangle}{FINITE NEWTON COORDINATES}{Main text: Theorem 2.6, p. 7.}
+Successive differences turn sampled values into Newton coefficients. Put $c_k=\Delta_1^k f(0)$. The exact finite identity is
+\[
+ f(n)=\sum_{k=0}^n c_k\binom nk.
+\]
+It holds over every commutative ring. There is no limiting process in this formula at a natural-number row.
+\vfig{08_newton}
+\captiontext{For $f(n)=3^n$, every difference multiplies the row by two. The highlighted left edge is $1,2,4,8,16,32$.}
+\head{Differences become a shift of coefficients}
+The Newton coefficients of $\Delta_1^s f$ are $c_s,c_{s+1},\ldots$. Hence
+\[
+ \Delta_1^s f(n)=\sum_{j=0}^n\binom nj c_{s+j}.
+\]
+A valuation bound on the coefficient tail therefore becomes a difference bound. The geometry of the difference triangle is doing algebraic work: the entries used by a particular stencil are visible.
+\head{Where finite evidence stops}
+Six samples determine the complete triangle drawn above. They determine a finite interpolating polynomial and every difference stencil contained in those samples. They do not determine an arbitrary later value of the original sequence. For this example, the formula $f(n)=3^n$ supplies the general rule, so its all-row behavior is independently known.
+
+Likewise, a Newton series on all of $\Zp$ needs a convergence theorem. The finite reconstruction identity alone does not establish that its coefficients decay sufficiently fast.
+\takeaway{Finite differences provide exact coordinates, not automatic extrapolation. Always state whether the claim concerns a finite stencil, a known sequence, or a convergent $p$-adic series.}
+
+\vpage{9}{A lower bound can hide cancellation}{WEIGHTS AND AFFINE PULLBACK}{Main text: Theorem 2.7 and Section 2.7, pp. 8--10.}
+The nonarchimedean inequality says that the order of a sum is at least the smallest order of its summands. It does not generally say that the orders are equal. A tie at the minimum can permit cancellation.
+\vfig{09_cancellation}
+\head{The same issue occurs in a change of address}
+For a finite Newton expansion, replacing $n$ by $Mq+s$ transports its coefficients through
+\[
+ \Theta_{M,s}(r,k)
+ =[z^r](1+z)^s\bigl((1+z)^M-1\bigr)^k
+ =\sum_{a=0}^k(-1)^{k-a}\binom ka\binom{Ma+s}{r}.
+\]
+These two expressions are independently compared by exact polynomial expansion. In the binary zero-address case there is a particularly simple expression:
+\[
+ \Theta_{2,0}(k+j,k)=2^{k-j}\binom kj\qquad(0\le j\le k).
+\]
+A nonzero address introduces further mixing. The illustrated shifted kernel has two contributions of order two whose sum has order three.
+\head{When equality is justified}
+If one summand has strictly smaller valuation than every other summand, it cannot be canceled, so the minimum is exact. Paper IX's displacement theorem uses this principle with a dominant first Newton term. It proves a stronger envelope for all remaining terms rather than treating a minimum bound as an equality.
+\takeaway{A valuation heatmap is often a map of guaranteed precision. Exact valuations require a noncancellation argument, not just a list of termwise weights.}
+
+\vpage{10}{The standard window shares one pattern}{ODD-PRIME REDUCTION}{Main text: Proposition 3.5 and Corollary 3.9, pp. 12 and 15.}
+For $N=mp$ and $0\le j<p$, Lucas reduction gives
+\[
+ \binom{mpn+j}{mpq}\equiv\binom{mn}{mq}\pmod p.
+\]
+All addresses in this standard window reduce to the same triangular system. Its diagonal entries are one modulo $p$, so the recurrence has a unique reduced solution.
+\vfig{10_standard_window}
+\captiontext{Nine exact coefficient rows for each of five addresses are reduced modulo five. The first column is separated because the period theorem begins at row one.}
+\head{A shared period, not an asserted least period}
+Here $p=5$, $m=2$, and $h=(p-1)/m=2$. The reduced rows from $n=1$ alternate between $4$ and $0$. The first row has value one, so extending the same two-step claim to $n=0$ would already fail: $C_{10,j}(2)-C_{10,j}(0)\equiv-1$.
+
+The general theorem proves that $h$ is a sufficient common period from row one on the divisor branch. It does not prove that this value is the least possible period in every family. Minimality requires a separate obstruction to every smaller displacement.
+\head{Why the address restriction matters}
+When $j<p$, the diagonal binomial coefficient is a unit after reduction. Once $j$ crosses $p$, this argument no longer applies unchanged. The all-address theorem uses the singular-ratio and weighted-series machinery; it is not an extrapolation from this five-row display.
+\takeaway{The shared reduction explains the standard window efficiently. The first row, the address range, and the difference between sufficient and least periods are all part of the statement.}
+
+\vpage{11}{A packet period is not a degree shift}{THE NISHIBUCHI DISPLACEMENT}{Main text: Theorem 3.6, Lemma 3.10, and their proof, pp. 13--16.}
+The original coefficient is indexed by degree, whereas the difference estimates are indexed by packet row. With $N=mp$ and $q=\operatorname{lcm}(2,p-1)$, the source theorem concerns the degree displacement $qp^r$.
+\vfig{11_two_indices}
+\head{Convert the indices before applying the bound}
+On the divisor branch, the corresponding row shift is $T=p^{r-1}q/m$. Multiplication by $N$ gives exactly $NT=qp^r$. For $p=3,m=2,r=2$, this is a shift of three rows or eighteen degrees. They describe the same displacement, not two competing period claims.
+
+In this example, the stronger divisor-branch starting condition $r\le mn$ already permits $n=1$. The uniform sufficient condition $n\ge r$ would start later. Neither condition is advertised as the earliest possible threshold for every parameter tuple.
+\head{How differences produce the period}
+A finite Newton expansion writes the displacement as
+\[
+ f(n+p^{r-1}h)-f(n)
+ =\sum_{k=1}^{p^{r-1}}\binom{p^{r-1}}k\Delta_h^k f(n).
+\]
+For $k\ge r$, the assumed difference supplies $p^r$. For smaller $k$, the binomial coefficient supplies the missing factors. In the displayed $p=3,r=2$ case, the three weights are $3,3,1$, paired with differences divisible by $3,9,9$.
+\takeaway{Every term of the finite expansion has the required precision. The published displacement follows only after translating the row shift back to ordinary degree.}
+
+\vpage{12}{The prime two keeps a separate sign}{FINITE UNIT COORDINATES}{Main text: Theorems 2.8--2.9, p. 8.}
+A finite unit can be separated into a root-of-unity part and a part congruent to one. At modulus $p^{L+1}$, the paper constructs
+\[
+ \omega_L(a)=a^{p^L},\qquad
+ \langle a\rangle_L=a\omega_L(a)^{-1}.
+\]
+For odd $p$, the first factor is a $(p-1)$st root of unity and the second is one modulo $p$.
+\vfig{12_unit_coordinates}
+\head{An explicit odd-prime decomposition}
+For $a=2$ modulo $125$, $L=2$ and $\omega_2(2)=2^{25}\equiv57$. Its inverse is $68$, so the principal factor is $2\cdot68\equiv11$. The multiplication $57\cdot11\equiv2$, the fourth-power identity, and both reductions are exact checks.
+\head{Why the dyadic sign cannot be read modulo two}
+At prime two, the $(p-1)$st root factor in that construction is trivial. To retain the distinction between $+1$ and $-1$, the paper instead uses
+\[
+ a=\epsilon(a)\langle a\rangle_4,\qquad
+ \epsilon(a)\in\{1,-1\},\quad\langle a\rangle_4\equiv1\pmod4.
+\]
+For $3$ modulo $32$, the factors are $-1$ and $29$. Both signs reduce to one modulo two, so a modulo-two inspection alone cannot recover this information.
+
+For a unit mode $u^n$, differences satisfy $\Delta_h^k(u^n)=u^n(u^h-1)^k$. Thus unit coordinates directly explain why a carefully chosen step gains valuation.
+\takeaway{The dyadic branch is not obtained by replacing an odd prime with two in every formula. Its extra sign is visible only at the appropriate residue depth.}
+
+\vpage{13}{Four addresses, four precision gains}{EXACT DYADIC DISPLACEMENT}{Main text: Theorem 3.15, p. 19.}
+For the width-four family, write $C_j=C_{4,j}$ and $U_j=U_{4,j}$. The paper proves an exact first-displacement law, not merely a lower bound:
+\[
+ \begin{aligned}
+ v_2(C_j(n+T)-C_j(n))&=v_2(T)+c_j,\\
+ v_2(U_j(n+T)-U_j(n))&=v_2(T)+d_j,
+ \end{aligned}\qquad T>0,
+\]
+where $c=(1,1,4,2)$ and $d=(1,1,5,3)$.
+\vfig{13_displacements}
+\head{The row does not appear in the answer}
+Every displayed value is valid at every starting row $n\ge0$. An odd step always has the same gain $d_j$. Doubling the step increases the order by one. The difference is nonzero, so an exact finite valuation is meaningful.
+
+The address-dependent gains come from the first Newton coefficients. The later coefficients satisfy a strictly stronger logarithmic envelope. In the finite displacement expansion, their combined contribution has at least one more factor of two than the leading term, so it cannot cancel it.
+\head{First order is not all orders}
+The all-order theorem separately proves
+\[
+ \Delta_u^k U_j(n)\in
+ 2^{k(1+v_2(u))+v_2(j!)}\Ztwo\qquad(u>0).
+\]
+The exact first-displacement law does not determine the exact valuation of every higher difference. Subtracting two first differences can introduce additional cancellation.
+\takeaway{This table is an illustration of a general proved equality. Its strength is the exclusion of cancellation, and that exclusion should not be exported to higher orders without a new argument.}
+
+\vpage{14}{When a sufficient period becomes least}{PERIOD CLASSIFICATION}{Main text: Corollary 3.16, pp. 19--20.}
+An original packet $U_j$ repeats modulo $2^r$ after a positive row shift $T$ exactly when $v_2(T)+d_j\ge r$. Therefore
+\[
+ T\text{ is a period modulo }2^r
+ \Longleftrightarrow 2^{\max(0,r-d_j)}\mid T.
+\]
+The least positive period is the displayed power of two.
+\vfig{14_periods}
+\head{The shaded range has period one}
+At address two, the initial value is $U_2(0)=2$, and every other value differs from it by a multiple of $32$. Consequently the whole packet is constant modulo $32$. At higher precision it begins to distinguish rows. Address three is similarly constant at $6$ modulo eight.
+
+At precision $2^{10}$ the least periods are $512,512,32,128$. The table is generated from the exact theorem. The example checker additionally verifies finite residue repetitions and explicit failures of every smaller candidate in a bounded range; those checks are not the source of the universal minimality conclusion.
+\head{Why a smaller shift fails}
+For any positive $T$ not divisible by the required power, the exact displacement law already fails the congruence at row zero. No scan through arbitrarily many rows is needed. This is the mathematical distinction between a observed repeating prefix and a proved least period.
+\takeaway{These are least packet-row periods. Multiply by four to express the corresponding supported degree displacement; do not infer a least period of the full degree-indexed sequence with its intervening zeros.}
+
+\vpage{15}{A dyadic permutation at every depth}{ISOMETRIC CONTINUATION}{Main text: Theorem 3.25 and Corollary 3.26, pp. 24--25.}
+Remove the address-dependent offset and scale:
+\[
+ f_j(n)=\frac{U_j(n)-j!}{2^{d_j}}.
+\]
+The exact displacement law becomes $v_2(f_j(n)-f_j(m))=v_2(n-m)$ for distinct natural numbers. Thus the rescaled map preserves dyadic distance.
+\vfig{15_isometries}
+\captiontext{Each square is the graph of a permutation modulo eight. Rows and columns use ordinary display order, which does not represent the dyadic metric.}
+\head{A permutation that respects every smaller residue}
+For example, address zero gives $0,7,2,1,4,3,6,5$ modulo eight. Reducing the outputs modulo four yields a function of the input modulo four, and reducing again gives the modulo-two map. The finite example therefore displays compatibility as well as bijectivity.
+
+The general proof uses density of the natural numbers and completeness to extend $f_j$ to an isometry $\Phi_j:\Ztwo\to\Ztwo$. Compactness then forces this self-isometry to be onto. The argument establishes more than a collection of unrelated finite permutations.
+\head{The original image is an affine ball}
+Undoing the scale gives the exact completed image
+\[
+ \widetilde U_j(\Ztwo)=j!+2^{d_j}\Ztwo.
+\]
+Every element in that ball has exactly one preimage. Outside it there is none. The four images are $1+2\Ztwo$, $1+2\Ztwo$, $2+32\Ztwo$, and $6+8\Ztwo$.
+\takeaway{A continuous isometric bijection need not already be an analytic function. The analytic polynomial-root theorem later in the paper uses separate hypotheses and a separate construction.}
+
+\vpage{16}{Large terms, exact arithmetic recovery}{CLASSICAL ODD-LENGTH TOWER}{Main text: Definition 3.17, Theorem 3.18, and Corollary 3.19, pp. 20--21.}
+Return to the classical signed Euler numbers $E_{2n}$ from $\sech t$. For a positive odd integer $p$, define
+\[
+ S_d(p)=\sum_{a=0}^{p-1}(-1)^a(2a+1)^d,
+ \qquad \sech^2t=\sum_{m\ge0}\gamma_m\frac{t^{2m}}{(2m)!}.
+\]
+The exact reconstruction is
+\[
+ E_{2n}=\sum_{m=0}^n\binom{2n}{2m}\gamma_m p^{2m}S_{2(n-m)}(p).
+\]
+\vfig{16_odd_tower}
+\head{Ordinary magnitude is a poor precision guide}
+For $p=3$ and $n=4$, partial sums swing through tens of millions before reaching $1385$. Yet each successive omitted layer carries at least two additional factors of three. Truncating after $m=M$ has error divisible by $p^{2M+2}$, regardless of how large the ordinary error looks.
+
+This divisibility follows term by term from the explicit factor $p^{2m}$. At full depth $M\ge n$, the result is exactly equal, not an approximation. The coefficient $\gamma_m$ is computed independently as a Hurwitz convolution of two classical Euler sequences.
+\head{Odd length is enough for the identity}
+The reconstruction is an integer identity for every positive odd $p$, including composite odd lengths. Primality is needed when calling the resulting divisibility ladder a prime-adic valuation statement. The checker includes length nine without treating nine as a prime.
+\takeaway{A truncation can be arithmetically accurate without being a good real-number approximation. The weight attached to each term tells us which notion of accuracy is being controlled.}
+
+\vpage{17}{The sharp dyadic edge tower}{FOUR DIGITS PER RETAINED LAYER}{Main text: Lemma 3.22 and Theorem 3.23, p. 23.}
+The classical dyadic construction uses a different source, not the odd-length formula with $p=2$. Define
+\[
+ A(n)=\frac{3^{2n+2}-1}{4(2n+1)(2n+2)},\qquad
+ \sum_{m\ge0}\beta_mz^{2m}=\left(\frac z{\sinh z}\right)^2,
+ \quad\kappa_m=\beta_m2^{2m}(2m)!.
+\]
+Then $E_{2n}=\sum_{m=0}^n\kappa_m\binom{2n}{2m}A(n-m)$.
+\vfig{17_sharp_tower}
+\head{Why the uniform exponent is exact}
+For $m\ge1$, the paper proves that $\kappa_m$ is nonzero and has valuation $4m-1$. The source $A(n-m)$ is a dyadic unit and the binomial coefficient is integral. Every term omitted after $M$ therefore has order at least $4M+3$:
+\[
+ E_{2n}-T_M(n)\in2^{4M+3}\Ztwo.
+\]
+At row $n=M+1$, there is exactly one omitted term. The other two factors are $\binom{2M+2}{2M+2}=1$ and $A(0)=1$. Its exact order is consequently $4M+3$, ruling out a uniform extra digit.
+\head{Why this is not a finite-pattern guess}
+The proof connects $\kappa_m$ to $-2^{4m}(2m-1)B_{2m}$ and uses the Bernoulli valuation theorem. The finite table is a transparent sample of that formula. A list of observed orders alone would not justify the all-$M$ conclusion.
+\takeaway{Uniform optimality is witnessed by the first omitted row. It does not mean that every row attains the uniform bound.}
+
+\vpage{18}{The row can buy extra precision}{TERM WEIGHTS AND OMITTED TAILS}{Main text: Proposition 3.24, pp. 23--24.}
+For $1\le m\le n$, the dyadic summand has exact order
+\[
+ w_m(n)=4m-1+v_2\binom{2n}{2m}.
+\]
+The binomial factor can improve the guaranteed precision at a particular row. The minimum weight of the omitted terms is a valid lower bound for the tail.
+\vfig{18_row_weights}
+\head{A concrete row}
+At $n=6$, the nonconstant summand orders are $4,7,13,15,20,23$. The exact tail orders after depths $M=0,\ldots,5$ happen to be those same numbers. For example, after depth two the tail has order thirteen, while the uniform theorem only guarantees eleven.
+
+At that depth the omitted minimum is uniquely attained, so the remaining summands cannot cancel it. In a more general tail, equal minimal orders can allow extra cancellation. The paper deliberately leaves the exact whole-tail valuation at arbitrary rows as a sharper question rather than replacing it by the minimum weight without justification.
+\head{Read blank cells and the full-depth endpoint correctly}
+A blank entry in the triangle means that the summand is absent because $m>n$. It is not a summand of order zero. Once $M\ge n$, the tail is empty and the error is exactly zero. Its valuation is infinity, not the last finite order in the row.
+
+The exact checker generates every displayed term as a rational number, reduces it, and factors its numerator and denominator. The shade is only a visual encoding of the resulting integer order.
+\takeaway{Use the uniform theorem for a guaranteed budget. Use exact row weights for a sharper certificate. Use a noncancellation argument before claiming an exact tail order.}
+
+\vpage{19}{Turn a residual into one new digit}{THE FINITE CORRECTION EQUATION}{Main text: Lemma 4.1 and Theorem 4.2, pp. 25--26.}
+Suppose $F(x)$ is divisible by $p^L$, with $L\ge1$, and write $F(x)=p^Lr_x$ exactly. Every candidate next residue has the form $x+p^Lt$. Polynomial Taylor expansion gives
+\[
+ F(x+p^Lt)\equiv p^L(r_x+DF(x)t)\pmod{p^{L+1}}.
+\]
+The next digit must solve $r_x+J_xt=0$ in the residue field.
+\vfig{19_root_digits}
+\head{A complete scalar lifting calculation}
+For $F(X)=X^2-2$ at prime seven, start with $x=3$. Its residual digit is $(9-2)/7=1$ and its derivative reduces to six. Solving $1+6t=0$ modulo seven gives $t=1$, so the next representative is ten modulo forty-nine. The table continues the same calculation through five corrections.
+
+Every listed candidate is checked by direct polynomial evaluation at the new modulus, independently of the Jacobian rule. Earlier digits remain unchanged because the correction is a multiple of the old modulus.
+\head{The hypothesis that removes the quadratic remainder}
+The discarded Taylor remainder has a factor $p^{2L}$. The inequality $2L\ge L+1$ is why this nonlinear argument assumes positive depth. At $L=0$, the rule need not characterize lifting. For an affine polynomial the remainder is identically zero, so that separate theorem includes depth zero.
+\takeaway{The linear correction equation is exact at one more digit. It is not a linear approximation with an uncontrolled error, and its allowed depth is part of the proof.}
+
+\vpage{20}{A nonempty correction fiber is a torsor}{COUNTING ROOT DIGITS}{Main text: Theorem 4.7, pp. 28--29.}
+At one precision, the obstruction is the residual class in the quotient by the Jacobian image:
+\[
+ \mathcal O_x=\FF_p^e/\im J_x,\qquad o_x=[r_x].
+\]
+The next lift exists exactly when $o_x=0$. When a correcting digit $t_0$ exists, every other correcting digit is $t_0+k$ with $k\in\Ker J_x$.
+\vfig{20_torsors}
+\head{Nine digits, one equation of substance}
+In the displayed example the only nontrivial equation is $a+b=1$ modulo three. Choose $a$ and $c$ freely; then $b=1-a$ is forced. There are nine solutions. Replacing the residual by $(-1,1)$ asks the zero second row of the Jacobian to cancel one, which is impossible.
+
+The rank is one, so the kernel has dimension two and the obstruction quotient dimension one. This gives the exact counts $3^{3-1}=9$ and $3^{2-1}=3$. A torsor means that translation by the kernel is free and transitive, without declaring any particular solution to be its canonical zero.
+\head{Prime-field counts have a boundary}
+The correction criterion and translation action also make sense modulo a composite integer $q$. The rank formula over $\FF_p$ does not. Multiplication by two on $\ZZ/4\ZZ$ has a kernel with two elements; the ring $\ZZ/4\ZZ$ is not the field with four elements, so a vector-space rank formula cannot be applied to it.
+\takeaway{The image detects existence, the kernel measures ambiguity, and the residual class identifies the actual obstruction. These are related but different objects.}
+
+\vpage{21}{Separate solutions need not agree}{SHARED CORRECTION LABELS}{Main text: Theorem 4.5 and Corollary 4.6, pp. 27--28.}
+Two systems can each admit a next digit without admitting the same next digit. For linear observations $J:U\to V$ and $K:U\to W$, the common label space is
+\[
+ C(J,K)=U/(\Ker J+\Ker K).
+\]
+Two attainable observations have a simultaneous preimage exactly when their labels agree.
+\vfig{21_shared}
+\head{The label is the middle coordinate}
+Take $U=\FF_3^3$, with $J(a,b,c)=(a,b)$ and $K(a,b,c)=(b,c)$. The first observation forgets $c$, and the second forgets $a$. Their common content is $b$. Both maps are onto, but of the eighty-one pairs of observations, only twenty-seven agree in this coordinate.
+
+The block pattern is the actual fiber product, not a proposed compatibility heuristic. Each retained pair comes from the unique triple with those three coordinates.
+\head{An arithmetic incompatibility at the next modulus}
+At the lower root $x=0$ modulo two, the equations $F(X)=X$ and $G(X)=X-2$ are both satisfied. Modulo four, the first requires the new digit zero and the second requires the new digit one. Each individual problem lifts, but there is no common residue solving both.
+
+Changing integer representatives within the same lower root does not change its distinguished obstruction class. That invariance is weaker than invariance under arbitrary changes in the equation list; adding a zero equation changes the raw cokernel.
+\takeaway{A joint root is a compatibility statement, not the conjunction of two unrelated existence statements. The common quotient records exactly the information both correction maps retain.}
+
+\vpage{22}{A successful step can be the last}{SINGULAR BRANCHES}{Main text: Remark 4.10 and Section 6.1, pp. 30 and 41.}
+For $F(X)=X^2-5$, the residue one is a root modulo two. Both odd residues are roots modulo four. Neither can continue to a root modulo eight, because every odd square is one modulo eight.
+\vfig{22_dead_branches}
+\captiontext{The two examples have the same initial odd residue and derivative zero modulo two. Their later normalized residuals differ. The right-hand picture shows only these first levels, not every later branch.}
+\head{What failed, exactly?}
+At depth one, $F(1)/2=-2$ reduces to zero, so the zero Jacobian causes no obstruction. At depth two, $F(1)/4=-1$ is odd. A zero Jacobian cannot change that residual digit, and the branch stops. The representative three gives the same obstruction at this precision.
+
+This does not contradict the smooth tower theorem. That theorem assumes a surjective reduced Jacobian, which the squaring map at an odd dyadic point does not have. Without that assumption, success at one precision cannot be reused as a promise of success at all future precisions.
+\head{Another failed shortcut: nonlinear depth zero}
+At $x=0$, $L=0$, and $F(X)=X^2-1$, the Jacobian is zero and the residual is nonzero modulo two. Nevertheless $x=1$ is a root modulo two and lies in the same residue class modulo one. The first-order criterion was being applied before its quadratic remainder became negligible.
+\takeaway{The missing object in singular persistence is a theorem linking all later obstructions. A finite tree of successful early lifts is not itself that theorem.}
+
+\vpage{23}{Which variables are allowed to move?}{PRESCRIBED PARAMETERS}{Main text: Theorem 4.13 and its example, pp. 32--33.}
+Write the variables as $(Y,T)$, where the parameter digit $v$ of $T$ is prescribed. Partition the reduced Jacobian into solved and parameter blocks $(J\ K)$. The new solved digit $u$ must satisfy
+\[
+ r_x+Ju+Kv=0,\qquad o_x(v)=[r_x+Kv]\in\FF_p^e/\im J.
+\]
+The relevant image is that of the solved block $J$, not necessarily the whole Jacobian.
+\vfig{23_prescribed}
+\head{A full-rank Jacobian is not enough for every split}
+In the example $F(Y,T)=T$, the full Jacobian has rank one. Solving for $T$ would give a regular chart. But after declaring $T$ to be a prescribed parameter, the solved block with respect to $Y$ is zero. No movement of $Y$ can alter the value of $F$.
+
+For parameter digit zero there are two residue choices for $Y$, producing the points $(0,0)$ and $(2,0)$ modulo four. For digit one the parameter is two modulo four, and neither choice of $Y$ can produce a root. The two cases are exhaustive.
+\head{Selected coordinates versus prescribed coordinates}
+The general chart theorem chooses an invertible minor of the full reduced Jacobian and then rearranges the variables. The prescribed-parameter theorem respects a split already imposed by the problem. Its obstruction formula remains valid even when that chosen solved block is not surjective.
+\takeaway{``There exists a good set of solved variables'' does not mean ``every proposed parameter split is good.'' The term $Kv$ keeps the imposed motion visible in the residual equation.}
+
+\vpage{24}{A root locus becomes a parameter chart}{CONTINUITY AND ANALYTICITY}{Main text: Theorems 4.12 and 5.3--5.4, pp. 31--32 and 38--39.}
+Consider $F(Y,T)=Y+Y^2+T$ near $(0,0)$ over $\ZZ_2$. The solved derivative is $1+2Y$, a unit. For each even parameter residue modulo $32$, there is exactly one even solved residue.
+\vfig{24_root_chart}
+\head{The apparent jaggedness is only display order}
+The graph satisfies $t=-y-y^2$. For two even residues $y,z$,
+\[
+ (-y-y^2)-(-z-z^2)=-(y-z)(1+y+z).
+\]
+The second factor is odd, so it has dyadic order zero. Consequently parameter and solved-coordinate differences have the same dyadic order. The finite permutation is compatible with every lower precision, although it looks irregular in ordinary numerical order.
+\head{The analytic theorem is stronger and different}
+Over the ambient field $\QQ_2$, the paper constructs an analytic local branch $\psi(T)$ with derivative $-J^{-1}K=-1$ at zero. Its formal expansion begins
+\[
+ \psi(T)=-T-T^2-2T^3-5T^4-14T^5-42T^6-\cdots.
+\]
+The exact checker verifies its displayed coefficients by substitution into $\psi+\psi^2+T$. This finite check does not prove convergence. Convergence and local uniqueness come from the analytic inverse-function argument in the manuscript.
+
+A continuous root selection through the same nonsingular point must agree with this branch near the base parameter. The theorem concerns a germ, not an arbitrary globally chosen branch.
+\takeaway{Integral residue charts live in $\ZZ_2$; analytic differentiation is carried out over $\QQ_2$. The former is not being treated as a vector space over the latter.}
+
+\vpage{25}{A nonunit Jacobian need not stop lifting}{WEIGHTED NONLINEAR CORRECTION}{Main text: Theorem 4.16 and Example 4.17, pp. 34--35.}
+The weighted theorem allows a Jacobian singular modulo $p$ but invertible over $\Qp$. Suppose $p^sJ^{-1}$ is integral, $F(a)\in p^r\Zp^d$, and $r>2s$. Then the unique root in $a+p^{s+1}\Zp^d$ has displacement in $p^{r-s}\Zp^d$.
+\vfig{25_weighted_lift}
+\head{Uniqueness of a completed root is not finite-level uniqueness}
+For $X^2-17$ at $a=1$, the residual is $-16$, $s=1$, and $r=4$. The theorem gives one root in $1+4\ZZ_2$, with displacement divisible by eight. Modulo $256$, however, both $105$ and $233$ are approximate roots in this ball. The first has no lift modulo $512$; the second has two. Only compatible continuation to every depth selects the unique completed root.
+
+This example prevents a false inference from weighted uniqueness to ``one digit choice at every stage.'' The latter was the square smooth theorem's conclusion under a unit Jacobian.
+\head{The strict threshold is necessary}
+For $X^2+3$ at one, the residual has order two and the derivative order one. Thus $r=2s$, but no root exists modulo eight. Replacing $r>2s$ by $r\ge2s$ would admit this counterexample. Similarly, $p^sX+p^r$ has root $-p^{r-s}$, so the displacement cannot uniformly gain another digit.
+\takeaway{The inverse weight quantifies a loss of precision. It can still permit an exact root, but neither the strict threshold nor the scale of the uniqueness ball can be dropped.}
+
+\vpage{26}{Coefficient and parameter motion add}{THE FIRST-ORDER FORMULA}{Main text: Theorem 4.19 and Example 4.20, pp. 36--37.}
+Start with $F(y_0,t_0)=0$. Perturb the equations to $G=F+p^MH$ and the parameters to $t_0+p^Mv$. If the solved Jacobian $J$ has inverse weight $s$ and $M>2s$, the solved root moves by
+\[
+ y-y_0=-p^MJ^{-1}\bigl(H(a)+Kv\bigr)+\varepsilon,
+ \qquad \varepsilon\in p^{2M-3s}\Zp^e.
+\]
+\vfig{26_root_motion}
+\head{The sign and both terms are observable}
+In the linear example, $J=K=1$, $p^M=4$, and $H=1$. The prescribed parameter is four, so the exact equation is $y+4+4=0$. The root is $-8$. Omitting the parameter contribution predicts $-4$, while changing its sign predicts zero. Neither error is divisible by the promised error modulus sixteen.
+
+A symbolic formula that suppresses the $Kv$ term may look like a reasonable coefficient-only perturbation rule, but it no longer represents the specified problem.
+\head{The quadratic remainder can attain the bound}
+For $y+y^2+2=0$, the unique even root has residue $90$ modulo $256$. Its equation gives $y+2=-y^2$, and $y\equiv2\pmod4$. Therefore $v_2(y+2)=2$: the first-order error is divisible by four but not eight. This realizes the error exponent $2M-3s=2$ at $M=1,s=0$.
+\takeaway{The displayed error exponent is a guarantee, not an exact valuation for every system. Exact boundary examples explain why a stronger uniform claim would be false.}
+
+\vpage{27}{Use the inverse weight, not its sum}{AUGMENTED JACOBIAN CERTIFICATE}{Main text: Theorem 4.19 and its block calculation, p. 36.}
+A controlled inverse is an integral matrix certificate. If $A=p^sJ^{-1}$, then $AJ=JA=p^sI$. For a prescribed-parameter problem, augment the system by the parameter equations. Its Jacobian and an integral scaled inverse are
+\[
+ B=\mat{J&K\\0&I},\qquad
+ C=\mat{A&-AK\\0&p^sI},\qquad CB=BC=p^sI.
+\]
+\vfig{27_inverse_weight}
+\head{A two-coordinate example}
+Take $J=\diag(2,8)$ and $K=(1,3)^T$. Multiplication by eight clears every entry of $J^{-1}$, and multiplication by four does not. The exact inverse weight is therefore $s=3$. The determinant has valuation four; using it as the weight would impose a stronger, unnecessary threshold in this example.
+
+The augmented matrix retains the same inverse weight. In the upper-right block of $CB$, the two terms $AK$ and $-AK$ cancel. In $BC$, the cancellation uses $JA=8I$. Both multiplication orders are checked, because one unverified orientation could conceal a sign or placement error.
+\head{Why augmentation is useful}
+The extra equations force the parameter coordinates to equal the prescribed values exactly. A theorem for square systems then supplies the full root. Projecting back to solved coordinates gives the joint-motion formula without inventing a separate inverse bound for every perturbed Jacobian.
+\takeaway{The certificate records the worst denominator in the inverse. Augmentation preserves that bound and makes the parameter forcing part of the actual system.}
+
+\vpage{28}{Finite agreement does not mean descent}{CRT AND COMPLETION}{Main text: Native 13.3 discussion, p. 42.}
+For each positive $r$, the finite congruences $n\equiv0\pmod{2^r}$ and $n\equiv1\pmod{3^r}$ have exactly one residue solution modulo $6^r$. Choose its least nonnegative representative $n_r$.
+\vfig{28_crt_limit}
+\head{The residues are compatible}
+Reducing $n_{r+1}$ modulo $6^r$ gives $n_r$. The two prime-adic limits are therefore zero in $\ZZ_2$ and one in $\ZZ_3$. A representative can repeat between successive depths, as $1216$ does here; strict growth of ordinary integers is not the compatibility condition.
+
+Nevertheless, no single integer has those two exact local values. An integer whose image in $\ZZ_2$ is zero is divisible by every power of two, and must be zero. Its image in $\ZZ_3$ cannot then be one.
+\head{The topology explains the distinction}
+The diagonal image of $\ZZ$ in the product of its prime-adic completions is dense because every finite collection of congruences can be solved. It is not the whole product. Finite synchronization naturally constructs a completed object; identifying which tuples descend to a global object requires additional data or a separate theorem.
+
+The manuscript presents this boundary argument as a topological explanation of its native completion question, not as a newly formalized global-descent theorem. This appendix checks the displayed finite CRT path and repeats the elementary argument with that status intact.
+\takeaway{``Every finite test can be met'' and ``one global integer realizes all local values'' are different assertions. Completing the residue data does not erase that distinction.}
+
+\vpage{29}{Spend the precision in a root problem}{AN END-TO-END EXACT EXAMPLE}{Main text: dyadic truncation and smooth root stability, pp. 23 and 30--32.}
+Use the arithmetic half of the paper to supply a coefficient for the lifting half. The target Euler number is $E_8=1385$. Retaining only depths zero and one of its dyadic tower gives $T_1(4)=-91019/45$.
+\vfig{29_synthesis}
+\head{What the truncation guarantees}
+The exact error is
+\[
+ E_8-T_1(4)=\frac{153344}{45},\qquad v_2=8.
+\]
+The uniform depth-one theorem guarantees at least seven digits; this row supplies eight. Even the uniform guarantee is enough after multiplying the coefficient by two to get equality modulo $256$.
+
+Now solve $y+y^2=2E_8$ modulo $256$, choosing the even branch. Replacing its right side by $2T_1(4)$ preserves that residue problem. Both reduce to $y+y^2=210$, whose even root is fourteen. The exact check enumerates all residue candidates and finds the other root, $241$, in the odd branch.
+\head{What is and is not recovered}
+The integer fourteen satisfies $14+14^2=210$, not $2770$. It is an exact residue root at the declared precision, not an exact integer root of the original equation. Since the derivative $1+2y$ is odd, this even approximate root lifts uniquely inside its residue ball to the corresponding dyadic root.
+
+The two exact dyadic roots for the two rational coefficients need not coincide. The truncation tells us how many of their digits agree; it does not replace one complete equation by the other without error.
+\takeaway{A certified arithmetic truncation can be consumed by a certified lifting calculation. The interface is an explicit precision budget, not a claim that the approximation is globally exact.}
+
+\vpage{30}{What the appendix certifies}{EVIDENCE AND CONTINUATION}{Main text: open questions and formal evidence, pp. 40--48.}
+The manuscript, its proof archive, and this appendix carry different kinds of evidence. Their boundaries are retained rather than combined into one undifferentiated ``verified'' label.
+\par
+\begin{tabularx}{\linewidth}{@{}lY@{}}\toprule
+Layer & Scope\\\midrule
+Preserved manuscript & The 48-page consolidated edition and its claim-to-source correspondence. Its original pages are not rewritten by this appendix.\\
+Preserved Lean evidence & The archived sources, versioned inventories, commands, and successful compiler reports. No new Lean run is represented by this editorial release.\\
+New exact checks & Rational arithmetic, modular enumeration, symbolic identities, and deliberately false controls for the stated examples. Tested ranges are recorded explicitly.\\
+New vector plates & Editable diagrams generated from the same finite models. Placement on the page is expository geometry, not a metric embedding or an extra theorem.\\
+Build and integrity checks & Source hashes, typesetting checks, page preservation, link destinations, and a replay from the delivered archive. These certify the package, not a new universal mathematical claim.\\\bottomrule
+\end{tabularx}
+\par
+\head{What remains outside the completed examples}
+The general native presentation-invariance and global-descent questions remain separate. Adding a zero equation can change a raw Jacobian cokernel without changing the solution set. Compatible finite residues do not automatically descend to a global integer. The paper also retains genuine fraction-field singular persistence, exact higher dyadic differences, least periods beyond width four, general affine Mahler valuations, and exact arbitrary-row tail values as further problems.
+\head{How to use the source package}
+The exact models and checks are in \texttt{visual\_appendix/source} and \texttt{visual\_appendix/checks}. The complete recovered manuscript and proof snapshot is preserved separately. Its historical versions are not extra independent theorem counts. The original older 28-page paper's full TeX, original figure generator, and complete historical experiment package were not recovered with the consolidation; this bundle does not invent them.
+\head{A final reading test}
+At each theorem, identify the coefficient ring, normalization, allowed index range, and whether the conclusion is a lower bound, an equality, a finite lift, or a completed object. Then ask which displayed hypothesis prevents the nearby counterexample.
+\takeaway{The visual appendix should make the proof boundaries easier to see, not make them easier to forget. Exact examples explain a theorem; its hypotheses determine where that explanation applies.}

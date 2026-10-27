@@ -1,0 +1,232 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=23mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,array,fancyhdr,xcolor,hyperref}
+\definecolor{ink}{HTML}{233F50}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=ink,pdftitle={Paper IX: Sixth Lean Verification Block},pdfauthor={Komorebi P.}}
+\pagestyle{fancy}\fancyhf{}\lhead{\small PRSC IX $\mid$ Sixth Lean Block}\rhead{\small v0.6.0}
+\lfoot{\small Komorebi P.}\rfoot{\small\thepage}
+\setlength{\headheight}{15pt}\setlength{\parindent}{0pt}\setlength{\parskip}{7pt}
+\newcommand{\Z}{\mathbb Z}\newcommand{\N}{\mathbb N}\newcommand{\Q}{\mathbb Q}
+\newcommand{\target}[1]{{\footnotesize\texttt{#1}}}
+\newcommand{\pageheading}[2]{{\Large\bfseries\color{ink}#1}\par{\small #2}\par\medskip}
+\begin{document}
+{\LARGE\bfseries\color{ink}Paper IX}\par
+{\Large\bfseries Sixth Lean Verification Block}\par
+{\large Companion jumps and Fibonacci packet recurrences}\par
+\textbf{Komorebi P.}\hfill Release 0.6.0
+\bigskip
+\section*{Scope and result}
+This release completes Theorem 9.1 and Corollary 9.2 of the unchanged 28-page status-corrected manuscript. The preceding 28 proof modules and five supplements remain unchanged.
+
+\textbf{Twenty-two of 24 named manuscript-proved items now have formal coverage; two remain pending.} Three classical inputs and two conjectures are tracked separately. The cumulative corpus has \textbf{382 named theorem declarations and 84 explicit definitions across 31 modules}.
+
+\begin{center}
+\begin{tabular}{@{}p{.42\textwidth}p{.24\textwidth}rr@{}}
+\toprule
+New module & Scope & Theorems & Defs.\\\midrule
+\texttt{CompanionPackets} & General jump and recurrence & 17 & 2\\
+\texttt{FibonacciPackets} & Actual Fibonacci specialization & 18 & 4\\
+\texttt{RecurrenceExamples} & Examples and boundary cases & 14 & 1\\\midrule
+Total added & Two named items & 49 & 7\\\bottomrule
+\end{tabular}
+\end{center}
+These counts include supporting lemmas and examples, not 49 independent mathematical discoveries. The principal statements are universal over their explicit inputs, not finite numerical observations.
+
+\section*{The main mathematical connection}
+A sampled state $u_k=v_{Nk+j}$ evolves by the actual jump matrix $C^N$. Its recurrence is derived from the characteristic polynomial of that matrix. No scalar recurrence or spectral decomposition is supplied as a substitute for the desired conclusion.
+
+For Fibonacci numbers, the state is independently defined from Mathlib's actual sequence. The Lucas sequence is independently defined by its initial values and recurrence. The trace and determinant of $C^N$ are then proved to supply the sampled recurrence coefficients.
+
+\section*{Important qualification}
+A $d$-dimensional state system supplies a recurrence of \textbf{order at most $d$}. Its minimal recurrence need not have order $d$. The original statement is read as the characteristic-polynomial recurrence, not a minimal-order claim. The formal equations also handle singular matrices, zero-dimensional spaces and zero step.
+
+\section*{Evidence}
+The clean cumulative build checks all 31 modules with warnings treated as errors and audits all 466 explicit declarations. Negative controls and independent exact-arithmetic mirrors are separate checks. Archive integrity and fresh-extraction results are recorded in the accompanying release audit.
+\newpage
+\pageheading{1. Actual matrix orbits and arithmetic jumps}{Theorem 9.1; manuscript page 22}
+Let $R$ be a commutative ring, $I$ a finite coordinate type and $d=|I|$. For $C\in M_I(R)$ and $v_0\in R^I$, define
+\[
+ \operatorname{orbit}(C,v_0,n)=C^nv_0,
+ \qquad u_k=\operatorname{packet}(C,v_0,N,j,k)=C^{Nk+j}v_0.
+\]
+The implementation uses actual matrix powers and matrix--vector multiplication. A separately supplied sequence $v$ with
+\[
+ v_{n+1}=Cv_n
+\]
+is proved by induction to equal this power orbit. Thus the source-sequence formulation is connected to the construction.
+
+\subsection*{The jump formula}
+Associativity and the laws for powers of one matrix give
+\[
+ \boxed{u_k=C^j(C^N)^kv_0=(C^N)^k(C^jv_0).}
+\]
+Only powers of the same matrix are interchanged. The argument does not assume that arbitrary matrices commute. In particular,
+\[
+ u_{k+1}=C^Nu_k,\qquad u_{k+a}=(C^N)^a u_k.
+\]
+The step matrix is $C^N$, not $C$. A checked example with the Fibonacci matrix and $N=2$ rejects replacing the jump with a single original step.
+
+\subsection*{Refinement of an arithmetic address}
+Taking another subsequence with step $M$ and offset $s$ yields
+\[
+ u_{Mk+s}=v_{(NM)k+(Ns+j)}.
+\]
+The formal proof establishes this identity for the actual packet function by checking the index arithmetic. It is not inferred from a diagram or a naming convention.
+
+\subsection*{Endpoints and interpretation}
+The algebraic identities allow $N=0$, in which case $u_k=v_j$ is constant. Positive-modulus residue packets are the special case $N>0$ and $0\le j<N$. The formula also permits offsets beyond that standard range. No inverse matrix, diagonalization, eigenvalue, or characteristic-zero assumption is needed.
+
+\textbf{Principal targets.}\par
+\target{Companion.orbit\_of\_recurrence}\par
+\target{Companion.companion\_jump, Companion.source\_companion\_jump}\par
+\target{Companion.packet\_step, Companion.packet\_advance}\par
+\target{Companion.packet\_refinement, Companion.packet\_zero\_step}
+\newpage
+\pageheading{2. From the characteristic polynomial to a recurrence}{Theorem 9.1, continued}
+Put $D=C^N$ and let
+\[
+ \chi_D(X)=\det(XI-D)=X^d+\sum_{a=0}^{d-1}c_aX^a
+\]
+be its actual characteristic polynomial. The implementation reuses the pinned Mathlib Cayley--Hamilton theorem, expands polynomial evaluation into a finite sum and proves
+\[
+ \sum_{a=0}^{d}\chi_D[a]D^a=0,
+ \qquad \chi_D[d]=1.
+\]
+Here $\chi_D[a]$ denotes the coefficient at index $a$. The identities hold over any commutative coefficient ring; the zero-ring case is handled explicitly by the proof's subsingleton branch.
+
+\subsection*{The complete vector recurrence}
+Apply the matrix identity to the actual state $u_k$. The already proved advance identity identifies each $D^a u_k$ with $u_{k+a}$. Consequently,
+\[
+ \sum_{a=0}^{d}\chi_D[a]u_{k+a}=0,
+ \qquad
+ \boxed{u_{k+d}=-\sum_{a=0}^{d-1}c_a u_{k+a}.}
+\]
+This is the desired recurrence, with its monic leading coefficient and all earlier coefficients supplied by $\chi_D$. It is not an assumption on the packet sequence.
+
+Every coordinate and every $R$-linear scalar observation $\lambda:R^I\to R$ satisfies the corresponding equation:
+\[
+ \lambda(u_{k+d})=-\sum_{a=0}^{d-1}c_a\lambda(u_{k+a}).
+\]
+A separate source-sequence theorem transports the recurrence back to the original $v_{Nk+j}$ notation.
+
+\subsection*{Order versus minimal order}
+The characteristic polynomial gives a recurrence of order at most $d$. For example, $C=I_2$ gives a degree-two characteristic polynomial, but every orbit is constant and obeys $u_{k+1}=u_k$. Both statements are checked. No minimal-polynomial classification is claimed.
+
+For $d=0$, the unique empty vector is zero and the formula remains valid. For singular matrices, Cayley--Hamilton still applies: invertibility is irrelevant. The nilpotent example $C=\left(\begin{smallmatrix}0&1\\0&0\end{smallmatrix}\right)$ has $C^2=0$ and $\chi_C=X^2$.
+
+\textbf{Principal targets.}\par
+\target{Companion.charpoly\_sum\_powers, Companion.charpoly\_coeff\_dimension}\par
+\target{Companion.packet\_charpoly\_annihilation}\par
+\target{Companion.packet\_charpoly\_recurrence}\par
+\target{Companion.packet\_coordinate\_recurrence}\par
+\target{Companion.packet\_observable\_recurrence}
+\newpage
+\pageheading{3. Fibonacci and Lucas coefficients are derived}{Corollary 9.2; manuscript page 22}
+Define the actual integer matrix and state
+\[
+ C=\begin{pmatrix}1&1\\1&0\end{pmatrix},
+ \qquad v_n=\begin{pmatrix}F_{n+1}\\F_n\end{pmatrix},
+ \qquad v_0=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+The values $F_n$ are Mathlib's \texttt{Nat.fib}, cast into $\Z$. Its basic recurrence proves $v_{n+1}=Cv_n$. The second coordinate of the packet state is therefore proved to be the intended $F_{Nk+j}$, not a newly assumed sequence.
+
+\subsection*{An independent Lucas sequence}
+Define
+\[
+ L_0=2,\quad L_1=1,\quad L_{n+2}=L_n+L_{n+1}.
+\]
+Direct finite matrix arithmetic proves $C^2=C+I$. Multiplication by $C^n$ gives $C^{n+2}=C^n+C^{n+1}$. Taking traces shows that $\operatorname{tr}(C^n)$ satisfies the same recurrence and initial values as $L_n$. Induction yields
+\[
+ \boxed{\operatorname{tr}(C^N)=L_N.}
+\]
+The implementation separately proves
+\[
+ \det C=-1,\qquad \det(C^N)=(-1)^N,
+ \qquad L_N=2F_{N+1}-F_N.
+\]
+No Binet roots or diagonalizability argument is needed.
+
+\subsection*{The sampled Fibonacci recurrence}
+The actual two-by-two characteristic-polynomial formula gives
+\[
+ \chi_{C^N}(X)=X^2-L_NX+(-1)^N.
+\]
+Insert these coefficients into the general packet recurrence and take the second coordinate:
+\[
+ \boxed{F_{N(k+2)+j}=L_NF_{N(k+1)+j}-(-1)^NF_{Nk+j}.}
+\]
+The full two-coordinate state satisfies the same equation. All subtraction is in $\Z$, not truncated natural-number subtraction. The result holds for all natural $N,j,k$, including zero step and zero initial values.
+
+\textbf{Principal targets.}\par
+\target{FibonacciPackets.state\_is\_orbit, FibonacciPackets.packet\_is\_fibonacci}\par
+\target{FibonacciPackets.trace\_power\_is\_lucas, FibonacciPackets.det\_power}\par
+\target{FibonacciPackets.jump\_charpoly}\par
+\target{FibonacciPackets.fibonacci\_packet\_recurrence}
+\newpage
+\pageheading{4. Exact examples and meaningful boundary checks}{Example 9.3 and supporting results}
+The independently defined Lucas recurrence gives
+\[
+ (L_0,L_1,L_2,L_3,L_4,L_5)=(2,1,3,4,7,11).
+\]
+For $N=3$, the general theorem therefore specializes to
+\[
+ u_{k+2}=4u_{k+1}+u_k.
+\]
+The implementation proves this for every offset $j$ and every $k$, not only the displayed sample. At $j=2$, direct evaluation of the actual Fibonacci sequence gives
+\[
+ (F_2,F_5,F_8,F_{11},F_{14},F_{17})=(1,5,21,89,377,1597).
+\]
+This is the exact manuscript example.
+
+\subsection*{The parity sign cannot be removed}
+For $N=2$, the recurrence is
+\[
+ u_{k+2}=3u_{k+1}-u_k.
+\]
+At $j=1,k=0$, the correct equation is $5=3\cdot2-1$. Replacing the minus sign with a plus would assert $5=7$. The source proves the inequality, and a separate invalid-proof control attempts and rejects the false equation.
+
+At $N=1$ the ordinary Fibonacci recurrence is recovered. At $N=0$, $L_0=2$ and the packet is constant, so the same formula becomes $u=2u-u$.
+
+\subsection*{Uniqueness from the first two packet values}
+For a fixed $N,j$, any integer sequence satisfying the proved sampled recurrence and starting at $F_j,F_{N+j}$ agrees with $F_{Nk+j}$ for all $k$. This is proved by two-step induction. It is a consequence of the established coefficients and recurrence, not a premise used to identify Fibonacci values initially.
+
+\subsection*{Independent finite mirrors}
+A pure-Python exact-arithmetic implementation computes characteristic polynomials by the permutation determinant and states by repeated matrix application. It checks 280 matrix systems over integers, rationals and several modular rings, including composite moduli and the zero ring. Separately it computes sampled Fibonacci sequences recursively and compares them with direct Fibonacci evaluation. These are useful regression checks, not Lean extraction or universal proofs.
+
+\textbf{Principal targets.}\par
+\target{RecurrenceExamples.manuscript\_sequence}\par
+\target{RecurrenceExamples.manuscript\_step\_three, RecurrenceExamples.step\_two}\par
+\target{FibonacciPackets.fibonacci\_packet\_unique}\par
+\target{RecurrenceExamples.even\_step\_wrong\_sign}\par
+\target{RecurrenceExamples.wrong\_jump\_matrix}
+\newpage
+\pageheading{5. Verification, provenance and remaining work}{Cumulative checks and exact scope}
+\textbf{Lean.} The fresh cumulative run uses Lean 4.34.0-rc2 and Mathlib revision
+\begin{center}\small\texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+All 31 modules compile with warnings treated as errors. The inventory contains 382 theorem declarations and 84 explicit definitions; all 466 expected axiom reports must match. Allowed dependencies are \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}, or subsets. The source-policy check excludes admitted proofs, added axioms and selected trust bypasses. All nine package revision pins are checked.
+
+\textbf{Controls and tests.} Twenty invalid-proof controls are expected to fail for mathematical reasons, not missing imports or timeouts. The three new controls test the Fibonacci sign, the jump matrix and the trace coefficient. All 131 infrastructure and release tests pass. These include 28 new sixth-block tests and preserved earlier arithmetic tests.
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Independent exact finite check & Cases\\\midrule
+Matrix systems across seven coefficient domains & 280\\
+Jump identities and characteristic recurrences & 1,680 each\\
+One-step packet transitions & 1,400\\
+Nested packet addresses & 280\\
+Fibonacci packet sequences & 357\\
+Fibonacci scalar recurrence steps & 11,067\\
+Lucas trace, determinant and Fibonacci identities & 81\\
+Invalid numerical inputs rejected & 10\\\bottomrule
+\end{tabular}
+\end{center}
+\textbf{Development failures.} Four Lean development checks failed before correction. The errors concerned a matrix-associativity step, recursive simplification, coefficient simplification and an ineffective coordinate for a counterexample. Their source snapshots and compiler logs are retained. An initial unit-test run failed two stale baseline-count assertions; those expected counts were updated, not the mathematical tests weakened.
+
+\textbf{Trust boundary.} Pinned Mathlib supplies Cayley--Hamilton, characteristic-polynomial facts, matrix algebra and the basic Fibonacci recurrence. Its compiled cache is reused, not independently rebuilt. Python mirrors do not execute extracted Lean definitions. The historical numerical suite and earlier papers are not rerun. The original manuscript and all 28 upstream proof files remain unchanged.
+
+\textbf{Remaining pair.} Theorem 7.5, the global odd-prime Euler finite-difference estimate, and Corollary 8.5, the uniform standard-window period, remain pending. The two conjectures are still unproved. This block does not use those claims as assumptions.
+
+Detailed compiler logs, inventories, amendments, the completed item crosswalk, and fresh-extraction integrity evidence accompany the release. Manuscript-to-Lean correspondence is a mathematical review, not an automatically certified semantic equivalence.
+\end{document}

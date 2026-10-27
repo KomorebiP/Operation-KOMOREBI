@@ -1,0 +1,83 @@
+module
+
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Tactic
+
+@[expose] public section
+
+noncomputable section
+
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.ResiduePackets
+
+variable {R : Type*}
+
+def packet [Zero R] (N j : ℕ) (a : ℕ → R) : ℕ → R :=
+  fun n => if n % N = j then a n else 0
+
+@[simp] theorem packet_apply [Zero R] (N j : ℕ) (a : ℕ → R) (n : ℕ) :
+    packet N j a n = if n % N = j then a n else 0 := rfl
+
+@[simp] theorem packet_idempotent [Zero R] (N j : ℕ) (a : ℕ → R) :
+    packet N j (packet N j a) = packet N j a := by
+  funext n
+  simp only [packet]
+  split_ifs <;> rfl
+
+theorem packet_orthogonal [Zero R] (N i j : ℕ) (hij : i ≠ j) (a : ℕ → R) :
+    packet N i (packet N j a) = 0 := by
+  funext n
+  simp only [packet, Pi.zero_apply]
+  split_ifs with h hi
+  · exact (hij (h.symm.trans hi)).elim
+  · rfl
+  · rfl
+
+theorem packet_reconstruction [AddCommMonoid R] {N : ℕ} (hN : 0 < N) (a : ℕ → R) :
+    ∑ j ∈ Finset.range N, packet N j a = a := by
+  funext n
+  simp only [Finset.sum_apply, packet]
+  rw [Finset.sum_eq_single (n % N)]
+  · simp
+  · intro b _ hb
+    simp [Ne.symm hb]
+  · simp [Nat.mod_lt n hN]
+
+theorem packet_refinement [AddCommMonoid R] {N M : ℕ} (hM : 0 < M)
+    (hNM : N ∣ M) (j : ℕ) (a : ℕ → R) :
+    packet N j a = ∑ r ∈ Finset.range M, if r % N = j then packet M r a else 0 := by
+  funext n
+  simp only [Finset.sum_apply]
+  rw [Finset.sum_eq_single (n % M)]
+  · simp [packet, Nat.mod_mod_of_dvd n hNM]
+  · intro b _ hb
+    by_cases h : b % N = j
+    · simp [h, packet, Ne.symm hb]
+    · simp [h]
+  · simp [Nat.mod_lt n hM]
+
+def seriesPacket [Semiring R] (N j : ℕ) (A : PowerSeries R) : PowerSeries R :=
+  PowerSeries.mk (packet N j (fun n => PowerSeries.coeff n A))
+
+@[simp] theorem seriesPacket_coeff [Semiring R] (N j : ℕ) (A : PowerSeries R) (n : ℕ) :
+    PowerSeries.coeff n (seriesPacket N j A) = packet N j (fun k => PowerSeries.coeff k A) n := by
+  simp [seriesPacket]
+
+theorem series_packet_reconstruction [Semiring R] {N : ℕ} (hN : 0 < N)
+    (A : PowerSeries R) : ∑ j ∈ Finset.range N, seriesPacket N j A = A := by
+  ext n
+  simpa only [map_sum, seriesPacket_coeff, Finset.sum_apply] using
+    congrFun (packet_reconstruction hN (fun k => PowerSeries.coeff k A)) n
+
+theorem series_packet_refinement [Semiring R] {N M : ℕ} (hM : 0 < M)
+    (hNM : N ∣ M) (j : ℕ) (A : PowerSeries R) :
+    seriesPacket N j A =
+      ∑ r ∈ Finset.range M, if r % N = j then seriesPacket M r A else 0 := by
+  ext n
+  simpa only [map_sum, apply_ite, map_zero, seriesPacket_coeff, Finset.sum_apply,
+    Pi.zero_apply, ite_apply] using
+    congrFun (packet_refinement hM hNM j (fun k => PowerSeries.coeff k A)) n
+
+end KomorebiPaperIX.ResiduePackets

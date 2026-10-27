@@ -1,0 +1,46 @@
+Euler/EulerPackets.lean:17:2: error: Tactic `rfl` failed: The left-hand side
+  (∏ x ∈ Finset.range q, (X - C ↑x) * (C 2 * X - C ↑(2 * x + 1))) * ((X - C ↑q) * (C 2 * X - C ↑(2 * q + 1)))
+is not definitionally equal to the right-hand side
+  eulerPacket q * (X - C ↑q) * (C 2 * X - C ↑(2 * q + 1))
+
+q : ℕ
+⊢ (∏ x ∈ Finset.range q, (X - C ↑x) * (C 2 * X - C ↑(2 * x + 1))) * ((X - C ↑q) * (C 2 * X - C ↑(2 * q + 1))) =
+    eulerPacket q * (X - C ↑q) * (C 2 * X - C ↑(2 * q + 1))
+Euler/EulerPackets.lean:21:61: error: unsolved goals
+q : ℕ
+x : D
+⊢ eval x (∏ x ∈ Finset.range q, (X - ↑x) * (C 2 * X - (C 2 * ↑x + 1))) =
+    ∏ x_1 ∈ Finset.range q, (x - ↑x_1) * (2 * x - (2 * ↑x_1 + 1))
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+Euler/EulerPackets.lean:46:14: error: unsolved goals
+case succ
+x : D
+q : ℕ
+ih : eval (2 * x) (descPochhammer D (2 * q)) = 2 ^ q * eval x (eulerPacket q)
+⊢ -(eval x (eulerPacket q) * x * eval (x * 2) (↑q * 2) * 2 ^ q * 2) -
+          eval x (eulerPacket q) * x * eval (x * 2) (1 + ↑q * 2) * 2 ^ q * 2 +
+        eval x (eulerPacket q) * x ^ 2 * 2 ^ q * 4 +
+      eval x (eulerPacket q) * eval (x * 2) (↑q * 2) * eval (x * 2) (1 + ↑q * 2) * 2 ^ q =
+    -(eval x (eulerPacket q) * x * ↑q * 2 ^ q * 8) - eval x (eulerPacket q) * x * 2 ^ q * 2 +
+          eval x (eulerPacket q) * x ^ 2 * 2 ^ q * 4 +
+        eval x (eulerPacket q) * ↑q * 2 ^ q * 2 +
+      eval x (eulerPacket q) * ↑q ^ 2 * 2 ^ q * 4
+Euler/EulerPackets.lean:58:49: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 0
+  a ≥ 0
+  a - b ≥ 2
+where
+ a := ↑Q
+ b := ↑n
+Euler/EulerPackets.lean:60:21: error: Type mismatch: After simplification, term
+  hq
+ has type
+  Q ≤ q
+but is expected to have type
+  n < q

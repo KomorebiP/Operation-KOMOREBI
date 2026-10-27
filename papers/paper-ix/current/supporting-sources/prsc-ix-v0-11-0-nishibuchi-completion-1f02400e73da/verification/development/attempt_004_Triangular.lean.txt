@@ -1,0 +1,129 @@
+module
+
+public import Mathlib.Tactic
+
+@[expose] public section
+
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.Triangular
+
+variable {F : Type*} [Field F]
+
+/-- Forward substitution, with recursion only on strictly earlier entries. -/
+def solve (T : ℕ → ℕ → F) (b : ℕ → F) (n : ℕ) : F :=
+  (b n - ∑ k : Fin n, T n k * solve T b k) / T n n
+termination_by n
+
+theorem solve_step (T : ℕ → ℕ → F) (b : ℕ → F) (n : ℕ) :
+    solve T b n = (b n - ∑ k : Fin n, T n k * solve T b k) / T n n := by
+  rw [solve]
+
+@[simp] theorem solve_zero (T : ℕ → ℕ → F) (b : ℕ → F) :
+    solve T b 0 = b 0 / T 0 0 := by
+  rw [solve_step]
+  simp
+
+theorem solve_row (T : ℕ → ℕ → F) (b : ℕ → F)
+    (hT : ∀ n, T n n ≠ 0) (n : ℕ) :
+    (∑ k : Fin n, T n k * solve T b k) + T n n * solve T b n = b n := by
+  rw [solve_step T b n]
+  field_simp
+  ring
+
+theorem solve_unique (T : ℕ → ℕ → F) (b a : ℕ → F)
+    (hT : ∀ n, T n n ≠ 0)
+    (ha : ∀ n, (∑ k : Fin n, T n k * a k) + T n n * a n = b n) :
+    a = solve T b := by
+  funext n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    have hs : (∑ k : Fin n, T n k * a k) = ∑ k : Fin n, T n k * solve T b k := by
+      apply Finset.sum_congr rfl
+      intro k _
+      rw [ih k k.isLt]
+    have hr := ha n
+    rw [hs] at hr
+    have he := solve_row T b hT n
+    exact (mul_left_cancel₀ (hT n)) (add_left_cancel (hr.trans he.symm))
+
+/-- Product of the first n+1 integer diagonal entries, including row zero. -/
+def denominator (T : ℕ → ℕ → ℤ) (n : ℕ) : ℤ :=
+  ∏ r : Fin (n + 1), T r r
+
+@[simp] theorem denominator_zero (T : ℕ → ℕ → ℤ) : denominator T 0 = T 0 0 := by
+  simp [denominator]
+
+theorem denominator_succ (T : ℕ → ℕ → ℤ) (n : ℕ) :
+    denominator T (n + 1) = denominator T n * T (n + 1) (n + 1) := by
+  simp only [denominator, Fin.prod_univ_castSucc, Fin.val_castSucc, Fin.val_last]
+
+theorem denominator_dvd (T : ℕ → ℕ → ℤ) {q n : ℕ} (h : q ≤ n) :
+    denominator T q ∣ denominator T n := by
+  induction n, h using Nat.le_induction with
+  | base => exact dvd_refl _
+  | succ n _ ih =>
+    rw [denominator_succ]
+    exact dvd_mul_of_dvd_left ih _
+
+def Integral (q : ℚ) : Prop := ∃ z : ℤ, q = (z : ℚ)
+
+theorem integral_int (z : ℤ) : Integral (z : ℚ) := ⟨z, rfl⟩
+
+theorem integral_add {a b : ℚ} (ha : Integral a) (hb : Integral b) : Integral (a + b) := by
+  obtain ⟨x, rfl⟩ := ha
+  obtain ⟨y, rfl⟩ := hb
+  exact ⟨x + y, (Int.cast_add x y).symm⟩
+
+theorem integral_sub {a b : ℚ} (ha : Integral a) (hb : Integral b) : Integral (a - b) := by
+  obtain ⟨x, rfl⟩ := ha
+  obtain ⟨y, rfl⟩ := hb
+  exact ⟨x - y, (Int.cast_sub x y).symm⟩
+
+theorem integral_mul {a b : ℚ} (ha : Integral a) (hb : Integral b) : Integral (a * b) := by
+  obtain ⟨x, rfl⟩ := ha
+  obtain ⟨y, rfl⟩ := hb
+  exact ⟨x * y, (Int.cast_mul x y).symm⟩
+
+theorem integral_sum {ι : Type*} (s : Finset ι) (f : ι → ℚ)
+    (hf : ∀ i ∈ s, Integral (f i)) : Integral (∑ i ∈ s, f i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simpa using integral_int 0
+  | @insert i s hi ih =>
+    rw [Finset.sum_insert hi]
+    exact integral_add (hf i (Finset.mem_insert_self i s))
+      (ih (fun j hj => hf j (Finset.mem_insert_of_mem hj)))
+
+theorem integral_promote {d D : ℤ} {a : ℚ} (hd : d ∣ D) (ha : Integral ((d : ℚ) * a)) :
+    Integral ((D : ℚ) * a) := by
+  obtain ⟨k, rfl⟩ := hd
+  rw [Int.cast_mul, mul_right_comm]
+  exact integral_mul ha (integral_int k)
+
+/-- Denominator clearing is derived for the recursively constructed solution. -/
+theorem solve_denominator_integral (T : ℕ → ℕ → ℤ) (b : ℕ → ℤ)
+    (hT : ∀ n, T n n ≠ 0) (n : ℕ) :
+    Integral ((denominator T n : ℚ) * solve (fun i j => (T i j : ℚ)) (fun i => (b i : ℚ)) n) := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    cases n with
+    | zero =>
+      simp only [denominator_zero, solve_zero]
+      have h0 : (T 0 0 : ℚ) ≠ 0 := Int.cast_ne_zero.mpr (hT 0)
+      rw [mul_div_cancel₀ _ h0]
+      exact integral_int _
+    | succ n =>
+      rw [solve_step, denominator_succ, Int.cast_mul]
+      have hn : (T (n + 1) (n + 1) : ℚ) ≠ 0 := Int.cast_ne_zero.mpr (hT (n + 1))
+      rw [mul_div_assoc, mul_div_cancel_left₀ _ hn]
+      rw [mul_sub, Finset.mul_sum]
+      apply integral_sub (integral_mul (integral_int _) (integral_int _))
+      apply integral_sum
+      intro k _
+      rw [mul_left_comm]
+      exact integral_mul (integral_int _)
+        (integral_promote (denominator_dvd T (Nat.le_of_lt_succ k.isLt)) (ih k k.isLt))
+
+end KomorebiPaperIX.Triangular

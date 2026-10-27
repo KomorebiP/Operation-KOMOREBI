@@ -1,0 +1,144 @@
+module
+
+public import Mathlib.FieldTheory.Finite.Basic
+public import Mathlib.Data.ZMod.Units
+public import Mathlib.LinearAlgebra.SModEq.Pow
+public import Mathlib.Tactic
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.FiniteUnits
+
+variable (p : ℕ) [Fact p.Prime]
+
+/-- The actual residue map from precision L+1 to the residue field. -/
+def residue (L : ℕ) : ZMod (p^(L+1)) →+* ZMod p :=
+  ZMod.castHom (dvd_pow_self p (by omega : L+1 ≠ 0)) (ZMod p)
+
+def residueUnits (L : ℕ) : (ZMod (p^(L+1)))ˣ →* (ZMod p)ˣ :=
+  Units.map (residue p L).toMonoidHom
+
+/-- A finite Teichmuller representative obtained by one explicit exponent. -/
+def omega (L : ℕ) (a : (ZMod (p^(L+1)))ˣ) : (ZMod (p^(L+1)))ˣ :=
+  a^(p^L)
+
+def principal (L : ℕ) (a : (ZMod (p^(L+1)))ˣ) : (ZMod (p^(L+1)))ˣ :=
+  a*(omega p L a)⁻¹
+
+/-- Euler's actual unit-group exponent proves exact root-of-unity closure. -/
+theorem omega_root (L : ℕ) (a : (ZMod (p^(L+1)))ˣ) :
+    (omega p L a)^(p-1) = 1 := by
+  rw [omega, ← pow_mul, ← Nat.totient_prime_pow_succ (Fact.out : p.Prime) L]
+  exact ZMod.pow_totient a
+
+theorem omega_residue (L : ℕ) (a : (ZMod (p^(L+1)))ˣ) :
+    residueUnits p L (omega p L a) = residueUnits p L a := by
+  apply Units.ext
+  change residue p L ((a : ZMod (p^(L+1)))^(p^L)) =
+    residue p L (a : ZMod (p^(L+1)))
+  rw [map_pow, ZMod.pow_card_pow]
+
+theorem principal_residue (L : ℕ) (a : (ZMod (p^(L+1)))ˣ) :
+    residueUnits p L (principal p L a) = 1 := by
+  rw [principal, map_mul, map_inv, omega_residue, mul_inv_cancel]
+
+theorem finite_unit_decomposition (L : ℕ) (a : (ZMod (p^(L+1)))ˣ) :
+    omega p L a * principal p L a = a ∧
+    (omega p L a)^(p-1)=1 ∧
+    residueUnits p L (omega p L a)=residueUnits p L a ∧
+    residueUnits p L (principal p L a)=1 := by
+  refine ⟨?_, omega_root p L a, omega_residue p L a, principal_residue p L a⟩
+  simp [principal, mul_left_comm]
+
+/-- A residue kernel test in the ring, not field divisibility. -/
+theorem residue_zero_iff (L : ℕ) (x : ZMod (p^(L+1))) :
+    residue p L x = 0 ↔ (p : ZMod (p^(L+1))) ∣ x := by
+  constructor
+  · intro h
+    have hv : ((x.val : ℕ) : ZMod p) = 0 := by
+      have he := congrArg (residue p L) (ZMod.natCast_zmod_val x)
+      simpa only [map_natCast, h] using he
+    obtain ⟨k,hk⟩ := (ZMod.natCast_eq_zero_iff _ _).mp hv
+    refine ⟨(k : ℕ), ?_⟩
+    rw [← ZMod.natCast_zmod_val x, hk, Nat.cast_mul]
+  · rintro ⟨y, rfl⟩
+    simp [map_mul, map_natCast]
+
+/-- Raising congruent elements to p^L removes all L+1 digits of their difference. -/
+theorem power_lift_congruence (L : ℕ) (x y : ZMod (p^(L+1)))
+    (h : residue p L x = residue p L y) :
+    x^(p^L) = y^(p^L) := by
+  let I : Ideal (ZMod (p^(L+1))) := Ideal.span {(p : ZMod (p^(L+1)))}
+  have hs : SModEq I x y := by
+    rw [SModEq.sub_mem, Ideal.mem_span_singleton]
+    apply (residue_zero_iff p L (x-y)).mp
+    rw [map_sub, h, sub_self]
+  have hpI : (p : ZMod (p^(L+1))) ∈ I := Ideal.subset_span (by simp)
+  have hh := SModEq.sub_mem.mp (hs.pow_pow_add_one hpI L)
+  change x^(p^L)-y^(p^L) ∈ I^(L+1) at hh
+  dsimp [I] at hh
+  rw [Ideal.span_singleton_pow, Ideal.mem_span_singleton] at hh
+  have hz : (p : ZMod (p^(L+1)))^(L+1) = 0 := by
+    rw [← Nat.cast_pow, ZMod.natCast_self]
+  rw [hz, zero_dvd_iff, sub_eq_zero] at hh
+  exact hh
+
+theorem root_fixed_by_prime (L : ℕ) (w : (ZMod (p^(L+1)))ˣ)
+    (hw : w^(p-1)=1) : w^p=w := by
+  have hp : 1 ≤ p := (Fact.out : p.Prime).one_lt.le
+  calc
+    w^p = w^((p-1)+1) := by rw [Nat.sub_add_cancel hp]
+    _ = w^(p-1)*w := pow_succ _ _
+    _ = w := by rw [hw, one_mul]
+
+theorem root_fixed_by_prime_power (L K : ℕ) (w : (ZMod (p^(L+1)))ˣ)
+    (hw : w^(p-1)=1) : w^(p^K)=w := by
+  induction K with
+  | zero => simp
+  | succ K ih =>
+    rw [pow_succ, pow_mul, ih, root_fixed_by_prime p L w hw]
+
+/-- The lifted root is unique, rather than an arbitrary solution at each precision. -/
+theorem root_unique (L : ℕ) (w z : (ZMod (p^(L+1)))ˣ)
+    (hw : w^(p-1)=1) (hz : z^(p-1)=1)
+    (hr : residueUnits p L w = residueUnits p L z) : w=z := by
+  have he : residue p L (w : ZMod (p^(L+1))) =
+      residue p L (z : ZMod (p^(L+1))) :=
+    congrArg (fun u : (ZMod p)ˣ => (u : ZMod p)) hr
+  have hpow := power_lift_congruence p L _ _ he
+  have hwu := root_fixed_by_prime_power p L L w hw
+  have hzu := root_fixed_by_prime_power p L L z hz
+  apply Units.ext
+  simpa only [← Units.val_pow_eq_pow_val, hwu, hzu] using hpow
+
+theorem omega_unique (L : ℕ) (a w : (ZMod (p^(L+1)))ˣ)
+    (hw : w^(p-1)=1) (hr : residueUnits p L w = residueUnits p L a) :
+    w=omega p L a := by
+  apply root_unique p L w (omega p L a) hw (omega_root p L a)
+  rw [omega_residue, hr]
+
+theorem omega_mul (L : ℕ) (a b : (ZMod (p^(L+1)))ˣ) :
+    omega p L (a*b) = omega p L a * omega p L b := by
+  simp only [omega, mul_pow]
+
+theorem principal_mul (L : ℕ) (a b : (ZMod (p^(L+1)))ˣ) :
+    principal p L (a*b) = principal p L a * principal p L b := by
+  simp only [principal, omega_mul, mul_inv_rev]
+  ac_rfl
+
+/-- Reconstruction with a principal factor determines both factors uniquely. -/
+theorem decomposition_unique (L : ℕ) (a w v : (ZMod (p^(L+1)))ˣ)
+    (ha : w*v=a) (hw : w^(p-1)=1) (hv : residueUnits p L v=1) :
+    w=omega p L a ∧ v=principal p L a := by
+  have hr : residueUnits p L w=residueUnits p L a := by
+    rw [← ha, map_mul, hv, mul_one]
+  have he := omega_unique p L a w hw hr
+  refine ⟨he, ?_⟩
+  subst w
+  apply mul_left_cancel (a := omega p L a)
+  rw [ha]
+  exact (finite_unit_decomposition p L a).1.symm
+
+end KomorebiPaperIX.FiniteUnits

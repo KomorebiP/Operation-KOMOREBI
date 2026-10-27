@@ -1,0 +1,22 @@
+descPochhammer_succ_left.{u} (R : Type u) [Ring R] (n : ℕ) :
+  descPochhammer R (n + 1) = Polynomial.X * (descPochhammer R n).comp (Polynomial.X - 1)
+descPochhammer_eval_eq_descFactorial.{u} (R : Type u) [Ring R] (n k : ℕ) :
+  Polynomial.eval (↑n) (descPochhammer R k) = ↑(n.descFactorial k)
+Nat.descFactorial_eq_factorial_mul_choose (n k : ℕ) : n.descFactorial k = k.factorial * n.choose k
+Finset.sum_range_succ'.{u_4} {M : Type u_4} [AddCommMonoid M] (f : ℕ → M) (n : ℕ) :
+  ∑ k ∈ Finset.range (n + 1), f k = ∑ k ∈ Finset.range n, f (k + 1) + f 0
+add_pow.{u_1} {R : Type u_1} [CommSemiring R] (x y : R) (n : ℕ) :
+  (x + y) ^ n = ∑ m ∈ Finset.range (n + 1), x ^ m * y ^ (n - m) * ↑(n.choose m)
+PadicInt.coe_sum.{u_1} {p : ℕ} [hp : Fact (Nat.Prime p)] {α : Type u_1} (s : Finset α) (f : α → ℤ_[p]) :
+  ↑(∑ z ∈ s, f z) = ∑ z ∈ s, ↑(f z)
+PadicInt.coe_add {p : ℕ} [hp : Fact (Nat.Prime p)] (z1 z2 : ℤ_[p]) : ↑(z1 + z2) = ↑z1 + ↑z2
+PadicInt.coe_natCast {p : ℕ} [hp : Fact (Nat.Prime p)] (n : ℕ) : ↑↑n = ↑n
+Finset.mul_sum.{u_1, u_4} {ι : Type u_1} {R : Type u_4} [NonUnitalNonAssocSemiring R] (s : Finset ι) (f : ι → R)
+  (a : R) : a * ∑ i ∈ s, f i = ∑ i ∈ s, a * f i
+Polynomial.eval_mul.{u} {R : Type u} [CommSemiring R] {p q : Polynomial R} {x : R} :
+  Polynomial.eval x (p * q) = Polynomial.eval x p * Polynomial.eval x q
+Nat.choose_succ_succ (n k : ℕ) : n.succ.choose k.succ = n.choose k + n.choose k.succ
+Check.lean:15:7: error(lean.unknownIdentifier): Unknown constant `Nat.succ_mul_choose_eq`
+Check.lean:16:7: error(lean.unknownIdentifier): Unknown constant `Nat.mul_choose_eq`
+mul_eq_mul_right_iff.{u_1} {M₀ : Type u_1} [MulZeroClass M₀] [IsRightCancelMulZero M₀] {a b c : M₀} :
+  a * c = b * c ↔ a = b ∨ c = 0

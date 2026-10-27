@@ -1,0 +1,133 @@
+module
+
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import Mathlib.Tactic.Ring
+public import Mathlib.Tactic
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.Companion
+
+open Matrix Polynomial
+
+variable {R : Type*} [CommRing R] {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+/-- The actual matrix orbit, not an assumed recurrence certificate. -/
+def orbit (C : Matrix ι ι R) (v : ι → R) (n : ℕ) : ι → R :=
+  (C ^ n) *ᵥ v
+
+/-- Arithmetic subsequence with step N and initial offset j. -/
+def packet (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) : ι → R :=
+  orbit C v (N*k+j)
+
+@[simp] theorem orbit_zero (C : Matrix ι ι R) (v : ι → R) : orbit C v 0 = v := by
+  simp [orbit]
+
+theorem orbit_succ (C : Matrix ι ι R) (v : ι → R) (n : ℕ) :
+    orbit C v (n+1) = C *ᵥ orbit C v n := by
+  simp [orbit, pow_succ', mulVec_mulVec]
+
+/-- Any supplied sequence satisfying the source dynamics equals the matrix orbit. -/
+theorem orbit_of_recurrence (C : Matrix ι ι R) (v : ℕ → ι → R)
+    (hv : ∀ n, v (n+1) = C *ᵥ v n) (n : ℕ) : v n = orbit C (v 0) n := by
+  induction n with
+  | zero => simp
+  | succ n ih => rw [hv, ih, orbit_succ]
+
+/-- Jump formula, without invertibility, eigenvalue, or positive-step assumptions. -/
+theorem companion_jump (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) :
+    packet C v N j k = (C^j) *ᵥ ((C^N)^k *ᵥ v) := by
+  simp only [packet, orbit, mulVec_mulVec, ← pow_mul, ← pow_add]
+  rw [Nat.add_comm]
+
+theorem packet_as_jump_orbit (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) :
+    packet C v N j k = orbit (C^N) (orbit C v j) k := by
+  simp only [packet, orbit, mulVec_mulVec, ← pow_mul, ← pow_add]
+
+theorem packet_step (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) :
+    packet C v N j (k+1) = (C^N) *ᵥ packet C v N j k := by
+  rw [packet_as_jump_orbit, packet_as_jump_orbit, orbit_succ]
+
+/-- Repeated jumps starting at any packet state. -/
+theorem packet_advance (C : Matrix ι ι R) (v : ι → R) (N j k a : ℕ) :
+    packet C v N j (k+a) = ((C^N)^a) *ᵥ packet C v N j k := by
+  simp only [packet_as_jump_orbit, orbit, mulVec_mulVec]
+  rw [← mul_assoc, ← pow_add, Nat.add_comm a k]
+
+/-- An arithmetic packet of an arithmetic packet is the expected finer address. -/
+theorem packet_refinement (C : Matrix ι ι R) (v : ι → R) (N j M s k : ℕ) :
+    packet C v N j (M*k+s) = packet C v (N*M) (N*s+j) k := by
+  simp only [packet]
+  congr 1
+  ring
+
+/-- A zero step is a constant subsequence. -/
+theorem packet_zero_step (C : Matrix ι ι R) (v : ι → R) (j k : ℕ) :
+    packet C v 0 j k = orbit C v j := by simp [packet]
+
+/-- Explicit characteristic-polynomial annihilation in the matrix algebra. -/
+theorem charpoly_sum_powers (D : Matrix ι ι R) :
+    (∑ a ∈ Finset.range (Fintype.card ι+1), D.charpoly.coeff a • D^a) = 0 := by
+  nontriviality R
+  have h := D.aeval_self_charpoly
+  rw [Polynomial.aeval_eq_sum_range, Matrix.charpoly_natDegree_eq_dim] at h
+  exact h
+
+/-- Leading coefficient at the matrix dimension, including the zero ring. -/
+theorem charpoly_coeff_dimension (D : Matrix ι ι R) :
+    D.charpoly.coeff (Fintype.card ι) = 1 := by
+  nontriviality R
+  simpa only [Polynomial.leadingCoeff, Matrix.charpoly_natDegree_eq_dim] using
+    D.charpoly_monic.leadingCoeff
+
+/-- Cayley--Hamilton applied to the actual jump states, not to an assumed scalar recurrence. -/
+theorem packet_charpoly_annihilation (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) :
+    (∑ a ∈ Finset.range (Fintype.card ι+1),
+      (C^N).charpoly.coeff a • packet C v N j (k+a)) = 0 := by
+  have h := congrArg (fun A : Matrix ι ι R => A *ᵥ packet C v N j k)
+    (charpoly_sum_powers (C^N))
+  simp only [Matrix.sum_mulVec, Matrix.smul_mulVec, Matrix.zero_mulVec] at h
+  simpa only [packet_advance] using h
+
+/-- The concrete order-at-most-d vector recurrence, with an explicit monic leading term. -/
+theorem packet_charpoly_recurrence (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) :
+    packet C v N j (k+Fintype.card ι) =
+      -∑ a ∈ Finset.range (Fintype.card ι),
+        (C^N).charpoly.coeff a • packet C v N j (k+a) := by
+  have h := packet_charpoly_annihilation C v N j k
+  rw [Finset.sum_range_succ, charpoly_coeff_dimension, one_smul] at h
+  exact eq_neg_of_add_eq_zero_right h
+
+/-- Every coordinate of the packet obeys the same characteristic recurrence. -/
+theorem packet_coordinate_recurrence (C : Matrix ι ι R) (v : ι → R) (N j k : ℕ) (i : ι) :
+    packet C v N j (k+Fintype.card ι) i =
+      -∑ a ∈ Finset.range (Fintype.card ι),
+        (C^N).charpoly.coeff a * packet C v N j (k+a) i := by
+  have h := congrFun (packet_charpoly_recurrence C v N j k) i
+  simpa using h
+
+/-- Source-sequence version of the jump theorem under the actual first-order recurrence. -/
+theorem source_companion_jump (C : Matrix ι ι R) (v : ℕ → ι → R)
+    (hv : ∀ n, v (n+1) = C *ᵥ v n) (N j k : ℕ) :
+    v (N*k+j) = (C^j) *ᵥ ((C^N)^k *ᵥ v 0) := by
+  rw [orbit_of_recurrence C v hv]
+  exact companion_jump C (v 0) N j k
+
+/-- Source-sequence version of the characteristic recurrence. -/
+theorem source_charpoly_recurrence (C : Matrix ι ι R) (v : ℕ → ι → R)
+    (hv : ∀ n, v (n+1) = C *ᵥ v n) (N j k : ℕ) :
+    v (N*(k+Fintype.card ι)+j) =
+      -∑ a ∈ Finset.range (Fintype.card ι),
+        (C^N).charpoly.coeff a • v (N*(k+a)+j) := by
+  calc
+    _ = packet C (v 0) N j (k+Fintype.card ι) := orbit_of_recurrence C v hv _
+    _ = _ := packet_charpoly_recurrence C (v 0) N j k
+    _ = _ := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro a _
+      rw [packet, ← orbit_of_recurrence C v hv]
+
+end KomorebiPaperIX.Companion

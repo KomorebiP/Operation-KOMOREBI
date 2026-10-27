@@ -1,0 +1,11 @@
+import CrossRadixComplexityProfile
+
+#print axioms KomorebiCrossRadix.primePowerShellFormula_eq_shell
+#print axioms KomorebiCrossRadix.shellVec_mobius_width
+#print axioms KomorebiCrossRadix.primePowerWidths_adjoin_eq_top
+#print axioms KomorebiCrossRadix.primePowerWidthSet_least_algebra_generating
+#print axioms KomorebiCrossRadix.primePowerDivisors_card_eq_Omega
+#print axioms KomorebiCrossRadix.primeLocalShellFormula_eq_shell
+#print axioms KomorebiCrossRadix.primeLocalWidthFormula_eq_width
+#print axioms KomorebiCrossRadix.divisorCoordinateAlgebra_prime_product
+#print axioms KomorebiCrossRadix.crossRadix_complexity_ledger

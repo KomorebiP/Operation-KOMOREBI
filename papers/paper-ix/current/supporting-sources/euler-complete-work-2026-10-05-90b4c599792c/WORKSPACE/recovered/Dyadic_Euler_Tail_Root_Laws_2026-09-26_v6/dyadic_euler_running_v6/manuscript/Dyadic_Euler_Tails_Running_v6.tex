@@ -1,0 +1,3944 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.88in,headheight=15pt,headsep=18pt,footskip=27pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{lmroman10-regular.otf}[BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]
+\setsansfont{lmsans10-regular.otf}[BoldFont=lmsans10-bold.otf,ItalicFont=lmsans10-oblique.otf]
+\setmonofont{DejaVu Sans Mono}[Scale=0.79]
+\usepackage{amsmath,amssymb,mathtools,needspace}
+\usepackage{unicode-math}
+\setmathfont{latinmodern-math.otf}
+\usepackage{microtype}
+\usepackage{booktabs,longtable,array,calc,multirow}
+\usepackage{graphicx,float,caption}
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{breaklines=true,breakanywhere=true,fontsize=\footnotesize}
+\usepackage{xurl,seqsplit}
+\usepackage{fancyhdr,titlesec,etoolbox}
+\usepackage{hyperref,bookmark}
+\hypersetup{hidelinks,bookmarksdepth=2,pdftitle={Dyadic Euler Tails: A Running Research Record},pdfauthor={Komorebi P.}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily Dyadic Euler Tails}
+\fancyhead[R]{\small\sffamily Research record \textbar\ v6}
+\fancyfoot[L]{\small\sffamily Komorebi P.}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+\titleformat{\section}{\Large\sffamily\bfseries}{}{0pt}{}
+\titleformat{\subsection}{\large\sffamily\bfseries}{}{0pt}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{22pt}{12pt}
+\titlespacing*{\subsection}{0pt}{16pt}{7pt}
+\titlespacing*{\subsubsection}{0pt}{12pt}{5pt}
+\setcounter{secnumdepth}{-1}
+\setcounter{tocdepth}{1}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt plus 1pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.13}
+\AtBeginEnvironment{longtable}{\small}
+\captionsetup{font=small,labelfont=bf}
+\linespread{1.04}
+\allowdisplaybreaks[2]
+\clubpenalty=10000
+\widowpenalty=10000
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\passthrough}[1]{#1}
+\providecommand{\pandocbounded}[1]{#1}
+\DeclareMathOperator{\sech}{sech}
+\DeclareMathOperator{\Res}{Res}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{0.65in}
+{\sffamily\large OPERATION KOMOREBI\par}
+\vspace{0.55in}
+{\sffamily\fontsize{31}{36}\selectfont\bfseries Dyadic Euler Tails\par}
+\vspace{0.20in}
+{\sffamily\fontsize{20}{25}\selectfont A Running Research Record\par}
+\vspace{0.38in}
+{\large The complete version-5 reading record, including the recovered earlier proof notes, with version 6 appended. Exact dyadic tail valuations and the role of binary carries and unit coefficients.\par}
+\vspace{0.45in}
+\[
+\mathcal T_{r-1}(N)=\kappa_r\binom{2N}{2r}\,2^{\mu_r}G_r(N-r)
+\]
+\[
+r=b2^L-j,\qquad b\text{ odd},\qquad j=\deg W_r
+\]
+\vfill
+{\large Komorebi P.\par}
+\vspace{0.14in}
+{\sffamily Version 6 \textbar\ 26 September 2026\par}
+\vspace{0.35in}
+\begin{minipage}{0.94\textwidth}
+\small
+Working research manuscript. Mathematical proofs, whole-ball coefficient certificates and sampled checks are distinguished. No Lean verification or historical-priority assessment is claimed. The larger irregular terminal labels remain outside the completed classification.
+\end{minipage}
+\end{titlepage}
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\phantomsection
+\section{Version 6 reading map and current boundary}\label{version-6-reading-map-and-current-boundary}
+
+\textbf{Operation Komorebi · Komorebi P. · 26 September 2026}
+
+This running manuscript preserves the complete version-5 reading record, including all recovered earlier proof notes, and appends Continuation VI. The earlier reading maps and unresolved-status descriptions remain historical statements at their stated version. The current scope is the map below and the explicitly quantified theorems of Continuation VI.
+
+The new result extends the exact dyadic valuation classification from pure shifted walls to arbitrary first omitted depths with prepared-polynomial degree at most 64. It also identifies an odd-multiplier dependence that the pure-wall examples could not reveal.
+
+\phantomsection
+\subsection{Current result map}\label{current-result-map}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Question
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Current result
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Location
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Uniform precision after retaining depths \(0,\ldots,M\) & Optimal exponent \(4M+3\), unchanged & Foundations and Continuation IV \\
+Whole tail at any first omitted depth \(r\) & Exact finite-polynomial valuation reduction & Continuation IV \\
+Canonical carry geometry of arbitrary \(r\) & \(r=b2^L-j\), where \(j\) is the last minimizing carry index and \(b\) is odd & Continuation VI, Section 2 \\
+Regular terminal labels & Complete exact valuation atlas for every multiplier & Continuation VI, Section 3 \\
+Irregular labels \(17,33,49\) & Parameter-uniform coefficient certificates in every exceptional phase & Continuation VI, Sections 5--8 \\
+Every depth with \(\deg W_r\le64\) & Complete constant-or-simple-root dyadic valuation atlas & Continuation VI, Section 9 \\
+Every \(r\) with at most 195 binary ones & Included by the degree bound, without an upper size limit & Continuation VI, Corollary VI.9 \\
+Repeated dyadic roots in this classified region & Excluded by the complete atlases & Continuation VI, Section 9 \\
+Repeated roots at larger irregular terminal labels & Not excluded or fully classified & Current research boundary \\
+Repeated roots over an algebraic extension & Not excluded by a dyadic-only atlas & Current research boundary \\
+Lean checking or historical priority & Neither claimed & All continuation audit sections \\
+\end{longtable}
+
+A classification on \(\mathbb Z_2\) must not be called global squarefreeness. A prepared polynomial may have roots in an algebraic extension that the dyadic argument domain does not see. The resultant criterion in Continuation V remains a separate certificate of squarefreeness when its nonzero valuation is established.
+
+\phantomsection
+\subsection{Notation added in this continuation}\label{notation-added-in-this-continuation}
+
+The target remains \(E_{2N}\). The last retained depth is \(M\), and the first omitted depth is \(r=M+1\). A nonempty original tail has offset \(x=N-r\ge0\); its analytic residual is also evaluated throughout \(\mathbb Z_2\).
+
+The finite carry cost is
+
+\[
+\lambda_r(q)=3q+s_2(r+q)-s_2(r),\qquad
+\mu_r=\min_q\lambda_r(q),\qquad
+j=\max\{q:\lambda_r(q)=\mu_r\}.
+\]
+
+For a nonconstant residual, the terminal tuple is
+
+\[
+L=v_2(r+j),\qquad b=(r+j)/2^L,\qquad \delta=L-L_j.
+\]
+
+The label \(j\) is not the Euler row, \(L\) is not the truncation depth, and \(b\) is not a Bernoulli number. The tuple must be determined from the \textbf{last global carry minimum}, not from the first apparent local wall.
+
+\phantomsection
+\subsection{New distinctions preserved in v6}\label{new-distinctions-preserved-in-v6}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Tempting inference
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Correct statement
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Pure shifted-wall data cover every arithmetic depth & An arbitrary depth also has an odd multiplier; the terminal-carry theorem and parameter certificates are needed \\
+Equal carry weights imply equal root geometry & False: at label 17 and distance 11, only \(b\equiv1,41\pmod{64}\) have two roots \\
+A parity-ball cutoff proves a global Gauss cutoff & The new uniform cutoff is coefficientwise after splitting parity \\
+A finite-precision multiplier template defines an exact analytic family in the multiplier & Not asserted; the proof concerns actual positive integer multipliers with the stated terminal label \\
+Classifying all \(r<2^{195}\) requires enumerating them & Here it follows from the general degree bound and the degree-64 classification; the audit did not enumerate that interval \\
+\end{longtable}
+
+\phantomsection
+\subsection{Evidence in this release}\label{evidence-in-this-release}
+
+The incoming v5 ledger matched all 124 recorded file hashes. Seven new retained bounded scientific executions completed successfully: five new v6 audits, a fresh v4-foundation rerun, and a fresh v5 distribution/resultant rerun. All seven execution manifests passed the retained validator.
+
+The new audits include 4,539 regular whole-ball certificates and 1,163 parameter-uniform irregular leaf certificates. These are distinct from sampled point checks. The proof of the finite-precision multiplier template extends the latter certificates to all admissible odd multipliers. The exact scope and nonclaims appear alongside the results.
+
+One document-figure export initially failed because the output directory was not writable from the user-visible Python process. The directory permission was corrected and both figures were regenerated. No scientific calculation was lost or changed. Earlier v5 computational timeouts remain recorded in the historical notes.
+
+\phantomsection
+\subsection{How the history is retained}\label{how-the-history-is-retained}
+
+The next part is the complete v5 Markdown reading record, preserved without rewriting its mathematical content. Its references to the then-current frontier are historical. Continuation VI is appended after that record and its reproduction appendix. Historical versions are also retained as separate source files in the bundle.
+
+\clearpage
+
+\phantomsection
+\section{Preserved version-5 reading record}\label{preserved-version-5-reading-record}
+
+\begin{quote}
+\textbf{Version boundary.} The complete prior reading record follows. Its ``current'' status statements refer to version 5. The current version-6 scope is stated in the preceding map and proved in the appended Continuation VI.
+\end{quote}
+
+\phantomsection
+\section{Reading map and current claim boundary}\label{reading-map-and-current-claim-boundary}
+
+This is a cumulative record of the dyadic Euler-tail investigation. It includes a short reconstruction of the original matrix and edge mechanisms, the complete recovered proof notes from versions 1 through 4, and the new version-5 continuation. The source bundle retains the associated programs, exact result files, certificate atlases and audit logs. Large machine-readable certificate tables are supplied in the bundle rather than printed as hundreds of redundant rows.
+
+The historical notes are retained to preserve the development, not to erase corrections. Where a historical interpretation conflicts with the correction register or a later theorem, the later statement governs. Each continuation retains its own equation-numbering convention. Version 4 is the consolidated mathematical base. Version 5 adds certified stopping bounds, exact precision distributions and the next irregular-wall classifications.
+
+\phantomsection
+\subsection{Current result map}\label{current-result-map-1}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Question
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Current answer
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Main location
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Uniform precision after depth \(M\) & \(2^{4M+3}\), optimally over all Euler rows & Foundations and Continuation IV \\
+Exact weight of one omitted term & \(4m-1+v_2\binom Nm\) for target \(E_{2N}\) & Foundations \\
+Whole remainder at any depth & Exact finite-polynomial reduction & Continuation IV, Section 8 \\
+Regular shifted walls & Exact root-emergence and valuation laws & Continuation IV, Sections 4--6 \\
+Irregular walls \(17,33,49\) & Complete coefficient certificates at the finite exceptional distances & Continuations IV and V \\
+Shifted-wall labels through 64 & Classified at every valid scale & Continuation V \\
+Frequency of extra cancellation & Exact rational generating function from a completed atlas & Continuation V \\
+Mean precision after complete wall separation & \(4\cdot2^L\) at \(r=2^L-j\) & Continuation V \\
+Guaranteed finite root resolution & Explicit bound when the prepared polynomial has nonzero resultant with its derivative & Continuation V \\
+Every arbitrary depth explicitly classified & Not established & Continuing ledger \\
+Universal simplicity of every residual polynomial & Not established & Continuing ledger \\
+Lean checking in these continuations & None performed & Audit boundary \\
+\end{longtable}
+
+\phantomsection
+\subsection{Notation that must not be conflated}\label{notation-that-must-not-be-conflated}
+
+The original Euler subscript is \(2N\). The reconstruction depth is \(m\). A truncation retains \(m=0,\ldots,M\), and \(r=M+1\) is its first omitted depth. The variable \(q\) indexes the residual layers after the first omitted summand has been factored out. At a shifted wall, \(j\) labels the dominant residual layer and \(r=2^L-j\). The distance beyond that wall is \(\delta=L-L_j\). Finally \(x=N-r\) is a row offset, not a reconstruction depth.
+
+The kernel coefficients are \(\beta_m\) and \(\kappa_m\). The notation \(\beta_m\) here does not denote a value of the Dirichlet beta function. The dyadic source \(A(N)\) is also distinct from the wall constant \(A_j\) used in the older notes.
+
+Throughout, \(v_2(2)=1\) and \(v_2(0)=\infty\). A zero residue modulo \(2^P\) certifies only a valuation of at least \(P\). Root residues identify finite prefixes of dyadic numbers. They are not claims that the roots are rational integers.
+
+\phantomsection
+\subsection{Correction register}\label{correction-register}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Earlier interpretation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Correct statement
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A factorial or complex beta-function simplification alone explains the \(p\)-adic globalization & The operative construction is a filtered triangular inverse, followed by integral normalization and tail control \\
+The odd-prime literal sum can simply use \(p=2\) & Its even generating function has a double zero. The dyadic construction first removes that obstruction and uses a different source \\
+Two powers of two per retained layer is the sharp dyadic rate & It is a coarse floor. Combining the inverse coefficient with the factorial gives the optimal exponent \(4M+3\) \\
+Carry boundaries are merely near powers of two & Adjacent weights obey the exact increment \(4+v_2(N-m)-v_2(m+1)\) \\
+Minimum-weight clusters always contain at most two terms & The preserved proof gives a three-minimum counterexample at \(N=2^{68}\) \\
+A multiple residual root automatically lifts & It may disappear after the next normalization. Root lifting requires an appropriate coefficient certificate \\
+\(\delta>2d_i\) is an exact emergence threshold & It is sufficient. At a regular wall the exact condition is \(\delta\ge d_i+k_i\) \\
+Moving beyond a wall forces monotone root counts & False for irregular walls. The size-33 family has one, zero, then two roots at distances 26, 27 and 28 \\
+A finite coefficient zero establishes a repeated root or exact zero & It supplies only a precision lower bound. Unresolved branches remain unresolved \\
+The odd-edge factor \(1-\varepsilon_pp^n\) may always be dropped & It is automatically one modulo \(p^k\) only when \(k\le n\) \\
+\end{longtable}
+
+\phantomsection
+\subsection{Evidence and append-only policy}\label{evidence-and-append-only-policy}
+
+The incoming v4 archive was restored from mounted bytes. All 42 entries in its integrity ledger matched. Its main audit was rerun successfully, and the rerun output is retained separately. Versions 1 through 3 remain historical evidence unless a new test explicitly covers them. The corrected v4 proof and the new v5 proofs are mathematical arguments, not claims of theorem-prover acceptance.
+
+New future continuations should be appended after Continuation V. They should identify any superseded statement, retain the original note, record a precise proof boundary, and save the executable checks with their actual ranges. The manuscript and its Markdown/LaTeX sources are versioned artifacts, not a promise of background or automatic updates.
+
+\clearpage
+
+\phantomsection
+\section{Foundations. From filtered matrices to dyadic carry walls}\label{foundations.-from-filtered-matrices-to-dyadic-carry-walls}
+
+This chapter reconstructs the mathematical starting point so the later notes can be read without the preceding conversation. The three constructions below are related, but they are not interchangeable.
+
+\phantomsection
+\subsection{The odd-prime matrix and successive cancellation}\label{the-odd-prime-matrix-and-successive-cancellation}
+
+Use signed Euler numbers
+
+\[
+\operatorname{sech}t=\sum_{n\ge0}E_n\frac{t^n}{n!},
+\qquad E_0=1,\ E_2=-1,\ E_4=5,\ E_6=-61.
+\]
+
+For an odd positive integer \(p\), define
+
+\[
+S_n(p)=\sum_{a=0}^{p-1}(-1)^a(2a+1)^n.
+\]
+
+The finite geometric sum and its even part give
+
+\[
+\sum_{N\ge0}S_{2N}(p)\frac{t^{2N}}{(2N)!}
+=\cosh^2(pt)\operatorname{sech}t.
+\]
+
+Therefore the even sequences satisfy \(S=T(p)E\), with the beginning of the infinite matrix
+
+\[
+T(p)=
+\begin{pmatrix}
+1&0&0&0&\cdots\\
+2p^2&1&0&0&\cdots\\
+8p^4&12p^2&1&0&\cdots\\
+32p^6&120p^4&30p^2&1&\cdots\\
+\vdots&\vdots&\vdots&\vdots&\ddots
+\end{pmatrix}.
+\]
+
+Every row is finite. The diagonal is one, so forward substitution constructs the inverse without an analytic convergence assumption. Multiplication by \(\operatorname{sech}^2(pt)\) identifies it explicitly. If the positive tangent numbers satisfy
+
+\[
+\tan z=\sum_{m\ge0}T_{2m+1}\frac{z^{2m+1}}{(2m+1)!},
+\]
+
+then
+
+\[
+\boxed{
+E_n=\sum_{m=0}^{n/2}(-1)^mT_{2m+1}
+\binom n{2m}p^{2m}S_{n-2m}(p)
+}\qquad(n\text{ even}).
+\]
+
+Each inverse subdiagonal contains \(p^{2m}\). When \(p\) is an odd prime, retaining through depth \(M\) gives a congruence modulo \(p^{2M+2}\) uniformly in the row. At any fixed precision, only finitely many inverse diagonals can matter, even though the same operator describes all rows.
+
+\phantomsection
+\subsubsection{One exact cancellation row}\label{one-exact-cancellation-row}
+
+The forward equations are
+
+\[
+\begin{aligned}
+S_6&=E_6+30p^2E_4+120p^4E_2+32p^6E_0,\\
+S_4&=E_4+12p^2E_2+8p^4E_0,\\
+S_2&=E_2+2p^2E_0,\qquad S_0=E_0.
+\end{aligned}
+\]
+
+Subtracting \(30p^2S_4\) removes \(E_4\), adding \(240p^4S_2\) removes the induced \(E_2\) term, and subtracting \(272p^6S_0\) removes the final constant term. The result is
+
+\[
+\boxed{E_6=S_6-30p^2S_4+240p^4S_2-272p^6S_0.}
+\]
+
+At \(p=3\), the power sums are \(S_0=1\), \(S_2=17\), \(S_4=545\), and \(S_6=14897\). Directly,
+
+\[
+14897-147150+330480-198288=-61.
+\]
+
+The successive cancellation is exact algebra. Its increasing prime divisibility is what makes truncation a controlled \(p\)-adic approximation.
+
+\phantomsection
+\subsection{The odd-prime edge tower}\label{the-odd-prime-edge-tower}
+
+For an odd prime \(p\), put \(\varepsilon_p=(-1)^{(p-1)/2}\) and
+
+\[
+q_p(a)=\frac{a^{p-1}-1}{p}\qquad(p\nmid a).
+\]
+
+At an edge \(n=\lambda(p-1)-2r\ge2\), define the unit reciprocal moments
+
+\[
+R_{s,\ell}(p)=\sum_{\substack{0\le a<p\\p\nmid(2a+1)}}
+\frac{(-1)^a q_p(2a+1)^\ell}{(2a+1)^{2s}}.
+\]
+
+For a unit base \(b\),
+
+\[
+b^{\lambda(p-1)-2s}
+=\frac{(1+pq_p(b))^\lambda}{b^{2s}}.
+\]
+
+Substitute this exact binomial expansion into the inverse matrix formula. The unique nonunit base \(b=p\) contributes a combined term \(\varepsilon_pp^nE_n\). Thus
+
+\[
+\begin{aligned}
+(1-\varepsilon_pp^n)E_n
+={}&\sum_{m=0}^{n/2}\sum_{\ell=0}^{\lambda}
+(-1)^mT_{2m+1}\binom n{2m}\binom\lambda\ell\\
+&\hspace{16mm}\cdot p^{2m+\ell}R_{r+m,\ell}(p).
+\end{aligned}
+\]
+
+At precision \(p^k\), the visible retained region is \(2m+\ell<k\). The prefactor on the left can be omitted automatically only when \(k\le n\). This is the higher odd-prime edge construction. It is not the dyadic root problem developed in the remainder of this record.
+
+\phantomsection
+\subsection{Where factorial lanes enter}\label{where-factorial-lanes-enter}
+
+A separate residue-section example clarifies the role of Pochhammer cancellation. Consider
+
+\[
+\mathcal S_{10,4}(t)=\sum_{n\ge0}\frac{t^{10n+4}}{(10n+4)!}.
+\]
+
+The exact factorial-lane decomposition is
+
+\[
+(10n+4)!=4!\prod_{r=5}^{14}(r)_{n;10}
+=4!\,10^{10n}\prod_{r=5}^{14}\left(\frac r{10}\right)_n.
+\]
+
+The parameter \(r/10=1\) supplies \((1)_n=n!\). After removing the forced \(t^4/4!\) term and using the divided-power basis \(t^{10n}/(10n)!\), the normalized coefficient is
+
+\[
+g_n=\frac{4!(10n)!}{(10n+4)!}
+=\frac{24}{(10n+1)(10n+2)(10n+3)(10n+4)}.
+\]
+
+Every denominator factor is a unit at five. Consequently \(v_5(g_n)=0\). The reciprocal divided-power sequence is determined by
+
+\[
+C_0=1,\qquad
+C_n=-\sum_{q=0}^{n-1}\binom{10n}{10q}g_{n-q}C_q.
+\]
+
+The integral lower-triangular recurrence preserves \(5\)-adic integrality. Here integrality refers to the divided-power coordinates. It must not be confused with integrality of the ordinary Taylor coefficients, whose factorial denominators remain in the basis. Strong finite-difference claims require their own hypotheses and do not follow merely from this cancellation.
+
+\phantomsection
+\subsection{Why the dyadic source is different}\label{why-the-dyadic-source-is-different}
+
+At \(p=2\), the literal alternating sum is \(1-3^n\). Its even generating function is
+
+\[
+\cosh t-\cosh3t=-2\sinh(2t)\sinh t.
+\]
+
+Its constant coefficient vanishes, and the first nonzero term has degree two. A unit-diagonal inverse cannot be obtained by blindly substituting two into the odd literal-sum transform. Removing the double-zero factor instead leads to
+
+\[
+A(N)=\frac{3^{2N+2}-1}{4(2N+1)(2N+2)},
+\] \[
+\sum_{N\ge0}A(N)\frac{t^{2N}}{(2N)!}
+=\frac{\sinh(2t)\sinh t}{2t^2}.
+\]
+
+Its inverse factor is \(4t^2/\sinh^2(2t)\) because the product is \(\operatorname{sech}t\). This gives the dyadic reconstruction used in all subsequent continuations.
+
+The numerator and denominator of \(A(N)\) have the same power of two:
+
+\[
+v_2(3^{2N+2}-1)=2+v_2(2N+2)
+=v_2\bigl(4(2N+1)(2N+2)\bigr).
+\]
+
+Thus \(A(N)\) is a dyadic unit. For the inverse,
+
+\[
+\kappa_m=\beta_m2^{2m}(2m)!
+=-2^{4m}(2m-1)B_{2m}.
+\]
+
+The classical Bernoulli denominator theorem gives \(v_2(B_{2m})=-1\) {[}S1{]}, hence the exact positive-depth kernel weight is \(4m-1\). This is where the apparent separate digit-sum and factorial losses combine into the sharp four-bit rate.
+
+\phantomsection
+\subsection{The sharp uniform bound and its limitation}\label{the-sharp-uniform-bound-and-its-limitation}
+
+For target \(E_{2N}\), each omitted term has exact valuation
+
+\[
+w_m(N)=4m-1+v_2\binom Nm.
+\]
+
+Retaining \(m\le M\) therefore yields
+
+\[
+\boxed{v_2\mathcal T_M(N)\ge4M+3.}
+\]
+
+At \(N=M+1\) there is exactly one omitted term. Its binomial coefficient and source value are one, so equality holds. No stronger exponent works uniformly over all rows for that same truncation.
+
+This does not determine a particular whole tail. When several minimum-weight terms occur, their unit residues can cancel. The later research concerns exactly that additional cancellation.
+
+\phantomsection
+\subsection{Exact binary boundaries}\label{exact-binary-boundaries}
+
+For consecutive positive depths,
+
+\[
+\boxed{w_{m+1}(N)-w_m(N)
+=4+v_2(N-m)-v_2(m+1).}
+\]
+
+Put \(a=v_2(N+1)\) and \(t=v_2(m+1)\). If \(t<a\), the increment is four. If \(t>a\), it is \(4+a-t\). If \(t=a\), write \(N+1=2^aA\), \(m+1=2^aB\) with \(A,B\) odd. Then the increment is \(4+v_2(A-B)\ge5\).
+
+An adjacent tie therefore occurs exactly when
+
+\[
+\boxed{v_2(m+1)=v_2(N+1)+4.}
+\]
+
+Larger binary jumps can create nonadjacent ties. At \(N=512\), the increments from depths 510 to 511 and then to 512 are \(+5,-5\). The two outside weights are equal while the middle one is higher.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/01_carry_residual.pdf}
+\caption{The carry contribution after removing the linear kernel weight. This makes the binary structure visible rather than hiding it under the slope-four baseline.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/02_nonadjacent_collision.pdf}
+\caption{A nonadjacent minimum collision near the endpoint of the row \(N=512\). These are individual term weights, not whole-tail valuations.}
+\end{figure}
+
+The following historical continuations start at this distinction between a minimum term weight and the valuation of their sum.
+
+\clearpage
+
+\phantomsection
+\section{Continuation I. Binary-edge root laws}\label{continuation-i.-binary-edge-root-laws}
+
+\begin{quote}
+\textbf{Historical record.} Recovered v1 proof note. Its finite execution counts are historical unless explicitly covered by the fresh reruns. Later continuations generalize the root law.
+\end{quote}
+
+Research continuation, 26 September 2026.
+
+\textbf{Status.} The results below have an explicit mathematical proof and an executed exact-arithmetic audit. They have not been compiled in Lean in this run. No historical-priority claim is made. The existing optimal uniform truncation theorem is an input, not a new result of this continuation.
+
+\phantomsection
+\subsection{1. Definitions and existing identities}\label{definitions-and-existing-identities}
+
+Use signed Euler numbers, with E\_0=1, E\_2=-1, E\_4=5, and
+
+\[
+\operatorname{sech}t=\sum_{n\ge0}E_n t^n/n!.
+\]
+
+Index a row by N, so its target is E\_(2N). Set
+
+\[
+A(N)=\frac{3^{2N+2}-1}{4(2N+1)(2N+2)},\qquad
+\left(\frac z{\sinh z}\right)^2=\sum_{m\ge0}\beta_mz^{2m},
+\]
+
+\[
+\kappa_m=2^{2m}(2m)!\beta_m,\qquad \kappa_0=1.
+\]
+
+The existing reconstruction is
+
+\[
+E_{2N}=\sum_{m=0}^N\kappa_m\binom{2N}{2m}A(N-m).
+\]
+
+For m\textgreater=1,
+
+\[
+\beta_m=-\frac{2^{2m}(2m-1)B_{2m}}{(2m)!},\quad
+v_2(\beta_m)=s_2(m)-1,\quad v_2(\kappa_m)=4m-1.
+\]
+
+Here s\_2 is binary digit sum. The Bernoulli valuation follows from von Staudt--Clausen; the factorial identity is Legendre's formula. Every nonnegative integral A(N) is a dyadic unit. Consequently the exact summand weight is
+
+\[
+w_m(N)=4m-1+v_2\binom{2N}{2m}=4m-1+v_2\binom Nm.
+\]
+
+The equality between these two binomial valuations does not assert equality of the binomial coefficients.
+
+Define the whole tail after depth M by
+
+\[
+\mathcal T_M(N)=E_{2N}-\sum_{m=0}^{\min(M,N)}\kappa_m\binom{2N}{2m}A(N-m).
+\]
+
+For M\textgreater=N this is zero exactly. Use v\_2(0)=infinity throughout. The existing optimal uniform lower bound is 4M+3, attained at N=M+1.
+
+\phantomsection
+\subsection{2. The analytic source, including its removable point}\label{the-analytic-source-including-its-removable-point}
+
+Extend A to the dyadic integers by
+
+\[
+\mathscr A(x)=\frac{9^{x+1}-1}{8(x+1)(2x+1)},\qquad
+\mathscr A(-1)=-\log(9)/8.
+\]
+
+Let l=log(9), so v\_2(l)=3. Then
+
+\[
+\mathscr A(x)=\frac{l/8}{1+2x}
+\sum_{k\ge0}\frac{l^k}{(k+1)!}(x+1)^k.
+\]
+
+The coefficient valuations 3k-v\_2((k+1)!) tend to infinity. For k\textgreater=1 they are positive. Also (1+2x)\textsuperscript{(-1)=sum\_k(-2x)}k. It follows that A is a restricted power series with integral dyadic coefficients and
+
+\[
+\mathscr A\in\mathbb Z_2\langle x\rangle,\qquad
+\mathscr A\equiv1\pmod2
+\]
+
+\textbf{coefficientwise}. This is stronger than just saying its integer values are odd. Integer translations preserve its integral Gauss norm.
+
+\phantomsection
+\subsection{3. Factor the entire omitted tail}\label{factor-the-entire-omitted-tail}
+
+Fix r\textgreater=1, put M=r-1, and write x=N-r. For j\textgreater=0 let
+
+\[
+P_j(x)=x^{\underline j}\prod_{i=0}^{j-1}(2x-2i-1),\qquad P_0=1.
+\]
+
+An exact factorial cancellation gives
+
+\[
+\mathcal T_{r-1}(N)=\kappa_r\binom{2N}{2r}H_r(N-r),
+\]
+
+where
+
+\[
+H_r(x)=\sum_{j\ge0}8^j\frac{\beta_{r+j}}{\beta_r}P_j(x)\mathscr A(x-j).
+\]
+
+Indeed, the ratio of the (r+j)th coefficient to the factored coefficient is
+
+\[
+4^j\frac{\beta_{r+j}}{\beta_r}(2x)^{\underline{2j}}
+=8^j\frac{\beta_{r+j}}{\beta_r}P_j(x).
+\]
+
+At a nonnegative integer x all terms j\textgreater x vanish. Thus the infinite analytic expression agrees with the original finite tail. For fixed r, its polynomial coefficient valuations are bounded below by
+
+\[
+3j+s_2(r+j)-s_2(r)\ge3j+1-s_2(r),
+\]
+
+which tend to infinity. Hence it defines an element of Q\_2.
+
+\phantomsection
+\subsection{4. Binary-edge root theorem}\label{binary-edge-root-theorem}
+
+\textbf{Theorem.} Let a\textgreater=4, r=2\^{}a-1, and M=2\^{}a-2. There is a unique alpha\_a in Z\_2 such that, on putting rho\_a=r+alpha\_a,
+
+\[
+\boxed{
+ v_2\mathcal T_{2^a-2}(N)
+ =4(2^a-1)+3-a+v_2\binom{N}{2^a-1}+v_2(N-\rho_a)
+}
+\]
+
+for every integer N\textgreater=2\^{}a-1. The convention at a zero tail is v\_2(0)=infinity. In addition,
+
+\[
+v_2(\alpha_a)=a-4.
+\]
+
+\textbf{Proof.} Since s\_2(r)=a, define
+
+\[
+G_a(x)=2^{a-4}H_r(x)
+ =\sum_{j\ge0}\gamma_{a,j}P_j(x)\mathscr A(x-j),
+\quad
+\gamma_{a,j}=2^{a-4}8^j\beta_{r+j}/\beta_r.
+\]
+
+The first coefficient is gamma\_(a,0)=2\^{}(a-4). The second is a unit because r+1=2\^{}a and
+
+\[
+v_2(\gamma_{a,1})=(a-4)+3-(a-1)=0.
+\]
+
+For every j\textgreater=2,
+
+\[
+v_2(\gamma_{a,j})=3j+s_2(r+j)-4\ge3j-3\ge3.
+\]
+
+Thus G\_a belongs to Z\_2, and, coefficientwise,
+
+\[
+G_a(x)\equiv
+\begin{cases}1+x,&a=4,\\x,&a>4\end{cases}\pmod2.
+\]
+
+Here P\_1=x(2x-1), which reduces to x modulo 2. It follows directly that for distinct x,y in Z\_2,
+
+\[
+\frac{G_a(x)-G_a(y)}{x-y}\in1+2\mathbb Z_2.
+\]
+
+Therefore G\_a is an isometry. The coefficientwise congruence also gives one root modulo 2. At each subsequent precision exactly one of its two lifts remains a root, because shifting by 2\^{}k changes G\_a by 2\^{}k times a unit modulo 2\^{}(k+1). Completeness constructs a unique root alpha\_a, and
+
+\[
+v_2G_a(x)=v_2(x-\alpha_a).
+\]
+
+Since G\_a(0)=2\^{}(a-4), isometry gives v\_2(alpha\_a)=a-4. Finally, the factorization in Section 3 and the known kappa valuation give
+
+\[
+v_2\mathcal T_{r-1}(N)
+=4r-1+v_2\binom Nr+4-a+v_2(N-r-\alpha_a),
+\]
+
+which is the claimed formula. QED.
+
+\textbf{Consequences.} The root controls the \emph{whole} tail, not merely the first two terms. Approaching rho\_a through integer residue classes gives arbitrarily large additional cancellation at one fixed truncation depth. This does not improve the uniform bound: at N=r the formula gives 4r-1=4M+3 exactly.
+
+\phantomsection
+\subsection{5. A second exact family: low binary digit sum}\label{a-second-exact-family-low-binary-digit-sum}
+
+If s\_2(r)\textless=4 and r!=15, then for every N\textgreater=r,
+
+\[
+\boxed{v_2\mathcal T_{r-1}(N)=4r-1+v_2\binom Nr.}
+\]
+
+For j\textgreater=2, the coefficient in H\_r has valuation at least 3j+1-s\_2(r)\textgreater=3. For j=1 its exact valuation is 4-v\_2(r+1). Under the stated condition v\_2(r+1)\textless=3: four trailing ones with no other one bits would be precisely r=15. Therefore all positive-j terms vanish coefficientwise modulo 2 and H\_r is congruent to A, hence to 1. Its value is a unit. In particular this proves the first-omitted-term valuation for all depths M=0,\ldots,13, at every admissible row, not only in a bounded scan.
+
+\phantomsection
+\subsection{6. Explicit M=14 example and root digits}\label{explicit-m14-example-and-root-digits}
+
+For a=4, r=15, the root law is
+
+\[
+v_2\mathcal T_{14}(N)=59+v_2\binom N{15}+v_2(N-\rho_4).
+\]
+
+Certified residues from the implemented lift include
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+q & rho\_4 modulo 2\^{}q \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+5 & 16 \\
+6 & 48 \\
+7 & 48 \\
+8 & 176 \\
+10 & 176 \\
+12 & 1200 \\
+16 & 9392 \\
+32 & 2083857584 \\
+64 & 4183939833681749168 \\
+\end{longtable}
+
+The 128-bit residue is \seqsplit{181803547360506310314536504063203550384}, hexadecimal \texttt{\seqsplit{88c616ef1758fccb3a10571c7c3524b0}}. These are compatible residues of a dyadic number, not a claim of an ordinary real limit.
+
+At N=16 the two omitted terms are
+
+\[
+S_{15}=\kappa_{15}\binom{32}{30}A(1),\qquad S_{16}=\kappa_{16},
+\quad A(1)=5/3.
+\]
+
+Both have valuation 63. Their normalized residues modulo 64 are respectively 63 and 33. Their sum is 32 modulo 64, so the tail has valuation 63+5=68. Exactly,
+
+\[
+\mathcal T_{14}(16)=-2^{68}\frac{1593243617206459}{58905}.
+\]
+
+Both the displayed numerator and denominator are odd.
+
+\phantomsection
+\subsection{7. The suggested two-minimum pattern is not universal}\label{the-suggested-two-minimum-pattern-is-not-universal}
+
+A finite scan showing at most two minimum-weight terms must not be extrapolated. Take
+
+\[
+N=2^{68},\qquad M=N-18.
+\]
+
+The omitted indices are m=N-d with 0\textless=d\textless=17. For 1\textless=d\textless=17,
+
+\[
+v_2\binom{N}{N-d}=68-v_2(d),
+\]
+
+so the weight above 4N-1 is 68-4d-v\_2(d). It vanishes at d=16 and d=17 and is positive at d=1,\ldots,15. The endpoint d=0 also has weight 4N-1. Thus there are exactly \textbf{three} minimum-weight terms, at N-17, N-16, N. Three units sum to a unit modulo two, so the full tail has exact valuation 4N-1. The audit checks all 18 weights by exact integer arithmetic. It does not compute this enormous Euler number.
+
+\phantomsection
+\subsection{8. Computational contract and interpretation}\label{computational-contract-and-interpretation}
+
+Run \texttt{python3\ check\_dyadic\_tail.py}. Python's standard library is sufficient. The script uses Fraction and arbitrary-precision integers; no floating approximation enters any mathematical assertion.
+
+Independent checks include inverse-series coefficients against a Bernoulli recurrence, full reconstruction against the Euler recurrence, source valuations, all nonempty tails with 1\textless=N\textless=512, and root-law predictions for a=4,\ldots,8. Root values are generated from the analytic remainder, not fitted to the finite tail table. Each digit lift verifies both the chosen branch and rejection of the alternative branch.
+
+The normalized root-series calculation omits only j for which the proved Gauss valuation 3j-3 reaches the requested precision. A second modular method uses the original, unfactored summands and omits only m with 4m-1 at least the modulus exponent. It agrees with rational tails for N=15,\ldots,512 and separately checks three large rows modulo 2\^{}220.
+
+\texttt{RESULTS.json} records exact counts and outputs. \texttt{MANIFEST.json} records command, environment, duration, conventions and hashes. The manifest follows the available version-1 template; its fields and hashes are checked locally. The separate bundled skill validator was not located in the working filesystem and was not run.
+
+The numerical tests support the implementation. The universal statements depend on the explicit proofs in Sections 4, 5, and 7. General depths not covered by those theorems are not classified here.
+
+\phantomsection
+\subsection{Sources and provenance}\label{sources-and-provenance}
+
+The source/kernel reconstruction, exact coefficient weights, optimal 4M+3 bound, and analytic source are retained formulas from the supplied Komorebi materials, including the Local Polyphase edition and Paper IX consolidated edition. The consolidated edition's arithmetic-refinements section explicitly separates exact individual weights from the not-yet-classified whole-tail valuation. This continuation studies that distinction.
+
+For the classical Bernoulli denominator input, see NIST DLMF 24.10.1, \url{https://dlmf.nist.gov/24.10.E1.} The hyperbolic series conventions agree with NIST DLMF 4.33, \url{https://dlmf.nist.gov/4.33.} No claim that the root-law formulation is absent from the external literature has been established.
+
+\clearpage
+
+\phantomsection
+\section{Continuation II. Carry-Newton reduction at arbitrary depth}\label{continuation-ii.-carry-newton-reduction-at-arbitrary-depth}
+
+\begin{quote}
+\textbf{Historical record.} Recovered v2 note. Its taxonomy is a taxonomy of residual roots. Multiple residual roots require further analysis before a dyadic-root claim.
+\end{quote}
+
+Research continuation, 26 September 2026.
+
+\phantomsection
+\subsection{Status}\label{status}
+
+This note continues \texttt{PROOF.md}. The exact tail factorization from that note is retained. The new result is a finite carry-based reduction for \textbf{every} first omitted depth \texttt{r}, together with a residual-polynomial criterion for no-root, one-root, two-root, and multiple-root branches.
+
+The mathematical reductions below are proofs. \texttt{check\_carry\_newton.py} supplies exact finite evidence and independent modular checks. No Lean compilation or historical-priority claim is made here.
+
+\phantomsection
+\subsection{1. Exact carry valuation of the factored coefficients}\label{exact-carry-valuation-of-the-factored-coefficients}
+
+From the existing factorization
+
+\[
+\mathcal T_{r-1}(N)=\kappa_r\binom{2N}{2r}H_r(N-r),
+\]
+
+with
+
+\[
+H_r(x)=\sum_{j\ge0}8^j\frac{\beta_{r+j}}{\beta_r}P_j(x)\mathscr A(x-j),
+\qquad
+P_j(x)=x^{\underline j}\prod_{i=0}^{j-1}(2x-2i-1),
+\]
+
+define
+
+\[
+\lambda_r(j)=v_2\!\left(8^j\frac{\beta_{r+j}}{\beta_r}\right).
+\]
+
+Since \(v_2(\beta_m)=s_2(m)-1\),
+
+\[
+\boxed{\lambda_r(j)=3j+s_2(r+j)-s_2(r).}
+\]
+
+Kummer gives
+
+\[
+v_2\binom{r+j}{j}=s_2(r)+s_2(j)-s_2(r+j),
+\]
+
+hence equivalently
+
+\[
+\boxed{
+\lambda_r(j)=3j+s_2(j)-v_2\binom{r+j}{j}.
+}
+\]
+
+Thus every anomalously low analytic coefficient is exactly a binary-carry event.
+
+\phantomsection
+\subsection{2. The infinite minimization is actually finite}\label{the-infinite-minimization-is-actually-finite}
+
+Let
+
+\[
+\mu_r=\min_{j\ge0}\lambda_r(j),
+\qquad
+J_r=\{j:\lambda_r(j)=\mu_r\}.
+\]
+
+Since \(\lambda_r(0)=0\), one always has \(\mu_r\le0\). For \(j\ge1\),
+
+\[
+\lambda_r(j)
+=3j+s_2(r+j)-s_2(r)
+\ge 3j+1-s_2(r).
+\]
+
+Therefore any minimizer must satisfy
+
+\[
+\boxed{
+0\le j\le \left\lfloor\frac{s_2(r)-1}{3}\right\rfloor.
+}
+\]
+
+So an infinite tail has a finite carry Newton polygon whose size is controlled by the \textbf{binary digit sum of the omitted depth}, not by the magnitude of the depth.
+
+\phantomsection
+\subsection{3. Residual cancellation polynomial}\label{residual-cancellation-polynomial}
+
+Normalize
+
+\[
+G_r(x)=2^{-\mu_r}H_r(x).
+\]
+
+Because the coefficient valuations tend to infinity, \(G_r\in\mathbb Z_2\langle x\rangle\). The analytic source satisfies \(\mathscr A\equiv1\pmod2\) coefficientwise, and every normalized minimum coefficient is a dyadic unit. Therefore
+
+\[
+\boxed{
+\overline G_r(X)
+=\sum_{j\in J_r}X^{\underline j}
+\in\mathbb F_2[X].
+}
+\]
+
+Since
+
+\[
+X^{\underline j}
+\equiv
+X^{\lceil j/2\rceil}(X+1)^{\lfloor j/2\rfloor}
+\pmod2,
+\]
+
+the first cancellation layer is completely explicit.
+
+The whole-tail valuation becomes
+
+\[
+\boxed{
+ v_2\mathcal T_{r-1}(N)
+ =4r-1+v_2\binom Nr+\mu_r+v_2G_r(N-r).
+}
+\]
+
+This is an exact identity, not a lower bound.
+
+\phantomsection
+\subsection{4. Root taxonomy at the first residual level}\label{root-taxonomy-at-the-first-residual-level}
+
+Write \texttt{1\_S} for an indicator modulo two. Then
+
+\[
+\overline G_r(0)=1_{0\in J_r},
+\qquad
+\overline G_r(1)=1_{0\in J_r}+1_{1\in J_r}.
+\]
+
+Also
+
+\[
+\overline G_r'(0)=1_{1\in J_r}+1_{2\in J_r},
+\]
+
+\[
+\overline G_r'(1)=1_{1\in J_r}+1_{2\in J_r}+1_{3\in J_r}.
+\]
+
+Hence:
+
+\begin{itemize}
+\tightlist
+\item
+  if \(0\in J_r\) and \(1\notin J_r\), there is no residual root and \(G_r(x)\) is a unit for every integer/dyadic \texttt{x};
+\item
+  if \(0,1\in J_r\), the only residual root is \texttt{1};
+\item
+  if \(0\notin J_r\) and \(1\in J_r\), the only residual root is \texttt{0};
+\item
+  if neither \texttt{0} nor \texttt{1} is in \(J_r\), both residue classes are roots.
+\end{itemize}
+
+A residual root \texttt{e} is simple exactly when the displayed derivative at \texttt{e} is one.
+
+For a simple root, if \texttt{x,y} lie in the same residue class \texttt{e\ mod\ 2}, the divided difference
+
+\[
+\frac{G_r(x)-G_r(y)}{x-y}
+\]
+
+is a dyadic unit because its reduction is \(\overline G_r'(e)=1\). Therefore the branch is an isometry. It has a unique root \(\alpha_{r,e}\in e+2\mathbb Z_2\), and
+
+\[
+\boxed{
+ v_2G_r(x)=v_2(x-\alpha_{r,e})
+ \quad(x\equiv e\pmod2).
+}
+\]
+
+On a nonroot residue class, \(v_2G_r(x)=0\).
+
+If a residual root is multiple, substitute \texttt{x=e+2y}, remove the common dyadic content, and repeat the same construction. This gives a recursive dyadic cancellation tree.
+
+\phantomsection
+\subsection{5. First two-root example: r = 510}\label{first-two-root-example-r-510}
+
+For
+
+\[
+r=510=2^9-2,
+\]
+
+the finite carry polygon has
+
+\[
+\lambda_{510}(0)=0,
+\quad
+\lambda_{510}(1)=4,
+\quad
+\lambda_{510}(2)=-1.
+\]
+
+Thus
+
+\[
+\mu_{510}=-1,
+\qquad J_{510}=\{2\},
+\]
+
+and
+
+\[
+\overline G_{510}(X)=X(X+1).
+\]
+
+Both residual roots are simple. Hence there are unique roots
+
+\[
+\alpha_0\in2\mathbb Z_2,
+\qquad
+\alpha_1\in1+2\mathbb Z_2,
+\]
+
+and, with \texttt{x=N-510},
+
+\[
+\boxed{
+ v_2\mathcal T_{509}(N)
+ =2038+v_2\binom N{510}
+ +v_2(x-\alpha_{x\bmod2}).
+}
+\]
+
+The audit lifts the roots to 64 bits:
+
+\[
+\alpha_0\equiv
+1840775104690357186
+\pmod{2^{64}},
+\]
+
+\[
+\alpha_1\equiv
+14399460289900872487
+\pmod{2^{64}}.
+\]
+
+This formula was checked independently against the original unfactored tail modulo \(2^{2100}\) at fifteen rows from \texttt{N=510} through \texttt{N=605}.
+
+\phantomsection
+\subsection{6. Exact shifted-power-of-two wall crossing}\label{exact-shifted-power-of-two-wall-crossing}
+
+The appearance of powers of two has an exact formulation.
+
+Fix \texttt{j\textgreater{}=1}. Define for \texttt{0\textless{}=k\textless{}j}
+
+\[
+e_j(k)
+=3k+s_2(j-1)-s_2(j-k-1),
+\]
+
+\[
+E_j=\min_{0\le k<j}e_j(k),
+\qquad
+K_j=\{k<j:e_j(k)=E_j\},
+\]
+
+and
+
+\[
+A_j=3j+1+s_2(j-1),
+\qquad
+L_j=A_j-E_j.
+\]
+
+For \texttt{L} large enough that \texttt{2\^{}L\textgreater{}j}, put
+
+\[
+r_L=2^L-j.
+\]
+
+Then for \texttt{k\textless{}j},
+
+\[
+\lambda_{r_L}(k)=e_j(k),
+\]
+
+while
+
+\[
+\lambda_{r_L}(j)=A_j-L.
+\]
+
+For \texttt{k\textgreater{}j} in the only range capable of minimizing,
+
+\[
+\lambda_{r_L}(k)
+=\lambda_{r_L}(j)+3(k-j)+s_2(k-j)
+>\lambda_{r_L}(j).
+\]
+
+Consequently:
+
+\[
+\boxed{
+L<L_j\Rightarrow j\notin J_{r_L},
+}
+\]
+
+\[
+\boxed{
+L=L_j\Rightarrow J_{r_L}=K_j\cup\{j\},
+}
+\]
+
+\[
+\boxed{
+L>L_j\Rightarrow J_{r_L}=\{j\}.
+}
+\]
+
+Thus every correction layer \texttt{j} has an exact \textbf{shifted power-of-two wall}
+
+\[
+\boxed{r=2^{L_j}-j.}
+\]
+
+Crossing that wall makes the \texttt{j}th analytic tail layer the unique dominant residual term.
+
+The first walls are
+
+\[
+15,\ 254,\ 2045,\ 32764,\ 131067,\ldots
+\]
+
+for \texttt{j=1,2,3,4,5,...}.
+
+The first three post-wall residual geometries are:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{j=1}: one simple root;
+\item
+  \texttt{j=2}: two simple roots;
+\item
+  \texttt{j=3}: an even double root and an odd simple root.
+\end{itemize}
+
+For singleton \texttt{J=\{j\}} in general,
+
+\[
+\overline G_r(X)
+=X^{\lceil j/2\rceil}(X+1)^{\lfloor j/2\rfloor},
+\]
+
+so higher \texttt{j} produce increasingly ramified cancellation trees.
+
+\phantomsection
+\subsection{7. Computational audit}\label{computational-audit}
+
+\texttt{check\_carry\_newton.py} uses exact rationals and arbitrary-precision integers only.
+
+The retained run reports:
+
+\begin{itemize}
+\tightlist
+\item
+  805,004 exact checks of the carry formula;
+\item
+  499,995 checks immediately beyond the finite minimizer cutoff;
+\item
+  600 shifted-wall checks (\texttt{j\textless{}=200}, before/at/after each wall);
+\item
+  all 131,328 nonempty exact rational tails with \texttt{N\textless{}=512} matched the no-root/simple-root prediction;
+\item
+  123,325 of those tails were no-root cases;
+\item
+  8,003 were simple-root cases;
+\item
+  no multiple-root case occurs below \texttt{r=513};
+\item
+  the first two-root case \texttt{r=510} was also checked through the original unfactored kernel modulo \texttt{2\^{}2100} at fifteen selected rows.
+\end{itemize}
+
+The finite run is evidence for the implementation. The universal statements above follow from the explicit carry identities, the finite-minimizer bound, reduction modulo two, and the divided-difference argument.
+
+\phantomsection
+\subsection{8. Remaining frontier}\label{remaining-frontier}
+
+The next unsolved layer is no longer ``the exact dyadic tail valuation'' in undifferentiated form. It is narrower:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  classify the multiple-root branches generated by the residual polynomials;
+\item
+  derive closed carry formulas for their successive rescalings;
+\item
+  identify when the recursive dyadic tree admits a finite symbolic description;
+\item
+  connect this tree to the already-developed affine Mahler/polyphase refinement operators.
+\end{enumerate}
+
+The first genuinely multiple branch appears at the post-wall \texttt{j=3} family: the odd branch is already solved by a simple Hensel root, while the even branch requires one more dyadic blow-up.
+
+\clearpage
+
+\phantomsection
+\section{Continuation III. Shifted-wall normal form and the first multiple branch}\label{continuation-iii.-shifted-wall-normal-form-and-the-first-multiple-branch}
+
+\begin{quote}
+\textbf{Historical record.} Recovered v3 note. The condition delta \textgreater{} 2 d\_i is sufficient, not an exact threshold. Continuation IV supplies the sharp regular-wall threshold. Continuation V disproves a general monotone-emergence interpretation.
+\end{quote}
+
+Research continuation, 26 September 2026.
+
+\phantomsection
+\subsection{Status}\label{status-1}
+
+This note continues \texttt{PROOF.md} and \texttt{CONTINUATION\_02.md}. The earlier carry-Newton reduction is retained. The new results are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  an exact shifted-wall normal form;
+\item
+  an addressed content formula for every dyadic branch;
+\item
+  a Hensel criterion that separates the roots generated by a wall;
+\item
+  complete resolution of the first multiple residual branch, \texttt{j=3};
+\item
+  exact rational checks at the three successive \texttt{j=3} wall distances.
+\end{enumerate}
+
+The normal-form and Hensel arguments are proofs. The scripts are finite audits. No Lean compilation or historical-priority claim is made here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{1. Setup retained from the previous block}\label{setup-retained-from-the-previous-block}
+
+Write the omitted tail after first omitted depth \texttt{r} as
+
+\[
+\mathcal T_{r-1}(N)
+=\kappa_r\binom{2N}{2r}H_r(N-r),
+\]
+
+where
+
+\[
+H_r(x)=\sum_{q\ge0}
+8^q\frac{\beta_{r+q}}{\beta_r}
+P_q(x)\mathscr A(x-q),
+\]
+
+\[
+P_q(x)=\prod_{i=0}^{q-1}(x-i)(2x-(2i+1)),
+\]
+
+and \texttt{A} is the integral analytic dyadic source. Its reduction is \texttt{1} modulo two. The coefficient valuation is
+
+\[
+\lambda_r(q)=3q+s_2(r+q)-s_2(r).
+\]
+
+Let \texttt{mu\_r=min\_q\ lambda\_r(q)} and normalize
+
+\[
+G_r(x)=2^{-\mu_r}H_r(x).
+\]
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{2. Exact addressed content of the packet polynomial}\label{exact-addressed-content-of-the-packet-polynomial}
+
+Fix a binary address
+
+\[
+x=s+2^k y,\qquad 0\le s<2^k.
+\]
+
+The second product in \texttt{P\_q} is always odd. Thus all coefficient content comes from
+
+\[
+(s+2^k y)^{\underline q}.
+\]
+
+For each factor \texttt{s+2\^{}k\ y-i}, the polynomial content is
+
+\[
+2^{\min(k,v_2(s-i))},
+\]
+
+with \texttt{v\_2(0)=infinity}. Therefore
+
+\[
+\boxed{
+C_{k,s}(q)
+=\sum_{i=0}^{q-1}\min(k,v_2(s-i))
+=\sum_{d=1}^{k}\#\{0\le i<q:i\equiv s\pmod{2^d}\}.
+}
+\]
+
+Let
+
+\[
+m_{k,s}(q)
+=\#\{0\le i<q:i\equiv s\pmod{2^k}\}.
+\]
+
+After dividing by the exact content, the residual polynomial is
+
+\[
+\boxed{
+2^{-C_{k,s}(q)}P_q(s+2^k y)
+\equiv y^{\underline{m_{k,s}(q)}}\pmod2.
+}
+\]
+
+Hence every dyadic blow-up remains a finite carry problem. The addressed weight of layer \texttt{q} is
+
+\[
+\boxed{
+W_{r;k,s}(q)=\lambda_r(q)-\mu_r+C_{k,s}(q).
+}
+\]
+
+The same finite candidate bound from \texttt{CONTINUATION\_02.md} continues to apply because \texttt{C\_\{k,s\}(q)\textgreater{}=0}.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{3. Shifted power-of-two wall normal form}\label{shifted-power-of-two-wall-normal-form}
+
+Fix a residual layer \texttt{j\textgreater{}=1}. Retain the definitions
+
+\[
+e_j(q)=3q+s_2(j-1)-s_2(j-q-1),\qquad 0\le q<j,
+\]
+
+\[
+E_j=\min_{q<j}e_j(q),
+\]
+
+\[
+A_j=3j+1+s_2(j-1),
+\qquad
+L_j=A_j-E_j.
+\]
+
+Take
+
+\[
+r=2^L-j,\qquad L>L_j,
+\]
+
+and put
+
+\[
+\delta=L-L_j.
+\]
+
+The wall theorem from the previous block says that \texttt{j} is the unique carry-Newton minimum. Moreover,
+
+\[
+\mu_r=\lambda_r(j)=A_j-L.
+\]
+
+For \texttt{q\textless{}j}, exact binary complement identities give
+
+\[
+\lambda_r(q)=e_j(q),
+\]
+
+so after normalization
+
+\[
+\lambda_r(q)-\mu_r
+=\delta+e_j(q)-E_j
+\ge\delta.
+\]
+
+For \texttt{q=j+h}, the packet polynomials factor exactly:
+
+\[
+\boxed{P_{j+h}(x)=P_j(x)P_h(x-j).}
+\]
+
+The normalized \texttt{h=0} coefficient is a unit. Every \texttt{h\textgreater{}=1} coefficient has valuation at least four. Consequently the complete right tail factors by \texttt{P\_j}, while every lower layer carries \texttt{2\^{}delta}.
+
+\phantomsection
+\subsubsection{Theorem: shifted-wall normal form}\label{theorem-shifted-wall-normal-form}
+
+There exist integral restricted analytic functions \texttt{U\_\{L,j\}} and \texttt{V\_\{L,j\}} such that
+
+\[
+\boxed{
+G_r(x)
+=P_j(x)U_{L,j}(x-j)+2^\delta V_{L,j}(x),
+}
+\]
+
+and
+
+\[
+\boxed{U_{L,j}(y)\in\mathbb Z_2\langle y\rangle^\times.}
+\]
+
+In fact \texttt{U\_\{L,j\}=1\ mod\ 2} coefficientwise after multiplication by a dyadic unit.
+
+This is the exact resolution meaning of moving farther beyond a shifted binary wall: every increment of \texttt{L} removes one more binary digit of the lower-layer perturbation, while the root skeleton \texttt{P\_j} stays fixed.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{4. Hensel separation of the wall roots}\label{hensel-separation-of-the-wall-roots}
+
+The polynomial \texttt{P\_j} has precisely the integral roots
+
+\[
+0,1,\ldots,j-1.
+\]
+
+The other \texttt{j} linear factors are dyadic units. At the root \texttt{i},
+
+\[
+\boxed{
+d_i
+:=v_2(P_j'(i))
+=v_2(i!)+v_2((j-1-i)!).
+}
+\]
+
+At \texttt{x=i}, the normal form gives
+
+\[
+v_2(G_r(i))\ge\delta.
+\]
+
+If \texttt{delta\textgreater{}d\_i}, then
+
+\[
+v_2(G_r'(i))=d_i,
+\]
+
+because the perturbation derivative is divisible by \texttt{2\^{}delta} and the \texttt{P\_j\ U} derivative has exact order \texttt{d\_i}.
+
+Therefore the strong Hensel condition holds whenever
+
+\[
+\boxed{\delta>2d_i.}
+\]
+
+\phantomsection
+\subsubsection{Theorem: individual root emergence}\label{theorem-individual-root-emergence}
+
+If
+
+\[
+\delta>2\bigl(v_2(i!)+v_2((j-1-i)!)\bigr),
+\]
+
+then there is a unique simple root \texttt{alpha\_i\ in\ Z\_2} in the Hensel ball about \texttt{i}, with
+
+\[
+\boxed{
+v_2(\alpha_i-i)\ge\delta-d_i>d_i.}
+\]
+
+The roots obtained from distinct integers \texttt{i} are distinct.
+
+Using Legendre's formula,
+
+\[
+d_i=j-1-s_2(i)-s_2(j-1-i).
+\]
+
+Since binary digit sum is subadditive,
+
+\[
+\boxed{
+\max_{0\le i<j}d_i
+=v_2((j-1)!).
+}
+\]
+
+Hence:
+
+\phantomsection
+\subsubsection{Corollary: complete wall resolution}\label{corollary-complete-wall-resolution}
+
+If
+
+\[
+\boxed{
+\delta>2v_2((j-1)!),
+}
+\]
+
+then all \texttt{j} integral skeleton roots lift to \texttt{j} distinct simple roots in \texttt{Z\_2}.
+
+There are no additional \texttt{Z\_2} roots. Indeed, modulo two the normal form reduces to \texttt{P\_j}, whose reduction has degree \texttt{j}; the greatest coefficient of Gauss norm one therefore occurs at degree \texttt{j}, and Strassmann's theorem bounds the number of zeros in the unit disc by \texttt{j}.
+
+Locally around a separated root, division by the linear factor gives the usual root-distance law. Since the derivative has order \texttt{d\_i}, sufficiently near \texttt{alpha\_i},
+
+\[
+\boxed{
+v_2(G_r(x))=d_i+v_2(x-\alpha_i).}
+\]
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{5. First multiple branch: j = 3}\label{first-multiple-branch-j-3}
+
+For \texttt{j=3},
+
+\[
+L_3=11,
+\qquad
+(d_0,d_1,d_2)=(1,0,1).
+\]
+
+Thus the middle root is guaranteed as soon as \texttt{delta\textgreater{}=1}, while the two outer roots are guaranteed once \texttt{delta\textgreater{}=3}.
+
+This gives the exact staged prediction:
+
+\phantomsection
+\subsubsection{delta = 1}\label{delta-1}
+
+\[
+L=12,
+\qquad
+r=4093.
+\]
+
+The first residual polynomial is
+
+\[
+X^2(X+1).
+\]
+
+On the even branch \texttt{x=2y}, the addressed minimum is the old layer \texttt{q=0}, so
+
+\[
+\boxed{v_2(G_{4093}(x))=1\quad(x\text{ even}).}
+\]
+
+The apparent double residual root therefore does \textbf{not} lift.
+
+The odd branch is simple and contains one dyadic root. Exact rational probes give
+
+\[
+\alpha_1\equiv23\pmod{32}.
+\]
+
+\phantomsection
+\subsubsection{delta = 2}\label{delta-2}
+
+\[
+L=13,
+\qquad
+r=8189.
+\]
+
+For every even \texttt{x},
+
+\[
+\boxed{v_2(G_{8189}(x))=2.}
+\]
+
+The odd branch still contains the single middle root, now closer to the integer skeleton point \texttt{1}:
+
+\[
+\alpha_1\equiv13\pmod{16}.
+\]
+
+Rows \texttt{x=3\ mod\ 4} are nonroot and have exact residual valuation one.
+
+\phantomsection
+\subsubsection{delta = 3}\label{delta-3}
+
+\[
+L=14,
+\qquad
+r=16381.
+\]
+
+Now all three roots separate, exactly as the Hensel threshold predicts. The first binary blow-up has
+
+\begin{itemize}
+\tightlist
+\item
+  even branch residual \texttt{y(y+1)}, producing roots near \texttt{0} and \texttt{2};
+\item
+  odd branch residual \texttt{y}, producing the root near \texttt{1};
+\item
+  the class \texttt{x=3\ mod\ 4} is nonroot.
+\end{itemize}
+
+Exact rational probes yield the finite residues
+
+\[
+\boxed{
+\alpha_0\equiv36\pmod{64},
+\qquad
+\alpha_1\equiv9\pmod{16},
+\qquad
+\alpha_2\equiv70\pmod{128}.
+}
+\]
+
+For example the exact normalized tail valuations are
+
+\[
+\begin{array}{c|ccccccc}
+x&0&1&2&3&4&5&6\\ \hline
+v_2(G_{16381}(x))&3&3&3&1&6&2&7.
+\end{array}
+\]
+
+The endpoint roots have derivative order one, so their local law is \texttt{1\ +\ distance-to-root}; the middle root has derivative order zero, so its local law is exactly distance-to-root.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{6. Interpretation}\label{interpretation}
+
+The multiple-root frontier is therefore not an uncontrolled failure of the carry polygon. It is a \textbf{singular perturbation problem with a fixed integer root skeleton}:
+
+\[
+\boxed{
+P_j(x)\times\text{unit}
++2^\delta\times\text{lower packet}.
+}
+\]
+
+The shifted power-of-two wall creates the skeleton. Increasing \texttt{delta} resolves its ramification. Roots with smaller derivative valuation separate first. Eventually every integer skeleton point \texttt{0,...,j-1} carries one dyadic root.
+
+For \texttt{j=3}, the progression is therefore
+
+\[
+\boxed{
+1\text{ dyadic root}
+\longrightarrow
+1\text{ dyadic root}
+\longrightarrow
+3\text{ dyadic roots}.
+}
+\]
+
+This is a stronger description than a valuation heatmap: it identifies why the multiple residual root initially fails to lift and exactly when it becomes a collection of genuine dyadic branches.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\phantomsection
+\subsection{7. Computation audit}\label{computation-audit}
+
+\texttt{check\_wall\_normal\_form.py} verifies the carry/complement formulas, the addressed content formula, the derivative maximum formula, and the \texttt{j=3} stage transitions. The retained optimized run passed \textbf{1,044,040} exact integer/combinatorial checks.
+
+\texttt{check\_exact\_small\_walls.py} constructs Bernoulli numbers, the original \texttt{kappa\_m}, and the original rational omitted tail for \texttt{r=4093} and \texttt{r=8189}; the retained run passed its structural assertions.
+
+\texttt{check\_exact\_r16381.py} performs the heavier exact rational check for \texttt{r=16381}, \texttt{x=0,...,6}. The retained run completed in about 33.5 seconds for coefficient construction and reproduced the valuation row displayed above.
+
+\phantomsection
+\subsubsection{Development failures}\label{development-failures}
+
+Two development runs failed for computational reasons:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  An all-in-one exact Bernoulli checker for all three large walls timed out at 120 seconds. The exact cases were split into smaller runs; those completed.
+\item
+  The first combinatorial normal-form checker timed out because it rebuilt large factorials inside a quadratic loop. Replacing that calculation by the mathematically identical digit-sum formula for \texttt{d\_i} reduced runtime to about 14 seconds and the rerun passed.
+\end{enumerate}
+
+Neither timeout produced a contradictory mathematical result.
+
+\phantomsection
+\subsubsection{Claim boundary}\label{claim-boundary}
+
+The wall normal form and Hensel threshold are general. The displayed root residues are finite-precision exact computations. For wall distances below the sufficient Hensel threshold, special unit cancellations can still require branch-specific analysis. No claim of historical priority is made here.
+
+\clearpage
+
+\phantomsection
+\section{Continuation IV. Exact wall resolution and finite polynomial reduction}\label{continuation-iv.-exact-wall-resolution-and-finite-polynomial-reduction}
+
+\begin{quote}
+\textbf{Historical record.} Recovered consolidated v4 proof note. Its main scientific checker has been rerun in this release. Continuation V appends new results without replacing this record.
+\end{quote}
+
+\textbf{Operation Komorebi · Komorebi P. · Continuation 04 · 26 September 2026}
+
+\phantomsection
+\subsection{Status and scope}\label{status-and-scope}
+
+This continuation proves a necessary-and-sufficient emergence law on every \textbf{regular carry wall}, gives an explicit classification of the five-root family for every wall distance and every dyadic argument, and supplies complete coefficient certificates for the first irregular wall, of size seventeen. It also constructs a finite-degree polynomial carrying the complete tail valuation at every first omitted depth.
+
+The universal statements below have mathematical proofs. The seventeen-root classification at its finitely many exceptional distances is computer-assisted: each residue ball has an exact coefficientwise certificate, and a proved truncation estimate controls all uncomputed coefficients. No Lean run was performed. Historical priority is not assessed.
+
+The earlier v3 condition \texttt{delta\ \textgreater{}\ 2\ d\_i} is a valid sufficient Hensel condition. It is \textbf{not an exact emergence threshold}. The distinction is corrected here without withdrawing the valid v3 implication.
+
+This is not an explicit root classification for every irregular wall or every arbitrary depth. The all-depth polynomial reduction is exact, but an implicit polynomial is not the same as an explicit classification of all its roots.
+
+\phantomsection
+\subsection{1. Conventions and the exact tail}\label{conventions-and-the-exact-tail}
+
+Use the signed Euler numbers and ordinary Bernoulli convention
+
+\[
+\operatorname{sech}t=\sum_{n\ge0}E_n\frac{t^n}{n!},\qquad
+\frac{t}{e^t-1}=\sum_{n\ge0}B_n\frac{t^n}{n!},\qquad B_1=-\frac12.
+\]
+
+The target is \texttt{E\_(2N)}, where \texttt{N} is the half-index. Let \texttt{M} be the last retained depth and \texttt{r=M+1} the first omitted depth. The valuation is normalized by \texttt{v\_2(2)=1}, with \texttt{v\_2(0)=infinity}. A residue zero modulo \texttt{2\^{}P} means only valuation at least \texttt{P}.
+
+Define
+
+\[
+A(N)=\frac{3^{2N+2}-1}{4(2N+1)(2N+2)},
+\qquad
+\left(\frac z{\sinh z}\right)^2=\sum_{m\ge0}\beta_mz^{2m},
+\qquad \kappa_m=2^{2m}(2m)!\beta_m.
+\]
+
+Here \texttt{beta\_0=kappa\_0=1}. For \texttt{m\textgreater{}=1},
+
+\[
+\beta_m=-\frac{2^{2m}(2m-1)B_{2m}}{(2m)!},
+\quad v_2(\beta_m)=s_2(m)-1,
+\quad \kappa_m=-2^{4m}(2m-1)B_{2m},
+\quad v_2(\kappa_m)=4m-1. \tag{1.1}
+\]
+
+The coefficient identity follows by differentiating \texttt{z\ coth\ z}. The valuation uses the classical facts \texttt{v\_2(B\_(2m))=-1} and \texttt{v\_2((2m)!)=2m-s\_2(m)}. The first is the dyadic consequence of von Staudt--Clausen {[}S1{]}.
+
+The source satisfies
+
+\[
+\sum_{N\ge0}A(N)\frac{t^{2N}}{(2N)!}
+=\frac{\sinh(2t)\sinh t}{2t^2}.
+\]
+
+Multiplication by \texttt{4t\^{}2/sinh\^{}2(2t)} gives \texttt{sech\ t}, hence
+
+\[
+E_{2N}=\sum_{m=0}^{N}\kappa_m\binom{2N}{2m}A(N-m). \tag{1.2}
+\]
+
+The omitted tail is
+
+\[
+\mathcal T_M(N)=E_{2N}-\sum_{m=0}^{\min(M,N)}
+\kappa_m\binom{2N}{2m}A(N-m).
+\]
+
+For \texttt{N\textless{}=M}, this is exactly zero. In what follows a nonempty tail always has \texttt{N\textgreater{}=r=M+1}.
+
+\phantomsection
+\subsection{2. Analytic factorization and the finite carry minimum}\label{analytic-factorization-and-the-finite-carry-minimum}
+
+Let \texttt{Z\_2\textless{}X\textgreater{}} denote the restricted power series with integral coefficients tending to zero 2-adically. Such series converge for every \texttt{X\ in\ Z\_2}. Congruences of series in this note are \textbf{coefficientwise} unless explicitly stated otherwise.
+
+Extend the source by
+
+\[
+\mathscr A(x)=\frac{9^{x+1}-1}{8(x+1)(2x+1)},
+\qquad \mathscr A(-1)=-\frac{\log9}{8}.
+\]
+
+Put \texttt{ell=log\ 9}. Since \texttt{v\_2(ell)=3},
+
+\[
+\mathscr A(x)=\frac{\ell/8}{1+2x}
+\sum_{h\ge0}\frac{\ell^h}{(h+1)!}(x+1)^h. \tag{2.1}
+\]
+
+The coefficient valuations in the displayed sum tend to infinity. For \texttt{h\textgreater{}=1} they are positive. Also \texttt{(1+2x)\^{}(-1)} is restricted integral. Therefore
+
+\[
+\mathscr A\in\mathbb Z_2\langle x\rangle^\times,
+\qquad \mathscr A\equiv1\pmod2,
+\qquad \mathscr A(N)=A(N).
+\]
+
+Define
+
+\[
+P_q(x)=\prod_{i=0}^{q-1}(x-i)(2x-(2i+1)),\qquad P_0=1.
+\]
+
+Cancelling the factorials in two summands of (1.2), and using
+
+\[
+4^q(2x)^{\underline{2q}}=8^qP_q(x),
+\]
+
+gives the exact factorization
+
+\[
+\mathcal T_{r-1}(N)
+=\kappa_r\binom{2N}{2r}H_r(N-r), \tag{2.2}
+\]
+
+where
+
+\[
+H_r(x)=\sum_{q\ge0}8^q\frac{\beta_{r+q}}{\beta_r}P_q(x)\mathscr A(x-q).
+\]
+
+For a nonnegative integer \texttt{x}, the factors \texttt{P\_q(x)} vanish for \texttt{q\textgreater{}x}. Thus (2.2) is an identity of finite rational sums at every original Euler row, not an approximation.
+
+The scalar coefficient has exact valuation
+
+\[
+\lambda_r(q)=3q+s_2(r+q)-s_2(r). \tag{2.3}
+\]
+
+Let
+
+\[
+\mu_r=\min_{q\ge0}\lambda_r(q),\qquad
+J_r=\{q:\lambda_r(q)=\mu_r\},\qquad G_r=2^{-\mu_r}H_r.
+\]
+
+Because \texttt{lambda\_r(0)=0} and \texttt{lambda\_r(q)\textgreater{}=3q+1-s\_2(r)}, every minimizer lies in the finite range
+
+\[
+0\le q\le\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor. \tag{2.4}
+\]
+
+In particular \texttt{mu\_r\textless{}=0}. The normalized series is restricted integral and
+
+\[
+\overline G_r(X)=\sum_{q\in J_r}X^{\underline q}\quad\text{in }\mathbb F_2[X]. \tag{2.5}
+\]
+
+This polynomial is nonzero: its highest-degree term has degree \texttt{max\ J\_r} and coefficient one. Thus the scalar normalization is the actual Gauss normalization, not only a lower bound.
+
+For every nonempty tail,
+
+\[
+\boxed{v_2\mathcal T_{r-1}(N)
+=4r-1+v_2\binom Nr+\mu_r+v_2G_r(N-r).} \tag{2.6}
+\]
+
+The equality \texttt{v\_2\ binom(2N,2r)=v\_2\ binom(N,r)} follows from the factorial digit-sum formula. The binomial coefficients themselves need not be equal.
+
+\phantomsection
+\subsection{3. Shifted walls and their normal form}\label{shifted-walls-and-their-normal-form}
+
+For \texttt{j\textgreater{}=1} and \texttt{0\textless{}=q\textless{}j}, define
+
+\[
+e_j(q)=3q+s_2(j-1)-s_2(j-q-1),\quad
+E_j=\min_{q<j}e_j(q),
+\] \[
+A_j=3j+1+s_2(j-1),\qquad L_j=A_j-E_j.
+\]
+
+Here \texttt{A\_j} is a wall constant, not the source \texttt{A(N)}. Take
+
+\[
+L>L_j,\qquad \delta=L-L_j,\qquad r=2^L-j.
+\]
+
+For \texttt{q\textless{}j}, binary complementation gives \texttt{lambda\_r(q)=e\_j(q)}. At \texttt{q=j},
+
+\[
+\lambda_r(j)=A_j-L=E_j-\delta.
+\]
+
+For \texttt{q=j+h\textgreater{}j},
+
+\[
+\lambda_r(j+h)-\lambda_r(j)
+=3h+s_2(2^L+h)-1>0.
+\]
+
+Therefore
+
+\[
+\mu_r=E_j-\delta,\qquad J_r=\{j\}. \tag{3.1}
+\]
+
+Use \texttt{P\_(j+h)(x)=P\_j(x)P\_h(x-j)} to collect all terms at and above \texttt{j}. The lower terms have normalized valuations \texttt{delta+e\_j(q)-E\_j}. This proves
+
+\[
+\boxed{G_r(x)=P_j(x)U(x-j)+2^\delta V(x),} \tag{3.2}
+\]
+
+where
+
+\[
+U\in\mathbb Z_2\langle x\rangle^\times,\quad U\equiv1\pmod2,
+\qquad V\in\mathbb Z_2\langle x\rangle.
+\]
+
+The higher terms forming \texttt{U} tend to zero in Gauss norm. Its leading term is a scalar unit times \texttt{mathscr\ A}, and all subsequent terms are even. No assumption that \texttt{V} is a unit has been made.
+
+The reduction degree of \texttt{G\_r} is exactly \texttt{j}. The half-integral roots of \texttt{P\_j} are outside \texttt{Z\_2}; its integral root skeleton is \texttt{0,...,j-1}.
+
+\phantomsection
+\subsection{4. Separating the skeleton at the correct local scale}\label{separating-the-skeleton-at-the-correct-local-scale}
+
+For \texttt{0\textless{}=i\textless{}j}, put
+
+\[
+d_i=v_2(i!)+v_2((j-1-i)!).
+\]
+
+For \texttt{j\textgreater{}1}, define
+
+\[
+k_i=1+\max_{h\ne i,\ 0\le h<j}v_2(i-h)
+=1+\left\lfloor\log_2\max(i,j-1-i)\right\rfloor.
+\]
+
+For \texttt{j=1}, define \texttt{k\_0=d\_0=0}. Let
+
+\[
+B_i=i+2^{k_i}\mathbb Z_2,\qquad t_i=d_i+k_i. \tag{4.1}
+\]
+
+\phantomsection
+\subsubsection{\texorpdfstring{Lemma 4.1. The balls \texttt{B\_i} partition \texttt{Z\_2}}{Lemma 4.1. The balls B\_i partition Z\_2}}\label{lemma-4.1.-the-balls-b_i-partition-z_2}
+
+They are disjoint since, for \texttt{i!=h}, the valuation of \texttt{i-h} is smaller than both \texttt{k\_i} and \texttt{k\_h}.
+
+For coverage, let \texttt{K=ceil(log\_2\ j)} and \texttt{b=2\^{}(K-1)} when \texttt{j\textgreater{}1}. Write \texttt{j=b+h}, with \texttt{1\textless{}=h\textless{}=b}. The residue classes modulo \texttt{b} from \texttt{0} to \texttt{h-1} occur twice in the skeleton, as \texttt{i} and \texttt{i+b}; these points have \texttt{k\_i=K} and split that class into its two children. The remaining classes from \texttt{h} to \texttt{b-1} occur once and have \texttt{k\_i=K-1}. Hence every dyadic integer lies in exactly one \texttt{B\_i}. The case \texttt{j=1} is immediate.
+
+\phantomsection
+\subsubsection{Lemma 4.2. Exact content on a separating ball}\label{lemma-4.2.-exact-content-on-a-separating-ball}
+
+On \texttt{x=i+2\^{}(k\_i)y},
+
+\[
+P_j(i+2^{k_i}y)=2^{t_i}yQ_i(y),
+\qquad Q_i\in\mathbb Z_2\langle y\rangle^\times,
+\quad Q_i\equiv1\pmod2. \tag{4.2}
+\]
+
+Indeed the factor \texttt{x-i} contributes \texttt{2\^{}(k\_i)y}. Each \texttt{x-h}, \texttt{h!=i}, has a fixed factor \texttt{2\^{}(v\_2(i-h))}, and after removing it has constant odd reduction because \texttt{k\_i\textgreater{}v\_2(i-h)}. The remaining factors \texttt{2x-(2h+1)} are units. Their total fixed valuation is \texttt{d\_i}.
+
+\phantomsection
+\subsubsection{Lemma 4.3. A coefficientwise affine reduction is an isometry}\label{lemma-4.3.-a-coefficientwise-affine-reduction-is-an-isometry}
+
+If \texttt{F\ in\ Z\_2\textless{}y\textgreater{}} has coefficientwise reduction \texttt{y+c}, then
+
+\[
+v_2(F(y)-F(z))=v_2(y-z)\qquad(y\ne z).
+\]
+
+To see this, divide the difference by \texttt{y-z}. The linear coefficient is odd and every contribution of degree at least two is even. The convergent quotient is therefore a unit. The one root modulo two lifts uniquely at every digit, giving a unique root \texttt{eta\ in\ Z\_2}, and
+
+\[
+v_2F(y)=v_2(y-\eta).
+\]
+
+This is the elementary simple-root Hensel mechanism for restricted series {[}S3{]}. Importantly, coefficientwise reduction is stronger than merely checking values at the two residues.
+
+\phantomsection
+\subsubsection{Theorem 4.4. Improved separation bound for every wall}\label{theorem-4.4.-improved-separation-bound-for-every-wall}
+
+If \texttt{delta\textgreater{}=t\_i}, the ball \texttt{B\_i} contains exactly one simple root \texttt{alpha\_i} of \texttt{G\_r}, and
+
+\[
+\boxed{v_2G_r(x)=d_i+v_2(x-\alpha_i)\qquad(x\in B_i).} \tag{4.3}
+\]
+
+Also \texttt{v\_2(alpha\_i-i)\textgreater{}=delta-d\_i}.
+
+\textbf{Proof.} Divide (3.2), after the substitution in (4.2), by \texttt{2\^{}(t\_i)}. Its main term is \texttt{y} times a unit. If \texttt{k\_i\textgreater{}=1}, the reduction of \texttt{V(i+2\^{}(k\_i)y)} is constant. Therefore the normalized series has reduction \texttt{y+c}. Apply Lemma 4.3. The original derivative has exact valuation \texttt{t\_i-k\_i=d\_i}. Evaluating the distance law at \texttt{x=i}, and using \texttt{v\_2G\_r(i)\textgreater{}=delta}, proves the displacement estimate. For \texttt{j=1}, post-wall \texttt{delta\textgreater{}=1} makes the entire perturbation even and the same argument applies.
+
+The largest threshold is
+
+\[
+\boxed{\max_i t_i=v_2((j-1)!)+\lceil\log_2j\rceil.} \tag{4.4}
+\]
+
+The upper bound follows from \texttt{binom(j-1,i)} being integral and \texttt{k\_i\textless{}=ceil(log\_2j)}; equality occurs at an endpoint. Thus (4.4), with \texttt{delta\textgreater{}=1} understood, guarantees exactly \texttt{j} simple roots. They exhaust the dyadic roots because the balls partition \texttt{Z\_2}.
+
+Once all balls contain their root,
+
+\[
+\boxed{v_2G_r(x)=\sum_{i=0}^{j-1}v_2(x-\alpha_i).} \tag{4.5}
+\]
+
+For a direct proof of (4.5), if \texttt{x\ in\ B\_i}, every other root has distance from \texttt{x} equal to the distance between its skeleton point and \texttt{i}. Those valuations sum to \texttt{d\_i}. Equation (4.3) then gives (4.5).
+
+This replaces v3's sufficient \texttt{delta\textgreater{}2\ max\ d\_i} with a generally smaller sufficient bound. Necessity requires more information about \texttt{V}, supplied next.
+
+\phantomsection
+\subsection{5. Complete exact classification of regular walls}\label{complete-exact-classification-of-regular-walls}
+
+\textbf{Definition.} A wall label \texttt{j} is regular here if
+
+\[
+\boxed{e_j(q)>0\qquad(1\le q<j).} \tag{5.1}
+\]
+
+This is a finite binary-digit condition, not an appeal to numerical root data. The terminology refers only to this note's wall condition.
+
+For a regular wall, \texttt{e\_j(0)=E\_j=0}, so \texttt{mu\_r=-delta}. In (3.2), the \texttt{q=0} contribution to \texttt{V} is \texttt{mathscr\ A(x)} and every other contribution is even. Hence
+
+\[
+V\equiv1\pmod2. \tag{5.2}
+\]
+
+\phantomsection
+\subsubsection{Theorem 5.1. Necessary-and-sufficient root emergence}\label{theorem-5.1.-necessary-and-sufficient-root-emergence}
+
+For a regular wall, for every integer \texttt{delta\textgreater{}=1}, each \texttt{B\_i} has exactly the following behavior:
+
+\[
+\boxed{v_2G_r(x)=
+\begin{cases}
+\delta,&\delta<t_i,\quad x\in B_i,\\
+d_i+v_2(x-\alpha_i),&\delta\ge t_i,\quad x\in B_i.
+\end{cases}} \tag{5.3}
+\]
+
+In the second case there is exactly one simple root in \texttt{B\_i}. Its displacement is exact:
+
+\[
+v_2(\alpha_i-i)=\delta-d_i.
+\]
+
+Consequently
+
+\[
+\boxed{\#\{x\in\mathbb Z_2:G_r(x)=0\}=\#\{i:t_i\le\delta\}.} \tag{5.4}
+\]
+
+\textbf{Proof.} If \texttt{delta\textless{}t\_i}, the first term of (3.2) is divisible by \texttt{2\^{}(t\_i)} on the ball and the second has exact valuation \texttt{delta}, by (5.2). This proves the first line and excludes roots. If \texttt{delta\textgreater{}=t\_i}, Theorem 4.4 applies. The reduction after division by \texttt{2\^{}(t\_i)} is \texttt{y+1} at equality and \texttt{y} when the inequality is strict. Since \texttt{G\_r(i)=2\^{}delta\ V(i)} has exact valuation \texttt{delta}, (4.3) gives the exact displacement. The partition lemma proves that no other dyadic roots are missed.
+
+Combining (2.6) and (5.3) is an exact all-row valuation formula for the original Euler remainder, including the possibility of an exact zero at a dyadic root.
+
+\phantomsection
+\subsubsection{Corollary 5.2. Power-of-two skeletons}\label{corollary-5.2.-power-of-two-skeletons}
+
+For \texttt{j=2\^{}a},
+
+\[
+e_j(q)=3q+s_2(q)>0\quad(1\le q<j).
+\]
+
+Every \texttt{k\_i=a} and every \texttt{d\_i=j-1-a}. Hence every \texttt{t\_i=j-1}, and
+
+\[
+\boxed{\#\text{ dyadic roots}=
+\begin{cases}
+0,&\delta<j-1,\\
+j,&\delta\ge j-1.
+\end{cases}} \tag{5.5}
+\]
+
+Here only positive wall distances are considered; at \texttt{j=1} the second case always applies. This is an infinite exact family, proved without extrapolating finite tests.
+
+\phantomsection
+\subsubsection{Corollary 5.3. The boundary and pre-wall range}\label{corollary-5.3.-the-boundary-and-pre-wall-range}
+
+For a regular wall, the classification also closes the start of the family. If \texttt{2\^{}L\textgreater{}j} and \texttt{L\textless{}L\_j}, then \texttt{J\_r=\{0\}}, \texttt{mu\_r=0}, and \texttt{G\_r} is a restricted analytic unit. There are no dyadic roots and the remainder valuation is exactly the first omitted term weight.
+
+At \texttt{L=L\_j}, there are two minimum layers, \texttt{J\_r=\{0,j\}}, and \texttt{mu\_r=0}. The reduction is
+
+\[
+\overline G_r(X)=1+X^{\underline j}.
+\]
+
+For \texttt{j\textgreater{}=2}, the falling product contains \texttt{X(X-1)}, so the reduction takes the value one at both residues. Consequently \texttt{v\_2G\_r(x)=0} for every \texttt{x\ in\ Z\_2}, and there are no roots. For \texttt{j=1}, the reduction is \texttt{1+X}; there is one simple root in the odd class. Thus Theorem 5.1 extends to \texttt{delta=0}, with its \texttt{j=1} convention, and the negative-distance range is root-free.
+
+The separate checker \texttt{check\_wall\_boundary\_v4.py} verifies the minima at every pre-wall scale for regular \texttt{j\textless{}=32}, and computes complete coefficient certificates at the equality scales. The proof above, rather than extrapolation, covers all regular wall labels.
+
+\phantomsection
+\subsection{6. The five-root family is completely resolved}\label{the-five-root-family-is-completely-resolved}
+
+For \texttt{j=5},
+
+\[
+(e_5(0),\ldots,e_5(4))=(0,2,6,9,13),\qquad L_5=17.
+\]
+
+Thus \texttt{r=2\^{}(17+delta)-5}, \texttt{M=r-1}, \texttt{mu\_r=-delta}, and the wall is regular.
+
+\begin{longtable}[]{@{}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1579}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedleft
+Skeleton \texttt{i}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\texttt{d\_i}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\texttt{k\_i}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Ball \texttt{B\_i}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Exact emergence distance \texttt{t\_i}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 3 & 3 & \texttt{0\ mod\ 8} & 6 \\
+1 & 1 & 2 & \texttt{1\ mod\ 4} & 3 \\
+2 & 2 & 2 & \texttt{2\ mod\ 4} & 4 \\
+3 & 1 & 2 & \texttt{3\ mod\ 4} & 3 \\
+4 & 3 & 3 & \texttt{4\ mod\ 8} & 6 \\
+\end{longtable}
+
+These five balls partition \texttt{Z\_2}. The exact root counts are therefore
+
+\begin{longtable}[]{@{}lrrrrrr@{}}
+\toprule\noalign{}
+Wall distance \texttt{delta} & 1 & 2 & 3 & 4 & 5 & 6 and above \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Number of roots & 0 & 0 & 2 & 3 & 3 & 5 \\
+\end{longtable}
+
+The earlier v3 sufficient stages \texttt{3,5,7} must not be read as sharp. The sharp stages are \textbf{3,4,6}. At the equality wall \texttt{delta=0} and throughout the valid pre-wall range there are no roots, by Corollary 5.3.
+
+For \texttt{x=N-r}, the original nonempty tail satisfies
+
+\[
+\boxed{v_2\mathcal T_{r-1}(N)
+=4r-1+v_2\binom Nr-\delta+
+\begin{cases}
+\delta,&x\in B_i,\ \delta<t_i,\\
+d_i+v_2(x-\alpha_i),&x\in B_i,\ \delta\ge t_i.
+\end{cases}} \tag{6.1}
+\]
+
+This is valid at every admissible row, not only near the first omitted row.
+
+\phantomsection
+\subsubsection{\texorpdfstring{Executed example at \texttt{delta=6}}{Executed example at delta=6}}\label{executed-example-at-delta6}
+
+Here \texttt{r=8,388,603}. All five roots are present. The following residues are certified modulo \texttt{2\^{}16}; the actual roots are dyadic numbers, not these finite integers.
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+Skeleton & Root residue modulo \texttt{65536} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 47240 \\
+1 & 39521 \\
+2 & 21714 \\
+3 & 60643 \\
+4 & 50028 \\
+\end{longtable}
+
+The calculation used 64-bit coefficient precision. Because the derivative has valuation \texttt{d\_i}, a root generally has \texttt{64-d\_i} certified bits. Full precision metadata is retained in the JSON, and no 64-bit claim is made for every root.
+
+At \texttt{x=0,...,12}, the exact values of \texttt{v\_2G\_r(x)} are
+
+\[
+6,6,6,6,6,3,4,3,10,4,5,4,8.
+\]
+
+For example \texttt{x=8} is in \texttt{B\_0}; the root residue gives \texttt{v\_2(8-alpha\_0)=7}, hence \texttt{v\_2G\_r(8)=3+7=10}. The original unfactored tail calculation agrees after normalization.
+
+The monic degree-five polynomial carrying the same valuations begins, modulo \texttt{256}, as
+
+\[
+W_r(X)\equiv X^5+246X^4+35X^3+206X^2+152X+192\pmod{256}.
+\]
+
+These eight-bit coefficients are a displayed check, not sufficient by themselves to establish the more precise root residues.
+
+\phantomsection
+\subsection{7. The first irregular wall: a finite complete certificate}\label{the-first-irregular-wall-a-finite-complete-certificate}
+
+At \texttt{j=17},
+
+\[
+L_{17}=53,\qquad e_{17}(0)=e_{17}(1)=0.
+\]
+
+Thus \texttt{V\ mod\ 2=1+X}, rather than the unit reduction required by Theorem 5.1. The regular-wall formula must not be used here.
+
+Nevertheless the general separation theorem guarantees all seventeen simple roots for
+
+\[
+\delta\ge v_2(16!)+\lceil\log_2 17\rceil=15+5=20.
+\]
+
+Only the finite prefix \texttt{delta=1,...,19} remains. For each such distance, and also for distance twenty as an endpoint check, the code produces a disjoint covering by balls \texttt{s+2\^{}k\ Z\_2}. Every leaf has a coefficient certificate of one of the two forms
+
+\[
+2^{-c}G_r(s+2^kY)\equiv1\pmod2, \tag{7.1}
+\]
+
+or
+
+\[
+2^{-c}G_r(s+2^kY)\equiv Y+\epsilon\pmod2. \tag{7.2}
+\]
+
+Case (7.1) proves that the exact valuation is \texttt{c} everywhere on the ball. Case (7.2), by Lemma 4.3, proves a unique simple root \texttt{alpha} on the ball and the exact law
+
+\[
+v_2G_r(x)=c-k+v_2(x-\alpha).
+\]
+
+The recorded polynomials are correct coefficientwise at a precision strictly beyond \texttt{c}; the rigorous cutoff in Section 9 controls the infinite analytic remainder. This is why these are whole-ball certificates rather than a collection of sampled values.
+
+The executed root counts are:
+
+\begin{longtable}[]{@{}lrrrrrrrr@{}}
+\toprule\noalign{}
+\texttt{delta} & 1--10 & 11--12 & 13 & 14--15 & 16 & 17 & 18--19 & 20 and above \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Roots & 1 & 2 & 4 & 8 & 12 & 14 & 15 & 17 \\
+\end{longtable}
+
+The JSON \texttt{first\_irregular\_wall} records all \textbf{163 leaf certificates} for distances one through twenty, with addresses, contents, polynomial reductions, root residues, and precision. There are no unresolved leaves. For larger distances Theorem 4.4 supplies the result. Together these establish the classification at every positive distance in this family.
+
+The pre-wall and equality scales for seventeen also close. For \texttt{5\textless{}=L\textless{}53}, \texttt{J\_r=\{0,1\}} and \texttt{G\_r\ mod\ 2=1+X}, so there is exactly one odd simple root. At \texttt{L=53}, the reduction becomes
+
+\[
+1+X+X^{\underline{17}}.
+\]
+
+Its only root in the residue field is \texttt{X=1}, and its derivative there is one. Hence this equality scale again has exactly one odd simple root. The boundary checker verifies all scales \texttt{L=5,...,53} with coefficient certificates and original-tail comparisons.
+
+Every \texttt{j} from one through thirty-two other than seventeen satisfies (5.1). This can be seen directly: for \texttt{j\textgreater{}=2}, \texttt{e\_j(1)=4-v\_2(j-1)}, and the only nonpositive case in this range is \texttt{j=17}; for \texttt{q\textgreater{}=2}, the digit-sum bound makes \texttt{e\_j(q)} positive. The case \texttt{j=1} is vacuous.
+
+Consequently Theorem 5.1, Corollary 5.3, and the seventeen-wall certificates cover every shifted-wall family with \texttt{1\textless{}=j\textless{}=32}, at every integer scale satisfying \texttt{2\^{}L\textgreater{}j}, including pre-wall and equality scales. This statement concerns those wall families, not every possible first omitted index \texttt{r}.
+
+\phantomsection
+\subsection{8. Every depth has a finite polynomial controlling the exact tail}\label{every-depth-has-a-finite-polynomial-controlling-the-exact-tail}
+
+\phantomsection
+\subsubsection{Theorem 8.1. Constructive finite-degree preparation}\label{theorem-8.1.-constructive-finite-degree-preparation}
+
+For every \texttt{r\textgreater{}=1}, put \texttt{d\_r=max\ J\_r}. There are unique factors
+
+\[
+G_r(X)=W_r(X)U_r(X),
+\]
+
+where \texttt{W\_r\ in\ Z\_2{[}X{]}} is monic of degree \texttt{d\_r}, and \texttt{U\_r\ in\ Z\_2\textless{}X\textgreater{}} is a unit with \texttt{U\_r\ mod\ 2=1}. In particular
+
+\[
+\boxed{\deg W_r=d_r\le\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor,} \tag{8.1}
+\]
+
+and
+
+\[
+\boxed{v_2\mathcal T_{r-1}(N)
+=4r-1+v_2\binom Nr+\mu_r+v_2W_r(N-r).} \tag{8.2}
+\]
+
+This is a specialization of one-variable Weierstrass preparation {[}S3{]}. The following proof also gives the implemented coefficient algorithm.
+
+\textbf{Constructive proof.} Let \texttt{g=G\_r\ mod\ 2}, which is monic of degree \texttt{d\_r} by (2.5). Start with its zero-one lift \texttt{W\_1=g}, \texttt{U\_1=1}. Suppose monic \texttt{W\_k} of degree \texttt{d\_r} and polynomial \texttt{U\_k} satisfy
+
+\[
+G_r-W_kU_k\in2^k\mathbb Z_2\langle X\rangle.
+\]
+
+Reduce the divided error modulo two. It is an ordinary polynomial, since the series is restricted. Divide it in \texttt{F\_2{[}X{]}} by \texttt{g}:
+
+\[
+\overline{(G_r-W_kU_k)/2^k}=gq+s,\qquad\deg s<d_r.
+\]
+
+Lift \texttt{q,s} with zero-one coefficients and set
+
+\[
+W_{k+1}=W_k+2^ks,\qquad U_{k+1}=U_k+2^kq.
+\]
+
+The new error is divisible by \texttt{2\^{}(k+1)}. The leading coefficient of \texttt{W\_k} remains one and its degree remains fixed. Both sequences are Cauchy in the Gauss norm. Completeness produces the required finite polynomial \texttt{W\_r} and restricted series \texttt{U\_r}. The latter reduces to one and is therefore invertible. Uniqueness follows from uniqueness of quotient and remainder at each binary digit, or by comparing two factorizations modulo successive powers of two. At degree zero take \texttt{W\_r=1}, \texttt{U\_r=G\_r}.
+
+The bound (8.1) follows from (2.4); (8.2) follows since a restricted integral unit takes unit values at every dyadic argument.
+
+\phantomsection
+\subsubsection{Corollary 8.2. Finite valuation descriptions exist at every depth}\label{corollary-8.2.-finite-valuation-descriptions-exist-at-every-depth}
+
+Every fixed \texttt{r} has finitely many dyadic roots, at most \texttt{d\_r} when multiplicities are counted. On a sufficiently small ball around a root \texttt{alpha} of multiplicity \texttt{e},
+
+\[
+v_2W_r(x)=c+e\,v_2(x-\alpha).
+\]
+
+Outside disjoint root neighborhoods, compactness gives a finite partition into balls on which \texttt{v\_2W\_r} is constant. Indeed the root-free quotient is continuous and nonzero near each root, while the complement is compact and root-free.
+
+This proves existence of a finite exact valuation description for every depth. It does \textbf{not} say that a fixed-precision computation can decide a repeated root, or that the current simple-root splitter always terminates on every input. The implementation reports unresolved precision/depth leaves instead of promoting them to results. An explicit arithmetic classification of all remaining irregular polynomials is not supplied here.
+
+\phantomsection
+\subsection{9. Exact computation without constructing enormous Bernoulli numbers}\label{exact-computation-without-constructing-enormous-bernoulli-numbers}
+
+\phantomsection
+\subsubsection{9.1 A precision-local Bernoulli identity}\label{a-precision-local-bernoulli-identity}
+
+The generating-function identity
+
+\[
+e^t\frac{2t}{e^{2t}-1}
+=\frac{2t}{e^t-1}-\frac{2t}{e^{2t}-1}
+\]
+
+implies, for positive even \texttt{n},
+
+\[
+(1-2^{n-1})\,2B_n
+=\sum_{k=0}^n\binom nk2^kB_k.
+\]
+
+Since \texttt{v\_2(B\_k)\textgreater{}=-1}, every term with \texttt{k\textgreater{}=P+1} is zero modulo \texttt{2\^{}P}. The factor on the left is odd. Thus
+
+\[
+\boxed{2B_n\equiv(1-2^{n-1})^{-1}
+\sum_{k=0}^{\min(n,P)}\binom nk2^kB_k\pmod{2^P}.} \tag{9.1}
+\]
+
+Only \texttt{B\_0,...,B\_P} are needed, even when the index \texttt{n} is enormous. Formula (9.1) is derived here from the classical Bernoulli finite-expansion and multiplication identities {[}S2{]}, and is not asserted to be historically new.
+
+The independent power-sum check uses, for \texttt{h=P+1},
+
+\[
+2B_n\equiv2^{1-h}\sum_{a=0}^{2^h-1}a^n\pmod{2^P}.
+\]
+
+Faulhaber's expansion proves the error estimate. Since \texttt{n} is even, \texttt{n+1} is odd; after removing the leading \texttt{2B\_n}, every term has valuation at least \texttt{h-1}. The finite sum is computed modulo \texttt{2\^{}(P+h-1)} before exact division by \texttt{2\^{}(h-1)}.
+
+\phantomsection
+\subsubsection{9.2 Kernel coefficients and a complete tail cutoff}\label{kernel-coefficients-and-a-complete-tail-cutoff}
+
+The normalized coefficient in \texttt{G\_r} can be computed by
+
+\[
+2^{-\mu_r}8^q\frac{\beta_{r+q}}{\beta_r}
+=2^{5q-\mu_r}\frac{2r+2q-1}{2r-1}
+\frac{2B_{2r+2q}}{2B_{2r}}
+\frac{(2r)!}{(2r+2q)!}. \tag{9.2}
+\]
+
+Strip powers of two from the finite product \texttt{(2r+1)...(2r+2q)} before modular inversion. The exact resulting power is \texttt{lambda\_r(q)-mu\_r}, and every remaining denominator is odd.
+
+For coefficient precision \texttt{P}, it suffices to retain
+
+\[
+0\le q\le Q=\max\left(0,\left\lfloor
+\frac{P+s_2(r)+\mu_r-2}{3}\right\rfloor\right). \tag{9.3}
+\]
+
+Indeed for \texttt{q\textgreater{}=Q+1},
+
+\[
+\lambda_r(q)-\mu_r\ge3q+1-s_2(r)-\mu_r\ge P.
+\]
+
+Thus all omitted terms vanish coefficientwise. Affine substitutions by integral addresses preserve coefficientwise precision.
+
+Formula (2.1) computes the source polynomial modulo \texttt{2\^{}P}. For \texttt{log9/8}, terms have valuation \texttt{3h-3-v\_2(h)}; for the main source sum, valuation \texttt{3k-v\_2((k+1)!)}; and the geometric inverse has coefficient valuation equal to its degree. These bounds justify the finite loops in the code.
+
+\phantomsection
+\subsubsection{9.3 Independent original-tail evaluation}\label{independent-original-tail-evaluation}
+
+\texttt{original\_normalized\_tail} uses the original \texttt{kappa\_m}, the binomial complement \texttt{binom(2N,2(x-q))}, and a modular-power source calculation. It does not use the factorial cancellation defining \texttt{P\_q}. Precision is increased before dividing by the valuation of the prefactor. Both this path and (9.2) use (9.1), whose Bernoulli residues are independently checked against exact small-index rationals and finite power sums at large indices.
+
+\phantomsection
+\subsection{10. Executed audit and reproduction}\label{executed-audit-and-reproduction}
+
+Run with standard Python; no third-party numerical library is required:
+
+\begin{verbatim}
+python check_completion_v4.py
+\end{verbatim}
+
+The retained run completed in \textbf{10.334768 seconds} with exit status zero. All scientific arithmetic is exact rational or modular integer arithmetic. Floating point is used only for elapsed-time metadata; infinity is a sentinel for the valuation of zero.
+
+Selected executed checks:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.4286}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5714}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Check
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Count or range
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Full Euler reconstruction, independent inverse and Euler recurrence & \texttt{N=0,...,128}, 129 rows \\
+Every nonempty rational tail in those rows & 8,256 \\
+Bernoulli residues against exact rational coefficients & 640 \\
+Large-index Bernoulli residues against finite power sums & 64 \\
+Source series against modular powers, including negative arguments & 363 \\
+Five-wall original unfactored-tail checks & 483 \\
+Seventeen-wall original unfactored-tail checks & 660 \\
+Five-wall sampled checks against the certified valuation atlas & 28,672 \\
+Five-wall whole-ball certificates & 28 \\
+Regular-wall whole-ball certificates & 11,969 \\
+First-irregular-wall whole-ball certificates & 163 \\
+Arbitrary-depth finite polynomial preparations & 75 \\
+Prepared-polynomial versus full-series valuation checks & 4,875 \\
+\end{longtable}
+
+The general separating-ball scales were separately checked at 8,255 skeleton points for \texttt{2\textless{}=j\textless{}=128}, and the maximum-scale identity at 127 values of \texttt{j}. All counts and all certificate data are in \texttt{RESULTS\_COMPLETION\_04.json}.
+
+A separate boundary-closure run completed in \textbf{0.352971 seconds}, with 1,513 pre-wall minimum checks, 111 whole-ball boundary/pre-wall certificates, and 1,280 additional original-tail comparisons. Its results, manifest, and log are retained under the \texttt{BOUNDARY\_04} names.
+
+A finite coefficient certificate with a proved omitted-term bound proves its corresponding whole-ball statement. The sampled comparisons are implementation checks, not independent universal proofs. Larger untested domains are covered only where an explicit theorem above applies.
+
+\phantomsection
+\subsection{11. Boundaries, corrections, and preserved history}\label{boundaries-corrections-and-preserved-history}
+
+The five-root family is now completely classified at every valid shifted-wall scale and every argument, including the pre-wall and equality scales. The regular-wall theorem and all power-of-two skeleton corollaries are universal. The first irregular wall is covered by its finite certificates and the all-large-distance theorem. These together cover all shifted-wall labels up to thirty-two.
+
+Every arbitrary depth has an exact finite-polynomial valuation reduction, but its root geometry is not explicitly classified here. In particular, neither simplicity of every root at arbitrary depth nor automatic resolution of every multiple root is asserted.
+
+The optimal uniform exponent \texttt{4M+3} is unchanged. Extra root-distance gains are row-specific and do not increase a bound required to hold at the first omitted row.
+
+Historical files from v1--v3 are preserved. Their retained logs are not claimed to have all been rerun in v4. This continuation reruns its own exact construction and the declared checks. No Lean compilation or priority review was performed.
+
+\phantomsection
+\subsection{Sources for classical inputs}\label{sources-for-classical-inputs}
+
+{[}S1{]} NIST Digital Library of Mathematical Functions, Section 24.10(i), equation 24.10.1, von Staudt--Clausen denominator theorem. \url{https://dlmf.nist.gov/24.10}
+
+{[}S2{]} NIST Digital Library of Mathematical Functions, Section 24.4, finite Bernoulli expansions, power sums, and multiplication formulas. \url{https://dlmf.nist.gov/24.4}
+
+{[}S3{]} Keith Conrad, \emph{Hensel's Lemma}, Theorem 8.2 and Remark 8.3, printed pages 16--17: restricted power series Hensel lifting and Weierstrass preparation. \url{https://kconrad.math.uconn.edu/blurbs/gradnumthy/hensel.pdf}
+
+The general wall thresholds and specialized Euler-tail formulas proved above should not be attributed to these classical references. They are the deductions of this continuation from the stated inputs.
+
+\clearpage
+
+\phantomsection
+\section{Continuation V. Certified resolution and precision distributions}\label{continuation-v.-certified-resolution-and-precision-distributions}
+
+\textbf{Komorebi P. · 26 September 2026 · Version 5}
+
+\phantomsection
+\subsection{Scope and new conclusions}\label{scope-and-new-conclusions}
+
+This continuation retains the exact source, kernel, tail factorization and finite polynomial preparation of v4. It adds three results. First, a nonzero resultant gives an explicit stopping bound for the polynomial root-resolution algorithm. Second, any completed valuation atlas determines an exact rational generating function for the frequency of cancellation, and an exact mean valuation. Third, complete coefficient certificates resolve the next irregular walls, of sizes 33 and 49. Together with the regular-wall theorem and the size-17 certificates, these cover every shifted-wall label through 64 at every valid scale.
+
+There is also a necessary interpretive correction. Root counts need not be monotone as an irregular wall distance increases. At size 33 the count drops from one to zero before rising to two. Moving beyond a wall suppresses a lower packet in the normal form, but does not by itself imply monotone root emergence. The regular-wall theorem remains valid with its stated unit-perturbation hypothesis.
+
+Universal statements below have proofs. The two new irregular-wall prefixes are computer-assisted: complete coefficientwise certificates cover dyadic balls, and the v4 cutoff controls every omitted analytic coefficient. Their numerical root residues are finite approximations, not exact rational roots. No Lean compilation or historical-priority assessment is claimed.
+
+\phantomsection
+\subsection{Conventions retained from v4}\label{conventions-retained-from-v4}
+
+The target is the signed Euler number \(E_{2N}\). The last retained depth is \(M\), and \(r=M+1\) is the first omitted depth. Put \(x=N-r\) for a nonempty integer tail. Define
+
+\[
+A(N)=\frac{3^{2N+2}-1}{4(2N+1)(2N+2)},\qquad
+\left(\frac z{\sinh z}\right)^2=\sum_{m\ge0}\beta_mz^{2m},
+\] \[
+\kappa_m=2^{2m}(2m)!\beta_m,
+\qquad
+\mathcal T_M(N)=E_{2N}-\sum_{m=0}^{\min(M,N)}
+\kappa_m\binom{2N}{2m}A(N-m).
+\]
+
+The source is a dyadic unit, \(v_2(\kappa_m)=4m-1\) for \(m\ge1\), and
+
+\[
+\mathcal T_{r-1}(N)=\kappa_r\binom{2N}{2r}H_r(N-r).
+\]
+
+The analytic source, including its removable point, is
+
+\[
+\mathscr A(x)=\frac{9^{x+1}-1}{8(x+1)(2x+1)},
+\qquad \mathscr A(-1)=-\frac{\log9}{8}.
+\]
+
+It belongs to \(\mathbb Z_2\langle x\rangle^\times\) and is one modulo two coefficientwise. With
+
+\[
+P_q(x)=\prod_{i=0}^{q-1}(x-i)(2x-(2i+1)),
+\] \[
+H_r(x)=\sum_{q\ge0}8^q\frac{\beta_{r+q}}{\beta_r}
+P_q(x)\mathscr A(x-q),
+\]
+
+the carry weights and normalization are
+
+\[
+\lambda_r(q)=3q+s_2(r+q)-s_2(r),\qquad
+\mu_r=\min_q\lambda_r(q),\qquad
+J_r=\{q:\lambda_r(q)=\mu_r\},
+\] \[
+G_r=2^{-\mu_r}H_r.
+\]
+
+Every minimizer satisfies \(q\le\lfloor(s_2(r)-1)/3\rfloor\). The finite polynomial preparation is
+
+\[
+G_r(X)=W_r(X)U_r(X),\qquad
+U_r\in\mathbb Z_2\langle X\rangle^\times,
+\]
+
+where \(W_r\) is monic of degree \(\max J_r\). Consequently
+
+\[
+\boxed{
+ v_2\mathcal T_{r-1}(N)
+ =4r-1+v_2\binom Nr+\mu_r+v_2W_r(N-r).
+} \tag{V.1}
+\]
+
+The old optimal uniform bound is \(4M+3=4r-1\). None of the results in this continuation increases that worst-case bound. Empty tails remain exactly zero, with valuation infinity.
+
+\phantomsection
+\subsection{A finite stopping certificate for squarefree residual polynomials}\label{a-finite-stopping-certificate-for-squarefree-residual-polynomials}
+
+Let \(W\in\mathbb Z_2[X]\) be monic of positive degree. Write
+
+\[
+R=\operatorname{Res}(W,W'),\qquad D=v_2(R).
+\]
+
+A zero resultant is not assumed absent. The following theorem is conditional on \(R\ne0\).
+
+\phantomsection
+\subsubsection{Theorem V.1. Resultant-controlled resolution depth}\label{theorem-v.1.-resultant-controlled-resolution-depth}
+
+Suppose \(D<\infty\). Then every ball modulo \(2^{D+1}\) has exactly one of the following descriptions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(v_2W\) is constant on that ball and there is no root there.
+\item
+  The ball contains one simple dyadic root \(\alpha\), and \(v_2W(x)=b+v_2(x-\alpha)\) there for a fixed integer \(b\).
+\end{enumerate}
+
+Coefficient precision
+
+\[
+\boxed{P\ge2D+2}
+\]
+
+is sufficient to certify the complete partition. An adaptive constant-or-affine splitter therefore terminates by depth at most \(D+1\) at that precision.
+
+\textbf{Proof.} The adjugate of the Sylvester matrix supplies \(A,B\in\mathbb Z_2[X]\) with
+
+\[
+A(X)W(X)+B(X)W'(X)=R.
+\]
+
+For every \(s\in\mathbb Z_2\), this implies
+
+\[
+\min\{v_2W(s),v_2W'(s)\}\le D. \tag{V.2}
+\]
+
+Set \(k=D+1\) and expand
+
+\[
+W(s+2^kY)=W(s)+2^kW'(s)Y+
+\sum_{i\ge2}2^{ki}c_iY^i,
+\qquad c_i\in\mathbb Z_2.
+\]
+
+If \(a=v_2W(s)\le D\), all nonconstant coefficients have valuation at least \(k>a\). Division by \(2^a\) gives constant reduction one, so the valuation is \(a\) throughout the ball.
+
+If \(a>D\), equation (V.2) gives \(b=v_2W'(s)\le D\). The linear coefficient has valuation \(c=k+b\le2D+1\), while every higher coefficient has valuation at least \(2k>c\). If \(a<c\), the constant dominates and again gives a constant-valuation ball. If \(a\ge c\), division by \(2^c\) gives coefficientwise reduction \(Y+\epsilon\). The elementary isometry lemma from v4 gives one root \(\eta\in\mathbb Z_2\) and
+
+\[
+v_2W(s+2^kY)=c+v_2(Y-\eta).
+\]
+
+Putting \(\alpha=s+2^k\eta\) yields \(c-k=b\) and the asserted distance law. The largest normalization used is \(c\le2D+1\), so \(P\ge2D+2\) supplies the nonzero residual coefficient in every case. This proves both the mathematical classification and the finite certificate bound. \(\square\)
+
+The Hensel/isometry step is standard local analysis {[}S3{]}. The proof here makes the stopping depth and coefficient budget explicit. It does not claim a polynomial-time algorithm: enumerating all depth-\(D+1\) balls can be expensive, and the adaptive splitter is intended to avoid that enumeration when certificates appear earlier.
+
+\phantomsection
+\subsubsection{Corollary V.2. A checkable certificate from finite coefficients}\label{corollary-v.2.-a-checkable-certificate-from-finite-coefficients}
+
+Compute the resultant of a monic coefficient lift of \(W_r\) modulo \(2^P\). If the resultant residue is nonzero, its valuation \(D<P\) is the exact valuation of the true dyadic resultant. This follows because the resultant is a polynomial with integer coefficients in the input coefficients. It certifies squarefreeness over \(\mathbb Q_2\).
+
+Once coefficient precision reaches \(2D+2\), Theorem V.1 gives a guaranteed finite resolution. If the resultant is zero modulo \(2^P\), the result is inconclusive. It does not establish a repeated root. A repeated root of the exact polynomial, should one occur, still requires a multiplicity-aware analysis.
+
+The new audit certifies 22 nonconstant Euler residual polynomials this way. One additional tested Euler residual is a unit polynomial. The test polynomial \(X^2\) deliberately produces an inconclusive resultant and an unresolved branch, confirming that the implementation does not turn a finite zero into a simple-root certificate.
+
+\phantomsection
+\subsubsection{Example: a degree-seven residual}\label{example-a-degree-seven-residual}
+
+For \(r=2^{40}-7\), the prepared polynomial has degree seven and exact resultant valuation \(D=24\). The theorem allows resolution depth 25 and coefficient precision 50. The adaptive certificate actually finishes at depth three. This illustrates a conservative worst-case certificate, not a claim that the upper bound is attained.
+
+\phantomsection
+\subsection{Exact frequency of residual cancellation}\label{exact-frequency-of-residual-cancellation}
+
+Equip \(\mathbb Z_2\) with normalized Haar measure \(\nu\), so a residue ball \(s+2^k\mathbb Z_2\) has measure \(2^{-k}\). This is a precise counting convention: events determined modulo \(2^h\) have the same measure as their fraction among the \(2^h\) residues. No probabilistic model of Euler numbers is assumed.
+
+A completed atlas has constant leaves and simple-root leaves. On a constant leaf of depth \(k\),
+
+\[
+v_2G(x)=c.
+\]
+
+On a simple-root leaf of depth \(k\) and normalization content \(c\),
+
+\[
+G(s+2^kY)=2^cF(Y),\qquad
+v_2F(Y)=v_2(Y-\eta).
+\]
+
+The last random variable under uniform Haar measure has the exact law
+
+\[
+\nu\{v_2(Y-\eta)=n\}=2^{-n-1},\qquad n\ge0. \tag{V.3}
+\]
+
+Indeed divisibility by \(2^n\) selects one ball of measure \(2^{-n}\), and subtracting the next ball gives the displayed shell measure.
+
+\phantomsection
+\subsubsection{Theorem V.3. Rational valuation generating function}\label{theorem-v.3.-rational-valuation-generating-function}
+
+Let
+
+\[
+Z_G(T)=\int_{\mathbb Z_2}T^{v_2G(x)}\,d\nu(x).
+\]
+
+The finite root set has measure zero. For a completed simple-root atlas,
+
+\[
+\boxed{
+ Z_G(T)=
+ \sum_{\text{constant leaves}}2^{-k}T^c
+ +\sum_{\text{simple-root leaves}}
+ \frac{2^{-k}T^c}{2-T}.
+} \tag{V.4}
+\]
+
+This identity is an identity of probability generating series for the nonnegative, finite valuations. It is also valid as a convergent integral for real \(0\le T<2\).
+
+\textbf{Proof.} A constant leaf contributes its measure times \(T^c\). On a simple-root leaf, use the affine parameter \(Y\), whose normalized measure is uniform, and sum the geometric series in (V.3):
+
+\[
+\sum_{n\ge0}2^{-n-1}T^n=\frac1{2-T}.
+\]
+
+Add the finitely many disjoint leaves. \(\square\)
+
+The exact survival probability is consequently
+
+\[
+\boxed{
+\nu\{v_2G\ge h\}=
+\sum_{\text{constant leaves}}2^{-k}\mathbf1_{c\ge h}
++\sum_{\text{root leaves}}2^{-k-\max(0,h-c)}.
+} \tag{V.5}
+\]
+
+For all sufficiently large \(h\),
+
+\[
+\boxed{
+\nu\{v_2G\ge h\}=C_G\,2^{-h},
+\qquad C_G=\sum_{\text{root leaves}}2^{c-k}.
+} \tag{V.6}
+\]
+
+An explicit onset is the maximum of the root-leaf contents and one more than each constant-leaf value. A root-free atlas gives \(C_G=0\). Beyond that onset, one extra binary digit of residual cancellation halves the fraction of eligible addresses.
+
+This last statement concerns residual cancellation after the kernel and binomial factors have been separated. It must not be read as an independence statement about the binomial carry term in (V.1).
+
+\phantomsection
+\subsubsection{Repeated roots and the general all-depth form}\label{repeated-roots-and-the-general-all-depth-form}
+
+The v4 preparation theorem and compactness imply a finite valuation description even when multiplicities occur. Near a root \(\alpha\) of multiplicity \(e\), on a sufficiently small ball, the valuation is \(c+e\,v_2(Y-\eta)\). Its generating contribution is
+
+\[
+\frac{2^{-k}T^c}{2-T^e}.
+\]
+
+Therefore every fixed depth has a rational valuation generating function, with denominators of this form for the dyadic root multiplicities actually present. This is an existence theorem. The present code certifies constant and simple-root leaves; it does not purport to determine an exact repeated root from arbitrarily long runs of finite zero residues.
+
+\phantomsection
+\subsection{The five-root distribution, explicitly}\label{the-five-root-distribution-explicitly}
+
+At the regular wall \(j=5\), after all five roots have separated (\(\delta\ge6\)), the separating data are
+
+\[
+(k_i)=(3,2,2,2,3),\qquad
+(d_i)=(3,1,2,1,3),\qquad
+(t_i)=(6,3,4,3,6).
+\]
+
+On each root ball, \(c=t_i\) and its mass is \(2^{-k_i}\). Theorem V.3 gives
+
+\[
+\boxed{
+ Z_{G_r}(T)=\frac{2T^3+T^4+T^6}{4(2-T)}.
+} \tag{V.7}
+\]
+
+In particular,
+
+\[
+\boxed{
+\nu\{v_2G_r\ge h\}=\frac{24}{2^h}
+\quad(h\ge6),
+\qquad
+\int v_2G_r\,d\nu=5.
+} \tag{V.8}
+\]
+
+Some exact residual precision budgets are:
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+Required residual valuation \(h\) & Exact address fraction \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+6 & \(3/8\) \\
+7 & \(3/16\) \\
+8 & \(3/32\) \\
+10 & \(3/128\) \\
+12 & \(3/512\) \\
+16 & \(3/8192\) \\
+\end{longtable}
+
+The audit compares the generating-function law against complete residue enumeration through 12 bits, not just selected root neighborhoods.
+
+At earlier positive distances the same theorem yields
+
+\[
+Z_{G_r}(T)=
+\sum_{\delta<t_i}2^{-k_i}T^\delta
++\sum_{\delta\ge t_i}\frac{2^{-k_i}T^{t_i}}{2-T}.
+\tag{V.9}
+\]
+
+For example the first two stages are \(T\) and \(T^2\), since the entire normalized residual has constant valuation one or two. Root emergence changes the distribution exactly when a separating ball crosses its threshold.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/05_precision_survival.pdf}
+\caption{Exact survival law for residual precision in the resolved five-root wall. The line is computed from the theorem, not fitted to samples.}
+\end{figure}
+
+\phantomsection
+\subsection{Mean precision of the complete Euler remainder}\label{mean-precision-of-the-complete-euler-remainder}
+
+\phantomsection
+\subsubsection{Lemma V.4. Mean binomial carry valuation}\label{lemma-v.4.-mean-binomial-carry-valuation}
+
+For every fixed positive integer \(r\),
+
+\[
+\boxed{
+\int_{\mathbb Z_2}v_2\binom{x+r}{r}\,d\nu(x)=s_2(r).
+} \tag{V.10}
+\]
+
+\textbf{Proof.} Away from the finitely many roots of the numerator,
+
+\[
+v_2\binom{x+r}{r}
+=\sum_{i=1}^{r}v_2(x+i)-v_2(r!).
+\]
+
+Translation invariance and (V.3) give \(\int v_2(x+i)\,d\nu=1\). Integrating the finite sum gives \(r-v_2(r!)=s_2(r)\). The finitely many infinite values have measure zero. No independence is used. \(\square\)
+
+The equality between the two binomial valuations in (V.1) extends to dyadic arguments: their ratio is a product of odd affine factors divided by odd integers and therefore a unit.
+
+\phantomsection
+\subsubsection{Theorem V.5. Mean remainder valuation at every resolved depth}\label{theorem-v.5.-mean-remainder-valuation-at-every-resolved-depth}
+
+For the analytic extension of the nonempty-tail formula, under \(N=r+x\) with \(x\) distributed by Haar measure,
+
+\[
+\boxed{
+\int v_2\mathcal T_{r-1}(r+x)\,d\nu(x)
+=4r-1+\mu_r+s_2(r)+\int v_2G_r(x)\,d\nu(x).
+} \tag{V.11}
+\]
+
+For a completed simple atlas,
+
+\[
+\int v_2G_r\,d\nu
+=\sum_{\text{constant leaves}}2^{-k}c
++\sum_{\text{root leaves}}2^{-k}(c+1). \tag{V.12}
+\]
+
+\textbf{Proof.} Integrate the exact valuation identity (V.1), apply Lemma V.4, and use (V.3) on each root leaf. All terms are integrable. \(\square\)
+
+\phantomsection
+\subsubsection{Corollary V.6. Exact mean after complete wall separation}\label{corollary-v.6.-exact-mean-after-complete-wall-separation}
+
+Let \(r=2^L-j\), with \(L>L_j\), and suppose all \(j\) skeleton roots have separated as in the v4 theorem. Then
+
+\[
+\boxed{
+\int v_2\mathcal T_{r-1}(r+x)\,d\nu(x)
+=4(r+j)=4\cdot2^L.
+} \tag{V.13}
+\]
+
+Equivalently, the mean gain above the optimal uniform exponent \(4r-1\) is exactly
+
+\[
+\boxed{4j+1.}
+\]
+
+\textbf{Proof.} Once all roots are separated, \(v_2G_r(x)=\sum_{i=0}^{j-1}v_2(x-\alpha_i)\), so its mean is \(j\). Binary complementation gives \(s_2(r)=L-s_2(j-1)\). From the wall definitions,
+
+\[
+\mu_r=E_j-(L-L_j),\qquad
+E_j+L_j=3j+1+s_2(j-1),
+\]
+
+hence \(\mu_r+s_2(r)=3j+1\). Substitute in (V.11). \(\square\)
+
+For the five-root wall at \(\delta=6\), \(r=8{,}388{,}603\). Its uniform exponent is \(33{,}554{,}411\), and its Haar mean exponent is \(33{,}554{,}432\). The gain is 21, exactly \(4\cdot5+1\).
+
+This is an average with a declared measure, not a guarantee at each row. It coexists with the sharp worst-case row and with arbitrarily large gains along root-approaching addresses. The counting interpretation is exact for capped valuation events modulo powers of two. No claim is made that untruncated arithmetic averages over successive integer prefixes must converge without an additional uniform-integrability argument.
+
+\phantomsection
+\subsubsection{Power-of-two skeletons}\label{power-of-two-skeletons}
+
+If \(j=2^a\), every separating content is \(t_i=j-1\). After all roots emerge,
+
+\[
+\boxed{
+Z_{G_r}(T)=\frac{T^{j-1}}{2-T}.
+} \tag{V.14}
+\]
+
+Thus the normalized residual valuation has the law \(j-1\) plus a geometric binary valuation, despite there being \(j\) distinct root balls. Its mean is \(j\). This follows from the equal ball masses and equal derivative/separation costs, not from an identification of the different roots.
+
+\phantomsection
+\subsection{The next irregular wall: a root disappears before the full set emerges}\label{the-next-irregular-wall-a-root-disappears-before-the-full-set-emerges}
+
+At \(j=33\), the lower carry weights have minimum \(E_{33}=-1\), uniquely at \(q=1\), and
+
+\[
+L_{33}=102,\qquad r=2^{102+\delta}-33,\qquad\mu_r=-1-\delta.
+\]
+
+The lower perturbation has reduction \(X\), not a unit. Therefore the regular-wall necessity and monotonicity conclusions do not apply.
+
+The complete root count is:
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+Distance \(\delta\) & Exact root count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 through 26 & 1 \\
+27 & 0 \\
+28 & 2 \\
+29 & 4 \\
+30 & 8 \\
+31 & 24 \\
+32 & 28 \\
+33 & 30 \\
+34 and 35 & 31 \\
+36 and above & 33 \\
+\end{longtable}
+
+The audit certifies every distance one through 37. The general separation threshold is 37, so the finite result at 36 and the theorem for every distance at least 37 prove the last row of this table. The finite valid pre-wall scales have one simple even root, as does the equality wall.
+
+\phantomsection
+\subsubsection{A complete no-root certificate at distance 27}\label{a-complete-no-root-certificate-at-distance-27}
+
+At \(\delta=27\), the following compressed partition covers \(\mathbb Z_2\):
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+Dyadic address & Exact value of \(v_2G_r\) & Measure \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+odd \(x\) & 27 & \(1/2\) \\
+\(x=0\pmod4\) & 28 & \(1/4\) \\
+\(x=6\pmod8\) & 29 & \(1/8\) \\
+\(x=10\pmod{16}\) & 30 & \(1/16\) \\
+\(x=2\pmod{32}\) & 31 & \(1/32\) \\
+\(x=18\pmod{32}\) & 32 & \(1/32\) \\
+\end{longtable}
+
+The stored certificate uses a few smaller leaves whose unions are the classes displayed here. Every leaf reduces coefficientwise to one after removal of its stated power of two. The last two classes split the one remaining class modulo sixteen, so the table covers all dyadic arguments, not a sampled subset.
+
+It follows that there is no dyadic root and no residual valuation above 32 in this family at this distance. Its exact generating polynomial is
+
+\[
+\boxed{
+Z_{G_r}(T)=\frac{16T^{27}+8T^{28}+4T^{29}+2T^{30}+T^{31}+T^{32}}{32}.
+} \tag{V.15}
+\]
+
+Its mean is \(895/32\). This is a bounded residual valuation; the separate binomial carry factor in the complete Euler remainder must still be accounted for.
+
+At distance 26, a simple-root leaf occurs on \(x=2\pmod{16}\). At distance 28 it has been replaced by two simple-root leaves, on \(x=2\) and \(x=18\) modulo 32. Statements about individual roots being continuously tracked as \(\delta\) changes would require a separately defined parameterized family. The result here is an exact count for each member of the discrete wall family.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/03_irregular_33.pdf}
+\caption{Root counts in the size-33 irregular wall. The dip at distance 27 is certified on a covering of the full dyadic domain.}
+\end{figure}
+
+\phantomsection
+\subsection{The size-49 wall and coverage through 64}\label{the-size-49-wall-and-coverage-through-64}
+
+For \(j=49\),
+
+\[
+E_{49}=0,\qquad L_{49}=150,\qquad
+r=2^{150+\delta}-49.
+\]
+
+The lower minimum is shared by \(q=0,1\), so the perturbation reduces to \(1+X\). Its exact root counts are:
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+Distance \(\delta\) & Exact root count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 through 42 & 1 \\
+43 & 4 \\
+44 & 6 \\
+45 & 12 \\
+46 & 16 \\
+47 & 28 \\
+48 & 30 \\
+49 & 39 \\
+50 & 43 \\
+51 & 45 \\
+52 and above & 49 \\
+\end{longtable}
+
+The general separation threshold is \(v_2(48!)+\lceil\log_2 49\rceil=46+6=52\). Every positive distance through 52 has a complete coefficient atlas. The theorem then covers every larger distance. Pre-wall and equality scales each have one odd simple root.
+
+The stored arithmetic uses 64-bit coefficient precision. A root residue can have fewer than 64 certified bits when a positive derivative valuation is removed. Every root record retains its own precision. None of the displayed classification counts depends on treating a finite residue as an exact zero.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/04_irregular_49.pdf}
+\caption{Exact root counts for the size-49 irregular wall. Complete separation occurs at the general bound 52.}
+\end{figure}
+
+\phantomsection
+\subsubsection{Corollary V.7. Complete shifted-wall coverage through size 64}\label{corollary-v.7.-complete-shifted-wall-coverage-through-size-64}
+
+For \(j\le64\), the only irregular labels are \(17,33,49\). Indeed, for \(q=1\),
+
+\[
+e_j(1)=4-v_2(j-1),
+\]
+
+so nonpositivity occurs precisely at those three labels in this range. For \(q\ge2\), the binary digit-sum bound makes \(e_j(q)>0\). The \(j=1\) condition is vacuous.
+
+The regular theorem therefore covers every other label. The inherited size-17 certificates and the two new atlases cover the exceptions. Combined with their pre-wall/equality proofs and the general all-large-distance theorem, this gives a complete classification for every shifted-wall family with
+
+\[
+\boxed{1\le j\le64,\qquad 2^L>j.}
+\]
+
+It does not classify every arbitrary first omitted depth \(r\). That broader problem retains the exact finite-polynomial reduction (V.1), and now also the conditional resultant stopping certificate.
+
+\phantomsection
+\subsection{Exact computation, evidence and failures}\label{exact-computation-evidence-and-failures}
+
+The incoming v4 archive had SHA-256
+
+\path{ab5f13419822911dc4bdbcede78399f398d9710674d8352f274c98e2ec9197e5}.
+
+All 42 files covered by its internal integrity ledger matched. Its main scientific checker was rerun without modifying the historical snapshot and reproduced the declared counts, including all 8,256 nonempty rational tails through \(N=128\). Those rerun results are separate from the inherited v4 record.
+
+The new, completed scientific runs use standard Python integer and rational arithmetic. The important new counts are:
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+Check & Executed scope \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Size-33 positive wall distances & 37 \\
+Size-49 positive wall distances & 52 \\
+New positive-distance whole-ball leaves & 930 \\
+New boundary whole-ball leaves & 8 \\
+New pre-wall minimum checks & 242 \\
+Original unfactored-tail comparisons in the two wall audits & 1,424 \\
+Atlas-versus-value comparisons in the two wall audits & 11,392 \\
+Squarefree nonconstant Euler residual certificates & 22 \\
+Exhaustive residue evaluations for distribution checks & 94,208 \\
+Exact survival thresholds compared & 299 \\
+Regular-wall mean checks & 153 \\
+Saturated mean identities checked directly & 18 \\
+\end{longtable}
+
+The 1,424 original-tail comparisons are modulo \(2^{32}\). At large wall distances some are zero residues and supply only a precision-limited consistency check. The classification itself rests on complete coefficientwise leaf certificates at greater precision, not on those point values. Separate precision metadata is recorded for each run.
+
+Two larger size-49 executions exceeded the outer 45-second execution limit: the initial unsplit audit, and a later 16-distance block. Neither produced its claimed scientific result file, and neither is counted as a pass. The successful runs partition the same distance interval into \(1\)--\(20\), \(21\)--\(36\), \(37\)--\(40\), \(41\)--\(44\), \(45\)--\(48\), and \(49\)--\(52\), without omissions or overlaps. Their individual manifests record input/output hashes, commands, logs and actual resource caps. These are computational failures, not observed mathematical counterexamples.
+
+A repeated-root safety test intentionally leaves the \(X^2\) branch unresolved. That is a successful test of the evidence boundary, not a claim to have resolved the repeated root through the simple-root procedure.
+
+The result files and manifest files distinguish fresh v5 runs, the fresh v4 rerun, and historical v1--v4 evidence. Mathematical proofs and finite certificates are not interchangeable, and neither is described as Lean-checked.
+
+\phantomsection
+\subsection{Continuing ledger}\label{continuing-ledger}
+
+The completed foundation is now an exact chain:
+
+\[
+\begin{aligned}
+\text{Euler source and inverse}
+&\longrightarrow\text{factored tail}\\
+&\longrightarrow\text{finite carry minimum}\\
+&\longrightarrow\text{finite residual polynomial}\\
+&\longrightarrow\text{certified valuation atlas}.
+\end{aligned}
+\]
+
+The atlas supplies root-distance laws, precision distributions and exact means. A nonzero resultant supplies a finite stopping bound without assuming that an unresolved numerical branch is harmless.
+
+The remaining mathematical question is explicit root geometry outside the classified wall families, especially whether an arbitrary prepared Euler-tail polynomial can have an exact repeated root. No blanket simple-root or unconditional finite-precision repeated-root decision theorem is asserted. The cumulative manuscript preserves that boundary rather than labeling the entire arbitrary-depth problem finished.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/06_residual_valuations.pdf}
+\caption{The resolved five-root residual on offsets 0 through 63. Ordinary integer order is used for display; the exact root-distance law uses the dyadic metric.}
+\end{figure}
+
+\clearpage
+
+\phantomsection
+\section{Sources, files and reproduction}\label{sources-files-and-reproduction}
+
+\phantomsection
+\subsection{Classical inputs}\label{classical-inputs}
+
+{[}S1{]} NIST, \emph{Digital Library of Mathematical Functions}, Section 24.10(i), equation 24.10.1. The von Staudt--Clausen denominator theorem supplies the dyadic Bernoulli valuation. \url{https://dlmf.nist.gov/24.10}
+
+{[}S2{]} NIST, \emph{Digital Library of Mathematical Functions}, Section 24.4. Finite Bernoulli expansions, multiplication identities and power sums supply the coefficient identities used in the precision-local Bernoulli evaluator. \url{https://dlmf.nist.gov/24.4}
+
+{[}S3{]} Keith Conrad, \emph{Hensel's Lemma}, Theorem 8.2 and Remark 8.3, printed pages 16--17. These cover restricted-series Hensel lifting and its relation to Weierstrass preparation. \url{https://kconrad.math.uconn.edu/blurbs/gradnumthy/hensel.pdf}
+
+These references support the classical ingredients, not a priority claim for the specialized Euler-tail deductions. The v5 source review checked the Bernoulli identities and read the relevant Hensel/Weierstrass pages. The specialized proofs and computational certificates are provided in the manuscript and source bundle.
+
+\phantomsection
+\subsection{Bundle layout}\label{bundle-layout}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Directory
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Contents
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{manuscript/} & Running Markdown, generated LaTeX, cumulative PDF, and the separate v5 appendix \\
+\texttt{history/v4/} & Unmodified recovered v4 directory, including all earlier proof notes, code and results \\
+\texttt{code/} & Reused exact modular engine and new certificate/distribution checkers \\
+\texttt{results/} & Fresh v4 rerun, new v5 results, whole-ball certificates, logs and manifests \\
+\texttt{figures/} & Seven plots in PDF and PNG formats with a regeneration script \\
+\texttt{sources/} & Source-provenance metadata and document-build information \\
+\end{longtable}
+
+The top-level release README identifies current proof files and separates mathematical, computational and unresolved claims. No font files are included.
+
+\phantomsection
+\subsection{Scientific reproduction}\label{scientific-reproduction}
+
+The core scientific checks use Python's standard library. The plot builder additionally uses Matplotlib. Pandoc and XeLaTeX build the manuscript. All exact scientific assertions use integers, rational numbers or modular residues. Floating point is confined to plotting coordinates and runtime metadata.
+
+From the \texttt{code} directory, run the individual checkers with new output filenames. The bounded runner refuses to reuse an existing declared scientific result file, preventing a stale result from masquerading as a completed run.
+
+\begin{verbatim}
+python rerun_v4_v5.py --output ../results/v4_recheck.json
+python check_distribution_v5.py --output ../results/distribution_recheck.json
+python check_irregular_v5.py --j 33 --output ../results/j33_recheck.json
+\end{verbatim}
+
+For size 49, use the retained disjoint intervals so the reproduction does not repeat the recorded oversized runs:
+
+\begin{verbatim}
+python check_irregular_v5.py --j 49 --delta-start 1 --delta-stop 20 --output ../results/j49_a_recheck.json
+python check_irregular_v5.py --j 49 --delta-start 21 --delta-stop 36 --output ../results/j49_b_recheck.json
+python check_irregular_v5.py --j 49 --delta-start 37 --delta-stop 40 --output ../results/j49_c1_recheck.json
+python check_irregular_v5.py --j 49 --delta-start 41 --delta-stop 44 --output ../results/j49_c2_recheck.json
+python check_irregular_v5.py --j 49 --delta-start 45 --delta-stop 48 --output ../results/j49_c3_recheck.json
+python check_irregular_v5.py --j 49 --delta-start 49 --delta-stop 52 --output ../results/j49_c4_recheck.json
+\end{verbatim}
+
+The v2 audit manifests record actual argv, pinned input hashes before and after, hashed scientific outputs, logs, runtime, exit status and resource limits. The document-build report records page counts and rendering checks separately. Scientific output integrity is not proof of a theorem, and a PDF build is not a scientific audit.
+
+\phantomsection
+\subsection{The present stopping point}\label{the-present-stopping-point}
+
+The mathematical development is cumulative but not closed by declaration. Every first omitted depth has an exact prepared polynomial. Completed atlases give exact root-distance and distribution laws. The regular-wall theorem and finite certificates cover shifted-wall labels through 64. A nonzero resultant gives a finite stopping guarantee.
+
+What remains is an explicit arithmetic classification outside these wall families and a universal answer about possible exact repeated roots of the prepared Euler-tail polynomials. Neither the finite audits nor the new average-precision identities are substitutes for that missing argument.
+
+\clearpage
+
+\phantomsection
+\section{Continuation VI. Terminal carries and arbitrary-depth root classification}\label{continuation-vi.-terminal-carries-and-arbitrary-depth-root-classification}
+
+\textbf{Komorebi P. · Operation Komorebi · 26 September 2026 · Version 6}
+
+\phantomsection
+\subsection{Result and scope}\label{result-and-scope}
+
+The previous record classified the shifted families \texttt{r=2\^{}L-j} through label 64. It did not classify every arbitrary first omitted depth whose prepared polynomial had degree at most 64. This continuation closes that distinction.
+
+Every nonconstant normalized Euler tail has a canonical terminal carry representation
+
+\[
+\boxed{r=b2^L-j,\qquad b\text{ odd},\qquad j=\deg W_r.} \tag{VI.1}
+\]
+
+The terminal label is determined by a finite carry minimum. The regular-wall proof extends to every odd multiplier once this terminal label has been established. New paired coefficient certificates handle all multipliers for the irregular terminal labels 17, 33 and 49.
+
+Consequently, every first omitted depth with \texttt{deg\ W\_r\textless{}=64} has a complete constant-or-simple-root valuation atlas on \texttt{Z\_2}. This includes every positive \texttt{r} with at most \textbf{195 binary ones}, an infinite set not bounded by the numerical size of \texttt{r}. It includes every \texttt{1\textless{}=r\textless{}2\^{}195} by proof, not by an enumeration of those integers.
+
+Every dyadic root in this region is simple. This is not a universal squarefreeness theorem over an algebraic closure. It does not exclude repeated dyadic roots in the remaining irregular terminal labels above 64.
+
+A crucial qualification is exposed by the first exceptional multiplier phase. At terminal label 17 and \texttt{L=64}, two roots exist precisely for
+
+\[
+\boxed{b\equiv1\text{ or }41\pmod{64}.} \tag{VI.2}
+\]
+
+All other odd multiplier classes have no dyadic root. Thus the unit coefficients can change the root geometry even when the active carry data agree.
+
+The general results below have proofs. The finite exceptional ranges are computer-assisted proofs based on coefficientwise certificates covering parameter balls and argument balls. Sampled comparisons are secondary checks. No Lean compilation or historical-priority assessment was performed.
+
+\phantomsection
+\subsection{1. Fixed conventions and inherited factorization}\label{fixed-conventions-and-inherited-factorization}
+
+The target is the signed Euler number \texttt{E\_(2N)}. The last retained depth is \texttt{M}, the first omitted depth is \texttt{r=M+1}, and the row offset is \texttt{x=N-r}. Define
+
+\[
+A(N)=\frac{3^{2N+2}-1}{4(2N+1)(2N+2)},\qquad
+\left(\frac z{\sinh z}\right)^2=\sum_{m\ge0}\beta_mz^{2m},
+\] \[
+\kappa_m=2^{2m}(2m)!\beta_m,\qquad
+v_2(\kappa_m)=4m-1\quad(m\ge1).
+\]
+
+The remainder is
+
+\[
+\mathcal T_M(N)=E_{2N}-\sum_{m=0}^{\min(M,N)}
+\kappa_m\binom{2N}{2m}A(N-m).
+\]
+
+For \texttt{N\textless{}=M}, it is exactly zero. All statements about nonempty original tails use \texttt{N\textgreater{}=r}.
+
+Use the analytic source and integer polynomial
+
+\[
+\mathscr A(x)=\frac{9^{x+1}-1}{8(x+1)(2x+1)},\qquad
+\mathscr A(-1)=-\frac{\log9}{8},
+\] \[
+P_q(x)=\prod_{i=0}^{q-1}(x-i)(2x-(2i+1)).
+\]
+
+The source is an integral restricted analytic unit with coefficientwise reduction one. The inherited exact factorization is
+
+\[
+\mathcal T_{r-1}(N)=\kappa_r\binom{2N}{2r}H_r(N-r),
+\] \[
+H_r(x)=\sum_{q\ge0}8^q\frac{\beta_{r+q}}{\beta_r}P_q(x)\mathscr A(x-q).
+\]
+
+Put
+
+\[
+\lambda_r(q)=3q+s_2(r+q)-s_2(r),
+\quad \mu_r=\min_{q\ge0}\lambda_r(q),
+\quad J_r=\{q:\lambda_r(q)=\mu_r\},
+\] \[
+G_r=2^{-\mu_r}H_r,\qquad j_r=\max J_r.
+\]
+
+Here \texttt{s\_2} counts the ones in the binary expansion. Every minimizer lies in
+
+\[
+0\le q\le\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor.
+\]
+
+The prepared polynomial has degree \texttt{j\_r}, and the exact valuation is
+
+\[
+\boxed{
+ v_2\mathcal T_{r-1}(N)
+ =4r-1+v_2\binom Nr+\mu_r+v_2G_r(N-r).
+} \tag{VI.3}
+\]
+
+Throughout, \texttt{v\_2(0)=infinity}. A zero residue at precision \texttt{P} certifies only valuation at least \texttt{P}.
+
+\phantomsection
+\subsection{2. The terminal carry theorem}\label{the-terminal-carry-theorem}
+
+\phantomsection
+\subsubsection{Lemma VI.1. Successive carry costs}\label{lemma-vi.1.-successive-carry-costs}
+
+For every \texttt{r\textgreater{}=1} and \texttt{q\textgreater{}=1},
+
+\[
+\boxed{\lambda_r(q)-\lambda_r(q-1)=4-v_2(r+q).} \tag{VI.4}
+\]
+
+\textbf{Proof.} The elementary identity \texttt{s\_2(n)-s\_2(n-1)=1-v\_2(n)} gives the formula after adding the linear increment three.
+
+In particular, every positive minimizing index satisfies \texttt{16\ \textbar{}\ r+q}. Distinct positive minimizers are congruent modulo sixteen. This is a restriction on the scalar carry minimum, not a claim that the whole-tail valuation is its minimum summand valuation.
+
+\phantomsection
+\subsubsection{Theorem VI.2. Canonical terminal wall at every nonconstant depth}\label{theorem-vi.2.-canonical-terminal-wall-at-every-nonconstant-depth}
+
+Let \texttt{j=j\_r\textgreater{}0} and set
+
+\[
+L=v_2(r+j),\qquad b=(r+j)/2^L.
+\]
+
+Then
+
+\[
+\boxed{j<2^L,\qquad b\text{ is a positive odd integer}.} \tag{VI.5}
+\]
+
+For \texttt{0\textless{}=q\textless{}j}, define
+
+\[
+e_j(q)=3q+s_2(j-1)-s_2(j-q-1),\qquad
+E_j=\min_{q<j}e_j(q),
+\] \[
+L_j=3j+1+s_2(j-1)-E_j.
+\]
+
+The following identities and inequalities are exact:
+
+\[
+\lambda_r(q)=e_j(q)\quad(q<j),
+\] \[
+\boxed{\mu_r=3j+1+s_2(j-1)-L,\qquad L\ge L_j.} \tag{VI.6}
+\]
+
+If \texttt{delta=L-L\_j}, then
+
+\[
+J_r=
+\begin{cases}
+\{j\},&\delta>0,\\
+\{q<j:e_j(q)=E_j\}\cup\{j\},&\delta=0.
+\end{cases} \tag{VI.7}
+\]
+
+\textbf{Proof.} Suppose first that \texttt{j\textgreater{}=2\^{}L}. The earlier index \texttt{q=j-2\^{}L} is nonnegative and
+
+\[
+r+q=(b-1)2^L.
+\]
+
+The case \texttt{b=1} would imply \texttt{r\textless{}=0}, which is excluded. Since \texttt{b} is odd,
+
+\[
+s_2(b)-s_2(b-1)=1.
+\]
+
+It follows that
+
+\[
+\lambda_r(j)-\lambda_r(j-2^L)=3\cdot2^L+1>0,
+\]
+
+contradicting minimality. Thus \texttt{j\textless{}2\^{}L}.
+
+Binary complementation now gives
+
+\[
+s_2(r)=s_2(b)-1+L-s_2(j-1).
+\]
+
+For \texttt{q\textless{}j}, applying the same identity to \texttt{b2\^{}L-(j-q)} gives \texttt{lambda\_r(q)=e\_j(q)}. At \texttt{q=j}, the digit sum is \texttt{s\_2(b)}, giving (VI.6). Minimality implies \texttt{mu\_r\textless{}=E\_j}, hence \texttt{L\textgreater{}=L\_j}. By the choice of the \textbf{last} minimizer, every \texttt{q\textgreater{}j} has strictly larger weight. The remaining assertions follow. This proves the representation without restricting the size or digit structure of the odd multiplier.
+
+\phantomsection
+\subsubsection{Why the last minimizer matters}\label{why-the-last-minimizer-matters}
+
+The first apparent wall need not be the controlling one. At
+
+\[
+r=2^{64}-17,
+\]
+
+one has \texttt{v\_2(r+1)=4}, so \texttt{lambda\_r(1)=0}. But
+
+\[
+\lambda_r(17)=-11.
+\]
+
+The actual terminal label is 17, not one. Replacing the last-minimum test by the first local carry would give the wrong normal form. The executable descriptor retains this as an adversarial test.
+
+\phantomsection
+\subsubsection{Corollary VI.3. Two all-depth residue tests}\label{corollary-vi.3.-two-all-depth-residue-tests}
+
+At every depth, without a degree bound:
+
+\begin{itemize}
+\tightlist
+\item
+  If \texttt{0\ in\ J\_r} and \texttt{1\ not\ in\ J\_r}, then \texttt{v\_2G\_r(x)=0} for all \texttt{x\ in\ Z\_2}.
+\item
+  If \texttt{1\ in\ J\_r}, then \texttt{G\_r} is an isometric bijection of \texttt{Z\_2}. It has a unique simple root \texttt{alpha}, and \texttt{v\_2G\_r(x)=v\_2(x-alpha)}.
+\end{itemize}
+
+\textbf{Proof.} The residual polynomial is \texttt{sum\_(q\ in\ J\_r)\ X\^{}underlined(q)}. Every falling factorial of degree at least two vanishes at both elements of \texttt{F\_2}, proving the first assertion. When one is a minimizer, Lemma VI.1 implies that every other positive minimizer is at least seventeen. Those higher falling products and their derivatives vanish at both residue classes. Thus \texttt{G\_r} induces a permutation modulo two and has odd derivative at both classes.
+
+For two arguments in the same parity class, the divided difference is odd by reduction to the derivative. For arguments of different parity, both the argument difference and the function difference are odd. This proves the isometry. Hensel lifting gives the unique root in its prescribed parity class. This proof does not assume that the entire residual polynomial has degree one.
+
+\phantomsection
+\subsection{3. The regular-wall proof now covers arbitrary depths}\label{the-regular-wall-proof-now-covers-arbitrary-depths}
+
+Collecting all residual terms at and above the last minimum gives
+
+\[
+\boxed{G_r(x)=P_j(x)U(x-j)+2^\delta V(x),} \tag{VI.8}
+\]
+
+with \texttt{U} an integral restricted unit reducing to one and \texttt{V} integral restricted. This follows from
+
+\[
+P_{j+h}(x)=P_j(x)P_h(x-j)
+\]
+
+and from the strict inequality in weight for every \texttt{q\textgreater{}j}. The lower normalized costs are \texttt{delta+e\_j(q)-E\_j}. Thus the normal form holds at \textbf{every} nonconstant depth, not only when the multiplier \texttt{b} is one.
+
+Call the terminal label regular when
+
+\[
+e_j(q)>0\qquad(1\le q<j).
+\]
+
+Then \texttt{E\_j=0}, \texttt{mu\_r=-delta}, and \texttt{V} reduces coefficientwise to one.
+
+Retain the separating data
+
+\[
+d_i=v_2(i!)+v_2((j-1-i)!),
+\] \[
+k_i=1+\lfloor\log_2\max(i,j-1-i)\rfloor,
+\qquad t_i=d_i+k_i
+\]
+
+for \texttt{j\textgreater{}1}, with \texttt{d\_0=k\_0=t\_0=0} when \texttt{j=1}. The balls
+
+\[
+B_i=i+2^{k_i}\mathbb Z_2\qquad(0\le i<j)
+\]
+
+partition \texttt{Z\_2}.
+
+\phantomsection
+\subsubsection{Theorem VI.4. Exact regular-terminal valuation atlas}\label{theorem-vi.4.-exact-regular-terminal-valuation-atlas}
+
+At every depth with regular terminal label \texttt{j},
+
+\[
+\boxed{v_2G_r(x)=
+\begin{cases}
+\delta,&x\in B_i,\ \delta<t_i,\\
+d_i+v_2(x-\alpha_i),&x\in B_i,\ \delta\ge t_i.
+\end{cases}} \tag{VI.9}
+\]
+
+In the second case \texttt{alpha\_i} is the unique root on that ball, is simple, and has
+
+\[
+v_2(\alpha_i-i)=\delta-d_i.
+\]
+
+The root count is exactly \texttt{\#\{i:t\_i\textless{}=delta\}}. At \texttt{delta=0} and \texttt{j\textgreater{}=2}, the function is pointwise a unit on \texttt{Z\_2}, although it need not be a unit of the Tate algebra. At \texttt{j=1}, the equality case has one odd simple root.
+
+\textbf{Proof.} Substitute \texttt{x=i+2\^{}(k\_i)y} into (VI.8). The fixed skeleton has the coefficient factorization
+
+\[
+P_j(i+2^{k_i}y)=2^{t_i}yQ_i(y),\qquad Q_i\equiv1\pmod2.
+\]
+
+If \texttt{delta\textless{}t\_i}, the perturbation is the unique smaller valuation and gives the constant branch. If \texttt{delta\textgreater{}=t\_i}, division by \texttt{2\^{}(t\_i)} gives reduction \texttt{y+1} at equality and \texttt{y} otherwise. Each is an isometry with one simple root. Evaluation at the skeleton point gives the displacement formula. The partition proves completeness. This is the earlier separating-ball proof with the now-proved terminal representation supplying its hypotheses.
+
+The same argument without regularity still guarantees all \texttt{j} simple roots once
+
+\[
+\boxed{\delta\ge v_2((j-1)!)+\lceil\log_2j\rceil.} \tag{VI.10}
+\]
+
+The multiplier can move the roots. It does not change these regular-label thresholds.
+
+\phantomsection
+\subsection{4. A precision cutoff independent of the size of the index}\label{a-precision-cutoff-independent-of-the-size-of-the-index}
+
+The original global coefficient cutoff depends on \texttt{s\_2(r)}. A local cutoff removes that dependence after one parity split.
+
+Write
+
+\[
+G_r(x)=\sum_{q\ge0}\gamma_{r,q}P_q(x)\mathscr A(x-q),
+\qquad
+\gamma_{r,q}=2^{-\mu_r}8^q\frac{\beta_{r+q}}{\beta_r}.
+\]
+
+All \texttt{gamma\_(r,q)} are integral by the definition of the true minimum \texttt{mu\_r}.
+
+\phantomsection
+\subsubsection{Lemma VI.5. Uniform parity cutoff}\label{lemma-vi.5.-uniform-parity-cutoff}
+
+For \texttt{e=0,1},
+
+\[
+P_q(e+2Y)\in2^{\lfloor q/2\rfloor}\mathbb Z_2[Y].
+\]
+
+Consequently, at coefficient precision \texttt{P},
+
+\[
+\boxed{
+G_r(e+2Y)\equiv
+\sum_{0\le q<2P}\gamma_{r,q}P_q(e+2Y)
+\mathscr A(e+2Y-q)\pmod{2^P}.
+} \tag{VI.11}
+\]
+
+This holds at every depth.
+
+\textbf{Proof.} Among the factors \texttt{e+2Y-i}, at least \texttt{floor(q/2)} have \texttt{i} of the same parity as \texttt{e}. Each has a factor two coefficientwise. All other factors are integral. The normalized scalars and analytic source are integral. Thus every term with \texttt{q\textgreater{}=2P} is zero coefficientwise on each parity ball. Deeper integral affine substitutions preserve that precision.
+
+This is a branchwise coefficient bound. It is \textbf{not} a claim that the same truncation holds globally in the Gauss norm before splitting parity.
+
+\phantomsection
+\subsection{5. Uniform control of the odd multiplier}\label{uniform-control-of-the-odd-multiplier}
+
+We now reduce the multiplier dependence to a pair of finite polynomials. The proof is what turns a finite parameter certificate into a statement about arbitrarily large integers.
+
+\phantomsection
+\subsubsection{Lemma VI.6. Precision-local Bernoulli stability}\label{lemma-vi.6.-precision-local-bernoulli-stability}
+
+Let \texttt{n,n\textquotesingle{}} be positive even integers with \texttt{n-1,n\textquotesingle{}-1\textgreater{}=P} and \texttt{n\ congruent\ n\textquotesingle{}\ modulo\ 2\^{}P}. Then
+
+\[
+2B_n\equiv2B_{n'}\pmod{2^P}.
+\]
+
+\textbf{Proof.} Use the inherited precision-local identity
+
+\[
+2B_n\equiv\sum_{k=0}^{P}\binom nk2^kB_k\pmod{2^P}.
+\]
+
+The depletion factor is one at this precision because \texttt{n-1\textgreater{}=P}. Vandermonde's identity and
+
+\[
+i\binom hi=h\binom{h-1}{i-1}
+\]
+
+give
+
+\[
+v_2\left(\binom nk-\binom{n'}k\right)
+\ge v_2(n-n')-\lfloor\log_2k\rfloor
+\]
+
+for \texttt{k\textgreater{}=1}, with zero terms harmless. Since \texttt{v\_2(2\^{}kB\_k)\textgreater{}=k-1}, and \texttt{k-1-floor(log\_2\ k)\textgreater{}=0}, every difference in the finite expansion has the required valuation. The constant term cancels. The Bernoulli generating identity and denominator bound are the classical inputs {[}S1, S2{]}.
+
+This is a finite-precision statement about actual positive indices. It does not assert an undepleted analytic interpolation of all Bernoulli values.
+
+\phantomsection
+\subsubsection{Theorem VI.7. A uniform two-polynomial wall template}\label{theorem-vi.7.-a-uniform-two-polynomial-wall-template}
+
+Fix \texttt{j,L,P}, put \texttt{r\_0=2\^{}L-j} and \texttt{Q=2P}, and assume that \texttt{j} is the terminal label of \texttt{r\_0}. For a positive odd integer \texttt{b}, put \texttt{r\_b=b2\^{}L-j} and assume that its terminal label is also \texttt{j}. The terminal theorem gives the same \texttt{mu} for both depths.
+
+The following conservative conditions suffice:
+
+\[
+2^L>2(j+Q),\qquad 2r_0-1\ge P,
+\] \[
+L+1-\left\lceil\log_2\bigl(2(j+Q)+1\bigr)\right\rceil\ge P.
+\tag{VI.12}
+\]
+
+Form the finite restricted-series approximations, coefficientwise modulo \texttt{2\^{}P},
+
+\[
+F_{<}(X)=\sum_{0\le q<\min(j,Q)}
+\gamma_{r_0,q}P_q(X)\mathscr A(X-q),
+\] \[
+F_{\ge}(X)=\sum_{j\le q<Q}
+\gamma_{r_0,q}P_q(X)\mathscr A(X-q).
+\]
+
+Then on either parity ball,
+
+\[
+\boxed{
+bG_{r_b}(e+2Y)
+\equiv
+\bigl(bF_<+F_{\ge}\bigr)(e+2Y)
+\pmod{2^P}.
+} \tag{VI.13}
+\]
+
+\textbf{Proof.} For \texttt{q\textless{}Q}, the normalized costs agree with those at \texttt{r\_0} because no second multiple of \texttt{2\^{}L} has been crossed. In the stripped coefficient formula, the factorial product has factors
+
+\[
+2r_b+t=2^{L+1}b+(t-2j),\qquad 1\le t\le2q.
+\]
+
+Every nonzero offset has bounded valuation. Condition (VI.12) makes its odd part independent of \texttt{b} modulo \texttt{2\^{}P}. There is exactly one zero-offset factor when \texttt{q\textgreater{}=j}, namely \texttt{2\^{}(L+1)b}. Its odd part contributes one denominator factor \texttt{b}. There is none when \texttt{q\textless{}j}.
+
+The Bernoulli unit ratios agree at the required precision by Lemma VI.6. The other odd scalar factors agree as well. Hence
+
+\[
+\gamma_{r_b,q}\equiv\gamma_{r_0,q}\quad(q<j),
+\] \[
+b\gamma_{r_b,q}\equiv\gamma_{r_0,q}\quad(j\le q<Q)
+\]
+
+modulo \texttt{2\^{}P}. Lemma VI.5 handles \textbf{every} omitted \texttt{q\textgreater{}=Q}, including remote carry events not visible in the low prefix. The true-terminal-label hypothesis is essential here because it guarantees integrality of all normalized scalars. This proves (VI.13).
+
+The equation is deliberately branchwise. We do not infer a global Gauss congruence from a congruence after parity splitting. We also do not infer a joint analytic family in \texttt{b} from this finite-precision template.
+
+\phantomsection
+\subsection{6. What the paired certificates prove}\label{what-the-paired-certificates-prove}
+
+In a parameter class
+
+\[
+b=s+2^h z,\qquad s\text{ odd},\qquad z\in\mathbb Z_2,
+\]
+
+the template is affine in the formal parameter:
+
+\[
+F_0(x)+zF_1(x),
+\quad F_0=sF_<+F_{\ge},\quad F_1=2^hF_<.
+\]
+
+Each stored leaf describes an argument ball \texttt{x=a+2\^{}k\ y}, with \texttt{k\textgreater{}=1}. After removing its content \texttt{2\^{}c}, the certificate gives one of
+
+\[
+1\pmod2,
+\qquad
+ y+\epsilon_0+\epsilon_1z\pmod2
+\tag{VI.14}
+\]
+
+coefficientwise in \textbf{both} variables. All higher powers of \texttt{y} are even, and its linear coefficient is one independently of the parameter.
+
+A constant leaf proves exact valuation \texttt{c} everywhere in its rectangle and excludes roots. A root leaf proves, for every admissible multiplier in the parameter class, a unique simple root \texttt{alpha\_b} in the argument ball and
+
+\[
+\boxed{v_2G_{r_b}(x)=c-k+v_2(x-\alpha_b).} \tag{VI.15}
+\]
+
+The error precision in (VI.13) is strictly greater than the content used by each certificate. Thus the same residual equation holds for the exact Euler-tail function at every admissible integer multiplier. The argument uses the elementary coefficientwise isometry proof and restricted-series Hensel lifting {[}S3{]}.
+
+The parameter balls partition the odd integers, and the argument balls partition \texttt{Z\_2} for each parameter ball. Their disjointness and exact dyadic masses are checked. This is why a finite certificate proves a family statement rather than merely verifying a few multipliers.
+
+The root \texttt{alpha\_b} is defined for the actual multiplier under consideration. No continuity or analytic interpolation of the exact undepleted family in \texttt{b} is asserted.
+
+\phantomsection
+\subsection{7. The first irregular label depends on the unit address}\label{the-first-irregular-label-depends-on-the-unit-address}
+
+For terminal label \texttt{j=17}, one has
+
+\[
+L_{17}=53,\qquad r=b2^{53+\delta}-17,\qquad\mu_r=-\delta.
+\]
+
+The complete classification, conditional only on this being the terminal label, is:
+
+\begin{longtable}[]{@{}rl@{}}
+\toprule\noalign{}
+Distance & Root count for all admissible odd multipliers \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 through 10 & 1 \\
+11 & 2 for \texttt{b=1\ or\ 41\ mod\ 64}, otherwise 0 \\
+12 & 2 \\
+13 & 4 \\
+14 through 15 & 8 \\
+16 & 12 \\
+17 & 14 \\
+18 through 19 & 15 \\
+20 and above & 17 \\
+\end{longtable}
+
+Every existing root is simple. The parameter-uniform certificates cover distances zero through twenty. The general separating-ball theorem covers every larger distance.
+
+\Needspace{14\baselineskip}
+
+At the exceptional distance eleven, the eight parameter balls used in the proof are:
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+Odd multiplier address & Number of roots \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{3\ mod\ 4} & 0 \\
+\texttt{5\ mod\ 8} & 0 \\
+\texttt{25\ mod\ 32} & 0 \\
+\texttt{17\ mod\ 32} & 0 \\
+\texttt{9\ mod\ 64} & 0 \\
+\texttt{33\ mod\ 64} & 0 \\
+\texttt{1\ mod\ 64} & 2 \\
+\texttt{41\ mod\ 64} & 2 \\
+\end{longtable}
+
+These disjoint classes cover all odd multipliers. They must not be conflated with the argument-ball addresses where the roots occur.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/08_multiplier_classes_v6.pdf}
+\caption{At the label-17 exceptional phase, only two of the 32 odd multiplier residue classes support dyadic roots. This is a uniform coefficient-certificate result, not a fit to sampled multipliers.}
+\end{figure}
+
+\phantomsection
+\subsubsection{An explicit two-versus-zero comparison}\label{an-explicit-two-versus-zero-comparison}
+
+Take
+
+\[
+r_1=2^{64}-17,\qquad r_3=3\cdot2^{64}-17.
+\]
+
+Both have \texttt{j=17}, \texttt{L=64}, \texttt{delta=11}, \texttt{mu=-11} and the same relevant low carry costs. Their residual reduction is \texttt{X\^{}9(X+1)\^{}8}. Nevertheless \texttt{G\_(r\_1)} has two dyadic roots and \texttt{G\_(r\_3)} has none.
+
+On the critical ball \texttt{x=3+8y}, remove content \texttt{2\^{}14} and prepare the remaining series as a monic quadratic times a unit. The exact polynomial residues are
+
+\[
+W_1(y)\equiv y^2+410y+25\pmod{512},
+\] \[
+W_3(y)\equiv y^2+368y+11\pmod{512}.
+\]
+
+\Needspace{7\baselineskip}
+
+Their discriminants satisfy
+
+\[
+\Delta_1\equiv64\pmod{512},\qquad
+v_2(\Delta_1)=6,\quad \Delta_1/64\equiv1\pmod8,
+\] \[
+\Delta_3\equiv212\pmod{512},\qquad
+v_2(\Delta_3)=2,\quad \Delta_3/4\equiv5\pmod8.
+\]
+
+The first is a nonzero square in \texttt{Q\_2}, the second is not. The usual dyadic square criterion is that a nonzero number has even valuation and unit part one modulo eight {[}S3, Theorem 4.5{]}. Thus the quadratics have respectively two roots and no roots. The complete atlas excludes roots on every other ball. No zero discriminant or repeated root is inferred from either case.
+
+For \texttt{b=3}, the whole-domain valuation table compresses to
+
+\[
+v_2G_{r_3}(x)=
+\begin{cases}
+11,&x\equiv0\pmod2,\\
+12,&x\equiv1\pmod4,\\
+13,&x\equiv7\pmod8,\\
+14,&x\equiv3\pmod{16},\\
+16,&x\equiv11\pmod{16}.
+\end{cases} \tag{VI.16}
+\]
+
+The maximum residual valuation here is sixteen. The binomial factor in the complete Euler tail remains separate.
+
+This is an exact limitation of a carry-only description. The carry data control integral depth and residual degree. Unit residues are still required to determine whether an unresolved quadratic branch splits.
+
+\phantomsection
+\subsection{8. The next two irregular labels are uniform in the multiplier}\label{the-next-two-irregular-labels-are-uniform-in-the-multiplier}
+
+The same method extends both v5 exceptional families to every admissible odd multiplier. In these two labels the root counts do not acquire an additional multiplier subdivision.
+
+For terminal label 33, \texttt{L\_33=102}:
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+Distance & Exact root count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 through 26 & 1 \\
+27 & 0 \\
+28 & 2 \\
+29 & 4 \\
+30 & 8 \\
+31 & 24 \\
+32 & 28 \\
+33 & 30 \\
+34 through 35 & 31 \\
+36 and above & 33 \\
+\end{longtable}
+
+Every distance zero through 37 has a parameter-uniform atlas. The general separation theorem covers every distance at least 37. The separately certified distance 36 gives the sharper onset in the table.
+
+For terminal label 49, \texttt{L\_49=150}:
+
+\begin{longtable}[]{@{}rr@{}}
+\toprule\noalign{}
+Distance & Exact root count \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 through 42 & 1 \\
+43 & 4 \\
+44 & 6 \\
+45 & 12 \\
+46 & 16 \\
+47 & 28 \\
+48 & 30 \\
+49 & 39 \\
+50 & 43 \\
+51 & 45 \\
+52 and above & 49 \\
+\end{longtable}
+
+Every distance zero through 52 is certified, and 52 is the general all-larger-distance threshold. All dyadic roots in both tables are simple. Their coordinates may depend on the multiplier even when their counts do not.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth,keepaspectratio]{../figures/09_terminal17_stages_v6.pdf}
+\caption{The label-17 phase diagram separates the unit classes at distance eleven. All other distances in this diagram have the same count for every admissible odd multiplier.}
+\end{figure}
+
+\phantomsection
+\subsection{9. Arbitrary-depth completion through residual degree 64}\label{arbitrary-depth-completion-through-residual-degree-64}
+
+\phantomsection
+\subsubsection{\texorpdfstring{Theorem VI.8. Complete dyadic valuation atlas at every depth with \texttt{j\_r\textless{}=64}}{Theorem VI.8. Complete dyadic valuation atlas at every depth with j\_r\textless=64}}\label{theorem-vi.8.-complete-dyadic-valuation-atlas-at-every-depth-with-j_r64}
+
+Let \texttt{r\textgreater{}=1} be arbitrary. If \texttt{j\_r\textless{}=64}, then the exact function \texttt{G\_r} has a finite covering of \texttt{Z\_2} by constant-valuation balls and balls with exactly one simple root and an exact root-distance law. The covering is supplied by the following exhaustive procedure.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Compute \texttt{mu\_r,J\_r} in the finite carry range. If \texttt{j\_r=0}, the function is an analytic unit.
+\item
+  Otherwise compute the terminal tuple \texttt{(j,L,b,delta)} from Theorem VI.2.
+\item
+  For a regular label, apply Theorem VI.4 at every separating ball.
+\item
+  For label 17, 33 or 49, use the parameter-uniform atlas in its finite exceptional range. Beyond that range use the separating-ball theorem.
+\end{enumerate}
+
+There are no other irregular labels at most 64.
+
+\textbf{Proof.} For \texttt{j\textgreater{}=2},
+
+\[
+e_j(1)=4-v_2(j-1).
+\]
+
+It is nonpositive in this range precisely at \texttt{j=17,33,49}. For \texttt{q\textgreater{}=2} and \texttt{j\textless{}=64}, the elementary digit-sum bound gives \texttt{e\_j(q)\textgreater{}0}. The \texttt{j=1} condition is vacuous. Thus the four cases above are exhaustive.
+
+The terminal theorem guarantees \texttt{delta\textgreater{}=0}, so no unclassified negative-distance case enters this procedure. The finite certificates have the hypotheses of Theorem VI.7 at their recorded precision. Each paired certificate supplies whole-parameter and whole-argument conclusions through (VI.14). The proof bounds cover all larger distances. Therefore no repeated dyadic root or unresolved branch remains in this region.
+
+For a root leaf of argument depth \texttt{k} and content \texttt{c}, combine (VI.3) with
+
+\[
+v_2G_r(x)=c-k+v_2(x-\alpha).
+\]
+
+For a constant leaf, substitute its fixed value. These are exact whole-tail valuations, not estimates obtained by taking a minimum of individual summand weights.
+
+\phantomsection
+\subsubsection{Corollary VI.9. A bound by binary complexity}\label{corollary-vi.9.-a-bound-by-binary-complexity}
+
+Every positive integer \texttt{r} satisfying
+
+\[
+\boxed{s_2(r)\le195} \tag{VI.17}
+\]
+
+is covered. Indeed \texttt{floor((s\_2(r)-1)/3)\textless{}=64}. This is an unbounded set of integers because the one-bits can occur at arbitrarily high positions. In particular all positive depths below \texttt{2\^{}195} are covered.
+
+The assertion over that enormous finite interval is a deduction from the theorem. The executed audit did not enumerate that interval and is not presented as having done so.
+
+\phantomsection
+\subsubsection{Remaining repeated-root boundary}\label{remaining-repeated-root-boundary}
+
+The only possible unclassified repeated \textbf{dyadic} root must lie outside all the following regions: regular terminal labels, the two all-depth residue tests in Corollary VI.3, and terminal labels at most 64. In particular the remaining terminal label must be irregular and at least 65.
+
+This does not exclude repeated roots of \texttt{W\_r} in an algebraic extension that do not lie in \texttt{Z\_2}. Such roots do not obstruct the stated dyadic valuation atlas. The v5 resultant theorem remains useful when global squarefreeness is desired or when a larger terminal label lacks a direct atlas.
+
+No claim is made that the remaining class is impossible. Nor is a finite zero resultant treated as proof that a repeated root exists.
+
+\phantomsection
+\subsection{10. Exact execution and reproducibility}\label{exact-execution-and-reproducibility}
+
+The incoming v5 archive was extracted into a clean working directory. All 124 hashes in its release ledger matched. The historical mathematical records and prior code were preserved. New code lives in \texttt{terminal\_carry\_v6.py}, \texttt{check\_terminal\_v6.py} and the separately named bounded runner \texttt{run\_audit\_v6.py}.
+
+All scientific assertions use standard-library exact integer, rational or modular arithmetic. Root residues and coefficients retain their declared precision. Plots are visualizations of the exact certificate results.
+
+\phantomsection
+\subsubsection{New retained audits}\label{new-retained-audits}
+
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+Check & Executed count or range \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Consecutive-depth terminal identities & \texttt{r=1,...,262144} \\
+Large and competing-carry identities & 2,240 \\
+Explicit remote-carry override & 1 \\
+Parity cutoff coefficient checks & 130 \\
+Generalized regular-wall members & 285 \\
+Regular whole-ball certificates & 4,539 \\
+Irregular distances including equality scales & 112 \\
+Covering parameter balls & 119 \\
+Uniform parameter-and-argument leaf certificates & 1,163 \\
+Independent multiplier atlases & 233 \\
+Template versus original-series parity coefficient checks & 466 \\
+Original unfactored-tail comparisons, new runs & 285 \\
+Local quadratic preparations & 3 \\
+\end{longtable}
+
+The exceptional parameter/argument certificates used argument depth at most seven. This is the observed maximum in the finite irregular certificate set, not a universal depth bound for every label.
+
+The parameter residue checks total 3,584. They verify the displayed congruence-class root counts against the stored parameter covering. The universal multiplier conclusion instead comes from the paired polynomial certificates and Theorem VI.7.
+
+The v4 foundation audit was rerun freshly, including its independent Euler reconstruction at \texttt{N=0,...,128}, all 8,256 nonempty rational tails in those rows, the small Bernoulli checks and the finite-power-sum checks. The v5 distribution/resultant audit was also rerun freshly, including its repeated-root guard and 94,208 exact residue evaluations. These inherited-theorem reruns are stored separately from the new v6 evidence and not counted as new mathematical results.
+
+All seven retained bounded scientific runs completed with exit status zero. No mathematical assertion failure or timeout occurred in those runs. The synthetic polynomial \texttt{X\^{}2} intentionally remains unresolved under the simple-root splitter, which confirms the safety boundary rather than a failure of the audit. Earlier recorded v5 timeouts remain in the historical failure log.
+
+The bounded runner records commands, input hashes before and after execution, output hashes, actual elapsed time, exit status, CPU and address-space limits, and cooperative numerical-library thread settings. Its seven new manifests passed the retained manifest validator. One subsequent figure-export attempt failed because the output directory was not writable from the user-visible plotting process. After correcting the directory permission, both figures were regenerated successfully. This document-build failure did not affect the scientific runs or their results.
+
+\phantomsection
+\subsubsection{Commands}\label{commands}
+
+From the \texttt{code} directory, use new result filenames to preserve this record:
+
+\begin{verbatim}
+python check_terminal_v6.py --mode combinatorial --output ../results/new_carry_check.json
+python check_terminal_v6.py --mode regular --output ../results/new_regular_check.json
+python check_terminal_v6.py --mode irregular --j 17 --output ../results/new_j17_check.json
+python check_terminal_v6.py --mode irregular --j 33 --output ../results/new_j33_check.json
+python check_terminal_v6.py --mode irregular --j 49 --output ../results/new_j49_check.json
+\end{verbatim}
+
+\texttt{results/UNIFORM\_J17\_V6.json}, \texttt{UNIFORM\_J33\_V6.json} and \texttt{UNIFORM\_J49\_V6.json} contain all template coefficients and paired leaf records. In a root leaf the stored reduction gives existence and simplicity uniformly over its parameter ball. Computing further digits of a particular root uses the original exact series at increased precision. A finite prefix of its digits is not an exact integer root.
+
+\phantomsection
+\subsection{11. Position of this continuation}\label{position-of-this-continuation}
+
+The optimal uniform truncation exponent remains \texttt{4M+3}. The extra cancellation is row-dependent. The new work enlarges the region where that dependence has an exact root or constant description.
+
+The principal progression is now
+
+\[
+\begin{aligned}
+\text{arbitrary first omitted depth}
+&\longrightarrow\text{terminal carry tuple}\\
+&\longrightarrow\text{regular or irregular normal form}\\
+&\longrightarrow\text{uniform parameter certificate}\\
+&\longrightarrow\text{exact dyadic valuation atlas}.
+\end{aligned}
+\]
+
+The next unresolved cases are larger irregular \textbf{terminal} labels, not merely further pure-power shifted walls. The multiplier must be retained as a unit address. The comparison at label 17 demonstrates why discarding it would lose arithmetic information.
+
+The running document retains the complete earlier record and appends this result. No prior proof is silently replaced. Later theorem scopes supersede earlier descriptions of what had not yet been classified.
+
+\clearpage
+
+\phantomsection
+\subsection{Classical inputs checked for this continuation}\label{classical-inputs-checked-for-this-continuation}
+
+{[}S1{]} NIST, \emph{Digital Library of Mathematical Functions}, Section 24.10(i). The von Staudt-Clausen denominator theorem supplies the dyadic Bernoulli valuation. \url{https://dlmf.nist.gov/24.10}
+
+{[}S2{]} NIST, \emph{Digital Library of Mathematical Functions}, Section 24.4. Bernoulli finite expansions, multiplication identities and power sums. \url{https://dlmf.nist.gov/24.4}
+
+{[}S3{]} Keith Conrad, \emph{Hensel's Lemma}. Theorem 4.5 gives the dyadic unit square criterion. Theorem 8.2 and Remark 8.3 give restricted-series Hensel lifting and the connection to Weierstrass preparation. Printed pages 7, 16 and 17 were inspected in this continuation. \url{https://kconrad.math.uconn.edu/blurbs/gradnumthy/hensel.pdf}
+
+These sources justify the classical ingredients. They are not cited as sources of the specialized terminal-carry theorem or the new multiplier classifications. No priority claim is made for those deductions.
+
+\end{document}

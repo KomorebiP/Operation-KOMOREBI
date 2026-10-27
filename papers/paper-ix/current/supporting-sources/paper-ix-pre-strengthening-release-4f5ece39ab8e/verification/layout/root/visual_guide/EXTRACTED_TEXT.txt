@@ -1,0 +1,2264 @@
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+READER’S MAP
+Three meanings of more digits
+Traditional companion: Section 1, p. 1;
+Section 3, p. 12;
+Section 4, p. 28
+This guide follows two kinds of objects through the same arithmetic discipline: coefficient sequences
+and polynomial equations. In the first, a valuation tells us which terms can be discarded at a chosen
+precision. In the second, a residual digit tells us whether an approximate root can be corrected. The
+common word “depth” does not make their indices interchangeable.
+Sequence address
+k = Nq + r
+k mod N = r
+Arithmetic depth
+a ≡b (mod pL)
+vp(a −b) ≥L
+Lifting depth
+xL+1 = xL + pLt
+rL + JLt = 0
+in Fp
+An address is not a modulus. A one-step lift is not yet an infinite branch.
+One sustained route through the paper
+Start with the Euler family defined by an actual reciprocal series. Keep track of the normalization,
+learn to read a finite difference table, and then use valuation bounds to obtain periods and truncations.
+The four dyadic packets provide an unusually sharp case: both their least periods and their completed
+images are known.
+Next, replace a coefficient difference with the residual of a polynomial. A Jacobian image decides one
+lifting step. Its kernel describes the choices of digit. Compatibility and a nonsingularity hypothesis
+then connect finite steps to an exact root and a local parameter chart.
+Reading route
+Pages in this guide
+Coordinates and precision
+V – 2–V – 9
+Euler congruences and sharp dyadic structure
+V – 10–V – 18
+Obstructions, root charts, and deformation
+V – 19–V – 27
+Completion, synthesis, and evidence
+V – 28–V – 30
+Coordinates, recurrences, and completed roots
+V – 31–V – 34
+Read this as: A picture here is tied to a formula or an enumerable example. The finite checks
+do not replace the paper’s general proofs, and the guide does not enlarge its Lean contract.
+Final edition
+•
+6 October 2026
+V – 1
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+OBJECT ATLAS
+Keep the objects separate
+Traditional companion: Definition 3.1, p. 12;
+Definition 3.4, p. 14;
+Section 4, p. 28
+The most useful reading aid is a stable distinction between an object, its coordinates, and the precision
+at which those coordinates are observed. The symbols below recur in both halves of the paper.
+Symbol
+Object and role
+PN,j
+A residue selector on the original coefficient index set. It keeps degrees congruent to j
+modulo N.
+E(N,j)
+d
+The original degree-d coefficient of the reciprocal family. Only degrees divisible by N can
+be nonzero.
+UN,j(n)
+The original Euler coefficient at degree Nn. Its row-zero value is j!.
+CN,j(n)
+The normalized packet UN,j(n)/j!, with row-zero value 1.
+∆k
+hf(n)
+A finite difference of order k and row step h, based at row n.
+vp, | · |p
+Arithmetic order and distance, with vp(0) = ∞and |a|p = p−vp(a) for a ̸= 0.
+TM(n)
+A depth-M classical dyadic truncation, approximating E2n, not U4,j(n).
+F, x, rx
+A polynomial system, an approximate root, and its normalized residual F(x)/pL.
+Jx
+The reduced Jacobian. Its image determines correctable residuals; its kernel determines
+digit ambiguity.
+Ox
+The finite quotient of residual values by the Jacobian image. It contains a distinguished
+obstruction class.
+J, K
+In a prescribed split (Y, T), the solved-variable and parameter blocks of the Jacobian.
+s
+An inverse-denominator bound: psJ−1 is integral. It is not automatically the determinant
+valuation.
+Two easy confusions to prevent
+The family address j is a denominator parameter. It is not the residue class of the nonzero output
+degrees: the reciprocal has support at d = Nn. Also, the notation PN,j for a selector is distinct from
+any similarly named source series in the arithmetic proof.
+Whenever a formula moves by T packet rows, write the corresponding degree shift NT beside it.
+Whenever a normalized coefficient is compared with an original coefficient, write U = j!C before taking
+valuations.
+Read this as: Read the ambient ring before the divisibility symbol. In the field Qp, every
+nonzero scalar divides every scalar. Precision means ideal membership in Zp, or an explicitly
+stated valuation bound.
+Final edition
+•
+6 October 2026
+V – 2
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+ARITHMETIC DISTANCE
+Closeness means shared residues
+Traditional companion: Definition 3.4, p. 14
+In a p-adic metric, two integers are close when their difference has many factors of p. Their ordinary
+sizes are irrelevant. A depth-L ball consists of numbers with the same residue modulo pL.
+a + pLZp = {b : vp(b −a) ≥L},
+a ≡b
+(mod pL) ⇐⇒|a −b|p ≤p−L.
+n = 1
+1
+0
+0
+0
+0
+n = 9
+1
+0
+0
+1
+0
+n = 13
+1
+0
+1
+1
+0
+20
+21
+22
+23
+24
+Read low-order digits from left to right.
+v2(9 −1) = 3
+|9 −1|2 = 1/8
+v2(13 −1) = 2
+|13 −1|2 = 1/4
+1, 9 ∈1 + 8Z2
+Digits are displayed low-order first. The drawing records congruence information; horizontal or vertical distances on the
+page are not 2-adic distances.
+Read the first disagreement
+The binary digits of 1 and 9 first disagree at the 23 position. Their difference therefore has order three.
+The digits of 1 and 13 first disagree at the 22 position, so these numbers are farther apart in the dyadic
+metric, although 13 and 9 look close on an ordinary number line.
+Each ball modulo pL splits into p residue balls modulo pL+1. A compatible lifting path chooses one
+child at each stage. A theorem guaranteeing a child at the current stage need not guarantee a child at
+every future stage.
+Zero has unlimited precision
+The value vp(0) is not zero. The mathematical convention is infinity. In the example checker, infinity
+is stored by a separate value rather than a large cutoff. Thus an empty omitted tail is exactly zero,
+not merely “very divisible.”
+Read this as: More matching low-order digits means smaller p-adic distance. Every precision
+claim in the appendix can be read as a claim about a shared residue ball.
+Final edition
+•
+6 October 2026
+V – 3
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+RESIDUE ADDRESSES
+Select, refine, synchronize
+Traditional companion: Theorem 2.1, p. 6;
+Theorem 2.11, p. 11;
+Theorem 2.10, p. 11
+A residue selector keeps a coefficient at its original location or replaces it by zero. Exactly one standard
+selector retains each coefficient. This gives idempotence, orthogonality, and reconstruction without a
+convergence argument:
+P 2
+N,j = PN,j,
+PN,iPN,j = 0 (i ̸= j),
+N−1
+X
+j=0
+PN,j = I.
+r mod 3 = 0
+1
+2
+r mod 4 = 0
+0
+4
+8
+1
+9
+1
+5
+2
+6
+10
+2
+3
+3
+7
+11
+Z/12Z ∼= Z/4Z × Z/3Z
+P2,1 = P4,1 + P4,3
+P12,7 = P4,3P3,1
+Every address appears exactly once; the selectors keep the original index set.
+The table contains the unique residue modulo twelve with each specified pair of residues modulo four and three. It is a
+complete finite Chinese-remainder calculation.
+Refinement keeps all children
+An odd coefficient lies in either address one or address three modulo four. Keeping both children
+reconstructs the odd selector. Keeping only one child is not refinement of the same object; it is an
+additional restriction.
+The selector P12,7 is simultaneously the address-three selector modulo four and the address-one selector
+modulo three. The moduli are coprime, so all twelve pairs occur independently. This is finite arithmetic
+synchronization, not a theorem that arbitrary data at infinitely many primes come from one integer.
+Selection is not compression of the index
+The compressed subsequence bq = aNq+j is useful, but its index is q, not Nq + j. A shift by one in
+the compressed subsequence advances by N in the original sequence. The recurrence-packet theorem
+explicitly uses the jump matrix CN for precisely this reason.
+Read this as: Exact reconstruction requires a complete address family. Finite CRT solves a
+finite congruence problem; global descent is a different question, revisited on V – 28.
+Final edition
+•
+6 October 2026
+V – 4
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+HURWITZ COORDINATES
+The product carries its weights
+Traditional companion: Theorem 2.2, p. 7;
+Theorem 2.3, p. 7
+Ordinary generating coefficients and exponential generating coefficients use different multiplication
+laws. If E(a) = P antn/n! in characteristic zero, multiplying two series and decoding gives the Hurwitz
+product
+(a ⋆b)n =
+n
+X
+r=0
+ 
+n
+r
+!
+arbn−r.
+0
+1
+2
+3
+4
+5
+6
+ordinary
+1
+2
+3
+4
+5
+6
+7
+Hurwitz
+1
+2
+4
+8
+16
+32
+64
+an = bn = 1
+coefficient index n
+[tn](AB) = Pn
+r=0 arbn−r
+(a ⋆b)n = Pn
+r=0
+ n
+r
+
+arbn−r
+At n = 3, the weights 1, 3, 3, 1 produce 8, not 4.
+Why the binomial coefficient appears
+The ordinary coefficient product contributes arbn−r/(r!(n −r)!). Multiplication by n! contributes the
+factor
+ n
+r
+. This is not an optional normalization. With every input coefficient equal to one, ordinary
+convolution gives n + 1, whereas Hurwitz convolution gives 2n.
+The Hurwitz formula itself is defined over every commutative ring.
+It can therefore be used in
+characteristic p even though division by n! cannot generally be performed there.
+The sequence
+operation is primary in that setting; a nonexistent factorial inverse must not be used as a shortcut.
+Differentiation becomes a shift
+Let (Da)n = an+1. In characteristic zero this corresponds to differentiating E(a). The higher product
+rule remains a binomial identity for sequences. In characteristic p, its middle coefficients vanish at
+order p:
+Dp(a ⋆b) = (Dpa) ⋆b + a ⋆(Dpb).
+The checked examples verify this law directly modulo several primes. Their finite truncation only tests
+output coefficients whose complete input windows are available.
+Read this as: A characteristic-zero encoding can explain the weights, but the integral coefficient
+law is what survives reduction modulo a prime.
+Final edition
+•
+6 October 2026
+V – 5
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE ACTUAL EULER FAMILY
+A reciprocal becomes a triangle
+Traditional companion: Definition 3.1, p. 12;
+Proposition 3.2, p. 13;
+Eq. 3.3, p. 13
+The paper does not begin with an arbitrary sequence that happens to satisfy a congruence. Its Euler
+coefficients come from the reciprocal
+X
+d≥0
+E(N,j)
+d
+td
+d! =
+
+X
+n≥0
+tNn
+(Nn + j)!
+
+
+−1
+.
+The denominator has constant coefficient 1/j!. The normalized packet CN,j = UN,j/j! consequently
+starts at one.
+Tnq =
+ 6n+3
+6q
+
+1
+0
+0
+1
+84
+0
+1
+5005
+455
+·
+(C6,3(q))
+1
+−1
+84
+703
+5460
+=
+target
+1
+0
+0
+C(0) = 1
+U(0) = 3! = 6
+Positive diagonal entries permit rational division; they need not be units modulo p.
+Solve the rows in order
+Clearing the factorials in the reciprocal identity yields
+n
+X
+q=0
+ 
+Nn + j
+Nq
+!
+CN,j(q) = δn0.
+At row n > 0, the earlier coefficients are already known. Divide their negative weighted sum by the
+positive diagonal coefficient. The example uses (N, j) = (6, 3), whose first three diagonal entries are
+1, 84, 455.
+The new checker computes these values twice: once from this triangular recurrence and once by ordinary
+formal-series inversion followed by factorial decoding. Agreement confirms that the visual example
+represents the intended reciprocal, rather than a similar-looking recurrence.
+A denominator bound is not integrality
+The product of diagonal entries through row n clears the denominator of CN,j(n). This does not
+mean that the original denominator was prime to every p. At address three and prime three, the first
+nontrivial normalized coefficient is already nonintegral.
+Read this as: The reciprocal, the triangular system, and the packet coefficients are three
+descriptions of one object. Changing the normalization changes the arithmetic precision.
+Final edition
+•
+6 October 2026
+V – 6
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+A NECESSARY CORRECTION
+One factorial costs one digit
+Traditional companion: Example 3.8, p. 17;
+Theorem 3.7, p. 15
+Take p = 3, m = 2, N = 6, and the address j = 3. This address lies outside the standard window
+j < p. The exact recurrence gives
+C6,3(1) = −1
+84,
+C6,3(2) = 703
+5460.
+Normalized packet
+Original coefficients
+C6,3(2) −C6,3(1) = 64
+455
+U6,3(2) −U6,3(1) = 384
+455
+v3 = 0
+v3 = 1
+1
+2
+3
+1
+2
+3
+U = 3!C
+=⇒
+v3(∆U) = v3(∆C) + 1
+The unnormalized theorem still holds
+Subtracting gives 64/455, which has no factor of three. Multiplying by 3! = 6 gives 384/455, which
+has exactly one factor of three. The factor 455 is a unit at three, so both valuation calculations are
+immediate integer factorizations.
+For the divisor branch, with h = (p −1)/m, the paper proves a bound for U and then converts it to C:
+vp(∆k
+uhCmp,j(n)) ≥min(k, mn) −vp(j!).
+Here n = k = u = h = 1. The normalized bound is zero and is attained. Removing the factorial-loss
+term would require order at least one, contradicted by the displayed fraction.
+This is a theorem boundary, not rounding error
+The failure is exact. Increasing numerical precision cannot repair it. The mathematical statement
+must retain the normalization factor. Inside j < p, the factorial is a p-adic unit, so this particular loss
+disappears; outside that window it cannot be silently ignored.
+Read this as: Before transferring a congruence from U to C, subtract vp(j!). A bound for an
+unnormalized family is not automatically the same bound for its normalized coordinates.
+Final edition
+•
+6 October 2026
+V – 7
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+FINITE NEWTON COORDINATES
+Read the left edge of the triangle
+Traditional companion: Theorem 2.6, p. 9
+Successive differences turn sampled values into Newton coefficients. Put ck = ∆k
+1f(0). The exact finite
+identity is
+f(n) =
+n
+X
+k=0
+ck
+ 
+n
+k
+!
+.
+It holds over every commutative ring. There is no limiting process in this formula at a natural-number
+row.
+∆0
+1
+3
+9
+27
+81
+243
+∆1
+2
+6
+18
+54
+162
+∆2
+4
+12
+36
+108
+∆3
+8
+24
+72
+∆4
+16
+48
+∆5
+32
+ck = 2k
+3n = Pn
+k=0 2k n
+k
+
+Left edge: Newton coefficients.
+Each next row: adjacent difference.
+For f(n) = 3n, every difference multiplies the row by two. The highlighted left edge is 1, 2, 4, 8, 16, 32.
+Differences become a shift of coefficients
+The Newton coefficients of ∆s
+1f are cs, cs+1, . . .. Hence
+∆s
+1f(n) =
+n
+X
+j=0
+ 
+n
+j
+!
+cs+j.
+A valuation bound on the coefficient tail therefore becomes a difference bound. The geometry of the
+difference triangle is doing algebraic work: the entries used by a particular stencil are visible.
+Where finite evidence stops
+Six samples determine the complete triangle drawn above. They determine a finite interpolating
+polynomial and every difference stencil contained in those samples. They do not determine an arbitrary
+later value of the original sequence. For this example, the formula f(n) = 3n supplies the general rule,
+so its all-row behavior is independently known.
+Likewise, a Newton series on all of Zp needs a convergence theorem. The finite reconstruction identity
+alone does not establish that its coefficients decay sufficiently fast.
+Read this as: Finite differences provide exact coordinates, not automatic extrapolation. Always
+state whether the claim concerns a finite stencil, a known sequence, or a convergent p-adic series.
+Final edition
+•
+6 October 2026
+V – 8
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+WEIGHTS AND AFFINE PULLBACK
+A lower bound can hide cancellation
+Traditional companion: Theorem 2.7, p. 10;
+Section 2.7, p. 11
+The nonarchimedean inequality says that the order of a sum is at least the smallest order of its
+summands. It does not generally say that the orders are equal. A tie at the minimum can permit
+cancellation.
+Cancellation in arithmetic
+2 + 6 = 8
+min{v2(2), v2(6)} = 1
+v2(8) = 3
+The affine Mahler kernel
+Θ2,1(3, 2) = [z3](1 + z)(2z + z2)2
+= 4 + 4 = 8
+candidate lower bound 2; actual order 3
+The same issue occurs in a change of address
+For a finite Newton expansion, replacing n by Mq + s transports its coefficients through
+ΘM,s(r, k) = [zr](1 + z)s (1 + z)M −1
+k =
+k
+X
+a=0
+(−1)k−a
+ 
+k
+a
+! 
+Ma + s
+r
+!
+.
+These two expressions are independently compared by exact polynomial expansion. In the binary
+zero-address case there is a particularly simple expression:
+Θ2,0(k + j, k) = 2k−j
+ 
+k
+j
+!
+(0 ≤j ≤k).
+A nonzero address introduces further mixing. The illustrated shifted kernel has two contributions of
+order two whose sum has order three.
+When equality is justified
+If one summand has strictly smaller valuation than every other summand, it cannot be canceled, so the
+minimum is exact. Paper IX’s displacement theorem uses this principle with a dominant first Newton
+term. It proves a stronger envelope for all remaining terms rather than treating a minimum bound as
+an equality.
+Read this as: A valuation heatmap is often a map of guaranteed precision. Exact valuations
+require a noncancellation argument, not just a list of termwise weights.
+Final edition
+•
+6 October 2026
+V – 9
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+ODD-PRIME REDUCTION
+The standard window shares one pattern
+Traditional companion: Proposition 3.5, p. 14;
+Corollary 3.9, p. 17
+For N = mp and 0 ≤j < p, Lucas reduction gives
+ 
+mpn + j
+mpq
+!
+≡
+ 
+mn
+mq
+!
+(mod p).
+All addresses in this standard window reduce to the same triangular system. Its diagonal entries are
+one modulo p, so the recurrence has a unique reduced solution.
+0
+1
+2
+3
+4
+5
+6
+7
+8
+j = 0
+1
+4
+0
+4
+0
+4
+0
+4
+0
+j = 1
+1
+4
+0
+4
+0
+4
+0
+4
+0
+j = 2
+1
+4
+0
+4
+0
+4
+0
+4
+0
+j = 3
+1
+4
+0
+4
+0
+4
+0
+4
+0
+j = 4
+1
+4
+0
+4
+0
+4
+0
+4
+0
+p = 5, m = 2, N = 10
+C10,j(n) (mod 5)
+All five addresses agree. The sufficient row period h = 2 begins at n = 1, not n = 0.
+Nine exact coefficient rows for each of five addresses are reduced modulo five. The first column is separated because the
+period theorem begins at row one.
+A shared period, not an asserted least period
+Here p = 5, m = 2, and h = (p −1)/m = 2. The reduced rows from n = 1 alternate between 4 and
+0. The first row has value one, so extending the same two-step claim to n = 0 would already fail:
+C10,j(2) −C10,j(0) ≡−1.
+The general theorem proves that h is a sufficient common period from row one on the divisor branch.
+It does not prove that this value is the least possible period in every family. Minimality requires a
+separate obstruction to every smaller displacement.
+Why the address restriction matters
+When j < p, the diagonal binomial coefficient is a unit after reduction. Once j crosses p, this argument
+no longer applies unchanged. The all-address theorem uses the singular-ratio and weighted-series
+machinery; it is not an extrapolation from this five-row display.
+Read this as: The shared reduction explains the standard window efficiently. The first row,
+the address range, and the difference between sufficient and least periods are all part of the
+statement.
+Final edition
+•
+6 October 2026
+V – 10
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE NISHIBUCHI DISPLACEMENT
+A packet period is not a degree shift
+Traditional companion: Theorem 3.6, p. 15;
+Lemma 3.10, p. 18
+The original coefficient is indexed by degree, whereas the difference estimates are indexed by packet
+row. With N = mp and q = lcm(2, p −1), the source theorem concerns the degree displacement qpr.
+0
+0
+1
+6
+2
+12
+3
+18
+4
+24
+5
+30
+6
+36
+packet row n
+ordinary degree 6n
+T = 3 rows
+NT = 18 = lcm(2, 2) 32 degrees
+p = 3
+m = 2
+r = 2
+Convert the indices before applying the bound
+On the divisor branch, the corresponding row shift is T = pr−1q/m. Multiplication by N gives exactly
+NT = qpr. For p = 3, m = 2, r = 2, this is a shift of three rows or eighteen degrees. They describe the
+same displacement, not two competing period claims.
+In this example, the stronger divisor-branch starting condition r ≤mn already permits n = 1. The
+uniform sufficient condition n ≥r would start later. Neither condition is advertised as the earliest
+possible threshold for every parameter tuple.
+How differences produce the period
+A finite Newton expansion writes the displacement as
+f(n + pr−1h) −f(n) =
+pr−1
+X
+k=1
+ 
+pr−1
+k
+!
+∆k
+hf(n).
+For k ≥r, the assumed difference supplies pr. For smaller k, the binomial coefficient supplies the
+missing factors. In the displayed p = 3, r = 2 case, the three weights are 3, 3, 1, paired with differences
+divisible by 3, 9, 9.
+Read this as: Every term of the finite expansion has the required precision. The published
+displacement follows only after translating the row shift back to ordinary degree.
+Final edition
+•
+6 October 2026
+V – 11
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+FINITE UNIT COORDINATES
+The prime two keeps a separate sign
+Traditional companion: Theorem 2.8, p. 10;
+Theorem 2.9, p. 10
+A finite unit can be separated into a root-of-unity part and a part congruent to one. At modulus pL+1,
+the paper constructs
+ωL(a) = apL,
+⟨a⟩L = aωL(a)−1.
+For odd p, the first factor is a (p −1)st root of unity and the second is one modulo p.
+Odd-prime modulus 125
+2 = 57 · 11 (mod 125)
+574 = 1 (mod 125)
+57 ≡2,
+11 ≡1 (mod 5)
+Dyadic modulus 32
+3 = (−1) · 29 (mod 32)
+29 ≡1 (mod 4)
++1 ≡−1 (mod 2)
+Modulo four retains the sign that modulo two cannot distinguish.
+An explicit odd-prime decomposition
+For a = 2 modulo 125, L = 2 and ω2(2) = 225 ≡57. Its inverse is 68, so the principal factor is
+2 · 68 ≡11. The multiplication 57 · 11 ≡2, the fourth-power identity, and both reductions are exact
+checks.
+Why the dyadic sign cannot be read modulo two
+At prime two, the (p −1)st root factor in that construction is trivial. To retain the distinction between
++1 and −1, the paper instead uses
+a = ϵ(a)⟨a⟩4,
+ϵ(a) ∈{1, −1},
+⟨a⟩4 ≡1
+(mod 4).
+For 3 modulo 32, the factors are −1 and 29. Both signs reduce to one modulo two, so a modulo-two
+inspection alone cannot recover this information.
+For a unit mode un, differences satisfy ∆k
+h(un) = un(uh −1)k. Thus unit coordinates directly explain
+why a carefully chosen step gains valuation.
+Read this as: The dyadic branch is not obtained by replacing an odd prime with two in every
+formula. Its extra sign is visible only at the appropriate residue depth.
+Final edition
+•
+6 October 2026
+V – 12
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+EXACT DYADIC DISPLACEMENT
+Four addresses, four precision gains
+Traditional companion: Theorem 3.15, p. 21;
+Theorem 3.11, p. 19
+For the width-four family, write Cj = C4,j and Uj = U4,j. The paper proves an exact first-displacement
+law, not merely a lower bound:
+v2(Cj(n + T) −Cj(n)) = v2(T) + cj,
+v2(Uj(n + T) −Uj(n)) = v2(T) + dj,
+T > 0,
+where c = (1, 1, 4, 2) and d = (1, 1, 5, 3).
+T = 1
+T = 2
+T = 3
+T = 4
+T = 8
+T = 16
+j = 0
+1
+2
+1
+3
+4
+5
+j = 1
+1
+2
+1
+3
+4
+5
+j = 2
+5
+6
+5
+7
+8
+9
+j = 3
+3
+4
+3
+5
+6
+7
+v2(Uj(n + T) −Uj(n)) = dj + v2(T)
+d = (1, 1, 5, 3)
+every row n ≥0, every T > 0
+The row does not appear in the answer
+Every displayed value is valid at every starting row n ≥0. An odd step always has the same gain dj.
+Doubling the step increases the order by one. The difference is nonzero, so an exact finite valuation is
+meaningful.
+The address-dependent gains come from the first Newton coefficients. The later coefficients satisfy a
+strictly stronger logarithmic envelope. In the finite displacement expansion, their combined contribution
+has at least one more factor of two than the leading term, so it cannot cancel it.
+First order is not all orders
+The all-order theorem separately proves
+∆k
+uUj(n) ∈2k(1+v2(u))+v2(j!)Z2
+(u > 0).
+The exact first-displacement law does not determine the exact valuation of every higher difference.
+Subtracting two first differences can introduce additional cancellation.
+Read this as: This table is an illustration of a general proved equality. Its strength is the
+exclusion of cancellation, and that exclusion should not be exported to higher orders without a
+new argument.
+Final edition
+•
+6 October 2026
+V – 13
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+PERIOD CLASSIFICATION
+When a sufficient period becomes least
+Traditional companion: Corollary 3.16, p. 22
+An original packet Uj repeats modulo 2r after a positive row shift T exactly when v2(T) + dj ≥r.
+Therefore
+T is a period modulo 2r ⇐⇒2max(0,r−dj) | T.
+The least positive period is the displayed power of two.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+j = 0
+1
+2
+4
+8
+16
+32
+64
+128
+256
+512
+j = 1
+1
+2
+4
+8
+16
+32
+64
+128
+256
+512
+j = 2
+1
+1
+1
+1
+1
+2
+4
+8
+16
+32
+j = 3
+1
+1
+1
+2
+4
+8
+16
+32
+64
+128
+Modulus 2r; columns show r, cells show the least positive row period.
+j = 2 :
+U2(n) ≡2 (mod 32)
+but period grows beyond that precision.
+The shaded range has period one
+At address two, the initial value is U2(0) = 2, and every other value differs from it by a multiple of 32.
+Consequently the whole packet is constant modulo 32. At higher precision it begins to distinguish
+rows. Address three is similarly constant at 6 modulo eight.
+At precision 210 the least periods are 512, 512, 32, 128. The table is generated from the exact theorem.
+The example checker additionally verifies finite residue repetitions and explicit failures of every smaller
+candidate in a bounded range; those checks are not the source of the universal minimality conclusion.
+Why a smaller shift fails
+For any positive T not divisible by the required power, the exact displacement law already fails the
+congruence at row zero. No scan through arbitrarily many rows is needed. This is the mathematical
+distinction between an observed repeating prefix and a proved least period.
+Read this as: These are least packet-row periods. Multiply by four to express the corresponding
+supported degree displacement; do not infer a least period of the full degree-indexed sequence
+with its intervening zeros.
+Final edition
+•
+6 October 2026
+V – 14
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+ISOMETRIC CONTINUATION
+A dyadic permutation at every depth
+Traditional companion: Theorem 3.25, p. 27;
+Corollary 3.26, p. 27
+Remove the address-dependent offset and scale:
+fj(n) = Uj(n) −j!
+2dj
+.
+The exact displacement law becomes v2(fj(n)−fj(m)) = v2(n−m) for distinct natural numbers. Thus
+the rescaled map preserves dyadic distance.
+j = 0
+0
+1
+2
+3
+4
+5
+6
+7
+row n, column fj(n)
+j = 1
+0
+1
+2
+3
+4
+5
+6
+7
+row n, column fj(n)
+j = 2
+0
+1
+2
+3
+4
+5
+6
+7
+row n, column fj(n)
+j = 3
+0
+1
+2
+3
+4
+5
+6
+7
+row n, column fj(n)
+fj(n) = (Uj(n) −j!)/2dj (mod 8); each row and column has one selected entry.
+Each square is the graph of a permutation modulo eight. Rows and columns use ordinary display order, which does not
+represent the dyadic metric.
+A permutation that respects every smaller residue
+For example, address zero gives 0, 7, 2, 1, 4, 3, 6, 5 modulo eight. Reducing the outputs modulo four
+yields a function of the input modulo four, and reducing again gives the modulo-two map. The finite
+example therefore displays compatibility as well as bijectivity.
+The general proof uses density of the natural numbers and completeness to extend fj to an isometry
+Φj : Z2 →Z2. Compactness then forces this self-isometry to be onto. The argument establishes more
+than a collection of unrelated finite permutations.
+The original image is an affine ball
+Undoing the scale gives the exact completed image
+eUj(Z2) = j! + 2djZ2.
+Every element in that ball has exactly one preimage. Outside it there is none. The four images are
+1 + 2Z2, 1 + 2Z2, 2 + 32Z2, and 6 + 8Z2.
+Read this as: A continuous isometric bijection need not already be an analytic function. The
+analytic polynomial-root theorem later in the paper uses separate hypotheses and a separate
+construction.
+Final edition
+•
+6 October 2026
+V – 15
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+CLASSICAL ODD-LENGTH TOWER
+Large terms, exact arithmetic recovery
+Traditional companion: Theorem 3.18, p. 23;
+Corollary 3.19, p. 23
+Return to the classical signed Euler numbers E2n from sech t. For a positive odd integer p, define
+Sd(p) =
+p−1
+X
+a=0
+(−1)a(2a + 1)d,
+sech2 t =
+X
+m≥0
+γm
+t2m
+(2m)!.
+The exact reconstruction is
+E2n =
+n
+X
+m=0
+ 
+2n
+2m
+!
+γmp2mS2(n−m)(p).
+summand
+partial sum
+m = 0
+384065
+384065
+m = 1
+−7508088
+−7124023
+m = 2
+49442400
+42318377
+m = 3
+−94385088
+−52066711
+m = 4
+52068096
+1385
+p = 3, n = 4
+E8 = 1385
+v3(tail) ≥2M + 2
+Large ordinary magnitudes can still agree to high prime-adic precision.
+Ordinary magnitude is a poor precision guide
+For p = 3 and n = 4, partial sums swing through tens of millions before reaching 1385. Yet each
+successive omitted layer carries at least two additional factors of three. Truncating after m = M has
+error divisible by p2M+2, regardless of how large the ordinary error looks.
+This divisibility follows term by term from the explicit factor p2m. At full depth M ≥n, the result
+is exactly equal, not an approximation. The coefficient γm is computed independently as a Hurwitz
+convolution of two classical Euler sequences.
+Odd length is enough for the identity
+The reconstruction is an integer identity for every positive odd p, including composite odd lengths.
+Primality is needed when calling the resulting divisibility ladder a prime-adic valuation statement. The
+checker includes length nine without treating nine as a prime.
+Read this as: A truncation can be arithmetically accurate without being a good real-number
+approximation. The weight attached to each term tells us which notion of accuracy is being
+controlled.
+Final edition
+•
+6 October 2026
+V – 16
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+FOUR DIGITS PER RETAINED LAYER
+The sharp dyadic edge tower
+Traditional companion: Lemma 3.22, p. 25;
+Theorem 3.23, p. 26
+The classical dyadic construction uses a different source, not the odd-length formula with p = 2. Define
+A(n) =
+32n+2 −1
+4(2n + 1)(2n + 2),
+X
+m≥0
+βmz2m =
+
+z
+sinh z
+2
+,
+κm = βm22m(2m)!.
+Then E2n = Pn
+m=0 κm
+ 2n
+2m
+A(n −m).
+first omitted row
+v2(error)
+exact first omitted error
+M = 0
+1
+3
+−8
+3
+M = 1
+2
+7
+128
+5
+M = 2
+3
+11
+−10240
+21
+M = 3
+4
+15
+229376
+15
+M = 4
+5
+19
+−7864320
+11
+M = 5
+6
+23
+63761809408
+1365
+At n = M + 1 only one term is missing: E2M+2 −TM(M + 1) = κM+1.
+Why the uniform exponent is exact
+For m ≥1, the paper proves that κm is nonzero and has valuation 4m −1. The source A(n −m) is a
+dyadic unit and the binomial coefficient is integral. Every term omitted after M therefore has order at
+least 4M + 3:
+E2n −TM(n) ∈24M+3Z2.
+At row n = M + 1, there is exactly one omitted term. The other two factors are
+ 2M+2
+2M+2
+ = 1 and
+A(0) = 1. Its exact order is consequently 4M + 3, ruling out a uniform extra digit.
+Why this is not a finite-pattern guess
+The proof connects κm to −24m(2m −1)B2m and uses the Bernoulli valuation theorem. The finite
+table is a transparent sample of that formula. A list of observed orders alone would not justify the
+all-M conclusion.
+Read this as: Uniform optimality is witnessed by the first omitted row. It does not mean that
+every row attains the uniform bound.
+Final edition
+•
+6 October 2026
+V – 17
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+TERM WEIGHTS AND OMITTED TAILS
+The row can buy extra precision
+Traditional companion: Proposition 3.24, p. 26
+For 1 ≤m ≤n, the dyadic summand has exact order
+wm(n) = 4m −1 + v2
+ 
+2n
+2m
+!
+.
+The binomial factor can improve the guaranteed precision at a particular row. The minimum weight of
+the omitted terms is a valid lower bound for the tail.
+1
+3
+2
+4
+7
+3
+3
+7
+11
+4
+5
+8
+13
+15
+5
+3
+8
+12
+15
+19
+6
+4
+7
+13
+15
+20
+23
+7
+3
+7
+11
+15
+19
+23
+27
+8
+6
+9
+14
+16
+22
+25
+30
+31
+1
+2
+3
+4
+5
+6
+7
+8
+Actual tails at row n = 6
+M
+0
+1
+2
+3
+4
+5
+v2
+4
+7
+13
+15
+20
+23
+Uniform: 4M + 3.
+Full depth M ≥6: error 0.
+Left: v2(Sm(n)) = 4m −1 + v2
+  2n
+2m
+
+. Blank cells have m > n.
+A concrete row
+At n = 6, the nonconstant summand orders are 4, 7, 13, 15, 20, 23. The exact tail orders after depths
+M = 0, . . . , 5 happen to be those same numbers. For example, after depth two the tail has order
+thirteen, while the uniform theorem only guarantees eleven.
+At that depth the omitted minimum is uniquely attained, so the remaining summands cannot cancel
+it. In a more general tail, equal minimal orders can allow extra cancellation. The paper deliberately
+leaves the exact whole-tail valuation at arbitrary rows as a sharper question rather than replacing it by
+the minimum weight without justification.
+Read blank cells and the full-depth endpoint correctly
+A blank entry in the triangle means that the summand is absent because m > n. It is not a summand
+of order zero. Once M ≥n, the tail is empty and the error is exactly zero. Its valuation is infinity, not
+the last finite order in the row.
+The exact checker generates every displayed term as a rational number, reduces it, and factors its
+numerator and denominator. The shade is only a visual encoding of the resulting integer order.
+Read this as: Use the uniform theorem for a guaranteed budget. Use exact row weights for a
+sharper certificate. Use a noncancellation argument before claiming an exact tail order.
+Final edition
+•
+6 October 2026
+V – 18
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE FINITE CORRECTION EQUATION
+Turn a residual into one new digit
+Traditional companion: Lemma 4.1, p. 28;
+Theorem 4.2, p. 28;
+Proposition 4.3, p. 29
+Suppose F(x) is divisible by pL, with L ≥1, and write F(x) = pLrx exactly. Every candidate next
+residue has the form x + pLt. Polynomial Taylor expansion gives
+F(x + pLt) ≡pL(rx + DF(x)t)
+(mod pL+1).
+The next digit must solve rx + Jxt = 0 in the residue field.
+L
+xL
+rL mod 7
+J mod 7
+t
+xL+1
+1
+3
+1
+6
+1
+10
+2
+10
+2
+6
+2
+108
+3
+108
+6
+6
+6
+2166
+4
+2166
+1
+6
+1
+4567
+5
+4567
+2
+6
+2
+38181
+F(X) = X2 −2,
+p = 7,
+x1 = 3
+xL+1 = xL + 7Lt,
+rL + 6t = 0 (mod 7)
+A complete scalar lifting calculation
+For F(X) = X2 −2 at prime seven, start with x = 3. Its residual digit is (9 −2)/7 = 1 and its
+derivative reduces to six. Solving 1 + 6t = 0 modulo seven gives t = 1, so the next representative is ten
+modulo forty-nine. The table continues the same calculation through five corrections.
+Every listed candidate is checked by direct polynomial evaluation at the new modulus, independently
+of the Jacobian rule. Earlier digits remain unchanged because the correction is a multiple of the old
+modulus.
+The hypothesis that removes the quadratic remainder
+The discarded Taylor remainder has a factor p2L. The inequality 2L ≥L + 1 is why this nonlinear
+argument assumes positive depth. At L = 0, the rule need not characterize lifting. For an affine
+polynomial the remainder is identically zero, so that separate theorem includes depth zero.
+Read this as: The linear correction equation is exact at one more digit. It is not a linear
+approximation with an uncontrolled error, and its allowed depth is part of the proof.
+Final edition
+•
+6 October 2026
+V – 19
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+COUNTING ROOT DIGITS
+A nonempty correction fiber is a torsor
+Traditional companion: Theorem 4.7, p. 31
+At one precision, the obstruction is the residual class in the quotient by the Jacobian image:
+Ox = Fe
+p/ im Jx,
+ox = [rx].
+The next lift exists exactly when ox = 0. When a correcting digit t0 exists, every other correcting digit
+is t0 + k with k ∈ker Jx.
+010
+011
+012
+100
+101
+102
+220
+221
+222
+t = (a, 1 −a, c)
+in F3
+3
+J =
+ 
+1
+1
+0
+0
+0
+0
+!
+r = (−1, 0) :
+#Tr = 33−1 = 9
+r = (−1, 1) :
+Tr = ∅
+# coker J = 32−1 = 3
+Rows vary c; columns vary a.
+Nine digits, one equation of substance
+In the displayed example the only nontrivial equation is a + b = 1 modulo three. Choose a and c freely;
+then b = 1 −a is forced. There are nine solutions. Replacing the residual by (−1, 1) asks the zero
+second row of the Jacobian to cancel one, which is impossible.
+The rank is one, so the kernel has dimension two and the obstruction quotient dimension one. This
+gives the exact counts 33−1 = 9 and 32−1 = 3. A torsor means that translation by the kernel is free
+and transitive, without declaring any particular solution to be its canonical zero.
+Prime-field counts have a boundary
+The correction criterion and translation action also make sense modulo a composite integer q. The
+rank formula over Fp does not. Multiplication by two on Z/4Z has a kernel with two elements; the
+ring Z/4Z is not the field with four elements, so a vector-space rank formula cannot be applied to it.
+Read this as: The image detects existence, the kernel measures ambiguity, and the residual
+class identifies the actual obstruction. These are related but different objects.
+Final edition
+•
+6 October 2026
+V – 20
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+SHARED CORRECTION LABELS
+Separate solutions need not agree
+Traditional companion: Theorem 4.5, p. 30;
+Corollary 4.6, p. 30;
+Proposition 4.4, p. 29
+Two systems can each admit a next digit without admitting the same next digit. For linear observations
+J : U →V and K : U →W, the common label space is
+C(J, K) = U/(ker J + ker K).
+Two attainable observations have a simultaneous preimage exactly when their labels agree.
+J(a, b, c) = (a, b),
+K(a, b, c) = (b, c)
+ker J + ker K = {(a, 0, c)}
+C(J, K) ∼= F3
+via b
+27 of 81 output pairs are compatible.
+A common correction requires equal middle coordinates.
+The label is the middle coordinate
+Take U = F3
+3, with J(a, b, c) = (a, b) and K(a, b, c) = (b, c). The first observation forgets c, and the
+second forgets a. Their common content is b. Both maps are onto, but of the eighty-one pairs of
+observations, only twenty-seven agree in this coordinate.
+The block pattern is the actual fiber product, not a proposed compatibility heuristic. Each retained
+pair comes from the unique triple with those three coordinates.
+An arithmetic incompatibility at the next modulus
+At the lower root x = 0 modulo two, the equations F(X) = X and G(X) = X −2 are both satisfied.
+Modulo four, the first requires the new digit zero and the second requires the new digit one. Each
+individual problem lifts, but there is no common residue solving both.
+Changing integer representatives within the same lower root does not change its distinguished obstruc-
+tion class. That invariance is weaker than invariance under arbitrary changes in the equation list;
+adding a zero equation changes the raw cokernel.
+Read this as: A joint root is a compatibility statement, not the conjunction of two unrelated
+existence statements. The common quotient records exactly the information both correction
+maps retain.
+Final edition
+•
+6 October 2026
+V – 21
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+SINGULAR BRANCHES
+A successful step can be the last
+Traditional companion: Remark 4.10, p. 33;
+Section 6.1, p. 43;
+Proposition 4.3, p. 29
+For F(X) = X2 −5, the residue one is a root modulo two. Both odd residues are roots modulo four.
+Neither can continue to a root modulo eight, because every odd square is one modulo eight.
+X2 −5
+X2 −17
+mod 2
+mod 4
+mod 8
+1
+1
+∅
+3
+∅
+1
+1
+1
+5
+3
+3
+7
+Same initial parity and derivative; different later residual obstructions.
+The two examples have the same initial odd residue and derivative zero modulo two. Their later normalized residuals
+differ. The right-hand picture shows only these first levels, not every later branch.
+What failed, exactly?
+At depth one, F(1)/2 = −2 reduces to zero, so the zero Jacobian causes no obstruction. At depth two,
+F(1)/4 = −1 is odd. A zero Jacobian cannot change that residual digit, and the branch stops. The
+representative three gives the same obstruction at this precision.
+This does not contradict the smooth tower theorem. That theorem assumes a surjective reduced
+Jacobian, which the squaring map at an odd dyadic point does not have. Without that assumption,
+success at one precision cannot be reused as a promise of success at all future precisions.
+Another failed shortcut: nonlinear depth zero
+At x = 0, L = 0, and F(X) = X2 −1, the Jacobian is zero and the residual is nonzero modulo two.
+Nevertheless x = 1 is a root modulo two and lies in the same residue class modulo one. The first-order
+criterion was being applied before its quadratic remainder became negligible.
+Read this as: The missing object in singular persistence is a theorem linking all later obstructions.
+A finite tree of successful early lifts is not itself that theorem.
+Final edition
+•
+6 October 2026
+V – 22
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+PRESCRIBED PARAMETERS
+Which variables are allowed to move?
+Traditional companion: Theorem 4.13, p. 35;
+Theorem 4.12, p. 33
+Write the variables as (Y, T), where the parameter digit v of T is prescribed. Partition the reduced
+Jacobian into solved and parameter blocks (J K). The new solved digit u must satisfy
+rx + Ju + Kv = 0,
+ox(v) = [rx + Kv] ∈Fe
+p/ im J.
+The relevant image is that of the solved block J, not necessarily the whole Jacobian.
+F(Y, T) = T,
+p = 2,
+x = (0, 0),
+L = 1
+DF = ( 0 1 ),
+JY = 0,
+KT = 1
+parameter digit v = 0
+T = 0 : (Y, T) = (0, 0), (2, 0)
+two next roots
+parameter digit v = 1
+T = 2 : F(Y, T) = 2 ̸= 0 (mod 4)
+no next root
+A full-rank Jacobian is not enough for every split
+In the example F(Y, T) = T, the full Jacobian has rank one. Solving for T would give a regular chart.
+But after declaring T to be a prescribed parameter, the solved block with respect to Y is zero. No
+movement of Y can alter the value of F.
+For parameter digit zero there are two residue choices for Y , producing the points (0, 0) and (2, 0)
+modulo four. For digit one the parameter is two modulo four, and neither choice of Y can produce a
+root. The two cases are exhaustive.
+Selected coordinates versus prescribed coordinates
+The general chart theorem chooses an invertible minor of the full reduced Jacobian and then rearranges
+the variables. The prescribed-parameter theorem respects a split already imposed by the problem. Its
+obstruction formula remains valid even when that chosen solved block is not surjective.
+Read this as: “There exists a good set of solved variables” does not mean “every proposed
+parameter split is good.” The term Kv keeps the imposed motion visible in the residual equation.
+Final edition
+•
+6 October 2026
+V – 23
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+CONTINUITY AND ANALYTICITY
+A root locus becomes a parameter chart
+Traditional companion: Theorem 4.12, p. 33;
+Theorem 5.3, p. 41;
+Theorem 5.4, p. 41
+Consider F(Y, T) = Y + Y 2 + T near (0, 0) over Z2. The solved derivative is 1 + 2Y , a unit. For each
+even parameter residue modulo 32, there is exactly one even solved residue.
+0
+0
+8
+8
+16
+16
+24
+24
+30
+30
+columns t, rows even y; modulus 32
+y + y2 + t = 0
+ψ(T) = −T −T 2 −2T 3 −5T 4 −· · ·
+Dψ(0) = −1
+The grid is not a real-plane curve.
+The apparent jaggedness is only display order
+The graph satisfies t = −y −y2. For two even residues y, z,
+(−y −y2) −(−z −z2) = −(y −z)(1 + y + z).
+The second factor is odd, so it has dyadic order zero. Consequently parameter and solved-coordinate
+differences have the same dyadic order. The finite permutation is compatible with every lower precision,
+although it looks irregular in ordinary numerical order.
+The analytic theorem is stronger and different
+Over the ambient field Q2, the paper constructs an analytic local branch ψ(T) with derivative
+−J−1K = −1 at zero. Its formal expansion begins
+ψ(T) = −T −T 2 −2T 3 −5T 4 −14T 5 −42T 6 −· · · .
+The exact checker verifies its displayed coefficients by substitution into ψ + ψ2 + T. This finite check
+does not prove convergence. Convergence and local uniqueness come from the analytic inverse-function
+argument in the manuscript.
+A continuous root selection through the same nonsingular point must agree with this branch near the
+base parameter. The theorem concerns a germ, not an arbitrary globally chosen branch.
+Read this as: Integral residue charts live in Z2; analytic differentiation is carried out over Q2.
+The former is not being treated as a vector space over the latter.
+Final edition
+•
+6 October 2026
+V – 24
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+WEIGHTED NONLINEAR CORRECTION
+A nonunit Jacobian need not stop lifting
+Traditional companion: Theorem 4.16, p. 36;
+Example 4.17, p. 37
+The weighted theorem allows a Jacobian singular modulo p but invertible over Qp. Suppose psJ−1 is
+integral, F(a) ∈prZd
+p, and r > 2s. Then the unique root in a + ps+1Zd
+p has displacement in pr−sZd
+p.
+F(X) = X2 −17,
+a = 1,
+J = 2,
+s = 1,
+r = 4 > 2s
+x = 105 (mod 256)
+x = 233 (mod 256)
+105
+fails mod 512
+361
+fails mod 512
+233
+root mod 512
+489
+root mod 512
+Unique root in 1 + 4Z2 does not mean a unique finite residue at each depth.
+Uniqueness of a completed root is not finite-level uniqueness
+For X2 −17 at a = 1, the residual is −16, s = 1, and r = 4. The theorem gives one root in 1 + 4Z2,
+with displacement divisible by eight. Modulo 256, however, both 105 and 233 are approximate roots in
+this ball. The first has no lift modulo 512; the second has two. Only compatible continuation to every
+depth selects the unique completed root.
+This example prevents a false inference from weighted uniqueness to “one digit choice at every stage.”
+The latter was the square smooth theorem’s conclusion under a unit Jacobian.
+The strict threshold is necessary
+For X2 + 3 at one, the residual has order two and the derivative order one. Thus r = 2s, but no root
+exists modulo eight. Replacing r > 2s by r ≥2s would admit this counterexample. Similarly, psX + pr
+has root −pr−s, so the displacement cannot uniformly gain another digit.
+Read this as: The inverse weight quantifies a loss of precision. It can still permit an exact root,
+but neither the strict threshold nor the scale of the uniqueness ball can be dropped.
+Final edition
+•
+6 October 2026
+V – 25
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+THE FIRST-ORDER FORMULA
+Coefficient and parameter motion add
+Traditional companion: Theorem 4.19, p. 38;
+Example 4.20, p. 39
+Start with F(y0, t0) = 0. Perturb the equations to G = F + pMH and the parameters to t0 + pMv. If
+the solved Jacobian J has inverse weight s and M > 2s, the solved root moves by
+y −y0 = −pMJ−1 H(a) + Kv
+ + ε,
+ε ∈p2M−3sZe
+p.
+F(Y, T) = Y + T,
+G = F + 4,
+T = 4
+predicted y
+error from exact root
+correct
+−4(1 + 1) = −8
+0
+omit parameter
+−4
+4 /∈16Z2
+reverse parameter sign
+0
+8 /∈16Z2
+δy = −pMJ−1(H(a) + Kv) + ε; both forcing terms are required.
+The sign and both terms are observable
+In the linear example, J = K = 1, pM = 4, and H = 1. The prescribed parameter is four, so the exact
+equation is y + 4 + 4 = 0. The root is −8. Omitting the parameter contribution predicts −4, while
+changing its sign predicts zero. Neither error is divisible by the promised error modulus sixteen.
+A symbolic formula that suppresses the Kv term may look like a reasonable coefficient-only perturbation
+rule, but it no longer represents the specified problem.
+The quadratic remainder can attain the bound
+For y + y2 + 2 = 0, the unique even root has residue 90 modulo 256. Its equation gives y + 2 = −y2,
+and y ≡2 (mod 4). Therefore v2(y + 2) = 2: the first-order error is divisible by four but not eight.
+This realizes the error exponent 2M −3s = 2 at M = 1, s = 0.
+Read this as: The displayed error exponent is a guarantee, not an exact valuation for every
+system. Exact boundary examples explain why a stronger uniform claim would be false.
+Final edition
+•
+6 October 2026
+V – 26
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+AUGMENTED JACOBIAN CERTIFICATE
+Use the inverse weight, not its sum
+Traditional companion: Theorem 4.19, p. 38;
+Lemma 5.2, p. 40
+A controlled inverse is an integral matrix certificate. If A = psJ−1, then AJ = JA = psI. For a
+prescribed-parameter problem, augment the system by the parameter equations. Its Jacobian and an
+integral scaled inverse are
+B =
+ 
+J
+K
+0
+I
+!
+,
+C =
+ 
+A
+−AK
+0
+psI
+!
+,
+CB = BC = psI.
+B =
+ 
+J
+K
+0
+1
+!
+2
+0
+1
+0
+8
+3
+0
+0
+1
+C = 8B−1
+4
+0
+−4
+0
+1
+−3
+0
+0
+8
+CB = BC = 8I
+s = 3
+v2(det J) = 4
+The largest inverse-denominator weight, not the sum, controls this certificate.
+A two-coordinate example
+Take J = diag(2, 8) and K = (1, 3)T . Multiplication by eight clears every entry of J−1, and multiplica-
+tion by four does not. The exact inverse weight is therefore s = 3. The determinant has valuation four;
+using it as the weight would impose a stronger, unnecessary threshold in this example.
+The augmented matrix retains the same inverse weight. In the upper-right block of CB, the two terms
+AK and −AK cancel. In BC, the cancellation uses JA = 8I. Both multiplication orders are checked,
+because one unverified orientation could conceal a sign or placement error.
+Why augmentation is useful
+The extra equations force the parameter coordinates to equal the prescribed values exactly.
+A
+theorem for square systems then supplies the full root. Projecting back to solved coordinates gives the
+joint-motion formula without inventing a separate inverse bound for every perturbed Jacobian.
+Read this as: The certificate records the worst denominator in the inverse. Augmentation
+preserves that bound and makes the parameter forcing part of the actual system.
+Final edition
+•
+6 October 2026
+V – 27
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+CRT AND COMPLETION
+Finite agreement does not mean descent
+Traditional companion: Section 6.3, p. 44
+For each positive r, the finite congruences n ≡0 (mod 2r) and n ≡1 (mod 3r) have exactly one
+residue solution modulo 6r. Choose its least nonnegative representative nr.
+r = 1
+r = 2
+r = 3
+r = 4
+r = 5
+r = 6
+2r
+2
+4
+8
+16
+32
+64
+3r
+3
+9
+27
+81
+243
+729
+nr
+4
+28
+136
+1216
+1216
+16768
+nr ≡0 (mod 2r),
+nr ≡1 (mod 3r)
+Compatible residues converge to (0, 1) ∈Z2 × Z3, not to a diagonal integer.
+The residues are compatible
+Reducing nr+1 modulo 6r gives nr. The two prime-adic limits are therefore zero in Z2 and one in Z3.
+A representative can repeat between successive depths, as 1216 does here; strict growth of ordinary
+integers is not the compatibility condition.
+Nevertheless, no single integer has those two exact local values. An integer whose image in Z2 is zero
+is divisible by every power of two, and must be zero. Its image in Z3 cannot then be one.
+The topology explains the distinction
+The diagonal image of Z in the product of its prime-adic completions is dense because every finite
+collection of congruences can be solved. It is not the whole product. Finite synchronization naturally
+constructs a completed object; identifying which tuples descend to a global object requires additional
+data or a separate theorem.
+The manuscript presents this boundary argument as a topological explanation of its native completion
+question, not as a newly formalized global-descent theorem. This appendix checks the displayed finite
+CRT path and repeats the elementary argument with that status intact.
+Read this as: “Every finite test can be met” and “one global integer realizes all local values”
+are different assertions. Completing the residue data does not erase that distinction.
+Final edition
+•
+6 October 2026
+V – 28
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+AN END-TO-END EXACT EXAMPLE
+Spend the precision in a root problem
+Traditional companion: Theorem 3.23, p. 26;
+Proposition 4.11, p. 33;
+Theorem 4.12, p. 33
+Use the arithmetic half of the paper to supply a coefficient for the lifting half. The target Euler number
+is E8 = 1385. Retaining only depths zero and one of its dyadic tower gives T1(4) = −91019/45.
+exact target
+E8 = 1385
+depth-one truncation
+T1(4) = −91019/45
+common forcing
+2E8 ≡2T1(4) ≡210 (mod 256)
+solved residue
+y = 14 :
+y + y2 = 210
+The even root is unique modulo 256. The odd root belongs to a different residue ball.
+What the truncation guarantees
+The exact error is
+E8 −T1(4) = 153344
+45
+,
+v2 = 8.
+The uniform depth-one theorem guarantees at least seven digits; this row supplies eight. Even the
+uniform guarantee is enough after multiplying the coefficient by two to get equality modulo 256.
+Now solve y + y2 = 2E8 modulo 256, choosing the even branch. Replacing its right side by 2T1(4)
+preserves that residue problem. Both reduce to y + y2 = 210, whose even root is fourteen. The exact
+check enumerates all residue candidates and finds the other root, 241, in the odd branch.
+What is and is not recovered
+The integer fourteen satisfies 14 + 142 = 210, not 2770. It is an exact residue root at the declared
+precision, not an exact integer root of the original equation. Since the derivative 1 + 2y is odd, this
+even approximate root lifts uniquely inside its residue ball to the corresponding dyadic root.
+The two exact dyadic roots for the two rational coefficients need not coincide. The truncation tells us
+how many of their digits agree; it does not replace one complete equation by the other without error.
+Read this as: A certified arithmetic truncation can be consumed by a certified lifting calculation.
+The interface is an explicit precision budget, not a claim that the approximation is globally exact.
+Final edition
+•
+6 October 2026
+V – 29
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+EVIDENCE AND CONTINUATION
+What the guide checks
+Traditional companion: Section 7, p. 46;
+Section 6, p. 43
+The manuscript, its proof archive, and this guide carry different kinds of evidence. Their boundaries
+are retained rather than combined into one undifferentiated “verified” label.
+Layer
+Scope
+Traditional companion
+The complete mathematical content of the 48-page consolidated source,
+full proof supplements and separately preserved Annals branch, with
+recorded corrections and source correspondence.
+Preserved Lean evidence
+The archived sources, versioned inventories, commands, and successful
+compiler reports. No new Lean run is represented by this editorial release.
+Fresh guide checks
+241 named assertions in integer and rational arithmetic, with 31,353
+declared case evaluations and 22 false controls rejected. These are
+bounded examples, not new theorem counts.
+Vector plates
+All 28 original plates and four additional plates, generated from exact
+finite models. Placement on the page is expository geometry, not a
+metric embedding or an extra theorem.
+Build and integrity checks
+Source hashes, typesetting checks, page preservation, link destinations,
+and an isolated replay of the delivered sources. These certify the package,
+not a new universal mathematical claim.
+What remains outside the completed examples
+The general native presentation-invariance and global-descent questions remain separate. Adding a
+zero equation can change a raw Jacobian cokernel without changing the solution set. Compatible finite
+residues do not automatically descend to a global integer. The paper also retains genuine fraction-field
+singular persistence, exact higher dyadic differences, least periods beyond width four, general affine
+Mahler valuations, and exact arbitrary-row tail values as further problems.
+How to use the source package
+The editable guide contains source/ and checks/. The historical SymPy report (214 assertions and
+19 false controls) is preserved separately; its original checker was not rerun. The complete recovered
+manuscript and proof snapshot is preserved separately. Its historical versions are not extra independent
+theorem counts. The original older 28-page paper’s full TeX, original figure generator, and complete
+historical experiment package were not recovered with the consolidation; this bundle does not invent
+them.
+A final reading test
+At each theorem, identify the coefficient ring, normalization, allowed index range, and whether the
+conclusion is a lower bound, an equality, a finite lift, or a completed object. Then ask which displayed
+hypothesis prevents the nearby counterexample.
+Read this as: The visual guide should make the proof boundaries easier to see, not make
+them easier to forget. Exact examples explain a theorem; its hypotheses determine where that
+explanation applies.
+Final edition
+•
+6 October 2026
+V – 30
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+TRANSPORTED RESIDUE SELECTORS
+Change the projector with the coordinates
+Traditional companion: Theorem 2.2, p. 7;
+Theorem 2.1, p. 6
+A coordinate equivalence changes the appearance of a residue selector while retaining its algebraic
+identities. In characteristic zero, use H(t) = 1 + t and write T = UH. The binomial transport formula
+reduces to
+(Ta)n = an + nan−1,
+a−1 = 0.
+Since H−1(t) = 1 −t + t2 −t3 + · · · , its exponential coordinates are kr = (−1)rr!. Thus
+(T −1b)n =
+n
+X
+r=0
+(−1)r
+n!
+(n −r)!bn−r.
+P2,0
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+bP2,0 = TP2,0T −1
+1
+0
+0
+0
+1
+0
+0
+0
+2
+−2
+1
+0
+6
+−6
+3
+0
+T : an 7→an + nan−1
+bP 2 = bP
+bP ̸= P
+A residue projector is conjugated when coordinates change; its raw mask is not reused.
+Compute the conjugation in four rows
+On rows zero through three, T has diagonal one and subdiagonal 1, 2, 3. Its inverse has lower rows
+(2, −2, 1, 0) and (−6, 6, −3, 1). Multiplying in both orders gives the identity. The even selector in the
+original coordinates is the diagonal mask P = diag(1, 0, 1, 0). In the new coordinates the selector is
+bP = TPT −1, the matrix shown above.
+The nonzero entry in its second row is expected: an even component in the original coordinates can
+contribute to an odd displayed coordinate after transport. Direct multiplication verifies bP 2 = bP and
+bP(I −bP) = 0.
+Why four rows are a complete example
+Lower triangularity makes this leading block closed under the calculations shown. It is an exact finite
+illustration of the general conjugation theorem. It does not identify a transported selector with ordinary
+deletion of the same residue coordinates.
+Read this as: The object is the same after an invertible change of coordinates. Its coordinate
+mask changes by conjugation, and the inverse is part of the construction.
+Final edition
+•
+6 October 2026
+V – 31
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+COMPANION POWERS AND PACKETS
+A compressed recurrence needs a jump
+Traditional companion: Theorem 2.10, p. 11
+For the Fibonacci sequence F0 = 0, F1 = 1, write the state as sn = (Fn+1, Fn)T . Its one-step companion
+matrix is C =
+ 
+1
+1
+1
+0
+!
+, so sn+1 = Csn. Selecting a parity address and compressing the retained entries
+advances the original index by two. The corresponding state update is C2.
+q
+0
+1
+2
+3
+4
+5
+6
+F2q
+0
+1
+3
+8
+21
+55
+144
+F2q+1
+1
+2
+5
+13
+34
+89
+233
+Fn+2 = Fn+1 + Fn
+C =
+ 
+1
+1
+1
+0
+!
+C2 =
+ 
+2
+1
+1
+1
+!
+Both packets satisfy bq+2 −3bq+1 + bq = 0.
+Derive the new recurrence from the actual jump
+The two-step matrix is C2 =
+ 
+2
+1
+1
+1
+!
+.
+Its characteristic polynomial is z2 −3z + 1, and direct
+multiplication gives
+(C2)2 −3C2 + I = 0.
+Applying this identity to either retained state proves that both packets bq = F2q and bq = F2q+1 satisfy
+bq+2 = 3bq+1 −bq.
+For the even packet, the first calculation is 3 = 3 · 1 −0; for the odd packet it is 5 = 3 · 2 −1. The
+displayed table continues each calculation through seven rows.
+Reconstruction and a useful failed shortcut
+Interleaving the two packets reconstructs the original sequence without changing either retained
+value. Reusing the one-step matrix on a compressed packet fails immediately: Cs0 = (1, 1)T , while
+C2s0 = (2, 1)T . They advance by different original index displacements.
+The general theorem uses CN for width N and the characteristic polynomial of that jump. No
+diagonalization, eigenvalue distinctness, or invertibility of C is needed for this construction.
+Read this as: Compression changes the step size. The recurrence follows from the actual
+companion power, and reconstruction still retains every original address.
+Final edition
+•
+6 October 2026
+V – 32
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+PRESENTATION AND OBSTRUCTION
+An equation list carries extra data
+Traditional companion: Proposition 4.4, p. 29;
+Section 6.2, p. 43
+The residual obstruction is defined using the codomain of the supplied equation list. An unchanged root
+set does not by itself identify two such codomains. At prime five, compare F(Y ) = Y and G(Y ) = (Y, 0)
+at Y = 0.
+One equation
+F(Y ) = Y
+J = (1)
+coker J = 0
+One redundant equation
+G(Y ) = (Y, 0)
+J =
+ 
+1
+0
+!
+coker J ∼= F5
+Both root sets are Y = 0, but the residual ambient spaces differ.
+The redundant equation is visible in the quotient
+The first Jacobian is an isomorphism F5 →F5, so its cokernel is zero. The second sends y to (y, 0) and
+has cokernel F5, represented by the unused second coordinate. Both distinguished obstruction classes
+vanish at this root, and both correction problems have the same solutions. Their raw obstruction
+spaces nevertheless have different cardinalities, one and five.
+This concrete discrepancy does not contradict independence of an integer representative. Replacing a
+representative by x + pLs changes the residual by an element of the same Jacobian image; it does not
+add an equation or change the residual codomain.
+An invertible change is a different situation
+If an equation change is an invertible linear map U of a fixed residual space, then im(UJ) = U(im J).
+The map [r] 7→[Ur] induces a genuine isomorphism of cokernels and takes the distinguished residual
+class to the new one. The example checker verifies attainment under U =
+ 
+1
+2
+0
+1
+!
+modulo five and
+checks its inverse explicitly.
+Adding a zero equation is not such an invertible change. A broader presentation-invariant theory needs
+a declared equivalence of presentations and a construction that respects it; the manuscript retains that
+question.
+Read this as: Identify the allowed presentation changes before claiming invariance. Equality of
+root sets, equality of obstruction classes, and an isomorphism of obstruction spaces are separate
+statements.
+Final edition
+•
+6 October 2026
+V – 33
+
+
+PAPER IX
+/
+VISUAL GUIDE
+KOMOREBI P.
+FINITE ROOTS AND COMPLETED ROOTS
+Follow one parameter through every depth
+Traditional companion: Theorem 4.8, p. 32;
+Theorem 4.9, p. 32;
+Theorem 5.3, p. 41
+Fix the parameter T = 2 in F(Y, T) = Y + Y 2 + T and select the even residue class. At every point
+of this class, the solved derivative 1 + 2Y is odd. Each correct lower root therefore has exactly one
+correcting digit in F2.
+L
+1
+2
+3
+4
+5
+6
+7
+8
+2L
+2
+4
+8
+16
+32
+64
+128
+256
+yL
+0
+2
+2
+10
+26
+26
+90
+90
+yL + y2
+L + 2 = 0 (mod 2L),
+yL ≡0 (mod 2)
+yL+1 ≡yL (mod 2L); the derivative 1 + 2yL is odd.
+Repeated representatives are compatible digits, not termination of the completed root.
+One step written out
+At depth three, choose y3 = 2. The residual is (2 + 22 + 2)/8 = 1, and the reduced derivative is one.
+The correction equation 1 + t = 0 modulo two gives t = 1. Hence y4 = 2 + 8 = 10. Direct substitution
+gives 10 + 102 + 2 = 112, divisible by sixteen.
+At depth five, y5 = 26. Its residual at modulus 32 is 704/32 = 22, which is even; the next digit is zero
+and the same integer representative remains valid at modulus 64. Repetition in the table therefore
+records a zero digit, not a completed calculation.
+What the finite table supplies
+Every entry is independently checked by direct evaluation and reduction to every preceding entry. This
+establishes eight finite residue calculations. The smooth tower theorem supplies continued existence
+and uniqueness; completeness supplies their limit in Z2, and polynomial continuity makes that limit an
+exact root.
+The integer representative 90 is not that exact root: 90 + 902 + 2 = 8192 ̸= 0. It agrees with the root
+to the displayed depth. The analytic local graph theorem gives a further conclusion over Q2, using an
+inverse-function argument and the actual polynomial derivative. A finite table alone supplies neither
+convergence of a proposed power series nor an analytic germ.
+Read this as: A finite root has a declared modulus. A completed root needs compatible digits
+at all depths, and an analytic root chart needs its own local theorem.
+Final edition
+•
+6 October 2026
+V – 34

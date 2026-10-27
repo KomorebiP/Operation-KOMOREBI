@@ -1,0 +1,63 @@
+module
+
+public import ResiduePackets
+public import Mathlib.Data.ZMod.Basic
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.CRTPackets
+
+/-- Actual CRT addresses, including M=1 and exponent zero. -/
+def addressEquiv (a M : ℕ) (hM : Odd M) :
+    ZMod (2^a*M) ≃+* ZMod (2^a) × ZMod M :=
+  ZMod.chineseRemainder (by
+    apply Nat.Coprime.pow_left
+    exact (Nat.coprime_two_left).mpr hM)
+
+theorem address_bijective (a M : ℕ) (hM : Odd M) :
+    Function.Bijective (addressEquiv a M hM) :=
+  (addressEquiv a M hM).bijective
+
+theorem address_components (a M : ℕ) (hM : Odd M) (r : ℕ) :
+    addressEquiv a M hM (r : ZMod (2^a*M)) =
+      ((r : ZMod (2^a)), (r : ZMod M)) := by
+  simp [addressEquiv, ZMod.chineseRemainder]
+
+/-- Equality of combined residues is exactly equality of the two component residues. -/
+theorem residue_equivalence (a M : ℕ) (hM : Odd M) (n r : ℕ) :
+    Nat.ModEq (2^a*M) n r ↔ Nat.ModEq (2^a) n r ∧ Nat.ModEq M n r := by
+  have hc : (2^a).Coprime M := Nat.Coprime.pow_left a ((Nat.coprime_two_left).mpr hM)
+  exact Nat.modEq_and_modEq_iff_modEq_mul hc |>.symm
+
+/-- The selector intersection is the actual combined residue selector. -/
+theorem packet_factorization {R : Type*} [Zero R]
+    (a M : ℕ) (hM : Odd M) (r : ℕ) (hr : r < 2^a*M) (f : ℕ → R) :
+    ResiduePackets.packet (2^a*M) r f =
+      ResiduePackets.packet (2^a) (r % 2^a) (ResiduePackets.packet M (r % M) f) := by
+  funext n
+  have he : (n % (2^a*M) = r) ↔ (n % (2^a) = r % (2^a) ∧ n % M = r % M) := by
+    have h := residue_equivalence a M hM n r
+    simpa only [Nat.ModEq, Nat.mod_eq_of_lt hr] using h
+  simp only [ResiduePackets.packet]
+  by_cases hx : n % (2^a*M) = r
+  · have hy := he.mp hx
+    rw [if_pos hx, if_pos hy.1, if_pos hy.2]
+  · rw [if_neg hx]
+    by_cases hy : n % (2^a) = r % (2^a)
+    · have hz : n % M ≠ r % M := by
+        intro hz; exact hx (he.mpr ⟨hy,hz⟩)
+      rw [if_pos hy, if_neg hz]
+    · rw [if_neg hy]
+
+theorem series_packet_factorization {R : Type*} [Semiring R]
+    (a M : ℕ) (hM : Odd M) (r : ℕ) (hr : r < 2^a*M) (f : PowerSeries R) :
+    ResiduePackets.seriesPacket (2^a*M) r f =
+      ResiduePackets.seriesPacket (2^a) (r % 2^a)
+        (ResiduePackets.seriesPacket M (r % M) f) := by
+  ext n
+  simpa only [ResiduePackets.seriesPacket_coeff, ResiduePackets.packet_apply] using
+    congrFun (packet_factorization a M hM r hr (fun k => PowerSeries.coeff k f)) n
+
+end KomorebiPaperIX.CRTPackets

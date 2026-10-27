@@ -1,0 +1,33 @@
+name: tagged-release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/check_release.py
+      - run: python scripts/package_release.py
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          release/Komorebi_Stratified_Universality_Foundations_v1.16.0_Block16.pdf
+          release/Holonomy_Twisted_Lane_Transport_and_Orbit_Descent.pdf
+          dist/Universal_Lane_Transport_v1.16.0_Block16_Research_Extension.zip
+          dist/Universal_Lane_Transport_v1.16.0_Block16_Full_Source.zip
+          dist/Universal_Lane_Transport_v1.16.0_Block16_SHA256SUMS.txt
+          --title "Universal Lane Transport Theorem ${GITHUB_REF_NAME}"
+          --generate-notes

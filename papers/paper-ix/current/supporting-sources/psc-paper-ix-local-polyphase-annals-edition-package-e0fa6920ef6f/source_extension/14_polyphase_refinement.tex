@@ -1,0 +1,383 @@
+\section{Polyphase refinement and local packet cascades}
+
+Polyphase refinement replaces one coarse packet by a finite family of finer packets while preserving exact synthesis. In the discrete sequence channel this is residue refinement. In the local channel it becomes a digit-tree decomposition of $\bbZ_p$. In Mahler coordinates it is represented by an explicit finite triangular transfer kernel. These descriptions can be compiled into one refinement graph.
+
+\subsection{Discrete polyphase analysis and synthesis}
+For $M\geq2$ and a sequence $a=(a_n)_{n\geq0}$, define
+\[
+ \boxed{a_r^{[M]}(q)=a_{Mq+r},\qquad0\leq r<M.}
+\]
+The analysis operator is
+\[
+ \cP_Ma=(a_0^{[M]},\ldots,a_{M-1}^{[M]}),
+\]
+and synthesis interleaves the components:
+\[
+ \boxed{a_{Mq+r}=a_r^{[M]}(q).}
+\]
+If
+\[
+ A(z)=\sum_{n\geq0}a_nz^n,
+ \qquad A_r^{[M]}(w)=\sum_{q\geq0}a_{Mq+r}w^q,
+\]
+then
+\[
+ \boxed{A(z)=\sum_{r=0}^{M-1}z^rA_r^{[M]}(z^M).}
+\]
+
+\begin{theorem}[Exact nested polyphase factorization]
+For $M,N\geq2$,
+\[
+ \boxed{\left(a_r^{[M]}\right)_s^{[N]}=a_{r+Ms}^{[MN]}.}
+\]
+Equivalently,
+\[
+ \boxed{\cP_{MN}=\Pi_{M,N}\left(\bigoplus_{r=0}^{M-1}\cP_N\right)\cP_M,}
+\]
+where $\Pi_{M,N}$ only reorders the phase labels.
+\end{theorem}
+
+\begin{proof}
+\[
+ \left(a_r^{[M]}\right)_s^{[N]}(q)
+ =a_r^{[M]}(Nq+s)=a_{M(Nq+s)+r}=a_{MNq+Ms+r}.
+\]
+\end{proof}
+
+For a mixed-radix path
+\[
+ \mathbf M=(M_1,\ldots,M_\ell),\qquad0\leq s_i<M_i,
+\]
+the final address is
+\[
+ \boxed{r(\mathbf s)=s_1+M_1s_2+M_1M_2s_3+\cdots+\left(\prod_{i=1}^{\ell-1}M_i\right)s_\ell.}
+\]
+The refined branch is
+\[
+ a_{\mathbf s}(q)=a_{(\prod_iM_i)q+r(\mathbf s)}.
+\]
+Only the product radix and accumulated address matter.
+
+\subsection{The carry polyphase algebra}
+Let $c=a*b$ be Cauchy convolution and write $A_r,B_r,C_r$ for the $M$-phase OGFs. Since two phase digits produce at most one carry,
+\[
+ \boxed{C_r(w)=\sum_{u+v=r}A_u(w)B_v(w)+w\sum_{u+v=r+M}A_u(w)B_v(w).}
+\]
+The first sum has zero phase carry. The second has one coarse-index delay.
+
+\begin{theorem}[Polyphase shift matrix]
+Let $E$ be the scalar shift $(Ea)_n=a_{n+1}$ and let $E_q$ shift the coarse index. Then
+\[
+ \boxed{\cP_M(Ea)=\mathsf S_M(E_q)\cP_Ma,}
+\]
+where
+\[
+ \mathsf S_M(E_q)=
+ \begin{pmatrix}
+ 0&1&0&\cdots&0\\
+ 0&0&1&\cdots&0\\
+ \vdots&&&\ddots&\vdots\\
+ 0&0&0&\cdots&1\\
+ E_q&0&0&\cdots&0
+ \end{pmatrix}.
+\]
+Moreover,
+\[
+ \boxed{\mathsf S_M(E_q)^M=E_qI_M.}
+\]
+\end{theorem}
+
+\begin{proof}
+For $r<M-1$,
+\[
+ (Ea)_{Mq+r}=a_{Mq+r+1}=a_{r+1}^{[M]}(q).
+\]
+For $r=M-1$,
+\[
+ (Ea)_{Mq+M-1}=a_{M(q+1)}=E_qa_0^{[M]}(q).
+\]
+After $M$ shifts every phase advances by one coarse index.
+\end{proof}
+
+\subsection{\texorpdfstring{$p$-adic}{p-adic} polyphase branches}
+For a prime $p$, $a\geq1$, and $0\leq s<p^a$, define
+\[
+ \boxed{f_{a,s}(x)=f(p^ax+s).}
+\]
+Because
+\[
+ \bbZ_p=\bigsqcup_{s=0}^{p^a-1}(s+p^a\bbZ_p),
+\]
+the family $\{f_{a,s}\}$ reconstructs $f$ uniquely on $\bbZ_p$.
+
+\begin{theorem}[Nested local branches]
+For $a,b\geq1$,
+\[
+ \boxed{(f_{a,s})_{b,t}=f_{a+b,s+p^at}.}
+\]
+Thus local polyphase refinement is the $p$-adic digit tree.
+\end{theorem}
+
+\begin{proof}
+\[
+ (f_{a,s})_{b,t}(x)=f(p^a(p^bx+t)+s)=f(p^{a+b}x+p^at+s).
+\]
+\end{proof}
+
+\subsection{The affine Mahler transfer kernel}
+Let
+\[
+ \Phi_M(z)=(1+z)^M-1.
+\]
+For $M\geq1$, $s\geq0$, and $r,k\geq0$, define
+\[
+ \boxed{\Theta_{M,s}(r,k)=[z^r](1+z)^s\Phi_M(z)^k.}
+\]
+Equivalently,
+\[
+ \boxed{\Theta_{M,s}(r,k)=\sum_{j=0}^{k}(-1)^{k-j}\binom kj\binom{Mj+s}{r}.}
+\]
+Since $\ord_z\Phi_M=1$ and $\deg\Phi_M=M$,
+\[
+ \boxed{\Theta_{M,s}(r,k)=0\quad\text{unless}\quad k\leq r\leq Mk+s.}
+\]
+
+\begin{theorem}[Mahler polyphase transfer]
+Let
+\[
+ f(x)=\sum_{r\geq0}c_r\binom xr
+\]
+be a convergent Mahler expansion. For $g_s(q)=f(Mq+s)$,
+\[
+ \boxed{g_s(q)=\sum_{k\geq0}d_{s,k}\binom qk,}
+\]
+where
+\[
+ \boxed{d_{s,k}=\sum_{r=k}^{Mk+s}c_r\Theta_{M,s}(r,k).}
+\]
+Each refined coefficient uses a finite window of the original Mahler coordinates.
+\end{theorem}
+
+\begin{proof}
+\[
+ \begin{aligned}
+ (1+z)^{Mq+s}
+ &=(1+z)^s\left((1+z)^M\right)^q\\
+ &=(1+z)^s(1+\Phi_M(z))^q\\
+ &=\sum_{k\geq0}\binom qk(1+z)^s\Phi_M(z)^k.
+ \end{aligned}
+\]
+Taking $[z^r]$ gives the affine expansion of $\binom{Mq+s}{r}$. Substitute it into the Mahler series.
+\end{proof}
+
+\begin{theorem}[Polyphase kernel composition]
+For $M,N\geq1$,
+\[
+ \boxed{\sum_{k\geq0}\Theta_{M,s}(r,k)\Theta_{N,t}(k,\ell)=\Theta_{MN,Mt+s}(r,\ell).}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the Mahler transfer first to $x=Mq+s$ and then to $q=Ny+t$. The composite substitution is $x=MNy+Mt+s$. Uniqueness of Mahler coefficients gives the identity.
+\end{proof}
+
+\subsection{Valuation transfer through refinement}
+\begin{theorem}[Exact polyphase valuation ledger]
+For every refined coefficient,
+\[
+ \boxed{v_p(d_{s,k})\geq\min_{k\leq r\leq Mk+s}\left(v_p(c_r)+v_p\bigl(\Theta_{M,s}(r,k)\bigr)\right).}
+\]
+If $v_p(c_r)\geq w(r)$ for a nondecreasing function $w$, then
+\[
+ \boxed{v_p(d_{s,k})\geq w(k).}
+\]
+Every monotone Mahler precision ladder survives arbitrary polyphase refinement without loss.
+\end{theorem}
+
+\begin{proof}
+Apply the non-Archimedean triangle inequality to the finite transfer formula. Since $r\geq k$, monotonicity gives $w(r)\geq w(k)$, and $\Theta_{M,s}(r,k)$ is integral.
+\end{proof}
+
+Define the branchwise weight transform
+\[
+ \boxed{(\mathfrak W_{M,s}w)(k)=\min_{k\leq r\leq Mk+s}\left(w(r)+v_p(\Theta_{M,s}(r,k))\right).}
+\]
+A mixed-radix refinement tree propagates certified precision by applying these min-plus transforms along each path. Direct refinement can be sharper when cancellation increases the valuation of a composed kernel, but the stagewise ledger is always valid.
+
+\subsection{Frobenius sparsification at prime-power radix}
+\begin{theorem}[Prime-power polyphase sparsification]
+Let $M=p^a$. Then
+\[
+ \boxed{\Theta_{p^a,s}(r,k)\equiv\binom{s}{r-p^ak}\pmod p,}
+\]
+with the binomial coefficient interpreted as zero outside $0\leq r-p^ak\leq s$. Consequently,
+\[
+ \boxed{d_{s,k}\equiv\sum_{u=0}^{s}\binom su c_{p^ak+u}\pmod p.}
+\]
+In particular,
+\[
+ \boxed{d_{0,k}\equiv c_{p^ak}\pmod p.}
+\]
+\end{theorem}
+
+\begin{proof}
+In characteristic $p$,
+\[
+ (1+z)^{p^a}-1\equiv z^{p^a}.
+\]
+Therefore
+\[
+ (1+z)^s\Phi_{p^a}(z)^k\equiv(1+z)^sz^{p^ak}\pmod p.
+\]
+Take coefficients and substitute into the Mahler transfer formula.
+\end{proof}
+
+This is the coefficient-space counterpart of Lucas reduction. At the first residual level, a prime-power refinement selects a short binomial window around $p^ak$ rather than mixing all Mahler coordinates.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\textwidth]{23_mahler_polyphase_kernel.pdf}
+\caption{Support and residual sparsity of the affine Mahler transfer kernel. Each refined coefficient uses a finite triangular window, which collapses to a short Frobenius window modulo $p$.}
+\end{figure}
+
+\subsection{Precision amplification under \texorpdfstring{$p$-power}{p-power} refinement}
+\begin{theorem}[Scalar polyphase precision amplification]
+Let $u\in\bbZ_p^\times$ and $a,r\geq0$. For odd $p$,
+\[
+ \boxed{\Delta_{(p-1)p^a}^{\,r}u^n=u^n\left(u^{(p-1)p^a}-1\right)^r,}
+\]
+and
+\[
+ \boxed{v_p\left(\Delta_{(p-1)p^a}^{\,r}u^n\right)\geq(a+1)r.}
+\]
+For $p=2$ and odd $u$,
+\[
+ \boxed{\Delta_{2^{a+1}}^{\,r}u^n=u^n\left(u^{2^{a+1}}-1\right)^r,}
+\]
+and
+\[
+ \boxed{v_2\left(\Delta_{2^{a+1}}^{\,r}u^n\right)\geq(a+3)r.}
+\]
+\end{theorem}
+
+\begin{proof}
+One step difference multiplies a unit mode by $u^H-1$. For odd $p$, Fermat reduction and lifting the exponent give
+\[
+ v_p(u^{(p-1)p^a}-1)\geq a+1.
+\]
+For odd $u$,
+\[
+ v_2(u^{2^{a+1}}-1)=v_2(u^2-1)+a\geq a+3.
+\]
+\end{proof}
+
+\begin{lemma}[Matrix precision amplification]
+If $X=I+p^LB$ with $B\in M_d(\bbZ_p)$, then for every $a\geq0$ there is $B_a\in M_d(\bbZ_p)$ such that
+\[
+ \boxed{X^{p^a}=I+p^{L+a}B_a.}
+\]
+\end{lemma}
+
+\begin{proof}
+Induct on $a$. If $X_a=I+p^{L+a}B_a$, expand $X_a^p$. The linear term is divisible by $p^{L+a+1}$ and every higher term has at least that valuation.
+\end{proof}
+
+\begin{theorem}[Matrix polyphase precision amplification]
+Assume $C^H=I+p^LB$. Put $H_a=Hp^a$ and write
+\[
+ C^{H_a}=I+p^{L+a}B_a.
+\]
+Then every refined packet $b_{a,j}(x)=a_{H_ax+j}$ has Mahler coefficients satisfying
+\[
+ \boxed{v_p(c_{a,j,r})\geq(L+a)r.}
+\]
+Equivalently,
+\[
+ \boxed{\Delta_{H_a}^{\,r}a_n\equiv0\pmod{p^{(L+a)r}}.}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the matrix Carmichael--Mahler theorem to the amplified congruence for $C^{H_a}$.
+\end{proof}
+
+\begin{example}[Refined dyadic Fibonacci ladder]
+Since $C^{12}=I+8B$ for the Fibonacci companion matrix,
+\[
+ C^{12\cdot2^a}\equiv I\pmod{2^{a+3}}.
+\]
+Therefore
+\[
+ \boxed{\Delta_{12\cdot2^a}^{\,r}F_n\equiv0\pmod{2^{(a+3)r}}.}
+\]
+Each dyadic refinement doubles the step and adds one guaranteed binary digit per Mahler depth.
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.91\textwidth]{24_polyphase_precision_tree.pdf}
+\caption{A local precision tree. Refining a principal-unit packet by one $p$-power digit increases the guaranteed Mahler slope from $L$ to $L+1$.}
+\end{figure}
+
+\subsection{Character-polyphase coordinates}
+For odd $p$, write
+\[
+ \boxed{n=j+(p-1)(s+p^aq),}
+\]
+with $0\leq j<p-1$ and $0\leq s<p^a$. The address $j$ is the finite character packet. The address $s$ is the principal-unit polyphase digit. For a unit mode,
+\[
+ u^n=u^{j+(p-1)s}\left(u^{(p-1)p^a}\right)^q.
+\]
+At $p=2$, write
+\[
+ \boxed{n=j+2(s+2^aq),}
+\]
+with $j\in\{0,1\}$ and $0\leq s<2^a$. Then
+\[
+ u^n=u^{j+2s}\left(u^{2^{a+1}}\right)^q.
+\]
+
+\begin{principle}[Local phase lattice]
+The finite character coordinate resolves torsion. The polyphase coordinate resolves principal-unit digits. The remaining coarse variable carries a rapidly convergent Mahler expansion:
+\[
+ \boxed{\text{character phase}\longrightarrow\text{$p$-power polyphase address}\longrightarrow\text{principal-unit Mahler depth}.}
+\]
+\end{principle}
+
+\subsection{Application to the Euler branches}
+The odd-prime depleted branch $\mathscr E_{p,j}^\times(x)$ and the direct dyadic branch $\mathscr E_2(x)$ are analytic functions on their local domains. They can be refined by $x=p^aq+s$. The Mahler polyphase theorem gives each branch an exact finite coefficient-transfer matrix. The valuation theorem preserves the original truncation ladder, while precision amplification strengthens it whenever the branch is represented by unit modes or an invertible finite state.
+
+For the odd-prime Euler branch, the two packet axes are
+\[
+ n=j+(p-1)(s+p^aq).
+\]
+For the dyadic even-index branch, the natural coordinate is
+\[
+ n=2(s+2^aq).
+\]
+Thus the odd and dyadic interpolation formulas fit into one mixed character-polyphase tree even though their source kernels and exact transfer weights remain different.
+
+\subsection{First polyphase research targets}
+\begin{problem}[Exact higher valuation of the polyphase kernel]
+Determine a closed formula or sharp combinatorial bound for
+\[
+ v_p\bigl(\Theta_{p^a,s}(r,k)\bigr)
+\]
+in terms of base-$p$ carries and the digit geometry of $(r,k,s)$.
+\end{problem}
+
+\begin{problem}[Optimal mixed-radix refinement]
+Given a target precision and coefficient range, choose a factorization $M=M_1\cdots M_\ell$ that minimizes packet width, transfer cost, and precision loss.
+\end{problem}
+
+\begin{problem}[Spectral-local signature transfer]
+Combine the spectral torsion signature of a C-finite sequence with its local character-polyphase signature. The target invariant should record complex root-of-unity collision, finite-field character phase, and principal-unit Mahler slope simultaneously.
+\end{problem}
+
+\begin{problem}[Nonlinear polyphase trees]
+Develop an analogue of the Mahler transfer kernel for compositional and algebraic fixed-point systems. The expected objects are packet-labeled rooted trees whose edges carry phase addresses and local valuation weights.
+\end{problem}
+
+\begin{boundary}
+Polyphase refinement is exact analysis and synthesis. It does not by itself prove that every refined branch is simpler. Simplification requires a transferred invariant such as spectral collision, Frobenius sparsity, valuation gain, or nonlinear tree cancellation.
+\end{boundary}

@@ -1,0 +1,62 @@
+\vpage{31}{Change the projector with the coordinates}{TRANSPORTED RESIDUE SELECTORS}{\mainrefs{31}}
+A coordinate equivalence changes the appearance of a residue selector while retaining its algebraic identities. In characteristic zero, use $H(t)=1+t$ and write $T=U_H$. The binomial transport formula reduces to
+\[
+ (Ta)_n=a_n+na_{n-1},\qquad a_{-1}=0.
+\]
+Since $H^{-1}(t)=1-t+t^2-t^3+\cdots$, its exponential coordinates are $k_r=(-1)^r r!$. Thus
+\[
+ (T^{-1}b)_n=\sum_{r=0}^n(-1)^r\frac{n!}{(n-r)!}b_{n-r}.
+\]
+\vfig{31_transported_selectors}
+\head{Compute the conjugation in four rows}
+On rows zero through three, $T$ has diagonal one and subdiagonal $1,2,3$. Its inverse has lower rows $(2,-2,1,0)$ and $(-6,6,-3,1)$. Multiplying in both orders gives the identity. The even selector in the original coordinates is the diagonal mask $P=\diag(1,0,1,0)$. In the new coordinates the selector is $\widehat P=TPT^{-1}$, the matrix shown above.
+
+The nonzero entry in its second row is expected: an even component in the original coordinates can contribute to an odd displayed coordinate after transport. Direct multiplication verifies $\widehat P^2=\widehat P$ and $\widehat P(I-\widehat P)=0$.
+\head{Why four rows are a complete example}
+Lower triangularity makes this leading block closed under the calculations shown. It is an exact finite illustration of the general conjugation theorem. It does not identify a transported selector with ordinary deletion of the same residue coordinates.
+\takeaway{The object is the same after an invertible change of coordinates. Its coordinate mask changes by conjugation, and the inverse is part of the construction.}
+
+\vpage{32}{A compressed recurrence needs a jump}{COMPANION POWERS AND PACKETS}{\mainrefs{32}}
+For the Fibonacci sequence $F_0=0$, $F_1=1$, write the state as $s_n=(F_{n+1},F_n)^T$. Its one-step companion matrix is $C=\mat{1&1\\1&0}$, so $s_{n+1}=Cs_n$. Selecting a parity address and compressing the retained entries advances the original index by two. The corresponding state update is $C^2$.
+\vfig{32_recurrence_packets}
+\head{Derive the new recurrence from the actual jump}
+The two-step matrix is $C^2=\mat{2&1\\1&1}$. Its characteristic polynomial is $z^2-3z+1$, and direct multiplication gives
+\[
+ (C^2)^2-3C^2+I=0.
+\]
+Applying this identity to either retained state proves that both packets $b_q=F_{2q}$ and $b_q=F_{2q+1}$ satisfy
+\[
+ b_{q+2}=3b_{q+1}-b_q.
+\]
+For the even packet, the first calculation is $3=3\cdot1-0$; for the odd packet it is $5=3\cdot2-1$. The displayed table continues each calculation through seven rows.
+\head{Reconstruction and a useful failed shortcut}
+Interleaving the two packets reconstructs the original sequence without changing either retained value. Reusing the one-step matrix on a compressed packet fails immediately: $Cs_0=(1,1)^T$, while $C^2s_0=(2,1)^T$. They advance by different original index displacements.
+
+The general theorem uses $C^N$ for width $N$ and the characteristic polynomial of that jump. No diagonalization, eigenvalue distinctness, or invertibility of $C$ is needed for this construction.
+\takeaway{Compression changes the step size. The recurrence follows from the actual companion power, and reconstruction still retains every original address.}
+
+\vpage{33}{An equation list carries extra data}{PRESENTATION AND OBSTRUCTION}{\mainrefs{33}}
+The residual obstruction is defined using the codomain of the supplied equation list. An unchanged root set does not by itself identify two such codomains. At prime five, compare $F(Y)=Y$ and $G(Y)=(Y,0)$ at $Y=0$.
+\vfig{33_equation_presentations}
+\head{The redundant equation is visible in the quotient}
+The first Jacobian is an isomorphism $\FF_5\to\FF_5$, so its cokernel is zero. The second sends $y$ to $(y,0)$ and has cokernel $\FF_5$, represented by the unused second coordinate. Both distinguished obstruction classes vanish at this root, and both correction problems have the same solutions. Their raw obstruction spaces nevertheless have different cardinalities, one and five.
+
+This concrete discrepancy does not contradict independence of an integer representative. Replacing a representative by $x+p^Ls$ changes the residual by an element of the same Jacobian image; it does not add an equation or change the residual codomain.
+\head{An invertible change is a different situation}
+If an equation change is an invertible linear map $U$ of a fixed residual space, then $\im(UJ)=U(\im J)$. The map $[r]\mapsto[Ur]$ induces a genuine isomorphism of cokernels and takes the distinguished residual class to the new one. The example checker verifies attainment under $U=\mat{1&2\\0&1}$ modulo five and checks its inverse explicitly.
+
+Adding a zero equation is not such an invertible change. A broader presentation-invariant theory needs a declared equivalence of presentations and a construction that respects it; the manuscript retains that question.
+\takeaway{Identify the allowed presentation changes before claiming invariance. Equality of root sets, equality of obstruction classes, and an isomorphism of obstruction spaces are separate statements.}
+
+\vpage{34}{Follow one parameter through every depth}{FINITE ROOTS AND COMPLETED ROOTS}{\mainrefs{34}}
+Fix the parameter $T=2$ in $F(Y,T)=Y+Y^2+T$ and select the even residue class. At every point of this class, the solved derivative $1+2Y$ is odd. Each correct lower root therefore has exactly one correcting digit in $\FF_2$.
+\vfig{34_compatible_root_path}
+\head{One step written out}
+At depth three, choose $y_3=2$. The residual is $(2+2^2+2)/8=1$, and the reduced derivative is one. The correction equation $1+t=0$ modulo two gives $t=1$. Hence $y_4=2+8=10$. Direct substitution gives $10+10^2+2=112$, divisible by sixteen.
+
+At depth five, $y_5=26$. Its residual at modulus $32$ is $704/32=22$, which is even; the next digit is zero and the same integer representative remains valid at modulus $64$. Repetition in the table therefore records a zero digit, not a completed calculation.
+\head{What the finite table supplies}
+Every entry is independently checked by direct evaluation and reduction to every preceding entry. This establishes eight finite residue calculations. The smooth tower theorem supplies continued existence and uniqueness; completeness supplies their limit in $\ZZ_2$, and polynomial continuity makes that limit an exact root.
+
+The integer representative $90$ is not that exact root: $90+90^2+2=8192\ne0$. It agrees with the root to the displayed depth. The analytic local graph theorem gives a further conclusion over $\QQ_2$, using an inverse-function argument and the actual polynomial derivative. A finite table alone supplies neither convergence of a proposed power series nor an analytic germ.
+\takeaway{A finite root has a declared modulus. A completed root needs compatible digits at all depths, and an analytic root chart needs its own local theorem.}

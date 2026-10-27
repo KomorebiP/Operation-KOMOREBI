@@ -1,0 +1,31 @@
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+/mnt/data/PRSC_IX_v0.1.0_Checked_First_Block/formalization/Triangular.lean:30:70: error: unsolved goals
+F : Type u_1
+inst✝ : Field F
+T : ℕ → ℕ → F
+b : ℕ → F
+hT : ∀ (n : ℕ), T n n ≠ 0
+n : ℕ
+⊢ ∑ x, T n ↑x * solve T b ↑x - (∑ x, T n ↑x * solve T b ↑x) * T n n * (T n n)⁻¹ + T n n * b n * (T n n)⁻¹ = b n
+/mnt/data/PRSC_IX_v0.1.0_Checked_First_Block/formalization/Triangular.lean:120:10: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ?a * ?b / ?c
+in the target expression
+  Integral
+    (↑(denominator T n) * ↑(T (n + 1) (n + 1)) *
+      ((↑(b (n + 1)) - ∑ k, ↑(T (n + 1) ↑k) * solve (fun i j => ↑(T i j)) (fun i => ↑(b i)) ↑k) / ↑(T (n + 1) (n + 1))))
+
+case h.succ
+T : ℕ → ℕ → ℤ
+b : ℕ → ℤ
+hT : ∀ (n : ℕ), T n n ≠ 0
+n : ℕ
+ih : ∀ m < n + 1, Integral (↑(denominator T m) * solve (fun i j => ↑(T i j)) (fun i => ↑(b i)) m)
+hn : ↑(T (n + 1) (n + 1)) ≠ 0
+⊢ Integral
+    (↑(denominator T n) * ↑(T (n + 1) (n + 1)) *
+      ((↑(b (n + 1)) - ∑ k, ↑(T (n + 1) ↑k) * solve (fun i j => ↑(T i j)) (fun i => ↑(b i)) ↑k) / ↑(T (n + 1) (n + 1))))

@@ -1,0 +1,126 @@
+module
+
+public import Mathlib.Data.Nat.Choose.Sum
+public import Mathlib.Data.Nat.Choose.Dvd
+public import Mathlib.Data.ZMod.Basic
+public import Mathlib.Tactic
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.Hurwitz
+
+variable {R : Type*} [CommRing R]
+
+/-- Divided-power multiplication on actual coefficient sequences. -/
+def convolution (f g : ℕ → R) (n : ℕ) : R :=
+  ∑ k ∈ Finset.range (n+1), (n.choose k : R) * f k * g (n-k)
+
+/-- Hurwitz differentiation is a coefficient shift, with no factorial division. -/
+def shift (d : ℕ) (f : ℕ → R) (n : ℕ) : R := f (n+d)
+
+/-- The constant-one series. -/
+def oneSeries : ℕ → R := fun n => if n=0 then 1 else 0
+
+@[simp] theorem convolution_zero_left (g : ℕ → R) : convolution 0 g = 0 := by
+  funext n; simp [convolution]
+
+@[simp] theorem convolution_zero_right (f : ℕ → R) : convolution f 0 = 0 := by
+  funext n; simp [convolution]
+
+@[simp] theorem convolution_at_zero (f g : ℕ → R) : convolution f g 0 = f 0 * g 0 := by
+  simp [convolution]
+
+theorem convolution_add_left (f g a : ℕ → R) :
+    convolution (f+g) a = convolution f a + convolution g a := by
+  funext n; simp [convolution, mul_add, add_mul, Finset.sum_add_distrib]
+
+theorem convolution_add_right (a f g : ℕ → R) :
+    convolution a (f+g) = convolution a f + convolution a g := by
+  funext n; simp [convolution, mul_add, Finset.sum_add_distrib]
+
+theorem convolution_sub_left (f g a : ℕ → R) :
+    convolution (f-g) a = convolution f a - convolution g a := by
+  funext n; simp [convolution, mul_sub, sub_mul, Finset.sum_sub_distrib]
+
+theorem convolution_sub_right (a f g : ℕ → R) :
+    convolution a (f-g) = convolution a f - convolution a g := by
+  funext n; simp [convolution, mul_sub, Finset.sum_sub_distrib]
+
+omit [CommRing R] in
+@[simp] theorem shift_zero (f : ℕ → R) : shift 0 f = f := by
+  funext n; simp [shift]
+
+omit [CommRing R] in
+theorem shift_add (d e : ℕ) (f : ℕ → R) : shift d (shift e f) = shift (d+e) f := by
+  funext n; simp [shift, Nat.add_assoc]
+
+/-- The first product rule follows from Pascal's actual binomial identity. -/
+theorem shift_one_convolution (f g : ℕ → R) :
+    shift 1 (convolution f g) = convolution f (shift 1 g) + convolution (shift 1 f) g := by
+  funext n
+  have h := Finset.sum_choose_succ_mul (fun i j => f i * g j) n
+  simp only [mul_assoc] at h
+  change (∑ k ∈ Finset.range (n+2), ((n+1).choose k : R)* f k * g (n+1-k)) = _
+  rw [h]
+  congr 1
+  · apply Finset.sum_congr rfl
+    intro k hk
+    have hk' := Finset.mem_range_succ_iff.mp hk
+    simp only [shift]
+    rw [Nat.add_sub_assoc hk']
+  · rfl
+
+/-- The exact higher Leibniz identity for coefficient shifts. -/
+theorem shift_convolution (d : ℕ) (f g : ℕ → R) (n : ℕ) :
+    convolution f g (n+d) =
+      ∑ k ∈ Finset.range (d+1), (d.choose k : R) * convolution (shift k f) (shift (d-k) g) n := by
+  induction d generalizing n with
+  | zero => simp
+  | succ d ih =>
+    rw [show n+(d+1)=(n+1)+d by omega, ih]
+    have h := Finset.sum_choose_succ_mul
+      (fun i j => convolution (shift i f) (shift j g) n) d
+    rw [h]
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro k hk
+    have hk' := Finset.mem_range_succ_iff.mp hk
+    have hder := congrFun (shift_one_convolution (shift k f) (shift (d-k) g)) n
+    simp only [shift_add, Pi.add_apply] at hder
+    change convolution (shift k f) (shift (d-k) g) (n+1) = _ at hder
+    rw [hder, mul_add]
+    rw [show 1+(d-k)=d+1-k by omega, show 1+k=k+1 by omega]
+
+/-- Vanishing of a convolution with unit constant coefficient forces vanishing. -/
+theorem convolution_left_eq_zero (f g : ℕ → R) (hg : g 0 = 1)
+    (h : convolution f g = 0) : f = 0 := by
+  funext n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    have hn := congrFun h n
+    rw [convolution, Finset.sum_range_succ] at hn
+    have hs : (∑ k ∈ Finset.range n, (n.choose k : R)*f k*g (n-k)) = 0 := by
+      apply Finset.sum_eq_zero
+      intro k hk
+      rw [ih k (Finset.mem_range.mp hk)]
+      simp
+    simpa [hs, hg] using hn
+
+/-- In characteristic p the pth coefficient shift is a derivation. -/
+theorem prime_shift_convolution (p : ℕ) (hp : p.Prime) [CharP R p] (f g : ℕ → R) :
+    shift p (convolution f g) = convolution f (shift p g) + convolution (shift p f) g := by
+  funext n
+  rw [shift, shift_convolution]
+  rw [Finset.sum_range_succ]
+  rw [Finset.sum_eq_single 0]
+  · simp
+  · intro k hk hk0
+    have hzero : (p.choose k : R) = 0 := by
+      exact (CharP.cast_eq_zero_iff R p _).mpr (hp.dvd_choose_self (by omega) (Finset.mem_range.mp hk))
+    rw [hzero, zero_mul]
+  · intro hnot
+    exact False.elim (hnot (Finset.mem_range.mpr hp.pos))
+
+end KomorebiPaperIX.Hurwitz

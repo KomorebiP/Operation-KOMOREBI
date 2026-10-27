@@ -1,0 +1,95 @@
+module
+
+public import HurwitzInverse
+public import WindowIndependence
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.WindowPeriod
+
+open Hurwitz HurwitzInverse WindowIndependence
+
+variable (p : ℕ) [Fact p.Prime]
+
+/-- The literal exponential residue-zero section, in Hurwitz coefficients. -/
+def sectionCoefficients (m : ℕ) : ℕ → ZMod p :=
+  fun n => if m ∣ n then 1 else 0
+
+@[simp] theorem section_zero (m : ℕ) : sectionCoefficients p m 0=1 := by
+  simp [sectionCoefficients]
+
+theorem section_off_support (m n : ℕ) (hn : ¬m∣n) : sectionCoefficients p m n=0 := by
+  simp [sectionCoefficients, hn]
+
+/-- p congruent to 1 modulo m gives the exact derivative identity of the section. -/
+theorem section_prime_shift (m : ℕ) (hm : m ∣ p-1) :
+    shift p (sectionCoefficients p m) = shift 1 (sectionCoefficients p m) := by
+  funext n
+  have hp : 0 < p := (Fact.out : p.Prime).pos
+  have he : n+p=(n+1)+(p-1) := by omega
+  simp only [shift, sectionCoefficients, he, Nat.dvd_add_right hm]
+
+/-- The full reciprocal has no coefficients outside the original degree support. -/
+theorem inverse_off_support (m n : ℕ) (hn : ¬m∣n) :
+    inverse (sectionCoefficients p m) n=0 :=
+  inverse_support m _ (section_zero p m) (section_off_support p m) n hn
+
+/-- Identifies the actual reciprocal with the independently defined residual inverse. -/
+theorem inverse_on_support (m : ℕ) (hm : 0<m) (n : ℕ) :
+    inverse (sectionCoefficients p m) (m*n) = reduced p m n := by
+  have he : (fun n => inverse (sectionCoefficients p m) (m*n)) = reduced p m := by
+    apply reduced_unique
+    intro r
+    have hr := congrFun (inverse_convolution (sectionCoefficients p m) (section_zero p m)) (m*r)
+    rw [convolution] at hr
+    rw [sum_on_multiples m r hm
+      (fun k => ((m*r).choose k : ZMod p)*inverse (sectionCoefficients p m) k*
+        sectionCoefficients p m (m*r-k))] at hr
+    · have hz : oneSeries (m*r) = (if r=0 then (1:ZMod p) else 0) := by
+        simp [oneSeries, Nat.mul_eq_zero, hm.ne']
+      rw [hz] at hr
+      convert hr using 1
+      apply Finset.sum_congr rfl
+      intro q _
+      simp [sectionCoefficients, ← Nat.mul_sub_left_distrib]
+    · intro k _ hk
+      rw [inverse_off_support p m k hk]
+      simp
+  exact congrFun he n
+
+/-- Corollary 8.5, proved directly: no all-order global estimate is a hypothesis. -/
+theorem uniform_standard_window_period (m n : ℕ) (hm : m ∣ p-1) (hn : 1≤n) :
+    reduced p m (n+(p-1)/m) = reduced p m n := by
+  have hp : 1 < p := (Fact.out : p.Prime).one_lt
+  have hmpos : 0<m := Nat.pos_of_dvd_of_pos hm (by omega)
+  have hmn : 1 ≤ m*n := Nat.one_le_mul (by omega) hn
+  have hshift := congrFun (inverse_prime_difference p (Fact.out : p.Prime)
+    (sectionCoefficients p m) (section_zero p m) (section_prime_shift p m hm)) (m*n-1)
+  simp only [shift] at hshift
+  have hi : m*(n+(p-1)/m) = m*n+(p-1) := by
+    rw [Nat.mul_add, Nat.mul_div_cancel' hm]
+  rw [← inverse_on_support p m hmpos, ← inverse_on_support p m hmpos]
+  rw [hi]
+  convert hshift using 1 <;> congr 1 <;> omega
+
+/-- Every multiple of this period works, without claiming that it is the least period. -/
+theorem multiple_period (m n u : ℕ) (hm : m ∣ p-1) (hn : 1≤n) :
+    reduced p m (n+u*((p-1)/m)) = reduced p m n := by
+  induction u with
+  | zero => simp
+  | succ u ih =>
+    rw [Nat.succ_mul, ← Nat.add_assoc, uniform_standard_window_period p m _ hm (by omega), ih]
+
+/-- The period is transported to the actual integral lift of every standard-window packet. -/
+theorem standard_window_period_divisibility (m j n u : ℕ)
+    (hm : m ∣ p-1) (hj : j<p) (hn : 1≤n) :
+    (p : ℤ_[p]) ∣ coeffPadic p m j hj (n+u*((p-1)/m)) - coeffPadic p m j hj n := by
+  have hz : PadicInt.toZMod (coeffPadic p m j hj (n+u*((p-1)/m)) - coeffPadic p m j hj n) = 0 := by
+    rw [map_sub, residue_independence, residue_independence, multiple_period p m n u hm hn, sub_self]
+  rw [← RingHom.mem_ker, PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p,
+    Ideal.mem_span_singleton] at hz
+  exact hz
+
+end KomorebiPaperIX.WindowPeriod

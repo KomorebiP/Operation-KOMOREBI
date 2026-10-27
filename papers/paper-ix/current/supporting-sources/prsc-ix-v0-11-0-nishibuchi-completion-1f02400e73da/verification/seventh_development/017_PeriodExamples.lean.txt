@@ -1,0 +1,75 @@
+module
+
+public import GlobalEulerBoundary
+public import DworkCriterion
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.PeriodExamples
+
+open WindowIndependence WindowPeriod Congruential
+
+local instance : Fact (Nat.Prime 5) := ⟨by decide⟩
+
+/-- Anchor from the same residual triangular system used by the general theorem. -/
+theorem reduced_one (p m : ℕ) [Fact p.Prime] : reduced p m 1 = -1 := by
+  have h := reduced_row p m 1
+  norm_num [Finset.sum_range_succ] at h
+  linear_combination h
+
+theorem reduced_two (p m : ℕ) [Fact p.Prime] :
+    reduced p m 2 = ((2*m).choose m : ZMod p)-1 := by
+  have h := reduced_row p m 2
+  norm_num [Finset.sum_range_succ, reduced_one, Nat.mul_comm m 2] at h
+  linear_combination h
+
+/-- The positive starting index cannot be silently replaced by zero. -/
+theorem period_can_fail_at_zero : reduced 3 2 (0+(3-1)/2) ≠ reduced 3 2 0 := by
+  norm_num [reduced_one]
+  decide
+
+/-- Actual all-row period, rather than finitely many displayed rows. -/
+theorem p3_m2_positive_tail (n : ℕ) (hn : 1≤n) : reduced 3 2 (n+1) = reduced 3 2 n := by
+  simpa using uniform_standard_window_period 3 2 n (by decide) hn
+
+theorem p5_m2_positive_tail (n : ℕ) (hn : 1≤n) : reduced 5 2 (n+2) = reduced 5 2 n := by
+  simpa using uniform_standard_window_period 5 2 n (by decide) hn
+
+/-- The condition m dividing p-1 is substantive. -/
+theorem nondivisor_reduced_third : reduced 5 3 3=2 := by
+  have h := reduced_row 5 3 3
+  norm_num [Finset.sum_range_succ, reduced_one, reduced_two, Nat.choose] at h
+  norm_num [show (1513 : ZMod 5) = 3 by decide] at h
+  linear_combination h
+
+theorem nondivisor_period_fails : reduced 5 3 (2+(5-1)/3) ≠ reduced 5 3 2 := by
+  norm_num [nondivisor_reduced_third, reduced_two, Nat.choose]
+  decide
+
+/-- Original rational coefficients, not an independent table of residues. -/
+theorem c60_first : coeff 6 0 1 = -1 := by
+  rw [coefficient_recurrence 6 0 (by decide : 0<1)]
+  norm_num [Finset.sum_range_succ, Nat.choose]
+
+theorem c60_second : coeff 6 0 2 = 923 := by
+  rw [coefficient_recurrence 6 0 (by decide : 0<2)]
+  norm_num [Finset.sum_range_succ, c60_first, Nat.choose]
+
+theorem c60_difference : coeff 6 0 2-coeff 6 0 1=924 := by
+  rw [c60_first, c60_second]; norm_num
+
+/-- A period modulo p must not be reported as a period modulo p squared. -/
+theorem first_difference_precision_is_one : padicValRat 3 (coeff 6 0 2-coeff 6 0 1)=1 := by
+  rw [c60_difference]
+  norm_num [padicValRat_def, padicValInt]
+  rw [show (924:ℕ)=3*308 by decide,
+    padicValNat.mul (by decide : (3:ℕ) ≠ 0) (by decide : (308:ℕ) ≠ 0)]
+  norm_num [padicValNat.eq_zero_of_not_dvd]
+
+/-- A constant unit series makes zero differences; precision must regard zero as infinite. -/
+theorem zero_has_every_precision (p : ℕ) (L : ℤ) : GlobalEulerBoundary.precision p L 0 := by
+  exact Or.inl rfl
+
+end KomorebiPaperIX.PeriodExamples

@@ -1,0 +1,679 @@
+\part{Local, Adelic, and Polyphase Transfer}
+\section{Odd-prime and dyadic local transfer calculus}
+
+The local arithmetic layer separates two tasks that are often conflated. A residue address records where a coefficient lies. A valuation weight records how accurately that coefficient is visible in a local lattice. Chinese remainder factorization controls the first task. Odd-prime, dyadic, Mahler, and transfer-kernel analysis control the second.
+
+The principal structural point is that the odd primes and the dyadic prime share one convolutional reconstruction law but not one integral coordinate system. At an odd prime the torsion part of the unit group has order $p-1$. At $p=2$ the torsion part is only the sign packet and the principal-unit filtration begins one level deeper. The resulting transfer kernels have different exact valuation profiles.
+
+\subsection{Valuation-filtered triangular systems}
+Let $R$ be a complete valuation ring with uniformizer $\pi$. Consider a unit lower-triangular coordinate change
+\[
+ S_n=\sum_{m=0}^{n}u_{n,m}A_m,
+ \qquad u_{n,n}\in R^\times,
+\]
+with inverse
+\[
+ A_n=\sum_{m=0}^{n}v_{n,m}S_m.
+\]
+
+\begin{theorem}[Uniform filtered truncation]
+Assume that a nondecreasing weight function $w:\bbN\to\bbN$ satisfies
+\[
+ v_{n,m}\in \pi^{w(n-m)}R
+ \qquad(0\leq m\leq n).
+\]
+Then the depth-$M$ truncation
+\[
+ A_n^{\langle M\rangle}
+ =\sum_{n-M\leq m\leq n}v_{n,m}S_m
+\]
+satisfies
+\[
+ \boxed{A_n-A_n^{\langle M\rangle}\in \pi^{w(M+1)}R}
+\]
+uniformly in $n$.
+\end{theorem}
+
+\begin{proof}
+Every omitted term has depth at least $M+1$, hence lies in $\pi^{w(M+1)}R$. A finite sum remains in that ideal.
+\end{proof}
+
+\begin{principle}[Visible weight versus accidental cancellation]
+The weight attached to a transfer coefficient gives a uniform certified lower bound. Additional divisibility produced by the source value, a binomial coefficient, or cancellation among terms is real but row-dependent. A proof-producing local compiler records both the visible kernel weight and the sharper realized valuation.
+\end{principle}
+
+\subsection{The two unit geometries}
+For an odd prime $p$,
+\[
+ \bbZ_p^\times\cong\mu_{p-1}\times(1+p\bbZ_p).
+\]
+At the dyadic prime,
+\[
+ \bbZ_2^\times\cong\{\pm1\}\times(1+4\bbZ_2).
+\]
+Thus the natural odd-prime character address is taken modulo $p-1$, whereas the first dyadic character address is only parity. After that finite character split, the principal-unit coordinate is handled by Mahler expansion and progressively finer $p$-power polyphase refinement.
+
+\begin{boundary}[No substitution principle at $p=2$]
+The dyadic theory is not obtained by inserting $p=2$ into an odd-prime formula. The sign packet, the depth of the principal-unit subgroup, and the exact transfer weights all change. The correct unification occurs at the level of source-kernel factorization, not at the level of identical coefficients.
+\end{boundary}
+
+\subsection{Odd-power coordinates}
+Write
+\[
+ \sech t=\sum_{n\geq0}E_n\frac{t^n}{n!},
+\]
+so $E_n=0$ for odd $n$. For an odd prime $p$, define
+\[
+ \boxed{S_n(p)=\sum_{a=0}^{p-1}(-1)^a(2a+1)^n.}
+\]
+
+\begin{lemma}[Odd-power exponential generating function]
+\[
+ \boxed{\sum_{n\geq0}S_n(p)\frac{t^n}{n!}=\frac{1+e^{2pt}}2\sech t.}
+\]
+Its even part is
+\[
+ \boxed{\sum_{r\geq0}S_{2r}(p)\frac{t^{2r}}{(2r)!}=\cosh^2(pt)\sech t.}
+\]
+\end{lemma}
+
+\begin{proof}
+The finite geometric sum gives
+\[
+ \sum_{a=0}^{p-1}(-1)^ae^{(2a+1)t}
+ =e^t\frac{1-(-e^{2t})^p}{1+e^{2t}}
+ =\frac{1+e^{2pt}}2\sech t,
+\]
+because $p$ is odd. Averaging the identity at $t$ and $-t$ gives the even part.
+\end{proof}
+
+Let $Z_n$ denote the Euler zigzag numbers,
+\[
+ \sec x+\tan x=\sum_{n\geq0}Z_n\frac{x^n}{n!}.
+\]
+Then
+\[
+ \sech^2x=\sum_{m\geq0}(-1)^mZ_{2m+1}\frac{x^{2m}}{(2m)!}.
+\]
+
+\begin{theorem}[Odd-prime Euler reconstruction]
+For every odd prime $p$ and every even $n\geq0$,
+\[
+ \boxed{E_n=\sum_{m=0}^{n/2}(-1)^mZ_{2m+1}\binom n{2m}p^{2m}S_{n-2m}(p).}
+\]
+The transformation is unit lower triangular in the even index.
+\end{theorem}
+
+\begin{proof}
+The even source identity implies
+\[
+ \sech t=\sech^2(pt)\sum_{r\geq0}S_{2r}(p)\frac{t^{2r}}{(2r)!}.
+\]
+Insert the divided-power expansion of $\sech^2(pt)$ and compare coefficients.
+\end{proof}
+
+\begin{corollary}[Uniform odd-prime ladder]
+For every $M\geq0$,
+\[
+ \boxed{E_n\equiv\sum_{m=0}^{\min(M,n/2)}(-1)^mZ_{2m+1}\binom n{2m}p^{2m}S_{n-2m}(p)\pmod{p^{2M+2}}.}
+\]
+\end{corollary}
+
+\begin{proof}
+Every omitted term has $m\geq M+1$ and contains $p^{2m}$. All remaining factors are integers.
+\end{proof}
+
+\subsection{The weighted dyadic source}
+For even $n\geq0$, define
+\[
+ \boxed{R_n=\frac{3^{n+2}-1}{4(n+1)(n+2)}.}
+\]
+Its even exponential generating function is
+\[
+ \boxed{\sum_{n\text{ even}}R_n\frac{t^n}{n!}=\frac{\sinh(2t)\sinh t}{2t^2}.}
+\]
+Define $\beta_m$ by
+\[
+ \boxed{\frac{z^2}{\sinh^2z}=\sum_{m\geq0}\beta_mz^{2m}.}
+\]
+The first values are
+\[
+ 1,-\frac13,\frac1{15},-\frac2{189},\frac1{675},\ldots.
+\]
+
+\begin{lemma}[Dyadic integrality and exact source valuation]
+For every $m\geq0$ and every even $n\geq0$,
+\[
+ \boxed{\beta_m\in\bbZ_2,\qquad R_n\in\bbZ_2^\times.}
+\]
+In particular,
+\[
+ \boxed{v_2(R_n)=0.}
+\]
+\end{lemma}
+
+\begin{proof}
+The series
+\[
+ \left(\frac{\sinh z}{z}\right)^2
+ =\sum_{m\geq0}\frac{2^{2m+1}}{(2m+2)!}z^{2m}
+\]
+has coefficients in $\bbZ_2$ and constant term one, so its inverse has coefficients in $\bbZ_2$.
+
+For $R_n$, put $k=n+2$. Since $k$ is even, lifting the exponent gives
+\[
+ v_2(3^k-1)=v_2(3-1)+v_2(3+1)+v_2(k)-1=2+v_2(k).
+\]
+Because $n+1$ is odd,
+\[
+ v_2\bigl(4(n+1)(n+2)\bigr)=2+v_2(k).
+\]
+The valuations are equal, so $R_n$ is a unit.
+\end{proof}
+
+\begin{theorem}[Exact weighted dyadic Euler reconstruction]
+For every even $n\geq0$,
+\[
+ \boxed{E_n=\sum_{m=0}^{n/2}\beta_m2^{2m}\fall n{2m}R_{n-2m}.}
+\]
+\end{theorem}
+
+\begin{proof}
+Substitute $z=2t$ into the inverse series and multiply:
+\[
+ \frac{4t^2}{\sinh^2(2t)}\frac{\sinh(2t)\sinh t}{2t^2}
+ =\frac{2\sinh t}{\sinh(2t)}=\sech t.
+\]
+Coefficient extraction turns multiplication by $t^{2m}$ into $\fall n{2m}$.
+\end{proof}
+
+\subsection{One local Euler-transfer theorem}
+Define
+\[
+ A_{p,n}=\begin{cases}
+ S_n(p),&p\text{ odd},\\
+ R_n,&p=2\text{ and }n\text{ even},\\
+ 0,&p=2\text{ and }n\text{ odd},
+ \end{cases}
+\]
+and
+\[
+ \kappa_{p,m}=\begin{cases}
+ (-1)^mZ_{2m+1}p^{2m},&p\text{ odd},\\
+ \beta_m2^{2m}(2m)!,&p=2.
+ \end{cases}
+\]
+
+\begin{theorem}[Unified local Euler-transfer theorem]
+For every prime $p$ and every even $n\geq0$,
+\[
+ \boxed{E_n=\sum_{m=0}^{n/2}\binom n{2m}\kappa_{p,m}A_{p,n-2m}.}
+\]
+Equivalently, if
+\[
+ H_p(t)=\sum_{r\geq0}A_{p,2r}\frac{t^{2r}}{(2r)!},
+ \qquad
+ K_p(t)=\sum_{m\geq0}\kappa_{p,m}\frac{t^{2m}}{(2m)!},
+\]
+then
+\[
+ \boxed{K_p(t)H_p(t)=\sech t.}
+\]
+For odd $p$,
+\[
+ H_p(t)=\cosh^2(pt)\sech t,
+ \qquad K_p(t)=\sech^2(pt).
+\]
+For $p=2$,
+\[
+ H_2(t)=\frac{\sinh(2t)\sinh t}{2t^2},
+ \qquad K_2(t)=\frac{4t^2}{\sinh^2(2t)}.
+\]
+\end{theorem}
+
+\begin{proof}
+The two source-kernel products were proved above. Comparing divided-power coefficients gives the common convolution law.
+\end{proof}
+
+\subsection{Exact odd-prime weight ledger}
+For odd $p$,
+\[
+ v_p(\kappa_{p,m})=2m+v_p(Z_{2m+1}).
+\]
+The tangent-number identity
+\[
+ Z_{2m+1}=(-1)^m\frac{2^{2m+2}(2^{2m+2}-1)B_{2m+2}}{2m+2}
+\]
+gives
+\[
+ \boxed{v_p(Z_{2m+1})=v_p(2^{2m+2}-1)+v_p(B_{2m+2})-v_p(2m+2).}
+\]
+For a nonzero reconstruction term,
+\[
+ \boxed{\begin{aligned}
+ W_p(n,m)={}&2m+v_p(Z_{2m+1})+v_p\binom n{2m}\\
+ &+v_p\bigl(S_{n-2m}(p)\bigr).
+ \end{aligned}}
+\]
+Kummer's theorem gives
+\[
+ v_p\binom n{2m}=\frac{s_p(2m)+s_p(n-2m)-s_p(n)}{p-1},
+\]
+so the binomial factor counts base-$p$ carries.
+
+\subsection{Exact dyadic kernel weights}
+\begin{lemma}[Bernoulli form of the dyadic inverse]
+For every $m\geq1$,
+\[
+ \boxed{\beta_m=-\frac{2^{2m}(2m-1)B_{2m}}{(2m)!}.}
+\]
+Consequently,
+\[
+ \boxed{v_2(\beta_m)=s_2(m)-1.}
+\]
+\end{lemma}
+
+\begin{proof}
+Differentiate
+\[
+ \coth z=\frac1z+\sum_{m\geq1}\frac{2^{2m}B_{2m}}{(2m)!}z^{2m-1}
+\]
+and use $-(\coth z)'=\sinh(z)^{-2}$. The coefficient formula follows. The von Staudt--Clausen theorem gives $v_2(B_{2m})=-1$, and Legendre's formula gives
+\[
+ v_2((2m)!)=2m-s_2(2m)=2m-s_2(m).
+\]
+\end{proof}
+
+For $m\geq1$, define
+\[
+ \boxed{\kappa_{2,m}=\beta_m2^{2m}(2m)!=-2^{4m}(2m-1)B_{2m}.}
+\]
+
+\begin{theorem}[Exact dyadic transfer depth]
+For every $m\geq1$,
+\[
+ \boxed{v_2(\kappa_{2,m})=4m-1.}
+\]
+Therefore
+\[
+ \boxed{v_2\left(\kappa_{2,m}\binom n{2m}R_{n-2m}\right)=4m-1+v_2\binom n{2m}.}
+\]
+Equivalently,
+\[
+ \boxed{W_2(n,m)=4m-1+s_2(m)+s_2(n-2m)-s_2(n).}
+\]
+\end{theorem}
+
+\begin{proof}
+The first identity follows from $v_2(B_{2m})=-1$. The source $R_{n-2m}$ is a unit. Kummer's binary carry formula gives the last expression.
+\end{proof}
+
+\begin{theorem}[Optimal dyadic truncation]
+Let
+\[
+ T_{2,M}(n)=\sum_{m=0}^{\min(M,n/2)}\kappa_{2,m}\binom n{2m}R_{n-2m}.
+\]
+Then
+\[
+ \boxed{E_n\equiv T_{2,M}(n)\pmod{2^{4M+3}}.}
+\]
+More precisely,
+\[
+ \boxed{v_2\bigl(E_n-T_{2,M}(n)\bigr)\geq\min_{M+1\leq m\leq n/2}\left(4m-1+v_2\binom n{2m}\right).}
+\]
+The uniform exponent $4M+3$ is best possible.
+\end{theorem}
+
+\begin{proof}
+Every omitted term has valuation at least $4(M+1)-1=4M+3$. The rowwise bound retains the exact carry contribution. For optimality, take $n=2M+2$. There is one omitted term, with $m=M+1$, $R_0=1$, and binomial coefficient one, so its valuation is exactly $4M+3$.
+\end{proof}
+
+The first three sharp truncations are
+\[
+ \begin{aligned}
+ E_n&\equiv R_n&&\pmod 8,\\
+ E_n&\equiv R_n-\frac83\binom n2R_{n-2}&&\pmod{128},\\
+ E_n&\equiv R_n-\frac83\binom n2R_{n-2}+\frac{128}{5}\binom n4R_{n-4}&&\pmod{2048}.
+ \end{aligned}
+\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.86\textwidth]{20_local_kernel_weight_profiles.pdf}
+\caption{The local Euler kernels share one convolution law but have different valuation geometry. The dyadic positive-depth kernel has exact slope four with offset minus one.}
+\end{figure}
+
+\section{Finite-field standard windows and Fourier transfer}
+
+The congruential Euler matrices contain standard windows whose first residual inverse is independent of packet address. The remaining period question can be settled exactly by finite-field character transfer.
+
+\subsection{The standard-window operator}
+Let $p$ be odd, let $m\mid p-1$, and put
+\[
+ h=\frac{p-1}{m}.
+\]
+Define
+\[
+ \boxed{(T_{m,p}f)_n=\sum_{q=0}^{n}\binom{mn}{mq}f_q\quad\text{in }\bbF_p.}
+\]
+Let
+\[
+ V_h=\{f:\bbN\to\bbF_p:f_{n+h}=f_n\text{ for every }n\geq1\}.
+\]
+
+\begin{theorem}[Finite-field standard-window transfer]
+\[
+ \boxed{T_{m,p}(V_h)=V_h.}
+\]
+Moreover, $T_{m,p}$ restricts to an automorphism of $V_h$.
+\end{theorem}
+
+\begin{proof}
+Every $f\in V_h$ can be written $f=d+c\delta_0$, where $d$ is fully $h$-periodic. Since $(T_{m,p}\delta_0)_n=1$, it is enough to treat $d$.
+
+Expand
+\[
+ d_q=\sum_{\chi\in\mu_h}c_\chi\chi^q.
+\]
+The $m$th-power map on $\bbF_p^\times$ has image $\mu_h$, so choose $y$ with $y^m=\chi$. The root-of-unity filter gives
+\[
+ T_{m,p}(\chi^\bullet)_n=\frac1m\sum_{\zeta\in\mu_m}(1+\zeta y)^{mn}.
+\]
+If $1+\zeta y=0$, that term vanishes for $n\geq1$. Otherwise
+\[
+ \left((1+\zeta y)^m\right)^h=(1+\zeta y)^{p-1}=1.
+\]
+Each summand is $h$-periodic for $n\geq1$. The operator is unit lower triangular, hence injective. Since $V_h$ is finite-dimensional, the restriction is bijective.
+\end{proof}
+
+\begin{corollary}[Exact standard-window period]
+Let $e^{(m,p)}$ be defined by
+\[
+ \sum_{q=0}^{n}\binom{mn}{mq}e_q^{(m,p)}=\delta_{n0}
+ \quad\text{in }\bbF_p.
+\]
+Then
+\[
+ \boxed{e_{n+h}^{(m,p)}=e_n^{(m,p)}\qquad(n\geq1).}
+\]
+Thus the infinite inverse is determined by $e_0,e_1,\ldots,e_h$.
+\end{corollary}
+
+\begin{proof}
+The sequence $\delta=(1,0,0,\ldots)$ lies in $V_h$. Its inverse image under the automorphism $T_{m,p}$ also lies in $V_h$.
+\end{proof}
+
+\begin{theorem}[Lucas standard-window reduction]
+For $N=mp$, $0\leq j<p$, and $0\leq q\leq n$,
+\[
+ \boxed{\binom{mpn+j}{mpq}\equiv\binom{mn}{mq}\pmod p.}
+\]
+The first residual inverse is independent of $j$ and is periodic with period $h$ from index one onward.
+\end{theorem}
+
+\begin{proof}
+Lucas' theorem gives
+\[
+ \binom{mpn+j}{mpq}\equiv\binom j0\binom{mn}{mq}\pmod p.
+\]
+The reduced matrix has unit diagonal and a unique inverse. Apply the preceding corollary.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.91\textwidth]{21_standard_window_fourier_transfer.pdf}
+\caption{Finite-field character transfer for a standard window. Each character becomes a finite sum of $h$-periodic modes, forcing the inverse window to have a finite periodic signature.}
+\end{figure}
+
+\section{Carmichael--Mahler packet transfer}
+
+Finite modular dynamics lift into exact local analytic expansions. After a sufficiently long jump, each unit mode or invertible state matrix lies in a principal-unit neighborhood of the identity. Binomial expansion then becomes a Mahler expansion with one visible valuation gain at every depth.
+
+\subsection{Finite Mahler coordinates}
+For $f:\bbN\to R$, define $\Delta f(n)=f(n+1)-f(n)$. Since
+\[
+ \Delta\binom xr=\binom x{r-1},
+\]
+the binomial polynomials are the natural finite-difference coordinates.
+
+\begin{theorem}[Finite Mahler reconstruction]
+For known values $f(0),\ldots,f(N)$, put $c_r=\Delta^rf(0)$. Then, for $0\leq n\leq N$,
+\[
+ \boxed{f(n)=\sum_{r=0}^{n}c_r\binom nr.}
+\]
+More generally,
+\[
+ \boxed{\Delta^sf(n)=\sum_{r\geq s}c_r\binom n{r-s}.}
+\]
+\end{theorem}
+
+\begin{proof}
+This is Newton interpolation followed by the binomial difference identity.
+\end{proof}
+
+\begin{corollary}[Difference valuation bound]
+If $c_r\in\bbZ_p$ and $v_p(c_r)\geq w(r)$, then
+\[
+ \boxed{v_p(\Delta^sf(n))\geq\min_{r\geq s}\left(w(r)+v_p\binom n{r-s}\right).}
+\]
+\end{corollary}
+
+\subsection{Scalar unit modes}
+For $L\geq1$ and odd $p$, put $\Lambda_{p,L}=(p-1)p^{L-1}$. For $p=2$ and $L\geq3$, put $\Lambda_{2,L}=2^{L-2}$.
+
+\begin{theorem}[Carmichael--Mahler transfer for one unit mode]
+Let $u\in\bbZ_p^\times$, let $H=\Lambda_{p,L}$, and put $q_{u,L}=u^H-1\in p^L\bbZ_p$. For every address $j$ and every $x\in\bbZ_p$,
+\[
+ \boxed{u^{Hx+j}=u^j\sum_{r\geq0}q_{u,L}^{\,r}\binom xr.}
+\]
+The Mahler coefficients satisfy
+\[
+ \boxed{v_p\left(u^jq_{u,L}^{\,r}\right)\geq Lr.}
+\]
+\end{theorem}
+
+\begin{proof}
+Use $u^{Hx+j}=u^j(1+q_{u,L})^x$ and the convergent $p$-adic binomial series.
+\end{proof}
+
+At the first stable level,
+\[
+ (H,L)=\begin{cases}(p-1,1),&p\text{ odd},\\(2,3),&p=2.\end{cases}
+\]
+
+\subsection{Polynomial-exponential modes}
+\begin{theorem}[Polynomial-exponential Mahler transfer]
+Let $f(n)=P(n)u^n$, where $P\in\bbZ_p[n]$ has degree $d$. Let $H=\Lambda_{p,L}$, fix $j$, and put
+\[
+ Q_j(x)=P(Hx+j),\qquad y=u^H,\qquad q=y-1.
+\]
+Then
+\[
+ f(Hx+j)=\sum_{r\geq0}c_{j,r}\binom xr,
+\]
+where
+\[
+ \boxed{c_{j,r}=u^j\sum_{k=0}^{\min(d,r)}\binom rk\Delta^kQ_j(0)y^kq^{r-k}.}
+\]
+Consequently,
+\[
+ \boxed{v_p(c_{j,r})\geq L\max(r-d,0).}
+\]
+For $R\geq d$,
+\[
+ \boxed{f(Hx+j)\equiv\sum_{r=0}^{R}c_{j,r}\binom xr\pmod{p^{L(R+1-d)}}}
+\]
+uniformly on $\bbZ_p$.
+\end{theorem}
+
+\begin{proof}
+On the polynomial factor, the difference operator acts as $q+y\Delta$. The two summands commute. Expanding $(q+y\Delta)^r$ and evaluating at zero gives the coefficient formula. Since $\Delta^kQ_j=0$ for $k>d$, each surviving term contains at least $q^{r-d}$.
+\end{proof}
+
+\subsection{Matrix state systems}
+Let
+\[
+ v_{n+1}=Cv_n,\qquad a_n=w^\top C^nv_0,
+\]
+with $C\in M_d(\bbZ_p)$ invertible modulo $p$.
+
+\begin{theorem}[Matrix Carmichael--Mahler transfer]
+Assume that $C^H\equiv I\pmod{p^L}$ and write $C^H=I+p^LB$. For every nonnegative integer $x$,
+\[
+ \boxed{a_{Hx+j}=\sum_{r=0}^{x}p^{Lr}\binom xr w^\top C^jB^rv_0.}
+\]
+The right side extends to $x\in\bbZ_p$ as the convergent infinite Mahler series with the same coefficients, and
+\[
+ \boxed{v_p(c_{j,r})\geq Lr.}
+\]
+Equivalently, with $b_j(x)=a_{Hx+j}$,
+\[
+ \boxed{\Delta^rb_j(x)=p^{Lr}w^\top C^j(I+p^LB)^xB^rv_0,}
+\]
+so $\Delta^rb_j(x)\equiv0\pmod{p^{Lr}}$.
+\end{theorem}
+
+\begin{proof}
+Expand $C^{Hx+j}=C^j(I+p^LB)^x$ by the matrix binomial theorem. One difference multiplies the expansion by $p^LB$.
+\end{proof}
+
+\begin{example}[Dyadic Fibonacci packet]
+For
+\[
+ C=\begin{pmatrix}1&1\\1&0\end{pmatrix},
+\]
+one has
+\[
+ C^{12}=\begin{pmatrix}233&144\\144&89\end{pmatrix}
+ =I+8\begin{pmatrix}29&18\\18&11\end{pmatrix}.
+\]
+Therefore
+\[
+ \boxed{\Delta_{12}^rF_n\equiv0\pmod{8^r}.}
+\]
+\end{example}
+
+\subsection{Adelic synchronization}
+\begin{theorem}[Finite adelic Mahler transfer]
+Let $Q=\prod_{p\in S}p^{L_p}$, let $C\in M_d(\bbZ)$ be invertible modulo $Q$, and choose $H$ with $C^H\equiv I\pmod Q$. Write $C^H=I+QB$. Then, for every nonnegative integer $x$,
+\[
+ \boxed{a_{Hx+j}=\sum_{r=0}^{x}Q^r\binom xr w^\top C^jB^rv_0,}
+\]
+and
+\[
+ \boxed{\Delta_H^ra_n\equiv0\pmod{Q^r}.}
+\]
+\end{theorem}
+
+\begin{proof}
+Use the same matrix binomial expansion over $\bbZ$, then reduce at each selected prime.
+\end{proof}
+
+\section{Local Euler interpolation}
+
+\subsection{Odd-prime depletion}
+The odd source contains one nonunit base, $2a+1=p$. Put
+\[
+ \sigma_p=(-1)^{(p-1)/2},\qquad S_n^\times(p)=S_n(p)-\sigma_pp^n.
+\]
+
+\begin{theorem}[Depleted odd-prime Euler reconstruction]
+For every even $n$,
+\[
+ \boxed{(1-\sigma_pp^n)E_n=\sum_{m=0}^{n/2}(-1)^mZ_{2m+1}\binom n{2m}p^{2m}S_{n-2m}^\times(p).}
+\]
+\end{theorem}
+
+\begin{proof}
+The removed source mode contributes $\sigma_p\cosh(pt)$. Multiplication by $\sech^2(pt)$ gives $\sigma_p\sech(pt)$. Subtracting from $\sech t$ gives coefficient $(1-\sigma_pp^n)E_n$.
+\end{proof}
+
+Fix an even residue $j\in\{0,2,\ldots,p-3\}$. For $x\in\bbZ_p$, define
+\[
+ \begin{aligned}
+ \mathscr E_{p,j}^\times(x)=\sum_{m\geq0}
+ &(-1)^mZ_{2m+1}p^{2m}\binom{(p-1)x+j}{2m}\\
+ &\times\sum_{\substack{0\leq a<p\\2a+1\neq p}}
+ (-1)^a(2a+1)^{j-2m}\left((2a+1)^{p-1}\right)^x.
+ \end{aligned}
+\]
+
+\begin{theorem}[Odd-prime analytic Euler branch]
+The series converges uniformly on $\bbZ_p$ and defines a $p$-adic analytic function. For every nonnegative integer $x$,
+\[
+ \boxed{\mathscr E_{p,j}^\times(x)=\left(1-\sigma_pp^{(p-1)x+j}\right)E_{(p-1)x+j}.}
+\]
+\end{theorem}
+
+\begin{proof}
+Every retained base is a unit and its $(p-1)$st power lies in $1+p\bbZ_p$. The binomial factor is integral, and $p^{2m}$ forces uniform convergence. At nonnegative integer $x$, the series terminates and becomes the depleted reconstruction formula.
+\end{proof}
+
+\begin{boundary}[The depleted factor is an interpolation identity on integers]
+The analytic function is defined by the unit-source series. The displayed factor $p^{(p-1)x+j}$ is evaluated only when $x$ is a nonnegative integer. No analytic function $x\mapsto p^x$ on all of $\bbZ_p$ is assumed or required.
+\end{boundary}
+
+\subsection{Direct dyadic interpolation}
+For $x\in\bbZ_2$, define
+\[
+ \boxed{\mathscr R(x)=\frac{9^{x+1}-1}{8(x+1)(2x+1)}.}
+\]
+The apparent singularity at $x=-1$ is removable, with value $-\log(9)/8$.
+
+\begin{lemma}[Integral analytic dyadic source]
+The function $\mathscr R$ is $2$-adic analytic and takes values in $\bbZ_2$. For every $n\geq0$,
+\[
+ \boxed{\mathscr R(n)=R_{2n}.}
+\]
+\end{lemma}
+
+\begin{proof}
+Put $y=x+1$. The quotient
+\[
+ \frac{9^y-1}{8y}=\sum_{k\geq1}\frac{8^{k-1}}{k}\binom{y-1}{k-1}
+\]
+is integral and uniformly convergent because $3(k-1)-v_2(k)\geq0$. The factor $2x+1$ is always a unit.
+\end{proof}
+
+Define
+\[
+ \boxed{\mathscr E_2(x)=\sum_{m\geq0}\kappa_{2,m}\binom{2x}{2m}\mathscr R(x-m).}
+\]
+
+\begin{theorem}[Direct dyadic Euler interpolation]
+The series converges uniformly and analytically on $\bbZ_2$. For every nonnegative integer $n$,
+\[
+ \boxed{\mathscr E_2(n)=E_{2n}.}
+\]
+The truncation after depth $M$ is correct modulo $2^{4M+3}$ uniformly on $\bbZ_2$.
+\end{theorem}
+
+\begin{proof}
+The binomial and source factors are integral. The coefficient $\kappa_{2,m}$ has valuation $4m-1$. At integer $n$, terms with $m>n$ vanish and the exact dyadic reconstruction remains.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.93\textwidth]{22_odd_dyadic_local_geometry.pdf}
+\caption{Odd and dyadic Euler branches share source-kernel reconstruction but differ in torsion address, principal-unit depth, nonunit correction, and precision growth.}
+\end{figure}
+
+\subsection{Address factorization and local visibility}
+Let $N=2^aM$ with $M$ odd. For every residue $r$,
+\[
+ \boxed{P_{N,r}=P_{2^a,r\bmod2^a}P_{M,r\bmod M}.}
+\]
+
+\begin{principle}[CRT address versus local lattice]
+CRT determines the discrete address of a coefficient. Local transfer kernels determine the precision at which that address becomes visible. A complete arithmetic packet records both.
+\end{principle}
+
+The combined pipeline is
+\[
+ \boxed{\begin{aligned}
+ \text{global coefficient}&\longrightarrow\text{character address}\longrightarrow\text{principal-unit coordinate}\\
+ &\longrightarrow\text{weighted local transfer}\longrightarrow\text{finite congruence truncation}\\
+ &\longrightarrow\text{polyphase refinement}\longrightarrow\text{CRT or adelic reconstruction}.
+ \end{aligned}}
+\]
+The next section develops polyphase refinement as an exact calculus.

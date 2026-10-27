@@ -1,0 +1,35 @@
+Euler/ResidualEvaluation.lean:80:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  PadicInt.Coe.ringHom
+    (∑' (b : ℕ), residualNumeratorTap r b * Polynomial.eval x (eulerPacket b) * reval eulerSource (x - ↑b))
+in the target expression
+  ↑(∑' (q : ℕ), residualNumeratorTap r q * Polynomial.eval x (eulerPacket q) * reval eulerSource (x - ↑q)) /
+      ↑(eulerBeta r) =
+    ∑' (q : ℕ),
+      8 ^ q * ↑(eulerBeta (r + q)) / ↑(eulerBeta r) * ↑(Polynomial.eval x (eulerPacket q)) *
+        ↑(reval eulerSource (x - ↑q))
+
+r : ℕ
+x : D
+hs : Summable fun q => residualNumeratorTap r q * Polynomial.eval x (eulerPacket q) * reval eulerSource (x - ↑q)
+hh :
+  HasSum
+    (⇑PadicInt.Coe.ringHom ∘ fun q =>
+      residualNumeratorTap r q * Polynomial.eval x (eulerPacket q) * reval eulerSource (x - ↑q))
+    (PadicInt.Coe.ringHom
+      (∑' (b : ℕ), residualNumeratorTap r b * Polynomial.eval x (eulerPacket b) * reval eulerSource (x - ↑b)))
+⊢ ↑(∑' (q : ℕ), residualNumeratorTap r q * Polynomial.eval x (eulerPacket q) * reval eulerSource (x - ↑q)) /
+      ↑(eulerBeta r) =
+    ∑' (q : ℕ),
+      8 ^ q * ↑(eulerBeta (r + q)) / ↑(eulerBeta r) * ↑(Polynomial.eval x (eulerPacket q)) *
+        ↑(reval eulerSource (x - ↑q))
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    ∑' (q : ℕ), residualNumeratorTap r q * Polynomial.eval x (eulerPacket q) * reval eulerSource (x - ↑q)
+  has type
+    D
+  but is expected to have type
+    { x // ‖x‖ ≤ 1 }
+  in the application
+    ↑(∑' (q : ℕ), residualNumeratorTap r q * Polynomial.eval x (eulerPacket q) * reval eulerSource (x - ↑q))

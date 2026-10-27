@@ -1,0 +1,14 @@
+import CrossRadixPrimewiseShellValuation
+import CrossRadixStandardWindowPadic
+import CrossRadixTropicalValuation
+import CrossRadixReynoldsIntegralDefect
+
+#print axioms KomorebiCrossRadix.frequencyShell_prime_depth_transition
+#print axioms KomorebiCrossRadix.standardWindow_choose_padicValNat_eq_zero
+#print axioms KomorebiCrossRadix.PadicDepth_affineJetTerm
+#print axioms KomorebiCrossRadix.PadicDepth_affineJetCoeff_of_terms
+#print axioms KomorebiCrossRadix.padicValInt_affineJetCoeff_ge
+#print axioms KomorebiCrossRadix.strict_cancellation_surplus_example
+#print axioms KomorebiCrossRadix.mem_ReynoldsGoodLattice_iff
+#print axioms KomorebiCrossRadix.reynoldsDefectEquiv
+#print axioms KomorebiCrossRadix.reynoldsBadPacketTwo_not_mem

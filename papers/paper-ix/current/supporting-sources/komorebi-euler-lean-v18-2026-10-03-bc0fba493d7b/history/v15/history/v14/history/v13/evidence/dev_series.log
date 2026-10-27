@@ -1,0 +1,51 @@
+Euler/CollisionSeries.lean:30:57: error: unsolved goals
+r : D
+e : Series
+n : ℕ
+⊢ r * (4 ^ (n + 2) * (coeff (n + 2)) e - 4 * if 2 ≤ n + 2 then 4 ^ (n + 2 - 2) * (coeff (n + 2 - 2)) e else 0) =
+    r * (4 ^ (n + 2) * (coeff (n + 2)) e - 4 * (4 ^ n * (coeff n) e))
+Euler/CollisionSeries.lean:39:53: error: `if_false` has been deprecated: Use `ite_false` instead
+Euler/CollisionSeries.lean:69:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (coeff (?d + ?n)) (X ^ ?n * ?p)
+in the target expression
+  (coeff 1) (X ^ 2 * (rescale 4) e) = 0
+
+r : D
+e H : Series
+z : D
+h : IsHalfCore (twoRatio r e) H z
+⊢ (coeff 1) (X ^ 2 * (rescale 4) e) = 0
+Euler/CollisionSeries.lean:67:28: error: This simp argument is unused:
+  pow_one
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [twoRatio, sub_mul, one_mul, mul_assoc, coeff_C_mul, map_sub, coeff_rescale]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Euler/CollisionSeries.lean:78:8: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a => red ((coeff _a) H) = 1
+Error: Application type mismatch: The argument
+  Nat.fact_prime_two
+has type
+  Fact (Nat.Prime 2)
+but is expected to have type
+  Fact (Nat.Prime _a)
+in the application
+  @PadicInt.instCommRing _a ⋯
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+case left
+r ε : D
+e H : Series
+z : D
+hr : red r = 1
+hε : red ε = 1
+he : (coeff 0) e = 1
+h : IsHalfCore (oneRatio r ε e) H z
+⊢ red ((coeff 2) H) = 1
+[compiler exit=1; seconds=1.936]
+[compiler exit=0; seconds=2.014]
+[compiler exit=0; seconds=2.265]

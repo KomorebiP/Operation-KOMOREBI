@@ -1,0 +1,53 @@
+name: verify-and-build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/check_release.py
+      - run: python manuscript/verify_block15_lane_transport.py
+      - run: python manuscript/verify_block16_holonomy_lane_transport.py
+
+  latex:
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: Komorebi_Stratified_Universality_Foundations_v1.16.0_Block16.tex
+          working_directory: manuscript
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - run: cd manuscript && python verify_block16_publication_audit.py
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: Holonomy_Twisted_Lane_Transport_and_Orbit_Descent.tex
+          working_directory: standalone
+          args: -pdf -interaction=nonstopmode -halt-on-error -file-line-error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lane-transport-pdfs
+          path: |
+            manuscript/Komorebi_Stratified_Universality_Foundations_v1.16.0_Block16.pdf
+            standalone/Holonomy_Twisted_Lane_Transport_and_Orbit_Descent.pdf
