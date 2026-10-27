@@ -139,8 +139,9 @@ def read_state(root, config, metadata, as_of):
 
 
 class Renderer:
-    def __init__(self, root, state):
+    def __init__(self, root, state, tracked_paths=None):
         self.root, self.state = root, state
+        self.tracked_paths = set(tracked_paths) if tracked_paths is not None else None
         self.records = state['components']
         self.by_id = {r['id']:r for r in self.records}
         self.available = [r for r in self.records if r['available']]
@@ -163,6 +164,8 @@ class Renderer:
         return self.status_by_id.get(row['id'], {}).get('reader_guide', row['destination']+'/')
 
     def existing(self, path):
+        if self.tracked_paths is not None:
+            return path in self.tracked_paths or any(p.startswith(path.rstrip('/')+'/') for p in self.tracked_paths)
         return (self.root/path).exists()
 
     def rows(self, values, page, boundary=False):
@@ -519,8 +522,11 @@ All software is **beta and work in progress**. The following records are dated o
 | Komorebi Math | [Qualification run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), 27 October 2026 | The run executed tests and failed. The inspected Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. The Windows 3.13 distribution job separately failed a hardware-wrapper import. |
 | Polyphase Float | [CI 40473953308](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953308), [ABI 40473953130](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953130), [CodeQL 40479469045](https://github.com/KomorebiP/polyphase-float/actions/runs/40479469045), 27 October 2026 | The inspected CI, ABI, and CodeQL runs completed successfully. These results apply to the runs' source revisions and configured coverage. |
 | AM-SPD | [Publication receipt](../verification/am-spd-v1.0.0-publication.json) and [release checklist](../packages/komorebi-am-spd/RELEASE_CHECKLIST.md) | The historical 1.0.0 release has its own qualification record. The current collection-wide software label is beta / work in progress. |
+| Constructive Repair | [Windows acceptance and remaining checks](components/CONSTRUCTIVE_REPAIR.md), 27 October 2026 | Windows 11 / CPython 3.12.14: 134 engine tests and 72 installed cases passed. The 100-test release suite had 95 passes, 3 POSIX-only skips, and 2 symlink-fixture setup errors. This is partial Python qualification, with no new Lean replay. |
 
 The Math failure above supersedes the earlier publication note that described failures before any job steps. Consult the live Actions pages and exact commit before making a newer qualification claim.
+
+The [27 October repository audit](AUDIT_2026-10-27.md) records source-receipt verification, navigation repairs, and the new Windows evidence. Run `python -B tools/check_source_receipts.py` and `python -B tools/update_completion_status.py --check` to check the committed source inventory and all maintained navigation/status pages. These checks do not execute the research programs.
 
 ## Preserved history
 
@@ -670,7 +676,7 @@ def main(argv=None):
         target=output/safe_relative(relative)
         if target.is_symlink():raise ImportFailure('Output is a symlink: '+relative)
         target.parent.mkdir(parents=True,exist_ok=True)
-        target.write_text(text,encoding='utf-8')
+        target.write_text(text,encoding='utf-8',newline='\n')
     print(dump_json({'output_files':sorted(renderer.outputs),'verified_source_totals':state['totals'],
                      'input_source_revision':state['source_revision']}),end='')
     return 0

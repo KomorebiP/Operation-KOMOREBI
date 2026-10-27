@@ -19,12 +19,20 @@ Read Realization Calculus and Komorebi Space together. Realization Boundaries de
 |---|---|
 | [Large Signal Model](large-signal-model/) | Algebraic signal models and their mathematical foundations. |
 | [Special Functions](special-functions/) | Cyclic families, sequence constructions, reciprocal structure, and exact methods. |
+| [Quantum and Circuits](quantum-and-circuits/) | Quantum models, channel interfaces, and circuit constructions. |
+| [Physics](physics/) | Discrete and continuous model structures and local constructions. |
+| [COS Method](cos-method/) | Quadratic-form probability calculations, tail accuracy, and numerical evidence. |
+| [COS Method: formal continuation](cos-method/formal-continuation/) | A separate continuation of the COS formal development. |
 
 ## Machine reasoning and workspace models
 
 | Work | Focus |
 |---|---|
 | [Machine Societies](machine-societies/) | Interacting computational agents and their theoretical models. |
+| [Machine Native Reasoning](machine-native-reasoning/) | Mathematical interfaces, computational representations, and reasoning constructions. |
+| [Self-Improving Intelligence](self-improving-intelligence/) | Theoretical models and conditions for recursive improvement. |
+| [Self-Improving Intelligence: visual guide](self-improving-intelligence/visual-guide/) | Visual companion to the self-improvement development. |
+| [Grounded Abstraction](grounded-abstraction/) | Abstraction, grounding, and their mathematical interfaces. |
 
 ## Method, interpretation, and reader guides
 

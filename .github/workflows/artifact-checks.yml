@@ -13,11 +13,19 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.13'
       - name: Validate collection and preserved formal artifact
         run: python -B tools/check_repository.py
+      - name: Verify every source receipt against the committed tree
+        run: python -B tools/check_source_receipts.py
+      - name: Check all maintained navigation and status pages
+        run: python -B tools/update_completion_status.py --check
+      - name: Test receipt and navigation regressions
+        run: python -B -m unittest discover -s tools -p 'test_*.py' -v
       - name: Test formal receipt and upload guards
         working-directory: formal/research-preview-1
         run: python -B -m unittest discover -s tests -p 'test_*.py' -v

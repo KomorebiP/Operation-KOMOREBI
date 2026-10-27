@@ -16,7 +16,9 @@
 | [AM-SPD](komorebi-am-spd/) | Finite image decomposition and reconstruction with retained residuals. |
 | [Quadratic-Form Engine / K-COS](../papers/quadratic-form-kcos/) | The earlier mathematical companion and numerical engine. |
 | [Certified Inference](certified-inference/) | A finite certified-inference core with executable Lean sources and worked constructions. |
-| [Constructive Repair](constructive-repair/) | Constructive repairs, examples, and the accompanying reference implementation. |
+| [Constructive Repair](../docs/components/CONSTRUCTIVE_REPAIR.md) | Constructive repairs, examples, and the accompanying reference implementation. |
+| [RRCT](rrct/) | The v0.60 persistent fuzzy J-Space bridge implementation. |
+| [Universal Generative Deformation Calculus](universal-generative-deformation/) | A reference Python package, examples, tests, and editable mathematical manuscript. |
 
 Additional implementations accompany the [research programs](../research/README.md) and [experimental laboratories](../experiments/README.md). Their software has the same beta / work-in-progress status.
 

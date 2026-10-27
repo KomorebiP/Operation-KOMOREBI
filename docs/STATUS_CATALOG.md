@@ -236,9 +236,13 @@ Finished one-observation, finite-dimensional Gaussian inference contract with ex
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Standalone release candidate with exact rational repair certificates and scoped Lean proofs; Python certificate validity is separate from kernel acceptance.
+Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases; the release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
 
-**Next gate:** Close candidate packaging and supported-platform checks, and point readers to the current collection license rather than historical undecided notices.
+**Next gate:** Resolve the two symlink-fixture prerequisites and complete a distribution gate for the intended rebuilt wheel and current metadata. Preserve the new exact source-to-wheel map and separate any future Lean replay from Python acceptance (F08).
+
+[Edition and reader guide](components/CONSTRUCTIVE_REPAIR.md)
+
+[Fresh software check (separate from Lean evidence)](../verification/constructive-repair/windows-2026-10-27/summary.json)
 
 [Source directory](../packages/constructive-repair) · [README.md](../packages/constructive-repair/README.md) · [python_baseline/README.md](../packages/constructive-repair/python_baseline/README.md) · [docs/LICENSING_STATUS.md](../packages/constructive-repair/docs/LICENSING_STATUS.md)
 

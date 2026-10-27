@@ -129,6 +129,8 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
             catalogue += f"Current counterpart: [{c['title']}](#{c['id']}).\n\n"
         if 'reader_guide' in row:
             catalogue += link('Edition and reader guide', row['reader_guide'], page) + '\n\n'
+        if 'software_verification' in row:
+            catalogue += link('Fresh software check (separate from Lean evidence)', row['software_verification']['path'], page) + '\n\n'
         evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
         catalogue += link('Source directory', row['destination']+'/', page) + ' · ' + evidence + '\n\n'
     catalogue += '''## Supporting and historical collections
@@ -195,7 +197,7 @@ def validate(root, data, git):
         assert path.startswith('docs/') and path.endswith('.md') and '..' not in path.split('/'), path
         assert (root/path).is_file(), 'Missing maintained document: '+path
     for path in data.get('assessment_records', []):
-        assert path.startswith('manifests/') and path.endswith('.json') and '..' not in path.split('/'), path
+        assert path.startswith(('manifests/', 'verification/')) and path.endswith('.json') and '..' not in path.split('/'), path
         assert (root/path).is_file(), 'Missing assessment record: '+path
         json.loads((root/path).read_text(encoding='utf-8'))
     for row in records:
@@ -206,6 +208,10 @@ def validate(root, data, git):
         assert row['scope'] and row['next_step'] and row['evidence'], row['id']
         if 'reader_guide' in row:
             assert row['reader_guide'] in maintained, 'Unregistered reader guide: '+row['id']
+        if 'software_verification' in row:
+            report = row['software_verification']
+            assert report['path'] in data.get('assessment_records', []), row['id']
+            assert hashlib.sha256((root/report['path']).read_bytes()).hexdigest() == report['sha256'], 'Software receipt changed: '+row['id']
         if row['import_role'] == 'supporting':
             assert (row['stage'], row['lean'], row['confidence']) == ('supporting', 'unassessed', 'unassessed')
         if row['lean'] in ('source', 'none', 'unassessed'):
@@ -252,10 +258,11 @@ def main():
     # Import here because the navigation renderer shares status_cells from this module.
     from update_source_navigation import Renderer
     source_state = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
-    navigation = Renderer(root, source_state)
+    navigation = Renderer(root, source_state, tracked_paths=tree)
     navigation.reader_pages(); navigation.status_pages()
-    for path in ('README.md', 'docs/START_HERE.md', 'research/README.md', 'docs/COMPONENT_INDEX.md', 'docs/PUBLICATION_STATUS.md'):
-        outputs[path] = navigation.outputs[path]
+    # Check every maintained reader/index page; a partial list left category
+    # indexes and the contribution/import summaries stale after new imports.
+    outputs.update(navigation.outputs)
     maintained = {p: (root/p).read_text(encoding='utf-8') for p in data.get('maintained_documents', [])}
     documents = {**maintained, **outputs}
     known = set(tree) | set(documents) | set(data.get('assessment_records', [])) | {'manifests/project-status.json'}
@@ -275,7 +282,8 @@ def main():
         if args.check:
             assert (root/path).read_text(encoding='utf-8') == content, 'Generated page is stale: '+path
         else:
-            (root/path).write_text(content, encoding='utf-8')
+            (root/path).parent.mkdir(parents=True, exist_ok=True)
+            (root/path).write_text(content, encoding='utf-8', newline='\n')
     print(json.dumps({'status': 'PASS', 'components': len(data['components']),
                       'evidence_files': evidence_count, 'generated_pages': len(outputs),
                       'new_lean_execution': False, 'new_proof_audit': False}))

@@ -8,12 +8,13 @@ The collection centers on Realization Calculus and Komorebi Space and extends th
 
 | Area | Available primary components | Reader index |
 |---|---|---|
-| Monographs and companion volumes | 9 | [Browse](monographs/README.md) |
-| Software packages | 2 | [Browse](packages/README.md) |
+| Experimental laboratories | 5 | [Browse](experiments/README.md) |
+| Monographs and companion volumes | 17 | [Browse](monographs/README.md) |
+| Software packages | 4 | [Browse](packages/README.md) |
 | Core papers | 12 | [Browse](papers/README.md) |
-| Research programs | 5 | [Browse](research/README.md) |
+| Research programs | 46 | [Browse](research/README.md) |
 
-The verified source collection also contains **0 supporting source components**. The [complete component index](docs/COMPONENT_INDEX.md) supplies exact paths, file counts, and receipts without conflating a preserved checkpoint with a new result.
+The verified source collection also contains **69 supporting source components**. The [complete component index](docs/COMPONENT_INDEX.md) supplies exact paths, file counts, and receipts without conflating a preserved checkpoint with a new result.
 
 The independent [Komorebi Math](https://github.com/KomorebiP/komorebi-math) and [Polyphase Float](https://github.com/KomorebiP/polyphase-float) repositories are public. **All software is beta and work in progress.** Earlier core source editions, Research Preview 1, K-COS, and AM-SPD retain their own source and verification history.
 

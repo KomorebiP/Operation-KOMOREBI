@@ -4,7 +4,7 @@ Recorded 2026-10-27 · **Komorebi P.**
 
 Choose work by its completion stage below, then read its exact scope and evidence in the linked entry. **Publication completion, Lean coverage and confidence are separate fields.** A finished book may contain open research; a checked formal block may belong to an unfinished program.
 
-This is an editorial assessment of existing release/status records at [source revision `bb652081bcce`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/bb652081bcce3398a437dd02e43ed590395f0bce). It covers **84 primary components** and separately accounts for **69 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
+This is an editorial assessment of existing release/status records at [source revision `ef52463dbe47`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/ef52463dbe476bcf0c027ed00c68c6d6fb2fdfb3). It covers **84 primary components** and separately accounts for **69 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 

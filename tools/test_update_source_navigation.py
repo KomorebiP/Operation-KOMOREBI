@@ -9,6 +9,22 @@ import update_source_navigation as nav
 
 
 class NavigationTests(unittest.TestCase):
+    def test_committed_presence_survives_sparse_checkout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            renderer=nav.Renderer(root, {'components':[]}, tracked_paths={'papers/old/README.md'})
+            self.assertFalse((root/'papers/old').exists())
+            self.assertTrue(renderer.existing('papers/old/README.md'))
+            self.assertTrue(renderer.existing('papers/old'))
+            self.assertFalse(renderer.existing('papers/old-other'))
+
+    def test_untracked_file_does_not_change_committed_navigation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); (root/'scratch').mkdir()
+            renderer=nav.Renderer(root, {'components':[]}, tracked_paths=set())
+            self.assertFalse(renderer.existing('scratch'))
+            self.assertTrue(nav.Renderer(root, {'components':[]}).existing('scratch'))
+
     def make_component(self, root, identifier, destination, name, data):
         relative=destination+'/'+name
         path=root/relative;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)

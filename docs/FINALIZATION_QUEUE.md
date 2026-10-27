@@ -100,6 +100,8 @@ The mathematical contract and kernel/Python distinction must survive package fin
 
 **Done when:** Repeat the documented package checks on supported platforms, publish an exact source-to-wheel mapping, and reference the current collection license.
 
+**Progress:** All 2,254 selected source files were SHA-256 checked; a rebuilt wheel maps exactly to seven committed runtime files. Windows 11 / CPython 3.12.14 passed 134 engine tests and 72 installed cases. The 100-test release suite had 95 passes, 3 POSIX/Linux-only skips and 2 symlink-fixture setup errors, so full qualification remains open. The package guide links the current collection license and preserves the original records.
+
 Applies to: [Constructive Repair](STATUS_CATALOG.md#constructive-repair).
 
 ## Proof and submission review

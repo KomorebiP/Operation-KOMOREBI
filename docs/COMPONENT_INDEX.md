@@ -50,7 +50,7 @@ Recorded 2026-10-27.
 | Component | Completion | Lean | Confidence basis | Source files | Receipt |
 |---|---|---|---|---|---|
 | [Certified Inference](../packages/certified-inference/) | [Scoped release](STATUS_CATALOG.md#certified-inference) | Declared contract recorded | Recorded formal evidence | 939 | [file record](../manifests/source-imports/certified-inference.json) |
-| [Constructive Repair](../packages/constructive-repair/) | [Active development](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
+| [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md) | [Active development](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
 | [RRCT](../packages/rrct/) | [Experiment / prototype](STATUS_CATALOG.md#packages-rrct) | No Lean claim | Experimental evidence | 185 | [file record](../manifests/source-imports/packages-rrct.json) |
 | [Universal Generative Deformation Calculus](../packages/universal-generative-deformation/) | [Experiment / prototype](STATUS_CATALOG.md#universal-generative-deformation) | No Lean claim | Experimental evidence | 144 | [file record](../manifests/source-imports/universal-generative-deformation.json) |
 
