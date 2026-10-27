@@ -1,0 +1,14 @@
+import KomorebiPadic.InvariantFactorSignature
+#check AddEquiv.map_nsmul
+#check AddEquiv.map_zsmul
+#check map_zsmul
+#check Int.cast_smul_eq_zsmul
+#check ZMod.intCast_zmod_eq_zero_iff_dvd
+#check ZMod.intCast_zmod_eq_zero_iff_dvd_int
+#check AddEquiv.apply_eq_iff_eq_symm_apply
+#check AddEquiv.piCongrLeft
+#check Equiv.piCongrLeft
+#check Fintype.equivOfCardEq
+#check Equiv.sigmaCongrRight
+#check Equiv.sigmaFiberEquiv
+#check Equiv.sigmaFiberEquiv_eq

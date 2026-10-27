@@ -1,0 +1,67 @@
+lean/KomorebiPadic/ObservableMaskAutomaton.lean:21:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  CoordinateSupport.embed (CoordinateSupport.least (maskSupportSystem p r A B hp))
+    (CoordinateSupport.restrict (CoordinateSupport.least (maskSupportSystem p r A B hp)) ↑x)
+in the target expression
+  leastProfileMaskOutput p r A B hp hr hB
+      (unflattenProfile (leastMaskDegreeProfile p r A B hp)
+        (CoordinateSupport.embed (leastMaskCoordinateSupport p r A B hp)
+          (CoordinateSupport.restrict (CoordinateSupport.least (maskSupportSystem p r A B hp)) ↑x))) =
+    leastProfileMaskOutput p r A B hp hr hB (unflattenProfile (leastMaskDegreeProfile p r A B hp) ↑x)
+
+p r : ℕ
+A B : ℤ[X]
+hp : Nat.Prime p
+hr : 0 < r
+hB : ¬↑p ∣ B.coeff 0
+x : IdealMaskState p r A B hp
+⊢ leastProfileMaskOutput p r A B hp hr hB
+      (unflattenProfile (leastMaskDegreeProfile p r A B hp)
+        (CoordinateSupport.embed (leastMaskCoordinateSupport p r A B hp)
+          (CoordinateSupport.restrict (CoordinateSupport.least (maskSupportSystem p r A B hp)) ↑x))) =
+    leastProfileMaskOutput p r A B hp hr hB (unflattenProfile (leastMaskDegreeProfile p r A B hp) ↑x)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    x
+  has type
+    IdealMaskState p r A B hp
+  but is expected to have type
+    ↥(CoordinateIdeal.State (CoordinateIdeal.least ⋯ (maskSupportSystem p r A B hp)))
+  in the application
+    ↑x
+lean/KomorebiPadic/ObservableMaskAutomaton.lean:128:2: error: Type mismatch: After simplification, term
+  he
+ has type
+  Iff
+    ((LinearObservability.projection
+          { dynamics := reachableStateSystem p r A B hp,
+            output := { toFun := reachableMaskOutput p r A B hp hr hB, map_add' := ⋯, map_smul' := ⋯ } })
+        x =
+      (LinearObservability.projection
+          { dynamics := reachableStateSystem p r A B hp,
+            output := { toFun := reachableMaskOutput p r A B hp hr hB, map_add' := ⋯, map_smul' := ⋯ } })
+        y)
+    (∀ (ds : List (Fin p)),
+      { toFun := reachableMaskOutput p r A B hp hr hB, map_add' := ⋯, map_smul' := ⋯ }
+          (reachableMaskIterate p r A B hp ds x) =
+        { toFun := reachableMaskOutput p r A B hp hr hB, map_add' := ⋯, map_smul' := ⋯ }
+          (reachableMaskIterate p r A B hp ds y))
+but is expected to have type
+  Iff ((observableMaskProjection p r A B hp hr hB) x = (observableMaskProjection p r A B hp hr hB) y)
+    (∀ (ds : List (Fin p)),
+      reachableMaskOutput p r A B hp hr hB (reachableMaskIterate p r A B hp ds x) =
+        reachableMaskOutput p r A B hp hr hB (reachableMaskIterate p r A B hp ds y))
+lean/KomorebiPadic/ObservableMaskAutomaton.lean:139:2: error: Type mismatch: After simplification, term
+  he ds
+ has type
+  @Eq (ZMod (p ^ r)) ((observableMaskOutput p r A B hp hr hB) (observableMaskIterate p r A B hp hr hB ds x))
+    ((observableMaskOutput p r A B hp hr hB) (observableMaskIterate p r A B hp hr hB ds y))
+but is expected to have type
+  @Eq (ZMod (p ^ r))
+    ((LinearObservability.quotientSystem (observableMaskSystem p r A B hp hr hB)).output
+      (LinearReachability.run (LinearObservability.quotientSystem (observableMaskSystem p r A B hp hr hB)).dynamics ds
+        x))
+    ((LinearObservability.quotientSystem (observableMaskSystem p r A B hp hr hB)).output
+      (LinearReachability.run (LinearObservability.quotientSystem (observableMaskSystem p r A B hp hr hB)).dynamics ds
+        y))

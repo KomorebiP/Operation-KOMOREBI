@@ -1,0 +1,50 @@
+import KomorebiPadic.ObservabilityExamples
+import KomorebiPadic.PresentationExamples
+import KomorebiPadic.ReachabilityExamples
+import KomorebiPadic.IdealClosureExamples
+import KomorebiPadic.SupportExamples
+import KomorebiPadic.LeastProfileMaskAutomaton
+import KomorebiPadic.NumeratorDegreeEmbedding
+import KomorebiPadic.PrunedMaskCertificate
+import KomorebiPadic.CanonicalMaskAutomaton
+import KomorebiPadic.FiniteMaskAutomaton
+import KomorebiPadic.CartierObstruction
+import KomorebiPadic.MaskReciprocalBridge
+import KomorebiPadic.SubmissionQuotaTransport
+import KomorebiPadic.ReplayBudgetTransport
+import KomorebiPadic.CheckpointImporter
+import KomorebiPadic.BudgetedPartitionCertificate
+import KomorebiPadic.AdaptivePartitionCertificate
+import KomorebiPadic.Arithmetic
+import KomorebiPadic.IntervalGraph
+import KomorebiPadic.ValuationModel
+import KomorebiPadic.ConcreteBinomialModel
+import KomorebiPadic.QuotientBarrier
+import KomorebiPadic.RadixDescent
+import KomorebiPadic.RepresentativeCompiler
+import KomorebiPadic.FiniteCompiler
+import KomorebiPadic.SuffixWindow
+import KomorebiPadic.TargetCompiler
+import KomorebiPadic.SequentialSearch
+import KomorebiPadic.DescendingSearch
+import KomorebiPadic.StableQuotient
+import KomorebiPadic.MaximumLayerCompiler
+import KomorebiPadic.CompilerComplexity
+import KomorebiPadic.RepresentativeBudgetClosedForm
+import KomorebiPadic.RepresentativeBudgetPrimeEnvelope
+import KomorebiPadic.RepresentativeBudgetParameterEnvelope
+
+import KomorebiPadic.DefectMonotonicity
+import KomorebiPadic.PrecisionMonotonicity
+import KomorebiPadic.CheckpointTransitionChain
+
+/-!
+# Komorebi p-adic correction graph
+
+This root module imports the arithmetic spine, the initial-interval theorem,
+the concrete binomial p-adic valuation model, the quotient-barrier stopping
+criterion, the prime-base radix descent theorem, the exact representative and
+suffix-window compilers, the sequential first-noncrossing search, and the
+kernel-checked end-to-end maximum-layer compiler.
+-/
+

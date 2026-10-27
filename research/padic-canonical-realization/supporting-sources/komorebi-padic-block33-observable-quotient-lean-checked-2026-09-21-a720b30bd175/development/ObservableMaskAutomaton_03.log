@@ -1,0 +1,31 @@
+lean/KomorebiPadic/ObservableMaskAutomaton.lean:216:2: error: Type mismatch: After simplification, term
+  LinearObservability.projection_eq_iff_finite_words (observableMaskSystem p r A B hp hr hB) hp
+    (reachableMask_state_card_power p r A B hp).left x y
+ has type
+  Iff
+    ((LinearObservability.projection (observableMaskSystem p r A B hp hr hB)) x =
+      (LinearObservability.projection (observableMaskSystem p r A B hp hr hB)) y)
+    (∀ (ds : List (Fin p)),
+      ds.length < Nat.log p (Nat.card ↥(ReachableMaskState p r A B hp)) →
+        reachableMaskOutput p r A B hp hr hB (reachableMaskIterate p r A B hp ds x) =
+          reachableMaskOutput p r A B hp hr hB (reachableMaskIterate p r A B hp ds y))
+but is expected to have type
+  Iff
+    ((LinearObservability.projection (observableMaskSystem p r A B hp hr hB)) x =
+      (LinearObservability.projection (observableMaskSystem p r A B hp hr hB)) y)
+    (∀ (ds : List (Fin p)),
+      ds.length < observableMaskRounds p r A B hp →
+        reachableMaskOutput p r A B hp hr hB (reachableMaskIterate p r A B hp ds x) =
+          reachableMaskOutput p r A B hp hr hB (reachableMaskIterate p r A B hp ds y))
+lean/KomorebiPadic/ObservableMaskAutomaton.lean:245:14: error: Type mismatch
+  LinearObservability.unobservable_greatest ?m.34
+has type
+  ∀ (U : @Submodule ?m.28 ?m.29 CommRing.toCommSemiring.toSemiring AddCommGroup.toAddCommMonoid ?m.33),
+    LinearObservability.SilentInvariant ?m.34 U → U ≤ LinearObservability.unobservable ?m.34
+but is expected to have type
+  ∀
+    (U :
+      @Submodule (ZMod (p ^ r)) (↥(ReachableMaskState p r A B hp)) CommRing.toCommSemiring.toSemiring
+        (ReachableMaskState p r A B hp).addCommGroup.toAddCommMonoid AddSubgroupClass.instZModModule),
+    LinearObservability.SilentInvariant (observableMaskSystem p r A B hp hr hB) U →
+      U ≤ unobservableMaskSpan p r A B hp hr hB

@@ -1,0 +1,15 @@
+import KomorebiPadic.FiniteModulePresentation
+#check Nat.card_pi
+#check Nat.card_congr
+#check Equiv.subtypeEquiv
+#check Equiv.subtypeEquivRight
+#check Equiv.piCongrRight
+#check Finset.sum_boole
+#check Finset.card_filter
+#check Multiset.count_map
+#check Finset.filter_val
+#check Multiset.ext
+#check Multiset.sort
+#check Finset.sum_ite_irrel
+#check Nat.add_sub_cancel_left
+#check Nat.add_sub_cancel

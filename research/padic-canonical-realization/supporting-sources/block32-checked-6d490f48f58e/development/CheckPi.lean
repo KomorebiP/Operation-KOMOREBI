@@ -1,0 +1,14 @@
+import KomorebiPadic.InvariantFactorSignature
+#check Pi.single_apply
+#check Pi.single_eq_same
+#check Pi.single_eq_of_ne
+#check Pi.single_apply_left
+#check Pi.single_apply_right
+#check Finset.sum_eq_single
+#check Finset.sum_apply
+#check Pi.zero_apply
+#check Pi.nsmul_apply
+#check Pi.smul_apply
+#check Pi.single_smul
+#check Pi.sum_single
+#check Pi.single_zsmul
