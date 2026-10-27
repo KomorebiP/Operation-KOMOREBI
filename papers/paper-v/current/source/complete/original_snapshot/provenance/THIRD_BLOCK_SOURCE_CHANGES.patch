@@ -1,0 +1,1124 @@
+--- v0.2.0/formalization/lean/KernelAudit.lean
++++ v0.3.0/formalization/lean/KernelAudit.lean
+@@ -1,6 +1,6 @@
+ import KomorebiPaperV
+ 
+-/- Source candidate audit harness. Not executed in the producing environment. Author: Komorebi P. -/
++/- Checked-target audit harness. Author: Komorebi P. -/
+ 
+ 
+ #print axioms KomorebiPaperV.Binary.cutSum_eq_root
+@@ -9,6 +9,25 @@
+ #print axioms KomorebiPaperV.Binary.best_is_global_minimum
+ #print axioms KomorebiPaperV.Binary.root_le_envelope
+ #print axioms KomorebiPaperV.Binary.cut_perturbation
++#print axioms KomorebiPaperV.CRT.residue_pair_iff
++#print axioms KomorebiPaperV.CRT.residue_mask_factorization
++#print axioms KomorebiPaperV.CRT.dyadic_odd_coprime
++#print axioms KomorebiPaperV.CRT.dyadic_odd_packet_factorization
++#print axioms KomorebiPaperV.CompletePrunings.terminal_exists
++#print axioms KomorebiPaperV.CompletePrunings.node_on_terminal
++#print axioms KomorebiPaperV.CompletePrunings.selected_stop_iff
++#print axioms KomorebiPaperV.CompletePrunings.selected_split_root_false
++#print axioms KomorebiPaperV.CompletePrunings.selected_split_down_iff
++#print axioms KomorebiPaperV.CompletePrunings.cut_complete
++#print axioms KomorebiPaperV.CompletePrunings.ancestor_onPath
++#print axioms KomorebiPaperV.CompletePrunings.path_nodes_comparable
++#print axioms KomorebiPaperV.CompletePrunings.complete_iff_covering_antichain
++#print axioms KomorebiPaperV.CompletePrunings.complete_root_unique
++#print axioms KomorebiPaperV.CompletePrunings.complete_child
++#print axioms KomorebiPaperV.CompletePrunings.complete_has_cut
++#print axioms KomorebiPaperV.CompletePrunings.cut_ext
++#print axioms KomorebiPaperV.CompletePrunings.complete_pruning_finite
++#print axioms KomorebiPaperV.CompletePrunings.complete_pruning_minimum
+ #print axioms KomorebiPaperV.FIRTransfer.tapEquiv_symm
+ #print axioms KomorebiPaperV.FIRTransfer.tapIndex_equiv
+ #print axioms KomorebiPaperV.FIRTransfer.transfer_address
+@@ -32,6 +51,7 @@
+ #print axioms KomorebiPaperV.FiniteAdaptive.value_perturbation
+ #print axioms KomorebiPaperV.FiniteAdaptive.best_unchanged_of_gap
+ #print axioms KomorebiPaperV.FiniteAdaptive.one_comparison_per_internal_node
++#print axioms KomorebiPaperV.FiniteAdaptive.selector_probability
+ #print axioms KomorebiPaperV.finite_minimum
+ #print axioms KomorebiPaperV.positive_gap
+ #print axioms KomorebiPaperV.gap_stability
+@@ -49,6 +69,34 @@
+ #print axioms KomorebiPaperV.FiniteTransforms.haar_flat_involution
+ #print axioms KomorebiPaperV.FiniteTransforms.matrix_eq_of_all_vectors
+ #print axioms KomorebiPaperV.FiniteTransforms.perfect_reconstruction_matrix_iff
++#print axioms KomorebiPaperV.HaarHilbert.inverse_low
++#print axioms KomorebiPaperV.HaarHilbert.inverse_high
++#print axioms KomorebiPaperV.HaarHilbert.energy
++#print axioms KomorebiPaperV.HaarHilbert.low_apply
++#print axioms KomorebiPaperV.HaarHilbert.high_apply
++#print axioms KomorebiPaperV.HilbertPackets.projection_apply
++#print axioms KomorebiPaperV.HilbertPackets.projection_norm_le
++#print axioms KomorebiPaperV.HilbertPackets.projector_apply
++#print axioms KomorebiPaperV.HilbertPackets.projector_idempotent
++#print axioms KomorebiPaperV.HilbertPackets.projector_annihilate
++#print axioms KomorebiPaperV.HilbertPackets.projector_complete
++#print axioms KomorebiPaperV.HilbertPackets.projector_refinement
++#print axioms KomorebiPaperV.HilbertPackets.reindex_norm
++#print axioms KomorebiPaperV.HilbertPackets.polyphase_apply
++#print axioms KomorebiPaperV.HilbertPackets.polyphase_synthesis_analysis
++#print axioms KomorebiPaperV.HilbertPackets.polyphase_analysis_synthesis
++#print axioms KomorebiPaperV.HilbertPackets.polyphase_energy
++#print axioms KomorebiPaperV.HilbertPackets.impulse_expansion
++#print axioms KomorebiPaperV.HilbertPackets.projector_symmetric
++#print axioms KomorebiPaperV.HilbertPackets.projector_orthogonal
++#print axioms KomorebiPaperV.HilbertPackets.impulse_basis_apply
++#print axioms KomorebiPaperV.HilbertPackets.impulse_dense_span
++#print axioms KomorebiPaperV.HilbertPackets.shift_apply
++#print axioms KomorebiPaperV.HilbertPackets.reindex_single
++#print axioms KomorebiPaperV.HilbertPackets.shift_impulse
++#print axioms KomorebiPaperV.HilbertPackets.residue_projector_refinement
++#print axioms KomorebiPaperV.HilbertPackets.shift_generated_dense_span
++#print axioms KomorebiPaperV.HilbertPackets.finite_impulse_expansion
+ #print axioms KomorebiPaperV.IntegerPolyphase.phase_val
+ #print axioms KomorebiPaperV.IntegerPolyphase.address_phase_quotient
+ #print axioms KomorebiPaperV.IntegerPolyphase.address_divmod
+@@ -78,6 +126,16 @@
+ #print axioms KomorebiPaperV.address_analyze_synthesize
+ #print axioms KomorebiPaperV.residuePacket_idempotent
+ #print axioms KomorebiPaperV.residuePacket_complete
++#print axioms KomorebiPaperV.SmithAction.action_mul
++#print axioms KomorebiPaperV.SmithAction.action_one
++#print axioms KomorebiPaperV.SmithAction.action_scale
++#print axioms KomorebiPaperV.SmithAction.action_nonzero
++#print axioms KomorebiPaperV.SmithAction.half_turn
++#print axioms KomorebiPaperV.SmithAction.half_turn_zero
++#print axioms KomorebiPaperV.SmithAction.half_turn_infinity
++#print axioms KomorebiPaperV.SmithAction.homogeneous_chart
++#print axioms KomorebiPaperV.SmithAction.chart_composition
++#print axioms KomorebiPaperV.SmithAction.finite_half_turn
+ 
+ open Lean Meta Elab Command
+ 
+@@ -90,6 +148,25 @@
+     `KomorebiPaperV.Binary.best_is_global_minimum,
+     `KomorebiPaperV.Binary.root_le_envelope,
+     `KomorebiPaperV.Binary.cut_perturbation,
++    `KomorebiPaperV.CRT.residue_pair_iff,
++    `KomorebiPaperV.CRT.residue_mask_factorization,
++    `KomorebiPaperV.CRT.dyadic_odd_coprime,
++    `KomorebiPaperV.CRT.dyadic_odd_packet_factorization,
++    `KomorebiPaperV.CompletePrunings.terminal_exists,
++    `KomorebiPaperV.CompletePrunings.node_on_terminal,
++    `KomorebiPaperV.CompletePrunings.selected_stop_iff,
++    `KomorebiPaperV.CompletePrunings.selected_split_root_false,
++    `KomorebiPaperV.CompletePrunings.selected_split_down_iff,
++    `KomorebiPaperV.CompletePrunings.cut_complete,
++    `KomorebiPaperV.CompletePrunings.ancestor_onPath,
++    `KomorebiPaperV.CompletePrunings.path_nodes_comparable,
++    `KomorebiPaperV.CompletePrunings.complete_iff_covering_antichain,
++    `KomorebiPaperV.CompletePrunings.complete_root_unique,
++    `KomorebiPaperV.CompletePrunings.complete_child,
++    `KomorebiPaperV.CompletePrunings.complete_has_cut,
++    `KomorebiPaperV.CompletePrunings.cut_ext,
++    `KomorebiPaperV.CompletePrunings.complete_pruning_finite,
++    `KomorebiPaperV.CompletePrunings.complete_pruning_minimum,
+     `KomorebiPaperV.FIRTransfer.tapEquiv_symm,
+     `KomorebiPaperV.FIRTransfer.tapIndex_equiv,
+     `KomorebiPaperV.FIRTransfer.transfer_address,
+@@ -113,6 +190,7 @@
+     `KomorebiPaperV.FiniteAdaptive.value_perturbation,
+     `KomorebiPaperV.FiniteAdaptive.best_unchanged_of_gap,
+     `KomorebiPaperV.FiniteAdaptive.one_comparison_per_internal_node,
++    `KomorebiPaperV.FiniteAdaptive.selector_probability,
+     `KomorebiPaperV.finite_minimum,
+     `KomorebiPaperV.positive_gap,
+     `KomorebiPaperV.gap_stability,
+@@ -130,6 +208,34 @@
+     `KomorebiPaperV.FiniteTransforms.haar_flat_involution,
+     `KomorebiPaperV.FiniteTransforms.matrix_eq_of_all_vectors,
+     `KomorebiPaperV.FiniteTransforms.perfect_reconstruction_matrix_iff,
++    `KomorebiPaperV.HaarHilbert.inverse_low,
++    `KomorebiPaperV.HaarHilbert.inverse_high,
++    `KomorebiPaperV.HaarHilbert.energy,
++    `KomorebiPaperV.HaarHilbert.low_apply,
++    `KomorebiPaperV.HaarHilbert.high_apply,
++    `KomorebiPaperV.HilbertPackets.projection_apply,
++    `KomorebiPaperV.HilbertPackets.projection_norm_le,
++    `KomorebiPaperV.HilbertPackets.projector_apply,
++    `KomorebiPaperV.HilbertPackets.projector_idempotent,
++    `KomorebiPaperV.HilbertPackets.projector_annihilate,
++    `KomorebiPaperV.HilbertPackets.projector_complete,
++    `KomorebiPaperV.HilbertPackets.projector_refinement,
++    `KomorebiPaperV.HilbertPackets.reindex_norm,
++    `KomorebiPaperV.HilbertPackets.polyphase_apply,
++    `KomorebiPaperV.HilbertPackets.polyphase_synthesis_analysis,
++    `KomorebiPaperV.HilbertPackets.polyphase_analysis_synthesis,
++    `KomorebiPaperV.HilbertPackets.polyphase_energy,
++    `KomorebiPaperV.HilbertPackets.impulse_expansion,
++    `KomorebiPaperV.HilbertPackets.projector_symmetric,
++    `KomorebiPaperV.HilbertPackets.projector_orthogonal,
++    `KomorebiPaperV.HilbertPackets.impulse_basis_apply,
++    `KomorebiPaperV.HilbertPackets.impulse_dense_span,
++    `KomorebiPaperV.HilbertPackets.shift_apply,
++    `KomorebiPaperV.HilbertPackets.reindex_single,
++    `KomorebiPaperV.HilbertPackets.shift_impulse,
++    `KomorebiPaperV.HilbertPackets.residue_projector_refinement,
++    `KomorebiPaperV.HilbertPackets.shift_generated_dense_span,
++    `KomorebiPaperV.HilbertPackets.finite_impulse_expansion,
+     `KomorebiPaperV.IntegerPolyphase.phase_val,
+     `KomorebiPaperV.IntegerPolyphase.address_phase_quotient,
+     `KomorebiPaperV.IntegerPolyphase.address_divmod,
+@@ -158,7 +264,17 @@
+     `KomorebiPaperV.address_synthesize_analyze,
+     `KomorebiPaperV.address_analyze_synthesize,
+     `KomorebiPaperV.residuePacket_idempotent,
+-    `KomorebiPaperV.residuePacket_complete
++    `KomorebiPaperV.residuePacket_complete,
++    `KomorebiPaperV.SmithAction.action_mul,
++    `KomorebiPaperV.SmithAction.action_one,
++    `KomorebiPaperV.SmithAction.action_scale,
++    `KomorebiPaperV.SmithAction.action_nonzero,
++    `KomorebiPaperV.SmithAction.half_turn,
++    `KomorebiPaperV.SmithAction.half_turn_zero,
++    `KomorebiPaperV.SmithAction.half_turn_infinity,
++    `KomorebiPaperV.SmithAction.homogeneous_chart,
++    `KomorebiPaperV.SmithAction.chart_composition,
++    `KomorebiPaperV.SmithAction.finite_half_turn
+   ]
+   for target in targets do
+     match env.find? target with
+--- v0.2.0/formalization/lean/KomorebiPaperV/BinaryAdaptive.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/BinaryAdaptive.lean
+@@ -1,8 +1,9 @@
+-import Mathlib
++import Mathlib.Basic.Real.Basic
++import Mathlib.Tactic
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE: not compiled. Finite, possibly unbalanced BINARY trees.
++Checked source. Finite, possibly unbalanced BINARY trees.
+ Cuts are defined recursively. The bridge to set-valued antichains of arbitrary
+ finite arity is not included. Parent conservation is an explicit hypothesis.
+ -/
+@@ -71,7 +72,7 @@
+   | leaf a => rfl
+   | branch a l r ihl ihr =>
+     by_cases h : c a ≤ value c l + value c r
+-    · simp [best, h, cutSum, label, value, min_eq_left h]
++    · simp [best, h, cutSum, label, value]
+     · have h' : value c l + value c r ≤ c a := by linarith
+       simp [best, h, cutSum, ihl, ihr, value, min_eq_right h']
+ 
+@@ -103,7 +104,7 @@
+           |(cutSum d ql - cutSum c ql) + (cutSum d qr - cutSum c qr)| := by
+             congr 1
+             ring
+-      _ ≤ |cutSum d ql - cutSum c ql| + |cutSum d qr - cutSum c qr| := abs_add _ _
++      _ ≤ |cutSum d ql - cutSum c ql| + |cutSum d qr - cutSum c qr| := abs_add_le _ _
+       _ ≤ envelope e l + envelope e r := add_le_add ihl ihr
+       _ ≤ envelope e (.branch a l r) := le_max_right _ _
+ 
+--- v0.2.0/formalization/lean/KomorebiPaperV/CRT.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/CRT.lean
+@@ -0,0 +1,43 @@
++import Mathlib.Data.Nat.Prime.Basic
++import KomorebiPaperV.Packets
++
++/-!
++Author: Komorebi P.
++Literal residue-mask factorization using the Chinese remainder equivalence.
++-/
++
++namespace KomorebiPaperV.CRT
++
++variable {V : Type*} [Zero V]
++
++theorem residue_pair_iff (M N : ℕ) (h : M.Coprime N) (r : ZMod (M * N)) (i : ℤ) :
++    (i : ZMod (M * N)) = r ↔
++      (i : ZMod M) = (ZMod.chineseRemainder h r).1 ∧
++      (i : ZMod N) = (ZMod.chineseRemainder h r).2 := by
++  rw [← (ZMod.chineseRemainder h).injective.eq_iff, Prod.ext_iff]
++  simp only [map_intCast, Prod.fst_intCast, Prod.snd_intCast]
++
++theorem residue_mask_factorization (M N : ℕ) (h : M.Coprime N)
++    (r : ZMod (M * N)) (x : ℤ → V) :
++    KomorebiPaperV.packet (fun i : ℤ => (i : ZMod (M * N))) r x =
++      KomorebiPaperV.packet (fun i : ℤ => (i : ZMod M))
++        (ZMod.chineseRemainder h r).1
++        (KomorebiPaperV.packet (fun i : ℤ => (i : ZMod N))
++          (ZMod.chineseRemainder h r).2 x) := by
++  funext i
++  simp only [KomorebiPaperV.packet, residue_pair_iff M N h]
++  split_ifs <;> simp_all
++
++theorem dyadic_odd_coprime (a d : ℕ) (hd : Odd d) : (2 ^ a).Coprime d := by
++  exact (Nat.coprime_two_left.mpr hd).pow_left a
++
++theorem dyadic_odd_packet_factorization (a d : ℕ) (hd : Odd d)
++    (r : ZMod (2 ^ a * d)) (x : ℤ → V) :
++    KomorebiPaperV.packet (fun i : ℤ => (i : ZMod (2 ^ a * d))) r x =
++      KomorebiPaperV.packet (fun i : ℤ => (i : ZMod (2 ^ a)))
++        (ZMod.chineseRemainder (dyadic_odd_coprime a d hd) r).1
++        (KomorebiPaperV.packet (fun i : ℤ => (i : ZMod d))
++          (ZMod.chineseRemainder (dyadic_odd_coprime a d hd) r).2 x) :=
++  residue_mask_factorization _ _ (dyadic_odd_coprime a d hd) r x
++
++end KomorebiPaperV.CRT
+--- v0.2.0/formalization/lean/KomorebiPaperV/CompletePrunings.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/CompletePrunings.lean
+@@ -0,0 +1,239 @@
++import KomorebiPaperV.FiniteAdaptive
++
++/-!
++Author: Komorebi P.
++Set-valued prunings use node identities, not potentially repeated node labels.
++Completeness means exactly one selected node on every terminal path. This is
++proved equivalent to the manuscript's covering antichain definition and to
++recursive cuts, for arbitrary positive finite branching.
++-/
++
++namespace KomorebiPaperV.CompletePrunings
++open KomorebiPaperV.FiniteAdaptive
++
++variable {A : Type*}
++
++inductive Node : FiniteAdaptive.Tree A → Type _ where
++  | root (t : FiniteAdaptive.Tree A) : Node t
++  | down {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++      (i : Fin (n + 1)) : Node (children i) → Node (.branch a n children)
++
++inductive OnPath : {t : FiniteAdaptive.Tree A} → Node t → Terminal t → Prop where
++  | root {t : FiniteAdaptive.Tree A} (p : Terminal t) : OnPath (.root t) p
++  | down {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++      {i : Fin (n + 1)} {v : Node (children i)} {p : Terminal (children i)} :
++      OnPath v p → OnPath (t := .branch a n children) (.down i v) (.down i p)
++
++inductive Selected : {t : FiniteAdaptive.Tree A} → Cut t → Node t → Prop where
++  | stop (t : FiniteAdaptive.Tree A) : Selected (.stop t) (.root t)
++  | split {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++      {q : ∀ i, Cut (children i)} {i : Fin (n + 1)} {v : Node (children i)} :
++      Selected (q i) v → Selected (t := .branch a n children) (.split q) (.down i v)
++
++def Complete {t : FiniteAdaptive.Tree A} (S : Set (Node t)) : Prop :=
++  ∀ p : Terminal t, ∃! v : Node t, OnPath v p ∧ v ∈ S
++
++theorem terminal_exists (t : FiniteAdaptive.Tree A) : Nonempty (Terminal t) := by
++  induction t with
++  | leaf a => exact ⟨.here⟩
++  | branch a n children ih =>
++    obtain ⟨p⟩ := ih 0
++    exact ⟨.down 0 p⟩
++
++theorem node_on_terminal {t : FiniteAdaptive.Tree A} (v : Node t) : ∃ p : Terminal t, OnPath v p := by
++  induction v with
++  | root t =>
++    obtain ⟨p⟩ := terminal_exists t
++    exact ⟨p, .root p⟩
++  | down i v ih =>
++    obtain ⟨p, hp⟩ := ih
++    exact ⟨.down i p, .down hp⟩
++
++theorem selected_stop_iff {t : FiniteAdaptive.Tree A} (v : Node t) :
++    Selected (.stop t) v ↔ v = .root t := by
++  constructor
++  · intro h; cases h; rfl
++  · rintro rfl; exact .stop t
++
++theorem selected_split_root_false {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++    (q : ∀ i, Cut (children i)) : ¬Selected (t := .branch a n children) (.split q) (.root _) := by
++  intro h; cases h
++
++theorem selected_split_down_iff {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++    (q : ∀ i, Cut (children i)) (i : Fin (n + 1)) (v : Node (children i)) :
++    Selected (t := .branch a n children) (.split q) (.down i v) ↔ Selected (q i) v := by
++  constructor
++  · intro h; cases h with | split h => exact h
++  · exact Selected.split
++
++theorem cut_complete {t : FiniteAdaptive.Tree A} (q : Cut t) : Complete {v | Selected q v} := by
++  induction q with
++  | stop t =>
++    intro p
++    refine ⟨.root t, ⟨.root p, .stop t⟩, ?_⟩
++    intro v hv
++    exact (selected_stop_iff v).mp hv.2
++  | @split a n children q ih =>
++    intro p
++    cases p with
++    | down i p =>
++      obtain ⟨v, hv, hu⟩ := ih i p
++      refine ⟨.down i v, ⟨.down hv.1, .split hv.2⟩, ?_⟩
++      intro w hw
++      cases hw.1 with
++      | root p => exact False.elim (selected_split_root_false q hw.2)
++      | down hp =>
++        have he := hu _ ⟨hp, (selected_split_down_iff q _ _).mp hw.2⟩
++        cases he
++        rfl
++
++/-- Literal rooted-tree ancestry, including equality. -/
++inductive Ancestor : {t : FiniteAdaptive.Tree A} → Node t → Node t → Prop where
++  | root {t : FiniteAdaptive.Tree A} (v : Node t) : Ancestor (.root t) v
++  | down {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++      {i : Fin (n + 1)} {u v : Node (children i)} :
++      Ancestor u v → Ancestor (t := .branch a n children) (.down i u) (.down i v)
++
++theorem ancestor_onPath {t : FiniteAdaptive.Tree A} {u v : Node t} (h : Ancestor u v)
++    {p : Terminal t} (hp : OnPath v p) : OnPath u p := by
++  induction h with
++  | root v => exact .root p
++  | down h ih =>
++    cases hp with | down hp => exact .down (ih hp)
++
++def CoveringAntichain {t : FiniteAdaptive.Tree A} (S : Set (Node t)) : Prop :=
++  (∀ p : Terminal t, ∃ v ∈ S, OnPath v p) ∧
++  (∀ u ∈ S, ∀ v ∈ S, Ancestor u v → u = v)
++
++theorem path_nodes_comparable {t : FiniteAdaptive.Tree A} {u v : Node t} {p : Terminal t}
++    (hu : OnPath u p) (hv : OnPath v p) : Ancestor u v ∨ Ancestor v u := by
++  induction hu with
++  | root p => exact Or.inl (.root _)
++  | @down a n children i u p hu ih =>
++    cases hv with
++    | root p => exact Or.inr (.root _)
++    | down hv =>
++      rcases ih hv with h | h
++      · exact Or.inl (.down h)
++      · exact Or.inr (.down h)
++
++theorem complete_iff_covering_antichain {t : FiniteAdaptive.Tree A} (S : Set (Node t)) :
++    Complete S ↔ CoveringAntichain S := by
++  constructor
++  · intro h
++    constructor
++    · intro p
++      obtain ⟨v, hv, _⟩ := h p
++      exact ⟨v, hv.2, hv.1⟩
++    · intro u hu v hv huv
++      obtain ⟨p, hp⟩ := node_on_terminal v
++      obtain ⟨w, _, hw⟩ := h p
++      exact (hw u ⟨ancestor_onPath huv hp, hu⟩).trans (hw v ⟨hp, hv⟩).symm
++  · rintro ⟨hcover, hanti⟩ p
++    obtain ⟨v, hv, hp⟩ := hcover p
++    refine ⟨v, ⟨hp, hv⟩, ?_⟩
++    intro u hu
++    rcases path_nodes_comparable hu.1 hp with h | h
++    · exact hanti u hu.2 v hv h
++    · exact (hanti v hv u hu.2 h).symm
++
++theorem complete_root_unique {t : FiniteAdaptive.Tree A} (S : Set (Node t)) (h : Complete S)
++    (hr : Node.root t ∈ S) (v : Node t) : v ∈ S ↔ v = .root t := by
++  constructor
++  · intro hv
++    obtain ⟨p, hp⟩ := node_on_terminal v
++    obtain ⟨w, _, hw⟩ := h p
++    exact (hw v ⟨hp, hv⟩).trans (hw (.root t) ⟨.root p, hr⟩).symm
++  · rintro rfl; exact hr
++
++theorem complete_child {a : A} {n : ℕ} {children : Fin (n + 1) → FiniteAdaptive.Tree A}
++    (S : Set (Node (.branch a n children))) (h : Complete S)
++    (hr : Node.root _ ∉ S) (i : Fin (n + 1)) :
++    Complete {v | Node.down i v ∈ S} := by
++  intro p
++  obtain ⟨v, hv, hu⟩ := h (.down i p)
++  cases hv.1 with
++  | root p => exact False.elim (hr hv.2)
++  | @down _ _ _ _ v _ hp =>
++    refine ⟨v, ⟨hp, hv.2⟩, ?_⟩
++    intro w hw
++    have he := hu (.down i w) ⟨.down hw.1, hw.2⟩
++    cases he
++    rfl
++
++theorem complete_has_cut (t : FiniteAdaptive.Tree A) (S : Set (Node t)) (h : Complete S) :
++    ∃ q : Cut t, ∀ v : Node t, Selected q v ↔ v ∈ S := by
++  classical
++  induction t with
++  | leaf a =>
++    refine ⟨.stop _, ?_⟩
++    intro v
++    cases v with
++    | root t =>
++      have hroot : Node.root (.leaf a) ∈ S := by
++        obtain ⟨w, hw, _⟩ := h .here
++        cases w
++        exact hw.2
++      simp [selected_stop_iff, hroot]
++  | branch a n children ih =>
++    by_cases hr : Node.root (.branch a n children) ∈ S
++    · exact ⟨.stop _, fun v => (selected_stop_iff v).trans
++        (complete_root_unique S h hr v).symm⟩
++    · have hex : ∀ i, ∃ q : Cut (children i), ∀ v,
++          Selected q v ↔ Node.down i v ∈ S :=
++        fun i => ih i _ (complete_child S h hr i)
++      choose q hq using hex
++      refine ⟨.split q, ?_⟩
++      intro v
++      cases v with
++      | root t => simp [selected_split_root_false, hr]
++      | down i v => exact (selected_split_down_iff q i v).trans (hq i v)
++
++theorem cut_ext (t : FiniteAdaptive.Tree A) (q r : Cut t)
++    (h : ∀ v, Selected q v ↔ Selected r v) : q = r := by
++  induction q with
++  | stop t =>
++    cases r with
++    | stop t => rfl
++    | split r =>
++      exact False.elim (selected_split_root_false r ((h (.root _)).mp (.stop _)))
++  | @split a n children q ih =>
++    cases r with
++    | stop t =>
++      exact False.elim (selected_split_root_false q ((h (.root _)).mpr (.stop _)))
++    | split r =>
++      have he : q = r := by
++        funext i
++        apply ih i (r i)
++        intro v
++        exact (selected_split_down_iff q i v).symm.trans
++          ((h (.down i v)).trans (selected_split_down_iff r i v))
++      cases he
++      rfl
++
++noncomputable def pruningEquiv (t : FiniteAdaptive.Tree A) :
++    Cut t ≃ {S : Set (Node t) // Complete S} where
++  toFun q := ⟨{v | Selected q v}, cut_complete q⟩
++  invFun S := (complete_has_cut t S.1 S.2).choose
++  left_inv q := by
++    apply cut_ext
++    exact (complete_has_cut t _ (cut_complete q)).choose_spec
++  right_inv S := by
++    apply Subtype.ext
++    ext v
++    exact (complete_has_cut t S.1 S.2).choose_spec v
++
++theorem complete_pruning_finite (t : FiniteAdaptive.Tree A) :
++    Finite {S : Set (Node t) // Complete S} :=
++  Finite.of_equiv (Cut t) (pruningEquiv t)
++
++theorem complete_pruning_minimum (t : FiniteAdaptive.Tree A)
++    (J : {S : Set (Node t) // Complete S} → ℝ) :
++    ∃ S, ∀ T, J S ≤ J T := by
++  obtain ⟨q, hq⟩ := arbitrary_objective_minimum t (J ∘ pruningEquiv t)
++  refine ⟨pruningEquiv t q, ?_⟩
++  intro S
++  simpa only [Function.comp_def, (pruningEquiv t).apply_symm_apply] using
++    hq ((pruningEquiv t).symm S)
++
++end KomorebiPaperV.CompletePrunings
+--- v0.2.0/formalization/lean/KomorebiPaperV/FIRTransfer.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/FIRTransfer.lean
+@@ -2,7 +2,7 @@
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Checked source; see the bundled build and axiom audit.
+ Exact finite-support FIR time-domain transfer, including negative tap addresses.
+ All sums below are finite. No bilateral z-transform convergence is assumed.
+ -/
+@@ -33,7 +33,9 @@
+ 
+ theorem tapEquiv_symm (N : ℕ) (hN : 0 < N) (k s : Fin N) (m : ℤ) :
+     (tapEquiv N hN k).symm (s, m) = tapIndex N k s m := by
+-  dsimp [tapEquiv, reflectEquiv, addressEquiv, negateQuotient, address, tapIndex]
++  simp only [tapEquiv, Equiv.symm_trans_apply, reflectEquiv,
++    addressEquiv, negateQuotient, Equiv.coe_fn_symm_mk,
++    address, tapIndex]
+   ring
+ 
+ theorem tapIndex_equiv (N : ℕ) (hN : 0 < N) (k : Fin N) (t : ℤ) :
+--- v0.2.0/formalization/lean/KomorebiPaperV/FiniteAdaptive.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/FiniteAdaptive.lean
+@@ -1,11 +1,12 @@
++import Mathlib.MeasureTheory.Measure.Basic
+ import KomorebiPaperV.FiniteSelection
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Checked source; see the bundled build and axiom audit.
+ Finite trees with arbitrary positive finite branching, including unary branches.
+-Cuts are typed recursive prunings. A separate set-valued antichain equivalence is
+-still required for complete coverage of the manuscript definition.
++Cuts are typed recursive prunings. CompletePrunings proves the set-valued
++covering-antichain equivalence.
+ -/
+ 
+ open scoped BigOperators
+@@ -92,6 +93,7 @@
+     | inr qs => rfl
+ 
+ /-- Finiteness of all admissible recursive cuts, not merely a sampled cut list. -/
++@[instance_reducible]
+ noncomputable def cutFintype : (t : Tree A) → Fintype (Cut t)
+   | .leaf a => Fintype.ofEquiv Unit (leafCutEquiv a).symm
+   | .branch a n children =>
+@@ -146,9 +148,9 @@
+   | leaf a => rfl
+   | branch a n children ih =>
+     by_cases h : c a ≤ ∑ i, value c (children i)
+-    · simp [best, h, cutSum, label, value, min_eq_left h]
++    · simp [best, h, cutSum, label, value]
+     · have h' : (∑ i, value c (children i)) ≤ c a := le_of_lt (lt_of_not_ge h)
+-      simp only [best, if_neg h, cutSum, value, min_eq_right h']
++      simp only [best, ite_eq_right h, cutSum, value, min_eq_right h']
+       exact Finset.sum_congr rfl (fun i _ => ih i)
+ 
+ theorem best_is_global_minimum (c : A → ℝ) {t : Tree A} (q : Cut t) :
+@@ -246,4 +248,17 @@
+     rw [Finset.sum_congr rfl (fun i _ => ih i)]
+     omega
+ 
++/-- Probability is transferred from a joint local-error event by set inclusion. -/
++theorem selector_probability {Ω : Type*} [MeasurableSpace Ω]
++    (μ : MeasureTheory.Measure Ω) (good : Set Ω) (δ : ENNReal)
++    (c e : A → ℝ) (d : Ω → A → ℝ) (t : Tree A) (γ : ℝ)
++    (hgood : ∀ ω ∈ good, ∀ a, |d ω a - c a| ≤ e a)
++    (hgap : ∀ q : Cut t, q ≠ best c t → γ ≤ cutSum c q - cutSum c (best c t))
++    (hmargin : 2 * envelope e t < γ) (hprob : 1 - δ ≤ μ good) :
++    1 - δ ≤ μ {ω | best (d ω) t = best c t} := by
++  apply hprob.trans
++  apply MeasureTheory.measure_mono
++  intro ω hω
++  exact best_unchanged_of_gap c (d ω) e (hgood ω hω) t γ hgap hmargin
++
+ end KomorebiPaperV.FiniteAdaptive
+--- v0.2.0/formalization/lean/KomorebiPaperV/FiniteSelection.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/FiniteSelection.lean
+@@ -1,8 +1,9 @@
+-import Mathlib
++import Mathlib.Basic.Real.Basic
++import Mathlib.Tactic
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE: not compiled. Finite objective selection with an explicit
++Checked source. Finite objective selection with an explicit
+ singleton case. Connecting this Finset to arbitrary complete tree prunings remains
+ an additional obligation; the binary recursive implementation is in BinaryAdaptive.
+ -/
+@@ -18,7 +19,7 @@
+   induction s using Finset.induction_on with
+   | empty =>
+     intro hs
+-    simpa using hs
++    simp at hs
+   | @insert a s ha ih =>
+     intro _
+     by_cases hs : s.Nonempty
+--- v0.2.0/formalization/lean/KomorebiPaperV/FiniteTransforms.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/FiniteTransforms.lean
+@@ -1,9 +1,10 @@
++import Mathlib.Analysis.Real.Sqrt
+ import KomorebiPaperV.Lifting
+ import KomorebiPaperV.Packets
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Checked source; see the bundled build and axiom audit.
+ Flat even-length indexing, finite lifting, and exactly normalized real Haar pairs.
+ The infinite l2 energy/completeness arguments are not supplied by finite identities.
+ -/
+--- v0.2.0/formalization/lean/KomorebiPaperV/HaarHilbert.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/HaarHilbert.lean
+@@ -0,0 +1,52 @@
++import KomorebiPaperV.HilbertPackets
++import Mathlib.Analysis.Real.Sqrt
++
++/-! Author: Komorebi P. Normalized Haar on entire complex l2 channels. -/
++
++namespace KomorebiPaperV.HaarHilbert
++open KomorebiPaperV.HilbertPackets
++
++noncomputable def low (x y : Signal ℤ) : Signal ℤ :=
++  (Real.sqrt 2)⁻¹ • (x + y)
++
++noncomputable def high (x y : Signal ℤ) : Signal ℤ :=
++  (Real.sqrt 2)⁻¹ • (x - y)
++
++theorem inverse_low (x y : Signal ℤ) : low (low x y) (high x y) = x := by
++  have hs : (Real.sqrt 2)⁻¹ * (Real.sqrt 2)⁻¹ * 2 = 1 := by
++    rw [← mul_inv, Real.mul_self_sqrt (by norm_num)]
++    norm_num
++  unfold low high
++  rw [← smul_add]
++  have hab : x + y + (x - y) = (2 : ℝ) • x := by module
++  rw [hab, smul_smul, smul_smul, hs, one_smul]
++
++theorem inverse_high (x y : Signal ℤ) : high (low x y) (high x y) = y := by
++  have hs : (Real.sqrt 2)⁻¹ * (Real.sqrt 2)⁻¹ * 2 = 1 := by
++    rw [← mul_inv, Real.mul_self_sqrt (by norm_num)]
++    norm_num
++  unfold low high
++  rw [← smul_sub]
++  have hab : x + y - (x - y) = (2 : ℝ) • y := by module
++  rw [hab, smul_smul, smul_smul, hs, one_smul]
++
++theorem energy (x y : Signal ℤ) :
++    ‖low x y‖ ^ 2 + ‖high x y‖ ^ 2 = ‖x‖ ^ 2 + ‖y‖ ^ 2 := by
++  have hs : ‖(Real.sqrt 2)⁻¹‖ ^ 2 = (1 / 2 : ℝ) := by
++    rw [Real.norm_eq_abs, sq_abs, inv_pow, Real.sq_sqrt (by norm_num)]
++    norm_num
++  dsimp [low, high]
++  rw [norm_smul, norm_smul, mul_pow, mul_pow, hs]
++  nlinarith [parallelogram_law_with_norm ℂ x y]
++
++theorem low_apply (x y : Signal ℤ) (n : ℤ) :
++    low x y n = ((Real.sqrt 2 : ℝ) : ℂ)⁻¹ * (x n + y n) := by
++  change (Real.sqrt 2)⁻¹ • (x n + y n) = _
++  rw [Complex.real_smul, Complex.ofReal_inv]
++
++theorem high_apply (x y : Signal ℤ) (n : ℤ) :
++    high x y n = ((Real.sqrt 2 : ℝ) : ℂ)⁻¹ * (x n - y n) := by
++  change (Real.sqrt 2)⁻¹ • (x n - y n) = _
++  rw [Complex.real_smul, Complex.ofReal_inv]
++
++end KomorebiPaperV.HaarHilbert
+--- v0.2.0/formalization/lean/KomorebiPaperV/HilbertPackets.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/HilbertPackets.lean
+@@ -0,0 +1,214 @@
++import Mathlib.Analysis.InnerProductSpace.l2Space
++import Mathlib.Analysis.Complex.Basic
++import Mathlib.Analysis.Normed.Lp.lpSpace
++import KomorebiPaperV.IntegerPolyphase
++
++/-!
++Author: Komorebi P.
++Square-summable signals: bounded packet maps, exact synthesis, and isometric
++integer address coordinates. The channel target uses the joint l2 norm on
++Fin N × Z, rather than the supremum norm on a function space of channels.
++-/
++
++open scoped BigOperators
++namespace KomorebiPaperV.HilbertPackets
++
++abbrev Signal (I : Type*) : Type _ := lp (fun _ : I => ℂ) 2
++
++variable {I R S J : Type*}
++
++noncomputable def projection [DecidableEq R] (phase : I → R) (r : R)
++    (x : Signal I) : Signal I :=
++  ⟨KomorebiPaperV.packet phase r x, (lp.memℓp x).mono' (by
++    intro i
++    by_cases h : phase i = r <;> simp [KomorebiPaperV.packet, h])⟩
++
++theorem projection_apply [DecidableEq R] (phase : I → R) (r : R)
++    (x : Signal I) (i : I) :
++    projection phase r x i = if phase i = r then x i else 0 := rfl
++
++theorem projection_norm_le [DecidableEq R] (phase : I → R) (r : R)
++    (x : Signal I) : ‖projection phase r x‖ ≤ ‖x‖ := by
++  apply lp.norm_mono (by norm_num)
++  intro i
++  by_cases h : phase i = r <;> simp [projection_apply, h]
++
++noncomputable def projectionLinear [DecidableEq R] (phase : I → R) (r : R) :
++    Signal I →ₗ[ℂ] Signal I where
++  toFun := projection phase r
++  map_add' x y := by
++    ext i
++    by_cases h : phase i = r <;> simp [projection_apply, h]
++  map_smul' a x := by
++    ext i
++    by_cases h : phase i = r <;> simp [projection_apply, h]
++
++noncomputable def projector [DecidableEq R] (phase : I → R) (r : R) :
++    Signal I →L[ℂ] Signal I :=
++  (projectionLinear phase r).mkContinuous 1 (by
++    intro x
++    change ‖projection phase r x‖ ≤ 1 * ‖x‖
++    simpa using projection_norm_le phase r x)
++
++theorem projector_apply [DecidableEq R] (phase : I → R) (r : R)
++    (x : Signal I) : projector phase r x = projection phase r x := rfl
++
++theorem projector_idempotent [DecidableEq R] (phase : I → R) (r : R) :
++    (projector phase r).comp (projector phase r) = projector phase r := by
++  ext x i
++  by_cases h : phase i = r <;>
++    simp [projector_apply, projection_apply, h]
++
++theorem projector_annihilate [DecidableEq R] (phase : I → R) (r s : R) (h : r ≠ s) :
++    (projector phase r).comp (projector phase s) = 0 := by
++  ext x i
++  by_cases hr : phase i = r
++  · simp [projector_apply, projection_apply, hr, h]
++  · simp [projector_apply, projection_apply, hr]
++
++theorem projector_complete [Fintype R] [DecidableEq R] (phase : I → R) :
++    (∑ r : R, projector phase r) = ContinuousLinearMap.id ℂ (Signal I) := by
++  apply ContinuousLinearMap.ext
++  intro x
++  simp only [sum_apply, ContinuousLinearMap.id_apply, projector_apply]
++  apply lp.ext
++  funext i
++  simp only [lp.coeFn_sum, Finset.sum_apply, projection_apply]
++  exact KomorebiPaperV.packet_complete phase (fun j => x j) i
++
++theorem projector_refinement [Fintype S] [DecidableEq S] [DecidableEq R]
++    (fine : I → S) (coarsen : S → R) (r : R) :
++    projector (coarsen ∘ fine) r =
++      ∑ s : S, if coarsen s = r then projector fine s else 0 := by
++  apply ContinuousLinearMap.ext
++  intro x
++  simp only [sum_apply, projector_apply]
++  apply lp.ext
++  funext i
++  rw [lp.coeFn_sum, Finset.sum_apply]
++  calc
++    _ = ∑ s : S, if coarsen s = r then projection fine s x i else 0 :=
++      KomorebiPaperV.packet_refinement fine coarsen r (fun j => x j) i
++    _ = _ := by
++      apply Finset.sum_congr rfl
++      intro s _
++      by_cases h : coarsen s = r <;> simp [h, projector_apply]
++
++noncomputable def reindex (e : I ≃ J) (x : Signal I) : Signal J :=
++  ⟨fun j => x (e.symm j), memℓp_gen (by
++    simpa only [Function.comp_def] using
++      e.symm.summable_iff.mpr ((lp.memℓp x).summable (by norm_num)))⟩
++
++theorem reindex_norm (e : I ≃ J) (x : Signal I) : ‖reindex e x‖ = ‖x‖ := by
++  rw [lp.norm_eq_tsum_rpow (by norm_num), lp.norm_eq_tsum_rpow (by norm_num)]
++  congr 1
++  exact e.symm.tsum_eq (fun i => ‖x i‖ ^ (2 : ENNReal).toReal)
++
++noncomputable def reindexIsometry (e : I ≃ J) : Signal I ≃ₗᵢ[ℂ] Signal J where
++  toFun := reindex e
++  invFun := reindex e.symm
++  left_inv x := by ext i; simp [reindex]
++  right_inv x := by ext j; simp [reindex]
++  map_add' x y := by ext j; rfl
++  map_smul' a x := by ext j; rfl
++  norm_map' := reindex_norm e
++
++noncomputable def polyphase (N : ℕ) (hN : 0 < N) :
++    Signal ℤ ≃ₗᵢ[ℂ] Signal (Fin N × ℤ) :=
++  reindexIsometry (KomorebiPaperV.IntegerPolyphase.addressEquiv N hN)
++
++theorem polyphase_apply (N : ℕ) (hN : 0 < N) (x : Signal ℤ) (r : Fin N) (q : ℤ) :
++    polyphase N hN x (r, q) = x ((N : ℤ) * q + (r.val : ℤ)) := rfl
++
++theorem polyphase_synthesis_analysis (N : ℕ) (hN : 0 < N) (x : Signal ℤ) :
++    (polyphase N hN).symm (polyphase N hN x) = x :=
++  (polyphase N hN).symm_apply_apply x
++
++theorem polyphase_analysis_synthesis (N : ℕ) (hN : 0 < N) (x : Signal (Fin N × ℤ)) :
++    polyphase N hN ((polyphase N hN).symm x) = x :=
++  (polyphase N hN).apply_symm_apply x
++
++theorem polyphase_energy (N : ℕ) (hN : 0 < N) (x : Signal ℤ) :
++    ‖polyphase N hN x‖ ^ 2 = ‖x‖ ^ 2 := by
++  rw [(polyphase N hN).norm_map]
++
++theorem impulse_expansion (x : Signal ℤ) :
++    HasSum (fun i : ℤ => lp.single 2 i (x i)) x :=
++  lp.hasSum_single (by norm_num) x
++
++theorem projector_symmetric [DecidableEq R] (phase : I → R) (r : R)
++    (x y : Signal I) :
++    inner ℂ (projector phase r x) y = inner ℂ x (projector phase r y) := by
++  rw [lp.inner_eq_tsum, lp.inner_eq_tsum]
++  apply tsum_congr
++  intro i
++  by_cases h : phase i = r <;> simp [projector_apply, projection_apply, h]
++
++theorem projector_orthogonal [DecidableEq R] (phase : I → R) (r s : R)
++    (h : r ≠ s) (x y : Signal I) :
++    inner ℂ (projector phase r x) (projector phase s y) = 0 := by
++  rw [lp.inner_eq_tsum]
++  have hz : ∀ i, inner ℂ (projector phase r x i) (projector phase s y i) = 0 := by
++    intro i
++    by_cases hr : phase i = r
++    · simp [projector_apply, projection_apply, hr, h]
++    · simp [projector_apply, projection_apply, hr]
++  simp only [hz, tsum_zero]
++
++noncomputable def impulseBasis : HilbertBasis ℤ ℂ (Signal ℤ) :=
++  ⟨LinearIsometryEquiv.refl ℂ (Signal ℤ)⟩
++
++theorem impulse_basis_apply (i : ℤ) : impulseBasis i = lp.single 2 i (1 : ℂ) := by
++  rw [← impulseBasis.repr_symm_single]
++  rfl
++
++theorem impulse_dense_span :
++    (Submodule.span ℂ (Set.range (fun i : ℤ => (lp.single 2 i (1 : ℂ) : Signal ℤ)))).topologicalClosure = ⊤ := by
++  have hfun : (⇑impulseBasis : ℤ → Signal ℤ) = fun i => lp.single 2 i (1 : ℂ) :=
++    funext impulse_basis_apply
++  rw [← hfun]
++  exact impulseBasis.dense_span
++
++noncomputable def shift (d : ℤ) : Signal ℤ ≃ₗᵢ[ℂ] Signal ℤ :=
++  reindexIsometry (Equiv.addRight d)
++
++theorem shift_apply (d n : ℤ) (x : Signal ℤ) : shift d x n = x (n - d) := rfl
++
++theorem reindex_single (e : I ≃ J) [DecidableEq I] [DecidableEq J] (i : I) (c : ℂ) :
++    reindex e (lp.single 2 i c) = lp.single 2 (e i) c := by
++  apply lp.ext
++  funext j
++  simp [reindex, lp.single_apply, Pi.single_apply, Equiv.symm_apply_eq]
++
++theorem shift_impulse (d i : ℤ) :
++    shift d (lp.single 2 i (1 : ℂ)) = lp.single 2 (i + d) (1 : ℂ) :=
++  reindex_single (Equiv.addRight d) i 1
++
++theorem residue_projector_refinement (N M : ℕ) (hN : 0 < N) (hM : 0 < M)
++    (hNM : N ∣ M) (r : Fin N) :
++    projector (IntegerPolyphase.phase N hN) r =
++      ∑ s : Fin M, if IntegerPolyphase.phase N hN (s.val : ℤ) = r
++        then projector (IntegerPolyphase.phase M hM) s else 0 := by
++  have hc : (fun j : ℤ => IntegerPolyphase.phase N hN
++      ((IntegerPolyphase.phase M hM j).val : ℤ)) = IntegerPolyphase.phase N hN := by
++    funext j
++    apply Fin.ext
++    change (((IntegerPolyphase.phase M hM j).val : ℤ) % (N : ℤ)).toNat =
++      (j % (N : ℤ)).toNat
++    rw [IntegerPolyphase.phase_val, IntegerPolyphase.emod_coarsen N M hNM]
++  have h := projector_refinement (IntegerPolyphase.phase M hM)
++    (fun s : Fin M => IntegerPolyphase.phase N hN (s.val : ℤ)) r
++  simpa only [Function.comp_def, hc] using h
++
++theorem shift_generated_dense_span :
++    (Submodule.span ℂ (Set.range (fun i : ℤ => shift i (lp.single 2 0 (1 : ℂ))))).topologicalClosure = ⊤ := by
++  simpa only [shift_impulse, zero_add] using impulse_dense_span
++
++theorem finite_impulse_expansion (s : Finset ℤ) (x : Signal ℤ)
++    (hs : ∀ i ∉ s, x i = 0) : (∑ i ∈ s, lp.single 2 i (x i)) = x := by
++  have hsum : HasSum (fun i : ℤ => (lp.single 2 i (x i) : Signal ℤ))
++      (∑ i ∈ s, lp.single 2 i (x i)) :=
++    hasSum_sum_of_ne_finset_zero (fun i hi => by rw [hs i hi, lp.single_zero])
++  exact hsum.unique (impulse_expansion x)
++
++end KomorebiPaperV.HilbertPackets
+--- v0.2.0/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean
+@@ -2,7 +2,7 @@
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Checked source; see the bundled build and axiom audit.
+ Literal signed integer polyphase coordinates, with N strictly positive.
+ No summability or Hilbert-space statement is hidden in these pointwise identities.
+ -/
+@@ -78,7 +78,7 @@
+ theorem analysis_synthesis (N : ℕ) (hN : 0 < N) (c : Fin N → ℤ → V) :
+     analysis N (synthesis N hN c) = c := by
+   funext r q
+-  simp [analysis, synthesis, phase_address, quotient_address]
++  simp only [analysis, synthesis, phase_address N hN, quotient_address N hN]
+ 
+ /-- Delay in ORIGINAL sample addresses, allowing negative delays (advances). -/
+ def delay (d : ℤ) (x : ℤ → V) : ℤ → V := fun n => x (n - d)
+--- v0.2.0/formalization/lean/KomorebiPaperV/KnownEdge.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/KnownEdge.lean
+@@ -1,8 +1,9 @@
+-import Mathlib
++import Mathlib.Analysis.Normed.Group.Basic
++import Mathlib.Tactic
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE: not compiled. Theorem 6.1 and Corollary 6.2 at their
++Checked source. Theorem 6.1 and Corollary 6.2 at their
+ algebraic/normed-group level. No edge-discovery or Lp mask theorem is asserted.
+ -/
+ 
+--- v0.2.0/formalization/lean/KomorebiPaperV/Lifting.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/Lifting.lean
+@@ -1,8 +1,10 @@
+-import Mathlib
++import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
++import Mathlib.LinearAlgebra.Matrix.Notation
++import Mathlib.Tactic
+ 
+ /-!
+ Author: Komorebi P.
+-SOURCE CANDIDATE: not compiled. Exact pair and coordinatewise lifting.
++Checked source. Exact pair and coordinatewise lifting.
+ The normalized Haar transform and its l2 energy theorem are separate obligations.
+ -/
+ 
+--- v0.2.0/formalization/lean/KomorebiPaperV/Packets.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/Packets.lean
+@@ -1,8 +1,9 @@
+-import Mathlib
++import Mathlib.Data.ZMod.Basic
++import Mathlib.Tactic
+ 
+ /-!
+ Author: Komorebi P.
+-Paper V, first block. SOURCE CANDIDATE: not compiled in the producing environment.
++Paper V, first block. Checked source; see the bundled build and axiom audit.
+ Pointwise partition identities are not by themselves the l2 bounded-operator bridge.
+ -/
+ 
+@@ -25,10 +26,7 @@
+     (x : I → V) : packet phase r (packet phase s x) = 0 := by
+   funext i
+   by_cases hr : phase i = r
+-  · have hs : phase i ≠ s := by
+-      intro hs
+-      exact hne (hr.symm.trans hs)
+-    simp [packet, hr, hs]
++  · simp [packet, hr, hne]
+   · simp [packet, hr]
+ end Packets
+ 
+@@ -46,6 +44,7 @@
+       · simp
+     _ = x i := by simp [packet]
+ 
++omit [Fintype R] in
+ theorem packet_refinement [Fintype S] [DecidableEq S]
+     (fine : I → S) (coarsen : S → R) (r : R) (x : I → V) (i : I) :
+     packet (coarsen ∘ fine) r x i =
+@@ -60,7 +59,7 @@
+         simp [packet, Ne.symm hb]
+       · simp
+     _ = packet (coarsen ∘ fine) r x i := by
+-      simp [packet, Function.comp_def]
++      simp [packet]
+ end FinitePackets
+ 
+ section AddressEquivalence
+--- v0.2.0/formalization/lean/KomorebiPaperV/SmithAction.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV/SmithAction.lean
+@@ -0,0 +1,74 @@
++import Mathlib.Basic.Complex.Basic
++import Mathlib.Tactic
++
++/-!
++Author: Komorebi P.
++Normalized homogeneous Smith action. Pair coordinates represent [u:v], so the
++half-turn swaps zero and infinity. Chart formulas carry explicit denominators.
++-/
++
++namespace KomorebiPaperV.SmithAction
++
++noncomputable def action (a : ℂ) (p : ℂ × ℂ) : ℂ × ℂ :=
++  (((1 + a) * p.1 + (1 - a) * p.2) / 2,
++   ((1 - a) * p.1 + (1 + a) * p.2) / 2)
++
++theorem action_mul (a b : ℂ) (p : ℂ × ℂ) :
++    action a (action b p) = action (a * b) p := by
++  apply Prod.ext <;> dsimp [action] <;> ring
++
++theorem action_one (p : ℂ × ℂ) : action 1 p = p := by
++  apply Prod.ext <;> dsimp [action] <;> ring
++
++theorem action_scale (a c : ℂ) (p : ℂ × ℂ) :
++    action a (c * p.1, c * p.2) =
++      (c * (action a p).1, c * (action a p).2) := by
++  apply Prod.ext <;> dsimp [action] <;> ring
++
++theorem action_nonzero (a : ℂ) (ha : a ≠ 0) (p : ℂ × ℂ) (hp : p ≠ 0) :
++    action a p ≠ 0 := by
++  intro h
++  have hi := action_mul a⁻¹ a p
++  rw [inv_mul_cancel₀ ha, action_one, h] at hi
++  have hz : action a⁻¹ (0 : ℂ × ℂ) = 0 := by simp [action]
++  exact hp (hi.symm.trans hz)
++
++theorem half_turn (p : ℂ × ℂ) : action (-1) p = (p.2, p.1) := by
++  apply Prod.ext <;> dsimp [action] <;> ring
++
++theorem half_turn_zero : action (-1) ((0 : ℂ), 1) = (1, 0) := by
++  exact half_turn _
++
++theorem half_turn_infinity : action (-1) ((1 : ℂ), 0) = (0, 1) := by
++  exact half_turn _
++
++def denominator (a z : ℂ) : ℂ := (1 - a) * z + (1 + a)
++
++noncomputable def mobius (a z : ℂ) : ℂ := ((1 + a) * z + (1 - a)) / denominator a z
++
++theorem homogeneous_chart (a z : ℂ) :
++    (action a (z, 1)).1 / (action a (z, 1)).2 = mobius a z := by
++  dsimp [action, mobius, denominator]
++  simp only [mul_one]
++  exact div_div_div_cancel_right₀ (by norm_num : (2 : ℂ) ≠ 0) _ _
++
++theorem chart_composition (a b z : ℂ)
++    (hb : denominator b z ≠ 0)
++    (hab : denominator (a * b) z ≠ 0)
++    (ha : denominator a (mobius b z) ≠ 0) :
++    mobius a (mobius b z) = mobius (a * b) z := by
++  have hrel : mobius b z * denominator b z = (1 + b) * z + (1 - b) :=
++    div_mul_cancel₀ _ hb
++  apply (div_eq_div_iff ha hab).mpr
++  dsimp only [denominator] at hrel ⊢
++  linear_combination 2 * a * hrel
++
++theorem finite_half_turn (z : ℂ) (hz : z ≠ 0) :
++    denominator (-1) z ≠ 0 ∧ mobius (-1) z = z⁻¹ := by
++  constructor
++  · simpa [denominator] using hz
++  · dsimp [mobius, denominator]
++    field_simp [hz]
++    ring
++
++end KomorebiPaperV.SmithAction
+--- v0.2.0/formalization/lean/KomorebiPaperV.lean
++++ v0.3.0/formalization/lean/KomorebiPaperV.lean
+@@ -7,3 +7,8 @@
+ import KomorebiPaperV.FIRTransfer
+ import KomorebiPaperV.FiniteAdaptive
+ import KomorebiPaperV.FiniteTransforms
++import KomorebiPaperV.HilbertPackets
++import KomorebiPaperV.CompletePrunings
++import KomorebiPaperV.CRT
++import KomorebiPaperV.SmithAction
++import KomorebiPaperV.HaarHilbert
+--- v0.2.0/formalization/lean/lakefile.toml
++++ v0.3.0/formalization/lean/lakefile.toml
+@@ -1,5 +1,5 @@
+ name = "KomorebiPaperV"
+-version = "0.2.0"
++version = "0.3.0"
+ defaultTargets = ["KomorebiPaperV"]
+ moreLeanArgs = ["-DwarningAsError=true"]
+ 
+--- v0.2.0/tests/test_verifier.py
++++ v0.3.0/tests/test_verifier.py
+@@ -45,8 +45,8 @@
+ 
+     def test_clean_static_contract(self):
+         result=verify.static_checks(self.root)
+-        self.assertEqual(result['explicit_theorem_targets'],75)
+-        self.assertEqual(result['proof_modules'],9)
++        self.assertEqual(result['explicit_theorem_targets'],133)
++        self.assertEqual(result['proof_modules'],14)
+ 
+     def test_no_assert_validation_statements(self):
+         tree=ast.parse((ROOT/'verification/verify.py').read_text(encoding='utf-8'))
+--- v0.2.0/verification/verify.py
++++ v0.3.0/verification/verify.py
+@@ -105,7 +105,7 @@
+     require('autoImplicit = false' in config and 'relaxedAutoImplicit = false' in config,
+             'Implicit-variable guard configuration missing.')
+     actual_lean = sorted(list(lean.glob('*.lean'))+list((lean/'KomorebiPaperV').glob('*.lean')))
+-    # Reject unexpected Lean files outside the nine source modules/audit/root.
++    # Reject unexpected Lean files outside the registered source modules/audit/root.
+     unexpected = [p for p in lean.rglob('*.lean') if '.lake' not in p.relative_to(lean).parts
+                   and p not in actual_lean]
+     require(not unexpected, f'Unexpected Lean source locations: {unexpected}.')
+@@ -173,8 +173,8 @@
+     args=parser.parse_args()
+     V=ROOT/'verification'; V.mkdir(exist_ok=True)
+     lean=ROOT/'formalization/lean'
+-    report={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'release':'0.2.0-second-block',
+-        'package_classification':'UNCOMPILED_LEAN_SOURCE_CANDIDATE',
++    report={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'release':'0.3.0-lean-checked',
++        'package_classification':'CHECKS_PENDING',
+         'full_paper_coverage_certified':False,'lean_kernel_checked':False,
+         'python_optimization_level':sys.flags.optimize,'gates':{},'status':'STARTED'}
+     status_path=V/('static_status.json' if args.static_only else 'verification_status.json')
+@@ -223,7 +223,7 @@
+             require('sorryAx' not in audited.stdout,'Unexpected proof placeholder in audit output.')
+             report['lean_kernel_checked']=True
+             report['gates']['lean']='CANDIDATE_TARGETS_BUILD_AND_AUDIT_PASS'
+-            report['package_classification']='CANDIDATE_TARGETS_CHECKED_NOT_FULL_PAPER'
++            report['package_classification']='CHECKED_TARGETS_PARTIAL_PAPER'
+             report['status']='CANDIDATE_LEAN_CHECKS_PASS'
+             code=0
+     except Exception as exc:

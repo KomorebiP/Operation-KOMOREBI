@@ -1,0 +1,15 @@
+theorem cyclic_power_law {N : ℕ} (hN : 0 < N) (k q : ℕ) (f : R⟦X⟧) :
+    cyclicProjector N k (f ^ q) =
+      ∑ i : Fin q → Fin N, if (∑ a, (i a).val) % N = k % N then
+        ∏ a, cyclicProjector N (i a).val f else 0 := by
+  classical
+  have hex : f ^ q = ∑ i : Fin q → Fin N, ∏ a, cyclicProjector N (i a).val f := by
+    have h := Fintype.sum_pow (fun i : Fin N => cyclicProjector N i.val f) q
+    rw [sum_fin_projector hN] at h
+    exact h
+  rw [hex, cyclicProjector_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  exact project_finite_product N k Finset.univ (fun a => (i a).val)
+    (fun a => cyclicProjector N (i a).val f)
+    (fun a _ => cyclicProjector_idempotent N (i a).val f)

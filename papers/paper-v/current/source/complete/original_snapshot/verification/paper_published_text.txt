@@ -1,0 +1,2218 @@
+                Projector-Resolved Seed Calculus V
+Polyphase Signal Calculus: Exact Reconstruction, Edge Packets, Wavelets, and Smith
+                                   Coordinates
+
+                                             Komorebi P.
+
+                         Expanded Lean-checked edition, version 1.1.0
+                                            6 September 2026
+
+
+
+                                                Abstract
+      This paper develops the signal realization of the projector-resolved seed calculus. The impulse δ0
+  is taken as a primitive signal seed and its shift orbit supplies the address system. Residue projectors
+  split a sequence into exact polyphase channels, nested divisibility gives exact refinement, and
+  every finite impulse-response operator becomes a matrix of packet transfers. The standard perfect-
+  reconstruction condition for a filter bank is therefore an analysis–synthesis identity in the common
+  operator language of the series. Haar analysis and every finite-depth wavelet-packet transform are
+  treated on complex ℓ2 , together with concrete finite-signal models and a predict–update lifting step.
+  The edge problem is separated into two statements. When a discontinuity packet is known and
+  retained exactly, approximation error is exactly the approximation error of the remaining smooth
+  packet; no spectral approximation of the jump is performed. When the packet is estimated, a
+  symmetric-difference bound isolates mask error, amplitude error, and smooth-background error.
+  Numerical studies compare global Fourier truncation, exact known-packet reconstruction, and
+  a deliberately narrow positive-contrast estimator in one and two dimensions, including curved
+  boundaries, corners, and multiple amplitudes. The same cyclic phase action is then placed on the
+  Smith reflection disk. Its pullback through the Cayley transform is a Möbius action on impedance,
+  and the two-phase case is precisely impedance–admittance inversion. Nonlinear coefficient products
+  obey cyclic packet convolution. The revised edition integrates a Lean formalization of all twenty
+  theorem-like statements under the hypotheses stated below: 225 supporting theorem targets in 23
+  modules. Eighteen regenerated figures, machine-readable numerical results, the 33-test original
+  companion suite, and 36 additional exact-model and verifier tests accompany the paper. Exact
+  signal theorems, limited numerical estimators, classical constructions, and open recovery problems
+  are kept distinct throughout.
+
+Scope and claim boundary. The paper proves exact polyphase reconstruction, exact finite
+filter-transfer identities, perfect reconstruction for the stated filter banks, the conditional known-
+edge theorem, mask and amplitude perturbation bounds, nonlinear residue-convolution laws,
+and the Smith-coordinate phase action. It does not claim that every discontinuity can be
+detected automatically, that every form of Gibbs ringing has been eliminated, or that the simple
+two-class estimator supplied with the release is a universal segmentation method. The estimator
+is included as one reproducible finite example. For every finite packet refinement tree, the paper
+now proves existence of a globally optimal complete pruning, an exact dynamic-programming
+selector for additive costs, and a deterministic margin-stability certificate. Wavelets, filter banks,
+the Cayley transform, and the classical Smith grid are treated as classical inputs organized in
+the common seed–packet–refinement language.
+
+
+
+
+                                                    1
+Projector-Resolved Seed Calculus V                                                               Komorebi P.
+
+
+Verification convention. “Lean-checked” refers to the explicitly scoped theorem statements and
+their supporting declarations, accepted by the pinned Lean kernel. It does not certify the English
+text automatically, the floating-point Python implementation, physical modelling choices, or the two
+conjectures. The manuscript-to-declaration correspondence has been reviewed manually; Appendix D
+records it result by result. The numerical experiments have been rerun for this edition.
+
+
+Contents
+1 The signal realization of the seed calculus                                                                5
+
+2 Residue projectors and exact polyphase coordinates                                                         5
+  2.1 Nested refinement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .          8
+
+3 Linear time-invariant operators as transfer matrices                                                       8
+
+4 Analysis banks, synthesis banks, and perfect reconstruction                                                9
+  4.1 The Haar bank . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         10
+  4.2 Predict–update lifting . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        11
+
+5 Wavelet packets as addressed refinements                                                                  12
+
+6 Known edge packets and spectral reconstruction                                                            12
+
+7 Mask, amplitude, and smooth-background error                                                              14
+
+8 One-dimensional numerical study                                                                           15
+
+9 Two-dimensional edge packets                                                                              16
+  9.1 Curves, corners, and multiple amplitudes          . . . . . . . . . . . . . . . . . . . . . . . . .   16
+
+10 Sparse wavelet packets and global Fourier modes                                                          20
+
+11 Finite adaptive packet trees                                                                             21
+
+12 Nonlinear signal packets                                                                                 25
+
+13 Smith coordinates as cyclic signal coordinates                                                           25
+   13.1 Radial seeds and physical phase . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       29
+
+14 Dyadic–odd phase factorization and boundary weighting                                                    30
+
+15 Boundary-localized error and claim control                                                               30
+
+16 Implementation and reproducibility                                                                       32
+
+17 Conclusions                                                                                              33
+
+A Algorithm statements                                                                                      34
+  A.1 Exact polyphase filtering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       34
+  A.2 Conditional known-edge reconstruction . . . . . . . . . . . . . . . . . . . . . . . . . . .           34
+  A.3 Limited positive-contrast estimator . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         34
+
+
+
+                                                    2
+Projector-Resolved Seed Calculus V                                                             Komorebi P.
+
+
+B Numerical record                                                                                        35
+
+C Notation crosswalk                                                                                      35
+
+D Formalization and reproducibility record                                                                36
+  D.1 What has been checked . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .         36
+  D.2 Result-by-result correspondence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       36
+  D.3 Three bridges that matter for the statement . . . . . . . . . . . . . . . . . . . . . . . .         37
+  D.4 Executed checks and numerical conventions . . . . . . . . . . . . . . . . . . . . . . . .           38
+  D.5 Pinned environment and rerunning the release . . . . . . . . . . . . . . . . . . . . . . .          38
+  D.6 What remains open . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       39
+
+
+List of Figures
+   1    Four-phase analysis of a finite signal. The channels are decimated coordinate packets;
+        interleaving them gives the original signal exactly. . . . . . . . . . . . . . . . . . . . .        7
+   2    The exact transfer matrix for a seven-tap FIR filter in four phases. Every cell records
+        the delays and coefficients carrying one input packet into one output packet. . . . . . .           9
+   3    A piecewise-smooth signal and its first Haar low/detail packets. The low channel records
+        local averages; the detail channel records adjacent-sample differences, including pairs
+        that cross a jump. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+   4    Energy of the sixteen depth-four Haar packet addresses for the test signal. The packet
+        address is an operator word in the common seed grammar. . . . . . . . . . . . . . . . 13
+   5    One-dimensional reconstruction and absolute error. The known packet removes the edge
+        from the global spectral approximation. The estimated packet is visibly better than the
+        global reconstruction in this limited test but retains smooth-background estimation error. 15
+   6    Error as spectral resolution increases. The known packet follows only the smooth
+        approximation error. The estimated reconstruction reaches a floor determined by
+        background and amplitude estimation. . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+   7    A sharp disk on a smooth background. Global Fourier truncation produces a bright
+        boundary halo and oscillatory interior and exterior error. Retaining the exact edge
+        packet leaves only the smooth-background approximation error. . . . . . . . . . . . . . 17
+   8    The limited data-driven experiment. The observed image alone is thresholded into two
+        intensity classes, cleaned topologically, harmonically filled, spectrally smoothed, and
+        recombined with an estimated jump. . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+   9    Known-packet stress test with curved boundaries, corners, overlap, and different jump
+        amplitudes. The exact packet is not a binary mask multiplied by one amplitude; it is
+        the complete piecewise packet. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+   10   Sparse approximation of the test signal. With very few coefficients the global Fourier
+        basis is initially better; after the edge packets are resolved, the Haar packet error decays
+        much faster in this example. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   11   A globally optimal mixed-depth Haar packet pruning. The selected antichain covers the
+        full tree, so its synthesis is exact even though different branches stop at different depths. 24
+   12   The dynamic-programming optimum agrees with exhaustive enumeration. A positive
+        gap larger than twice the declared perturbation envelope certifies that the selected tree
+        is stable. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24
+   13   Norms of pairwise product interactions for five residue phases. The label in each cell
+        gives the output phase (i + j) mod 5. . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+
+
+                                                     3
+Projector-Resolved Seed Calculus V                                                             Komorebi P.
+
+
+   14   The classical Smith grid equipped with sixteen exact phase rays and four radial seed
+        orbits. The Cayley transform creates the chart; the projector calculus supplies the nested
+        cyclic coordinate system. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   28
+   15   The same reflection circle at phase orders 2, 4, 8, 16, 32. Each coarse phase ray appears
+        in every finer grid whose order is a multiple of its order. The exact residue-projector
+        refinement law concerns coefficient packets, not sums of impedance points. . . . . . . .          29
+   16   The proposed symmetric refinement weight becomes large near the open- and short-
+        circuit boundary points. It is a condition-based adaptive coordinate, not an asserted
+        optimal sampling law. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     31
+   17   Error restricted to a narrow boundary band. Global truncation concentrates large error
+        on the jump. The known-packet reconstruction has only the small smooth-packet error
+        in the same band. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   31
+   18   Proof and claim boundary. Finite adaptive-tree selection is now proved; the remaining
+        open rows concern universal recovery and infinite-tree or asymptotic selection. . . . . .         32
+
+
+List of Tables
+   1    Sparse approximation errors for the one-dimensional test signal. . . . . . . . . . . . . .        20
+   2    Numerical companion modules. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        32
+   3    Main edge-study measurements. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       35
+   4    Main software artifacts. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    35
+   5    Notation crosswalk. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   35
+   6    The twenty manuscript results and their Lean statement scopes. . . . . . . . . . . . .            36
+
+
+
+
+                                                     4
+Projector-Resolved Seed Calculus V                                                           Komorebi P.
+
+
+1    The signal realization of the seed calculus
+Let ℓ2 (Z; C), abbreviated ℓ2 (Z), be the Hilbert space of square-summable complex discrete signals.
+The inner product is conjugate-linear in its first argument. A superscript ∗ on a bounded operator
+denotes its Hilbert adjoint. Write δn for the unit impulse at address n and let the bilateral shift be
+
+                                           (Sx)[n] = x[n − 1].
+
+Then
+                                                  S n δ0 = δn .
+The primitive signal seed is therefore s = δ0 , the address operators are the shift words S n , and the
+completion is the ℓ2 norm.
+
+Theorem 1.1 (Impulse seed theorem). The closed shift-generated hull of δ0 is all of ℓ2 (Z):
+
+                                                               ℓ2
+                                     span{S n δ0 : n ∈ Z}           = ℓ2 (Z).
+
+Every finitely supported signal has the exact finite expression
+                                                   X
+                                            x=           x[n]S n δ0 .
+                                                   n∈Z
+
+Proof. The shift orbit is the standard orthonormal basis {δn }n∈Z . For x ∈ ℓ2 , the finite truncations
+                                          X
+                                   xF =         x[n]δn ,       F ⊂ Z finite,
+                                          n∈F
+
+satisfy ∥x − xF ∥22 = n∈F        2
+                        / |x[n]| → 0 as the finite sets exhaust Z. Thus the unordered Hilbert-space
+                     P
+      P
+sum n x[n]δn converges to x, and the finite-support statement is exact. The shift is a surjective
+isometry because n 7→ n − 1 is a bijection of Z, with inverse shift n 7→ n + 1. This proves the closed-span
+assertion.
+
+    This realization fixes the language used below:
+
+                impulse seed −→ shift address −→ packet projection −→ filter transfer
+                                   −→ refinement −→ reconstruction.
+
+Remark 1.2 (Several completions). The same algebraic seed description applies to finite sequences, ℓ1 ,
+ℓ2 , periodic sequences, tempered distributions, and multidimensional lattices. The topology decides
+which infinite reconstructions are legitimate. Finite-dimensional experiments in this paper use ordinary
+Euclidean norms; theorem statements specify the ambient norm when it matters.
+
+
+2    Residue projectors and exact polyphase coordinates
+Fix an integer N ≥ 1. For 0 ≤ r < N , define
+
+                                     (PN,r x)[n] = 1n≡r (mod N ) x[n].
+
+The corresponding decimated channel is
+
+                                            xr [q] = x[N q + r].
+
+
+                                                           5
+Projector-Resolved Seed Calculus V                                                                         Komorebi P.
+
+
+Theorem 2.1 (Polyphase projector theorem). The maps PN,r are bounded orthogonal projectors on
+ℓ2 , with operator norm at most one, and satisfy
+                                                                      N
+                                                                      X −1
+                                   PN,r PN,s = δrs PN,r ,                     PN,r = I.
+                                                                      r=0
+
+Consequently,
+                                                         N
+                                                         X −1
+                                                    x=          PN,r x
+                                                         r=0
+
+with no approximation.
+
+Proof. Each integer belongs to exactly one residue class modulo N . Multiplying the two indicator
+functions gives zero for distinct classes and the same indicator for equal classes. Summing all residue
+indicators gives one at every address. Moreover,
+                                     X
+                  ∥PN,r x∥22 =                  |x[n]|2 ≤ ∥x∥22 ,             ⟨PN,r x, y⟩ = ⟨x, PN,r y⟩.
+                                 n≡r (mod N )
+
+The mask is real-valued, so the inner-product identity follows term by term. Hence each projector is
+self-adjoint, and the ranges of different residue projectors are orthogonal.
+
+   Define the analysis and synthesis maps
+
+                    AN x = (x0 , . . . , xN −1 ),        SN (x0 , . . . , xN −1 )[N q + r] = xr [q].
+
+Corollary 2.2 (Analysis–synthesis identity).
+
+                                                    SN AN = I.
+
+On the product of the channel spaces one also has AN SN = I. Equip this finite product with the Hilbert
+norm
+                                                                      N
+                                                                      X −1
+                                       ∥(x0 , . . . , xN −1 )∥2ch =           ∥xr ∥22 .
+                                                                      r=0
+
+Then AN is a linear isometric equivalence and
+                                                           N
+                                                           X −1
+                                                ∥x∥22 =           ∥xr ∥22 .
+                                                           r=0
+
+Proof. Euclidean division gives a unique pair (r, q) with 0 ≤ r < N and n = N q + r, including negative
+n. The address maps n 7→ (n mod N, n div N ) and (r, q) 7→ N q + r are inverse. Analysis and synthesis
+are reindexing by this bijection. Reindexing the nonnegative sum n |x[n]|2 proves the norm identity
+                                                                   P
+
+and shows that both maps preserve square summability. In Lean the target is ℓ2 ({0, . . . , N − 1} × Z),
+which realizes exactly this Hilbert norm.
+
+
+
+
+                                                            6
+Projector-Resolved Seed Calculus V                                                             Komorebi P.
+
+
+
+
+                         Four-phase analysis and exact synthesis; residual 0.0e+00
+                                      Signal generated from one shift orbit
+            1
+            0
+            1
+                0            10                20                    30              40
+            1
+  phase 0
+
+
+
+
+            0
+
+            1
+                0        2                4                 6                 8           10
+            1
+  phase 1
+
+
+
+
+            0
+
+            1
+                0        2                4                 6                 8           10
+            1
+  phase 2
+
+
+
+
+            0
+            1
+                0        2                4                 6                 8           10
+
+            1
+  phase 3
+
+
+
+
+            0
+
+            1
+                0        2                4                  6                8           10
+                                                 decimated index
+
+Figure 1: Four-phase analysis of a finite signal. The channels are decimated coordinate packets;
+interleaving them gives the original signal exactly.
+
+
+
+
+                                                    7
+Projector-Resolved Seed Calculus V                                                                Komorebi P.
+
+
+2.1   Nested refinement
+Suppose N, M ≥ 1 and N | M . Every coarse phase has a disjoint family of fine descendants:
+
+                           ChildM (N, r) = {s : 0 ≤ s < M, s ≡ r              (mod N )}.
+
+Theorem 2.3 (Exact nested refinement). For N, M ≥ 1 and N | M ,
+                                                          X
+                                            PN,r =                   PM,s .
+                                                       0≤s<M
+                                                     s≡r (mod N )
+
+
+Proof. An integer n satisfies n ≡ r (mod N ) exactly when its unique residue s = n mod M lies among
+the listed descendants. The fine indicators are disjoint, so their sum is the coarse indicator.
+
+    This identity is the signal form of the refinement law introduced in Paper II. It is not merely a
+denser sampling rule. The coarse masked packet, represented on the original integer lattice, is exactly
+the sum of its fine masked descendants. Decimated channels at different moduli must first be placed in
+these common coordinates before being added.
+
+
+3     Linear time-invariant operators as transfer matrices
+Let h be a finite impulse response and
+                                                               X
+                                    y = h ∗ x,       y[n] =          h[q]x[n − q].
+                                                               q∈Z
+
+Resolve both input and output into N phases. For output phase k and input phase s, define the
+transfer kernel
+                                   hks [m] = h[N m + k − s].
+Out-of-range taps are understood to be zero.
+Theorem 3.1 (Exact FIR polyphase transfer law). The output channels satisfy
+
+                                                 N
+                                                 X −1 X
+                                      yk [n] =             hks [m]xs [n − m].
+                                                 s=0 m∈Z
+
+
+For the numerical channel transform, take z ∈ C \ {0} and assume
+
+                                           |xs [n]z −n | < ∞
+                                      X
+                                                                (0 ≤ s < N ).
+                                     n∈Z
+
+Define Xs (z) =
+                  P           −n . The output series then also converge absolutely, and
+                  n xs [n]z
+
+                                                        (N )
+                                                                           h[N m + k − s]z −m .
+                                                                      X
+                      Y (z) = H (N ) (z)X(z),         Hks (z) =
+                                                                       m
+
+Proof. Evaluate y at address N n + k and partition every input index by its residue s:
+                                           X
+                          y[N n + k] =          h[q]x[N n + k − q]
+                                            q
+                                           N
+                                           X −1 X
+                                       =            h[N m + k − s]x[N (n − m) + s].
+                                           s=0 m
+
+
+                                                           8
+Projector-Resolved Seed Calculus V                                                                                                Komorebi P.
+
+
+For a fixed output phase k, the change of tap address q = N m + k − s is a bijection between Z and the
+pairs (s, m) with 0 ≤ s < N : choose s ≡ k − q (mod N ) and then m = (q − k + s)/N . Thus this is a
+reindexing of the finite filter support, valid for every bilateral input sequence, without a convergence
+assumption on x.
+    The last factor is xs [n − m], giving the time-domain formula. Under the additional transform
+hypothesis, each delayed channel has transform
+                                            xs [n − m]z −n = z −m                         xs [j]z −j .
+                                        X                                            X
+
+                                        n                                            j
+
+Absolute summability permits this bijective reindexing, and only finitely many delayed channels are
+combined. Taking their finite linear combination gives the matrix formula. The time-domain theorem
+therefore remains valid even when no numerical bilateral transform exists.
+
+                      Exact four-phase FIR transfer matrix (delay:coefficient)
+                                                                                                                  0.80
+
+           output 0    0:0.15, 1:0.45            1:0.8                1:0.45, 2:0.15             1:-0.2, 2:-0.2   0.75
+
+                                                                                                                  0.70
+
+
+
+
+                                                                                                                     sum of absolute tap weights
+           output 1    0:-0.2, 1:-0.2        0:0.15, 1:0.45                  1:0.8               1:0.45, 2:0.15   0.65
+
+                                                                                                                  0.60
+
+           output 2    0:0.45, 1:0.15        0:-0.2, 1:-0.2           0:0.15, 1:0.45                 1:0.8        0.55
+
+                                                                                                                  0.50
+
+           output 3        0:0.8             0:0.45, 1:0.15              0:-0.2, 1:-0.2          0:0.15, 1:0.45   0.45
+
+                                                                                                                  0.40
+                        input 0               input 1                     input 2                 input 3
+
+Figure 2: The exact transfer matrix for a seven-tap FIR filter in four phases. Every cell records the
+delays and coefficients carrying one input packet into one output packet.
+
+Remark 3.2 (Operator-block form). If H denotes convolution by h, the same identity is
+                                                              X
+                                                   H=               PN,k HPN,s .
+                                                              k,s
+
+Thus the familiar polyphase matrix is exactly the transfer-block matrix of the seed calculus.
+
+
+4    Analysis banks, synthesis banks, and perfect reconstruction
+Work with finite impulse-response banks. Let L = C[z, z −1 ] be the Laurent-polynomial algebra, with
+the monomial z −m acting on a bilateral sequence by x[n] 7→ x[n − m]. Let E ∈ MatN ×N (L) and
+
+                                                                     9
+Projector-Resolved Seed Calculus V                                                                Komorebi P.
+
+
+R ∈ MatN ×N (L) be analysis and synthesis matrices. Their composition acts on all bilateral channel
+sequences by finite convolutions. At a nonzero z where the input transforms are absolutely convergent,
+this gives
+                                       X(z)
+                                        c    = R(z)E(z)X(z).
+
+Theorem 4.1 (Perfect-reconstruction criterion). For d ∈ Z, such a bank reconstructs every input up
+to a delay of d channel indices exactly when the following Laurent-polynomial identity holds:
+
+                                             R(z)E(z) = z −d IN .
+
+If the right side is cz −d IN with c ̸= 0, reconstruction holds up to gain c and channel delay d. After
+interleaving, this is a delay of N d original samples. A negative delay denotes an advance.
+
+Proof. Finite convolution represents Laurent-polynomial multiplication: composing shifts adds their
+delays, and distributivity handles finite sums. Thus the matrix identity implies the asserted action.
+Conversely, let B = RE − cz −d IN and suppose its action vanishes on every channel sequence. Insert
+an impulse at channel s, address zero, with every other channel zero. Output channel k reads the
+coefficients of the Laurent polynomial Bks at all addresses. All of these coefficients vanish, so Bks = 0
+for every k, s. The representation is faithful, proving necessity as a polynomial identity rather than
+merely equality at one evaluation point. The displayed unit-gain case is c = 1.
+
+Original-sample delay. For an arbitrary original-sample delay D ∈ Z, the output phase k has
+
+                yk [n] = xrk [n + qk ],     rk = (k − D) mod N,             qk = (k − D) div N.
+
+Its channel matrix has the sole nonzero entry z qk in row k, column rk . In particular, a one-sample
+delay at N = 2 has matrix                            !
+                                             0 z −1
+                                                        ,
+                                             1 0
+
+whereas z −1 I2 delays the original signal by two samples. The general address identity is valid for
+negative sample addresses as well.
+
+4.1   The Haar bank
+The Haar analysis matrix is                                      !
+                                                 1 1 1
+                                            EH = √       .
+                                                  2 1 −1
+                           T and
+It is orthogonal, so RH = EH
+                                                 RH EH = I2 .
+The channels are
+                                  x[2n] + x[2n + 1]                   x[2n] − x[2n + 1]
+                         a[n] =          √          ,        d[n] =          √          .
+                                           2                                   2
+Corollary 4.2 (Haar energy identity).
+
+                                            ∥x∥22 = ∥a∥22 + ∥d∥22 .
+
+
+
+
+                                                        10
+Projector-Resolved Seed Calculus V                                                                     Komorebi P.
+
+
+Proof. For any u, v ∈ C, the parallelogram identity gives
+                                          u+v 2   u−v 2
+                                           √    + √     = |u|2 + |v|2 .
+                                             2      2
+Apply this to u = x[2n], v = x[2n + 1] and sum over n ∈ Z. Each summand is nonnegative; the right
+side is ∥x∥22 by the two-channel address equivalence. This also proves that the literal low and detail
+channels belong to ℓ2 . The real Haar matrix is unitary over C, so the finite-signal statement is the
+same calculation with a finite sum.
+
+                                                 Piecewise-smooth signal
+       1.0
+       0.8
+       0.6
+       0.4
+       0.2
+             1.00     0.75         0.50         0.25         0.00               0.25   0.50     0.75    1.00
+                                                       Haar low packet
+      1.25
+      1.00
+      0.75
+      0.50
+      0.25
+             0               100                 200                      300             400          500
+                                                  Haar edge/detail packet
+       0.5
+       0.4
+       0.3
+       0.2
+       0.1
+       0.0
+             0               100                 200                      300             400          500
+                                                        decimated index
+
+Figure 3: A piecewise-smooth signal and its first Haar low/detail packets. The low channel records
+local averages; the detail channel records adjacent-sample differences, including pairs that cross a jump.
+
+
+
+4.2     Predict–update lifting
+Split x into even and odd channels e, o. Define
+                                                                       1
+                                            d = o − e,          s = e + d.
+                                                                       2
+The inverse is
+                                            1
+                                    e = s − d,     o = d + e.
+                                            2
+Theorem 4.3 (Exact lifting reconstruction). The predict–update map (e, o) 7→ (s, d) is invertible with
+determinant one and the displayed inverse. Consequently the associated finite transform reconstructs
+every even-length signal exactly.
+
+                                                           11
+Projector-Resolved Seed Calculus V                                                            Komorebi P.
+
+
+Proof. The forward matrix is               !                     !     !
+                                          s         1/2 1/2          e
+                                               =                       ,
+                                          d         −1   1           o
+whose determinant is one. Direct substitution gives the inverse formulas.
+
+
+5     Wavelet packets as addressed refinements
+On ℓ2 (Z; C), apply the Haar analysis to both children at each stage. For a finite input, assume its
+length is divisible by 2ℓ when a depth-ℓ transform is used. A binary word α ∈ {0, 1}ℓ addresses a
+depth-ℓ packet, denoted Wℓ,α x. Appending 0 or 1 selects the low or high child.
+Theorem 5.1 (Wavelet-packet reconstruction and energy). At every finite depth ℓ,
+
+                                                           ∗
+                                                   X
+                                         x=               Wℓ,α Wℓ,α x,
+                                               α∈{0,1}ℓ
+
+
+and                                                  X
+                                        ∥x∥22 =               ∥Wℓ,α x∥22 .
+                                                   α∈{0,1}ℓ
+
+Proof. Write H0 , H1 for the literal low and detail operators. The preceding energy identity implies
+∥Hb x∥2 ≤ ∥x∥2 , so both have bounded Hilbert adjoints. At depth zero the only packet operator is the
+identity. If the energy identity holds at depth ℓ, apply the one-level identity to each Wℓ,α x and sum;
+this proves it at depth ℓ + 1.
+    Set A =
+                P     ∗
+                  α Wℓ,α Wℓ,α . This is a finite sum of bounded operators. The energy result says
+⟨x, Ax⟩ = ⟨x, x⟩ for every x. Complex polarization, applied also to x+y and x+iy, gives ⟨y, (A−I)x⟩ = 0
+for all x, y, hence A = I. Applying the operator identity to x proves synthesis. This argument uses the
+actual Hilbert adjoints of the decimation operators, not a separately postulated inverse symbol.
+
+Classical Input 5.2 (Wavelet boundary). The existence and perfect-reconstruction theory of wavelets
+and filter banks are classical. Their role here is structural: they provide a fully developed realization in
+which seed generation, packet addressing, refinement, transfer blocks, and exact synthesis can all be
+read literally in the common operator language.
+
+
+6     Known edge packets and spectral reconstruction
+The central distinction is between approximating a jump globally and retaining it as its own packet.
+   Let
+                                             f =s+j
+where s belongs to a smooth approximation class and j is a known discontinuity packet. Let Qm be
+any approximation operator applied only to s, and define
+
+                                               fem = Qm s + j.
+
+Theorem 6.1 (Exact known-edge theorem). For every norm for which the expressions are defined,
+
+                            f − fem = s − Qm s,           ∥f − fem ∥ = ∥s − Qm s∥.
+
+No approximation of j occurs.
+
+                                                       12
+Projector-Resolved Seed Calculus V                                                                                   Komorebi P.
+
+
+                                             Energy distribution across a depth-four Haar packet tree
+                    350
+
+                    300
+
+                    250
+    packet energy
+
+
+
+
+                    200
+
+                    150
+
+                    100
+
+                    50
+
+                     0
+                          00
+
+                               01
+
+                                    10
+
+                                         11
+
+                                                  00
+
+                                                        01
+
+                                                              10
+
+                                                                       11
+
+                                                                                00
+
+                                                                                       01
+
+                                                                                            10
+
+                                                                                                 11
+
+                                                                                                      00
+
+                                                                                                           01
+
+                                                                                                                10
+
+                                                                                                                     11
+                          00
+
+                               00
+
+                                    00
+
+                                         00
+
+                                                01
+
+                                                       01
+
+                                                             01
+
+                                                                   01
+
+                                                                            10
+
+                                                                                       10
+
+                                                                                            10
+
+                                                                                                 10
+
+                                                                                                      11
+
+                                                                                                           11
+
+                                                                                                                11
+
+                                                                                                                     11
+                                                               wavelet packet address
+
+Figure 4: Energy of the sixteen depth-four Haar packet addresses for the test signal. The packet
+address is an operator word in the common seed grammar.
+
+
+Proof. Subtract:
+                                             f − fem = (s + j) − (Qm s + j) = s − Qm s.
+Taking the norm gives the second identity.
+
+Corollary 6.2 (Several exact edge packets). If
+                                                                            M
+                                                                            X
+                                                             f =s+                jq
+                                                                            q=1
+
+and every jq is retained exactly, then
+                                                                            !
+                                                                  X
+                                                 f − Qm s +            jq         = ∥s − Qm s∥.
+                                                                   q
+
+Curved edges, corners, and different jump amplitudes do not alter the identity.
+
+Proof. The finite sum j = M
+                                         P
+                                q=1 jq is a single retained packet. Applying the preceding cancellation
+identity gives the result; the empty family M = 0 is included with sum zero.
+
+Boundary 6.3 (What the theorem does and does not say). The theorem explains why global ringing
+caused by spectrally approximating a known jump is absent from the reconstructed jump packet. It
+does not discover the packet. If the packet is wrong, its error is reconstructed exactly as well. Nor
+does the theorem prevent unrelated truncation errors in the smooth packet, domain-boundary errors,
+noise, or model mismatch.
+
+
+
+
+                                                                       13
+Projector-Resolved Seed Calculus V                                                             Komorebi P.
+
+
+7    Mask, amplitude, and smooth-background error
+Let (X, Σ, µ) be a measure space, with measurable masks Ω, Ω  b ⊆ X and scalar amplitudes a, a
+                                                                                             b∈C
+(real amplitudes are a special case). Suppose a scalar jump packet is
+
+                                                 j = a1Ω ,
+
+and an estimated packet is
+                                                 j=a
+                                                 b b1 b .
+                                                     Ω
+
+Theorem 7.1 (Packet perturbation bound). For 1 ≤ p < ∞, interpreted first as an inequality of
+extended Lp seminorms,
+
+                                                b| µ(Ω)1/p + |a
+                              ∥j − bj∥Lp ≤ |a − a                    b 1/p .
+                                                              b| µ(Ω△Ω)
+
+If µ(Ω) and µ(Ω△Ω)b are finite, all terms in this displayed jump bound are finite and it is an ordinary real-
+valued Lp inequality. For the pointwise supremum, and consequently also the essential L∞ seminorm,
+
+                                    ∥j − bj∥∞ ≤ |a − a
+                                                     b | + |a
+                                                            b| 1 b .
+                                                                Ω△Ω̸=∅
+
+Proof. Write
+                                        b1b = (a − a
+                                  a1Ω − a Ω
+                                                          b(1Ω − 1b ).
+                                                   b)1Ω + a
+                                                                  Ω
+Apply the triangle inequality and use
+
+                                       ∥1Ω − 1Ω           b 1/p
+                                              b ∥Lp = µ(Ω△Ω) .
+
+For the supremum estimate, |1Ω − 1Ω   b | ≤ 1 pointwise, and this function vanishes everywhere when
+the symmetric difference is empty. The same pointwise bound also bounds the essential supremum.
+Nonempty null symmetric differences need not contribute to the essential norm; the stated bound
+remains valid in that case and need not be sharp. Measurability justifies the Lp triangle inequality and
+the indicator norm formula.
+
+    If s, sb are measurable smooth-background models, the same triangle inequality gives, for finite p,
+
+                                                          b|µ(Ω)1/p + |a
+                      ∥f − (sb + bj)∥p ≤ ∥s − sb∥p + |a − a                  b 1/p .
+                                                                       b|µ(Ω△Ω)
+
+This is the correct separation of errors. Detection error is not hidden inside a generic reconstruction
+score.
+
+Conjecture 7.2 (Stable edge-packet recovery). For specified piecewise-smooth classes, contrast
+bounds, separation conditions, and noise models, there should exist a multiscale packet estimator
+whose symmetric-difference error and amplitude error converge at rates controlled independently of the
+smooth approximation rate. A theorem of this kind would turn the conditional known-edge result into
+a stable data-driven reconstruction theorem. No universal version is asserted here.
+
+
+
+
+                                                     14
+Projector-Resolved Seed Calculus V                                                                                  Komorebi P.
+
+
+8                   One-dimensional numerical study
+The one-dimensional signal contains a smooth non-bandlimited background and a positive rectangular
+packet. Three reconstructions are compared:
+       (i) global Fourier truncation of the complete signal;
+    (ii) Fourier truncation of the known smooth packet plus the exact jump packet;
+ (iii) a two-class estimated packet followed by harmonic background filling, spectral smoothing, and
+       jump-amplitude estimation.
+
+                                                     One-dimensional edge reconstruction
+                   1.0
+
+                   0.8
+
+                   0.6                                                           original                    known edge packet
+                                                                                 global Fourier truncation   estimated edge packet
+                   0.4
+
+                   0.2
+
+
+
+                  0.35
+                  0.30
+                  0.25
+ absolute error
+
+
+
+
+                  0.20                                                                  global error         estimated-packet error
+                                                                                        known-packet error   estimated packet
+                  0.15
+                  0.10
+                  0.05
+                  0.00
+                         1.00       0.75      0.50      0.25         0.00        0.25              0.50      0.75           1.00
+                                                                  coordinate
+
+Figure 5: One-dimensional reconstruction and absolute error. The known packet removes the edge from
+the global spectral approximation. The estimated packet is visibly better than the global reconstruction
+in this limited test but retains smooth-background estimation error.
+
+Numerical Certificate 8.1 (One-dimensional errors). For 1024 samples on [−1, 1) and Fourier cutoff
+m = 18, the retained frequency indices are −18, . . . , 18: 37 bins including the zero-frequency bin. The
+measured values were
+                                method                             RMSE maximum absolute error
+                                global Fourier truncation 5.4023 × 10−2                        3.4968 × 10−1
+                                known edge packet         1.3692 × 10−4                        1.4503 × 10−3
+                                estimated edge packet     2.4029 × 10−2                        5.9530 × 10−2
+
+The simple estimator recovered the binary mask exactly in this deliberately separated two-class example.
+That result is a property of this test, not a universal guarantee.
+
+
+                                                                 15
+Projector-Resolved Seed Calculus V                                                                           Komorebi P.
+
+
+                                        Smooth-packet accuracy and edge-packet leakage
+                 10 1
+
+
+
+
+                 10 2
+                                                                                          global Fourier
+          RMSE
+
+
+
+
+                                                                                          known edge packet
+                                                                                          estimated edge packet
+                 10 3
+
+
+
+
+                 10 4
+                                   10                 20                  30                40                    50
+                                                Fourier cutoff m (2m + 1 retained bins)
+
+Figure 6: Error as spectral resolution increases. The known packet follows only the smooth approxima-
+tion error. The estimated reconstruction reaches a floor determined by background and amplitude
+estimation.
+
+
+9      Two-dimensional edge packets
+The first image consists of a smooth background and one sharp disk. The same three logical levels
+must remain separate:
+
+ (a) the exact theorem using the known decomposition;
+
+ (b) a limited estimator designed for a positive-contrast two-class packet;
+
+    (c) the open problem of recovering arbitrary edge packets under noise and model ambiguity.
+
+Numerical Certificate 9.1 (Two-dimensional errors). For the 192 × 192 disk experiment, a square Fourier
+mask retains indices |kx |, |ky | ≤ 16, or 332 = 1089 bins. The reported errors are
+
+                        method                       full-image RMSE boundary-band RMSE
+                        global Fourier truncation         3.7643 × 10−2                   1.8541 × 10−1
+                        known edge packet                 6.4752 × 10−5                   1.2709 × 10−5
+                        estimated edge packet             3.4043 × 10−3                   8.8834 × 10−3
+
+The mask intersection-over-union was one in this positive-contrast synthetic case. The amplitude was
+estimated rather than inserted from the generating model.
+
+9.1     Curves, corners, and multiple amplitudes
+The exact theorem does not depend on the shape of the known edge packet. The next experiment
+contains a disk, a square, and a diamond with different jump amplitudes.
+
+                                                             16
+Projector-Resolved Seed Calculus V                                                                                 Komorebi P.
+
+
+
+
+                       Sharp disk plus smooth background: exact edge packet versus global truncation
+           Original                       Global Fourier reconstruction                           Global error
+                                                                                1.0                                      0.30
+                                0.9
+                                0.8                                                                                      0.25
+                                                                                0.8
+                                0.7
+                                                                                                                         0.20
+                                0.6
+                                                                                0.6
+                                                                                                                         0.15
+                                0.5
+                                0.4                                             0.4                                      0.10
+                                0.3
+                                                                                                                         0.05
+                                0.2                                             0.2
+
+
+           Original                       Known-packet reconstruction                         Known-packet error
+                                                                                                                         0.0012
+                                0.9                                             0.9
+                                0.8                                             0.8                                      0.0010
+                                0.7                                             0.7                                      0.0008
+                                0.6                                             0.6
+                                                                                                                         0.0006
+                                0.5                                             0.5
+                                0.4                                             0.4                                      0.0004
+                                0.3                                             0.3                                      0.0002
+                                0.2                                             0.2
+
+
+Figure 7: A sharp disk on a smooth background. Global Fourier truncation produces a bright boundary
+halo and oscillatory interior and exterior error. Retaining the exact edge packet leaves only the
+smooth-background approximation error.
+
+
+
+
+                                                            17
+Projector-Resolved Seed Calculus V                                                                                       Komorebi P.
+
+
+
+
+                            Narrow data-driven case: positive-contrast two-class packet estimation
+        Observed image                       Estimated binary packet             1.0       Estimated-packet reconstruction
+                               0.9                                                                                             0.9
+                               0.8                                               0.8                                           0.8
+                               0.7                                                                                             0.7
+                                                                                 0.6
+                               0.6                                                                                             0.6
+                               0.5                                               0.4                                           0.5
+                               0.4                                                                                             0.4
+                               0.3                                               0.2                                           0.3
+                               0.2                                                                                             0.2
+                                                                                 0.0
+
+          Global error                        Estimated-packet error                                 Mask disagreement         0.100
+                                                                                 0.0200
+                               0.30
+                                                                                 0.0175                                        0.075
+                               0.25                                                                                            0.050
+                                                                                 0.0150
+                               0.20                                              0.0125                                        0.025
+
+                               0.15                                              0.0100                                        0.000
+                                                                                 0.0075                                         0.025
+                               0.10
+                                                                                 0.0050                                         0.050
+                               0.05                                              0.0025                                         0.075
+                                                                                 0.0000                                         0.100
+
+Figure 8: The limited data-driven experiment. The observed image alone is thresholded into two
+intensity classes, cleaned topologically, harmonically filled, spectrally smoothed, and recombined with
+an estimated jump.
+
+
+
+
+                                                             18
+Projector-Resolved Seed Calculus V                                                                               Komorebi P.
+
+
+
+
+                                      Corners, curved boundaries, and multiple amplitudes
+     Original multiedge image                        Global Fourier                           Known packet
+                                0.9                                                                                          0.9
+                                                                                    0.8
+                                0.8                                                                                          0.8
+                                                                                    0.7
+                                0.7                                                                                          0.7
+                                                                                    0.6
+                                0.6                                                                                          0.6
+                                                                                    0.5
+                                0.5                                                                                          0.5
+                                                                                    0.4
+                                0.4                                                                                          0.4
+                                                                                    0.3
+                                0.3                                                                                          0.3
+                                                                                    0.2
+                                0.2                                                                                          0.2
+                                                                                    0.1
+                                0.1                                                                                          0.1
+
+        Exact edge packet                            Global error                           Known-packet error        1e 6
+                                0.7                                                 0.30
+                                0.6                                                                                          8
+                                                                                    0.25
+                                0.5
+                                                                                    0.20                                     6
+                                0.4
+                                                                                    0.15
+                                0.3                                                                                          4
+                                                                                    0.10
+                                0.2
+                                                                                                                             2
+                                0.1                                                 0.05
+
+                                0.0
+
+Figure 9: Known-packet stress test with curved boundaries, corners, overlap, and different jump
+amplitudes. The exact packet is not a binary mask multiplied by one amplitude; it is the complete
+piecewise packet.
+
+
+
+
+                                                             19
+Projector-Resolved Seed Calculus V                                                                        Komorebi P.
+
+
+Numerical Certificate 9.2 (Multiedge errors). The global reconstruction had RMSE 3.3740 × 10−2 and
+maximum error 3.2807 × 10−1 . The known-packet reconstruction had only the remaining smooth-
+background error. The experiment checks the finite implementation of the theorem for a composite
+packet; it is not a data-driven multiregion segmentation result.
+
+
+10     Sparse wavelet packets and global Fourier modes
+A sharp edge is spatially local but spectrally global. Wavelets often provide a more economical
+coordinate system once enough localized coefficients are retained. To keep the comparison explicit, the
+numerical study subtracts the signal mean, keeps the largest coefficients in a fixed depth-five Haar packet
+basis, and compares them with the same number of largest-magnitude discrete Fourier coefficients.
+These are coefficient-count budgets, not equal bit-storage budgets. The Fourier reconstruction uses the
+real part of the inverse transform; for the five reported budgets, the selected nonzero-frequency bins
+occur in conjugate pairs, so this operation removes only floating-point imaginary residuals.
+
+                                 Sparse approximation of a piecewise-smooth signal
+                                                                                Haar packet
+                10 1                                                            largest Fourier coefficients
+
+
+
+
+                10 2
+         RMSE
+
+
+
+
+                10 3
+
+
+
+
+                                                                          102
+                                                  retained coefficients
+
+Figure 10: Sparse approximation of the test signal. With very few coefficients the global Fourier basis
+is initially better; after the edge packets are resolved, the Haar packet error decays much faster in this
+example.
+
+
+                  Table 1: Sparse approximation errors for the one-dimensional test signal.
+
+                        retained coefficients   Haar packet RMSE           Fourier RMSE
+                                          16         1.7999 × 10−1          6.6522 × 10−2
+                                          32         3.8414 × 10−2          4.9153 × 10−2
+                                          64         1.6267 × 10−2          3.8056 × 10−2
+                                         128         1.7387 × 10−3          2.5631 × 10−2
+                                         256         1.5870 × 10−4          1.7424 × 10−2
+
+
+                                                      20
+Projector-Resolved Seed Calculus V                                                          Komorebi P.
+
+
+Boundary 10.1 (Basis selection). This table compares two fixed finite coordinate systems for one signal.
+It does not prove that Haar packets are optimal, that Fourier is inferior on smooth or oscillatory data,
+or that a single packet tree is best for every edge geometry. The point is that the seed calculus records
+both systems with the same analysis, transfer, refinement, and synthesis maps.
+
+
+11      Finite adaptive packet trees
+The preceding sparse comparison used one fixed depth-five packet basis. A refinement tree permits a
+stronger choice: different branches may stop at different depths while the selected packets still form
+one complete coordinate system.
+
+Definition 11.1 (Complete packet pruning). Let T be a finite rooted refinement tree. Every node v
+carries a projector Pv , the root satisfies P∅ = I, and every internal node satisfies
+                                   X
+                           Pv =             Pu ,    Pu Pw = 0     (u ̸= w in ch(v)).
+                                  u∈ch(v)
+
+A set Λ of nodes is a complete pruning if it is an antichain and every root-to-terminal path meets Λ
+exactly once.
+
+Theorem 11.2 (Exact synthesis from every complete pruning). For every complete pruning Λ,
+                                       X                          X
+                                             Pv = I,         x=         Pv x.
+                                       v∈Λ                        v∈Λ
+
+
+Thus changing the selected tree changes the coordinates but does not introduce reconstruction error.
+
+Proof. Starting from the root identity P∅ = I, replace every unselected internal node by the exact
+sum of its children. If a complete pruning contains the root it contains no other node. Otherwise
+its restriction to each child subtree is itself a complete pruning: every terminal path through that
+child must be met exactly once. Induction on the finite tree therefore justifies the substitution and
+its termination precisely at Λ. Child subtrees have distinct node addresses, so their selected-node
+sets form a disjoint union. The sum identity uses only root identity and parent-to-child conservation;
+sibling orthogonality gives the additional interpretation as nonoverlapping projector packets. Applying
+the resulting identity to x gives the synthesis formula.
+
+     Let y denote the observed data. For a complete pruning Λ, consider any finite criterion
+
+                                    Jy (Λ) = Ry (Λ) + ηLy (Λ) + τ K(Λ),
+
+where Ry is a representation cost, Ly is a cross-packet leakage cost, and K is a tree-complexity
+penalty. Here Ry , Ly , K take finite real values, and η, τ are fixed real weights (usually nonnegative in
+applications). No additivity is needed for the first theorem.
+
+Theorem 11.3 (Finite globally optimal stable selector). Let P(T ) be the finite set of complete prunings
+of T .
+
+  (i) A global minimizer
+                                                   Λ∗y ∈ argmin Jy (Λ)
+                                                        Λ∈P(T )
+
+      always exists.
+
+
+                                                        21
+Projector-Resolved Seed Calculus V                                                                Komorebi P.
+
+
+ (ii) If the minimizer is unique and at least one competing pruning exists, its gap
+
+                                               Γy = min∗ Jy (Λ) − Jy (Λ∗y )
+                                                                                     
+                                                        Λ̸=Λy
+
+      is attained and strictly positive. If the pruning set is a singleton, its only element minimizes
+      every criterion; no real-valued minimum over an empty competitor set is introduced.
+
+(iii) In the case with competitors, if new data y ′ satisfy
+
+                                                                                    Γy
+                                               sup |Jy′ (Λ) − Jy (Λ)| <                ,
+                                              Λ∈P(T )                               2
+
+      then Λ∗y′ = Λ∗y .
+
+ (iv) Every selected minimizer preserves the exact synthesis identity of the preceding theorem.
+
+Proof. The root-only pruning exists, and every pruning is a subset of the finite node set, so the feasible
+set is nonempty and finite. Thus the minimum is attained. If competitors exist, their finitely many
+differences from a unique optimum are strictly positive, so their minimum is positive and is achieved
+by a competitor. In the singleton case there is no alternative selector under any objective change. In
+the remaining case, For any competing pruning Λ ̸= Λ∗y ,
+
+                          Jy′ (Λ) − Jy′ (Λ∗y ) ≥ Jy (Λ) − Jy (Λ∗y ) − 2 sup |Jy′ (Ξ) − Jy (Ξ)|
+                                                                                Ξ
+                                             > Γy − Γy = 0.
+
+Hence the same pruning remains uniquely optimal. Exact synthesis depends only on completeness of
+the pruning, not on the cost used to select it.
+
+   For tree-local costs, the optimum can be found without enumerating all prunings.
+
+Theorem 11.4 (Dynamic-programming best packet basis). Suppose
+                                                                X
+                                                 Jy (Λ) =             cv (y).
+                                                                v∈Λ
+
+For a node v, define recursively
+                                       
+                                       cv (y),
+                                       
+                                       
+                                                                                    v terminal,
+                                                                
+                              Vy (v) =                 X         
+                                       
+                                       
+                                       
+                                        min    cv (y),   V y (u)   ,               v internal.
+                                                                 
+                                                          u∈ch(v)
+
+Stop at v when cv (y) ≤ u Vy (u), including equality; refine otherwise. This deterministic rule produces
+                            P
+
+a globally optimal complete pruning. With the node costs supplied and child values cached, the evaluator
+uses one comparison per internal node, one visit per node, and at most |T | − 1 additions. Its arithmetic-
+and-visit count is therefore at most 3|T |. This is a unit-cost statement about the specified evaluator; it
+excludes evaluation of the local costs, bit complexity of scalar arithmetic, and materialization or sorting
+of packet-address strings.
+
+Proof. Proceed upward from the terminal nodes. Every complete pruning below an internal node v
+has exactly two possible forms: it either stops at v, with cost cv (y), or it refines and is the union of
+complete child prunings, whose minimum total cost is the sum of the already computed child minima.
+
+                                                            22
+Projector-Resolved Seed Calculus V                                                           Komorebi P.
+
+
+The recursion therefore gives the exact minimum on every subtree, in particular at the root. This
+characterization also proves both directions of the correspondence between recursive cuts and complete
+covering antichains, for arbitrary positive finite branching, including unary branches. Summing cached
+child values charges at most one addition per child edge; a finite rooted tree has |T | − 1 such edges.
+The number of internal nodes is at most |T |, which gives the stated work bound. Ties do not affect
+optimality, but the stop-on-ties rule makes the selected pruning unambiguous.
+Corollary 11.5 (Local perturbation certificate). Assume
+                                          |cv (y ′ ) − cv (y)| ≤ εv .
+Define                             
+                                    εv ,
+                                   
+                                                                        v terminal,
+                                                    
+                            E(v) =             X     
+                                     max    ε ,   E(u)  ,                v internal.
+                                           v
+                                   
+                                   
+                                   
+                                                     
+                                                 u∈ch(v)
+For the complete prunings Pv below v, the envelope is exactly
+                                                            X
+                                           E(v) = max             εa .
+                                                     Λ∈Pv
+                                                            a∈Λ
+
+The maximum is attained. Every complete-pruning cost changes by at most E(∅), and the two globally
+optimal values differ by at most this quantity. Consequently, for a unique optimum with competitors,
+                                               Γy > 2E(∅)
+is a deterministic certificate that the globally optimal pruning is unchanged. A singleton pruning set is
+stable without a gap condition. If a noise model supplies all local bounds simultaneously on one event
+of probability at least 1 − δ, and the displayed strict-gap condition holds, the same selector is recovered
+with probability at least 1 − δ. Individual nodewise probabilities alone do not give this joint confidence
+without an additional argument, such as a union bound.
+Proof. For any pruning of the subtree rooted at v, either v itself is selected, producing perturbation at
+most εv , or the pruning is the disjoint union of child prunings, producing perturbation at most the
+sum of the child envelopes. The same decomposition applied to the nonnegative weights εa proves
+equality with the maximum weight: at each node choose either the stop option or a maximizing
+pruning in each child, whichever gives the larger total. Finiteness ensures these choices attain their
+maxima. Evaluating each cost at a minimizer of the other cost bounds the difference of the two optimal
+values by the uniform envelope. The selector statement follows from the strict-gap theorem. The joint
+local-error event is contained in the selector-preservation event, so monotonicity of probability proves
+the probabilistic assertion.
+
+Numerical Certificate 11.6 (Adaptive-tree optimum). For the depth-five example, the complete binary
+tree has 458,330 admissible prunings. Dynamic programming and exhaustive enumeration returned the
+same minimum with residual 0. The selected pruning was
+                                      {000, 001, 0100, 0101, 011, 1},
+and mixed-depth synthesis reconstructed the signal with maximum residual 8.88 × 10−16 . The optimum
+gap was 3.1909 × 10−4 , while twice the declared perturbation envelope was 6.4 × 10−5 , so the finite
+selector is certified stable.
+Boundary 11.7 (Finite versus asymptotic selection). The theorem resolves the finite adaptive-tree
+existence, exact-synthesis, global-optimality, and margin-stability problem. It does not by itself prove
+minimax rates, statistical consistency on an infinite tree, or a universal choice of representation and
+leakage costs for every signal class.
+
+                                                     23
+Projector-Resolved Seed Calculus V                                                                                                                       Komorebi P.
+
+
+
+
+                      Dynamic programming selects a globally optimal complete packet pruning
+
+
+                                                                                                                                1
+
+
+
+
+                             000                   001                                  011
+
+
+
+                                                                 0100     0101
+
+
+
+
+                                                  selected packets: 000, 001, 0100, 0101, 011, 1 | exact synthesis residual 8.88e-16
+
+Figure 11: A globally optimal mixed-depth Haar packet pruning. The selected antichain covers the full
+tree, so its synthesis is exact even though different branches stop at different depths.
+
+
+
+
+                                    Finite global optimum among 458,330 prunings                                   Gap criterion certifies selector stability
+                      10 2
+                                   first gap = 3.191e-04
+                                                                                                        0.00030
+                                                                                                                                    stable
+                                                                                                        0.00025
+ cost above optimum
+
+
+
+
+                                                                                                        0.00020
+                                                                                                 cost
+
+
+
+
+                                                                                                        0.00015
+                      10 3
+                                                                                                        0.00010
+
+                                                                                                        0.00005
+
+                                                                                                        0.00000
+                             0          500       1000        1500      2000     2500     3000                    optimum gap               twice perturbation envelope
+                                                           pruning rank
+
+Figure 12: The dynamic-programming optimum agrees with exhaustive enumeration. A positive gap
+larger than twice the declared perturbation envelope certifies that the selected tree is stable.
+
+
+
+
+                                                                                                 24
+Projector-Resolved Seed Calculus V                                                          Komorebi P.
+
+
+12      Nonlinear signal packets
+Linear time invariance is not required for exact packet coordinates. Let A and B be formal power
+series over a commutative coefficient ring (in particular C). Set
+                                             X
+                                    A(z) =         an z n ,     Ai = PN,i A.
+                                             n≥0
+
+All phase indices range from 0 to N − 1. For another representation B(z), multiplication gives a
+nonlinear or bilinear interaction.
+
+Theorem 12.1 (Cyclic product law).
+                                                              X
+                                     PN,k (AB) =                          Ai B j .
+                                                       i+j≡k (mod N )
+
+
+For q ∈ N, the qth-power identity is
+                                                         X
+                                     PN,k (Aq ) =                   Ai1 · · · Aiq .
+                                                    i1 +···+iq ≡k
+
+Proof. Every coefficient in Ai Bj has degree congruent to i + j modulo N . At any fixed degree n, the
+Cauchy coefficient sum is finite. Sorting these terms by the residues of their two indices gives the first
+identity coefficient by coefficient. For the power identity, use induction on q and the finite product
+law. At q = 0, the index set contains the single empty tuple, its product is 1, and its residue sum is 0;
+hence the right side is 1 for k = 0 and 0 otherwise, as required. No convergence is needed for these
+formal identities. For analytic power series, the same identities hold wherever the series are absolutely
+convergent and their Cauchy products may be evaluated.
+
+     For a finite nonlinear shift operator
+
+                                     F (x)[n] = x[n] + αx[n]x[n − 1],
+
+the exact packet coordinates are simply
+                                                                                !
+                                                               X
+                                     Fr ((xs )s ) = PN,r F              PN,s x .
+                                                                    s
+
+Analysis followed by this packet system and synthesis reproduces the direct nonlinear output exactly.
+The numerical residual in the companion implementation was zero to machine representation.
+
+
+13      Smith coordinates as cyclic signal coordinates
+Let Z0 > 0 be a reference impedance and
+                                                     Z
+                                             z=         = r + ix.
+                                                     Z0
+The reflection coefficient is
+                                             z−1                        1+Γ
+                                        Γ=       ,            z=            .
+                                             z+1                        1−Γ
+
+
+
+                                                         25
+Projector-Resolved Seed Calculus V                                                                            Komorebi P.
+
+
+
+
+                                    Nonlinear/product packet interactions add modulo N
+                                                                                         5.0
+                                0       0         1           2          3       4
+                                                                                         4.5
+
+                                                                                         4.0
+                                1       1         2           3          4       0
+
+                                                                                         3.5
+
+
+
+
+                                                                                           interaction norm
+            first input phase
+
+
+
+
+                                2       2         3           4          0       1       3.0
+
+                                                                                         2.5
+                                3       3         4           0          1       2
+                                                                                         2.0
+
+                                                                                         1.5
+                                4       4         0           1          2       3
+
+                                                                                         1.0
+                                        0         1            2         3      4
+                                                      second input phase
+Figure 13: Norms of pairwise product interactions for five residue phases. The label in each cell gives
+the output phase (i + j) mod 5.
+
+
+
+
+                                                                  26
+Projector-Resolved Seed Calculus V                                                              Komorebi P.
+
+
+Classical Input 13.1 (Cayley geometry). The map sends the finite passive half-plane r ≥ 0 onto the
+closed unit disk with Γ = 1 omitted. Adjoining the point at infinity in impedance adds that missing
+boundary point; the open right half-plane maps conformally onto the open disk. Constant resistance
+and reactance become the familiar Smith circles. This conformal geometry is classical and is not
+replaced by polyphase refinement.
+   Writing Γ = u + iv, the grid equations are
+                                                     2
+                                                r                     1
+                                      
+                                          u−              + v2 =            ,
+                                               1+r                 (1 + r)2
+and, for x ̸= 0,
+                                                               2
+                                                        1               1
+                                                      
+                                                 2
+                                          (u − 1) + v −             =      .
+                                                        x               x2
+   Fix
+                                                 ωN = e2πi/N
+and rotate the reflection coefficient by
+                                                           k
+                                               RN,k (Γ) = ωN Γ.
+Theorem 13.2 (Polyphase Möbius action). Regard normalized impedance as the projective line
+P1 (C) = C ∪ {∞}. For N ≥ 1, the pullback is a globally defined projective action. In the finite chart,
+wherever the denominator is nonzero, it is
+                                                       k )z + (1 − ω k )
+                                                 (1 + ωN            N
+                                    TN,k (z) =         k )z + (1 + ω k )
+                                                                         .
+                                                 (1 − ωN            N
+
+As maps on P1 (C) it satisfies
+                                       TN,k ◦ TN,ℓ = TN,k+ℓ (mod N ) .
+Proof. Let C(z) = (z − 1)/(z + 1). Then
+                                           TN,k = C −1 ◦ RN,k ◦ C.
+For a division-free construction, represent a point by a nonzero pair [u : v], identifying [cu : cv] = [u : v]
+for c ̸= 0. With w = ωN k , use the matrix
+                                                                         !
+                                              1 1+w 1−w
+                                       A(w) =           .
+                                              2 1−w 1+w
+It has determinant w ̸= 0, preserves nonzero pairs, and commutes with rescaling, so it induces a
+projective map. Direct multiplication gives A(w)A(w′ ) = A(ww′ ) and A(1) = I. Since ωN   N = 1, this
+
+proves the cyclic composition law modulo N . The Cayley coordinate of [u : v] is [u − v : u + v], and
+applying A(w) changes this pair to [w(u − v) : u + v]. This proves the conjugacy also at poles. For
+[z : 1], taking the coordinate ratio gives the displayed finite-chart formula.
+
+Corollary 13.3 (Impedance–admittance is the two-phase split). For N = 2 and finite z ̸= 0,
+
+                                                T2,1 (z) = z −1 .
+
+On the full projective line it exchanges 0 and ∞. Thus a half-turn of the reflection disk exchanges
+normalized impedance and admittance.
+Proof. ω2 = exp(πi) = −1, so A(ω2 )[u : v] = [v : u]. The finite ratio is 1/z when z ̸= 0; the coordinate
+swap also gives [0 : 1] ↔ [1 : 0]. No ordinary division by zero is used to represent infinity.
+
+
+                                                          27
+Projector-Resolved Seed Calculus V                                                       Komorebi P.
+
+
+
+
+                                    Projector-resolved polyphase Smith chart
+          1.00
+
+
+          0.75
+
+
+          0.50
+
+
+          0.25
+
+
+          0.00
+
+
+          0.25
+
+
+          0.50
+
+
+          0.75
+
+
+          1.00
+
+                 1.00     0.75     0.50      0.25        0.00   0.25     0.50   0.75     1.00
+
+
+Figure 14: The classical Smith grid equipped with sixteen exact phase rays and four radial seed orbits.
+The Cayley transform creates the chart; the projector calculus supplies the nested cyclic coordinate
+system.
+
+
+
+
+                                                    28
+Projector-Resolved Seed Calculus V                                                                     Komorebi P.
+
+
+13.1    Radial seeds and physical phase
+For 0 ≤ ρ < 1 and angle θ,
+                                                      Γ = ρeiθ
+gives
+                                                           1 + ρeiθ
+                                            z(ρ, θ) =               ,
+                                                           1 − ρeiθ
+with
+                                    1 − ρ2                          2ρ sin θ
+                      r(ρ, θ) =                2
+                                                 ,   x(ρ, θ) =                   .
+                              1 − 2ρ cos θ + ρ                 1 − 2ρ cos θ + ρ2
+A fixed ρ is a constant-mismatch circle. Refining N increases angular resolution without changing ρ.
+
+                              Exact nested phase refinement on one mismatch circle
+               1.00
+
+               0.75
+
+               0.50
+
+               0.25
+
+               0.00
+
+               0.25
+
+               0.50
+
+               0.75
+
+               1.00
+                       1.00       0.75   0.50      0.25        0.00     0.25     0.50   0.75    1.00
+                                   N=2          N=4             N=8            N=16      N=32
+
+Figure 15: The same reflection circle at phase orders 2, 4, 8, 16, 32. Each coarse phase ray appears
+in every finer grid whose order is a multiple of its order. The exact residue-projector refinement law
+concerns coefficient packets, not sums of impedance points.
+
+   For a lossless transmission line,
+                                                Γin = ΓL e−2iβℓ .
+One N -phase step corresponds to a line-length increment λ/(2N ), up to the chosen orientation
+convention. Hence the phase address has a direct electrical interpretation.
+
+                                                          29
+Projector-Resolved Seed Calculus V                                                           Komorebi P.
+
+
+14      Dyadic–odd phase factorization and boundary weighting
+Write
+                                         N = 2s M,         M odd.
+The cyclic index splits by the Chinese remainder theorem:
+
+                                        Z/N Z ∼
+                                              = Z/2s Z × Z/M Z.
+
+Proposition 14.1 (Dyadic–odd packet factorization). After identifying the residue labels by the
+Chinese remainder map, the phase projector factors as
+
+                                           PN,j = P2s ,j2 PM,jo .
+
+Proof. The two congruence conditions are independent because 2s and M are coprime. Their indicator
+functions multiply to the indicator of the unique residue class modulo N satisfying both.
+
+   The first dyadic step is exceptional in Smith coordinates because it is the inversion z 7→ z −1 . Higher
+dyadic levels refine the open/short duality into quarter-, eighth-, and finer phase sectors.
+   Away from its pole Γ = 1, the inverse Cayley map has derivative
+                                             dz       2
+                                                =          ,
+                                             dΓ   (1 − Γ)2
+
+while normalized admittance has derivative proportional to (1 + Γ)−2 . Away from Γ = ±1, this
+motivates the symmetric sensitivity
+
+                                                       1           1
+                                    wSmith (Γ) =           2
+                                                             +          .
+                                                   |1 − Γ|     |1 + Γ|2
+
+Boundary 14.2 (Weighted refinement). The sensitivity formula follows directly from the exact coordinate
+derivatives. Using it to choose an optimal adaptive grid, interpolation rule, or measurement design is a
+separate numerical problem. The release visualizes the weight but does not prove optimality.
+
+
+15      Boundary-localized error and claim control
+The strongest visual distinction between global Fourier reconstruction and exact packet retention is
+seen in a band around the discontinuity.
+
+Conjecture 15.1 (Edge-packet approximation class). There should exist natural function spaces in
+which a signal is represented as             X
+                                    f =s+       aq 1Ωq ,
+                                                       q
+
+with separate norms for smooth approximation, boundary geometry, packet amplitude, and packet
+identification. A projector-resolved approximation theory on such spaces should yield rates that do not
+mix smooth truncation error with discontinuity-location error.
+
+
+
+
+                                                     30
+Projector-Resolved Seed Calculus V                                                                                               Komorebi P.
+
+
+
+
+                                  Symmetric sensitivity near open and short circuit                                 4.0
+                1.00
+                                                                                                                    3.5
+                0.75
+                                                                                                                    3.0
+                0.50
+
+                0.25                                                                                                2.5
+
+
+
+
+                                                                                                                       log10 wSmith
+                0.00                                                                                                2.0
+
+                0.25
+                                                                                                                    1.5
+
+                0.50
+                                                                                                                    1.0
+                0.75
+                                                                                                                    0.5
+                1.00
+                           1.00    0.75         0.50   0.25    0.00      0.25   0.50      0.75     1.00
+
+
+Figure 16: The proposed symmetric refinement weight becomes large near the open- and short-circuit
+boundary points. It is a condition-based adaptive coordinate, not an asserted optimal sampling law.
+
+
+
+
+           Boundary band                  1.0           Global error in band                     Known-packet error in band           1e 5
+                                                                                       0.30                                                  3.0
+                                          0.8                                          0.25                                                  2.5
+
+                                          0.6                                          0.20                                                  2.0
+
+                                                                                       0.15                                                  1.5
+                                          0.4
+                                                                                       0.10                                                  1.0
+                                          0.2
+                                                                                       0.05                                                  0.5
+
+                                          0.0                                          0.00                                                  0.0
+
+Figure 17: Error restricted to a narrow boundary band. Global truncation concentrates large error on
+the jump. The known-packet reconstruction has only the small smooth-packet error in the same band.
+
+
+
+
+                                                                    31
+Projector-Resolved Seed Calculus V                                                                             Komorebi P.
+
+
+                                                Claim boundary for Paper V after the finite adaptive-tree theorem
+                polyphase reconstruction             yes
+
+                              FIR transfer           yes
+
+              Haar perfect reconstruction            yes
+
+                    known-edge theorem               yes
+
+                mask perturbation bound              yes
+
+      finite adaptive packet-tree optimum            yes
+
+              positive-contrast estimator                                      yes
+
+                     Smith Mobius action             yes
+
+                nonlinear packet product             yes
+
+                universal edge discovery                                                                 yes
+
+         infinite-tree/asymptotic selector                                                               yes
+                                                   proved                numerical/limited          open boundary
+
+Figure 18: Proof and claim boundary. Finite adaptive-tree selection is now proved; the remaining open
+rows concern universal recovery and infinite-tree or asymptotic selection.
+
+
+16     Implementation and reproducibility
+The companion package is organized by mathematical layer:
+
+                                         Table 2: Numerical companion modules.
+
+   module                                    implemented content
+   polyphase.py                              residue projectors, analysis/synthesis, refinement, exact FIR
+                                             transfer kernels, polyphase convolution
+   filterbanks.py                            Haar analysis/synthesis, complete Haar packet trees, energy
+                                             accounting, predict–update lifting
+   adaptive.py                               complete-pruning enumeration, exact mixed-depth synthesis,
+                                             dynamic-programming optimization, and stability certificates
+   edges.py                                  one- and two-dimensional Fourier truncation, known-packet
+                                             reconstruction, narrow two-class estimators, harmonic filling,
+                                             error metrics
+   smith.py                                  Cayley coordinates, cyclic Möbius action, Smith circles,
+                                             sensitivity weight, coefficient projectors
+   nonlinear.py                              coefficient packets, cyclic product convolution, nonlinear shifted
+                                             packet reconstruction
+   experiments.py                            all machine-readable numerical certificates and tabular summaries
+   visuals.py                                the eighteen figure pairs used in the paper
+
+   The original companion source has been recovered and rerun. Its 33 tests pass, and all 18 figure
+pairs and numerical tables have been regenerated. The Lean package contributes 20 independent
+
+                                                               32
+Projector-Resolved Seed Calculus V                                                            Komorebi P.
+
+
+exact-model tests and 16 tests of the verifier itself; these account for another 36 passing tests. The
+exact-model suites count 305,933 assertions. These counts are separate from the 225 Lean theorem
+targets.
+    All numerical computations are CPU-based. Floating-point residuals measure finite implementations
+and may vary at rounding level with the scientific libraries. The universal mathematical statements are
+supported by the Lean proofs; the Python modules are not compiled or verified by Lean. The adaptive-
+tree certificate uses floating-point costs and an exhaustive finite comparison, so its displayed gap is
+numerical evidence rather than an interval-arithmetic proof about those computed costs. Appendix D
+explains the verification boundary.
+Numerical Certificate 16.1 (Finite numerical residuals). The largest recorded residuals were
+
+                   identity                                                        residual
+                   polyphase reconstruction                                              0
+                   nested refinement                                                     0
+                   polyphase convolution                                       4.44 × 10−16
+                   Haar reconstruction                                         8.88 × 10−16
+                   wavelet-packet reconstruction                               2.22 × 10−15
+                   adaptive-tree optimum versus exhaustive search                         0
+                   adaptive mixed-depth synthesis                              8.88 × 10−16
+                   lifting reconstruction                                      4.44 × 10−16
+                   Smith rotation conjugacy                                    3.34 × 10−16
+                   Smith impedance–admittance duality                                     0
+                   nonlinear product-packet reconstruction                     1.33 × 10−15
+                   nonlinear shifted-filter reconstruction                                0
+
+The Haar and wavelet energy residuals were 5.68 × 10−14 and 2.27 × 10−13 , respectively.
+
+
+17    Conclusions
+The signal realization makes the seed, address, packet, transfer, refinement, and synthesis operations
+concrete. The objects and laws can be read directly:
+
+                                         seed = δ0 ,
+                                      address = S n ,
+                                       packet = PN,r x,
+                                      transfer = PN,k HPN,s ,
+                                                            X
+                                   refinement = PN,r =            PM,s ,
+                                                            s≻r
+                                                   X
+                                     synthesis =        PN,r x,
+                                                   r
+                                                                           !
+                                                             X
+                                 nonlinearity = PN,r F            PN,s x .
+                                                              s
+
+Filter banks, wavelet packets, adaptive complete prunings, edge packets, and Smith coordinates
+inhabit the same operator grammar, but their claims differ. Polyphase and filter-bank identities are
+exact. Wavelet perfect reconstruction is exact. The known-edge theorem is exact conditional on
+the decomposition. Estimated-edge performance depends on a detection model. The Smith chart
+
+                                                   33
+Projector-Resolved Seed Calculus V                                                             Komorebi P.
+
+
+remains the classical Cayley geometry equipped with an exact cyclic refinement algebra. Keeping those
+distinctions explicit is part of the calculus, not an editorial afterthought.
+    The next paper in the series turns from discrete signal transfer to semigroups, resolvents, conditioning,
+stochastic evolution, fractional powers, and PDE kernels.
+
+
+A      Algorithm statements
+A.1     Exact polyphase filtering
+Given x, h, and N :
+
+    1. Form xs [n] = x[N n + s] for 0 ≤ s < N .
+
+    2. Form every transfer kernel hks [m] = h[N m + k − s].
+
+    3. Compute                                     XX
+                                        yk [n] =            hks [m]xs [n − m].
+                                                   s   m
+
+    4. Interleave the yk channels.
+
+   The algorithm is algebraically identical to direct convolution; its purpose is to expose independent
+and interacting packets for block computation and refinement.
+
+A.2     Conditional known-edge reconstruction
+Given a decomposition f = s + j:
+
+    1. Apply the selected smooth approximation Qm to s only.
+
+    2. Retain j exactly.
+
+    3. Return Qm s + j.
+
+    The error certificate is ∥s − Qm s∥.
+
+A.3     Limited positive-contrast estimator
+The included finite estimator does the following:
+
+    1. Split the observed values into two classes by an Otsu threshold.
+
+    2. Keep coherent connected components and fill holes.
+
+    3. Harmonically fill the selected packet to estimate the missing background.
+
+    4. Smooth the filled background spectrally.
+
+    5. Estimate one packet amplitude by a robust median residual.
+
+    6. Recombine the estimated smooth and edge packets.
+
+   This procedure is useful for the supplied separated synthetic case. It assumes a positive-contrast
+two-class packet and is not promoted to a general edge theorem.
+
+
+                                                       34
+Projector-Resolved Seed Calculus V                                                        Komorebi P.
+
+
+B     Numerical record
+
+                                Table 3: Main edge-study measurements.
+
+             case                    global RMSE        known-packet RMSE   estimated RMSE
+             1D rectangular packet   5.4023 × 10−2           1.3692 × 10−4     2.4029 × 10−2
+             2D disk packet          3.7643 × 10−2           6.4752 × 10−5     3.4043 × 10−3
+             2D multiedge packet     3.3740 × 10−2          known composite packet only
+
+
+                                     Table 4: Main software artifacts.
+
+      artifact                                  purpose
+      results/numerical_results.json            complete machine-readable certificate record
+      tables/numerical_summary.csv              flat summary of errors and residuals
+      tables/sparse_representation.csv          wavelet/Fourier coefficient study
+      tests/                                    automated finite identity and estimator tests
+      figures/                                  PNG and vector-PDF figure pairs
+      VERIFY_PAPER.py                           combined manuscript, numerical, and Lean checks
+
+
+C     Notation crosswalk
+
+                                       Table 5: Notation crosswalk.
+
+    common symbol          signal realization                   interpretation
+    s                      δ0                                   primitive signal seed
+    An                     Sn                                   address operator
+    PN,r                   residue mask                         phase packet projector
+    Tks                    PN,k HPN,s                           input-to-output phase transfer
+    E, R                   analysis and synthesis matrices      coordinate conversion and
+                                                                reconstruction
+    W (γ)                  filter or path weight                refinement or implementation cost
+    ∆(F )                  coarse/fine signal defect            aliasing, leakage, or estimator
+                                                                inconsistency
+    Hol(γ)                 closed phase transfer                cycle consistency in a network
+    Γ                      reflection coefficient               Smith-disk coordinate
+
+
+
+
+                                                       35
+Projector-Resolved Seed Calculus V                                                            Komorebi P.
+
+
+D       Formalization and reproducibility record
+D.1     What has been checked
+This edition has twenty theorem-like statements: Theorems, Propositions, and Corollaries, counted
+together. The Lean project contains 225 explicit supporting theorem targets in 23 proof modules.
+All twenty statements have an explicit scope row and principal declaration targets. A fresh build
+and axiom audit accepted the project with warnings treated as errors. The audit inspected all 827
+declarations in the project namespace, including definitions and automatically generated declarations.
+The latter is an implementation census, not a count of 827 mathematical theorems.
+    The accepted axiom dependencies are propext, Classical.choice, and Quot.sound. No admitted
+proof or additional project axiom is permitted. The verifier checks the imported modules, registered
+theorem inventory, dependency pins, source hashes, and coverage of the twenty-row scope contract. Its
+successful status is LEAN_CHECKS_PASS. The correspondence between a mathematical sentence in this
+PDF and its Lean type is a manual mathematical review, not an automated semantic-equivalence test.
+    The source-level formalization was completed before this manuscript revision. The revision integrates
+those checked hypotheses and conclusions into the paper itself; it does not increase the Lean theorem
+count by counting editorial changes as new proofs. Eleven foundational formal-power-series proofs in
+CyclicSeries are adaptations of Paper IV and are identified as such in the provenance record.
+
+D.2     Result-by-result correspondence
+The following table summarizes the reviewed statement boundary. Full qualified declaration names,
+source locations, and supplementary targets appear in MANUSCRIPT_TARGET_MAP.md and the machine-
+readable scope contract. Every row below has supporting kernel-checked declarations; numerical
+certificates, classical-input paragraphs, remarks, and conjectures are not additional theorem rows.
+
+              Table 6: The twenty manuscript results and their Lean statement scopes.
+
+  Result      Principal modules               Checked mathematical content
+  1.1         HilbertPackets                  Complex ℓ2 impulse expansion, finite-support identity,
+                                              unitary shifts, and closed shift-generated span.
+  2.1         HilbertPackets                  Bounded self-adjoint residue projectors, pairwise
+                                              annihilation, completeness, and orthogonal ranges.
+  2.2         IntegerPolyphase;               Signed quotient/remainder coordinates, both inverse
+              HilbertPackets                  identities, and the joint Hilbert norm of the channels.
+  2.3         HilbertPackets                  Literal bounded-projector refinement for positive divisible
+                                              moduli.
+  3.1         FIRTransfer; ZTransform         Finite-support tap reindexing for all bilateral inputs;
+                                              numerical channel transforms under weighted absolute
+                                              summability.
+  4.1         FilterBank; FiniteTransforms    Finite Laurent/FIR bank composition, faithful action on
+                                              sequences, gain-delay reconstruction criterion, and the N d
+                                              original-sample delay.
+  4.2         HaarChannels; HaarHilbert       Literal even/odd input samples, normalized complex
+                                              low/detail channels, and ℓ2 energy equality.
+  4.3         Lifting; FiniteTransforms       Predict/update inverse maps, determinant one, and both
+                                              flat finite-signal inverse identities.
+  5.1         WaveletPackets                  Every finite depth of literal Haar packet operators, energy
+                                              equality, and reconstruction using actual Hilbert adjoints.
+  6.1         KnownEdge                       Exact cancellation of one retained packet, and equality of
+                                              approximation errors.
+
+
+                                                   36
+Projector-Resolved Seed Calculus V                                                            Komorebi P.
+
+
+  Result      Principal modules               Checked mathematical content
+  6.2         KnownEdge                       Finite families of retained packets, with no geometry
+                                              assumption on the packets.
+  7.1         MaskPerturbation                Measurable-mask symmetric-difference norm, extended
+                                              finite-p error bound, pointwise and essential supremum
+                                              bounds, and smooth-background error.
+  11.2        CompletePrunings;               Recursive cuts correspond to complete covering antichains;
+              PruningSums                     literal finite node sums preserve synthesis.
+  11.3        PruningSums                     Finite arbitrary-objective minimization, attained positive
+                                              gap with competitors, strict stability, and the singleton
+                                              case.
+  11.4        FiniteAdaptive;                 Deterministic stop-on-ties selector, global optimum,
+              PruningAlgorithm                arbitrary positive finite branching, and the stated
+                                              unit-operation count.
+  11.5        PruningSums;                    Attained maximum error envelope, optimal-value
+              PruningAlgorithm                perturbation, strict-gap selector stability, and probability
+                                              transfer from a joint event.
+  12.1        CyclicSeries                    Formal Cauchy-product residue convolution and the
+                                              finite-tuple power identity, including the empty product at
+                                              exponent zero.
+  13.2        SmithAction; SmithCyclic        Nonzero homogeneous pairs modulo scaling, Cayley
+                                              conjugacy, the actual exponential phase, and cyclic
+                                              composition on the projective line.
+  13.3        SmithCyclic                     Two-phase coordinate swap, 0 ↔ ∞, and finite impedance
+                                              inversion when z ̸= 0.
+  14.1        CRT                             Signed integer residue-mask factorization for coprime
+                                              moduli, including the dyadic–odd case.
+
+
+   The remaining foundational modules Packets, FiniteSelection, and BinaryAdaptive provide
+generic coordinate, finite-minimum, and binary-tree lemmas used or retained alongside the concrete
+constructions. The Hilbert target is the square-summable space on a product of indices; it is not the
+supremum-norm function space that Lean would otherwise assign to an unqualified finite family of
+channels.
+
+D.3      Three bridges that matter for the statement
+Finite filters and numerical transforms. The filter-bank proof is an algebraic theorem about
+finite Laurent-polynomial kernels acting faithfully on bilateral sequences. Equality at a single complex
+value of z would be insufficient to prove a polynomial identity; the impulse argument avoids that
+error. The separate transform theorem proves the finite-filter action agrees with evaluation wherever
+the weighted input series converge absolutely. An arbitrary bilateral ℓ2 sequence need not have an
+absolutely convergent numerical z-transform. The all-sequence time-domain theorem makes no such
+assumption.
+
+Recursive trees and set-valued prunings. The formal tree permits any positive finite arity at an
+internal node, including arity one. A node has a position in the tree, so equal data labels on distinct
+nodes do not identify the nodes. A recursive cut is either a stop or a collection of child cuts. Its
+equivalence with a covering antichain is proved in both directions. The cost, envelope, and operator
+sums are then shown to equal actual finite sums over the selected node set. This connects the recursive
+optimizer to the manuscript’s set-valued definition instead of assuming that connection.
+
+
+
+                                                  37
+Projector-Resolved Seed Calculus V                                                          Komorebi P.
+
+
+Hilbert operators and finite experiments. The coordinate maps, literal Haar channels, and
+packet operators are constructed on complex ℓ2 . Square summability and boundedness are established
+before adjoints are used. The finite Python experiments separately check indexing, reconstruction,
+and energy at finite lengths. They illustrate these operators but are not the objects executed by the
+Lean kernel. Likewise, the Python Smith routine evaluates only finite charts; the Lean projective
+construction supplies the pole-safe universal statement.
+
+D.4    Executed checks and numerical conventions
+              Check family                                             Accepted count
+              Original numerical companion tests                                       33
+              Independent exact-model tests                                            20
+              Verifier positive and negative controls                                  16
+              Total tests in these three families                                      69
+              Exact assertions inside the independent model suites                305,933
+              Registered Lean theorem targets                                         225
+              Lean proof modules                                                       23
+              Regenerated figure pairs                                                 18
+
+    All scalar entries in the recovered numerical-results JSON reproduced exactly in this environment.
+This includes the 458,330-pruning depth-five comparison, its selected six-node pruning, the optimum
+gap, and the reconstruction residuals. The five Fourier sparse-approximation budgets were also checked
+for conjugate-pair closure. The revised figures and tables use the regenerated data. This exact replay
+of the stored floating-point numbers is stronger than a visual similarity check, but it is not a promise
+of bitwise equality on every platform.
+    For the one-dimensional low-pass experiment, “cutoff 18” means 37 signed frequency bins, not 18
+retained coefficients. The disk experiment uses a square 33×33 frequency mask, not a radial cutoff. The
+sparse comparison uses largest-coefficient budgets instead of either low-pass convention. The full-image
+and boundary-band RMSEs are normalized by the number of samples in the respective comparison set.
+The supplied inpainting routines perform a fixed finite number of periodic neighbor-averaging iterations;
+“harmonic filling” describes that iteration, not a separately proved exact continuum Dirichlet solver.
+    The independent exact-model suite checks signed polyphase/FIR addresses, exact lifting and
+normalized Haar arithmetic, mask bounds, and exhaustive finite-tree objectives. Its tree census includes
+all 626 ordered rooted tree shapes with one through eight nodes and 129,958 node subsets. These
+finite checks can catch implementation or convention errors; they are not substitutes for the universal
+Lean proofs. The verifier controls exercise failure paths, including incomplete scope contracts and
+unregistered proof targets. Mandatory verification conditions use explicit exceptions rather than
+Python assertions, so optimized Python cannot silently remove them.
+
+D.5    Pinned environment and rerunning the release
+The Lean toolchain is leanprover/lean4:v4.34.0-rc2. The project pins mathlib to
+                             aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+
+The Lake manifest records the remaining dependency revisions. The numerical environment versions
+are recorded in verification/numerical_environment.json. Source and artifact hashes appear in
+SHA256SUMS.txt. The original manuscript, source, numerical data, and figures remain available under
+provenance for comparison; the expanded PDF and its TeX are the current manuscript.
+    From the release root, the combined verification entry point is:
+
+                                                   38
+Projector-Resolved Seed Calculus V                                                         Komorebi P.
+
+
+
+python3 VERIFY_PAPER.py
+
+This runs the Lean verifier, companion tests, numerical regeneration/comparison, and manuscript
+consistency checks. Lean, Lake, the pinned dependencies, the Python requirements, and a TeX
+installation must be available for the corresponding full checks. Missing prerequisites or failed checks
+return failure; static checks alone never report kernel verification. The individual numerical generation
+command is
+cd companion
+python3 run_all.py
+python3 -m pytest -q tests
+
+The TeX source resolves the eighteen vector figures from the manuscript’s figure directory. The
+checked build uses repeated pdfLaTeX passes, then text, cross-reference, and page-render inspection.
+Different pdfTeX versions can produce different binary PDF hashes even when the rendered document
+is unchanged.
+    In the present container, a disclosed runtime adapter was needed for Lean executable-path discovery:
+it redirects a read of the current process’s numeric /proc executable link to /proc/self/exe. It
+does not modify the Lean binary, elaborator, kernel, axioms, or proof terms. The adapter source
+and invocation are retained with the verification evidence; ordinary installations can run the pinned
+toolchain directly.
+
+D.6    What remains open
+The finite theorem scope is complete in the stated sense: all twenty theorem-like statements have
+reviewed, accepted formal counterparts, and the numerical companion has been rerun. The two edge-
+recovery conjectures remain open research directions. No universal segmentation theorem, infinite-tree
+consistency result, minimax rate, or optimal Smith sampling theorem is inferred from the finite results.
+Classical Smith-grid and transmission-line formulae provide application context; those physical and
+historical assertions are not additional Lean-certified theorem rows.
+    Across the available Papers I–V manuscripts there are 168 theorem-like results. Their release
+maps contain 1,456 raw theorem targets; removing two shared qualified names and eleven known
+Paper-IV-to-V adaptations leaves 1,443 after those known duplicate removals. This is a source census,
+not a claim of that many independent or novel mathematical results. Papers I–IV were counted from
+their release material and bundled audit records; only Paper V was freshly built for this edition.
+
+
+
+
+                                                   39
+

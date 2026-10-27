@@ -1,0 +1,14 @@
+theorem original_sample_delay (N : ℕ) (hN : 0 < N)
+    (E R : Matrix (Fin N) (Fin N) Laurent) (c : ℂ) (d : ℤ)
+    (h : R*E = gainDelay c d) (x : Signal) (n : ℤ) :
+    KomorebiPaperV.IntegerPolyphase.synthesis N hN
+      (bank R (bank E (KomorebiPaperV.IntegerPolyphase.analysis N x))) n = c*x (n-(N:ℤ)*d) := by
+  have hr := (perfect_reconstruction_iff E R c d).mpr h
+  unfold KomorebiPaperV.IntegerPolyphase.synthesis
+  rw [hr]
+  congr 1
+  unfold KomorebiPaperV.IntegerPolyphase.analysis
+  congr 1
+  have ha := KomorebiPaperV.IntegerPolyphase.address_phase_quotient N hN n
+  dsimp [KomorebiPaperV.IntegerPolyphase.address] at ha ⊢
+  linarith

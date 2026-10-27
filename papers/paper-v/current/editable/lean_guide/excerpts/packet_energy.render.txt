@@ -1,0 +1,10 @@
+theorem packet_energy (n : ℕ) (x : H) : ∑ w : Word n, ‖packet n w x‖ ^ 2 = ‖x‖ ^ 2 := by
+  induction n generalizing x with
+  | zero =>
+    change (∑ w : Unit, ‖x‖ ^ 2) = _
+    simp
+  | succ n ih =>
+    change (∑ w : Fin 2 × Word n, ‖(packet n w.2) (childOp w.1 x)‖ ^ 2) = _
+    rw [Fintype.sum_prod_type]
+    simp_rw [ih]
+    exact child_energy x

@@ -1,0 +1,13 @@
+theorem bank_faithful (A B : Matrix I I Laurent) :
+    (∀ x, bank A x = bank B x) ↔ A = B := by
+  constructor
+  · intro h
+    funext k s
+    apply AddMonoidAlgebra.ext
+    apply Finsupp.ext
+    intro n
+    have he := congrArg (fun y : I → Signal => y k n) (h (channelImpulse s))
+    simpa only [bank_impulse] using he
+  · rintro rfl
+    intro x
+    rfl

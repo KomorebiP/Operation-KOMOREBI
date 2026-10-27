@@ -1,0 +1,8 @@
+def addressEquiv (N : ℕ) (hN : 0 < N) : ℤ ≃ Fin N × ℤ where
+  toFun n := (phase N hN n, quotient N n)
+  invFun p := address N p.1 p.2
+  left_inv := address_phase_quotient N hN
+  right_inv p := by
+    apply Prod.ext
+    · exact phase_address N hN p.1 p.2
+    · exact quotient_address N hN p.1 p.2

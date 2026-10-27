@@ -1,0 +1,12 @@
+theorem delay_transform (x : ℤ → ℂ) (z X : ℂ) (hz : z ≠ 0)
+    (h : HasTransform x z X) (d : ℤ) :
+    HasTransform (fun n => x (n-d)) z (z ^ (-d) * X) := by
+  have hh := h.mul_left (z ^ (-d))
+  have he : (fun n : ℤ => z ^ (-d) * (x n * z ^ (-n))) =
+      (fun n : ℤ => x (n-d) * z ^ (-n)) ∘ Equiv.addRight d := by
+    funext n
+    change z ^ (-d) * (x n * z ^ (-n)) = x (n+d-d) * z ^ (-(n+d))
+    rw [add_sub_cancel_right, neg_add, zpow_add₀ hz]
+    ring
+  rw [he] at hh
+  exact (Equiv.addRight d).hasSum_iff.mp hh

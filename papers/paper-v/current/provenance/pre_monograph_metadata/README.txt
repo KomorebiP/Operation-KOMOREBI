@@ -1,0 +1,1 @@
+Pre-monograph metadata and historical layout evidence. These describe earlier dated snapshots and are not current edition page counts or build instructions. The earlier archive left 17 verification files missing, listed in ../HISTORICAL_RECOVERY_GAPS.json. Current evidence is under verification/MONOGRAPH_VERIFICATION.json.

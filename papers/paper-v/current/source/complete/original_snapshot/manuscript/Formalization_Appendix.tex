@@ -1,0 +1,110 @@
+\section{Formalization and reproducibility record}\label{sec:formalization}
+
+\subsection{What has been checked}
+
+This edition has twenty theorem-like statements: Theorems, Propositions, and Corollaries, counted together. The Lean project contains 225 explicit supporting theorem targets in 23 proof modules. All twenty statements have an explicit scope row and principal declaration targets. A fresh build and axiom audit accepted the project with warnings treated as errors. The audit inspected all 827 declarations in the project namespace, including definitions and automatically generated declarations. The latter is an implementation census, not a count of 827 mathematical theorems.
+
+The accepted axiom dependencies are \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. No admitted proof or additional project axiom is permitted. The verifier checks the imported modules, registered theorem inventory, dependency pins, source hashes, and coverage of the twenty-row scope contract. Its successful status is \texttt{LEAN\_CHECKS\_PASS}. The correspondence between a mathematical sentence in this PDF and its Lean type is a manual mathematical review, not an automated semantic-equivalence test.
+
+The source-level formalization was completed before this manuscript revision. The revision integrates those checked hypotheses and conclusions into the paper itself; it does not increase the Lean theorem count by counting editorial changes as new proofs. Eleven foundational formal-power-series proofs in \texttt{CyclicSeries} are adaptations of Paper IV and are identified as such in the provenance record.
+
+\subsection{Result-by-result correspondence}
+
+The following table summarizes the reviewed statement boundary. Full qualified declaration names, source locations, and supplementary targets appear in \texttt{MANUSCRIPT\_TARGET\_MAP.md} and the machine-readable scope contract. Every row below has supporting kernel-checked declarations; numerical certificates, classical-input paragraphs, remarks, and conjectures are not additional theorem rows.
+
+\begingroup\small
+\begin{longtable}{L{0.09\textwidth}L{0.28\textwidth}L{0.53\textwidth}}
+\caption{The twenty manuscript results and their Lean statement scopes.}\label{tab:lean-map}\\
+\toprule
+\textbf{Result}&\textbf{Principal modules}&\textbf{Checked mathematical content}\\
+\midrule\endfirsthead
+\toprule
+\textbf{Result}&\textbf{Principal modules}&\textbf{Checked mathematical content}\\
+\midrule\endhead
+\ref{result:01}&HilbertPackets&Complex $\ell^2$ impulse expansion, finite-support identity, unitary shifts, and closed shift-generated span.\\
+\ref{result:02}&HilbertPackets&Bounded self-adjoint residue projectors, pairwise annihilation, completeness, and orthogonal ranges.\\
+\ref{result:03}&IntegerPolyphase; HilbertPackets&Signed quotient/remainder coordinates, both inverse identities, and the joint Hilbert norm of the channels.\\
+\ref{result:04}&HilbertPackets&Literal bounded-projector refinement for positive divisible moduli.\\
+\ref{result:05}&FIRTransfer; ZTransform&Finite-support tap reindexing for all bilateral inputs; numerical channel transforms under weighted absolute summability.\\
+\ref{result:06}&FilterBank; FiniteTransforms&Finite Laurent/FIR bank composition, faithful action on sequences, gain-delay reconstruction criterion, and the $Nd$ original-sample delay.\\
+\ref{result:07}&HaarChannels; HaarHilbert&Literal even/odd input samples, normalized complex low/detail channels, and $\ell^2$ energy equality.\\
+\ref{result:08}&Lifting; FiniteTransforms&Predict/update inverse maps, determinant one, and both flat finite-signal inverse identities.\\
+\ref{result:09}&WaveletPackets&Every finite depth of literal Haar packet operators, energy equality, and reconstruction using actual Hilbert adjoints.\\
+\ref{result:10}&KnownEdge&Exact cancellation of one retained packet, and equality of approximation errors.\\
+\ref{result:11}&KnownEdge&Finite families of retained packets, with no geometry assumption on the packets.\\
+\ref{result:12}&MaskPerturbation&Measurable-mask symmetric-difference norm, extended finite-$p$ error bound, pointwise and essential supremum bounds, and smooth-background error.\\
+\ref{result:13}&CompletePrunings; PruningSums&Recursive cuts correspond to complete covering antichains; literal finite node sums preserve synthesis.\\
+\ref{result:14}&PruningSums&Finite arbitrary-objective minimization, attained positive gap with competitors, strict stability, and the singleton case.\\
+\ref{result:15}&FiniteAdaptive; PruningAlgorithm&Deterministic stop-on-ties selector, global optimum, arbitrary positive finite branching, and the stated unit-operation count.\\
+\ref{result:16}&PruningSums; PruningAlgorithm&Attained maximum error envelope, optimal-value perturbation, strict-gap selector stability, and probability transfer from a joint event.\\
+\ref{result:17}&CyclicSeries&Formal Cauchy-product residue convolution and the finite-tuple power identity, including the empty product at exponent zero.\\
+\ref{result:18}&SmithAction; SmithCyclic&Nonzero homogeneous pairs modulo scaling, Cayley conjugacy, the actual exponential phase, and cyclic composition on the projective line.\\
+\ref{result:19}&SmithCyclic&Two-phase coordinate swap, $0\leftrightarrow\infty$, and finite impedance inversion when $z\ne0$.\\
+\ref{result:20}&CRT&Signed integer residue-mask factorization for coprime moduli, including the dyadic--odd case.\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+The remaining foundational modules \texttt{Packets}, \texttt{FiniteSelection}, and \texttt{BinaryAdaptive} provide generic coordinate, finite-minimum, and binary-tree lemmas used or retained alongside the concrete constructions. The Hilbert target is the square-summable space on a product of indices; it is not the supremum-norm function space that Lean would otherwise assign to an unqualified finite family of channels.
+
+\subsection{Three bridges that matter for the statement}
+
+\paragraph{Finite filters and numerical transforms.}
+The filter-bank proof is an algebraic theorem about finite Laurent-polynomial kernels acting faithfully on bilateral sequences. Equality at a single complex value of $z$ would be insufficient to prove a polynomial identity; the impulse argument avoids that error. The separate transform theorem proves the finite-filter action agrees with evaluation wherever the weighted input series converge absolutely. An arbitrary bilateral $\ell^2$ sequence need not have an absolutely convergent numerical $z$-transform. The all-sequence time-domain theorem makes no such assumption.
+
+\paragraph{Recursive trees and set-valued prunings.}
+The formal tree permits any positive finite arity at an internal node, including arity one. A node has a position in the tree, so equal data labels on distinct nodes do not identify the nodes. A recursive cut is either a stop or a collection of child cuts. Its equivalence with a covering antichain is proved in both directions. The cost, envelope, and operator sums are then shown to equal actual finite sums over the selected node set. This connects the recursive optimizer to the manuscript's set-valued definition instead of assuming that connection.
+
+\paragraph{Hilbert operators and finite experiments.}
+The coordinate maps, literal Haar channels, and packet operators are constructed on complex $\ell^2$. Square summability and boundedness are established before adjoints are used. The finite Python experiments separately check indexing, reconstruction, and energy at finite lengths. They illustrate these operators but are not the objects executed by the Lean kernel. Likewise, the Python Smith routine evaluates only finite charts; the Lean projective construction supplies the pole-safe universal statement.
+
+\subsection{Executed checks and numerical conventions}
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+\textbf{Check family}&\textbf{Accepted count}\\
+\midrule
+Original numerical companion tests&33\\
+Independent exact-model tests&20\\
+Verifier positive and negative controls&16\\
+Total tests in these three families&69\\
+Exact assertions inside the independent model suites&305,933\\
+Registered Lean theorem targets&225\\
+Lean proof modules&23\\
+Regenerated figure pairs&18\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All scalar entries in the recovered numerical-results JSON reproduced exactly in this environment. This includes the 458,330-pruning depth-five comparison, its selected six-node pruning, the optimum gap, and the reconstruction residuals. The five Fourier sparse-approximation budgets were also checked for conjugate-pair closure. The revised figures and tables use the regenerated data. This exact replay of the stored floating-point numbers is stronger than a visual similarity check, but it is not a promise of bitwise equality on every platform.
+
+For the one-dimensional low-pass experiment, ``cutoff 18'' means 37 signed frequency bins, not 18 retained coefficients. The disk experiment uses a square $33\times33$ frequency mask, not a radial cutoff. The sparse comparison uses largest-coefficient budgets instead of either low-pass convention. The full-image and boundary-band RMSEs are normalized by the number of samples in the respective comparison set. The supplied inpainting routines perform a fixed finite number of periodic neighbor-averaging iterations; ``harmonic filling'' describes that iteration, not a separately proved exact continuum Dirichlet solver.
+
+The independent exact-model suite checks signed polyphase/FIR addresses, exact lifting and normalized Haar arithmetic, mask bounds, and exhaustive finite-tree objectives. Its tree census includes all 626 ordered rooted tree shapes with one through eight nodes and 129,958 node subsets. These finite checks can catch implementation or convention errors; they are not substitutes for the universal Lean proofs. The verifier controls exercise failure paths, including incomplete scope contracts and unregistered proof targets. Mandatory verification conditions use explicit exceptions rather than Python assertions, so optimized Python cannot silently remove them.
+
+\subsection{Pinned environment and rerunning the release}
+
+The Lean toolchain is \texttt{leanprover/lean4:v4.34.0-rc2}. The project pins mathlib to
+\begin{center}\small\texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+The Lake manifest records the remaining dependency revisions. The numerical environment versions are recorded in \texttt{verification/numerical\_environment.json}. Source and artifact hashes appear in \texttt{SHA256SUMS.txt}. The original manuscript, source, numerical data, and figures remain available under provenance for comparison; the expanded PDF and its TeX are the current manuscript.
+
+From the release root, the combined verification entry point is:
+\begin{lstlisting}[language=bash,numbers=none]
+python3 VERIFY_PAPER.py
+\end{lstlisting}
+This runs the Lean verifier, companion tests, numerical regeneration/comparison, and manuscript consistency checks. Lean, Lake, the pinned dependencies, the Python requirements, and a TeX installation must be available for the corresponding full checks. Missing prerequisites or failed checks return failure; static checks alone never report kernel verification. The individual numerical generation command is
+\begin{lstlisting}[language=bash,numbers=none]
+cd companion
+python3 run_all.py
+python3 -m pytest -q tests
+\end{lstlisting}
+The TeX source resolves the eighteen vector figures from the manuscript's figure directory. The checked build uses repeated pdfLaTeX passes, then text, cross-reference, and page-render inspection. Different pdfTeX versions can produce different binary PDF hashes even when the rendered document is unchanged.
+
+In the present container, a disclosed runtime adapter was needed for Lean executable-path discovery: it redirects a read of the current process's numeric \texttt{/proc} executable link to \texttt{/proc/self/exe}. It does not modify the Lean binary, elaborator, kernel, axioms, or proof terms. The adapter source and invocation are retained with the verification evidence; ordinary installations can run the pinned toolchain directly.
+
+\subsection{What remains open}
+
+The finite theorem scope is complete in the stated sense: all twenty theorem-like statements have reviewed, accepted formal counterparts, and the numerical companion has been rerun. The two edge-recovery conjectures remain open research directions. No universal segmentation theorem, infinite-tree consistency result, minimax rate, or optimal Smith sampling theorem is inferred from the finite results. Classical Smith-grid and transmission-line formulae provide application context; those physical and historical assertions are not additional Lean-certified theorem rows.
+
+Across the available Papers I--V manuscripts there are 168 theorem-like results. Their release maps contain 1,456 raw theorem targets; removing two shared qualified names and eleven known Paper-IV-to-V adaptations leaves 1,443 after those known duplicate removals. This is a source census, not a claim of that many independent or novel mathematical results. Papers I--IV were counted from their release material and bundled audit records; only Paper V was freshly built for this edition.

@@ -1,0 +1,1076 @@
+--- v0.1.0/formalization/lean/KernelAudit.lean
++++ v0.2.0/formalization/lean/KernelAudit.lean
+@@ -1,6 +1,7 @@
+ import KomorebiPaperV
+ 
+-/- Source candidate audit harness. Not executed in the producing environment. -/
++/- Source candidate audit harness. Not executed in the producing environment. Author: Komorebi P. -/
++
+ 
+ #print axioms KomorebiPaperV.Binary.cutSum_eq_root
+ #print axioms KomorebiPaperV.Binary.value_le_cost
+@@ -8,11 +9,57 @@
+ #print axioms KomorebiPaperV.Binary.best_is_global_minimum
+ #print axioms KomorebiPaperV.Binary.root_le_envelope
+ #print axioms KomorebiPaperV.Binary.cut_perturbation
++#print axioms KomorebiPaperV.FIRTransfer.tapEquiv_symm
++#print axioms KomorebiPaperV.FIRTransfer.tapIndex_equiv
++#print axioms KomorebiPaperV.FIRTransfer.transfer_address
++#print axioms KomorebiPaperV.FIRTransfer.fir_reindex
++#print axioms KomorebiPaperV.FIRTransfer.sum_pair_fiber
++#print axioms KomorebiPaperV.FIRTransfer.fir_polyphase_transfer
++#print axioms KomorebiPaperV.FiniteAdaptive.cutSum_eq_root
++#print axioms KomorebiPaperV.FiniteAdaptive.cutSum_eq_identity
++#print axioms KomorebiPaperV.FiniteAdaptive.pathHits_one
++#print axioms KomorebiPaperV.FiniteAdaptive.arbitrary_objective_minimum
++#print axioms KomorebiPaperV.FiniteAdaptive.strict_minimum_positive_gap
++#print axioms KomorebiPaperV.FiniteAdaptive.value_le_cost
++#print axioms KomorebiPaperV.FiniteAdaptive.best_cost
++#print axioms KomorebiPaperV.FiniteAdaptive.best_is_global_minimum
++#print axioms KomorebiPaperV.FiniteAdaptive.best_preserves_synthesis
++#print axioms KomorebiPaperV.FiniteAdaptive.stop_on_tie
++#print axioms KomorebiPaperV.FiniteAdaptive.root_le_envelope
++#print axioms KomorebiPaperV.FiniteAdaptive.cost_le_envelope
++#print axioms KomorebiPaperV.FiniteAdaptive.envelope_attained
++#print axioms KomorebiPaperV.FiniteAdaptive.cut_perturbation
++#print axioms KomorebiPaperV.FiniteAdaptive.value_perturbation
++#print axioms KomorebiPaperV.FiniteAdaptive.best_unchanged_of_gap
++#print axioms KomorebiPaperV.FiniteAdaptive.one_comparison_per_internal_node
+ #print axioms KomorebiPaperV.finite_minimum
+ #print axioms KomorebiPaperV.positive_gap
+ #print axioms KomorebiPaperV.gap_stability
+ #print axioms KomorebiPaperV.singleton_minimum
+ #print axioms KomorebiPaperV.singleton_selection_unchanged
++#print axioms KomorebiPaperV.FiniteTransforms.unpair_pair
++#print axioms KomorebiPaperV.FiniteTransforms.pair_unpair
++#print axioms KomorebiPaperV.FiniteTransforms.flat_synthesis_analysis
++#print axioms KomorebiPaperV.FiniteTransforms.flat_analysis_synthesis
++#print axioms KomorebiPaperV.FiniteTransforms.unlift_lift_flat
++#print axioms KomorebiPaperV.FiniteTransforms.lift_unlift_flat
++#print axioms KomorebiPaperV.FiniteTransforms.haar_involution
++#print axioms KomorebiPaperV.FiniteTransforms.haar_pair_energy
++#print axioms KomorebiPaperV.FiniteTransforms.haar_finite_energy
++#print axioms KomorebiPaperV.FiniteTransforms.haar_flat_involution
++#print axioms KomorebiPaperV.FiniteTransforms.matrix_eq_of_all_vectors
++#print axioms KomorebiPaperV.FiniteTransforms.perfect_reconstruction_matrix_iff
++#print axioms KomorebiPaperV.IntegerPolyphase.phase_val
++#print axioms KomorebiPaperV.IntegerPolyphase.address_phase_quotient
++#print axioms KomorebiPaperV.IntegerPolyphase.address_divmod
++#print axioms KomorebiPaperV.IntegerPolyphase.phase_address
++#print axioms KomorebiPaperV.IntegerPolyphase.quotient_address
++#print axioms KomorebiPaperV.IntegerPolyphase.synthesis_analysis
++#print axioms KomorebiPaperV.IntegerPolyphase.analysis_synthesis
++#print axioms KomorebiPaperV.IntegerPolyphase.channel_delay
++#print axioms KomorebiPaperV.IntegerPolyphase.sample_delay
++#print axioms KomorebiPaperV.IntegerPolyphase.emod_coarsen
++#print axioms KomorebiPaperV.IntegerPolyphase.residue_refinement
+ #print axioms KomorebiPaperV.known_edge_error
+ #print axioms KomorebiPaperV.estimated_edge_error
+ #print axioms KomorebiPaperV.several_known_edges_error
+@@ -43,11 +90,57 @@
+     `KomorebiPaperV.Binary.best_is_global_minimum,
+     `KomorebiPaperV.Binary.root_le_envelope,
+     `KomorebiPaperV.Binary.cut_perturbation,
++    `KomorebiPaperV.FIRTransfer.tapEquiv_symm,
++    `KomorebiPaperV.FIRTransfer.tapIndex_equiv,
++    `KomorebiPaperV.FIRTransfer.transfer_address,
++    `KomorebiPaperV.FIRTransfer.fir_reindex,
++    `KomorebiPaperV.FIRTransfer.sum_pair_fiber,
++    `KomorebiPaperV.FIRTransfer.fir_polyphase_transfer,
++    `KomorebiPaperV.FiniteAdaptive.cutSum_eq_root,
++    `KomorebiPaperV.FiniteAdaptive.cutSum_eq_identity,
++    `KomorebiPaperV.FiniteAdaptive.pathHits_one,
++    `KomorebiPaperV.FiniteAdaptive.arbitrary_objective_minimum,
++    `KomorebiPaperV.FiniteAdaptive.strict_minimum_positive_gap,
++    `KomorebiPaperV.FiniteAdaptive.value_le_cost,
++    `KomorebiPaperV.FiniteAdaptive.best_cost,
++    `KomorebiPaperV.FiniteAdaptive.best_is_global_minimum,
++    `KomorebiPaperV.FiniteAdaptive.best_preserves_synthesis,
++    `KomorebiPaperV.FiniteAdaptive.stop_on_tie,
++    `KomorebiPaperV.FiniteAdaptive.root_le_envelope,
++    `KomorebiPaperV.FiniteAdaptive.cost_le_envelope,
++    `KomorebiPaperV.FiniteAdaptive.envelope_attained,
++    `KomorebiPaperV.FiniteAdaptive.cut_perturbation,
++    `KomorebiPaperV.FiniteAdaptive.value_perturbation,
++    `KomorebiPaperV.FiniteAdaptive.best_unchanged_of_gap,
++    `KomorebiPaperV.FiniteAdaptive.one_comparison_per_internal_node,
+     `KomorebiPaperV.finite_minimum,
+     `KomorebiPaperV.positive_gap,
+     `KomorebiPaperV.gap_stability,
+     `KomorebiPaperV.singleton_minimum,
+     `KomorebiPaperV.singleton_selection_unchanged,
++    `KomorebiPaperV.FiniteTransforms.unpair_pair,
++    `KomorebiPaperV.FiniteTransforms.pair_unpair,
++    `KomorebiPaperV.FiniteTransforms.flat_synthesis_analysis,
++    `KomorebiPaperV.FiniteTransforms.flat_analysis_synthesis,
++    `KomorebiPaperV.FiniteTransforms.unlift_lift_flat,
++    `KomorebiPaperV.FiniteTransforms.lift_unlift_flat,
++    `KomorebiPaperV.FiniteTransforms.haar_involution,
++    `KomorebiPaperV.FiniteTransforms.haar_pair_energy,
++    `KomorebiPaperV.FiniteTransforms.haar_finite_energy,
++    `KomorebiPaperV.FiniteTransforms.haar_flat_involution,
++    `KomorebiPaperV.FiniteTransforms.matrix_eq_of_all_vectors,
++    `KomorebiPaperV.FiniteTransforms.perfect_reconstruction_matrix_iff,
++    `KomorebiPaperV.IntegerPolyphase.phase_val,
++    `KomorebiPaperV.IntegerPolyphase.address_phase_quotient,
++    `KomorebiPaperV.IntegerPolyphase.address_divmod,
++    `KomorebiPaperV.IntegerPolyphase.phase_address,
++    `KomorebiPaperV.IntegerPolyphase.quotient_address,
++    `KomorebiPaperV.IntegerPolyphase.synthesis_analysis,
++    `KomorebiPaperV.IntegerPolyphase.analysis_synthesis,
++    `KomorebiPaperV.IntegerPolyphase.channel_delay,
++    `KomorebiPaperV.IntegerPolyphase.sample_delay,
++    `KomorebiPaperV.IntegerPolyphase.emod_coarsen,
++    `KomorebiPaperV.IntegerPolyphase.residue_refinement,
+     `KomorebiPaperV.known_edge_error,
+     `KomorebiPaperV.estimated_edge_error,
+     `KomorebiPaperV.several_known_edges_error,
+--- /dev/null
++++ v0.2.0/formalization/lean/KomorebiPaperV/FIRTransfer.lean
+@@ -0,0 +1,112 @@
++import KomorebiPaperV.IntegerPolyphase
++
++/-!
++Author: Komorebi P.
++SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Exact finite-support FIR time-domain transfer, including negative tap addresses.
++All sums below are finite. No bilateral z-transform convergence is assumed.
++-/
++
++open scoped BigOperators
++namespace KomorebiPaperV.FIRTransfer
++open KomorebiPaperV.IntegerPolyphase
++
++variable {K : Type*} [Semiring K]
++
++def reflectEquiv (k : ℤ) : ℤ ≃ ℤ where
++  toFun t := k - t
++  invFun t := k - t
++  left_inv t := by dsimp; omega
++  right_inv t := by dsimp; omega
++
++def negateQuotient (N : ℕ) : (Fin N × ℤ) ≃ (Fin N × ℤ) where
++  toFun p := (p.1, -p.2)
++  invFun p := (p.1, -p.2)
++  left_inv p := by cases p; simp
++  right_inv p := by cases p; simp
++
++def tapEquiv (N : ℕ) (hN : 0 < N) (k : Fin N) : ℤ ≃ Fin N × ℤ :=
++  ((reflectEquiv (k.val : ℤ)).trans (addressEquiv N hN)).trans (negateQuotient N)
++
++def tapIndex (N : ℕ) (k s : Fin N) (m : ℤ) : ℤ :=
++  (N : ℤ) * m + (k.val : ℤ) - (s.val : ℤ)
++
++theorem tapEquiv_symm (N : ℕ) (hN : 0 < N) (k s : Fin N) (m : ℤ) :
++    (tapEquiv N hN k).symm (s, m) = tapIndex N k s m := by
++  dsimp [tapEquiv, reflectEquiv, addressEquiv, negateQuotient, address, tapIndex]
++  ring
++
++theorem tapIndex_equiv (N : ℕ) (hN : 0 < N) (k : Fin N) (t : ℤ) :
++    tapIndex N k ((tapEquiv N hN k) t).1 ((tapEquiv N hN k) t).2 = t := by
++  calc
++    _ = (tapEquiv N hN k).symm ((tapEquiv N hN k) t) :=
++      (tapEquiv_symm N hN k _ _).symm
++    _ = t := (tapEquiv N hN k).symm_apply_apply t
++
++theorem transfer_address (N : ℕ) (k s : Fin N) (n m : ℤ) :
++    address N k n - tapIndex N k s m = address N s (n - m) := by
++  dsimp [address, tapIndex]
++  ring
++
++def fir (h : ℤ →₀ K) (x : ℤ → K) (n : ℤ) : K :=
++  ∑ t ∈ h.support, h t * x (n - t)
++
++def kernel (N : ℕ) (h : ℤ →₀ K) (k s : Fin N) (m : ℤ) : K :=
++  h (tapIndex N k s m)
++
++def transferSupport (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K) (k : Fin N) :
++    Finset (Fin N × ℤ) := h.support.map (tapEquiv N hN k).toEmbedding
++
++def delays (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K) (k s : Fin N) : Finset ℤ :=
++  ((transferSupport N hN h k).filter (fun p => p.1 = s)).image Prod.snd
++
++theorem fir_reindex (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K) (x : ℤ → K)
++    (k : Fin N) (n : ℤ) :
++    fir h x (address N k n) =
++      ∑ p ∈ transferSupport N hN h k,
++        kernel N h k p.1 p.2 * analysis N x p.1 (n - p.2) := by
++  simp only [fir, transferSupport, Finset.sum_map]
++  apply Finset.sum_congr rfl
++  intro t _
++  dsimp only [Function.Embedding.coeFn_mk, Equiv.toEmbedding, kernel, analysis]
++  have ht := tapIndex_equiv N hN k t
++  rw [ht]
++  congr 1
++  apply congrArg x
++  exact (congrArg (fun t' => address N k n - t') ht.symm).trans
++    (transfer_address N k _ n _)
++
++/-- Reindex a fiber of a finite set of pairs by its second coordinate. -/
++theorem sum_pair_fiber {R Q E : Type*} [DecidableEq R] [DecidableEq Q]
++    [AddCommMonoid E] (u : Finset (R × Q)) (r : R) (F : R → Q → E) :
++    (∑ p ∈ u.filter (fun p => p.1 = r), F p.1 p.2) =
++      ∑ q ∈ (u.filter (fun p => p.1 = r)).image Prod.snd, F r q := by
++  rw [Finset.sum_image (by
++    intro p hp q hq hpq
++    apply Prod.ext
++    · exact (Finset.mem_filter.mp hp).2.trans (Finset.mem_filter.mp hq).2.symm
++    · exact hpq)]
++  apply Finset.sum_congr rfl
++  intro p hp
++  rw [(Finset.mem_filter.mp hp).2]
++
++/-- Literal h[k,s](m)=h[N*m+k-s] transfer, on the exact finite channel supports. -/
++theorem fir_polyphase_transfer (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K)
++    (x : ℤ → K) (k : Fin N) (n : ℤ) :
++    analysis N (fir h x) k n =
++      ∑ s : Fin N, ∑ m ∈ delays N hN h k s,
++        kernel N h k s m * analysis N x s (n - m) := by
++  change fir h x (address N k n) = _
++  rw [fir_reindex N hN h x k n]
++  calc
++    _ = ∑ s : Fin N, ∑ p ∈ (transferSupport N hN h k).filter (fun p => p.1 = s),
++        kernel N h k p.1 p.2 * analysis N x p.1 (n - p.2) :=
++      (Finset.sum_fiberwise (transferSupport N hN h k) Prod.fst
++        (fun p => kernel N h k p.1 p.2 * analysis N x p.1 (n - p.2))).symm
++    _ = _ := by
++      apply Finset.sum_congr rfl
++      intro s _
++      exact sum_pair_fiber (transferSupport N hN h k) s
++        (fun r m => kernel N h k r m * analysis N x r (n - m))
++
++end KomorebiPaperV.FIRTransfer
+--- /dev/null
++++ v0.2.0/formalization/lean/KomorebiPaperV/FiniteAdaptive.lean
+@@ -0,0 +1,249 @@
++import KomorebiPaperV.FiniteSelection
++
++/-!
++Author: Komorebi P.
++SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Finite trees with arbitrary positive finite branching, including unary branches.
++Cuts are typed recursive prunings. A separate set-valued antichain equivalence is
++still required for complete coverage of the manuscript definition.
++-/
++
++open scoped BigOperators
++namespace KomorebiPaperV.FiniteAdaptive
++
++inductive Tree (A : Type*) where
++  | leaf : A → Tree A
++  | branch : (a : A) → (n : ℕ) → (Fin (n + 1) → Tree A) → Tree A
++
++variable {A E : Type*}
++
++def label : Tree A → A
++  | .leaf a => a
++  | .branch a _ _ => a
++
++inductive Cut : Tree A → Type _ where
++  | stop (t : Tree A) : Cut t
++  | split {a : A} {n : ℕ} {children : Fin (n + 1) → Tree A} :
++      (∀ i, Cut (children i)) → Cut (.branch a n children)
++
++def cutSum [AddCommMonoid E] (p : A → E) : {t : Tree A} → Cut t → E
++  | t, .stop _ => p (label t)
++  | _, .split q => ∑ i, cutSum p (q i)
++
++def conserves [AddCommMonoid E] (p : A → E) : Tree A → Prop
++  | .leaf _ => True
++  | .branch a _ children =>
++      p a = ∑ i, p (label (children i)) ∧ ∀ i, conserves p (children i)
++
++theorem cutSum_eq_root [AddCommMonoid E] (p : A → E) {t : Tree A} (q : Cut t) :
++    conserves p t → cutSum p q = p (label t) := by
++  induction q with
++  | stop t => intro _; rfl
++  | @split a n children q ih =>
++    intro h
++    rcases h with ⟨hroot, hchild⟩
++    change (∑ i, cutSum p (q i)) = p a
++    calc
++      _ = ∑ i, p (label (children i)) :=
++        Finset.sum_congr rfl (fun i _ => ih i (hchild i))
++      _ = p a := hroot.symm
++
++/-- This includes operator-valued packets: take E to be an additive space of maps. -/
++theorem cutSum_eq_identity [AddCommMonoid E] (p : A → E) {t : Tree A}
++    (q : Cut t) (h : conserves p t) (identity : E) (hroot : p (label t) = identity) :
++    cutSum p q = identity := (cutSum_eq_root p q h).trans hroot
++
++inductive Terminal : Tree A → Type _ where
++  | here {a : A} : Terminal (.leaf a)
++  | down {a : A} {n : ℕ} {children : Fin (n + 1) → Tree A}
++      (i : Fin (n + 1)) : Terminal (children i) → Terminal (.branch a n children)
++
++/-- Number of selected packets met by a typed root-to-terminal path. -/
++def pathHits : {t : Tree A} → Cut t → Terminal t → ℕ
++  | _, .stop _, _ => 1
++  | _, .split q, .down i path => pathHits (q i) path
++
++theorem pathHits_one {t : Tree A} (q : Cut t) :
++    ∀ path : Terminal t, pathHits q path = 1 := by
++  induction q with
++  | stop t => intro _; rfl
++  | split q ih =>
++    intro path
++    cases path with
++    | down i path => exact ih i path
++
++def leafCutEquiv (a : A) : Cut (.leaf a) ≃ Unit where
++  toFun _ := ()
++  invFun _ := .stop (.leaf a)
++  left_inv q := by cases q; rfl
++  right_inv u := by cases u; rfl
++
++def branchCutEquiv (a : A) (n : ℕ) (children : Fin (n + 1) → Tree A) :
++    Cut (.branch a n children) ≃ (Unit ⊕ (∀ i, Cut (children i))) where
++  toFun q := match q with
++    | .stop _ => .inl ()
++    | .split childrenCuts => .inr childrenCuts
++  invFun q := match q with
++    | .inl _ => .stop (.branch a n children)
++    | .inr childrenCuts => .split childrenCuts
++  left_inv q := by cases q <;> rfl
++  right_inv q := by cases q with
++    | inl u => cases u; rfl
++    | inr qs => rfl
++
++/-- Finiteness of all admissible recursive cuts, not merely a sampled cut list. -/
++noncomputable def cutFintype : (t : Tree A) → Fintype (Cut t)
++  | .leaf a => Fintype.ofEquiv Unit (leafCutEquiv a).symm
++  | .branch a n children =>
++      letI : ∀ i, Fintype (Cut (children i)) := fun i => cutFintype (children i)
++      Fintype.ofEquiv (Unit ⊕ (∀ i, Cut (children i)))
++        (branchCutEquiv a n children).symm
++
++noncomputable instance (t : Tree A) : Fintype (Cut t) := cutFintype t
++
++/-- Arbitrary criteria need not be additive for finite attainment. -/
++theorem arbitrary_objective_minimum (t : Tree A) (J : Cut t → ℝ) :
++    ∃ q : Cut t, ∀ r : Cut t, J q ≤ J r := by
++  classical
++  obtain ⟨q, _, hq⟩ := KomorebiPaperV.finite_minimum J Finset.univ
++    ⟨Cut.stop t, Finset.mem_univ _⟩
++  exact ⟨q, fun r => hq r (Finset.mem_univ _)⟩
++
++theorem strict_minimum_positive_gap (t : Tree A) (J : Cut t → ℝ) (q : Cut t)
++    (hother : ∃ r : Cut t, r ≠ q) (hstrict : ∀ r : Cut t, r ≠ q → J q < J r) :
++    ∃ γ : ℝ, 0 < γ ∧ ∀ r : Cut t, r ≠ q → γ ≤ J r - J q := by
++  classical
++  obtain ⟨r, hr⟩ := hother
++  obtain ⟨γ, hγ, hgap⟩ := KomorebiPaperV.positive_gap Finset.univ J q
++    ⟨r, Finset.mem_erase.mpr ⟨hr, Finset.mem_univ _⟩⟩
++    (fun s _ hs => hstrict s hs)
++  exact ⟨γ, hγ, fun s hs => hgap s (Finset.mem_univ _) hs⟩
++
++noncomputable def value (c : A → ℝ) : Tree A → ℝ
++  | .leaf a => c a
++  | .branch a _ children => min (c a) (∑ i, value c (children i))
++
++/-- Specification-level selector. The exact Python implementation caches children.
++This definition alone is NOT a formal bound on Lean evaluation time. -/
++noncomputable def best (c : A → ℝ) : (t : Tree A) → Cut t
++  | .leaf a => .stop (.leaf a)
++  | .branch a n children =>
++      if c a ≤ ∑ i, value c (children i) then .stop (.branch a n children)
++      else .split (fun i => best c (children i))
++
++theorem value_le_cost (c : A → ℝ) {t : Tree A} (q : Cut t) :
++    value c t ≤ cutSum c q := by
++  induction q with
++  | stop t =>
++    cases t with
++    | leaf a => exact le_rfl
++    | branch a n children => exact min_le_left _ _
++  | split q ih =>
++    exact le_trans (min_le_right _ _) (Finset.sum_le_sum (fun i _ => ih i))
++
++theorem best_cost (c : A → ℝ) (t : Tree A) : cutSum c (best c t) = value c t := by
++  induction t with
++  | leaf a => rfl
++  | branch a n children ih =>
++    by_cases h : c a ≤ ∑ i, value c (children i)
++    · simp [best, h, cutSum, label, value, min_eq_left h]
++    · have h' : (∑ i, value c (children i)) ≤ c a := le_of_lt (lt_of_not_ge h)
++      simp only [best, if_neg h, cutSum, value, min_eq_right h']
++      exact Finset.sum_congr rfl (fun i _ => ih i)
++
++theorem best_is_global_minimum (c : A → ℝ) {t : Tree A} (q : Cut t) :
++    cutSum c (best c t) ≤ cutSum c q := by
++  rw [best_cost]
++  exact value_le_cost c q
++
++theorem best_preserves_synthesis [AddCommMonoid E] (p : A → E) (c : A → ℝ)
++    (t : Tree A) (h : conserves p t) : cutSum p (best c t) = p (label t) :=
++  cutSum_eq_root p (best c t) h
++
++theorem stop_on_tie (c : A → ℝ) (a : A) (n : ℕ) (children : Fin (n + 1) → Tree A)
++    (h : c a = ∑ i, value c (children i)) :
++    best c (.branch a n children) = Cut.stop (.branch a n children) := by
++  simp [best, le_of_eq h]
++
++noncomputable def envelope (e : A → ℝ) : Tree A → ℝ
++  | .leaf a => e a
++  | .branch a _ children => max (e a) (∑ i, envelope e (children i))
++
++theorem root_le_envelope (e : A → ℝ) (t : Tree A) : e (label t) ≤ envelope e t := by
++  cases t with
++  | leaf a => exact le_rfl
++  | branch a n children => exact le_max_left _ _
++
++theorem cost_le_envelope (e : A → ℝ) {t : Tree A} (q : Cut t) :
++    cutSum e q ≤ envelope e t := by
++  induction q with
++  | stop t => exact root_le_envelope e t
++  | split q ih =>
++    exact le_trans (Finset.sum_le_sum (fun i _ => ih i)) (le_max_right _ _)
++
++/-- The envelope is attained by a pruning, so it is the exact worst cut weight. -/
++theorem envelope_attained (e : A → ℝ) (t : Tree A) :
++    ∃ q : Cut t, cutSum e q = envelope e t := by
++  classical
++  induction t with
++  | leaf a => exact ⟨.stop (.leaf a), rfl⟩
++  | branch a n children ih =>
++    by_cases h : (∑ i, envelope e (children i)) ≤ e a
++    · exact ⟨.stop (.branch a n children), (max_eq_left h).symm⟩
++    · choose q hq using ih
++      refine ⟨.split q, ?_⟩
++      change (∑ i, cutSum e (q i)) = max (e a) (∑ i, envelope e (children i))
++      rw [max_eq_right (le_of_lt (lt_of_not_ge h))]
++      exact Finset.sum_congr rfl (fun i _ => hq i)
++
++theorem cut_perturbation (c d e : A → ℝ) (h : ∀ a, |d a - c a| ≤ e a)
++    {t : Tree A} (q : Cut t) : |cutSum d q - cutSum c q| ≤ envelope e t := by
++  induction q with
++  | stop t => exact le_trans (h (label t)) (root_le_envelope e t)
++  | @split a n children q ih =>
++    change |(∑ i, cutSum d (q i)) - ∑ i, cutSum c (q i)| ≤ _
++    calc
++      _ = |∑ i, (cutSum d (q i) - cutSum c (q i))| := by rw [Finset.sum_sub_distrib]
++      _ ≤ ∑ i, |cutSum d (q i) - cutSum c (q i)| := Finset.abs_sum_le_sum_abs _ _
++      _ ≤ ∑ i, envelope e (children i) := Finset.sum_le_sum (fun i _ => ih i)
++      _ ≤ envelope e (.branch a n children) := le_max_right _ _
++
++theorem value_perturbation (c d e : A → ℝ) (h : ∀ a, |d a - c a| ≤ e a)
++    (t : Tree A) : |value d t - value c t| ≤ envelope e t := by
++  have hc := abs_le.mp (cut_perturbation c d e h (best c t))
++  have hd := abs_le.mp (cut_perturbation c d e h (best d t))
++  have hminc := value_le_cost c (best d t)
++  have hmind := value_le_cost d (best c t)
++  rw [best_cost c t] at hc
++  rw [best_cost d t] at hd
++  exact abs_le.mpr ⟨by linarith, by linarith⟩
++
++theorem best_unchanged_of_gap (c d e : A → ℝ) (h : ∀ a, |d a - c a| ≤ e a)
++    (t : Tree A) (γ : ℝ)
++    (hgap : ∀ q : Cut t, q ≠ best c t → γ ≤ cutSum c q - cutSum c (best c t))
++    (hmargin : 2 * envelope e t < γ) : best d t = best c t := by
++  by_contra hne
++  have hfirst := abs_le.mp (cut_perturbation c d e h (best c t))
++  have hsecond := abs_le.mp (cut_perturbation c d e h (best d t))
++  have hsep := hgap (best d t) hne
++  have hmin := best_is_global_minimum d (best c t)
++  linarith
++
++/-- Logical bottom-up comparison recurrence, excluding arithmetic and cut copying. -/
++def comparisonCount : Tree A → ℕ
++  | .leaf _ => 0
++  | .branch _ _ children => 1 + ∑ i, comparisonCount (children i)
++
++def internalNodes : Tree A → ℕ
++  | .leaf _ => 0
++  | .branch _ _ children => (∑ i, internalNodes (children i)) + 1
++
++theorem one_comparison_per_internal_node (t : Tree A) : comparisonCount t = internalNodes t := by
++  induction t with
++  | leaf a => rfl
++  | branch a n children ih =>
++    dsimp [comparisonCount, internalNodes]
++    rw [Finset.sum_congr rfl (fun i _ => ih i)]
++    omega
++
++end KomorebiPaperV.FiniteAdaptive
+--- /dev/null
++++ v0.2.0/formalization/lean/KomorebiPaperV/FiniteTransforms.lean
+@@ -0,0 +1,141 @@
++import KomorebiPaperV.Lifting
++import KomorebiPaperV.Packets
++
++/-!
++Author: Komorebi P.
++SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Flat even-length indexing, finite lifting, and exactly normalized real Haar pairs.
++The infinite l2 energy/completeness arguments are not supplied by finite identities.
++-/
++
++open scoped BigOperators
++namespace KomorebiPaperV.FiniteTransforms
++
++variable {K : Type*}
++
++/-- Valid even for n=0. This is literal flat-signal indexing, not an assumed address map. -/
++def flatAddressEquiv (n : ℕ) : Fin (2 * n) ≃ Fin n × Fin 2 where
++  toFun j := (⟨j.val / 2, by have := j.isLt; omega⟩,
++    ⟨j.val % 2, by omega⟩)
++  invFun p := ⟨2 * p.1.val + p.2.val, by
++    have hi := p.1.isLt
++    have hb := p.2.isLt
++    omega⟩
++  left_inv j := by apply Fin.ext; dsimp; omega
++  right_inv p := by
++    apply Prod.ext
++    · apply Fin.ext
++      dsimp
++      have hb := p.2.isLt
++      omega
++    · apply Fin.ext
++      dsimp
++      have hb := p.2.isLt
++      omega
++
++def pairChannels {I : Type*} (c : I → Fin 2 → K) : I → K × K :=
++  fun i => (c i 0, c i 1)
++
++def unpairChannels {I : Type*} (p : I → K × K) : I → Fin 2 → K :=
++  fun i b => if b = 0 then (p i).1 else (p i).2
++
++theorem unpair_pair {I : Type*} (c : I → Fin 2 → K) :
++    unpairChannels (pairChannels c) = c := by
++  funext i b
++  fin_cases b <;> simp [unpairChannels, pairChannels]
++
++theorem pair_unpair {I : Type*} (p : I → K × K) :
++    pairChannels (unpairChannels p) = p := by
++  funext i
++  apply Prod.ext <;> simp [unpairChannels, pairChannels]
++
++def flatAnalysis (n : ℕ) (x : Fin (2 * n) → K) : Fin n → K × K :=
++  pairChannels (KomorebiPaperV.analyzeAddress (flatAddressEquiv n) x)
++
++def flatSynthesis (n : ℕ) (p : Fin n → K × K) : Fin (2 * n) → K :=
++  KomorebiPaperV.synthesizeAddress (flatAddressEquiv n) (unpairChannels p)
++
++theorem flat_synthesis_analysis (n : ℕ) (x : Fin (2 * n) → K) :
++    flatSynthesis n (flatAnalysis n x) = x := by
++  rw [flatSynthesis, flatAnalysis, unpair_pair]
++  exact KomorebiPaperV.address_synthesize_analyze (flatAddressEquiv n) x
++
++theorem flat_analysis_synthesis (n : ℕ) (p : Fin n → K × K) :
++    flatAnalysis n (flatSynthesis n p) = p := by
++  rw [flatAnalysis, flatSynthesis, KomorebiPaperV.address_analyze_synthesize]
++  exact pair_unpair p
++
++section Lifting
++variable [Field K] [CharZero K]
++
++def liftFlat (n : ℕ) (x : Fin (2 * n) → K) : Fin (2 * n) → K :=
++  flatSynthesis n (fun i => KomorebiPaperV.liftingAnalysis (flatAnalysis n x i))
++
++def unliftFlat (n : ℕ) (x : Fin (2 * n) → K) : Fin (2 * n) → K :=
++  flatSynthesis n (fun i => KomorebiPaperV.liftingSynthesis (flatAnalysis n x i))
++
++theorem unlift_lift_flat (n : ℕ) (x : Fin (2 * n) → K) :
++    unliftFlat n (liftFlat n x) = x := by
++  simp only [unliftFlat, liftFlat, flat_analysis_synthesis,
++    KomorebiPaperV.lifting_synthesis_analysis, flat_synthesis_analysis]
++
++theorem lift_unlift_flat (n : ℕ) (x : Fin (2 * n) → K) :
++    liftFlat n (unliftFlat n x) = x := by
++  simp only [liftFlat, unliftFlat, flat_analysis_synthesis,
++    KomorebiPaperV.lifting_analysis_synthesis, flat_synthesis_analysis]
++end Lifting
++
++noncomputable def haar (x : ℝ × ℝ) : ℝ × ℝ :=
++  ((x.1 + x.2) / Real.sqrt 2, (x.1 - x.2) / Real.sqrt 2)
++
++theorem haar_involution (x : ℝ × ℝ) : haar (haar x) = x := by
++  have hs : Real.sqrt 2 * Real.sqrt 2 = 2 := by
++    simpa only [pow_two] using (Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num))
++  apply Prod.ext
++  · dsimp [haar]
++    rw [← add_div, div_div, hs]
++    ring
++  · dsimp [haar]
++    rw [← sub_div, div_div, hs]
++    ring
++
++theorem haar_pair_energy (x : ℝ × ℝ) :
++    (haar x).1 ^ 2 + (haar x).2 ^ 2 = x.1 ^ 2 + x.2 ^ 2 := by
++  have hs : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
++  dsimp [haar]
++  rw [div_pow, div_pow, hs]
++  ring
++
++theorem haar_finite_energy {I : Type*} [Fintype I] (x : I → ℝ × ℝ) :
++    (∑ i, ((haar (x i)).1 ^ 2 + (haar (x i)).2 ^ 2)) =
++      ∑ i, ((x i).1 ^ 2 + (x i).2 ^ 2) := by
++  exact Finset.sum_congr rfl (fun i _ => haar_pair_energy (x i))
++
++noncomputable def haarFlat (n : ℕ) (x : Fin (2 * n) → ℝ) : Fin (2 * n) → ℝ :=
++  flatSynthesis n (fun i => haar (flatAnalysis n x i))
++
++theorem haar_flat_involution (n : ℕ) (x : Fin (2 * n) → ℝ) :
++    haarFlat n (haarFlat n x) = x := by
++  simp only [haarFlat, flat_analysis_synthesis, haar_involution, flat_synthesis_analysis]
++
++section MatrixCriterion
++variable {I : Type*} [Fintype I] [DecidableEq I] [Semiring K]
++
++theorem matrix_eq_of_all_vectors (M D : Matrix I I K)
++    (h : ∀ v : I → K, M.mulVec v = D.mulVec v) : M = D := by
++  classical
++  ext i j
++  have hj := congrFun (h (fun k => if k = j then 1 else 0)) i
++  simpa [Matrix.mulVec, dotProduct, mul_ite] using hj
++
++/-- Algebraic matrix criterion. D may be a gain-delay or phase-permutation matrix.
++The representation of filter-bank operators by those matrices is a separate bridge. -/
++theorem perfect_reconstruction_matrix_iff (R E D : Matrix I I K) :
++    (∀ v : I → K, (R * E).mulVec v = D.mulVec v) ↔ R * E = D := by
++  constructor
++  · exact matrix_eq_of_all_vectors (R * E) D
++  · intro h v
++    rw [h]
++end MatrixCriterion
++
++end KomorebiPaperV.FiniteTransforms
+--- /dev/null
++++ v0.2.0/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean
+@@ -0,0 +1,127 @@
++import KomorebiPaperV.Packets
++
++/-!
++Author: Komorebi P.
++SOURCE CANDIDATE, not kernel-checked in the producing environment.
++Literal signed integer polyphase coordinates, with N strictly positive.
++No summability or Hilbert-space statement is hidden in these pointwise identities.
++-/
++
++open scoped BigOperators
++namespace KomorebiPaperV.IntegerPolyphase
++
++variable {V : Type*}
++
++def phase (N : ℕ) (hN : 0 < N) (n : ℤ) : Fin N :=
++  ⟨(n % (N : ℤ)).toNat, by
++    have hn : (N : ℤ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hN)
++    have hlo := Int.emod_nonneg n hn
++    have hhi := Int.emod_lt_of_pos n (show (0 : ℤ) < N by exact_mod_cast hN)
++    omega⟩
++
++def quotient (N : ℕ) (n : ℤ) : ℤ := n / (N : ℤ)
++
++def address (N : ℕ) (r : Fin N) (q : ℤ) : ℤ := (N : ℤ) * q + (r.val : ℤ)
++
++theorem phase_val (N : ℕ) (hN : 0 < N) (n : ℤ) :
++    ((phase N hN n).val : ℤ) = n % (N : ℤ) := by
++  apply Int.toNat_of_nonneg
++  exact Int.emod_nonneg n (by exact_mod_cast (Nat.ne_of_gt hN))
++
++theorem address_phase_quotient (N : ℕ) (hN : 0 < N) (n : ℤ) :
++    address N (phase N hN n) (quotient N n) = n := by
++  dsimp [address, quotient]
++  rw [phase_val]
++  exact Int.mul_ediv_add_emod n (N : ℤ)
++
++theorem address_divmod (N : ℕ) (hN : 0 < N) (r : Fin N) (q : ℤ) :
++    address N r q / (N : ℤ) = q ∧
++      address N r q % (N : ℤ) = (r.val : ℤ) := by
++  apply (Int.ediv_emod_unique (show (0 : ℤ) < N by exact_mod_cast hN)).mpr
++  refine ⟨?_, ?_, ?_⟩
++  · dsimp [address]
++    ring
++  · exact_mod_cast (Nat.zero_le r.val)
++  · exact_mod_cast r.isLt
++
++theorem phase_address (N : ℕ) (hN : 0 < N) (r : Fin N) (q : ℤ) :
++    phase N hN (address N r q) = r := by
++  apply Fin.ext
++  change (address N r q % (N : ℤ)).toNat = r.val
++  rw [(address_divmod N hN r q).2]
++  simp
++
++theorem quotient_address (N : ℕ) (hN : 0 < N) (r : Fin N) (q : ℤ) :
++    quotient N (address N r q) = q :=
++  (address_divmod N hN r q).1
++
++def addressEquiv (N : ℕ) (hN : 0 < N) : ℤ ≃ Fin N × ℤ where
++  toFun n := (phase N hN n, quotient N n)
++  invFun p := address N p.1 p.2
++  left_inv := address_phase_quotient N hN
++  right_inv p := by
++    apply Prod.ext
++    · exact phase_address N hN p.1 p.2
++    · exact quotient_address N hN p.1 p.2
++
++def analysis (N : ℕ) (x : ℤ → V) : Fin N → ℤ → V :=
++  fun r q => x (address N r q)
++
++def synthesis (N : ℕ) (hN : 0 < N) (c : Fin N → ℤ → V) : ℤ → V :=
++  fun n => c (phase N hN n) (quotient N n)
++
++theorem synthesis_analysis (N : ℕ) (hN : 0 < N) (x : ℤ → V) :
++    synthesis N hN (analysis N x) = x := by
++  funext n
++  exact congrArg x (address_phase_quotient N hN n)
++
++theorem analysis_synthesis (N : ℕ) (hN : 0 < N) (c : Fin N → ℤ → V) :
++    analysis N (synthesis N hN c) = c := by
++  funext r q
++  simp [analysis, synthesis, phase_address, quotient_address]
++
++/-- Delay in ORIGINAL sample addresses, allowing negative delays (advances). -/
++def delay (d : ℤ) (x : ℤ → V) : ℤ → V := fun n => x (n - d)
++
++/-- A channel delay d is an original-sample delay N*d. -/
++theorem channel_delay (N : ℕ) (d : ℤ) (x : ℤ → V) (r : Fin N) (q : ℤ) :
++    analysis N (delay ((N : ℤ) * d) x) r q = analysis N x r (q - d) := by
++  dsimp [analysis, delay, address]
++  congr 1
++  ring
++
++/-- General sample delay: the input phase is (r-d) mod N and the carry is signed. -/
++theorem sample_delay (N : ℕ) (hN : 0 < N) (d : ℤ) (x : ℤ → V)
++    (r : Fin N) (q : ℤ) :
++    analysis N (delay d x) r q =
++      analysis N x (phase N hN ((r.val : ℤ) - d))
++        (q + quotient N ((r.val : ℤ) - d)) := by
++  dsimp [analysis, delay]
++  congr 1
++  have h := address_phase_quotient N hN ((r.val : ℤ) - d)
++  dsimp [address] at h ⊢
++  linear_combination -h
++
++/-- Reduction modulo a divisor commutes with reduction modulo the finer modulus. -/
++theorem emod_coarsen (N M : ℕ) (hNM : N ∣ M) (n : ℤ) :
++    (n % (M : ℤ)) % (N : ℤ) = n % (N : ℤ) := by
++  exact Int.emod_emod_of_dvd n (by exact_mod_cast hNM)
++
++/-- Literal integer-residue refinement, before the bounded-operator bridge. -/
++theorem residue_refinement [AddCommMonoid V] (N M : ℕ) (hN : 0 < N)
++    (hM : 0 < M) (hNM : N ∣ M) (r : Fin N) (x : ℤ → V) (n : ℤ) :
++    KomorebiPaperV.packet (phase N hN) r x n =
++      ∑ s : Fin M, if phase N hN (s.val : ℤ) = r
++        then KomorebiPaperV.packet (phase M hM) s x n else 0 := by
++  have hcoarse : (phase N hN ∘ fun j : ℤ => ((phase M hM j).val : ℤ)) =
++      phase N hN := by
++    funext j
++    apply Fin.ext
++    change (((phase M hM j).val : ℤ) % (N : ℤ)).toNat = (j % (N : ℤ)).toNat
++    rw [phase_val, emod_coarsen N M hNM]
++  have h := KomorebiPaperV.packet_refinement (phase M hM)
++    (fun s : Fin M => phase N hN (s.val : ℤ)) r x n
++  have hc : (fun j : ℤ => phase N hN ((phase M hM j).val : ℤ)) = phase N hN := hcoarse
++  simpa only [Function.comp_def, hc] using h
++
++end KomorebiPaperV.IntegerPolyphase
+--- v0.1.0/formalization/lean/KomorebiPaperV.lean
++++ v0.2.0/formalization/lean/KomorebiPaperV.lean
+@@ -3,3 +3,7 @@
+ import KomorebiPaperV.Lifting
+ import KomorebiPaperV.FiniteSelection
+ import KomorebiPaperV.BinaryAdaptive
++import KomorebiPaperV.IntegerPolyphase
++import KomorebiPaperV.FIRTransfer
++import KomorebiPaperV.FiniteAdaptive
++import KomorebiPaperV.FiniteTransforms
+--- v0.1.0/verification/verify.py
++++ v0.2.0/verification/verify.py
+@@ -1,8 +1,9 @@
+ #!/usr/bin/env python3
+-"""Fail-closed checks for the Paper V source-candidate package.
+-
+-No compilation is inferred from lexical scans or Python tests. Even a successful
+-Lean run certifies only the candidate declarations, not complete Paper V coverage.
++"""Fail-closed source, exact-model, and optional Lean verification for Paper V.
++
++Static checks and independent exact tests NEVER imply Lean compilation.
++Even a successful Lean run checks candidate targets, not complete paper coverage.
++No validation gate uses Python assert, so optimization cannot remove the gates.
+ Author: Komorebi P.
+ """
+ from __future__ import annotations
+@@ -17,12 +18,34 @@
+ import sys
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+-LEAN_ROOT = ROOT / 'formalization' / 'lean'
+-V = ROOT / 'verification'
++TOOLCHAIN = 'leanprover/lean4:v4.34.0-rc2'
++MATHLIB_REV = 'aeb72f1e9981b6d35b426b16dca7759be3e7ba06'
++FORBIDDEN = r'\b(?:sorry|admit|sorryAx|axiom|unsafe|native_decide|ofReduceBool|implemented_by|extern|partial)\b'
++
++
++class VerificationError(RuntimeError):
++    """A mandatory verification gate did not pass."""
++
++
++def require(condition: bool, message: str) -> None:
++    if not condition:
++        raise VerificationError(message)
++
++
++def sha256(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def read_json(path: Path):
++    return json.loads(path.read_text(encoding='utf-8'))
+ 
+ 
+ def lean_code_only(text: str) -> str:
+-    """Remove nested block comments, line comments, and strings before token scans."""
++    """Lexically strip nested comments/strings, preserving line positions.
++
++    This is a token scanner, NOT a Lean parser or an elaborator. Integrity hashes
++    and the actual compiler/audit are separate gates.
++    """
+     out: list[str] = []
+     i, depth = 0, 0
+     quoted = False
+@@ -45,89 +68,172 @@
+             i = len(text) if end < 0 else end
+         elif text[i] == '"': quoted = True; out.append(' '); i += 1
+         else: out.append(text[i]); i += 1
+-    if depth or quoted:
+-        raise ValueError('Unterminated block comment or string in source scan.')
++    require(not depth and not quoted, 'Unterminated Lean comment or string.')
+     return ''.join(out)
+ 
+ 
+-def run(command: list[str], cwd: Path, log: str, timeout: int = 900) -> subprocess.CompletedProcess[str]:
+-    p = subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE,
+-                       stderr=subprocess.STDOUT, timeout=timeout, encoding='utf-8', errors='replace')
+-    (V / log).write_text(p.stdout, encoding='utf-8')
+-    if p.returncode:
+-        raise RuntimeError(f'{command[0]} exited {p.returncode}; see verification/{log}')
+-    return p
++def source_inventory(root: Path) -> list[dict[str, object]]:
++    """Recognize the simple namespace/declaration format used in this package."""
++    lean = root/'formalization/lean'
++    targets: list[dict[str, object]] = []
++    for path in sorted((lean/'KomorebiPaperV').glob('*.lean')):
++        code = lean_code_only(path.read_text(encoding='utf-8'))
++        namespaces = re.findall(r'(?m)^namespace\s+([\w.]+)\s*$', code)
++        require(len(namespaces) == 1, f'Expected one explicit namespace in {path.name}.')
++        namespace = namespaces[0]
++        require(namespace == 'KomorebiPaperV' or namespace.startswith('KomorebiPaperV.'),
++                f'Unexpected namespace in {path.name}.')
++        for match in re.finditer(r'(?m)^theorem\s+(\w+)\b', code):
++            targets.append({'declaration':namespace+'.'+match.group(1),'kind':'theorem',
++                'file':path.relative_to(lean).as_posix(),'line':code[:match.start()].count('\n')+1})
++    return targets
++
++
++def static_checks(root: Path) -> dict[str, object]:
++    lean = root/'formalization/lean'
++    contract = read_json(root/'verification/candidate_contract.json')
++    baseline = read_json(root/'provenance/BASELINE.json')
++    require(sha256(root/'manuscript'/baseline['baseline_file']) == baseline['baseline_sha256'],
++            'Baseline PDF hash mismatch.')
++    require((lean/'lean-toolchain').read_text().strip() == TOOLCHAIN, 'Unexpected Lean toolchain pin.')
++    manifest = read_json(lean/'lake-manifest.json')
++    mathlib = [p for p in manifest['packages'] if p['name']=='mathlib']
++    require(len(mathlib)==1 and mathlib[0]['rev']==MATHLIB_REV, 'Unexpected mathlib pin.')
++    config = (lean/'lakefile.toml').read_text(encoding='utf-8')
++    require(f'rev = "{MATHLIB_REV}"' in config, 'Lake configuration/mathlib pin mismatch.')
++    require('"-DwarningAsError=true"' in config, 'Warnings-as-errors configuration missing.')
++    require('autoImplicit = false' in config and 'relaxedAutoImplicit = false' in config,
++            'Implicit-variable guard configuration missing.')
++    actual_lean = sorted(list(lean.glob('*.lean'))+list((lean/'KomorebiPaperV').glob('*.lean')))
++    # Reject unexpected Lean files outside the nine source modules/audit/root.
++    unexpected = [p for p in lean.rglob('*.lean') if '.lake' not in p.relative_to(lean).parts
++                  and p not in actual_lean]
++    require(not unexpected, f'Unexpected Lean source locations: {unexpected}.')
++    frozen = contract['source_sha256']
++    expected_paths = set(frozen)
++    actual_paths = {p.relative_to(root).as_posix() for p in actual_lean}
++    actual_paths.update('formalization/lean/'+name for name in
++                        ('lean-toolchain','lakefile.toml','lake-manifest.json'))
++    require(actual_paths == expected_paths, 'Source file-set mismatch.')
++    for rel, expected_hash in frozen.items():
++        path = root/rel
++        require(path.is_file() and sha256(path)==expected_hash, f'Source integrity mismatch: {rel}.')
++    for path in actual_lean:
++        code=lean_code_only(path.read_text(encoding='utf-8'))
++        bad=re.findall(FORBIDDEN,code)
++        require(not bad, f'Forbidden active Lean tokens in {path.name}: {bad}.')
++        if path.name != 'KernelAudit.lean':
++            require(not re.search(r'\b(?:run_cmd|initialize|opaque)\b',code),
++                    f'Unexpected metaprogram/opaque command in {path.name}.')
++    actual=source_inventory(root)
++    found={row['declaration'] for row in actual}
++    expected={row['declaration'] for row in contract['theorem_targets']}
++    require(len(actual)==len(found), 'Duplicate theorem names.')
++    require(len(contract['theorem_targets'])==len(expected), 'Duplicate contract target.')
++    require(found==expected, f'Theorem target mismatch: {sorted(found ^ expected)}.')
++    require(actual==contract['theorem_targets'], 'Source-location/theorem contract mismatch.')
++    imports=set(re.findall(r'(?m)^import\s+(KomorebiPaperV\.\w+)\s*$',
++                           (lean/'KomorebiPaperV.lean').read_text(encoding='utf-8')))
++    modules={'KomorebiPaperV.'+p.stem for p in (lean/'KomorebiPaperV').glob('*.lean')}
++    require(imports==modules, 'Top-level library import coverage mismatch.')
++    audit=(lean/'KernelAudit.lean').read_text(encoding='utf-8')
++    printed=re.findall(r'(?m)^#print axioms\s+([\w.]+)\s*$',audit)
++    named=re.findall(r'(?m)^\s+`(KomorebiPaperV\.[\w.]+),?\s*$',audit)
++    require(set(printed)==expected and len(printed)==len(expected), 'Axiom-print target coverage mismatch.')
++    require(set(named)==expected and len(named)==len(expected), 'Audit target-array coverage mismatch.')
++    require('PAPER_V_CANDIDATE_TARGET_AUDIT_PASS:' in audit, 'Audit sentinel definition missing.')
++    return {'baseline_hash':'PASS','source_integrity':'PASS','pinned_configuration':'PASS',
++            'lexical_scan':'PASS','target_contract':'PASS','import_and_audit_coverage':'PASS',
++            'lean_files':len(actual_lean),'proof_modules':len(modules),
++            'explicit_theorem_targets':len(expected),
++            'meaning':'Static source checks only. No parsing, elaboration, or kernel acceptance inferred.'}
++
++
++def run(command: list[str], cwd: Path, log_path: Path,
++        timeout: int = 900) -> subprocess.CompletedProcess[str]:
++    try:
++        result=subprocess.run(command,cwd=cwd,text=True,stdout=subprocess.PIPE,
++            stderr=subprocess.STDOUT,timeout=timeout,encoding='utf-8',errors='replace')
++    except subprocess.TimeoutExpired as exc:
++        partial=exc.stdout or ''
++        if isinstance(partial,bytes): partial=partial.decode('utf-8',errors='replace')
++        log_path.write_text(partial+f'\nTIMEOUT after {timeout} seconds.\n',encoding='utf-8')
++        raise VerificationError(f'Command timed out; see {log_path.name}.') from exc
++    except OSError as exc:
++        log_path.write_text(f'PROCESS NOT STARTED: {exc}\n',encoding='utf-8')
++        raise VerificationError(f'Command could not start; see {log_path.name}.') from exc
++    log_path.write_text(result.stdout,encoding='utf-8')
++    require(result.returncode==0, f'{command[0]} exited {result.returncode}; see {log_path.name}.')
++    return result
+ 
+ 
+ def main() -> int:
+-    parser = argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument('--static-only', action='store_true')
+-    args = parser.parse_args()
+-    report = {'timestamp_utc': datetime.now(timezone.utc).isoformat(),
+-              'package_classification': 'UNCOMPILED_LEAN_SOURCE_CANDIDATE',
+-              'full_paper_coverage_certified': False, 'lean_kernel_checked': False,
+-              'gates': {}, 'status': 'STARTED'}
+-    status_file = V / ('static_status.json' if args.static_only else 'verification_status.json')
+-    exit_code = 1
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--static-only',action='store_true',help='Run source and exact Python checks, not Lean.')
++    args=parser.parse_args()
++    V=ROOT/'verification'; V.mkdir(exist_ok=True)
++    lean=ROOT/'formalization/lean'
++    report={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'release':'0.2.0-second-block',
++        'package_classification':'UNCOMPILED_LEAN_SOURCE_CANDIDATE',
++        'full_paper_coverage_certified':False,'lean_kernel_checked':False,
++        'python_optimization_level':sys.flags.optimize,'gates':{},'status':'STARTED'}
++    status_path=V/('static_status.json' if args.static_only else 'verification_status.json')
++    code=1
+     try:
+-        provenance = json.loads((ROOT/'provenance/BASELINE.json').read_text())
+-        pdf = ROOT/'manuscript'/provenance['baseline_file']
+-        assert hashlib.sha256(pdf.read_bytes()).hexdigest() == provenance['baseline_sha256'], 'Baseline PDF hash mismatch'
+-        report['gates']['baseline_hash'] = 'PASS'
+-        contract = json.loads((V/'candidate_contract.json').read_text())
+-        found: set[str] = set()
+-        sources = list(LEAN_ROOT.glob('*.lean')) + list((LEAN_ROOT/'KomorebiPaperV').glob('*.lean'))
+-        for p in sources:
+-            code = lean_code_only(p.read_text(encoding='utf-8'))
+-            forbidden = re.findall(r'\b(?:sorry|admit|sorryAx|axiom|unsafe)\b', code)
+-            assert not forbidden, f'Forbidden source tokens in {p.name}: {forbidden}'
+-            if p.parent.name == 'KomorebiPaperV':
+-                ns = 'KomorebiPaperV.Binary' if p.stem == 'BinaryAdaptive' else 'KomorebiPaperV'
+-                found.update(ns+'.'+name for name in re.findall(r'(?m)^theorem\s+(\w+)',code))
+-        expected = {r['declaration'] for r in contract['theorem_targets']}
+-        assert found == expected, f'Candidate declaration mismatch: {found ^ expected}'
+-        report['gates']['lexical_scan'] = {'status':'PASS','files':len(sources),
+-                                          'explicit_theorem_targets':len(expected),
+-                                          'meaning':'Lexical/source-contract check only, not elaboration.'}
+-        run([sys.executable, str(ROOT/'tests/test_exact_models.py'), '--report', str(V/'exact_model_results.json')],
+-            ROOT, 'exact_model_tests.log', timeout=120)
+-        report['gates']['exact_finite_models'] = json.loads((V/'exact_model_results.json').read_text())
++        report['gates']['source']=static_checks(ROOT)
++        for script,stem in [('test_exact_models.py','exact_model'),
++                            ('test_second_block.py','second_block'),
++                            ('test_verifier.py','verifier_controls')]:
++            output=V/(stem+'_results.json')
++            run([sys.executable,str(ROOT/'tests'/script),'--report',str(output)],
++                ROOT,V/(stem+'_tests.log'),timeout=180)
++            results=read_json(output)
++            require(results['status']=='PASS' and results['tests_run']>0,
++                    f'No passing tests reported by {script}.')
++            report['gates'][stem]=results
+         if args.static_only:
+-            report['gates']['lean'] = 'NOT_REQUESTED'
+-            report['status'] = 'STATIC_AND_EXACT_ONLY'
+-            exit_code = 0
++            report['gates']['lean']='NOT_REQUESTED'
++            report['status']='STATIC_AND_EXACT_ONLY'
++            code=0
+         elif shutil.which('lake') is None:
+-            report['gates']['lean'] = 'BLOCKED_NO_LAKE'
+-            report['status'] = 'BLOCKED_NO_LAKE'
+-            report['limitation'] = 'No Lean process ran. Passing independent finite tests does not certify these Lean sources.'
+-            exit_code = 2
++            report['gates']['lean']='BLOCKED_NO_LAKE'
++            report['status']='BLOCKED_NO_LAKE'
++            report['limitation']='No Lean process ran. Exact Python tests do not execute or certify the Lean candidates.'
++            code=2
+         else:
+-            ver = run(['lake','env','lean','--version'],LEAN_ROOT,'lean_version.log',120)
+-            assert '4.34.0-rc2' in ver.stdout, 'Unexpected Lean version'
+-            run(['lake','build','KomorebiPaperV'],LEAN_ROOT,'lean_build.log')
+-            manifest = json.loads((LEAN_ROOT/'lake-manifest.json').read_text())
++            # This branch must run with the pinned compiler/dependencies before any kernel claim.
++            version=run(['lake','env','lean','--version'],lean,V/'lean_version.log',120)
++            require(re.search(r'\b4\.34\.0-rc2\b',version.stdout) is not None, 'Unexpected Lean version.')
++            run(['lake','build','KomorebiPaperV'],lean,V/'lean_build.log')
++            # Reject any lock/config/source change performed while fetching/building.
++            static_checks(ROOT)
++            manifest=read_json(lean/'lake-manifest.json')
+             for package in manifest['packages']:
+-                path = LEAN_ROOT/'.lake/packages'/package['name']
+-                got = run(['git','rev-parse','HEAD'],path,'pin_'+package['name']+'.log',30).stdout.strip()
+-                assert got == package['rev'], f'Dependency pin mismatch: {package["name"]}'
+-            audit = run(['lake','env','lean','-DwarningAsError=true','KernelAudit.lean'],LEAN_ROOT,'lean_axiom_audit.log')
+-            assert f'PAPER_V_CANDIDATE_TARGET_AUDIT_PASS: {len(expected)} theorem targets;' in audit.stdout, 'Missing audit success sentinel'
+-            assert 'sorryAx' not in audit.stdout, 'Unexpected proof placeholder in audit output'
+-            report['lean_kernel_checked'] = True
+-            report['gates']['lean'] = 'CANDIDATE_TARGETS_BUILD_AND_AUDIT_PASS'
+-            report['package_classification'] = 'CANDIDATE_TARGETS_CHECKED_NOT_FULL_PAPER'
+-            report['status'] = 'CANDIDATE_LEAN_CHECKS_PASS'
+-            exit_code = 0
++                dep=lean/'.lake/packages'/package['name']
++                rev=run(['git','rev-parse','HEAD'],dep,V/('pin_'+package['name']+'.log'),30).stdout.strip()
++                require(rev==package['rev'],f'Dependency revision mismatch: {package["name"]}.')
++                dirty=run(['git','status','--porcelain','--untracked-files=no'],dep,
++                          V/('dirty_'+package['name']+'.log'),30).stdout.strip()
++                require(not dirty,f'Modified tracked dependency sources: {package["name"]}.')
++            audited=run(['lake','env','lean','-DwarningAsError=true','KernelAudit.lean'],
++                        lean,V/'lean_axiom_audit.log')
++            count=report['gates']['source']['explicit_theorem_targets']
++            require(f'PAPER_V_CANDIDATE_TARGET_AUDIT_PASS: {count} theorem targets;' in audited.stdout,
++                    'Missing audit success sentinel.')
++            require('sorryAx' not in audited.stdout,'Unexpected proof placeholder in audit output.')
++            report['lean_kernel_checked']=True
++            report['gates']['lean']='CANDIDATE_TARGETS_BUILD_AND_AUDIT_PASS'
++            report['package_classification']='CANDIDATE_TARGETS_CHECKED_NOT_FULL_PAPER'
++            report['status']='CANDIDATE_LEAN_CHECKS_PASS'
++            code=0
+     except Exception as exc:
+-        report['status'] = 'FAIL'
+-        report['error'] = str(exc)
+-        exit_code = 1
++        report['status']='FAIL'; report['error']=str(exc); code=1
+     finally:
+-        report['exit_code'] = exit_code
+-        status_file.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
++        report['exit_code']=code
++        status_path.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+         print(json.dumps(report,indent=2))
+-    return exit_code
+-
+-
+-if __name__ == '__main__':
++    return code
++
++
++if __name__=='__main__':
+     raise SystemExit(main())

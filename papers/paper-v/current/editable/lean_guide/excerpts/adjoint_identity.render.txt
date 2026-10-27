@@ -1,0 +1,13 @@
+theorem energy_implies_adjoint_identity \{I : Type*\} [Fintype I]
+    (W : I → H →L[ℂ] H) (h : ∀ x, ∑ i, ‖W i x‖ ^ 2 = ‖x‖ ^ 2) :
+    (∑ i, (W i).adjoint.comp (W i)) = ContinuousLinearMap.id ℂ H := by
+  have he : (∑ i, (W i).adjoint.comp (W i)).toLinearMap = LinearMap.id := by
+    apply (ext_inner_map _ _).mp
+    intro x
+    change inner ℂ ((∑ i, (W i).adjoint.comp (W i)) x) x = inner ℂ x x
+    simp only [sum_apply, ContinuousLinearMap.comp_apply, sum_inner,
+      ContinuousLinearMap.adjoint_inner_left, inner_self_eq_norm_sq_to_K]
+    exact_mod_cast h x
+  apply ContinuousLinearMap.ext
+  intro x
+  exact LinearMap.congr_fun he x

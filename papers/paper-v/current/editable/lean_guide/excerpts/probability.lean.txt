@@ -1,0 +1,11 @@
+theorem antichain_probability {Ω : Type*} [MeasurableSpace Ω]
+    (μ : MeasureTheory.Measure Ω) (good : Set Ω) (δ : ENNReal)
+    (c e : A → ℝ) (d : Ω → A → ℝ) (t : FiniteAdaptive.Tree A) (γ : ℝ)
+    (hgood : ∀ ω ∈ good, ∀ a, |d ω a-c a| ≤ e a)
+    (hg : ∀ S : Pruning t, S ≠ selected c t → γ ≤ nodeSum c S-nodeSum c (selected c t))
+    (hm : 2*envelope e t < γ) (hprob : 1-δ ≤ μ good) :
+    1-δ ≤ μ {ω | selected (d ω) t = selected c t} := by
+  apply hprob.trans
+  apply MeasureTheory.measure_mono
+  intro ω hω
+  exact antichain_selector_stable c (d ω) e (hgood ω hω) t γ hg hm

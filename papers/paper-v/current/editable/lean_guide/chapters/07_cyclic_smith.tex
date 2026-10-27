@@ -1,0 +1,60 @@
+\section{Formal cyclic products and projective Smith actions}
+\subsection{A formal residue projector filters coefficients}
+For a formal power series $f=\sum_{n\ge0}f_nX^n$, the $j$th cyclic projector retains the degrees congruent to $j$ modulo $N$.
+\excerpt{CyclicSeries}{cyclic_projector}
+The ambient coefficient ring is a commutative semiring. There is no evaluation point and no convergence assumption in this definition. Multiplication is the formal Cauchy product, whose individual coefficients are finite sums.
+
+The projector laws express idempotence, disjointness of different residue classes, and resolution of the identity for $N>0$. A pure packet in residue $i$ multiplied by one in residue $j$ lies in residue $i+j$ modulo $N$.
+
+\subsection{The complete cyclic product law}
+Decompose both factors into packets, distribute multiplication, and retain only pairs whose residue labels add to the requested output label.
+\excerpt{CyclicSeries}{cyclic_product}
+For $N=2$, write $f=f_0+f_1$ and $g=g_0+g_1$. Then
+\[
+(fg)_0=f_0g_0+f_1g_1,\qquad (fg)_1=f_0g_1+f_1g_0.
+\]
+The subscripts label degree parity. They are not independent scalar coefficients. This formula explains nonlinear coupling between packet labels without leaving the formal-series setting.
+
+\subsection{Powers include the empty product}
+The power theorem sums over all $q$-tuples of residue labels, retaining those whose sum has the requested residue.
+\excerpt{CyclicSeries}{cyclic_power}
+At $q=0$, the type \code{Fin 0 → Fin N} has one function, the empty assignment. Its sum of labels is zero and its product is one. Thus the formula returns the constant series one for the zero residue and zero otherwise. This boundary case is part of the statement, not an unstated convention added afterward.
+
+The foundational coefficient-projector proofs identify their adaptation from Paper IV in source comments and in the cumulative census. Reusing them in a new application does not make them independent additional discoveries. Analytic root-of-unity formulas require their own convergence domain when formal series are evaluated.
+
+\subsection{Use homogeneous coordinates at poles}
+For a nonzero complex parameter $a$, the normalized homogeneous Smith action is
+\[
+A_a\binom uv=\frac12
+\begin{pmatrix}1+a&1-a\\1-a&1+a\end{pmatrix}\binom uv.
+\]
+\excerpt{SmithAction}{smith_action}
+The source proves $A_aA_b=A_{ab}$, $A_1=I$, and preservation of nonzero pairs when $a\ne0$. Multiplying both input coordinates by the same nonzero scalar multiplies both output coordinates by that scalar.
+
+A projective point is a nonzero pair modulo this common scaling. The source constructs the equivalence relation explicitly.
+\excerpt{SmithCyclic}{smith_quotient}
+The quotient is the full projective line in this coordinate model. It includes $[0:1]$, representing zero impedance, and $[1:0]$, representing infinity. The action respects scaling, so it descends to the quotient.
+
+\subsection{Cyclic composition}
+The parameter $\omega_N=\exp(2\pi i/N)$ is nonzero and satisfies $\omega_N^N=1$ for $N>0$. The resulting projective actions compose by addition of exponents modulo $N$.
+\excerpt{SmithCyclic}{smith_composition}
+This source target establishes the modulo-$N$ composition law. It should not be described as a separate formal proof that the action has exact order $N$ unless the required primitivity and nontriviality converse are established as additional formal declarations. The broader traditional treatment contains further action analysis; its prose scope is separately recorded.
+
+\subsection{Cayley coordinates explain the action}
+In the pair coordinates $(u-v,u+v)$, the action multiplies the first coordinate by $a$ and leaves the second fixed.
+\excerpt{SmithCyclic}{smith_cayley}
+On a finite chart where the denominators are nonzero, this corresponds to rotation or multiplication of the reflection coefficient. The rational impedance formula is
+\[
+z\longmapsto\frac{(1+a)z+(1-a)}{(1-a)z+(1+a)}.
+\]
+A vanishing denominator means the image is the projective point at infinity. Lean's field division is totalized, so a bare identity of division expressions does not by itself assert that a displayed chart exists. The homogeneous action carries the geometry through such poles, while chart composition theorems carry explicit denominator conditions.
+
+\subsection{The half-turn swaps zero and infinity}
+For $N=2$, $\omega_2=-1$ and the homogeneous action swaps the two coordinates.
+\excerpt{SmithCyclic}{smith_swap}
+On the finite nonzero chart this gives $z\mapsto z^{-1}$. At $z=0$ it maps $[0:1]$ to $[1:0]$. At infinity it does the reverse. The reciprocal formula is therefore a chart description of a globally defined projective transformation, not a rule that discards poles.
+
+\subsection{Dyadic and odd masks factor by CRT}
+If $N=2^aM$ with $M$ odd, the two factors are coprime. An integer satisfies a residue condition modulo their product precisely when it satisfies both factor conditions. The source proves the corresponding equality of integer-residue masks.
+\excerpt{CRT}{crt}
+This is an exact mask factorization. It does not prove that a particular nonuniform sample allocation is optimal, nor does it provide a minimax sampling theorem. It supplies the arithmetic structure on which more specialized sampling constructions can be built.

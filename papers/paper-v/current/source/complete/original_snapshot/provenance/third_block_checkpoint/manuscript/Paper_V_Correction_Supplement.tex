@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Paper V: Corrections and First Formalization Block},pdfauthor={Komorebi P.},pdfsubject={Uncompiled Lean source candidates and exact finite regression tests}}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Projector-Resolved Seed Calculus V}
+\rhead{Komorebi P.}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+\newtheorem{proposition}{Proposition}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\title{Paper V\\Corrections and First Formalization Block}
+\author{Komorebi P.}
+\date{Working supplement, version 0.1.0}
+\begin{document}
+\maketitle
+\noindent\textbf{Status.} This supplement accompanies the 31-page adaptive-tree-resolved edition. The original manuscript is preserved unchanged. The new Lean sources are uncompiled proof candidates. The exact finite tests reported here are not Lean kernel verification.
+
+\section{Finite selection, including a singleton tree}
+Theorem 11.3, page 19, requires a separate case when no competing pruning exists. A root-only tree has precisely one complete pruning, so a minimum taken over all competing prunings is not a real number in that case.
+
+\begin{proposition}[Corrected finite selection statement]
+Let $\mathcal P$ be a nonempty finite set of complete prunings, and let $J:\mathcal P\to\R$. A global minimizer exists. If $\mathcal P=\{\Lambda_*\}$, then $\Lambda_*$ is the unique minimizer of every real-valued objective on $\mathcal P$.
+
+Suppose instead that $|\mathcal P|\ge2$ and $\Lambda_*$ uniquely minimizes $J$. Then
+\[
+\gamma=\min_{\Lambda\in\mathcal P\setminus\{\Lambda_*\}}
+\bigl(J(\Lambda)-J(\Lambda_*)\bigr)>0.
+\]
+For another objective $J'$, if
+\[
+|J'(\Lambda)-J(\Lambda)|\le\varepsilon
+\quad\hbox{for every }\Lambda\in\mathcal P,
+\qquad 2\varepsilon<\gamma,
+\]
+then $\Lambda_*$ also uniquely minimizes $J'$.
+\end{proposition}
+\begin{proof}
+A real-valued function on a nonempty finite set attains its minimum. The singleton case has no competitor. In the nonsingleton case, uniqueness makes every difference in the nonempty finite competitor set positive, so its minimum is positive. For each competitor,
+\begin{align*}
+J'(\Lambda)-J'(\Lambda_*)
+&\ge J(\Lambda)-J(\Lambda_*)-2\varepsilon\\
+&\ge\gamma-2\varepsilon>0.
+\end{align*}
+\end{proof}
+The inequality must be strict. The objectives $(0,2)$ and $(1,1)$ have uniform difference one, exactly half the original gap, and the second objective has a tie.
+
+\section{A deterministic tree selector and its envelope}
+For Theorem 11.4, pages 19--20, specify the tie rule:
+\[
+\text{stop at }v\quad\Longleftrightarrow\quad
+c_v\le\sum_{u\in\operatorname{ch}(v)}V(u).
+\]
+Terminal nodes are always selected. Strictly smaller child cost causes refinement. Bottom-up induction shows that each selected subtree cost is its minimum. With the costs already supplied, one addition per child and one comparison per internal node give a linear arithmetic-operation count. Computing the local costs and the bit complexity of exact arithmetic are separate costs.
+
+For local errors $|c'_v-c_v|\le\varepsilon_v$, define
+\[
+E(v)=
+\begin{cases}
+\varepsilon_v,&v\text{ terminal},\\
+\max\left\{\varepsilon_v,\sum_{u\in\operatorname{ch}(v)}E(u)\right\},&v\text{ internal}.
+\end{cases}
+\]
+Induction over any complete pruning gives
+\[
+\left|\sum_{v\in\Lambda}c'_v-\sum_{v\in\Lambda}c_v\right|\le E(\mathrm{root}).
+\]
+The finite-gap result applies when $2E(\mathrm{root})<\gamma$. In Corollary 11.5, the probability statement should refer to a \emph{joint event} on which all the local bounds hold. Separate per-node probability statements are not automatically a joint bound with the same failure probability.
+
+Exact synthesis is independent of the selected objective. Repeated substitution of $P_v=\sum_{u\in\operatorname{ch}(v)}P_u$ stops at a complete pruning and yields $\sum_{v\in\Lambda}P_v=I$. The new Lean candidate encodes this substitution principle for recursively represented binary cuts under an explicit local conservation hypothesis. The general antichain and arbitrary-branching correspondence is not yet supplied.
+
+\section{Channel delay and original-sample delay}
+In Theorem 4.1, page 8, let $\zeta$ denote the \emph{channel} transform variable. With
+\[
+x_r[q]=x[Nq+r],
+\]
+the identity $R(\zeta)E(\zeta)=\zeta^{-d}I_N$ yields
+\[
+\widehat x_r[q]=x_r[q-d],\qquad
+\widehat x[n]=x[n-Nd].
+\]
+It therefore describes $d$ channel-index steps, or $Nd$ original samples.
+
+For a general original-sample delay $D=q_0N+t$, where $0\le t<N$, put
+\[
+s_r=(r-t)\bmod N,\qquad d_r=q_0+\mathbf1_{\{r<t\}}.
+\]
+Then the exact delay matrix has the entries
+\[
+\mathcal D_D(\zeta)_{r,s}=
+\begin{cases}
+\zeta^{-d_r},&s=s_r,\\
+0,&s\ne s_r.
+\end{cases}
+\]
+Indeed, $Nq+r-D=N(q-d_r)+s_r$. For two channels and one original sample,
+\[
+\mathcal D_1(\zeta)=
+\begin{pmatrix}0&\zeta^{-1}\\1&0\end{pmatrix},
+\]
+not $\zeta^{-1}I_2$. Thus either name the delay unit in the existing scalar criterion or use $R E=\mathcal D_D$ for arbitrary original-sample delays.
+
+The time-domain FIR law does not need an analytic transform. Its transform restatement should use finite Laurent polynomials, another specified formal interpretation, or an actual common convergence domain.
+
+\section{The Smith action at zero and infinity}
+The finite rational formula in Theorem 13.2, page 23, is not an everywhere-defined map $\C\to\C$. In particular, the half-turn sends zero impedance to infinity.
+
+\begin{proposition}[Projective phase action]
+For $w\in\C\setminus\{0\}$, let
+\[
+M(w)=\begin{pmatrix}1+w&1-w\\1-w&1+w\end{pmatrix}.
+\]
+Its projective action on $\mathbb P^1(\C)$ is invertible, and these actions satisfy $T_u\circ T_v=T_{uv}$. For $w=-1$, the action is $[a:b]\mapsto[b:a]$.
+\end{proposition}
+\begin{proof}
+Direct multiplication gives
+\[
+\det M(w)=4w\ne0,\qquad M(u)M(v)=2M(uv).
+\]
+The nonzero scalar factor does not change a projective map. Also
+$M(-1)=\left(\begin{smallmatrix}0&2\\2&0\end{smallmatrix}\right)$.
+\end{proof}
+For $w=\omega_N^k$, this gives the cyclic composition law. On the affine chart $[z:1]$ where the denominator is nonzero, it gives exactly the printed formula. Corollary 13.3 becomes $z\mapsto z^{-1}$ for $z\ne0$, with the projective extension exchanging zero and infinity.
+
+Alternatively, the finite action can be restricted to $\operatorname{Re}z>0$. Since
+\[
+|z+1|^2-|z-1|^2=4\operatorname{Re}z>0,
+\]
+its Cayley image lies strictly inside the unit disk, which is preserved by phase rotations. The finite closed passive half-plane omits the disk point $\Gamma=1$, corresponding to infinite impedance. Ordinary division by zero in a formal library must not be used to encode this projective point.
+
+\section{Other hypothesis and editorial repairs}
+For Theorem 7.1, specify measurable masks and membership of the relevant indicator functions in $L^p$. For finite $p$, finite measures of the original mask and its symmetric difference suffice for the displayed finite-norm formula. Distinguish a pointwise supremum from an essential supremum.
+
+On page 28, change the implementation table's sixteen figure pairs to eighteen after checking the companion source. On page 30, Appendix A.3, change ``Harmically fill'' to ``Harmonically fill.'' These corrections do not promote either edge-recovery conjecture to a theorem.
+
+\section{First-block verification record}
+The working package contains five Lean modules and 29 theorem declarations. They are source candidates, not newly verified results. The interpreter and build tool were absent, and attempted retrieval of the official toolchain failed at container DNS resolution. No fresh Lean compilation or axiom audit ran.
+
+The new independent finite reference suite passed twelve tests with 25,825 counted assertions using exact rational arithmetic. It includes signed polyphase indices, FIR transfer, delay conventions, lifting, mask-error bounds, complete cuts, negative costs, ties, singleton selection, and perturbation envelopes. Dynamic programming was compared with exhaustive enumeration for 300 cost assignments over six fixed tree shapes, including a depth-four tree with 677 prunings.
+
+The depth-five count 458,330 was checked using the recurrence $c_0=1$, $c_{d+1}=1+c_d^2$, not by rerunning the manuscript's depth-five optimization experiment. The manuscript's 33 original tests, optimum gap, and numerical residuals were not reproduced. The original PDF remains unchanged, with SHA-256 recorded in the package provenance.
+\end{document}

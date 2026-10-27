@@ -1,0 +1,11 @@
+theorem objective_gap_attained (t : FiniteAdaptive.Tree A) (J : Pruning t → ℝ) (S : Pruning t)
+    (ho : ∃ T, T ≠ S) (hu : ∀ T, T ≠ S → J S < J T) :
+    ∃ T : Pruning t, T ≠ S ∧ 0 < J T-J S ∧ ∀ U, U ≠ S → J T-J S ≤ J U-J S := by
+  let : Fintype (Pruning t) := Fintype.ofEquiv (Cut t) (pruningEquiv t)
+  classical
+  obtain ⟨U,hU⟩ := ho
+  obtain ⟨T,hT,hmin⟩ := KomorebiPaperV.finite_minimum (fun T => J T-J S)
+    (Finset.univ.erase S) ⟨U, Finset.mem_erase.mpr ⟨hU, Finset.mem_univ _⟩⟩
+  have hTS := (Finset.mem_erase.mp hT).1
+  exact ⟨T,hTS,sub_pos.mpr (hu T hTS),fun V hV => hmin V
+    (Finset.mem_erase.mpr ⟨hV, Finset.mem_univ _⟩)⟩

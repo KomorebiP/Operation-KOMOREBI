@@ -1,0 +1,6 @@
+noncomputable def projector [DecidableEq R] (phase : I → R) (r : R) :
+    Signal I →L[ℂ] Signal I :=
+  (projectionLinear phase r).mkContinuous 1 (by
+    intro x
+    change ‖projection phase r x‖ ≤ 1 * ‖x‖
+    simpa using projection_norm_le phase r x)

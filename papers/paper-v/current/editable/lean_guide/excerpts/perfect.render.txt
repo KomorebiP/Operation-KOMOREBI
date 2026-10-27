@@ -1,0 +1,12 @@
+theorem perfect_reconstruction_iff (E R : Matrix I I Laurent) (c : ℂ) (d : ℤ) :
+    (∀ x : I → Signal, ∀ k n, bank R (bank E x) k n = c*x k (n-d)) ↔
+      R*E = gainDelay c d := by
+  rw [← bank_faithful]
+  constructor
+  · intro h x
+    funext k n
+    rw [bank_mul, gain_delay_action]
+    exact h x k n
+  · intro h x k n
+    have he := congrArg (fun y : I → Signal => y k n) (h x)
+    simpa only [bank_mul, gain_delay_action] using he

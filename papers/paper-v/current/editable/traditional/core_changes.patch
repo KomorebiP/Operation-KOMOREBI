@@ -1,0 +1,109 @@
+--- source/formal_core.tex
++++ core_corrected.tex
+@@ -100,7 +100,7 @@
+ \maketitle
+ 
+ \begin{abstract}
+-This paper develops the signal realization of the projector-resolved seed calculus. The impulse $\delta_0$ is taken as a primitive signal seed and its shift orbit supplies the address system. Residue projectors split a sequence into exact polyphase channels, nested divisibility gives exact refinement, and every finite impulse-response operator becomes a matrix of packet transfers. The standard perfect-reconstruction condition for a filter bank is therefore an analysis--synthesis identity in the common operator language of the series. Haar analysis and every finite-depth wavelet-packet transform are treated on complex $\ell^2$, together with concrete finite-signal models and a predict--update lifting step. The edge problem is separated into two statements. When a discontinuity packet is known and retained exactly, approximation error is exactly the approximation error of the remaining smooth packet; no spectral approximation of the jump is performed. When the packet is estimated, a symmetric-difference bound isolates mask error, amplitude error, and smooth-background error. Numerical studies compare global Fourier truncation, exact known-packet reconstruction, and a deliberately narrow positive-contrast estimator in one and two dimensions, including curved boundaries, corners, and multiple amplitudes. The same cyclic phase action is then placed on the Smith reflection disk. Its pullback through the Cayley transform is a M\"obius action on impedance, and the two-phase case is precisely impedance--admittance inversion. Nonlinear coefficient products obey cyclic packet convolution. The revised edition integrates a Lean formalization of all twenty theorem-like statements under the hypotheses stated below: 225 supporting theorem targets in 23 modules. Eighteen regenerated figures, machine-readable numerical results, the 33-test original companion suite, and 36 additional exact-model and verifier tests accompany the paper. Exact signal theorems, limited numerical estimators, classical constructions, and open recovery problems are kept distinct throughout.
++This paper develops the signal realization of the projector-resolved seed calculus. The impulse $\delta_0$ is taken as a primitive signal seed and its shift orbit supplies the address system. Residue projectors split a sequence into exact polyphase channels, nested divisibility gives exact refinement, and every finite impulse-response operator becomes a matrix of packet transfers. The standard perfect-reconstruction condition for a filter bank is therefore an analysis--synthesis identity in the common operator language of the series. Haar analysis and every finite-depth wavelet-packet transform are treated on complex $\ell^2$, together with concrete finite-signal models and a predict--update lifting step. The edge problem is separated into two statements. When a discontinuity packet is known and retained exactly, approximation error is exactly the approximation error of the remaining smooth packet; no spectral approximation of the jump is performed. When the packet is estimated, a symmetric-difference bound isolates mask error, amplitude error, and smooth-background error. Numerical studies compare global Fourier truncation, exact known-packet reconstruction, and a deliberately narrow positive-contrast estimator in one and two dimensions, including curved boundaries, corners, and multiple amplitudes. The same cyclic phase action is then placed on the Smith reflection disk. Its pullback through the Cayley transform is a M\"obius action on impedance, and the two-phase case is precisely impedance--admittance inversion. Nonlinear coefficient products obey cyclic packet convolution. The preserved September 2026 release integrates a Lean formalization of all twenty theorem-like statements under the hypotheses stated below: 225 supporting theorem targets in 23 modules. Eighteen regenerated figures, machine-readable numerical results, the 33-test original companion suite, and 36 additional exact-model and verifier tests accompany the paper. Exact signal theorems, limited numerical estimators, classical constructions, and open recovery problems are kept distinct throughout.
+ \end{abstract}
+ 
+ \begin{center}
+@@ -110,7 +110,7 @@
+ \end{center}
+ 
+ \clearpage
+-\noindent\textbf{Verification convention.} ``Lean-checked'' refers to the explicitly scoped theorem statements and their supporting declarations, accepted by the pinned Lean kernel. It does not certify the English text automatically, the floating-point Python implementation, physical modelling choices, or the two conjectures. The manuscript-to-declaration correspondence has been reviewed manually; Appendix~\ref{sec:formalization} records it result by result. The numerical experiments have been rerun for this edition.
++\noindent\textbf{Verification convention.} ``Lean-checked'' refers to the explicitly scoped theorem statements and their supporting declarations, accepted by the pinned Lean kernel. It does not certify the English text automatically, the floating-point Python implementation, physical modelling choices, or the two conjectures. The manuscript-to-declaration correspondence has been reviewed manually; Appendix~\ref{sec:formalization} records it result by result. The September 2026 release records a rerun of the numerical experiments. The current final-edition checks are distinguished in the opening reading note.
+ 
+ \tableofcontents
+ \listoffigures
+@@ -790,7 +790,7 @@
+ \end{theorem}
+ 
+ \begin{proof}
+-The root-only pruning exists, and every pruning is a subset of the finite node set, so the feasible set is nonempty and finite. Thus the minimum is attained. If competitors exist, their finitely many differences from a unique optimum are strictly positive, so their minimum is positive and is achieved by a competitor. In the singleton case there is no alternative selector under any objective change. In the remaining case,  For any competing pruning $\Lambda\ne\Lambda_y^*$,
++The root-only pruning exists, and every pruning is a subset of the finite node set, so the feasible set is nonempty and finite. Thus the minimum is attained. If competitors exist, their finitely many differences from a unique optimum are strictly positive, so their minimum is positive and is achieved by a competitor. In the singleton case there is no alternative selector under any objective change. In the remaining case, for any competing pruning $\Lambda\ne\Lambda_y^*$,
+ \[
+ \begin{aligned}
+ J_{y'}(\Lambda)-J_{y'}(\Lambda_y^*)
+@@ -852,11 +852,11 @@
+ \[
+ \boxed{\Gamma_y>2E(\varnothing)}
+ \]
+-is a deterministic certificate that the globally optimal pruning is unchanged.  A singleton pruning set is stable without a gap condition. If a noise model supplies \emph{all} local bounds simultaneously on one event of probability at least $1-\delta$, and the displayed strict-gap condition holds, the same selector is recovered with probability at least $1-\delta$. Individual nodewise probabilities alone do not give this joint confidence without an additional argument, such as a union bound.
++is a deterministic certificate that the globally optimal pruning is unchanged.  A singleton pruning set is stable without a gap condition. Assume the random node costs and the joint local-error event are measurable. If a noise model supplies \emph{all} local bounds simultaneously on one event of probability at least $1-\delta$, and the displayed strict-gap condition holds, the same selector is recovered with probability at least $1-\delta$. Individual nodewise probabilities alone do not give this joint confidence without an additional argument, such as a union bound.
+ \end{corollary}
+ 
+ \begin{proof}
+-For any pruning of the subtree rooted at $v$, either $v$ itself is selected, producing perturbation at most $\varepsilon_v$, or the pruning is the disjoint union of child prunings, producing perturbation at most the sum of the child envelopes.  The same decomposition applied to the nonnegative weights $\varepsilon_a$ proves equality with the maximum weight: at each node choose either the stop option or a maximizing pruning in each child, whichever gives the larger total. Finiteness ensures these choices attain their maxima. Evaluating each cost at a minimizer of the other cost bounds the difference of the two optimal values by the uniform envelope. The selector statement follows from the strict-gap theorem. The joint local-error event is contained in the selector-preservation event, so monotonicity of probability proves the probabilistic assertion.
++For any pruning of the subtree rooted at $v$, either $v$ itself is selected, producing perturbation at most $\varepsilon_v$, or the pruning is the disjoint union of child prunings, producing perturbation at most the sum of the child envelopes.  The same decomposition applied to the nonnegative weights $\varepsilon_a$ proves equality with the maximum weight: at each node choose either the stop option or a maximizing pruning in each child, whichever gives the larger total. Finiteness ensures these choices attain their maxima. Evaluating each cost at a minimizer of the other cost bounds the difference of the two optimal values by the uniform envelope. The selector statement follows from the strict-gap theorem. The finite deterministic comparisons defining the selector make its preservation event measurable when the random node costs are measurable. The joint local-error event is contained in the selector-preservation event, so monotonicity of probability proves the probabilistic assertion.
+ \end{proof}
+ 
+ \begin{figure}[htbp]
+@@ -1156,7 +1156,7 @@
+ \bottomrule
+ \end{longtable}
+ 
+-The original companion source has been recovered and rerun. Its 33 tests pass, and all 18 figure pairs and numerical tables have been regenerated. The Lean package contributes 20 independent exact-model tests and 16 tests of the verifier itself; these account for another 36 passing tests. The exact-model suites count 305,933 assertions. These counts are separate from the 225 Lean theorem targets.
++The September 2026 release records recovery and rerunning of the original companion source: its 33 tests passed, and all 18 figure pairs and numerical tables were regenerated. The Lean package contributes 20 independent exact-model tests and 16 tests of the verifier itself; these account for another 36 passing tests. The exact-model suites count 305,933 assertions. These counts are separate from the 225 Lean theorem targets.
+ 
+ All numerical computations are CPU-based. Floating-point residuals measure finite implementations and may vary at rounding level with the scientific libraries. The universal mathematical statements are supported by the Lean proofs; the Python modules are not compiled or verified by Lean. The adaptive-tree certificate uses floating-point costs and an exhaustive finite comparison, so its displayed gap is numerical evidence rather than an interval-arithmetic proof about those computed costs. Appendix~\ref{sec:formalization} explains the verification boundary.
+ 
+@@ -1313,7 +1313,7 @@
+ 
+ \subsection{What has been checked}
+ 
+-This edition has twenty theorem-like statements: Theorems, Propositions, and Corollaries, counted together. The Lean project contains 225 explicit supporting theorem targets in 23 proof modules. All twenty statements have an explicit scope row and principal declaration targets. A fresh build and axiom audit accepted the project with warnings treated as errors. The audit inspected all 827 declarations in the project namespace, including definitions and automatically generated declarations. The latter is an implementation census, not a count of 827 mathematical theorems.
++The preserved Part I manuscript has twenty theorem-like statements: Theorems, Propositions, and Corollaries, counted together. The Lean project contains 225 explicit supporting theorem targets in 23 proof modules. All twenty statements have an explicit scope row and principal declaration targets. The September 2026 release records a successful build and axiom audit with warnings treated as errors. No fresh Lean build is asserted for this October final edition. The audit inspected all 827 declarations in the project namespace, including definitions and automatically generated declarations. The latter is an implementation census, not a count of 827 mathematical theorems.
+ 
+ The accepted axiom dependencies are \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. No admitted proof or additional project axiom is permitted. The verifier checks the imported modules, registered theorem inventory, dependency pins, source hashes, and coverage of the twenty-row scope contract. Its successful status is \texttt{LEAN\_CHECKS\_PASS}. The correspondence between a mathematical sentence in this PDF and its Lean type is a manual mathematical review, not an automated semantic-equivalence test.
+ 
+@@ -1369,7 +1369,7 @@
+ \paragraph{Hilbert operators and finite experiments.}
+ The coordinate maps, literal Haar channels, and packet operators are constructed on complex $\ell^2$. Square summability and boundedness are established before adjoints are used. The finite Python experiments separately check indexing, reconstruction, and energy at finite lengths. They illustrate these operators but are not the objects executed by the Lean kernel. Likewise, the Python Smith routine evaluates only finite charts; the Lean projective construction supplies the pole-safe universal statement.
+ 
+-\subsection{Executed checks and numerical conventions}
++\subsection{September 2026 checks and numerical conventions}
+ 
+ \begin{center}
+ \begin{tabular}{lr}
+@@ -1388,7 +1388,7 @@
+ \end{tabular}
+ \end{center}
+ 
+-All scalar entries in the recovered numerical-results JSON reproduced exactly in this environment. This includes the 458,330-pruning depth-five comparison, its selected six-node pruning, the optimum gap, and the reconstruction residuals. The five Fourier sparse-approximation budgets were also checked for conjugate-pair closure. The revised figures and tables use the regenerated data. This exact replay of the stored floating-point numbers is stronger than a visual similarity check, but it is not a promise of bitwise equality on every platform.
++The September 2026 record states that all scalar entries in the recovered numerical-results JSON reproduced exactly in its environment. This includes the 458,330-pruning depth-five comparison, its selected six-node pruning, the optimum gap, and the reconstruction residuals. The five Fourier sparse-approximation budgets were also checked for conjugate-pair closure. The revised figures and tables use the regenerated data. This exact replay of the stored floating-point numbers is stronger than a visual similarity check, but it is not a promise of bitwise equality on every platform.
+ 
+ For the one-dimensional low-pass experiment, ``cutoff 18'' means 37 signed frequency bins, not 18 retained coefficients. The disk experiment uses a square $33\times33$ frequency mask, not a radial cutoff. The sparse comparison uses largest-coefficient budgets instead of either low-pass convention. The full-image and boundary-band RMSEs are normalized by the number of samples in the respective comparison set. The supplied inpainting routines perform a fixed finite number of periodic neighbor-averaging iterations; ``harmonic filling'' describes that iteration, not a separately proved exact continuum Dirichlet solver.
+ 
+@@ -1398,9 +1398,9 @@
+ 
+ The Lean toolchain is \texttt{leanprover/lean4:v4.34.0-rc2}. The project pins mathlib to
+ \begin{center}\small\texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+-The Lake manifest records the remaining dependency revisions. The numerical environment versions are recorded in \texttt{verification/numerical\_environment.json}. Source and artifact hashes appear in \texttt{SHA256SUMS.txt}. The original manuscript, source, numerical data, and figures remain available under provenance for comparison; the expanded PDF and its TeX are the current manuscript.
+-
+-From the release root, the combined verification entry point is:
++The Lake manifest records the remaining dependency revisions. The numerical environment versions are recorded in \texttt{verification/numerical\_environment.json}. Source and artifact hashes appear in \texttt{SHA256SUMS.txt}. The original manuscript, source, numerical data, and figures remain available under provenance for comparison; the expanded PDF and its TeX are the manuscript of that September 2026 release.
++
++From the preserved release root (\texttt{source/complete/original\_snapshot} in the final package), the combined verification entry point is:
+ \begin{lstlisting}[language=bash,numbers=none]
+ python3 VERIFY_PAPER.py
+ \end{lstlisting}
+@@ -1412,12 +1412,12 @@
+ \end{lstlisting}
+ The TeX source resolves the eighteen vector figures from the manuscript's figure directory. The checked build uses repeated pdfLaTeX passes, then text, cross-reference, and page-render inspection. Different pdfTeX versions can produce different binary PDF hashes even when the rendered document is unchanged.
+ 
+-In the present container, a disclosed runtime adapter was needed for Lean executable-path discovery: it redirects a read of the current process's numeric \texttt{/proc} executable link to \texttt{/proc/self/exe}. It does not modify the Lean binary, elaborator, kernel, axioms, or proof terms. The adapter source and invocation are retained with the verification evidence; ordinary installations can run the pinned toolchain directly.
++In the September 2026 release environment, a disclosed runtime adapter was needed for Lean executable-path discovery: it redirects a read of the current process's numeric \texttt{/proc} executable link to \texttt{/proc/self/exe}. It does not modify the Lean binary, elaborator, kernel, axioms, or proof terms. The adapter source and invocation are retained with the verification evidence; ordinary installations can run the pinned toolchain directly.
+ 
+ \subsection{What remains open}
+ 
+-The finite theorem scope is complete in the stated sense: all twenty theorem-like statements have reviewed, accepted formal counterparts, and the numerical companion has been rerun. The two edge-recovery conjectures remain open research directions. No universal segmentation theorem, infinite-tree consistency result, minimax rate, or optimal Smith sampling theorem is inferred from the finite results. Classical Smith-grid and transmission-line formulae provide application context; those physical and historical assertions are not additional Lean-certified theorem rows.
+-
+-Across the available Papers I--V manuscripts there are 168 theorem-like results. Their release maps contain 1,456 raw theorem targets; removing two shared qualified names and eleven known Paper-IV-to-V adaptations leaves 1,443 after those known duplicate removals. This is a source census, not a claim of that many independent or novel mathematical results. Papers I--IV were counted from their release material and bundled audit records; only Paper V was freshly built for this edition.
++The September 2026 finite theorem scope is complete in the stated sense: all twenty theorem-like statements have reviewed, accepted formal counterparts, and that release records a rerun of the numerical companion. The two edge-recovery conjectures remain open research directions. No universal segmentation theorem, infinite-tree consistency result, minimax rate, or optimal Smith sampling theorem is inferred from the finite results. Classical Smith-grid and transmission-line formulae provide application context; those physical and historical assertions are not additional Lean-certified theorem rows.
++
++Across the available Papers I--V manuscripts there are 168 theorem-like results. Their release maps contain 1,456 raw theorem targets; removing two shared qualified names and eleven known Paper-IV-to-V adaptations leaves 1,443 after those known duplicate removals. This is a source census, not a claim of that many independent or novel mathematical results. Papers I--IV were counted from their release material and bundled audit records; only Paper V was freshly built for that September 2026 release. These historical cross-paper counts are not a current census of the October final companions.
+ 
+ \end{document}

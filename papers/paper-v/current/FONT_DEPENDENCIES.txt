@@ -1,0 +1,13 @@
+PAPER V EXTERNAL FONT DEPENDENCIES
+
+The release distributes no standalone font binaries. Install XeLaTeX, BibTeX and the TeX packages declared in each preamble. The build preflight requires kpsewhich to resolve the exact named font files. No automatic download, installation or substitute font is used.
+
+Required for all readers: P052 Roman/Bold/Italic/BoldItalic; NimbusSans Regular/Bold/Italic/BoldItalic; lmmono10 regular and italic; latinmodern-math.otf.
+Required additionally for the Lean guide: DejaVuSansMono regular, bold, oblique and bold-oblique TTF files.
+
+The builder resolves installed paths, records file sizes and SHA-256 hashes, and copies the files into fonts/ inside a private temporary build directory. The copied bytes are verified before XeLaTeX runs. Temporary font files are discarded with that directory. FONT_DEPENDENCIES.json accompanies each build's output and appears in the isolated-replay receipt.
+
+On a TeX installation that does not expose the files to kpsewhich, register the fonts in its local TEXMF tree first. The original font notices remain under editable/*/fonts/. PDF embedding follows the font embedding permissions; this release's document grant is in LICENSE.md.
+
+Build with: python3 scripts/build_pdfs.py --check-only --report /absolute/path/outside/package/build.json
+The actual source trees are staged in isolation. No Lean or numerical verification is implied by successful typesetting.

@@ -1,0 +1,1 @@
+This initial package check found one stale authority hash after a final audit addendum. The sources and 25 reviewed files were unchanged. See the current parent-directory reports for the explicit re-review and resolved integrity check. This is provenance of a corrected metadata issue, not a failed mathematical test.

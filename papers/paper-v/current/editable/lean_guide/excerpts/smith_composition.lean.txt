@@ -1,0 +1,7 @@
+theorem cyclic_composition (N : ℕ) (hN : 0 < N) (k l : ℕ) (p : Projective) :
+    cyclicAction N k (cyclicAction N l p) = cyclicAction N ((k+l)%N) p := by
+  unfold cyclicAction
+  rw [projective_mul]
+  have he : omega N ^ k * omega N ^ l = omega N ^ ((k+l)%N) := by
+    rw [← pow_add, pow_eq_pow_mod (k+l) (omega_pow N hN)]
+  congr 1

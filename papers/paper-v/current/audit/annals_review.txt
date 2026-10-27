@@ -1,0 +1,219 @@
+PAPER V: HISTORICAL ANNALS PROOF REVIEW
+
+Primary verdict: correct only after a stated restriction.
+The 63 historical Annals proof developments may be retained as a separate prose development after the listed domain repairs; they are not 63 additionally Lean-checked manuscript results.
+
+SOURCE PINS
+/workspace/scratch/a478a5fc4884/paper_v_work/source/annals/PSC_Paper_V_Annals_Human_Edition.tex
+602aafef1be5dca5597bfbdc5cae07aa8f16fd9f2df484e82b82259f9087df22
+/workspace/scratch/a478a5fc4884/paper_v_work/source/complete/original_snapshot/manuscript/Paper_V_Expanded_Lean_Checked.tex
+8ecc68a200f9519f5fd0f4d186ae9ee9350be4b27187a5b905d1ac0ec3fa9d41
+
+SCOPE
+Read all 63 raw theorem/proposition/lemma/corollary proof bodies. No source manuscript was edited. This branch does not certify historical audit dashboards, numerical reports, or Lean compilation. The thematic crosswalk is not a Lean coverage map.
+No applicable AGENTS.md was present on the inspected ancestor paths.
+
+REPAIRS AND CLARIFICATIONS
+
+A | missing linearity / type ambiguity
+Locators: thm:estimated_packet_reconstruction, thm:estimated_packet_gibbs, cor:reconstruction_after_detection
+Existing context: Notation says bounded approximation operator; paragraph before retained identity says Q:X->X bounded. Linearity is not explicit. The retained identity itself does not need linearity, but the estimated-packet identity does.
+Decisive witness: X=R, Q(x)=|x|, s=1, j=-1, jhat=0. Q is norm bounded by 1. f-fhat=0 while (I-Q)s+(I-Q)(j-jhat)=-2.
+Required/suggested wording: State that every Q_m used in estimated-packet reconstruction is a bounded linear operator. Add linear to notation and relevant theorem hypotheses.
+Repaired argument: Linearity gives Q_m(s+j-jhat)=Q_ms+Q_m(j-jhat). Triangle inequality and the linear operator norm give the advertised bound.
+Dependency impact: estimated packet identity; estimated packet norm bound; post-detection reconstruction; estimated Gibbs bound
+
+B | actual false claim if constants unconstrained
+Locators: prop:nonunitary_tree_bounds
+Existing context: Local displayed inequalities impose no nonnegativity on A_v, B_v. The induction multiplies by child lower constants.
+Decisive witness: Two successive zero maps on R along a root to child to terminal unary tree, both with A_v=-1 and B_v=0. Each local inequality -|x|^2<=0<=0 holds. Recursive lower constant at root is (-1)(-1)=1, but leaf output is zero for x=1.
+Required/suggested wording: Require 0<=A_v<=B_v<infinity. Strict A_v>0 is needed only when asserting a positive frame lower bound.
+Repaired argument: All child a(w) are nonnegative by induction, so multiplying local lower bounds preserves inequalities. Upper constants are nonnegative as well.
+Dependency impact: nonunitary recursive bounds only; unitary pruning and additive optimization unaffected
+
+C | step-domain convention conflict
+Locators: thm:haar_step_coefficient, cor:haar_scale_separation, cor:two_grid_haar_detection
+Existing context: Earlier H_tau=1_[tau,1]. Haar subsection moves to R or a chosen extension but does not prescribe the endpoint continuation.
+Decisive witness: Use earlier bounded-interval step H_{1/4}=1_[1/4,1], amplitude 1, shifted Haar support [1/2,3/2] of length 1, positive on [1/2,1], negative on [1,3/2]. The coefficient is 1/2 despite the support not crossing tau. The extra discontinuity at 1 is responsible.
+Required/suggested wording: In the Haar subsections explicitly use H_tau(t)=1_[tau,infinity)(t) on R. Its restriction to (0,1) agrees with the earlier step. Any endpoint extension must use the declared half-line model on the analyzed supports.
+Repaired argument: Each half-line step is constant on a support excluding its sole jump; direct integration produces the triangular coefficient. The half-cell shift chooses a support at distance at least L/4 from its endpoints. L below minimum separation excludes other jumps.
+Dependency impact: Haar step coefficients; scale threshold gap; two-grid detection; no claim of deduplicated recovery or synthesis for the redundant system
+
+D | omitted radius range
+Locators: thm:geometric_packet_bound
+Existing context: Definition of linear tube bound supplies the estimate only for 0 < delta < delta0; theorem does not repeat that range.
+Decisive witness: For the unit circle in R^2, mu(N_delta)=4 pi delta for 0 < delta < 1. Thus C=4 pi,delta0 = 1 qualifies. With E=unit disk, F=disk of radius 3.9, delta=3, E triangle F is inside N_3 but its area 14.21 pi exceeds C delta = 12 pi.
+Required/suggested wording: Require 0 < delta < delta0, where delta0 is the radius in the linear tube bound.
+Repaired argument: Symmetric-difference inclusion then invokes the available tube estimate in its stated range, followed by exact scalar region formula.
+Dependency impact: geometric mask bound; boundary-band corollary already says small delta
+
+E | convergence-mode clarification
+Locators: cor:probability_consistency
+Existing context: The section supplies independent centered sub-Gaussian noises and the earlier fixed jump model. Final sentence says packet error converges to zero without a mode.
+Decisive witness: None
+Required/suggested wording: Say convergence in probability in every finite L^p norm, for the fixed finite model and admissible sampling grids above. Do not claim almost sure convergence.
+Repaired argument: For each tolerance e > 0 and confidence delta > 0 the deterministic bound on the good event is eventually below e. Hence limsup P(error>e)<=delta. Delta is arbitrary.
+Dependency impact: probability consistency wording
+
+F | make inherited sampling scope explicit
+Locators: thm:deterministic_jump_recovery, cor:deterministic_consistency, cor:probability_consistency
+Existing context: Recovery section already assumes a Lipschitz background, no jump on a sample, at most one per cell. The minimum amplitude is defined only for a nonempty jump list.
+Decisive witness: Tau=1/2 lies on samples for every evenn. Thus an asymptotic assertion over all integern cannot silently use the no-jump-on-grid assumption.
+Required/suggested wording: State Q>=1 when defining min amplitude;Q=0 is trivial if handled separately. In asymptotic statements explicitly retain fixed nonzero amplitudes, finite Q, positive separation and admissible grids.
+Repaired argument: On those grids, separation eventually gives at most one jump per cell and the original threshold proof applies.
+Dependency impact: clarifies inherited asymptotic domain; no threshold constant changed
+
+G | tie and singleton boundary clarification
+Locators: thm:best_basis, cor:best_basis_selection_stability
+Existing context: Finite packet-tree context is explicit. Original recursion only specifies strict comparison branches. g>0 tacitly presupposes a competitor.
+Decisive witness: A one-node tree has no second smallest pruning cost. Equal stop and split costs leave both strict reconstruction branches unspecified.
+Required/suggested wording: Retain on ties using c(v)<=sum child F; split otherwise. Require a competing pruning for gap definition, or state singleton trivially stable. Define g = min_{L!=L*}(C(L)-C(L*)).
+Repaired argument: Either tie choice attains the displayed minimum; stop-on-ties makes the algorithm total. For competitors, each gap decreases by at most 2epsilon_star.
+Dependency impact: selection rule completeness, no alteration of optimal cost formula
+
+H | inherited independence clarification
+Locators: cor:repeated_measurements
+Existing context: Sub-Gaussian subsection already assumes independent noises across sample sites. Repeated-measurements corollary adds independent repetitions.
+Decisive witness: None
+Required/suggested wording: Optionally make all site and repetition noises independent explicit. This is a clarification of inherited context, not an identified contradiction.
+Repaired argument: Averages at separate sites remain independent with variance proxy sigma^2/R; adjacent differences have proxy 2 sigma^2/R.
+Dependency impact: probability confidence convention only
+
+I | delay-unit convention clarification
+Locators: thm:perfect_reconstruction, thm:imperfect_reconstruction
+Existing context: Section explicitly operates in relevant polyphase spaces, so z^{-d} is a channel delay. Text calls it input delay without units.
+Decisive witness: N=2 and scalar multiplierz^{-1} on both channels produces a two-fine-sample shift, not a one-fine-sample shift.
+Required/suggested wording: Specify d coarse-channel samples; this corresponds to N d fine samples in the N-phase one-dimensional setting.
+Repaired argument: Inverse channel transform shifts each channel by d, and interleaving multiplies the fine-address offset by N.
+Dependency impact: interpretation of reconstruction delay, no matrix identity changed
+
+J | external standard-fact scope
+Locators: sf:gibbs_behavior
+Existing context: Statement says isolated jump without a local regularity class; proof is citation only.
+Decisive witness: None
+Required/suggested wording: Restrict contextual Gibbs statement to a periodic piecewise C1 function with an isolated nonzero jump. Keep explicitly outside proved-result/Lean denominator. Authenticate an exact source separately if claiming fresh literature verification.
+Repaired argument: Standard classical Gibbs asymptotics apply under this regularity; retained-packet theorems themselves only use the exact algebraic error identity and do not depend on this fact.
+Dependency impact: contextual imported fact only; no downstream proof dependency
+
+K | zero noise boundary case
+Locators: thm:probability_recovery
+Existing context: The stated moment-generating-function proxy permits sigma=0, but the displayed tail proof divides by sigma^2.
+Decisive witness: The stated proof expression is undefined at sigma=0. The theorem itself remains valid.
+Required/suggested wording: Handle sigma=0 separately: a 0-sub-Gaussian centered variable is zero almost surely, so the deterministic contrast bound applies with zero noise; thereafter assume sigma>0 for the Chernoff division.
+Repaired argument: For sigma=0, Markov gives P(eta>=t)<=exp(-lambda t) for every lambda > 0 and t > 0; let lambda tend to infinity and repeat for -eta.
+Dependency impact: probability proof boundary case; recovery constant unchanged
+
+L | false prose assertion about actual noise maxima
+Locators: rem:noise_scaling
+Existing context: Remark says the maximum noise contrast grows slowly with n at fixed scale. Sub-Gaussianity only supplies an upper-tail certificate, not actual growth.
+Decisive witness: Independent Rademacher noises taking values plus/minus sigma are sigma-sub-Gaussian, while every adjacent noise contrast is bounded by 2 sigma for all n.
+Required/suggested wording: Say the displayed uniform high-probability certificate scales like sigma*sqrt(log n), so this certificate does not yield consistency at fixed sigma. Decreasing effective noise or repeated averaging supplies sufficient regimes.
+Repaired argument: This describes the bound actually proved and makes no unsupported lower-growth claim for general sub-Gaussian distributions.
+Dependency impact: noise-scaling explanatory remark only; no recovery theorem invalidated
+
+M | cross-part complex inner-product convention
+Locators: thm:smooth_haar_bound
+Existing context: The latest 20-result core declares conjugate-linear first slot. Annals standalone does not specify that convention but its smooth-Haar proof writes an un-conjugated s-integral. On integration into a common final paper, the displayed equality must follow the common convention.
+Decisive witness: With s(t)=i*t on [0,L] and real normalized Haar, the un-conjugated integral has the opposite sign to the inner product under a conjugate-linear first slot. Magnitudes are identical.
+Required/suggested wording: Put a complex conjugate over s(t)-s(t+L/2) in the pairing integral, or explicitly use an equivalent consistent inner-product ordering.
+Repaired argument: The modulus of the conjugated difference is unchanged, so ML^(3/2)/4 and every subsequent absolute coefficient estimate stay exactly the same.
+Dependency impact: one proof equality under combined-edition conventions; no numerical threshold or theorem conclusion changed
+
+CRITICAL DERIVATIONS
+
+higher_order_trace: For ell<m, truncated-power ell derivative is continuous at tau; for ell=m it has unit jump; for ell>m its side derivatives vanish. Packet derivative-jump matrix is diagonal in (m,tau). Subtracting coefficients cancels every trace through r - 1; piecewise integration by parts cancels interface terms, giving global W^{r,p}.
+
+higher_order_location: Integral in location of phi_{m-1,u}; its Lp norm on (0,1) is <=1/((m-1)!((m-1)p+1)^(1/p)), so Minkowski gives the displayed Lipschitz constant.
+
+geometry: Region intersections partition the domain exactly. Equal-amplitude error is |a|mu(E triangle F)^(1/p). A local tube estimate can only be applied inside its radius range.
+
+deterministic: D_k=a_q+(s(t_{k+1})-s(t_k))+(eta_{k+1}-eta_k) on a one-jump cell. Residual<=Mh+2eps. Strict threshold interval exists iff a_min>2b. Midpoint error<=h/2 and disjoint detected cells let the location Lp errors add in pth powers.
+
+probability: Independent sigma-subGaussian differences have mgf<=exp(sigma^2lambda^2). Chernoff gives two-tail<=2exp(-t^2/(4sigma^2)); n-cell union bound with t =2sigma sqrt(log(2n/delta)) gives delta. Adjacent contrasts need not be independent for the union bound. Sigma=0 is handled as deterministic zero noise, avoiding division by zero.
+
+haar: Smooth coefficient<=ML^(3/2)/4 by pairing half-cell points. Half-line step coefficient=|a|sqrtL min(u,1-u). Bounded noise coefficient<=eps sqrtL. Compare upper and lower for threshold. Modulo L, either grid places tau at distance >= L/4 from endpoints.
+
+best_basis: Finite prunings give an attained minimum; each subtree pruning stops or splits. Uniform pruning-cost perturbation<= epsilon_star implies optimum difference<= epsilon_star. Strict competitor gaps remain positive if 2 epsilon_star < g. Ties/singletons need explicit total selection conventions.
+
+difference: Binomial coefficients have sum of absolute values 2^m; (d + 1)st difference vanishes on a degree<=d polynomial stencil. The breakpoint-band theorem requires a nonzero response assumption and does not prove every breakpoint has one.
+
+EXTERNAL/BACKGROUND LEAVES
+Young inequality and Plancherel | conditional external background not reauthenticated | transfer and filter-bank sections
+finite-dimensional multiplier essential-sup norm and singular-value facts | standard background derivation locally reconstructed; no source authentication | sharp multiplier norm and canonical dual estimates
+one-dimensional Sobolev representatives and traces | conditional standard background; gluing step reconstructed by integration by parts | higher order trace packet decomposition
+Minkowski integral inequality | standard background not reauthenticated | higher-order location Lipschitz constant
+sub-Gaussian Chernoff bound | locally reconstructed from stated moment-generating-function inequality and independence | probability recovery
+classical Gibbs asymptotics | conditional external fact; regularity restriction required | context only; no theorem proof depends on it
+Chinese remainder theorem | standard finite group fact not freshly source-authenticated | coprime phase factorization
+
+63-RESULT INVENTORY AND THEMATIC LATEST 20 CROSSWALK
+Each row is a historical result record, not a distinct new Lean result. Statement/proof hashes are in the JSON.
+01 | line 269 | thm:impulse_generation | latest [1] | analogue | fixes []
+02 | line 287 | prop:finite_periodic | latest [1] | extension | fixes []
+03 | line 320 | thm:lattice_polyphase | latest [2, 3] | generalization | fixes []
+04 | line 351 | cor:one_dimensional_polyphase | latest [2, 3] | generalization | fixes []
+05 | line 367 | prop:translation_covariance | latest [2, 3] | additional consequence | fixes []
+06 | line 411 | thm:lattice_refinement | latest [4] | generalization | fixes []
+07 | line 464 | thm:convolution_transfer | latest [5] | generalization or consequence | fixes []
+08 | line 489 | prop:transfer_norm_control | latest [5] | generalization or consequence | fixes []
+09 | line 503 | prop:transfer_composition | latest [5] | generalization or consequence | fixes []
+10 | line 535 | cor:fir_closure | latest [5] | generalization or consequence | fixes []
+11 | line 577 | thm:perfect_reconstruction | latest [6] | analogue | fixes ['I']
+12 | line 589 | thm:imperfect_reconstruction | latest [6] | additional stability development | fixes ['I']
+13 | line 633 | thm:filter_perturbation | latest [6] | additional stability development | fixes []
+14 | line 667 | thm:frame_bounds | latest [6] | additional stability development | fixes []
+15 | line 697 | cor:canonical_noise | latest [6] | additional stability development | fixes []
+16 | line 718 | thm:frame_perturbation | latest [6] | additional stability development | fixes []
+17 | line 753 | cor:paraunitary | latest [6] | additional stability development | fixes []
+18 | line 787 | cor:haar_reconstruction | latest [7] | analogue | fixes []
+19 | line 817 | thm:lifting_update | latest [8] | analogue | fixes []
+20 | line 879 | thm:pruned_packet_tree | latest [9, 13] | Hilbert-space development | fixes []
+21 | line 898 | cor:unitary_tree_noise | latest [9, 13] | Hilbert-space development | fixes []
+22 | line 915 | prop:nonunitary_tree_bounds | latest [9, 13] | Hilbert-space development | fixes ['B']
+23 | line 971 | thm:best_basis | latest [15] | analogue; latest source adds total tie rule and complexity bound | fixes ['G']
+24 | line 988 | thm:best_basis_cost_stability | latest [14, 16] | additive special case; latest source includes nonadditive finite selection | fixes []
+25 | line 1019 | cor:best_basis_selection_stability | latest [14, 16] | additive special case; latest source includes nonadditive finite selection | fixes ['G']
+26 | line 1062 | thm:higher_order_packet_decomposition | latest [10, 11] | additional analytic decomposition; not represented by the 20-result scope | fixes []
+27 | line 1100 | cor:trace_packet_uniqueness | latest [10, 11] | additional analytic decomposition; not represented by the 20-result scope | fixes []
+28 | line 1129 | thm:retained_packet_identity | latest [10, 11] | analogue / conditional approximation consequence | fixes []
+29 | line 1159 | cor:sobolev_rate | latest [10, 11] | analogue / conditional approximation consequence | fixes []
+30 | line 1179 | thm:estimated_packet_reconstruction | latest [12] | additional quantitative development | fixes ['A']
+31 | line 1230 | thm:scalar_region_formula | latest [12] | additional quantitative development | fixes []
+32 | line 1253 | cor:step_location_error | latest [12] | additional quantitative development | fixes []
+33 | line 1267 | thm:higher_order_location | latest [12] | additional quantitative development | fixes []
+34 | line 1310 | thm:overlap_matrix | latest [12] | additional quantitative development | fixes []
+35 | line 1332 | cor:background_packet_error | latest [12] | additional quantitative development | fixes []
+36 | line 1374 | thm:geometric_packet_bound | latest [12] | additional quantitative development | fixes ['D']
+37 | line 1446 | lem:contrast_gap | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes []
+38 | line 1473 | thm:deterministic_jump_recovery | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes ['F']
+39 | line 1510 | cor:jump_count_sign | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes []
+40 | line 1526 | cor:reconstruction_after_detection | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes ['A']
+41 | line 1580 | cor:deterministic_consistency | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes ['F']
+42 | line 1618 | thm:probability_recovery | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes ['K']
+43 | line 1657 | cor:repeated_measurements | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes ['H']
+44 | line 1676 | cor:probability_consistency | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes ['E', 'F']
+45 | line 1688 | prop:vector_jump_recovery | latest [10, 11, 12] | additional recovery development; not a Lean coverage claim | fixes []
+46 | line 1719 | thm:smooth_haar_bound | latest [] | additional localization development outside the 20-result scope | fixes ['M']
+47 | line 1740 | thm:haar_step_coefficient | latest [] | additional localization development outside the 20-result scope | fixes ['C']
+48 | line 1762 | cor:haar_scale_separation | latest [] | additional localization development outside the 20-result scope | fixes ['C']
+49 | line 1810 | thm:half_shift_guarantee | latest [] | additional localization development outside the 20-result scope | fixes []
+50 | line 1822 | cor:two_grid_haar_detection | latest [] | additional localization development outside the 20-result scope | fixes ['C']
+51 | line 1856 | thm:polynomial_annihilation | latest [] | additional localization development outside the 20-result scope | fixes []
+52 | line 1872 | prop:difference_noise | latest [] | additional localization development outside the 20-result scope | fixes []
+53 | line 1886 | cor:robust_breakpoint_bands | latest [] | additional localization development outside the 20-result scope | fixes []
+54 | line 1908 | thm:uniform_packet_convergence | latest [10, 11, 12] | consequence / quantitative extension | fixes []
+55 | line 1927 | thm:estimated_packet_gibbs | latest [10, 11, 12] | consequence / quantitative extension | fixes ['A']
+56 | line 1951 | cor:boundary_band_error | latest [10, 11, 12] | consequence / quantitative extension | fixes []
+57 | line 1992 | thm:cauchy_residue_law | latest [17] | analogue | fixes []
+58 | line 2019 | thm:shifted_monomial_law | latest [17] | additional nonlinear sample-coordinate law | fixes []
+59 | line 2066 | cor:polynomial_shift_filters | latest [17] | additional nonlinear sample-coordinate law | fixes []
+60 | line 2164 | thm:cyclic_mobius | latest [18] | analogue | fixes []
+61 | line 2192 | cor:impedance_admittance | latest [19] | analogue | fixes []
+62 | line 2204 | prop:radial_phase | latest [18, 20] | secondary coordinate consequence | fixes []
+63 | line 2224 | prop:phase_factorization | latest [20] | coprime group-label generalization | fixes []
+
+RETENTION RECOMMENDATION
+Retain the latest 20-result edition as the formal coverage spine and the corrected Annals 63-proof body as a separately labeled analytic development. Preserve source snapshots unchanged and log exact corrections in the final edition. Keep all 63 proof bodies, updating only local hypotheses/conventions and their necessary short proof sentences. Do not sum 20 + 63 as 83 nonoverlapping or Lean-verified results.
+
+LIMITS
+No fresh external theorem authentication, Lean build, full formal semantic audit, or numerical-suite execution occurred in this branch. The corrected final manuscript must be checked against these recommendations and pinned separately before its new revision receives a verdict.

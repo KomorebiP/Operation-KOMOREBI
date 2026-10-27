@@ -1,0 +1,1456 @@
+{
+  "schema": "komorebi.paper_v.annals_review.v1",
+  "created_utc": "2026-10-06T00:58:39.173393+00:00",
+  "reviewer_task": "/root/paper5_audit/annals_scope",
+  "primary_verdict": "correct only after a stated restriction",
+  "normalized_claim": "The 63 historical Annals proof developments may be retained as a separate prose development after the listed domain repairs; they are not 63 additionally Lean-checked manuscript results.",
+  "source_pins": [
+    {
+      "path": "/workspace/scratch/a478a5fc4884/paper_v_work/source/annals/PSC_Paper_V_Annals_Human_Edition.tex",
+      "sha256": "602aafef1be5dca5597bfbdc5cae07aa8f16fd9f2df484e82b82259f9087df22"
+    },
+    {
+      "path": "/workspace/scratch/a478a5fc4884/paper_v_work/source/complete/original_snapshot/manuscript/Paper_V_Expanded_Lean_Checked.tex",
+      "sha256": "8ecc68a200f9519f5fd0f4d186ae9ee9350be4b27187a5b905d1ac0ec3fa9d41"
+    }
+  ],
+  "scope": {
+    "raw_theorem_proofs_read": 63,
+    "latest_scope": "20 result groups, thematic crosswalk only in this branch",
+    "computational_checks": "No fresh numerical suite or Lean compilation performed in this branch. Counterexamples and critical constants reconstructed analytically.",
+    "external_sources": "No fresh primary-source authentication in this branch. Parent informed of unresolved external leaves.",
+    "not_claimed": [
+      "complete kernel verification",
+      "new global novelty",
+      "83 independent results from 20 + 63",
+      "all historical audit claims authenticated"
+    ]
+  },
+  "repairs": [
+    {
+      "id": "A",
+      "kind": "missing linearity / type ambiguity",
+      "locators": [
+        "thm:estimated_packet_reconstruction",
+        "thm:estimated_packet_gibbs",
+        "cor:reconstruction_after_detection"
+      ],
+      "source_context": "Notation says bounded approximation operator; paragraph before retained identity says Q:X->X bounded. Linearity is not explicit. The retained identity itself does not need linearity, but the estimated-packet identity does.",
+      "counterexample": "X=R, Q(x)=|x|, s=1, j=-1, jhat=0. Q is norm bounded by 1. f-fhat=0 while (I-Q)s+(I-Q)(j-jhat)=-2.",
+      "repair": "State that every Q_m used in estimated-packet reconstruction is a bounded linear operator. Add linear to notation and relevant theorem hypotheses.",
+      "repaired_argument": "Linearity gives Q_m(s+j-jhat)=Q_ms+Q_m(j-jhat). Triangle inequality and the linear operator norm give the advertised bound.",
+      "impact": [
+        "estimated packet identity",
+        "estimated packet norm bound",
+        "post-detection reconstruction",
+        "estimated Gibbs bound"
+      ]
+    },
+    {
+      "id": "B",
+      "kind": "actual false claim if constants unconstrained",
+      "locators": [
+        "prop:nonunitary_tree_bounds"
+      ],
+      "source_context": "Local displayed inequalities impose no nonnegativity on A_v, B_v. The induction multiplies by child lower constants.",
+      "counterexample": "Two successive zero maps on R along a root to child to terminal unary tree, both with A_v=-1 and B_v=0. Each local inequality -|x|^2<=0<=0 holds. Recursive lower constant at root is (-1)(-1)=1, but leaf output is zero for x=1.",
+      "repair": "Require 0<=A_v<=B_v<infinity. Strict A_v>0 is needed only when asserting a positive frame lower bound.",
+      "repaired_argument": "All child a(w) are nonnegative by induction, so multiplying local lower bounds preserves inequalities. Upper constants are nonnegative as well.",
+      "impact": [
+        "nonunitary recursive bounds only; unitary pruning and additive optimization unaffected"
+      ]
+    },
+    {
+      "id": "C",
+      "kind": "step-domain convention conflict",
+      "locators": [
+        "thm:haar_step_coefficient",
+        "cor:haar_scale_separation",
+        "cor:two_grid_haar_detection"
+      ],
+      "source_context": "Earlier H_tau=1_[tau,1]. Haar subsection moves to R or a chosen extension but does not prescribe the endpoint continuation.",
+      "counterexample": "Use earlier bounded-interval step H_{1/4}=1_[1/4,1], amplitude 1, shifted Haar support [1/2,3/2] of length 1, positive on [1/2,1], negative on [1,3/2]. The coefficient is 1/2 despite the support not crossing tau. The extra discontinuity at 1 is responsible.",
+      "repair": "In the Haar subsections explicitly use H_tau(t)=1_[tau,infinity)(t) on R. Its restriction to (0,1) agrees with the earlier step. Any endpoint extension must use the declared half-line model on the analyzed supports.",
+      "repaired_argument": "Each half-line step is constant on a support excluding its sole jump; direct integration produces the triangular coefficient. The half-cell shift chooses a support at distance at least L/4 from its endpoints. L below minimum separation excludes other jumps.",
+      "impact": [
+        "Haar step coefficients",
+        "scale threshold gap",
+        "two-grid detection; no claim of deduplicated recovery or synthesis for the redundant system"
+      ]
+    },
+    {
+      "id": "D",
+      "kind": "omitted radius range",
+      "locators": [
+        "thm:geometric_packet_bound"
+      ],
+      "source_context": "Definition of linear tube bound supplies the estimate only for 0 < delta < delta0; theorem does not repeat that range.",
+      "counterexample": "For the unit circle in R^2, mu(N_delta)=4 pi delta for 0 < delta < 1. Thus C=4 pi,delta0 = 1 qualifies. With E=unit disk, F=disk of radius 3.9, delta=3, E triangle F is inside N_3 but its area 14.21 pi exceeds C delta = 12 pi.",
+      "repair": "Require 0 < delta < delta0, where delta0 is the radius in the linear tube bound.",
+      "repaired_argument": "Symmetric-difference inclusion then invokes the available tube estimate in its stated range, followed by exact scalar region formula.",
+      "impact": [
+        "geometric mask bound; boundary-band corollary already says small delta"
+      ]
+    },
+    {
+      "id": "E",
+      "kind": "convergence-mode clarification",
+      "locators": [
+        "cor:probability_consistency"
+      ],
+      "source_context": "The section supplies independent centered sub-Gaussian noises and the earlier fixed jump model. Final sentence says packet error converges to zero without a mode.",
+      "counterexample": null,
+      "repair": "Say convergence in probability in every finite L^p norm, for the fixed finite model and admissible sampling grids above. Do not claim almost sure convergence.",
+      "repaired_argument": "For each tolerance e > 0 and confidence delta > 0 the deterministic bound on the good event is eventually below e. Hence limsup P(error>e)<=delta. Delta is arbitrary.",
+      "impact": [
+        "probability consistency wording"
+      ]
+    },
+    {
+      "id": "F",
+      "kind": "make inherited sampling scope explicit",
+      "locators": [
+        "thm:deterministic_jump_recovery",
+        "cor:deterministic_consistency",
+        "cor:probability_consistency"
+      ],
+      "source_context": "Recovery section already assumes a Lipschitz background, no jump on a sample, at most one per cell. The minimum amplitude is defined only for a nonempty jump list.",
+      "counterexample": "Tau=1/2 lies on samples for every evenn. Thus an asymptotic assertion over all integern cannot silently use the no-jump-on-grid assumption.",
+      "repair": "State Q>=1 when defining min amplitude;Q=0 is trivial if handled separately. In asymptotic statements explicitly retain fixed nonzero amplitudes, finite Q, positive separation and admissible grids.",
+      "repaired_argument": "On those grids, separation eventually gives at most one jump per cell and the original threshold proof applies.",
+      "impact": [
+        "clarifies inherited asymptotic domain; no threshold constant changed"
+      ]
+    },
+    {
+      "id": "G",
+      "kind": "tie and singleton boundary clarification",
+      "locators": [
+        "thm:best_basis",
+        "cor:best_basis_selection_stability"
+      ],
+      "source_context": "Finite packet-tree context is explicit. Original recursion only specifies strict comparison branches. g>0 tacitly presupposes a competitor.",
+      "counterexample": "A one-node tree has no second smallest pruning cost. Equal stop and split costs leave both strict reconstruction branches unspecified.",
+      "repair": "Retain on ties using c(v)<=sum child F; split otherwise. Require a competing pruning for gap definition, or state singleton trivially stable. Define g = min_{L!=L*}(C(L)-C(L*)).",
+      "repaired_argument": "Either tie choice attains the displayed minimum; stop-on-ties makes the algorithm total. For competitors, each gap decreases by at most 2epsilon_star.",
+      "impact": [
+        "selection rule completeness, no alteration of optimal cost formula"
+      ]
+    },
+    {
+      "id": "H",
+      "kind": "inherited independence clarification",
+      "locators": [
+        "cor:repeated_measurements"
+      ],
+      "source_context": "Sub-Gaussian subsection already assumes independent noises across sample sites. Repeated-measurements corollary adds independent repetitions.",
+      "counterexample": null,
+      "repair": "Optionally make all site and repetition noises independent explicit. This is a clarification of inherited context, not an identified contradiction.",
+      "repaired_argument": "Averages at separate sites remain independent with variance proxy sigma^2/R; adjacent differences have proxy 2 sigma^2/R.",
+      "impact": [
+        "probability confidence convention only"
+      ]
+    },
+    {
+      "id": "I",
+      "kind": "delay-unit convention clarification",
+      "locators": [
+        "thm:perfect_reconstruction",
+        "thm:imperfect_reconstruction"
+      ],
+      "source_context": "Section explicitly operates in relevant polyphase spaces, so z^{-d} is a channel delay. Text calls it input delay without units.",
+      "counterexample": "N=2 and scalar multiplierz^{-1} on both channels produces a two-fine-sample shift, not a one-fine-sample shift.",
+      "repair": "Specify d coarse-channel samples; this corresponds to N d fine samples in the N-phase one-dimensional setting.",
+      "repaired_argument": "Inverse channel transform shifts each channel by d, and interleaving multiplies the fine-address offset by N.",
+      "impact": [
+        "interpretation of reconstruction delay, no matrix identity changed"
+      ]
+    },
+    {
+      "id": "J",
+      "kind": "external standard-fact scope",
+      "locators": [
+        "sf:gibbs_behavior"
+      ],
+      "source_context": "Statement says isolated jump without a local regularity class; proof is citation only.",
+      "counterexample": null,
+      "repair": "Restrict contextual Gibbs statement to a periodic piecewise C1 function with an isolated nonzero jump. Keep explicitly outside proved-result/Lean denominator. Authenticate an exact source separately if claiming fresh literature verification.",
+      "repaired_argument": "Standard classical Gibbs asymptotics apply under this regularity; retained-packet theorems themselves only use the exact algebraic error identity and do not depend on this fact.",
+      "impact": [
+        "contextual imported fact only; no downstream proof dependency"
+      ]
+    },
+    {
+      "id": "K",
+      "kind": "zero noise boundary case",
+      "locators": [
+        "thm:probability_recovery"
+      ],
+      "source_context": "The stated moment-generating-function proxy permits sigma=0, but the displayed tail proof divides by sigma^2.",
+      "counterexample": "The stated proof expression is undefined at sigma=0. The theorem itself remains valid.",
+      "repair": "Handle sigma=0 separately: a 0-sub-Gaussian centered variable is zero almost surely, so the deterministic contrast bound applies with zero noise; thereafter assume sigma>0 for the Chernoff division.",
+      "repaired_argument": "For sigma=0, Markov gives P(eta>=t)<=exp(-lambda t) for every lambda > 0 and t > 0; let lambda tend to infinity and repeat for -eta.",
+      "impact": [
+        "probability proof boundary case; recovery constant unchanged"
+      ]
+    },
+    {
+      "id": "L",
+      "kind": "false prose assertion about actual noise maxima",
+      "locators": [
+        "rem:noise_scaling"
+      ],
+      "source_context": "Remark says the maximum noise contrast grows slowly with n at fixed scale. Sub-Gaussianity only supplies an upper-tail certificate, not actual growth.",
+      "counterexample": "Independent Rademacher noises taking values plus/minus sigma are sigma-sub-Gaussian, while every adjacent noise contrast is bounded by 2 sigma for all n.",
+      "repair": "Say the displayed uniform high-probability certificate scales like sigma*sqrt(log n), so this certificate does not yield consistency at fixed sigma. Decreasing effective noise or repeated averaging supplies sufficient regimes.",
+      "repaired_argument": "This describes the bound actually proved and makes no unsupported lower-growth claim for general sub-Gaussian distributions.",
+      "impact": [
+        "noise-scaling explanatory remark only; no recovery theorem invalidated"
+      ]
+    },
+    {
+      "id": "M",
+      "kind": "cross-part complex inner-product convention",
+      "locators": [
+        "thm:smooth_haar_bound"
+      ],
+      "source_context": "The latest 20-result core declares conjugate-linear first slot. Annals standalone does not specify that convention but its smooth-Haar proof writes an un-conjugated s-integral. On integration into a common final paper, the displayed equality must follow the common convention.",
+      "counterexample": "With s(t)=i*t on [0,L] and real normalized Haar, the un-conjugated integral has the opposite sign to the inner product under a conjugate-linear first slot. Magnitudes are identical.",
+      "repair": "Put a complex conjugate over s(t)-s(t+L/2) in the pairing integral, or explicitly use an equivalent consistent inner-product ordering.",
+      "repaired_argument": "The modulus of the conjugated difference is unchanged, so ML^(3/2)/4 and every subsequent absolute coefficient estimate stay exactly the same.",
+      "impact": [
+        "one proof equality under combined-edition conventions; no numerical threshold or theorem conclusion changed"
+      ]
+    }
+  ],
+  "dependency_graph": [
+    [
+      "lattice cosets",
+      "polyphase isometry",
+      "convolution transfer",
+      "bank Fourier multiplier",
+      "packet trees"
+    ],
+    [
+      "Sobolev trace cancellation",
+      "global Sobolev remainder",
+      "retained packet identity",
+      "conditional approximation rate"
+    ],
+    [
+      "exact indicator overlaps",
+      "packet norm error",
+      "linear estimated-packet identity",
+      "reconstruction error"
+    ],
+    [
+      "Lipschitz increment and noise",
+      "contrast gap",
+      "exact jump-cell recovery",
+      "packet error",
+      "probability consistency"
+    ],
+    [
+      "smooth Haar estimate",
+      "step Haar coefficient",
+      "scale gap",
+      "half-grid distance",
+      "alignment-free presence detection"
+    ],
+    [
+      "finite polynomial difference",
+      "binomial noise norm",
+      "breakpoint response bands"
+    ],
+    [
+      "finite additive objective",
+      "tree recursion",
+      "uniform cost perturbation",
+      "gap stability"
+    ],
+    [
+      "Cayley conjugacy",
+      "cyclic action",
+      "coprime label CRT"
+    ]
+  ],
+  "external_or_background_leaves": [
+    {
+      "leaf": "Young inequality and Plancherel",
+      "status": "conditional external background not reauthenticated",
+      "used_by": "transfer and filter-bank sections"
+    },
+    {
+      "leaf": "finite-dimensional multiplier essential-sup norm and singular-value facts",
+      "status": "standard background derivation locally reconstructed; no source authentication",
+      "used_by": "sharp multiplier norm and canonical dual estimates"
+    },
+    {
+      "leaf": "one-dimensional Sobolev representatives and traces",
+      "status": "conditional standard background; gluing step reconstructed by integration by parts",
+      "used_by": "higher order trace packet decomposition"
+    },
+    {
+      "leaf": "Minkowski integral inequality",
+      "status": "standard background not reauthenticated",
+      "used_by": "higher-order location Lipschitz constant"
+    },
+    {
+      "leaf": "sub-Gaussian Chernoff bound",
+      "status": "locally reconstructed from stated moment-generating-function inequality and independence",
+      "used_by": "probability recovery"
+    },
+    {
+      "leaf": "classical Gibbs asymptotics",
+      "status": "conditional external fact; regularity restriction required",
+      "used_by": "context only; no theorem proof depends on it"
+    },
+    {
+      "leaf": "Chinese remainder theorem",
+      "status": "standard finite group fact not freshly source-authenticated",
+      "used_by": "coprime phase factorization"
+    }
+  ],
+  "critical_derivations": {
+    "higher_order_trace": "For ell<m, truncated-power ell derivative is continuous at tau; for ell=m it has unit jump; for ell>m its side derivatives vanish. Packet derivative-jump matrix is diagonal in (m,tau). Subtracting coefficients cancels every trace through r - 1; piecewise integration by parts cancels interface terms, giving global W^{r,p}.",
+    "higher_order_location": "Integral in location of phi_{m-1,u}; its Lp norm on (0,1) is <=1/((m-1)!((m-1)p+1)^(1/p)), so Minkowski gives the displayed Lipschitz constant.",
+    "geometry": "Region intersections partition the domain exactly. Equal-amplitude error is |a|mu(E triangle F)^(1/p). A local tube estimate can only be applied inside its radius range.",
+    "deterministic": "D_k=a_q+(s(t_{k+1})-s(t_k))+(eta_{k+1}-eta_k) on a one-jump cell. Residual<=Mh+2eps. Strict threshold interval exists iff a_min>2b. Midpoint error<=h/2 and disjoint detected cells let the location Lp errors add in pth powers.",
+    "probability": "Independent sigma-subGaussian differences have mgf<=exp(sigma^2lambda^2). Chernoff gives two-tail<=2exp(-t^2/(4sigma^2)); n-cell union bound with t =2sigma sqrt(log(2n/delta)) gives delta. Adjacent contrasts need not be independent for the union bound. Sigma=0 is handled as deterministic zero noise, avoiding division by zero.",
+    "haar": "Smooth coefficient<=ML^(3/2)/4 by pairing half-cell points. Half-line step coefficient=|a|sqrtL min(u,1-u). Bounded noise coefficient<=eps sqrtL. Compare upper and lower for threshold. Modulo L, either grid places tau at distance >= L/4 from endpoints.",
+    "best_basis": "Finite prunings give an attained minimum; each subtree pruning stops or splits. Uniform pruning-cost perturbation<= epsilon_star implies optimum difference<= epsilon_star. Strict competitor gaps remain positive if 2 epsilon_star < g. Ties/singletons need explicit total selection conventions.",
+    "difference": "Binomial coefficients have sum of absolute values 2^m; (d + 1)st difference vanishes on a degree<=d polynomial stencil. The breakpoint-band theorem requires a nonzero response assumption and does not prove every breakpoint has one."
+  },
+  "inventory": [
+    {
+      "index": 1,
+      "environment": "theorem",
+      "title": "Impulse generation",
+      "label": "thm:impulse_generation",
+      "line": 269,
+      "statement_sha256": "e17e42d11acb9bdc4db73cf486dd77a4c6c0c449dee6b38732388158d71ceccb",
+      "proof_sha256": "0891602c7d7fddfc069306f12a40d5e48779fb61f9ceddbc53bab9dbabc1fc0d",
+      "latest20_related_results": [
+        1
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 2,
+      "environment": "proposition",
+      "title": "Finite periodic signals",
+      "label": "prop:finite_periodic",
+      "line": 287,
+      "statement_sha256": "79fd2bfb550679a5ba00d71a3311bf9be5bad4c3da6e72a0ab0efdf2a77f10ad",
+      "proof_sha256": "6e45202e93692d262c70c6b931c9f963a475b3fc46283011e9172520ddc60d00",
+      "latest20_related_results": [
+        1
+      ],
+      "relation": "extension",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 3,
+      "environment": "theorem",
+      "title": "Exact lattice polyphase decomposition",
+      "label": "thm:lattice_polyphase",
+      "line": 320,
+      "statement_sha256": "2ceb214a56ef8ee055c2646613b51eb6033a85bea26ed96f54669003d531241f",
+      "proof_sha256": "9fb7e1cdf4727930b6d9cfd0ee470f0008a73d088f24a44227a87b8d834ec9eb",
+      "latest20_related_results": [
+        2,
+        3
+      ],
+      "relation": "generalization",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 4,
+      "environment": "corollary",
+      "title": "One dimensional residue coordinates",
+      "label": "cor:one_dimensional_polyphase",
+      "line": 351,
+      "statement_sha256": "67802f4eeb25c07f2e0d29f92a3cd762d39736f03bc709105ad2e16b1fe376c2",
+      "proof_sha256": "7b8bf7eb7390b2f87b2078308638babd66e542679b034d6046d8da8ac0090cc0",
+      "latest20_related_results": [
+        2,
+        3
+      ],
+      "relation": "generalization",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 5,
+      "environment": "proposition",
+      "title": "Translation covariance",
+      "label": "prop:translation_covariance",
+      "line": 367,
+      "statement_sha256": "66121cb529fd712bf0ad307a891b5dc7fb1784754a13d85e3c16b9654e15f8e7",
+      "proof_sha256": "fa7bc426025e4cd0e71acfb8c80b4e81e6c4ee1696427da0ad3e9361f4051346",
+      "latest20_related_results": [
+        2,
+        3
+      ],
+      "relation": "additional consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 6,
+      "environment": "theorem",
+      "title": "Exact lattice refinement",
+      "label": "thm:lattice_refinement",
+      "line": 411,
+      "statement_sha256": "a493fdb723b581c18f656b0b5c85271a627417ec9c795034bc92887536d00782",
+      "proof_sha256": "b7991d65bb194ed1b3787321a4bbed792d3a23fc1aaa059dd990c6ef7185968d",
+      "latest20_related_results": [
+        4
+      ],
+      "relation": "generalization",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 7,
+      "environment": "theorem",
+      "title": "Exact convolution transfer law",
+      "label": "thm:convolution_transfer",
+      "line": 464,
+      "statement_sha256": "57abf483ee53b10485381bb5acf7d3e6f028dfc618c8b1fbb764c07068a0ecd1",
+      "proof_sha256": "26b367acb84cc43ebb2162fb9ff2fcaa596c8755d502798a056d7f8d06e5204c",
+      "latest20_related_results": [
+        5
+      ],
+      "relation": "generalization or consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 8,
+      "environment": "proposition",
+      "title": "Transfer norm control",
+      "label": "prop:transfer_norm_control",
+      "line": 489,
+      "statement_sha256": "4d35697ebb3e90fd9e61f7f3fd6d533238cbc3c9b51091212e7d34c2d5b62e71",
+      "proof_sha256": "3e6c96f8fec460bdc63a16b0e1b0467258793217c332bcca55d50fccc24b40ba",
+      "latest20_related_results": [
+        5
+      ],
+      "relation": "generalization or consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 9,
+      "environment": "proposition",
+      "title": "Composition of transfer matrices",
+      "label": "prop:transfer_composition",
+      "line": 503,
+      "statement_sha256": "3ec14a0077d5dd0d1af8aec54ae2e22af09c36cb3c3f19ceb9789ba35b587a85",
+      "proof_sha256": "a62bd66f116138707cb6360acf6d6ce0df1a7c8f2b21d6bc47f54938cf825112",
+      "latest20_related_results": [
+        5
+      ],
+      "relation": "generalization or consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 10,
+      "environment": "corollary",
+      "title": "Finite impulse response closure",
+      "label": "cor:fir_closure",
+      "line": 535,
+      "statement_sha256": "d782bd141b8b4aab2a23db60c9fece9f147ddc734e9aeffa129c76c499b64c88",
+      "proof_sha256": "4b51670c45664a12b41ab93345923a11347920fad309349e635db9577b7e4f57",
+      "latest20_related_results": [
+        5
+      ],
+      "relation": "generalization or consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 11,
+      "environment": "theorem",
+      "title": "Perfect reconstruction criterion",
+      "label": "thm:perfect_reconstruction",
+      "line": 577,
+      "statement_sha256": "6a1459ab52836ee9f026b853f05231978b6abcb3e236fef378b3ad86eba2eac0",
+      "proof_sha256": "386b814be816c87639814408186fc5d8cb64d4329927b3f34ec7afce67569236",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "I"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 12,
+      "environment": "theorem",
+      "title": "Quantitative imperfect reconstruction",
+      "label": "thm:imperfect_reconstruction",
+      "line": 589,
+      "statement_sha256": "438cfccb7c891add8e654d96992bffad0cc190a2801dfe86982341dde9aef745",
+      "proof_sha256": "9de898b505839de027c3106585284308515fe6fdf181e94811164c581a083c41",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "additional stability development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "I"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 13,
+      "environment": "theorem",
+      "title": "Stability under filter perturbation",
+      "label": "thm:filter_perturbation",
+      "line": 633,
+      "statement_sha256": "484ee2d8edbe529997ef57f22683e181793cbbdef6057c6e55873e527a4a123a",
+      "proof_sha256": "1a378521aa5a607a83edbd8c1382a55fa44815e1014bbaecf2f00cd2051e871c",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "additional stability development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 14,
+      "environment": "theorem",
+      "title": "Frame bounds from the polyphase symbol",
+      "label": "thm:frame_bounds",
+      "line": 667,
+      "statement_sha256": "0df998a014c66707ae6f076ae58dee387d9bf66678e0ed7dc0c6e4503865ff04",
+      "proof_sha256": "b0c2bcd1d0325e7164c3fdc68de3ca6f7fd5d9bbe7ae4bc2659cad106270e0e9",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "additional stability development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 15,
+      "environment": "corollary",
+      "title": "Coefficient noise under canonical synthesis",
+      "label": "cor:canonical_noise",
+      "line": 697,
+      "statement_sha256": "9d646be17e33bcf8ecff54c8458c620f1561ebbbef90033260c0467887b0bb0e",
+      "proof_sha256": "0aca41b70b772de641d5524b0d0f66061743bb360b44e3dee4a4c6983b266edf",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "additional stability development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 16,
+      "environment": "theorem",
+      "title": "Perturbation of frame bounds",
+      "label": "thm:frame_perturbation",
+      "line": 718,
+      "statement_sha256": "40e18b7ce47d556f1e04c6363aade9ccbe3dab819697fa273b95f9637223fbf0",
+      "proof_sha256": "546014de60c49f47b18b59604d090de25679349cb8036d407aeaa648cb86b734",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "additional stability development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 17,
+      "environment": "corollary",
+      "title": "Paraunitary bank",
+      "label": "cor:paraunitary",
+      "line": 753,
+      "statement_sha256": "735311691c3dccfed27f5ff2afcd206394b1b5fe867036054e03f8daf7703dde",
+      "proof_sha256": "a122134307fd35a6e5f29d2c5f711664c2207e12d2c6aa05bf34dc778aa4d432",
+      "latest20_related_results": [
+        6
+      ],
+      "relation": "additional stability development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 18,
+      "environment": "corollary",
+      "title": "Haar reconstruction and energy",
+      "label": "cor:haar_reconstruction",
+      "line": 787,
+      "statement_sha256": "bc2f2f9b0e262b4b1521c652888dd9c73194a39202d3ac6b07e8d32eb28c8478",
+      "proof_sha256": "f88fb8a72f6158d82d1c2cfe0c999f88957cadc38ec7cb3dd620bd0883e46067",
+      "latest20_related_results": [
+        7
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 19,
+      "environment": "theorem",
+      "title": "Exact lifting update",
+      "label": "thm:lifting_update",
+      "line": 817,
+      "statement_sha256": "9de5f4ea639c1d0d52018d9c0407193d56b121193adec771810e00bbf34650ac",
+      "proof_sha256": "8b6dc69d3650cf565aad8a23c7801480a8516af2073fcd12807ce95f46b1a3ac",
+      "latest20_related_results": [
+        8
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 20,
+      "environment": "theorem",
+      "title": "Reconstruction on a pruned packet tree",
+      "label": "thm:pruned_packet_tree",
+      "line": 879,
+      "statement_sha256": "54b908570efb08f3716eca6ec5bbf8997ce17facfd3c93b1f79d89d8ae4f22fe",
+      "proof_sha256": "dc56a3c2fbe9dad534e7f4af57d5131231003e10eebf4c1a4302d21999886a83",
+      "latest20_related_results": [
+        9,
+        13
+      ],
+      "relation": "Hilbert-space development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 21,
+      "environment": "corollary",
+      "title": "Coefficient perturbations in a unitary tree",
+      "label": "cor:unitary_tree_noise",
+      "line": 898,
+      "statement_sha256": "ddd77fff609e5ee9ca7b6c95ce189c08db4da9e0bac264bc3e11c1b812095f1b",
+      "proof_sha256": "76777d3d1d18fe62501e2aea53b23366a3e90c3b58f7f074acfe6d1118011efc",
+      "latest20_related_results": [
+        9,
+        13
+      ],
+      "relation": "Hilbert-space development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 22,
+      "environment": "proposition",
+      "title": "Bounds for nonunitary local splits",
+      "label": "prop:nonunitary_tree_bounds",
+      "line": 915,
+      "statement_sha256": "369fac7cfc3ce06007a823bb7223c9224622cd29318d56c693a8f9e36c8be985",
+      "proof_sha256": "e7e34293e3f1393dbdd346060c9b5aa3d9933220ccfd56c1f683bac108d0b106",
+      "latest20_related_results": [
+        9,
+        13
+      ],
+      "relation": "Hilbert-space development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "B"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 23,
+      "environment": "theorem",
+      "title": "Exact additive best basis recursion",
+      "label": "thm:best_basis",
+      "line": 971,
+      "statement_sha256": "8b0e13c4a9c89b7d010dabd14a888ae6e09e4224381a97418cded76f99a23764",
+      "proof_sha256": "afe627b1e87ab84ca61718c9e9f2ffcb738e61c08d85f573b00f75309eaa5841",
+      "latest20_related_results": [
+        15
+      ],
+      "relation": "analogue; latest source adds total tie rule and complexity bound",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "G"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 24,
+      "environment": "theorem",
+      "title": "Stability of the optimal cost",
+      "label": "thm:best_basis_cost_stability",
+      "line": 988,
+      "statement_sha256": "d5320b63a09cb3095e1f0fb5aae5fc2be0e4fd7c24741f75d0ead989443b6730",
+      "proof_sha256": "e910a0c14b166adc46784ad054bf513adc854d46ef7a13b5f62609429bede952",
+      "latest20_related_results": [
+        14,
+        16
+      ],
+      "relation": "additive special case; latest source includes nonadditive finite selection",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 25,
+      "environment": "corollary",
+      "title": "Stability of the selected basis",
+      "label": "cor:best_basis_selection_stability",
+      "line": 1019,
+      "statement_sha256": "1df99ec37459b384c3f8d05c4af6461ad2a66304a79a9d4c202fbe02e8166e63",
+      "proof_sha256": "ba21880e3867c20377cbf35a2b38b33cd62aef816aa8ed85a39638026c9b7f95",
+      "latest20_related_results": [
+        14,
+        16
+      ],
+      "relation": "additive special case; latest source includes nonadditive finite selection",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "G"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 26,
+      "environment": "theorem",
+      "title": "Higher order singular packet decomposition",
+      "label": "thm:higher_order_packet_decomposition",
+      "line": 1062,
+      "statement_sha256": "ee0b9d0d5dea6522a25c3d6f36134bc690745193939a3f3746a48a9e4f2c6a50",
+      "proof_sha256": "5f75d9f0030bcf07914aa4c677cacd85d130a6c06dedbb21078b656cc9f5dc40",
+      "latest20_related_results": [
+        10,
+        11
+      ],
+      "relation": "additional analytic decomposition; not represented by the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 27,
+      "environment": "corollary",
+      "title": "Uniqueness of the trace packet",
+      "label": "cor:trace_packet_uniqueness",
+      "line": 1100,
+      "statement_sha256": "1f68cf236566e1bd69684d7b9b58928ca72757196c4433b70cca69b9b696c6e8",
+      "proof_sha256": "06a55f343b85aa1ada6b154685ca318e18a6625a766664c303e0082164b58548",
+      "latest20_related_results": [
+        10,
+        11
+      ],
+      "relation": "additional analytic decomposition; not represented by the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 28,
+      "environment": "theorem",
+      "title": "Exact retained packet identity",
+      "label": "thm:retained_packet_identity",
+      "line": 1129,
+      "statement_sha256": "9789623b136db122a427e84b1f224b94b0bc79d560339bed10c0303f208b798d",
+      "proof_sha256": "f85c3e39a21d2dc0219afec9f3a6ce270739a96f3f5f12a9175dd9cef7a0a53f",
+      "latest20_related_results": [
+        10,
+        11
+      ],
+      "relation": "analogue / conditional approximation consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 29,
+      "environment": "corollary",
+      "title": "Sobolev rate after packet separation",
+      "label": "cor:sobolev_rate",
+      "line": 1159,
+      "statement_sha256": "bfd8f284a0f6d423c407e0e9afb4881a664bdb1002fb108672979261d82e9fb0",
+      "proof_sha256": "7592ef97346096801a2868d339f4a8b19db30ce76ab2e81d6cb60fb41344d5cb",
+      "latest20_related_results": [
+        10,
+        11
+      ],
+      "relation": "analogue / conditional approximation consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 30,
+      "environment": "theorem",
+      "title": "Reconstruction with an estimated packet",
+      "label": "thm:estimated_packet_reconstruction",
+      "line": 1179,
+      "statement_sha256": "7f9ac9ff509e78859009033498c1dfc73d3c53e1017e0410a20c4898a8a0b8b3",
+      "proof_sha256": "ff18e3e1de1e036fcaa55c2d948a75fb5ea1e90c37c60bb33d4ccda212158444",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "A"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 31,
+      "environment": "theorem",
+      "title": "Exact scalar region formula",
+      "label": "thm:scalar_region_formula",
+      "line": 1230,
+      "statement_sha256": "e6c29e99408ea3dd136f314fc182e5c5828d01c9134fc4d02d3d58d0f9b27ec2",
+      "proof_sha256": "71506c2654ad033e7a39ff4c8473dd9c88dc54bed3f3072053fbe5d63a043269",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 32,
+      "environment": "corollary",
+      "title": "Location error for one step",
+      "label": "cor:step_location_error",
+      "line": 1253,
+      "statement_sha256": "1d4bd9f30e85fd1244b5a8cd31fd8039a0bbe143fcf1daa17d3192b9edceb774",
+      "proof_sha256": "dfdc8aad3c46e64f0fe7fc7569bce919ed02522f271974a91c8ef531d8d868b9",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 33,
+      "environment": "theorem",
+      "title": "Location stability for higher order packets",
+      "label": "thm:higher_order_location",
+      "line": 1267,
+      "statement_sha256": "050b3654e147e69ebad3b16afe59a1eb3f30d40aee771df83780a2dc89be2148",
+      "proof_sha256": "1ef05f63f3c2113c7473eaec3d4f779b0d62f951d3ae8d51efd87b74397d20a6",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 34,
+      "environment": "theorem",
+      "title": "Overlap matrix formula",
+      "label": "thm:overlap_matrix",
+      "line": 1310,
+      "statement_sha256": "2058492923055f1ccb5cd1a333176ee0f17a99bc6fcab6d7226ae95c7bdc7e35",
+      "proof_sha256": "a8f3a38761e318ef1ddfb2044a7e457551cb18e80ae170af88d8d7f3556a18a9",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 35,
+      "environment": "corollary",
+      "title": "Background and packet error",
+      "label": "cor:background_packet_error",
+      "line": 1332,
+      "statement_sha256": "d1ecf1d155be1f7cc8cbfd3f2770b5e77e8cc6a183f0e4c8d2c9886975444bc1",
+      "proof_sha256": "4638b1e5b1666baceeb47fcc5e11d876ebc0b2f17c3fe21ec8f92626180fb8b8",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 36,
+      "environment": "theorem",
+      "title": "Geometric packet bound",
+      "label": "thm:geometric_packet_bound",
+      "line": 1374,
+      "statement_sha256": "a99b8aed59efe9d7645c46bd92ecf19e4afb227ced6a98c97bacc2f13ebdeb79",
+      "proof_sha256": "78d5f4826cc714f9996410f52bef3a39560c8f00e5d4c94e5cbebd411fb858e2",
+      "latest20_related_results": [
+        12
+      ],
+      "relation": "additional quantitative development",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "D"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 37,
+      "environment": "lemma",
+      "title": "Contrast gap",
+      "label": "lem:contrast_gap",
+      "line": 1446,
+      "statement_sha256": "eb2dfb70e7fe71274694231e17844738955b830b833fa1f6b610abf5e9ff6c7b",
+      "proof_sha256": "4beb534f983a7c34391c855d0fea676bd926baa48f872e3f7533625876917d47",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 38,
+      "environment": "theorem",
+      "title": "Deterministic jump cell recovery",
+      "label": "thm:deterministic_jump_recovery",
+      "line": 1473,
+      "statement_sha256": "e425c74264b9216510899ab4d3a426117840d0b6dea428bdafeff6e0dd8999d4",
+      "proof_sha256": "cd399e50c2b117cc0b04d3bf9bf39503b66f61820d2170e1a426ceb5cbb014cc",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "F"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 39,
+      "environment": "corollary",
+      "title": "Jump count and sign recovery",
+      "label": "cor:jump_count_sign",
+      "line": 1510,
+      "statement_sha256": "6029a3a3777299b2ca254bb77a13895d4a272ed56f6d77b6d20a421cc643a77f",
+      "proof_sha256": "d2ed958dd15c4e710323f4a40e0e1a921932eb306ff43e1d8518079aad54adc6",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 40,
+      "environment": "corollary",
+      "title": "Packet reconstruction after detection",
+      "label": "cor:reconstruction_after_detection",
+      "line": 1526,
+      "statement_sha256": "475a8cc42be61418c3bd0a2ff8e41987e0536994e311e4dcd7ab543b21fda9eb",
+      "proof_sha256": "1560e0f44cf0590f5c648e5a8600298ae11696ec0654bff28f7e2fd1c4d48b56",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "A"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 41,
+      "environment": "corollary",
+      "title": "Deterministic consistency",
+      "label": "cor:deterministic_consistency",
+      "line": 1580,
+      "statement_sha256": "355e0bfffb0ae56cb776461b8d9b3501c7f1eff0becd5dffca0cfb4a9cc21d3f",
+      "proof_sha256": "e2da40872bf937d1e05c4df609547ec21a858a1dbba13cedc18f0d24089bf50b",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "F"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 42,
+      "environment": "theorem",
+      "title": "Probability recovery bound",
+      "label": "thm:probability_recovery",
+      "line": 1618,
+      "statement_sha256": "d4fc27e309f474d1e5ef5cc9ad497de5b9fbad4f813231e77f3bd40d193a07c3",
+      "proof_sha256": "8ecab4e4d2afd7b4aebe90ef5f7e063349f37e29fd8005efda0ff8d4eea4a8ee",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "K"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 43,
+      "environment": "corollary",
+      "title": "Repeated measurements",
+      "label": "cor:repeated_measurements",
+      "line": 1657,
+      "statement_sha256": "088a026423c8c21f821b8c80c0205ca3719347803893717a19069cc6c1f73155",
+      "proof_sha256": "863099c7ef5ede9a3d05d29970960a97402093ae10c41606a78002b7afc8c8d7",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "H"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 44,
+      "environment": "corollary",
+      "title": "Probability consistency",
+      "label": "cor:probability_consistency",
+      "line": 1676,
+      "statement_sha256": "072fe0e7d4d4de0350a268f75519fefe66cc75f48cf14ef6b686310d24a718cd",
+      "proof_sha256": "0a0471c1156cb553e2fa1f1ecd651aa97b5de300f3548557aac93cf47632264e",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "E",
+        "F"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 45,
+      "environment": "proposition",
+      "title": "Vector jump recovery",
+      "label": "prop:vector_jump_recovery",
+      "line": 1688,
+      "statement_sha256": "85e2aedd325b394b8f9c9896b2f63cf0c6b575b3be28dfa2d24a5eaf198bce84",
+      "proof_sha256": "03532d3c75e0c4f29dff7d76a81282e3a815a1fafb39e65bbaa86e8bd1b193e6",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "additional recovery development; not a Lean coverage claim",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 46,
+      "environment": "theorem",
+      "title": "Smooth Haar coefficient bound",
+      "label": "thm:smooth_haar_bound",
+      "line": 1719,
+      "statement_sha256": "69c17c082fcf12208eb00122b1ea6f814ad802e7ad393fa178b52ab0c327c918",
+      "proof_sha256": "74c713d7f0ab1f2f0b949bbb23cd26a8676063cdbe1d10532af6b705bf98cc0d",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "M"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 47,
+      "environment": "theorem",
+      "title": "Exact Haar coefficient of a step",
+      "label": "thm:haar_step_coefficient",
+      "line": 1740,
+      "statement_sha256": "0a6ed446e392f6191e89cb12fa65085e1c6fb9a4d00fdbb31a4f5b3b69a75735",
+      "proof_sha256": "76975c8ac8dde526a92d74eaa1474effb0642ce36846d0cdf8b18e1d7fdad4e4",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "C"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 48,
+      "environment": "corollary",
+      "title": "Scale separation",
+      "label": "cor:haar_scale_separation",
+      "line": 1762,
+      "statement_sha256": "e2e657b09fcb9fc30e16bc1d4988f6a1792793f4662c494505afe35109f2fb8d",
+      "proof_sha256": "67538db09fae7153807015bcdb1209fd3daef56319be28f13f72f96e626e23d8",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "C"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 49,
+      "environment": "theorem",
+      "title": "Half cell shift guarantee",
+      "label": "thm:half_shift_guarantee",
+      "line": 1810,
+      "statement_sha256": "aef2cd213dc2dc4f746515957603f5a448c8379a5fd586412e5b7d6036b19fae",
+      "proof_sha256": "09b9cc75054f893f1ec5ddcd6565a3323ee1217159e38e9f903798c3c7fa633c",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 50,
+      "environment": "corollary",
+      "title": "Alignment free two grid Haar detection",
+      "label": "cor:two_grid_haar_detection",
+      "line": 1822,
+      "statement_sha256": "2ae2db34aa92e58e78d0f2250f017953a909ff7754b2919c9c422d1695629b37",
+      "proof_sha256": "23ef977806020c90182d894e97009d5132cd488623394fd4a8392b62c3f2564e",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "C"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 51,
+      "environment": "theorem",
+      "title": "Polynomial annihilation and boundary support",
+      "label": "thm:polynomial_annihilation",
+      "line": 1856,
+      "statement_sha256": "97f76a63088870d138bcf6c1e1d1dec8d7fa1fab5c26e5348e87da5c816525f2",
+      "proof_sha256": "696a4ad0a48d02e141ffa6365ca30cc96ed67c0206091336d00cf058a7f2be89",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 52,
+      "environment": "proposition",
+      "title": "Noise amplification by differences",
+      "label": "prop:difference_noise",
+      "line": 1872,
+      "statement_sha256": "e297f0643d09f904a1e8c61dc51fc86c9bbcc7f8c3eb2f938ef048d622fa5b6c",
+      "proof_sha256": "f7d7b809d593d72dc7077ce8d3df80421b4fbba9d03d069617b9d2f6ae529f75",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 53,
+      "environment": "corollary",
+      "title": "Robust breakpoint bands",
+      "label": "cor:robust_breakpoint_bands",
+      "line": 1886,
+      "statement_sha256": "6719fa7b4712d35dd918c7139df32c5ab8a987742b9aaf2267aa6a9828000a4a",
+      "proof_sha256": "caf29fd34b9c7a3e166ae2b663122cca5813dcc345e626c275bca5d7929782b4",
+      "latest20_related_results": [],
+      "relation": "additional localization development outside the 20-result scope",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 54,
+      "environment": "theorem",
+      "title": "Uniform convergence with exact jump packets",
+      "label": "thm:uniform_packet_convergence",
+      "line": 1908,
+      "statement_sha256": "7d8ba061c9593e39080c3179a8a748531d3791d86da71c1ceef646e28f836e07",
+      "proof_sha256": "ae4a61307b2d2278e5f79732c6d5a39b2474bbb2a792072648b4632df9435a97",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "consequence / quantitative extension",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 55,
+      "environment": "theorem",
+      "title": "Estimated packet Gibbs bound",
+      "label": "thm:estimated_packet_gibbs",
+      "line": 1927,
+      "statement_sha256": "9c73c50398d585b950fa2db57cccc3341254f58c45793d48f8fd5734ba4c7570",
+      "proof_sha256": "b21e088f8117968ad24138a45687dba50a85b4ce98503c0f31657b5e5c010955",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "consequence / quantitative extension",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [
+        "A"
+      ],
+      "obligation_status": "requires listed repair/clarification"
+    },
+    {
+      "index": 56,
+      "environment": "corollary",
+      "title": "Boundary band error",
+      "label": "cor:boundary_band_error",
+      "line": 1951,
+      "statement_sha256": "5fba5fbe51ce7e5e973900c2e7ce1cc2629bb58c9f0fadd41ab3b589ccdb5a07",
+      "proof_sha256": "f6d7fb38eeee266f713b05ac8e7d4f09974528dcd265bce1257f210d36b716f5",
+      "latest20_related_results": [
+        10,
+        11,
+        12
+      ],
+      "relation": "consequence / quantitative extension",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 57,
+      "environment": "theorem",
+      "title": "Residue law for Cauchy products",
+      "label": "thm:cauchy_residue_law",
+      "line": 1992,
+      "statement_sha256": "0545a08c4c0d5408b508db2550d41066b450ac023f87dfe2b42fa0b519fe01b1",
+      "proof_sha256": "6023673c421edfad33167c9ad78ffe39477c4a3fe72d39f4b3006e885acb9eb8",
+      "latest20_related_results": [
+        17
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 58,
+      "environment": "theorem",
+      "title": "Shifted pointwise monomial law",
+      "label": "thm:shifted_monomial_law",
+      "line": 2019,
+      "statement_sha256": "ac3e20c1d563848fc9206fc1148593f2d0c20daffb73860762ae7531860ff5c3",
+      "proof_sha256": "184a0622dae7ecf305cde96fd8cba9fb572cfb55dbc39df1767a098e6c40fcb0",
+      "latest20_related_results": [
+        17
+      ],
+      "relation": "additional nonlinear sample-coordinate law",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 59,
+      "environment": "corollary",
+      "title": "Polynomial shift filters",
+      "label": "cor:polynomial_shift_filters",
+      "line": 2066,
+      "statement_sha256": "cdf55f9ae89e381a2f66cc6b2a874788b897a2c25ec8e18314adfe8b9559169a",
+      "proof_sha256": "30be8aa182be750cda010dbcab8eb743a69914b7c56fb5fc9c9e6d2996f7526b",
+      "latest20_related_results": [
+        17
+      ],
+      "relation": "additional nonlinear sample-coordinate law",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 60,
+      "environment": "theorem",
+      "title": "Cyclic Mobius action",
+      "label": "thm:cyclic_mobius",
+      "line": 2164,
+      "statement_sha256": "c01cdee0a349fe2867add6b29da5e49f363085612fadecb2b67b9a5136dfa208",
+      "proof_sha256": "3cc4abc16469f18c4803f357cbf218005a1e614a0eb13554c8b2ad7b8e181bc8",
+      "latest20_related_results": [
+        18
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 61,
+      "environment": "corollary",
+      "title": "Impedance and admittance",
+      "label": "cor:impedance_admittance",
+      "line": 2192,
+      "statement_sha256": "c05ff5fc608bcec73a0d2ae0506f50a1e4d016bbf62e897866073fd14217f38e",
+      "proof_sha256": "640e2a5a34069bd62b8f9777e5858096ec0ade092a84b59c1155641af0d2dc1d",
+      "latest20_related_results": [
+        19
+      ],
+      "relation": "analogue",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 62,
+      "environment": "proposition",
+      "title": "Radial and phase coordinates",
+      "label": "prop:radial_phase",
+      "line": 2204,
+      "statement_sha256": "cac871651c9d1e8169d33334d360240d0f34037f8ce6c2f03c5efba81dcecb81",
+      "proof_sha256": "c6167b6a0198ef1c0753f455ea92e17ff5a98d3242428cca984d1a4a95176adc",
+      "latest20_related_results": [
+        18,
+        20
+      ],
+      "relation": "secondary coordinate consequence",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    },
+    {
+      "index": 63,
+      "environment": "proposition",
+      "title": "Coprime phase factorization",
+      "label": "prop:phase_factorization",
+      "line": 2224,
+      "statement_sha256": "4f2917a2719bcc3912e3c6a8e6b97ecf51a204cf0854cceff00749e9416098d9",
+      "proof_sha256": "8f8ca8089c2d66330f3370fbbf96c9e04986b15ccccc2e363c2626630e3d5daf",
+      "latest20_related_results": [
+        20
+      ],
+      "relation": "coprime group-label generalization",
+      "lean_coverage": "not established by this thematic map",
+      "raw_proof_read": true,
+      "repair_or_clarification_ids": [],
+      "obligation_status": "local derivation passed subject to stated domain and standard background leaves"
+    }
+  ],
+  "recommendation": "Retain the latest 20-result edition as the formal coverage spine and the corrected Annals 63-proof body as a separately labeled analytic development. Preserve source snapshots unchanged and log exact corrections in the final edition. Keep all 63 proof bodies, updating only local hypotheses/conventions and their necessary short proof sentences. Do not sum 20 + 63 as 83 nonoverlapping or Lean-verified results."
+}

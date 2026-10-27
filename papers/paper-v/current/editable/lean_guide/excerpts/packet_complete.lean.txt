@@ -1,0 +1,10 @@
+theorem packet_complete (phase : I → R) (x : I → V) (i : I) :
+    (∑ r : R, packet phase r x i) = x i := by
+  classical
+  calc
+    (∑ r : R, packet phase r x i) = packet phase (phase i) x i := by
+      apply Finset.sum_eq_single (phase i)
+      · intro b _ hb
+        simp [packet, Ne.symm hb]
+      · simp
+    _ = x i := by simp [packet]
