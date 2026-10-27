@@ -1,0 +1,43 @@
+{
+  "conclusion": "The reviewed supplemental script preserves the frozen task compilation entry point, spawn initialization, task contents, limits and complete run binding, with schedule-only task selection. Publication uses a unique temporary plus no-replace hard link and compares any pre-existing record hash. No known semantics-changing task-order state was identified in the separate source reviews; universal task-order equivalence is not proven.",
+  "limitations": [
+    "Static negative state checks are not a whole-program alias proof or executed schedule equivalence test.",
+    "No current worker-stack attribution.",
+    "No query solutions read.",
+    "No budgets, policies, source code or current-run baselines changed by this review."
+  ],
+  "method": "Read-only source/AST comparison with frozen engine.scan, engine.compile_record, engine.sanitize, contract.write_json. No scheduler/runtime import, compiler execution, target inspection or process modification.",
+  "required_final_gate": "Before prediction freeze/scoring, authenticate supplemental metadata and require every completed event record_hash (including duplicate events) to equal the corresponding final complete census record content_hash. The unchanged original scan may later atomically replace a supplemental checkpoint; metadata preserves the independent completion hash for comparison.",
+  "reviewed_sources": {
+    "arc-fullbank/block17/contract.py": "ceb7074c22299d7abf75ac96a4575981619c8272a552b07f40f8de9dd91bcb20",
+    "arc-fullbank/block17/engine.py": "cbf7da60cac001ffc750cde5379669d612b484f4dcfc42dea7490f5428961daf"
+  },
+  "reviewed_utc": "2026-10-09T05:15:40.693741+00:00",
+  "scheduler": {
+    "bytes": 6735,
+    "path": "/workspace/scratch/40dd7e475149/arc-evidence/scripts/supplement_block17_scan.py",
+    "sha256": "bf612124af1784c64cfb574d3b83319d7d877bc4be35d28d9817ff2094673a39"
+  },
+  "schema": "arc.block17.supplemental_schedule_static_review.v1",
+  "selection": {
+    "order": "ascending maximum demonstration/query-input grid cells, then total cells, then task ID",
+    "reservation_assumption": "first six currently missing sorted tasks correspond to the original six active workers; completion races can cause duplicate work, so correctness relies on hash comparison rather than this reservation assumption",
+    "reserved_prefix": 6,
+    "workers": 2
+  },
+  "static_checks": {
+    "atomic_no_replace_publication": true,
+    "complete120_172_check": true,
+    "duplicate_record_hash_failure": true,
+    "full120_run_formula": true,
+    "original_worker_initializer": true,
+    "outer_and_record_seal_verification": true,
+    "pinned_expected_run_hash": true,
+    "record_hash_metadata": true,
+    "record_input_binding": true,
+    "sanitized_task_input": true,
+    "spawn_method": true,
+    "unchanged_engine_compile_record_call": true,
+    "unique_temporary_path": true
+  }
+}

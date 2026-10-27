@@ -1,0 +1,229 @@
+Block 17 portable offline execution
+2026-10-09 UTC
+
+Start in the extracted snapshot root. The verified training snapshot supplies
+the original source ZIP, frozen training records and the external replay helper.
+Extract the public-evaluation checkpoint snapshot into the same root to resume
+its completed records. Use a separate extraction root for a restored run; preserve
+the original workspace, source snapshot and scoring receipts. Solver runs use
+local files only: no API credentials,
+network calls or package downloads are required. Python and NumPy must already
+be installed in the execution environment.
+
+Tested environment: Linux, Python 3.12.14, NumPy 2.3.5. The 13 integrated tests
+passed. The authenticated training replay reproduced typed_recent (primary)
+790/1076 exact outputs, 73.4201%, and typed_supported (control) 846/1076, 78.6245%.
+That replay selects predictions from frozen compiled records; it does not rerun
+their compilers or execute every serialized candidate program. Both predictions
+are written and authenticated before the helper opens training scoring targets.
+
+The fresh evaluation scan recompiles 77 interfaces per task: 8 inherited live
+interfaces, 21 Block 13 adapters and 48 Block 14/15 entrants. It uses all 120
+evaluation tasks and 172 test inputs. The scan remains pending at preparation
+of this note. Compiler completion alone does not establish a score. Keep both
+policies frozen; generate their predictions before independent label scoring.
+
+BASH / LINUX
+
+Use the existing Python environment containing NumPy 2.3.5. If its executable
+has another name, change arc_python only. Begin in the extracted snapshot root.
+
+  arc_root="$(pwd -P)"
+  arc_python="python3"
+  arc_source="$arc_root/arc-fullbank/block17"
+  arc_train_out="$arc_root/arc-offline-runs/training-replay"
+  arc_eval_out="$arc_root/arc-evidence/fullbank-public-evaluation/census.json"
+  export PYTHONDONTWRITEBYTECODE=1
+  export OPENBLAS_NUM_THREADS=1
+
+Restore the unchanged nested source archive; its member root is block17/:
+
+  "$arc_python" -m zipfile -e \
+    "$arc_root/arc-later-download/Komorebi_PR_LASM_Block17_Full_Bank_Integration.zip" \
+    "$arc_root/arc-fullbank"
+
+For a newly restored scan, authenticate every source file against the archived
+original snapshot and capture the new extraction mtimes in a separate baseline:
+
+  arc_restored_baseline="$arc_root/arc-offline-runs/restored_block17_source_before.json"
+  "$arc_python" "$arc_root/arc-evidence/later-source-audit/capture_restored_block17_baseline.py" \
+    --root "$arc_source" \
+    --reference "$arc_root/arc-evidence/later-source-audit/block17_source_before.json" \
+    --output "$arc_restored_baseline"
+
+Run the 13 integrated tests from the source directory:
+
+  cd "$arc_source"
+  "$arc_python" -m unittest discover -s tests -p 'test_*.py' -v
+
+Run the memory-safe, authenticated training replay into a new external folder:
+
+  cd "$arc_root"
+  "$arc_python" arc-evidence/later-source-audit/stream_block17_dispatch.py \
+    --root "$arc_source" \
+    --challenges "$arc_source/data/challenges.json" \
+    --census "$arc_source/results/census.json.gz" \
+    --compare-dir "$arc_source/results" \
+    --output-dir "$arc_train_out" \
+    --solutions "$arc_source/evidence/solutions.json"
+
+Start or resume the unchanged fresh full-bank evaluation:
+
+  cd "$arc_source"
+  "$arc_python" run_scan.py \
+    --challenges "$arc_root/arc-offline-data/arc-agi_evaluation_challenges.json" \
+    --include-new --workers 6 --output "$arc_eval_out"
+
+After the restored scan, compare against that new baseline:
+
+  "$arc_python" "$arc_root/arc-evidence/later-source-audit/verify_block17_unchanged.py" \
+    --root "$arc_source" --snapshot "$arc_restored_baseline" \
+    --output "$arc_root/arc-offline-runs/restored_block17_source_after.json"
+
+After the scan has exited successfully and the complete 120-task census and
+checkpoints exist, finalize both fixed policies and independently score them:
+
+  cd "$arc_root"
+  "$arc_python" arc-evidence/scripts/finalize_block17_public_evaluation.py \
+    --workspace "$arc_root" --source-snapshot "$arc_restored_baseline"
+
+This step requires the matching evaluation solutions at
+arc-offline-data/arc-agi_evaluation_solutions.json and the supplied external
+dispatch/scoring helpers. The checkpoint snapshot itself contains no solutions.
+The finalizer authenticates and seals both policy predictions before opening
+scoring targets. See the receipt preservation notes below before running it.
+
+WINDOWS POWERSHELL / WSL UBUNTU
+
+These commands were not executed here: neither powershell nor pwsh is installed
+in the tested environment. They invoke Linux Python inside the user's existing
+WSL Ubuntu. The authenticated helper imports the Unix-only resource module and
+cannot run unchanged under native Windows Python. Native Windows runtime
+compatibility is untested; these commands deliberately keep execution in Linux.
+WSL must support --cd. Ensure the selected Linux Python already has NumPy 2.3.5.
+
+Begin in the extracted snapshot root in PowerShell. Arguments are passed
+separately to wsl.exe; paths are not interpolated into a shell command string.
+
+  $arcRoot = (Get-Location).ProviderPath
+  $arcWslRoot = (& wsl.exe --exec wslpath -a -u "$arcRoot").Trim()
+  if ($LASTEXITCODE -ne 0) { throw 'Cannot resolve the snapshot path in WSL.' }
+  $arcWslPython = 'python3'
+  $arcWslSource = "$arcWslRoot/arc-fullbank/block17"
+  $arcWslCommon = @('--exec', 'env', 'PYTHONDONTWRITEBYTECODE=1', 'OPENBLAS_NUM_THREADS=1')
+
+Restore the original source using Linux Python from the snapshot root:
+
+  & wsl.exe --cd "$arcWslRoot" @arcWslCommon $arcWslPython -m zipfile -e 'arc-later-download/Komorebi_PR_LASM_Block17_Full_Bank_Integration.zip' 'arc-fullbank'
+  if ($LASTEXITCODE -ne 0) { throw 'Source restoration failed.' }
+
+Authenticate source contents and capture a separate restored-run mtime baseline:
+
+  $arcBaselineArgs = @(
+    'arc-evidence/later-source-audit/capture_restored_block17_baseline.py',
+    '--root', 'arc-fullbank/block17',
+    '--reference', 'arc-evidence/later-source-audit/block17_source_before.json',
+    '--output', 'arc-offline-runs/restored_block17_source_before.json'
+  )
+  & wsl.exe --cd "$arcWslRoot" @arcWslCommon $arcWslPython @arcBaselineArgs
+  if ($LASTEXITCODE -ne 0) { throw 'Restored source authentication failed.' }
+
+Run tests with the source directory as the explicit Linux working directory:
+
+  & wsl.exe --cd "$arcWslSource" @arcWslCommon $arcWslPython -m unittest discover -s 'tests' -p 'test_*.py' -v
+  if ($LASTEXITCODE -ne 0) { throw 'Integrated tests failed.' }
+
+Run the unchanged memory-safe helper from the snapshot root:
+
+  $arcReplayArgs = @(
+    'arc-evidence/later-source-audit/stream_block17_dispatch.py',
+    '--root', 'arc-fullbank/block17',
+    '--challenges', 'arc-fullbank/block17/data/challenges.json',
+    '--census', 'arc-fullbank/block17/results/census.json.gz',
+    '--compare-dir', 'arc-fullbank/block17/results',
+    '--output-dir', 'arc-offline-runs/training-replay',
+    '--solutions', 'arc-fullbank/block17/evidence/solutions.json'
+  )
+  & wsl.exe --cd "$arcWslRoot" @arcWslCommon $arcWslPython @arcReplayArgs
+  if ($LASTEXITCODE -ne 0) { throw 'Authenticated training replay failed.' }
+
+Start or resume the fresh evaluation from the explicit source working directory:
+
+  $arcEvalArgs = @(
+    'run_scan.py',
+    '--challenges', "$arcWslRoot/arc-offline-data/arc-agi_evaluation_challenges.json",
+    '--include-new', '--workers', '6',
+    '--output', "$arcWslRoot/arc-evidence/fullbank-public-evaluation/census.json"
+  )
+  & wsl.exe --cd "$arcWslSource" @arcWslCommon $arcWslPython @arcEvalArgs
+  if ($LASTEXITCODE -ne 0) { throw 'Fresh evaluation did not finish successfully; preserve completed checkpoints.' }
+
+After the restored scan, check source contents and mtimes against its baseline:
+
+  $arcVerifyArgs = @(
+    'arc-evidence/later-source-audit/verify_block17_unchanged.py',
+    '--root', 'arc-fullbank/block17',
+    '--snapshot', 'arc-offline-runs/restored_block17_source_before.json',
+    '--output', 'arc-offline-runs/restored_block17_source_after.json'
+  )
+  & wsl.exe --cd "$arcWslRoot" @arcWslCommon $arcWslPython @arcVerifyArgs
+  if ($LASTEXITCODE -ne 0) { throw 'Source changed during the restored run.' }
+
+Only after the scan has exited successfully and the complete 120-task census
+and checkpoints exist, finalize using the authenticated restored-run baseline:
+
+  $arcFinalizeArgs = @(
+    'arc-evidence/scripts/finalize_block17_public_evaluation.py',
+    '--workspace', "$arcWslRoot",
+    '--source-snapshot', "$arcWslRoot/arc-offline-runs/restored_block17_source_before.json"
+  )
+  & wsl.exe --cd "$arcWslRoot" @arcWslCommon $arcWslPython @arcFinalizeArgs
+  if ($LASTEXITCODE -ne 0) { throw 'Restored-run finalization failed; inspect its external logs.' }
+
+The same solutions and external-helper requirements apply as in the Bash route.
+Both policy predictions are authenticated and sealed before scoring targets are
+opened. These finalization commands were documented, not executed here.
+
+RESOURCE AND RESTORE LIMITS
+
+The original validate.py and whole-census cached loader were killed with exit
+137 under the shared 8 GiB memory limit. The frozen training JSON expands to
+2,600,599,269 bytes; the memory-safe helper completed with about 530 MiB peak
+RSS in the tested Linux run. Its resource measurement assumes Linux units.
+
+Fresh full-bank compilation is computationally expensive. --workers changes
+concurrency only; the frozen search budgets and nominal core tier 2.0 are not
+wall-clock cutoffs. Run one scan per checkpoint directory. Preserve completed
+census.tasks/*.json files and exclude .partial files from restoration. To reuse
+these checkpoints, retain the complete 120-task challenge file, exact source,
+banks, limits, --include-new and the same census output path. A changed challenge
+file or compiler configuration requires a separate output/checkpoint directory.
+
+All generated outputs above are outside the frozen source. Do not modify source,
+banks, policies or the pinned replay helper for portability. Restored file mtimes
+may differ; portable authentication checks source contents, sizes and inventory.
+
+The original block17_source_before.json and sealed score receipts describe the
+original run. Preserve them. The training stream helper authenticates source,
+banks, candidate records and manifest bytes without requiring original mtimes;
+it does not need a replacement snapshot.
+
+The external finalize_block17_public_evaluation.py accepts optional
+--source-snapshot PATH. Its default remains the historical original
+arc-evidence/later-source-audit/block17_source_before.json. The restored-run
+commands explicitly select arc-offline-runs/restored_block17_source_before.json,
+created by capture_restored_block17_baseline.py after authenticating original
+content, sizes and inventory. The finalizer passes this baseline to the unchanged
+source verifier, checks it remains unchanged during dispatch, and records its
+path and SHA256 in the sealed prediction freeze and independent scoring audit.
+Do not overwrite the original snapshot or alter frozen source for restoration.
+
+The finalizer has no output-directory option. Under --workspace it writes
+dispatches, submissions, logs, the prediction freeze, scores, ledgers and audits
+to arc-evidence/fullbank-public-evaluation using fixed filenames. Preserve the
+original receipts and use the separate restored workspace root shown above so
+new-run outputs remain separate. Rerunning finalization in a workspace with
+existing finalization receipts can overwrite those files; retain prior receipts
+in a separate location first. The original training replay receipts remain in
+arc-evidence/fullbank-training-stream-replay; the reproduced training outputs
+above go to arc-offline-runs/training-replay.

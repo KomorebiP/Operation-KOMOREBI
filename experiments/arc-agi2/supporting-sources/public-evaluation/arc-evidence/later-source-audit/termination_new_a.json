@@ -1,0 +1,2108 @@
+{
+  "created_utc": "2026-10-09T05:16:05.998178+00:00",
+  "limitations": [
+    "Named local-call AST checks do not resolve arbitrary dynamic aliases, callbacks, monkeypatching, hostile cyclic Python objects, or stdlib internals. Two project module dependencies were manually traced as described.",
+    "A private ray helper accepting a zero vector, empty-set gravity, or cyclic serializer object can be imagined outside the reviewed compiler paths; callers/preconditions inspected here do not establish those paths as reachable defects.",
+    "Finite search bounds are mathematical counts, not wall-clock guarantees. Most exported finite limits do not impose per-call elapsed-time deadlines. No global wall-time guarantee is claimed.",
+    "No current worker stack, task identity, stage attribution, profile, or checkpoint contents were inspected."
+  ],
+  "modules": [
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [
+        {
+          "bound": "At most H*W appended/visited cells.",
+          "function": "_monochrome_components",
+          "line": 631,
+          "ref": "entrants/amodal_scene_reconstruction.py:631",
+          "termination_basis": "Appended queue cells are marked outside/removed from remaining before append. Each finite accepted-grid cell appears once."
+        },
+        {
+          "bound": "At most H*W appended/visited cells.",
+          "function": "_closed_cycle_bands",
+          "line": 680,
+          "ref": "entrants/amodal_scene_reconstruction.py:680",
+          "termination_basis": "Appended queue cells are marked outside/removed from remaining before append. Each finite accepted-grid cell appears once."
+        }
+      ],
+      "interface": "amodal_scene_reconstruction",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "At most three active _d4 frames.",
+          "call_lines": [
+            210,
+            212,
+            220
+          ],
+          "function": "_d4",
+          "line": 200,
+          "ref": "entrants/amodal_scene_reconstruction.py:200",
+          "status": "reviewed_no_concrete_defect",
+          "termination_basis": "Named operation dispatch reduces recursive calls to explicit simpler/base transforms; unknown operations raise."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/amodal_scene_reconstruction.py",
+      "source_lines": 1084,
+      "source_sha256": "7ba537df96fffec14b30989fdcae17793b92c3c878168732b9001d15aef9cc81",
+      "while_count": 3,
+      "while_loops": [
+        {
+          "bound": "At most N parent hops for N=H*W nodes.",
+          "condition": "self.parent[value] != value",
+          "end_line": 276,
+          "function": "_UnionFind.find",
+          "limitation": null,
+          "line": 274,
+          "ref": "entrants/amodal_scene_reconstruction.py:274",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            265,
+            279,
+            286,
+            289
+          ],
+          "termination_basis": "Parent array starts as identity. union joins distinct roots and always attaches the larger root to the smaller; find follows/path-halves that forest."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 642,
+          "function": "_monochrome_components",
+          "limitation": null,
+          "line": 626,
+          "ref": "entrants/amodal_scene_reconstruction.py:626",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most number of input graph nodes iterations.",
+          "condition": "remaining",
+          "end_line": 804,
+          "function": "_unique_topological_order",
+          "limitation": null,
+          "line": 791,
+          "ref": "entrants/amodal_scene_reconstruction.py:791",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            798,
+            802
+          ],
+          "termination_basis": "Each iteration either raises for nonunique roots or pops exactly one remaining node. Cyclic/nonunique graphs do not spin."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [
+        {
+          "bound": "At most H*W appended/visited cells.",
+          "function": "_closed_cycle_bands_v2",
+          "line": 178,
+          "ref": "entrants/amodal_scene_reconstruction_v2.py:178",
+          "termination_basis": "Appended queue cells are marked outside/removed from remaining before append. Each finite accepted-grid cell appears once."
+        },
+        {
+          "bound": "At most H*W appended/visited cells.",
+          "function": "_four_components",
+          "line": 408,
+          "ref": "entrants/amodal_scene_reconstruction_v2.py:408",
+          "termination_basis": "Appended queue cells are marked outside/removed from remaining before append. Each finite accepted-grid cell appears once."
+        }
+      ],
+      "interface": "amodal_scene_reconstruction_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [
+        "amodal_scene_reconstruction"
+      ],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/amodal_scene_reconstruction_v2.py",
+      "source_lines": 847,
+      "source_sha256": "d17ec0ecaf76a14ad32e737082b469db0c1f25931eb5b2c4f9db95aede7bf724",
+      "while_count": 4,
+      "while_loops": [
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= center_row + distance * dr < height and 0 <= center_column + distance * dc < width",
+          "end_line": 382,
+          "function": "_plus_seed_periodic_rays",
+          "limitation": null,
+          "line": 380,
+          "ref": "entrants/amodal_scene_reconstruction_v2.py:380",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            378,
+            382,
+            383,
+            388
+          ],
+          "termination_basis": "distance increases by one; diagonal/cardinal vectors are explicitly nonzero."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= center_row + distance * dr < height and 0 <= center_column + distance * dc < width",
+          "end_line": 388,
+          "function": "_plus_seed_periodic_rays",
+          "limitation": null,
+          "line": 385,
+          "ref": "entrants/amodal_scene_reconstruction_v2.py:385",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            378,
+            382,
+            383,
+            388
+          ],
+          "termination_basis": "distance increases by one; diagonal/cardinal vectors are explicitly nonzero."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 419,
+          "function": "_four_components",
+          "limitation": null,
+          "line": 403,
+          "ref": "entrants/amodal_scene_reconstruction_v2.py:403",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most M passes for M initial nonempty components.",
+          "condition": "changed",
+          "end_line": 458,
+          "function": "_row_band_rectangle_completion",
+          "limitation": null,
+          "line": 435,
+          "ref": "entrants/amodal_scene_reconstruction_v2.py:435",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            436,
+            454,
+            455,
+            456,
+            457
+          ],
+          "termination_basis": "changed resets false; setting it true also removes one component, then breaks both inner scans."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "analogical_object_rewrite",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "Finite decoded tree size and nesting depth.",
+          "call_lines": [
+            895,
+            898
+          ],
+          "function": "_swap_program.swap_role",
+          "limitation": "Arbitrary cyclic Python object inputs are not asserted safe; canonicalization rejects cycles before this traversal.",
+          "line": 889,
+          "ref": "entrants/analogical_object_rewrite.py:889",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            887,
+            900
+          ],
+          "termination_basis": "Walks strict descendants of json.loads(_canonical(program)), an acyclic JSON tree."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/analogical_object_rewrite.py",
+      "source_lines": 1122,
+      "source_sha256": "713cad1f1797a4c374f8ed7db34ad0eb9e89e3b75dda499cca2f60024e04c6a3",
+      "while_count": 3,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 325,
+          "function": "_components",
+          "limitation": null,
+          "line": 298,
+          "ref": "entrants/analogical_object_rewrite.py:298",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 313,
+          "function": "_components",
+          "limitation": null,
+          "line": 303,
+          "ref": "entrants/analogical_object_rewrite.py:303",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= row < len(scene.grid) and 0 <= column < len(scene.grid[0])",
+          "end_line": 539,
+          "function": "_frame_paint_cells",
+          "limitation": null,
+          "line": 536,
+          "ref": "entrants/analogical_object_rewrite.py:536",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            528,
+            535,
+            538,
+            539
+          ],
+          "termination_basis": "Direction is one of four explicit cardinal unit vectors and coordinates advance each iteration."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "analogical_object_rewrite_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/analogical_object_rewrite_v2.py",
+      "source_lines": 709,
+      "source_sha256": "ec642dc48a8217bfc28817250b21a723abedf9dd57c5f656fc6b7d3ce2972402",
+      "while_count": 2,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 247,
+          "function": "_objects",
+          "limitation": null,
+          "line": 226,
+          "ref": "entrants/analogical_object_rewrite_v2.py:226",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 238,
+          "function": "_objects",
+          "limitation": null,
+          "line": 231,
+          "ref": "entrants/analogical_object_rewrite_v2.py:231",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "analogical_object_rewrite_v3",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/analogical_object_rewrite_v3.py",
+      "source_lines": 939,
+      "source_sha256": "a0ce65dc8ceddc8b19ca20c168348d94451e0957b944578e057b269b5edf0650",
+      "while_count": 2,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "pending",
+          "end_line": 259,
+          "function": "_components",
+          "limitation": null,
+          "line": 235,
+          "ref": "entrants/analogical_object_rewrite_v3.py:235",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 251,
+          "function": "_components",
+          "limitation": null,
+          "line": 241,
+          "ref": "entrants/analogical_object_rewrite_v3.py:241",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "causal_event_dynamics",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/causal_event_dynamics.py",
+      "source_lines": 1231,
+      "source_sha256": "efdd5c045fd090d9caaf5bbfdd652b8822a15b58c618ea675de86e74714f3827",
+      "while_count": 10,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "unseen",
+          "end_line": 202,
+          "function": "_components",
+          "limitation": null,
+          "line": 189,
+          "ref": "entrants/causal_event_dynamics.py:189",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 201,
+          "function": "_components",
+          "limitation": null,
+          "line": 194,
+          "ref": "entrants/causal_event_dynamics.py:194",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most max(H,W) steps to target.",
+          "condition": "(row, column) != (target_row if inward[0] else root_row, target_column if inward[1] else root_column)",
+          "end_line": 302,
+          "function": "_header_connector",
+          "limitation": null,
+          "line": 296,
+          "ref": "entrants/causal_event_dynamics.py:296",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            255,
+            259,
+            264,
+            291,
+            293,
+            300,
+            301
+          ],
+          "termination_basis": "Inward direction comes from an explicit cardinal boundary table; target lies strictly ahead in its varying coordinate and unit steps advance to that integer coordinate."
+        },
+        {
+          "bound": "At most max(H,W) iterations.",
+          "condition": "0 <= row + inward[0] < height and 0 <= column + inward[1] < width",
+          "end_line": 316,
+          "function": "_header_connector",
+          "limitation": null,
+          "line": 313,
+          "ref": "entrants/causal_event_dynamics.py:313",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            255,
+            259,
+            264,
+            314,
+            315
+          ],
+          "termination_basis": "Nonzero cardinal inward direction advances until the next position leaves the canvas."
+        },
+        {
+          "bound": "At most max(H,W) advances per ray.",
+          "condition": "True",
+          "end_line": 373,
+          "function": "_gravity_splash",
+          "limitation": null,
+          "line": 366,
+          "ref": "entrants/causal_event_dynamics.py:366",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            327,
+            328,
+            363,
+            367,
+            368,
+            369
+          ],
+          "termination_basis": "Cardinal dr,dc is validated; perpendicular pr,pc creates a nonzero diagonal step. Every iteration advances before an out-of-bounds break."
+        },
+        {
+          "bound": "At most 10*H*W successful outer iterations; next attempt raises.",
+          "condition": "True",
+          "end_line": 442,
+          "function": "_deflected_beam",
+          "limitation": null,
+          "line": 409,
+          "ref": "entrants/causal_event_dynamics.py:409",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            407,
+            410,
+            411
+          ],
+          "termination_basis": "steps increments before budget check on every outer iteration, including paths taking continue."
+        },
+        {
+          "bound": "At most max(H,W) iterations per sidestep.",
+          "condition": "True",
+          "end_line": 442,
+          "function": "_deflected_beam",
+          "limitation": null,
+          "line": 428,
+          "ref": "entrants/causal_event_dynamics.py:428",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            394,
+            405,
+            425,
+            427,
+            429,
+            430,
+            432,
+            439
+          ],
+          "termination_basis": "side direction is a nonzero cardinal rotation of the fixed beam direction. Each iteration moves sideways and either exits the corridor or raises on leaving canvas/obstruction."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= row < height and 0 <= column < width",
+          "end_line": 471,
+          "function": "_radial_kernel",
+          "limitation": null,
+          "line": 467,
+          "ref": "entrants/causal_event_dynamics.py:467",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            461,
+            462,
+            470,
+            471
+          ],
+          "termination_basis": "Local kernel excludes (0,0); coordinates advance by its fixed nonzero unit vector."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "unseen",
+          "end_line": 698,
+          "function": "_checkerboard_flood",
+          "limitation": null,
+          "line": 670,
+          "ref": "entrants/causal_event_dynamics.py:670",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 682,
+          "function": "_checkerboard_flood",
+          "limitation": null,
+          "line": 675,
+          "ref": "entrants/causal_event_dynamics.py:675",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "compact_codec_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/compact_codec_v2.py",
+      "source_lines": 999,
+      "source_sha256": "69518bbfa8d84eecc035f424b83b2407607b8fccaf2761a57a7d891c07319091",
+      "while_count": 1,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 258,
+          "function": "_components",
+          "limitation": null,
+          "line": 245,
+          "ref": "entrants/compact_codec_v2.py:245",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "compact_codec_v3",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "4096 successful entries; entry 4097 raises. Depth <= number of source_objects.",
+          "call_lines": [
+            476,
+            483
+          ],
+          "function": "_registered_direction.search",
+          "line": 461,
+          "ref": "entrants/compact_codec_v3.py:461",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            467,
+            468,
+            470
+          ],
+          "termination_basis": "index increments for skip and placement branches. visited increments on every entry; explicit 4096 visit and 64-cover guards."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/compact_codec_v3.py",
+      "source_lines": 849,
+      "source_sha256": "af601bfb9f0b102ce5f644667dad0578abba49bd691b21b95cdcdd5de8906a7a",
+      "while_count": 1,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 269,
+          "function": "_components",
+          "limitation": null,
+          "line": 258,
+          "ref": "entrants/compact_codec_v3.py:258",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "compact_codec_v4",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "4096 successful entries; entry 4097 raises. Depth <= number of source_objects.",
+          "call_lines": [
+            480,
+            487
+          ],
+          "function": "_registered_direction.search",
+          "line": 465,
+          "ref": "entrants/compact_codec_v4.py:465",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            471,
+            472,
+            474
+          ],
+          "termination_basis": "index increments for skip and placement branches. visited increments on every entry; explicit 4096 visit and 64-cover guards."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/compact_codec_v4.py",
+      "source_lines": 869,
+      "source_sha256": "efef12160b34f621fe70745184f647b41d0a2654181360bc2a4e9aaffab892fd",
+      "while_count": 1,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 273,
+          "function": "_components",
+          "limitation": null,
+          "line": 262,
+          "ref": "entrants/compact_codec_v4.py:262",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "compact_output_induction",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "At most two active _d4 frames.",
+          "call_lines": [
+            251,
+            262
+          ],
+          "function": "_d4",
+          "line": 240,
+          "ref": "entrants/compact_output_induction.py:240",
+          "status": "reviewed_no_concrete_defect",
+          "termination_basis": "Recursive transform calls use nonrecursive rot90, transpose, or rot180 cases."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/compact_output_induction.py",
+      "source_lines": 1894,
+      "source_sha256": "483ca0f950eac8df0326b78384139bbc5e31fe17f462baab61ce743e23328126",
+      "while_count": 10,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 378,
+          "function": "_objects",
+          "limitation": null,
+          "line": 357,
+          "ref": "entrants/compact_output_induction.py:357",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 375,
+          "function": "_objects",
+          "limitation": null,
+          "line": 365,
+          "ref": "entrants/compact_output_induction.py:365",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 437,
+          "function": "_holes",
+          "limitation": null,
+          "line": 424,
+          "ref": "entrants/compact_output_induction.py:424",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 436,
+          "function": "_holes",
+          "limitation": null,
+          "line": 429,
+          "ref": "entrants/compact_output_induction.py:429",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 454,
+          "function": "_internal_components",
+          "limitation": null,
+          "line": 445,
+          "ref": "entrants/compact_output_induction.py:445",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 454,
+          "function": "_internal_components",
+          "limitation": null,
+          "line": 448,
+          "ref": "entrants/compact_output_induction.py:448",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "All counters strictly increase; at most size outer iterations and linear total run advances.",
+          "condition": "index < size",
+          "end_line": 562,
+          "function": "_bands",
+          "limitation": null,
+          "line": 553,
+          "ref": "entrants/compact_output_induction.py:553",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            555,
+            556,
+            560,
+            562
+          ],
+          "termination_basis": "Cut skip increments index; run scan increments end; outer loop sets index=end+1 or breaks at size."
+        },
+        {
+          "bound": "All counters strictly increase; at most size outer iterations and linear total run advances.",
+          "condition": "index < size and index in cuts",
+          "end_line": 555,
+          "function": "_bands",
+          "limitation": null,
+          "line": 554,
+          "ref": "entrants/compact_output_induction.py:554",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            555,
+            556,
+            560,
+            562
+          ],
+          "termination_basis": "Cut skip increments index; run scan increments end; outer loop sets index=end+1 or breaks at size."
+        },
+        {
+          "bound": "All counters strictly increase; at most size outer iterations and linear total run advances.",
+          "condition": "end + 1 < size and end + 1 not in cuts",
+          "end_line": 560,
+          "function": "_bands",
+          "limitation": null,
+          "line": 559,
+          "ref": "entrants/compact_output_induction.py:559",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            555,
+            556,
+            560,
+            562
+          ],
+          "termination_basis": "Cut skip increments index; run scan increments end; outer loop sets index=end+1 or breaks at size."
+        },
+        {
+          "bound": "At most number of line colors successful iterations.",
+          "condition": "remaining",
+          "end_line": 931,
+          "function": "_line_layer_order",
+          "limitation": null,
+          "line": 907,
+          "ref": "entrants/compact_output_induction.py:907",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            913,
+            929,
+            931
+          ],
+          "termination_basis": "Every successful iteration removes chosen from remaining. A cyclic ordering can raise on an empty candidate list, but cannot retain remaining forever."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "compositional_program_search",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/compositional_program_search.py",
+      "source_lines": 1971,
+      "source_sha256": "3b612b154727d1899ea3042021a5400458763a36f9bc187ab0286f4ef849ef34",
+      "while_count": 4,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 250,
+          "function": "_components",
+          "limitation": null,
+          "line": 236,
+          "ref": "entrants/compositional_program_search.py:236",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 249,
+          "function": "_components",
+          "limitation": null,
+          "line": 242,
+          "ref": "entrants/compositional_program_search.py:242",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 847,
+          "function": "_fill_holes_state",
+          "limitation": null,
+          "line": 804,
+          "ref": "entrants/compositional_program_search.py:804",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 823,
+          "function": "_fill_holes_state",
+          "limitation": null,
+          "line": 811,
+          "ref": "entrants/compositional_program_search.py:811",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "constructive_paint_compiler",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/constructive_paint_compiler.py",
+      "source_lines": 1768,
+      "source_sha256": "4c763075f729635cf1ac140c641c55d2302c10b11f4e132e936d947e006dd821",
+      "while_count": 7,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 207,
+          "function": "_components",
+          "limitation": null,
+          "line": 195,
+          "ref": "entrants/constructive_paint_compiler.py:195",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "current != stop",
+          "end_line": 498,
+          "function": "_separator_ray_field",
+          "limitation": null,
+          "line": 492,
+          "ref": "entrants/constructive_paint_compiler.py:492",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            456,
+            465,
+            476,
+            477,
+            487,
+            491,
+            498,
+            500,
+            504,
+            511
+          ],
+          "termination_basis": "step is +/-1. Toward rays stop at the separator; away rays stop at canvas sentinel, or earlier on foreground. Separator cells use scaffold color and cannot be selected toward/away movers."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "current != stop",
+          "end_line": 511,
+          "function": "_separator_ray_field",
+          "limitation": null,
+          "line": 505,
+          "ref": "entrants/constructive_paint_compiler.py:505",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            456,
+            465,
+            476,
+            477,
+            487,
+            491,
+            498,
+            500,
+            504,
+            511
+          ],
+          "termination_basis": "step is +/-1. Toward rays stop at the separator; away rays stop at canvas sentinel, or earlier on foreground. Separator cells use scaffold color and cannot be selected toward/away movers."
+        },
+        {
+          "bound": "At most four scales: 2,4,8,16.",
+          "condition": "scale <= 16",
+          "end_line": 555,
+          "function": "_scaled_stamp_staircase",
+          "limitation": null,
+          "line": 534,
+          "ref": "entrants/constructive_paint_compiler.py:534",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            532,
+            542,
+            555
+          ],
+          "termination_basis": "scale starts at 2 and doubles; finite threshold or bounds break."
+        },
+        {
+          "bound": "At most max(H,W) iterations per bounds call.",
+          "condition": "0 <= nr < height and 0 <= nc < width",
+          "end_line": 941,
+          "function": "_plus_center_line_field.bounds",
+          "limitation": null,
+          "line": 937,
+          "ref": "entrants/constructive_paint_compiler.py:937",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            940,
+            941,
+            946,
+            947,
+            952,
+            953
+          ],
+          "termination_basis": "All four callers provide nonzero cardinal unit vectors; both position coordinates update by that vector."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= nr < len(grid) and 0 <= nc < len(grid[0])",
+          "end_line": 1217,
+          "function": "_scaffold_corner_rays",
+          "limitation": null,
+          "line": 1211,
+          "ref": "entrants/constructive_paint_compiler.py:1211",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            1203,
+            1204,
+            1205,
+            1216,
+            1217
+          ],
+          "termination_basis": "Corners supply explicit nonzero diagonal vectors; coordinates update every iteration."
+        },
+        {
+          "bound": "At most 4*H*W distinct valid diagonal states, then exit/repeat rejection; explicit count guard also exists.",
+          "condition": "True",
+          "end_line": 1344,
+          "function": "_typed_barrier_billiard",
+          "limitation": null,
+          "line": 1316,
+          "ref": "entrants/constructive_paint_compiler.py:1316",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            1296,
+            1298,
+            1299,
+            1317,
+            1318,
+            1320,
+            1339,
+            1341
+          ],
+          "termination_basis": "Tracks (row,column,dr,dc) before each transition and raises for repeat or state count overflow. Reflection retains diagonal direction and can repeat position only with a recorded direction state."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "constructive_paint_compiler_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/constructive_paint_compiler_v2.py",
+      "source_lines": 587,
+      "source_sha256": "992fa5967d7aa709121f1307ead2962b397b92523071fd543fb2c62f9de1ba58",
+      "while_count": 0,
+      "while_loops": []
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "contextual_recolor",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "Finite feature structure size and nesting.",
+          "call_lines": [
+            198,
+            200,
+            202
+          ],
+          "function": "_jsonable",
+          "limitation": "No arbitrary-object cycle detector; no source-reachable cyclic feature construction found. This is not a guarantee for hostile cyclic Python API objects.",
+          "line": 194,
+          "ref": "entrants/contextual_recolor.py:194",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            195,
+            828,
+            903,
+            1084
+          ],
+          "termination_basis": "Traverses feature tuple/list/mapping children produced from sanitized scenes; scalar/Fraction cases terminate."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/contextual_recolor.py",
+      "source_lines": 1247,
+      "source_sha256": "a432aa2bf5e71272bd0e745e334cf88465a1fdac222fd3b11d824407109e3544",
+      "while_count": 6,
+      "while_loops": [
+        {
+          "bound": "At most initial border seeds +4*(B_height+2)*(B_width+2) queue pops.",
+          "condition": "queue",
+          "end_line": 291,
+          "function": "_hole_count",
+          "limitation": null,
+          "line": 283,
+          "ref": "entrants/contextual_recolor.py:283",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            288,
+            290,
+            291
+          ],
+          "termination_basis": "Only bounded exterior points not yet visited expand neighbors; each expanded point is added to exterior before extending queue. Duplicate/outside entries are popped without expansion."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "unseen",
+          "end_line": 308,
+          "function": "_hole_count",
+          "limitation": null,
+          "line": 299,
+          "ref": "entrants/contextual_recolor.py:299",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 308,
+          "function": "_hole_count",
+          "limitation": null,
+          "line": 304,
+          "ref": "entrants/contextual_recolor.py:304",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "unseen",
+          "end_line": 384,
+          "function": "_components",
+          "limitation": null,
+          "line": 368,
+          "ref": "entrants/contextual_recolor.py:368",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 383,
+          "function": "_components",
+          "limitation": null,
+          "line": 374,
+          "ref": "entrants/contextual_recolor.py:374",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most max(H,W) iterations per direction.",
+          "condition": "0 <= row < height and 0 <= column < width",
+          "end_line": 624,
+          "function": "_ray_distances",
+          "limitation": null,
+          "line": 619,
+          "ref": "entrants/contextual_recolor.py:619",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            616,
+            623,
+            624
+          ],
+          "termination_basis": "Loop iterates four explicit nonzero cardinal directions and advances coordinates."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "delta_algebra",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "Depth <= min(max_rules, changed bit count, rule count); defaults max_rules=3 and rule cap=512. Finite branching, even when successful-program cap does not bind.",
+          "call_lines": [
+            1116
+          ],
+          "function": "_enumerate_programs_for_background.visit",
+          "limitation": "No visited-node count inside this search. Finite depth can still allow many branches before successful-program/executor caps bind.",
+          "line": 1079,
+          "ref": "entrants/delta_algebra.py:1079",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            54,
+            55,
+            57,
+            1081,
+            1083,
+            1097,
+            1100,
+            1107,
+            1110,
+            1113,
+            1114
+          ],
+          "termination_basis": "Stops on exhausted statistics, full changed coverage, max_rules, or MDL prune. Each branch selects a new rule and strictly increases covered; first uncovered bit is covered by selected masks."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/delta_algebra.py",
+      "source_lines": 1474,
+      "source_sha256": "91f3eb66bdeb5d1c1e9f0c2ed9b3e55f3d79f76142f3f4543d970c66406b3920",
+      "while_count": 5,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 318,
+          "function": "_components",
+          "limitation": null,
+          "line": 301,
+          "ref": "entrants/delta_algebra.py:301",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 314,
+          "function": "_components",
+          "limitation": null,
+          "line": 307,
+          "ref": "entrants/delta_algebra.py:307",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= rr < height and 0 <= cc < width",
+          "end_line": 385,
+          "function": "_axis_between",
+          "limitation": null,
+          "line": 380,
+          "ref": "entrants/delta_algebra.py:380",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            369,
+            370,
+            371,
+            372,
+            374,
+            384,
+            385
+          ],
+          "termination_basis": "Recognizes only fixed cardinal/diagonal direction sets before looping; coordinates advance by a nonzero vector."
+        },
+        {
+          "bound": "At most max(H,W) iterations per ray.",
+          "condition": "0 <= row < height and 0 <= column < width",
+          "end_line": 428,
+          "function": "_visible_colors",
+          "limitation": "The private helper does not independently reject an arbitrary zero vector; no compiler-reachable caller supplying one was found.",
+          "line": 422,
+          "ref": "entrants/delta_algebra.py:422",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            36,
+            37,
+            38,
+            427,
+            428,
+            501,
+            502,
+            650,
+            651
+          ],
+          "termination_basis": "All named callers pass ORTHOGONAL or EIGHT, both omit (0,0); coordinates advance."
+        },
+        {
+          "bound": "At most initial mask.bit_count() iterations.",
+          "condition": "pending",
+          "end_line": 1074,
+          "function": "_enumerate_programs_for_background",
+          "limitation": null,
+          "line": 1070,
+          "ref": "entrants/delta_algebra.py:1070",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            1021,
+            1068,
+            1071,
+            1074
+          ],
+          "termination_basis": "mask is a nonnegative bitmask constructed from changed cells; pending xor low removes its least set bit."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "delta_algebra_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/delta_algebra_v2.py",
+      "source_lines": 767,
+      "source_sha256": "2247f20978a3783e67b61b5aa9458a0d1d5c89728bb304de890296a43c742c93",
+      "while_count": 2,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 239,
+          "function": "_components",
+          "limitation": null,
+          "line": 222,
+          "ref": "entrants/delta_algebra_v2.py:222",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 235,
+          "function": "_components",
+          "limitation": null,
+          "line": 228,
+          "ref": "entrants/delta_algebra_v2.py:228",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "frame_morphism_compiler",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "Depth <= hole count. Finite masks/colors.",
+          "call_lines": [
+            838
+          ],
+          "function": "_inventory_assignments.search",
+          "line": 822,
+          "reachability": "No named caller of _inventory_assignments found in this source; included as module-definition inventory, not attributed to live compilation.",
+          "ref": "entrants/frame_morphism_compiler.py:822",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            816,
+            823,
+            826,
+            829,
+            832
+          ],
+          "termination_basis": "Each selected positive mask includes first uncovered hole and cannot overlap covered. Coverage therefore strictly grows; full mask and >128 outcome stops."
+        },
+        {
+          "bound": "Depth P = selected external rectangular components <= accepted grid cells; each piece has <=H*W translations. Coarse total tree bound sum((H*W)^k,k=0..P). Unique holes capped at 12, but piece count has no separate local cap.",
+          "call_lines": [
+            952
+          ],
+          "function": "_tile_inventory_into_cavities.search",
+          "limitation": "No visited-node cap. Output cap counts distinct solutions, not unsuccessful/equivalent branches. Large finite work is plausible, not a confirmed nontermination defect.",
+          "line": 921,
+          "ref": "entrants/frame_morphism_compiler.py:921",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            860,
+            895,
+            897,
+            903,
+            909,
+            910,
+            919,
+            922,
+            924,
+            947
+          ],
+          "termination_basis": "piece_index increments on every recursive call. Stops at full piece depth or >128 distinct outputs. Placements are finite grid translations, reject overlaps."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/frame_morphism_compiler.py",
+      "source_lines": 1466,
+      "source_sha256": "ccd4650d03bed063ae9faa0ca9bce18ce6d1f5fbaf16ad48644614ab83eddf9e",
+      "while_count": 4,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 225,
+          "function": "_components",
+          "limitation": null,
+          "line": 215,
+          "ref": "entrants/frame_morphism_compiler.py:215",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 255,
+          "function": "_mixed_components",
+          "limitation": null,
+          "line": 245,
+          "ref": "entrants/frame_morphism_compiler.py:245",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "candidates",
+          "end_line": 802,
+          "function": "_enclosed_holes",
+          "limitation": null,
+          "line": 786,
+          "ref": "entrants/frame_morphism_compiler.py:786",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 800,
+          "function": "_enclosed_holes",
+          "limitation": null,
+          "line": 792,
+          "ref": "entrants/frame_morphism_compiler.py:792",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "frame_morphism_compiler_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/frame_morphism_compiler_v2.py",
+      "source_lines": 709,
+      "source_sha256": "5022b06040d0fb8a66ec9f5b24159ba508d7184085d097b27a128838618ca80a",
+      "while_count": 1,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 163,
+          "function": "_components",
+          "limitation": null,
+          "line": 153,
+          "ref": "entrants/frame_morphism_compiler_v2.py:153",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "hidden_signal_router",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/hidden_signal_router.py",
+      "source_lines": 1302,
+      "source_sha256": "5e084d2821917324cb0555829d498c7c7e2dddee0c9c46ed8214b68af74ff626",
+      "while_count": 13,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "unseen",
+          "end_line": 229,
+          "function": "_components",
+          "limitation": null,
+          "line": 216,
+          "ref": "entrants/hidden_signal_router.py:216",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 228,
+          "function": "_components",
+          "limitation": null,
+          "line": 221,
+          "ref": "entrants/hidden_signal_router.py:221",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 366,
+          "function": "_seeded_checker_component",
+          "limitation": null,
+          "line": 355,
+          "ref": "entrants/hidden_signal_router.py:355",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "Exactly max(abs(delta_row),abs(delta_column))+1 emitted points for this standard walk.",
+          "condition": "True",
+          "end_line": 406,
+          "function": "_bresenham",
+          "limitation": null,
+          "line": 396,
+          "ref": "entrants/hidden_signal_router.py:396",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            388,
+            390,
+            391,
+            392,
+            393,
+            398,
+            400,
+            401,
+            404
+          ],
+          "termination_basis": "Integer Bresenham walk has nonnegative column delta, nonpositive row delta and unit axis steps; at least one conditional advances until integer endpoint equality."
+        },
+        {
+          "bound": "At most width or height total index advances per scan.",
+          "condition": "column < width",
+          "end_line": 543,
+          "function": "_maximal_empty_rectangles",
+          "limitation": null,
+          "line": 529,
+          "ref": "entrants/hidden_signal_router.py:529",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            531,
+            535,
+            543,
+            576,
+            580,
+            588,
+            605,
+            609,
+            617
+          ],
+          "termination_basis": "Bad positions increment scan index before continue; good runs increment within scan and outer scan increments after run."
+        },
+        {
+          "bound": "At most width or height total index advances per scan.",
+          "condition": "column + 1 < width and open_columns[column + 1]",
+          "end_line": 535,
+          "function": "_maximal_empty_rectangles",
+          "limitation": null,
+          "line": 534,
+          "ref": "entrants/hidden_signal_router.py:534",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            531,
+            535,
+            543,
+            576,
+            580,
+            588,
+            605,
+            609,
+            617
+          ],
+          "termination_basis": "Bad positions increment scan index before continue; good runs increment within scan and outer scan increments after run."
+        },
+        {
+          "bound": "At most width or height total index advances per scan.",
+          "condition": "row < height",
+          "end_line": 588,
+          "function": "_negative_space_router",
+          "limitation": null,
+          "line": 574,
+          "ref": "entrants/hidden_signal_router.py:574",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            531,
+            535,
+            543,
+            576,
+            580,
+            588,
+            605,
+            609,
+            617
+          ],
+          "termination_basis": "Bad positions increment scan index before continue; good runs increment within scan and outer scan increments after run."
+        },
+        {
+          "bound": "At most width or height total index advances per scan.",
+          "condition": "row + 1 < height and good[row + 1]",
+          "end_line": 580,
+          "function": "_negative_space_router",
+          "limitation": null,
+          "line": 579,
+          "ref": "entrants/hidden_signal_router.py:579",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            531,
+            535,
+            543,
+            576,
+            580,
+            588,
+            605,
+            609,
+            617
+          ],
+          "termination_basis": "Bad positions increment scan index before continue; good runs increment within scan and outer scan increments after run."
+        },
+        {
+          "bound": "At most width or height total index advances per scan.",
+          "condition": "column < width",
+          "end_line": 617,
+          "function": "_negative_space_router",
+          "limitation": null,
+          "line": 603,
+          "ref": "entrants/hidden_signal_router.py:603",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            531,
+            535,
+            543,
+            576,
+            580,
+            588,
+            605,
+            609,
+            617
+          ],
+          "termination_basis": "Bad positions increment scan index before continue; good runs increment within scan and outer scan increments after run."
+        },
+        {
+          "bound": "At most width or height total index advances per scan.",
+          "condition": "column + 1 < width and good[column + 1]",
+          "end_line": 609,
+          "function": "_negative_space_router",
+          "limitation": null,
+          "line": 608,
+          "ref": "entrants/hidden_signal_router.py:608",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            531,
+            535,
+            543,
+            576,
+            580,
+            588,
+            605,
+            609,
+            617
+          ],
+          "termination_basis": "Bad positions increment scan index before continue; good runs increment within scan and outer scan increments after run."
+        },
+        {
+          "bound": "At most vertex_count parent hops.",
+          "condition": "parents[vertex] != vertex",
+          "end_line": 681,
+          "function": "_mst.root",
+          "limitation": null,
+          "line": 679,
+          "ref": "entrants/hidden_signal_router.py:679",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            676,
+            691,
+            692,
+            694
+          ],
+          "termination_basis": "parents starts identity; MST joins distinct roots, so no edge creates a parent cycle. Root path-halves/follows the forest."
+        },
+        {
+          "bound": "At most max(H,W) iterations per collision ray.",
+          "condition": "0 <= row < height and 0 <= column < width",
+          "end_line": 859,
+          "function": "_interacting_emitters",
+          "limitation": null,
+          "line": 854,
+          "ref": "entrants/hidden_signal_router.py:854",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            858,
+            859
+          ],
+          "termination_basis": "row increases and column decreases by one every iteration."
+        },
+        {
+          "bound": "At most max_route_states processed states (default 100000); next pop raises. Turn cap default 8.",
+          "condition": "stack",
+          "end_line": 927,
+          "function": "_ray_routes",
+          "limitation": null,
+          "line": 891,
+          "ref": "entrants/hidden_signal_router.py:891",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            54,
+            55,
+            876,
+            879,
+            893,
+            894,
+            907,
+            910,
+            911,
+            913,
+            925,
+            927
+          ],
+          "termination_basis": "Each stack pop increments states, rejects beyond max_route_states; forward branches append a new seen state/path cell and turn branches increment turns and add a seen direction state."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "lineage_composition",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "At most max_search_nodes successful entries (default 200000); depth <= inventory piece count.",
+          "call_lines": [
+            610
+          ],
+          "function": "_unique_cavity_assignment.search",
+          "line": 582,
+          "ref": "entrants/lineage_composition.py:582",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            51,
+            589,
+            590,
+            592,
+            594,
+            604,
+            611
+          ],
+          "termination_basis": "depth increments; nodes increments on every entry and raises over max_search_nodes. Also stops once >1 solutions and on impossible remaining coverage."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/lineage_composition.py",
+      "source_lines": 1028,
+      "source_sha256": "52b27c7b8d9e8c8d1afb9dc2e952013a42e9ebf7eb282859d72ccb896b736147",
+      "while_count": 4,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 248,
+          "function": "_components",
+          "limitation": null,
+          "line": 234,
+          "ref": "entrants/lineage_composition.py:234",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 247,
+          "function": "_components",
+          "limitation": null,
+          "line": 240,
+          "ref": "entrants/lineage_composition.py:240",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 316,
+          "function": "_has_enclosed_void_or_is_solid",
+          "limitation": null,
+          "line": 299,
+          "ref": "entrants/lineage_composition.py:299",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 311,
+          "function": "_has_enclosed_void_or_is_solid",
+          "limitation": null,
+          "line": 304,
+          "ref": "entrants/lineage_composition.py:304",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "motion_transport_compiler",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "At most two active _d4 frames.",
+          "call_lines": [
+            253
+          ],
+          "function": "_d4",
+          "line": 237,
+          "ref": "entrants/motion_transport_compiler.py:237",
+          "status": "reviewed_no_concrete_defect",
+          "termination_basis": "anti transform dispatches only to nonrecursive diag and r180 cases."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/motion_transport_compiler.py",
+      "source_lines": 1139,
+      "source_sha256": "ba0c6a54065a61759a494eb69948ce859e405fc28a67c3c4e360cb26636ba53c",
+      "while_count": 3,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 222,
+          "function": "_components",
+          "limitation": null,
+          "line": 203,
+          "ref": "entrants/motion_transport_compiler.py:203",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 219,
+          "function": "_components",
+          "limitation": null,
+          "line": 209,
+          "ref": "entrants/motion_transport_compiler.py:209",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most H downward attempts per mover.",
+          "condition": "True",
+          "end_line": 631,
+          "function": "_gravity_by_area",
+          "limitation": "The hypothetical empty-set fixed point is unreachable through the reviewed compiler path.",
+          "line": 626,
+          "ref": "entrants/motion_transport_compiler.py:626",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            605,
+            606,
+            611,
+            612,
+            616,
+            623,
+            627,
+            628,
+            630
+          ],
+          "termination_basis": "Movers originate from nonempty components with minimum_area exactly 4. successor shifts every nonempty source cell down one row; bottom eventually reaches height or collision breaks."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "motion_transport_compiler_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [
+        {
+          "bound": "At most two active _d4 frames.",
+          "call_lines": [
+            261
+          ],
+          "function": "_d4",
+          "line": 245,
+          "ref": "entrants/motion_transport_compiler_v2.py:245",
+          "status": "reviewed_no_concrete_defect",
+          "termination_basis": "anti transform dispatches only to nonrecursive diag and r180 cases."
+        }
+      ],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/motion_transport_compiler_v2.py",
+      "source_lines": 1676,
+      "source_sha256": "9a6cf6130d0a4df2984779df1b07382c3475a1a86a1af4c251d48ed086cc7895",
+      "while_count": 4,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 230,
+          "function": "_components",
+          "limitation": null,
+          "line": 211,
+          "ref": "entrants/motion_transport_compiler_v2.py:211",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 227,
+          "function": "_components",
+          "limitation": null,
+          "line": 217,
+          "ref": "entrants/motion_transport_compiler_v2.py:217",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "remaining",
+          "end_line": 342,
+          "function": "_components_from_cells",
+          "limitation": null,
+          "line": 328,
+          "ref": "entrants/motion_transport_compiler_v2.py:328",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 341,
+          "function": "_components_from_cells",
+          "limitation": null,
+          "line": 333,
+          "ref": "entrants/motion_transport_compiler_v2.py:333",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "multiscale_codec",
+      "matches_bank_sha256": true,
+      "project_dependencies": [],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/multiscale_codec.py",
+      "source_lines": 1035,
+      "source_sha256": "7193c77d39419f6db5d2a22540bea611c0f0816c9149c0367568f2701f5238c2",
+      "while_count": 4,
+      "while_loops": [
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 365,
+          "function": "_component_count",
+          "limitation": null,
+          "line": 354,
+          "ref": "entrants/multiscale_codec.py:354",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most finite cell count queue pops/enqueues per traversal; outer component iterations <= initial eligible cell count. Padded-mask _hole_count uses (H+2)*(W+2) cells.",
+          "condition": "queue",
+          "end_line": 397,
+          "function": "_hole_count",
+          "limitation": null,
+          "line": 386,
+          "ref": "entrants/multiscale_codec.py:386",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [],
+          "termination_basis": "Finite component/flood traversal: initial seed is removed/marked; every enqueued new cell is removed from remaining or marked seen before enqueue. Queue entries are popped and cannot re-enqueue marked cells."
+        },
+        {
+          "bound": "At most line width total run/index advances.",
+          "condition": "column < len(line)",
+          "end_line": 618,
+          "function": "_horizontal_runs",
+          "limitation": null,
+          "line": 608,
+          "ref": "entrants/multiscale_codec.py:608",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            611,
+            615,
+            618
+          ],
+          "termination_basis": "Background branch increments column; run scan increments right; outer index becomes right+1."
+        },
+        {
+          "bound": "At most line width total run/index advances.",
+          "condition": "right + 1 < len(line) and line[right + 1] == color",
+          "end_line": 615,
+          "function": "_horizontal_runs",
+          "limitation": null,
+          "line": 614,
+          "ref": "entrants/multiscale_codec.py:614",
+          "status": "reviewed_no_concrete_defect",
+          "supporting_lines": [
+            611,
+            615,
+            618
+          ],
+          "termination_basis": "Background branch increments column; run scan increments right; outer index becomes right+1."
+        }
+      ]
+    },
+    {
+      "confirmed_defects": [],
+      "coverage_status": "source_static_review_complete_for_requested_loop_and_recursion_scope",
+      "direct_local_cycle_inventory": "Named local-call AST graph showed only the recursive definitions inventoried here; no additional mutual-recursion cycle found. Duplicate nested search definitions were manually reviewed separately.",
+      "growing_for_queue_loops": [],
+      "interface": "multiscale_codec_v2",
+      "matches_bank_sha256": true,
+      "project_dependencies": [
+        "multiscale_codec"
+      ],
+      "recursive_definitions": [],
+      "source_file": "/workspace/scratch/40dd7e475149/arc-fullbank/block17/entrants/multiscale_codec_v2.py",
+      "source_lines": 481,
+      "source_sha256": "1285fdd56a4ea1a825027cc54da0a9d2cef377e7f5d2c2b35d7a08a9b651c104",
+      "while_count": 0,
+      "while_loops": []
+    }
+  ],
+  "no_execution": {
+    "budget_or_scheduling_changes": false,
+    "challenge_or_solution_data_opened": false,
+    "compiler_executions": 0,
+    "method": "Source text reads, stdlib AST parsing, direct named-call inventory, bank/source SHA256 checks, and report JSON serialization only.",
+    "profiles_or_process_attachments": 0,
+    "project_modules_imported": false,
+    "source_edits": false,
+    "tests_executed": 0
+  },
+  "schema": "arc_block17.source_only_termination_inventory.v1",
+  "scope": {
+    "additional_project_helper_modules": 0,
+    "bank_file": "bank14_15.json",
+    "helper_closure": "amodal v2 dynamically loads its hash-pinned v1 sibling at lines38\u201364; multiscale v2 imports v1 sibling at line28. Both are already included among the 24. Other imports are stdlib.",
+    "interface_count": 24,
+    "selection": "First 24 lexicographically sorted compiler interfaces, inclusive amodal_scene_reconstruction through multiscale_codec_v2",
+    "while_count": 94,
+    "worker_state": "Unknown; parent supplied stalled57 context. No process/task state inspected by this review."
+  },
+  "source_root": "/workspace/scratch/40dd7e475149/arc-fullbank/block17",
+  "summary": {
+    "conclusion": "No concrete reachable nontermination defect found within the assigned source scope. This is a static bounded-scope review, not a termination proof for every Python object/API input or the whole runtime.",
+    "confirmed_reachable_zero_step_or_cycle_defects": [],
+    "material_finite_work_path": "frame_morphism_compiler._tile_inventory_into_cavities.search advances finite piece depth but has no visited-node cap. Its >128 output cap may not prune unsuccessful/equivalent branches. No live-worker attribution is available."
+  },
+  "task_order_supplement": {
+    "conclusion": "No known task-order-sensitive semantic compiler global encountered in these 24 sources. This does not prove scheduling equivalence for the remaining bank, engine, initializer, filesystem/census aggregation, or dynamically aliased/global state. No supplemental process was executed.",
+    "direct_module_assignment_mutation_scan": "Only amodal v2 sys.modules insertion/removal found among direct name-rooted global assignment/mutator candidates. Alias or reflective mutation is not exhaustively proved absent.",
+    "encountered_mutable_process_state": [
+      {
+        "assessment": "Not task-derived. Scheduling may change first-load timing; reviewed loader does not select different source/behavior based on tasks.",
+        "source_refs": [
+          "entrants/amodal_scene_reconstruction_v2.py:41",
+          "entrants/amodal_scene_reconstruction_v2.py:45",
+          "entrants/amodal_scene_reconstruction_v2.py:48",
+          "entrants/amodal_scene_reconstruction_v2.py:55",
+          "entrants/amodal_scene_reconstruction_v2.py:59"
+        ],
+        "state": "Hash-pinned base implementation in sys.modules; loaded once per process and reused."
+      },
+      {
+        "assessment": "Inputs are immutable grids/frozen Object records plus explicit role/cap arguments; cached outputs are scalars/Fractions, immutable grids, frozen Object/PanelSet records with tuple fields. Bodies read their arguments and constants. No known semantic task-order dependence found; cache warmth/eviction can change time/memory.",
+        "frozen_record_refs": [
+          "entrants/compact_output_induction.py:83",
+          "entrants/compact_output_induction.py:109"
+        ],
+        "source_refs": [
+          "entrants/compact_output_induction.py:206",
+          "entrants/compact_output_induction.py:332",
+          "entrants/compact_output_induction.py:384",
+          "entrants/compact_output_induction.py:458",
+          "entrants/compact_output_induction.py:566",
+          "entrants/compact_output_induction.py:610"
+        ],
+        "state": "Six bounded functools.lru_cache helpers: _background, _objects, _object_crop, _feature, _split_uniform, _split_equal."
+      }
+    ],
+    "explicit_global_statements_in_24_sources": 0,
+    "status": "limited_static_evidence_only"
+  }
+}
