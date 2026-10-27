@@ -59,7 +59,7 @@ This is an editorial assessment of existing release/status records at [source re
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [focused review](SOUNDNESS_REVIEW_2026-10-27.md) records the scope and provenance of the latest checks. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
 ## Completion stages
 
@@ -182,7 +182,7 @@ The collection's current reuse grant already addresses retained historical undec
 
 These entries are removed from the main reading lists until the return criteria below are met. Their original files remain available for development and inspection. Placement here is a readiness decision, not a conclusion that every mathematical idea in them is false. Lean is not required for return; appropriate written, computational, or implementation evidence is.
 
-See the [focused review](SOUNDNESS_REVIEW_2026-10-27.md) for the inspected sources, findings, and limits. No whole-collection soundness certification is implied for entries outside this list.
+See the [first focused review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) for the inspected sources, findings, and limits. No whole-collection soundness certification is implied for entries outside this list.
 
 '''
     for row in primary:
@@ -192,7 +192,7 @@ See the [focused review](SOUNDNESS_REVIEW_2026-10-27.md) for the inspected sourc
         incubator += f'<a id="{row["id"]}"></a>\n\n## {row["title"]}\n\n'
         incubator += entry['reason'] + '\n\n**Return gate:** ' + entry['return_gate'] + '\n\n'
         incubator += link('Preserved source', row['destination']+'/', 'docs/INCUBATOR.md') + ' · '
-        incubator += f'[Completion and evidence record](STATUS_CATALOG.md#{row["id"]})\n\n'
+        incubator += f'[Completion and evidence record](STATUS_CATALOG.md#{row["id"]}) · ' + link('Review and findings', entry['review'], 'docs/INCUBATOR.md') + '\n\n'
     incubator += '[Research reading list](../research/README.md) · [Complete inventory](COMPONENT_INDEX.md) · [Finalization queue](FINALIZATION_QUEUE.md)\n'
     return {'docs/COMPLETION_STATUS.md': text, 'docs/STATUS_CATALOG.md': catalogue,
             'docs/FINALIZATION_QUEUE.md': queue, 'docs/INCUBATOR.md': incubator}
@@ -210,6 +210,38 @@ def git_tree(root, git, revision):
     return result
 
 
+def validate_reader_reviews(root, data, available, current, git):
+    """Validate ordered review history without discarding earlier decisions."""
+    assert not ('reader_curation_reviews' in data and 'reader_curation_review' in data), 'Ambiguous review history'
+    bindings = data.get('reader_curation_reviews', [])
+    if 'reader_curation_review' in data:
+        bindings = [data['reader_curation_review']]
+    assert len({b['path'] for b in bindings}) == len(bindings), 'Duplicate review record'
+    decisions = {}
+    for binding in bindings:
+        assert binding['path'] in data['assessment_records']
+        raw_review = (root/binding['path']).read_bytes()
+        assert hashlib.sha256(raw_review).hexdigest() == binding['sha256'], 'Reader review binding changed'
+        review = json.loads(raw_review)
+        for artifact in [review['report'], review['computation']]:
+            assert artifact['path'] in data['maintained_documents'] or artifact['path'] in data['assessment_records']
+            assert hashlib.sha256((root/artifact['path']).read_bytes()).hexdigest() == artifact['sha256'], artifact['path']
+        reviewed = git_tree(root, git, review['source_revision'])
+        for source_file in review['reviewed_sources']:
+            assert reviewed.get(source_file['path']) == source_file['sha'], source_file['path']
+            assert current.get(source_file['path']) == source_file['sha'], 'Reassess changed reviewed source: '+source_file['path']
+        latest = {r['id']: r for r in review['decisions']}
+        assert len(latest) == len(review['decisions']) and set(latest) <= set(available)
+        for identifier, decision in latest.items():
+            assert decision['placement'] in ('retain', 'retain_with_clarification', 'retain_development', 'incubator'), identifier
+            decisions[identifier] = {**decision, 'review': review['report']['path']}
+    incubated = {r['id'] for r in data['components'] if r.get('reader_listing', {}).get('placement') == 'incubator'}
+    assert incubated == {i for i, r in decisions.items() if r['placement'] == 'incubator'}, 'Reader decisions differ from review history'
+    for row in data['components']:
+        if row['id'] in incubated:
+            assert row['reader_listing']['review'] == decisions[row['id']]['review'], row['id']
+
+
 def validate(root, data, git):
     source = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
     available = {r['id']: r for r in source['components']}
@@ -225,6 +257,10 @@ def validate(root, data, git):
         assert path.startswith(('manifests/', 'verification/')) and path.endswith('.json') and '..' not in path.split('/'), path
         assert (root/path).is_file(), 'Missing assessment record: '+path
         json.loads((root/path).read_text(encoding='utf-8'))
+    for artifact in data.get('assessment_artifacts', []):
+        path = artifact['path']
+        assert path.startswith('verification/') and '..' not in path.split('/'), path
+        assert hashlib.sha256((root/path).read_bytes()).hexdigest() == artifact['sha256'], 'Assessment artifact changed: '+path
     for row in records:
         c = available[row['id']]
         assert row['destination'] == c['destination'] and row['import_role'] == c['role'], row['id']
@@ -255,23 +291,7 @@ def validate(root, data, git):
     assert not data['new_lean_execution'] and not data['new_mathematical_proof_audit']
     pinned = git_tree(root, git, data['source_revision'])
     current = git_tree(root, git, 'HEAD')
-    if 'reader_curation_review' in data:
-        binding = data['reader_curation_review']
-        assert binding['path'] in data['assessment_records']
-        raw_review = (root/binding['path']).read_bytes()
-        assert hashlib.sha256(raw_review).hexdigest() == binding['sha256'], 'Reader review binding changed'
-        review = json.loads(raw_review)
-        for artifact in [review['report'], review['computation']]:
-            assert artifact['path'] in maintained or artifact['path'] in data['assessment_records']
-            assert hashlib.sha256((root/artifact['path']).read_bytes()).hexdigest() == artifact['sha256'], artifact['path']
-        reviewed = git_tree(root, git, review['source_revision'])
-        for source_file in review['reviewed_sources']:
-            assert reviewed.get(source_file['path']) == source_file['sha'], source_file['path']
-            assert current.get(source_file['path']) == source_file['sha'], 'Reassess changed reviewed source: '+source_file['path']
-        decisions = {r['id']: r for r in review['decisions']}
-        assert len(decisions) == len(review['decisions']) and set(decisions) <= set(available)
-        incubated = {r['id'] for r in records if r.get('reader_listing', {}).get('placement') == 'incubator'}
-        assert incubated == {i for i, r in decisions.items() if r['placement'] == 'incubator'}
+    validate_reader_reviews(root, data, available, current, git)
     paths = sorted(evidence)
     raw = subprocess.check_output([git, 'cat-file', '--batch'], cwd=root,
                                   input=('\n'.join(evidence[p]['git_blob_sha1'] for p in paths)+'\n').encode())
@@ -312,6 +332,7 @@ def main():
     maintained = {p: (root/p).read_text(encoding='utf-8') for p in data.get('maintained_documents', [])}
     documents = {**maintained, **outputs}
     known = set(tree) | set(documents) | set(data.get('assessment_records', [])) | {'manifests/project-status.json'}
+    known.update(a['path'] for a in data.get('assessment_artifacts', []))
     for path, content in documents.items():
         for target in re.findall(r'\]\(([^)]+)\)', content):
             if '://' in target:

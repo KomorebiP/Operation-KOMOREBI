@@ -105,3 +105,7 @@ Review the resulting diff before publication. This regenerates all maintained na
 The [finalization queue](FINALIZATION_QUEUE.md) names remaining work and its completion criteria. Update a status only when the corresponding evidence supports it.
 
 [README](../README.md) · [Reading guide](START_HERE.md) · [Public project statement](PROJECT_STATEMENT.md) · [Latest audit](AUDIT_2026-10-27.md)
+
+## SRIC admission counterexamples
+
+The [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) records seven local fixture executions and three reproduced gaps in the retained Python pipeline. Its NumPy harness is a diagnostic counterexample record, not a repaired runtime or an acceptance suite. No real checkpoint was run. Follow the audit for the exact command, environment, observed controls, and correction gates.

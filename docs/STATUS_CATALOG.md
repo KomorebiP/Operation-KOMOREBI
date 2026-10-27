@@ -574,6 +574,14 @@ Source-locked external-model protocol with infrastructure tests; the real Coconu
 
 **Next gate:** Authenticate the exact checkpoint and dataset, run the frozen adapter and admission gates, then report the actual result.
 
+**Reader listing: incubator.** A bounded audit reproduced admission with empty replay logits, order-dependent handling of a NaN replay error, and an unsupported real-checkpoint flag for an absent fingerprint. The normal engineered fixture remains explicitly synthetic.
+
+**Return gate:** Publish a separately identified corrected edition with rejection tests for empty/non-finite logits and absent or invalid provenance, plus the existing positive fixture and finite-mismatch control. Qualify any real-model run separately with pinned checkpoint evidence.
+
+[Focused review](SRIC_ADMISSION_AUDIT_2026-10-27.md)
+
+[Edition and reader guide](SRIC_ADMISSION_AUDIT_2026-10-27.md)
+
 [Source directory](../research/sric-external-admission) · [README.md](../research/sric-external-admission/README.md) · [frozen/README.md](../research/sric-external-admission/frozen/README.md) · [REAL_EXECUTION_STATUS.md](../research/sric-external-admission/REAL_EXECUTION_STATUS.md)
 
 <a id="research-sric-block23-witness"></a>

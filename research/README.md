@@ -56,8 +56,7 @@ Incomplete implementation entries are listed separately in the [incubator](../do
 | [Machine Understanding](machine-understanding/) | Model results and empirical demonstrations remain separately scoped. |
 | [OSL and Neuralese](osl-neuralese/) | Historical failed experiments and incomplete verifier attempts remain part of the evidence. |
 | [OSL and Neuralese: reading edition](osl-neuralese/reading-edition/) | Read alongside the experimental records and their limitations. |
-| [SRIC: external semantic admission](sric-external-admission/) | The recorded admission conditions and experimental scope remain explicit. |
-| [SRIC: endogenous semantic witness](sric-block23-witness/) | Use the exact witness assumptions and finite evidence recorded in the source. |
+| [SRIC: endogenous semantic witness](sric-block23-witness/) | Finite synthetic semantic-witness construction; recorded real-model pilot remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23. |
 | [Stratified Recursive Improvement Closure](stratified-recursive-improvement/) | Formal model closure does not itself establish unrestricted real-world self-improvement. |
 | [AVOC](avoc/) | Read the formal contract and retained limitations in the component. |
 | [PRISM-1](prism-1/) | Read the model assumptions and experimental limitations with the results. |

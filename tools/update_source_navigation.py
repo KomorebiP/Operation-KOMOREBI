@@ -268,7 +268,7 @@ The [formalization guide](formal/README.md) explains the corresponding Lean proj
 | Lean coverage | Which formal claims have recorded compiler evidence and which still need a current replay. |
 | Confidence basis | The kind and scope of recorded review, proof, calculation, or experimental evidence. |
 
-Lean is optional: a sound written argument can support a result without formalization. Reader inclusion requires a clear claim and appropriate support. The [focused soundness review](docs/SOUNDNESS_REVIEW_2026-10-27.md) explains the latest decisions; incomplete implementation entries are separated into an [incubator](docs/INCUBATOR.md). This review is limited in scope and does not certify every listed work.
+Lean is optional: a sound written argument can support a result without formalization. Reader inclusion requires a clear claim and appropriate support. The [focused soundness review](docs/SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](docs/SRIC_ADMISSION_AUDIT_2026-10-27.md) explain the decisions; incomplete implementation entries are separated into an [incubator](docs/INCUBATOR.md). These reviews are limited in scope and do not certify every listed work.
 
 These fields are assessed separately. A finished reading edition can contain open conjectures; a passing collection check verifies its stated integrity and tooling scope. The [27 October audit](docs/AUDIT_2026-10-27.md) records source-integrity checks and partial Windows package qualification. The [finalization queue](docs/FINALIZATION_QUEUE.md) tracks source recovery, fresh proof builds, bounded reviews, and remaining experiments.
 

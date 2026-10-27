@@ -128,6 +128,16 @@ Lean is optional; precise statements, sufficient arguments or appropriately boun
 
 Applies to: [Euler Signal Bridge](STATUS_CATALOG.md#euler-signal-bridge) · [Hilbert 12: ambient dual slice](STATUS_CATALOG.md#hilbert12-ambient-dual-slice) · [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) · [Hilbert 12: analytic Fourier branch](STATUS_CATALOG.md#hilbert12-analytic-fourier) · [Hilbert 12: contracting ambient torsion](STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion) · [PRISM-1R](STATUS_CATALOG.md#research-prism-1r) · [RRCT multispace convergence protocol](STATUS_CATALOG.md#research-rrct-multispace-protocol).
 
+### F15 — Repair and qualify SRIC Block 24 admission gates
+
+**Status: open**
+
+The retained Block 24 Python pipeline admitted malformed replay evidence and inferred real-checkpoint evidence from a missing fingerprint.
+
+**Done when:** Resolve the three reproduced Python-pipeline defects in docs/SRIC_ADMISSION_AUDIT_2026-10-27.md in a new edition, with explicit negative controls and provenance validation. Retain the original source/fixture evidence; real-checkpoint execution remains a separate gate.
+
+Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission).
+
 ## Formal, mathematical and empirical development
 
 ### F11 — Extend selected formal cores only against explicit claim maps
