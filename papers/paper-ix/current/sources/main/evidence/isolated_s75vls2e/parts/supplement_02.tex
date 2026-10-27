@@ -1,0 +1,233 @@
+\clearpage\subsection{Second Lean Block Supplement}\label{app:sup2}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical; the final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+This release continues the 28-page \emph{status-corrected} Paper IX manuscript. It completes formal coverage of Lemma 4.1, Theorem 4.2 and Corollary 4.3. The original manuscript and all eight first-block proof modules remain unchanged.
+
+\textbf{Ten of 24 named manuscript-proved items are now covered in their recorded scopes. Fourteen remain pending.} Three classical inputs and two conjectures are tracked separately. The cumulative corpus has \textbf{163 named theorem declarations and 37 explicit definitions in 13 modules}. The 74 new theorems include auxiliary identities and concrete examples; they are not 74 independent discoveries.
+
+\begin{center}
+\begin{tabular}{@{}p{.13\textwidth}p{.63\textwidth}r@{}}
+\toprule
+Item & New formal coverage & Theorems\\\midrule
+4.1 & Literal odd-power EGF and its even part & 18\\
+4.2 & Integral Euler and signed zigzag coefficient bridges & 29\\
+4.2, 4.3 & Exact reconstruction, matrix rows and truncation & 16\\
+Example & Exact scalar anchors and sharpness controls & 11\\\midrule
+ & Total added across five modules & 74\\\bottomrule
+\end{tabular}
+\end{center}
+The five added modules are:\par
+{\small\mcode{OddPowerSeries}, \mcode{EulerCoefficients}, \mcode{ZigzagCoefficients},\newline
+\mcode{OddEulerReconstruction} and \mcode{OddEulerExamples}.}
+
+\subsubsection*{A useful scope strengthening}
+The algebraic proof needs \emph{oddness}, not primality. The exact reconstruction and the integer divisibility statement are therefore checked for every positive odd length $p$, including $p=1$ and odd composites. The manuscript's odd-prime statement follows as a specialization. This is a sharpening of assumptions in this development, not a historical-priority claim. Even lengths are not included; a checked row-zero counterexample shows why.
+
+\subsubsection*{What is not completed}
+The weighted dyadic theory and the general corrected odd-prime finite-difference theorem remain pending. No continuum convergence or analytic summability theorem is inferred from the formal power-series equalities in this block. The historical numerical study is not being relabelled as a fresh experiment.
+\par\medskip
+\pageheading{1. The actual odd-power generating function}{Lemma 4.1; manuscript page 10}
+Work in the rational formal power-series ring $\Q[[t]]$. Define
+\[
+ S_n(p)=\sum_{a=0}^{p-1}(-1)^a(2a+1)^n\in\Z,
+ \qquad F_p(t)=\sum_{n\ge0}S_n(p)\frac{t^n}{n!}.
+\]
+The formal exponential is Mathlib's \mcode{PowerSeries.exp}; scalar substitution is its actual \mcode{rescale} homomorphism. We define
+\[
+ \exp_a(t)=e^{at},\qquad
+ \cosh_a(t)=\frac{e^{at}+e^{-at}}2,\qquad
+ \sech(t)=\cosh_1(t)^{-1}.
+\]
+The constant term of $\cosh_a$ is proved to be one, so the reciprocal used here is a genuine unit inverse.
+
+\subsection*{From finite sums to a series identity}
+Coefficient extraction proves
+\[
+ F_p(t)=\sum_{a=0}^{p-1}(-1)^a e^{(2a+1)t}.
+\]
+An induction on the actual finite summation length establishes the telescoping identity
+\[
+ F_p(t)\cosh t=\frac{1-(-1)^p e^{2pt}}2.
+\]
+For odd $p$ this gives, without a geometric-series convergence assumption,
+\[
+ \boxed{F_p(t)=\frac{1+e^{2pt}}2\,\sech t.}
+\]
+This is an equality of complete formal series, not a fixed-degree polynomial check.
+
+\subsection*{Even projection is identified coefficientwise}
+For any formal series $f$, let $\operatorname{EvenPart}(f)=(f(t)+f(-t))/2$. Its $n$th coefficient is proved to be the coefficient of $f$ when $n$ is even and zero otherwise. Rescaling the inverse law proves $\sech(-t)=\sech(t)$. The exponential multiplication identity then gives
+\[
+ \cosh^2(pt)=\frac{2+e^{2pt}+e^{-2pt}}4,
+\]
+and hence
+\[
+ \boxed{\sum_{r\ge0}S_{2r}(p)\frac{t^{2r}}{(2r)!}
+       =\cosh^2(pt)\,\sech t.}
+\]
+Both the full and even EGF formulas are derived from the original integer sum. Neither is supplied as a hypothesis.
+
+\textbf{Principal targets.}\par
+\target{OddPower.source_as_exponentials}\par
+\target{OddPower.source_times_cosh}\par
+\target{OddPower.odd_source_egf, OddPower.odd_source_even_egf}
+\par\medskip
+\pageheading{2. Integral Euler coefficients and the zigzag bridge}{Coefficient foundations for Theorem 4.2}
+The first block already constructed $C_{N,j}(r)$ by the manuscript's triangular recurrence. At $(N,j)=(2,0)$, every diagonal binomial coefficient equals one. Its denominator-clearing product is therefore one, and $C_{2,0}(r)$ is an integer.
+
+The source defines $E_{2r}$ as the integer numerator of that rational coefficient and proves that its rational cast equals $C_{2,0}(r)$. Set $E_{2r+1}=0$. The actual exponential-section identity from the first block proves
+\[
+ \boxed{\sum_{n\ge0}E_n\frac{t^n}{n!}=\sech t.}
+\]
+Thus the integer sequence is connected to the intended signed Euler family, rather than merely assigned the name Euler.
+
+\subsection*{The inverse coefficients are integral by construction}
+Define the integer binomial convolution
+\[
+ B_n=\sum_{r=0}^{n}\binom nr E_rE_{n-r},\qquad b_m=B_{2m}.
+\]
+The product formula for actual EGFs gives
+\[
+ \sum_{n\ge0}B_n\frac{t^n}{n!}=\sech^2 t.
+\]
+Odd coefficients vanish by parity. In particular, every $b_m$ is an integer; this is the integrality required by the later congruence.
+
+\subsection*{Connecting to the paper's $Z_n$ convention}
+The paper defines $Z_n$ through $\sec t+\tan t$. The Lean construction uses Mathlib's actual formal sine and cosine series and defines
+\[
+ \sec t=(\cos t)^{-1},\quad \tan t=(\sin t)\sec t,
+ \quad Z_n=n![t^n](\sec t+\tan t).
+\]
+It proves the sine and cosine derivative identities, $\sin^2t+\cos^2t=1$, and
+\[
+ (\tan t)'=\sec^2t.
+\]
+Sign substitution in the squared variable carries the hyperbolic cosine kernel to the actual cosine kernel. The same homomorphism carries their inverses and their squares. Extracting the even coefficient in the derivative of tangent yields
+\[
+ \boxed{b_m=(-1)^m Z_{2m+1}.}
+\]
+This formula is \emph{proved}, not assumed as an input to reconstruction. The formalization follows the generating-function definition of zigzag numbers; it does not additionally formalize their interpretation as counts of alternating permutations.
+
+\textbf{Principal targets.}\par
+\target{EulerCoefficients.euler_egf, EulerCoefficients.inverse_coeff_cast}\par
+\target{Zigzag.derivative_tan, Zigzag.inverse_is_signed_zigzag}
+\par\medskip
+\pageheading{3. Exact reconstruction and the triangular matrix}{Theorem 4.2; manuscript page 11}
+For odd $p$, rescaling the already proved inverse law gives
+\[
+ \sech(pt)\cosh(pt)=1.
+\]
+Multiplying the even-source identity by $\sech^2(pt)$ therefore proves
+\[
+ \sech^2(pt)\left(\sum_{r\ge0}S_{2r}(p)\frac{t^{2r}}{(2r)!}\right)=\sech t.
+\]
+Actual EGF multiplication now gives the integer coefficient formula
+\[
+ \boxed{E_{2r}=\sum_{m=0}^{r}\binom{2r}{2m}b_m p^{2m}S_{2(r-m)}(p).}
+\]
+The formal proof first extracts the sum over all indices and then proves that the odd summands vanish. A checked even-index summation identity supplies the displayed change of variables.
+
+Substituting the independently proved signed-zigzag identity recovers the manuscript's notation. For every even degree $n$,
+\[
+ \boxed{E_n=\sum_{m=0}^{n/2}(-1)^m Z_{2m+1}\binom n{2m}p^{2m}S_{n-2m}(p).}
+\]
+The Lean version uses $n=2r$ to avoid ambiguous natural-number division. Every even natural degree has that form. Primality is not used in this equality.
+
+\subsection*{The row action is connected to the matrix entries}
+Reversing the finite sum and using binomial symmetry gives the actual source-index row action
+\[
+ E_{2r}=\sum_{q=0}^{r}U_{r,q}(p)S_{2q}(p),
+\]
+where
+\[
+ U_{r,q}(p)=
+ \begin{cases}
+ \displaystyle\binom{2r}{2q}b_{r-q}p^{2(r-q)},&q\le r,\\
+ 0,&q>r.
+ \end{cases}
+\]
+The row-action equality, the diagonal identity $U_{r,r}=1$, and vanishing above the diagonal are all checked. The arithmetic weight is also explicit:
+\[
+ p^{2(r-q)}\mid U_{r,q}(p)\quad\text{in }\Z,\qquad 0\le q\le r.
+\]
+No inverse-coordinate identity, unit diagonal or weight bound is assumed for these rows.
+
+\textbf{Principal targets.}\par
+\target{OddEuler.odd_reconstruction_series}\par
+\target{OddEuler.odd_euler_reconstruction}\par
+\target{OddEuler.odd_euler_reconstruction_zigzag}\par
+\target{OddEuler.row_action, OddEuler.row_diagonal, OddEuler.row_weight}
+\par\medskip
+\pageheading{4. Uniform truncation and a sharp exact example}{Corollary 4.3 and Example 4.4}
+For row $2r$ and depth $M$, the actual truncation is
+\[
+ T_M(p,2r)=\sum_{m=0}^{\min(M,r)}\binom{2r}{2m}b_m p^{2m}S_{2(r-m)}(p).
+\]
+Every omitted term has $m\ge M+1$. Its other factors are integers, so the first-block omitted-tail theorem, now applied to the \emph{proved Euler identity}, gives
+\[
+ \boxed{p^{2M+2}\mid E_{2r}-T_M(p,2r)\quad\text{in }\Z.}
+\]
+This is not divisibility in $\Q$, where a nonzero divisor would make the assertion vacuous. The statement holds for every row and depth. For an odd prime it is precisely the claimed supercongruence. If $M\ge r$, complete retention is proved exact.
+
+\subsection*{The displayed manuscript row is kernel-checked}
+The scalar anchors are derived from the same general coefficient recurrence:
+\[
+ (E_0,E_2,E_4,E_6,E_8)=(1,-1,5,-61,1385),
+\]
+\[
+ (b_0,b_1,b_2,b_3,b_4)=(1,-2,16,-272,7936).
+\]
+The literal source sums at $p=5$ give
+\[
+ (S_0,S_2,S_4,S_6,S_8)=(1,49,4705,428689,37665985).
+\]
+Consequently,
+\[
+ T_2(5,8)=2\,731\,001\,385,\qquad
+ E_8-T_2(5,8)=-2\,731\,000\,000.
+\]
+The source proves both
+\[
+ 5^6\mid E_8-T_2(5,8),\qquad 5^7\nmid E_8-T_2(5,8).
+\]
+Thus the guaranteed power is attained in this example. No stronger uniform exponent is inferred.
+
+\subsection*{Oddness cannot be silently dropped}
+For length two, $S_0(2)=1-1=0$, whereas $E_0=1$. The row-zero reconstruction already fails. The source proves this failure, and the release verifier separately attempts and rejects an invalid proof of the even-length identity.
+
+\textbf{Principal targets.}\par
+\target{OddEuler.odd_euler_supercongruence}\par
+\target{OddEuler.odd_prime_supercongruence, OddEuler.full_depth_exact}\par
+\target{OddEulerExamples.manuscript_error_sharp}\par
+\target{OddEulerExamples.even_length_reconstruction_fails}
+\par\medskip
+\pageheading{5. Verification, reproducibility and remaining work}{Cumulative release evidence}
+\begin{center}
+\begin{tabular}{@{}p{.70\textwidth}r@{}}
+\toprule
+Check & Result\\\midrule
+Fresh cumulative proof-module compilation & 13/13\\
+Named theorem declarations audited & 163/163\\
+Explicit definitions audited & 37/37\\
+Exact dependency-revision checks & 9/9\\
+Invalid proof controls rejected as intended & 5/5\\
+Infrastructure and release-contract unit tests & 33 passed\\
+New captured development attempts & 15\\
+Development attempts failing before correction & 8\\\bottomrule
+\end{tabular}
+\end{center}
+The pinned runtime is Lean 4.34.0-rc2 and Mathlib revision
+\begin{center}\footnotesize\mcode{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+Every final module compiled with warnings treated as errors. All 200 expected axiom reports were resolved and used only \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}, or subsets. The audit is of explicit project declarations. Mathlib's compiled cache was reused, not independently rebuilt.
+
+The negative controls cover a false equality, a proof placeholder, the old false normalized finite-difference bound, the false even-length extension, and a false extra digit of precision. Missing imports and timeouts do not count as successful rejection. The placeholder is rejected by warnings-as-errors, and \mcode{sorryAx} is separately excluded from the axiom audit.
+
+\subsection*{Independent finite arithmetic checks}
+Exact Python mirrors passed 234 reconstruction rows and 2,340 truncation-depth cases for odd lengths 1 through 35 and even degrees 0 through 24. They also checked 468 coefficients of each generating-function identity, 13 signed-zigzag bridges and seven invalid-input controls. These are rational/integer calculations, not executions extracted from Lean. The first-block mirror suite was rerun separately. The original historical numerical suite was not recovered or rerun.
+
+\subsection*{Provenance and limits}
+All eight upstream proof files, the original 28-page corrected manuscript and the first supplement are preserved. The initial clean baseline and a preliminary successful second-block build are separate from the final build that includes the explicit matrix row-action theorem. Eight failed development drafts and their diagnostics are retained, not counted as successful proofs. An unsupported interactive container invocation was replaced by successful noninteractive runtime recovery; every archive-part hash and the combined hash matched.
+
+\textbf{Fourteen manuscript-proved items remain pending.} The next coherent target is the separately weighted dyadic reconstruction. The global finite-difference theorem, three classical inputs and two conjectures have not been promoted by this block.
+
+\textbf{Reproduce.} Run \mcode{bash Run-Portable.sh /path/to/extracted/kit}. This performs unit tests, both independent regression suites and a fresh Lean build. The kit is separate; native Windows is not tested. Precise commands, source hashes, raw compiler logs, scope entries and failures accompany the release. Manuscript-to-Lean correspondence remains a mathematical review, not an automated semantic-equivalence theorem.

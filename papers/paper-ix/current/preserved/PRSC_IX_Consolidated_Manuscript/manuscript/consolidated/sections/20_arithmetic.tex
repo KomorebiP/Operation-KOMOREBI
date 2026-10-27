@@ -1,0 +1,1092 @@
+\section{Congruential Euler packets and their arithmetic}
+\label{sec:arithmetic}
+
+Two related constructions run through this section.  The congruential
+Euler family is indexed by a modulus $N$ and an address $j$.  Its
+exceptional dyadic member has $N=4$ and four addresses.  The classical
+signed Euler numbers arise from $N=2$, $j=0$.  Keeping these indices
+visible distinguishes the four-packet period theorems from the classical
+edge truncations.
+
+\subsection{Original coefficients, normalized packets, and precision}
+
+\begin{definition}[Congruential Euler coefficients]\label{def:arith-euler}
+For $N\ge1$ and $0\le j<N$, define rational coefficients by the formal identity
+\begin{equation}\label{eq:arith-euler-egf}
+ \sum_{d\ge0}E_d^{(N,j)}\frac{t^d}{d!}
+ =\left(\sum_{n\ge0}\frac{t^{Nn}}{(Nn+j)!}\right)^{-1}.
+\end{equation}
+The reciprocal exists because its denominator has constant coefficient
+$1/j!\ne0$.  Set
+\[
+ U_{N,j}(n)=E_{Nn}^{(N,j)},\qquad C_{N,j}(n)=\frac{U_{N,j}(n)}{j!}.
+\]
+Thus $C_{N,j}(0)=1$ and $U_{N,j}(0)=j!$.  All coefficients outside the
+multiples of $N$ vanish.
+\end{definition}
+
+The normalized source and its inverse are
+\begin{equation}\label{eq:arith-kernel}
+ K_{N,j}(t)=j!\sum_{n\ge0}\frac{t^{Nn}}{(Nn+j)!},\qquad
+ \mathcal P_{N,j}(t)=\sum_{n\ge0}C_{N,j}(n)\frac{t^{Nn}}{(Nn)!}.
+\end{equation}
+Their product is one.  Clearing factorials in its coefficient of $t^{Nn}$
+gives the triangular system
+\begin{equation}\label{eq:arith-triangular}
+ \sum_{q=0}^{n}\binom{Nn+j}{Nq}C_{N,j}(q)=\delta_{n0}.
+\end{equation}
+In particular, for $n>0$,
+\[
+ C_{N,j}(n)=-\binom{Nn+j}{Nn}^{-1}
+       \sum_{q=0}^{n-1}\binom{Nn+j}{Nq}C_{N,j}(q).
+\]
+The diagonal binomial coefficient is positive, so this recurrence determines
+the sequence uniquely.  The Lean construction begins with this recurrence
+and derives the reciprocal identity from it.  The resulting sequence is
+then identified with the degree-indexed coefficients of
+\eqref{eq:arith-euler-egf}, so both descriptions refer to the same family.
+
+The relevant declarations are
+\lean{KomorebiPaperIX.Congruential.triangular_inverse},
+\lean{KomorebiPaperIX.Congruential.packet_is_actual_inverse}, and
+\lean{KomorebiPaperIX.NishibuchiCompletion.generalizedEuler_at_packet}.
+The cleared identity with the original positive-address exponential section
+is \lean{KomorebiPaperIX.NishibuchiCompletion.original_generating_identity}.
+
+\begin{proposition}[A denominator bound for every address]
+\label{prop:arith-denominator}
+For $N\ge1$, $0\le j<N$, and $n\in\N$, set
+\[
+ D_{N,j}(n)=\prod_{r=1}^{n}\binom{Nr+j}{Nr},\qquad D_{N,j}(0)=1.
+\]
+Then $D_{N,j}(n)C_{N,j}(n)\in\Z$.
+\end{proposition}
+
+\begin{proof}
+Proceed by induction in the recurrence \eqref{eq:arith-triangular}.
+For every $q<n$, the product $D_{N,j}(q)$ divides $D_{N,j}(n-1)$.
+Multiplying the recurrence by $D_{N,j}(n-1)$ therefore makes every
+previous term integral.  The diagonal factor completes the product
+$D_{N,j}(n)$, proving the claim.  At $n=0$, both factors are one.
+This gives a uniform denominator bound without requiring integrality of
+the normalized coefficients themselves.  The Lean statements are
+\lean{KomorebiPaperIX.Congruential.clearing_product} and
+\lean{KomorebiPaperIX.Congruential.universal_denominator_clearing}.
+\end{proof}
+
+\begin{example}[The Bernoulli boundary address]\label{ex:arith-bernoulli}
+At $N=2$, the address $j=1$ gives a second classical family.  Define the
+Bernoulli numbers by
+\[
+ B(z)=\frac{z}{e^z-1}=\sum_{r\ge0}B_r\frac{z^r}{r!},
+ \qquad B_0=1,\quad B_1=-\frac12.
+\]
+All quotients here are regular formal series.  The identity
+\[
+ 2B(z)-B(2z)=\frac{z}{\sinh z}
+            =\sum_{n\ge0}C_{2,1}(n)\frac{z^{2n}}{(2n)!}
+\]
+follows by putting the two fractions on a common denominator and using
+\eqref{eq:arith-euler-egf}.  Comparing even coefficients yields
+\[
+ C_{2,1}(n)=(2-2^{2n})B_{2n}\qquad(n\in\N).
+\]
+This classical derivation restores the boundary example from the original
+manuscript.  No dedicated Lean bridge for this Bernoulli specialization
+was identified in the preserved sources.
+\end{example}
+
+\begin{definition}[Differences and valuation conventions]\label{def:arith-precision}
+For a sequence $f$ and $h,k,n\in\N$, put
+\[
+ \Delta_h f(n)=f(n+h)-f(n),\qquad
+ \Delta_h^0 f(n)=f(n),\qquad
+ \Delta_h^{k+1}f(n)=\Delta_h^k f(n+h)-\Delta_h^k f(n).
+\]
+We use the extended valuation $v_p(0)=+\infty$ in mathematical statements.
+Thus $v_p(x)\ge L$, including negative integers $L$, means
+$x=0$ or the ordinary valuation of the nonzero rational $x$ is at least $L$.
+For integral coefficients and $L\ge0$, it is equivalent to
+$x\in p^L\Z_p$.  In expressions involving a step multiplier we write
+$\nu_p(u)=v_p(u)$ for $u>0$ and set $\nu_p(0)=0$.  This finite convention
+makes the displayed exponents meaningful at step zero, where all
+positive-order differences vanish.
+\end{definition}
+
+The valuation convention at zero is encoded by
+\lean{KomorebiPaperIX.GlobalEulerBoundary.precision}.  For $p$-adic
+congruences, divisibility is interpreted in $\Z_p$; statements over other
+coefficient rings specify the ring explicitly.  Field divisibility in
+$\Q_p$ alone does not encode precision.
+
+\subsection{The standard address window and its common reduction}
+
+The addresses below the prime have unit diagonal coefficients.  In this
+window the normalized packets are integral, and their reductions agree
+at every row.
+
+\begin{proposition}[Lucas reduction and address independence]
+\label{prop:arith-lucas-window}
+Let $p$ be prime, $m>0$, and $N=mp$.  For $0\le j<p$ and $n,q\in\N$,
+\[
+ \binom{mpn+j}{mpq}\equiv\binom{mn}{mq}\pmod p.
+\]
+Every $C_{mp,j}(n)$ belongs to $\Z_p$.  Its reduction is the unique
+sequence $\overline C_m:\N\to\F_p$ satisfying
+\[
+ \sum_{q=0}^{n}\binom{mn}{mq}\overline C_m(q)=\delta_{n0}
+ \quad\text{in }\F_p.
+\]
+Consequently, for any two addresses $0\le j,k<p$,
+\[
+ C_{mp,j}(n)\equiv C_{mp,k}(n)\pmod p\qquad(n\in\N).
+\]
+\end{proposition}
+
+\begin{proof}
+Lucas reduction separates the lowest base-$p$ digits, which are $j$ and
+zero in the upper and lower arguments.  Their binomial contribution is
+one, leaving the displayed reduced row.  On the diagonal the reduced
+coefficient is one.  The recurrence \eqref{eq:arith-triangular} therefore
+constructs an integral packet by successive division by units in $\Z_p$.
+After reduction, every address satisfies the same triangular system over
+$\F_p$.  Its diagonal entries are one, so its solution is unique.  This
+proves both the common reduction and the congruence between addresses.
+The row reduction is
+\lean{KomorebiPaperIX.StandardWindow.lucas_row_reduction}.
+The integral identification and the two reduction statements are
+\lean{KomorebiPaperIX.WindowIndependence.standard_window_integral},
+\lean{KomorebiPaperIX.WindowIndependence.coeffPadic_coe},
+\lean{KomorebiPaperIX.WindowIndependence.residue_independence}, and
+\lean{KomorebiPaperIX.WindowIndependence.two_window_addresses_congruent}.
+\end{proof}
+
+\subsection{The full Nishibuchi statement and its starting bound}
+
+\begin{theorem}[Nishibuchi congruence]\label{thm:arith-nishibuchi}
+Let $p$ be prime, let $m>0$, and suppose that $m\mid p-1$ or $m=2$.
+Put $N=mp$ and $q=\operatorname{lcm}(2,p-1)$.  For every $0\le j<N$,
+all $U_{N,j}(n)$ belong to $\Z_p$.  For $r\ge1$ and $n\ge r$,
+\begin{equation}\label{eq:arith-nishibuchi}
+ E_{Nn+qp^r}^{(N,j)}\equiv E_{Nn}^{(N,j)}\pmod{p^r}.
+\end{equation}
+Thus the positive sufficient starting index $n_0=r$ works uniformly.
+If $m\mid p-1$, the stronger sufficient condition $r\le mn$ is valid.
+\end{theorem}
+
+This theorem covers the full parameter range and displacement of Conjecture
+3.9 in the fixed version of Nishibuchi's paper used for the statement
+comparison.  The corresponding Lean theorem is
+\lean{KomorebiPaperIX.NishibuchiCompletion.conjecture_3_9}.
+The stronger divisor-branch threshold is
+\lean{KomorebiPaperIX.NishibuchiCompletion.divisor_period}.
+The starting index is sufficient uniformly, although it need not be the
+earliest one for a given tuple of parameters.
+
+We first prove the difference estimates on the divisor branch, then derive
+the period from a finite Newton expansion.
+
+\begin{theorem}[All-address differences on the divisor branch]
+\label{thm:arith-divisor-base}
+Let $p$ be prime, $m>0$, $m\mid p-1$, $N=mp$, and $0\le j<N$.
+Write $h=(p-1)/m$.  For every $u,k,n\in\N$,
+\begin{align}
+ U_{N,j}(n)&\in\Z_p,\label{eq:arith-divisor-integral}\\
+ \Delta_{uh}^{k}U_{N,j}(n)&\in p^{\min(k,mn)}\Z_p,\label{eq:arith-divisor-bound}\\
+ v_p\bigl(\Delta_{uh}^{k}C_{N,j}(n)\bigr)
+   &\ge\min(k,mn)-v_p(j!).\label{eq:arith-divisor-normalized}
+\end{align}
+The factorial correction is part of the normalized statement, including
+addresses $j\ge p$.
+\end{theorem}
+
+\begin{proof}
+Work in the Hurwitz integral ring of formal series
+\[
+ \mathcal H_p=\left\{F\in\Q_p[[t]]:
+            d![t^d]F\in\Z_p\text{ for every }d\right\}.
+\]
+For $D=d/dt$, let $B_p=(D^{p^2}-D^p)/p$.  Call $F$ flat if
+$B_p^sF\in\mathcal H_p$ for every $s\ge0$.
+We will prove that $j!\mathcal P_{N,j}$ is flat at every address.  The main
+difficulty is to include the addresses at which the usual unit-pivot
+argument fails.
+
+Set
+\[
+ H_c(t)=\sum_{n\ge0}\frac{t^{Nn+c}}{(Nn+c)!},\qquad
+ A_c(t)=\sum_{n\ge0}\frac{t^{Nn}}{(Nn+c)!},\qquad
+ R_c(t)=\frac{A_{c-1}(t)}{A_c(t)}\quad(1\le c<N).
+\]
+The denominator of this last quotient has nonzero constant coefficient.
+The section identities give
+\[
+ R_cH_c=tH_{c-1},\qquad R_c(0)=c,\qquad
+ j!\mathcal P_{N,j}=\mathcal P_{N,0}\prod_{c=1}^{j}R_c.
+\]
+Cancellation of consecutive source sections proves the product identity
+and ties the ratios directly to the family under study.
+
+At the singular addresses $c=ap$, $1\le a<m$, use the weighted ring
+\[
+ \mathcal W_p=\left\{\sum_{d\ge0}a_dT^d:
+          p^{\lfloor d/p\rfloor}a_d\in\Z_p\right\}.
+\]
+The key estimate is $R_{ap}(\log(1+T))\in\mathcal W_p$.  Its arithmetic
+input comes from the cyclic group ring $\Z[\Z/N\Z]$.
+For its canonical element $x$ and $I=(p,x^{p-1}-1)$, the relation
+$(x^{p-1})^p=1$ implies $I^p\subseteq(p)I$.  Induction yields
+$I^q\subseteq(p^{v_p(q!)})$.  Grouping the falling factorial
+$(x)_d=\prod_{i=0}^{d-1}(x-i)$ into consecutive blocks of length $p$
+then gives an integral residue-coordinate factor
+$p^{v_p(\lfloor d/p\rfloor!)}$.  The identity
+\[
+ v_p(d!)=\lfloor d/p\rfloor+v_p(\lfloor d/p\rfloor!)
+\]
+accounts for precisely the weight in $\mathcal W_p$ after dividing by $d!$.
+Comparison of the section and group-ring recurrences identifies these
+coordinates with the logarithmically substituted section.
+
+To pass from the section to the singular ratio, factor out its initial zero:
+for $c=ap$, the section has the form
+\[
+ H_c(\log(1+T))=\frac{T^c}{c!}\,V(T),\qquad V(0)=1,
+ \qquad V\in\mathcal W_p.
+\]
+The weight of $c!$ compensates for the coefficient shift by $c$.
+The weighted ring is closed under inversion of series with constant
+coefficient one and under $L_T=\log(1+T)(1+T)d/dT$.  With
+$\ell(T)=\log(1+T)/T$, interpreted by coefficient shifting, differentiation
+of the displayed factorization gives
+\[
+ R_c(\log(1+T))=c(1+T)\ell(T)+(L_TV)V^{-1}.
+\]
+Since $p\ell(T)\in\mathcal W_p$ and $p\mid c$, both terms are weighted.
+This is the singular estimate
+\lean{KomorebiPaperIX.SingularRatioAmice.paper_singular_amice_estimate}.
+
+To deduce flatness from the weighted estimate, use
+$\Theta=(1+T)d/dT$.  Both $\Theta$ and
+$(\Theta^{p^2}-\Theta^p)/p$ preserve $\mathcal W_p$.
+For the first operator, its coefficient formula is
+$(d+1)a_{d+1}+da_d$; whenever the floor weight rises, the factor $d+1$
+provides the missing $p$.  For the second operator, the proof uses its
+full Leibniz correction and the scalar congruence
+$p^2\mid b^{p^2}-b^p$.  Weighted monomials factor as
+\[
+ a_dT^d=(p^{\lfloor d/p\rfloor}a_d)
+          (T^p/p)^{\lfloor d/p\rfloor}T^{d\bmod p}.
+\]
+The operator preserves these monomials and hence finite weighted
+polynomials.  Each fixed output coefficient depends on only finitely many
+input coefficients, which extends the result to the formal series.
+Substitution $T=e^t-1$ intertwines $D$ with $\Theta$ and maps
+$\mathcal W_p$ into $\mathcal H_p$, because
+\[
+ d![t^d]F(e^t-1)=[T^0]\Theta^dF.
+\]
+It follows that the singular ratios are flat.  This transfer is proved in
+\lean{KomorebiPaperIX.WeightedDworkTransfer.singular_ratio_flat}.
+
+At a nonsingular address $2\le c<N$ with $p\nmid c$, differentiation of the section
+identities gives
+\[
+ tR_c'=R_c(1+R_{c-1}-R_c).
+\]
+Writing $q=R_{c-1}-(c-1)$ and $y=R_c-c$, this becomes
+\[
+ (tD+c)y=cq+yq-y^2.
+\]
+On degrees divisible by $p$, the inverse of $tD+c$ divides the degree-$d$
+coefficient by the unit $d+c$.  Starting with $y_0=0$, form
+\[
+ y_{s+1}=(tD+c)^{-1}(cq+y_sq-y_s^2).
+\]
+Flatness and support are preserved.  Since the difference of two right
+sides factors as $(z-y)(q-z-y)$ and its second factor has zero constant
+term, agreement with the solution gains one coefficient at each iteration.
+Consequently $[t^d]y_s=[t^d]y$ for $d\le s$.
+Every coefficient of $B_p^r y$ can therefore be read from a sufficiently
+long finite iterate.  The argument is entirely formal.
+This is the content of
+\lean{KomorebiPaperIX.RiccatiFlatPropagation.riccati_solution_flat}.
+
+The standard window supplies the initial ratio $R_1$.  The weighted
+estimate handles $p\mid c$, and Riccati propagation handles $p\nmid c$.
+Flatness is closed under products, so the exact factorization establishes
+flatness of $j!\mathcal P_{N,j}$.  Extracting its supported Hurwitz coefficients
+and applying the proved saturation and step-multiple lemmas yields
+\eqref{eq:arith-divisor-integral}--\eqref{eq:arith-divisor-bound}.
+Finally $\Delta_{uh}^kU_{N,j}=j!\Delta_{uh}^kC_{N,j}$ gives
+\eqref{eq:arith-divisor-normalized}, with the zero case retained.
+The resulting statements are
+\lean{KomorebiPaperIX.AllResidueEuler.all_residue_flat},
+\lean{KomorebiPaperIX.AllResidueEuler.global_unnormalized_bound}, and
+\lean{KomorebiPaperIX.AllResidueEuler.global_normalized_precision}.
+\end{proof}
+
+\begin{example}[Why the factorial loss is necessary]
+\label{ex:arith-normalization-loss}
+Take $p=3$, $m=2$, $N=6$, and $j=3$.  The recurrence gives
+\[
+ C_{6,3}(1)=-\frac1{84},\qquad
+ C_{6,3}(2)=\frac{703}{5460},\qquad
+ C_{6,3}(2)-C_{6,3}(1)=\frac{64}{455}.
+\]
+The last difference has $3$-adic valuation zero.  Here $h=1$, so at
+$n=1$ the order-one bound without factorial loss would require valuation
+at least one.  The corrected normalized bound is sharp, since
+\[
+ v_3\bigl(C_{6,3}(2)-C_{6,3}(1)\bigr)=0=1-v_3(3!).
+\]
+Multiplication by $3!$ gives
+\[
+ U_{6,3}(2)-U_{6,3}(1)=\frac{384}{455},\qquad
+ v_3\bigl(U_{6,3}(2)-U_{6,3}(1)\bigr)=1,
+\]
+consistent with the unnormalized theorem.  Thus the factorial correction
+is already necessary at a single step in the all-address parameter range.
+These exact values and the refutation of a universal bound without loss
+are formalized in
+\lean{KomorebiPaperIX.Normalization.normalized_first},
+\lean{KomorebiPaperIX.Normalization.normalized_second},
+\lean{KomorebiPaperIX.Normalization.normalized_difference},
+\lean{KomorebiPaperIX.Normalization.difference_valuation},
+\lean{KomorebiPaperIX.Normalization.factorial_loss_is_sharp},
+\lean{KomorebiPaperIX.Normalization.unnormalized_difference},
+\lean{KomorebiPaperIX.Normalization.unnormalized_difference_valuation}, and
+\lean{KomorebiPaperIX.Normalization.universal_no_loss_refuted}.
+\end{example}
+
+\begin{corollary}[A common period in the standard window]
+\label{cor:arith-window-period}
+Let $p$ be prime, $m>0$, $m\mid p-1$, and $0\le j<p$.  Put
+$h=(p-1)/m$.  For every $n\ge1$ and $u\in\N$,
+\[
+ \overline C_m(n+uh)=\overline C_m(n),\qquad
+ C_{mp,j}(n+uh)\equiv C_{mp,j}(n)\pmod p.
+\]
+Thus $h$ is a sufficient period from row one, common to all addresses
+in the standard window.  It need not be the least period.
+\end{corollary}
+
+\begin{proof}
+Since $j<p$, the factorial $j!$ is a unit in $\Z_p$.  Also $mn\ge1$.
+The order-one case of Theorem~\ref{thm:arith-divisor-base} therefore gives
+valuation at least one for the normalized difference at every step $uh$.
+This proves the congruence, and Proposition~\ref{prop:arith-lucas-window}
+identifies its reduction with the equality for $\overline C_m$.
+The preserved Lean development also proves this period directly from the
+Hurwitz inverse in characteristic $p$:
+\lean{KomorebiPaperIX.WindowPeriod.uniform_standard_window_period},
+\lean{KomorebiPaperIX.WindowPeriod.multiple_period}, and
+\lean{KomorebiPaperIX.WindowPeriod.standard_window_period_divisibility}.
+\end{proof}
+
+\begin{lemma}[Prime-power period from finite differences]
+\label{lem:arith-newton-period}
+Let $R$ be a commutative ring, $p$ a prime, $f:\N\to R$, $h,n\in\N$,
+and $r\ge1$.  If
+\[
+ p^{\min(k,r)}\mid\Delta_h^k f(n)\quad\text{for every }k\in\N,
+\]
+then $p^r\mid f(n+p^{r-1}h)-f(n)$.
+\end{lemma}
+
+\begin{proof}
+The finite Newton expansion gives
+\[
+ f(n+p^{r-1}h)-f(n)
+ =\sum_{k=1}^{p^{r-1}}\binom{p^{r-1}}k\Delta_h^k f(n).
+\]
+Terms with $k\ge r$ have the required factor from the difference.
+For $1\le k<r$, the identity
+\[
+ k\binom{p^{r-1}}k=p^{r-1}\binom{p^{r-1}-1}{k-1}
+\]
+and $v_p(k)<k$ imply
+$p^r\mid\binom{p^{r-1}}k p^k$ in $\Z$.
+Mapping that integer divisibility to $R$ proves the claim term by term.
+The argument includes $r=1$.
+The declaration is
+\lean{KomorebiPaperIX.PeriodFromDifferences.prime_power_period}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:arith-nishibuchi}]
+On the divisor branch, $m\mid q$ and the packet step $q/m$ is an integer
+multiple of $h=(p-1)/m$.  If $r\le mn$, Theorem~\ref{thm:arith-divisor-base}
+supplies the hypotheses of Lemma~\ref{lem:arith-newton-period}.
+Its packet displacement is $p^{r-1}q/m$, which converts to the original
+degree as follows:
+\[
+ mp\left(n+p^{r-1}\frac qm\right)=mpn+qp^r.
+\]
+The choice $n\ge r$ implies $mn\ge r$ because $m\ge1$.
+
+For an odd prime, $2\mid p-1$, so the option $m=2$ introduces no further
+case.  The sole remaining branch is $p=2,m=2,N=4$.  The all-row theorem
+proved next gives $2^k\mid\Delta_1^kC_{4,j}(n)$ at every row and address.
+After multiplying by $j!$, Lemma~\ref{lem:arith-newton-period} gives packet
+period $2^{r-1}$ and degree displacement $4\cdot2^{r-1}=2^{r+1}=qp^r$.
+It also gives integrality.  Hence the complete statement follows.
+The formal degree conversion is
+\lean{KomorebiPaperIX.NishibuchiCompletion.original_degree_shift};
+the all-parameter degree theorem is
+\lean{KomorebiPaperIX.NishibuchiCompletion.full_period_degree}.
+\end{proof}
+
+\subsection{All-row dyadic differences and displacement amplification}
+
+For the remainder of the four-packet discussion abbreviate
+$C_j=C_{4,j}$ and $U_j=U_{4,j}$.  Removing the original row cap requires
+an unshifted coefficient operator.
+
+\begin{theorem}[All-row dyadic higher differences]\label{thm:arith-dyadic-differences}
+For $0\le j<4$ and all $u,k,n\in\N$,
+\begin{align}
+ C_j(n)&\in\Z_2,\\
+ \Delta_u^kC_j(n)&\in 2^{k(1+\nu_2(u))}\Z_2,\label{eq:arith-allrow-c}\\
+ \Delta_u^kU_j(n)&\in
+ 2^{k(1+\nu_2(u))+v_2(j!)}\Z_2.\label{eq:arith-allrow-u}
+\end{align}
+There is no restriction $k\le n$ and no minimum with the row $n$.
+\end{theorem}
+
+\begin{proof}
+The Hurwitz coefficients of the normalized source $K_{4,j}$ at degrees
+$4n$ are
+\[
+ g_j(n)=\binom{4n+j}{4n}^{-1}.
+\]
+Their explicit expressions are
+\[
+ \begin{aligned}
+ g_0(n)&=1,&
+ g_1(n)&=\frac1{4n+1},\\
+ g_2(n)&=\frac1{(4n+1)(2n+1)},&
+ g_3(n)&=\frac3{(4n+1)(2n+1)(4n+3)}.
+ \end{aligned}
+\]
+Every denominator is odd.  An affine sequence with even slope satisfies
+$2^k\mid\Delta_1^k f(n)$ for every $k,n$.  The exact product identity
+\[
+ \Delta_1^s(fg)(n)=\sum_{i=0}^s\binom si
+          \Delta_1^if(n)\Delta_1^{s-i}g(n+i)
+\]
+proves closure of this property under products.  Applying the formula
+with the factors interchanged to $fg=1$ isolates $f(n+s)\Delta_1^sg(n)$.
+Multiplication by $f(n+s)^{-1}$ and induction then prove closure under
+pointwise unit inverses.
+Thus all four $g_j$ have the property.  The explicit formulas and difference
+bounds are formalized in
+\lean{KomorebiPaperIX.DyadicFourKernel.source_coe} and
+\lean{KomorebiPaperIX.DyadicFourKernel.source_kummer}.
+
+For an integer charge $c$, put
+\[
+ A_c=\frac{D^4-c}{2}.
+\]
+A series is flat of charge $c$ when applying any power $A_c^s$ to it gives
+an element of $\mathcal H_2$.  The required product formula is
+\begin{equation}\label{eq:arith-charged-product}
+ A_{c+d}(FG)=(A_cF)G+F(A_dG)
+       +2F'G'''+3F''G''+2F'''G'.
+\end{equation}
+All middle coefficients are integral.  Derivatives preserve
+$\mathcal H_2$ and commute with $A_c$.  Induction on the number of
+iterations in \eqref{eq:arith-charged-product} proves that multiplication
+adds charges.  If $FG=1$, the same formula yields
+\[
+ A_{-c}G=-G^2A_cF-G(2F'G'''+3F''G''+2F'''G').
+\]
+Induction, starting from the independently established integrality of
+the reciprocal $G$, proves that inversion negates the charge.
+Finally $A_{c+2}=A_c-1$, so increasing a charge by two preserves flatness.
+These are
+\lean{KomorebiPaperIX.ChargedDworkClosure.B_mul},
+\lean{KomorebiPaperIX.ChargedDworkClosure.flat_inverse}, and
+\lean{KomorebiPaperIX.ChargedDworkClosure.flat_charge_shift}.
+
+Packing $g_j$ into degrees divisible by four gives $K_{4,j}$.
+Its source property is precisely charge-one flatness.  Inversion gives
+charge $-1$, and the charge shift restores charge one for the
+reciprocal $\mathcal P_{4,j}$.  If $\operatorname{dec}(F)(d)=d![t^d]F$, the exact
+coefficient identity is
+\[
+ \operatorname{dec}(A_1^sF)(d)
+       =2^{-s}\Delta_4^s\operatorname{dec}(F)(d).
+\]
+At $d=4n$, packing turns the right side into
+$2^{-s}\Delta_1^sC_j(n)$.  This extraction requires no negative degree
+and therefore holds at every $n$, including zero.  It proves the unit-step
+bound \lean{KomorebiPaperIX.DyadicFourAllRows.base_step_bound}.
+
+To incorporate $v_2(u)$, expand a displacement using finite Newton
+coefficients.  For any prime $p$, $u>0$, and $1\le a\le u$,
+\[
+ p^{v_p(u)+1}\mid\binom ua p^a,
+\]
+as follows from $a\binom ua=u\binom{u-1}{a-1}$ and $v_p(a)<a$.
+Repeated displacement, retaining the remaining base-difference order
+at each induction step, gives a factor $p^{k(1+v_p(u))}$ from $k$
+displacements.  This induction is formalized in
+\lean{KomorebiPaperIX.StepAmplification.repeated_precision}.
+Applying it with $p=2$ proves \eqref{eq:arith-allrow-c}; multiplication
+by $j!$ proves \eqref{eq:arith-allrow-u}.  Zero step and zero order follow
+from their definitions.  The final statements are
+\lean{KomorebiPaperIX.DyadicFourFinalStrengthening.normalized_step_bound}
+and
+\lean{KomorebiPaperIX.DyadicFourFinalStrengthening.unnormalized_step_bound}.
+\end{proof}
+
+\begin{corollary}[Step-sensitive divisor-branch bound]\label{cor:arith-amplified}
+Under the hypotheses of Theorem~\ref{thm:arith-divisor-base}, for all
+$u,k,n\in\N$,
+\[
+ \Delta_{u(p-1)/m}^{k}U_{mp,j}(n)
+       \in p^{\min(k(1+\nu_p(u)),mn)}\Z_p.
+\]
+For $C_{mp,j}$ the corresponding valuation lower bound is
+$\min(k(1+\nu_p(u)),mn)-v_p(j!)$.
+\end{corollary}
+
+\begin{proof}
+Apply the same repeated-displacement theorem with the fixed cap $mn$ to
+\eqref{eq:arith-divisor-bound}.  The argument preserves this cap and
+improves the contribution from the order of the difference.
+Division by the fixed factorial gives the rational valuation statement,
+with the zero case included.
+These are
+\lean{KomorebiPaperIX.AllResidueStepAmplification.unnormalized_precision}
+and
+\lean{KomorebiPaperIX.AllResidueStepAmplification.normalized_precision}.
+\end{proof}
+
+\begin{corollary}[Dyadic periods from row zero]\label{cor:arith-allrow-period}
+For $0\le j<4$, $r\ge1$, and $n\ge0$,
+\[
+ U_j(n+2^{r-1})\equiv U_j(n)\pmod{2^r}.
+\]
+For $j=2,3$ and $r\ge2$, $2^{r-2}$ is also a sufficient packet period.
+The respective original degree displacements are $2^{r+1}$ and $2^r$.
+\end{corollary}
+
+\begin{proof}
+Use Lemma~\ref{lem:arith-newton-period} and the unit-step case of
+Theorem~\ref{thm:arith-dyadic-differences}.  At $j=2,3$ the factorial
+contributes an additional power of two.  The original degree versions are
+\lean{KomorebiPaperIX.DyadicFourFinalStrengthening.all_rows_period_degree}
+and
+\lean{KomorebiPaperIX.DyadicFourFinalStrengthening.all_rows_half_period_degree}.
+The next theorem sharpens these sufficient periods to a complete
+classification.
+\end{proof}
+
+\subsection{Exact displacement valuations and least packet periods}
+
+\begin{lemma}[Finite Newton dominance]\label{lem:arith-dominance}
+Let $f:\N\to\Q$ and write $a_k=\Delta_1^kf(0)$.  Suppose that $c\in\N$,
+$a_1\ne0$, $v_2(a_1)=c$, and
+\[
+ v_2(a_k)\ge c+1+\lfloor\log_2k\rfloor\qquad(k\ge2).
+\]
+Then for every $n\ge0$ and $T>0$,
+\[
+ f(n+T)-f(n)\ne0,\qquad
+ v_2\bigl(f(n+T)-f(n)\bigr)=v_2(T)+c.
+\]
+\end{lemma}
+
+\begin{proof}
+Finite Newton reconstruction at an arbitrary row gives
+\[
+ \Delta_1^kf(n)=\sum_{i=0}^{n}\binom ni a_{k+i}.
+\]
+The monotonicity of $\lfloor\log_2k\rfloor$ therefore preserves the
+higher-coefficient bound after translation.  In addition,
+$\Delta_1f(n)-a_1\in2^{c+1}\Z_2$, so the first difference is nonzero
+of exact valuation $c$.
+
+Now expand the displacement:
+\[
+ f(n+T)-f(n)=T\Delta_1f(n)
+          +\sum_{k=2}^{T}\binom Tk\Delta_1^kf(n).
+\]
+For $1\le k\le T$, the binomial denominator identity implies
+\[
+ v_2\binom Tk\ge v_2(T)-v_2(k)
+            \ge v_2(T)-\lfloor\log_2k\rfloor.
+\]
+Every term of the remaining sum consequently has valuation at least
+$v_2(T)+c+1$.  Its sum cannot cancel the leading term, which has exact
+valuation $v_2(T)+c$.  This proves nonvanishing and the claimed valuation
+using only finite sums.
+The general theorem is
+\lean{KomorebiPaperIX.NewtonDominance.exact_displacement}.
+\end{proof}
+
+\begin{theorem}[Exact four-packet displacement law]\label{thm:arith-exact}
+Set
+\[
+ (c_0,c_1,c_2,c_3)=(1,1,4,2),\qquad
+ (d_0,d_1,d_2,d_3)=(1,1,5,3).
+\]
+For $0\le j<4$, $n\ge0$, and every positive integer $T$,
+\begin{align*}
+ C_j(n+T)-C_j(n)&\ne0,&
+ v_2\bigl(C_j(n+T)-C_j(n)\bigr)&=v_2(T)+c_j,\\
+ U_j(n+T)-U_j(n)&\ne0,&
+ v_2\bigl(U_j(n+T)-U_j(n)\bigr)&=v_2(T)+d_j.
+\end{align*}
+\end{theorem}
+
+\begin{proof}
+The first Newton coefficients, derived from
+\eqref{eq:arith-triangular}, are
+\[
+ a_{0,1}=-2,\quad a_{1,1}=-\frac65,\quad
+ a_{2,1}=-\frac{16}{15},\quad a_{3,1}=-\frac{36}{35}.
+\]
+Their exact valuations are $c_j$.  Theorem~\ref{thm:arith-dyadic-differences}
+gives $v_2(a_{j,k})\ge k$ for all orders.  To obtain the stronger
+logarithmic envelope required by Lemma~\ref{lem:arith-dominance}, only
+a finite initial segment needs improvement.  The recurrence proves the
+following exact valuations:
+\begin{center}
+\begin{tabular}{cll}\toprule
+Address $j$ & Further orders $k$ & $v_2(a_{j,k})$ in that order\\\midrule
+$0$ & $2$ & $3$\\
+$1$ & $2$ & $3$\\
+$2$ & $2,3,4,5,6$ & $6,9,13,16,22$\\
+$3$ & $2,3,4$ & $8,8,15$\\\bottomrule
+\end{tabular}
+\end{center}
+For all subsequent $k$, the elementary inequality
+$c_j+1+\lfloor\log_2k\rfloor\le k$ completes the envelope.
+The entries follow by exact rational computation from the defining
+recurrence, and their valuations are proved in Lean.  Together with the
+inequality for all subsequent orders, they establish the bound at every
+order.
+The uniform envelope is
+\lean{KomorebiPaperIX.DyadicFourPrefix.tail_precision}.
+
+Apply Lemma~\ref{lem:arith-dominance} to $C_j$.  Multiplication by the
+nonzero factorial $j!$ adds $v_2(j!)$ and preserves nonzeroness.
+Hence $d_j=c_j+v_2(j!)$, giving the four valuation gains for the original
+coefficients.
+The declarations are
+\lean{KomorebiPaperIX.DyadicFourLeastPeriods.normalized_exact_displacement}
+and \lean{KomorebiPaperIX.DyadicFourLeastPeriods.exact_displacement}.
+\end{proof}
+
+\begin{corollary}[All positive periods and their least element]
+\label{cor:arith-least-period}
+For $r\in\N$ and $0\le j<4$, a positive integer $T$ is a packet period
+of $U_j$ modulo $2^r$ if and only if
+\[
+ 2^{\max(0,r-d_j)}\mid T.
+\]
+Here a packet period means $U_j(n+T)\equiv U_j(n)\pmod{2^r}$ for every
+$n\ge0$.  Consequently the least positive packet periods are
+\[
+ \begin{array}{c|cccc}
+ j&0&1&2&3\\\hline
+ \text{least period}&2^{\max(0,r-1)}&2^{\max(0,r-1)}&
+                 2^{\max(0,r-5)}&2^{\max(0,r-3)}.
+ \end{array}
+\]
+\end{corollary}
+
+\begin{proof}
+By the exact displacement law, the congruence at any row is equivalent to
+$v_2(T)+d_j\ge r$.  This is exactly the displayed integer
+divisibility criterion.  Its least positive solution is the indicated
+power of two, which also covers $r=0$ and $r\le d_j$.
+The all-period and least-element statements are
+\lean{KomorebiPaperIX.DyadicFourLeastPeriods.period_iff_dvd} and
+\lean{KomorebiPaperIX.DyadicFourLeastPeriods.least_packet_period}.
+\end{proof}
+
+For example, $U_2(n)\equiv2\pmod{32}$ and $U_3(n)\equiv6\pmod8$
+for every row.  At precision $2^{10}$ the least packet periods are
+$512,512,32,128$.  A packet displacement $T$ has original degree
+displacement $4T$, as proved by
+\lean{KomorebiPaperIX.DyadicFourLeastPeriods.original_degree_exact_displacement}.
+Minimality here concerns packet shifts.  Shifts of the full degree-indexed
+sequence, including its zero coefficients off the packet support, require
+a separate analysis.  Exact valuations of arbitrary higher-order differences
+are also a separate question from the first-displacement law.
+
+\subsection{Classical odd-length coordinates and their congruence ladder}
+
+The classical signed Euler numbers have generating function
+$\operatorname{sech}t=\sum_{n\ge0}E_{2n}t^{2n}/(2n)!$.
+They are the $N=2$, $j=0$ member of
+\eqref{eq:arith-euler-egf}.  The coordinate theorem reconstructs
+them from finite alternating sums of odd powers.
+
+\begin{definition}[Odd-length source and inverse coefficients]
+\label{def:arith-odd-source}
+For a positive odd integer $p$, define
+\[
+ S_d(p)=\sum_{a=0}^{p-1}(-1)^a(2a+1)^d.
+\]
+Let $\gamma_m$ be the integral Hurwitz coefficients of $\operatorname{sech}^2$:
+\[
+ \operatorname{sech}^2t=\sum_{m\ge0}\gamma_m\frac{t^{2m}}{(2m)!},
+ \qquad
+ \gamma_m=\sum_{b=0}^{2m}\binom{2m}{b}E_bE_{2m-b},
+\]
+where $E_b=0$ for odd $b$.  Then $\gamma_0=1$.  Define
+\[
+ T^{\mathrm{odd}}_{p,M}(n)=\sum_{m=0}^{\min(M,n)}
+       \binom{2n}{2m}\gamma_m p^{2m}S_{2(n-m)}(p).
+\]
+Here $p$ need only be odd; primality is needed only to interpret the
+result as a prime-adic congruence ladder.
+\end{definition}
+
+The source and inverse coefficients are
+\lean{KomorebiPaperIX.OddPower.source} and
+\lean{KomorebiPaperIX.EulerCoefficients.inverseEven}; the truncation is
+\lean{KomorebiPaperIX.OddEuler.truncation}.
+
+The same inverse coefficients can be written in the signed zigzag notation
+of the original manuscript.  Define $Z_r$ by
+\[
+ \sec t+\tan t=\sum_{r\ge0}Z_r\frac{t^r}{r!}.
+\]
+Then
+\begin{equation}\label{eq:arith-signed-zigzag}
+ \gamma_m=(-1)^m Z_{2m+1}\qquad(m\in\N).
+\end{equation}
+Indeed, the odd coefficients come from $\tan t$, whose derivative is
+$\sec^2t$.  Changing the sign of the squared variable in the even series
+for $\operatorname{sech}^2t$ gives $\sec^2t$, so its degree-$2m$
+Hurwitz coefficient is $(-1)^m\gamma_m$.  Differentiation identifies
+this coefficient with $Z_{2m+1}$, proving the formula.  The Lean bridge is
+\lean{KomorebiPaperIX.Zigzag.inverse_is_signed_zigzag}; it uses the
+formal generating-function definition of the zigzag numbers.
+
+\begin{theorem}[Classical odd-length reconstruction]
+\label{thm:arith-odd-reconstruction}
+For every positive odd integer $p$ and every $n\in\N$,
+\[
+ E_{2n}=\sum_{m=0}^{n}\binom{2n}{2m}\gamma_m p^{2m}S_{2(n-m)}(p).
+\]
+Equivalently, $E_{2n}=\sum_{q=0}^n V_{nq}S_{2q}(p)$ for the lower
+triangular matrix
+\[
+ V_{nq}=\binom{2n}{2q}\gamma_{n-q}p^{2(n-q)}\quad(q\le n),
+ \qquad V_{nq}=0\quad(q>n).
+\]
+It has $V_{nn}=1$ and $p^{2(n-q)}\mid V_{nq}$ when $q\le n$.
+\end{theorem}
+
+\begin{proof}
+The exponential generating series of the source is the finite sum
+\[
+ \mathcal S_p(t)=\sum_{a=0}^{p-1}(-1)^a e^{(2a+1)t}.
+\]
+Multiplication by $\cosh t$ telescopes.  Since $p$ is odd,
+\[
+ \mathcal S_p(t)=\frac{1+e^{2pt}}{2}\operatorname{sech}t.
+\]
+Taking its even part gives
+\[
+ \sum_{n\ge0}S_{2n}(p)\frac{t^{2n}}{(2n)!}
+       =\cosh^2(pt)\operatorname{sech}t.
+\]
+Multiplication by the reciprocal $\operatorname{sech}^2(pt)$
+yields $\operatorname{sech}t$.  The EGF product rule now gives the
+reconstruction coefficient by coefficient.  Replacing $m$ by $n-q$
+produces the displayed lower triangular row.  Its diagonal and weights
+follow from $\gamma_0=1$ and the explicit factor $p^{2(n-q)}$.
+The source-series identity is
+\lean{KomorebiPaperIX.OddPower.odd_source_even_egf}; the reconstruction
+and row statement are
+\lean{KomorebiPaperIX.OddEuler.odd_euler_reconstruction} and
+\lean{KomorebiPaperIX.OddEuler.row_action}.
+\end{proof}
+
+\begin{corollary}[Odd-prime truncation ladder]\label{cor:arith-odd-ladder}
+For every positive odd integer $p$ and all $M,n\in\N$,
+\[
+ p^{2M+2}\mid E_{2n}-T^{\mathrm{odd}}_{p,M}(n)\quad\text{in }\Z.
+\]
+If $M\ge n$, the truncation equals $E_{2n}$ exactly.  In particular,
+for an odd prime $p$ this is a congruence modulo $p^{2M+2}$ in $\Z_p$.
+\end{corollary}
+
+\begin{proof}
+Every omitted summand has $m\ge M+1$, hence contains the integer factor
+$p^{2m}$ divisible by $p^{2M+2}$.  All its other factors are integral.
+The finite sum of these omitted terms proves the assertion, with the
+empty-tail case giving exact equality.  These are
+\lean{KomorebiPaperIX.OddEuler.odd_euler_supercongruence} and
+\lean{KomorebiPaperIX.OddEuler.full_depth_exact}.
+\end{proof}
+
+The reconstruction and its truncation bound already hold over the integers.
+For the dyadic construction we use a different source.  Its original bound
+of $2^{2M+2}$ follows from integral reciprocal coefficients, and the next
+subsection sharpens that bound to the optimal uniform exponent $4M+3$.
+
+\subsection{The optimal classical dyadic edge tower}
+
+Return now to the classical signed Euler numbers
+\[
+ \operatorname{sech}t=\frac1{\cosh t}
+       =\sum_{n\ge0}E_{2n}\frac{t^{2n}}{(2n)!}.
+\]
+Thus $E_{2n}=E_{2n}^{(2,0)}$ in the convention
+\eqref{eq:arith-euler-egf}.  In particular $E_0=1$, $E_2=-1$, and $E_4=5$.
+The following construction concerns these $N=2$ coefficients, not $C_{4,0}$.
+
+\begin{definition}[Dyadic truncation]\label{def:arith-truncation}
+Define $\beta_m$ by the formal unit-series identity
+\[
+ \sum_{m\ge0}\beta_m z^{2m}=\left(\frac{z}{\sinh z}\right)^2,
+ \qquad \beta_0=1,
+\]
+where the quotient means the inverse of the unit series
+$(\sinh z/z)^2$.  Define
+\[
+ A(n)=\frac{3^{2n+2}-1}{4(2n+1)(2n+2)},\qquad
+ S_m(n)=\beta_m2^{2m}\frac{(2n)!}{(2n-2m)!}A(n-m)
+       \quad(0\le m\le n),
+\]
+and
+\begin{equation}\label{eq:arith-tm}
+ T_M(n)=\sum_{m=0}^{\min(M,n)}S_m(n)\qquad(M,n\in\N).
+\end{equation}
+\end{definition}
+
+These definitions correspond to
+\lean{KomorebiPaperIX.Dyadic.beta},
+\lean{KomorebiPaperIX.Dyadic.sourceEven}, and
+\lean{KomorebiPaperIX.DyadicReconstruction.truncation}.
+The formal summand uses a falling factorial, and
+\lean{KomorebiPaperIX.DyadicReconstruction.falling_factorial_fraction}
+proves its equality with the quotient displayed above.
+
+\begin{lemma}[Exact reconstruction and source integrality]
+\label{lem:arith-reconstruction}
+For every $n\in\N$,
+\[
+ E_{2n}=\sum_{m=0}^{n}S_m(n).
+\]
+Every $\beta_m$ is $2$-adically integral and every $A(n)$ is a nonzero
+$2$-adic unit.  If $M\ge n$, then $T_M(n)=E_{2n}$.
+\end{lemma}
+
+\begin{proof}
+The ordinary kernel coefficients of $(\sinh z/z)^2$, in $z^2$, are
+\[
+ \frac{2^{2m+1}}{(2m+2)!}.
+\]
+Legendre's strict factorial bound
+$v_2((2m+2)!)<2m+2$ makes them integral.  Their constant coefficient is
+one.  The coefficient recurrence for its reciprocal therefore
+proves integrality of every $\beta_m$.
+For the source factor, lifting the exponent at the even power $2n+2$
+gives
+\[
+ v_2(3^{2n+2}-1)=2+v_2(2n+2).
+\]
+Its denominator has the same valuation, since $2n+1$ is odd.  Thus
+$A(n)$ is a nonzero unit.
+
+Its exponential generating function is
+\[
+ \mathcal A(t)=\sum_{n\ge0}A(n)\frac{t^{2n}}{(2n)!}
+             =\frac{\cosh(3t)-\cosh t}{4t^2}.
+\]
+The quotients by powers of $t$ are well defined because the required
+initial coefficients vanish.  The hyperbolic identity
+\[
+ \mathcal A(t)\cosh t=\left(\frac{\sinh(2t)}{2t}\right)^2
+\]
+then gives the exact formal-series product
+\[
+ \left(\sum_{m\ge0}\beta_m(2t)^{2m}\right)\mathcal A(t)
+       =\operatorname{sech}t.
+\]
+Taking the factorial-scaled coefficient of $t^{2n}$ produces the stated
+finite sum.  Full depth leaves no omitted terms.
+The relevant declarations are
+\lean{KomorebiPaperIX.Dyadic.beta_integral},
+\lean{KomorebiPaperIX.Dyadic.source_valuation},
+\lean{KomorebiPaperIX.DyadicSeries.dyadic_reconstruction_series}, and
+\lean{KomorebiPaperIX.DyadicReconstruction.dyadic_reconstruction}.
+\end{proof}
+
+\begin{lemma}[Exact weighted inverse coefficient]\label{lem:arith-kappa}
+Let $\kappa_m=\beta_m2^{2m}(2m)!$.  For every $m\ge1$,
+\[
+ \kappa_m=-2^{4m}(2m-1)B_{2m}\ne0,\qquad
+ v_2(\kappa_m)=4m-1,
+\]
+where $B_{2m}$ is the usual even Bernoulli number.
+\end{lemma}
+
+\begin{proof}
+Let $Q(z)=z\coth z$, the regular formal series with constant coefficient
+one.  The elementary differential identity
+\[
+ \left(\frac z{\sinh z}\right)^2=Q(z)-zQ'(z)
+\]
+and the Bernoulli expansion
+\[
+ Q(z)=1+\sum_{m\ge1}\frac{2^{2m}B_{2m}}{(2m)!}z^{2m}
+\]
+give
+$\beta_m=-2^{2m}(2m-1)B_{2m}/(2m)!$.
+Multiplication by $2^{2m}(2m)!$ proves the identity for $\kappa_m$.
+The Bernoulli valuation theorem gives $v_2(B_{2m})=-1$.
+Since $2m-1$ is odd, the valuation is exactly $4m-1$.
+This also proves nonvanishing.  In Lean, the hyperbolic identity is proved
+after clearing removable zeros.  The library Bernoulli theorem then
+determines the valuation of $\kappa_m$.
+The declarations are
+\lean{KomorebiPaperIX.DyadicSharpTower.kappa_bernoulli} and
+\lean{KomorebiPaperIX.DyadicSharpTower.kappa_valuation}.
+\end{proof}
+
+\begin{theorem}[Optimal uniform dyadic tower]\label{thm:arith-sharp-tower}
+For all $M,n\in\N$,
+\begin{equation}\label{eq:arith-sharp-tail}
+ E_{2n}-T_M(n)\in2^{4M+3}\Z_2.
+\end{equation}
+At the first omitted row $n=M+1$, the error is nonzero and
+\[
+ v_2\bigl(E_{2M+2}-T_M(M+1)\bigr)=4M+3.
+\]
+Thus the exponent $4M+3$ cannot be increased uniformly in the Euler row.
+\end{theorem}
+
+\begin{proof}
+Rewrite the summand exactly as
+\[
+ S_m(n)=\kappa_m\binom{2n}{2m}A(n-m).
+\]
+For $m>M$, its first factor is divisible by $2^{4m-1}$, the binomial
+coefficient is integral, and $A(n-m)$ is a unit.  Hence every omitted
+summand is divisible by $2^{4M+3}$.  Summing the finite tail proves
+\eqref{eq:arith-sharp-tail}.  If $M\ge n$, the tail is empty and the
+statement includes the resulting zero error.
+
+At $n=M+1$ there is exactly one omitted summand.  Here
+$\binom{2n}{2n}=1$ and $A(0)=1$, so the error is $\kappa_{M+1}$.
+Lemma~\ref{lem:arith-kappa} gives its exact valuation $4M+3$ and
+nonvanishing.  The statements are
+\lean{KomorebiPaperIX.DyadicSharpTower.dyadic_supercongruence_sharp},
+\lean{KomorebiPaperIX.DyadicSharpTower.first_omitted_error}, and
+\lean{KomorebiPaperIX.DyadicSharpTower.first_omitted_error_valuation}.
+\end{proof}
+
+\begin{proposition}[Row-dependent summand weights]\label{prop:arith-row-weight}
+For $1\le m\le n$, the summand is nonzero and
+\[
+ v_2(S_m(n))=4m-1+v_2\binom{2n}{2m}.
+\]
+More generally, if $L\in\N$ satisfies
+\[
+ L\le4m-1+v_2\binom{2n}{2m}\qquad\text{for every }M<m\le n,
+\]
+then $E_{2n}-T_M(n)\in2^L\Z_2$.
+\end{proposition}
+
+\begin{proof}
+Use the same factorization of $S_m(n)$, the nonzero binomial coefficient
+for $m\le n$, the exact valuation of $\kappa_m$, and the unit property
+of $A(n-m)$.  The tail conclusion follows by addition in $2^L\Z_2$.
+These are \lean{KomorebiPaperIX.DyadicSharpTower.summand_valuation} and
+\lean{KomorebiPaperIX.DyadicSharpTower.dyadic_supercongruence_row_weight}.
+\end{proof}
+
+The minimum summand weight bounds the tail valuation from below, but
+cancellation may raise that valuation.  An exact formula for the entire
+tail at every row therefore remains open.  Uniform optimality follows
+from the equality already established at $n=M+1$.
+
+\subsection{Isometric continuation of the four dyadic packets}
+
+The exact displacement law also determines the images of the packets
+after continuous extension to the dyadic integers.
+
+\begin{theorem}[Isometric packet bijections]\label{thm:arith-isometry}
+For $0\le j<4$, define on natural numbers
+\[
+ f_j(n)=\frac{U_j(n)-j!}{2^{d_j}},\qquad (d_0,d_1,d_2,d_3)=(1,1,5,3).
+\]
+There is a unique continuous map $\Phi_j:\Z_2\to\Z_2$ whose value at
+every $n\in\N$ equals the embedded rational $f_j(n)$.
+It is an isometric bijection and $\Phi_j(0)=0$:
+\[
+ |\Phi_j(x)-\Phi_j(y)|_2=|x-y|_2\qquad(x,y\in\Z_2).
+\]
+In particular, every element of $\Z_2$ has exactly one preimage.
+\end{theorem}
+
+\begin{proof}
+For $n>0$, the displacement law at row zero gives
+$v_2(U_j(n)-j!)=v_2(n)+d_j$, so $f_j(n)\in\Z_2$.
+The value at zero is zero.  Applying the same law to the smaller of two
+unequal natural numbers shows
+\[
+ |f_j(n)-f_j(m)|_2=|n-m|_2.
+\]
+The natural numbers are dense in $\Z_2$, and the target is complete.
+The map therefore extends continuously.  The distance identity extends
+on the dense product of natural-number points, making the extension
+an isometry.  Density also proves uniqueness among all continuous maps
+with these prescribed values.
+
+To prove surjectivity, use compactness.  For an isometry $g$ of a compact
+metric space into itself, the sequence of iterates $g^n(x)$ has a
+convergent subsequence.  Two sufficiently close iterates, with exponents
+$a<b$, yield $d(x,g^{b-a}(x))$ equally small after removing $a$ isometric
+iterations.  Since $b-a>0$, the latter point is in the image of $g$.
+Thus the image is dense.  It is also compact and hence closed, so it is
+the whole space.  Apply this to $\Phi_j$ on $\Z_2$.
+
+The general ingredients are
+\lean{KomorebiPaperIX.DensePadicIsometry.existsUnique_extensionEquiv} and
+\lean{KomorebiPaperIX.CompactSelfIsometry.surjective}.
+The packet specialization is
+\lean{KomorebiPaperIX.DyadicFourIsometry.existsUnique_isometry};
+uniqueness among continuous maps is
+\lean{KomorebiPaperIX.DyadicFourIsometry.unique_continuous}.
+\end{proof}
+
+\begin{corollary}[Exact image of the original coefficients]
+\label{cor:arith-affine-image}
+The continuous extension of the original sequence is
+\[
+ \widetilde U_j(x)=j!+2^{d_j}\Phi_j(x).
+\]
+It is injective, its image is exactly $j!+2^{d_j}\Z_2$, and
+\[
+ |\widetilde U_j(x)-\widetilde U_j(y)|_2
+     =2^{-d_j}|x-y|_2.
+\]
+Every point of that affine image has exactly one preimage in $\Z_2$.
+\end{corollary}
+
+\begin{proof}
+The formula agrees with $U_j$ on every natural number.  Continuity and
+the distance equality follow from the corresponding properties of
+$\Phi_j$.  Its surjectivity gives precisely the displayed affine image,
+and multiplication by the nonzero scalar $2^{d_j}$ preserves injectivity.
+The declarations are
+\lean{KomorebiPaperIX.DyadicFourIsometry.originalExtension_nat},
+\lean{KomorebiPaperIX.DyadicFourIsometry.originalExtension_dist}, and
+\lean{KomorebiPaperIX.DyadicFourIsometry.originalExtension_range}.
+\end{proof}
+
+The four rational packet sequences thus extend to bijections onto their
+exact dyadic images.  The proof uses density, completeness, and the
+displacement law.  Analyticity of these packet extensions would require
+a further argument.  The analytic polynomial solution maps constructed
+later rest on separate hypotheses and a separate proof.

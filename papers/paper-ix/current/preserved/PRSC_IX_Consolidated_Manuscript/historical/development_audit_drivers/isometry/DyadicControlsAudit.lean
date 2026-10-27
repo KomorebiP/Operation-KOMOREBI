@@ -1,0 +1,9 @@
+module
+public import DyadicIsometryControls
+
+#print axioms KomorebiPaperIX.DyadicIsometryControls.address_zero_at_one
+#print axioms KomorebiPaperIX.DyadicIsometryControls.address_zero_at_two
+#print axioms KomorebiPaperIX.DyadicIsometryControls.address_zero_not_additive
+#print axioms KomorebiPaperIX.DyadicIsometryControls.address_zero_inverse_at_thirty_four
+#print axioms KomorebiPaperIX.DyadicIsometryControls.original_address_zero_ne_zero
+#print axioms KomorebiPaperIX.DyadicIsometryControls.original_address_zero_not_surjective

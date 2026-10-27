@@ -1,0 +1,1000 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools,mathrsfs}
+\usepackage{bm}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2600
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else
+    \edef\@subjects{Primary:~\@primarysubjects}%
+  \fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty
+      \edef\@subjects{Secondary:~\@secondarysubjects}%
+    \else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}%
+    \fi
+  \fi
+  \ifpdf
+    \hypersetup{pdfsubject=\@subjects}%
+  \fi
+  \if@aom@oldkeywords\else
+    \@footnotetext{AMS Classification:~\@subjects.}%
+  \fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\Zp}{\mathbb Z_p}
+\newcommand{\Qp}{\mathbb Q_p}
+\newcommand{\Hcal}{\mathcal H}
+\newcommand{\Ecal}{\mathcal E}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Vcal}{\mathcal V}
+\newcommand{\Wcal}{\mathcal W}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\vp}{v_p}
+\newcommand{\vTwo}{v_2}
+\newcommand{\sTwo}{s_2}
+\newcommand{\DeltaH}{\Delta_h}
+\newcommand{\fall}[2]{(#1)_{#2}}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\one}{\bm 1}
+\newcommand{\starh}{\mathbin{\star}}
+\newcommand{\e}{\mathrm e}
+
+\graphicspath{{figures/}}
+
+\title[Local arithmetic packet calculus]{Local Arithmetic Packet Calculus for Euler Families, Mahler Transfer, and Polyphase Refinement}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{11B68}
+\subject{secondary}{msc2020}{11S80}
+\subject{secondary}{msc2020}{11B37}
+\subject{secondary}{msc2020}{13F25}
+\keyword{Euler number}
+\keyword{Hurwitz series}
+\keyword{Mahler expansion}
+\keyword{finite field period}
+\keyword{supercongruence}
+\keyword{polyphase refinement}
+\keyword{arithmetic lifting}
+\copyrightnote{}
+\doinumber{}
+
+\pdfstringdefDisableCommands{\let\unskip\relax}
+\hypersetup{
+  pdftitle={Local Arithmetic Packet Calculus for Euler Families, Mahler Transfer, and Polyphase Refinement},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Hurwitz series, unified local Euler transfer, sharp dyadic reconstruction, Mahler interpolation, polyphase refinement, lifting obstructions, and recurrence packets}
+}
+
+\begin{document}
+\begin{abstract}
+This article places the odd and dyadic Euler coordinates inside one local source and kernel calculus without identifying their different integral structures. A finite field Hurwitz algebra proves the exact period of every standard window modulo an odd prime. Alternating odd power sums and a dyadic source then satisfy one divided power reconstruction law. The dyadic kernel has exact valuation \(4m-1\), which gives the optimal uniform depth \(M\) modulus \(2^{4M+3}\). Carmichael and Mahler coordinates turn unit modes, polynomial exponential modes, and invertible matrix recurrences into convergent local expansions with explicit valuation slopes. They produce a depleted odd prime interpolation of Euler numbers, a direct analytic interpolation of the even Euler sequence on \(\mathbb Z_2\), and simultaneous congruences at finitely many primes. Affine reindexing \(x=Mq+s\) acts on Mahler coefficients through a finite kernel with an exact composition law. Prime power refinement becomes sparse modulo the residue prime and increases certified precision. Cokernel classes govern one step arithmetic lifting. Recurrence packets and Chinese remainder projectors complete the finite reconstruction theory. The remaining inverse valuation and unrestricted gluing problems are stated precisely.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+Euler numbers carry several kinds of local information at once. Their indices have residue addresses. Their coefficient transforms have triangular depth. Their local expansions have Mahler degree. Their congruences depend on the valuation of the transfer kernel and on the valuation of the source value in the row being reconstructed. These pieces should not be merged into one undifferentiated congruence calculation.
+
+This article begins with the Hurwitz product
+\[
+(a\starh b)_n
+=
+\sum_{r=0}^{n}
+\binom nr a_rb_{n-r}.
+\]
+Over a field of characteristic zero it is multiplication of exponential generating functions. Over a finite field it realizes the additive group algebra through the exponential modes \(\epsilon_u=(u^n)_{n\geq0}\). This finite algebra gives an exact proof of the standard window period. Hurwitz series rings are treated in \cite{Keigher1997,BarberoCerrutiMurru2018}. The finite difference and umbral background may be found in \cite{Roman1984,Comtet1974,GrahamKnuthPatashnik1994}.
+
+Fix an odd prime \(p\), a divisor \(m\mid p-1\), and put
+\[
+h=\frac{p-1}{m}.
+\]
+The reduced standard window inverse is defined by
+\[
+\sum_{q=0}^{n}
+\binom{mn}{mq}e_q^{(m,p)}
+=
+\delta_{n0}
+\quad\text{in }\FF_p.
+\]
+We prove that
+\[
+e_{n+h}^{(m,p)}=e_n^{(m,p)}
+\qquad(n\geq1).
+\]
+The result first follows from subgroup symmetry in the finite Hurwitz algebra. A second proof shows that the standard window operator preserves the finite space of sequences that are \(h\) periodic after their constant term. The two arguments expose different parts of the same finite character structure.
+
+The central change in this edition is the treatment of the odd and dyadic Euler formulas. They are no longer presented as unrelated reconstruction devices. For each prime \(p\) we define an even source series \(H_p\) and an inverse kernel \(K_p\) satisfying
+\[
+K_p(t)H_p(t)=\operatorname{sech}t.
+\]
+At an odd prime,
+\[
+H_p(t)=\cosh^2(pt)\operatorname{sech}t,
+\qquad
+K_p(t)=\operatorname{sech}^2(pt).
+\]
+At the dyadic prime,
+\[
+H_2(t)=\frac{\sinh(2t)\sinh t}{2t^2},
+\qquad
+K_2(t)=\frac{4t^2}{\sinh^2(2t)}.
+\]
+The coefficient convolution is identical in form, but the kernels have different integral weights. This is the correct sense in which the local theories unify.
+
+The dyadic kernel is substantially sharper than the separate coefficient bound alone suggests. If
+\[
+\frac{z^2}{\sinh^2z}
+=
+\sum_{r\geq0}\beta_rz^{2r}
+\]
+and
+\[
+\kappa_{2,r}=\beta_r2^{2r}(2r)!,
+\]
+then
+\[
+\vTwo(\kappa_{2,r})=4r-1
+\qquad(r\geq1).
+\]
+Consequently, truncation after depth \(M\) is uniformly valid modulo
+\[
+2^{4M+3},
+\]
+and this exponent is optimal. The rowwise estimate records the additional binary carries in the binomial coefficient. Classical congruence theory for Euler families is extensive \cite{CarlitzLevine1960,Young1999,Young2001,Sun2008,Chen2004}. The formulas here are stated as exact coordinate identities. Historical priority requires a separate theorem by theorem comparison.
+
+The second expansion concerns local interpolation. The exponent of the finite unit group moves every unit mode into a principal unit neighborhood. Binomial expansion then gives a Mahler series whose depth \(r\) coefficient gains at least \(Lr\) digits when the chosen jump is the identity modulo \(p^L\). The same argument applies to polynomial exponential modes and to invertible matrix state systems. Mahler interpolation and the Amice transform are classical \cite{Mahler1958,Amice1964,Robert2000}. The local unit structure and valuation tools used here are standard \cite{Koblitz1984,Serre1979,Washington1997,Gouvea1997}.
+
+The odd Euler source contains one nonunit base. Removing that base gives an analytic unit source and an interpolation of a depleted Euler sequence on every even character branch. The dyadic source is already analytic on \(\Zp\) after a removable singularity is filled. It yields a direct analytic interpolation of \(E_{2n}\) on \(\mathbb Z_2\). These branches are then refined by the substitution
+\[
+x=Mq+s.
+\]
+The induced Mahler coefficient transform is finite and explicit. Its kernels compose exactly. At prime power radix they become sparse modulo the residue prime. Every monotone valuation ladder survives the refinement.
+
+The remaining sections treat arithmetic lift obstructions, recurrence packets, and Chinese remainder reconstruction. The lifting obstruction is the residual defect modulo the image of the declared correction map. A recurrence packet is governed by a jump matrix \(C^N\). If one integral recurrence is fixed, all of its local realizations have one common source. These statements do not prove that arbitrary unrelated local objects have a global origin.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.96\textwidth]{01_arithmetic_architecture.pdf}
+\caption{The arithmetic coordinate chain. Residue address, local character, Mahler depth, transfer weight, and reconstruction are recorded separately.}
+\label{fig:architecture}
+\end{figure}
+
+Four boundaries remain explicit. A period modulo \(p\) does not by itself lift to all powers of \(p\). The full finite difference estimate for every congruential reciprocal packet still requires control of the triangular inverse. Exact higher valuations of the affine polyphase kernel are not yet known in general. Chinese remainder reconstruction and finite adelic synchronization do not prove a global source for arbitrary local systems.
+\section{Hurwitz series and finite field subgroup inversion}\label{sec:hurwitz}
+
+\subsection{The Hurwitz ring}
+
+\begin{definition}[Hurwitz series ring]\label{def:hurwitz_ring}
+Let \(R\) be a commutative ring with identity. The Hurwitz series ring \(\Hcal(R)\) is the set \(R^{\NN}\) with componentwise addition and product
+\[
+(a\starh b)_n
+=
+\sum_{r=0}^{n}
+\binom nr a_r b_{n-r}.
+\]
+Its identity is
+\[
+\delta=(1,0,0,\ldots).
+\]
+\end{definition}
+
+When the factorials are invertible, the sequence \(a\) may be written as the exponential generating series
+\[
+A(t)=\sum_{n\geq0}a_n\frac{t^n}{n!},
+\]
+and the Hurwitz product becomes ordinary multiplication. The sequence definition remains valid in every characteristic.
+
+\begin{definition}[Exponential mode]\label{def:exponential_mode}
+For \(u\in R\), define
+\[
+\epsilon_u=(u^n)_{n\geq0},
+\]
+where \(0^0=1\).
+\end{definition}
+
+\begin{proposition}[Addition law for modes]\label{prop:mode_addition}
+For every \(u,v\in R\),
+\[
+\boxed{
+\epsilon_u\starh\epsilon_v
+=
+\epsilon_{u+v}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The \(n\)th coefficient is
+\[
+\sum_{r=0}^{n}
+\binom nr u^rv^{n-r}
+=
+(u+v)^n
+\]
+by the binomial theorem.
+\end{proof}
+
+\subsection{The finite additive group algebra}
+
+Let \(p\) be prime. Write \(\FF_p^+\) for the additive group of the finite field.
+
+\begin{theorem}[Finite field mode algebra]\label{thm:mode_group_algebra}
+The map
+\[
+\Theta:
+\FF_p[\FF_p^+]
+\longrightarrow
+\Hcal(\FF_p),
+\qquad
+[u]\longmapsto\epsilon_u,
+\]
+is an injective algebra homomorphism. Its image is the \(p\) dimensional subalgebra spanned by the modes \(\epsilon_u\).
+\end{theorem}
+
+\begin{proof}
+The product law follows from \cref{prop:mode_addition}. To prove injectivity, suppose
+\[
+\sum_{u\in\FF_p}c_u\epsilon_u=0.
+\]
+Looking at the coordinates \(n=0,1,\ldots,p-1\) gives a Vandermonde system with matrix
+\[
+(u^n)_{0\leq n\leq p-1,\ u\in\FF_p}.
+\]
+Its determinant is the product of all differences between distinct field elements, so it is nonzero. Hence every \(c_u\) vanishes.
+\end{proof}
+
+\begin{proposition}[Augmentation criterion]\label{prop:augmentation_criterion}
+Let
+\[
+x=\sum_{u\in\FF_p}c_u[u]
+\in
+\FF_p[\FF_p^+].
+\]
+Then \(x\) is a unit if and only if
+\[
+\operatorname{aug}(x)
+=
+\sum_uc_u
+\]
+is nonzero. If \(J\) is the augmentation ideal, then
+\[
+J^p=0.
+\]
+\end{proposition}
+
+\begin{proof}
+Choose a generator \(g\) of the cyclic additive group. Then
+\[
+\FF_p[\FF_p^+]
+\cong
+\FF_p[y]/(y^p-1)
+=
+\FF_p[y]/(y-1)^p.
+\]
+The augmentation ideal is generated by \(y-1\), so its \(p\)th power is zero. Every element has the form \(a+n\) with \(a\in\FF_p\) and \(n\in J\). It is invertible exactly when \(a\neq0\), which is the augmentation condition.
+\end{proof}
+
+\begin{corollary}[Finite inverse formula]\label{cor:finite_inverse_formula}
+If \(x\) has augmentation one and \(n=x-1\), then
+\[
+\boxed{
+x^{-1}
+=
+\sum_{r=0}^{p-1}(-n)^r.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+By \cref{prop:augmentation_criterion}, \(n^p=0\). The finite geometric sum gives the inverse.
+\end{proof}
+
+\subsection{Subgroup selectors}
+
+Fix a divisor \(m\) of \(p-1\). Let
+\[
+H_m
+=
+\{\zeta\in\FF_p^\times:\zeta^m=1\}.
+\]
+This group has order \(m\).
+
+\begin{definition}[Multiple selector]\label{def:multiple_selector}
+Define \(a^{(m)}\in\Hcal(\FF_p)\) by
+\[
+a_n^{(m)}
+=
+\begin{cases}
+1,&m\mid n,\\
+0,&m\nmid n.
+\end{cases}
+\]
+\end{definition}
+
+\begin{lemma}[Subgroup average]\label{lem:subgroup_average}
+The multiple selector has the mode expansion
+\[
+\boxed{
+a^{(m)}
+=
+\frac1m
+\sum_{\zeta\in H_m}
+\epsilon_\zeta.
+}
+\]
+\end{lemma}
+
+\begin{proof}
+The \(n\)th coefficient on the right is
+\[
+\frac1m
+\sum_{\zeta\in H_m}\zeta^n.
+\]
+The character sum is one when \(m\mid n\) and zero otherwise.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.62\textwidth]{02_hurwitz_subgroup_average.pdf}
+\caption{A subgroup average in the additive group algebra. The highlighted modes select coefficient degrees divisible by the subgroup order.}
+\label{fig:subgroup_average}
+\end{figure}
+
+Since the subgroup average has augmentation one, it has a unique Hurwitz inverse. Write
+\[
+b^{(m,p)}
+=
+(a^{(m)})^{-1}.
+\]
+
+\begin{theorem}[Support and positive degree period]\label{thm:support_period}
+The inverse \(b^{(m,p)}\) has the following properties.
+\begin{enumerate}
+\item \(b_n^{(m,p)}=0\) unless \(m\mid n\).
+\item For every positive \(n\),
+\[
+\boxed{
+b_{n+p-1}^{(m,p)}
+=
+b_n^{(m,p)}.
+}
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Multiplication by an element \(\eta\in H_m\) gives an automorphism of the additive group and therefore an automorphism
+\[
+\epsilon_u\longmapsto\epsilon_{\eta u}
+\]
+of the mode algebra. The selector \(a^{(m)}\) is fixed by every such automorphism, so its unique inverse is fixed as well.
+
+Write
+\[
+b^{(m,p)}
+=
+\sum_{u\in\FF_p}c_u\epsilon_u.
+\]
+Invariance gives \(c_{\eta u}=c_u\). After the change of variable \(u\mapsto\eta u\),
+\[
+b_n^{(m,p)}
+=
+\eta^n b_n^{(m,p)}
+\]
+for every \(\eta\in H_m\). If \(m\nmid n\), some \(\eta\) satisfies \(\eta^n\neq1\), so the coefficient vanishes.
+
+For positive \(n\), the zero mode contributes nothing. Every nonzero mode satisfies \(u^{p-1}=1\). Hence
+\[
+b_{n+p-1}^{(m,p)}
+=
+\sum_{u\neq0}c_uu^{n+p-1}
+=
+\sum_{u\neq0}c_uu^n
+=
+b_n^{(m,p)}.
+\]
+\end{proof}
+
+\begin{definition}[Compressed inverse]\label{def:compressed_inverse}
+Set
+\[
+e_n^{(m,p)}
+=
+b_{mn}^{(m,p)}.
+\]
+\end{definition}
+
+\begin{proposition}[Compressed inverse recurrence]\label{prop:compressed_inverse_recurrence}
+The compressed coefficients satisfy
+\[
+\boxed{
+\sum_{q=0}^{n}
+\binom{mn}{mq}
+e_q^{(m,p)}
+=
+\delta_{n0}.
+}
+\]
+In particular, \(e_0^{(m,p)}=1\), and the positive coefficients are determined recursively because the diagonal is one.
+\end{proposition}
+
+\begin{proof}
+Evaluate the Hurwitz identity
+\[
+a^{(m)}\starh b^{(m,p)}=\delta
+\]
+at degree \(mn\). Both factors vanish outside degrees divisible by \(m\). Reindexing the surviving terms gives the displayed recurrence.
+\end{proof}
+
+\begin{corollary}[Uniform compressed period]\label{cor:compressed_period}
+Let
+\[
+h=\frac{p-1}{m}.
+\]
+Then
+\[
+\boxed{
+e_{n+h}^{(m,p)}
+=
+e_n^{(m,p)}
+\qquad(n\geq1).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Since \(m(n+h)=mn+p-1\), the conclusion follows from \cref{thm:support_period}.
+\end{proof}
+
+\begin{corollary}[Rational ordinary generating function]\label{cor:periodic_ogf}
+In \(\FF_p[[z]]\),
+\[
+\boxed{
+\sum_{n\geq0}e_n^{(m,p)}z^n
+=
+1+
+\frac{
+\sum_{r=1}^{h}e_r^{(m,p)}z^r
+}{1-z^h}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Separate the constant coefficient and group the positive indices into residue classes modulo \(h\).
+\end{proof}
+
+\begin{theorem}[Exponential form and minimal period]\label{thm:minimal_period}
+Let
+\[
+G_m=(\FF_p^\times)^m.
+\]
+This cyclic group has order \(h\). There are uniquely determined coefficients \(d_v\in\FF_p\), indexed by \(v\in G_m\), such that
+\[
+\boxed{
+e_n^{(m,p)}
+=
+\sum_{v\in G_m}d_vv^n
+\qquad(n\geq1).
+}
+\]
+The minimal positive period is the least common multiple of the orders of those \(v\) for which \(d_v\neq0\). In particular, it divides \(h\).
+\end{theorem}
+
+\begin{proof}
+The coefficients \(c_u\) in the proof of \cref{thm:support_period} are constant on the cosets of \(H_m\). For \(u\neq0\), the value \(u^m\) depends only on the coset, and every element of \(G_m\) arises. Grouping the modes by cosets gives the displayed expansion.
+
+Distinct elements of \(G_m\) define linearly independent functions on one full period, by the Vandermonde determinant. Therefore a positive integer \(r\) is a period exactly when \(v^r=1\) for every active mode. The least such \(r\) is the stated least common multiple.
+\end{proof}
+
+\begin{example}[A compressed inverse modulo seven]\label{ex:compressed_mod_seven}
+Take \(p=7\) and \(m=2\), so \(h=3\). The recurrence gives
+\[
+e_n^{(2,7)}
+=
+1,6,4,1,6,4,\ldots
+\qquad(n\geq1).
+\]
+The positive tail has exact period three.
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{03_standard_window_periods.pdf}
+\caption{Several compressed inverses. Every row is periodic after the constant term, as proved in \cref{cor:compressed_period}.}
+\label{fig:standard_periods}
+\end{figure}
+
+
+\section{Unit triangular coefficient transport}\label{sec:triangular_transport}
+
+The examples later in the paper use different kernels, but their coefficient algebra has one common form. This section records that form once. Let \(R\) be a commutative algebra over \(\QQ\), and take all coefficients in \(R\).
+
+Let
+\[
+H(t)=\sum_{r\geq0}h_r\frac{t^r}{r!},
+\qquad
+h_0=1.
+\]
+There is a unique inverse
+\[
+K(t)=H(t)^{-1}
+=\sum_{r\geq0}k_r\frac{t^r}{r!}.
+\]
+
+\begin{theorem}[Exact coefficient transport]\label{thm:exact_coefficient_transport}
+Let
+\[
+A(t)=\sum_{n\geq0}A_n\frac{t^n}{n!},
+\qquad
+S(t)=H(t)A(t).
+\]
+Then
+\[
+\boxed{
+S_n
+=
+\sum_{r=0}^{n}
+\binom nr h_rA_{n-r}.
+}
+\]
+The inverse coordinate formula is
+\[
+\boxed{
+A_n
+=
+\sum_{r=0}^{n}
+\binom nr k_rS_{n-r}.
+}
+\]
+Both transforms are lower triangular with diagonal one.
+\end{theorem}
+
+\begin{proof}
+The first identity is the coefficient rule for the product of exponential generating functions. Multiply by \(K(t)\) and use \(K(t)H(t)=1\) for the inverse identity. The diagonal coefficient in each transform is the constant coefficient of its kernel, which is one.
+\end{proof}
+
+\begin{corollary}[Composition of coefficient transports]\label{cor:transport_composition}
+If \(U_H\) and \(U_G\) are the triangular transforms associated with unit kernels \(H\) and \(G\), then
+\[
+\boxed{
+U_HU_G=U_{HG}.
+}
+\]
+In particular, the inverse of \(U_H\) is \(U_{H^{-1}}\).
+\end{corollary}
+
+\begin{proof}
+Multiplication by \(G\), followed by multiplication by \(H\), is multiplication by \(HG\).
+\end{proof}
+
+\begin{theorem}[Filtered triangular reconstruction]\label{thm:filtered_triangular_reconstruction}
+Let \(p\) be prime. Suppose
+\[
+A_n
+=
+\sum_{r=0}^{n}
+\binom nr
+c_rp^{w(r)}S_{n-r},
+\]
+where \(c_r\in\Zp\), \(S_n\in\Zp\), and
+\[
+w(r)\in\NN.
+\]
+For every precision \(L\geq1\),
+\[
+\boxed{
+A_n
+\equiv
+\sum_{\substack{0\leq r\leq n\\w(r)<L}}
+\binom nr
+c_rp^{w(r)}S_{n-r}
+\pmod {p^L}.
+}
+\]
+When the omitted set is nonempty, the tail has valuation at least
+\[
+\boxed{
+\min_{\substack{0\leq r\leq n\\w(r)\geq L}}
+\left(
+w(r)+\vp\binom nr+\vp(S_{n-r})
+\right).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Every omitted summand belongs to \(p^L\Zp\). The sharper statement follows by taking the minimum of the exact lower bounds for the summands and applying the nonarchimedean triangle inequality.
+\end{proof}
+
+\begin{remark}\label{rem:triangular_freedom}
+An arbitrary invertible triangular matrix can encode an arbitrary sequence. The transforms retained here have an explicit generating kernel and a visible filtration. Those two features make exact inversion and uniform truncation possible.
+\end{remark}
+
+\section{Congruential reciprocal packets}\label{sec:congruential}
+
+\subsection{Residue sections of the exponential series}
+
+For integers \(N\geq1\) and \(0\leq j<N\), define
+\[
+\Ecal_{N,j}(t)
+=
+\sum_{n\geq0}
+\frac{t^{Nn+j}}{(Nn+j)!}.
+\]
+The forced factor \(t^j\) may be removed without changing the residue address.
+
+\begin{definition}[Congruential reciprocal packet]\label{def:congruential_packet}
+Define
+\[
+\boxed{
+\Ccal_{N,j}(t)
+=
+\frac{t^j/j!}{\Ecal_{N,j}(t)}
+=
+\sum_{n\geq0}
+C_{N,j}(n)
+\frac{t^{Nn}}{(Nn)!}.
+}
+\]
+\end{definition}
+
+\begin{theorem}[Triangular inverse system]\label{thm:triangular_inverse}
+The coefficients satisfy \(C_{N,j}(0)=1\) and
+\[
+\boxed{
+\sum_{q=0}^{n}
+\binom{Nn+j}{Nq}
+C_{N,j}(q)
+=
+\delta_{n0}.
+}
+\]
+For \(n\geq1\),
+\[
+\boxed{
+C_{N,j}(n)
+=
+-
+\frac{
+\sum_{q=0}^{n-1}
+\binom{Nn+j}{Nq}C_{N,j}(q)
+}{
+\binom{Nn+j}{Nn}
+}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply \(\Ccal_{N,j}(t)\) by \(\Ecal_{N,j}(t)\) and compare the coefficient of \(t^{Nn+j}/(Nn+j)!\). The last summand is the diagonal term, which is nonzero over \(\QQ\).
+\end{proof}
+
+\begin{proposition}[A denominator bound]\label{prop:denominator_bound}
+Let
+\[
+D_{N,j}(n)
+=
+\prod_{r=1}^{n}
+\binom{Nr+j}{Nr},
+\qquad
+D_{N,j}(0)=1.
+\]
+Then
+\[
+\boxed{
+D_{N,j}(n)C_{N,j}(n)
+\in
+\ZZ.
+}
+\]
+For every prime \(p\),
+\[
+\vp(C_{N,j}(n))
+\geq
+-
+\sum_{r=1}^{n}
+\vp\binom{Nr+j}{Nr}.
+\]
+\end{proposition}
+
+\begin{proof}
+Use induction on \(n\) in the recurrence of \cref{thm:triangular_inverse}. Every earlier denominator divides \(D_{N,j}(n-1)\), while the new diagonal denominator is the final factor of \(D_{N,j}(n)\). The valuation statement follows.
+\end{proof}
+
+\begin{example}[Euler and Bernoulli boundaries]\label{ex:euler_bernoulli_boundaries}
+For \((N,j)=(2,0)\),
+\[
+\Ccal_{2,0}(t)=\operatorname{sech}t,
+\]
+so
+\[
+C_{2,0}(n)=E_{2n}.
+\]
+For \((N,j)=(2,1)\),
+\[
+\Ccal_{2,1}(t)=\frac{t}{\sinh t},
+\]
+and
+\[
+C_{2,1}(n)
+=
+2\left(1-2^{2n-1}\right)B_{2n}.
+\]
+The usual convention \(B_1=-1/2\) is used. Euler and Bernoulli number conventions are reviewed in \cite{Comtet1974,Stanley2012}.
+\end{example}
+
+\subsection{Standard windows}
+
+Fix a prime \(p\), an integer \(m\geq1\), and an address \(0\leq j<p\). Put
+\[
+N=mp.
+\]
+For arbitrary \(m\), let \(\widetilde e_n^{(m,p)}\in\FF_p\) be the unique sequence satisfying
+\[
+\boxed{
+\sum_{q=0}^{n}
+\binom{mn}{mq}
+\widetilde e_q^{(m,p)}
+=
+\delta_{n0}.
+}
+\]
+When \(m\mid p-1\), this sequence agrees with the compressed Hurwitz inverse in \cref{prop:compressed_inverse_recurrence}.
+
+\begin{standardfact}[Lucas congruence]\label{fact:lucas}
+If \(a=a_0+a_1p+\cdots\) and \(b=b_0+b_1p+\cdots\) are base \(p\) expansions, then
+\[
+\binom ab
+\equiv
+\prod_r\binom{a_r}{b_r}
+\pmod p.
+\]
+This is the classical theorem of Lucas \cite{Lucas1878a}.
+\end{standardfact}
+
+\begin{theorem}[Standard window reduction]\label{thm:standard_window_reduction}
+For \(0\leq q\leq n\),
+\[
+\boxed{
+\binom{mpn+j}{mpq}
+\equiv
+\binom{mn}{mq}
+\pmod p.
+}
+\]
+The diagonal coefficient is a unit modulo \(p\):
+\[
+\binom{mpn+j}{mpn}
+\equiv1
+\pmod p.
+\]
+\end{theorem}
+
+\begin{proof}
+Write
+\[
+mpn+j=p(mn)+j,
+\qquad
+mpq=p(mq).
+\]
+Lucas reduction separates the lowest base \(p\) digit and gives
+\[
+\binom{mpn+j}{mpq}
+\equiv
+\binom j0
+\binom{mn}{mq}
+\pmod p.
+\]
+The diagonal case is obtained by setting \(q=n\).
+\end{proof}
+
+\begin{corollary}[Standard window integrality]\label{cor:standard_integrality}
+Every coefficient \(C_{mp,j}(n)\) belongs to \(\Zp\).
+\end{corollary}
+
+\begin{proof}
+The recurrence in \cref{thm:triangular_inverse} starts with a \(p\) integral constant term. The binomial coefficients are integers, and every diagonal term is a \(p\) adic unit by \cref{thm:standard_window_reduction}. Induction gives the result.
+\end{proof}
+
+\begin{corollary}[Address independence modulo the prime]\label{cor:address_independence}
+Let \(\widetilde e_n^{(m,p)}\) be the reduced standard inverse above. Then
+\[
+\boxed{
+C_{mp,j}(n)
+\equiv
+\widetilde e_n^{(m,p)}
+\pmod p
+}
+\]
+for every \(0\leq j<p\).
+\end{corollary}
+
+\begin{proof}
+Modulo \(p\), the recurrence in \cref{thm:triangular_inverse} becomes
+\[
+\sum_{q=0}^{n}
+\binom{mn}{mq}
+C_{mp,j}(q)
+=
+\delta_{n0}.
+\]
+This is the defining recurrence for \(\widetilde e_n^{(m,p)}\). The diagonal is one, so the solution is unique.
+\end{proof}
+
+\begin{theorem}[Uniform standard window period]\label{thm:standard_window_period}
+Assume that \(p\) is odd and \(m\mid p-1\). Put
+\[
+h=\frac{p-1}{m}.
+\]
+Then for every standard window address \(0\leq j<p\),
+\[
+\boxed{
+C_{mp,j}(n+h)
+\equiv
+C_{mp,j}(n)
+\pmod p
+\qquad(n\geq1).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+By \cref{cor:address_independence}, every address reduces to the same reduced standard inverse. Under the divisibility assumption, that inverse agrees with the compressed Hurwitz inverse by \cref{prop:compressed_inverse_recurrence}. Its positive tail has period \(h\) by \cref{cor:compressed_period}.
+\end{proof}
+
+\begin{corollary}[Rational residual generating function]\label{cor:standard_rational_ogf}
+Under the hypotheses of \cref{thm:standard_window_period}, for every standard address \(j\),
+\[
+\sum_{n\geq0}
+\left(C_{mp,j}(n)\bmod p\right)z^n
+=
+1+
+\frac{
+\sum_{r=1}^{h}\widetilde e_r^{(m,p)}z^r
+}{1-z^h}.
+\]
+\end{corollary}
+
+\begin{proof}
+Combine \cref{cor:address_independence,cor:periodic_ogf}.
+\end{proof}
+
+
+\begin{theorem}[Fourier invariance of the standard window operator]\label{thm:standard_window_fourier}
+Let \(p\) be odd, let \(m\mid p-1\), and let \(h=(p-1)/m\). Define
+\[
+(T_{m,p}f)_n
+=
+\sum_{q=0}^{n}\binom{mn}{mq}f_q
+\quad\text{in }\FF_p.
+\]
+Let \(V_h\) be the vector space of sequences satisfying
+\[
+f_{n+h}=f_n
+\qquad(n\geq1).
+\]
+Then
+\[
+\boxed{T_{m,p}(V_h)=V_h.}
+\]
+The restriction of \(T_{m,p}\) to \(V_h\) is an automorphism.
+\end{theorem}
+
+\begin{proof}
+Choose \(d_0=f_h\) and \(d_n=f_n\) for \(n\geq1\). Then \(d\) is fully \(h\) periodic and \(f=d+c\delta_0\) for \(c=f_0-f_h\). Since \(T_{m,p}\delta_0\) is the constant sequence one, it is enough to treat \(d\). Expand
+\[
+d_q=\sum_{\chi\in\mu_h}c_\chi\chi^q.
+\]
+The \(m\)th power map on \(\FF_p^\times\) has image \(\mu_h\). Choose \(y\) with \(y^m=\chi\). The root filter gives
+\[
+T_{m,p}(\chi^\bullet)_n
+=
+\frac1m
+\sum_{\zeta\in\mu_m}
+(1+\zeta y)^{mn}.
+\]
+If \(1+\zeta y=0\), the corresponding term vanishes for positive \(n\). Otherwise
+\[
+\left((1+\zeta y)^m\right)^h
+=
+(1+\zeta y)^{p-1}
+=1.
+\]
+Every summand is therefore \(h\) periodic for positive \(n\). Thus \(T_{m,p}\) preserves \(V_h\). It is unit lower triangular on every finite initial segment. Its restriction to the finite dimensional space determined by \(f_0,f_1,\ldots,f_h\) is injective and hence bijective.
+\end{proof}
+
+\begin{corollary}[A second proof of the standard window period]\label{cor:standard_window_fourier_period}
+The reduced inverse \(e^{(m,p)}\) and every standard address satisfy the period in \cref{thm:standard_window_period}.
+\end{corollary}
+
+\begin{proof}
+The sequence \(\delta=(1,0,0,\ldots)\) belongs to \(V_h\). Its inverse image under the automorphism in \cref{thm:standard_window_fourier} also belongs to \(V_h\). Address independence modulo \(p\) gives the statement for every standard address.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{21_standard_window_fourier_transfer.pdf}
+\caption{Finite field Fourier transfer for a standard window. Each character becomes a finite sum of positive index modes with period dividing \(h\).}
+\label{fig:standard_fourier}
+\end{figure}
+\begin{figure}[t]
+\centering
+\includegraphics[width=.68\textwidth]{04_standard_window_matrix.pdf}
+\caption{A standard window matrix after reduction modulo seven. The address has disappeared and the diagonal remains one.}
+\label{fig:standard_matrix}
+\end{figure}
+
+\begin{remark}\label{rem:period_boundary}
+The theorem gives a period modulo \(p\). A period modulo higher powers requires additional control of the triangular inverse and cannot be inferred from the finite field argument alone.

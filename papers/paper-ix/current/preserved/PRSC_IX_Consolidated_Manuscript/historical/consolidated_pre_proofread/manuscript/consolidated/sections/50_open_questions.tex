@@ -1,0 +1,238 @@
+\section{Remaining questions and the boundary of the results}
+\label{sec:open}
+
+The external Nishibuchi conjecture, in its stated parameter range, is resolved
+by the arithmetic results above. The following questions concern extensions,
+sharper classifications, and the original native seed-calculus program. They
+are not missing steps in that resolved conjecture. The local analyticity and
+differentiability theorem is also complete under its stated invertibility
+hypothesis.
+
+\subsection{Singular persistence beyond an invertible solved block}
+\label{subsec:singular-open}
+
+The weighted lifting theorem allows the solved Jacobian to be noninvertible
+modulo $p$ provided that it is invertible over $\Qp$ with a controlled inverse.
+This includes a substantial class of lifts often called singular modulo $p$.
+The remaining problem concerns a different situation: the Jacobian is
+rank-deficient even over $\Qp$, and the current inverse construction cannot
+apply.
+
+For a fixed polynomial system $F\in\Z[X_1,\ldots,X_d]^e$, let
+\[
+\mathcal L_{F,L}(\bar x)
+=\{x'\in(\Z/p^{L+1}\Z)^d:
+F(x')=0,\ x'\equiv\bar x\pmod{p^L}\}.
+\]
+The finite obstruction theorem already decides whether this set is empty
+from the actual residual digit and reduced Jacobian. If it is nonempty, its
+cardinality and affine kernel structure are determined. A vanishing class
+at one level says only that this one step is possible.
+
+For example, $X^2-5$ has the root $1$ modulo $2$, and both $1$ and $3$ lift it
+to roots modulo $4$. Every odd square is $1$ modulo $8$, so neither branch
+continues to a root modulo $8$. This direct arithmetic example illustrates
+why a successful first correction is not a persistence theorem.
+
+The open task is to find useful structural hypotheses and higher obstruction
+data that control an entire singular branch, including its behavior under
+coefficient and parameter deformation. One must establish those conditions
+at successive levels, or establish a suitable all-level existence statement
+from which compatible branches follow. The finite obstruction calculus gives
+a way to test each level. It does not supply an unconditional singular
+persistence result. Multiple branches, later obstruction, and changes in the
+rank of the Jacobian must remain possible in any proposed general statement.
+
+\subsection{Native 13.2: what presentation invariance must mean}
+\label{subsec:native132}
+
+The original conjecture asks for a canonical finite obstruction packet whose
+vanishing is necessary and sufficient for a one-level lift in a finitely
+presented arithmetic seed system. For a fixed finite polynomial presentation,
+the paper now supplies the precise obstruction
+\[
+o_{F,\bar x}=[r]\in
+\coker\!\left(J_{F,\bar x}:\F_p^d\longrightarrow\F_p^e\right),
+\]
+where $r$ is the residual digit. Its independence from the chosen integer
+representative is proved. That independence is different from invariance
+under a change of equations or presentation.
+
+The distinction cannot be removed by declaring the raw cokernel canonical.
+The presentations $F=(X)$ and $G=(X,0)$ describe the same zero locus over every
+coefficient ring. At zero their Jacobians are, respectively,
+\[
+\F_p\xrightarrow{\,1\,}\F_p,
+\qquad
+\F_p\xrightarrow{\,(1,0)\,}\F_p^2.
+\]
+Their raw cokernels are $0$ and $\F_p$. Both distinguished obstruction classes
+vanish, but the two ambient obstruction groups are not isomorphic. This is
+an elementary presentation counterexample, not a refutation of every possible
+intrinsic obstruction construction.
+
+A complete version of Native 13.2 therefore needs the following data before
+its full statement can be audited:
+\begin{enumerate}
+\item a category of seed objects, including how the operators, relations,
+projectors, weights, and topology enter an object;
+\item specified changes of presentation and a proof that they preserve the
+actual lift problem;
+\item an obstruction object that respects dependencies among the relations,
+together with comparison maps or a universal property;
+\item a precise meaning of ``finite'' and ``canonical'', and a proof that
+vanishing is equivalent to the intended one-step continuation.
+\end{enumerate}
+For commutative algebra presentations, retaining the relation module rather
+than all listed equations is a natural route. Extending such a construction
+to the entire seed vocabulary requires an encoding and a proof that lifts
+are preserved. The consolidation does not claim that missing implication.
+
+\subsection{Native 13.3: finite compatibility, completion, and descent}
+\label{subsec:native133}
+
+The original proposed form is
+\[
+X\simeq X_2^{\mathrm{wt}}\times_C\prod_{p>2}'X_p.
+\]
+It leaves $X$, the distinguished subsets defining the restricted product,
+the maps to $C$, the ambient category, and the universal meaning of
+``smallest'' unspecified. In particular, one must decide whether $X$ is a
+global object or a completed object.
+
+There is now an exact linear compatibility result. If two local observations
+$J:U\to V$ and $K:U\to W$ are linear maps from the \emph{same} correction
+module, define
+\[
+C_{J,K}=U/(\ker J+\ker K).
+\]
+The attainable observations $\im J$ and $\im K$ have canonical labels in this
+quotient. Equality of labels is equivalent to simultaneous realization by a
+single correction. The joint image is exactly the fiber product over
+$C_{J,K}$, with the proved linear universal property.
+The declarations are
+\begingroup\small\raggedright
+\lean{Komorebi.SharedCorrection.labels_eq_iff_common},
+\lean{Komorebi.SharedCorrection.joint_range_eq_fiber}, and
+\lean{Komorebi.SharedCorrection.common_universal}.
+\par\endgroup
+This result assumes a common correction module and actual observation maps.
+An arithmetic application must construct them and prove that their notion
+of compatibility is the one required by the application.
+
+\paragraph{Why the global/completed distinction is necessary.}
+Consider constant sequences with integer initial value. Their global parameter
+space is $\Z$, while their local parameter spaces are $\Z_p$. Under the
+canonical local maps, the image of the global objects is the diagonal
+\[
+D=\{(n)_p:n\in\Z\}\subseteq\prod_p\Z_p.
+\]
+This diagonal is dense: a basic open set specifies finitely many congruences,
+and the Chinese remainder theorem provides an integer satisfying them. It is
+proper: the tuple with $2$-adic coordinate zero and all odd-adic coordinates
+one is not the image of an integer. Indeed an integer zero in $\Z_2$ must be
+zero, contradicting its $3$-adic coordinate.
+
+Consequently this canonical global diagonal cannot be an equality locus
+\[
+\{(a,b):f(a)=g(b)\}
+\subseteq \Z_2\times\prod_{p>2}\Z_p
+\]
+for continuous maps to a Hausdorff space $C$. Such an equality locus is closed,
+as the inverse image of the closed diagonal in $C\times C$, whereas $D$ is
+proper and dense. This elementary topological argument is retained from the
+native progress note as a prose argument. It is not a new Lean-certified
+result, and it concerns exactly the stated topological interpretation.
+
+Finite CRT reconstruction and the familiar completed object
+$\widehat\Z=\prod_p\Z_p$ address a different question. They do not recover
+which local tuples arise from a single global integer. A complete form of
+Native 13.3 must specify finite-level compatibility, transition maps and
+completion, and any additional global descent condition. Recurrence,
+spectral, or Frobenius information must appear as actual maps or constraints,
+not only as a proposed description of $C$.
+
+\subsection{Arithmetic refinements}
+\label{subsec:arithmetic-open}
+
+Write $U_{N,j}(n)=j!C_{N,j}(n)$ and $U_j=U_{4,j}$, and use
+$v_p(0)=\infty$ when discussing valuation bounds. The following classification
+questions remain open in this program.
+
+\begin{enumerate}
+\item \textbf{Higher dyadic differences.}
+Determine the exact value of
+\[
+v_2\!\left(\Delta_u^kU_j(n)\right),\qquad k\geq2,
+\]
+with explicit treatment of zero differences. The all-order lower bounds and
+the exact first-displacement theorem do not determine this value: subtraction
+of two first differences can introduce further cancellation. The first
+concrete target is order $2$ in one fixed address.
+
+\item \textbf{Least periods beyond $N=4$.}
+For further packet families, determine the least positive $P$ for which
+$U_{N,j}(n+P)\equiv U_{N,j}(n)\pmod{p^r}$ for every $n$ in the claimed range.
+The general sufficient periods are proved. Their minimality does not follow
+from those sufficient bounds, and a period in packet index is a degree shift
+of $NP$.
+
+\item \textbf{Exact affine Mahler-kernel valuations.}
+For the kernel of Section~\ref{subsec:polyphase-exposition}, determine exact
+values of
+\[
+v_p\bigl(\Theta_{M,s}(r,k)\bigr),\qquad
+\Theta_{M,s}(r,k)=[z^r](1+z)^s((1+z)^M-1)^k,
+\]
+beyond the explicit special families. The minimum valuation of the summands
+gives a lower bound. Equality requires a separate argument excluding
+cancellation.
+
+\item \textbf{Exact classical dyadic tail values.}
+The uniform truncation exponent $4M+3$ and its optimality are proved.
+Individual term weights are also known. The valuation of the whole omitted
+tail at an arbitrary even row may be higher, so an exact formula for all rows
+requires more than taking the minimum of those term weights. Empty tails
+must remain exactly zero.
+\end{enumerate}
+
+These questions refine existing estimates and exact cases. They do not reopen
+the external conjecture or the sharp uniform classical dyadic bound.
+
+\subsection{Historical material and interface work}
+\label{subsec:historical-scope}
+
+The original status-corrected Paper IX survives as a 28-page PDF. Its recovered
+formalization supports the framework, Euler coordinates, Mahler differences,
+unit coordinates, recurrence packets, and CRT results retained in this
+manuscript. The original TeX, original figure-generation files, and complete
+historical experiment package were not recovered with that PDF. Their older
+figure and test counts are therefore historical records, not newly reproduced
+computations in this consolidation.
+
+A separate reconstructed Annals text survives as a retrieved textual copy.
+It includes finite-field mode and subgroup inversion, Fourier invariance,
+Carmichael and matrix transfer, Amice pullbacks, depleted analytic Euler
+branches, and extensive polyphase formulas. The sharp classical dyadic kernel
+and truncation claims from that text have since been connected to checked
+Lean proofs. The finite polyphase formulas used for explanation here have
+short explicit algebraic derivations. The remainder of that larger historical
+text has not acquired blanket formal coverage merely by being preserved.
+The source archive retains the text with its provenance, and the statement
+map distinguishes these historical claims from the certified claims in the
+present manuscript.
+
+Remaining recovery work includes the precise older odd-prime edge identities,
+their stated ranges, and the binary digit-sum form of the checked weights.
+Recovering a formula, checking its prose proof, and locating an exact Lean
+declaration are separate steps. Missing historical sources should remain
+identified instead of being reconstructed from a remembered result.
+
+There is also a narrower interface task. The new regularity theorem applies to
+arbitrary ambient $\Qp$ polynomial coefficients and identifies the analytic
+germ of every continuous ambient-field root selection under its hypotheses.
+Several older rectangular charts were defined using integer coefficients,
+integer centers, or subtype-valued maps. Comparing each such historical
+interface explicitly with the new ambient formulation remains to be done.
+It does not invalidate the proved analytic implicit-function theorem, and it
+is not counted as a general singular-persistence result.

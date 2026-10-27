@@ -1,0 +1,235 @@
+\section{Analytic regularity of the local solution map}
+\label{sec:regularity}
+The deformation estimates quantify the displacement of an exact root under
+small changes. We now identify the local parameter dependence as analytic.
+The construction uses the actual polynomial evaluation map and its actual
+Jacobian. Its domain is a vector space over the fraction field. In particular,
+$\Zp$ is not used as a vector space over $\Qp$.
+
+Let $\mathbb K$ be a complete nontrivially normed field. Let $e,k\in\N$, and
+write the variables as $(Y,T)\in\mathbb K^e\times\mathbb K^k$. For
+\[
+ F\in\mathbb K[Y_1,\ldots,Y_e,T_1,\ldots,T_k]^e,
+ \qquad a=(y_0,t_0),
+\]
+define the matrices of evaluated formal partial derivatives
+\begin{equation}
+ J=D_YF(a)\in M_e(\mathbb K),\qquad
+ K=D_TF(a)\in M_{e\times k}(\mathbb K).
+ \label{eq:regularity-blocks}
+\end{equation}
+Rows index equations and columns index variables. We first establish that
+these formal derivatives are the derivatives of the evaluation map.
+
+\begin{lemma}[Actual polynomial derivative]
+\label{lem:actual-polynomial-derivative}
+For $P\in\mathbb K[X_1,\ldots,X_n]$, polynomial evaluation is analytic at
+every point. At $a\in\mathbb K^n$ its strict Fr\'echet derivative is
+\[
+ v\longmapsto\sum_{j=1}^n (\partial_jP)(a)v_j.
+\]
+For a finite system, its strict derivative is the continuous linear map
+represented by the matrix of evaluated formal partial derivatives.
+\end{lemma}
+\begin{proof}
+For the derivative statement, use polynomial induction on constants,
+addition, and multiplication by a variable. Constants have zero derivative.
+The sum rule agrees with the additivity of formal partial differentiation.
+For $PX_j$, the product rule gives
+\[
+ d(PX_j)_a(v)=a_j\,dP_a(v)+P(a)v_j,
+\]
+which agrees with the evaluated formal product rule for every coordinate.
+The finite product rule for maps to coordinate spaces then assembles the
+system derivative. Each matrix defines a continuous linear map because the
+coordinate spaces are finite-dimensional over the complete field.
+Polynomial analyticity follows from the corresponding polynomial induction
+in Mathlib and its finite-coordinate assembly.
+\end{proof}
+The derivative bridge and analytic statements are
+\lean{Komorebi.PolynomialAnalyticEvaluation.hasStrictFDerivAt_evalSystem},
+\lean{Komorebi.PolynomialAnalyticEvaluation.analyticAt_evalSystem}, and
+\lean{Komorebi.PolynomialAnalyticEvaluation.analyticOnNhd_evalSystem}.
+
+\begin{lemma}[The augmented derivative]
+\label{lem:augmented-analytic-inverse}
+If $J\in\operatorname{GL}_e(\mathbb K)$, the actual polynomial map
+\[
+ \Phi(Y,T)=(F(Y,T),T)
+\]
+has invertible strict derivative at $a$, with
+\begin{equation}
+ D\Phi(a)=\begin{pmatrix}J&K\\0&I_k\end{pmatrix},\qquad
+ D\Phi(a)^{-1}=\begin{pmatrix}J^{-1}&-J^{-1}K\\0&I_k\end{pmatrix}.
+ \label{eq:analytic-block-inverse}
+\end{equation}
+The local inverse supplied by this derivative is analytic near $\Phi(a)$.
+\end{lemma}
+\begin{proof}
+The lower equations are the actual parameter variables. Differentiating
+them gives the blocks $0$ and $I_k$. Lemma~\ref{lem:actual-polynomial-derivative}
+identifies the remaining blocks with~\eqref{eq:regularity-blocks}.
+Multiplication of the two matrices in~\eqref{eq:analytic-block-inverse},
+in both orders, gives the identity. The resulting linear equivalence is
+continuous, as is its inverse. Apply the strict inverse-function theorem to
+$\Phi$. The analytic inverse theorem applies to the same open partial
+homeomorphism, because $\Phi$ is analytic and its derivative is that
+continuous linear equivalence. It supplies a convergent local power-series
+representation of this inverse.
+\end{proof}
+The actual augmented Jacobian is checked by
+\lean{Komorebi.PolynomialJointSystem.jacobian_augmented}.
+The continuous inverse block and its restriction are
+\lean{Komorebi.PolynomialAnalyticBlocks.upperEquiv} and
+\lean{Komorebi.PolynomialAnalyticBlocks.inverse_solved_zero}.
+Analyticity of the same constructed inverse is
+\lean{Komorebi.PolynomialAnalyticInverse.analyticAt_inverse}.
+
+\begin{theorem}[Analytic local root graph]
+\label{thm:analytic-local-graph}
+Suppose $F(a)=0$ and $J\in\operatorname{GL}_e(\mathbb K)$. There are open
+neighborhoods $t_0\in U\subseteq\mathbb K^k$ and
+$y_0\in V\subseteq\mathbb K^e$, and a map
+$\psi:\mathbb K^k\to\mathbb K^e$, such that
+\begin{gather}
+ \psi(t_0)=y_0,\qquad \psi(U)\subseteq V,\qquad
+ \psi\text{ is analytic at every point of }U,\label{eq:analytic-psi}\\
+ F(y,t)=0\quad\Longleftrightarrow\quad y=\psi(t)
+ \qquad(t\in U,\ y\in V).\label{eq:analytic-root-graph}
+\end{gather}
+At the base parameter, the strict Fr\'echet derivative is
+\begin{equation}
+ \boxed{D\psi(t_0)=-J^{-1}K.}
+ \label{eq:implicit-derivative}
+\end{equation}
+In particular, $\psi$ is differentiable on $U$.
+\end{theorem}
+\begin{proof}
+Let $g$ be the analytic local inverse of $\Phi$ supplied by
+Lemma~\ref{lem:augmented-analytic-inverse}. Since $F(a)=0$,
+$\Phi(a)=(0,t_0)$ and $g(0,t_0)=a$. Define
+\[
+ \psi(t)=\pi_Yg(0,t),
+\]
+where $\pi_Y$ projects to the solved coordinates. This gives the base value
+and analyticity at $t_0$. The chain rule and
+\eqref{eq:analytic-block-inverse} give
+\[
+ D\psi(t_0)v
+ =\pi_Y\begin{pmatrix}J^{-1}&-J^{-1}K\\0&I_k\end{pmatrix}
+       \binom{0}{v}
+ =-J^{-1}Kv.
+\]
+
+For completeness, the neighborhood construction must provide an entire
+product graph. The source of the open partial homeomorphism defined by
+$\Phi$ is open around $a$; its inverse is $g$. Choose open sets $V$ and $U_0$
+containing $y_0$ and $t_0$ such that
+$V\times U_0$ lies in that source. Restrict $U_0$ further by the preimage of
+an open analytic inverse neighborhood under $t\mapsto(0,t)$, the open locus
+where this same $\psi$ is analytic, and the interior of $\psi^{-1}(V)$.
+All of these sets contain $t_0$. For the last set, use the continuity of
+$\psi$ at $t_0$ and $\psi(t_0)=y_0\in V$. Their intersection is an open
+neighborhood $U$ with $\psi(U)\subseteq V$.
+
+If $t\in U$, $y\in V$ and $F(y,t)=0$, then
+$\Phi(y,t)=(0,t)$. The left inverse identity forces
+$g(0,t)=(y,t)$, hence $y=\psi(t)$. Conversely, the right inverse identity
+$\Phi(g(0,t))=(0,t)$ says both that its solved equations vanish and that its
+parameter coordinates are exactly $t$. Thus
+$g(0,t)=(\psi(t),t)$ and $F(\psi(t),t)=0$.
+Analyticity at every point of $U$ implies differentiability there.
+\end{proof}
+This is
+\lean{Komorebi.PolynomialAnalyticImplicit.exists_analytic_implicit}.
+The expanded statement contract also includes differentiability explicitly:
+\lean{Komorebi.PolynomialRegularityContracts.actual_padic_analytic_root_graph}.
+
+\begin{theorem}[Regularity of a supplied root selection]
+\label{thm:selection-regularity}
+Under the hypotheses of Theorem~\ref{thm:analytic-local-graph}, let
+$h:\mathbb K^k\to\mathbb K^e$ be continuous at $t_0$, with
+$h(t_0)=y_0$. Suppose $F(h(t),t)=0$ for every $t$ in some neighborhood of
+$t_0$. Then $h$ and $\psi$ agree in a neighborhood of $t_0$. Consequently
+$h$ is analytic there as a germ and has strict derivative
+$Dh(t_0)=-J^{-1}K$.
+\end{theorem}
+\begin{proof}
+Continuity at $t_0$ places $h(t)$ inside $V$ for all sufficiently close
+parameters. Intersect this neighborhood with $U$ and the neighborhood on
+which the root equation holds. Equation~\eqref{eq:analytic-root-graph} gives
+$h(t)=\psi(t)$ throughout the intersection. Analyticity and strict
+differentiability at a point are unchanged by agreement on a neighborhood.
+\end{proof}
+The formal result is
+\lean{Komorebi.PolynomialAnalyticSelection.continuous_selection_regularity}.
+Its formulation even derives $F(a)=0$ from the eventual root equation and
+the specified base value.
+
+\begin{corollary}[Regularity throughout an open parameter set]
+\label{cor:selection-open-regularity}
+Let $U\subseteq\mathbb K^k$ be open, and let $h$ be continuous on $U$.
+Suppose that for every $t\in U$,
+\[
+ F(h(t),t)=0,
+ \qquad J_t=D_YF(h(t),t)\in\operatorname{GL}_e(\mathbb K).
+\]
+Then $h$ is analytic at every point of $U$ and its strict derivative is
+\[
+ Dh(t)=-J_t^{-1}D_TF(h(t),t)\qquad(t\in U).
+\]
+\end{corollary}
+\begin{proof}
+At each $t\in U$, openness turns continuity on $U$ into continuity at $t$
+and makes the root equation hold on a neighborhood of $t$. Apply
+Theorem~\ref{thm:selection-regularity} at $(h(t),t)$.
+\end{proof}
+This is
+\lean{Komorebi.PolynomialAnalyticSelection.continuous_selection_analyticOnNhd}.
+The pointwise invertibility assumption is part of this corollary.
+
+\begin{corollary}[Integral coefficients and centers]
+\label{cor:integral-analytic-graph}
+Let $p$ be any prime. Suppose $F\in\Zp[Y,T]^e$, $a\in\Zp^{e+k}$,
+and $F(a)=0$. Let $\iota:\Zp\hookrightarrow\Qp$ be the inclusion.
+If $\iota(D_YF(a))\in\operatorname{GL}_e(\Qp)$, the polynomial system
+obtained by including the original coefficients in $\Qp$ has the analytic
+local root graph of Theorem~\ref{thm:analytic-local-graph} at $\iota(a)$.
+The strict derivative at the base is
+\[
+ -\iota(D_YF(a))^{-1}\iota(D_TF(a)).
+\]
+The open neighborhoods and the output map are in the ambient spaces over
+$\Qp$.
+\end{corollary}
+\begin{proof}
+Coefficient inclusion commutes with evaluation and formal partial
+differentiation. Consequently both Jacobian blocks after inclusion are the
+entrywise inclusions of the original blocks, and the original exact root
+remains an exact root. Apply Theorem~\ref{thm:analytic-local-graph} to these
+actual included polynomials.
+\end{proof}
+This is
+\lean{Komorebi.PolynomialRegularityIntegral.exists_analytic_integral_implicit}.
+It requires no invertibility modulo $p$. In particular, it includes solved
+Jacobians singular modulo $p$ but invertible over the fraction field.
+
+\begin{example}[The derivative sign and a nonlinear control]
+For $F(Y,T)=Y+T$, the exact branch is $\psi(T)=-T$ and $J=K=1$.
+The derivative is $-1$. Uniqueness of the derivative rules out $+1$ over
+$\Qp$, including $p=2$. The nonlinear polynomial $F(Y,T)=Y+Y^2+T$
+has $F(0,0)=0$ and $J=K=1$ there. The actual formal theorem is instantiated
+on this polynomial to construct an analytic local root graph of derivative
+$-1$; a branch is not supplied as an assumption.
+The declarations and the deliberately rejected positive-sign statement are
+in the regularity control and statement-contract files.
+\end{example}
+
+The results cover arbitrary finite $e$ and $k$, including zero. The local
+inverse machinery explicitly handles a zero-dimensional domain. These
+analytic neighborhoods have no new uniform numerical radius. The earlier
+weighted lifting and joint deformation theorems retain their quantitative
+radii and error bounds, while the present statements establish regularity
+of the local solution germ. A direct Lean identification with each
+historical subtype-valued chart is an additional interface task. General
+persistence at a fraction-field singular solved block is a separate problem.

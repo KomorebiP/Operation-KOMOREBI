@@ -1,0 +1,6 @@
+def digitEquivLifts (q L : ℕ) (hq : 0 < q) (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (r : Fin e → ℤ) (hr : evalSystem F x = (q : ℤ)^L • r) :
+    DigitSolutions q F x r ≃ ActualLifts q L F x :=
+  Equiv.subtypeEquiv (digitEquivResidue q L hq x)
+    (fun t => (digit_residue_solution_iff q L hq hL F x r hr t).symm)

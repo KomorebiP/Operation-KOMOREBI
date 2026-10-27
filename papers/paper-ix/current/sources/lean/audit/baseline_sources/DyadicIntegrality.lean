@@ -1,0 +1,178 @@
+module
+
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.NumberTheory.Multiplicity
+public import Mathlib.RingTheory.PowerSeries.Inverse
+public import Mathlib.Tactic
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.Dyadic
+
+open PowerSeries
+
+/-- Rational coefficients integral for the actual 2-adic norm. -/
+def integralRationals : Subring ℚ where
+  carrier := {q | padicNorm 2 q ≤ 1}
+  zero_mem' := by simp
+  one_mem' := by simp
+  add_mem' := fun ha hb => padicNorm.nonarchimedean.trans (max_le ha hb)
+  mul_mem' := by
+    intro a b ha hb
+    change padicNorm 2 (a*b) ≤ 1
+    rw [padicNorm.mul]
+    calc
+      _ ≤ 1*1 := mul_le_mul ha hb (padicNorm.nonneg _) (by norm_num)
+      _ = 1 := by norm_num
+  neg_mem' := by intro a ha; simpa using ha
+
+@[simp] theorem integral_iff (q : ℚ) : q ∈ integralRationals ↔ padicNorm 2 q ≤ 1 := Iff.rfl
+
+/-- Nonnegative rational valuation implies actual 2-adic integrality, including zero. -/
+theorem integral_of_valuation {q : ℚ} (h : 0 ≤ padicValRat 2 q) : q ∈ integralRationals := by
+  change padicNorm 2 q ≤ 1
+  by_cases hq : q = 0
+  · simp [hq]
+  · rw [padicNorm.eq_zpow_of_nonzero hq]
+    exact zpow_le_one_of_nonpos₀ (by norm_num) (neg_nonpos.mpr h)
+
+/-- The rational coefficient really defines a member of the completed ring Z_2. -/
+def toPadicInt (q : ℚ) (hq : q ∈ integralRationals) : ℤ_[2] :=
+  ⟨q, by rw [Padic.eq_padicNorm]; exact_mod_cast hq⟩
+
+@[simp] theorem toPadicInt_coe (q : ℚ) (h : q ∈ integralRationals) :
+    ((toPadicInt q h : ℤ_[2]) : ℚ_[2]) = (q : ℚ_[2]) := rfl
+
+/-- The squared-variable coefficients of (sinh z / z)^2. -/
+def kernelCoeff (m : ℕ) : ℚ := 2^(2*m+1) / (2*m+2).factorial
+
+def kernel : PowerSeries ℚ := mk kernelCoeff
+
+def beta (m : ℕ) : ℚ := coeff m kernel⁻¹
+
+@[simp] theorem kernel_constant : constantCoeff kernel = 1 := by
+  simp [kernel, kernelCoeff]
+
+@[simp] theorem beta_zero : beta 0 = 1 := by simp [beta]
+
+theorem kernel_coefficient_valuation (m : ℕ) :
+    padicValRat 2 (kernelCoeff m) = (2*m+1 : ℤ) - padicValNat 2 (2*m+2).factorial := by
+  rw [kernelCoeff, padicValRat.div (by positivity) (by exact_mod_cast Nat.factorial_ne_zero _)]
+  have htwo : padicValRat 2 (2:ℚ) = 1 := padicValRat.self (by decide : 1 < 2)
+  simp [htwo]
+
+/-- Legendre's strict factorial bound supplies the necessary cancellation of powers of two. -/
+theorem kernel_coefficient_integral (m : ℕ) : kernelCoeff m ∈ integralRationals := by
+  apply integral_of_valuation
+  rw [kernel_coefficient_valuation]
+  have h := padicValNat_factorial_lt_of_ne_zero 2 (by omega : 2*m+2 ≠ 0)
+  omega
+
+/-- Coefficientwise closure under the genuine unit-series inverse. -/
+theorem inverse_coefficients_in_subring (S : Subring ℚ) (f : PowerSeries ℚ)
+    (h0 : constantCoeff f = 1) (hf : ∀ n, coeff n f ∈ S) :
+    ∀ n, coeff n f⁻¹ ∈ S := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    rw [coeff_inv, h0]
+    split_ifs with hn
+    · simp
+    · apply S.mul_mem (by simp)
+      apply S.sum_mem
+      intro x hx
+      split_ifs with hxn
+      · exact S.mul_mem (hf x.1) (ih x.2 hxn)
+      · exact S.zero_mem
+
+/-- Lemma 5.1: beta is proved integral, not assumed in the reconstruction. -/
+theorem beta_integral (m : ℕ) : beta m ∈ integralRationals := by
+  exact inverse_coefficients_in_subring integralRationals kernel kernel_constant
+    (by intro n; simpa [kernel] using kernel_coefficient_integral n) m
+
+def betaPadic (m : ℕ) : ℤ_[2] := toPadicInt (beta m) (beta_integral m)
+
+@[simp] theorem betaPadic_coe (m : ℕ) : (betaPadic m : ℚ_[2]) = (beta m : ℚ_[2]) := rfl
+
+/-- The actual dyadic source at even degree 2n. -/
+def sourceEven (n : ℕ) : ℚ := ((3:ℚ)^(2*n+2)-1) / (4*(2*n+1)*(2*n+2))
+
+theorem source_numerator_nonzero (n : ℕ) : (3:ℚ)^(2*n+2)-1 ≠ 0 := by
+  have h : (1:ℚ) < 3^(2*n+2) := one_lt_pow₀ (by norm_num) (by omega)
+  linarith
+
+/-- The LTE equality is applied at the actual even exponent. -/
+theorem source_numerator_valuation (n : ℕ) :
+    padicValRat 2 ((3:ℚ)^(2*n+2)-1) = 2 + padicValNat 2 (2*n+2) := by
+  have h := padicValNat.pow_two_sub_one (by decide : 1 < 3) (by decide : ¬ 2 ∣ 3)
+    (by omega : 2*n+2 ≠ 0) (by exact ⟨n+1, by omega⟩ : Even (2*n+2))
+  have he : (3:ℚ)^(2*n+2)-1 = ((3^(2*n+2)-1 : ℕ) : ℚ) := by
+    rw [Nat.cast_sub (Nat.one_le_pow _ _ (by decide))]; norm_cast
+  rw [he, padicValRat.of_nat]
+  have h4 : padicValNat 2 4 = 2 := padicValNat.prime_pow 2
+  have h2 : padicValNat 2 2 = 1 := by norm_num
+  norm_num only at h
+  rw [h4, h2] at h
+  omega
+
+theorem source_denominator_valuation (n : ℕ) :
+    padicValRat 2 (4*(2*(n:ℚ)+1)*(2*n+2)) = 2 + padicValNat 2 (2*n+2) := by
+  have ho : ¬ 2 ∣ 2*n+1 := by omega
+  have hv : padicValNat 2 (2*n+1) = 0 := padicValNat.eq_zero_of_not_dvd ho
+  have h1 : (2*(n:ℚ)+1) = ((2*n+1:ℕ):ℚ) := by push_cast; rfl
+  have h2 : (2*(n:ℚ)+2) = ((2*n+2:ℕ):ℚ) := by push_cast; rfl
+  rw [padicValRat.mul (by positivity) (by positivity),
+    padicValRat.mul (by norm_num) (by positivity), h1, h2, padicValRat.of_nat,
+    padicValRat.of_nat, hv]
+  have h4 : padicValRat 2 (4:ℚ) = 2 := by
+    change padicValRat 2 ((2:ℚ)^2) = 2
+    have ht : padicValRat 2 (2:ℚ) = 1 := padicValRat.self (by decide : 1 < 2)
+    rw [padicValRat.pow, ht]
+    norm_num
+  rw [h4]; ring
+
+/-- Lemma 5.2, strengthened: every source coefficient is a 2-adic unit. -/
+theorem source_valuation (n : ℕ) : padicValRat 2 (sourceEven n) = 0 := by
+  rw [sourceEven, padicValRat.div (source_numerator_nonzero n) (by positivity),
+    source_numerator_valuation, source_denominator_valuation, sub_self]
+
+theorem source_integral (n : ℕ) : sourceEven n ∈ integralRationals :=
+  integral_of_valuation (by rw [source_valuation])
+
+def sourcePadic (n : ℕ) : ℤ_[2] := toPadicInt (sourceEven n) (source_integral n)
+
+@[simp] theorem sourcePadic_coe (n : ℕ) : (sourcePadic n : ℚ_[2]) = (sourceEven n : ℚ_[2]) := rfl
+
+/-- An explicit bridge between rational integrality and the completed-field norm. -/
+theorem integral_iff_completed_norm (q : ℚ) :
+    q ∈ integralRationals ↔ ‖(q : ℚ_[2])‖ ≤ 1 := by
+  rw [integral_iff, Padic.eq_padicNorm]
+  norm_cast
+
+theorem source_nonzero (n : ℕ) : sourceEven n ≠ 0 := by
+  exact div_ne_zero (source_numerator_nonzero n) (by positivity)
+
+theorem source_norm_one (n : ℕ) : padicNorm 2 (sourceEven n) = 1 := by
+  rw [padicNorm.eq_zpow_of_nonzero (source_nonzero n), source_valuation]
+  norm_num
+
+theorem sourcePadic_isUnit (n : ℕ) : IsUnit (sourcePadic n) := by
+  rw [PadicInt.isUnit_iff, PadicInt.norm_def, sourcePadic_coe,
+    Padic.eq_padicNorm, source_norm_one]
+  norm_num
+
+/-- Exact recurrence for the normalized reciprocal's ordinary coefficients. -/
+theorem beta_recurrence (n : ℕ) (hn : 0 < n) :
+    beta n = - ∑ q ∈ Finset.range n, beta q * kernelCoeff (n-q) := by
+  have h := congrArg (coeff n) (PowerSeries.inv_mul_cancel kernel (by simp))
+  simp only [coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk,
+    coeff_one, kernel, coeff_mk] at h
+  rw [Finset.sum_range_succ, Nat.sub_self, ite_eq_right (by omega)] at h
+  have h0 : kernelCoeff 0 = 1 := by norm_num [kernelCoeff]
+  rw [h0,mul_one] at h
+  simp only [beta, kernel]
+  linear_combination h
+
+end KomorebiPaperIX.Dyadic

@@ -1,0 +1,109 @@
+% Shared worked examples. Exact data and figure generation: tools/worked_examples.py.
+\begingroup
+\ifdefined\IXMainAtlas
+\section{Worked arithmetic and lifting atlas}\label{app:worked-atlas}
+These examples connect the coefficient calculus with the correction machinery. They instantiate the statements in the main text rather than add new universal claims. Each displayed rational value, residue, and finite reconstruction is checked by the accompanying exact script.
+\fi
+\newcommand{\AtlasHead}[2]{\ifdefined\AtlasStarted\clearpage\fi\ifdefined\IXMainAtlas\subsection{#1}\else\section{#1}\fi\label{#2}\def\AtlasStarted{1}}
+\newcommand{\AtlasImage}[1]{\begin{center}\includegraphics[width=.91\linewidth]{\AtlasFigDir/#1.pdf}\end{center}}
+\AtlasHead{Compute the reciprocal before estimating it}{atlas:reciprocal}
+For width $N$ and address $j$, the normalized source and its reciprocal are
+\[
+ G_{N,j}(t)=j!\sum_{n\ge0}\frac{t^{Nn}}{(Nn+j)!},\qquad
+ G_{N,j}(t)^{-1}=\sum_{n\ge0}C_{N,j}(n)\frac{t^{Nn}}{(Nn)!}.
+\]
+Multiplying the two series and clearing the factorials gives an exact triangular recurrence:
+\[
+ C_{N,j}(0)=1,\qquad
+ C_{N,j}(n)=-\frac{\displaystyle\sum_{r=0}^{n-1}
+ \binom{Nn+j}{Nr}C_{N,j}(r)}{\binom{Nn+j}{Nn}}.
+\]
+\AtlasImage{reciprocal_rows}
+The table is for $N=4$. The first two address-zero rows illustrate the computation without any valuation estimate:
+\[
+ C_{4,0}(1)=-1,\qquad
+ C_{4,0}(2)=-\bigl(1+\binom84(-1)\bigr)=69.
+\]
+At address one, the same recurrence yields $C_{4,1}(1)=-1/5$ and $C_{4,1}(2)=121/45$. These are exact rational coefficients, not rounded approximations. The second implementation in the supplied script inverts the ordinary power series first, then multiplies by $(Nn)!$. Agreement between the two constructions checks the factorial placement.
+
+\AtlasHead{The normalization loss is a real boundary}{atlas:normalization}
+The original Euler coefficient is $E_{Nn}^{(N,j)}=j!C_{N,j}(n)$. Multiplication by $j!$ changes the available $p$-adic precision. That change cannot be discarded outside the unit-factorial window.
+
+Take $p=3$, $N=6$, $j=3$, and compare rows one and two. Exact inversion gives
+\[
+ C_{6,3}(1)=-\frac1{84},\quad
+ C_{6,3}(2)=\frac{703}{5460},\quad
+ C_{6,3}(2)-C_{6,3}(1)=\frac{64}{455}.
+\]
+\AtlasImage{normalization_loss}
+Neither $64$ nor $455$ is divisible by three, so the normalized difference has valuation zero. The original coefficient difference is $3!\cdot64/455=384/455$, of valuation one.
+
+This is the counterexample behind the corrected factorial-loss statement. A bound for the original Euler normalization must lose $v_p(j!)$ when translated to $C_{N,j}$. For $0\le j<p$, that loss is zero. The distinction concerns which sequence the theorem measures, not a numerical weakness of the calculation.
+
+\AtlasHead{Odd primes require the sign twist}{atlas:sign}
+The prime-power transfer controls a sign-twisted reciprocal sequence at odd primes. It must not be read as an ordinary-difference theorem for the untwisted coefficients.
+
+At $N=p=3$ and $j=0$, put $A(n)=(-1)^nC_{3,0}(n)$. The first three rows are
+\AtlasImage{odd_prime_sign}
+The ordinary first difference at row zero is $-1-1=-2$. It is a $3$-adic unit, so an asserted lower bound of one for that difference would be false. The twisted first difference is zero, whose mathematical valuation is $+\infty$. At the next row, the twisted difference is $19-1=18$, of valuation two.
+
+Equivalently, the untwisted sequence is acted on by $T_H=S^H-(-1)^H$, where $S$ advances one row. At odd step one this is $S+1$, not $S-1$. The zero in the example is handled by a zero-safe divisibility statement rather than a finite valuation equality. The explicit sign and the zero convention are both part of the theorem's interface.
+
+\AtlasHead{Newton coordinates turn precision into a finite computation}{atlas:newton}
+Let $b_k=\Delta_1^kC_{4,0}(0)$. The first coefficients obtained from the difference triangle are
+\input{generated/worked_newton_values.tex}
+The exact Newton identity recovers each nonnegative integer row:
+\[
+ C_{4,0}(n)=\sum_{k=0}^{n}b_k\binom nk.
+\]
+\AtlasImage{newton_cutoff}
+For this address the proved law is $v_2(b_k)=2k-s_2(k)$ for $k\ge1$. Every $k\ge5$ therefore has $v_2(b_k)\ge8$. Since $\binom nk$ is integral, those terms vanish modulo $256$. Thus, for every $n\ge0$,
+\[
+ C_{4,0}(n)\equiv1+254\binom n1+72\binom n2+
+ 176\binom n3+128\binom n4\pmod{256}.
+\]
+The uniform truncation follows from the coefficient theorem. The script separately checks the exact Newton reconstruction and this reduction for rows $0$ through $32$. Those finite checks validate the worked arithmetic without replacing the theorem.
+
+\AtlasHead{A compatible root is built one digit at a time}{atlas:smooth}
+Take $F(x)=x^2-7$ over the $3$-adic integers and start with $x_1=1$ modulo three. If $F(x_L)=3^Lr_L$, the next representative has the form $x_{L+1}=x_L+3^Lt_L$. Its correcting digit satisfies
+\[
+ r_L+2x_Lt_L\equiv0\pmod3.
+\]
+\AtlasImage{smooth_tower}
+For example, $F(1)/3=-2$ and $2x_1=2$, so the next digit is one and $x_2=4$. Then $F(4)/9=1$, again giving digit one and $x_3=13$. At the next stage the residual is divisible by three, so digit zero is correct. A zero digit is not a stalled construction.
+
+Every center remains congruent to one modulo three. Hence $2x_L$ stays a unit, and the correction equation has a unique digit at every stage. The representatives are compatible and their increments are divisible by $3^L$. Completeness gives a limit, and continuity of the polynomial gives a root of $F$. The finite table exhibits the construction. The unit derivative is what supports indefinite continuation.
+
+\AtlasHead{A singular residual can stop a lift}{atlas:blocked}
+Now take $F(x)=x^2-3$ at the residue $x=0$ modulo three. The residual is $r=F(0)/3=-1$ and the Jacobian is zero modulo three. The next-digit equation would require
+\[
+ -1+0\cdot t\equiv0\pmod3,
+\]
+which has no solution.
+\AtlasImage{singular_block}
+The three representatives of the old root class modulo nine all leave residual six modulo nine. Thus the root class exists at precision three but does not lift to precision nine. This is an exact obstruction, not failure of an iterative search.
+
+A singular Jacobian alone does not imply failure. For $F(x)=x^2$ at the same center, the residual is zero and all three candidate digits lift to roots modulo nine. The obstruction is the residual class in the cokernel of the actual Jacobian. It is this class, rather than the rank by itself, that decides whether a next lift exists.
+
+\AtlasHead{Separate corrections need not be one shared correction}{atlas:shared}
+Consider the two-component system $F(x)=(x,x-3)$ at $x=0$, with $q=3$ and $L=1$. Both components vanish modulo three. After writing a candidate as $y=3t$, its residual vector modulo three is
+\[
+ \overline r+J\overline t=(0,2)+(t,t)=(t,t-1).
+\]
+\AtlasImage{shared_obstruction}
+The first coordinate can be corrected by $t=0$. The second can be corrected by $t=1$. No digit corrects both. The available residuals are $(0,2)$, $(1,0)$, and $(2,1)$, none of which is $(0,0)$.
+
+The combined Jacobian maps $t$ to the diagonal vector $(t,t)$. Its image is smaller than the product of its coordinate images. Checking the two projected obstructions independently therefore loses the compatibility condition. The common-correction theorem retains the full residual vector and the shared digit space, which is exactly the information needed to detect this failure.
+
+\AtlasHead{A derivative weight can cost one digit of root precision}{atlas:weighted}
+Compare the linear equations $F(x)=3x=0$ and $G_A(x)=3x+3^A=0$, where $A\ge2$. Their coefficient difference has $3$-adic valuation $A$, but their roots differ by
+\[
+ x_A-0=-3^{A-1},\qquad v_3(x_A)=A-1.
+\]
+\AtlasImage{weighted_motion}
+The derivative has valuation one. Solving the correction equation divides by three, so one digit of coefficient precision is lost in root displacement. The calculation is exact for every displayed $A$ and also follows immediately from the two linear equations.
+
+This example explains why weighted lifting and deformation estimates track a Jacobian loss rather than silently treating every invertible derivative over $\mathbb Q_p$ as a unit over $\mathbb Z_p$. A valuation-zero derivative would not incur this particular loss. Nonlinear systems additionally require their stated neighborhood, residual, and right-inverse hypotheses.
+
+\medskip\noindent\textbf{Reproducibility.} The eight examples use exact rational and integer arithmetic in \nolinkurl{tools/worked_examples.py}. The release record states the executed finite ranges. This atlas adds no Lean endpoint and changes no formal claim in the companion.
+\endgroup

@@ -1,0 +1,1414 @@
+% Integrated strengthening, based on the frozen proof revision of 2026-10-06.
+% No preamble. All valuations have v_p(0)=+infinity.
+\section{Threshold-free reciprocal transfer at prime-power section orders}
+\label{sec:prime-power-transfer-final}
+
+The completion of Nishibuchi's conjecture fixes the requested eventual
+congruence. The stronger question is whether the sufficient starting row
+can be removed, and how much precision the difference order and the step
+actually provide. This section answers the first question at every
+prime-power section order. Subsequent sections give a factorial improvement
+and exact results at section order four.
+
+Throughout these sections, the normalized source and its reciprocal are
+\begin{equation}
+ G_{N,j}(t)=j!\sum_{n\geq0}\frac{t^{Nn}}{(Nn+j)!},\qquad
+ F_{N,j}(t)=G_{N,j}(t)^{-1}
+   =\sum_{n\geq0}C_{N,j}(n)\frac{t^{Nn}}{(Nn)!},
+ \label{eq:final-normalization}
+\end{equation}
+where $N\geq1$ and $0\leq j<N$. In particular, $C_{N,j}(0)=1$.
+The coefficients in the original convention satisfy
+\begin{equation}
+ E_{Nn}^{(N,j)}=j!C_{N,j}(n),\qquad
+ E_d^{(N,j)}=0\quad(N\nmid d).
+ \label{eq:final-original-normalization}
+\end{equation}
+Thus every valuation of a nonzero difference gains $v_p(j!)$ on returning
+to the original coefficients. This factor must be retained when stating
+optimal periods or the final congruence.
+
+Write $S f(n)=f(n+1)$ and $\Delta_H=S^H-1$. A mixed difference
+$\Delta_{H_1}\cdots\Delta_{H_k}$ acts on the row variable $n$, rather than
+on the full Euler subscript. We use $v_p(0)=+\infty$. Orders and starting
+rows are nonnegative integers; steps are positive integers unless stated
+otherwise. An empty mixed difference is the original value, and a zero
+ordinary step makes every nonempty product containing it zero.
+
+\subsection{The Hurwitz lattice and translated differential flatness}
+
+\begin{definition}[Hurwitz integral series]
+For a prime $p$, let
+\[
+ \mathcal H_p=\left\{\sum_{d\geq0}f_d\frac{t^d}{d!}:
+                    f_d\in\mathbb Z_p\right\}
+       \subset\mathbb Q_p[[t]].
+\]
+For $N=p^a$ and $\lambda\in\mathbb Z_p$, put
+\[
+ D=\frac{d}{dt},\qquad L_\lambda=\frac{D^N-\lambda}{p}.
+\]
+A series $A$ is $\lambda$-flat if $L_\lambda^k A\in\mathcal H_p$ for every
+$k\geq0$.
+\end{definition}
+
+Products preserve $\mathcal H_p$ because the coefficient at factorial
+degree $d$ is
+\[
+ (AB)_d=\sum_{i=0}^d\binom di a_i b_{d-i}.
+\]
+The derivative $D$ acts by the coefficient shift $(DA)_d=a_{d+1}$.
+Consequently every nonnegative power of $D$ preserves the lattice.
+If $A\in\mathcal H_p$ has unit constant term, its reciprocal belongs to
+the same lattice: with $B=A^{-1}$,
+\begin{equation}
+ b_0=a_0^{-1},\qquad
+ b_d=-a_0^{-1}\sum_{i=1}^d\binom di a_i b_{d-i}.
+ \label{eq:hurwitz-reciprocal-recurrence}
+\end{equation}
+If $A$ is supported at degrees divisible by $N$, this recurrence also
+proves that $B$ has the same support.
+
+\begin{lemma}[Translated product formula]
+\label{lem:translated-hurwitz-product}
+For $N=p^a$, $a\geq1$, and $\lambda,\mu\in\mathbb Z_p$,
+\begin{equation}
+ L_{\lambda+\mu}(AB)
+  =(L_\lambda A)B+A(L_\mu B)
+       +\sum_{i=1}^{N-1}c_i(D^iA)(D^{N-i}B),
+ \qquad c_i=\frac1p\binom Ni\in\mathbb Z.
+ \label{eq:translated-product}
+\end{equation}
+Flatness types add under multiplication.
+\end{lemma}
+
+\begin{proof}
+The identity $(1+X)^{p^a}=1+X^{p^a}$ over $\mathbb F_p$ shows that every
+interior binomial coefficient $\binom Ni$ is divisible by $p$.
+Subtract $(\lambda+\mu)AB$ from the ordinary $N$th derivative product
+formula and divide by $p$ to obtain \eqref{eq:translated-product}.
+
+For completeness, the iterated formula is an integral multinomial
+formula, rather than a product rule with unspecified remainders. On the
+tensor of the two factors use the mutually commuting operators
+\[
+ L_\lambda\otimes1,\quad 1\otimes L_\mu,\quad
+ c_iD^i\otimes D^{N-i}\quad(1\leq i<N).
+\]
+Applying multiplication after the $k$th power of their sum gives exactly
+$L_{\lambda+\mu}^k(AB)$. Expanding it yields terms indexed by
+$a,b,e_1,\ldots,e_{N-1}\geq0$, with $a+b+\sum_i e_i=k$:
+\begin{equation}
+ \frac{k!}{a!b!\prod_i e_i!}\prod_i c_i^{e_i}
+ (D^\alpha L_\lambda^a A)(D^\beta L_\mu^b B),
+ \quad
+ \alpha=\sum_i i e_i,\quad
+ \beta=\sum_i(N-i)e_i.
+ \label{eq:translated-multinomial}
+\end{equation}
+Every scalar is integral. If $A$ and $B$ have the stated flatness types,
+both factors in every term belong to $\mathcal H_p$, as does their product.
+\end{proof}
+
+\begin{lemma}[Reciprocal transfer]
+\label{lem:translated-hurwitz-inverse}
+If $A$ is $\lambda$-flat and has unit constant term, then $A^{-1}$ is
+$(-\lambda)$-flat.
+\end{lemma}
+
+\begin{proof}
+Set $B=A^{-1}$. Its order-zero integrality was established in
+\eqref{eq:hurwitz-reciprocal-recurrence}. Assume by induction that
+$L_{-\lambda}^bB\in\mathcal H_p$ for $b<k$. Since $AB=1$,
+\[
+ L_0^k(AB)=\left(\frac{D^N}{p}\right)^k1=0\qquad(k>0).
+\]
+Use \eqref{eq:translated-multinomial} with $\mu=-\lambda$.
+Exactly one term has inverse order $b=k$: it has $a=0$ and all $e_i=0$,
+and is $A L_{-\lambda}^k B$. In every other term $b<k$, so its second
+factor is integral by induction and derivative-shift integrality. Its
+first factor is integral by the flatness of $A$, and its scalar is
+integral. Hence $A L_{-\lambda}^k B\in\mathcal H_p$. Multiplying by the
+already integral $B$ proves $L_{-\lambda}^k B\in\mathcal H_p$.
+This induction takes place in the entire Hurwitz lattice. It places no
+restriction on the coefficient degree or the starting row.
+\end{proof}
+
+\subsection{The actual Euler source}
+
+The packed factorial coefficient of $G_{N,j}$ is
+\begin{equation}
+ g_{N,j}(n)=\frac{j!(Nn)!}{(Nn+j)!}
+   =\prod_{i=1}^j\left(1+\frac Ni n\right)^{-1}.
+ \label{eq:actual-prime-power-kernel}
+\end{equation}
+The empty product is one. If $N=p^a$ and $1\leq i<N$, then
+$v_p(i)<a$, so $N/i\in p\mathbb Z_p$. Every affine denominator in
+\eqref{eq:actual-prime-power-kernel} is therefore a unit on $\mathbb Z_p$.
+
+For $s\in p\mathbb Z_p$, an exact finite-difference identity is
+\begin{equation}
+ \Delta_1^k\frac1{1+sn}
+  =\frac{(-s)^k k!}{\prod_{h=0}^k(1+s(n+h))}.
+ \label{eq:affine-reciprocal-exact}
+\end{equation}
+It follows by induction, subtracting adjacent rational functions; each
+successive subtraction adds the factor $-(k+1)s$ in the numerator.
+Its denominator is a unit, so it belongs to $p^k\mathbb Z_p$.
+The discrete Leibniz formula
+\begin{equation}
+ \Delta_1^k(fg)(n)
+ =\sum_{r=0}^k\binom kr
+       (\Delta_1^r f)(n)(\Delta_1^{k-r}g)(n+r)
+ \label{eq:discrete-leibniz-final}
+\end{equation}
+then proves $\Delta_1^k g_{N,j}(n)\in p^k\mathbb Z_p$ for every $k,n$.
+The coefficient at degree $Nn$ of $L_1^kG_{N,j}$ is precisely
+$p^{-k}\Delta_1^k g_{N,j}(n)$, and the other residue classes vanish.
+Thus the actual source is $1$-flat.
+
+\begin{theorem}[All-row prime-power transfer]
+\label{thm:all-prime-power-transfer}
+Let $p$ be prime, $a\geq1$, $N=p^a$, and $0\leq j<N$.
+The coefficients $C_{N,j}(n)$ belong to $\mathbb Z_p$ for all $n\geq0$.
+Set $A_{N,j}(n)=(-1)^n C_{N,j}(n)$ and
+$T_H=S^H-(-1)^H$. For $k\geq1$ and positive $H_1,\ldots,H_k$,
+\begin{align}
+ v_p(\Delta_{H_1}\cdots\Delta_{H_k}A_{N,j}(n))
+  &\geq k+\sum_{\nu=1}^k v_p(H_\nu),
+ \label{eq:prime-power-signed-bound}\\
+ v_p(T_{H_1}\cdots T_{H_k}E_{Nn}^{(N,j)})
+  &\geq v_p(j!)+k+\sum_{\nu=1}^k v_p(H_\nu).
+ \label{eq:prime-power-original-twist}
+\end{align}
+At $p=2$, the ordinary differences of $C_{N,j}$ and of the original
+coefficients satisfy the same bounds. These dyadic statements also hold
+for $N=1$.
+\end{theorem}
+
+\begin{proof}
+Reciprocal transfer gives $L_{-1}^kF_{N,j}\in\mathcal H_p$.
+Extraction of the packed coefficient gives
+$(S+1)^k C_{N,j}(n)\in p^k\mathbb Z_p$. Moreover,
+\[
+ \Delta_1^k A_{N,j}(n)=(-1)^{n+k}(S+1)^k C_{N,j}(n),
+\]
+so $A_{N,j}$ has the ordinary $p^k$ difference property.
+At $p=2$, $L_1=L_{-1}-1$; its integral binomial expansion on
+$F_{N,j}$ gives $\Delta_1^k C_{N,j}(n)\in2^k\mathbb Z_2$ directly.
+For $N=1$ the interior sum in the product formula is empty, so the same
+argument applies without change; equivalently, $F_{1,0}(t)=e^{-t}$.
+
+To retain the valuation of a step, let $B$ be any sequence satisfying
+$\Delta_1^m B\in p^m\mathbb Z_p$ at every order and row. Use the finite
+operator identity
+\[
+ \Delta_H=\sum_{i=1}^H\binom Hi\Delta_1^i.
+\]
+The relation $i\binom Hi=H\binom{H-1}{i-1}$ implies
+\[
+ v_p\left(p^i\binom Hi\right)
+ \geq i+v_p(H)-v_p(i)\geq1+v_p(H).
+\]
+Multiplying these identities for the $k$ steps, every term of total
+order $M$ has its scalar multiplied by $p^M$, and is divisible by
+$p^{k+\sum_\nu v_p(H_\nu)}$. This proves the mixed-step bound.
+Finally,
+\[
+ \Delta_H A_{N,j}(n)=(-1)^{n+H}T_H C_{N,j}(n).
+\]
+Iteration contributes only a global sign. Multiplying by $j!$ proves
+\eqref{eq:prime-power-original-twist}.
+\end{proof}
+
+\begin{corollary}[Threshold-free dyadic congruence]
+\label{cor:all-dyadic-final}
+For $N=2^a$, $a\geq0$, all permitted $j$, and $n\geq0$,
+\begin{equation}
+ v_2(\Delta_{H_1}\cdots\Delta_{H_k}E_{Nn}^{(N,j)})
+  \geq v_2(j!)+k+\sum_{\nu=1}^k v_2(H_\nu).
+ \label{eq:all-dyadic-final-bound}
+\end{equation}
+In particular, $\Delta_H^k$ gains $k(1+v_2(H))$ bits before normalization.
+For $r>v_2(j!)$, the row displacement
+$H=2^{\max(0,r-v_2(j!)-1)}$ is a sufficient period modulo $2^r$ from
+row zero. If $r\leq v_2(j!)$, all original coefficients vanish modulo
+$2^r$.
+\end{corollary}
+
+\begin{remark}[Necessary boundaries]
+At an odd prime the ordinary step-one difference cannot replace the
+sign-twisted operator in the general theorem. For $j=0$,
+$C_{N,0}(0)=1$ and $C_{N,0}(1)=-1$, so their ordinary difference is
+$-2$, a unit at every odd prime. The proof also does not extend
+unchanged to non-prime-power $N$, whose interior binomial coefficients
+need not be divisible by the chosen prime. Neither observation is a
+counterexample to Nishibuchi's original eventual congruence.
+\end{remark}
+
+\section{Factorial precision at section order four}
+\label{sec:factorial-four-final}
+
+Write $C_j=C_{4,j}$ and $F_j=F_{4,j}$. The all-row theorem removes the
+threshold, but at $N=4$ it leaves a further factorial gain unused.
+The exact algebra below proves that gain for all four addresses and
+identifies several infinite families where it is sharp.
+
+\begin{theorem}[Four-address factorial bound]
+\label{thm:four-factorial-bound}
+For $j\in\{0,1,2,3\}$, $n\geq0$, $k\geq1$, and positive mixed steps,
+\begin{equation}
+ v_2(\Delta_{H_1}\cdots\Delta_{H_k}C_j(n))
+ \geq k+v_2(k!)+\sum_{\nu=1}^k v_2(H_\nu)+\beta_j,
+ \quad (\beta_0,\beta_1,\beta_2,\beta_3)=(0,0,3,1).
+ \label{eq:factorial-four-lower}
+\end{equation}
+Address two also satisfies
+\begin{equation}
+ v_2(\Delta_{H_1}\cdots\Delta_{H_k}C_2(n))
+ \geq 2k+v_2(k!)+\left\lfloor\frac{k}{2}\right\rfloor
+             +\sum_{\nu=1}^k v_2(H_\nu).
+ \label{eq:factorial-four-j2-filtration}
+\end{equation}
+For the original coefficients, the offsets in
+\eqref{eq:factorial-four-lower} are $(0,0,4,2)$.
+No positive-order offset is asserted for the empty difference.
+\end{theorem}
+
+The proof of the first two addresses uses one classical arithmetic
+input: Frobenius's exact congruence for the ordinary Euler numbers in
+the $\operatorname{sech}$ convention, as stated and derived by
+Gessel~\cite{gessel}, Section~9. The address-two and address-three
+bounds below are finite Bernoulli calculations and do not require that
+input. A divided-power argument is necessary: ordinary integral moments
+alone do not justify division by $k!$.
+
+\subsection{Euler moments and an integral divided-power algebra}
+
+Let $\mathcal L$ be the ordinary Euler evaluation functional on a
+variable $\mathcal E$, defined by
+\[
+ \mathcal L(\mathcal E^d)=\operatorname{Euler}_d,
+ \qquad \sum_{d\geq0}\operatorname{Euler}_d\frac{t^d}{d!}
+                  =\operatorname{sech}t.
+\]
+The functional is linear; it is not a multiplicative evaluation.
+Independent variables mean that moments of polynomials in separate
+variables factor. Odd moments vanish. Frobenius's congruence is
+\begin{equation}
+ v_2\left(\sum_{r=0}^m(-1)^{m-r}\binom mr
+                 \operatorname{Euler}_{2n+2r}\right)
+       =m+v_2(m!)\qquad(n,m\geq0).
+ \label{eq:classical-frobenius-exact}
+\end{equation}
+For $m=0$, the assertion is that every even Euler number is odd.
+With $P=(\mathcal E^2-1)/2$ and
+$\gamma_m(P)=P^m/m!$, the case $n=0$ says
+\begin{equation}
+ \mathcal L(\gamma_m(P))\in\mathbb Z_2^{\times}
+                 \qquad(m\geq0).
+ \label{eq:euler-pd-odd-moments}
+\end{equation}
+Introduce an independent Euler variable $\mathcal F$ and
+$Q=(\mathcal F^2-1)/2$.
+
+Put $K=\mathbb Q_2(i)$, $R=\mathbb Z_2[i]$,
+$a=(1+i)/2$, and $b=(1-i)/2$. The exact identity
+\begin{equation}
+ F_0(t)=\frac{2}{\cosh t+\cos t}
+       =\operatorname{sech}(at)\operatorname{sech}(bt)
+ \label{eq:four-euler-factorization}
+\end{equation}
+gives, for $U=a\mathcal E+b\mathcal F$,
+$\mathcal L(U^{4n})=C_0(n)$. Although $a$ and $b$ have negative
+valuation, their denominators disappear from the following exact
+polynomial identities:
+\begin{align}
+ U^2&=\mathcal E\mathcal F+i(P-Q),\nonumber\\
+ H_0:=\frac{U^4-1}{2}
+   &=P+Q-\frac{P^2}{2}-\frac{Q^2}{2}
+                 +3PQ+i\mathcal E\mathcal F(P-Q).
+ \label{eq:four-euler-H}
+\end{align}
+
+Let $\Gamma_R(P,Q)$ be the $R$-subalgebra generated by all
+$\gamma_m(P)$ and $\gamma_r(Q)$. Adjoin $\mathcal E,\mathcal F$ with
+\[
+ \mathcal E^2=1+2P,\qquad \mathcal F^2=1+2Q,
+\]
+and call the resulting algebra $\mathcal A_0$. Its elements are finite
+expressions; no completion is being presumed. It is generated as a
+$\Gamma_R(P,Q)$-module by $1,\mathcal E,\mathcal F,\mathcal E\mathcal F$.
+The functional maps this module to $R$. For an even basis term this is
+\eqref{eq:euler-pd-odd-moments} and independence. For a basis term with
+an odd Euler factor the moment is zero, since $P$ and $Q$ are even
+polynomials in their respective variables.
+
+Every displayed component of $H_0$ has all its divided powers in
+$\mathcal A_0$. Besides the generators, the needed identities are
+\begin{align}
+ \gamma_m(P^2/2)
+     &=\frac{(2m)!}{2^m m!}\gamma_{2m}(P),\nonumber\\
+ \gamma_m(3PQ)&=3^m m!\gamma_m(P)\gamma_m(Q),\nonumber\\
+ \gamma_m(P-Q)&=\sum_{r=0}^m(-1)^r
+                   \gamma_{m-r}(P)\gamma_r(Q).
+ \label{eq:components-divided-powers}
+\end{align}
+The first scalar counts partitions into pairs and is an integer.
+For the last term of $H_0$, multiply the third identity by
+$(i\mathcal E\mathcal F)^m$ and reduce the Euler powers using the
+integral quadratic relations. Finally,
+\[
+ \gamma_k(X+Y)=\sum_{r=0}^k\gamma_r(X)\gamma_{k-r}(Y)
+\]
+proves $\gamma_k(H_0)\in\mathcal A_0$. Applying the functional and
+putting $W=U^4-1=2H_0$ gives
+\begin{equation}
+ \mathcal L(W^m)\in2^m m!R\qquad(m\geq0).
+ \label{eq:euler-W-factorial}
+\end{equation}
+These moments are rational. The identity
+$R\cap\mathbb Q_2=\mathbb Z_2$, obtained from the linear independence
+of $1,i$ over $\mathbb Q_2$, descends every such divisibility statement
+to $\mathbb Z_2$. No field property of $R/2R$ is needed.
+
+For every starting row,
+\begin{equation}
+ \Delta_1^k C_0(n)
+   =\mathcal L(U^{4n}W^k)
+   =\sum_{s=0}^n\binom ns\mathcal L(W^{k+s}).
+ \label{eq:base-row-finite-expansion}
+\end{equation}
+Each summand lies in $2^k k!\mathbb Z_2$, proving the factorial
+bound for address zero from row zero onward.
+
+\subsection{A finite step-expansion lemma}
+
+The conversion from unit steps to arbitrary mixed steps is used several
+times, so it is useful to make it explicit. Write $\Delta=\Delta_1$.
+For $H>0$,
+\begin{equation}
+ \Delta_H=\sum_{m=1}^H\binom Hm\Delta^m.
+ \label{eq:finite-step-expansion}
+\end{equation}
+A mixed term with local orders $m_1,\ldots,m_k\geq1$ and
+$M=\sum_\nu m_\nu$ therefore has valuation at least
+\[
+ M+v_2(M!)+\beta
+    +\sum_\nu\bigl(v_2(H_\nu)-v_2(m_\nu)\bigr)
+\]
+if the unit-order estimate has offset $\beta$ for every positive order.
+The inequalities
+\[
+ m-1\geq v_2(m),\qquad M\geq k,\qquad v_2(M!)\geq v_2(k!)
+\]
+make this at least $k+v_2(k!)+\beta+\sum_\nu v_2(H_\nu)$.
+Every expansion is finite. This proves the desired mixed-step transfer
+without an exchange of limits.
+
+\subsection{An elementary Bernoulli denominator bound}
+
+Let $B_m$ denote the Bernoulli numbers with $B_1=-1/2$.
+The identity obtained by substituting $u=e^t-1$ into
+$\log(1+u)/u$ is
+\begin{equation}
+ B_m=\sum_{r=0}^m(-1)^r\frac{r!}{r+1}
+                                  \left\{\begin{matrix}m\\r\end{matrix}\right\},
+ \label{eq:bernoulli-stirling-denominator}
+\end{equation}
+where the braces are Stirling numbers of the second kind. Each
+$2r!/(r+1)$ is dyadically integral. Indeed, if $s=v_2(r+1)>0$, then
+$r\geq2^s-1$ and
+\[
+ v_2(r!)\geq v_2((2^s-1)!)=2^s-1-s\geq s-1.
+\]
+The last inequality is $2^s\geq2s$; the case $s=0$ is immediate.
+Consequently
+\begin{equation}
+ 2B_m\in\mathbb Z_2\qquad(m\geq0).
+ \label{eq:elementary-bernoulli-bound}
+\end{equation}
+Thus the transfer factors below require no appeal to the
+von Staudt--Clausen theorem.
+
+\subsection{Address one and the scaled-binomial transfer}
+
+The address-one source is
+$G_{4,1}(t)=(\sinh t+\sin t)/(2t)$. The identities $a+b=1$,
+$a-b=i$, and $ab=1/2$ give
+\begin{equation}
+ D_1(t):=G_{4,1}(t)F_0(t)
+ =\frac12\left(\frac{\tanh(at)}{at}
+                         +\frac{\tanh(bt)}{bt}\right).
+ \label{eq:address-one-tangent-factor}
+\end{equation}
+For example, its numerator follows from
+\[
+ \sinh t+\sin t
+ =2b\sinh(at)\cosh(bt)+2a\cosh(at)\sinh(bt),
+\]
+while $\cosh t+\cos t=2\cosh(at)\cosh(bt)$.
+Only degrees divisible by four survive. Its actual Hurwitz packets are
+\begin{equation}
+ D_1(t)=\sum_{i\geq0}d_i\frac{t^{4i}}{(4i)!},\qquad
+ d_i=\left(-\frac14\right)^i
+ \frac{2^{4i+2}(2^{4i+2}-1)B_{4i+2}}{(4i+2)(4i+1)}.
+ \label{eq:address-one-packets}
+\end{equation}
+The constant is one. Since $v_2(4i+2)=1$, the elementary Bernoulli bound
+shows $v_2(d_i)\geq2i$. Hurwitz inversion therefore gives
+\[
+ D_1(t)^{-1}=\sum_{i\geq0}h_i\frac{t^{4i}}{(4i)!},
+ \qquad h_0=1,\quad v_2(h_i)\geq2i.
+\]
+This follows by induction from the inverse recurrence: for packet index
+$i$, every product $d_rh_{i-r}$ has valuation at least $2i$, and its
+binomial multiplier is integral.
+Because $F_1=F_0D_1^{-1}$,
+\begin{equation}
+ C_1(n)-C_0(n)
+     =\sum_{i\geq1}h_i\binom{4n}{4i}C_0(n-i).
+ \label{eq:address-one-exact-transfer}
+\end{equation}
+At a natural $n$ this is a finite sum, with $i\leq n$.
+
+Here is the polynomial estimate that supplies one additional bit.
+For $i\geq1$, put $P_i(x)=4^i\binom{4x}{4i}$. Its constant is zero,
+and its degree-$d$ coefficient is
+\begin{equation}
+ [x^d]P_i(x)=\frac{4^i4^d s(4i,d)}{(4i)!},
+ \label{eq:scaled-binomial-coefficients}
+\end{equation}
+where $s(m,d)$ is a signed Stirling number of the first kind.
+In each product contributing to $s(4i,d)$, at most $d-1$ of the
+$2i-1$ even integers in $1,\ldots,4i-1$ can be omitted. Thus
+\[
+ v_2(s(4i,d))\geq\max(0,2i-d).
+\]
+Writing $s_2(i)$ for the number of ones in the binary expansion of $i$,
+and using $v_2((4i)!)=4i-s_2(i)$, gives
+\begin{equation}
+ v_2([x^d]P_i)
+ \geq2d-2i+s_2(i)+\max(0,2i-d)
+ \geq d+s_2(i)\geq d+1\quad(d\geq1).
+ \label{eq:scaled-binomial-degree-bound}
+\end{equation}
+For $k\geq1$, $\Delta_1^k x^d$ vanishes when $d<k$ and is an
+integer polynomial with values divisible by $k!$. To see the latter,
+expand $x^d=\sum_r\left\{\begin{smallmatrix}d\\r\end{smallmatrix}\right\}
+r!\binom xr$ and apply
+$\Delta_1^k\binom xr=\binom{x}{r-k}$.
+It follows that
+\begin{equation}
+ \Delta_1^kP_i(x)\in2^{k+1}k!\mathbb Z_2
+                      \qquad(k\geq0,\ x\in\mathbb Z_2).
+ \label{eq:scaled-binomial-difference-bound}
+\end{equation}
+For $k=0$ the bound follows directly from the coefficient estimate.
+
+To apply discrete products in \eqref{eq:address-one-exact-transfer}
+without a moving truncation, first extend $C_0$ to $\mathbb Z_2$ by its
+uniformly convergent Newton series. The all-row bound
+$v_2(\Delta_1^m C_0(0))\geq m$ proves this convergence. Its factorial
+bounds extend to every dyadic starting point by continuity and
+approximation with natural rows. The sum in
+\eqref{eq:address-one-exact-transfer} is then uniformly convergent on
+$\mathbb Z_2$: both the binomial polynomial and $C_0(x-i)$ are
+integral-valued and $v_2(h_i)\geq2i$.
+
+For the pointwise product $P_i(x)C_0(x-i)$, the discrete Leibniz formula
+has scalar divisibility
+\[
+ \binom kr(2^{r+1}r!)(2^{k-r}(k-r)!)=2^{k+1}k!.
+\]
+Multiplication by $h_i/4^i\in\mathbb Z_2$ and uniform summation now give
+\begin{equation}
+ v_2(\Delta_1^k(C_1-C_0)(n))
+               \geq k+v_2(k!)+1\qquad(k,n\geq0).
+ \label{eq:address-one-extra-bit}
+\end{equation}
+The same extra bit holds for positive mixed steps by
+\eqref{eq:finite-step-expansion}. Combining this with the address-zero
+bound proves Theorem~\ref{thm:four-factorial-bound} for address one.
+
+\subsection{Central factorials and integral Bernoulli divided powers}
+
+\begin{lemma}[Bernoulli divided-power moments]
+\label{lem:bernoulli-central-pd}
+Let $Z$ be the ordinary Bernoulli variable,
+$\mathcal L(Z^r)=B_r$, with exponential transform $t/(e^t-1)$.
+For $P=Z(Z+1)$ and $\mu_m=\mathcal L(P^m/m!)$,
+\begin{equation}
+ \mu_m\in\mathbb Z_2,\qquad
+ v_2(\mu_m)\geq s_2(m)-1\quad(m\geq1).
+ \label{eq:bernoulli-central-moment-bound}
+\end{equation}
+Moreover, $\mu_m$ is odd exactly when $m=0$ or $m$ is a positive power
+of two.
+\end{lemma}
+
+\begin{proof}
+Define the central-factorial basis polynomials
+\[
+ P_r(X)=\prod_{a=0}^{r-1}(X-a(a+1)).
+\]
+At $X=Z(Z+1)$, they have the exact factorization
+\begin{equation}
+ P_r(Z(Z+1))
+   =\prod_{a=0}^{r-1}(Z-a)(Z+a+1)
+   =(2r)!\binom{Z+r}{2r}.
+ \label{eq:central-factorial-substitution}
+\end{equation}
+The Bernoulli transform gives
+$\mathcal L((1+T)^Z)=\log(1+T)/T$, whence
+$\mathcal L(\binom Zj)=(-1)^j/(j+1)$. Finite Vandermonde expansion
+therefore gives
+\begin{align}
+ \mathcal L\left(\binom{Z+r}{2r}\right)
+ &=(-1)^r\sum_{q=0}^r(-1)^q\binom rq\frac1{r+q+1}\nonumber\\
+ &=(-1)^r\frac{(r!)^2}{(2r+1)!}.
+ \label{eq:central-factorial-evaluation}
+\end{align}
+The last equality is the rational identity obtained by expanding
+$\int_0^1t^r(1-t)^r\,dt$. This use of an ordinary finite integral makes
+no assertion about a positive or bounded $p$-adic measure. In
+particular,
+\[
+ \mathcal L(P_r(P))=(-1)^r\frac{(r!)^2}{2r+1}.
+\]
+
+Expand $X^m=\sum_{r=0}^mT(m,r)P_r(X)$. Since
+$XP_r(X)=P_{r+1}(X)+r(r+1)P_r(X)$, these integer coefficients satisfy
+\begin{equation}
+ T(m+1,r)=T(m,r-1)+r(r+1)T(m,r),
+ \quad T(0,0)=1.
+ \label{eq:central-factorial-recurrence}
+\end{equation}
+Every $r(r+1)$ is even. Induction, including the boundary indices,
+proves $2^{m-r}\mid T(m,r)$ for $0\leq r\leq m$.
+For $m>0$ the $r=0$ term vanishes. Each remaining summand of
+$\mathcal L(P^m/m!)$ has valuation at least
+\begin{equation}
+ m-r+2v_2(r!)-v_2(m!)
+   =r+s_2(m)-2s_2(r)\geq s_2(m)-1\geq0.
+ \label{eq:central-factorial-term-bound}
+\end{equation}
+Here $r\geq2s_2(r)-1$ follows from
+$r\geq2^{s_2(r)}-1$ and $2^u\geq2u$ for $u\geq1$.
+This proves integrality and the stronger bound.
+
+If $m$ is not a power of two, $s_2(m)\geq2$ makes $\mu_m$ even.
+If $m$ is a positive power of two, the only central indices which can
+contribute an odd residue are $r=1$ and $r=3$, since
+$r-2s_2(r)=-1$ only at these two positive integers. The $r=1$ term is
+odd: $T(m,1)=2^{m-1}$ and $v_2(m!)=m-1$. For $m\geq4$ a power of
+two, the $r=3$ term is even. More explicitly,
+\[
+ \frac{T(m,3)}{2^{m-3}}=h_{m-3}(1,3,6),
+ \qquad
+ \sum_{d\geq0}h_d(1,3,6)t^d
+       =\frac1{(1-t)(1-3t)(1-6t)}.
+\]
+Reduction modulo two gives $(1-t)^{-2}$, whose degree $m-3$
+coefficient has parity $m-2=0$. At $m=1,2$ the $r=3$ term is absent,
+and the $r=1$ term is again odd. Finally $\mu_0=1$.
+\end{proof}
+
+\subsection{Address two and its stronger filtration}
+
+The variable $\mathcal B=2Z+1$ has transform
+\[
+ e^t\frac{2t}{e^{2t}-1}=\frac{t}{\sinh t}.
+\]
+Its odd moments vanish, and
+$P=(\mathcal B^2-1)/4=Z(Z+1)$ has the divided-power moments of
+Lemma~\ref{lem:bernoulli-central-pd}. Introduce an independent copy
+$\mathcal D$ and $Q=(\mathcal D^2-1)/4$. The exact factorization
+\begin{equation}
+ F_2(t)=\frac{t^2}{\cosh t-\cos t}
+       =\frac{at}{\sinh(at)}\frac{bt}{\sinh(bt)}
+ \label{eq:address-two-factorization}
+\end{equation}
+shows that $U=a\mathcal B+b\mathcal D$ satisfies
+$\mathcal L(U^{4n})=C_2(n)$. Direct expansion gives
+\begin{equation}
+ H_2:=\frac{U^4-1}{4}
+     =P+Q-P^2-Q^2+6PQ+i\mathcal B\mathcal D(P-Q).
+ \label{eq:address-two-H}
+\end{equation}
+
+Let $\mathcal A_2$ be the divided-power algebra over $R$ generated by
+$P,Q$, adjoining $\mathcal B,\mathcal D$ with
+$\mathcal B^2=1+4P$, $\mathcal D^2=1+4Q$.
+The functional is integral on its module basis
+$1,\mathcal B,\mathcal D,\mathcal B\mathcal D$ by the Bernoulli lemma,
+independence, and vanishing of odd moments. Every component in
+\eqref{eq:address-two-H} has integral divided powers, by the same
+finite identities as before; $P^2$ is even easier than $P^2/2$.
+Consequently
+\begin{equation}
+ \mathcal L((U^4-1)^m)\in4^m m!\mathbb Z_2,
+ \qquad
+ v_2(\Delta_1^kC_2(n))\geq2k+v_2(k!).
+ \label{eq:address-two-basic-factorial}
+\end{equation}
+The starting-row conclusion follows from the finite base expansion
+\eqref{eq:base-row-finite-expansion}, now with $W=4H_2$.
+
+The low Newton coefficients of the actual reciprocal are
+\begin{equation}
+ C_2(0)=1,\quad C_2(1)=-\frac1{15},\quad C_2(2)=\frac{13}{45},
+ \qquad a_1=-\frac{16}{15},\quad a_2=\frac{64}{45},
+ \label{eq:address-two-initial-newton}
+\end{equation}
+where $a_m=\Delta_1^m C_2(0)$. Thus $v_2(a_1)=4$ and $v_2(a_2)=6$.
+For $m\geq3$, \eqref{eq:address-two-basic-factorial} bounds $a_m$ by
+$2m+v_2(m!)$. The finite shifted Newton formula
+\begin{equation}
+ \Delta_1^kC_2(n)=\sum_{m=k}^{n+k}a_m\binom n{m-k}
+ \label{eq:shifted-newton-finite}
+\end{equation}
+therefore gives
+$v_2(\Delta_1^kC_2(n))\geq k+v_2(k!)+3$ for every $k\geq1$.
+For $k\geq3$ this is $2k\geq k+3$; for $k=1,2$ it uses the exact
+initial coefficients and the higher tail bound. The finite step
+expansion proves the offset three in
+\eqref{eq:factorial-four-lower}.
+
+There is a still stronger filtration. Put
+\[
+ X=P+Q,\qquad \tau=i\mathcal B\mathcal D,\qquad \epsilon=1+\tau.
+\]
+Then the exact identities are
+\begin{equation}
+ H_2=\epsilon X+2G,\quad
+ G=-\gamma_2(P)-\gamma_2(Q)+3PQ-\tau Q,\quad
+ \epsilon^2=2V,\quad V=\tau-2X-8PQ.
+ \label{eq:address-two-filtration-algebra}
+\end{equation}
+Every divided power of $G$ is integral component by component.
+The finite addition identity gives
+\begin{equation}
+ \gamma_k(H_2)=\sum_{r=0}^k2^r\gamma_r(G)
+                  \epsilon^{k-r}\gamma_{k-r}(X)
+          \in2^{\lfloor k/2\rfloor}\mathcal A_2,
+ \label{eq:address-two-filtration-pd}
+\end{equation}
+because the $r$th term belongs to
+$2^{r+\lfloor(k-r)/2\rfloor}\mathcal A_2$.
+Applying the functional, rational descent, and the base-index expansion
+proves the unit-step version of
+\eqref{eq:factorial-four-j2-filtration}.
+For a mixed term of total order $M$, its lower bound exceeds the target
+at order $k$ by at least
+\[
+ 2(M-k)+\left\lfloor\frac M2\right\rfloor
+          -\left\lfloor\frac k2\right\rfloor
+       +v_2(M!)-v_2(k!)-\sum_\nu v_2(m_\nu)\geq0.
+\]
+Indeed $\sum_\nu v_2(m_\nu)\leq M-k$. This proves the stronger mixed
+bound. The earlier offset-three bound is retained, since it is stronger
+at the lowest orders.
+
+\subsection{Address three and cancellation of the apparent pole}
+
+The address-three source is
+$G_{4,3}(t)=3(\sinh t-\sin t)/t^3$. Addition identities give
+\[
+ \sinh t-\sin t
+ =2a\sinh(at)\cosh(bt)+2b\cosh(at)\sinh(bt),
+ \qquad \cosh t-\cos t=2\sinh(at)\sinh(bt).
+\]
+Consequently
+\begin{equation}
+ D_3(t):=G_{4,3}(t)F_2(t)
+ =\frac32\left(\frac{\coth(at)}{at}
+                            +\frac{\coth(bt)}{bt}\right).
+ \label{eq:address-three-cotangent-factor}
+\end{equation}
+This expression is a power series: its two polar terms cancel because
+$a^{-2}+b^{-2}=0$. Its constant is one, only degrees divisible by four
+survive, and the Bernoulli expansion gives
+\begin{equation}
+ D_3(t)=\sum_{i\geq0}d_i\frac{t^{4i}}{(4i)!},\qquad
+ d_i=3\left(-\frac14\right)^i
+          \frac{2^{4i+2}B_{4i+2}}{(4i+2)(4i+1)}.
+ \label{eq:address-three-packets}
+\end{equation}
+Again $v_2(d_i)\geq2i$, and the inverse coefficients $h_i$ have the same
+bound. Since $F_3=F_2D_3^{-1}$,
+\begin{equation}
+ C_3(n)-C_2(n)=\sum_{i\geq1}h_i\binom{4n}{4i}C_2(n-i).
+ \label{eq:address-three-exact-transfer}
+\end{equation}
+The scaled-binomial argument
+\eqref{eq:scaled-binomial-difference-bound} applies unchanged.
+The basic bound for $C_2$ includes order zero; its continuous extension
+is available from the threshold-free theorem. Thus the shifted sums
+converge uniformly on $\mathbb Z_2$, and the pointwise product rule
+proves
+\begin{equation}
+ v_2(\Delta_1^k(C_3-C_2)(n))\geq k+v_2(k!)+1
+                                      \qquad(k,n\geq0).
+ \label{eq:address-three-extra-bit}
+\end{equation}
+At every positive order $C_2$ has three extra bits, so this gives the
+one-bit offset for $C_3$. Finite step expansion finishes the proof of
+Theorem~\ref{thm:four-factorial-bound}.
+
+\section{Sharp higher-difference families}
+\label{sec:sharp-higher-final}
+
+The lower bounds do not mean that every mixed stencil has exactly the
+stated valuation. Addresses zero and one have a complete classification
+of when the leading factorial precision is attained. Address two has
+exact mixed precision at every positive power-of-two order.
+
+\begin{theorem}[Exact factorial precision at addresses zero and one]
+\label{thm:zero-one-exact-mixed}
+Let $j\in\{0,1\}$, $k\geq1$, $n\geq0$, and $H_1,\ldots,H_k>0$.
+Put
+\[
+ L=k+v_2(k!)+\sum_{\nu=1}^k v_2(H_\nu),\qquad
+ e=\#\{\nu:2\mid H_\nu\}.
+\]
+The mixed difference has valuation exactly $L$ if $k$ is odd or $e$ is
+even. If $k$ is even and $e$ is odd, it has valuation at least $L+1$.
+In particular, for every homogeneous positive step,
+\begin{equation}
+ v_2(\Delta_H^kC_j(n))=k+v_2(k!)+k v_2(H).
+ \label{eq:zero-one-homogeneous-exact}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Return to the Euler variables of address zero and put
+$X=P+Q$, $\tau=i\mathcal E\mathcal F$, $\epsilon=1+\tau$.
+Direct rearrangement of \eqref{eq:four-euler-H} gives
+\begin{equation}
+ H_0=\gamma_2(X)+\epsilon X+2G,\qquad
+ G=-\gamma_2(P)-\gamma_2(Q)+PQ-\tau Q,
+ \qquad \epsilon^2=2(\tau-P-Q-2PQ).
+ \label{eq:zero-parity-decomposition}
+\end{equation}
+The divided powers of $G$ are integral by the same component formulas
+used above. Thus modulo $2\mathcal A_0$, $\gamma_k(H_0)$ equals the
+divided power of $\gamma_2(X)+\epsilon X$. The identity
+\[
+ \gamma_r(\gamma_2(X))
+   =\frac{(2r)!}{2^r r!}\gamma_{2r}(X)
+\]
+has an odd integer scalar. Every term involving $\epsilon^j$ for
+$j\geq2$ vanishes modulo two. The surviving zero and first powers give
+\begin{equation}
+ \gamma_k(H_0)\equiv
+       \gamma_{2k}(X)+\epsilon\gamma_{2k-1}(X)
+                                  \pmod{2\mathcal A_0}.
+ \label{eq:zero-parity-leading-pd}
+\end{equation}
+The multiplication coefficient in the second term is $2k-1$, also odd.
+By the odd moments \eqref{eq:euler-pd-odd-moments} and independence,
+\[
+ \mathcal L(\gamma_m(P+Q))\equiv m+1\pmod2.
+\]
+The $\tau$-weighted moment vanishes because it contains an odd power of
+each Euler variable. Therefore the first term of
+\eqref{eq:zero-parity-leading-pd} evaluates to one modulo two and the
+second to zero. Hence $\mathcal L(\gamma_k(H_0))$ is odd at every order,
+including order zero. This proves
+\[
+ v_2(\Delta_1^k C_0(0))=k+v_2(k!).
+\]
+In the base-row expansion \eqref{eq:base-row-finite-expansion}, every
+$s>0$ term has at least one extra bit after division by $2^k k!$.
+Thus the same exact valuation holds at every starting row.
+The extra-bit transfer \eqref{eq:address-one-extra-bit} proves it for
+address one as well.
+
+It remains to track possible ties in the mixed-step expansion.
+For local orders $m_\nu\geq1$ and total $M$, the excess over $L$ is
+at least
+\begin{equation}
+ \left(M-k-\sum_\nu v_2(m_\nu)\right)
+                       +\left(v_2(M!)-v_2(k!)\right).
+ \label{eq:zero-one-mixed-excess}
+\end{equation}
+The first bracket is nonnegative, and equality requires every
+$m_\nu$ to be one or two. Two or more occurrences of two make the
+second bracket positive, since the intervening factorial interval then
+contains an even number. Exactly one occurrence of two can tie only
+when $k$ is even; its binomial coefficient can have the minimally
+allowed valuation only if its associated step is even.
+
+The all-one multi-index contributes one after normalization by $2^L$.
+When $k$ is even, each even step supplies exactly one further tied term,
+again with normalized residue one. For example,
+$\binom H2=H(H-1)/2$ attains $v_2(H)-1$ exactly when $H$ is even;
+all remaining factors and the exact normalized order-$k+1$ difference
+are odd. Thus the total normalized parity is one for odd $k$, and
+$1+e$ for even $k$. This proves the classification.
+In the homogeneous case, $e$ is zero or $k$, so it is even whenever
+$k$ is even, proving \eqref{eq:zero-one-homogeneous-exact}.
+\end{proof}
+
+\begin{remark}[A mixed cancellation]
+The exceptional class can gain more than one bit. The exact values
+\[
+ \Delta_1\Delta_2C_0(0)=-33728,\qquad
+ \Delta_1\Delta_2C_1(0)=-\frac{150208}{585}
+\]
+both have valuation six, whereas their baseline $L$ is four.
+The theorem classifies attainment of the baseline; it does not give a
+complete deeper valuation in the cancellation class.
+\end{remark}
+
+\begin{theorem}[Exact address-two power orders]
+\label{thm:two-exact-power-orders}
+For every starting row $n\geq0$ and all positive mixed steps,
+\begin{equation}
+ v_2(\Delta_{H_1}\cdots\Delta_{H_k}C_2(n))
+       =V_2(k)+\sum_{\nu=1}^k v_2(H_\nu)
+ \label{eq:two-power-orders-exact}
+\end{equation}
+whenever $k$ is a positive power of two, where
+\[
+ V_2(1)=4,\qquad V_2(2)=6,\qquad
+ V_2(k)=2k+v_2(k!)+\frac{k}{2}\quad(k\geq4).
+\]
+For the original coefficients, the right side gains one bit.
+\end{theorem}
+
+\begin{proof}
+For $k=2^r\geq4$, put $q=k/2$, which is even. Normalize the exact
+expansion \eqref{eq:address-two-filtration-pd} by $2^q$ before reducing
+modulo two. Its $u$th auxiliary term has excess
+$u+\lfloor(k-u)/2\rfloor-q=\lfloor u/2\rfloor$.
+Only auxiliary indices zero and one can therefore survive:
+\begin{equation}
+ \frac{\gamma_k(H_2)}{2^q}
+ \equiv V^q\gamma_k(X)
+       +\epsilon V^{q-1}G\gamma_{k-1}(X)
+                                \pmod{2\mathcal A_2}.
+ \label{eq:two-power-leading-normalized}
+\end{equation}
+Here $V\equiv\tau\pmod2$ and $\tau^2\equiv1\pmod2$.
+Since $q$ is even and $\epsilon\tau\equiv\epsilon\pmod2$, this reduces
+to $\gamma_k(X)+\epsilon G\gamma_{k-1}(X)$.
+Moreover, $G\equiv\gamma_2(X)+\tau Q\pmod2$.
+After evaluation, every term with a single $\tau$ vanishes, so the
+second contribution reduces to
+\[
+ \mathcal L\bigl((\gamma_2(X)+Q)\gamma_{k-1}(X)\bigr).
+\]
+The $\gamma_2(X)$ product has scalar $\binom{k+1}{2}$, which is even
+because $4\mid k$. The other contribution expands as
+\begin{equation}
+ \mathcal L(Q\gamma_{k-1}(P+Q))
+    =\sum_{a=0}^{k-1}(k-a)\mu_a\mu_{k-a}.
+ \label{eq:two-power-Q-evaluation}
+\end{equation}
+An odd summand would require $k-a$ to be odd and $\mu_{k-a}$ to be
+odd. By Lemma~\ref{lem:bernoulli-central-pd}, this requires $k-a=1$.
+Then $a=k-1$ is not a power of two and $\mu_a$ is even. Hence the
+second contribution is zero modulo two.
+
+For the first contribution, independence gives
+$\mathcal L(\gamma_k(P+Q))=\sum_{a=0}^k\mu_a\mu_{k-a}$.
+The parity generating series of these convolution moments is
+\[
+ (1+t+t^2+t^4+t^8+\cdots)^2
+        =1+t^2+t^4+t^8+\cdots\quad\text{in }\mathbb F_2[[t]].
+\]
+Its coefficient is one at every $k=2^r\geq4$. Thus the normalized
+moment in \eqref{eq:two-power-leading-normalized} is odd and
+\[
+ v_2(\Delta_1^kC_2(0))=2k+v_2(k!)+k/2.
+\]
+Inserting $U^{4n}=(1+4H_2)^n$ introduces only corrections with strictly
+higher valuation, by the filtered bound at orders $k+s$ for $s>0$.
+The equality consequently holds at every starting row.
+
+For mixed steps the all-one local multi-index gives the claimed leading
+term. A higher term of total order $M>k$ has excess at least
+\[
+ 2(M-k)+\left\lfloor\frac M2\right\rfloor-\frac k2
+       +v_2(M!)-v_2(k!)-\sum_\nu v_2(m_\nu)
+       \geq M-k\geq1.
+\]
+Hence the leading term cannot cancel.
+
+At order one, $a_1$ in \eqref{eq:address-two-initial-newton} has
+valuation four and the Newton tail starts at valuation six; its shifted
+value remains exact. In the step expansion a local order two can lose
+at most one bit through its binomial coefficient, so every correction
+is still above $4+v_2(H_1)$. At order two, $a_2$ has valuation six and
+the next coefficient has lower bound eight from the stronger
+filtration. A total-order-three correction loses at most one bit,
+so it stays above the leading valuation six, while later orders gain
+still more. The same argument proves exactness for both mixed steps.
+\end{proof}
+
+\begin{remark}[What the power orders do not decide]
+The exact orders in Theorem~\ref{thm:two-exact-power-orders} form an
+infinite family. They do not supply a complete valuation formula at
+non-power-of-two orders in address two, nor an exact higher-difference
+formula at address three. Numerical patterns at other orders remain
+bounded observations unless proved separately.
+\end{remark}
+
+\section{Exact first differences, least periods, and dyadic images}
+\label{sec:sharp-periods-final}
+
+The factorial estimates are stronger than needed for the optimal
+first-difference law. A general Newton criterion gives the exact law
+from the threshold-free bound and finitely many rational coefficients.
+This route also yields all addresses at ranks two and eight, and an
+infinite family at every larger dyadic rank.
+
+\begin{lemma}[A first-difference criterion]
+\label{lem:newton-exact-isometry-criterion}
+Let $C:\mathbb Z_{\geq0}\to\mathbb Z_2$ have Newton coefficients
+$a_k=\Delta_1^kC(0)$. Suppose for an integer $b\geq0$ that
+\begin{equation}
+ v_2(a_1)=b,\qquad
+ v_2(a_k)\geq b+1+\lfloor\log_2k\rfloor\quad(k\geq2).
+ \label{eq:newton-isometry-criterion}
+\end{equation}
+Then for every $n\geq0$ and $H>0$,
+\begin{equation}
+ v_2(C(n+H)-C(n))=b+v_2(H).
+ \label{eq:newton-isometry-conclusion}
+\end{equation}
+The Newton interpolation extends continuously to $\mathbb Z_2$ and
+satisfies the same identity for any two distinct dyadic arguments.
+\end{lemma}
+
+\begin{proof}
+At a natural argument the exact Newton expansion is finite.
+Vandermonde gives
+\[
+ \binom{n+H}{k}-\binom nk
+   =\sum_{i=1}^k\binom Hi\binom n{k-i}.
+\]
+For $1\leq i\leq H$,
+$v_2(\binom Hi)\geq v_2(H)-v_2(i)
+ \geq v_2(H)-\lfloor\log_2k\rfloor$; terms with $i>H$ vanish.
+Thus each Newton summand with $k\geq2$ has valuation at least
+$b+v_2(H)+1$. The $k=1$ summand is $Ha_1$, of exact valuation
+$b+v_2(H)$, proving \eqref{eq:newton-isometry-conclusion}.
+
+The coefficient hypothesis implies $a_k\to0$ dyadically, so the
+Newton series converges uniformly on $\mathbb Z_2$, where
+$\binom xk$ is integral-valued. For distinct $x,y\in\mathbb Z_2$,
+approximate the pair by natural integer pairs with their difference
+valuation eventually equal to $v_2(x-y)$. The corresponding function
+differences have the fixed exact valuation $b+v_2(x-y)$.
+A limit of elements with that fixed valuation has the same valuation:
+the normalized residues are units, and $\mathbb Z_2^\times$ is closed.
+\end{proof}
+
+\begin{theorem}[Exact four-address first differences]
+\label{thm:rank-four-exact-periods}
+For every $n\geq0$, $H>0$, and $j\in\{0,1,2,3\}$,
+\begin{align}
+ v_2(C_j(n+H)-C_j(n))&=v_2(H)+b_j,
+      &(b_0,b_1,b_2,b_3)&=(1,1,4,2),\label{eq:rank-four-normalized-isometry}\\
+ v_2(E_{4(n+H)}^{(4,j)}-E_{4n}^{(4,j)})&=v_2(H)+B_j,
+      &(B_0,B_1,B_2,B_3)&=(1,1,5,3).
+ \label{eq:rank-four-original-isometry}
+\end{align}
+Consequently, the least positive row period modulo $2^r$ is exactly
+\begin{equation}
+ P_j(r)=2^{\max(0,r-B_j)}\qquad(r\geq1).
+ \label{eq:rank-four-least-period-final}
+\end{equation}
+The corresponding displacement in the original Euler subscript is
+$4P_j(r)$.
+\end{theorem}
+
+\begin{proof}
+The actual reciprocal recurrence is
+\begin{equation}
+ C_{N,j}(n)=-\sum_{q=1}^n\binom{Nn}{Nq}
+           g_{N,j}(q)C_{N,j}(n-q),\qquad C_{N,j}(0)=1.
+ \label{eq:exact-reciprocal-row-recurrence}
+\end{equation}
+For $N=4$, the four kernels are
+\[
+ 1,\qquad\frac1{4q+1},\qquad
+ \frac1{(4q+1)(2q+1)},\qquad
+ \frac3{(4q+1)(2q+1)(4q+3)}.
+\]
+The threshold-free theorem gives $v_2(a_k)\geq k$ in every address.
+The following exact values cover all orders where that bound does not
+already imply \eqref{eq:newton-isometry-criterion}:
+\begin{center}
+\begin{tabular}{c r l r}
+$j$&$k$&$a_k$&$v_2(a_k)$\\\hline
+0&1&$-2$&1\\
+0&2&$72$&3\\
+1&1&$-6/5$&1\\
+1&2&$184/45$&3\\
+2&1&$-16/15$&4\\
+2&2&$64/45$&6\\
+2&3&$-14848/1365$&9\\
+2&4&$71426048/69615$&13\\
+2&5&$-25509691392/85085$&16\\
+2&6&$149113198870528/765765$&22\\
+3&1&$-36/35$&2\\
+3&2&$256/231$&8\\
+3&3&$-65792/35035$&8\\
+3&4&$161644544/4849845$&15
+\end{tabular}
+\end{center}
+They are finite rational evaluations of
+\eqref{eq:exact-reciprocal-row-recurrence}, followed by
+$a_k=\sum_{h=0}^k(-1)^{k-h}\binom kh C_j(h)$.
+For addresses zero and one, $k\geq3$ is covered by the generic bound;
+for address two, $k\geq7$ is covered; for address three, $k\geq5$ is
+covered. In each range the elementary inequality is
+$k-\lfloor\log_2k\rfloor\geq b_j+1$.
+Lemma~\ref{lem:newton-exact-isometry-criterion} proves the normalized
+identity. Multiplication by $j!$ proves the original identity.
+
+A row displacement $H$ preserves the original coefficient modulo
+$2^r$ at even one row exactly when $v_2(H)+B_j\geq r$.
+The least positive such integer is
+$2^{\max(0,r-B_j)}$, and the same displacement works at every row.
+This proves both optimality and the absence of a starting threshold.
+\end{proof}
+
+\begin{corollary}[Exact image and residue enumeration]
+\label{cor:four-exact-images}
+Let $\widetilde C_j$ denote the dyadic Newton interpolation.
+The map
+\[
+ T_j(x)=\frac{\widetilde C_j(x)-1}{2^{b_j}}
+\]
+is a bijective isometry $\mathbb Z_2\to\mathbb Z_2$, and
+\begin{equation}
+ \widetilde C_j(\mathbb Z_2)=1+2^{b_j}\mathbb Z_2,
+ \qquad j!\widetilde C_j(\mathbb Z_2)=j!+2^{B_j}\mathbb Z_2.
+ \label{eq:four-interpolation-images-final}
+\end{equation}
+For $r>B_j$, one least period modulo $2^r$ visits every residue in
+$j!+2^{B_j}\mathbb Z/2^r\mathbb Z$ exactly once. For $r\leq B_j$,
+there is one residue and the least row period is one.
+\end{corollary}
+
+\begin{proof}
+The exact difference identity gives
+$v_2(T_j(x)-T_j(y))=v_2(x-y)$ and $T_j(0)=0$.
+For every $s\geq1$, the map induces an injection of
+$\mathbb Z_2/2^s\mathbb Z_2$ into itself. It is a bijection because
+both sets have $2^s$ elements. These quotient bijections are compatible
+with reduction. Inverting them gives a compatible preimage system for
+every dyadic integer, proving surjectivity. Multiplication by $j!$
+changes the image ideal by exactly $v_2(j!)$.
+The finite quotient bijection is also precisely the residue enumeration
+in a least row period.
+\end{proof}
+
+\subsection{An infinite exact family at all dyadic ranks}
+
+\begin{theorem}[Lower-half exact laws]
+\label{thm:lower-half-all-dyadic-isometry}
+Let $N=2^a\geq4$ and $0\leq j<N/2$. Then for all $n\geq0$ and $H>0$,
+\begin{equation}
+ v_2(C_{N,j}(n+H)-C_{N,j}(n))=1+v_2(H).
+ \label{eq:lower-half-all-dyadic-exact}
+\end{equation}
+Its normalized interpolation is a bijection onto $1+2\mathbb Z_2$.
+For the original coefficients, the least row period modulo $2^r$ is
+$2^{\max(0,r-1-v_2(j!))}$.
+\end{theorem}
+
+\begin{proof}
+Every slope $N/i$ in the source has valuation at least two, since
+$i\leq j<N/2$. Hence $g(1)\equiv1\pmod4$ and
+$g(2)\equiv1\pmod8$. The first two Newton coefficients from the
+reciprocal recurrence are
+\begin{equation}
+ a_1=-g(1)-1,\qquad
+ a_2=\binom{2N}{N}g(1)^2-g(2)+2g(1)+1.
+ \label{eq:lower-half-initial-newton}
+\end{equation}
+The first has valuation exactly one. Also
+$\binom{2N}{N}\equiv6\pmod8$ for every $N=2^a\geq2$.
+To see this, write
+\[
+ B_a=\binom{2^{a+1}}{2^a}
+       =2\prod_{h=1}^{2^a-1}\left(1+\frac{2^a}{h}\right).
+\]
+The even-$h$ factors give $B_{a-1}$; the odd-$h$ factors are one
+modulo four for $a\geq2$. Since $B_{a-1}$ has valuation one,
+$B_a\equiv B_{a-1}\pmod8$, and $B_1=6$.
+Therefore $a_2\equiv6-1+2+1=0\pmod8$.
+The global Mahler bound covers all $k\geq3$, completing the criterion
+with $b=1$. The period and image deductions are the same as above.
+The proof also covers $N=2,j=0$, whose kernel is identically one.
+\end{proof}
+
+\subsection{Complete exact laws at ranks two and eight}
+
+\begin{proposition}[Small-rank complete isometry table]
+\label{prop:two-four-eight-isometry-table}
+Every address at $N\in\{2,4,8\}$ satisfies
+\[
+ v_2(C_{N,j}(n+H)-C_{N,j}(n))=b_{N,j}+v_2(H).
+\]
+The following entries are ordered by $j=0,\ldots,N-1$:
+\begin{center}
+\begin{tabular}{c l l}
+$N$&normalized shifts $b_{N,j}$&original shifts $B_{N,j}=b_{N,j}+v_2(j!)$\\\hline
+2&$1,2$&$1,2$\\
+4&$1,1,4,2$&$1,1,5,3$\\
+8&$1,1,1,1,4,3,2,2$&$1,1,2,2,7,6,6,6$
+\end{tabular}
+\end{center}
+For each entry, the least original row period is
+$2^{\max(0,r-B_{N,j})}$, its Euler subscript displacement is $N$ times
+that period, and the exact-image and residue-enumeration conclusions
+hold with the corresponding shifts.
+\end{proposition}
+
+\begin{proof}
+Rank four was proved above. At ranks two and eight the finite
+criterion is verified by the actual rational recurrence
+\eqref{eq:exact-reciprocal-row-recurrence}. The following valuation
+lists record every initial Newton coefficient needed in addition to
+the generic tail $v_2(a_k)\geq k$:
+\begin{center}
+\begin{tabular}{c c c l}
+$N$&$j$&$b_{N,j}$&$v_2(a_1),v_2(a_2),\ldots$ through the finite cutoff\\\hline
+2&0&1&$1,3$\\
+2&1&2&$2,5,9,11$\\
+8&0&1&$1,3$\\
+8&1&1&$1,3$\\
+8&2&1&$1,3$\\
+8&3&1&$1,3$\\
+8&4&4&$4,6,9,13,16,20$\\
+8&5&3&$3,6,10,13,17$\\
+8&6&2&$2,6,8,13$\\
+8&7&2&$2,11,8,15$
+\end{tabular}
+\end{center}
+The first entries can also be read directly from
+$a_1=-1-\binom{N+j}{j}^{-1}$. At rank eight they are respectively
+\[
+ -2,\ -\frac{10}{9},\ -\frac{46}{45},\ -\frac{166}{165},\
+ -\frac{496}{495},\ -\frac{1288}{1287},\
+ -\frac{3004}{3003},\ -\frac{6436}{6435}.
+\]
+All later entries in the table are finite rational arithmetic, with
+full numerator and denominator records retained in the accompanying
+exact certificate \texttt{all\_rank\_extensions\_verified.json}.
+Every entry with $k\geq2$ meets
+$b_{N,j}+1+\lfloor\log_2k\rfloor$. Beyond the displayed cutoff, the
+inequality $k\geq b_{N,j}+1+\lfloor\log_2k\rfloor$ holds at every
+order. Thus the finite table and the proved infinite tail establish
+the full hypothesis of Lemma~\ref{lem:newton-exact-isometry-criterion}.
+This is a finite coefficient proof followed by a universal tail
+argument, rather than extrapolation from sampled rows or steps.
+\end{proof}
+
+\begin{remark}[Failure of a universal upper-half exact law]
+The all-rank lower bound remains valid in every address. The exact
+first-difference law does not automatically extend to all upper-half
+addresses. Exact rational recurrence calculations give
+\begin{center}
+\begin{tabular}{c c c c}
+$(N,j)$&$v_2(C(1)-C(0))$&$v_2(C(2)-C(0))$&naive $b+v_2(2)$\\\hline
+$(16,9)$&5&7&6\\
+$(32,18)$&6&6&7\\
+$(32,19)$&5&7&6
+\end{tabular}
+\end{center}
+For example, at $(N,j)=(16,9)$ the first difference is
+$-2042976/2042975$, whereas the two-row difference is
+$-2215603929728/2215923048625$. These exact counterexamples refute
+the additional universal isometry proposal. They preserve the
+threshold-free lower bound and the original conjecture.
+\end{remark}
+
+\section{Analytic interpolation and exact Taylor radii}
+\label{sec:analytic-radii-final}
+
+The threshold-free Mahler theorem gives continuous interpolation.
+Analytic interpolation needs a stronger estimate, and the factorial
+bounds provide it directly. The ordinary Taylor radius is determined
+by the coefficient growth, including infinite exact subsequences.
+
+\begin{theorem}[Taylor coefficient bounds and radii]
+\label{thm:four-taylor-radii}
+For $j=0,1,2,3$, the dyadic interpolation has an ordinary power series
+\[
+ \widetilde C_j(x)=1+\sum_{\ell\geq1}d_{j,\ell}x^\ell,
+ \qquad v_2(d_{j,\ell})\geq\ell+\beta_j.
+\]
+Its Taylor series converges for $|x|_2<2$.
+At addresses zero and one,
+\begin{equation}
+ v_2(d_{j,\ell})=\ell\quad(\ell\geq1),
+ \qquad R_0=R_1=2.
+ \label{eq:zero-one-exact-taylor-radius}
+\end{equation}
+At address two,
+\begin{equation}
+ v_2(d_{2,\ell})\geq
+       \max\left(2\ell+\left\lfloor\frac\ell2\right\rfloor,
+                          \ell+3\right),
+ \qquad R_2=2^{5/2}.
+ \label{eq:two-exact-taylor-radius}
+\end{equation}
+The radius at address three is at least two; its exact radius is not
+asserted here. The stated exact radii at addresses zero, one, and two
+hold at every center in $\mathbb Z_2$.
+\end{theorem}
+
+\begin{proof}
+Put $a_m=\Delta_1^mC_j(0)$ and expand the falling factorial in the
+Newton series. The ordinary coefficients are
+\begin{equation}
+ d_{j,\ell}=\sum_{m\geq\ell}\frac{a_m}{m!}s(m,\ell).
+ \label{eq:newton-taylor-stirling}
+\end{equation}
+Since $s(m,\ell)$ is integral and
+$v_2(a_m/m!)\geq m+\beta_j$, the coefficient sum converges and has
+valuation at least $\ell+\beta_j$. The sum exchange is justified on
+$\mathbb Z_2$ by these uniform geometric coefficient bounds.
+The ordinary power series agrees there with the Newton interpolation
+and converges whenever $|x|_2<2$.
+
+For $j=0,1$, the term $m=\ell$ in
+\eqref{eq:newton-taylor-stirling} has exact valuation $\ell$, since
+$s(\ell,\ell)=1$ and the Newton valuation is exact. Every later term
+has valuation at least $\ell+1$. Thus
+$v_2(d_{j,\ell})=\ell$, and the coefficient radius is exactly two.
+At a center $x_0\in\mathbb Z_2$, the coefficient of $y^\ell$ in the
+translated series is
+\begin{equation}
+ \sum_{m\geq\ell}d_{j,m}\binom m\ell x_0^{m-\ell}.
+ \label{eq:taylor-translation-coefficient}
+\end{equation}
+Its initial term again has exact valuation $\ell$, and all later
+terms have at least one more bit. The exact radius is therefore two
+at every integral center.
+
+For address two, the stronger factorial filtration gives the lower
+bound in \eqref{eq:two-exact-taylor-radius}. At each
+$\ell=2^r\geq4$, Theorem~\ref{thm:two-exact-power-orders} makes the
+$m=\ell$ term in \eqref{eq:newton-taylor-stirling} have valuation
+$2\ell+\ell/2=5\ell/2$. Every $m>\ell$ term has strictly greater
+lower bound $2m+\lfloor m/2\rfloor$. Hence
+\[
+ v_2(d_{2,\ell})=5\ell/2\qquad(\ell=2^r\geq4).
+\]
+The universal lower bound and this unbounded exact subsequence prove
+that the coefficient radius is exactly $2^{5/2}$. Translation by an
+integral center preserves the same unique leading coefficients at
+these degrees in \eqref{eq:taylor-translation-coefficient}, proving
+the exact radius at every such center.
+\end{proof}
+
+\begin{remark}[Boundary interpretation]
+For addresses zero and one, at an argument of absolute value two every
+positive-degree Taylor term has valuation zero, so that ordinary Taylor
+series diverges. For address two, over a complete extension admitting
+arguments of absolute value $2^{5/2}$, the power-of-two-degree terms
+have valuation zero and fail to tend to zero. These statements concern
+the Taylor expansions just constructed; they do not prohibit a
+different analytic continuation. On $\mathbb Q_2$-valued arguments,
+open-disc notation must be read with its discrete value group. The
+coefficient radius is the precise invariant in the theorem.
+\end{remark}
+
+\section{The final congruence in the original Euler convention}
+\label{sec:final-original-congruence}
+
+The preceding bounds can be stated as one uniform congruence without
+suppressing the address normalization. This is the strengthened formula
+for the four-address family, valid from the first row.
+
+\begin{corollary}[Final common-step congruence]
+\label{cor:final-euler-congruence}
+Let $j\in\{0,1,2,3\}$, $n\geq0$, and $k,H\geq1$. Define
+\[
+ A_0(k)=A_1(k)=k,\qquad
+ A_2(k)=\max\left(k+4,\ 2k+\left\lfloor\frac k2\right\rfloor+1\right),
+ \qquad A_3(k)=k+2.
+\]
+Then
+\begin{equation}
+ \boxed{\displaystyle
+ \sum_{i=0}^k(-1)^{k-i}\binom ki E_{4(n+iH)}^{(4,j)}
+       \equiv0\pmod{2^{\,v_2(k!)+k v_2(H)+A_j(k)}}.}
+ \label{eq:boxed-final-euler-congruence}
+\end{equation}
+For $j=0,1$, this displayed exponent is the exact valuation for every
+$n,k,H$ in the stated range. For $j=2$, the exact positive
+power-of-two-order valuations are given by
+Theorem~\ref{thm:two-exact-power-orders}, with one added bit.
+\end{corollary}
+
+\begin{proof}
+The left side is $j!\Delta_H^kC_j(n)$.
+At addresses zero and one, $v_2(j!)=0$ and the exact homogeneous
+formula gives the exponent. At address two, $v_2(2!)=1$; the maximum
+of \eqref{eq:factorial-four-lower} and
+\eqref{eq:factorial-four-j2-filtration} yields
+$\max(k+4,2k+\lfloor k/2\rfloor+1)$ after removing the common
+$v_2(k!)+k v_2(H)$. At address three, the one-bit normalized offset
+and $v_2(3!)=1$ give $k+2$.
+\end{proof}
+
+For mixed steps the same corollary holds with $k v_2(H)$ replaced by
+$\sum_\nu v_2(H_\nu)$ and the binomial stencil replaced by
+$j!\Delta_{H_1}\cdots\Delta_{H_k}C_j(n)$.
+At addresses zero and one, exactness is then governed by the parity
+classification in Theorem~\ref{thm:zero-one-exact-mixed}.
+At first order these bounds are exact in every address, with original
+valuation offsets $(1,1,5,3)$; the least periods are those in
+\eqref{eq:rank-four-least-period-final}.
+
+\subsection{Proof coverage and remaining questions}
+
+The results in these sections are mathematical theorems with detailed
+proofs and preserved audit evidence. Their formal status must be read
+statement by statement. The recovered Paper~IX release already contains
+Lean results for the rank-four threshold-free homogeneous bound, the
+sharp first-difference laws, the least periods, and the dyadic isometry
+and image conclusions. Those inherited results should not be described
+as missing merely because the earlier short completion supplement did
+not include their later modules.
+
+The all-rank dyadic and general prime-power transfer proof presented
+here, the factorial improvements, the mixed leading-parity
+classification, the Bernoulli power-order sharpness, the all-rank
+lower-half exact laws, the complete rank-eight extension, and the exact
+Taylor-radius arguments have not received new Lean formalization in
+this strengthening. A mathematical audit and an exact computation are
+neither a Lean compilation nor external peer review. The separate Lean
+guide records the recovered formal declarations and any fresh release
+checks without extending their coverage to these new claims.
+
+The completed external statement is Nishibuchi's Conjecture~3.9 in
+its prescribed parameter family and coefficient normalization.
+These stronger congruences enlarge its dyadic branch and remove its
+starting threshold there. They do not settle every Euler problem.
+In particular, the following questions remain separate:
+\begin{itemize}
+ \item a complete exact higher-difference law at all non-power-of-two
+       orders in address two;
+ \item complete higher-difference valuations and the exact ordinary
+       Taylor radius in address three;
+ \item a classification of the upper-half dyadic addresses having an
+       exact first-difference metric law at arbitrary larger ranks;
+ \item the distinct universal simplicity or nonvanishing question
+       for the later Euler-tail residuals, and the original native
+       Paper~IX conjectures beyond the completed external statement.
+\end{itemize}
+The exact counterexamples above rule out the naive universal upper-half
+isometry, and mixed cancellations rule out unconditional baseline
+sharpness for arbitrary stencils. No global historical-priority or
+novelty assertion is made for these strengthened statements.

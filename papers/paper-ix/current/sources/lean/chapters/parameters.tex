@@ -1,0 +1,44 @@
+\section{Local charts and prescribed parameter paths}\label{sec:parameters}
+\subsection{The solved block is the correct Jacobian}
+Split the variables as $(y,t)$, where $y$ has $m$ solved coordinates and $t$ has $k$ prescribed parameters. For $e$ equations the reduced Jacobian has blocks
+\[
+ D F=(J\;K),\qquad
+ J:\mathbb F_p^m\to\mathbb F_p^e,
+ \quad K:\mathbb F_p^k\to\mathbb F_p^e.
+\]
+A prescribed parameter digit $v$ changes the residual by $Kv$. The solved digit $u$ must solve
+\[
+ Ju=-\bar r-Kv.
+\]
+Surjectivity of the full matrix $(J\;K)$ is insufficient when $v$ has already been fixed. It is surjectivity of $J$ that permits every prescribed digit.
+
+\contract{For an integer polynomial system, the source defines the parameter residual $\bar r+Kv$, the solved digit map $J$, and the joined full digit $(u,v)$. The split equation equals the full digit equation exactly.}
+\excerpt{Prescribed digit equation}{prescribed}
+\walk{The block derivative theorem rewrites the full digit map on \code{join u v} as the sum of the solved and parameter actions. Associativity and commutativity then identify the residual equations. The parameter term has positive sign inside $\bar r+Kv+Ju=0$, and consequently negative sign when solving for $u$. Losing this sign changes the actual root motion.}
+
+If the solved block has rank $\rho$, a soluble prescribed-digit fiber has $p^{m-\rho}$ elements. For a surjective $J$, this becomes $p^{m-e}$ for every prescribed $v$. A square solved block gives one solved digit for each parameter digit. Rectangular solved blocks leave free solved directions, so prescribing the parameter alone does not generally select one root.
+
+\subsection{The continuous chart includes both directions}
+\contract{The chart endpoint uses $e$ equations, $e$ solved coordinates and $q$ free parameters. The starting integer point is a root modulo $p^L$, $L\ge1$, and the solved digit Jacobian is surjective. The homeomorphism is between the parameter residue ball and the exact root locus in the full residue ball.}
+\excerpt{Parameter-ball homeomorphism}{chart}
+\walk{The forward map takes a parameter to its uniquely solved root in the ball. The inverse is the free-coordinate projection. The first inverse identity says the constructed root has the requested parameter. The second invokes uniqueness of solved coordinates for any root in the ball. Continuity of the solution map and continuity of the projection establish a homeomorphism, not merely a set bijection.}
+
+This chart has explicit integral residue balls and strong congruence control. Its source proof precedes the analytic regularity layer. A homeomorphism of root spaces does not automatically identify an analytic derivative; the later polynomial/analytic bridge supplies that stronger conclusion under fraction-field nonsingularity.
+
+\subsection{An arbitrary p-adic parameter is reached by integer digits}
+The prescribed tower construction can begin with a supplied compatible integer parameter path $t_n$ converging to $\tau$. It constructs solved coordinates at every depth and tracks the actual parameter path, rather than guessing compatible roots independently. The endpoint also builds such a parameter path for every p-adic $\tau$ in the initial parameter ball.
+
+\contract{$p$ is prime, $L\ge1$, $J$ is the surjective solved digit map with $m$ solved coordinates and $e$ equations, and $\tau$ lies in the initial parameter residue ball. No solution tower or parameter path is an input to this endpoint.}
+\excerpt{Arbitrary prescribed parameter with a root tower}{prescribed_root}
+\walk{The parameter-path theorem supplies integer approximations with the correct initial value and increment divisibility. The prescribed integer tower fills in solved digits using $J$-surjectivity. A p-adic tower limit then gives the exact root with free part $\tau$. The returned finite lift count $p^{m-e}$ holds at every stage and for every next parameter digit, making the rectangular freedom explicit.}
+
+\contract{For $m=e$, the prescribed root in the initial ball is unique. The full predicate includes its exact parameter $\tau$ as well as its root equation and residue ball.}
+\excerpt{Square prescribed uniqueness}{prescribed_unique}
+\walk{Existence and the prescribed-root comparison theorem are combined. Two candidates with the same parameter have zero parameter difference, so their next solved digit difference lies in the kernel of the bijective solved block. It vanishes at each depth. The theorem therefore controls every candidate root with that parameter, independent of the tower choices used to obtain the first one.}
+
+If $k=0$, the parameter space has one vector and the theorem reduces to the square root theorem. If there are zero equations, the algebraic finite-product statements remain meaningful in dimension zero, subject to their stated typeclass and surjectivity hypotheses. The source does not impose a positive dimension merely to make a matrix display look conventional.
+
+\subsection{A full-rank system admits a suitable coordinate split}
+For a general $e$-equation system with surjective full reduced Jacobian, the minor-selection module chooses $e$ independent columns. The coordinate-reordering module turns that choice into a permutation separating solved and free coordinates; it proves evaluation and derivative blocks transform according to that actual permutation. The general-chart theorem then applies the square solved-block chart in those coordinates and transports the result back.
+
+This is existence of a good coordinate split. It does not assert that every externally prescribed split has a surjective solved block. If a parameter policy has already fixed particular coordinates, its prescribed-lifting theorem must still check that policy's own solved block. The finite dimensions and explicit reorder equivalence preserve the number of free parameters, $d-e$.

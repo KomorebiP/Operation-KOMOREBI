@@ -1,0 +1,7 @@
+theorem existsUnique_isometry (j : ℕ) (hj : j < 4) :
+    ∃! e : ℤ_[2] ≃ᵢ ℤ_[2], ∀ n : ℕ,
+      (e (n : ℤ_[2]) : ℚ_[2]) = (DyadicPacketRational.packet j n : ℚ_[2]) := by
+  refine ⟨isometry j hj, isometry_nat j hj, ?_⟩
+  intro e he
+  apply IsometryEquiv.ext
+  exact congrFun (unique_continuous j hj e e.continuous he)

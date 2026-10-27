@@ -1,0 +1,150 @@
+# Paper IX: weighted first-order root motion
+
+**Komorebi P. — 8 September 2026.**
+
+## The theorem
+
+Let \(p\) be prime, \(R=\mathbb Z_p\), \(K=\mathbb Q_p\), and \(d,s,M\in\mathbb N\).
+Let \(F,H\in R[X_1,\ldots,X_d]^d\), let \(a\in R^d\) satisfy \(F(a)=0\), and set
+\[
+J=DF(a),\qquad G=F+p^M H.
+\]
+Assume
+\[
+J\in\operatorname{GL}_d(K),\qquad p^sJ^{-1}\in M_d(R),\qquad M>2s.
+\]
+Then there is exactly one root \(b\) of \(G\) in \(a+p^{s+1}R^d\). It satisfies
+\[
+b-a\in p^{M-s}R^d,
+\]
+and there is \(\varepsilon\in p^{2M-3s}R^d\) such that, in \(K^d\),
+\[
+\boxed{b-a=-p^M J^{-1}H(a)+\varepsilon.}
+\]
+The inverse in this formula belongs to the original Jacobian \(DF(a)\).
+The theorem constructs the perturbed root from these hypotheses and proves
+uniqueness throughout the full ball of depth \(s+1\). It does not require an
+additional Jacobian hypothesis on \(G\). Coefficients and centers are arbitrary
+integral p-adic elements. Every prime and finite square dimension are included,
+including \(p=2\) and dimension zero.
+
+The error depth exceeds the displacement depth by
+\[
+(2M-3s)-(M-s)=M-2s\ge1.
+\]
+Thus the first-order term determines strictly more digits than the displacement
+bound alone. These are guaranteed divisibility bounds; equality of valuations
+is not asserted for every system.
+
+## Root construction with the original inverse
+
+Write \(A=p^sJ^{-1}\in M_d(R)\), so \(AJ=JA=p^sI\).
+Let \(t=p^{s+1}\) and \(k=M-(2s+1)\ge0\). The actual polynomial Taylor and
+difference identities give polynomial systems \(Q_F,Q_H\), both vanishing at zero,
+such that
+\[
+(AF)(a+tu)=p^{2s+1}u+p^{2s+2}Q_F(u),
+\]
+\[
+(AH)(a+tu)=(AH)(a)+tQ_H(u).
+\]
+Consequently
+\[
+(AG)(a+tu)=p^{2s+1}\bigl(C+u+pQ(u)\bigr),
+\]
+where
+\[
+C=p^kAH(a),\qquad
+Q=Q_F+p^{M-s-1}Q_H,\qquad Q(0)=0.
+\]
+All exponents are nonnegative under \(M>2s\). Actual integral polynomial
+evaluation is 1-Lipschitz, so \(u\mapsto-C-pQ(u)\) is a strict contraction on
+the complete space \(R^d\). Its unique fixed point inherits the depth \(k\) of
+\(C\), because \(Q(0)=0\). Thus \(b=a+tu\) has displacement depth
+\(s+1+k=M-s\).
+
+The certificate \(JA=p^sI\) makes multiplication by \(A\) injective, so the
+normalized zero is an actual root of \(G\). Every root in \(a+tR^d\) has the
+form \(a+tw\) and satisfies the same fixed-point equation. This proves uniqueness
+on the entire stated ball using the original matrix certificate.
+
+## The first-order error
+
+Put \(\delta=b-a\) and \(L=M-s\). The displacement form of Taylor's theorem,
+proved over any commutative ring, gives
+\[
+E_F=(AF)(b)-(AF)(a)-p^s\delta\in p^{2L}R^d.
+\]
+Polynomial congruence gives
+\[
+E_H=(AH)(b)-(AH)(a)\in p^LR^d.
+\]
+Since \(F(a)=0\) and \(G(b)=0\),
+\[
+p^s\delta+p^MAH(a)=-E_F-p^ME_H.
+\]
+We have \(M+L\ge2L\), so the right side lies in \(p^{2L}R^d\). Cancelling
+the nonzero scalar \(p^s\) proves the integral estimate
+\[
+\delta+p^{M-s}AH(a)\in p^{2M-3s}R^d.
+\]
+Define this integral vector to be \(\varepsilon\). Under \(R\hookrightarrow K\),
+the exact identity \(p^{M-s}A=p^MJ^{-1}\) gives the displayed first-order formula.
+The Lean bridge checks matrix evaluation and all coefficient inclusions explicitly.
+
+## Sharpness and the strict threshold
+
+For \(p=2\), take \(F(X)=X+X^2\), \(H(X)=1\), \(a=0\), \(s=0\), \(M=1\).
+There is a unique root \(b\in2\mathbb Z_2\) of \(X+X^2+2\). Its equation gives
+\(b+2=-b^2\). It also forces \(b\equiv2\pmod4\). Therefore
+\[
+v_2(b+2)=2=2M-3s.
+\]
+The accompanying Lean controls show that the error is divisible by four and is
+not divisible by eight. This refutes a uniform replacement of \(2M-3s\) by
+\(2M-3s+1\), even for a one-variable unit Jacobian.
+
+The prior strict-threshold example also applies to perturbations: take
+\(F(X)=X^2-1\), \(H(X)=1\), \(a=1\), \(p=2\), \(s=1\), \(M=2\).
+Then \(F(a)=0\), \(DF(a)=2\), and \(F+2^2H=X^2+3\) has no root modulo eight,
+hence none in \(\mathbb Z_2\). The new explanatory identification uses the
+previously checked no-root polynomial. The strict inequality \(M>2s\) cannot
+uniformly be replaced by \(M\ge2s\).
+
+## Formal statement map
+
+| Module | Role |
+|---|---|
+| `PolynomialMotionNormalization.lean` | Actual perturbation and normalization using the original Jacobian; scaled polynomial differences. |
+| `PolynomialTaylorDisplacement.lean` | Taylor error divisible by \(c^2\) when the displacement is coordinatewise divisible by \(c\). |
+| `PolynomialMotionEstimate.lean` | Integral error estimate using the original inverse certificate and an actual perturbed root. |
+| `PolynomialMotionRational.lean` | Exact conversion to the fraction-field inverse formula with an integral error vector. |
+| `PolynomialRootMotion.lean` | Constructs the root, joins all estimates, and proves full-ball unique existence with the first-order formula. |
+
+The principal entry points are
+`Komorebi.PolynomialRootMotion.exists_root_motion` and
+`Komorebi.PolynomialRootMotion.exists_unique_root_motion`.
+The five new mathematical modules contain 13 theorems and one definition.
+The independent proof audit, external expanded contracts, exact source hashes,
+fresh Lean verification, and development records accompany this note.
+
+## Updated scope
+
+Weighted perturbation and the stated first-order error are now formalized, in
+addition to the preceding weighted lifting and continuous chart results.
+This finite precision estimate is not a theorem of analytic or Fréchet
+differentiability. The earlier rectangular chart interfaces retain their
+integer-coefficient and integer-center hypotheses.
+
+The next clear block is the prescribed-parameter obstruction: for a split
+Jacobian \((J\ K)\), residual digit \(\bar r\), and prescribed parameter digit
+\(v\), a correcting solved-coordinate digit \(u\) must satisfy
+\[
+Ju=-\bar r-Kv.
+\]
+The intended criterion is vanishing of \([\bar r+Kv]\) in \(\operatorname{coker}J\),
+with a precise bridge to the actual polynomial lift and its correction fiber.
+That interface and any compatible iteration remain separate. Rationally
+rank-deficient towers, higher obstructions, native presentation invariance,
+global/completed descent, and the additional exact valuation questions remain open
+in this program. No external novelty claim is made by this formalization.

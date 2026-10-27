@@ -1,0 +1,12 @@
+theorem finite_polynomial_lift_count (p L : ℕ) [Fact (Nat.Prime p)] (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (hx : ∀ i, (p : ℤ)^L ∣ evalSystem F x i) :
+    ∃ r : Fin e → ℤ,
+      evalSystem F x = (p : ℤ)^L • r ∧
+      Nat.card (ActualLifts p L F x) =
+        (if obstruction p (jacobian F x) r = 0 then
+          p ^ (d - FiniteFiberCounts.rank p (digitJacobian p F x)) else 0) ∧
+      Nat.card (Obstruction p (jacobian F x)) =
+        p ^ (e - FiniteFiberCounts.rank p (digitJacobian p F x)) := by
+  obtain ⟨r, hr⟩ := Komorebi.PolynomialObstruction.residual_exists p L F x hx
+  exact ⟨r, hr, lift_card p L hL F x r hr, obstruction_card p F x⟩

@@ -1,0 +1,102 @@
+module
+
+public import DworkCriterion
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.EulerDefect
+
+open DworkCriterion
+
+variable {R : Type*} [CommRing R]
+
+/-- The actual Euler operator t*d/dt plus the scalar c on Hurwitz coefficients. -/
+def eulerOperator (c : ℕ) (f : ℕ → R) (d : ℕ) : R := (d+c:R)*f d
+
+/-- The literal commutator correction for the two differential shifts. -/
+def correction (p L : ℕ) (f : ℕ → R) (d : ℕ) : R :=
+  (p+L:R)*f (d+p+L)-(p:R)*f (d+p)
+
+/-- All-order commutator, derived for the actual coefficient shifts. -/
+theorem iterated_commutator (p L c s : ℕ) (f : ℕ → R) (d : ℕ) :
+    defectIter p L (s+1) (eulerOperator c f) d =
+      eulerOperator c (defectIter p L (s+1) f) d +
+      (s+1:R)*correction p L (defectIter p L s f) d := by
+  induction s generalizing d with
+  | zero =>
+    simp only [defectIter_succ, defectIter_zero, eulerOperator, correction,
+      Nat.cast_add, Nat.cast_zero]
+    ring
+  | succ s ih =>
+    rw [defectIter_succ, ih, ih]
+    simp only [eulerOperator, correction, defectIter_succ, Nat.cast_add, Nat.cast_one]
+    simp only [Nat.add_assoc]
+    ring
+
+/-- The actual defect preserves p-supported sequences. -/
+theorem defect_support (p L : ℕ) (hL : p∣L) (f : ℕ → R)
+    (hf : ∀ d, ¬p∣d → f d=0) (s d : ℕ) (hd : ¬p∣d) :
+    defectIter p L s f d=0 := by
+  induction s generalizing d with
+  | zero => exact hf d hd
+  | succ s ih =>
+    have h1 : ¬p∣d+p := by simpa using hd
+    have h2 : ¬p∣d+p+L := by simpa [Nat.dvd_add_left hL] using h1
+    rw [defectIter_succ, ih _ h2, ih _ h1, sub_self]
+
+variable (p : ℕ) [Fact p.Prime]
+
+/-- On p-supported degrees the Euler pivot is a genuine p-adic unit when p does not divide c. -/
+theorem euler_pivot_unit (c d : ℕ) (hc : ¬p∣c) (hd : p∣d) :
+    IsUnit ((d+c:ℕ) : ℤ_[p]) := by
+  rw [PadicInt.isUnit_iff, PadicInt.norm_natCast_eq_one_iff]
+  apply (Fact.out : p.Prime).coprime_iff_not_dvd.mpr
+  simpa [Nat.dvd_add_right hd] using hc
+
+/-- Reflection of full flatness through the nonsingular Euler operator.
+Only ordinary coefficient integrality and p-support are assumed for f, not its higher defects. -/
+theorem flat_of_euler_flat (c : ℕ) (hc : ¬p∣c) (f : ℕ → ℤ_[p])
+    (hf : ∀ d, ¬p∣d → f d=0) (H : DworkCriterion.flat p (eulerOperator c f)) :
+    DworkCriterion.flat p f := by
+  intro s
+  induction s with
+  | zero => intro d; simp
+  | succ s ih =>
+    intro d
+    by_cases hd : p∣d
+    · have hcorr : (p:ℤ_[p])^(s+1)∣
+          ((s+1:ℕ):ℤ_[p])*correction p (p*(p-1))
+            (defectIter p (p*(p-1)) s f) d := by
+        have he : p+p*(p-1)=p*p := by
+          have hp := (Fact.out : p.Prime).pos
+          have hh := Nat.sub_add_cancel (show 1≤p by omega)
+          nlinarith
+        have hdiv : (p:ℤ_[p])^s ∣
+            (p:ℤ_[p])*defectIter p (p*(p-1)) s f (d+p+p*(p-1)) -
+              defectIter p (p*(p-1)) s f (d+p) :=
+          dvd_sub (dvd_mul_of_dvd_right (ih _) _) (ih _)
+        obtain ⟨z,hz⟩ := hdiv
+        refine ⟨((s+1:ℕ):ℤ_[p])*z, ?_⟩
+        simp only [correction]
+        rw [show (p:ℤ_[p]) + ((p*(p-1):ℕ):ℤ_[p]) = (p:ℤ_[p])*(p:ℤ_[p]) by exact_mod_cast he]
+        rw [pow_succ]
+        linear_combination ((s+1:ℕ):ℤ_[p])*(p:ℤ_[p])*hz
+      have h := H (s+1) d
+      rw [iterated_commutator] at h
+      have hprod : (p:ℤ_[p])^(s+1)∣eulerOperator c (defectIter p (p*(p-1)) (s+1) f) d :=
+        by simpa only [Nat.cast_add, Nat.cast_one, add_sub_cancel_right] using dvd_sub h hcorr
+      have hu := euler_pivot_unit p c d hc hd
+      have hi : ∃ a : ℤ_[p], a*((d+c:ℕ):ℤ_[p])=1 := by
+        obtain ⟨u,hu⟩ := hu
+        refine ⟨((u⁻¹ : ℤ_[p]ˣ) : ℤ_[p]), ?_⟩
+        rw [← hu]; simp
+      obtain ⟨a,ha⟩ := hi
+      have hh := dvd_mul_of_dvd_right hprod a
+      simpa only [eulerOperator, ← Nat.cast_add, ← mul_assoc, ha, one_mul] using hh
+    · rw [defect_support p (p*(p-1)) (dvd_mul_right _ _) f hf (s+1) d hd]
+      exact dvd_zero _
+
+end KomorebiPaperIX.EulerDefect

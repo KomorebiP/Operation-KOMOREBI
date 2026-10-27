@@ -1,0 +1,8 @@
+theorem original_degree_shift (m n r:ℕ) (h:m∣p-1 ∨ m=2) (hr:0<r) :
+    m*p*(n+p^(r-1)*(displacementFactor p/m)) =
+      m*p*n+displacementFactor p*p^r := by
+  have hq := Nat.mul_div_cancel' (modulus_divides_displacement p m h)
+  have hp : p^r=p^(r-1)*p := by rw [←pow_succ,Nat.sub_add_cancel (by omega : 1≤r)]
+  calc
+    _ = m*p*n+(m*(displacementFactor p/m))*(p^(r-1)*p) := by ring
+    _ = _ := by rw [hq,hp]

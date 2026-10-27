@@ -1,0 +1,22 @@
+theorem solve_denominator_integral (T : ℕ → ℕ → ℤ) (b : ℕ → ℤ)
+    (hT : ∀ n, T n n ≠ 0) (n : ℕ) :
+    Integral ((denominator T n : ℚ) * solve (fun i j => (T i j : ℚ)) (fun i => (b i : ℚ)) n) := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    cases n with
+    | zero =>
+      simp only [denominator_zero, solve_zero]
+      have h0 : (T 0 0 : ℚ) ≠ 0 := Int.cast_ne_zero.mpr (hT 0)
+      rw [mul_div_cancel₀ _ h0]
+      exact integral_int _
+    | succ n =>
+      rw [solve_step, denominator_succ, Int.cast_mul]
+      have hn : (T (n + 1) (n + 1) : ℚ) ≠ 0 := Int.cast_ne_zero.mpr (hT (n + 1))
+      rw [mul_assoc, mul_div_cancel₀ _ hn]
+      rw [mul_sub, Finset.mul_sum]
+      apply integral_sub (integral_mul (integral_int _) (integral_int _))
+      apply integral_sum
+      intro k _
+      rw [mul_left_comm]
+      exact integral_mul (integral_int _)
+        (integral_promote (denominator_dvd T (Nat.le_of_lt_succ k.isLt)) (ih k k.isLt))

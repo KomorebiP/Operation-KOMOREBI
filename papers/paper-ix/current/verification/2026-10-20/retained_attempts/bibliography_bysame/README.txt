@@ -1,0 +1,1 @@
+The first bibliography-integrated main build failed at the generated AMS repeated-author macro bysame, which is not defined by the article preamble. Visual and Lean source builds passed. This is retained failed authoring evidence, not a final accepted build.

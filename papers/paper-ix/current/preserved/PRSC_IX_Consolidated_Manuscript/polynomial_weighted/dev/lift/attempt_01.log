@@ -1,0 +1,26 @@
+/workspace/scratch/196a43c5b4f3/polynomial_weighted/formalization/PolynomialWeightedLift.lean:37:36: error: unsolved goals
+d p s r : ℕ
+inst✝ : Fact (Nat.Prime p)
+hr : 2 * s < r
+F : Fin d → MvPolynomial (Fin d) ℤ_[p]
+a : Fin d → ℤ_[p]
+A : Matrix (Fin d) (Fin d) ℤ_[p]
+hJA : jacobian F a * A = ↑p ^ s • 1
+C : Fin d → ℤ_[p]
+Q : Fin d → MvPolynomial (Fin d) ℤ_[p]
+hC : ∀ (i : Fin d), ↑p ^ (r - (2 * s + 1)) ∣ C i
+hQ : ∀ (i : Fin d), (eval 0) (Q i) = 0
+hnorm :
+  ∀ (u : Fin d → ℤ_[p]) (i : Fin d),
+    (eval (shiftedPoint p s a u)) (precondition A F i) = ↑p ^ (2 * s + 1) * (C i + u i + ↑p * (eval u) (Q i))
+H : Fin d → MvPolynomial (Fin d) ℤ_[p] := fun i => -Q i
+c : Fin d → ℤ_[p] := fun i => -C i
+i : Fin d
+⊢ constantCoeff (Q i) = 0
+/workspace/scratch/196a43c5b4f3/polynomial_weighted/formalization/PolynomialWeightedLift.lean:39:25: error: This simp argument is unused:
+  hQ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [evalSystem, H]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

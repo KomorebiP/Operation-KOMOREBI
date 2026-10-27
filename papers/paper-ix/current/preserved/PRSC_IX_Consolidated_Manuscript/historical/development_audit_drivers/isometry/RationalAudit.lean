@@ -1,0 +1,10 @@
+module
+public import DyadicPacketRational
+
+#print axioms KomorebiPaperIX.DyadicPacketRational.packet
+#print axioms KomorebiPaperIX.DyadicPacketRational.packet_zero
+#print axioms KomorebiPaperIX.DyadicPacketRational.packet_sub
+#print axioms KomorebiPaperIX.DyadicPacketRational.exact_displacement
+#print axioms KomorebiPaperIX.DyadicPacketRational.norm_displacement
+#print axioms KomorebiPaperIX.DyadicPacketRational.norm_sub
+#print axioms KomorebiPaperIX.DyadicPacketRational.norm_le_one

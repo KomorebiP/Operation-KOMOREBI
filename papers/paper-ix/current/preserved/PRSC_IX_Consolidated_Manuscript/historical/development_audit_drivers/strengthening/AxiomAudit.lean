@@ -1,0 +1,29 @@
+import DyadicSharpTower
+
+#print axioms KomorebiPaperIX.DyadicSharpTower.cothNormalized
+#print axioms KomorebiPaperIX.DyadicSharpTower.expAt_derivative
+#print axioms KomorebiPaperIX.DyadicSharpTower.sinh_derivative
+#print axioms KomorebiPaperIX.DyadicSharpTower.cosh_derivative
+#print axioms KomorebiPaperIX.DyadicSharpTower.hyperbolic_identity
+#print axioms KomorebiPaperIX.DyadicSharpTower.coth_times_sinh
+#print axioms KomorebiPaperIX.DyadicSharpTower.inverse_eq_coth_derivative
+#print axioms KomorebiPaperIX.DyadicSharpTower.beta_bernoulli
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappa
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappa_bernoulli
+#print axioms KomorebiPaperIX.DyadicSharpTower.odd_factor_valuation
+#print axioms KomorebiPaperIX.DyadicSharpTower.bernoulli_dyadic_valuation
+#print axioms KomorebiPaperIX.DyadicSharpTower.bernoulli_even_nonzero
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappa_valuation
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappa_nonzero
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappaPadic
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappaPadic_coe
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappaPadic_norm
+#print axioms KomorebiPaperIX.DyadicSharpTower.kappaPadic_divisible
+#print axioms KomorebiPaperIX.DyadicSharpTower.summand_kappa
+#print axioms KomorebiPaperIX.DyadicSharpTower.summandPadic_kappa
+#print axioms KomorebiPaperIX.DyadicSharpTower.dyadic_supercongruence_sharp
+#print axioms KomorebiPaperIX.DyadicSharpTower.first_omitted_error
+#print axioms KomorebiPaperIX.DyadicSharpTower.first_omitted_error_valuation
+#print axioms KomorebiPaperIX.DyadicSharpTower.summand_valuation
+#print axioms KomorebiPaperIX.DyadicSharpTower.summandPadic_divisible
+#print axioms KomorebiPaperIX.DyadicSharpTower.dyadic_supercongruence_row_weight

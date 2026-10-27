@@ -1,0 +1,400 @@
+\section{Prime-edge reciprocal moments}\label{sec:prime-edge}
+
+Let \(p\) be an odd prime.  Put
+\begin{equation}\label{eq:h-epsilon}
+ h=\frac{p-1}{2},\qquad \epsp=(-1)^h,
+\end{equation}
+and write
+\(
+a_j=2j+1
+\) for \(0\le j\le p-1\).  The unique nonunit among the \(a_j\) is \(a_h=p\).
+
+For \(p\nmid a\), define the Fermat quotient
+\begin{equation}\label{eq:fermat-quotient}
+ q_p(a)=\frac{a^{p-1}-1}{p}\in\Z.
+\end{equation}
+
+\begin{definition}[Weighted reciprocal moments]\label{def:moments}
+For integers \(s\ge1\) and \(\ell\ge0\), define
+\begin{equation}\label{eq:H-moment}
+ \Hmom_{s,\ell}(p)=
+ \sum_{\substack{0\le j\le p-1\\j\ne h}}
+ \frac{(-1)^j q_p(a_j)^\ell}{a_j^s}
+ \in\Z_{(p)}.
+\end{equation}
+\end{definition}
+The moments with \(\ell=0\) are alternating reciprocal sums.  For later comparison with the original edge notation, set
+\begin{equation}\label{eq:RQ-def}
+ R_s(p)=\Hmom_{2s,0}(p),
+ \qquad
+ Q_s(p)=\Hmom_{2s,1}(p).
+\end{equation}
+
+\subsection{Exact decomposition of edge power sums}
+
+\begin{lemma}[Exact Fermat-quotient decomposition]\label{lem:exact-decomposition}
+Let \(\lambda\ge1\), \(s\ge1\), and
+\(
+d=\lambda(p-1)-s\ge0
+\).  Then
+\begin{equation}\label{eq:exact-decomposition}
+ S_d(p)=
+ \sum_{\ell=0}^{\lambda}\binom\lambda\ell p^\ell
+ \Hmom_{s,\ell}(p)
+ +\epsp p^d.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For every \(j\ne h\),
+\[
+ a_j^d
+ =\frac{(a_j^{p-1})^\lambda}{a_j^s}
+ =\frac{(1+pq_p(a_j))^\lambda}{a_j^s}
+ =\sum_{\ell=0}^{\lambda}\binom\lambda\ell
+ p^\ell\frac{q_p(a_j)^\ell}{a_j^s}.
+\]
+The omitted term is the nonunit \(a_h=p\), with sign \((-1)^h=\epsp\), and contributes \(\epsp p^d\).
+\end{proof}
+
+\subsection{An all-index moment identity}
+
+\begin{theorem}[Exact all-index prime-edge identity]\label{thm:all-index-edge}
+Let \(\lambda\ge1\) and \(r\ge1\), and suppose
+\begin{equation}\label{eq:all-index-n}
+ n=\lambda(p-1)-r\ge1.
+\end{equation}
+Then the following identity holds exactly in \(\Q\):
+\begin{equation}\label{eq:all-index-edge}
+ \boxed{
+ (1-\epsp p^n)E_n
+ =\sum_{d=0}^{n}\tau_d\binom ndp^d
+ \sum_{\ell=0}^{\lambda}\binom\lambda\ell p^\ell
+ \Hmom_{r+d,\ell}(p).}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Apply the full inverse \eqref{eq:full-inverse} with \(X=p\) and replace each
+\(
+S_{n-d}(p)
+\)
+using \Cref{lem:exact-decomposition}, since
+\[
+ n-d=\lambda(p-1)-(r+d).
+\]
+The nonunit part of the \(d\)-th term is
+\[
+ \tau_d\binom ndp^d\epsp p^{n-d}
+ =\epsp p^n\tau_d\binom nd.
+\]
+After summing over \(d\), \eqref{eq:tau-convolution} shows that the total nonunit contribution is \(\epsp p^nE_n\).  Moving it to the left gives \eqref{eq:all-index-edge}.
+\end{proof}
+
+\begin{corollary}[All-index two-dimensional filtration]\label{cor:all-index-filtration}
+Under the hypotheses of \Cref{thm:all-index-edge}, for every \(k\ge1\),
+\begin{align}\label{eq:all-index-filtration}
+ (1-\epsp p^n)E_n\equiv
+ \sum_{\substack{0\le d\le n,\ 0\le\ell\le\lambda\\d+\ell<k}}
+ \tau_d\binom nd\binom\lambda\ell p^{d+\ell}
+ \Hmom_{r+d,\ell}(p)
+ \pmod{p^k}.
+\end{align}
+If \(k\le n\), the left-hand side may be replaced by \(E_n\).
+\end{corollary}
+
+\begin{proof}
+Every moment lies in \(\Z_{(p)}\), and each term has the displayed factor \(p^{d+\ell}\).  If \(k\le n\), then \(\epsp p^nE_n\equiv0\pmod{p^k}\).
+\end{proof}
+
+\subsection{The stronger parity-refined edge identity}
+
+When the edge index is even, \Cref{thm:even-inverse} replaces the odd subdiagonal weights of the full transform by even weights and gives a sharper filtration.
+
+\begin{theorem}[Exact parity-refined prime-edge identity]\label{thm:even-edge-exact}
+Let \(\lambda\ge1\) and \(r\ge1\), and suppose
+\begin{equation}\label{eq:even-edge-n}
+ n=\lambda(p-1)-2r\ge2.
+\end{equation}
+Then
+\begin{equation}\label{eq:even-edge-exact}
+ \boxed{
+ (1-\epsp p^n)E_n
+ =\sum_{m=0}^{n/2}
+ (-1)^mT_{2m+1}\binom n{2m}p^{2m}
+ \sum_{\ell=0}^{\lambda}\binom\lambda\ell p^\ell
+ \Hmom_{2(r+m),\ell}(p).}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Apply the parity-refined inverse \eqref{eq:even-inverse-literal}.  For the term indexed by \(m\), use \Cref{lem:exact-decomposition} with
+\[
+ n-2m=\lambda(p-1)-2(r+m).
+\]
+The nonunit contribution is
+\[
+ \epsp p^n(-1)^mT_{2m+1}\binom n{2m}.
+\]
+Summing and applying \eqref{eq:even-convolution} gives \(\epsp p^nE_n\), which is moved to the left.
+\end{proof}
+
+\begin{corollary}[Parity-refined two-dimensional filtration]\label{cor:even-edge-filtration}
+Under the hypotheses of \Cref{thm:even-edge-exact}, for every \(k\ge1\),
+\begin{align}\label{eq:even-edge-filtration}
+ (1-\epsp p^n)E_n\equiv
+ \sum_{\substack{0\le m\le n/2,\ 0\le\ell\le\lambda\\2m+\ell<k}}
+ &(-1)^mT_{2m+1}\binom n{2m}
+ \binom\lambda\ell p^{2m+\ell}
+ \Hmom_{2(r+m),\ell}(p)
+ \pmod{p^k}.
+\end{align}
+If \(k\le n\), the left-hand side may be replaced by \(E_n\).
+\end{corollary}
+
+The case \(\lambda=1\) gives the complete first-edge expansion.
+
+\begin{corollary}[Complete reciprocal first-edge identity]\label{cor:first-edge-exact}
+Let \(1\le r\le(p-3)/2\), and put \(n=p-1-2r\).  Then
+\begin{equation}\label{eq:first-edge-exact}
+ \boxed{
+ (1-\epsp p^n)E_n
+ =\sum_{m=0}^{n/2}
+ (-1)^mT_{2m+1}\binom n{2m}p^{2m}
+ \bigl(R_{r+m}(p)+pQ_{r+m}(p)\bigr).}
+\end{equation}
+\end{corollary}
+
+For example, whenever \(n\ge5\), reduction modulo \(p^5\) gives
+\begin{align}\label{eq:first-edge-p5}
+E_n\equiv{}&R_r(p)+pQ_r(p)
+ -2\binom n2p^2R_{r+1}(p)
+ -2\binom n2p^3Q_{r+1}(p)\notag\\
+&+16\binom n4p^4R_{r+2}(p)
+\pmod{p^5}.
+\end{align}
+The term structure is two-dimensional: the Appell depth contributes \(2m\), and the Fermat-quotient moment contributes \(\ell\).
+
+\subsection{The mixed reciprocal tower}
+
+The original edge hierarchy is recovered by keeping the shallower power sums and replacing only the deepest term by a reciprocal sum.
+
+\begin{corollary}[Mixed reciprocal tower]\label{cor:mixed-tower}
+Let \(M\ge1\), let \(1\le r\le(p-3)/2-M\), and put \(n=p-1-2r\).  Then
+\begin{align}\label{eq:mixed-tower}
+ E_n\equiv{}&
+ \sum_{m=0}^{M-1}
+ (-1)^mT_{2m+1}\binom n{2m}p^{2m}S_{n-2m}(p)\notag\\
+&+(-1)^MT_{2M+1}\binom n{2M}p^{2M}R_{r+M}(p)
+ \pmod{p^{2M+1}}.
+\end{align}
+\end{corollary}
+
+\begin{proof}
+Truncate \eqref{eq:even-inverse-literal} after \(m=M\).  The tail is divisible by \(p^{2M+2}\).  By \Cref{lem:exact-decomposition} with \(\lambda=1\),
+\[
+ S_{p-1-2(r+M)}(p)
+ \equiv R_{r+M}(p)\pmod p.
+\]
+Multiplication by \(p^{2M}\) raises this replacement to modulus \(p^{2M+1}\).
+\end{proof}
+
+The first two levels are
+\begin{align}
+ E_{p-1-2r}
+ &\equiv S_{p-1-2r}(p)
+ -2\binom{p-1-2r}{2}p^2R_{r+1}(p)
+ \pmod{p^3},\label{eq:mixed-p3}\\
+ E_{p-1-2r}
+ &\equiv S_{p-1-2r}(p)
+ -2\binom{p-1-2r}{2}p^2S_{p-3-2r}(p)\notag\\
+ &\qquad
+ +16\binom{p-1-2r}{4}p^4R_{r+2}(p)
+ \pmod{p^5}.
+ \label{eq:mixed-p5}
+\end{align}
+
+\begin{remark}[Relation with earlier reciprocal congruences]\label{rem:lehmer}
+At \(r=1\), the leading congruence
+\(
+E_{p-3}\equiv R_1(p)\pmod p
+\)
+belongs to the classical Lehmer-type theory.  The formulas above differ in that they supply an exact tangent-number expansion, systematically introduce Fermat-quotient moments, and extend the edge from \(p-1-2r\) to \(\lambda(p-1)-r\) and \(\lambda(p-1)-2r\).
+\end{remark}
+
+\section{The prime \texorpdfstring{\(2\)}{2} and the literal even branch}\label{sec:two}
+
+The polynomial branch \(\Sunif_n(2)\) already satisfies the generalized congruences of \Cref{sec:congruences}.  It does not, however, equal the literal sum
+\[
+ S_n(2)=1-3^n.
+\]
+The even literal generating function is, by \eqref{eq:literal-even-egf},
+\begin{equation}\label{eq:literal-two-even}
+ \sum_{n\text{ even}}S_n(2)\frac{t^n}{n!}
+ =-\sinh^2(2t)\sech t,
+\end{equation}
+which has zero diagonal as a transform of the Euler sequence.  A shift removes the double zero.
+
+For an even integer \(N\ge2\) and an even \(n\ge0\), define
+\begin{equation}\label{eq:V-def}
+ \Vshift_n(N)=-\frac{S_{n+2}(N)}{N^2(n+1)(n+2)}.
+\end{equation}
+
+\begin{proposition}[Shifted literal transform]\label{prop:shifted-transform}
+For every even \(N\ge2\),
+\begin{equation}\label{eq:shifted-egf}
+ \sum_{n\text{ even}}\Vshift_n(N)\frac{t^n}{n!}
+ =\left(\frac{\sinh(Nt)}{Nt}\right)^2\sech t.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For even \(N\), \eqref{eq:literal-even-egf} gives
+\[
+ \sum_{n\text{ even}}S_n(N)\frac{t^n}{n!}
+ =-\sinh^2(Nt)\sech t.
+\]
+Since \(S_0(N)=0\), shifting by two and dividing by \(-N^2t^2\) gives \eqref{eq:shifted-egf}.
+\end{proof}
+
+Define \(\beta_m\in\Q\) by
+\begin{equation}\label{eq:beta-def}
+ \left(\frac{x}{\sinh x}\right)^2
+ =\sum_{m\ge0}\beta_mx^{2m}.
+\end{equation}
+Then
+\begin{equation}\label{eq:beta-formula}
+ \beta_0=1,
+ \qquad
+ \beta_m=-\frac{2^{2m}(2m-1)B_{2m}}{(2m)!}
+ \quad(m\ge1).
+\end{equation}
+The first values are
+\[
+ 1,-\frac13,\frac1{15},-\frac2{189},\frac1{675},\ldots.
+\]
+
+\begin{theorem}[Exact shifted literal inversion]\label{thm:shifted-inverse}
+Let \(N\ge2\) be even and let \(n\ge0\) be even.  Then
+\begin{equation}\label{eq:shifted-inverse}
+ \boxed{
+ E_n=\sum_{m=0}^{n/2}
+ \beta_mN^{2m}\fall n{2m}\Vshift_{n-2m}(N).}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Multiply \eqref{eq:shifted-egf} by
+\(
+(Nt/\sinh Nt)^2
+\), expand by \eqref{eq:beta-def}, and compare coefficients.
+\end{proof}
+
+For \(N=2\),
+\begin{equation}\label{eq:V2}
+ \Vshift_n(2)=\frac{3^{n+2}-1}{4(n+1)(n+2)}.
+\end{equation}
+
+\begin{lemma}[Two-adic integrality]\label{lem:two-integrality}
+For every even \(n\ge0\), \(\Vshift_n(2)\in\Z_{(2)}\).  Moreover, \(\beta_m\in\Z_{(2)}\) for every \(m\ge0\).
+\end{lemma}
+
+\begin{proof}
+For even \(n+2\), the lifting-the-exponent lemma gives
+\[
+ v_2(3^{n+2}-1)=2+v_2(n+2),
+\]
+which is the \(2\)-adic valuation of the denominator in \eqref{eq:V2}, since \(n+1\) is odd.  For \(m\ge1\), von Staudt--Clausen gives \(v_2(B_{2m})=-1\), and therefore
+\[
+ v_2(\beta_m)=2m-1-v_2((2m)!)\ge0.
+\]
+\end{proof}
+
+\begin{corollary}[Literal \(2\)-adic hierarchy]\label{cor:literal-two}
+For every even \(n\ge0\) and \(M\ge0\),
+\begin{equation}\label{eq:literal-two}
+ E_n\equiv
+ \sum_{m=0}^{\min\{M,n/2\}}
+ \beta_m2^{2m}\fall n{2m}\Vshift_{n-2m}(2)
+ \pmod{2^{2M+2}}.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Use \Cref{thm:shifted-inverse} and \Cref{lem:two-integrality}; the first omitted term contains \(2^{2M+2}\).
+\end{proof}
+
+\section{Examples and exact verification}\label{sec:examples}
+
+\begin{example}[An all-index congruence]\label{ex:all-index}
+Take \(N=5\) and \(n=3\).  Since
+\[
+ S_3(5)=485,
+ \qquad
+ S_2(5)=49,
+\]
+\eqref{eq:full-level3} gives
+\[
+ E_3\equiv485-3\cdot5\cdot49=-250\equiv0\pmod{125},
+\]
+as required because \(E_3=0\).
+\end{example}
+
+\begin{example}[A composite modulus]\label{ex:composite}
+Take \(N=9\) and \(n=6\).  The literal sums may be used because \(N\) is odd.  One finds
+\[
+ S_6(9)=16230881,
+ \qquad
+ S_4(9)=51521.
+\]
+The level \(N^4\) congruence \eqref{eq:even-level4} gives
+\[
+ S_6(9)-6\cdot5\cdot9^2S_4(9)=-108965149.
+\]
+Since
+\[
+ -108965149-E_6=-108965088=-16608\cdot9^4,
+\]
+the congruence holds exactly modulo \(9^4\).
+\end{example}
+
+\begin{example}[The first prime edge]\label{ex:prime-edge}
+Let \(p=7\), \(r=1\), and \(n=4\).  Reduction of \eqref{eq:first-edge-exact} modulo \(7^3\) gives
+\[
+ E_4\equiv R_1(7)+7Q_1(7)-12\cdot7^2R_2(7)\pmod{7^3}.
+\]
+Computing in \(\Z_{(7)}\), the right-hand side has residue \(5\), equal to \(E_4\).
+\end{example}
+
+All identities in the paper are formal consequences of generating functions, but exact symbolic computation is useful for checking transcription and boundary conditions.  A supplementary verification script checks the full and parity-refined inversions, both universal congruence hierarchies, the all-index and parity-refined prime-edge identities, and the shifted literal inversion for a range of parameters.
+
+\section{Concluding remarks}
+
+The alternating sums \(S_n(N)\) admit two natural inverse descriptions.  The full transform uses \(1-\tanh(Xt)\), while the even transform uses \(\sech^2(Xt)\).  Their tangent-number coefficients produce complementary congruence hierarchies: one is valid for every index, and the other is stronger on even indices.  The latter strengthens the classical congruence modulo an odd modulus to a uniform expansion modulo arbitrary powers of that modulus.
+
+At prime-edge indices, Fermat's identity lifts the power sums to exact reciprocal moments.  The resulting weights \(p^{d+\ell}\) and \(p^{2m+\ell}\) reveal a two-dimensional filtration that is not visible in the initial mod-\(p\) congruence.  The exact moment formulas also clarify the role of the nonunit term: after tangent inversion, all such contributions collapse to the single factor \(\epsp p^nE_n\).
+
+The convolution-transfer theorem shows that the method is not confined to the classical Euler sequence.  Its \(r\)-fold specialization produces exact and congruential transforms for higher-order Euler numbers, while the support of the reciprocal kernel explains when stronger filtrations survive convolution.  Further work may treat character-twisted and other Appell kernels, identify finite-sum models for the resulting transformed sequences, exploit additional divisibility in the inverse coefficients, and determine linear relations among the moments \(\Hmom_{s,\ell}(p)\) that compress the prime-edge expansions.
+
+\begin{thebibliography}{99}
+\footnotesize
+\setlength{\itemsep}{0pt}
+
+\bibitem{AdellLekuona2018}
+J.~A.~Adell and A.~Lekuona,
+\emph{Closed form expressions for Appell polynomials},
+arXiv:1803.05943 [math.NT] (2018).
+
+\bibitem{BazsoMezo2018}
+A.~Bazs\'o and I.~Mez\H{o},
+\emph{Some notes on alternating power sums of arithmetic progressions},
+J. Integer Seq. \textbf{21} (2018), Article 18.7.8.
+
+\bibitem{CosgraveDilcher2013}
+J.~B.~Cosgrave and K.~Dilcher,
+\emph{On a congruence of Emma Lehmer related to Euler numbers},
+Acta Arith. \textbf{161} (2013), no.~1, 47--67.
+\newblock \doi{10.4064/aa161-1-4}.
+
+\bibitem{DavenportEtAl2024}
+D.~E.~Davenport, S.~K.~Frankson, L.~W.~Shapiro, and L.~C.~Woodson,

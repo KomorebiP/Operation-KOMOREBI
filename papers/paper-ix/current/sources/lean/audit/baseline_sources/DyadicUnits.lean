@@ -1,0 +1,93 @@
+module
+
+public import FiniteUnits
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.DyadicUnits
+
+/-- Precision is L+2 so reduction modulo four is always defined. -/
+def modFour (L : ℕ) : ZMod (2^(L+2)) →+* ZMod 4 :=
+  ZMod.castHom (by
+    have h : 2^2 ∣ 2^(L+2) := pow_dvd_pow 2 (by omega)
+    norm_num at h ⊢
+    exact h) (ZMod 4)
+
+def modFourUnits (L : ℕ) : (ZMod (2^(L+2)))ˣ →* (ZMod 4)ˣ :=
+  Units.map (modFour L).toMonoidHom
+
+/-- Exhaustion of the four actual residues, not an assumed dyadic splitting. -/
+theorem four_unit_cases (a : (ZMod 4)ˣ) : a=1 ∨ a=-1 := by
+  have h : ∀ x : ZMod 4, IsUnit x → x=1 ∨ x=-1 := by decide
+  rcases h (a : ZMod 4) a.isUnit with h | h
+  · exact Or.inl (Units.ext h)
+  · exact Or.inr (Units.ext h)
+
+def sign (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) : (ZMod (2^(L+2)))ˣ :=
+  if modFourUnits L a = 1 then 1 else -1
+
+def principal (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) : (ZMod (2^(L+2)))ˣ :=
+  sign L a * a
+
+theorem sign_cases (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) :
+    sign L a = 1 ∨ sign L a = -1 := by
+  unfold sign
+  split_ifs <;> simp
+
+theorem sign_square (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) :
+    sign L a * sign L a = 1 := by
+  rcases sign_cases L a with h | h <;> simp [h]
+
+/-- The sign carries exactly the mod-four residue of the original unit. -/
+theorem sign_mod_four (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) :
+    modFourUnits L (sign L a) = modFourUnits L a := by
+  rcases four_unit_cases (modFourUnits L a) with h | h
+  · simp [sign, h]
+  · have hn : (-1 : (ZMod 4)ˣ) ≠ 1 := by decide
+    rw [sign, h, ite_eq_right hn]
+    apply Units.ext
+    simp [modFourUnits]
+
+theorem principal_mod_four (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) :
+    modFourUnits L (principal L a) = 1 := by
+  rw [principal, map_mul, sign_mod_four]
+  rcases four_unit_cases (modFourUnits L a) with h | h <;> simp [h]
+
+/-- Proposition 6.2, dyadic branch: a = sign(a) * principal(a). -/
+theorem dyadic_unit_decomposition (L : ℕ) (a : (ZMod (2^(L+2)))ˣ) :
+    sign L a * principal L a = a ∧
+    (sign L a = 1 ∨ sign L a = -1) ∧
+    modFourUnits L (principal L a) = 1 := by
+  refine ⟨?_, sign_cases L a, principal_mod_four L a⟩
+  rw [principal, ← mul_assoc, sign_square, one_mul]
+
+theorem sign_unique (L : ℕ) (a s : (ZMod (2^(L+2)))ˣ)
+    (hs : s=1 ∨ s=-1) (hr : modFourUnits L s = modFourUnits L a) :
+    s=sign L a := by
+  rcases hs with rfl | rfl
+  · have ha : modFourUnits L a=1 := by simpa using hr.symm
+    simp [sign, ha]
+  · have ha : modFourUnits L a = -1 := by simpa [modFourUnits] using hr.symm
+    have hn : (-1 : (ZMod 4)ˣ) ≠ 1 := by decide
+    simp [sign, ha, hn]
+
+theorem decomposition_unique (L : ℕ) (a s v : (ZMod (2^(L+2)))ˣ)
+    (ha : s*v=a) (hs : s=1 ∨ s=-1) (hv : modFourUnits L v=1) :
+    s=sign L a ∧ v=principal L a := by
+  have hr : modFourUnits L s = modFourUnits L a := by
+    rw [← ha, map_mul, hv, mul_one]
+  have he := sign_unique L a s hs hr
+  refine ⟨he, ?_⟩
+  subst s
+  apply mul_left_cancel (a := sign L a)
+  rw [ha]
+  exact (dyadic_unit_decomposition L a).1.symm
+
+/-- Modulo two alone cannot distinguish the two signs. -/
+theorem sign_invisible_mod_two : (1 : ZMod 2) = -1 := by decide
+
+theorem signs_distinct_mod_four : (1 : ZMod 4) ≠ -1 := by decide
+
+end KomorebiPaperIX.DyadicUnits

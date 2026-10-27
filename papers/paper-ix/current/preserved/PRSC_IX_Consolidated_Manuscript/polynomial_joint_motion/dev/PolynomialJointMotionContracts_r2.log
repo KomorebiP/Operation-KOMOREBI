@@ -1,0 +1,50 @@
+/workspace/scratch/196a43c5b4f3/polynomial_joint_motion/contracts/PolynomialJointMotionContracts.lean:78:2: error: Type mismatch: After simplification, term
+  result
+ has type
+  ∃ y,
+    (∀ (i : Fin e),
+        (eval (Fin.append y (PolynomialParameterSystem.freePart a + ↑p ^ M • v))) (F i) +
+            ↑p ^ M * (eval (Fin.append y (PolynomialParameterSystem.freePart a + ↑p ^ M • v))) (H i) =
+          0) ∧
+      (∀ (i : Fin e), ↑p ^ (M - s) ∣ y i - a (Fin.castAdd k i)) ∧
+        (∀ (i : Fin e), ↑p ^ (s + 1) ∣ y i - a (Fin.castAdd k i)) ∧
+          (∀ (z : Fin e → ℤ_[p]),
+              (∀ (i : Fin e),
+                  (eval (Fin.append z (PolynomialParameterSystem.freePart a + ↑p ^ M • v))) (F i) +
+                      ↑p ^ M * (eval (Fin.append z (PolynomialParameterSystem.freePart a + ↑p ^ M • v))) (H i) =
+                    0) →
+                (∀ (i : Fin e), ↑p ^ (s + 1) ∣ z i - a (Fin.castAdd k i)) → z = y) ∧
+            ∃ ε,
+              (∀ (i : Fin e), ↑p ^ (2 * M - 3 * s) ∣ ε i) ∧
+                ∀ (i : Fin e),
+                  ↑(y i) - ↑(a (Fin.castAdd k i)) =
+                    -↑p ^ M *
+                        ((algebraMap ℤ_[p] ℚ_[p]).mapMatrix (PolynomialJointSystem.solvedJacobian F a))⁻¹.mulVec
+                          (fun j => ↑((eval a) (H j) + (PolynomialJointSystem.parameterJacobian F a).mulVec v j)) i +
+                      ↑(ε i)
+but is expected to have type
+  ∃ y,
+    (∀ (i : Fin e),
+        (eval (Fin.append y fun j => a (Fin.natAdd e j) + ↑p ^ M * v j)) (F i) +
+            ↑p ^ M * (eval (Fin.append y fun j => a (Fin.natAdd e j) + ↑p ^ M * v j)) (H i) =
+          0) ∧
+      (∀ (i : Fin e), ↑p ^ (M - s) ∣ y i - a (Fin.castAdd k i)) ∧
+        (∀ (i : Fin e), ↑p ^ (s + 1) ∣ y i - a (Fin.castAdd k i)) ∧
+          (∀ (z : Fin e → ℤ_[p]),
+              (∀ (i : Fin e),
+                  (eval (Fin.append z fun j => a (Fin.natAdd e j) + ↑p ^ M * v j)) (F i) +
+                      ↑p ^ M * (eval (Fin.append z fun j => a (Fin.natAdd e j) + ↑p ^ M * v j)) (H i) =
+                    0) →
+                (∀ (i : Fin e), ↑p ^ (s + 1) ∣ z i - a (Fin.castAdd k i)) → z = y) ∧
+            ∃ ε,
+              (∀ (i : Fin e), ↑p ^ (2 * M - 3 * s) ∣ ε i) ∧
+                ∀ (i : Fin e),
+                  ↑(y i) - ↑(a (Fin.castAdd k i)) =
+                    -↑p ^ M *
+                        ((algebraMap ℤ_[p] ℚ_[p]).mapMatrix fun r j =>
+                                (eval a) ((pderiv (Fin.castAdd k j)) (F r)))⁻¹.mulVec
+                          (fun j =>
+                            ↑((eval a) (H j) +
+                                (Matrix.of fun r t => (eval a) ((pderiv (Fin.natAdd e t)) (F r))).mulVec v j))
+                          i +
+                      ↑(ε i)

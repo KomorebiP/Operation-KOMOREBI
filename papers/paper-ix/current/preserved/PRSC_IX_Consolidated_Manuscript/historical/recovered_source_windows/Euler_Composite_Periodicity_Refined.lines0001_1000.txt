@@ -1,0 +1,1000 @@
+\documentclass[final,5p,twocolumn]{elsarticle}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{newtxtext,newtxmath}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{cuted}
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Filtered Weyl--Hurwitz Operators for Euler Numbers: Valuation Trees and Composite Periodicity},pdfauthor={Victor Petrescu}}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\journal{}
+\biboptions{sort&compress}
+\allowdisplaybreaks[2]
+\setlength{\columnsep}{0.25in}
+\setlength{\stripsep}{6pt plus 2pt minus 2pt}
+\setlist{nosep,leftmargin=*}
+
+\DeclareMathOperator{\sech}{sech}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\Even}{Even}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Zp}{\mathbb Z_p}
+\newcommand{\Fp}{\mathbb F_p}
+\newcommand{\Zloc}{\mathbb Z_{(p)}}
+\newcommand{\Hrz}{\mathcal H}
+\newcommand{\Lop}{\mathsf L}
+\newcommand{\Uop}{\mathsf U}
+\newcommand{\Nop}{\mathsf N}
+\newcommand{\Id}{\mathsf I}
+\newcommand{\fall}[2]{(#1)_{#2}}
+\newcommand{\epsp}{\varepsilon_p}
+\newcommand{\chiFour}{\chi_4}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{definition}{Definition}{Definitions}
+\crefname{example}{Example}{Examples}
+\crefname{conjecture}{Conjecture}{Conjectures}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Filtered Weyl--Hurwitz Operators for Euler Numbers:\\Valuation Trees and Composite Periodicity}
+
+\author{Victor Petrescu}
+% Add an affiliation and corresponding-author email before submission, if required by the target journal.
+% \address{...}
+% \ead{...}
+
+\begin{abstract}
+We develop a filtered Weyl--Hurwitz operator calculus for Euler numbers and lacunary Euler sequences.  Finite alternating odd-power sums form an exact lower-triangular transform of the Euler numbers; on even indices the reciprocal kernel is $\sech^2(Nt)$, and the inverse coefficients are signed tangent numbers.  The resulting subdiagonal filtration gives congruence expansions at every prime-power precision, exact remainders, sharpness criteria, and valuation-sensitive truncations.  Odd-prime tangent valuations are reduced to local Kubota--Leopoldt branches, while the higher-order inverse polynomials $\Theta_{2m}(x)=x(x+1)\Psi_{2m}(x)$ are treated by discriminants and Hensel trees.  We also prove arbitrary-shift Weyl commutator bounds and reciprocal-periodicity results.  For Nishibuchi's composite cyclic kernels with $N=mp$, $m\mid p-1$, and $0\le j<p$, we prove the finite-difference estimate
+\[
+v_p(\Delta_h^kE_{Nn}^{(N,j)})\ge\min\{k,mn\},\qquad h=(p-1)/m,
+\]
+and deduce every prime-power layer of his composite-periodicity conjecture with the explicit threshold $n\ge\lceil r/m\rceil$.  For $j\ge p$, an exact Dwork-quotient factorization and a divided-power Frobenius reduction isolate the remaining nonunit obstruction.  Edge reciprocal moments are related to $p$-adic beta values.  The underlying Hurwitz and Weyl algebra is classical; the arithmetic content comes from the explicit reciprocal kernels, their support, and their coefficient valuations.
+\end{abstract}
+
+\begin{keyword}
+Euler numbers \sep tangent numbers \sep Hurwitz series \sep Weyl algebra \sep $p$-adic congruences \sep irregular Bernoulli numbers \sep congruential Euler numbers
+\MSC[2020] 11B68 \sep 11A07 \sep 05A15 \sep 13F25
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}\label{sec:intro}
+
+The Euler numbers are defined by
+\begin{equation}\label{eq:euler-def}
+\sech t=\sum_{n\ge 0}E_n\frac{t^n}{n!}.
+\end{equation}
+Thus $E_{2r+1}=0$ and
+$E_0=1$, $E_2=-1$, $E_4=5$, $E_6=-61$.
+For odd $N\ge1$, define
+\begin{equation}\label{eq:S-def}
+S_n(N)=\sum_{j=0}^{N-1}(-1)^j(2j+1)^n.
+\end{equation}
+Finite alternating power sums are classically expressed through Euler polynomials. If $\mathsf E_n(x)$ is defined by
+\[
+\frac{2e^{xt}}{e^t+1}=\sum_{n\ge0}\mathsf E_n(x)\frac{t^n}{n!},
+\]
+then, for odd $N$,
+\begin{equation}\label{eq:euler-poly-classical}
+S_n(N)=2^{n-1}\left(\mathsf E_n\!\left(\tfrac12\right)
++\mathsf E_n\!\left(N+\tfrac12\right)\right).
+\end{equation}
+This classical identity is not the main point of the paper. We use the finite sum as a triangular transform, compute its inverse, and read arithmetic information from the inverse subdiagonals.
+
+The central exact identity is
+\begin{equation}\label{eq:intro-main}
+E_n=\sum_{m=0}^{n/2}(-1)^mT_{2m+1}
+\binom n{2m}N^{2m}S_{n-2m}(N),
+\qquad n\ \text{even},
+\end{equation}
+where the positive tangent numbers are defined by
+\begin{equation}\label{eq:tangent-def}
+\tan t=\sum_{m\ge0}T_{2m+1}\frac{t^{2m+1}}{(2m+1)!}.
+\end{equation}
+The $m$th term in \eqref{eq:intro-main} contains $N^{2m}$. Therefore every truncation gives a congruence, and every prescribed modulus $p^k$ is reached by retaining finitely many terms. The exact tail identifies sharp cases and permits termwise valuation cutoffs.
+
+The operator formulation also gives a broader principle. Suppose
+\[
+B_N(t)=K(Nt)A(t),\qquad K(0)=1,
+\]
+and
+\[
+K(z)^{-1}=\sum_{q\ge0}\lambda_{gq}\frac{z^{gq}}{(gq)!},
+\qquad \lambda_{gq}\in\Z.
+\]
+Then
+\begin{equation}\label{eq:intro-general}
+a_n=\sum_{q=0}^{\lfloor n/g\rfloor}
+\lambda_{gq}\binom n{gq}N^{gq}b_{n-gq}(N),
+\end{equation}
+and truncation after $q=M$ is valid modulo $N^{g(M+1)}$. The Euler transform has $K(z)=\cosh^2z$ and $g=2$.
+
+The main results are as follows.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item The full and even finite-sum transforms are written as Hurwitz-series operators and as row-finite lower-triangular matrices. Their inverses are explicit; the even inverse coefficients are signed tangent numbers.
+\item The inverse filtration gives congruences for every even Euler index and every prime-power precision. Exact remainders yield uniform sharpness results and adaptive cutoffs.
+\item Prime-edge indices $n=p-1-2r$ admit exact decompositions through alternating reciprocal moments and Fermat-quotient moments. These moments reduce at fixed precision to finite $\chi_4$-weighted power sums and Euler-polynomial values.
+\item Higher-order Euler numbers inherit a direct multidimensional finite-sum transform. The inverse coefficients are integral polynomials $\Theta_{2m}(x)$ divisible by $x(x+1)$.
+\item A general gap-filtered kernel theorem characterizes the matrix filtration. For an arbitrary shift $q$, the commutator with $K(p^\alpha\Lop)$ is divisible by $p^{v_p(q)+\alpha}$, giving a sharp periodicity-transfer bound.
+\item If a $p$-integral unit kernel satisfies $\Uop^pH=H$, then its reciprocal satisfies $(\Uop^{p^r}+\Id)H^{-1}\equiv0\pmod{p^r}$. For the lacunary Euler kernel the modulus improves to $p^{r+1}$.
+\item Singular irregular Bernoulli branches are incorporated through their local Weierstrass polynomials. This gives an exact root-tree formula for the tangent valuations that occur in the adaptive Euler expansion.
+\item Cyclic projections place lacunary and congruential Euler kernels in the same operator system.  For $N=mp$, $m\mid p-1$, and $0\le j<p$, we prove an exact finite-difference valuation and every prime-power layer of Nishibuchi's composite periodicity conjecture, with the explicit threshold $n\ge\lceil r/m\rceil$.  The remaining range $j\ge p$ is reduced to an integral Dwork-quotient condition and a divided-power annihilator problem.
+\item The reciprocal moments admit a $p$-adic beta expansion, while a residue theorem explains which additional zero-set information is required for complex beta- and zeta-value formulas.
+\end{enumerate}
+
+The formal algebra of Appell sequences, binomial convolution, and Hurwitz series is classical; see \cite{Roman,AdellLekuona,Barbero}. Alternating power sums and earlier Euler congruences appear in \cite{BazsoMezo,HeLiao,Gessel,CosgraveDilcher}. Generalized and lacunary Euler numbers were studied in \cite{LeemingMacleod,Lehmer,KomatsuLiu,Nishibuchi}. The claims here concern the explicit Euler/tangent inverse, its arithmetic filtration, and the operator consequences developed from it.
+
+\section{Hurwitz series, Weyl operators, and matrices}\label{sec:operators}
+
+Let $R$ be a commutative ring. The Hurwitz-series ring is
+\[
+\Hrz(R)=\left\{\sum_{n\ge0}a_n\frac{t^n}{n!}:a_n\in R\right\},
+\]
+with ordinary multiplication. In coefficient form,
+\begin{equation}\label{eq:binomial-convolution}
+(a*b)_n=\sum_{j=0}^n\binom nj a_jb_{n-j}.
+\end{equation}
+A series is invertible exactly when its constant coefficient is a unit.
+
+For a sequence $a=(a_n)_{n\ge0}$ with exponential generating function $A(t)$, define
+\begin{equation}\label{eq:weyl-ops}
+(\Lop a)_n=na_{n-1},\qquad
+(\Uop a)_n=a_{n+1},
+\end{equation}
+where $a_{-1}=0$. Under exponential generating functions, $\Lop$ is multiplication by $t$ and $\Uop$ is differentiation. Hence
+\begin{equation}\label{eq:weyl-rel}
+\Uop\Lop-\Lop\Uop=\Id.
+\end{equation}
+
+If
+\[
+K(z)=\sum_{d\ge0}\kappa_d\frac{z^d}{d!},
+\]
+define $K(c\Lop)$ by formal substitution. Its action is
+\begin{equation}\label{eq:kernel-action}
+\bigl(K(c\Lop)a\bigr)_n
+=\sum_{d=0}^n\kappa_d\binom nd c^d a_{n-d}.
+\end{equation}
+Thus $K(c\Lop)$ multiplies $A(t)$ by $K(ct)$.
+
+\begin{proposition}[Kernel algebra]\label{prop:kernel-algebra}
+For $K,L\in\Hrz(R)$,
+\[
+(KL)(c\Lop)=K(c\Lop)L(c\Lop).
+\]
+If $K(0)$ is a unit, then
+\[
+K(c\Lop)^{-1}=K^{-1}(c\Lop).
+\]
+\end{proposition}
+
+\begin{proof}
+Both statements follow by multiplying the corresponding exponential generating functions. Equivalently, \eqref{eq:binomial-convolution} is exactly the matrix product rule for \eqref{eq:kernel-action}.
+\end{proof}
+
+The matrix of $K(c\Lop)$, with rows and columns indexed by $0,1,2,\ldots$, is
+\begin{equation}\label{eq:lower-matrix}
+M_K(c)_{n,j}=
+\begin{cases}
+\displaystyle \binom nj\kappa_{n-j}c^{n-j},&j\le n,\\
+0,&j>n.
+\end{cases}
+\end{equation}
+It is lower triangular and row-finite. If $\kappa_0=1$, it is unit lower triangular. Its transpose is upper triangular and acts on finitely supported linear functionals. This supplies both lower- and upper-triangular forms without introducing a second transform.
+
+The Weyl relation gives a useful commutation identity.
+
+\begin{proposition}[Weyl expansion]\label{prop:weyl-expansion}
+For every integer $q\ge0$,
+\begin{equation}\label{eq:weyl-expansion}
+\Uop^qK(c\Lop)=
+\sum_{r=0}^q\binom qr c^rK^{(r)}(c\Lop)\Uop^{q-r}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For $q=1$, \eqref{eq:weyl-rel} gives
+$\Uop K(c\Lop)=K(c\Lop)\Uop+cK'(c\Lop)$.
+Induction on $q$ and Pascal's identity give \eqref{eq:weyl-expansion}.
+\end{proof}
+
+\section{Exact Euler transforms}\label{sec:exact}
+
+\begin{theorem}[Full transform and inverse]\label{thm:full-transform}
+For odd $N$,
+\begin{equation}\label{eq:full-transform}
+\sum_{n\ge0}S_n(N)\frac{t^n}{n!}
+=e^{Nt}\cosh(Nt)\sech t.
+\end{equation}
+Equivalently,
+\[
+S(N)=e^{N\Lop}\cosh(N\Lop)E.
+\]
+The inverse is
+\begin{equation}\label{eq:full-inverse-operator}
+E=(1-\tanh(N\Lop))S(N),
+\end{equation}
+and therefore
+\begin{equation}\label{eq:full-inverse}
+E_n=S_n(N)+
+\sum_{\substack{r\ge1\\2r-1\le n}}
+(-1)^rT_{2r-1}\binom n{2r-1}N^{2r-1}
+S_{n-2r+1}(N).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The finite geometric sum gives
+\[
+\sum_{j=0}^{N-1}(-1)^je^{(2j+1)t}
+=e^t\frac{1-(-e^{2t})^N}{1+e^{2t}}.
+\]
+Since $N$ is odd, this equals
+\[
+\frac{1+e^{2Nt}}2\sech t
+=e^{Nt}\cosh(Nt)\sech t.
+\]
+The reciprocal of $e^z\cosh z=(e^{2z}+1)/2$ is
+$2/(e^{2z}+1)=1-\tanh z$. Substitution in \cref{prop:kernel-algebra} proves the operator inverse, and the tangent expansion gives \eqref{eq:full-inverse}.
+\end{proof}
+
+For odd $n$, \eqref{eq:full-inverse} is an identity among finite sums because $E_n=0$. In particular,
+\begin{equation}\label{eq:odd-congruence}
+S_n(N)\equiv0\pmod N\qquad(n\text{ odd}).
+\end{equation}
+
+Taking the even part produces the central transform.
+
+\begin{theorem}[Even transform and tangent inverse]\label{thm:even-transform}
+For odd $N$,
+\begin{equation}\label{eq:even-transform-egf}
+\sum_{\substack{n\ge0\\n\text{ even}}}
+S_n(N)\frac{t^n}{n!}
+=\cosh^2(Nt)\sech t.
+\end{equation}
+Equivalently,
+\begin{equation}\label{eq:even-operator}
+S^+(N)=\cosh^2(N\Lop)E,
+\qquad
+E=\sech^2(N\Lop)S^+(N).
+\end{equation}
+For even $n$,
+\begin{align}
+S_n(N)&=E_n+
+\sum_{m=1}^{n/2}2^{2m-1}\binom n{2m}N^{2m}E_{n-2m},
+\label{eq:forward-even}\\
+E_n&=\sum_{m=0}^{n/2}(-1)^mT_{2m+1}
+\binom n{2m}N^{2m}S_{n-2m}(N).
+\label{eq:inverse-even}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+The even part of the multiplier in \eqref{eq:full-transform} is
+\[
+\frac{e^{Nt}+e^{-Nt}}2\cosh(Nt)=\cosh^2(Nt).
+\]
+Now
+\[
+\cosh^2z=1+\sum_{m\ge1}2^{2m-1}\frac{z^{2m}}{(2m)!},
+\]
+while
+\[
+\sech^2z=\sum_{m\ge0}(-1)^mT_{2m+1}
+\frac{z^{2m}}{(2m)!}.
+\]
+Apply \eqref{eq:kernel-action} to the multiplier and its reciprocal.
+\end{proof}
+
+On even indices write $e_r=E_{2r}$ and $s_r(N)=S_{2r}(N)$. The first matrix blocks are
+\begin{equation}\label{eq:matrix-blocks}
+\left(\begin{array}{c}
+s_0\\s_1\\s_2\\s_3
+\end{array}\right)
+=
+\left(\begin{array}{cccc}
+1&0&0&0\\
+2N^2&1&0&0\\
+8N^4&12N^2&1&0\\
+32N^6&120N^4&30N^2&1
+\end{array}\right)
+\left(\begin{array}{c}
+e_0\\e_1\\e_2\\e_3
+\end{array}\right),
+\end{equation}
+with inverse
+\begin{equation}\label{eq:inverse-matrix-block}
+\left(\begin{array}{cccc}
+1&0&0&0\\
+-2N^2&1&0&0\\
+16N^4&-12N^2&1&0\\
+-272N^6&240N^4&-30N^2&1
+\end{array}\right).
+\end{equation}
+The transposes of \eqref{eq:matrix-blocks} and \eqref{eq:inverse-matrix-block} are the corresponding upper-triangular matrices on finitely supported coefficient functionals.
+
+\begin{example}\label{ex:N3}
+For $N=3$,
+\[
+S_0=1,\quad S_2=17,\quad S_4=545,\quad S_6=14897.
+\]
+Then \eqref{eq:inverse-even} gives
+\[
+E_6=14897-147150+330480-198288=-61.
+\]
+The four terms carry $3^0,3^2,3^4,3^6$, respectively.
+\end{example}
+
+\section{Congruence filtration, remainders, and valuations}\label{sec:congruences}
+
+For even $n$, define
+\begin{equation}\label{eq:PM}
+P_M(n,N)=\sum_{m=0}^{\min(M,n/2)}(-1)^mT_{2m+1}
+\binom n{2m}N^{2m}S_{n-2m}(N).
+\end{equation}
+
+\begin{theorem}[Uniform hierarchy]\label{thm:uniform-hierarchy}
+Let $N$ be odd, $n$ even, and $M\ge0$. Then
+\begin{equation}\label{eq:uniform-mod-N}
+E_n\equiv P_M(n,N)\pmod{2N^{2M+2}}.
+\end{equation}
+Consequently, for every odd prime $p$ and $k\ge1$,
+\begin{align}\label{eq:all-powers}
+E_n\equiv{}&
+\sum_{\substack{0\le m\le n/2\\2m<k}}
+(-1)^mT_{2m+1}\binom n{2m}p^{2m}
+S_{n-2m}(p)\pmod{p^k}.
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Subtract \eqref{eq:PM} from the exact inverse. Every omitted term contains $N^{2M+2}$. Since $T_{2m+1}$ is even for $m\ge1$, the tail is divisible by $2N^{2M+2}$. For \eqref{eq:all-powers}, retain exactly the terms with $2m<k$.
+\end{proof}
+
+The first levels are
+\begin{align}
+E_n&\equiv S_n(N)\pmod{2N^2},\label{eq:first-level}\\
+E_n&\equiv S_n(N)-n(n-1)N^2S_{n-2}(N)
+\pmod{16N^4},\label{eq:second-level}\\
+E_n&\equiv S_n(N)-n(n-1)N^2S_{n-2}(N)\notag\\
+&\quad+16\binom n4N^4S_{n-4}(N)
+\pmod{16N^6}.\label{eq:third-level}
+\end{align}
+
+\begin{proposition}[Exact remainder and sharpness]\label{prop:remainder}
+For even $n$,
+\begin{equation}\label{eq:exact-remainder}
+E_n-P_M(n,N)=\sum_{m=M+1}^{n/2}(-1)^mT_{2m+1}
+\binom n{2m}N^{2m}S_{n-2m}(N).
+\end{equation}
+At the first omitted index $n=2M+2$,
+\begin{equation}\label{eq:sharpness}
+E_{2M+2}-P_M(2M+2,N)
+=(-1)^{M+1}T_{2M+3}N^{2M+2}.
+\end{equation}
+Hence, for an odd prime $p$,
+\[
+v_p(E_{2M+2}-P_M(2M+2,p))
+=2M+2+v_p(T_{2M+3}).
+\]
+If $p\nmid T_{2M+3}$, the uniform modulus $p^{2M+2}$ cannot be replaced by $p^{2M+3}$.
+\end{proposition}
+
+\begin{proof}
+Equation \eqref{eq:exact-remainder} is the tail of \eqref{eq:inverse-even}. If $n=2M+2$, the tail has one term and $S_0(N)=1$ for odd $N$.
+\end{proof}
+
+\begin{corollary}[Adaptive cutoff]\label{cor:adaptive}
+For an odd prime $p$, put
+\[
+w_{p,n}(m)=2m+v_p(T_{2m+1})+v_p\binom n{2m}
++v_p(S_{n-2m}(p)).
+\]
+Then
+\begin{equation}\label{eq:adaptive}
+E_n\equiv\sum_{\substack{0\le m\le n/2\\w_{p,n}(m)<k}}
+(-1)^mT_{2m+1}\binom n{2m}p^{2m}S_{n-2m}(p)
+\pmod{p^k}.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Omit from the exact inverse every term whose $p$-adic valuation is at least $k$.
+\end{proof}
+
+The tangent number contribution can be read from Bernoulli numbers.
+
+\begin{proposition}[Tangent valuations]\label{prop:tangent-valuations}
+Let $r=2m+2$ and let $p$ be an odd prime. Then
+\begin{equation}\label{eq:tangent-valuation}
+v_p(T_{r-1})=v_p(2^r-1)+v_p(B_r/r).
+\end{equation}
+Let $h_p=\ord_p(2)$ and $w_p=v_p(2^{p-1}-1)$. More explicitly,
+\begin{equation}\label{eq:tangent-cases}
+v_p(T_{r-1})=
+\begin{cases}
+w_p-1,&p-1\mid r,\\
+w_p+v_p(r)+v_p(B_r/r),&h_p\mid r,\ p-1\nmid r,\\
+v_p(B_r/r),&h_p\nmid r.
+\end{cases}
+\end{equation}
+Also
+\begin{equation}\label{eq:tangent-2adic}
+v_2(T_{2m+1})=2m-v_2(m+1).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The classical formula
+\[
+T_{r-1}=(-1)^{r/2-1}\frac{2^r(2^r-1)B_r}{r}
+\]
+gives \eqref{eq:tangent-valuation}. If $h_p\mid r$, the lifting-the-exponent lemma gives
+$v_p(2^r-1)=w_p+v_p(r)$; if $h_p\nmid r$, that valuation is zero. When $p-1\mid r$, the von Staudt--Clausen theorem gives $v_p(B_r/r)=-1-v_p(r)$. This proves \eqref{eq:tangent-cases}. The same theorem gives $v_2(B_r)=-1$, which yields \eqref{eq:tangent-2adic}.
+\end{proof}
+
+For regular $p$, $v_p(B_r/r)=0$ whenever $p-1\nmid r$. For irregular primes this term is governed by the corresponding divided-Bernoulli branch; see Kellner \cite{Kellner}. Thus \eqref{eq:tangent-valuation} isolates the part of the adaptive cutoff that is not elementary.
+
+\subsection{Singular irregular branches}\label{subsec:singular-branches}
+Let $(p,\ell)$ be an irregular pair, with $2\le \ell\le p-3$ even, and put
+\[
+r(s)=\ell+(p-1)s,\qquad s\in\Zp.
+\]
+Let $\mathcal Z_{p,\ell}:\Zp\to\Zp$ denote the corresponding Kubota--Leopoldt branch. Its interpolation values are
+\begin{equation}\label{eq:KL-branch}
+\mathcal Z_{p,\ell}(s)=
+\left(1-p^{r(s)-1}\right)\frac{B_{r(s)}}{r(s)},
+\qquad s\in\Z_{\ge0}.
+\end{equation}
+The factor in parentheses is a $p$-adic unit. Hence
+\begin{equation}\label{eq:bernoulli-branch-valuation}
+v_p\!\left(\frac{B_{r(s)}}{r(s)}\right)
+=v_p\bigl(\mathcal Z_{p,\ell}(s)\bigr).
+\end{equation}
+For nonsingular irregular pairs, the branch has a simple zero and the valuation is the distance from that zero. Singular branches may have higher Weierstrass degree and several lifting paths.
+
+\begin{theorem}[Weierstrass reduction of tangent valuations]\label{thm:tangent-weierstrass}
+Fix an odd prime $p$, an irregular class $\ell$, and a residue disk $a+p\Zp$. There are an integer $\mu_a\ge0$, a unit $U_a(X)\in\Zp[[X]]^\times$, and a distinguished polynomial $P_a(X)\in\Zp[X]$ such that
+\begin{equation}\label{eq:branch-weierstrass}
+\mathcal Z_{p,\ell}(a+pX)=p^{\mu_a}U_a(X)P_a(X).
+\end{equation}
+If $s=a+px$ and $r=r(s)$, then
+\begin{equation}\label{eq:tangent-weierstrass-valuation}
+v_p(T_{r-1})=
+ v_p(2^r-1)+\mu_a+v_p(P_a(x)).
+\end{equation}
+Consequently, every tangent valuation on a singular irregular branch is determined by the finite-branching root-lifting tree of $P_a$.
+\end{theorem}
+
+\begin{proof}
+The interpolation in \eqref{eq:KL-branch} follows from the Kummer congruences. Apply the $p$-adic Weierstrass preparation theorem to the restricted power series $X\mapsto\mathcal Z_{p,\ell}(a+pX)$. Equation \eqref{eq:bernoulli-branch-valuation} and \cref{prop:tangent-valuations} give \eqref{eq:tangent-weierstrass-valuation}. A distinguished polynomial has finitely many residual roots, and the standard Hensel tree computes $v_p(P_a(x))$ to any prescribed precision.
+\end{proof}
+
+\begin{remark}
+The existence and structure of the branches are classical $p$-adic zeta theory. Kellner's nonsingularity condition is the degree-one case, where the tree consists of one infinite path. The point here is that \eqref{eq:tangent-weierstrass-valuation} inserts the general, possibly singular, branch directly into the tangent-number cutoff in \eqref{eq:adaptive}. A uniform closed classification of the polynomials $P_a$ remains equivalent to the corresponding singular Bernoulli problem.
+\end{remark}
+
+\begin{example}\label{ex:p5}
+Let $p=5$ and $n=8$. Modulo $5^5$, the uniform cutoff allows $m\le2$, but the $m=2$ term is already divisible by $5^5$. Since
+\[
+S_8(5)\equiv360,\qquad
+-2\binom82 5^2S_6(5)\equiv1025\pmod{3125},
+\]
+\eqref{eq:adaptive} gives
+$E_8\equiv360+1025=1385\pmod{3125}$.
+\end{example}
+
+\section{Prime-edge reciprocal moments}\label{sec:edge}
+
+Let $p$ be an odd prime. Put
+\[
+\epsp=(-1)^{(p-1)/2}
+\]
+and define
+\begin{align}
+R_s(p)&=\sum_{\substack{0\le j<p\\p\nmid2j+1}}
+\frac{(-1)^j}{(2j+1)^{2s}},\label{eq:R-def}\\
+F_s(p)&=\sum_{\substack{0\le j<p\\p\nmid2j+1}}
+\frac{(-1)^jq_p(2j+1)}{(2j+1)^{2s}},\label{eq:F-def}
+\end{align}
+where $q_p(a)=(a^{p-1}-1)/p$. All congruences involving $R_s(p)$ or $F_s(p)$ are interpreted in the localization $\Zloc$.
+
+\begin{lemma}[Exact edge decomposition]\label{lem:edge-decomp}
+For $1\le s\le(p-1)/2$,
+\begin{equation}\label{eq:edge-decomp}
+S_{p-1-2s}(p)=R_s(p)+pF_s(p)+\epsp p^{p-1-2s}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Separate the term $2j+1=p$. For every remaining term,
+\[
+(2j+1)^{p-1-2s}
+=\frac{1+pq_p(2j+1)}{(2j+1)^{2s}}.
+\]
+Summation gives \eqref{eq:edge-decomp}.
+\end{proof}
+
+\begin{theorem}[Edge congruence tower]\label{thm:edge-tower}
+Let $n=p-1-2r$ and assume $r+M\le(p-3)/2$. Then
+\begin{align}
+E_n\equiv{}&\sum_{m=0}^{M-1}(-1)^mT_{2m+1}
+\binom n{2m}p^{2m}S_{n-2m}(p)\notag\\
+&+(-1)^MT_{2M+1}\binom n{2M}p^{2M}R_{r+M}(p)
+\pmod{p^{2M+1}},\label{eq:edge-tower-one}
+\end{align}
+and
+\begin{align}
+E_n\equiv{}&\sum_{m=0}^{M-1}(-1)^mT_{2m+1}
+\binom n{2m}p^{2m}S_{n-2m}(p)\notag\\
+&+(-1)^MT_{2M+1}\binom n{2M}p^{2M}\notag\\
+&\quad\times\bigl(R_{r+M}(p)+pF_{r+M}(p)\bigr)
+\pmod{p^{2M+2}}.\label{eq:edge-tower-two}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+In \eqref{eq:inverse-even}, retain the terms through $m=M$. Apply \cref{lem:edge-decomp} to the last finite sum. The remaining inverse tail starts with $p^{2M+2}$.
+\end{proof}
+
+Applying \cref{lem:edge-decomp} to every term gives an exact closed identity.
+
+\begin{theorem}[Closed edge formula]\label{thm:closed-edge}
+Let $1\le r\le(p-3)/2$ and $n=p-1-2r$. Then
+\begin{align}
+(1-\epsp p^n)E_n
+={}&\sum_{m=0}^{n/2}(-1)^mT_{2m+1}\binom n{2m}p^{2m}\notag\\
+&\times\bigl(R_{r+m}(p)+pF_{r+m}(p)\bigr).
+\label{eq:closed-edge}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+The exceptional term from \cref{lem:edge-decomp} contributes
+\[
+\epsp p^n\sum_{m=0}^{n/2}(-1)^mT_{2m+1}\binom n{2m}.
+\]
+The sum equals $E_n$ by \eqref{eq:inverse-even} at $N=1$, because $S_j(1)=1$. Move this term to the left.
+\end{proof}
+
+The reciprocal moments have a finite reduction. Let $\chiFour(a)=(-1)^{(a-1)/2}$ for odd $a$, and define
+\begin{equation}\label{eq:A-def}
+A_d(p)=\sum_{\substack{1\le a<2p\\a\text{ odd},\ p\nmid a}}
+\chiFour(a)a^d.
+\end{equation}
+Then
+\begin{equation}\label{eq:A-euler-poly}
+A_d(p)=2^{d-1}\left(\mathsf E_d\!\left(\tfrac12\right)
++\mathsf E_d\!\left(p+\tfrac12\right)\right)-\epsp p^d.
+\end{equation}
+
+\begin{proposition}[Moment reduction]\label{prop:moment-reduction}
+Let $k\ge1$ and suppose $\varphi(p^k)\ge2s$. Put $d=\varphi(p^k)-2s$. Then
+\begin{align}
+R_s(p)&\equiv A_d(p)\pmod{p^k},\label{eq:R-reduction}\\
+F_s(p)&\equiv Q_d(p)\pmod{p^k},\label{eq:F-reduction}
+\end{align}
+where
+\begin{equation}\label{eq:Q-def}
+Q_d(p)=\frac{A_{d+p-1}(p)-A_d(p)}p\in\Z.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For every $p$-adic unit $a$, Euler's theorem gives
+$a^{-2s}\equiv a^d\pmod{p^k}$, proving \eqref{eq:R-reduction}. Multiplying by $q_p(a)$ gives \eqref{eq:F-reduction}. Finally,
+\[
+q_p(a)a^d=\frac{a^{d+p-1}-a^d}{p},
+\]
+so summing proves \eqref{eq:Q-def}. Formula \eqref{eq:A-euler-poly} follows from the classical alternating Euler-polynomial sum after removing the term $a=p$.
+\end{proof}
+
+\subsection{\texorpdfstring{$p$}{p}-adic beta interpretation of the edge moments}\label{subsec:padic-beta}
+
+Let $\chiFour$ be the primitive character modulo $4$ and let $\beta(s)=L(s,\chiFour)$ be the Dirichlet beta function. For even $d\ge0$,
+\begin{equation}\label{eq:beta-negative}
+2\beta(-d)=E_d.
+\end{equation}
+Fix an even residue class $c$ modulo $p-1$. We write $\beta_{p,c}(s)$ for the Kubota--Leopoldt branch characterized by
+\begin{equation}\label{eq:padic-beta-interpolation}
+\beta_{p,c}(-d)=(1-\epsp p^d)\beta(-d)=\frac{1-\epsp p^d}{2}E_d
+\end{equation}
+for nonnegative even $d\equiv c\pmod{p-1}$. The branch notation records the Teichmuller component. Existence and analyticity are standard consequences of the Kubota--Leopoldt construction; related Euler interpolations are discussed in \cite{KubotaLeopoldt,KimHu,KnospeWashington}.
+
+For $x\in\Zp$, on the component indexed by $c$, define
+\begin{align}
+\mathcal A_{p,c}(x)={}&2\beta_{p,c}(-x)\notag\\
+&+\sum_{\ell\ge1}(2p)^{2\ell}\binom{x}{2\ell}\beta_{p,c-2\ell}(2\ell-x),
+\label{eq:moment-continuation}
+\end{align}
+where branch labels are read modulo $p-1$. The series converges uniformly on $\Zp$: the binomial polynomials and the beta branches are bounded on compact sets, while the $\ell$th term contains $p^{2\ell}$.
+
+\begin{theorem}[$p$-adic beta expansion]\label{thm:padic-beta-moments}
+Let $s\ge1$ and let $c\equiv-2s\pmod{p-1}$. Then
+\begin{align}
+R_s(p)={}&\mathcal A_{p,c}(-2s)\notag\\
+={}&2\beta_{p,c}(2s)\notag\\
+&+\sum_{\ell\ge1}(2p)^{2\ell}\binom{2s+2\ell-1}{2\ell}\beta_{p,c-2\ell}(2s+2\ell).
+\label{eq:R-padic-beta}
+\end{align}
+and
+\begin{equation}\label{eq:F-padic-beta}
+F_s(p)=\frac{\mathcal A_{p,c}(p-1-2s)-\mathcal A_{p,c}(-2s)}{p}.
+\end{equation}
+Thus $R_s(p)$ is a convergent combination of positive $p$-adic beta values, and $F_s(p)$ is the corresponding weight-space finite difference.
+\end{theorem}
+
+\begin{proof}
+Put $d_k=\varphi(p^k)-2s$. For all sufficiently large $k$, $d_k$ is a nonnegative even integer, $d_k\to-2s$ in $\Zp$, and \cref{prop:moment-reduction} gives $A_{d_k}(p)\to R_s(p)$. For even $d$, the forward Euler transform gives the exact identity
+\begin{equation}\label{eq:A-E-expansion}
+A_d(p)=E_d+\sum_{\ell=1}^{d/2}2^{2\ell-1}\binom d{2\ell}p^{2\ell}E_{d-2\ell}-\epsp p^d.
+\end{equation}
+Fix $\ell$. By \eqref{eq:padic-beta-interpolation},
+\[
+E_{d_k-2\ell}\longrightarrow2\beta_{p,c-2\ell}(2s+2\ell),
+\]
+and $\binom{d_k}{2\ell}\to\binom{-2s}{2\ell}$. The term $p^{d_k}$ tends to zero. The tails of \eqref{eq:A-E-expansion} are uniformly divisible by increasing powers $p^{2\ell}$, so the limit may be taken termwise. This proves \eqref{eq:R-padic-beta}; use $\binom{-2s}{2\ell}=\binom{2s+2\ell-1}{2\ell}$. Finally, \cref{prop:moment-reduction} gives
+\[
+F_s(p)=\lim_{k\to\infty}\frac{A_{d_k+p-1}(p)-A_{d_k}(p)}p.
+\]
+The two limits are $\mathcal A_{p,c}(p-1-2s)$ and $\mathcal A_{p,c}(-2s)$, which proves \eqref{eq:F-padic-beta}.
+\end{proof}
+
+\begin{example}\label{ex:edge7}
+For $p=7$, $r=1$, and $n=4$, \eqref{eq:edge-tower-one} with $M=1$ gives
+\[
+E_4\equiv S_4(7)-2\binom42 7^2R_2(7)\pmod{7^3}.
+\]
+Here $S_4(7)\equiv103\pmod{343}$ and $R_2(7)\equiv6\pmod7$. The correction is $98$ modulo $343$, so the right side is $5=E_4$.
+\end{example}
+
+\section{Higher-order Euler numbers}\label{sec:higher}
+
+For an integer $\nu\ge1$, define
+\begin{equation}\label{eq:higher-euler-def}
+\sech^\nu t=\sum_{n\ge0}E_n^{\langle\nu\rangle}\frac{t^n}{n!}.
+\end{equation}
+For odd $N$, define the $\nu$-fold alternating sum
+\begin{equation}\label{eq:multi-S}
+\mathcal S_n^{\langle\nu\rangle}(N)=
+\sum_{j_1,\ldots,j_\nu=0}^{N-1}(-1)^{j_1+\cdots+j_\nu}
+\bigl(2(j_1+\cdots+j_\nu)+\nu\bigr)^n.
+\end{equation}
+
+\begin{theorem}[Higher-order transform]\label{thm:higher-transform}
+The exponential generating function of \eqref{eq:multi-S} is
+\begin{equation}\label{eq:higher-full}
+e^{\nu Nt}\cosh^\nu(Nt)\sech^\nu t.
+\end{equation}
+Its even part is
+\begin{equation}\label{eq:higher-even}
+\cosh(\nu Nt)\cosh^\nu(Nt)\sech^\nu t.
+\end{equation}
+Define $\Theta_{2m}(x)\in\Z[x]$ by
+\begin{equation}\label{eq:theta-def}
+\sech(xz)\sech^x z
+=\sum_{m\ge0}\Theta_{2m}(x)\frac{z^{2m}}{(2m)!}.
+\end{equation}
+Then, for even $n$,
+\begin{equation}\label{eq:higher-inverse}
+E_n^{\langle\nu\rangle}=
+\sum_{m=0}^{n/2}\Theta_{2m}(\nu)\binom n{2m}N^{2m}
+\mathcal S_{n-2m}^{\langle\nu\rangle}(N).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Equation \eqref{eq:higher-full} is the $\nu$th power of \eqref{eq:full-transform}. Since $\sech^\nu t$ is even, its even part is \eqref{eq:higher-even}. The reciprocal of the even multiplier $\cosh(\nu z)\cosh^\nu z$ is the kernel in \eqref{eq:theta-def}, and \eqref{eq:higher-inverse} follows from \eqref{eq:kernel-action}.
+\end{proof}
+
+The first coefficients are
+\begin{align*}
+\Theta_0(x)&=1,\\
+\Theta_2(x)&=-x(x+1),\\
+\Theta_4(x)&=x(x+1)(5x^2+x+2),\\
+\Theta_6(x)&=-x(x+1)(61x^4+14x^3+31x^2+14x+16).
+\end{align*}
+
+\begin{proposition}[Coefficient structure]\label{prop:theta-structure}
+For $m\ge1$,
+\begin{equation}\label{eq:theta-factor}
+\Theta_{2m}(x)=x(x+1)\Psi_{2m}(x),
+\qquad \Psi_{2m}(x)\in\Z[x].
+\end{equation}
+Moreover,
+\begin{equation}\label{eq:theta-boundary}
+\Psi_{2m}(0)=(-1)^mT_{2m-1},\qquad
+\Psi_{2m}(-1)=(-1)^m(2m-1)T_{2m-1}.
+\end{equation}
+The coefficients satisfy
+\begin{align}
+\Theta_{2m}(x)=\sum_{j=1}^m&\binom{2m-1}{2j-1}(-1)^jT_{2j-1}
+(x^{2j}+x)\Theta_{2m-2j}(x).
+\label{eq:theta-recurrence}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Taking logarithms in \eqref{eq:theta-def} gives
+\[
+\sum_{j\ge1}(-1)^jT_{2j-1}(x^{2j}+x)
+\frac{z^{2j}}{(2j)!}.
+\]
+The exponential formula proves integrality, and differentiation with respect to $z$ gives \eqref{eq:theta-recurrence}. Each $x^{2j}+x$ is divisible by $x(x+1)$, proving \eqref{eq:theta-factor}. Differentiation with respect to $x$ at $x=0$ and $x=-1$ gives \eqref{eq:theta-boundary}.
+\end{proof}
+
+For an odd prime $p$,
+\begin{equation}\label{eq:theta-valuation-basic}
+v_p(\Theta_{2m}(\nu))=v_p(\nu)+v_p(\nu+1)+v_p(\Psi_{2m}(\nu)).
+\end{equation}
+The next theorem makes this local factorization explicit.
+
+\begin{theorem}[Local valuation classification]\label{thm:theta-local}
+Let $p$ be odd and $m\ge1$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item If $p\nmid T_{2m-1}$ and $\nu\in p\Zp$, then $v_p(\Theta_{2m}(\nu))=v_p(\nu)$.
+\item If $p\nmid(2m-1)T_{2m-1}$ and $\nu\in-1+p\Zp$, then $v_p(\Theta_{2m}(\nu))=v_p(\nu+1)$.
+\item Let $a\in\mathbb F_p\setminus\{0,-1\}$ be a simple root of $\overline{\Psi}_{2m}$. Let $\xi_a\in\Zp$ be its unique Hensel lift. For $\nu\in a+p\Zp$, $v_p(\Theta_{2m}(\nu))=v_p(\nu-\xi_a)$.
+\item If $\overline{\Psi}_{2m}$ has no roots outside $0$ and $-1$ and the unit conditions in \textup{(i)}--\textup{(ii)} hold, then for every $\nu\in\Zp$,
+\[
+v_p(\Theta_{2m}(\nu))=v_p(\nu)+v_p(\nu+1).
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Use \eqref{eq:theta-factor}, \eqref{eq:theta-boundary}, and \eqref{eq:theta-valuation-basic}. In \textup{(i)}, $\nu+1$ and $\Psi_{2m}(\nu)$ are units because $\Psi_{2m}(\nu)\equiv\Psi_{2m}(0)=(-1)^mT_{2m-1}\pmod p$. The proof of \textup{(ii)} is identical at $-1$. For \textup{(iii)}, Hensel's lemma gives $\Psi_{2m}(x)=(x-\xi_a)U_a(x)$ on $a+p\Zp$, where $U_a$ is a unit; also $x$ and $x+1$ are units there. Part \textup{(iv)} follows by partitioning $\Zp$ into residue classes modulo $p$.
+\end{proof}
+
+Repeated roots are handled by a root-lifting tree with finite branching at each level. For $e\ge1$, put
+\[
+\mathcal R_e=\{a\bmod p^e:\Psi_{2m}(a)\equiv0\pmod{p^e}\}.
+\]
+If $a_e\in\mathcal R_e$, its children are $a_e+tp^e$, $0\le t<p$, satisfying
+\begin{equation}\label{eq:root-tree-step}
+\frac{\Psi_{2m}(a_e)}{p^e}+t\Psi_{2m}'(a_e)\equiv0\pmod p.
+\end{equation}
+A unit derivative gives one child, a zero derivative with nonzero first term gives none, and two zero terms give all $p$ children. Consequently,
+\begin{equation}\label{eq:root-tree-valuation}
+v_p(\Psi_{2m}(\nu))=\sup\{e:\nu\bmod p^e\in\mathcal R_e\}.
+\end{equation}
+Equations \eqref{eq:theta-valuation-basic}, \eqref{eq:root-tree-step}, and \eqref{eq:root-tree-valuation} give an exact finite algorithm to any prescribed precision.
+
+\begin{theorem}[Uniform exceptional-prime and branch classification]\label{thm:theta-discriminant}
+Let $m\ge2$, let $c_m$ be the leading coefficient of $\Psi_{2m}$, and put
+\[
+\mathfrak D_m=c_m\operatorname{disc}(\Psi_{2m}).
+\]
+Assume $\mathfrak D_m\ne0$.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item If $p\nmid\mathfrak D_m$, the reduction of $\Psi_{2m}$ has the same degree and is squarefree. Every residual root is simple, has a unique lift $\xi\in\Zp$, and on its residue disk
+\[
+v_p(\Psi_{2m}(\nu))=v_p(\nu-\xi).
+\]
+Thus only the finitely many primes dividing $\mathfrak D_m$ can produce repeated-root trees.
+\item Let $p\mid\mathfrak D_m$. The child rule \eqref{eq:root-tree-step} is exhaustive: a node has one, zero, or $p$ children according as the two coefficients in that congruence are respectively unit, inconsistent, or both zero modulo $p$.
+\item Every infinite path converges to a root $\xi\in\Zp$. On a sufficiently small disk around that root there are integers $e\ge1$ and $c\ge0$ and a unit $V$ such that
+\[
+\Psi_{2m}(x)=p^c(x-\xi)^eV(x),
+\]
+and therefore
+\begin{equation}\label{eq:theta-repeated-local}
+v_p(\Theta_{2m}(\nu))=
+ v_p(\nu)+v_p(\nu+1)+c+e\,v_p(\nu-\xi).
+\end{equation}
+A finite path contributes only the finite valuations recorded before it terminates.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part \textup{(i)} is the discriminant criterion followed by Hensel's lemma. Part \textup{(ii)} is the first-order Taylor congruence modulo $p^{e+1}$. Compactness of $\Zp$ gives a limit for every infinite nested path, and continuity gives a root. The local factorization in \textup{(iii)} follows from Weierstrass preparation, after removing the exact multiplicity of the root. Equation \eqref{eq:theta-repeated-local} then follows from \eqref{eq:theta-factor}.
+\end{proof}
+
+\begin{remark}
+For each fixed $m$, \cref{thm:theta-discriminant} is a complete local classification: all but finitely many primes are simple-root cases, and each exceptional prime is resolved by a finite-branching Hensel tree. What remains open is a closed description of the exceptional set and its trees as $m$ varies.
+\end{remark}
+
+\begin{example}[The coefficient $\Theta_4$]\label{ex:theta4-local}
+Here
+\[
+\Theta_4(x)=x(x+1)(5x^2+x+2),\qquad \operatorname{disc}(5x^2+x+2)=-39.
+\]
+For $p\notin\{3,5,13\}$, the residual factor has no root when $\left(\frac{-39}{p}\right)=-1$, and two simple roots when $\left(\frac{-39}{p}\right)=1$. In the latter case each root has a unique lift and \cref{thm:theta-local}\textup{(iii)} gives the exact extra valuation. For $p=5$, the residual factor is $x+2$ and has one simple lift. For $p=3$, writing $x=-1+3u$ gives $5x^2+x+2=3(2-9u+15u^2)$, so its valuation is exactly $1$. For $p=13$, writing $x=9+13u$ and using $20(5x^2+x+2)=(10x+1)^2+39$ again gives valuation exactly $1$.
+\end{example}
+
+\begin{corollary}[Higher-order hierarchy]\label{cor:higher-hierarchy}
+For $M\ge0$, odd $N$, and even $n$,
+\begin{align}
+E_n^{\langle\nu\rangle}\equiv
+\sum_{m=0}^{\min(M,n/2)}&\Theta_{2m}(\nu)\binom n{2m}N^{2m}
+\mathcal S_{n-2m}^{\langle\nu\rangle}(N)\notag\\
+&\pmod{\nu(\nu+1)N^{2M+2}}.
+\label{eq:higher-hierarchy}
+\end{align}
+\end{corollary}
+
+\begin{proof}
+The omitted terms contain $N^{2M+2}$, and every nonconstant $\Theta_{2m}(\nu)$ contains $\nu(\nu+1)$.
+\end{proof}
+
+\begin{example}\label{ex:order2}
+For $\nu=2$ and $N=3$,
+\[
+\mathcal S_0=1,\qquad \mathcal S_2=52,\qquad \mathcal S_4=5200.
+\]
+Since $\Theta_2(2)=-6$ and $\Theta_4(2)=144$, \eqref{eq:higher-inverse} gives
+\[
+E_4^{\langle2\rangle}=5200-6\binom42 3^2\cdot52+144\cdot3^4=16.
+\]
+\end{example}
+
+\section{Gap-filtered inverse kernels}\label{sec:kernel}
+
+The Euler transform is a special case of a general statement.
+
+\begin{theorem}[Kernel transfer]\label{thm:kernel-transfer}
+Let $R$ be a commutative ring, let
+\[
+K(z)=\sum_{d\ge0}\kappa_d\frac{z^d}{d!}\in\Hrz(R),
+\qquad \kappa_0=1,
+\]
+and suppose
+\[
+B_N(t)=K(Nt)A(t).
+\]
+If
+\[
+K(z)^{-1}=\sum_{d\ge0}\lambda_d\frac{z^d}{d!},
+\]
+then
+\begin{equation}\label{eq:general-inverse}
+a_n=\sum_{d=0}^n\lambda_d\binom ndN^d b_{n-d}(N).
+\end{equation}
+If $R=\Z$ and $\lambda_d=0$ unless $g\mid d$, then
+\begin{equation}\label{eq:general-gap}
+a_n\equiv\sum_{q=0}^{\min(M,\lfloor n/g\rfloor)}
+\lambda_{gq}\binom n{gq}N^{gq}b_{n-gq}(N)
+\pmod{N^{g(M+1)}}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Apply $K^{-1}(N\Lop)$ and use \eqref{eq:kernel-action}. The tail in \eqref{eq:general-gap} begins with $N^{g(M+1)}$.
+\end{proof}
+
+Let
+\[
+\Hrz_g(R)=\left\{\sum_{q\ge0}a_{gq}\frac{z^{gq}}{(gq)!}\right\}.
+\]
+
+\begin{proposition}[Gap-support equivalence]\label{prop:gap-equivalence}
+For a unit $K\in\Hrz(R)$, the following are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $K\in\Hrz_g(R)$;
+\item $K^{-1}\in\Hrz_g(R)$;
+\item the matrices $M_K(N)$ and $M_{K^{-1}}(N)$ are supported only on subdiagonals whose distance is divisible by $g$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The subring $\Hrz_g(R)$ is closed under multiplication and recursive inversion of units. The matrix statement follows from \eqref{eq:lower-matrix}.
+\end{proof}
+
+Finite exponential kernels have a simple symmetry criterion.
+
+\begin{proposition}[Root-of-unity criterion]\label{prop:root-unity}
+Let $F$ be a characteristic-zero field containing the $g$th roots of unity, and let
+\[
+K(z)=\sum_{\alpha\in A}c_\alpha e^{\alpha z},
+\]
+where $A\subset F$ is finite and the nodes are distinct. The following are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the coefficient of $z^n/n!$ vanishes whenever $g\nmid n$;
+\item $K(\zeta z)=K(z)$ for every $\zeta^g=1$;
+\item $c_{\zeta\alpha}=c_\alpha$ on every root-of-unity orbit, with missing weights interpreted as zero.
+\end{enumerate}
+If $K(0)=1$ and all nonzero moments lie in a subring $R$, then $K^{-1}\in\Hrz_g(R)$.
+\end{proposition}
+
+\begin{proof}
+The first two statements are equivalent by coefficient comparison. For the last equivalence, finite exponential functions with distinct exponents are linearly independent, as follows from the Vandermonde matrix of their derivatives at zero. The final statement follows from recursive inversion in $\Hrz_g(R)$.
+\end{proof}
+
+For the Euler transform,
+\[
+K(z)=\cosh^2z=\tfrac14e^{2z}+\tfrac12+\tfrac14e^{-2z}.
+\]
+The weighted nodes are invariant under $\alpha\mapsto-\alpha$, so $g=2$; the reciprocal is $\sech^2z$ and its divided-power coefficients are the signed tangent numbers.
+
+\section{Arbitrary-shift Weyl commutators}\label{sec:commutator}
+
+The lower-triangular filtration comes from $\Lop$. Coefficient shifts are powers of $\Uop$. The exact Weyl expansion gives a sharp uniform commutator modulus for every shift, not only for prime powers.
+
+\begin{theorem}[Arbitrary-shift commutator]\label{thm:arbitrary-commutator}
+Let $p$ be prime, $q\ge1$, $s=v_p(q)$, and $\alpha\ge1$. If $K\in\Hrz(\Zp)$, then
+\begin{equation}\label{eq:arbitrary-commutator-formula}
+[\Uop^q,K(p^\alpha\Lop)]=\sum_{r=1}^q\binom qr p^{\alpha r}K^{(r)}(p^\alpha\Lop)\Uop^{q-r},
+\end{equation}
+and, on $\Zp$-valued sequences,
+\begin{equation}\label{eq:arbitrary-commutator-div}
+[\Uop^q,K(p^\alpha\Lop)]\equiv0\pmod{p^{s+\alpha}}.
+\end{equation}
+The exponent $s+\alpha$ is the minimum valuation of the scalar coefficients in \eqref{eq:arbitrary-commutator-formula}, attained at $r=1$.
+\end{theorem}
+
+\begin{proof}
+Equation \eqref{eq:arbitrary-commutator-formula} is \cref{prop:weyl-expansion} with the $r=0$ term removed. For $1\le r\le q$,
+\[
+v_p\binom qr\ge s-v_p(r),
+\]
+which follows from $\binom qr=(q/r)\binom{q-1}{r-1}$. Hence
+\[
+v_p\left(p^{\alpha r}\binom qr\right)\ge s+\alpha r-v_p(r)\ge s+\alpha,
+\]
+because $r-v_p(r)\ge1$. For $r=1$, the valuation is exactly $s+\alpha$.
+\end{proof}
+
+\begin{corollary}[Periodicity transfer]\label{cor:periodicity-transfer}
+Let $a$ be a $\Zp$-valued sequence, let $b=K(p^\alpha\Lop)a$, and let $\epsilon\in\Zp$. If
+\[
+(\Uop^q+\epsilon\Id)a\equiv0\pmod{p^\lambda},
+\]
+then
+\begin{equation}\label{eq:periodicity-transfer}
+(\Uop^q+\epsilon\Id)b\equiv0\pmod{p^{\min(\lambda,v_p(q)+\alpha)}}.
+\end{equation}
+If $K^{-1}\in\Hrz(\Zp)$, the implication is reversible with the same bound.
+\end{corollary}
+
+\begin{proof}
+Write
+\[
+(\Uop^q+\epsilon\Id)b=K(p^\alpha\Lop)(\Uop^q+\epsilon\Id)a+[\Uop^q,K(p^\alpha\Lop)]a.
+\]
+Apply \cref{thm:arbitrary-commutator}; use $K^{-1}$ for the converse.
+\end{proof}
+
+\section{Reciprocal-kernel periodicity}\label{sec:reciprocal-periodicity}
+
+The preceding theorem transports an existing coefficient congruence. The next result produces one directly from a differential symmetry of the kernel.
+
+\begin{theorem}[Reciprocal anti-periodicity]\label{thm:reciprocal-periodicity}
+Let $p$ be an odd prime. Let $H\in\Hrz(\Zp)$ be a unit satisfying
+\begin{equation}\label{eq:p-differential-periodic}
+\Uop^pH=H,
+\end{equation}
+and put $F=H^{-1}$. Then for every $r\ge1$,
+\begin{equation}\label{eq:reciprocal-antiperiodic}
+(\Uop^{p^r}+\Id)F\equiv0\pmod{p^r}.
+\end{equation}
+Equivalently, if $F(t)=\sum f_n t^n/n!$, then $f_{n+p^r}+f_n\equiv0\pmod{p^r}$ for every $n\ge0$.
+\end{theorem}
+
+\begin{proof}
+We use strong induction on $r$. For $r=1$, differentiate $FH=1$ exactly $p$ times. Since $\Uop^pH=H$,
+\[
+(\Uop^pF+F)H=-\sum_{k=1}^{p-1}\binom pk(\Uop^{p-k}F)(\Uop^kH),

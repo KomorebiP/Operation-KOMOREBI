@@ -1,0 +1,263 @@
+F_{N(k+2)+j}
+=
+L_NF_{N(k+1)+j}
+-(-1)^NF_{Nk+j}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:second_order_jump} with \(P=1\) and \(Q=-1\). Then \(V_N=L_N\).
+\end{proof}
+
+\subsection{Finite and local periodicity}
+
+\begin{theorem}[Periodicity of an invertible recurrence modulo a prime power]\label{thm:recurrence_periodicity}
+Let
+\[
+C\in M_d(\ZZ),
+\qquad
+p\nmid\det C.
+\]
+For every \(L\geq1\), every state orbit modulo \(p^L\) is purely periodic. Its period divides the order of \(C\) in
+\[
+\operatorname{GL}_d(\ZZ/p^L\ZZ).
+\]
+If \(p\mid\det C\), every orbit is still eventually periodic.
+\end{theorem}
+
+\begin{proof}
+When \(p\nmid\det C\), multiplication by \(C\) is a permutation of the finite state set \((\ZZ/p^L\ZZ)^d\). Every orbit of a permutation is periodic, and applying the group order relation for \(C\) gives the divisibility statement. Without invertibility, repeated application of a map on a finite set eventually repeats a state, after which the orbit is periodic.
+\end{proof}
+
+\begin{corollary}[Residue packet periods]\label{cor:residue_packet_periods}
+Under the invertibility hypothesis of \cref{thm:recurrence_periodicity}, every residue packet with jump \(N\) has period dividing the order of \(C^N\) modulo \(p^L\).
+\end{corollary}
+
+\begin{proof}
+Use the jump matrix from \cref{thm:companion_jump}.
+\end{proof}
+
+\subsection{The common integral spine}
+
+\begin{theorem}[Base change of an integral recurrence]\label{thm:integral_recurrence_spine}
+Let
+\[
+C\in M_d(\ZZ),
+\qquad
+v_0\in\ZZ^d.
+\]
+The integral orbit
+\[
+v_n=C^nv_0
+\]
+determines, by base change, compatible orbits in every ring \(R\) equipped with a homomorphism \(\ZZ\to R\). In particular, the reductions modulo every positive integer and the orbits in every \(\Zp^d\) share the same companion matrix, characteristic polynomial, and integer recurrence relations.
+\end{theorem}
+
+\begin{proof}
+Every coordinate of \(C^nv_0\) is an integer polynomial in the entries of \(C\) and \(v_0\). Applying a ring homomorphism commutes with matrix multiplication and preserves every polynomial relation with integer coefficients.
+\end{proof}
+
+\begin{corollary}[Prime independent recurrence spine]\label{cor:prime_independent_spine}
+An integral companion system gives a canonical common source for all of its local realizations. No choice of coefficient prime is required to define the recurrence or its residue packets.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:integral_recurrence_spine} to the companion matrix and its initial state.
+\end{proof}
+
+\begin{remark}\label{rem:spine_boundary}
+This theorem supplies a prime independent spine for integral linear recurrences. It does not prove that every unrelated family of local arithmetic packets arises from one global object.
+\end{remark}
+
+\section{Chinese remainder packet refinement}\label{sec:crt}
+
+The Chinese remainder theorem gives an exact factorization of residue addresses. We state it at the level of sequence projectors so that it can be combined directly with the earlier coordinate systems.
+
+\begin{definition}[Residue projector]\label{def:residue_projector}
+For a sequence \(a=(a_n)_{n\geq0}\), a positive integer \(N\), and an address \(r\) modulo \(N\), define
+\[
+(P_{N,r}a)_n
+=
+\begin{cases}
+a_n,&n\equiv r\pmod N,\\
+0,&n\not\equiv r\pmod N.
+\end{cases}
+\]
+\end{definition}
+
+\begin{proposition}[Complete residue packet system]\label{prop:residue_packet_system}
+For fixed \(N\), the projectors \(P_{N,r}\) satisfy
+\[
+P_{N,r}P_{N,s}
+=
+\delta_{rs}P_{N,r}
+\]
+and
+\[
+\boxed{
+\sum_{r\bmod N}P_{N,r}=I.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Every nonnegative integer belongs to exactly one residue class modulo \(N\).
+\end{proof}
+
+\begin{theorem}[Coprime packet factorization]\label{thm:crt_packet_factorization}
+Let \(A\) and \(B\) be coprime positive integers. Let \(r_A\) be an address modulo \(A\) and \(r_B\) an address modulo \(B\). Let \(r\) be the unique address modulo \(AB\) satisfying
+\[
+r\equiv r_A\pmod A,
+\qquad
+r\equiv r_B\pmod B.
+\]
+Then
+\[
+\boxed{
+P_{AB,r}
+=
+P_{A,r_A}P_{B,r_B}
+=
+P_{B,r_B}P_{A,r_A}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The product retains exactly the indices satisfying both congruences. By the Chinese remainder theorem, those indices form one residue class modulo \(AB\) \cite{IrelandRosen1990}.
+\end{proof}
+
+\begin{corollary}[Several coprime moduli]\label{cor:many_crt_packets}
+Let \(N_1,\ldots,N_s\) be pairwise coprime and put
+\[
+N=\prod_{j=1}^{s}N_j.
+\]
+For compatible addresses \(r_j\),
+\[
+\boxed{
+P_{N,r}
+=
+\prod_{j=1}^{s}P_{N_j,r_j},
+}
+\]
+where \(r\) is the unique combined address modulo \(N\).
+\end{corollary}
+
+\begin{proof}
+Iterate \cref{thm:crt_packet_factorization}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.86\textwidth]{15_crt_packets.pdf}
+\caption{A residue modulo a product of coprime moduli is the exact intersection of its local residue packets.}
+\label{fig:crt_packets}
+\end{figure}
+
+\begin{standardfact}[Finite local reconstruction]\label{fact:finite_local_reconstruction}
+Let
+\[
+N=\prod_{j=1}^{s}p_j^{a_j}
+\]
+be the prime power factorization of a positive integer. The map
+\[
+\ZZ/N\ZZ
+\longrightarrow
+\prod_{j=1}^{s}\ZZ/p_j^{a_j}\ZZ
+\]
+is a ring isomorphism. Thus a compatible collection of prime power residues reconstructs one residue modulo \(N\) \cite{IrelandRosen1990}.
+\end{standardfact}
+
+\begin{proposition}[Dyadic and odd residue refinement]\label{prop:dyadic_odd_refinement}
+Let \(N=2^am\) with \(m\) odd. Every residue packet modulo \(N\) factors uniquely as the product of one dyadic packet modulo \(2^a\) and one odd packet modulo \(m\).
+\end{proposition}
+
+\begin{proof}
+The moduli \(2^a\) and \(m\) are coprime. Apply \cref{thm:crt_packet_factorization}.
+\end{proof}
+
+\begin{remark}\label{rem:crt_weight_boundary}
+The residue address factors exactly, but valuation weights do not become identical across primes. The odd coordinate system of \cref{sec:local_euler} and the dyadic coordinate system of \cref{sec:local_euler} remain genuinely different integral charts.
+\end{remark}
+
+\section{Verification and exact boundaries}\label{sec:boundaries}
+
+The proofs in the article are symbolic. Exact computation tests formulas, finite ranges, and the source implementation. It does not replace a uniform proof.
+
+\begin{table}[t]
+\centering
+\caption{Status of the principal local arithmetic blocks.}
+\label{tab:status}
+\begin{tabular}{>{\raggedright\arraybackslash}p{.33\textwidth}>{\raggedright\arraybackslash}p{.24\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}}
+\toprule
+Block & Status & Main boundary\\
+\midrule
+Standard window period & Proved modulo the residue prime & Higher prime powers require inverse estimates\\
+Unified local Euler transfer & Proved for every prime & Odd and dyadic integral charts remain different\\
+Dyadic kernel and truncation & Exact weight and optimal uniform modulus proved & Row cancellation may give stronger values\\
+Carmichael and Mahler transfer & Proved for scalar, polynomial exponential, matrix, and finite adelic systems & A jump congruence must first be available\\
+Local Euler interpolation & Proved for depleted odd branches and the direct dyadic branch & The odd nonunit factor is only evaluated at integer interpolation points\\
+Affine polyphase transfer & Exact analysis, synthesis, carry law, kernel composition, residual sparsity, and valuation preservation proved & General exact kernel valuations remain open\\
+Lift obstruction and recurrence spine & Proved for the declared local problems and integral recurrences & Unrestricted global gluing is not proved\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The remaining congruential difference problem}
+
+Let \(C_{mp,j}(n)\) be a congruential reciprocal coefficient and let
+\[
+h=\frac{p-1}{m}.
+\]
+The unit mode calculations suggest bounds for
+\[
+\vp\left(\Delta_h^sC_{mp,j}(n)\right).
+\]
+The theorems of \cref{sec:mahler,sec:polyphase} determine the gain before the congruential triangular inverse is applied. They do not yet determine every valuation loss introduced by that inverse. The full family bound therefore remains open.
+
+\subsection{Higher valuations of the affine kernel}
+
+The residual formula
+\[
+\Theta_{p^a,s}(r,k)
+\equiv
+\binom{s}{r-p^ak}
+\pmod p
+\]
+is exact. A closed formula for
+\[
+\vp\left(\Theta_{p^a,s}(r,k)\right)
+\]
+in terms of base \(p\) carries and the three digit addresses is not proved here. Such a formula would sharpen the min plus valuation ledger and could distinguish optimal refinement trees.
+
+\subsection{The remaining global gluing problem}
+
+The finite adelic theorem synchronizes a finite set of primes when one integral state system is already fixed. The recurrence theorem gives a common local source under the same assumption. Chinese remainder projectors reconstruct finite residue addresses. None of these results proves that an arbitrary collection of local analytic branches has a common global arithmetic origin.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.95\textwidth]{16_claim_boundary.pdf}
+\caption{The proved local coordinate theory and the remaining inverse valuation, affine kernel, and global gluing problems.}
+\label{fig:claim_boundary}
+\end{figure}
+
+\subsection{Historical scope}
+
+The article uses classical work on Euler congruences, finite differences, local fields, Hurwitz series, Mahler interpolation, Lucas congruences, and recurrence sequences \cite{CarlitzLevine1960,Young1999,Young2001,Sun2008,Chen2004,Lucas1878a,LidlNiederreiter1997,EverestVanDerPoortenShparlinskiWard2003}. The exact formulas and local transfer statements should be compared individually with that literature before any historical priority claim is made.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The local arithmetic theory now has one common architecture. The finite character coordinate identifies the torsion phase. The source and kernel product reconstructs the Euler coefficient. The kernel valuation records certified precision. Carmichael and Mahler coordinates describe the remaining principal unit motion. Polyphase analysis resolves additional local digits, records carries and shifts exactly, and transports Mahler coefficients through a finite affine kernel.
+
+The odd and dyadic cases agree at the level of convolution and differ at the level of integral geometry. At odd primes the source must be depleted before it becomes a unit mode interpolation. At the dyadic prime the source extends directly to an analytic integral function. The dyadic kernel has exact weight \(4r-1\), giving the optimal uniform modulus \(2^{4M+3}\) after depth \(M\).
+
+Three tasks remain outside the proved region. The first is a complete finite difference estimate after the congruential triangular inverse. The second is an exact higher valuation theory for the affine Mahler kernel. The third is a global existence theorem for local systems that do not already arise from one integral source.
+\section*{Language model contribution}
+
+An OpenAI language model was used as an organizational and mathematical drafting aid. Its contributions included suggestions for the finite field Hurwitz proof, the unified source and kernel formulation in \cref{sec:local_euler}, the sharp dyadic truncation in \cref{thm:optimal_dyadic_truncation}, the Carmichael and Mahler statements in \cref{sec:mahler}, the affine kernel in \cref{sec:polyphase}, and the obstruction and recurrence organization. The author assumes full responsibility for independently verifying every statement, calculation, proof, and reference in any submitted version. The model is not an author.
+
+\bibliographystyle{amsplain}
+\bibliography{PSC_Paper_IX_Local_Polyphase_Annals_Edition}
+
+\end{document}

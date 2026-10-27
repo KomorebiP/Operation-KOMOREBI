@@ -1,0 +1,11 @@
+theorem exists_unique_padic_root (p L : ℕ) [Fact (Nat.Prime p)] (hL : 1 ≤ L)
+    (F : Fin d → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (hx : ∀ i, (p : ℤ)^L ∣ evalSystem F x i)
+    (hJ : Function.Surjective (digitJacobian p F x)) :
+    ∃! a : Fin d → ℤ_[p],
+      (∀ i, MvPolynomial.eval₂ (Int.castRingHom ℤ_[p]) a (F i) = 0) ∧
+      (∀ i, (p : ℤ_[p])^L ∣ a i - (x i : ℤ_[p])) := by
+  obtain ⟨a, ha, hax⟩ := exists_padic_root p L hL F x hx hJ
+  refine ⟨a, ⟨ha, hax⟩, ?_⟩
+  intro b hb
+  exact padic_root_unique p L hL F x hJ b a hb.1 ha hb.2 hax

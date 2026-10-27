@@ -1,0 +1,20 @@
+theorem exists_prescribed_padic_root_with_tower (p L : ℕ) [Fact (Nat.Prime p)]
+    (hL : 1 ≤ L) (F : Fin e → MvPolynomial (Fin (m+k)) ℤ)
+    (x : Fin (m+k) → ℤ) (hx : ∀ i, (p : ℤ)^L ∣ evalSystem F x i)
+    (hJ : Function.Surjective (solvedJacobian p F x))
+    (τ : Fin k → ℤ_[p])
+    (hτ : ∀ j, (p : ℤ_[p])^L ∣ τ j - ((freePart x j : ℤ) : ℤ_[p])) :
+    ∃ (z : ℕ → Fin (m+k) → ℤ) (b : Fin (m+k) → ℤ_[p]),
+      z 0 = x ∧
+      (∀ n i, (p : ℤ)^(L+n) ∣ evalSystem F (z n) i) ∧
+      (∀ n i, (p : ℤ)^(L+n) ∣ (z (n+1) - z n) i) ∧
+      (∀ n, solvedJacobian p F (z n) = solvedJacobian p F x) ∧
+      Tendsto (fun n i => (z n i : ℤ_[p])) atTop (\CodeSymbol{1D4DD} b) ∧
+      (∀ i, padicEval p F b i = 0) ∧ freePart b = τ ∧
+      (∀ n i, (p : ℤ_[p])^(L+n) ∣ b i - (z n i : ℤ_[p])) ∧
+      (∀ n v, Nat.card (PrescribedLifts p (L+n) F (z n) v) = p^(m-e)) := by
+  obtain ⟨t, ht0, ht, _, htlim⟩ :=
+    PolynomialParameterPath.exists_parameter_path p L (freePart x) τ hτ
+  obtain ⟨z, b, hz0, _, hroot, hstep, hfixed, hlim, hb, hbτ, hprecision, hcard⟩ :=
+    exists_root_with_prescribed_path p L hL F x hx hJ t ht0 ht τ htlim
+  exact ⟨z, b, hz0, hroot, hstep, hfixed, hlim, hb, hbτ, hprecision, hcard⟩

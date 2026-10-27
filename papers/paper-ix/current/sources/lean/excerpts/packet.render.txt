@@ -1,0 +1,9 @@
+theorem packet_reconstruction [AddCommMonoid R] \CodeChar{123}N : ℕ\CodeChar{125} (hN : 0 < N) (a : ℕ → R) :
+    ∑ j ∈ Finset.range N, packet N j a = a := by
+  funext n
+  simp only [Finset.sum_apply, packet]
+  rw [Finset.sum_eq_single (n % N)]
+  · simp
+  · intro b _ hb
+    simp [Ne.symm hb]
+  · simp [Nat.mod_lt n hN]

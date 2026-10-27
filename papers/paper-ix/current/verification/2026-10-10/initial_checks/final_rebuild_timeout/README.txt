@@ -1,0 +1,1 @@
+The outer 200-second command timed out during the copied-source Lean-guide XeLaTeX build. Main and visual builds had completed. No process remained after the timeout. This is a publication-build interruption, not Lean theorem compilation. The interrupted log is retained; a retry uses the same unchanged copied sources.

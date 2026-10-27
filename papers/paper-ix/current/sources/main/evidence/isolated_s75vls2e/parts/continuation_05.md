@@ -1,0 +1,127 @@
+# Paper IX: continuous p-adic parameter charts
+
+**Komorebi P. — 8 September 2026.**
+
+**Fresh verification: PASS — 40 checks, 244 explicit declaration audits.**
+
+## Main statement
+
+Let \(p\) be prime, \(L\ge1\), \(e,q\ge0\), and
+\[
+F\in\mathbb Z[X_1,\ldots,X_{e+q}]^e,\qquad
+x\in\mathbb Z^{e+q},\qquad F(x)\equiv0\pmod{p^L}.
+\]
+Assume the actual reduced Jacobian
+\[
+A_x=DF(x)\bmod p:\mathbb F_p^{e+q}\longrightarrow\mathbb F_p^e
+\]
+is surjective. All vector congruences are coordinatewise.
+
+There is a coordinate permutation \(\sigma\), with
+\((\sigma z)_i=z_{\sigma(i)}\). Write \(\sigma z=(y,t)\), using \(e\) solved
+coordinates and \(q\) free coordinates. Define
+\[
+(y_0,t_0)=\sigma x,\qquad
+B=x+p^L\mathbb Z_p^{e+q},\qquad
+T=t_0+p^L\mathbb Z_p^q,\qquad
+\mathcal R=\{z\in B:F(z)=0\}.
+\]
+There is a homeomorphism
+\[
+h:T\xrightarrow{\ \sim\ }\mathcal R,\qquad
+h^{-1}(z)=\operatorname{free}(\sigma z).
+\]
+Equivalently, a continuous function \(\phi:T\to y_0+p^L\mathbb Z_p^e\)
+gives the entire root locus through \(\sigma h(t)=(\phi(t),t)\).
+Every parameter has exactly one corresponding root in \(B\). For every \(N\ge0\),
+\[
+\boxed{h(t)\equiv h(u)\pmod{p^N}\iff t\equiv u\pmod{p^N}.}
+\]
+
+The coordinate choice is a conclusion. A suitable minor and a preexisting
+chart are not hypotheses. The theorem covers the original root locus after
+undoing the coordinate reordering. Since \(x\) is an approximate root, it does
+not assert \(\phi(t_0)=y_0\) unless \(F(x)=0\) exactly. The cases \(p=2\),
+\(L=1\), \(e=0\), and \(q=0\) are included.
+
+## Supporting theorems
+
+For a rectangular integer polynomial system with a surjective reduced
+Jacobian at \(x\), and \(L\ge1\),
+\[
+F(x+p^L\mathbb Z_p^d)=F(x)+p^L\mathbb Z_p^e.
+\]
+This covers arbitrary p-adic output targets. No lower-root hypothesis is needed.
+
+When \(d=e\), the actual restricted polynomial map is a homeomorphism.
+Moreover, for arbitrary \(a,b\in x+p\mathbb Z_p^d\) and every \(N\ge0\),
+\[
+F(a)\equiv F(b)\pmod{p^N}\iff a\equiv b\pmod{p^N}.
+\]
+Its inverse therefore preserves every congruence depth.
+
+## Proof structure
+
+1. The actual integer Taylor formula gives one additional input digit from
+   one additional output digit when the reduced square Jacobian is
+   surjective. Its finite domain and codomain have the same size, so it is
+   injective. Induction gives every integer precision.
+2. Canonical integer truncations of arbitrary p-adic vectors preserve
+   evaluation modulo each power of \(p\). Applying the integer result to
+   truncations proves the p-adic congruence equivalence.
+3. Subtracting an integer target from the constant terms leaves the actual
+   Jacobian unchanged. The previous root-lifting theorem supplies a preimage.
+   The image of the compact input ball is closed and contains the convergent
+   truncations of every admissible p-adic target, hence contains the target.
+   No compatibility of arbitrarily chosen preimages is assumed.
+4. In the square case, the resulting continuous bijection from a compact
+   ball to a Hausdorff ball is a homeomorphism. Its forward map is actual
+   polynomial evaluation, and its inverse solves the output equation.
+5. For a specified surjective solved-variable block, apply this inverse to
+   the actual augmented polynomial map
+   \[
+   \Psi(y,t)=(F(y,t),t).
+   \]
+   Its derivative has an identity free-coordinate block. The inverse at
+   \((0,t)\) gives the root. The lower-root congruence places this target
+   in the output ball. Injectivity proves uniqueness and full graph coverage.
+   Projection identifies the inverse chart and reflects congruences.
+6. The columns of a surjective finite-dimensional linear map contain a
+   basis. Select those columns and extend their injection to a coordinate
+   permutation. Polynomial renaming by \(\sigma^{-1}\) transports actual
+   evaluations and partial derivatives. The fixed-coordinate chart then
+   gives the main theorem on the entire original root locus.
+
+## Scope
+
+Coefficients are integers; roots and parameters are arbitrary p-adic points.
+This supplies continuous polynomial parameter charts. Analyticity,
+differentiability, arbitrary p-adic coefficient interfaces, weighted lifting
+for nonunit Jacobians, and first-order root-motion estimates are separate.
+
+Full Jacobian surjectivity need not allow an arbitrary prescribed parameter
+choice. At the dyadic origin, \(F(X,T)=X^2-T\) has a surjective full Jacobian
+but zero \(X\)-derivative. Prescribing \(T=2\) gives no root even modulo \(4\).
+Suitable coordinates instead solve for \(T\).
+
+## Verification and provenance
+
+The eight new mathematical modules contain 75 declarations: 60 theorems and
+15 definitions. The active polynomial dependency set contains 25 mathematical
+modules. Counts including inherited support and theorem contracts are recorded
+separately in the final report.
+
+
+The exact universal statements are Lean theorems, not conclusions from sampled
+numerical tests. The fresh gate rebuilds project sources with warnings treated
+as errors, checks expanded theorem contracts, audits explicit declarations,
+and checks rejected invalid extensions. Only propext, Classical.choice, and
+Quot.sound are permitted as axiom dependencies.
+
+Pinned runtime: Lean 4.34.0-rc2, Mathlib revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+
+See inventory.json, verification/polynomial_charts_verification.json, and
+INDEPENDENT_PROOF_AUDIT.md for actual evidence. RECOVERY_RECORD.md explains
+workspace maintenance, the intact previous release, and reconstruction of
+the unpublished chart sources. Lost logs are not represented as recovered.

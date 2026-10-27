@@ -1,0 +1,17 @@
+def parameterHomeomorph (p L : ℕ) [Fact (Nat.Prime p)] (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin (e + q)) ℤ) (x : Fin (e + q) → ℤ)
+    (hx : ∀ i, (p : ℤ)^L ∣ evalSystem F x i)
+    (hJ : Function.Surjective (solvedJacobian p F x)) :
+    residueBall p L (freePart x) ≃ₜ {z : residueBall p L x // padicEval p F z.val = 0} where
+  toFun t := ⟨chartPoint p L hL F x hx hJ t, chartPoint_root p L hL F x hx hJ t⟩
+  invFun z := ⟨freePart z.val.val, fun j => z.val.property (Fin.natAdd e j)⟩
+  left_inv t := Subtype.ext (chartPoint_free p L hL F x hx hJ t)
+  right_inv z := by
+    apply Subtype.ext
+    exact (chartPoint_unique p L hL F x hx hJ _ z.val z.property rfl).symm
+  continuous_toFun := by
+    apply Continuous.subtype_mk
+    exact continuous_chartPoint p L hL F x hx hJ
+  continuous_invFun := by
+    apply Continuous.subtype_mk
+    exact continuous_freePart.comp (continuous_subtype_val.comp continuous_subtype_val)

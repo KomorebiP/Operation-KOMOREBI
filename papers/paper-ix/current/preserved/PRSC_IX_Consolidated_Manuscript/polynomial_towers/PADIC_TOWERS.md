@@ -1,0 +1,119 @@
+# Paper IX: compatible polynomial towers and p-adic roots
+
+**Author: Komorebi P. — 8 September 2026.**
+
+This block completes the nonsingular branch of the passage from one-step polynomial lifting to an infinite compatible tower and an actual p-adic root. Surjectivity is required only of the reduced Jacobian at the initial root. The proof derives its persistence, constructs the tower, proves convergence and verifies the original polynomial equations at the limit.
+
+## Main theorem
+
+Let \(p\) be prime, \(L\ge1\), and
+\[
+F\in\mathbb Z[X_1,\ldots,X_d]^e,\qquad x\in\mathbb Z^d,
+\qquad F(x)\equiv0\pmod{p^L}.
+\]
+Assume the actual reduced Jacobian
+\[
+A_x=DF(x)\bmod p:\mathbb F_p^d\longrightarrow\mathbb F_p^e
+\]
+is surjective. Then Lean proves that there is a point
+\[
+\boxed{a\in\mathbb Z_p^d,\qquad F(a)=0,\qquad
+ a\equiv x\pmod{p^L}.}
+\]
+Here the coefficients of the original integer polynomials are cast into \(\mathbb Z_p\), and their multivariable evaluation is exactly zero. This is an existence theorem for a fixed polynomial presentation with the stated Jacobian hypothesis.
+
+The stronger checked statement constructs \(z_n\in\mathbb Z^d\), \(n\ge0\), with
+\[
+\begin{aligned}
+z_0&=x,\\
+F(z_n)&\equiv0\pmod{p^{L+n}},\\
+z_{n+1}&\equiv z_n\pmod{p^{L+n}},\\
+DF(z_n)\bmod p&=A_x,\\
+z_n&\longrightarrow a\quad\text{in }\mathbb Z_p^d,\\
+a-z_n&\in p^{L+n}\mathbb Z_p^d.
+\end{aligned}
+\]
+The last inclusion retains every prescribed precision. It is a divisibility lower bound, not an assertion that the error has exactly that valuation. An approximation can already equal the limiting root.
+
+## Why the single initial hypothesis suffices
+
+The one-step Taylor theorem already supplies the exact correction equation
+\[
+b_n+A_{z_n}t=0,\qquad
+b_n=F(z_n)/p^{L+n}\bmod p.
+\]
+Surjectivity supplies a correcting digit for every residual \(b_n\). The chosen correction gives an actual new integer point \(z_{n+1}\), using the proved nonlinear Taylor remainder.
+
+Every coordinate change is divisible by \(p^{L+n}\), hence by \(p\). Each formal partial derivative is itself an integer polynomial, so its value is unchanged modulo \(p\). Therefore
+\[
+A_{z_{n+1}}=A_{z_n}=A_x.
+\]
+The proof assumes no separate surjectivity or solvability statement at later levels. A dependent recursion chooses each next point from the proved one-step existence theorem. It produces one compatible sequence, rather than unrelated witnesses at different precisions.
+
+The integer tower construction works more generally for every positive modulus \(q\), including composite \(q\) and \(q=1\), with a surjective map over \(\mathbb Z/q\mathbb Z\). The p-adic completion and the rank-based branching formulas in this block use prime \(p\).
+
+## Convergence and exact polynomial vanishing
+
+Compatibility implies, for \(m\ge n\),
+\[
+p^{L+n}\mid z_m-z_n.
+\]
+After casting to \(\mathbb Z_p\), this bounds each coordinate distance by \(p^{-(L+n)}\), so the sequence is Cauchy. Completeness supplies its limit. Closed norm bounds show that the limit retains the congruence at every stage.
+
+The generic convergence theorem is proved independently of the polynomial application. It also proves
+\[
+p^{L+n}\mid v_n\ \text{for all }n
+\quad\Longrightarrow\quad v_n\longrightarrow0\text{ in }\mathbb Z_p.
+\]
+Apply this to each integer sequence \(F_i(z_n)\). Continuity of multivariable polynomial evaluation also gives \(F_i(z_n)\to F_i(a)\). Uniqueness of limits then yields \(F_i(a)=0\).
+
+The cast-evaluation identity is explicitly checked, so the continuous function is the evaluation of the original polynomials. Convergence and polynomial vanishing are conclusions, not assumptions of the main existence theorem.
+
+## Exact number of choices at each level
+
+Surjectivity implies
+\[
+\operatorname{rank}_{\mathbb F_p}A_x=e,\qquad e\le d.
+\]
+Combining this with the preceding exact residue-lift count gives
+\[
+\boxed{\#\mathcal L_{z_n,L+n}=p^{d-e}\quad\text{for every }n.}
+\]
+These are distinct solutions modulo \(p^{L+n+1}\) lying above the selected point modulo \(p^{L+n}\). The original finite obstruction group at each smooth point has cardinality one.
+
+The theorem constructs one path through these finite choices. When \(d>e\), it does not claim that all paths have the same limit. The generic uniqueness theorem concerns the limit of a fixed sequence only.
+
+## Boundary controls
+
+The positive control theorems and rejected invalid proofs cover three distinctions.
+
+1. **An initial lift does not guarantee an infinite tower without the Jacobian condition.** \(X^2-5\) has the odd lower root modulo two and a lift modulo four, but no root modulo eight. Lean proves that no integer tower can continue through all precisions in this example.
+2. **Surjective rectangular Jacobians do not give uniqueness of all roots.** The system \(F(X,Y)=X\) has a surjective Jacobian and distinct dyadic roots \((0,0)\) and \((0,2)\), both in the same residue modulo two.
+3. **The retained initial precision cannot be increased without justification.** For \(F(X)=X-2\), zero is a lower root modulo two with surjective derivative, but its exact root two does not retain zero modulo four.
+
+The controls are theorem checks of these explicit examples. They supplement the universal proof audit and do not replace it.
+
+For several polynomial blocks, the hypothesis applies to their combined system. Surjectivity of each block separately does not imply surjectivity of the combined Jacobian or shared liftability. The preceding shared-correction obstruction remains relevant in that situation.
+
+## Formalization and verification
+
+New modules:
+
+| Module | Role |
+|---|---|
+| `PolynomialSurjectiveStep` | Actual Jacobian stability and a surjectivity-preserving next lift |
+| `PolynomialIntegerTower` | Dependent recursive tower, all cross-level congruences and fixed Jacobian |
+| `PadicTowerLimit` | Cauchy convergence, retained precision and vanishing with growing divisibility |
+| `PolynomialSmoothCounts` | Full row rank, dimension bound, exact branching and trivial obstruction |
+| `PolynomialPadicLift` | Actual coefficient casting, continuity, exact polynomial root and combined theorem |
+| `PolynomialTowerControls` | Counterexamples to unwarranted existence, uniqueness and precision claims |
+
+The fresh gate is `verification/polynomial_towers_verification.json`; the independent review is `INDEPENDENT_PROOF_AUDIT.md`. The inventory records every active source, explicit contract and negative control. Only `propext`, `Classical.choice` and `Quot.sound` are permitted; warnings are errors. The pinned Mathlib cache is reused, while every project module needed by this new gate is freshly compiled.
+
+Initial development failures involved elementary telescoping rewrites, a namespace/deprecation issue in the smooth-count specialization, and unfolding the actual evaluation definition in the continuity proof. They were corrected without weakening a theorem hypothesis or replacing an actual object by an assumed model. Development logs are preserved separately from the final successful gate.
+
+## What remains
+
+The smooth fixed-presentation infinite-lifting branch is now complete. This does not resolve arbitrary singular towers, presentation-independent native obstruction theory, or global descent.
+
+The next clear theorem is uniqueness in the square nonsingular case \(d=e\), using the one-child count at every level and separation by all p-adic precisions. For rectangular systems, a stronger future target is a local parametrization by the free p-adic coordinates. Those claims require additional arguments and are not included in this release's completion count.

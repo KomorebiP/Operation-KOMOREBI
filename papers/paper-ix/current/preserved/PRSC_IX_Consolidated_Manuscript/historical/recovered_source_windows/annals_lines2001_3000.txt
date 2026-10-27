@@ -1,0 +1,1000 @@
+}
+\]
+The apparent singularity at \(x=-1\) is removable, with value \(-\log(9)/8\).
+
+\begin{lemma}[Analytic dyadic source]\label{lem:analytic_dyadic_source}
+The function \(\mathscr R\) belongs to the dyadic Tate algebra and takes values in \(\mathbb Z_2\). For every nonnegative integer \(n\),
+\[
+\boxed{\mathscr R(n)=R_{2n}.}
+\]
+\end{lemma}
+
+\begin{proof}
+Put \(y=x+1\) and let \(\ell=\log 9\). Since \(\vTwo(\ell)=3\),
+\[
+\frac{9^y-1}{8y}
+=
+\frac{\ell}{8}
+\sum_{m\geq0}
+\frac{\ell^m}{(m+1)!}y^m.
+\]
+The coefficient of \(y^m\) has valuation
+\[
+3m-\vTwo((m+1)!),
+\]
+which is nonnegative and tends to positive infinity. The quotient therefore belongs to \(\mathbb Z_2\langle y\rangle\). The factor \(2x+1=1+2x\) is a unit in \(\mathbb Z_2\langle x\rangle\), with inverse \(\sum_{m\geq0}(-2x)^m\). Hence \(\mathscr R\) is integral and analytic. The integer values follow from the definition of \(R_{2n}\).
+\end{proof}
+
+Define
+\[
+\boxed{
+\mathscr E_2(x)
+=
+\sum_{r\geq0}
+\kappa_{2,r}
+\binom{2x}{2r}
+\mathscr R(x-r).
+}
+\]
+
+\begin{theorem}[Direct dyadic Euler interpolation]\label{thm:direct_dyadic_interpolation}
+The series defining \(\mathscr E_2\) converges in the dyadic Tate algebra. For every nonnegative integer \(n\),
+\[
+\boxed{\mathscr E_2(n)=E_{2n}.}
+\]
+Truncation after depth \(M\) is uniformly valid modulo \(2^{4M+3}\) on \(\mathbb Z_2\).
+\end{theorem}
+
+\begin{proof}
+The monomial Gauss norm of \(\binom{2x}{2r}\) is at most \(2^{\vTwo((2r)!)}\). Since
+\[
+\vTwo(\kappa_{2,r})=4r-1,
+\]
+the product tends to zero in Gauss norm. Translation by the integer \(r\) preserves the unit disc, so \(\mathscr R(x-r)\) remains an integral analytic function with uniformly bounded supremum norm. The series therefore converges in the Tate algebra.
+
+At a nonnegative integer \(n\), every term with \(r>n\) vanishes and \cref{thm:dyadic_coordinate_pair} remains. For arbitrary \(x\in\mathbb Z_2\), the integer valued polynomial \(\binom{2x}{2r}\) and the source value \(\mathscr R(x-r)\) lie in \(\mathbb Z_2\). Every omitted term after depth \(M\) is therefore divisible by \(2^{4M+3}\). This proves the uniform truncation statement.
+\end{proof}
+
+\begin{theorem}[Unified local interpolation statement]\label{thm:unified_local_interpolation}
+The odd branch \(\mathscr E_{p,j}^\times\) and the dyadic branch \(\mathscr E_2\) are analytic local realizations of the source and kernel law in \cref{thm:unified_local_euler}. At integer arguments they recover, respectively,
+\[
+\left(1-\sigma_pp^n\right)E_n
+\]
+on each even odd prime character branch and
+\[
+E_{2n}
+\]
+on the dyadic even branch. The two realizations have distinct source corrections and distinct kernel valuation slopes.
+\end{theorem}
+
+\begin{proof}
+Combine \cref{thm:odd_analytic_branch,thm:direct_dyadic_interpolation} with the source and kernel definitions in \cref{thm:unified_local_euler}.
+\end{proof}
+
+\section{Polyphase refinement of local Mahler coordinates}\label{sec:polyphase}
+
+Polyphase refinement replaces one local branch by finitely many digit branches while preserving exact synthesis. For sequences it is residue analysis. For local functions it is the digit tree of \(\mathbb Z_p\). In Mahler coordinates it becomes a finite triangular kernel.
+
+\subsection{Discrete analysis and exact synthesis}
+
+For a sequence \(a=(a_n)_{n\geq0}\) and \(M\geq2\), define
+\[
+a_r^{[M]}(q)=a_{Mq+r}
+\qquad(0\leq r<M).
+\]
+The analysis map is
+\[
+\mathcal P_Ma
+=
+\left(a_0^{[M]},\ldots,a_{M-1}^{[M]}\right).
+\]
+Synthesis interleaves the branches by the rule
+\[
+a_{Mq+r}=a_r^{[M]}(q).
+\]
+
+\begin{theorem}[Exact discrete polyphase reconstruction]\label{thm:discrete_polyphase_reconstruction}
+The analysis map \(\mathcal P_M\) is a bijection between sequences and ordered families of \(M\) sequences. If
+\[
+A(z)=\sum_{n\geq0}a_nz^n
+\]
+and
+\[
+A_r^{[M]}(w)=\sum_{q\geq0}a_{Mq+r}w^q,
+\]
+then
+\[
+\boxed{
+A(z)=\sum_{r=0}^{M-1}z^rA_r^{[M]}(z^M).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Every nonnegative integer has a unique expression \(Mq+r\) with \(0\leq r<M\). Group the terms of the ordinary generating function by this residue.
+\end{proof}
+
+\begin{theorem}[Nested discrete refinement]\label{thm:nested_discrete_polyphase}
+For positive integers \(M,N\),
+\[
+\boxed{
+\left(a_r^{[M]}\right)_s^{[N]}
+=
+a_{r+Ms}^{[MN]}.
+}
+\]
+For a mixed radix path \((M_1,\ldots,M_\ell)\) with digits \(0\leq s_i<M_i\), the final address is
+\[
+\boxed{
+r(\boldsymbol s)
+=
+s_1+M_1s_2+\cdots+
+\left(\prod_{i=1}^{\ell-1}M_i\right)s_\ell.
+}
+\]
+Only the product radix and accumulated address determine the final branch.
+\end{theorem}
+
+\begin{proof}
+Direct substitution gives
+\[
+\left(a_r^{[M]}\right)_s^{[N]}(q)
+=
+a_{M(Nq+s)+r}.
+\]
+Iterate this identity along the mixed radix path.
+\end{proof}
+
+\subsection{Carry convolution and the shift matrix}
+
+Let \(c=a*b\) be the ordinary Cauchy convolution. Write \(A_r\), \(B_r\), and \(C_r\) for the phase ordinary generating functions.
+
+\begin{proposition}[One carry convolution law]\label{prop:polyphase_carry_convolution}
+For every residue \(r\),
+\[
+\boxed{
+C_r(w)
+=
+\sum_{u+v=r}A_u(w)B_v(w)
++
+w\sum_{u+v=r+M}A_u(w)B_v(w).
+}
+\]
+The first sum has no phase carry. The second has one coarse index carry.
+\end{proposition}
+
+\begin{proof}
+Write the input indices as \(Mq+u\) and \(Mq'+v\). Since \(0\leq u,v<M\), their sum has residue \(u+v\) when \(u+v<M\), and residue \(u+v-M\) with one additional coarse index when \(u+v\geq M\).
+\end{proof}
+
+\begin{theorem}[Polyphase shift matrix]\label{thm:polyphase_shift_matrix}
+Let \(E\) be the scalar shift \((Ea)_n=a_{n+1}\), and let \(E_q\) shift the coarse index. Then
+\[
+\boxed{
+\mathcal P_M(Ea)
+=
+\mathsf S_M(E_q)\mathcal P_Ma,
+}
+\]
+where
+\[
+\mathsf S_M(E_q)
+=
+\begin{pmatrix}
+0&1&0&\cdots&0\\
+0&0&1&\cdots&0\\
+\vdots&&&\ddots&\vdots\\
+0&0&0&\cdots&1\\
+E_q&0&0&\cdots&0
+\end{pmatrix}.
+\]
+It also satisfies
+\[
+\boxed{\mathsf S_M(E_q)^M=E_qI_M.}
+\]
+\end{theorem}
+
+\begin{proof}
+For \(r<M-1\),
+\[
+(Ea)_{Mq+r}=a_{Mq+r+1}=a_{r+1}^{[M]}(q).
+\]
+For \(r=M-1\),
+\[
+(Ea)_{Mq+M-1}=a_{M(q+1)}=E_qa_0^{[M]}(q).
+\]
+After \(M\) shifts every phase has advanced by one coarse index.
+\end{proof}
+
+\subsection{Local branches and digit reconstruction}
+
+For \(a\geq1\) and \(0\leq s<p^a\), define
+\[
+f_{a,s}(x)=f(p^ax+s).
+\]
+
+\begin{theorem}[Exact local branch reconstruction]\label{thm:local_branch_reconstruction}
+The family \(\{f_{a,s}\}_{0\leq s<p^a}\) determines \(f\) uniquely on \(\mathbb Z_p\). More precisely, if \(y\in s+p^a\mathbb Z_p\), then
+\[
+\boxed{
+f(y)=f_{a,s}\left(\frac{y-s}{p^a}\right).
+}
+\]
+For \(a,b\geq1\),
+\[
+\boxed{
+(f_{a,s})_{b,t}
+=
+f_{a+b,s+p^at}.
+}
+\]
+Thus local refinement is exactly the \(p\) adic digit tree.
+\end{theorem}
+
+\begin{proof}
+The cosets \(s+p^a\mathbb Z_p\) form a disjoint partition of \(\mathbb Z_p\). The first formula is the inverse affine change of variables on one coset. The second follows from
+\[
+p^a(p^bx+t)+s
+=
+p^{a+b}x+p^at+s.
+\]
+\end{proof}
+
+\subsection{The affine Mahler kernel}
+
+Let
+\[
+\Phi_M(z)=(1+z)^M-1.
+\]
+For \(M\geq1\), \(s\geq0\), and \(r,k\geq0\), define
+\[
+\boxed{
+\Theta_{M,s}(r,k)
+=
+[z^r](1+z)^s\Phi_M(z)^k.
+}
+\]
+Equivalently,
+\[
+\boxed{
+\Theta_{M,s}(r,k)
+=
+\sum_{j=0}^{k}
+(-1)^{k-j}\binom kj\binom{Mj+s}{r}.
+}
+\]
+It vanishes unless
+\[
+k\leq r\leq Mk+s.
+\]
+
+\begin{proposition}[Edge coefficients of the affine kernel]\label{prop:affine_kernel_edges}
+For every \(M\geq1\), \(s\geq0\), and \(k\geq0\),
+\[
+\boxed{
+\Theta_{M,s}(k,k)=M^k,
+\qquad
+\Theta_{M,s}(Mk+s,k)=1.
+}
+\]
+For binary radix and zero address,
+\[
+\boxed{
+\Theta_{2,0}(k+j,k)
+=
+2^{k-j}\binom kj
+\qquad(0\leq j\leq k).
+}
+\]
+Hence
+\[
+\boxed{
+\vTwo\left(\Theta_{2,0}(k+j,k)\right)
+=
+k-j+\vTwo\binom kj.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The lowest degree term of \(\Phi_M(z)\) is \(Mz\), and its highest degree term is \(z^M\). Multiplication by \((1+z)^s\) gives the two edge coefficients. When \(M=2\) and \(s=0\),
+\[
+\Phi_2(z)^k
+=
+(2z+z^2)^k
+=
+z^k(2+z)^k.
+\]
+Taking the coefficient of \(z^{k+j}\) gives the binary formula.
+\end{proof}
+
+\begin{theorem}[Mahler polyphase transfer]\label{thm:mahler_polyphase_transfer}
+Let
+\[
+f(x)=\sum_{r\geq0}c_r\binom xr
+\]
+be a convergent Mahler expansion. For
+\[
+g_s(q)=f(Mq+s),
+\]
+one has
+\[
+\boxed{
+g_s(q)=\sum_{k\geq0}d_{s,k}\binom qk,}
+\]
+where
+\[
+\boxed{
+d_{s,k}
+=
+\sum_{r=k}^{Mk+s}
+c_r\Theta_{M,s}(r,k).
+}
+\]
+Every refined coefficient uses a finite window of the original Mahler coefficients.
+\end{theorem}
+
+\begin{proof}
+Use
+\[
+(1+z)^{Mq+s}
+=
+(1+z)^s\left(1+\Phi_M(z)\right)^q
+=
+\sum_{k\geq0}\binom qk(1+z)^s\Phi_M(z)^k.
+\]
+Taking the coefficient of \(z^r\) gives the affine expansion of \(\binom{Mq+s}{r}\). Since \(c_r\to0\) and every \(d_{s,k}\) uses indices \(r\geq k\), the transformed coefficients also tend to zero.
+\end{proof}
+
+\begin{theorem}[Kernel composition]\label{thm:polyphase_kernel_composition}
+For positive integers \(M,N\),
+\[
+\boxed{
+\sum_{k\geq0}
+\Theta_{M,s}(r,k)
+\Theta_{N,t}(k,\ell)
+=
+\Theta_{MN,Mt+s}(r,\ell).
+}
+\]
+The sum is finite.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:mahler_polyphase_transfer} first to \(x=Mq+s\) and then to \(q=Ny+t\). The composite substitution is \(x=MNy+Mt+s\). Uniqueness of Mahler coefficients gives the identity.
+\end{proof}
+
+\subsection{Valuation transport}
+
+\begin{theorem}[Polyphase valuation ledger]\label{thm:polyphase_valuation_ledger}
+For every refined coefficient,
+\[
+\boxed{
+\vp(d_{s,k})
+\geq
+\min_{k\leq r\leq Mk+s}
+\left(
+\vp(c_r)+\vp(\Theta_{M,s}(r,k))
+\right).
+}
+\]
+If \(\vp(c_r)\geq w(r)\) for a nondecreasing function \(w\), then
+\[
+\boxed{\vp(d_{s,k})\geq w(k).}
+\]
+Thus every monotone Mahler precision ladder survives arbitrary polyphase refinement.
+\end{theorem}
+
+\begin{proof}
+Apply the nonarchimedean triangle inequality to the finite coefficient formula. Since \(r\geq k\), monotonicity gives \(w(r)\geq w(k)\), and the affine kernel is integral.
+\end{proof}
+
+\begin{theorem}[Prime power sparsification]\label{thm:prime_power_sparsification}
+Let \(M=p^a\). Then
+\[
+\boxed{
+\Theta_{p^a,s}(r,k)
+\equiv
+\binom{s}{r-p^ak}
+\pmod p,
+}
+\]
+where the binomial coefficient is zero outside its natural range. Consequently,
+\[
+\boxed{
+d_{s,k}
+\equiv
+\sum_{u=0}^{s}
+\binom su
+c_{p^ak+u}
+\pmod p.
+}
+\]
+In particular,
+\[
+\boxed{d_{0,k}\equiv c_{p^ak}\pmod p.}
+\]
+\end{theorem}
+
+\begin{proof}
+In characteristic \(p\),
+\[
+(1+z)^{p^a}-1\equiv z^{p^a}.
+\]
+Substitute this congruence in the definition of \(\Theta_{p^a,s}\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{23_mahler_polyphase_kernel.pdf}
+\caption{The affine Mahler kernel has finite triangular support. At prime power radix its reduction is confined to a short Frobenius window.}
+\label{fig:mahler_polyphase_kernel}
+\end{figure}
+
+\subsection{Precision amplification}
+
+\begin{theorem}[Scalar polyphase precision amplification]\label{thm:scalar_polyphase_precision}
+Let \(u\in\mathbb Z_p^\times\), let \(a,r\geq0\), and put
+\[
+H_a=
+\begin{cases}
+(p-1)p^a,&p\text{ odd},\\
+2^{a+1},&p=2.
+\end{cases}
+\]
+Then
+\[
+\boxed{
+\Delta_{H_a}^{\,r}u^n
+=
+u^n\left(u^{H_a}-1\right)^r.
+}
+\]
+For odd \(p\),
+\[
+\boxed{
+\vp\left(\Delta_{H_a}^{\,r}u^n\right)
+\geq(a+1)r.
+}
+\]
+For \(p=2\) and odd \(u\),
+\[
+\boxed{
+\vTwo\left(\Delta_{H_a}^{\,r}u^n\right)
+\geq(a+3)r.
+}
+\]
+Equivalently, every additional prime power digit increases the certified Mahler slope by one.
+\end{theorem}
+
+\begin{proof}
+One difference with step \(H_a\) multiplies the unit mode by \(u^{H_a}-1\). Iterate. The valuation estimates are those of \cref{cor:basic_local_difference_gains}.
+\end{proof}
+
+\begin{lemma}[Matrix power amplification]\label{lem:matrix_power_amplification}
+If
+\[
+X=I+p^LB
+\]
+with \(B\in M_d(\Zp)\), then for every \(a\geq0\) there is \(B_a\in M_d(\Zp)\) such that
+\[
+\boxed{X^{p^a}=I+p^{L+a}B_a.}
+\]
+\end{lemma}
+
+\begin{proof}
+Induct on \(a\). Expand the \(p\)th power of \(I+p^{L+a}B_a\). The linear term has valuation at least \(L+a+1\), and every higher term has at least that valuation.
+\end{proof}
+
+\begin{theorem}[Matrix polyphase precision amplification]\label{thm:matrix_polyphase_precision}
+Assume
+\[
+C^H=I+p^LB.
+\]
+Put \(H_a=Hp^a\). Then
+\[
+C^{H_a}=I+p^{L+a}B_a
+\]
+for an integral matrix \(B_a\). Every refined packet
+\[
+b_{a,j}(x)=a_{H_ax+j}
+\]
+has Mahler coefficients satisfying
+\[
+\boxed{\vp(c_{a,j,r})\geq(L+a)r.}
+\]
+Equivalently,
+\[
+\boxed{
+\Delta_{H_a}^{\,r}a_n
+\equiv0
+\pmod {p^{(L+a)r}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Combine \cref{lem:matrix_power_amplification,thm:matrix_carmichael_mahler}.
+\end{proof}
+
+\begin{example}[Refined dyadic Fibonacci ladder]\label{ex:refined_fibonacci_ladder}
+For the Fibonacci companion matrix
+\[
+C=
+\begin{pmatrix}
+1&1\\
+1&0
+\end{pmatrix},
+\]
+one has
+\[
+C^{12}
+=I+8
+\begin{pmatrix}
+29&18\\
+18&11
+\end{pmatrix}.
+\]
+Therefore
+\[
+\boxed{
+\Delta_{12\cdot2^a}^{\,r}F_n
+\equiv0
+\pmod {2^{(a+3)r}}.
+}
+\]
+Every dyadic refinement doubles the step and adds one guaranteed binary digit at each Mahler depth.
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.91\textwidth]{24_polyphase_precision_tree.pdf}
+\caption{Every additional prime power refinement digit increases the certified Mahler slope of a principal unit matrix packet by one.}
+\label{fig:polyphase_precision_tree}
+\end{figure}
+
+\subsection{Character and polyphase coordinates}
+
+For odd \(p\), write
+\[
+\boxed{
+n=j+(p-1)(s+p^aq),
+}
+\]
+with \(0\leq j<p-1\) and \(0\leq s<p^a\). The address \(j\) records the finite character. The address \(s\) records the principal unit digit. The variable \(q\) carries the remaining Mahler expansion.
+
+At the dyadic prime, write
+\[
+\boxed{
+n=j+2(s+2^aq),
+}
+\]
+with \(j\in\{0,1\}\) and \(0\leq s<2^a\). The sign coordinate replaces the odd prime character coordinate.
+
+\begin{proposition}[Local phase lattice]\label{prop:local_phase_lattice}
+For a unit mode \(u^n\), the odd prime coordinate gives
+\[
+\boxed{
+u^n
+=
+u^{j+(p-1)s}
+\left(u^{(p-1)p^a}\right)^q.
+}
+\]
+The dyadic coordinate gives
+\[
+\boxed{
+u^n
+=
+u^{j+2s}
+\left(u^{2^{a+1}}\right)^q.
+}
+\]
+Thus finite character phase, local digit address, and Mahler depth are separate coordinates.
+\end{proposition}
+
+\begin{proof}
+Substitute the two displayed decompositions of \(n\).
+\end{proof}
+
+\begin{corollary}[Polyphase refinement of the Euler branches]\label{cor:euler_polyphase_refinement}
+The analytic branches in \cref{thm:odd_analytic_branch,thm:direct_dyadic_interpolation} admit exact refinements under \(x=p^aq+s\). Their refined Mahler coefficients are obtained from \(\Theta_{p^a,s}\). The original monotone valuation ladders are preserved, and unit mode or invertible matrix representations gain one certified digit per refinement level.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:mahler_polyphase_transfer,thm:polyphase_valuation_ledger,cor:basic_local_difference_gains,thm:matrix_polyphase_precision}.
+\end{proof}
+
+\begin{remark}\label{rem:polyphase_boundary}
+Exact refinement does not imply that every branch is simpler. A simplification theorem requires an additional invariant, such as Frobenius sparsity, valuation gain, spectral collision, or a vanishing transfer block.
+\end{remark}
+\section{Arithmetic lift obstructions}\label{sec:lifting}
+
+A congruence class may solve an equation to one precision and fail at the next. The correct obstruction is not an arbitrary residual vector. It is the residual vector modulo the image of the declared correction map.
+
+\subsection{Linear lifting}
+
+Let \(p\) be a prime. Let
+\[
+M\in M_{r,d}(\Zp),
+\qquad
+b\in\Zp^r.
+\]
+Suppose that \(x_L\in\Zp^d\) satisfies
+\[
+Mx_L\equiv b\pmod {p^L}
+\]
+for some \(L\geq1\). Define the reduced residual
+\[
+\rho_L(x_L)
+=
+\frac{Mx_L-b}{p^L}
+\pmod p
+\in\FF_p^r.
+\]
+Write \(\overline M\) for the reduction of \(M\) modulo \(p\).
+
+\begin{definition}[Linear lift obstruction]\label{def:linear_lift_obstruction}
+The linear obstruction at depth \(L\) is
+\[
+\boxed{
+\operatorname{Ob}^{\mathrm{lin}}_L(x_L)
+=
+[\rho_L(x_L)]
+\in
+\coker(\overline M).
+}
+\]
+\end{definition}
+
+\begin{theorem}[One level linear lifting]\label{thm:linear_lifting}
+A class represented by \(x_L\) lifts to a solution modulo \(p^{L+1}\) if and only if
+\[
+\boxed{
+\operatorname{Ob}^{\mathrm{lin}}_L(x_L)=0.
+}
+\]
+More precisely, a correction \(y\in\FF_p^d\) gives a lift
+\[
+x_{L+1}=x_L+p^Ly
+\pmod {p^{L+1}}
+\]
+if and only if
+\[
+\boxed{
+\overline My=-\rho_L(x_L).
+}
+\]
+When one correction exists, the set of all correction classes is a coset of \(\ker\overline M\).
+\end{theorem}
+
+\begin{proof}
+Modulo \(p^{L+1}\),
+\[
+M(x_L+p^Ly)-b
+=
+Mx_L-b+p^LMy.
+\]
+After division by \(p^L\) and reduction modulo \(p\), the lift condition becomes
+\[
+\rho_L(x_L)+\overline My=0.
+\]
+This equation is solvable exactly when the residual lies in the image of \(\overline M\). If \(y_0\) is one solution, every solution is \(y_0+z\) with \(z\in\ker\overline M\).
+\end{proof}
+
+\begin{proposition}[Representative independence]\label{prop:linear_obstruction_independence}
+The class \(\operatorname{Ob}^{\mathrm{lin}}_L(x_L)\) depends only on the solution class of \(x_L\) modulo \(p^L\).
+\end{proposition}
+
+\begin{proof}
+Replace \(x_L\) by \(x_L+p^Lz\). The reduced residual changes by \(\overline Mz\). Its class in the cokernel is unchanged.
+\end{proof}
+
+\begin{corollary}[Exact number of linear children]\label{cor:linear_child_count}
+If \(\rho=\rank_{\FF_p}\overline M\), then a solvable depth \(L\) class has exactly
+\[
+\boxed{
+p^{d-\rho}
+}
+\]
+children modulo \(p^{L+1}\).
+\end{corollary}
+
+\begin{proof}
+The correction set is a coset of a vector space of dimension \(d-\rho\).
+\end{proof}
+
+\begin{example}[A visible linear obstruction]\label{ex:linear_lift_obstruction}
+Take \(p=3\), \(L=1\), and
+\[
+M=
+\begin{pmatrix}
+1&1\\
+0&0
+\end{pmatrix}.
+\]
+The class \(x_1=(0,0)\) solves
+\[
+Mx_1\equiv b\pmod3
+\]
+for both
+\[
+b_1=(-3,0)
+\qquad\text{and}\qquad
+b_2=(0,-3).
+\]
+For \(b_1\), the reduced residual is \((1,0)\), which belongs to the image of \(\overline M\). There are three correction classes, given by
+\[
+y_1+y_2=2
+\pmod3.
+\]
+For \(b_2\), the residual is \((0,1)\), whose cokernel class is nonzero. No lift modulo nine exists because the second row of \(M\) remains zero.
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{12_lift_obstruction.pdf}
+\caption{A residual vector lifts precisely when its class vanishes in the cokernel of the reduced correction map.}
+\label{fig:lift_obstruction}
+\end{figure}
+
+\subsection{Polynomial lifting}
+
+Let
+\[
+F=(F_1,\ldots,F_r):\Zp^d\longrightarrow\Zp^r
+\]
+be a polynomial map. Suppose
+\[
+F(x_L)\in p^L\Zp^r.
+\]
+Define
+\[
+\rho_L^F(x_L)
+=
+\frac{F(x_L)}{p^L}
+\pmod p.
+\]
+Let \(J_F(x_L)\) denote the Jacobian matrix and write \(\overline J_F(x_L)\) for its reduction modulo \(p\).
+
+\begin{definition}[Polynomial lift obstruction]\label{def:polynomial_lift_obstruction}
+The polynomial obstruction at depth \(L\) is
+\[
+\boxed{
+\operatorname{Ob}^{F}_L(x_L)
+=
+[\rho_L^F(x_L)]
+\in
+\coker\bigl(\overline J_F(x_L)\bigr).
+}
+\]
+\end{definition}
+
+\begin{theorem}[One level polynomial lifting]\label{thm:polynomial_lifting}
+Let \(L\geq1\). A class represented by \(x_L\) lifts to a zero of \(F\) modulo \(p^{L+1}\) if and only if
+\[
+\boxed{
+\operatorname{Ob}^{F}_L(x_L)=0.
+}
+\]
+A correction \(y\in\FF_p^d\) gives a lift if and only if
+\[
+\boxed{
+\overline J_F(x_L)y
+=
+-\rho_L^F(x_L).
+}
+\]
+When a correction exists, the correction classes form a coset of
+\[
+\ker\overline J_F(x_L).
+\]
+\end{theorem}
+
+\begin{proof}
+The polynomial Taylor expansion gives
+\[
+F(x_L+p^Ly)
+\equiv
+F(x_L)+p^LJ_F(x_L)y
+\pmod {p^{L+1}}.
+\]
+Every term of degree at least two in the increment contains \(p^{2L}\), which is divisible by \(p^{L+1}\). Divide by \(p^L\), reduce modulo \(p\), and apply the same cokernel criterion as in \cref{thm:linear_lifting}.
+\end{proof}
+
+\begin{proposition}[Polynomial representative independence]\label{prop:polynomial_obstruction_independence}
+The class \(\operatorname{Ob}^{F}_L(x_L)\) depends only on the class of \(x_L\) modulo \(p^L\).
+\end{proposition}
+
+\begin{proof}
+If \(x_L\) is replaced by \(x_L+p^Lz\), Taylor expansion shows that the reduced residual changes by an element of the image of \(\overline J_F(x_L)\). The reduced Jacobian itself is unchanged because \(L\geq1\).
+\end{proof}
+
+\begin{corollary}[Simple root lifting]\label{cor:simple_root_lifting}
+Assume \(r=d\) and
+\[
+\det J_F(x_L)\not\equiv0\pmod p.
+\]
+Then the depth \(L\) solution has exactly one child modulo \(p^{L+1}\). Iterating gives a unique \(p\) adic zero above the initial class.
+\end{corollary}
+
+\begin{proof}
+The reduced Jacobian is invertible, so every residual has one correction. The resulting compatible sequence is Cauchy in \(\Zp^d\), and continuity of \(F\) gives a zero in the limit. Uniqueness holds at every depth.
+\end{proof}
+
+\begin{example}[A singular polynomial obstruction]\label{ex:singular_polynomial_obstruction}
+Let \(p=3\) and consider the class \(x_1=0\) modulo three. For
+\[
+F_0(x)=x^2,
+\]
+the residual and the reduced derivative both vanish. Every correction \(y\in\FF_3\) gives
+\[
+F_0(3y)\equiv0\pmod9,
+\]
+so the class has three children. For
+\[
+F_1(x)=x^2+3,
+\]
+the reduced derivative is still zero, but the reduced residual is one. Its class in the cokernel is nonzero, so no lift modulo nine exists.
+\end{example}
+
+This is the usual simple root mechanism behind Hensel lifting. The obstruction formulation also covers singular Jacobians, where some residual classes lift and others do not \cite{Serre1979,Gouvea1997,Robert2000}.
+
+\subsection{Packetwise obstruction splitting}
+
+\begin{theorem}[Packet decomposition of a lift obstruction]\label{thm:packet_lift_obstruction}
+Suppose
+\[
+\FF_p^d
+=
+\bigoplus_{a\in A}U_a,
+\qquad
+\FF_p^r
+=
+\bigoplus_{a\in A}V_a,
+\]
+and suppose a linear correction map \(D:\FF_p^d\to\FF_p^r\) satisfies
+\[
+D(U_a)\subseteq V_a
+\]
+for every \(a\). Write \(D_a=D|_{U_a}\). Then
+\[
+\boxed{
+\coker D
+\cong
+\bigoplus_{a\in A}\coker D_a.
+}
+\]
+A residual lifts if and only if every packet obstruction vanishes.
+\end{theorem}
+
+\begin{proof}
+The image of \(D\) is the direct sum of the images of the maps \(D_a\). Taking the quotient of the codomain packet decomposition gives the stated cokernel decomposition.
+\end{proof}
+
+\begin{remark}\label{rem:lifting_boundary}
+The obstruction theorems solve one declared local lifting step. They do not prove that a compatible branch exists across unrelated primes, that a global Diophantine point exists, or that an arithmetic representation is automorphic.
+\end{remark}
+
+\section{Recurrence packets and a common integral spine}\label{sec:recurrences}
+
+Linear recurrences provide a setting where residue subsequences, local completions, and a common global source can all be described exactly. Background on recurrence sequences may be found in \cite{EverestVanDerPoortenShparlinskiWard2003,Stanley2012}.
+
+\subsection{Companion jumps}
+
+Let \(R\) be a commutative ring. Let
+\[
+v_{n+1}=Cv_n,
+\qquad
+C\in M_d(R).
+\]
+For a positive integer \(N\) and an address \(j\in\{0,\ldots,N-1\}\), define the residue state packet
+\[
+u_k^{(j)}=v_{Nk+j}.
+\]
+
+\begin{theorem}[Companion jump recurrence]\label{thm:companion_jump}
+Every residue state packet satisfies
+\[
+\boxed{
+u_{k+1}^{(j)}=C^Nu_k^{(j)}.}
+\]
+More explicitly,
+\[
+\boxed{
+u_k^{(j)}=C^j(C^N)^kv_0.}
+\]
+\end{theorem}
+
+\begin{proof}
+The state relation gives \(v_n=C^nv_0\). Substitute \(n=Nk+j\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{13_recurrence_packets.pdf}
+\caption{A recurrence splits into residue packets. Each packet evolves by the same jump matrix \(C^N\) and has a different initial address.}
+\label{fig:recurrence_packets}
+\end{figure}
+
+We use the resultant convention
+\[
+\Res_y(f,g)
+=
+\prod_{f(\alpha)=0}g(\alpha)
+\]
+when \(f\) is monic, with roots counted with multiplicity.
+
+\begin{theorem}[Characteristic polynomial of the jump]\label{thm:jump_characteristic}
+Let
+\[
+\chi_C(y)=\det(yI-C).
+\]
+Then
+\[
+\boxed{
+\chi_{C^N}(x)
+=
+\Res_y\bigl(\chi_C(y),x-y^N\bigr).
+}
+\]
+The identity holds over the coefficient ring after interpreting the resultant universally.
+\end{theorem}
+
+\begin{proof}
+After passage to an algebraic closure, let \(\alpha_1,\ldots,\alpha_d\) be the eigenvalues of \(C\), counted with algebraic multiplicity. The resultant is
+\[
+\prod_{i=1}^{d}(x-\alpha_i^N),
+\]
+which is the characteristic polynomial of \(C^N\). Both sides are polynomial expressions with integer coefficients in the entries of \(C\), so the identity descends to every commutative coefficient ring.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.75\textwidth]{14_recurrence_root_power.pdf}
+\caption{Passing to every \(N\)th term raises each characteristic root to its \(N\)th power.}
+\label{fig:recurrence_root_power}
+\end{figure}
+
+\subsection{Second order recurrences}
+
+\begin{theorem}[Residue subsequences of a second order recurrence]\label{thm:second_order_jump}
+Suppose
+\[
+x_{n+2}=Px_{n+1}-Qx_n
+\]
+over a commutative ring. Define \(V_0=2\), \(V_1=P\), and
+\[
+V_{n+2}=PV_{n+1}-QV_n.
+\]
+For every positive integer \(N\) and every address \(j\), the subsequence
+\[
+u_k=x_{Nk+j}
+\]
+satisfies
+\[
+\boxed{
+u_{k+2}=V_Nu_{k+1}-Q^Nu_k.}
+\]
+\end{theorem}
+
+\begin{proof}
+The companion matrix
+\[
+C=
+\begin{pmatrix}
+P&-Q\\
+1&0
+\end{pmatrix}
+\]
+has trace \(P\) and determinant \(Q\). The trace of \(C^N\) is \(V_N\), while its determinant is \(Q^N\). Cayley Hamilton applied to \(C^N\) gives
+\[
+(C^N)^2-V_NC^N+Q^NI=0.
+\]
+Apply this identity to the residue state packet and take its scalar coordinate.
+\end{proof}
+
+\begin{corollary}[Fibonacci residue packets]\label{cor:fibonacci_packets}
+Let \(F_0=0\), \(F_1=1\), and \(F_{n+2}=F_{n+1}+F_n\). Let \(L_N\) denote the Lucas number. For every \(N\geq1\) and every address \(j\),
+\[
+\boxed{

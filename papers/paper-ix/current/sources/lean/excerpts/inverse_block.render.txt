@@ -1,0 +1,8 @@
+theorem inverse_solved_zero (J : Matrix (Fin e) (Fin e) \CodeSymbol{1D55C})
+    (K : Matrix (Fin e) (Fin k) \CodeSymbol{1D55C}) (hJ : IsUnit J) (v : Fin k → \CodeSymbol{1D55C}) :
+    solvedPart ((upperEquiv J K hJ).symm (join (0 : Fin e → \CodeSymbol{1D55C}) v)) =
+      matrixCLM (-(J⁻¹ * K)) v := by
+  rw [upperEquiv_symm_apply]
+  simp only [blockCertificate, upperBlock_mulVec_join, Matrix.mulVec_zero,
+    zero_add, solvedPart_join]
+  rfl

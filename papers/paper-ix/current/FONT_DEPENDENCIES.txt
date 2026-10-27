@@ -1,0 +1,29 @@
+PAPER IX EXTERNAL FONT DEPENDENCIES
+
+No standalone font binaries are bundled. Rebuilding requires an installed TeX
+distribution, its declared font packages, and the external OpenType/TrueType
+fonts below. The scripts install no software and download no dependencies.
+
+The traditional and visual readers use pdfLaTeX with Latin Modern, mathpazo,
+Helvetica-compatible sans text and the Computer Modern mathematical families
+selected by the packaged TeX style. The PDF font inventory records embedded
+URW Palladio L, Nimbus Sans L, Pazo Math, Latin Modern Mono, and Computer Modern
+subsets. Figure PDFs have their own embedded font subsets, including DejaVu.
+
+The Lean guide uses XeLaTeX. Its preamble and shared publication style require
+URW Base35 P052 and Nimbus Sans, Latin Modern Math, DejaVu Sans and DejaVu Sans
+Mono. In the tested Linux environment the shared style's URW selectors point
+to /usr/share/fonts/opentype/urw-base35/. The bare OpenType filenames in the
+preamble are resolved by the installed TeX/font configuration. A different
+installation must provide those declared fonts and satisfy the selectors.
+This is a tested reproduction dependency, not a claim of a Windows-native
+font installer or a fallback-font substitution system.
+
+Use the root rebuild_pdfs.py entry point for a copied-source build of the whole
+reading set. It stages the packaged house style, sources and figures in an
+empty external directory. The direct sources/lean/build.py entry point also
+stages that house style for its isolated guide build.
+
+PDF byte identity, trailer-ID-normalized identity, and extracted-text/page-count
+comparisons are separate recorded checks. Different font/TeX installations can
+affect layout and bytes. Current release identities are the hashes in RELEASE.json.

@@ -1,0 +1,14 @@
+theorem finite_polynomial_obstruction (q L : ℕ) (hq : 0 < q) (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (hx : ∀ i, (q : ℤ)^L ∣ evalSystem F x i) :
+    ∃ r : Fin e → ℤ,
+      evalSystem F x = (q : ℤ)^L • r ∧
+      Finite (Obstruction q (jacobian F x)) ∧
+      ((∃ y : Fin d → ℤ,
+        (∀ i, (q : ℤ)^L ∣ (y - x) i) ∧
+        (∀ i, (q : ℤ)^(L+1) ∣ evalSystem F y i)) ↔
+          obstruction q (jacobian F x) r = 0) := by
+  obtain ⟨r, hr⟩ := residual_exists q L F x hx
+  let : NeZero q := ⟨Nat.ne_of_gt hq⟩
+  exact ⟨r, hr, obstruction_finite q (jacobian F x),
+    polynomial_same_residue_lift_iff q L hq hL F x r hr⟩

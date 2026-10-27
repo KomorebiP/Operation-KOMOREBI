@@ -1,0 +1,14 @@
+module
+public import NewtonDominance
+
+#print axioms KomorebiPaperIX.NewtonDominance.precision_mono
+#print axioms KomorebiPaperIX.NewtonDominance.precision_add
+#print axioms KomorebiPaperIX.NewtonDominance.precision_sum
+#print axioms KomorebiPaperIX.NewtonDominance.precision_mul
+#print axioms KomorebiPaperIX.NewtonDominance.precision_mul_nat
+#print axioms KomorebiPaperIX.NewtonDominance.strict_dominance
+#print axioms KomorebiPaperIX.NewtonDominance.translated_tail
+#print axioms KomorebiPaperIX.NewtonDominance.first_difference_tail
+#print axioms KomorebiPaperIX.NewtonDominance.choose_precision
+#print axioms KomorebiPaperIX.NewtonDominance.displacement_expansion
+#print axioms KomorebiPaperIX.NewtonDominance.exact_displacement

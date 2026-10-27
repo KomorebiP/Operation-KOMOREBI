@@ -1,0 +1,24 @@
+/workspace/scratch/196a43c5b4f3/polynomial_weighted/formalization/PolynomialWeightedNormalization.lean:71:2: error: ring failed, ring expressions not equal
+d p s r : ℕ
+inst✝ : Fact (Nat.Prime p)
+hr : 2 * s < r
+F : Fin d → MvPolynomial (Fin d) ℤ_[p]
+a : Fin d → ℤ_[p]
+A : Matrix (Fin d) (Fin d) ℤ_[p]
+hAJ : A * jacobian F a = ↑p ^ s • 1
+hF : ∀ (i : Fin d), ↑p ^ r ∣ (eval a) (F i)
+D : Fin d → ℤ_[p]
+hD : ∀ (i : Fin d), (eval a) (precondition A F i) = ↑p ^ r * D i
+Q : Fin d → MvPolynomial (Fin d) ℤ_[p]
+hQ :
+  ∀ (i : Fin d) (u : Fin d → ℤ_[p]),
+    (eval fun i => a i + ↑p ^ (s + 1) * u i) (precondition A F i) =
+      (eval a) (precondition A F i) + ↑p ^ (s + 1) * ∑ i_1, (eval a) ((pderiv i_1) (precondition A F i)) * u i_1 +
+        (↑p ^ (s + 1)) ^ 2 * (eval u) (Q i)
+hQ0 : ∀ (i : Fin d), (eval 0) (Q i) = 0
+u : Fin d → ℤ_[p]
+i : Fin d
+hpow₀ : ↑p ^ (2 * s + 1) * ↑p ^ (r - (2 * s + 1)) = ↑p ^ r
+hpow₁ : ↑p ^ (s + 1) * ↑p ^ s = ↑p ^ (2 * s + 1)
+hpow₂ : (↑p ^ (s + 1)) ^ 2 = ↑p ^ (2 * s + 1) * ↑p
+⊢ -(↑p * ↑p ^ (s * 2) * ↑p ^ (r - (2 * s + 1)) * D i * 2) + ↑p ^ r * D i * 2 = 0

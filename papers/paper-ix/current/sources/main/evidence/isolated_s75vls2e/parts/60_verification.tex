@@ -1,0 +1,258 @@
+\section{Formal evidence and reproduction}
+\label{sec:verification}
+
+The verification record supports the manuscript in several ways. The Lean source states the quantified theorem and its hypotheses. A
+compiler report records acceptance of that source by a specified Lean and
+Mathlib environment. An axiom audit identifies the axioms used by the resulting
+named declarations. Statement contracts and mathematical controls check
+selected interfaces and boundary cases. Finally, source correspondence reviews
+compare the formal objects with the intended mathematical statement. Each check has a specific role: numerical examples test particular cases,
+whereas a universal claim requires a proof, and correspondence with an
+external conjecture requires a comparison of the statements.
+
+This edition revises the exposition and checks the evidence index against
+the preserved sources. The Lean sources are unchanged. Their compiler
+acceptance is supported by the earlier successful reports, whose source and
+log hashes are checked by the accompanying index. The most recent compilation
+covers local analytic regularity and its polynomial dependencies; earlier
+reports cover the arithmetic and native obstruction developments.
+
+The proofreading pass also restores several results omitted from the first
+consolidation and records the comparison with the original paper. Its
+coverage matrix and semantic review appear in
+\texttt{consolidation/editorial/}. The Bernoulli boundary is accompanied by
+a classical derivation, without a claim of a dedicated Lean certificate.
+The reviews distinguish this addition from restored results already present
+in the checked sources.
+
+\subsection{Verification frontiers}
+
+Table~\ref{tab:verification-frontiers} gives the recorded scope of each major
+verification frontier. An \emph{inventoried module} is a source file in that
+frontier's formalization list. Older lists sometimes include files of examples
+or positive controls in this group. A \emph{check} is an entry in the report's
+run list, including expected rejection of invalid claims. An \emph{axiom
+closure} is the recorded axiom dependency set of an explicitly named
+declaration; definitions and abbreviations contribute to this count as well
+as theorems. None of these columns is a count of distinct mathematical results
+across the paper.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Preserved frontier & Modules & Checks & Axiom closures\\
+\midrule
+Original completion baseline & 79 & $79+37+3$ & 1000\\
+Dyadic strengthening and isometry & 22 & 38 & 246\\
+Standalone finite affine obstruction & 2 & 4 & 17\\
+Shared correction quotient & 6 & 13 & 60\\
+Polynomial one-step lifting & 9 & 18 & 91\\
+Exact polynomial lift counts & 9 & 17 & 106\\
+Smooth infinite towers & 14 & 22 & 127\\
+Coefficient deformation & 17 & 26 & 159\\
+Continuous parameter charts & 25 & 40 & 244\\
+Weighted lifting & 30 & 50 & 304\\
+First-order root motion & 35 & 58 & 326\\
+Prescribed parameter obstruction & 39 & 65 & 375\\
+Prescribed parameter towers & 45 & 74 & 408\\
+Joint coefficient and parameter motion & 49 & 82 & 460\\
+Local analytic regularity & 55 & 91 & 515\\
+\bottomrule
+\end{tabular}
+\caption{Recorded verification scopes. Rows overlap extensively through
+inherited sources and must not be added. The baseline separates 79 module
+checks, 37 control checks, and three additional recorded runs; its nine
+dependency revision comparisons are recorded separately.}
+\label{tab:verification-frontiers}
+\end{table}
+
+The baseline inventory contains 836 theorem commands, 162 definitions and two
+abbreviations, matching its 1000 audited names. The latest polynomial inventory
+contains 322 theorem commands, 76 definitions and seven abbreviations in its
+55 formalization modules. Its eight positive-control support modules and
+13 statement-contract modules bring the full audit to 415 theorem commands,
+92 definitions and eight abbreviations, hence 515 closures. The 91 checks also
+include 12 negative controls. Six new regularity modules contribute 30 theorem
+commands and eight definitions; all 49 inherited formalization modules are
+unchanged in that release.
+
+The arithmetic strengthening inventory exposes a small historical metadata
+error. Its summary fields say 179 theorems and 12 definitions, while its
+module entries list 215 theorem commands, ten lemma commands,
+20 definitions and one abbreviation. These 246 named entries exactly match
+the preserved axiom audit. The consolidation uses the entries and audit, and
+records the stale summary fields explicitly. The original inventory remains
+unchanged as historical evidence. This is a correction to the reporting
+metadata, not a newly discovered proof or a modification of a checked theorem.
+
+\subsection{Claim-to-source correspondence}
+
+The source references attached to the mathematical sections identify the
+principal declarations for each result. Their complete names, exact source
+hashes, roles and verification frontiers are collected in
+\texttt{consolidation/audit/DECLARATIONS.csv}. The accompanying
+\texttt{consolidation/audit/EVIDENCE\_INDEX.json} records the corresponding inventories,
+reports and retained logs. In particular, the following interfaces distinguish
+the principal completed results from generic auxiliary lemmas:
+\begin{itemize}
+\item The external conjecture is assembled by
+\lean{NishibuchiCompletion.conjecture_3_9} in the original completion
+baseline. Its coefficient identification, integrality, parameter split and
+explicit threshold are part of that proof chain.
+\item Exact $N=4$ packet periods are supplied by
+\lean{DyadicFourLeastPeriods.least_packet_period}; the isometric extension
+is supplied by \lean{DyadicFourIsometry.existsUnique_isometry}. The
+normalization of the original coefficients is an explicit part of these
+interfaces.
+\item The classical sharp edge tower is supplied by
+\lean{DyadicSharpTower.dyadic_supercongruence_sharp}, together with its
+first omitted error valuation. Its optimality concerns the stated uniform
+truncation bound.
+\item Prescribed parameter lifting uses the actual residual and actual
+partial Jacobians in
+\lean{PolynomialPrescribedObstruction.prescribed_lift_iff_obstruction_zero}.
+The quotient criterion and exact lift counts are not assumptions of the
+later tower results.
+\item Joint deformation is supplied by
+\lean{PolynomialJointDeformation.exists_unique_joint_deformation}.
+Local regularity is supplied by
+\lean{PolynomialAnalyticImplicit.exists_analytic_implicit}, with the
+actual polynomial derivative and the derivative formula $-J^{-1}K$.
+\item \lean{PolynomialAnalyticSelection.continuous_selection_regularity}
+transfers the analytic germ and strict derivative to any continuous local
+root selection satisfying the stated root and base-point conditions.
+\end{itemize}
+Here arithmetic declaration names have namespace prefix
+\texttt{KomorebiPaperIX.}; polynomial and native declarations have prefix
+\texttt{Komorebi.}. The section maps and CSV retain the full names.
+
+The declaration index covers every explicitly named theorem, lemma,
+definition and abbreviation in the 14 release-frontier inventories, together
+with the earlier standalone affine report. Byte-identical copies of a source
+file are collapsed, while all their locations remain recorded. If the same
+qualified name occurs in different source versions, the versions remain
+separate and are marked. Anonymous examples, compiler-generated declarations,
+failed development attempts, and the contents of earlier nested historical
+snapshots are not counted as named results in this index. Negative-control
+source files are checked for integrity but are not recorded as proved
+mathematical assertions. Consequently, the number of CSV rows must not be
+quoted as a global unique theorem count.
+
+\subsection{External statement and library dependencies}
+
+The original conjecture correspondence was reviewed against Nishibuchi's
+arXiv version \texttt{2605.10677v2}, dated 1 June 2026. The retained source
+record identifies the official version, the full title, the PDF checksum and
+the extracted-text checksum. The detailed review compares Definition~2.1,
+Notation~3.2 and Conjecture~3.9 with the actual reciprocal EGF coefficients,
+the factor $j!$, the residue range, the degree displacement, and the threshold
+in the formal capstone. Nishibuchi's conjecture is the conclusion to be
+proved; it is not an axiom imported into Lean.
+
+The full external paper is not redistributed in this source release.
+Consolidation preserves the earlier source correspondence audit and its
+version record. The earlier consolidation recorded a blocked request to the official arXiv endpoints.
+For this final edition, the official unversioned PDF was freshly inspected;
+its internal version is v2, dated 1 June 2026. Definition 2.1 and Remark 2.3
+(printed page 3), Notation 3.2 (page 5), and Conjecture 3.9 (page 8)
+confirm the parameter, index, degree-displacement and normalization match.
+Requests to the versioned PDF and HTML endpoints still failed.
+This source check is distinct from the inherited compiler acceptance.
+No broad literature or priority claim is made.
+
+The mathematical environment is Lean \texttt{4.34.0-rc2}, with Mathlib revision
+\nolinkurl{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.
+The allowed axiom dependencies are
+\texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}.
+The reports do not describe a rebuild of Mathlib from source. The local
+regularity audit separately records the applicable Mathlib analytic inverse
+and strict derivative interfaces and their hypotheses. In particular, the
+field-valued analysis is performed over a complete nontrivially normed field;
+its integral specialization embeds the data into $\Qp$. It does not use
+$\Zp$ as a vector space over $\Qp$.
+
+\subsection{Reproduction and limits of the consolidation check}
+
+The archive contains the mathematical sources, verifier scripts, controls,
+contracts, prior logs and exact inventories. The pinned Lean and Mathlib kit
+is supplied separately. From the consolidated archive root, the latest
+polynomial gate can be reproduced with a new output directory:
+\begin{verbatim}
+python3 replay_paper9_regularity.py \
+  --kit /absolute/path/to/pinned-kit \
+  --output /absolute/path/to/new-polynomial-run
+\end{verbatim}
+The preserved arithmetic, native and shared-correction chain has a separate
+entry point:
+\begin{verbatim}
+python3 replay_shared_correction.py --all \
+  --kit /absolute/path/to/pinned-kit \
+  --output /absolute/path/to/new-arithmetic-run
+\end{verbatim}
+These commands reproduce the recorded checks; they were not rerun during
+manuscript consolidation or proofreading. The second command rebuilds
+the preserved baseline before the arithmetic continuation. Each output path
+must be new. The reports retain the original full commands, runtime
+fingerprints and output hashes. The executable-path compatibility adapter
+used in the recorded environment restores runtime path discovery; it does
+not alter Lean's mathematical kernel or the source statements.
+
+For the narrower evidence reconciliation carried out for this edition, use
+\begin{verbatim}
+python3 consolidation/tools/evidence_index.py \
+  --source . --output /absolute/path/to/new-evidence-index
+\end{verbatim}
+This check compared 644 source-file occurrences with their recorded hashes
+and 713 retained log occurrences with their recorded hashes. Four additional
+logs from the older standalone affine report were fingerprinted, but that
+legacy report does not contain prior log hashes; those four are not promoted
+to hash comparisons. Every named declaration in the selected inventories
+matches the appropriate recorded standard-axiom dependency set. These are
+integrity and provenance checks, not another Lean compilation.
+
+Expected negative-control failures are retained as evidence that specific
+invalid strengthenings are rejected. Examples include an unjustified extra
+precision digit, omitted parameter terms, a wrong derivative sign, and
+uniqueness without the appropriate hypotheses. Development failures and
+interrupted runs remain historical records; only the successful designated
+release reports support the verification table. Only accepted declarations in the designated successful reports support
+claims of formal verification.
+
+Finally, the proof of the original stated conjecture does not resolve every
+extension mentioned in this manuscript. The open questions concerning
+rationally rank-deficient singular points, presentation invariance, global
+or completed descent, and further exact arithmetic have no certificate
+supplied by these counts. Section~\ref{sec:open} states the remaining implications explicitly.
+
+\subsection{Checks for this final edition}
+The final review reconstructed the arguments in all 54 current written
+proof blocks under their stated hypotheses. The two expanded paragraphs
+in the all-address proof make the inverse-flatness commutator and the
+coefficient-extraction saturation explicit. The recovered historical text
+received five local repairs: integral observation vectors for matrix
+congruences, positive precision for matrix amplification, integral Mahler
+coefficients for the sparsification consequence, the corrected modulo-seven
+example, and the even-subsequence range for source changes. Its remaining
+historical and external-source evidence limits are retained in
+Appendix~\ref{app:recovered}; preservation of its 82 proof bodies is not
+a blanket formal certificate.
+
+An independent Python gate using arbitrary-precision integers and
+\texttt{fractions.Fraction} passed 116,492 deterministic assertions in nine
+finite families: packet construction, foundational identities, divisor-branch
+congruences, four-packet sharpness, classical truncations, polynomial digit
+fibers, shared affine quotients, finite towers and charts, and weighted
+deformation. Nineteen invalid strengthenings were rejected by concrete
+controls. The exact ranges, coefficient domains, scripts and output hashes
+are in the accompanying \nolinkurl{verification/computation} manifests.
+These finite tests do not establish a universal theorem.
+
+The unchanged early-row script separately reproduced 312 finite period
+cases and its odd-prime row-zero boundary control. Other research-script
+replays, unchanged baseline regression gates and recovered-text controls
+are recorded separately in the same audit directory; their totals are
+not added to the independent gate. Lean and Lake were unavailable in this
+execution environment. No fresh compiler run, infinite $p$-adic computation,
+analytic-continuation computation or hardware benchmark is asserted.

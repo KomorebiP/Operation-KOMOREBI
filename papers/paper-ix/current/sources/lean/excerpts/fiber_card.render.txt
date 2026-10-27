@@ -1,0 +1,7 @@
+theorem fiber_card (A : (Fin d → ZMod p) →ₗ[ZMod p] (Fin e → ZMod p))
+    (b : Fin e → ZMod p) :
+    Nat.card (Fiber A b) = if Nonempty (Fiber A b) then p ^ (d - rank p A) else 0 := by
+  classical
+  split_ifs with h
+  · exact fiber_card_of_nonempty p A b h
+  · exact fiber_card_of_empty A b h

@@ -1,0 +1,522 @@
+\section{Arithmetic packets and coefficient transport}
+\label{sec:foundations}
+
+The coefficient object in this paper is a sequence, a formal power series, or a
+finite recurrence state. Residue selection changes which indices are visible.
+Triangular transport changes the coordinates of the same object. A valuation
+filtration then determines how many coordinates suffice at a given precision.
+These operations give the common framework for the Euler congruences and for
+the later finite lifting constructions.
+
+The original arithmetic seed notation
+\[
+\mathcal S=(A,a_0,\mathcal O,\mathcal R,\{P_{N,j}\},w,\tau_p)
+\]
+records a coefficient ring or module, a seed, allowed operators, relations,
+residue selectors, a depth weight, and a topology. It is useful descriptive
+notation. It does not, by itself, define a category of seed presentations or a
+notion of equivalence between them. The theorems below concern the concrete
+objects specified in their statements. Section~\ref{sec:open} explains the
+additional definitions needed for the original native conjectures.
+
+The Lean declarations cited in this section have namespace prefix
+\lean{KomorebiPaperIX}. Their exact modules and source hashes are recorded in
+the accompanying statement map. They belong to the preserved baseline
+formalization. The consolidation introduces no new Lean proof of these results.
+
+\subsection{Residue selectors and exact reconstruction}
+
+Let $R$ be a commutative ring, $a:\N\to R$, $N\geq1$, and $0\leq j<N$.
+Define
+\[
+(P_{N,j}a)(n)=
+\begin{cases}
+a(n),&n\equiv j\pmod N,\\
+0,&\text{otherwise}.
+\end{cases}
+\]
+This definition keeps the original index set. The compressed subsequence
+$a(Nq+j)$, used below for recurrence packets, is a different representation of
+the selected coefficients.
+
+\begin{theorem}[Residue reconstruction]
+\label{thm:residue-reconstruction}
+The selectors satisfy
+\[
+P_{N,j}^2=P_{N,j},\qquad P_{N,i}P_{N,j}=0\quad(i\ne j),
+\qquad \sum_{j=0}^{N-1}P_{N,j}=I.
+\]
+If $N\mid M$ and $M>0$, then
+\[
+P_{N,j}a=\sum_{\substack{0\leq r<M\\r\equiv j\pmod N}}P_{M,r}a.
+\]
+The same identities hold coefficientwise for actual formal power series.
+\end{theorem}
+
+\begin{proof}
+At a fixed index $n$, exactly one standard residue label equals $n\bmod N$.
+Consequently a repeated selector changes nothing, two different selectors have
+zero composite, and the sum retains $a(n)$ exactly once. If $N\mid M$, reducing
+$n\bmod M$ modulo $N$ gives $n\bmod N$. This proves the refinement identity
+at every coefficient. Equality of all coefficients proves the formal-series
+versions.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{ResiduePackets.packet_idempotent},
+\lean{ResiduePackets.packet_orthogonal},
+\lean{ResiduePackets.packet_reconstruction}, and
+\lean{ResiduePackets.packet_refinement}; the series variants have the
+prefix \lean{series_packet} in the same module.
+The algebraic statements need no convergence hypothesis.
+\par\endgroup
+
+\subsection{Formal exponential coordinates and Hurwitz multiplication}
+
+Over a characteristic-zero field $K$, put
+\[
+\mathcal E(a)=\sum_{n\geq0}\frac{a_n}{n!}t^n,
+\qquad \mathcal D(A)_n=n![t^n]A.
+\]
+These are inverse maps between sequences and $K[[t]]$. We use them as
+\emph{formal} exponential coordinates. A statement about their coefficients
+does not assert convergence of an exponential generating function on an
+analytic domain.
+
+\begin{theorem}[Constructed unit-triangular coordinates]
+\label{thm:egf-coordinates}
+Let $h:\N\to K$ satisfy $h_0=1$, write $H=\mathcal E(h)$ and
+$H^{-1}=\mathcal E(k)$, and define
+\[
+U_Ha=\mathcal D(H\mathcal E(a)).
+\]
+Then $U_H$ is an equivalence, with inverse
+$U_H^{-1}a=\mathcal D(H^{-1}\mathcal E(a))$. Its coefficient formulas are
+\[
+(U_Ha)_n=\sum_{r=0}^{n}\binom nr h_r a_{n-r},\qquad
+(U_H^{-1}a)_n=\sum_{r=0}^{n}\binom nr k_r a_{n-r}.
+\]
+The resulting triangular matrix has diagonal entries $1$. The transported
+selectors
+\[
+\widehat P_{N,j}=U_HP_{N,j}U_H^{-1}
+\]
+are idempotent and pairwise orthogonal, and their sum is the identity.
+\end{theorem}
+
+\begin{proof}
+The factorials are nonzero in $K$, so encoding and decoding cancel
+coefficientwise. The constant coefficient of $H$ is $1$; hence its formal
+power-series inverse exists. Multiplication by $H$ and $H^{-1}$ gives the two
+inverse laws. The ordinary product coefficient formula, multiplied by $n!$,
+gives the displayed binomial sums. In row $n$, the coefficient of $a_n$ is
+$h_0=1$ and coefficients of $a_q$ with $q>n$ vanish. Conjugating the identities
+of Theorem~\ref{thm:residue-reconstruction} by the constructed equivalence proves
+the transported projector identities.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{EGF.decode_encode}, \lean{EGF.encode_decode},
+\lean{EGF.egf_product}, \lean{EGF.coordinateEquiv},
+\lean{EGF.coordinate_forward}, \lean{EGF.coordinate_inverse},
+and \lean{EGF.transported_reconstruction}, together with the idempotence and
+orthogonality declarations in \lean{EGFCoordinates}.
+\par\endgroup
+
+Factorial division is inappropriate in characteristic $p$. The coefficient
+operation itself remains meaningful over every commutative ring:
+\[
+(f\star g)_n=\sum_{r=0}^{n}\binom nr f_r g_{n-r},\qquad
+(D^d f)_n=f_{n+d},\qquad \mathbf1_n=\begin{cases}1,&n=0,\\0,&n>0.\end{cases}
+\]
+Here $\star$ is Hurwitz multiplication. The symbol $D^d$ denotes a coefficient
+shift, which agrees with formal differentiation after characteristic-zero
+encoding.
+
+\begin{theorem}[Hurwitz product rules]
+\label{thm:hurwitz-product}
+For $d\geq0$,
+\[
+D^d(f\star g)=\sum_{r=0}^{d}\binom dr(D^r f)\star(D^{d-r}g).
+\]
+If $R$ has prime characteristic $p$, then
+\[
+D^p(f\star g)=f\star D^p g+D^p f\star g.
+\]
+Over a field, if $g_0=1$, a sequence $b$ is constructed recursively with
+$b\star g=\mathbf1$. If also $D^p g=Dg$ in characteristic $p$, then
+$D^p b=Db$.
+\end{theorem}
+
+\begin{proof}
+Pascal's identity proves the first product rule, and induction proves the
+higher rule. The intermediate binomial coefficients $\binom pr$ vanish in
+characteristic $p$. For the inverse, solve row $n$ using the coefficient of
+$b_n$, which is $g_0=1$:
+\[
+b_n=\mathbf1_n-\sum_{r<n}\binom nr b_r g_{n-r}.
+\]
+Subtract the first and $p$th product rules for $b\star g=\mathbf1$.
+The assumed identity for $g$ leaves
+$(D^p b-Db)\star g=0$. A second triangular induction shows that convolution
+with a sequence having constant coefficient $1$ has trivial kernel.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{Hurwitz.shift_convolution}, \lean{Hurwitz.prime_shift_convolution},
+\lean{Hurwitz.convolution_left_eq_zero},
+\lean{HurwitzInverse.inverse_convolution}, and
+\lean{HurwitzInverse.inverse_prime_difference}.
+This argument uses coefficient sequences directly. It never interprets
+$1/n!$ as an element of $\F_p$ when $p\mid n!$.
+\par\endgroup
+
+\subsection{Triangular inversion and a finite precision filtration}
+
+\begin{theorem}[Forward substitution and denominator clearing]
+\label{thm:triangular-foundation}
+Let $T_{nq}$ be coefficients over a field with $T_{nn}\ne0$ for every $n$.
+For any sequence $b$, define
+\[
+a_n=\frac{b_n-\sum_{q<n}T_{nq}a_q}{T_{nn}}.
+\]
+This constructs the unique solution of
+$\sum_{q=0}^{n}T_{nq}a_q=b_n$ for all $n$. If $T_{nq}$ and $b_n$ are integers
+and the solution is taken over $\Q$, then
+\[
+\left(\prod_{r=0}^{n}T_{rr}\right)a_n\in\Z.
+\]
+\end{theorem}
+
+\begin{proof}
+The recursion refers only to smaller indices. Substitution proves each row.
+If a second solution agrees through row $n-1$, subtracting row $n$ and
+cancelling $T_{nn}$ proves equality at $n$. For integrality, use induction and
+promote every earlier clearing product to $\prod_{r<n}T_{rr}$. Multiplication
+by the additional factor $T_{nn}$ cancels the only new division.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{Triangular.solve_row}, \lean{Triangular.solve_unique}, and
+\lean{Triangular.solve_denominator_integral}. This is a denominator bound,
+not an assertion that the unscaled solution is integral.
+\par\endgroup
+
+To isolate the filtration argument, let $p$ be any element of a commutative
+ring and let $w:\N\to\N\cup\{\infty\}$. Set $p^{[r]}=p^r$ for finite $r$
+and $p^{[\infty]}=0$. The latter notation means the coefficient vanishes.
+
+\begin{theorem}[Filtered finite reconstruction]
+\label{thm:filtered-foundation}
+For every $n,L\in\N$ and sequences $c,S$ in that ring,
+\[
+\begin{split}
+&\sum_{r=0}^{n}\binom nr c_rp^{[w(r)]}S_{n-r}\\
+&\hspace{8mm}\equiv
+\sum_{\substack{0\leq r\leq n\\w(r)<L}}
+\binom nr c_rp^{[w(r)]}S_{n-r}\pmod{p^L}.
+\end{split}
+\]
+Here congruence means divisibility of the difference by $p^L$ in the
+coefficient ring. In $\Zp$, it means membership in $p^L\Zp$.
+\end{theorem}
+
+\begin{proof}
+The difference of the two sums consists exactly of terms with $w(r)\geq L$.
+Every such term is divisible by $p^L$, including the zero terms with infinite
+weight. Their finite sum has the same divisibility.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{Filtered.filtered_triangular_reconstruction} and
+\lean{Filtered.padic_filtered_reconstruction}.
+For weights $2r$, retaining $r\leq M$ gives the bound $p^{2M+2}$ through
+\lean{Filtered.even_weight_tail}. A sharper kernel weight can improve this
+bound, as in the classical dyadic reconstruction later in the paper. Each
+coefficient row is finite, so no hypothesis $w(r)\to\infty$ is needed here.
+\par\endgroup
+
+\subsection{Finite Mahler coordinates and weighted differences}
+
+For $f:\N\to R$, define the step-$h$ forward difference and its iterates by
+\[
+\Delta_h f(n)=f(n+h)-f(n),\qquad \Delta_h^0 f=f,
+\]
+and put $c_r(f)=\Delta_1^r f(0)$. These are actual differences of $f$, not
+freely supplied coefficients.
+
+\begin{theorem}[Finite Newton--Mahler identities]
+\label{thm:mahler-foundation}
+For every $n,s,h\in\N$,
+\[
+\begin{aligned}
+f(n)&=\sum_{r=0}^{n}c_r(f)\binom nr,\\
+c_r(\Delta_1^s f)&=c_{s+r}(f),\\
+\Delta_1^s f(n)&=\sum_{j=0}^{n}c_{s+j}(f)\binom nj,\\
+\Delta_h^s f(n)&=\sum_{j=0}^{s}(-1)^{s-j}\binom sj f(n+jh).
+\end{aligned}
+\]
+The finite interpolant
+$I_Nf(n)=\sum_{r=0}^{N}c_r(f)\binom nr$ agrees with $f$ for $n\leq N$.
+It has the same order-$s$ unit-step difference at $n$ whenever $n+s\leq N$.
+For arbitrary coefficients $c_0,\ldots,c_N$, the corresponding binomial
+interpolant has exactly those coefficients and zero coefficients above $N$.
+\end{theorem}
+
+\begin{proof}
+The shift operator is $I+\Delta_1$. Expanding its $n$th power and evaluating
+at zero gives reconstruction. Composing difference operators gives the
+coefficient shift and applying reconstruction to $\Delta_1^s f$ gives the
+third identity. The binomial expansion of $(E_h-I)^s$ gives the explicit
+stencil. Binomial coefficients vanish when their lower index exceeds $n$,
+which proves the interpolation claim. Equality of every point of the stencil
+proves equality of differences. Repeated finite differences of $\binom nr$
+at zero give the exact coefficient extraction.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{Mahler.finite_mahler_reconstruction},
+\lean{Mahler.coefficient_difference},
+\lean{Mahler.difference_from_coefficients},
+\lean{Mahler.difference_explicit},
+\lean{Mahler.finite_sample_difference}, and
+\lean{Mahler.coefficient_interpolant}.
+Finite samples determine only stencils contained in the sample interval.
+They do not establish a universal tail estimate.
+\par\endgroup
+
+For $x\in\Zp$, use the zero-safe valuation
+\[
+\operatorname{ord}_p(x)=
+\begin{cases}v_p(x),&x\ne0,\\\infty,&x=0.\end{cases}
+\]
+Thus $L\leq\operatorname{ord}_p(x)$ is equivalent to $x\in p^L\Zp$.
+
+\begin{theorem}[Weighted difference bound]
+\label{thm:weighted-mahler-foundation}
+Let $f:\N\to\Zp$ and let $w:\N\to\N\cup\{\infty\}$ satisfy
+$w(s+j)\leq\operatorname{ord}_p(c_{s+j}(f))$ for $0\leq j\leq n$.
+Then
+\[
+\operatorname{ord}_p(\Delta_1^s f(n))\geq
+\min_{0\leq j\leq n}
+\left\{w(s+j)+v_p\binom nj\right\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the nonarchimedean inequality to the finite coefficient formula in
+Theorem~\ref{thm:mahler-foundation}. For $0\leq j\leq n$, the integer
+$\binom nj$ is positive. The order of its product with $c_{s+j}(f)$ is the
+sum of the two orders, including the case where that coefficient is zero.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{PadicBounds.nat_le_order_iff},
+\lean{PadicBounds.weighted_difference_bound}, and
+\lean{PadicBounds.weighted_difference_divisibility}.
+These are finite algebraic identities and bounds. An expansion on all of
+$\Zp$ additionally requires an appropriate convergence theorem; no such
+infinite expansion is inferred from finite interpolation alone.
+\par\endgroup
+
+\subsection{Unit modes and the dyadic distinction}
+
+\begin{theorem}[Differences of unit modes]
+\label{thm:unit-modes-foundation}
+Over every commutative ring,
+\[
+\Delta_h^s(u^n)=u^n(u^h-1)^s.
+\]
+For any prime $p$, units $u_i\in\Zp^\times$, coefficients $a_i\in\Zp$, and
+a finite index set $I$, the sequence $f(n)=\sum_{i\in I}a_i u_i^n$ satisfies
+\[
+\Delta_{p-1}^s f(n)\in p^s\Zp
+\qquad(n,s\in\N).
+\]
+\end{theorem}
+
+\begin{proof}
+Induction gives the geometric identity. Reduction of a unit to $\F_p^\times$
+gives $u_i^{p-1}=1$ modulo $p$. Taking $s$ powers supplies $p^s$ in each
+summand. The actual difference operator is linear over finite sums.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{UnitModes.geometric_difference},
+\lean{UnitModes.unit_fermat_divisibility}, and
+\lean{UnitModes.finite_unit_modes_divisibility}.
+The result includes $p=2$, where the displayed step is $1$. It makes no
+claim about arbitrary infinite sums of modes.
+\par\endgroup
+
+\begin{theorem}[Finite unit coordinates]
+\label{thm:finite-unit-foundation}
+Let $p$ be prime, $L\geq0$, and
+$a\in(\Z/p^{L+1}\Z)^\times$. Define
+\[
+\omega_L(a)=a^{p^L},\qquad \langle a\rangle_L=a\omega_L(a)^{-1}.
+\]
+Then
+\[
+a=\omega_L(a)\langle a\rangle_L,\qquad
+\omega_L(a)^{p-1}=1,\qquad \langle a\rangle_L\equiv1\pmod p.
+\]
+The two factors are uniquely determined by these properties and are compatible
+with reduction to lower precision.
+For $a\in(\Z/2^{L+2}\Z)^\times$, there is instead a unique decomposition
+\[
+a=\epsilon(a)\langle a\rangle_4,
+\qquad \epsilon(a)\in\{1,-1\},\qquad
+\langle a\rangle_4\equiv1\pmod4.
+\]
+\end{theorem}
+
+\begin{proof}
+The unit-group exponent $p^L(p-1)$ gives the root identity for $\omega_L$.
+Its residue is that of $a$, so the remaining factor has residue $1$.
+If two $(p-1)$st roots have equal residue, raising them to $p^L$ makes them
+equal modulo $p^{L+1}$, while each root is fixed by this exponent. This proves
+uniqueness and then compatibility under reduction. In the dyadic construction,
+an odd residue is exactly $1$ or $-1$ modulo $4$. Choose that sign and multiply
+$a$ by it to obtain the principal factor. The two signs remain distinct
+modulo $4$, which proves uniqueness.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{FiniteUnits.finite_unit_decomposition},
+\lean{FiniteUnits.decomposition_unique},
+\lean{UnitRefinement.omega_compatible},
+\lean{UnitRefinement.principal_compatible}, and
+\lean{DyadicUnits.dyadic_unit_decomposition} with
+\lean{DyadicUnits.decomposition_unique}.
+The finite $p=2$ version of the first construction has trivial root-of-unity
+factor. The separate modulo-$4$ construction retains the sign that reduction
+modulo $2$ cannot detect.
+\par\endgroup
+
+\subsection{Recurrence packets and finite arithmetic synchronization}
+
+\begin{theorem}[Companion jumps and packet recurrences]
+\label{thm:companion-foundation}
+Let $C$ be a $d\times d$ matrix over a commutative ring and
+$x_n=C^n x_0$. For $N,j,k\in\N$, put $b_k=x_{Nk+j}$. Then
+\[
+b_k=C^j(C^N)^kx_0,\qquad b_{k+1}=C^Nb_k.
+\]
+If $\chi_{C^N}(X)=X^d+\sum_{r<d}q_rX^r$, then
+\[
+b_{k+d}=-\sum_{r=0}^{d-1}q_r b_{k+r}.
+\]
+Every coordinate and every linear scalar observable satisfies the same
+recurrence. No invertibility or diagonalization hypothesis is required.
+\end{theorem}
+
+\begin{proof}
+The jump identity is the power law for one matrix. Apply the
+Cayley--Hamilton identity $\chi_{C^N}(C^N)=0$ to the actual state $b_k$.
+The leading coefficient is $1$, so the final state can be isolated. A linear
+observable preserves the resulting finite sum.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{Companion.companion_jump},
+\lean{Companion.packet_charpoly_recurrence}, and
+\lean{Companion.packet_observable_recurrence}.
+The source-sequence versions require and use the actual relation
+$x_{n+1}=Cx_n$, rather than assuming the desired packet recurrence.
+For the Fibonacci matrix $C=\left(\begin{smallmatrix}1&1\\1&0\end{smallmatrix}\right)$,
+its jump trace is the Lucas number $L_N$ and its determinant is $(-1)^N$.
+Thus
+\[
+F_{N(k+2)+j}=L_NF_{N(k+1)+j}-(-1)^NF_{Nk+j}.
+\]
+This specialization is
+\lean{FibonacciPackets.fibonacci_packet_recurrence}; it is derived from the
+actual Fibonacci state.
+\par\endgroup
+
+\begin{theorem}[Dyadic--odd packet factorization]
+\label{thm:crt-foundation}
+Let $a\geq0$ and let $M$ be a positive odd integer. The Chinese remainder map
+is a ring isomorphism
+\[
+\Z/(2^aM)\Z\simeq\Z/2^a\Z\times\Z/M\Z.
+\]
+For $0\leq r<2^aM$ and any coefficient sequence $f$,
+\[
+P_{2^aM,r}f
+=P_{2^a,r\bmod 2^a}\,P_{M,r\bmod M}f.
+\]
+The same identity holds for formal-series coefficient selectors.
+\end{theorem}
+
+\begin{proof}
+The two moduli are coprime. An index has the prescribed combined residue
+exactly when it has both component residues. Applying this equivalence to
+the indicator defining each selector proves the formula.
+\end{proof}
+
+\begingroup\small\raggedright
+\noindent\emph{Formal correspondence.}
+\lean{CRTPackets.addressEquiv}, \lean{CRTPackets.residue_equivalence},
+\lean{CRTPackets.packet_factorization}, and
+\lean{CRTPackets.series_packet_factorization}.
+This theorem synchronizes finite arithmetic addresses. It does not identify a
+global integer object with an arbitrary family of $p$-adic objects.
+\par\endgroup
+
+\subsection{Polyphase notation retained from the recovered manuscript}
+\label{subsec:polyphase-exposition}
+
+The recovered Annals text develops a broader polyphase vocabulary. The
+following elementary identities explain that vocabulary; they are exposition,
+not additional Lean-certified assertions in this consolidation.
+For a sequence $a$ and $M\geq1$, let $a_r^{[M]}(q)=a_{Mq+r}$ for $0\leq r<M$.
+If $A(z)=\sum_n a_nz^n$ and $A_r(w)=\sum_q a_{Mq+r}w^q$ are ordinary generating
+functions, then unique quotient and remainder give
+\[
+A(z)=\sum_{r=0}^{M-1}z^rA_r(z^M),\qquad
+\bigl(a_r^{[M]}\bigr)_s^{[N]}=a_{r+Ms}^{[MN]}.
+\]
+For ordinary Cauchy multiplication, the phase-$r$ product has a term without a
+carry and a term with one carry:
+\[
+C_r(w)=\sum_{u+v=r}A_u(w)B_v(w)
++w\sum_{u+v=r+M}A_u(w)B_v(w),\qquad 0\leq u,v<M.
+\]
+This follows by adding the two phase addresses. It is an ordinary-series
+formula and must not be substituted for Hurwitz convolution.
+
+The affine Mahler kernel is
+\[
+\Theta_{M,s}(r,k)=[z^r](1+z)^s\bigl((1+z)^M-1\bigr)^k
+=\sum_{j=0}^{k}(-1)^{k-j}\binom kj\binom{Mj+s}{r}.
+\]
+It vanishes unless $k\leq r\leq Mk+s$. For a finite binomial expansion
+$f(n)=\sum_{r=0}^{D}c_r\binom nr$, the $k$th Newton coefficient of
+$g(q)=f(Mq+s)$ is therefore
+\[
+c_k(g)=\sum_{r=k}^{\min(D,Mk+s)}c_r\Theta_{M,s}(r,k).
+\]
+Indeed, insert the finite stencil for $\Delta_1^k g(0)$ and interchange its
+two finite sums. Coefficient extraction of the binomial expansion of
+$((1+z)^M-1)^k$ gives the kernel. In the binary zero-address case,
+\[
+\Theta_{2,0}(k+j,k)=2^{k-j}\binom kj\qquad(0\leq j\leq k),
+\]
+since $(2z+z^2)^k=z^k(2+z)^k$.
+The general exact valuation problem is still distinct from these identities.
+The recovered infinite analytic extensions and stronger historical identities
+are accounted for in Section~\ref{subsec:historical-scope}; this finite
+exposition does not certify those extensions.

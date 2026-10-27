@@ -1,0 +1,11 @@
+module
+public import PolynomialPadicContraction
+#print axioms Komorebi.PolynomialPadicContraction.evalSystem
+#print axioms Komorebi.PolynomialPadicContraction.eval_dvd_of_dvd
+#print axioms Komorebi.PolynomialPadicContraction.eval_dist_le
+#print axioms Komorebi.PolynomialPadicContraction.lipschitz_evalSystem
+#print axioms Komorebi.PolynomialPadicContraction.contractionMap
+#print axioms Komorebi.PolynomialPadicContraction.contracting_contractionMap
+#print axioms Komorebi.PolynomialPadicContraction.exists_unique_fixedPoint
+#print axioms Komorebi.PolynomialPadicContraction.fixedPoint_divisible
+#print axioms Komorebi.PolynomialPadicContraction.exists_unique_fixedPoint_divisible

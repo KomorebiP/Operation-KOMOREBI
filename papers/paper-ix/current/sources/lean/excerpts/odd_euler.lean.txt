@@ -1,0 +1,8 @@
+theorem odd_euler_reconstruction (p n : ℕ) (hp : Odd p) :
+    eulerEven n = ∑ m ∈ Finset.range (n+1),
+      ((2*n).choose (2*m) : ℤ) * inverseEven m * (p:ℤ)^(2*m) * source p (2*(n-m)) := by
+  have h := reconstruction_all_indices p (2*n) hp (even_two_mul n)
+  rw [euler_even] at h
+  rw [sum_even_terms (fun r => ((2*n).choose r : ℤ)*inverseCoeff r*(p:ℤ)^r*source p (2*n-r))
+    (fun m => by rw [inverse_odd_zero _ (by exact ⟨m,rfl⟩)]; simp)] at h
+  simpa only [inverseEven, Nat.mul_sub_left_distrib] using h

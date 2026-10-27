@@ -1,0 +1,5 @@
+theorem exists_unique_fixedPoint (p : ℕ) [Fact p.Prime]
+    (H : Fin d → MvPolynomial (Fin d) ℤ_[p]) (c : Fin d → ℤ_[p]) :
+    ∃! u : Fin d → ℤ_[p], contractionMap p H c u = u := by
+  let hf := contracting_contractionMap p H c
+  exact ⟨hf.fixedPoint _, hf.fixedPoint_isFixedPt, fun u hu => hf.fixedPoint_unique hu⟩

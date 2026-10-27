@@ -1,0 +1,51 @@
+\section{Actual derivatives and analytic local graphs}\label{sec:regularity}
+\subsection{The polynomial Jacobian becomes a strict derivative}
+The earlier integer Taylor lemma proves divisibility. Analytic regularity needs a different bridge: actual polynomial evaluation must have the strict Fr\'echet derivative represented by the evaluated formal Jacobian. The source proves the scalar derivative by polynomial induction and assembles finite coordinates.
+
+\contract{$\mathbb K$ is a complete nontrivially normed field; $F$ is a vector of actual multivariate polynomials over $\mathbb K$. The strict derivative of evaluation at $a$ is the continuous linear map represented by the actual Jacobian.}
+\excerpt{Strict derivative of the evaluated polynomial system}{actual_derivative}
+\walk{Each scalar polynomial has its proved derivative. \code{hasStrictFDerivAt_pi} assembles those coordinate derivatives. Extensionality of continuous linear maps compares their action on every vector and coordinate; unfolding the matrix action yields the same finite dot product as the formal partial derivatives. The final conversion identifies the evaluated system with this coordinate assembly.}
+
+Analyticity of actual polynomial evaluation is supplied through the pinned Mathlib multivariate-polynomial theorem and finite coordinate assembly. It is not a hypothesis about a proposed solution map. The development also proves the derivative block identities for the actual augmented polynomial system; a user cannot supply an unrelated matrix and call it the Jacobian.
+
+\subsection{The strict local inverse is the analytic inverse}
+\contract{In the inverse helper, $\mathbb K$ is nontrivially normed; $E,F$ are normed spaces over it; $E$ is complete; and $i:E\simeq_LF$ is a continuous linear equivalence. The function is analytic at $a$ and has strict derivative $i$ there.}
+\excerpt{Analyticity of the same local inverse}{analytic_inverse}
+\walk{The strict derivative's local inverse is the inverse of its associated open partial homeomorphism. The Mathlib analytic inverse theorem applies to that same inverse, using the derivative identity. The proof does not construct one analytic inverse and separately assume it agrees with the root-solving inverse; the two are linked by the explicit partial homeomorphism.}
+
+These helper hypotheses are slightly different from the polynomial endpoint's ambient hypotheses. In particular, the helper only declares completeness of its source space $E$, while the endpoint gets it from the complete field and finite-dimensional coordinates. Reading the full variable context prevents a short excerpt from concealing these assumptions.
+
+\subsection{The augmented derivative exposes the sign}
+For the map $\Phi(y,t)=(F(y,t),t)$, the actual derivative at $a$ and its inverse are
+\[
+D\Phi(a)=\begin{pmatrix}J&K\\0&I\end{pmatrix},\qquad
+D\Phi(a)^{-1}=\begin{pmatrix}J^{-1}&-J^{-1}K\\0&I\end{pmatrix}.
+\]
+The source constructs the continuous linear equivalence from these matrices and verifies both products. Inserting a pure parameter displacement $(0,v)$ into the inverse yields solved displacement $-J^{-1}Kv$.
+
+\contract{$J$ is a square invertible matrix over the normed field and $K$ has the specified rectangular shape. The explicit augmented equivalence's inverse, restricted to parameter input and solved output, equals the continuous linear map of $-J^{-1}K$.}
+\excerpt{Solved part of the inverse block}{inverse_block}
+\walk{The proof unfolds the actual inverse equivalence and its certificate, evaluates the upper block on the joined vector, and removes the zero solved input. The negative sign is therefore an algebraic consequence of the inverse block identities. The dedicated derivative-sign negative control checks a concrete contrary statement.}
+
+\subsection{The graph is exact in a product neighborhood}
+\contract{$\mathbb K$ is a complete nontrivially normed field; $F\in\mathbb K[Y,T]^e$ is an actual polynomial system with $e$ solved and $k$ parameter coordinates; $F(a)=0$; and the solved Jacobian $J$ is invertible. The theorem constructs open neighborhoods $U,V$, an analytic solution $\psi$, and exact equivalence $F(y,t)=0\iff y=\psi(t)$ for $t\in U,y\in V$.}
+\excerpt{Actual polynomial analytic implicit theorem}{analytic_implicit}
+\walk{The proof names the actual solved and parameter blocks $J,K$, constructs their upper-block continuous equivalence, and identifies the augmented polynomial map with $z\mapsto(F(z),\pi_Tz)$. Actual polynomial analyticity and the strict derivative bridge provide the inputs to the analytic graph helper. The helper takes a local inverse $g$ and defines $\psi(t)=\pi_Yg(0,t)$. The final linear-map identity restricts $g$'s inverse derivative to obtain $-J^{-1}K$.}
+
+The graph helper shrinks the parameter neighborhood so that four requirements hold together: the inverse identities, analyticity, the requested product neighborhood, and $\psi(U)\subseteq V$. This shrinking is part of the proof. It is not enough to know an inverse exists at the base point and then claim every point in an arbitrary ball lies in its domain.
+
+The function $\psi$ is defined on the ambient parameter space, but the root and regularity conclusions are restricted to $U$. Uniqueness is among $y\in V$. Analyticity on the neighborhood implies differentiability there; the displayed strict derivative formula is at the specified base point. The open-set selection theorem later obtains the analogous derivative at every point by applying the local theorem repeatedly.
+
+\subsection{A supplied continuous root selection acquires regularity}
+\contract{Keep the same field and solved-block nonsingularity. A supplied map $g$ is continuous at the base parameter, has the correct base value, and solves the exact polynomial equation on a neighborhood. No derivative or analyticity of $g$ is assumed.}
+\excerpt{Regularity transfers to a continuous selection}{selection}
+\walk{The root equation at the base point follows from the eventual neighborhood equation and the given base value. The analytic graph theorem constructs $\psi$. Continuity places $g(t)$ in $V$ for all sufficiently close $t$, while openness places $t$ in $U$. The exact graph equivalence forces $g=\psi$ as germs. Analyticity and the strict derivative transfer through eventual equality.}
+
+For a continuous exact root selection on an open set, the source requires an invertible solved Jacobian at every point of that set. It then proves analyticity and the actual implicit derivative at every point. A single nonsingular point does not justify regularity of a branch through later singular points. Arbitrary global branch choices are outside this germ comparison.
+
+\subsection{Integral coefficients are evaluated in the fraction field}
+\contract{For any prime $p$, the coefficients and base point may lie in $\mathbb Z_p$. Only the solved Jacobian after inclusion in $\mathbb Q_p$ must be invertible. The resulting neighborhoods and analytic map live in the ambient $\mathbb Q_p$ vector spaces.}
+\excerpt{Integral polynomial specialization in the ambient p-adic field}{integral}
+\walk{The source proves that evaluation, formal partial derivatives, and both Jacobian blocks commute with the coefficient inclusion. It applies the actual polynomial implicit theorem to the included system and point, then rewrites its equation and derivative back in terms of the original integral coefficients. Invertibility modulo $p$ is not required. The included solved Jacobian may therefore be singular modulo $p$ while remaining invertible over $\mathbb Q_p$.}
+
+This is an ambient-field analytic theorem. It does not make $\mathbb Z_p$ a vector space over $\mathbb Q_p$, assert that every nearby analytic value is integral, or supply a new explicit integral radius. The earlier weighted and residue-ball theorems retain their own quantitative domains. Nor does it prove a branch through a point whose solved Jacobian is singular over the fraction field. General singular persistence and global compatibility remain separate research problems.

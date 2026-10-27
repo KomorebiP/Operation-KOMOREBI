@@ -1,0 +1,275 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=23mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,array,fancyhdr,xcolor,hyperref}
+\definecolor{ink}{HTML}{233F50}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=ink,pdftitle={Paper IX: Fifth Lean Verification Block},pdfauthor={Komorebi P.}}
+\pagestyle{fancy}\fancyhf{}\lhead{\small PRSC IX $\mid$ Fifth Lean Block}\rhead{\small v0.5.0}
+\lfoot{\small Komorebi P.}\rfoot{\small\thepage}
+\setlength{\headheight}{15pt}\setlength{\parindent}{0pt}\setlength{\parskip}{7pt}
+\newcommand{\Q}{\mathbb Q}\newcommand{\Z}{\mathbb Z}\newcommand{\N}{\mathbb N}
+\newcommand{\F}{\mathbb F}
+\newcommand{\target}[1]{{\footnotesize\texttt{#1}}}
+\newcommand{\pageheading}[2]{{\Large\bfseries\color{ink}#1}\par{\small #2}\par\medskip}
+\begin{document}
+{\LARGE\bfseries\color{ink}Paper IX}\par
+{\Large\bfseries Fifth Lean Verification Block}\par
+{\large Integral window reduction, finite unit factors,\newline and CRT packet addresses}\par
+\textbf{Komorebi P.}\hfill Release 0.5.0
+\bigskip
+\section*{Scope and result}
+This release continues the unchanged 28-page status-corrected manuscript and the checked fourth block. It completes Proposition 6.2, Corollary 8.3 and Theorem 10.1 in the scopes stated below. All 21 upstream proof files and the four earlier mathematical supplements remain unchanged.
+
+\textbf{Twenty of 24 named manuscript-proved items now have formal coverage; four remain pending.} Three classical inputs and two conjectures are tracked separately. The cumulative project contains \textbf{333 named theorem declarations and 77 explicit definitions across 28 modules}.
+
+\begin{center}
+\begin{tabular}{@{}p{.43\textwidth}p{.22\textwidth}rr@{}}
+\toprule
+New module & Scope & Theorems & Defs.\\\midrule
+\texttt{UnitTriangular} & Integral solver & 5 & 1\\
+\texttt{WindowIndependence} & 8.3 & 11 & 3\\
+\texttt{FiniteUnits} & 6.2, prime powers & 13 & 4\\
+\texttt{DyadicUnits} & 6.2, sign branch & 10 & 4\\
+\texttt{UnitRefinement} & Finite compatibility & 4 & 2\\
+\texttt{CRTPackets} & 10.1 & 5 & 1\\
+\texttt{FiniteArithmeticExamples} & Exact controls & 13 & 2\\\midrule
+Total added & Three items & 61 & 17\\\bottomrule
+\end{tabular}
+\end{center}
+The 61 new theorems include supporting lemmas and examples, not 61 independent discoveries. Pinned Mathlib supplies finite-field, unit-group, ideal-power, $p$-adic residue and Chinese-remainder results. The new modules connect these to the actual packet coefficients, explicit finite lifts and existing selectors.
+
+\section*{The specification matters}
+Rational coefficients are not reduced through an imaginary map $\Q\to\F_p$. The proof first constructs their integral lifts in $\Z_p$ and establishes equality in $\Q_p$. Root representatives are actual units at the requested precision, not unchanged residues that need not satisfy the root equation modulo $p^\ell$.
+
+\section*{Verification status}
+The fresh cumulative Lean build compiled all 28 modules with warnings treated as errors, matched 410 declaration axiom reports, and rejected all 17 invalid-proof controls. All 103 infrastructure and release tests passed. Independent finite regressions are recorded separately from the proofs. A separate release audit records the archive's fresh-extraction rebuild and integrity checks.
+\newpage
+\pageheading{1. Integral reduction of the original coefficients}{Corollary 8.3; manuscript pages 19--20}
+Fix a prime $p$, an integer $m\geq1$ and a window address $0\leq j<p$. The earlier project defines the rational packet coefficients by the actual recurrence
+\[
+ \sum_{q=0}^{n}\binom{mpn+j}{mpq}C_{mp,j}(q)=\delta_{n0}.
+\]
+The previous Lucas theorem proves
+\[
+ \binom{mpn+j}{mpq}\equiv\binom{mn}{mq}\pmod p,\qquad
+ \binom{mpn+j}{mpn}\equiv1\pmod p.
+\]
+The last congruence makes each diagonal entry a unit in the actual completed ring $\Z_p$.
+
+\subsection*{First construct the integral solution}
+For a ring $R$, a triangular row system $T$, right-hand side $b$, and proved unit pivots $d_n=T_{nn}$, define
+\[
+ s_n=d_n^{-1}\left(b_n-\sum_{q<n}T_{nq}s_q\right).
+\]
+The new ring-level solver uses well-founded recursion. Its row identities and unique-solution property are proved. The source also proves compatibility of this solver with ring homomorphisms into fields.
+
+Specializing to $R=\Z_p$ constructs $c^{(p)}_{m,j}(n)$. Mapping to $\Q_p$ and comparing with the original rational forward substitution gives
+\[
+ \boxed{c^{(p)}_{m,j}(n)=C_{mp,j}(n)\quad\text{in }\Q_p.}
+\]
+Thus every original standard-window coefficient is $p$-integral, for every row. Integrality is a conclusion, not an additional hypothesis on the coefficients.
+
+\subsection*{Then apply the residue map}
+Independently define $e^{(m,p)}$ over $\F_p$ by the unit-diagonal system
+\[
+ \sum_{q=0}^{n}\binom{mn}{mq}e^{(m,p)}_q=\delta_{n0}.
+\]
+Its recurrence and uniqueness are checked. Applying the actual homomorphism $\pi:\Z_p\to\F_p$ to the integral row, and then Lucas reduction, proves
+\[
+ \boxed{\pi(c^{(p)}_{m,j}(n))=e^{(m,p)}_n.}
+\]
+For $j,k<p$, a separate ideal statement gives
+\[
+ p\mid c^{(p)}_{m,j}(n)-c^{(p)}_{m,k}(n)\quad\text{inside }\Z_p.
+\]
+The formal solver also covers $m=0$; the manuscript uses $m\geq1$. No global finite-difference theorem or period assertion enters this proof.
+
+\textbf{Principal targets.}\par
+\target{WindowIndependence.coeffPadic\_coe, .standard\_window\_integral}\par
+\target{WindowIndependence.residue\_independence, .reduced\_unique}\par
+\target{WindowIndependence.two\_window\_addresses\_congruent}
+\newpage
+\pageheading{2. Explicit finite prime-power decomposition}{Proposition 6.2; odd-prime branch}
+Let $p$ be prime, $\ell\geq1$, and
+\[
+ a\in\bigl(\Z/p^\ell\Z\bigr)^\times.
+\]
+Define actual units in the same ring by
+\[
+ \boxed{\omega_\ell(a)=a^{p^{\ell-1}},\qquad
+ \langle a\rangle_\ell=a\,\omega_\ell(a)^{-1}.}
+\]
+The Lean source writes $\ell=L+1$, so zero precision is excluded without truncated natural-number subtraction.
+
+\subsection*{The root equation and residue are derived}
+Euler's unit-group exponent gives
+\[
+ \omega_\ell(a)^{p-1}
+ =a^{p^{\ell-1}(p-1)}=a^{\varphi(p^\ell)}=1.
+\]
+Reduction to the actual field $\F_p$ commutes with powers. Its Frobenius identity gives
+\[
+ \overline{\omega_\ell(a)}
+ =\bar a^{p^{\ell-1}}=\bar a.
+\]
+Consequently,
+\[
+ \boxed{a=\omega_\ell(a)\langle a\rangle_\ell,\quad
+ \omega_\ell(a)^{p-1}=1,\quad
+ \overline{\langle a\rangle_\ell}=1.}
+\]
+The manuscript's finite existence conclusion is obtained directly. The proof does not assume a Hensel lift or an already supplied root representative.
+
+\subsection*{Uniqueness requires a lifting argument}
+The source proves the actual kernel statement
+\[
+ \bar x=0\quad\Longleftrightarrow\quad p\mid x
+ \quad\text{in }\Z/p^\ell\Z.
+\]
+For $x\equiv y\pmod p$, the checked ideal-power lifting theorem gives
+\[
+ x^{p^{\ell-1}}-y^{p^{\ell-1}}\in(p)^\ell=(0).
+\]
+If $w^{p-1}=1$, then $w^p=w$ and hence $w^{p^k}=w$ for every $k$. Therefore two roots with the same residue are equal. The decomposition is unique whenever its second factor reduces to one. Multiplicativity of both factors is also proved.
+
+For $p=3,\ell=2,a=2$, the checked values are
+\[
+ \omega_2(2)=8,\qquad \langle2\rangle_2=7,\qquad
+ 8^2=1,\quad8\cdot7=2\quad\text{in }\Z/9\Z.
+\]
+The unlifted representative $2$ is not a square root of one modulo nine.
+
+\textbf{Principal targets.}\par
+\target{FiniteUnits.finite\_unit\_decomposition, .power\_lift\_congruence}\par
+\target{FiniteUnits.omega\_unique, .decomposition\_unique}\par
+\target{FiniteUnits.omega\_mul, .principal\_mul}
+\newpage
+\pageheading{3. Precision compatibility and the dyadic sign}{Finite refinements and Proposition 6.2's dyadic branch}
+For $1\leq k\leq\ell$, let
+\[
+ \rho_{\ell,k}:\Z/p^\ell\Z\longrightarrow\Z/p^k\Z
+\]
+be the actual reduction homomorphism. It induces a map on units. The explicit construction satisfies
+\[
+ \boxed{\rho_{\ell,k}(\omega_\ell(a))
+ =\omega_k(\rho_{\ell,k}(a)),}
+\]
+\[
+ \boxed{\rho_{\ell,k}(\langle a\rangle_\ell)
+ =\langle\rho_{\ell,k}(a)\rangle_k.}
+\]
+The proof uses the exponent factorization
+$p^{\ell-1}=p^{k-1}p^{\ell-k}$ and the already proved Frobenius invariance of a lifted root. Principal factors also satisfy
+\[
+ \langle a\rangle_\ell^{\,p^{\ell-1}}=1.
+\]
+At precision one the principal factor is exactly one. These are coherent finite certificates; no infinite inverse limit or topological unit-group equivalence is constructed in this release.
+
+\subsection*{Why the mod-four branch is separate}
+Now let $\ell\geq2$ and $a\in(\Z/2^\ell\Z)^\times$. The actual units of $\Z/4\Z$ are exhausted by $1$ and $-1$. Define
+\[
+ \varepsilon_\ell(a)=
+ \begin{cases}1,&a\equiv1\pmod4,\\-1,&a\equiv3\pmod4,\end{cases}
+ \qquad
+ \langle a\rangle_{2,\ell}=\varepsilon_\ell(a)a.
+\]
+The source uses $\ell=L+2$. It proves
+\[
+ \boxed{a=\varepsilon_\ell(a)\langle a\rangle_{2,\ell},\quad
+ \varepsilon_\ell(a)\in\{1,-1\},\quad
+ \langle a\rangle_{2,\ell}\equiv1\pmod4.}
+\]
+The sign is uniquely determined by the residue modulo four, and cancellation gives uniqueness of the principal factor.
+
+The checked example $a=3$ modulo eight has sign $7=-1$ and principal factor $5$:
+\[
+ 7\cdot5=3\pmod8,\qquad5=1\pmod4.
+\]
+The code separately proves $1=-1$ in $\Z/2\Z$ but $1\neq-1$ in $\Z/4\Z$. Modulo two alone cannot identify the sign. The generic prime-power construction at $p=2$ only asks for a principal residue modulo two and is not silently substituted for this stronger mod-four factorization.
+
+\textbf{Principal targets.}\par
+\target{UnitRefinement.omega\_compatible, .principal\_compatible, .principal\_power}\par
+\target{DyadicUnits.dyadic\_unit\_decomposition, .decomposition\_unique}
+\newpage
+\pageheading{4. CRT addresses and the actual packet selectors}{Theorem 10.1; manuscript page 22}
+Let $a\geq0$, let $M$ be odd, and put $N=2^aM$. Coprimality is derived from oddness:
+\[
+ \gcd(2^a,M)=1.
+\]
+The construction uses the actual Chinese-remainder ring equivalence
+\[
+ \boxed{\Z/N\Z\ \simeq\ \Z/2^a\Z\times\Z/M\Z.}
+\]
+Its bijectivity and component formula are checked. On a natural representative $r$, the components are precisely its reductions modulo the two factors, not arbitrary coordinate labels.
+
+\subsection*{The algebraic bridge to projectors}
+For natural indices $n,r$, the source proves
+\[
+ n\equiv r\pmod{2^aM}
+ \quad\Longleftrightarrow\quad
+ \bigl(n\equiv r\pmod{2^a}\text{ and }n\equiv r\pmod M\bigr).
+\]
+For the original coefficient selector
+\[
+ (P_{N,r}f)(n)=
+ \begin{cases}f(n),&n\bmod N=r,\\0,&\text{otherwise},\end{cases}
+\]
+take the canonical label $0\leq r<N$. The logical equivalence yields the actual equality of sequence operators
+\[
+ \boxed{P_{N,r}f=
+ P_{2^a,\,r\bmod2^a}\bigl(P_{M,\,r\bmod M}f\bigr).}
+\]
+This statement holds for coefficients in any type with zero. A separate theorem lifts the equality coefficientwise to the existing formal power-series selectors over any semiring.
+
+The cases $a=0$ and $M=1$ are included. The corresponding one-element residue ring is not excluded. Oddness of $M$ already implies positivity.
+
+\subsection*{What is not asserted}
+CRT factors addresses, not the visibility weights or valuation filtrations associated with those addresses. Nothing in this proof gives an equal-weight decomposition at every prime or an additional analytic convergence theorem.
+
+Coprimality cannot be discarded. The distinct classes $0$ and $2$ modulo four both map to $(0,0)$ when both components are reduced modulo two. The source checks this counterexample. It also checks a composite-modulus failure of the Fermat exponent and a coefficient outside the standard window that is not $3$-adically integral.
+
+\textbf{Principal targets.}\par
+\target{CRTPackets.address\_bijective, .address\_components, .residue\_equivalence}\par
+\target{CRTPackets.packet\_factorization, .series\_packet\_factorization}\par
+\target{FiniteArithmeticExamples.outside\_window\_not\_integral}
+\newpage
+\pageheading{5. Verification, regressions and remaining work}{Cumulative release evidence}
+The fresh build started with an empty output directory under Lean 4.34.0-rc2 and Mathlib revision
+\[
+ \texttt{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.
+\]
+All nine dependency revisions matched the runtime manifest and repository heads.
+
+\begin{center}
+\begin{tabular}{@{}p{.68\textwidth}r@{}}
+\toprule
+Check & Result\\\midrule
+Modules compiled, warnings treated as errors & 28/28\\
+Named theorem declarations & 333\\
+Explicit definitions audited separately & 77\\
+Expected axiom reports matched & 410/410\\
+Invalid-proof controls rejected & 17/17\\
+Infrastructure and release tests & 103 passed\\\bottomrule
+\end{tabular}
+\end{center}
+Dependencies are among \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}, or subsets thereof. The source scan excludes admitted proofs, new axioms and selected trust bypasses. The five new rejection controls cover root lifting, primality, dyadic signs, integrality and coprimality.
+
+\subsection*{Independent finite checks}
+The exact Python mirrors passed 2,132 standard-window coefficient rows, 1,476 prime-power unit cases, 555 exhaustive root-uniqueness checks, 4,594 precision comparisons and 576 multiplicativity comparisons. The dyadic suite checked 454 decompositions and their uniqueness. CRT covered 1,240 addresses and 6,200 selector cases. Thirteen invalid inputs were rejected.
+
+These are independently implemented finite arithmetic checks, not code extracted from Lean or replacements for its universal proofs. Their deterministic mathematical payload is replayed separately from elapsed time in the fresh-extraction release audit.
+
+\subsection*{Failures and preservation}
+Eleven of 18 development checks failed before repair, on lemma interfaces, coercions, finite cases and simplification. Their inactive snapshots and diagnostics are retained. All 21 upstream proof files and four earlier supplements are unchanged. Edition-specific test updates retain archived originals.
+
+\subsection*{Four manuscript-proved items remain pending}
+\begin{center}
+\begin{tabular}{@{}lp{.79\textwidth}@{}}
+7.5 & Global odd-prime Euler finite-difference theorem\\
+8.5 & Uniform standard-window period\\
+9.1 & Companion jump theorem\\
+9.2 & Fibonacci packet recurrence\\
+\end{tabular}
+\end{center}
+Three classical inputs and two conjectures remain separate. Mathlib's cache was reused, not independently rebuilt. Earlier papers and historical experiments were not rerun. The preserved manuscript must be read with the cumulative supplements and amendments.
+\end{document}

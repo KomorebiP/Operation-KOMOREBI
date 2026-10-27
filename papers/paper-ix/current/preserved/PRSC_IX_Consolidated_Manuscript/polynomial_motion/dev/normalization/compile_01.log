@@ -1,0 +1,61 @@
+/workspace/scratch/196a43c5b4f3/polynomial_motion/formalization/PolynomialMotionNormalization.lean:58:2: error: unsolved goals
+case refine_2
+d : ℕ
+R : Type u_1
+inst✝ : CommRing R
+P : MvPolynomial (Fin d) R
+a : Fin d → R
+c : R
+Q : MvPolynomial (Fin d) R
+hQ :
+  ∀ (u : Fin d → R),
+    (eval fun i => a i + c * u i) P = (eval a) P + c * ∑ i, (eval a) ((pderiv i) P) * u i + c ^ 2 * (eval u) Q
+hQ0 : (eval 0) Q = 0
+⊢ constantCoeff (linearPart P a) + c * constantCoeff Q = 0
+/workspace/scratch/196a43c5b4f3/polynomial_motion/formalization/PolynomialMotionNormalization.lean:58:10: error: This simp argument is unused:
+  hQ0
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/196a43c5b4f3/polynomial_motion/formalization/PolynomialMotionNormalization.lean:87:2: error: unsolved goals
+case refine_1
+d p s M : ℕ
+inst✝ : Fact (Nat.Prime p)
+hr : 2 * s < M
+F H : Fin d → MvPolynomial (Fin d) ℤ_[p]
+a : Fin d → ℤ_[p]
+A : Matrix (Fin d) (Fin d) ℤ_[p]
+hAJ : A * jacobian F a = ↑p ^ s • 1
+hF : ∀ (i : Fin d), (eval a) (F i) = 0
+hAF : ∀ (i : Fin d), (eval a) (precondition A F i) = 0
+QF : Fin d → MvPolynomial (Fin d) ℤ_[p]
+hQF :
+  ∀ (i : Fin d) (u : Fin d → ℤ_[p]),
+    (eval fun i => a i + ↑p ^ (s + 1) * u i) (precondition A F i) =
+      (eval a) (precondition A F i) + ↑p ^ (s + 1) * ∑ i_1, (eval a) ((pderiv i_1) (precondition A F i)) * u i_1 +
+        (↑p ^ (s + 1)) ^ 2 * (eval u) (QF i)
+hQF0 : ∀ (i : Fin d), (eval 0) (QF i) = 0
+QH : Fin d → MvPolynomial (Fin d) ℤ_[p]
+hQH :
+  ∀ (i : Fin d) (u : Fin d → ℤ_[p]),
+    (eval fun i => a i + ↑p ^ (s + 1) * u i) (precondition A H i) =
+      (eval a) (precondition A H i) + ↑p ^ (s + 1) * (eval u) (QH i)
+hQH0 : ∀ (i : Fin d), (eval 0) (QH i) = 0
+i : Fin d
+⊢ constantCoeff (QF i) + ↑p ^ (M - (s + 1)) * constantCoeff (QH i) = 0
+/workspace/scratch/196a43c5b4f3/polynomial_motion/formalization/PolynomialMotionNormalization.lean:88:10: error: This simp argument is unused:
+  hQF0
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hQH0]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/196a43c5b4f3/polynomial_motion/formalization/PolynomialMotionNormalization.lean:88:16: error: This simp argument is unused:
+  hQH0
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hQF0]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

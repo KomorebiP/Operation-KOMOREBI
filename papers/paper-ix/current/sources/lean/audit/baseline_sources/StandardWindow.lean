@@ -1,0 +1,51 @@
+module
+
+public import Mathlib.Data.Nat.Choose.Lucas
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.Tactic
+public import Mathlib.Data.Nat.Prime.Factorial
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.StandardWindow
+
+/-- Separating the low digit proves the original all-row congruence. -/
+theorem lucas_row_reduction (p m n q j : ℕ) [Fact p.Prime] (hj : j < p) :
+    Nat.ModEq p ((m*p*n+j).choose (m*p*q)) ((m*n).choose (m*q)) := by
+  have h := Choose.choose_modEq_choose_mod_mul_choose_div_nat
+    (p := p) (n := p*(m*n)+j) (k := p*(m*q))
+  have hp : 0 < p := (Fact.out : p.Prime).pos
+  have hjdiv : j/p=0 := Nat.div_eq_of_lt hj
+  simpa [Nat.mul_add_mod, Nat.add_mod, Nat.mod_eq_of_lt hj, Nat.mul_div_right,
+    Nat.add_div, hjdiv, hp, Nat.not_le.mpr hj, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm] using h
+
+theorem standard_diagonal_mod_one (p m n j : ℕ) [Fact p.Prime] (hj : j < p) :
+    Nat.ModEq p ((m*p*n+j).choose (m*p*n)) 1 := by
+  simpa using lucas_row_reduction p m n n j hj
+
+theorem standard_diagonal_not_divisible (p m n j : ℕ) [Fact p.Prime] (hj : j < p) :
+    ¬ p ∣ (m*p*n+j).choose (m*p*n) := by
+  have h := standard_diagonal_mod_one p m n j hj
+  intro hd
+  have hp : 1 < p := (Fact.out : p.Prime).one_lt
+  have he : ((m*p*n+j).choose (m*p*n)) % p = 1 % p := h
+  rw [Nat.mod_eq_zero_of_dvd hd, Nat.mod_eq_of_lt hp] at he
+  omega
+
+theorem standard_diagonal_unit (p m n j : ℕ) [Fact p.Prime] (hj : j < p) :
+    IsUnit (((m*p*n+j).choose (m*p*n) : ℕ) : ZMod p) := by
+  apply isUnit_iff_ne_zero.mpr
+  intro h
+  exact standard_diagonal_not_divisible p m n j hj ((ZMod.natCast_eq_zero_iff _ _).mp h)
+
+theorem factorial_unit_window (p j : ℕ) [Fact p.Prime] (hj : j < p) :
+    ¬ p ∣ j.factorial := by
+  simpa only [(Fact.out : p.Prime).dvd_factorial, not_le] using hj
+
+theorem factorial_valuation_zero (p j : ℕ) [Fact p.Prime] (hj : j < p) :
+    padicValNat p j.factorial = 0 :=
+  padicValNat.eq_zero_of_not_dvd (factorial_unit_window p j hj)
+
+end KomorebiPaperIX.StandardWindow

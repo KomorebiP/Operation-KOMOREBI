@@ -1,0 +1,142 @@
+'KomorebiPaperIX.StepAmplification.binomial_step_precision' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.StepAmplification.offset_displacement' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.StepAmplification.difference_compose' depends on axioms: [propext]
+'KomorebiPaperIX.StepAmplification.repeated_offset' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.StepAmplification.repeated_precision' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.DyadicStepAmplification.normalized_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiPaperIX.DyadicStepAmplification.normalized_precision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.DyadicStepAmplification.prime_power_step_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.DyadicStepAmplification.unnormalized_factorial_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.DyadicStepAmplification.unnormalized_factorial_precision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.StepAmplificationExamples.actual_second_coefficient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.StepAmplificationExamples.actual_first_difference' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.StepAmplificationExamples.actual_first_difference_valuation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.StepAmplificationExamples.no_uniform_extra_digit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.AllResidueStepAmplification.unnormalized_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.AllResidueStepAmplification.unnormalized_precision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiPaperIX.AllResidueStepAmplification.normalized_precision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+theorem KomorebiPaperIX.DyadicStepAmplification.normalized_precision : ∀ (j u k n : ℕ),
+  j < 4 →
+    KomorebiPaperIX.GlobalEulerBoundary.precision 2 (↑(min (k * (padicValNat 2 u + 1)) n))
+      (KomorebiPaperIX.Mahler.difference u k (KomorebiPaperIX.Congruential.coeff 4 j) n) :=
+fun j u k n hj =>
+  KomorebiPaperIX.StandardWindowPrecision.rational_precision_of_divisibility 2
+    (KomorebiPaperIX.Mahler.difference u k (KomorebiPaperIX.DyadicFourCongruences.normalizedLift j hj) n)
+    (KomorebiPaperIX.Mahler.difference u k (KomorebiPaperIX.Congruential.coeff 4 j) n)
+    (KomorebiPaperIX.DyadicFourCongruences.normalized_difference_coe j u k n hj) (min (k * (padicValNat 2 u + 1)) n)
+    (KomorebiPaperIX.DyadicStepAmplification.normalized_bound j u k n hj)
+theorem KomorebiPaperIX.DyadicStepAmplification.unnormalized_factorial_precision : ∀ (j u k n : ℕ),
+  j < 4 →
+    KomorebiPaperIX.GlobalEulerBoundary.precision 2 (↑(min (k * (padicValNat 2 u + 1)) n + padicValNat 2 j.factorial))
+      (KomorebiPaperIX.Mahler.difference u k (KomorebiPaperIX.Congruential.unnormalized 4 j) n) :=
+fun j u k n hj =>
+  KomorebiPaperIX.StandardWindowPrecision.rational_precision_of_divisibility 2
+    (KomorebiPaperIX.Mahler.difference u k (KomorebiPaperIX.DyadicFourCongruences.unnormalizedLift j hj) n)
+    (KomorebiPaperIX.Mahler.difference u k (KomorebiPaperIX.Congruential.unnormalized 4 j) n)
+    (KomorebiPaperIX.DyadicFourCongruences.unnormalized_difference_coe j u k n hj)
+    (min (k * (padicValNat 2 u + 1)) n + padicValNat 2 j.factorial)
+    (KomorebiPaperIX.DyadicStepAmplification.unnormalized_factorial_bound j u k n hj)
+theorem KomorebiPaperIX.AllResidueStepAmplification.unnormalized_precision : ∀ (p : ℕ) [Fact (Nat.Prime p)]
+  (m j u k n : ℕ),
+  m ∣ p - 1 →
+    0 < m →
+      j < m * p →
+        KomorebiPaperIX.GlobalEulerBoundary.precision p (↑(min (k * (padicValNat p u + 1)) (m * n)))
+          (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k (KomorebiPaperIX.Congruential.unnormalized (m * p) j)
+            n) :=
+fun p [Fact (Nat.Prime p)] m j u k n hm hmpos hj =>
+  KomorebiPaperIX.StandardWindowPrecision.rational_precision_of_divisibility p
+    (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k
+      (KomorebiPaperIX.AllResidueEuler.unnormalizedLift p m j hm hmpos hj) n)
+    (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k (KomorebiPaperIX.Congruential.unnormalized (m * p) j) n)
+    (id
+      (Eq.mpr
+        (id
+          (congrArg
+            (fun _a =>
+              _a =
+                (algebraMap ℚ ℚ_[p])
+                  (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k
+                    (KomorebiPaperIX.Congruential.unnormalized (m * p) j) n))
+            (Eq.symm
+              (KomorebiPaperIX.DifferenceFiltration.difference_map (algebraMap ℤ_[p] ℚ_[p]) (u * ((p - 1) / m)) k
+                (KomorebiPaperIX.AllResidueEuler.unnormalizedLift p m j hm hmpos hj) n))))
+        (Eq.mpr
+          (id
+            (congrArg
+              (fun _a =>
+                KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k
+                    (fun j_1 =>
+                      (algebraMap ℤ_[p] ℚ_[p]) (KomorebiPaperIX.AllResidueEuler.unnormalizedLift p m j hm hmpos hj j_1))
+                    n =
+                  _a)
+              (Eq.symm
+                (KomorebiPaperIX.DifferenceFiltration.difference_map (algebraMap ℚ ℚ_[p]) (u * ((p - 1) / m)) k
+                  (KomorebiPaperIX.Congruential.unnormalized (m * p) j) n))))
+          ((fun {R} [CommRing R] h h_1 e_h =>
+              Eq.rec (motive := fun h_2 e_h =>
+                ∀ (s s_1 : ℕ),
+                  s = s_1 →
+                    ∀ (f f_1 : ℕ → R),
+                      f = f_1 →
+                        ∀ (a a_1 : ℕ),
+                          a = a_1 →
+                            KomorebiPaperIX.Mahler.difference h s f a =
+                              KomorebiPaperIX.Mahler.difference h_2 s_1 f_1 a_1)
+                (fun s s_1 e_s =>
+                  Eq.rec (motive := fun s_2 e_s =>
+                    ∀ (f f_1 : ℕ → R),
+                      f = f_1 →
+                        ∀ (a a_1 : ℕ),
+                          a = a_1 →
+                            KomorebiPaperIX.Mahler.difference h s f a = KomorebiPaperIX.Mahler.difference h s_2 f_1 a_1)
+                    (fun f f_1 e_f =>
+                      Eq.rec (motive := fun f_2 e_f =>
+                        ∀ (a a_1 : ℕ),
+                          a = a_1 →
+                            KomorebiPaperIX.Mahler.difference h s f a = KomorebiPaperIX.Mahler.difference h s f_2 a_1)
+                        (fun a a_1 e_a => e_a ▸ Eq.refl (KomorebiPaperIX.Mahler.difference h s f a)) e_f)
+                    e_s)
+                e_h)
+            (u * ((p - 1) / m)) (u * ((p - 1) / m)) (Eq.refl (u * ((p - 1) / m))) k k (Eq.refl k)
+            (fun j_1 =>
+              (algebraMap ℤ_[p] ℚ_[p]) (KomorebiPaperIX.AllResidueEuler.unnormalizedLift p m j hm hmpos hj j_1))
+            (fun j_1 => (algebraMap ℚ ℚ_[p]) (KomorebiPaperIX.Congruential.unnormalized (m * p) j j_1))
+            (funext fun r => KomorebiPaperIX.AllResidueEuler.unnormalizedLift_coe p m j r hm hmpos hj) n n
+            (Eq.refl n)))))
+    (min (k * (padicValNat p u + 1)) (m * n))
+    (KomorebiPaperIX.AllResidueStepAmplification.unnormalized_bound p m j u k n hm hmpos hj)
+theorem KomorebiPaperIX.AllResidueStepAmplification.normalized_precision : ∀ (p : ℕ) [Fact (Nat.Prime p)]
+  (m j u k n : ℕ),
+  m ∣ p - 1 →
+    0 < m →
+      j < m * p →
+        KomorebiPaperIX.GlobalEulerBoundary.precision p
+          (↑(min (k * (padicValNat p u + 1)) (m * n)) - ↑(padicValNat p j.factorial))
+          (KomorebiPaperIX.Mahler.difference (u * ((p - 1) / m)) k (KomorebiPaperIX.Congruential.coeff (m * p) j) n) :=
+fun p [Fact (Nat.Prime p)] m j u k n hm hmpos hj =>
+  KomorebiPaperIX.GlobalEulerBoundary.factorial_loss_transfer p (m * p) j (u * ((p - 1) / m)) k n
+    (↑(min (k * (padicValNat p u + 1)) (m * n)))
+    (KomorebiPaperIX.AllResidueStepAmplification.unnormalized_precision p m j u k n hm hmpos hj)

@@ -1,0 +1,37 @@
+theorem exists_analytic_integral_implicit (p : ℕ) [Fact (Nat.Prime p)]
+    (F : Fin e → MvPolynomial (Fin (e + k)) ℤ_[p])
+    (a : Fin (e + k) → ℤ_[p]) (hF : ∀ i, eval a (F i) = 0)
+    (hJ : IsUnit (rationalMatrix p (Komorebi.PolynomialJointSystem.solvedJacobian F a))) :
+    ∃ (ψ : (Fin k → ℚ_[p]) → (Fin e → ℚ_[p])) (U : Set (Fin k → ℚ_[p]))
+      (V : Set (Fin e → ℚ_[p])),
+      IsOpen U ∧ IsOpen V ∧ rationalPoint p (freePart a) ∈ U ∧
+      rationalPoint p (solvedPart a) ∈ V ∧
+      ψ (rationalPoint p (freePart a)) = rationalPoint p (solvedPart a) ∧
+      AnalyticOnNhd ℚ_[p] ψ U ∧ (∀ t ∈ U, ψ t ∈ V) ∧
+      (∀ t ∈ U, ∀ y ∈ V,
+        (∀ i, eval₂ (algebraMap ℤ_[p] ℚ_[p]) (join y t) (F i) = 0) ↔ y = ψ t) ∧
+      HasStrictFDerivAt ψ
+        (matrixCLM (-((rationalMatrix p
+          (Komorebi.PolynomialJointSystem.solvedJacobian F a))⁻¹ *
+          Matrix.of (fun i j => algebraMap ℤ_[p] ℚ_[p] (parameterJacobian F a i j)))))
+        (rationalPoint p (freePart a)) := by
+  have hroot : evalSystem (rationalSystem p F) (rationalPoint p a) = 0 := by
+    ext i
+    exact rationalSystem_root p F a hF i
+  have hunit : IsUnit (Komorebi.PolynomialJointSystem.solvedJacobian
+      (rationalSystem p F) (rationalPoint p a)) := by
+    simpa only [solvedJacobian_rationalSystem] using hJ
+  obtain ⟨ψ, U, V, hU, hV, ht, hy, hψa, hψan, hψV, hgraph, hder⟩ :=
+    Komorebi.PolynomialAnalyticImplicit.exists_analytic_implicit
+      (rationalSystem p F) (rationalPoint p a) hroot hunit
+  refine ⟨ψ, U, V, hU, hV, ht, hy, hψa, hψan, hψV, ?_, ?_⟩
+  · intro t ht' y hy'
+    have h := hgraph t ht' y hy'
+    simpa only [evalSystem, rationalSystem, MvPolynomial.eval_map,
+      funext_iff, Pi.zero_apply] using h
+  · have hK : parameterJacobian (rationalSystem p F) (rationalPoint p a) =
+        Matrix.of (fun i j => algebraMap ℤ_[p] ℚ_[p] (parameterJacobian F a i j)) := by
+      ext i j
+      exact eval_pderiv_rationalSystem p F a i (Fin.natAdd e j)
+    rw [solvedJacobian_rationalSystem, hK, rationalPoint_freePart] at hder
+    exact hder

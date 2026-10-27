@@ -1,0 +1,6 @@
+theorem prescribed_equation_iff (q : ℕ) (F : Fin e → MvPolynomial (Fin (m + k)) ℤ)
+    (x : Fin (m + k) → ℤ) (r : Fin e → ℤ) (v : Fin k → ZMod q) (u : Fin m → ZMod q) :
+    parameterResidual q F x r v + solvedJacobian q F x u = 0 ↔
+      reduction q e r + digitJacobian q F x (PolynomialParameterSystem.join u v) = 0 := by
+  rw [digitJacobian_join]
+  simp only [parameterResidual, add_assoc, add_comm (parameterJacobian q F x v)]

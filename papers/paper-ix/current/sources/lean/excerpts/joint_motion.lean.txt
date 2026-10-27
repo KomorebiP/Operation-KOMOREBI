@@ -1,0 +1,30 @@
+theorem exists_joint_root_motion (p s M : ℕ) [Fact p.Prime]
+    (hM : 2 * s < M) (F H : Fin e → MvPolynomial (Fin (e + k)) ℤ_[p])
+    (a : Fin (e + k) → ℤ_[p]) (v : Fin k → ℤ_[p])
+    (hFa : ∀ i, eval a (F i) = 0)
+    (hJ : IsUnit (rationalMatrix p (solvedJacobian F a)))
+    (hbound : ∃ A : Matrix (Fin e) (Fin e) ℤ_[p],
+      rationalMatrix p A = (p : ℚ_[p]) ^ s • (rationalMatrix p (solvedJacobian F a))⁻¹) :
+    ∃ b : Fin (e + k) → ℤ_[p],
+      (∀ i, eval b (F i) + (p : ℤ_[p]) ^ M * eval b (H i) = 0) ∧
+      freePart b = freePart a + (p : ℤ_[p]) ^ M • v ∧
+      (∀ i, (p : ℤ_[p]) ^ (M - s) ∣ b i - a i) ∧
+      (∀ i, (p : ℤ_[p]) ^ (s + 1) ∣ b i - a i) ∧
+      (∀ z : Fin (e + k) → ℤ_[p],
+        (∀ i, eval z (F i) + (p : ℤ_[p]) ^ M * eval z (H i) = 0) →
+        freePart z = freePart a + (p : ℤ_[p]) ^ M • v →
+        (∀ i, (p : ℤ_[p]) ^ (s + 1) ∣ z i - a i) → z = b) ∧
+      (∃ ε : Fin e → ℤ_[p], (∀ i, (p : ℤ_[p]) ^ (2 * M - 3 * s) ∣ ε i) ∧
+        ∀ i, ((solvedPart b i : ℤ_[p]) : ℚ_[p]) - ((solvedPart a i : ℤ_[p]) : ℚ_[p]) =
+          -(p : ℚ_[p]) ^ M * ((rationalMatrix p (solvedJacobian F a))⁻¹).mulVec
+            (fun j => ((eval a (H j) + (parameterJacobian F a).mulVec v j : ℤ_[p]) : ℚ_[p])) i +
+          (ε i : ℚ_[p])) := by
+  obtain ⟨A, hA⟩ := hbound
+  obtain ⟨hAJ, hJA⟩ := certificate_of_integral_inverse p s (solvedJacobian F a) A hJ hA
+  obtain ⟨b, hb, ht, hdepth, hball, huniq, herror⟩ :=
+    exists_joint_root_certificate p s M hM F H a v A hAJ hJA hFa
+  obtain ⟨ε, hε, hformula⟩ := PolynomialMotionRational.exists_rational_error
+    p s M (2 * M - 3 * s) (by omega) (solvedJacobian F a) A hA
+    (solvedPart a) (solvedPart b)
+    ((fun j => eval a (H j)) + (parameterJacobian F a).mulVec v) herror
+  exact ⟨b, hb, ht, hdepth, hball, huniq, ε, hε, hformula⟩

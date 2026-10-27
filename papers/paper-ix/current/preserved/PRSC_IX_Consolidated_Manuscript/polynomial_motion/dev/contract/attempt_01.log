@@ -1,0 +1,30 @@
+/workspace/scratch/196a43c5b4f3/polynomial_motion/contracts/PolynomialRootMotionContract.lean:66:2: error: Type mismatch: After simplification, term
+  PolynomialRootMotion.exists_unique_root_motion p s M hM F H a hFa hJ hbound
+ has type
+  And (∃! b, (∀ (i : Fin d), (eval b) (F i) + ↑p ^ M * (eval b) (H i) = 0) ∧ ∀ (i : Fin d), ↑p ^ (s + 1) ∣ b i - a i)
+    (∀ (b : Fin d → ℤ_[p]),
+      (∀ (i : Fin d), (eval b) (F i) + ↑p ^ M * (eval b) (H i) = 0) →
+        (∀ (i : Fin d), ↑p ^ (s + 1) ∣ b i - a i) →
+          (∀ (i : Fin d), ↑p ^ (M - s) ∣ b i - a i) ∧
+            ∃ ε,
+              (∀ (i : Fin d), ↑p ^ (2 * M - 3 * s) ∣ ε i) ∧
+                ∀ (i : Fin d),
+                  ↑(b i) - ↑(a i) =
+                    -↑p ^ M *
+                        ((algebraMap ℤ_[p] ℚ_[p]).mapMatrix (PolynomialWeightedInverse.jacobian F a))⁻¹.mulVec
+                          (fun j => ↑((eval a) (H j))) i +
+                      ↑(ε i))
+but is expected to have type
+  And (∃! b, (∀ (i : Fin d), (eval b) (F i) + ↑p ^ M * (eval b) (H i) = 0) ∧ ∀ (i : Fin d), ↑p ^ (s + 1) ∣ b i - a i)
+    (∀ (b : Fin d → ℤ_[p]),
+      (∀ (i : Fin d), (eval b) (F i) + ↑p ^ M * (eval b) (H i) = 0) →
+        (∀ (i : Fin d), ↑p ^ (s + 1) ∣ b i - a i) →
+          (∀ (i : Fin d), ↑p ^ (M - s) ∣ b i - a i) ∧
+            ∃ ε,
+              (∀ (i : Fin d), ↑p ^ (2 * M - 3 * s) ∣ ε i) ∧
+                ∀ (i : Fin d),
+                  ↑(b i) - ↑(a i) =
+                    -↑p ^ M *
+                        ((algebraMap ℤ_[p] ℚ_[p]).mapMatrix fun k j => (eval a) ((pderiv j) (F k)))⁻¹.mulVec
+                          (fun j => ↑((eval a) (H j))) i +
+                      ↑(ε i))
