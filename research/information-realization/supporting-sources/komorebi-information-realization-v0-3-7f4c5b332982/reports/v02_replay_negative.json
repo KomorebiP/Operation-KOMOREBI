@@ -1,0 +1,125 @@
+{
+  "suite": "negative",
+  "status": "PASS",
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "elapsed_seconds": 0.016,
+  "confirmed_v01_implementation_issues": 3,
+  "false_generalizations_refuted": 9,
+  "large_integer_boundary_checks": 3072,
+  "invalid_input_cases_rejected": 11,
+  "findings": [
+    {
+      "id": "BUG-01",
+      "claim": "v0.1 crashes on null observation cells",
+      "observed": [
+        {
+          "routine": "optimal_squared_error",
+          "exception": "KeyError",
+          "missing_key": "1"
+        },
+        {
+          "routine": "projection_increment",
+          "exception": "KeyError",
+          "missing_key": "1"
+        }
+      ],
+      "v0.2": "fixed, null mass skipped and null-cell conditional means chosen as zero"
+    },
+    {
+      "id": "BUG-02",
+      "claim": "v0.1 accepts negative probability and returns an impossible negative error",
+      "old_error": "-1",
+      "v0.2": "rejected with ValueError"
+    },
+    {
+      "id": "BUG-03",
+      "claim": "float ceil(log2(k)) can understate a large integer alphabet budget",
+      "alphabet": 9007199254740993,
+      "old_bits": 53,
+      "correct_bits": 54,
+      "note": "Latent arithmetic weakness, not a failure encountered in the tiny v0.1 enumerations."
+    },
+    {
+      "id": "NC-01",
+      "false_generalization": "zero probabilistic deficit implies pointwise recovery without full support",
+      "counterexample": {
+        "states": 2,
+        "positive_mass_states": 1,
+        "classes": 1,
+        "kappa": 2,
+        "repair_bits": 1,
+        "entropy_bits": 0.0,
+        "bayes_error": "0",
+        "categorical_residual": "0"
+      }
+    },
+    {
+      "id": "NC-02",
+      "false_generalization": "projection loss identity without nesting or a Markov condition",
+      "loss_difference": "-1/4",
+      "projector_distance": "1/4"
+    },
+    {
+      "id": "NC-03",
+      "false_generalization": "task information is additive or always has diminishing marginal returns",
+      "witness": "Fair A,B and F=A XOR B. Individual task mutual informations are 0; joint is 1 bit."
+    },
+    {
+      "id": "NC-04",
+      "false_generalization": "Kappa alphabet theorem remains valid when encoder sees only F rather than the state",
+      "state_aware_min_alphabet": 2,
+      "target_only_min_alphabet": 3,
+      "target_only_two_symbol_best_success": "9/10",
+      "coloring": [
+        0,
+        1,
+        0,
+        1,
+        2
+      ],
+      "valid_colorings_by_alphabet": {
+        "1": 0,
+        "2": 0,
+        "3": 30
+      }
+    },
+    {
+      "id": "NC-05",
+      "false_generalization": "sum/difference signal repair works unchanged in characteristic two",
+      "GF5_combined_rank": 4,
+      "GF2_combined_rank": 2
+    },
+    {
+      "id": "NC-06",
+      "false_generalization": "pairwise satisfiable parity constraints necessarily glue globally",
+      "pairwise_solution_counts": [
+        2,
+        2,
+        2
+      ],
+      "global_solutions": 0
+    },
+    {
+      "id": "NC-07",
+      "false_generalization": "very small Bayes error removes the exact obstruction",
+      "bayes_error": "1/1000000",
+      "exact_repair_bits": 1
+    },
+    {
+      "id": "NC-08",
+      "false_generalization": "MSE is an intrinsic count of information independent of target coordinates",
+      "MSE_for_labels_0_1": "1/4",
+      "MSE_for_labels_0_10": "25"
+    },
+    {
+      "id": "NC-09",
+      "false_generalization": "exact injectivity implies noise-robust reconstruction",
+      "observation": "R(a,b)=(a,b/1000)",
+      "noise_in_second_coordinate": "1/1000",
+      "reconstructed_b_error": "1",
+      "error_amplification": 1000
+    }
+  ],
+  "interpretation": "Expected counterexamples and regressions are PASS when detected. They are not disproofs of the correctly stated theorems."
+}

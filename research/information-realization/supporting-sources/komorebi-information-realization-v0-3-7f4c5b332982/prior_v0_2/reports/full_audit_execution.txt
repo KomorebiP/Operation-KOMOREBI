@@ -1,0 +1,236 @@
+RUN structural
+{
+  "suite": "structural",
+  "status": "PASS",
+  "elapsed_seconds": 0.731,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "realization_task_pairs": 44168,
+  "composition_configurations": 521196,
+  "constructive_minimal_repairs": 44168,
+  "obstruction_witnesses": 41263,
+  "coverage": "All observation/task partitions and observation coarsenings on 1..6 states, up to alphabet relabeling.",
+  "by_state_size": [
+    {
+      "states": 1,
+      "partitions": 1,
+      "composition_cases": 1
+    },
+    {
+      "states": 2,
+      "partitions": 2,
+      "composition_cases": 6
+    },
+    {
+      "states": 3,
+      "partitions": 5,
+      "composition_cases": 60
+    },
+    {
+      "states": 4,
+      "partitions": 15,
+      "composition_cases": 900
+    },
+    {
+      "states": 5,
+      "partitions": 52,
+      "composition_cases": 18616
+    },
+    {
+      "states": 6,
+      "partitions": 203,
+      "composition_cases": 501613
+    }
+  ]
+}
+RUN probability
+{
+  "suite": "probability",
+  "status": "PASS",
+  "elapsed_seconds": 19.789,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "weighted_models": 18684,
+  "models_with_zero_weights": 14866,
+  "models_with_full_support": 3818,
+  "explicit_decoder_candidates": 266034,
+  "encoder_partitions_evaluated": 273316,
+  "optimal_repair_budget_instances": 74016,
+  "exact_entropy_risk_projection_transport_instances": 73610,
+  "coverage": "All observation/task partitions on 1..4 states; every nonzero weight vector in {0,1,2}^n; all coarsenings; every code partition and m=1..n.",
+  "entropy_arithmetic": "Exact rational exponential certificates. No floating tolerance used for theorem inequalities.",
+  "categorical_residual_checks": "One-hot MSE oracle, Bayes-error bounds, exact entropy-collision bound, and exact transfer-loss identity."
+}
+RUN markov
+{
+  "suite": "markov",
+  "status": "PASS",
+  "elapsed_seconds": 0.891,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "binary_markov_models": 3125,
+  "models_with_zero_weights": 2882,
+  "decimal_display_crosschecks": 1341,
+  "coverage": "Every binary Markov chain with each of its five probability parameters in {0,1/4,1/2,3/4,1}.",
+  "probability_and_entropy_inequalities": "EXACT"
+}
+RUN linear
+{
+  "suite": "linear",
+  "status": "PASS",
+  "elapsed_seconds": 1.838,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "exhaustive_linear_map_pairs": 10657,
+  "seeded_GF5_four_dimensional_pairs": 300,
+  "coverage": "All pairs of 2x3 GF(2) matrices and 2x2 GF(3) matrices; 300 seed-2601015 GF(5)^4 instances, including empty/redundant task and observation row sets.",
+  "independent_oracles": "State-fiber enumeration, kernel-image enumeration, modular row reduction, constructive task-row repair."
+}
+RUN dynamics
+{
+  "suite": "dynamics",
+  "status": "PASS",
+  "elapsed_seconds": 0.194,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "exhaustive_single_action_models": 3984,
+  "seeded_multiple_action_models": 1000,
+  "coverage": "All transitions and observation partitions on 1..4 states; 1000 seed-2602015 systems on 2..12 states with 2..4 actions.",
+  "oracles": "Product-state reachability and exhaustive minimality among partitions for n<=4."
+}
+RUN metamorphic
+{
+  "suite": "metamorphic",
+  "status": "PASS",
+  "elapsed_seconds": 0.124,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "metamorphic_models": 1000,
+  "coverage": "Seed 2603015. State permutations, bijective label recodings, weight rescaling, splitting a latent state (including null duplicates)."
+}
+RUN negative
+{
+  "suite": "negative",
+  "status": "PASS",
+  "elapsed_seconds": 0.011,
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "optimization_level": 0,
+  "confirmed_v01_implementation_issues": 3,
+  "false_generalizations_refuted": 9,
+  "large_integer_boundary_checks": 3072,
+  "invalid_input_cases_rejected": 11,
+  "findings": [
+    {
+      "id": "BUG-01",
+      "claim": "v0.1 crashes on null observation cells",
+      "observed": [
+        {
+          "routine": "optimal_squared_error",
+          "exception": "KeyError",
+          "missing_key": "1"
+        },
+        {
+          "routine": "projection_increment",
+          "exception": "KeyError",
+          "missing_key": "1"
+        }
+      ],
+      "v0.2": "fixed, null mass skipped and null-cell conditional means chosen as zero"
+    },
+    {
+      "id": "BUG-02",
+      "claim": "v0.1 accepts negative probability and returns an impossible negative error",
+      "old_error": "-1",
+      "v0.2": "rejected with ValueError"
+    },
+    {
+      "id": "BUG-03",
+      "claim": "float ceil(log2(k)) can understate a large integer alphabet budget",
+      "alphabet": 9007199254740993,
+      "old_bits": 53,
+      "correct_bits": 54,
+      "note": "Latent arithmetic weakness, not a failure encountered in the tiny v0.1 enumerations."
+    },
+    {
+      "id": "NC-01",
+      "false_generalization": "zero probabilistic deficit implies pointwise recovery without full support",
+      "counterexample": {
+        "states": 2,
+        "positive_mass_states": 1,
+        "classes": 1,
+        "kappa": 2,
+        "repair_bits": 1,
+        "entropy_bits": 0.0,
+        "bayes_error": "0",
+        "categorical_residual": "0"
+      }
+    },
+    {
+      "id": "NC-02",
+      "false_generalization": "projection loss identity without nesting or a Markov condition",
+      "loss_difference": "-1/4",
+      "projector_distance": "1/4"
+    },
+    {
+      "id": "NC-03",
+      "false_generalization": "task information is additive or always has diminishing marginal returns",
+      "witness": "Fair A,B and F=A XOR B. Individual task mutual informations are 0; joint is 1 bit."
+    },
+    {
+      "id": "NC-04",
+      "false_generalization": "Kappa alphabet theorem remains valid when encoder sees only F rather than the state",
+      "state_aware_min_alphabet": 2,
+      "target_only_min_alphabet": 3,
+      "target_only_two_symbol_best_success": "9/10",
+      "coloring": [
+        0,
+        1,
+        0,
+        1,
+        2
+      ],
+      "valid_colorings_by_alphabet": {
+        "1": 0,
+        "2": 0,
+        "3": 30
+      }
+    },
+    {
+      "id": "NC-05",
+      "false_generalization": "sum/difference signal repair works unchanged in characteristic two",
+      "GF5_combined_rank": 4,
+      "GF2_combined_rank": 2
+    },
+    {
+      "id": "NC-06",
+      "false_generalization": "pairwise satisfiable parity constraints necessarily glue globally",
+      "pairwise_solution_counts": [
+        2,
+        2,
+        2
+      ],
+      "global_solutions": 0
+    },
+    {
+      "id": "NC-07",
+      "false_generalization": "very small Bayes error removes the exact obstruction",
+      "bayes_error": "1/1000000",
+      "exact_repair_bits": 1
+    },
+    {
+      "id": "NC-08",
+      "false_generalization": "MSE is an intrinsic count of information independent of target coordinates",
+      "MSE_for_labels_0_1": "1/4",
+      "MSE_for_labels_0_10": "25"
+    },
+    {
+      "id": "NC-09",
+      "false_generalization": "exact injectivity implies noise-robust reconstruction",
+      "observation": "R(a,b)=(a,b/1000)",
+      "noise_in_second_coordinate": "1/1000",
+      "reconstructed_b_error": "1",
+      "error_amplification": 1000
+    }
+  ],
+  "interpretation": "Expected counterexamples and regressions are PASS when detected. They are not disproofs of the correctly stated theorems."
+}
