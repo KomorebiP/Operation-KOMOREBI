@@ -1,0 +1,894 @@
+{
+  "schema": "komorebi.signal.claim-lean-concordance.v1",
+  "author": "Komorebi P.",
+  "edition": "2026-10-06",
+  "traditional_claim_input": "traditional/Claim_Concordance.json",
+  "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535",
+  "evidence_scope": "Inspected Paper V v1.1.0 source; inherited checks plus current static correspondence only",
+  "claims": [
+    {
+      "claim_id": "SG-01",
+      "title": "Complete packet analysis and synthesis",
+      "statement_tex": "\nThe maps\n\\[\n \\mathcal A x=(P_ax)_a,\\qquad\n \\mathcal S(x_a)_a=\\sum_ax_a\n\\]\nare inverse isomorphisms between $X$ and $\\bigoplus_aX_a$. In particular,\n$x=\\sum_aP_ax$ uniquely.\n",
+      "hypotheses": "Let $P_1,\\ldots,P_m\\in\\operatorname{End}(X)$ satisfy $P_aP_b=\\delta_{ab}P_a$ and $\\sum_aP_a=I_X$. Set $X_a=P_aX$.",
+      "hypotheses_tex": "Let $P_1,\\ldots,P_m\\in\\operatorname{End}(X)$ satisfy $P_aP_b=\\delta_{ab}P_a$ and $\\sum_aP_a=I_X$. Set $X_a=P_aX$.",
+      "domain": "Vector spaces over a field",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.packet_complete",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/Packets.lean",
+          "line": 36,
+          "source_sha256": "9ea5f1ce99c69179a55bcc289e301820febdff64153a6b9cfec48be52dd04d93",
+          "source_quoted": "theorem packet_complete (phase : I → R) (x : I → V) (i : I) :\n    (∑ r : R, packet phase r x i) = x i := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.projector_complete",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 69,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "theorem projector_complete [Fintype R] [DecidableEq R] (phase : I → R) :\n    (∑ r : R, projector phase r) = ContinuousLinearMap.id ℂ (Signal I) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The archived source proves coordinate and ℓ2 projector specializations; the SG result is for arbitrary complete algebraic projectors.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-02",
+      "title": "Transfer algebra and packet paths",
+      "statement_tex": "\n\\[\n T=\\sum_{a,b}P_bTP_a,\\qquad\n (ST)_{ca}=\\sum_bS_{cb}T_{ba}.\n\\]\nThe block representation is an algebra isomorphism to\n$\\operatorname{End}(\\bigoplus_aX_a)$, with multiplication by contraction of\nintermediate packets. For every integer $k\\ge1$, iterating the product gives\n\\[\n P_{a_k}T^kP_{a_0}\n =\\sum_{a_1,\\ldots,a_{k-1}}\n (P_{a_k}TP_{a_{k-1}})\\cdots(P_{a_1}TP_{a_0}).\n\\]\n",
+      "hypotheses": "Let $S,T\\in\\operatorname{End}(X)$. Set $T_{ba}=P_bTP_a$, viewed as a map $X_a\\to X_b$.",
+      "hypotheses_tex": "Let $S,T\\in\\operatorname{End}(X)$. Set $T_{ba}=P_bTP_a$, viewed as a map $X_a\\to X_b$.",
+      "domain": "The packet space of SG-01",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.FilterBank.bank_mul",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FilterBank.lean",
+          "line": 84,
+          "source_sha256": "217237e10f963e8c0780ab5079edca882c900b39dea0100aa2b79942b9c5b107",
+          "source_quoted": "theorem bank_mul (A B : Matrix I I Laurent) (x : I → Signal) :\n    bank (A*B) x = bank A (bank B x) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "Composition is proved for finite Laurent filter-bank operators; arbitrary packet transfer paths remain a prose theorem.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-03",
+      "title": "Refinement preserves represented operators",
+      "statement_tex": "\n\\[\n P_bTP_a=\\sum_{\\sigma\\in F_b}\\sum_{\\rho\\in F_a}Q_\\sigma TQ_\\rho.\n\\]\nThe coordinate changes $J=\\mathcal A_Q\\mathcal S_P$ and\n$C=\\mathcal A_P\\mathcal S_Q$ satisfy $CJ=I$ and $JC=I$ on their packet\ncoordinate spaces. Refinement is exact before any child packet is discarded.\n",
+      "hypotheses": "Let $(Q_\\rho)$ refine $(P_a)$, with a partition of fine labels into $F_a$ and $P_a=\\sum_{\\rho\\in F_a}Q_\\rho$.",
+      "hypotheses_tex": "Let $(Q_\\rho)$ refine $(P_a)$, with a partition of fine labels into $F_a$ and $P_a=\\sum_{\\rho\\in F_a}Q_\\rho$.",
+      "domain": "Finite complete packet systems",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.packet_refinement",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/Packets.lean",
+          "line": 48,
+          "source_sha256": "9ea5f1ce99c69179a55bcc289e301820febdff64153a6b9cfec48be52dd04d93",
+          "source_quoted": "theorem packet_refinement [Fintype S] [DecidableEq S]\n    (fine : I → S) (coarsen : S → R) (r : R) (x : I → V) (i : I) :\n    packet (coarsen ∘ fine) r x i =\n      ∑ s : S, if coarsen s = r then packet fine s x i else 0 := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.projector_refinement",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 79,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "theorem projector_refinement [Fintype S] [DecidableEq S] [DecidableEq R]\n    (fine : I → S) (coarsen : S → R) (r : R) :\n    projector (coarsen ∘ fine) r =\n      ∑ s : S, if coarsen s = r then projector fine s else 0 := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The source proves supplied coordinate refinement and its bounded ℓ2 specialization, not every abstract packet operator refinement.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-04",
+      "title": "Pulled-back transform packets",
+      "statement_tex": "\nThe operators $P_a=V^{-1}E_aV$ are a complete packet family on $X$.\nFor a unitary $V$ and orthogonal coordinate selectors $E_a$ in a Hilbert space,\n\\[\n \\|x\\|^2=\\sum_a\\|P_ax\\|^2.\n\\]\n",
+      "hypotheses": "Let $V:X\\to Y$ be an isomorphism and $(E_a)$ a finite complete packet family on $Y$.",
+      "hypotheses_tex": "Let $V:X\\to Y$ be an isomorphism and $(E_a)$ a finite complete packet family on $Y$.",
+      "domain": "Vector spaces with an invertible transform",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.reindexIsometry",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 107,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "noncomputable def reindexIsometry (e : I ≃ J) : Signal I ≃ₗᵢ[ℂ] Signal J where\n  toFun := reindex e",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "A bijective coordinate reindexing is a particular isometric transform; the arbitrary invertible-transform conjugation theorem is not a recovered target.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-05",
+      "title": "Polyphase analysis and convolution kernels",
+      "statement_tex": "\nInterleaving the $N$ channels recovers $x$ exactly. With\n\\[\n h_{ba}[k]=h[Nk+b-a],\n\\]\nthe output channels satisfy\n\\[\n y_b[q]=\\sum_{a=0}^{N-1}\\sum_{t\\in\\mathbb Z}h_{ba}[q-t]x_a[t].\n\\]\nThus convolution becomes an $N\\times N$ transfer-kernel system.\n",
+      "hypotheses": "Fix an integer $N\\ge1$. Let $h,x\\in\\ell^1(\\mathbb Z)$ and $y=h*x$. Define $x_a[q]=x[Nq+a]$ and $y_b[q]=y[Nq+b]$, for $0\\le a,b<N$.",
+      "hypotheses_tex": "Fix an integer $N\\ge1$. Let $h,x\\in\\ell^1(\\mathbb Z)$ and $y=h*x$. Define $x_a[q]=x[Nq+a]$ and $y_b[q]=y[Nq+b]$, for $0\\le a,b<N$.",
+      "domain": "Absolutely summable sequences on $\\mathbb Z$",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.IntegerPolyphase.synthesis_analysis",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean",
+          "line": 73,
+          "source_sha256": "80c6e382ebffb55a106bab0fe0328fbdf89f91617c779a1af5d108c2f5eab269",
+          "source_quoted": "theorem synthesis_analysis (N : ℕ) (hN : 0 < N) (x : ℤ → V) :\n    synthesis N hN (analysis N x) = x := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.IntegerPolyphase.analysis_synthesis",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean",
+          "line": 78,
+          "source_sha256": "80c6e382ebffb55a106bab0fe0328fbdf89f91617c779a1af5d108c2f5eab269",
+          "source_quoted": "theorem analysis_synthesis (N : ℕ) (hN : 0 < N) (c : Fin N → ℤ → V) :\n    analysis N (synthesis N hN c) = c := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.FIRTransfer.fir_polyphase_transfer",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FIRTransfer.lean",
+          "line": 96,
+          "source_sha256": "4d6a120a0c60f54e719c3539754a587e25affa0a67e8c26e3e1788359c41971e",
+          "source_quoted": "theorem fir_polyphase_transfer (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K)\n    (x : ℤ → K) (k : Fin N) (n : ℤ) :\n    analysis N (fir h x) k n =\n      ∑ s : Fin N, ∑ m ∈ delays N hN h k s,\n        kernel N h k s m * analysis N x s (n - m) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "Exact integer round trips and finite-support convolution are formalized. The SG claim allows ℓ1 infinite-support kernels and needs its absolute-convergence argument.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-06",
+      "title": "The arithmetic of residual alias ambiguity",
+      "statement_tex": "\nExactly $d$ unit-modulus nodes satisfy the same data. Hence the physical node\nis unique precisely when $d=1$. If integers $c,b_1,\\ldots,b_k$ obey\n$Nc+\\sum_jr_jb_j=d$, then\n\\[\n u^c\\prod_jw_j^{b_j}=z^d.\n\\]\nFor $d=1$ this is an explicit exact de-aliasing formula.\n",
+      "hypotheses": "Let $z\\in\\mathbb C$, $|z|=1$, and suppose $u=z^N$ and $w_j=z^{r_j}$ are known, with $N\\ge1$ and integer offsets $r_j$. Let $d=\\gcd(N,r_1,\\ldots,r_k)$.",
+      "hypotheses_tex": "Let $z\\in\\mathbb C$, $|z|=1$, and suppose $u=z^N$ and $w_j=z^{r_j}$ are known, with $N\\ge1$ and integer offsets $r_j$. Let $d=\\gcd(N,r_1,\\ldots,r_k)$.",
+      "domain": "Unit-modulus exponential nodes",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Unit-circle power observations, finite alias group, and Bézout/gcd identification.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-07",
+      "title": "Measurement and decomposition obstructions",
+      "statement_tex": "\nIf $Mf_0=Mf_1$ but $J(f_0)\\ne J(f_1)$, no map $R:Y\\to\\mathcal J$ recovers\nthe correct edge for both. If $\\mathcal S\\cap\\mathcal J\\ne\\{0\\}$, the\nsum decomposition $f=s+j$ is not unique. In particular, finitely many point\nsamples on a periodic interval cannot recover every arbitrary interval packet.\n",
+      "hypotheses": "Let $M:X\\to Y$ be any map and let an edge assignment $J:X\\to\\mathcal J$ be specified. Separately, let $\\mathcal S,\\mathcal J$ be linear subspaces of a common vector space.",
+      "hypotheses_tex": "Let $M:X\\to Y$ be any map and let an edge assignment $J:X\\to\\mathcal J$ be specified. Separately, let $\\mathcal S,\\mathcal J$ be linear subspaces of a common vector space.",
+      "domain": "An arbitrary measurement model and linear packet classes",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Measurement-fiber identifiability and direct-sum uniqueness in the declared model.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-08",
+      "title": "No uniform location stability without separation",
+      "statement_tex": "\nTheir unordered location sets have permutation-matched bottleneck distance at\nleast $\\pi-\\delta$, while their measured derivative moments satisfy\n\\[\n |m_n-\\widetilde m_n|\n =|(1-e^{-in\\pi})(1-e^{-in\\delta})|\n \\le2|n|\\delta\\qquad(n\\in F).\n\\]\nThere is no Lipschitz inverse for locations with one constant on all distinct\ntwo-jump configurations, even at this fixed order and with known amplitudes.\n",
+      "hypotheses": "Fix a finite set $F\\subset\\mathbb Z$ of derivative-moment indices. For $0<\\delta<\\pi/4$, compare locations $(0,\\delta)$ and $(\\pi,\\pi+\\delta)$, both with amplitudes $(1,-1)$.",
+      "hypotheses_tex": "Fix a finite set $F\\subset\\mathbb Z$ of derivative-moment indices. For $0<\\delta<\\pi/4$, compare locations $(0,\\delta)$ and $(\\pi,\\pi+\\delta)$, both with amplitudes $(1,-1)$.",
+      "domain": "Two-jump periodic packets of fixed known amplitudes",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Matched circular location metric and the fixed-order narrow-pulse counterexample.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-09",
+      "title": "Out-of-band matched identification",
+      "statement_tex": "\nOn $X=\\mathcal S_K+\\operatorname{span}\\{m\\}$, the functional\n\\[\n \\ell_F(g)=D_F^{-1}\\sum_{n\\in F}\\overline{\\widehat m(n)}\\widehat g(n)\n\\]\nsatisfies $\\ell_F(s+am)=a$. The decomposition is direct. If the measured\ncoefficients have errors $\\eta_n$, then\n\\[\n |\\widetilde a-a|\\le D_F^{-1/2}\\Bigl(\\sum_{n\\in F}|\\eta_n|^2\\Bigr)^{1/2}.\n\\]\n",
+      "hypotheses": "Let $\\mathcal S_K$ be the trigonometric polynomials of degree at most $K$. Let $m\\in L^1(\\mathbb T)$ and a finite nonempty set $F\\subset\\{n:|n|>K\\}$ satisfy $D_F=\\sum_{n\\in F}|\\widehat m(n)|^2>0$.",
+      "hypotheses_tex": "Let $\\mathcal S_K$ be the trigonometric polynomials of degree at most $K$. Let $m\\in L^1(\\mathbb T)$ and a finite nonempty set $F\\subset\\{n:|n|>K\\}$ satisfy $D_F=\\sum_{n\\in F}|\\widehat m(n)|^2>0$.",
+      "domain": "Periodic integrable signals with one known edge shape",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.known_edge_error",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 17,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem known_edge_error (s j : E) (Q : E → E) :\n    (s + j) - (Q s + j) = s - Q s := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The formal supplied-edge cancellation is related; Fourier out-of-band identification of an unknown scalar coefficient is additional.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-10",
+      "title": "The singularity-exact block operator",
+      "statement_tex": "\n\\[\n P_J^2=P_J,\\quad P_S^2=P_S,\\quad P_SP_J=P_JP_S=0,\n \\quad P_S+P_J=I_X,\n\\]\nand the resolved reconstruction obeys\n\\[\n \\mathcal R_M=S_MP_S+P_J=I_X.\n\\]\n",
+      "hypotheses": "Let $P_Jg=\\ell_F(g)m$, $P_S=I-P_J$, and let $S_M$ be Fourier truncation of degree $M\\ge K$.",
+      "hypotheses_tex": "Let $P_Jg=\\ell_F(g)m$, $P_S=I-P_J$, and let $S_M$ be Fourier truncation of degree $M\\ge K$.",
+      "domain": "The model space of SG-09",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.known_edge_error",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 17,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem known_edge_error (s j : E) (Q : E → E) :\n    (s + j) - (Q s + j) = s - Q s := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.known_edge_norm",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 34,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem known_edge_norm (s j : E) (Q : E → E) :\n    ‖(s + j) - (Q s + j)‖ = ‖s - Q s‖ := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "Supplied-edge error cancellation is formal. The Fourier-defined block, its projector identities and exactness on the model class are separate prose obligations.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-11",
+      "title": "Resolved error for an analytic background",
+      "statement_tex": "\nThe reconstruction error is exactly $f-\\mathcal R_Mf=s-S_Ms$, and\n\\[\n \\|f-\\mathcal R_Mf\\|_\\infty\n \\le\\frac{2Ce^{-\\rho(M+1)}}{1-e^{-\\rho}}.\n\\]\nThe bound is uniform across the jumps of $j$.\n",
+      "hypotheses": "Let $f=s+j$ with $|\\widehat s(n)|\\le Ce^{-\\rho|n|}$, where $C\\ge0$ and $\\rho>0$. Use the canonical uniformly convergent Fourier-series representative of $s$. Set $\\mathcal R_Mf=S_Ms+j$.",
+      "hypotheses_tex": "Let $f=s+j$ with $|\\widehat s(n)|\\le Ce^{-\\rho|n|}$, where $C\\ge0$ and $\\rho>0$. Use the canonical uniformly convergent Fourier-series representative of $s$. Set $\\mathcal R_Mf=S_Ms+j$.",
+      "domain": "Periodic signals with a supplied exact edge packet",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.known_edge_error",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 17,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem known_edge_error (s j : E) (Q : E → E) :\n    (s + j) - (Q s + j) = s - Q s := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.known_edge_norm",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 34,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem known_edge_norm (s j : E) (Q : E → E) :\n    ‖(s + j) - (Q s + j)‖ = ‖s - Q s‖ := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The cancellation part is formal; analytic Fourier decay, tail summation and the concrete signal-norm instantiation are not targets here.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-12",
+      "title": "The scaled interval-edge Gibbs profile",
+      "statement_tex": "\nUniformly for $z$ in compact real intervals,\n\\[\n S_Mj(x_M(z))\\longrightarrow\\frac12+\\frac1\\pi\\operatorname{Si}(z),\n \\qquad \\operatorname{Si}(z)=\\int_0^z\\frac{\\sin t}{t}\\,dt.\n\\]\nThe first positive maximum of the limiting profile is $1+G$, where\n\\[\n G=\\frac{\\operatorname{Si}(\\pi)}\\pi-\\frac12\n   =0.089489872236\\ldots.\n\\]\n",
+      "hypotheses": "Assume $0<a<\\pi$, let $\\lambda_M=M+1/2$, and use the right edge coordinate $x_M(z)=a-z/\\lambda_M$.",
+      "hypotheses_tex": "Assume $0<a<\\pi$, let $\\lambda_M=M+1/2$, and use the right edge coordinate $x_M(z)=a-z/\\lambda_M$.",
+      "domain": "The interval packet $j=\\mathbf1_{[-a,a)}$ on $\\mathbb T$",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Dirichlet-kernel scaled limit, sine-integral profile, and the local Gibbs overshoot.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-13",
+      "title": "Positive Fourier averaging preserves range",
+      "statement_tex": "\nThen $0\\le\\sigma_Mj\\le1$ everywhere. For an interval packet, this suppresses\novershoot while retaining a continuous transition rather than an exact jump.\n",
+      "hypotheses": "Let $\\sigma_M=(M+1)^{-1}\\sum_{k=0}^MS_k$ be the Fejer mean. Suppose $0\\le j\\le1$ almost everywhere.",
+      "hypotheses_tex": "Let $\\sigma_M=(M+1)^{-1}\\sum_{k=0}^MS_k$ be the Fejer mean. Suppose $0\\le j\\le1$ almost everywhere.",
+      "domain": "Periodic bounded real signals",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Fejér-kernel positivity, integral normalization, and range preservation almost everywhere.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-14",
+      "title": "Residualized sparse injectivity",
+      "statement_tex": "\nEvery vector $\\alpha$ with $\\|\\alpha\\|_0\\le s$ is uniquely determined by\n$A\\alpha$ if and only if\n\\[\n \\ker A\\cap\\{h:\\|h\\|_0\\le\\min(2s,d)\\}=\\{0\\}.\n\\]\nEquivalently every set of at most $\\min(2s,d)$ columns is independent.\nWith the convention $\\operatorname{spark}(A)=d+1$ when all $d$ columns are\nindependent, the equivalent condition is\n$\\operatorname{spark}(A)>\\min(2s,d)$.\nFor $s=0$ uniqueness is automatic.\n",
+      "hypotheses": "Let $\\mathcal S\\subseteq\\mathbb F^m$ be a subspace, $P$ its orthogonal projector, $R=I-P$, $D\\in\\mathbb F^{m\\times d}$, and $A=RD$. Let $s\\ge0$ be an integer.",
+      "hypotheses_tex": "Let $\\mathcal S\\subseteq\\mathbb F^m$ be a subspace, $P$ its orthogonal projector, $R=I-P$, $D\\in\\mathbb F^{m\\times d}$, and $A=RD$. Let $s\\ge0$ be an integer.",
+      "domain": "Finite real or complex Euclidean spaces",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Projected sparse null-secant injectivity and the capped spark convention.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-15",
+      "title": "Sparse noise stability and support thresholding",
+      "statement_tex": "\nDefine\n\\[\n \\gamma=\\min_{\\substack{\\|h\\|_2=1\\\\\\|h\\|_0\\le\\min(2s,d)}}\\|Ah\\|_2>0.\n\\]\nThen\n\\[\n \\|\\widehat\\alpha-\\alpha_0\\|_2\\le2\\epsilon/\\gamma,\n \\qquad\\|D(\\widehat\\alpha-\\alpha_0)\\|_2\n \\le2\\|D\\|_2\\epsilon/\\gamma.\n\\]\nIf every nonzero true coefficient has magnitude greater than $4\\epsilon/\\gamma$,\nthresholding at $2\\epsilon/\\gamma$ with a strict greater-than rule recovers\nthe true support.\n",
+      "hypotheses": "Assume $s\\ge1$, $d\\ge1$, and the injectivity condition of SG-14. Let $y=s_0+D\\alpha_0+\\eta$, $s_0\\in\\mathcal S$, $\\|\\alpha_0\\|_0\\le s$, and $\\|R\\eta\\|_2\\le\\epsilon$. Let $\\widehat\\alpha$ be $s$-sparse with $\\|A\\widehat\\alpha-Ry\\|_2\\le\\epsilon$.",
+      "hypotheses_tex": "Assume $s\\ge1$, $d\\ge1$, and the injectivity condition of SG-14. Let $y=s_0+D\\alpha_0+\\eta$, $s_0\\in\\mathcal S$, $\\|\\alpha_0\\|_0\\le s$, and $\\|R\\eta\\|_2\\le\\epsilon$. Let $\\widehat\\alpha$ be $s$-sparse with $\\|A\\widehat\\alpha-Ry\\|_2\\le\\epsilon$.",
+      "domain": "The Euclidean model of SG-14",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Restricted column separation, nuisance projection contraction, and sparse support bounds.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-16",
+      "title": "Profiled one-packet discovery and its finite gap",
+      "statement_tex": "\nFor an unrestricted scalar amplitude the least-squares profile is\n\\[\n \\widehat a(q)=\\frac{\\langle Rq,Ry\\rangle}{\\|Rq\\|_2^2},\n \\qquad J(q)=\\|Ry-\\widehat a(q)Rq\\|_2^2.\n\\]\nThe true mask has $\\widehat a(q_*)=a_*$ and $J(q_*)=0$.\nIt is the unique zero-residual positive-amplitude mask exactly when no other\nresidualized mask lies on its positive ray. Define the closed rays\n$C_q=\\{aRq:a\\ge0\\}$. If\n\\[\n \\Gamma=\\inf_{q\\ne q_*}\\operatorname{dist}(Ry,C_q)>0,\n\\]\nwith the convention $\\inf\\varnothing=+\\infty$, then every perturbed residualized datum $Ry+e$ with $\\|e\\|_2<\\Gamma/2$\nselects $q_*$ uniquely by nearest-ray distance.\n",
+      "hypotheses": "Let $B$ have full column rank, $P$ be the orthogonal projector onto its range, $R=I-P$, and let $\\mathcal Q$ be a finite mask library with $Rq\\ne0$ for every $q$. Suppose $y=B\\theta_*+a_*q_*$, with $a_*>0$ and $q_*\\in\\mathcal Q$.",
+      "hypotheses_tex": "Let $B$ have full column rank, $P$ be the orthogonal projector onto its range, $R=I-P$, and let $\\mathcal Q$ be a finite mask library with $Rq\\ne0$ for every $q$. Suppose $y=B\\theta_*+a_*q_*$, with $a_*>0$ and $q_*\\in\\mathcal Q$.",
+      "domain": "Finite real dictionaries with positive amplitudes",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.positive_gap",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FiniteSelection.lean",
+          "line": 48,
+          "source_sha256": "455f6b1e08193afbc5cafbe04f6140162a15f26dd691575fa24b15138b5d3229",
+          "source_quoted": "theorem positive_gap [DecidableEq A] (s : Finset A) (f : A → ℝ) (m : A)\n    (hcompetitors : (s.erase m).Nonempty)\n    (hstrict : ∀ a ∈ s, a ≠ m → f m < f a) :\n    ∃ γ : ℝ, 0 < γ ∧ ∀ a ∈ s, a ≠ m → γ ≤ f a - f m := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.gap_stability",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FiniteSelection.lean",
+          "line": 58,
+          "source_sha256": "455f6b1e08193afbc5cafbe04f6140162a15f26dd691575fa24b15138b5d3229",
+          "source_quoted": "theorem gap_stability (s : Finset A) (f g : A → ℝ) (m : A)\n    (hm : m ∈ s) (γ ε : ℝ)\n    (hgap : ∀ a ∈ s, a ≠ m → γ ≤ f a - f m)\n    (hpert : ∀ a ∈ s, |g a - f a| ≤ ε) (hmargin : 2 * ε < γ) :\n    ∀ a ∈ s, a ≠ m → g m < g a := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "Finite objective gap and stability are formal under a strict optimum and uniform objective errors; profiled dictionary identification and its particular score are additional.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-17",
+      "title": "Mask error is a support geometry calculation",
+      "statement_tex": "\n\\begin{align*}\n \\|aq-\\widetilde a\\widetilde q\\|_2^2\n &=|a-\\widetilde a|^2|\\operatorname{supp}q\\cap\\operatorname{supp}\\widetilde q|\\\\\n &\\quad+|a|^2|\\operatorname{supp}q\\setminus\\operatorname{supp}\\widetilde q|\n +|\\widetilde a|^2|\\operatorname{supp}\\widetilde q\\setminus\\operatorname{supp}q|.\n\\end{align*}\nFor $a=\\widetilde a=1$ the squared norm is the cardinality of the symmetric\nsupport difference.\n",
+      "hypotheses": "Let $q,\\widetilde q\\in\\{0,1\\}^m$ and $a,\\widetilde a\\in\\mathbb R$.",
+      "hypotheses_tex": "Let $q,\\widetilde q\\in\\{0,1\\}^m$ and $a,\\widetilde a\\in\\mathbb R$.",
+      "domain": "Finite binary masks",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.MaskPerturbation.symmetric_difference_norm",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/MaskPerturbation.lean",
+          "line": 18,
+          "source_sha256": "da8dff07593e08375e9c2acc1f7f73cb9cf4b7b23d23142eef01136ca0c657e9",
+          "source_quoted": "theorem symmetric_difference_norm (μ : Measure Ω) (S T : Set Ω)\n    (hS : MeasurableSet S) (hT : MeasurableSet T) (p : ENNReal)\n    (hp : p ≠ 0) (hpTop : p ≠ ∞) (a : ℂ) :\n    eLpNorm (jump S a-jump T a) p μ = ‖a‖ₑ * μ (S ∆ T) ^ (1 / p.toReal) := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.MaskPerturbation.finite_p_perturbation",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/MaskPerturbation.lean",
+          "line": 43,
+          "source_sha256": "da8dff07593e08375e9c2acc1f7f73cb9cf4b7b23d23142eef01136ca0c657e9",
+          "source_quoted": "theorem finite_p_perturbation (μ : Measure Ω) (S T : Set Ω)\n    (hS : MeasurableSet S) (hT : MeasurableSet T) (p : ENNReal)\n    (hp : 1 ≤ p) (hpTop : p ≠ ∞) (a b : ℂ) :\n    eLpNorm (jump S a-jump T b) p μ ≤\n      ‖a-b‖ₑ * μ S ^ (1 / p.toReal) + ‖b‖ₑ * μ (S ∆ T) ^ (1 / p.toReal) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The source provides extended measurable-mask identities and bounds; the SG mixed-amplitude finite-vector identity is a distinct specialization/derivation.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-18",
+      "title": "Differentiation isolates an exponential moment packet",
+      "statement_tex": "\n\\[\n Dj=\\sum_\\ell a_\\ell\\delta_{\\tau_\\ell},\\qquad\n m_n:=2\\pi in\\widehat f(n)=\\sum_{\\ell=1}^ra_\\ell z_\\ell^n.\n\\]\nFor a non-bandlimited integrable background the same formula holds with\nan additive defect $e_n=2\\pi in\\widehat s(n)$.\n",
+      "hypotheses": "Use the Fourier convention in Section 1. Let $n>K$ and $z_\\ell=e^{-i\\tau_\\ell}$.",
+      "hypotheses_tex": "Use the Fourier convention in Section 1. Let $n>K$ and $z_\\ell=e^{-i\\tau_\\ell}$.",
+      "domain": "The class $\\mathcal U_{K,L}$",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Continuous distributional derivative and Fourier normalization to exponential moments.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-19",
+      "title": "Hankel rank detects the actual order",
+      "statement_tex": "\nWriting $V_h=(z_\\ell^i)_{i,\\ell}$ and $V_w=(z_\\ell^j)_{j,\\ell}$,\n\\[\n H_{h,w}=V_h\\operatorname{diag}(c_\\ell)V_w^{\\mathsf T},\n \\qquad\\operatorname{rank}H_{h,w}=r.\n\\]\nFor $r=0$ the Hankel matrix is zero. The transpose is algebraic and is not\na conjugate transpose.\n",
+      "hypotheses": "Let $m_{n_0+k}=\\sum_{\\ell=1}^r c_\\ell z_\\ell^k$, with distinct nonzero nodes and nonzero coefficients. Let $H_{h,w}=(m_{n_0+i+j})_{0\\le i<h,\\ 0\\le j<w}$, with $h,w\\ge r$.",
+      "hypotheses_tex": "Let $m_{n_0+k}=\\sum_{\\ell=1}^r c_\\ell z_\\ell^k$, with distinct nonzero nodes and nonzero coefficients. Let $H_{h,w}=(m_{n_0+i+j})_{0\\le i<h,\\ 0\\le j<w}$, with $h,w\\ge r$.",
+      "domain": "Finite exponential moments over $\\mathbb C$",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Hankel/Vandermonde factorization, rank, and zero-order interpretation.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-20",
+      "title": "Exact Prony annihilation and location recovery",
+      "statement_tex": "\nThe unique monic annihilator\n\\[\n Q(z)=\\prod_{\\ell=1}^r(z-z_\\ell)=\\sum_{k=0}^{r-1}q_kz^k+z^r\n\\]\nis recovered from\n\\[\n H_{r,r}q=-v,\\qquad v=(m_{n_0+r+i})_{i=0}^{r-1}.\n\\]\nIts roots are exactly the nodes. Once the nodes are known, $r$ consecutive\nmoments determine the coefficients uniquely by a Vandermonde solve.\nFor unit-modulus nodes the corresponding locations are\n$\\tau_\\ell=-\\arg z_\\ell\\pmod{2\\pi}$.\n",
+      "hypotheses": "Assume $r\\ge1$ and $2r$ consecutive moments $m_{n_0},\\ldots,m_{n_0+2r-1}$ are known.",
+      "hypotheses_tex": "Assume $r\\ge1$ and $2r$ consecutive moments $m_{n_0},\\ldots,m_{n_0+2r-1}$ are known.",
+      "domain": "The nonzero-order moment model of SG-19",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Prony annihilator uniqueness, polynomial roots, and matched location recovery.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-21",
+      "title": "Canonical periodic integration of jump data",
+      "statement_tex": "\n\\[\n j(x)=\\sum_\\ell a_\\ell G_T(x-\\tau_\\ell)\n\\]\nis the unique mean-zero right-continuous piecewise-constant packet with those\njumps. Its distributional derivative is $\\sum_\\ell a_\\ell\\delta_{\\tau_\\ell}$.\n",
+      "hypotheses": "Let distinct locations $\\tau_\\ell\\in\\mathbb R/(T\\mathbb Z)$ and real amplitudes $a_\\ell$ satisfy $\\sum_\\ell a_\\ell=0$. Define the mean-zero periodic sawtooth $G_T(x)=1/2-x/T$ for $0<x<T$, with the right-continuous endpoint value.",
+      "hypotheses_tex": "Let distinct locations $\\tau_\\ell\\in\\mathbb R/(T\\mathbb Z)$ and real amplitudes $a_\\ell$ satisfy $\\sum_\\ell a_\\ell=0$. Define the mean-zero periodic sawtooth $G_T(x)=1/2-x/T$ for $0<x<T$, with the right-continuous endpoint value.",
+      "domain": "A period of length $T>0$",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Canonical mean-zero periodic primitive and its representative.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-22",
+      "title": "Finite exact unknown-order reconstruction",
+      "statement_tex": "\nThose data uniquely determine the actual active order $r$, every jump\nlocation and amplitude up to permutation, the canonical edge packet $j$,\nthe smooth coefficients of $s$, and the complete signal $f$ as an $L^1$ class\nand as its selected right-continuous representative. The high-frequency\nbudget is $2L$ complex coefficients. The low budget is $2K+1$ coefficients,\nwith conjugate symmetry redundancy for a real signal.\n",
+      "hypotheses": "Let $K\\ge0$ and $L\\ge1$ be known integers. Assume exact Fourier coefficients for $-K\\le n\\le K$ and $K+1\\le n\\le K+2L$.",
+      "hypotheses_tex": "Let $K\\ge0$ and $L\\ge1$ be known integers. Assume exact Fourier coefficients for $-K\\le n\\le K$ and $K+1\\le n\\le K+2L$.",
+      "domain": "The real class $\\mathcal U_{K,L}$",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Finite exact data budget, unknown/zero order branch, and synthesis modulo representative.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-23",
+      "title": "Hankel perturbation from Fourier noise",
+      "statement_tex": "\n\\[\n \\|E\\|_2\\le\\|E\\|_F\n \\le\\sqrt{hw}\\max_{0\\le i<h,\\ 0\\le j<w}|\\epsilon_{n_0+i+j}|.\n\\]\nIn particular, an error bound $|\\eta_n|\\le\\eta$ implies\n\\[\n \\|E\\|_2\\le2\\pi\\sqrt{hw}\\eta\\max_{i,j}|n_0+i+j|.\n\\]\n",
+      "hypotheses": "Let measured Fourier coefficients have errors $\\eta_n$ and moment errors $\\epsilon_n=2\\pi in\\eta_n$. Let $E=(\\epsilon_{n_0+i+j})$ have $h\\ge1$ rows and $w\\ge1$ columns.",
+      "hypotheses_tex": "Let measured Fourier coefficients have errors $\\eta_n$ and moment errors $\\epsilon_n=2\\pi in\\eta_n$. Let $E=(\\epsilon_{n_0+i+j})$ have $h\\ge1$ rows and $w\\ge1$ columns.",
+      "domain": "A rectangular Hankel matrix of derivative moments",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Fourier-noise scaling and the rectangular Hankel Frobenius/spectral bound.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-24",
+      "title": "Annihilator coefficient perturbation",
+      "statement_tex": "\nThe perturbed system is invertible, and its solution satisfies\n\\[\n \\|\\widetilde q-q\\|_2\n \\le\\frac{\\|H^{-1}\\|_2}{1-\\|H^{-1}\\|_2\\|E\\|_2}\n       (\\|e\\|_2+\\|E\\|_2\\|q\\|_2).\n\\]\n",
+      "hypotheses": "Write $Hq=-v$, and suppose $\\widetilde H=H+E$, $\\widetilde v=v+e$. Assume $\\|H^{-1}\\|_2\\|E\\|_2<1$.",
+      "hypotheses_tex": "Write $Hq=-v$, and suppose $\\widetilde H=H+E$, $\\widetilde v=v+e$. Assume $\\|H^{-1}\\|_2\\|E\\|_2<1$.",
+      "domain": "The invertible square Prony system of SG-20",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Perturbed inverse/Neumann gate and annihilator coefficient error.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-25",
+      "title": "Conditional simple-root disk localization",
+      "statement_tex": "\nIf for every $\\ell$\n\\[\n \\sup_{|z-z_\\ell|=\\rho}|E_Q(z)|\n <\\min_{|z-z_\\ell|=\\rho}|Q(z)|,\n\\]\nthen $\\widetilde Q$ has exactly one root, counted with multiplicity, in each\ndisk $|z-z_\\ell|<\\rho$. All its roots are thereby matched with error less\nthan $\\rho$. A sufficient explicit bound on each circle is\n\\[\n \\sum_{k=0}^{r-1}|\\widetilde q_k-q_k|(|z_\\ell|+\\rho)^k\n <\\rho\\prod_{j\\ne\\ell}(|z_\\ell-z_j|-\\rho).\n\\]\n",
+      "hypotheses": "Let $r\\ge1$ and $Q(z)=\\prod_{\\ell=1}^r(z-z_\\ell)$ have distinct roots and $\\widetilde Q=Q+E_Q$. Choose $0<\\rho<\\tfrac12\\min_{\\ell\\ne k}|z_\\ell-z_k|$ when $r\\ge2$, or any $\\rho>0$ when $r=1$.",
+      "hypotheses_tex": "Let $r\\ge1$ and $Q(z)=\\prod_{\\ell=1}^r(z-z_\\ell)$ have distinct roots and $\\widetilde Q=Q+E_Q$. Choose $0<\\rho<\\tfrac12\\min_{\\ell\\ne k}|z_\\ell-z_k|$ when $r\\ge2$, or any $\\rho>0$ when $r=1$.",
+      "domain": "Monic complex polynomials of the same degree",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Strict Rouché disk gate, one root per disk, and conditional true-root matching.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-26",
+      "title": "Amplitude stability with perturbed nodes",
+      "statement_tex": "\n\\[\n \\|\\widehat a-a\\|_2\n \\le\\frac{\\|e\\|_2+\\|\\Delta V\\|_2\\|a\\|_2}\n {\\sigma_{\\min}(V)-\\|\\Delta V\\|_2}.\n\\]\nFor unit nodes in rows with nonnegative powers $n$, matched chord error\n$|\\widehat z_\\ell-z_\\ell|\\le\\delta$ gives the entry bound\n$|\\widehat z_\\ell^n-z_\\ell^n|\\le n\\delta$.\n",
+      "hypotheses": "Let $V$ have full column rank, $m=Va$, $\\widetilde V=V+\\Delta V$, and $\\widetilde m=m+e$. Assume $\\sigma_{\\min}(V)>\\|\\Delta V\\|_2$. Let $\\widehat a$ minimize $\\|\\widetilde Vb-\\widetilde m\\|_2$.",
+      "hypotheses_tex": "Let $V$ have full column rank, $m=Va$, $\\widetilde V=V+\\Delta V$, and $\\widetilde m=m+e$. Assume $\\sigma_{\\min}(V)>\\|\\Delta V\\|_2$. Let $\\widehat a$ minimize $\\|\\widetilde Vb-\\widetilde m\\|_2$.",
+      "domain": "A square or overdetermined Vandermonde amplitude fit",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Perturbed full-column-rank least squares and amplitude stability.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-27",
+      "title": "Shared-node offset channels",
+      "statement_tex": "\n\\[\n m_{(q_0+q)N+r}=\\sum_\\ell b_{\\ell,r}u_\\ell^q+e_{(q_0+q)N+r},\n \\quad u_\\ell=z_\\ell^N,\\quad b_{\\ell,r}=a_\\ell u_\\ell^{q_0}z_\\ell^r.\n\\]\nFor each matched edge $b_{\\ell,r+1}=z_\\ell b_{\\ell,r}$.\nIf $|\\widehat s(n)|\\le C_s(1+|n|)^{-p-2}$ with $p\\ge0$, then for\nnonnegative $q,r$\n\\[\n |e_{(q_0+q)N+r}|\\le2\\pi C_s(q_0N)^{-p-1}.\n\\]\n",
+      "hypotheses": "Fix integers $N\\ge2$, $q_0\\ge1$, and an offset $r\\ge0$. Suppose $m_n=\\sum_\\ell a_\\ell z_\\ell^n+e_n$, with $|z_\\ell|=1$.",
+      "hypotheses_tex": "Fix integers $N\\ge2$, $q_0\\ge1$, and an offset $r\\ge0$. Suppose $m_n=\\sum_\\ell a_\\ell z_\\ell^n+e_n$, with $|z_\\ell|=1$.",
+      "domain": "Derivative moments with an additive defect",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Defective moment model and shared aliased exponential nodes across offsets.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-28",
+      "title": "Order recovery with a supplied singular threshold",
+      "statement_tex": "\nExactly $r$ singular values of $H$ exceed $t$. If $r=0$, a supplied\nthreshold $t>\\|E\\|_2$ selects zero. If $r=k$, all $k$ singular values exceed\nthe threshold and no nonexistent $\\sigma_{k+1}$ is used.\n",
+      "hypotheses": "Let $H=H_0+E$, with $H_0$ of rank $r\\ge1$, $k=\\min(h,w)\\ge r$, and $\\epsilon=\\|E\\|_2<\\sigma_r(H_0)/2$. Supply a threshold $t$ with $\\epsilon<t<\\sigma_r(H_0)-\\epsilon$.",
+      "hypotheses_tex": "Let $H=H_0+E$, with $H_0$ of rank $r\\ge1$, $k=\\min(h,w)\\ge r$, and $\\epsilon=\\|E\\|_2<\\sigma_r(H_0)/2$. Supply a threshold $t$ with $\\epsilon<t<\\sigma_r(H_0)-\\epsilon$.",
+      "domain": "Finite rectangular complex matrices",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Complex singular-value perturbation and a supplied threshold, including full rank.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-29",
+      "title": "Exact phase from adjacent offset products",
+      "statement_tex": "\n\\[\n S(c)=R|b|^2z\\ne0,\\qquad\\Phi(c):=S(c)/|S(c)|=z.\n\\]\nTwo channels already give $z=c_1/c_0$ exactly. More channels provide repeated\nadjacent relations, without an unconditional deterministic averaging gain.\n",
+      "hypotheses": "Let $R\\ge1$ be an integer counting adjacent products, and let $c_r=bz^r$ for $0\\le r\\le R$, with $b\\ne0$ and $|z|=1$. Define $S(c)=\\sum_{r=0}^{R-1}\\overline{c_r}c_{r+1}$.",
+      "hypotheses_tex": "Let $R\\ge1$ be an integer counting adjacent products, and let $c_r=bz^r$ for $0\\le r\\le R$, with $b\\ne0$ and $|z|=1$. Define $S(c)=\\sum_{r=0}^{R-1}\\overline{c_r}c_{r+1}$.",
+      "domain": "One matched unit-circle coefficient progression",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Adjacent offset products with R≥1 and nonzero amplitude.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-30",
+      "title": "Deterministic offset-phase perturbation",
+      "statement_tex": "\nThe phase sum is nonzero and\n\\[\n |\\Phi(c)-z|\\le\\frac{2\\Delta}{A}\n =\\frac{4\\epsilon}{|b|}+2\\left(\\frac\\epsilon{|b|}\\right)^2.\n\\]\n",
+      "hypotheses": "Let $c_r=bz^r+e_r$ for $0\\le r\\le R$, with $R\\ge1$, $b\\ne0$, $|z|=1$, and $|e_r|\\le\\epsilon$. Put $A=R|b|^2$ and $\\Delta=R(2|b|\\epsilon+\\epsilon^2)$. Assume $\\Delta<A$.",
+      "hypotheses_tex": "Let $c_r=bz^r+e_r$ for $0\\le r\\le R$, with $R\\ge1$, $b\\ne0$, $|z|=1$, and $|e_r|\\le\\epsilon$. Put $A=R|b|^2$ and $\\Delta=R(2|b|\\epsilon+\\epsilon^2)$. Assume $\\Delta<A$.",
+      "domain": "A noisy progression as in SG-29",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Offset phase denominator and explicit defect-to-phase bound.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-31",
+      "title": "A zero offset residual tests a progression",
+      "statement_tex": "\nThen $\\nu(c,\\zeta)=0$ if and only if $c_r=c_0\\zeta^r$ for\n$0\\le r\\le R$.\n",
+      "hypotheses": "Let $R\\ge1$, $c_0\\ne0$, and $|\\zeta|=1$. Define $\\nu(c,\\zeta)=\\bigl(\\sum_{r=0}^{R-1}|c_{r+1}-\\zeta c_r|^2\\bigr)^{1/2}/\\bigl(\\sum_{r=0}^{R-1}|c_r|^2\\bigr)^{1/2}$.",
+      "hypotheses_tex": "Let $R\\ge1$, $c_0\\ne0$, and $|\\zeta|=1$. Define $\\nu(c,\\zeta)=\\bigl(\\sum_{r=0}^{R-1}|c_{r+1}-\\zeta c_r|^2\\bigr)^{1/2}/\\bigl(\\sum_{r=0}^{R-1}|c_r|^2\\bigr)^{1/2}$.",
+      "domain": "Finite complex offset data",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Normalized residual zero exactly characterizes a finite progression.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-32",
+      "title": "Unique branch selection under a strict margin",
+      "statement_tex": "\nIf\n\\[\n |\\widetilde z-z|+|\\rho-z|<\\sin(\\pi/N),\n\\]\nthen $\\rho$ is the unique root of $\\overline u$ nearest to $\\widetilde z$.\nIt equals the branch an oracle chooses by the true-node neighborhood.\n",
+      "hypotheses": "Let $N\\ge2$, $|z|=1$, $u=z^N$, and $\\overline u=\\widehat u/|\\widehat u|$ with $\\widehat u\\ne0$. Let $\\rho$ be a root of $\\overline u$ continuously associated with $z$, and $\\widetilde z$ a coarse phase estimate.",
+      "hypotheses_tex": "Let $N\\ge2$, $|z|=1$, $u=z^N$, and $\\overline u=\\widehat u/|\\widehat u|$ with $\\widehat u\\ne0$. Let $\\rho$ be a root of $\\overline u$ continuously associated with $z$, and $\\widetilde z$ a coarse phase estimate.",
+      "domain": "Nth roots of a unit-modulus estimate",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.gap_stability",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FiniteSelection.lean",
+          "line": 58,
+          "source_sha256": "455f6b1e08193afbc5cafbe04f6140162a15f26dd691575fa24b15138b5d3229",
+          "source_quoted": "theorem gap_stability (s : Finset A) (f g : A → ℝ) (m : A)\n    (hm : m ∈ s) (γ ε : ℝ)\n    (hgap : ∀ a ∈ s, a ≠ m → γ ≤ f a - f m)\n    (hpert : ∀ a ∈ s, |g a - f a| ≤ ε) (hmargin : 2 * ε < γ) :\n    ∀ a ∈ s, a ≠ m → g m < g a := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The finite strict-margin selection principle is formal; circular Nth-root geometry, associated-root error and the particular metric gate remain additional.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-33",
+      "title": "Associated roots divide the angular error",
+      "statement_tex": "\n\\[\n |\\rho-z|\\le2\\sin\\left(\\frac1N\\arcsin\\frac\\eta2\\right)\n \\le\\frac2N\\arcsin\\frac\\eta2.\n\\]\nFor a nonzero raw estimate, $|\\widehat u-u|\\le\\epsilon$ implies\n$|\\widehat u/|\\widehat u|-u|\\le2\\epsilon$. Thus when the raw error tends to\nzero, correct lifting gains a factor $1/N$ in chord and angular accuracy.\n",
+      "hypotheses": "Let $N\\ge1$, $z^N=u$, $|z|=|u|=|\\overline u|=1$, and $|\\overline u-u|\\le\\eta<2$. Let $\\rho$ be the associated root along the shortest angular perturbation.",
+      "hypotheses_tex": "Let $N\\ge1$, $z^N=u$, $|z|=|u|=|\\overline u|=1$, and $|\\overline u-u|\\le\\eta<2$. Let $\\rho$ be the associated root along the shortest angular perturbation.",
+      "domain": "Unit-modulus nodes and their associated root branches",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Associated root branch and divided angular perturbation.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-34",
+      "title": "An explicit exact self-calibration budget",
+      "statement_tex": "\nThe Fourier coefficients at the high indices\n\\[\n \\mathcal I_0=\\{(q_0+q)N:0\\le q\\le2L_{\\max}\\},\\qquad\n \\mathcal I_1=\\{(q_0+q)N+1:0\\le q<L_{\\max}\\}\n\\]\ndetermine the unknown edge order, every physical node, and every jump amplitude\nexactly. The high-frequency budget is $3L_{\\max}+1$. Low modes\n$-K\\le n\\le K$ then give the complete signal. No supplied jump neighborhood\nis required.\n",
+      "hypotheses": "Let $f\\in\\mathcal U_{K,L_{\\max}}$, with $L_{\\max}\\ge1$. Supply $N\\ge2$, $q_0\\ge1$ with $q_0N>K$, and assume the active aliased nodes $u_\\ell=z_\\ell^N$ are distinct.",
+      "hypotheses_tex": "Let $f\\in\\mathcal U_{K,L_{\\max}}$, with $L_{\\max}\\ge1$. Supply $N\\ge2$, $q_0\\ge1$ with $q_0N>K$, and assume the active aliased nodes $u_\\ell=z_\\ell^N$ are distinct.",
+      "domain": "Bandlimited background with a bounded number of jumps",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Explicit exact calibration data budget and distinct active alias nodes.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-35",
+      "title": "Conditional asymptotic rates after calibrated lifting",
+      "statement_tex": "\nThe threshold-selected order is eventually correct. The aligned lifted nodes\nand locations satisfy\n\\[\n |\\widehat z_\\ell-z_\\ell|=O(N^{-p-2}),\\qquad\n d_{\\mathbb T}(\\widehat\\tau_\\ell,\\tau_\\ell)=O(N^{-p-2}).\n\\]\nThe recovered amplitudes satisfy\n$|\\widehat a_\\ell-a_\\ell|=O(N^{-p-1})$.\n",
+      "hypotheses": "Let $p\\ge0$, fix $q_0$ and the finite number of channel samples and offsets, and take a sequence $N\\to\\infty$. Assume distinct aliased nodes, uniform rank-threshold gaps/local inverse bounds for the aligned Prony and coefficient fits, $|b_{\\ell,0}|\\ge b_{\\min}>0$, uniformly bounded amplitudes, and the strict branch margin of SG-32. Suppose the moment defect is $O(N^{-p-1})$.",
+      "hypotheses_tex": "Let $p\\ge0$, fix $q_0$ and the finite number of channel samples and offsets, and take a sequence $N\\to\\infty$. Assume distinct aliased nodes, uniform rank-threshold gaps/local inverse bounds for the aligned Prony and coefficient fits, $|b_{\\ell,0}|\\ge b_{\\min}>0$, uniformly bounded amplitudes, and the strict branch margin of SG-32. Suppose the moment defect is $O(N^{-p-1})$.",
+      "domain": "A selected sequence of decimation scales",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Uniform inverse bounds, coefficient lower bounds, strict branch margin, and conditional rates.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-36",
+      "title": "Resolved synthesis splits the two error sources",
+      "statement_tex": "\n\\[\n f-\\widehat f_M=(s-A_Ms)+(I-A_M)(j-\\widehat j),\n\\]\nand therefore\n\\[\n \\|f-\\widehat f_M\\|\\le\\|s-A_Ms\\|+(1+C_M)\\|j-\\widehat j\\|.\n\\]\nIf $\\widehat j=j$, the complete error equals the smooth approximation error.\n",
+      "hypotheses": "Let $f=s+j$, let $\\widehat j$ belong to the same space, and let $A_M$ be a bounded linear operator with norm at most $C_M$. Define $\\widehat f_M=A_M(f-\\widehat j)+\\widehat j$.",
+      "hypotheses_tex": "Let $f=s+j$, let $\\widehat j$ belong to the same space, and let $A_M$ be a bounded linear operator with norm at most $C_M$. Define $\\widehat f_M=A_M(f-\\widehat j)+\\widehat j$.",
+      "domain": "A normed signal space",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.estimated_edge_error",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 21,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem estimated_edge_error (s shat j jhat : E) :\n    (s + j) - (shat + jhat) = (s - shat) + (j - jhat) := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.estimated_edge_norm_bound",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 43,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem estimated_edge_norm_bound (s shat j jhat : E) :\n    ‖(s + j) - (shat + jhat)‖ ≤ ‖s - shat‖ + ‖j - jhat‖ := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The additive error split is formal; the A_M linearity rewrite and its operator-norm amplification are not this source type.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-37",
+      "title": "Sharp additive L1 control for normalized jump packets",
+      "statement_tex": "\n\\[\n \\|j-\\widehat j\\|_1\n \\le\\frac T4\\sum_\\ell|a_\\ell-\\widehat a_\\ell|\n +2\\sum_\\ell|\\widehat a_\\ell|d_\\ell(1-d_\\ell/T).\n\\]\nIn particular the simpler location term $2\\sum_\\ell|\\widehat a_\\ell|d_\\ell$\nis valid. The printed location coefficient one in the inherited\nself-calibration manuscript is not valid for mean-zero normalization.\n",
+      "hypotheses": "Let $j,\\widehat j$ have matched real jump data $(a_\\ell,\\tau_\\ell)$ and $(\\widehat a_\\ell,\\widehat\\tau_\\ell)$, with both amplitude sums zero. Use their canonical representatives and let $d_\\ell=d_T(\\tau_\\ell,\\widehat\\tau_\\ell)\\le T/2$.",
+      "hypotheses_tex": "Let $j,\\widehat j$ have matched real jump data $(a_\\ell,\\tau_\\ell)$ and $(\\widehat a_\\ell,\\widehat\\tau_\\ell)$, with both amplitude sums zero. Use their canonical representatives and let $d_\\ell=d_T(\\tau_\\ell,\\widehat\\tau_\\ell)\\le T/2$.",
+      "domain": "Mean-zero periodic packets of period $T>0$",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.MaskPerturbation.finite_p_perturbation",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/MaskPerturbation.lean",
+          "line": 43,
+          "source_sha256": "da8dff07593e08375e9c2acc1f7f73cb9cf4b7b23d23142eef01136ca0c657e9",
+          "source_quoted": "theorem finite_p_perturbation (μ : Measure Ω) (S T : Set Ω)\n    (hS : MeasurableSet S) (hT : MeasurableSet T) (p : ENNReal)\n    (hp : 1 ≤ p) (hpTop : p ≠ ∞) (a b : ℂ) :\n    eLpNorm (jump S a-jump T b) p μ ≤\n      ‖a-b‖ₑ * μ S ^ (1 / p.toReal) + ‖b‖ₑ * μ (S ∆ T) ^ (1 / p.toReal) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "Measurable-mask error infrastructure is related, but the corrected mean-zero periodic sawtooth calculation and sharp factor two are not formalized here.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-38",
+      "title": "A conditional global L1 reconstruction rate",
+      "statement_tex": "\n\\[\n \\|j-\\widehat j\\|_1=O(N^{-p-1}),\\qquad\n \\|f-\\widehat f_M\\|_1\\le b_M+O((1+C_M)N^{-p-1}).\n\\]\nFor Fourier truncation, $C_M=O(1+\\log(M+1))$. If also\n$|\\widehat s(n)|\\le C_s(1+|n|)^{-p-2}$, its smooth remainder satisfies\n$b_M=O(M^{-p-1})$. Taking $M$ comparable to $N$ yields\n$O((1+\\log N)N^{-p-1})$.\n",
+      "hypotheses": "Assume a fixed finite jump count, bounded jump amplitudes, the hypotheses of SG-35, and a bounded linear smooth reconstruction $A_M$ acting on $L^1(\\mathbb T)$. Require $\\widehat j$ to be the canonical packet of real matched estimated amplitudes whose sum is zero. Let $b_M=\\|s-A_Ms\\|_1$ and $C_M=\\|A_M\\|_{L^1\\to L^1}$.",
+      "hypotheses_tex": "Assume a fixed finite jump count, bounded jump amplitudes, the hypotheses of SG-35, and a bounded linear smooth reconstruction $A_M$ acting on $L^1(\\mathbb T)$. Require $\\widehat j$ to be the canonical packet of real matched estimated amplitudes whose sum is zero. Let $b_M=\\|s-A_Ms\\|_1$ and $C_M=\\|A_M\\|_{L^1\\to L^1}$.",
+      "domain": "The rate family of SG-35 with $T=2\\pi$",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.estimated_edge_norm_bound",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+          "line": 43,
+          "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+          "source_quoted": "theorem estimated_edge_norm_bound (s shat j jhat : E) :\n    ‖(s + j) - (shat + jhat)‖ ≤ ‖s - shat‖ + ‖j - jhat‖ := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.MaskPerturbation.full_signal_perturbation",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/MaskPerturbation.lean",
+          "line": 79,
+          "source_sha256": "da8dff07593e08375e9c2acc1f7f73cb9cf4b7b23d23142eef01136ca0c657e9",
+          "source_quoted": "theorem full_signal_perturbation (μ : Measure Ω) (S T : Set Ω)\n    (hS : MeasurableSet S) (hT : MeasurableSet T) (p : ENNReal)\n    (hp : 1 ≤ p) (hpTop : p ≠ ∞) (a b : ℂ) (s t : Ω → ℂ)\n    (hs : AEStronglyMeasurable s μ) (ht : AEStronglyMeasurable t μ) :\n    eLpNorm ((s+jump S a)-(t+jump T b)) p μ ≤ eLpNorm (s-t) p μ +\n      (‖a-b‖ₑ * μ S ^ (1/p.toReal) + ‖b‖ₑ * μ (S ∆ T) ^ (1/p.toReal)) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "Supplied-error combination is related; calibrated parameter rates, canonical jump L1 control and Fourier operator-norm growth remain prose obligations.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-39",
+      "title": "Shared-location multichannel recovery",
+      "statement_tex": "\nThe stacked system uniquely recovers the common annihilator\n$Q(z)=\\prod_\\ell(z-z_\\ell)$. Its roots recover the common locations.\nWith $r$ consecutive moments per channel, a channelwise Vandermonde solve\nrecovers every amplitude, including amplitudes that vanish in that channel.\n",
+      "hypotheses": "Let $m_n^{(c)}=\\sum_{\\ell=1}^ra_{c\\ell}z_\\ell^n$, with distinct common unit-modulus nodes. At each node at least one channel amplitude is nonzero. Form the stacked linear recurrence system for a monic polynomial of degree $r$ and assume its coefficient matrix has column rank $r$.",
+      "hypotheses_tex": "Let $m_n^{(c)}=\\sum_{\\ell=1}^ra_{c\\ell}z_\\ell^n$, with distinct common unit-modulus nodes. At each node at least one channel amplitude is nonzero. Form the stacked linear recurrence system for a monic polynomial of degree $r$ and assume its coefficient matrix has column rank $r$.",
+      "domain": "A finite collection of exponential moment channels",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Stacked full-column-rank recurrence, common annihilator, and channelwise Vandermonde recovery.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-40",
+      "title": "Confluent annihilation and the leading offset phase",
+      "statement_tex": "\n\\[\n \\prod_{\\ell=1}^r(E-z_\\ell)^{d+1}m=0.\n\\]\nFor offset $v\\ge0$, writing a decimated channel as\n\\[\n m_{(q_0+q)N+v}=\\sum_\\ell u_\\ell^q\n                   \\sum_{h=0}^d\\gamma_{\\ell,v,h}q^h,\n \\qquad u_\\ell=z_\\ell^N,\n\\]\nthe highest-degree coefficients satisfy\n$\\gamma_{\\ell,1,d}/\\gamma_{\\ell,0,d}=z_\\ell$.\nThis ratio applies to separated, matched confluent terms with nonzero leading\ncoefficient. The displayed annihilator is not asserted to have minimal order\nwhen leading coefficients vanish.\n",
+      "hypotheses": "Let $m_n=\\sum_{\\ell=1}^rz_\\ell^nP_\\ell(n)$ with distinct nonzero nodes and $\\deg P_\\ell\\le d$. Let $E$ be the forward shift. For an offset ratio assume $N\\ge1$ and the leading coefficient of $P_\\ell$ at degree $d$ is nonzero.",
+      "hypotheses_tex": "Let $m_n=\\sum_{\\ell=1}^rz_\\ell^nP_\\ell(n)$ with distinct nonzero nodes and $\\deg P_\\ell\\le d$. Let $E$ be the forward shift. For an offset ratio assume $N\\ge1$ and the leading coefficient of $P_\\ell$ at degree $d$ is nonzero.",
+      "domain": "Polynomial-exponential sequences",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Confluent shift annihilation, polynomial degree, and nonvanishing leading offset coefficients.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-41",
+      "title": "Model mismatch enters the same sparse stability bound",
+      "statement_tex": "\n\\[\n \\|\\widehat\\alpha-\\alpha_0\\|_2\\le2\\epsilon/\\gamma.\n\\]\nIf an actual edge $j$ obeys $\\|j-D\\alpha_0\\|_2\\le\\delta$, then\n\\[\n \\|j-D\\widehat\\alpha\\|_2\\le\\delta+2\\|D\\|_2\\epsilon/\\gamma.\n\\]\nThe theorem applies to finite image dictionaries under these printed\nsparsity, residual, and restricted-injectivity hypotheses.\n",
+      "hypotheses": "Use $A=RD$ from SG-14 and assume $s\\ge1$, $d\\ge1$, and its restricted constant $\\gamma>0$. Suppose $y=s_0+D\\alpha_0+e+\\eta$, with $s_0\\in\\mathcal S$, $\\|\\alpha_0\\|_0\\le s$, and $\\|R(e+\\eta)\\|_2\\le\\epsilon$. Let $\\widehat\\alpha$ be $s$-sparse with $\\|A\\widehat\\alpha-Ry\\|_2\\le\\epsilon$.",
+      "hypotheses_tex": "Use $A=RD$ from SG-14 and assume $s\\ge1$, $d\\ge1$, and its restricted constant $\\gamma>0$. Suppose $y=s_0+D\\alpha_0+e+\\eta$, with $s_0\\in\\mathcal S$, $\\|\\alpha_0\\|_0\\le s$, and $\\|R(e+\\eta)\\|_2\\le\\epsilon$. Let $\\widehat\\alpha$ be $s$-sparse with $\\|A\\widehat\\alpha-Ry\\|_2\\le\\epsilon$.",
+      "domain": "A finite-dimensional background-edge model",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Restricted sparse injectivity with projected model mismatch and edge approximation error.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-42",
+      "title": "Ideal nested-span refitting decreases residual",
+      "statement_tex": "\n\\[\n \\|f-P_{k+1}f\\|\\le\\|f-P_kf\\|,\n \\qquad f-P_kf\\perp V_k.\n\\]\nIf $\\bigcup_kV_k$ is dense, then $P_kf\\to f$ in norm.\n",
+      "hypotheses": "Let $V_1\\subseteq V_2\\subseteq\\cdots$ be finite-dimensional subspaces. Let $P_k$ be the orthogonal projector onto $V_k$.",
+      "hypotheses_tex": "Let $V_1\\subseteq V_2\\subseteq\\cdots$ be finite-dimensional subspaces. Let $P_k$ be the orthogonal projector onto $V_k$.",
+      "domain": "A Hilbert space with finite selected packet spans",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.impulse_dense_span",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 165,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "theorem impulse_dense_span :\n    (Submodule.span ℂ (Set.range (fun i : ℤ => (lp.single 2 i (1 : ℂ) : Signal ℤ)))).topologicalClosure = ⊤ := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.projector_orthogonal",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 147,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "theorem projector_orthogonal [DecidableEq R] (phase : I → R) (r s : R)\n    (h : r ≠ s) (x y : Signal I) :\n    inner ℂ (projector phase r x) (projector phase s y) = 0 := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "The source proves density and orthogonality for particular ℓ2 coordinate packets; arbitrary nested finite-span projector convergence is not a recovered target.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-43",
+      "title": "Ridge refitting has a different stationarity law",
+      "statement_tex": "\nThe minimizer is unique and\n\\[\n (M^{\\mathsf T}M+\\lambda I)c=M^{\\mathsf T}y,\n \\qquad M^{\\mathsf T}r=\\lambda c.\n\\]\nAdding candidate columns cannot increase the minimized ridge objective,\nbut exact orthogonality $M^{\\mathsf T}r=0$ is not the ridge stationarity law.\nEven a complete pixel basis need not give zero residual when $\\lambda>0$.\n",
+      "hypotheses": "Let $M\\in\\mathbb R^{m\\times d}$, $y\\in\\mathbb R^m$, and $\\lambda>0$. Let $c$ minimize $\\|y-Mc\\|_2^2+\\lambda\\|c\\|_2^2$ and set $r=y-Mc$.",
+      "hypotheses_tex": "Let $M\\in\\mathbb R^{m\\times d}$, $y\\in\\mathbb R^m$, and $\\lambda>0$. Let $c$ minimize $\\|y-Mc\\|_2^2+\\lambda\\|c\\|_2^2$ and set $r=y-Mc$.",
+      "domain": "Finite-dimensional real packet designs",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Positive ridge normal equations, uniqueness, and modified residual stationarity.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-44",
+      "title": "Clipping is nonexpansive toward a bounded truth",
+      "statement_tex": "\n\\[\n \\|C(x)-C(y)\\|_2\\le\\|x-y\\|_2,\\qquad\n \\|C(x)-f\\|_2\\le\\|x-f\\|_2.\n\\]\nClipping is nonlinear; it is not the bounded linear synthesis operator in\nSG-36. Its truth-error guarantee depends on the stated box constraint.\n",
+      "hypotheses": "Define $C(x)$ coordinatewise by $C(t)=\\min(1,\\max(0,t))$. Suppose the truth $f$ has every coordinate in $[0,1]$.",
+      "hypotheses_tex": "Define $C(x)$ coordinatewise by $C(t)=\\min(1,\\max(0,t))$. Suppose the truth $f$ has every coordinate in $[0,1]$.",
+      "domain": "Real pixel arrays with Euclidean norms",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Scalar clipping nonexpansiveness, box truth assumption, and Euclidean assembly.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-45",
+      "title": "An exact residual archive preserves the object",
+      "statement_tex": "\nThe synthesis $q+r=f$ is exact. This identity supplies no sparsity, compression,\nor recovery-from-fewer-measurements conclusion. In finite pixel space the\nfull pixel basis likewise spans every image in the ideal unregularized model.\n",
+      "hypotheses": "Let an approximation $q$ to an available object $f$ be supplied, and retain the complete residual $r=f-q$.",
+      "hypotheses_tex": "Let an approximation $q$ to an available object $f$ be supplied, and retain the complete residual $r=f-q$.",
+      "domain": "Any normed signal space",
+      "coverage_classification": "no_recovered_target",
+      "related_declarations": [],
+      "interpretation": "Exact full residual identity and ideal finite pixel spanning; no compression inference.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    },
+    {
+      "claim_id": "SG-46",
+      "title": "Bounded identities extend from a dense core",
+      "statement_tex": "\nThen $A=B$ on $X$. Consequently a finite packet identity established on a\ndense core extends to a completion when both represented operators have\nbounded extensions. An infinite projector sum additionally requires a\nspecified convergent synthesis; bounded finite identities alone do not\nsupply that convergence.\n",
+      "hypotheses": "Let $D$ be a dense linear subspace of $X$, and let $A,B:X\\to Y$ be bounded linear operators agreeing on $D$.",
+      "hypotheses_tex": "Let $D$ be a dense linear subspace of $X$, and let $A,B:X\\to Y$ be bounded linear operators agreeing on $D$.",
+      "domain": "Normed spaces and bounded linear maps",
+      "coverage_classification": "related_infrastructure",
+      "related_declarations": [
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.shift_generated_dense_span",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 203,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "theorem shift_generated_dense_span :\n    (Submodule.span ℂ (Set.range (fun i : ℤ => shift i (lp.single 2 0 (1 : ℂ))))).topologicalClosure = ⊤ := by",
+          "coverage_relation": "related_infrastructure_only"
+        },
+        {
+          "declaration": "KomorebiPaperV.HilbertPackets.projector_complete",
+          "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+          "line": 69,
+          "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+          "source_quoted": "theorem projector_complete [Fintype R] [DecidableEq R] (phase : I → R) :\n    (∑ r : R, projector phase r) = ContinuousLinearMap.id ℂ (Signal I) := by",
+          "coverage_relation": "related_infrastructure_only"
+        }
+      ],
+      "interpretation": "An explicit dense core and bounded finite projector identity are formal examples; the general bounded-operator extension theorem is not a recovered target.",
+      "full_current_claim_covered": false,
+      "fresh_signal_lean_certificate": false,
+      "traditional_claim_input_sha256": "ffe0b1ee413da77fd443669d97634ac3817fbd1236c4a22af30eaf35daf0b535"
+    }
+  ]
+}

@@ -1,0 +1,831 @@
+\documentclass[11pt,oneside,openany]{book}
+\usepackage[letterpaper,margin=0.82in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx,float,placeins,booktabs,longtable,tabularx,array}
+\usepackage{xcolor,hyperref,fancyhdr,enumitem,listings}
+\usepackage{subcaption}
+\usepackage{ragged2e}
+\usepackage{caption}
+\usepackage{titlesec}
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Muted}{HTML}{566573}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{PaleBlue}{HTML}{EAF3F7}
+\definecolor{PaleTeal}{HTML}{EAF5F2}
+\definecolor{PaleOrange}{HTML}{FCF2E8}
+\definecolor{PaleRed}{HTML}{FBEDE9}
+\color{Ink}
+\hypersetup{
+ colorlinks=true,
+ linkcolor=Blue,
+ urlcolor=Blue,
+ citecolor=Blue,
+ pdftitle={Complex Signal and Image Benchmark for Projector-Resolved Gibbs Reconstruction},
+ pdfauthor={Komorebi P.},
+ pdfsubject={Complex one-dimensional signals, geometric images, natural images, Fourier ringing, edge packets, and benchmark boundaries},
+ pdfcreator={},pdfproducer={}
+}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancyhead[L]{\small Complex Signal and Image Benchmark}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+
+\titleclass{\part}{straight}
+\titleformat{\part}[block]
+  {\color{Blue}\LARGE\bfseries\RaggedRight}
+  {Part \thepart}
+  {0.75em}
+  {}
+\titlespacing*{\part}{0pt}{18pt}{14pt}
+\titleclass{\chapter}{straight}
+\titleformat{\chapter}[hang]
+  {\color{Ink}\LARGE\bfseries}
+  {\thechapter.}
+  {0.65em}
+  {}
+\titlespacing*{\chapter}{0pt}{18pt}{10pt}
+
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Worked example}
+\newtheorem{certificate}[theorem]{Numerical certificate}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\T}{\mathbb T}
+\newcommand{\RMSE}{\operatorname{RMSE}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\spark}{\operatorname{spark}}
+\newcommand{\Callout}[2][PaleBlue]{\noindent\colorbox{#1}{\parbox{0.965\linewidth}{\vspace{4pt}\RaggedRight #2\par\vspace{4pt}}}}
+\newcommand{\Figure}[3]{
+\begin{figure}[H]
+\centering
+\includegraphics[width=#1\textwidth]{#2}
+\caption{#3}
+\end{figure}
+}
+\graphicspath{{figures/}}
+\lstset{
+ basicstyle=\ttfamily\scriptsize,
+ breaklines=true,
+ columns=fullflexible,
+ frame=single,
+ showstringspaces=false,
+ tabsize=4
+}
+\begin{document}
+\hypersetup{pageanchor=false}
+
+\begin{titlepage}
+\centering
+\vspace*{0.55in}
+{\Large\color{Blue}\bfseries PROJECTOR-RESOLVED GIBBS RECONSTRUCTION\par}
+\vspace{0.18in}
+{\Huge\bfseries Complex Signal and Image Benchmark\par}
+\vspace{0.16in}
+{\Large Multi-Jump Signals, Curved Geometry, Text, Natural Images, and the Boundary of Exact Packet Recovery\par}
+\vspace{0.40in}
+\begin{minipage}{0.82\linewidth}
+\large
+This study asks a harder question than whether one idealized edge packet can be reconstructed. It tests the same calculus on crowded one-dimensional signals, non-bandlimited backgrounds, near-colliding jumps, mixed two-dimensional geometry, text, thin structures, and natural images. Exact-model results and exploratory results are kept separate throughout.
+\end{minipage}
+\vfill
+{\Large\bfseries Komorebi P.\par}
+\vspace{0.55in}
+\end{titlepage}
+
+\frontmatter
+\hypersetup{pageanchor=true}
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+A projector-resolved reconstruction method should not be judged only on a single rectangular pulse. This monograph builds a controlled benchmark that moves from difficult one-dimensional signals to two-dimensional geometric images and then to natural images outside the proved model class. The one-dimensional suite includes eight-jump bandlimited signals, analytic tails, algebraic tails, chirps, localized bursts, rough smooth packets, noisy moments, near-colliding jumps, and model orders from two through ten. The two-dimensional suite uses a finite dictionary of 318 rectangles, disks, ellipses, and bars, followed by deliberately out-of-dictionary stars, text, and nested rings. Four standard natural images are included as an exploratory boundary test.
+
+The exact finite-rate method recovers every declared jump count in the three controlled one-dimensional cases. The median ratio of resolved reconstruction error to raw Fourier error across all six complex one-dimensional cases is
+\[
+2.5619\times10^{-4}.
+\]
+One deliberately difficult burst background causes the unknown-order estimator to overfit six true jumps as nine, which is retained as a negative control. In the exact two-dimensional dictionary cases, the selected support is correct in all three named examples and in forty of forty separated random cases. The median resolved-to-raw RMSE ratio over the three named geometric images is
+\[
+0.4169.
+\]
+The same dictionary method performs poorly when the geometry is absent from the dictionary, and no exact recovery claim is made for natural images. Those failures are not discarded. They identify the next mathematical problem: a geometry-adaptive packet model with quantitative stability and a controlled complexity penalty.
+
+\chapter*{Status of the conclusions}
+\addcontentsline{toc}{chapter}{Status of the conclusions}
+\Callout[PaleTeal]{\textbf{Proved finite statements.} Complete packet synthesis, finite-dictionary identifiability under the stated conditions, the residualized sparse model, and exact reconstruction after correct support recovery are finite mathematical statements.}
+
+\Callout[PaleOrange]{\textbf{Controlled computational results.} Jump-count recovery, location error, support recovery, image metrics, noise sweeps, and runtime values are measurements from the supplied deterministic code and data generation.}
+
+\Callout[PaleRed]{\textbf{Exploratory boundary tests.} Stars, text, nested rings, and natural images do not satisfy the finite dictionary theorem. Their results test the present implementation. They are not promoted to universal recovery theorems.}
+
+\tableofcontents
+\listoffigures
+
+\mainmatter
+
+\part{Benchmark Design}
+
+\chapter{Why the simple example is not enough}
+
+The earlier Gibbs case study established an exact mechanism. When a signal decomposes as
+\[
+f=s+j
+\]
+and the singular packet $j$ is recovered, one should reconstruct $s$ in a global smooth atlas and synthesize $j$ in its native packet coordinate. The final reconstruction is
+\[
+\widehat f=A_M(f-\widehat j)+\widehat j.
+\]
+If $\widehat j=j$, the discontinuity is not forced through a finite global Fourier polynomial. The classical Dirichlet-kernel ringing term does not appear in the synthesized edge packet.
+
+That mechanism is exact, but a single interval does not settle the practical question. A serious reconstruction method must face at least five complications.
+
+\begin{enumerate}[leftmargin=2em]
+\item The number of jumps may be unknown.
+\item The smooth packet may not be bandlimited.
+\item Jumps may be close enough to create a badly conditioned Prony system.
+\item Two-dimensional edges may have several shapes and may overlap.
+\item Real images may lie outside every finite geometry dictionary used in the theorem.
+\end{enumerate}
+
+This benchmark was designed to expose those complications one by one.
+
+\Figure{0.96}{01_benchmark_architecture.pdf}{The benchmark progresses from controlled finite-rate signals to exact finite geometric dictionaries, then to out-of-model geometry and natural images. The logical status changes as the model assumptions are relaxed.}
+
+\section{What counts as success}
+
+For one-dimensional edge recovery, the primary quantities are
+\[
+L,\qquad \widehat L,\qquad
+\max_\ell d_{\T}(\widehat\tau_\ell,\tau_\ell),\qquad
+\max_\ell |\widehat a_\ell-a_\ell|.
+\]
+Reconstruction quality is measured both globally and inside a narrow boundary band. This matters because a global RMSE can look small while the jump neighborhood remains visibly wrong.
+
+For images, the benchmark reports
+\[
+\RMSE,\qquad
+\operatorname{PSNR},\qquad
+\operatorname{SSIM},\qquad
+\text{boundary RMSE},\qquad
+\text{edge IoU}.
+\]
+The image metrics answer different questions. RMSE measures global fidelity. SSIM measures structural similarity. Boundary RMSE focuses on the region where ringing and edge blur occur. Edge IoU measures whether the estimated image places sharp structure in the right locations.
+
+\section{Methods compared}
+
+Every two-dimensional case is compared with the same baseline family.
+
+\begin{description}[leftmargin=1.6in,style=nextline]
+\item[Raw Fourier] A square low-pass truncation of the two-dimensional Fourier spectrum.
+\item[Fej\'er] A separable Ces\`aro weighting that reduces ringing by damping the highest retained modes.
+\item[Lanczos] A separable sigma factor applied inside the retained spectral square.
+\item[Haar threshold] A finite orthonormal Haar transform followed by hard coefficient selection.
+\item[Total variation] A TV denoising step applied to the raw Fourier reconstruction.
+\item[Dictionary resolved] Projection away from a smooth DCT packet, sparse geometric packet selection, and reconstruction of smooth and edge packets in separate coordinates.
+\end{description}
+
+The last method has a theorem only when the true edge packet belongs to the declared finite dictionary and the residualized dictionary is identifiable at the required sparsity.
+
+\chapter{The common mathematical model}
+
+\section{One-dimensional finite-rate packet model}
+
+Let
+\[
+f=s+j
+\]
+on the periodic interval $\T=\R/(2\pi\mathbb Z)$. The jump packet is piecewise constant with derivative
+\[
+Dj=\sum_{\ell=1}^{L}a_\ell\delta_{\tau_\ell},
+\qquad
+\sum_{\ell=1}^{L}a_\ell=0.
+\]
+The high-frequency derivative moments are
+\[
+m_n=2\pi i n\widehat f(n)
+=\sum_{\ell=1}^{L}a_\ell e^{-in\tau_\ell}+e_n,
+\]
+where $e_n$ is the contribution of the smooth background at frequency $n$.
+
+With $z_\ell=e^{-i\tau_\ell}$ and decimation factor $N$, the polyphase channels are
+\[
+m_{(q_0+q)N+r}
+=
+\sum_{\ell=1}^{L}b_{\ell,r}u_\ell^q+e_{(q_0+q)N+r},
+\]
+where
+\[
+u_\ell=z_\ell^N,
+\qquad
+b_{\ell,r}=a_\ell z_\ell^{q_0N+r}.
+\]
+The adjacent offset law
+\[
+b_{\ell,r+1}=z_\ell b_{\ell,r}
+\]
+recovers the physical phase that is lost by decimation.
+
+\section{Two-dimensional finite dictionary model}
+
+The exact image experiments use
+\[
+y=Bc+D\alpha+\eta.
+\]
+The columns of $B$ span a low-frequency DCT background. The columns of $D$ are geometric masks. The coefficient vector $\alpha$ is sparse.
+
+Let
+\[
+P_B=B(B^\mathsf TB)^{-1}B^\mathsf T,
+\qquad
+R_B=I-P_B.
+\]
+After removing the smooth packet,
+\[
+R_By=(R_BD)\alpha+R_B\eta.
+\]
+The relevant edge dictionary is therefore
+\[
+A=R_BD.
+\]
+
+\begin{theorem}[Finite dictionary identifiability]
+Every $s$-sparse edge vector is uniquely determined from $R_By$ if and only if
+\[
+\ker A\cap\{h:\|h\|_0\le 2s\}=\{0\}.
+\]
+Equivalently,
+\[
+\spark(A)>2s.
+\]
+\end{theorem}
+
+\begin{proof}
+If two $s$-sparse vectors $\alpha_1$ and $\alpha_2$ give the same residualized observation, then
+\[
+A(\alpha_1-\alpha_2)=0
+\]
+and $\alpha_1-\alpha_2$ has at most $2s$ nonzero entries. The kernel condition forces equality. Conversely, a nonzero $2s$-sparse kernel vector can be split into the difference of two $s$-sparse vectors, giving two distinct edge packets with the same observation.
+\end{proof}
+
+The implementation uses a greedy sparse selector with an elbow rule. That algorithm is a finite computational choice. The theorem above concerns uniqueness of the sparse representation, not the success of every greedy algorithm.
+
+\chapter{Reproducibility and benchmark controls}
+
+The complete study is generated by one Python program. It creates the signals, images, edge dictionaries, reconstructions, metrics, figures, CSV tables, and JSON ledger. Random experiments use fixed seeds. No hand-edited result is inserted into the tables.
+
+The exact and exploratory branches are separated in the output files. A failed unknown-order estimate is kept. A poor out-of-dictionary reconstruction is kept. Natural-image comparisons are not labeled exact.
+
+\Figure{0.94}{15_failure_boundary_map.pdf}{The exact theorem weakens as edge separation shrinks, the background model becomes wrong, and the geometry leaves the dictionary. Natural images are an exploratory endpoint rather than a hidden extension of the theorem.}
+
+\part{Complex One-Dimensional Signals}
+
+\chapter{Eight jumps with a bandlimited background}
+
+The first case stays fully inside the finite-rate model. The edge packet has eight separated jumps and the smooth packet is bandlimited. The unknown-order estimator returns
+\[
+\widehat L=8.
+\]
+The maximum location error is zero to the stored floating-point representation and the maximum jump-amplitude error is
+\[
+1.33\times10^{-15}.
+\]
+
+The raw Fourier reconstruction still places a global trigonometric approximation across every jump. Its RMSE is
+\[
+4.0065\times10^{-2}.
+\]
+The resolved reconstruction error is
+\[
+1.56\times10^{-16}.
+\]
+
+\Figure{0.96}{02_bandlimited_8_jump.pdf}{Eight-jump bandlimited test. The top panel compares the truth, raw Fourier reconstruction, and resolved synthesis. The middle panel isolates the errors. The bottom panel compares true and recovered jump packets.}
+
+The example is important because the difficulty is not the smooth background. It is the number of discontinuities. The experiment shows that the same polyphase recovery stage can handle several edge packets without changing the synthesis law.
+
+\chapter{Six jumps with an analytic tail}
+
+The analytic background is not finite-bandwidth, but its Fourier coefficients decay rapidly. The recovered count remains six. The maximum location error is
+\[
+4.44\times10^{-16}
+\]
+and the jump error is below
+\[
+7\times10^{-13}.
+\]
+
+The resolved RMSE is
+\[
+1.93\times10^{-14},
+\]
+compared with raw Fourier RMSE
+\[
+3.6293\times10^{-2}.
+\]
+
+\Figure{0.96}{03_analytic_6_jump.pdf}{Six-jump analytic-background test. The edge packet is recovered from high-frequency derivative moments while the analytic tail remains in the smooth residual.}
+
+This case shows that exact bandlimiting is not required for a useful result. What is required is that the smooth contamination in the high-frequency moments be small enough for the annihilating system and the phase lift to remain stable.
+
+\chapter{Algebraic tails, chirps, bursts, and rough backgrounds}
+
+\section{Power-tail background}
+
+The power-tail example is a controlled approximation rather than an exact finite-bandwidth problem. The recovered order is correct. The location error is
+\[
+3.60\times10^{-10}
+\]
+and the resolved RMSE is
+\[
+5.22\times10^{-8}.
+\]
+The raw Fourier RMSE is more than six orders of magnitude larger.
+
+\section{Chirp background}
+
+The chirp places substantial oscillatory energy across a wider frequency range. The jump count is still recovered correctly. The location error is about
+\[
+1.93\times10^{-5}
+\]
+and the resolved RMSE is
+\[
+3.96\times10^{-4}.
+\]
+
+\Figure{0.96}{04_chirp_6_jump.pdf}{Six jumps on a non-bandlimited chirp. The result remains accurate, but the smooth high-frequency contamination is now visible in the recovered jump amplitudes and in the residual.}
+
+\section{Localized bursts}
+
+The burst background is the clearest negative control in the one-dimensional suite. It carries localized high-frequency energy that resembles innovation moments. The order estimator returns nine rather than six. The location and amplitude metrics are therefore not defined as a one-to-one match.
+
+Even in this failed model-order case, the resolved RMSE is
+\[
+2.70\times10^{-3},
+\]
+which is much smaller than the raw Fourier RMSE
+\[
+2.82\times10^{-2}.
+\]
+That improvement does not turn the wrong order into a correct edge interpretation. Reconstruction quality and correct mechanism identification are different questions.
+
+\Figure{0.96}{05_bursts_6_jump.pdf}{Localized bursts produce a model-order failure. The plot is retained because it identifies a real boundary of the current unknown-order estimator.}
+
+\section{Rough smooth packet}
+
+The rough background has a slow coefficient tail. The true count of four is recovered. The location error remains below
+\[
+6\times10^{-7}
+\]
+and the resolved RMSE is
+\[
+1.30\times10^{-5}.
+\]
+
+\Figure{0.96}{06_rough_4_jump.pdf}{Four jumps on a rough background. The finite-rate innovation model remains visible, though the phase residual is larger than in the analytic cases.}
+
+\input{generated_tables/one_d_cases.tex}
+
+\chapter{Noise sensitivity}
+
+The six-jump analytic case is repeated with complex Gaussian perturbations added to the derivative moments. The noise standard deviation ranges from $10^{-5}$ to $2\times10^{-1}$.
+
+At low and moderate noise, the location and amplitude errors grow approximately linearly with the moment perturbation. The declared success criterion is
+\[
+\max_\ell d_{\T}(\widehat\tau_\ell,\tau_\ell)<10^{-3},
+\qquad
+\max_\ell|\widehat a_\ell-a_\ell|<5\times10^{-3}.
+\]
+The success rate remains one through $\sigma=5\times10^{-2}$. It falls sharply at $\sigma=10^{-1}$ and is zero at $\sigma=2\times10^{-1}$.
+
+\Figure{0.92}{07_noise_sweep.pdf}{Median location and amplitude errors across the six-jump noise sweep.}
+
+\Figure{0.92}{08_noise_success.pdf}{Recovery success remains high until the moment noise crosses the stability margin of the chosen configuration.}
+
+\input{generated_tables/one_d_noise.tex}
+
+\chapter{Near-colliding jumps}
+
+Two opposite jumps are placed at $0.55$ and $0.55+\delta$. The other two jumps remain well separated. A fixed moment perturbation of size
+\[
+\sigma=10^{-3}
+\]
+is applied while $\delta$ decreases from $0.9$ to $0.001$.
+
+The smallest singular value of the sampled Vandermonde system falls with the separation. The amplitude error rises rapidly in the same region. At $\delta=0.001$, the median jump-amplitude error is several orders of magnitude larger than it is for well-separated edges.
+
+\Figure{0.92}{09_separation_sweep.pdf}{The near-collision sweep shows the connection between Vandermonde conditioning and recovery error under fixed noise. Exact arithmetic can separate distinct nodes, but stable recovery cannot be uniform as the nodes collide.}
+
+\input{generated_tables/separation.tex}
+
+\chapter{Unknown order from two through ten}
+
+The random order sweep uses separated edge packets with orders
+\[
+L=2,3,\ldots,10.
+\]
+Eight cases are generated at each order. In this selected separated family, all cases meet the location threshold. The median runtime remains below a fraction of a second on the test machine, though it grows once the matrix pencils become larger.
+
+\Figure{0.90}{10_order_success.pdf}{Location recovery success across model orders two through ten.}
+
+\Figure{0.92}{11_order_accuracy_runtime.pdf}{Median location error and runtime across the order sweep. The runtime axis records the complete recovery call, including nonlinear refinement.}
+
+\input{generated_tables/order_sweep.tex}
+
+\chapter{One-dimensional scorecard}
+
+\Figure{0.96}{12_one_dimensional_summary.pdf}{Logarithmic error summary for the six named complex signal cases. The burst case is visibly weaker than the controlled cases, but its resolved synthesis still reduces global error.}
+
+\Figure{0.90}{13_complex_case_localization.pdf}{Maximum location error against minimum separation for the named complex cases. Background mismatch can dominate even when geometric separation is generous.}
+
+\Figure{0.96}{14_order_and_phase_certificates.pdf}{Recovered jump counts and polyphase phase residuals. The burst background is the only named case whose order estimate is wrong.}
+
+Across all six named cases, including the failed burst-order case, the median ratio
+\[
+\frac{\RMSE(\widehat f_{\mathrm{resolved}},f)}{\RMSE(S_Nf,f)}
+\]
+is
+\[
+\boxed{2.5619\times10^{-4}}.
+\]
+This number measures reconstruction error, not universal edge-identification success. The distinction is essential.
+
+\part{Two-Dimensional Geometric Packets}
+
+\chapter{The finite geometry dictionary}
+
+The image size is $96\times96$. The dictionary contains 318 masks after zero-residual columns are removed. Its atoms include
+\begin{itemize}
+\item axis-aligned rectangles at several centers and sizes
+\item disks at several centers and radii
+\item ellipses with several aspect ratios
+\item thin horizontal and vertical bars
+\end{itemize}
+
+Every atom is residualized against a $6\times6$ low-frequency DCT packet before sparse selection. This step prevents the edge dictionary from absorbing structure that belongs to the smooth model.
+
+\Figure{0.90}{16_geometry_dictionary_atoms.pdf}{Representative atoms from the 318-column finite geometry dictionary.}
+
+The selector uses normalized residualized atoms and a greedy correlation step. Model order is chosen by a relative improvement elbow. In the named exact cases, the elbow occurs immediately after the true support is selected.
+
+\chapter{Mixed rectangles, disks, ellipses, and bars}
+
+The first image contains four edge atoms on a smooth DCT background. The true support consists of one rectangle, one disk, one ellipse, and one vertical bar. The algorithm selects exactly those four atoms.
+
+The raw Fourier RMSE is
+\[
+6.4338\times10^{-2}.
+\]
+The dictionary-resolved RMSE is
+\[
+2.4632\times10^{-2}.
+\]
+The boundary RMSE falls from
+\[
+1.3966\times10^{-1}
+\]
+to
+\[
+4.4379\times10^{-2}.
+\]
+
+\Figure{0.98}{17_multi_geometry_reconstructions.pdf}{Reconstructions of the mixed-geometry image. The dictionary-resolved result restores the declared shapes while the smooth DCT packet carries the background.}
+
+\Figure{0.98}{18_multi_geometry_errors.pdf}{Absolute error maps for the mixed-geometry image. Raw spectral methods concentrate error along every sharp boundary.}
+
+\chapter{Curved shapes}
+
+The curved case contains a disk and two ellipses. All three atoms belong to the dictionary. The exact support is recovered.
+
+The raw Fourier RMSE is
+\[
+5.9087\times10^{-2},
+\]
+while the dictionary-resolved RMSE is
+\[
+2.5546\times10^{-2}.
+\]
+The resolved edge IoU is approximately
+\[
+0.8755.
+\]
+
+\Figure{0.98}{19_curved_shapes_reconstructions.pdf}{Disk and ellipse reconstruction. The finite dictionary can represent this geometry exactly, though the recovered amplitudes remain influenced by the truncated observation.}
+
+\Figure{0.98}{20_curved_shapes_errors.pdf}{Absolute error maps for the curved-shape case.}
+
+\chapter{Thin structures}
+
+Thin bars are difficult for low-pass Fourier reconstruction because their width is close to the effective spatial resolution. The exact support contains three bars and one small rectangle. All four are recovered.
+
+The raw Fourier RMSE is
+\[
+5.1313\times10^{-2}.
+\]
+The dictionary-resolved RMSE is
+\[
+1.8514\times10^{-2}.
+\]
+The edge IoU rises from about $0.327$ to about $0.906$.
+
+\Figure{0.98}{21_thin_structures_reconstructions.pdf}{Thin structures under six reconstruction methods.}
+
+\Figure{0.98}{22_thin_structures_errors.pdf}{Absolute error maps for thin structures. The native bar atoms reduce the extended spectral halo around the narrow objects.}
+
+\chapter{Method comparison on exact geometric cases}
+
+\Figure{0.96}{23_exact_geometry_rmse.pdf}{RMSE matrix for the three exact geometric cases and six methods.}
+
+\Figure{0.96}{24_exact_geometry_boundary_rmse.pdf}{Boundary-band RMSE matrix. The resolved method is strongest where the model assumptions are met.}
+
+The median ratio of dictionary-resolved RMSE to raw Fourier RMSE over the three exact cases is
+\[
+\boxed{0.4169}.
+\]
+Unlike the one-dimensional finite-rate case, the two-dimensional reconstruction is not numerically exact. The reason is that sparse support recovery is applied to a Fourier-truncated image, not to exact full-resolution measurements. The geometry is recovered correctly, but the smooth and amplitude estimates still inherit observation error.
+
+\input{generated_tables/two_d_exact.tex}
+
+\chapter{Noise and random finite-dictionary images}
+
+\section{Noise sweep}
+
+The four-atom mixed-geometry image is corrupted before Fourier truncation. The correct support remains stable through moderate noise. At $\sigma=0.6$, the elbow selector collapses to one atom and the median support IoU drops to $0.25$.
+
+\Figure{0.92}{25_two_dimensional_noise.pdf}{Noise sensitivity of the finite geometric packet recovery. The sharp support transition is visible at high noise.}
+
+\input{generated_tables/two_d_noise.tex}
+
+\section{Forty random cases}
+
+Forty images are generated from two through five randomly selected dictionary atoms. In this separated deterministic suite, the selected support matches the true support in every case. The median support IoU is one. The median resolved RMSE is about $0.0211$, compared with median raw Fourier RMSE about $0.0556$.
+
+\Figure{0.98}{26_two_dimensional_random_stress.pdf}{Support overlap, reconstruction errors, and model-order selection in forty random finite-dictionary images.}
+
+\input{generated_tables/two_d_random_summary.tex}
+
+\begin{boundary}[Interpretation of the random suite]
+The forty cases are generated from the same finite dictionary used for recovery. They test implementation, conditioning, and sparse selection inside the model. They do not establish recovery for arbitrary image geometry.
+\end{boundary}
+
+\part{Geometry Outside the Dictionary}
+
+\chapter{Star-shaped boundary}
+
+The star is not a member of the rectangle, disk, ellipse, and bar dictionary. The sparse selector approximates the star using several unrelated atoms. This is a model failure, not an implementation bug.
+
+\Figure{0.98}{27_star_out_of_dictionary.pdf}{Star-shaped boundary outside the finite dictionary. The dictionary-resolved method blurs the star into an incorrect geometric combination.}
+
+In this case, TV and the raw or wavelet reconstructions outperform the finite dictionary method in global RMSE. The result shows why a geometry-adaptive packet family is necessary before one can claim broad two-dimensional unknown-edge recovery.
+
+\chapter{Text over a smooth gradient}
+
+Thin letter strokes contain corners, junctions, and many short edge segments. None of those structures appears in the geometric dictionary. The dictionary method again fails to represent the correct edge packet.
+
+\Figure{0.98}{28_text_over_gradient.pdf}{Text over a smooth gradient. The example is deliberately outside the declared geometry model.}
+
+A future text-capable packet system would need line-segment, corner, junction, or contour atoms. It would also need a complexity rule that does not replace every letter by a large unstructured collection of local masks.
+
+\chapter{Nested rings}
+
+The nested-ring case contains a disk difference. Although the dictionary includes disks, it does not include the exact two-radius ring as one atom. A sparse combination can approximate it, but the low-pass observation and atom correlation make the selected representation unstable.
+
+\Figure{0.98}{29_nested_rings.pdf}{Nested rings test the ability to form a composite boundary from simple atoms.}
+
+\chapter{Out-of-model comparison}
+
+\Figure{0.96}{30_out_of_model_rmse.pdf}{RMSE comparison for stars, text, and nested rings. The finite dictionary is no longer uniformly competitive.}
+
+\Figure{0.96}{31_out_of_model_edge_iou.pdf}{Edge overlap for the out-of-dictionary images. The result confirms that good exact-model performance does not transfer automatically to unseen geometry.}
+
+\input{generated_tables/out_model.tex}
+
+The main lesson is direct. Exact synthesis is only as useful as the packet model that identifies the singular structure. A fixed dictionary can be powerful and still be narrow.
+
+\part{Natural Images as an Exploratory Boundary}
+
+\chapter{Why natural images are different}
+
+Natural images contain texture, shading, occlusion, repeated patterns, smooth edges, sharp edges, and sensor noise. They do not usually admit a unique decomposition into one low-frequency smooth packet and a small number of exact geometric masks.
+
+The natural-image section therefore compares only standard reconstruction and regularization methods. The finite geometry dictionary is not applied as an exact theorem. The question is more modest: how much ringing and blur remain after Fourier truncation, and which generic baseline behaves best on each image?
+
+\chapter{Camera image}
+
+\Figure{0.98}{32_natural_camera.pdf}{Camera image reconstructed from a square Fourier window. TV gives the lowest global RMSE in this case, while the boundary metrics remain close among raw Fourier, Haar thresholding, and TV.}
+
+The camera image contains both smooth regions and strong edges. TV improves global RMSE from about $0.0488$ to about $0.0469$. It does not remove every boundary artifact. The result is useful as a baseline, not as evidence for exact packet recovery.
+
+\chapter{Coins image}
+
+\Figure{0.98}{33_natural_coins.pdf}{Coins image. Repeated circular boundaries make the image visually related to the geometric tests, but texture and illumination violate the exact finite dictionary model.}
+
+TV again gives the lowest RMSE among the tested generic methods. Raw Fourier and Haar thresholding are close behind. Fej\'er and Lanczos reduce some high-frequency oscillation but broaden many coin boundaries.
+
+\chapter{Document page}
+
+\Figure{0.98}{34_natural_page.pdf}{Document page with text, shading, and perspective. None of the tested generic methods is exact.}
+
+The page image confirms the difficulty already seen in the synthetic text example. Thin high-contrast strokes need a packet geometry adapted to lines, corners, and repeated glyph structure.
+
+\chapter{Natural-image metric summary}
+
+\Figure{0.96}{35_natural_ssim.pdf}{SSIM across the four natural images. The strongest method depends on the image.}
+
+\Figure{0.96}{36_natural_boundary_rmse.pdf}{Boundary-band RMSE for the natural images. No single generic method dominates every case.}
+
+\input{generated_tables/natural.tex}
+
+The moon image is the clearest case in which raw Fourier is already strong. Its smooth large-scale structure does not benefit from aggressive TV regularization. This variation is precisely why a future adaptive atlas must select its packet geometry from evidence rather than assume that every image is edge-dominated.
+
+\chapter{Natural background with exact geometric overlays}
+
+The hybrid case separates two difficulties. The background is a heavily smoothed natural camera image. Three sharp geometric packets are then added from the finite dictionary. This gives a realistic-looking smooth field while preserving a known edge model.
+
+\Figure{0.98}{37_natural_hybrid.pdf}{Natural-background hybrid with three exact geometric packets.}
+
+\Figure{0.98}{38_natural_hybrid_errors.pdf}{Error maps for the natural-background hybrid.}
+
+\Figure{0.92}{39_natural_hybrid_rmse.pdf}{RMSE comparison for the natural-background hybrid. TV gives the lowest global RMSE, while the dictionary method yields a different balance between geometric recovery and background approximation.}
+
+The dictionary selector identifies five atoms rather than the three true atoms. The smoothed natural background still contains structure outside the low-order DCT packet, and the selector uses additional geometry to explain part of it. This is an important warning. A richer background model is as necessary as a richer edge model.
+
+\part{What the Benchmark Establishes}
+
+\chapter{Final scorecard}
+
+\Figure{0.95}{40_final_scorecard.pdf}{The final benchmark scorecard separates exact-model success from out-of-model limitations.}
+
+The main numerical conclusions are as follows.
+
+\begin{enumerate}[leftmargin=2em]
+\item All three controlled one-dimensional cases recover the declared jump count.
+\item Two of the three harder one-dimensional stress backgrounds also recover the count. The localized-burst case overestimates it.
+\item Resolved synthesis greatly reduces one-dimensional reconstruction error across all six named cases.
+\item The exact two-dimensional geometric support is recovered in all three named cases.
+\item Forty of forty separated random finite-dictionary cases recover the exact support under the deterministic benchmark settings.
+\item The same dictionary method performs poorly on stars and text that are not represented in the dictionary.
+\item Natural-image results vary by image and remain exploratory.
+\end{enumerate}
+
+\chapter{The mathematical boundary exposed by the tests}
+
+The benchmark points to three distinct unresolved problems.
+
+\section{Background-edge separation}
+
+The burst example shows that high-frequency smooth structure can imitate jump moments. A stronger theory needs a joint model in which the background and edge packets are identified simultaneously. One possible target is an incoherence or transversality condition between a smooth spectral dictionary and an innovation dictionary.
+
+\section{Geometry-adaptive two-dimensional packets}
+
+The finite geometry theorem is exact, but the dictionary is narrow. A field-level image theorem needs a packet family rich enough to approximate or recover curves, corners, junctions, and text without becoming so large that identifiability and computation collapse.
+
+A natural target is a multiscale contour grammar with parent-child refinement. Coarse curves would split only where the residual demands more detail. The selection rule would balance data fit, boundary complexity, and cross-packet coherence.
+
+\section{A theorem for model mismatch}
+
+The current exact theorem says what happens when the edge packet belongs to the dictionary. The next theorem should quantify what happens when it does not. If $j$ is approximated by $D\alpha$, one seeks a bound of the form
+\[
+\|f-\widehat f\|
+\le
+\|s-A_Ms\|
++
+C_1\inf_{\|\alpha\|_0\le q}\|j-D\alpha\|
++
+C_2\,\text{measurement noise}
++
+C_3\,\text{selection error}.
+\]
+Such a theorem would connect exact packet synthesis with practical approximation classes.
+
+\chapter{A precise next research program}
+
+The benchmark suggests the following sequence.
+
+\begin{enumerate}[leftmargin=2em]
+\item Replace the fixed two-dimensional dictionary by a nested contour tree.
+\item Prove a finite mixed-depth synthesis theorem for the contour tree.
+\item Derive a residualized identifiability condition for the selected contour packets.
+\item Build a joint background-edge selector that cannot explain smooth bursts by adding false jumps without paying a measurable complexity cost.
+\item Prove a noisy oracle inequality with separate smooth-tail, geometry, amplitude, and support terms.
+\item Test the resulting method on the same exact, out-of-model, hybrid, and natural-image suite.
+\end{enumerate}
+
+The benchmark is therefore not an endpoint. It is a map of where the present calculus is exact, where it remains useful, and where the packet model must be enlarged.
+
+\appendix
+
+\chapter{Additional complete result tables}
+
+The main chapters already contain the named-case, noise, collision, exact-geometry, out-of-model, and natural-image tables. This appendix supplies the complete forty-case random suite and the full natural-background hybrid table.
+
+\section{Forty random finite-dictionary images}
+\input{generated_tables/two_d_random_full.tex}
+
+\section{Natural-background hybrid}
+\input{generated_tables/hybrid.tex}
+
+\chapter{Automated checks}
+\input{generated_tables/checks.tex}
+
+\chapter{Implementation map}
+
+The complete implementation is contained in
+\[
+\texttt{complex\_signal\_image\_benchmark.py}.
+\]
+Its main layers are listed below.
+
+\begin{longtable}{L{0.30\linewidth}L{0.60\linewidth}}
+\toprule
+Layer & Responsibility\\
+\midrule
+\endfirsthead
+\toprule Layer & Responsibility\\\midrule\endhead
+Periodic edge model & Jump locations, jump amplitudes, Fourier moments, and piecewise-constant synthesis.\\
+Polyphase recovery & Hankel rank, ESPRIT nodes, offset-channel phase recovery, branch lifting, amplitudes, and nonlinear refinement.\\
+One-dimensional suite & Controlled backgrounds, chirps, bursts, rough tails, noise sweeps, collision sweeps, and order sweeps.\\
+Two-dimensional transforms & Raw Fourier, Fej\'er, Lanczos, Haar thresholding, and TV baselines.\\
+Geometry dictionary & Rectangles, disks, ellipses, bars, DCT residualization, normalized Gram matrix, and sparse selection.\\
+Image metrics & RMSE, maximum error, PSNR, SSIM, boundary RMSE, edge IoU, and ringing diagnostics.\\
+Exploratory images & Stars, text, nested rings, four standard natural images, and a natural-background hybrid.\\
+Artifact generation & Forty figure pairs, eleven CSV tables, JSON results, and deterministic checks.\\
+\bottomrule
+\end{longtable}
+
+\chapter{Reproduction}
+
+After extraction, the complete benchmark can be regenerated with
+\begin{lstlisting}
+python complex_signal_image_benchmark.py --out .
+\end{lstlisting}
+
+The manuscript can then be compiled with
+\begin{lstlisting}
+latexmk -pdf -interaction=nonstopmode Complex_Signal_Image_Gibbs_Benchmark.tex
+\end{lstlisting}
+
+The code uses NumPy, SciPy, Matplotlib, scikit-image, Pillow, and SymPy. The four natural images are loaded from the example data distributed with scikit-image and resized deterministically before use.
+
+\chapter{Related mathematical context}
+
+\begin{thebibliography}{99}
+
+\bibitem{AdcockHansenShadrin}
+B. Adcock, A. C. Hansen, and A. Shadrin,
+\emph{A stability barrier for reconstructions from Fourier samples},
+SIAM Journal on Numerical Analysis 52 (2014), 125--139.
+
+\bibitem{BatenkovComplete}
+D. Batenkov,
+\emph{Complete algebraic reconstruction of piecewise-smooth functions from Fourier data},
+Mathematics of Computation 84 (2015), 2329--2350.
+
+\bibitem{BatenkovYomdin}
+D. Batenkov and Y. Yomdin,
+\emph{Algebraic Fourier reconstruction of piecewise smooth functions},
+Mathematics of Computation 81 (2012), 277--318.
+
+\bibitem{BatenkovDecimation}
+D. Batenkov,
+\emph{Accurate solution of near-colliding Prony systems via decimation and homotopy continuation},
+Theoretical Computer Science 681 (2017), 27--40.
+
+\bibitem{VEXPA}
+M. Briani, A. Cuyt, F. Knaepkens, and W.-s. Lee,
+\emph{VEXPA: validated exponential analysis through regular sub-sampling},
+Signal Processing 147 (2018), 207--220.
+
+\bibitem{FRI}
+M. Vetterli, P. Marziliano, and T. Blu,
+\emph{Sampling signals with finite rate of innovation},
+IEEE Transactions on Signal Processing 50 (2002), 1417--1428.
+
+\bibitem{GottliebShu}
+D. Gottlieb and C.-W. Shu,
+\emph{On the Gibbs phenomenon and its resolution},
+SIAM Review 39 (1997), 644--668.
+
+\end{thebibliography}
+
+\end{document}

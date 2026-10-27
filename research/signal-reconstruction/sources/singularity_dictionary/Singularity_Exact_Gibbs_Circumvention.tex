@@ -1,0 +1,718 @@
+\documentclass[11pt,oneside]{book}
+\usepackage[letterpaper,margin=0.82in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx,float,booktabs,longtable,tabularx,array}
+\usepackage{xcolor,hyperref,fancyhdr,enumitem,listings,placeins}
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{E76F51}
+\definecolor{PaleBlue}{HTML}{EAF3F8}
+\definecolor{PaleTeal}{HTML}{E8F5F2}
+\definecolor{PaleOrange}{HTML}{FCEFEA}
+\hypersetup{colorlinks=true,hypertexnames=false,linkcolor=Blue,urlcolor=Blue,citecolor=Blue,pdftitle={Singularity-Exact Reconstruction: A Closed Projector-Resolved Circumvention of the Gibbs Phenomenon},pdfauthor={Komorebi P.},pdfsubject={Projector-resolved Fourier reconstruction and exact singularity packets},pdfcreator={},pdfproducer={}}
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[L]{\scriptsize\color{gray} Singularity-Exact Reconstruction}\fancyfoot[R]{\scriptsize\color{gray}\thepage}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5.5pt}\setlength{\emergencystretch}{3em}\raggedbottom
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt}\setlist[enumerate]{leftmargin=1.8em,itemsep=3pt}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newtheorem{theorem}{Theorem}[chapter]\newtheorem{proposition}[theorem]{Proposition}\newtheorem{lemma}[theorem]{Lemma}\newtheorem{corollary}[theorem]{Corollary}\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}\newtheorem{boundary}[theorem]{Boundary}\newtheorem{certificate}[theorem]{Certificate}
+\newcommand{\Torus}{\mathbb T}\newcommand{\C}{\mathbb C}\newcommand{\R}{\mathbb R}\newcommand{\Z}{\mathbb Z}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\Callout}[1]{\noindent\colorbox{PaleBlue}{\parbox{0.955\linewidth}{\small\vspace{3pt}#1\vspace{3pt}}}}
+\newcommand{\ExactBox}[1]{\noindent\colorbox{PaleTeal}{\parbox{0.955\linewidth}{\small\textbf{Exact statement.} #1}}}
+\newcommand{\BoundaryBox}[1]{\noindent\colorbox{PaleOrange}{\parbox{0.955\linewidth}{\small\textbf{Boundary.} #1}}}
+\newcommand{\VisualPage}[4]{\clearpage\section{#1}\begin{center}\includegraphics[width=0.96\textwidth,height=0.61\textheight,keepaspectratio]{figures/#2}\end{center}\Callout{#3}\ifx\relax#4\relax\else\label{#4}\fi}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,showstringspaces=false,frame=single,columns=fullflexible,tabsize=4}
+\graphicspath{{figures/}}
+\begin{document}
+\begin{titlepage}
+\centering\vspace*{0.55in}
+{\Large\color{Blue}\bfseries PROJECTOR-RESOLVED SEED CALCULUS\par}\vspace{0.18in}
+{\Huge\bfseries Singularity-Exact Reconstruction\par}\vspace{0.12in}
+{\LARGE\bfseries A Closed Projector-Resolved Circumvention of the Gibbs Phenomenon\par}\vspace{0.25in}
+{\Large One signal, one discontinuity packet, every derivation, every residual, and one executable source file\par}
+\vfill
+\begin{minipage}{0.82\textwidth}\large
+The classical Fourier partial sums of a discontinuous signal develop a boundary layer whose limiting relative overshoot is nonzero.  The construction in this monograph does not attempt to cancel that layer after it has formed.  It changes the representation: the jump is recovered as an exact packet, the smooth complement is treated spectrally, and synthesis recombines the two without asking global Fourier modes to approximate the discontinuity.
+\end{minipage}
+\vfill
+{\Large Komorebi P.\par}\vspace{0.35in}
+\end{titlepage}
+\frontmatter
+\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
+This monograph follows one periodic signal from its primitive seed to its final reconstruction.  The signal is
+\[
+f(t)=s(t)+\frac54\mathbf 1_{[1/4,3/4)}(t),\qquad t\in\Torus=\R/\Z,
+\]
+where
+\[
+s(t)=\frac13\cos(2\pi t)+\frac14\sin(6\pi t)-\frac15\cos(10\pi t).
+\]
+The global Fourier partial sums are computed in closed form and shown to exhibit the classical Gibbs boundary layer.  A finite family of out-of-band Fourier coordinates then defines an exact edge-amplitude functional.  That functional generates an idempotent singularity projector $P_J$ and a complementary smooth projector $P_S=I-P_J$.  The reconstruction operator
+\[
+\mathcal R_5=Q_5P_S+P_J
+\]
+is proved to be the identity on the declared model space.  Consequently the jump is retained exactly, the smooth packet is reconstructed exactly from five Fourier frequencies, and the full residual vanishes to floating-point roundoff in the finite implementation.
+
+The document includes the Dirichlet-kernel derivation of the Gibbs constant, a finite dyadic interval-discovery theorem, noise and endpoint-perturbation certificates, negative controls, polyphase refinement, Haar sparsity, complete tables, and the entire executable source.  All results are regenerated by one Python file.  The exact conclusion is model-relative: the construction proves how Gibbs ringing is circumvented when the singular geometry is represented as a packet or is correctly selected from the declared finite dictionary.  It does not assert automatic recovery of arbitrary unknown discontinuities.
+
+\chapter*{Claim boundary}\addcontentsline{toc}{chapter}{Claim boundary}
+\ExactBox{For the model space $X=\mathcal S_5\oplus\operatorname{span}\{m\}$, with $m=\mathbf1_{[1/4,3/4)}$, the packet projectors and reconstruction operator are exact.  The finite grid implementation reproduces the signal with maximum residual below $10^{-15}$.}
+
+\BoundaryBox{This is not a theorem that one fixed packet system removes Gibbs ringing from every nonsmooth function.  Exact circumvention requires the correct singular packet, or a recovery theorem for a declared model class.  Spectral filters, wavelets, and edge estimators remain useful but logically distinct tools.}
+
+The phrase ``circumventing Gibbs'' is used precisely: the discontinuity is removed from the global approximation task and retained as an exact reconstruction packet.  It is not hidden by smoothing and it is not claimed that the classical Fourier theorem is false.
+
+\chapter*{Reading map}\addcontentsline{toc}{chapter}{Reading map}
+\begin{enumerate}
+\item Part~I derives the classical obstruction from the exact Fourier coefficients and Dirichlet kernel.
+\item Part~II constructs the packet projectors and proves singularity-exact synthesis.
+\item Part~III resolves the same packet through dyadic, polyphase, and Haar coordinates.
+\item Part~IV proves finite dictionary discovery and robustness bounds.
+\item Part~V collects negative controls, complexity comparisons, and the exact logical boundary.
+\item The appendices contain the complete coefficient tables, numerical records, and the single-file implementation.
+\end{enumerate}
+\tableofcontents
+\mainmatter
+
+\part{The one signal and the classical obstruction}
+\chapter{The primitive seed}
+\section{The ambient object}
+Work on the one-dimensional torus $\Torus=\R/\Z$ with Fourier convention
+\[
+\widehat g(k)=\int_0^1g(t)e^{-2\pi ikt}\,dt,
+\qquad
+g(t)\sim\sum_{k\in\Z}\widehat g(k)e^{2\pi ikt}.
+\]
+The primitive data are the smooth seed $s$, the interval address
+\[
+\Omega=[1/4,3/4),
+\]
+and the jump amplitude $a=5/4$.  Put
+\[
+m=\mathbf1_\Omega,
+\qquad
+j=am,
+\qquad
+f=s+j.
+\]
+This is a single typed seed system: $s$ lies in a finite Fourier subspace, while $j$ lies in a one-dimensional geometric packet space.
+
+\section{Why the decomposition matters}
+The discontinuity is not an accidental perturbation of the smooth signal.  It changes the asymptotic decay of the Fourier coefficients from finite support to $1/|k|$.  A global Fourier truncation therefore spends arbitrarily many modes representing the boundary of $\Omega$.  The packet method keeps the geometry of $\Omega$ as data and reserves Fourier modes for $s$.
+
+\begin{definition}[Smooth and singular seed spaces]
+Let
+\[
+\mathcal S_5=\operatorname{span}\{e^{2\pi ikt}:|k|\le5\},
+\qquad
+X=\mathcal S_5\oplus\operatorname{span}\{m\}.
+\]
+The direct sum is algebraic: $m\notin\mathcal S_5$ because $m$ has infinitely many nonzero Fourier coefficients.
+\end{definition}
+
+\VisualPage{The complete closed pipeline}{01_closed_pipeline.pdf}{The same typed object is carried through global Fourier analysis, edge identification, complementary projectors, smooth spectral transfer, and exact synthesis.  The red branch records the classical failure; the green branch is the exact reconstruction route.}{}
+
+\VisualPage{The primitive seed split}{02_seed_decomposition.pdf}{The one worked example never changes.  The smooth trigonometric polynomial, the interval packet, and their sum are the only signal objects used throughout the monograph.}{}
+\chapter{Closed Fourier coefficients}
+\section{The smooth packet}
+The Fourier coefficients of $s$ are finite:
+\[
+\widehat s(\pm1)=\frac16,
+\qquad
+\widehat s(3)=-\frac{i}{8},
+\qquad
+\widehat s(-3)=\frac{i}{8},
+\qquad
+\widehat s(\pm5)=-\frac1{10},
+\]
+and every other coefficient vanishes.
+
+\section{The interval packet}
+For $k\ne0$,
+\begin{align*}
+\widehat m(k)
+&=\int_{1/4}^{3/4}e^{-2\pi ikt}\,dt\\
+&=e^{-\pi ik}\frac{\sin(\pi k/2)}{\pi k}\\
+&=(-1)^k\frac{\sin(\pi k/2)}{\pi k},
+\end{align*}
+while $\widehat m(0)=1/2$.  Thus every nonzero even coefficient vanishes and every odd coefficient has magnitude $1/(\pi|k|)$.
+
+\begin{proposition}[Exact signal coefficients]
+For every $k\in\Z$,
+\[
+\boxed{\widehat f(k)=\widehat s(k)+\frac54\widehat m(k).}
+\]
+For $|k|>5$, this reduces to
+\[
+\widehat f(k)=\frac54\widehat m(k).
+\]
+\end{proposition}
+\begin{proof}
+Linearity of the Fourier integral gives the first identity.  The second follows from the finite support of $\widehat s$.
+\end{proof}
+
+\section{The spectral signature of the jump}
+The out-of-band coefficients are not noise in this model.  They form a one-parameter family with known shape and unknown amplitude.  That observation is the seed of the singularity projector constructed later.
+
+\VisualPage{Exact Fourier coefficient packets}{03_exact_fourier_coefficients.pdf}{The smooth seed occupies only frequencies $\pm1,\pm3,\pm5$.  Outside that set, every nonzero coefficient belongs to the interval packet and is proportional to one scalar amplitude.}{}
+\chapter{Global Fourier reconstruction}
+\section{Partial sums}
+Let
+\[
+Q_Ng(t)=\sum_{|k|\le N}\widehat g(k)e^{2\pi ikt}.
+\]
+For every $N\ge5$,
+\[
+Q_Nf=s+\frac54Q_Nm,
+\]
+so the global error is
+\[
+\boxed{f-Q_Nf=\frac54(m-Q_Nm).}
+\]
+Once the smooth degree has been reached, every remaining global error is caused by representing the interval packet with global Fourier modes.
+
+\section{What increasing \texorpdfstring{$N$}{N} does}
+Increasing $N$ narrows the region in which $Q_Nm$ oscillates.  It does not force the maximum overshoot, normalized by the jump height, to zero.  That distinction between width and height is the essential content of the Gibbs phenomenon.
+
+\VisualPage{Global Fourier partial sums}{04_global_fourier_partial_sums.pdf}{The boundary layer becomes visually narrower as the cutoff grows, but the first overshoot remains a fixed fraction of the jump height.}{}
+
+\VisualPage{Boundary-layer zoom}{05_boundary_layer_zoom.pdf}{The oscillations localize around the upward and downward jumps.  Away from the jumps the convergence is rapid; the obstruction is boundary-localized.}{}
+\chapter{The Dirichlet kernel and the Gibbs constant}
+\section{Convolution form}
+The Dirichlet kernel on $\Torus$ is
+\[
+D_N(t)=\sum_{k=-N}^Ne^{2\pi ikt}
+=\frac{\sin((2N+1)\pi t)}{\sin(\pi t)}.
+\]
+The partial sum is convolution:
+\[
+Q_Ng(t)=\int_0^1g(u)D_N(t-u)\,du.
+\]
+The central peak of $D_N$ becomes narrower with $N$, but its signed side lobes do not form a positive approximate identity.
+
+\section{Local scaling at a jump}
+Consider a unit upward jump at $t=\alpha$.  Set
+\[
+t_N(y)=\alpha+\frac{y}{(2N+1)\pi}.
+\]
+After substituting $v=z/((2N+1)\pi)$ in the local convolution integral, one obtains the limiting profile
+\[
+\boxed{
+\lim_{N\to\infty}Q_NH(t_N(y))
+=\frac{1}{2}+\frac1\pi\operatorname{Si}(y),
+}
+\]
+where
+\[
+\operatorname{Si}(y)=\int_0^y\frac{\sin z}{z}\,dz.
+\]
+
+\begin{theorem}[Gibbs overshoot constant]
+The first limiting maximum occurs at $y=\pi$.  Its value is
+\[
+\frac12+\frac1\pi\operatorname{Si}(\pi)=1+G,
+\]
+where
+\[
+\boxed{G=\frac{\operatorname{Si}(\pi)}{\pi}-\frac12
+=0.0894898722360835\ldots.}
+\]
+For a jump of height $a$, the limiting absolute overshoot is $Ga$.
+\end{theorem}
+\begin{proof}
+Differentiate the limiting profile.  Its derivative is $\sin y/(\pi y)$, whose first positive zero occurs at $y=\pi$.  The derivative is positive on $(0,\pi)$ and negative immediately after $\pi$, so this is the first maximum.  Evaluation gives the displayed constant.  Linearity scales the profile by the jump height.
+\end{proof}
+
+\VisualPage{Universal scaled Gibbs profile}{06_scaled_gibbs_profile.pdf}{The normalized local profile is independent of the smooth background and depends only on the jump height.  The first maximum gives the universal constant $G$.}{}
+
+\VisualPage{Overshoot convergence}{07_overshoot_convergence.pdf}{The measured overshoot converges to $G$ rather than to zero.  More modes reduce the spatial width of the boundary layer, not its limiting relative height.}{}
+
+\VisualPage{Dirichlet-kernel geometry}{08_dirichlet_kernel.pdf}{The side lobes of the Dirichlet kernel are the mechanism that mixes information across the jump.  Their signed mass is not removed by increasing the cutoff.}{}
+\chapter{Why filtering is a different operation}
+\section{Filtered spectral sums}
+Fejer, Lanczos, and exponential filters replace the sharp cutoff by frequency weights.  They can suppress visible ringing, and positive kernels such as the Fejer kernel avoid the classical overshoot in many step examples.  They do so by broadening the transition region and changing the approximation operator.
+
+\section{The exact distinction}
+A filtered approximation still asks one global spectral representation to encode both $s$ and $j$.  The packet construction instead stores $j$ as an exact object.  Therefore smoothing and exact singularity retention should not be described as the same mechanism.
+
+\begin{boundary}[No claim of exclusivity]
+The projector construction is not claimed to be the only useful treatment of discontinuities.  Spectral filtering, Gegenbauer reconstruction, ENO/WENO methods, adaptive meshes, wavelets, and domain decomposition solve related problems under different assumptions.  The present claim is narrower and exact: once the singular packet is declared, its Fourier tail no longer contributes to the approximation error.
+\end{boundary}
+
+\VisualPage{Filtered Fourier baselines}{09_spectral_filters.pdf}{Filtering trades oscillatory overshoot for a wider transition layer.  The edge geometry is still implicit in the global coefficient field.}{}
+
+\VisualPage{Filtered error profiles}{10_filter_error_profiles.pdf}{The filters redistribute error near the boundary.  None of these global reconstructions equals the declared half-open interval packet at finite cutoff.}{}
+\part{The projector-resolved circumvention}
+\chapter{An edge functional from out-of-band modes}
+\section{Choice of identifying frequencies}
+Choose a finite symmetric set
+\[
+K\subset\{k\in\Z:|k|>5,\ k\text{ odd}\}.
+\]
+For every $k\in K$, $\widehat s(k)=0$ and $\widehat m(k)\ne0$.  Define
+\[
+\ell_K(g)=
+\frac{\sum_{k\in K}\overline{\widehat m(k)}\widehat g(k)}
+{\sum_{k\in K}|\widehat m(k)|^2}.
+\]
+
+\begin{theorem}[Exact amplitude recovery]
+For every $g=s_0+bm\in X$ with $s_0\in\mathcal S_5$,
+\[
+\boxed{\ell_K(g)=b.}
+\]
+\end{theorem}
+\begin{proof}
+For $k\in K$, $\widehat g(k)=b\widehat m(k)$.  Therefore the numerator is
+\[
+b\sum_{k\in K}|\widehat m(k)|^2,
+\]
+which cancels the denominator.
+\end{proof}
+
+\section{Why several modes are used}
+A single nonzero out-of-band coefficient already identifies $b$ in exact arithmetic.  The least-squares combination above uses all selected modes and exposes the noise amplification explicitly.  By Cauchy--Schwarz,
+\[
+|\ell_K(\eta)|
+\le
+\frac{\left(\sum_{k\in K}|\widehat\eta(k)|^2\right)^{1/2}}
+{\left(\sum_{k\in K}|\widehat m(k)|^2\right)^{1/2}}.
+\]
+This is a stability certificate, not a claim that high-frequency noise is harmless.
+
+\VisualPage{Modes used by the edge functional}{11_edge_functional_modes.pdf}{All selected frequencies lie outside the smooth seed band.  Their known coefficient pattern turns the edge-amplitude problem into a one-dimensional projection.}{}
+\chapter{The singularity projector}
+\begin{definition}[Edge and smooth projectors]
+For $g$ in the ambient finite-energy space, define
+\[
+P_Jg=\ell_K(g)m,
+\qquad
+P_Sg=g-P_Jg.
+\]
+\end{definition}
+
+\begin{theorem}[Projector algebra]
+The operators satisfy
+\[
+\boxed{
+P_J^2=P_J,
+\qquad
+P_S^2=P_S,
+\qquad
+P_SP_J=P_JP_S=0,
+\qquad
+P_S+P_J=I.
+}
+\]
+On $X=\mathcal S_5\oplus\operatorname{span}\{m\}$,
+\[
+P_J(s_0+bm)=bm,
+\qquad
+P_S(s_0+bm)=s_0.
+\]
+\end{theorem}
+\begin{proof}
+The amplitude theorem gives $\ell_K(m)=1$.  Hence
+\[
+P_J^2g=\ell_K(g)\ell_K(m)m=P_Jg.
+\]
+The remaining algebra follows from $P_S=I-P_J$.  The formulas on $X$ use $\ell_K(s_0)=0$ and $\ell_K(bm)=b$.
+\end{proof}
+
+\begin{remark}
+$P_J$ is generally oblique rather than orthogonal in $L^2(\Torus)$.  Orthogonality is not required for exact analysis and synthesis; idempotence, annihilation, and completeness are the relevant algebraic properties here.
+\end{remark}
+
+\VisualPage{Projector analysis and synthesis}{12_projector_pipeline.pdf}{The observed signal is split into a geometric packet and a smooth packet.  The jump is never sent through the global low-pass approximation operator.}{}
+
+\VisualPage{Recovered smooth and singular packets}{13_recovered_packets.pdf}{The out-of-band functional recovers $a=5/4$, leaving a degree-five smooth packet.  Both components match their declared seeds to floating-point roundoff.}{}
+\chapter{The singularity-exact reconstruction theorem}
+Let $Q_5$ be the Fourier projector onto $\mathcal S_5$ and define
+\[
+\mathcal R_5=Q_5P_S+P_J.
+\]
+
+\begin{theorem}[Exact reconstruction on the model space]
+For every $g\in X$,
+\[
+\boxed{\mathcal R_5g=g.}
+\]
+\end{theorem}
+\begin{proof}
+Write $g=s_0+bm$.  The projector theorem gives $P_Sg=s_0$ and $P_Jg=bm$.  Since $s_0\in\mathcal S_5$, $Q_5s_0=s_0$.  Therefore
+\[
+\mathcal R_5g=Q_5s_0+bm=s_0+bm=g.
+\]
+\end{proof}
+
+\begin{corollary}[The Gibbs term is absent]
+For the chosen signal,
+\[
+f-\mathcal R_5f=0.
+\]
+By contrast, for $N\ge5$,
+\[
+f-Q_Nf=\frac54(m-Q_Nm),
+\]
+which retains the entire jump-approximation error.
+\end{corollary}
+
+\begin{theorem}[General singularity-exact error identity]
+Let $s$ be any periodic function for which $Q_Ns$ is defined, and let $j$ be a declared exact packet.  If analysis returns $P_Sf=s$ and $P_Jf=j$, then
+\[
+\boxed{
+f-(Q_NP_Sf+P_Jf)=s-Q_Ns.
+}
+\]
+Thus all convergence rates and pointwise behavior are inherited from the smooth packet alone.
+\end{theorem}
+\begin{proof}
+Substitute $f=s+j$ and use exact packet recovery:
+\[
+f-(Q_Ns+j)=s-Q_Ns.
+\]
+\end{proof}
+
+\section{What has actually been circumvented}
+The classical Gibbs theorem remains intact.  The global Fourier approximation $Q_Nf$ still rings.  The reconstruction operator has changed because the object has been resolved into two packets with different synthesis laws.  The discontinuity is reconstructed from its geometric address and amplitude, not from a truncated global Fourier series.
+
+\VisualPage{Global and packet reconstructions}{14_global_vs_packet_reconstruction.pdf}{The upper panel retains the classical boundary layer.  The lower panel overlays the exact signal because the smooth and singular packets are synthesized by different exact operators.}{}
+
+\VisualPage{Residual comparison}{15_residual_comparison.pdf}{The global residual is concentrated near the jumps.  The packet residual is at floating-point roundoff across the whole period.}{}
+
+\VisualPage{Whole-domain and boundary-band rates}{16_error_rates.pdf}{The packet error is the smooth spectral error only.  In the chosen degree-five model, that error is zero once the declared smooth band is retained.}{}
+
+\VisualPage{Pointwise boundary error}{17_boundary_error_log.pdf}{On a logarithmic scale the contrast is explicit: the global method has an $O(1)$ boundary layer, while the packet reconstruction remains at numerical roundoff.}{}
+
+\VisualPage{First-difference structure}{18_first_difference_comparison.pdf}{The exact packet retains two localized jump events.  The global partial sum replaces them with oscillatory boundary differences.}{}
+\part{Refinement and alternative exact atlases}
+\chapter{Dyadic spatial refinement}
+The interval $[1/4,3/4)$ is aligned with the level-two dyadic partition.  Let
+\[
+I_{2,r}=[r/4,(r+1)/4),\qquad r=0,1,2,3.
+\]
+Then
+\[
+\boxed{
+m=\mathbf1_{I_{2,1}}+\mathbf1_{I_{2,2}}.
+}
+\]
+This is an exact packet refinement: the parent interval is reconstructed from two disjoint child packets.  No Fourier approximation is involved in this identity.
+
+On the grid, residue and polyphase projectors can further split each spatial packet by sample address.  Interleaving all phases reconstructs the mask exactly.
+
+\VisualPage{Dyadic refinement tree}{19_dyadic_refinement_tree.pdf}{The singularity address is already exact at level two.  Refinement may continue inside the selected quarters without altering the external reconstruction contract.}{}
+
+\VisualPage{Polyphase packets of the interval mask}{20_mask_polyphase_packets.pdf}{Each sample belongs to exactly one phase channel.  The phase channels are sparse views of one exact geometric packet and synthesize by interleaving.}{}
+\chapter{Haar coordinates for the same packet}
+The Haar transform provides another exact atlas.  Because both boundaries are dyadically aligned, the interval mask has only three nonzero Haar coefficients in the length-$512$ implementation.  Full inverse Haar synthesis reconstructs the mask exactly.
+
+This comparison explains why wavelets often handle discontinuities more economically than global Fourier modes: localization changes coefficient concentration.  The projector solution goes one step further in the declared model by treating the interval geometry itself as a packet rather than merely as a sparse transform pattern.
+
+\VisualPage{Haar sparsity of the interval packet}{21_haar_sparsity.pdf}{The exact mask has only 3 nonzero Haar coefficients on the dyadically aligned grid.  The same mask has an infinite $1/|k|$ Fourier tail in the continuum.}{}
+
+\VisualPage{Exact inverse-Haar reconstruction}{22_haar_mask_reconstruction.pdf}{The Haar atlas is exact when all required coefficients are retained.  Thresholding and best-basis selection are separate approximation decisions.}{}
+
+\VisualPage{Fourier versus Haar concentration}{23_fourier_haar_concentration.pdf}{This is not a universal wavelet-dominance theorem.  It is a coordinate concentration statement for the one interval packet used throughout the monograph.}{}
+\part{Finite discovery and robustness}
+\chapter{Recovering the interval from a finite dictionary}
+So far the packet address $\Omega$ has been declared.  The same example can also support a finite exact discovery theorem.
+
+Let $\mathcal D$ be the set of intervals
+\[
+\Omega_{ij}=[i/16,j/16),\qquad 0\le i<j\le16,
+\]
+subject to a minimum width of two cells.  For each candidate define
+\[
+X_{ij}=\mathcal S_5+\operatorname{span}\{\mathbf1_{\Omega_{ij}}\}.
+\]
+Fit the sampled signal by least squares in every $X_{ij}$ and select the smallest residual.
+
+\begin{theorem}[Finite exact interval selection]
+Assume the true sample vector $x$ belongs to exactly one candidate space $X_{i_*j_*}$.  Then the residual minimizer is unique and equals $(i_*,j_*)$.
+\end{theorem}
+\begin{proof}
+The true candidate has residual zero.  Every other candidate has positive residual by the uniqueness assumption, so the true candidate is the unique minimizer.
+\end{proof}
+
+For the current signal, the selected interval is
+\[
+[4/16,12/16)=[1/4,3/4),
+\]
+and the nearest wrong candidate has residual norm
+\[
+\gamma=3.019188207386.
+\]
+
+\VisualPage{Finite interval-dictionary residual surface}{24_interval_dictionary_heatmap.pdf}{The true packet is the unique zero-residual entry.  Neighboring intervals form a positive residual basin rather than another exact representation.}{}
+
+\VisualPage{Candidate ranking}{25_interval_candidate_ranking.pdf}{The ranking makes the model separation gap visible.  This gap becomes the stability constant for noisy selection.}{}
+\chapter{Noise stability of finite packet discovery}
+Let $x\in X_{r_*}$ be the exact signal and define
+\[
+\gamma=\min_{r\ne r_*}\operatorname{dist}(x,X_r)>0.
+\]
+Observe $y=x+e$.
+
+\begin{theorem}[Half-gap stability]
+If
+\[
+\norm{e}<\frac\gamma2,
+\]
+then $r_*$ remains the unique minimum-residual candidate.
+\end{theorem}
+\begin{proof}
+For the true space,
+\[
+\operatorname{dist}(y,X_{r_*})\le\norm e.
+\]
+For any wrong space,
+\[
+\operatorname{dist}(y,X_r)
+\ge
+\operatorname{dist}(x,X_r)-\norm e
+\ge
+\gamma-\norm e.
+\]
+If $\norm e<\gamma/2$, then $\norm e<\gamma-\norm e$, so the true residual is strictly smaller than every wrong residual.
+\end{proof}
+
+The theorem is worst-case and deterministic.  Noise above the threshold may still be classified correctly, but it is no longer guaranteed by this argument.
+
+\VisualPage{Finite dictionary under noise}{26_dictionary_noise_stability.pdf}{Every tested perturbation below the half-gap threshold retained the true interval.  The theorem concerns the norm of the entire perturbation, not a particular probability distribution.}{}
+\chapter{Amplitude noise and endpoint perturbations}
+\section{Amplitude estimator}
+For noisy data $f+\eta$,
+\[
+\widehat a-a=\ell_K(\eta).
+\]
+The Cauchy--Schwarz certificate given earlier measures the noise gain of the selected edge modes.  Using additional valid modes increases the mask energy in the denominator but may also admit more high-frequency noise; the tradeoff is explicit.
+
+\section{Support perturbation}
+For a true packet $a\mathbf1_\Omega$ and an estimated packet $\widehat a\mathbf1_{\widehat\Omega}$,
+\begin{theorem}[Packet perturbation bound]
+For $1\le p<\infty$,
+\[
+\boxed{
+\norm{a\mathbf1_\Omega-\widehat a\mathbf1_{\widehat\Omega}}_{L^p}
+\le
+|a-\widehat a|\,\mu(\Omega)^{1/p}
++|\widehat a|\,\mu(\Omega\triangle\widehat\Omega)^{1/p}.
+}
+\]
+If $a=\widehat a$, equality reduces to
+\[
+\norm{a(\mathbf1_\Omega-\mathbf1_{\widehat\Omega})}_{L^p}
+=|a|\mu(\Omega\triangle\widehat\Omega)^{1/p}.
+\]
+\end{theorem}
+\begin{proof}
+Write
+\[
+a\mathbf1_\Omega-\widehat a\mathbf1_{\widehat\Omega}
+=(a-\widehat a)\mathbf1_\Omega
++\widehat a(\mathbf1_\Omega-\mathbf1_{\widehat\Omega})
+\]
+and apply the triangle inequality.  The difference of indicators has absolute value one exactly on the symmetric difference.
+\end{proof}
+
+\VisualPage{Amplitude recovery under noise}{27_amplitude_noise_study.pdf}{The estimator is unbiased in the controlled Gaussian experiment and its variance grows with the noise level.  The exact noiseless coefficient identity remains separate from this statistical study.}{}
+
+\VisualPage{Endpoint perturbation equality}{28_endpoint_perturbation_bound.pdf}{With the amplitude fixed, the measured error equals the symmetric-difference formula exactly on the finite grid.}{}
+\chapter{Model mismatch and negative controls}
+A trustworthy reconstruction method must fail visibly when its assumptions fail.
+
+\section{Undeclared smooth frequency}
+Add $0.06\cos(18\pi t)$ to the signal while keeping the declared smooth degree at five.  The edge packet is still recovered correctly, but the ninth frequency remains in the residual.  The residual therefore identifies a missing smooth packet rather than creating boundary ringing.
+
+\section{Incorrect interval packet}
+Shift both packet endpoints and run the same reconstruction.  The result has a nonzero residual concentrated near the incorrect support boundaries.  This proves that the implementation is not merely returning the original input or forcing a zero certificate.
+
+\VisualPage{Residual from an undeclared smooth mode}{29_model_mismatch_residual.pdf}{The residual has a coherent oscillatory shape matching the omitted ninth frequency.  The singular packet remains exact because its identifying modes and support are unchanged.}{}
+
+\VisualPage{Wrong-packet negative control}{30_wrong_packet_negative_control.pdf}{An incorrect interval address produces a visible nonzero residual.  Exact synthesis is conditional on the correct packet geometry, as the theorem states.}{}
+\part{Computational consequences and exact boundaries}
+\chapter{Mode budgets and variation}
+\section{Why global mode count is not the right complexity measure}
+A global Fourier representation treats every jump location as an infinite coefficient tail.  The packet representation stores:
+\begin{itemize}
+\item the finite smooth coefficients;
+\item two interval endpoints;
+\item one jump amplitude.
+\end{itemize}
+For the declared model, this finite data reconstructs the object exactly.  The gain is not free compression of arbitrary signals; it comes from matching the representation to the singular geometry.
+
+\section{Total variation}
+The exact packet has two localized jumps.  Global partial sums replace those jumps by alternating boundary oscillations and therefore create excess discrete total variation at finite cutoff.  Packet synthesis preserves the variation of the represented object up to numerical roundoff.
+
+\VisualPage{Global mode budget}{31_mode_budget_comparison.pdf}{The boundary maximum error associated with Gibbs ringing does not vanish by merely adding global modes.  The exact packet stores the boundary as geometry.}{}
+
+\VisualPage{Total-variation comparison}{32_total_variation.pdf}{The oscillatory boundary layer adds variation that is absent from the exact singular packet.  This plot is descriptive for the sampled signal; the exact theorem is the reconstruction identity.}{}
+\chapter{The exact error source}
+For $N\ge5$ the global and packet errors are
+\[
+\begin{aligned}
+E_{\mathrm{global}}
+&=f-Q_Nf\\
+&=(I-Q_N)s+(I-Q_N)j\\
+&=(I-Q_N)j,
+\end{aligned}
+\]
+and
+\[
+\begin{aligned}
+E_{\mathrm{packet}}
+&=f-(Q_NP_Sf+P_Jf)\\
+&=(I-Q_N)s\\
+&=0
+\end{aligned}
+\]
+for the chosen degree-five seed.  The essential step is therefore not a more complicated Fourier coefficient formula.  It is the declaration and exact recovery of $j$ as an independent packet.
+
+\VisualPage{Where the Gibbs term goes}{33_error_source_decomposition.pdf}{The global method carries the jump truncation term $(I-Q_N)j$.  The packet method replaces it with exact synthesis of $j$, leaving only the smooth approximation term.}{}
+
+\VisualPage{Finite projector matrices}{34_projector_matrices.pdf}{The small-grid matrices independently verify idempotence, completeness, and packet annihilation.  The projectors are oblique but algebraically exact.}{}
+
+\VisualPage{Proof dependency ladder}{35_theorem_dependency_ladder.pdf}{Every later claim depends on an earlier exact identity.  Numerical experiments are placed after, rather than in place of, the algebraic proofs.}{}
+
+\VisualPage{Certificate dashboard}{36_certificate_dashboard.pdf}{The dashboard separates near-zero identity residuals from the deliberately positive wrong-model separation gap.}{}
+\chapter{One closed executable object}
+The complete artifact is generated by one file:
+\[
+\texttt{gibbs\_projector\_closed.py}.
+\]
+The file contains the signal definition, closed Fourier coefficients, Gibbs asymptotic, finite projectors, dictionary search, robustness experiments, figures, tables, LaTeX manuscript, KaTeX derivation, assertions, PDF build, and checksum manifest.
+
+The build order is intentional:
+\begin{enumerate}
+\item compute and assert the mathematical identities;
+\item write the numerical certificate ledger;
+\item generate figures and tables;
+\item write the manuscript from those exact results;
+\item compile the PDF;
+\item preflight and render it;
+\item write the release manifest.
+\end{enumerate}
+A failed assertion stops the build before a successful-looking PDF can be produced.
+
+\VisualPage{Single-file build architecture}{37_single_file_architecture.pdf}{All generated artifacts descend from one executable source.  The TeX file is a generated view of the same definitions and certificates used by the numerical experiments.}{}
+
+\VisualPage{Final four-panel synthesis}{38_final_synthesis.pdf}{The singularity packet is retained exactly, while Fourier analysis is reserved for the smooth component.  This is the complete mechanism of the circumvention.}{}
+
+\VisualPage{Complete calculus wheel}{39_summary_wheel.pdf}{The wheel closes only after synthesis and residual verification.  If the residual is nonzero, the loop returns to packet choice or model refinement rather than relabeling the failure as exact.}{}
+\chapter{What this example establishes}
+\section{Proved statements}
+Within the declared model and finite dictionary, the work proves:
+\begin{enumerate}
+\item the exact Fourier coefficients of the smooth and singular packets;
+\item the classical Gibbs limiting profile and constant;
+\item an exact edge-amplitude functional;
+\item a complete complementary projector pair;
+\item exact singularity-retaining synthesis;
+\item a finite exact interval-selection theorem;
+\item a half-gap noise-stability theorem;
+\item exact support-perturbation bounds;
+\item exact dyadic, polyphase, and Haar reconstructions of the singular packet.
+\end{enumerate}
+
+\section{What remains a broader research problem}
+The example does not by itself solve:
+\begin{itemize}
+\item arbitrary edge discovery in noisy multidimensional data;
+\item singularities not contained in the declared packet dictionary;
+\item nonlinear shocks whose locations evolve with the solution;
+\item high-dimensional geometry with unknown topology;
+\item optimal packet dictionaries, penalties, or statistical rates;
+\item every manifestation of Gibbs-like behavior in numerical PDEs.
+\end{itemize}
+Those questions require their own recovery and evolution theorems.  The significance of the present construction is that it isolates the exact mechanism: global ringing disappears from the reconstruction error when the singular geometry is represented and synthesized exactly.
+
+\section{Final formula}
+The entire worked outcome can be compressed to
+\[
+\boxed{
+\underbrace{f}_{\text{observed object}}
+=
+\underbrace{P_Sf}_{\text{smooth packet}}
++
+\underbrace{P_Jf}_{\text{singularity packet}}
+\xrightarrow{\ Q_5\oplus I\ }
+\underbrace{Q_5P_Sf+P_Jf}_{f}.
+}
+\]
+The formula is short because every preceding chapter establishes why each symbol is defined, computable, stable in the stated sense, and exact on the declared class.
+
+\appendix
+\chapter{Complete coefficient table}
+The following table is generated directly from the closed formulas used by the code.
+\input{tables/coefficient_table.tex}
+
+\chapter{Overshoot convergence table}
+\input{tables/overshoot_table.tex}
+
+\chapter{Finite interval candidates}
+\input{tables/dictionary_table.tex}
+
+\chapter{Detailed proof of the local scaling limit}
+Let $H$ be the periodic step with an upward jump at the origin.  Near the jump, write
+\[
+Q_NH(\delta)-\frac12
+=\int_0^\delta D_N(v)\,dv+R_N(\delta),
+\]
+where $R_N$ contains terms whose integration domain stays away from the singular point.  For
+\[
+\delta=\frac{y}{(2N+1)\pi},
+\]
+set $v=z/((2N+1)\pi)$.  Then
+\[
+D_N(v)\,dv
+=\frac{\sin z}{\sin(z/(2N+1))}\frac{dz}{(2N+1)\pi}
+\longrightarrow
+\frac{\sin z}{\pi z}\,dz
+\]
+uniformly on compact $z$-intervals after removal of the removable singularity at zero.  Dominated convergence on each fixed compact interval gives
+\[
+\int_0^\delta D_N(v)\,dv
+\longrightarrow
+\frac1\pi\int_0^y\frac{\sin z}{z}\,dz.
+\]
+The remote term $R_N(\delta)$ converges to the constant appropriate to the one-sided baseline and does not affect the universal local profile.  For the rectangular packet, the second jump is a fixed positive distance away on the local $1/N$ scale, so it contributes only the correct constant background.  This yields the profile used in Chapter~4.
+
+\chapter{Finite projector matrix derivation}
+On a length-$n$ grid, let $F$ denote the normalized discrete Fourier analysis matrix,
+\[
+F_{kj}=\frac1n e^{-2\pi ikj/n}.
+\]
+Let $m$ be the sampled interval mask and $K$ the selected out-of-band modes.  Define the row functional
+\[
+\lambda^*=
+\frac{\sum_{k\in K}\overline{(Fm)_k}F_{k,:}}
+{\sum_{k\in K}|(Fm)_k|^2}.
+\]
+Then
+\[
+P_J=m\lambda^*,
+\qquad
+\lambda^*m=1.
+\]
+Consequently
+\[
+P_J^2=m(\lambda^*m)\lambda^*=P_J.
+\]
+The complementary matrix $P_S=I-P_J$ satisfies every remaining projector identity by direct algebra.  The matrices visualized in Figure~34 are generated from this formula at $n=64$.
+
+\chapter{Reproduction commands}
+From the extracted source directory:
+\begin{lstlisting}
+python gibbs_projector_closed.py
+\end{lstlisting}
+The script creates all figures, tables, the certificate JSON, the KaTeX markdown, the LaTeX source, and the final PDF.  A nonzero assertion or LaTeX return code stops the build.
+
+\chapter{Complete single-file source}
+The following listing is the complete executable object that generated this manuscript.
+\lstinputlisting{gibbs_projector_closed.py}
+\end{document}

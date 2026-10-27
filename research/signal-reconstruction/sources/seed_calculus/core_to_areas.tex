@@ -1,0 +1,798 @@
+\chapter{The transfer algebra as a genuine calculus}\label{ch:transfer-calculus}
+
+\section{The block representation is an algebra isomorphism}
+The finite realization theorem reconstructs each operator from its transfer blocks.  The stronger statement is that the complete family of blocks is an exact coordinate representation of the entire operator algebra.
+
+Let
+\[
+\mathfrak B_{\mathcal P}
+=
+\bigoplus_{\alpha,\beta}
+\operatorname{Hom}(X_\alpha,X_\beta).
+\]
+Define
+\[
+\Phi_{\mathcal P}:\operatorname{End}(X)\longrightarrow\mathfrak B_{\mathcal P},
+\qquad
+\Phi_{\mathcal P}(T)=(P_\beta TP_\alpha)_{\beta,\alpha}.
+\]
+Equip $\mathfrak B_{\mathcal P}$ with matrix-style multiplication
+\[
+(B\star C)_{\gamma\alpha}
+=
+\sum_\beta B_{\gamma\beta}C_{\beta\alpha}.
+\]
+
+\begin{theorem}[Full block-algebra representation]\label{thm:block-algebra-iso}
+$\Phi_{\mathcal P}$ is a unital algebra isomorphism.  Its inverse is
+\[
+\boxed{
+\Phi_{\mathcal P}^{-1}((B_{\beta\alpha}))
+=
+\sum_{\alpha,\beta}B_{\beta\alpha}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Exact operator reconstruction proves that the displayed inverse recovers $T$.  Conversely, if each $B_{\beta\alpha}$ maps $X_\alpha$ into $X_\beta$, then
+\[
+P_\delta\left(\sum_{\alpha,\beta}B_{\beta\alpha}\right)P_\gamma
+=B_{\delta\gamma}
+\]
+because all other corners are annihilated.  The block multiplication theorem gives
+\[
+\Phi_{\mathcal P}(ST)=\Phi_{\mathcal P}(S)\star\Phi_{\mathcal P}(T).
+\]
+The identity operator corresponds to the diagonal block identity.
+\end{proof}
+
+\section{Support graphs and packet paths}
+Define the support relation
+\[
+\alpha\longrightarrow\beta
+\quad\Longleftrightarrow\quad
+P_\beta TP_\alpha\ne0.
+\]
+This produces a directed transfer graph.  The graph records possible movement, while the blocks retain the exact linear maps and weights.
+
+\begin{theorem}[Path expansion for powers]\label{thm:path-power}
+For every $m\ge1$,
+\[
+\boxed{
+P_{\alpha_m}T^mP_{\alpha_0}
+=
+\sum_{\alpha_1,\ldots,\alpha_{m-1}}
+(P_{\alpha_m}TP_{\alpha_{m-1}})\cdots
+(P_{\alpha_1}TP_{\alpha_0}).
+}
+\]
+Only directed packet paths contribute nonzero terms.
+\end{theorem}
+
+\begin{proof}
+Insert $I=\sum_\alpha P_\alpha$ between every adjacent pair of copies of $T$ and distribute.  Pairwise annihilation removes every incompatible path.
+\end{proof}
+
+\section{The master transfer operator}
+Return to the cyclic seed example and define
+\[
+T=2I-U+3U^2.
+\]
+In the coordinate basis,
+\[
+T=
+\begin{pmatrix}
+2&0&0&0&0&0&3&-1\\
+-1&2&0&0&0&0&0&3\\
+3&-1&2&0&0&0&0&0\\
+0&3&-1&2&0&0&0&0\\
+0&0&3&-1&2&0&0&0\\
+0&0&0&3&-1&2&0&0\\
+0&0&0&0&3&-1&2&0\\
+0&0&0&0&0&3&-1&2
+\end{pmatrix}.
+\]
+Applying it to
+\[
+x=(2,-1,3,0,1,4,-2,5)^{\mathsf T}
+\]
+gives
+\[
+\boxed{
+Tx=(-7,11,13,-6,11,7,-5,24)^{\mathsf T}.
+}
+\]
+
+\begin{calculationbox}[ coordinate rule]
+Because $(Ux)_j=x_{j-1}$ and $(U^2x)_j=x_{j-2}$ with indices modulo eight,
+\[
+(Tx)_j=2x_j-x_{j-1}+3x_{j-2}.
+\]
+For example,
+\[
+(Tx)_0=2(2)-x_7+3x_6=4-5-6=-7,
+\]
+and
+\[
+(Tx)_7=2(5)-x_6+3x_5=10+2+12=24.
+\]
+\end{calculationbox}
+
+\SafeFigure[.78\linewidth]{45_transfer_support_matrix.pdf}{The exact support pattern of the transfer blocks.  A nonzero cell records a genuine packet-to-packet map, not merely a correlation.}{fig:master-transfer-support}
+
+\SafeFigure[.96\linewidth]{55_master_seed_and_transfer_output.pdf}{The generated object and the exact output of the declared transfer operator.}{fig:master-transfer-output}
+
+\section{Composition with a second operator}
+Let
+\[
+S=I+U^3.
+\]
+The product $ST$ may be calculated directly, but the calculus resolves it through every intermediate address:
+\[
+P_bSTP_a
+=
+\sum_{\gamma=0}^{7}
+(P_bSP_\gamma)(P_\gamma TP_a).
+\]
+Summing over $a$ and $b$ reconstructs $ST$ exactly.
+
+\SafeFigure[.96\linewidth]{47_operator_path_sum.pdf}{A reduced visualization of the packet-path law.  The proof sums all intermediate addresses, including paths that vanish.}{fig:master-path-sum}
+
+\begin{certificate}[ master product]
+The symbolic matrix
+\[
+\sum_{a,b,\gamma}
+E_bSE_\gamma TE_a-ST
+\]
+is exactly the zero $8\times8$ matrix.
+\end{certificate}
+
+\section{Adjoints, symmetries, and diagonalization}
+When the packets are orthogonal,
+\[
+(P_\beta TP_\alpha)^*=P_\alpha T^*P_\beta.
+\]
+Thus adjunction reverses every transfer edge.  If $T$ commutes with every packet projector, all off-diagonal blocks vanish and the packets reduce $T$.
+
+For the cyclic operator $T=2I-U+3U^2$, the Fourier transform diagonalizes $U$ and hence diagonalizes $T$.  If $FUF^*=\diag(\zeta_0,\ldots,\zeta_7)$, then
+\[
+FTF^*
+=
+\diag(2-\zeta_k+3\zeta_k^2)_{k=0}^{7}.
+\]
+The operator is banded in spatial coordinates and diagonal in Fourier coordinates.
+
+\SafeFigure[.96\linewidth]{46_operator_spatial_fourier.pdf}{The same operator in the spatial and Fourier atlases.  Coordinate transport changes the matrix pattern but not the underlying map.}{fig:master-operator-atlases}
+
+\begin{stepbox}{Seed-to-finish Step 7: transfer blocks}
+Insert complete projectors on both sides of the operator.  The resulting block field is an exact operator coordinate system.
+\end{stepbox}
+
+\begin{stepbox}{Seed-to-finish Step 8: packet paths}
+Insert complete projectors between composed operators.  Products, powers, circuits, and time steps become exact sums over packet paths.
+\end{stepbox}
+
+\chapter{Refinement, coarsening, and multiple atlases}\label{ch:refinement-atlases}
+
+\section{Coordinate refinement maps}
+Let $\mathcal P=\{P_\alpha\}$ be coarse and $\mathcal Q=\{Q_\rho\}$ be fine, with
+\[
+P_\alpha=\sum_{\rho\succ\alpha}Q_\rho.
+\]
+Both packet tuples are exact coordinate copies of $X$.  Define
+\[
+J=\Acal_{\mathcal Q}\Scal_{\mathcal P},
+\qquad
+C=\Acal_{\mathcal P}\Scal_{\mathcal Q}.
+\]
+
+\begin{theorem}[Exact coordinate refinement]\label{thm:coordinate-refinement}
+On the direct sums of the actual packet ranges,
+\[
+\boxed{CJ=I_{\oplus X_\alpha},\qquad JC=I_{\oplus Y_\rho}.}
+\]
+Thus refinement and coarsening are inverse coordinate changes when all children are retained.
+\end{theorem}
+
+\begin{proof}
+Use exact analysis and synthesis at each level:
+\[
+CJ
+=
+\Acal_{\mathcal P}\Scal_{\mathcal Q}
+\Acal_{\mathcal Q}\Scal_{\mathcal P}
+=
+\Acal_{\mathcal P}I_X\Scal_{\mathcal P}
+=I.
+\]
+The proof of $JC=I$ is identical.
+\end{proof}
+
+\begin{remark}
+Refinement is not truncation.  Loss begins only when a child packet is discarded, merged through a noninvertible statistic, or replaced by a model.
+\end{remark}
+
+\SafeFigure[.82\linewidth]{48_refinement_incidence.pdf}{The exact parent-child incidence for the parity-to-mod-four refinement.}{fig:refinement-incidence}
+
+\section{The master refinement}
+The parity packets refine into mod-four packets, which refine into coordinate packets:
+\[
+P_{\mathrm e}=R_0+R_2,
+\qquad
+P_{\mathrm o}=R_1+R_3,
+\]
+\[
+R_r=E_r+E_{r+4}.
+\]
+Therefore
+\[
+P_{\mathrm e}x
+=
+E_0x+E_2x+E_4x+E_6x,
+\]
+and similarly for the odd packet.  Every equality is exact over $\C^8$.
+
+\section{Transfer blocks under refinement}
+Refining both the source and target packets gives
+\[
+P_\beta TP_\alpha
+=
+\sum_{\sigma\succ\beta}
+\sum_{\rho\succ\alpha}
+Q_\sigma TQ_\rho.
+\]
+The coarse block is not replaced by a different operator.  It is exactly reconstructed from the fine child blocks.
+
+For a weighted filtration, assign a nonnegative weight $w(\beta,\alpha)$ to each transfer edge and define the weight of a path as the sum of its edge weights.  Truncation by total weight then has an explicit omitted-path residual.  The exact block and path formulas remain prior to any truncation.
+
+\section{Transform atlases and pulled-back projectors}
+Let $U:X\to Y$ be invertible and let $E_\alpha$ be the ordinary coordinate projectors on $Y$.  The pulled-back projectors
+\[
+P_\alpha=U^{-1}E_\alpha U
+\]
+form a complete atlas on $X$.  The signal chapter later takes $U$ to be Fourier and Haar transforms; the physics chapter takes $U$ to be the normal-mode transform; the quantum chapter takes $U$ to be a basis-changing unitary.
+
+\SafeFigure[.96\linewidth]{49_transform_atlas_portfolio.pdf}{Spatial, Fourier, Haar, and general conjugated packet systems are exact atlases of one object.}{fig:atlas-portfolio}
+
+\section{A redundant exact multi-atlas frame}
+Several complete unitary atlases may be retained simultaneously.  Let $U_1,\ldots,U_m$ be unitary and let $w_a>0$.  Define
+\[
+\Acal x=(w_aU_ax)_{a=1}^m.
+\]
+
+\begin{theorem}[Weighted multi-atlas reconstruction]\label{thm:multi-atlas}
+The canonical synthesis
+\[
+\Scal((c_a)_a)
+=
+\frac{1}{W}
+\sum_{a=1}^m w_aU_a^*c_a,
+\qquad
+W=\sum_{a=1}^m w_a^2,
+\]
+satisfies
+\[
+\boxed{\Scal\Acal=I_X.}
+\]
+Moreover,
+\[
+\sum_{a=1}^m\|w_aU_ax\|^2=W\|x\|^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Unitary inversion gives
+\[
+\Scal\Acal x
+=
+\frac1W\sum_aw_a^2U_a^*U_ax
+=
+\frac1W\sum_aw_a^2x=x.
+\]
+The energy identity follows from $\|U_ax\|=\|x\|$.
+\end{proof}
+
+For the master vector, choose
+\[
+U_1=I,
+\qquad
+U_2=F,
+\qquad
+U_3=H,
+\qquad
+(w_1,w_2,w_3)=(1,2,3).
+\]
+Then $W=14$ and
+\[
+\widehat x
+=
+\frac1{14}
+\left(c_1+2F^*c_2+3H^*c_3\right)
+=x.
+\]
+
+\SafeFigure[.96\linewidth]{50_multi_atlas_tight_frame.pdf}{The master spatial-Fourier-Haar portfolio is redundant but exactly reconstructing.}{fig:multi-atlas-frame}
+
+\section{Completion direction}
+A refinement tower
+\[
+\mathcal P^{(0)}\prec\mathcal P^{(1)}\prec\cdots
+\]
+is algebraically coherent when every parent is the sum of its children.  In a finite object this tower terminates.  In an infinite object one must additionally declare a topology or inverse-limit structure and prove convergence.
+
+\SafeFigure[.95\linewidth]{53_completion_refinement_tower.pdf}{The finite master tower.  The figure also marks the additional datum needed in an infinite theory: a declared convergence structure.}{fig:completion-tower}
+
+\begin{stepbox}{Seed-to-finish Step 9: refinement}
+Replace a packet by a complete child family.  Because all children are retained, refinement is an invertible coordinate change.
+\end{stepbox}
+
+\begin{stepbox}{Seed-to-finish Step 10: atlas portfolio}
+Transport ordinary coordinate projectors through Fourier, wavelet, modal, or other invertible transforms.  Several unitary atlases may be retained together through the exact tight-frame synthesis theorem.
+\end{stepbox}
+
+\chapter{Nonlinear packets, obstruction packets, and completion}\label{ch:nonlinear-completion}
+
+\section{Exact nonlinear packet coordinates}
+Let $N:X\to Y$ be an arbitrary map between finite spaces with complete packet systems $\mathcal P$ on $X$ and $\mathcal Q$ on $Y$.  Define the packet-coordinate map
+\[
+\widetilde N
+=
+\Acal_{\mathcal Q}N\Scal_{\mathcal P}.
+\]
+
+\begin{theorem}[Exact nonlinear conjugacy]\label{thm:nonlinear-conjugacy}
+The nonlinear map is recovered exactly by
+\[
+\boxed{
+N
+=
+\Scal_{\mathcal Q}\widetilde N\Acal_{\mathcal P}.
+}
+\]
+No linearity assumption on $N$ is required.
+\end{theorem}
+
+\begin{proof}
+Use $\Scal_{\mathcal Q}\Acal_{\mathcal Q}=I_Y$ and $\Scal_{\mathcal P}\Acal_{\mathcal P}=I_X$:
+\[
+\Scal_{\mathcal Q}\widetilde N\Acal_{\mathcal P}
+=
+\Scal_{\mathcal Q}\Acal_{\mathcal Q}
+N
+\Scal_{\mathcal P}\Acal_{\mathcal P}
+=N.
+\]
+\end{proof}
+
+The theorem says that nonlinear packet coordinates are exact, but it does not say that packets evolve independently.  Nonlinearity creates interactions among input packets.
+
+\section{Multilinear interaction tensors}
+Let $B:X\times X\to Y$ be bilinear.  Since $x=\sum_aP_ax$,
+\[
+\boxed{
+B(x,x)
+=
+\sum_{a,c}B(P_ax,P_cx).
+}
+\]
+Resolving the output gives
+\[
+B_{b;ac}(x)
+=
+Q_bB(P_ax,P_cx),
+\]
+which is a three-index interaction tensor rather than a two-index transfer matrix.
+
+More generally, for a $k$-linear map $M$,
+\[
+Q_bM(x_1,\ldots,x_k)
+=
+\sum_{a_1,\ldots,a_k}
+Q_bM(P_{a_1}x_1,\ldots,P_{a_k}x_k).
+\]
+
+\SafeFigure[.93\linewidth]{51_nonlinear_interaction_hypergraph.pdf}{Linear transfer edges become nonlinear interaction hyperedges indexed by several input packets and one output packet.}{fig:nonlinear-hypergraph}
+
+\section{Packet jets}
+If $N$ is $k$ times differentiable, its $k$th derivative is a $k$-linear map.  Therefore
+\[
+\boxed{
+Q_bD^kN(x)[h_1,\ldots,h_k]
+=
+\sum_{a_1,\ldots,a_k}
+Q_bD^kN(x)[P_{a_1}h_1,\ldots,P_{a_k}h_k].
+}
+\]
+The complete family of these tensors is the packet jet.  Ordinary Taylor expansion may then be written packet by packet without changing its sum.
+
+For a quadratic fixed-point equation
+\[
+x=s+B(x,x),
+\]
+repeated substitution produces rooted binary trees.  Each leaf carries a seed packet, each internal vertex carries a bilinear interaction block, and synthesis sums all packet-labeled trees.  Convergence is an analytic question; the packet labeling itself is exact at every finite order.
+
+\section{The master nonlinear map}
+Define
+\[
+N(x)=x+(Ux)\odot(U^3x),
+\]
+where $\odot$ is coordinatewise multiplication.  For the master vector,
+\[
+\boxed{
+N(x)=(22,-5,-2,6,1,7,-2,3)^{\mathsf T}.
+}
+\]
+
+\begin{calculationbox}[ first coordinate]
+Because $(Ux)_0=x_7=5$ and $(U^3x)_0=x_5=4$,
+\[
+N(x)_0=x_0+(Ux)_0(U^3x)_0=2+5\cdot4=22.
+\]
+Every remaining coordinate follows the same cyclic rule.
+\end{calculationbox}
+
+The bilinear term resolves exactly as
+\[
+(Ux)\odot(U^3x)
+=
+\sum_{a,c}
+(UE_ax)\odot(U^3E_cx).
+\]
+The symbolic residual is the zero vector.
+
+\SafeFigure[.94\linewidth]{57_master_nonlinear_reconstruction.pdf}{The master input and nonlinear output.  The full output is synthesized from exact interaction packets.}{fig:master-nonlinear-output}
+
+\section{Obstruction packets}
+Packet coordinates can expose a failure without guaranteeing that it vanishes.  Let $L:H\to K$ be a linear map between finite-dimensional inner-product spaces.  Let $L^\dagger$ be its Moore--Penrose inverse and define
+\[
+\Pi_{\mathrm{Obs}}=I-LL^\dagger.
+\]
+
+\begin{theorem}[Finite obstruction criterion]\label{thm:obstruction-criterion}
+The equation
+\[
+Lh=d
+\]
+is solvable if and only if
+\[
+\boxed{\Pi_{\mathrm{Obs}}d=0.}
+\]
+The obstruction packet is the orthogonal projection of $d$ onto $\Ran(L)^\perp$.
+\end{theorem}
+
+\begin{proof}
+$LL^\dagger$ is the orthogonal projector onto $\Ran(L)$.  Thus $I-LL^\dagger$ projects onto the orthogonal complement.  The vector $d$ lies in the range exactly when its complementary projection vanishes.
+\end{proof}
+
+Take
+\[
+L=
+\begin{pmatrix}
+1&0\\0&1\\1&1
+\end{pmatrix}.
+\]
+Then
+\[
+\Pi_{\mathrm{Obs}}
+=
+\frac13
+\begin{pmatrix}
+1&1&-1\\
+1&1&-1\\
+-1&-1&1
+\end{pmatrix}.
+\]
+For $d=(1,2,3)^{\mathsf T}$ the obstruction is zero.  For
+\[
+d'=(1,2,4)^{\mathsf T},
+\]
+\[
+\boxed{
+\Pi_{\mathrm{Obs}}d'
+=
+\left(-\frac13,-\frac13,\frac13\right)^{\mathsf T}\ne0.
+}
+\]
+
+\SafeFigure[.96\linewidth]{52_obstruction_packet_geometry.pdf}{Positive and negative controls for the finite obstruction theorem.  The nonzero packet localizes the exact failed compatibility condition.}{fig:obstruction-geometry}
+
+\section{Completion from a dense core}
+The finite theorems extend to completed spaces only under explicit continuity hypotheses.
+
+\begin{theorem}[Dense-core extension]\label{thm:dense-extension}
+Let $X$ be a normed space, let $D\subseteq X$ be dense, and let $A,B:X\to Y$ be bounded linear maps into a normed space $Y$.  If $Ax=Bx$ for every $x\in D$, then $A=B$ on $X$.
+\end{theorem}
+
+\begin{proof}
+For $x\in X$, choose $x_n\in D$ with $x_n\to x$.  Boundedness gives
+\[
+Ax=\lim_nAx_n=\lim_nBx_n=Bx.
+\]
+\end{proof}
+
+\begin{corollary}[Completion preserves a finite packet split]\label{cor:packet-completion}
+Suppose bounded operators $P_1,\ldots,P_m$ satisfy
+\[
+P_iP_j=\delta_{ij}P_i,
+\qquad
+\sum_iP_i=I
+\]
+on a dense invariant subspace $D$.  Then the same identities hold on the completion of $D$.
+\end{corollary}
+
+\begin{proof}
+Every difference between the two sides is a bounded operator vanishing on $D$, so apply \cref{thm:dense-extension}.
+\end{proof}
+
+\begin{boundarybox}[ infinite towers]
+An inverse system of exact finite reconstructions does not automatically produce a nonempty, complete, or physically meaningful limit.  One must prove compatibility, completeness, domain preservation, and convergence in the declared topology.
+\end{boundarybox}
+
+\begin{stepbox}{Seed-to-finish Step 11: nonlinear interaction}
+Replace transfer matrices by interaction tensors or trees.  Analysis and synthesis remain exact even though packet independence generally fails.
+\end{stepbox}
+
+\begin{stepbox}{Seed-to-finish Step 12: obstruction}
+Project a continuation defect onto the complement of the correction range.  Vanishing is the exact solvability criterion; nonvanishing is retained as a localized packet rather than hidden.
+\end{stepbox}
+
+\begin{stepbox}{Seed-to-finish Step 13: completion}
+Pass from a dense finite or algebraic core only after the relevant projectors and operators are proved bounded or otherwise controlled on their domains.
+\end{stepbox}
+
+\chapter{One seed through the entire calculus}\label{ch:master-example}
+
+\section{The complete step ledger}
+This chapter repeats the master cyclic example without skipping any layer.  The purpose is to show that the definitions form one continuous calculus rather than a collection of disconnected identities.
+
+\SafeFigure[.98\linewidth]{54_master_example_pipeline.pdf}{The master example from primitive seed through nonlinear interaction and final reconstruction.}{fig:master-full-pipeline}
+
+\subsection{Step 0: choose the ambient type}
+Declare
+\[
+X=\C^8
+\]
+with standard basis $e_0,\ldots,e_7$ and the usual Hermitian inner product.  The finite dimension makes all linear operators bounded and all sums finite.
+
+\subsection{Step 1: choose the seed}
+Set
+\[
+s=e_0.
+\]
+At this stage only one primitive vector has been supplied.
+
+\subsection{Step 2: choose the operator grammar}
+Let the grammar be generated by the forward cyclic shift $U$.  The admissible linear operators are polynomials in $U$.
+
+\subsection{Step 3: compute the orbit}
+The orbit is
+\[
+\{s,Us,\ldots,U^7s\}
+=
+\{e_0,e_1,\ldots,e_7\}.
+\]
+The orbit matrix has rank eight, so one seed generates all of $X$.
+
+\subsection{Step 4: impose the relation}
+The exact relation is
+\[
+U^8=I.
+\]
+Hence every operator word has a unique normal form of degree at most seven.
+
+\subsection{Step 5: generate the object}
+Use
+\[
+p(z)=2-z+3z^2+z^4+4z^5-2z^6+5z^7
+\]
+and form
+\[
+x=p(U)s=(2,-1,3,0,1,4,-2,5)^{\mathsf T}.
+\]
+
+\subsection{Step 6: declare the packet addresses}
+Use four exact atlases:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item coordinate packets $E_j$;
+\item parity packets $P_{\mathrm e},P_{\mathrm o}$;
+\item mod-four packets $R_0,\ldots,R_3$;
+\item Fourier character packets $Q_0,\ldots,Q_7$.
+\end{enumerate}
+Each family is complete at its own level.
+
+\subsection{Step 7: analyze and synthesize}
+Coordinate analysis gives
+\[
+\Acal_E x=(E_0x,\ldots,E_7x),
+\]
+and
+\[
+\Scal_E\Acal_E x
+=
+\sum_{j=0}^7E_jx=x.
+\]
+The exact residual is zero.
+
+\subsection{Step 8: declare a transfer operator}
+Set
+\[
+T=2I-U+3U^2.
+\]
+The output is
+\[
+Tx=(-7,11,13,-6,11,7,-5,24)^{\mathsf T}.
+\]
+
+\subsection{Step 9: reconstruct the operator}
+Resolve
+\[
+T_{ba}=E_bTE_a.
+\]
+Then
+\[
+\sum_{a,b}T_{ba}=T.
+\]
+The support graph has exactly the cyclic identity, one-step, and two-step bands dictated by the polynomial in $U$.
+
+\subsection{Step 10: compose by paths}
+Let $S=I+U^3$.  The product is reconstructed from
+\[
+E_bSTE_a
+=
+\sum_\gamma(E_bSE_\gamma)(E_\gamma TE_a).
+\]
+The complete path-sum residual is zero.
+
+\subsection{Step 11: refine}
+Use
+\[
+P_{\mathrm e}=R_0+R_2,
+\qquad
+P_{\mathrm o}=R_1+R_3,
+\]
+and
+\[
+R_r=E_r+E_{r+4}.
+\]
+Every coarse object packet and every coarse operator block is recovered by summing its fine descendants.
+
+\subsection{Step 12: transport to Fourier space}
+Let $F$ be the unitary DFT.  The projectors
+\[
+Q_k=F^*E_kF
+\]
+are complete, mutually annihilating, and idempotent.  In this atlas,
+\[
+FTF^*
+=
+\diag(2-\zeta_k+3\zeta_k^2).
+\]
+
+\SafeFigure[.89\linewidth]{56_master_fourier_packets.pdf}{The exact Fourier magnitudes and phases of the master vector.  Both are required for complete synthesis.}{fig:master-fourier-packets}
+
+\subsection{Step 13: retain several atlases simultaneously}
+Analyze $x$ through spatial, Fourier, and Haar transforms with weights $(1,2,3)$.  The canonical tight-frame synthesis divides by
+\[
+1^2+2^2+3^2=14
+\]
+and reconstructs $x$ exactly.
+
+\subsection{Step 14: apply a nonlinear operation}
+Use
+\[
+N(x)=x+(Ux)\odot(U^3x).
+\]
+The output interaction sum over all packet pairs equals the direct nonlinear term, and output synthesis returns
+\[
+N(x)=(22,-5,-2,6,1,7,-2,3)^{\mathsf T}.
+\]
+
+\subsection{Step 15: test an obstruction}
+For the separate continuation map
+\[
+L=\begin{pmatrix}1&0\\0&1\\1&1\end{pmatrix},
+\]
+the datum $(1,2,3)^{\mathsf T}$ has zero obstruction and is solvable.  The datum $(1,2,4)^{\mathsf T}$ has obstruction
+\[
+\left(-\frac13,-\frac13,\frac13\right)^{\mathsf T},
+\]
+so no exact correction exists in the declared range.
+
+\subsection{Step 16: close the reconstruction loop}
+The exact symbolic certificates are
+\[
+\begin{array}{ll}
+\rank\mathcal O_U(s)=8,&U^8-I=0,\\[2pt]
+\sum_jE_jx-x=0,&\sum_{a,b}E_bTE_a-T=0,\\[2pt]
+\sum_{a,b,\gamma}E_bSE_\gamma TE_a-ST=0,&\sum_kQ_k-I=0,\\[2pt]
+\Scal\Acal x-x=0,&\sum_bE_bN(x)-N(x)=0.
+\end{array}
+\]
+The intended negative control is the nonzero blocked obstruction.
+
+\SafeFigure[.95\linewidth]{58_master_certificate_dashboard.pdf}{The master certificate ledger.  The nonzero obstruction row is intentionally retained because a calculus must detect failures as well as exact reconstructions.}{fig:master-dashboard}
+
+\section{Complete symbolic implementation}
+\begin{lstlisting}
+from proof_atlas.foundations import build_certificate, matrix_zero
+
+c = build_certificate()
+assert c.orbit_rank == 8
+assert matrix_zero(c.relation_residual)
+assert matrix_zero(c.spatial_reconstruction_residual)
+assert matrix_zero(c.transfer_reconstruction_residual)
+assert matrix_zero(c.product_path_residual)
+assert matrix_zero(c.fourier_completeness_residual)
+assert matrix_zero(c.multi_atlas_reconstruction_residual)
+assert matrix_zero(c.nonlinear_packet_residual)
+assert matrix_zero(c.bilinear_interaction_residual)
+assert matrix_zero(c.solvable_obstruction)
+assert not matrix_zero(c.blocked_obstruction)
+\end{lstlisting}
+
+\chapter{The start-to-finish realization theorem}\label{ch:start-finish-theorem}
+
+\section{Statement}
+The preceding chapters can now be assembled into one dependency-ordered theorem.
+
+\begin{theorem}[Finite seed-to-reconstruction theorem]\label{thm:seed-to-reconstruction}
+Let $X$ be finite-dimensional.  Suppose the following data are declared:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+\item a finite seed family $S$;
+\item a fixed unital operator algebra $\mathcal A\subseteq\operatorname{End}(X)$;
+\item a relation system presenting the generated hull;
+\item one or more complete packet atlases;
+\item exact refinement maps among selected atlases;
+\item an admissible linear, multilinear, polynomial, or arbitrary finite map;
+\item a synthesis law for every retained coordinate family.
+\end{enumerate}
+Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item the generated object lies in the quotient of the free seed module by the relation kernel;
+\item every complete atlas reconstructs the object exactly;
+\item every linear operator reconstructs from its transfer blocks;
+\item operator products reconstruct from packet paths;
+\item complete refinement preserves both object and operator reconstruction;
+\item arbitrary nonlinear maps possess exact packet-coordinate conjugates;
+\item multilinear terms decompose into complete interaction tensors;
+\item finite correction problems admit exact obstruction packets;
+\item every bounded identity established on a dense invariant core extends to its completion;
+\item every final equality has an explicit object-level or operator-level residual certificate.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part (a) is \cref{thm:seed-presentation}.  Parts (b) and (c) are the object and operator reconstruction theorems.  Part (d) follows from repeated insertion of packet completeness.  Part (e) is \cref{thm:coordinate-refinement} and the refined-block identity.  Part (f) is \cref{thm:nonlinear-conjugacy}; part (g) follows by multilinearity.  Part (h) is \cref{thm:obstruction-criterion}.  Part (i) is \cref{thm:dense-extension,cor:packet-completion}.  The residual in part (j) is obtained by subtracting the reconstructed quantity from the direct quantity at the appropriate type.
+\end{proof}
+
+\SafeFigure[.92\linewidth]{60_theorem_dependency_ladder.pdf}{Each theorem depends on the preceding layers.  The cross-domain examples come after, not before, this proof chain.}{fig:dependency-ladder}
+
+\section{Why the construction deserves the name calculus}
+The term calculus is justified by closure under the recurring operations:
+\begin{itemize}[leftmargin=1.6em]
+\item seeds generate controlled hulls;
+\item relations reduce operator words to normal forms;
+\item projectors provide exact coordinate differentials in the broad sense of resolving variation by packet;
+\item transfer blocks compose by a matrix law;
+\item refinement has exact chain maps and inverse synthesis;
+\item nonlinear maps possess packet jets and interaction trees;
+\item obstructions localize failed continuation;
+\item completion transports finite identities under declared continuity hypotheses;
+\item synthesis returns every retained calculation to the original object space.
+\end{itemize}
+These operations are not one isolated theorem.  They form a closed grammar for constructing, resolving, transforming, refining, and reconstructing mathematical objects.
+
+\SafeFigure[.72\linewidth]{59_complete_calculus_wheel.pdf}{The operational cycle of the calculus.  Reconstruction is not the end: the residual may become the seed for the next refinement.}{fig:calculus-wheel}
+
+\section{Transition to the seven independent realizations}
+The master example proves the entire chain in one finite cyclic module.  The next seven chapters retain all of their original content and repeat the verification in different domains.  Their role is to show that the common theorem is not tied to the cyclic shift example:
+\begin{enumerate}[label=\arabic*.,leftmargin=2em]
+\item a general rational matrix decomposition;
+\item signal polyphase, Fourier, and wavelet coordinates;
+\item quantum circuit paths and reduced states;
+\item conditional expectation and Bayesian information loss;
+\item closed analytic and arithmetic coefficient families;
+\item physical normal modes and conserved energy;
+\item nonlinear filters and geometric holonomy.
+\end{enumerate}

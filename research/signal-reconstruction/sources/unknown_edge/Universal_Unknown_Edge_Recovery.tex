@@ -1,0 +1,1748 @@
+\documentclass[11pt,oneside]{book}
+\usepackage[letterpaper,margin=0.76in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,longtable,tabularx,array,multicol}
+\usepackage{graphicx,float,caption,subcaption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{pdflscape}
+\usepackage{tikz}
+\usepackage{siunitx}
+\usepackage{needspace}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\usepackage{url}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Muted}{HTML}{566573}
+\definecolor{Paper}{HTML}{FAFAF7}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Purple}{HTML}{6C5CE7}
+\definecolor{PaleBlue}{HTML}{E6F0F4}
+\definecolor{PaleTeal}{HTML}{E6F3F1}
+\definecolor{PaleOrange}{HTML}{FBF0E6}
+\definecolor{PaleMagenta}{HTML}{F4EAF1}
+
+\pagecolor{Paper}
+\color{Ink}
+\hypersetup{
+ colorlinks=true,
+ linkcolor=Blue,
+ urlcolor=Blue,
+ citecolor=Blue,
+ hypertexnames=false,
+ pdftitle={Universal Unknown-Edge Recovery in a Projector-Resolved Finite-Rate Class},
+ pdfauthor={Komorebi P.},
+ pdfsubject={Impossibility without structure, exact off-grid edge recovery, finite dictionary recovery, and Gibbs-free synthesis},
+ pdfcreator={},pdfproducer={}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{Muted} Universal Unknown-Edge Recovery}
+\fancyhead[R]{\small\color{Muted} Komorebi P.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{9pt plus 2pt minus 2pt}
+\setlength{\intextsep}{9pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{2pt}
+\graphicspath{{figures/}}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\setlist[itemize]{leftmargin=1.4em,itemsep=3pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=3pt,topsep=4pt}
+
+\titleformat{\chapter}[hang]
+  {\normalfont\huge\bfseries\color{Ink}}
+  {\thechapter}{0.65em}{}
+\titleformat{name=\chapter,numberless}[hang]
+  {\normalfont\huge\bfseries\color{Ink}}
+  {}{0pt}{}
+\titlespacing*{\section}{0pt}{1.4ex plus .4ex minus .2ex}{0.45ex}
+\titlespacing*{\subsection}{0pt}{1.1ex plus .3ex minus .2ex}{0.35ex}
+
+% Chapters and parts are compact structural headings rather than forced title pages.
+% This keeps a proof, its figure, and its explanation in one continuous reading flow.
+\makeatletter
+\renewcommand\chapter{\@startsection{chapter}{0}{\z@}%
+  {2.4ex plus .7ex minus .3ex}%
+  {1.0ex plus .2ex}%
+  {\normalfont\LARGE\bfseries\color{Ink}}}
+\renewcommand\part[1]{%
+  \par\Needspace{9\baselineskip}%
+  \vspace{2.2ex}%
+  \refstepcounter{part}%
+  \addcontentsline{toc}{part}{\protect\numberline{\Roman{part}}#1}%
+  {\color{Blue}\rule{\linewidth}{1.2pt}\par}%
+  \vspace{0.7ex}%
+  {\normalfont\Large\bfseries\color{Ink}Part \Roman{part}: #1\par}%
+  \vspace{0.6ex}%
+  {\color{Blue}\rule{\linewidth}{0.5pt}\par}%
+  \vspace{1.0ex}%
+}
+\makeatother
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{certificate}[theorem]{Exact check}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newtheorem{example}[theorem]{Worked example}
+
+\newcommand{\Torus}{\mathbb T}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spark}{\operatorname{spark}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\RS}{R_{\mathcal S}}
+\newcommand{\PS}{P_{\mathcal S}}
+\newcommand{\EdgeClass}{\mathcal U_{K,L}}
+
+\newcommand{\StatusBox}[2]{%
+\begin{center}
+\colorbox{#1}{\parbox{0.93\linewidth}{\vspace{5pt}\small #2\vspace{5pt}}}
+\end{center}}
+
+\newcommand{\FigureWide}[3]{%
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\textwidth,height=0.47\textheight,keepaspectratio]{#1.pdf}
+\caption{#2}
+\label{fig:#1}
+\begin{minipage}{0.94\textwidth}
+\small\RaggedRight\textbf{Reading the figure.} #3
+\end{minipage}
+\end{figure}}
+
+\newcommand{\FigurePair}[6]{%
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.485\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{#1.pdf}
+\caption{#2}
+\label{fig:#1}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.485\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{#3.pdf}
+\caption{#4}
+\label{fig:#3}
+\end{subfigure}
+\vspace{3pt}
+\begin{minipage}{0.95\textwidth}
+\small\RaggedRight\textbf{Left.} #5 \textbf{Right.} #6
+\end{minipage}
+\end{figure}}
+
+\makeatletter
+\newcommand{\CompactContents}{%
+\chapter*{Contents}
+\begingroup
+\small
+\setlength{\parskip}{0pt}
+\@starttoc{toc}
+\endgroup}
+\newcommand{\CompactListOfFigures}{%
+\chapter*{Figures}
+\begingroup
+\footnotesize
+\setlength{\columnsep}{0.25in}
+\setlength{\parskip}{0pt}
+\begin{multicols}{2}
+\@starttoc{lof}
+\end{multicols}
+\endgroup}
+\makeatother
+
+\lstset{
+ language=Python,
+ basicstyle=\ttfamily\scriptsize,
+ keywordstyle=\color{Blue}\bfseries,
+ commentstyle=\color{Teal},
+ stringstyle=\color{Magenta},
+ numbers=left,
+ numberstyle=\tiny\color{Muted},
+ stepnumber=1,
+ numbersep=6pt,
+ frame=single,
+ breaklines=true,
+ breakatwhitespace=false,
+ columns=fullflexible,
+ keepspaces=true,
+ showstringspaces=false,
+ tabsize=4,
+ xleftmargin=0.06\linewidth,
+ xrightmargin=0.02\linewidth
+}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\begin{tikzpicture}[remember picture,overlay]
+\fill[Blue!8] (current page.south west) rectangle (current page.north east);
+\fill[Orange!14] ([xshift=-2.8in]current page.north east) rectangle (current page.north east);
+\draw[Blue,line width=4pt] ([xshift=.58in,yshift=-.66in]current page.north west) -- ([xshift=-.58in,yshift=-.66in]current page.north east);
+\draw[Magenta,line width=2pt] ([xshift=.58in,yshift=.66in]current page.south west) -- ([xshift=-.58in,yshift=.66in]current page.south east);
+\end{tikzpicture}
+\vspace*{0.50in}
+{\large\color{Blue}\bfseries PROJECTOR-RESOLVED SEED CALCULUS\par}
+\vspace{0.16in}
+{\fontsize{32}{37}\selectfont\bfseries Universal Unknown-Edge Recovery\par}
+\vspace{0.14in}
+{\fontsize{19}{23}\selectfont\color{Muted} Impossibility without structure, exact off-grid recovery in a finite-rate class, and Gibbs-free synthesis\par}
+\vspace{0.40in}
+\begin{minipage}{0.84\linewidth}
+\large
+A truly unrestricted recovery theorem cannot exist. This book proves that obstruction first. It then gives a complete recovery theorem for every periodic signal consisting of an unknown bandlimited background and finitely many unknown off-grid jumps. The number of jumps, their locations, their amplitudes, the edge packet, and the smooth packet are all reconstructed from finitely many Fourier coefficients.
+\end{minipage}
+\vfill
+{\Large\bfseries Komorebi P.\par}
+\vspace{0.28in}
+\end{titlepage}
+
+\frontmatter
+
+\chapter*{Abstract}
+Unknown-edge recovery is not meaningful until the measurement map, background class, edge class, and stability scale are declared. If arbitrary functions are allowed, a nonzero interval can lie between every pair of sample points and remain invisible. If the smooth and edge classes overlap, the decomposition is not unique. If two opposite jumps collide, their Fourier moments approach zero, so no recovery map can have a uniform stability constant over all edge separations.
+
+After proving those limits, this work gives two positive theorems. The first is finite-dimensional. Let \(\mathcal S\) be a background subspace, let \(D\) be an edge dictionary, and let \(\RS=I-\PS\). Every edge packet with at most \(s\) active atoms is recoverable from \(y=s_0+D\alpha\) if and only if
+\[
+\Ker(\RS D)\cap\{h:\norm{h}_0\le 2s\}=\{0\}.
+\]
+The associated restricted separation constant gives an explicit deterministic noise bound.
+
+The second theorem is continuous and off-grid. Let
+\[
+f=s+j
+\]
+be a real \(2\pi\)-periodic signal. Assume \(s\) is an unknown trigonometric polynomial of degree at most \(K\). Assume \(j\) is an unknown piecewise-constant function with at most \(L\) distinct jumps. For frequencies \(n>K\),
+\[
+m_n=2\pi\ii n\widehat f(n)
+=\sum_{\ell=1}^{L}a_\ell z_\ell^n,
+\qquad
+z_\ell=\e^{-\ii\tau_\ell}.
+\]
+The edge moments form a finite-rank Hankel packet. Its rank is the unknown number of jumps. Its null recurrence gives an annihilating polynomial whose roots are the unknown edge locations. A Vandermonde solve gives the jump amplitudes. The edge packet follows by periodic integration. The low Fourier modes then recover the smooth packet. The reconstructed signal is exact throughout the declared class.
+
+The same recovery removes the Gibbs mechanism from the final synthesis. The edge is not approximated by a truncated global Fourier series. It is recovered and restored in its own packet. The supplied single Python file generates thirty-five figure pairs, five data tables, four exact random examples, a symbolic roots-of-unity derivation, a two-dimensional rectangle example, noise and collision experiments, and nineteen independent checks.
+
+\chapter*{The result in one page}
+\StatusBox{PaleOrange}{\textbf{What cannot be true.} No method can recover arbitrary unknown edges from arbitrary finite measurements. No stable theorem can be uniform over colliding edges. A claim of universality without a model class is false.}
+
+\StatusBox{PaleTeal}{\textbf{What is proved.} Every signal in the class \(\EdgeClass\), consisting of a degree-\(K\) periodic trigonometric background plus at most \(L\) distinct piecewise-constant jumps, is recovered exactly from finitely many Fourier coefficients. The true value of \(L\) may be unknown as long as an upper bound is supplied.}
+
+\StatusBox{PaleBlue}{\textbf{What the calculus adds.} The smooth component is removed by a declared projector. The discontinuity becomes a finite derivative packet. The Hankel matrix is a transfer packet with exact rank \(L\). The annihilator is the obstruction-free recurrence. The edge and smooth packets are reconstructed separately and then synthesized exactly.}
+
+The core formula is
+\[
+\boxed{
+2\pi\ii n\widehat f(n)
+=
+\sum_{\ell=1}^{L}a_\ell \e^{-\ii n\tau_\ell}
+\qquad(n>K).
+}
+\]
+From \(2L\) consecutive values of this sequence, the edge locations and amplitudes are determined by finite linear algebra. If only an upper bound \(L_{\max}\) is known, the rank of an \(L_{\max}\times L_{\max}\) Hankel matrix gives the actual number of active edges.
+
+\chapter*{Claim boundary}
+The word \emph{universal} is used in the ordinary theorem sense. One algorithm works for every member of one declared class. It does not mean every possible edge in every possible function can be recovered from every kind of data.
+
+The following statements are established here.
+\begin{itemize}
+\item Unrestricted universal recovery from noninjective measurements is impossible.
+\item Universal sparse recovery in a finite edge dictionary has a necessary and sufficient secant condition.
+\item Periodic off-grid piecewise-constant edges mixed with an unknown bandlimited background are exactly recoverable from finitely many Fourier coefficients.
+\item The unknown number of jumps is the Hankel rank under the stated nondegeneracy assumptions.
+\item Shared edge locations across several channels have a common annihilator.
+\item Piecewise-polynomial packets reduce to a repeated-root annihilator.
+\item Exact edge recovery followed by native packet synthesis removes jump-generated Gibbs ringing from the reconstructed signal.
+\end{itemize}
+
+The following statements are not established.
+\begin{itemize}
+\item Exact recovery of arbitrary sub-grid edges from arbitrary point samples.
+\item Uniform noise stability without a lower bound on edge separation or an equivalent conditioning hypothesis.
+\item Exact recovery of arbitrary two-dimensional curves from finitely many unrestricted measurements.
+\item A claim that annihilating filters, Prony reconstruction, finite-rate sampling, or super-resolution were invented here.
+\end{itemize}
+
+\chapter*{Reading path}
+The proof has four layers.
+\begin{enumerate}
+\item Chapters 1--3 show why a model-free theorem cannot exist.
+\item Chapters 4--7 prove the finite dictionary theorem and its stability estimate.
+\item Chapters 8--17 prove the off-grid finite-rate theorem from the distributional derivative through final reconstruction.
+\item Chapters 18--27 study Gibbs synthesis, noise, edge collision, multiple channels, piecewise polynomials, and implementation.
+\end{enumerate}
+
+\CompactContents
+\CompactListOfFigures
+
+\mainmatter
+
+\part{The boundary of universality}
+
+\chapter{What unknown-edge recovery means}
+\section{The object to be recovered}
+An edge is not a number attached to a plot. It is a failure of one local description to continue across a boundary. In one dimension a piecewise-constant edge packet has a distributional derivative supported on finitely many points. In a sampled image an edge packet may be a member of a finite geometric dictionary. In a graph signal it may be a sparse gradient across selected graph edges.
+
+The recovery problem must therefore declare four objects.
+\begin{enumerate}
+\item A measurement map \(M\).
+\item A background class \(\mathcal S\).
+\item An edge class \(\mathcal J\).
+\item A rule for deciding when two edge packets are distinguishable.
+\end{enumerate}
+
+Given data
+\[
+y=M(s+j)+\eta,
+\qquad
+s\in\mathcal S,
+\qquad
+j\in\mathcal J,
+\]
+unknown-edge recovery asks for \(j\), its boundary parameters, and a reconstruction of \(s\). Exact recovery means that the returned packets synthesize the original object, not merely that an image looks sharp.
+
+\FigureWide{01_closed_pipeline}{The complete recovery chain used in this book.}{The data are first separated from the smooth band. The remaining moments form a finite-rank packet. The annihilating recurrence produces edge locations. Native edge synthesis then avoids the Gibbs mechanism.}
+
+\section{Three meanings of universal}
+The same word is often used for three different goals.
+
+\textbf{Model-free universality} would recover edges in every admissible function from the stated measurements. This fails as soon as the measurement map is not injective.
+
+\textbf{Class universality} means one algorithm works for every member of a declared class. This is the meaning proved here.
+
+\textbf{Uniform stability} asks for one error constant valid across the class. This requires quantitative separation. Exact identifiability alone does not provide a useful noise constant when edges nearly collide.
+
+Keeping these meanings separate is essential. The exact theorem is strong because its assumptions and conclusion match. It would become weaker, not stronger, if the assumptions were hidden behind an unrestricted use of the word universal.
+
+\chapter{Why model-free recovery is impossible}
+\section{The measurement obstruction}
+\begin{theorem}[Noninjective measurement obstruction]
+Let \(M:X\to Y\) be a measurement map. Suppose there are two admissible objects \(f_0,f_1\in X\) with
+\[
+M f_0=M f_1
+\]
+and different edge packets. No recovery map \(R:Y\to\mathcal J\) can return the correct edge packet for both objects.
+\end{theorem}
+
+\begin{proof}
+The two objects produce the same datum \(y=Mf_0=Mf_1\). The map \(R\) has one value at \(y\). That value cannot equal two different edge packets.
+\end{proof}
+
+\begin{corollary}[Finite point samples do not see every edge]
+Fix finitely many sample points in an interval. There is a nonzero indicator packet supported between two adjacent sample points that vanishes at every sample point. Hence arbitrary unknown edges cannot be recovered from those samples.
+\end{corollary}
+
+\begin{proof}
+Choose a nonempty open interval containing no sample point. Its indicator is nonzero, has two edges, and is zero at every sampled coordinate.
+\end{proof}
+
+\FigurePair{02_unrestricted_impossibility}{A hidden interval between samples}{03_decomposition_ambiguity}{A second source of nonuniqueness}{The two displayed signals have identical samples. Any deterministic algorithm receives exactly the same input for both.}{Even full knowledge of the sum does not determine its smooth and edge components when the two classes overlap.}
+
+\section{The decomposition obstruction}
+\begin{theorem}[Intersection obstruction]
+Let \(\mathcal S\) and \(\mathcal J\) be linear subspaces of an ambient vector space. If
+\[
+\mathcal S\cap\mathcal J\ne\{0\},
+\]
+then the decomposition \(f=s+j\) is not unique.
+\end{theorem}
+
+\begin{proof}
+Take a nonzero \(h\in\mathcal S\cap\mathcal J\). Then
+\[
+f=s+j=(s+h)+(j-h).
+\]
+Both pairs belong to \(\mathcal S\times\mathcal J\), and the pairs are different.
+\end{proof}
+
+The condition \(\mathcal S\cap\mathcal J=\{0\}\) is necessary when the full object is known. Under an incomplete measurement map, one needs the stronger condition that no difference of two admissible edge packets becomes indistinguishable after the background has been removed.
+
+\chapter{Why no uniform noise bound can ignore edge separation}
+\section{A collapsing pair of jumps}
+Consider the periodic interval packet
+\[
+j_\delta=\mathbf 1_{[0,\delta)}.
+\]
+Its derivative packet is
+\[
+j_\delta'=\delta_0-\delta_\delta.
+\]
+The corresponding Fourier moments are
+\[
+m_n(\delta)=1-\e^{-\ii n\delta}.
+\]
+For every fixed finite set of indices,
+\[
+\norm{m(\delta)}_2\longrightarrow0
+\qquad(\delta\to0).
+\]
+The edge amplitudes remain \(+1\) and \(-1\). Only their separation changes.
+
+\begin{theorem}[No uniform Lipschitz recovery over colliding edges]
+Let the measurement vector contain finitely many Fourier moments. There is no inverse map from moments to edge locations with one Lipschitz constant valid for all distinct edge configurations.
+\end{theorem}
+
+\begin{proof}
+The moment vector of the two-edge packet tends to the moment vector of the zero packet as \(\delta\to0\). The edge parameter does not converge to an ordinary two-edge parameter with fixed separation. Any uniform Lipschitz inverse would force a fixed nonzero edge displacement to be bounded by a constant times a measurement difference that tends to zero.
+\end{proof}
+
+\FigurePair{23_no_uniform_stability}{Moment collapse}{22_collision_conditioning}{Conditioning near collision}{The measurement norm shrinks linearly at first as opposite jumps approach each other.}{The Hankel and Vandermonde condition numbers rise as the minimum separation falls. Exact arithmetic still identifies distinct edges, but noise amplification becomes unavoidable.}
+
+This theorem does not weaken the exact result. It identifies the quantity that must appear in a stable result. One may state that quantity as minimum separation, a smallest Hankel singular value, a Vandermonde condition number, or a root-isolation margin. They express the same geometric fact from different coordinates.
+
+\part{A universal theorem for finite edge dictionaries}
+
+\chapter{Removing the background packet}
+\section{Finite-dimensional model}
+Let \(X=\R^m\) with its usual inner product. Let \(\mathcal S\subseteq X\) be a known background subspace. Let
+\[
+D=\begin{pmatrix}d_1&\cdots&d_N\end{pmatrix}
+\]
+be a finite dictionary of candidate edge atoms. The observation has the form
+\[
+y=s_0+D\alpha_0+\eta,
+\qquad
+s_0\in\mathcal S.
+\]
+The unknown coefficient vector \(\alpha_0\) is assumed to have at most \(s\) nonzero entries.
+
+Let \(\PS\) be the orthogonal projector onto \(\mathcal S\), and put
+\[
+\RS=I-\PS.
+\]
+Applying \(\RS\) removes every possible smooth coefficient at once:
+\[
+\RS y=\RS D\alpha_0+\RS\eta.
+\]
+The residualized dictionary
+\[
+A=\RS D
+\]
+is the actual edge measurement operator. The background basis no longer appears in the search.
+
+\FigureWide{19_residualized_secant_condition}{The residualized secant condition.}{Two candidate edge packets can be distinguished exactly when their difference remains visible after projection away from the background.}
+
+\section{Why pairwise differences control recovery}
+Suppose two \(s\)-sparse vectors \(\alpha\) and \(\beta\) explain the same residual data. Then
+\[
+A\alpha=A\beta,
+\]
+so
+\[
+A(\alpha-\beta)=0.
+\]
+The difference \(h=\alpha-\beta\) has at most \(2s\) nonzero entries. Therefore the recovery problem is not governed by the individual atoms alone. It is governed by the complete set of \(2s\)-sparse secants.
+
+\chapter{The residualized secant theorem}
+\begin{theorem}[Universal finite-dictionary recovery]
+The following statements are equivalent.
+\begin{enumerate}
+\item Every \(s\)-sparse edge coefficient vector is uniquely determined from \(A\alpha\).
+\item
+\[
+\Ker A\cap\{h:\norm{h}_0\le2s\}=\{0\}.
+\]
+\item Every set of at most \(2s\) columns of \(A\) is linearly independent.
+\item
+\[
+\spark(A)>2s.
+\]
+\end{enumerate}
+When these conditions hold, the solution of
+\[
+\boxed{
+\min_{\alpha}\norm{\alpha}_0
+\quad\text{subject to}\quad
+A\alpha=\RS y
+}
+\]
+is the true edge coefficient vector for every noise-free observation in the class.
+\end{theorem}
+
+\begin{proof}
+Assume statement 2. Let \(\alpha\) and \(\beta\) be \(s\)-sparse and satisfy \(A\alpha=A\beta\). Then \(h=\alpha-\beta\) lies in \(\Ker A\), and \(\norm{h}_0\le2s\). Statement 2 gives \(h=0\), hence \(\alpha=\beta\).
+
+Conversely, if statement 2 fails, choose a nonzero \(h\in\Ker A\) with \(\norm{h}_0\le2s\). Split the support of \(h\) into two disjoint sets of size at most \(s\). Write
+\[
+h=\alpha-\beta
+\]
+with \(\alpha\) and \(\beta\) supported on those two sets. Then \(A\alpha=A\beta\) even though \(\alpha\ne\beta\). Universal uniqueness fails.
+
+Statements 2, 3, and 4 are the standard equivalent definitions of the spark condition. The optimization claim follows because the true \(s\)-sparse vector is feasible and no other vector with at most \(s\) nonzero entries can be feasible.
+\end{proof}
+
+\begin{remark}
+The theorem is exact and dimension-independent. The atoms may be one-dimensional intervals, image masks, graph cuts, curve fragments, or any other finite family. The theorem does not say the combinatorial search is always cheap. It says exactly when the inverse problem has one answer.
+\end{remark}
+
+\chapter{A deterministic stability theorem}
+\section{Restricted separation constant}
+Assume the exact secant condition holds. Since the dictionary is finite, define
+\[
+\boxed{
+\gamma_{2s}
+=
+\min_{
+\substack{h\ne0\\
+norm{h}_0\le2s}
+}
+\frac{\norm{Ah}_2}{\norm{h}_2}.
+}
+\]
+The minimum is positive. It measures the smallest visible difference between two admissible edge descriptions.
+
+\begin{theorem}[Finite-dictionary noise bound]
+Suppose
+\[
+y=s_0+D\alpha_0+\eta,
+\qquad
+\norm{\RS\eta}_2\le\varepsilon,
+\qquad
+\norm{\alpha_0}_0\le s.
+\]
+Let \(\widehat\alpha\) satisfy
+\[
+\norm{\widehat\alpha}_0\le s
+\]
+and
+\[
+\norm{A\widehat\alpha-\RS y}_2\le\varepsilon.
+\]
+Then
+\[
+\boxed{
+\norm{\widehat\alpha-\alpha_0}_2
+\le
+\frac{2\varepsilon}{\gamma_{2s}}.
+}
+\]
+Consequently,
+\[
+\norm{D(\widehat\alpha-\alpha_0)}_2
+\le
+\frac{2\norm{D}\varepsilon}{\gamma_{2s}}.
+\]
+\end{theorem}
+
+\begin{proof}
+Put \(h=\widehat\alpha-\alpha_0\). Its support has size at most \(2s\). By the triangle inequality,
+\[
+\begin{aligned}
+\norm{Ah}_2
+&\le
+\norm{A\widehat\alpha-\RS y}_2
++
+\norm{\RS y-A\alpha_0}_2\\
+&\le2\varepsilon.
+\end{aligned}
+\]
+The definition of \(\gamma_{2s}\) gives
+\[
+\gamma_{2s}\norm{h}_2\le\norm{Ah}_2.
+\]
+Combining the two estimates proves the first bound. The packet bound follows by applying \(D\).
+\end{proof}
+
+\begin{corollary}[Support recovery by thresholding]
+If
+\[
+\min_{k\in\supp\alpha_0}|(\alpha_0)_k|
+>
+\frac{4\varepsilon}{\gamma_{2s}},
+\]
+then thresholding \(\widehat\alpha\) at \(2\varepsilon/\gamma_{2s}\) recovers the true support.
+\end{corollary}
+
+\begin{proof}
+Every coordinate error is at most the \(\ell^2\) error. True nonzero coefficients remain above the threshold, while true zero coefficients remain below it.
+\end{proof}
+
+\section{What the constant means}
+The quantity \(\gamma_{2s}\) is a finite obstruction margin. If it is zero, two admissible packet descriptions become identical after background removal. If it is positive but small, the problem is identifiable yet sensitive. The theorem makes that distinction visible.
+
+\chapter{Worked finite dictionary examples}
+\section{One-dimensional two-atom packet}
+The code constructs a length-24 signal. The background space is spanned by
+\[
+1,
+\cos x,
+\sin x,
+\cos2x,
+\sin2x.
+\]
+The edge dictionary contains eight short interval atoms. The true coefficient vector uses two atoms with amplitudes \(1.2\) and \(-0.7\). Complete support search finds the exact pair.
+
+The computed restricted separation constant is
+\[
+\boxed{
+\gamma_4=0.5116895108313039.
+}
+\]
+The recovered support is
+\[
+\boxed{
+\{1,5\}.
+}
+\]
+The reconstruction residual is \(1.21\times10^{-15}\).
+
+\FigureWide{18_finite_dictionary_recovery}{Exact recovery in a finite one-dimensional dictionary.}{The smooth background is removed before the sparse search. The two active interval atoms are recovered exactly. The positive value of \(\gamma_4\) certifies uniqueness and controls the noisy coefficient error.}
+
+A deterministic noise vector of size \(10^{-4}\) was then added. The measured coefficient error was
+\[
+1.235\times10^{-4},
+\]
+while the theorem gave the valid bound
+\[
+2.078\times10^{-3}.
+\]
+The bound is not intended to be sharp. Its role is to turn a visual recovery into a checkable inequality.
+
+\section{A two-dimensional rectangle packet}
+The same theorem is applied to an \(18\times18\) image. The background is a six-dimensional smooth trigonometric space. The edge dictionary contains every nonwrapping axis-aligned rectangle with height and width between three and seven pixels.
+
+The true rectangle is
+\[
+(\text{top},\text{left},\text{height},\text{width})
+=
+(6,8,5,6).
+\]
+Profile least squares over the complete dictionary returns the same tuple and the correct amplitude \(1.35\). The largest reconstruction error is at floating-point scale.
+
+\FigureWide{35_two_dimensional_rectangle}{A dimension-independent finite-dictionary recovery.}{The observed image contains a smooth background and one unknown rectangle. The profile search recovers the exact rectangle and amplitude. The final panel shows only roundoff. This is not a theorem for arbitrary continuous curves. It is an exact theorem for the complete finite dictionary that was declared.}
+
+\section{Why this theorem matters for the larger problem}
+The finite dictionary theorem already gives a universal answer for any finite packet library. Its weakness is computational and representational. A fine geometric library may be large, and an arbitrary off-grid edge is not one of its atoms. The next part removes that grid restriction in one dimension by changing coordinates from candidate masks to Fourier moments.
+
+\part{Exact off-grid recovery from Fourier packets}
+
+\chapter{The finite-rate edge class}
+\section{Periodic coordinate and Fourier convention}
+Work on
+\[
+\Torus=\R/(2\pi\Z).
+\]
+For an integrable periodic function \(u\), define
+\[
+\widehat u(n)
+=
+\frac{1}{2\pi}
+\int_0^{2\pi}u(x)\e^{-\ii nx}\,dx,
+\qquad
+n\in\Z.
+\]
+The inverse Fourier series is written
+\[
+u(x)=\sum_{n\in\Z}\widehat u(n)\e^{\ii nx}
+\]
+whenever the usual convergence assumptions hold.
+
+\section{The declared class}
+\begin{definition}[Universal finite-rate edge class]
+For nonnegative integers \(K\) and \(L\ge2\), let \(\EdgeClass\) consist of real periodic signals
+\[
+f=s+j
+\]
+with the following properties.
+\begin{enumerate}
+\item The background is a trigonometric polynomial
+\[
+s(x)=\sum_{|n|\le K}c_n\e^{\ii nx},
+\qquad
+c_{-n}=\overline{c_n}.
+\]
+\item The edge packet \(j\) is piecewise constant with at most \(L\) distinct jumps at locations
+\[
+0\le\tau_1<\cdots<\tau_r<2\pi,
+\qquad
+r\le L.
+\]
+\item The nonzero jump amplitudes are
+\[
+a_\ell=j(\tau_\ell^+)-j(\tau_\ell^-).
+\]
+\item Periodicity gives
+\[
+\sum_{\ell=1}^{r}a_\ell=0.
+\]
+\item The edge packet is normalized to have mean zero. The missing constant is absorbed into \(s\).
+\end{enumerate}
+\end{definition}
+
+The number \(r\), the locations \(\tau_\ell\), the jumps \(a_\ell\), and all background coefficients are unknown. Only the bounds \(K\) and \(L\) are assumed known.
+
+\FigureWide{04_declared_model}{One representative member of the finite-rate class.}{The background, edge packet, and observed sum are all unknown to the recovery algorithm. The displayed case has four off-grid jumps and a degree-four background.}
+
+\section{Why the class is not small in the relevant sense}
+The edge locations are continuous parameters. They are not restricted to a sample grid. The jump amplitudes are arbitrary nonzero real numbers satisfying one periodic balance equation. The background coefficients are arbitrary within the declared spectral band. The class includes intervals, multi-level staircases, irregular segment lengths, and any finite combination of upward and downward jumps.
+
+At the same time, the class has a finite number of degrees of freedom. That finite-rate structure is what makes exact recovery from finitely many measurements possible.
+
+\chapter{The derivative packet}
+\section{Distributional derivative}
+A piecewise-constant function has zero ordinary derivative inside each segment. All derivative mass is concentrated at the boundaries.
+
+\begin{proposition}[Edge derivative packet]
+For \(j\) in the declared class,
+\[
+\boxed{
+Dj
+=
+\sum_{\ell=1}^{r}a_\ell\delta_{\tau_\ell}
+}
+\]
+in the sense of distributions.
+\end{proposition}
+
+\begin{proof}
+Let \(\varphi\) be a smooth periodic test function. Integrating by parts on each constant segment gives
+\[
+-\int_0^{2\pi}j(x)\varphi'(x)\,dx
+=
+\sum_{\ell=1}^{r}
+\bigl(j(\tau_\ell^+)-j(\tau_\ell^-)\bigr)
+\varphi(\tau_\ell).
+\]
+The coefficient of \(\varphi(\tau_\ell)\) is the jump amplitude \(a_\ell\). This is exactly the action of the stated sum of Dirac masses.
+\end{proof}
+
+\FigureWide{05_distributional_derivative}{The edge packet becomes a finite atomic derivative.}{The piecewise-constant signal may occupy the entire domain, but its derivative is supported only at the unknown boundaries. This is the decisive compression step.}
+
+\section{Fourier transform of the derivative packet}
+The Fourier coefficient of \(\delta_{\tau}\) is
+\[
+\widehat{\delta_\tau}(n)
+=
+\frac{1}{2\pi}\e^{-\ii n\tau}.
+\]
+Differentiation multiplies Fourier coefficients by \(\ii n\). Therefore
+\[
+\ii n\widehat j(n)
+=
+\frac{1}{2\pi}
+\sum_{\ell=1}^{r}a_\ell\e^{-\ii n\tau_\ell}.
+\]
+For \(n\ne0\),
+\[
+\boxed{
+2\pi\ii n\widehat j(n)
+=
+\sum_{\ell=1}^{r}a_\ell z_\ell^n,
+\qquad
+z_\ell=\e^{-\ii\tau_\ell}.
+}
+\]
+Each unknown edge location is now a point on the unit circle. The moment sequence is a finite sum of exponentials.
+
+\chapter{Removing the unknown smooth background}
+\section{High-frequency packet separation}
+Because \(s\) has degree at most \(K\),
+\[
+\widehat s(n)=0
+\qquad
+(|n|>K).
+\]
+Hence for every positive \(n>K\),
+\[
+\widehat f(n)=\widehat j(n).
+\]
+Define the high-frequency edge moments
+\[
+\boxed{
+m_n=2\pi\ii n\widehat f(n)
+\qquad(n>K).
+}
+\]
+Then
+\[
+\boxed{
+m_n=
+\sum_{\ell=1}^{r}a_\ell z_\ell^n.
+}
+\]
+The background coefficients never enter this formula. The smooth packet has been removed by spectral projection rather than estimated jointly with the edges.
+
+\FigurePair{06_fourier_packet_separation}{The smooth band and the edge tail}{07_edge_moments}{The finite exponential moment sequence}{The shaded region contains the unknown smooth background. Every coefficient beyond that region belongs to the edge packet.}{Multiplication by \(2\pi\ii n\) converts the \(1/n\) Fourier tail into a finite exponential sum.}
+
+\section{The operator interpretation}
+Let \(P_{>K}\) select Fourier modes with \(n>K\). Let \(D\) denote distributional differentiation. The complete edge-analysis map is
+\[
+f
+\longmapsto
+P_{>K}Df.
+\]
+On the declared class,
+\[
+P_{>K}Df=P_{>K}Dj.
+\]
+This is a projector-resolved operation. The smooth component is killed because it belongs to a known invariant spectral packet. The remaining object is not the edge function itself. It is its finite innovation measure.
+
+\chapter{The Hankel packet and its rank}
+\section{Hankel construction}
+Fix
+\[
+n_0=K+1.
+\]
+For a positive integer \(q\), form the \(q\times q\) Hankel matrix
+\[
+H_q
+=
+\bigl(m_{n_0+p+q'}\bigr)_{p,q'=0}^{q-1}.
+\]
+When the true number of active jumps is \(r\), define the rectangular Vandermonde matrix
+\[
+V_q
+=
+\begin{pmatrix}
+1&\cdots&1\\
+z_1&\cdots&z_r\\
+\vdots&&\vdots\\
+z_1^{q-1}&\cdots&z_r^{q-1}
+\end{pmatrix}.
+\]
+Then
+\[
+\boxed{
+H_q
+=
+V_q
+\diag(a_1z_1^{n_0},\ldots,a_rz_r^{n_0})
+V_q^{\mathsf T}.
+}
+\]
+
+\begin{proof}
+The \((p,q')\) entry of the right side is
+\[
+\sum_{\ell=1}^{r}
+z_\ell^p
+(a_\ell z_\ell^{n_0})
+z_\ell^{q'}
+=
+\sum_{\ell=1}^{r}
+a_\ell z_\ell^{n_0+p+q'}
+=
+m_{n_0+p+q'}.
+\]
+\end{proof}
+
+\FigureWide{08_hankel_packet}{A representative Hankel packet.}{The matrix is built from consecutive moments. Its factorization contains the unknown edge locations in the Vandermonde factors and the jump amplitudes in the diagonal factor.}
+
+\section{Unknown number of edges}
+\begin{theorem}[Hankel rank equals the number of active jumps]
+Assume the jump locations are distinct and the jump amplitudes are nonzero. If \(q\ge r\), then
+\[
+\boxed{
+\rank H_q=r.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The matrix \(V_q\) has full column rank because the nodes \(z_\ell\) are distinct. The diagonal matrix is invertible because every \(a_\ell\) and \(z_\ell\) is nonzero. The transpose \(V_q^{\mathsf T}\) has full row rank. Since \(V_q\) is injective on \(\C^r\), multiplication on the left cannot reduce the rank of the full-row-rank product of the remaining two factors. Therefore the product has rank \(r\).
+\end{proof}
+
+\begin{corollary}[Recovery of an unknown edge count]
+Suppose only an upper bound \(L\) is known. Construct \(H_L\) from \(2L-1\) consecutive moments. In exact arithmetic,
+\[
+r=\rank H_L.
+\]
+\end{corollary}
+
+\FigureWide{09_unknown_order_rank}{The unknown number of edges appears as a rank break.}{The representative example was supplied with an upper bound of six. The Hankel matrix has exactly four significant singular values because the signal has four active jumps.}
+
+\chapter{The annihilating polynomial}
+\section{Construction}
+Define the monic polynomial
+\[
+\boxed{
+Q(z)
+=
+\prod_{\ell=1}^{r}(z-z_\ell)
+=
+q_0+q_1z+\cdots+q_{r-1}z^{r-1}+z^r.
+}
+\]
+Because \(Q(z_\ell)=0\),
+\[
+\begin{aligned}
+\sum_{k=0}^{r}q_km_{n+k}
+&=
+\sum_{k=0}^{r}q_k
+\sum_{\ell=1}^{r}a_\ell z_\ell^{n+k}\\
+&=
+\sum_{\ell=1}^{r}a_\ell z_\ell^n
+\sum_{k=0}^{r}q_kz_\ell^k\\
+&=
+\sum_{\ell=1}^{r}a_\ell z_\ell^nQ(z_\ell)\\
+&=0.
+\end{aligned}
+\]
+Thus the edge moments satisfy a linear recurrence of order \(r\).
+
+\section{Finite linear system}
+Using \(n=n_0,\ldots,n_0+r-1\), the recurrence gives
+\[
+\begin{pmatrix}
+m_{n_0}&m_{n_0+1}&\cdots&m_{n_0+r-1}\\
+m_{n_0+1}&m_{n_0+2}&\cdots&m_{n_0+r}\\
+\vdots&\vdots&&\vdots\\
+m_{n_0+r-1}&m_{n_0+r}&\cdots&m_{n_0+2r-2}
+\end{pmatrix}
+\begin{pmatrix}q_0\\q_1\\\vdots\\q_{r-1}\end{pmatrix}
+=
+-
+\begin{pmatrix}
+m_{n_0+r}\\m_{n_0+r+1}\\\vdots\\m_{n_0+2r-1}
+\end{pmatrix}.
+\]
+The coefficient matrix is \(H_r\), which is invertible by the rank theorem. Hence the annihilator is uniquely determined.
+
+\begin{theorem}[Exact location recovery]
+Under the hypotheses above, \(2r\) consecutive high-frequency moments determine \(Q\) uniquely. The roots of \(Q\) are exactly
+\[
+z_\ell=\e^{-\ii\tau_\ell}.
+\]
+Therefore
+\[
+\boxed{
+\tau_\ell=-\arg z_\ell\pmod{2\pi}
+}
+\]
+recovers every unknown edge location.
+\end{theorem}
+
+\begin{proof}
+The Hankel system has one solution because \(H_r\) is invertible. The true monic polynomial satisfies the system, so the computed polynomial equals the true polynomial. Its roots are the distinct values \(z_\ell\).
+\end{proof}
+
+\FigurePair{10_annihilator_roots}{Roots on the unit circle}{11_edge_location_recovery}{True and recovered edge positions}{The roots of the computed polynomial lie on the same points as the true edge nodes.}{The off-grid coordinates agree to roughly \(10^{-14}\) in the representative double-precision example.}
+
+\chapter{Recovering jump amplitudes and the edge packet}
+\section{Vandermonde solve}
+Once \(z_\ell\) are known, the first \(r\) moments give
+\[
+\begin{pmatrix}
+m_{n_0}\\
+m_{n_0+1}\\
+\vdots\\
+m_{n_0+r-1}
+\end{pmatrix}
+=
+\begin{pmatrix}
+z_1^{n_0}&\cdots&z_r^{n_0}\\
+z_1^{n_0+1}&\cdots&z_r^{n_0+1}\\
+\vdots&&\vdots\\
+z_1^{n_0+r-1}&\cdots&z_r^{n_0+r-1}
+\end{pmatrix}
+\begin{pmatrix}a_1\\a_2\\\vdots\\a_r\end{pmatrix}.
+\]
+This Vandermonde matrix is invertible because the nodes are distinct.
+
+\begin{theorem}[Exact jump-amplitude recovery]
+The recovered locations and any \(r\) consecutive moments determine the jump amplitudes uniquely.
+\end{theorem}
+
+\begin{proof}
+Factor the matrix as
+\[
+\begin{pmatrix}
+1&\cdots&1\\
+z_1&\cdots&z_r\\
+\vdots&&\vdots\\
+z_1^{r-1}&\cdots&z_r^{r-1}
+\end{pmatrix}
+\diag(z_1^{n_0},\ldots,z_r^{n_0}).
+\]
+Both factors are invertible.
+\end{proof}
+
+\FigureWide{12_jump_amplitudes}{Exact jump-amplitude recovery.}{The true and recovered bars overlap at plotting precision. The code uses all available moments in a least-squares solve, which agrees with the exact square system in the noise-free case.}
+
+\section{Periodic integration}
+Sort the locations so that
+\[
+0\le\tau_1<\cdots<\tau_r<2\pi.
+\]
+Let
+\[
+\ell_k=\tau_{k+1}-\tau_k,
+\qquad
+\tau_{r+1}=\tau_1+2\pi,
+\]
+and define cumulative levels
+\[
+c_k=\sum_{j=1}^{k}a_j.
+\]
+A piecewise-constant function with the correct derivative has value \(b+c_k\) on \([\tau_k,\tau_{k+1})\). The zero-mean normalization determines
+\[
+\boxed{
+b=-\frac{1}{2\pi}\sum_{k=1}^{r}\ell_kc_k.}
+\]
+This reconstructs the complete edge packet \(j\).
+
+\begin{remark}
+The derivative determines a periodic piecewise-constant function up to a constant. That constant is not an edge parameter. Assigning it to the smooth packet gives a canonical direct sum.
+\end{remark}
+
+\chapter{Recovering the smooth packet}
+For \(|n|\le K\), compute
+\[
+\boxed{
+\widehat s(n)
+=
+\widehat f(n)-\widehat j(n).
+}
+\]
+For \(|n|>K\), set \(\widehat s(n)=0\). Then
+\[
+s(x)=\sum_{|n|\le K}\widehat s(n)\e^{\ii nx}.
+\]
+Every background coefficient is therefore recovered by direct subtraction after the edge packet is known.
+
+\FigureWide{13_recovered_packets}{Recovered smooth, edge, and complete packets.}{The top row compares the true and recovered background. The middle row compares the edge packet. The bottom row shows complete synthesis. The dashed curves lie on the originals.}
+
+\chapter{The universal off-grid recovery theorem}
+\begin{theorem}[Universal unknown-edge recovery in \(\EdgeClass\)]
+Fix upper bounds \(K\) and \(L\). Let \(f\in\EdgeClass\) have \(r\le L\) distinct active jumps. Assume the jump amplitudes are nonzero. Suppose the Fourier coefficients
+\[
+\widehat f(n)
+\]
+are known for
+\[
+-K\le n\le K
+\]
+and for the \(2L\) consecutive positive indices
+\[
+K+1,
+K+2,
+\ldots,
+K+2L.
+\]
+Then the following objects are determined uniquely and can be constructed by finite linear algebra.
+\begin{enumerate}
+\item The actual number of jumps \(r\).
+\item Every off-grid jump location \(\tau_\ell\).
+\item Every jump amplitude \(a_\ell\).
+\item The canonical zero-mean edge packet \(j\).
+\item Every background Fourier coefficient \(\widehat s(n)\).
+\item The complete signal \(f=s+j\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Form the high-frequency moments
+\[
+m_n=2\pi\ii n\widehat f(n).
+\]
+Since \(n>K\), these equal the edge moments. Build the \(L\times L\) Hankel matrix. Its rank is the true number \(r\). Use the leading \(r\times r\) Hankel system to recover the monic annihilating polynomial. Its distinct roots yield the locations. The Vandermonde system yields the jump amplitudes. Periodic integration with zero mean yields \(j\). Subtraction from the low Fourier modes yields \(s\). Their sum is \(f\).
+\end{proof}
+
+\begin{corollary}[Finite-rate measurement count]
+The high-frequency edge information requires \(2L\) complex Fourier coefficients. The smooth packet requires \(2K+1\) low-frequency coefficients. Thus the declared class is reconstructed from a number of coefficients that grows linearly in the number of edge and background degrees of freedom.
+\end{corollary}
+
+\FigurePair{28_measurement_count}{Measurement count}{17_exact_case_dashboard}{Four exact random examples}{The number of required Fourier coefficients grows linearly with the edge bound.}{Signals with two, four, six, and eight off-grid jumps were reconstructed at floating-point precision.}
+
+\section{Representative numerical values}
+For the four-edge case used throughout the figures,
+\[
+\max_\ell|\widehat\tau_\ell-\tau_\ell|_{\Torus}
+=
+4.66\times10^{-14},
+\]
+\[
+\max_\ell|\widehat a_\ell-a_\ell|
+=
+2.93\times10^{-13},
+\]
+and
+\[
+\norm{\widehat f-f}_{L^\infty(8192\text{ points})}
+=
+3.82\times10^{-14}.
+\]
+Across all four exact random cases, the largest location error was \(4.41\times10^{-13}\), the largest jump error was \(2.56\times10^{-12}\), and the largest reconstruction error was \(3.96\times10^{-13}\).
+
+\FigureWide{14_exact_reconstruction_residual}{The final reconstruction residual.}{The residual is numerical roundoff. Its shape reflects floating-point root and Vandermonde errors, not a missing edge packet.}
+
+\part{Gibbs-free synthesis after unknown-edge recovery}
+
+\chapter{Why exact edge recovery changes the reconstruction problem}
+\section{The raw Fourier route}
+A discontinuity has Fourier coefficients that decay only as \(1/|n|\). A raw partial sum therefore asks a globally smooth trigonometric polynomial to reproduce a jump. The Dirichlet kernel supplies the familiar oscillatory boundary layer. Increasing the cutoff narrows that layer, but it does not remove the limiting relative overshoot.
+
+For the recovered model
+\[
+f=s+j,
+\]
+the raw order-\(N\) Fourier reconstruction is
+\[
+S_Nf=S_Ns+S_Nj.
+\]
+When \(N\ge K\), the smooth term is already exact:
+\[
+S_Ns=s.
+\]
+The entire remaining error is therefore
+\[
+S_Nf-f=S_Nj-j.
+\]
+The Gibbs phenomenon is not spread throughout the model. It is carried by the edge packet.
+
+\section{The resolved synthesis route}
+Once the edge parameters are recovered, define
+\[
+\widehat j=\operatorname{Integrate}_{0}\left(
+\sum_{\ell=1}^{r}\widehat a_\ell\delta_{\widehat\tau_\ell}
+\right),
+\]
+where \(\operatorname{Integrate}_{0}\) denotes periodic integration with zero mean. Define the recovered smooth packet by
+\[
+\widehat s(x)
+=
+\sum_{|n|\le K}
+\left(
+\widehat f(n)-\widehat{\widehat j}(n)
+\right)
+\e^{\ii nx}.
+\]
+The final synthesis is
+\[
+\boxed{
+\widehat f_{\mathrm{resolved}}
+=
+\widehat s+\widehat j.
+}
+\]
+The edge is never sent through a finite global Fourier truncation. It is restored from its recovered jump data.
+
+\begin{theorem}[Gibbs-free exact synthesis]
+Under the hypotheses of the universal off-grid recovery theorem, the resolved reconstruction satisfies
+\[
+\widehat f_{\mathrm{resolved}}=f.
+\]
+In particular, the final signal has no Gibbs overshoot or undershoot.
+\end{theorem}
+
+\begin{proof}
+The recovery theorem gives the exact locations and amplitudes, hence \(\widehat j=j\). It also gives every low-frequency background coefficient, hence \(\widehat s=s\). Therefore
+\[
+\widehat f_{\mathrm{resolved}}
+=\widehat s+\widehat j
+=s+j=f.
+\]
+The conclusion concerns the synthesized object. A plot of the truncated Fourier series may still show Gibbs ringing, but that approximation is no longer the reconstruction used by the model.
+\end{proof}
+
+\FigurePair{15_gibbs_free_synthesis}{Raw and resolved synthesis}{16_edge_zoom}{Boundary detail}{The raw Fourier reconstruction rings because the discontinuity remains inside the global spectral packet. The resolved reconstruction restores the edge directly.}{The magnified boundary shows that the resolved curve follows the declared one-sided values while the raw partial sum overshoots and oscillates.}
+
+\section{Error decomposition when the edge is only approximate}
+The exact theorem has a useful perturbative form. Let
+\[
+\widehat f=\widehat s+\widehat j.
+\]
+Then for any norm in which the two errors are defined,
+\[
+\boxed{
+\norm{f-\widehat f}
+\le
+\norm{s-\widehat s}
++
+\norm{j-\widehat j}.
+}
+\]
+For interval or finite-jump packets, the second term can be split into location and amplitude errors. If
+\[
+j=a\mathbf 1_{\Omega},
+\qquad
+\widehat j=\widehat a\mathbf 1_{\widehat\Omega},
+\]
+then for \(1\le p<\infty\),
+\[
+\boxed{
+\norm{j-\widehat j}_{L^p}
+\le
+|a-\widehat a|\,\mu(\Omega)^{1/p}
++
+|\widehat a|\,\mu(\Omega\triangle\widehat\Omega)^{1/p}.
+}
+\]
+This is the relevant distinction. A wrong edge packet does not mysteriously become exact. Its support and amplitude errors remain visible in the final residual.
+
+\chapter{The closed recovery algorithm}
+\begin{algorithm}[Unknown-edge recovery and resolved synthesis]
+Given a bandlimit bound \(K\), an edge-count bound \(L\), and Fourier data at the required indices, perform the following steps.
+\begin{enumerate}
+\item Form the high-frequency derivative moments
+\[
+m_n=2\pi\ii n\widehat f(n),
+\qquad n=K+1,\ldots,K+2L.
+\]
+\item Build the \(L\times L\) Hankel matrix from consecutive moments.
+\item Determine the active jump count from its exact rank, or from a declared singular-value threshold in noisy data.
+\item Solve the square Hankel recurrence for the monic annihilating polynomial.
+\item Find its roots and map them to circular locations by
+\[
+\tau_\ell=-\arg z_\ell\pmod{2\pi}.
+\]
+\item Solve the Vandermonde system for the jump amplitudes.
+\item Integrate the recovered derivative packet with zero mean to obtain \(j\).
+\item Subtract the Fourier coefficients of \(j\) from the low modes of \(f\) to recover \(s\).
+\item Synthesize
+\[
+\widehat f=s+j.
+\]
+\item Report the recurrence residual, amplitude residual, root separation, condition numbers, and final reconstruction residual.
+\end{enumerate}
+\end{algorithm}
+
+The algorithm is finite. Its nonlinear step is polynomial root finding. Every other step is a matrix construction, a rank computation, a linear solve, or a direct synthesis formula.
+
+The full sequence is summarized in Figure~\ref{fig:01_closed_pipeline}. Every arrow in that diagram corresponds to a formula proved in this book.
+
+\part{Stability, conditioning, and the exact boundary}
+
+\chapter{Why exact recovery is not the same as uniform stability}
+\section{Fourier noise becomes derivative-moment noise}
+Suppose the observed high Fourier coefficients are
+\[
+\widehat f_{\eta}(n)=\widehat f(n)+\eta_n.
+\]
+The derivative moments become
+\[
+m_n^{\eta}
+=2\pi\ii n\widehat f_{\eta}(n)
+=m_n+2\pi\ii n\eta_n.
+\]
+Thus differentiation amplifies coefficient noise by a factor proportional to \(|n|\). High modes remove the bandlimited background, but they are not free of numerical cost.
+
+\section{Hankel perturbation}
+Let
+\[
+H=H(m),
+\qquad
+H_{\eta}=H(m+e)=H+E.
+\]
+Weyl's inequality gives
+\[
+|\sigma_k(H_{\eta})-\sigma_k(H)|
+\le
+\norm{E}_2.
+\]
+If the true Hankel rank is \(r\), then a sufficient rank-identification condition is
+\[
+\boxed{
+\norm{E}_2<\frac12\sigma_r(H).
+}
+\]
+Under this condition, the first \(r\) singular values remain separated from the zero tail by a nonzero gap. The rank threshold is therefore tied to the smallest active singular value, not chosen independently of the signal geometry.
+
+\section{Root localization by Rouché's theorem}
+The annihilator has the form
+\[
+Q(z)=\prod_{\ell=1}^{r}(z-z_\ell),
+\]
+with distinct roots on the unit circle. Let
+\[
+\widetilde Q(z)=Q(z)+E_Q(z)
+\]
+be the polynomial obtained from perturbed moments.
+
+Choose \(0<\rho<\Delta/2\), where
+\[
+\Delta=\min_{j\ne k}|z_j-z_k|.
+\]
+The disks
+\[
+D_j=\{z:|z-z_j|<\rho\}
+\]
+are disjoint. Define
+\[
+m_j(\rho)=\min_{|z-z_j|=\rho}|Q(z)|.
+\]
+
+\begin{theorem}[Deterministic root-disk certificate]
+If
+\[
+\sup_{|z-z_j|=\rho}|E_Q(z)|<m_j(\rho)
+\]
+for every \(j\), then \(\widetilde Q\) has exactly one root in each disk \(D_j\). Hence the recovered roots can be matched to the true roots with error less than \(\rho\).
+\end{theorem}
+
+\begin{proof}
+On the boundary of \(D_j\), the perturbation has smaller modulus than \(Q\). Rouché's theorem gives the same number of zeros inside the disk. Since \(Q\) has exactly one simple zero there, so does \(\widetilde Q\).
+\end{proof}
+
+If
+\[
+E_Q(z)=\sum_{k=0}^{r-1}\delta q_k z^k,
+\]
+then a computable sufficient condition is
+\[
+\sum_{k=0}^{r-1}|\delta q_k|(1+\rho)^k
+<
+\min_j m_j(\rho).
+\]
+The condition becomes more demanding as roots approach each other because the boundary minima shrink.
+
+\FigureWide{26_root_stability_disks}{Certified root neighborhoods.}{Disjoint disks around simple annihilator roots provide a concrete local stability certificate. The disks cannot remain uniformly large when edge locations collide.}
+
+\section{Amplitude stability}
+After location recovery, the amplitudes solve
+\[
+Va=m.
+\]
+For a square nonsingular Vandermonde matrix, the first-order perturbation scale is controlled by
+\[
+\kappa(V)=\norm{V}_2\norm{V^{-1}}_2.
+\]
+More precisely, if \(V\) is fixed and only the moments are perturbed, then
+\[
+\norm{\widetilde a-a}_2
+\le
+\norm{V^{\dagger}}_2\norm{\widetilde m-m}_2.
+\]
+When the locations are also perturbed, an additional matrix perturbation term appears. Both effects worsen as the Vandermonde columns become nearly dependent.
+
+\chapter{Collision is the unavoidable hard boundary}
+Consider two opposite jumps separated by \(\delta\):
+\[
+D j_{\delta}
+=
+\delta_0-\delta_{\delta}.
+\]
+Their moment is
+\[
+m_n(\delta)=1-\e^{-\ii n\delta}.
+\]
+For fixed \(n\),
+\[
+|m_n(\delta)|
+=2\left|\sin\frac{n\delta}{2}\right|
+\le |n|\delta.
+\]
+Thus every finite block of moments tends to zero with \(\delta\), even though the jump pair remains nonzero for every \(\delta>0\). This rules out a uniform inverse Lipschitz constant over all separations.
+
+\begin{theorem}[No separation-free stability]
+Fix finitely many Fourier indices. There is no constant \(C\) such that every two-jump periodic edge packet obeys
+\[
+\dist(\text{edge parameters},0)
+\le
+C\norm{\text{measured moments}}.
+\]
+\end{theorem}
+
+\begin{proof}
+Use the opposite-jump family above. The parameter vector retains two nonzero unit jumps while the finite moment vector tends to zero as \(\delta\to0\).
+\end{proof}
+
+The numerical collision study appears in Figure~\ref{fig:22_collision_conditioning}, while the exact moment-collapse witness appears in Figure~\ref{fig:23_no_uniform_stability}.
+
+\chapter{Finite noise experiments}
+The implementation studies four minimum-separation regimes and seven Fourier-noise levels. Each table entry is based on repeated deterministic fixed-seed trials. A run is counted as successful when the recovered order is correct and every matched location lies within the declared tolerance.
+
+\FigurePair{20_noise_separation_heatmap}{Recovery frequency}{21_noise_location_error}{Location error}{Larger separation supports a wider stable noise range. The exact zero-noise theorem succeeds in every tested case.}{The median location error rises with the noise level and grows faster when the edge geometry is less separated.}
+
+\begin{longtable}{rrrrr}
+\caption{Selected rows from the noise and separation experiment.}\label{tab:noise-selected}\\
+\toprule
+Min. sep. & Noise & Success & Median location & Median RMSE\\
+\midrule
+\endfirsthead
+\toprule
+Min. sep. & Noise & Success & Median location & Median RMSE\\
+\midrule
+\endhead
+0.22 & \(10^{-8}\) & 1.000 & \(9.35\times10^{-6}\) & \(2.00\times10^{-6}\)\\
+0.22 & \(10^{-6}\) & 0.875 & \(5.10\times10^{-4}\) & \(1.33\times10^{-4}\)\\
+0.22 & \(10^{-4}\) & 0.3125 & \(6.34\times10^{-2}\) & \(7.49\times10^{-2}\)\\
+0.35 & \(10^{-6}\) & 1.000 & \(2.10\times10^{-4}\) & \(1.37\times10^{-4}\)\\
+0.55 & \(10^{-6}\) & 1.000 & \(8.45\times10^{-5}\) & \(2.49\times10^{-5}\)\\
+0.80 & \(10^{-6}\) & 1.000 & \(6.45\times10^{-5}\) & \(1.53\times10^{-5}\)\\
+0.80 & \(10^{-4}\) & 0.65625 & \(9.20\times10^{-3}\) & \(3.38\times10^{-2}\)\\
+\bottomrule
+\end{longtable}
+
+The experiment is evidence about the stated implementation and parameter range. It does not replace a probabilistic minimax theorem. The deterministic root-disk and singular-value certificates explain the observed transition.
+
+\part{Extensions of the same recovery law}
+
+\chapter{Several channels with shared edge locations}
+Suppose \(C\) signals share the same edge locations but have channel-dependent jump amplitudes:
+\[
+m_n^{(c)}
+=
+\sum_{\ell=1}^{r}a_{c\ell}z_\ell^n.
+\]
+Every channel is annihilated by the same polynomial
+\[
+Q(z)=\prod_{\ell=1}^{r}(z-z_\ell).
+\]
+Stack the channel Hankel equations into one linear system.
+
+\begin{theorem}[Shared-edge multichannel recovery]
+If the stacked recurrence matrix has column rank \(r\), then the common annihilator is unique. Its roots recover every shared location. Channelwise Vandermonde solves then recover the amplitudes in each channel.
+\end{theorem}
+
+\begin{proof}
+Each channel supplies linear equations for the same recurrence coefficients. Full column rank makes the stacked solution unique. The root and amplitude steps are then the same as in the scalar theorem.
+\end{proof}
+
+A location may be weak or absent in one channel and still be recoverable if it is visible in the stacked system. This is one reason multichannel data can be more stable than a single trace.
+
+\FigureWide{24_multichannel_shared_edges}{Two channels with one shared edge geometry.}{The two signals have different jump amplitudes but the same locations. Stacked Hankel equations recover the common annihilator with a location error of less than \(10^{-15}\) in the displayed example.}
+
+\chapter{Piecewise-polynomial packets}
+Let \(u\) be periodic and piecewise polynomial of degree at most \(d\), with breakpoints \(\tau_\ell\). Its \((d+1)\)-st distributional derivative is supported at those breakpoints:
+\[
+D^{d+1}u
+=
+\sum_{\ell=1}^{r}
+\sum_{q=0}^{d}
+ b_{\ell q}\,\delta_{\tau_\ell}^{(q)}.
+\]
+Consequently, the Fourier-domain derivative moments have the exponential-polynomial form
+\[
+m_n
+=
+\sum_{\ell=1}^{r}p_\ell(n)z_\ell^n,
+\]
+where each \(p_\ell\) has degree at most \(d\).
+
+\begin{theorem}[Confluent annihilation]
+Every sequence of the form above is annihilated by
+\[
+\boxed{
+Q(E)
+=
+\prod_{\ell=1}^{r}(E-z_\ell)^{d+1},
+}
+\]
+where \(E\) is the forward-shift operator on the moment index.
+\end{theorem}
+
+\begin{proof}
+For one term \(n^qz^n\), the operator \(E-z\) lowers the polynomial degree by one while retaining the exponential factor. Applying it \(q+1\) times gives zero. The product over all locations annihilates every term.
+\end{proof}
+
+The piecewise-constant result is exactly the case \(d=0\). In the polynomial case the roots have multiplicity \(d+1\), so the annihilator order grows to \(r(d+1)\). Recovery then uses confluent Vandermonde systems.
+
+\FigureWide{25_piecewise_polynomial_extension}{From jumps to higher-order innovations.}{Differentiation converts each polynomial segment model into a finite collection of point-supported derivative packets. The annihilator retains the same locations with repeated roots.}
+
+\chapter{Two-dimensional finite dictionaries}
+The finite residualized-secant theorem does not depend on dimension. Let \(B\) span a smooth image background and let the columns of \(D\) be candidate geometric edge masks. Exact sparse recovery is governed by
+\[
+\Ker((I-P_B)D)\cap\{h:\norm{h}_0\le2s\}=\{0\}.
+\]
+
+The implementation uses a small two-dimensional image with a smooth background and one unknown rectangle selected from a complete finite rectangle library. Exhaustive profile least squares recovers the exact rectangle
+\[
+(\text{top},\text{left},\text{height},\text{width})
+=(6,8,5,6)
+\]
+and its amplitude, with zero residual to numerical precision.
+
+The complete two-dimensional reconstruction is shown in Figure~\ref{fig:35_two_dimensional_rectangle}.
+
+\begin{boundary}[Continuous two-dimensional curves]
+This rectangle calculation does not solve arbitrary continuous two-dimensional edge recovery. A continuous theorem requires a geometric edge model, enough Fourier samples, and a uniqueness condition. One established route models the edge set as the zero set of a trigonometric polynomial and derives a two-dimensional annihilation relation. The present work keeps that larger problem separate from the proved finite dictionary theorem.
+\end{boundary}
+
+\part{Failure modes, complexity, and implementation}
+
+\chapter{Two ways the exact theorem can be used incorrectly}
+\section{Too few moments}
+An order-\(r\) annihilator contains \(r\) unknown recurrence coefficients. The square recurrence solve needs at least \(2r\) consecutive moments in the direct Prony construction used here. With too few moments, different edge configurations can satisfy the same incomplete data.
+
+\FigureWide{29_too_few_moments}{The moment-count boundary.}{Below the finite-rate count, the recurrence system is underdetermined. Exact root recovery is then not a theorem, even when a numerical routine returns a polynomial.}
+
+\section{An invalid background bandlimit}
+The formula
+\[
+m_n=2\pi\ii n\widehat f(n)
+\]
+is an edge-only moment only when \(|n|>K\). Starting inside the true background band contaminates the Hankel packet with smooth Fourier content.
+
+\FigureWide{30_bandlimit_boundary}{The declared bandlimit matters.}{When the high-frequency block begins too early, the background has not vanished. The moment sequence no longer has the assumed finite exponential form.}
+
+\section{Model mismatch}
+Other sources of mismatch include:
+\begin{itemize}
+\item a background that is not exactly bandlimited
+\item more jumps than the supplied upper bound
+\item repeated or nearly colliding jump locations
+\item a non-piecewise-constant edge packet treated as piecewise constant
+\item Fourier coefficients computed under a different normalization
+\item nonperiodic boundary data used without a boundary model
+\end{itemize}
+Each mismatch appears in one of the internal certificates: rank tail, recurrence residual, root modulus, amplitude residual, or final reconstruction residual.
+
+\chapter{Computational cost}
+For known order \(r\), the direct implementation performs:
+\begin{itemize}
+\item an \(r\times r\) Hankel solve
+\item a degree-\(r\) polynomial root computation
+\item a least-squares Vandermonde solve with \(2L\) rows
+\item direct Fourier and edge synthesis
+\end{itemize}
+The dense algebraic cost is dominated by cubic operations in \(r\). The measurement count is linear in \(K+L\). This distinction matters. The model is sample-efficient because its innovation rate is finite, but a naive dense solver is not claimed to be optimal for large \(r\).
+
+\FigureWide{27_runtime_scaling}{Measured direct runtime.}{The measured CPU time remains below one millisecond through order twelve in the supplied environment. This is a small implementation benchmark, not an asymptotic proof. The coefficient count is shown separately in Figure~\ref{fig:28_measurement_count}.}
+
+\begin{longtable}{rr}
+\caption{Measured direct recovery time.}\label{tab:runtime}\\
+\toprule
+Edge order & Median seconds\\
+\midrule
+\endfirsthead
+\toprule
+Edge order & Median seconds\\
+\midrule
+\endhead
+2 & 0.000164\\
+4 & 0.000213\\
+6 & 0.000231\\
+8 & 0.000275\\
+10 & 0.000342\\
+12 & 0.000425\\
+\bottomrule
+\end{longtable}
+
+\chapter{A symbolic four-edge calculation}
+Take the four roots
+\[
+z_1=1,
+\qquad
+z_2=\ii,
+\qquad
+z_3=-1,
+\qquad
+z_4=-\ii.
+\]
+Their annihilator is
+\[
+\boxed{
+Q(z)
+=(z-1)(z-\ii)(z+1)(z+\ii)
+=z^4-1.
+}
+\]
+Choose nonzero jump weights summing to zero. The resulting moment sequence satisfies
+\[
+m_{n+4}-m_n=0.
+\]
+The exact symbolic Hankel determinant generated by the code is
+\[
+\boxed{6144},
+\]
+so the order-four recurrence system is nonsingular. This calculation checks the root, recurrence, and rank conventions without floating-point arithmetic.
+
+\chapter{Verification ledger}
+The single implementation performs nineteen named checks. They are not used as substitutes for the proofs. They verify that the displayed formulas and the source code agree.
+
+\begin{longtable}{L{0.43\textwidth}L{0.12\textwidth}L{0.35\textwidth}}
+\caption{Complete computational check ledger.}\label{tab:tests}\\
+\toprule
+Check & Result & Recorded detail\\
+\midrule
+\endfirsthead
+\toprule
+Check & Result & Recorded detail\\
+\midrule
+\endhead
+Symbolic annihilator & pass & \(z^4-1\)\\
+Distributional Fourier identity & pass & residual \(4.97\times10^{-16}\)\\
+Unknown order & pass & true order and recovered order both four\\
+Off-grid locations & pass & maximum error \(4.66\times10^{-14}\)\\
+Jump amplitudes & pass & maximum error \(2.93\times10^{-13}\)\\
+Annihilating recurrence & pass & residual \(6.17\times10^{-14}\)\\
+Vandermonde amplitude solve & pass & residual \(3.35\times10^{-13}\)\\
+Full signal reconstruction & pass & error \(3.82\times10^{-14}\)\\
+Gibbs-free synthesis & pass & raw Fourier RMSE \(2.57\times10^{-1}\)\\
+Four exact random cases & pass & orders two, four, six, and eight\\
+Finite dictionary support & pass & recovered support \(\{1,5\}\)\\
+Finite dictionary synthesis & pass & residual \(1.21\times10^{-15}\)\\
+Restricted separation & pass & \(\gamma_4=0.5116895\)\\
+Finite dictionary stability & pass & error below deterministic bound\\
+Shared multichannel edges & pass & location error \(8.88\times10^{-16}\)\\
+Piecewise-polynomial recurrence & pass & residual \(1.59\times10^{-14}\)\\
+Finite-sampling impossibility witness & pass & hidden interval between sample points\\
+Collision instability & pass & moment norm shrinks with separation\\
+Two-dimensional rectangle & pass & exact support and amplitude\\
+\bottomrule
+\end{longtable}
+
+\FigureWide{31_verification_dashboard}{The complete finite verification dashboard.}{Every check is tied to a theorem, a boundary example, or a stated implementation contract.}
+
+\chapter{How the pieces depend on one another}
+\FigureWide{32_proof_dependency_map}{Proof dependency map.}{The positive theorem begins only after the impossibility results define the model boundary. The final synthesis depends on successful location, amplitude, edge, and background recovery.}
+
+\FigureWide{33_claim_boundary}{What is proved and what remains outside the theorem.}{The green region contains exact finite theorems. The orange region contains local stability conditions and controlled experiments. Arbitrary model-free recovery and arbitrary continuous two-dimensional curves remain outside the proved scope.}
+
+\FigureWide{34_summary_wheel}{The unknown-edge recovery wheel.}{The full loop is measure, project, differentiate, form moments, build the Hankel packet, annihilate, recover geometry, reconstruct packets, and synthesize. The residual returns the process to model diagnosis when an assumption fails.}
+
+\part{Relation to established finite-rate recovery}
+
+\chapter{What is classical and what is organized here}
+Annihilating filters, Prony-type recovery, and finite-rate-of-innovation sampling are established ideas. Vetterli, Marziliano, and Blu proved sampling and reconstruction results for signals with a finite rate of innovation, including Dirac streams, nonuniform splines, and piecewise polynomials. Dragotti, Vetterli, and Blu developed compact-support sampling kernels and local reconstruction methods. Candès and Fernandez-Granda proved exact and stable super-resolution results for separated point sources using total-variation minimization. Ongie and Jacob developed off-grid recovery for two-dimensional piecewise-constant images whose edge sets lie on trigonometric curves.
+
+The contribution of this document is narrower and explicit. It places the recovery chain inside the projector-resolved calculus, proves the impossibility boundary before stating a universal claim, joins finite dictionary and off-grid recovery in one language, and carries the recovered edge into a Gibbs-free synthesis certificate. It does not claim invention of Prony's method or finite-rate-of-innovation sampling.
+
+\chapter{The strongest defensible conclusion}
+There is no model-free solution to universal unknown-edge recovery. There is, however, an exact finite solution for every member of a broad declared class:
+\[
+\boxed{
+\text{bandlimited periodic background}
++
+\text{finitely many off-grid piecewise-constant jumps}.
+}
+\]
+Within that class, the unknown edge count, locations, amplitudes, edge packet, background packet, and complete signal are determined by finitely many Fourier coefficients.
+
+The result is universal over the class because the algorithm does not know the individual signal parameters in advance. It uses only the bounds \(K\) and \(L\). The theorem is not universal over arbitrary functions, arbitrary measurements, or arbitrarily colliding noisy edges.
+
+The central reconstruction identity is
+\[
+\boxed{
+\widehat f
+=
+\widehat s+\widehat j
+=f.
+}
+\]
+This is also the exact answer to the Gibbs problem in the declared model. The global Fourier basis is used where it is exact. The recovered singular packet is synthesized in its own coordinate. Nothing is smoothed across the jump, and no overshoot is introduced into the final reconstruction.
+
+\appendix
+
+\chapter{Detailed exact-recovery table}
+\begin{longtable}{rrrrrrrr}
+\caption{Exact off-grid recovery across four random cases.}\label{tab:exact-cases}\\
+\toprule
+Case & \(K\) & True edges & Recovered & Location error & Jump error & Reconstruction error & \(\kappa(H)\)\\
+\midrule
+\endfirsthead
+\toprule
+Case & \(K\) & True edges & Recovered & Location error & Jump error & Reconstruction error & \(\kappa(H)\)\\
+\midrule
+\endhead
+1 & 3 & 2 & 2 & \(1.78\times10^{-15}\) & \(1.02\times10^{-15}\) & \(1.33\times10^{-15}\) & 1.25\\
+2 & 4 & 4 & 4 & \(4.66\times10^{-14}\) & \(2.93\times10^{-13}\) & \(3.82\times10^{-14}\) & 111.64\\
+3 & 5 & 6 & 6 & \(3.11\times10^{-15}\) & \(1.34\times10^{-14}\) & \(2.33\times10^{-15}\) & 18.79\\
+4 & 6 & 8 & 8 & \(4.41\times10^{-13}\) & \(2.56\times10^{-12}\) & \(3.96\times10^{-13}\) & 300.16\\
+\bottomrule
+\end{longtable}
+
+\chapter{Notation and implementation map}
+\begin{longtable}{L{0.32\textwidth}L{0.57\textwidth}}
+\toprule
+Symbol or function & Meaning\\
+\midrule
+\endfirsthead
+\toprule
+Symbol or function & Meaning\\
+\midrule
+\endhead
+\(\Torus\) & The periodic coordinate domain \(\R/(2\pi\Z)\).\\
+\(\mathcal T_K\) & Real trigonometric polynomials of degree at most \(K\).\\
+\(\EdgeClass\) & Signals with a degree-\(K\) background and at most \(L\) active jumps.\\
+\(D j\) & Distributional derivative edge packet.\\
+\(m_n\) & Edge moment \(2\pi\ii n\widehat f(n)\) above the background band.\\
+\(H_q\) & Hankel matrix formed from consecutive moments.\\
+\(Q\) & Monic annihilating polynomial.\\
+\(z_\ell\) & Unit-circle root \(\e^{-\ii\tau_\ell}\).\\
+\(V\) & Vandermonde matrix for amplitude recovery.\\
+\(\PS\) & Orthogonal projector onto a finite background subspace.\\
+\(\RS\) & Residual projector \(I-\PS\).\\
+\nolinkurl{recover_unknown_edges} & Hankel rank, annihilator, roots, and amplitudes.\\
+\nolinkurl{reconstruct_background} & Low-mode subtraction after edge recovery.\\
+\nolinkurl{packet_resolved_reconstruction} & Exact separate synthesis of smooth and edge packets.\\
+\nolinkurl{exhaustive_sparse_recovery} & Finite dictionary profile search.\\
+\nolinkurl{recover_shared_edges_multichannel} & Stacked recurrence recovery for shared locations.\\
+\bottomrule
+\end{longtable}
+
+\chapter{Complete single-file implementation}
+The following source generates the figures, tables, experiments, test ledger, and machine-readable summary used in this book.
+
+\lstinputlisting{universal_unknown_edge_recovery.py}
+
+\chapter{Bibliographic note}
+\begin{thebibliography}{9}
+\bibitem{Vetterli2002}
+M. Vetterli, P. Marziliano, and T. Blu,
+``Sampling Signals with Finite Rate of Innovation,''
+\emph{IEEE Transactions on Signal Processing}, vol. 50, no. 6, pp. 1417--1428, 2002.
+DOI: 10.1109/TSP.2002.1003065.
+
+\bibitem{Dragotti2007}
+P. L. Dragotti, M. Vetterli, and T. Blu,
+``Sampling Moments and Reconstructing Signals of Finite Rate of Innovation: Shannon Meets Strang--Fix,''
+\emph{IEEE Transactions on Signal Processing}, vol. 55, no. 5, pp. 1741--1757, 2007.
+DOI: 10.1109/TSP.2006.890907.
+
+\bibitem{Candes2014}
+E. J. Cand\`es and C. Fernandez-Granda,
+``Towards a Mathematical Theory of Super-Resolution,''
+\emph{Communications on Pure and Applied Mathematics}, vol. 67, no. 6, pp. 906--956, 2014.
+
+\bibitem{Ongie2016}
+G. Ongie and M. Jacob,
+``Off-the-Grid Recovery of Piecewise Constant Images from Few Fourier Samples,''
+\emph{SIAM Journal on Imaging Sciences}, vol. 9, no. 3, pp. 1004--1041, 2016.
+DOI: 10.1137/15M1042280.
+\end{thebibliography}
+
+\chapter{Reproduction}
+From the source directory, run
+\begin{lstlisting}[language=bash,numbers=none]
+python universal_unknown_edge_recovery.py --out .
+pdflatex -interaction=nonstopmode Universal_Unknown_Edge_Recovery.tex
+pdflatex -interaction=nonstopmode Universal_Unknown_Edge_Recovery.tex
+\end{lstlisting}
+The Python file writes every figure, table, and numerical result before the manuscript is compiled.
+
+\end{document}

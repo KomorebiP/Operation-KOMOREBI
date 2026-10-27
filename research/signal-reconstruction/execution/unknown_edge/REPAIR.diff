@@ -1,0 +1,31 @@
+--- sources/unknown_edge/universal_unknown_edge_recovery.py
++++ execution/unknown_edge/universal_unknown_edge_recovery.py
+@@ -520,7 +520,16 @@
+ 
+     @property
+     def projector(self) -> Array:
+-        q, _ = np.linalg.qr(self.background)
++        # Rank-aware numerical orthogonal projection onto range(background).
++        # Full-column QR includes arbitrary extra directions when B is dependent.
++        B = self.background
++        if B.shape[1] == 0:
++            return np.zeros((B.shape[0], B.shape[0]), dtype=float)
++        u, singular, _ = np.linalg.svd(B, full_matrices=False)
++        if singular.size == 0:
++            return np.zeros((B.shape[0], B.shape[0]), dtype=float)
++        tolerance = np.finfo(float).eps * max(B.shape) * singular[0]
++        q = u[:, singular > tolerance]
+         return q @ q.T
+ 
+     @property
+@@ -537,6 +546,10 @@
+     max_support = min(sparsity, A.shape[1])
+     for size in range(1, max_support + 1):
+         for support in combinations(range(A.shape[1]), size):
++            # A wide support has a coefficient kernel, even when compact SVD
++            # returns only positive row-space singular values.
++            if size > A.shape[0]:
++                return 0.0
+             sigma = np.linalg.svd(A[:, support], compute_uv=False)
+             best = min(best, float(sigma[-1]))
+     return best

@@ -1,0 +1,1311 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.82in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx,float,booktabs,longtable,tabularx,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{listings}
+\usepackage{placeins}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.misc}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Muted}{HTML}{566573}
+\definecolor{Paper}{HTML}{FAFAF7}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Purple}{HTML}{6C5CE7}
+\definecolor{Green}{HTML}{6A994E}
+\definecolor{PaleBlue}{HTML}{E8F1F5}
+\definecolor{PaleTeal}{HTML}{E6F3F1}
+\definecolor{PaleOrange}{HTML}{FBF0E6}
+\definecolor{PaleMagenta}{HTML}{F4EAF1}
+
+\pagecolor{Paper}
+\color{Ink}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=Blue,
+  citecolor=Blue,
+  urlcolor=Blue,
+  pdftitle={Self-Calibrating Polyphase Fourier Reconstruction},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Unknown jump count, oracle-equivalent internal de-aliasing, rate-preserving edge recovery, and Gibbs-free synthesis},
+  pdfcreator={},pdfproducer={}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Self-Calibrating Polyphase Fourier Reconstruction}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\setlist[itemize]{leftmargin=1.35em,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.55em,itemsep=3pt,topsep=3pt}
+\graphicspath{{figures/}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Worked example}
+\newtheorem{certificate}[theorem]{Numerical certificate}
+\newtheorem{boundary}[theorem]{Boundary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\spanop}{span}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\T}{\mathbb T}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\widebar}[1]{\overline{#1}}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{Blue}\bfseries,
+  commentstyle=\color{Muted},
+  stringstyle=\color{Green!70!black},
+  numbers=left,
+  numberstyle=\tiny\color{Muted},
+  stepnumber=1,
+  numbersep=7pt,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{Muted!40},
+  xleftmargin=1.7em,
+  framexleftmargin=1.2em,
+  tabsize=4
+}
+
+\newcommand{\Callout}[2][PaleBlue]{%
+\begin{center}
+\colorbox{#1}{\parbox{0.93\linewidth}{\vspace{4pt}\small #2\vspace{4pt}}}
+\end{center}}
+
+\newcommand{\Figure}[3][0.92\linewidth]{%
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=#1]{#2}
+\caption{#3}
+\end{figure}}
+
+\title{\textbf{Self-Calibrating Polyphase Fourier Reconstruction}\\[4pt]
+\large Unknown Jump Count, Oracle-Equivalent Internal De-Aliasing, Rate-Preserving Edge Recovery, and Gibbs-Free Synthesis}
+\author{Komorebi P.}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Raw Fourier partial sums represent a discontinuity by a global trigonometric polynomial and therefore retain Gibbs oscillations. Exact algebraic methods can recover finite-rate edge parameters, while decimation can improve the conditioning and asymptotic accuracy of the underlying Prony system. Those gains come with two practical burdens. The number of active jumps may be unknown, and decimation replaces each edge phase $z_j$ by the aliased phase $u_j=z_j^N$, leaving $N$ possible roots. Existing exponential-analysis methods already show that shifted samples can remove this aliasing. The present paper carries that mechanism into piecewise-smooth Fourier reconstruction and proves a rate-preserving synthesis theorem.
+
+The method reorganizes high-frequency derivative moments into offset polyphase channels
+\[
+m_{qN+r}=\sum_{j=1}^{L} b_j z_j^r u_j^q+e_{qN+r}.
+\]
+A Hankel singular-value gap identifies the unknown jump count. A decimated Prony solve recovers the aliased nodes $u_j$. The coefficients across offsets form geometric progressions in $r$. Their phases give an internal estimate of $z_j$, which selects the correct root of $u_j$ without an externally supplied jump neighborhood. Several offsets also provide a closed-form phase fit and an a posteriori validation residual. Under a Fourier-tail assumption on the smooth background, a uniform Prony-conditioning hypothesis, and a branch-margin condition, the phase lift preserves the decimated method's one-order gain. If the aliased-node error is $O(N^{-p-1})$, the unaliased jump-location error is $O(N^{-p-2})$.
+
+The recovered singular packet is synthesized in its native coordinate. The smooth residual is reconstructed by a stable smooth-class operator. This replaces the persistent $O(1)$ Gibbs overshoot by explicit edge-parameter and smooth-tail errors. The paper proves exact recovery for a bandlimited control class, gives an explicit high-frequency budget of $3L_{\max}+1$ coefficients for unknown-order self-calibration, establishes a deterministic perturbation theorem for non-bandlimited backgrounds, extends the construction to higher jump jets, and proves a stable synthesis inequality. A single Python file generates every experiment, figure, table, and numerical certificate. The included implementation passes 31 named checks.
+\end{abstract}
+
+\Callout[PaleOrange]{\textbf{Claim boundary.} The shifted-channel de-aliasing identity is established exponential-analysis machinery. Decimated algebraic Fourier reconstruction, finite-rate innovation methods, and Gibbs-resolution methods also have substantial prior literatures. The mathematical contribution developed here is the rate-preserving integration of unknown-order detection, offset-channel branch selection, validation, and edge-native synthesis for a piecewise-smooth Fourier model. The paper does not claim separation-free recovery, arbitrary edge geometry, or a model-free violation of known stability barriers.}
+
+\clearpage
+\setcounter{tocdepth}{1}
+\begingroup
+\small
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+\clearpage
+
+\section{The problem that remains after exact unknown-edge recovery}
+
+The previous finite-rate recovery theorem answered an important question. If a periodic signal has a bandlimited smooth packet and a finite piecewise-constant edge packet, then a finite set of Fourier coefficients determines the edge count, locations, amplitudes, smooth packet, and complete signal. That theorem removes the known-edge assumption. It does not yet reach the most useful piecewise-smooth setting.
+
+Three difficulties remain.
+
+\begin{enumerate}
+\item The smooth background need not be bandlimited. Its high-frequency coefficients perturb the exact exponential moment system.
+\item A decimated Prony method recovers $u_j=z_j^N$ rather than $z_j$. Taking a principal root is wrong in general.
+\item The number of active jumps may be unknown, and a wrong model order can produce an apparently plausible reconstruction.
+\end{enumerate}
+
+The purpose of this paper is to close those three gaps in one finite architecture.
+
+\Figure{01_architecture.pdf}{The complete recovery chain. Every stage produces a mathematical object and a diagnostic quantity.}
+
+The problem is not to make the classical Fourier partial sum stop exhibiting Gibbs behavior. The problem is to infer the singular packet from the Fourier data, remove it before smooth reconstruction, and return it through an exact synthesis map.
+
+\section{Relation to the established literature}
+
+The relevant literature contains several mature lines of work.
+
+\begin{itemize}
+\item Fourier--Gegenbauer methods recover high accuracy on smooth subintervals after discontinuity information has been located.
+\item Eckhoff-type algebraic reconstruction turns high Fourier coefficients into nonlinear equations for jump parameters. Decimated equations attain the maximal asymptotic rate under stated smoothness and model assumptions.
+\item Finite-rate-of-innovation sampling and Prony methods recover sparse innovation parameters from moments or generalized samples.
+\item Shifted and decimated exponential analysis uses several sampling offsets to resolve aliasing, estimate model order, and validate recovered components.
+\item Super-resolution theory quantifies the instability created by closely spaced singularities.
+\end{itemize}
+
+The new theorem-facing object is the way these ingredients are joined. Decimation is used for accuracy. Offset polyphase channels are used for internal branch selection. Hankel gaps are used for self-calibration. Projector synthesis keeps the recovered singular packet out of the smooth global approximation.
+
+\Figure{24_literature_position.pdf}{A schematic comparison of capabilities. The table is not a priority claim. It records the specific combination developed in this paper.}
+
+\begin{boundary}[No contradiction with the general stability barrier]
+Stable recovery of arbitrary analytic nonperiodic functions from their first Fourier coefficients cannot converge faster than root-exponentially without instability. The present result concerns a nonlinear finite-rate singular model with separation, amplitude, and Fourier-tail assumptions. It proves algebraic parameter rates on that narrower class.
+\end{boundary}
+
+\Figure{25_stability_boundary.pdf}{The model class is narrower than the class covered by the general Fourier stability barrier.}
+
+\section{Signal class and Fourier convention}
+
+Work on the periodic torus $\T=\R/(2\pi\Z)$ with Fourier coefficients
+\[
+\widehat f(n)=\frac{1}{2\pi}\int_0^{2\pi}f(x)e^{-inx}\,dx.
+\]
+
+The signal is decomposed as
+\[
+\boxed{f=s+j.}
+\]
+
+The edge packet is periodic and piecewise constant. Its distributional derivative is
+\[
+Dj=\sum_{\ell=1}^{L}a_\ell\delta_{\tau_\ell},
+\qquad
+\sum_{\ell=1}^{L}a_\ell=0.
+\]
+Set
+\[
+z_\ell=e^{-i\tau_\ell}.
+\]
+For $n\ne0$,
+\[
+2\pi in\widehat j(n)=\sum_{\ell=1}^{L}a_\ell z_\ell^n.
+\]
+
+The smooth packet is not assumed bandlimited.
+
+\begin{assumption}[Fourier-tail class]
+For some integer $p\ge0$ and constant $C_s>0$,
+\[
+\boxed{\abs{\widehat s(n)}\le C_s(1+\abs n)^{-p-2}.}
+\]
+\end{assumption}
+
+Define the derivative moments
+\[
+\boxed{m_n=2\pi in\widehat f(n).}
+\]
+Then
+\[
+m_n=\sum_{\ell=1}^{L}a_\ell z_\ell^n+e_n,
+\qquad
+\abs{e_n}\le 2\pi C_s(1+\abs n)^{-p-1}.
+\]
+
+\Figure{02_signal_model.pdf}{The main numerical example uses a non-bandlimited analytic background and four off-grid jumps.}
+\Figure{03_fourier_tail.pdf}{The edge packet has a $1/n$ Fourier tail, while the analytic background decays much faster.}
+\Figure{04_derivative_moments.pdf}{Multiplication by $2\pi in$ converts the edge packet into an exponential moment sequence and leaves the smooth background as a decaying defect.}
+
+\section{Why decimation helps and why it aliases}
+
+Choose an integer decimation factor $N\ge2$, an initial block index $q_0\ge1$, and an offset $r$. Write
+\[
+n=(q_0+q)N+r.
+\]
+Then
+\[
+\begin{aligned}
+m_{(q_0+q)N+r}
+&=\sum_{\ell=1}^{L}a_\ell z_\ell^{(q_0+q)N+r}+e_{(q_0+q)N+r}\\
+&=\sum_{\ell=1}^{L}\underbrace{a_\ell z_\ell^r(z_\ell^N)^{q_0}}_{b_{\ell,r}}
+\underbrace{(z_\ell^N)^q}_{u_\ell^q}
++e_{(q_0+q)N+r}.
+\end{aligned}
+\]
+Thus every offset channel has the same aliased nodes
+\[
+\boxed{u_\ell=z_\ell^N}
+\]
+and different coefficients
+\[
+\boxed{b_{\ell,r}=a_\ell z_\ell^r u_\ell^{q_0}.}
+\]
+
+Decimation can separate phases that are close in the original coordinate. It also maps every $z_\ell$ to $z_\ell^N$, so one aliased node has $N$ possible roots. A root-selection mechanism is therefore part of the mathematics, not an implementation detail.
+
+\Figure{05_polyphase_lattice.pdf}{The high-frequency moments are split into residue channels.}
+\Figure{07_alias_geometry.pdf}{The original phases and their decimated images on the unit circle.}
+\Figure{21_principal_root_failure.pdf}{The principal complex root does not generally return the physical edge phase.}
+
+\section{Unknown jump count from a Hankel gap}
+
+For one offset channel, define the finite Hankel matrix
+\[
+H(y)=(y_{r+c})_{0\le r<R,\ 0\le c<C}.
+\]
+In the exact edge-only model,
+\[
+H_0=V_R\diag(b_1,\ldots,b_L)V_C^{\mathsf T},
+\]
+where the columns of $V_R$ and $V_C$ are powers of the distinct nodes $u_\ell$. Hence
+\[
+\rank H_0=L.
+\]
+
+\begin{theorem}[Exact order from Hankel rank]
+Assume the aliased nodes $u_1,\ldots,u_L$ are distinct and the coefficients $b_\ell$ are nonzero. If $R,C\ge L$, then
+\[
+\boxed{\rank H_0=L.}
+\]
+\end{theorem}
+
+\begin{proof}
+Both Vandermonde factors have full column rank, and the diagonal coefficient matrix is invertible. The rank of their product is therefore $L$.
+\end{proof}
+
+The non-bandlimited smooth packet perturbs the matrix.
+
+\begin{theorem}[Order recovery under a singular-value gap]
+Let
+\[
+H=H_0+E,
+\qquad
+\rank H_0=L.
+\]
+If
+\[
+\norm E_2<\frac12\sigma_L(H_0),
+\]
+then any threshold $t$ satisfying
+\[
+\norm E_2<t<\sigma_L(H_0)-\norm E_2
+\]
+selects exactly $L$ singular values of $H$.
+\end{theorem}
+
+\begin{proof}
+Weyl's singular-value perturbation inequality gives
+\[
+\sigma_L(H)\ge\sigma_L(H_0)-\norm E_2>t
+\]
+and
+\[
+\sigma_{L+1}(H)\le\norm E_2<t.
+\]
+The threshold therefore separates the signal rank from the defect tail.
+\end{proof}
+
+The implementation uses the largest adjacent singular-value ratio within a declared upper bound. That rule is a practical estimator. The theorem above states the exact condition that justifies a thresholded rank count.
+
+\Figure{06_hankel_rank.pdf}{The fourth singular value is separated from the smooth-tail floor by a large gap in the main example.}
+
+\section{Offset coefficients and internal phase recovery}
+
+Once the aliased nodes $u_\ell$ have been recovered, each offset channel is linear in its coefficients. Solving its Vandermonde system gives estimates of
+\[
+b_{\ell,r}=b_{\ell,0}z_\ell^r.
+\]
+The single-ratio identity
+\[
+\frac{b_{\ell,1}}{b_{\ell,0}}=z_\ell
+\]
+is the basic shifted-sample de-aliasing relation used in exponential analysis.
+
+The present implementation uses several offsets at once.
+
+\begin{definition}[Multi-offset phase estimator]
+Given coefficients $c_0,\ldots,c_R$, define
+\[
+S(c)=\sum_{r=0}^{R-1}\overline{c_r}c_{r+1}.
+\]
+If $S(c)\ne0$, set
+\[
+\boxed{\Phi(c)=\frac{S(c)}{\abs{S(c)}}.}
+\]
+\end{definition}
+
+\begin{theorem}[Exact multi-offset phase]
+If
+\[
+c_r=bz^r,
+\qquad
+b\ne0,
+\qquad
+\abs z=1,
+\]
+then
+\[
+\boxed{\Phi(c)=z.}
+\]
+\end{theorem}
+
+\begin{proof}
+Each adjacent product is
+\[
+\overline{c_r}c_{r+1}=\abs b^2z.
+\]
+Hence
+\[
+S(c)=R\abs b^2z,
+\]
+and normalization gives $z$.
+\end{proof}
+
+\begin{theorem}[Deterministic phase perturbation]
+Suppose
+\[
+c_r=bz^r+e_r,
+\qquad
+\abs z=1,
+\qquad
+\abs{e_r}\le\varepsilon.
+\]
+Let
+\[
+A=R\abs b^2,
+\qquad
+\delta=R(2\abs b\varepsilon+\varepsilon^2).
+\]
+If $\delta<A$, then $S(c)\ne0$ and
+\[
+\boxed{
+\abs{\Phi(c)-z}
+\le
+\frac{2\delta}{A}
+=
+\frac{4\varepsilon}{\abs b}
++2\left(\frac{\varepsilon}{\abs b}\right)^2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Write
+\[
+S(c)=A z+E.
+\]
+Expanding each adjacent product gives
+\[
+\abs E\le R(2\abs b\varepsilon+\varepsilon^2)=\delta.
+\]
+Since $\delta<A$, the perturbed sum is nonzero. For any nonzero $w$ and $v=Az$,
+\[
+\left|\frac{w}{\abs w}-z\right|
+\le
+\left|\frac{w}{\abs w}-\frac{w}{A}\right|
++
+\left|\frac{w-v}{A}\right|
+\le
+\frac{2\abs{w-v}}{A}.
+\]
+Substitute $w=S(c)$.
+\end{proof}
+
+The deterministic worst-case bound does not improve with the number of offsets because adversarial errors can align. Under independent centered coefficient errors, the averaged adjacent products reduce variance. The numerical experiment isolates that effect in coefficient space.
+
+\Figure{09_offset_coefficients.pdf}{Each recovered coefficient column follows a geometric phase progression across offsets.}
+\Figure{16_offset_averaging.pdf}{With independent coefficient perturbations, the multi-offset estimator becomes more accurate as additional offsets are included.}
+
+\section{A posteriori phase validation}
+
+The phase model can be checked directly.
+
+\begin{definition}[Offset recurrence residual]
+For a phase estimate $\widetilde z$, define
+\[
+\boxed{
+V(c,\widetilde z)
+=
+\frac{
+\left(\sum_{r=0}^{R-1}\abs{c_{r+1}-\widetilde zc_r}^2\right)^{1/2}
+}{
+\left(\sum_{r=0}^{R}\abs{c_r}^2\right)^{1/2}
+}.
+}
+\]
+\end{definition}
+
+\begin{proposition}[Exact validation]
+If $c_r=bz^r$ with $b\ne0$, then
+\[
+V(c,z)=0.
+\]
+Conversely, if $V(c,\widetilde z)=0$ and $c_0\ne0$, then
+\[
+c_r=c_0\widetilde z^r
+\]
+for every $r$.
+\end{proposition}
+
+\begin{proof}
+The forward statement is immediate. For the converse, zero residual gives
+\[
+c_{r+1}=\widetilde zc_r.
+\]
+Induction gives the geometric progression.
+\end{proof}
+
+This residual does not prove that the recovered component belongs to the physical signal. It proves that the offset data attached to that component are consistent with one phase. Combining it with the Hankel gap, the original-data residual, and agreement across decimations gives a stronger certificate portfolio.
+
+\Figure{10_validation_residual.pdf}{The main example has very small offset recurrence residuals.}
+\Figure{27_validation_heatmap.pdf}{The validation residual can help choose a decimation and offset count before accepting a reconstruction.}
+
+\section{Branch lifting from aliased nodes}
+
+Let $u=z^N$. An estimate $\widehat u$ determines $N$ candidate roots. The offset phase estimate identifies the correct branch.
+
+\begin{lemma}[Candidate separation]
+The $N$ roots of a nonzero complex number with fixed modulus are separated on their common circle by chord distance
+\[
+2r\sin\left(\frac\pi N\right),
+\]
+where $r$ is the root modulus.
+\end{lemma}
+
+\begin{theorem}[Branch-margin criterion]
+Let $\abs z=1$ and $u=z^N$. Normalize a nonzero aliased estimate by
+\[
+\bar u=\frac{\widehat u}{\abs{\widehat u}}.
+\]
+Among the $N$ roots of $\bar u$, let $\rho$ be the one corresponding continuously to $z$. Let $\widetilde z$ be a coarse phase estimate. If
+\[
+\boxed{
+\abs{\widetilde z-z}+\abs{\rho-z}
+<
+\sin\left(\frac\pi N\right),
+}
+\]
+then the root of $\bar u$ nearest to $\widetilde z$ is $\rho$.
+\end{theorem}
+
+\begin{proof}
+Every incorrect root is at least $2\sin(\pi/N)$ from $\rho$. The triangle inequality gives
+\[
+\abs{\widetilde z-\rho}
+\le
+\abs{\widetilde z-z}+\abs{z-\rho}
+<
+\sin(\pi/N).
+\]
+Every other root is farther than $\sin(\pi/N)$ from $\widetilde z$. Thus $\rho$ is the unique nearest root.
+\end{proof}
+
+\begin{lemma}[One-order root gain]
+Let $\abs u=1$, let $\bar u$ be a unit-modulus perturbation, and let $\rho$ be the corresponding branch of the $N$th root. If
+\[
+\abs{\bar u-u}\le\eta<2,
+\]
+then
+\[
+\boxed{
+\abs{\rho-z}
+\le
+2\sin\left(
+\frac{1}{N}\arcsin\frac\eta2
+\right)
+\le
+\frac{2}{N}\arcsin\frac\eta2.
+}
+\]
+\end{lemma}
+
+\begin{proof}
+The angular perturbation of $u$ is at most $2\arcsin(\eta/2)$. Taking the corresponding $N$th root divides that angular perturbation by $N$. Convert the result back to chord distance.
+\end{proof}
+
+\Figure{08_branch_selection.pdf}{The offset estimate selects one root from the decimated candidate set.}
+\Figure{22_branch_margin.pdf}{The sufficient branch condition separates coarse phase accuracy from aliased-root accuracy.}
+
+\section{Rate-preserving polyphase lifting}
+
+The central rate statement is now elementary once the decimated solver and offset coefficient estimates are controlled.
+
+\begin{theorem}[Rate-preserving lifting]
+Fix $p\ge0$. Suppose a selected decimation $N$ satisfies the following estimates for each edge:
+\[
+\abs{\widehat u-u}\le C_uN^{-p-1},
+\]
+\[
+\max_r\abs{\widehat b_r-b_r}\le C_bN^{-p-1},
+\]
+and
+\[
+\abs{b_0}\ge b_{\min}>0.
+\]
+Assume the branch-margin criterion holds for sufficiently large $N$. Then the lifted node estimate satisfies
+\[
+\boxed{
+\abs{\widehat z-z}=O(N^{-p-2}).
+}
+\]
+The corresponding location error satisfies the same order.
+\end{theorem}
+
+\begin{proof}
+The phase perturbation theorem gives
+\[
+\abs{\widetilde z-z}=O(N^{-p-1}).
+\]
+For $p\ge0$, this is eventually smaller than the candidate spacing scale $N^{-1}$ whenever the constants and selected decimation satisfy the branch margin. The correct branch is therefore selected. The one-order root lemma then gives
+\[
+\abs{\widehat z-z}
+\le
+\frac{C}{N}\abs{\widehat u-u}
+=O(N^{-p-2}).
+\]
+On the unit circle, angular and chord errors are locally equivalent.
+\end{proof}
+
+\begin{corollary}[Oracle-equivalent branch selection]
+Under the branch-margin hypothesis, the root selected by the offset phase is exactly the root that would be selected by an oracle supplying the correct jump neighborhood. Therefore the self-calibrated estimator inherits every location-error estimate proved for that oracle branch.
+\end{corollary}
+
+\begin{proof}
+The oracle and the offset estimator both select the unique candidate root lying inside the branch-margin neighborhood of the true phase. Uniqueness forces the two selected roots to coincide.
+\end{proof}
+
+This theorem is a lifting result. It does not replace the perturbation theory of the underlying decimated Prony method. It proves that an internally derived branch selector can preserve its rate without an externally supplied jump neighborhood.
+
+\begin{corollary}[Smooth-tail interpretation]
+Under the Fourier-tail assumption,
+\[
+\abs{e_{qN+r}}=O(N^{-p-1})
+\]
+for fixed $q$ and $r$. On any compact admissible parameter class for which the decimated Prony map and its coefficient solve have uniformly bounded local inverses, the hypotheses of the rate-preserving lifting theorem hold.
+\end{corollary}
+
+\begin{proof}
+The moment defect follows directly from
+\[
+\abs{e_n}=2\pi\abs n\abs{\widehat s(n)}.
+\]
+Distinct aliased nodes and nonzero amplitudes make the finite Prony Jacobian a full-rank confluent Vandermonde system. Uniform separation and amplitude bounds give a bounded local inverse on a compact admissible class.
+\end{proof}
+
+\Figure{12_rate_curves.pdf}{Deterministic power-tail backgrounds produce improving location errors as the decimation scale grows.}
+\Figure{13_rate_slopes.pdf}{The empirical rate exponents track the $p+2$ prediction over the stable decimation subsequence.}
+
+The oscillations in the rate curves are not hidden. Some decimations map distinct physical phases close together. A useful implementation therefore searches over several candidate decimations and selects one with a healthy rank gap and small validation residual.
+
+\Figure{26_multiscale_consensus.pdf}{Independent decimations provide a direct consistency check on the recovered phases.}
+
+\section{Self-calibrating reconstruction theorem}
+
+We can now state the complete finite theorem.
+
+\begin{assumption}[Admissible edge class]
+The edge packets satisfy:
+\begin{enumerate}
+\item $L\le L_{\max}$
+\item distinct locations with minimum circular separation $\Delta>0$
+\item jump amplitudes bounded by
+\[
+0<a_{\min}\le\abs{a_\ell}\le a_{\max}
+\]
+\item at least one tested decimation has distinct aliased nodes with a declared separation lower bound
+\end{enumerate}
+\end{assumption}
+
+\begin{theorem}[Exact self-calibration in the bandlimited control class]
+Suppose the smooth packet is bandlimited below the first moment index used by the algorithm. Assume exact arithmetic, an admissible edge packet, enough moments for the Hankel and coefficient systems, and one tested decimation with distinct aliased nodes. Then the procedure recovers:
+\begin{enumerate}
+\item the exact jump count $L$
+\item every aliased node $u_\ell$
+\item every physical phase $z_\ell$
+\item every jump location $\tau_\ell$
+\item every jump amplitude $a_\ell$
+\item the exact edge packet $j$
+\item the exact smooth packet $s$
+\end{enumerate}
+No externally supplied jump neighborhood is required.
+\end{theorem}
+
+\begin{proof}
+The high derivative moments contain only the edge exponential sum. The Hankel rank is exactly $L$. Exact Prony recovery gives the distinct aliased nodes. Each offset Vandermonde solve gives the exact coefficient progression $b_{\ell,r}=b_{\ell,0}z_\ell^r$. The phase estimator returns $z_\ell$. The branch lift therefore selects the correct physical root. A final real Vandermonde solve with the zero-sum constraint gives the jump amplitudes. Subtracting the recovered edge Fourier coefficients leaves the smooth coefficients.
+\end{proof}
+
+\begin{corollary}[Explicit finite innovation budget]
+Assume the hypotheses of the exact self-calibration theorem and suppose the jump count satisfies $L\le L_{\max}$. Choose integers $N\ge2$ and $q_0\ge1$ so that $q_0N$ lies above the smooth bandwidth. Define
+\[
+\mathcal I_0
+=
+\{(q_0+q)N:0\le q\le2L_{\max}\}
+\]
+and
+\[
+\mathcal I_1
+=
+\{(q_0+q)N+1:0\le q<L_{\max}\}.
+\]
+If the aliased nodes $u_\ell=z_\ell^N$ are distinct, then the derivative moments indexed by
+\[
+\mathcal I_0\cup\mathcal I_1
+\]
+determine the unknown order, every physical phase, and every jump amplitude exactly. The high-frequency innovation budget is
+\[
+\boxed{
+\abs{\mathcal I_0}+\abs{\mathcal I_1}
+=3L_{\max}+1.
+}
+\]
+This count does not include the low Fourier coefficients used afterward to reconstruct the smooth packet.
+\end{corollary}
+
+\begin{proof}
+The $2L_{\max}+1$ base-channel moments form an $(L_{\max}+1)\times(L_{\max}+1)$ Hankel matrix of exact rank $L$, so the unknown order is recovered. Once $L$ is known, the first $2L$ base moments determine the annihilating polynomial and hence the distinct aliased nodes $u_\ell$. Solving the base Vandermonde system gives
+\[
+b_{\ell,0}=a_\ell u_\ell^{q_0}.
+\]
+The adjacent channel contains
+\[
+m_{(q_0+q)N+1}
+=
+\sum_{\ell=1}^{L}b_{\ell,0}z_\ell u_\ell^q.
+\]
+Its first $L_{\max}$ samples contain at least $L$ equations. The Vandermonde solve therefore gives $b_{\ell,0}z_\ell$, and division by the nonzero base coefficient gives $z_\ell$ directly. Finally,
+\[
+a_\ell=b_{\ell,0}u_\ell^{-q_0}.
+\]
+The zero-mean normalization fixes the additive constant of the edge packet. Subtracting its Fourier coefficients leaves the smooth packet.
+\end{proof}
+
+\begin{certificate}[Nineteen-coefficient control example]
+For $L_{\max}=6$, $N=10$, and $q_0=1$, the implementation uses thirteen base-channel moments and six adjacent-channel moments. Thus it uses exactly
+\[
+3L_{\max}+1=19
+\]
+high-frequency Fourier coefficients. The unknown order is recovered as four. The maximum location error is
+\[
+9.77\times10^{-15},
+\]
+and the maximum jump-amplitude error is
+\[
+5.78\times10^{-15}.
+\]
+\end{certificate}
+
+\Figure{40_finite_sample_budget.pdf}{The exact bandlimited control theorem has an explicit finite innovation budget. The count is an upper bound for this construction, not a minimality claim.}
+
+\begin{theorem}[Perturbed self-calibration for a non-bandlimited background]
+Let the smooth packet satisfy the Fourier-tail assumption and let the edge packet belong to a compact admissible class. Suppose a tested decimation satisfies the singular-gap condition, the local inverse bounds for the decimated Prony and coefficient systems, and the branch-margin condition. Then, for sufficiently large decimation scale,
+\begin{align*}
+\widehat L&=L,\\
+\max_\ell\abs{\widehat\tau_\ell-\tau_\ell}_{\T}&\le C_\tau N^{-p-2},\\
+\max_\ell\abs{\widehat a_\ell-a_\ell}&\le C_aN^{-p-1}.
+\end{align*}
+The constants depend on the smooth-tail bound, separation, amplitude bounds, selected sample pattern, and local inverse constants.
+\end{theorem}
+
+\begin{proof}
+The smooth moment defect is $O(N^{-p-1})$. The singular-gap theorem preserves the order. The local inverse bounds transfer this perturbation to the aliased nodes and offset coefficients. The rate-preserving lifting theorem gives the location estimate. The amplitude estimate follows from the uniformly conditioned real Vandermonde solve.
+\end{proof}
+
+\Figure{11_recovered_parameters.pdf}{The analytic-background example recovers the four locations and amplitudes to displayed precision.}
+\Figure{28_amplitude_recovery.pdf}{Recovered and true jump amplitudes.}
+
+\section{A stable synthesis theorem}
+
+Edge recovery alone does not explain the removal of Gibbs oscillations. The reconstruction operator matters.
+
+Let $A_M$ be a reconstruction operator for the smooth class. It may be a Fourier partial sum when the edge is exact and the smooth packet is sufficiently regular. For a norm-stable theorem, Fej\'er means or another uniformly bounded smooth-class operator are convenient.
+
+Given an edge estimate $\widehat j$, define
+\[
+\boxed{
+\widehat f_M=A_M(f-\widehat j)+\widehat j.
+}
+\]
+
+\begin{theorem}[Resolved synthesis inequality]
+If $A_M$ is bounded on a normed signal space with
+\[
+\norm{A_M}\le C_A,
+\]
+then
+\[
+\boxed{
+\norm{f-\widehat f_M}
+\le
+\norm{s-A_Ms}
++(1+C_A)\norm{j-\widehat j}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Using $f=s+j$,
+\[
+\begin{aligned}
+f-\widehat f_M
+&=s+j-A_M(s+j-\widehat j)-\widehat j\\
+&=(s-A_Ms)+(I-A_M)(j-\widehat j).
+\end{aligned}
+\]
+Apply the triangle inequality and the operator bound.
+\end{proof}
+
+\begin{corollary}[Exact edge packet]
+If $\widehat j=j$, then
+\[
+\boxed{
+\norm{f-\widehat f_M}=\norm{s-A_Ms}.
+}
+\]
+No jump packet is sent through the smooth global approximation.
+\end{corollary}
+
+This is the precise Gibbs-free statement. The classical partial sum of the full signal still has Gibbs oscillations. The resolved synthesis does not create them because the singular packet is reconstructed in its native coordinate.
+
+For periodic piecewise-constant packets, a location and amplitude perturbation yields an $L^1$ estimate. After matching the jumps,
+\[
+\norm{j-\widehat j}_{L^1}
+\le
+2\pi\sum_\ell\abs{a_\ell-\widehat a_\ell}
++
+\sum_\ell\abs{\widehat a_\ell}\abs{\tau_\ell-\widehat\tau_\ell}_{\T}.
+\]
+Combining this with the recovery rates gives an explicit global reconstruction rate in $L^1$.
+
+\Figure{18_reconstruction_comparison.pdf}{Raw Fourier and Fej\'er reconstructions are compared with edge-native synthesis.}
+\Figure{19_reconstruction_errors.pdf}{The resolved method replaces persistent oscillatory edge error with the much smaller parameter and smooth-tail error.}
+\Figure{20_metric_summary.pdf}{End-to-end errors for the main non-bandlimited experiment.}
+
+\section{Worked example from Fourier data to reconstruction}
+
+The edge packet has locations
+\[
+(0.42,\ 1.37,\ 2.85,\ 4.62)
+\]
+and jumps
+\[
+(1,\ -0.65,\ 0.40,\ -0.75).
+\]
+The smooth packet is
+\[
+s(x)=0.35e^{0.7\cos x}+0.2\sin(2x)-0.15\cos(5x).
+\]
+Its Fourier coefficients are known exactly through modified Bessel functions, and they do not terminate.
+
+The algorithm uses decimation $N=10$, six offset channels, and twenty-two samples per channel. The Hankel gap identifies four active jumps. The offset recurrence residual is approximately
+\[
+1.04\times10^{-11}.
+\]
+After nonlinear refinement, the recovered locations are
+\[
+0.4200000000000002,
+\quad
+1.3700000000000003,
+\quad
+2.8500000000000014,
+\quad
+4.6200000000000000.
+\]
+The recovered amplitudes differ from the true amplitudes by less than $10^{-12}$ in this deterministic example.
+
+\Figure{29_smooth_packet_recovery.pdf}{Subtracting the recovered edge coefficients reveals the smooth packet.}
+\Figure{30_edge_packet_recovery.pdf}{The recovered singular packet is returned by a piecewise-constant synthesis map.}
+
+A second example uses a power-law smooth tail rather than an analytic one. With forty-eight retained smooth Fourier modes, the measured errors were
+\[
+\begin{array}{lr}
+\toprule
+\text{quantity}&\text{value}\\
+\midrule
+\text{raw Fourier RMSE}&4.7716\times10^{-2}\\
+\text{Fej\'er RMSE}&6.6610\times10^{-2}\\
+\text{resolved RMSE}&4.8374\times10^{-7}\\
+\text{maximum location error}&6.4866\times10^{-9}\\
+\text{maximum jump error}&1.2407\times10^{-5}\\
+\text{edge }L^1\text{ error}&2.0201\times10^{-5}\\
+\text{smooth packet RMSE}&4.0952\times10^{-6}\\
+\bottomrule
+\end{array}
+\]
+
+\section{Direct oracle comparison and random-family stress test}
+
+The decisive comparison is not between the self-calibrated method and a deliberately weak smoother. It is between the self-calibrated branch and the branch chosen by an oracle that already knows the correct jump neighborhood.
+
+For each aliased estimate $\widehat u_j$, define three lifts.
+
+\begin{enumerate}
+\item The \emph{principal-root baseline} takes the principal $N$th root and ignores every offset channel.
+\item The \emph{oracle lift} chooses the candidate root nearest the true phase. This is used only for evaluation.
+\item The \emph{self-calibrated lift} chooses the candidate root nearest the phase obtained from the offset coefficients.
+\end{enumerate}
+
+The oracle-equivalence corollary predicts that the last two methods choose the same branch whenever the margin condition holds. The complete deterministic benchmark covers four smooth-tail indices and seven decimation scales. Across all twenty-eight combinations, the maximum distance between the oracle and self-calibrated node sets was
+\[
+\boxed{2.22\times10^{-16}.}
+\]
+The principal-root baseline produced order-one angular errors because the physical phases were not confined to its preferred branch.
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$N$&principal root&oracle branch&self-calibrated branch\\
+\midrule
+6&$2.4303$&$5.1590\times10^{-4}$&$5.1590\times10^{-4}$\\
+8&$3.0508$&$1.2892\times10^{-6}$&$1.2892\times10^{-6}$\\
+10&$2.7366$&$1.7717\times10^{-6}$&$1.7717\times10^{-6}$\\
+12&$2.9424$&$4.3100\times10^{-6}$&$4.3100\times10^{-6}$\\
+16&$2.7489$&$1.7739\times10^{-7}$&$1.7739\times10^{-7}$\\
+20&$2.8274$&$4.8757\times10^{-7}$&$4.8757\times10^{-7}$\\
+24&$2.9424$&$1.0754\times10^{-7}$&$1.0754\times10^{-7}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The displayed rows use the $p=2$ power-tail background. The same oracle agreement holds for all four tested tail indices.
+
+\Figure{36_oracle_equivalence.pdf}{The self-calibrated lift follows the oracle branch while the principal root fails.}
+\Figure{37_oracle_distance.pdf}{The oracle and self-calibrated node sets coincide to floating-point precision throughout the benchmark grid.}
+
+A second benchmark removes the fixed four-edge geometry. One hundred deterministic random cases were generated with:
+
+\begin{itemize}
+\item an unknown jump count between two and five
+\item minimum physical separation at least $0.45$
+\item minimum separation after the tested decimation at least $0.35$
+\item nonzero jump magnitudes bounded away from zero
+\item one of four unknown power-law smooth tails
+\end{itemize}
+
+The algorithm was not told the true jump count, locations, amplitudes, or tail index. It recovered the correct order in all one hundred cases. Every maximum location error was below $10^{-3}$. The median error was
+\[
+1.19\times10^{-6},
+\]
+and the largest was
+\[
+2.84\times10^{-4}.
+\]
+
+\Figure{38_random_stress_errors.pdf}{Location-error distribution over one hundred separated random signals.}
+\Figure{39_random_order_confusion.pdf}{The recovered model order equals the true jump count throughout the random stress family.}
+
+\begin{boundary}[Meaning of the stress test]
+The one-hundred-case result is a finite numerical certificate, not a universal probability theorem. The generation conditions enforce the same physical and aliased separation hypotheses used by the analysis. Its role is to test the full unknown-order and unknown-location pipeline away from one hand-selected geometry.
+\end{boundary}
+
+\section{Noise, order selection, and the branch margin}
+
+Moment noise was added independently at five scales. For the first four scales, the estimated jump count was correct in all thirty runs. Median location error grew linearly with the injected moment-noise scale over the displayed range.
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$\sigma$&median location error&maximum location error&order success\\
+\midrule
+$10^{-10}$&$6.56\times10^{-13}$&$1.67\times10^{-12}$&1.00\\
+$10^{-8}$&$6.19\times10^{-11}$&$1.39\times10^{-10}$&1.00\\
+$10^{-6}$&$6.22\times10^{-9}$&$1.39\times10^{-8}$&1.00\\
+$10^{-5}$&$6.22\times10^{-8}$&$1.39\times10^{-7}$&1.00\\
+$10^{-4}$&$6.22\times10^{-7}$&$1.39\times10^{-6}$&1.00\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\Figure{14_noise_error.pdf}{Location error under additive complex moment noise.}
+\Figure{15_order_success.pdf}{The jump count remains stable while the Hankel gap stays visible.}
+
+The method is not stable without separation. Near collisions cause the Prony Jacobian and the Hankel gap to deteriorate. Decimation can improve or worsen a particular pair because it maps angular gaps modulo $2\pi$. This is why the implementation tests several decimations and records the validation residual rather than fixing one scale blindly.
+
+\Figure{17_collision_boundary.pdf}{Near-collision diagnostics. The nonmonotone pattern reflects alias geometry at the selected decimation.}
+
+\section{Higher jump jets and confluent Prony systems}
+
+The phase-lifting idea is not limited to piecewise-constant packets. Suppose a piecewise-smooth function has jump data through derivative order $d$. After multiplying its Fourier coefficients by $(in)^{d+1}$, the singular moments have the form
+\[
+\boxed{
+m_n=\sum_{\ell=1}^{L}z_\ell^nP_\ell(n)+e_n,
+}
+\]
+where each $P_\ell$ is a polynomial of degree at most $d$.
+
+On the offset channel $n=(q_0+q)N+r$,
+\[
+P_\ell((q_0+q)N+r)
+=\sum_{h=0}^{d}\beta_{\ell,r,h}q^h.
+\]
+Thus
+\[
+m_{(q_0+q)N+r}
+=\sum_{\ell=1}^{L}u_\ell^q
+\sum_{h=0}^{d}\gamma_{\ell,r,h}q^h
++e_{(q_0+q)N+r}.
+\]
+This is a confluent Prony system. If the function jump $a_{0,\ell}$ is nonzero, the leading coefficient satisfies
+\[
+\gamma_{\ell,r,d}
+=
+C_\ell z_\ell^r
+\]
+
+after the factors independent of $r$ are collected. Hence
+\[
+\boxed{
+\frac{\gamma_{\ell,1,d}}{\gamma_{\ell,0,d}}=z_\ell.
+}
+\]
+
+\begin{proposition}[Confluent offset phase]
+For a jump jet with a nonzero leading singular coefficient, the physical edge phase is the ratio of corresponding highest-degree confluent coefficients in two adjacent offset channels.
+\end{proposition}
+
+\begin{proof}
+The highest power of $q$ arises from the leading term of $P_\ell((q_0+q)N+r)$. Every factor other than $z_\ell^r$ is independent of the offset. Taking the ratio cancels the aliased node, amplitude, decimation power, and initial-block factor.
+\end{proof}
+
+The exact symbolic check in the code uses two nodes and degree-one polynomial amplitudes. It obtains the ratios $1$ and $i$, followed by the validation identities
+\[
+\gamma_{2}\gamma_{0}-\gamma_{1}^{2}=0
+\]
+for both nodes.
+
+\section{Computational complexity}
+
+For fixed edge count $L$, offset count $R$, and samples per offset $Q$, the principal costs are:
+
+\begin{itemize}
+\item one Hankel singular-value decomposition of size proportional to $Q$
+\item one reduced eigenproblem of size $L$
+\item $R$ Vandermonde least-squares solves
+\item one optional nonlinear refinement over $2L-1$ real parameters
+\end{itemize}
+
+The small parametric solve is separate from the cost of evaluating or storing the full reconstructed signal. In the supplied implementation, the median time for the linear phase-lifting stage grew from roughly two milliseconds at twelve samples per offset to roughly seven milliseconds at forty-eight samples per offset on the build environment.
+
+\Figure{31_runtime.pdf}{Measured runtime of the finite parametric stage.}
+\Figure{32_algorithm.pdf}{The executable algorithm and the diagnostic object emitted by each stage.}
+
+\section{What would count as a field-level advance}
+
+The result is stronger than the earlier known-edge packet theorem and stronger than exact recovery restricted to a bandlimited smooth background. It also does more than place a new name on shifted Prony samples. The substantive theorem is the following combination:
+
+\begin{enumerate}
+\item the jump count is inferred from the same Fourier data
+\item decimation is retained for conditioning and rate
+\item offset channels select the physical branch internally
+\item the branch lift preserves the one-order location gain
+\item unused offsets provide a validation residual
+\item the self-calibrated branch is proved to equal the oracle branch under the margin condition
+\item the recovered edge is synthesized outside the smooth global approximation
+\end{enumerate}
+
+\Figure{23_theorem_map.pdf}{The theorem is assembled from rank recovery, decimated inversion, phase lifting, and resolved synthesis.}
+\Figure{35_final_synthesis.pdf}{The field-facing statement in one diagram.}
+
+Whether this exact package is historically first is not established by the mathematics alone. The paper therefore makes a narrower priority statement. Shifted-sample de-aliasing, Prony inversion, decimation, finite-rate innovation, and Gibbs-resolution methods are acknowledged as prior inputs. The theorem proved here closes a specific gap in decimated Fourier edge reconstruction. It replaces an externally supplied branch neighborhood by a phase recovered from the Fourier data, proves equality with the oracle branch under a checkable margin, preserves the decimated localization rate, detects the unknown jump count, and completes the reconstruction by native edge synthesis.
+
+\section{Limitations and next theorem}
+
+\begin{boundary}[Current scope]
+The present theorem does not cover arbitrary two-dimensional curves, unbounded jump counts, separation-free recovery, general blind measurement operators, or arbitrary smoothness classes without a quantitative tail model.
+\end{boundary}
+
+The next mathematically meaningful extension is two-dimensional off-grid curve recovery with the same four properties:
+
+\begin{enumerate}
+\item unknown model order or curve complexity
+\item internal de-aliasing across polyphase frequency blocks
+\item a deterministic validation residual
+\item native geometric synthesis after recovery
+\end{enumerate}
+
+A second direction is minimax statistical analysis. The deterministic bounds identify the relevant quantities: singular-value gaps, aliased-node separation, offset coefficient strength, branch margin, and smooth-tail size. A complete statistical theorem should express the recovery risk in those coordinates.
+
+\Figure{34_scope_boundary.pdf}{The theorem is strong inside a declared finite-rate class and deliberately silent outside it.}
+
+\section{Numerical certificate ledger}
+
+The single implementation passed 31 named checks. The checks include:
+
+\begin{itemize}
+\item periodic jump consistency
+\item unknown-order recovery in exact and analytic-background cases
+\item exact phase, branch, and amplitude recovery
+\item a principal-root negative control
+\item the multi-offset phase identity
+\item the confluent symbolic ratio
+\item four smooth-tail rate families
+\item noisy order recovery
+\item end-to-end Gibbs-free reconstruction
+\end{itemize}
+
+\Figure{33_certificate_dashboard.pdf}{Selected numerical certificates from the complete result ledger.}
+
+The figure set contains forty vector PDFs and forty matching PNGs. Every table and plotted experiment is regenerated by the same Python file.
+
+\section{Conclusion}
+
+The classical Gibbs phenomenon remains a property of raw global Fourier partial sums. The reconstruction problem changes when the singular packet is treated as an object to recover rather than an error to smooth away.
+
+For the declared periodic class, the high-frequency derivative moments form a perturbed exponential sequence. Decimation gives an accurate but aliased representation. Offset polyphase channels contain the missing physical phase. Their coefficients recover the correct branch from the Fourier data themselves. A Hankel gap supplies the jump count. A validation residual checks the phase progression. The final synthesis returns the edge directly and applies the smooth reconstruction only to the smooth residual.
+
+The result can be summarized as
+\begin{center}
+\fbox{\parbox{0.86\linewidth}{
+\centering
+Fourier data
+$\longrightarrow$
+self-calibrated edge parameters
+$\longrightarrow$
+native edge synthesis
+\\[3pt]
+$\longrightarrow$
+no persistent Gibbs edge ringing
+}}
+\end{center}
+
+The main advance is not a claim that decimation, shifted samples, Prony systems, or edge augmentation were previously unknown. It is a theorem showing that they can be assembled into one rate-preserving Fourier reconstruction with unknown jump count, no supplied jump neighborhoods, and explicit certificates at every stage.
+
+\appendix
+
+\section{Detailed algebra for the multi-offset estimator}
+
+For reference, write
+\[
+c_r=bz^r+e_r.
+\]
+Then
+\[
+\begin{aligned}
+\overline{c_r}c_{r+1}
+&=(\overline b\overline z^r+\overline e_r)(bz^{r+1}+e_{r+1})\\
+&=\abs b^2z
++\overline b\overline z^r e_{r+1}
++bz^{r+1}\overline e_r
++\overline e_re_{r+1}.
+\end{aligned}
+\]
+Summing gives
+\[
+S=R\abs b^2z+E
+\]
+with
+\[
+\abs E\le R(2\abs b\varepsilon+\varepsilon^2).
+\]
+The normalized phase map is locally Lipschitz away from zero. The displayed theorem uses the elementary bound
+\[
+\left|\frac{v+E}{\abs{v+E}}-\frac v{\abs v}\right|
+\le
+\frac{2\abs E}{\abs v}.
+\]
+This is the entire phase-perturbation argument. No asymptotic expansion is required.
+
+\section{Detailed algebra for the branch lift}
+
+Let
+\[
+u=e^{i\theta},
+\qquad
+\bar u=e^{i(\theta+\delta)}.
+\]
+The corresponding root branch is
+\[
+z=e^{i\theta/N},
+\qquad
+\rho=e^{i(\theta+\delta)/N}.
+\]
+Therefore
+\[
+\abs{\rho-z}
+=2\left|\sin\frac{\delta}{2N}\right|.
+\]
+If
+\[
+\abs{\bar u-u}=2\left|\sin\frac\delta2\right|\le\eta,
+\]
+then
+\[
+\abs\delta\le2\arcsin(\eta/2).
+\]
+Substitution gives the one-order root bound used in the main theorem.
+
+\section{Exact symbolic confluent example}
+
+Take
+\[
+z_1=1,
+\qquad
+z_2=i,
+\]
+with degree-one amplitudes
+\[
+P_1(n)=2n+5,
+\qquad
+P_2(n)=-3n+4.
+\]
+For $N=3$ and offset $r$,
+\[
+m_{3(q+1)+r}
+=(2(3(q+1)+r)+5)z_1^{3(q+1)+r}
++(-3(3(q+1)+r)+4)z_2^{3(q+1)+r}.
+\]
+Writing each channel in the confluent basis
+\[
+(c_{0,j}^{(r)}+c_{1,j}^{(r)}q)u_j^q
+\]
+and solving exactly gives
+\[
+\frac{c_{1,1}^{(1)}}{c_{1,1}^{(0)}}=1,
+\qquad
+\frac{c_{1,2}^{(1)}}{c_{1,2}^{(0)}}=i.
+\]
+The next offset satisfies
+\[
+c_{1,j}^{(2)}c_{1,j}^{(0)}-(c_{1,j}^{(1)})^2=0.
+\]
+This is the higher-jet analogue of the piecewise-constant phase progression.
+
+\section{Selected numerical tables}
+
+\subsection{Offset averaging}
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+offsets&single median&multi median&single 90\%&multi 90\%\\
+\midrule
+2&$4.46\times10^{-2}$&$4.46\times10^{-2}$&$8.26\times10^{-2}$&$8.26\times10^{-2}$\\
+3&$4.76\times10^{-2}$&$2.31\times10^{-2}$&$8.42\times10^{-2}$&$4.20\times10^{-2}$\\
+4&$4.77\times10^{-2}$&$1.52\times10^{-2}$&$8.74\times10^{-2}$&$2.91\times10^{-2}$\\
+6&$4.58\times10^{-2}$&$8.97\times10^{-3}$&$8.67\times10^{-2}$&$1.63\times10^{-2}$\\
+8&$4.61\times10^{-2}$&$6.58\times10^{-3}$&$8.36\times10^{-2}$&$1.25\times10^{-2}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Runtime}
+\begin{center}
+\begin{tabular}{rr}
+\toprule
+samples per offset&median time in milliseconds\\
+\midrule
+12&2.04\\
+16&2.58\\
+20&3.09\\
+28&4.19\\
+36&5.30\\
+48&6.97\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Implementation map}
+
+The release is intentionally simple.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.32\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}}
+\toprule
+file or directory&role\\
+\midrule
+\endfirsthead
+\toprule
+file or directory&role\\
+\midrule
+\endhead
+\path{polyphase_gibbs_breakthrough.py}&single closed implementation, tests, figures, tables, and result ledger\\
+\texttt{figures/}&forty PDF and PNG figure pairs\\
+\texttt{tables/}&rate, noise, offset, collision, oracle, stress, runtime, and test tables\\
+\path{results/results.json}&machine-readable principal certificate ledger\\
+\path{Self_Calibrating_Polyphase_Gibbs_Reconstruction.tex}&complete paper source\\
+\bottomrule
+\end{longtable}
+
+\section{Complete Python implementation}
+
+The following listing is the exact program used to generate the numerical material in this paper.
+
+\lstinputlisting{polyphase_gibbs_breakthrough.py}
+
+\begin{thebibliography}{99}
+
+\bibitem{AdcockHansenShadrin}
+B. Adcock, A. C. Hansen, and A. Shadrin,
+\emph{A stability barrier for reconstructions from Fourier samples},
+SIAM Journal on Numerical Analysis 52 (2014), 125--139.
+
+\bibitem{BatenkovComplete}
+D. Batenkov,
+\emph{Complete algebraic reconstruction of piecewise-smooth functions from Fourier data},
+Mathematics of Computation 84 (2015), 2329--2350.
+
+\bibitem{BatenkovYomdin}
+D. Batenkov and Y. Yomdin,
+\emph{Algebraic Fourier reconstruction of piecewise smooth functions},
+Mathematics of Computation 81 (2012), 277--318.
+
+\bibitem{BatenkovDecimation}
+D. Batenkov,
+\emph{Accurate solution of near-colliding Prony systems via decimation and homotopy continuation},
+Theoretical Computer Science 681 (2017), 27--40.
+
+\bibitem{VEXPA}
+M. Briani, A. Cuyt, F. Knaepkens, and W.-s. Lee,
+\emph{VEXPA: validated exponential analysis through regular sub-sampling},
+Signal Processing 147 (2018), 207--220.
+
+\bibitem{FRI}
+M. Vetterli, P. Marziliano, and T. Blu,
+\emph{Sampling signals with finite rate of innovation},
+IEEE Transactions on Signal Processing 50 (2002), 1417--1428.
+
+\bibitem{Gegenbauer}
+A. Gelb and Z. Jackiewicz,
+\emph{Determining analyticity for parameter optimization of the Gegenbauer reconstruction method},
+SIAM Journal on Scientific Computing 27 (2005), 1014--1031.
+
+\bibitem{GottliebShu}
+D. Gottlieb and C.-W. Shu,
+\emph{On the Gibbs phenomenon and its resolution},
+SIAM Review 39 (1997), 644--668.
+
+\bibitem{PronyGeometry}
+D. Batenkov and Y. Yomdin,
+\emph{Local and global geometry of Prony systems and Fourier reconstruction of piecewise-smooth functions},
+Contemporary Mathematics 586 (2013), 57--72.
+
+\bibitem{SparseMultidim}
+A. Cuyt, Y. Hou, F. Knaepkens, and W.-s. Lee,
+\emph{Sparse multidimensional exponential analysis with an application to radar imaging},
+SIAM Journal on Scientific Computing 42 (2020), B675--B695.
+
+\end{thebibliography}
+
+\end{document}

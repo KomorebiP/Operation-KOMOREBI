@@ -1,0 +1,279 @@
+{
+  "schema": "komorebi.signal.source-anchors.v1",
+  "author": "Komorebi P.",
+  "source_version": "Paper V v1.1.0 checkpoint",
+  "anchors": [
+    {
+      "anchor_id": "packet",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/Packets.lean",
+      "start_line": 17,
+      "end_line": 23,
+      "source_sha256": "9ea5f1ce99c69179a55bcc289e301820febdff64153a6b9cfec48be52dd04d93",
+      "qualified_declarations": [
+        "KomorebiPaperV.packet",
+        "KomorebiPaperV.packet_idempotent"
+      ],
+      "source_quoted": "def packet (phase : I → R) (r : R) (x : I → V) : I → V :=\n  fun i => if phase i = r then x i else 0\n\ntheorem packet_idempotent (phase : I → R) (r : R) (x : I → V) :\n    packet phase r (packet phase r x) = packet phase r x := by\n  funext i\n  by_cases h : phase i = r <;> simp [packet, h]",
+      "context_hypotheses": "I, R and V are arbitrary types; decidable equality on R and zero in V.",
+      "interpretation": "Coordinate restriction and its exact pointwise idempotence.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "packet_complete",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/Packets.lean",
+      "start_line": 36,
+      "end_line": 45,
+      "source_sha256": "9ea5f1ce99c69179a55bcc289e301820febdff64153a6b9cfec48be52dd04d93",
+      "qualified_declarations": [
+        "KomorebiPaperV.packet_complete"
+      ],
+      "source_quoted": "theorem packet_complete (phase : I → R) (x : I → V) (i : I) :\n    (∑ r : R, packet phase r x i) = x i := by\n  classical\n  calc\n    (∑ r : R, packet phase r x i) = packet phase (phase i) x i := by\n      apply Finset.sum_eq_single (phase i)\n      · intro b _ hb\n        simp [packet, Ne.symm hb]\n      · simp\n    _ = x i := by simp [packet]",
+      "context_hypotheses": "R is finite with decidable equality; V is an additive commutative monoid.",
+      "interpretation": "A finite partition sum restores each supplied coordinate.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "address_roundtrip",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/Packets.lean",
+      "start_line": 74,
+      "end_line": 83,
+      "source_sha256": "9ea5f1ce99c69179a55bcc289e301820febdff64153a6b9cfec48be52dd04d93",
+      "qualified_declarations": [
+        "KomorebiPaperV.address_synthesize_analyze",
+        "KomorebiPaperV.address_analyze_synthesize"
+      ],
+      "source_quoted": "theorem address_synthesize_analyze (e : I ≃ R × Q) (x : I → V) :\n    synthesizeAddress e (analyzeAddress e x) = x := by\n  funext i\n  simp [synthesizeAddress, analyzeAddress]\n\ntheorem address_analyze_synthesize (e : I ≃ R × Q) (c : R → Q → V) :\n    analyzeAddress e (synthesizeAddress e c) = c := by\n  funext r q\n  simp [synthesizeAddress, analyzeAddress]\nend AddressEquivalence",
+      "context_hypotheses": "I, R, Q and V are arbitrary types; e is a supplied equivalence I ≃ R × Q.",
+      "interpretation": "Inverse address maps give exact round trips on arbitrary functions.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "integer_equiv",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean",
+      "start_line": 57,
+      "end_line": 64,
+      "source_sha256": "80c6e382ebffb55a106bab0fe0328fbdf89f91617c779a1af5d108c2f5eab269",
+      "qualified_declarations": [
+        "KomorebiPaperV.IntegerPolyphase.addressEquiv"
+      ],
+      "source_quoted": "\ndef addressEquiv (N : ℕ) (hN : 0 < N) : ℤ ≃ Fin N × ℤ where\n  toFun n := (phase N hN n, quotient N n)\n  invFun p := address N p.1 p.2\n  left_inv := address_phase_quotient N hN\n  right_inv p := by\n    apply Prod.ext\n    · exact phase_address N hN p.1 p.2",
+      "context_hypotheses": "N is natural and strictly positive; addresses and quotient coordinates are signed integers.",
+      "interpretation": "Euclidean division supplies a literal integer address equivalence.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "sample_delay",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/IntegerPolyphase.lean",
+      "start_line": 94,
+      "end_line": 104,
+      "source_sha256": "80c6e382ebffb55a106bab0fe0328fbdf89f91617c779a1af5d108c2f5eab269",
+      "qualified_declarations": [
+        "KomorebiPaperV.IntegerPolyphase.sample_delay"
+      ],
+      "source_quoted": "theorem sample_delay (N : ℕ) (hN : 0 < N) (d : ℤ) (x : ℤ → V)\n    (r : Fin N) (q : ℤ) :\n    analysis N (delay d x) r q =\n      analysis N x (phase N hN ((r.val : ℤ) - d))\n        (q + quotient N ((r.val : ℤ) - d)) := by\n  dsimp [analysis, delay]\n  congr 1\n  have h := address_phase_quotient N hN ((r.val : ℤ) - d)\n  dsimp [address] at h ⊢\n  linear_combination -h\n",
+      "context_hypotheses": "N > 0; d is any signed integer; x is any coefficient function.",
+      "interpretation": "A general original-sample delay changes phase and adds a signed quotient carry.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "hilbert_signal",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+      "start_line": 16,
+      "end_line": 24,
+      "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+      "qualified_declarations": [
+        "KomorebiPaperV.HilbertPackets.Signal",
+        "KomorebiPaperV.HilbertPackets.projection"
+      ],
+      "source_quoted": "abbrev Signal (I : Type*) : Type _ := lp (fun _ : I => ℂ) 2\n\nvariable {I R S J : Type*}\n\nnoncomputable def projection [DecidableEq R] (phase : I → R) (r : R)\n    (x : Signal I) : Signal I :=\n  ⟨KomorebiPaperV.packet phase r x, (lp.memℓp x).mono' (by\n    intro i\n    by_cases h : phase i = r <;> simp [KomorebiPaperV.packet, h])⟩",
+      "context_hypotheses": "Complex square-summable sequences; arbitrary address type; decidable phase labels.",
+      "interpretation": "The packet restriction remains in the actual ℓ2 sequence space.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "hilbert_polyphase",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+      "start_line": 116,
+      "end_line": 133,
+      "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+      "qualified_declarations": [
+        "KomorebiPaperV.HilbertPackets.polyphase",
+        "KomorebiPaperV.HilbertPackets.polyphase_energy"
+      ],
+      "source_quoted": "noncomputable def polyphase (N : ℕ) (hN : 0 < N) :\n    Signal ℤ ≃ₗᵢ[ℂ] Signal (Fin N × ℤ) :=\n  reindexIsometry (KomorebiPaperV.IntegerPolyphase.addressEquiv N hN)\n\ntheorem polyphase_apply (N : ℕ) (hN : 0 < N) (x : Signal ℤ) (r : Fin N) (q : ℤ) :\n    polyphase N hN x (r, q) = x ((N : ℤ) * q + (r.val : ℤ)) := rfl\n\ntheorem polyphase_synthesis_analysis (N : ℕ) (hN : 0 < N) (x : Signal ℤ) :\n    (polyphase N hN).symm (polyphase N hN x) = x :=\n  (polyphase N hN).symm_apply_apply x\n\ntheorem polyphase_analysis_synthesis (N : ℕ) (hN : 0 < N) (x : Signal (Fin N × ℤ)) :\n    polyphase N hN ((polyphase N hN).symm x) = x :=\n  (polyphase N hN).apply_symm_apply x\n\ntheorem polyphase_energy (N : ℕ) (hN : 0 < N) (x : Signal ℤ) :\n    ‖polyphase N hN x‖ ^ 2 = ‖x‖ ^ 2 := by\n  rw [(polyphase N hN).norm_map]",
+      "context_hypotheses": "N > 0 and the input is complex ℓ2; the output uses joint ℓ2 on Fin N × ℤ.",
+      "interpretation": "Polyphase reindexing is a linear isometric equivalence and preserves total energy.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "impulse_expansion",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/HilbertPackets.lean",
+      "start_line": 135,
+      "end_line": 137,
+      "source_sha256": "0278dab2e3f10c9622727f7ae975e8b05d399e656580cf6853f6f9c24f6e5b79",
+      "qualified_declarations": [
+        "KomorebiPaperV.HilbertPackets.impulse_expansion"
+      ],
+      "source_quoted": "theorem impulse_expansion (x : Signal ℤ) :\n    HasSum (fun i : ℤ => lp.single 2 i (x i)) x :=\n  lp.hasSum_single (by norm_num) x",
+      "context_hypotheses": "x is a complex square-summable sequence on ℤ.",
+      "interpretation": "The vector series of coordinate impulses converges to x in ℓ2 norm.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "fir_definitions",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FIRTransfer.lean",
+      "start_line": 53,
+      "end_line": 57,
+      "source_sha256": "4d6a120a0c60f54e719c3539754a587e25affa0a67e8c26e3e1788359c41971e",
+      "qualified_declarations": [
+        "KomorebiPaperV.FIRTransfer.fir",
+        "KomorebiPaperV.FIRTransfer.kernel"
+      ],
+      "source_quoted": "def fir (h : ℤ →₀ K) (x : ℤ → K) (n : ℤ) : K :=\n  ∑ t ∈ h.support, h t * x (n - t)\n\ndef kernel (N : ℕ) (h : ℤ →₀ K) (k s : Fin N) (m : ℤ) : K :=\n  h (tapIndex N k s m)",
+      "context_hypotheses": "K is a semiring; h is finitely supported; x is any bilateral sequence.",
+      "interpretation": "Finite convolution and the exact signed channel kernel are defined.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "fir_transfer",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FIRTransfer.lean",
+      "start_line": 96,
+      "end_line": 101,
+      "source_sha256": "4d6a120a0c60f54e719c3539754a587e25affa0a67e8c26e3e1788359c41971e",
+      "qualified_declarations": [
+        "KomorebiPaperV.FIRTransfer.fir_polyphase_transfer"
+      ],
+      "source_quoted": "theorem fir_polyphase_transfer (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K)\n    (x : ℤ → K) (k : Fin N) (n : ℤ) :\n    analysis N (fir h x) k n =\n      ∑ s : Fin N, ∑ m ∈ delays N hN h k s,\n        kernel N h k s m * analysis N x s (n - m) := by\n  change fir h x (address N k n) = _",
+      "context_hypotheses": "K is a semiring; N > 0; h is finitely supported; x is an arbitrary ℤ-indexed function.",
+      "interpretation": "Finite-support convolution is represented by exact finite channel sums.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "filter_pr",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FilterBank.lean",
+      "start_line": 133,
+      "end_line": 136,
+      "source_sha256": "217237e10f963e8c0780ab5079edca882c900b39dea0100aa2b79942b9c5b107",
+      "qualified_declarations": [
+        "KomorebiPaperV.FilterBank.perfect_reconstruction_iff"
+      ],
+      "source_quoted": "theorem perfect_reconstruction_iff (E R : Matrix I I Laurent) (c : ℂ) (d : ℤ) :\n    (∀ x : I → Signal, ∀ k n, bank R (bank E x) k n = c*x k (n-d)) ↔\n      R*E = gainDelay c d := by\n  rw [← bank_faithful]",
+      "context_hypotheses": "I is finite with decidable equality; E and R have finite complex Laurent entries; c and d are arbitrary.",
+      "interpretation": "Reconstruction of every channel sequence is equivalent to the gain-delay Laurent matrix identity.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "filter_sample_delay",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/FilterBank.lean",
+      "start_line": 155,
+      "end_line": 161,
+      "source_sha256": "217237e10f963e8c0780ab5079edca882c900b39dea0100aa2b79942b9c5b107",
+      "qualified_declarations": [
+        "KomorebiPaperV.FilterBank.original_sample_delay"
+      ],
+      "source_quoted": "theorem original_sample_delay (N : ℕ) (hN : 0 < N)\n    (E R : Matrix (Fin N) (Fin N) Laurent) (c : ℂ) (d : ℤ)\n    (h : R*E = gainDelay c d) (x : Signal) (n : ℤ) :\n    KomorebiPaperV.IntegerPolyphase.synthesis N hN\n      (bank R (bank E (KomorebiPaperV.IntegerPolyphase.analysis N x))) n = c*x (n-(N:ℤ)*d) := by\n  have hr := (perfect_reconstruction_iff E R c d).mpr h\n  unfold KomorebiPaperV.IntegerPolyphase.synthesis",
+      "context_hypotheses": "N > 0; the supplied Laurent matrix identity R*E = gainDelay c d holds.",
+      "interpretation": "A delay d in channel samples becomes the original-sample delay N*d.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "known_edge",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+      "start_line": 17,
+      "end_line": 19,
+      "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+      "qualified_declarations": [
+        "KomorebiPaperV.known_edge_error"
+      ],
+      "source_quoted": "theorem known_edge_error (s j : E) (Q : E → E) :\n    (s + j) - (Q s + j) = s - Q s := by\n  abel",
+      "context_hypotheses": "E is an additive commutative group; Q : E → E is arbitrary; the same supplied j is retained.",
+      "interpretation": "Exact supplied-edge cancellation is purely additive and does not estimate j.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "estimated_edge",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/KnownEdge.lean",
+      "start_line": 43,
+      "end_line": 46,
+      "source_sha256": "74e69af941daa65eebed671942d9f0bdcbc054856bfa72e7aec9fe9e671ce49e",
+      "qualified_declarations": [
+        "KomorebiPaperV.estimated_edge_norm_bound"
+      ],
+      "source_quoted": "theorem estimated_edge_norm_bound (s shat j jhat : E) :\n    ‖(s + j) - (shat + jhat)‖ ≤ ‖s - shat‖ + ‖j - jhat‖ := by\n  rw [estimated_edge_error]\n  exact norm_add_le _ _",
+      "context_hypotheses": "E is a seminormed additive commutative group; all four elements are supplied.",
+      "interpretation": "The total supplied reconstruction error is bounded by background and edge errors.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "mask_finite",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/MaskPerturbation.lean",
+      "start_line": 43,
+      "end_line": 47,
+      "source_sha256": "da8dff07593e08375e9c2acc1f7f73cb9cf4b7b23d23142eef01136ca0c657e9",
+      "qualified_declarations": [
+        "KomorebiPaperV.MaskPerturbation.finite_p_perturbation"
+      ],
+      "source_quoted": "theorem finite_p_perturbation (μ : Measure Ω) (S T : Set Ω)\n    (hS : MeasurableSet S) (hT : MeasurableSet T) (p : ENNReal)\n    (hp : 1 ≤ p) (hpTop : p ≠ ∞) (a b : ℂ) :\n    eLpNorm (jump S a-jump T b) p μ ≤\n      ‖a-b‖ₑ * μ S ^ (1 / p.toReal) + ‖b‖ₑ * μ (S ∆ T) ^ (1 / p.toReal) := by",
+      "context_hypotheses": "Ω is measurable; S,T measurable; μ arbitrary; p : ENNReal with 1 ≤ p and p ≠ ∞; a,b complex.",
+      "interpretation": "Extended finite-exponent mask error separates amplitude error from changed support.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "mask_infinity",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/MaskPerturbation.lean",
+      "start_line": 73,
+      "end_line": 77,
+      "source_sha256": "da8dff07593e08375e9c2acc1f7f73cb9cf4b7b23d23142eef01136ca0c657e9",
+      "qualified_declarations": [
+        "KomorebiPaperV.MaskPerturbation.infinity_perturbation"
+      ],
+      "source_quoted": "theorem infinity_perturbation (μ : Measure Ω) (S T : Set Ω) (a b : ℂ) :\n    eLpNorm (jump S a-jump T b) ∞ μ ≤\n      ENNReal.ofReal (‖a-b‖ + if S ∆ T = ∅ then 0 else ‖b‖) := by\n  rw [eLpNorm_exponent_top]\n  exact eLpNormEssSup_le_of_ae_bound (ae_of_all μ (pointwise_sup_bound S T a b))",
+      "context_hypotheses": "Ω is measurable; μ arbitrary; S,T arbitrary sets; a,b complex; actual S∆T=∅ condition.",
+      "interpretation": "A pointwise support bound yields an essential-supremum bound; the condition is actual set equality.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "pruning_synthesis",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/PruningSums.lean",
+      "start_line": 88,
+      "end_line": 97,
+      "source_sha256": "d85bfff2b75c873e2dd3ac4e03b2052e42590481de86d0ccddc291473f76c669",
+      "qualified_declarations": [
+        "KomorebiPaperV.PruningSums.packet_projector_synthesis"
+      ],
+      "source_quoted": "theorem packet_projector_synthesis {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]\n    (p : A → H →L[ℂ] H) (t : FiniteAdaptive.Tree A)\n    (h : conserves p t) (hr : p (label t) = ContinuousLinearMap.id ℂ H)\n    (S : Pruning t) (x : H) :\n    nodeSum p S = ContinuousLinearMap.id ℂ H ∧\n      (∑ v ∈ S.val.toFinite.toFinset, p (nodeLabel v) x) = x := by\n  have hs := (antichain_synthesis p t h S).trans hr\n  refine ⟨hs, ?_⟩\n  have hx := congrArg (fun T : H →L[ℂ] H => T x) hs\n  simpa [nodeSum] using hx",
+      "context_hypotheses": "H is a complex normed space; a finite tree, conservation law, identity root and complete pruning are supplied.",
+      "interpretation": "A complete covering antichain of conserving operator labels synthesizes identity.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "pruning_solver",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/PruningAlgorithm.lean",
+      "start_line": 13,
+      "end_line": 30,
+      "source_sha256": "d7d53b187d0ebd4b8e79a13fca21e82a0765f805285aadc32acf8b212b2b3b94",
+      "qualified_declarations": [
+        "KomorebiPaperV.PruningAlgorithm.Result",
+        "KomorebiPaperV.PruningAlgorithm.solve"
+      ],
+      "source_quoted": "structure Result (t : FiniteAdaptive.Tree A) where\n  cut : Cut t\n  cost : ℝ\n  comparisons : ℕ\n  additions : ℕ\n  visits : ℕ\n\nnoncomputable def solve (c : A → ℝ) : (t : FiniteAdaptive.Tree A) → Result t\n  | .leaf a => ⟨.stop _, c a, 0, 0, 1⟩\n  | .branch a n ch =>\n      let child := fun i => solve c (ch i)\n      let total := ∑ i, (child i).cost\n      let stop := c a ≤ total\n      ⟨if stop then .stop _ else .split (fun i => (child i).cut),\n       min (c a) total,\n       1 + ∑ i, (child i).comparisons,\n       (n+1) + ∑ i, (child i).additions,\n       1 + ∑ i, (child i).visits⟩",
+      "context_hypotheses": "A finite adaptive tree; arbitrary real node costs; noncomputable real comparison and cached child model.",
+      "interpretation": "Bottom-up additive-cost selection records a cut, cost and explicit abstract operation counts.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    },
+    {
+      "anchor_id": "pruning_work",
+      "file": "related_formal/paper_v/formalization/lean/KomorebiPaperV/PruningAlgorithm.lean",
+      "start_line": 89,
+      "end_line": 95,
+      "source_sha256": "d7d53b187d0ebd4b8e79a13fca21e82a0765f805285aadc32acf8b212b2b3b94",
+      "qualified_declarations": [
+        "KomorebiPaperV.PruningAlgorithm.solve_linear_work"
+      ],
+      "source_quoted": "theorem solve_linear_work (c : A → ℝ) (t : FiniteAdaptive.Tree A) :\n    (solve c t).visits + (solve c t).comparisons + (solve c t).additions ≤ 3 * nodes t := by\n  have hv := solve_visits c t\n  have hc := solve_comparisons c t\n  have ha := solve_additions c t\n  have hi := internal_le_nodes t\n  omega",
+      "context_hypotheses": "Finite tree and supplied node costs; unit-cost visits/comparisons/additions as defined in solve.",
+      "interpretation": "The recorded abstract operation count is at most three times the number of tree nodes.",
+      "evidence": "Literal preserved source excerpt; inherited related proof evidence; no current elaboration"
+    }
+  ]
+}

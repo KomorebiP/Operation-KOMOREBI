@@ -1,0 +1,1302 @@
+\documentclass[11pt,oneside]{book}
+\usepackage[letterpaper,margin=0.78in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multicol}
+\usepackage{graphicx,float,caption,subcaption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{pdflscape}
+\usepackage{tikz}
+\usepackage{siunitx}
+\usepackage{bm}
+\usepackage{needspace}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Muted}{HTML}{566573}
+\definecolor{Paper}{HTML}{FAFAF7}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Purple}{HTML}{6C5CE7}
+\definecolor{PaleBlue}{HTML}{E6F0F4}
+\definecolor{PaleTeal}{HTML}{E6F3F1}
+\definecolor{PaleOrange}{HTML}{FBF0E6}
+\definecolor{PaleMagenta}{HTML}{F4EAF1}
+
+\pagecolor{Paper}
+\color{Ink}
+\hypersetup{
+ colorlinks=true,
+ linkcolor=Blue,
+ urlcolor=Blue,
+ citecolor=Blue,
+ hypertexnames=false,
+ pdftitle={Projector-Resolved Gibbs Reconstruction: A Step-by-Step Case Study},
+ pdfauthor={Komorebi P.},
+ pdfsubject={Exact packet separation of a discontinuity, Fourier Gibbs analysis, finite interval recovery, and reconstruction},
+ pdfcreator={},pdfproducer={}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{Muted} Projector-Resolved Gibbs Reconstruction}
+\fancyhead[R]{\small\color{Muted} Komorebi P.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\raggedbottom
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{9pt plus 2pt minus 2pt}
+\setlength{\intextsep}{9pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{2pt}
+\graphicspath{{figures/}}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\setlist[itemize]{leftmargin=1.4em,itemsep=3pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=3pt,topsep=4pt}
+
+\titleformat{\chapter}[hang]
+  {\normalfont\huge\bfseries\color{Ink}}
+  {\thechapter}{0.65em}{}
+\titleformat{name=\chapter,numberless}[hang]
+  {\normalfont\huge\bfseries\color{Ink}}
+  {}{0pt}{}
+\titlespacing*{\chapter}{0pt}{-0.24in}{0.18in}
+\titlespacing*{\section}{0pt}{1.4ex plus .4ex minus .2ex}{0.45ex}
+\titlespacing*{\subsection}{0pt}{1.1ex plus .3ex minus .2ex}{0.35ex}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{certificate}[theorem]{Certificate}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary}
+\newtheorem{example}[theorem]{Worked example}
+
+\newcommand{\Torus}{\mathbb T}
+\newcommand{\R}{\mathbb R}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Si}{\operatorname{Si}}
+\newcommand{\RMSE}{\operatorname{RMSE}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\chiA}{\chi_{[-a,a)}}
+\newcommand{\SN}{S_N}
+\newcommand{\RN}{\mathcal R_N}
+\newcommand{\Ps}{P_{\mathrm s}}
+\newcommand{\Pj}{P_{\mathrm j}}
+
+\newcommand{\StatusBox}[2]{%
+\begin{center}
+\colorbox{#1}{\parbox{0.93\linewidth}{\vspace{5pt}\small #2\vspace{5pt}}}
+\end{center}}
+
+\newcommand{\FigurePage}[3]{%
+\par
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\textwidth,height=0.52\textheight,keepaspectratio]{#1.pdf}
+\caption{#2}
+\label{fig:#1}
+\vspace{2pt}
+\begin{minipage}{0.94\textwidth}
+\small\RaggedRight\textbf{What the figure shows.} #3
+\end{minipage}
+\end{figure}
+\par\medskip
+}
+
+\newcommand{\StartPart}[4]{%
+\clearpage
+\phantomsection
+\addcontentsline{toc}{part}{Part #1: #2}
+\chapter{#3}
+\begin{center}
+\colorbox{PaleBlue}{\parbox{0.94\linewidth}{%
+\vspace{4pt}
+\textbf{Part #1: #2}\par
+\small #4
+\vspace{4pt}}}
+\end{center}
+\medskip
+}
+
+\makeatletter
+\newcommand{\CompactContents}{%
+\chapter*{\contentsname}
+\begingroup
+\small
+\setlength{\columnsep}{0.28in}
+\setlength{\parskip}{0pt}
+\begin{multicols}{2}
+\@starttoc{toc}
+\end{multicols}
+\endgroup
+}
+\newcommand{\CompactListOfFigures}{%
+\chapter*{\listfigurename}
+\begingroup
+\footnotesize
+\setlength{\columnsep}{0.25in}
+\setlength{\parskip}{0pt}
+\begin{multicols}{2}
+\@starttoc{lof}
+\end{multicols}
+\endgroup
+}
+\makeatother
+
+\lstset{
+ language=Python,
+ basicstyle=\ttfamily\scriptsize,
+ keywordstyle=\color{Blue}\bfseries,
+ commentstyle=\color{Teal},
+ stringstyle=\color{Magenta},
+ numbers=left,
+ numberstyle=\tiny\color{Muted},
+ stepnumber=1,
+ numbersep=6pt,
+ frame=single,
+ breaklines=true,
+ breakatwhitespace=false,
+ columns=fullflexible,
+ keepspaces=true,
+ showstringspaces=false,
+ tabsize=4,
+ xleftmargin=0.06\linewidth,
+ xrightmargin=0.02\linewidth
+}
+
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\begin{tikzpicture}[remember picture,overlay]
+\fill[Blue!8] (current page.south west) rectangle (current page.north east);
+\fill[Orange!14] ([xshift=-2.7in]current page.north east) rectangle (current page.north east);
+\draw[Blue,line width=4pt] ([xshift=.58in,yshift=-.66in]current page.north west) -- ([xshift=-.58in,yshift=-.66in]current page.north east);
+\draw[Magenta,line width=2pt] ([xshift=.58in,yshift=.66in]current page.south west) -- ([xshift=-.58in,yshift=.66in]current page.south east);
+\end{tikzpicture}
+\vspace*{0.52in}
+{\large\color{Blue}\bfseries PROJECTOR-RESOLVED SEED CALCULUS\par}
+\vspace{0.18in}
+{\fontsize{32}{37}\selectfont\bfseries Projector-Resolved Gibbs\\Reconstruction\par}
+\vspace{0.14in}
+{\fontsize{20}{24}\selectfont\color{Muted} A step-by-step study of a discontinuity, Fourier ringing, packet separation, finite recovery, and reconstruction\par}
+\vspace{0.42in}
+\begin{minipage}{0.83\linewidth}
+\large
+We follow one explicitly defined periodic signal from its elementary pieces through Fourier analysis, the Gibbs limit, packet separation, exact synthesis, interval recovery, perturbation tests, and noise experiments. Every calculation, plot, and numerical check comes from one Python file.
+\end{minipage}
+\vfill
+{\Large\bfseries Komorebi P.\par}
+\vspace{0.25in}
+{\large Worked mathematical and computational edition\par}
+\end{titlepage}
+
+\frontmatter
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+The whole argument follows one signal. On the circle
+\[
+\Torus=\R/(2\pi\Z),
+\]
+define
+\[
+ s(x)=\frac14+\frac25\cos(2x)-\frac13\sin(3x)+\frac15\cos(5x),
+\qquad
+ j(x)=\mathbf 1_{[-\pi/3,\,\pi/3)}(x),
+\]
+and
+\[
+ f(x)=s(x)+j(x).
+\]
+The smooth packet is a degree-five trigonometric polynomial. The edge packet is a unit rectangular discontinuity. Global Fourier truncation reproduces the smooth part exactly once the order is at least five, but it approximates the discontinuity by a Dirichlet-kernel convolution. At the right edge, after scaling
+\[
+ x=a-\frac{z}{N+1/2},\qquad a=\frac\pi3,
+\]
+the jump partial sums converge to
+\[
+ \frac12+\frac1\pi\Si(z).
+\]
+The first interior maximum occurs at $z=\pi$, producing the classical overshoot
+\[
+ G=\frac{\Si(\pi)}{\pi}-\frac12
+ =0.089489872236\ldots.
+\]
+The oscillatory region narrows, but the normalized first overshoot does not vanish.
+
+The model space is the direct sum
+\[
+ \mathcal M_5=\mathcal T_5\oplus\Span\{j\},
+\]
+where $\mathcal T_5$ is the real degree-five trigonometric space. The associated projectors $\Ps$ and $\Pj$ give the exact analysis
+\[
+ f\longmapsto (\Ps f,\Pj f)=(s,j).
+\]
+Instead of applying the same global Fourier truncation to both packets, define
+\[
+ \boxed{\RN=\SN\Ps+\Pj.}
+\]
+For every $N\ge5$,
+\[
+ \RN f=\SN s+j=s+j=f.
+\]
+The discontinuity is not smoothed, filtered, or represented by an increasingly long Fourier tail. It is retained exactly as a geometric packet. In this finite model, the jump-generated Gibbs term never enters the reconstructed signal.
+
+The second half removes the oracle assumption from the finite sampled example. On a $96$-point grid, the smooth background is represented by its complete degree-five design matrix and every admissible positive cyclic interval packet of length at most half the grid is enumerated. After projecting both the data and each candidate packet off the smooth subspace, the best amplitude is obtained in closed form and the residual is minimized exactly. The true interval $(\text{start},\text{length})=(32,32)$ is the unique minimizer. Its objective residual is zero to floating-point representation, while the next candidate has residual $0.7531607493\ldots$. The reconstructed data have maximum residual $5.55\times10^{-16}$.
+
+The finite exact theorem is separated from numerical robustness experiments. Noise, off-grid edges, filtering comparisons, and runtime scaling are reported as computations. Universal edge discovery, arbitrary multidimensional singularities, and unrestricted Gibbs removal are not claimed.
+
+\chapter*{The precise claim}
+\addcontentsline{toc}{chapter}{The precise claim}
+\StatusBox{PaleTeal}{\textbf{What is proved.} The raw Fourier partial sums of the chosen jump packet have the universal Gibbs edge profile. The smooth-edge model has complementary projectors. The operator $\RN=\SN\Ps+\Pj$ is the identity on the whole model space for $N\ge5$. On the displayed noise-free grid, profile least squares over the finite interval library recovers the unique true packet.}
+
+\StatusBox{PaleOrange}{\textbf{What is measured.} The supplied program runs fixed numerical experiments on noise recovery, off-grid localization, filtering, transition width, runtime, and residual localization.}
+
+\StatusBox{PaleMagenta}{\textbf{What lies outside this example.} Ordinary Fourier partial sums still ring. The argument does not recover every discontinuity from arbitrary noisy data, and it does not claim historical priority for singularity subtraction or adapted representations. It gives one fully worked realization of the calculus.}
+
+\chapter*{How to read the book}
+\addcontentsline{toc}{chapter}{How to read the book}
+The argument runs in this order:
+\[
+\boxed{
+\begin{gathered}
+\text{seed}\to\text{exact coefficients}\to\text{Dirichlet kernel}\to\text{Gibbs limit}\\
+\to\text{model packets}\to\text{resolved operator}\to\text{finite sample projector}\\
+\to\text{interval search}\to\text{exact reconstruction}\to\text{residual diagnostics}\\
+\to\text{residual check}.
+\end{gathered}}
+\]
+We first define the signal and derive the Gibbs mechanism. We then build the packet reconstruction, recover the interval from samples, compare it with standard filters, and study what happens when the support or amplitude is wrong. The last part gives the numerical checks and the full source listing.
+
+\CompactContents
+\CompactListOfFigures
+
+\mainmatter
+
+\StartPart{I}{The single signal}{The primitive seed}{We begin with the signal itself. Its smooth and discontinuous pieces are written down before any approximation is applied.}
+
+\section{Ambient space and periodic coordinate}
+The ambient continuous coordinate is the circle
+\[
+\Torus=\R/(2\pi\Z).
+\]
+Representatives are chosen in $[-\pi,\pi)$. Addition is always interpreted modulo $2\pi$. The complex Fourier characters are
+\[
+ e_n(x)=\e^{\ii nx},\qquad n\in\Z.
+\]
+They satisfy
+\[
+ \frac1{2\pi}\int_{-\pi}^{\pi}e_n(x)\overline{e_m(x)}\,dx=\delta_{nm}.
+\]
+The Fourier coefficient convention is
+\[
+ \widehat g(n)=\frac1{2\pi}\int_{-\pi}^{\pi}g(x)\e^{-\ii nx}\,dx.
+\]
+The order-$N$ partial-sum operator is
+\[
+ \SN g(x)=\sum_{|n|\le N}\widehat g(n)\e^{\ii nx}.
+\]
+
+\section{The smooth seed}
+Define
+\[
+\boxed{
+ s(x)=\frac14+\frac25\cos(2x)-\frac13\sin(3x)+\frac15\cos(5x).}
+\]
+The smooth part is not an unspecified remainder. It is the following degree-five trigonometric polynomial. Its nonzero complex coefficients are
+\[
+\widehat s(0)=\frac14,
+\qquad
+\widehat s(\pm2)=\frac15,
+\qquad
+\widehat s(3)=\frac{\ii}{6},
+\qquad
+\widehat s(-3)=-\frac{\ii}{6},
+\qquad
+\widehat s(\pm5)=\frac1{10}.
+\]
+Therefore
+\[
+\SN s=s\qquad(N\ge5).
+\]
+The smooth packet is deliberately finite so that every remaining error can be attributed exactly to the treatment of the discontinuity.
+
+\section{The geometric edge packet}
+Let
+\[
+ a=\frac\pi3
+\]
+and define the periodic half-open interval packet
+\[
+\boxed{j(x)=\mathbf1_{[-a,a)}(x).}
+\]
+Its one-sided values at the right edge are
+\[
+ j(a^-)=1,
+\qquad
+ j(a^+)=0.
+\]
+Its jump amplitude is exactly one. At the left edge the orientation is reversed.
+
+\section{The complete signal}
+The one signal used throughout the book is
+\[
+\boxed{f=s+j.}
+\]
+It has no hidden random component. Every coefficient, edge, sample, and reconstruction is generated from this formula.
+
+\FigurePage{01_signal_components}{The smooth seed, geometric edge packet, and complete signal. The vertical discontinuities occur at $x=\pm\pi/3$.}{The key distinction is already visible. The smooth packet is global and oscillatory but finite-band. The edge packet is spatially simple and spectrally long-tailed. Treating them with the same approximation operator is a coordinate choice, not a necessity.}
+
+\FigurePage{04_seed_atoms}{Primitive atoms from which the complete signal is assembled.}{The signal is built from a constant, three harmonic atoms, scalar multiplication, addition, and one interval indicator. Nothing new is added after the target signal has been chosen.}
+
+\FigurePage{05_jump_geometry}{The edge packet as a geometric object with two oriented boundaries.}{The right edge is the location at which the detailed Gibbs calculation will be performed. The left edge behaves by symmetry.}
+
+\chapter{The first exact packet decomposition}
+
+\section{The model class}
+Let $\mathcal T_5$ be the real trigonometric polynomials of degree at most five:
+\[
+\mathcal T_5=
+\Span_{\R}\{1,\cos x,\sin x,\ldots,\cos5x,\sin5x\}.
+\]
+Define
+\[
+\mathcal J=\Span_{\R}\{j\}.
+\]
+Since every member of $\mathcal T_5$ is continuous and every nonzero member of $\mathcal J$ has a jump, the intersection is trivial:
+\[
+\mathcal T_5\cap\mathcal J=\{0\}.
+\]
+Hence
+\[
+\boxed{\mathcal M_5=\mathcal T_5\oplus\mathcal J}
+\]
+is a direct sum.
+
+\begin{definition}[Smooth and edge projectors]
+For $g=t+cj\in\mathcal M_5$, define
+\[
+\Ps g=t,
+\qquad
+\Pj g=cj.
+\]
+\end{definition}
+
+\begin{theorem}[Exact two-packet calculus]
+On $\mathcal M_5$,
+\[
+\Ps^2=\Ps,
+\qquad
+\Pj^2=\Pj,
+\qquad
+\Ps\Pj=\Pj\Ps=0,
+\qquad
+\Ps+\Pj=I.
+\]
+Consequently every $g\in\mathcal M_5$ has the exact analysis-synthesis identity
+\[
+\boxed{g=\Ps g+\Pj g.}
+\]
+\end{theorem}
+
+\begin{proof}
+Write $g=t+cj$. Then $\Ps g=t$ and $\Pj g=cj$. Reapplying either map does not change its selected component, so both are idempotent. Applying $\Ps$ to $cj$ gives zero, and applying $\Pj$ to $t$ gives zero. Finally $\Ps g+\Pj g=t+cj=g$.
+\end{proof}
+
+\begin{remark}
+These are algebraic projectors on the chosen direct sum. They need not be orthogonal in the ambient $L^2$ inner product. Exact reconstruction requires the two ranges to be complementary and complete. Orthogonality is a separate geometric question.
+\end{remark}
+
+\FigurePage{02_closed_pipeline}{The calculation from the signal seed to the final residual.}{The smooth packet enters the Fourier block. The edge packet passes through the identity block. The two outputs are then added.}
+
+\FigurePage{03_exact_packet_split}{The exact decomposition $f=\Ps f+\Pj f$.}{This is the structural step on which the entire reconstruction rests. Gibbs ringing will be traced to applying $\SN$ to $\Pj f$ rather than preserving that packet.}
+
+\StartPart{II}{Why global Fourier truncation rings}{Exact Fourier coefficients}{This part derives the coefficient tail, the Dirichlet-kernel convolution, and the scaled sine-integral profile. The overshoot is traced to a precise local limit near the jump.}
+
+\section{The edge coefficient calculation}
+For $n\ne0$,
+\[
+\begin{aligned}
+\widehat j(n)
+&=\frac1{2\pi}\int_{-a}^{a}\e^{-\ii nx}\,dx\\
+&=\frac1{2\pi}\left[\frac{\e^{-\ii nx}}{-\ii n}\right]_{-a}^{a}\\
+&=\frac{\e^{\ii na}-\e^{-\ii na}}{2\pi\ii n}\\
+&=\boxed{\frac{\sin(na)}{\pi n}}.
+\end{aligned}
+\]
+For $n=0$,
+\[
+\widehat j(0)=\frac1{2\pi}\int_{-a}^{a}1\,dx=\frac a\pi=\frac13.
+\]
+Thus
+\[
+\boxed{
+\widehat j(n)=
+\begin{cases}
+1/3,&n=0,\\[2pt]
+\sin(n\pi/3)/(\pi n),&n\ne0.
+\end{cases}}
+\]
+
+\section{Six residue packets in frequency}
+The factor $\sin(n\pi/3)$ has the exact period-six pattern
+\[
+\sin\left(\frac{n\pi}{3}\right)=
+\begin{cases}
+0,&n\equiv0,3\pmod6,\\[2pt]
+\sqrt3/2,&n\equiv1,2\pmod6,\\[2pt]
+-\sqrt3/2,&n\equiv4,5\pmod6.
+\end{cases}
+\]
+Therefore the jump's Fourier sequence already carries a polyphase decomposition. Two residue packets vanish, two are positive, and two are negative. The factor $1/n$ remains and prevents finite spectral closure.
+
+\section{The full coefficient formula}
+Combining the smooth and jump packets gives
+\[
+\widehat f(n)=\widehat s(n)+\widehat j(n).
+\]
+For $|n|>5$,
+\[
+\widehat f(n)=\widehat j(n)=\frac{\sin(n\pi/3)}{\pi n}.
+\]
+The asymptotic decay is only $O(1/|n|)$ along the four nonzero residue classes. This is the spectral signature of the discontinuity.
+
+\FigurePage{06_exact_fourier_coefficients}{Exact Fourier magnitudes of the smooth and edge packets.}{The smooth spectrum terminates. The edge spectrum does not. Global truncation therefore spends all additional resolution on approximating the discontinuity.}
+
+\FigurePage{07_coefficient_residue_classes}{The exact six-phase pattern of $\sin(n\pi/3)$.}{The coefficients split into six residue classes. This does not remove the $1/n$ tail. It makes the arithmetic pattern visible.}
+
+\FigurePage{08_coefficient_decay}{The algebraic edge-coefficient tail and its $1/(\pi n)$ envelope.}{No amount of increasing $N$ turns the jump packet into a finite Fourier object.}
+
+\chapter{The Dirichlet-kernel mechanism}
+
+\section{Partial sums as convolution}
+The order-$N$ Dirichlet kernel is
+\[
+ D_N(u)=\sum_{n=-N}^{N}\e^{\ii nu}
+ =\frac{\sin((N+1/2)u)}{\sin(u/2)}.
+\]
+For every integrable periodic function,
+\[
+ \SN g(x)=\frac1{2\pi}\int_{-\pi}^{\pi}D_N(x-t)g(t)\,dt.
+\]
+For the interval packet,
+\[
+\boxed{
+ \SN j(x)=\frac1{2\pi}\int_{-a}^{a}D_N(x-t)\,dt.}
+\]
+Equivalently, direct coefficient substitution gives
+\[
+\boxed{
+ \SN j(x)=\frac13+\frac2\pi\sum_{n=1}^{N}
+ \frac{\sin(n\pi/3)}{n}\cos(nx).}
+\]
+
+\section{Why sharpening produces oscillation}
+The mass of $D_N$ concentrates near the origin as $N$ grows, but the kernel is not nonnegative. It has alternating sidelobes whose amplitudes are large enough to survive the edge scaling. Convolution at a discontinuity necessarily samples both one-sided values. The width of the resulting transition decreases, while the normalized first oscillation approaches a nonzero constant.
+
+\FigurePage{09_dirichlet_kernels}{Dirichlet kernels at four orders.}{The central lobe becomes narrower, but the kernel retains alternating positive and negative sidelobes.}
+
+\FigurePage{10_edge_convolution}{The local convolution mechanism at the right edge.}{The global truncation operator cannot know that the left and right samples belong to different geometric packets. It mixes both sides through the same kernel.}
+
+\chapter{The scaled Gibbs limit}
+
+\section{Right-edge scaling}
+Focus on the right edge $x=a$. Approach it from the interior with
+\[
+ x_N(z)=a-\frac{z}{N+1/2},
+ \qquad z\in\R.
+\]
+Positive $z$ lies inside the interval. The local scale is exactly the reciprocal width of the main Dirichlet lobe.
+
+\begin{theorem}[Universal edge profile]
+For each fixed $z\in\R$,
+\[
+\boxed{
+ \lim_{N\to\infty}\SN j\!\left(a-\frac{z}{N+1/2}\right)
+ =\frac12+\frac1\pi\Si(z),}
+\]
+where
+\[
+ \Si(z)=\int_0^z\frac{\sin u}{u}\,du.
+\]
+\end{theorem}
+
+\begin{proof}
+Write the convolution integral in the local variable $u=(N+1/2)(t-a)$. Only the endpoint $t=a$ contributes a nonuniform term. The opposite endpoint stays a fixed distance away. In the endpoint window,
+\[
+ \sin\left(\frac{x-t}{2}\right)
+ \sim \frac{x-t}{2},
+\]
+and the rescaled Dirichlet kernel becomes the sinc kernel. The midpoint contribution gives $1/2$, while integrating the local sinc profile from $0$ to $z$ gives $\Si(z)/\pi$. Contributions away from the edge converge uniformly and supply the correct one-sided baseline. Combining the terms yields the stated limit.
+\end{proof}
+
+\section{The first maximum}
+Differentiate the limiting profile:
+\[
+ \frac{d}{dz}\left(\frac12+\frac1\pi\Si(z)\right)
+ =\frac1\pi\frac{\sin z}{z}.
+\]
+The first positive critical point is $z=\pi$. It is a maximum. Therefore
+\[
+ \frac12+\frac{\Si(\pi)}{\pi}
+ =1+G,
+\]
+where
+\[
+\boxed{
+ G=\frac{\Si(\pi)}{\pi}-\frac12
+ =0.089489872236\ldots.}
+\]
+The normalized overshoot is about $8.949\%$ of the jump amplitude.
+
+\begin{corollary}[Persistence on the complete signal]
+For every $N\ge5$, the smooth packet is reproduced exactly by $\SN$. Hence the local overshoot of $\SN f$ relative to the interior branch $s+1$ is exactly the overshoot of $\SN j$ relative to $1$.
+\end{corollary}
+
+\begin{boundary}
+The theorem states that the first scaled overshoot persists. It does not say that the oscillatory region keeps a fixed physical width. Its width is $O(1/N)$.
+\end{boundary}
+
+\FigurePage{11_raw_partial_N5}{Raw global Fourier reconstruction at $N=5$.}{At the first order that exactly contains the smooth seed, all visible error is generated by the jump packet.}
+\FigurePage{12_raw_partial_N10}{Raw global Fourier reconstruction at $N=10$.}{Additional modes narrow the ringing region but do not eliminate its edge mechanism.}
+\FigurePage{13_raw_partial_N20}{Raw global Fourier reconstruction at $N=20$.}{The global error decreases while the first edge overshoot remains comparable to the jump amplitude.}
+\FigurePage{14_raw_partial_N40}{Raw global Fourier reconstruction at $N=40$.}{The oscillation is localized more tightly around the two boundaries.}
+\FigurePage{15_edge_zoom_N10}{Right-edge detail at $N=10$.}{The approximation crosses the exact one-sided levels and oscillates around them.}
+\FigurePage{16_edge_zoom_N20}{Right-edge detail at $N=20$.}{The width contracts. The first overshoot becomes more clearly separated.}
+\FigurePage{17_edge_zoom_N40}{Right-edge detail at $N=40$.}{The maximum is close to the universal normalized value.}
+\FigurePage{18_scaled_profile_collapse}{Collapse of finite edge profiles onto the sine-integral limit.}{The correct comparison variable is $z=(N+1/2)(a-x)$, not the unscaled spatial coordinate.}
+\FigurePage{19_gibbs_constant_convergence}{Convergence of the first scaled overshoot to $G$.}{The plotted value is evaluated at the theoretically selected point $x=a-\pi/(N+1/2)$.}
+\FigurePage{20_overshoot_vs_order}{Overshoot for raw, filtered, and packet-resolved methods.}{The packet curve is identically zero because the edge packet is never truncated.}
+\FigurePage{21_rmse_vs_order}{Global RMSE as the spectral order grows.}{For this finite-band background, the packet reconstruction reaches floating-point zero at $N=5$.}
+\FigurePage{22_boundary_rmse_vs_order}{Boundary-band RMSE.}{This metric isolates the computational region in which the coordinate choice matters most.}
+
+\StartPart{III}{The packet reconstruction}{The resolved operator}{The singular piece now receives its own coordinate. Fourier truncation acts on the smooth packet, while the edge packet passes through unchanged.}
+
+\section{Why the global operator is the wrong block assignment}
+Global truncation applies $\SN$ to the complete signal:
+\[
+ \SN f=\SN\Ps f+\SN\Pj f.
+\]
+The first block is exact for $N\ge5$. The second block is the Gibbs-producing approximation of the discontinuity.
+
+The calculus permits different transfer rules on different packets. Define
+\[
+\boxed{
+ \RN=\SN\Ps+\Pj.}
+\]
+The smooth packet is handled spectrally. The edge packet is retained in its native geometric coordinate.
+
+\begin{theorem}[Exact Gibbs-bypassing reconstruction]
+For every $g\in\mathcal M_5$ and every $N\ge5$,
+\[
+\boxed{\RN g=g.}
+\]
+\end{theorem}
+
+\begin{proof}
+Write $g=t+cj$ with $t\in\mathcal T_5$. Then
+\[
+\RN g
+=\SN\Ps(t+cj)+\Pj(t+cj)
+=\SN t+cj.
+\]
+Since $t$ has degree at most five and $N\ge5$, $\SN t=t$. Hence $\RN g=t+cj=g$.
+\end{proof}
+
+\begin{corollary}[Exact one-sided values]
+For the worked signal and $N\ge5$,
+\[
+ (\RN f)(a^-)=s(a)+1,
+ \qquad
+ (\RN f)(a^+)=s(a).
+\]
+No jump-induced overshoot, undershoot, or transition blur is introduced.
+\end{corollary}
+
+\section{Block matrix}
+Relative to
+\[
+ \mathcal M_5=\mathcal T_5\oplus\mathcal J,
+\]
+the operator is
+\[
+\RN=
+\begin{pmatrix}
+\SN|_{\mathcal T_5}&0\\
+0&I_{\mathcal J}
+\end{pmatrix}.
+\]
+For $N\ge5$ this becomes
+\[
+\RN=
+\begin{pmatrix}
+I_{\mathcal T_5}&0\\
+0&I_{\mathcal J}
+\end{pmatrix}=I_{\mathcal M_5}.
+\]
+
+\FigurePage{29_packet_operator_pipeline}{Analysis, packet-specific operation, and synthesis.}{The change is not a stronger Fourier filter. The two packets are given different operators because they have different structure.}
+\FigurePage{53_packet_operator_blocks}{Block matrix of the resolved reconstruction operator.}{At sufficient smooth resolution, both diagonal blocks are identities and both cross blocks vanish.}
+\FigurePage{30_packet_exact_reconstruction}{Exact resolved reconstruction of the continuous worked signal.}{The dashed reconstruction is hidden beneath the exact curve.}
+\FigurePage{31_packet_residual}{Pointwise residual of the resolved reconstruction.}{The nonzero scale is only floating-point evaluation noise.}
+
+\chapter{Extension beyond finite-band smooth packets}
+
+\section{Analytic smooth background}
+The smooth part of the worked signal is finite-band, so the identity appears at a finite order. The same argument applies to any smooth packet $s$ for which a Fourier error estimate is available. Let
+\[
+ f=s+cj,
+\qquad
+\RN f=\SN s+cj.
+\]
+Then the exact identity is
+\[
+\boxed{f-\RN f=s-\SN s.}
+\]
+The jump contributes no approximation error at all.
+
+\begin{proposition}[Uniform analytic-tail bound]
+Suppose
+\[
+ |\widehat s(n)|\le Ce^{-\rho|n|}
+\]
+for constants $C,\rho>0$. Then
+\[
+\norm{f-\RN f}_{\infty}
+\le
+2C\sum_{n>N}e^{-\rho n}
+=\boxed{\frac{2Ce^{-\rho(N+1)}}{1-e^{-\rho}}}.
+\]
+\end{proposition}
+
+\begin{proof}
+The edge packet cancels exactly. Apply the triangle inequality to the omitted Fourier tail of $s$.
+\end{proof}
+
+\begin{remark}
+The bound is uniform across the edge. The smooth approximation remains uniformly convergent because the discontinuity is no longer part of the packet being truncated.
+\end{remark}
+
+\chapter{Why filtering is different}
+
+\section{Fejer averaging}
+The Fejer sum is
+\[
+ \sigma_Ng=\frac1{N+1}\sum_{m=0}^{N}S_mg.
+\]
+Its kernel is nonnegative and integrates to $2\pi$. Hence for $0\le j\le1$,
+\[
+0\le\sigma_Nj\le1.
+\]
+It eliminates overshoot of the jump component, but it replaces the exact discontinuity by a transition layer.
+
+\section{Lanczos and exponential filters}
+Lanczos and exponential spectral weights suppress high-frequency coefficients. They reduce sidelobes but also modify low-order information unless designed to preserve selected modes. The essential tradeoff is between oscillation and edge width.
+
+\section{Packet retention changes the approximation problem}
+Filtering asks how to approximate the whole signal more gently in the same global Fourier coordinate. Packet retention asks which components should be approximated in Fourier coordinates at all. The second question can remove the singular packet from the truncation error instead of redistributing its error.
+
+\FigurePage{23_fejer_jump}{Fejer reconstruction of the jump packet.}{Positivity prevents overshoot, but the discontinuity is replaced by a finite transition width.}
+\FigurePage{24_lanczos_jump}{Lanczos-filtered jump reconstruction.}{Ringing is reduced but not removed exactly, and the edge remains blurred.}
+\FigurePage{25_exponential_jump}{Exponentially filtered jump reconstruction.}{Strong high-mode damping controls oscillations by suppressing the very coefficients needed to sharpen the edge.}
+\FigurePage{26_method_comparison_full}{Full-signal comparison at $N=40$.}{Away from the edge all methods are visually similar. The decisive differences occur in a narrow boundary region.}
+\FigurePage{27_method_comparison_edge}{Right-edge comparison at $N=40$.}{The packet method preserves both one-sided values and the exact edge location.}
+\FigurePage{28_metric_heatmap}{Four complementary error measures at $N=40$.}{No scalar metric alone captures overshoot, blur, global error, and boundary error.}
+\FigurePage{55_method_tradeoff}{Boundary error versus transition width.}{Filtering moves along a blur-error curve. Exact packet retention changes the coordinate model and occupies the origin for this worked class.}
+
+\StartPart{IV}{Recovering the packet from samples}{The finite observation model}{The edge is no longer assumed known. It is recovered from a finite grid by searching a stated interval library and fitting the smooth background in closed form.}
+
+\section{The sample grid}
+Take
+\[
+ M=96,
+ \qquad
+ x_m=-\pi+\frac{2\pi m}{M},
+ \qquad
+ 0\le m<M.
+\]
+Because $M$ is divisible by three, the edges $\pm\pi/3$ align with the sample grid. The interval begins at sample
+\[
+ r_*=32
+\]
+and has length
+\[
+ \ell_*=32.
+\]
+Let
+\[
+ q_{r,\ell}[m]
+ =\mathbf1_{\{r,r+1,\ldots,r+\ell-1\}\bmod M}(m)
+\]
+be the cyclic interval mask. The true mask is
+\[
+ q_*=q_{32,32}.
+\]
+The observed vector is
+\[
+ y=B\theta_*+q_*.
+\]
+
+\section{The smooth design matrix}
+Let $B\in\R^{M\times11}$ contain the sampled basis
+\[
+1,\cos x,\sin x,\ldots,\cos5x,\sin5x.
+\]
+Let $Q$ be any orthonormal basis for $\Ran(B)$ and set
+\[
+ P_B=QQ^{\mathsf T}.
+\]
+The residual projector is
+\[
+ P_B^{\perp}=I-P_B.
+\]
+Since the smooth seed lies in $\Ran(B)$,
+\[
+ P_B^{\perp}y=P_B^{\perp}q_*.
+\]
+This removes every unknown smooth coefficient before interval selection.
+
+\FigurePage{32_finite_grid_samples}{The continuous signal and its $96$ observed values.}{The recovery algorithm receives the samples, the smooth degree, and the allowed interval library. It does not receive the true start or length.}
+\FigurePage{33_background_design_matrix}{The complete degree-five sampled trigonometric design.}{The matrix has eleven columns: one constant and sine-cosine pairs through degree five.}
+\FigurePage{34_residualized_signal_and_mask}{Residualizing the data and the true mask against the smooth subspace.}{In the exact model, the two displayed vectors are identical.}
+
+\chapter{Profile least squares over interval packets}
+
+\section{Eliminating the smooth coefficients}
+For a candidate interval $q$, consider
+\[
+ y=B\theta+Aq.
+\]
+Projecting by $P_B^{\perp}$ gives
+\[
+ y^{\perp}=Aq^{\perp},
+\qquad
+ y^{\perp}=P_B^{\perp}y,
+\qquad
+ q^{\perp}=P_B^{\perp}q.
+\]
+For fixed $q$ with $q^{\perp}\ne0$, the least-squares amplitude is
+\[
+\boxed{
+ \widehat A(q)=
+ \frac{\inner{q^{\perp}}{y^{\perp}}}
+ {\norm{q^{\perp}}_2^2}.}
+\]
+The profiled objective is
+\[
+\boxed{
+ J(q)=\norm{y^{\perp}-\widehat A(q)q^{\perp}}_2^2.}
+\]
+
+\begin{theorem}[Finite exact interval recovery]
+Assume the data satisfy
+\[
+ y=B\theta_*+A_*q_*,
+ \qquad A_*>0,
+\]
+and assume no other admissible candidate $q$ has $q^{\perp}$ equal to a positive scalar multiple of $q_*^{\perp}$. Then $q_*$ is the unique minimizer of $J$ among positive-amplitude candidates, and
+\[
+ J(q_*)=0.
+\]
+\end{theorem}
+
+\begin{proof}
+Residualization gives $y^{\perp}=A_*q_*^{\perp}$. Substituting $q_*$ into the amplitude formula returns $A_*$, so $J(q_*)=0$. If another candidate had zero objective, then $y^{\perp}=\widehat A(q)q^{\perp}$ with $\widehat A(q)>0$, so $q^{\perp}$ would be a positive scalar multiple of $q_*^{\perp}$, contrary to the hypothesis.
+\end{proof}
+
+\section{The finite identifiability gap}
+The program enumerates all positive cyclic intervals with lengths between eight and forty-eight samples. There are $3936$ candidates after excluding residualized zero directions. The exact minimizer is
+\[
+ (r,\ell,A)=(32,32,1).
+\]
+Its computed objective is zero after nonnegativity clipping. The second-best objective is
+\[
+0.7531607493634364.
+\]
+Thus the finite gap is
+\[
+\boxed{\Gamma=0.7531607493634364.}
+\]
+
+\begin{corollary}[Objective perturbation stability]
+If a perturbed objective $\widetilde J$ satisfies
+\[
+\sup_q|\widetilde J(q)-J(q)|<\Gamma/2,
+\]
+then the exact minimizer remains unique.
+\end{corollary}
+
+\FigurePage{35_candidate_objective_ranking}{The ranked profile objective values.}{The true interval is separated from every other admissible packet by a large finite gap.}
+\FigurePage{36_start_length_objective}{The complete start-length objective surface.}{The white ring marks $(32,32)$. The logarithmic scale makes the zero residual visible against the nonzero field.}
+\FigurePage{37_identifiability_gap}{Best residual, second-best residual, and their gap.}{The gap shows how far the best wrong interval lies above the true one.}
+
+\chapter{Reconstruction after packet recovery}
+
+\section{Recovered smooth packet}
+After finding $(\widehat q,\widehat A)$, reconstruct the smooth component by
+\[
+\widehat s=P_B(y-\widehat A\widehat q).
+\]
+Then
+\[
+\widehat y=\widehat s+\widehat A\widehat q.
+\]
+For the worked data,
+\[
+\widehat q=q_*,
+\qquad
+\widehat A=1,
+\qquad
+\widehat s=s|_{\{x_m\}}.
+\]
+The maximum sample residual is
+\[
+\boxed{5.551115123125783\times10^{-16}.}
+\]
+
+\section{Recovered coefficients}
+The recovered degree-five coefficient vector agrees with the original coefficients to floating-point precision. In the column order
+\[
+1,\cos x,\sin x,\ldots,\cos5x,\sin5x,
+\]
+the only nonzero entries are
+\[
+\frac14,
+\qquad
+\frac25\text{ at }\cos2x,
+\qquad
+-\frac13\text{ at }\sin3x,
+\qquad
+\frac15\text{ at }\cos5x.
+\]
+
+\FigurePage{38_recovered_components}{Data, recovered smooth packet, and recovered edge packet.}{The fit returns the smooth part and the interval part separately, rather than only matching their sum.}
+\FigurePage{39_recovered_coefficients}{True and recovered smooth coefficients.}{Every harmonic coefficient outside the chosen degree-five model remains at numerical zero.}
+\FigurePage{40_closed_grid_reconstruction}{Sample-space synthesis and residual.}{This closes the loop from observed values to packet selection to exact reconstruction.}
+
+\chapter{The single executable algorithm}
+
+\begin{algorithm}[Finite Gibbs packet solver]
+Given $M$, degree $K$, minimum and maximum interval lengths, and samples $y$:
+\begin{enumerate}
+\item Build the complete trigonometric design $B_K$.
+\item Compute an orthonormal basis $Q$ of $\Ran(B_K)$.
+\item Form $y^{\perp}=y-QQ^{\mathsf T}y$.
+\item Enumerate every admissible cyclic interval mask $q$.
+\item Residualize $q^{\perp}=q-QQ^{\mathsf T}q$.
+\item Compute $\widehat A(q)=\inner{q^{\perp}}{y^{\perp}}/\norm{q^{\perp}}^2$.
+\item Reject nonpositive amplitudes.
+\item Minimize $J(q)=\norm{y^{\perp}-\widehat A(q)q^{\perp}}^2$.
+\item Reconstruct $\widehat s=QQ^{\mathsf T}(y-\widehat A\widehat q)$.
+\item Return $\widehat y=\widehat s+\widehat A\widehat q$, the objective gap, and the residual.
+\end{enumerate}
+\end{algorithm}
+
+\begin{remark}
+The exhaustive interval library is used because every candidate can be inspected. Larger problems could use dynamic programming, multiscale search, change-point methods, or branch-and-bound without changing the analysis and synthesis formulas.
+\end{remark}
+
+\StartPart{V}{Perturbation and residual-driven refinement}{What happens when the packet is wrong}{Wrong support, wrong amplitude, noise, and off-grid boundaries are treated separately. Each failure leaves a residual that points back to the part of the model that needs attention.}
+
+\section{One-sample mislocation}
+Shift the recovered interval by one sample while keeping its length and amplitude fixed. The smooth packet remains correct, but the edge packet disagrees at exactly two sample addresses. The residual is therefore supported only at the two boundaries.
+
+\begin{proposition}[Discrete packet perturbation identity]
+Let $q,\widetilde q\in\{0,1\}^M$ be masks and let $A,\widetilde A\in\R$. Then
+\[
+\begin{aligned}
+\norm{Aq-\widetilde A\widetilde q}_2^2
+&=(A-\widetilde A)^2|\supp q\cap\supp\widetilde q|\\
+&\quad+A^2|\supp q\setminus\supp\widetilde q|\\
+&\quad+\widetilde A^2|\supp\widetilde q\setminus\supp q|.
+\end{aligned}
+\]
+In particular, if $A=\widetilde A=1$,
+\[
+\boxed{\norm{q-\widetilde q}_2^2=|\supp q\triangle\supp\widetilde q|.}
+\]
+\end{proposition}
+
+\begin{proof}
+Partition the sample addresses into the intersection, the two one-sided differences, and the common complement. The summand is respectively $(A-\widetilde A)^2$, $A^2$, $\widetilde A^2$, and zero.
+\end{proof}
+
+\section{Amplitude mismatch}
+If the support is correct but the amplitude is $\widetilde A$, then
+\[
+\norm{Aq-\widetilde Aq}_2
+=|A-\widetilde A|\sqrt{|\supp q|}.
+\]
+The error remains inside the packet. It does not produce global ringing.
+
+\FigurePage{41_mislocated_edge}{A one-sample edge shift and its residual.}{The failure is not spread across the domain. It identifies the addresses at which the geometric packet is wrong.}
+\FigurePage{42_amplitude_mismatch}{Residuals for several amplitude errors.}{Correct support and incorrect amplitude produce a uniform packet-local residual.}
+\FigurePage{43_packet_perturbation_bound}{Exact support-error formula for shifted masks.}{For equal amplitudes, the squared Euclidean error equals the symmetric-difference count exactly.}
+\FigurePage{51_residual_localization}{Absolute residual under a wrong interval packet.}{Only two narrow regions require additional geometric refinement.}
+\FigurePage{52_adaptive_local_refinement}{Residual-driven local refinement.}{The calculus refines where the obstruction lives rather than increasing global Fourier order everywhere.}
+
+\chapter{Noise experiments}
+
+\section{Status of the experiment}
+The noise study is not part of the exact theorem. For each standard deviation
+\[
+\sigma\in\{0,.01,.03,.05,.08,.12,.16,.20,.25\},
+\]
+the program adds independent Gaussian noise to the $96$ samples and reruns the complete finite interval search. The random generator seed is fixed, and every aggregate is reproducible.
+
+\section{Observed behavior}
+At low and moderate noise the objective gap is large enough that the correct support remains stable in the sampled experiments. At larger noise the support rate decreases and endpoint errors appear. This is the expected boundary between an exact finite identification theorem and a statistical recovery theorem.
+
+\begin{boundary}
+The displayed curves do not prove minimax optimality, posterior consistency, or universal robustness. They certify only the deterministic experiment encoded in the source.
+\end{boundary}
+
+\FigurePage{44_noisy_recovery_examples}{Three representative noisy data sets and their recovered packet models.}{Each panel reports the selected start and length.}
+\FigurePage{45_exact_support_rate}{Exact support-recovery frequency in the deterministic Monte Carlo suite.}{The rate remains one through the moderate noise levels of this experiment and then degrades.}
+\FigurePage{46_mean_abs_start_error_samples}{Mean absolute start-index error.}{The endpoint error becomes nonzero only after the support selector begins to change.}
+\FigurePage{47_mean_abs_amplitude_error}{Mean absolute amplitude error.}{Amplitude estimation degrades continuously before support recovery necessarily fails.}
+\FigurePage{48_mean_boundary_rmse}{Mean reconstruction error in a seven-sample band around each boundary.}{The boundary metric is more sensitive to support errors than global RMSE.}
+
+\chapter{Off-grid edges}
+
+\section{Sampling resolution}
+Now shift the continuous half-width by $0.37$ grid spacings. The sampled mask still belongs to the finite interval library, but the true continuous edge lies between samples. The algorithm can recover the sampled support exactly while the continuous endpoint remains known only to within the grid spacing.
+
+\section{Refinement experiment}
+The program repeats the fit at several grid sizes. The measured maximum endpoint error tracks the sample spacing
+\[
+\Delta x=\frac{2\pi}{M}.
+\]
+This demonstrates the role of geometric refinement: continuous localization improves by refining the address system, not by increasing the global Fourier order on a fixed grid.
+
+\FigurePage{49_offgrid_example}{One off-grid sampled example and its best grid packet.}{The continuous edge is shown separately from the discrete support boundary.}
+\FigurePage{50_offgrid_convergence}{Endpoint error and grid spacing under refinement.}{The computation is consistent with first-order address localization for this simple grid selector.}
+
+\StartPart{VI}{Exact reconstruction and approximation}{Error ledger}{Raw truncation, classical filters, and packet reconstruction are compared on the same signal with the same error measures.}
+
+\section{Metrics}
+The program records:
+\begin{description}
+\item[Global RMSE] the root-mean-square error over the full periodic grid.
+\item[Maximum error] the pointwise maximum, including the jump midpoint convention.
+\item[Boundary RMSE] the RMSE within a fixed band of both edges.
+\item[Jump overshoot] the maximum amount above the interior unit level near the right edge.
+\item[Jump undershoot] the minimum value below the exterior zero level.
+\item[Transition width] the distance between approximate $0.9$ and $0.1$ crossings.
+\item[Total variation] the periodic discrete variation of the reconstructed signal.
+\end{description}
+
+No one metric is sufficient. Fejer averaging has no jump overshoot but nonzero transition width. Raw Fourier truncation has a sharper transition and persistent normalized overshoot. The packet operator has zero transition width, zero jump overshoot, and zero model error after the smooth order is reached.
+
+\section{Exact versus approximate operations}
+\begin{longtable}{L{0.31\textwidth}L{0.22\textwidth}L{0.38\textwidth}}
+\toprule
+Operation & Status & Meaning\\
+\midrule
+Fourier coefficient formula & exact identity & obtained by direct integration\\
+Dirichlet-kernel representation & exact identity & finite partial sum as convolution\\
+Scaled Gibbs profile & asymptotic theorem & fixed scaled coordinate as $N\to\infty$\\
+Smooth-edge projectors & exact algebra & direct-sum model coordinates\\
+Resolved operator & exact theorem & identity on $\mathcal M_5$ for $N\ge5$\\
+Finite interval search & exact finite optimization & exhaustive stated candidate family\\
+Noise study & computation & fixed random seed and finite repetitions\\
+Off-grid study & computation & finite grid sizes and one shifted edge\\
+Universal edge recovery & not claimed & would require a separate statistical theory\\
+\bottomrule
+\end{longtable}
+
+\FigurePage{54_fourier_polyphase_packets}{Residue-class refinement of the edge coefficient sequence.}{The spectral tail has exact arithmetic structure even though it is not finitely supported.}
+\FigurePage{60_claim_boundary}{The final claim boundary.}{The last chart separates exact identities, asymptotic results, finite checks, numerical experiments, and claims that are not made.}
+
+\chapter{Computational complexity and alternatives}
+
+\section{Reference implementation cost}
+For grid size $M$, the interval library contains $O(M^2)$ candidates. With fixed smooth degree $K$, residualizing each candidate costs $O(MK)$ in the direct reference implementation. The library build is therefore polynomial and intentionally transparent. Once residual masks are precomputed, one profile search is a matrix-vector product.
+
+\section{Accelerations consistent with the proof}
+The same objective can be accelerated by:
+\begin{itemize}
+\item cumulative sums for interval correlations.
+\item FFT evaluation of cyclic correlations.
+\item multiscale interval trees.
+\item branch-and-bound using objective lower bounds.
+\item dynamic programming for nested packet families.
+\item local refinement triggered by the residual support.
+\end{itemize}
+These are implementation improvements. They do not change the exact analysis-synthesis theorem.
+
+\FigurePage{56_runtime_scaling}{Measured library-build and profile-search times for the reference code.}{The timings describe this implementation on this machine. They are not asymptotic hardware claims.}
+
+\chapter{How the proof fits together}
+
+\section{Two independent chains}
+The complete result uses two proof chains.
+
+The first chain explains the failure of raw truncation:
+\[
+\text{exact edge coefficients}
+\to
+\text{Dirichlet convolution}
+\to
+\text{scaled sine-integral limit}
+\to
+\text{persistent Gibbs constant}.
+\]
+
+The second chain proves the resolved reconstruction:
+\[
+\text{direct-sum model}
+\to
+\text{complete projectors}
+\to
+\text{packet-specific operator}
+\to
+\text{exact synthesis}.
+\]
+
+They meet at the comparison
+\[
+\SN f=\SN s+\SN j,
+\qquad
+\RN f=\SN s+j.
+\]
+The first truncates the singular packet. The second does not.
+
+\FigurePage{57_proof_dependency_map}{Dependency map of the failure theorem and the reconstruction theorem.}{The packet result does not deny the Gibbs theorem. It changes the operator acting on the chosen singular component.}
+\FigurePage{59_summary_wheel}{The calculation from start to finish.}{The appendix contains the one Python file used for every figure, table, and numerical check.}
+
+\StartPart{VII}{Verification and reproducibility}{Verification table}{The analytic identities and numerical experiments are tied to one source file, one command, and a row-by-row record of the checks.}
+
+\section{Independent checks}
+The program checks:
+\begin{enumerate}
+\item exact Fourier coefficients against dense quadrature at nine indices.
+\item exact packet synthesis.
+\item exact degree-five smooth reconstruction.
+\item exact resolved reconstruction.
+\item the scaled Gibbs profile at multiple coordinates.
+\item the Gibbs constant at high order.
+\item positivity of the Fejer jump reconstruction.
+\item exact recovery of start, length, and amplitude.
+\item exact finite reconstruction and positive identifiability gap.
+\item the six-phase coefficient pattern.
+\item the symmetric-difference identity.
+\item the off-grid localization check.
+\item low-noise success and high-noise degradation controls.
+\item persistence of raw Gibbs overshoot and zero packet overshoot.
+\end{enumerate}
+The final generated test ledger contains twenty-six passing rows.
+
+\FigurePage{58_test_dashboard}{Verification results generated by the program.}{Each row gives the result of one check together with its residual or numerical witness.}
+
+\chapter{One-command reproduction}
+
+From the source directory, the entire computational layer is regenerated by
+\begin{lstlisting}[language=bash,numbers=none]
+python gibbs_packet_case.py --manifest
+\end{lstlisting}
+The PDF is then compiled with
+\begin{lstlisting}[language=bash,numbers=none]
+pdflatex -interaction=nonstopmode -halt-on-error Projector_Resolved_Gibbs_Case_Study.tex
+pdflatex -interaction=nonstopmode -halt-on-error Projector_Resolved_Gibbs_Case_Study.tex
+\end{lstlisting}
+The Windows PowerShell runner included in the release performs the same sequence.
+
+\chapter{Final theorem and conclusion}
+
+\begin{theorem}[Worked resolution of the Gibbs case]
+For the signal
+\[
+ f(x)=\frac14+\frac25\cos(2x)-\frac13\sin(3x)+\frac15\cos(5x)
+ +\mathbf1_{[-\pi/3,\pi/3)}(x),
+\]
+the following statements hold.
+\begin{enumerate}
+\item Raw global Fourier partial sums have the universal Gibbs edge profile and normalized first overshoot $G=0.089489872236\ldots$.
+\item The chosen model class $\mathcal M_5=\mathcal T_5\oplus\Span\{j\}$ has complementary exact projectors $\Ps$ and $\Pj$.
+\item The resolved operator $\RN=\SN\Ps+\Pj$ satisfies $\RN=I$ on $\mathcal M_5$ for every $N\ge5$.
+\item On the stated $96$-sample interval library, profile least squares uniquely recovers the true positive packet $(32,32)$ with amplitude one and a positive objective gap.
+\item The recovered smooth and edge packets synthesize the samples with maximum residual $5.55\times10^{-16}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Items 1--3 were proved in the analytic chapters. Item 4 follows from the finite interval-recovery theorem and the positive gap between the true interval and every competing interval. Item 5 follows from the displayed synthesis formula and the numerical record.
+\end{proof}
+
+The conclusion is straightforward. The Gibbs theorem remains true for raw Fourier partial sums. In the reconstructed model, the discontinuity is stored in its own packet, so Fourier truncation is applied only to the smooth part. On the finite grid, the interval packet is recovered by checking every allowed candidate. The example therefore runs from the original signal to a final residual without hiding an intermediate step.
+
+\appendix
+
+\StartPart{VIII}{Appendices}{Exact formula sheet}{The appendices collect the formulas, numerical tables, full implementation, file map, and the exact boundary of the result.}
+
+\section{Signal}
+\[
+ s(x)=\frac14+\frac25\cos(2x)-\frac13\sin(3x)+\frac15\cos(5x),
+\qquad
+ j(x)=\mathbf1_{[-\pi/3,\pi/3)}(x),
+\qquad
+ f=s+j.
+\]
+
+\section{Fourier coefficients}
+\[
+\widehat s(0)=\frac14,
+\quad
+\widehat s(\pm2)=\frac15,
+\quad
+\widehat s(3)=\frac\ii6,
+\quad
+\widehat s(-3)=-\frac\ii6,
+\quad
+\widehat s(\pm5)=\frac1{10}.
+\]
+\[
+\widehat j(0)=\frac13,
+\qquad
+\widehat j(n)=\frac{\sin(n\pi/3)}{\pi n}\quad(n\ne0).
+\]
+
+\section{Partial sum}
+\[
+\SN j(x)=\frac13+\frac2\pi\sum_{n=1}^{N}
+\frac{\sin(n\pi/3)}{n}\cos(nx).
+\]
+
+\section{Gibbs profile}
+\[
+\lim_{N\to\infty}\SN j\left(\frac\pi3-\frac z{N+1/2}\right)
+=\frac12+\frac1\pi\Si(z).
+\]
+\[
+G=\frac{\Si(\pi)}\pi-\frac12.
+\]
+
+\section{Resolved operator}
+\[
+\Ps(t+cj)=t,
+\qquad
+\Pj(t+cj)=cj,
+\qquad
+\RN=\SN\Ps+\Pj.
+\]
+\[
+\RN=I_{\mathcal M_5}\qquad(N\ge5).
+\]
+
+\section{Finite profile objective}
+\[
+P_B=QQ^{\mathsf T},
+\qquad
+y^{\perp}=(I-P_B)y,
+\qquad
+q^{\perp}=(I-P_B)q.
+\]
+\[
+\widehat A(q)=\frac{\inner{q^{\perp}}{y^{\perp}}}{\norm{q^{\perp}}^2},
+\qquad
+J(q)=\norm{y^{\perp}-\widehat A(q)q^{\perp}}^2.
+\]
+
+\chapter{Selected numerical tables}
+
+\section{Exact recovery record}
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Quantity & Value\\
+\midrule
+Grid size & 96\\
+True start & 32\\
+True length & 32\\
+Recovered start & 32\\
+Recovered length & 32\\
+Recovered amplitude & 1\\
+Best objective & 0\\
+Second objective & 0.7531607493634364\\
+Maximum synthesis residual & $5.551115123125783\times10^{-16}$\\
+Gibbs constant & 0.08948987223608351\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Machine-readable tables}
+The source release includes:
+\begin{itemize}
+\item \texttt{tables/fourier\_coefficients.csv}.
+\item \texttt{tables/method\_metrics.csv}.
+\item \texttt{tables/noise\_recovery.csv}.
+\item \texttt{tables/offgrid\_recovery.csv}.
+\item \texttt{tables/runtime\_scaling.csv}.
+\item \texttt{tables/test\_ledger.csv}.
+\item \texttt{results/numerical\_results.json}.
+\end{itemize}
+
+\chapter{The full Python implementation}
+The following Python file generates every figure, table, and numerical check in this study.
+
+\lstinputlisting{gibbs_packet_case.py}
+
+\chapter{File map}
+
+\begin{longtable}{L{0.34\textwidth}L{0.56\textwidth}}
+\toprule
+Path & Role\\
+\midrule
+\texttt{gibbs\_packet\_case.py} & Single implementation, experiment generator, test suite, and manifest writer\\
+\nolinkurl{Projector_Resolved_Gibbs_Case_Study.tex} & Complete monograph source\\
+\texttt{figures/} & Sixty vector-PDF and PNG figure pairs\\
+\texttt{tables/} & Exact and numerical CSV ledgers\\
+\texttt{results/} & JSON summary and PDF audit records\\
+\texttt{Run\_All.ps1} & Windows one-command runner\\
+\texttt{run\_all.sh} & POSIX one-command runner\\
+\texttt{manifest.json} & File inventory with sizes and hashes\\
+\texttt{SHA256SUMS.txt} & Release checksum ledger\\
+\bottomrule
+\end{longtable}
+
+\chapter{What this example establishes}
+The exact result concerns the model and finite interval library stated in the text. Its mathematical content can be summarized as follows:
+\[
+\boxed{\begin{minipage}{0.86\linewidth}
+\centering
+A discontinuity need not be approximated by the same global spectral block used for the smooth component. When the model supplies a complete smooth-edge packet split, the edge can be retained exactly, the smooth packet can be treated spectrally, and the resulting synthesis has no jump-generated Gibbs error.
+\end{minipage}}
+\]
+The corresponding universal problem is to discover and certify suitable singular packets for broader data classes. That question remains a separate theorem program.
+
+\end{document}
