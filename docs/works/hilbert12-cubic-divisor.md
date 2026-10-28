@@ -8,7 +8,7 @@
 
 **Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
 
-Complex divisor constructions and a finite algebraic companion.
+The equality of the analytic and algebraic unit constructions remains open. Infinite-product analysis lies outside the finite Lean scope.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

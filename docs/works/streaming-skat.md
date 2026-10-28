@@ -8,7 +8,7 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-Streaming decomposition and synthetic realistic-LD validation.
+Beta research software. Synthetic validation does not establish clinical validity.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

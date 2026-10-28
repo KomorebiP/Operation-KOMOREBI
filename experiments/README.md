@@ -13,7 +13,7 @@ Computational programs, protocols, and recorded outcomes accompany the [core pap
 | [J-Space Causal Lab](../docs/works/experiments-jspace-causal-lab.md) | Causal interventions and tests in J-Space models. | [Code](jspace-causal-lab/runtime/) · [Work page](../docs/works/experiments-jspace-causal-lab.md) |
 | [J-Space Collections](../docs/works/experiments-jspace-collections.md) | J-Space constructions, machinery, and worked experiments. | [Code](jspace-collections/machinery/) · [Work page](../docs/works/experiments-jspace-collections.md) |
 | [Workspace Incubator](../docs/works/experiments-workspace-incubator.md) | Workspace construction and exploratory experiments. | [Code](workspace-incubator/src/) · [Work page](../docs/works/experiments-workspace-incubator.md) |
-| [ARC-AGI-2 experiment](../docs/works/arc-agi2.md) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. | [Code](arc-agi2/prepare_limitfix.py) · [Work page](../docs/works/arc-agi2.md) |
+| [ARC-AGI-2 experiment](../docs/works/arc-agi2.md) | The source files are available. Scientific scope, completion, and evidence from proofs or experiments still need assessment. | [Code](arc-agi2/prepare_limitfix.py) · [Work page](../docs/works/arc-agi2.md) |
 
 Related machine-reasoning, OSL/Neuralese, inference, and workspace programs are listed in the [research index](../research/README.md). Earlier and distinct experimental branches appear in the [component index](../docs/COMPONENT_INDEX.md).
 

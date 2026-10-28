@@ -8,7 +8,7 @@
 
 **Completion:** Reading edition complete · **Lean:** Source; no current pass · **Confidence:** Recorded written review
 
-Finite constructions, written reductions, and cycle-realization obligations.
+Actual cycle realization and comparison correspondence remain open. Sources marked uncompiled retain that status.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

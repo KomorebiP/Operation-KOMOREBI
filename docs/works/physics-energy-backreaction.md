@@ -8,7 +8,7 @@
 
 **Completion:** Needs assessment · **Lean:** Not assessed · **Confidence:** Unassessed
 
-Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment.
+The source files are available. Scientific scope, completion, and evidence from proofs or experiments still need assessment.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

@@ -8,7 +8,7 @@
 
 **Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
 
-Projector-resolved prime contact, coherence, and exact calculations.
+Structural limitations and conditional routes are stated explicitly. No abc proof is claimed.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

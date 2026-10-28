@@ -8,7 +8,7 @@
 
 **Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
 
-Finite synthetic semantic-witness construction; recorded real-model pilot remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23.
+A finite synthetic semantic-witness construction. The recorded pilot with a real model remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

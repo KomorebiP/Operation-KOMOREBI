@@ -8,7 +8,7 @@
 
 **Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
 
-A reader edition of the ABC research program and its evidence.
+The general ABC endpoint remains open. The newer RR8 branch is listed separately.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

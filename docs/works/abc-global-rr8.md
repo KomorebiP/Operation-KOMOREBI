@@ -8,7 +8,7 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Recorded written review
 
-Source-recovery, finite-observer, and global RR8 developments.
+ABC remains open. These results do not establish a uniform abc exponent.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

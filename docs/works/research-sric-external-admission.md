@@ -8,7 +8,7 @@
 
 **Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
 
-Corrected 0.3.3 beta source runtime: 15 admission/CLI tests passed on the recorded fixture scope; real-checkpoint execution and scientific qualification remain pending. The retained 0.3.2 edition has documented defects.
+The corrected 0.3.3 beta runtime passed 15 admission and CLI tests within the recorded fixture scope. Execution with a real checkpoint and scientific validation are still pending. The preserved 0.3.2 edition has documented defects.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

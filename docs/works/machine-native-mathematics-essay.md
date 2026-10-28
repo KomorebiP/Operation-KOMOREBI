@@ -8,7 +8,7 @@
 
 **Completion:** Reader available; source qualification pending · **Lean:** No Lean claim · **Confidence:** Unassessed
 
-A standalone essay on machine-native mathematics.
+A standalone reader PDF is supplied. This component does not include editable source.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

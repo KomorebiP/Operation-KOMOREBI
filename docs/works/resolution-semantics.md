@@ -8,7 +8,7 @@
 
 **Completion:** Active development · **Lean:** Source; no current pass · **Confidence:** Written / finite evidence
 
-Written structural arguments and finite checks; the two-world obstruction has a focused review, while other theorems and forcing applications need their own review.
+Written structural arguments and finite checks. The two-world obstruction has a focused review. Other theorems and forcing applications need their own review.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

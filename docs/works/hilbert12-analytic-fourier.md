@@ -8,7 +8,7 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-Explicit algebraic Fourier and quotient constructions; analytic orbit and special-value normalization remain unproved.
+Explicit algebraic Fourier and quotient constructions. Analytic orbit and special-value normalization remain unproved.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

@@ -8,7 +8,7 @@
 
 **Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
 
-Selected arithmetic and representation-theoretic developments.
+General Strong Artin remains open. Historical checkpoints are separate formal projects.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 

@@ -8,7 +8,7 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-Finite pairing and Gauss-cube calculations with an explicit primitive-root specialization; the analytic equality remains open.
+Finite pairing and Gauss-cube calculations with an explicit primitive-root specialization. The analytic equality remains open.
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
