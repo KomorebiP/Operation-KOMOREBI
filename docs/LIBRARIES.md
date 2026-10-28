@@ -4,10 +4,12 @@
 
 | Library | Documentation | Current terms |
 |---|---|---|
-| [Komorebi Math](https://github.com/KomorebiP/komorebi-math) | Repository README, examples, and instructions for checking the package | MIT for the current library. Retain third-party notices. |
-| [Polyphase Float](https://github.com/KomorebiP/polyphase-float) | Repository README and numerical reference documentation | LGPL-3.0-or-later. Retain third-party notices. |
+| [Komorebi Math](https://github.com/KomorebiP/komorebi-math) | [User guide](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md), [worked examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/WORKED_EXAMPLES.md), [public API](https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md), and [platform requirements](https://github.com/KomorebiP/komorebi-math/blob/main/docs/SUPPORTED_PLATFORMS.md) | MIT for the current library. Retain third-party notices. |
+| [Polyphase Float](https://github.com/KomorebiP/polyphase-float) | [User guide](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/README.md), [build instructions](https://github.com/KomorebiP/polyphase-float/blob/main/docs/BUILDING.md), [semantic reference](https://github.com/KomorebiP/polyphase-float/blob/main/docs/PUBLIC_SEMANTIC_CONTRACT_0.20.0.md), and [testing](https://github.com/KomorebiP/polyphase-float/blob/main/docs/TESTING.md) | LGPL-3.0-or-later. Retain third-party notices. |
 
 The [package index](../packages/README.md) covers software in this collection. The [experimental laboratories](../experiments/README.md) and [research programs](../research/README.md) contain further implementations and protocols.
+
+The documentation links above follow each library's `main` branch. For a reproducible setup, use the exact commit and run links in the [software qualification record](GITHUB_IMPORT_STATUS.md#software-qualification-records). The [tagged beta releases](PUBLICATION_STATUS.md#release-assets) are earlier source snapshots and do not include every later fix.
 
 Use the [code and script finder](browse/CODE.md) for direct file links across the collection, or the [browse hub](BROWSE.md) to move between a work's manuscript, formal sources, and evidence.
 

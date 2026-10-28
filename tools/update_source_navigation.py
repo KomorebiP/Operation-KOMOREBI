@@ -17,6 +17,7 @@ from pathlib import Path
 from import_source_collection import ImportFailure, receipt_matches, safe_relative
 from update_completion_status import status_cells
 from browse_navigation import Browser, REGISTRY, card_path
+from update_publication_metadata import LIBRARIES, validate_library_records
 
 REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
 CATEGORY_LABELS = {'papers':'Core papers','foundations':'Foundations and semantics',
@@ -49,6 +50,28 @@ def table(headers, rows):
     lines = ['| ' + ' | '.join(headers) + ' |', '|' + '|'.join('---' for _ in headers) + '|']
     lines.extend('| ' + ' | '.join(clean(cell) for cell in row) + ' |' for row in rows)
     return '\n'.join(lines) + '\n'
+
+
+def library_qualification_table():
+    rows=[]
+    for library in validate_library_records(LIBRARIES):
+        name='Komorebi Math' if library['repository']=='komorebi-math' else 'Polyphase Float'
+        revision=library['remote_commit']
+        record=f"[Commit `{revision[:12]}`]({library['repository_url']}/commit/{revision})"
+        record+=' · '+' · '.join(f"[{run['name']}]({run['url']})" for run in library['checks'])
+        record+=' · observed '+library['remote_observation_date']
+        rows.append((name,record,library['qualification_scope']))
+    return table(['Library','Checked commit and runs','Result and scope'],rows)
+
+
+def library_release_table():
+    rows=[]
+    for library in validate_library_records(LIBRARIES):
+        name='Komorebi Math' if library['repository']=='komorebi-math' else 'Polyphase Float'
+        revision=library['release_commit']
+        rows.append((name,f"[Beta source snapshot]({library['release_url']})",
+                     f"[`{revision[:12]}`]({library['repository_url']}/commit/{revision})"))
+    return table(['Library','Tagged release','Release source commit'],rows)
 
 
 def link(title, path, page):
@@ -385,10 +408,12 @@ Use a component's documented installation and examples. A mathematical result in
 
 | Library | Documentation | Current terms |
 |---|---|---|
-| [Komorebi Math](https://github.com/KomorebiP/komorebi-math) | Repository README, examples, and instructions for checking the package | MIT for the current library. Retain third-party notices. |
-| [Polyphase Float](https://github.com/KomorebiP/polyphase-float) | Repository README and numerical reference documentation | LGPL-3.0-or-later. Retain third-party notices. |
+| [Komorebi Math](https://github.com/KomorebiP/komorebi-math) | [User guide](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md), [worked examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/WORKED_EXAMPLES.md), [public API](https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md), and [platform requirements](https://github.com/KomorebiP/komorebi-math/blob/main/docs/SUPPORTED_PLATFORMS.md) | MIT for the current library. Retain third-party notices. |
+| [Polyphase Float](https://github.com/KomorebiP/polyphase-float) | [User guide](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/README.md), [build instructions](https://github.com/KomorebiP/polyphase-float/blob/main/docs/BUILDING.md), [semantic reference](https://github.com/KomorebiP/polyphase-float/blob/main/docs/PUBLIC_SEMANTIC_CONTRACT_0.20.0.md), and [testing](https://github.com/KomorebiP/polyphase-float/blob/main/docs/TESTING.md) | LGPL-3.0-or-later. Retain third-party notices. |
 
 The [package index](../packages/README.md) covers software in this collection. The [experimental laboratories](../experiments/README.md) and [research programs](../research/README.md) contain further implementations and protocols.
+
+The documentation links above follow each library's `main` branch. For a reproducible setup, use the exact commit and run links in the [software qualification record](GITHUB_IMPORT_STATUS.md#software-qualification-records). The [tagged beta releases](PUBLICATION_STATUS.md#release-assets) are earlier source snapshots and do not include every later fix.
 
 Use the [code and script finder](browse/CODE.md) for direct file links across the collection, or the [browse hub](BROWSE.md) to move between a work's manuscript, formal sources, and evidence.
 
@@ -563,7 +588,12 @@ Earlier Papers I–IV, the Quadratic-Form Engine / K-COS, Research Preview 1, an
 
 The [Realization Calculus publication collection](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/papers-2026-10-25) preserves the original frozen distributions and companion assets. The initial publication contained 21 assets. Availability as a release asset and availability as browsable source files are separate records.
 
-The two independent libraries have public beta prereleases: [Komorebi Math](https://github.com/KomorebiP/komorebi-math/releases/tag/beta-2026-10-27) and [Polyphase Float](https://github.com/KomorebiP/polyphase-float/releases/tag/beta-2026-10-27). **All current software is beta and work in progress**, including implementations in the research collection. Historical version numbers and release labels remain preserved as history.
+The two independent libraries have public beta prereleases. These tagged source snapshots were checked on 28 October 2026. Neither has separate build artifacts attached.
+
+'''+library_release_table()+'''
+The [newer checked source revisions](GITHUB_IMPORT_STATUS.md#software-qualification-records) include subsequent maintenance changes. Komorebi Math's CI repairs are in the newer source revision and are not included in its tagged beta snapshot. Use the checked commit when reproducing that passing run.
+
+**All current software is beta and work in progress**, including implementations in the research collection. Historical version numbers and release labels remain preserved as history.
 
 ## Scope and verification
 
@@ -582,7 +612,7 @@ Public attribution is **Komorebi P.** Read the [collection reuse terms](../LICEN
         revtext=f"The input source checkout was [{revision}]({REPO_URL}/commit/{revision})." if revision else 'The source receipts were checked against the input directory.'
         self.put('docs/GITHUB_IMPORT_STATUS.md',f'''# GitHub source and qualification status
 
-Recorded {date}.
+Source availability recorded {date}. Library checks and release tags observed {max(r['remote_observation_date'] for r in LIBRARIES)}.
 
 ## Current source availability
 
@@ -594,16 +624,22 @@ The initial 18-component source-file import completed successfully in [Actions r
 
 ## Software qualification records
 
-All software is **beta and work in progress**. The following records are dated observations of specific runs, not claims about every later revision:
+All software is **beta and work in progress**. The library records below identify the commits and completed runs inspected on the observation date. Later source changes need their own checks.
+
+{library_qualification_table()}
+
+The [publication metadata](../manifests/release-candidate.json) records these commit and workflow identities. The [tagged beta releases](PUBLICATION_STATUS.md#release-assets) point to earlier source commits. A passing run for a newer commit does not qualify an older release snapshot.
+
+### Packages in this collection
 
 | Component | Inspected record | Result and scope |
 |---|---|---|
-| Komorebi Math | [Qualification run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), 27 October 2026 | The run executed tests and failed. The inspected Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. The Windows 3.13 distribution job separately failed a hardware-wrapper import. |
-| Polyphase Float | [CI 40473953308](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953308), [ABI 40473953130](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953130), [CodeQL 40479469045](https://github.com/KomorebiP/polyphase-float/actions/runs/40479469045), 27 October 2026 | The inspected CI, ABI, and CodeQL runs completed successfully. These results apply to the runs' source revisions and configured coverage. |
 | AM-SPD | [Publication receipt](../verification/am-spd-v1.0.0-publication.json) and [release checklist](../packages/komorebi-am-spd/RELEASE_CHECKLIST.md) | The historical 1.0.0 release has its own qualification record. The current collection-wide software label is beta / work in progress. |
 | Constructive Repair | [Windows acceptance and remaining checks](components/CONSTRUCTIVE_REPAIR.md), 27 October 2026 | Windows 11 / CPython 3.12.14: 134 engine tests and 72 installed cases passed. The 100-test release suite had 95 passes, 3 POSIX-only skips, and 2 symlink-fixture setup errors. This is partial Python qualification, with no new Lean replay. |
 
-The Math failure above supersedes the earlier publication note that described failures before any job steps. Consult the live Actions pages and exact commit before making a newer qualification claim.
+**Earlier Math failures:** [Run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), inspected on 27 October 2026, failed after executing tests. Its Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. A Windows 3.13 distribution job failed a hardware-wrapper import. The [later repair](https://github.com/KomorebiP/komorebi-math/commit/b3aa11f8f41a6acaef012260866cfe21730234ea) corrected both issues. The passing run above belongs to that repair commit and leaves the earlier results intact.
+
+The earlier Polyphase Float observations remain available in [CI 40473953308](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953308), [ABI 40473953130](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953130), and [CodeQL 40479469045](https://github.com/KomorebiP/polyphase-float/actions/runs/40479469045).
 
 The [27 October repository audit](AUDIT_2026-10-27.md) records source-receipt verification, navigation repairs, and the new Windows evidence. Run `python -B tools/check_source_receipts.py` and `python -B tools/update_completion_status.py --check` to check the committed source inventory and all maintained navigation/status pages. These checks do not execute the research programs.
 
@@ -705,11 +741,14 @@ def current_ledger(root, state):
     for row in rows:
         if row['id'] in ('KOM-LIBRARY-KOMOREBI-MATH','KOM-LIBRARY-POLYPHASE-FLOAT'):
             is_math=row['id']=='KOM-LIBRARY-KOMOREBI-MATH'
+            library=next(r for r in validate_library_records(LIBRARIES)
+                         if r['repository']==('komorebi-math' if is_math else 'polyphase-float'))
             row.update({'title':'Komorebi Math' if is_math else 'Polyphase Float','mathematical_status':'Beta research software',
-                'status_as_of':'2026-10-27','remote_state':'public_populated','software_release_status':'beta / work in progress',
-                'observed_package_version':'1.0.0' if is_math else '0.20.0',
-                'remote_commit':'5f33ded5a8238222e5beda6e5cb701b54fc3dbdb' if is_math else 'a7f6e8652b11a37f2c3a5d5577f1d918a768f7d6',
-                'remote_observation_date':'2026-10-27','previous_checkpoint':HISTORY_LEDGER+'#'+row['id'],
+                'status_as_of':library['remote_observation_date'],'remote_state':'public_populated','software_release_status':'beta / work in progress',
+                'observed_package_version':library['observed_package_version'],
+                'remote_commit':library['remote_commit'],'release_commit':library['release_commit'],
+                'qualification_record':'manifests/release-candidate.json',
+                'remote_observation_date':library['remote_observation_date'],'previous_checkpoint':HISTORY_LEDGER+'#'+row['id'],
                 'boundary':'Qualification results are revision-specific. The current software is beta and work in progress.',
                 'next_action':'Consult current repository documentation and the exact-revision qualification record.'})
         elif row['id']=='KOM-AM-SPD':

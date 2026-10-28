@@ -30,7 +30,16 @@ Earlier Papers I–IV, the Quadratic-Form Engine / K-COS, Research Preview 1, an
 
 The [Realization Calculus publication collection](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/papers-2026-10-25) preserves the original frozen distributions and companion assets. The initial publication contained 21 assets. Availability as a release asset and availability as browsable source files are separate records.
 
-The two independent libraries have public beta prereleases: [Komorebi Math](https://github.com/KomorebiP/komorebi-math/releases/tag/beta-2026-10-27) and [Polyphase Float](https://github.com/KomorebiP/polyphase-float/releases/tag/beta-2026-10-27). **All current software is beta and work in progress**, including implementations in the research collection. Historical version numbers and release labels remain preserved as history.
+The two independent libraries have public beta prereleases. These tagged source snapshots were checked on 28 October 2026. Neither has separate build artifacts attached.
+
+| Library | Tagged release | Release source commit |
+|---|---|---|
+| Komorebi Math | [Beta source snapshot](https://github.com/KomorebiP/komorebi-math/releases/tag/beta-2026-10-27) | [`5f33ded5a823`](https://github.com/KomorebiP/komorebi-math/commit/5f33ded5a8238222e5beda6e5cb701b54fc3dbdb) |
+| Polyphase Float | [Beta source snapshot](https://github.com/KomorebiP/polyphase-float/releases/tag/beta-2026-10-27) | [`a7f6e8652b11`](https://github.com/KomorebiP/polyphase-float/commit/a7f6e8652b11a37f2c3a5d5577f1d918a768f7d6) |
+
+The [newer checked source revisions](GITHUB_IMPORT_STATUS.md#software-qualification-records) include subsequent maintenance changes. Komorebi Math's CI repairs are in the newer source revision and are not included in its tagged beta snapshot. Use the checked commit when reproducing that passing run.
+
+**All current software is beta and work in progress**, including implementations in the research collection. Historical version numbers and release labels remain preserved as history.
 
 ## Scope and verification
 

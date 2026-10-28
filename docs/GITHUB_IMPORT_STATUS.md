@@ -1,6 +1,6 @@
 # GitHub source and qualification status
 
-Recorded 2026-10-27.
+Source availability recorded 2026-10-27. Library checks and release tags observed 2026-10-28.
 
 ## Current source availability
 
@@ -12,16 +12,26 @@ The initial 18-component source-file import completed successfully in [Actions r
 
 ## Software qualification records
 
-All software is **beta and work in progress**. The following records are dated observations of specific runs, not claims about every later revision:
+All software is **beta and work in progress**. The library records below identify the commits and completed runs inspected on the observation date. Later source changes need their own checks.
+
+| Library | Checked commit and runs | Result and scope |
+|---|---|---|
+| Komorebi Math | [Commit `b3aa11f8f41a`](https://github.com/KomorebiP/komorebi-math/commit/b3aa11f8f41a6acaef012260866cfe21730234ea) · [CPU release qualification](https://github.com/KomorebiP/komorebi-math/actions/runs/40704823688) · observed 2026-10-28 | The CPU release workflow passed all 18 jobs, including Linux and Windows source and installation checks on Python 3.11, 3.12, and 3.13. The Windows hardware wrapper passed its unavailable-backend rejection check. This is not a positive GPU hardware qualification. |
+| Polyphase Float | [Commit `6b27482c268f`](https://github.com/KomorebiP/polyphase-float/commit/6b27482c268f92db571a095f43c0a10ccf16fbda) · [CI](https://github.com/KomorebiP/polyphase-float/actions/runs/40696505491) · [ABI governance](https://github.com/KomorebiP/polyphase-float/actions/runs/40696505553) · [CodeQL](https://github.com/KomorebiP/polyphase-float/actions/runs/40696505613) · observed 2026-10-28 | The CI, ABI governance, and CodeQL workflows passed for this commit. Their configured checks and platforms define the tested scope. |
+
+
+The [publication metadata](../manifests/release-candidate.json) records these commit and workflow identities. The [tagged beta releases](PUBLICATION_STATUS.md#release-assets) point to earlier source commits. A passing run for a newer commit does not qualify an older release snapshot.
+
+### Packages in this collection
 
 | Component | Inspected record | Result and scope |
 |---|---|---|
-| Komorebi Math | [Qualification run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), 27 October 2026 | The run executed tests and failed. The inspected Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. The Windows 3.13 distribution job separately failed a hardware-wrapper import. |
-| Polyphase Float | [CI 40473953308](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953308), [ABI 40473953130](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953130), [CodeQL 40479469045](https://github.com/KomorebiP/polyphase-float/actions/runs/40479469045), 27 October 2026 | The inspected CI, ABI, and CodeQL runs completed successfully. These results apply to the runs' source revisions and configured coverage. |
 | AM-SPD | [Publication receipt](../verification/am-spd-v1.0.0-publication.json) and [release checklist](../packages/komorebi-am-spd/RELEASE_CHECKLIST.md) | The historical 1.0.0 release has its own qualification record. The current collection-wide software label is beta / work in progress. |
 | Constructive Repair | [Windows acceptance and remaining checks](components/CONSTRUCTIVE_REPAIR.md), 27 October 2026 | Windows 11 / CPython 3.12.14: 134 engine tests and 72 installed cases passed. The 100-test release suite had 95 passes, 3 POSIX-only skips, and 2 symlink-fixture setup errors. This is partial Python qualification, with no new Lean replay. |
 
-The Math failure above supersedes the earlier publication note that described failures before any job steps. Consult the live Actions pages and exact commit before making a newer qualification claim.
+**Earlier Math failures:** [Run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), inspected on 27 October 2026, failed after executing tests. Its Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. A Windows 3.13 distribution job failed a hardware-wrapper import. The [later repair](https://github.com/KomorebiP/komorebi-math/commit/b3aa11f8f41a6acaef012260866cfe21730234ea) corrected both issues. The passing run above belongs to that repair commit and leaves the earlier results intact.
+
+The earlier Polyphase Float observations remain available in [CI 40473953308](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953308), [ABI 40473953130](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953130), and [CodeQL 40479469045](https://github.com/KomorebiP/polyphase-float/actions/runs/40479469045).
 
 The [27 October repository audit](AUDIT_2026-10-27.md) records source-receipt verification, navigation repairs, and the new Windows evidence. Run `python -B tools/check_source_receipts.py` and `python -B tools/update_completion_status.py --check` to check the committed source inventory and all maintained navigation/status pages. These checks do not execute the research programs.
 

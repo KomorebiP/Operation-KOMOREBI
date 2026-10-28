@@ -19,22 +19,61 @@ CURRENT_PATH='manifests/release-candidate.json'
 INDEX_PATH='manifests/source-components.json'
 LIBRARIES=[
     {'repository':'komorebi-math','repository_url':'https://github.com/KomorebiP/komorebi-math',
-     'remote_commit':'5f33ded5a8238222e5beda6e5cb701b54fc3dbdb','remote_commit_confirmed':True,
-     'remote_observation_date':'2026-10-27','observed_package_version':'1.0.0',
+     'remote_commit':'b3aa11f8f41a6acaef012260866cfe21730234ea','remote_commit_confirmed':True,
+     'remote_observation_date':'2026-10-28','observed_package_version':'1.0.0',
      'release_channel':'beta','work_in_progress':True,'license':'MIT',
-     'release_url':'https://github.com/KomorebiP/komorebi-math/releases/tag/beta-2026-10-27'},
+     'release_url':'https://github.com/KomorebiP/komorebi-math/releases/tag/beta-2026-10-27',
+     'release_commit':'5f33ded5a8238222e5beda6e5cb701b54fc3dbdb',
+     'release_prerelease':True,'release_asset_count':0,
+     'qualification_scope':'The CPU release workflow passed all 18 jobs, including Linux and Windows source and installation checks on Python 3.11, 3.12, and 3.13. The Windows hardware wrapper passed its unavailable-backend rejection check. This is not a positive GPU hardware qualification.',
+     'checks':[{'name':'CPU release qualification','run_id':40704823688,
+                'head_sha':'b3aa11f8f41a6acaef012260866cfe21730234ea',
+                'status':'completed','conclusion':'success',
+                'url':'https://github.com/KomorebiP/komorebi-math/actions/runs/40704823688'}]},
     {'repository':'polyphase-float','repository_url':'https://github.com/KomorebiP/polyphase-float',
-     'remote_commit':'a7f6e8652b11a37f2c3a5d5577f1d918a768f7d6','remote_commit_confirmed':True,
-     'remote_observation_date':'2026-10-27','observed_package_version':'0.20.0',
+     'remote_commit':'6b27482c268f92db571a095f43c0a10ccf16fbda','remote_commit_confirmed':True,
+     'remote_observation_date':'2026-10-28','observed_package_version':'0.20.0',
      'release_channel':'beta','work_in_progress':True,'license':'LGPL-3.0-or-later',
-     'release_url':'https://github.com/KomorebiP/polyphase-float/releases/tag/beta-2026-10-27'}]
+     'release_url':'https://github.com/KomorebiP/polyphase-float/releases/tag/beta-2026-10-27',
+     'release_commit':'a7f6e8652b11a37f2c3a5d5577f1d918a768f7d6',
+     'release_prerelease':True,'release_asset_count':0,
+     'qualification_scope':'The CI, ABI governance, and CodeQL workflows passed for this commit. Their configured checks and platforms define the tested scope.',
+     'checks':[{'name':'CI','run_id':40696505491,
+                'head_sha':'6b27482c268f92db571a095f43c0a10ccf16fbda',
+                'status':'completed','conclusion':'success',
+                'url':'https://github.com/KomorebiP/polyphase-float/actions/runs/40696505491'},
+               {'name':'ABI governance','run_id':40696505553,
+                'head_sha':'6b27482c268f92db571a095f43c0a10ccf16fbda',
+                'status':'completed','conclusion':'success',
+                'url':'https://github.com/KomorebiP/polyphase-float/actions/runs/40696505553'},
+               {'name':'CodeQL','run_id':40696505613,
+                'head_sha':'6b27482c268f92db571a095f43c0a10ccf16fbda',
+                'status':'completed','conclusion':'success',
+                'url':'https://github.com/KomorebiP/polyphase-float/actions/runs/40696505613'}]}]
 
 
 def require(condition,message):
     if not condition:raise ValueError(message)
 
 
+def validate_library_records(records):
+    """Check recorded passing runs, without querying GitHub or executing software."""
+    require(len({r['repository'] for r in records})==len(records),'Duplicate library observation')
+    for row in records:
+        url='https://github.com/KomorebiP/'+row['repository']
+        require(row['repository_url']==url,'Library URL does not match repository')
+        for key in ('remote_commit','release_commit'):
+            require(bool(re.fullmatch(r'[0-9a-f]{40}',row[key])),'Full library and release commits are required')
+        require(row['checks'],'A checked revision needs a workflow record')
+        for run in row['checks']:
+            require(run['head_sha']==row['remote_commit'],'Workflow covers a different library revision')
+            require(run['status']=='completed' and run['conclusion']=='success','Passing observation requires a completed successful run')
+            require(run['url']==url+'/actions/runs/'+str(run['run_id']),'Workflow URL does not match repository and run')
+    return records
+
+
 def build_record(index_bytes,source_commit,history_bytes):
+    validate_library_records(LIBRARIES)
     require(bool(re.fullmatch(r'[0-9a-f]{40}',source_commit)), 'A full verified source commit is required')
     index=json.loads(index_bytes)
     require(index.get('schema')==1,'Unsupported source-component index schema')
