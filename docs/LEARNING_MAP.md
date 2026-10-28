@@ -2,7 +2,9 @@
 
 Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.
 
-[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md)
+[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md) · [Example coverage by work](EXAMPLE_COVERAGE.md)
+
+Jump to: [Core papers](#start-from-a-core-paper) · [Monographs and other works](#start-from-a-monograph-or-another-work) · [Topics](#topics)
 
 ## Start from a core paper
 
@@ -20,6 +22,22 @@ Choose the paper you are reading. The examples introduce selected ideas. They do
 - [Paper X](works/paper-x.md#worked-examples-for-this-work): [18. Follow a modular lift branch](examples/18_LIFT_BRANCHES.md)
 - [Paper XI](works/paper-xi.md#worked-examples-for-this-work): [19. Compute Frobenius in a quadratic finite field](examples/19_FINITE_FROBENIUS.md)
 - [Paper XII](works/paper-xii.md#worked-examples-for-this-work): [20. Separate support from multiplicity](examples/20_SUPPORT_AND_MULTIPLICITY.md)
+
+## Start from a monograph or another work
+
+These works have introductory examples in this guide. The [coverage list](EXAMPLE_COVERAGE.md) also shows works still awaiting a tutorial. A source edition may contain its own worked examples.
+
+- [Proof Path Theory](works/proof-path-theory.md#worked-examples-for-this-work): [21. Choose a certificate with shared premises](examples/21_PROOF_CERTIFICATES.md)
+- [Special Functions](works/monographs-special-functions.md#worked-examples-for-this-work): [24. Calculate coefficients of contracted feedback](examples/24_CONTRACTED_FEEDBACK.md)
+- [Machine Societies](works/monographs-machine-societies.md#worked-examples-for-this-work): [22. Recover the memory hidden by a summary](examples/22_HIDDEN_MEMORY.md)
+- [Certified Inference](works/certified-inference.md#worked-examples-for-this-work): [26. Update a Gaussian model from one observation](examples/26_GAUSSIAN_UPDATE.md)
+- [Constructive Repair](works/constructive-repair.md#worked-examples-for-this-work): [25. Choose repair directions from a finite menu](examples/25_REPAIR_MENUS.md)
+- [Information Realization](works/information-realization.md#worked-examples-for-this-work): [10. Find a kernel and its fibers](examples/10_KERNELS.md) · [14. Separate averages and details](examples/14_HAAR_PAIRS.md)
+- [Realization Boundaries](works/realization-boundaries.md#worked-examples-for-this-work): [7. Detect lost information](examples/07_OBSTRUCTIONS.md)
+- [Sufficient Resolution](works/sufficient-resolution.md#worked-examples-for-this-work): [22. Recover the memory hidden by a summary](examples/22_HIDDEN_MEMORY.md)
+- [Grounded Abstraction](works/monographs-grounded-abstraction.md#worked-examples-for-this-work): [23. Find the reusable part of a calibration](examples/23_CALIBRATED_CONTINUATION.md)
+- [Certified Bayesian Inference](works/research-certified-bayesian-inference.md#worked-examples-for-this-work): [26. Update a Gaussian model from one observation](examples/26_GAUSSIAN_UPDATE.md)
+- [Gaussian Elimination: collected guide](works/gaussian-elimination-guide.md#worked-examples-for-this-work): [12. Eliminate a block of unknowns](examples/12_BLOCK_ELIMINATION.md)
 
 ## Topics
 
@@ -43,6 +61,12 @@ Choose the paper you are reading. The examples introduce selected ideas. They do
 - [18. Follow a modular lift branch](#lift-branches)
 - [19. Compute Frobenius in a quadratic finite field](#finite-frobenius)
 - [20. Separate support from multiplicity](#support-multiplicity)
+- [21. Choose a certificate with shared premises](#proof-certificates)
+- [22. Recover the memory hidden by a summary](#hidden-memory)
+- [23. Find the reusable part of a calibration](#calibrated-continuation)
+- [24. Calculate coefficients of contracted feedback](#contracted-feedback)
+- [25. Choose repair directions from a finite menu](#repair-menus)
+- [26. Update a Gaussian model from one observation](#gaussian-update)
 
 <a id="packets"></a>
 
@@ -61,7 +85,7 @@ Exact packet coordinates provide the source setting for the elementary decomposi
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: packets()](../tools/check_hand_examples.py#L56). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: packets()](../tools/check_hand_examples.py#L57). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -84,7 +108,7 @@ Paper I develops seed generation with its stated algebra and module hypotheses.
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: seeds()](../tools/check_hand_examples.py#L72). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: seeds()](../tools/check_hand_examples.py#L73). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -107,7 +131,7 @@ Use Paper I for exact packet coordinates and the library atlas for general coord
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: coordinates()](../tools/check_hand_examples.py#L84). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: coordinates()](../tools/check_hand_examples.py#L85). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -134,7 +158,7 @@ Paper II supplies transfer background. Paper VIII develops operator algorithms a
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#transfer-blocks). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: transfer()](../tools/check_hand_examples.py#L98). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: transfer()](../tools/check_hand_examples.py#L99). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -161,7 +185,7 @@ Read Paper II for refinement and Paper V for signal and polyphase constructions.
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: refinement()](../tools/check_hand_examples.py#L118). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: refinement()](../tools/check_hand_examples.py#L119). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -184,7 +208,7 @@ Compare the exact packet setting of Paper I with the broader analysis and synthe
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: redundant_coordinates()](../tools/check_hand_examples.py#L135). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: redundant_coordinates()](../tools/check_hand_examples.py#L136). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -211,7 +235,7 @@ The finite recovery obstruction is an entry point to the works on compatibility 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: obstructions()](../tools/check_hand_examples.py#L155). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: obstructions()](../tools/check_hand_examples.py#L156). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -234,7 +258,7 @@ Paper VI includes stochastic and Bayesian realizations. Its assumptions extend b
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: weighted_averages()](../tools/check_hand_examples.py#L165). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: weighted_averages()](../tools/check_hand_examples.py#L166). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -257,7 +281,7 @@ Paper IX supplies dyadic arithmetic background. The rounding implementation and 
 
 [Related library guide and code examples](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/chapters/06_arithmetic_ranges.md). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: binary_rounding()](../tools/check_hand_examples.py#L182). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: binary_rounding()](../tools/check_hand_examples.py#L183). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -284,7 +308,7 @@ These finite linear calculations give background for typed realizations and info
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: kernels()](../tools/check_hand_examples.py#L201). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: kernels()](../tools/check_hand_examples.py#L202). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -311,7 +335,7 @@ The example uses a diagonalizable two-dimensional matrix. The works develop wide
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: spectral_projectors()](../tools/check_hand_examples.py#L212). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: spectral_projectors()](../tools/check_hand_examples.py#L213). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -338,7 +362,7 @@ Paper VI gives elimination background. The collected Gaussian elimination guide 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: block_elimination()](../tools/check_hand_examples.py#L225). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: block_elimination()](../tools/check_hand_examples.py#L226). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -361,7 +385,7 @@ The example is ordinary integer CRT. Paper IX develops arithmetic packets and lo
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: modular_reconstruction()](../tools/check_hand_examples.py#L237). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: modular_reconstruction()](../tools/check_hand_examples.py#L238). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -388,7 +412,7 @@ Paper V supplies signal background. Information Realization includes a finite Ha
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: haar_pairs()](../tools/check_hand_examples.py#L247). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: haar_pairs()](../tools/check_hand_examples.py#L248). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -415,7 +439,7 @@ Paper I develops typed systems and their realizations. Paper III continues with 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#3-operate). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: typed_paths()](../tools/check_hand_examples.py#L263). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: typed_paths()](../tools/check_hand_examples.py#L264). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -443,7 +467,7 @@ This coefficient model introduces cyclic projection and reciprocal recursion in 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md#cyclic-coefficient-coordinates). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: cyclic_reciprocals()](../tools/check_hand_examples.py#L276). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: cyclic_reciprocals()](../tools/check_hand_examples.py#L277). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -470,7 +494,7 @@ Paper VII develops finite quantum constructions and separate continuum research 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#quantum-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: quantum_measurement()](../tools/check_hand_examples.py#L305). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: quantum_measurement()](../tools/check_hand_examples.py#L306). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -497,7 +521,7 @@ Finite lift branches give elementary background for Paper X’s residual constru
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md#komorebi_mathdeformation). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: lift_branches()](../tools/check_hand_examples.py#L340). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: lift_branches()](../tools/check_hand_examples.py#L341). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -524,7 +548,7 @@ This is finite-field background for Paper XI’s finite packet theory. Conjectur
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md#komorebi_mathlanglandslocal). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: finite_frobenius()](../tools/check_hand_examples.py#L353). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: finite_frobenius()](../tools/check_hand_examples.py#L354). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -551,7 +575,182 @@ Paper XII distinguishes module support from packet and arithmetic constructions.
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#deformation-and-langlands-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: support_multiplicity()](../tools/check_hand_examples.py#L378). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: support_multiplicity()](../tools/check_hand_examples.py#L379). This checks the displayed rational, modular or finite-set calculations exactly.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Back to topics](#topics)
+
+<a id="proof-certificates"></a>
+
+## 21. Choose a certificate with shared premises
+
+[Work through the example](examples/21_PROOF_CERTIFICATES.md)
+
+**Terms:** [Finite proof field](GLOSSARY.md#proof-field) · [Admissible leaf](GLOSSARY.md#admissible-leaf) · [Recorded inference rule](GLOSSARY.md#inference-rule) · [Verification closure](GLOSSARY.md#verification-closure) · [Inclusion-minimal certificate](GLOSSARY.md#inclusion-minimal) · [Least certificate](GLOSSARY.md#least-certificate) · [Minimum-cost certificate](GLOSSARY.md#minimum-cost-certificate)
+
+This example compares certificates in a supplied finite rule system. It illustrates verification closure and cost selection in Proof Path Theory. It does not certify arbitrary inference rules or Python implementations.
+
+### Proof Path Theory
+
+[Read](works/proof-path-theory.md#read) · [Written proofs](works/proof-path-theory.md#written-proofs) · [Lean coverage](works/proof-path-theory.md#lean) · [Code and setup](works/proof-path-theory.md#code) · [Evidence](works/proof-path-theory.md#evidence)
+
+**Source passages:**
+
+- [Proof Path Theory: certificates and verification closure](../monographs/proof-path-theory/docs/Proof_Path_Theory.tex#L408)
+- [Proof Path Theory: alternative derivations and costs](../monographs/proof-path-theory/docs/Proof_Path_Theory.tex#L479)
+
+
+[Edition guide and reproduction instructions](../monographs/proof-path-theory/README.md). Use each work’s Code and setup link for its implementation. The arithmetic check below covers this tutorial separately.
+
+[Python arithmetic check for this example: proof_certificates()](../tools/check_hand_examples.py#L396). This checks the displayed rational, modular or finite-set calculations exactly.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Back to topics](#topics)
+
+<a id="hidden-memory"></a>
+
+## 22. Recover the memory hidden by a summary
+
+[Work through the example](examples/22_HIDDEN_MEMORY.md)
+
+**Terms:** [Visible state](GLOSSARY.md#visible-state) · [Hidden state](GLOSSARY.md#hidden-state) · [Prepared hidden initialization](GLOSSARY.md#prepared-state) · [Discrete memory maps](GLOSSARY.md#memory-kernel) · [Autonomous dynamics of a summary](GLOSSARY.md#autonomous-dynamics) · [State augmentation](GLOSSARY.md#state-augmentation) · [Semigroup law for evolution maps](GLOSSARY.md#semigroup-law)
+
+This two-coordinate model illustrates prepared evolution and hidden-memory return in Sufficient Resolution, and the deterministic quotient criterion in Machine Societies. The works’ broader assumptions and review records remain separate.
+
+### Sufficient Resolution
+
+[Read](works/sufficient-resolution.md#read) · [Written proofs](works/sufficient-resolution.md#written-proofs) · [Lean coverage](works/sufficient-resolution.md#lean) · [Code and setup](works/sufficient-resolution.md#code) · [Evidence](works/sufficient-resolution.md#evidence)
+
+### Machine Societies
+
+[Read](works/monographs-machine-societies.md#read) · [Written proofs](works/monographs-machine-societies.md#written-proofs) · [Lean coverage](works/monographs-machine-societies.md#lean) · [Code and setup](works/monographs-machine-societies.md#code) · [Evidence](works/monographs-machine-societies.md#evidence)
+
+**Source passages:**
+
+- [Sufficient Resolution: exact hidden elimination and closure](../monographs/sufficient-resolution/traditional/Sufficient_Resolution_Traditional.tex#L300)
+- [Machine Societies: deterministic quotient criterion](../monographs/machine-societies/publication/Machine_Societies_v1.0.0.tex#L293)
+
+
+[Edition guide and reproduction instructions](../monographs/sufficient-resolution/README.md). Use each work’s Code and setup link for its implementation. The arithmetic check below covers this tutorial separately.
+
+[Python arithmetic check for this example: hidden_memory()](../tools/check_hand_examples.py#L423). This checks the displayed rational, modular or finite-set calculations exactly.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Back to topics](#topics)
+
+<a id="calibrated-continuation"></a>
+
+## 23. Find the reusable part of a calibration
+
+[Work through the example](examples/23_CALIBRATED_CONTINUATION.md)
+
+**Terms:** [Exact operator calibration](GLOSSARY.md#calibration) · [Calibration span](GLOSSARY.md#calibration-span) · [Compatible model](GLOSSARY.md#compatible-model) · [Linear extension](GLOSSARY.md#linear-extension) · [Reusable calibrated core](GLOSSARY.md#reusable-core) · [Identifiability relative to a model class](GLOSSARY.md#identifiability)
+
+Grounded Abstraction supplies the three-coordinate calibration used here. The reusable domain is computed for exact full-state output and the unrestricted class of compatible linear extensions.
+
+### Grounded Abstraction
+
+[Read](works/monographs-grounded-abstraction.md#read) · [Written proofs](works/monographs-grounded-abstraction.md#written-proofs) · [Lean coverage](works/monographs-grounded-abstraction.md#lean) · [Code and setup](works/monographs-grounded-abstraction.md#code) · [Evidence](works/monographs-grounded-abstraction.md#evidence)
+
+**Source passages:**
+
+- [Grounded Abstraction: the calibrated continuation domain](../monographs/grounded-abstraction/Grounded_Abstraction_v1.0.0.tex#L611)
+- [Grounded Abstraction: the three-coordinate example](../monographs/grounded-abstraction/Grounded_Abstraction_v1.0.0.tex#L638)
+
+
+[Edition guide and reproduction instructions](../monographs/grounded-abstraction/README.md). Use each work’s Code and setup link for its implementation. The arithmetic check below covers this tutorial separately.
+
+[Python arithmetic check for this example: calibrated_continuation()](../tools/check_hand_examples.py#L444). This checks the displayed rational, modular or finite-set calculations exactly.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Back to topics](#topics)
+
+<a id="contracted-feedback"></a>
+
+## 24. Calculate coefficients of contracted feedback
+
+[Work through the example](examples/24_CONTRACTED_FEEDBACK.md)
+
+**Terms:** [Derivative in the series example](GLOSSARY.md#derivative) · [Differential equation](GLOSSARY.md#differential-equation) · [Initial condition](GLOSSARY.md#initial-condition) · [Contracted argument](GLOSSARY.md#contracted-argument) · [Coefficient recurrence](GLOSSARY.md#coefficient-recurrence)
+
+This example expands the defining coefficient recurrence for a member of Special Functions. Finite coefficient checks do not replace the monograph’s analytic existence, growth or separation arguments.
+
+### Special Functions
+
+[Read](works/monographs-special-functions.md#read) · [Written proofs](works/monographs-special-functions.md#written-proofs) · [Lean coverage](works/monographs-special-functions.md#lean) · [Code and setup](works/monographs-special-functions.md#code) · [Evidence](works/monographs-special-functions.md#evidence)
+
+**Source passages:**
+
+- [Special Functions: defining equation and coefficient recurrence](../monographs/special-functions/monograph/main.tex#L78)
+
+
+[Edition guide and reproduction instructions](../monographs/special-functions/README.md). Use each work’s Code and setup link for its implementation. The arithmetic check below covers this tutorial separately.
+
+[Python arithmetic check for this example: contracted_feedback()](../tools/check_hand_examples.py#L463). This checks the displayed rational, modular or finite-set calculations exactly.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Back to topics](#topics)
+
+<a id="repair-menus"></a>
+
+## 25. Choose repair directions from a finite menu
+
+[Work through the example](examples/25_REPAIR_MENUS.md)
+
+**Terms:** [Repair direction](GLOSSARY.md#repair-direction) · [Free linear repair](GLOSSARY.md#free-repair) · [Finite repair menu](GLOSSARY.md#repair-menu) · [Repair selection cost](GLOSSARY.md#repair-cost) · [Feasibility](GLOSSARY.md#feasibility) · [Linear obstruction witness](GLOSSARY.md#dual-witness)
+
+The example uses rational linear repair with supplied menu costs. It distinguishes feasibility, optimal selection and rejection of a proposed certificate. Python checks and Lean acceptance retain their separate recorded meanings.
+
+### Constructive Repair
+
+[Read](works/constructive-repair.md#read) · [Written proofs](works/constructive-repair.md#written-proofs) · [Lean coverage](works/constructive-repair.md#lean) · [Code and setup](works/constructive-repair.md#code) · [Evidence](works/constructive-repair.md#evidence)
+
+**Source passages:**
+
+- [Constructive Repair: the original menu example](../packages/constructive-repair/README.md#L24)
+- [Constructive Repair: mathematical scope](../packages/constructive-repair/README.md#L56)
+
+
+[Edition guide and reproduction instructions](components/CONSTRUCTIVE_REPAIR.md). Use each work’s Code and setup link for its implementation. The arithmetic check below covers this tutorial separately.
+
+[Python arithmetic check for this example: repair_menus()](../tools/check_hand_examples.py#L488). This checks the displayed rational, modular or finite-set calculations exactly.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Back to topics](#topics)
+
+<a id="gaussian-update"></a>
+
+## 26. Update a Gaussian model from one observation
+
+[Work through the example](examples/26_GAUSSIAN_UPDATE.md)
+
+**Terms:** [Finite-dimensional Gaussian model](GLOSSARY.md#gaussian-model) · [Prior distribution](GLOSSARY.md#prior) · [Likelihood](GLOSSARY.md#likelihood) · [Posterior distribution](GLOSSARY.md#posterior) · [Covariance matrix](GLOSSARY.md#covariance) · [Precision matrix](GLOSSARY.md#precision-matrix) · [Observation innovation](GLOSSARY.md#innovation) · [Exact Gaussian gain](GLOSSARY.md#gaussian-gain) · [Joseph covariance](GLOSSARY.md#joseph-covariance)
+
+These calculations explain the exact Gaussian model and a candidate Joseph covariance. The release’s law-error tolerance, interval output and emitted Lean-instance checks require their full contracts.
+
+### Certified Inference
+
+[Read](works/certified-inference.md#read) · [Written proofs](works/certified-inference.md#written-proofs) · [Lean coverage](works/certified-inference.md#lean) · [Code and setup](works/certified-inference.md#code) · [Evidence](works/certified-inference.md#evidence)
+
+### Certified Bayesian Inference
+
+[Read](works/research-certified-bayesian-inference.md#read) · [Written proofs](works/research-certified-bayesian-inference.md#written-proofs) · [Lean coverage](works/research-certified-bayesian-inference.md#lean) · [Code and setup](works/research-certified-bayesian-inference.md#code) · [Evidence](works/research-certified-bayesian-inference.md#evidence)
+
+**Source passages:**
+
+- [Certified Bayesian Inference: Gaussian model and posterior formulas](../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/manuscripts/foundations.tex#L1)
+- [Certified Inference: execution and evidence contract](../packages/certified-inference/README.md#L6)
+
+
+[Edition guide and reproduction instructions](../packages/certified-inference/README.md). Use each work’s Code and setup link for its implementation. The arithmetic check below covers this tutorial separately.
+
+[Python arithmetic check for this example: gaussian_update()](../tools/check_hand_examples.py#L522). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 

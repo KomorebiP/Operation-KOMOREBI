@@ -92,7 +92,7 @@ The finite recovery obstruction is an entry point to the works on compatibility 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: obstructions()](../../tools/check_hand_examples.py#L155). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: obstructions()](../../tools/check_hand_examples.py#L156). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -100,3 +100,4 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 - [Next: Average with unequal weights](08_WEIGHTED_AVERAGES.md)
 - [All examples](../HAND_WORKED_EXAMPLES.md)
 - [Topic map](../LEARNING_MAP.md#obstructions)
+- [Example coverage by work](../EXAMPLE_COVERAGE.md)

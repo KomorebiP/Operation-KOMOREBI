@@ -100,10 +100,11 @@ Exact packet coordinates provide the source setting for the elementary decomposi
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: packets()](../../tools/check_hand_examples.py#L56). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: packets()](../../tools/check_hand_examples.py#L57). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
 - [Next: Generate a space from one seed](02_SEEDS.md)
 - [All examples](../HAND_WORKED_EXAMPLES.md)
 - [Topic map](../LEARNING_MAP.md#packets)
+- [Example coverage by work](../EXAMPLE_COVERAGE.md)

@@ -6,6 +6,7 @@ It does not validate all tutorial prose, prove general research claims, run
 Lean or exercise the production libraries.
 """
 from fractions import Fraction as F
+from itertools import combinations
 
 
 def matrix(*rows):
@@ -392,12 +393,168 @@ def support_multiplicity():
         assert mul(element,element)==add(scale(F(a)**2,eye(2)),scale(2*F(a)*F(b),j))
 
 
+def proof_certificates():
+    obligations=set('abcd')
+    supplies=[set('ab'),set('bc'),set('cd'),set('ad')]
+    def derived(chosen,available):
+        # Singleton-premise rules, followed by the rule requiring all obligations.
+        reached=set().union(*(available[i] for i in chosen))
+        return reached|({'t'} if obligations<=reached else set())
+    subsets=[frozenset(c) for n in range(5) for c in combinations(range(4),n)]
+    valid=[s for s in subsets if 't' in derived(s,supplies)]
+    best=min(map(len,valid))
+    optima={s for s in valid if len(s)==best}
+    assert best==2 and optima=={frozenset((0,2)),frozenset((1,3))}
+    assert all(not any(t<s for t in valid) for s in optima)
+    common=frozenset.intersection(*optima)
+    assert not common and 't' not in derived(common,supplies)
+    assert derived({0},supplies)==set('ab')
+    for pair,missing in [((0,1),'d'),((0,3),'c'),((1,2),'a'),((2,3),'b')]:
+        assert obligations-derived(pair,supplies)=={missing}
+    extended=supplies+[obligations]
+    for last_cost,minimum in [(3,2),(1,1)]:
+        costs=[1,1,1,1,last_cost]
+        actual=min(sum(costs[i] for i in chosen)
+                   for n in range(6) for chosen in combinations(range(5),n)
+                   if 't' in derived(chosen,extended))
+        assert actual==minimum
+
+
+def hidden_memory():
+    t=matrix([1,1],[1,0]);power=eye(2);state=(F(1),F(0))
+    visible=[];states=[]
+    for n in range(6):
+        states.append(state);visible.append(power[0][0])
+        assert state==apply(power,(1,0))
+        state=apply(t,state);power=mul(t,power)
+    assert states==[(1,0),(1,1),(2,1),(3,2),(5,3),(8,5)]
+    assert visible==[1,1,2,3,5,8]
+    assert visible[2]!=visible[1]*visible[1]
+    assert [F(1)*F(0)**k*F(1) for k in range(4)]==[1,0,0,0]
+    assert all(states[n][1]==visible[n-1] for n in range(1,6))
+    assert all(visible[n+1]==visible[n]+visible[n-1] for n in range(1,5))
+    assert apply(t,(1,0))[0]==1 and apply(t,(1,1))[0]==2
+    prepared=matrix([1,1],[0,0]);power=eye(2)
+    for _ in range(6):
+        assert apply(power,(1,0))==(1,0)
+        power=mul(prepared,power)
+    assert apply(prepared,(1,1))==(2,0)
+
+
+def calibrated_continuation():
+    e1,e2,e3=(1,0,0),(0,1,0),(0,0,1)
+    t0=matrix([1,0,0],[0,0,0],[0,1,0])
+    t1=matrix([1,0,1],[0,0,0],[0,1,0])
+    for t in (t0,t1):
+        assert apply(t,e1)==e1 and apply(t,e2)==e3
+        assert apply(t,(2,-1,0))==(2,0,-1)
+        assert apply(t,(1,1,0))==(1,0,1)
+        assert t[2][0]==0 and t[2][1]==1  # U -> U requires the e2 coefficient to vanish.
+        power=eye(3)
+        for _ in range(6):
+            assert apply(power,(2,0,0))==(2,0,0)
+            power=mul(t,power)
+    assert apply(mul(t0,t0),e2)==(0,0,0)
+    assert apply(mul(t1,t1),e2)==e1
+    assert apply(t0,(2,3,0))==(2,0,3)
+    assert apply(mul(t0,t0),(2,3,0))==(2,0,0)
+
+
+def contracted_feedback():
+    def coefficients(q,r,count):
+        values=[F(1)]
+        for n in range(1,count):
+            values.append(sum(q**(2*i+1)*r**(2*(n-1-i)+1)*values[i]*values[n-1-i]
+                              for i in range(n))/(2*n+1))
+        return values
+    q,r=F(1,3),F(2,3)
+    c=coefficients(q,r,4)
+    assert c==[1,F(2,27),F(4,2187),F(232,11160261)]
+    assert c[2]*(q*r**5+q**5*r)==F(136,1594323)
+    assert c[1]**2*q**3*r**3==F(32,531441)
+    assert sum(c[:3])==F(2353,2187)
+    # Independently multiply the truncated polynomials and differentiate.
+    polynomial=[F(0)]*8
+    for i,v in enumerate(c):polynomial[2*i+1]=v
+    product=[F(0)]*15
+    for i,a in enumerate(polynomial):
+        for j,b in enumerate(polynomial):product[i+j]+=a*q**i*b*r**j
+    derivative=[(n+1)*polynomial[n+1] for n in range(7)]
+    assert derivative==[product[n]+int(n==0) for n in range(7)]
+    assert product[8]!=0  # A truncated polynomial is not the full solution.
+    assert coefficients(F(1,2),F(1,2),3)==[1,F(1,12),F(1,480)]
+
+
+def repair_menus():
+    def rank(columns):
+        a=[list(row) for row in zip(*columns)];pivot=0
+        for j in range(len(columns)):
+            i=next((i for i in range(pivot,len(a)) if a[i][j]),None)
+            if i is None:continue
+            a[pivot],a[i]=a[i],a[pivot]
+            divisor=a[pivot][j];a[pivot]=[v/divisor for v in a[pivot]]
+            for i in range(len(a)):
+                if i!=pivot:
+                    factor=a[i][j]
+                    a[i]=[v-factor*w for v,w in zip(a[i],a[pivot])]
+            pivot+=1
+            if pivot==len(a):break
+        return pivot
+    d=tuple(map(F,(1,0,0)));target=tuple(map(F,(0,1,0)))
+    menu=[tuple(map(F,row)) for row in ((0,1,1),(0,0,1),(0,1,0))]
+    assert rank([d])==1 and rank([d,target])==2
+    feasible=[]
+    for n in range(4):
+        for chosen in combinations(range(3),n):
+            columns=[d]+[menu[i] for i in chosen]
+            if rank(columns)==rank(columns+[target]):feasible.append(chosen)
+    assert set(feasible)=={(2,),(0,1),(0,2),(1,2),(0,1,2)}
+    costs=[1,1,3]
+    assert min(sum(costs[i] for i in s) for s in feasible)==2
+    assert vector_sum(menu[0],tuple(-v for v in menu[1]))==target
+    assert vector_sum(menu[0],menu[1])==(0,1,2)
+    witness=matrix([0,1,0])
+    assert apply(witness,d)==apply(witness,menu[1])==(0,)
+    assert apply(witness,target)==(1,)
+    assert min(sum([1,1,1][i] for i in s) for s in feasible)==1
+
+
+def gaussian_update():
+    h=matrix([1,1]);p=eye(2);noise=eye(1);mean=(0,0);y=F(3)
+    s=add(mul(mul(h,p),transpose(h)),noise)
+    assert s==matrix([3])
+    k=scale(F(1,3),mul(p,transpose(h)))
+    assert k==matrix([F(1,3)],[F(1,3)])
+    posterior_mean=apply(k,(y,))
+    assert posterior_mean==(1,1)
+    covariance=add(p,scale(-1,mul(mul(k,h),p)))
+    assert covariance==matrix([F(2,3),F(-1,3)],[F(-1,3),F(2,3)])
+    precision=add(eye(2),mul(transpose(h),h))
+    assert precision==matrix([2,1],[1,2]) and mul(precision,covariance)==eye(2)
+    assert apply(precision,posterior_mean)==apply(transpose(h),(y,))
+    assert y*y-sum(a*b for a,b in zip(posterior_mean,apply(precision,posterior_mean)))==3
+    assert apply(covariance,(1,1))==(F(1,3),F(1,3))
+    assert apply(covariance,(1,-1))==(1,-1)
+    def joseph(gain):
+        residual_operator=add(eye(2),scale(-1,mul(gain,h)))
+        return add(mul(mul(residual_operator,p),transpose(residual_operator)),mul(mul(gain,noise),transpose(gain)))
+    assert joseph(k)==covariance
+    b=matrix([F(1,4)],[F(1,4)])
+    assert apply(b,(y,))==(F(3,4),F(3,4))
+    assert joseph(b)==matrix([F(11,16),F(-5,16)],[F(-5,16),F(11,16)])
+    assert add(mul(p,transpose(h)),scale(-1,mul(b,s)))==matrix([F(1,4)],[F(1,4)])
+    assert joseph(b)!=add(p,scale(-1,mul(mul(b,h),p)))
+    assert apply(k,(-y,))==(-1,-1) and joseph(k)==covariance
+
+
 def main():
     checks=(packets,seeds,coordinates,transfer,refinement,
             redundant_coordinates,obstructions,weighted_averages,binary_rounding,
             kernels,spectral_projectors,block_elimination,modular_reconstruction,
             haar_pairs,typed_paths,cyclic_reciprocals,quantum_measurement,
-            lift_branches,finite_frobenius,support_multiplicity)
+            lift_branches,finite_frobenius,support_multiplicity,
+            proof_certificates,hidden_memory,calibrated_continuation,
+            contracted_feedback,repair_menus,gaussian_update)
     for check in checks:
         check()
     print(f'PASS: {len(checks)} hand-worked examples')

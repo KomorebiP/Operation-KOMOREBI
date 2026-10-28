@@ -1,6 +1,6 @@
 # Glossary and notation
 
-This guide explains 143 terms used in the collection and its finite examples. Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).
+This guide explains 183 terms used in the collection and its finite examples. Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).
 
 A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.
 
@@ -15,6 +15,8 @@ A word can have a more specific meaning in another paper. The paper’s definiti
 - [Series and cyclic functions](#series-and-functions)
 - [Finite quantum systems](#finite-quantum)
 - [Arithmetic and modules](#arithmetic-and-modules)
+- [Dynamics, memory and calibration](#dynamics-and-calibration)
+- [Inference and probability](#inference-and-probability)
 
 <a id="linear-foundations"></a>
 
@@ -572,7 +574,7 @@ A declared scaling convention. For a Haar pair, dividing sums and differences by
 
 How descriptions become finer, discard information or meet a compatibility condition.
 
-[Refinement](#refinement) · [Obstruction](#obstruction) · [Coarsening](#coarsening) · [Polyphase decomposition](#polyphase) · [Residue class](#residue-class) · [Compatibility](#compatibility) · [Commuting diagram](#commuting-diagram) · [Reconstruction](#reconstruction) · [Fiber](#fiber) · [Factorization through a map](#factorization) · [Lift](#lift) · [Finite conditional expectation](#conditional-expectation) · [Completion](#completion) · [Haar pair](#haar-pair) · [Detail coefficient](#detail-coefficient)
+[Refinement](#refinement) · [Obstruction](#obstruction) · [Coarsening](#coarsening) · [Polyphase decomposition](#polyphase) · [Residue class](#residue-class) · [Compatibility](#compatibility) · [Commuting diagram](#commuting-diagram) · [Reconstruction](#reconstruction) · [Fiber](#fiber) · [Factorization through a map](#factorization) · [Lift](#lift) · [Finite conditional expectation](#conditional-expectation) · [Completion](#completion) · [Haar pair](#haar-pair) · [Detail coefficient](#detail-coefficient) · [Repair direction](#repair-direction) · [Free linear repair](#free-repair) · [Finite repair menu](#repair-menu) · [Repair selection cost](#repair-cost) · [Feasibility](#feasibility) · [Linear obstruction witness](#dual-witness)
 
 <a id="refinement"></a>
 
@@ -698,6 +700,54 @@ In the Haar pair example, the signed half-difference d = (u−v)/2. It records t
 
 [Hand-worked example](examples/14_HAAR_PAIRS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#haar) · [Haar pair](#haar-pair) · [Residual](#residual)
 
+<a id="repair-direction"></a>
+
+### Repair direction
+
+An allowed vector added to the span of the original image so that a required target can become reachable. Both the target equation and the permitted coefficient system must remain specified.
+
+[Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#repair-menus) · [Image](#image) · [Span](#span) · [Finite repair menu](#repair-menu)
+
+<a id="free-repair"></a>
+
+### Free linear repair
+
+A repair problem allowing freely chosen added directions over the declared field. In the rational finite-dimensional setting, the minimum added dimension is the dimension of the span of the target residual classes in the original cokernel.
+
+[Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#repair-menus) · [Repair direction](#repair-direction) · [Cokernel](#cokernel) · [Dimension](#dimension)
+
+<a id="repair-menu"></a>
+
+### Finite repair menu
+
+A supplied finite list of candidate directions, with costs and any selection restrictions. Feasibility and optimality are judged using this list and the original target equation.
+
+[Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#repair-menus) · [Repair direction](#repair-direction) · [Repair selection cost](#repair-cost) · [Feasibility](#feasibility)
+
+<a id="repair-cost"></a>
+
+### Repair selection cost
+
+The declared cost of the selected repair choices. In the tutorial it is the sum of their selection costs, paid once per choice, independently of the rational coefficients used to combine them.
+
+[Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#repair-menus) · [Finite repair menu](#repair-menu) · [Free linear repair](#free-repair)
+
+<a id="feasibility"></a>
+
+### Feasibility
+
+Existence of a solution satisfying the stated equations and admissibility conditions. Failure of one candidate or exhaustion of a search budget does not by itself show infeasibility.
+
+[Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#repair-menus) · [Hypothesis](#hypothesis) · [Obstruction](#obstruction) · [Certificate](#certificate)
+
+<a id="dual-witness"></a>
+
+### Linear obstruction witness
+
+A linear functional that annihilates every allowed direction but has a nonzero value on the required target. It proves that this target lies outside their span under the stated linear problem.
+
+[Hand-worked example](examples/25_REPAIR_MENUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#repair-menus) · [Linear map](#linear-map) · [Kernel](#kernel) · [Obstruction](#obstruction) · [Feasibility](#feasibility)
+
 <a id="arithmetic-and-error"></a>
 
 ## Arithmetic and error
@@ -816,7 +866,7 @@ For pairwise coprime positive moduli, a tuple of residues specifies exactly one 
 
 How to read assumptions, proofs, formal links and computation records.
 
-[Certificate](#certificate) · [Conditional](#conditional) · [Lean correspondence](#lean-correspondence) · [Hypothesis](#hypothesis) · [Theorem](#theorem) · [Proof](#proof) · [Heuristic](#heuristic) · [Finite check](#finite-check)
+[Certificate](#certificate) · [Conditional](#conditional) · [Lean correspondence](#lean-correspondence) · [Hypothesis](#hypothesis) · [Theorem](#theorem) · [Proof](#proof) · [Heuristic](#heuristic) · [Finite check](#finite-check) · [Finite proof field](#proof-field) · [Admissible leaf](#admissible-leaf) · [Recorded inference rule](#inference-rule) · [Verification closure](#verification-closure) · [Inclusion-minimal certificate](#inclusion-minimal) · [Least certificate](#least-certificate) · [Minimum-cost certificate](#minimum-cost-certificate)
 
 <a id="certificate"></a>
 
@@ -882,13 +932,69 @@ A check over specified, finitely many inputs or cases. Exhaustive checking can p
 
 [Hand-worked example](examples/01_PACKETS.md) · [Further reading](VERIFICATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#packets) · [Proof](#proof) · [Certificate](#certificate) · [Hypothesis](#hypothesis)
 
+<a id="proof-field"></a>
+
+### Finite proof field
+
+A declared finite collection of claim nodes, admissible leaves and recorded inference rules. Certificate validity is relative to this supplied system.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Recorded inference rule](#inference-rule) · [Admissible leaf](#admissible-leaf) · [Certificate](#certificate)
+
+<a id="admissible-leaf"></a>
+
+### Admissible leaf
+
+A node allowed as a starting point under the declared proof-field contract. Selecting such a leaf does not require deriving it again inside that certificate.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Finite proof field](#proof-field) · [Hypothesis](#hypothesis)
+
+<a id="inference-rule"></a>
+
+### Recorded inference rule
+
+A specified set of premise nodes together with a conclusion node. The certificate can use the rule only when the required premises have been derived and its recorded certification permits it.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Finite proof field](#proof-field) · [Verification closure](#verification-closure)
+
+<a id="verification-closure"></a>
+
+### Verification closure
+
+The nodes obtainable by admitting selected admissible leaves and repeatedly applying the retained certified rules whose premises are available.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Admissible leaf](#admissible-leaf) · [Recorded inference rule](#inference-rule) · [Certificate](#certificate)
+
+<a id="inclusion-minimal"></a>
+
+### Inclusion-minimal certificate
+
+A valid node-and-rule certificate with no valid strictly smaller subcertificate under componentwise inclusion. Several incomparable minimal certificates can exist.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Certificate](#certificate) · [Least certificate](#least-certificate) · [Minimum-cost certificate](#minimum-cost-certificate)
+
+<a id="least-certificate"></a>
+
+### Least certificate
+
+A certificate contained componentwise in every certificate for the same request and rule system. This is stronger than being inclusion-minimal or having minimum numerical cost.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Inclusion-minimal certificate](#inclusion-minimal) · [Minimum-cost certificate](#minimum-cost-certificate)
+
+<a id="minimum-cost-certificate"></a>
+
+### Minimum-cost certificate
+
+A valid certificate attaining the lowest declared total cost among the permitted certificates. Costs count selected items according to the supplied rule, so a shared premise need not be charged each time it is used.
+
+[Hand-worked example](examples/21_PROOF_CERTIFICATES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#proof-certificates) · [Certificate](#certificate) · [Least certificate](#least-certificate) · [Finite proof field](#proof-field)
+
 <a id="series-and-functions"></a>
 
 ## Series and cyclic functions
 
 Coefficient operations and the distinction between a finite truncation and an infinite series.
 
-[Coefficient](#coefficient) · [Power series](#power-series) · [Truncation](#truncation) · [Formal reciprocal](#formal-reciprocal) · [Coefficient convolution](#convolution) · [Root of unity](#root-of-unity)
+[Coefficient](#coefficient) · [Power series](#power-series) · [Truncation](#truncation) · [Formal reciprocal](#formal-reciprocal) · [Coefficient convolution](#convolution) · [Root of unity](#root-of-unity) · [Derivative in the series example](#derivative) · [Differential equation](#differential-equation) · [Initial condition](#initial-condition) · [Contracted argument](#contracted-argument) · [Coefficient recurrence](#coefficient-recurrence)
 
 <a id="coefficient"></a>
 
@@ -937,6 +1043,46 @@ The multiplication rule cₙ = sum from k=0 to n of aₖbₙ₋ₖ for ordinary 
 A complex number ω with ωᴺ = 1 for a positive integer N. It is primitive when N is its least positive such exponent. A weighted average over the powers of a primitive Nth root selects coefficients in one residue class modulo N.
 
 [Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Residue class](#residue-class) · [Packet](#packet)
+
+<a id="derivative"></a>
+
+### Derivative in the series example
+
+For n≥1, differentiating a power-series term aₙzⁿ gives n aₙzⁿ⁻¹. Constant terms differentiate to zero. Formal differentiation acts on coefficients. An analytic interpretation uses the function’s convergence and differentiability conditions.
+
+[Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#contracted-feedback) · [Coefficient](#coefficient) · [Power series](#power-series)
+
+<a id="differential-equation"></a>
+
+### Differential equation
+
+An equation relating an unknown function to one or more of its derivatives. The example also evaluates the same function at contracted arguments qz and rz.
+
+[Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#contracted-feedback) · [Derivative in the series example](#derivative) · [Initial condition](#initial-condition) · [Contracted argument](#contracted-argument)
+
+<a id="initial-condition"></a>
+
+### Initial condition
+
+A specified value, or collection of derivative values, used with a differential equation. The feedback example fixes T(0)=0, and the equation then forces T′(0)=1.
+
+[Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#contracted-feedback) · [Differential equation](#differential-equation) · [Derivative in the series example](#derivative)
+
+<a id="contracted-argument"></a>
+
+### Contracted argument
+
+Evaluation at qz with 0<q<1 in the feedback example. A term cₙzⁿ becomes cₙqⁿzⁿ after this substitution. The scaling is inside the defining equation.
+
+[Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#contracted-feedback) · [Coefficient](#coefficient) · [Differential equation](#differential-equation)
+
+<a id="coefficient-recurrence"></a>
+
+### Coefficient recurrence
+
+A rule determining successive series coefficients from earlier ones. It gives exact finite calculations at each degree. Analytic convergence and bounds for a discarded tail require additional arguments.
+
+[Hand-worked example](examples/24_CONTRACTED_FEEDBACK.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#contracted-feedback) · [Coefficient](#coefficient) · [Truncation](#truncation) · [Coefficient convolution](#convolution)
 
 <a id="finite-quantum"></a>
 
@@ -1242,6 +1388,198 @@ A construction that makes ring elements outside a chosen prime ideal invertible,
 
 [Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Prime ideal](#prime-ideal) · [Module support](#module-support) · [Module](#module)
 
+<a id="dynamics-and-calibration"></a>
+
+## Dynamics, memory and calibration
+
+What a retained state predicts and what exact observations determine.
+
+[Visible state](#visible-state) · [Hidden state](#hidden-state) · [Prepared hidden initialization](#prepared-state) · [Discrete memory maps](#memory-kernel) · [Autonomous dynamics of a summary](#autonomous-dynamics) · [State augmentation](#state-augmentation) · [Semigroup law for evolution maps](#semigroup-law) · [Exact operator calibration](#calibration) · [Calibration span](#calibration-span) · [Compatible model](#compatible-model) · [Linear extension](#linear-extension) · [Reusable calibrated core](#reusable-core) · [Identifiability relative to a model class](#identifiability)
+
+<a id="visible-state"></a>
+
+### Visible state
+
+The state coordinates or summary retained for a specified prediction task. A visible value need not contain enough information to determine its own next value.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Hidden state](#hidden-state) · [Autonomous dynamics of a summary](#autonomous-dynamics) · [Coarsening](#coarsening)
+
+<a id="hidden-state"></a>
+
+### Hidden state
+
+The part of the declared full state omitted by the current observation or summary. It can influence later visible outputs even when it does not affect the current output.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Visible state](#visible-state) · [Discrete memory maps](#memory-kernel)
+
+<a id="prepared-state"></a>
+
+### Prepared hidden initialization
+
+An initialization that fixes the hidden coordinates by a specified rule. The example uses R(y)=(y,0). Results for this preparation need not hold for arbitrary hidden starting values.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Hidden state](#hidden-state) · [Reconstruction](#reconstruction) · [Autonomous dynamics of a summary](#autonomous-dynamics)
+
+<a id="memory-kernel"></a>
+
+### Discrete memory maps
+
+For the block update (y,z) ↦ (Ay+Bz,Gy+Dz), the maps Mₖ=BDᵏG describe a visible-to-hidden entry, k hidden transitions and a return. The first effect of Mₖ on prepared visible evolution occurs after k+2 full steps.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Block matrix](#block-matrix) · [Hidden state](#hidden-state) · [Prepared hidden initialization](#prepared-state)
+
+<a id="autonomous-dynamics"></a>
+
+### Autonomous dynamics of a summary
+
+A transition rule determined by the retained current state, under the declared controls and initialization contract. For deterministic maps, full states with the same summary must have the same next summary.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Visible state](#visible-state) · [Fiber](#fiber) · [Factorization through a map](#factorization)
+
+<a id="state-augmentation"></a>
+
+### State augmentation
+
+Enlarging a retained state with additional coordinates or history needed for future prediction. The hidden-memory example retains the previous visible value along with the current one.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Visible state](#visible-state) · [Hidden state](#hidden-state) · [Autonomous dynamics of a summary](#autonomous-dynamics)
+
+<a id="semigroup-law"></a>
+
+### Semigroup law for evolution maps
+
+The identity Eₘ₊ₙ=EₘEₙ for nonnegative step counts, with E₀ the identity. It expresses agreement between uninterrupted evolution and successive uses of the same state-level evolution maps.
+
+[Hand-worked example](examples/22_HIDDEN_MEMORY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#hidden-memory) · [Composition](#composition) · [Identity operator](#identity) · [Prepared hidden initialization](#prepared-state)
+
+<a id="calibration"></a>
+
+### Exact operator calibration
+
+Supplied input-output pairs for an unknown operation. For a linear operation, every linear relation among calibrated inputs must be respected by the supplied outputs.
+
+[Hand-worked example](examples/23_CALIBRATED_CONTINUATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#calibrated-continuation) · [Linear map](#linear-map) · [Calibration span](#calibration-span) · [Compatible model](#compatible-model)
+
+<a id="calibration-span"></a>
+
+### Calibration span
+
+The span of the calibrated input vectors. Consistent exact linear calibration determines the operation on this span. Its outputs can leave that span.
+
+[Hand-worked example](examples/23_CALIBRATED_CONTINUATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#calibrated-continuation) · [Exact operator calibration](#calibration) · [Span](#span) · [Reusable calibrated core](#reusable-core)
+
+<a id="compatible-model"></a>
+
+### Compatible model
+
+A model satisfying all supplied data and every declared structural assumption. In the calibration example, all linear extensions of the known restriction are allowed, and each model stays fixed through a trajectory.
+
+[Hand-worked example](examples/23_CALIBRATED_CONTINUATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#calibrated-continuation) · [Exact operator calibration](#calibration) · [Linear extension](#linear-extension) · [Identifiability relative to a model class](#identifiability)
+
+<a id="linear-extension"></a>
+
+### Linear extension
+
+A linear map on a larger vector space that agrees with a given map on its original subspace. Values on an added basis can vary unless further conditions are imposed.
+
+[Hand-worked example](examples/23_CALIBRATED_CONTINUATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#calibrated-continuation) · [Linear map](#linear-map) · [Subspace](#subspace) · [Basis](#basis)
+
+<a id="reusable-core"></a>
+
+### Reusable calibrated core
+
+For the tutorial’s unrestricted linear extension class and full-state output, the largest subspace inside the calibration span preserved by every calibrated operation. All finite operation sequences from this subspace are determined by the calibration.
+
+[Hand-worked example](examples/23_CALIBRATED_CONTINUATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#calibrated-continuation) · [Calibration span](#calibration-span) · [Invariant subspace](#invariant-subspace) · [Compatible model](#compatible-model)
+
+<a id="identifiability"></a>
+
+### Identifiability relative to a model class
+
+A requested quantity is identifiable from the supplied data when every compatible model gives the same value. Identifying a particular output can require less information than identifying the whole model.
+
+[Hand-worked example](examples/23_CALIBRATED_CONTINUATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#calibrated-continuation) · [Compatible model](#compatible-model) · [Exact operator calibration](#calibration) · [Obstruction](#obstruction)
+
+<a id="inference-and-probability"></a>
+
+## Inference and probability
+
+The model, observation and Gaussian calculations used in the inference example.
+
+[Finite-dimensional Gaussian model](#gaussian-model) · [Prior distribution](#prior) · [Likelihood](#likelihood) · [Posterior distribution](#posterior) · [Covariance matrix](#covariance) · [Precision matrix](#precision-matrix) · [Observation innovation](#innovation) · [Exact Gaussian gain](#gaussian-gain) · [Joseph covariance](#joseph-covariance)
+
+<a id="gaussian-model"></a>
+
+### Finite-dimensional Gaussian model
+
+A model with a Gaussian state and specified linear observations with Gaussian noise. The tutorial supplies an independent noise variable, a prior mean and covariance, an observation matrix and a positive noise variance.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Prior distribution](#prior) · [Likelihood](#likelihood) · [Covariance matrix](#covariance)
+
+<a id="prior"></a>
+
+### Prior distribution
+
+The state distribution specified before conditioning on the observation under the declared model. A Gaussian prior is described by its mean and covariance.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Finite-dimensional Gaussian model](#gaussian-model) · [Posterior distribution](#posterior) · [Covariance matrix](#covariance)
+
+<a id="likelihood"></a>
+
+### Likelihood
+
+For a fixed observed value, the observation density viewed as a function of the proposed state or parameter. It is combined with the prior and normalized to obtain a posterior density when that density formula applies.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Prior distribution](#prior) · [Posterior distribution](#posterior) · [Finite-dimensional Gaussian model](#gaussian-model)
+
+<a id="posterior"></a>
+
+### Posterior distribution
+
+The state distribution conditional on the observed data under the supplied prior and observation model. The tutorial computes the usual explicit Gaussian conditional density by completing the square.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Prior distribution](#prior) · [Likelihood](#likelihood) · [Exact Gaussian gain](#gaussian-gain)
+
+<a id="covariance"></a>
+
+### Covariance matrix
+
+For a random vector X with mean m and finite second moments, the matrix E[(X−m)(X−m)ᵀ]. Its diagonal entries are variances. For a unit direction u, uᵀCu is the variance in that direction.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Positive semidefinite matrix](#positive-semidefinite) · [Finite-dimensional Gaussian model](#gaussian-model) · [Precision matrix](#precision-matrix)
+
+<a id="precision-matrix"></a>
+
+### Precision matrix
+
+The inverse covariance when the covariance is invertible. In a nonsingular Gaussian density it appears in the quadratic exponent. This use of precision is distinct from the number of bits in stored arithmetic.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Covariance matrix](#covariance) · [Inverse](#inverse) · [Precision](#precision)
+
+<a id="innovation"></a>
+
+### Observation innovation
+
+The difference d=y−Hm between an observation and its predicted mean in the linear model. Its covariance is S=HPHᵀ+R when the state covariance is P and the independent noise covariance is R.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Finite-dimensional Gaussian model](#gaussian-model) · [Covariance matrix](#covariance) · [Exact Gaussian gain](#gaussian-gain)
+
+<a id="gaussian-gain"></a>
+
+### Exact Gaussian gain
+
+For the declared linear Gaussian model, K=PHᵀ(HPHᵀ+R)⁻¹. Multiplying the innovation by K gives the posterior mean correction. Positive noise covariance makes the displayed observation-space inverse exist.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Observation innovation](#innovation) · [Posterior distribution](#posterior) · [Joseph covariance](#joseph-covariance)
+
+<a id="joseph-covariance"></a>
+
+### Joseph covariance
+
+For a gain B, the matrix (I−BH)P(I−BH)ᵀ+BRBᵀ. It is positive semidefinite for valid prior and noise covariances. At the exact gain it equals the posterior covariance. A general gain still needs its own accuracy check.
+
+[Hand-worked example](examples/26_GAUSSIAN_UPDATE.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#gaussian-update) · [Covariance matrix](#covariance) · [Exact Gaussian gain](#gaussian-gain) · [Positive semidefinite matrix](#positive-semidefinite)
+
 ## Symbols in the introductory example
 
 The examples use the following notation. The reading column spells out symbols for readers who are unfamiliar with them.
@@ -1270,6 +1608,6 @@ Symbols are local to their definitions. In another paper, the same letter can de
 
 ## Alphabetical index
 
-[Address](#address) · [Adjoint matrix](#adjoint) · [Analysis and synthesis](#analysis-synthesis) · [Basis](#basis) · [Block matrix](#block-matrix) · [Born probability](#born-probability) · [Certificate](#certificate) · [Chinese remainder theorem](#chinese-remainder) · [Coarsening](#coarsening) · [Coefficient](#coefficient) · [Coefficient convolution](#convolution) · [Coherence in a chosen basis](#coherence) · [Cokernel](#cokernel) · [Commutative ring with identity](#ring) · [Commutator](#commutator) · [Commuting diagram](#commuting-diagram) · [Compatibility](#compatibility) · [Compatible tower](#compatible-tower) · [Complete packet family](#complete-packet-family) · [Completion](#completion) · [Complex conjugate](#complex-conjugate) · [Composition](#composition) · [Conditional](#conditional) · [Coordinate change](#coordinate-change) · [Coordinates](#coordinates) · [Coprime integers](#coprime) · [Cyclic vector](#cyclic) · [Density matrix](#density-matrix) · [Dephasing](#dephasing) · [Detail coefficient](#detail-coefficient) · [Determinant](#determinant) · [Diagonalizable operator](#diagonalizable) · [Dimension](#dimension) · [Direct sum](#direct-sum) · [Domain and codomain](#domain-codomain) · [Dyadic rational](#dyadic-rational) · [Eigenspace](#eigenspace) · [Eigenvalue](#eigenvalue) · [Eigenvector](#eigenvector) · [Elimination](#elimination) · [Exact](#exact) · [Extension field](#extension-field) · [Factorization through a map](#factorization) · [Fiber](#fiber) · [Field](#field) · [Field norm](#field-norm) · [Field trace](#field-trace) · [Finite check](#finite-check) · [Finite conditional expectation](#conditional-expectation) · [Finite-field Frobenius](#frobenius) · [Formal reciprocal](#formal-reciprocal) · [Haar pair](#haar-pair) · [Hermitian matrix](#hermitian) · [Heuristic](#heuristic) · [Hypothesis](#hypothesis) · [Ideal](#ideal) · [Identity operator](#identity) · [Image](#image) · [Injective map](#injective) · [Inner product](#inner-product) · [Integer congruence](#congruence) · [Intertwiner](#intertwiner) · [Invariant subspace](#invariant-subspace) · [Inverse](#inverse) · [Irreducible polynomial](#irreducible-polynomial) · [Kernel](#kernel) · [Kraus operators](#kraus-operator) · [Lean correspondence](#lean-correspondence) · [Left inverse](#left-inverse) · [Lift](#lift) · [Lift branch](#lift-branch) · [Linear independence](#linear-independence) · [Linear isomorphism](#isomorphism) · [Linear map](#linear-map) · [Localization at a prime](#localization) · [Matrix](#matrix) · [Matrix trace](#trace) · [Minimal polynomial](#minimal-polynomial) · [Modular inverse](#modular-inverse) · [Modular reduction](#modular-reduction) · [Module](#module) · [Module annihilator](#annihilator) · [Module presentation](#module-presentation) · [Module support](#module-support) · [Multiplicity in the module example](#multiplicity) · [Mutual annihilation](#mutual-annihilation) · [Nilpotent operator](#nilpotent) · [Norm](#norm) · [Normalization](#normalization) · [Nullity](#nullity) · [Numerical](#numerical) · [Numerical ternary](#ternary) · [Obstruction](#obstruction) · [Operator algebra](#operator-algebra) · [Operator conjugation](#conjugation) · [Operator relation](#relation) · [Orthogonal matrix](#orthogonal-matrix) · [Orthogonal projector](#orthogonal-projector) · [p-adic integer](#padic-integer) · [Packet](#packet) · [Polynomial in an operator](#polynomial-in-operator) · [Polyphase decomposition](#polyphase) · [Positive semidefinite matrix](#positive-semidefinite) · [Power series](#power-series) · [Precision](#precision) · [Prime field](#prime-field) · [Prime ideal](#prime-ideal) · [Prime power](#prime-power) · [Projector](#projector) · [Proof](#proof) · [Purity of a density matrix](#purity) · [Quantum amplitude](#amplitude) · [Quotient space](#quotient-space) · [Rank](#rank) · [Rank–nullity identity](#rank-nullity) · [Realization](#realization) · [Reconstruction](#reconstruction) · [Redundant coordinates](#redundancy) · [Refinement](#refinement) · [Residual](#residual) · [Residue class](#residue-class) · [Root of unity](#root-of-unity) · [Rounding](#rounding) · [Scalar](#scalar) · [Schur complement](#schur-complement) · [Seed](#seed) · [Seed rank](#seed-rank) · [Span](#span) · [Spectral projector](#spectral-projector) · [Subspace](#subspace) · [Surjective map](#surjective) · [Survival to a finite level](#surviving-branch) · [Theorem](#theorem) · [Tolerance](#tolerance) · [Transfer block](#transfer-block) · [Truncation](#truncation) · [Typed path](#typed-path) · [Typed system](#typed-system) · [ULP](#ulp) · [Unitary matrix](#unitary) · [Vector](#vector) · [Vector space](#vector-space) · [Zeroth Fitting ideal](#fitting-ideal)
+[Address](#address) · [Adjoint matrix](#adjoint) · [Admissible leaf](#admissible-leaf) · [Analysis and synthesis](#analysis-synthesis) · [Autonomous dynamics of a summary](#autonomous-dynamics) · [Basis](#basis) · [Block matrix](#block-matrix) · [Born probability](#born-probability) · [Calibration span](#calibration-span) · [Certificate](#certificate) · [Chinese remainder theorem](#chinese-remainder) · [Coarsening](#coarsening) · [Coefficient](#coefficient) · [Coefficient convolution](#convolution) · [Coefficient recurrence](#coefficient-recurrence) · [Coherence in a chosen basis](#coherence) · [Cokernel](#cokernel) · [Commutative ring with identity](#ring) · [Commutator](#commutator) · [Commuting diagram](#commuting-diagram) · [Compatibility](#compatibility) · [Compatible model](#compatible-model) · [Compatible tower](#compatible-tower) · [Complete packet family](#complete-packet-family) · [Completion](#completion) · [Complex conjugate](#complex-conjugate) · [Composition](#composition) · [Conditional](#conditional) · [Contracted argument](#contracted-argument) · [Coordinate change](#coordinate-change) · [Coordinates](#coordinates) · [Coprime integers](#coprime) · [Covariance matrix](#covariance) · [Cyclic vector](#cyclic) · [Density matrix](#density-matrix) · [Dephasing](#dephasing) · [Derivative in the series example](#derivative) · [Detail coefficient](#detail-coefficient) · [Determinant](#determinant) · [Diagonalizable operator](#diagonalizable) · [Differential equation](#differential-equation) · [Dimension](#dimension) · [Direct sum](#direct-sum) · [Discrete memory maps](#memory-kernel) · [Domain and codomain](#domain-codomain) · [Dyadic rational](#dyadic-rational) · [Eigenspace](#eigenspace) · [Eigenvalue](#eigenvalue) · [Eigenvector](#eigenvector) · [Elimination](#elimination) · [Exact](#exact) · [Exact Gaussian gain](#gaussian-gain) · [Exact operator calibration](#calibration) · [Extension field](#extension-field) · [Factorization through a map](#factorization) · [Feasibility](#feasibility) · [Fiber](#fiber) · [Field](#field) · [Field norm](#field-norm) · [Field trace](#field-trace) · [Finite check](#finite-check) · [Finite conditional expectation](#conditional-expectation) · [Finite proof field](#proof-field) · [Finite repair menu](#repair-menu) · [Finite-dimensional Gaussian model](#gaussian-model) · [Finite-field Frobenius](#frobenius) · [Formal reciprocal](#formal-reciprocal) · [Free linear repair](#free-repair) · [Haar pair](#haar-pair) · [Hermitian matrix](#hermitian) · [Heuristic](#heuristic) · [Hidden state](#hidden-state) · [Hypothesis](#hypothesis) · [Ideal](#ideal) · [Identifiability relative to a model class](#identifiability) · [Identity operator](#identity) · [Image](#image) · [Inclusion-minimal certificate](#inclusion-minimal) · [Initial condition](#initial-condition) · [Injective map](#injective) · [Inner product](#inner-product) · [Integer congruence](#congruence) · [Intertwiner](#intertwiner) · [Invariant subspace](#invariant-subspace) · [Inverse](#inverse) · [Irreducible polynomial](#irreducible-polynomial) · [Joseph covariance](#joseph-covariance) · [Kernel](#kernel) · [Kraus operators](#kraus-operator) · [Lean correspondence](#lean-correspondence) · [Least certificate](#least-certificate) · [Left inverse](#left-inverse) · [Lift](#lift) · [Lift branch](#lift-branch) · [Likelihood](#likelihood) · [Linear extension](#linear-extension) · [Linear independence](#linear-independence) · [Linear isomorphism](#isomorphism) · [Linear map](#linear-map) · [Linear obstruction witness](#dual-witness) · [Localization at a prime](#localization) · [Matrix](#matrix) · [Matrix trace](#trace) · [Minimal polynomial](#minimal-polynomial) · [Minimum-cost certificate](#minimum-cost-certificate) · [Modular inverse](#modular-inverse) · [Modular reduction](#modular-reduction) · [Module](#module) · [Module annihilator](#annihilator) · [Module presentation](#module-presentation) · [Module support](#module-support) · [Multiplicity in the module example](#multiplicity) · [Mutual annihilation](#mutual-annihilation) · [Nilpotent operator](#nilpotent) · [Norm](#norm) · [Normalization](#normalization) · [Nullity](#nullity) · [Numerical](#numerical) · [Numerical ternary](#ternary) · [Observation innovation](#innovation) · [Obstruction](#obstruction) · [Operator algebra](#operator-algebra) · [Operator conjugation](#conjugation) · [Operator relation](#relation) · [Orthogonal matrix](#orthogonal-matrix) · [Orthogonal projector](#orthogonal-projector) · [p-adic integer](#padic-integer) · [Packet](#packet) · [Polynomial in an operator](#polynomial-in-operator) · [Polyphase decomposition](#polyphase) · [Positive semidefinite matrix](#positive-semidefinite) · [Posterior distribution](#posterior) · [Power series](#power-series) · [Precision](#precision) · [Precision matrix](#precision-matrix) · [Prepared hidden initialization](#prepared-state) · [Prime field](#prime-field) · [Prime ideal](#prime-ideal) · [Prime power](#prime-power) · [Prior distribution](#prior) · [Projector](#projector) · [Proof](#proof) · [Purity of a density matrix](#purity) · [Quantum amplitude](#amplitude) · [Quotient space](#quotient-space) · [Rank](#rank) · [Rank–nullity identity](#rank-nullity) · [Realization](#realization) · [Reconstruction](#reconstruction) · [Recorded inference rule](#inference-rule) · [Redundant coordinates](#redundancy) · [Refinement](#refinement) · [Repair direction](#repair-direction) · [Repair selection cost](#repair-cost) · [Residual](#residual) · [Residue class](#residue-class) · [Reusable calibrated core](#reusable-core) · [Root of unity](#root-of-unity) · [Rounding](#rounding) · [Scalar](#scalar) · [Schur complement](#schur-complement) · [Seed](#seed) · [Seed rank](#seed-rank) · [Semigroup law for evolution maps](#semigroup-law) · [Span](#span) · [Spectral projector](#spectral-projector) · [State augmentation](#state-augmentation) · [Subspace](#subspace) · [Surjective map](#surjective) · [Survival to a finite level](#surviving-branch) · [Theorem](#theorem) · [Tolerance](#tolerance) · [Transfer block](#transfer-block) · [Truncation](#truncation) · [Typed path](#typed-path) · [Typed system](#typed-system) · [ULP](#ulp) · [Unitary matrix](#unitary) · [Vector](#vector) · [Vector space](#vector-space) · [Verification closure](#verification-closure) · [Visible state](#visible-state) · [Zeroth Fitting ideal](#fitting-ideal)
 
 [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)

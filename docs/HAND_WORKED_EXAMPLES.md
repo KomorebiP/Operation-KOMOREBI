@@ -13,6 +13,8 @@ Lean coverage and code. Each example has these routes at the end, and the
 related work pages link back to the examples.
 
 Already reading a paper? [Find its examples in the paper index](LEARNING_MAP.md#start-from-a-core-paper).
+For a book or another work, use the [monograph and work index](LEARNING_MAP.md#start-from-a-monograph-or-another-work).
+The [coverage list](EXAMPLE_COVERAGE.md) shows which works still need an introductory tutorial in this guide.
 
 | Example | What you will work out | Background |
 |---|---|---|
@@ -36,6 +38,12 @@ Already reading a paper? [Find its examples in the paper index](LEARNING_MAP.md#
 | 18. [Follow modular lift branches](examples/18_LIFT_BRANCHES.md) | Paper X: reduction compatibility and branches that stop | Integer remainders |
 | 19. [Compute finite-field Frobenius](examples/19_FINITE_FROBENIUS.md) | Paper XI: a quadratic field, trace, norm and an intertwiner | Modular arithmetic and matrices |
 | 20. [Separate support from multiplicity](examples/20_SUPPORT_AND_MULTIPLICITY.md) | Paper XII: module presentations, fibers and nilpotent structure | Quotients and linear maps |
+| 21. [Choose a proof certificate](examples/21_PROOF_CERTIFICATES.md) | Proof Path Theory: shared premises, minimum cost and incomparable certificates | Sets and small tables |
+| 22. [Recover hidden memory](examples/22_HIDDEN_MEMORY.md) | Sufficient Resolution and Machine Societies: visible summaries and delayed feedback | Two-coordinate updates |
+| 23. [Find a reusable calibration](examples/23_CALIBRATED_CONTINUATION.md) | Grounded Abstraction: known inputs, compatible models and an invariant core | Basis vectors and matrix products |
+| 24. [Calculate feedback coefficients](examples/24_CONTRACTED_FEEDBACK.md) | Special Functions: contracted arguments and a nonlinear coefficient recurrence | Polynomial products and differentiation |
+| 25. [Choose repair directions](examples/25_REPAIR_MENUS.md) | Constructive Repair: free repair, weighted menus and an obstruction witness | Linear equations and span |
+| 26. [Update a Gaussian model](examples/26_GAUSSIAN_UPDATE.md) | Certified Inference: one observation, posterior covariance and a candidate gain | Small matrices and Gaussian densities |
 
 ## Conventions and scope
 
@@ -50,15 +58,15 @@ general theorem or establish a new Lean correspondence.
 
 ## Check the arithmetic or run a program
 
-The [exact arithmetic checker](../tools/check_hand_examples.py) checks the 20
-examples with Python's standard library and rational arithmetic. From the
+The [exact arithmetic checker](../tools/check_hand_examples.py) checks the 26
+examples with Python's standard library and exact rational, modular and finite-set calculations. From the
 collection checkout, run:
 
     python -B tools/check_hand_examples.py
 
 Expected result:
 
-    PASS: 20 hand-worked examples
+    PASS: 26 hand-worked examples
 
 The checker covers the displayed finite calculations. It does not validate every
 sentence in the tutorials, review a research proof or run Lean.

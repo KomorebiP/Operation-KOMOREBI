@@ -93,7 +93,7 @@ Paper VII develops finite quantum constructions and separate continuum research 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#quantum-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: quantum_measurement()](../../tools/check_hand_examples.py#L305). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: quantum_measurement()](../../tools/check_hand_examples.py#L306). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -101,3 +101,4 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 - [Next: Follow a modular lift branch](18_LIFT_BRANCHES.md)
 - [All examples](../HAND_WORKED_EXAMPLES.md)
 - [Topic map](../LEARNING_MAP.md#quantum-measurement)
+- [Example coverage by work](../EXAMPLE_COVERAGE.md)

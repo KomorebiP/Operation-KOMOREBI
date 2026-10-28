@@ -4,7 +4,7 @@
 
 <a id="work-navigation"></a>
 
-[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
+[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
 **Completion:** Scoped release · **Lean:** Declared contract recorded · **Confidence:** Recorded formal evidence
 
@@ -22,13 +22,19 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#certified-inference) · [Download this work](../DOWNLOADS.md#certified-inference)
 
+### Worked examples for this work
+
+These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.
+
+- [26. Update a Gaussian model from one observation](../examples/26_GAUSSIAN_UPDATE.md) · [Terms and source routes](../LEARNING_MAP.md#gaussian-update)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
 - [Edition README](../../packages/certified-inference/README.md)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Written proofs
 
@@ -36,7 +42,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 Written proofs may be in the [reading files](#read). There is no separate text or claim map linked here. The [evidence record](#evidence) describes what has been reviewed.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Lean
 
@@ -46,7 +52,7 @@ Start with the [edition guide](../../packages/certified-inference/README.md) and
 
 [Find this work among other Lean projects](../browse/LEAN.md#certified-inference)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Code
 
@@ -56,7 +62,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 [Find this work among other code projects](../browse/CODE.md#certified-inference)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Evidence
 
@@ -66,7 +72,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 The evidence records describe the reviews and runs completed for this edition.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Continue browsing
 

@@ -178,9 +178,12 @@ def source_routes(topic, components, page):
     if topic.get('source_passages'):
         text+='**Source passages:**\n\n'
         text+='\n'.join('- '+link(passage['label'],passage['path'],page) for passage in topic['source_passages'])+'\n\n'
-    text+='\n[Related library guide and code examples]('+topic['code_guide']+'). The guide covers related constructions and their software interfaces.\n\n'
+    guide=topic['code_guide']
+    label=topic.get('code_guide_label','Related library guide and code examples')
+    text+='\n'+('['+label+']('+guide+')' if guide.startswith(('https://','http://')) else link(label,guide,page))+'. '
+    text+=topic.get('code_guide_note','The guide covers related constructions and their software interfaces.')+'\n\n'
     if topic.get('check'):
-        text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed finite calculations with exact rational or modular arithmetic.\n\n'
+        text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed rational, modular or finite-set calculations exactly.\n\n'
     text+='The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.\n\n'
     return text
 
@@ -196,10 +199,16 @@ def render_learning_pages(root, config, components):
     terms={x['id']:x['term'] for x in config['glossary']}
     assert all(set(t['works'])<=set(works) for t in topics)
     page='docs/LEARNING_MAP.md'
+    core=[c for c in components if c['group']=='papers']
+    related=[c for c in components if c['group']!='papers' and any(c['id'] in t['works'] for t in topics)]
     text='# From examples to papers, proofs, Lean and code\n\n'
     text+='Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.\n\n'
-    text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md)\n\n'
-    core=[c for c in components if c['group']=='papers']
+    text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md) · [Example coverage by work](EXAMPLE_COVERAGE.md)\n\n'
+    jumps=[]
+    if core:jumps.append('[Core papers](#start-from-a-core-paper)')
+    if related:jumps.append('[Monographs and other works](#start-from-a-monograph-or-another-work)')
+    jumps.append('[Topics](#topics)')
+    text+='Jump to: '+' · '.join(jumps)+'\n\n'
     if core:
         text+='## Start from a core paper\n\n'
         text+='Choose the paper you are reading. The examples introduce selected ideas. They do not cover every result or establish new Lean correspondences.\n\n'
@@ -208,6 +217,14 @@ def render_learning_pages(root, config, components):
             label=component['title'].split(':',1)[0]
             text+='- '+link(label,'docs/works/'+component['id']+'.md'+('#worked-examples-for-this-work' if relevant else '#read'),page)+': '
             text+=(' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant) if relevant else 'No introductory example is listed yet.')+'\n'
+        text+='\n'
+    if related:
+        text+='## Start from a monograph or another work\n\n'
+        text+='These works have introductory examples in this guide. The '+link('coverage list','docs/EXAMPLE_COVERAGE.md',page)+' also shows works still awaiting a tutorial. A source edition may contain its own worked examples.\n\n'
+        for component in related:
+            relevant=[t for t in topics if component['id'] in t['works']]
+            text+='- '+link(component['title'],'docs/works/'+component['id']+'.md#worked-examples-for-this-work',page)+': '
+            text+=' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant)+'\n'
         text+='\n'
     text+='## Topics\n\n'+ '\n'.join('- ['+str(t['number'])+'. '+t['title']+'](#'+t['id']+')' for t in topics)+'\n\n'
     out={}
@@ -229,7 +246,28 @@ def render_learning_pages(root, config, components):
         footer=[]
         if index:footer.append(link('Previous: '+topics[index-1]['title'],topics[index-1]['example'],example))
         if index+1<len(topics):footer.append(link('Next: '+topics[index+1]['title'],topics[index+1]['example'],example))
-        footer.extend([link('All examples','docs/HAND_WORKED_EXAMPLES.md',example),link('Topic map',page+'#'+topic['id'],example)])
+        footer.extend([link('All examples','docs/HAND_WORKED_EXAMPLES.md',example),link('Topic map',page+'#'+topic['id'],example),link('Example coverage by work','docs/EXAMPLE_COVERAGE.md',example)])
         out[example]=body+'\n'.join('- '+item for item in footer)+'\n'
     out[page]=text+'[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading routes](READING_ROUTES.md)\n'
+    coverage_page='docs/EXAMPLE_COVERAGE.md'
+    covered={identifier for topic in topics for identifier in topic['works']}
+    coverage='# Introductory example coverage by work\n\n'
+    coverage+=str(len(covered))+' of '+str(len(components))+' work pages have introductory example routes in this guide. '
+    coverage+=str(len(components)-len(covered))+' do not yet have a tutorial linked here. Their source editions may contain their own examples.\n\n'
+    coverage+='This is a reading aid. An example route does not measure proof completion, Lean coverage or confidence. Those records remain on each work page.\n\n'
+    coverage+='[All examples](HAND_WORKED_EXAMPLES.md) · [Topic map](LEARNING_MAP.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md)\n\n'
+    groups={'papers':'Core papers','monographs':'Monographs and companion volumes','packages':'Software packages','research':'Research programs','experiments':'Experimental laboratories'}
+    assert {c['group'] for c in components}<=set(groups)
+    coverage+=' · '.join('['+label+'](#'+label.lower().replace(' ','-')+')' for group,label in groups.items() if any(c['group']==group for c in components))+'\n\n'
+    for group,label in groups.items():
+        members=[c for c in components if c['group']==group]
+        if not members:continue
+        coverage+='## '+label+'\n\n'
+        for component in members:
+            relevant=[t for t in topics if component['id'] in t['works']]
+            anchor='#worked-examples-for-this-work' if relevant else '#read'
+            coverage+='- '+link(component['title'],'docs/works/'+component['id']+'.md'+anchor,coverage_page)+': '
+            coverage+=(' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],coverage_page) for t in relevant) if relevant else 'No introductory tutorial linked in this guide yet.')+'\n'
+        coverage+='\n'
+    out[coverage_page]=coverage+'[Back to the topic map](LEARNING_MAP.md) · [All examples](HAND_WORKED_EXAMPLES.md)\n'
     return out

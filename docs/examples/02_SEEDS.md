@@ -81,7 +81,7 @@ Paper I develops seed generation with its stated algebra and module hypotheses.
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: seeds()](../../tools/check_hand_examples.py#L72). This checks the displayed finite calculations with exact rational or modular arithmetic.
+[Python arithmetic check for this example: seeds()](../../tools/check_hand_examples.py#L73). This checks the displayed rational, modular or finite-set calculations exactly.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
@@ -89,3 +89,4 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 - [Next: Change coordinates](03_COORDINATES.md)
 - [All examples](../HAND_WORKED_EXAMPLES.md)
 - [Topic map](../LEARNING_MAP.md#seeds)
+- [Example coverage by work](../EXAMPLE_COVERAGE.md)

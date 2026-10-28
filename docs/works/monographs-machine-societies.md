@@ -4,7 +4,7 @@
 
 <a id="work-navigation"></a>
 
-[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
+[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
 **Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
 
@@ -22,6 +22,12 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-machine-societies) · [Download this work](../DOWNLOADS.md#monographs-machine-societies)
 
+### Worked examples for this work
+
+These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.
+
+- [22. Recover the memory hidden by a summary](../examples/22_HIDDEN_MEMORY.md) · [Terms and source routes](../LEARNING_MAP.md#hidden-memory)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
@@ -29,7 +35,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 - [Edition README](../../monographs/machine-societies/README.md)
 - [Read PDF](../../monographs/machine-societies/Machine_Societies_v1.0.0.pdf)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Written proofs
 
@@ -39,13 +45,13 @@ Find the statement number or section in the [reading files](#read), then read it
 
 [Find this work among other written proofs](../browse/PROOFS.md#monographs-machine-societies)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Lean
 
 No Lean source or guide is linked here. See the Lean status above and the [evidence below](#evidence) for the recorded coverage.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Code
 
@@ -55,7 +61,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 [Find this work among other code projects](../browse/CODE.md#monographs-machine-societies)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Evidence
 
@@ -66,7 +72,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 The evidence records describe the reviews and runs completed for this edition.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Continue browsing
 

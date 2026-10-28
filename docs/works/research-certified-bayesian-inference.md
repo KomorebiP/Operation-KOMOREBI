@@ -4,7 +4,7 @@
 
 <a id="work-navigation"></a>
 
-[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
+[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
 **Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
 
@@ -22,6 +22,12 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-certified-bayesian-inference) · [Download this work](../DOWNLOADS.md#research-certified-bayesian-inference)
 
+### Worked examples for this work
+
+These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.
+
+- [26. Update a Gaussian model from one observation](../examples/26_GAUSSIAN_UPDATE.md) · [Terms and source routes](../LEARNING_MAP.md#gaussian-update)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
@@ -30,7 +36,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 - [Read PDF](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Visual_Guide_Final.pdf)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Written proofs
 
@@ -40,7 +46,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 [Find this work among other written proofs](../browse/PROOFS.md#research-certified-bayesian-inference)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Lean
 
@@ -48,13 +54,13 @@ The links below are guides and claim maps. No Lean source is linked here. See th
 
 - [Lean guide (PDF)](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Lean_Companion_Final.pdf)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Code
 
 No code shortcut is listed for this edition. Check the [complete file listing under Evidence](#evidence).
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Evidence
 
@@ -64,7 +70,7 @@ No code shortcut is listed for this edition. Check the [complete file listing un
 
 The evidence records describe the reviews and runs completed for this edition.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Continue browsing
 
