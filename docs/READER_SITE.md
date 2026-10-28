@@ -62,7 +62,7 @@ runs finish successfully. A website build confirms its own navigation and
 packaging scope, not new mathematical or formal verification.
 
 The workflow also runs the documented introductory Python and C examples.
-It checks the 15 hand-worked examples with exact rational arithmetic.
+It checks the 20 hand-worked examples with exact rational and modular arithmetic.
 The library workflows retain their broader platform and release checks.
 
 [Accessibility and known limits](ACCESSIBILITY.md) · [Repository maintenance](MAINTENANCE.md)

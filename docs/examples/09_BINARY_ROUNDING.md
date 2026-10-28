@@ -91,8 +91,11 @@ Paper IX supplies dyadic arithmetic background. The rounding implementation and 
 
 [Related library guide and code examples](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/chapters/06_arithmetic_ranges.md). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: binary_rounding()](../../tools/check_hand_examples.py#L182). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: binary_rounding()](../../tools/check_hand_examples.py#L182). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Average with unequal weights](08_WEIGHTED_AVERAGES.md) · [Next: Find a kernel and its fibers](10_KERNELS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#rounding)
+- [Previous: Average with unequal weights](08_WEIGHTED_AVERAGES.md)
+- [Next: Find a kernel and its fibers](10_KERNELS.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#rounding)

@@ -175,9 +175,12 @@ def source_routes(topic, components, page):
         text+='### '+component['title']+'\n\n'
         text+=' · '.join(link(label,base+'#'+anchor,page) for label,anchor in
             [('Read','read'),('Written proofs','written-proofs'),('Lean coverage','lean'),('Code and setup','code'),('Evidence','evidence')])+'\n\n'
+    if topic.get('source_passages'):
+        text+='**Source passages:**\n\n'
+        text+='\n'.join('- '+link(passage['label'],passage['path'],page) for passage in topic['source_passages'])+'\n\n'
     text+='\n[Related library guide and code examples]('+topic['code_guide']+'). The guide covers related constructions and their software interfaces.\n\n'
     if topic.get('check'):
-        text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed finite calculations with exact fractions.\n\n'
+        text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed finite calculations with exact rational or modular arithmetic.\n\n'
     text+='The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.\n\n'
     return text
 
@@ -196,6 +199,16 @@ def render_learning_pages(root, config, components):
     text='# From examples to papers, proofs, Lean and code\n\n'
     text+='Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.\n\n'
     text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md)\n\n'
+    core=[c for c in components if c['group']=='papers']
+    if core:
+        text+='## Start from a core paper\n\n'
+        text+='Choose the paper you are reading. The examples introduce selected ideas. They do not cover every result or establish new Lean correspondences.\n\n'
+        for component in core:
+            relevant=[t for t in topics if component['id'] in t['works']]
+            label=component['title'].split(':',1)[0]
+            text+='- '+link(label,'docs/works/'+component['id']+'.md'+('#worked-examples-for-this-work' if relevant else '#read'),page)+': '
+            text+=(' · '.join(link(str(t['number'])+'. '+t['title'],t['example'],page) for t in relevant) if relevant else 'No introductory example is listed yet.')+'\n'
+        text+='\n'
     text+='## Topics\n\n'+ '\n'.join('- ['+str(t['number'])+'. '+t['title']+'](#'+t['id']+')' for t in topics)+'\n\n'
     out={}
     marker='<!-- learning-navigation -->'
@@ -217,6 +230,6 @@ def render_learning_pages(root, config, components):
         if index:footer.append(link('Previous: '+topics[index-1]['title'],topics[index-1]['example'],example))
         if index+1<len(topics):footer.append(link('Next: '+topics[index+1]['title'],topics[index+1]['example'],example))
         footer.extend([link('All examples','docs/HAND_WORKED_EXAMPLES.md',example),link('Topic map',page+'#'+topic['id'],example)])
-        out[example]=body+' · '.join(footer)+'\n'
+        out[example]=body+'\n'.join('- '+item for item in footer)+'\n'
     out[page]=text+'[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading routes](READING_ROUTES.md)\n'
     return out

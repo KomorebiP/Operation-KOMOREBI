@@ -73,8 +73,11 @@ These finite linear calculations give background for typed realizations and info
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: kernels()](../../tools/check_hand_examples.py#L201). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: kernels()](../../tools/check_hand_examples.py#L201). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Round a binary number](09_BINARY_ROUNDING.md) · [Next: Build spectral projectors](11_SPECTRAL_PROJECTORS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#kernels)
+- [Previous: Round a binary number](09_BINARY_ROUNDING.md)
+- [Next: Build spectral projectors](11_SPECTRAL_PROJECTORS.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#kernels)

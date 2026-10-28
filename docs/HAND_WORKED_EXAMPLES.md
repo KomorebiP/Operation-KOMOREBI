@@ -12,6 +12,8 @@ Use the [topic map](LEARNING_MAP.md) to find the related papers, written proofs,
 Lean coverage and code. Each example has these routes at the end, and the
 related work pages link back to the examples.
 
+Already reading a paper? [Find its examples in the paper index](LEARNING_MAP.md#start-from-a-core-paper).
+
 | Example | What you will work out | Background |
 |---|---|---|
 | 1. [Split and reconstruct a vector](examples/01_PACKETS.md) | Projectors, complete packet families and an oblique decomposition | Addition and multiplication |
@@ -29,6 +31,11 @@ related work pages link back to the examples.
 | 13. [Reconstruct from residues](examples/13_MODULAR_RECONSTRUCTION.md) | Modular inverses, CRT and residue selectors | Integer remainders |
 | 14. [Separate averages and differences](examples/14_HAAR_PAIRS.md) | Two Haar levels, reconstruction and energy accounting | Averages and squares |
 | 15. [Compose typed operations](examples/15_TYPED_PATHS.md) | Legal paths, one-sided inverses and a commutator | Matrix dimensions and products |
+| 16. [Split reciprocal coefficients](examples/16_CYCLIC_RECIPROCALS.md) | Paper IV: coefficient recursion, cyclic projection and truncation | Polynomial multiplication |
+| 17. [Calculate quantum measurement](examples/17_QUANTUM_MEASUREMENT.md) | Paper VII: phases, density matrices, probabilities and dephasing | Complex numbers and small matrices |
+| 18. [Follow modular lift branches](examples/18_LIFT_BRANCHES.md) | Paper X: reduction compatibility and branches that stop | Integer remainders |
+| 19. [Compute finite-field Frobenius](examples/19_FINITE_FROBENIUS.md) | Paper XI: a quadratic field, trace, norm and an intertwiner | Modular arithmetic and matrices |
+| 20. [Separate support from multiplicity](examples/20_SUPPORT_AND_MULTIPLICITY.md) | Paper XII: module presentations, fibers and nilpotent structure | Quotients and linear maps |
 
 ## Conventions and scope
 
@@ -43,7 +50,7 @@ general theorem or establish a new Lean correspondence.
 
 ## Check the arithmetic or run a program
 
-The [exact arithmetic checker](../tools/check_hand_examples.py) checks the 15
+The [exact arithmetic checker](../tools/check_hand_examples.py) checks the 20
 examples with Python's standard library and rational arithmetic. From the
 collection checkout, run:
 
@@ -51,7 +58,7 @@ collection checkout, run:
 
 Expected result:
 
-    PASS: 15 hand-worked examples
+    PASS: 20 hand-worked examples
 
 The checker covers the displayed finite calculations. It does not validate every
 sentence in the tutorials, review a research proof or run Lean.

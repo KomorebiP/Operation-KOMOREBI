@@ -72,8 +72,11 @@ The example is ordinary integer CRT. Paper IX develops arithmetic packets and lo
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: modular_reconstruction()](../../tools/check_hand_examples.py#L237). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: modular_reconstruction()](../../tools/check_hand_examples.py#L237). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Eliminate a block of unknowns](12_BLOCK_ELIMINATION.md) · [Next: Separate averages and details](14_HAAR_PAIRS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#modular)
+- [Previous: Eliminate a block of unknowns](12_BLOCK_ELIMINATION.md)
+- [Next: Separate averages and details](14_HAAR_PAIRS.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#modular)

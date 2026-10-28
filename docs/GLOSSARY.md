@@ -1,6 +1,6 @@
 # Glossary and notation
 
-This guide explains 100 terms used in the collection and its finite examples. Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).
+This guide explains 143 terms used in the collection and its finite examples. Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).
 
 A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.
 
@@ -12,6 +12,9 @@ A word can have a more specific meaning in another paper. The paper’s definiti
 - [Refinement and constraints](#refinement-and-constraints)
 - [Arithmetic and error](#arithmetic-and-error)
 - [Claims and evidence](#claims-and-evidence)
+- [Series and cyclic functions](#series-and-functions)
+- [Finite quantum systems](#finite-quantum)
+- [Arithmetic and modules](#arithmetic-and-modules)
 
 <a id="linear-foundations"></a>
 
@@ -237,7 +240,7 @@ The declared input and target spaces of a map. The codomain includes all permitt
 
 How an allowed action generates, selects and decomposes objects.
 
-[Realization](#realization) · [Seed](#seed) · [Address](#address) · [Projector](#projector) · [Packet](#packet) · [Typed system](#typed-system) · [Operator algebra](#operator-algebra) · [Seed rank](#seed-rank) · [Cyclic vector](#cyclic) · [Orthogonal projector](#orthogonal-projector) · [Complete packet family](#complete-packet-family) · [Mutual annihilation](#mutual-annihilation) · [Invariant subspace](#invariant-subspace) · [Eigenvector](#eigenvector) · [Eigenvalue](#eigenvalue) · [Eigenspace](#eigenspace) · [Diagonalizable operator](#diagonalizable) · [Polynomial in an operator](#polynomial-in-operator) · [Minimal polynomial](#minimal-polynomial) · [Spectral projector](#spectral-projector) · [Commutator](#commutator) · [Typed path](#typed-path) · [Operator relation](#relation)
+[Realization](#realization) · [Seed](#seed) · [Address](#address) · [Projector](#projector) · [Packet](#packet) · [Typed system](#typed-system) · [Operator algebra](#operator-algebra) · [Seed rank](#seed-rank) · [Cyclic vector](#cyclic) · [Orthogonal projector](#orthogonal-projector) · [Complete packet family](#complete-packet-family) · [Mutual annihilation](#mutual-annihilation) · [Invariant subspace](#invariant-subspace) · [Eigenvector](#eigenvector) · [Eigenvalue](#eigenvalue) · [Eigenspace](#eigenspace) · [Diagonalizable operator](#diagonalizable) · [Polynomial in an operator](#polynomial-in-operator) · [Minimal polynomial](#minimal-polynomial) · [Spectral projector](#spectral-projector) · [Commutator](#commutator) · [Typed path](#typed-path) · [Operator relation](#relation) · [Nilpotent operator](#nilpotent)
 
 <a id="realization"></a>
 
@@ -424,6 +427,14 @@ A sequence of arrows in which each output type matches the next input type. Its 
 A required equality between legal operator expressions, such as T² = 0. In a typed system, both sides must have the same input and output types.
 
 [Hand-worked example](examples/15_TYPED_PATHS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#typed-paths) · [Typed path](#typed-path) · [Realization](#realization) · [Minimal polynomial](#minimal-polynomial)
+
+<a id="nilpotent"></a>
+
+### Nilpotent operator
+
+An operator N for which Nᵏ = 0 for some positive integer k. It can be nonzero. The smallest such k on a nonzero space is its nilpotency index.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Operator algebra](#operator-algebra) · [Minimal polynomial](#minimal-polynomial)
 
 <a id="coordinates-and-transfer"></a>
 
@@ -871,6 +882,366 @@ A check over specified, finitely many inputs or cases. Exhaustive checking can p
 
 [Hand-worked example](examples/01_PACKETS.md) · [Further reading](VERIFICATION.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#packets) · [Proof](#proof) · [Certificate](#certificate) · [Hypothesis](#hypothesis)
 
+<a id="series-and-functions"></a>
+
+## Series and cyclic functions
+
+Coefficient operations and the distinction between a finite truncation and an infinite series.
+
+[Coefficient](#coefficient) · [Power series](#power-series) · [Truncation](#truncation) · [Formal reciprocal](#formal-reciprocal) · [Coefficient convolution](#convolution) · [Root of unity](#root-of-unity)
+
+<a id="coefficient"></a>
+
+### Coefficient
+
+The scalar multiplying a specified basis term. In f(z) = sum aₙzⁿ, aₙ is the coefficient of zⁿ.
+
+[Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Scalar](#scalar) · [Basis](#basis)
+
+<a id="power-series"></a>
+
+### Power series
+
+An expression sum aₙzⁿ with infinitely many coefficient positions. A formal power series is manipulated through its coefficients. Evaluating it at a number additionally requires convergence.
+
+[Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Coefficient](#coefficient) · [Truncation](#truncation)
+
+<a id="truncation"></a>
+
+### Truncation
+
+Keeping only specified degrees or levels. Equality modulo zᴺ means the coefficients of degrees below N agree. It need not be equality of the full functions or series.
+
+[Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Power series](#power-series) · [Residual](#residual)
+
+<a id="formal-reciprocal"></a>
+
+### Formal reciprocal
+
+For a power series over a field with nonzero constant coefficient, the unique series whose product with it is one. Its coefficients are determined recursively. A finite truncation only verifies the corresponding finite set of coefficient identities.
+
+[Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Power series](#power-series) · [Coefficient convolution](#convolution) · [Field](#field)
+
+<a id="convolution"></a>
+
+### Coefficient convolution
+
+The multiplication rule cₙ = sum from k=0 to n of aₖbₙ₋ₖ for ordinary power series. Each output coefficient is a finite sum, even when the series are infinite.
+
+[Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Coefficient](#coefficient) · [Power series](#power-series)
+
+<a id="root-of-unity"></a>
+
+### Root of unity
+
+A complex number ω with ωᴺ = 1 for a positive integer N. It is primitive when N is its least positive such exponent. A weighted average over the powers of a primitive Nth root selects coefficients in one residue class modulo N.
+
+[Hand-worked example](examples/16_CYCLIC_RECIPROCALS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#cyclic-reciprocals) · [Residue class](#residue-class) · [Packet](#packet)
+
+<a id="finite-quantum"></a>
+
+## Finite quantum systems
+
+States, measurement and channels on finite complex vector spaces.
+
+[Complex conjugate](#complex-conjugate) · [Adjoint matrix](#adjoint) · [Unitary matrix](#unitary) · [Quantum amplitude](#amplitude) · [Density matrix](#density-matrix) · [Matrix trace](#trace) · [Born probability](#born-probability) · [Purity of a density matrix](#purity) · [Dephasing](#dephasing) · [Kraus operators](#kraus-operator) · [Hermitian matrix](#hermitian) · [Positive semidefinite matrix](#positive-semidefinite) · [Coherence in a chosen basis](#coherence)
+
+<a id="complex-conjugate"></a>
+
+### Complex conjugate
+
+For real a and b, the conjugate of a+bi is a−bi. The squared modulus is (a+bi)(a−bi) = a²+b².
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Inner product](#inner-product) · [Scalar](#scalar)
+
+<a id="adjoint"></a>
+
+### Adjoint matrix
+
+For a complex matrix in orthonormal bases, the adjoint A* is its conjugate transpose. In real orthonormal bases this is the ordinary transpose.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Complex conjugate](#complex-conjugate) · [Inner product](#inner-product)
+
+<a id="unitary"></a>
+
+### Unitary matrix
+
+A complex square matrix U with U*U = UU* = I. It preserves the complex inner product and therefore vector norms.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Norm](#norm) · [Orthogonal matrix](#orthogonal-matrix)
+
+<a id="amplitude"></a>
+
+### Quantum amplitude
+
+A complex coordinate of a normalized state vector in a chosen orthonormal basis. Its squared modulus gives that basis outcome’s probability. Relative phases can affect measurements in other bases.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Complex conjugate](#complex-conjugate) · [Born probability](#born-probability) · [Coordinates](#coordinates)
+
+<a id="density-matrix"></a>
+
+### Density matrix
+
+A positive semidefinite Hermitian matrix with trace one. A normalized vector ψ gives the pure-state matrix ρ = ψψ*. Different vectors that differ only by an overall complex phase give the same density matrix.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Matrix trace](#trace) · [Purity of a density matrix](#purity)
+
+<a id="trace"></a>
+
+### Matrix trace
+
+The sum of diagonal entries of a square matrix. It is unchanged by an invertible change of basis. Field trace is a related arithmetic construction with its own definition.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Matrix](#matrix) · [Field trace](#field-trace)
+
+<a id="born-probability"></a>
+
+### Born probability
+
+For a density matrix ρ and an orthogonal measurement projector P, the outcome probability is tr(Pρ). A complete orthogonal projector family gives probabilities summing to one.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Density matrix](#density-matrix) · [Matrix trace](#trace) · [Orthogonal projector](#orthogonal-projector)
+
+<a id="purity"></a>
+
+### Purity of a density matrix
+
+The number tr(ρ²). For a finite density matrix it equals one exactly for a pure state and is smaller for a mixed state.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Density matrix](#density-matrix) · [Matrix trace](#trace)
+
+<a id="dephasing"></a>
+
+### Dephasing
+
+For a specified complete orthogonal family Pᵢ, the channel ρ ↦ sum PᵢρPᵢ removes coherence between different selected subspaces. Its effect depends on the chosen decomposition.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Density matrix](#density-matrix) · [Projector](#projector) · [Kraus operators](#kraus-operator)
+
+<a id="kraus-operator"></a>
+
+### Kraus operators
+
+Matrices Kᵢ describing a finite quantum channel by Φ(ρ) = sum KᵢρKᵢ*. The condition sum Kᵢ*Kᵢ = I makes this map trace preserving.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Density matrix](#density-matrix) · [Matrix trace](#trace)
+
+<a id="hermitian"></a>
+
+### Hermitian matrix
+
+A complex square matrix A with A* = A. Its diagonal entries are real and opposite off-diagonal entries are complex conjugates. This condition alone does not imply positivity.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Adjoint matrix](#adjoint) · [Positive semidefinite matrix](#positive-semidefinite)
+
+<a id="positive-semidefinite"></a>
+
+### Positive semidefinite matrix
+
+A Hermitian matrix A for which v*Av is nonnegative for every vector v. Zero eigenvalues are allowed.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Hermitian matrix](#hermitian) · [Eigenvalue](#eigenvalue) · [Density matrix](#density-matrix)
+
+<a id="coherence"></a>
+
+### Coherence in a chosen basis
+
+Off-diagonal density-matrix entries that encode relations between different basis components. They can contribute to probabilities after a change of measurement basis.
+
+[Hand-worked example](examples/17_QUANTUM_MEASUREMENT.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#quantum-measurement) · [Density matrix](#density-matrix) · [Dephasing](#dephasing) · [Quantum amplitude](#amplitude)
+
+<a id="arithmetic-and-modules"></a>
+
+## Arithmetic and modules
+
+Finite fields, lift branches and the module data behind support.
+
+[Prime power](#prime-power) · [Modular reduction](#modular-reduction) · [Lift branch](#lift-branch) · [Compatible tower](#compatible-tower) · [p-adic integer](#padic-integer) · [Survival to a finite level](#surviving-branch) · [Prime field](#prime-field) · [Extension field](#extension-field) · [Finite-field Frobenius](#frobenius) · [Field trace](#field-trace) · [Field norm](#field-norm) · [Irreducible polynomial](#irreducible-polynomial) · [Commutative ring with identity](#ring) · [Module](#module) · [Module presentation](#module-presentation) · [Cokernel](#cokernel) · [Module annihilator](#annihilator) · [Module support](#module-support) · [Zeroth Fitting ideal](#fitting-ideal) · [Multiplicity in the module example](#multiplicity) · [Ideal](#ideal) · [Prime ideal](#prime-ideal) · [Localization at a prime](#localization)
+
+<a id="prime-power"></a>
+
+### Prime power
+
+An integer pⁿ with p prime and n a nonnegative integer. Successive positive powers give the moduli in the lift-branch example.
+
+[Hand-worked example](examples/18_LIFT_BRANCHES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#lift-branches) · [Integer congruence](#congruence) · [Prime field](#prime-field)
+
+<a id="modular-reduction"></a>
+
+### Modular reduction
+
+Passing from a residue class modulo pⁿ⁺¹ to its class modulo pⁿ. This map forgets the highest retained base-p digit.
+
+[Hand-worked example](examples/18_LIFT_BRANCHES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#lift-branches) · [Prime power](#prime-power) · [Residue class](#residue-class) · [Coarsening](#coarsening)
+
+<a id="lift-branch"></a>
+
+### Lift branch
+
+A sequence of solutions at successive levels whose reductions agree. A node at one finite level can have several children or no child.
+
+[Hand-worked example](examples/18_LIFT_BRANCHES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#lift-branches) · [Lift](#lift) · [Modular reduction](#modular-reduction) · [Compatible tower](#compatible-tower)
+
+<a id="compatible-tower"></a>
+
+### Compatible tower
+
+A collection of objects with specified maps between levels and stated compatibility identities. For modular solutions, the next residue must reduce to the preceding one.
+
+[Hand-worked example](examples/18_LIFT_BRANCHES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#lift-branches) · [Compatibility](#compatibility) · [Modular reduction](#modular-reduction) · [Completion](#completion)
+
+<a id="padic-integer"></a>
+
+### p-adic integer
+
+For a prime p, an element of the inverse limit of the residue rings modulo pⁿ. It specifies a compatible residue at every positive level. A finite list of residues is only a truncation of that data.
+
+[Hand-worked example](examples/18_LIFT_BRANCHES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#lift-branches) · [Compatible tower](#compatible-tower) · [Prime power](#prime-power) · [Truncation](#truncation)
+
+<a id="surviving-branch"></a>
+
+### Survival to a finite level
+
+A branch reaches the chosen last level without losing compatibility or the required equations. Survival to that level alone says nothing about the next one.
+
+[Hand-worked example](examples/18_LIFT_BRANCHES.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#lift-branches) · [Lift branch](#lift-branch) · [Finite check](#finite-check)
+
+<a id="prime-field"></a>
+
+### Prime field
+
+The smallest subfield of a field. In characteristic p it consists of the p scalar classes and is isomorphic to Fₚ. In characteristic zero it is isomorphic to the rational numbers.
+
+[Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#finite-frobenius) · [Field](#field) · [Integer congruence](#congruence)
+
+<a id="extension-field"></a>
+
+### Extension field
+
+A field containing a specified smaller field. The extension degree is its vector-space dimension over that smaller field.
+
+[Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#finite-frobenius) · [Field](#field) · [Dimension](#dimension) · [Prime field](#prime-field)
+
+<a id="frobenius"></a>
+
+### Finite-field Frobenius
+
+In a finite field of characteristic p, the map x ↦ xᵖ is an automorphism. Over F_q, the relative Frobenius is x ↦ x^q. The example uses q = p = 5.
+
+[Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#finite-frobenius) · [Extension field](#extension-field) · [Linear isomorphism](#isomorphism)
+
+<a id="field-trace"></a>
+
+### Field trace
+
+For a finite field extension L/K, the trace of the K-linear map that multiplies L by an element a. In F₂₅/F₅ it is a+a⁵.
+
+[Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#finite-frobenius) · [Matrix trace](#trace) · [Extension field](#extension-field) · [Finite-field Frobenius](#frobenius)
+
+<a id="field-norm"></a>
+
+### Field norm
+
+For a finite field extension L/K, the determinant of multiplication by an element a as a K-linear map. In F₂₅/F₅ it is a·a⁵. This norm is algebraic and is not a vector length.
+
+[Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#finite-frobenius) · [Determinant](#determinant) · [Extension field](#extension-field) · [Norm](#norm)
+
+<a id="irreducible-polynomial"></a>
+
+### Irreducible polynomial
+
+A nonconstant polynomial over a field that cannot be factored into two polynomials of positive degree over that field. For degree two, irreducibility is equivalent to having no root in the field.
+
+[Hand-worked example](examples/19_FINITE_FROBENIUS.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#finite-frobenius) · [Field](#field) · [Extension field](#extension-field)
+
+<a id="ring"></a>
+
+### Commutative ring with identity
+
+A system with addition, subtraction and commutative multiplication satisfying the ring laws and having a multiplicative identity. A nonzero element need not have a multiplicative inverse.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Field](#field) · [Module](#module)
+
+<a id="module"></a>
+
+### Module
+
+An abelian additive group with a scalar action by a ring satisfying the usual distributive, associative and identity laws. For a module over Q[t], multiplication by t can be specified by a Q-linear operator.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Commutative ring with identity](#ring) · [Operator algebra](#operator-algebra)
+
+<a id="module-presentation"></a>
+
+### Module presentation
+
+A description of a module by generators and relations. A finite matrix A: Rᵐ → Rⁿ presents the quotient Rⁿ/im A.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Module](#module) · [Cokernel](#cokernel) · [Image](#image)
+
+<a id="cokernel"></a>
+
+### Cokernel
+
+For a linear map or module map A: U → V, the quotient V/im A. It records target classes modulo those already reached by A.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Quotient space](#quotient-space) · [Image](#image) · [Module](#module)
+
+<a id="annihilator"></a>
+
+### Module annihilator
+
+The ideal of ring elements that act as zero on every element of a module. For Q[t]/(tᵏ), the annihilator is the ideal (tᵏ).
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Module](#module) · [Nilpotent operator](#nilpotent) · [Commutative ring with identity](#ring)
+
+<a id="module-support"></a>
+
+### Module support
+
+The prime ideals at which a module’s localization is nonzero. In the example Q[t]/(tᵏ), the support is the single prime ideal (t). The underlying support set does not determine k or the module.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Module](#module) · [Module annihilator](#annihilator) · [Multiplicity in the module example](#multiplicity)
+
+<a id="fitting-ideal"></a>
+
+### Zeroth Fitting ideal
+
+For a finite presentation Rᵐ → Rⁿ → M → 0 over a commutative ring, the ideal generated by the n by n minors of the presentation matrix. In the one-generator example with relation tᵏ, it is (tᵏ).
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Module presentation](#module-presentation) · [Determinant](#determinant) · [Module support](#module-support)
+
+<a id="multiplicity"></a>
+
+### Multiplicity in the module example
+
+For Q[t]/(tᵏ) supported at t=0, the integer k records the module’s length and its Q-vector-space dimension. This is additional data beyond the one-point support set. Other works use multiplicity with their own specified objects.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Dimension](#dimension) · [Module support](#module-support) · [Nilpotent operator](#nilpotent)
+
+<a id="ideal"></a>
+
+### Ideal
+
+An additive subgroup of a commutative ring closed under multiplication by every element of the ring. The principal ideal (f) consists of all multiples of f.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Commutative ring with identity](#ring) · [Module annihilator](#annihilator)
+
+<a id="prime-ideal"></a>
+
+### Prime ideal
+
+A proper ideal P such that ab in P implies a in P or b in P. The ideal (t) in Q[t] is prime because the quotient is the field Q.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Ideal](#ideal) · [Commutative ring with identity](#ring) · [Field](#field)
+
+<a id="localization"></a>
+
+### Localization at a prime
+
+A construction that makes ring elements outside a chosen prime ideal invertible, and carries a module along with that scalar change. The prime lies in the module’s support exactly when the localized module is nonzero.
+
+[Hand-worked example](examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Papers, proofs, Lean and code](LEARNING_MAP.md#support-multiplicity) · [Prime ideal](#prime-ideal) · [Module support](#module-support) · [Module](#module)
+
 ## Symbols in the introductory example
 
 The examples use the following notation. The reading column spells out symbols for readers who are unfamiliar with them.
@@ -899,6 +1270,6 @@ Symbols are local to their definitions. In another paper, the same letter can de
 
 ## Alphabetical index
 
-[Address](#address) · [Analysis and synthesis](#analysis-synthesis) · [Basis](#basis) · [Block matrix](#block-matrix) · [Certificate](#certificate) · [Chinese remainder theorem](#chinese-remainder) · [Coarsening](#coarsening) · [Commutator](#commutator) · [Commuting diagram](#commuting-diagram) · [Compatibility](#compatibility) · [Complete packet family](#complete-packet-family) · [Completion](#completion) · [Composition](#composition) · [Conditional](#conditional) · [Coordinate change](#coordinate-change) · [Coordinates](#coordinates) · [Coprime integers](#coprime) · [Cyclic vector](#cyclic) · [Detail coefficient](#detail-coefficient) · [Determinant](#determinant) · [Diagonalizable operator](#diagonalizable) · [Dimension](#dimension) · [Direct sum](#direct-sum) · [Domain and codomain](#domain-codomain) · [Dyadic rational](#dyadic-rational) · [Eigenspace](#eigenspace) · [Eigenvalue](#eigenvalue) · [Eigenvector](#eigenvector) · [Elimination](#elimination) · [Exact](#exact) · [Factorization through a map](#factorization) · [Fiber](#fiber) · [Field](#field) · [Finite check](#finite-check) · [Finite conditional expectation](#conditional-expectation) · [Haar pair](#haar-pair) · [Heuristic](#heuristic) · [Hypothesis](#hypothesis) · [Identity operator](#identity) · [Image](#image) · [Injective map](#injective) · [Inner product](#inner-product) · [Integer congruence](#congruence) · [Intertwiner](#intertwiner) · [Invariant subspace](#invariant-subspace) · [Inverse](#inverse) · [Kernel](#kernel) · [Lean correspondence](#lean-correspondence) · [Left inverse](#left-inverse) · [Lift](#lift) · [Linear independence](#linear-independence) · [Linear isomorphism](#isomorphism) · [Linear map](#linear-map) · [Matrix](#matrix) · [Minimal polynomial](#minimal-polynomial) · [Modular inverse](#modular-inverse) · [Mutual annihilation](#mutual-annihilation) · [Norm](#norm) · [Normalization](#normalization) · [Nullity](#nullity) · [Numerical](#numerical) · [Numerical ternary](#ternary) · [Obstruction](#obstruction) · [Operator algebra](#operator-algebra) · [Operator conjugation](#conjugation) · [Operator relation](#relation) · [Orthogonal matrix](#orthogonal-matrix) · [Orthogonal projector](#orthogonal-projector) · [Packet](#packet) · [Polynomial in an operator](#polynomial-in-operator) · [Polyphase decomposition](#polyphase) · [Precision](#precision) · [Projector](#projector) · [Proof](#proof) · [Quotient space](#quotient-space) · [Rank](#rank) · [Rank–nullity identity](#rank-nullity) · [Realization](#realization) · [Reconstruction](#reconstruction) · [Redundant coordinates](#redundancy) · [Refinement](#refinement) · [Residual](#residual) · [Residue class](#residue-class) · [Rounding](#rounding) · [Scalar](#scalar) · [Schur complement](#schur-complement) · [Seed](#seed) · [Seed rank](#seed-rank) · [Span](#span) · [Spectral projector](#spectral-projector) · [Subspace](#subspace) · [Surjective map](#surjective) · [Theorem](#theorem) · [Tolerance](#tolerance) · [Transfer block](#transfer-block) · [Typed path](#typed-path) · [Typed system](#typed-system) · [ULP](#ulp) · [Vector](#vector) · [Vector space](#vector-space)
+[Address](#address) · [Adjoint matrix](#adjoint) · [Analysis and synthesis](#analysis-synthesis) · [Basis](#basis) · [Block matrix](#block-matrix) · [Born probability](#born-probability) · [Certificate](#certificate) · [Chinese remainder theorem](#chinese-remainder) · [Coarsening](#coarsening) · [Coefficient](#coefficient) · [Coefficient convolution](#convolution) · [Coherence in a chosen basis](#coherence) · [Cokernel](#cokernel) · [Commutative ring with identity](#ring) · [Commutator](#commutator) · [Commuting diagram](#commuting-diagram) · [Compatibility](#compatibility) · [Compatible tower](#compatible-tower) · [Complete packet family](#complete-packet-family) · [Completion](#completion) · [Complex conjugate](#complex-conjugate) · [Composition](#composition) · [Conditional](#conditional) · [Coordinate change](#coordinate-change) · [Coordinates](#coordinates) · [Coprime integers](#coprime) · [Cyclic vector](#cyclic) · [Density matrix](#density-matrix) · [Dephasing](#dephasing) · [Detail coefficient](#detail-coefficient) · [Determinant](#determinant) · [Diagonalizable operator](#diagonalizable) · [Dimension](#dimension) · [Direct sum](#direct-sum) · [Domain and codomain](#domain-codomain) · [Dyadic rational](#dyadic-rational) · [Eigenspace](#eigenspace) · [Eigenvalue](#eigenvalue) · [Eigenvector](#eigenvector) · [Elimination](#elimination) · [Exact](#exact) · [Extension field](#extension-field) · [Factorization through a map](#factorization) · [Fiber](#fiber) · [Field](#field) · [Field norm](#field-norm) · [Field trace](#field-trace) · [Finite check](#finite-check) · [Finite conditional expectation](#conditional-expectation) · [Finite-field Frobenius](#frobenius) · [Formal reciprocal](#formal-reciprocal) · [Haar pair](#haar-pair) · [Hermitian matrix](#hermitian) · [Heuristic](#heuristic) · [Hypothesis](#hypothesis) · [Ideal](#ideal) · [Identity operator](#identity) · [Image](#image) · [Injective map](#injective) · [Inner product](#inner-product) · [Integer congruence](#congruence) · [Intertwiner](#intertwiner) · [Invariant subspace](#invariant-subspace) · [Inverse](#inverse) · [Irreducible polynomial](#irreducible-polynomial) · [Kernel](#kernel) · [Kraus operators](#kraus-operator) · [Lean correspondence](#lean-correspondence) · [Left inverse](#left-inverse) · [Lift](#lift) · [Lift branch](#lift-branch) · [Linear independence](#linear-independence) · [Linear isomorphism](#isomorphism) · [Linear map](#linear-map) · [Localization at a prime](#localization) · [Matrix](#matrix) · [Matrix trace](#trace) · [Minimal polynomial](#minimal-polynomial) · [Modular inverse](#modular-inverse) · [Modular reduction](#modular-reduction) · [Module](#module) · [Module annihilator](#annihilator) · [Module presentation](#module-presentation) · [Module support](#module-support) · [Multiplicity in the module example](#multiplicity) · [Mutual annihilation](#mutual-annihilation) · [Nilpotent operator](#nilpotent) · [Norm](#norm) · [Normalization](#normalization) · [Nullity](#nullity) · [Numerical](#numerical) · [Numerical ternary](#ternary) · [Obstruction](#obstruction) · [Operator algebra](#operator-algebra) · [Operator conjugation](#conjugation) · [Operator relation](#relation) · [Orthogonal matrix](#orthogonal-matrix) · [Orthogonal projector](#orthogonal-projector) · [p-adic integer](#padic-integer) · [Packet](#packet) · [Polynomial in an operator](#polynomial-in-operator) · [Polyphase decomposition](#polyphase) · [Positive semidefinite matrix](#positive-semidefinite) · [Power series](#power-series) · [Precision](#precision) · [Prime field](#prime-field) · [Prime ideal](#prime-ideal) · [Prime power](#prime-power) · [Projector](#projector) · [Proof](#proof) · [Purity of a density matrix](#purity) · [Quantum amplitude](#amplitude) · [Quotient space](#quotient-space) · [Rank](#rank) · [Rank–nullity identity](#rank-nullity) · [Realization](#realization) · [Reconstruction](#reconstruction) · [Redundant coordinates](#redundancy) · [Refinement](#refinement) · [Residual](#residual) · [Residue class](#residue-class) · [Root of unity](#root-of-unity) · [Rounding](#rounding) · [Scalar](#scalar) · [Schur complement](#schur-complement) · [Seed](#seed) · [Seed rank](#seed-rank) · [Span](#span) · [Spectral projector](#spectral-projector) · [Subspace](#subspace) · [Surjective map](#surjective) · [Survival to a finite level](#surviving-branch) · [Theorem](#theorem) · [Tolerance](#tolerance) · [Transfer block](#transfer-block) · [Truncation](#truncation) · [Typed path](#typed-path) · [Typed system](#typed-system) · [ULP](#ulp) · [Unitary matrix](#unitary) · [Vector](#vector) · [Vector space](#vector-space) · [Zeroth Fitting ideal](#fitting-ideal)
 
 [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)

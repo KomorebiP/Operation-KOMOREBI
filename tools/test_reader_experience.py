@@ -21,12 +21,16 @@ class LearningNavigationTests(unittest.TestCase):
                     'glossary':[{'id':'projector','term':'Projector'}],
                     'learning_topics':[{'id':'packets','number':1,'title':'Packets',
                         'example':example,'terms':['projector'],'works':['paper-i'],
-                        'scope':'Finite example.','code_guide':'https://example.org/guide'}]}
+                        'scope':'Finite example.','code_guide':'https://example.org/guide',
+                        'source_passages':[{'label':'Definition in the paper','path':'papers/paper-i/definition.tex#L4'}]}]}
             (root/'manifests/reader-experience.json').write_text(json.dumps(config),encoding='utf-8')
             first=render_learning_pages(root,config,[component])
             self.assertTrue(first[example].startswith(calculation))
             for anchor in ('read','written-proofs','lean','code','evidence'):
                 self.assertIn('../works/paper-i.md#'+anchor,first[example])
+            self.assertIn('../../papers/paper-i/definition.tex#L4',first[example])
+            self.assertIn('## Start from a core paper',first['docs/LEARNING_MAP.md'])
+            self.assertIn('works/paper-i.md#worked-examples-for-this-work',first['docs/LEARNING_MAP.md'])
             (root/example).write_text(first[example],encoding='utf-8')
             self.assertEqual(first,render_learning_pages(root,config,[component]))
             back=introduction(root,component,{'scope':'Recorded scope.','next_step':'Pending.'},'docs/works/paper-i.md')

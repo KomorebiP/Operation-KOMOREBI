@@ -89,8 +89,11 @@ Paper VI gives elimination background. The collected Gaussian elimination guide 
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: block_elimination()](../../tools/check_hand_examples.py#L225). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: block_elimination()](../../tools/check_hand_examples.py#L225). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Build spectral projectors](11_SPECTRAL_PROJECTORS.md) · [Next: Reconstruct from residues](13_MODULAR_RECONSTRUCTION.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#elimination)
+- [Previous: Build spectral projectors](11_SPECTRAL_PROJECTORS.md)
+- [Next: Reconstruct from residues](13_MODULAR_RECONSTRUCTION.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#elimination)

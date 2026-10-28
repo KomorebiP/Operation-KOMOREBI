@@ -84,8 +84,11 @@ Paper V supplies signal background. Information Realization includes a finite Ha
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: haar_pairs()](../../tools/check_hand_examples.py#L247). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: haar_pairs()](../../tools/check_hand_examples.py#L247). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Reconstruct from residues](13_MODULAR_RECONSTRUCTION.md) · [Next: Compose typed operations](15_TYPED_PATHS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#haar)
+- [Previous: Reconstruct from residues](13_MODULAR_RECONSTRUCTION.md)
+- [Next: Compose typed operations](15_TYPED_PATHS.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#haar)

@@ -4,7 +4,7 @@
 
 <a id="work-navigation"></a>
 
-[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
+[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
 **Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
 
@@ -22,6 +22,12 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-xii) · [Download this work](../DOWNLOADS.md#paper-xii)
 
+### Worked examples for this work
+
+These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.
+
+- [20. Separate support from multiplicity](../examples/20_SUPPORT_AND_MULTIPLICITY.md) · [Terms and source routes](../LEARNING_MAP.md#support-multiplicity)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
@@ -30,7 +36,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 - [Read PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf)
 - [Visual guide (PDF)](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Visual_Guide_v1.0.0.pdf)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Written proofs
 
@@ -40,7 +46,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 [Find this work among other written proofs](../browse/PROOFS.md#paper-xii)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Lean
 
@@ -54,7 +60,7 @@ Start with the [edition guide](../../papers/paper-xii/current/README.md) and the
 
 [Find this work among other Lean projects](../browse/LEAN.md#paper-xii)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Code
 
@@ -64,7 +70,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 [Find this work among other code projects](../browse/CODE.md#paper-xii)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Evidence
 
@@ -74,7 +80,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 The evidence records describe the reviews and runs completed for this edition.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Continue browsing
 

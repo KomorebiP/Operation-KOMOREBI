@@ -108,8 +108,11 @@ Read Paper II for refinement and Paper V for signal and polyphase constructions.
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: refinement()](../../tools/check_hand_examples.py#L118). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: refinement()](../../tools/check_hand_examples.py#L118). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Assemble transfer blocks](04_TRANSFER.md) · [Next: Use redundant coordinates](06_REDUNDANT_COORDINATES.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#refinement)
+- [Previous: Assemble transfer blocks](04_TRANSFER.md)
+- [Next: Use redundant coordinates](06_REDUNDANT_COORDINATES.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#refinement)

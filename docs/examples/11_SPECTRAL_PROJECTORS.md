@@ -89,8 +89,11 @@ The example uses a diagonalizable two-dimensional matrix. The works develop wide
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 
-[Python arithmetic check for this example: spectral_projectors()](../../tools/check_hand_examples.py#L212). This checks the displayed finite calculations with exact fractions.
+[Python arithmetic check for this example: spectral_projectors()](../../tools/check_hand_examples.py#L212). This checks the displayed finite calculations with exact rational or modular arithmetic.
 
 The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
 
-[Previous: Find a kernel and its fibers](10_KERNELS.md) · [Next: Eliminate a block of unknowns](12_BLOCK_ELIMINATION.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#spectral)
+- [Previous: Find a kernel and its fibers](10_KERNELS.md)
+- [Next: Eliminate a block of unknowns](12_BLOCK_ELIMINATION.md)
+- [All examples](../HAND_WORKED_EXAMPLES.md)
+- [Topic map](../LEARNING_MAP.md#spectral)

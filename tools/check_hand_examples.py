@@ -273,11 +273,131 @@ def typed_paths():
     assert apply(q,(2,3))==(0,5)
 
 
+def cyclic_reciprocals():
+    b=[F(1)]
+    for n in range(1,9):
+        b.append(-b[n-1]-(b[n-2] if n>=2 else 0))
+    assert b==[1,-1,0,1,-1,0,1,-1,0]
+    def convolution(a,b):
+        result=[F(0)]*(len(a)+len(b)-1)
+        for i,x in enumerate(a):
+            for j,y in enumerate(b):result[i+j]+=x*y
+        return result
+    for length in (6,9):
+        product=convolution([1,1,1],b[:length])
+        assert product==[1]+[0]*(length-1)+[-1,0]
+    packets=[tuple(x if i%3==r else 0 for i,x in enumerate(b[:6])) for r in range(3)]
+    assert packets==[(1,0,0,1,0,0),(0,-1,0,0,-1,0),(0,0,0,0,0,0)]
+    assert vector_sum(*packets)==tuple(b[:6])
+    # Exact arithmetic in Q[omega] with omega^2 + omega + 1 = 0.
+    def multiply(x,y):
+        a,b=x;c,d=y
+        return (a*c-b*d,a*d+b*c-b*d)
+    powers=[(1,0),(0,1),(-1,-1)]
+    assert multiply(powers[1],powers[1])==powers[2]
+    assert multiply(powers[2],powers[1])==powers[0]
+    for n in range(9):
+        for r in range(3):
+            values=[powers[((n-r)*k)%3] for k in range(3)]
+            assert (F(sum(v[0] for v in values),3),F(sum(v[1] for v in values),3))==(int(n%3==r),0)
+
+
+def quantum_measurement():
+    def z(a,b=0):return (F(a),F(b))
+    def plus(a,b):return (a[0]+b[0],a[1]+b[1])
+    def times(a,b):return (a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0])
+    def conj(a):return (a[0],-a[1])
+    def abs2(a):return a[0]**2+a[1]**2
+    def product(a,b):
+        return tuple(tuple(plus(times(a[i][0],b[0][j]),times(a[i][1],b[1][j])) for j in range(2)) for i in range(2))
+    psi=(z(F(3,5)),z(0,F(4,5)))
+    rho=tuple(tuple(times(a,conj(b)) for b in psi) for a in psi)
+    assert sum(abs2(a) for a in psi)==1
+    assert rho==((z(F(9,25)),z(0,F(-12,25))),(z(0,F(12,25)),z(F(16,25))))
+    assert product(rho,rho)==rho and plus(rho[0][0],rho[1][1])==z(1)
+    assert tuple(tuple(conj(rho[j][i]) for j in range(2)) for i in range(2))==rho
+    diagonal=((rho[0][0],z(0)),(z(0),rho[1][1]))
+    squared=product(diagonal,diagonal)
+    assert plus(squared[0][0],squared[1][1])==z(F(337,625))
+    p=(((z(1),z(0)),(z(0),z(0))),((z(0),z(0)),(z(0),z(1))))
+    parts=[product(product(q,rho),q) for q in p]
+    assert tuple(tuple(plus(parts[0][i][j],parts[1][i][j]) for j in range(2)) for i in range(2))==diagonal
+    u=((z(1),z(0)),(z(0),z(0,-1)))
+    adjoint=tuple(tuple(conj(u[j][i]) for j in range(2)) for i in range(2))
+    assert product(adjoint,u)==((z(1),z(0)),(z(0),z(1)))
+    phi=(psi[0],times(z(0,-1),psi[1]))
+    assert phi==(z(F(3,5)),z(F(4,5)))
+    def hadamard_probabilities(v):
+        return (abs2(plus(v[0],v[1]))/2,abs2(plus(v[0],(-v[1][0],-v[1][1])))/2)
+    assert hadamard_probabilities(psi)==(F(1,2),F(1,2))
+    assert hadamard_probabilities(phi)==(F(49,50),F(1,50))
+    chi=(z(F(4,5)),z(F(3,5)))
+    assert tuple(abs2(a) for a in chi)==(F(16,25),F(9,25))
+    assert sum(abs2(a)**2 for a in chi)==F(337,625)
+    assert hadamard_probabilities(chi)==(F(49,50),F(1,50))
+
+
+def lift_branches():
+    roots=lambda m:[x for x in range(m) if (x*x-1)%m==0]
+    assert [roots(m) for m in (2,4,8,16,32)]==[[1],[1,3],[1,3,5,7],[1,7,9,15],[1,15,17,31]]
+    children={r:[s for s in (r,r+8) if (s*s-1)%16==0] for r in roots(8)}
+    assert children=={1:[1,9],3:[],5:[],7:[7,15]}
+    assert 9**2%32==25**2%32==17
+    path=(1,3,7,15)
+    assert all(path[i+1]%(2**(i+1))==path[i] for i in range(3))
+    for n in range(1,9):
+        assert (2**n-1)**2-1==2**(2*n)-2**(n+1)
+        assert ((2**n-1)**2-1)%(2**n)==0
+
+
+def finite_frobenius():
+    def multiply(x,y):
+        a,b=x;c,d=y
+        return ((a*c+3*b*d)%5,(a*d+b*c)%5)
+    def power(x,n):
+        result=(1,0)
+        for _ in range(n):result=multiply(result,x)
+        return result
+    def reduced(a):return tuple(tuple(int(v)%5 for v in row) for row in a)
+    assert {x*x%5 for x in range(5)}=={0,1,4}
+    for a in range(5):
+        for b in range(5):
+            assert power((a,b),5)==(a,(-b)%5)
+            assert power((a,b),25)==(a,b)
+    alpha=(0,1);beta=(1,1);gamma=(2,1)
+    assert power(alpha,5)==(0,4) and power(beta,2)==(4,2)
+    assert power(beta,5)==(1,4) and multiply(beta,power(beta,5))==(3,0)
+    assert multiply(beta,(2,3))==(1,0)
+    assert power(gamma,5)==(2,4) and multiply(gamma,(2,4))==(1,0)
+    c=matrix([1,0],[0,4]);m=matrix([1,3],[1,1])
+    assert reduced(mul(c,c))==eye(2)
+    assert reduced(mul(mul(c,m),c))==matrix([1,2],[4,1])
+    assert (m[0][0]+m[1][1])%5==2 and (m[0][0]*m[1][1]-m[0][1]*m[1][0])%5==3
+
+
+def support_multiplicity():
+    j=matrix([0,0],[1,0]);p=selector(2,0)
+    zero=matrix([0,0],[0,0])
+    assert j!=zero and mul(j,j)==zero
+    assert mul(p,p)==p and mul(p,j)==zero and mul(j,p)==j
+    shift=matrix([0,0,0],[1,0,0],[0,1,0])
+    assert mul(shift,shift)!=scale(0,eye(3))
+    assert mul(mul(shift,shift),shift)==scale(0,eye(3))
+    for value in (F(-2),F(-1,3),F(0),F(1,2),F(3)):
+        assert (value==0)==(value**2==0)==(value**3==0)
+        if value:assert value*(1/value)==value**2*(1/value**2)==1
+    # Squaring a*I+b*J produces a^2*I+2ab*J, since J^2=0.
+    for a,b in [(0,0),(1,0),(F(1,2),2),(1,3),(-2,F(1,3))]:
+        element=add(scale(F(a),eye(2)),scale(F(b),j))
+        assert mul(element,element)==add(scale(F(a)**2,eye(2)),scale(2*F(a)*F(b),j))
+
+
 def main():
     checks=(packets,seeds,coordinates,transfer,refinement,
             redundant_coordinates,obstructions,weighted_averages,binary_rounding,
             kernels,spectral_projectors,block_elimination,modular_reconstruction,
-            haar_pairs,typed_paths)
+            haar_pairs,typed_paths,cyclic_reciprocals,quantum_measurement,
+            lift_branches,finite_frobenius,support_multiplicity)
     for check in checks:
         check()
     print(f'PASS: {len(checks)} hand-worked examples')

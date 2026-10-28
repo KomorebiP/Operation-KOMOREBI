@@ -4,7 +4,7 @@
 
 <a id="work-navigation"></a>
 
-[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
+[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
 **Completion:** Scoped release · **Lean:** Declared contract recorded · **Confidence:** Recorded formal evidence
 
@@ -22,6 +22,12 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-x) · [Download this work](../DOWNLOADS.md#paper-x)
 
+### Worked examples for this work
+
+These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.
+
+- [18. Follow a modular lift branch](../examples/18_LIFT_BRANCHES.md) · [Terms and source routes](../LEARNING_MAP.md#lift-branches)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
@@ -30,7 +36,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 - [Read PDF](../../papers/paper-x/current/publication/pdfs/Paper_X_Traditional_Final.pdf)
 - [Visual guide (PDF)](../../papers/paper-x/current/publication/pdfs/Paper_X_Visual_Guide_Final.pdf)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Written proofs
 
@@ -40,7 +46,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 [Find this work among other written proofs](../browse/PROOFS.md#paper-x)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Lean
 
@@ -51,7 +57,7 @@ Start with the [edition guide](../../papers/paper-x/current/README.md) and the b
 
 [Find this work among other Lean projects](../browse/LEAN.md#paper-x)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Code
 
@@ -61,7 +67,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 [Find this work among other code projects](../browse/CODE.md#paper-x)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Evidence
 
@@ -71,7 +77,7 @@ These links include code, examples, checks, or build tools. Read the [edition gu
 
 The evidence records describe the reviews and runs completed for this edition.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Continue browsing
 
