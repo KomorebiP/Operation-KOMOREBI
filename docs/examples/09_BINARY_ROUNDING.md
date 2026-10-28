@@ -24,9 +24,9 @@ The spacing within this interval is $1/4$.
 
 Take
 
-$$
+```math
 x=\frac{13}{8}=1+\frac12+\frac18=1.101_2.
-$$
+```
 
 Its two nearest three-bit neighbors are $3/2=12/8$ and $7/4=14/8$.
 Both are at distance $1/8$.
@@ -35,10 +35,10 @@ The lower candidate has retained significand bits $110$, whose integer value
 six is even. The upper has bits $111$, whose integer value seven is odd.
 Ties to even therefore chooses
 
-$$
+```math
 \widehat x=\frac32,\qquad
 \widehat x-x=\frac{12}{8}-\frac{13}{8}=-\frac18.
-$$
+```
 
 The stored result is below the exact value. A numerical ternary return using
 the stored-minus-exact convention would have negative sign.

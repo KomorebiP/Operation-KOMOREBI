@@ -4,9 +4,9 @@
 
 Take the finite list
 
-$$
+```math
 x=(1,2,3,4,5,6,7,8).
-$$
+```
 
 Index its entries from zero through seven. Thus $x_0=1$ and $x_7=8$.
 We only rearrange this finite list. No boundary extension or convolution is
@@ -16,17 +16,17 @@ needed.
 
 For remainder $r=0,1$, collect the entries $x_{2k+r}$:
 
-$$
+```math
 x^{(2)}_0=(1,3,5,7),\qquad x^{(2)}_1=(2,4,6,8).
-$$
+```
 
 These are compact coordinate lists. To view them as vectors in the original
 eight positions, put zeros in the other slots:
 
-$$
+```math
 P_0x=(1,0,3,0,5,0,7,0),\qquad
 P_1x=(0,2,0,4,0,6,0,8).
-$$
+```
 
 Their sum is $x$.
 
@@ -45,16 +45,16 @@ Let $F_r$ select those positions in the original eight-dimensional space.
 The even positions split into remainders 0 and 2. The odd positions split into
 remainders 1 and 3. Therefore
 
-$$
+```math
 P_0=F_0+F_2,\qquad P_1=F_1+F_3.
-$$
+```
 
 For example,
 
-$$
+```math
 F_0x=(1,0,0,0,5,0,0,0),\qquad
 F_2x=(0,0,3,0,0,0,7,0).
-$$
+```
 
 Adding these gives $P_0x$. Interleaving the four compact lists recovers
 $(1,2,3,4,5,6,7,8)$.
@@ -63,16 +63,16 @@ $(1,2,3,4,5,6,7,8)$.
 
 Discard remainder 2 and retain the other three. The reconstructed list is
 
-$$
+```math
 \widehat x=(1,2,0,4,5,6,0,8).
-$$
+```
 
 The residual, defined here as original minus reconstructed, is
 
-$$
+```math
 r=x-\widehat x=(0,0,3,0,0,0,7,0),\qquad
 \|r\|_2^2=3^2+7^2=58.
-$$
+```
 
 Rearranging all packets is exact. Discarding a nonzero packet changes the
 signal, and the residual records the missing values.

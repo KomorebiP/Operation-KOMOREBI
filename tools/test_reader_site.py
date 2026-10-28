@@ -1,11 +1,21 @@
 """Regression checks for source paths and reader HTML transformations."""
 import unittest
 
-from build_reader_site import Rewriter, document_url, safe_path
+from build_reader_site import Rewriter, document_url, math_fences, safe_path
 from check_reader_site import Page
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_math_fences_preserve_matrix_rows_and_escaped_text(self):
+        matrix = r'\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}'
+        source = '<pre><code class="language-math">'+matrix+'\n</code></pre>'
+        self.assertEqual(math_fences(source), '<div class="arithmatex">\\['+matrix+'\n\\]</div>')
+        ordinary = '<pre><code class="language-python">print(1)\n</code></pre>'
+        self.assertEqual(math_fences(ordinary), ordinary)
+        escaped = '<pre><code class="language-math">&lt;script&gt;\n</code></pre>'
+        self.assertIn('&lt;script&gt;', math_fences(escaped))
+        self.assertNotIn('<script>', math_fences(escaped))
+
     def test_bundle_paths_cannot_escape(self):
         for path in ('../private.txt','/absolute.txt','folder/../../private.txt','folder\\file.txt','C:/private.txt','file:stream',''):
             with self.subTest(path=path), self.assertRaises(ValueError):

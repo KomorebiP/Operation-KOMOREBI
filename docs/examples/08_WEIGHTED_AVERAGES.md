@@ -10,16 +10,16 @@ We want a value that is constant within each group.
 
 The first group's weighted mean is
 
-$$
+```math
 \frac{1\cdot2+3\cdot6}{1+3}=\frac{20}{4}=5.
-$$
+```
 
 The second group has only the value 9. The averaged vector is therefore
 
-$$
+```math
 Ex=\begin{pmatrix}5\\5\\9\end{pmatrix},\qquad
 E=\begin{pmatrix}1/4&3/4&0\\1/4&3/4&0\\0&0&1\end{pmatrix}.
-$$
+```
 
 Normalizing all weights by their total, six, would give the same group means.
 This is finite conditional expectation with respect to the chosen partition.
@@ -36,21 +36,21 @@ and every output of $E$ has that form. Hence $E^2=E$.
 
 The residual is
 
-$$
+```math
 r=x-Ex=\begin{pmatrix}-3\\1\\0\end{pmatrix}.
-$$
+```
 
 Use the weighted inner product
 
-$$
+```math
 \langle u,v\rangle_w=u_1v_1+3u_2v_2+2u_3v_3.
-$$
+```
 
 For every group-constant vector $y=(a,a,b)^{\mathsf T}$,
 
-$$
+```math
 \langle r,y\rangle_w=(-3)a+3(1)a+2(0)b=0.
-$$
+```
 
 The residual is orthogonal to the retained subspace in this inner product.
 The matrix $E$ is not symmetric in ordinary coordinates, so the choice of
@@ -58,14 +58,14 @@ inner product matters.
 
 ## Check the squared lengths
 
-$$
+```math
 \|x\|_w^2=2^2+3\cdot6^2+2\cdot9^2=274,
-$$
+```
 
-$$
+```math
 \|Ex\|_w^2=5^2+3\cdot5^2+2\cdot9^2=262,\qquad
 \|r\|_w^2=(-3)^2+3\cdot1^2=12.
-$$
+```
 
 As expected from orthogonality, $274=262+12$.
 

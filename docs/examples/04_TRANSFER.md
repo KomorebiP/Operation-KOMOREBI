@@ -5,10 +5,10 @@
 Use the coordinate projectors $P_1,P_2$ from
 [Example 1](01_PACKETS.md), and let
 
-$$
+```math
 T=\begin{pmatrix}1&2\\3&4\end{pmatrix},\qquad
 x=\begin{pmatrix}2\\3\end{pmatrix}.
-$$
+```
 
 The block $T_{ji}=P_jTP_i$ selects source component $i$, applies $T$ and
 selects target component $j$. The source selection acts first.
@@ -17,12 +17,12 @@ selects target component $j$. The source selection acts first.
 
 Right multiplication keeps one column. Left multiplication keeps one row:
 
-$$
+```math
 T_{11}=\begin{pmatrix}1&0\\0&0\end{pmatrix},\quad
 T_{12}=\begin{pmatrix}0&2\\0&0\end{pmatrix},\quad
 T_{21}=\begin{pmatrix}0&0\\3&0\end{pmatrix},\quad
 T_{22}=\begin{pmatrix}0&0\\0&4\end{pmatrix}.
-$$
+```
 
 Adding these four matrices gives $T$.
 
@@ -37,32 +37,32 @@ Adding these four matrices gives $T$.
 
 The sum is $(8,18)^{\mathsf T}$. Direct multiplication gives the same answer:
 
-$$
+```math
 Tx=\begin{pmatrix}1\cdot2+2\cdot3\\3\cdot2+4\cdot3\end{pmatrix}
 =\begin{pmatrix}8\\18\end{pmatrix}.
-$$
+```
 
 The reconstruction law comes from inserting the complete family on both sides:
 
-$$
+```math
 T=(P_1+P_2)T(P_1+P_2)=\sum_{j=1}^{2}\sum_{i=1}^{2}P_jTP_i.
-$$
+```
 
 ## Compose another operation
 
 Let $U$ exchange the two coordinates:
 
-$$
+```math
 U=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
 UT=\begin{pmatrix}3&4\\1&2\end{pmatrix}.
-$$
+```
 
 The two-step output is $U(Tx)=(18,8)^{\mathsf T}$, which also equals
 $(UT)x$. More generally, inserting the identity between the operations gives
 
-$$
+```math
 P_kUTP_i=\sum_{j=1}^{2}(P_kUP_j)(P_jTP_i).
-$$
+```
 
 Here $P_j^2=P_j$ makes the repeated middle selection harmless. The sum runs
 over the intermediate packets.

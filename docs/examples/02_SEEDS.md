@@ -10,18 +10,18 @@ of powers of one matrix, including the identity.
 
 On $\mathbb R^2$, let
 
-$$
+```math
 N=\begin{pmatrix}0&1\\0&0\end{pmatrix},\qquad
 v=\begin{pmatrix}0\\1\end{pmatrix}.
-$$
+```
 
 Apply the operator repeatedly:
 
-$$
+```math
 N^0v=v=\begin{pmatrix}0\\1\end{pmatrix},\qquad
 Nv=\begin{pmatrix}1\\0\end{pmatrix},\qquad
 N^2v=\begin{pmatrix}0\\0\end{pmatrix}.
-$$
+```
 
 In fact $N^2=0$, so further applications give zero too.
 
@@ -29,10 +29,10 @@ In fact $N^2=0$, so further applications give zero too.
 
 For any real numbers $a,b$,
 
-$$
+```math
 \begin{pmatrix}a\\b\end{pmatrix}
 =b\,v+a\,Nv=(bI_2+aN)v.
-$$
+```
 
 Thus one seed generates the whole space under this action. For the input
 $(2,3)^{\mathsf T}$, the coefficients are $b=3$ and $a=2$.

@@ -10,26 +10,26 @@ projectors.
 
 Work over the real numbers and set
 
-$$
+```math
 A=\begin{pmatrix}1&0\\0&1\\1&1\end{pmatrix},\qquad
 S=\frac13\begin{pmatrix}2&-1&1\\-1&2&1\end{pmatrix}.
-$$
+```
 
 $A$ is $3$ by $2$ and sends a vector to three coordinates. $S$ is $2$ by
 $3$ and sends those coordinates back. Multiplication gives
 
-$$
+```math
 SA=\frac13\begin{pmatrix}2+1&-1+1\\-1+1&2+1\end{pmatrix}
 =I_2.
-$$
+```
 
 For $x=(2,3)^{\mathsf T}$,
 
-$$
+```math
 Ax=\begin{pmatrix}2\\3\\5\end{pmatrix},\qquad
 S(Ax)=\frac13\begin{pmatrix}4-3+5\\-2+6+5\end{pmatrix}
 =\begin{pmatrix}2\\3\end{pmatrix}.
-$$
+```
 
 The third coordinate is redundant because it is the sum of the first two.
 
@@ -38,33 +38,33 @@ The third coordinate is redundant because it is the sum of the first two.
 Let $E_i$ keep only coordinate $i$ in the three-dimensional coordinate space.
 Define $C_i=SE_iA$. Their contributions to $x$ are
 
-$$
+```math
 C_1x=\begin{pmatrix}4/3\\-2/3\end{pmatrix},\qquad
 C_2x=\begin{pmatrix}-1\\2\end{pmatrix},\qquad
 C_3x=\begin{pmatrix}5/3\\5/3\end{pmatrix}.
-$$
+```
 
 Adding gives
 
-$$
+```math
 \begin{pmatrix}4/3-1+5/3\\-2/3+2+5/3\end{pmatrix}
 =\begin{pmatrix}2\\3\end{pmatrix}.
-$$
+```
 
 The matrices are
 
-$$
+```math
 C_1=\frac13\begin{pmatrix}2&0\\-1&0\end{pmatrix},\quad
 C_2=\frac13\begin{pmatrix}0&-1\\0&2\end{pmatrix},\quad
 C_3=\frac13\begin{pmatrix}1&1\\1&1\end{pmatrix}.
-$$
+```
 
 They sum to $I_2$. However,
 
-$$
+```math
 C_1^2=\frac19\begin{pmatrix}4&0\\-2&0\end{pmatrix}
 =\frac23C_1\ne C_1.
-$$
+```
 
 So $C_1$ is not a projector. Exact additive reconstruction alone does not
 establish idempotence.
@@ -73,9 +73,9 @@ establish idempotence.
 
 In the other order,
 
-$$
+```math
 AS=\frac13\begin{pmatrix}2&-1&1\\-1&2&1\\1&1&2\end{pmatrix}\ne I_3.
-$$
+```
 
 For $z=(0,0,1)^{\mathsf T}$, we get
 $ASz=(1/3,1/3,2/3)^{\mathsf T}$, not $z$. The original $z$ cannot equal

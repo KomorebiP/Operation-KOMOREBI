@@ -46,6 +46,13 @@ def slugify(value, separator):
     return re.sub(r'[^\w\- ]', '', value).replace(' ', separator)
 
 
+def math_fences(rendered):
+    """Render GitHub math fences after Markdown has protected their TeX escapes."""
+    return re.sub(r'<pre><code class="language-math">(.*?)</code></pre>',
+                  lambda match: '<div class="arithmatex">\\['+match[1]+'\\]</div>',
+                  rendered, flags=re.S)
+
+
 def document_url(repo, path):
     prefix = {'collection':'collection', 'math':'math', 'polyphase':'polyphase'}[repo]
     if path == 'README.md':
@@ -240,6 +247,7 @@ class Site:
         for (repo,path),text in self.documents.items():
             page=document_url(repo,path)
             rendered=markdown.markdown(text,extensions=['tables','fenced_code','toc','pymdownx.arithmatex'],extension_configs={'toc':{'slugify':slugify},'pymdownx.arithmatex':{'generic':True}})
+            rendered=math_fences(rendered)
             rewrite=Rewriter(lambda target,image:self.resolve(repo,path,page,target,image))
             rewrite.feed(rendered)
             title_match=re.search(r'^#\s+(.+)',text,re.M)
