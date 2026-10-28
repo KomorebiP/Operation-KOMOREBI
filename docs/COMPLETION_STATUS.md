@@ -10,7 +10,9 @@ This is an editorial assessment of existing release/status records at [source re
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Subsequent work includes the [SRIC repair](SRIC_REPAIR_2026-10-27.md) and [first three written-proof reviews](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md), followed by an [eight-claim Machine Societies review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH2_2026-10-27.md). The [stochastic-closure review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH3_2026-10-27.md) and [safety, amendment, and computability review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH4_2026-10-27.md) bring combined Machine Societies coverage to 38 of 62 pairs: 36 recorded passes, two qualified statements, and 24 unreviewed. The qualifications concern the memory bound’s domain and the computability theorem’s event-emitting compilation premise, including its certificate consequence. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [records guide](RECORDS.md) brings together the dated reviews, current claim coverage, source bindings, and qualification records. Read each report's scope and unresolved findings before reusing its conclusions.
+
+Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
 ## Completion stages
 

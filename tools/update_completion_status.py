@@ -59,7 +59,9 @@ This is an editorial assessment of existing release/status records at [source re
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [mathematical review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the scope and provenance of the checks. Subsequent work includes the [SRIC repair](SRIC_REPAIR_2026-10-27.md) and [first three written-proof reviews](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md), followed by an [eight-claim Machine Societies review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH2_2026-10-27.md). The [stochastic-closure review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH3_2026-10-27.md) and [safety, amendment, and computability review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH4_2026-10-27.md) bring combined Machine Societies coverage to 38 of 62 pairs: 36 recorded passes, two qualified statements, and 24 unreviewed. The qualifications concern the memory bound’s domain and the computability theorem’s event-emitting compilation premise, including its certificate consequence. Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [records guide](RECORDS.md) brings together the dated reviews, current claim coverage, source bindings, and qualification records. Read each report's scope and unresolved findings before reusing its conclusions.
+
+Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
 ## Completion stages
 
@@ -156,15 +158,20 @@ Every entry below is **Supporting / historical**, with **Lean: Not assessed** an
 
 Recorded {data['as_of']}. Status cleanup is separate from mathematical research, formalization and empirical qualification. Items marked done have completed their stated gate; progress on an open item does not close its remaining requirements. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
 
-Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
+**Current maintenance focus:** {data.get('maintenance_focus', 'Follow each open gate below and retain the scope of its evidence.')} All software remains beta / work in progress.
 '''
+    queue += '\n## Queue at a glance\n\n'
+    queue += table(['Item', 'Status', 'Completion gate'],
+                   [(f"[{task['id']}](#{task['id'].lower()})", task['status'], task['title']) for task in data['finalization_queue']])
     lanes = [('now', 'Completed cleanup and bounded qualification'), ('next', 'Next finishing work'),
              ('review', 'Proof and submission review'), ('research', 'Formal, mathematical and empirical development')]
     for lane, title in lanes:
         queue += '\n## ' + title + '\n'
         for task in data['finalization_queue']:
-            if task['lane'] != lane:
+            group = 'now' if task['status'] == 'done' else ('next' if task['lane'] == 'now' else task['lane'])
+            if group != lane:
                 continue
+            queue += f'\n<a id="{task["id"].lower()}"></a>\n'
             queue += f"\n### {task['id']} — {task['title']}\n\n**Status: {task['status']}**\n\n{task['reason']}\n\n**Done when:** {task['done_when']}\n\n"
             if task.get('progress'):
                 queue += '**Progress:** ' + task['progress'] + '\n\n'
@@ -348,6 +355,8 @@ def main():
     # Check every maintained reader/index page; a partial list left category
     # indexes and the contribution/import summaries stale after new imports.
     outputs.update(navigation.outputs)
+    from record_navigation import render_record_pages
+    outputs.update(render_record_pages(root, data, tree))
     maintained = {p: (root/p).read_text(encoding='utf-8') for p in data.get('maintained_documents', [])}
     documents = {**maintained, **outputs}
     known = set(tree) | set(documents) | set(data.get('assessment_records', [])) | {'manifests/project-status.json'}

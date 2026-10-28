@@ -2,9 +2,32 @@
 
 Recorded 2026-10-27. Status cleanup is separate from mathematical research, formalization and empirical qualification. Items marked done have completed their stated gate; progress on an open item does not close its remaining requirements. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
 
-Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
+**Current maintenance focus:** Repository navigation, edition records, and reproducibility instructions are the current maintenance priority. Further bounded proof reviews are deferred; their existing findings and completion gates remain open. All software remains beta / work in progress.
+
+## Queue at a glance
+
+| Item | Status | Completion gate |
+|---|---|---|
+| [F01](#f01) | done | Separate current and historical status |
+| [F02](#f02) | done | Make completion, Lean and confidence independently visible |
+| [F03](#f03) | open | Reconcile the expanded Machine-Native Reasoning book |
+| [F04](#f04) | open | Resolve Paper IV visual-guide source correspondence |
+| [F05](#f05) | open | Replay editions that currently rely on inherited formal evidence |
+| [F06](#f06) | open | Resolve uncompiled or unverified Lean source |
+| [F07](#f07) | open | Assess the two reader-only entries |
+| [F08](#f08) | open | Close the Constructive Repair release-candidate checklist |
+| [F09](#f09) | done | Consolidate Streaming SKAT version navigation |
+| [F10](#f10) | open | Complete bounded proof and submission reviews |
+| [F11](#f11) | open | Extend selected formal cores only against explicit claim maps |
+| [F12](#f12) | open | Run the missing empirical and hardware campaigns |
+| [F13](#f13) | ongoing | Preserve the open-endpoint register |
+| [F14](#f14) | ongoing | Review substantive support before reader promotion |
+| [F15](#f15) | done | Repair and qualify SRIC Block 24 admission gates |
+| [F16](#f16) | open | Assess the newly imported source collections |
 
 ## Completed cleanup and bounded qualification
+
+<a id="f01"></a>
 
 ### F01 — Separate current and historical status
 
@@ -16,6 +39,8 @@ Current core is 27/27; the older 23/27 checkpoint and working wider manuscript r
 
 Applies to: [Machine Theory: formal development](STATUS_CATALOG.md#research-machine-theory-formal) · [Machine Native Reasoning](STATUS_CATALOG.md#monographs-machine-native-reasoning) · [Machine Native Reasoning: wider continuation](STATUS_CATALOG.md#research-machine-native-reasoning-wider).
 
+<a id="f02"></a>
+
 ### F02 — Make completion, Lean and confidence independently visible
 
 **Status: done**
@@ -25,6 +50,8 @@ All primary components receive distinct stage, Lean, confidence, scope, evidence
 **Done when:** Every selected component is represented once; supporting sources remain separately classified.
 
 Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).
+
+<a id="f09"></a>
 
 ### F09 — Consolidate Streaming SKAT version navigation
 
@@ -38,7 +65,23 @@ A maintained edition guide now separates the v0.8 manuscript and 0.8.0 marker fr
 
 Applies to: [Streaming Polyphase Factor Decomposition / SKAT](STATUS_CATALOG.md#streaming-skat).
 
+<a id="f15"></a>
+
+### F15 — Repair and qualify SRIC Block 24 admission gates
+
+**Status: done**
+
+The three reproduced admission/provenance defects are repaired in the separate 0.3.3 beta source runtime.
+
+**Done when:** Publish a separately identified corrected edition with rejection controls, preserved synthetic positive fixture, and source-bound evidence.
+
+**Progress:** 15 test methods passed locally, including all 48 NaN positions, provenance failures, finite mismatch, and a custom-path CLI round trip. Original 0.3.2 evidence remains intact. Real-model execution and wider qualification remain open under F12.
+
+Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission).
+
 ## Next finishing work
+
+<a id="f03"></a>
 
 ### F03 — Reconcile the expanded Machine-Native Reasoning book
 
@@ -50,6 +93,8 @@ The selected core is complete; the exact expanded 1,155-page edition needs its o
 
 Applies to: [Machine Native Reasoning: wider continuation](STATUS_CATALOG.md#research-machine-native-reasoning-wider) · [Machine Native Reasoning](STATUS_CATALOG.md#monographs-machine-native-reasoning).
 
+<a id="f04"></a>
+
 ### F04 — Resolve Paper IV visual-guide source correspondence
 
 **Status: open**
@@ -59,6 +104,8 @@ The latest visual PDF lacks a recovered exact matching editable source.
 **Done when:** An authenticated matching source or explicitly new reconstructed edition has a documented PDF/text comparison and page review.
 
 Applies to: [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](STATUS_CATALOG.md#paper-iv).
+
+<a id="f05"></a>
 
 ### F05 — Replay editions that currently rely on inherited formal evidence
 
@@ -70,6 +117,8 @@ These editions do not have a fresh whole-edition Lean replay in the assessed pub
 
 Applies to: [Sufficient Resolution](STATUS_CATALOG.md#sufficient-resolution) · [AVOC](STATUS_CATALOG.md#research-avoc) · [Strong Artin: source and evidence](STATUS_CATALOG.md#strong-artin-reader) · [Paper V: Polyphase Signal Calculus](STATUS_CATALOG.md#paper-v) · [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](STATUS_CATALOG.md#paper-vi) · [Paper VII: Quantum Seed Calculus](STATUS_CATALOG.md#paper-vii) · [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](STATUS_CATALOG.md#paper-viii) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](STATUS_CATALOG.md#paper-xii).
 
+<a id="f06"></a>
+
 ### F06 — Resolve uncompiled or unverified Lean source
 
 **Status: open**
@@ -79,6 +128,8 @@ Source text or static inventories are not compiler acceptance.
 **Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript; retain missing mathematical inputs.
 
 Applies to: [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) · [Hodge: source and evidence](STATUS_CATALOG.md#hodge-reader) · [Stratified Universality](STATUS_CATALOG.md#stratified-universality).
+
+<a id="f07"></a>
 
 ### F07 — Assess the two reader-only entries
 
@@ -91,6 +142,8 @@ Availability alone does not establish an editorial or mathematical completion le
 **Progress:** PDF identities, page counts, scope, and selected rendered front matter inspected; two reader guides and a hash-bound assessment record added. Both entries now distinguish reader availability from completed source/build qualification. Exact editable source recovery, complete page checks, and proof/review reconciliation remain open.
 
 Applies to: [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) · [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay).
+
+<a id="f08"></a>
 
 ### F08 — Close the Constructive Repair release-candidate checklist
 
@@ -106,6 +159,8 @@ Applies to: [Constructive Repair](STATUS_CATALOG.md#constructive-repair).
 
 ## Proof and submission review
 
+<a id="f10"></a>
+
 ### F10 — Complete bounded proof and submission reviews
 
 **Status: open**
@@ -117,6 +172,8 @@ Existing review scopes do not cover all proofs or establish external submission 
 **Progress:** Machine Societies has 38 distinct reviewed pairs of 62: 36 recorded passes and two qualifications; 24 remain unreviewed. Batch 4 adds five passes and identifies the missing event-emitting compilation premise in thm:undecidable. That restriction and its certificate consequence, plus the earlier finite-index condition for prop:memory, need a revised source edition. Neither qualified statement is counted as a pass. Other listed review obligations remain open.
 
 Applies to: [Machine Societies](STATUS_CATALOG.md#monographs-machine-societies) · [Hypergraph Lumpability and Bayesian Refinement](STATUS_CATALOG.md#research-hypergraph-bayesian-refinement) · [Stratified Relational Workspace Theory](STATUS_CATALOG.md#research-stratified-relational-workspace) · [Seeded Two-Axis Calculus](STATUS_CATALOG.md#seeded-two-axis).
+
+<a id="f14"></a>
 
 ### F14 — Review substantive support before reader promotion
 
@@ -130,17 +187,7 @@ Lean is optional; precise statements, sufficient arguments or appropriately boun
 
 Applies to: [Euler Signal Bridge](STATUS_CATALOG.md#euler-signal-bridge) · [Hilbert 12: ambient dual slice](STATUS_CATALOG.md#hilbert12-ambient-dual-slice) · [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) · [Hilbert 12: analytic Fourier branch](STATUS_CATALOG.md#hilbert12-analytic-fourier) · [Hilbert 12: contracting ambient torsion](STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion) · [PRISM-1R](STATUS_CATALOG.md#research-prism-1r) · [RRCT multispace convergence protocol](STATUS_CATALOG.md#research-rrct-multispace-protocol).
 
-### F15 — Repair and qualify SRIC Block 24 admission gates
-
-**Status: done**
-
-The three reproduced admission/provenance defects are repaired in the separate 0.3.3 beta source runtime.
-
-**Done when:** Publish a separately identified corrected edition with rejection controls, preserved synthetic positive fixture, and source-bound evidence.
-
-**Progress:** 15 test methods passed locally, including all 48 NaN positions, provenance failures, finite mismatch, and a custom-path CLI round trip. Original 0.3.2 evidence remains intact. Real-model execution and wider qualification remain open under F12.
-
-Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission).
+<a id="f16"></a>
 
 ### F16 — Assess the newly imported source collections
 
@@ -156,6 +203,8 @@ Applies to: [ARC-AGI-2 experiment](STATUS_CATALOG.md#arc-agi2) · [Offline hando
 
 ## Formal, mathematical and empirical development
 
+<a id="f11"></a>
+
 ### F11 — Extend selected formal cores only against explicit claim maps
 
 **Status: open**
@@ -166,6 +215,8 @@ Publication completion and checked subresults leave wider formal or implementati
 
 Applies to: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](STATUS_CATALOG.md#paper-iii) · [Special Functions](STATUS_CATALOG.md#monographs-special-functions) · [Quantum and Circuits](STATUS_CATALOG.md#monographs-quantum-and-circuits) · [Signal Reconstruction](STATUS_CATALOG.md#signal-reconstruction) · [COS Method: formal continuation](STATUS_CATALOG.md#monographs-cos-method-formal-continuation) · [p-adic Canonical Realization](STATUS_CATALOG.md#padic-canonical-realization) · [Model-Theory Normalization](STATUS_CATALOG.md#model-theory-normalization).
 
+<a id="f12"></a>
+
 ### F12 — Run the missing empirical and hardware campaigns
 
 **Status: open**
@@ -175,6 +226,8 @@ Fixtures, candidate diagnostics and interface skeletons do not establish real-mo
 **Done when:** Use frozen inputs and gates, retain failures, execute held-out/replicated tests or hardware compilation/measurement, and report the actual tested scope.
 
 Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission) · [SRIC: endogenous semantic witness](STATUS_CATALOG.md#research-sric-block23-witness) · [RRCT multispace convergence protocol](STATUS_CATALOG.md#research-rrct-multispace-protocol) · [RRCT](STATUS_CATALOG.md#packages-rrct) · [Arithmetic J-Space Training Lab](STATUS_CATALOG.md#experiments-arithmetic-jspace) · [Workspace Incubator](STATUS_CATALOG.md#experiments-workspace-incubator) · [PRISM-1](STATUS_CATALOG.md#research-prism-1) · [PRISM-1R](STATUS_CATALOG.md#research-prism-1r).
+
+<a id="f13"></a>
 
 ### F13 — Preserve the open-endpoint register
 
