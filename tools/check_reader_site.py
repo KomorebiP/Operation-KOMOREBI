@@ -59,7 +59,9 @@ def inspect_site(root):
             assert resolved in files,(path,target,'Missing local file')
             links+=1
             if resolved=='assets/pdfjs/web/viewer.html':
+                from fetch_pdf_runtime import RUNTIME_ID
                 query=parse_qs(parts.query)
+                assert query.get('v')==[RUNTIME_ID],(path,target,'Stale PDF reader URL')
                 assert len(query.get('file',[]))==1,(path,target,'Missing PDF target')
                 pdf=urlsplit(query['file'][0])
                 assert not pdf.scheme and not pdf.netloc,(path,target,'External PDF target')

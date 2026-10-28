@@ -36,6 +36,7 @@ eventDocument.addEventListener("webviewerloaded", event => {
 });
 '''
 CSS = '.komorebi-return{display:inline-flex!important;align-items:center;width:auto!important;padding:0 8px!important;color:var(--main-color);text-decoration:underline;white-space:nowrap;font:12px system-ui,sans-serif}.komorebi-return::before{display:none!important}\n'
+RUNTIME_ID = hashlib.sha256((SHA256+CONFIG+CSS).encode()).hexdigest()[:16]
 
 
 def extract(raw, output):
@@ -57,7 +58,8 @@ def extract(raw, output):
                 marker = b'<script src="viewer.mjs" type="module"></script>'
                 if data.count(marker) != 1:
                     raise ValueError('PDF.js configuration insertion point changed')
-                data = data.replace(marker, b'<link rel="stylesheet" href="komorebi-config.css">\n  <script src="komorebi-config.js"></script>\n  '+marker)
+                config_tags = ('<link rel="stylesheet" href="komorebi-config.css?v='+RUNTIME_ID+'">\n  <script src="komorebi-config.js?v='+RUNTIME_ID+'"></script>\n  ').encode()
+                data = data.replace(marker, config_tags+marker)
             target = output/path.as_posix()
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
@@ -66,7 +68,7 @@ def extract(raw, output):
     files['web/komorebi-config.js'] = hashlib.sha256(CONFIG.encode()).hexdigest()
     (output/'web/komorebi-config.css').write_text(CSS, encoding='utf-8', newline='\n')
     files['web/komorebi-config.css'] = hashlib.sha256(CSS.encode()).hexdigest()
-    record = dict(runtime='PDF.js', version=VERSION, url=URL, archive_sha256=SHA256,
+    record = dict(runtime='PDF.js', version=VERSION, url=URL, archive_sha256=SHA256, reader_revision=RUNTIME_ID,
                   customization='Load Komorebi settings and return-link styles before viewer.mjs. Disable PDF scripting and saved preference overrides. Add a validated return link to the work page.',
                   files=files)
     (output/'SOURCE.json').write_text(json.dumps(record, indent=2)+'\n', encoding='utf-8')
@@ -77,6 +79,8 @@ def verify(root):
     record = json.loads((root/'SOURCE.json').read_bytes())
     if record['archive_sha256'] != SHA256 or record['version'] != VERSION:
         raise ValueError('Unexpected PDF.js runtime')
+    if record.get('reader_revision') != RUNTIME_ID:
+        raise ValueError('Unexpected PDF.js reader configuration')
     required = {'LICENSE', 'web/viewer.html', 'web/viewer.mjs', 'web/viewer.css',
                 'web/komorebi-config.js', 'web/komorebi-config.css', 'build/pdf.mjs', 'build/pdf.worker.mjs'}
     if not required <= record['files'].keys():

@@ -132,9 +132,11 @@ class ReadingDocuments:
         return self.site.rel(target, page)+('#'+fragment if fragment else '')
 
     def viewer_url(self, record, page, fragment=''):
+        from fetch_pdf_runtime import RUNTIME_ID
         viewer = 'assets/pdfjs/web/viewer.html'
         return (self.site.rel(viewer, page)+'?file='+quote(self.site.rel(record['file_url'], viewer), safe='')+
                 '&work='+quote(self.site.rel('collection/works/'+record['work']+'.html', viewer), safe='')+
+                '&v='+RUNTIME_ID+
                 ('#'+fragment if fragment else ''))
 
     def work_intro(self, work, page):
