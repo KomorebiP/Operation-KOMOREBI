@@ -16,6 +16,8 @@ pages with documentation from two explicitly pinned library revisions.
 | Paper I statement and declaration locations | [Claim navigation](../manifests/claim-navigation.json), bound to its retained source records |
 | Library source revisions | [Website library revisions](../manifests/reader-site-libraries.json) |
 | Page structure and browser behavior | [Website assets](../website/assets/) and [site builder](../tools/build_reader_site.py) |
+| Local PDF and source reading pages | [Document publisher](../tools/reader_documents.py) and receipt-bound source files |
+| Embedded PDF reader | [Pinned PDF.js fetch and verification](../tools/fetch_pdf_runtime.py) |
 
 Reading routes, glossary, download guides and work introductions are generated
 with the collection's normal status command. Edit their source records or
@@ -37,16 +39,29 @@ by the website workflow. Choose fresh output directories for each build.
 python -m pip install -r website/requirements.txt
 python -B tools/update_completion_status.py --check
 python -B tools/fetch_reader_runtime.py --output ../reader-runtime
-python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
+python -B tools/fetch_pdf_runtime.py --output ../pdf-reader-runtime
+python -B tools/build_reader_site.py --math-root ../komorebi-math --polyphase-root ../polyphase-float --mathjax-root ../reader-runtime --pdfjs-root ../pdf-reader-runtime --revision FULL_COLLECTION_COMMIT --output ../reader-site
 python -B tools/check_reader_site.py --site ../reader-site
 python -m http.server 8765 --directory ../reader-site
 ```
 
 Replace `FULL_COLLECTION_COMMIT` with the output of `git rev-parse HEAD`.
-The runtime fetch verifies a pinned SHA-512 digest before unpacking MathJax.
-The finished site serves its math files locally. Source receipt mismatches or
+The runtime fetches verify pinned digests before unpacking MathJax and PDF.js.
+The finished site serves both runtimes and its selected documents locally.
+Source receipt mismatches or
 missing reading files fail the build. The ZIPs identify their selected files
 and do not claim to be standalone build environments.
+
+The PDF catalogue includes the main papers, visual guides and formal companions
+listed in the browse resources. The document publisher also renders edition
+Markdown, shows source files with line links, and follows explicit local TeX
+inputs. It never executes the manuscripts or programs. PDF page bookmarks and
+Markdown line references retain their destinations. Documents without a PDF
+keep their available source formats.
+
+The build writes `documents/index.json` with the published file paths and source
+identities. The site checker verifies those copies, embedded reader targets,
+linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 
 ## Publication
 
