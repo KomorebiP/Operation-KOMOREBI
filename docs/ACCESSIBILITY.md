@@ -32,6 +32,18 @@ description.
 
 ## PDFs and downloads
 
+Use **Papers and PDFs** in the website navigation to open papers, visual guides
+and formal companions without leaving the site. Each document has an embedded
+reader with search, page selection, zoom and printing. **Expand reader** opens
+the same document in a larger reading view. **Open PDF directly** and
+**Download PDF** remain available if the embedded reader cannot load.
+
+Document pages link back to the work, written proofs, Lean coverage, code and
+available worked examples. Edition READMEs are rendered as HTML. Linked
+manuscript and program sources have selectable text and line links. TeX source
+is shown as source, with links to included manuscript sections where available.
+Use the PDF for its typeset equations.
+
 Reading ZIPs include a contents manifest, source revision, checksums and
 available license notices. They contain selected reading files, not complete
 software or Lean builds. Use [Downloads](DOWNLOADS.md) for that distinction and
@@ -63,5 +75,8 @@ technology details are useful when you can provide them.
 
 Math rendering uses [MathJax](https://www.mathjax.org/) under its retained
 Apache 2.0 license. The website build records the runtime's source and integrity.
+The PDF reader uses [Mozilla PDF.js](https://mozilla.github.io/pdf.js/) with its
+retained Apache 2.0 license. The build verifies the pinned viewer and each
+published document against its source identity. PDF scripting is disabled.
 
 [Reading routes](READING_ROUTES.md) · [Glossary](GLOSSARY.md) · [Project statement](PROJECT_STATEMENT.md)

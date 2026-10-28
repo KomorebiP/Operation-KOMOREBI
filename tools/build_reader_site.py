@@ -19,7 +19,7 @@ import zipfile
 
 REPOSITORY = 'KomorebiP/Operation-KOMOREBI'
 BASE_URL = 'https://KomorebiP.github.io/Operation-KOMOREBI/'
-READ_KINDS = {'guide', 'pdf', 'text', 'claims', 'lean_setup'}
+READ_KINDS = {'guide', 'pdf', 'visual', 'formal_guide', 'text', 'claims', 'lean_setup'}
 
 
 def safe_path(value):
@@ -160,13 +160,14 @@ class Rewriter(HTMLParser):
 
 
 class Site:
-    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None):
+    def __init__(self,root,math_root,poly_root,output,revision,source_cache=None,mathjax_root=None,pdfjs_root=None):
         self.root=root
         self.roots={'collection':root,'math':math_root,'polyphase':poly_root}
         self.output=output
         self.revision=revision
         self.cache=source_cache
         self.mathjax_root=mathjax_root
+        self.pdfjs_root=pdfjs_root
         self.registry=json.loads((root/'manifests/browse-resources.json').read_bytes())
         self.status=json.loads((root/'manifests/project-status.json').read_bytes())
         self.assessments={c['id']:c for c in self.status['components']}
@@ -179,6 +180,8 @@ class Site:
         self.asset_count=0
         self.bundle_records=[]
         self.claims=validate_claims(root,{c['destination']+'/'+f['path'] for c in self.components.values() for f in json.loads((root/c['receipt']).read_bytes())['files']})
+        from reader_documents import ReadingDocuments
+        self.reader=ReadingDocuments(self)
     def write(self,path,text):
         target=self.output/safe_path(path)
         target.parent.mkdir(parents=True,exist_ok=True)
@@ -188,7 +191,7 @@ class Site:
     def page(self,path,title,body,source=None):
         esc=html.escape
         root=self.rel('index.html',path)
-        nav=[('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
+        nav=[('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Papers and PDFs','documents.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
         nav_html=''.join('<a href="'+self.rel(p,path)+'"'+(' aria-current="page"' if p==path else '')+'>'+t+'</a>' for t,p in nav)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
         doc='''<!doctype html>
@@ -221,11 +224,15 @@ class Site:
         if parts.scheme or parts.netloc:
             # Keep cross-repository documentation within the public reading site.
             for key,full in self.repos.items():
-                prefix='https://github.com/'+full+'/blob/main/'
-                if target.startswith(prefix):
-                    relative=unquote(parts.path.split('/blob/main/',1)[1])
-                    if (key,relative) in self.documents:
-                        return self.rel(document_url(key,relative),page)+('#'+parts.fragment if parts.fragment else '')
+                for revision in ('main',self.revisions[key]):
+                    prefix='https://github.com/'+full+'/blob/'+revision+'/'
+                    if target.startswith(prefix):
+                        relative=unquote(parts.path.split('/blob/'+revision+'/',1)[1])
+                        if (key,relative) in self.documents:
+                            return self.rel(document_url(key,relative),page)+('#'+parts.fragment if parts.fragment else '')
+                        if key=='collection' and not is_image:
+                            local=self.reader.resolve(relative,page,parts.fragment)
+                            if local:return local
             if target.startswith(BASE_URL):return self.rel(target[len(BASE_URL):].split('#')[0] or 'index.html',page)+('#'+parts.fragment if parts.fragment else '')
             return target
         resolved=posixpath.normpath(posixpath.join(posixpath.dirname(path),unquote(parts.path))) if parts.path else path
@@ -233,6 +240,12 @@ class Site:
             return github(self.repos[repo],self.revisions[repo],resolved.lstrip('/'))
         if (repo,resolved) in self.documents:
             return self.rel(document_url(repo,resolved),page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and not is_image:
+            reader_url=self.reader.resolve(resolved,page,parts.fragment)
+            if reader_url:return reader_url
+        if repo=='collection' and is_image:
+            image_url=self.reader.image_url(resolved,page)
+            if image_url:return image_url
         local=self.roots[repo]/resolved
         if is_image and local.is_file() and local.suffix.lower() in {'.svg','.png','.jpg','.jpeg','.webp','.gif'}:
             dest='assets/source/'+repo+'/'+resolved
@@ -253,7 +266,16 @@ class Site:
             title_match=re.search(r'^#\s+(.+)',text,re.M)
             title=title_match[1] if title_match else Path(path).stem
             section={'collection':'Collection','math':'Komorebi Math','polyphase':'Polyphase Float'}[repo]
-            body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article>'+''.join(rewrite.out)+'</article>'
+            content=''.join(rewrite.out)
+            if repo=='collection' and path.startswith('docs/works/'):
+                identifier=PurePosixPath(path).stem
+                shortcut=self.reader.work_intro(identifier,page)
+                content=re.sub(r'(</h1>)',lambda m:m[1]+shortcut,content,count=1)
+                pdf=self.reader.primary_pdf(identifier)
+                if pdf:
+                    link='<p><a href="'+self.rel(pdf['url'],page)+'">Read the written arguments in the PDF</a>. The manuscript source remains available below.</p>'
+                    content=content.replace('<h2 id="written-proofs">Written proofs</h2>','<h2 id="written-proofs">Written proofs</h2>'+link)
+            body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article>'+content+'</article>'
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)
             plain=html.unescape(re.sub(r'\s+',' ',plain))
@@ -315,7 +337,7 @@ class Site:
             body+='<article class="work" data-group="'+c['group']+'" data-search="'+e((c['title']+' '+s.get('reader_summary',c['summary'])).lower(),quote=True)+'"><p class="eyebrow">'+e(c['group'])+(' · Incubator' if held else '')+'</p><h2><a href="collection/works/'+c['id']+'.html">'+e(c['title'])+'</a></h2><p>'+e(s.get('reader_summary',c['summary']))+'</p><p class="status">'+e(status)+'</p></article>'
         self.page('works.html','Browse works',body+'</div><noscript><p>All works are shown. Use your browser’s Find command to locate a title.</p></noscript>')
         self.page('software.html','Software','<h1>Run a small calculation</h1><p>Start with the platform instructions and expected output. All software remains beta.</p><p><a class="button" href="collection/FIRST_RUN.html">First runs and expected output</a></p><div class="route-grid"><a class="route" href="math/index.html"><h2>Komorebi Math</h2><p>Python. Finite operators, coordinates, signals and arithmetic.</p></a><a class="route" href="polyphase/index.html"><h2>Polyphase Float</h2><p>C on the supported Linux baseline. Arbitrary-precision binary arithmetic.</p></a></div><p><a href="collection/LIBRARIES.html">Library checks and source revisions</a></p>')
-        self.page('search.html','Search the guides','<h1>Search the guides</h1><p>Search titles, terminology and page text across the collection and both libraries. This index covers the site’s HTML guides, not the full text of every PDF.</p><form id="site-search" data-index="search-index.json"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><button type="submit">Search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
+        self.page('search.html','Search the guides','<h1>Search the guides</h1><p>Search titles and selected text from the reading pages and guides. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-index="search-index.json"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><button type="submit">Search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
         self.write('search-index.json',json.dumps(self.search,ensure_ascii=False)+'\n')
         body='<h1>Download one work</h1><p>These ZIP files contain selected reading files and license notices, with source identities and SHA-256 checksums. They are not complete Lean or software builds. For those, use the <a href="collection/DOWNLOADS.html#obtain-a-full-component">component source instructions</a>.</p><p><a href="downloads/index.json">All bundle contents and checksums (JSON)</a></p><div class="download-list">'
         for r in self.bundle_records:
@@ -328,12 +350,12 @@ class Site:
         body='<h1>Follow a written claim</h1><section id="paper-i"><h2>Paper I</h2><p>108 retained correspondence records. The source labels 69 as covered. Definitions, boundaries and documentary entries keep their own labels. This index does not report a new proof review or Lean run.</p><p><a href="collection/CLAIM_LINKS.html">Coverage of other works</a> · <a href="collection/works/paper-i.html">Paper I and its evidence</a></p><p>Lean links open the recorded module. Search for the displayed full declaration name. Code links remain at work level because no claim-specific executable test is asserted by this index.</p><label for="claim-query">Find a title or record ID</label><input id="claim-query" type="search"><p id="claim-count" role="status" aria-live="polite">108 records</p>'
         for row in self.claims['records']:
             rev=self.claims['source_revision']
-            statement=github(REPOSITORY,rev,row['statement_path'],row['statement_line'])
-            proof=github(REPOSITORY,rev,row['statement_path'],row['proof_line']) if row['proof_line'] else None
+            statement=self.reader.resolve(row['statement_path'],'claims.html','L'+str(row['statement_line'])) or github(REPOSITORY,rev,row['statement_path'],row['statement_line'])
+            proof=(self.reader.resolve(row['statement_path'],'claims.html','L'+str(row['proof_line'])) or github(REPOSITORY,rev,row['statement_path'],row['proof_line'])) if row['proof_line'] else None
             body+='<article class="claim" id="'+row['id'].lower()+'" data-search="'+e((row['id']+' '+row['title']+' '+row['kind']+' '+row['status']).lower(),quote=True)+'"><h3>'+e(row['title'])+'</h3><p><code>'+e(row['id'])+'</code> · '+e(row['kind'])+' · Recorded status: '+e(row['status'])+'</p><p>'+e(row['scope'])+'</p><p><a href="'+statement+'">Written statement</a>'+(' · <a href="'+proof+'">Written proof</a>' if proof else ' · No separate proof block recorded')+'</p><details><summary>'+str(len(row['lean']))+' recorded Lean declarations</summary><ul>'
             for d in row['lean']:
                 name='<code>'+e(d['name'])+'</code>'
-                body+='<li>'+('<a href="'+github(REPOSITORY,rev,d['path'])+'">'+name+'</a>' if d['path'] else name+'. Source location not recorded in the owned inventory')+'</li>'
+                body+='<li>'+('<a href="'+(self.reader.resolve(d['path'],'claims.html') or github(REPOSITORY,rev,d['path']))+'">'+name+'</a>' if d['path'] else name+'. Source location not recorded in the owned inventory')+'</li>'
             if not row['lean']:body+='<li>No declaration mapping recorded for this entry.</li>'
             body+='</ul></details><p><a href="collection/works/paper-i.html#code">Work’s code</a> · <a href="collection/works/paper-i.html#evidence">Evidence and reproduction</a></p></article>'
         self.page('claims.html','Follow a written claim',body+'</section>')
@@ -342,15 +364,24 @@ class Site:
             raise ValueError('Use a new empty site output directory')
         self.output.mkdir(parents=True,exist_ok=True)
         self.collect_documents()
+        self.reader.prepare()
         shutil.copytree(self.root/'website/assets',self.output/'assets',dirs_exist_ok=True)
         if not self.mathjax_root or not (self.mathjax_root/'a11y/explorer.js').is_file():
             raise ValueError('The complete pinned MathJax runtime is required')
         shutil.copytree(self.mathjax_root,self.output/'assets/mathjax')
+        from fetch_pdf_runtime import verify as verify_pdf_runtime
+        if not self.pdfjs_root:
+            raise ValueError('The pinned PDF.js runtime is required')
+        verify_pdf_runtime(self.pdfjs_root)
+        shutil.copytree(self.pdfjs_root,self.output/'assets/pdfjs')
         self.markdown_pages()
+        self.reader.render()
         self.bundles()
+        self.reader.catalog()
         self.indexes()
         self.write('.nojekyll','')
         result=dict(collection_revision=self.revision,library_revisions=self.revisions,html_guides=len(self.documents),works=len(self.registry['components']),claim_records=len(self.claims['records']),reading_bundles=len(self.bundle_records),bundle_bytes=sum(x['archive_bytes'] for x in self.bundle_records),new_proof_review=False,new_lean_execution=False)
+        result.update(reading_documents=len(self.reader.records),pdfs=sum(r['format']=='pdf' for r in self.reader.records.values()))
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
 
@@ -364,9 +395,10 @@ def main():
     p.add_argument('--revision',required=True)
     p.add_argument('--source-cache',type=Path)
     p.add_argument('--mathjax-root',type=Path,required=True)
+    p.add_argument('--pdfjs-root',type=Path,required=True)
     args=p.parse_args()
     if not re.fullmatch(r'[0-9a-f]{40}',args.revision):p.error('A full collection commit is required')
-    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root).build()
+    Site(args.root.resolve(),args.math_root.resolve(),args.polyphase_root.resolve(),args.output.resolve(),args.revision,args.source_cache,args.mathjax_root,args.pdfjs_root).build()
 
 
 if __name__=='__main__':main()

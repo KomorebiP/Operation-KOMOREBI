@@ -11,7 +11,8 @@ function filterItems(input, selector, status, group) {
       item.hidden = !match;
       shown += Number(match);
     }
-    status.textContent = `${shown} of ${items.length} ${selector === ".claim" ? "records" : "works"}`;
+    const label = input.dataset.resultLabel || (selector === ".claim" ? "records" : "works");
+    status.textContent = `${shown} of ${items.length} ${label}`;
   };
   input.addEventListener("input", apply);
   if (group) group.addEventListener("change", apply);

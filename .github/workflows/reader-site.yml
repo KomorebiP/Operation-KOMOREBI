@@ -76,8 +76,10 @@ jobs:
           PY
       - name: Obtain the pinned math accessibility runtime
         run: python -B tools/fetch_reader_runtime.py --output .reader-build/mathjax
+      - name: Obtain the pinned PDF reader
+        run: python -B tools/fetch_pdf_runtime.py --output .reader-build/pdfjs
       - name: Build the reader site and reading ZIPs
-        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --revision '${{ github.sha }}' --output reader-site
+        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --pdfjs-root .reader-build/pdfjs --revision '${{ github.sha }}' --output reader-site
       - name: Check HTML links, access features and all reading ZIPs
         run: python -B tools/check_reader_site.py --site reader-site
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
