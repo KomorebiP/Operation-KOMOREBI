@@ -43,7 +43,7 @@ It is a well-typed equality of maps $V\to W$.
 
 ## Compare orders only on one space
 
-On $V$, take $D=\operatorname{diag}(2,3)$. Both $DP$ and $PD$ are defined:
+On $V$, take $D=\mathrm{diag}(2,3)$. Both $DP$ and $PD$ are defined:
 
 ```math
 DP=\begin{pmatrix}2&2\\0&0\end{pmatrix},\qquad

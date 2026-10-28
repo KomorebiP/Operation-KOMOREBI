@@ -28,7 +28,7 @@ They span the entire target, so $T$ is surjective and its rank is two.
 The dimensions satisfy
 
 ```math
-\dim\mathbb R^3=3=2+1=\operatorname{rank}T+\operatorname{nullity}T.
+\dim\mathbb R^3=3=2+1=\mathrm{rank}T+\mathrm{nullity}T.
 ```
 
 ## Describe every input with the same output

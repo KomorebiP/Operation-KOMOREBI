@@ -38,8 +38,8 @@ The element $\beta$ has the two-element orbit $1+\alpha,1-\alpha$.
 ## Compute trace, norm and inverse
 
 ```math
-\operatorname{Tr}(\beta)=\beta+\beta^5=2,\qquad
-\operatorname{N}(\beta)=\beta\beta^5=1-3=3\quad\text{in }\mathbb F_5.
+\mathrm{Tr}(\beta)=\beta+\beta^5=2,\qquad
+\mathrm{N}(\beta)=\beta\beta^5=1-3=3\quad\text{in }\mathbb F_5.
 ```
 
 Since the inverse of $3$ modulo five is $2$,

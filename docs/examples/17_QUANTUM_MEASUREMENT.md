@@ -12,25 +12,25 @@ has squared norm $9/25+16/25=1$. This is a finite example for reading Paper VII.
 
 ## Form the density matrix
 
-Take the conjugate transpose $\psi^*=(3/5,-4i/5)$. Then
+Take the conjugate transpose $\psi^{\ast}=(3/5,-4i/5)$. Then
 
 ```math
-\rho=\psi\psi^*
+\rho=\psi\psi^{\ast}
 =\begin{pmatrix}9/25&-12i/25\\12i/25&16/25\end{pmatrix}.
 ```
 
 It is Hermitian and has trace one. Also
-$\rho^2=\psi(\psi^*\psi)\psi^*=\rho$, so its purity $\operatorname{tr}(\rho^2)$
-is one. Positivity follows from $v^*\rho v=|\psi^*v|^2\ge0$.
+$\rho^2=\psi(\psi^{\ast}\psi)\psi^{\ast}=\rho$, so its purity $\mathrm{tr}(\rho^2)$
+is one. Positivity follows from $v^{\ast}\rho v=|\psi^{\ast}v|^2\ge0$.
 
 ## Measure in the coordinate basis
 
-Use $P_0=\operatorname{diag}(1,0)$ and $P_1=\operatorname{diag}(0,1)$.
+Use $P_0=\mathrm{diag}(1,0)$ and $P_1=\mathrm{diag}(0,1)$.
 The outcome probabilities are
 
 ```math
-p_0=\operatorname{tr}(P_0\rho)=9/25,\qquad
-p_1=\operatorname{tr}(P_1\rho)=16/25.
+p_0=\mathrm{tr}(P_0\rho)=9/25,\qquad
+p_1=\mathrm{tr}(P_1\rho)=16/25.
 ```
 
 If the outcome is recorded, the corresponding normalized density matrices
@@ -41,7 +41,7 @@ are $P_0$ and $P_1$. If the outcome is forgotten, the state is
 =\begin{pmatrix}9/25&0\\0&16/25\end{pmatrix}.
 ```
 
-The two projectors are Kraus operators satisfying $P_0^*P_0+P_1^*P_1=I$.
+The two projectors are Kraus operators satisfying $P_0^{\ast}P_0+P_1^{\ast}P_1=I$.
 The channel preserves trace. Its output purity is
 
 ```math
@@ -50,7 +50,7 @@ The channel preserves trace. Its output purity is
 
 ## See what a relative phase changes
 
-The unitary $U=\operatorname{diag}(1,-i)$ sends $\psi$ to
+The unitary $U=\mathrm{diag}(1,-i)$ sends $\psi$ to
 $\phi=(3/5,4/5)^{\mathsf T}$. These two states have the same coordinate-basis
 probabilities, but they need not agree in another basis.
 Apply the Hadamard matrix

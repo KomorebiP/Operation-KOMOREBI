@@ -45,7 +45,7 @@ two-dimensional rational structure.
 
 ## Check whether a vector-space projector respects the module
 
-The matrix $P=\operatorname{diag}(1,0)$ is an idempotent on the underlying
+The matrix $P=\mathrm{diag}(1,0)$ is an idempotent on the underlying
 two-dimensional space. However,
 
 ```math
