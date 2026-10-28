@@ -21,25 +21,31 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../monographs/cos-method/book/K_COS_Monograph.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#monographs-cos-method)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../monographs/cos-method/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
 - [Lean sources (directory)](../../monographs/cos-method/lean/)
+
+[Find this work among other Lean projects](../browse/LEAN.md#monographs-cos-method)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../monographs/cos-method/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: engine](../../monographs/cos-method/engine/)
+
+[Find this work among other code projects](../browse/CODE.md#monographs-cos-method)
 
 [Back to work navigation](#work-navigation)
 

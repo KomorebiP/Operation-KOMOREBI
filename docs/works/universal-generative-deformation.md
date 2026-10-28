@@ -21,26 +21,28 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../packages/universal-generative-deformation/paper/Universal_Generative_Deformation_Calculus.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#universal-generative-deformation)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
-
-No direct Lean source or guide is selected. The recorded Lean status above and evidence below describe the assessed scope.
+No direct Lean source or guide is selected. The recorded Lean status above and [evidence below](#evidence) describe the assessed scope.
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../packages/universal-generative-deformation/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: generative_deformation](../../packages/universal-generative-deformation/generative_deformation/)
 - [Code / scripts: tests](../../packages/universal-generative-deformation/tests/)
+
+[Find this work among other code projects](../browse/CODE.md#universal-generative-deformation)
 
 [Back to work navigation](#work-navigation)
 

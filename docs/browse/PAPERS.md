@@ -107,7 +107,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](../works/paper-ix.md)
 
-[PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf) · [Text](../../papers/paper-ix/current/sources/main/) · [Lean](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/) · [Code](../../papers/paper-ix/current/tools/) · [Work page](../works/paper-ix.md)
+[PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf) · [Text](../../papers/paper-ix/current/sources/main/) · [Lean](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/strengthening/formalization/) · [Code](../../papers/paper-ix/current/tools/) · [Work page](../works/paper-ix.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -137,6 +137,6 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](../works/paper-xii.md)
 
-[PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf) · [Text](../../papers/paper-xii/current/core/publication/source/traditional/Paper_XII_Traditional_Final.tex) · [Lean](../../papers/paper-xii/current/core/publication/source/lean_guide/formal_release/lean/) · [Code](../../papers/paper-xii/current/scripts/) · [Work page](../works/paper-xii.md)
+[PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf) · [Text](../../papers/paper-xii/current/core/publication/source/traditional/Paper_XII_Traditional_Final.tex) · [Lean](../../papers/paper-xii/current/core/publication/source/lean_guide/formal_release/lean/PaperXII/) · [Code](../../papers/paper-xii/current/scripts/) · [Work page](../works/paper-xii.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)

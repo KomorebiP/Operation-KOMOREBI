@@ -21,26 +21,30 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../monographs/self-improving-intelligence/Self_Improving_Intelligence_v1.0.0.tex)
 - [CLAIMS.md](../../monographs/self-improving-intelligence/CLAIMS.md)
+
+[Find this work among other written proofs](../browse/PROOFS.md#monographs-self-improving-intelligence)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+No direct Lean source shortcut is selected. Guides and claim maps below are reading material; consult the [evidence record](#evidence) for the recorded scope.
 
-No direct Lean source or guide is selected. The recorded Lean status above and evidence below describe the assessed scope.
+- [CLAIMS.md](../../monographs/self-improving-intelligence/CLAIMS.md)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../monographs/self-improving-intelligence/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: code](../../monographs/self-improving-intelligence/code/)
+
+[Find this work among other code projects](../browse/CODE.md#monographs-self-improving-intelligence)
 
 [Back to work navigation](#work-navigation)
 

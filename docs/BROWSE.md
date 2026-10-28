@@ -23,7 +23,7 @@ Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**
 
 ## Move around without opening large folders
 
-Category pages have linked contents and direct file shortcuts. Choose **Work page** to keep one work's paper, proofs, Lean, code, and evidence together. Each work page has a section menu, return links, and previous/next links within its collection. The status catalogue links back to the same work page. Older category anchors remain usable.
+Category pages have linked contents and direct file shortcuts. Choose **Work page** to keep one work's paper, proofs, Lean, code, and evidence together. Each work page has a section menu, return links, and previous/next links within its collection. Proof, Lean, and code sections link to their matching finder entry; each finder has title shortcuts and returns to the corresponding section. The status catalogue links back to the same work page. Older category anchors remain usable.
 
 Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. Work pages use a single-column list layout. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
 

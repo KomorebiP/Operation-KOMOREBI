@@ -23,26 +23,28 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Text sources: collatz/main.tex](../../research/collatz-and-riemann-readers/collatz/main.tex)
 - [Text sources: riemann/main.tex](../../research/collatz-and-riemann-readers/riemann/main.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#collatz-and-riemann-readers)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
-
-No direct Lean source or guide is selected. The recorded Lean status above and evidence below describe the assessed scope.
+No direct Lean source or guide is selected. The recorded Lean status above and [evidence below](#evidence) describe the assessed scope.
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/collatz-and-riemann-readers/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Script: build.py](../../research/collatz-and-riemann-readers/build.py)
+
+[Find this work among other code projects](../browse/CODE.md#collatz-and-riemann-readers)
 
 [Back to work navigation](#work-navigation)
 

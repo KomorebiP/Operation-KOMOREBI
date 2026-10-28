@@ -2,7 +2,7 @@
 
 [Browse hub](../BROWSE.md) · [Find proofs](PROOFS.md) · [Lean sources](LEAN.md) · [Code](CODE.md) · [Collection](../../README.md)
 
-These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work page** and the edition README for setup and effects before running them. All software remains beta / work in progress.
+These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup and effects before running them. All software remains beta / work in progress.
 
 <a id="collections"></a>
 
@@ -12,76 +12,149 @@ Jump to: [Core papers](#papers) · [Books and companion volumes](#monographs) ·
 
 ## Core papers
 
-### [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](../works/paper-i.md)
+Jump to a work:
+
+- [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](#paper-i)
+- [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](#paper-ii)
+- [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](#paper-iii)
+- [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](#paper-iv)
+- [Paper V: Polyphase Signal Calculus](#paper-v)
+- [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](#paper-vi)
+- [Paper VII: Quantum Seed Calculus](#paper-vii)
+- [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](#paper-viii)
+- [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](#paper-ix)
+- [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](#paper-x)
+- [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](#paper-xi)
+- [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](#paper-xii)
+
+<a id="paper-i"></a>
+
+### [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](../works/paper-i.md#code)
 
 - [Code / scripts: code/python](../../papers/paper-i/current/code/python/)
-- [Work page](../works/paper-i.md)
+- [Return to this work’s code section](../works/paper-i.md#code)
+- [Work overview](../works/paper-i.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-i)
 
-### [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](../works/paper-ii.md)
+[Back to collection menu](#collections)
+
+<a id="paper-ii"></a>
+
+### [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](../works/paper-ii.md#code)
 
 - [Code / scripts: source/canonical_v1.2.1/code/python](../../papers/paper-ii/current/source/canonical_v1.2.1/code/python/)
-- [Work page](../works/paper-ii.md)
+- [Return to this work’s code section](../works/paper-ii.md#code)
+- [Work overview](../works/paper-ii.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-ii)
 
-### [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](../works/paper-iii.md)
+[Back to collection menu](#collections)
+
+<a id="paper-iii"></a>
+
+### [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](../works/paper-iii.md#code)
 
 - [Code / scripts: tools](../../papers/paper-iii/current/tools/)
-- [Work page](../works/paper-iii.md)
+- [Return to this work’s code section](../works/paper-iii.md#code)
+- [Work overview](../works/paper-iii.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-iii)
 
-### [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](../works/paper-iv.md)
+[Back to collection menu](#collections)
+
+<a id="paper-iv"></a>
+
+### [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](../works/paper-iv.md#code)
 
 - [Code / scripts: scripts](../../papers/paper-iv/current/scripts/)
-- [Work page](../works/paper-iv.md)
+- [Return to this work’s code section](../works/paper-iv.md#code)
+- [Work overview](../works/paper-iv.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-iv)
 
-### [Paper V: Polyphase Signal Calculus](../works/paper-v.md)
+[Back to collection menu](#collections)
+
+<a id="paper-v"></a>
+
+### [Paper V: Polyphase Signal Calculus](../works/paper-v.md#code)
 
 - [Code / scripts: source/complete/original_snapshot/companion](../../papers/paper-v/current/source/complete/original_snapshot/companion/)
-- [Work page](../works/paper-v.md)
+- [Return to this work’s code section](../works/paper-v.md#code)
+- [Work overview](../works/paper-v.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-v)
 
-### [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](../works/paper-vi.md)
+[Back to collection menu](#collections)
+
+<a id="paper-vi"></a>
+
+### [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](../works/paper-vi.md#code)
 
 - [Code / scripts: source/complete/original_snapshot/companion](../../papers/paper-vi/current/source/complete/original_snapshot/companion/)
-- [Work page](../works/paper-vi.md)
+- [Return to this work’s code section](../works/paper-vi.md#code)
+- [Work overview](../works/paper-vi.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-vi)
 
-### [Paper VII: Quantum Seed Calculus](../works/paper-vii.md)
+[Back to collection menu](#collections)
+
+<a id="paper-vii"></a>
+
+### [Paper VII: Quantum Seed Calculus](../works/paper-vii.md#code)
 
 - [Code / scripts: source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_companion](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_companion/)
-- [Work page](../works/paper-vii.md)
+- [Return to this work’s code section](../works/paper-vii.md#code)
+- [Work overview](../works/paper-vii.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-vii)
 
-### [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](../works/paper-viii.md)
+[Back to collection menu](#collections)
+
+<a id="paper-viii"></a>
+
+### [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](../works/paper-viii.md#code)
 
 - [Code / scripts: source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_companion/legacy](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_companion/legacy/)
-- [Work page](../works/paper-viii.md)
+- [Return to this work’s code section](../works/paper-viii.md#code)
+- [Work overview](../works/paper-viii.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-viii)
 
-### [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](../works/paper-ix.md)
+[Back to collection menu](#collections)
+
+<a id="paper-ix"></a>
+
+### [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](../works/paper-ix.md#code)
 
 - [Code / scripts: tools](../../papers/paper-ix/current/tools/)
-- [Work page](../works/paper-ix.md)
+- [Return to this work’s code section](../works/paper-ix.md#code)
+- [Work overview](../works/paper-ix.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-ix)
 
-### [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](../works/paper-x.md)
+[Back to collection menu](#collections)
+
+<a id="paper-x"></a>
+
+### [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](../works/paper-x.md#code)
 
 - [Code / scripts: inherited_baseline/original_companion](../../papers/paper-x/current/inherited_baseline/original_companion/)
-- [Work page](../works/paper-x.md)
+- [Return to this work’s code section](../works/paper-x.md#code)
+- [Work overview](../works/paper-x.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-x)
 
-### [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](../works/paper-xi.md)
+[Back to collection menu](#collections)
+
+<a id="paper-xi"></a>
+
+### [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](../works/paper-xi.md#code)
 
 - [Code / scripts: tools](../../papers/paper-xi/current/tools/)
-- [Work page](../works/paper-xi.md)
+- [Return to this work’s code section](../works/paper-xi.md#code)
+- [Work overview](../works/paper-xi.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-xi)
 
-### [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](../works/paper-xii.md)
+[Back to collection menu](#collections)
+
+<a id="paper-xii"></a>
+
+### [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](../works/paper-xii.md#code)
 
 - [Code / scripts: scripts](../../papers/paper-xii/current/scripts/)
-- [Work page](../works/paper-xii.md)
+- [Return to this work’s code section](../works/paper-xii.md#code)
+- [Work overview](../works/paper-xii.md)
 - [Status and evidence](../STATUS_CATALOG.md#paper-xii)
 
 [Back to collection menu](#collections)
@@ -90,112 +163,221 @@ Jump to: [Core papers](#papers) · [Books and companion volumes](#monographs) ·
 
 ## Books and companion volumes
 
-### [Realization Calculus](../works/realization-calculus-book.md)
+Jump to a work:
+
+- [Realization Calculus](#realization-calculus-book)
+- [Proof Path Theory](#proof-path-theory)
+- [Komorebi Methodology](#komorebi-methodology)
+- [Large Signal Model](#monographs-large-signal-model)
+- [Special Functions](#monographs-special-functions)
+- [Machine Societies](#monographs-machine-societies)
+- [Komorebi Space](#komorebi-space)
+- [Realization Boundaries](#realization-boundaries)
+- [Sufficient Resolution](#sufficient-resolution)
+- [Machine Native Reasoning](#monographs-machine-native-reasoning)
+- [Physics](#monographs-physics)
+- [COS Method](#monographs-cos-method)
+- [COS Method: formal continuation](#monographs-cos-method-formal-continuation)
+- [Self-Improving Intelligence](#monographs-self-improving-intelligence)
+- [Self-Improving Intelligence: visual guide](#monographs-self-improving-intelligence-visual-guide)
+- [Grounded Abstraction](#monographs-grounded-abstraction)
+- [Machine Theory Compendium](#machine-theory-compendium)
+- [Realization Calculus: twin edition](#realization-calculus-twin-edition)
+
+<a id="realization-calculus-book"></a>
+
+### [Realization Calculus](../works/realization-calculus-book.md#code)
 
 - [Code / scripts: scripts](../../monographs/realization-calculus/scripts/)
-- [Work page](../works/realization-calculus-book.md)
+- [Return to this work’s code section](../works/realization-calculus-book.md#code)
+- [Work overview](../works/realization-calculus-book.md)
 - [Status and evidence](../STATUS_CATALOG.md#realization-calculus-book)
 
-### [Proof Path Theory](../works/proof-path-theory.md)
+[Back to collection menu](#collections)
 
-- [Code / scripts: src](../../monographs/proof-path-theory/src/)
-- [Work page](../works/proof-path-theory.md)
+<a id="proof-path-theory"></a>
+
+### [Proof Path Theory](../works/proof-path-theory.md#code)
+
+- [Proof Path Theory implementation and CLI](../../monographs/proof-path-theory/src/proof_path_theory/)
+- [Return to this work’s code section](../works/proof-path-theory.md#code)
+- [Work overview](../works/proof-path-theory.md)
 - [Status and evidence](../STATUS_CATALOG.md#proof-path-theory)
 
-### [Komorebi Methodology](../works/komorebi-methodology.md)
+[Back to collection menu](#collections)
+
+<a id="komorebi-methodology"></a>
+
+### [Komorebi Methodology](../works/komorebi-methodology.md#code)
 
 - [Script: build.py](../../monographs/komorebi-methodology/build.py)
-- [Work page](../works/komorebi-methodology.md)
+- [Return to this work’s code section](../works/komorebi-methodology.md#code)
+- [Work overview](../works/komorebi-methodology.md)
 - [Status and evidence](../STATUS_CATALOG.md#komorebi-methodology)
 
-### [Large Signal Model](../works/monographs-large-signal-model.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-large-signal-model"></a>
+
+### [Large Signal Model](../works/monographs-large-signal-model.md#code)
 
 - [Code / scripts: Reference_Laboratory](../../monographs/large-signal-model/Reference_Laboratory/)
-- [Work page](../works/monographs-large-signal-model.md)
+- [Return to this work’s code section](../works/monographs-large-signal-model.md#code)
+- [Work overview](../works/monographs-large-signal-model.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-large-signal-model)
 
-### [Special Functions](../works/monographs-special-functions.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-special-functions"></a>
+
+### [Special Functions](../works/monographs-special-functions.md#code)
 
 - [Code / scripts: tools](../../monographs/special-functions/tools/)
-- [Work page](../works/monographs-special-functions.md)
+- [Return to this work’s code section](../works/monographs-special-functions.md#code)
+- [Work overview](../works/monographs-special-functions.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-special-functions)
 
-### [Machine Societies](../works/monographs-machine-societies.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-machine-societies"></a>
+
+### [Machine Societies](../works/monographs-machine-societies.md#code)
 
 - [Code / scripts: code](../../monographs/machine-societies/code/)
-- [Work page](../works/monographs-machine-societies.md)
+- [Return to this work’s code section](../works/monographs-machine-societies.md#code)
+- [Work overview](../works/monographs-machine-societies.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-machine-societies)
 
-### [Komorebi Space](../works/komorebi-space.md)
+[Back to collection menu](#collections)
+
+<a id="komorebi-space"></a>
+
+### [Komorebi Space](../works/komorebi-space.md#code)
 
 - [Code / scripts: examples](../../monographs/komorebi-space/examples/)
-- [Work page](../works/komorebi-space.md)
+- [Return to this work’s code section](../works/komorebi-space.md#code)
+- [Work overview](../works/komorebi-space.md)
 - [Status and evidence](../STATUS_CATALOG.md#komorebi-space)
 
-### [Realization Boundaries](../works/realization-boundaries.md)
+[Back to collection menu](#collections)
+
+<a id="realization-boundaries"></a>
+
+### [Realization Boundaries](../works/realization-boundaries.md#code)
 
 - [Code / scripts: scripts](../../monographs/realization-boundaries/scripts/)
-- [Work page](../works/realization-boundaries.md)
+- [Return to this work’s code section](../works/realization-boundaries.md#code)
+- [Work overview](../works/realization-boundaries.md)
 - [Status and evidence](../STATUS_CATALOG.md#realization-boundaries)
 
-### [Sufficient Resolution](../works/sufficient-resolution.md)
+[Back to collection menu](#collections)
+
+<a id="sufficient-resolution"></a>
+
+### [Sufficient Resolution](../works/sufficient-resolution.md#code)
 
 - [Script: audit_release.py](../../monographs/sufficient-resolution/audit_release.py)
-- [Work page](../works/sufficient-resolution.md)
+- [Return to this work’s code section](../works/sufficient-resolution.md#code)
+- [Work overview](../works/sufficient-resolution.md)
 - [Status and evidence](../STATUS_CATALOG.md#sufficient-resolution)
 
-### [Machine Native Reasoning](../works/monographs-machine-native-reasoning.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-machine-native-reasoning"></a>
+
+### [Machine Native Reasoning](../works/monographs-machine-native-reasoning.md#code)
 
 - [Code / scripts: tools](../../monographs/machine-native-reasoning/tools/)
-- [Work page](../works/monographs-machine-native-reasoning.md)
+- [Return to this work’s code section](../works/monographs-machine-native-reasoning.md#code)
+- [Work overview](../works/monographs-machine-native-reasoning.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-machine-native-reasoning)
 
-### [Physics](../works/monographs-physics.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-physics"></a>
+
+### [Physics](../works/monographs-physics.md#code)
 
 - [Code / scripts: tools](../../monographs/physics/tools/)
-- [Work page](../works/monographs-physics.md)
+- [Return to this work’s code section](../works/monographs-physics.md#code)
+- [Work overview](../works/monographs-physics.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-physics)
 
-### [COS Method](../works/monographs-cos-method.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-cos-method"></a>
+
+### [COS Method](../works/monographs-cos-method.md#code)
 
 - [Code / scripts: engine](../../monographs/cos-method/engine/)
-- [Work page](../works/monographs-cos-method.md)
+- [Return to this work’s code section](../works/monographs-cos-method.md#code)
+- [Work overview](../works/monographs-cos-method.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-cos-method)
 
-### [COS Method: formal continuation](../works/monographs-cos-method-formal-continuation.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-cos-method-formal-continuation"></a>
+
+### [COS Method: formal continuation](../works/monographs-cos-method-formal-continuation.md#code)
 
 - [Script: verify.py](../../monographs/cos-method/formal-continuation/verify.py)
-- [Work page](../works/monographs-cos-method-formal-continuation.md)
+- [Return to this work’s code section](../works/monographs-cos-method-formal-continuation.md#code)
+- [Work overview](../works/monographs-cos-method-formal-continuation.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-cos-method-formal-continuation)
 
-### [Self-Improving Intelligence](../works/monographs-self-improving-intelligence.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-self-improving-intelligence"></a>
+
+### [Self-Improving Intelligence](../works/monographs-self-improving-intelligence.md#code)
 
 - [Code / scripts: code](../../monographs/self-improving-intelligence/code/)
-- [Work page](../works/monographs-self-improving-intelligence.md)
+- [Return to this work’s code section](../works/monographs-self-improving-intelligence.md#code)
+- [Work overview](../works/monographs-self-improving-intelligence.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-self-improving-intelligence)
 
-### [Self-Improving Intelligence: visual guide](../works/monographs-self-improving-intelligence-visual-guide.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-self-improving-intelligence-visual-guide"></a>
+
+### [Self-Improving Intelligence: visual guide](../works/monographs-self-improving-intelligence-visual-guide.md#code)
 
 - [Code / scripts: code](../../monographs/self-improving-intelligence/visual-guide/code/)
-- [Work page](../works/monographs-self-improving-intelligence-visual-guide.md)
+- [Return to this work’s code section](../works/monographs-self-improving-intelligence-visual-guide.md#code)
+- [Work overview](../works/monographs-self-improving-intelligence-visual-guide.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-self-improving-intelligence-visual-guide)
 
-### [Grounded Abstraction](../works/monographs-grounded-abstraction.md)
+[Back to collection menu](#collections)
+
+<a id="monographs-grounded-abstraction"></a>
+
+### [Grounded Abstraction](../works/monographs-grounded-abstraction.md#code)
 
 - [Code / scripts: code](../../monographs/grounded-abstraction/code/)
-- [Work page](../works/monographs-grounded-abstraction.md)
+- [Return to this work’s code section](../works/monographs-grounded-abstraction.md#code)
+- [Work overview](../works/monographs-grounded-abstraction.md)
 - [Status and evidence](../STATUS_CATALOG.md#monographs-grounded-abstraction)
 
-### [Machine Theory Compendium](../works/machine-theory-compendium.md)
+[Back to collection menu](#collections)
+
+<a id="machine-theory-compendium"></a>
+
+### [Machine Theory Compendium](../works/machine-theory-compendium.md#code)
 
 - [Code / scripts: code](../../monographs/machine-theory-compendium/code/)
-- [Work page](../works/machine-theory-compendium.md)
+- [Return to this work’s code section](../works/machine-theory-compendium.md#code)
+- [Work overview](../works/machine-theory-compendium.md)
 - [Status and evidence](../STATUS_CATALOG.md#machine-theory-compendium)
 
-### [Realization Calculus: twin edition](../works/realization-calculus-twin-edition.md)
+[Back to collection menu](#collections)
+
+<a id="realization-calculus-twin-edition"></a>
+
+### [Realization Calculus: twin edition](../works/realization-calculus-twin-edition.md#code)
 
 - [Code / scripts: tools](../../monographs/realization-calculus-twin-edition/tools/)
-- [Work page](../works/realization-calculus-twin-edition.md)
+- [Return to this work’s code section](../works/realization-calculus-twin-edition.md#code)
+- [Work overview](../works/realization-calculus-twin-edition.md)
 - [Status and evidence](../STATUS_CATALOG.md#realization-calculus-twin-edition)
 
 [Back to collection menu](#collections)
@@ -204,243 +386,478 @@ Jump to: [Core papers](#papers) · [Books and companion volumes](#monographs) ·
 
 ## Research programs
 
-### [Information Realization](../works/information-realization.md)
+Jump to a work:
+
+- [Information Realization](#information-realization)
+- [KZFC and Residual Reflection](#kzfc-multiverse)
+- [Logical Resolution](#logical-resolution)
+- [p-adic Canonical Realization](#padic-canonical-realization)
+- [Representation Calculus](#representation-calculus)
+- [Machine Understanding](#research-machine-understanding)
+- [OSL and Neuralese](#research-osl-neuralese)
+- [SRIC: external semantic admission](#research-sric-external-admission)
+- [SRIC: endogenous semantic witness](#research-sric-block23-witness)
+- [Hypergraph Lumpability and Bayesian Refinement](#research-hypergraph-bayesian-refinement)
+- [PRISM-1](#research-prism-1)
+- [Stratified Relational Workspace Theory](#research-stratified-relational-workspace)
+- [Machine Theory: formal development](#research-machine-theory-formal)
+- [Machine Native Reasoning: wider continuation](#research-machine-native-reasoning-wider)
+- [ABC: global RR8 branch](#abc-global-rr8)
+- [ABC: source and evidence reader](#abc-reader)
+- [AddMul Arithmetic Reconstruction](#addmul-arithmetic-reconstruction)
+- [Beal: source and evidence](#beal-reader)
+- [Catalan Constant: source and evidence](#catalan-constant-reader)
+- [Collatz and Riemann: source and evidence](#collatz-and-riemann-readers)
+- [Euler Signal Bridge](#euler-signal-bridge)
+- [Hilbert 12: ambient dual slice](#hilbert12-ambient-dual-slice)
+- [Hilbert 12: analytic Fourier branch](#hilbert12-analytic-fourier)
+- [Hilbert 12: closure attempt](#hilbert12-closure-attempt)
+- [Hilbert 12: contracting ambient torsion](#hilbert12-contracting-ambient-torsion)
+- [Hilbert 12: cubic divisor development](#hilbert12-cubic-divisor)
+- [Hodge: source and evidence](#hodge-reader)
+- [Inverse Galois: source and evidence](#inverse-galois-reader)
+- [IUT Valuation Hulls](#iut-valuation-hulls)
+- [Lehmer: source and evidence](#lehmer-reader)
+- [Model-Theory Normalization](#model-theory-normalization)
+- [Resolution Semantics](#resolution-semantics)
+- [Seeded Two-Axis Calculus](#seeded-two-axis)
+- [Signal Reconstruction](#signal-reconstruction)
+- [Stratified Universality](#stratified-universality)
+- [Streaming Polyphase Factor Decomposition / SKAT](#streaming-skat)
+- [Strong Artin: source and evidence](#strong-artin-reader)
+- [Physics: energy and backreaction](#physics-energy-backreaction)
+- [Physics: origin locking](#physics-origin-locking)
+
+<a id="information-realization"></a>
+
+### [Information Realization](../works/information-realization.md#code)
 
 - [Code / scripts: tools](../../research/information-realization/tools/)
-- [Work page](../works/information-realization.md)
+- [Return to this work’s code section](../works/information-realization.md#code)
+- [Work overview](../works/information-realization.md)
 - [Status and evidence](../STATUS_CATALOG.md#information-realization)
 
-### [KZFC and Residual Reflection](../works/kzfc-multiverse.md)
+[Back to collection menu](#collections)
+
+<a id="kzfc-multiverse"></a>
+
+### [KZFC and Residual Reflection](../works/kzfc-multiverse.md#code)
 
 - [Code / scripts: scripts](../../research/kzfc-multiverse/scripts/)
-- [Work page](../works/kzfc-multiverse.md)
+- [Return to this work’s code section](../works/kzfc-multiverse.md#code)
+- [Work overview](../works/kzfc-multiverse.md)
 - [Status and evidence](../STATUS_CATALOG.md#kzfc-multiverse)
 
-### [Logical Resolution](../works/logical-resolution.md)
+[Back to collection menu](#collections)
+
+<a id="logical-resolution"></a>
+
+### [Logical Resolution](../works/logical-resolution.md#code)
 
 - [Code / scripts: tools](../../research/logical-resolution/tools/)
-- [Work page](../works/logical-resolution.md)
+- [Return to this work’s code section](../works/logical-resolution.md#code)
+- [Work overview](../works/logical-resolution.md)
 - [Status and evidence](../STATUS_CATALOG.md#logical-resolution)
 
-### [p-adic Canonical Realization](../works/padic-canonical-realization.md)
+[Back to collection menu](#collections)
+
+<a id="padic-canonical-realization"></a>
+
+### [p-adic Canonical Realization](../works/padic-canonical-realization.md#code)
 
 - [Script: verify_release.py](../../research/padic-canonical-realization/verify_release.py)
-- [Work page](../works/padic-canonical-realization.md)
+- [Return to this work’s code section](../works/padic-canonical-realization.md#code)
+- [Work overview](../works/padic-canonical-realization.md)
 - [Status and evidence](../STATUS_CATALOG.md#padic-canonical-realization)
 
-### [Representation Calculus](../works/representation-calculus.md)
+[Back to collection menu](#collections)
+
+<a id="representation-calculus"></a>
+
+### [Representation Calculus](../works/representation-calculus.md#code)
 
 - [Code / scripts: checks](../../research/representation-calculus/checks/)
-- [Work page](../works/representation-calculus.md)
+- [Return to this work’s code section](../works/representation-calculus.md#code)
+- [Work overview](../works/representation-calculus.md)
 - [Status and evidence](../STATUS_CATALOG.md#representation-calculus)
 
-### [Machine Understanding](../works/research-machine-understanding.md)
+[Back to collection menu](#collections)
+
+<a id="research-machine-understanding"></a>
+
+### [Machine Understanding](../works/research-machine-understanding.md#code)
 
 - [Code / scripts: code](../../research/machine-understanding/code/)
-- [Work page](../works/research-machine-understanding.md)
+- [Return to this work’s code section](../works/research-machine-understanding.md#code)
+- [Work overview](../works/research-machine-understanding.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-machine-understanding)
 
-### [OSL and Neuralese](../works/research-osl-neuralese.md)
+[Back to collection menu](#collections)
+
+<a id="research-osl-neuralese"></a>
+
+### [OSL and Neuralese](../works/research-osl-neuralese.md#code)
 
 - [Code / scripts: OSL/core05/reference](../../research/osl-neuralese/OSL/core05/reference/)
 - [Code / scripts: OSL/core05/tests](../../research/osl-neuralese/OSL/core05/tests/)
-- [Work page](../works/research-osl-neuralese.md)
+- [Return to this work’s code section](../works/research-osl-neuralese.md#code)
+- [Work overview](../works/research-osl-neuralese.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-osl-neuralese)
 
-### [SRIC: external semantic admission](../works/research-sric-external-admission.md)
+[Back to collection menu](#collections)
+
+<a id="research-sric-external-admission"></a>
+
+### [SRIC: external semantic admission](../works/research-sric-external-admission.md#code)
 
 - [Corrected runtime 0.3.3 (source and setup)](../../packages/sric-admission-v0.3.3/)
 - [Repair scope and recorded qualification](../SRIC_REPAIR_2026-10-27.md)
 - [Preserved original edition: Code / scripts: sric_real_lrm](../../research/sric-external-admission/sric_real_lrm/)
 - [Preserved original edition: Code / scripts: tests](../../research/sric-external-admission/tests/)
-- [Work page](../works/research-sric-external-admission.md)
+- [Return to this work’s code section](../works/research-sric-external-admission.md#code)
+- [Work overview](../works/research-sric-external-admission.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-sric-external-admission)
 
-### [SRIC: endogenous semantic witness](../works/research-sric-block23-witness.md)
+[Back to collection menu](#collections)
+
+<a id="research-sric-block23-witness"></a>
+
+### [SRIC: endogenous semantic witness](../works/research-sric-block23-witness.md#code)
 
 - [Code / scripts: block23](../../research/sric-block23-witness/block23/)
 - [Code / scripts: tests](../../research/sric-block23-witness/tests/)
-- [Work page](../works/research-sric-block23-witness.md)
+- [Return to this work’s code section](../works/research-sric-block23-witness.md#code)
+- [Work overview](../works/research-sric-block23-witness.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-sric-block23-witness)
 
-### [Hypergraph Lumpability and Bayesian Refinement](../works/research-hypergraph-bayesian-refinement.md)
+[Back to collection menu](#collections)
 
-- [Code / scripts: src](../../research/hypergraph-bayesian-refinement/src/)
-- [Work page](../works/research-hypergraph-bayesian-refinement.md)
+<a id="research-hypergraph-bayesian-refinement"></a>
+
+### [Hypergraph Lumpability and Bayesian Refinement](../works/research-hypergraph-bayesian-refinement.md#code)
+
+- [Finite reference implementation (Python)](../../research/hypergraph-bayesian-refinement/src/priq/core.py)
+- [Return to this work’s code section](../works/research-hypergraph-bayesian-refinement.md#code)
+- [Work overview](../works/research-hypergraph-bayesian-refinement.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-hypergraph-bayesian-refinement)
 
-### [PRISM-1](../works/research-prism-1.md)
+[Back to collection menu](#collections)
+
+<a id="research-prism-1"></a>
+
+### [PRISM-1](../works/research-prism-1.md#code)
 
 - [Script: prism_chip_model.py](../../research/prism-1/prism_chip_model.py)
-- [Work page](../works/research-prism-1.md)
+- [Return to this work’s code section](../works/research-prism-1.md#code)
+- [Work overview](../works/research-prism-1.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-prism-1)
 
-### [Stratified Relational Workspace Theory](../works/research-stratified-relational-workspace.md)
+[Back to collection menu](#collections)
+
+<a id="research-stratified-relational-workspace"></a>
+
+### [Stratified Relational Workspace Theory](../works/research-stratified-relational-workspace.md#code)
 
 - [Code / scripts: scripts](../../research/stratified-relational-workspace/scripts/)
-- [Work page](../works/research-stratified-relational-workspace.md)
+- [Return to this work’s code section](../works/research-stratified-relational-workspace.md#code)
+- [Work overview](../works/research-stratified-relational-workspace.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-stratified-relational-workspace)
 
-### [Machine Theory: formal development](../works/research-machine-theory-formal.md)
+[Back to collection menu](#collections)
+
+<a id="research-machine-theory-formal"></a>
+
+### [Machine Theory: formal development](../works/research-machine-theory-formal.md#code)
 
 - [Code / scripts: scripts](../../research/machine-theory-formal/scripts/)
-- [Work page](../works/research-machine-theory-formal.md)
+- [Return to this work’s code section](../works/research-machine-theory-formal.md#code)
+- [Work overview](../works/research-machine-theory-formal.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-machine-theory-formal)
 
-### [Machine Native Reasoning: wider continuation](../works/research-machine-native-reasoning-wider.md)
+[Back to collection menu](#collections)
+
+<a id="research-machine-native-reasoning-wider"></a>
+
+### [Machine Native Reasoning: wider continuation](../works/research-machine-native-reasoning-wider.md#code)
 
 - [Code / scripts: scripts](../../research/machine-native-reasoning-wider/scripts/)
-- [Work page](../works/research-machine-native-reasoning-wider.md)
+- [Return to this work’s code section](../works/research-machine-native-reasoning-wider.md#code)
+- [Work overview](../works/research-machine-native-reasoning-wider.md)
 - [Status and evidence](../STATUS_CATALOG.md#research-machine-native-reasoning-wider)
 
-### [ABC: global RR8 branch](../works/abc-global-rr8.md)
+[Back to collection menu](#collections)
+
+<a id="abc-global-rr8"></a>
+
+### [ABC: global RR8 branch](../works/abc-global-rr8.md#code)
 
 - [Code / scripts: abc_work](../../research/abc-global-rr8/abc_work/)
-- [Work page](../works/abc-global-rr8.md)
+- [Return to this work’s code section](../works/abc-global-rr8.md#code)
+- [Work overview](../works/abc-global-rr8.md)
 - [Status and evidence](../STATUS_CATALOG.md#abc-global-rr8)
 
-### [ABC: source and evidence reader](../works/abc-reader.md)
+[Back to collection menu](#collections)
+
+<a id="abc-reader"></a>
+
+### [ABC: source and evidence reader](../works/abc-reader.md#code)
 
 - [Code / scripts: evidence/computation](../../research/abc-reader/evidence/computation/)
-- [Work page](../works/abc-reader.md)
+- [Return to this work’s code section](../works/abc-reader.md#code)
+- [Work overview](../works/abc-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#abc-reader)
 
-### [AddMul Arithmetic Reconstruction](../works/addmul-arithmetic-reconstruction.md)
+[Back to collection menu](#collections)
+
+<a id="addmul-arithmetic-reconstruction"></a>
+
+### [AddMul Arithmetic Reconstruction](../works/addmul-arithmetic-reconstruction.md#code)
 
 - [Code / scripts: tests](../../research/addmul-arithmetic-reconstruction/tests/)
-- [Work page](../works/addmul-arithmetic-reconstruction.md)
+- [Return to this work’s code section](../works/addmul-arithmetic-reconstruction.md#code)
+- [Work overview](../works/addmul-arithmetic-reconstruction.md)
 - [Status and evidence](../STATUS_CATALOG.md#addmul-arithmetic-reconstruction)
 
-### [Beal: source and evidence](../works/beal-reader.md)
+[Back to collection menu](#collections)
+
+<a id="beal-reader"></a>
+
+### [Beal: source and evidence](../works/beal-reader.md#code)
 
 - [Code / scripts: evidence/computation](../../research/beal-reader/evidence/computation/)
-- [Work page](../works/beal-reader.md)
+- [Return to this work’s code section](../works/beal-reader.md#code)
+- [Work overview](../works/beal-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#beal-reader)
 
-### [Catalan Constant: source and evidence](../works/catalan-constant-reader.md)
+[Back to collection menu](#collections)
+
+<a id="catalan-constant-reader"></a>
+
+### [Catalan Constant: source and evidence](../works/catalan-constant-reader.md#code)
 
 - [Code / scripts: computations](../../research/catalan-constant-reader/computations/)
-- [Work page](../works/catalan-constant-reader.md)
+- [Return to this work’s code section](../works/catalan-constant-reader.md#code)
+- [Work overview](../works/catalan-constant-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#catalan-constant-reader)
 
-### [Collatz and Riemann: source and evidence](../works/collatz-and-riemann-readers.md)
+[Back to collection menu](#collections)
+
+<a id="collatz-and-riemann-readers"></a>
+
+### [Collatz and Riemann: source and evidence](../works/collatz-and-riemann-readers.md#code)
 
 - [Script: build.py](../../research/collatz-and-riemann-readers/build.py)
-- [Work page](../works/collatz-and-riemann-readers.md)
+- [Return to this work’s code section](../works/collatz-and-riemann-readers.md#code)
+- [Work overview](../works/collatz-and-riemann-readers.md)
 - [Status and evidence](../STATUS_CATALOG.md#collatz-and-riemann-readers)
 
-### [Euler Signal Bridge](../works/euler-signal-bridge.md)
+[Back to collection menu](#collections)
+
+<a id="euler-signal-bridge"></a>
+
+### [Euler Signal Bridge](../works/euler-signal-bridge.md#code)
 
 - [Script: verify_bridge.py](../../research/euler-signal-bridge/verify_bridge.py)
-- [Work page](../works/euler-signal-bridge.md)
+- [Return to this work’s code section](../works/euler-signal-bridge.md#code)
+- [Work overview](../works/euler-signal-bridge.md)
 - [Status and evidence](../STATUS_CATALOG.md#euler-signal-bridge)
 
-### [Hilbert 12: ambient dual slice](../works/hilbert12-ambient-dual-slice.md)
+[Back to collection menu](#collections)
+
+<a id="hilbert12-ambient-dual-slice"></a>
+
+### [Hilbert 12: ambient dual slice](../works/hilbert12-ambient-dual-slice.md#code)
 
 - [Script: h12_ambient_dual_slice_verify.py](../../research/hilbert12-ambient-dual-slice/h12_ambient_dual_slice_verify.py)
-- [Work page](../works/hilbert12-ambient-dual-slice.md)
+- [Return to this work’s code section](../works/hilbert12-ambient-dual-slice.md#code)
+- [Work overview](../works/hilbert12-ambient-dual-slice.md)
 - [Status and evidence](../STATUS_CATALOG.md#hilbert12-ambient-dual-slice)
 
-### [Hilbert 12: analytic Fourier branch](../works/hilbert12-analytic-fourier.md)
+[Back to collection menu](#collections)
+
+<a id="hilbert12-analytic-fourier"></a>
+
+### [Hilbert 12: analytic Fourier branch](../works/hilbert12-analytic-fourier.md#code)
 
 - [Script: H12_Analytic_Resolvent_Verifier.py](../../research/hilbert12-analytic-fourier/H12_Analytic_Resolvent_Verifier.py)
-- [Work page](../works/hilbert12-analytic-fourier.md)
+- [Return to this work’s code section](../works/hilbert12-analytic-fourier.md#code)
+- [Work overview](../works/hilbert12-analytic-fourier.md)
 - [Status and evidence](../STATUS_CATALOG.md#hilbert12-analytic-fourier)
 
-### [Hilbert 12: closure attempt](../works/hilbert12-closure-attempt.md)
+[Back to collection menu](#collections)
+
+<a id="hilbert12-closure-attempt"></a>
+
+### [Hilbert 12: closure attempt](../works/hilbert12-closure-attempt.md#code)
 
 - [Script: h12_closure_verify.py](../../research/hilbert12-closure-attempt/h12_closure_verify.py)
-- [Work page](../works/hilbert12-closure-attempt.md)
+- [Return to this work’s code section](../works/hilbert12-closure-attempt.md#code)
+- [Work overview](../works/hilbert12-closure-attempt.md)
 - [Status and evidence](../STATUS_CATALOG.md#hilbert12-closure-attempt)
 
-### [Hilbert 12: contracting ambient torsion](../works/hilbert12-contracting-ambient-torsion.md)
+[Back to collection menu](#collections)
+
+<a id="hilbert12-contracting-ambient-torsion"></a>
+
+### [Hilbert 12: contracting ambient torsion](../works/hilbert12-contracting-ambient-torsion.md#code)
 
 - [Script: h12_full_ambient_torsion_verify.py](../../research/hilbert12-contracting-ambient-torsion/h12_full_ambient_torsion_verify.py)
-- [Work page](../works/hilbert12-contracting-ambient-torsion.md)
+- [Return to this work’s code section](../works/hilbert12-contracting-ambient-torsion.md#code)
+- [Work overview](../works/hilbert12-contracting-ambient-torsion.md)
 - [Status and evidence](../STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion)
 
-### [Hilbert 12: cubic divisor development](../works/hilbert12-cubic-divisor.md)
+[Back to collection menu](#collections)
+
+<a id="hilbert12-cubic-divisor"></a>
+
+### [Hilbert 12: cubic divisor development](../works/hilbert12-cubic-divisor.md#code)
 
 - [Code / scripts: scripts](../../research/hilbert12-cubic-divisor/scripts/)
-- [Work page](../works/hilbert12-cubic-divisor.md)
+- [Return to this work’s code section](../works/hilbert12-cubic-divisor.md#code)
+- [Work overview](../works/hilbert12-cubic-divisor.md)
 - [Status and evidence](../STATUS_CATALOG.md#hilbert12-cubic-divisor)
 
-### [Hodge: source and evidence](../works/hodge-reader.md)
+[Back to collection menu](#collections)
+
+<a id="hodge-reader"></a>
+
+### [Hodge: source and evidence](../works/hodge-reader.md#code)
 
 - [Script: build.py](../../research/hodge-reader/build.py)
-- [Work page](../works/hodge-reader.md)
+- [Return to this work’s code section](../works/hodge-reader.md#code)
+- [Work overview](../works/hodge-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#hodge-reader)
 
-### [Inverse Galois: source and evidence](../works/inverse-galois-reader.md)
+[Back to collection menu](#collections)
+
+<a id="inverse-galois-reader"></a>
+
+### [Inverse Galois: source and evidence](../works/inverse-galois-reader.md#code)
 
 - [Code / scripts: computations](../../research/inverse-galois-reader/computations/)
-- [Work page](../works/inverse-galois-reader.md)
+- [Return to this work’s code section](../works/inverse-galois-reader.md#code)
+- [Work overview](../works/inverse-galois-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#inverse-galois-reader)
 
-### [IUT Valuation Hulls](../works/iut-valuation-hulls.md)
+[Back to collection menu](#collections)
+
+<a id="iut-valuation-hulls"></a>
+
+### [IUT Valuation Hulls](../works/iut-valuation-hulls.md#code)
 
 - [Code / scripts: experiments](../../research/iut-valuation-hulls/experiments/)
-- [Work page](../works/iut-valuation-hulls.md)
+- [Return to this work’s code section](../works/iut-valuation-hulls.md#code)
+- [Work overview](../works/iut-valuation-hulls.md)
 - [Status and evidence](../STATUS_CATALOG.md#iut-valuation-hulls)
 
-### [Lehmer: source and evidence](../works/lehmer-reader.md)
+[Back to collection menu](#collections)
+
+<a id="lehmer-reader"></a>
+
+### [Lehmer: source and evidence](../works/lehmer-reader.md#code)
 
 - [Code / scripts: code](../../research/lehmer-reader/code/)
-- [Work page](../works/lehmer-reader.md)
+- [Return to this work’s code section](../works/lehmer-reader.md#code)
+- [Work overview](../works/lehmer-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#lehmer-reader)
 
-### [Model-Theory Normalization](../works/model-theory-normalization.md)
+[Back to collection menu](#collections)
+
+<a id="model-theory-normalization"></a>
+
+### [Model-Theory Normalization](../works/model-theory-normalization.md#code)
 
 - [Code / scripts: checks](../../research/model-theory-normalization/checks/)
-- [Work page](../works/model-theory-normalization.md)
+- [Return to this work’s code section](../works/model-theory-normalization.md#code)
+- [Work overview](../works/model-theory-normalization.md)
 - [Status and evidence](../STATUS_CATALOG.md#model-theory-normalization)
 
-### [Resolution Semantics](../works/resolution-semantics.md)
+[Back to collection menu](#collections)
+
+<a id="resolution-semantics"></a>
+
+### [Resolution Semantics](../works/resolution-semantics.md#code)
 
 - [Code / scripts: checks](../../research/resolution-semantics/checks/)
-- [Work page](../works/resolution-semantics.md)
+- [Return to this work’s code section](../works/resolution-semantics.md#code)
+- [Work overview](../works/resolution-semantics.md)
 - [Status and evidence](../STATUS_CATALOG.md#resolution-semantics)
 
-### [Seeded Two-Axis Calculus](../works/seeded-two-axis.md)
+[Back to collection menu](#collections)
+
+<a id="seeded-two-axis"></a>
+
+### [Seeded Two-Axis Calculus](../works/seeded-two-axis.md#code)
 
 - [Code / scripts: checks](../../research/seeded-two-axis/checks/)
-- [Work page](../works/seeded-two-axis.md)
+- [Return to this work’s code section](../works/seeded-two-axis.md#code)
+- [Work overview](../works/seeded-two-axis.md)
 - [Status and evidence](../STATUS_CATALOG.md#seeded-two-axis)
 
-### [Signal Reconstruction](../works/signal-reconstruction.md)
+[Back to collection menu](#collections)
+
+<a id="signal-reconstruction"></a>
+
+### [Signal Reconstruction](../works/signal-reconstruction.md#code)
 
 - [Script: audit_release.py](../../research/signal-reconstruction/audit_release.py)
-- [Work page](../works/signal-reconstruction.md)
+- [Return to this work’s code section](../works/signal-reconstruction.md#code)
+- [Work overview](../works/signal-reconstruction.md)
 - [Status and evidence](../STATUS_CATALOG.md#signal-reconstruction)
 
-### [Stratified Universality](../works/stratified-universality.md)
+[Back to collection menu](#collections)
+
+<a id="stratified-universality"></a>
+
+### [Stratified Universality](../works/stratified-universality.md#code)
 
 - [Script: build_release.py](../../research/stratified-universality/build_release.py)
-- [Work page](../works/stratified-universality.md)
+- [Return to this work’s code section](../works/stratified-universality.md#code)
+- [Work overview](../works/stratified-universality.md)
 - [Status and evidence](../STATUS_CATALOG.md#stratified-universality)
 
-### [Streaming Polyphase Factor Decomposition / SKAT](../works/streaming-skat.md)
+[Back to collection menu](#collections)
+
+<a id="streaming-skat"></a>
+
+### [Streaming Polyphase Factor Decomposition / SKAT](../works/streaming-skat.md#code)
 
 - [Script: kcos.py](../../research/streaming-skat/kcos.py)
-- [Work page](../works/streaming-skat.md)
+- [Return to this work’s code section](../works/streaming-skat.md#code)
+- [Work overview](../works/streaming-skat.md)
 - [Status and evidence](../STATUS_CATALOG.md#streaming-skat)
 
-### [Strong Artin: source and evidence](../works/strong-artin-reader.md)
+[Back to collection menu](#collections)
+
+<a id="strong-artin-reader"></a>
+
+### [Strong Artin: source and evidence](../works/strong-artin-reader.md#code)
 
 - [Script: build.py](../../research/strong-artin-reader/build.py)
-- [Work page](../works/strong-artin-reader.md)
+- [Return to this work’s code section](../works/strong-artin-reader.md#code)
+- [Work overview](../works/strong-artin-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#strong-artin-reader)
 
-### [Physics: energy and backreaction](../works/physics-energy-backreaction.md)
+[Back to collection menu](#collections)
+
+<a id="physics-energy-backreaction"></a>
+
+### [Physics: energy and backreaction](../works/physics-energy-backreaction.md#code)
 
 - [Code / scripts: code](../../research/physics-energy-backreaction/code/)
-- [Work page](../works/physics-energy-backreaction.md)
+- [Return to this work’s code section](../works/physics-energy-backreaction.md#code)
+- [Work overview](../works/physics-energy-backreaction.md)
 - [Status and evidence](../STATUS_CATALOG.md#physics-energy-backreaction)
 
-### [Physics: origin locking](../works/physics-origin-locking.md)
+[Back to collection menu](#collections)
+
+<a id="physics-origin-locking"></a>
+
+### [Physics: origin locking](../works/physics-origin-locking.md#code)
 
 - [Code / scripts: code](../../research/physics-origin-locking/code/)
-- [Work page](../works/physics-origin-locking.md)
+- [Return to this work’s code section](../works/physics-origin-locking.md#code)
+- [Work overview](../works/physics-origin-locking.md)
 - [Status and evidence](../STATUS_CATALOG.md#physics-origin-locking)
 
 [Back to collection menu](#collections)
@@ -449,36 +866,68 @@ Jump to: [Core papers](#papers) · [Books and companion volumes](#monographs) ·
 
 ## Software packages
 
-### [Certified Inference](../works/certified-inference.md)
+Jump to a work:
+
+- [Certified Inference](#certified-inference)
+- [Constructive Repair](#constructive-repair)
+- [RRCT](#packages-rrct)
+- [Universal Generative Deformation Calculus](#universal-generative-deformation)
+- [Large Signal Model software](#large-signal-model)
+
+<a id="certified-inference"></a>
+
+### [Certified Inference](../works/certified-inference.md#code)
 
 - [Code / scripts: checks](../../packages/certified-inference/checks/)
-- [Work page](../works/certified-inference.md)
+- [Return to this work’s code section](../works/certified-inference.md#code)
+- [Work overview](../works/certified-inference.md)
 - [Status and evidence](../STATUS_CATALOG.md#certified-inference)
 
-### [Constructive Repair](../works/constructive-repair.md)
+[Back to collection menu](#collections)
+
+<a id="constructive-repair"></a>
+
+### [Constructive Repair](../works/constructive-repair.md#code)
 
 - [Code / scripts: python/komorebi_repair](../../packages/constructive-repair/python/komorebi_repair/)
 - [Code / scripts: tests](../../packages/constructive-repair/tests/)
-- [Work page](../works/constructive-repair.md)
+- [Return to this work’s code section](../works/constructive-repair.md#code)
+- [Work overview](../works/constructive-repair.md)
 - [Status and evidence](../STATUS_CATALOG.md#constructive-repair)
 
-### [RRCT](../works/packages-rrct.md)
+[Back to collection menu](#collections)
 
-- [Code / scripts: src](../../packages/rrct/src/)
-- [Work page](../works/packages-rrct.md)
+<a id="packages-rrct"></a>
+
+### [RRCT](../works/packages-rrct.md#code)
+
+- [RRCT implementation and CLI](../../packages/rrct/src/rrct_lab/)
+- [Return to this work’s code section](../works/packages-rrct.md#code)
+- [Work overview](../works/packages-rrct.md)
 - [Status and evidence](../STATUS_CATALOG.md#packages-rrct)
 
-### [Universal Generative Deformation Calculus](../works/universal-generative-deformation.md)
+[Back to collection menu](#collections)
+
+<a id="universal-generative-deformation"></a>
+
+### [Universal Generative Deformation Calculus](../works/universal-generative-deformation.md#code)
 
 - [Code / scripts: generative_deformation](../../packages/universal-generative-deformation/generative_deformation/)
 - [Code / scripts: tests](../../packages/universal-generative-deformation/tests/)
-- [Work page](../works/universal-generative-deformation.md)
+- [Return to this work’s code section](../works/universal-generative-deformation.md#code)
+- [Work overview](../works/universal-generative-deformation.md)
 - [Status and evidence](../STATUS_CATALOG.md#universal-generative-deformation)
 
-### [Large Signal Model software](../works/large-signal-model.md)
+[Back to collection menu](#collections)
 
-- [Code / scripts: src](../../packages/large-signal-model/src/)
-- [Work page](../works/large-signal-model.md)
+<a id="large-signal-model"></a>
+
+### [Large Signal Model software](../works/large-signal-model.md#code)
+
+- [Public PR-LASM package interface](../../packages/large-signal-model/src/komorebi_pr_lasm/)
+- [Implementation and compatibility namespace](../../packages/large-signal-model/src/komorebi_arc3_offline/)
+- [Return to this work’s code section](../works/large-signal-model.md#code)
+- [Work overview](../works/large-signal-model.md)
 - [Status and evidence](../STATUS_CATALOG.md#large-signal-model)
 
 [Back to collection menu](#collections)
@@ -487,41 +936,78 @@ Jump to: [Core papers](#papers) · [Books and companion volumes](#monographs) ·
 
 ## Experiments
 
-### [Agent Dynamics](../works/experiments-agent-dynamics.md)
+Jump to a work:
+
+- [Agent Dynamics](#experiments-agent-dynamics)
+- [Arithmetic J-Space Training Lab](#experiments-arithmetic-jspace)
+- [J-Space Causal Lab](#experiments-jspace-causal-lab)
+- [J-Space Collections](#experiments-jspace-collections)
+- [Workspace Incubator](#experiments-workspace-incubator)
+- [ARC-AGI-2 experiment](#arc-agi2)
+
+<a id="experiments-agent-dynamics"></a>
+
+### [Agent Dynamics](../works/experiments-agent-dynamics.md#code)
 
 - [Code / scripts: code](../../experiments/agent-dynamics/code/)
-- [Work page](../works/experiments-agent-dynamics.md)
+- [Return to this work’s code section](../works/experiments-agent-dynamics.md#code)
+- [Work overview](../works/experiments-agent-dynamics.md)
 - [Status and evidence](../STATUS_CATALOG.md#experiments-agent-dynamics)
 
-### [Arithmetic J-Space Training Lab](../works/experiments-arithmetic-jspace.md)
+[Back to collection menu](#collections)
+
+<a id="experiments-arithmetic-jspace"></a>
+
+### [Arithmetic J-Space Training Lab](../works/experiments-arithmetic-jspace.md#code)
 
 - [Code / scripts: arithmetic_space_lab](../../experiments/arithmetic-jspace/arithmetic_space_lab/)
 - [Code / scripts: tests](../../experiments/arithmetic-jspace/tests/)
-- [Work page](../works/experiments-arithmetic-jspace.md)
+- [Return to this work’s code section](../works/experiments-arithmetic-jspace.md#code)
+- [Work overview](../works/experiments-arithmetic-jspace.md)
 - [Status and evidence](../STATUS_CATALOG.md#experiments-arithmetic-jspace)
 
-### [J-Space Causal Lab](../works/experiments-jspace-causal-lab.md)
+[Back to collection menu](#collections)
+
+<a id="experiments-jspace-causal-lab"></a>
+
+### [J-Space Causal Lab](../works/experiments-jspace-causal-lab.md#code)
 
 - [Code / scripts: runtime](../../experiments/jspace-causal-lab/runtime/)
-- [Work page](../works/experiments-jspace-causal-lab.md)
+- [Return to this work’s code section](../works/experiments-jspace-causal-lab.md#code)
+- [Work overview](../works/experiments-jspace-causal-lab.md)
 - [Status and evidence](../STATUS_CATALOG.md#experiments-jspace-causal-lab)
 
-### [J-Space Collections](../works/experiments-jspace-collections.md)
+[Back to collection menu](#collections)
+
+<a id="experiments-jspace-collections"></a>
+
+### [J-Space Collections](../works/experiments-jspace-collections.md#code)
 
 - [Code / scripts: machinery](../../experiments/jspace-collections/machinery/)
-- [Work page](../works/experiments-jspace-collections.md)
+- [Return to this work’s code section](../works/experiments-jspace-collections.md#code)
+- [Work overview](../works/experiments-jspace-collections.md)
 - [Status and evidence](../STATUS_CATALOG.md#experiments-jspace-collections)
 
-### [Workspace Incubator](../works/experiments-workspace-incubator.md)
+[Back to collection menu](#collections)
+
+<a id="experiments-workspace-incubator"></a>
+
+### [Workspace Incubator](../works/experiments-workspace-incubator.md#code)
 
 - [Code / scripts: src](../../experiments/workspace-incubator/src/)
-- [Work page](../works/experiments-workspace-incubator.md)
+- [Return to this work’s code section](../works/experiments-workspace-incubator.md#code)
+- [Work overview](../works/experiments-workspace-incubator.md)
 - [Status and evidence](../STATUS_CATALOG.md#experiments-workspace-incubator)
 
-### [ARC-AGI-2 experiment](../works/arc-agi2.md)
+[Back to collection menu](#collections)
+
+<a id="arc-agi2"></a>
+
+### [ARC-AGI-2 experiment](../works/arc-agi2.md#code)
 
 - [Script: prepare_limitfix.py](../../experiments/arc-agi2/prepare_limitfix.py)
-- [Work page](../works/arc-agi2.md)
+- [Return to this work’s code section](../works/arc-agi2.md#code)
+- [Work overview](../works/arc-agi2.md)
 - [Status and evidence](../STATUS_CATALOG.md#arc-agi2)
 
 [Back to collection menu](#collections)

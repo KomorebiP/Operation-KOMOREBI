@@ -22,17 +22,19 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Text sources: Papers I–IV](../../monographs/realization-calculus/source_i_iv/)
 - [Text sources: Papers V–VIII](../../monographs/realization-calculus/source_v_viii/)
 - [Text sources: Papers IX–XII](../../monographs/realization-calculus/source_ix_xii/)
 
+[Find this work among other written proofs](../browse/PROOFS.md#realization-calculus-book)
+
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+No direct Lean source shortcut is selected. Guides and claim maps below are reading material; consult the [evidence record](#evidence) for the recorded scope.
 
 - [Lean guide (PDF)](../../monographs/realization-calculus/frozen_readers/Paper_I_Lean_Guide_Final.pdf)
 
@@ -40,9 +42,11 @@ Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../monographs/realization-calculus/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: scripts](../../monographs/realization-calculus/scripts/)
+
+[Find this work among other code projects](../browse/CODE.md#realization-calculus-book)
 
 [Back to work navigation](#work-navigation)
 

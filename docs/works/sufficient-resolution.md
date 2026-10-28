@@ -22,26 +22,34 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../monographs/sufficient-resolution/traditional/Sufficient_Resolution_Traditional.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#sufficient-resolution)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../monographs/sufficient-resolution/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
+- [Portable replay instructions and prerequisites](../../monographs/sufficient-resolution/formal/PORTABLE_REPLAY.md)
 - [Lean guide (PDF)](../../monographs/sufficient-resolution/lean/Sufficient_Resolution_Lean_Guide.pdf)
-- [Lean sources (directory)](../../monographs/sufficient-resolution/formal/)
+- [Sufficient Resolution mathematical modules](../../monographs/sufficient-resolution/formal/Komorebi/SufficientResolution/)
+- [Formal project, build roots, and provenance](../../monographs/sufficient-resolution/formal/)
+
+[Find this work among other Lean projects](../browse/LEAN.md#sufficient-resolution)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../monographs/sufficient-resolution/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Script: audit_release.py](../../monographs/sufficient-resolution/audit_release.py)
+
+[Find this work among other code projects](../browse/CODE.md#sufficient-resolution)
 
 [Back to work navigation](#work-navigation)
 

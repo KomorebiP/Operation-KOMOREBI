@@ -22,26 +22,35 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Text sources: sources/main](../../papers/paper-ix/current/sources/main/)
+
+[Find this work among other written proofs](../browse/PROOFS.md#paper-ix)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../papers/paper-ix/current/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
+- [Current guide: source locations, correspondence, and replay limits](../../papers/paper-ix/current/sources/lean/README.md)
 - [Lean guide (PDF)](../../papers/paper-ix/current/output/pdf/Paper_IX_Euler_Lean_Guide_Final.pdf)
-- [Lean sources (directory)](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/)
+- [Recorded width-four, period, and isometry modules](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/strengthening/formalization/)
+- [Recorded polynomial-regularity modules](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/polynomial_regularity/formalization/)
+- [All preserved formal branches and records](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/)
+
+[Find this work among other Lean projects](../browse/LEAN.md#paper-ix)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../papers/paper-ix/current/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: tools](../../papers/paper-ix/current/tools/)
+
+[Find this work among other code projects](../browse/CODE.md#paper-ix)
 
 [Back to work navigation](#work-navigation)
 

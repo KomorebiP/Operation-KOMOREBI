@@ -22,25 +22,33 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../research/strong-artin-reader/paper/main.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#strong-artin-reader)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../research/strong-artin-reader/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
-- [Lean sources (directory)](../../research/strong-artin-reader/lean/)
+- [Formal source guide and replay prerequisites](../../research/strong-artin-reader/lean/README.md)
+- [v0.38 checkpoint mathematical modules](../../research/strong-artin-reader/lean/history/v0.38/src/)
+- [All retained formal checkpoints and ancestry](../../research/strong-artin-reader/lean/)
+
+[Find this work among other Lean projects](../browse/LEAN.md#strong-artin-reader)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/strong-artin-reader/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Script: build.py](../../research/strong-artin-reader/build.py)
+
+[Find this work among other code projects](../browse/CODE.md#strong-artin-reader)
 
 [Back to work navigation](#work-navigation)
 

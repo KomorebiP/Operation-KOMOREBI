@@ -22,26 +22,33 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../monographs/proof-path-theory/docs/Proof_Path_Theory.tex)
 - [LEAN GUIDE.md](../../monographs/proof-path-theory/docs/LEAN_GUIDE.md)
+
+[Find this work among other written proofs](../browse/PROOFS.md#proof-path-theory)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../monographs/proof-path-theory/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
 - [Lean sources (directory)](../../monographs/proof-path-theory/formal/)
+- [LEAN GUIDE.md](../../monographs/proof-path-theory/docs/LEAN_GUIDE.md)
+
+[Find this work among other Lean projects](../browse/LEAN.md#proof-path-theory)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../monographs/proof-path-theory/README.md) for requirements and effects. All software is beta / work in progress.
 
-- [Code / scripts: src](../../monographs/proof-path-theory/src/)
+- [Proof Path Theory implementation and CLI](../../monographs/proof-path-theory/src/proof_path_theory/)
+
+[Find this work among other code projects](../browse/CODE.md#proof-path-theory)
 
 [Back to work navigation](#work-navigation)
 

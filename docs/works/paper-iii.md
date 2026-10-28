@@ -22,26 +22,32 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../papers/paper-iii/current/manuscript/Paper_III_Traditional_Final.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#paper-iii)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../papers/paper-iii/current/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
 - [Lean guide (PDF)](../../papers/paper-iii/current/publication/Paper_III_Lean_Guide_v1.0.0.pdf)
 - [Lean sources (directory)](../../papers/paper-iii/current/formal/)
+
+[Find this work among other Lean projects](../browse/LEAN.md#paper-iii)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../papers/paper-iii/current/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: tools](../../papers/paper-iii/current/tools/)
+
+[Find this work among other code projects](../browse/CODE.md#paper-iii)
 
 [Back to work navigation](#work-navigation)
 

@@ -22,26 +22,32 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [Manuscript text (TeX)](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.tex)
+
+[Find this work among other written proofs](../browse/PROOFS.md#signal-reconstruction)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../research/signal-reconstruction/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
 
 - [Lean guide (PDF)](../../research/signal-reconstruction/lean/Signal_Reconstruction_Lean_Guide.pdf)
 - [Lean sources (directory)](../../research/signal-reconstruction/related_formal/paper_v/formalization/lean/)
+
+[Find this work among other Lean projects](../browse/LEAN.md#signal-reconstruction)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/signal-reconstruction/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Script: audit_release.py](../../research/signal-reconstruction/audit_release.py)
+
+[Find this work among other code projects](../browse/CODE.md#signal-reconstruction)
 
 [Back to work navigation](#work-navigation)
 

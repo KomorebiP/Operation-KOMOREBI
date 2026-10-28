@@ -79,7 +79,7 @@ These incomplete implementation entries retain their incubator placement and ret
 
 [Open work page: KZFC and Residual Reflection](../works/kzfc-multiverse.md)
 
-[Lean](../../research/kzfc-multiverse/Komorebi/) · [Code](../../research/kzfc-multiverse/scripts/) · [Work page](../works/kzfc-multiverse.md)
+[Lean](../../research/kzfc-multiverse/Komorebi/Foundation/) · [Code](../../research/kzfc-multiverse/scripts/) · [Work page](../works/kzfc-multiverse.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -189,7 +189,7 @@ These incomplete implementation entries retain their incubator placement and ret
 
 [Open work page: Hypergraph Lumpability and Bayesian Refinement](../works/research-hypergraph-bayesian-refinement.md)
 
-[PDF](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.pdf) · [Text](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.tex) · [Code](../../research/hypergraph-bayesian-refinement/src/) · [Work page](../works/research-hypergraph-bayesian-refinement.md)
+[PDF](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.pdf) · [Text](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.tex) · [Code](../../research/hypergraph-bayesian-refinement/src/priq/core.py) · [Work page](../works/research-hypergraph-bayesian-refinement.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -399,7 +399,7 @@ These incomplete implementation entries retain their incubator placement and ret
 
 [Open work page: IUT Valuation Hulls](../works/iut-valuation-hulls.md)
 
-[Lean](../../research/iut-valuation-hulls/formalization/) · [Code](../../research/iut-valuation-hulls/experiments/) · [Work page](../works/iut-valuation-hulls.md)
+[Lean](../../research/iut-valuation-hulls/formalization/lean/) · [Code](../../research/iut-valuation-hulls/experiments/) · [Work page](../works/iut-valuation-hulls.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -499,7 +499,7 @@ These incomplete implementation entries retain their incubator placement and ret
 
 [Open work page: Strong Artin: source and evidence](../works/strong-artin-reader.md)
 
-[PDF](../../research/strong-artin-reader/pdf/Komorebi_Strong_Artin_Conjecture_Piece_v1.0.pdf) · [Text](../../research/strong-artin-reader/paper/main.tex) · [Lean](../../research/strong-artin-reader/lean/) · [Code](../../research/strong-artin-reader/build.py) · [Work page](../works/strong-artin-reader.md)
+[PDF](../../research/strong-artin-reader/pdf/Komorebi_Strong_Artin_Conjecture_Piece_v1.0.pdf) · [Text](../../research/strong-artin-reader/paper/main.tex) · [Lean](../../research/strong-artin-reader/lean/history/v0.38/src/) · [Code](../../research/strong-artin-reader/build.py) · [Work page](../works/strong-artin-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 

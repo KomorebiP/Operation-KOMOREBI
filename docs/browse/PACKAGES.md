@@ -40,7 +40,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: RRCT](../works/packages-rrct.md)
 
-[Code](../../packages/rrct/src/) · [Work page](../works/packages-rrct.md)
+[Code](../../packages/rrct/src/rrct_lab/) · [Work page](../works/packages-rrct.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -60,6 +60,6 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Large Signal Model software](../works/large-signal-model.md)
 
-[PDF](../../packages/large-signal-model/paper/Projector_Resolved_Large_Algebraic_Signal_Model.pdf) · [Text](../../packages/large-signal-model/paper/Projector_Resolved_Large_Algebraic_Signal_Model.tex) · [Code](../../packages/large-signal-model/src/) · [Work page](../works/large-signal-model.md)
+[PDF](../../packages/large-signal-model/paper/Projector_Resolved_Large_Algebraic_Signal_Model.pdf) · [Text](../../packages/large-signal-model/paper/Projector_Resolved_Large_Algebraic_Signal_Model.tex) · [Code](../../packages/large-signal-model/src/komorebi_pr_lasm/) · [Work page](../works/large-signal-model.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)

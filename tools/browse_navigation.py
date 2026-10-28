@@ -12,7 +12,9 @@ REGISTRY = 'manifests/browse-resources.json'
 GROUPS = {'papers': 'Core papers', 'monographs': 'Books and companion volumes',
           'research': 'Research programs', 'packages': 'Software packages',
           'experiments': 'Experiments'}
-KINDS = {'guide', 'pdf', 'text', 'visual', 'formal_guide', 'lean', 'claims', 'code'}
+KINDS = {'guide', 'pdf', 'text', 'visual', 'formal_guide', 'lean_setup', 'lean', 'claims', 'code'}
+FINDERS = {'PROOFS': ('written-proofs', {'pdf','text','claims'}),
+           'LEAN': ('lean', {'lean'}), 'CODE': ('code', {'code'})}
 CODE_EXTENSIONS = ('.py', '.c', '.cpp', '.ipynb', '.rs', '.jl', '.h', '.hpp')
 # Maintained corrections live separately from receipt-bound imported editions.
 # Keep both routes visible; the existing repair report defines their scope.
@@ -76,6 +78,8 @@ def validate_resources(root, registry, state, tracked_paths=None):
                 assert p.endswith('.pdf'), 'PDF resource must link to a PDF: '+p
             if kind=='text':
                 assert any(f.endswith(('.tex','.md','.txt')) for f in members), 'Text resource lacks text: '+p
+            if kind=='lean_setup':
+                assert p.endswith(('.md','.txt')) and not p.endswith('/'), 'Lean instructions must be a text document: '+p
             if kind=='lean':
                 assert any(f.endswith('.lean') and not f.endswith('lakefile.lean') for f in members), 'Lean source entry has no declarations: '+p
             if kind=='code':
@@ -102,10 +106,22 @@ class Browser:
         if corrected:
             result += [link(corrected[0],corrected[1],page),
                        link('Repair scope and recorded qualification',corrected[2],page)]
+        selected = [a for a in self.rows[c['id']]['resources'] if a['kind'] in kinds]
+        selected.sort(key=lambda a: a['kind']!='lean_setup')
         result += [link(('Preserved original edition: ' if corrected and a['kind']=='code' else '')+a['label'],
                         c['destination']+'/'+a['path'],page)
-                   for a in self.rows[c['id']]['resources'] if a['kind'] in kinds]
+                   for a in selected]
         return result
+
+    def in_finder(self, c, name):
+        return not self.held(c) and any(a['kind'] in FINDERS[name][1] for a in self.rows[c['id']]['resources'])
+
+    def setup_link(self, c, page):
+        guide = self.assessments[c['id']].get('reader_guide')
+        if guide:
+            return link('maintained edition guide',guide,page)
+        guide = next((a for a in self.rows[c['id']]['resources'] if a['kind']=='guide'),None)
+        return link('edition guide',c['destination']+'/'+guide['path'],page) if guide else '[reading files](#read)'
 
     def shortcuts(self, c, page):
         assets = self.rows[c['id']]['resources']
@@ -152,22 +168,29 @@ class Browser:
             text += '**Incubator:** '+link('Limits and return criteria','docs/INCUBATOR.md#'+c['id'],page)+'.\n\n'
         text += 'Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.\n\n'
         sections = [
-            ('Read', {'pdf','visual','guide'}, 'No reading file is selected here; use the edition files below.'),
-            ('Written proofs', {'text','claims'}, 'No separate text or claim-map entry is selected. Use the reading file above and the evidence record below; this is not a claim that written proofs are absent.'),
-            ('Lean', {'lean','formal_guide'}, 'No direct Lean source or guide is selected. The recorded Lean status above and evidence below describe the assessed scope.'),
-            ('Code', {'code'}, 'No code shortcut is selected for this edition. See its complete file listing below.')]
+            ('Read', {'pdf','visual','guide'}, 'No reading file is selected here; use the [complete file listing under Evidence](#evidence).'),
+            ('Written proofs', {'text','claims'}, 'No separate text or claim-map entry is selected. Use the [reading files](#read) and [evidence record](#evidence); this is not a claim that written proofs are absent.'),
+            ('Lean', {'lean','formal_guide','lean_setup','claims'}, 'No direct Lean source or guide is selected. The recorded Lean status above and [evidence below](#evidence) describe the assessed scope.'),
+            ('Code', {'code'}, 'No code shortcut is selected for this edition. Use the [complete file listing under Evidence](#evidence).')]
         for title,kinds,empty in sections:
             text += '## '+title+'\n\n'
-            if title=='Written proofs':
-                text += 'Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.\n\n'
-            if title=='Lean':
-                text += 'Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.\n\n'
-            if title=='Code':
-                text += 'These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.\n\n'
             links = self.resources(c,kinds,page)
+            has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])
+            if title=='Written proofs':
+                text += 'Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.\n\n'
+            if title=='Lean' and has_lean:
+                text += 'Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the '+self.setup_link(c,page)+' and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.\n\n'
+            if title=='Code' and links:
+                text += 'These links may include runtime code, examples, checks, or build utilities. Consult the '+self.setup_link(c,page)+' for requirements and effects. All software is beta / work in progress.\n\n'
+            if title=='Lean' and links and not has_lean:
+                text += 'No direct Lean source shortcut is selected. Guides and claim maps below are reading material; consult the [evidence record](#evidence) for the recorded scope.\n\n'
             text += '\n'.join('- '+item for item in links)+'\n' if links else empty+'\n'
             if title=='Read' and s.get('reader_guide'):
                 text += '- '+link('Maintained edition guide',s['reader_guide'],page)+'\n'
+            finder = {'Written proofs':'PROOFS','Lean':'LEAN','Code':'CODE'}.get(title)
+            if finder and self.in_finder(c,finder):
+                text += '\n'+link('Find this work among other '+{'PROOFS':'written proofs','LEAN':'Lean projects','CODE':'code projects'}[finder],
+                                  'docs/browse/'+finder+'.md#'+c['id'],page)+'\n'
             text += '\n[Back to work navigation](#work-navigation)\n\n'
         text += '## Evidence\n\n'
         text += '- '+link('Completion, Lean coverage, confidence, and cited evidence','docs/STATUS_CATALOG.md#'+c['id'],page)+'\n'
@@ -216,7 +239,7 @@ Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**
 
 ## Move around without opening large folders
 
-Category pages have linked contents and direct file shortcuts. Choose **Work page** to keep one work's paper, proofs, Lean, code, and evidence together. Each work page has a section menu, return links, and previous/next links within its collection. The status catalogue links back to the same work page. Older category anchors remain usable.
+Category pages have linked contents and direct file shortcuts. Choose **Work page** to keep one work's paper, proofs, Lean, code, and evidence together. Each work page has a section menu, return links, and previous/next links within its collection. Proof, Lean, and code sections link to their matching finder entry; each finder has title shortcuts and returns to the corresponding section. The status catalogue links back to the same work page. Older category anchors remain usable.
 
 Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. Work pages use a single-column list layout. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
 
@@ -257,27 +280,33 @@ These are navigation links to preserved editions. Existing scope and scientific 
             outputs[page] = text
         for name,title,kinds,intro in [
             ('PROOFS','Find written statements and proofs',{'pdf','text','claims'},
-             'Open the manuscript or claim guide, then search for the statement number or section. A selected text source may be part of a multi-file manuscript. These links locate writing and existing evidence; they do not certify every statement. Follow **Work page** for visual guides, Lean, code, and the exact edition.'),
-            ('LEAN','Find Lean source files',{'lean'},
-             'Every source link below contains `.lean` files. The recorded coverage text describes the existing assessment, not a new compiler run. Read the linked work guide for imports, toolchain requirements, correspondence maps, and accepted execution records. Lean-guide PDFs appear on those work pages separately.'),
+             'Open the manuscript or claim guide, then search for the statement number or section. A selected text source may be part of a multi-file manuscript. These links locate writing and existing evidence; they do not certify every statement. Follow **Work overview** for visual guides, Lean, code, and the exact edition.'),
+            ('LEAN','Find Lean source files',{'lean','lean_setup','claims'},
+             'Every work listed below has a selected `.lean` source file or directory. Setup instructions and correspondence maps are labeled separately. The recorded coverage text describes the existing assessment, not a new compiler run. Read the instructions for imports, toolchain requirements, and accepted execution records. Lean-guide PDFs appear on the work pages separately.'),
             ('CODE','Find code and scripts',{'code'},
-             'These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work page** and the edition README for setup and effects before running them. All software remains beta / work in progress.')]:
+             'These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup and effects before running them. All software remains beta / work in progress.')]:
             page = 'docs/browse/'+name+'.md'
             text = '# '+title+'\n\n'+self.footer(page)+'\n'+intro+'\n\n'
             text += '<a id="collections"></a>\n\nJump to: '+' · '.join('['+t+'](#'+g+')' for g,t in GROUPS.items())+'\n'
             for group,label in GROUPS.items():
                 text += '\n<a id="'+group+'"></a>\n\n## '+label+'\n\n'
                 entries = []
-                for c in self.components:
-                    if c['group']!=group or self.held(c):continue
+                selected = [c for c in self.components if c['group']==group and self.in_finder(c,name)]
+                if selected:
+                    text += 'Jump to a work:\n\n'+'\n'.join('- '+link(c['title'],'#'+c['id'],page) for c in selected)+'\n\n'
+                for c in selected:
                     links = self.resources(c,kinds,page)
                     if not links:continue
                     if name=='LEAN':
                         links.append('Coverage: '+self.status['labels']['lean'][self.assessments[c['id']]['lean']][0])
-                    links += [link('Work page',card_path(c),page),link('Status and evidence','docs/STATUS_CATALOG.md#'+c['id'],page)]
-                    entries.append('### '+link(c['title'],card_path(c),page)+'\n\n'+'\n'.join('- '+item for item in links)+'\n')
+                    section = FINDERS[name][0]
+                    section_label = 'Lean' if name=='LEAN' else section.replace('-',' ')
+                    links += [link('Return to this work’s '+section_label+' section',card_path(c)+'#'+section,page),
+                              link('Work overview',card_path(c),page),link('Status and evidence','docs/STATUS_CATALOG.md#'+c['id'],page)]
+                    entries.append('<a id="'+c['id']+'"></a>\n\n### '+link(c['title'],card_path(c)+'#'+section,page)+'\n\n'+
+                                   '\n'.join('- '+item for item in links)+'\n\n[Back to collection menu](#collections)\n')
                 text += '\n'.join(entries) if entries else 'No direct resource selected in this category; use its [work index]('+posixpath.basename(page_for(group))+').\n'
-                text += '\n[Back to collection menu](#collections)\n'
+                if not entries:text += '\n[Back to collection menu](#collections)\n'
             text += '\n'+self.footer(page)
             outputs[page] = text
         return {p:t.rstrip()+'\n' for p,t in outputs.items()}

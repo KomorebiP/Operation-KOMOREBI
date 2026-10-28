@@ -169,6 +169,50 @@ class BrowseNavigationTests(unittest.TestCase):
             self.assertIn('[Code](packages/sric-admission-v0.3.3/)',shortcuts)
             self.assertNotIn('research/open-work/code/',shortcuts)
 
+    def test_finders_and_work_sections_have_reciprocal_exact_targets(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); _,state,status,tracked=self.fixture(root)
+            pages=Browser(root,state,status,tracked).render()
+            work=pages['docs/works/open-work.md']
+            for finder,section in [('PROOFS','written-proofs'),('LEAN','lean'),('CODE','code')]:
+                text=pages['docs/browse/'+finder+'.md']
+                self.assertIn('(../browse/'+finder+'.md#open-work)',work)
+                self.assertEqual(text.count('<a id="open-work"></a>'),1)
+                self.assertIn('[Open-Work](#open-work)',text)
+                self.assertIn('(../works/open-work.md#'+section+')',text)
+                self.assertNotIn('<a id="held-work"></a>',text)
+            self.assertIn('Consult the [edition guide](../../research/open-work/README.md)',work)
+
+    def test_lean_setup_does_not_create_a_formal_source_claim(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); registry,state,status,tracked=self.fixture(root)
+            row=registry['components'][0]
+            row['resources']=[a for a in row['resources'] if a['kind'] not in ('lean','guide')]
+            row['resources'].append({'kind':'lean_setup','label':'Setup and limits','path':'README.md'})
+            (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
+            pages=Browser(root,state,status,tracked).render()
+            self.assertNotIn('Open-Work',pages['docs/browse/LEAN.md'])
+            lean=pages['docs/works/open-work.md'].split('## Lean\n')[1].split('## Code\n')[0]
+            self.assertIn('No direct Lean source shortcut is selected',lean)
+            self.assertIn('[Setup and limits]',lean)
+            self.assertLess(lean.index('[Setup and limits]'),lean.index('[Lean guide (PDF)]'))
+            row['resources'][-1]['path']='paper.pdf'
+            row['resources']=[row['resources'][-1]]
+            with self.assertRaisesRegex(AssertionError,'instructions must be a text document'):
+                validate_resources(root,registry,state,tracked)
+
+    def test_absent_resources_offer_clickable_fallbacks_without_dead_finder_anchors(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); registry,state,status,tracked=self.fixture(root)
+            registry['components'][0]['resources']=[]
+            (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
+            text=Browser(root,state,status,tracked).render()['docs/works/open-work.md']
+            self.assertIn('[reading files](#read)',text)
+            self.assertIn('[evidence record](#evidence)',text)
+            self.assertIn('[complete file listing under Evidence](#evidence)',text)
+            for finder in ['PROOFS','LEAN','CODE']:
+                self.assertNotIn(finder+'.md#open-work',text)
+
     def test_resource_links_encode_spaces_and_parentheses_and_keep_fragments(self):
         self.assertEqual(link('Text','papers/a file (draft).tex','docs/BROWSE.md'),
                          '[Text](../papers/a%20file%20%28draft%29.tex)')

@@ -44,7 +44,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Proof Path Theory](../works/proof-path-theory.md)
 
-[PDF](../../monographs/proof-path-theory/docs/Proof_Path_Theory.pdf) · [Text](../../monographs/proof-path-theory/docs/Proof_Path_Theory.tex) · [Lean](../../monographs/proof-path-theory/formal/) · [Code](../../monographs/proof-path-theory/src/) · [Work page](../works/proof-path-theory.md)
+[PDF](../../monographs/proof-path-theory/docs/Proof_Path_Theory.pdf) · [Text](../../monographs/proof-path-theory/docs/Proof_Path_Theory.tex) · [Lean](../../monographs/proof-path-theory/formal/) · [Code](../../monographs/proof-path-theory/src/proof_path_theory/) · [Work page](../works/proof-path-theory.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -64,7 +64,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Large Signal Model](../works/monographs-large-signal-model.md)
 
-[PDF](../../monographs/large-signal-model/Monograph/build/Realization_Calculus_Large_Signal_Model.pdf) · [Text](../../monographs/large-signal-model/Monograph/source/) · [Lean](../../monographs/large-signal-model/Lean/) · [Code](../../monographs/large-signal-model/Reference_Laboratory/) · [Work page](../works/monographs-large-signal-model.md)
+[PDF](../../monographs/large-signal-model/Monograph/build/Realization_Calculus_Large_Signal_Model.pdf) · [Text](../../monographs/large-signal-model/Monograph/source/) · [Lean](../../monographs/large-signal-model/Lean/KomorebiLSM/) · [Code](../../monographs/large-signal-model/Reference_Laboratory/) · [Work page](../works/monographs-large-signal-model.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -114,7 +114,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Sufficient Resolution](../works/sufficient-resolution.md)
 
-[PDF](../../monographs/sufficient-resolution/traditional/Sufficient_Resolution_Traditional.pdf) · [Text](../../monographs/sufficient-resolution/traditional/Sufficient_Resolution_Traditional.tex) · [Lean](../../monographs/sufficient-resolution/formal/) · [Code](../../monographs/sufficient-resolution/audit_release.py) · [Work page](../works/sufficient-resolution.md)
+[PDF](../../monographs/sufficient-resolution/traditional/Sufficient_Resolution_Traditional.pdf) · [Text](../../monographs/sufficient-resolution/traditional/Sufficient_Resolution_Traditional.tex) · [Lean](../../monographs/sufficient-resolution/formal/Komorebi/SufficientResolution/) · [Code](../../monographs/sufficient-resolution/audit_release.py) · [Work page](../works/sufficient-resolution.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -144,7 +144,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 [Open work page: Physics](../works/monographs-physics.md)
 
-[PDF](../../monographs/physics/Komorebi_Physics.pdf) · [Text](../../monographs/physics/source/monographs/) · [Lean](../../monographs/physics/formal/) · [Code](../../monographs/physics/tools/) · [Work page](../works/monographs-physics.md)
+[PDF](../../monographs/physics/Komorebi_Physics.pdf) · [Text](../../monographs/physics/source/monographs/) · [Lean](../../monographs/physics/formal/continuum/KomorebiPhysics/) · [Code](../../monographs/physics/tools/) · [Work page](../works/monographs-physics.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 

@@ -20,25 +20,29 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
 
 - [CLAIMS.md](../../research/abc-global-rr8/abc_work/komorebi_arithmetic/routes/witt_space/CLAIMS.md)
+
+[Find this work among other written proofs](../browse/PROOFS.md#abc-global-rr8)
 
 [Back to work navigation](#work-navigation)
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.
+No direct Lean source shortcut is selected. Guides and claim maps below are reading material; consult the [evidence record](#evidence) for the recorded scope.
 
-No direct Lean source or guide is selected. The recorded Lean status above and evidence below describe the assessed scope.
+- [CLAIMS.md](../../research/abc-global-rr8/abc_work/komorebi_arithmetic/routes/witt_space/CLAIMS.md)
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.
+These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/abc-global-rr8/README.md) for requirements and effects. All software is beta / work in progress.
 
 - [Code / scripts: abc_work](../../research/abc-global-rr8/abc_work/)
+
+[Find this work among other code projects](../browse/CODE.md#abc-global-rr8)
 
 [Back to work navigation](#work-navigation)
 
