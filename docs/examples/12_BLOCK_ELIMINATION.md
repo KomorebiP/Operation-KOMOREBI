@@ -78,10 +78,14 @@ Substitution gives $2(7/5)+1/5=3$ and $3(7/5)+4/5=5$.
 
 Paper VI gives elimination background. The collected Gaussian elimination guide retains its pending source qualification and unassessed confidence.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations | [Read](../works/paper-vi.md#read) | [Proofs](../works/paper-vi.md#written-proofs) | [Coverage and sources](../works/paper-vi.md#lean) | [Code and setup](../works/paper-vi.md#code) | [Status](../works/paper-vi.md#evidence) |
-| Gaussian Elimination: collected guide | [Read](../works/gaussian-elimination-guide.md#read) | [Proofs](../works/gaussian-elimination-guide.md#written-proofs) | [Coverage and sources](../works/gaussian-elimination-guide.md#lean) | [Code and setup](../works/gaussian-elimination-guide.md#code) | [Status](../works/gaussian-elimination-guide.md#evidence) |
+### Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations
+
+[Read](../works/paper-vi.md#read) · [Written proofs](../works/paper-vi.md#written-proofs) · [Lean coverage](../works/paper-vi.md#lean) · [Code and setup](../works/paper-vi.md#code) · [Evidence](../works/paper-vi.md#evidence)
+
+### Gaussian Elimination: collected guide
+
+[Read](../works/gaussian-elimination-guide.md#read) · [Written proofs](../works/gaussian-elimination-guide.md#written-proofs) · [Lean coverage](../works/gaussian-elimination-guide.md#lean) · [Code and setup](../works/gaussian-elimination-guide.md#code) · [Evidence](../works/gaussian-elimination-guide.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 

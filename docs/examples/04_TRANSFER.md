@@ -88,10 +88,14 @@ of a particular hardware implementation.
 
 Paper II supplies transfer background. Paper VIII develops operator algorithms and compilation.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](../works/paper-ii.md#read) | [Proofs](../works/paper-ii.md#written-proofs) | [Coverage and sources](../works/paper-ii.md#lean) | [Code and setup](../works/paper-ii.md#code) | [Status](../works/paper-ii.md#evidence) |
-| Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization | [Read](../works/paper-viii.md#read) | [Proofs](../works/paper-viii.md#written-proofs) | [Coverage and sources](../works/paper-viii.md#lean) | [Code and setup](../works/paper-viii.md#code) | [Status](../works/paper-viii.md#evidence) |
+### Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
+
+[Read](../works/paper-ii.md#read) · [Written proofs](../works/paper-ii.md#written-proofs) · [Lean coverage](../works/paper-ii.md#lean) · [Code and setup](../works/paper-ii.md#code) · [Evidence](../works/paper-ii.md#evidence)
+
+### Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization
+
+[Read](../works/paper-viii.md#read) · [Written proofs](../works/paper-viii.md#written-proofs) · [Lean coverage](../works/paper-viii.md#lean) · [Code and setup](../works/paper-viii.md#code) · [Evidence](../works/paper-viii.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#transfer-blocks). The guide covers related constructions and their software interfaces.
 

@@ -169,13 +169,12 @@ def render_glossary(config):
 
 def source_routes(topic, components, page):
     text=topic['scope']+'\n\n'
-    text+='| Related work | Paper or book | Written proofs | Lean | Code | Evidence |\n|---|---|---|---|---|---|\n'
     for identifier in topic['works']:
         component=components[identifier]
         base='docs/works/'+identifier+'.md'
-        cells=[component['title']]+[link(label,base+'#'+anchor,page) for label,anchor in
-            [('Read','read'),('Proofs','written-proofs'),('Coverage and sources','lean'),('Code and setup','code'),('Status','evidence')]]
-        text+='| '+' | '.join(cells)+' |\n'
+        text+='### '+component['title']+'\n\n'
+        text+=' · '.join(link(label,base+'#'+anchor,page) for label,anchor in
+            [('Read','read'),('Written proofs','written-proofs'),('Lean coverage','lean'),('Code and setup','code'),('Evidence','evidence')])+'\n\n'
     text+='\n[Related library guide and code examples]('+topic['code_guide']+'). The guide covers related constructions and their software interfaces.\n\n'
     if topic.get('check'):
         text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed finite calculations with exact fractions.\n\n'

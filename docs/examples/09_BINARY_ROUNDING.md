@@ -84,9 +84,10 @@ contracts beyond this small rounding model.
 
 Paper IX supplies dyadic arithmetic background. The rounding implementation and its contracts belong to Polyphase Float.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation | [Read](../works/paper-ix.md#read) | [Proofs](../works/paper-ix.md#written-proofs) | [Coverage and sources](../works/paper-ix.md#lean) | [Code and setup](../works/paper-ix.md#code) | [Status](../works/paper-ix.md#evidence) |
+### Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation
+
+[Read](../works/paper-ix.md#read) · [Written proofs](../works/paper-ix.md#written-proofs) · [Lean coverage](../works/paper-ix.md#lean) · [Code and setup](../works/paper-ix.md#code) · [Evidence](../works/paper-ix.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/chapters/06_arithmetic_ranges.md). The guide covers related constructions and their software interfaces.
 

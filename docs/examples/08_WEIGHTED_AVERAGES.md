@@ -91,9 +91,10 @@ It does not estimate either from data.
 
 Paper VI includes stochastic and Bayesian realizations. Its assumptions extend beyond this finite partition.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations | [Read](../works/paper-vi.md#read) | [Proofs](../works/paper-vi.md#written-proofs) | [Coverage and sources](../works/paper-vi.md#lean) | [Code and setup](../works/paper-vi.md#code) | [Status](../works/paper-vi.md#evidence) |
+### Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations
+
+[Read](../works/paper-vi.md#read) · [Written proofs](../works/paper-vi.md#written-proofs) · [Lean coverage](../works/paper-vi.md#lean) · [Code and setup](../works/paper-vi.md#code) · [Evidence](../works/paper-vi.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 

@@ -101,9 +101,10 @@ They sum to the original vector.
 
 Compare the exact packet setting of Paper I with the broader analysis and synthesis construction in the library guide.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](../works/paper-i.md#read) · [Written proofs](../works/paper-i.md#written-proofs) · [Lean coverage](../works/paper-i.md#lean) · [Code and setup](../works/paper-i.md#code) · [Evidence](../works/paper-i.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors). The guide covers related constructions and their software interfaces.
 

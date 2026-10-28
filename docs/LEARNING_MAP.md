@@ -32,9 +32,10 @@ Choose a topic to move from a hand calculation to definitions and related source
 
 Exact packet coordinates provide the source setting for the elementary decomposition.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction). The guide covers related constructions and their software interfaces.
 
@@ -54,9 +55,10 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper I develops seed generation with its stated algebra and module hypotheses.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed). The guide covers related constructions and their software interfaces.
 
@@ -76,9 +78,10 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Use Paper I for exact packet coordinates and the library atlas for general coordinate changes.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport). The guide covers related constructions and their software interfaces.
 
@@ -98,10 +101,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper II supplies transfer background. Paper VIII develops operator algorithms and compilation.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](works/paper-ii.md#read) | [Proofs](works/paper-ii.md#written-proofs) | [Coverage and sources](works/paper-ii.md#lean) | [Code and setup](works/paper-ii.md#code) | [Status](works/paper-ii.md#evidence) |
-| Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization | [Read](works/paper-viii.md#read) | [Proofs](works/paper-viii.md#written-proofs) | [Coverage and sources](works/paper-viii.md#lean) | [Code and setup](works/paper-viii.md#code) | [Status](works/paper-viii.md#evidence) |
+### Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
+
+[Read](works/paper-ii.md#read) · [Written proofs](works/paper-ii.md#written-proofs) · [Lean coverage](works/paper-ii.md#lean) · [Code and setup](works/paper-ii.md#code) · [Evidence](works/paper-ii.md#evidence)
+
+### Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization
+
+[Read](works/paper-viii.md#read) · [Written proofs](works/paper-viii.md#written-proofs) · [Lean coverage](works/paper-viii.md#lean) · [Code and setup](works/paper-viii.md#code) · [Evidence](works/paper-viii.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#transfer-blocks). The guide covers related constructions and their software interfaces.
 
@@ -121,10 +128,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Read Paper II for refinement and Paper V for signal and polyphase constructions.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](works/paper-ii.md#read) | [Proofs](works/paper-ii.md#written-proofs) | [Coverage and sources](works/paper-ii.md#lean) | [Code and setup](works/paper-ii.md#code) | [Status](works/paper-ii.md#evidence) |
-| Paper V: Polyphase Signal Calculus | [Read](works/paper-v.md#read) | [Proofs](works/paper-v.md#written-proofs) | [Coverage and sources](works/paper-v.md#lean) | [Code and setup](works/paper-v.md#code) | [Status](works/paper-v.md#evidence) |
+### Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
+
+[Read](works/paper-ii.md#read) · [Written proofs](works/paper-ii.md#written-proofs) · [Lean coverage](works/paper-ii.md#lean) · [Code and setup](works/paper-ii.md#code) · [Evidence](works/paper-ii.md#evidence)
+
+### Paper V: Polyphase Signal Calculus
+
+[Read](works/paper-v.md#read) · [Written proofs](works/paper-v.md#written-proofs) · [Lean coverage](works/paper-v.md#lean) · [Code and setup](works/paper-v.md#code) · [Evidence](works/paper-v.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine). The guide covers related constructions and their software interfaces.
 
@@ -144,9 +155,10 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Compare the exact packet setting of Paper I with the broader analysis and synthesis construction in the library guide.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors). The guide covers related constructions and their software interfaces.
 
@@ -166,10 +178,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 The finite recovery obstruction is an entry point to the works on compatibility and realization boundaries.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory | [Read](works/paper-iii.md#read) | [Proofs](works/paper-iii.md#written-proofs) | [Coverage and sources](works/paper-iii.md#lean) | [Code and setup](works/paper-iii.md#code) | [Status](works/paper-iii.md#evidence) |
-| Realization Boundaries | [Read](works/realization-boundaries.md#read) | [Proofs](works/realization-boundaries.md#written-proofs) | [Coverage and sources](works/realization-boundaries.md#lean) | [Code and setup](works/realization-boundaries.md#code) | [Status](works/realization-boundaries.md#evidence) |
+### Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory
+
+[Read](works/paper-iii.md#read) · [Written proofs](works/paper-iii.md#written-proofs) · [Lean coverage](works/paper-iii.md#lean) · [Code and setup](works/paper-iii.md#code) · [Evidence](works/paper-iii.md#evidence)
+
+### Realization Boundaries
+
+[Read](works/realization-boundaries.md#read) · [Written proofs](works/realization-boundaries.md#written-proofs) · [Lean coverage](works/realization-boundaries.md#lean) · [Code and setup](works/realization-boundaries.md#code) · [Evidence](works/realization-boundaries.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
@@ -189,9 +205,10 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper VI includes stochastic and Bayesian realizations. Its assumptions extend beyond this finite partition.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations | [Read](works/paper-vi.md#read) | [Proofs](works/paper-vi.md#written-proofs) | [Coverage and sources](works/paper-vi.md#lean) | [Code and setup](works/paper-vi.md#code) | [Status](works/paper-vi.md#evidence) |
+### Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations
+
+[Read](works/paper-vi.md#read) · [Written proofs](works/paper-vi.md#written-proofs) · [Lean coverage](works/paper-vi.md#lean) · [Code and setup](works/paper-vi.md#code) · [Evidence](works/paper-vi.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 
@@ -211,9 +228,10 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper IX supplies dyadic arithmetic background. The rounding implementation and its contracts belong to Polyphase Float.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation | [Read](works/paper-ix.md#read) | [Proofs](works/paper-ix.md#written-proofs) | [Coverage and sources](works/paper-ix.md#lean) | [Code and setup](works/paper-ix.md#code) | [Status](works/paper-ix.md#evidence) |
+### Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation
+
+[Read](works/paper-ix.md#read) · [Written proofs](works/paper-ix.md#written-proofs) · [Lean coverage](works/paper-ix.md#lean) · [Code and setup](works/paper-ix.md#code) · [Evidence](works/paper-ix.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/chapters/06_arithmetic_ranges.md). The guide covers related constructions and their software interfaces.
 
@@ -233,10 +251,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 These finite linear calculations give background for typed realizations and information loss. Read each work for its own claims.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
-| Information Realization | [Read](works/information-realization.md#read) | [Proofs](works/information-realization.md#written-proofs) | [Coverage and sources](works/information-realization.md#lean) | [Code and setup](works/information-realization.md#code) | [Status](works/information-realization.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
+### Information Realization
+
+[Read](works/information-realization.md#read) · [Written proofs](works/information-realization.md#written-proofs) · [Lean coverage](works/information-realization.md#lean) · [Code and setup](works/information-realization.md#code) · [Evidence](works/information-realization.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
@@ -256,10 +278,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 The example uses a diagonalizable two-dimensional matrix. The works develop wider packet and spectral constructions with additional hypotheses.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
-| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](works/paper-ii.md#read) | [Proofs](works/paper-ii.md#written-proofs) | [Coverage and sources](works/paper-ii.md#lean) | [Code and setup](works/paper-ii.md#code) | [Status](works/paper-ii.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
+### Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
+
+[Read](works/paper-ii.md#read) · [Written proofs](works/paper-ii.md#written-proofs) · [Lean coverage](works/paper-ii.md#lean) · [Code and setup](works/paper-ii.md#code) · [Evidence](works/paper-ii.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 
@@ -279,10 +305,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper VI gives elimination background. The collected Gaussian elimination guide retains its pending source qualification and unassessed confidence.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations | [Read](works/paper-vi.md#read) | [Proofs](works/paper-vi.md#written-proofs) | [Coverage and sources](works/paper-vi.md#lean) | [Code and setup](works/paper-vi.md#code) | [Status](works/paper-vi.md#evidence) |
-| Gaussian Elimination: collected guide | [Read](works/gaussian-elimination-guide.md#read) | [Proofs](works/gaussian-elimination-guide.md#written-proofs) | [Coverage and sources](works/gaussian-elimination-guide.md#lean) | [Code and setup](works/gaussian-elimination-guide.md#code) | [Status](works/gaussian-elimination-guide.md#evidence) |
+### Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations
+
+[Read](works/paper-vi.md#read) · [Written proofs](works/paper-vi.md#written-proofs) · [Lean coverage](works/paper-vi.md#lean) · [Code and setup](works/paper-vi.md#code) · [Evidence](works/paper-vi.md#evidence)
+
+### Gaussian Elimination: collected guide
+
+[Read](works/gaussian-elimination-guide.md#read) · [Written proofs](works/gaussian-elimination-guide.md#written-proofs) · [Lean coverage](works/gaussian-elimination-guide.md#lean) · [Code and setup](works/gaussian-elimination-guide.md#code) · [Evidence](works/gaussian-elimination-guide.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
 
@@ -302,9 +332,10 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 The example is ordinary integer CRT. Paper IX develops arithmetic packets and local deformation beyond this calculation.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation | [Read](works/paper-ix.md#read) | [Proofs](works/paper-ix.md#written-proofs) | [Coverage and sources](works/paper-ix.md#lean) | [Code and setup](works/paper-ix.md#code) | [Status](works/paper-ix.md#evidence) |
+### Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation
+
+[Read](works/paper-ix.md#read) · [Written proofs](works/paper-ix.md#written-proofs) · [Lean coverage](works/paper-ix.md#lean) · [Code and setup](works/paper-ix.md#code) · [Evidence](works/paper-ix.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 
@@ -324,10 +355,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper V supplies signal background. Information Realization includes a finite Haar contract within its recorded formal core.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper V: Polyphase Signal Calculus | [Read](works/paper-v.md#read) | [Proofs](works/paper-v.md#written-proofs) | [Coverage and sources](works/paper-v.md#lean) | [Code and setup](works/paper-v.md#code) | [Status](works/paper-v.md#evidence) |
-| Information Realization | [Read](works/information-realization.md#read) | [Proofs](works/information-realization.md#written-proofs) | [Coverage and sources](works/information-realization.md#lean) | [Code and setup](works/information-realization.md#code) | [Status](works/information-realization.md#evidence) |
+### Paper V: Polyphase Signal Calculus
+
+[Read](works/paper-v.md#read) · [Written proofs](works/paper-v.md#written-proofs) · [Lean coverage](works/paper-v.md#lean) · [Code and setup](works/paper-v.md#code) · [Evidence](works/paper-v.md#evidence)
+
+### Information Realization
+
+[Read](works/information-realization.md#read) · [Written proofs](works/information-realization.md#written-proofs) · [Lean coverage](works/information-realization.md#lean) · [Code and setup](works/information-realization.md#code) · [Evidence](works/information-realization.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization). The guide covers related constructions and their software interfaces.
 
@@ -347,10 +382,14 @@ The Lean links open each work’s recorded coverage and sources. They do not cer
 
 Paper I develops typed systems and their realizations. Paper III continues with typed transfer and obstructions.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](works/paper-i.md#read) | [Proofs](works/paper-i.md#written-proofs) | [Coverage and sources](works/paper-i.md#lean) | [Code and setup](works/paper-i.md#code) | [Status](works/paper-i.md#evidence) |
-| Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory | [Read](works/paper-iii.md#read) | [Proofs](works/paper-iii.md#written-proofs) | [Coverage and sources](works/paper-iii.md#lean) | [Code and setup](works/paper-iii.md#code) | [Status](works/paper-iii.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](works/paper-i.md#read) · [Written proofs](works/paper-i.md#written-proofs) · [Lean coverage](works/paper-i.md#lean) · [Code and setup](works/paper-i.md#code) · [Evidence](works/paper-i.md#evidence)
+
+### Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory
+
+[Read](works/paper-iii.md#read) · [Written proofs](works/paper-iii.md#written-proofs) · [Lean coverage](works/paper-iii.md#lean) · [Code and setup](works/paper-iii.md#code) · [Evidence](works/paper-iii.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#3-operate). The guide covers related constructions and their software interfaces.
 

@@ -65,9 +65,10 @@ and $4$ modulo $5$.
 
 The example is ordinary integer CRT. Paper IX develops arithmetic packets and local deformation beyond this calculation.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation | [Read](../works/paper-ix.md#read) | [Proofs](../works/paper-ix.md#written-proofs) | [Coverage and sources](../works/paper-ix.md#lean) | [Code and setup](../works/paper-ix.md#code) | [Status](../works/paper-ix.md#evidence) |
+### Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation
+
+[Read](../works/paper-ix.md#read) · [Written proofs](../works/paper-ix.md#written-proofs) · [Lean coverage](../works/paper-ix.md#lean) · [Code and setup](../works/paper-ix.md#code) · [Evidence](../works/paper-ix.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 

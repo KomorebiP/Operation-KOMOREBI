@@ -97,10 +97,14 @@ $4+16+36+64=120$.
 
 Read Paper II for refinement and Paper V for signal and polyphase constructions.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](../works/paper-ii.md#read) | [Proofs](../works/paper-ii.md#written-proofs) | [Coverage and sources](../works/paper-ii.md#lean) | [Code and setup](../works/paper-ii.md#code) | [Status](../works/paper-ii.md#evidence) |
-| Paper V: Polyphase Signal Calculus | [Read](../works/paper-v.md#read) | [Proofs](../works/paper-v.md#written-proofs) | [Coverage and sources](../works/paper-v.md#lean) | [Code and setup](../works/paper-v.md#code) | [Status](../works/paper-v.md#evidence) |
+### Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
+
+[Read](../works/paper-ii.md#read) · [Written proofs](../works/paper-ii.md#written-proofs) · [Lean coverage](../works/paper-ii.md#lean) · [Code and setup](../works/paper-ii.md#code) · [Evidence](../works/paper-ii.md#evidence)
+
+### Paper V: Polyphase Signal Calculus
+
+[Read](../works/paper-v.md#read) · [Written proofs](../works/paper-v.md#written-proofs) · [Lean coverage](../works/paper-v.md#lean) · [Code and setup](../works/paper-v.md#code) · [Evidence](../works/paper-v.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine). The guide covers related constructions and their software interfaces.
 

@@ -78,10 +78,14 @@ T^2=\begin{pmatrix}4&5\\0&9\end{pmatrix}.
 
 The example uses a diagonalizable two-dimensional matrix. The works develop wider packet and spectral constructions with additional hypotheses.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
-| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](../works/paper-ii.md#read) | [Proofs](../works/paper-ii.md#written-proofs) | [Coverage and sources](../works/paper-ii.md#lean) | [Code and setup](../works/paper-ii.md#code) | [Status](../works/paper-ii.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](../works/paper-i.md#read) · [Written proofs](../works/paper-i.md#written-proofs) · [Lean coverage](../works/paper-i.md#lean) · [Code and setup](../works/paper-i.md#code) · [Evidence](../works/paper-i.md#evidence)
+
+### Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
+
+[Read](../works/paper-ii.md#read) · [Written proofs](../works/paper-ii.md#written-proofs) · [Lean coverage](../works/paper-ii.md#lean) · [Code and setup](../works/paper-ii.md#code) · [Evidence](../works/paper-ii.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#spectral-and-packet-coordinates). The guide covers related constructions and their software interfaces.
 

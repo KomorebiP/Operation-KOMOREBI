@@ -73,10 +73,14 @@ $4(16+4)+2(1+1)=84$, the original squared norm.
 
 Paper V supplies signal background. Information Realization includes a finite Haar contract within its recorded formal core.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper V: Polyphase Signal Calculus | [Read](../works/paper-v.md#read) | [Proofs](../works/paper-v.md#written-proofs) | [Coverage and sources](../works/paper-v.md#lean) | [Code and setup](../works/paper-v.md#code) | [Status](../works/paper-v.md#evidence) |
-| Information Realization | [Read](../works/information-realization.md#read) | [Proofs](../works/information-realization.md#written-proofs) | [Coverage and sources](../works/information-realization.md#lean) | [Code and setup](../works/information-realization.md#code) | [Status](../works/information-realization.md#evidence) |
+### Paper V: Polyphase Signal Calculus
+
+[Read](../works/paper-v.md#read) · [Written proofs](../works/paper-v.md#written-proofs) · [Lean coverage](../works/paper-v.md#lean) · [Code and setup](../works/paper-v.md#code) · [Evidence](../works/paper-v.md#evidence)
+
+### Information Realization
+
+[Read](../works/information-realization.md#read) · [Written proofs](../works/information-realization.md#written-proofs) · [Lean coverage](../works/information-realization.md#lean) · [Code and setup](../works/information-realization.md#code) · [Evidence](../works/information-realization.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization). The guide covers related constructions and their software interfaces.
 

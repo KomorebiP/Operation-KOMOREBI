@@ -74,10 +74,14 @@ It is another projector, with a different selected range.
 
 Paper I develops typed systems and their realizations. Paper III continues with typed transfer and obstructions.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
-| Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory | [Read](../works/paper-iii.md#read) | [Proofs](../works/paper-iii.md#written-proofs) | [Coverage and sources](../works/paper-iii.md#lean) | [Code and setup](../works/paper-iii.md#code) | [Status](../works/paper-iii.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](../works/paper-i.md#read) · [Written proofs](../works/paper-i.md#written-proofs) · [Lean coverage](../works/paper-i.md#lean) · [Code and setup](../works/paper-i.md#code) · [Evidence](../works/paper-i.md#evidence)
+
+### Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory
+
+[Read](../works/paper-iii.md#read) · [Written proofs](../works/paper-iii.md#written-proofs) · [Lean coverage](../works/paper-iii.md#lean) · [Code and setup](../works/paper-iii.md#code) · [Evidence](../works/paper-iii.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#3-operate). The guide covers related constructions and their software interfaces.
 

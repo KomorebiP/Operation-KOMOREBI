@@ -62,10 +62,14 @@ gives $(0,1,-2)^{\mathsf T}$, whose output is $(1,-1)^{\mathsf T}$.
 
 These finite linear calculations give background for typed realizations and information loss. Read each work for its own claims.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
-| Information Realization | [Read](../works/information-realization.md#read) | [Proofs](../works/information-realization.md#written-proofs) | [Coverage and sources](../works/information-realization.md#lean) | [Code and setup](../works/information-realization.md#code) | [Status](../works/information-realization.md#evidence) |
+### Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
+
+[Read](../works/paper-i.md#read) · [Written proofs](../works/paper-i.md#written-proofs) · [Lean coverage](../works/paper-i.md#lean) · [Code and setup](../works/paper-i.md#code) · [Evidence](../works/paper-i.md#evidence)
+
+### Information Realization
+
+[Read](../works/information-realization.md#read) · [Written proofs](../works/information-realization.md#written-proofs) · [Lean coverage](../works/information-realization.md#lean) · [Code and setup](../works/information-realization.md#code) · [Evidence](../works/information-realization.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 

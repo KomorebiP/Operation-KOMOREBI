@@ -81,10 +81,14 @@ products are one and zero.
 
 The finite recovery obstruction is an entry point to the works on compatibility and realization boundaries.
 
-| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
-|---|---|---|---|---|---|
-| Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory | [Read](../works/paper-iii.md#read) | [Proofs](../works/paper-iii.md#written-proofs) | [Coverage and sources](../works/paper-iii.md#lean) | [Code and setup](../works/paper-iii.md#code) | [Status](../works/paper-iii.md#evidence) |
-| Realization Boundaries | [Read](../works/realization-boundaries.md#read) | [Proofs](../works/realization-boundaries.md#written-proofs) | [Coverage and sources](../works/realization-boundaries.md#lean) | [Code and setup](../works/realization-boundaries.md#code) | [Status](../works/realization-boundaries.md#evidence) |
+### Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory
+
+[Read](../works/paper-iii.md#read) · [Written proofs](../works/paper-iii.md#written-proofs) · [Lean coverage](../works/paper-iii.md#lean) · [Code and setup](../works/paper-iii.md#code) · [Evidence](../works/paper-iii.md#evidence)
+
+### Realization Boundaries
+
+[Read](../works/realization-boundaries.md#read) · [Written proofs](../works/realization-boundaries.md#written-proofs) · [Lean coverage](../works/realization-boundaries.md#lean) · [Code and setup](../works/realization-boundaries.md#code) · [Evidence](../works/realization-boundaries.md#evidence)
+
 
 [Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
 
