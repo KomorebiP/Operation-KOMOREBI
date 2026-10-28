@@ -6,7 +6,7 @@
 
 [Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
 
-**Completion:** Reading edition complete · **Lean:** Source; no current pass · **Confidence:** Recorded written review
+**Completion:** Reading edition complete · **Lean:** Source available, no current pass · **Confidence:** Recorded written review
 
 Actual cycle realization and comparison correspondence remain open. Sources marked uncompiled retain that status.
 

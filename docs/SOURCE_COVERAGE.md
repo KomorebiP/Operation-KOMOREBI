@@ -4,11 +4,11 @@
 
 This page maps all **74 named entries** in the release inventory to their canonical source components or existing repositories. It records where the work can be inspected. Several entries share a combined edition, so the row count is not a count of independent discoveries.
 
-**Source coverage does not establish mathematical completion, solve an open conjecture, demonstrate novelty, qualify a software release, or claim a new Lean replay.** Each component retains its own hypotheses, evidence, limitations and formalization boundary. Public libraries are presented as beta or work in progress; recorded qualifications apply only to their stated scope. See the [completion, Lean coverage and confidence catalogue](COMPLETION_STATUS.md) for the separate assessment of each component.
+**Source coverage does not establish mathematical completion, solve an open conjecture, demonstrate novelty, qualify a software release, or claim a new Lean replay.** Each component retains its own hypotheses, evidence, limitations and formalization boundary. Public libraries are presented as beta or work in progress. Recorded qualifications apply only to their stated scope. See the [completion, Lean coverage and confidence catalogue](COMPLETION_STATUS.md) for the separate assessment of each component.
 
-The machine-readable [source-coverage manifest](../manifests/source-coverage.json) gives exact component IDs, original archive filenames and full SHA-256 identities where available. These identify source versions; repository import receipts establish publication of the selected files.
+The machine-readable [source-coverage manifest](../manifests/source-coverage.json) gives exact component IDs, original archive filenames and full SHA-256 identities where available. These identify source versions. Repository import receipts establish publication of the selected files.
 
-The [publication verification record](../verification/source-publication-2026-10-27.json) records the complete SHA-256 check of **139,002 source files** and the unchanged scientific sources through the subsequent catalogue reconciliation. These are file-identity checks; the [completion catalogue](COMPLETION_STATUS.md) records scientific status separately.
+The [publication verification record](../verification/source-publication-2026-10-27.json) records the complete SHA-256 check of **139,002 source files** and the unchanged scientific sources through the subsequent catalogue reconciliation. These are file-identity checks. The [completion catalogue](COMPLETION_STATUS.md) records scientific status separately.
 
 ## Coverage summary
 
@@ -19,7 +19,7 @@ The [publication verification record](../verification/source-publication-2026-10
 | Included in a combined source | 2 | The original branch is retained inside a combined collection. |
 | Existing repository or component | 3 | The separately maintained repository or existing component remains canonical. |
 | Collection repository | 1 | The collection hub itself is an inventory entry. |
-| Available records; source unrecovered | 1 | Written and verification records are available, with the source limit stated below. |
+| Available records, source unrecovered | 1 | Written and verification records are available, with the source limit stated below. |
 
 ## Known source-availability limits
 
@@ -80,16 +80,16 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 |---:|---|---|---|
 | 24 | Large Signal Model mathematical foundations and Lean 1.0.0 | Source package | [monographs/large-signal-model](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/large-signal-model) |
 | 25 | Machine-Native Reasoning formal companion Core25 v0.18.0 | Newer canonical source | [monographs/machine-native-reasoning](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/machine-native-reasoning) |
-| 26 | PR-LASM production finite-core runtime 2.3.0 | Source package | [packages/large-signal-model](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/large-signal-model); [supporting: supporting-sources](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/large-signal-model/supporting-sources) |
+| 26 | PR-LASM production finite-core runtime 2.3.0 | Source package | [packages/large-signal-model](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/large-signal-model) · [supporting: supporting-sources](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/large-signal-model/supporting-sources) |
 | 27 | Grounded Abstraction v1.0.0 | Source package | [monographs/grounded-abstraction](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/grounded-abstraction) |
-| 28 | Self-Improving Intelligence v1.0.0 and visual guide | Source package | [monographs/self-improving-intelligence](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/self-improving-intelligence); [monographs/self-improving-intelligence/visual-guide](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/self-improving-intelligence/visual-guide) |
+| 28 | Self-Improving Intelligence v1.0.0 and visual guide | Source package | [monographs/self-improving-intelligence](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/self-improving-intelligence) · [monographs/self-improving-intelligence/visual-guide](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/self-improving-intelligence/visual-guide) |
 | 29 | Agent Dynamics Python visual companion v1.0 | Source package | [experiments/agent-dynamics](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/agent-dynamics) |
 | 30 | Machine Societies theoretical monograph v1.0.0 | Source package | [monographs/machine-societies](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/machine-societies) |
 | 31 | Quantum-Arithmetic bridge publication set | Included in a combined source | [monographs/quantum-and-circuits](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/quantum-and-circuits) |
 | 32 | Circuit Obstructions publication set | Included in a combined source | [monographs/quantum-and-circuits](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/quantum-and-circuits) |
 | 33 | Realization Calculus: Quantum and Circuits collected volume | Newer canonical source | [monographs/quantum-and-circuits](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/quantum-and-circuits) |
 | 34 | Machine-Theory compendium and older integrated collection | Source package | [monographs/machine-theory-compendium](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/machine-theory-compendium) |
-| 35 | ARC-AGI2 Block17 solver and evaluation research | Source package | [experiments/arc-agi2](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2); [supporting: original-solver](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/original-solver); [supporting: public-evaluation](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/public-evaluation); [supporting: training-evidence](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/training-evidence); [supporting: offline-handoff](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/offline-handoff) |
+| 35 | ARC-AGI2 Block17 solver and evaluation research | Source package | [experiments/arc-agi2](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2) · [supporting: original-solver](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/original-solver) · [supporting: public-evaluation](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/public-evaluation) · [supporting: training-evidence](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/training-evidence) · [supporting: offline-handoff](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/experiments/arc-agi2/supporting-sources/offline-handoff) |
 
 ### Software and release infrastructure
 
@@ -109,8 +109,8 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | No. | Project | Source disposition | Canonical source |
 |---:|---|---|---|
 | 44 | Komorebi Physics main publication and generator | Source package | [monographs/physics](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/physics) |
-| 45 | Physics energy, matching and origin-locking continuations | Source package | [research/physics-energy-backreaction](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-energy-backreaction); [research/physics-origin-locking](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-origin-locking) |
-| 46 | Physics curvature, initial states and conserved subtraction | Available records; source unrecovered | [research/physics-curvature-states](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-curvature-states) |
+| 45 | Physics energy, matching and origin-locking continuations | Source package | [research/physics-energy-backreaction](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-energy-backreaction) · [research/physics-origin-locking](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-origin-locking) |
+| 46 | Physics curvature, initial states and conserved subtraction | Available records, source unrecovered | [research/physics-curvature-states](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/physics-curvature-states) |
 | 47 | The Komorebi Methodology reviewed professional essay | Source package | [monographs/komorebi-methodology](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/komorebi-methodology) |
 
 ### Arithmetic and conjecture programs
@@ -129,7 +129,7 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | 57 | Lehmer tau-nonvanishing reader | Source package | [research/lehmer-reader](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/lehmer-reader) |
 | 58 | Catalan constant reader | Source package | [research/catalan-constant-reader](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/catalan-constant-reader) |
 | 59 | Inverse Galois reader | Source package | [research/inverse-galois-reader](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/inverse-galois-reader) |
-| 60 | Hilbert 12 cubic divisor transport | Source package | [research/hilbert12-cubic-divisor](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-cubic-divisor); [research/hilbert12-closure-attempt](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-closure-attempt); [research/hilbert12-contracting-ambient-torsion](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-contracting-ambient-torsion); [research/hilbert12-analytic-fourier](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-analytic-fourier); [research/hilbert12-ambient-dual-slice](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-ambient-dual-slice) |
+| 60 | Hilbert 12 cubic divisor transport | Source package | [research/hilbert12-cubic-divisor](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-cubic-divisor) · [research/hilbert12-closure-attempt](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-closure-attempt) · [research/hilbert12-contracting-ambient-torsion](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-contracting-ambient-torsion) · [research/hilbert12-analytic-fourier](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-analytic-fourier) · [research/hilbert12-ambient-dual-slice](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/hilbert12-ambient-dual-slice) |
 
 ### Additional foundations
 
@@ -140,7 +140,7 @@ No other named entry in this 74-entry inventory remains unaccounted for. This is
 | 63 | Representation Calculus | Source package | [research/representation-calculus](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/representation-calculus) |
 | 64 | p-adic canonical residual realization | Source package | [research/padic-canonical-realization](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/research/padic-canonical-realization) |
 | 65 | Sufficient Resolution | Source package | [monographs/sufficient-resolution](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/monographs/sufficient-resolution) |
-| 66 | Certified Inference Core within recovered v14 | Source package | [packages/certified-inference](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/certified-inference); [packages/certified-inference/supporting-sources/recovery-v14](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/certified-inference/supporting-sources/recovery-v14) |
+| 66 | Certified Inference Core within recovered v14 | Source package | [packages/certified-inference](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/certified-inference) · [packages/certified-inference/supporting-sources/recovery-v14](https://github.com/KomorebiP/Operation-KOMOREBI/tree/main/packages/certified-inference/supporting-sources/recovery-v14) |
 
 ### Other branches and coverage reconciliation
 

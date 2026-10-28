@@ -4,7 +4,7 @@
 
 Recorded 2026-10-27. This queue tracks documentation, research, formalization and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
 
-**Current maintenance focus:** Repository navigation, edition records, and reproducibility instructions are the current maintenance priority. Further bounded proof reviews are deferred; their existing findings and completion gates remain open. All software remains beta / work in progress.
+**Current maintenance focus:** Repository navigation, edition records, and reproducibility instructions are the current maintenance priority. Further proof reviews are deferred. Their existing findings and completion requirements remain open. All software remains beta / work in progress.
 
 ## Queue at a glance
 
@@ -31,31 +31,37 @@ Recorded 2026-10-27. This queue tracks documentation, research, formalization an
 
 <a id="f01"></a>
 
-### F01 — Separate current and historical status
+<a id="f01--separate-current-and-historical-status"></a>
+
+### F01: Separate current and historical status
 
 **Status: done**
 
-Current core is 27/27; the older 23/27 checkpoint and working wider manuscript retain their own labels.
+The current core is 27/27. The older 23/27 checkpoint and working wider manuscript retain their own labels.
 
-**Done when:** Status pages link each edition and its own evidence; source packages remain byte-preserved.
+**Done when:** Status pages link each edition and its own evidence. Source packages remain byte-preserved.
 
 Related works and source records: [Machine Theory: formal development](works/research-machine-theory-formal.md) · [Machine Native Reasoning](works/monographs-machine-native-reasoning.md) · [Machine Native Reasoning: wider continuation](works/research-machine-native-reasoning-wider.md).
 
 <a id="f02"></a>
 
-### F02 — Make completion, Lean and confidence independently visible
+<a id="f02--make-completion-lean-and-confidence-independently-visible"></a>
+
+### F02: Make completion, Lean and confidence independently visible
 
 **Status: done**
 
 All primary components receive distinct stage, Lean, confidence, scope, evidence and next-step fields.
 
-**Done when:** Every selected component is represented once; supporting sources remain separately classified.
+**Done when:** Every selected component is represented once. Supporting sources remain separately classified.
 
 Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).
 
 <a id="f09"></a>
 
-### F09 — Consolidate Streaming SKAT version navigation
+<a id="f09--consolidate-streaming-skat-version-navigation"></a>
+
+### F09: Consolidate Streaming SKAT version navigation
 
 **Status: done**
 
@@ -63,13 +69,15 @@ A maintained edition guide now separates the v0.8 manuscript and 0.8.0 marker fr
 
 **Done when:** Create a current edition map and entry point, reconcile the current manuscript/tests, and preserve earlier records with their original dates.
 
-**Progress:** Linked the manuscript/source pair, theorem index, seven-suite historical 31-test census, copy-LD correction, and open numerical/empirical boundaries. The original source package is unchanged; no fresh test, simulation, or Lean replay is claimed.
+**Progress:** Linked the manuscript/source pair, theorem index, seven-suite historical 31-test census, copy-LD correction, and open numerical/empirical boundaries. The original source package is unchanged. No fresh test, simulation, or Lean replay is claimed.
 
 Related works and source records: [Streaming Polyphase Factor Decomposition / SKAT](works/streaming-skat.md).
 
 <a id="f15"></a>
 
-### F15 — Repair and qualify SRIC Block 24 admission gates
+<a id="f15--repair-and-qualify-sric-block-24-admission-gates"></a>
+
+### F15: Repair and qualify SRIC Block 24 admission gates
 
 **Status: done**
 
@@ -85,11 +93,13 @@ Related works and source records: [SRIC: external semantic admission](works/rese
 
 <a id="f03"></a>
 
-### F03 — Reconcile the expanded Machine-Native Reasoning book
+<a id="f03--reconcile-the-expanded-machine-native-reasoning-book"></a>
+
+### F03: Reconcile the expanded Machine-Native Reasoning book
 
 **Status: open**
 
-The selected core is complete; the exact expanded 1,155-page edition needs its own source and reader reconciliation.
+The selected core is complete. The exact expanded 1,155-page edition needs its own source and reader reconciliation.
 
 **Done when:** Identify the exact source/PDF hashes, reconcile core correspondence, rebuild the book, and complete its own publication review.
 
@@ -97,7 +107,9 @@ Related works and source records: [Machine Native Reasoning: wider continuation]
 
 <a id="f04"></a>
 
-### F04 — Resolve Paper IV visual-guide source correspondence
+<a id="f04--resolve-paper-iv-visual-guide-source-correspondence"></a>
+
+### F04: Resolve Paper IV visual-guide source correspondence
 
 **Status: open**
 
@@ -109,31 +121,37 @@ Related works and source records: [Paper IV: Cyclic Analytic Functions, Reciproc
 
 <a id="f05"></a>
 
-### F05 — Replay editions that currently rely on inherited formal evidence
+<a id="f05--replay-editions-that-currently-rely-on-inherited-formal-evidence"></a>
+
+### F05: Replay editions that currently rely on inherited formal evidence
 
 **Status: open**
 
 These editions do not have a fresh whole-edition Lean replay in the assessed publication record.
 
-**Done when:** Pinned sources/dependencies, accepted builds, exact declaration/axiom checks and appropriate controls are saved under new receipts; coverage is not enlarged by replay.
+**Done when:** Pinned sources/dependencies, accepted builds, exact declaration/axiom checks and appropriate controls are saved under new receipts. Coverage is not enlarged by replay.
 
 Related works and source records: [Sufficient Resolution](works/sufficient-resolution.md) · [AVOC](works/research-avoc.md) · [Strong Artin: source and evidence](works/strong-artin-reader.md) · [Paper V: Polyphase Signal Calculus](works/paper-v.md) · [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](works/paper-vi.md) · [Paper VII: Quantum Seed Calculus](works/paper-vii.md) · [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](works/paper-viii.md) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md).
 
 <a id="f06"></a>
 
-### F06 — Resolve uncompiled or unverified Lean source
+<a id="f06--resolve-uncompiled-or-unverified-lean-source"></a>
+
+### F06: Resolve uncompiled or unverified Lean source
 
 **Status: open**
 
 Source text or static inventories are not compiler acceptance.
 
-**Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript; retain missing mathematical inputs.
+**Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript. Retain missing mathematical inputs.
 
 Related works and source records: [Resolution Semantics](works/resolution-semantics.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Stratified Universality](works/stratified-universality.md).
 
 <a id="f07"></a>
 
-### F07 — Assess the two reader-only entries
+<a id="f07--assess-the-two-reader-only-entries"></a>
+
+### F07: Assess the two reader-only entries
 
 **Status: open**
 
@@ -141,13 +159,15 @@ Availability alone does not establish an editorial or mathematical completion le
 
 **Done when:** Identify the edition, editable sources, claim scope and actual review/build records, then replace the unassessed labels.
 
-**Progress:** PDF identities, page counts, scope, and selected rendered front matter inspected; two reader guides and a hash-bound assessment record added. Both entries now distinguish reader availability from completed source/build qualification. Exact editable source recovery, complete page checks, and proof/review reconciliation remain open.
+**Progress:** PDF identities, page counts, scope, and selected rendered front matter inspected. Two reader guides and a hash-bound assessment record added. Both entries now distinguish reader availability from completed source/build qualification. Exact editable source recovery, complete page checks, and proof/review reconciliation remain open.
 
 Related works and source records: [Gaussian Elimination: collected guide](works/gaussian-elimination-guide.md) · [The Possibility for a Machine Native Mathematics](works/machine-native-mathematics-essay.md).
 
 <a id="f08"></a>
 
-### F08 — Close the Constructive Repair release-candidate checklist
+<a id="f08--close-the-constructive-repair-release-candidate-checklist"></a>
+
+### F08: Close the Constructive Repair release-candidate checklist
 
 **Status: open**
 
@@ -155,7 +175,7 @@ The mathematical contract and kernel/Python distinction must survive package fin
 
 **Done when:** Repeat the documented package checks on supported platforms, publish an exact source-to-wheel mapping, and reference the current collection license.
 
-**Progress:** All 2,254 selected source files were SHA-256 checked; a rebuilt wheel maps exactly to seven committed runtime files. Windows 11 / CPython 3.12.14 passed 134 engine tests and 72 installed cases. The 100-test release suite had 95 passes, 3 POSIX/Linux-only skips and 2 symlink-fixture setup errors, so full qualification remains open. The package guide links the current collection license and preserves the original records.
+**Progress:** All 2,254 selected source files were SHA-256 checked. A rebuilt wheel maps exactly to seven committed runtime files. Windows 11 / CPython 3.12.14 passed 134 engine tests and 72 installed cases. The 100-test release suite had 95 passes, 3 POSIX/Linux-only skips and 2 symlink-fixture setup errors, so full qualification remains open. The package guide links the current collection license and preserves the original records.
 
 Related works and source records: [Constructive Repair](works/constructive-repair.md).
 
@@ -163,7 +183,9 @@ Related works and source records: [Constructive Repair](works/constructive-repai
 
 <a id="f10"></a>
 
-### F10 — Complete bounded proof and submission reviews
+<a id="f10--complete-bounded-proof-and-submission-reviews"></a>
+
+### F10: Complete bounded proof and submission reviews
 
 **Status: open**
 
@@ -171,27 +193,31 @@ Existing review scopes do not cover all proofs or establish external submission 
 
 **Done when:** Record statement-specific reviews, resolve findings, and keep literature priority and empirical review distinct from proof correctness.
 
-**Progress:** Machine Societies has 38 distinct reviewed pairs of 62: 36 recorded passes and two qualifications; 24 remain unreviewed. Batch 4 adds five passes and identifies the missing event-emitting compilation premise in thm:undecidable. That restriction and its certificate consequence, plus the earlier finite-index condition for prop:memory, need a revised source edition. Neither qualified statement is counted as a pass. Other listed review obligations remain open.
+**Progress:** Machine Societies has 38 distinct reviewed pairs of 62: 36 recorded passes and two qualifications. 24 remain unreviewed. Batch 4 adds five passes and identifies the missing event-emitting compilation premise in thm:undecidable. That restriction and its certificate consequence, plus the earlier finite-index condition for prop:memory, need a revised source edition. Neither qualified statement is counted as a pass. Other listed review obligations remain open.
 
 Related works and source records: [Machine Societies](works/monographs-machine-societies.md) · [Hypergraph Lumpability and Bayesian Refinement](works/research-hypergraph-bayesian-refinement.md) · [Stratified Relational Workspace Theory](works/research-stratified-relational-workspace.md) · [Seeded Two-Axis Calculus](works/seeded-two-axis.md).
 
 <a id="f14"></a>
 
-### F14 — Review substantive support before reader promotion
+<a id="f14--review-substantive-support-before-reader-promotion"></a>
+
+### F14: Review substantive support before reader promotion
 
 **Status: ongoing**
 
-Lean is optional; precise statements, sufficient arguments or appropriately bounded evidence, and honest completion claims are required.
+Lean is optional. Precise statements, sufficient arguments or appropriately bounded evidence, and honest completion claims are required.
 
 **Done when:** Review the exact claims and evidence for each proposed promotion, resolve identified defects, and record the reviewer and source revision. A finite pass or listing decision cannot certify a whole program.
 
-**Progress:** Seven small entries screened; three focused mathematical claims reviewed; two incomplete implementation entries moved to the incubator. Remaining manuscripts and analytic dependencies are not certified by this pass.
+**Progress:** Seven small entries screened. Three focused mathematical claims reviewed. Two incomplete implementation entries moved to the incubator. Remaining manuscripts and analytic dependencies are not certified by this pass.
 
 Related works and source records: [Euler Signal Bridge](works/euler-signal-bridge.md) · [Hilbert 12: ambient dual slice](works/hilbert12-ambient-dual-slice.md) · [Resolution Semantics](works/resolution-semantics.md) · [Hilbert 12: analytic Fourier branch](works/hilbert12-analytic-fourier.md) · [Hilbert 12: contracting ambient torsion](works/hilbert12-contracting-ambient-torsion.md) · [PRISM-1R](works/research-prism-1r.md) · [RRCT multispace convergence protocol](works/research-rrct-multispace-protocol.md).
 
 <a id="f16"></a>
 
-### F16 — Assess the newly imported source collections
+<a id="f16--assess-the-newly-imported-source-collections"></a>
+
+### F16: Assess the newly imported source collections
 
 **Status: open**
 
@@ -207,7 +233,9 @@ Related works and source records: [ARC-AGI-2 experiment](works/arc-agi2.md) · [
 
 <a id="f11"></a>
 
-### F11 — Extend selected formal cores only against explicit claim maps
+<a id="f11--extend-selected-formal-cores-only-against-explicit-claim-maps"></a>
+
+### F11: Extend selected formal cores only against explicit claim maps
 
 **Status: open**
 
@@ -219,7 +247,9 @@ Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets,
 
 <a id="f12"></a>
 
-### F12 — Run the missing empirical and hardware campaigns
+<a id="f12--run-the-missing-empirical-and-hardware-campaigns"></a>
+
+### F12: Run the missing empirical and hardware campaigns
 
 **Status: open**
 
@@ -231,13 +261,15 @@ Related works and source records: [SRIC: external semantic admission](works/rese
 
 <a id="f13"></a>
 
-### F13 — Preserve the open-endpoint register
+<a id="f13--preserve-the-open-endpoint-register"></a>
+
+### F13: Preserve the open-endpoint register
 
 **Status: ongoing**
 
 These broad mathematical or physical endpoints are research obligations, not editorial cleanup.
 
-**Done when:** Promote only an exact newly proved obligation with its hypotheses and review/formal evidence; finite checks and a released book cannot close an open endpoint.
+**Done when:** Promote only an exact newly proved obligation with its hypotheses and review/formal evidence. Finite checks and a released book cannot close an open endpoint.
 
 Related works and source records: [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](works/paper-x.md) · [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](works/paper-xi.md) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md) · [ABC: global RR8 branch](works/abc-global-rr8.md) · [ABC: source and evidence reader](works/abc-reader.md) · [Beal: source and evidence](works/beal-reader.md) · [Catalan Constant: source and evidence](works/catalan-constant-reader.md) · [Collatz and Riemann: source and evidence](works/collatz-and-riemann-readers.md) · [Hilbert 12: closure attempt](works/hilbert12-closure-attempt.md) · [Hilbert 12: cubic divisor development](works/hilbert12-cubic-divisor.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Inverse Galois: source and evidence](works/inverse-galois-reader.md) · [Lehmer: source and evidence](works/lehmer-reader.md) · [Strong Artin: source and evidence](works/strong-artin-reader.md) · [Physics](works/monographs-physics.md).
 

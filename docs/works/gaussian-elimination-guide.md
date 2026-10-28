@@ -6,7 +6,7 @@
 
 [Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
 
-**Completion:** Reader available; source qualification pending · **Lean:** Not assessed · **Confidence:** Unassessed
+**Completion:** Reader available, source qualification pending · **Lean:** Not assessed · **Confidence:** Unassessed
 
 A standalone reader PDF is supplied. This component does not include editable source.
 

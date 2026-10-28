@@ -2,7 +2,7 @@
 
 **Working mathematical note · Focused review: 27 October 2026**
 
-The [original note](../../research/hilbert12-ambient-dual-slice/H12_Ambient_Dual_Slice_Research_Note.md) contains substantive finite algebra despite having only two files. Its analytic comparison remains open. Lean is not needed to state or check these elementary finite identities; the note's whole analytic argument has not been certified by this review.
+The [original note](../../research/hilbert12-ambient-dual-slice/H12_Ambient_Dual_Slice_Research_Note.md) contains substantive finite algebra despite having only two files. Its analytic comparison remains open. Lean is not needed to state or check these elementary finite identities. The note's whole analytic argument has not been certified by this review.
 
 ## Make the Gauss-cube specialization explicit
 
@@ -29,7 +29,7 @@ g_r(z)^3=7J-J\Phi_7(z),
 \qquad z^7=1.
 $$
 
-After specializing to $z=\zeta_7$, the relation $\Phi_7(\zeta_7)=0$ gives $G_r^3=7J$. The scalar identity is **not** an identity in the larger ring with only $z^7=1$: evaluation at $z=1$ gives zero on the left, while $7J$ is nonzero. The original code already retains the correction term; this note makes the passage between the two rings explicit.
+After specializing to $z=\zeta_7$, the relation $\Phi_7(\zeta_7)=0$ gives $G_r^3=7J$. The scalar identity is **not** an identity in the larger ring with only $z^7=1$: evaluation at $z=1$ gives zero on the left, while $7J$ is nonzero. The original code already retains the correction term. This note makes the passage between the two rings explicit.
 
 The new exact check covers all six nonzero residue classes. It neither selects a cube-root branch nor identifies an elliptic-gamma value with an algebraic one. The inherited divisor theorem, analytic period carries, and normalized special-value comparison require their own evidence.
 

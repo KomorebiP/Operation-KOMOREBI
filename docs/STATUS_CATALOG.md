@@ -10,7 +10,7 @@ Recorded 2026-10-27. Each entry summarizes existing evidence for a particular so
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-69 accepted proof-level correspondences in the stated manuscript scope; 108 correspondence records are not 108 theorems.
+69 accepted proof-level correspondences in the stated manuscript scope. 108 correspondence records are not 108 theorems.
 
 **Next step:** Maintain the exact statement map and reproduce the pinned formal contract before a changed release.
 
@@ -24,7 +24,7 @@ Recorded 2026-10-27. Each entry summarizes existing evidence for a particular so
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-53/53 proof-level scopes have recorded replay and accepted correspondence; admissible contour existence remains an application assumption.
+53/53 proof-level scopes have recorded replay and accepted correspondence. Admissible contour existence remains an application assumption.
 
 **Next step:** Preserve the contour hypotheses and rerun the recorded contract after any mathematical change.
 
@@ -38,7 +38,7 @@ Recorded 2026-10-27. Each entry summarizes existing evidence for a particular so
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Technical reading release is complete; the accepted 16-module core does not cover the expanded monograph. The historical full-coverage count is uncertified.
+Technical reading release is complete. The accepted 16-module core does not cover the expanded monograph. The historical full-coverage count is uncertified.
 
 **Next step:** Map the expanded packet-Taylor, Stirling/Touchard and later corollaries to explicit missing formal obligations.
 
@@ -66,9 +66,9 @@ Technical reading release is complete; the accepted 16-module core does not cove
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Publication 1.2.0 closes its stated scope; 20 finite formal core results and 225 theorem targets are inherited evidence, separate from the larger manuscript.
+Publication 1.2.0 closes its stated scope. 20 finite formal core results and 225 theorem targets are inherited evidence, separate from the larger manuscript.
 
-**Next step:** Replay the inherited formal core with the pinned runtime; retain the documented E11.1 amendment and current reproduction entry point.
+**Next step:** Replay the inherited formal core with the pinned runtime. Retain the documented E11.1 amendment and current reproduction entry point.
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-v.md)
 
@@ -80,9 +80,9 @@ Publication 1.2.0 closes its stated scope; 20 finite formal core results and 225
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Publication closeout is complete; the inherited 33-result finite formal contract does not cover all 142 theorem-like statements or the broader analytic program.
+Publication closeout is complete. The inherited 33-result finite formal contract does not cover all 142 theorem-like statements or the broader analytic program.
 
-**Next step:** Build a claim-by-claim expansion plan for the ordinary-proof material; preserve finite-state and common-gap hypotheses.
+**Next step:** Build a claim-by-claim expansion plan for the ordinary-proof material. Preserve finite-state and common-gap hypotheses.
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-vi.md)
 
@@ -94,7 +94,7 @@ Publication closeout is complete; the inherited 33-result finite formal contract
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Prose/proofreading release is complete; 19 inherited finite formal items are separate from the book. All five physical continuum targets remain open.
+Prose/proofreading release is complete. 19 inherited finite formal items are separate from the book. All five physical continuum targets remain open.
 
 **Next step:** Separate the finite formal correspondence from the five continuum research obligations in any next release.
 
@@ -108,7 +108,7 @@ Prose/proofreading release is complete; 19 inherited finite formal items are sep
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Internal publication release is complete; the inherited finite formal contract excludes numerical QR/SVD and canonical singular-value API identification. GPU execution was not performed.
+Internal publication release is complete. The inherited finite formal contract excludes numerical QR/SVD and canonical singular-value API identification. GPU execution was not performed.
 
 **Next step:** Choose a bounded numerical or GPU validation target and record actual execution before expanding implementation claims.
 
@@ -122,7 +122,7 @@ Internal publication release is complete; the inherited finite formal contract e
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Accepted reading release preserves scoped arithmetic, dyadic and lifting formal work; broader extensions and the Euler reciprocal endpoint remain open.
+Accepted reading release preserves scoped arithmetic, dyadic and lifting formal work. Broader extensions and the Euler reciprocal endpoint remain open.
 
 **Next step:** Reconcile the current claim map with the narrowed threshold-free theorem and retain the refuted stronger statement as history.
 
@@ -136,9 +136,9 @@ Accepted reading release preserves scoped arithmetic, dyadic and lifting formal 
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-The amended 20/20 contract is conditional. Transported targets and a summand in a supplied carrier are separate outputs; general arithmetic attachment remains open.
+The amended 20/20 contract is conditional. Transported targets and a summand in a supplied carrier are separate outputs. General arithmetic attachment remains open.
 
-**Next step:** Keep the amended contract distinct from stronger historical attempts; supply missing comparison and arithmetic inputs before any stronger promotion.
+**Next step:** Keep the amended contract distinct from stronger historical attempts. Supply missing comparison and arithmetic inputs before any stronger promotion.
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-x.md)
 
@@ -150,7 +150,7 @@ The amended 20/20 contract is conditional. Transported targets and a summand in 
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Finite packet and selected terminal developments have accepted formal evidence; Conjecture 66 and its arithmetic realization obligations remain open.
+Finite packet and selected terminal developments have accepted formal evidence. Conjecture 66 and its arithmetic realization obligations remain open.
 
 **Next step:** Track each Conjecture 66 obligation separately from the accepted finite packet and transported constructions.
 
@@ -164,9 +164,9 @@ Finite packet and selected terminal developments have accepted formal evidence; 
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-49 revised claims map to 291 production targets in historical evidence. Original wording remains 41 complete, seven partial, one unchecked; arithmetic and automorphic inputs remain explicit.
+49 revised claims map to 291 production targets in historical evidence. Original wording remains 41 complete, seven partial, one unchecked. Arithmetic and automorphic inputs remain explicit.
 
-**Next step:** Replay the pinned amended contract and preserve the original-versus-amended concordance; do not promote missing arithmetic premises.
+**Next step:** Replay the pinned amended contract and preserve the original-versus-amended concordance. Do not promote missing arithmetic premises.
 
 [Return to this work: paper, proofs, Lean, and code](works/paper-xii.md)
 
@@ -192,7 +192,7 @@ The 2,714-page collected book is an editorial assembly. Formal coverage and open
 
 **Scoped release** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Publication 1.8.0 formalizes the finite trace checker and typed JSON exchange on existing proof-field semantics; arbitrary Python correctness and broader manuscript coverage remain open.
+Publication 1.8.0 formalizes the finite trace checker and typed JSON exchange on existing proof-field semantics. Arbitrary Python correctness and broader manuscript coverage remain open.
 
 **Next step:** Define a separate Python-to-Lean refinement target and preserve the distinction between rejected certificates and infeasibility.
 
@@ -206,7 +206,7 @@ Publication 1.8.0 formalizes the finite trace checker and typed JSON exchange on
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Reviewed essay with written arguments and 40 finite exact-check groups; no new Lean compilation or corpus-wide formal audit.
+Reviewed essay with written arguments and 40 finite exact-check groups. No new Lean compilation or corpus-wide formal audit.
 
 **Next step:** Maintain claim-to-evidence links and arrange a focused external review of the unbounded arguments before stronger assurance claims.
 
@@ -220,7 +220,7 @@ Reviewed essay with written arguments and 40 finite exact-check groups; no new L
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-87/87 registered propositions have complete formal mappings under explicit model assumptions; empirical model success is outside that contract.
+87/87 registered propositions have complete formal mappings under explicit model assumptions. Empirical model success is outside that contract.
 
 **Next step:** Maintain the 87-row map and repeat the accepted build/axiom/replay gates for a changed release.
 
@@ -234,7 +234,7 @@ Reviewed essay with written arguments and 40 finite exact-check groups; no new L
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Proofread reading volumes plus 68 named formal declarations in a finite core and Block 1; the full analytic monograph is not formalized.
+Proofread reading volumes plus 68 named formal declarations in a finite core and Block 1. The full analytic monograph is not formalized.
 
 **Next step:** Select the next analytic theorem family and state its formal dependencies before extending the finite core.
 
@@ -264,9 +264,9 @@ Proofread reading volumes plus 68 named formal declarations in a finite core and
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-Finished one-observation, finite-dimensional Gaussian inference contract with exact factor-coded data and checked termination/output certificates; no sampler or universal Python parser refinement.
+Finished one-observation, finite-dimensional Gaussian inference contract with exact factor-coded data and checked termination/output certificates. No sampler or universal Python parser refinement.
 
-**Next step:** Maintain proof-producing instance checks; treat Python results as provisional until the emitted Lean instance passes.
+**Next step:** Maintain proof-producing instance checks. Treat Python results as provisional until the emitted Lean instance passes.
 
 [Return to this work: paper, proofs, Lean, and code](works/certified-inference.md)
 
@@ -278,7 +278,7 @@ Finished one-observation, finite-dimensional Gaussian inference contract with ex
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases; the release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
+Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases. The release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
 
 **Next step:** Resolve the two symlink-fixture prerequisites and complete a distribution gate for the intended rebuilt wheel and current metadata. Preserve the new exact source-to-wheel map and separate any future Lean replay from Python acceptance (F08).
 
@@ -296,7 +296,7 @@ Standalone release candidate with exact rational repair certificates and scoped 
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-First formal block: 58 theorem declarations across six production modules; the whole information program is not formalized.
+The first formal block contains 58 theorem declarations across six production modules. The whole information program is not formalized.
 
 **Next step:** Choose the next result beyond the checked linear repair and Haar contracts and retain their coefficient assumptions.
 
@@ -310,7 +310,7 @@ First formal block: 58 theorem declarations across six production modules; the w
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-All sixteen principal theorem groups have formal counterparts; the recorded integrated verification covers 166 targets. Application hypotheses remain explicit.
+All sixteen principal theorem groups have formal counterparts. The recorded integrated verification covers 166 targets. Application hypotheses remain explicit.
 
 **Next step:** Preserve the sixteen-group correspondence and repeat the integrated verification for any changed source release.
 
@@ -324,7 +324,7 @@ All sixteen principal theorem groups have formal counterparts; the recorded inte
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Checked depth-zero and multiverse blocks; the arbitrary complete obstruction tower can be vacuous. No model existence follows from the conditional extraction theorem.
+The depth-zero and multiverse blocks are checked. The arbitrary complete obstruction tower can be vacuous. No model existence follows from the conditional extraction theorem.
 
 **Next step:** Finish the internal compactness-to-filter-extension converse or specify a nonvacuous constrained tower before proposing a stronger axiom.
 
@@ -338,7 +338,7 @@ Checked depth-zero and multiverse blocks; the arbitrary complete obstruction tow
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-13 checked modules and 112 theorem declarations cover the standard-syntax bridge and relational layer; arbitrary formula preservation is outside the stated interface.
+13 checked modules and 112 theorem declarations cover the standard-syntax bridge and relational layer. Arbitrary formula preservation is outside the stated interface.
 
 **Next step:** Take the bounded target in CONTINUE_HERE and preserve the quantifier-sensitive observation contract.
 
@@ -352,7 +352,7 @@ Checked depth-zero and multiverse blocks; the arbitrary complete obstruction tow
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Cross-realization theorem establishes the stated finite linear minimality and uniqueness; minimum module cardinality is not minimum DFA size.
+Cross-realization theorem establishes the stated finite linear minimality and uniqueness. Minimum module cardinality is not minimum DFA size.
 
 **Next step:** Complete the efficient executable compiler refinement separately from the mathematical realization theorem.
 
@@ -368,7 +368,7 @@ Cross-realization theorem establishes the stated finite linear minimality and un
 
 45/45 registered monograph contracts are complete in the checked companion, with exact documented semantics.
 
-**Next step:** Maintain the final coverage map and v1.0.0 acceptance pointer; older verification README labels remain historical.
+**Next step:** Maintain the final coverage map and v1.0.0 acceptance pointer. Older verification README labels remain historical.
 
 [Return to this work: paper, proofs, Lean, and code](works/realization-boundaries.md)
 
@@ -380,9 +380,9 @@ Cross-realization theorem establishes the stated finite linear minimality and un
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Checked generic adapter and 202 frozen matrix certificates; 235 local modules were built. Most declaration counts include inherited/generated facts.
+The generic adapter and 202 frozen matrix certificates are checked. The build covered 235 local modules. Most declaration counts include inherited or generated facts.
 
-**Next step:** Extend the executable refinement only under the stated encoding and coefficient hypotheses; preserve the nonlinear-encoding boundary.
+**Next step:** Extend the executable refinement only under the stated encoding and coefficient hypotheses. Preserve the nonlinear-encoding boundary.
 
 [Return to this work: paper, proofs, Lean, and code](works/representation-calculus.md)
 
@@ -394,7 +394,7 @@ Checked generic adapter and 202 frozen matrix certificates; 235 local modules we
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Complete publication of v0.16.0 contracts with 93 formal source modules; the publication edition records no fresh Lean run.
+Complete publication of v0.16.0 contracts with 93 formal source modules. The publication edition records no fresh Lean run.
 
 **Next step:** Restore the matching runtime and execute the full pinned formal replay before upgrading the current verification label.
 
@@ -408,9 +408,9 @@ Complete publication of v0.16.0 contracts with 93 formal source modules; the pub
 
 **Scoped release** · Lean: **Declared contract recorded** · Confidence basis: **Recorded formal evidence**
 
-Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results; it does not certify the expanded 1,155-page monograph.
+Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results. It does not certify the expanded 1,155-page monograph.
 
-**Next step:** Maintain the completed core; recover the exact expanded source and PDF before claiming that separate book is finalized.
+**Next step:** Maintain the completed core. Recover the exact expanded source and PDF before claiming that separate book is finalized.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-machine-native-reasoning.md)
 
@@ -422,7 +422,7 @@ Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results; it does n
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Complete 344-page publication with explicit open research; 211 named declarations across thirteen formal modules cover selected arithmetic/circuit developments, not the full book.
+Complete 344-page publication with explicit open research. 211 named declarations across thirteen formal modules cover selected arithmetic/circuit developments, not the full book.
 
 **Next step:** Map the remaining ordinary-proof chapters and open physical targets separately from the thirteen checked modules.
 
@@ -450,7 +450,7 @@ Complete 572-page book with an accepted scoped centered free-field extension. Fi
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Closing 138-page publication with a finite Gram/enclosure Lean companion; full numerical correctness is outside the official companion.
+Closing 138-page publication with a finite Gram/enclosure Lean companion. Full numerical correctness is outside the official companion.
 
 **Next step:** Keep the official monograph stable and route end-to-end numerical proof work to the separate continuation.
 
@@ -464,7 +464,7 @@ Closing 138-page publication with a finite Gram/enclosure Lean companion; full n
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Checked intermediate branch connecting Gaussian/spectral reductions and rational acceptance; spectral inclusion and COS endpoint enclosures remain premises.
+Checked intermediate branch connecting Gaussian/spectral reductions and rational acceptance. Spectral inclusion and COS endpoint enclosures remain premises.
 
 **Next step:** Prove or certify the numerical spectral inclusion and endpoint enclosure inputs before claiming end-to-end verification.
 
@@ -478,7 +478,7 @@ Checked intermediate branch connecting Gaussian/spectral reductions and rational
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Theoretical publication with 30 statement/proof pairs and finite reference constructions; no deployed autonomous agent or indefinite acceleration result.
+Theoretical publication with 30 statement/proof pairs and finite reference constructions. No deployed autonomous agent or indefinite acceleration result.
 
 **Next step:** Obtain focused review of the theorem chain and design a separate empirical evaluation of the integrated architecture.
 
@@ -492,9 +492,9 @@ Theoretical publication with 30 statement/proof pairs and finite reference const
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Finished visual companion with focused checks; the original research suite was not rerun for the guide.
+Finished visual companion with focused checks. The original research suite was not rerun for the guide.
 
-**Next step:** Maintain source locators and guide checks when the parent manuscript changes; inherit no extra proof or empirical status.
+**Next step:** Maintain source locators and guide checks when the parent manuscript changes. Inherit no extra proof or empirical status.
 
 [Return to this work: paper, proofs, Lean, and code](works/monographs-self-improving-intelligence-visual-guide.md)
 
@@ -506,7 +506,7 @@ Finished visual companion with focused checks; the original research suite was n
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-First-edition theoretical manuscript with twenty written statements and exact examples; no agent training campaign or Lean certificate.
+First-edition theoretical manuscript with twenty written statements and exact examples. No agent training campaign or Lean certificate.
 
 **Next step:** Review the new quantitative extension and keep calibration and learning assumptions visible in subsequent work.
 
@@ -534,9 +534,9 @@ Frozen first-edition theoretical/editorial scope with twenty statements, bounded
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Executed illustrative two-agent model with supplied schedule, sensor semantics and reset rule; no learned policy or general self-improvement result.
+Executed illustrative two-agent model with supplied schedule, sensor semantics and reset rule. No learned policy or general self-improvement result.
 
-**Next step:** Validate any learned or adaptive replacement against a preregistered baseline; retain the supplied-rule demonstration as its own experiment.
+**Next step:** Validate any learned or adaptive replacement against a preregistered baseline. Retain the supplied-rule demonstration as its own experiment.
 
 [Return to this work: paper, proofs, Lean, and code](works/experiments-agent-dynamics.md)
 
@@ -548,7 +548,7 @@ Executed illustrative two-agent model with supplied schedule, sensor semantics a
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Candidate arithmetic subspace protocol; JSPACE_CLAIM=NOT_ESTABLISHED. Required mediation and native shared-access assays are absent.
+Candidate arithmetic subspace protocol with JSPACE_CLAIM=NOT_ESTABLISHED. Required mediation and native shared-access assays are absent.
 
 **Next step:** Complete the mandatory causal assays and a locked confirmatory cohort before changing the claim ceiling.
 
@@ -562,7 +562,7 @@ Candidate arithmetic subspace protocol; JSPACE_CLAIM=NOT_ESTABLISHED. Required m
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Research instrument for candidate causal states using saved models and retained failed assays; not a J-space certificate.
+Research instrument for candidate causal states using saved models and retained failed assays. Not a J-space certificate.
 
 **Next step:** Resolve the recorded relay failures and run matched intervention/mediation checks on fixed settings.
 
@@ -576,7 +576,7 @@ Research instrument for candidate causal states using saved models and retained 
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Typed object collections and workspace action machinery; programs and proposals are supplied, and no new training was performed.
+Typed object collections and workspace actions. Programs and proposals are supplied, and no new training was performed.
 
 **Next step:** Evaluate a learned controller separately from the hand-supplied examples and test the Windows wrapper on its target host.
 
@@ -590,7 +590,7 @@ Typed object collections and workspace action machinery; programs and proposals 
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Executed adaptive continuation with positive and negative transfer/retrieval outcomes; native shared-workspace gaps remain open.
+Executed adaptive continuation with positive and negative transfer/retrieval outcomes. Native shared-workspace gaps remain open.
 
 **Next step:** Run a genuinely held-out, balanced cohort and retain repeated-access and no-wire failures in the primary result.
 
@@ -604,7 +604,7 @@ Executed adaptive continuation with positive and negative transfer/retrieval out
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Frozen manuscripts and experiment evidence plus an exact finite interface; learned results, failures and unspent experiments retain separate statuses.
+Frozen manuscripts and experiment evidence plus an exact finite interface. Learned results, failures and unspent experiments retain separate statuses.
 
 **Next step:** Reconcile each learned claim with its own frozen run and keep the supplied finite demonstrator separate from learned-decoder claims.
 
@@ -618,7 +618,7 @@ Frozen manuscripts and experiment evidence plus an exact finite interface; learn
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Compact reading edition of OSL/Neuralese; historical experiments and executable runtime belong to the separate complete edition.
+Compact reading edition of OSL/Neuralese. Historical experiments and executable runtime belong to the separate complete edition.
 
 **Next step:** Maintain links to the complete evidence edition and avoid assigning executable or Lean status from manuscript availability.
 
@@ -632,15 +632,15 @@ Compact reading edition of OSL/Neuralese; historical experiments and executable 
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Protocol and numerical smoke checks; the primary multi-family causal campaign is incomplete, and the Qwen runner was not executed in the recorded build.
+The available evidence covers the protocol and numerical smoke checks. The primary multi-family causal campaign is incomplete, and the Qwen runner was not executed in the recorded build.
 
 **Next step:** Execute the source-locked primary campaign with all required independent estimator families and mediation gates.
 
 [Return to this work: paper, proofs, Lean, and code](works/research-rrct-multispace-protocol.md)
 
-**Reader listing: incubator.** Only synthetic estimator execution is recorded; the actual Qwen and primary causal runs are absent.
+**Reader listing: incubator.** Only synthetic estimator execution is recorded. The actual Qwen and primary causal runs are absent.
 
-**Requirements for returning to the reading list:** Run the frozen-model smoke with authenticated inputs and report its descriptive scope; any workspace claim additionally requires the full primary causal, mediation, and replication gates.
+**Requirements for returning to the reading list:** Run the frozen-model smoke with authenticated inputs and report its descriptive scope. Any workspace claim additionally requires the full primary causal, mediation, and replication gates.
 
 [Focused review](SOUNDNESS_REVIEW_2026-10-27.md)
 
@@ -652,7 +652,7 @@ Protocol and numerical smoke checks; the primary multi-family causal campaign is
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Beta functional research platform; the single-seed preset passes three diagnostic links and fails planner necessity and recurrence specificity.
+Beta research platform. The single-seed preset passes three diagnostic links and fails planner necessity and recurrence specificity.
 
 **Next step:** Freeze a replicated holdout campaign and resolve or report the failed later links before claiming the full chain.
 
@@ -666,7 +666,7 @@ Beta functional research platform; the single-seed preset passes three diagnosti
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Source-locked external-model protocol with infrastructure tests; the real Coconut checkpoint has not been executed in this release.
+Source-locked external-model protocol with infrastructure tests. The real Coconut checkpoint has not been executed in this release.
 
 **Next step:** Authenticate the exact checkpoint and dataset, run the frozen adapter and admission gates, then report the actual result.
 
@@ -682,7 +682,7 @@ Source-locked external-model protocol with infrastructure tests; the real Coconu
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Finite synthetic semantic-witness construction and fake-runtime pilot checks; no external-checkpoint result.
+Finite synthetic semantic-witness construction and fake-runtime pilot checks. No external-checkpoint result.
 
 **Next step:** Lock the real checkpoint digest and execute the pilot without substituting fixture metrics for model evidence.
 
@@ -696,7 +696,7 @@ Finite synthetic semantic-witness construction and fake-runtime pilot checks; no
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Complete finite-fixture publication/evidence package; the real latent-reasoner pilot remains unexecuted.
+Complete finite-fixture publication/evidence package. The real latent-reasoner pilot remains unexecuted.
 
 **Next step:** Keep the completed synthetic benchmark separate from the external-model campaign and its unfilled source lock.
 
@@ -710,7 +710,7 @@ Complete finite-fixture publication/evidence package; the real latent-reasoner p
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Complete reading set based on archived formal v0.41.0; publication checks did not execute Lean or the actual Lean endpoint.
+Complete reading set based on archived formal v0.41.0. Publication checks did not execute Lean or the actual Lean endpoint.
 
 **Next step:** Restore the exact runtime and replay the archived source and endpoint before labeling the publication as freshly formal-verified.
 
@@ -724,7 +724,7 @@ Complete reading set based on archived formal v0.41.0; publication checks did no
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Internally complete manuscript and finite certificates; external proof and literature-priority reviews remain pending.
+Internally complete manuscript and finite certificates. External proof and literature-priority reviews remain pending.
 
 **Next step:** Complete the independent proof review and systematic comparison to related quotient/lumping theories before journal submission.
 
@@ -738,15 +738,15 @@ Internally complete manuscript and finite certificates; external proof and liter
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Architecture and semantic reference tests; RTL is an uncompiled interface skeleton with candidate bit packing.
+The evidence covers the architecture and semantic reference tests. The RTL is an uncompiled interface skeleton with candidate bit packing.
 
 **Next step:** Compile and simulate the RTL, then synthesize and measure an FPGA prototype before making hardware performance claims.
 
 [Return to this work: paper, proofs, Lean, and code](works/research-prism-1r.md)
 
-**Reader listing: incubator.** Hardware is an uncompiled boundary skeleton with success tie-offs; no executed hardware qualification.
+**Reader listing: incubator.** The hardware is an uncompiled interface skeleton with success tie-offs. No hardware qualification has been run.
 
-**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency and fault inputs; compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
+**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency and fault inputs. Compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
 
 [Focused review](SOUNDNESS_REVIEW_2026-10-27.md)
 
@@ -758,7 +758,7 @@ Architecture and semantic reference tests; RTL is an uncompiled interface skelet
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Behavioral architecture, planner and cost model; no production RTL, synthesis, timing or measured silicon result.
+Behavioral architecture, planner and cost model. No production RTL, synthesis, timing or measured silicon result.
 
 **Next step:** Build a bit-accurate FPGA Packet Streaming Multiprocessor and report measured results under a fixed output contract.
 
@@ -772,7 +772,7 @@ Behavioral architecture, planner and cost model; no production RTL, synthesis, t
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Publication companion for the scoped single-observation Gaussian inference contract; source excerpts and archived formal coverage are not universal Python correctness.
+Publication companion for the scoped single-observation Gaussian inference contract. Source excerpts and archived formal coverage are not universal Python correctness.
 
 **Next step:** Link the publication claims to the canonical Certified Inference contract and replay its source-bound proof-producing examples.
 
@@ -786,7 +786,7 @@ Publication companion for the scoped single-observation Gaussian inference contr
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Complete preprint monograph with finite regression checks; external mathematical and empirical review remains pending.
+Complete preprint monograph with finite regression checks. External mathematical and empirical review remains pending.
 
 **Next step:** Obtain external review and evaluate empirical claims separately from finite mathematical regression tests.
 
@@ -802,7 +802,7 @@ Complete preprint monograph with finite regression checks; external mathematical
 
 Earlier Block 15 checkpoint covers 23/27 selected results. The later Reviewed Mathematical Core admission covers 27/27 in a different source edition.
 
-**Next step:** Use the newer core for current completion status; preserve this checkpoint and its original four pending targets as dated history.
+**Next step:** Use the newer core for current completion status. Preserve this checkpoint and its original four pending targets as dated history.
 
 [Return to this work: paper, proofs, Lean, and code](works/research-machine-theory-formal.md)
 
@@ -816,7 +816,7 @@ Current counterpart: [Machine Native Reasoning](#monographs-machine-native-reaso
 
 **Active development** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Recovered 74-page working continuation retains an older 23/27 core map; neither it nor the completed selected core is the expanded 1,155-page edition.
+Recovered 74-page working continuation retains an older 23/27 core map. Neither it nor the completed selected core is the expanded 1,155-page edition.
 
 **Next step:** Recover the exact expanded monograph, reconcile its own statements with the accepted 27/27 core, and rebuild/review that edition.
 
@@ -830,9 +830,9 @@ Recovered 74-page working continuation retains an older 23/27 core map; neither 
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Scoped written radical-cost identities and obstructions; the global ABC target and exceptional-prime tail remain open. No new Lean run.
+Scoped written radical-cost identities and obstructions. The global ABC target and exceptional-prime tail remain open. No new Lean run.
 
-**Next step:** Address the documented large-exceptional-prime budget or another justified arithmetic comparison; do not promote local bounds to ABC.
+**Next step:** Address the documented large-exceptional-prime budget or another justified arithmetic comparison. Do not promote local bounds to ABC.
 
 [Return to this work: paper, proofs, Lean, and code](works/abc-global-rr8.md)
 
@@ -844,7 +844,7 @@ Scoped written radical-cost identities and obstructions; the global ABC target a
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Finished evidence reader with selected formal conditional interfaces; the actual arithmetic/IUT witness and uniform abc inequality are not supplied.
+Finished evidence reader with selected formal conditional interfaces. The actual arithmetic/IUT witness and uniform abc inequality are not supplied.
 
 **Next step:** Keep the missing source-witness theorem and uniform arithmetic estimate explicit before any endpoint claim.
 
@@ -858,7 +858,7 @@ Finished evidence reader with selected formal conditional interfaces; the actual
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Three positive Lean units and exact finite controls cover finite observation, filter budgets and a carry example; no global height mechanism.
+Three positive Lean units and exact finite controls cover finite observation, filter budgets and a carry example. No global height mechanism.
 
 **Next step:** Formulate and prove the next arithmetic comparison beyond the finite reconstruction class before making a global-height claim.
 
@@ -872,7 +872,7 @@ Three positive Lean units and exact finite controls cover finite observation, fi
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Finished reader with selected checked algebraic scopes; neither general Beal nor the recovered signature route is closed.
+Finished reader with selected checked algebraic scopes. Neither general Beal nor the recovered signature route is closed.
 
 **Next step:** Supply the actual arithmetic affine obstruction/realization input and retain the upstream Frey and residual-pattern assumptions.
 
@@ -886,7 +886,7 @@ Finished reader with selected checked algebraic scopes; neither general Beal nor
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Finished exposition/evidence set with written recurrence arguments and finite checks; irrationality of Catalan's constant remains open.
+Finished exposition/evidence set with written recurrence arguments and finite checks. Irrationality of Catalan's constant remains open.
 
 **Next step:** Establish the missing uniform arithmetic bounds and review external claims at their exact versions before promotion.
 
@@ -900,7 +900,7 @@ Finished exposition/evidence set with written recurrence arguments and finite ch
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Finished reader/visual sets with scoped arguments, exact reductions and finite checks; both conjectures remain open.
+Finished reader/visual sets with scoped arguments, exact reductions and finite checks. Both conjectures remain open.
 
 **Next step:** Track each universal endpoint separately from finite orbit checks, models and conditional reductions.
 
@@ -914,7 +914,7 @@ Finished reader/visual sets with scoped arguments, exact reductions and finite c
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Written FIR/operator identities and 395 finite exact assertions; no universal congruence or novelty is inferred from the finite run.
+Written FIR/operator identities and 395 finite exact assertions. No universal congruence or novelty is inferred from the finite run.
 
 **Next step:** Review the universal written identities separately and specify any proposed arithmetic congruence with its full hypotheses.
 
@@ -926,9 +926,9 @@ Written FIR/operator identities and 395 finite exact assertions; no universal co
 
 ## Gaussian Elimination: collected guide
 
-**Reader available; source qualification pending** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+**Reader available, source qualification pending** · Lean: **Not assessed** · Confidence basis: **Unassessed**
 
-45-page collection compiled 7 October 2026 from four source PDFs and two reflowed arithmetic notes. Edition, source map, and rendered front matter inspected; the compilation explicitly reports no new source-experiment or Lean replay. Mathematical confidence remains unassessed.
+45-page collection compiled 7 October 2026 from four source PDFs and two reflowed arithmetic notes. Edition, source map, and rendered front matter inspected. The compilation explicitly reports no new source-experiment or Lean replay. Mathematical confidence remains unassessed.
 
 **Next step:** Recover the exact editable assembly and matching source editions, reproduce the PDF, inspect every page, and reconcile source-specific proof and formal records (F07).
 
@@ -944,7 +944,7 @@ Written FIR/operator identities and 395 finite exact assertions; no universal co
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Exact finite algebra and a fixed-point obstruction; the analytic comparison remains open.
+Exact finite algebra and a fixed-point obstruction. The analytic comparison remains open.
 
 **Next step:** Connect the exact dual-slice construction to a justified analytic comparison without assuming the missing equality.
 
@@ -960,9 +960,9 @@ Exact finite algebra and a fixed-point obstruction; the analytic comparison rema
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Written algebraic/Fourier reductions and exact checks with floating diagnostics; gamma-to-class-field equality remains unproved.
+Written algebraic/Fourier reductions and exact checks with floating diagnostics. The gamma-to-class-field equality remains unproved.
 
-**Next step:** Prove the exact special-value comparison; use directed enclosures for numerical bounds and keep them separate from equality.
+**Next step:** Prove the exact special-value comparison. Use directed enclosures for numerical bounds and keep them separate from equality.
 
 [Return to this work: paper, proofs, Lean, and code](works/hilbert12-analytic-fourier.md)
 
@@ -974,9 +974,9 @@ Written algebraic/Fourier reductions and exact checks with floating diagnostics;
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Interval certificate bounds a ratio distance below 10^-60 and resolves a branch condition; it does not establish exact equality.
+Interval certificate bounds a ratio distance below 10^-60 and resolves a branch condition. It does not establish exact equality.
 
-**Next step:** Prove the remaining exact analytic identity; numerical closeness alone cannot close the class-field comparison.
+**Next step:** Prove the remaining exact analytic identity. Numerical closeness alone cannot close the class-field comparison.
 
 [Return to this work: paper, proofs, Lean, and code](works/hilbert12-closure-attempt.md)
 
@@ -988,7 +988,7 @@ Interval certificate bounds a ratio distance below 10^-60 and resolves a branch 
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Exact 343-point torsion dynamics and written distribution identities; numerical diagnostics are not interval certificates or gamma algebraicity.
+Exact 343-point torsion dynamics and written distribution identities. Numerical diagnostics are not interval certificates or gamma algebraicity.
 
 **Next step:** Complete the analytic/class-field comparison while preserving the full torsion and dual-pairing data.
 
@@ -1002,7 +1002,7 @@ Exact 343-point torsion dynamics and written distribution identities; numerical 
 
 **Reading edition complete** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Finished reading set with 42 selected formal modules; complex divisor arguments and the gamma/class-field equality exceed that formal scope.
+Finished reading set with 42 selected formal modules. Complex divisor arguments and the gamma/class-field equality exceed that formal scope.
 
 **Next step:** Resolve the polarized reality, periodic descent and principal-norm obligations before claiming the original equality.
 
@@ -1014,9 +1014,9 @@ Finished reading set with 42 selected formal modules; complex divisor arguments 
 
 ## Hodge: source and evidence
 
-**Reading edition complete** · Lean: **Source; no current pass** · Confidence basis: **Recorded written review**
+**Reading edition complete** · Lean: **Source available, no current pass** · Confidence basis: **Recorded written review**
 
-Finished evidence reader with conditional geometric arguments; current Lean elaboration was blocked before compilation and general Hodge remains open.
+Finished evidence reader with conditional geometric arguments. Current Lean elaboration was blocked before compilation and general Hodge remains open.
 
 **Next step:** Compile the exact conditional source with pinned dependencies, then address the independent algebraic-cycle realization inputs.
 
@@ -1030,9 +1030,9 @@ Finished evidence reader with conditional geometric arguments; current Lean elab
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Finished reader with reviewed elementary realizations and regular-projector statements; universal realization over Q remains open and no Lean certificate is claimed.
+Finished reader with reviewed elementary realizations and regular-projector statements. Universal realization over Q remains open and no Lean certificate is claimed.
 
-**Next step:** Supply the arithmetic existence input for the specified conditional route; keep finite examples distinct from all finite groups.
+**Next step:** Supply the arithmetic existence input for the specified conditional route. Keep finite examples distinct from all finite groups.
 
 [Return to this work: paper, proofs, Lean, and code](works/inverse-galois-reader.md)
 
@@ -1044,7 +1044,7 @@ Finished reader with reviewed elementary realizations and regular-projector stat
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Checked valuation-hull and structural witness interfaces; SourceWitnessTheorem remains open. No proof or disproof of IUT III Corollary 3.12 or ABC.
+Checked valuation-hull and structural witness interfaces. SourceWitnessTheorem remains open. No proof or disproof of IUT III Corollary 3.12 or ABC.
 
 **Next step:** Construct the actual source witness linking the abstract interface to the intended arithmetic objects.
 
@@ -1058,9 +1058,9 @@ Checked valuation-hull and structural witness interfaces; SourceWitnessTheorem r
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Finished reader on Ramanujan tau nonvanishing with written and finite evidence; no recovered Lean certificate and no all-prime theorem.
+Finished reader on Ramanujan tau nonvanishing with written and finite evidence. No recovered Lean certificate and no all-prime theorem.
 
-**Next step:** Prove the remaining actual-prime nonvanishing obligation; preserve the distinction between local models and the Delta representation.
+**Next step:** Prove the remaining actual-prime nonvanishing obligation. Preserve the distinction between local models and the Delta representation.
 
 [Return to this work: paper, proofs, Lean, and code](works/lehmer-reader.md)
 
@@ -1070,9 +1070,9 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence; 
 
 ## The Possibility for a Machine Native Mathematics
 
-**Reader available; source qualification pending** · Lean: **No Lean claim** · Confidence basis: **Unassessed**
+**Reader available, source qualification pending** · Lean: **No Lean claim** · Confidence basis: **Unassessed**
 
-29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected; no Lean verification claim for the essay or new mathematical review.
+29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected. No Lean verification claim for the essay or new mathematical review.
 
 **Next step:** Recover the exact editable v10 source, rebuild and inspect the full PDF, and map technical assertions to their source-specific evidence before final reader qualification (F07).
 
@@ -1088,7 +1088,7 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence; 
 
 **Active development** · Lean: **Selected results recorded** · Confidence basis: **Recorded formal evidence**
 
-Verified scalar binary backend and finite discovery fixtures; end-to-end discovery bit-cost lowering remains open.
+Verified scalar binary backend and finite discovery fixtures. End-to-end discovery bit-cost lowering remains open.
 
 **Next step:** Prove the universal lowering/refinement bridge beyond the tested discovery fixtures.
 
@@ -1102,7 +1102,7 @@ Verified scalar binary backend and finite discovery fixtures; end-to-end discove
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Internally audited final manuscript with exact finite coherence calculations; the abc conjecture is not proved.
+Internally audited final manuscript with exact finite coherence calculations. The abc conjecture is not proved.
 
 **Next step:** Obtain independent proof review and keep conditional/global-height claims separate from finite coherence results.
 
@@ -1114,9 +1114,9 @@ Internally audited final manuscript with exact finite coherence calculations; th
 
 ## Resolution Semantics
 
-**Active development** · Lean: **Source; no current pass** · Confidence basis: **Written / finite evidence**
+**Active development** · Lean: **Source available, no current pass** · Confidence basis: **Written / finite evidence**
 
-Written structural proofs and finite tests; KRS_Core.lean is explicitly uncompiled and is only a limited two-valued scaffold.
+Written structural proofs and finite tests. KRS_Core.lean is explicitly uncompiled and is only a limited two-valued scaffold.
 
 **Next step:** Pin a compiler and dependencies, compile the exact scaffold, and map its actual types to the written theorem inventory.
 
@@ -1130,7 +1130,7 @@ Written structural proofs and finite tests; KRS_Core.lean is explicitly uncompil
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Working manuscript with 82 ledger targets, written proofs and self-review; no Lean certification or independent review.
+Working manuscript with 82 ledger targets, written proofs and self-review. No Lean certification or independent review.
 
 **Next step:** Independently review K72-K82 and retain the unconstrained rank-two scope before adding geometric or Galois conditions.
 
@@ -1144,7 +1144,7 @@ Working manuscript with 82 ledger targets, written proofs and self-review; no Le
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Finished reading set; related Paper V formal sources support packet/known-edge infrastructure, not the present unknown-edge and self-calibration theory. Recorded identification failures remain.
+Finished reading set. Related Paper V formal sources support packet/known-edge infrastructure, not the present unknown-edge and self-calibration theory. Recorded identification failures remain.
 
 **Next step:** Formalize a selected unknown-edge or self-calibration theorem and keep failed rank/location heuristics visible in qualification tests.
 
@@ -1156,9 +1156,9 @@ Finished reading set; related Paper V formal sources support packet/known-edge i
 
 ## Stratified Universality
 
-**Reading edition complete** · Lean: **Source; no current pass** · Confidence basis: **Recorded written review**
+**Reading edition complete** · Lean: **Source available, no current pass** · Confidence basis: **Recorded written review**
 
-Complete amended reading/source package; 75 components have mixed proved/imported/conditional/conjectural status. The reconstructed Lean core has no fresh compiler pass.
+Complete amended reading/source package. 75 components have mixed proved/imported/conditional/conjectural status. The reconstructed Lean core has no fresh compiler pass.
 
 **Next step:** Compile the exact included core, authenticate the separate historical formal package, and preserve the mixed 75-component concordance.
 
@@ -1172,7 +1172,7 @@ Complete amended reading/source package; 75 components have mixed proved/importe
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Illustrated manuscript v0.8 and package marker 0.8.0, with a later v0.9 synthetic simulation continuation. Written analytic guarantees and bounded simulations; the recorded 31-test pass is historical and was not rerun during navigation cleanup.
+Illustrated manuscript v0.8 and package marker 0.8.0, with a later v0.9 synthetic simulation continuation. Written analytic guarantees and bounded simulations. The recorded 31-test pass is historical and was not rerun during navigation cleanup.
 
 **Next step:** Perform a pinned test/simulation replay, independently review the spectral-tail and simulation contracts, and harden the documented intermediate overflow calculation. External-cohort, logistic-calibration, and GPU qualification remain separate.
 
@@ -1188,7 +1188,7 @@ Illustrated manuscript v0.8 and package marker 0.8.0, with a later v0.9 syntheti
 
 **Reading edition complete** · Lean: **Inherited / related evidence** · Confidence basis: **Historical formal evidence**
 
-Finished evidence reader with retained scoped formal results; the publication records zero fresh Lean invocations and global automorphic attachment remains open.
+Finished evidence reader with retained scoped formal results. The publication records zero fresh Lean invocations and global automorphic attachment remains open.
 
 **Next step:** Restore the exact runtime and replay the current source, then keep the global carrier-existence input as a separate research obligation.
 
@@ -1202,7 +1202,7 @@ Finished evidence reader with retained scoped formal results; the publication re
 
 **Experiment / prototype** · Lean: **No Lean claim** · Confidence basis: **Experimental evidence**
 
-Beta executable construction with 50 tests and 18 experiment checks; closure is relative to a declared grammar, not all mathematics or historical novelty.
+Beta executable construction with 50 tests and 18 experiment checks. Closure is relative to a declared grammar, not all mathematics or historical novelty.
 
 **Next step:** Validate broader grammar families and state a separate completeness theorem before extrapolating finite exploration to infinite branches.
 

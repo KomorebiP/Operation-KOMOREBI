@@ -505,7 +505,7 @@ Jump to a work:
 ### [Hodge: source and evidence](../works/hodge-reader.md#lean)
 
 - [Lean sources (directory)](../../research/hodge-reader/evidence/formal/)
-- Coverage: Source; no current pass
+- Coverage: Source available, no current pass
 - [Return to this work’s Lean section](../works/hodge-reader.md#lean)
 - [Work overview](../works/hodge-reader.md)
 - [Status and evidence](../STATUS_CATALOG.md#hodge-reader)
@@ -542,7 +542,7 @@ Jump to a work:
 ### [Resolution Semantics](../works/resolution-semantics.md#lean)
 
 - [Lean sources (directory)](../../research/resolution-semantics/formal/)
-- Coverage: Source; no current pass
+- Coverage: Source available, no current pass
 - [Return to this work’s Lean section](../works/resolution-semantics.md#lean)
 - [Work overview](../works/resolution-semantics.md)
 - [Status and evidence](../STATUS_CATALOG.md#resolution-semantics)
@@ -566,7 +566,7 @@ Jump to a work:
 ### [Stratified Universality](../works/stratified-universality.md#lean)
 
 - [Lean sources (directory)](../../research/stratified-universality/lean/inspected_source/)
-- Coverage: Source; no current pass
+- Coverage: Source available, no current pass
 - [Return to this work’s Lean section](../works/stratified-universality.md#lean)
 - [Work overview](../works/stratified-universality.md)
 - [Status and evidence](../STATUS_CATALOG.md#stratified-universality)

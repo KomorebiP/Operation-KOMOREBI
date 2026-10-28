@@ -22,9 +22,9 @@ These reports appear in review order, including those written on the same date. 
 
 | Date | Report | Recorded scope | Evidence binding |
 |---|---|---|---|
-| 2026-10-27 | [Focused soundness and reader-list review](SOUNDNESS_REVIEW_2026-10-27.md) | Seven-entry editorial screening; three focused claim audits; two implementation-boundary inspections. | [JSON record](../manifests/reader-curation-2026-10-27.json) |
+| 2026-10-27 | [Focused soundness and reader-list review](SOUNDNESS_REVIEW_2026-10-27.md) | Editorial screening of seven entries, three focused claim audits, and two inspections of implementation limits. | [JSON record](../manifests/reader-curation-2026-10-27.json) |
 | 2026-10-27 | [SRIC admission audit: three acceptance gaps](SRIC_ADMISSION_AUDIT_2026-10-27.md) | Block 24 Python admission counterexamples and Block 23 documentation scope comparison. | [JSON record](../manifests/sric-admission-review-2026-10-27.json) |
-| 2026-10-27 | [SRIC admission repair: runtime 0.3.3](SRIC_REPAIR_2026-10-27.md) | Known admission defects repaired in a separate source edition; finite qualification only. | [JSON record](../manifests/sric-repair-review-2026-10-27.json) |
+| 2026-10-27 | [SRIC admission repair: runtime 0.3.3](SRIC_REPAIR_2026-10-27.md) | Known admission defects repaired in a separate source edition. Finite qualification only. | [JSON record](../manifests/sric-repair-review-2026-10-27.json) |
 | 2026-10-27 | [Machine Societies: three additional proof reviews](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md) | Three written proofs only: deterministic quotient, erasure reconstruction, and repair budget. | [JSON record](../manifests/machine-societies-review-2026-10-27.json) |
 | 2026-10-27 | [Machine Societies: memory, composition, and governance review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH2_2026-10-27.md) | Eight written statement/proof pairs: identifiability, memory, composition, simulation, symmetry, governance quotient/refinement, and institutional language transport. | [JSON record](../manifests/machine-societies-review-batch2-2026-10-27.json) |
 | 2026-10-27 | [Machine Societies: stochastic closure and error bounds](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH3_2026-10-27.md) | Six written statement/proof pairs: controlled lumpability, finite-horizon closure, implementation dependence, transport defects, finite-block averaging, and robust reduced-model enforcement. | [JSON record](../manifests/machine-societies-review-batch3-2026-10-27.json) |
@@ -38,7 +38,7 @@ Restrictions and unresolved findings remain in the [component evidence catalogue
 
 ## Other dated reports
 
-- [Repository audit — 27 October 2026](AUDIT_2026-10-27.md)
+- [Repository audit: 27 October 2026](AUDIT_2026-10-27.md)
 - [Source inventory reconciliation](SOURCE_INVENTORY_RECONCILIATION_2026-10-27.md)
 
 ## Additional registered evidence

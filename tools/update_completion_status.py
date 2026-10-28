@@ -182,7 +182,12 @@ Recorded {data['as_of']}. This queue tracks documentation, research, formalizati
             if group != lane:
                 continue
             queue += f'\n<a id="{task["id"].lower()}"></a>\n'
-            queue += f"\n### {task['id']} — {task['title']}\n\n**Status: {task['status']}**\n\n{task['reason']}\n\n**Done when:** {task['done_when']}\n\n"
+            # Keep links to the earlier heading while using simpler punctuation.
+            from navigation_links import anchors
+            old_heading = f"### {task['id']} — {task['title']}"
+            for anchor in sorted(anchors(old_heading)):
+                queue += f'\n<a id="{anchor}"></a>\n'
+            queue += f"\n### {task['id']}: {task['title']}\n\n**Status: {task['status']}**\n\n{task['reason']}\n\n**Done when:** {task['done_when']}\n\n"
             if task.get('progress'):
                 queue += '**Progress:** ' + task['progress'] + '\n\n'
             ids = task['components']

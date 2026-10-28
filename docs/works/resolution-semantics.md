@@ -6,7 +6,7 @@
 
 [Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
 
-**Completion:** Active development · **Lean:** Source; no current pass · **Confidence:** Written / finite evidence
+**Completion:** Active development · **Lean:** Source available, no current pass · **Confidence:** Written / finite evidence
 
 Written structural arguments and finite checks. The two-world obstruction has a focused review. Other theorems and forcing applications need their own review.
 

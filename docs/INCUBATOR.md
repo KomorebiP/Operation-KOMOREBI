@@ -10,9 +10,9 @@ The [first focused review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission a
 
 ## RRCT multispace convergence protocol
 
-Only synthetic estimator execution is recorded; the actual Qwen and primary causal runs are absent.
+Only synthetic estimator execution is recorded. The actual Qwen and primary causal runs are absent.
 
-**Requirements for returning to the reading list:** Run the frozen-model smoke with authenticated inputs and report its descriptive scope; any workspace claim additionally requires the full primary causal, mediation, and replication gates.
+**Requirements for returning to the reading list:** Run the frozen-model smoke with authenticated inputs and report its descriptive scope. Any workspace claim additionally requires the full primary causal, mediation, and replication gates.
 
 [Work page: paper, proofs, Lean, and code](works/research-rrct-multispace-protocol.md) · [Preserved source](../research/rrct-multispace-protocol) · [Completion and evidence record](STATUS_CATALOG.md#research-rrct-multispace-protocol) · [Review and findings](SOUNDNESS_REVIEW_2026-10-27.md)
 
@@ -20,9 +20,9 @@ Only synthetic estimator execution is recorded; the actual Qwen and primary caus
 
 ## PRISM-1R
 
-Hardware is an uncompiled boundary skeleton with success tie-offs; no executed hardware qualification.
+The hardware is an uncompiled interface skeleton with success tie-offs. No hardware qualification has been run.
 
-**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency and fault inputs; compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
+**Requirements for returning to the reading list:** Replace success tie-offs with real generation, certificate, dependency and fault inputs. Compile/simulate the RTL and retain meaningful rejection controls. Hardware performance requires separate measured evidence.
 
 [Work page: paper, proofs, Lean, and code](works/research-prism-1r.md) · [Preserved source](../research/prism-1r) · [Completion and evidence record](STATUS_CATALOG.md#research-prism-1r) · [Review and findings](SOUNDNESS_REVIEW_2026-10-27.md)
 
@@ -34,7 +34,7 @@ These works have a later recorded decision allowing them back into a reading lis
 
 ### SRIC: external semantic admission
 
-Returned through the corrected 0.3.3 beta source edition after bounded admission/CLI qualification. The original 0.3.2 defects remain historical facts; real-model execution and wider scientific claims remain pending.
+Returned through the corrected 0.3.3 beta source edition after bounded admission/CLI qualification. The original 0.3.2 defects remain historical facts. Real-model execution and wider scientific claims remain pending.
 
 [Current review and edition](SRIC_REPAIR_2026-10-27.md) · [Earlier audit](SRIC_ADMISSION_AUDIT_2026-10-27.md)
 

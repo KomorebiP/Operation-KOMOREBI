@@ -60,7 +60,7 @@ class RecordNavigationTests(unittest.TestCase):
         task['status'] = 'done'
         queue = render(data)['docs/FINALIZATION_QUEUE.md']
         completed = queue.split('## Completed cleanup and bounded qualification', 1)[1].split('## Next finishing work', 1)[0]
-        self.assertIn('### '+task['id']+' —', completed)
+        self.assertIn('### '+task['id']+':', completed)
         for t in data['finalization_queue']:
             self.assertEqual(queue.count('<a id="'+t['id'].lower()+'"></a>'), 1)
             self.assertIn('](#'+t['id'].lower()+')', queue)

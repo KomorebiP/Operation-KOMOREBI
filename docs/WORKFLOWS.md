@@ -7,7 +7,7 @@ The collection has eight workflows. Their triggers and scopes differ: a successf
 | Workflow | Trigger | What it checks |
 |---|---|---|
 | [Collection and formal artifact checks](../.github/workflows/artifact-checks.yml) | Push, pull request, or manual dispatch | Collection entry points, preserved preview identity, all source receipts, maintained navigation/status pages, tooling regressions, bounded SRIC fixtures, and preview guard/classifier tests. It does not invoke Lean. |
-| [AM-SPD CI](../.github/workflows/am-spd-ci.yml) | Relevant package/workflow changes on main pushes or pull requests; manual dispatch | AM-SPD compilation, lint, tests, package verification, and a synthetic-geometry replay on the configured Python 3.13 jobs. The matrix covers Ubuntu and Windows. It does not qualify unrelated packages. |
+| [AM-SPD CI](../.github/workflows/am-spd-ci.yml) | Relevant package/workflow changes on main pushes or pull requests, or manual dispatch | AM-SPD compilation, lint, tests, package verification, and a synthetic-geometry replay on the configured Python 3.13 jobs. The matrix covers Ubuntu and Windows. It does not qualify unrelated packages. |
 
 A documentation-only push normally runs the collection checks without triggering the path-filtered AM-SPD CI. The [verification guide](VERIFICATION.md) gives the local collection commands and explains what they establish.
 
@@ -15,8 +15,8 @@ A documentation-only push normally runs the collection checks without triggering
 
 | Workflow | Trigger | Scope and output |
 |---|---|---|
-| [Pinned Lean replay](../.github/workflows/lean-replay.yml) | Manual dispatch | Research Preview 1 only: checks sealed inputs, obtains its pinned toolchain/dependencies, runs a clean build, inspects axioms and negative controls, and validates a fresh proof receipt. Its run artifacts include workflow context; unavailable bootstrap or incomplete controls remain limitations. |
-| [AM-SPD paper replay](../.github/workflows/am-spd-paper-replay.yml) | Manual dispatch with selected cases; default `synthetic_geometry` | Replays the selected AM-SPD cases against their reference criteria and uploads the replay output. Selected cases are not every experiment in the collection. |
+| [Pinned Lean replay](../.github/workflows/lean-replay.yml) | Manual dispatch | Research Preview 1 only: checks sealed inputs, obtains its pinned toolchain/dependencies, runs a clean build, inspects axioms and negative controls, and validates a fresh proof receipt. Its run artifacts include workflow context. Unavailable bootstrap or incomplete controls remain limitations. |
+| [AM-SPD paper replay](../.github/workflows/am-spd-paper-replay.yml) | Manual dispatch with selected cases (default: `synthetic_geometry`) | Replays the selected AM-SPD cases against their reference criteria and uploads the replay output. Selected cases are not every experiment in the collection. |
 | [AM-SPD full research verification](../.github/workflows/am-spd-full-research-verification.yml) | Manual dispatch | Checks the retained AM-SPD research-source checksums and runs that package's documented verification script, retaining its output as a workflow artifact. “Full” is scoped to this package and script. |
 | [Build AM-SPD distribution](../.github/workflows/am-spd-build.yml) | An `am-spd-v*` tag push or manual dispatch | Builds AM-SPD distributions and tests wheel/source-distribution installation separately from the checkout. Distribution artifacts are distinct from publication of a GitHub release. |
 
@@ -29,12 +29,12 @@ These workflows need their own successful run and evidence. The collection's sta
 | [Import source collection](../.github/workflows/import-source-collection.yml) | Manual dispatch on main with a committed batch name and exact `expected_base` SHA | Imports and verifies the selected declared source batch, then publishes its changes. Its main-commit check prevents silently importing on an unexpected base. This is a source publication operation. |
 | [AM-SPD stable release](../.github/workflows/am-spd-stable-release.yml) | Successful main-branch AM-SPD CI completion, or manual dispatch | Requires successful CI for the exact current main commit, builds and qualifies release assets, and can create the `am-spd-v1.0.0` release/tag. It preserves existing tag/release identities and refuses a conflicting revision. This is a publication operation, not a general test command. |
 
-The retained AM-SPD workflow name and versioned release machinery describe that component's historical release contract. The current collection-wide software label remains **beta / work in progress**. This guide documents the existing workflows; it does not change their triggers, dispatch a run, or publish a release.
+The retained AM-SPD workflow name and versioned release machinery describe that component's historical release contract. The current collection-wide software label remains **beta / work in progress**. This guide documents the existing workflows. It does not change their triggers, dispatch a run, or publish a release.
 
 ## Record the outcome
 
 For an executed check, retain the workflow/run URL, full source SHA, input parameters, relevant environment, conclusion, and artifact/receipt location. A failed setup, a failed intended negative control, and a successful proof rejection are different outcomes. Read the diagnostic record before assigning a status.
 
-The [Actions page](https://github.com/KomorebiP/Operation-KOMOREBI/actions) shows current runs. The [records guide](RECORDS.md) links the collection's retained reports; the [publication status](PUBLICATION_STATUS.md) describes what is publicly available.
+The [Actions page](https://github.com/KomorebiP/Operation-KOMOREBI/actions) shows current runs. The [records guide](RECORDS.md) links the collection's retained reports. The [publication status](PUBLICATION_STATUS.md) describes what is publicly available.
 
 [Documentation](README.md) · [Run and verify](VERIFICATION.md) · [Contributing](../CONTRIBUTING.md)
