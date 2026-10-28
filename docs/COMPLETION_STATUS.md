@@ -2,15 +2,17 @@
 
 Recorded 2026-10-27 · **Komorebi P.**
 
-Choose work by its completion stage below, then read its exact scope and evidence in the linked entry. **Publication completion, Lean coverage and confidence are separate fields.** A finished book may contain open research; a checked formal block may belong to an unfinished program.
+[Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
-This is an editorial assessment of existing release/status records at [source revision `080487d6401a`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/080487d6401a7e9d90c415fd9ffbbf8d825e3842). It covers **91 primary components** and separately accounts for **75 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
+**Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
+
+This guide summarizes the existing release and status records at [source revision `080487d6401a`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/080487d6401a7e9d90c415fd9ffbbf8d825e3842). It covers **91 primary components** and **75 supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [records guide](RECORDS.md) brings together the dated reviews, current claim coverage, source bindings, and qualification records. Read each report's scope and unresolved findings before reusing its conclusions.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [records guide](RECORDS.md) brings together dated reviews, claim coverage, the files each record covers, and software checks. Read each report's scope and unresolved findings before relying on its conclusions.
 
 Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
@@ -26,9 +28,9 @@ Entries deferred from the main reading lists remain in the [incubator](INCUBATOR
 | Needs assessment | 7 | Available material lacks a sufficient assessed source/status record for a stronger label. |
 | Earlier checkpoint | 1 | A retained earlier edition; later admission records do not retroactively change its evidence. |
 
-These are work categories, not percentages or a ranking of mathematical importance. “Scoped release” means its declared finish line is recorded as complete. It does not mean every surrounding sentence, implementation, or broader conjecture is proved. “Reading edition complete” describes the editorial deliverable, not journal acceptance or a closed research program.
+These categories describe the state of a work. They are not percentages or a ranking of mathematical importance. “Scoped release” means the stated release requirements are recorded as complete. Broader claims and implementations may remain unfinished. “Reading edition complete” means the stated manuscript or reader set has been released. It does not imply journal acceptance or a completed research program.
 
-“Reader available” identifies an inspected reading artifact whose editable source, complete page review, or reproducible build remains unqualified. It does not promote the artifact's mathematical confidence or imply a completed reading edition.
+“Reader available” means the PDF edition and its reading scope have been identified. Matching editable sources, a full page review, and a reproducible build still need checking. This label does not establish mathematical confidence or a completed reading edition.
 
 ## Lean coverage
 
@@ -41,7 +43,7 @@ These are work categories, not percentages or a ranking of mathematical importan
 | No Lean claim | The assessed scope claims writing, calculations or experiments rather than Lean verification. |
 | Not assessed | No formal-coverage assessment is made. |
 
-“Declared contract” counts only the registered claims in the cited map. Modules, declarations, named theorems, proof bodies and finite test cases are different units. Partial counts must not be converted into a whole-project completion percentage. A source map, integrity hash, Lean guide PDF or static inventory is not a compiler receipt. An inherited record is not automatically invalid; it simply does not certify a changed or wider edition.
+“Declared contract” covers only the registered claims in the linked map. Modules, declarations, named theorems, proof bodies and finite test cases count different things, so their totals cannot be combined into a project completion percentage. A source map, file hash, Lean guide PDF or inventory does not establish that Lean accepted a proof. Evidence from an earlier edition keeps its own scope and does not certify a changed or expanded edition.
 
 ## Confidence basis
 
@@ -54,9 +56,9 @@ These are work categories, not percentages or a ranking of mathematical importan
 | Experimental evidence | Confidence is limited to the stated experiment, fixture, prototype or engineering tests; generalization and scientific endpoints remain separate. |
 | Unassessed | There is not enough assessed evidence for a confidence classification. |
 
-Confidence labels identify the **strongest recorded evidence for the stated subset**, not a probability that the entire project is correct. A record can contain both checked results and open or refuted claims. Written review is only as broad as its recorded scope; it does not imply external peer review. Formal acceptance still requires correct hypotheses and a faithful prose-to-formal correspondence. Experimental tests address their actual populations, inputs and conditions.
+Confidence labels identify the **strongest recorded evidence for the stated subset**. They do not assign a probability that the whole project is correct. A record can contain checked results alongside open or refuted claims. A written review covers only its stated scope and does not imply external peer review. Lean proofs still need correct hypotheses and a faithful match to the written statements. Experiments support claims about the populations, inputs and conditions actually tested.
 
-All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. Current reuse terms are in [LICENSE.md](../LICENSE.md); older undecided notices remain historical.
+All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. See [LICENSE.md](../LICENSE.md) for the current reuse terms. Older undecided notices remain part of the historical record.
 
 ## Scoped release (9)
 
@@ -186,7 +188,7 @@ All executable software remains **beta / work in progress**, including implement
 
 ## Supporting and earlier material
 
-The **75 supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts establish availability; this triage does not re-assess their individual mathematics. They inherit neither the coverage nor the completion label of a newer primary edition.
+The **75 supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts identify the available files. This guide does not reassess their mathematics or transfer a newer edition's coverage and completion label to them.
 
 | Additional material | Status in this assessment |
 |---|---|
@@ -198,6 +200,8 @@ The **75 supporting collections** are listed separately in the [evidence catalog
 
 ## Maintaining the distinctions
 
-Edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The source-navigation generator reads the same labels for the component index. A changed source, expanded statement or new accepted execution requires a reviewed status update; a successful upload alone does not promote any label.
+Maintainers can edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The component index uses the same labels. A changed source, expanded statement or new accepted run requires a reviewed status update. Uploading files alone does not change their completion or confidence status.
 
-To promote a formal status, supply the exact claim map, pinned source/environment, accepted compiler and axiom records, appropriate controls and any required semantic correspondence review. To finalize a reader, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and empirical goals remain separate queue items.
+To strengthen a formal status, supply the exact claim map, pinned source and environment, accepted compiler and axiom records, appropriate controls, and any required review of how the formal and written statements correspond. To finalize a reading edition, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and experimental goals remain separate queue items.
+
+[Browse the collection](BROWSE.md) · [Finalization queue](FINALIZATION_QUEUE.md) · [Records guide](RECORDS.md)

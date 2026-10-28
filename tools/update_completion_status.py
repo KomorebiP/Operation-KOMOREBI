@@ -51,15 +51,17 @@ def render(data):
 
 Recorded {data['as_of']} · **Komorebi P.**
 
-Choose work by its completion stage below, then read its exact scope and evidence in the linked entry. **Publication completion, Lean coverage and confidence are separate fields.** A finished book may contain open research; a checked formal block may belong to an unfinished program.
+[Browse the collection](BROWSE.md) · [Start here](START_HERE.md) · [Repository home](../README.md)
 
-This is an editorial assessment of existing release/status records at [source revision `{data['source_revision'][:12]}`]({REPO_URL}/commit/{data['source_revision']}). It covers **{len(primary)} primary components** and separately accounts for **{len(supporting)} supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
+**Completion, Lean coverage and confidence describe different things.** A finished book may contain open research. A checked Lean proof may belong to an unfinished project. Choose a completion stage below, open a work's evidence record, then follow its paper, proofs, Lean, and code link.
+
+This guide summarizes the existing release and status records at [source revision `{data['source_revision'][:12]}`]({REPO_URL}/commit/{data['source_revision']}). It covers **{len(primary)} primary components** and **{len(supporting)} supporting collections**. The labels report those records, rather than a new proof review or Lean run. Each recorded pass keeps its original date and scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
 ## Reader selection and soundness
 
-Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [records guide](RECORDS.md) brings together the dated reviews, current claim coverage, source bindings, and qualification records. Read each report's scope and unresolved findings before reusing its conclusions.
+Lean is optional. A clear written proof, exact finite certificate, or appropriately scoped experiment can support its own claim. File counts, formatting, and compilation alone do not establish soundness. The [records guide](RECORDS.md) brings together dated reviews, claim coverage, the files each record covers, and software checks. Read each report's scope and unresolved findings before relying on its conclusions.
 
 Entries deferred from the main reading lists remain in the [incubator](INCUBATOR.md), with their source and status records intact. The component counts below describe the complete selected inventory, including those deferred entries.
 
@@ -69,25 +71,25 @@ Entries deferred from the main reading lists remain in the [incubator](INCUBATOR
     text += table(['Stage', 'Primary entries', 'Meaning'],
                   [(labels['stage'][s][0], counts[s], labels['stage'][s][1]) for s in STAGES])
     text += '''
-These are work categories, not percentages or a ranking of mathematical importance. “Scoped release” means its declared finish line is recorded as complete. It does not mean every surrounding sentence, implementation, or broader conjecture is proved. “Reading edition complete” describes the editorial deliverable, not journal acceptance or a closed research program.
+These categories describe the state of a work. They are not percentages or a ranking of mathematical importance. “Scoped release” means the stated release requirements are recorded as complete. Broader claims and implementations may remain unfinished. “Reading edition complete” means the stated manuscript or reader set has been released. It does not imply journal acceptance or a completed research program.
 
-“Reader available” identifies an inspected reading artifact whose editable source, complete page review, or reproducible build remains unqualified. It does not promote the artifact's mathematical confidence or imply a completed reading edition.
+“Reader available” means the PDF edition and its reading scope have been identified. Matching editable sources, a full page review, and a reproducible build still need checking. This label does not establish mathematical confidence or a completed reading edition.
 
 ## Lean coverage
 
 '''
     text += table(['Label', 'Meaning'], labels['lean'].values())
     text += '''
-“Declared contract” counts only the registered claims in the cited map. Modules, declarations, named theorems, proof bodies and finite test cases are different units. Partial counts must not be converted into a whole-project completion percentage. A source map, integrity hash, Lean guide PDF or static inventory is not a compiler receipt. An inherited record is not automatically invalid; it simply does not certify a changed or wider edition.
+“Declared contract” covers only the registered claims in the linked map. Modules, declarations, named theorems, proof bodies and finite test cases count different things, so their totals cannot be combined into a project completion percentage. A source map, file hash, Lean guide PDF or inventory does not establish that Lean accepted a proof. Evidence from an earlier edition keeps its own scope and does not certify a changed or expanded edition.
 
 ## Confidence basis
 
 '''
     text += table(['Label', 'What supports confidence'], labels['confidence'].values())
     text += '''
-Confidence labels identify the **strongest recorded evidence for the stated subset**, not a probability that the entire project is correct. A record can contain both checked results and open or refuted claims. Written review is only as broad as its recorded scope; it does not imply external peer review. Formal acceptance still requires correct hypotheses and a faithful prose-to-formal correspondence. Experimental tests address their actual populations, inputs and conditions.
+Confidence labels identify the **strongest recorded evidence for the stated subset**. They do not assign a probability that the whole project is correct. A record can contain checked results alongside open or refuted claims. A written review covers only its stated scope and does not imply external peer review. Lean proofs still need correct hypotheses and a faithful match to the written statements. Experiments support claims about the populations, inputs and conditions actually tested.
 
-All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. Current reuse terms are in [LICENSE.md](../LICENSE.md); older undecided notices remain historical.
+All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. See [LICENSE.md](../LICENSE.md) for the current reuse terms. Older undecided notices remain part of the historical record.
 '''
     for stage in STAGES:
         selected = [r for r in primary if r['stage'] == stage]
@@ -98,7 +100,7 @@ All executable software remains **beta / work in progress**, including implement
     text += f'''
 ## Supporting and earlier material
 
-The **{len(supporting)} supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts establish availability; this triage does not re-assess their individual mathematics. They inherit neither the coverage nor the completion label of a newer primary edition.
+The **{len(supporting)} supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts identify the available files. This guide does not reassess their mathematics or transfer a newer edition's coverage and completion label to them.
 
 '''
     text += table(['Additional material', 'Status in this assessment'],
@@ -106,15 +108,19 @@ The **{len(supporting)} supporting collections** are listed separately in the [e
     text += '''
 ## Maintaining the distinctions
 
-Edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The source-navigation generator reads the same labels for the component index. A changed source, expanded statement or new accepted execution requires a reviewed status update; a successful upload alone does not promote any label.
+Maintainers can edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The component index uses the same labels. A changed source, expanded statement or new accepted run requires a reviewed status update. Uploading files alone does not change their completion or confidence status.
 
-To promote a formal status, supply the exact claim map, pinned source/environment, accepted compiler and axiom records, appropriate controls and any required semantic correspondence review. To finalize a reader, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and empirical goals remain separate queue items.
+To strengthen a formal status, supply the exact claim map, pinned source and environment, accepted compiler and axiom records, appropriate controls, and any required review of how the formal and written statements correspond. To finalize a reading edition, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and experimental goals remain separate queue items.
+
+[Browse the collection](BROWSE.md) · [Finalization queue](FINALIZATION_QUEUE.md) · [Records guide](RECORDS.md)
 '''
 
     page = 'docs/STATUS_CATALOG.md'
     catalogue = f'''# Project status and evidence catalogue
 
-Recorded {data['as_of']}. These are source-specific editorial assessments of existing records, not fresh proof or compiler results. The [status guide](COMPLETION_STATUS.md) defines every label; the [finalization queue](FINALIZATION_QUEUE.md) groups the remaining work. Evidence-file hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
+[Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Finalization queue](FINALIZATION_QUEUE.md)
+
+Recorded {data['as_of']}. Each entry summarizes existing evidence for a particular source edition. These entries do not report new proof reviews or compiler runs. The [status guide](COMPLETION_STATUS.md) defines the labels. Each primary entry links back to the work's paper, proofs, Lean, and code. Supporting collections link to their source files and import receipts. File hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
 
 '''
     for row in primary:
@@ -127,14 +133,14 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
 
 {row['scope']}
 
-**Next gate:** {row['next_step']}
+**Next step:** {row['next_step']}
 
 '''
         catalogue += link('Return to this work: paper, proofs, Lean, and code', 'docs/works/'+row['id']+'.md', page)+'\n\n'
         if 'reader_listing' in row:
             entry = row['reader_listing']
             catalogue += '**Reader listing: incubator.** ' + entry['reason'] + '\n\n'
-            catalogue += '**Return gate:** ' + entry['return_gate'] + '\n\n'
+            catalogue += '**Requirements for returning to the reading list:** ' + entry['return_gate'] + '\n\n'
             catalogue += link('Focused review', entry['review'], page) + '\n\n'
         if 'current_counterpart' in row:
             c = by_id[row['current_counterpart']]
@@ -142,27 +148,30 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
         if 'reader_guide' in row:
             catalogue += link('Edition and reader guide', row['reader_guide'], page) + '\n\n'
         if 'review_report' in row:
-            catalogue += link('Latest bounded written review', row['review_report'], page) + '\n\n'
+            catalogue += link('Latest written review and its scope', row['review_report'], page) + '\n\n'
         if 'software_verification' in row:
-            catalogue += link('Fresh software check (separate from Lean evidence)', row['software_verification']['path'], page) + '\n\n'
+            catalogue += link('Software check and tested scope', row['software_verification']['path'], page) + ' (separate from Lean evidence)\n\n'
         evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
         catalogue += link('Source directory', row['destination']+'/', page) + ' · ' + evidence + '\n\n'
     catalogue += '''## Supporting and historical collections
 
-Every entry below is **Supporting / historical**, with **Lean: Not assessed** and **Confidence: Unassessed** in this triage. Its own original records may contain narrower accepted results. An import receipt only identifies source files; it is not mathematical evidence. Consult the edition's own statements and execution records before reusing its results.
+Every entry below is **Supporting / historical**, with **Lean: Not assessed** and **Confidence: Unassessed** in this catalogue. Its original records may contain accepted results within a narrower scope. An import receipt identifies files and does not establish mathematical correctness. Consult the edition's own statements and run records before reusing its results.
 
 '''
     catalogue += table(['Collection', 'Availability record'],
                        [(f'<a id="{r["id"]}"></a>'+link(r['title'], r['destination']+'/', page), link('file receipt', r['evidence'][0]['path'], page)) for r in supporting])
+    catalogue += '\n[Browse the collection](BROWSE.md) · [Status guide](COMPLETION_STATUS.md) · [Records guide](RECORDS.md)\n'
 
     queue = f'''# Cleanup and finalization queue
 
-Recorded {data['as_of']}. Status cleanup is separate from mathematical research, formalization and empirical qualification. Items marked done have completed their stated gate; progress on an open item does not close its remaining requirements. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
+[Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Evidence catalogue](STATUS_CATALOG.md)
+
+Recorded {data['as_of']}. This queue tracks documentation, research, formalization and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
 
 **Current maintenance focus:** {data.get('maintenance_focus', 'Follow each open gate below and retain the scope of its evidence.')} All software remains beta / work in progress.
 '''
     queue += '\n## Queue at a glance\n\n'
-    queue += table(['Item', 'Status', 'Completion gate'],
+    queue += table(['Item', 'Status', 'Work to complete'],
                    [(f"[{task['id']}](#{task['id'].lower()})", task['status'], task['title']) for task in data['finalization_queue']])
     lanes = [('now', 'Completed cleanup and bounded qualification'), ('next', 'Next finishing work'),
              ('review', 'Proof and submission review'), ('research', 'Formal, mathematical and empirical development')]
@@ -180,19 +189,25 @@ Recorded {data['as_of']}. Status cleanup is separate from mathematical research,
             if len(ids) > 20:
                 queue += 'Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).\n'
             else:
-                queue += 'Applies to: ' + ' · '.join(f"[{by_id[i]['title']}](STATUS_CATALOG.md#{i})" for i in ids) + '.\n'
+                queue += 'Related works and source records: ' + ' · '.join(
+                    f"[{by_id[i]['title']}](works/{i}.md)" if by_id[i]['import_role'] == 'primary'
+                    else f"[{by_id[i]['title']}](STATUS_CATALOG.md#{i})" for i in ids) + '.\n'
     queue += '''
 ## Release discipline
 
-Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A failed control is positive evidence only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes are not proof rejections. Conditional results keep their premises after editorial completion.
+Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A control counts as a successful rejection check only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes do not establish proof rejection. Conditional results keep their assumptions after editorial work is complete.
 
-The collection's current reuse grant already addresses retained historical undecided notices. Updating navigation to explain that grant is cleanup; it does not require relabeling historical source bytes or changing third-party terms.
+The [current reuse terms](../LICENSE.md) explain how retained historical undecided notices are handled. Navigation can clarify those terms while preserving historical source files and third-party terms.
+
+[Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Records guide](RECORDS.md)
 '''
     incubator = '''# Incubator: incomplete implementation entries
 
-These entries are removed from the main reading lists until the return criteria below are met. Their original files remain available for development and inspection. Placement here is a readiness decision, not a conclusion that every mathematical idea in them is false. Lean is not required for return; appropriate written, computational, or implementation evidence is.
+[Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Finalization queue](FINALIZATION_QUEUE.md)
 
-See the [first focused review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) for the inspected sources, findings, and limits. No whole-collection soundness certification is implied for entries outside this list.
+These works need further evidence before returning to the main reading lists. Their original files remain available for development and inspection. Placement here describes their readiness and does not dismiss every mathematical idea they contain. Lean is optional. The requirements below identify the written, computational, or implementation evidence each entry needs.
+
+The [first focused review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) record the sources inspected, findings, and limits. Works outside this list still have their own review limits and open questions.
 
 '''
     for row in primary:
@@ -200,16 +215,18 @@ See the [first focused review](SOUNDNESS_REVIEW_2026-10-27.md) and [SRIC admissi
         if not entry:
             continue
         incubator += f'<a id="{row["id"]}"></a>\n\n## {row["title"]}\n\n'
-        incubator += entry['reason'] + '\n\n**Return gate:** ' + entry['return_gate'] + '\n\n'
+        incubator += entry['reason'] + '\n\n**Requirements for returning to the reading list:** ' + entry['return_gate'] + '\n\n'
+        incubator += link('Work page: paper, proofs, Lean, and code', 'docs/works/'+row['id']+'.md', 'docs/INCUBATOR.md') + ' · '
         incubator += link('Preserved source', row['destination']+'/', 'docs/INCUBATOR.md') + ' · '
         incubator += f'[Completion and evidence record](STATUS_CATALOG.md#{row["id"]}) · ' + link('Review and findings', entry['review'], 'docs/INCUBATOR.md') + '\n\n'
     returned = [row for row in primary if 'reader_return' in row]
     if returned:
-        incubator += '## Returned to a scoped reading list\n\nEarlier audit links remain valid. These entries have a later recorded decision; their remaining limits still apply.\n\n'
+        incubator += '## Returned to a scoped reading list\n\nThese works have a later recorded decision allowing them back into a reading list. Their remaining limits still apply, and the earlier audits remain available.\n\n'
         for row in returned:
             entry = row['reader_return']
             incubator += f'<a id="{row["id"]}"></a>\n\n### {row["title"]}\n\n'
             incubator += entry['scope'] + '\n\n' + link('Current review and edition', entry['review'], 'docs/INCUBATOR.md') + ' · ' + link('Earlier audit', entry['previous_review'], 'docs/INCUBATOR.md') + '\n\n'
+            incubator += link('Work page: paper, proofs, Lean, and code', 'docs/works/'+row['id']+'.md', 'docs/INCUBATOR.md') + ' · ' + f'[Completion and evidence record](STATUS_CATALOG.md#{row["id"]})\n\n'
     incubator += '[Research reading list](../research/README.md) · [Complete inventory](COMPONENT_INDEX.md) · [Finalization queue](FINALIZATION_QUEUE.md)\n'
     return {'docs/COMPLETION_STATUS.md': text, 'docs/STATUS_CATALOG.md': catalogue,
             'docs/FINALIZATION_QUEUE.md': queue, 'docs/INCUBATOR.md': incubator}

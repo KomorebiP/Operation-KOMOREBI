@@ -1,12 +1,14 @@
 # Cleanup and finalization queue
 
-Recorded 2026-10-27. Status cleanup is separate from mathematical research, formalization and empirical qualification. Items marked done have completed their stated gate; progress on an open item does not close its remaining requirements. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
+[Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Evidence catalogue](STATUS_CATALOG.md)
+
+Recorded 2026-10-27. This queue tracks documentation, research, formalization and experimental work. An item marked done has met its stated completion requirements. Progress on an open item leaves its remaining requirements in place. Use the item links below to read those requirements, then follow the work links to its paper, proofs, Lean, and code.
 
 **Current maintenance focus:** Repository navigation, edition records, and reproducibility instructions are the current maintenance priority. Further bounded proof reviews are deferred; their existing findings and completion gates remain open. All software remains beta / work in progress.
 
 ## Queue at a glance
 
-| Item | Status | Completion gate |
+| Item | Status | Work to complete |
 |---|---|---|
 | [F01](#f01) | done | Separate current and historical status |
 | [F02](#f02) | done | Make completion, Lean and confidence independently visible |
@@ -37,7 +39,7 @@ Current core is 27/27; the older 23/27 checkpoint and working wider manuscript r
 
 **Done when:** Status pages link each edition and its own evidence; source packages remain byte-preserved.
 
-Applies to: [Machine Theory: formal development](STATUS_CATALOG.md#research-machine-theory-formal) · [Machine Native Reasoning](STATUS_CATALOG.md#monographs-machine-native-reasoning) · [Machine Native Reasoning: wider continuation](STATUS_CATALOG.md#research-machine-native-reasoning-wider).
+Related works and source records: [Machine Theory: formal development](works/research-machine-theory-formal.md) · [Machine Native Reasoning](works/monographs-machine-native-reasoning.md) · [Machine Native Reasoning: wider continuation](works/research-machine-native-reasoning-wider.md).
 
 <a id="f02"></a>
 
@@ -63,7 +65,7 @@ A maintained edition guide now separates the v0.8 manuscript and 0.8.0 marker fr
 
 **Progress:** Linked the manuscript/source pair, theorem index, seven-suite historical 31-test census, copy-LD correction, and open numerical/empirical boundaries. The original source package is unchanged; no fresh test, simulation, or Lean replay is claimed.
 
-Applies to: [Streaming Polyphase Factor Decomposition / SKAT](STATUS_CATALOG.md#streaming-skat).
+Related works and source records: [Streaming Polyphase Factor Decomposition / SKAT](works/streaming-skat.md).
 
 <a id="f15"></a>
 
@@ -77,7 +79,7 @@ The three reproduced admission/provenance defects are repaired in the separate 0
 
 **Progress:** 15 test methods passed locally, including all 48 NaN positions, provenance failures, finite mismatch, and a custom-path CLI round trip. Original 0.3.2 evidence remains intact. Real-model execution and wider qualification remain open under F12.
 
-Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission).
+Related works and source records: [SRIC: external semantic admission](works/research-sric-external-admission.md).
 
 ## Next finishing work
 
@@ -91,7 +93,7 @@ The selected core is complete; the exact expanded 1,155-page edition needs its o
 
 **Done when:** Identify the exact source/PDF hashes, reconcile core correspondence, rebuild the book, and complete its own publication review.
 
-Applies to: [Machine Native Reasoning: wider continuation](STATUS_CATALOG.md#research-machine-native-reasoning-wider) · [Machine Native Reasoning](STATUS_CATALOG.md#monographs-machine-native-reasoning).
+Related works and source records: [Machine Native Reasoning: wider continuation](works/research-machine-native-reasoning-wider.md) · [Machine Native Reasoning](works/monographs-machine-native-reasoning.md).
 
 <a id="f04"></a>
 
@@ -103,7 +105,7 @@ The latest visual PDF lacks a recovered exact matching editable source.
 
 **Done when:** An authenticated matching source or explicitly new reconstructed edition has a documented PDF/text comparison and page review.
 
-Applies to: [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](STATUS_CATALOG.md#paper-iv).
+Related works and source records: [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](works/paper-iv.md).
 
 <a id="f05"></a>
 
@@ -115,7 +117,7 @@ These editions do not have a fresh whole-edition Lean replay in the assessed pub
 
 **Done when:** Pinned sources/dependencies, accepted builds, exact declaration/axiom checks and appropriate controls are saved under new receipts; coverage is not enlarged by replay.
 
-Applies to: [Sufficient Resolution](STATUS_CATALOG.md#sufficient-resolution) · [AVOC](STATUS_CATALOG.md#research-avoc) · [Strong Artin: source and evidence](STATUS_CATALOG.md#strong-artin-reader) · [Paper V: Polyphase Signal Calculus](STATUS_CATALOG.md#paper-v) · [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](STATUS_CATALOG.md#paper-vi) · [Paper VII: Quantum Seed Calculus](STATUS_CATALOG.md#paper-vii) · [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](STATUS_CATALOG.md#paper-viii) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](STATUS_CATALOG.md#paper-xii).
+Related works and source records: [Sufficient Resolution](works/sufficient-resolution.md) · [AVOC](works/research-avoc.md) · [Strong Artin: source and evidence](works/strong-artin-reader.md) · [Paper V: Polyphase Signal Calculus](works/paper-v.md) · [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](works/paper-vi.md) · [Paper VII: Quantum Seed Calculus](works/paper-vii.md) · [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](works/paper-viii.md) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md).
 
 <a id="f06"></a>
 
@@ -127,7 +129,7 @@ Source text or static inventories are not compiler acceptance.
 
 **Done when:** Compile the exact intended source with pinned dependencies, record diagnostics and axioms, and map accepted statements to the manuscript; retain missing mathematical inputs.
 
-Applies to: [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) · [Hodge: source and evidence](STATUS_CATALOG.md#hodge-reader) · [Stratified Universality](STATUS_CATALOG.md#stratified-universality).
+Related works and source records: [Resolution Semantics](works/resolution-semantics.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Stratified Universality](works/stratified-universality.md).
 
 <a id="f07"></a>
 
@@ -141,7 +143,7 @@ Availability alone does not establish an editorial or mathematical completion le
 
 **Progress:** PDF identities, page counts, scope, and selected rendered front matter inspected; two reader guides and a hash-bound assessment record added. Both entries now distinguish reader availability from completed source/build qualification. Exact editable source recovery, complete page checks, and proof/review reconciliation remain open.
 
-Applies to: [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) · [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay).
+Related works and source records: [Gaussian Elimination: collected guide](works/gaussian-elimination-guide.md) · [The Possibility for a Machine Native Mathematics](works/machine-native-mathematics-essay.md).
 
 <a id="f08"></a>
 
@@ -155,7 +157,7 @@ The mathematical contract and kernel/Python distinction must survive package fin
 
 **Progress:** All 2,254 selected source files were SHA-256 checked; a rebuilt wheel maps exactly to seven committed runtime files. Windows 11 / CPython 3.12.14 passed 134 engine tests and 72 installed cases. The 100-test release suite had 95 passes, 3 POSIX/Linux-only skips and 2 symlink-fixture setup errors, so full qualification remains open. The package guide links the current collection license and preserves the original records.
 
-Applies to: [Constructive Repair](STATUS_CATALOG.md#constructive-repair).
+Related works and source records: [Constructive Repair](works/constructive-repair.md).
 
 ## Proof and submission review
 
@@ -171,7 +173,7 @@ Existing review scopes do not cover all proofs or establish external submission 
 
 **Progress:** Machine Societies has 38 distinct reviewed pairs of 62: 36 recorded passes and two qualifications; 24 remain unreviewed. Batch 4 adds five passes and identifies the missing event-emitting compilation premise in thm:undecidable. That restriction and its certificate consequence, plus the earlier finite-index condition for prop:memory, need a revised source edition. Neither qualified statement is counted as a pass. Other listed review obligations remain open.
 
-Applies to: [Machine Societies](STATUS_CATALOG.md#monographs-machine-societies) · [Hypergraph Lumpability and Bayesian Refinement](STATUS_CATALOG.md#research-hypergraph-bayesian-refinement) · [Stratified Relational Workspace Theory](STATUS_CATALOG.md#research-stratified-relational-workspace) · [Seeded Two-Axis Calculus](STATUS_CATALOG.md#seeded-two-axis).
+Related works and source records: [Machine Societies](works/monographs-machine-societies.md) · [Hypergraph Lumpability and Bayesian Refinement](works/research-hypergraph-bayesian-refinement.md) · [Stratified Relational Workspace Theory](works/research-stratified-relational-workspace.md) · [Seeded Two-Axis Calculus](works/seeded-two-axis.md).
 
 <a id="f14"></a>
 
@@ -185,7 +187,7 @@ Lean is optional; precise statements, sufficient arguments or appropriately boun
 
 **Progress:** Seven small entries screened; three focused mathematical claims reviewed; two incomplete implementation entries moved to the incubator. Remaining manuscripts and analytic dependencies are not certified by this pass.
 
-Applies to: [Euler Signal Bridge](STATUS_CATALOG.md#euler-signal-bridge) · [Hilbert 12: ambient dual slice](STATUS_CATALOG.md#hilbert12-ambient-dual-slice) · [Resolution Semantics](STATUS_CATALOG.md#resolution-semantics) · [Hilbert 12: analytic Fourier branch](STATUS_CATALOG.md#hilbert12-analytic-fourier) · [Hilbert 12: contracting ambient torsion](STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion) · [PRISM-1R](STATUS_CATALOG.md#research-prism-1r) · [RRCT multispace convergence protocol](STATUS_CATALOG.md#research-rrct-multispace-protocol).
+Related works and source records: [Euler Signal Bridge](works/euler-signal-bridge.md) · [Hilbert 12: ambient dual slice](works/hilbert12-ambient-dual-slice.md) · [Resolution Semantics](works/resolution-semantics.md) · [Hilbert 12: analytic Fourier branch](works/hilbert12-analytic-fourier.md) · [Hilbert 12: contracting ambient torsion](works/hilbert12-contracting-ambient-torsion.md) · [PRISM-1R](works/research-prism-1r.md) · [RRCT multispace convergence protocol](works/research-rrct-multispace-protocol.md).
 
 <a id="f16"></a>
 
@@ -199,7 +201,7 @@ Thirteen additional collections were imported before the availability and assess
 
 **Progress:** All 166 component receipts now reconcile with the committed paths, blob identities, modes, and aggregate record digests. The 13 new records remain scientifically unassessed.
 
-Applies to: [ARC-AGI-2 experiment](STATUS_CATALOG.md#arc-agi2) · [Offline handoff](STATUS_CATALOG.md#arc-agi2-offline-handoff) · [Original solver](STATUS_CATALOG.md#arc-agi2-original-solver) · [Public evaluation](STATUS_CATALOG.md#arc-agi2-public-evaluation) · [Training evidence](STATUS_CATALOG.md#arc-agi2-training-evidence) · [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](STATUS_CATALOG.md#large-signal-model) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](STATUS_CATALOG.md#machine-theory-compendium) · [Physics: curvature states](STATUS_CATALOG.md#physics-curvature-states) · [Physics: energy and backreaction](STATUS_CATALOG.md#physics-energy-backreaction) · [Physics: origin locking](STATUS_CATALOG.md#physics-origin-locking) · [Realization Calculus: twin edition](STATUS_CATALOG.md#realization-calculus-twin-edition).
+Related works and source records: [ARC-AGI-2 experiment](works/arc-agi2.md) · [Offline handoff](STATUS_CATALOG.md#arc-agi2-offline-handoff) · [Original solver](STATUS_CATALOG.md#arc-agi2-original-solver) · [Public evaluation](STATUS_CATALOG.md#arc-agi2-public-evaluation) · [Training evidence](STATUS_CATALOG.md#arc-agi2-training-evidence) · [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](works/large-signal-model.md) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](works/machine-theory-compendium.md) · [Physics: curvature states](works/physics-curvature-states.md) · [Physics: energy and backreaction](works/physics-energy-backreaction.md) · [Physics: origin locking](works/physics-origin-locking.md) · [Realization Calculus: twin edition](works/realization-calculus-twin-edition.md).
 
 ## Formal, mathematical and empirical development
 
@@ -213,7 +215,7 @@ Publication completion and checked subresults leave wider formal or implementati
 
 **Done when:** Choose one precise next theorem/refinement contract, establish its dependencies, and admit it only with corresponding source and verification evidence.
 
-Applies to: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](STATUS_CATALOG.md#paper-iii) · [Special Functions](STATUS_CATALOG.md#monographs-special-functions) · [Quantum and Circuits](STATUS_CATALOG.md#monographs-quantum-and-circuits) · [Signal Reconstruction](STATUS_CATALOG.md#signal-reconstruction) · [COS Method: formal continuation](STATUS_CATALOG.md#monographs-cos-method-formal-continuation) · [p-adic Canonical Realization](STATUS_CATALOG.md#padic-canonical-realization) · [Model-Theory Normalization](STATUS_CATALOG.md#model-theory-normalization).
+Related works and source records: [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](works/paper-iii.md) · [Special Functions](works/monographs-special-functions.md) · [Quantum and Circuits](works/monographs-quantum-and-circuits.md) · [Signal Reconstruction](works/signal-reconstruction.md) · [COS Method: formal continuation](works/monographs-cos-method-formal-continuation.md) · [p-adic Canonical Realization](works/padic-canonical-realization.md) · [Model-Theory Normalization](works/model-theory-normalization.md).
 
 <a id="f12"></a>
 
@@ -225,7 +227,7 @@ Fixtures, candidate diagnostics and interface skeletons do not establish real-mo
 
 **Done when:** Use frozen inputs and gates, retain failures, execute held-out/replicated tests or hardware compilation/measurement, and report the actual tested scope.
 
-Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission) · [SRIC: endogenous semantic witness](STATUS_CATALOG.md#research-sric-block23-witness) · [RRCT multispace convergence protocol](STATUS_CATALOG.md#research-rrct-multispace-protocol) · [RRCT](STATUS_CATALOG.md#packages-rrct) · [Arithmetic J-Space Training Lab](STATUS_CATALOG.md#experiments-arithmetic-jspace) · [Workspace Incubator](STATUS_CATALOG.md#experiments-workspace-incubator) · [PRISM-1](STATUS_CATALOG.md#research-prism-1) · [PRISM-1R](STATUS_CATALOG.md#research-prism-1r).
+Related works and source records: [SRIC: external semantic admission](works/research-sric-external-admission.md) · [SRIC: endogenous semantic witness](works/research-sric-block23-witness.md) · [RRCT multispace convergence protocol](works/research-rrct-multispace-protocol.md) · [RRCT](works/packages-rrct.md) · [Arithmetic J-Space Training Lab](works/experiments-arithmetic-jspace.md) · [Workspace Incubator](works/experiments-workspace-incubator.md) · [PRISM-1](works/research-prism-1.md) · [PRISM-1R](works/research-prism-1r.md).
 
 <a id="f13"></a>
 
@@ -237,10 +239,12 @@ These broad mathematical or physical endpoints are research obligations, not edi
 
 **Done when:** Promote only an exact newly proved obligation with its hypotheses and review/formal evidence; finite checks and a released book cannot close an open endpoint.
 
-Applies to: [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](STATUS_CATALOG.md#paper-x) · [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](STATUS_CATALOG.md#paper-xi) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](STATUS_CATALOG.md#paper-xii) · [ABC: global RR8 branch](STATUS_CATALOG.md#abc-global-rr8) · [ABC: source and evidence reader](STATUS_CATALOG.md#abc-reader) · [Beal: source and evidence](STATUS_CATALOG.md#beal-reader) · [Catalan Constant: source and evidence](STATUS_CATALOG.md#catalan-constant-reader) · [Collatz and Riemann: source and evidence](STATUS_CATALOG.md#collatz-and-riemann-readers) · [Hilbert 12: closure attempt](STATUS_CATALOG.md#hilbert12-closure-attempt) · [Hilbert 12: cubic divisor development](STATUS_CATALOG.md#hilbert12-cubic-divisor) · [Hodge: source and evidence](STATUS_CATALOG.md#hodge-reader) · [Inverse Galois: source and evidence](STATUS_CATALOG.md#inverse-galois-reader) · [Lehmer: source and evidence](STATUS_CATALOG.md#lehmer-reader) · [Strong Artin: source and evidence](STATUS_CATALOG.md#strong-artin-reader) · [Physics](STATUS_CATALOG.md#monographs-physics).
+Related works and source records: [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](works/paper-x.md) · [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](works/paper-xi.md) · [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](works/paper-xii.md) · [ABC: global RR8 branch](works/abc-global-rr8.md) · [ABC: source and evidence reader](works/abc-reader.md) · [Beal: source and evidence](works/beal-reader.md) · [Catalan Constant: source and evidence](works/catalan-constant-reader.md) · [Collatz and Riemann: source and evidence](works/collatz-and-riemann-readers.md) · [Hilbert 12: closure attempt](works/hilbert12-closure-attempt.md) · [Hilbert 12: cubic divisor development](works/hilbert12-cubic-divisor.md) · [Hodge: source and evidence](works/hodge-reader.md) · [Inverse Galois: source and evidence](works/inverse-galois-reader.md) · [Lehmer: source and evidence](works/lehmer-reader.md) · [Strong Artin: source and evidence](works/strong-artin-reader.md) · [Physics](works/monographs-physics.md).
 
 ## Release discipline
 
-Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A failed control is positive evidence only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes are not proof rejections. Conditional results keep their premises after editorial completion.
+Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A control counts as a successful rejection check only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes do not establish proof rejection. Conditional results keep their assumptions after editorial work is complete.
 
-The collection's current reuse grant already addresses retained historical undecided notices. Updating navigation to explain that grant is cleanup; it does not require relabeling historical source bytes or changing third-party terms.
+The [current reuse terms](../LICENSE.md) explain how retained historical undecided notices are handled. Navigation can clarify those terms while preserving historical source files and third-party terms.
+
+[Browse the collection](BROWSE.md) · [Completion guide](COMPLETION_STATUS.md) · [Records guide](RECORDS.md)
