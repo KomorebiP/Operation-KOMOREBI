@@ -4,6 +4,10 @@ Choose one of the paths below. Each example has a small, explicit expected
 result. Record the source revision with `git rev-parse HEAD` before running it.
 All software remains beta and work in progress.
 
+For the calculations before the code, use the [hand-worked examples](HAND_WORKED_EXAMPLES.md).
+The [packet example](examples/01_PACKETS.md) and [coordinate example](examples/03_COORDINATES.md)
+explain the two Python outputs below.
+
 ## Komorebi Math on Windows PowerShell
 
 Install Git and a supported Python 3.11, 3.12 or 3.13 interpreter first. The

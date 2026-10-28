@@ -10,4 +10,4 @@ Written proofs can stand on their own. Lean coverage and software tests answer a
 
 The [completion guide](../COMPLETION_STATUS.md#lean-coverage) explains the labels. The [verification guide](../VERIFICATION.md) separates source identity, compiler execution and mathematical review. This route does not perform a new proof audit.
 
-[Reading routes](../READING_ROUTES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)
+[Reading routes](../READING_ROUTES.md) · [Hand-worked examples](../HAND_WORKED_EXAMPLES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)

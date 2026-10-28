@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "Editorial reading help. Definitions introduce finite computational examples and do not replace each work's hypotheses or upgrade its evidence.",
+  "scope": "Introductory definitions and notation for reading the collection. Finite examples are identified explicitly. Each work retains its own definitions, hypotheses and evidence status.",
   "background": {
     "papers": "Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.",
     "monographs": "Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.",
@@ -9,21 +9,998 @@
     "experiments": "Basic programming and familiarity with the stated data and evaluation method. Read the input limits and acceptance criteria before interpreting output."
   },
   "glossary": [
-    {"id":"realization","term":"Realization","definition":"A way to represent a declared system using concrete spaces and operations. The finite matrix implementation assigns a vector-space dimension to each type and a matrix to each allowed arrow.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#3-operate"},
-    {"id":"seed","term":"Seed","definition":"Initial generating data from which an operator action produces further elements.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed"},
-    {"id":"address","term":"Address","definition":"A name for a legal operator path or a packet coordinate. Different domains use addresses such as residues, signal phases or tree paths.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#2-address"},
-    {"id":"projector","term":"Projector","definition":"An operator P satisfying P² = P. Applying it again preserves the component already selected. A component in a redundant representation need not be a projector.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors"},
-    {"id":"packet","term":"Packet","definition":"In the finite projector setting, a component selected by one projector in a complete family. The family separates an object into components that can be put back together. Other domains give packet their own definitions.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction"},
-    {"id":"coordinates","term":"Coordinates","definition":"Values that describe an object relative to a chosen representation. A coordinate change changes that description while preserving the object under the stated transformation rules.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases"},
-    {"id":"analysis-synthesis","term":"Analysis and synthesis","definition":"Analysis sends an object to coordinates. Synthesis reconstructs the object from them. The finite system checks SA = I, where A analyzes and S synthesizes.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition"},
-    {"id":"transfer-block","term":"Transfer block","definition":"The part of an operation connecting one source component to one target component. In a projector system it has the form QⱼTPᵢ. The blocks reconstruct the full operator under the packet hypotheses.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#transfer-blocks"},
-    {"id":"refinement","term":"Refinement","definition":"A compatible move from a coarser description to a finer one. In finite packet refinement, each fine packet has a coarse parent and each coarse projector equals the sum of its children.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine"},
-    {"id":"residual","term":"Residual","definition":"A recorded discrepancy used to check a stated identity or computation. Its acceptance rule depends on the operation. A small numerical residual does not by itself establish a general theorem.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence"},
-    {"id":"obstruction","term":"Obstruction","definition":"A reason a requested construction cannot meet its conditions. A carrier-change obstruction can exhibit two inputs identified by one representation that another representation must distinguish.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion"},
-    {"id":"certificate","term":"Certificate","definition":"A structured report containing validity, evidence class, residuals and assumptions. Its producer defines what was checked. A saved certificate describes a past calculation and needs revalidation for a new one.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence"},
-    {"id":"exact","term":"Exact","definition":"Computed using exact finite algebra or arithmetic under the stated hypotheses. Exact describes the evidence class. It does not establish every supplied assumption.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#execution-classes"},
-    {"id":"numerical","term":"Numerical","definition":"Computed with floating-point arithmetic and interpreted using a stated error or residual rule. Even a zero observed residual does not turn a floating-point calculation into an exact-arithmetic proof.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#execution-classes"},
-    {"id":"conditional","term":"Conditional","definition":"A result that retains explicitly listed assumptions that the computation has not established. Passing its checks does not discharge those assumptions.","source":"https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence"},
-    {"id":"lean-correspondence","term":"Lean correspondence","definition":"A recorded connection between a written claim and a formal Lean statement. Check the hypotheses, declaration, source edition and execution record. A similarly named declaration alone does not establish the connection.","source":"https://github.com/KomorebiP/Operation-KOMOREBI/blob/main/docs/COMPLETION_STATUS.md#lean-coverage"}
+    {
+      "id": "realization",
+      "term": "Realization",
+      "section": "operators-and-packets",
+      "definition": "A way to represent a declared system using concrete spaces and operations while respecting its required relations. A finite matrix realization assigns a space to each type and a matrix to each permitted arrow.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#3-operate",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "typed-system",
+        "operator-algebra",
+        "compatibility"
+      ]
+    },
+    {
+      "id": "seed",
+      "term": "Seed",
+      "section": "operators-and-packets",
+      "definition": "Initial generating data from which the allowed operator action produces further elements. Whether a seed is sufficient depends on both the object and the declared action.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "span",
+        "seed-rank",
+        "cyclic"
+      ]
+    },
+    {
+      "id": "address",
+      "term": "Address",
+      "section": "operators-and-packets",
+      "definition": "A label for a legal operator path or a packet coordinate. Examples include signal phases, residue classes and positions in a packet tree. An address identifies a location in a representation, not necessarily a physical location.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "typed-system",
+        "packet",
+        "residue-class"
+      ]
+    },
+    {
+      "id": "projector",
+      "term": "Projector",
+      "section": "operators-and-packets",
+      "definition": "A linear operator P satisfying P² = P. Applying it twice has the same effect as applying it once. This algebraic definition does not require orthogonality.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "orthogonal-projector",
+        "packet",
+        "redundancy"
+      ]
+    },
+    {
+      "id": "packet",
+      "term": "Packet",
+      "section": "operators-and-packets",
+      "definition": "In the finite projector example, a selected component Pᵢx or the subspace in which it lies, according to context. Signal, algebraic and arithmetic works may assign the word more specific meanings.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "projector",
+        "complete-packet-family",
+        "address"
+      ]
+    },
+    {
+      "id": "coordinates",
+      "term": "Coordinates",
+      "section": "coordinates-and-transfer",
+      "definition": "Values describing an object relative to a chosen representation. Coordinates can be unique basis coefficients or redundant measurements, depending on the setup.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "basis",
+        "coordinate-change",
+        "redundancy"
+      ]
+    },
+    {
+      "id": "analysis-synthesis",
+      "term": "Analysis and synthesis",
+      "section": "coordinates-and-transfer",
+      "definition": "Analysis sends an object to coordinates. Synthesis returns an object from coordinates. In the finite model, A analyzes and S synthesizes, and exact reconstruction is the identity SA = I.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition",
+      "example": "examples/06_REDUNDANT_COORDINATES.md",
+      "related": [
+        "left-inverse",
+        "coordinates",
+        "reconstruction"
+      ]
+    },
+    {
+      "id": "transfer-block",
+      "term": "Transfer block",
+      "section": "coordinates-and-transfer",
+      "definition": "The part of an operation connecting a source component to a target component. With source projector Pᵢ, target projector Qⱼ and operator T, the block is QⱼTPᵢ. Complete source and target families allow the blocks to reconstruct T.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport",
+      "example": "examples/04_TRANSFER.md",
+      "related": [
+        "projector",
+        "composition",
+        "reconstruction"
+      ]
+    },
+    {
+      "id": "refinement",
+      "term": "Refinement",
+      "section": "refinement-and-constraints",
+      "definition": "A compatible move from a coarser description to a finer one. In finite packet refinement, each fine packet has a coarse parent and each coarse projector is the sum of its children.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "coarsening",
+        "compatibility",
+        "residue-class"
+      ]
+    },
+    {
+      "id": "residual",
+      "term": "Residual",
+      "section": "arithmetic-and-error",
+      "definition": "A discrepancy computed for a specified identity or reconstruction. In Example 5 it is r = x − x̂. Other operations may use a different sign or norm, so the definition belongs with the reported number.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "norm",
+        "tolerance",
+        "obstruction"
+      ]
+    },
+    {
+      "id": "obstruction",
+      "term": "Obstruction",
+      "section": "refinement-and-constraints",
+      "definition": "An identified reason a requested construction cannot meet its stated conditions. In the recovery example, two inputs have the same coarse value but require different answers, so no recovery function from that value alone exists.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion",
+      "example": "examples/07_OBSTRUCTIONS.md",
+      "related": [
+        "fiber",
+        "factorization",
+        "residual"
+      ],
+      "note": "A nonzero numerical residual is not automatically a proof that every possible construction fails."
+    },
+    {
+      "id": "certificate",
+      "term": "Certificate",
+      "section": "claims-and-evidence",
+      "definition": "A structured report describing a particular check, with its evidence class, residuals and assumptions. The producer determines what was checked. A saved certificate describes a past calculation and needs revalidation for a new one.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence",
+      "related": [
+        "exact",
+        "numerical",
+        "conditional"
+      ]
+    },
+    {
+      "id": "exact",
+      "term": "Exact",
+      "section": "arithmetic-and-error",
+      "definition": "Computed or stated in exact algebra or arithmetic under the declared hypotheses. Exact rational arithmetic avoids rounding of those rational values. It does not establish an unchecked modeling assumption.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#execution-classes",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "numerical",
+        "hypothesis",
+        "dyadic-rational"
+      ]
+    },
+    {
+      "id": "numerical",
+      "term": "Numerical",
+      "section": "arithmetic-and-error",
+      "definition": "Computed with finite-precision arithmetic and interpreted using a stated error or residual rule. A zero observed floating-point residual does not turn the whole computation into an exact-arithmetic proof.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#execution-classes",
+      "example": "examples/09_BINARY_ROUNDING.md",
+      "related": [
+        "exact",
+        "residual",
+        "tolerance"
+      ]
+    },
+    {
+      "id": "conditional",
+      "term": "Conditional",
+      "section": "claims-and-evidence",
+      "definition": "A result that retains explicitly listed assumptions. In a computation record, some of those assumptions may not have been established by the computation. Passing its checks does not discharge them.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence",
+      "related": [
+        "hypothesis",
+        "certificate",
+        "completion"
+      ]
+    },
+    {
+      "id": "lean-correspondence",
+      "term": "Lean correspondence",
+      "section": "claims-and-evidence",
+      "definition": "A recorded connection between a written claim and a formal Lean statement. Compare hypotheses, the full formal type, source edition and execution record. A similar declaration name or a working link alone does not establish the correspondence.",
+      "source": "COMPLETION_STATUS.md#lean-coverage",
+      "related": [
+        "proof",
+        "theorem",
+        "certificate"
+      ]
+    },
+    {
+      "id": "scalar",
+      "term": "Scalar",
+      "section": "linear-foundations",
+      "definition": "A number from the declared coefficient field, used to multiply vectors. The hand-worked matrix examples use real scalars and exact rational entries.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "field",
+        "vector"
+      ]
+    },
+    {
+      "id": "field",
+      "term": "Field",
+      "section": "linear-foundations",
+      "definition": "A number system with addition, subtraction, multiplication and division by every nonzero element. The rational, real and complex numbers are examples. A result over one field does not automatically hold over another.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "scalar"
+      ]
+    },
+    {
+      "id": "vector",
+      "term": "Vector",
+      "section": "linear-foundations",
+      "definition": "An element of a vector space. In the finite examples it is a column of numbers. Its coordinates depend on a chosen representation.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "vector-space",
+        "coordinates"
+      ]
+    },
+    {
+      "id": "vector-space",
+      "term": "Vector space",
+      "section": "linear-foundations",
+      "definition": "A collection of vectors closed under addition and scalar multiplication, with the usual distributive and associative laws. The space of pairs of real numbers is denoted R².",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "field",
+        "span",
+        "basis"
+      ]
+    },
+    {
+      "id": "linear-map",
+      "term": "Linear map",
+      "section": "linear-foundations",
+      "definition": "A map T satisfying T(au + bv) = aT(u) + bT(v) for all vectors u, v and allowed scalars a, b. A linear map preserves linear combinations.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/04_TRANSFER.md",
+      "related": [
+        "matrix",
+        "kernel",
+        "image"
+      ]
+    },
+    {
+      "id": "matrix",
+      "term": "Matrix",
+      "section": "linear-foundations",
+      "definition": "A rectangular array representing a linear map after bases have been chosen. An m by n matrix takes n coordinates to m coordinates. Each output coordinate is a row multiplied by the input column.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "linear-map",
+        "basis",
+        "composition"
+      ]
+    },
+    {
+      "id": "identity",
+      "term": "Identity operator",
+      "section": "linear-foundations",
+      "definition": "The map I that leaves every input unchanged, so Ix = x. The subscript in I₂ or I₃ specifies the dimension when needed.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "inverse",
+        "complete-packet-family"
+      ]
+    },
+    {
+      "id": "span",
+      "term": "Span",
+      "section": "linear-foundations",
+      "definition": "All finite linear combinations of a specified set of vectors. The span of the empty set consists only of the zero vector. With an operator action, one may first apply allowed operators and then take the span.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "seed",
+        "basis",
+        "linear-independence"
+      ]
+    },
+    {
+      "id": "linear-independence",
+      "term": "Linear independence",
+      "section": "linear-foundations",
+      "definition": "A family is linearly independent when the only linear combination giving zero has every coefficient zero. No member of a finite independent family can be formed from the others.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "span",
+        "basis"
+      ]
+    },
+    {
+      "id": "basis",
+      "term": "Basis",
+      "section": "linear-foundations",
+      "definition": "A linearly independent spanning family. Every vector has a unique finite linear combination in that basis. Redundant measurements can describe a vector without forming a basis.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "span",
+        "linear-independence",
+        "redundancy"
+      ]
+    },
+    {
+      "id": "dimension",
+      "term": "Dimension",
+      "section": "linear-foundations",
+      "definition": "The number of vectors in a basis of a finite-dimensional vector space. In these examples, R² has dimension two even when three redundant measurements are stored.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/06_REDUNDANT_COORDINATES.md",
+      "related": [
+        "basis",
+        "rank",
+        "seed-rank"
+      ]
+    },
+    {
+      "id": "kernel",
+      "term": "Kernel",
+      "section": "linear-foundations",
+      "definition": "For a linear map T, the vectors sent to zero: ker T = {x : Tx = 0}. A nonzero kernel describes directions that this map cannot distinguish from zero.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion",
+      "example": "examples/07_OBSTRUCTIONS.md",
+      "related": [
+        "image",
+        "fiber",
+        "factorization"
+      ]
+    },
+    {
+      "id": "image",
+      "term": "Image",
+      "section": "linear-foundations",
+      "definition": "The outputs actually attained by a map. For a linear map T, im T = {Tx : x is an allowed input} is a subspace of the target. The declared target can be larger than the image.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion",
+      "example": "examples/06_REDUNDANT_COORDINATES.md",
+      "related": [
+        "kernel",
+        "rank",
+        "left-inverse"
+      ]
+    },
+    {
+      "id": "rank",
+      "term": "Rank",
+      "section": "linear-foundations",
+      "definition": "For a finite linear map, the dimension of its image. A matrix has full column rank when its columns are linearly independent, so it has no nonzero input in its kernel.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition",
+      "example": "examples/06_REDUNDANT_COORDINATES.md",
+      "related": [
+        "dimension",
+        "image",
+        "seed-rank"
+      ],
+      "note": "Matrix rank and seed rank answer different questions."
+    },
+    {
+      "id": "inner-product",
+      "term": "Inner product",
+      "section": "linear-foundations",
+      "definition": "For real vector spaces, a symmetric bilinear pairing with ⟨v,v⟩ > 0 for every nonzero v. It defines lengths and angles. Positive weights give the pairing sum_i w_i u_i v_i. Complex inner products use conjugate symmetry and conjugate linearity in one argument.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#4-project",
+      "example": "examples/08_WEIGHTED_AVERAGES.md",
+      "related": [
+        "norm",
+        "orthogonal-projector"
+      ]
+    },
+    {
+      "id": "norm",
+      "term": "Norm",
+      "section": "linear-foundations",
+      "definition": "A nonnegative measure of size that is zero only at the zero vector, scales by the absolute value of a scalar and satisfies the triangle inequality. The Euclidean norm is the square root of the sum of squared coordinates.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#4-project",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "inner-product",
+        "residual",
+        "tolerance"
+      ]
+    },
+    {
+      "id": "typed-system",
+      "term": "Typed system",
+      "section": "operators-and-packets",
+      "definition": "A system that records which objects an operation accepts and returns. A path of operations is legal only when consecutive input and output types agree. Types are part of the mathematical specification.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md#typed-finite-expressions",
+      "example": "examples/04_TRANSFER.md",
+      "related": [
+        "linear-map",
+        "composition",
+        "realization"
+      ]
+    },
+    {
+      "id": "operator-algebra",
+      "term": "Operator algebra",
+      "section": "operators-and-packets",
+      "definition": "In the finite linear setting, a collection of linear operators closed under sums, scalar multiples and composition. When a unital algebra is intended, the identity operator is included.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#3-operate",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "composition",
+        "seed",
+        "invariant-subspace"
+      ]
+    },
+    {
+      "id": "seed-rank",
+      "term": "Seed rank",
+      "section": "operators-and-packets",
+      "definition": "In the finite linear example, the least number of seeds whose operator-generated span is the whole space. More general definitions can involve modules, dense generation and cardinalities. Read the definition in the chosen work.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "seed",
+        "span",
+        "rank"
+      ]
+    },
+    {
+      "id": "cyclic",
+      "term": "Cyclic vector",
+      "section": "operators-and-packets",
+      "definition": "For a single linear operator T, a vector v is cyclic when v, Tv, T²v and further iterates span the space under consideration. One cyclic vector is enough to generate that operator module.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "seed",
+        "span"
+      ]
+    },
+    {
+      "id": "orthogonal-projector",
+      "term": "Orthogonal projector",
+      "section": "operators-and-packets",
+      "definition": "A projector onto a subspace whose residual x − Px is perpendicular to that subspace in the specified inner product. In ordinary real Euclidean coordinates its matrix is symmetric as well as idempotent.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#4-project",
+      "example": "examples/08_WEIGHTED_AVERAGES.md",
+      "related": [
+        "projector",
+        "inner-product"
+      ],
+      "note": "Orthogonality depends on the inner product. Weighted averaging need not have a symmetric matrix in ordinary coordinates."
+    },
+    {
+      "id": "complete-packet-family",
+      "term": "Complete packet family",
+      "section": "operators-and-packets",
+      "definition": "In these finite examples, projectors Pᵢ with PᵢPⱼ = 0 for distinct indices and sum_i Pᵢ = I. These identities decompose every vector as x = sum_i Pᵢx.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "projector",
+        "mutual-annihilation",
+        "reconstruction"
+      ]
+    },
+    {
+      "id": "mutual-annihilation",
+      "term": "Mutual annihilation",
+      "section": "operators-and-packets",
+      "definition": "The relation PᵢPⱼ = 0 whenever i and j differ. Applying one selection after a different selection gives zero. For a pair of projectors, both orders must be checked.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "projector",
+        "complete-packet-family"
+      ]
+    },
+    {
+      "id": "invariant-subspace",
+      "term": "Invariant subspace",
+      "section": "operators-and-packets",
+      "definition": "A subspace W preserved by an operator T, meaning T(W) is contained in W. Preservation does not require T to act as the identity on W.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed",
+      "example": "examples/02_SEEDS.md",
+      "related": [
+        "span",
+        "operator-algebra"
+      ]
+    },
+    {
+      "id": "coordinate-change",
+      "term": "Coordinate change",
+      "section": "coordinates-and-transfer",
+      "definition": "A transformation between descriptions of the same object. In the invertible linear example the convention is y = Cx, so x = C⁻¹y. Keeping track of the direction prevents inverse formulas from being swapped.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "coordinates",
+        "inverse",
+        "conjugation"
+      ]
+    },
+    {
+      "id": "inverse",
+      "term": "Inverse",
+      "section": "coordinates-and-transfer",
+      "definition": "A map that undoes another map in both directions. For a square invertible matrix C, the inverse satisfies C⁻¹C = CC⁻¹ = I.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#coordinate-systems-and-atlases",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "identity",
+        "left-inverse"
+      ]
+    },
+    {
+      "id": "left-inverse",
+      "term": "Left inverse",
+      "section": "coordinates-and-transfer",
+      "definition": "For A mapping an input space to a coordinate space, S is a left inverse when SA = I on the input space. This gives exact reconstruction of analyzed inputs. It does not imply AS = I on the entire coordinate space.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition",
+      "example": "examples/06_REDUNDANT_COORDINATES.md",
+      "related": [
+        "inverse",
+        "analysis-synthesis",
+        "image"
+      ]
+    },
+    {
+      "id": "redundancy",
+      "term": "Redundant coordinates",
+      "section": "coordinates-and-transfer",
+      "definition": "A representation containing more coordinate entries than are needed for a basis description. Valid coordinate lists can satisfy relations, such as a third measurement being the sum of the first two.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors",
+      "example": "examples/06_REDUNDANT_COORDINATES.md",
+      "related": [
+        "basis",
+        "analysis-synthesis",
+        "projector"
+      ],
+      "note": "The reconstruction components SEᵢA can sum to the identity without being projectors."
+    },
+    {
+      "id": "composition",
+      "term": "Composition",
+      "section": "coordinates-and-transfer",
+      "definition": "Applying one map after another. In a matrix product UT, T acts first and U acts second. The intermediate dimensions or types must agree.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/PUBLIC_API.md#typed-finite-expressions",
+      "example": "examples/04_TRANSFER.md",
+      "related": [
+        "typed-system",
+        "matrix",
+        "transfer-block"
+      ]
+    },
+    {
+      "id": "conjugation",
+      "term": "Operator conjugation",
+      "section": "coordinates-and-transfer",
+      "definition": "The change in an operator matrix under an invertible coordinate change. With y = Cx and original operator T, the new matrix is CTC⁻¹. This usage is distinct from complex conjugation.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "coordinate-change",
+        "intertwiner"
+      ]
+    },
+    {
+      "id": "intertwiner",
+      "term": "Intertwiner",
+      "section": "coordinates-and-transfer",
+      "definition": "A linear map C connecting operators T and U by CT = UC. Applying T and then C agrees with applying C and then U. An intertwiner need not be invertible.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "conjugation",
+        "commuting-diagram"
+      ]
+    },
+    {
+      "id": "coarsening",
+      "term": "Coarsening",
+      "section": "refinement-and-constraints",
+      "definition": "Passing to a description that groups or forgets distinctions. Combining fine packets can recover a coarse packet, while discarding the fine values can prevent later reconstruction.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "refinement",
+        "obstruction",
+        "fiber"
+      ]
+    },
+    {
+      "id": "polyphase",
+      "term": "Polyphase decomposition",
+      "section": "refinement-and-constraints",
+      "definition": "For a sequence x and a positive integer m, the phase r collects samples x_(mk+r), with 0 ≤ r < m. Interleaving all phases reconstructs the indexed sequence. Filtering requires additional boundary and convention choices.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "address",
+        "residue-class",
+        "reconstruction"
+      ]
+    },
+    {
+      "id": "residue-class",
+      "term": "Residue class",
+      "section": "refinement-and-constraints",
+      "definition": "Integers with the same remainder modulo a positive integer m. Two integers belong to the same class when their difference is a multiple of m. Even and odd indices are the two classes modulo two.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#signal-realization",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "polyphase",
+        "address"
+      ]
+    },
+    {
+      "id": "compatibility",
+      "term": "Compatibility",
+      "section": "refinement-and-constraints",
+      "definition": "Agreement between specified maps, operations or levels of a construction. The relevant equality must be stated, such as a coarse projector equaling the sum of its fine children.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#6-refine",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "commuting-diagram",
+        "refinement",
+        "completion"
+      ]
+    },
+    {
+      "id": "commuting-diagram",
+      "term": "Commuting diagram",
+      "section": "refinement-and-constraints",
+      "definition": "A diagram in which the declared routes between the same starting and ending objects give the same map. In Example 3 the equality is D_y C = C D.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport",
+      "example": "examples/03_COORDINATES.md",
+      "related": [
+        "composition",
+        "compatibility",
+        "intertwiner"
+      ]
+    },
+    {
+      "id": "reconstruction",
+      "term": "Reconstruction",
+      "section": "refinement-and-constraints",
+      "definition": "Recovering an object from its representation under the stated identities. Exact reconstruction may use all packet components or a synthesis map. Dropping components generally introduces a residual.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#definition",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "analysis-synthesis",
+        "residual",
+        "complete-packet-family"
+      ]
+    },
+    {
+      "id": "fiber",
+      "term": "Fiber",
+      "section": "refinement-and-constraints",
+      "definition": "For a map R and an output s, the set of all inputs with R(x) = s. A proposed observation can be recovered from R(x) alone only if it is constant on each fiber.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion",
+      "example": "examples/07_OBSTRUCTIONS.md",
+      "related": [
+        "kernel",
+        "factorization"
+      ]
+    },
+    {
+      "id": "factorization",
+      "term": "Factorization through a map",
+      "section": "refinement-and-constraints",
+      "definition": "Writing one map F as G composed with another map R, so F(x) = G(R(x)). This means the intermediate value R(x) contains enough information for the requested output F(x).",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion",
+      "example": "examples/07_OBSTRUCTIONS.md",
+      "related": [
+        "fiber",
+        "obstruction",
+        "composition"
+      ]
+    },
+    {
+      "id": "lift",
+      "term": "Lift",
+      "section": "refinement-and-constraints",
+      "definition": "An object at a finer or richer level that maps to a specified object at a coarser level. Existence, uniqueness and compatibility of lifts are separate questions.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#7-constrain",
+      "related": [
+        "refinement",
+        "compatibility",
+        "obstruction"
+      ]
+    },
+    {
+      "id": "conditional-expectation",
+      "term": "Finite conditional expectation",
+      "section": "refinement-and-constraints",
+      "definition": "For positive weights and a finite partition, replace each value by its group’s weighted mean. The resulting map fixes group-constant vectors and is an orthogonal projector in the corresponding weighted inner product.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#4-project",
+      "example": "examples/08_WEIGHTED_AVERAGES.md",
+      "related": [
+        "orthogonal-projector",
+        "inner-product",
+        "coarsening"
+      ]
+    },
+    {
+      "id": "completion",
+      "term": "Completion",
+      "section": "refinement-and-constraints",
+      "definition": "A construction that adds or realizes limits or missing structure under a specified mathematical definition. There is no single universal completion operation across the collection. A finite compatible tower does not by itself construct an infinite limit.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#8-complete",
+      "related": [
+        "compatibility",
+        "lift"
+      ],
+      "note": "Mathematical completion and the editorial completion stage of a paper are different uses of the word."
+    },
+    {
+      "id": "precision",
+      "term": "Precision",
+      "section": "arithmetic-and-error",
+      "definition": "The capacity of a numerical representation. For the binary model here it is the number of significant binary digits, including the leading bit. More precision does not alone prove that an algorithm or its input is accurate.",
+      "source": "https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md",
+      "example": "examples/09_BINARY_ROUNDING.md",
+      "related": [
+        "rounding",
+        "ulp",
+        "numerical"
+      ]
+    },
+    {
+      "id": "dyadic-rational",
+      "term": "Dyadic rational",
+      "section": "arithmetic-and-error",
+      "definition": "A rational number expressible as an integer divided by a power of two. These are precisely the rational numbers with a finite binary expansion, apart from representation range limits.",
+      "source": "https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md",
+      "example": "examples/09_BINARY_ROUNDING.md",
+      "related": [
+        "exact",
+        "rounding"
+      ]
+    },
+    {
+      "id": "rounding",
+      "term": "Rounding",
+      "section": "arithmetic-and-error",
+      "definition": "Choosing a representable stored value for an exact value according to a specified rule. Nearest, ties to even chooses the closer value and resolves an exact midpoint by the parity of the last retained significand bit.",
+      "source": "https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md",
+      "example": "examples/09_BINARY_ROUNDING.md",
+      "related": [
+        "precision",
+        "ulp",
+        "ternary"
+      ]
+    },
+    {
+      "id": "ulp",
+      "term": "ULP",
+      "section": "arithmetic-and-error",
+      "definition": "A unit in the last retained place at a specified precision and exponent. In the three-bit example the spacing in [1, 2) is 1/4, while the spacing in [2, 4) is 1/2. It is not one fixed absolute distance.",
+      "source": "https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md",
+      "example": "examples/09_BINARY_ROUNDING.md",
+      "related": [
+        "precision",
+        "rounding"
+      ]
+    },
+    {
+      "id": "ternary",
+      "term": "Numerical ternary",
+      "section": "arithmetic-and-error",
+      "definition": "A numerical return whose sign compares the stored result with the exact value under the operation’s contract. Zero means exact, negative means below and positive means above. An error sentinel is not a numerical direction.",
+      "source": "https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/glossary.md",
+      "example": "examples/09_BINARY_ROUNDING.md",
+      "related": [
+        "rounding",
+        "exact"
+      ]
+    },
+    {
+      "id": "tolerance",
+      "term": "Tolerance",
+      "section": "arithmetic-and-error",
+      "definition": "A declared threshold used by a numerical acceptance rule. Its units, scaling and comparison must match the residual being checked. A residual below tolerance is evidence within that rule, not exact equality in general.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#certificates-and-saved-evidence",
+      "example": "examples/05_REFINEMENT.md",
+      "related": [
+        "residual",
+        "norm",
+        "numerical"
+      ]
+    },
+    {
+      "id": "hypothesis",
+      "term": "Hypothesis",
+      "section": "claims-and-evidence",
+      "definition": "An assumption required by a statement or construction. It may describe the space, arithmetic, domain, regularity or supplied data. A conclusion applies only where its hypotheses hold.",
+      "source": "VERIFICATION.md",
+      "example": "examples/08_WEIGHTED_AVERAGES.md",
+      "related": [
+        "conditional",
+        "theorem",
+        "certificate"
+      ]
+    },
+    {
+      "id": "theorem",
+      "term": "Theorem",
+      "section": "claims-and-evidence",
+      "definition": "A mathematical statement established by a proof from its specified assumptions. A theorem may be conditional on explicit hypotheses, even when the implication itself is fully proved.",
+      "source": "VERIFICATION.md",
+      "related": [
+        "hypothesis",
+        "proof",
+        "conditional"
+      ]
+    },
+    {
+      "id": "proof",
+      "term": "Proof",
+      "section": "claims-and-evidence",
+      "definition": "An argument establishing a statement from its hypotheses and accepted prior results. A worked input illustrates a statement. A general identity or argument is needed to establish a claim about every allowed input.",
+      "source": "VERIFICATION.md",
+      "example": "examples/07_OBSTRUCTIONS.md",
+      "related": [
+        "theorem",
+        "finite-check",
+        "lean-correspondence"
+      ]
+    },
+    {
+      "id": "heuristic",
+      "term": "Heuristic",
+      "section": "claims-and-evidence",
+      "definition": "A method for discovery, search or estimation without a complete guarantee for the claimed outcome. Its suggestions can lead to later proofs or checks, but the suggestions alone do not establish them.",
+      "source": "https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#execution-classes",
+      "related": [
+        "proof",
+        "finite-check"
+      ]
+    },
+    {
+      "id": "finite-check",
+      "term": "Finite check",
+      "section": "claims-and-evidence",
+      "definition": "A check over specified, finitely many inputs or cases. Exhaustive checking can prove a claim about that finite domain. Sampling a larger domain does not establish the universal claim without an additional argument.",
+      "source": "VERIFICATION.md",
+      "example": "examples/01_PACKETS.md",
+      "related": [
+        "proof",
+        "certificate",
+        "hypothesis"
+      ]
+    }
+  ],
+  "glossary_sections": [
+    {
+      "id": "linear-foundations",
+      "title": "Linear foundations",
+      "description": "The objects and notation used in the finite examples."
+    },
+    {
+      "id": "operators-and-packets",
+      "title": "Operators, seeds and packets",
+      "description": "How an allowed action generates, selects and decomposes objects."
+    },
+    {
+      "id": "coordinates-and-transfer",
+      "title": "Coordinates and transfer",
+      "description": "How descriptions change and operations move between components."
+    },
+    {
+      "id": "refinement-and-constraints",
+      "title": "Refinement and constraints",
+      "description": "How descriptions become finer, discard information or meet a compatibility condition."
+    },
+    {
+      "id": "arithmetic-and-error",
+      "title": "Arithmetic and error",
+      "description": "How exact values, stored approximations and error measures differ."
+    },
+    {
+      "id": "claims-and-evidence",
+      "title": "Claims and evidence",
+      "description": "How to read assumptions, proofs, formal links and computation records."
+    }
+  ],
+  "notation": [
+    [
+      "x, y, v",
+      "Vector names",
+      "Objects or their coordinate columns, as declared in the example."
+    ],
+    [
+      "R², R³",
+      "R two, R three",
+      "Real coordinate spaces of dimensions two and three."
+    ],
+    [
+      "xᵀ",
+      "x transpose",
+      "A row or column with its orientation exchanged."
+    ],
+    [
+      "Iₙ",
+      "I sub n",
+      "The identity matrix on n coordinates."
+    ],
+    [
+      "Pᵢ",
+      "P sub i",
+      "A projector in the declared family."
+    ],
+    [
+      "Σᵢ Pᵢx",
+      "Sum over i of P sub i applied to x",
+      "Add the selected components. The examples use finite sums."
+    ],
+    [
+      "A, S",
+      "A, S",
+      "Analysis and synthesis maps where that convention is declared."
+    ],
+    [
+      "C⁻¹",
+      "C inverse",
+      "The inverse of an invertible coordinate change C."
+    ],
+    [
+      "QⱼTPᵢ",
+      "Q sub j, T, P sub i",
+      "Select source i, apply T, then select target j."
+    ],
+    [
+      "ker R, im R",
+      "Kernel of R, image of R",
+      "Inputs sent to zero and outputs attained by a linear map."
+    ],
+    [
+      "G ∘ R",
+      "G composed with R",
+      "Apply R first and G second."
+    ],
+    [
+      "span{v, Nv}",
+      "Span of v and N v",
+      "All scalar linear combinations of the displayed vectors."
+    ],
+    [
+      "⟨u, v⟩w",
+      "Inner product of u and v with weights w",
+      "The weighted pairing defined in Example 8."
+    ],
+    [
+      "‖x‖₂²",
+      "Squared Euclidean norm of x",
+      "Sum of squares of real coordinates."
+    ],
+    [
+      "x̂",
+      "x hat",
+      "An approximation or reconstruction, as defined locally."
+    ],
+    [
+      "xₖₘ₊ᵣ",
+      "x sub k m plus r",
+      "A sequence entry whose index has remainder r modulo m."
+    ],
+    [
+      "1.101₂",
+      "One point one zero one in base two",
+      "The binary fraction 1 + 1/2 + 1/8."
+    ]
   ]
 }

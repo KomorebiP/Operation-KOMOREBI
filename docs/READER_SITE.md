@@ -12,6 +12,7 @@ pages with documentation from two explicitly pinned library revisions.
 | Completion, Lean coverage, confidence and limits | [Project status](../manifests/project-status.json) |
 | Selected reading, proof, Lean and code files | [Browse resources](../manifests/browse-resources.json) |
 | Introductory terminology and background advice | [Reader experience](../manifests/reader-experience.json) |
+| Hand-worked calculations and exercises | [Example index](HAND_WORKED_EXAMPLES.md), [tutorial pages](examples/) and [exact arithmetic checker](../tools/check_hand_examples.py) |
 | Paper I statement and declaration locations | [Claim navigation](../manifests/claim-navigation.json), bound to its retained source records |
 | Library source revisions | [Website library revisions](../manifests/reader-site-libraries.json) |
 | Page structure and browser behavior | [Website assets](../website/assets/) and [site builder](../tools/build_reader_site.py) |
@@ -55,6 +56,7 @@ runs finish successfully. A website build confirms its own navigation and
 packaging scope, not new mathematical or formal verification.
 
 The workflow also runs the documented introductory Python and C examples.
+It checks the nine hand-worked examples with exact rational arithmetic.
 The library workflows retain their broader platform and release checks.
 
 [Accessibility and known limits](ACCESSIBILITY.md) · [Repository maintenance](MAINTENANCE.md)

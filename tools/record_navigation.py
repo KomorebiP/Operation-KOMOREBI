@@ -59,6 +59,7 @@ Use these guides to find works, software, and project records. Each dated review
 |---|---|
 | A starting point for your background or task | [Reading routes](READING_ROUTES.md) and the [public website](https://KomorebiP.github.io/Operation-KOMOREBI/) |
 | Introductory terminology and notation | [Glossary](GLOSSARY.md) |
+| Calculations with every step shown | [Hand-worked examples](HAND_WORKED_EXAMPLES.md) |
 | A small program with expected output | [First runs](FIRST_RUN.md) |
 | Statement locations, formal modules and reading ZIPs | [Claim links](CLAIM_LINKS.md) and [downloads](DOWNLOADS.md) |
 | Accessible formats and known limits | [Accessibility](ACCESSIBILITY.md) |

@@ -15,6 +15,11 @@ def load(root):
     data = json.loads((root/'manifests/reader-experience.json').read_bytes())
     assert data['schema'] == 1
     assert len({x['id'] for x in data['glossary']}) == len(data['glossary'])
+    identifiers={x['id'] for x in data['glossary']}
+    sections={x['id'] for x in data.get('glossary_sections',[])}
+    for term in data['glossary']:
+        if sections:assert term['section'] in sections
+        assert set(term.get('related',[])) <= identifiers
     return data
 
 
@@ -37,19 +42,21 @@ ROUTES = {
 
 1. Read the [project introduction](../START_HERE.md) and [authorship statement](../PROJECT_STATEMENT.md).
 2. Look up **realization**, **projector**, **packet** and **certificate** in the [glossary](../GLOSSARY.md).
-3. Follow the [first software examples](../FIRST_RUN.md). The two-coordinate example separates a vector and reconstructs it.
-4. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
-5. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
+3. Work through [splitting and reconstructing a vector by hand](../examples/01_PACKETS.md). Continue through the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) at your own pace.
+4. Try the [first software examples](../FIRST_RUN.md) when you want to compare a program with the hand calculations.
+5. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
+6. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
 
 Start with vectors and matrices if linear algebra is unfamiliar. You can read the work introductions without installing software.
 '''),
     'MATHEMATICS': ('Read the mathematics', '''This is a suggested sequence, not a prerequisite chain for every work.
 
 1. Read [Start here](../START_HERE.md) for the common questions and a finite identity.
-2. Open [Paper I](../works/paper-i.md) for typed systems and packet coordinates.
-3. Continue to [Paper II](../works/paper-ii.md) for refinement and transfer.
-4. Choose a [book or companion volume](../browse/MONOGRAPHS.md) that matches your subject.
-5. Use the work's **Written proofs** and **Evidence** sections for precise statements and recorded review scope.
+2. Use the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) for concrete calculations with packets, seeds, coordinates and obstructions.
+3. Open [Paper I](../works/paper-i.md) for typed systems and packet coordinates.
+4. Continue to [Paper II](../works/paper-ii.md) for refinement and transfer.
+5. Choose a [book or companion volume](../browse/MONOGRAPHS.md) that matches your subject.
+6. Use the work's **Written proofs** and **Evidence** sections for precise statements and recorded review scope.
 
 Keep the coefficient system, topology, finiteness conditions and application assumptions with each statement. A shared vocabulary does not make the hypotheses of different works interchangeable.
 '''),
@@ -66,7 +73,7 @@ The [completion guide](../COMPLETION_STATUS.md#lean-coverage) explains the label
     'SOFTWARE': ('Run the software', '''Choose the library and environment before installing dependencies. All software remains beta and work in progress.
 
 1. Use the [software guide](../LIBRARIES.md) to choose a library.
-2. Follow the [first-run instructions](../FIRST_RUN.md) for Python or the Linux C library.
+2. Follow the [first-run instructions](../FIRST_RUN.md) for Python or the Linux C library. The [hand calculations](../HAND_WORKED_EXAMPLES.md) explain the basic operations without software.
 3. Compare your output with the stated result and record the source revision.
 4. Continue to [Komorebi Math worked examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/WORKED_EXAMPLES.md) or [Polyphase Float's complete C programs](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/README.md).
 5. Use the library's testing instructions to check the operations you intend to use.
@@ -80,31 +87,11 @@ def render_reader_pages(root, components, assessments):
         return {}
     config = load(root)
     out = {}
-    footer = '\n[Reading routes](../READING_ROUTES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)\n'
+    footer = '\n[Reading routes](../READING_ROUTES.md) · [Hand-worked examples](../HAND_WORKED_EXAMPLES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)\n'
     for key,(title,body) in ROUTES.items():
         out['docs/routes/'+key+'.md'] = '# '+title+'\n\n'+body+footer
-    out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
-    glossary = '# Glossary and notation\n\nThese definitions introduce the finite computational examples. A term can have a more specific meaning in another paper. Follow its definition and hypotheses there.\n\n'
-    glossary += ' · '.join('['+x['term']+'](#'+x['id']+')' for x in config['glossary'])+'\n\n'
-    for x in config['glossary']:
-        glossary += '<a id="'+x['id']+'"></a>\n\n## '+x['term']+'\n\n'+x['definition']+' [Definition and context]('+x['source']+').\n\n'
-    glossary += '''## Symbols in the introductory example
-
-| Symbol | Meaning in this example |
-|---|---|
-| x | The vector being represented |
-| Pᵢ | A projector selecting component i |
-| I | The identity operator |
-| A | Analysis from an object to coordinates |
-| S | Synthesis from coordinates to an object |
-| T | An operation on the source object |
-| QⱼTPᵢ | The part of T from source component i to target component j |
-
-Symbols are local to their definitions. In another paper, the same letter can denote a different object.
-
-[Reading routes](READING_ROUTES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)
-'''
-    out['docs/GLOSSARY.md']=glossary
+    out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
+    out['docs/GLOSSARY.md']=render_glossary(config)
     downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
     claims='# Follow a written claim\n\nThe [searchable claim index]('+SITE+'claims.html) begins with Paper I’s 108 correspondence records. Only 69 are labeled covered in the source record. Definitions, boundaries and documentary entries remain separately labeled. This is navigation through recorded evidence, not a new acceptance run or proof review.\n\nEach entry links the written statement and proof when recorded, the declared Lean modules and the work’s code and evidence. Module locations come from the retained declaration inventory. Code is linked at work level unless a claim-specific test is recorded. A link does not establish a new correspondence.\n\n'
     for c in components:
@@ -121,3 +108,37 @@ Symbols are local to their definitions. In another paper, the same letter can de
     out['docs/DOWNLOADS.md']=downloads
     out['docs/CLAIM_LINKS.md']=claims
     return {p:s.rstrip()+'\n' for p,s in out.items()}
+
+
+def render_glossary(config):
+    terms={x['id']:x for x in config['glossary']}
+    text='# Glossary and notation\n\n'
+    text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
+    text+='Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).\n\n'
+    text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
+    text+='[Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [First software runs](FIRST_RUN.md)\n\n'
+    for section in config['glossary_sections']:
+        text+='- ['+section['title']+'](#'+section['id']+')\n'
+    text+='\n'
+    for section in config['glossary_sections']:
+        group=[x for x in config['glossary'] if x['section']==section['id']]
+        text+='<a id="'+section['id']+'"></a>\n\n## '+section['title']+'\n\n'+section['description']+'\n\n'
+        text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in group)+'\n\n'
+        for term in group:
+            text+='<a id="'+term['id']+'"></a>\n\n### '+term['term']+'\n\n'+term['definition']+'\n\n'
+            if term.get('note'):text+='**Keep in mind:** '+term['note']+'\n\n'
+            links=[]
+            if term.get('example'):links.append('[Hand-worked example]('+term['example']+')')
+            links.append('[Further reading]('+term['source']+')')
+            links.extend('['+terms[key]['term']+'](#'+key+')' for key in term.get('related',[]))
+            text+=' · '.join(links)+'\n\n'
+    text+='## Symbols in the introductory example\n\n'
+    text+='The examples use the following notation. The reading column spells out symbols for readers who are unfamiliar with them.\n\n'
+    text+='| Symbol | Read as | Meaning here |\n|---|---|---|\n'
+    for row in config['notation']:
+        text+='| '+' | '.join(row)+' |\n'
+    text+='\nSymbols are local to their definitions. In another paper, the same letter can denote a different object.\n\n'
+    text+='## Alphabetical index\n\n'
+    text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in sorted(config['glossary'],key=lambda x:x['term'].casefold()))+'\n\n'
+    text+='[Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)\n'
+    return text

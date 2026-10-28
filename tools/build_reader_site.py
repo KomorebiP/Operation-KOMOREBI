@@ -181,7 +181,7 @@ class Site:
     def page(self,path,title,body,source=None):
         esc=html.escape
         root=self.rel('index.html',path)
-        nav=[('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
+        nav=[('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
         nav_html=''.join('<a href="'+self.rel(p,path)+'"'+(' aria-current="page"' if p==path else '')+'>'+t+'</a>' for t,p in nav)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
         doc='''<!doctype html>

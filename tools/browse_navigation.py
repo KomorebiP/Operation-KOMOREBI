@@ -225,7 +225,7 @@ class Browser:
         page = 'docs/BROWSE.md'
         text = '''# Browse papers, proofs, Lean, and code
 
-[Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Reading routes](READING_ROUTES.md) · [Glossary](GLOSSARY.md) · [Reading downloads](DOWNLOADS.md)
+[Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading downloads](DOWNLOADS.md)
 
 Choose a subject below, or go straight to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 
