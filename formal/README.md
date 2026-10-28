@@ -2,6 +2,8 @@
 
 The collection includes Lean source projects with explicit statements, imports, assumptions, and reproduction instructions. Begin with the claim map and pinned environment in the component you want to use.
 
+[Find Lean source files](../docs/browse/LEAN.md) · [Find written statements and proofs](../docs/browse/PROOFS.md) · [Browse all works](../docs/BROWSE.md)
+
 The [twelve core papers](../papers/README.md) link their current paper projects. [Komorebi Space and the companion volumes](../monographs/README.md) supply further developments, and the [research programs](../research/README.md) keep their finite formal statements alongside open obligations.
 
 ## A small starting point

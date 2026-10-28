@@ -2,6 +2,8 @@
 
 **Komorebi P. · Work in progress**
 
+[Browse all works](docs/BROWSE.md) · [Read papers](docs/browse/PAPERS.md) · [Find proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md)
+
 > **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
 
 The [public project and authorship statement](docs/PROJECT_STATEMENT.md#current-state-and-publication-circumstances) records this context. Completion, review, and verification vary by component; all executable software remains **beta / work in progress**.
@@ -14,6 +16,7 @@ Komorebi Space provides the ambient setting for those constructions. It brings r
 
 | Goal | Starting point |
 |---|---|
+| Open a paper, proof, Lean source, or code file | [Clickable browse hub](docs/BROWSE.md), with direct files and edition-specific evidence. |
 | Understand the framework | [Reading guide](docs/START_HERE.md), then the foundations below. |
 | Read the main developments | [Twelve core papers](papers/README.md) and [monographs](monographs/README.md). |
 | Choose by readiness | [Completion stage, Lean coverage, and confidence](docs/COMPLETION_STATUS.md), with links to exact evidence. |
@@ -26,22 +29,22 @@ The [authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, hu
 
 | Work | Subject |
 |---|---|
-| [Realization Calculus](monographs/realization-calculus/) | The collected core development, from packets and transfer to refinement and applications. |
-| [Komorebi Space](monographs/komorebi-space/) | The ambient framework for realizations, projections, compatibility, residuals, and obstructions. |
-| [Realization Boundaries](monographs/realization-boundaries/) | Representability, finite descriptions, and explicit limits of realization. |
-| [Sufficient Resolution](monographs/sufficient-resolution/) | Resolution conditions and the information retained by a representation. |
+| [Realization Calculus](docs/browse/MONOGRAPHS.md#realization-calculus-book) | The collected core development, from packets and transfer to refinement and applications. |
+| [Komorebi Space](docs/browse/MONOGRAPHS.md#komorebi-space) | The ambient framework for realizations, projections, compatibility, residuals, and obstructions. |
+| [Realization Boundaries](docs/browse/MONOGRAPHS.md#realization-boundaries) | Representability, finite descriptions, and explicit limits of realization. |
+| [Sufficient Resolution](docs/browse/MONOGRAPHS.md#sufficient-resolution) | Resolution conditions and the information retained by a representation. |
 
 ## Further reading
 
 | Interest | Starting point |
 |---|---|
-| Arithmetic, special functions, and sequence constructions | [Special Functions](monographs/special-functions/) |
-| Signals, quadratic forms, and numerical probability | [COS Method](monographs/cos-method/) and [Polyphase Signal Calculus](papers/paper-v/current/) |
-| Quantum models and circuit constructions | [Quantum and Circuits](monographs/quantum-and-circuits/) and [Quantum Seed Calculus](papers/paper-vii/current/) |
-| Discrete and continuous physical models | [Physics](monographs/physics/) |
-| Algebraic signal models | [Large Signal Model](monographs/large-signal-model/) |
-| Machine reasoning, abstraction, and interacting agents | [Machine Native Reasoning](monographs/machine-native-reasoning/) and [Machine Societies](monographs/machine-societies/) |
-| Discovery, proof, and review | [Proof Path Theory](monographs/proof-path-theory/) and [Komorebi Methodology](monographs/komorebi-methodology/) |
+| Arithmetic, special functions, and sequence constructions | [Special Functions](docs/browse/MONOGRAPHS.md#monographs-special-functions) |
+| Signals, quadratic forms, and numerical probability | [COS Method](docs/browse/MONOGRAPHS.md#monographs-cos-method) and [Polyphase Signal Calculus](docs/browse/PAPERS.md#paper-v) |
+| Quantum models and circuit constructions | [Quantum and Circuits](docs/browse/MONOGRAPHS.md#monographs-quantum-and-circuits) and [Quantum Seed Calculus](docs/browse/PAPERS.md#paper-vii) |
+| Discrete and continuous physical models | [Physics](docs/browse/MONOGRAPHS.md#monographs-physics) |
+| Algebraic signal models | [Large Signal Model](docs/browse/MONOGRAPHS.md#monographs-large-signal-model) |
+| Machine reasoning, abstraction, and interacting agents | [Machine Native Reasoning](docs/browse/MONOGRAPHS.md#monographs-machine-native-reasoning) and [Machine Societies](docs/browse/MONOGRAPHS.md#monographs-machine-societies) |
+| Discovery, proof, and review | [Proof Path Theory](docs/browse/MONOGRAPHS.md#proof-path-theory) and [Komorebi Methodology](docs/browse/MONOGRAPHS.md#komorebi-methodology) |
 
 ## Software and experiments
 

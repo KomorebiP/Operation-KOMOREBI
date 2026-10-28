@@ -57,6 +57,7 @@ Use the guides below for the maintained collection. Dated reviews and execution 
 
 | Find | Guide |
 |---|---|
+| Direct PDFs, manuscript text, proofs, Lean, and code | [Clickable browse hub](BROWSE.md) |
 | A reading route through the mathematics | [Start here](START_HERE.md) |
 | A component or source edition | [Component index](COMPONENT_INDEX.md) and [source coverage](SOURCE_COVERAGE.md) |
 | Completion stage, Lean coverage, and confidence | [Status guide](COMPLETION_STATUS.md) and [evidence catalogue](STATUS_CATALOG.md) |
@@ -149,6 +150,7 @@ These JSON files record source availability, editorial status, and evidence bind
 |---|---|
 | [source-collection.json](source-collection.json) | Selected component declarations and expected source identities. |
 | [source-components.json](source-components.json) | Receipt-derived availability and primary/supporting classifications. |
+| [browse-resources.json](browse-resources.json) | Selected file and directory shortcuts for each primary work; checked against its own source receipt. |
 | [source-imports/](source-imports/) | Per-component paths, file hashes, modes, and source provenance. |
 | [source-coverage.json](source-coverage.json) | Crosswalk from named inventory entries to available sources and remaining availability limits. |
 | [project-status.json](project-status.json) | Completion, Lean, confidence, scope, finalization queue, and registered evidence. |

@@ -8,80 +8,80 @@ Incomplete implementation entries are listed separately in the [incubator](../do
 
 ## Foundations and semantics
 
-| Work | Scope |
-|---|---|
-| [Information Realization](information-realization/) | The first formal block is separate from broader written developments. |
-| [KZFC and Residual Reflection](kzfc-multiverse/) | The individual statements retain their stated foundational assumptions. |
-| [Logical Resolution](logical-resolution/) | Read the declared finite contracts separately from broader proposed applications. |
-| [Representation Calculus](representation-calculus/) | The scope of each construction is stated in the source. |
-| [Model-Theory Normalization](model-theory-normalization/) | End-to-end discovery-loop bit-cost refinement remains open. |
-| [Resolution Semantics](resolution-semantics/) | Written structural arguments and finite checks; the two-world obstruction has a focused review, while other theorems and forcing applications need their own review. |
-| [Seeded Two-Axis Calculus](seeded-two-axis/) | The written proofs are not Lean-certified. |
-| [Stratified Universality](stratified-universality/) | No whole-monograph Lean certificate is claimed. |
+| Work | Scope | Files |
+|---|---|---|
+| [Information Realization](../docs/browse/RESEARCH.md#information-realization) | The first formal block is separate from broader written developments. | [Lean](information-realization/lean/) · [Code](information-realization/tools/) · [All links](../docs/browse/RESEARCH.md#information-realization) |
+| [KZFC and Residual Reflection](../docs/browse/RESEARCH.md#kzfc-multiverse) | The individual statements retain their stated foundational assumptions. | [Lean](kzfc-multiverse/Komorebi/) · [Code](kzfc-multiverse/scripts/) · [All links](../docs/browse/RESEARCH.md#kzfc-multiverse) |
+| [Logical Resolution](../docs/browse/RESEARCH.md#logical-resolution) | Read the declared finite contracts separately from broader proposed applications. | [Lean](logical-resolution/formalization/) · [Code](logical-resolution/tools/) · [All links](../docs/browse/RESEARCH.md#logical-resolution) |
+| [Representation Calculus](../docs/browse/RESEARCH.md#representation-calculus) | The scope of each construction is stated in the source. | [Lean](representation-calculus/formalization/) · [Code](representation-calculus/checks/) · [All links](../docs/browse/RESEARCH.md#representation-calculus) |
+| [Model-Theory Normalization](../docs/browse/RESEARCH.md#model-theory-normalization) | End-to-end discovery-loop bit-cost refinement remains open. | [Lean](model-theory-normalization/formalization/) · [Code](model-theory-normalization/checks/) · [All links](../docs/browse/RESEARCH.md#model-theory-normalization) |
+| [Resolution Semantics](../docs/browse/RESEARCH.md#resolution-semantics) | Written structural arguments and finite checks; the two-world obstruction has a focused review, while other theorems and forcing applications need their own review. | [PDF](resolution-semantics/Komorebi_Resolution_Semantics.pdf) · [Text](resolution-semantics/Komorebi_Resolution_Semantics.tex) · [Lean](resolution-semantics/formal/) · [Code](resolution-semantics/checks/) · [All links](../docs/browse/RESEARCH.md#resolution-semantics) |
+| [Seeded Two-Axis Calculus](../docs/browse/RESEARCH.md#seeded-two-axis) | The written proofs are not Lean-certified. | [PDF](seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.pdf) · [Text](seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.tex) · [Code](seeded-two-axis/checks/) · [All links](../docs/browse/RESEARCH.md#seeded-two-axis) |
+| [Stratified Universality](../docs/browse/RESEARCH.md#stratified-universality) | No whole-monograph Lean certificate is claimed. | [PDF](stratified-universality/traditional/Stratified_Universality_Traditional.pdf) · [Text](stratified-universality/traditional/Stratified_Universality_Traditional.tex) · [Lean](stratified-universality/lean/inspected_source/) · [Code](stratified-universality/build_release.py) · [All links](../docs/browse/RESEARCH.md#stratified-universality) |
 
 ## Analysis, signals, and physical models
 
-| Work | Scope |
-|---|---|
-| [Euler Signal Bridge](euler-signal-bridge/) | Written finite-difference and FIR identities with exact controls; broader Euler congruences require separate proofs. |
-| [Signal Reconstruction](signal-reconstruction/) | Known-edge packet infrastructure does not prove the new unknown-edge and self-calibration claims. |
-| [Physics: curvature states](physics-curvature-states/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
-| [Physics: energy and backreaction](physics-energy-backreaction/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
-| [Physics: origin locking](physics-origin-locking/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
+| Work | Scope | Files |
+|---|---|---|
+| [Euler Signal Bridge](../docs/browse/RESEARCH.md#euler-signal-bridge) | Written finite-difference and FIR identities with exact controls; broader Euler congruences require separate proofs. | [Code](euler-signal-bridge/verify_bridge.py) · [All links](../docs/browse/RESEARCH.md#euler-signal-bridge) |
+| [Signal Reconstruction](../docs/browse/RESEARCH.md#signal-reconstruction) | Known-edge packet infrastructure does not prove the new unknown-edge and self-calibration claims. | [PDF](signal-reconstruction/traditional/Signal_Reconstruction_Traditional.pdf) · [Text](signal-reconstruction/traditional/Signal_Reconstruction_Traditional.tex) · [Lean](signal-reconstruction/related_formal/paper_v/formalization/lean/) · [Code](signal-reconstruction/audit_release.py) · [All links](../docs/browse/RESEARCH.md#signal-reconstruction) |
+| [Physics: curvature states](../docs/browse/RESEARCH.md#physics-curvature-states) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. | [PDF](physics-curvature-states/Komorebi_Physics_Curvature_States_and_Subtraction.pdf) · [All links](../docs/browse/RESEARCH.md#physics-curvature-states) |
+| [Physics: energy and backreaction](../docs/browse/RESEARCH.md#physics-energy-backreaction) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. | [PDF](physics-energy-backreaction/Energy_Conserving_Production.pdf) · [Text](physics-energy-backreaction/Energy_Conserving_Production.tex) · [Code](physics-energy-backreaction/code/) · [All links](../docs/browse/RESEARCH.md#physics-energy-backreaction) |
+| [Physics: origin locking](../docs/browse/RESEARCH.md#physics-origin-locking) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. | [PDF](physics-origin-locking/Origin_Locking_and_Cosmological_Energy_Exchange.pdf) · [Code](physics-origin-locking/code/) · [All links](../docs/browse/RESEARCH.md#physics-origin-locking) |
 
 ## Arithmetic and open mathematical programs
 
-| Work | Scope |
-|---|---|
-| [p-adic Canonical Realization](padic-canonical-realization/) | Finite formal results retain the hypotheses of their exact declarations. |
-| [ABC: global RR8 branch](abc-global-rr8/) | ABC remains open; these results do not establish a uniform abc exponent. |
-| [ABC: source and evidence reader](abc-reader/) | The general ABC endpoint remains open; the newer RR8 branch is listed separately. |
-| [AddMul Arithmetic Reconstruction](addmul-arithmetic-reconstruction/) | No global abc estimate or IUT reconstruction is claimed. |
-| [Beal: source and evidence](beal-reader/) | General Beal and the recovered signature route remain incomplete. |
-| [Catalan Constant: source and evidence](catalan-constant-reader/) | The irrationality of Catalan constant is not established. |
-| [Collatz and Riemann: source and evidence](collatz-and-riemann-readers/) | Universal Collatz descent and the signed Riemann estimate remain open. |
-| [Hilbert 12: ambient dual slice](../docs/components/H12_AMBIENT_DUAL_SLICE.md) | Finite pairing and Gauss-cube calculations with an explicit primitive-root specialization; the analytic equality remains open. |
-| [Hilbert 12: analytic Fourier branch](hilbert12-analytic-fourier/) | Explicit algebraic Fourier and quotient constructions; analytic orbit and special-value normalization remain unproved. |
-| [Hilbert 12: closure attempt](hilbert12-closure-attempt/) | A small numerical interval distance does not prove exact elliptic-gamma or class-field equality. |
-| [Hilbert 12: contracting ambient torsion](hilbert12-contracting-ambient-torsion/) | Finite torsion transport and separate distribution arguments; inherited analytic inputs and the arithmetic comparison require further review. |
-| [Hilbert 12: cubic divisor development](hilbert12-cubic-divisor/) | The equality of the analytic and algebraic unit constructions remains open; infinite-product analysis lies outside the finite Lean scope. |
-| [Hodge: source and evidence](hodge-reader/) | Actual cycle realization and comparison correspondence remain open; uncompiled sources remain uncompiled. |
-| [Inverse Galois: source and evidence](inverse-galois-reader/) | Realization of every finite group over the rationals remains open. |
-| [IUT Valuation Hulls](iut-valuation-hulls/) | This does not prove or disprove IUT III Corollary 3.12 or abc. |
-| [Lehmer: source and evidence](lehmer-reader/) | All-prime tau nonvanishing remains open. |
-| [Prime-Contact Coherence Calculus](prime-contact-coherence/) | Structural limitations and conditional routes remain explicit; no abc proof is claimed. |
-| [Strong Artin: source and evidence](strong-artin-reader/) | General Strong Artin remains open; historical checkpoints are separate formal projects. |
+| Work | Scope | Files |
+|---|---|---|
+| [p-adic Canonical Realization](../docs/browse/RESEARCH.md#padic-canonical-realization) | Finite formal results retain the hypotheses of their exact declarations. | [Lean](padic-canonical-realization/lean/) · [Code](padic-canonical-realization/verify_release.py) · [All links](../docs/browse/RESEARCH.md#padic-canonical-realization) |
+| [ABC: global RR8 branch](../docs/browse/RESEARCH.md#abc-global-rr8) | ABC remains open; these results do not establish a uniform abc exponent. | [Code](abc-global-rr8/abc_work/) · [All links](../docs/browse/RESEARCH.md#abc-global-rr8) |
+| [ABC: source and evidence reader](../docs/browse/RESEARCH.md#abc-reader) | The general ABC endpoint remains open; the newer RR8 branch is listed separately. | [PDF](abc-reader/pdf/Komorebi_ABC_Conjecture_Piece_v1.0.pdf) · [Text](abc-reader/paper/main.tex) · [Lean](abc-reader/evidence/formal/ktg_source/formalization/lean/) · [Code](abc-reader/evidence/computation/) · [All links](../docs/browse/RESEARCH.md#abc-reader) |
+| [AddMul Arithmetic Reconstruction](../docs/browse/RESEARCH.md#addmul-arithmetic-reconstruction) | No global abc estimate or IUT reconstruction is claimed. | [Lean](addmul-arithmetic-reconstruction/proofs/) · [Code](addmul-arithmetic-reconstruction/tests/) · [All links](../docs/browse/RESEARCH.md#addmul-arithmetic-reconstruction) |
+| [Beal: source and evidence](../docs/browse/RESEARCH.md#beal-reader) | General Beal and the recovered signature route remain incomplete. | [PDF](beal-reader/pdf/Komorebi_Beal_Conjecture_Piece_v1.0.pdf) · [Text](beal-reader/paper/main.tex) · [Lean](beal-reader/evidence/formal/historical_project/) · [Code](beal-reader/evidence/computation/) · [All links](../docs/browse/RESEARCH.md#beal-reader) |
+| [Catalan Constant: source and evidence](../docs/browse/RESEARCH.md#catalan-constant-reader) | The irrationality of Catalan constant is not established. | [PDF](catalan-constant-reader/output/pdf/Komorebi_Catalan_Constant_Conjecture_Piece_v1.0.pdf) · [Text](catalan-constant-reader/paper/main.tex) · [Code](catalan-constant-reader/computations/) · [All links](../docs/browse/RESEARCH.md#catalan-constant-reader) |
+| [Collatz and Riemann: source and evidence](../docs/browse/RESEARCH.md#collatz-and-riemann-readers) | Universal Collatz descent and the signed Riemann estimate remain open. | [PDF](collatz-and-riemann-readers/pdf/Komorebi_Collatz_Conjecture_Piece_v1.1.pdf) · [Text](collatz-and-riemann-readers/collatz/main.tex) · [Code](collatz-and-riemann-readers/build.py) · [All links](../docs/browse/RESEARCH.md#collatz-and-riemann-readers) |
+| [Hilbert 12: ambient dual slice](../docs/browse/RESEARCH.md#hilbert12-ambient-dual-slice) | Finite pairing and Gauss-cube calculations with an explicit primitive-root specialization; the analytic equality remains open. | [Code](hilbert12-ambient-dual-slice/h12_ambient_dual_slice_verify.py) · [All links](../docs/browse/RESEARCH.md#hilbert12-ambient-dual-slice) |
+| [Hilbert 12: analytic Fourier branch](../docs/browse/RESEARCH.md#hilbert12-analytic-fourier) | Explicit algebraic Fourier and quotient constructions; analytic orbit and special-value normalization remain unproved. | [Code](hilbert12-analytic-fourier/H12_Analytic_Resolvent_Verifier.py) · [All links](../docs/browse/RESEARCH.md#hilbert12-analytic-fourier) |
+| [Hilbert 12: closure attempt](../docs/browse/RESEARCH.md#hilbert12-closure-attempt) | A small numerical interval distance does not prove exact elliptic-gamma or class-field equality. | [Code](hilbert12-closure-attempt/h12_closure_verify.py) · [All links](../docs/browse/RESEARCH.md#hilbert12-closure-attempt) |
+| [Hilbert 12: contracting ambient torsion](../docs/browse/RESEARCH.md#hilbert12-contracting-ambient-torsion) | Finite torsion transport and separate distribution arguments; inherited analytic inputs and the arithmetic comparison require further review. | [Code](hilbert12-contracting-ambient-torsion/h12_full_ambient_torsion_verify.py) · [All links](../docs/browse/RESEARCH.md#hilbert12-contracting-ambient-torsion) |
+| [Hilbert 12: cubic divisor development](../docs/browse/RESEARCH.md#hilbert12-cubic-divisor) | The equality of the analytic and algebraic unit constructions remains open; infinite-product analysis lies outside the finite Lean scope. | [PDF](hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.pdf) · [Text](hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.tex) · [Lean](hilbert12-cubic-divisor/lean/) · [Code](hilbert12-cubic-divisor/scripts/) · [All links](../docs/browse/RESEARCH.md#hilbert12-cubic-divisor) |
+| [Hodge: source and evidence](../docs/browse/RESEARCH.md#hodge-reader) | Actual cycle realization and comparison correspondence remain open; uncompiled sources remain uncompiled. | [PDF](hodge-reader/pdf/Komorebi_Hodge_Conjecture_Piece_v1.0.pdf) · [Text](hodge-reader/paper/main.tex) · [Lean](hodge-reader/evidence/formal/) · [Code](hodge-reader/build.py) · [All links](../docs/browse/RESEARCH.md#hodge-reader) |
+| [Inverse Galois: source and evidence](../docs/browse/RESEARCH.md#inverse-galois-reader) | Realization of every finite group over the rationals remains open. | [PDF](inverse-galois-reader/output/pdf/Komorebi_Inverse_Galois_Conjecture_Piece_v1.0.pdf) · [Text](inverse-galois-reader/paper/main.tex) · [Code](inverse-galois-reader/computations/) · [All links](../docs/browse/RESEARCH.md#inverse-galois-reader) |
+| [IUT Valuation Hulls](../docs/browse/RESEARCH.md#iut-valuation-hulls) | This does not prove or disprove IUT III Corollary 3.12 or abc. | [Lean](iut-valuation-hulls/formalization/) · [Code](iut-valuation-hulls/experiments/) · [All links](../docs/browse/RESEARCH.md#iut-valuation-hulls) |
+| [Lehmer: source and evidence](../docs/browse/RESEARCH.md#lehmer-reader) | All-prime tau nonvanishing remains open. | [PDF](lehmer-reader/output/pdf/Komorebi_Lehmer_Conjecture_Piece_v1.0.pdf) · [Text](lehmer-reader/paper/main.tex) · [Code](lehmer-reader/code/) · [All links](../docs/browse/RESEARCH.md#lehmer-reader) |
+| [Prime-Contact Coherence Calculus](../docs/browse/RESEARCH.md#prime-contact-coherence) | Structural limitations and conditional routes remain explicit; no abc proof is claimed. | [Text](prime-contact-coherence/Projector_Resolved_Prime_Contact_Coherence_Calculus_Verified_Final.tex) · [All links](../docs/browse/RESEARCH.md#prime-contact-coherence) |
+| [Strong Artin: source and evidence](../docs/browse/RESEARCH.md#strong-artin-reader) | General Strong Artin remains open; historical checkpoints are separate formal projects. | [PDF](strong-artin-reader/pdf/Komorebi_Strong_Artin_Conjecture_Piece_v1.0.pdf) · [Text](strong-artin-reader/paper/main.tex) · [Lean](strong-artin-reader/lean/) · [Code](strong-artin-reader/build.py) · [All links](../docs/browse/RESEARCH.md#strong-artin-reader) |
 
 ## Machine reasoning and workspace models
 
-| Work | Scope |
-|---|---|
-| [Machine Understanding](machine-understanding/) | Model results and empirical demonstrations remain separately scoped. |
-| [OSL and Neuralese](osl-neuralese/) | Historical failed experiments and incomplete verifier attempts remain part of the evidence. |
-| [OSL and Neuralese: reading edition](osl-neuralese/reading-edition/) | Read alongside the experimental records and their limitations. |
-| [SRIC: external semantic admission](../docs/SRIC_REPAIR_2026-10-27.md) | Corrected 0.3.3 beta source runtime: 15 admission/CLI tests passed on the recorded fixture scope; real-checkpoint execution and scientific qualification remain pending. The retained 0.3.2 edition has documented defects. |
-| [SRIC: endogenous semantic witness](sric-block23-witness/) | Finite synthetic semantic-witness construction; recorded real-model pilot remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23. |
-| [Stratified Recursive Improvement Closure](stratified-recursive-improvement/) | Formal model closure does not itself establish unrestricted real-world self-improvement. |
-| [AVOC](avoc/) | Read the formal contract and retained limitations in the component. |
-| [PRISM-1](prism-1/) | Read the model assumptions and experimental limitations with the results. |
-| [Stratified Relational Workspace Theory](stratified-relational-workspace/) | Theoretical statements retain the declared workspace model. |
-| [Machine Theory: formal development](machine-theory-formal/) | The finite formal declarations do not certify every surrounding machine-model claim. |
-| [Machine Native Reasoning: wider continuation](machine-native-reasoning-wider/) | Preserve the distinction between reviewed core results and wider or conditional work. |
+| Work | Scope | Files |
+|---|---|---|
+| [Machine Understanding](../docs/browse/RESEARCH.md#research-machine-understanding) | Model results and empirical demonstrations remain separately scoped. | [PDF](machine-understanding/Machine_Understanding_v1.0.0.pdf) · [Text](machine-understanding/Machine_Understanding_v1.0.0.tex) · [Code](machine-understanding/code/) · [All links](../docs/browse/RESEARCH.md#research-machine-understanding) |
+| [OSL and Neuralese](../docs/browse/RESEARCH.md#research-osl-neuralese) | Historical failed experiments and incomplete verifier attempts remain part of the evidence. | [PDF](osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.pdf) · [Text](osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.tex) · [Code](osl-neuralese/OSL/core05/reference/) · [All links](../docs/browse/RESEARCH.md#research-osl-neuralese) |
+| [OSL and Neuralese: reading edition](../docs/browse/RESEARCH.md#research-osl-neuralese-reading-edition) | Read alongside the experimental records and their limitations. | [PDF](osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/publication/pdfs/OSL_Final_Research_Edition_v1.0.pdf) · [Text](osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex) · [All links](../docs/browse/RESEARCH.md#research-osl-neuralese-reading-edition) |
+| [SRIC: external semantic admission](../docs/browse/RESEARCH.md#research-sric-external-admission) | Corrected 0.3.3 beta source runtime: 15 admission/CLI tests passed on the recorded fixture scope; real-checkpoint execution and scientific qualification remain pending. The retained 0.3.2 edition has documented defects. | [PDF](sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.pdf) · [Text](sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.tex) · [Code](sric-external-admission/sric_real_lrm/) · [All links](../docs/browse/RESEARCH.md#research-sric-external-admission) |
+| [SRIC: endogenous semantic witness](../docs/browse/RESEARCH.md#research-sric-block23-witness) | Finite synthetic semantic-witness construction; recorded real-model pilot remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23. | [PDF](sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.pdf) · [Text](sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.tex) · [Code](sric-block23-witness/block23/) · [All links](../docs/browse/RESEARCH.md#research-sric-block23-witness) |
+| [Stratified Recursive Improvement Closure](../docs/browse/RESEARCH.md#research-stratified-recursive-improvement) | Formal model closure does not itself establish unrestricted real-world self-improvement. | [PDF](stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.pdf) · [Text](stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.tex) · [All links](../docs/browse/RESEARCH.md#research-stratified-recursive-improvement) |
+| [AVOC](../docs/browse/RESEARCH.md#research-avoc) | Read the formal contract and retained limitations in the component. | [PDF](avoc/AVOC_Publication_1.0/output/AVOC_Traditional_Final.pdf) · [Text](avoc/AVOC_Publication_1.0/manuscripts/main.tex) · [All links](../docs/browse/RESEARCH.md#research-avoc) |
+| [PRISM-1](../docs/browse/RESEARCH.md#research-prism-1) | Read the model assumptions and experimental limitations with the results. | [PDF](prism-1/Komorebi_PRISM_1_Final_Updated.pdf) · [Text](prism-1/Komorebi_PRISM_1_Final_Updated.tex) · [Code](prism-1/prism_chip_model.py) · [All links](../docs/browse/RESEARCH.md#research-prism-1) |
+| [Stratified Relational Workspace Theory](../docs/browse/RESEARCH.md#research-stratified-relational-workspace) | Theoretical statements retain the declared workspace model. | [PDF](stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.pdf) · [Text](stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.tex) · [Code](stratified-relational-workspace/scripts/) · [All links](../docs/browse/RESEARCH.md#research-stratified-relational-workspace) |
+| [Machine Theory: formal development](../docs/browse/RESEARCH.md#research-machine-theory-formal) | The finite formal declarations do not certify every surrounding machine-model claim. | [PDF](machine-theory-formal/source/Reviewed_Core_v0.2.pdf) · [Lean](machine-theory-formal/MachineTheory/) · [Code](machine-theory-formal/scripts/) · [All links](../docs/browse/RESEARCH.md#research-machine-theory-formal) |
+| [Machine Native Reasoning: wider continuation](../docs/browse/RESEARCH.md#research-machine-native-reasoning-wider) | Preserve the distinction between reviewed core results and wider or conditional work. | [PDF](machine-native-reasoning-wider/Machine_Native_Reasoning_Reviewed_Continuation.pdf) · [Text](machine-native-reasoning-wider/book.tex) · [Lean](machine-native-reasoning-wider/sources/lean15_current/MachineTheory/) · [Code](machine-native-reasoning-wider/scripts/) · [All links](../docs/browse/RESEARCH.md#research-machine-native-reasoning-wider) |
 
 ## Inference and statistical models
 
-| Work | Scope |
-|---|---|
-| [Hypergraph Lumpability and Bayesian Refinement](hypergraph-bayesian-refinement/) | The finite model and its admissible refinements determine the result scope. |
-| [Certified Bayesian Inference](certified-bayesian-inference/) | Finite certified statements retain their input and model assumptions. |
-| [Streaming Polyphase Factor Decomposition / SKAT](../docs/components/STREAMING_SKAT.md) | Beta research software; synthetic validation does not establish clinical validity. |
+| Work | Scope | Files |
+|---|---|---|
+| [Hypergraph Lumpability and Bayesian Refinement](../docs/browse/RESEARCH.md#research-hypergraph-bayesian-refinement) | The finite model and its admissible refinements determine the result scope. | [PDF](hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.pdf) · [Text](hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.tex) · [Code](hypergraph-bayesian-refinement/src/) · [All links](../docs/browse/RESEARCH.md#research-hypergraph-bayesian-refinement) |
+| [Certified Bayesian Inference](../docs/browse/RESEARCH.md#research-certified-bayesian-inference) | Finite certified statements retain their input and model assumptions. | [PDF](certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Traditional_Final.pdf) · [Text](certified-bayesian-inference/Certified_Bayesian_Publication_1.0/manuscripts/main.tex) · [All links](../docs/browse/RESEARCH.md#research-certified-bayesian-inference) |
+| [Streaming Polyphase Factor Decomposition / SKAT](../docs/browse/RESEARCH.md#streaming-skat) | Beta research software; synthetic validation does not establish clinical validity. | [PDF](streaming-skat/FINAL_MANUSCRIPT.pdf) · [Text](streaming-skat/FINAL_MANUSCRIPT.tex) · [Code](streaming-skat/kcos.py) · [All links](../docs/browse/RESEARCH.md#streaming-skat) |
 
 ## Method, interpretation, and reader guides
 
-| Work | Scope |
-|---|---|
-| [Gaussian Elimination: collected guide](../docs/components/GAUSSIAN_ELIMINATION.md) | A standalone reader PDF is supplied; no editable source is included in this component. |
-| [The Possibility for a Machine Native Mathematics](../docs/components/MACHINE_NATIVE_MATHEMATICS.md) | A standalone reader PDF is supplied; no editable source is included in this component. |
+| Work | Scope | Files |
+|---|---|---|
+| [Gaussian Elimination: collected guide](../docs/browse/RESEARCH.md#gaussian-elimination-guide) | A standalone reader PDF is supplied; no editable source is included in this component. | [PDF](gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf) · [All links](../docs/browse/RESEARCH.md#gaussian-elimination-guide) |
+| [The Possibility for a Machine Native Mathematics](../docs/browse/RESEARCH.md#machine-native-mathematics-essay) | A standalone reader PDF is supplied; no editable source is included in this component. | [PDF](machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf) · [All links](../docs/browse/RESEARCH.md#machine-native-mathematics-essay) |
 
 All executable software is **beta and work in progress**.
 

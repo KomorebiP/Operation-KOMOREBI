@@ -6,6 +6,7 @@ These JSON files record source availability, editorial status, and evidence bind
 |---|---|
 | [source-collection.json](source-collection.json) | Selected component declarations and expected source identities. |
 | [source-components.json](source-components.json) | Receipt-derived availability and primary/supporting classifications. |
+| [browse-resources.json](browse-resources.json) | Selected file and directory shortcuts for each primary work; checked against its own source receipt. |
 | [source-imports/](source-imports/) | Per-component paths, file hashes, modes, and source provenance. |
 | [source-coverage.json](source-coverage.json) | Crosswalk from named inventory entries to available sources and remaining availability limits. |
 | [project-status.json](project-status.json) | Completion, Lean, confidence, scope, finalization queue, and registered evidence. |

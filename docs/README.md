@@ -4,6 +4,7 @@ Use the guides below for the maintained collection. Dated reviews and execution 
 
 | Find | Guide |
 |---|---|
+| Direct PDFs, manuscript text, proofs, Lean, and code | [Clickable browse hub](BROWSE.md) |
 | A reading route through the mathematics | [Start here](START_HERE.md) |
 | A component or source edition | [Component index](COMPONENT_INDEX.md) and [source coverage](SOURCE_COVERAGE.md) |
 | Completion stage, Lean coverage, and confidence | [Status guide](COMPLETION_STATUS.md) and [evidence catalogue](STATUS_CATALOG.md) |

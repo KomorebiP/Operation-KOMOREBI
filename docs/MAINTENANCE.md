@@ -17,6 +17,8 @@ Run commands from the collection root. The [verification guide](VERIFICATION.md)
 
 For routine wording or navigation changes, edit the relevant template or maintained document, then use `update_completion_status.py`. The source-navigation and publication-metadata scripts are for source/publication reconciliation; their dated inputs need explicit review before reuse. Use a separate output directory to inspect their overlays before applying them.
 
+The [browse-resource registry](../manifests/browse-resources.json) selects direct reading, text, Lean, and code links for every primary component. [browse_navigation.py](../tools/browse_navigation.py) validates each selection against that component's import receipt and the committed tree, then generates the [browse hub](BROWSE.md) and its category/resource pages. Add or revise explicit selections when an edition changes; file names alone must not promote a scientific status. PDF guides are kept separate from actual Lean files. Incubator entries retain their placement.
+
 [record_navigation.py](../tools/record_navigation.py) and [proof_review_coverage.py](../tools/proof_review_coverage.py) are supporting modules called by the status tool. The latter validates existing claim/evidence bindings; running the status tool does not perform a new proof review. The `test_*.py` files are the collection tooling regression suite. The [workflow guide](WORKFLOWS.md) describes which commands GitHub runs and which workflows can publish.
 
 ## Keep records traceable

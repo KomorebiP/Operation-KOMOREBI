@@ -1,0 +1,39 @@
+# Browse papers, proofs, Lean, and code
+
+Choose a subject below, or go straight to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
+
+Each work has direct file links, a source directory, and its completion, Lean, confidence, and evidence record. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** is explanatory reading; **Lean sources** opens actual `.lean` files. Code links can include research utilities and build scripts; follow the edition's README before running them.
+
+## Choose a collection
+
+| Collection | Open |
+|---|---|
+| Core papers | [12 works](browse/PAPERS.md) |
+| Books and companion volumes | [19 works](browse/MONOGRAPHS.md) |
+| Research programs | [49 works](browse/RESEARCH.md) |
+| Software packages | [5 works](browse/PACKAGES.md) |
+| Experiments | [6 works](browse/EXPERIMENTS.md) |
+
+## Follow a claim
+
+1. Open the work's PDF or text and find the theorem, proposition, or section number.
+2. Read the written argument and its assumptions. The [proof finder](browse/PROOFS.md) links manuscript text, selected claim maps, and the existing evidence record.
+3. Where formalization exists, follow the [Lean source finder](browse/LEAN.md) and the edition's correspondence/build instructions. A similarly named declaration or a Lean-guide PDF does not by itself establish a correspondence.
+4. Use the work's **Status and evidence** link to see what was checked and what remains open. Written proofs do not require Lean.
+
+## Move around without opening large folders
+
+Category pages have a linked contents list and a **Back to contents** link after every work. Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
+
+The original files remain in their source directories. If a PDF is too large for GitHub's preview, use the file page's download control. A resource omitted from these selected shortcuts may still exist in the edition contents. The [complete component index](COMPONENT_INDEX.md) includes all supporting and historical collections.
+
+## Small examples and other editions
+
+- [Research Preview 1: mathematical note](../formal/research-preview-1/THEOREM_NOTE.md), [claim map](../formal/research-preview-1/CLAIMS.md), and [reproduction instructions](../formal/research-preview-1/REPRODUCE.md).
+- [Corrected SRIC 0.3.3 runtime](../packages/sric-admission-v0.3.3/README.md) and [its bounded qualification](SRIC_REPAIR_2026-10-27.md).
+- [Independent libraries and earlier software editions](LIBRARIES.md).
+- [Incubator and return criteria](INCUBATOR.md). Incubator entries are marked separately on category pages and excluded from the proof, Lean, and code reading routes.
+
+These are navigation links to preserved editions. Existing scope and scientific status still apply; no new proof review or Lean run is implied.
+
+[Reading guide](START_HERE.md) · [Run and verify](VERIFICATION.md) · [Collection](../README.md)

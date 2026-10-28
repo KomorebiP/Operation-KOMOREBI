@@ -13,15 +13,15 @@ The [corrected SRIC admission 0.3.3 source edition](sric-admission-v0.3.3/README
 
 ## Packages in this collection
 
-| Package | Purpose |
-|---|---|
-| [AM-SPD](komorebi-am-spd/) | Finite image decomposition and reconstruction with retained residuals. |
-| [Quadratic-Form Engine / K-COS](../papers/quadratic-form-kcos/) | The earlier mathematical companion and numerical engine. |
-| [Certified Inference](certified-inference/) | A finite certified-inference core with executable Lean sources and worked constructions. |
-| [Constructive Repair](../docs/components/CONSTRUCTIVE_REPAIR.md) | Constructive repairs, examples, and the accompanying reference implementation. |
-| [RRCT](rrct/) | The v0.60 persistent fuzzy J-Space bridge implementation. |
-| [Universal Generative Deformation Calculus](universal-generative-deformation/) | A reference Python package, examples, tests, and editable mathematical manuscript. |
-| [Large Signal Model software](large-signal-model/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
+| Package | Purpose | Files |
+|---|---|---|
+| [AM-SPD](komorebi-am-spd/) | Finite image decomposition and reconstruction with retained residuals. | [Open edition](komorebi-am-spd/) |
+| [Quadratic-Form Engine / K-COS](../papers/quadratic-form-kcos/) | The earlier mathematical companion and numerical engine. | [Open edition](../papers/quadratic-form-kcos/) |
+| [Certified Inference](../docs/browse/PACKAGES.md#certified-inference) | A finite certified-inference core with executable Lean sources and worked constructions. | [Lean](certified-inference/Komorebi/) · [Code](certified-inference/checks/) · [All links](../docs/browse/PACKAGES.md#certified-inference) |
+| [Constructive Repair](../docs/browse/PACKAGES.md#constructive-repair) | Constructive repairs, examples, and the accompanying reference implementation. | [PDF](constructive-repair/monograph/Constructive_Repair.pdf) · [Text](constructive-repair/monograph/Constructive_Repair.tex) · [Lean](constructive-repair/lean/) · [Code](constructive-repair/python/komorebi_repair/) · [All links](../docs/browse/PACKAGES.md#constructive-repair) |
+| [RRCT](../docs/browse/PACKAGES.md#packages-rrct) | The v0.60 persistent fuzzy J-Space bridge implementation. | [Code](rrct/src/) · [All links](../docs/browse/PACKAGES.md#packages-rrct) |
+| [Universal Generative Deformation Calculus](../docs/browse/PACKAGES.md#universal-generative-deformation) | A reference Python package, examples, tests, and editable mathematical manuscript. | [PDF](universal-generative-deformation/paper/Universal_Generative_Deformation_Calculus.pdf) · [Text](universal-generative-deformation/paper/Universal_Generative_Deformation_Calculus.tex) · [Code](universal-generative-deformation/generative_deformation/) · [All links](../docs/browse/PACKAGES.md#universal-generative-deformation) |
+| [Large Signal Model software](../docs/browse/PACKAGES.md#large-signal-model) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. | [PDF](large-signal-model/paper/Projector_Resolved_Large_Algebraic_Signal_Model.pdf) · [Text](large-signal-model/paper/Projector_Resolved_Large_Algebraic_Signal_Model.tex) · [Code](large-signal-model/src/) · [All links](../docs/browse/PACKAGES.md#large-signal-model) |
 
 Additional implementations accompany the [research programs](../research/README.md) and [experimental laboratories](../experiments/README.md). Their software has the same beta / work-in-progress status.
 

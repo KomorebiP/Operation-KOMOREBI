@@ -2,6 +2,8 @@
 
 **Realization Calculus and Komorebi Space · Komorebi P.**
 
+[Browse by work](BROWSE.md) · [Papers](browse/PAPERS.md) · [Written proofs](browse/PROOFS.md) · [Lean](browse/LEAN.md) · [Code](browse/CODE.md)
+
 This collection studies how a construction can be represented, transformed, and checked while keeping track of the structure that makes it work. Realization Calculus develops operations on packets, coordinates, transfer blocks, and refinements. Komorebi Space supplies the ambient framework for comparing realizations, projections, compatibility, residuals, and obstructions.
 
 The [public project and authorship statement](PROJECT_STATEMENT.md) explains the project's purpose, authorship, use of AI assistance, and publication circumstances. The collection remains a work in progress. For setup and check commands, use the [verification guide](VERIFICATION.md).
@@ -12,14 +14,14 @@ For project readiness and remaining work, use the [completion and confidence gui
 
 | Goal | Begin with |
 |---|---|
-| Understand the common language | [Realization Calculus](../monographs/realization-calculus/) and [Komorebi Space](../monographs/komorebi-space/) |
+| Understand the common language | [Realization Calculus](browse/MONOGRAPHS.md#realization-calculus-book) and [Komorebi Space](browse/MONOGRAPHS.md#komorebi-space) |
 | Study the individual developments | [Papers I–XII](../papers/README.md) |
-| Understand limits of representation | [Realization Boundaries](../monographs/realization-boundaries/) |
+| Understand limits of representation | [Realization Boundaries](browse/MONOGRAPHS.md#realization-boundaries) |
 | Read a small formal example | [Research Preview 1](../formal/research-preview-1/README.md) |
 | Follow an application | [Monographs and companion volumes](../monographs/README.md) |
 | Explore an open mathematical program | [Research programs and their scope](../research/README.md) |
 | Work with executable mathematics | [Software guide](LIBRARIES.md) and [experimental laboratories](../experiments/README.md) |
-| Study method and review | [Proof Path Theory](../monographs/proof-path-theory/) and [Komorebi Methodology](../monographs/komorebi-methodology/) |
+| Study method and review | [Proof Path Theory](browse/MONOGRAPHS.md#proof-path-theory) and [Komorebi Methodology](browse/MONOGRAPHS.md#komorebi-methodology) |
 
 ## Four questions to carry through the collection
 

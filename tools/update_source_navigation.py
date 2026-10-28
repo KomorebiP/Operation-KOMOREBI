@@ -16,6 +16,7 @@ import subprocess
 from pathlib import Path
 from import_source_collection import ImportFailure, receipt_matches, safe_relative
 from update_completion_status import status_cells
+from browse_navigation import Browser, REGISTRY, card_path
 
 REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
 CATEGORY_LABELS = {'papers':'Core papers','foundations':'Foundations and semantics',
@@ -150,6 +151,7 @@ class Renderer:
         status_path = root / 'manifests/project-status.json'
         self.project_status = json.loads(status_path.read_text(encoding='utf-8')) if status_path.exists() else None
         self.status_by_id = {r['id']:r for r in self.project_status['components']} if self.project_status else {}
+        self.browser = Browser(root, state, self.project_status, self.tracked_paths) if self.project_status and (root/REGISTRY).is_file() else None
 
     def put(self, path, content):
         self.outputs[path] = content.rstrip() + '\n'
@@ -164,6 +166,8 @@ class Renderer:
         status = self.status_by_id.get(row['id'], {})
         if status.get('reader_listing', {}).get('placement') == 'incubator':
             return 'docs/INCUBATOR.md#'+row['id']
+        if self.browser and row['id'] in self.browser.rows:
+            return card_path(row)
         return status.get('reader_guide', row['destination']+'/')
 
     def existing(self, path):
@@ -172,7 +176,8 @@ class Renderer:
         return (self.root/path).exists()
 
     def rows(self, values, page, boundary=False):
-        return [(link(r['title'],self.reader_path(r),page), self.status_by_id.get(r['id'], {}).get('reader_summary', r['boundary'] if boundary else r['summary'])) for r in values]
+        rows = [(link(r['title'],self.reader_path(r),page), self.status_by_id.get(r['id'], {}).get('reader_summary', r['boundary'] if boundary else r['summary'])) for r in values]
+        return [row+(self.browser.shortcuts(r,page),) for row,r in zip(rows,values)] if self.browser else rows
 
     def group_page(self, page, heading, intro, values, *, boundary=False, extra=''):
         held = [r for r in values if self.status_by_id.get(r['id'], {}).get('reader_listing', {}).get('placement') == 'incubator']
@@ -183,16 +188,20 @@ class Renderer:
         for category,label in CATEGORY_LABELS.items():
             rows = [r for r in values if r['category']==category]
             if rows:
-                text += '\n## '+label+'\n\n'+table(['Work','Scope' if boundary else 'Focus'],self.rows(rows,page,boundary))
+                text += '\n## '+label+'\n\n'+table(['Work','Scope' if boundary else 'Focus']+(['Files'] if self.browser else []),self.rows(rows,page,boundary))
         text += '\n'+extra if extra else ''
         text += '\nAll executable software is **beta and work in progress**.\n\n'+link('Reading guide','docs/START_HERE.md',page)+' · '+link('Complete component index','docs/COMPONENT_INDEX.md',page)+' · '+link('Collection','README.md',page)+'\n'
         self.put(page,text)
 
     def reader_pages(self):
+        if self.browser:
+            self.outputs.update(self.browser.render())
         page='README.md'; w=lambda i,t=None:self.work(i,page,t)
         text='''# Realization Calculus and Komorebi Space
 
 **Komorebi P. · Work in progress**
+
+[Browse all works](docs/BROWSE.md) · [Read papers](docs/browse/PAPERS.md) · [Find proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md)
 
 > **Author’s note:** This work remains in progress and has, in many respects, been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
 
@@ -206,6 +215,7 @@ Komorebi Space provides the ambient setting for those constructions. It brings r
 
 | Goal | Starting point |
 |---|---|
+| Open a paper, proof, Lean source, or code file | [Clickable browse hub](docs/BROWSE.md), with direct files and edition-specific evidence. |
 | Understand the framework | [Reading guide](docs/START_HERE.md), then the foundations below. |
 | Read the main developments | [Twelve core papers](papers/README.md) and [monographs](monographs/README.md). |
 | Choose by readiness | [Completion stage, Lean coverage, and confidence](docs/COMPLETION_STATUS.md), with links to exact evidence. |
@@ -310,7 +320,7 @@ The core sequence develops a common language of typed operators, packets, transf
 
 '''
         text+='For a continuous reading route, begin with '+self.work('realization-calculus-book',page,'Realization Calculus')+' and read '+self.work('komorebi-space',page,'Komorebi Space')+' alongside it.\n\n'
-        text+=table(['Paper','Main subject'],self.rows(papers,page))
+        text+=table(['Paper','Main subject']+(['Files'] if self.browser else []),self.rows(papers,page))
         text+='''
 Each paper directory contains the manuscript and the source, formal, computational, and visual material supplied with that edition.
 
@@ -346,7 +356,7 @@ The [monographs](../monographs/README.md) provide extended accounts and further 
         values=[r for r in self.primary if r['group']=='packages']
         old=[]
         for path in ('packages/komorebi-am-spd','papers/quadratic-form-kcos'):
-            if self.existing(path):old.append((link(LEGACY_COMPONENTS[path][0],path+'/',page),LEGACY_COMPONENTS[path][1]))
+            if self.existing(path):old.append((link(LEGACY_COMPONENTS[path][0],path+'/',page),LEGACY_COMPONENTS[path][1])+((link('Open edition',path+'/',page),) if self.browser else ()))
         self.put(page,'''# Research software
 
 **All software is beta and work in progress.** Each component documents its supported inputs, dependencies, and qualification scope.
@@ -362,7 +372,7 @@ The [corrected SRIC admission 0.3.3 source edition](sric-admission-v0.3.3/README
 
 ## Packages in this collection
 
-'''+table(['Package','Purpose'],old+self.rows(values,page))+'''
+'''+table(['Package','Purpose']+(['Files'] if self.browser else []),old+self.rows(values,page))+'''
 Additional implementations accompany the [research programs](../research/README.md) and [experimental laboratories](../experiments/README.md). Their software has the same beta / work-in-progress status.
 
 Use a component's documented installation and examples. A mathematical result in an accompanying paper does not expand the tested platform, numerical range, or supported input contract of its software.
@@ -379,6 +389,8 @@ Use a component's documented installation and examples. A mathematical result in
 | [Polyphase Float](https://github.com/KomorebiP/polyphase-float) | Repository README and numerical reference documentation | LGPL-3.0-or-later; retain third-party notices. |
 
 The [package index](../packages/README.md) covers software in this collection. The [experimental laboratories](../experiments/README.md) and [research programs](../research/README.md) contain further implementations and protocols.
+
+Use the [code and script finder](browse/CODE.md) for direct file links across the collection, or the [browse hub](BROWSE.md) to move between a work's manuscript, formal sources, and evidence.
 
 The [collection verification guide](VERIFICATION.md) provides Git checkout instructions, a small standard-library example, and commands for source and navigation checks. For a concrete package record, see [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md): its engine and installed cases passed on the recorded Windows environment, while full release qualification remains incomplete.
 
@@ -398,6 +410,8 @@ A passing test applies to the exercised behavior. A finite computation, numerica
         self.put('formal/README.md','''# Formalizations and proof contracts
 
 The collection includes Lean source projects with explicit statements, imports, assumptions, and reproduction instructions. Begin with the claim map and pinned environment in the component you want to use.
+
+[Find Lean source files](../docs/browse/LEAN.md) · [Find written statements and proofs](../docs/browse/PROOFS.md) · [Browse all works](../docs/BROWSE.md)
 
 The [twelve core papers](../papers/README.md) link their current paper projects. [Komorebi Space and the companion volumes](../monographs/README.md) supply further developments, and the [research programs](../research/README.md) keep their finite formal statements alongside open obligations.
 
@@ -419,6 +433,8 @@ A successful file-integrity check identifies exact source bytes. Fresh Lean comp
         self.put(page,'''# Start here
 
 **Realization Calculus and Komorebi Space · Komorebi P.**
+
+[Browse by work](BROWSE.md) · [Papers](browse/PAPERS.md) · [Written proofs](browse/PROOFS.md) · [Lean](browse/LEAN.md) · [Code](browse/CODE.md)
 
 This collection studies how a construction can be represented, transformed, and checked while keeping track of the structure that makes it work. Realization Calculus develops operations on packets, coordinates, transfer blocks, and refinements. Komorebi Space supplies the ambient framework for comparing realizations, projections, compatibility, residuals, and obstructions.
 
@@ -487,6 +503,7 @@ All software is **beta and work in progress**. Follow the [citation guidance](..
         page='docs/COMPONENT_INDEX.md'
         text='# Component index\n\nRecorded '+date+'.\n\n'+str(totals['available_primary_components'])+' primary components and '+str(totals['available_supporting_components'])+' supporting source collections are present with verified file receipts. The receipts cover **'+format(totals['unique_source_files'],',')+' distinct source files**. Older source imports remain separately available.\n'
         text+='\n[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the exact scope in each linked record; file counts establish neither proof nor completion.\n'
+        text+='\nFor direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub](BROWSE.md). The inventory below retains all source and receipt details.\n'
         for group,label in GROUP_LABELS.items():
             rows=[r for r in self.primary if r['group']==group]
             if rows:

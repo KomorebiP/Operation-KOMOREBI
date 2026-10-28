@@ -15,6 +15,7 @@ import posixpath
 import re
 import subprocess
 from pathlib import Path
+from urllib.parse import unquote
 
 REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
 STAGES = ('scoped_release', 'reading_release', 'development', 'prototype',
@@ -352,6 +353,8 @@ def main():
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     root = args.root.resolve()
+    from browse_navigation import REGISTRY
+    assert (root/REGISTRY).is_file(), 'Missing browse-resource registry'
     data = json.loads((root/'manifests/project-status.json').read_text(encoding='utf-8'))
     tree, evidence_count = validate(root, data, args.git)
     outputs = {p: content.rstrip()+'\n' for p, content in render(data).items()}
@@ -375,6 +378,7 @@ def main():
             if '://' in target:
                 continue
             relative, _, anchor = target.partition('#')
+            relative = unquote(relative)
             resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), relative)) if relative else path
             resolved = resolved.rstrip('/')
             assert resolved in known or any(p.startswith(resolved+'/') for p in known), (path, target)
