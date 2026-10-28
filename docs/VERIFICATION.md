@@ -55,7 +55,7 @@ Each command must finish with exit status zero. Read its scope and diagnostics a
 
 Source identity does not establish mathematical correctness. These commands do not perform a new SHA-256 read of every source blob or replay every Lean project. For a package's own tests, use its instructions and supported dependencies.
 
-The [GitHub workflow](../.github/workflows/artifact-checks.yml) also runs the preview's receipt/upload-guard tests and proof-diagnostic classifier self-test. To reproduce those steps, change to `formal/research-preview-1/` and run:
+The [workflow guide](WORKFLOWS.md) maps the eight workflows, their triggers, and their publication effects. The [collection workflow](../.github/workflows/artifact-checks.yml) also runs the preview's receipt/upload-guard tests and proof-diagnostic classifier self-test. To reproduce those steps, change to `formal/research-preview-1/` and run:
 
 ```text
 python -B -m unittest discover -s tests -p "test_*.py" -v
@@ -100,7 +100,7 @@ git diff --check
 git diff --stat
 ```
 
-Review the resulting diff before publication. This regenerates all maintained navigation/status outputs and validates the additional documents registered in the status manifest. It does not revise the original scientific source packages. The public authorship statement, distribution notice, component guides, and historical snapshots are maintained separately and checked through that registration. Add a new report to the appropriate registry with its evidence bindings; the records index then includes it automatically. Keep the maintenance focus in the status manifest current without changing scientific labels merely to reflect scheduling.
+Review the resulting diff before publication. This regenerates all maintained navigation/status outputs and validates the additional documents registered in the status manifest. It does not revise the original scientific source packages. The public authorship statement, distribution notice, component guides, historical snapshots, contribution/citation guides, and GitHub issue/pull-request templates are maintained separately and checked through that registration. Add a new report to the appropriate registry with its evidence bindings; the records index then includes it automatically. Keep the maintenance focus in the status manifest current without changing scientific labels merely to reflect scheduling.
 
 The [finalization queue](FINALIZATION_QUEUE.md) names remaining work and its completion criteria. Update a status only when the corresponding evidence supports it.
 

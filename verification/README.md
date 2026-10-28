@@ -1,6 +1,6 @@
 # Verification evidence
 
-This directory retains dated publication, source, and execution evidence. Use the [verification guide](../docs/VERIFICATION.md) to reproduce checks and the [records guide](../docs/RECORDS.md) to find the reports that interpret these files.
+This directory retains dated publication, source, and execution evidence. Use the [verification guide](../docs/VERIFICATION.md) to reproduce checks, the [workflow guide](../docs/WORKFLOWS.md) to understand GitHub runs, and the [records guide](../docs/RECORDS.md) to find the reports that interpret these files.
 
 | Evidence family | Entry point and scope |
 |---|---|

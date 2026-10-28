@@ -13,7 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> int:
     errors: list[str] = []
     required = [
-        'README.md', 'CONTRIBUTIONS.md', 'docs/START_HERE.md',
+        'README.md', 'CONTRIBUTIONS.md', 'CONTRIBUTING.md', 'CITATION.md',
+        'docs/START_HERE.md', 'docs/WORKFLOWS.md',
         'papers/README.md', 'formal/README.md', 'experiments/README.md',
         'packages/README.md', 'manifests/contributions.json',
         'formal/research-preview-1/REPRODUCE.md',

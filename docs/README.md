@@ -9,9 +9,12 @@ Use the guides below for the maintained collection. Dated reviews and execution 
 | Completion stage, Lean coverage, and confidence | [Status guide](COMPLETION_STATUS.md) and [evidence catalogue](STATUS_CATALOG.md) |
 | Remaining work and completion criteria | [Finalization queue](FINALIZATION_QUEUE.md) |
 | Commands, setup, and interpretation of checks | [Run and verify](VERIFICATION.md) |
+| What each GitHub workflow runs or publishes | [Workflow guide](WORKFLOWS.md) |
 | Software entry points | [Libraries and packages](LIBRARIES.md) |
 | Current public availability and distribution | [Publication status](PUBLICATION_STATUS.md) and [distribution notice](DISTRIBUTION_STATUS.md) |
 | Authorship and publication circumstances | [Public project statement](PROJECT_STATEMENT.md) |
+| Cite a work or the collection | [Citation guidance](../CITATION.md) |
+| Report a problem or propose a correction | [Contributing](../CONTRIBUTING.md) |
 | Dated reviews, receipts, and retained history | [Records guide](RECORDS.md) |
 | Entries awaiting sufficient implementation support | [Incubator](INCUBATOR.md) |
 

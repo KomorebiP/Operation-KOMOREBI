@@ -46,7 +46,7 @@ From that component directory, run:
 python -B demo.py
 ```
 
-For proof reproduction, follow its [pinned Lean environment](../formal/research-preview-1/REPRODUCE.md).
+For proof reproduction, follow its [pinned Lean environment](../formal/research-preview-1/REPRODUCE.md). The [workflow guide](WORKFLOWS.md) explains the separate collection checks and manual proof replay.
 
 ## Interpret the evidence
 
@@ -61,6 +61,6 @@ For proof reproduction, follow its [pinned Lean environment](../formal/research-
 
 A proved implication remains a result when an application premise is open. Applying it requires that premise. Paper XI's Conjecture 66 and the remaining Physics and machine-model obligations retain that distinction.
 
-All software is **beta and work in progress**. Cite **Komorebi P.**, the specific work, and the revision you use.
+All software is **beta and work in progress**. Follow the [citation guidance](../CITATION.md) for the specific work and revision you use.
 
 [Complete component index](COMPONENT_INDEX.md) · [Collection](../README.md)

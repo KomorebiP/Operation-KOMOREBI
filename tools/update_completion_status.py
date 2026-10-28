@@ -258,6 +258,18 @@ def validate_reader_reviews(root, data, available, current, git):
             assert row['reader_listing']['review'] == decisions[row['id']]['review'], row['id']
 
 
+def validate_maintained_documents(root, paths):
+    """Check the bounded collection-document registry, including GitHub guides."""
+    assert len(paths) == len(set(paths)), 'Duplicate maintained document'
+    for path in paths:
+        allowed = (path.startswith('docs/') or path in (
+            'CONTRIBUTING.md', 'CITATION.md', '.github/pull_request_template.md')
+            or re.fullmatch(r'\.github/ISSUE_TEMPLATE/[A-Za-z0-9_-]+\.md', path))
+        assert allowed and path.endswith('.md') and '..' not in path.split('/'), path
+        assert (root/path).is_file(), 'Missing maintained document: '+path
+    return set(paths)
+
+
 def validate(root, data, git):
     source = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
     available = {r['id']: r for r in source['components']}
@@ -265,10 +277,7 @@ def validate(root, data, git):
     assert len(records) == len({r['id'] for r in records}), 'Duplicate project status ID'
     assert set(available) == {r['id'] for r in records}, 'Source/status component mismatch'
     evidence = {}
-    maintained = set(data.get('maintained_documents', []))
-    for path in maintained:
-        assert path.startswith('docs/') and path.endswith('.md') and '..' not in path.split('/'), path
-        assert (root/path).is_file(), 'Missing maintained document: '+path
+    maintained = validate_maintained_documents(root, data.get('maintained_documents', []))
     for path in data.get('assessment_records', []):
         assert path.startswith(('manifests/', 'verification/', 'packages/')) and path.endswith('.json') and '..' not in path.split('/'), path
         assert (root/path).is_file(), 'Missing assessment record: '+path

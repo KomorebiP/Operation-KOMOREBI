@@ -62,9 +62,12 @@ Use the guides below for the maintained collection. Dated reviews and execution 
 | Completion stage, Lean coverage, and confidence | [Status guide](COMPLETION_STATUS.md) and [evidence catalogue](STATUS_CATALOG.md) |
 | Remaining work and completion criteria | [Finalization queue](FINALIZATION_QUEUE.md) |
 | Commands, setup, and interpretation of checks | [Run and verify](VERIFICATION.md) |
+| What each GitHub workflow runs or publishes | [Workflow guide](WORKFLOWS.md) |
 | Software entry points | [Libraries and packages](LIBRARIES.md) |
 | Current public availability and distribution | [Publication status](PUBLICATION_STATUS.md) and [distribution notice](DISTRIBUTION_STATUS.md) |
 | Authorship and publication circumstances | [Public project statement](PROJECT_STATEMENT.md) |
+| Cite a work or the collection | [Citation guidance](../CITATION.md) |
+| Report a problem or propose a correction | [Contributing](../CONTRIBUTING.md) |
 | Dated reviews, receipts, and retained history | [Records guide](RECORDS.md) |
 | Entries awaiting sufficient implementation support | [Incubator](INCUBATOR.md) |
 
@@ -160,7 +163,7 @@ For a maintained status or navigation change, follow [Maintaining reader pages](
 '''
     outputs['verification/README.md'] = '''# Verification evidence
 
-This directory retains dated publication, source, and execution evidence. Use the [verification guide](../docs/VERIFICATION.md) to reproduce checks and the [records guide](../docs/RECORDS.md) to find the reports that interpret these files.
+This directory retains dated publication, source, and execution evidence. Use the [verification guide](../docs/VERIFICATION.md) to reproduce checks, the [workflow guide](../docs/WORKFLOWS.md) to understand GitHub runs, and the [records guide](../docs/RECORDS.md) to find the reports that interpret these files.
 
 | Evidence family | Entry point and scope |
 |---|---|
