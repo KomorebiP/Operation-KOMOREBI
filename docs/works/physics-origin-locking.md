@@ -10,7 +10,7 @@
 
 Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment.
 
-Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.
+Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
@@ -21,9 +21,9 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
-No separate text or claim-map entry is selected. Use the [reading files](#read) and [evidence record](#evidence); this is not a claim that written proofs are absent.
+Written proofs may be in the [reading files](#read). There is no separate text or claim map linked here. The [evidence record](#evidence) describes what has been reviewed.
 
 [Find this work among other written proofs](../browse/PROOFS.md#physics-origin-locking)
 
@@ -31,13 +31,13 @@ No separate text or claim-map entry is selected. Use the [reading files](#read) 
 
 ## Lean
 
-No direct Lean source or guide is selected. The recorded Lean status above and [evidence below](#evidence) describe the assessed scope.
+No Lean source or guide is linked here. See the Lean status above and the [evidence below](#evidence) for the recorded coverage.
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/physics-origin-locking/README.md) for requirements and effects. All software is beta / work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../research/physics-origin-locking/README.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: code](../../research/physics-origin-locking/code/)
 
@@ -51,7 +51,7 @@ These links may include runtime code, examples, checks, or build utilities. Cons
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/physics-origin-locking.json)
 - [All files in this source edition](../../research/physics-origin-locking/)
 
-These links organize existing material; they do not add proof reviews, compiler runs, or scientific coverage.
+The evidence records describe the reviews and runs completed for this edition.
 
 [Back to work navigation](#work-navigation)
 

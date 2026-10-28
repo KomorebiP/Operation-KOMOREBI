@@ -10,7 +10,7 @@
 
 Source-recovery, finite-observer, and global RR8 developments.
 
-Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.
+Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
@@ -20,7 +20,7 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [CLAIMS.md](../../research/abc-global-rr8/abc_work/komorebi_arithmetic/routes/witt_space/CLAIMS.md)
 
@@ -30,7 +30,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 ## Lean
 
-No direct Lean source shortcut is selected. Guides and claim maps below are reading material; consult the [evidence record](#evidence) for the recorded scope.
+The links below are guides and claim maps. No Lean source is linked here. See the [evidence record](#evidence) for the recorded coverage.
 
 - [CLAIMS.md](../../research/abc-global-rr8/abc_work/komorebi_arithmetic/routes/witt_space/CLAIMS.md)
 
@@ -38,7 +38,7 @@ No direct Lean source shortcut is selected. Guides and claim maps below are read
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/abc-global-rr8/README.md) for requirements and effects. All software is beta / work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../research/abc-global-rr8/README.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: abc_work](../../research/abc-global-rr8/abc_work/)
 
@@ -52,7 +52,7 @@ These links may include runtime code, examples, checks, or build utilities. Cons
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/abc-global-rr8.json)
 - [All files in this source edition](../../research/abc-global-rr8/)
 
-These links organize existing material; they do not add proof reviews, compiler runs, or scientific coverage.
+The evidence records describe the reviews and runs completed for this edition.
 
 [Back to work navigation](#work-navigation)
 

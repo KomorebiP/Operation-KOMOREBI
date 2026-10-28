@@ -2,7 +2,7 @@
 
 [Browse hub](../BROWSE.md) · [Find proofs](PROOFS.md) · [Lean sources](LEAN.md) · [Code](CODE.md) · [Collection](../../README.md)
 
-These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup and effects before running them. All software remains beta / work in progress.
+These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work overview** and the edition README for setup instructions and what each command does. All software remains beta / work in progress.
 
 <a id="collections"></a>
 
@@ -511,7 +511,7 @@ Jump to a work:
 ### [SRIC: external semantic admission](../works/research-sric-external-admission.md#code)
 
 - [Corrected runtime 0.3.3 (source and setup)](../../packages/sric-admission-v0.3.3/)
-- [Repair scope and recorded qualification](../SRIC_REPAIR_2026-10-27.md)
+- [Repair details and recorded checks](../SRIC_REPAIR_2026-10-27.md)
 - [Preserved original edition: Code / scripts: sric_real_lrm](../../research/sric-external-admission/sric_real_lrm/)
 - [Preserved original edition: Code / scripts: tests](../../research/sric-external-admission/tests/)
 - [Return to this work’s code section](../works/research-sric-external-admission.md#code)

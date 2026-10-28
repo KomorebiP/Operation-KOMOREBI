@@ -24,7 +24,7 @@ The paper and research indexes identify the major scope boundaries. Paper XI's C
 
 ## Historical contributions
 
-All 87 rows of the 21 September 2026 Part I register remain in the [machine-readable contribution ledger](manifests/contributions.json). The [earlier contribution index](docs/history/CONTRIBUTIONS_2026-10-09.md) preserves their readable historical record. These rows include result families, experiments, and drafts; their historical labels are not a current theorem total or completion percentage.
+All 87 rows of the 21 September 2026 Part I register remain in the [machine-readable contribution ledger](manifests/contributions.json). The [earlier contribution index](docs/history/CONTRIBUTIONS_2026-10-09.md) preserves their readable historical record. These rows include result families, experiments, and drafts. Their historical labels do not give a current theorem total or completion percentage.
 
 The current ledger adds exact source-component bindings and receipt locations. Supporting source collections are enumerated in the [component manifest](manifests/source-components.json). No historical mathematical status is promoted merely because its files are now public.
 

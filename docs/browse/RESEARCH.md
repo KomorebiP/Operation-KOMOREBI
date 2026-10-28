@@ -2,7 +2,7 @@
 
 [Browse hub](../BROWSE.md) · [Find proofs](PROOFS.md) · [Lean sources](LEAN.md) · [Code](CODE.md) · [Collection](../../README.md)
 
-PDF, manuscript text, Lean sources, code, and existing evidence are linked separately. Source files may retain older edition wording; the status link gives the maintained assessment.
+PDF, manuscript text, Lean sources, code, and existing evidence are linked separately. Source files may describe an older edition. The status link gives the current assessment.
 
 <a id="contents"></a>
 
@@ -58,7 +58,7 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 ### Incubator sources
 
-These incomplete implementation entries retain their incubator placement and return criteria.
+These entries need more implementation work. Follow each entry for its limits and return criteria.
 
 - [RRCT multispace convergence protocol](#research-rrct-multispace-protocol)
 - [PRISM-1R](#research-prism-1r)

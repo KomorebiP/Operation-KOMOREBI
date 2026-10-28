@@ -1,10 +1,10 @@
 # Documentation
 
-Use the guides below for the maintained collection. Dated reviews and execution records retain the scope and source revision of their original check.
+Use these guides to find works, software, and project records. Each dated review or run applies to the source revision and scope stated in that record.
 
 | Find | Guide |
 |---|---|
-| Direct PDFs, manuscript text, proofs, Lean, and code | [Clickable browse hub](BROWSE.md) |
+| Direct PDFs, manuscript text, proofs, Lean, and code | [Browse by work](BROWSE.md) |
 | A reading route through the mathematics | [Start here](START_HERE.md) |
 | A component or source edition | [Component index](COMPONENT_INDEX.md) and [source coverage](SOURCE_COVERAGE.md) |
 | Completion stage, Lean coverage, and confidence | [Status guide](COMPLETION_STATUS.md) and [evidence catalogue](STATUS_CATALOG.md) |

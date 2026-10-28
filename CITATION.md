@@ -1,6 +1,6 @@
 # Citing this collection
 
-Use **Komorebi P.** as the public author name. Preserve that name as written rather than expanding the pseudonym or inferring a legal name. The [project statement](docs/PROJECT_STATEMENT.md) explains authorship and human–AI collaboration.
+Use **Komorebi P.** as the public author name. Preserve that name as written rather than expanding the pseudonym or inferring a legal name. The [project statement](docs/PROJECT_STATEMENT.md) explains authorship and the use of AI assistance.
 
 ## Cite the work and revision used
 
@@ -11,7 +11,7 @@ For a theorem, implementation, experiment, or figure, cite the specific paper or
 - The repository commit and component path, plus the section, theorem, function, or figure when relevant.
 - A permanent GitHub link to that revision or an identified release asset.
 
-Use a work's own citation metadata or DOI when one is supplied. A DOI, version, or publication date belonging to one component does not describe the entire collection. A current `main` link can change; record the commit used for a reproducible reference.
+Use a work's own citation metadata or DOI when one is supplied. A DOI, version, or publication date belonging to one component does not describe the entire collection. A link to `main` can change. Include the commit so readers can find the version you used.
 
 For a Git checkout, obtain the full commit with:
 
@@ -19,7 +19,7 @@ For a Git checkout, obtain the full commit with:
 git rev-parse HEAD
 ```
 
-The [component index](docs/COMPONENT_INDEX.md) locates source editions. The [records guide](docs/RECORDS.md) identifies review and execution evidence with their own source bindings.
+The [component index](docs/COMPONENT_INDEX.md) locates source editions. The [records guide](docs/RECORDS.md) links review and execution records to the source editions they cover.
 
 ## Collection-level attribution
 

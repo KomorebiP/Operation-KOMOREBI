@@ -624,7 +624,7 @@ Jump to a work:
 
 ## Experiments
 
-No direct resource selected in this category; use its [work index](EXPERIMENTS.md).
+No direct resource is listed in this category. Use its [work index](EXPERIMENTS.md).
 
 [Back to collection menu](#collections)
 

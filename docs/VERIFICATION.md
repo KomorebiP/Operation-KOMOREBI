@@ -2,7 +2,7 @@
 
 **Komorebi P. · Work in progress · 27 October 2026**
 
-Operation-KOMOREBI contains separate manuscripts, formal projects, packages, and experiments. Select a component before installing dependencies or attempting a build. All executable software is **beta / work in progress**; each result applies to its recorded revision, environment, and tested scope.
+Operation-KOMOREBI contains separate manuscripts, formal projects, packages, and experiments. Select a component before installing dependencies or attempting a build. All executable software is **beta and work in progress**. Each result applies to its recorded revision, environment, and tested scope.
 
 ## Obtain a checkout
 
@@ -21,7 +21,7 @@ This is a large collection, so checkout can take time. The long-path setting hel
 
 Use a normal Git clone with history for the status checks: they read both the current committed tree and the assessed source revision. A downloaded ZIP has no Git history, and a shallow clone can omit the required revision. From a shallow clone, `git fetch --unshallow` restores the history. Record the output of `git rev-parse HEAD` with any result.
 
-Checkout contents and Git history are separate requirements. `check_repository.py` needs the entry-point files, imported contribution paths, and entire preserved preview on disk. A sparse checkout can omit them even when the commit exists. The checker reports missing prerequisites as JSON with a nonzero exit status; a preview marked `NOT_RUN` is an incomplete check. Use a complete checkout for the full collection workflow. The source-receipt checker reads committed Git objects and can operate with sparse checkout contents.
+Checkout contents and Git history are separate requirements. `check_repository.py` needs the entry-point files, imported contribution paths, and entire preserved preview on disk. A sparse checkout can omit them even when the commit exists. The checker reports missing prerequisites as JSON with a nonzero exit status. A preview marked `NOT_RUN` is an incomplete check. Use a complete checkout for the full collection workflow. The source-receipt checker reads committed Git objects and can operate with sparse checkout contents.
 
 ## Run the small example
 
@@ -33,7 +33,7 @@ python -B formal/research-preview-1/demo.py
 
 Expected output is JSON containing `"status": "PASS"` and `"scalar_coefficient_comparisons": 96`. There are three mask cases, with 32 coefficients per case. The reference implementation uses exact integer and modular arithmetic and compares a finite Cartier machine with a separately computed recurrence. It does not run Lean or the minimal-realization compiler.
 
-For a larger example, the same script accepts `--count 256`, producing 768 scalar comparisons. Its optional `--output PATH` writes a receipt; choose a new path outside retained evidence. The [preview reproduction guide](../formal/research-preview-1/REPRODUCE.md) describes the separate reference audits and proof replay.
+For a larger example, the same script accepts `--count 256`, producing 768 scalar comparisons. Its optional `--output PATH` writes a receipt. Choose a new path outside retained evidence. The [preview reproduction guide](../formal/research-preview-1/REPRODUCE.md) describes the separate reference audits and proof replay.
 
 ## Check the collection
 
@@ -51,7 +51,7 @@ Each command must finish with exit status zero. Read its scope and diagnostics a
 | Command | What it checks |
 |---|---|
 | `check_repository.py` | Required entry points, contribution paths, and the preserved research preview's source/artifact identity. |
-| `check_source_receipts.py` | All selected component receipts against the committed Git tree: configuration, counts, aggregate record digests, paths, Git blob identities, and modes. It defaults to `HEAD`; it does not certify arbitrary working-tree edits. |
+| `check_source_receipts.py` | All selected component receipts against the committed Git tree: configuration, counts, aggregate record digests, paths, Git blob identities, and modes. It defaults to `HEAD` and does not check uncommitted source edits. |
 | `update_completion_status.py --check` | Status/evidence correspondence, maintained relative links, and all generated reader and status pages. It validates recorded evidence without rerunning its original proofs or experiments. |
 | Tools regression suite | Collection import, receipt, and navigation tooling behavior. |
 
@@ -64,7 +64,7 @@ python -B -m unittest discover -s tests -p "test_*.py" -v
 python -B tools/replay_lean.py --self-test
 ```
 
-The classifier self-test checks diagnostic handling; it does not invoke the Lean compiler. The workflow's success applies to these checks on its displayed commit. [View workflow runs](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/artifact-checks.yml).
+The classifier self-test checks diagnostic handling. It does not run the Lean compiler. The workflow's success applies to these checks on its displayed commit. [View workflow runs](https://github.com/KomorebiP/Operation-KOMOREBI/actions/workflows/artifact-checks.yml).
 
 ## Reproduce a component result
 
@@ -83,13 +83,13 @@ Preserved component files can contain historical descriptions such as “unpubli
 
 | Observation | Next step |
 |---|---|
-| Assessed Git revision is missing | Confirm this is a Git checkout and obtain its history; a source ZIP cannot supply commit objects. |
+| Assessed Git revision is missing | Use a Git checkout with history. A source ZIP does not contain commit objects. |
 | Preview is `NOT_RUN` or entry-point files are missing | Confirm the checkout includes the required files and entire preserved preview directory. Inspect the recorded reason for a launch failure. A partial checkout is not a successful artifact check. |
 | Preview output is malformed, reports failure, or exits nonzero | Read `preview`, `preview_exit_status`, and any `preview_stderr`. Both JSON `PASS` and exit status zero are required. |
 | A generated page is stale | Review the intended source/template change, regenerate the pages, and inspect the diff before committing. |
 | A source hash or evidence binding differs | Identify the changed bytes and edition. Record a corrected revision with new evidence instead of overwriting the old receipt. |
 | Temporary directory or symlink setup fails | Use a writable temporary directory or an environment with the required fixture capability, then rerun. The blocked test remains unverified. |
-| A negative control fails for an import, timeout, or setup reason | Resolve that prerequisite; only its intended rejection satisfies the control. |
+| A negative control fails for an import, timeout, or setup reason | Resolve the setup problem and rerun the control. It passes only when the intended rejection occurs. |
 
 Report a failure with the commit, exact command, platform, relevant dependency versions, and diagnostic output. Remove credentials and unrelated personal paths before sharing logs.
 
@@ -97,11 +97,11 @@ Report a failure with the commit, exact command, platform, relevant dependency v
 
 The [maintenance guide](MAINTENANCE.md) maps each script to its inputs and file/publication effects and explains how to preserve dated records.
 
-Direct reading and source links are selected in [browse-resources.json](../manifests/browse-resources.json) and rendered by [browse_navigation.py](../tools/browse_navigation.py). The same status command checks their receipt ownership, committed paths, file types, and navigation anchors. Each primary work has a generated page under `docs/works/` connecting its reading files, written proofs, Lean, code, and evidence; the evidence catalogue provides a return link. The browse pages reuse the existing completion, Lean, and confidence labels.
+Direct reading and source links are selected in [browse-resources.json](../manifests/browse-resources.json) and rendered by [browse_navigation.py](../tools/browse_navigation.py). The same status command checks their receipt ownership, committed paths, file types, and navigation anchors. Each primary work has a generated page under `docs/works/` connecting its reading files, written proofs, Lean, code, and evidence. The evidence catalogue links back to that page. The browse pages reuse the existing completion, Lean, and confidence labels.
 
-The command's `navigation_links` result counts checked inline relative links, directory links, and fragments in maintained/generated documents. Paths are case-sensitive, encoded file names are decoded, and example code blocks cannot supply navigation targets. Remote URLs and fragments in preserved source documents are counted separately as unchecked. A passing result establishes repository navigation within that scope; it does not certify remote services or make untagged PDFs accessible.
+The command's `navigation_links` result counts checked inline relative links, directory links, and fragments in maintained/generated documents. Paths are case-sensitive, encoded file names are decoded, and example code blocks cannot supply navigation targets. Remote URLs and fragments in preserved source documents are counted separately as unchecked. A passing result confirms navigation within that scope. It does not check remote services or make untagged PDFs accessible.
 
-The proof, Lean, and code finders now have per-work anchors and return links to the same work section. The maintained-page check validates both ends. Lean setup documents are validated as text files and shown separately from actual Lean sources; instructions alone do not qualify an entry for the Lean-source finder. Source shortcuts may open a module directory within a larger historical project, so use the accompanying setup guide to locate the build root before running commands.
+The proof, Lean, and code finders now have per-work anchors and return links to the same work section. The maintained-page check validates both ends. Lean setup documents are checked as text files and shown separately from Lean sources. A work needs an actual Lean source link to appear in the Lean finder. Source shortcuts may open a module directory within a larger historical project, so use the accompanying setup guide to locate the build root before running commands.
 
 The top-level README and category/reading guides are generated by [update_source_navigation.py](../tools/update_source_navigation.py). Documentation, record, manifest, verification, and history indexes are generated by [record_navigation.py](../tools/record_navigation.py) from the existing registry and committed history paths. Completion labels, evidence references, and the finalization queue are driven by [project-status.json](../manifests/project-status.json). Edit the appropriate template or record, then run from the collection root:
 
@@ -112,7 +112,7 @@ git diff --check
 git diff --stat
 ```
 
-Review the resulting diff before publication. This regenerates all maintained navigation/status outputs and validates the additional documents registered in the status manifest. It does not revise the original scientific source packages. The public authorship statement, distribution notice, component guides, historical snapshots, contribution/citation guides, and GitHub issue/pull-request templates are maintained separately and checked through that registration. Add a new report to the appropriate registry with its evidence bindings; the records index then includes it automatically. Keep the maintenance focus in the status manifest current without changing scientific labels merely to reflect scheduling.
+Review the resulting diff before publication. This regenerates all maintained navigation/status outputs and validates the additional documents registered in the status manifest. It does not revise the original scientific source packages. The public authorship statement, distribution notice, component guides, historical snapshots, contribution/citation guides, and GitHub issue/pull-request templates are maintained separately and checked through that registration. Add a new report and its evidence references to the appropriate registry. The records index will then include it automatically. Keep the maintenance focus in the status manifest current without changing scientific labels merely to reflect scheduling.
 
 The [finalization queue](FINALIZATION_QUEUE.md) names remaining work and its completion criteria. Update a status only when the corresponding evidence supports it.
 
@@ -124,6 +124,6 @@ The [0.3.3 repair guide](SRIC_REPAIR_2026-10-27.md) identifies the corrected sou
 python -B packages/sric-admission-v0.3.3/tests/test_admission_boundaries.py
 ```
 
-This includes a synthetic CLI round trip and rejection controls; no real checkpoint is downloaded or qualified. The earlier [admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) retains seven diagnostic fixture executions and three reproduced gaps in the old pipeline. Its harness is a historical counterexample record, not the repaired runtime's acceptance suite.
+This includes a synthetic CLI round trip and rejection controls. No real checkpoint is downloaded or tested. The earlier [admission audit](SRIC_ADMISSION_AUDIT_2026-10-27.md) retains seven diagnostic fixture executions and three reproduced gaps in the old pipeline. Its harness is a historical counterexample record, not the repaired runtime's acceptance suite.
 
 [Documentation](README.md) · [Records guide](RECORDS.md) · [Public project statement](PROJECT_STATEMENT.md) · [Collection](../README.md)

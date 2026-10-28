@@ -2,7 +2,7 @@
 
 **Komorebi P.**
 
-Computational programs, protocols, and recorded outcomes accompany the [core papers](../papers/README.md), [monographs](../monographs/README.md), and [software packages](../packages/README.md). The laboratories listed here provide further executable models. Read each result with its tested range, arithmetic model, environment, and comparison criteria. A successful run establishes the recorded finite outcome.
+Computational programs, protocols, and recorded outcomes accompany the [core papers](../papers/README.md), [monographs](../monographs/README.md), and [software packages](../packages/README.md). The laboratories listed here provide further executable models. For each result, check the tested range, arithmetic model, environment, and comparison criteria. A successful run establishes the recorded finite result.
 
 ## Experimental laboratories
 

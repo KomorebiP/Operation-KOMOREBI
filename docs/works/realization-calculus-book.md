@@ -10,7 +10,7 @@
 
 The collected core development, from packets and transfer to refinement and applications.
 
-Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.
+Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
@@ -22,7 +22,7 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [Text sources: Papers I–IV](../../monographs/realization-calculus/source_i_iv/)
 - [Text sources: Papers V–VIII](../../monographs/realization-calculus/source_v_viii/)
@@ -34,7 +34,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 ## Lean
 
-No direct Lean source shortcut is selected. Guides and claim maps below are reading material; consult the [evidence record](#evidence) for the recorded scope.
+The links below are guides and claim maps. No Lean source is linked here. See the [evidence record](#evidence) for the recorded coverage.
 
 - [Lean guide (PDF)](../../monographs/realization-calculus/frozen_readers/Paper_I_Lean_Guide_Final.pdf)
 
@@ -42,7 +42,7 @@ No direct Lean source shortcut is selected. Guides and claim maps below are read
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../monographs/realization-calculus/README.md) for requirements and effects. All software is beta / work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../monographs/realization-calculus/README.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: scripts](../../monographs/realization-calculus/scripts/)
 
@@ -56,7 +56,7 @@ These links may include runtime code, examples, checks, or build utilities. Cons
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/realization-calculus-book.json)
 - [All files in this source edition](../../monographs/realization-calculus/)
 
-These links organize existing material; they do not add proof reviews, compiler runs, or scientific coverage.
+The evidence records describe the reviews and runs completed for this edition.
 
 [Back to work navigation](#work-navigation)
 

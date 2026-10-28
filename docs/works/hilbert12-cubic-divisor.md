@@ -10,7 +10,7 @@
 
 Complex divisor constructions and a finite algebraic companion.
 
-Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.
+Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
@@ -22,7 +22,7 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [Manuscript text (TeX)](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.tex)
 
@@ -32,7 +32,7 @@ Find the statement number or section in the [reading files](#read), then read it
 
 ## Lean
 
-Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Start with the [edition guide](../../research/hilbert12-cubic-divisor/README.md) and any formal instructions below; check exact correspondence records before treating a declaration as the formal version of a written claim.
+Start with the [edition guide](../../research/hilbert12-cubic-divisor/README.md) and the build instructions below. Check the correspondence records to see which written claims the Lean declarations cover. Source links lead to `.lean` files. PDF guides explain the formalization.
 
 - [Lean guide (PDF)](../../research/hilbert12-cubic-divisor/lean/H12_Cubic_Divisor_Lean_Guide.pdf)
 - [Lean sources (directory)](../../research/hilbert12-cubic-divisor/lean/)
@@ -43,7 +43,7 @@ Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading
 
 ## Code
 
-These links may include runtime code, examples, checks, or build utilities. Consult the [edition guide](../../research/hilbert12-cubic-divisor/README.md) for requirements and effects. All software is beta / work in progress.
+These links include code, examples, checks, or build tools. Read the [edition guide](../../research/hilbert12-cubic-divisor/README.md) for setup instructions and what each command does. All software is beta and work in progress.
 
 - [Code / scripts: scripts](../../research/hilbert12-cubic-divisor/scripts/)
 
@@ -57,7 +57,7 @@ These links may include runtime code, examples, checks, or build utilities. Cons
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/hilbert12-cubic-divisor.json)
 - [All files in this source edition](../../research/hilbert12-cubic-divisor/)
 
-These links organize existing material; they do not add proof reviews, compiler runs, or scientific coverage.
+The evidence records describe the reviews and runs completed for this edition.
 
 [Back to work navigation](#work-navigation)
 

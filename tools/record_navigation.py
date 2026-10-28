@@ -53,11 +53,11 @@ def render_record_pages(root, data, tracked_paths):
     outputs = {}
     docs = '''# Documentation
 
-Use the guides below for the maintained collection. Dated reviews and execution records retain the scope and source revision of their original check.
+Use these guides to find works, software, and project records. Each dated review or run applies to the source revision and scope stated in that record.
 
 | Find | Guide |
 |---|---|
-| Direct PDFs, manuscript text, proofs, Lean, and code | [Clickable browse hub](BROWSE.md) |
+| Direct PDFs, manuscript text, proofs, Lean, and code | [Browse by work](BROWSE.md) |
 | A reading route through the mathematics | [Start here](START_HERE.md) |
 | A component or source edition | [Component index](COMPONENT_INDEX.md) and [source coverage](SOURCE_COVERAGE.md) |
 | Completion stage, Lean coverage, and confidence | [Status guide](COMPLETION_STATUS.md) and [evidence catalogue](STATUS_CATALOG.md) |
@@ -90,7 +90,7 @@ The [maintenance instructions](VERIFICATION.md#maintaining-reader-pages) identif
 
     records = '''# Records and review history
 
-Current guidance, dated observations, and preserved source editions serve different purposes. Use the current guides to navigate, then follow the exact record for the scope, source revision, environment, and result being claimed.
+Start with the guides below, then open a record for its scope, source revision, environment, and result.
 
 ## Current record map
 
@@ -104,17 +104,17 @@ Current guidance, dated observations, and preserved source editions serve differ
 | What did a particular check establish? | [Verification guide](VERIFICATION.md), dated reports below | [Execution evidence](../verification/README.md) |
 | What did the earlier collection record? | [Historical snapshots](history/README.md) | [Historical manifests](../manifests/history/) |
 
-The filename `release-candidate.json` is retained for compatibility; its current status is `PUBLIC_SOURCE_COLLECTION`. It does not mean the public repository is still a private candidate. The earlier private-candidate record has its own historical path.
+The filename `release-candidate.json` is retained for compatibility. Its current status is `PUBLIC_SOURCE_COLLECTION`. It does not mean the public repository is still a private candidate. The earlier private-candidate record has its own historical path.
 
 ## Bounded review history
 
-These entries follow the registered review order, including reports written on the same date. Later cumulative counts must not be added to earlier cumulative counts. A review report's scope, qualifications, and provenance are part of its result; a new index is not a new review.
+These reports appear in review order, including those written on the same date. Later totals include earlier reviews, so do not add them together. Read each result with its scope, limitations, and source details. Updating this index does not add a review.
 
 '''
     records += table(['Date', 'Report', 'Recorded scope', 'Evidence binding'], review_rows(root, data))
     records += '\n## Current written-proof coverage\n\n'+coverage_summary(root, data)+'\n'
     records += '''
-Restrictions and unresolved findings remain in the [component evidence catalogue](STATUS_CATALOG.md) and [finalization queue](FINALIZATION_QUEUE.md). Review coverage is not a correctness percentage, whole-book certification, or independent peer review. The [finalization queue](FINALIZATION_QUEUE.md) records the current maintenance priority; scheduling does not change these verdicts.
+Restrictions and unresolved findings remain in the [component evidence catalogue](STATUS_CATALOG.md) and [finalization queue](FINALIZATION_QUEUE.md). Review coverage is not a correctness percentage, whole-book certification, or independent peer review. The [finalization queue](FINALIZATION_QUEUE.md) records the current maintenance priority. Scheduling does not change these verdicts.
 
 ## Other dated reports
 
@@ -123,7 +123,7 @@ Restrictions and unresolved findings remain in the [component evidence catalogue
     for path in data['maintained_documents']:
         if re.search(r'\d{4}-\d{2}-\d{2}', path) and not path.startswith('docs/history/') and path not in bound_reports:
             records += '- '+link(title(root, path), path, 'docs/RECORDS.md')+'\n'
-    records += '\n## Additional registered evidence\n\nThese files complement the review records above. Contracts, source bindings, run outputs, publication receipts, and editorial assessments retain their own meanings.\n\n'
+    records += '\n## Additional registered evidence\n\nThese files include test contracts, source records, run outputs, publication receipts, and editorial assessments. Each describes its own purpose and scope.\n\n'
     review_paths = {b['path'] for b in data['reader_curation_reviews']}
     for path in data['assessment_records']:
         if path not in review_paths:
@@ -144,22 +144,22 @@ The collection workflow validates registered hashes, links, and generated pages.
 
     outputs['manifests/README.md'] = '''# Collection manifests
 
-These JSON files record source availability, editorial status, and evidence bindings. Start with the [records guide](../docs/RECORDS.md) for readable reports and their exact companion records.
+These JSON files record available sources, editorial status, and the evidence attached to each edition. Start with the [records guide](../docs/RECORDS.md) for readable reports and their exact companion records.
 
 | File or directory | Role |
 |---|---|
 | [source-collection.json](source-collection.json) | Selected component declarations and expected source identities. |
 | [source-components.json](source-components.json) | Receipt-derived availability and primary/supporting classifications. |
-| [browse-resources.json](browse-resources.json) | Selected file and directory shortcuts for each primary work; checked against its own source receipt. |
+| [browse-resources.json](browse-resources.json) | Selected file and directory shortcuts for each primary work, checked against its source receipt. |
 | [source-imports/](source-imports/) | Per-component paths, file hashes, modes, and source provenance. |
 | [source-coverage.json](source-coverage.json) | Crosswalk from named inventory entries to available sources and remaining availability limits. |
 | [project-status.json](project-status.json) | Completion, Lean, confidence, scope, finalization queue, and registered evidence. |
 | [contributions.json](contributions.json) | Historical contributions and current source bindings. |
-| [release-candidate.json](release-candidate.json) | Current public publication record; the legacy filename is retained for compatibility. |
+| [release-candidate.json](release-candidate.json) | Current publication record. The earlier filename is retained for compatibility. |
 | [machine-societies-review-index.json](machine-societies-review-index.json) | Unique claim coverage bound to exact manuscript and review hashes. |
 | [history/](history/) | Earlier collection snapshots, with their original dates and meanings. |
 
-Dated assessment and review records are indexed in the [records guide](../docs/RECORDS.md). A source receipt establishes identity and availability; it does not establish scientific completion. Editing a JSON status without the corresponding evidence does not close a finalization gate.
+Dated assessment and review records are indexed in the [records guide](../docs/RECORDS.md). A source receipt identifies the available files. It does not establish scientific completion. Editing a JSON status without the corresponding evidence does not close a finalization gate.
 
 For a maintained status or navigation change, follow [Maintaining reader pages](../docs/VERIFICATION.md#maintaining-reader-pages). Corrections to source or dated evidence need an identified new edition or record and updated bindings.
 
@@ -175,12 +175,12 @@ This directory retains dated publication, source, and execution evidence. Use th
 | Constructive Repair | [Windows summary](constructive-repair/windows-2026-10-27/summary.json), [source-to-wheel binding](constructive-repair/windows-2026-10-27/wheel-source-binding.json), and [reader guide](../docs/components/CONSTRUCTIVE_REPAIR.md). The recorded suite includes unresolved setup errors. |
 | Focused soundness checks | [Contract](audits/soundness-2026-10-27/contract.json), [run record](audits/soundness-2026-10-27/run/manifest.json), and [report](../docs/SOUNDNESS_REVIEW_2026-10-27.md). |
 | Original SRIC admission defects | [Contract](audits/sric-admission-2026-10-27/contract.json), [run record](audits/sric-admission-2026-10-27/run/manifest.json), and [audit](../docs/SRIC_ADMISSION_AUDIT_2026-10-27.md). Preserved diagnostic counterexamples. |
-| Corrected SRIC 0.3.3 edition | [Contract](audits/sric-repair-2026-10-27/contract.json), [run record](audits/sric-repair-2026-10-27/run/manifest.json), and [repair guide](../docs/SRIC_REPAIR_2026-10-27.md). Finite fixtures and rejection controls; no real-model qualification. |
+| Corrected SRIC 0.3.3 edition | [Contract](audits/sric-repair-2026-10-27/contract.json), [run record](audits/sric-repair-2026-10-27/run/manifest.json), and [repair guide](../docs/SRIC_REPAIR_2026-10-27.md). Finite fixtures and rejection controls. No checks with a real model. |
 | AM-SPD publication | [Historical release receipt](am-spd-v1.0.0-publication.json). Its original scope and date remain attached. |
 
-Some evidence lives inside a preserved component rather than this directory. Follow that component's [status entry](../docs/STATUS_CATALOG.md) and source instructions. Written-review records are indexed under [manifests](../manifests/README.md); this directory is not a complete inventory of every proof or experiment.
+Some evidence lives inside a preserved component rather than this directory. Follow that component's [status entry](../docs/STATUS_CATALOG.md) and source instructions. Written reviews are indexed under [manifests](../manifests/README.md). This directory does not contain every proof or experiment.
 
-Keep run inputs, source revisions, environments, outcomes, and failures together. Write new results to a new identified record; do not overwrite a sealed receipt or convert a setup error into a mathematical rejection.
+Keep run inputs, source revisions, environments, outcomes, and failures together. Give new results their own record. Preserve sealed receipts and report setup errors as setup errors.
 
 [Documentation](../docs/README.md) · [Records guide](../docs/RECORDS.md)
 '''

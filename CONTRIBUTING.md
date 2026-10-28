@@ -4,11 +4,11 @@ Operation-KOMOREBI is a collection of separate manuscripts, source editions, sof
 
 ## Choose the right report
 
-Use the [issue chooser](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose) for a correction, software problem, or source-record discrepancy. A useful report identifies the exact work, edition or commit, file, and observed problem. An issue is enough to report a finding; a proposed fix is optional.
+Use the [issue chooser](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose) for a correction, software problem, or source-record discrepancy. A useful report identifies the exact work, edition or commit, file, and observed problem. You can report a finding without proposing a fix.
 
 | Report | Include |
 |---|---|
-| Documentation or mathematical correction | The exact sentence, statement, or equation; its assumptions; the discrepancy; and supporting reasoning or a small counterexample where relevant. Lean is optional. |
+| Documentation or mathematical correction | The exact sentence, statement, or equation, its assumptions, the problem, and supporting reasoning or a small counterexample where relevant. Lean is optional. |
 | Software problem | Package and revision, operating system, runtime/dependency versions, command, minimal input, expected and actual behavior, exit status, and relevant diagnostics. |
 | Missing source, broken link, or stale record | The page or manifest entry, exact link/path, expected edition or digest, observed result, and any known source reference. |
 
@@ -18,9 +18,9 @@ For a problem specific to the independent [Komorebi Math](https://github.com/Kom
 
 Keep the change focused on one correction or related set of files. Explain the problem, resulting behavior, and checks performed. The pull request template provides space for the exact component/edition and any remaining limitations.
 
-The [maintenance guide](docs/MAINTENANCE.md) identifies the relevant scripts, their file/publication effects, and the update rules for dated records.
+The [maintenance guide](docs/MAINTENANCE.md) explains which scripts to use, what they write or publish, and how to update dated records.
 
-Maintained guidance and frozen source editions have different update paths:
+Choose where to make the change:
 
 | Change | Where to work |
 |---|---|
@@ -44,13 +44,13 @@ git diff --check
 git diff --stat
 ```
 
-Inspect the generated diff before submitting it. The [verification guide](docs/VERIFICATION.md) covers checkout requirements, source-receipt checks, component-specific commands, and failure interpretation. Source-receipt checks use committed Git trees; an unstaged source correction needs its own identified revision before it can be qualified.
+Inspect the generated diff before submitting it. The [verification guide](docs/VERIFICATION.md) covers checkout requirements, source-receipt checks, component-specific commands, and failure interpretation. Source receipts are checked against committed Git trees. Commit a source correction as a new revision before checking it against a receipt.
 
 For a software change, run the relevant package's tests and record the environment. For a scientific correction, state precisely which claim and dependencies the evidence covers. Record failed or unavailable checks alongside successful ones.
 
 ## Records, attribution, and terms
 
-The [records guide](docs/RECORDS.md) links dated reviews and receipts. Give new evidence its own source revision, scope, inputs, and outcome; keep earlier failures and corrections traceable. The [workflow guide](docs/WORKFLOWS.md) distinguishes routine checks, manual replays, and workflows that publish changes.
+The [records guide](docs/RECORDS.md) links dated reviews and receipts. Record the source revision, scope, inputs, and outcome for new evidence. Keep earlier failures and corrections traceable. The [workflow guide](docs/WORKFLOWS.md) distinguishes routine checks, manual replays, and workflows that publish changes.
 
 Public attribution is **Komorebi P.** Follow the [citation guidance](CITATION.md) and the [collection reuse terms](LICENSE.md), together with applicable component and third-party notices.
 

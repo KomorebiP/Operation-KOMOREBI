@@ -151,8 +151,8 @@ class BrowseNavigationTests(unittest.TestCase):
             registry['components'][0]['resources']=[]
             (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
             text=Browser(root,state,status,tracked).render()['docs/works/open-work.md']
-            self.assertIn('not a claim that written proofs are absent',text)
-            self.assertIn('No direct Lean source or guide is selected',text)
+            self.assertIn('Written proofs may be in the [reading files](#read)',text)
+            self.assertIn('No Lean source or guide is linked here',text)
             self.assertIn('(../../research/open-work/)',text)
 
     def test_repaired_runtime_is_first_and_preserved_code_is_labeled(self):
@@ -181,7 +181,7 @@ class BrowseNavigationTests(unittest.TestCase):
                 self.assertIn('[Open-Work](#open-work)',text)
                 self.assertIn('(../works/open-work.md#'+section+')',text)
                 self.assertNotIn('<a id="held-work"></a>',text)
-            self.assertIn('Consult the [edition guide](../../research/open-work/README.md)',work)
+            self.assertIn('Read the [edition guide](../../research/open-work/README.md)',work)
 
     def test_lean_setup_does_not_create_a_formal_source_claim(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -193,7 +193,7 @@ class BrowseNavigationTests(unittest.TestCase):
             pages=Browser(root,state,status,tracked).render()
             self.assertNotIn('Open-Work',pages['docs/browse/LEAN.md'])
             lean=pages['docs/works/open-work.md'].split('## Lean\n')[1].split('## Code\n')[0]
-            self.assertIn('No direct Lean source shortcut is selected',lean)
+            self.assertIn('No Lean source is linked here',lean)
             self.assertIn('[Setup and limits]',lean)
             self.assertLess(lean.index('[Setup and limits]'),lean.index('[Lean guide (PDF)]'))
             row['resources'][-1]['path']='paper.pdf'

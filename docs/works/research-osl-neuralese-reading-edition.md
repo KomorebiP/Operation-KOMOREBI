@@ -10,7 +10,7 @@
 
 The LaTeX and PDF reading companion.
 
-Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.
+Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
 
@@ -22,7 +22,7 @@ Keep this work page open while reading files. Use Ctrl+click (Command+click on m
 
 ## Written proofs
 
-Find the statement number or section in the [reading files](#read), then read its assumptions and argument. Claim maps may refer to a narrower formal contract.
+Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
 - [Text sources: OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex)
 - [Text sources: OSL_Neuralese_Manuscripts_v1.0/Neuralese/manuscript/Neuralese_Final_Research_Edition.tex](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/Neuralese/manuscript/Neuralese_Final_Research_Edition.tex)
@@ -33,13 +33,13 @@ Find the statement number or section in the [reading files](#read), then read it
 
 ## Lean
 
-No direct Lean source or guide is selected. The recorded Lean status above and [evidence below](#evidence) describe the assessed scope.
+No Lean source or guide is linked here. See the Lean status above and the [evidence below](#evidence) for the recorded coverage.
 
 [Back to work navigation](#work-navigation)
 
 ## Code
 
-No code shortcut is selected for this edition. Use the [complete file listing under Evidence](#evidence).
+No code shortcut is listed for this edition. Check the [complete file listing under Evidence](#evidence).
 
 [Back to work navigation](#work-navigation)
 
@@ -49,7 +49,7 @@ No code shortcut is selected for this edition. Use the [complete file listing un
 - [Source-file receipt (identity and availability)](../../manifests/source-imports/research-osl-neuralese-reading-edition.json)
 - [All files in this source edition](../../research/osl-neuralese/reading-edition/)
 
-These links organize existing material; they do not add proof reviews, compiler runs, or scientific coverage.
+The evidence records describe the reviews and runs completed for this edition.
 
 [Back to work navigation](#work-navigation)
 

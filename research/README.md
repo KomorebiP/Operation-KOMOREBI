@@ -2,9 +2,9 @@
 
 **Komorebi P.**
 
-These programs keep statements, arguments, calculations, and open obligations together. A program can contain completed theorems and exact computations while its main goal remains open. The scope column identifies the principal limitation to carry into further use.
+These programs bring together statements, arguments, calculations, and open questions. Some contain completed theorems and exact computations while their main goal remains open. The scope column explains the main limit of each program.
 
-Incomplete implementation entries are listed separately in the [incubator](../docs/INCUBATOR.md). This reading list is curated; the complete source inventory remains available.
+Incomplete implementation entries are listed separately in the [incubator](../docs/INCUBATOR.md). This list focuses on works ready for readers. The complete source inventory is also available.
 
 ## Foundations and semantics
 

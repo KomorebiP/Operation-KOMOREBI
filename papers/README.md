@@ -4,7 +4,7 @@
 
 The core sequence develops a common language of typed operators, packets, transfer, refinement, and realization. The papers proceed from foundational constructions to signals, stochastic and quantum models, computation, and arithmetic.
 
-For a continuous reading route, begin with [Realization Calculus](../docs/works/realization-calculus-book.md) and read [Komorebi Space](../docs/works/komorebi-space.md) alongside it.
+Begin with [Realization Calculus](../docs/works/realization-calculus-book.md) and read [Komorebi Space](../docs/works/komorebi-space.md) alongside it.
 
 | Paper | Main subject | Files |
 |---|---|---|
@@ -31,9 +31,9 @@ Each paper directory contains the manuscript and the source, formal, computation
 
 **Quantum and computation:** Papers VII–VIII develop finite quantum constructions, packet algorithms, and compilation.
 
-**Arithmetic and comparison:** Papers IX–XII develop arithmetic packets, residual seeds, comparison, and patching. Paper X's completion statements are conditional. Paper XI retains the open general endpoint designated Conjecture 66. Paper XII keeps its arithmetic and patching inputs explicit.
+**Arithmetic and comparison:** Papers IX–XII develop arithmetic packets, residual seeds, comparison, and patching. Paper X's completion statements are conditional. The general endpoint in Paper XI remains open as Conjecture 66. Paper XII keeps its arithmetic and patching inputs explicit.
 
-The [monographs](../monographs/README.md) provide extended accounts and further applications. The [formalization guide](../formal/README.md) explains how to identify the exact finite formal contract.
+The [monographs](../monographs/README.md) provide extended accounts and further applications. The [formalization guide](../formal/README.md) explains how to identify the finite claims covered by each formalization.
 
 Earlier source editions remain available: [Paper I](paper-i/), [Paper II](paper-ii/), [Paper III](paper-iii/), [Paper IV](paper-iv/).
 

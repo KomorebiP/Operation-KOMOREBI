@@ -2,7 +2,7 @@
 
 [Browse hub](../BROWSE.md) · [Find proofs](PROOFS.md) · [Lean sources](LEAN.md) · [Code](CODE.md) · [Collection](../../README.md)
 
-Open the manuscript or claim guide, then search for the statement number or section. A selected text source may be part of a multi-file manuscript. These links locate writing and existing evidence; they do not certify every statement. Follow **Work overview** for visual guides, Lean, code, and the exact edition.
+Open the manuscript or claim guide, then search for the statement number or section. A selected text source may be part of a multi-file manuscript. The evidence records state which claims have been reviewed. Follow **Work overview** for visual guides, Lean, code, and the exact edition.
 
 <a id="collections"></a>
 

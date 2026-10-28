@@ -1,6 +1,6 @@
 # Records and review history
 
-Current guidance, dated observations, and preserved source editions serve different purposes. Use the current guides to navigate, then follow the exact record for the scope, source revision, environment, and result being claimed.
+Start with the guides below, then open a record for its scope, source revision, environment, and result.
 
 ## Current record map
 
@@ -14,11 +14,11 @@ Current guidance, dated observations, and preserved source editions serve differ
 | What did a particular check establish? | [Verification guide](VERIFICATION.md), dated reports below | [Execution evidence](../verification/README.md) |
 | What did the earlier collection record? | [Historical snapshots](history/README.md) | [Historical manifests](../manifests/history/) |
 
-The filename `release-candidate.json` is retained for compatibility; its current status is `PUBLIC_SOURCE_COLLECTION`. It does not mean the public repository is still a private candidate. The earlier private-candidate record has its own historical path.
+The filename `release-candidate.json` is retained for compatibility. Its current status is `PUBLIC_SOURCE_COLLECTION`. It does not mean the public repository is still a private candidate. The earlier private-candidate record has its own historical path.
 
 ## Bounded review history
 
-These entries follow the registered review order, including reports written on the same date. Later cumulative counts must not be added to earlier cumulative counts. A review report's scope, qualifications, and provenance are part of its result; a new index is not a new review.
+These reports appear in review order, including those written on the same date. Later totals include earlier reviews, so do not add them together. Read each result with its scope, limitations, and source details. Updating this index does not add a review.
 
 | Date | Report | Recorded scope | Evidence binding |
 |---|---|---|---|
@@ -34,7 +34,7 @@ These entries follow the registered review order, including reports written on t
 
 For [Machine_Societies_v1.0.0.tex](../monographs/machine-societies/publication/Machine_Societies_v1.0.0.tex), the bound records cover **38 of 62 distinct pairs**: 36 recorded passes, 2 requiring restrictions, and 24 unreviewed. [Coverage and exact claim labels](../manifests/machine-societies-review-index.json).
 
-Restrictions and unresolved findings remain in the [component evidence catalogue](STATUS_CATALOG.md) and [finalization queue](FINALIZATION_QUEUE.md). Review coverage is not a correctness percentage, whole-book certification, or independent peer review. The [finalization queue](FINALIZATION_QUEUE.md) records the current maintenance priority; scheduling does not change these verdicts.
+Restrictions and unresolved findings remain in the [component evidence catalogue](STATUS_CATALOG.md) and [finalization queue](FINALIZATION_QUEUE.md). Review coverage is not a correctness percentage, whole-book certification, or independent peer review. The [finalization queue](FINALIZATION_QUEUE.md) records the current maintenance priority. Scheduling does not change these verdicts.
 
 ## Other dated reports
 
@@ -43,7 +43,7 @@ Restrictions and unresolved findings remain in the [component evidence catalogue
 
 ## Additional registered evidence
 
-These files complement the review records above. Contracts, source bindings, run outputs, publication receipts, and editorial assessments retain their own meanings.
+These files include test contracts, source records, run outputs, publication receipts, and editorial assessments. Each describes its own purpose and scope.
 
 - [manifests/reader-assessment-2026-10-27.json](../manifests/reader-assessment-2026-10-27.json)
 - [verification/constructive-repair/windows-2026-10-27/summary.json](../verification/constructive-repair/windows-2026-10-27/summary.json)

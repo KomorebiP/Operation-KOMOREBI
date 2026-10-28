@@ -4,9 +4,9 @@
 
 Komorebi is an independent mathematical research program published under the name **Komorebi P.** Realization Calculus studies representations, decompositions, transfers, reconstruction, and the information or obstructions that remain under those operations. Komorebi Space supplies a framework for comparing compatible realizations. The public collection brings together manuscripts, formal developments, software, calculations, experiments, and explanatory guides.
 
-The work has developed through human–AI collaboration. Existing contribution records document substantial AI assistance with mathematical formulation, drafting, proof approaches and review, code generation, exact-arithmetic implementation, testing, references, figures, and document production. The role and review history vary by component; the original disclosures remain the authority for those details.
+The work has developed with substantial AI assistance. Contribution records describe that assistance in mathematical formulation, drafting, proof approaches and review, code generation, exact arithmetic, testing, references, figures, and document production. The role and review history vary by component. See each work’s original disclosure for the details.
 
-Komorebi P. is the named author and retains responsibility for the published claims, release decisions, and corrections. AI systems are credited as assistance in the production process. Their output does not supply independent mathematical validation. This statement does not assert that every proof has received separate personal approval, independent human review, or external certification.
+Komorebi P. is the named author and is responsible for the published claims, release decisions, and corrections. AI assistance is credited in the project records. AI output is not independent mathematical validation. This statement does not mean that every proof has received separate personal approval, independent human review, or external certification.
 
 ## Current state and publication circumstances
 
@@ -14,7 +14,7 @@ The following note records the author’s account of the circumstances, added at
 
 > This work remains in progress and has, in many respects, been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
 
-This context accompanies the project’s public release. Editing, source reconciliation, proof reproduction, software qualification, and review remain ongoing where indicated in the [finalization queue](FINALIZATION_QUEUE.md). Completion and confidence labels continue to depend on each component’s recorded evidence. All executable software remains **beta / work in progress**.
+The [finalization queue](FINALIZATION_QUEUE.md) lists the remaining editing, source checks, proof replays, software testing, and reviews. Completion and confidence labels depend on the evidence recorded for each component. All executable software remains **beta / work in progress**.
 
 ## Why the work uses a pseudonym
 
@@ -30,11 +30,11 @@ Evaluate a result through its exact statement, hypotheses, argument, source revi
 
 The [completion guide](COMPLETION_STATUS.md) separates publication readiness, Lean coverage, and confidence. A completed reading edition can contain open questions. A completed formal contract covers its registered claims. Conditional results retain their premises, and all executable software remains **beta / work in progress**.
 
-The purpose of making the collection public is to make its claims and methods available for inspection, criticism, reproduction, and reuse under the [applicable terms](../LICENSE.md). Corrections should identify the exact work, revision, statement or function, and discrepancy. Reproducible examples and precise objections are useful contributions.
+The collection is public so readers can inspect, criticize, reproduce, and reuse its claims and methods under the [applicable terms](../LICENSE.md). Corrections should identify the exact work, revision, statement or function, and discrepancy. Reproducible examples and precise objections are useful contributions.
 
 ## Sources and editorial provenance
 
-This page is a consolidated public statement prepared on 27 October 2026 from existing project material. The pseudonym note above is reproduced from the published essay; the surrounding text consolidates the project overview and disclosures. The note on publication circumstances was added directly at the author’s request on the same date. This consolidated statement is not presented as the recovery of a previously separate statement file.
+This statement was prepared on 27 October 2026 from existing project material. The pseudonym note is quoted from the published essay. The surrounding text brings together the project overview and disclosures. The author requested the note on publication circumstances on the same date. This page was assembled for publication, rather than recovered from an earlier standalone statement. The surrounding prose was edited for clarity on 28 October 2026. The quoted notes are unchanged.
 
 - [Project overview](../README.md) and [reading guide](START_HERE.md).
 - [Machine-Native Mathematics author note and reader guide](components/MACHINE_NATIVE_MATHEMATICS.md).

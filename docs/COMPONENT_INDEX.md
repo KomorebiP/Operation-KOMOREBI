@@ -4,7 +4,7 @@ Recorded 2026-10-27.
 
 91 primary components and 75 supporting source collections are present with verified file receipts. The receipts cover **139,002 distinct source files**. Older source imports remain separately available.
 
-[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the exact scope in each linked record; file counts establish neither proof nor completion.
+[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the scope of each linked record. File counts do not measure proof or completion.
 
 For direct PDFs, manuscript text, Lean, and code, use the [clickable browse hub](BROWSE.md). The inventory below retains all source and receipt details.
 
