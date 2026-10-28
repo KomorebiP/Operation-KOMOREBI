@@ -10,6 +10,7 @@ Use the guides below for the maintained collection. Dated reviews and execution 
 | Remaining work and completion criteria | [Finalization queue](FINALIZATION_QUEUE.md) |
 | Commands, setup, and interpretation of checks | [Run and verify](VERIFICATION.md) |
 | What each GitHub workflow runs or publishes | [Workflow guide](WORKFLOWS.md) |
+| Maintenance scripts, record updates, and cleanup history | [Repository maintenance](MAINTENANCE.md) |
 | Software entry points | [Libraries and packages](LIBRARIES.md) |
 | Current public availability and distribution | [Publication status](PUBLICATION_STATUS.md) and [distribution notice](DISTRIBUTION_STATUS.md) |
 | Authorship and publication circumstances | [Public project statement](PROJECT_STATEMENT.md) |

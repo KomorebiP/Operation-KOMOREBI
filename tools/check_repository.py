@@ -10,7 +10,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def main() -> int:
+def check(root: Path) -> dict:
+    """Return diagnostics even when a checkout or child check is incomplete."""
     errors: list[str] = []
     required = [
         'README.md', 'CONTRIBUTIONS.md', 'CONTRIBUTING.md', 'CITATION.md',
@@ -20,14 +21,16 @@ def main() -> int:
         'formal/research-preview-1/REPRODUCE.md',
     ]
     for rel in required:
-        if not (ROOT / rel).is_file():
+        if not (root / rel).is_file():
             errors.append(f'Missing entry point: {rel}')
-    ledger_path = ROOT / 'manifests/contributions.json'
+    ledger_path = root / 'manifests/contributions.json'
     if ledger_path.exists():
         try:
             ledger = json.loads(ledger_path.read_text(encoding='utf-8'))
-            if not isinstance(ledger, dict) or not isinstance(ledger.get('contributions'), list):
-                errors.append('Contribution ledger must contain a contributions array')
+            if (not isinstance(ledger, dict)
+                    or not isinstance(ledger.get('contributions'), list)
+                    or not all(isinstance(row, dict) for row in ledger['contributions'])):
+                errors.append('Contribution ledger must contain an array of contribution objects')
             else:
                 rows = ledger['contributions']
                 ids = [row.get('id') for row in rows]
@@ -36,28 +39,55 @@ def main() -> int:
                 for row in rows:
                     if row.get('disposition') == 'imported':
                         rel = row.get('local_path')
-                        if not rel or not (ROOT / rel).exists():
+                        if not isinstance(rel, str) or not rel or not (root / rel).exists():
                             errors.append(f"Imported contribution has no local bytes: {row.get('id')}")
         except (OSError, ValueError) as exc:
             errors.append(f'Cannot read contribution ledger: {exc}')
-    preview = ROOT / 'formal/research-preview-1'
+    preview = root / 'formal/research-preview-1'
     command = [sys.executable, '-B', 'tools/check_release.py']
-    proc = subprocess.run(command, cwd=preview, capture_output=True, text=True)
-    try:
-        preview_result = json.loads(proc.stdout)
-    except ValueError:
-        preview_result = {'stdout': proc.stdout, 'stderr': proc.stderr}
-    if proc.returncode != 0:
-        errors.append('Preserved formal preview artifact check failed')
+    preview_exit_status = None
+    preview_stderr = ''
+    if not (preview / 'tools/check_release.py').is_file():
+        reason = ('Preserved preview checker is missing: formal/research-preview-1/tools/check_release.py. '
+                  'Use a complete checkout; for a sparse checkout, include the entire preserved preview directory.')
+        preview_result = {'status': 'NOT_RUN', 'reason': reason}
+        errors.append(reason)
+    else:
+        try:
+            proc = subprocess.run(command, cwd=preview, capture_output=True,
+                                  encoding='utf-8', errors='replace')
+        except OSError as exc:
+            reason = 'Cannot start the preserved preview checker: '+str(exc)
+            preview_result = {'status': 'NOT_RUN', 'reason': reason}
+            errors.append(reason)
+        else:
+            preview_exit_status, preview_stderr = proc.returncode, proc.stderr
+            try:
+                preview_result = json.loads(proc.stdout)
+                if not isinstance(preview_result, dict):
+                    raise ValueError('Expected a JSON object')
+            except ValueError:
+                preview_result = {'status': 'FAIL', 'stdout': proc.stdout,
+                                  'errors': ['Preview checker did not return a JSON object']}
+            if proc.returncode != 0 or preview_result.get('status') != 'PASS':
+                errors.append('Preserved formal preview artifact check failed; inspect preview diagnostics and exit status')
     result = {
         'status': 'PASS' if not errors else 'FAIL',
         'scope': 'Entry-point presence and preserved formal source/artifact identity; no Lean replay, full corpus reconciliation, or publication approval.',
         'entry_points_checked': len(required),
         'preview': preview_result,
+        'preview_exit_status': preview_exit_status,
         'errors': errors,
     }
+    if preview_stderr:
+        result['preview_stderr'] = preview_stderr
+    return result
+
+
+def main() -> int:
+    result = check(ROOT)
     print(json.dumps(result, indent=2))
-    return bool(errors)
+    return int(result['status'] != 'PASS')
 
 
 if __name__ == '__main__':

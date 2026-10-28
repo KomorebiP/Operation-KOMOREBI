@@ -9,6 +9,7 @@ Current guidance, dated observations, and preserved source editions serve differ
 | Which sources are available? | [Component index](COMPONENT_INDEX.md), [source coverage](SOURCE_COVERAGE.md) | [Source index](../manifests/source-components.json), [import receipts](../manifests/source-imports/) |
 | What is complete, checked, or still open? | [Status guide](COMPLETION_STATUS.md), [evidence catalogue](STATUS_CATALOG.md) | [Project status](../manifests/project-status.json) |
 | What remains to finish? | [Finalization queue](FINALIZATION_QUEUE.md) | Queue entries in [project status](../manifests/project-status.json) |
+| How are collection records maintained? | [Maintenance guide and selected cleanup checkpoints](MAINTENANCE.md) | [Git history](https://github.com/KomorebiP/Operation-KOMOREBI/commits/main/) |
 | What is publicly distributed? | [Publication status](PUBLICATION_STATUS.md), [distribution notice](DISTRIBUTION_STATUS.md) | [Public publication record](../manifests/release-candidate.json) |
 | What did a particular check establish? | [Verification guide](VERIFICATION.md), dated reports below | [Execution evidence](../verification/README.md) |
 | What did the earlier collection record? | [Historical snapshots](history/README.md) | [Historical manifests](../manifests/history/) |

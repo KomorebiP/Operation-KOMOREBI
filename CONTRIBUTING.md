@@ -18,6 +18,8 @@ For a problem specific to the independent [Komorebi Math](https://github.com/Kom
 
 Keep the change focused on one correction or related set of files. Explain the problem, resulting behavior, and checks performed. The pull request template provides space for the exact component/edition and any remaining limitations.
 
+The [maintenance guide](docs/MAINTENANCE.md) identifies the relevant scripts, their file/publication effects, and the update rules for dated records.
+
 Maintained guidance and frozen source editions have different update paths:
 
 | Change | Where to work |
