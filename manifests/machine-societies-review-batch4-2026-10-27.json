@@ -1,0 +1,265 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-27",
+  "source_revision": "3cc5bd4d728265f489a1e5fdc2ad68ec6c78eb93",
+  "scope": "Six written statement/proof pairs: inductive safety, finite-horizon viability, amendment confluence, quiescent replication, exclusive service, and the computability boundary.",
+  "provenance": "AI-assisted sequential self-review; not independent peer review.",
+  "new_lean_execution": false,
+  "new_computation": false,
+  "whole_collection_soundness_claim": false,
+  "reviewed_sources": [
+    {
+      "path": "monographs/machine-societies/MATHEMATICAL_REVIEW.md",
+      "sha": "bc9d43e8f2c1d706968fd214f6295e9c46a0064b",
+      "sha256": "4aa99d86245953c24fd19894976ad6e5a83d51cc27869e751a246d53b8d60bac"
+    },
+    {
+      "path": "monographs/machine-societies/RELEASE_LEDGER.json",
+      "sha": "011546e3e8b8f15cd76261447f943f26a0620260",
+      "sha256": "bf7424bab1139f49a013f789cfb697c2bdda76f2b52c5b2440b55a30230ac674"
+    },
+    {
+      "path": "monographs/machine-societies/verification/proof_review.json",
+      "sha": "f0a99f24f0f4b2ea75095dbf4264907094edd0c6",
+      "sha256": "5e802de10e04f1f04cf2f7b22569b2af773f8227f0f2f5579871e1872948c2ea"
+    },
+    {
+      "path": "monographs/machine-societies/publication/Machine_Societies_v1.0.0.tex",
+      "sha": "581c4979cac12ceae9ef94bafc75ef7932101847",
+      "sha256": "600a8100804c4c91d7cf79a4985e9312eacc19195395aee01debb240cb0a6be0"
+    }
+  ],
+  "cards": [
+    {
+      "label": "prop:safety",
+      "title": "Constitutional inductive safety",
+      "normalized_claim": "If the initial full operating state satisfies a predicate and every admitted edge preserves it from a satisfying state, every state reachable by finitely many admitted edges satisfies that predicate.",
+      "hypotheses": "The state includes the operating and institutional variables. The relation includes both ordinary actions and amendments. Closure is required for every admitted edge with a safe source, including edges that change the checker.",
+      "decisive_argument": "The zero-edge path is the initial premise. For a path of length n+1, the induction hypothesis gives the predicate at its penultimate state, and the final admitted edge gives it at the endpoint. Every finitely reachable state has such a path.",
+      "dependencies": "Initial predicate + universal edge closure → induction on finite path length → reachable-state predicate. Leaves are internal premises and finite induction; there is no external theorem or computation dependency.",
+      "boundary_cases": "Zero steps, deadlocked safe states, loops, nondeterministic choices, and unreachable unsafe states. A safe deadlock satisfies this proposition without providing service. The nearby unchecked-checker example violates edge closure on the second edge; it is not a counterexample to the proposition.",
+      "strongest_safe_statement": "The predicate is invariant relative to the declared transition relation. Actual implementation adherence, ethical adequacy, liveness, and timely service are additional obligations.",
+      "next_check": "For an implementation, include all checker-changing transitions in the relation and establish the closure premise for each admitted transition family.",
+      "source_line": 1117,
+      "statement_and_proof_sha256": "9789cfa5fd77b0611ce2baf30edf58387c00c77eb4db44fe1fe1471b33fc904a",
+      "statement_and_proof": "\\begin{proposition}[Constitutional inductive safety]\\label{prop:safety}\nIf $\\Psi(s_0)$ and every admitted transition satisfies\n\\[\n\\Psi(s)\\wedge R(s,s')\\Longrightarrow\\Psi(s'),\n\\]\nthen $\\Psi(s_t)$ holds for every state reachable by finitely many admitted transitions.\n\\end{proposition}\n\\begin{proof}\nInduction on the number of admitted transitions.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope",
+        "external_theorem": "none required for this implication; adjacent literature not assessed"
+      }
+    },
+    {
+      "label": "prop:viability",
+      "title": "Finite-horizon almost-sure viability",
+      "normalized_claim": "For each nonnegative finite horizon h, membership in the recursively defined set V_h is equivalent to the existence of an admissible policy that executes h transitions and stays in the safe set almost surely, including the present state. A deterministic time-dependent Markov policy suffices on the viable states.",
+      "hypotheses": "Finite full state space, finite safe subset and action sets, a Markov transition law for each available state/action, and policies allowed to observe the full state and remaining horizon. The horizon counts actual transitions; a deadlocked run is not treated as an h-transition policy.",
+      "decisive_argument": "At horizon zero the condition is exactly membership in S. A successful first action must put all positive-probability successors in V_h: at each such successor the conditional continuation is an admissible successful h-step policy. Conversely, an action with support in V_h followed by the inductively chosen actions preserves safety. Select one witness action for each viable state and remaining horizon. Randomization cannot rescue a first action with positive probability of reaching a nonviable successor.",
+      "dependencies": "Full Markov state + support criterion → backward induction. Finite action selection → deterministic time-dependent Markov witnesses. Randomized-policy necessity uses conditional continuations on positive-probability branches. All leaves are internal finite-probability facts and premises.",
+      "boundary_cases": "h=0 needs no available action. An empty action set excludes a state from V_1 even when it is safe; an empty safe set makes all V_h empty. Zero-probability successors are irrelevant. A positive but small chance of leaving V_h still prevents an almost-sure guarantee. Partial observation and an unbounded horizon are outside this statement.",
+      "strongest_safe_statement": "The recurrence exactly solves the stated finite-horizon full-information safety problem. It does not prove decentralized implementability, eventual service, or infinite-horizon viability.",
+      "next_check": "Before applying the recurrence, verify the full-state Markov representation, action availability, and whether the intended policy observes that state.",
+      "source_line": 1145,
+      "statement_and_proof_sha256": "a06c9e7bd5eeeffbf3a598df71164fc9d3a80386cc18bc047facfde99b3139b5",
+      "statement_and_proof": "\\begin{proposition}[Finite-horizon almost-sure institutional viability]\\label{prop:viability}\nA state $s$ belongs to $V_h$ if and only if there exists an admissible policy under which every state visited over the next $h$ transitions, including the present state, lies in $S$ with probability one. Policies may use the full observed state and the remaining horizon. For $s\\in V_h$, a time-dependent Markov policy suffices.\n\\end{proposition}\n\\begin{proof}\nThe claim at $h=0$ is $V_0=S$. Suppose it holds at $h$. To remain in $S$ almost surely for another step and then for $h$ further steps, the first action must have support entirely in states from which the remaining $h$ steps can be kept safe. By the induction hypothesis, these are exactly $V_h$. Thus admissible first actions are precisely those in the definition of $V_{h+1}$. Choosing a witnessing action at each state and remaining horizon supplies a time-dependent Markov policy. Conversely, if no such action exists, every first action assigns positive probability to a successor from which the required remaining guarantee is impossible. Randomizing over actions cannot remove that positive failure probability unless all positively chosen actions are themselves witnessing actions.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope",
+        "external_theorem": "none required for this implication; adjacent literature not assessed"
+      }
+    },
+    {
+      "label": "thm:confluence",
+      "title": "Order-independent amendment normal forms",
+      "normalized_claim": "A terminating locally confluent amendment relation is confluent; each starting state has one reachable normal form, and every maximal amendment sequence ends there.",
+      "hypotheses": "Termination excludes every infinite chain of actual steps within the declared episode. Local confluence joins every pair of one-step successors by finite paths. The full state includes pending proposals, versions, permissions, and consequence records. Well-founded induction uses the ordinary classical set-theoretic convention.",
+      "decisive_argument": "For descendants y,z of s, the case y=s or z=s is immediate. Otherwise local confluence joins their first successors a,b at c. Induction at a joins y,c at p; induction at b joins z,c at q. Termination makes a,b,c strict descendants of s, so induction at c joins p,q. Concatenation joins y,z. A maximal path cannot be infinite or end with an available edge, so it ends at a normal form; two reachable normal forms joined by confluence must coincide.",
+      "dependencies": "Termination → well-founded strict-descendant induction; local joining + three induction uses → confluence; termination + maximality → normal-form existence; confluence + terminality → uniqueness. Newman Theorem 3 supplies the same confluence implication after translating his path terminology; the manuscript also supplies its own proof.",
+      "boundary_cases": "A starting normal form permits the empty path. The local join may equal a or b but cannot equal s, since that would make a cycle. Local joinability does not require one-step commutation. A finite rulebook alone does not imply termination. Equal projected policy text does not establish confluence of the full consequence state.",
+      "strongest_safe_statement": "Order independence holds for the specified terminating episode and state representation. It gives neither equal path costs nor termination of all future institutional change.",
+      "next_check": "For a concrete amendment system, prove a ranking or another termination argument and discharge every local fork in the full declared state.",
+      "source_line": 1173,
+      "statement_and_proof_sha256": "9c9c7710adc579638fb4d2521eb0c95f9f7c3bbc114353b491a17e87c6fc5191",
+      "statement_and_proof": "\\begin{theorem}[Order-independent amendment normal forms]\\label{thm:confluence}\nA terminating, locally confluent amendment relation is confluent. Each starting state has a unique reachable normal form, so every maximal amendment sequence ends at that normal form. This is Newman's lemma applied to the declared institutional transition relation~\\cite{newman}.\n\\end{theorem}\n\\begin{proof}\nUse well-founded induction on strict descendants of $s$. For descendants $y,z$ of $s$, there is nothing to prove if one equals $s$. Otherwise choose first steps $s\\to a\\to^*y$ and $s\\to b\\to^*z$. Local confluence supplies $c$ with $a\\to^*c$ and $b\\to^*c$. The induction hypothesis at $a$ joins $y,c$ at some $p$, and the hypothesis at $b$ joins $z,c$ at some $q$. Since $c$ is also a strict descendant of $s$, its hypothesis joins $p,q$. Thus $y,z$ have a common descendant. Termination ensures a normal form is reached along every maximal sequence. Two reachable normal forms must coincide because confluence gives a common descendant and neither can move.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope",
+        "external_theorem": "verified: Newman Theorem 3 and notation translation; internal proof also checked"
+      }
+    },
+    {
+      "label": "prop:merge-convergence",
+      "title": "Quiescent convergence and invariant preservation",
+      "normalized_claim": "With finitely many replicas and finitely many fixed contributions, eventual inclusion of every contribution in every replica makes all states eventually equal the join of the initial state and those contributions. A set containing the initial state and preserved by local updates and binary joins remains invariant.",
+      "hypotheses": "A join-semilattice, a common initial element, updates by joining a fixed contribution, merges by joining replica states, finite replicas/contributions, and eventual dissemination to every replica. For invariant preservation, all permitted local updates preserve V and V is join-closed.",
+      "decisive_argument": "Inductively each replica holds the initial element joined with some created contributions. Associativity, commutativity, and idempotence remove order and multiplicity. Once all contributions are included, that join is the same fixed element and cannot change. The maximum of finitely many eventual inclusion points gives a common finite point for all replicas. A separate induction over updates and merges proves membership in V.",
+      "dependencies": "Join laws + update/merge definitions → representation by a subset of contributions → common final join after dissemination. Finiteness → one common eventual point. Initial membership + local-update preservation + join closure → invariant induction. No external CRDT theorem is needed for this restricted proof.",
+      "boundary_cases": "No contributions gives the initial state; one replica works without communication; repeated deliveries do not change a join. No bottom element or finite semilattice is required. The result conditions on the same accepted contributions: a different schedule can generate different contributions when generation depends on local state.",
+      "strongest_safe_statement": "The stated algebra ensures quiescent convergence and the specified invariant. It does not certify authorization, detect completed dissemination, or undo the physical effects of conflicting irrevocable grants.",
+      "next_check": "Verify that actual update and merge operations have the declared join form and that the intended validity predicate is closed under every independently reachable merge.",
+      "source_line": 1207,
+      "statement_and_proof_sha256": "5fa3e5724ac8ec7d37f7f7069c725acd6ffd1c4fc98aa80b42f57d2cd3a9f705",
+      "statement_and_proof": "\\begin{proposition}[Quiescent convergence and invariant preservation]\\label{prop:merge-convergence}\nAssume finitely many replicas begin at $\\ell_0$, only finitely many contributions $\\delta_1,\\ldots,\\delta_N$ are created, and every contribution eventually becomes included in every replica. Then each replica eventually equals\n\\[\n\\ell^\\star=\\ell_0\\vee\\delta_1\\vee\\cdots\\vee\\delta_N,\n\\]\nindependently of merge order and duplicate deliveries. Moreover, let $V\\subseteq L$ contain the initial state. If every permitted local update maps $V$ into $V$ and $V$ is closed under $\\vee$, every local and merged state remains in $V$.\n\\end{proposition}\n\\begin{proof}\nAt every step a replica is the join of $\\ell_0$ and some created contributions. Associativity, commutativity, and idempotence remove ordering and duplication effects. Once every contribution has reached a replica, its state is $\\ell^\\star$ and cannot subsequently change. Finiteness of the replicas and contributions gives a finite point after which this holds everywhere. For the second claim, induction over local updates and merges preserves membership in $V$ by the two closure assumptions.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope",
+        "external_theorem": "none required for this implication; adjacent literature not assessed"
+      }
+    },
+    {
+      "label": "prop:exclusive-service",
+      "title": "Exclusive service cannot be unconditionally local",
+      "normalized_claim": "Two isolated decision sites cannot both guarantee irrevocable singleton-request service before a deadline and at most one grant for simultaneous requests. The impossibility also holds for probability-one guarantees with request-independent random tapes.",
+      "hypotheses": "Each site observes its own requests and receives no information about the other site’s requests before the common deadline. There is no separate shared atomic resource operation before that deadline. Compare executions with the same initial resource state and matching local request timing. Random tapes have the same joint request-independent law in the compared executions.",
+      "decisive_argument": "In the concurrent execution, each site has the same local history as in its own singleton execution. The singleton requirement therefore forces both deterministic grants. With randomization, each local grant event still has probability one by equality of its local law; the union of the two complementary null events has probability zero, so both grants occur almost surely. Independence of the two random tapes is unnecessary.",
+      "dependencies": "Information restriction + matched local inputs → indistinguishable local histories/laws → singleton service forces two grants → contradiction. For randomized protocols the only probability step is closure of null events under a finite union. No general consensus impossibility result is used.",
+      "boundary_cases": "Shared correlated randomness does not avoid the probability-one contradiction. The proposition does not quantify an approximate service probability. A preassigned owner drops singleton service at the nonowner; an atomic grant primitive changes the premises; tentative reservations are not the required irrevocable grants.",
+      "strongest_safe_statement": "The incompatible guarantees are those of this particular deadline and information contract. This is not an impossibility theorem for every distributed allocation protocol.",
+      "next_check": "Specify the actual communication, atomic resource, preallocation, or deadline assumption that makes the intended service contract feasible.",
+      "source_line": 1233,
+      "statement_and_proof_sha256": "f6b4de0a37b503a36d6ebb886aebf9fc2becf210bac2daca46d0fff32eded8f5",
+      "statement_and_proof": "\\begin{proposition}[Exclusive service cannot be unconditionally local]\\label{prop:exclusive-service}\nNo deterministic protocol can satisfy both of the following in every such execution: (i) whenever a request occurs at only one site, that site irrevocably grants the resource before the deadline; and (ii) at most one grant occurs when requests arrive concurrently at both sites. The same conclusion holds for randomized protocols when both guarantees are required with probability one and random tapes have the same request-independent law across these executions.\n\\end{proposition}\n\\begin{proof}\nCompare the two singleton-request executions with the concurrent-request execution. Until the deadline, each site has the same local history in the concurrent execution as in its own singleton execution. Requirement (i) therefore makes each grant, violating (ii). In the randomized case each site's grant event has probability one in the concurrent execution by the same local-law comparison. Their intersection also has probability one, without requiring independent random tapes.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope",
+        "external_theorem": "none required for this implication; adjacent literature not assessed"
+      }
+    },
+    {
+      "label": "thm:undecidable",
+      "title": "No universal constitutional safety decider",
+      "normalized_claim": "The manuscript asserts that any class with effective initial encodings, deterministic total computable steps, a forbidden event, and effective step-by-step Turing simulation has undecidable safety and non-semidecidable safety, while event occurrence is semidecidable.",
+      "hypotheses": "The stated simulation premise does not explicitly require the class to admit a simulator that emits the actual forbidden event when its simulated machine halts. Event occurrence must also be effectively recognizable from a simulated finite step, as the execution-based semidecision argument presumes.",
+      "decisive_argument": "The first reduction requires an effective map from every machine/input pair to an admissible program whose actual forbidden event occurs if and only if that machine halts. Universal simulation of internal configurations alone does not supply this map. A class containing silent universal simulators and a separately tagged immediate-event program meets the literal simulation premise while its safety is decidable by the tag. Under the explicit event-emitting compilation restriction, the manuscript’s existing reduction and dovetailing argument are valid.",
+      "dependencies": "Missing class-closure arrow: machine/input → admissible event-emitting simulator. With that arrow, halting undecidability → no total safety decider. Recognizable event + total effective steps → semidecision of occurrence. A hypothetical safety semidecision + occurrence semidecision → total decision by dovetailing → contradiction. The classical undecidability leaf is checked against Turing’s symbol-printing result with an explicit standard encoding translation.",
+      "boundary_cases": "A never-emitting universal simulator already gives an all-safe counterclass. Adding one immediate-event program makes both safety and unsafety nonempty and still decidable, so merely requiring a nontrivial event does not repair the premise. Finite state spaces, finite step bounds, and restricted program languages are outside the strengthened universal impossibility claim.",
+      "strongest_safe_statement": "For an effectively presented program class with uniformly computable total steps, decidable event recognition, and an effective admissible compilation that emits the forbidden event exactly when any input Turing computation halts, event occurrence is semidecidable, safety is undecidable, and safety is not semidecidable.",
+      "next_check": "State the event-emitting compilation and event-recognition premises in a revised source edition, and apply the same restriction to the complete-certificate consequence at source line 1275.",
+      "verdict": "correct only after a stated restriction",
+      "remaining_gap": "Universal simulation does not imply closure under the event-emitting instrumentation used by the reduction. The literal broad class claim is false; the explicitly restricted version follows by the existing proof.",
+      "issue_kind": "Substantive missing hypothesis in the reduction, not a typographical change.",
+      "counterexample": "Codes have tag 0 followed by a Turing machine/input pair, or tag 1. A tag-0 run executes the simulated machine one step at a time in internal memory, keeps the actual event bit zero, and stutters after simulated halting. A tag-1 run emits the actual event on its first step and then stutters. Initial states and all transitions are effective and total. The class effectively simulates every Turing computation, yet a tag test decides safety. The simulated tape symbols are internal data, not the actual forbidden-event channel.",
+      "downstream_impact": "The sound-and-complete recursively enumerable safety-certificate impossibility at line 1275 needs the same stronger class premise. For the counterclass, accepting a fixed certificate exactly for tag-0 codes is already sound, complete, and decidable. No finite-state result or separately reviewed proof is invalidated by this finding.",
+      "source_line": 1261,
+      "statement_and_proof_sha256": "d3a390085f477c47ed1bbbb42257c37fae1479dcaea39a4cd30831e624a6896e",
+      "statement_and_proof": "\\begin{theorem}[No universal constitutional safety decider]\\label{thm:undecidable}\nThere is no total algorithm that decides safety for every program in this class. In the same class, occurrence of the forbidden event is semidecidable, whereas safety is not semidecidable in general.\n\\end{theorem}\n\\begin{proof}\nGiven a Turing machine $M$ and input $w$, construct a program $P_{M,w}$ that simulates $M(w)$ and produces the forbidden event exactly when the simulation halts. Each simulation step is computable and terminates. The constructed program is safe exactly when $M(w)$ does not halt. A total safety decider would decide halting by complementing its answer, contradicting the classical undecidability result~\\cite{turing}.\n\nOccurrence of the event is semidecidable by executing successive steps until it appears. If safety were also semidecidable for this universal class, run the two semidecision procedures in interleaved steps. Exactly one would eventually accept, yielding a total decider. Equivalently, the effective construction would semidecide nonhalting as well as halting, which is impossible.\n\\end{proof}",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "failed: missing admissible event-emitting compilation premise",
+        "proof_implications": "conditional on the explicit restriction",
+        "boundary_cases": "failed for the literal class hypothesis: counterclass supplied",
+        "dependency_circularity": "passed",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope",
+        "external_theorem": "verified classical source; application conditional on the class restriction"
+      }
+    }
+  ],
+  "literature_checks": [
+    {
+      "id": "newman-1942",
+      "title": "On Theories with a Combinatorial Definition of Equivalence",
+      "authors": [
+        "M. H. A. Newman"
+      ],
+      "doi": "10.2307/1968867",
+      "version": "Annals of Mathematics 43(2), 223–243, April 1942",
+      "date_checked": "2026-10-27",
+      "source_url": "https://www.ens-lyon.fr/LIP/REWRITING/TERMINATION/NEWMAN/Newman.pdf",
+      "metadata_url": "https://www.jstor.org/stable/i307210",
+      "inspected_pdf_sha256": "1a5243d6e42cc3c240c77b7fc81f441263786bd93abf3e6fd344b819fe89def3",
+      "project_cache": "absent; temporary inspection copy only; full text not published",
+      "extraction_status": "Text extraction unavailable on image scan; visually inspected pages 223–228 using pypdfium2 rendering.",
+      "locator": "Theorem 3, page 226; definitions and conditions (A)–(D), page 224; proof, pages 227–228.",
+      "source_status": "proves",
+      "project_claim": "thm:confluence",
+      "translation": "Positive cells are admitted steps; descending paths are reductions; lower bounds are common descendants. Condition (D) is local confluence and condition (A) is joinability of connected vertices. With no infinite descending path, Theorem 3 proves (D) implies (A), which gives the required confluence implication.",
+      "checks_performed": [
+        "scan title/author/journal/pages matched publisher issue metadata",
+        "exact theorem and definitions visually extracted",
+        "hypotheses and project application checked"
+      ],
+      "implication_verdict": "verified",
+      "overlap": "known after translation of notation",
+      "caveat": "The manuscript’s induction proof is checked directly; equality of full episode states is the application contract. No priority claim or wider bibliography review."
+    },
+    {
+      "id": "turing-1937",
+      "title": "On Computable Numbers, with an Application to the Entscheidungsproblem",
+      "authors": [
+        "A. M. Turing"
+      ],
+      "doi": "10.1112/plms/s2-42.1.230",
+      "version": "Proceedings of the London Mathematical Society s2-42(1), 230–265, 1937; received/read in 1936",
+      "date_checked": "2026-10-27",
+      "source_url": "https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf",
+      "project_cache": "absent; no project cache copy or full text published",
+      "extraction_status": "Browser PDF text inspected, especially section 8, printed pages 246–248.",
+      "locator": "Section 8, page 248: impossibility of deciding whether an arbitrary machine ever prints a designated symbol.",
+      "source_status": "proves",
+      "project_claim": "classical undecidability input to thm:undecidable",
+      "translation": "A Turing machine that monitors a simulated run and halts when the designated symbol is printed would turn a halting decider into a symbol-printing decider. This verifies the halting-undecidability input in modern language. Mapping halting to the project’s actual event requires the separately stated admissible event-emitting compiler.",
+      "checks_performed": [
+        "facsimile title/author/received-read dates and printed pagination inspected",
+        "section 8 symbol-printing result extracted",
+        "modern halting translation checked",
+        "project class-closure premise found missing"
+      ],
+      "implication_verdict": "conditional: classical leaf verified; application requires event-emitting compilation and effective event recognition",
+      "overlap": "formal corollary not stated, under the explicit restriction",
+      "caveat": "Turing’s circle-free property is not ordinary halting. The source statement used is the designated-symbol result; no claim that the project’s formulation appears verbatim. No novelty survey."
+    }
+  ],
+  "prior_count": 32,
+  "additional_count": 6,
+  "combined_distinct_count": 38,
+  "proved_as_written_count": 36,
+  "qualified_count": 2,
+  "remaining_count": 24,
+  "report": {
+    "path": "docs/MACHINE_SOCIETIES_PROOF_REVIEW_BATCH4_2026-10-27.md",
+    "sha256": "60ea75fba90928c90c23c717337eeb2ddc41067c4882342011023de11e2533ca"
+  },
+  "decisions": [
+    {
+      "id": "monographs-machine-societies",
+      "placement": "retain_with_clarification",
+      "reason": "Five further implications pass; the computability theorem needs an explicit event-emitting compilation premise, including its downstream certificate consequence. Combined coverage is 38 of 62: 36 recorded passes, two qualified statements, and 24 unreviewed pairs."
+    }
+  ]
+}
