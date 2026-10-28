@@ -21,6 +21,12 @@ Reading routes, glossary, download guides and work introductions are generated
 with the collection's normal status command. Edit their source records or
 templates. Keep each claim's exact recorded scope when changing navigation.
 
+The `learning_topics` records in the reader experience manifest generate the
+[topic map](LEARNING_MAP.md), the source routes at the end of each tutorial,
+and return links on the related work pages. Edit tutorial explanations above
+the `learning-navigation` marker. The status command replaces the section
+below that marker. A subject route does not establish a theorem correspondence.
+
 ## Build locally
 
 Use a complete collection checkout and separate checkouts of the two libraries
@@ -56,7 +62,7 @@ runs finish successfully. A website build confirms its own navigation and
 packaging scope, not new mathematical or formal verification.
 
 The workflow also runs the documented introductory Python and C examples.
-It checks the nine hand-worked examples with exact rational arithmetic.
+It checks the 15 hand-worked examples with exact rational arithmetic.
 The library workflows retain their broader platform and release checks.
 
 [Accessibility and known limits](ACCESSIBILITY.md) · [Repository maintenance](MAINTENANCE.md)

@@ -161,12 +161,15 @@ class Browser:
     def work_page(self, c):
         page = card_path(c)
         s = self.assessments[c['id']]
+        from reader_experience import introduction
+        intro = introduction(self.root, c, s, page)
+        examples = ' · [Worked examples](#worked-examples-for-this-work)' if '### Worked examples for this work' in intro else ''
+        return_navigation = '[Back to work navigation](#work-navigation)'+examples
         text = '# '+c['title']+'\n\n'
         text += link('Browse hub','docs/BROWSE.md',page)+' / '+link(GROUPS[c['group']],page_for(c['group']),page)+'\n\n'
-        text += '<a id="work-navigation"></a>\n\n'+self.work_navigation()+'\n\n'
+        text += '<a id="work-navigation"></a>\n\n'+self.work_navigation()+examples+'\n\n'
         text += self.status_line(c,page)+'\n\n'+s.get('reader_summary',c['summary'])+'\n\n'
-        from reader_experience import introduction
-        text += introduction(self.root, c, s, page)
+        text += intro
         if self.held(c):
             text += '**Incubator:** '+link('Limits and return criteria','docs/INCUBATOR.md#'+c['id'],page)+'.\n\n'
         text += 'Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.\n\n'
@@ -194,7 +197,7 @@ class Browser:
             if finder and self.in_finder(c,finder):
                 text += '\n'+link('Find this work among other '+{'PROOFS':'written proofs','LEAN':'Lean projects','CODE':'code projects'}[finder],
                                   'docs/browse/'+finder+'.md#'+c['id'],page)+'\n'
-            text += '\n[Back to work navigation](#work-navigation)\n\n'
+            text += '\n'+return_navigation+'\n\n'
         text += '## Evidence\n\n'
         text += '- '+link('Completion, Lean coverage, confidence, and cited evidence','docs/STATUS_CATALOG.md#'+c['id'],page)+'\n'
         if s.get('review_report'):
@@ -207,7 +210,7 @@ class Browser:
         text += '- '+link('Source-file receipt (identity and availability)',c['receipt'],page)+'\n'
         text += '- '+link('All files in this source edition',c['destination']+'/',page)+'\n\n'
         text += 'The evidence records describe the reviews and runs completed for this edition.\n\n'
-        text += '[Back to work navigation](#work-navigation)\n\n## Continue browsing\n\n'
+        text += return_navigation+'\n\n## Continue browsing\n\n'
         neighbours = self.neighbours(c,page)
         if neighbours:text += neighbours+'\n'
         text += '- '+link('Back to '+GROUPS[c['group']],page_for(c['group'])+'#contents',page)+'\n'

@@ -1,6 +1,6 @@
 # 1. Split and reconstruct a vector
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: projector](../GLOSSARY.md#projector)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: projector](../GLOSSARY.md#projector) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 We will split a vector into two components and put it back together. Work over
 the real numbers and take
@@ -85,4 +85,22 @@ $(-1,-1)^{\mathsf T}$. Both pairs sum to $(4,-1)^{\mathsf T}$.
 [orthogonal projector](../GLOSSARY.md#orthogonal-projector), and the
 [library's first packet program](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction).
 
-[Next: generate a space from a seed](02_SEEDS.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Projector](../GLOSSARY.md#projector) · [Packet](../GLOSSARY.md#packet) · [Complete packet family](../GLOSSARY.md#complete-packet-family) · [Orthogonal projector](../GLOSSARY.md#orthogonal-projector) · [Direct sum](../GLOSSARY.md#direct-sum)
+
+Exact packet coordinates provide the source setting for the elementary decomposition.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/USER_GUIDE.md#first-program-packet-analysis-and-reconstruction). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: packets()](../../tools/check_hand_examples.py#L56). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Next: Generate a space from one seed](02_SEEDS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#packets)

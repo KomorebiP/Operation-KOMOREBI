@@ -4,7 +4,7 @@
 
 <a id="work-navigation"></a>
 
-[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
+[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence) · [Worked examples](#worked-examples-for-this-work)
 
 **Completion:** Reader available, source qualification pending · **Lean:** Not assessed · **Confidence:** Unassessed
 
@@ -22,6 +22,12 @@ The background advice is an editorial starting point. The work itself states its
 
 [Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#gaussian-elimination-guide) · [Download this work](../DOWNLOADS.md#gaussian-elimination-guide)
 
+### Worked examples for this work
+
+These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.
+
+- [12. Eliminate a block of unknowns](../examples/12_BLOCK_ELIMINATION.md) · [Terms and source routes](../LEARNING_MAP.md#elimination)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read
@@ -29,7 +35,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 - [Read PDF](../../research/gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf)
 - [Maintained edition guide](../components/GAUSSIAN_ELIMINATION.md)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Written proofs
 
@@ -39,19 +45,19 @@ Written proofs may be in the [reading files](#read). There is no separate text o
 
 [Find this work among other written proofs](../browse/PROOFS.md#gaussian-elimination-guide)
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Lean
 
 No Lean source or guide is linked here. See the Lean status above and the [evidence below](#evidence) for the recorded coverage.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Code
 
 No code shortcut is listed for this edition. Check the [complete file listing under Evidence](#evidence).
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Evidence
 
@@ -61,7 +67,7 @@ No code shortcut is listed for this edition. Check the [complete file listing un
 
 The evidence records describe the reviews and runs completed for this edition.
 
-[Back to work navigation](#work-navigation)
+[Back to work navigation](#work-navigation) · [Worked examples](#worked-examples-for-this-work)
 
 ## Continue browsing
 

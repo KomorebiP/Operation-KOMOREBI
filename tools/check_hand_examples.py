@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the finite arithmetic in docs/examples with exact rational values.
 
-This checks the nine displayed constructions and their exercise answers.
+This checks the displayed constructions and their exercise answers.
 It does not validate all tutorial prose, prove general research claims, run
 Lean or exercise the production libraries.
 """
@@ -198,11 +198,89 @@ def binary_rounding():
     assert F(5,4)-1==F(1,4) and 2*F(5,4)-2==F(1,2)
 
 
+def kernels():
+    t=matrix([1,1,0],[0,1,1])
+    k=(-1,1,-1)
+    assert apply(t,k)==(0,0)
+    assert apply(t,(1,0,0))==(1,0) and apply(t,(0,0,1))==(0,1)
+    for s in [0,1,2,F(-3,2)]:
+        assert apply(t,(5-s,s,7-s))==(5,7)
+        assert apply(t,(1-s,s,-1-s))==(1,-1)
+    assert apply(t,(3,2,5))==(5,7)
+
+
+def spectral_projectors():
+    t=matrix([2,1],[0,3]);i=eye(2)
+    p=add(scale(3,i),scale(-1,t));q=add(t,scale(-2,i))
+    assert p==matrix([1,-1],[0,0]) and q==matrix([0,1],[0,1])
+    assert apply(t,(1,0))==(2,0) and apply(t,(1,1))==(3,3)
+    assert mul(p,p)==p and mul(q,q)==q
+    assert mul(p,q)==mul(q,p)==matrix([0,0],[0,0])
+    assert add(p,q)==i and add(scale(2,p),scale(3,q))==t
+    assert add(mul(t,t),scale(-5,t),scale(6,i))==matrix([0,0],[0,0])
+    assert mul(t,t)==matrix([4,5],[0,9])==add(scale(4,p),scale(9,q))
+    assert apply(t,(2,3))==(7,9) and apply(mul(t,t),(2,3))==(23,27)
+
+
+def block_elimination():
+    m=matrix([2,1],[3,4]);s=F(4)-3*F(1,2)
+    assert s==F(5,2)
+    assert mul(matrix([1,0],[F(3,2),1]),matrix([2,1],[0,s]))==m
+    for f,g,u,v in [(5,11,F(9,5),F(7,5)),(3,5,F(7,5),F(1,5))]:
+        assert (g-F(3,2)*f)/s==v and (f-v)/2==u
+        assert apply(m,(u,v))==(f,g)
+    assert m[0][0]*m[1][1]-m[0][1]*m[1][0]==2*s==5
+    singular=matrix([2,1],[3,F(3,2)])
+    assert apply(singular,(F(5,2),0))==apply(singular,(2,1))==(5,F(15,2))
+
+
+def modular_reconstruction():
+    assert (10%3,10%5)==(1,0) and (6%3,6%5)==(0,1)
+    assert (2*10+3*6)%15==8 and (8%3,8%5)==(2,3)
+    assert [x for x in range(15) if (x%3,x%5)==(2,3)]==[8]
+    assert 10**2%15==10 and 6**2%15==6 and 10*6%15==0 and (10+6)%15==1
+    assert [x for x in range(12) if (x%4,x%6)==(1,2)]==[]
+    assert [x for x in range(12) if (x%4,x%6)==(1,1)]==[1]
+    assert (10+4*6)%15==4 and (4%3,4%5)==(1,4)
+
+
+def haar_pairs():
+    h=scale(F(1,2),matrix([1,1],[1,-1]));inverse=scale(2,h)
+    assert mul(h,inverse)==mul(inverse,h)==eye(2)
+    assert mul(transpose(h),h)==scale(F(1,2),eye(2))
+    for x,expected in [((2,6,10,14),(8,-4,-2,-2)),((1,3,5,7),(4,-2,-1,-1))]:
+        a,d=apply(h,x[:2]);b,e=apply(h,x[2:])
+        top,detail=apply(h,(a,b))
+        assert (top,detail,d,e)==expected
+        a2,b2=apply(inverse,(top,detail))
+        assert apply(inverse,(a2,d))+apply(inverse,(b2,e))==x
+        assert squared_norm(x)==4*(top*top+detail*detail)+2*(d*d+e*e)
+    assert squared_norm((2,6,10,14))==336 and squared_norm((8,-4,-2,-2))==88
+    assert squared_norm((4,4,12,12))==320 and squared_norm((-2,2,-2,2))==16
+    assert squared_norm((1,3,5,7))==84
+
+
+def typed_paths():
+    a=matrix([1,1]);b=matrix([1],[0]);p=mul(b,a)
+    assert mul(a,b)==eye(1) and p==matrix([1,1],[0,0])
+    assert mul(p,p)==p and mul(a,p)==a
+    assert apply(a,(2,3))==(5,) and apply(p,(2,3))==(5,0)
+    d=matrix([2,0],[0,3])
+    assert mul(d,p)==matrix([2,2],[0,0]) and mul(p,d)==matrix([2,3],[0,0])
+    assert add(mul(d,p),scale(-1,mul(p,d)))==matrix([0,-1],[0,0])
+    other=matrix([0],[1]);q=mul(other,a)
+    assert mul(a,other)==eye(1) and mul(q,q)==q and q==matrix([0,0],[1,1])
+    assert apply(q,(2,3))==(0,5)
+
+
 def main():
-    for check in (packets,seeds,coordinates,transfer,refinement,
-                  redundant_coordinates,obstructions,weighted_averages,binary_rounding):
+    checks=(packets,seeds,coordinates,transfer,refinement,
+            redundant_coordinates,obstructions,weighted_averages,binary_rounding,
+            kernels,spectral_projectors,block_elimination,modular_reconstruction,
+            haar_pairs,typed_paths)
+    for check in checks:
         check()
-    print('PASS: 9 hand-worked examples')
+    print(f'PASS: {len(checks)} hand-worked examples')
 
 
 if __name__=='__main__':

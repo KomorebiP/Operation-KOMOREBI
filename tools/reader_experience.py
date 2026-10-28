@@ -1,6 +1,8 @@
 """Reading routes and introductions derived from the collection's recorded scope."""
 import json
+import ast
 import posixpath
+import re
 from urllib.parse import quote
 
 SITE = 'https://KomorebiP.github.io/Operation-KOMOREBI/'
@@ -20,6 +22,11 @@ def load(root):
     for term in data['glossary']:
         if sections:assert term['section'] in sections
         assert set(term.get('related',[])) <= identifiers
+    topics=data.get('learning_topics',[])
+    assert len({x['id'] for x in topics})==len(topics)
+    assert len({x['example'] for x in topics})==len(topics)
+    for topic in topics:
+        assert set(topic['terms']) <= identifiers
     return data
 
 
@@ -27,14 +34,23 @@ def introduction(root, component, assessment, page):
     config = root/'manifests/reader-experience.json'
     if not config.exists():
         return ''
-    background = load(root)['background'][component['group']]
-    return ('## Before you start\n\n**Suggested background:** '+background+'\n\n'
+    data = load(root)
+    background = data['background'][component['group']]
+    text = ('## Before you start\n\n**Suggested background:** '+background+'\n\n'
             '**Recorded results and limits:** '+assessment['scope']+'\n\n'
             '**Remaining work:** '+assessment['next_step']+'\n\n'
             'The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.\n\n'+
             ' · '.join(link(t,p,page) for t,p in [('Reading routes','docs/READING_ROUTES.md'),
             ('Glossary','docs/GLOSSARY.md'),('Claim links','docs/CLAIM_LINKS.md#'+component['id']),
             ('Download this work','docs/DOWNLOADS.md#'+component['id'])])+'\n\n')
+    topics=[t for t in data.get('learning_topics',[]) if component['id'] in t['works']]
+    if topics:
+        text+='### Worked examples for this work\n\n'
+        text+='These introductory calculations lead into this work’s subject. The source and evidence links below retain the work’s recorded scope.\n\n'
+        for topic in topics:
+            text+='- '+link(str(topic['number'])+'. '+topic['title'],topic['example'],page)+' · '+link('Terms and source routes','docs/LEARNING_MAP.md#'+topic['id'],page)+'\n'
+        text+='\n'
+    return text
 
 
 ROUTES = {
@@ -87,6 +103,7 @@ def render_reader_pages(root, components, assessments):
         return {}
     config = load(root)
     out = {}
+    out.update(render_learning_pages(root, config, components))
     footer = '\n[Reading routes](../READING_ROUTES.md) · [Hand-worked examples](../HAND_WORKED_EXAMPLES.md) · [Browse works](../BROWSE.md) · [Glossary](../GLOSSARY.md)\n'
     for key,(title,body) in ROUTES.items():
         out['docs/routes/'+key+'.md'] = '# '+title+'\n\n'+body+footer
@@ -116,7 +133,7 @@ def render_glossary(config):
     text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
     text+='Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
-    text+='[Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [First software runs](FIRST_RUN.md)\n\n'
+    text+='[Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
     for section in config['glossary_sections']:
         text+='- ['+section['title']+'](#'+section['id']+')\n'
     text+='\n'
@@ -129,7 +146,13 @@ def render_glossary(config):
             if term.get('note'):text+='**Keep in mind:** '+term['note']+'\n\n'
             links=[]
             if term.get('example'):links.append('[Hand-worked example]('+term['example']+')')
-            links.append('[Further reading]('+term['source']+')')
+            if term.get('source')!=term.get('example'):
+                links.append('[Further reading]('+term['source']+')')
+            topics=[t for t in config.get('learning_topics',[]) if term['id'] in t['terms'] or t['example']=='docs/'+term.get('example','')]
+            if topics:
+                links.append('[Papers, proofs, Lean and code](LEARNING_MAP.md#'+topics[0]['id']+')')
+            elif term['section']=='claims-and-evidence':
+                links.append('[How to inspect a proof](routes/PROOF_REVIEW.md)')
             links.extend('['+terms[key]['term']+'](#'+key+')' for key in term.get('related',[]))
             text+=' · '.join(links)+'\n\n'
     text+='## Symbols in the introductory example\n\n'
@@ -142,3 +165,59 @@ def render_glossary(config):
     text+=' · '.join('['+x['term']+'](#'+x['id']+')' for x in sorted(config['glossary'],key=lambda x:x['term'].casefold()))+'\n\n'
     text+='[Reading routes](READING_ROUTES.md) · [Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [First runs](FIRST_RUN.md) · [Browse works](BROWSE.md)\n'
     return text
+
+
+def source_routes(topic, components, page):
+    text=topic['scope']+'\n\n'
+    text+='| Related work | Paper or book | Written proofs | Lean | Code | Evidence |\n|---|---|---|---|---|---|\n'
+    for identifier in topic['works']:
+        component=components[identifier]
+        base='docs/works/'+identifier+'.md'
+        cells=[component['title']]+[link(label,base+'#'+anchor,page) for label,anchor in
+            [('Read','read'),('Proofs','written-proofs'),('Coverage and sources','lean'),('Code and setup','code'),('Status','evidence')]]
+        text+='| '+' | '.join(cells)+' |\n'
+    text+='\n[Related library guide and code examples]('+topic['code_guide']+'). The guide covers related constructions and their software interfaces.\n\n'
+    if topic.get('check'):
+        text+=link('Python arithmetic check for this example: '+topic['check']+'()', 'tools/check_hand_examples.py#L'+str(topic['_check_line']),page)+'. This checks the displayed finite calculations with exact fractions.\n\n'
+    text+='The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.\n\n'
+    return text
+
+
+def render_learning_pages(root, config, components):
+    topics=config.get('learning_topics',[])
+    if not topics:return {}
+    if any(t.get('check') for t in topics):
+        checks=ast.parse((root/'tools/check_hand_examples.py').read_text(encoding='utf-8'))
+        lines={node.name:node.lineno for node in checks.body if isinstance(node,ast.FunctionDef)}
+        topics=[dict(t, _check_line=lines[t['check']]) for t in topics]
+    works={c['id']:c for c in components}
+    terms={x['id']:x['term'] for x in config['glossary']}
+    assert all(set(t['works'])<=set(works) for t in topics)
+    page='docs/LEARNING_MAP.md'
+    text='# From examples to papers, proofs, Lean and code\n\n'
+    text+='Choose a topic to move from a hand calculation to definitions and related source material. Each linked work has return links to these examples. These are subject routes, not new theorem-to-Lean correspondences.\n\n'
+    text+='[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Browse works](BROWSE.md)\n\n'
+    text+='## Topics\n\n'+ '\n'.join('- ['+str(t['number'])+'. '+t['title']+'](#'+t['id']+')' for t in topics)+'\n\n'
+    out={}
+    marker='<!-- learning-navigation -->'
+    for index,topic in enumerate(topics):
+        text+='<a id="'+topic['id']+'"></a>\n\n## '+str(topic['number'])+'. '+topic['title']+'\n\n'
+        text+=link('Work through the example',topic['example'],page)+'\n\n'
+        text+='**Terms:** '+' · '.join(link(terms[x],'docs/GLOSSARY.md#'+x,page) for x in topic['terms'])+'\n\n'
+        text+=source_routes(topic,works,page)+'[Back to topics](#topics)\n\n'
+        example=topic['example']
+        body=(root/example).read_text(encoding='utf-8').split(marker)[0].rstrip()
+        body=re.sub(r'\n\[(?:Previous|Next):[^\n]+$', '', body).rstrip()
+        jump='[Papers, proofs, Lean and code](#papers-proofs-lean-and-code)'
+        if jump not in body:
+            body=re.sub(r'(^\[All examples\][^\n]*)',lambda m:m[1]+' · '+jump,body,count=1,flags=re.M)
+        body+='\n\n'+marker+'\n\n## Papers, proofs, Lean and code\n\n'
+        body+='**Terms in this example:** '+' · '.join(link(terms[x],'docs/GLOSSARY.md#'+x,example) for x in topic['terms'])+'\n\n'
+        body+=source_routes(topic,works,example)
+        footer=[]
+        if index:footer.append(link('Previous: '+topics[index-1]['title'],topics[index-1]['example'],example))
+        if index+1<len(topics):footer.append(link('Next: '+topics[index+1]['title'],topics[index+1]['example'],example))
+        footer.extend([link('All examples','docs/HAND_WORKED_EXAMPLES.md',example),link('Topic map',page+'#'+topic['id'],example)])
+        out[example]=body+' · '.join(footer)+'\n'
+    out[page]=text+'[All hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Glossary](GLOSSARY.md) · [Reading routes](READING_ROUTES.md)\n'
+    return out

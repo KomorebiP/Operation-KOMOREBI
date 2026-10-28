@@ -8,6 +8,10 @@ Start with the first example if matrices are new to you. A matrix acts on a
 column vector by taking the dot product of each row with that vector. The
 [glossary](GLOSSARY.md) explains the notation and the distinctions used here.
 
+Use the [topic map](LEARNING_MAP.md) to find the related papers, written proofs,
+Lean coverage and code. Each example has these routes at the end, and the
+related work pages link back to the examples.
+
 | Example | What you will work out | Background |
 |---|---|---|
 | 1. [Split and reconstruct a vector](examples/01_PACKETS.md) | Projectors, complete packet families and an oblique decomposition | Addition and multiplication |
@@ -19,6 +23,12 @@ column vector by taking the dot product of each row with that vector. The
 | 7. [Find an obstruction to recovering information](examples/07_OBSTRUCTIONS.md) | Two inputs with the same coarse value and different requested answers | Two-variable arithmetic |
 | 8. [Average with unequal weights](examples/08_WEIGHTED_AVERAGES.md) | Conditional expectation and orthogonality in a weighted inner product | Weighted means |
 | 9. [Round a binary number by hand](examples/09_BINARY_ROUNDING.md) | Precision, ties to even, error direction and local spacing | Fractions and powers of two |
+| 10. [Find a kernel and its fibers](examples/10_KERNELS.md) | Rank, nullity and the information a map erases | Linear equations |
+| 11. [Build spectral projectors](examples/11_SPECTRAL_PROJECTORS.md) | Eigenvectors, polynomial identities and oblique packets | Examples 1 and 2 |
+| 12. [Eliminate one block](examples/12_BLOCK_ELIMINATION.md) | Schur complements, back substitution and singular cases | Two linear equations |
+| 13. [Reconstruct from residues](examples/13_MODULAR_RECONSTRUCTION.md) | Modular inverses, CRT and residue selectors | Integer remainders |
+| 14. [Separate averages and differences](examples/14_HAAR_PAIRS.md) | Two Haar levels, reconstruction and energy accounting | Averages and squares |
+| 15. [Compose typed operations](examples/15_TYPED_PATHS.md) | Legal paths, one-sided inverses and a commutator | Matrix dimensions and products |
 
 ## Conventions and scope
 
@@ -33,7 +43,7 @@ general theorem or establish a new Lean correspondence.
 
 ## Check the arithmetic or run a program
 
-The [exact arithmetic checker](../tools/check_hand_examples.py) checks the nine
+The [exact arithmetic checker](../tools/check_hand_examples.py) checks the 15
 examples with Python's standard library and rational arithmetic. From the
 collection checkout, run:
 
@@ -41,7 +51,7 @@ collection checkout, run:
 
 Expected result:
 
-    PASS: 9 hand-worked examples
+    PASS: 15 hand-worked examples
 
 The checker covers the displayed finite calculations. It does not validate every
 sentence in the tutorials, review a research proof or run Lean.

@@ -1,6 +1,6 @@
 # 9. Round a binary number by hand
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: precision](../GLOSSARY.md#precision)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: precision](../GLOSSARY.md#precision) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 Consider positive binary floating-point numbers with three significant bits,
 including the leading one. We stay away from exponent limits and subnormal
@@ -76,4 +76,22 @@ stored-minus-exact error is $+1/8$.
 Library range behavior, error sentinels and diagnostic flags have additional
 contracts beyond this small rounding model.
 
-[Previous: weighted averages](08_WEIGHTED_AVERAGES.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [First software runs](../FIRST_RUN.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Precision](../GLOSSARY.md#precision) · [Dyadic rational](../GLOSSARY.md#dyadic-rational) · [Rounding](../GLOSSARY.md#rounding) · [ULP](../GLOSSARY.md#ulp) · [Numerical ternary](../GLOSSARY.md#ternary) · [Exact](../GLOSSARY.md#exact) · [Numerical](../GLOSSARY.md#numerical)
+
+Paper IX supplies dyadic arithmetic background. The rounding implementation and its contracts belong to Polyphase Float.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation | [Read](../works/paper-ix.md#read) | [Proofs](../works/paper-ix.md#written-proofs) | [Coverage and sources](../works/paper-ix.md#lean) | [Code and setup](../works/paper-ix.md#code) | [Status](../works/paper-ix.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/polyphase-float/blob/main/docs/manual/chapters/06_arithmetic_ranges.md). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: binary_rounding()](../../tools/check_hand_examples.py#L182). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Average with unequal weights](08_WEIGHTED_AVERAGES.md) · [Next: Find a kernel and its fibers](10_KERNELS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#rounding)

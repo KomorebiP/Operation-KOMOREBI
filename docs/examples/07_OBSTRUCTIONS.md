@@ -1,6 +1,6 @@
 # 7. Find an obstruction to recovering information
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: obstruction](../GLOSSARY.md#obstruction)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: obstruction](../GLOSSARY.md#obstruction) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 Suppose a coarse description keeps only the sum of two real coordinates:
 
@@ -73,4 +73,23 @@ products are one and zero.
 [factorization](../GLOSSARY.md#factorization), and the
 [carrier-change criterion](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md#factorization-criterion).
 
-[Previous: redundant coordinates](06_REDUNDANT_COORDINATES.md) · [Next: weighted averages](08_WEIGHTED_AVERAGES.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Obstruction](../GLOSSARY.md#obstruction) · [Fiber](../GLOSSARY.md#fiber) · [Factorization through a map](../GLOSSARY.md#factorization) · [Kernel](../GLOSSARY.md#kernel) · [Quotient space](../GLOSSARY.md#quotient-space)
+
+The finite recovery obstruction is an entry point to the works on compatibility and realization boundaries.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory | [Read](../works/paper-iii.md#read) | [Proofs](../works/paper-iii.md#written-proofs) | [Coverage and sources](../works/paper-iii.md#lean) | [Code and setup](../works/paper-iii.md#code) | [Status](../works/paper-iii.md#evidence) |
+| Realization Boundaries | [Read](../works/realization-boundaries.md#read) | [Proofs](../works/realization-boundaries.md#written-proofs) | [Coverage and sources](../works/realization-boundaries.md#lean) | [Code and setup](../works/realization-boundaries.md#code) | [Status](../works/realization-boundaries.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/CARRIER_CHANGE_OBSTRUCTIONS.md). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: obstructions()](../../tools/check_hand_examples.py#L155). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Use redundant coordinates](06_REDUNDANT_COORDINATES.md) · [Next: Average with unequal weights](08_WEIGHTED_AVERAGES.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#obstructions)

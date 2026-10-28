@@ -1,6 +1,6 @@
 # 2. Generate a space from one seed
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: seed](../GLOSSARY.md#seed)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: seed](../GLOSSARY.md#seed) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 The same vector space can require different generating data under different
 allowed operations. Here the allowed operations are real linear combinations
@@ -66,4 +66,22 @@ when $b\ne0$. If $b=0$, both vectors lie on the first coordinate axis.
 [seed operations guide](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed).
 Paper I's broader definitions may use modules, topology and cardinalities.
 
-[Previous: packets](01_PACKETS.md) · [Next: coordinates](03_COORDINATES.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Seed](../GLOSSARY.md#seed) · [Seed rank](../GLOSSARY.md#seed-rank) · [Cyclic vector](../GLOSSARY.md#cyclic) · [Span](../GLOSSARY.md#span) · [Operator algebra](../GLOSSARY.md#operator-algebra)
+
+Paper I develops seed generation with its stated algebra and module hypotheses.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#1-seed). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: seeds()](../../tools/check_hand_examples.py#L72). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Split and reconstruct a vector](01_PACKETS.md) · [Next: Change coordinates](03_COORDINATES.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#seeds)

@@ -1,6 +1,6 @@
 # 4. Assemble an operator from transfer blocks
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: transfer block](../GLOSSARY.md#transfer-block)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: transfer block](../GLOSSARY.md#transfer-block) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 Use the coordinate projectors $P_1,P_2$ from
 [Example 1](01_PACKETS.md), and let
@@ -80,4 +80,23 @@ $(-1,-1)^{\mathsf T}$.
 The example checks finite matrix identities. It makes no claim about the cost
 of a particular hardware implementation.
 
-[Previous: coordinates](03_COORDINATES.md) · [Next: refinement](05_REFINEMENT.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Transfer block](../GLOSSARY.md#transfer-block) · [Composition](../GLOSSARY.md#composition) · [Block matrix](../GLOSSARY.md#block-matrix)
+
+Paper II supplies transfer background. Paper VIII develops operator algorithms and compilation.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Read](../works/paper-ii.md#read) | [Proofs](../works/paper-ii.md#written-proofs) | [Coverage and sources](../works/paper-ii.md#lean) | [Code and setup](../works/paper-ii.md#code) | [Status](../works/paper-ii.md#evidence) |
+| Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization | [Read](../works/paper-viii.md#read) | [Proofs](../works/paper-viii.md#written-proofs) | [Coverage and sources](../works/paper-viii.md#lean) | [Code and setup](../works/paper-viii.md#code) | [Status](../works/paper-viii.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#transfer-blocks). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: transfer()](../../tools/check_hand_examples.py#L98). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Change coordinates](03_COORDINATES.md) · [Next: Refine a signal](05_REFINEMENT.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#transfer)

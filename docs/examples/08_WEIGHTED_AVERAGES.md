@@ -1,6 +1,6 @@
 # 8. Average with unequal weights
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: conditional expectation](../GLOSSARY.md#conditional-expectation)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: conditional expectation](../GLOSSARY.md#conditional-expectation) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 Take three real values $x=(2,6,9)^{\mathsf T}$, with positive weights
 $w=(1,3,2)$. Group the first two positions together and leave the third alone.
@@ -83,4 +83,22 @@ $121=113+8$.
 This calculation assumes known positive weights and a fixed finite partition.
 It does not estimate either from data.
 
-[Previous: obstructions](07_OBSTRUCTIONS.md) · [Next: binary rounding](09_BINARY_ROUNDING.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Finite conditional expectation](../GLOSSARY.md#conditional-expectation) · [Inner product](../GLOSSARY.md#inner-product) · [Orthogonal projector](../GLOSSARY.md#orthogonal-projector) · [Residual](../GLOSSARY.md#residual)
+
+Paper VI includes stochastic and Bayesian realizations. Its assumptions extend beyond this finite partition.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations | [Read](../works/paper-vi.md#read) | [Proofs](../works/paper-vi.md#written-proofs) | [Coverage and sources](../works/paper-vi.md#lean) | [Code and setup](../works/paper-vi.md#code) | [Status](../works/paper-vi.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md#dynamics-realization). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: weighted_averages()](../../tools/check_hand_examples.py#L165). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Detect lost information](07_OBSTRUCTIONS.md) · [Next: Round a binary number](09_BINARY_ROUNDING.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#averages)

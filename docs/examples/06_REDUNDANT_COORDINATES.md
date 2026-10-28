@@ -1,6 +1,6 @@
 # 6. Reconstruct from redundant coordinates
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: analysis and synthesis](../GLOSSARY.md#analysis-synthesis)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 Three measurements can describe a two-dimensional vector. They may reconstruct
 it exactly even though their individual reconstruction components are not
@@ -93,4 +93,22 @@ They sum to the original vector.
 [redundant coordinates](../GLOSSARY.md#redundancy), and
 [components versus projectors](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors).
 
-[Previous: refinement](05_REFINEMENT.md) · [Next: obstructions](07_OBSTRUCTIONS.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Analysis and synthesis](../GLOSSARY.md#analysis-synthesis) · [Left inverse](../GLOSSARY.md#left-inverse) · [Redundant coordinates](../GLOSSARY.md#redundancy) · [Reconstruction](../GLOSSARY.md#reconstruction)
+
+Compare the exact packet setting of Paper I with the broader analysis and synthesis construction in the library guide.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/ANALYSIS_SYNTHESIS_SYSTEMS.md#components-versus-projectors). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: redundant_coordinates()](../../tools/check_hand_examples.py#L135). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Refine a signal](05_REFINEMENT.md) · [Next: Detect lost information](07_OBSTRUCTIONS.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#redundancy)

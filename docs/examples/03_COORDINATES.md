@@ -1,6 +1,6 @@
 # 3. Change coordinates and transport an operator
 
-[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: coordinate change](../GLOSSARY.md#coordinate-change)
+[All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: coordinate change](../GLOSSARY.md#coordinate-change) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
 Let $x$ and $y$ be two coordinate descriptions of the same object, related by
 $y=Cx$. This convention fixes the direction of the change.
@@ -85,4 +85,22 @@ $(3,2)^{\mathsf T}$ in the new coordinates.
 [commuting diagram](../GLOSSARY.md#commuting-diagram), and
 [operator transport](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport).
 
-[Previous: seeds](02_SEEDS.md) · [Next: transfer blocks](04_TRANSFER.md) · [All examples](../HAND_WORKED_EXAMPLES.md)
+<!-- learning-navigation -->
+
+## Papers, proofs, Lean and code
+
+**Terms in this example:** [Coordinates](../GLOSSARY.md#coordinates) · [Coordinate change](../GLOSSARY.md#coordinate-change) · [Inverse](../GLOSSARY.md#inverse) · [Operator conjugation](../GLOSSARY.md#conjugation) · [Linear isomorphism](../GLOSSARY.md#isomorphism)
+
+Use Paper I for exact packet coordinates and the library atlas for general coordinate changes.
+
+| Related work | Paper or book | Written proofs | Lean | Code | Evidence |
+|---|---|---|---|---|---|
+| Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Read](../works/paper-i.md#read) | [Proofs](../works/paper-i.md#written-proofs) | [Coverage and sources](../works/paper-i.md#lean) | [Code and setup](../works/paper-i.md#code) | [Status](../works/paper-i.md#evidence) |
+
+[Related library guide and code examples](https://github.com/KomorebiP/komorebi-math/blob/main/docs/GENERAL_COORDINATE_ATLAS.md#tensor-and-operator-transport). The guide covers related constructions and their software interfaces.
+
+[Python arithmetic check for this example: coordinates()](../../tools/check_hand_examples.py#L84). This checks the displayed finite calculations with exact fractions.
+
+The Lean links open each work’s recorded coverage and sources. They do not certify this tutorial. A work may have limited coverage or no linked Lean or code. Its page states what is available.
+
+[Previous: Generate a space from one seed](02_SEEDS.md) · [Next: Assemble transfer blocks](04_TRANSFER.md) · [All examples](../HAND_WORKED_EXAMPLES.md) · [Topic map](../LEARNING_MAP.md#coordinates)
