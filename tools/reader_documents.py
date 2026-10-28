@@ -54,6 +54,8 @@ class ReadingDocuments:
                 self.owned[path] = {**f, 'repository_path': path, 'work': component['id']}
             for resource in component['resources']:
                 self.add(component['destination']+'/'+resource['path'], resource['label'])
+        for source in site.claims.get('sources', []):
+            self.add(source['path'])
         for row in site.claims['records']:
             self.add(row['statement_path'])
             for declaration in row['lean']:
@@ -165,6 +167,8 @@ class ReadingDocuments:
             overview = self.site.root/('docs/works/'+work+'.md')
             if 'id="worked-examples-for-this-work"' in overview.read_text(encoding='utf-8') or '### Worked examples for this work' in overview.read_text(encoding='utf-8'):
                 body += '<a href="'+work_url+'#worked-examples-for-this-work">Worked examples</a>'
+            if work in {w['id'] for w in self.site.claims.get('works', [])}:
+                body += '<a href="'+self.site.rel('claims.html', page)+'#'+work+'">Claim index</a>'
             body += '</nav>'
             siblings = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r != record]
             if record['format'] == 'pdf':

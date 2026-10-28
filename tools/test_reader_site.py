@@ -7,12 +7,64 @@ import tempfile
 from types import SimpleNamespace
 
 from build_reader_site import Rewriter, Site, document_url, math_fences, safe_path, selected_files
-from check_reader_site import Page
+from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
+from claim_navigation import statements, manuscript_sources, validate_claims, PAPERS
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_search_fragments_must_exist_in_the_target_page(self):
+        pages={'claims.html':Page('<article id="first"></article>')}
+        check_search_targets([{'url':'claims.html#first'}],pages)
+        for target in ('claims.html#missing','missing.html#first','https://example.com/claims.html'):
+            with self.subTest(target=target), self.assertRaises(AssertionError):
+                check_search_targets([{'url':target}],pages)
+
+    def test_statement_locations_ignore_examples_and_do_not_guess_proof_links(self):
+        text = ('% \\begin{theorem}[Comment]\\end{theorem}\n'
+                '\\begin{verbatim}\\begin{lemma}Fake\\end{lemma}\\end{verbatim}\n'
+                '\\begin{theorem}[A {map [a,b]}]\\label{thm:a}\nTrue.\\end{theorem}\n'
+                '\\begin{proof}Argument.\\end{proof}\n'
+                '\\begin{conjecture}[Still open]Claim.\\end{conjecture}\n'
+                'An unrelated paragraph.\n\\begin{proof}Other argument.\\end{proof}')
+        rows = statements(text, 'paper/main.tex', 'paper-ii', 'a'*64)
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0]['statement_line'], 3)
+        self.assertEqual(rows[0]['proof_line'], 5)
+        self.assertEqual(rows[0]['labels'], ['thm:a'])
+        self.assertEqual(rows[1]['kind'], 'conjecture')
+        self.assertIsNone(rows[1]['proof_line'])
+        self.assertEqual(rows[0]['lean'], [])
+        self.assertTrue(all(r['status']=='written_statement' for r in rows))
+
+    def test_literal_inputs_resolve_from_main_directory_and_stay_owned(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            texts = {'paper/main.tex':'\\input{parts/first}',
+                     'paper/parts/first.tex':'\\input{parts/second}\\input{../../private}',
+                     'paper/parts/second.tex':'\\begin{theorem}Yes.\\end{theorem}'}
+            owned = {}
+            for path, text in texts.items():
+                target = root/path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(text.encode())
+                owned[path] = {'sha256':hashlib.sha256(text.encode()).hexdigest()}
+            sources = manuscript_sources(root, None, 'paper/main.tex', owned)
+            self.assertEqual(list(sources), list(texts))
+
+    def test_claim_index_has_all_core_papers_and_preserves_paper_i_statuses(self):
+        root = Path(__file__).resolve().parents[1]
+        paths = set()
+        for work in PAPERS:
+            receipt = json.loads((root/('manifests/source-imports/'+work+'.json')).read_bytes())
+            paths.update(receipt['destination']+'/'+r['path'] for r in receipt['files'])
+        data = validate_claims(root, paths)
+        self.assertEqual({r['work_id'] for r in data['records']}, set(PAPERS))
+        first = [r for r in data['records'] if r['work_id']=='paper-i']
+        self.assertEqual(len(first), 108)
+        self.assertEqual(sum(r['status']=='covered' for r in first), 69)
+
     def test_math_fences_preserve_matrix_rows_and_escaped_text(self):
         matrix = r'\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}'
         source = '<pre><code class="language-math">'+matrix+'\n</code></pre>'

@@ -36,6 +36,17 @@ class Page(HTMLParser):
         if tag=='iframe':self.iframes.append(a)
 
 
+def check_search_targets(index, pages):
+    assert len(index)==len({x['url'] for x in index}),'Duplicate search targets'
+    for item in index:
+        target=urlsplit(item['url'])
+        assert not target.scheme and not target.netloc and not target.query,item['url']
+        path=unquote(target.path)
+        assert path in pages,('Missing search page',item['url'])
+        if target.fragment:
+            assert unquote(target.fragment) in pages[path].ids,('Missing search fragment',item['url'])
+
+
 def inspect_site(root):
     files={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
     # The pinned third-party viewer has its own interface and localization markup.
@@ -71,8 +82,7 @@ def inspect_site(root):
                 assert unquote(parts.fragment) in pages[resolved].ids,(path,target,'Missing fragment')
                 fragments+=1
     index=json.loads((root/'search-index.json').read_bytes())
-    assert len(index)==len({x['url'] for x in index}),'Duplicate search pages'
-    assert all(x['url'] in pages for x in index)
+    check_search_targets(index, pages)
     bundles=json.loads((root/'downloads/index.json').read_bytes())
     zipped_files=0
     for bundle in bundles:

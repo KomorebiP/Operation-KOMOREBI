@@ -79,28 +79,7 @@ def selected_files(root, component):
     return result
 
 
-def validate_claims(root, known_paths):
-    data=json.loads((root/'manifests/claim-navigation.json').read_bytes())
-    assert data['schema']==1
-    receipt=json.loads((root/'manifests/source-imports/paper-i.json').read_bytes())
-    prefix=receipt['destination']+'/'
-    sources={prefix+x['path']:x for x in receipt['files']}
-    for source in data['sources']:
-        assert source['git_blob_sha1']==sources[source['path']]['git_blob_sha1']
-        assert source['path'] in known_paths
-    ids=set()
-    for row in data['records']:
-        assert row['id'] not in ids
-        ids.add(row['id'])
-        assert row['statement_path'] in known_paths
-        assert sources[row['statement_path']]['sha256']==row['source_sha256']
-        assert isinstance(row['statement_line'],int) and row['statement_line']>0
-        assert row['proof_line'] is None or isinstance(row['proof_line'],int) and row['proof_line']>0
-        for declaration in row['lean']:
-            if declaration['path']:
-                assert declaration['path'] in known_paths
-                assert declaration['git_blob_sha1']==sources[declaration['path']]['git_blob_sha1']
-    return data
+from claim_navigation import validate_claims, render_claim_index
 
 
 class Rewriter(HTMLParser):
@@ -197,9 +176,9 @@ class Site:
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs and run finite mathematical examples.">
-<title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'''">
+<title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-<script defer src="'''+self.rel('assets/reader.js',path)+'''"></script></head><body>
+<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script></head><body>
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a><nav aria-label="Main navigation">'''+nav_html+'''<a href="'''+self.rel('search.html',path)+'''">Search</a></nav></header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer>'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><p>Work in progress. Completion, Lean coverage and confidence retain their recorded scope.</p></footer></body></html>'''
         self.write(path,doc)
@@ -326,7 +305,7 @@ class Site:
         e=html.escape
         route_links=[('New to Komorebi','Start with a small example and the vocabulary.','NEW_READER'),('Read the mathematics','Choose a work and keep its assumptions in view.','MATHEMATICS'),('Inspect a proof','Follow statements, formal sources and recorded evidence.','PROOF_REVIEW'),('Run the software','Choose an environment and compare expected output.','SOFTWARE')]
         cards=''.join('<a class="route" href="collection/routes/'+key+'.html"><h2>'+title+'</h2><p>'+desc+'</p><span>Open route →</span></a>' for title,desc,key in route_links)
-        body='<section class="hero"><p class="eyebrow">Komorebi P. / A working research collection</p><h1>Find a way into<br>the mathematics.</h1><p class="lede">Read a paper, follow its proof, or run a small calculation. Choose your starting point and keep the work’s assumptions and evidence close at hand.</p><p><a class="button" href="works.html">Browse the works</a> <a href="search.html">Search all guides</a></p></section><section aria-label="Choose a reading route" class="route-grid">'+cards+'</section><section class="intro"><h2>Three repositories, one place to begin</h2><dl><dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd><dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd><dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl></section><aside class="notice"><h2>Read the status with the result</h2><p>The collection is a work in progress. Completion, Lean coverage and confidence are separate descriptions. Software is beta. A linked file is not evidence that every claim has been verified.</p><a href="collection/COMPLETION_STATUS.html">Understand the evidence labels</a></aside>'
+        body='<section class="hero"><p class="eyebrow">Komorebi P. / A working research collection</p><h1>Find a way into<br>the mathematics.</h1><p class="lede">Read a paper, follow its proof, or run a small calculation. Choose your starting point and keep the work’s assumptions and evidence close at hand.</p><p><a class="button" href="works.html">Browse the works</a> <a href="search.html">Search the collection</a></p></section><section aria-label="Choose a reading route" class="route-grid">'+cards+'</section><section class="intro"><h2>Three repositories, one place to begin</h2><dl><dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd><dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd><dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl></section><aside class="notice"><h2>Read the status with the result</h2><p>The collection is a work in progress. Completion, Lean coverage and confidence are separate descriptions. Software is beta. A linked file is not evidence that every claim has been verified.</p><a href="collection/COMPLETION_STATUS.html">Understand the evidence labels</a></aside>'
         self.page('index.html','Read, inspect and run',body)
         body='<h1>Browse the works</h1><p>Each page brings together reading files, written proofs, Lean, code and the recorded limits. Incubator entries remain visible and labeled.</p><form class="filters" data-work-filter><label for="work-query">Find a title or subject</label><input id="work-query" name="q" type="search"><label for="work-group">Collection</label><select id="work-group"><option value="">All collections</option>'+''.join('<option value="'+g+'">'+t+'</option>' for g,t in [('papers','Core papers'),('monographs','Books and companion volumes'),('research','Research programs'),('packages','Software packages'),('experiments','Experiments')])+'</select><button type="reset">Clear filters</button></form><p id="work-count" role="status" aria-live="polite">'+str(len(self.registry['components']))+' works</p><div class="work-list">'
         for row in self.registry['components']:
@@ -337,28 +316,23 @@ class Site:
             body+='<article class="work" data-group="'+c['group']+'" data-search="'+e((c['title']+' '+s.get('reader_summary',c['summary'])).lower(),quote=True)+'"><p class="eyebrow">'+e(c['group'])+(' · Incubator' if held else '')+'</p><h2><a href="collection/works/'+c['id']+'.html">'+e(c['title'])+'</a></h2><p>'+e(s.get('reader_summary',c['summary']))+'</p><p class="status">'+e(status)+'</p></article>'
         self.page('works.html','Browse works',body+'</div><noscript><p>All works are shown. Use your browser’s Find command to locate a title.</p></noscript>')
         self.page('software.html','Software','<h1>Run a small calculation</h1><p>Start with the platform instructions and expected output. All software remains beta.</p><p><a class="button" href="collection/FIRST_RUN.html">First runs and expected output</a></p><div class="route-grid"><a class="route" href="math/index.html"><h2>Komorebi Math</h2><p>Python. Finite operators, coordinates, signals and arithmetic.</p></a><a class="route" href="polyphase/index.html"><h2>Polyphase Float</h2><p>C on the supported Linux baseline. Arbitrary-precision binary arithmetic.</p></a></div><p><a href="collection/LIBRARIES.html">Library checks and source revisions</a></p>')
-        self.page('search.html','Search the guides','<h1>Search the guides</h1><p>Search titles and selected text from the reading pages and guides. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-index="search-index.json"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><button type="submit">Search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
+        self.page('search.html','Search the collection','<h1>Search the collection</h1><p>Search claims from all 12 core papers, glossary entries, worked examples, source texts and guides. Open a PDF and use its reader search to find words throughout that document.</p><form id="site-search" data-index="search-index.json"><label for="search-query">Word, symbol name or question</label><input id="search-query" type="search" name="q" autocomplete="off"><label for="search-group">Repository</label><select id="search-group"><option value="">All repositories</option><option>Collection</option><option>Komorebi Math</option><option>Polyphase Float</option></select><label for="search-kind">Result type</label><select id="search-kind"><option value="">All result types</option><option>Claims</option><option>Glossary</option><option>Examples</option><option>Papers and source</option><option>Guides</option></select><button type="submit">Search</button><button type="reset">Clear search</button></form><p id="search-status" role="status" aria-live="polite">Enter a search term.</p><ol id="search-results"></ol><button id="search-more" type="button" hidden>Show more results</button><noscript><p>Search needs JavaScript. You can still <a href="works.html">browse all works</a> and use the <a href="collection/GLOSSARY.html">glossary</a>.</p></noscript>')
+        self.claim_index()
+        learning=json.loads((self.root/'manifests/reader-experience.json').read_bytes())
+        for term in learning['glossary']:
+            self.search.append(dict(title=term['term'], group='Collection', kind='Glossary', url='collection/GLOSSARY.html#'+term['id'], text=term['term']+' '+term['definition']+' '+' '.join(term.get('related',[]))))
+        for item in self.search:
+            if 'kind' not in item:
+                url=item['url']
+                item['kind']=('Glossary' if '/GLOSSARY.' in url else 'Examples' if '/examples/' in url or '/HAND_WORKED_EXAMPLES.' in url else 'Papers and source' if url.startswith('read/') else 'Guides')
         self.write('search-index.json',json.dumps(self.search,ensure_ascii=False)+'\n')
         body='<h1>Download one work</h1><p>These ZIP files contain selected reading files and license notices, with source identities and SHA-256 checksums. They are not complete Lean or software builds. For those, use the <a href="collection/DOWNLOADS.html#obtain-a-full-component">component source instructions</a>.</p><p><a href="downloads/index.json">All bundle contents and checksums (JSON)</a></p><div class="download-list">'
         for r in self.bundle_records:
             body+='<section id="'+r['work']+'"><h2>'+e(r['title'])+'</h2><p><a download href="'+r['url']+'">Download reading ZIP</a> · '+f'{r["archive_bytes"]/1048576:.1f}'+' MB · '+str(len(r['files']))+' selected files</p><details><summary>Contents and checksum</summary><ul>'+''.join('<li>'+e(x['path'])+'</li>' for x in r['files'])+'</ul><p>ZIP SHA-256: <code>'+r['archive_sha256']+'</code></p></details><p><a href="collection/works/'+r['work']+'.html">Work, limits and evidence</a></p></section>'
         self.page('downloads.html','Download one work',body+'</div>')
-        self.claim_index()
         self.page('404.html','Page not found','<h1>This page could not be found</h1><p>Use the <a href="'+BASE_URL+'">Komorebi starting page</a>, <a href="'+BASE_URL+'search.html">search</a> or <a href="'+BASE_URL+'works.html">work index</a> to find the current page.</p>')
     def claim_index(self):
-        e=html.escape
-        body='<h1>Follow a written claim</h1><section id="paper-i"><h2>Paper I</h2><p>108 retained correspondence records. The source labels 69 as covered. Definitions, boundaries and documentary entries keep their own labels. This index does not report a new proof review or Lean run.</p><p><a href="collection/CLAIM_LINKS.html">Coverage of other works</a> · <a href="collection/works/paper-i.html">Paper I and its evidence</a></p><p>Lean links open the recorded module. Search for the displayed full declaration name. Code links remain at work level because no claim-specific executable test is asserted by this index.</p><label for="claim-query">Find a title or record ID</label><input id="claim-query" type="search"><p id="claim-count" role="status" aria-live="polite">108 records</p>'
-        for row in self.claims['records']:
-            rev=self.claims['source_revision']
-            statement=self.reader.resolve(row['statement_path'],'claims.html','L'+str(row['statement_line'])) or github(REPOSITORY,rev,row['statement_path'],row['statement_line'])
-            proof=(self.reader.resolve(row['statement_path'],'claims.html','L'+str(row['proof_line'])) or github(REPOSITORY,rev,row['statement_path'],row['proof_line'])) if row['proof_line'] else None
-            body+='<article class="claim" id="'+row['id'].lower()+'" data-search="'+e((row['id']+' '+row['title']+' '+row['kind']+' '+row['status']).lower(),quote=True)+'"><h3>'+e(row['title'])+'</h3><p><code>'+e(row['id'])+'</code> · '+e(row['kind'])+' · Recorded status: '+e(row['status'])+'</p><p>'+e(row['scope'])+'</p><p><a href="'+statement+'">Written statement</a>'+(' · <a href="'+proof+'">Written proof</a>' if proof else ' · No separate proof block recorded')+'</p><details><summary>'+str(len(row['lean']))+' recorded Lean declarations</summary><ul>'
-            for d in row['lean']:
-                name='<code>'+e(d['name'])+'</code>'
-                body+='<li>'+('<a href="'+(self.reader.resolve(d['path'],'claims.html') or github(REPOSITORY,rev,d['path']))+'">'+name+'</a>' if d['path'] else name+'. Source location not recorded in the owned inventory')+'</li>'
-            if not row['lean']:body+='<li>No declaration mapping recorded for this entry.</li>'
-            body+='</ul></details><p><a href="collection/works/paper-i.html#code">Work’s code</a> · <a href="collection/works/paper-i.html#evidence">Evidence and reproduction</a></p></article>'
-        self.page('claims.html','Follow a written claim',body+'</section>')
+        render_claim_index(self)
     def build(self):
         if self.output.exists() and any(self.output.iterdir()):
             raise ValueError('Use a new empty site output directory')

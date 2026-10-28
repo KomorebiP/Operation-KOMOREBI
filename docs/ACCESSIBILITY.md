@@ -17,6 +17,25 @@ zoom changes the text size. Reading routes and the work catalogue remain
 available when JavaScript is disabled. Search and catalogue filters use
 JavaScript and announce their result counts.
 
+## Find a statement or term
+
+The [claim index](https://KomorebiP.github.io/Operation-KOMOREBI/claims.html)
+contains all 12 core papers. Choose a paper or statement type, or search its
+indexed titles, text, source labels and recorded Lean names. Each record has a
+permanent link. Paper sections connect to the on-site PDF, examples, Lean guide,
+code and evidence. Document pages link back to the paper’s claim index.
+
+[Site search](https://KomorebiP.github.io/Operation-KOMOREBI/search.html) includes
+individual claims and glossary entries. Filter by repository or result type.
+Spaces and common punctuation are treated alike, so “seed-rank” and “seed rank”
+find the same indexed text. The page address preserves your query and filters.
+Use **Show more results** to reach matches beyond the first 40. Keyboard focus
+moves to the first new result, and the result count is announced.
+
+Search covers indexed HTML and source text. Use the PDF reader’s own search for
+the full text of a PDF. With JavaScript disabled, all claim records and paper
+jump links remain readable. The browser’s Find command is also available.
+
 ## Mathematics and figures
 
 The HTML guides use a locally served, pinned MathJax runtime. Its menu and

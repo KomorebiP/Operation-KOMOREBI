@@ -13,7 +13,7 @@ pages with documentation from two explicitly pinned library revisions.
 | Selected reading, proof, Lean and code files | [Browse resources](../manifests/browse-resources.json) |
 | Introductory terminology and background advice | [Reader experience](../manifests/reader-experience.json) |
 | Hand-worked calculations and exercises | [Example index](HAND_WORKED_EXAMPLES.md), [tutorial pages](examples/) and [exact arithmetic checker](../tools/check_hand_examples.py) |
-| Paper I statement and declaration locations | [Claim navigation](../manifests/claim-navigation.json), bound to its retained source records |
+| Statement locations for all 12 core papers and retained Paper I declaration mappings | [Claim navigation](../manifests/claim-navigation.json), bound to the retained source records |
 | Library source revisions | [Website library revisions](../manifests/reader-site-libraries.json) |
 | Page structure and browser behavior | [Website assets](../website/assets/) and [site builder](../tools/build_reader_site.py) |
 | Local PDF and source reading pages | [Document publisher](../tools/reader_documents.py) and receipt-bound source files |
@@ -37,6 +37,7 @@ by the website workflow. Choose fresh output directories for each build.
 
 ```text
 python -m pip install -r website/requirements.txt
+python -B tools/claim_navigation.py --check
 python -B tools/update_completion_status.py --check
 python -B tools/fetch_reader_runtime.py --output ../reader-runtime
 python -B tools/fetch_pdf_runtime.py --output ../pdf-reader-runtime
@@ -81,3 +82,19 @@ It checks the 26 hand-worked examples with exact rational, modular and finite-se
 The library workflows retain their broader platform and release checks.
 
 [Accessibility and known limits](ACCESSIBILITY.md) · [Repository maintenance](MAINTENANCE.md)
+
+## Claim indexing and search
+
+Run `python -B tools/claim_navigation.py` to regenerate the manuscript index, then
+run the normal status command to refresh the claim guide. `--check` compares the
+index with the receipt-bound source texts. Paper I keeps its existing correspondence
+records. The other core papers use literal statement environments and TeX inputs.
+The extractor does not expand macros, index historical environments or infer Lean
+coverage. Proof links identify immediately following proof blocks. A missing link
+does not assert that a proof is absent elsewhere.
+
+Site search includes individual claim and glossary links, with filters for result
+type and repository. Search addresses preserve filters. Results load in groups of
+40, and the next group remains reachable through the Show more results button.
+The claim index has separate paper and statement-type filters. Direct claim links
+reveal their paper even when an earlier filter would otherwise hide it.
