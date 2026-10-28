@@ -12,6 +12,8 @@ Recorded 2026-10-27. These are source-specific editorial assessments of existing
 
 **Next gate:** Maintain the exact statement map and reproduce the pinned formal contract before a changed release.
 
+[Return to this work: paper, proofs, Lean, and code](works/paper-i.md)
+
 [Source directory](../papers/paper-i/current) · [README.md](../papers/paper-i/current/README.md) · [README.txt](../papers/paper-i/current/README.txt) · [RELEASE_REPORT.txt](../papers/paper-i/current/RELEASE_REPORT.txt)
 
 <a id="paper-ii"></a>
@@ -23,6 +25,8 @@ Recorded 2026-10-27. These are source-specific editorial assessments of existing
 53/53 proof-level scopes have recorded replay and accepted correspondence; admissible contour existence remains an application assumption.
 
 **Next gate:** Preserve the contour hypotheses and rerun the recorded contract after any mathematical change.
+
+[Return to this work: paper, proofs, Lean, and code](works/paper-ii.md)
 
 [Source directory](../papers/paper-ii/current) · [RELEASE_STATUS.json](../papers/paper-ii/current/RELEASE_STATUS.json) · [README.md](../papers/paper-ii/current/README.md) · [SERIES_STATUS.json](../papers/paper-ii/current/SERIES_STATUS.json)
 
@@ -36,6 +40,8 @@ Technical reading release is complete; the accepted 16-module core does not cove
 
 **Next gate:** Map the expanded packet-Taylor, Stirling/Touchard and later corollaries to explicit missing formal obligations.
 
+[Return to this work: paper, proofs, Lean, and code](works/paper-iii.md)
+
 [Source directory](../papers/paper-iii/current) · [RELEASE_STATUS.json](../papers/paper-iii/current/RELEASE_STATUS.json) · [README.md](../papers/paper-iii/current/README.md) · [tools/README.md](../papers/paper-iii/current/tools/README.md)
 
 <a id="paper-iv"></a>
@@ -47,6 +53,8 @@ Technical reading release is complete; the accepted 16-module core does not cove
 68 scoped results have recorded formal acceptance. The exact editable source of the latest visual PDF is not recovered.
 
 **Next gate:** Recover or reconstruct the matching visual-guide source and demonstrate a source-to-PDF comparison in a new edition.
+
+[Return to this work: paper, proofs, Lean, and code](works/paper-iv.md)
 
 [Source directory](../papers/paper-iv/current) · [README.md](../papers/paper-iv/current/README.md) · [Paper_IV_Verification_Closeout_v1.1.0/README.md](../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/README.md) · [Paper_IV_Verification_Closeout_v1.1.0/RELEASE_SCOPE.md](../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/RELEASE_SCOPE.md)
 
@@ -60,6 +68,8 @@ Publication 1.2.0 closes its stated scope; 20 finite formal core results and 225
 
 **Next gate:** Replay the inherited formal core with the pinned runtime; retain the documented E11.1 amendment and current reproduction entry point.
 
+[Return to this work: paper, proofs, Lean, and code](works/paper-v.md)
+
 [Source directory](../papers/paper-v/current) · [README.txt](../papers/paper-v/current/README.txt) · [SERIES_STATUS.json](../papers/paper-v/current/SERIES_STATUS.json)
 
 <a id="paper-vi"></a>
@@ -71,6 +81,8 @@ Publication 1.2.0 closes its stated scope; 20 finite formal core results and 225
 Publication closeout is complete; the inherited 33-result finite formal contract does not cover all 142 theorem-like statements or the broader analytic program.
 
 **Next gate:** Build a claim-by-claim expansion plan for the ordinary-proof material; preserve finite-state and common-gap hypotheses.
+
+[Return to this work: paper, proofs, Lean, and code](works/paper-vi.md)
 
 [Source directory](../papers/paper-vi/current) · [README.md](../papers/paper-vi/current/README.md) · [SERIES_STATUS.json](../papers/paper-vi/current/SERIES_STATUS.json) · [README.txt](../papers/paper-vi/current/README.txt)
 
@@ -84,6 +96,8 @@ Prose/proofreading release is complete; 19 inherited finite formal items are sep
 
 **Next gate:** Separate the finite formal correspondence from the five continuum research obligations in any next release.
 
+[Return to this work: paper, proofs, Lean, and code](works/paper-vii.md)
+
 [Source directory](../papers/paper-vii/current) · [README.md](../papers/paper-vii/current/README.md) · [SERIES_STATUS.json](../papers/paper-vii/current/SERIES_STATUS.json) · [README.txt](../papers/paper-vii/current/README.txt)
 
 <a id="paper-viii"></a>
@@ -95,6 +109,8 @@ Prose/proofreading release is complete; 19 inherited finite formal items are sep
 Internal publication release is complete; the inherited finite formal contract excludes numerical QR/SVD and canonical singular-value API identification. GPU execution was not performed.
 
 **Next gate:** Choose a bounded numerical or GPU validation target and record actual execution before expanding implementation claims.
+
+[Return to this work: paper, proofs, Lean, and code](works/paper-viii.md)
 
 [Source directory](../papers/paper-viii/current) · [README.md](../papers/paper-viii/current/README.md) · [SERIES_STATUS.json](../papers/paper-viii/current/SERIES_STATUS.json) · [README.txt](../papers/paper-viii/current/README.txt)
 
@@ -108,6 +124,8 @@ Accepted reading release preserves scoped arithmetic, dyadic and lifting formal 
 
 **Next gate:** Reconcile the current claim map with the narrowed threshold-free theorem and retain the refuted stronger statement as history.
 
+[Return to this work: paper, proofs, Lean, and code](works/paper-ix.md)
+
 [Source directory](../papers/paper-ix/current) · [README.md](../papers/paper-ix/current/README.md) · [publication/README.txt](../papers/paper-ix/current/publication/README.txt) · [sources/visual_README.md](../papers/paper-ix/current/sources/visual_README.md)
 
 <a id="paper-x"></a>
@@ -119,6 +137,8 @@ Accepted reading release preserves scoped arithmetic, dyadic and lifting formal 
 The amended 20/20 contract is conditional. Transported targets and a summand in a supplied carrier are separate outputs; general arithmetic attachment remains open.
 
 **Next gate:** Keep the amended contract distinct from stronger historical attempts; supply missing comparison and arithmetic inputs before any stronger promotion.
+
+[Return to this work: paper, proofs, Lean, and code](works/paper-x.md)
 
 [Source directory](../papers/paper-x/current) · [README.md](../papers/paper-x/current/README.md)
 
@@ -132,6 +152,8 @@ Finite packet and selected terminal developments have accepted formal evidence; 
 
 **Next gate:** Track each Conjecture 66 obligation separately from the accepted finite packet and transported constructions.
 
+[Return to this work: paper, proofs, Lean, and code](works/paper-xi.md)
+
 [Source directory](../papers/paper-xi/current) · [README.md](../papers/paper-xi/current/README.md) · [formalization/README.md](../papers/paper-xi/current/formalization/README.md) · [publication/source/lean_guide/README.md](../papers/paper-xi/current/publication/source/lean_guide/README.md)
 
 <a id="paper-xii"></a>
@@ -143,6 +165,8 @@ Finite packet and selected terminal developments have accepted formal evidence; 
 49 revised claims map to 291 production targets in historical evidence. Original wording remains 41 complete, seven partial, one unchecked; arithmetic and automorphic inputs remain explicit.
 
 **Next gate:** Replay the pinned amended contract and preserve the original-versus-amended concordance; do not promote missing arithmetic premises.
+
+[Return to this work: paper, proofs, Lean, and code](works/paper-xii.md)
 
 [Source directory](../papers/paper-xii/current) · [README.md](../papers/paper-xii/current/README.md) · [core/README.md](../papers/paper-xii/current/core/README.md)
 
@@ -156,6 +180,8 @@ The 2,714-page collected book is an editorial assembly. Formal coverage and open
 
 **Next gate:** Maintain the chapter-to-edition map and verify any rebuilt volume against its component source and page accounting.
 
+[Return to this work: paper, proofs, Lean, and code](works/realization-calculus-book.md)
+
 [Source directory](../monographs/realization-calculus) · [README.md](../monographs/realization-calculus/README.md) · [source_v_viii/README.md](../monographs/realization-calculus/source_v_viii/README.md) · [source_v_viii/book_edit_baseline/README.md](../monographs/realization-calculus/source_v_viii/book_edit_baseline/README.md)
 
 <a id="proof-path-theory"></a>
@@ -167,6 +193,8 @@ The 2,714-page collected book is an editorial assembly. Formal coverage and open
 Publication 1.8.0 formalizes the finite trace checker and typed JSON exchange on existing proof-field semantics; arbitrary Python correctness and broader manuscript coverage remain open.
 
 **Next gate:** Define a separate Python-to-Lean refinement target and preserve the distinction between rejected certificates and infeasibility.
+
+[Return to this work: paper, proofs, Lean, and code](works/proof-path-theory.md)
 
 [Source directory](../monographs/proof-path-theory) · [STATUS.md](../monographs/proof-path-theory/STATUS.md) · [README.md](../monographs/proof-path-theory/README.md) · [evidence/README.md](../monographs/proof-path-theory/evidence/README.md)
 
@@ -180,6 +208,8 @@ Reviewed essay with written arguments and 40 finite exact-check groups; no new L
 
 **Next gate:** Maintain claim-to-evidence links and arrange a focused external review of the unbounded arguments before stronger assurance claims.
 
+[Return to this work: paper, proofs, Lean, and code](works/komorebi-methodology.md)
+
 [Source directory](../monographs/komorebi-methodology) · [README.md](../monographs/komorebi-methodology/README.md) · [audit/CLAIM_MAP.json](../monographs/komorebi-methodology/audit/CLAIM_MAP.json) · [requirements.txt](../monographs/komorebi-methodology/requirements.txt)
 
 <a id="monographs-large-signal-model"></a>
@@ -191,6 +221,8 @@ Reviewed essay with written arguments and 40 finite exact-check groups; no new L
 87/87 registered propositions have complete formal mappings under explicit model assumptions; empirical model success is outside that contract.
 
 **Next gate:** Maintain the 87-row map and repeat the accepted build/axiom/replay gates for a changed release.
+
+[Return to this work: paper, proofs, Lean, and code](works/monographs-large-signal-model.md)
 
 [Source directory](../monographs/large-signal-model) · [README.md](../monographs/large-signal-model/README.md) · [Lean/README.md](../monographs/large-signal-model/Lean/README.md) · [Monograph/README.md](../monographs/large-signal-model/Monograph/README.md)
 
@@ -204,6 +236,8 @@ Proofread reading volumes plus 68 named formal declarations in a finite core and
 
 **Next gate:** Select the next analytic theorem family and state its formal dependencies before extending the finite core.
 
+[Return to this work: paper, proofs, Lean, and code](works/monographs-special-functions.md)
+
 [Source directory](../monographs/special-functions) · [LEAN_STATUS.md](../monographs/special-functions/LEAN_STATUS.md) · [README.md](../monographs/special-functions/README.md) · [lean/README.md](../monographs/special-functions/lean/README.md)
 
 <a id="monographs-machine-societies"></a>
@@ -215,6 +249,8 @@ Proofread reading volumes plus 68 named formal declarations in a finite core and
 118-page reading edition. Bound self-review records cover 38 of 62 statement/proof pairs: 36 recorded as proved as written, two qualifications (memory domain and computability class), and 24 unreviewed. Coverage is not whole-book certification.
 
 **Next gate:** Review the remaining 24 pairs in bounded batches. In a revised source edition, state the positive finite-index condition for the memory bit bound and the event-emitting compilation premise for the computability theorem and its certificate consequence. Keep empirical and independent review separate.
+
+[Return to this work: paper, proofs, Lean, and code](works/monographs-machine-societies.md)
 
 [Latest bounded written review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH4_2026-10-27.md)
 
@@ -230,6 +266,8 @@ Finished one-observation, finite-dimensional Gaussian inference contract with ex
 
 **Next gate:** Maintain proof-producing instance checks; treat Python results as provisional until the emitted Lean instance passes.
 
+[Return to this work: paper, proofs, Lean, and code](works/certified-inference.md)
+
 [Source directory](../packages/certified-inference) · [README.md](../packages/certified-inference/README.md) · [RUNTIME_METADATA/README.md](../packages/certified-inference/RUNTIME_METADATA/README.md) · [RELEASE_SCOPE.md](../packages/certified-inference/RELEASE_SCOPE.md)
 
 <a id="constructive-repair"></a>
@@ -241,6 +279,8 @@ Finished one-observation, finite-dimensional Gaussian inference contract with ex
 Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases; the release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
 
 **Next gate:** Resolve the two symlink-fixture prerequisites and complete a distribution gate for the intended rebuilt wheel and current metadata. Preserve the new exact source-to-wheel map and separate any future Lean replay from Python acceptance (F08).
+
+[Return to this work: paper, proofs, Lean, and code](works/constructive-repair.md)
 
 [Edition and reader guide](components/CONSTRUCTIVE_REPAIR.md)
 
@@ -258,6 +298,8 @@ First formal block: 58 theorem declarations across six production modules; the w
 
 **Next gate:** Choose the next result beyond the checked linear repair and Haar contracts and retain their coefficient assumptions.
 
+[Return to this work: paper, proofs, Lean, and code](works/information-realization.md)
+
 [Source directory](../research/information-realization) · [README.md](../research/information-realization/README.md) · [AUDIT_REPORT.md](../research/information-realization/AUDIT_REPORT.md) · [LEAN_GUIDE.md](../research/information-realization/LEAN_GUIDE.md)
 
 <a id="komorebi-space"></a>
@@ -269,6 +311,8 @@ First formal block: 58 theorem declarations across six production modules; the w
 All sixteen principal theorem groups have formal counterparts; the recorded integrated verification covers 166 targets. Application hypotheses remain explicit.
 
 **Next gate:** Preserve the sixteen-group correspondence and repeat the integrated verification for any changed source release.
+
+[Return to this work: paper, proofs, Lean, and code](works/komorebi-space.md)
 
 [Source directory](../monographs/komorebi-space) · [README.md](../monographs/komorebi-space/README.md) · [lean/README.md](../monographs/komorebi-space/lean/README.md) · [examples/README.md](../monographs/komorebi-space/examples/README.md)
 
@@ -282,6 +326,8 @@ Checked depth-zero and multiverse blocks; the arbitrary complete obstruction tow
 
 **Next gate:** Finish the internal compactness-to-filter-extension converse or specify a nonvacuous constrained tower before proposing a stronger axiom.
 
+[Return to this work: paper, proofs, Lean, and code](works/kzfc-multiverse.md)
+
 [Source directory](../research/kzfc-multiverse) · [README.md](../research/kzfc-multiverse/README.md) · [README_v0.10.0_PREDECESSOR.md](../research/kzfc-multiverse/README_v0.10.0_PREDECESSOR.md) · [verification_v0.3.0_fresh/README_HISTORY.md](../research/kzfc-multiverse/verification_v0.3.0_fresh/README_HISTORY.md)
 
 <a id="logical-resolution"></a>
@@ -293,6 +339,8 @@ Checked depth-zero and multiverse blocks; the arbitrary complete obstruction tow
 13 checked modules and 112 theorem declarations cover the standard-syntax bridge and relational layer; arbitrary formula preservation is outside the stated interface.
 
 **Next gate:** Take the bounded target in CONTINUE_HERE and preserve the quantifier-sensitive observation contract.
+
+[Return to this work: paper, proofs, Lean, and code](works/logical-resolution.md)
 
 [Source directory](../research/logical-resolution) · [README.md](../research/logical-resolution/README.md) · [FORMALIZATION_COVERAGE.md](../research/logical-resolution/FORMALIZATION_COVERAGE.md) · [source_records/PARENT_FORMALIZATION_COVERAGE.md](../research/logical-resolution/source_records/PARENT_FORMALIZATION_COVERAGE.md)
 
@@ -306,6 +354,8 @@ Cross-realization theorem establishes the stated finite linear minimality and un
 
 **Next gate:** Complete the efficient executable compiler refinement separately from the mathematical realization theorem.
 
+[Return to this work: paper, proofs, Lean, and code](works/padic-canonical-realization.md)
+
 [Source directory](../research/padic-canonical-realization) · [README.md](../research/padic-canonical-realization/README.md) · [REPORT.md](../research/padic-canonical-realization/REPORT.md) · [REPRODUCE.md](../research/padic-canonical-realization/REPRODUCE.md)
 
 <a id="realization-boundaries"></a>
@@ -317,6 +367,8 @@ Cross-realization theorem establishes the stated finite linear minimality and un
 45/45 registered monograph contracts are complete in the checked companion, with exact documented semantics.
 
 **Next gate:** Maintain the final coverage map and v1.0.0 acceptance pointer; older verification README labels remain historical.
+
+[Return to this work: paper, proofs, Lean, and code](works/realization-boundaries.md)
 
 [Source directory](../monographs/realization-boundaries) · [README.md](../monographs/realization-boundaries/README.md) · [docs/MONOGRAPH_COVERAGE.md](../monographs/realization-boundaries/docs/MONOGRAPH_COVERAGE.md)
 
@@ -330,6 +382,8 @@ Checked generic adapter and 202 frozen matrix certificates; 235 local modules we
 
 **Next gate:** Extend the executable refinement only under the stated encoding and coefficient hypotheses; preserve the nonlinear-encoding boundary.
 
+[Return to this work: paper, proofs, Lean, and code](works/representation-calculus.md)
+
 [Source directory](../research/representation-calculus) · [README.md](../research/representation-calculus/README.md) · [FORMALIZATION_COVERAGE.md](../research/representation-calculus/FORMALIZATION_COVERAGE.md) · [source_records/v0.3_README.md](../research/representation-calculus/source_records/v0.3_README.md)
 
 <a id="sufficient-resolution"></a>
@@ -341,6 +395,8 @@ Checked generic adapter and 202 frozen matrix certificates; 235 local modules we
 Complete publication of v0.16.0 contracts with 93 formal source modules; the publication edition records no fresh Lean run.
 
 **Next gate:** Restore the matching runtime and execute the full pinned formal replay before upgrading the current verification label.
+
+[Return to this work: paper, proofs, Lean, and code](works/sufficient-resolution.md)
 
 [Source directory](../monographs/sufficient-resolution) · [RELEASE_STATUS.json](../monographs/sufficient-resolution/RELEASE_STATUS.json) · [README.md](../monographs/sufficient-resolution/README.md) · [formal/README.md](../monographs/sufficient-resolution/formal/README.md)
 
@@ -354,6 +410,8 @@ Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results; it does n
 
 **Next gate:** Maintain the completed core; recover the exact expanded source and PDF before claiming that separate book is finalized.
 
+[Return to this work: paper, proofs, Lean, and code](works/monographs-machine-native-reasoning.md)
+
 [Source directory](../monographs/machine-native-reasoning) · [README.md](../monographs/machine-native-reasoning/README.md) · [release/ADMISSION_RECORD.json](../monographs/machine-native-reasoning/release/ADMISSION_RECORD.json) · [release/REPORT.md](../monographs/machine-native-reasoning/release/REPORT.md)
 
 <a id="monographs-quantum-and-circuits"></a>
@@ -365,6 +423,8 @@ Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results; it does n
 Complete 344-page publication with explicit open research; 211 named declarations across thirteen formal modules cover selected arithmetic/circuit developments, not the full book.
 
 **Next gate:** Map the remaining ordinary-proof chapters and open physical targets separately from the thirteen checked modules.
+
+[Return to this work: paper, proofs, Lean, and code](works/monographs-quantum-and-circuits.md)
 
 [Source directory](../monographs/quantum-and-circuits) · [README.md](../monographs/quantum-and-circuits/README.md) · [volume/README.md](../monographs/quantum-and-circuits/volume/README.md) · [release_tools/README.md](../monographs/quantum-and-circuits/release_tools/README.md)
 
@@ -378,6 +438,8 @@ Complete 572-page book with an accepted scoped centered free-field extension. Fi
 
 **Next gate:** Resolve the spectral-functional-calculus API identification and distinguish current Block 51 receipts from older modular build limitations.
 
+[Return to this work: paper, proofs, Lean, and code](works/monographs-physics.md)
+
 [Source directory](../monographs/physics) · [README.md](../monographs/physics/README.md)
 
 <a id="monographs-cos-method"></a>
@@ -389,6 +451,8 @@ Complete 572-page book with an accepted scoped centered free-field extension. Fi
 Closing 138-page publication with a finite Gram/enclosure Lean companion; full numerical correctness is outside the official companion.
 
 **Next gate:** Keep the official monograph stable and route end-to-end numerical proof work to the separate continuation.
+
+[Return to this work: paper, proofs, Lean, and code](works/monographs-cos-method.md)
 
 [Source directory](../monographs/cos-method) · [README.md](../monographs/cos-method/README.md) · [lean/README.md](../monographs/cos-method/lean/README.md)
 
@@ -402,6 +466,8 @@ Checked intermediate branch connecting Gaussian/spectral reductions and rational
 
 **Next gate:** Prove or certify the numerical spectral inclusion and endpoint enclosure inputs before claiming end-to-end verification.
 
+[Return to this work: paper, proofs, Lean, and code](works/monographs-cos-method-formal-continuation.md)
+
 [Source directory](../monographs/cos-method/formal-continuation) · [README.md](../monographs/cos-method/formal-continuation/README.md) · [docs/COVERAGE.json](../monographs/cos-method/formal-continuation/docs/COVERAGE.json) · [CONTINUE_HERE.md](../monographs/cos-method/formal-continuation/CONTINUE_HERE.md)
 
 <a id="monographs-self-improving-intelligence"></a>
@@ -413,6 +479,8 @@ Checked intermediate branch connecting Gaussian/spectral reductions and rational
 Theoretical publication with 30 statement/proof pairs and finite reference constructions; no deployed autonomous agent or indefinite acceleration result.
 
 **Next gate:** Obtain focused review of the theorem chain and design a separate empirical evaluation of the integrated architecture.
+
+[Return to this work: paper, proofs, Lean, and code](works/monographs-self-improving-intelligence.md)
 
 [Source directory](../monographs/self-improving-intelligence) · [README.md](../monographs/self-improving-intelligence/README.md) · [visual-guide/README.md](../monographs/self-improving-intelligence/visual-guide/README.md) · [lineage/v0.6.0/README.md](../monographs/self-improving-intelligence/lineage/v0.6.0/README.md)
 
@@ -426,6 +494,8 @@ Finished visual companion with focused checks; the original research suite was n
 
 **Next gate:** Maintain source locators and guide checks when the parent manuscript changes; inherit no extra proof or empirical status.
 
+[Return to this work: paper, proofs, Lean, and code](works/monographs-self-improving-intelligence-visual-guide.md)
+
 [Source directory](../monographs/self-improving-intelligence/visual-guide) · [README.md](../monographs/self-improving-intelligence/visual-guide/README.md) · [REVIEW_NOTES.md](../monographs/self-improving-intelligence/visual-guide/REVIEW_NOTES.md) · [READING_NOTES.md](../monographs/self-improving-intelligence/visual-guide/READING_NOTES.md)
 
 <a id="monographs-grounded-abstraction"></a>
@@ -437,6 +507,8 @@ Finished visual companion with focused checks; the original research suite was n
 First-edition theoretical manuscript with twenty written statements and exact examples; no agent training campaign or Lean certificate.
 
 **Next gate:** Review the new quantitative extension and keep calibration and learning assumptions visible in subsequent work.
+
+[Return to this work: paper, proofs, Lean, and code](works/monographs-grounded-abstraction.md)
 
 [Source directory](../monographs/grounded-abstraction) · [README.md](../monographs/grounded-abstraction/README.md) · [SOURCE_MAP.md](../monographs/grounded-abstraction/SOURCE_MAP.md) · [NEXT_THEORY.md](../monographs/grounded-abstraction/NEXT_THEORY.md)
 
@@ -450,6 +522,8 @@ Frozen first-edition theoretical/editorial scope with twenty statements, bounded
 
 **Next gate:** Pursue external proof review and separate empirical acquisition from the supplied observation and recipient models.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-machine-understanding.md)
+
 [Source directory](../research/machine-understanding) · [README.md](../research/machine-understanding/README.md) · [FIRST_EDITION_SCOPE.md](../research/machine-understanding/FIRST_EDITION_SCOPE.md) · [CHANGELOG.md](../research/machine-understanding/CHANGELOG.md)
 
 <a id="experiments-agent-dynamics"></a>
@@ -461,6 +535,8 @@ Frozen first-edition theoretical/editorial scope with twenty statements, bounded
 Executed illustrative two-agent model with supplied schedule, sensor semantics and reset rule; no learned policy or general self-improvement result.
 
 **Next gate:** Validate any learned or adaptive replacement against a preregistered baseline; retain the supplied-rule demonstration as its own experiment.
+
+[Return to this work: paper, proofs, Lean, and code](works/experiments-agent-dynamics.md)
 
 [Source directory](../experiments/agent-dynamics) · [README.md](../experiments/agent-dynamics/README.md) · [SOURCE_MAP.md](../experiments/agent-dynamics/SOURCE_MAP.md) · [REVIEW_NOTES.md](../experiments/agent-dynamics/REVIEW_NOTES.md)
 
@@ -474,6 +550,8 @@ Candidate arithmetic subspace protocol; JSPACE_CLAIM=NOT_ESTABLISHED. Required m
 
 **Next gate:** Complete the mandatory causal assays and a locked confirmatory cohort before changing the claim ceiling.
 
+[Return to this work: paper, proofs, Lean, and code](works/experiments-arithmetic-jspace.md)
+
 [Source directory](../experiments/arithmetic-jspace) · [README.md](../experiments/arithmetic-jspace/README.md) · [EXPERIMENT_DESIGN.md](../experiments/arithmetic-jspace/EXPERIMENT_DESIGN.md) · [WORKSPACE_PROTOCOL.md](../experiments/arithmetic-jspace/WORKSPACE_PROTOCOL.md)
 
 <a id="experiments-jspace-causal-lab"></a>
@@ -485,6 +563,8 @@ Candidate arithmetic subspace protocol; JSPACE_CLAIM=NOT_ESTABLISHED. Required m
 Research instrument for candidate causal states using saved models and retained failed assays; not a J-space certificate.
 
 **Next gate:** Resolve the recorded relay failures and run matched intervention/mediation checks on fixed settings.
+
+[Return to this work: paper, proofs, Lean, and code](works/experiments-jspace-causal-lab.md)
 
 [Source directory](../experiments/jspace-causal-lab) · [README.md](../experiments/jspace-causal-lab/README.md) · [provenance/v1_2/README.md](../experiments/jspace-causal-lab/provenance/v1_2/README.md) · [provenance/v1_1_README.md](../experiments/jspace-causal-lab/provenance/v1_1_README.md)
 
@@ -498,6 +578,8 @@ Typed object collections and workspace action machinery; programs and proposals 
 
 **Next gate:** Evaluate a learned controller separately from the hand-supplied examples and test the Windows wrapper on its target host.
 
+[Return to this work: paper, proofs, Lean, and code](works/experiments-jspace-collections.md)
+
 [Source directory](../experiments/jspace-collections) · [README.md](../experiments/jspace-collections/README.md) · [PROTOCOL.md](../experiments/jspace-collections/PROTOCOL.md) · [VERIFICATION.md](../experiments/jspace-collections/VERIFICATION.md)
 
 <a id="experiments-workspace-incubator"></a>
@@ -509,6 +591,8 @@ Typed object collections and workspace action machinery; programs and proposals 
 Executed adaptive continuation with positive and negative transfer/retrieval outcomes; native shared-workspace gaps remain open.
 
 **Next gate:** Run a genuinely held-out, balanced cohort and retain repeated-access and no-wire failures in the primary result.
+
+[Return to this work: paper, proofs, Lean, and code](works/experiments-workspace-incubator.md)
 
 [Source directory](../experiments/workspace-incubator) · [README.md](../experiments/workspace-incubator/README.md) · [REPORT.md](../experiments/workspace-incubator/REPORT.md) · [requirements-recorded.txt](../experiments/workspace-incubator/requirements-recorded.txt)
 
@@ -522,6 +606,8 @@ Frozen manuscripts and experiment evidence plus an exact finite interface; learn
 
 **Next gate:** Reconcile each learned claim with its own frozen run and keep the supplied finite demonstrator separate from learned-decoder claims.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-osl-neuralese.md)
+
 [Source directory](../research/osl-neuralese) · [README.md](../research/osl-neuralese/README.md) · [interface/README.md](../research/osl-neuralese/interface/README.md) · [OSL/core05/README.md](../research/osl-neuralese/OSL/core05/README.md)
 
 <a id="research-osl-neuralese-reading-edition"></a>
@@ -534,6 +620,8 @@ Compact reading edition of OSL/Neuralese; historical experiments and executable 
 
 **Next gate:** Maintain links to the complete evidence edition and avoid assigning executable or Lean status from manuscript availability.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-osl-neuralese-reading-edition.md)
+
 [Source directory](../research/osl-neuralese/reading-edition) · [OSL_Neuralese_Manuscripts_v1.0/README.md](../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/README.md) · [OSL_Neuralese_Manuscripts_v1.0/publication/README.txt](../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/publication/README.txt) · [CURRENT_READING_EDITION.txt](../research/osl-neuralese/reading-edition/CURRENT_READING_EDITION.txt)
 
 <a id="research-rrct-multispace-protocol"></a>
@@ -545,6 +633,8 @@ Compact reading edition of OSL/Neuralese; historical experiments and executable 
 Protocol and numerical smoke checks; the primary multi-family causal campaign is incomplete, and the Qwen runner was not executed in the recorded build.
 
 **Next gate:** Execute the source-locked primary campaign with all required independent estimator families and mediation gates.
+
+[Return to this work: paper, proofs, Lean, and code](works/research-rrct-multispace-protocol.md)
 
 **Reader listing: incubator.** Only synthetic estimator execution is recorded; the actual Qwen and primary causal runs are absent.
 
@@ -564,6 +654,8 @@ Beta functional research platform; the single-seed preset passes three diagnosti
 
 **Next gate:** Freeze a replicated holdout campaign and resolve or report the failed later links before claiming the full chain.
 
+[Return to this work: paper, proofs, Lean, and code](works/packages-rrct.md)
+
 [Source directory](../packages/rrct) · [README.md](../packages/rrct/README.md) · [runs/README.md](../packages/rrct/runs/README.md) · [vendor/README.md](../packages/rrct/vendor/README.md)
 
 <a id="research-sric-external-admission"></a>
@@ -575,6 +667,8 @@ Beta functional research platform; the single-seed preset passes three diagnosti
 Source-locked external-model protocol with infrastructure tests; the real Coconut checkpoint has not been executed in this release.
 
 **Next gate:** Authenticate the exact checkpoint and dataset, run the frozen adapter and admission gates, then report the actual result.
+
+[Return to this work: paper, proofs, Lean, and code](works/research-sric-external-admission.md)
 
 [Edition and reader guide](SRIC_REPAIR_2026-10-27.md)
 
@@ -590,6 +684,8 @@ Finite synthetic semantic-witness construction and fake-runtime pilot checks; no
 
 **Next gate:** Lock the real checkpoint digest and execute the pilot without substituting fixture metrics for model evidence.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-sric-block23-witness.md)
+
 [Source directory](../research/sric-block23-witness) · [README.md](../research/sric-block23-witness/README.md) · [REAL_LRM_PILOT_STATUS.md](../research/sric-block23-witness/REAL_LRM_PILOT_STATUS.md) · [RESULTS.md](../research/sric-block23-witness/RESULTS.md)
 
 <a id="research-stratified-recursive-improvement"></a>
@@ -601,6 +697,8 @@ Finite synthetic semantic-witness construction and fake-runtime pilot checks; no
 Complete finite-fixture publication/evidence package; the real latent-reasoner pilot remains unexecuted.
 
 **Next gate:** Keep the completed synthetic benchmark separate from the external-model campaign and its unfilled source lock.
+
+[Return to this work: paper, proofs, Lean, and code](works/research-stratified-recursive-improvement.md)
 
 [Source directory](../research/stratified-recursive-improvement) · [README.md](../research/stratified-recursive-improvement/README.md) · [SRIC_v2.4_Block23_REAL_LRM_PILOT_STATUS.md](../research/stratified-recursive-improvement/SRIC_v2.4_Block23_REAL_LRM_PILOT_STATUS.md) · [SRIC_v2.4_Block23_BUILD.txt](../research/stratified-recursive-improvement/SRIC_v2.4_Block23_BUILD.txt)
 
@@ -614,6 +712,8 @@ Complete reading set based on archived formal v0.41.0; publication checks did no
 
 **Next gate:** Restore the exact runtime and replay the archived source and endpoint before labeling the publication as freshly formal-verified.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-avoc.md)
+
 [Source directory](../research/avoc) · [AVOC_Publication_1.0/README.md](../research/avoc/AVOC_Publication_1.0/README.md) · [AVOC_Publication_1.0/source/AVOC_Formal_v0.41.0/README.md](../research/avoc/AVOC_Publication_1.0/source/AVOC_Formal_v0.41.0/README.md) · [AVOC_Publication_1.0/publication/README.txt](../research/avoc/AVOC_Publication_1.0/publication/README.txt)
 
 <a id="research-hypergraph-bayesian-refinement"></a>
@@ -626,6 +726,8 @@ Internally complete manuscript and finite certificates; external proof and liter
 
 **Next gate:** Complete the independent proof review and systematic comparison to related quotient/lumping theories before journal submission.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-hypergraph-bayesian-refinement.md)
+
 [Source directory](../research/hypergraph-bayesian-refinement) · [MANUSCRIPT_STATUS.md](../research/hypergraph-bayesian-refinement/MANUSCRIPT_STATUS.md) · [README.md](../research/hypergraph-bayesian-refinement/README.md) · [CHANGELOG.md](../research/hypergraph-bayesian-refinement/CHANGELOG.md)
 
 <a id="research-prism-1r"></a>
@@ -637,6 +739,8 @@ Internally complete manuscript and finite certificates; external proof and liter
 Architecture and semantic reference tests; RTL is an uncompiled interface skeleton with candidate bit packing.
 
 **Next gate:** Compile and simulate the RTL, then synthesize and measure an FPGA prototype before making hardware performance claims.
+
+[Return to this work: paper, proofs, Lean, and code](works/research-prism-1r.md)
 
 **Reader listing: incubator.** Hardware is an uncompiled boundary skeleton with success tie-offs; no executed hardware qualification.
 
@@ -656,6 +760,8 @@ Behavioral architecture, planner and cost model; no production RTL, synthesis, t
 
 **Next gate:** Build a bit-accurate FPGA Packet Streaming Multiprocessor and report measured results under a fixed output contract.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-prism-1.md)
+
 [Source directory](../research/prism-1) · [README.md](../research/prism-1/README.md) · [rtl_skeleton/README.md](../research/prism-1/rtl_skeleton/README.md)
 
 <a id="research-certified-bayesian-inference"></a>
@@ -667,6 +773,8 @@ Behavioral architecture, planner and cost model; no production RTL, synthesis, t
 Publication companion for the scoped single-observation Gaussian inference contract; source excerpts and archived formal coverage are not universal Python correctness.
 
 **Next gate:** Link the publication claims to the canonical Certified Inference contract and replay its source-bound proof-producing examples.
+
+[Return to this work: paper, proofs, Lean, and code](works/research-certified-bayesian-inference.md)
 
 [Source directory](../research/certified-bayesian-inference) · [Certified_Bayesian_Publication_1.0/README.md](../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/README.md) · [Certified_Bayesian_Publication_1.0/source/FD_Certified_Inference_Core_v1.0.0_Checked/README.md](../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/source/FD_Certified_Inference_Core_v1.0.0_Checked/README.md) · [Certified_Bayesian_Publication_1.0/publication/README.txt](../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/publication/README.txt)
 
@@ -680,6 +788,8 @@ Complete preprint monograph with finite regression checks; external mathematical
 
 **Next gate:** Obtain external review and evaluate empirical claims separately from finite mathematical regression tests.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-stratified-relational-workspace.md)
+
 [Source directory](../research/stratified-relational-workspace) · [README.md](../research/stratified-relational-workspace/README.md) · [audits/README.md](../research/stratified-relational-workspace/audits/README.md) · [verification/README.md](../research/stratified-relational-workspace/verification/README.md)
 
 <a id="research-machine-theory-formal"></a>
@@ -691,6 +801,8 @@ Complete preprint monograph with finite regression checks; external mathematical
 Earlier Block 15 checkpoint covers 23/27 selected results. The later Reviewed Mathematical Core admission covers 27/27 in a different source edition.
 
 **Next gate:** Use the newer core for current completion status; preserve this checkpoint and its original four pending targets as dated history.
+
+[Return to this work: paper, proofs, Lean, and code](works/research-machine-theory-formal.md)
 
 Current counterpart: [Machine Native Reasoning](#monographs-machine-native-reasoning).
 
@@ -706,6 +818,8 @@ Recovered 74-page working continuation retains an older 23/27 core map; neither 
 
 **Next gate:** Recover the exact expanded monograph, reconcile its own statements with the accepted 27/27 core, and rebuild/review that edition.
 
+[Return to this work: paper, proofs, Lean, and code](works/research-machine-native-reasoning-wider.md)
+
 [Source directory](../research/machine-native-reasoning-wider) · [README.md](../research/machine-native-reasoning-wider/README.md) · [sources/core/README.md](../research/machine-native-reasoning-wider/sources/core/README.md)
 
 <a id="abc-global-rr8"></a>
@@ -717,6 +831,8 @@ Recovered 74-page working continuation retains an older 23/27 core map; neither 
 Scoped written radical-cost identities and obstructions; the global ABC target and exceptional-prime tail remain open. No new Lean run.
 
 **Next gate:** Address the documented large-exceptional-prime budget or another justified arithmetic comparison; do not promote local bounds to ABC.
+
+[Return to this work: paper, proofs, Lean, and code](works/abc-global-rr8.md)
 
 [Source directory](../research/abc-global-rr8) · [README.md](../research/abc-global-rr8/README.md) · [abc_work/base/ABC_Two_Sided_Radical_Euler_Law_2026-10-25/README.md](../research/abc-global-rr8/abc_work/base/ABC_Two_Sided_Radical_Euler_Law_2026-10-25/README.md) · [abc_work/komorebi_arithmetic/COMPARISON_STATUS.json](../research/abc-global-rr8/abc_work/komorebi_arithmetic/COMPARISON_STATUS.json)
 
@@ -730,6 +846,8 @@ Finished evidence reader with selected formal conditional interfaces; the actual
 
 **Next gate:** Keep the missing source-witness theorem and uniform arithmetic estimate explicit before any endpoint claim.
 
+[Return to this work: paper, proofs, Lean, and code](works/abc-reader.md)
+
 [Source directory](../research/abc-reader) · [README.md](../research/abc-reader/README.md) · [evidence/FORMAL_STATUS.md](../research/abc-reader/evidence/FORMAL_STATUS.md) · [evidence/recovered/KTG_Block03_Preserved_Payload/PROJECT_STATUS.md](../research/abc-reader/evidence/recovered/KTG_Block03_Preserved_Payload/PROJECT_STATUS.md)
 
 <a id="addmul-arithmetic-reconstruction"></a>
@@ -741,6 +859,8 @@ Finished evidence reader with selected formal conditional interfaces; the actual
 Three positive Lean units and exact finite controls cover finite observation, filter budgets and a carry example; no global height mechanism.
 
 **Next gate:** Formulate and prove the next arithmetic comparison beyond the finite reconstruction class before making a global-height claim.
+
+[Return to this work: paper, proofs, Lean, and code](works/addmul-arithmetic-reconstruction.md)
 
 [Source directory](../research/addmul-arithmetic-reconstruction) · [README.md](../research/addmul-arithmetic-reconstruction/README.md) · [RESEARCH_NOTE.md](../research/addmul-arithmetic-reconstruction/RESEARCH_NOTE.md) · [evidence/results.json](../research/addmul-arithmetic-reconstruction/evidence/results.json)
 
@@ -754,6 +874,8 @@ Finished reader with selected checked algebraic scopes; neither general Beal nor
 
 **Next gate:** Supply the actual arithmetic affine obstruction/realization input and retain the upstream Frey and residual-pattern assumptions.
 
+[Return to this work: paper, proofs, Lean, and code](works/beal-reader.md)
+
 [Source directory](../research/beal-reader) · [README.md](../research/beal-reader/README.md) · [evidence/FORMAL_STATUS.md](../research/beal-reader/evidence/FORMAL_STATUS.md) · [evidence/computation/contracts/block67_status.json](../research/beal-reader/evidence/computation/contracts/block67_status.json)
 
 <a id="catalan-constant-reader"></a>
@@ -765,6 +887,8 @@ Finished reader with selected checked algebraic scopes; neither general Beal nor
 Finished exposition/evidence set with written recurrence arguments and finite checks; irrationality of Catalan's constant remains open.
 
 **Next gate:** Establish the missing uniform arithmetic bounds and review external claims at their exact versions before promotion.
+
+[Return to this work: paper, proofs, Lean, and code](works/catalan-constant-reader.md)
 
 [Source directory](../research/catalan-constant-reader) · [README.md](../research/catalan-constant-reader/README.md) · [evidence/CURRENT_STATUS.md](../research/catalan-constant-reader/evidence/CURRENT_STATUS.md) · [MANIFEST.json](../research/catalan-constant-reader/MANIFEST.json)
 
@@ -778,6 +902,8 @@ Finished reader/visual sets with scoped arguments, exact reductions and finite c
 
 **Next gate:** Track each universal endpoint separately from finite orbit checks, models and conditional reductions.
 
+[Return to this work: paper, proofs, Lean, and code](works/collatz-and-riemann-readers.md)
+
 [Source directory](../research/collatz-and-riemann-readers) · [README.md](../research/collatz-and-riemann-readers/README.md) · [collatz_visual/README.md](../research/collatz-and-riemann-readers/collatz_visual/README.md) · [archive/v1.0/README.md](../research/collatz-and-riemann-readers/archive/v1.0/README.md)
 
 <a id="euler-signal-bridge"></a>
@@ -790,6 +916,8 @@ Written FIR/operator identities and 395 finite exact assertions; no universal co
 
 **Next gate:** Review the universal written identities separately and specify any proposed arithmetic congruence with its full hypotheses.
 
+[Return to this work: paper, proofs, Lean, and code](works/euler-signal-bridge.md)
+
 [Source directory](../research/euler-signal-bridge) · [READ_ME.txt](../research/euler-signal-bridge/READ_ME.txt) · [exact_results.json](../research/euler-signal-bridge/exact_results.json) · [computation_manifest.json](../research/euler-signal-bridge/computation_manifest.json)
 
 <a id="gaussian-elimination-guide"></a>
@@ -801,6 +929,8 @@ Written FIR/operator identities and 395 finite exact assertions; no universal co
 45-page collection compiled 7 October 2026 from four source PDFs and two reflowed arithmetic notes. Edition, source map, and rendered front matter inspected; the compilation explicitly reports no new source-experiment or Lean replay. Mathematical confidence remains unassessed.
 
 **Next gate:** Recover the exact editable assembly and matching source editions, reproduce the PDF, inspect every page, and reconcile source-specific proof and formal records (F07).
+
+[Return to this work: paper, proofs, Lean, and code](works/gaussian-elimination-guide.md)
 
 [Edition and reader guide](components/GAUSSIAN_ELIMINATION.md)
 
@@ -816,6 +946,8 @@ Exact finite algebra and a fixed-point obstruction; the analytic comparison rema
 
 **Next gate:** Connect the exact dual-slice construction to a justified analytic comparison without assuming the missing equality.
 
+[Return to this work: paper, proofs, Lean, and code](works/hilbert12-ambient-dual-slice.md)
+
 [Edition and reader guide](components/H12_AMBIENT_DUAL_SLICE.md)
 
 [Source directory](../research/hilbert12-ambient-dual-slice) · [H12_Ambient_Dual_Slice_Research_Note.md](../research/hilbert12-ambient-dual-slice/H12_Ambient_Dual_Slice_Research_Note.md)
@@ -830,6 +962,8 @@ Written algebraic/Fourier reductions and exact checks with floating diagnostics;
 
 **Next gate:** Prove the exact special-value comparison; use directed enclosures for numerical bounds and keep them separate from equality.
 
+[Return to this work: paper, proofs, Lean, and code](works/hilbert12-analytic-fourier.md)
+
 [Source directory](../research/hilbert12-analytic-fourier) · [H12_Analytic_Fourier_README.md](../research/hilbert12-analytic-fourier/H12_Analytic_Fourier_README.md) · [H12_Analytic_Resolvent_Verification_Log.txt](../research/hilbert12-analytic-fourier/H12_Analytic_Resolvent_Verification_Log.txt) · [H12_Analytic_Fourier_Resolvent_Research_Note.md](../research/hilbert12-analytic-fourier/H12_Analytic_Fourier_Resolvent_Research_Note.md)
 
 <a id="hilbert12-closure-attempt"></a>
@@ -841,6 +975,8 @@ Written algebraic/Fourier reductions and exact checks with floating diagnostics;
 Interval certificate bounds a ratio distance below 10^-60 and resolves a branch condition; it does not establish exact equality.
 
 **Next gate:** Prove the remaining exact analytic identity; numerical closeness alone cannot close the class-field comparison.
+
+[Return to this work: paper, proofs, Lean, and code](works/hilbert12-closure-attempt.md)
 
 [Source directory](../research/hilbert12-closure-attempt) · [README.md](../research/hilbert12-closure-attempt/README.md) · [inherited_seven_replay.txt](../research/hilbert12-closure-attempt/inherited_seven_replay.txt) · [inherited_torsion_replay.txt](../research/hilbert12-closure-attempt/inherited_torsion_replay.txt)
 
@@ -854,6 +990,8 @@ Exact 343-point torsion dynamics and written distribution identities; numerical 
 
 **Next gate:** Complete the analytic/class-field comparison while preserving the full torsion and dual-pairing data.
 
+[Return to this work: paper, proofs, Lean, and code](works/hilbert12-contracting-ambient-torsion.md)
+
 [Source directory](../research/hilbert12-contracting-ambient-torsion) · [H12_Ambient_Torsion_README.md](../research/hilbert12-contracting-ambient-torsion/H12_Ambient_Torsion_README.md) · [H12_Full_Ambient_Torsion_Verification_Log.txt](../research/hilbert12-contracting-ambient-torsion/H12_Full_Ambient_Torsion_Verification_Log.txt) · [H12_Contracting_Ambient_Torsion_Research_Note.md](../research/hilbert12-contracting-ambient-torsion/H12_Contracting_Ambient_Torsion_Research_Note.md)
 
 <a id="hilbert12-cubic-divisor"></a>
@@ -865,6 +1003,8 @@ Exact 343-point torsion dynamics and written distribution identities; numerical 
 Finished reading set with 42 selected formal modules; complex divisor arguments and the gamma/class-field equality exceed that formal scope.
 
 **Next gate:** Resolve the polarized reality, periodic descent and principal-norm obligations before claiming the original equality.
+
+[Return to this work: paper, proofs, Lean, and code](works/hilbert12-cubic-divisor.md)
 
 [Source directory](../research/hilbert12-cubic-divisor) · [README.md](../research/hilbert12-cubic-divisor/README.md) · [lean/README.md](../research/hilbert12-cubic-divisor/lean/README.md) · [visual/README.md](../research/hilbert12-cubic-divisor/visual/README.md)
 
@@ -878,6 +1018,8 @@ Finished evidence reader with conditional geometric arguments; current Lean elab
 
 **Next gate:** Compile the exact conditional source with pinned dependencies, then address the independent algebraic-cycle realization inputs.
 
+[Return to this work: paper, proofs, Lean, and code](works/hodge-reader.md)
+
 [Source directory](../research/hodge-reader) · [README.md](../research/hodge-reader/README.md) · [evidence/formal/FORMAL_STATUS.md](../research/hodge-reader/evidence/formal/FORMAL_STATUS.md)
 
 <a id="inverse-galois-reader"></a>
@@ -889,6 +1031,8 @@ Finished evidence reader with conditional geometric arguments; current Lean elab
 Finished reader with reviewed elementary realizations and regular-projector statements; universal realization over Q remains open and no Lean certificate is claimed.
 
 **Next gate:** Supply the arithmetic existence input for the specified conditional route; keep finite examples distinct from all finite groups.
+
+[Return to this work: paper, proofs, Lean, and code](works/inverse-galois-reader.md)
 
 [Source directory](../research/inverse-galois-reader) · [README.md](../research/inverse-galois-reader/README.md) · [historical/Resolution_Theory_Galois_Expanded_Journal_Package_extracted/Resolution_Theory_Galois_Expanded_Journal_Package/README.md](../research/inverse-galois-reader/historical/Resolution_Theory_Galois_Expanded_Journal_Package_extracted/Resolution_Theory_Galois_Expanded_Journal_Package/README.md) · [evidence/FINAL_STATUS.json](../research/inverse-galois-reader/evidence/FINAL_STATUS.json)
 
@@ -902,6 +1046,8 @@ Checked valuation-hull and structural witness interfaces; SourceWitnessTheorem r
 
 **Next gate:** Construct the actual source witness linking the abstract interface to the intended arithmetic objects.
 
+[Return to this work: paper, proofs, Lean, and code](works/iut-valuation-hulls.md)
+
 [Source directory](../research/iut-valuation-hulls) · [README.md](../research/iut-valuation-hulls/README.md) · [formalization/lean/README.md](../research/iut-valuation-hulls/formalization/lean/README.md) · [HANDOFF_B05.md](../research/iut-valuation-hulls/HANDOFF_B05.md)
 
 <a id="lehmer-reader"></a>
@@ -914,6 +1060,8 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence; 
 
 **Next gate:** Prove the remaining actual-prime nonvanishing obligation; preserve the distinction between local models and the Delta representation.
 
+[Return to this work: paper, proofs, Lean, and code](works/lehmer-reader.md)
+
 [Source directory](../research/lehmer-reader) · [README.md](../research/lehmer-reader/README.md) · [evidence/CURRENT_STATUS.md](../research/lehmer-reader/evidence/CURRENT_STATUS.md)
 
 <a id="machine-native-mathematics-essay"></a>
@@ -925,6 +1073,8 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence; 
 29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected; no Lean verification claim for the essay or new mathematical review.
 
 **Next gate:** Recover the exact editable v10 source, rebuild and inspect the full PDF, and map technical assertions to their source-specific evidence before final reader qualification (F07).
+
+[Return to this work: paper, proofs, Lean, and code](works/machine-native-mathematics-essay.md)
 
 [Edition and reader guide](components/MACHINE_NATIVE_MATHEMATICS.md)
 
@@ -940,6 +1090,8 @@ Verified scalar binary backend and finite discovery fixtures; end-to-end discove
 
 **Next gate:** Prove the universal lowering/refinement bridge beyond the tested discovery fixtures.
 
+[Return to this work: paper, proofs, Lean, and code](works/model-theory-normalization.md)
+
 [Source directory](../research/model-theory-normalization) · [README.md](../research/model-theory-normalization/README.md) · [FORMALIZATION_COVERAGE.md](../research/model-theory-normalization/FORMALIZATION_COVERAGE.md) · [RESULTS.md](../research/model-theory-normalization/RESULTS.md)
 
 <a id="prime-contact-coherence"></a>
@@ -951,6 +1103,8 @@ Verified scalar binary backend and finite discovery fixtures; end-to-end discove
 Internally audited final manuscript with exact finite coherence calculations; the abc conjecture is not proved.
 
 **Next gate:** Obtain independent proof review and keep conditional/global-height claims separate from finite coherence results.
+
+[Return to this work: paper, proofs, Lean, and code](works/prime-contact-coherence.md)
 
 [Source directory](../research/prime-contact-coherence) · [README.md](../research/prime-contact-coherence/README.md) · [MANIFEST.json](../research/prime-contact-coherence/MANIFEST.json) · [verification/final_pdfinfo.txt](../research/prime-contact-coherence/verification/final_pdfinfo.txt)
 
@@ -964,6 +1118,8 @@ Written structural proofs and finite tests; KRS_Core.lean is explicitly uncompil
 
 **Next gate:** Pin a compiler and dependencies, compile the exact scaffold, and map its actual types to the written theorem inventory.
 
+[Return to this work: paper, proofs, Lean, and code](works/resolution-semantics.md)
+
 [Source directory](../research/resolution-semantics) · [README.md](../research/resolution-semantics/README.md) · [THEOREM_INDEX.md](../research/resolution-semantics/THEOREM_INDEX.md) · [PROOF_BOUNDARY.md](../research/resolution-semantics/PROOF_BOUNDARY.md)
 
 <a id="seeded-two-axis"></a>
@@ -975,6 +1131,8 @@ Written structural proofs and finite tests; KRS_Core.lean is explicitly uncompil
 Working manuscript with 82 ledger targets, written proofs and self-review; no Lean certification or independent review.
 
 **Next gate:** Independently review K72-K82 and retain the unconstrained rank-two scope before adding geometric or Galois conditions.
+
+[Return to this work: paper, proofs, Lean, and code](works/seeded-two-axis.md)
 
 [Source directory](../research/seeded-two-axis) · [STATUS.md](../research/seeded-two-axis/STATUS.md) · [README.md](../research/seeded-two-axis/README.md) · [RESEARCH_LOG.md](../research/seeded-two-axis/RESEARCH_LOG.md)
 
@@ -988,6 +1146,8 @@ Finished reading set; related Paper V formal sources support packet/known-edge i
 
 **Next gate:** Formalize a selected unknown-edge or self-calibration theorem and keep failed rank/location heuristics visible in qualification tests.
 
+[Return to this work: paper, proofs, Lean, and code](works/signal-reconstruction.md)
+
 [Source directory](../research/signal-reconstruction) · [RELEASE_STATUS.json](../research/signal-reconstruction/RELEASE_STATUS.json) · [README.md](../research/signal-reconstruction/README.md) · [visual/README.md](../research/signal-reconstruction/visual/README.md)
 
 <a id="stratified-universality"></a>
@@ -1000,6 +1160,8 @@ Complete amended reading/source package; 75 components have mixed proved/importe
 
 **Next gate:** Compile the exact included core, authenticate the separate historical formal package, and preserve the mixed 75-component concordance.
 
+[Return to this work: paper, proofs, Lean, and code](works/stratified-universality.md)
+
 [Source directory](../research/stratified-universality) · [README.md](../research/stratified-universality/README.md) · [RELEASE_STATUS.json](../research/stratified-universality/RELEASE_STATUS.json)
 
 <a id="streaming-skat"></a>
@@ -1011,6 +1173,8 @@ Complete amended reading/source package; 75 components have mixed proved/importe
 Illustrated manuscript v0.8 and package marker 0.8.0, with a later v0.9 synthetic simulation continuation. Written analytic guarantees and bounded simulations; the recorded 31-test pass is historical and was not rerun during navigation cleanup.
 
 **Next gate:** Perform a pinned test/simulation replay, independently review the spectral-tail and simulation contracts, and harden the documented intermediate overflow calculation. External-cohort, logistic-calibration, and GPU qualification remain separate.
+
+[Return to this work: paper, proofs, Lean, and code](works/streaming-skat.md)
 
 [Edition and reader guide](components/STREAMING_SKAT.md)
 
@@ -1026,6 +1190,8 @@ Finished evidence reader with retained scoped formal results; the publication re
 
 **Next gate:** Restore the exact runtime and replay the current source, then keep the global carrier-existence input as a separate research obligation.
 
+[Return to this work: paper, proofs, Lean, and code](works/strong-artin-reader.md)
+
 [Source directory](../research/strong-artin-reader) · [README.md](../research/strong-artin-reader/README.md) · [lean/README.md](../research/strong-artin-reader/lean/README.md) · [lean/CURRENT_REPLAY_STATUS.json](../research/strong-artin-reader/lean/CURRENT_REPLAY_STATUS.json)
 
 <a id="universal-generative-deformation"></a>
@@ -1037,6 +1203,8 @@ Finished evidence reader with retained scoped formal results; the publication re
 Beta executable construction with 50 tests and 18 experiment checks; closure is relative to a declared grammar, not all mathematics or historical novelty.
 
 **Next gate:** Validate broader grammar families and state a separate completeness theorem before extrapolating finite exploration to infinite branches.
+
+[Return to this work: paper, proofs, Lean, and code](works/universal-generative-deformation.md)
 
 [Source directory](../packages/universal-generative-deformation) · [README.md](../packages/universal-generative-deformation/README.md) · [CHANGELOG.md](../packages/universal-generative-deformation/CHANGELOG.md) · [RELEASE_AUDIT.md](../packages/universal-generative-deformation/RELEASE_AUDIT.md)
 
@@ -1050,6 +1218,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
 
+[Return to this work: paper, proofs, Lean, and code](works/arc-agi2.md)
+
 [Source directory](../experiments/arc-agi2) · [import receipt (availability only)](../manifests/source-imports/arc-agi2.json)
 
 <a id="large-signal-model"></a>
@@ -1061,6 +1231,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Return to this work: paper, proofs, Lean, and code](works/large-signal-model.md)
 
 [Source directory](../packages/large-signal-model) · [import receipt (availability only)](../manifests/source-imports/large-signal-model.json)
 
@@ -1074,6 +1246,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
 
+[Return to this work: paper, proofs, Lean, and code](works/machine-theory-compendium.md)
+
 [Source directory](../monographs/machine-theory-compendium) · [import receipt (availability only)](../manifests/source-imports/machine-theory-compendium.json)
 
 <a id="physics-curvature-states"></a>
@@ -1085,6 +1259,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Return to this work: paper, proofs, Lean, and code](works/physics-curvature-states.md)
 
 [Source directory](../research/physics-curvature-states) · [import receipt (availability only)](../manifests/source-imports/physics-curvature-states.json)
 
@@ -1098,6 +1274,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
 
+[Return to this work: paper, proofs, Lean, and code](works/physics-energy-backreaction.md)
+
 [Source directory](../research/physics-energy-backreaction) · [import receipt (availability only)](../manifests/source-imports/physics-energy-backreaction.json)
 
 <a id="physics-origin-locking"></a>
@@ -1110,6 +1288,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
 
+[Return to this work: paper, proofs, Lean, and code](works/physics-origin-locking.md)
+
 [Source directory](../research/physics-origin-locking) · [import receipt (availability only)](../manifests/source-imports/physics-origin-locking.json)
 
 <a id="realization-calculus-twin-edition"></a>
@@ -1121,6 +1301,8 @@ Source import identity and receipt verified. No new assessment of mathematical s
 Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
 
 **Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Return to this work: paper, proofs, Lean, and code](works/realization-calculus-twin-edition.md)
 
 [Source directory](../monographs/realization-calculus-twin-edition) · [import receipt (availability only)](../manifests/source-imports/realization-calculus-twin-edition.json)
 

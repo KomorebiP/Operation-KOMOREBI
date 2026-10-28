@@ -15,7 +15,6 @@ import posixpath
 import re
 import subprocess
 from pathlib import Path
-from urllib.parse import unquote
 
 REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
 STAGES = ('scoped_release', 'reading_release', 'development', 'prototype',
@@ -131,6 +130,7 @@ Recorded {data['as_of']}. These are source-specific editorial assessments of exi
 **Next gate:** {row['next_step']}
 
 '''
+        catalogue += link('Return to this work: paper, proofs, Lean, and code', 'docs/works/'+row['id']+'.md', page)+'\n\n'
         if 'reader_listing' in row:
             entry = row['reader_listing']
             catalogue += '**Reader listing: incubator.** ' + entry['reason'] + '\n\n'
@@ -373,19 +373,8 @@ def main():
     documents = {**maintained, **outputs}
     known = set(tree) | set(documents) | set(data.get('assessment_records', [])) | {'manifests/project-status.json'}
     known.update(a['path'] for a in data.get('assessment_artifacts', []))
-    for path, content in documents.items():
-        for target in re.findall(r'\]\(([^)]+)\)', content):
-            if '://' in target:
-                continue
-            relative, _, anchor = target.partition('#')
-            relative = unquote(relative)
-            resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), relative)) if relative else path
-            resolved = resolved.rstrip('/')
-            assert resolved in known or any(p.startswith(resolved+'/') for p in known), (path, target)
-            if anchor and resolved in documents:
-                target_text = documents[resolved]
-                headings = [re.sub(r'[^\w\- ]', '', s.lower()).replace(' ', '-') for s in re.findall(r'^#+ (.+)$', target_text, re.M)]
-                assert f'id="{anchor}"' in target_text or anchor in headings, (path, target)
+    from navigation_links import check_links
+    link_counts = check_links(documents, known)
     for path, content in outputs.items():
         if args.check:
             assert (root/path).read_text(encoding='utf-8') == content, 'Generated page is stale: '+path
@@ -394,6 +383,7 @@ def main():
             (root/path).write_text(content, encoding='utf-8', newline='\n')
     print(json.dumps({'status': 'PASS', 'components': len(data['components']),
                       'evidence_files': evidence_count, 'generated_pages': len(outputs),
+                      'navigation_links': link_counts,
                       'new_lean_execution': False, 'new_proof_audit': False}))
 
 

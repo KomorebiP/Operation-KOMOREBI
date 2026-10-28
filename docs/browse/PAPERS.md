@@ -8,36 +8,26 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 ## Contents
 
-| Work | Quick links |
-|---|---|
-| [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](#paper-i) | [PDF](../../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf) · [Text](../../papers/paper-i/current/editable/traditional/Paper_I_Monograph.tex) · [Lean](../../papers/paper-i/current/formal/current/) · [Code](../../papers/paper-i/current/code/python/) · [All links](PAPERS.md#paper-i) |
-| [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](#paper-ii) | [PDF](../../papers/paper-ii/current/papers/Paper_II_Traditional_Final.pdf) · [Text](../../papers/paper-ii/current/editable/traditional/Paper_II_Traditional_Final.tex) · [Lean](../../papers/paper-ii/current/formal/current/) · [Code](../../papers/paper-ii/current/source/canonical_v1.2.1/code/python/) · [All links](PAPERS.md#paper-ii) |
-| [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](#paper-iii) | [PDF](../../papers/paper-iii/current/publication/Paper_III_Final_v1.0.0.pdf) · [Text](../../papers/paper-iii/current/manuscript/Paper_III_Traditional_Final.tex) · [Lean](../../papers/paper-iii/current/formal/) · [Code](../../papers/paper-iii/current/tools/) · [All links](PAPERS.md#paper-iii) |
-| [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](#paper-iv) | [PDF](../../papers/paper-iv/current/readers/Paper_IV_Traditional_Final.pdf) · [Text](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/Paper_IV_Traditional_Final.tex) · [Lean](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/formalization/lean/) · [Code](../../papers/paper-iv/current/scripts/) · [All links](PAPERS.md#paper-iv) |
-| [Paper V: Polyphase Signal Calculus](#paper-v) | [PDF](../../papers/paper-v/current/papers/Paper_V_Traditional_Final.pdf) · [Text](../../papers/paper-v/current/editable/traditional/Paper_V_Traditional_Final.tex) · [Lean](../../papers/paper-v/current/source/complete/original_snapshot/formalization/lean/) · [Code](../../papers/paper-v/current/source/complete/original_snapshot/companion/) · [All links](PAPERS.md#paper-v) |
-| [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](#paper-vi) | [PDF](../../papers/paper-vi/current/papers/Paper_VI_Traditional_Final.pdf) · [Text](../../papers/paper-vi/current/editable/traditional/Paper_VI_Traditional_Final.tex) · [Lean](../../papers/paper-vi/current/source/complete/original_snapshot/formalization/lean/) · [Code](../../papers/paper-vi/current/source/complete/original_snapshot/companion/) · [All links](PAPERS.md#paper-vi) |
-| [Paper VII: Quantum Seed Calculus](#paper-vii) | [PDF](../../papers/paper-vii/current/papers/Paper_VII_Traditional_Final.pdf) · [Text](../../papers/paper-vii/current/editable/traditional/Paper_VII_Traditional_Final.tex) · [Lean](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot/formalization/) · [Code](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_companion/) · [All links](PAPERS.md#paper-vii) |
-| [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](#paper-viii) | [PDF](../../papers/paper-viii/current/papers/Paper_VIII_Traditional_Final.pdf) · [Text](../../papers/paper-viii/current/editable/traditional/Paper_VIII_Traditional_Final.tex) · [Lean](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot/formalization/) · [Code](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_companion/legacy/) · [All links](PAPERS.md#paper-viii) |
-| [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](#paper-ix) | [PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf) · [Text](../../papers/paper-ix/current/sources/main/) · [Lean](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/) · [Code](../../papers/paper-ix/current/tools/) · [All links](PAPERS.md#paper-ix) |
-| [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](#paper-x) | [PDF](../../papers/paper-x/current/publication/pdfs/Paper_X_Traditional_Final.pdf) · [Text](../../papers/paper-x/current/manuscript/Paper_X_Block27_Amended.tex) · [Lean](../../papers/paper-x/current/current_continuation/lean/) · [Code](../../papers/paper-x/current/inherited_baseline/original_companion/) · [All links](PAPERS.md#paper-x) |
-| [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](#paper-xi) | [PDF](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Traditional_v1.1.0.pdf) · [Text](../../papers/paper-xi/current/publication/source/traditional/Paper_XI_Traditional_Final.tex) · [Lean](../../papers/paper-xi/current/formalization/) · [Code](../../papers/paper-xi/current/tools/) · [All links](PAPERS.md#paper-xi) |
-| [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](#paper-xii) | [PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf) · [Text](../../papers/paper-xii/current/core/publication/source/traditional/Paper_XII_Traditional_Final.tex) · [Lean](../../papers/paper-xii/current/core/publication/source/lean_guide/formal_release/lean/) · [Code](../../papers/paper-xii/current/scripts/) · [All links](PAPERS.md#paper-xii) |
+- [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](../works/paper-i.md)
+- [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](../works/paper-ii.md)
+- [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](../works/paper-iii.md)
+- [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](../works/paper-iv.md)
+- [Paper V: Polyphase Signal Calculus](../works/paper-v.md)
+- [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](../works/paper-vi.md)
+- [Paper VII: Quantum Seed Calculus](../works/paper-vii.md)
+- [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](../works/paper-viii.md)
+- [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](../works/paper-ix.md)
+- [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](../works/paper-x.md)
+- [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](../works/paper-xi.md)
+- [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](../works/paper-xii.md)
 
 <a id="paper-i"></a>
 
 ## Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates
 
-**Completion:** Scoped release · **Lean:** Declared contract recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](../works/paper-i.md)
 
-Typed systems, finite realization, seed rank, and packet coordinates.
-
-**Read:** [Edition README](../../papers/paper-i/current/README.md) · [Read PDF](../../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-i/current/editable/traditional/Paper_I_Monograph.tex) · [Formal replay instructions (text)](../../papers/paper-i/current/formal/README.txt)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-i/current/papers/Paper_I_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-i/current/formal/current/) · [108-record correspondence map (JSON)](../../papers/paper-i/current/formal/coverage/COVERAGE_108.json)
-
-**Code and scripts:** [Code / scripts: code/python](../../papers/paper-i/current/code/python/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-i) · [All edition files](../../papers/paper-i/current/) · [Source-file receipt](../../manifests/source-imports/paper-i.json)
+[PDF](../../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf) · [Text](../../papers/paper-i/current/editable/traditional/Paper_I_Monograph.tex) · [Lean](../../papers/paper-i/current/formal/current/) · [Code](../../papers/paper-i/current/code/python/) · [Work page](../works/paper-i.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -45,17 +35,9 @@ Typed systems, finite realization, seed rank, and packet coordinates.
 
 ## Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets
 
-**Completion:** Scoped release · **Lean:** Declared contract recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](../works/paper-ii.md)
 
-Refinement, weighted transfer, and integral structure.
-
-**Read:** [Edition README](../../papers/paper-ii/current/README.md) · [Read PDF](../../papers/paper-ii/current/papers/Paper_II_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-ii/current/editable/traditional/Paper_II_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-ii/current/papers/Paper_II_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-ii/current/papers/Paper_II_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-ii/current/formal/current/)
-
-**Code and scripts:** [Code / scripts: source/canonical_v1.2.1/code/python](../../papers/paper-ii/current/source/canonical_v1.2.1/code/python/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-ii) · [All edition files](../../papers/paper-ii/current/) · [Source-file receipt](../../manifests/source-imports/paper-ii.json)
+[PDF](../../papers/paper-ii/current/papers/Paper_II_Traditional_Final.pdf) · [Text](../../papers/paper-ii/current/editable/traditional/Paper_II_Traditional_Final.tex) · [Lean](../../papers/paper-ii/current/formal/current/) · [Code](../../papers/paper-ii/current/source/canonical_v1.2.1/code/python/) · [Work page](../works/paper-ii.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -63,17 +45,9 @@ Refinement, weighted transfer, and integral structure.
 
 ## Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](../works/paper-iii.md)
 
-Nonlinear constructions, compatibility, and explicit obstructions.
-
-**Read:** [Edition README](../../papers/paper-iii/current/README.md) · [Read PDF](../../papers/paper-iii/current/publication/Paper_III_Final_v1.0.0.pdf) · [Manuscript text (TeX)](../../papers/paper-iii/current/manuscript/Paper_III_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-iii/current/publication/Paper_III_Visual_Guide_v1.0.0.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-iii/current/publication/Paper_III_Lean_Guide_v1.0.0.pdf) · [Lean sources (directory)](../../papers/paper-iii/current/formal/)
-
-**Code and scripts:** [Code / scripts: tools](../../papers/paper-iii/current/tools/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-iii) · [All edition files](../../papers/paper-iii/current/) · [Source-file receipt](../../manifests/source-imports/paper-iii.json)
+[PDF](../../papers/paper-iii/current/publication/Paper_III_Final_v1.0.0.pdf) · [Text](../../papers/paper-iii/current/manuscript/Paper_III_Traditional_Final.tex) · [Lean](../../papers/paper-iii/current/formal/) · [Code](../../papers/paper-iii/current/tools/) · [Work page](../works/paper-iii.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -81,17 +55,9 @@ Nonlinear constructions, compatibility, and explicit obstructions.
 
 ## Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](../works/paper-iv.md)
 
-Cyclic analytic families, reciprocal identities, and spectral information.
-
-**Read:** [Edition README](../../papers/paper-iv/current/README.md) · [Read PDF](../../papers/paper-iv/current/readers/Paper_IV_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/Paper_IV_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-iv/current/readers/Paper_IV_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-iv/current/readers/Paper_IV_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/formalization/lean/)
-
-**Code and scripts:** [Code / scripts: scripts](../../papers/paper-iv/current/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-iv) · [All edition files](../../papers/paper-iv/current/) · [Source-file receipt](../../manifests/source-imports/paper-iv.json)
+[PDF](../../papers/paper-iv/current/readers/Paper_IV_Traditional_Final.pdf) · [Text](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/Paper_IV_Traditional_Final.tex) · [Lean](../../papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/formalization/lean/) · [Code](../../papers/paper-iv/current/scripts/) · [Work page](../works/paper-iv.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -99,17 +65,9 @@ Cyclic analytic families, reciprocal identities, and spectral information.
 
 ## Paper V: Polyphase Signal Calculus
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Paper V: Polyphase Signal Calculus](../works/paper-v.md)
 
-Polyphase decomposition, refinement, and signal operations.
-
-**Read:** [Edition README](../../papers/paper-v/current/README.md) · [Read PDF](../../papers/paper-v/current/papers/Paper_V_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-v/current/editable/traditional/Paper_V_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-v/current/papers/Paper_V_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-v/current/papers/Paper_V_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-v/current/source/complete/original_snapshot/formalization/lean/)
-
-**Code and scripts:** [Code / scripts: source/complete/original_snapshot/companion](../../papers/paper-v/current/source/complete/original_snapshot/companion/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-v) · [All edition files](../../papers/paper-v/current/) · [Source-file receipt](../../manifests/source-imports/paper-v.json)
+[PDF](../../papers/paper-v/current/papers/Paper_V_Traditional_Final.pdf) · [Text](../../papers/paper-v/current/editable/traditional/Paper_V_Traditional_Final.tex) · [Lean](../../papers/paper-v/current/source/complete/original_snapshot/formalization/lean/) · [Code](../../papers/paper-v/current/source/complete/original_snapshot/companion/) · [Work page](../works/paper-v.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -117,17 +75,9 @@ Polyphase decomposition, refinement, and signal operations.
 
 ## Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](../works/paper-vi.md)
 
-Semigroup constructions and probabilistic and analytic applications.
-
-**Read:** [Edition README](../../papers/paper-vi/current/README.md) · [Read PDF](../../papers/paper-vi/current/papers/Paper_VI_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-vi/current/editable/traditional/Paper_VI_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-vi/current/papers/Paper_VI_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-vi/current/papers/Paper_VI_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-vi/current/source/complete/original_snapshot/formalization/lean/)
-
-**Code and scripts:** [Code / scripts: source/complete/original_snapshot/companion](../../papers/paper-vi/current/source/complete/original_snapshot/companion/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-vi) · [All edition files](../../papers/paper-vi/current/) · [Source-file receipt](../../manifests/source-imports/paper-vi.json)
+[PDF](../../papers/paper-vi/current/papers/Paper_VI_Traditional_Final.pdf) · [Text](../../papers/paper-vi/current/editable/traditional/Paper_VI_Traditional_Final.tex) · [Lean](../../papers/paper-vi/current/source/complete/original_snapshot/formalization/lean/) · [Code](../../papers/paper-vi/current/source/complete/original_snapshot/companion/) · [Work page](../works/paper-vi.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -135,17 +85,9 @@ Semigroup constructions and probabilistic and analytic applications.
 
 ## Paper VII: Quantum Seed Calculus
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Paper VII: Quantum Seed Calculus](../works/paper-vii.md)
 
-Finite quantum constructions and seed representations.
-
-**Read:** [Edition README](../../papers/paper-vii/current/README.md) · [Read PDF](../../papers/paper-vii/current/papers/Paper_VII_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-vii/current/editable/traditional/Paper_VII_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-vii/current/papers/Paper_VII_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-vii/current/papers/Paper_VII_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot/formalization/)
-
-**Code and scripts:** [Code / scripts: source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_companion](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_companion/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-vii) · [All edition files](../../papers/paper-vii/current/) · [Source-file receipt](../../manifests/source-imports/paper-vii.json)
+[PDF](../../papers/paper-vii/current/papers/Paper_VII_Traditional_Final.pdf) · [Text](../../papers/paper-vii/current/editable/traditional/Paper_VII_Traditional_Final.tex) · [Lean](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot/formalization/) · [Code](../../papers/paper-vii/current/source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix/original_companion/) · [Work page](../works/paper-vii.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -153,17 +95,9 @@ Finite quantum constructions and seed representations.
 
 ## Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](../works/paper-viii.md)
 
-Exact finite algorithms, compilation, and computational realization.
-
-**Read:** [Edition README](../../papers/paper-viii/current/README.md) · [Read PDF](../../papers/paper-viii/current/papers/Paper_VIII_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-viii/current/editable/traditional/Paper_VIII_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-viii/current/papers/Paper_VIII_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-viii/current/papers/Paper_VIII_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot/formalization/)
-
-**Code and scripts:** [Code / scripts: source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_companion/legacy](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_companion/legacy/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-viii) · [All edition files](../../papers/paper-viii/current/) · [Source-file receipt](../../manifests/source-imports/paper-viii.json)
+[PDF](../../papers/paper-viii/current/papers/Paper_VIII_Traditional_Final.pdf) · [Text](../../papers/paper-viii/current/editable/traditional/Paper_VIII_Traditional_Final.tex) · [Lean](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot/formalization/) · [Code](../../papers/paper-viii/current/source/complete/Paper_VIII_Complete_v0.6.0_With_Visual_Appendix/original_companion/legacy/) · [Work page](../works/paper-viii.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -171,17 +105,9 @@ Exact finite algorithms, compilation, and computational realization.
 
 ## Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](../works/paper-ix.md)
 
-Arithmetic packets, refinement towers, and local deformation.
-
-**Read:** [Edition README](../../papers/paper-ix/current/README.md) · [Read PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf) · [Text sources: sources/main](../../papers/paper-ix/current/sources/main/) · [Visual guide (PDF)](../../papers/paper-ix/current/output/pdf/Paper_IX_Euler_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-ix/current/output/pdf/Paper_IX_Euler_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/)
-
-**Code and scripts:** [Code / scripts: tools](../../papers/paper-ix/current/tools/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-ix) · [All edition files](../../papers/paper-ix/current/) · [Source-file receipt](../../manifests/source-imports/paper-ix.json)
+[PDF](../../papers/paper-ix/current/publication/pdfs/Paper_IX_Euler_Main_Final.pdf) · [Text](../../papers/paper-ix/current/sources/main/) · [Lean](../../papers/paper-ix/current/preserved/PRSC_IX_Consolidated_Manuscript/) · [Code](../../papers/paper-ix/current/tools/) · [Work page](../works/paper-ix.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -189,17 +115,9 @@ Arithmetic packets, refinement towers, and local deformation.
 
 ## Paper X: Universal Residual Seeds and Conditional Occupied-System Completion
 
-**Completion:** Scoped release · **Lean:** Declared contract recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](../works/paper-x.md)
 
-Residual structures and completion under stated premises.
-
-**Read:** [Edition README](../../papers/paper-x/current/README.md) · [Read PDF](../../papers/paper-x/current/publication/pdfs/Paper_X_Traditional_Final.pdf) · [Manuscript text (TeX)](../../papers/paper-x/current/manuscript/Paper_X_Block27_Amended.tex) · [Visual guide (PDF)](../../papers/paper-x/current/publication/pdfs/Paper_X_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-x/current/publication/pdfs/Paper_X_Lean_Guide_Final.pdf) · [Lean sources (directory)](../../papers/paper-x/current/current_continuation/lean/)
-
-**Code and scripts:** [Code / scripts: inherited_baseline/original_companion](../../papers/paper-x/current/inherited_baseline/original_companion/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-x) · [All edition files](../../papers/paper-x/current/) · [Source-file receipt](../../manifests/source-imports/paper-x.json)
+[PDF](../../papers/paper-x/current/publication/pdfs/Paper_X_Traditional_Final.pdf) · [Text](../../papers/paper-x/current/manuscript/Paper_X_Block27_Amended.tex) · [Lean](../../papers/paper-x/current/current_continuation/lean/) · [Code](../../papers/paper-x/current/inherited_baseline/original_companion/) · [Work page](../works/paper-x.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -207,17 +125,9 @@ Residual structures and completion under stated premises.
 
 ## Paper XI: Packets, Arithmetic Realization, and Conditional Comparison
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](../works/paper-xi.md)
 
-Arithmetic realization and comparison interfaces.
-
-**Read:** [Edition README](../../papers/paper-xi/current/README.md) · [Read PDF](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Traditional_v1.1.0.pdf) · [Manuscript text (TeX)](../../papers/paper-xi/current/publication/source/traditional/Paper_XI_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Visual_Guide_v1.1.0.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Lean_Guide_v1.1.0.pdf) · [Lean sources (directory)](../../papers/paper-xi/current/formalization/)
-
-**Code and scripts:** [Code / scripts: tools](../../papers/paper-xi/current/tools/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-xi) · [All edition files](../../papers/paper-xi/current/) · [Source-file receipt](../../manifests/source-imports/paper-xi.json)
+[PDF](../../papers/paper-xi/current/publication/pdfs/Paper_XI_Traditional_v1.1.0.pdf) · [Text](../../papers/paper-xi/current/publication/source/traditional/Paper_XI_Traditional_Final.tex) · [Lean](../../papers/paper-xi/current/formalization/) · [Code](../../papers/paper-xi/current/tools/) · [Work page](../works/paper-xi.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -225,16 +135,8 @@ Arithmetic realization and comparison interfaces.
 
 ## Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](../works/paper-xii.md)
 
-Patching, Hecke packets, and conditional automorphic constructions.
-
-**Read:** [Edition README](../../papers/paper-xii/current/README.md) · [Read PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf) · [Manuscript text (TeX)](../../papers/paper-xii/current/core/publication/source/traditional/Paper_XII_Traditional_Final.tex) · [Visual guide (PDF)](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Visual_Guide_v1.0.0.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Lean_Guide_v1.0.0.pdf) · [Lean sources (directory)](../../papers/paper-xii/current/core/publication/source/lean_guide/formal_release/lean/)
-
-**Code and scripts:** [Code / scripts: scripts](../../papers/paper-xii/current/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#paper-xii) · [All edition files](../../papers/paper-xii/current/) · [Source-file receipt](../../manifests/source-imports/paper-xii.json)
+[PDF](../../papers/paper-xii/current/core/publication/pdfs/Paper_XII_Traditional_v1.0.0.pdf) · [Text](../../papers/paper-xii/current/core/publication/source/traditional/Paper_XII_Traditional_Final.tex) · [Lean](../../papers/paper-xii/current/core/publication/source/lean_guide/formal_release/lean/) · [Code](../../papers/paper-xii/current/scripts/) · [Work page](../works/paper-xii.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)

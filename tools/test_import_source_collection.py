@@ -131,7 +131,11 @@ class SourceImportTests(unittest.TestCase):
             config = {"components": [{"id": "archived-csv", "destination": destination}]}
             imp._preserve_source_bytes(config, root)
             self.assertIn("unrelated.txt -text\n", info.read_text(encoding="utf-8"))
-            git(root, "add", "--force", "--", relative, "outside.csv")
+            # The fixture already staged these files under the old attributes.
+            # Force a reread after changing info/attributes; otherwise Git may
+            # reuse cached stat data, depending on the filesystem timestamp.
+            # The importer installs its override before its first staging.
+            git(root, "add", "--renormalize", "--", relative, "outside.csv")
             self.assertEqual(git(root, "rev-parse", ":" + relative), raw_blob)
             self.assertNotEqual(git(root, "rev-parse", ":outside.csv"), raw_blob,
                                 "The override must stay within declared source destinations")

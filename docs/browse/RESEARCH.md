@@ -8,55 +8,53 @@ PDF, manuscript text, Lean sources, code, and existing evidence are linked separ
 
 ## Contents
 
-| Work | Quick links |
-|---|---|
-| [Information Realization](#information-realization) | [Lean](../../research/information-realization/lean/) · [Code](../../research/information-realization/tools/) · [All links](RESEARCH.md#information-realization) |
-| [KZFC and Residual Reflection](#kzfc-multiverse) | [Lean](../../research/kzfc-multiverse/Komorebi/) · [Code](../../research/kzfc-multiverse/scripts/) · [All links](RESEARCH.md#kzfc-multiverse) |
-| [Logical Resolution](#logical-resolution) | [Lean](../../research/logical-resolution/formalization/) · [Code](../../research/logical-resolution/tools/) · [All links](RESEARCH.md#logical-resolution) |
-| [p-adic Canonical Realization](#padic-canonical-realization) | [Lean](../../research/padic-canonical-realization/lean/) · [Code](../../research/padic-canonical-realization/verify_release.py) · [All links](RESEARCH.md#padic-canonical-realization) |
-| [Representation Calculus](#representation-calculus) | [Lean](../../research/representation-calculus/formalization/) · [Code](../../research/representation-calculus/checks/) · [All links](RESEARCH.md#representation-calculus) |
-| [Machine Understanding](#research-machine-understanding) | [PDF](../../research/machine-understanding/Machine_Understanding_v1.0.0.pdf) · [Text](../../research/machine-understanding/Machine_Understanding_v1.0.0.tex) · [Code](../../research/machine-understanding/code/) · [All links](RESEARCH.md#research-machine-understanding) |
-| [OSL and Neuralese](#research-osl-neuralese) | [PDF](../../research/osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.pdf) · [Text](../../research/osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.tex) · [Code](../../research/osl-neuralese/OSL/core05/reference/) · [All links](RESEARCH.md#research-osl-neuralese) |
-| [OSL and Neuralese: reading edition](#research-osl-neuralese-reading-edition) | [PDF](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/publication/pdfs/OSL_Final_Research_Edition_v1.0.pdf) · [Text](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex) · [All links](RESEARCH.md#research-osl-neuralese-reading-edition) |
-| [SRIC: external semantic admission](#research-sric-external-admission) | [PDF](../../research/sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.pdf) · [Text](../../research/sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.tex) · [Code](../../research/sric-external-admission/sric_real_lrm/) · [All links](RESEARCH.md#research-sric-external-admission) |
-| [SRIC: endogenous semantic witness](#research-sric-block23-witness) | [PDF](../../research/sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.pdf) · [Text](../../research/sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.tex) · [Code](../../research/sric-block23-witness/block23/) · [All links](RESEARCH.md#research-sric-block23-witness) |
-| [Stratified Recursive Improvement Closure](#research-stratified-recursive-improvement) | [PDF](../../research/stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.pdf) · [Text](../../research/stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.tex) · [All links](RESEARCH.md#research-stratified-recursive-improvement) |
-| [AVOC](#research-avoc) | [PDF](../../research/avoc/AVOC_Publication_1.0/output/AVOC_Traditional_Final.pdf) · [Text](../../research/avoc/AVOC_Publication_1.0/manuscripts/main.tex) · [All links](RESEARCH.md#research-avoc) |
-| [Hypergraph Lumpability and Bayesian Refinement](#research-hypergraph-bayesian-refinement) | [PDF](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.pdf) · [Text](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.tex) · [Code](../../research/hypergraph-bayesian-refinement/src/) · [All links](RESEARCH.md#research-hypergraph-bayesian-refinement) |
-| [PRISM-1](#research-prism-1) | [PDF](../../research/prism-1/Komorebi_PRISM_1_Final_Updated.pdf) · [Text](../../research/prism-1/Komorebi_PRISM_1_Final_Updated.tex) · [Code](../../research/prism-1/prism_chip_model.py) · [All links](RESEARCH.md#research-prism-1) |
-| [Certified Bayesian Inference](#research-certified-bayesian-inference) | [PDF](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Traditional_Final.pdf) · [Text](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/manuscripts/main.tex) · [All links](RESEARCH.md#research-certified-bayesian-inference) |
-| [Stratified Relational Workspace Theory](#research-stratified-relational-workspace) | [PDF](../../research/stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.pdf) · [Text](../../research/stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.tex) · [Code](../../research/stratified-relational-workspace/scripts/) · [All links](RESEARCH.md#research-stratified-relational-workspace) |
-| [Machine Theory: formal development](#research-machine-theory-formal) | [PDF](../../research/machine-theory-formal/source/Reviewed_Core_v0.2.pdf) · [Lean](../../research/machine-theory-formal/MachineTheory/) · [Code](../../research/machine-theory-formal/scripts/) · [All links](RESEARCH.md#research-machine-theory-formal) |
-| [Machine Native Reasoning: wider continuation](#research-machine-native-reasoning-wider) | [PDF](../../research/machine-native-reasoning-wider/Machine_Native_Reasoning_Reviewed_Continuation.pdf) · [Text](../../research/machine-native-reasoning-wider/book.tex) · [Lean](../../research/machine-native-reasoning-wider/sources/lean15_current/MachineTheory/) · [Code](../../research/machine-native-reasoning-wider/scripts/) · [All links](RESEARCH.md#research-machine-native-reasoning-wider) |
-| [ABC: global RR8 branch](#abc-global-rr8) | [Code](../../research/abc-global-rr8/abc_work/) · [All links](RESEARCH.md#abc-global-rr8) |
-| [ABC: source and evidence reader](#abc-reader) | [PDF](../../research/abc-reader/pdf/Komorebi_ABC_Conjecture_Piece_v1.0.pdf) · [Text](../../research/abc-reader/paper/main.tex) · [Lean](../../research/abc-reader/evidence/formal/ktg_source/formalization/lean/) · [Code](../../research/abc-reader/evidence/computation/) · [All links](RESEARCH.md#abc-reader) |
-| [AddMul Arithmetic Reconstruction](#addmul-arithmetic-reconstruction) | [Lean](../../research/addmul-arithmetic-reconstruction/proofs/) · [Code](../../research/addmul-arithmetic-reconstruction/tests/) · [All links](RESEARCH.md#addmul-arithmetic-reconstruction) |
-| [Beal: source and evidence](#beal-reader) | [PDF](../../research/beal-reader/pdf/Komorebi_Beal_Conjecture_Piece_v1.0.pdf) · [Text](../../research/beal-reader/paper/main.tex) · [Lean](../../research/beal-reader/evidence/formal/historical_project/) · [Code](../../research/beal-reader/evidence/computation/) · [All links](RESEARCH.md#beal-reader) |
-| [Catalan Constant: source and evidence](#catalan-constant-reader) | [PDF](../../research/catalan-constant-reader/output/pdf/Komorebi_Catalan_Constant_Conjecture_Piece_v1.0.pdf) · [Text](../../research/catalan-constant-reader/paper/main.tex) · [Code](../../research/catalan-constant-reader/computations/) · [All links](RESEARCH.md#catalan-constant-reader) |
-| [Collatz and Riemann: source and evidence](#collatz-and-riemann-readers) | [PDF](../../research/collatz-and-riemann-readers/pdf/Komorebi_Collatz_Conjecture_Piece_v1.1.pdf) · [Text](../../research/collatz-and-riemann-readers/collatz/main.tex) · [Code](../../research/collatz-and-riemann-readers/build.py) · [All links](RESEARCH.md#collatz-and-riemann-readers) |
-| [Euler Signal Bridge](#euler-signal-bridge) | [Code](../../research/euler-signal-bridge/verify_bridge.py) · [All links](RESEARCH.md#euler-signal-bridge) |
-| [Gaussian Elimination: collected guide](#gaussian-elimination-guide) | [PDF](../../research/gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf) · [All links](RESEARCH.md#gaussian-elimination-guide) |
-| [Hilbert 12: ambient dual slice](#hilbert12-ambient-dual-slice) | [Code](../../research/hilbert12-ambient-dual-slice/h12_ambient_dual_slice_verify.py) · [All links](RESEARCH.md#hilbert12-ambient-dual-slice) |
-| [Hilbert 12: analytic Fourier branch](#hilbert12-analytic-fourier) | [Code](../../research/hilbert12-analytic-fourier/H12_Analytic_Resolvent_Verifier.py) · [All links](RESEARCH.md#hilbert12-analytic-fourier) |
-| [Hilbert 12: closure attempt](#hilbert12-closure-attempt) | [Code](../../research/hilbert12-closure-attempt/h12_closure_verify.py) · [All links](RESEARCH.md#hilbert12-closure-attempt) |
-| [Hilbert 12: contracting ambient torsion](#hilbert12-contracting-ambient-torsion) | [Code](../../research/hilbert12-contracting-ambient-torsion/h12_full_ambient_torsion_verify.py) · [All links](RESEARCH.md#hilbert12-contracting-ambient-torsion) |
-| [Hilbert 12: cubic divisor development](#hilbert12-cubic-divisor) | [PDF](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.pdf) · [Text](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.tex) · [Lean](../../research/hilbert12-cubic-divisor/lean/) · [Code](../../research/hilbert12-cubic-divisor/scripts/) · [All links](RESEARCH.md#hilbert12-cubic-divisor) |
-| [Hodge: source and evidence](#hodge-reader) | [PDF](../../research/hodge-reader/pdf/Komorebi_Hodge_Conjecture_Piece_v1.0.pdf) · [Text](../../research/hodge-reader/paper/main.tex) · [Lean](../../research/hodge-reader/evidence/formal/) · [Code](../../research/hodge-reader/build.py) · [All links](RESEARCH.md#hodge-reader) |
-| [Inverse Galois: source and evidence](#inverse-galois-reader) | [PDF](../../research/inverse-galois-reader/output/pdf/Komorebi_Inverse_Galois_Conjecture_Piece_v1.0.pdf) · [Text](../../research/inverse-galois-reader/paper/main.tex) · [Code](../../research/inverse-galois-reader/computations/) · [All links](RESEARCH.md#inverse-galois-reader) |
-| [IUT Valuation Hulls](#iut-valuation-hulls) | [Lean](../../research/iut-valuation-hulls/formalization/) · [Code](../../research/iut-valuation-hulls/experiments/) · [All links](RESEARCH.md#iut-valuation-hulls) |
-| [Lehmer: source and evidence](#lehmer-reader) | [PDF](../../research/lehmer-reader/output/pdf/Komorebi_Lehmer_Conjecture_Piece_v1.0.pdf) · [Text](../../research/lehmer-reader/paper/main.tex) · [Code](../../research/lehmer-reader/code/) · [All links](RESEARCH.md#lehmer-reader) |
-| [The Possibility for a Machine Native Mathematics](#machine-native-mathematics-essay) | [PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf) · [All links](RESEARCH.md#machine-native-mathematics-essay) |
-| [Model-Theory Normalization](#model-theory-normalization) | [Lean](../../research/model-theory-normalization/formalization/) · [Code](../../research/model-theory-normalization/checks/) · [All links](RESEARCH.md#model-theory-normalization) |
-| [Prime-Contact Coherence Calculus](#prime-contact-coherence) | [Text](../../research/prime-contact-coherence/Projector_Resolved_Prime_Contact_Coherence_Calculus_Verified_Final.tex) · [All links](RESEARCH.md#prime-contact-coherence) |
-| [Resolution Semantics](#resolution-semantics) | [PDF](../../research/resolution-semantics/Komorebi_Resolution_Semantics.pdf) · [Text](../../research/resolution-semantics/Komorebi_Resolution_Semantics.tex) · [Lean](../../research/resolution-semantics/formal/) · [Code](../../research/resolution-semantics/checks/) · [All links](RESEARCH.md#resolution-semantics) |
-| [Seeded Two-Axis Calculus](#seeded-two-axis) | [PDF](../../research/seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.pdf) · [Text](../../research/seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.tex) · [Code](../../research/seeded-two-axis/checks/) · [All links](RESEARCH.md#seeded-two-axis) |
-| [Signal Reconstruction](#signal-reconstruction) | [PDF](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.pdf) · [Text](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.tex) · [Lean](../../research/signal-reconstruction/related_formal/paper_v/formalization/lean/) · [Code](../../research/signal-reconstruction/audit_release.py) · [All links](RESEARCH.md#signal-reconstruction) |
-| [Stratified Universality](#stratified-universality) | [PDF](../../research/stratified-universality/traditional/Stratified_Universality_Traditional.pdf) · [Text](../../research/stratified-universality/traditional/Stratified_Universality_Traditional.tex) · [Lean](../../research/stratified-universality/lean/inspected_source/) · [Code](../../research/stratified-universality/build_release.py) · [All links](RESEARCH.md#stratified-universality) |
-| [Streaming Polyphase Factor Decomposition / SKAT](#streaming-skat) | [PDF](../../research/streaming-skat/FINAL_MANUSCRIPT.pdf) · [Text](../../research/streaming-skat/FINAL_MANUSCRIPT.tex) · [Code](../../research/streaming-skat/kcos.py) · [All links](RESEARCH.md#streaming-skat) |
-| [Strong Artin: source and evidence](#strong-artin-reader) | [PDF](../../research/strong-artin-reader/pdf/Komorebi_Strong_Artin_Conjecture_Piece_v1.0.pdf) · [Text](../../research/strong-artin-reader/paper/main.tex) · [Lean](../../research/strong-artin-reader/lean/) · [Code](../../research/strong-artin-reader/build.py) · [All links](RESEARCH.md#strong-artin-reader) |
-| [Physics: curvature states](#physics-curvature-states) | [PDF](../../research/physics-curvature-states/Komorebi_Physics_Curvature_States_and_Subtraction.pdf) · [All links](RESEARCH.md#physics-curvature-states) |
-| [Physics: energy and backreaction](#physics-energy-backreaction) | [PDF](../../research/physics-energy-backreaction/Energy_Conserving_Production.pdf) · [Text](../../research/physics-energy-backreaction/Energy_Conserving_Production.tex) · [Code](../../research/physics-energy-backreaction/code/) · [All links](RESEARCH.md#physics-energy-backreaction) |
-| [Physics: origin locking](#physics-origin-locking) | [PDF](../../research/physics-origin-locking/Origin_Locking_and_Cosmological_Energy_Exchange.pdf) · [Code](../../research/physics-origin-locking/code/) · [All links](RESEARCH.md#physics-origin-locking) |
+- [Information Realization](../works/information-realization.md)
+- [KZFC and Residual Reflection](../works/kzfc-multiverse.md)
+- [Logical Resolution](../works/logical-resolution.md)
+- [p-adic Canonical Realization](../works/padic-canonical-realization.md)
+- [Representation Calculus](../works/representation-calculus.md)
+- [Machine Understanding](../works/research-machine-understanding.md)
+- [OSL and Neuralese](../works/research-osl-neuralese.md)
+- [OSL and Neuralese: reading edition](../works/research-osl-neuralese-reading-edition.md)
+- [SRIC: external semantic admission](../works/research-sric-external-admission.md)
+- [SRIC: endogenous semantic witness](../works/research-sric-block23-witness.md)
+- [Stratified Recursive Improvement Closure](../works/research-stratified-recursive-improvement.md)
+- [AVOC](../works/research-avoc.md)
+- [Hypergraph Lumpability and Bayesian Refinement](../works/research-hypergraph-bayesian-refinement.md)
+- [PRISM-1](../works/research-prism-1.md)
+- [Certified Bayesian Inference](../works/research-certified-bayesian-inference.md)
+- [Stratified Relational Workspace Theory](../works/research-stratified-relational-workspace.md)
+- [Machine Theory: formal development](../works/research-machine-theory-formal.md)
+- [Machine Native Reasoning: wider continuation](../works/research-machine-native-reasoning-wider.md)
+- [ABC: global RR8 branch](../works/abc-global-rr8.md)
+- [ABC: source and evidence reader](../works/abc-reader.md)
+- [AddMul Arithmetic Reconstruction](../works/addmul-arithmetic-reconstruction.md)
+- [Beal: source and evidence](../works/beal-reader.md)
+- [Catalan Constant: source and evidence](../works/catalan-constant-reader.md)
+- [Collatz and Riemann: source and evidence](../works/collatz-and-riemann-readers.md)
+- [Euler Signal Bridge](../works/euler-signal-bridge.md)
+- [Gaussian Elimination: collected guide](../works/gaussian-elimination-guide.md)
+- [Hilbert 12: ambient dual slice](../works/hilbert12-ambient-dual-slice.md)
+- [Hilbert 12: analytic Fourier branch](../works/hilbert12-analytic-fourier.md)
+- [Hilbert 12: closure attempt](../works/hilbert12-closure-attempt.md)
+- [Hilbert 12: contracting ambient torsion](../works/hilbert12-contracting-ambient-torsion.md)
+- [Hilbert 12: cubic divisor development](../works/hilbert12-cubic-divisor.md)
+- [Hodge: source and evidence](../works/hodge-reader.md)
+- [Inverse Galois: source and evidence](../works/inverse-galois-reader.md)
+- [IUT Valuation Hulls](../works/iut-valuation-hulls.md)
+- [Lehmer: source and evidence](../works/lehmer-reader.md)
+- [The Possibility for a Machine Native Mathematics](../works/machine-native-mathematics-essay.md)
+- [Model-Theory Normalization](../works/model-theory-normalization.md)
+- [Prime-Contact Coherence Calculus](../works/prime-contact-coherence.md)
+- [Resolution Semantics](../works/resolution-semantics.md)
+- [Seeded Two-Axis Calculus](../works/seeded-two-axis.md)
+- [Signal Reconstruction](../works/signal-reconstruction.md)
+- [Stratified Universality](../works/stratified-universality.md)
+- [Streaming Polyphase Factor Decomposition / SKAT](../works/streaming-skat.md)
+- [Strong Artin: source and evidence](../works/strong-artin-reader.md)
+- [Physics: curvature states](../works/physics-curvature-states.md)
+- [Physics: energy and backreaction](../works/physics-energy-backreaction.md)
+- [Physics: origin locking](../works/physics-origin-locking.md)
 
 ### Incubator sources
 
@@ -69,17 +67,9 @@ These incomplete implementation entries retain their incubator placement and ret
 
 ## Information Realization
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Information Realization](../works/information-realization.md)
 
-Information, realizations, and a finite formal core.
-
-**Read:** [Edition README](../../research/information-realization/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/information-realization/lean/) · [LEAN GUIDE.md](../../research/information-realization/LEAN_GUIDE.md)
-
-**Code and scripts:** [Code / scripts: tools](../../research/information-realization/tools/)
-
-[Status and evidence](../STATUS_CATALOG.md#information-realization) · [All edition files](../../research/information-realization/) · [Source-file receipt](../../manifests/source-imports/information-realization.json)
+[Lean](../../research/information-realization/lean/) · [Code](../../research/information-realization/tools/) · [Work page](../works/information-realization.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -87,17 +77,9 @@ Information, realizations, and a finite formal core.
 
 ## KZFC and Residual Reflection
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: KZFC and Residual Reflection](../works/kzfc-multiverse.md)
 
-Set-theoretic structures, multiverse interfaces, and residual reflection.
-
-**Read:** [Edition README](../../research/kzfc-multiverse/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/kzfc-multiverse/Komorebi/)
-
-**Code and scripts:** [Code / scripts: scripts](../../research/kzfc-multiverse/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#kzfc-multiverse) · [All edition files](../../research/kzfc-multiverse/) · [Source-file receipt](../../manifests/source-imports/kzfc-multiverse.json)
+[Lean](../../research/kzfc-multiverse/Komorebi/) · [Code](../../research/kzfc-multiverse/scripts/) · [Work page](../works/kzfc-multiverse.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -105,17 +87,9 @@ Set-theoretic structures, multiverse interfaces, and residual reflection.
 
 ## Logical Resolution
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Logical Resolution](../works/logical-resolution.md)
 
-Logical resolution and the structures used to represent it.
-
-**Read:** [Edition README](../../research/logical-resolution/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/logical-resolution/formalization/)
-
-**Code and scripts:** [Code / scripts: tools](../../research/logical-resolution/tools/)
-
-[Status and evidence](../STATUS_CATALOG.md#logical-resolution) · [All edition files](../../research/logical-resolution/) · [Source-file receipt](../../manifests/source-imports/logical-resolution.json)
+[Lean](../../research/logical-resolution/formalization/) · [Code](../../research/logical-resolution/tools/) · [Work page](../works/logical-resolution.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -123,17 +97,9 @@ Logical resolution and the structures used to represent it.
 
 ## p-adic Canonical Realization
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: p-adic Canonical Realization](../works/padic-canonical-realization.md)
 
-Canonical realization and the Block 34 finite formal development.
-
-**Read:** [Edition README](../../research/padic-canonical-realization/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/padic-canonical-realization/lean/)
-
-**Code and scripts:** [Script: verify_release.py](../../research/padic-canonical-realization/verify_release.py)
-
-[Status and evidence](../STATUS_CATALOG.md#padic-canonical-realization) · [All edition files](../../research/padic-canonical-realization/) · [Source-file receipt](../../manifests/source-imports/padic-canonical-realization.json)
+[Lean](../../research/padic-canonical-realization/lean/) · [Code](../../research/padic-canonical-realization/verify_release.py) · [Work page](../works/padic-canonical-realization.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -141,17 +107,9 @@ Canonical realization and the Block 34 finite formal development.
 
 ## Representation Calculus
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Representation Calculus](../works/representation-calculus.md)
 
-Representations, their transformations, and compatibility.
-
-**Read:** [Edition README](../../research/representation-calculus/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/representation-calculus/formalization/)
-
-**Code and scripts:** [Code / scripts: checks](../../research/representation-calculus/checks/)
-
-[Status and evidence](../STATUS_CATALOG.md#representation-calculus) · [All edition files](../../research/representation-calculus/) · [Source-file receipt](../../manifests/source-imports/representation-calculus.json)
+[Lean](../../research/representation-calculus/formalization/) · [Code](../../research/representation-calculus/checks/) · [Work page](../works/representation-calculus.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -159,15 +117,9 @@ Representations, their transformations, and compatibility.
 
 ## Machine Understanding
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Machine Understanding](../works/research-machine-understanding.md)
 
-Models and mathematical interfaces for machine understanding.
-
-**Read:** [Edition README](../../research/machine-understanding/README.md) · [Read PDF](../../research/machine-understanding/Machine_Understanding_v1.0.0.pdf) · [Manuscript text (TeX)](../../research/machine-understanding/Machine_Understanding_v1.0.0.tex)
-
-**Code and scripts:** [Code / scripts: code](../../research/machine-understanding/code/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-machine-understanding) · [All edition files](../../research/machine-understanding/) · [Source-file receipt](../../manifests/source-imports/research-machine-understanding.json)
+[PDF](../../research/machine-understanding/Machine_Understanding_v1.0.0.pdf) · [Text](../../research/machine-understanding/Machine_Understanding_v1.0.0.tex) · [Code](../../research/machine-understanding/code/) · [Work page](../works/research-machine-understanding.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -175,15 +127,9 @@ Models and mathematical interfaces for machine understanding.
 
 ## OSL and Neuralese
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: OSL and Neuralese](../works/research-osl-neuralese.md)
 
-Operator and semantic interfaces, experiments, and their retained scientific history.
-
-**Read:** [Edition README](../../research/osl-neuralese/README.md) · [OSL Final Research Edition (PDF)](../../research/osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.pdf) · [Neuralese Final Research Edition (PDF)](../../research/osl-neuralese/Neuralese/manuscript/Neuralese_Final_Research_Edition.pdf) · [Text sources: OSL/manuscript/OSL_Final_Research_Edition.tex](../../research/osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.tex) · [Text sources: Neuralese/manuscript/Neuralese_Final_Research_Edition.tex](../../research/osl-neuralese/Neuralese/manuscript/Neuralese_Final_Research_Edition.tex)
-
-**Code and scripts:** [Code / scripts: OSL/core05/reference](../../research/osl-neuralese/OSL/core05/reference/) · [Code / scripts: OSL/core05/tests](../../research/osl-neuralese/OSL/core05/tests/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-osl-neuralese) · [All edition files](../../research/osl-neuralese/) · [Source-file receipt](../../manifests/source-imports/research-osl-neuralese.json)
+[PDF](../../research/osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.pdf) · [Text](../../research/osl-neuralese/OSL/manuscript/OSL_Final_Research_Edition.tex) · [Code](../../research/osl-neuralese/OSL/core05/reference/) · [Work page](../works/research-osl-neuralese.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -191,13 +137,9 @@ Operator and semantic interfaces, experiments, and their retained scientific his
 
 ## OSL and Neuralese: reading edition
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: OSL and Neuralese: reading edition](../works/research-osl-neuralese-reading-edition.md)
 
-The LaTeX and PDF reading companion.
-
-**Read:** [Edition README](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/README.md) · [OSL Final Research Edition v1.0 (PDF)](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/publication/pdfs/OSL_Final_Research_Edition_v1.0.pdf) · [Neuralese Final Research Edition v1.0 (PDF)](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/publication/pdfs/Neuralese_Final_Research_Edition_v1.0.pdf) · [Text sources: OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex) · [Text sources: OSL_Neuralese_Manuscripts_v1.0/Neuralese/manuscript/Neuralese_Final_Research_Edition.tex](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/Neuralese/manuscript/Neuralese_Final_Research_Edition.tex)
-
-[Status and evidence](../STATUS_CATALOG.md#research-osl-neuralese-reading-edition) · [All edition files](../../research/osl-neuralese/reading-edition/) · [Source-file receipt](../../manifests/source-imports/research-osl-neuralese-reading-edition.json)
+[PDF](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/publication/pdfs/OSL_Final_Research_Edition_v1.0.pdf) · [Text](../../research/osl-neuralese/reading-edition/OSL_Neuralese_Manuscripts_v1.0/OSL/manuscript/OSL_Final_Research_Edition.tex) · [Work page](../works/research-osl-neuralese-reading-edition.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -205,17 +147,9 @@ The LaTeX and PDF reading companion.
 
 ## SRIC: external semantic admission
 
-**Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: SRIC: external semantic admission](../works/research-sric-external-admission.md)
 
-Corrected 0.3.3 beta source runtime: 15 admission/CLI tests passed on the recorded fixture scope; real-checkpoint execution and scientific qualification remain pending. The retained 0.3.2 edition has documented defects.
-
-**Read:** [Edition README](../../research/sric-external-admission/README.md) · [Read PDF](../../research/sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.pdf) · [Manuscript text (TeX)](../../research/sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.tex)
-
-**Code and scripts:** [Code / scripts: sric_real_lrm](../../research/sric-external-admission/sric_real_lrm/) · [Code / scripts: tests](../../research/sric-external-admission/tests/)
-
-[Maintained edition guide](../SRIC_REPAIR_2026-10-27.md)
-
-[Status and evidence](../STATUS_CATALOG.md#research-sric-external-admission) · [All edition files](../../research/sric-external-admission/) · [Source-file receipt](../../manifests/source-imports/research-sric-external-admission.json)
+[PDF](../../research/sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.pdf) · [Text](../../research/sric-external-admission/manuscript/SRIC_Block24_External_LRM_Causal_Semantic_Admission_Protocol_v0.3.0.tex) · [Code](../../packages/sric-admission-v0.3.3/) · [Work page](../works/research-sric-external-admission.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -223,15 +157,9 @@ Corrected 0.3.3 beta source runtime: 15 admission/CLI tests passed on the record
 
 ## SRIC: endogenous semantic witness
 
-**Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: SRIC: endogenous semantic witness](../works/research-sric-block23-witness.md)
 
-Finite synthetic semantic-witness construction; recorded real-model pilot remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23.
-
-**Read:** [Edition README](../../research/sric-block23-witness/README.md) · [Read PDF](../../research/sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.pdf) · [Manuscript text (TeX)](../../research/sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.tex)
-
-**Code and scripts:** [Code / scripts: block23](../../research/sric-block23-witness/block23/) · [Code / scripts: tests](../../research/sric-block23-witness/tests/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-sric-block23-witness) · [All edition files](../../research/sric-block23-witness/) · [Source-file receipt](../../manifests/source-imports/research-sric-block23-witness.json)
+[PDF](../../research/sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.pdf) · [Text](../../research/sric-block23-witness/SRIC_Block23_Endogenous_Semantic_Witness.tex) · [Code](../../research/sric-block23-witness/block23/) · [Work page](../works/research-sric-block23-witness.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -239,13 +167,9 @@ Finite synthetic semantic-witness construction; recorded real-model pilot remain
 
 ## Stratified Recursive Improvement Closure
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: Stratified Recursive Improvement Closure](../works/research-stratified-recursive-improvement.md)
 
-Stratified closure models and the Block 23 development.
-
-**Read:** [Edition README](../../research/stratified-recursive-improvement/README.md) · [Read PDF](../../research/stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.pdf) · [Manuscript text (TeX)](../../research/stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.tex)
-
-[Status and evidence](../STATUS_CATALOG.md#research-stratified-recursive-improvement) · [All edition files](../../research/stratified-recursive-improvement/) · [Source-file receipt](../../manifests/source-imports/research-stratified-recursive-improvement.json)
+[PDF](../../research/stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.pdf) · [Text](../../research/stratified-recursive-improvement/Stratified_Recursive_Improvement_Closure_v2.4_Block23.tex) · [Work page](../works/research-stratified-recursive-improvement.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -253,15 +177,9 @@ Stratified closure models and the Block 23 development.
 
 ## AVOC
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: AVOC](../works/research-avoc.md)
 
-The AVOC publication and formal source collection.
-
-**Read:** [Edition README](../../research/avoc/AVOC_Publication_1.0/README.md) · [Read PDF](../../research/avoc/AVOC_Publication_1.0/output/AVOC_Traditional_Final.pdf) · [Manuscript text (TeX)](../../research/avoc/AVOC_Publication_1.0/manuscripts/main.tex) · [Visual guide (PDF)](../../research/avoc/AVOC_Publication_1.0/output/AVOC_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../research/avoc/AVOC_Publication_1.0/output/AVOC_Lean_Companion_Final.pdf)
-
-[Status and evidence](../STATUS_CATALOG.md#research-avoc) · [All edition files](../../research/avoc/) · [Source-file receipt](../../manifests/source-imports/research-avoc.json)
+[PDF](../../research/avoc/AVOC_Publication_1.0/output/AVOC_Traditional_Final.pdf) · [Text](../../research/avoc/AVOC_Publication_1.0/manuscripts/main.tex) · [Work page](../works/research-avoc.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -269,15 +187,9 @@ The AVOC publication and formal source collection.
 
 ## Hypergraph Lumpability and Bayesian Refinement
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Hypergraph Lumpability and Bayesian Refinement](../works/research-hypergraph-bayesian-refinement.md)
 
-Hypergraph structure, lumpability, and Bayesian refinement.
-
-**Read:** [Edition README](../../research/hypergraph-bayesian-refinement/README.md) · [Read PDF](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.pdf) · [Manuscript text (TeX)](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.tex)
-
-**Code and scripts:** [Code / scripts: src](../../research/hypergraph-bayesian-refinement/src/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-hypergraph-bayesian-refinement) · [All edition files](../../research/hypergraph-bayesian-refinement/) · [Source-file receipt](../../manifests/source-imports/research-hypergraph-bayesian-refinement.json)
+[PDF](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.pdf) · [Text](../../research/hypergraph-bayesian-refinement/Hypergraph_Lumpability_Bayesian_Refinement.tex) · [Code](../../research/hypergraph-bayesian-refinement/src/) · [Work page](../works/research-hypergraph-bayesian-refinement.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -285,15 +197,9 @@ Hypergraph structure, lumpability, and Bayesian refinement.
 
 ## PRISM-1
 
-**Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: PRISM-1](../works/research-prism-1.md)
 
-The PRISM-1 mathematical and computational development.
-
-**Read:** [Edition README](../../research/prism-1/README.md) · [Read PDF](../../research/prism-1/Komorebi_PRISM_1_Final_Updated.pdf) · [Manuscript text (TeX)](../../research/prism-1/Komorebi_PRISM_1_Final_Updated.tex)
-
-**Code and scripts:** [Script: prism_chip_model.py](../../research/prism-1/prism_chip_model.py)
-
-[Status and evidence](../STATUS_CATALOG.md#research-prism-1) · [All edition files](../../research/prism-1/) · [Source-file receipt](../../manifests/source-imports/research-prism-1.json)
+[PDF](../../research/prism-1/Komorebi_PRISM_1_Final_Updated.pdf) · [Text](../../research/prism-1/Komorebi_PRISM_1_Final_Updated.tex) · [Code](../../research/prism-1/prism_chip_model.py) · [Work page](../works/research-prism-1.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -301,15 +207,9 @@ The PRISM-1 mathematical and computational development.
 
 ## Certified Bayesian Inference
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Certified Bayesian Inference](../works/research-certified-bayesian-inference.md)
 
-Certified Bayesian constructions and their publication sources.
-
-**Read:** [Edition README](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/README.md) · [Read PDF](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Traditional_Final.pdf) · [Manuscript text (TeX)](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/manuscripts/main.tex) · [Visual guide (PDF)](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Visual_Guide_Final.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Lean_Companion_Final.pdf)
-
-[Status and evidence](../STATUS_CATALOG.md#research-certified-bayesian-inference) · [All edition files](../../research/certified-bayesian-inference/) · [Source-file receipt](../../manifests/source-imports/research-certified-bayesian-inference.json)
+[PDF](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/output/Certified_Bayesian_Traditional_Final.pdf) · [Text](../../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/manuscripts/main.tex) · [Work page](../works/research-certified-bayesian-inference.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -317,15 +217,9 @@ Certified Bayesian constructions and their publication sources.
 
 ## Stratified Relational Workspace Theory
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Stratified Relational Workspace Theory](../works/research-stratified-relational-workspace.md)
 
-Stratified relational workspaces and their mathematical interfaces.
-
-**Read:** [Edition README](../../research/stratified-relational-workspace/README.md) · [Read PDF](../../research/stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.pdf) · [Manuscript text (TeX)](../../research/stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.tex)
-
-**Code and scripts:** [Code / scripts: scripts](../../research/stratified-relational-workspace/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-stratified-relational-workspace) · [All edition files](../../research/stratified-relational-workspace/) · [Source-file receipt](../../manifests/source-imports/research-stratified-relational-workspace.json)
+[PDF](../../research/stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.pdf) · [Text](../../research/stratified-relational-workspace/monograph/Stratified_Relational_Workspace_Theory.tex) · [Code](../../research/stratified-relational-workspace/scripts/) · [Work page](../works/research-stratified-relational-workspace.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -333,17 +227,9 @@ Stratified relational workspaces and their mathematical interfaces.
 
 ## Machine Theory: formal development
 
-**Completion:** Earlier checkpoint · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Machine Theory: formal development](../works/research-machine-theory-formal.md)
 
-The Block 15 Lean development for machine-theory structures.
-
-**Read:** [Edition README](../../research/machine-theory-formal/README.md) · [Read PDF](../../research/machine-theory-formal/source/Reviewed_Core_v0.2.pdf)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/machine-theory-formal/MachineTheory/)
-
-**Code and scripts:** [Code / scripts: scripts](../../research/machine-theory-formal/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-machine-theory-formal) · [All edition files](../../research/machine-theory-formal/) · [Source-file receipt](../../manifests/source-imports/research-machine-theory-formal.json)
+[PDF](../../research/machine-theory-formal/source/Reviewed_Core_v0.2.pdf) · [Lean](../../research/machine-theory-formal/MachineTheory/) · [Code](../../research/machine-theory-formal/scripts/) · [Work page](../works/research-machine-theory-formal.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -351,17 +237,9 @@ The Block 15 Lean development for machine-theory structures.
 
 ## Machine Native Reasoning: wider continuation
 
-**Completion:** Active development · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Machine Native Reasoning: wider continuation](../works/research-machine-native-reasoning-wider.md)
 
-The broader continuation accompanying the reviewed core volume.
-
-**Read:** [Edition README](../../research/machine-native-reasoning-wider/README.md) · [Read PDF](../../research/machine-native-reasoning-wider/Machine_Native_Reasoning_Reviewed_Continuation.pdf) · [Manuscript text (TeX)](../../research/machine-native-reasoning-wider/book.tex)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/machine-native-reasoning-wider/sources/lean15_current/MachineTheory/)
-
-**Code and scripts:** [Code / scripts: scripts](../../research/machine-native-reasoning-wider/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-machine-native-reasoning-wider) · [All edition files](../../research/machine-native-reasoning-wider/) · [Source-file receipt](../../manifests/source-imports/research-machine-native-reasoning-wider.json)
+[PDF](../../research/machine-native-reasoning-wider/Machine_Native_Reasoning_Reviewed_Continuation.pdf) · [Text](../../research/machine-native-reasoning-wider/book.tex) · [Lean](../../research/machine-native-reasoning-wider/sources/lean15_current/MachineTheory/) · [Code](../../research/machine-native-reasoning-wider/scripts/) · [Work page](../works/research-machine-native-reasoning-wider.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -369,17 +247,9 @@ The broader continuation accompanying the reviewed core volume.
 
 ## ABC: global RR8 branch
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: ABC: global RR8 branch](../works/abc-global-rr8.md)
 
-Source-recovery, finite-observer, and global RR8 developments.
-
-**Read:** [Edition README](../../research/abc-global-rr8/README.md)
-
-**Formal sources and claim guides:** [CLAIMS.md](../../research/abc-global-rr8/abc_work/komorebi_arithmetic/routes/witt_space/CLAIMS.md)
-
-**Code and scripts:** [Code / scripts: abc_work](../../research/abc-global-rr8/abc_work/)
-
-[Status and evidence](../STATUS_CATALOG.md#abc-global-rr8) · [All edition files](../../research/abc-global-rr8/) · [Source-file receipt](../../manifests/source-imports/abc-global-rr8.json)
+[Code](../../research/abc-global-rr8/abc_work/) · [Work page](../works/abc-global-rr8.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -387,17 +257,9 @@ Source-recovery, finite-observer, and global RR8 developments.
 
 ## ABC: source and evidence reader
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: ABC: source and evidence reader](../works/abc-reader.md)
 
-A reader edition of the ABC research program and its evidence.
-
-**Read:** [Edition README](../../research/abc-reader/README.md) · [Read PDF](../../research/abc-reader/pdf/Komorebi_ABC_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/abc-reader/paper/main.tex) · [Visual guide (PDF)](../../research/abc-reader/pdf/Komorebi_ABC_Visual_Guide_v1.0.pdf)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/abc-reader/evidence/formal/ktg_source/formalization/lean/)
-
-**Code and scripts:** [Code / scripts: evidence/computation](../../research/abc-reader/evidence/computation/)
-
-[Status and evidence](../STATUS_CATALOG.md#abc-reader) · [All edition files](../../research/abc-reader/) · [Source-file receipt](../../manifests/source-imports/abc-reader.json)
+[PDF](../../research/abc-reader/pdf/Komorebi_ABC_Conjecture_Piece_v1.0.pdf) · [Text](../../research/abc-reader/paper/main.tex) · [Lean](../../research/abc-reader/evidence/formal/ktg_source/formalization/lean/) · [Code](../../research/abc-reader/evidence/computation/) · [Work page](../works/abc-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -405,17 +267,9 @@ A reader edition of the ABC research program and its evidence.
 
 ## AddMul Arithmetic Reconstruction
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: AddMul Arithmetic Reconstruction](../works/addmul-arithmetic-reconstruction.md)
 
-A finite arithmetic-reconstruction block with explicit rejection controls.
-
-**Read:** [Edition README](../../research/addmul-arithmetic-reconstruction/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/addmul-arithmetic-reconstruction/proofs/)
-
-**Code and scripts:** [Code / scripts: tests](../../research/addmul-arithmetic-reconstruction/tests/)
-
-[Status and evidence](../STATUS_CATALOG.md#addmul-arithmetic-reconstruction) · [All edition files](../../research/addmul-arithmetic-reconstruction/) · [Source-file receipt](../../manifests/source-imports/addmul-arithmetic-reconstruction.json)
+[Lean](../../research/addmul-arithmetic-reconstruction/proofs/) · [Code](../../research/addmul-arithmetic-reconstruction/tests/) · [Work page](../works/addmul-arithmetic-reconstruction.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -423,17 +277,9 @@ A finite arithmetic-reconstruction block with explicit rejection controls.
 
 ## Beal: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Beal: source and evidence](../works/beal-reader.md)
 
-Scoped reductions, finite checks, and retained arithmetic routes.
-
-**Read:** [Edition README](../../research/beal-reader/README.md) · [Read PDF](../../research/beal-reader/pdf/Komorebi_Beal_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/beal-reader/paper/main.tex) · [Visual guide (PDF)](../../research/beal-reader/pdf/Komorebi_Beal_Visual_Guide_v1.0.pdf)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/beal-reader/evidence/formal/historical_project/)
-
-**Code and scripts:** [Code / scripts: evidence/computation](../../research/beal-reader/evidence/computation/)
-
-[Status and evidence](../STATUS_CATALOG.md#beal-reader) · [All edition files](../../research/beal-reader/) · [Source-file receipt](../../manifests/source-imports/beal-reader.json)
+[PDF](../../research/beal-reader/pdf/Komorebi_Beal_Conjecture_Piece_v1.0.pdf) · [Text](../../research/beal-reader/paper/main.tex) · [Lean](../../research/beal-reader/evidence/formal/historical_project/) · [Code](../../research/beal-reader/evidence/computation/) · [Work page](../works/beal-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -441,15 +287,9 @@ Scoped reductions, finite checks, and retained arithmetic routes.
 
 ## Catalan Constant: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Catalan Constant: source and evidence](../works/catalan-constant-reader.md)
 
-Finite exact calculations and irrationality research routes.
-
-**Read:** [Edition README](../../research/catalan-constant-reader/README.md) · [Read PDF](../../research/catalan-constant-reader/output/pdf/Komorebi_Catalan_Constant_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/catalan-constant-reader/paper/main.tex) · [Visual guide (PDF)](../../research/catalan-constant-reader/output/pdf/Komorebi_Catalan_Constant_Visual_Guide_v1.0.pdf)
-
-**Code and scripts:** [Code / scripts: computations](../../research/catalan-constant-reader/computations/)
-
-[Status and evidence](../STATUS_CATALOG.md#catalan-constant-reader) · [All edition files](../../research/catalan-constant-reader/) · [Source-file receipt](../../manifests/source-imports/catalan-constant-reader.json)
+[PDF](../../research/catalan-constant-reader/output/pdf/Komorebi_Catalan_Constant_Conjecture_Piece_v1.0.pdf) · [Text](../../research/catalan-constant-reader/paper/main.tex) · [Code](../../research/catalan-constant-reader/computations/) · [Work page](../works/catalan-constant-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -457,15 +297,9 @@ Finite exact calculations and irrationality research routes.
 
 ## Collatz and Riemann: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Collatz and Riemann: source and evidence](../works/collatz-and-riemann-readers.md)
 
-Reader editions, finite results, and research evidence for both programs.
-
-**Read:** [Edition README](../../research/collatz-and-riemann-readers/README.md) · [Komorebi Collatz Conjecture Piece v1.1 (PDF)](../../research/collatz-and-riemann-readers/pdf/Komorebi_Collatz_Conjecture_Piece_v1.1.pdf) · [Komorebi Riemann Conjecture Piece v1.1 (PDF)](../../research/collatz-and-riemann-readers/pdf/Komorebi_Riemann_Conjecture_Piece_v1.1.pdf) · [Text sources: collatz/main.tex](../../research/collatz-and-riemann-readers/collatz/main.tex) · [Text sources: riemann/main.tex](../../research/collatz-and-riemann-readers/riemann/main.tex) · [Visual guide (PDF)](../../research/collatz-and-riemann-readers/pdf/Komorebi_Collatz_Visual_Guide_v1.1.pdf)
-
-**Code and scripts:** [Script: build.py](../../research/collatz-and-riemann-readers/build.py)
-
-[Status and evidence](../STATUS_CATALOG.md#collatz-and-riemann-readers) · [All edition files](../../research/collatz-and-riemann-readers/) · [Source-file receipt](../../manifests/source-imports/collatz-and-riemann-readers.json)
+[PDF](../../research/collatz-and-riemann-readers/pdf/Komorebi_Collatz_Conjecture_Piece_v1.1.pdf) · [Text](../../research/collatz-and-riemann-readers/collatz/main.tex) · [Code](../../research/collatz-and-riemann-readers/build.py) · [Work page](../works/collatz-and-riemann-readers.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -473,13 +307,9 @@ Reader editions, finite results, and research evidence for both programs.
 
 ## Euler Signal Bridge
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Euler Signal Bridge](../works/euler-signal-bridge.md)
 
-Written finite-difference and FIR identities with exact controls; broader Euler congruences require separate proofs.
-
-**Code and scripts:** [Script: verify_bridge.py](../../research/euler-signal-bridge/verify_bridge.py)
-
-[Status and evidence](../STATUS_CATALOG.md#euler-signal-bridge) · [All edition files](../../research/euler-signal-bridge/) · [Source-file receipt](../../manifests/source-imports/euler-signal-bridge.json)
+[Code](../../research/euler-signal-bridge/verify_bridge.py) · [Work page](../works/euler-signal-bridge.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -487,15 +317,9 @@ Written finite-difference and FIR identities with exact controls; broader Euler 
 
 ## Gaussian Elimination: collected guide
 
-**Completion:** Reader available; source qualification pending · **Lean:** Not assessed · **Confidence:** Unassessed
+[Open work page: Gaussian Elimination: collected guide](../works/gaussian-elimination-guide.md)
 
-A collected reader guide in PDF form.
-
-**Read:** [Read PDF](../../research/gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf)
-
-[Maintained edition guide](../components/GAUSSIAN_ELIMINATION.md)
-
-[Status and evidence](../STATUS_CATALOG.md#gaussian-elimination-guide) · [All edition files](../../research/gaussian-elimination-guide/) · [Source-file receipt](../../manifests/source-imports/gaussian-elimination-guide.json)
+[PDF](../../research/gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf) · [Work page](../works/gaussian-elimination-guide.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -503,15 +327,9 @@ A collected reader guide in PDF form.
 
 ## Hilbert 12: ambient dual slice
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Hilbert 12: ambient dual slice](../works/hilbert12-ambient-dual-slice.md)
 
-Finite pairing and Gauss-cube calculations with an explicit primitive-root specialization; the analytic equality remains open.
-
-**Code and scripts:** [Script: h12_ambient_dual_slice_verify.py](../../research/hilbert12-ambient-dual-slice/h12_ambient_dual_slice_verify.py)
-
-[Maintained edition guide](../components/H12_AMBIENT_DUAL_SLICE.md)
-
-[Status and evidence](../STATUS_CATALOG.md#hilbert12-ambient-dual-slice) · [All edition files](../../research/hilbert12-ambient-dual-slice/) · [Source-file receipt](../../manifests/source-imports/hilbert12-ambient-dual-slice.json)
+[Code](../../research/hilbert12-ambient-dual-slice/h12_ambient_dual_slice_verify.py) · [Work page](../works/hilbert12-ambient-dual-slice.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -519,13 +337,9 @@ Finite pairing and Gauss-cube calculations with an explicit primitive-root speci
 
 ## Hilbert 12: analytic Fourier branch
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Hilbert 12: analytic Fourier branch](../works/hilbert12-analytic-fourier.md)
 
-Explicit algebraic Fourier and quotient constructions; analytic orbit and special-value normalization remain unproved.
-
-**Code and scripts:** [Script: H12_Analytic_Resolvent_Verifier.py](../../research/hilbert12-analytic-fourier/H12_Analytic_Resolvent_Verifier.py)
-
-[Status and evidence](../STATUS_CATALOG.md#hilbert12-analytic-fourier) · [All edition files](../../research/hilbert12-analytic-fourier/) · [Source-file receipt](../../manifests/source-imports/hilbert12-analytic-fourier.json)
+[Code](../../research/hilbert12-analytic-fourier/H12_Analytic_Resolvent_Verifier.py) · [Work page](../works/hilbert12-analytic-fourier.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -533,15 +347,9 @@ Explicit algebraic Fourier and quotient constructions; analytic orbit and specia
 
 ## Hilbert 12: closure attempt
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Hilbert 12: closure attempt](../works/hilbert12-closure-attempt.md)
 
-Weighted transport obstruction, arithmetic certificates, and rational interval comparison.
-
-**Read:** [Edition README](../../research/hilbert12-closure-attempt/README.md)
-
-**Code and scripts:** [Script: h12_closure_verify.py](../../research/hilbert12-closure-attempt/h12_closure_verify.py)
-
-[Status and evidence](../STATUS_CATALOG.md#hilbert12-closure-attempt) · [All edition files](../../research/hilbert12-closure-attempt/) · [Source-file receipt](../../manifests/source-imports/hilbert12-closure-attempt.json)
+[Code](../../research/hilbert12-closure-attempt/h12_closure_verify.py) · [Work page](../works/hilbert12-closure-attempt.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -549,13 +357,9 @@ Weighted transport obstruction, arithmetic certificates, and rational interval c
 
 ## Hilbert 12: contracting ambient torsion
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Hilbert 12: contracting ambient torsion](../works/hilbert12-contracting-ambient-torsion.md)
 
-Finite torsion transport and separate distribution arguments; inherited analytic inputs and the arithmetic comparison require further review.
-
-**Code and scripts:** [Script: h12_full_ambient_torsion_verify.py](../../research/hilbert12-contracting-ambient-torsion/h12_full_ambient_torsion_verify.py)
-
-[Status and evidence](../STATUS_CATALOG.md#hilbert12-contracting-ambient-torsion) · [All edition files](../../research/hilbert12-contracting-ambient-torsion/) · [Source-file receipt](../../manifests/source-imports/hilbert12-contracting-ambient-torsion.json)
+[Code](../../research/hilbert12-contracting-ambient-torsion/h12_full_ambient_torsion_verify.py) · [Work page](../works/hilbert12-contracting-ambient-torsion.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -563,17 +367,9 @@ Finite torsion transport and separate distribution arguments; inherited analytic
 
 ## Hilbert 12: cubic divisor development
 
-**Completion:** Reading edition complete · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Hilbert 12: cubic divisor development](../works/hilbert12-cubic-divisor.md)
 
-Complex divisor constructions and a finite algebraic companion.
-
-**Read:** [Edition README](../../research/hilbert12-cubic-divisor/README.md) · [Read PDF](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.pdf) · [Manuscript text (TeX)](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.tex) · [Visual guide (PDF)](../../research/hilbert12-cubic-divisor/visual/H12_Cubic_Divisor_Visual_Guide.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../research/hilbert12-cubic-divisor/lean/H12_Cubic_Divisor_Lean_Guide.pdf) · [Lean sources (directory)](../../research/hilbert12-cubic-divisor/lean/)
-
-**Code and scripts:** [Code / scripts: scripts](../../research/hilbert12-cubic-divisor/scripts/)
-
-[Status and evidence](../STATUS_CATALOG.md#hilbert12-cubic-divisor) · [All edition files](../../research/hilbert12-cubic-divisor/) · [Source-file receipt](../../manifests/source-imports/hilbert12-cubic-divisor.json)
+[PDF](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.pdf) · [Text](../../research/hilbert12-cubic-divisor/traditional/H12_Cubic_Divisor_Traditional.tex) · [Lean](../../research/hilbert12-cubic-divisor/lean/) · [Code](../../research/hilbert12-cubic-divisor/scripts/) · [Work page](../works/hilbert12-cubic-divisor.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -581,17 +377,9 @@ Complex divisor constructions and a finite algebraic companion.
 
 ## Hodge: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** Source; no current pass · **Confidence:** Recorded written review
+[Open work page: Hodge: source and evidence](../works/hodge-reader.md)
 
-Finite constructions, written reductions, and cycle-realization obligations.
-
-**Read:** [Edition README](../../research/hodge-reader/README.md) · [Read PDF](../../research/hodge-reader/pdf/Komorebi_Hodge_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/hodge-reader/paper/main.tex) · [Visual guide (PDF)](../../research/hodge-reader/pdf/Komorebi_Hodge_Visual_Guide_v1.0.pdf)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/hodge-reader/evidence/formal/)
-
-**Code and scripts:** [Script: build.py](../../research/hodge-reader/build.py)
-
-[Status and evidence](../STATUS_CATALOG.md#hodge-reader) · [All edition files](../../research/hodge-reader/) · [Source-file receipt](../../manifests/source-imports/hodge-reader.json)
+[PDF](../../research/hodge-reader/pdf/Komorebi_Hodge_Conjecture_Piece_v1.0.pdf) · [Text](../../research/hodge-reader/paper/main.tex) · [Lean](../../research/hodge-reader/evidence/formal/) · [Code](../../research/hodge-reader/build.py) · [Work page](../works/hodge-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -599,15 +387,9 @@ Finite constructions, written reductions, and cycle-realization obligations.
 
 ## Inverse Galois: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Inverse Galois: source and evidence](../works/inverse-galois-reader.md)
 
-Finite examples and selected realization obligations.
-
-**Read:** [Edition README](../../research/inverse-galois-reader/README.md) · [Read PDF](../../research/inverse-galois-reader/output/pdf/Komorebi_Inverse_Galois_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/inverse-galois-reader/paper/main.tex) · [Visual guide (PDF)](../../research/inverse-galois-reader/output/pdf/Komorebi_Inverse_Galois_Visual_Guide_v1.0.pdf)
-
-**Code and scripts:** [Code / scripts: computations](../../research/inverse-galois-reader/computations/)
-
-[Status and evidence](../STATUS_CATALOG.md#inverse-galois-reader) · [All edition files](../../research/inverse-galois-reader/) · [Source-file receipt](../../manifests/source-imports/inverse-galois-reader.json)
+[PDF](../../research/inverse-galois-reader/output/pdf/Komorebi_Inverse_Galois_Conjecture_Piece_v1.0.pdf) · [Text](../../research/inverse-galois-reader/paper/main.tex) · [Code](../../research/inverse-galois-reader/computations/) · [Work page](../works/inverse-galois-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -615,17 +397,9 @@ Finite examples and selected realization obligations.
 
 ## IUT Valuation Hulls
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: IUT Valuation Hulls](../works/iut-valuation-hulls.md)
 
-The B05 valuation-hull continuation and finite formal controls.
-
-**Read:** [Edition README](../../research/iut-valuation-hulls/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/iut-valuation-hulls/formalization/)
-
-**Code and scripts:** [Code / scripts: experiments](../../research/iut-valuation-hulls/experiments/)
-
-[Status and evidence](../STATUS_CATALOG.md#iut-valuation-hulls) · [All edition files](../../research/iut-valuation-hulls/) · [Source-file receipt](../../manifests/source-imports/iut-valuation-hulls.json)
+[Lean](../../research/iut-valuation-hulls/formalization/) · [Code](../../research/iut-valuation-hulls/experiments/) · [Work page](../works/iut-valuation-hulls.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -633,15 +407,9 @@ The B05 valuation-hull continuation and finite formal controls.
 
 ## Lehmer: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Lehmer: source and evidence](../works/lehmer-reader.md)
 
-Written reductions and bounded exact calculations for tau nonvanishing.
-
-**Read:** [Edition README](../../research/lehmer-reader/README.md) · [Read PDF](../../research/lehmer-reader/output/pdf/Komorebi_Lehmer_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/lehmer-reader/paper/main.tex) · [Visual guide (PDF)](../../research/lehmer-reader/output/pdf/Komorebi_Lehmer_Visual_Guide_v1.0.pdf)
-
-**Code and scripts:** [Code / scripts: code](../../research/lehmer-reader/code/)
-
-[Status and evidence](../STATUS_CATALOG.md#lehmer-reader) · [All edition files](../../research/lehmer-reader/) · [Source-file receipt](../../manifests/source-imports/lehmer-reader.json)
+[PDF](../../research/lehmer-reader/output/pdf/Komorebi_Lehmer_Conjecture_Piece_v1.0.pdf) · [Text](../../research/lehmer-reader/paper/main.tex) · [Code](../../research/lehmer-reader/code/) · [Work page](../works/lehmer-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -649,15 +417,9 @@ Written reductions and bounded exact calculations for tau nonvanishing.
 
 ## The Possibility for a Machine Native Mathematics
 
-**Completion:** Reader available; source qualification pending · **Lean:** No Lean claim · **Confidence:** Unassessed
+[Open work page: The Possibility for a Machine Native Mathematics](../works/machine-native-mathematics-essay.md)
 
-A standalone essay on machine-native mathematics.
-
-**Read:** [Read PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
-
-[Maintained edition guide](../components/MACHINE_NATIVE_MATHEMATICS.md)
-
-[Status and evidence](../STATUS_CATALOG.md#machine-native-mathematics-essay) · [All edition files](../../research/machine-native-mathematics-essay/) · [Source-file receipt](../../manifests/source-imports/machine-native-mathematics-essay.json)
+[PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf) · [Work page](../works/machine-native-mathematics-essay.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -665,17 +427,9 @@ A standalone essay on machine-native mathematics.
 
 ## Model-Theory Normalization
 
-**Completion:** Active development · **Lean:** Selected results recorded · **Confidence:** Recorded formal evidence
+[Open work page: Model-Theory Normalization](../works/model-theory-normalization.md)
 
-A scalar binary backend and its normalization development.
-
-**Read:** [Edition README](../../research/model-theory-normalization/README.md)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/model-theory-normalization/formalization/)
-
-**Code and scripts:** [Code / scripts: checks](../../research/model-theory-normalization/checks/)
-
-[Status and evidence](../STATUS_CATALOG.md#model-theory-normalization) · [All edition files](../../research/model-theory-normalization/) · [Source-file receipt](../../manifests/source-imports/model-theory-normalization.json)
+[Lean](../../research/model-theory-normalization/formalization/) · [Code](../../research/model-theory-normalization/checks/) · [Work page](../works/model-theory-normalization.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -683,13 +437,9 @@ A scalar binary backend and its normalization development.
 
 ## Prime-Contact Coherence Calculus
 
-**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Recorded written review
+[Open work page: Prime-Contact Coherence Calculus](../works/prime-contact-coherence.md)
 
-Projector-resolved prime contact, coherence, and exact calculations.
-
-**Read:** [Edition README](../../research/prime-contact-coherence/README.md) · [Manuscript text (TeX)](../../research/prime-contact-coherence/Projector_Resolved_Prime_Contact_Coherence_Calculus_Verified_Final.tex)
-
-[Status and evidence](../STATUS_CATALOG.md#prime-contact-coherence) · [All edition files](../../research/prime-contact-coherence/) · [Source-file receipt](../../manifests/source-imports/prime-contact-coherence.json)
+[Text](../../research/prime-contact-coherence/Projector_Resolved_Prime_Contact_Coherence_Calculus_Verified_Final.tex) · [Work page](../works/prime-contact-coherence.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -697,17 +447,9 @@ Projector-resolved prime contact, coherence, and exact calculations.
 
 ## Resolution Semantics
 
-**Completion:** Active development · **Lean:** Source; no current pass · **Confidence:** Written / finite evidence
+[Open work page: Resolution Semantics](../works/resolution-semantics.md)
 
-Written structural arguments and finite checks; the two-world obstruction has a focused review, while other theorems and forcing applications need their own review.
-
-**Read:** [Edition README](../../research/resolution-semantics/README.md) · [Read PDF](../../research/resolution-semantics/Komorebi_Resolution_Semantics.pdf) · [Manuscript text (TeX)](../../research/resolution-semantics/Komorebi_Resolution_Semantics.tex)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/resolution-semantics/formal/)
-
-**Code and scripts:** [Code / scripts: checks](../../research/resolution-semantics/checks/)
-
-[Status and evidence](../STATUS_CATALOG.md#resolution-semantics) · [All edition files](../../research/resolution-semantics/) · [Source-file receipt](../../manifests/source-imports/resolution-semantics.json)
+[PDF](../../research/resolution-semantics/Komorebi_Resolution_Semantics.pdf) · [Text](../../research/resolution-semantics/Komorebi_Resolution_Semantics.tex) · [Lean](../../research/resolution-semantics/formal/) · [Code](../../research/resolution-semantics/checks/) · [Work page](../works/resolution-semantics.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -715,15 +457,9 @@ Written structural arguments and finite checks; the two-world obstruction has a 
 
 ## Seeded Two-Axis Calculus
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Seeded Two-Axis Calculus](../works/seeded-two-axis.md)
 
-A cumulative two-axis calculus and rank-two p-adic lifting tool.
-
-**Read:** [Edition README](../../research/seeded-two-axis/README.md) · [Read PDF](../../research/seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.pdf) · [Manuscript text (TeX)](../../research/seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.tex)
-
-**Code and scripts:** [Code / scripts: checks](../../research/seeded-two-axis/checks/)
-
-[Status and evidence](../STATUS_CATALOG.md#seeded-two-axis) · [All edition files](../../research/seeded-two-axis/) · [Source-file receipt](../../manifests/source-imports/seeded-two-axis.json)
+[PDF](../../research/seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.pdf) · [Text](../../research/seeded-two-axis/Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.tex) · [Code](../../research/seeded-two-axis/checks/) · [Work page](../works/seeded-two-axis.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -731,17 +467,9 @@ A cumulative two-axis calculus and rank-two p-adic lifting tool.
 
 ## Signal Reconstruction
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Signal Reconstruction](../works/signal-reconstruction.md)
 
-Packet reconstruction, edge recovery, and calibration.
-
-**Read:** [Edition README](../../research/signal-reconstruction/README.md) · [Read PDF](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.pdf) · [Manuscript text (TeX)](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.tex) · [Visual guide (PDF)](../../research/signal-reconstruction/visual/Signal_Reconstruction_Visual_Guide.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../research/signal-reconstruction/lean/Signal_Reconstruction_Lean_Guide.pdf) · [Lean sources (directory)](../../research/signal-reconstruction/related_formal/paper_v/formalization/lean/)
-
-**Code and scripts:** [Script: audit_release.py](../../research/signal-reconstruction/audit_release.py)
-
-[Status and evidence](../STATUS_CATALOG.md#signal-reconstruction) · [All edition files](../../research/signal-reconstruction/) · [Source-file receipt](../../manifests/source-imports/signal-reconstruction.json)
+[PDF](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.pdf) · [Text](../../research/signal-reconstruction/traditional/Signal_Reconstruction_Traditional.tex) · [Lean](../../research/signal-reconstruction/related_formal/paper_v/formalization/lean/) · [Code](../../research/signal-reconstruction/audit_release.py) · [Work page](../works/signal-reconstruction.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -749,17 +477,9 @@ Packet reconstruction, edge recovery, and calibration.
 
 ## Stratified Universality
 
-**Completion:** Reading edition complete · **Lean:** Source; no current pass · **Confidence:** Recorded written review
+[Open work page: Stratified Universality](../works/stratified-universality.md)
 
-A stratified universality development with traditional, visual, and formal companions.
-
-**Read:** [Edition README](../../research/stratified-universality/README.md) · [Read PDF](../../research/stratified-universality/traditional/Stratified_Universality_Traditional.pdf) · [Manuscript text (TeX)](../../research/stratified-universality/traditional/Stratified_Universality_Traditional.tex) · [Visual guide (PDF)](../../research/stratified-universality/visual/Stratified_Universality_Visual_Guide.pdf)
-
-**Formal sources and claim guides:** [Lean guide (PDF)](../../research/stratified-universality/lean/Stratified_Universality_Lean_Guide.pdf) · [Lean sources (directory)](../../research/stratified-universality/lean/inspected_source/)
-
-**Code and scripts:** [Script: build_release.py](../../research/stratified-universality/build_release.py)
-
-[Status and evidence](../STATUS_CATALOG.md#stratified-universality) · [All edition files](../../research/stratified-universality/) · [Source-file receipt](../../manifests/source-imports/stratified-universality.json)
+[PDF](../../research/stratified-universality/traditional/Stratified_Universality_Traditional.pdf) · [Text](../../research/stratified-universality/traditional/Stratified_Universality_Traditional.tex) · [Lean](../../research/stratified-universality/lean/inspected_source/) · [Code](../../research/stratified-universality/build_release.py) · [Work page](../works/stratified-universality.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -767,17 +487,9 @@ A stratified universality development with traditional, visual, and formal compa
 
 ## Streaming Polyphase Factor Decomposition / SKAT
 
-**Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
+[Open work page: Streaming Polyphase Factor Decomposition / SKAT](../works/streaming-skat.md)
 
-Streaming decomposition and synthetic realistic-LD validation.
-
-**Read:** [Edition README](../../research/streaming-skat/README.md) · [Read PDF](../../research/streaming-skat/FINAL_MANUSCRIPT.pdf) · [Manuscript text (TeX)](../../research/streaming-skat/FINAL_MANUSCRIPT.tex)
-
-**Code and scripts:** [Script: kcos.py](../../research/streaming-skat/kcos.py)
-
-[Maintained edition guide](../components/STREAMING_SKAT.md)
-
-[Status and evidence](../STATUS_CATALOG.md#streaming-skat) · [All edition files](../../research/streaming-skat/) · [Source-file receipt](../../manifests/source-imports/streaming-skat.json)
+[PDF](../../research/streaming-skat/FINAL_MANUSCRIPT.pdf) · [Text](../../research/streaming-skat/FINAL_MANUSCRIPT.tex) · [Code](../../research/streaming-skat/kcos.py) · [Work page](../works/streaming-skat.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -785,17 +497,9 @@ Streaming decomposition and synthetic realistic-LD validation.
 
 ## Strong Artin: source and evidence
 
-**Completion:** Reading edition complete · **Lean:** Inherited / related evidence · **Confidence:** Historical formal evidence
+[Open work page: Strong Artin: source and evidence](../works/strong-artin-reader.md)
 
-Selected arithmetic and representation-theoretic developments.
-
-**Read:** [Edition README](../../research/strong-artin-reader/README.md) · [Read PDF](../../research/strong-artin-reader/pdf/Komorebi_Strong_Artin_Conjecture_Piece_v1.0.pdf) · [Manuscript text (TeX)](../../research/strong-artin-reader/paper/main.tex) · [Visual guide (PDF)](../../research/strong-artin-reader/pdf/Komorebi_Strong_Artin_Visual_Guide_v1.0.pdf)
-
-**Formal sources and claim guides:** [Lean sources (directory)](../../research/strong-artin-reader/lean/)
-
-**Code and scripts:** [Script: build.py](../../research/strong-artin-reader/build.py)
-
-[Status and evidence](../STATUS_CATALOG.md#strong-artin-reader) · [All edition files](../../research/strong-artin-reader/) · [Source-file receipt](../../manifests/source-imports/strong-artin-reader.json)
+[PDF](../../research/strong-artin-reader/pdf/Komorebi_Strong_Artin_Conjecture_Piece_v1.0.pdf) · [Text](../../research/strong-artin-reader/paper/main.tex) · [Lean](../../research/strong-artin-reader/lean/) · [Code](../../research/strong-artin-reader/build.py) · [Work page](../works/strong-artin-reader.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -803,13 +507,9 @@ Selected arithmetic and representation-theoretic developments.
 
 ## Physics: curvature states
 
-**Completion:** Needs assessment · **Lean:** Not assessed · **Confidence:** Unassessed
+[Open work page: Physics: curvature states](../works/physics-curvature-states.md)
 
-Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment.
-
-**Read:** [Edition README](../../research/physics-curvature-states/README.md) · [Read PDF](../../research/physics-curvature-states/Komorebi_Physics_Curvature_States_and_Subtraction.pdf)
-
-[Status and evidence](../STATUS_CATALOG.md#physics-curvature-states) · [All edition files](../../research/physics-curvature-states/) · [Source-file receipt](../../manifests/source-imports/physics-curvature-states.json)
+[PDF](../../research/physics-curvature-states/Komorebi_Physics_Curvature_States_and_Subtraction.pdf) · [Work page](../works/physics-curvature-states.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -817,15 +517,9 @@ Imported source material; scientific scope, completion, and proof or experiment 
 
 ## Physics: energy and backreaction
 
-**Completion:** Needs assessment · **Lean:** Not assessed · **Confidence:** Unassessed
+[Open work page: Physics: energy and backreaction](../works/physics-energy-backreaction.md)
 
-Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment.
-
-**Read:** [Edition README](../../research/physics-energy-backreaction/README.md) · [Read PDF](../../research/physics-energy-backreaction/Energy_Conserving_Production.pdf) · [Manuscript text (TeX)](../../research/physics-energy-backreaction/Energy_Conserving_Production.tex)
-
-**Code and scripts:** [Code / scripts: code](../../research/physics-energy-backreaction/code/)
-
-[Status and evidence](../STATUS_CATALOG.md#physics-energy-backreaction) · [All edition files](../../research/physics-energy-backreaction/) · [Source-file receipt](../../manifests/source-imports/physics-energy-backreaction.json)
+[PDF](../../research/physics-energy-backreaction/Energy_Conserving_Production.pdf) · [Text](../../research/physics-energy-backreaction/Energy_Conserving_Production.tex) · [Code](../../research/physics-energy-backreaction/code/) · [Work page](../works/physics-energy-backreaction.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -833,15 +527,9 @@ Imported source material; scientific scope, completion, and proof or experiment 
 
 ## Physics: origin locking
 
-**Completion:** Needs assessment · **Lean:** Not assessed · **Confidence:** Unassessed
+[Open work page: Physics: origin locking](../works/physics-origin-locking.md)
 
-Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment.
-
-**Read:** [Edition README](../../research/physics-origin-locking/README.md) · [Read PDF](../../research/physics-origin-locking/Origin_Locking_and_Cosmological_Energy_Exchange.pdf)
-
-**Code and scripts:** [Code / scripts: code](../../research/physics-origin-locking/code/)
-
-[Status and evidence](../STATUS_CATALOG.md#physics-origin-locking) · [All edition files](../../research/physics-origin-locking/) · [Source-file receipt](../../manifests/source-imports/physics-origin-locking.json)
+[PDF](../../research/physics-origin-locking/Origin_Locking_and_Cosmological_Energy_Exchange.pdf) · [Code](../../research/physics-origin-locking/code/) · [Work page](../works/physics-origin-locking.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -851,15 +539,9 @@ Imported source material; scientific scope, completion, and proof or experiment 
 
 **Incubator:** [Read the limits and return criteria](../INCUBATOR.md#research-rrct-multispace-protocol).
 
-**Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: RRCT multispace convergence protocol](../works/research-rrct-multispace-protocol.md)
 
-The v0.61 multispace convergence research protocol.
-
-**Read:** [Edition README](../../research/rrct-multispace-protocol/README.md)
-
-**Code and scripts:** [Code / scripts: tools](../../research/rrct-multispace-protocol/tools/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-rrct-multispace-protocol) · [All edition files](../../research/rrct-multispace-protocol/) · [Source-file receipt](../../manifests/source-imports/research-rrct-multispace-protocol.json)
+[Code](../../research/rrct-multispace-protocol/tools/) · [Work page](../works/research-rrct-multispace-protocol.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)
 
@@ -869,14 +551,8 @@ The v0.61 multispace convergence research protocol.
 
 **Incubator:** [Read the limits and return criteria](../INCUBATOR.md#research-prism-1r).
 
-**Completion:** Experiment / prototype · **Lean:** No Lean claim · **Confidence:** Experimental evidence
+[Open work page: PRISM-1R](../works/research-prism-1r.md)
 
-The PRISM-1R implementation and research handoff.
-
-**Read:** [Edition README](../../research/prism-1r/README.md) · [Read PDF](../../research/prism-1r/docs/PRISM-1R_Implementation_Deployment_Blueprint_v0.2.pdf) · [Manuscript text (TeX)](../../research/prism-1r/docs/PRISM-1R_Implementation_Deployment_Blueprint_v0.2.tex)
-
-**Code and scripts:** [Code / scripts: python](../../research/prism-1r/python/)
-
-[Status and evidence](../STATUS_CATALOG.md#research-prism-1r) · [All edition files](../../research/prism-1r/) · [Source-file receipt](../../manifests/source-imports/research-prism-1r.json)
+[PDF](../../research/prism-1r/docs/PRISM-1R_Implementation_Deployment_Blueprint_v0.2.pdf) · [Text](../../research/prism-1r/docs/PRISM-1R_Implementation_Deployment_Blueprint_v0.2.tex) · [Code](../../research/prism-1r/python/) · [Work page](../works/research-prism-1r.md)
 
 [Back to contents](#contents) · [Browse all collections](../BROWSE.md)

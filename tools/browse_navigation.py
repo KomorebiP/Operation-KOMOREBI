@@ -14,6 +14,11 @@ GROUPS = {'papers': 'Core papers', 'monographs': 'Books and companion volumes',
           'experiments': 'Experiments'}
 KINDS = {'guide', 'pdf', 'text', 'visual', 'formal_guide', 'lean', 'claims', 'code'}
 CODE_EXTENSIONS = ('.py', '.c', '.cpp', '.ipynb', '.rs', '.jl', '.h', '.hpp')
+# Maintained corrections live separately from receipt-bound imported editions.
+# Keep both routes visible; the existing repair report defines their scope.
+CORRECTED_CODE = {'research-sric-external-admission': (
+    'Corrected runtime 0.3.3 (source and setup)', 'packages/sric-admission-v0.3.3/',
+    'docs/SRIC_REPAIR_2026-10-27.md')}
 
 
 def page_for(group):
@@ -21,7 +26,7 @@ def page_for(group):
 
 
 def card_path(component):
-    return page_for(component['group'])+'#'+component['id']
+    return 'docs/works/'+component['id']+'.md'
 
 
 def link(label, target, page):
@@ -92,23 +97,96 @@ class Browser:
         return self.assessments[c['id']].get('reader_listing',{}).get('placement')=='incubator'
 
     def resources(self, c, kinds, page):
-        return [link(a['label'],c['destination']+'/'+a['path'],page)
-                for a in self.rows[c['id']]['resources'] if a['kind'] in kinds]
+        corrected = CORRECTED_CODE.get(c['id']) if 'code' in kinds else None
+        result = []
+        if corrected:
+            result += [link(corrected[0],corrected[1],page),
+                       link('Repair scope and recorded qualification',corrected[2],page)]
+        result += [link(('Preserved original edition: ' if corrected and a['kind']=='code' else '')+a['label'],
+                        c['destination']+'/'+a['path'],page)
+                   for a in self.rows[c['id']]['resources'] if a['kind'] in kinds]
+        return result
 
     def shortcuts(self, c, page):
         assets = self.rows[c['id']]['resources']
         result = []
         for kind, label in [('pdf','PDF'), ('text','Text'), ('lean','Lean'), ('code','Code')]:
+            if kind=='code' and c['id'] in CORRECTED_CODE:
+                result.append(link(label,CORRECTED_CODE[c['id']][1],page))
+                continue
             a = next((a for a in assets if a['kind']==kind), None)
             if a:
                 result.append(link(label,c['destination']+'/'+a['path'],page))
-        return ' · '.join(result+[link('All links',card_path(c),page)])
+        return ' · '.join(result+[link('Work page',card_path(c),page)])
 
     def status_line(self, c, page):
         row = self.assessments[c['id']]
         labels = self.status['labels']
         fields = [('Completion','stage'), ('Lean','lean'), ('Confidence','confidence')]
         return ' · '.join('**'+title+':** '+labels[key][row[key]][0] for title,key in fields)
+
+    def work_navigation(self):
+        return '[Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)'
+
+    def neighbours(self, c, page):
+        # Keep incubator entries out of the ordinary reading sequence.
+        peers = [v for v in self.components if v['group']==c['group'] and self.held(v)==self.held(c)]
+        index = peers.index(c)
+        links = []
+        if index:
+            before = peers[index-1]
+            links.append(link('Previous: '+before['title'],card_path(before),page))
+        if index+1 < len(peers):
+            after = peers[index+1]
+            links.append(link('Next: '+after['title'],card_path(after),page))
+        return '\n'.join('- '+item for item in links)
+
+    def work_page(self, c):
+        page = card_path(c)
+        s = self.assessments[c['id']]
+        text = '# '+c['title']+'\n\n'
+        text += link('Browse hub','docs/BROWSE.md',page)+' / '+link(GROUPS[c['group']],page_for(c['group']),page)+'\n\n'
+        text += '<a id="work-navigation"></a>\n\n'+self.work_navigation()+'\n\n'
+        text += self.status_line(c,page)+'\n\n'+s.get('reader_summary',c['summary'])+'\n\n'
+        if self.held(c):
+            text += '**Incubator:** '+link('Limits and return criteria','docs/INCUBATOR.md#'+c['id'],page)+'.\n\n'
+        text += 'Keep this work page open while reading files. Use Ctrl+click (Command+click on macOS) to open a resource in another tab, or use your browser’s Back command to return.\n\n'
+        sections = [
+            ('Read', {'pdf','visual','guide'}, 'No reading file is selected here; use the edition files below.'),
+            ('Written proofs', {'text','claims'}, 'No separate text or claim-map entry is selected. Use the reading file above and the evidence record below; this is not a claim that written proofs are absent.'),
+            ('Lean', {'lean','formal_guide'}, 'No direct Lean source or guide is selected. The recorded Lean status above and evidence below describe the assessed scope.'),
+            ('Code', {'code'}, 'No code shortcut is selected for this edition. See its complete file listing below.')]
+        for title,kinds,empty in sections:
+            text += '## '+title+'\n\n'
+            if title=='Written proofs':
+                text += 'Find the statement number or section in the manuscript and read its assumptions and argument. Claim maps may refer to a narrower formal contract.\n\n'
+            if title=='Lean':
+                text += 'Lean-source links lead to `.lean` files. A Lean-guide PDF is explanatory reading. Follow this edition’s build instructions and exact correspondence records before treating a declaration as the formal version of a written claim.\n\n'
+            if title=='Code':
+                text += 'These links may include runtime code, examples, checks, or build utilities. Consult the edition README for requirements and effects. All software is beta / work in progress.\n\n'
+            links = self.resources(c,kinds,page)
+            text += '\n'.join('- '+item for item in links)+'\n' if links else empty+'\n'
+            if title=='Read' and s.get('reader_guide'):
+                text += '- '+link('Maintained edition guide',s['reader_guide'],page)+'\n'
+            text += '\n[Back to work navigation](#work-navigation)\n\n'
+        text += '## Evidence\n\n'
+        text += '- '+link('Completion, Lean coverage, confidence, and cited evidence','docs/STATUS_CATALOG.md#'+c['id'],page)+'\n'
+        if s.get('review_report'):
+            text += '- '+link('Latest recorded written review',s['review_report'],page)+'\n'
+        if s.get('software_verification'):
+            text += '- '+link('Recorded software qualification',s['software_verification']['path'],page)+'\n'
+        if s.get('current_counterpart'):
+            other = next(v for v in self.components if v['id']==s['current_counterpart'])
+            text += '- '+link('Current counterpart: '+other['title'],card_path(other),page)+'\n'
+        text += '- '+link('Source-file receipt (identity and availability)',c['receipt'],page)+'\n'
+        text += '- '+link('All files in this source edition',c['destination']+'/',page)+'\n\n'
+        text += 'These links organize existing material; they do not add proof reviews, compiler runs, or scientific coverage.\n\n'
+        text += '[Back to work navigation](#work-navigation)\n\n## Continue browsing\n\n'
+        neighbours = self.neighbours(c,page)
+        if neighbours:text += neighbours+'\n'
+        text += '- '+link('Back to '+GROUPS[c['group']],page_for(c['group'])+'#contents',page)+'\n'
+        text += '- '+link('All collections','docs/BROWSE.md',page)+'\n'
+        return text
 
     def footer(self, page):
         return ' · '.join(link(t,p,page) for t,p in [('Browse hub','docs/BROWSE.md'),
@@ -122,7 +200,7 @@ class Browser:
 
 Choose a subject below, or go straight to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 
-Each work has direct file links, a source directory, and its completion, Lean, confidence, and evidence record. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** is explanatory reading; **Lean sources** opens actual `.lean` files. Code links can include research utilities and build scripts; follow the edition's README before running them.
+Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**, and **Evidence** sections. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** is explanatory reading; **Lean sources** leads to actual `.lean` files. Code links can include research utilities and build scripts; follow the edition's README before running them.
 
 ## Choose a collection
 
@@ -134,11 +212,13 @@ Each work has direct file links, a source directory, and its completion, Lean, c
 1. Open the work's PDF or text and find the theorem, proposition, or section number.
 2. Read the written argument and its assumptions. The [proof finder](browse/PROOFS.md) links manuscript text, selected claim maps, and the existing evidence record.
 3. Where formalization exists, follow the [Lean source finder](browse/LEAN.md) and the edition's correspondence/build instructions. A similarly named declaration or a Lean-guide PDF does not by itself establish a correspondence.
-4. Use the work's **Status and evidence** link to see what was checked and what remains open. Written proofs do not require Lean.
+4. Use the work's **Evidence** section to see what was checked and what remains open. Written proofs do not require Lean.
 
 ## Move around without opening large folders
 
-Category pages have a linked contents list and a **Back to contents** link after every work. Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
+Category pages have linked contents and direct file shortcuts. Choose **Work page** to keep one work's paper, proofs, Lean, code, and evidence together. Each work page has a section menu, return links, and previous/next links within its collection. The status catalogue links back to the same work page. Older category anchors remain usable.
+
+Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. Work pages use a single-column list layout. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
 
 The original files remain in their source directories. If a PDF is too large for GitHub's preview, use the file page's download control. A resource omitted from these selected shortcuts may still exist in the edition contents. The [complete component index](COMPONENT_INDEX.md) includes all supporting and historical collections.
 
@@ -154,6 +234,8 @@ These are navigation links to preserved editions. Existing scope and scientific 
 [Reading guide](START_HERE.md) · [Run and verify](VERIFICATION.md) · [Collection](../README.md)
 '''
         outputs[page] = text
+        for c in self.components:
+            outputs[card_path(c)] = self.work_page(c)
         for group,title in GROUPS.items():
             page = page_for(group)
             values = [c for c in self.components if c['group']==group]
@@ -161,38 +243,28 @@ These are navigation links to preserved editions. Existing scope and scientific 
             held = [c for c in values if self.held(c)]
             text = '# '+title+': reading and source links\n\n'+self.footer(page)
             text += '\nPDF, manuscript text, Lean sources, code, and existing evidence are linked separately. Source files may retain older edition wording; the status link gives the maintained assessment.\n\n<a id="contents"></a>\n\n## Contents\n\n'
-            text += table(['Work','Quick links'],[(link(c['title'],'#'+c['id'],page),self.shortcuts(c,page)) for c in visible])
+            text += '\n'.join('- '+link(c['title'],card_path(c),page) for c in visible)+'\n'
             if held:
                 text += '\n### Incubator sources\n\nThese incomplete implementation entries retain their incubator placement and return criteria.\n\n'
                 text += '\n'.join('- '+link(c['title'],'#'+c['id'],page) for c in held)+'\n'
             for c in visible+held:
-                s = self.assessments[c['id']]
                 text += '\n<a id="'+c['id']+'"></a>\n\n## '+c['title']+'\n\n'
                 if self.held(c):
                     text += '**Incubator:** '+link('Read the limits and return criteria','docs/INCUBATOR.md#'+c['id'],page)+'.\n\n'
-                text += self.status_line(c,page)+'\n\n'
-                text += s.get('reader_summary',c['summary'])+'\n\n'
-                sections = [('Read',{'pdf','text','guide','visual'}),
-                            ('Formal sources and claim guides',{'lean','formal_guide','claims'}),
-                            ('Code and scripts',{'code'})]
-                for label,kinds in sections:
-                    links = self.resources(c,kinds,page)
-                    if links:text += '**'+label+':** '+ ' · '.join(links)+'\n\n'
-                if s.get('reader_guide'):
-                    text += link('Maintained edition guide',s['reader_guide'],page)+'\n\n'
-                text += link('Status and evidence','docs/STATUS_CATALOG.md#'+c['id'],page)+' · '+link('All edition files',c['destination']+'/',page)+' · '+link('Source-file receipt',c['receipt'],page)+'\n\n'
+                text += link('Open work page: '+c['title'],card_path(c),page)+'\n\n'
+                text += self.shortcuts(c,page)+'\n\n'
                 text += '[Back to contents](#contents) · '+link('Browse all collections','docs/BROWSE.md',page)+'\n'
             outputs[page] = text
         for name,title,kinds,intro in [
             ('PROOFS','Find written statements and proofs',{'pdf','text','claims'},
-             'Open the manuscript or claim guide, then search for the statement number or section. A selected text source may be part of a multi-file manuscript. These links locate writing and existing evidence; they do not certify every statement. Follow **All links** for visual guides, Lean, code, and the exact edition.'),
+             'Open the manuscript or claim guide, then search for the statement number or section. A selected text source may be part of a multi-file manuscript. These links locate writing and existing evidence; they do not certify every statement. Follow **Work page** for visual guides, Lean, code, and the exact edition.'),
             ('LEAN','Find Lean source files',{'lean'},
              'Every source link below contains `.lean` files. The recorded coverage text describes the existing assessment, not a new compiler run. Read the linked work guide for imports, toolchain requirements, correspondence maps, and accepted execution records. Lean-guide PDFs appear on those work pages separately.'),
             ('CODE','Find code and scripts',{'code'},
-             'These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **All links** and the edition README for setup and effects before running them. All software remains beta / work in progress.')]:
+             'These are entry points to runtime code, examples, checks, and utilities supplied with each edition. Some are build or audit scripts. Read **Work page** and the edition README for setup and effects before running them. All software remains beta / work in progress.')]:
             page = 'docs/browse/'+name+'.md'
             text = '# '+title+'\n\n'+self.footer(page)+'\n'+intro+'\n\n'
-            text += 'Jump to: '+' · '.join('['+t+'](#'+g+')' for g,t in GROUPS.items())+'\n'
+            text += '<a id="collections"></a>\n\nJump to: '+' · '.join('['+t+'](#'+g+')' for g,t in GROUPS.items())+'\n'
             for group,label in GROUPS.items():
                 text += '\n<a id="'+group+'"></a>\n\n## '+label+'\n\n'
                 entries = []
@@ -202,9 +274,10 @@ These are navigation links to preserved editions. Existing scope and scientific 
                     if not links:continue
                     if name=='LEAN':
                         links.append('Coverage: '+self.status['labels']['lean'][self.assessments[c['id']]['lean']][0])
-                    links += [link('All links',card_path(c),page),link('Status and evidence','docs/STATUS_CATALOG.md#'+c['id'],page)]
-                    entries.append((c['title'],' · '.join(links)))
-                text += table(['Work','Open'],entries) if entries else 'No direct resource selected in this category; use its [work index]('+posixpath.basename(page_for(group))+').\n'
+                    links += [link('Work page',card_path(c),page),link('Status and evidence','docs/STATUS_CATALOG.md#'+c['id'],page)]
+                    entries.append('### '+link(c['title'],card_path(c),page)+'\n\n'+'\n'.join('- '+item for item in links)+'\n')
+                text += '\n'.join(entries) if entries else 'No direct resource selected in this category; use its [work index]('+posixpath.basename(page_for(group))+').\n'
+                text += '\n[Back to collection menu](#collections)\n'
             text += '\n'+self.footer(page)
             outputs[page] = text
         return {p:t.rstrip()+'\n' for p,t in outputs.items()}

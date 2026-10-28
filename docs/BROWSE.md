@@ -2,7 +2,7 @@
 
 Choose a subject below, or go straight to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 
-Each work has direct file links, a source directory, and its completion, Lean, confidence, and evidence record. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** is explanatory reading; **Lean sources** opens actual `.lean` files. Code links can include research utilities and build scripts; follow the edition's README before running them.
+Each work has its own page with **Read**, **Written proofs**, **Lean**, **Code**, and **Evidence** sections. **PDF** opens a reading file. **Text** opens editable TeX or other source text. **Lean guide** is explanatory reading; **Lean sources** leads to actual `.lean` files. Code links can include research utilities and build scripts; follow the edition's README before running them.
 
 ## Choose a collection
 
@@ -19,11 +19,13 @@ Each work has direct file links, a source directory, and its completion, Lean, c
 1. Open the work's PDF or text and find the theorem, proposition, or section number.
 2. Read the written argument and its assumptions. The [proof finder](browse/PROOFS.md) links manuscript text, selected claim maps, and the existing evidence record.
 3. Where formalization exists, follow the [Lean source finder](browse/LEAN.md) and the edition's correspondence/build instructions. A similarly named declaration or a Lean-guide PDF does not by itself establish a correspondence.
-4. Use the work's **Status and evidence** link to see what was checked and what remains open. Written proofs do not require Lean.
+4. Use the work's **Evidence** section to see what was checked and what remains open. Written proofs do not require Lean.
 
 ## Move around without opening large folders
 
-Category pages have a linked contents list and a **Back to contents** link after every work. Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
+Category pages have linked contents and direct file shortcuts. Choose **Work page** to keep one work's paper, proofs, Lean, code, and evidence together. Each work page has a section menu, return links, and previous/next links within its collection. The status catalogue links back to the same work page. Older category anchors remain usable.
+
+Use your browser's Find command (Ctrl+F or Command+F) to locate a title. Links carry file-format labels, and status is written in text rather than conveyed by color. Work pages use a single-column list layout. TeX links provide source text where available; they are not a claim that every PDF is tagged for assistive technology.
 
 The original files remain in their source directories. If a PDF is too large for GitHub's preview, use the file page's download control. A resource omitted from these selected shortcuts may still exist in the edition contents. The [complete component index](COMPONENT_INDEX.md) includes all supporting and historical collections.
 

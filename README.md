@@ -29,22 +29,22 @@ The [authorship statement](docs/PROJECT_STATEMENT.md) explains the pseudonym, hu
 
 | Work | Subject |
 |---|---|
-| [Realization Calculus](docs/browse/MONOGRAPHS.md#realization-calculus-book) | The collected core development, from packets and transfer to refinement and applications. |
-| [Komorebi Space](docs/browse/MONOGRAPHS.md#komorebi-space) | The ambient framework for realizations, projections, compatibility, residuals, and obstructions. |
-| [Realization Boundaries](docs/browse/MONOGRAPHS.md#realization-boundaries) | Representability, finite descriptions, and explicit limits of realization. |
-| [Sufficient Resolution](docs/browse/MONOGRAPHS.md#sufficient-resolution) | Resolution conditions and the information retained by a representation. |
+| [Realization Calculus](docs/works/realization-calculus-book.md) | The collected core development, from packets and transfer to refinement and applications. |
+| [Komorebi Space](docs/works/komorebi-space.md) | The ambient framework for realizations, projections, compatibility, residuals, and obstructions. |
+| [Realization Boundaries](docs/works/realization-boundaries.md) | Representability, finite descriptions, and explicit limits of realization. |
+| [Sufficient Resolution](docs/works/sufficient-resolution.md) | Resolution conditions and the information retained by a representation. |
 
 ## Further reading
 
 | Interest | Starting point |
 |---|---|
-| Arithmetic, special functions, and sequence constructions | [Special Functions](docs/browse/MONOGRAPHS.md#monographs-special-functions) |
-| Signals, quadratic forms, and numerical probability | [COS Method](docs/browse/MONOGRAPHS.md#monographs-cos-method) and [Polyphase Signal Calculus](docs/browse/PAPERS.md#paper-v) |
-| Quantum models and circuit constructions | [Quantum and Circuits](docs/browse/MONOGRAPHS.md#monographs-quantum-and-circuits) and [Quantum Seed Calculus](docs/browse/PAPERS.md#paper-vii) |
-| Discrete and continuous physical models | [Physics](docs/browse/MONOGRAPHS.md#monographs-physics) |
-| Algebraic signal models | [Large Signal Model](docs/browse/MONOGRAPHS.md#monographs-large-signal-model) |
-| Machine reasoning, abstraction, and interacting agents | [Machine Native Reasoning](docs/browse/MONOGRAPHS.md#monographs-machine-native-reasoning) and [Machine Societies](docs/browse/MONOGRAPHS.md#monographs-machine-societies) |
-| Discovery, proof, and review | [Proof Path Theory](docs/browse/MONOGRAPHS.md#proof-path-theory) and [Komorebi Methodology](docs/browse/MONOGRAPHS.md#komorebi-methodology) |
+| Arithmetic, special functions, and sequence constructions | [Special Functions](docs/works/monographs-special-functions.md) |
+| Signals, quadratic forms, and numerical probability | [COS Method](docs/works/monographs-cos-method.md) and [Polyphase Signal Calculus](docs/works/paper-v.md) |
+| Quantum models and circuit constructions | [Quantum and Circuits](docs/works/monographs-quantum-and-circuits.md) and [Quantum Seed Calculus](docs/works/paper-vii.md) |
+| Discrete and continuous physical models | [Physics](docs/works/monographs-physics.md) |
+| Algebraic signal models | [Large Signal Model](docs/works/monographs-large-signal-model.md) |
+| Machine reasoning, abstraction, and interacting agents | [Machine Native Reasoning](docs/works/monographs-machine-native-reasoning.md) and [Machine Societies](docs/works/monographs-machine-societies.md) |
+| Discovery, proof, and review | [Proof Path Theory](docs/works/proof-path-theory.md) and [Komorebi Methodology](docs/works/komorebi-methodology.md) |
 
 ## Software and experiments
 

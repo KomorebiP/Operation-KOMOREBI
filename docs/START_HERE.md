@@ -14,14 +14,14 @@ For project readiness and remaining work, use the [completion and confidence gui
 
 | Goal | Begin with |
 |---|---|
-| Understand the common language | [Realization Calculus](browse/MONOGRAPHS.md#realization-calculus-book) and [Komorebi Space](browse/MONOGRAPHS.md#komorebi-space) |
+| Understand the common language | [Realization Calculus](works/realization-calculus-book.md) and [Komorebi Space](works/komorebi-space.md) |
 | Study the individual developments | [Papers I–XII](../papers/README.md) |
-| Understand limits of representation | [Realization Boundaries](browse/MONOGRAPHS.md#realization-boundaries) |
+| Understand limits of representation | [Realization Boundaries](works/realization-boundaries.md) |
 | Read a small formal example | [Research Preview 1](../formal/research-preview-1/README.md) |
 | Follow an application | [Monographs and companion volumes](../monographs/README.md) |
 | Explore an open mathematical program | [Research programs and their scope](../research/README.md) |
 | Work with executable mathematics | [Software guide](LIBRARIES.md) and [experimental laboratories](../experiments/README.md) |
-| Study method and review | [Proof Path Theory](browse/MONOGRAPHS.md#proof-path-theory) and [Komorebi Methodology](browse/MONOGRAPHS.md#komorebi-methodology) |
+| Study method and review | [Proof Path Theory](works/proof-path-theory.md) and [Komorebi Methodology](works/komorebi-methodology.md) |
 
 ## Four questions to carry through the collection
 

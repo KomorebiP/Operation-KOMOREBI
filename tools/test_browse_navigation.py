@@ -52,11 +52,11 @@ class BrowseNavigationTests(unittest.TestCase):
             self.assertIn('(../../research/open-work/paper.pdf)',text)
             self.assertIn('(../../research/open-work/paper.tex)',text)
             self.assertIn('Source; no current pass',pages['docs/browse/LEAN.md'])
-            self.assertIn('**Confidence:** Unassessed',text)
+            self.assertIn('**Confidence:** Unassessed',pages['docs/works/open-work.md'])
             self.assertEqual(status,before)
             self.assertFalse((root/'research').exists())
             renderer=Renderer(root,state,tracked)
-            self.assertEqual(renderer.reader_path(state['components'][0]),'docs/browse/RESEARCH.md#open-work')
+            self.assertEqual(renderer.reader_path(state['components'][0]),'docs/works/open-work.md')
             self.assertIn('paper.pdf',browser.shortcuts(state['components'][0],'README.md'))
 
     def test_incubator_is_preserved_but_excluded_from_resource_reading_routes(self):
@@ -73,7 +73,7 @@ class BrowseNavigationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp); registry,state,status,tracked=self.fixture(root)
             pages=Browser(root,state,status,tracked).render()
-            self.assertIn('lean-guide.pdf',pages['docs/browse/RESEARCH.md'])
+            self.assertIn('lean-guide.pdf',pages['docs/works/open-work.md'])
             self.assertNotIn('lean-guide.pdf',pages['docs/browse/LEAN.md'])
             for path in ['lean-guide.pdf','formal/lakefile.lean']:
                 bad=copy.deepcopy(registry)
@@ -108,8 +108,66 @@ class BrowseNavigationTests(unittest.TestCase):
             text=Browser(root,state,status,tracked).render()['docs/browse/RESEARCH.md']
             for c in state['components']:
                 self.assertEqual(text.count('<a id="'+c['id']+'"></a>'),1)
-                self.assertIn('](#'+c['id']+')',text)
+                self.assertIn('(../works/'+c['id']+'.md)',text)
             self.assertEqual(text.count('[Back to contents](#contents)'),2)
+
+    def test_work_page_sections_returns_and_separate_lean_guide(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); _,state,status,tracked=self.fixture(root)
+            pages=Browser(root,state,status,tracked).render()
+            text=pages['docs/works/open-work.md']
+            for title,anchor in [('Read','read'),('Written proofs','written-proofs'),
+                                 ('Lean','lean'),('Code','code'),('Evidence','evidence')]:
+                self.assertIn('## '+title+'\n',text)
+                self.assertIn('](#'+anchor+')',text)
+            self.assertEqual(text.count('[Back to work navigation](#work-navigation)'),5)
+            self.assertIn('(../STATUS_CATALOG.md#open-work)',text)
+            self.assertIn('(../browse/RESEARCH.md#contents)',text)
+            lean=text.split('## Lean\n')[1].split('## Code\n')[0]
+            self.assertIn('lean-guide.pdf',lean)
+            self.assertIn('formal/)',lean)
+            self.assertNotIn('|',text)  # single-column reading route
+
+    def test_previous_next_are_reciprocal_and_skip_incubator(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); _,state,status,tracked=self.fixture(root)
+            browser=Browser(root,state,status,tracked)
+            first=state['components'][0]
+            second={**first,'id':'next-work','title':'Next work'}
+            third={**first,'id':'last-work','title':'Last work'}
+            browser.components.extend([second,third])
+            browser.assessments.update({c['id']:status['components'][0] for c in [second,third]})
+            self.assertEqual(browser.neighbours(first,'docs/works/open-work.md'),
+                             '- [Next: Next work](next-work.md)')
+            self.assertEqual(browser.neighbours(second,'docs/works/next-work.md'),
+                             '- [Previous: Open-Work](open-work.md)\n- [Next: Last work](last-work.md)')
+            self.assertEqual(browser.neighbours(third,'docs/works/last-work.md'),
+                             '- [Previous: Next work](next-work.md)')
+            self.assertEqual(browser.neighbours(state['components'][1],'docs/works/held-work.md'),'')
+
+    def test_no_resource_selection_does_not_claim_proofs_or_sources_absent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); registry,state,status,tracked=self.fixture(root)
+            registry['components'][0]['resources']=[]
+            (root/REGISTRY).write_text(json.dumps(registry),encoding='utf-8')
+            text=Browser(root,state,status,tracked).render()['docs/works/open-work.md']
+            self.assertIn('not a claim that written proofs are absent',text)
+            self.assertIn('No direct Lean source or guide is selected',text)
+            self.assertIn('(../../research/open-work/)',text)
+
+    def test_repaired_runtime_is_first_and_preserved_code_is_labeled(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp); _,state,status,tracked=self.fixture(root)
+            browser=Browser(root,state,status,tracked)
+            c={**state['components'][0],'id':'research-sric-external-admission'}
+            browser.rows[c['id']]=browser.rows['open-work']
+            links=browser.resources(c,{'code'},'docs/works/test.md')
+            self.assertIn('sric-admission-v0.3.3/',links[0])
+            self.assertIn('SRIC_REPAIR_2026-10-27.md',links[1])
+            self.assertIn('Preserved original edition',links[2])
+            shortcuts=browser.shortcuts(c,'README.md')
+            self.assertIn('[Code](packages/sric-admission-v0.3.3/)',shortcuts)
+            self.assertNotIn('research/open-work/code/',shortcuts)
 
     def test_resource_links_encode_spaces_and_parentheses_and_keep_fragments(self):
         self.assertEqual(link('Text','papers/a file (draft).tex','docs/BROWSE.md'),
