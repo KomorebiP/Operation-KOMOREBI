@@ -35,7 +35,7 @@ eventDocument.addEventListener("webviewerloaded", event => {
   }
 });
 '''
-CSS = '.komorebi-return{display:inline-flex!important;align-items:center;width:auto!important;padding:0 8px!important;color:var(--main-color);text-decoration:underline;white-space:nowrap;font:12px system-ui,sans-serif}\n'
+CSS = '.komorebi-return{display:inline-flex!important;align-items:center;width:auto!important;padding:0 8px!important;color:var(--main-color);text-decoration:underline;white-space:nowrap;font:12px system-ui,sans-serif}.komorebi-return::before{display:none!important}\n'
 
 
 def extract(raw, output):
