@@ -10,6 +10,18 @@
 
 A stratified universality development with traditional, visual, and formal companions.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Complete amended reading/source package. 75 components have mixed proved/imported/conditional/conjectural status. The reconstructed Lean core has no fresh compiler pass.
+
+**Remaining work:** Compile the exact included core, authenticate the separate historical formal package, and preserve the mixed 75-component concordance.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#stratified-universality) · [Download this work](../DOWNLOADS.md#stratified-universality)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

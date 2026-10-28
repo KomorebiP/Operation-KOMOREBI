@@ -10,6 +10,18 @@
 
 A standalone reader PDF is supplied. This component does not include editable source.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** 29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected. No Lean verification claim for the essay or new mathematical review.
+
+**Remaining work:** Recover the exact editable v10 source, rebuild and inspect the full PDF, and map technical assertions to their source-specific evidence before final reader qualification (F07).
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#machine-native-mathematics-essay) · [Download this work](../DOWNLOADS.md#machine-native-mathematics-essay)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

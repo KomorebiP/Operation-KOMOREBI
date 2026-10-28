@@ -10,6 +10,18 @@
 
 A reference Python package, examples, tests, and editable mathematical manuscript.
 
+## Before you start
+
+**Suggested background:** Basic command-line use and the package's programming language. Check its platform requirements before installation.
+
+**Recorded results and limits:** Beta executable construction with 50 tests and 18 experiment checks. Closure is relative to a declared grammar, not all mathematics or historical novelty.
+
+**Remaining work:** Validate broader grammar families and state a separate completeness theorem before extrapolating finite exploration to infinite branches.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#universal-generative-deformation) · [Download this work](../DOWNLOADS.md#universal-generative-deformation)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

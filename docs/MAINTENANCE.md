@@ -47,6 +47,11 @@ Use the [records guide](RECORDS.md) to locate the current entry point and dated 
 
 ## Selected published cleanup checkpoints
 
+The [reader website guide](READER_SITE.md) documents the shared HTML site,
+reading ZIPs, claim locations, library pins and publication workflow. Update
+the reader registry and templates alongside generated pages. Keep the
+accessibility limitations and the scope of transcribed claim links explicit.
+
 These entries record two completed documentation/tooling updates from 27 October 2026. For later changes, see the [Git history](https://github.com/KomorebiP/Operation-KOMOREBI/commits/main/). Neither checkpoint adds a mathematical review or changes scientific status.
 
 | Commit | Cleanup | Recorded checks |

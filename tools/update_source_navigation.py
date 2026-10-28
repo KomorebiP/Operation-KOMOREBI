@@ -224,6 +224,8 @@ class Renderer:
 
 **Komorebi P. · Work in progress**
 
+[Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Choose a reading route](docs/READING_ROUTES.md) · [Glossary](docs/GLOSSARY.md) · [Download one work](docs/DOWNLOADS.md)
+
 [Browse all works](docs/BROWSE.md) · [Read papers](docs/browse/PAPERS.md) · [Find proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md)
 
 > **Author’s note:** This work is still in progress. Much of it has been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
@@ -403,6 +405,8 @@ Use a component's documented installation and examples. A mathematical result in
 [Software guide](../docs/LIBRARIES.md) · [Collection](../README.md)
 ''')
         self.put('docs/LIBRARIES.md','''# Software guide
+
+[Read the software website](https://KomorebiP.github.io/Operation-KOMOREBI/software.html) · [First runs and expected output](FIRST_RUN.md) · [Glossary](GLOSSARY.md)
 
 **All Komorebi software is beta and work in progress.** Version numbers and earlier release names identify revisions. The current public software status is beta.
 
@@ -637,7 +641,7 @@ The [publication metadata](../manifests/release-candidate.json) records these co
 | AM-SPD | [Publication receipt](../verification/am-spd-v1.0.0-publication.json) and [release checklist](../packages/komorebi-am-spd/RELEASE_CHECKLIST.md) | The historical 1.0.0 release has its own qualification record. The current collection-wide software label is beta / work in progress. |
 | Constructive Repair | [Windows acceptance and remaining checks](components/CONSTRUCTIVE_REPAIR.md), 27 October 2026 | Windows 11 / CPython 3.12.14: 134 engine tests and 72 installed cases passed. The 100-test release suite had 95 passes, 3 POSIX-only skips, and 2 symlink-fixture setup errors. This is partial Python qualification, with no new Lean replay. |
 
-**Earlier Math failures:** [Run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), inspected on 27 October 2026, failed after executing tests. Its Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. A Windows 3.13 distribution job failed a hardware-wrapper import. The [later repair](https://github.com/KomorebiP/komorebi-math/commit/b3aa11f8f41a6acaef012260866cfe21730234ea) corrected both issues. The passing run above belongs to that repair commit and leaves the earlier results intact.
+**Earlier Math failures:** [Run 40473822693](https://github.com/KomorebiP/komorebi-math/actions/runs/40473822693), inspected on 27 October 2026, failed after executing tests. Its Ubuntu Python 3.11 job reported 2,748 passed, 10 skipped, and one release-channel metadata failure. A Windows 3.13 distribution job failed a hardware-wrapper import. The [later repair](https://github.com/KomorebiP/komorebi-math/commit/b3aa11f8f41a6acaef012260866cfe21730234ea) corrected both issues. The current checked revision includes those repairs. The earlier results remain part of the record.
 
 The earlier Polyphase Float observations remain available in [CI 40473953308](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953308), [ABI 40473953130](https://github.com/KomorebiP/polyphase-float/actions/runs/40473953130), and [CodeQL 40479469045](https://github.com/KomorebiP/polyphase-float/actions/runs/40479469045).
 

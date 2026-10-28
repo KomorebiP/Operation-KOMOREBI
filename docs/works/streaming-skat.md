@@ -10,6 +10,18 @@
 
 Beta research software. Synthetic validation does not establish clinical validity.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Illustrated manuscript v0.8 and package marker 0.8.0, with a later v0.9 synthetic simulation continuation. Written analytic guarantees and bounded simulations. The recorded 31-test pass is historical and was not rerun during navigation cleanup.
+
+**Remaining work:** Perform a pinned test/simulation replay, independently review the spectral-tail and simulation contracts, and harden the documented intermediate overflow calculation. External-cohort, logistic-calibration, and GPU qualification remain separate.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#streaming-skat) · [Download this work](../DOWNLOADS.md#streaming-skat)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 Actual cycle realization and comparison correspondence remain open. Sources marked uncompiled retain that status.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished evidence reader with conditional geometric arguments. Current Lean elaboration was blocked before compilation and general Hodge remains open.
+
+**Remaining work:** Compile the exact conditional source with pinned dependencies, then address the independent algebraic-cycle realization inputs.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#hodge-reader) · [Download this work](../DOWNLOADS.md#hodge-reader)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 The AVOC publication and formal source collection.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Complete reading set based on archived formal v0.41.0. Publication checks did not execute Lean or the actual Lean endpoint.
+
+**Remaining work:** Restore the exact runtime and replay the archived source and endpoint before labeling the publication as freshly formal-verified.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-avoc) · [Download this work](../DOWNLOADS.md#research-avoc)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

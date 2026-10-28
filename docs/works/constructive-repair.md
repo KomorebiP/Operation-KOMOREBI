@@ -10,6 +10,18 @@
 
 Constructive repairs, examples, and the accompanying reference implementation.
 
+## Before you start
+
+**Suggested background:** Basic command-line use and the package's programming language. Check its platform requirements before installation.
+
+**Recorded results and limits:** Standalone release candidate with exact rational repair certificates and scoped historical Lean evidence. Fresh Windows 11 / CPython 3.12.14 checks passed 134 engine tests and 72 installed cases. The release suite retains two symlink-fixture setup errors and three POSIX/Linux-only skips. Python certificate validity remains separate from kernel acceptance.
+
+**Remaining work:** Resolve the two symlink-fixture prerequisites and complete a distribution gate for the intended rebuilt wheel and current metadata. Preserve the new exact source-to-wheel map and separate any future Lean replay from Python acceptance (F08).
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#constructive-repair) · [Download this work](../DOWNLOADS.md#constructive-repair)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

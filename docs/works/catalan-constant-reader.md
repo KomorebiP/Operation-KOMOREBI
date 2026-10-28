@@ -10,6 +10,18 @@
 
 Finite exact calculations and irrationality research routes.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished exposition/evidence set with written recurrence arguments and finite checks. Irrationality of Catalan's constant remains open.
+
+**Remaining work:** Establish the missing uniform arithmetic bounds and review external claims at their exact versions before promotion.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#catalan-constant-reader) · [Download this work](../DOWNLOADS.md#catalan-constant-reader)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

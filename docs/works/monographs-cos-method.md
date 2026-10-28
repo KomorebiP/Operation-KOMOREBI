@@ -10,6 +10,18 @@
 
 Quadratic-form probability calculations, tail accuracy, and numerical evidence.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** Closing 138-page publication with a finite Gram/enclosure Lean companion. Full numerical correctness is outside the official companion.
+
+**Remaining work:** Keep the official monograph stable and route end-to-end numerical proof work to the separate continuation.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-cos-method) · [Download this work](../DOWNLOADS.md#monographs-cos-method)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

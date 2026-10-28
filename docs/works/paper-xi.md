@@ -10,6 +10,18 @@
 
 Arithmetic realization and comparison interfaces.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** Finite packet and selected terminal developments have accepted formal evidence. Conjecture 66 and its arithmetic realization obligations remain open.
+
+**Remaining work:** Track each Conjecture 66 obligation separately from the accepted finite packet and transported constructions.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-xi) · [Download this work](../DOWNLOADS.md#paper-xi)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

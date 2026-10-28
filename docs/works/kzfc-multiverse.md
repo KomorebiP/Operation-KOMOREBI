@@ -10,6 +10,18 @@
 
 Set-theoretic structures, multiverse interfaces, and residual reflection.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** The depth-zero and multiverse blocks are checked. The arbitrary complete obstruction tower can be vacuous. No model existence follows from the conditional extraction theorem.
+
+**Remaining work:** Finish the internal compactness-to-filter-extension converse or specify a nonvacuous constrained tower before proposing a stronger axiom.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#kzfc-multiverse) · [Download this work](../DOWNLOADS.md#kzfc-multiverse)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

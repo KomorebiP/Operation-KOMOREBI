@@ -10,6 +10,18 @@
 
 Scoped reductions, finite checks, and retained arithmetic routes.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished reader with selected checked algebraic scopes. Neither general Beal nor the recovered signature route is closed.
+
+**Remaining work:** Supply the actual arithmetic affine obstruction/realization input and retain the upstream Frey and residual-pattern assumptions.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#beal-reader) · [Download this work](../DOWNLOADS.md#beal-reader)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

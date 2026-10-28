@@ -10,6 +10,18 @@
 
 A finite synthetic semantic-witness construction. The recorded pilot with a real model remains blocked. The latest comparison checked the written scope, without rerunning or certifying Block 23.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finite synthetic semantic-witness construction and fake-runtime pilot checks. No external-checkpoint result.
+
+**Remaining work:** Lock the real checkpoint digest and execute the pilot without substituting fixture metrics for model evidence.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-sric-block23-witness) · [Download this work](../DOWNLOADS.md#research-sric-block23-witness)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

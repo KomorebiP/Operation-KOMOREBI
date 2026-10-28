@@ -10,6 +10,18 @@
 
 118-page reading edition. Bound self-review records cover 38 of 62 statement/proof pairs: 36 recorded as proved as written, two qualifications (memory domain and computability class), and 24 unreviewed. Coverage is not whole-book certification.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** 118-page reading edition. Bound self-review records cover 38 of 62 statement/proof pairs: 36 recorded as proved as written, two qualifications (memory domain and computability class), and 24 unreviewed. Coverage is not whole-book certification.
+
+**Remaining work:** Review the remaining 24 pairs in bounded batches. In a revised source edition, state the positive finite-index condition for the memory bit bound and the event-emitting compilation premise for the computability theorem and its certificate consequence. Keep empirical and independent review separate.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-machine-societies) · [Download this work](../DOWNLOADS.md#monographs-machine-societies)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

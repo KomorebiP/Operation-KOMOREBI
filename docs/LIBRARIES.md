@@ -1,5 +1,7 @@
 # Software guide
 
+[Read the software website](https://KomorebiP.github.io/Operation-KOMOREBI/software.html) · [First runs and expected output](FIRST_RUN.md) · [Glossary](GLOSSARY.md)
+
 **All Komorebi software is beta and work in progress.** Version numbers and earlier release names identify revisions. The current public software status is beta.
 
 | Library | Documentation | Current terms |

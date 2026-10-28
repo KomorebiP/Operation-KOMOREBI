@@ -10,6 +10,18 @@
 
 ABC remains open. These results do not establish a uniform abc exponent.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Scoped written radical-cost identities and obstructions. The global ABC target and exceptional-prime tail remain open. No new Lean run.
+
+**Remaining work:** Address the documented large-exceptional-prime budget or another justified arithmetic comparison. Do not promote local bounds to ABC.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#abc-global-rr8) · [Download this work](../DOWNLOADS.md#abc-global-rr8)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

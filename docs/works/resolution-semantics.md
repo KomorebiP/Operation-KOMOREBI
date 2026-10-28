@@ -10,6 +10,18 @@
 
 Written structural arguments and finite checks. The two-world obstruction has a focused review. Other theorems and forcing applications need their own review.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Written structural proofs and finite tests. KRS_Core.lean is explicitly uncompiled and is only a limited two-valued scaffold.
+
+**Remaining work:** Pin a compiler and dependencies, compile the exact scaffold, and map its actual types to the written theorem inventory.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#resolution-semantics) · [Download this work](../DOWNLOADS.md#resolution-semantics)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

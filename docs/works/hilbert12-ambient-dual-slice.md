@@ -10,6 +10,18 @@
 
 Finite pairing and Gauss-cube calculations with an explicit primitive-root specialization. The analytic equality remains open.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Exact finite algebra and a fixed-point obstruction. The analytic comparison remains open.
+
+**Remaining work:** Connect the exact dual-slice construction to a justified analytic comparison without assuming the missing equality.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#hilbert12-ambient-dual-slice) · [Download this work](../DOWNLOADS.md#hilbert12-ambient-dual-slice)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

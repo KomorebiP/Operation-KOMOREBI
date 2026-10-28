@@ -10,6 +10,18 @@
 
 Cyclic analytic families, reciprocal identities, and spectral information.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** 68 scoped results have recorded formal acceptance. The exact editable source of the latest visual PDF is not recovered.
+
+**Remaining work:** Recover or reconstruct the matching visual-guide source and demonstrate a source-to-PDF comparison in a new edition.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-iv) · [Download this work](../DOWNLOADS.md#paper-iv)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

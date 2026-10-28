@@ -10,6 +10,18 @@
 
 Polyphase decomposition, refinement, and signal operations.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** Publication 1.2.0 closes its stated scope. 20 finite formal core results and 225 theorem targets are inherited evidence, separate from the larger manuscript.
+
+**Remaining work:** Replay the inherited formal core with the pinned runtime. Retain the documented E11.1 amendment and current reproduction entry point.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-v) · [Download this work](../DOWNLOADS.md#paper-v)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

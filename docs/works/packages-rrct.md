@@ -10,6 +10,18 @@
 
 The v0.60 persistent fuzzy J-Space bridge implementation.
 
+## Before you start
+
+**Suggested background:** Basic command-line use and the package's programming language. Check its platform requirements before installation.
+
+**Recorded results and limits:** Beta research platform. The single-seed preset passes three diagnostic links and fails planner necessity and recurrence specificity.
+
+**Remaining work:** Freeze a replicated holdout campaign and resolve or report the failed later links before claiming the full chain.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#packages-rrct) · [Download this work](../DOWNLOADS.md#packages-rrct)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

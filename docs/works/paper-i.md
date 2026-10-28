@@ -10,6 +10,18 @@
 
 Typed systems, finite realization, seed rank, and packet coordinates.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** 69 accepted proof-level correspondences in the stated manuscript scope. 108 correspondence records are not 108 theorems.
+
+**Remaining work:** Maintain the exact statement map and reproduce the pinned formal contract before a changed release.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-i) · [Download this work](../DOWNLOADS.md#paper-i)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 The ambient framework for realizations, projections, compatibility, residuals, and obstructions.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** All sixteen principal theorem groups have formal counterparts. The recorded integrated verification covers 166 targets. Application hypotheses remain explicit.
+
+**Remaining work:** Preserve the sixteen-group correspondence and repeat the integrated verification for any changed source release.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#komorebi-space) · [Download this work](../DOWNLOADS.md#komorebi-space)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

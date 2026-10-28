@@ -10,6 +10,18 @@
 
 Discrete and continuous model structures and local constructions.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** Complete 572-page book with an accepted scoped centered free-field extension. Fixed infinite Fourier-space results do not close sampled-grid, interacting-field or cosmological targets.
+
+**Remaining work:** Resolve the spectral-functional-calculus API identification and distinguish current Block 51 receipts from older modular build limitations.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-physics) · [Download this work](../DOWNLOADS.md#monographs-physics)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

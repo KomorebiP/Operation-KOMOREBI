@@ -10,6 +10,18 @@
 
 Refinement, weighted transfer, and integral structure.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** 53/53 proof-level scopes have recorded replay and accepted correspondence. Admissible contour existence remains an application assumption.
+
+**Remaining work:** Preserve the contour hypotheses and rerun the recorded contract after any mathematical change.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-ii) · [Download this work](../DOWNLOADS.md#paper-ii)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

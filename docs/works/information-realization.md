@@ -10,6 +10,18 @@
 
 Information, realizations, and a finite formal core.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** The first formal block contains 58 theorem declarations across six production modules. The whole information program is not formalized.
+
+**Remaining work:** Choose the next result beyond the checked linear repair and Haar contracts and retain their coefficient assumptions.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#information-realization) · [Download this work](../DOWNLOADS.md#information-realization)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

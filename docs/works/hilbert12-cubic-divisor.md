@@ -10,6 +10,18 @@
 
 The equality of the analytic and algebraic unit constructions remains open. Infinite-product analysis lies outside the finite Lean scope.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished reading set with 42 selected formal modules. Complex divisor arguments and the gamma/class-field equality exceed that formal scope.
+
+**Remaining work:** Resolve the polarized reality, periodic descent and principal-norm obligations before claiming the original equality.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#hilbert12-cubic-divisor) · [Download this work](../DOWNLOADS.md#hilbert12-cubic-divisor)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

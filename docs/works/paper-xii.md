@@ -10,6 +10,18 @@
 
 Patching, Hecke packets, and conditional automorphic constructions.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** 49 revised claims map to 291 production targets in historical evidence. Original wording remains 41 complete, seven partial, one unchecked. Arithmetic and automorphic inputs remain explicit.
+
+**Remaining work:** Replay the pinned amended contract and preserve the original-versus-amended concordance. Do not promote missing arithmetic premises.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-xii) · [Download this work](../DOWNLOADS.md#paper-xii)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -90,6 +90,7 @@ def validate_resources(root, registry, state, tracked_paths=None):
 
 class Browser:
     def __init__(self, root, state, status, tracked_paths=None):
+        self.root = root
         self.registry = json.loads((root/REGISTRY).read_bytes())
         self.resource_count = validate_resources(root, self.registry, state, tracked_paths)
         self.rows = {r['id']:r for r in self.registry['components']}
@@ -164,6 +165,8 @@ class Browser:
         text += link('Browse hub','docs/BROWSE.md',page)+' / '+link(GROUPS[c['group']],page_for(c['group']),page)+'\n\n'
         text += '<a id="work-navigation"></a>\n\n'+self.work_navigation()+'\n\n'
         text += self.status_line(c,page)+'\n\n'+s.get('reader_summary',c['summary'])+'\n\n'
+        from reader_experience import introduction
+        text += introduction(self.root, c, s, page)
         if self.held(c):
             text += '**Incubator:** '+link('Limits and return criteria','docs/INCUBATOR.md#'+c['id'],page)+'.\n\n'
         text += 'Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.\n\n'
@@ -217,9 +220,12 @@ class Browser:
                          ('Code','docs/browse/CODE.md'),('Collection','README.md')])+'\n'
 
     def render(self):
-        outputs = {}
+        from reader_experience import render_reader_pages
+        outputs = render_reader_pages(self.root, self.components, self.assessments)
         page = 'docs/BROWSE.md'
         text = '''# Browse papers, proofs, Lean, and code
+
+[Searchable website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Reading routes](READING_ROUTES.md) · [Glossary](GLOSSARY.md) · [Reading downloads](DOWNLOADS.md)
 
 Choose a subject below, or go straight to [written statements and proofs](browse/PROOFS.md), [Lean sources](browse/LEAN.md), or [code and scripts](browse/CODE.md).
 

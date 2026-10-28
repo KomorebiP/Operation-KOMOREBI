@@ -2,6 +2,8 @@
 
 **Komorebi P. · Work in progress**
 
+[Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/) · [Choose a reading route](docs/READING_ROUTES.md) · [Glossary](docs/GLOSSARY.md) · [Download one work](docs/DOWNLOADS.md)
+
 [Browse all works](docs/BROWSE.md) · [Read papers](docs/browse/PAPERS.md) · [Find proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md)
 
 > **Author’s note:** This work is still in progress. Much of it has been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.

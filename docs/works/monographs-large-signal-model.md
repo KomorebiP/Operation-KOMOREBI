@@ -10,6 +10,18 @@
 
 Algebraic signal models and their mathematical foundations.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** 87/87 registered propositions have complete formal mappings under explicit model assumptions. Empirical model success is outside that contract.
+
+**Remaining work:** Maintain the 87-row map and repeat the accepted build/axiom/replay gates for a changed release.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-large-signal-model) · [Download this work](../DOWNLOADS.md#monographs-large-signal-model)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

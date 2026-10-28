@@ -10,6 +10,18 @@
 
 Theoretical models and conditions for recursive improvement.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** Theoretical publication with 30 statement/proof pairs and finite reference constructions. No deployed autonomous agent or indefinite acceleration result.
+
+**Remaining work:** Obtain focused review of the theorem chain and design a separate empirical evaluation of the integrated architecture.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-self-improving-intelligence) · [Download this work](../DOWNLOADS.md#monographs-self-improving-intelligence)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

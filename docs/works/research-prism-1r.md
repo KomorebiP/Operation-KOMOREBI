@@ -10,6 +10,18 @@
 
 The PRISM-1R implementation and research handoff.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** The evidence covers the architecture and semantic reference tests. The RTL is an uncompiled interface skeleton with candidate bit packing.
+
+**Remaining work:** Compile and simulate the RTL, then synthesize and measure an FPGA prototype before making hardware performance claims.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-prism-1r) · [Download this work](../DOWNLOADS.md#research-prism-1r)
+
 **Incubator:** [Limits and return criteria](../INCUBATOR.md#research-prism-1r).
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.

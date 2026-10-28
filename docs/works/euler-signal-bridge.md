@@ -10,6 +10,18 @@
 
 Written finite-difference and FIR identities with exact controls. Broader Euler congruences require separate proofs.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Written FIR/operator identities and 395 finite exact assertions. No universal congruence or novelty is inferred from the finite run.
+
+**Remaining work:** Review the universal written identities separately and specify any proposed arithmetic congruence with its full hypotheses.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#euler-signal-bridge) · [Download this work](../DOWNLOADS.md#euler-signal-bridge)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

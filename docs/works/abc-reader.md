@@ -10,6 +10,18 @@
 
 The general ABC endpoint remains open. The newer RR8 branch is listed separately.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished evidence reader with selected formal conditional interfaces. The actual arithmetic/IUT witness and uniform abc inequality are not supplied.
+
+**Remaining work:** Keep the missing source-witness theorem and uniform arithmetic estimate explicit before any endpoint claim.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#abc-reader) · [Download this work](../DOWNLOADS.md#abc-reader)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 The corrected 0.3.3 beta runtime passed 15 admission and CLI tests within the recorded fixture scope. Execution with a real checkpoint and scientific validation are still pending. The preserved 0.3.2 edition has documented defects.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Source-locked external-model protocol with infrastructure tests. The real Coconut checkpoint has not been executed in this release.
+
+**Remaining work:** Authenticate the exact checkpoint and dataset, run the frozen adapter and admission gates, then report the actual result.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-sric-external-admission) · [Download this work](../DOWNLOADS.md#research-sric-external-admission)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

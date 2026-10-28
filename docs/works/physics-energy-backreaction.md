@@ -10,6 +10,18 @@
 
 The source files are available. Scientific scope, completion, and evidence from proofs or experiments still need assessment.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Remaining work:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#physics-energy-backreaction) · [Download this work](../DOWNLOADS.md#physics-energy-backreaction)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 Workspace construction and exploratory experiments.
 
+## Before you start
+
+**Suggested background:** Basic programming and familiarity with the stated data and evaluation method. Read the input limits and acceptance criteria before interpreting output.
+
+**Recorded results and limits:** Executed adaptive continuation with positive and negative transfer/retrieval outcomes. Native shared-workspace gaps remain open.
+
+**Remaining work:** Run a genuinely held-out, balanced cohort and retain repeated-access and no-wire failures in the primary result.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#experiments-workspace-incubator) · [Download this work](../DOWNLOADS.md#experiments-workspace-incubator)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

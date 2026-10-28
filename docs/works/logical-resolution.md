@@ -10,6 +10,18 @@
 
 Logical resolution and the structures used to represent it.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** 13 checked modules and 112 theorem declarations cover the standard-syntax bridge and relational layer. Arbitrary formula preservation is outside the stated interface.
+
+**Remaining work:** Take the bounded target in CONTINUE_HERE and preserve the quantifier-sensitive observation contract.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#logical-resolution) · [Download this work](../DOWNLOADS.md#logical-resolution)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

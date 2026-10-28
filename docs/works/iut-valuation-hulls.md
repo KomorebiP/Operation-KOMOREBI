@@ -10,6 +10,18 @@
 
 The B05 valuation-hull continuation and finite formal controls.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Checked valuation-hull and structural witness interfaces. SourceWitnessTheorem remains open. No proof or disproof of IUT III Corollary 3.12 or ABC.
+
+**Remaining work:** Construct the actual source witness linking the abstract interface to the intended arithmetic objects.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#iut-valuation-hulls) · [Download this work](../DOWNLOADS.md#iut-valuation-hulls)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

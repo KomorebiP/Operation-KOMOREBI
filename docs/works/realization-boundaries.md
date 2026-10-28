@@ -10,6 +10,18 @@
 
 Representability, finite descriptions, and explicit limits of realization.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** 45/45 registered monograph contracts are complete in the checked companion, with exact documented semantics.
+
+**Remaining work:** Maintain the final coverage map and v1.0.0 acceptance pointer. Older verification README labels remain historical.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#realization-boundaries) · [Download this work](../DOWNLOADS.md#realization-boundaries)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

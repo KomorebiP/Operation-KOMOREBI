@@ -10,6 +10,18 @@
 
 Mathematical interfaces, computational representations, and reasoning constructions.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** Accepted v1.0.0 admission covers 27/27 selected Reviewed Core results. It does not certify the expanded 1,155-page monograph.
+
+**Remaining work:** Maintain the completed core. Recover the exact expanded source and PDF before claiming that separate book is finalized.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-machine-native-reasoning) · [Download this work](../DOWNLOADS.md#monographs-machine-native-reasoning)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

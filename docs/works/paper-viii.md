@@ -10,6 +10,18 @@
 
 Exact finite algorithms, compilation, and computational realization.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** Internal publication release is complete. The inherited finite formal contract excludes numerical QR/SVD and canonical singular-value API identification. GPU execution was not performed.
+
+**Remaining work:** Choose a bounded numerical or GPU validation target and record actual execution before expanding implementation claims.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-viii) · [Download this work](../DOWNLOADS.md#paper-viii)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

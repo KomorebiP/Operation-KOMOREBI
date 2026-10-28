@@ -10,6 +10,18 @@
 
 A separate continuation of the COS formal development.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** Checked intermediate branch connecting Gaussian/spectral reductions and rational acceptance. Spectral inclusion and COS endpoint enclosures remain premises.
+
+**Remaining work:** Prove or certify the numerical spectral inclusion and endpoint enclosure inputs before claiming end-to-end verification.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#monographs-cos-method-formal-continuation) · [Download this work](../DOWNLOADS.md#monographs-cos-method-formal-continuation)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

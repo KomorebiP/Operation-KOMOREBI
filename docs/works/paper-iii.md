@@ -10,6 +10,18 @@
 
 Nonlinear constructions, compatibility, and explicit obstructions.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** Technical reading release is complete. The accepted 16-module core does not cover the expanded monograph. The historical full-coverage count is uncertified.
+
+**Remaining work:** Map the expanded packet-Taylor, Stirling/Touchard and later corollaries to explicit missing formal obligations.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-iii) · [Download this work](../DOWNLOADS.md#paper-iii)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

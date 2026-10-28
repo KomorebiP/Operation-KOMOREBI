@@ -10,6 +10,18 @@
 
 Written reductions and bounded exact calculations for tau nonvanishing.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished reader on Ramanujan tau nonvanishing with written and finite evidence. No recovered Lean certificate and no all-prime theorem.
+
+**Remaining work:** Prove the remaining actual-prime nonvanishing obligation. Preserve the distinction between local models and the Delta representation.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#lehmer-reader) · [Download this work](../DOWNLOADS.md#lehmer-reader)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 Arithmetic packets, refinement towers, and local deformation.
 
+## Before you start
+
+**Suggested background:** Vectors, matrices, linear maps, kernels and images, and reading a statement with hypotheses. Consult the selected paper for any additional algebra or analysis it uses.
+
+**Recorded results and limits:** Accepted reading release preserves scoped arithmetic, dyadic and lifting formal work. Broader extensions and the Euler reciprocal endpoint remain open.
+
+**Remaining work:** Reconcile the current claim map with the narrowed threshold-free theorem and retain the refuted stronger statement as history.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#paper-ix) · [Download this work](../DOWNLOADS.md#paper-ix)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

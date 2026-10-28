@@ -10,6 +10,18 @@
 
 A standalone reader PDF is supplied. This component does not include editable source.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** 45-page collection compiled 7 October 2026 from four source PDFs and two reflowed arithmetic notes. Edition, source map, and rendered front matter inspected. The compilation explicitly reports no new source-experiment or Lean replay. Mathematical confidence remains unassessed.
+
+**Remaining work:** Recover the exact editable assembly and matching source editions, reproduce the PDF, inspect every page, and reconcile source-specific proof and formal records (F07).
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#gaussian-elimination-guide) · [Download this work](../DOWNLOADS.md#gaussian-elimination-guide)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

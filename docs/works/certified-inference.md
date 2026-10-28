@@ -10,6 +10,18 @@
 
 A finite certified-inference core with executable Lean sources and worked constructions.
 
+## Before you start
+
+**Suggested background:** Basic command-line use and the package's programming language. Check its platform requirements before installation.
+
+**Recorded results and limits:** Finished one-observation, finite-dimensional Gaussian inference contract with exact factor-coded data and checked termination/output certificates. No sampler or universal Python parser refinement.
+
+**Remaining work:** Maintain proof-producing instance checks. Treat Python results as provisional until the emitted Lean instance passes.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#certified-inference) · [Download this work](../DOWNLOADS.md#certified-inference)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

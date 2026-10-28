@@ -10,6 +10,18 @@
 
 Operator and semantic interfaces, experiments, and their retained scientific history.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Frozen manuscripts and experiment evidence plus an exact finite interface. Learned results, failures and unspent experiments retain separate statuses.
+
+**Remaining work:** Reconcile each learned claim with its own frozen run and keep the supplied finite demonstrator separate from learned-decoder claims.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-osl-neuralese) · [Download this work](../DOWNLOADS.md#research-osl-neuralese)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

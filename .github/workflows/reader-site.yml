@@ -1,0 +1,99 @@
+name: Reader website
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: reader-site-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Read pinned library revisions
+        id: pins
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          pins = json.loads(Path('manifests/reader-site-libraries.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              for name in ('math', 'polyphase'):
+                  print(name + '=' + pins[name]['revision'], file=output)
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: KomorebiP/komorebi-math
+          ref: ${{ steps.pins.outputs.math }}
+          path: .reader-libraries/math
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: KomorebiP/polyphase-float
+          ref: ${{ steps.pins.outputs.polyphase }}
+          path: .reader-libraries/polyphase
+          persist-credentials: false
+      - name: Install documentation dependencies and the Python library
+        run: python -m pip install -r website/requirements.txt ./.reader-libraries/math
+      - name: Test website safeguards
+        run: python -B -m unittest discover -s tools -p 'test_reader_site.py' -v
+      - name: Check the introductory Python output
+        run: |
+          python - <<'PY'
+          import subprocess, sys
+          result = subprocess.run([sys.executable, '.reader-libraries/math/examples/first_run.py'], text=True, capture_output=True, check=True)
+          expected = 'Numerical reconstruction: [2.0, 3.0]\nExact coordinate change: (7/2, 3)\nExact inverse: (2, 3)\nPASS: first examples\n'
+          assert result.stdout == expected, result.stdout
+          print(result.stdout)
+          PY
+      - name: Build and run the introductory C example
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libgmp-dev
+          cmake -S .reader-libraries/polyphase -B .reader-build/polyphase -DCMAKE_BUILD_TYPE=Release -DPPF_OPENMP=OFF -DPPF_MPFR_SUPPORT=OFF -DPPF_BUILD_EXAMPLES=ON -DBUILD_TESTING=OFF
+          cmake --build .reader-build/polyphase --parallel --target example_basic
+          python - <<'PY'
+          import subprocess
+          result = subprocess.run(['.reader-build/polyphase/example_basic'], text=True, capture_output=True, check=True)
+          assert result.stdout == 'x (256 bits) = 3.10000e1\ny (80 bits)  = 3.10000e1\n', result.stdout
+          print(result.stdout)
+          PY
+      - name: Obtain the pinned math accessibility runtime
+        run: python -B tools/fetch_reader_runtime.py --output .reader-build/mathjax
+      - name: Build the reader site and reading ZIPs
+        run: python -B tools/build_reader_site.py --math-root .reader-libraries/math --polyphase-root .reader-libraries/polyphase --mathjax-root .reader-build/mathjax --revision '${{ github.sha }}' --output reader-site
+      - name: Check HTML links, access features and all reading ZIPs
+        run: python -B tools/check_reader_site.py --site reader-site
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: reader-site
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish the reader site
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e

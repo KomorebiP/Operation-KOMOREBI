@@ -10,6 +10,18 @@
 
 Finite examples and selected realization obligations.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Finished reader with reviewed elementary realizations and regular-projector statements. Universal realization over Q remains open and no Lean certificate is claimed.
+
+**Remaining work:** Supply the arithmetic existence input for the specified conditional route. Keep finite examples distinct from all finite groups.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#inverse-galois-reader) · [Download this work](../DOWNLOADS.md#inverse-galois-reader)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

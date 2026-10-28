@@ -10,6 +10,18 @@
 
 Certified Bayesian constructions and their publication sources.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Publication companion for the scoped single-observation Gaussian inference contract. Source excerpts and archived formal coverage are not universal Python correctness.
+
+**Remaining work:** Link the publication claims to the canonical Certified Inference contract and replay its source-bound proof-producing examples.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-certified-bayesian-inference) · [Download this work](../DOWNLOADS.md#research-certified-bayesian-inference)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

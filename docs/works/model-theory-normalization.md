@@ -10,6 +10,18 @@
 
 A scalar binary backend and its normalization development.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Verified scalar binary backend and finite discovery fixtures. End-to-end discovery bit-cost lowering remains open.
+
+**Remaining work:** Prove the universal lowering/refinement bridge beyond the tested discovery fixtures.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#model-theory-normalization) · [Download this work](../DOWNLOADS.md#model-theory-normalization)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 The broader continuation accompanying the reviewed core volume.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Recovered 74-page working continuation retains an older 23/27 core map. Neither it nor the completed selected core is the expanded 1,155-page edition.
+
+**Remaining work:** Recover the exact expanded monograph, reconcile its own statements with the accepted 27/27 core, and rebuild/review that edition.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-machine-native-reasoning-wider) · [Download this work](../DOWNLOADS.md#research-machine-native-reasoning-wider)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

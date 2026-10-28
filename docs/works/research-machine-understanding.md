@@ -10,6 +10,18 @@
 
 Models and mathematical interfaces for machine understanding.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** Frozen first-edition theoretical/editorial scope with twenty statements, bounded exact tests and explicit interpreter/resource charges.
+
+**Remaining work:** Pursue external proof review and separate empirical acquisition from the supplied observation and recipient models.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-machine-understanding) · [Download this work](../DOWNLOADS.md#research-machine-understanding)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

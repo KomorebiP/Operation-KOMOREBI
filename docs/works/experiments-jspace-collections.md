@@ -10,6 +10,18 @@
 
 J-Space constructions, machinery, and worked experiments.
 
+## Before you start
+
+**Suggested background:** Basic programming and familiarity with the stated data and evaluation method. Read the input limits and acceptance criteria before interpreting output.
+
+**Recorded results and limits:** Typed object collections and workspace actions. Programs and proposals are supplied, and no new training was performed.
+
+**Remaining work:** Evaluate a learned controller separately from the hand-supplied examples and test the Windows wrapper on its target host.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#experiments-jspace-collections) · [Download this work](../DOWNLOADS.md#experiments-jspace-collections)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

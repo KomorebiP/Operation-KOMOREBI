@@ -10,6 +10,18 @@
 
 Proof validity, discovery paths, interpretation, and review.
 
+## Before you start
+
+**Suggested background:** Begin with the introduction and glossary. Then use the volume's own definitions to identify the background needed for its subject.
+
+**Recorded results and limits:** Publication 1.8.0 formalizes the finite trace checker and typed JSON exchange on existing proof-field semantics. Arbitrary Python correctness and broader manuscript coverage remain open.
+
+**Remaining work:** Define a separate Python-to-Lean refinement target and preserve the distinction between rejected certificates and infeasibility.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#proof-path-theory) · [Download this work](../DOWNLOADS.md#proof-path-theory)
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

@@ -10,6 +10,18 @@
 
 The v0.61 multispace convergence research protocol.
 
+## Before you start
+
+**Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
+
+**Recorded results and limits:** The available evidence covers the protocol and numerical smoke checks. The primary multi-family causal campaign is incomplete, and the Qwen runner was not executed in the recorded build.
+
+**Remaining work:** Execute the source-locked primary campaign with all required independent estimator families and mediation gates.
+
+The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
+
+[Reading routes](../READING_ROUTES.md) · [Glossary](../GLOSSARY.md) · [Claim links](../CLAIM_LINKS.md#research-rrct-multispace-protocol) · [Download this work](../DOWNLOADS.md#research-rrct-multispace-protocol)
+
 **Incubator:** [Limits and return criteria](../INCUBATOR.md#research-rrct-multispace-protocol).
 
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.

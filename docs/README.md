@@ -4,6 +4,11 @@ Use these guides to find works, software, and project records. Each dated review
 
 | Find | Guide |
 |---|---|
+| A starting point for your background or task | [Reading routes](READING_ROUTES.md) and the [public website](https://KomorebiP.github.io/Operation-KOMOREBI/) |
+| Introductory terminology and notation | [Glossary](GLOSSARY.md) |
+| A small program with expected output | [First runs](FIRST_RUN.md) |
+| Statement locations, formal modules and reading ZIPs | [Claim links](CLAIM_LINKS.md) and [downloads](DOWNLOADS.md) |
+| Accessible formats and known limits | [Accessibility](ACCESSIBILITY.md) |
 | Direct PDFs, manuscript text, proofs, Lean, and code | [Browse by work](BROWSE.md) |
 | A reading route through the mathematics | [Start here](START_HERE.md) |
 | A component or source edition | [Component index](COMPONENT_INDEX.md) and [source coverage](SOURCE_COVERAGE.md) |
@@ -12,6 +17,7 @@ Use these guides to find works, software, and project records. Each dated review
 | Commands, setup, and interpretation of checks | [Run and verify](VERIFICATION.md) |
 | What each GitHub workflow runs or publishes | [Workflow guide](WORKFLOWS.md) |
 | Maintenance scripts, record updates, and cleanup history | [Repository maintenance](MAINTENANCE.md) |
+| Build or update the public website | [Reader site maintenance](READER_SITE.md) |
 | Software entry points | [Libraries and packages](LIBRARIES.md) |
 | Current public availability and distribution | [Publication status](PUBLICATION_STATUS.md) and [distribution notice](DISTRIBUTION_STATUS.md) |
 | Authorship and publication circumstances | [Public project statement](PROJECT_STATEMENT.md) |
