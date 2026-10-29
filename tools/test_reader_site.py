@@ -11,10 +11,35 @@ from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
 from claim_navigation import statements, manuscript_sources, validate_claims, PAPERS
-from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels, manuscript_bibliography, presentation_tex
+from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels, manuscript_bibliography, presentation_tex, passage_links, reading_options
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_reading_tools_preserve_proof_links_and_no_script_access(self):
+        from html.parser import HTMLParser
+        class ToolLinks(HTMLParser):
+            def __init__(self, text):
+                super().__init__(); self.optional=False; self.links=[]; self.feed(text)
+            def handle_starttag(self, tag, attrs):
+                attrs=dict(attrs)
+                self.assert_visible(attrs)
+                if 'passage-tools' in attrs.get('class','').split(): self.optional=True
+                if tag=='a': self.links.append((attrs['href'],self.optional))
+            def handle_endtag(self, tag):
+                if tag in {'span','p'}: self.optional=False
+            def assert_visible(self, attrs):
+                if 'hidden' in attrs: raise AssertionError('Source links must work without JavaScript')
+        source='<a href="source.html#L10">Source line 10</a>'
+        proof='<a href="#L20">Read proof</a>'
+        parsed=ToolLinks(passage_links(source,proof))
+        self.assertEqual(parsed.links,[('#L20',False),('source.html#L10',True)])
+        self.assertEqual(ToolLinks(passage_links(source)).links,[('source.html#L10',True)])
+        self.assertNotIn('<nav',passage_links(source,proof))
+        options=Page(reading_options())
+        self.assertIn('show-passage-tools',options.labels)
+        self.assertEqual(options.inputs[0]['aria-controls'],'chapter-text')
+        self.assertIn('#chapter-text',options.links)
+
     def test_paper_i_lists_keep_math_before_inside_and_after_items(self):
         source=r'$a$ before. \begin{enumerate}\item $b$\item $c$\end{enumerate} After $d$.'
         chapter=Chapter('',{})

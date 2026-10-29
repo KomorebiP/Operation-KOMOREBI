@@ -30,6 +30,18 @@ so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
 and example routes. Readable chapters keep their chapter contents.
 
+The HTML chapters of Papers I–III open with repeated source and reference links
+hidden from the reading flow. **Show source and reference links** reveals each
+passage’s permalink, source line, claim record and related resources. The choice
+is remembered in this browser when local storage is available. **Read proof**,
+**Back to statement**, contents and section links remain visible in either view.
+**Skip contents and start reading** moves directly to the chapter text. Without
+JavaScript, all passage links remain visible and usable.
+
+Section controls are ordinary links within the chapter, so they do not add a
+repeated navigation landmark for every heading. Chapter contents, neighbouring
+chapters and work routes retain their named navigation regions.
+
 In-page links to chapters, statements, proofs and source lines also move keyboard
 focus to the destination. Any enclosing contents disclosure opens when needed.
 

@@ -676,6 +676,22 @@ def render_reading_index(reader):
     site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions Paper I Paper II Paper III chapters equations proofs',work_ids=list(BOOKS)))
 
 
+def passage_links(source_links, reading_links=''):
+    """Keep proof/section navigation available when optional tools are hidden."""
+    if reading_links:
+        return '<p class="passage-links">'+reading_links+'<span class="passage-tools"> · '+source_links+'</span></p>'
+    return '<p class="passage-links passage-tools">'+source_links+'</p>'
+
+
+def reading_options():
+    return ('<div class="reading-options" hidden><label for="show-passage-tools">'
+            '<input id="show-passage-tools" type="checkbox" aria-controls="chapter-text" '
+            'aria-describedby="reading-options-help">Show source and reference links</label>'
+            '<p id="reading-options-help">Show each passage’s permalink, source line, claim record '
+            'and related resources. Proof links and chapter navigation are always available.</p></div>'
+            '<p><a href="#chapter-text">Skip contents and start reading</a></p>')
+
+
 def render_book(reader,book):
     site=reader.site
     config=book['config']
@@ -694,22 +710,23 @@ def render_book(reader,book):
         body='<p class="eyebrow">Readable manuscript</p><h1>'+e(title)+'</h1>'
         body+='<p>The wording and mathematics follow the retained manuscript. This reading format does not add a proof review or extend Lean coverage.</p>'
         body+=reader.work_routes(work,page)+neighbour_links(spec)
-        body+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'+toc
-        body+='<article class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
+        body+='<p><a href="'+reader.resolve(source,page)+'">Original TeX with line links</a> · <a href="'+site.rel(reader.records[source]['file_url'],page)+'" download>Download TeX</a></p>'+reading_options()+toc
+        body+='<article id="chapter-text" class="readable-chapter" aria-label="'+e(title,quote=True)+'">'
         level=2
         for node in chapter.nodes:
             kind=node['kind']
             label=(node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip()
             source_link=reader.resolve(source,page,'L'+str(node['line']))
             links='<a href="#'+node['id']+'">Permalink</a> · <a href="'+source_link+'">Source line '+str(node['line'])+'</a>'
+            reading_links=''
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
                 index=headings.index(node)
-                links+=' · <a href="#contents">Contents</a>'
-                if index: links+=' · <a href="#'+headings[index-1]['id']+'">Previous section</a>'
-                if index+1<len(headings): links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
-                body+='<nav class="passage-links" aria-label="Section navigation">'+links+'</nav>'
+                reading_links='<a href="#contents">Contents</a>'
+                if index: reading_links+=' · <a href="#'+headings[index-1]['id']+'">Previous section</a>'
+                if index+1<len(headings): reading_links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
+                body+=passage_links(links,reading_links)
             elif kind=='figure':
                 match=re.match(r'\s*\\centering\s*\\includegraphics\[width=0?\.96\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
                 if not match: raise ValueError('Unsupported figure')
@@ -718,24 +735,24 @@ def render_book(reader,book):
                 path=config['base']+'figures/'+match[1].removesuffix('.pdf')+'.png'
                 image=reader.image_url(path,page)
                 if not image: raise ValueError('Missing receipt-bound figure '+path)
-                body+='<figure id="'+node['id']+'"><img src="'+image+'" alt="'+e(plain_math(caption.replace('$',''))[0],quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption><p class="passage-links">'+links+'</p></figure>'
+                body+='<figure id="'+node['id']+'"><img src="'+image+'" alt="'+e(plain_math(caption.replace('$',''))[0],quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
-                body+='<section id="'+node['id']+'">'+render_table(node,chapter)+'<p class="passage-links">'+links+'</p></section>'
+                body+='<section id="'+node['id']+'">'+render_table(node,chapter)+passage_links(links)+'</section>'
             elif kind=='conceptchain':
-                body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div><p class="passage-links">'+links+'</p></section>'
+                body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div>'+passage_links(links)+'</section>'
             elif kind=='thebibliography':
                 body+='<section id="'+node['id']+'"><h2>References</h2>'
                 for entry in book['references']:
                     body+='<section id="ref-'+entry['key']+'"><h3>'+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
-                body+='<p class="passage-links">'+links+'</p></section>'
+                body+=passage_links(links)+'</section>'
             elif kind=='lstlisting':
-                body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre><p class="passage-links">'+links+'</p></section>'
+                body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre>'+passage_links(links)+'</section>'
             else:
                 row=rows.get(node['line']) or proof_rows.get(node['line'])
                 if row:
                     links+=' · <a href="'+site.rel('claims.html',page)+'#'+row['id'].lower()+'">Claim record</a>'
                     other=row['statement_line'] if kind=='proof' else row['proof_line']
-                    if other: links+=' · <a href="#L'+str(other)+'">'+('Back to statement' if kind=='proof' else 'Read proof')+'</a>'
+                    if other: reading_links='<a href="#L'+str(other)+'">'+('Back to statement' if kind=='proof' else 'Read proof')+'</a>'
                     hub=site.rel('collection/works/'+work+'.html',page)
                     links+=' · <a href="'+hub+'#lean">Lean coverage</a> · <a href="'+hub+'#code">Code</a> · <a href="'+hub+'#worked-examples-for-this-work">Worked examples</a>'
                 body+='<section id="'+node['id']+'" class="reading-block '+kind+'">'
@@ -746,7 +763,7 @@ def render_book(reader,book):
                         label='Proof of '+KIND_NAMES.get(statement['kind'],statement['kind'].capitalize())+' '+statement['number']
                     heading_level=str(min(level+1,6))
                     body+='<h'+heading_level+'>'+chapter.inline(label)+'</h'+heading_level+'>'
-                body+=chapter.paragraphs(node['body'])+'<p class="passage-links">'+links+'</p></section>'
+                body+=chapter.paragraphs(node['body'])+passage_links(links,reading_links)+'</section>'
             if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])

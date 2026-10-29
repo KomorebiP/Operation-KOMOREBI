@@ -48,6 +48,24 @@ document.addEventListener("click", event => {
   focusReadingTarget(target, url.hash);
 });
 
+const readingOptions = document.querySelector(".reading-options");
+const showPassageTools = document.querySelector("#show-passage-tools");
+if (readingOptions && showPassageTools) {
+  const passageTools = document.querySelectorAll(".readable-chapter .passage-tools");
+  const preferenceKey = "komorebi.reading.showPassageTools";
+  // Storage may be unavailable in private or restricted browsing.
+  try { showPassageTools.checked = localStorage.getItem(preferenceKey) === "true"; } catch {}
+  function applyReadingOptions() {
+    for (const group of passageTools) group.hidden = !showPassageTools.checked;
+  }
+  showPassageTools.addEventListener("change", () => {
+    applyReadingOptions();
+    try { localStorage.setItem(preferenceKey, String(showPassageTools.checked)); } catch {}
+  });
+  applyReadingOptions();
+  readingOptions.hidden = false;
+}
+
 const sourceLineForm = document.querySelector("#source-line-form");
 if (sourceLineForm) {
   const lineInput = document.querySelector("#source-line-number");
