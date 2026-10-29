@@ -130,6 +130,11 @@ can be scrolled with the keyboard. Equations use the same MathJax reading contro
 as the manuscript. Each plate links to its manuscript statements and original
 PDF page, and to the previous and next plates.
 
+Paper IV's reading menu includes **Visual atlas**. Referenced manuscript
+sections and statements link back to the relevant plates, using each plate's
+number and title. These links remain available when source links are hidden.
+Previous and next plate links also name their destinations.
+
 Descriptions and table headings are added reading aids. Mathematical labels are
 read directly from the retained drawing sources. The build checks that each
 label appears exactly once, verifies image and source checksums, and compares

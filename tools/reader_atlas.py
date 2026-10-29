@@ -2,6 +2,7 @@
 import hashlib
 import html
 import json
+import posixpath
 import re
 from html.parser import HTMLParser
 
@@ -15,6 +16,7 @@ DEFINITIONS=FOURTH_BASE+'atlas-definitions.tex'
 INDEX='read/paper-iv/atlas/index.html'
 RECEIPTS='assets/atlas/paper-iv/figures.json'
 REPORT='documents/paper-iv-atlas.json'
+REFERENCE_PATTERN=re.compile(r'(Section|Definition|Theorem|Proposition|Corollary|Example) (\d+(?:\.\d+)?) \(p\. (\d+)\)')
 
 
 def digest(raw): return hashlib.sha256(raw).hexdigest()
@@ -112,31 +114,55 @@ def prepare(reader):
         for node in chapter.nodes:
             if node['number'] and node['kind']!='part':
                 references[(node['kind'].capitalize(),node['number'])]=chapter.url+'#'+node['id']
+    backlinks=manuscript_backlinks(selected,references)
+    for _,_,chapter in reader.readable_books['paper-iv']['chapters']:
+        for node in chapter.nodes:
+            linked=backlinks.get(chapter.url+'#'+node['id'],[])
+            chapter.related_readings[node['id']]=[('Atlas V'+str(p['number'])+': '+p['title'],p['url']) for p in linked]
     reader.atlas=dict(plates=selected,figures=figures,macros=macros,references=references,
+                      backlinks=backlinks,
                       source_sha256=digest(raw),definitions_sha256=digest(defs))
 
 
-def source_references(locator, references, relative):
-    pattern=re.compile(r'(Section|Definition|Theorem|Proposition|Corollary|Example) (\d+(?:\.\d+)?) \(p\. (\d+)\)')
-    out=[]; pos=0
-    for match in pattern.finditer(locator):
+def reference_matches(locator, references):
+    matches=[]
+    for match in REFERENCE_PATTERN.finditer(locator):
         key=(match[1],match[2])
         if key not in references: raise ValueError('Atlas reference does not resolve: '+match[0])
+        matches.append((match,references[key]))
+    if not matches: raise ValueError('Atlas plate has no manuscript reference')
+    return matches
+
+
+def manuscript_backlinks(selected, references):
+    """Reverse only the manuscript references explicitly retained in each plate."""
+    backlinks={}
+    for plate in selected:
+        for target in dict.fromkeys(target for _,target in reference_matches(plate['locator'],references)):
+            backlinks.setdefault(target,[]).append({key:plate[key] for key in ('number','title','url')})
+    return backlinks
+
+
+def source_references(locator, references, relative):
+    out=[]; pos=0
+    for match,target in reference_matches(locator,references):
         out.append(html.escape(locator[pos:match.start()]))
-        out.append('<a href="'+html.escape(relative(references[key]),quote=True)+'">'+html.escape(match[0])+'</a>')
+        out.append('<a href="'+html.escape(relative(target),quote=True)+'">'+html.escape(match[0])+'</a>')
         pos=match.end()
-    if not out: raise ValueError('Atlas plate has no manuscript reference')
     return ''.join(out)+html.escape(locator[pos:])
 
 
 def neighbours(reader, plate):
     number=plate['number']; page=plate['url']
     routes=[]
-    if number>1: routes.append(('Previous: V'+str(number-1),plate_url(number-1)))
+    def neighbour(index, direction):
+        adjacent=reader.atlas['plates'][index]
+        return (direction+': V'+str(adjacent['number'])+' · '+adjacent['title'],adjacent['url'])
+    if number>1: routes.append(neighbour(number-2,'Previous'))
     routes.append(('All 26 atlas plates',INDEX))
-    if number<26: routes.append(('Next: V'+str(number+1),plate_url(number+1)))
+    if number<26: routes.append(neighbour(number,'Next'))
     return '<nav class="chapter-neighbours" aria-label="Neighbouring atlas plates">'+''.join(
-        '<a href="'+reader.site.rel(url,page)+'">'+title+'</a>' for title,url in routes)+'</nav>'
+        '<a href="'+reader.site.rel(url,page)+'">'+html.escape(title)+'</a>' for title,url in routes)+'</nav>'
 
 
 def render_drawing(figure, chapter, reader):
@@ -234,7 +260,7 @@ def render(reader):
                             nodes=[{k:n[k] for k in ('kind','id','line','end_line')} for n in chapter.nodes]))
     report=dict(source=SOURCE,source_sha256=atlas['source_sha256'],definitions=DEFINITIONS,
                 definitions_sha256=atlas['definitions_sha256'],macro_source=reader.readable_books['paper-iv']['config']['main'],
-                macros=atlas['macros'],plates=reports,figures={name:dict(**f['receipt'],node_order=f['order'],nodes=f['nodes']) for name,f in atlas['figures'].items()},
+                macros=atlas['macros'],plates=reports,manuscript_backlinks=atlas['backlinks'],figures={name:dict(**f['receipt'],node_order=f['order'],nodes=f['nodes']) for name,f in atlas['figures'].items()},
                 new_proof_review=False,new_lean_execution=False,new_mathematical_example_execution=False)
     site.write(REPORT,json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     body='<p class="eyebrow">Paper IV · Visual atlas</p><h1>Explore the 26 atlas plates</h1><p>Read the worked models with their original drawings, selectable equations, text descriptions and tables. Each plate links to the manuscript statements it illustrates.</p>'
@@ -275,6 +301,18 @@ def verify(root, documents, pages):
             if self.depth: self.expressions[-1]+=data
     selected=plates(raw.decode('utf-8-sig'))
     assert len(report['plates'])==len(selected)==26
+    linked_plates=set(); return_links=0
+    for target,linked in report['manuscript_backlinks'].items():
+        chapter,anchor=target.split('#')
+        assert anchor in pages[chapter].ids
+        assert len(linked)==len({p['number'] for p in linked})
+        for plate in linked:
+            original=selected[plate['number']-1]
+            assert all(plate[k]==original[k] for k in ('number','title','url'))
+            assert posixpath.relpath(plate['url'],posixpath.dirname(chapter)) in pages[chapter].links
+            assert posixpath.relpath(target,posixpath.dirname(plate['url'])) in pages[plate['url']].links
+            linked_plates.add(plate['number']); return_links+=1
+    assert linked_plates==set(range(1,27))
     count=0
     for plate,record in zip(selected,report['plates']):
         assert record['number']==plate['number'] and record['url']==plate['url']
@@ -288,4 +326,5 @@ def verify(root, documents, pages):
             assert node['id'] in pages[plate['url']].ids
             assert 'L'+str(node['line']) in pages[records[SOURCE]['url']].ids
         count+=len(expected)
-    return dict(plates=26,drawings=24,math_expressions=count)
+    return dict(plates=26,drawings=24,math_expressions=count,
+                manuscript_targets=len(report['manuscript_backlinks']),return_links=return_links)

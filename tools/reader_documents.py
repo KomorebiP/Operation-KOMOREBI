@@ -205,6 +205,8 @@ class ReadingDocuments:
         from readable_chapters import BOOKS
         if work in BOOKS:
             routes.append(('Read chapters', BOOKS[work]['index']))
+            if BOOKS[work].get('atlas_index'):
+                routes.append(('Visual atlas', BOOKS[work]['atlas_index']))
             if BOOKS[work].get('diagram_guide'):
                 routes.append(('Diagram descriptions', BOOKS[work]['diagram_guide']))
         if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))

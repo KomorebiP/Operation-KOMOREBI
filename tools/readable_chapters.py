@@ -99,6 +99,7 @@ BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, ma
                         bib_page='read/paper-iv/references.html',
                         title='Cyclic analytic functions, reciprocal families, and spectral zero data',
                         chapters=FOURTH_CHAPTERS, main_chapters=17, monolithic=True,
+                        atlas_index='read/paper-iv/atlas/index.html',
                         html_inputs={'atlas-pages': dict(url='read/paper-iv/atlas/index.html',title='Explore the 26 atlas plates in HTML',note='')})
 CHAPTERS += FOURTH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
@@ -277,6 +278,7 @@ class Chapter:
         self.formal_labels = {}
         self.external_inputs = {}
         self.command_links = {}
+        self.related_readings = {}
         self.math = []
         self.labels = {}
         self.nodes = []
@@ -775,9 +777,14 @@ def passage_links(source_links, reading_links=''):
     return '<p class="passage-links passage-tools">'+source_links+'</p>'
 
 
+def related_reading_links(chapter, identifier):
+    return ' · '.join('<a href="'+html.escape(chapter.relative(url),quote=True)+'">'+html.escape(label)+'</a>'
+                      for label,url in chapter.related_readings.get(identifier,[]))
+
+
 def reading_options(description=None):
     description=description or ('Show each passage’s permalink, source line, claim record '
-                                'and related resources. Proof links and chapter navigation are always available.')
+                                'and related resources. Proof links, atlas links and chapter navigation are always available.')
     return ('<div class="reading-options" hidden><label for="show-passage-tools">'
             '<input id="show-passage-tools" type="checkbox" aria-controls="chapter-text" '
             'aria-describedby="reading-options-help">Show source and reference links</label>'
@@ -813,14 +820,15 @@ def render_book(reader,book):
             label=(node['number']+' '+node['title']).strip() if kind in HEADINGS else (KIND_NAMES.get(kind,kind.capitalize())+' '+node['number']+(': '+node['title'] if node['title'] else '')).strip()
             source_link=reader.resolve(source,page,'L'+str(node['line']))
             links='<a href="#'+node['id']+'">Permalink</a> · <a href="'+source_link+'">Source line '+str(node['line'])+'</a>'
-            reading_links=''
+            reading_links=related_reading_links(chapter,node['id'])
             if kind in HEADINGS:
                 level=min(level+1,5) if kind=='paragraph' else HEADINGS[kind]
                 body+='<h'+str(level)+' id="'+node['id']+'">'+e(node['number'])+' '+chapter.inline(node['title'])+'</h'+str(level)+'>'
                 index=headings.index(node)
-                reading_links='<a href="#contents">Contents</a>'
-                if index: reading_links+=' · <a href="#'+headings[index-1]['id']+'">Previous section</a>'
-                if index+1<len(headings): reading_links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
+                section_links='<a href="#contents">Contents</a>'
+                if index: section_links+=' · <a href="#'+headings[index-1]['id']+'">Previous section</a>'
+                if index+1<len(headings): section_links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
+                reading_links=' · '.join(filter(None,[section_links,reading_links]))
                 body+=passage_links(links,reading_links)
             elif kind=='figure':
                 match=re.match(r'\s*\\centering\s*\\includegraphics\[width=0?\.9[68]\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
@@ -857,7 +865,7 @@ def render_book(reader,book):
                 if row:
                     links+=' · <a href="'+site.rel('claims.html',page)+'#'+row['id'].lower()+'">Claim record</a>'
                     other=row['statement_line'] if kind=='proof' else row['proof_line']
-                    if other: reading_links='<a href="#L'+str(other)+'">'+('Back to statement' if kind=='proof' else 'Read proof')+'</a>'
+                    if other: reading_links=' · '.join(filter(None,['<a href="#L'+str(other)+'">'+('Back to statement' if kind=='proof' else 'Read proof')+'</a>',reading_links]))
                     hub=site.rel('collection/works/'+work+'.html',page)
                     links+=' · <a href="'+hub+'#lean">Lean coverage</a> · <a href="'+hub+'#code">Code</a> · <a href="'+hub+'#worked-examples-for-this-work">Worked examples</a>'
                 body+='<section id="'+node['id']+'" class="reading-block '+kind+'">'

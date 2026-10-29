@@ -76,6 +76,18 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('tabindex="0" role="region"',rendered)
         self.assertIn('id="drawing-label-1"',rendered)
 
+    def test_atlas_return_links_follow_only_explicit_references_and_deduplicate(self):
+        from reader_atlas import manuscript_backlinks
+        selected=[dict(number=3,title='A filter',url='atlas/v03.html',locator='Theorem 3.1 (p. 4), Theorem 3.1 (p. 4).'),
+                  dict(number=4,title='A product',url='atlas/v04.html',locator='Theorem 3.1 (p. 4), Section 3 (p. 3).')]
+        references={('Theorem','3.1'):'chapter.html#L30',('Section','3'):'chapter.html#L20',('Proposition','3.2'):'chapter.html#L40'}
+        links=manuscript_backlinks(selected,references)
+        self.assertEqual([p['number'] for p in links['chapter.html#L30']],[3,4])
+        self.assertEqual([p['number'] for p in links['chapter.html#L20']],[4])
+        self.assertNotIn('chapter.html#L40',links)
+        del references[('Section','3')]
+        with self.assertRaises(ValueError): manuscript_backlinks(selected,references)
+
     def test_atlas_formula_order_includes_diagram_between_source_passages(self):
         from reader_atlas import expected_math
         plate=dict(body=r'$a$\vfig{drawing}$d$')
@@ -116,6 +128,14 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertEqual(parsed.links,[('#L20',False),('source.html#L10',True)])
         self.assertEqual(ToolLinks(passage_links(source)).links,[('source.html#L10',True)])
         self.assertNotIn('<nav',passage_links(source,proof))
+        from readable_chapters import related_reading_links
+        chapter=Chapter('',{})
+        chapter.url='read/paper-iv/chapter.html'
+        chapter.related_readings={'L10':[('Atlas V3: A < B','read/paper-iv/atlas/v03.html')]}
+        atlas=related_reading_links(chapter,'L10')
+        self.assertIn('A &lt; B',atlas)
+        self.assertEqual(ToolLinks(passage_links(source,proof+' · '+atlas)).links,
+                         [('#L20',False),('atlas/v03.html',False),('source.html#L10',True)])
         options=Page(reading_options())
         self.assertIn('show-passage-tools',options.labels)
         self.assertEqual(options.inputs[0]['aria-controls'],'chapter-text')
@@ -404,6 +424,8 @@ class ReaderSiteTests(unittest.TestCase):
         other = reader.work_routes('other','index.html')
         self.assertNotIn('Worked examples', other)
         self.assertNotIn('claims.html#other', other)
+        self.assertIn('read/paper-iv/atlas/index.html',Page(reader.work_routes('paper-iv','index.html')).links)
+        self.assertNotIn('read/paper-iv/atlas/index.html',routes)
 
     def test_example_search_membership_follows_recorded_learning_routes(self):
         reader = ReadingDocuments.__new__(ReadingDocuments)

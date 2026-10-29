@@ -92,6 +92,12 @@ original source-line links, and records the atlas and drawing mathematical input
 sequences in `documents/paper-iv-atlas.json`. The site checker re-derives those
 sequences from the published source files and verifies the rendered HTML.
 
+Atlas manuscript references also generate return links at their exact section
+or statement. These links stay visible with proof navigation when optional
+source links are hidden. No relation is inferred from matching keywords.
+`manuscript_backlinks` in the conversion record stores the source-derived
+connections; the site checker verifies both directions for every plate.
+
 Drawing PNGs and their source/image receipts are committed under
 `website/assets/atlas/paper-iv/`. To rebuild only these images, use
 `python tools/build_atlas_figures.py --tectonic PATH_TO_TECTONIC --pdftoppm PATH_TO_PDFTOPPM --stage EMPTY_DIRECTORY`.
