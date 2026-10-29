@@ -18,13 +18,15 @@ for the coefficient of \(t^{12}/12!\) in \(\sec t\), and
 E_8-E_0=1384
 \]
 
-for a refinement of the signed Euler sequence. The derivations connect them to reciprocal series, a two-packet matrix, finite-difference coordinates, and an exact correction law.
+for a refinement of the signed Euler sequence. The derivations connect them to reciprocal series, a two-packet matrix, finite-difference coordinates, and an exact correction law. We will also reconstruct \(E_8=1385\) from alternating odd powers and from a separate dyadic source. Those calculations will give exact partial sums and precision certificates.
 
 The Euler numbers and the quartic sequence used below are classical. This example develops them through Komorebi's packet, transfer, and residual language. Its purpose is to make a substantial calculation inspectable from beginning to end. The [source notes](../../verification/euler-packets/SOURCES.md) identify the classical references and the project sources.
 
 You can follow the algebra without running code. The accompanying [Python program](../../examples/euler_packets.py) uses exact integers and fractions and needs only Python's standard library.
 
-## Conventions and three coordinate systems
+<a id="conventions-and-three-coordinate-systems"></a>
+
+## Conventions and coordinate systems
 
 Euler number conventions vary. We will use the positive secant numbers \(s_n\), indexed by half the ordinary degree:
 
@@ -64,15 +66,18 @@ In the sequence-refinement part we will write \(a(n)=E_{2n}\). In particular, \(
 | 5 | 10 | 50521 | -50521 |
 | 6 | 12 | 2702765 | 2702765 |
 
-We will use three coordinate systems. Their operations have different meanings.
+We will use several coordinate systems. Their operations have different meanings.
 
 | Coordinates | Object being represented | Operation to keep track of |
 |---|---|---|
 | Exponential coefficients | A formal series in \(t\) | Products carry binomial weights |
 | Residue packets | The same even series, grouped modulo four | Multiplication becomes a matrix with a carry factor |
+| Local Euler coordinates | Signed Euler numbers reconstructed from an odd-length or dyadic source | A weighted convolution retains a finite truncation error |
 | Finite differences | The indexed sequence \(a(0),a(1),\ldots\) | Sampling becomes a polynomial in the forward difference |
 
 The series calculations take place over the rational numbers. A formal series is a sequence of coefficients with a multiplication rule. Every coefficient of a product is a finite sum, so the calculations do not require an analytic convergence argument. A series with a nonzero constant coefficient has a unique formal reciprocal.
+
+For a prime \(p\), \(v_p(x)\) denotes the exponent of \(p\) in the reduced numerator of a nonzero rational number \(x\), minus that in its denominator. We set \(v_p(0)=\infty\). A rational number can be reduced modulo \(p^h\) when its reduced denominator is coprime to \(p\), using the modular inverse of that denominator.
 
 ## Build the secant numbers from the reciprocal equation
 
@@ -409,7 +414,7 @@ Its full series is
 G(u)=\sum_{j\geq0}\frac{(-4)^j u^j}{(4j)!}.
 \]
 
-Here is a proof of that coefficient formula. Over the harmless scalar extension containing \(i\),
+Here is a proof of that coefficient formula. Work temporarily over \(\mathbb Q(i)\):
 
 \[
 \cos t\cosh t
@@ -525,6 +530,94 @@ s_6
 \]
 
 This agrees with the direct secant recurrence, but its intermediate objects are different. One route uses all preceding secant coefficients. The other constructs the quartic carrier and transfers it to the two packets. We have proved why the routes agree, so a disagreement in an implementation would expose a convention or arithmetic error.
+
+## Recover the quartic carrier from an Euler packet
+
+The bridge can also be read backwards. In the first packet, the coefficient of \(b_m\) is \(4^m\), so
+
+\[
+b_m=\frac1{4^m}\left[
+s_{2m}-\sum_{k=0}^{m-1}\binom{4m}{4k}4^kb_k\right].
+\]
+
+The case \(m=0\) gives \(b_0=s_0=1\), with an empty sum. The next steps give
+
+\[
+\begin{aligned}
+b_1&=\frac{5-1}{4}=1,\\
+b_2&=\frac{1385-1-70\cdot4}{16}
+=\frac{1104}{16}=69,\\
+b_3&=\frac{2702765-1-1980-546480}{64}
+=\frac{2154304}{64}=33661.
+\end{aligned}
+\]
+
+Once that carrier is known, the second packet is determined by the same reconstruction rule. For example,
+
+\[
+\begin{aligned}
+s_7
+&=1+\binom{14}4\,4+\binom{14}8\,16\cdot69
++\binom{14}{12}\,64\cdot33661\\
+&=1+4004+3315312+196041664\\
+&=199360981.
+\end{aligned}
+\]
+
+Thus the Euler coefficients at degrees \(0,4,8,12\) recover the carrier through \(b_3\), which also predicts the coefficient at degree fourteen. This uses the reciprocal equation and its fixed numerator. An arbitrary even series would have two independent packets. The reconstruction constraint is what connects them in this example.
+
+## Count the first quartic values without series inversion
+
+There is a concrete permutation interpretation of the same integers. Arrange \(4n\) distinct letters in descending blocks of four. Require an ascent at each boundary between blocks. This is the four-alternating pattern used by the cited OEIS entries.
+
+At length four, only \(4321\) occurs, so \(b_1=1\). At length eight, choose which four letters occupy the first block. Each block then has a unique descending order. There are \(\binom84=70\) choices. Exactly one choice gives a descent at the boundary as well, namely the globally descending permutation. Removing it leaves
+
+\[
+b_2=70-1=69.
+\]
+
+At length twelve, three descending blocks can be filled in
+
+\[
+\frac{12!}{4!4!4!}=34650
+\]
+
+ways. A forbidden descent at the first boundary merges its two blocks into a descending block of eight. That leaves \(\binom{12}4=495\) choices. The second forbidden boundary gives another 495. Their intersection is the unique globally descending permutation. Inclusion-exclusion gives
+
+\[
+b_3=34650-495-495+1=33661.
+\]
+
+At length sixteen there are three internal boundaries. The same calculation gives
+
+\[
+\begin{aligned}
+b_4
+&=\frac{16!}{(4!)^4}
+-3\frac{16!}{8!4!4!}
++2\binom{16}4+\binom{16}8-1\\
+&=63063000-3\cdot900900+2\cdot1820+12870-1\\
+&=60376809.
+\end{aligned}
+\]
+
+The double-boundary intersections have different shapes. Two adjacent merges give blocks of sizes twelve and four. Two disjoint merges give blocks of sizes eight and eight. Keeping those cases separate explains the two different binomial terms.
+
+For general block length \(N\geq1\) and \(n>0\), a selection of forbidden boundaries merges the blocks into an ordered composition \(q_1+\cdots+q_k=n\). There are \(n-k\) merged boundaries and
+
+\[
+\frac{(Nn)!}{(Nq_1)!\cdots(Nq_k)!}
+\]
+
+ways to fill the resulting descending blocks. Hence the count is
+
+\[
+\sum_{k=1}^n(-1)^{n-k}
+\sum_{\substack{q_1+\cdots+q_k=n\\q_j\geq1}}
+\frac{(Nn)!}{(Nq_1)!\cdots(Nq_k)!}.
+\]
+
+Expanding \(D_N^{-1}=(1+(D_N-1))^{-1}\) gives precisely this expression for \(b_N(n)\). This proves the enumeration identity. Direct permutation enumeration and rank-based dynamic programming provide separate finite checks of its implementation.
 
 ## Turn the reciprocal calculation into parameter polynomials
 
@@ -738,6 +831,394 @@ Three whole-family identities follow from the generating function:
 For the first, add the generating functions at \(x+1\) and \(x\). The factor \(e^t+1\) cancels, leaving \(2e^{xt}\). For the derivative identity, differentiation in \(x\) multiplies the generating function by \(t\). For reflection, the generating function at \(1-x\) is the original one with \(t\) replaced by \(-t\). Each conclusion follows by coefficient comparison.
 
 We have now used one Euler sequence to construct both its residue-packet representation and a classical polynomial basis. The parameter-addition law and the Euler translation identities remain separate, explicitly typed operations.
+
+## Use Euler polynomials to sum alternating powers
+
+The translation law also turns a finite sum into two boundary values. Multiply
+
+\[
+\mathcal E_m(x+j+1)+\mathcal E_m(x+j)=2(x+j)^m
+\]
+
+by \((-1)^j\), and sum over \(0\leq j<L\). Every interior polynomial value cancels with its neighbor. For every integer \(L\geq0\),
+
+\[
+\boxed{
+\sum_{j=0}^{L-1}(-1)^j(x+j)^m
+=\frac{\mathcal E_m(x)-(-1)^L\mathcal E_m(x+L)}2.}
+\]
+
+The empty sum at \(L=0\) is zero. No limiting process is involved.
+
+For example,
+
+\[
+1^4-2^4+3^4-4^4+5^4
+=1-16+81-256+625=435.
+\]
+
+The polynomial calculation gives the same answer:
+
+\[
+\frac{\mathcal E_4(1)+\mathcal E_4(6)}2
+=\frac{0+(6^4-2\cdot6^3+6)}2
+=\frac{870}{2}=435.
+\]
+
+The alternating odd-power window needed next is obtained by taking \(x=1/2\) and multiplying by \(2^m\). For an odd positive length \(p\), define
+
+\[
+A_{p,m}=\sum_{a=0}^{p-1}(-1)^a(2a+1)^m.
+\]
+
+Then
+
+\[
+A_{p,m}=2^{m-1}
+\left[\mathcal E_m\!\left(\frac12\right)
++\mathcal E_m\!\left(p+\frac12\right)\right].
+\]
+
+This includes \(m=0\): the factor is \(1/2\), and the bracket is two. For \(p=3,m=4\), the direct value is \(1-81+625=545\). Since
+
+\[
+\mathcal E_4\!\left(\frac12\right)=\frac5{16},
+\qquad
+\mathcal E_4\!\left(\frac72\right)=\frac{1085}{16},
+\]
+
+the polynomial route gives \(8(5+1085)/16=545\) as well.
+
+## Reconstruct Euler numbers from an odd-length window
+
+We now use the local Euler coordinates developed in [Paper IX](../works/paper-ix.md). The source numbers \(A_{p,2n}\) are finite alternating sums. The first question is what operator reconstructs \(E_{2n}\) from them.
+
+Start with their full exponential generating series. The finite geometric sum gives, for positive odd \(p\),
+
+\[
+\begin{aligned}
+\sum_{m\geq0}A_{p,m}\frac{t^m}{m!}
+&=\sum_{a=0}^{p-1}(-1)^ae^{(2a+1)t}\\
+&=e^t\frac{1+e^{2pt}}{1+e^{2t}}\\
+&=e^{pt}\cosh(pt)\operatorname{sech}t.
+\end{aligned}
+\]
+
+Average the expression at \(t\) and \(-t\) to retain only even degrees:
+
+\[
+\mathcal A_p(t)
+:=\sum_{n\geq0}A_{p,2n}\frac{t^{2n}}{(2n)!}
+=\cosh^2(pt)\operatorname{sech}t.
+\]
+
+The reconstruction kernel is therefore \(\operatorname{sech}^2(pt)\). Write
+
+\[
+\operatorname{sech}^2t
+=\sum_{r\geq0}\gamma_r\frac{t^{2r}}{(2r)!}.
+\]
+
+The earlier reciprocal-power polynomials give
+
+\[
+\gamma_r=(-1)^rP_{2,r}(2),
+\qquad
+(\gamma_0,\ldots,\gamma_4)=(1,-2,16,-272,7936).
+\]
+
+These coefficients are integers. One can also see their integrality directly by multiplying the two signed Euler series. Multiplying \(\mathcal A_p\) by the reconstruction kernel and comparing EGF coefficients proves
+
+\[
+\boxed{
+E_{2n}=\sum_{r=0}^n\binom{2n}{2r}
+\gamma_rp^{2r}A_{p,2n-2r}.}
+\]
+
+The inverse transfer is equally explicit. Since
+
+\[
+\cosh^2(pt)=\frac{1+\cosh(2pt)}2,
+\]
+
+its EGF coefficients are
+
+\[
+\lambda_{p,0}=1,\qquad
+\lambda_{p,r}=2^{2r-1}p^{2r}\quad(r\geq1).
+\]
+
+Consequently,
+
+\[
+A_{p,2n}=\sum_{r=0}^n\binom{2n}{2r}
+\lambda_{p,r}E_{2n-2r}.
+\]
+
+For \(p=3,n=2\), this inverse calculation is already visible:
+
+\[
+A_{3,4}=5+6\cdot18\cdot(-1)+648=545.
+\]
+
+The forward and inverse transfers are triangular and have diagonal one. Oddness of \(p\) is needed for this source identity. Primality is needed only when we interpret the resulting precision in terms of a prime.
+
+## Work the odd-prime reconstruction through to 1385
+
+Choose \(p=3\). The source and kernel values needed for ordinary degree eight are
+
+| \(r\) | Source \(A_{3,2r}=1-3^{2r}+5^{2r}\) | Kernel \(\gamma_r3^{2r}\) |
+|---:|---:|---:|
+| 0 | 1 | 1 |
+| 1 | 17 | -18 |
+| 2 | 545 | 1296 |
+| 3 | 14897 | -198288 |
+| 4 | 384065 | 52068096 |
+
+Insert them into the degree-eight reconstruction:
+
+\[
+\begin{aligned}
+E_8
+&=384065+28(-18)(14897)+70(1296)(545)\\
+&\quad+28(-198288)(17)+52068096\\
+&=384065-7508088+49442400-94385088+52068096\\
+&=1385.
+\end{aligned}
+\]
+
+Let \(T_L^{(p)}(n)\) retain terms \(0\leq r\leq\min(L,n)\). Every omitted term contains \(p^{2r}\), and all its remaining factors are integers. Thus, for every odd positive \(p\),
+
+\[
+p^{2L+2}\mid E_{2n}-T_L^{(p)}(n).
+\]
+
+If \(L\geq n\), the omitted sum is empty and the error is zero. For an odd prime this gives a prime-adic precision certificate. It follows from the explicit finite sum for every \(n\), rather than from the size of a tested prefix.
+
+For this particular row, the complete partial sums and errors are
+
+| Depth \(L\) | \(T_L^{(3)}(4)\) | Error \(1385-T_L^{(3)}(4)\) | \(v_3\) of error |
+|---:|---:|---:|---:|
+| 0 | 384065 | -382680 | 2 |
+| 1 | -7124023 | 7125408 | 4 |
+| 2 | 42318377 | -42316992 | 6 |
+| 3 | -52066711 | 52068096 | 8 |
+| 4 | 1385 | 0 | \(\infty\) |
+
+For instance, \(1385\equiv8\pmod9\), while \(-7124023\equiv1385\equiv8\pmod{81}\). The partial sums fluctuate in ordinary size, but their differences from the target acquire the stated powers of three. These are two different ways of measuring the same rational or integer error.
+
+## Build the separate dyadic source and kernel
+
+The odd-length source cannot simply be reused with \(p=2\). Its constant coefficient would be \(1-1=0\). Multiplication by any formal series would still have constant coefficient zero, so it could not reconstruct \(E_0=1\).
+
+Paper IX uses a different source for the dyadic chart. In ordinary even degree \(m\), set
+
+\[
+R_m=\frac{3^{m+2}-1}{4(m+1)(m+2)}.
+\]
+
+Its generating series is
+
+\[
+\mathcal R(t)=\sum_{n\geq0}R_{2n}\frac{t^{2n}}{(2n)!}
+=\frac{\cosh(3t)-\cosh t}{4t^2}.
+\]
+
+The numerator is divisible by \(t^2\), so this is a well-defined formal series with constant coefficient one. The identity \(\cosh(3t)-\cosh t=4\cosh t\sinh^2t\) gives
+
+\[
+\mathcal R(t)\cosh t
+=\left(\frac{\sinh(2t)}{2t}\right)^2.
+\]
+
+The quotient \(\sinh(2t)/(2t)\) also has constant coefficient one. Define
+
+\[
+J(t)=\left(\frac{\sinh(2t)}{2t}\right)^2,
+\qquad
+K(t)=J(t)^{-1}=\left(\frac{2t}{\sinh(2t)}\right)^2.
+\]
+
+Then \(K(t)\mathcal R(t)=\operatorname{sech}t\). If
+
+\[
+K(t)=\sum_{r\geq0}\kappa_r\frac{t^{2r}}{(2r)!},
+\]
+
+the dyadic reconstruction is
+
+\[
+\boxed{
+E_{2n}=\sum_{r=0}^n\binom{2n}{2r}\kappa_rR_{2n-2r}.}
+\]
+
+We can obtain the kernel entirely by rational inversion. The inverse kernel has coefficients
+
+\[
+J(t)=\frac{\cosh(4t)-1}{8t^2}
+=\sum_{r\geq0}\lambda_{2,r}\frac{t^{2r}}{(2r)!},
+\qquad
+\lambda_{2,r}=\frac{2^{4r+1}}{(2r+1)(2r+2)}.
+\]
+
+The constant coefficient is one. For \(r>0\), the product equation \(JK=1\) gives
+
+\[
+\kappa_r=-\sum_{j=1}^r\binom{2r}{2j}\lambda_{2,j}\kappa_{r-j}.
+\]
+
+For example,
+
+\[
+\begin{aligned}
+\kappa_1&=-\frac83,\\
+\kappa_2&=-\frac{256}{15}
+-6\left(\frac83\right)\left(-\frac83\right)
+=\frac{128}{5},\\
+\kappa_3&=-\frac{1024}{7}+\frac{2048}{3}-1024
+=-\frac{10240}{21}.
+\end{aligned}
+\]
+
+The relevant source and kernel values are
+
+| \(r\) | \(R_{2r}\) | \(\kappa_r\) |
+|---:|---:|---:|
+| 0 | 1 | 1 |
+| 1 | \(5/3\) | \(-8/3\) |
+| 2 | \(91/15\) | \(128/5\) |
+| 3 | \(205/7\) | \(-10240/21\) |
+| 4 | \(7381/45\) | \(229376/15\) |
+
+The dyadic source, kernel and factorial normalization have all changed together. Merely substituting two into the odd-prime formula would miss that change of coordinates.
+
+## Reconstruct 1385 in the dyadic chart
+
+At ordinary degree eight, calculate the five terms separately:
+
+\[
+\begin{aligned}
+E_8
+&=\frac{7381}{45}
++28\left(-\frac83\right)\frac{205}{7}
++70\left(\frac{128}{5}\right)\frac{91}{15}\\
+&\quad+28\left(-\frac{10240}{21}\right)\frac53
++\frac{229376}{15}\\
+&=\frac{7381}{45}-\frac{6560}{3}+\frac{163072}{15}
+-\frac{204800}{9}+\frac{229376}{15}\\
+&=\frac{7381-98400+489216-1024000+688128}{45}\\
+&=\frac{62325}{45}=1385.
+\end{aligned}
+\]
+
+Define \(T_L^{(2)}(n)\) by retaining the first \(L+1\) terms, or all terms when \(L\geq n\). The error table for this row is
+
+| Depth \(L\) | \(T_L^{(2)}(4)\) | Error \(1385-T_L^{(2)}(4)\) | \(v_2\) of error |
+|---:|---:|---:|---:|
+| 0 | \(7381/45\) | \(54944/45\) | 5 |
+| 1 | \(-91019/45\) | \(153344/45\) | 8 |
+| 2 | \(398197/45\) | \(-335872/45\) | 13 |
+| 3 | \(-208601/15\) | \(229376/15\) | 15 |
+| 4 | 1385 | 0 | \(\infty\) |
+
+All denominators in this table are odd, so the congruences are meaningful in the ring \(\mathbb Z_{(2)}\) of rationals with odd denominator.
+
+The first term alone already gives the correct answer modulo 32. Indeed,
+
+\[
+45\equiv13\pmod{32},\qquad13\cdot5\equiv1\pmod{32},
+\]
+
+so
+
+\[
+\frac{7381}{45}\equiv21\cdot5\equiv9\equiv1385\pmod{32}.
+\]
+
+This modular division uses the inverse of an odd denominator. It is a different operation from attempting to reduce \(5/24\) modulo a power of two, which is undefined because 24 is not a unit.
+
+## Prove the dyadic precision bound and locate its sharp edge
+
+The exact kernel explains the precision pattern. Define the Bernoulli numbers by
+
+\[
+\frac{z}{e^z-1}=\sum_{j\geq0}B_j\frac{z^j}{j!},
+\qquad B_1=-\frac12.
+\]
+
+The regular even series \(Q(z)=z\coth z\) has expansion
+
+\[
+Q(z)=1+\sum_{r\geq1}\frac{2^{2r}B_{2r}}{(2r)!}z^{2r}.
+\]
+
+This follows from \(Q(z)=z+2z/(e^{2z}-1)\). Differentiation gives
+
+\[
+Q(z)-zQ'(z)=\left(\frac z{\sinh z}\right)^2.
+\]
+
+Substitute \(z=2t\) and compare coefficients:
+
+\[
+\kappa_r=-2^{4r}(2r-1)B_{2r}\qquad(r\geq1).
+\]
+
+The [von Staudt–Clausen denominator theorem](https://dlmf.nist.gov/24.10.E1) states that the reduced denominator of \(B_{2r}\), for \(r\geq1\), contains each prime \(q\) with \((q-1)\mid2r\) exactly once. In particular it contains two exactly once. Thus \(v_2(B_{2r})=-1\), and
+
+\[
+\boxed{v_2(\kappa_r)=4r-1\quad(r\geq1).}
+\]
+
+We also need the source coefficients to be dyadic units. Write \(n+1=2^du\), with \(u\) odd. In
+
+\[
+9^{n+1}-1=(9^u-1)\prod_{j=0}^{d-1}(9^{2^ju}+1),
+\]
+
+the first factor has valuation three, since \((9^u-1)/(9-1)\) is odd. Each factor in the product has valuation one. Hence \(v_2(9^{n+1}-1)=3+d\). The denominator of \(R_{2n}\) has the same valuation, so \(v_2(R_{2n})=0\).
+
+It follows that the \(r\)-th reconstruction term, for \(1\leq r\leq n\), has exact weight
+
+\[
+v_2\!\left(\binom{2n}{2r}\kappa_rR_{2n-2r}\right)
+=4r-1+v_2\binom{2n}{2r}.
+\]
+
+Every term omitted after depth \(L\) has weight at least \(4L+3\). Their finite sum therefore proves
+
+\[
+\boxed{
+E_{2n}-T_L^{(2)}(n)\in2^{4L+3}\mathbb Z_{(2)}
+\quad(n,L\geq0).}
+\]
+
+The bound includes the empty tail, where the error is zero. It is uniformly sharp: at \(n=L+1\), exactly one term is omitted, and that term is \(\kappa_{L+1}\), because the binomial coefficient and \(R_0\) are both one. Its valuation is exactly \(4L+3\).
+
+The first sharpness examples are
+
+\[
+\begin{aligned}
+E_2-T_0^{(2)}(1)&=-1-\frac53=-\frac83,
+&v_2&=3,\\
+E_4-T_1^{(2)}(2)&=\frac{128}{5},
+&v_2&=7,\\
+E_6-T_2^{(2)}(3)&=-\frac{10240}{21},
+&v_2&=11,\\
+E_8-T_3^{(2)}(4)&=\frac{229376}{15},
+&v_2&=15.
+\end{aligned}
+\]
+
+For the fixed row \(E_8\), the four nonconstant term weights are
+
+\[
+3+v_2(28)=5,\quad
+7+v_2(70)=8,\quad
+11+v_2(28)=13,\quad15.
+\]
+
+They are distinct and increase strictly. In each nonempty tail there is a unique term of least valuation, so it cannot be cancelled by terms divisible by a higher power of two. This proves the exact error valuations \(5,8,13,15\) in the table. The uniform bound and the stronger precision of a particular row answer different questions.
 
 ## Use a residual to certify and improve a finite reciprocal
 
@@ -1125,6 +1606,55 @@ The spacing-four output is \(1384=8\cdot173\), with valuation three. These are v
 
 Primality matters in the integer-polynomial statement. For the composite value four, \(\binom42=6\) is not divisible by four. One cannot replace the prime hypothesis by an arbitrary positive integer while keeping \(B_p\) integral in this form.
 
+## Compare the residuals at three and five
+
+The next difference coordinate of the Euler sequence is
+
+\[
+\begin{aligned}
+c_5
+&=a(5)-5a(4)+10a(3)-10a(2)+5a(1)-a(0)\\
+&=-50521-6925-610-50-5-1=-58112.
+\end{aligned}
+\]
+
+At spacing three, the operator is
+
+\[
+S^3-I=\Delta^3+3\Delta+3\Delta^2.
+\]
+
+Its Euler output is
+
+\[
+a(3)-a(0)=-80+3(-2)+3(8)=-80+18=-62.
+\]
+
+The residual 18 has valuation \(v_3(18)=2\). Thus omitting it happens to preserve this output modulo nine. It fails modulo 27. The extra factor of three comes from the particular input values, since \(c_1+c_2=6\). The operator coefficients alone guarantee only the explicit factor three.
+
+At spacing five,
+
+\[
+S^5-I=\Delta^5+5\Delta+10\Delta^2+10\Delta^3+5\Delta^4.
+\]
+
+The correction is
+
+\[
+5(-2)+10(8)+10(-80)+5(1664)
+=-10+80-800+8320=7590.
+\]
+
+Therefore
+
+\[
+a(5)-a(0)=-58112+7590=-50522,
+\]
+
+which agrees with \(-50521-1\). Here \(v_5(7590)=1\), so the discarded residual is already visible modulo 25. Its residue there is 15.
+
+These examples distinguish a divisibility statement about the transfer polynomial from an additional cancellation in one Euler row. Both can be calculated exactly, but they are separate pieces of information. The local reconstruction ladders proved earlier concern different operators and retain their own hypotheses.
+
 ## Read the same shift polynomial as a signal filter
 
 The operator \((S^M-I)^k\) also acts on a complex exponential sequence
@@ -1155,6 +1685,40 @@ It differs by a pure shift and has the same gain. The earlier one-sided Euler ca
 
 This frequency response belongs to the finite filter. We have not taken a convergent Fourier transform of the rapidly growing Euler sequence. The arithmetic reading of the polynomial measures divisibility of integer outputs. The signal reading evaluates it on exponential modes. The common shift polynomial connects the two calculations while preserving what each one means.
 
+## See what a single sampled lane forgets
+
+A small bounded signal makes the sampling issue visible without the growth of the Euler numbers. Compare
+
+\[
+x(n)=(-1)^n,\qquad y(n)=1\quad(n\geq0).
+\]
+
+Their even lanes agree:
+
+\[
+R_{2,0}x=R_{2,0}y=(1,1,1,\ldots).
+\]
+
+Their odd lanes are different: \(R_{2,1}x=(-1,-1,\ldots)\), while \(R_{2,1}y=(1,1,\ldots)\). Consequently, knowing the even lane alone does not determine the even lane after a one-step shift of the original signal.
+
+More explicitly, set \(v=x-y\) and \(f=R_{2,0}\). Then
+
+\[
+f(v)=0,\qquad f(Sv)=(-2,-2,\ldots)\ne0.
+\]
+
+This is the same kind of kernel obstruction that appeared when we discarded the second formal-series packet. An operator on the retained data alone could not send the same zero input to both of these outputs.
+
+Retaining both phases repairs the representation. Write \(b_0=R_{2,0}x\) and \(b_1=R_{2,1}x\). A unit shift of the original signal sends the pair to
+
+\[
+(b_0,b_1)\longmapsto(b_1,S_qb_0).
+\]
+
+Two such operations give \((S_qb_0,S_qb_1)\), as required for an original shift by two. The advance of the lane index is part of this two-phase transfer.
+
+Finally, \((S^2-I)x=0\), because \(x(n+2)=x(n)\). The filter cannot detect this alternating mode at that spacing. This is its zero at frequency \(\omega=\pi\), evaluated on an actual bounded signal. The statement concerns the filter and the retained phases, with no Fourier transform assigned to the Euler sequence.
+
 ## Run the exact checks
 
 Download the [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_packets.py), or the [complete source and results bundle](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-and-checks.zip). From the download directory, run:
@@ -1169,6 +1733,8 @@ Python 3.10 or later is sufficient. On Windows, `py -3` can replace `python` whe
 ```text
 Secant numbers: 1, 1, 5, 61, 1385, 50521, 2702765
 Quartic reciprocal: 1, 1, 69, 33661, 60376809
+Odd-length and dyadic reconstructions: E_8 = 1385
+Dyadic E_8 tail valuations: 5, 8, 13, 15, exact
 Signed Euler difference coordinates: 1, -2, 8, -80, 1664
 Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376
 Refinement: 2*4 + 1376 = 1384
@@ -1185,7 +1751,7 @@ python -B euler_packets.py --output my-euler-results
 
 The program refuses to replace existing result files. The CSV values retain integers and rational numbers, including the ordinary coefficients and their factorial normalization.
 
-You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
 
 The checks use several different routes:
 
@@ -1198,19 +1764,22 @@ The checks use several different routes:
 | Quartic bridge | Scalar and packet calculations | Secant indices 0–40, packet coefficients through \(u^{11}\) |
 | Residual correction | Direct inverse and residual squaring in the same quotient ring | Modulo \(t^{32}\), iterations 0–4 |
 | Euler polynomials | Centered reconstruction, shift, derivative, and reflection identities | Degrees 0–12 |
+| Alternating powers | Direct finite sums against telescoped Euler-polynomial values | Degrees 0–12, lengths 0, 1, 2, 3, 5, 6, and starts \(-1/2,0,1,3/2\) |
+| Local Euler charts | Direct power sums or rational sources against formal-series multiplication, reconstruction, and inverse transfer | Charts 1, 2, 3, 5, 7, 9, every even degree 0–20 |
+| Local precision | Every finite depth against the exact tail, plus the Bernoulli kernel and first omitted dyadic row | Prime charts 2, 3, 5, 7 through degree 20, sharp dyadic depths 0–9 |
 | Sequence transfer | Direct sampled differences against polynomial kernels | Spacings 1–5, every lane, orders 0–5, three specified integer sequences |
 | Refinement composition | Every coefficient of composed and direct kernel rows | Both spacings 1–4, every lane, orders 0–3 |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
 The permutation control uses a different definition of the numbers. At length \(m\), keep the number of admissible permutations ending at each possible rank. If the next comparison is an ascent, sum the preceding counts below the new rank. For a descent, sum those at or above it. Repeating the prescribed pattern gives the total. The program also enumerates the small permutation sets directly to check this dynamic program. It does not infer a universal enumeration theorem from those samples.
 
-The [bounded run manifest](../../verification/euler-packets/run-001/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [proof self-review](../../verification/euler-packets/PROOF_REVIEW.md) concerns the written algebra separately. There is no new Lean run for this example.
+The [bounded run manifest](../../verification/euler-packets/run-002/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [original proof self-review](../../verification/euler-packets/PROOF_REVIEW.md) and [expansion self-review](../../verification/euler-packets/PROOF_REVIEW_EXPANSION.md) concern the written algebra separately. There is no new Lean run for this example.
 
-A separate check compares 605 exact coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges. This checks agreement with the implemented project machinery alongside the standalone derivation.
+A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
 ## What the example establishes
 
-The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction identity, reciprocal parameter polynomials, classical Euler-polynomial reconstruction, formal residual correction, and sequence-refinement kernels with their composition and prime correction.
+The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local reconstructions with proved precision bounds, formal residual correction, and sequence-refinement kernels with their composition and prime correction.
 
 The finite program checks implementations of these laws in its declared ranges. Its deliberately wrong controls expose missing carry factors, wrong factorial normalization, discarded residuals, and an invalid composite-number generalization.
 
@@ -1221,11 +1790,12 @@ The method keeps the representation, operation, preserved data, and remaining de
 ## Sources and further reading
 
 - [NIST DLMF, Euler numbers and polynomials](https://dlmf.nist.gov/24.2#ii), including the signed convention and polynomial generating function, and the [secant expansion](https://dlmf.nist.gov/4.19.E5).
+- [NIST DLMF, von Staudt–Clausen theorem](https://dlmf.nist.gov/24.10.E1), for the precise Bernoulli denominator input in the dyadic kernel valuation.
 - [OEIS A000364](https://oeis.org/A000364) and its [coefficient table](https://oeis.org/A000364/b000364.txt), for the positive secant sequence and offset.
 - [OEIS A211212](https://oeis.org/A211212), for the quartic reciprocal sequence, and [A181985](https://oeis.org/A181985), for generalized alternating permutations.
 - [Paper IV](../works/paper-iv.md), for cyclic denominators and reciprocal-power polynomials. The [sequence experiments](SEQUENCE_SHAPES.md) use the same exponential normalization.
 - [Euler Signal Bridge](../works/euler-signal-bridge.md), for the existing finite-difference/FIR interface developed in greater detail here.
-- [Paper III](../works/paper-iii.md), for the broader typed transfer and residual language, and [Paper IX](../works/paper-ix.md), for arithmetic packets and local polynomial deformations.
+- [Paper III](../works/paper-iii.md), for the broader typed transfer and residual language, and [Paper IX](../works/paper-ix.md), for the odd-length and dyadic Euler reconstruction, sharp precision bounds, arithmetic packets, and local polynomial deformations.
 - [Source and overlap notes](../../verification/euler-packets/SOURCES.md), [target and route record](../../verification/euler-packets/TARGET_AND_ROUTES.md), and [proof self-review](../../verification/euler-packets/PROOF_REVIEW.md).
 
 [Back to the essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Explore the sequence graphs](SEQUENCE_SHAPES.md) · [All demonstrations](../DEMONSTRATIONS.md)

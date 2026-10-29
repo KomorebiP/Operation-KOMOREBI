@@ -8,15 +8,15 @@
 
 **Completion:** Active development · **Lean:** No Lean claim · **Confidence:** Written / finite evidence
 
-An extended Euler derivation connects reciprocal polynomials, residue packets, exact residual repair, and finite-difference/FIR transfer.
+An extended Euler derivation connects reciprocal polynomials, residue packets, odd and dyadic local reconstruction, proved precision bounds, exact residual repair, and finite-difference/FIR transfer.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series derivations, a written self-review and bounded library comparisons. Universal Euler congruences remain outside that scope.
+**Recorded results and limits:** Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series and local arithmetic derivations, explicit truncation theorems, a written self-review and bounded library comparisons. Broader Euler-branch classification remains outside that scope.
 
-**Remaining work:** Independent mathematical review and any broader arithmetic congruence require their own hypotheses and evidence. Keep finite tests, written self-review and any future formalization distinct.
+**Remaining work:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs and any future formalization distinct.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 

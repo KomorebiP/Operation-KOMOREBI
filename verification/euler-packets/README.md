@@ -12,15 +12,18 @@ Python 3.10+ and its standard library are sufficient. No files are written by
 the first command. The second creates JSON and exact CSV tables and refuses to
 replace existing result files.
 
-`run-001/manifest.json` is the accepted v2 bounded execution record. It identifies
+`run-002/manifest.json` is the accepted v2 bounded execution record. It identifies
 the actual source revision and dirty state at execution, observed source hashes
 before/after, Python version, elapsed time, limits and output hashes. These
 hashes bind the new source independently of its pre-commit dirty state. The
 contract specifies every tested range and what a pass does not establish.
 
-`cross-check-001/manifest.json` binds a separate check of the accepted results,
+`cross-check-002/manifest.json` binds a separate check of the accepted results,
 the page's printed CLI output, Schur reconstruction, and exact agreement with
-the pinned mathematical-library source. To repeat that additional comparison,
+the pinned mathematical-library source, including 605 reciprocal coefficients
+and 1,012 local-chart values, truncations and row weights. The additional
+`local-reconstruction.csv` gives every displayed E_8 term, partial sum and error.
+To repeat that additional comparison,
 use a checkout whose tracked `src/` matches the pin in
 `manifests/reader-site-libraries.json`:
 
@@ -37,11 +40,20 @@ POSIX memory, CPU or affinity limit is claimed on Windows. The recorded thread
 setting is a conventional environment preference, not a universal enforcement
 mechanism. Neither run is a hardware performance benchmark.
 
-The mathematical dependency and self-review are in `PROOF_REVIEW.md`, the
-authenticated references and notation translation in `SOURCES.md`, and the
-target/route checkpoint in `TARGET_AND_ROUTES.md`. Written proofs and finite
-execution are separate evidence. No Lean run, novelty, exclusive-method claim,
-general Euler congruence or speedup is asserted.
+The first-edition self-review is in `PROOF_REVIEW.md`, and the added claims and
+full-page proofreading are in `PROOF_REVIEW_EXPANSION.md`. The authenticated
+references are in `SOURCES.md`, with the precise new denominator-theorem
+application in `LITERATURE_EXTENSION.md`. The target and route checkpoint is
+in `TARGET_AND_ROUTES.md`. Written proofs and finite
+execution are separate evidence. The local reconstruction and precision
+theorems have written proofs. No broader Euler-branch conjecture is certified
+by the finite checks, and no Lean run, novelty, exclusive method or speedup is
+asserted.
+
+The first-edition `run-001`, `cross-check-001` and their contracts are preserved
+as historical execution records. Their input hashes describe that edition,
+not the revised program or page. They are not accepted evidence for the
+expanded source. The publication record accepts only the fresh 002 runs.
 
 The publication manifest in `manifests/euler-packets-worked-example-2026-10-29.json`
 binds the final manuscript, code, review and execution records. Captured runner

@@ -2,6 +2,11 @@
 
 **29 October 2026 · Codex self-review · EULER-CASE-001**
 
+This record concerns C1-C10 in the first published edition, collection revision
+`9987ef468dcbfa49a256ea6da2b249d577da0a88`. Its remaining-scope discussion
+describes that edition. The added local reconstruction and precision theorems
+are reviewed separately in `PROOF_REVIEW_EXPANSION.md`.
+
 ## Normalized claim and verdict
 
 For the formal units and coefficient systems defined in the worked page, the

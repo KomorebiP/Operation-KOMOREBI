@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT/'examples/euler_packets.py'
 PAGE = ROOT/'docs/demonstrations/EULER_PACKETS.md'
-RUN = ROOT/'verification/euler-packets/run-001'
+RUN = ROOT/'verification/euler-packets/run-002'
 
 
 def digest(path):
@@ -39,6 +39,7 @@ def check_library(example, math_root, git):
     sys.path.insert(0,str(math_root/'src'))
     from komorebi_math.sequences import reciprocal_coefficients as integral
     from komorebi_math.analytic.reciprocal import reciprocal_coefficients as analytic
+    from komorebi_math.arithmetic.euler import EulerLocalCoordinates
     import numpy
     checks=0
     for spacing in range(2,7):
@@ -50,6 +51,35 @@ def check_library(example, math_root, git):
             reference=example.reciprocal_recurrence(spacing,parameter,11)
             assert tuple(reference)==analytic(spacing,parameter,10)
             checks+=11
+    local_checks=dict(values=0,truncations=0,row_weights=0)
+    for prime in (2,3,5,7):
+        coordinates=EulerLocalCoordinates(prime)
+        kernel=example.local_kernel(prime,11)
+        inverse_kernel=example.local_inverse_kernel(prime,11)
+        for index in range(11):
+            degree=2*index
+            source=example.local_source(prime,degree)
+            terms=example.local_terms(prime,index)
+            expected_value=sum(terms)
+            assert coordinates.source(degree)==source
+            assert coordinates.kernel(index)==kernel[index]
+            assert coordinates.inverse_kernel(index)==inverse_kernel[index]
+            assert coordinates.reconstruct(degree)==expected_value
+            assert coordinates.inverse_reconstruct_source(degree)==source
+            local_checks['values']+=5
+            for depth in range(index+1):
+                result=coordinates.truncate(degree,depth)
+                partial=sum(terms[:depth+1])
+                assert result.value==partial
+                assert result.error==expected_value-partial
+                assert result.certificate.valid
+                if depth==index:
+                    assert result.modulus is None
+                else:
+                    assert result.modulus==prime**(4*depth+3 if prime==2 else 2*depth+2)
+                local_checks['truncations']+=2
+                assert coordinates.row_weight(degree,depth)==example.valuation(terms[depth],prime)
+                local_checks['row_weights']+=1
     sources=[]
     for name,module in sorted(sys.modules.items()):
         filename=getattr(module,'__file__',None)
@@ -65,6 +95,8 @@ def check_library(example, math_root, git):
     return dict(status='PASS',checkout_revision=revision,source_revision=expected,
                 tracked_sources_match_pin=True,coefficient_comparisons=checks,
                 numpy_version=numpy.__version__,imported_sources=sources,
+                local_charts=[2,3,5,7],local_even_degree=[0,20],
+                local_comparisons=local_checks,local_chart_comparisons=sum(local_checks.values()),
                 scope='Exact numeric library outputs in the declared finite range. Not a proof of the complete Python implementation.')
 
 

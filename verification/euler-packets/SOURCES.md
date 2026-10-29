@@ -11,7 +11,7 @@ checks for the worked example, not a literature-wide novelty review.
 | NIST DLMF, Chapter 4 | [4.19.5](https://dlmf.nist.gov/4.19.E5) | Checked the secant expansion and sign conversion. Here `s_n=(-1)^n E_(2n)` is positive, and n is a compressed index. The analytic radius reported there is not used as a numerical error certificate. |
 | OEIS A000364 | [entry](https://oeis.org/A000364), [b-file](https://oeis.org/A000364/b000364.txt), indices 0 through 15 | Opened the source table and checked the embedded integer prefix and zero offset. The program stores EGF numerators, not ordinary coefficients. |
 | OEIS A211212 | [entry](https://oeis.org/A211212), prefix indices 0 through 11 and displayed generating function | Checked the quartic prefix, recurrence and generating function. Its `1/(cos(x/sqrt(2))*cosh(x/sqrt(2)))` is D_4(x)^(-1) in the example. The b-file request was unavailable, so the entry's displayed prefix is the source actually used. No asymptotic formula was used. |
-| OEIS A181985 | [entry](https://oeis.org/A181985), definition of N-alternating permutations | Checked the comparison pattern: an ascent occurs exactly when N divides the position. This motivates an independent finite rank-DP check. The example does not claim a new universal enumeration proof. |
+| OEIS A181985 | [entry](https://oeis.org/A181985), definition of N-alternating permutations | Checked the comparison pattern: an ascent occurs exactly when N divides the position. The expanded example supplies its inclusion-exclusion derivation, with rank DP and small explicit permutations as finite controls. No novelty claim is made for this enumeration identity. |
 
 No third-party paper PDF or licensed full text was copied into this publication.
 The two short attributed numerical prefixes are embedded in the standalone
@@ -40,7 +40,16 @@ The mathematical library source pin is
   logarithmic reciprocal-power construction, with degree meaning the final
   compressed index. Integer and Fraction parameters have exact arithmetic.
 - `src/komorebi_math/arithmetic/euler.py`: signed sech convention and separately
-  named zigzag numbers.
+  named zigzag numbers, odd and dyadic source/kernel pairs, exact reconstruction,
+  truncation and row-weight interfaces used by the expansion.
+
+The expansion additionally reads
+`papers/paper-ix/current/sources/main/parts/20_arithmetic.tex` at collection
+revision `9987ef468dcbfa49a256ea6da2b249d577da0a88`. The odd-length reconstruction,
+dyadic reconstruction, Bernoulli kernel, sharp tower and row weights are
+**known after translation of notation** from that source. The new numerical
+rows illustrate those results. `LITERATURE_EXTENSION.md` authenticates the
+external NIST denominator theorem used by the sharp dyadic valuation proof.
 
 The comparison checker records the actual checkout revision separately from the
 source pin. The local checkout has documentation changes, but its tracked source
@@ -53,7 +62,7 @@ claimed kernel-certified. The compared outputs are exact integers and Fractions.
 
 The classical sources authenticate definitions, sequence identities and prefixes.
 The universal algebraic identities in the new page are derived there and reviewed
-in `PROOF_REVIEW.md`. No application premise is supplied solely by a matching
+in `PROOF_REVIEW.md` and `PROOF_REVIEW_EXPANSION.md`. No application premise is supplied solely by a matching
 sequence name. The finite comparison range is in the computation contracts.
 
 - Secant and quartic recurrences: **known verbatim**, with the displayed indexing.

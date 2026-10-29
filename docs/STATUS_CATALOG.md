@@ -914,9 +914,9 @@ Finished reader/visual sets with scoped arguments, exact reductions and finite c
 
 **Active development** · Lean: **No Lean claim** · Confidence basis: **Written / finite evidence**
 
-Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series derivations, a written self-review and bounded library comparisons. Universal Euler congruences remain outside that scope.
+Written finite-difference/FIR identities and separately recorded exact controls. The extended Euler case adds formal-series and local arithmetic derivations, explicit truncation theorems, a written self-review and bounded library comparisons. Broader Euler-branch classification remains outside that scope.
 
-**Next step:** Independent mathematical review and any broader arithmetic congruence require their own hypotheses and evidence. Keep finite tests, written self-review and any future formalization distinct.
+**Next step:** Independent mathematical review and any broader arithmetic classification require their own hypotheses and evidence. Keep finite tests, written self-review, externally cited theorem inputs and any future formalization distinct.
 
 [Return to this work: paper, proofs, Lean, and code](works/euler-signal-bridge.md)
 

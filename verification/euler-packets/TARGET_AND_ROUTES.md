@@ -79,3 +79,32 @@ The formal proof self-review is in `PROOF_REVIEW.md`. Source authentication and
 conventions are in `SOURCES.md`. The computation contract and v2 run manifest bind
 the exact script and observed results. Publication integration is navigation and
 exposition, and does not promote other papers' mathematical status.
+
+## Expansion checkpoint EULER-CASE-002
+
+Requested proofreading and further worked examples begin at collection commit
+`9987ef468dcbfa49a256ea6da2b249d577da0a88`. Preserve the accepted first-edition
+runs as historical records. New runs must bind the revised script and page.
+
+The added targets are the Paper IX odd-length and dyadic local Euler charts,
+their forward and inverse coefficient laws, and a fully worked reconstruction
+of E_8 in each chart. Supply explicit partial sums, exact rational errors and
+local valuations. Prove the odd-length truncation bound from integer factors.
+For the sharp dyadic bound, derive the Bernoulli kernel formula and verify the
+precise external denominator-theorem input before using it. Retain its prime,
+positive-index and coefficient-domain hypotheses.
+
+Complementary examples will recover the quartic carrier from its Euler packet,
+explain the first quartic permutation counts by inclusion-exclusion, telescope
+finite alternating powers with Euler polynomials, and test higher prime
+residuals. A bounded alternating signal will show what a single sampled lane
+forgets. These additions must have written derivations and independent exact
+coefficient or sample-space controls.
+
+The routes have distinct discriminators: formal generating functions against
+finite power sums for the odd chart, direct inverse coefficients against the
+Bernoulli formula for the dyadic chart, and direct sampling or enumeration
+against transferred coordinates for the complementary examples. Success is
+closed written arguments under explicit hypotheses, a fresh completed primary
+run and library comparison, and source-bound published downloads. No result is
+declared new, and no Lean execution is part of this phase.

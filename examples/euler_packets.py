@@ -181,6 +181,99 @@ def as_integer(value):
     return value.numerator
 
 
+def local_source(chart, degree):
+    """Paper IX source, indexed by ordinary even degree."""
+    if degree < 0 or degree % 2:
+        raise ValueError('An even nonnegative ordinary degree is required')
+    if chart == 2:
+        return F(3**(degree+2)-1,4*(degree+1)*(degree+2))
+    if chart < 1 or chart % 2 == 0:
+        raise ValueError('Use the dyadic chart 2 or a positive odd length')
+    return F(sum((-1)**a*(2*a+1)**degree for a in range(chart)))
+
+
+def local_inverse_kernel(chart, count):
+    """EGF coefficients of the explicit inverse transfer unit."""
+    if chart == 2:
+        return [F(2**(4*r+1),(2*r+1)*(2*r+2)) for r in range(count)]
+    if chart < 1 or chart % 2 == 0:
+        raise ValueError('Use the dyadic chart 2 or a positive odd length')
+    return [F(1)]+[F(2**(2*r-1)*chart**(2*r)) for r in range(1,count)]
+
+
+def local_kernel(chart, count):
+    """Invert the explicit unit by ordinary rational Cauchy products."""
+    ordinary=[v/factorial(2*r) for r,v in enumerate(local_inverse_kernel(chart,count))]
+    return [v*factorial(2*r) for r,v in enumerate(inverse(ordinary,count))]
+
+
+def local_terms(chart, index):
+    """Terms reconstructing E_(2*index), including every factorial weight."""
+    return [comb(2*index,2*r)*coefficient*local_source(chart,2*(index-r))
+            for r,coefficient in enumerate(local_kernel(chart,index+1))]
+
+
+def bernoulli_numbers(degree):
+    """Independent inversion of (exp(t)-1)/t, with B_1=-1/2."""
+    ordinary=inverse([F(1,factorial(j+1)) for j in range(degree+1)],degree+1)
+    return [value*factorial(j) for j,value in enumerate(ordinary)]
+
+
+def valuation(value, prime):
+    """Exact rational p-valuation; None denotes the valuation of zero."""
+    value=F(value)
+    if value == 0:
+        return None
+    numerator,denominator=abs(value.numerator),value.denominator
+    result=0
+    while numerator % prime == 0:
+        numerator//=prime
+        result+=1
+    while denominator % prime == 0:
+        denominator//=prime
+        result-=1
+    return result
+
+
+def rational_residue(value, modulus):
+    """Reduce only fractions whose reduced denominator is a unit."""
+    value=F(value)
+    return value.numerator*pow(value.denominator,-1,modulus) % modulus
+
+
+def local_row_record(chart, index):
+    terms=local_terms(chart,index)
+    exact=sum(terms)
+    partial=F(0)
+    rows=[]
+    for depth,term in enumerate(terms):
+        partial+=term
+        error=exact-partial
+        rows.append(dict(depth=depth,term=str(term),partial=str(partial),
+                         error=str(error),valuation=valuation(error,chart)))
+    return dict(chart=chart,ordinary_degree=2*index,exact=str(exact),rows=rows)
+
+
+def composition_count(spacing, blocks):
+    """Inclusion-exclusion over the cuts between descending blocks."""
+    if blocks == 0:
+        return 1
+    def compositions(total):
+        if total == 0:
+            yield ()
+        else:
+            for first in range(1,total+1):
+                for rest in compositions(total-first):
+                    yield (first,)+rest
+    result=0
+    for parts in compositions(blocks):
+        denominator=1
+        for part in parts:
+            denominator*=factorial(spacing*part)
+        result+=(-1)**(blocks-len(parts))*factorial(spacing*blocks)//denominator
+    return result
+
+
 def compute():
     counts = {}
 
@@ -225,6 +318,7 @@ def compute():
         a = reciprocal_recurrence(spacing,1,9)
         for n in range(9):
             check('rank_dynamic_program',a[n] == alternating_count(spacing,spacing*n))
+            check('permutation_composition_formula',a[n] == composition_count(spacing,n))
     # An explicit enumeration checks the rank-DP implementation on small inputs.
     for spacing,size in [(2,0),(2,4),(2,6),(2,8),(4,4),(4,8)]:
         actual = sum(all((p[j-1] < p[j]) == (j % spacing == 0)
@@ -252,6 +346,11 @@ def compute():
     for n in range(41):
         rebuilt = sum(comb(2*n,4*k)*4**k*b[k] for k in range(n//2+1))
         check('quartic_to_secant',rebuilt == s[n])
+    recovered=[]
+    for n in range(21):
+        remainder=s[2*n]-sum(comb(4*n,4*k)*4**k*recovered[k] for k in range(n))
+        recovered.append(remainder/4**n)
+        check('secant_to_quartic',recovered[n] == b[n])
     naive_a = inverse(c,length)
     check('failure_controls',naive_a[1] == -F(1,24) and packet_a[1] == F(5,24))
     check('failure_controls',mul(d,naive_a,length)[0] == -F(1,2))
@@ -308,6 +407,63 @@ def compute():
         if n:
             derivative = [j*poly[j] for j in range(1,len(poly))]
             check('euler_polynomial_derivative',trim(derivative) == trim(scale(euler_polynomials[n-1],n)))
+        for length in (0,1,2,3,5,6):
+            for start in (-F(1,2),F(0),F(1),F(3,2)):
+                direct=sum((-1)**j*(start+j)**n for j in range(length))
+                boundary=(evaluate(poly,start)-(-1)**length*evaluate(poly,start+length))/2
+                check('alternating_power_telescope',direct == boundary)
+
+    # Paper IX charts: direct windows and rational sources versus formal units.
+    local_count=11
+    bernoulli=bernoulli_numbers(20)
+    signed_egf=[(-1)**n*s[n]/factorial(2*n) for n in range(local_count)]
+    for chart in (1,2,3,5,7,9):
+        kernel=local_kernel(chart,local_count)
+        inverse_coefficients=local_inverse_kernel(chart,local_count)
+        ordinary_inverse=[v/factorial(2*r) for r,v in enumerate(inverse_coefficients)]
+        source_by_series=mul(ordinary_inverse,signed_egf,local_count)
+        for n in range(local_count):
+            source=local_source(chart,2*n)
+            check('local_source_series',source_by_series[n]*factorial(2*n) == source)
+            rebuilt=sum(local_terms(chart,n))
+            check('local_euler_reconstruction',rebuilt == (-1)**n*s[n])
+            inverse_source=sum(comb(2*n,2*r)*inverse_coefficients[r]*(-1)**(n-r)*s[n-r]
+                               for r in range(n+1))
+            check('local_inverse_reconstruction',inverse_source == source)
+            if chart == 2:
+                check('dyadic_source_units',valuation(source,2) == 0)
+                if n:
+                    check('dyadic_bernoulli_kernel',kernel[n] == -2**(4*n)*(2*n-1)*bernoulli[2*n])
+                    check('dyadic_kernel_valuation',valuation(kernel[n],2) == 4*n-1)
+            else:
+                check('odd_reciprocal_power_kernel',kernel[n] == (-1)**n*chart**(2*n)*reciprocal_recurrence(2,2,n+1)[n])
+            terms=local_terms(chart,n)
+            for depth in range(n+1):
+                error=rebuilt-sum(terms[:depth+1])
+                if chart in (2,3,5,7):
+                    bound=4*depth+3 if chart == 2 else 2*depth+2
+                    actual=valuation(error,chart)
+                    check('local_truncation_bound',actual is None or actual >= bound)
+                if depth == n:
+                    check('full_depth_exact',error == 0)
+        if chart == 2:
+            for depth in range(10):
+                error=sum(local_terms(2,depth+1))-sum(local_terms(2,depth+1)[:depth+1])
+                check('dyadic_first_omitted_sharpness',error == kernel[depth+1] and valuation(error,2) == 4*depth+3)
+    odd_example=local_row_record(3,4)
+    dyadic_example=local_row_record(2,4)
+    check('displayed_local_reconstruction',odd_example['exact'] == dyadic_example['exact'] == '1385')
+    check('displayed_local_reconstruction',[r['valuation'] for r in dyadic_example['rows']] == [5,8,13,15,None])
+    check('displayed_local_reconstruction',[r['term'] for r in dyadic_example['rows']]
+          == ['7381/45','-6560/3','163072/15','-204800/9','229376/15'])
+    check('displayed_local_reconstruction',rational_residue(F(7381,45),32) == 1385 % 32 == 9)
+    try:
+        rational_residue(F(5,24),8)
+    except ValueError:
+        check('failure_controls',True)
+    else:
+        check('failure_controls',False)
+    check('failure_controls',sum((-1)**a for a in range(2)) == 0)
 
     # The same signed Euler data, now in integer finite-difference coordinates.
     signed = [as_integer((-1)**n*s[n]) for n in range(41)]
@@ -351,6 +507,17 @@ def compute():
     check('failure_controls',c0[2] != signed[2]-signed[0])
     check('failure_controls',(signed[2]-signed[0]) % 8 != c0[2] % 8)
     check('failure_controls',comb(4,2) % 4 != 0)
+    first_six=difference_coefficients(signed[:6])
+    check('higher_prime_examples',first_six == [1,-2,8,-80,1664,-58112])
+    for prime,expected_correction in ((3,18),(5,7590)):
+        correction=sum(comb(prime,j)*first_six[j] for j in range(1,prime))
+        check('higher_prime_examples',correction == expected_correction)
+        check('higher_prime_examples',first_six[prime]+correction == signed[prime]-1)
+    alternating=[(-1)**n for n in range(12)]
+    constant=[1]*12
+    check('sampled_signal_control',alternating[::2] == constant[::2])
+    check('sampled_signal_control',alternating[1::2] != constant[1::2])
+    check('sampled_signal_control',all(alternating[n+2]-alternating[n] == 0 for n in range(10)))
     # No field-valued quotient or division by a non-unit is used in the modular check.
 
     polynomials = reciprocal_polynomials(2,6)
@@ -364,6 +531,7 @@ def compute():
         newton_residual_orders=residual_orders,
         reciprocal_power_polynomials=[[str(c) for c in p] for p in polynomials],
         euler_polynomials=[[str(c) for c in p] for p in euler_polynomials[:7]],
+        local_reconstructions=[odd_example,dyadic_example],
         references=REFERENCES,
         bounds=dict(reciprocal_spacing=[2,6],reciprocal_index=[0,10],
             reciprocal_parameters=[str(r) for r in parameters],
@@ -372,19 +540,23 @@ def compute():
             permutation_dp_spacing=[2,6],permutation_dp_block_count=[0,8],
             enumeration_cases=[[2,0],[2,4],[2,6],[2,8],[4,4],[4,8]],
             euler_polynomial_degree=[0,12],newton_precision=32,
+            alternating_power_lengths=[0,1,2,3,5,6],alternating_power_starts=['-1/2','0','1','3/2'],
+            local_charts=[1,2,3,5,7,9],local_even_degree=[0,20],
+            dyadic_sharp_depth=[0,9],bernoulli_degree=[0,20],
             difference_spacing=[1,5],difference_offsets='all 0 <= s < M',difference_order=[0,5],
             composition_spacings=[1,4],composition_offsets='all admitted offsets',composition_order=[0,3],
             primes=[2,3,5,7,11]),
         non_claims=['No novelty or exclusive-method claim.',
             'Finite computations are separate from the written universal algebraic proofs.',
             'No numerical error bound, asymptotic law or complexity advantage is established.',
-            'No Lean execution or universal congruence for Euler numbers.'])
+            'No Lean execution. The local truncation theorems are proved separately; finite checks do not certify broader Euler congruences.'])
     return report
 
 
 def save_results(directory, report):
     directory.mkdir(parents=True,exist_ok=True)
-    paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv']
+    paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv',
+             directory/'local-reconstruction.csv']
     if any(p.exists() for p in paths):
         raise FileExistsError('Choose a directory with no existing result files')
     paths[0].write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -400,6 +572,13 @@ def save_results(directory, report):
             for n,p in enumerate(reciprocal_polynomials(spacing,9)):
                 for degree,value in enumerate(p):
                     writer.writerow([spacing,n,degree,str(value)])
+    with paths[3].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['chart','ordinary_degree','depth','term','partial','error','error_valuation'])
+        for example in report['local_reconstructions']:
+            for row in example['rows']:
+                writer.writerow([example['chart'],example['ordinary_degree'],row['depth'],row['term'],
+                                 row['partial'],row['error'],'infinity' if row['valuation'] is None else row['valuation']])
 
 
 def main():
@@ -411,6 +590,8 @@ def main():
         save_results(args.output,report)
     print('Secant numbers:', ', '.join(map(str,report['secant'][:7])))
     print('Quartic reciprocal:', ', '.join(map(str,report['quartic'][:5])))
+    print('Odd-length and dyadic reconstructions: E_8 = 1385')
+    print('Dyadic E_8 tail valuations: 5, 8, 13, 15, exact')
     print('Signed Euler difference coordinates:', ', '.join(map(str,report['difference_coordinates'])))
     print('Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376')
     print('Refinement: 2*4 + 1376 = 1384')

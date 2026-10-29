@@ -2,6 +2,9 @@
 
 **EULER-CASE-001 · 29 October 2026 · Codex in this chat**
 
+This is the first-edition development closeout, retained at its original scope.
+The subsequent expansion is recorded in `CLOSEOUT_EXPANSION.md`.
+
 ## Target and result
 
 The mathematical development phase is complete for the target in

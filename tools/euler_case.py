@@ -47,10 +47,11 @@ def publish(site):
                 raise ValueError('Euler run output differs: '+entry['path'])
     downloads={
         'euler_packets.py':'examples/euler_packets.py',
-        'results.json':'verification/euler-packets/run-001/results.json',
-        'euler-coefficients.csv':'verification/euler-packets/run-001/euler-coefficients.csv',
-        'power-polynomials.csv':'verification/euler-packets/run-001/power-polynomials.csv',
-        'library-comparison.json':'verification/euler-packets/cross-check-001/results.json',
+        'results.json':'verification/euler-packets/run-002/results.json',
+        'euler-coefficients.csv':'verification/euler-packets/run-002/euler-coefficients.csv',
+        'power-polynomials.csv':'verification/euler-packets/run-002/power-polynomials.csv',
+        'local-reconstruction.csv':'verification/euler-packets/run-002/local-reconstruction.csv',
+        'library-comparison.json':'verification/euler-packets/cross-check-002/results.json',
     }
     output=site.output/PREFIX
     output.mkdir(parents=True,exist_ok=True)
@@ -85,7 +86,7 @@ def publish(site):
               'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/examples/euler_packets.py')
     site.search.append(dict(title='Euler packets, polynomials and residuals / exact program',
         group='Collection',kind='Code',url=READER,work_ids=record['work_ids'],
-        text='Euler secant A000364 A211212 quartic packets Schur complement reciprocal polynomials prime residual exact standalone Python'))
+        text='Euler secant A000364 A211212 quartic packets Schur complement reciprocal polynomials odd-prime dyadic local coordinates Bernoulli sharp precision prime residual exact standalone Python'))
     return source
 
 
