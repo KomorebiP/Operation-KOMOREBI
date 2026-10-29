@@ -78,7 +78,7 @@ for N in range(2, 9):
     if any(v <= 0 for v in fractions):
         raise ValueError("This logarithmic view requires positive coefficients.")
     heights = [log10(v.numerator)-log10(v.denominator) for v in fractions]
-    flat_traces.append({"mode": "lines+markers+text", "name": f"N={N}",
+    flat_traces.append({"mode": "lines+markers+text", "name": f"N={N}", "cliponaxis": False,
                        "x": ns, "y": heights, "text": [""]*(count-1)+[f"N={N}"],
                        "textposition": "middle right", "textfont": {"size": 15, "color": colors[N-2]},
                        "line": {"color": colors[N-2], "dash": "solid" if N % 2 == 0 else "dash"},
