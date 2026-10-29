@@ -32,7 +32,9 @@ CHAPTERS = [
 ]
 CHAPTERS = [dict(source=BASE+p,url='read/paper-ii/'+slug+'.html',title=title,work='paper-ii') for p,slug,title in CHAPTERS]
 BOOKS = {'paper-ii':dict(work='paper-ii',label='Paper II',base=BASE,main=MAIN,bib=BIB_SOURCE,index=INDEX,bib_page=BIB_PAGE,
-                       title='Refinement, weighted transfer and integral separation',chapters=CHAPTERS[:],main_chapters=7)}
+                       title='Refinement, weighted transfer and integral separation',chapters=CHAPTERS[:],main_chapters=7,
+                       diagram_guide='collection/PAPER_II_DIAGRAMS.html',
+                       figure_descriptions='website/paper-ii-figure-descriptions.json')}
 THIRD_BASE = 'papers/paper-iii/current/manuscript/'
 THIRD_CHAPTERS = [
     ('01_finite_coordinates.tex','finite-coordinates','Finite coordinates and typed transfer'),
@@ -43,7 +45,9 @@ THIRD_CHAPTERS = [
 THIRD_CHAPTERS = [dict(source=THIRD_BASE+'chapters/'+p,url='read/paper-iii/'+slug+'.html',title=t,work='paper-iii') for p,slug,t in THIRD_CHAPTERS]
 BOOKS['paper-iii']=dict(work='paper-iii',label='Paper III',base=THIRD_BASE,main=THIRD_BASE+'Paper_III_Traditional_Final.tex',
                        bib=THIRD_BASE+'references.bib',index='read/paper-iii/index.html',bib_page='read/paper-iii/references.html',
-                       title='Typed transfer, nonlinear packets and obstruction theory',chapters=THIRD_CHAPTERS,main_chapters=4)
+                       title='Typed transfer, nonlinear packets and obstruction theory',chapters=THIRD_CHAPTERS,main_chapters=4,
+                       diagram_guide='collection/PAPER_III_DIAGRAMS.html',
+                       figure_descriptions='website/paper-iii-figure-descriptions.json')
 CHAPTERS += THIRD_CHAPTERS
 FIRST_BASE = 'papers/paper-i/current/editable/traditional/'
 FIRST_CHAPTERS = [
@@ -99,6 +103,8 @@ BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, ma
                         bib_page='read/paper-iv/references.html',
                         title='Cyclic analytic functions, reciprocal families, and spectral zero data',
                         chapters=FOURTH_CHAPTERS, main_chapters=17, monolithic=True,
+                        diagram_guide='collection/PAPER_IV_DIAGRAMS.html',
+                        figure_descriptions='website/paper-iv-figure-descriptions.json',
                         atlas_index='read/paper-iv/atlas/index.html',
                         html_inputs={'atlas-pages': dict(url='read/paper-iv/atlas/index.html',title='Explore the 26 atlas plates in HTML',note='')})
 CHAPTERS += FOURTH_CHAPTERS
@@ -848,7 +854,7 @@ def render_book(reader,book):
                     described.add(name)
                     alt=description['alt']
                     description_link='<p><a href="'+site.rel(config['diagram_guide'],page)+'#'+description['anchor']+'">Text description of this figure</a></p>'
-                body+='<figure id="'+node['id']+'"><img src="'+image+'" alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
+                body+='<figure id="'+node['id']+'" tabindex="-1"><img src="'+image+'" alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
                 body+='<section id="'+node['id']+'">'+render_table(node,chapter)+passage_links(links)+'</section>'
             elif kind=='conceptchain':

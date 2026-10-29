@@ -15,6 +15,17 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_authored_tables_retain_captions_and_both_header_axes(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<table><caption>Transfer norms</caption><thead><tr>'
+                     '<th>Output / input</th><th>Input 0</th></tr></thead>'
+                     '<tbody><tr><th scope="row">Output 0</th><td>5.0</td>'
+                     '</tr></tbody></table>')
+        rendered=''.join(rewrite.out)
+        self.assertIn('<table><caption>Transfer norms</caption>',rendered)
+        self.assertEqual(rendered.count('scope="col"'),2)
+        self.assertIn('<th scope="row">Output 0</th><td>5.0</td>',rendered)
+
     def test_atlas_plate_boundaries_retain_original_lines_and_reject_reordering(self):
         from reader_atlas import plates
         source='\n'.join('\\vpage{'+str(i)+'}{Title}{Topic}{Section 1 (p. 1).}\nText $x$.' for i in range(1,27))

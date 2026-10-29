@@ -8,8 +8,8 @@ aids for the retained manuscript, with its hypotheses and proof scope.
 [Read Paper I](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/index.html)
 · [Accessibility and reading options](ACCESSIBILITY.md)
 
-<a id="figure-01"></a>
-## Figure 1: from seeds to a realization
+<a id="figure-1-from-seeds-to-a-realization"></a>
+<h2 id="figure-01" tabindex="-1">Figure 1: from seeds to a realization</h2>
 
 Six boxes form a directed sequence. Across the top row, read **Choose seeds**
 (generators in the object), then **Address them** (indices for the seeds), then
@@ -22,8 +22,8 @@ than a claim that every object comes with all these choices automatically.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/foundations-and-seed-rank.html#L203)
 
-<a id="figure-02"></a>
-## Figure 2: transfer blocks of a sampled operator
+<a id="figure-2-transfer-blocks-of-a-sampled-operator"></a>
+<h2 id="figure-02" tabindex="-1">Figure 2: transfer blocks of a sampled operator</h2>
 
 This three-by-three heatmap gives the Frobenius norm of each block of a sampled
 operator. Rows are **output** packets and columns are **input** packets. Select
@@ -43,8 +43,8 @@ block’s signs or its complete linear action.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/packets-and-transfer-graphs.html#L900)
 
-<a id="figure-03"></a>
-## Figure 3: one seed can span the space or stall
+<a id="figure-3-one-seed-can-span-the-space-or-stall"></a>
+<h2 id="figure-03" tabindex="-1">Figure 3: one seed can span the space or stall</h2>
 
 The horizontal axis counts Krylov vectors, from 1 through 8. The vertical axis
 is the dimension of their span in an eight-dimensional space. The vectors are
@@ -57,8 +57,8 @@ single polynomial orbit.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/foundations-and-seed-rank.html#L1013)
 
-<a id="figure-04"></a>
-## Figure 4: semisimple multiplicity and seed rank
+<a id="figure-4-semisimple-multiplicity-and-seed-rank"></a>
+<h2 id="figure-04" tabindex="-1">Figure 4: semisimple multiplicity and seed rank</h2>
 
 The horizontal axis is multiplicity m, from 1 to 24. The vertical axis is the
 simple-module dimension d, from 1 to 8. Every cell displays, by shading, the
@@ -71,8 +71,8 @@ block formula under the manuscript’s semisimple hypotheses.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/foundations-and-seed-rank.html#L867)
 
-<a id="figure-05"></a>
-## Figure 5: one seed for path adjacency
+<a id="figure-5-one-seed-for-path-adjacency"></a>
+<h2 id="figure-05" tabindex="-1">Figure 5: one seed for path adjacency</h2>
 
 A six-vertex path illustrates a seed at its first endpoint. Beneath it, a plot
 has number of vertices on the horizontal axis and adjacency seed rank on the
@@ -84,8 +84,8 @@ plotted cases alone are not its proof.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/worked-models.html#L359)
 
-<a id="figure-06"></a>
-## Figure 6: two seeds for cycle adjacency
+<a id="figure-6-two-seeds-for-cycle-adjacency"></a>
+<h2 id="figure-06" tabindex="-1">Figure 6: two seeds for cycle adjacency</h2>
 
 A six-vertex cycle accompanies a plot of cycle sizes **3 through 20**. The
 horizontal axis is number of vertices; the vertical axis is adjacency seed
@@ -97,8 +97,8 @@ cyclic shift.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/worked-models.html#L402)
 
-<a id="figure-07"></a>
-## Figure 7: periodic shift through six residue packets
+<a id="figure-7-periodic-shift-through-six-residue-packets"></a>
+<h2 id="figure-07" tabindex="-1">Figure 7: periodic shift through six residue packets</h2>
 
 The left panel is a six-by-six support matrix for a periodic shift on
 twenty-four coordinates. Both axes are numbered 0 through 5; columns are input
@@ -112,8 +112,8 @@ see atlas plate 19 below.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/worked-models.html#L241)
 
-<a id="figure-08"></a>
-## Figure 8: multiplication by y exchanges two packets
+<a id="figure-8-multiplication-by-y-exchanges-two-packets"></a>
+<h2 id="figure-08" tabindex="-1">Figure 8: multiplication by y exchanges two packets</h2>
 
 The coordinate algebra is described by the relation **y squared = x cubed − x**.
 Its two coefficient lanes are the even packet k[x] and the odd packet yk[x].
@@ -125,8 +125,8 @@ Two applications multiply each packet by x cubed − x, matching the relation.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/worked-models.html#L130)
 
-<a id="figure-09"></a>
-## Figure 9: projector products after a change of basis
+<a id="figure-9-projector-products-after-a-change-of-basis"></a>
+<h2 id="figure-09" tabindex="-1">Figure 9: projector products after a change of basis</h2>
 
 This numerical heatmap records Frobenius norms of products of transported
 projectors Q_i Q_j. There are three four-dimensional packets in a
@@ -144,8 +144,8 @@ roundoff in this illustration, rather than nonzero terms in the exact identity.
 
 [Figure and surrounding text](https://komorebip.github.io/Operation-KOMOREBI/read/paper-i/transport-and-realization.html#L369)
 
-<a id="figure-10"></a>
-## Figure 10: two proof families meet in the worked models
+<a id="figure-10-two-proof-families-meet-in-the-worked-models"></a>
+<h2 id="figure-10" tabindex="-1">Figure 10: two proof families meet in the worked models</h2>
 
 Two left-to-right chains converge on one **Worked realizations** box. The
 generator chain is **Fixed operator grammar → Hulls and presentations →
@@ -166,8 +166,8 @@ printed manuscript. The descriptions below follow its plate order. Page links
 open the original PDF at the corresponding page. The atlas’s surrounding
 explanations and hypotheses remain part of the reading.
 
-<a id="atlas-01"></a>
-## Plate 1: what can one seed actually do?
+<a id="plate-1-what-can-one-seed-actually-do"></a>
+<h2 id="atlas-01" tabindex="-1">Plate 1: what can one seed actually do?</h2>
 
 Four rows compare minimum seed counts for the same six-dimensional rational
 space. Scalar multiples of the identity require **6** seeds. Polynomials in
@@ -179,8 +179,8 @@ ambient space stays fixed.
 
 [Original plate 1](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=83)
 
-<a id="atlas-02"></a>
-## Plate 2: an atlas of the objects
+<a id="plate-2-an-atlas-of-the-objects"></a>
+<h2 id="atlas-02" tabindex="-1">Plate 2: an atlas of the objects</h2>
 
 A three-column table pairs each symbol with its role and a concrete example.
 The space X supplies possible target vectors; S supplies seeds; the fixed
@@ -194,8 +194,8 @@ apply T, then extract beta.
 
 [Original plate 2](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=84)
 
-<a id="atlas-03"></a>
-## Plate 3: two chains can stay linked
+<a id="plate-3-two-chains-can-stay-linked"></a>
+<h2 id="atlas-03" tabindex="-1">Plate 3: two chains can stay linked</h2>
 
 Two horizontal three-vertex chains run from e_0 to e_1 to e_2 to zero, and from
 f_0 to f_1 to f_2 to zero. Vertical dotted pairings join corresponding positions.
@@ -206,8 +206,8 @@ produce all six directions, but that is a larger operator grammar.
 
 [Original plate 3](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=85)
 
-<a id="atlas-04"></a>
-## Plate 4: a quotient proves two seeds are necessary
+<a id="plate-4-a-quotient-proves-two-seeds-are-necessary"></a>
+<h2 id="atlas-04" tabindex="-1">Plate 4: a quotient proves two seeds are necessary</h2>
 
 A two-by-six matrix has its only nonzero entries in the first row’s e_0 column
 and the second row’s f_0 column. Both entries are one. It keeps the two chain
@@ -218,8 +218,8 @@ chain heads attain that bound in the original space.
 
 [Original plate 4](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=86)
 
-<a id="atlas-05"></a>
-## Plate 5: relations identify words, not just outputs
+<a id="plate-5-relations-identify-words-not-just-outputs"></a>
+<h2 id="atlas-05" tabindex="-1">Plate 5: relations identify words, not just outputs</h2>
 
 Three two-by-two matrices show C = E_12, B = E_21 and their product
 CB = E_11. C has a one only in its upper-right cell, B only in its lower-left
@@ -230,8 +230,8 @@ of left modules; a seed annihilator is not automatically a two-sided ideal.
 
 [Original plate 5](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=87)
 
-<a id="atlas-06"></a>
-## Plate 6: a reached type can still hide a direction
+<a id="plate-6-a-reached-type-can-still-hide-a-direction"></a>
+<h2 id="atlas-06" tabindex="-1">Plate 6: a reached type can still hide a direction</h2>
 
 Five slots are grouped as two directions in U and three in V. In the first
 row, a seed supported at U fills both U slots and only the first two V slots:
@@ -242,8 +242,8 @@ and minimizing the unrestricted number of seeds are different questions.
 
 [Original plate 6](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=88)
 
-<a id="atlas-07"></a>
-## Plate 7: exact does not mean orthogonal
+<a id="plate-7-exact-does-not-mean-orthogonal"></a>
+<h2 id="atlas-07" tabindex="-1">Plate 7: exact does not mean orthogonal</h2>
 
 In a coordinate plane, one packet lies on the horizontal axis and the other
 on the diagonal line. The vector x = (3,2) is the sum of Px = (1,0) and
@@ -254,8 +254,8 @@ algebraic reconstruction without an energy-preserving orthogonal splitting.
 
 [Original plate 7](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=89)
 
-<a id="atlas-08"></a>
-## Plate 8: a transfer block has an input and an output
+<a id="plate-8-a-transfer-block-has-an-input-and-an-output"></a>
+<h2 id="atlas-08" tabindex="-1">Plate 8: a transfer block has an input and an output</h2>
 
 Two three-by-three matrices show an operator and its square. The rows of T
 are **(1,2,0), (0,1,3), (4,0,1)**. The rows of T squared are
@@ -266,8 +266,8 @@ These are actual signed coefficients, not a matrix of norms or a support graph.
 
 [Original plate 8](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=90)
 
-<a id="atlas-09"></a>
-## Plate 9: two visible routes can cancel exactly
+<a id="plate-9-two-visible-routes-can-cancel-exactly"></a>
+<h2 id="atlas-09" tabindex="-1">Plate 9: two visible routes can cancel exactly</h2>
 
 A diamond graph starts at e_1, branches to e_2 and e_3, then rejoins at e_4.
 The first two arrows have weight +1. The e_2-to-e_4 arrow has weight +1,
@@ -279,8 +279,8 @@ between steps would change the allowed grammar.
 
 [Original plate 9](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=91)
 
-<a id="atlas-10"></a>
-## Plate 10: which zero patterns survive multiplication?
+<a id="plate-10-which-zero-patterns-survive-multiplication"></a>
+<h2 id="atlas-10" tabindex="-1">Plate 10: which zero patterns survive multiplication?</h2>
 
 Three matrices compare an allowed support pattern, an offending product and
 the transitive closure. The first allows the diagonal, 1-to-2 and 2-to-3, but
@@ -292,8 +292,8 @@ identity and transitive closure supplies all compositions.
 
 [Original plate 10](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=92)
 
-<a id="atlas-11"></a>
-## Plate 11: move the packets with the coordinates
+<a id="plate-11-move-the-packets-with-the-coordinates"></a>
+<h2 id="atlas-11" tabindex="-1">Plate 11: move the packets with the coordinates</h2>
 
 The top row shows T = diag(1,2), the shear with rows (1,1) and (0,1), and the
 conjugated operator with rows (1,1) and (0,2). The transformed matrix gains an
@@ -305,8 +305,8 @@ change in packet routing.
 
 [Original plate 11](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=93)
 
-<a id="atlas-12"></a>
-## Plate 12: shared control and independent control differ
+<a id="plate-12-shared-control-and-independent-control-differ"></a>
+<h2 id="atlas-12" tabindex="-1">Plate 12: shared control and independent control differ</h2>
 
 Both panels start from the mixed seed (1,1). Shared scalar action reaches only
 the diagonal line, represented by points (a,a). Independent coordinate action
@@ -318,8 +318,8 @@ maximum rather than their sum.
 
 [Original plate 12](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=94)
 
-<a id="atlas-13"></a>
-## Plate 13: how much row space can one seed supply?
+<a id="plate-13-how-much-row-space-can-one-seed-supply"></a>
+<h2 id="atlas-13" tabindex="-1">Plate 13: how much row space can one seed supply?</h2>
 
 Three two-by-five seed matrices cover columns 1 and 2, then 3 and 4, then 5.
 Their cumulative orbit dimensions under left multiplication by two-by-two
@@ -331,8 +331,8 @@ that synthesize it from the three fixed seeds.
 
 [Original plate 13](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=95)
 
-<a id="atlas-14"></a>
-## Plate 14: distinct labels let one polynomial separate chains
+<a id="plate-14-distinct-labels-let-one-polynomial-separate-chains"></a>
+<h2 id="atlas-14" tabindex="-1">Plate 14: distinct labels let one polynomial separate chains</h2>
 
 Two six-by-six Krylov matrices compare equal and distinct primary labels.
 Two equal nilpotent three-chains give rank **3** for the mixed seed. Replacing
@@ -344,8 +344,8 @@ operations already in the polynomial grammar.
 
 [Original plate 14](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=96)
 
-<a id="atlas-15"></a>
-## Plate 15: walk counts make an endpoint cyclic
+<a id="plate-15-walk-counts-make-an-endpoint-cyclic"></a>
+<h2 id="atlas-15" tabindex="-1">Plate 15: walk counts make an endpoint cyclic</h2>
 
 A five-vertex path marks vertex 1 as the seed. Under it, the five Krylov columns
 count walks of lengths 0 through 4. The matrix rows are **(1,0,1,0,2)**,
@@ -357,8 +357,8 @@ general endpoint proof.
 
 [Original plate 15](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=97)
 
-<a id="atlas-16"></a>
-## Plate 16: closing a path changes the seed obstruction
+<a id="plate-16-closing-a-path-changes-the-seed-obstruction"></a>
+<h2 id="atlas-16" tabindex="-1">Plate 16: closing a path changes the seed obstruction</h2>
 
 A six-vertex cycle highlights adjacent vertices 0 and 1 as a generating pair.
 A bar chart gives eigenvalue multiplicities: **−2 has 1, −1 has 2, 1 has 2,
@@ -370,8 +370,8 @@ the pair.
 
 [Original plate 16](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=98)
 
-<a id="atlas-17"></a>
-## Plate 17: a relation becomes a packet product rule
+<a id="plate-17-a-relation-becomes-a-packet-product-rule"></a>
+<h2 id="atlas-17" tabindex="-1">Plate 17: a relation becomes a packet product rule</h2>
 
 Two infinite coefficient lanes are shown through degree four. The top lane is
 **1, x, x squared, x cubed, x to the fourth, …**. The lower lane is
@@ -383,8 +383,8 @@ multiplication, not the genus or smoothness of a drawn algebraic curve.
 
 [Original plate 17](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=99)
 
-<a id="atlas-18"></a>
-## Plate 18: density is not finite generation of each vector
+<a id="plate-18-density-is-not-finite-generation-of-each-vector"></a>
+<h2 id="atlas-18" tabindex="-1">Plate 18: density is not finite generation of each vector</h2>
 
 A stem plot shows the sequence x[n] = 2 to the power −|n|. It peaks at one at
 zero and halves at each step away from zero in either direction. The shaded
@@ -396,8 +396,8 @@ give finite-support approximants whose norm limit is the infinite sequence.
 
 [Original plate 18](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=100)
 
-<a id="atlas-19"></a>
-## Plate 19: residue packets retain an address carry
+<a id="plate-19-residue-packets-retain-an-address-carry"></a>
+<h2 id="atlas-19" tabindex="-1">Plate 19: residue packets retain an address carry</h2>
 
 Three rows divide a window of integer addresses into residue classes modulo
 three. Row 0 contains −6, −3, 0, 3 and 6; row 1 contains −5, −2, 1 and 4; row 2
@@ -409,8 +409,8 @@ information about the infinite sequence, even if the phase graph looked the same
 
 [Original plate 19](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=101)
 
-<a id="atlas-20"></a>
-## Plate 20: stop when the subspace stops growing
+<a id="plate-20-stop-when-the-subspace-stops-growing"></a>
+<h2 id="atlas-20" tabindex="-1">Plate 20: stop when the subspace stops growing</h2>
 
 The horizontal axis counts hull-expansion iterations; the vertical axis is
 subspace dimension. Both curves start at dimension one for the same mixed
@@ -423,8 +423,8 @@ rather than results of a numerical rank tolerance.
 
 [Original plate 20](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=102)
 
-<a id="atlas-21"></a>
-## Plate 21: tensor products require every cross term
+<a id="plate-21-tensor-products-require-every-cross-term"></a>
+<h2 id="atlas-21" tabindex="-1">Plate 21: tensor products require every cross term</h2>
 
 A two-by-two coefficient rectangle expands the tensor product of
 2e_1 + 3e_2 with 5f_1 + 7f_2. Rows correspond to e_1 and e_2; columns correspond
@@ -436,8 +436,8 @@ equality or a theorem about completed topological tensor products.
 
 [Original plate 21](../papers/paper-i/current/papers/Paper_I_Traditional_Final.pdf#page=103)
 
-<a id="atlas-22"></a>
-## Plate 22: what the pictures certify
+<a id="plate-22-what-the-pictures-certify"></a>
+<h2 id="atlas-22" tabindex="-1">Plate 22: what the pictures certify</h2>
 
 A three-column table connects seven topics to their mathematical content and
 the hypotheses that must remain attached. Presentations require a fixed

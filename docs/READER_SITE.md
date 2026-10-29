@@ -126,12 +126,16 @@ Extend the selected books only after checking syntax, source fidelity, figures,
 navigation and rendered mathematics. Passing these checks does not establish
 mathematical correctness or new Lean coverage.
 
-Paper I’s [diagram guide](PAPER_I_DIAGRAMS.md) describes its ten chapter figures
-and 22 atlas plates. `website/paper-i-figure-descriptions.json` supplies concise
-image alternatives and guide anchors. Each description is bound to the reviewed
-PNG checksum; changed or missing figures stop the build for review. Original
-captions remain unchanged, and description links stay visible in the quieter
-reading view.
+The diagram guides cover all chapter figures in
+[Paper I](PAPER_I_DIAGRAMS.md), [Paper II](PAPER_II_DIAGRAMS.md),
+[Paper III](PAPER_III_DIAGRAMS.md) and [Paper IV](PAPER_IV_DIAGRAMS.md):
+10, 13, 6 and 6 figures respectively. Each book's
+`website/paper-*-figure-descriptions.json` supplies concise image alternatives
+and guide anchors. Each description is bound to the reviewed PNG checksum;
+changed, missing or unused figures stop the build for review. Original captions
+remain unchanged, and description links stay visible in the quieter reading view.
+The first three guides also describe their 22, 24 and 24 atlas pages. Paper IV's
+guide links to the existing 26 HTML plates and their complete label transcripts.
 
 ## Publication
 

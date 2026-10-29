@@ -114,6 +114,23 @@ PDF, with a direct page link beside each description. The two conceptual
 diagrams have keyboard-scrollable regions. The build checks all 1,445 mathematical
 expressions in the six selected source sections, in their original order.
 
+The chapter figures in Papers II–IV also retain their captions and have short
+alternatives plus a visible **Text description of this figure** link. The
+guides describe directions, axes, scales and numeric values without relying
+on colour:
+
+| Reading guide | Chapter figures | Atlas coverage |
+| --- | ---: | --- |
+| [Paper I](PAPER_I_DIAGRAMS.md) | 10 | 22 plate descriptions |
+| [Paper II](PAPER_II_DIAGRAMS.md) | 13 | 24 page descriptions |
+| [Paper III](PAPER_III_DIAGRAMS.md) | 6 | 24 page descriptions |
+| [Paper IV](PAPER_IV_DIAGRAMS.md) | 6 | 26 HTML plates with drawing-label transcripts |
+
+Paper II and III's atlas descriptions link to each page's retained explanation
+and to the original visual-guide PDF. Their reading aids summarize the diagrams;
+the full prose and drawing labels are not transcribed into separate HTML plates
+as they are for Paper IV.
+
 Paper IV has 17 main sections, an opening orientation and an atlas introduction.
 Its HTML edition retains all 68 proof bodies, 95 numbered records, six manuscript
 figures and the formalization ledger. The build checks all 1,041 mathematical
