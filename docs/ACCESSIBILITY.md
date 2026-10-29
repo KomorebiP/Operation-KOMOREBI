@@ -138,6 +138,10 @@ expressions in the main document, in their original order. Chapter links keep
 the line numbers from the single TeX manuscript.
 The preserved formal release and its stated scope remain unchanged.
 
+The [Paper IV diagram descriptions](PAPER_IV_DIAGRAMS.md) also provide formatted
+equations with the site's math-reading controls. Longer formulas have their own
+keyboard-scrollable areas, and the coefficient table uses descriptive row names.
+
 The [26 Paper IV atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iv/atlas/index.html)
 also have HTML pages. They retain the source prose and equations, with 24
 drawings rendered from the unchanged TikZ files. Each drawing has a text
