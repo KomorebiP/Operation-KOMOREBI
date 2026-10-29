@@ -180,7 +180,12 @@ class Browser:
             ('Code', {'code'}, 'No code shortcut is listed for this edition. Check the [complete file listing under Evidence](#evidence).')]
         for title,kinds,empty in sections:
             text += '## '+title+'\n\n'
+            edition=s.get('editorial_edition')
+            if title=='Read' and edition:
+                text+=link('Revised reading edition',edition['manuscript'],page)+' · '+link('Monograph PDF',edition['pdf'],page)+'\n\n'
             links = self.resources(c,kinds,page)
+            if title=='Written proofs' and edition:
+                links.insert(0,link('Mathematical discussion in the revised essay',edition['manuscript'],page))
             has_lean = any(a['kind']=='lean' for a in self.rows[c['id']]['resources'])
             if title=='Written proofs':
                 text += 'Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.\n\n'

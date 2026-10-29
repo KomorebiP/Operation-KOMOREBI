@@ -81,7 +81,7 @@ Incomplete implementation entries are listed separately in the [incubator](../do
 | Work | Scope | Files |
 |---|---|---|
 | [Gaussian Elimination: collected guide](../docs/works/gaussian-elimination-guide.md) | A standalone reader PDF is supplied. This component does not include editable source. | [PDF](gaussian-elimination-guide/Komorebi_Gaussian_Elimination_Collected_Pages.pdf) · [Work page](../docs/works/gaussian-elimination-guide.md) |
-| [The Possibility for a Machine Native Mathematics](../docs/works/machine-native-mathematics-essay.md) | A standalone reader PDF is supplied. This component does not include editable source. | [PDF](machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf) · [Work page](../docs/works/machine-native-mathematics-essay.md) |
+| [The Possibility for a Machine Native Mathematics](../docs/works/machine-native-mathematics-essay.md) | A conceptual essay on representations and languages for machine reasoning. The revised monograph and HTML reading edition include editable sources and a documented editorial review. | [PDF](machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf) · [Work page](../docs/works/machine-native-mathematics-essay.md) |
 
 All executable software is **beta and work in progress**.
 

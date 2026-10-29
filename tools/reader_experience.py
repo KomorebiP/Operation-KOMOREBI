@@ -128,6 +128,8 @@ def render_reader_pages(root, components, assessments):
     for c in components:
         identifier=c['id']
         downloads += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n[Reading ZIP and contents]('+SITE+'downloads.html#'+identifier+') · '+link('Work and evidence','docs/works/'+identifier+'.md','docs/DOWNLOADS.md')+'\n\n'
+        if assessments[identifier].get('editorial_edition'):
+            downloads+='[Revised reading edition and editable sources]('+SITE+'downloads/'+identifier+'-reading-edition.zip). The original source selection above remains available.\n\n'
         claims += '<a id="'+identifier+'"></a>\n\n## '+c['title']+'\n\n'
         if identifier in counts:
             claims+='[Open '+str(counts[identifier])+' '+('correspondence records' if identifier=='paper-i' else 'written statement records')+']('+SITE+'claims.html#'+identifier+').\n\n'

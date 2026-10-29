@@ -59,6 +59,7 @@ These files include test contracts, source records, run outputs, publication rec
 - [manifests/machine-societies-review-index.json](../manifests/machine-societies-review-index.json)
 - [manifests/source-inventory-reconciliation-2026-10-27.json](../manifests/source-inventory-reconciliation-2026-10-27.json)
 - [verification/source-publication-2026-10-27.json](../verification/source-publication-2026-10-27.json)
+- [manifests/machine-native-reading-edition-2026-10-29.json](../manifests/machine-native-reading-edition-2026-10-29.json)
 
 ## Reading and updating a record
 

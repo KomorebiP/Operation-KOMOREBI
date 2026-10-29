@@ -1,40 +1,50 @@
 # Public project and authorship statement
 
-**Komorebi P. · 27 October 2026**
+**Komorebi P. · First published 27 October 2026 · Revised 29 October 2026**
 
-Komorebi is an independent mathematical research program published under the name **Komorebi P.** Realization Calculus studies representations, decompositions, transfers, reconstruction, and the information or obstructions that remain under those operations. Komorebi Space supplies a framework for comparing compatible realizations. The public collection brings together manuscripts, formal developments, software, calculations, experiments, and explanatory guides.
+Komorebi is my independent mathematical research project. I publish it under the name **Komorebi P.** The collection brings together manuscripts, formal developments, software, calculations, experiments, and guides for readers.
 
-The work has developed with substantial AI assistance. Contribution records describe that assistance in mathematical formulation, drafting, proof approaches and review, code generation, exact arithmetic, testing, references, figures, and document production. The role and review history vary by component. See each work’s original disclosure for the details.
+Realization Calculus studies how mathematical objects are represented, decomposed, transferred, and reconstructed. It also studies the information and obstructions that remain through those operations. Komorebi Space provides a framework for comparing compatible realizations. Each work develops a particular part of that program and carries its own claims, assumptions, and evidence.
 
-Komorebi P. is the named author and is responsible for the published claims, release decisions, and corrections. AI assistance is credited in the project records. AI output is not independent mathematical validation. This statement does not mean that every proof has received separate personal approval, independent human review, or external certification.
+## Authorship and AI assistance
+
+The work has developed with substantial AI assistance. The contribution records describe help with mathematical formulation, drafting, possible proof approaches, review, code, exact calculations, testing, references, figures, and document production. The extent of that assistance and the review history vary from one work to another. Each work's disclosure is the place to look for those details.
+
+I am the named author and take responsibility for the claims I publish, the editions I release, and the corrections they need. AI assistance is credited in the project records. It is not independent mathematical validation.
+
+Authorship alone does not establish that every proof has received separate personal approval, independent human review, or external certification. Those are distinct claims and need their own records.
 
 ## Current state and publication circumstances
 
-The following note records the author’s account of the circumstances, added at the author’s request on 27 October 2026:
+I asked for the following note to be added on 27 October 2026. It records my account of the publication circumstances:
 
 > This work remains in progress and has, in many respects, been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
 
-The [finalization queue](FINALIZATION_QUEUE.md) lists the remaining editing, source checks, proof replays, software testing, and reviews. Completion and confidence labels depend on the evidence recorded for each component. All executable software remains **beta / work in progress**.
+The [finalization queue](FINALIZATION_QUEUE.md) lists the remaining editing, source checks, proof replays, software tests, and reviews. A work's completion and confidence labels depend on its recorded evidence. All executable software remains **beta and work in progress**.
 
 ## Why the work uses a pseudonym
 
-The existing author note in *The Possibility for a Machine-Native Mathematics*, September 2026, page 1, states:
+I want readers to encounter the work through its definitions, arguments, formal statements, code, experiments, and reproducible results. A name, biography, set of credentials, or institutional affiliation cannot replace that examination.
 
-> Komorebi P. is a pseudonym. The point is not mystery. The author does not want identity, credentials, biography, or institutional affiliation to become proxies for evaluating the work. The pseudonym is a temporary methodological separation between the claims and the person making them, not a declaration of permanent anonymity. The work should be judged through its definitions, proofs, formalizations, code, experiments, and reproducibility before biography is allowed to become part of its interpretation.
+Komorebi P. is a pseudonym that gives those questions some distance from my identity. I regard this as a working arrangement, rather than a commitment to permanent anonymity. The explanation first appeared in the author note to *The Possibility for a Machine-Native Mathematics* in September 2026.
 
 [Read the original author note](../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf#page=1).
 
 ## How to evaluate the collection
 
-Evaluate a result through its exact statement, hypotheses, argument, source revision, and supporting evidence. A written proof, accepted Lean declaration, finite calculation, numerical experiment, and software test establish different things. A formal result also requires a faithful correspondence between the written claim and the formal statement. Originality and broader scientific applicability require their own assessment.
+Begin with the exact statement, its hypotheses, the argument, the source revision, and the supporting evidence. A written proof, an accepted Lean declaration, a finite calculation, a numerical experiment, and a software test answer different questions. They should not be treated as interchangeable forms of verification.
 
-The [completion guide](COMPLETION_STATUS.md) separates publication readiness, Lean coverage, and confidence. A completed reading edition can contain open questions. A completed formal contract covers its registered claims. Conditional results retain their premises, and all executable software remains **beta / work in progress**.
+A formal result also needs a faithful correspondence between the written claim and the formal statement. Originality and broader scientific applicability need their own assessment.
 
-The collection is public so readers can inspect, criticize, reproduce, and reuse its claims and methods under the [applicable terms](../LICENSE.md). Corrections should identify the exact work, revision, statement or function, and discrepancy. Reproducible examples and precise objections are useful contributions.
+The [completion guide](COMPLETION_STATUS.md) separates publication readiness, Lean coverage, and confidence. A reading edition can be complete while its subject still contains open questions. A completed formal contract covers its registered claims. A conditional result still depends on its premises.
+
+I have made the collection public so readers can inspect, criticize, reproduce, and reuse it under the [applicable terms](../LICENSE.md). A useful correction identifies the work and revision, the statement or function at issue, and the discrepancy. A reproducible example or a precise objection helps me locate the problem and make the correction.
 
 ## Sources and editorial provenance
 
-This statement was prepared on 27 October 2026 from existing project material. The pseudonym note is quoted from the published essay. The surrounding text brings together the project overview and disclosures. The author requested the note on publication circumstances on the same date. This page was assembled for publication, rather than recovered from an earlier standalone statement. The surrounding prose was edited for clarity on 28 October 2026. The quoted notes are unchanged.
+This statement was first prepared on 27 October 2026 from the project overview, the essay's author note, and the disclosures listed below. It was assembled for publication at that time. It was not an earlier standalone statement recovered from the source collection.
+
+The prose was edited on 28 October and revised again on 29 October 2026. The current explanation of the pseudonym paraphrases the original author note. The quoted note on publication circumstances is unchanged. The [revised essay](essays/MACHINE_NATIVE_MATHEMATICS.md) gives the broader conceptual account in a new reading edition.
 
 - [Project overview](../README.md) and [reading guide](START_HERE.md).
 - [Machine-Native Mathematics author note and reader guide](components/MACHINE_NATIVE_MATHEMATICS.md).

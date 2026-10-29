@@ -760,7 +760,7 @@ Jump to a work:
 
 ### [The Possibility for a Machine Native Mathematics](../works/machine-native-mathematics-essay.md#written-proofs)
 
-- [Read PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
+- [Original September 2026 PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
 - [Return to this work’s written proofs section](../works/machine-native-mathematics-essay.md#written-proofs)
 - [Work overview](../works/machine-native-mathematics-essay.md)
 - [Status and evidence](../STATUS_CATALOG.md#machine-native-mathematics-essay)

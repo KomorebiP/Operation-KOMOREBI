@@ -202,6 +202,21 @@ def inspect_site(root):
     for name, entry in python['examples'].items():
         assert editors['code-'+name] == (root/entry['url']).read_text(encoding='utf-8')
     documents=json.loads((root/'documents/index.json').read_bytes())
+    editions=json.loads((root/'editorial-editions.json').read_bytes()) if (root/'editorial-editions.json').is_file() else []
+    assert len(editions)==len({item['work'] for item in editions}), 'Duplicate editorial reading edition'
+    for edition in editions:
+        assert edition['url'] in pages and edition['manuscript_url'] in pages
+        assert len(pages[edition['url']].iframes)==1
+        assert edition['file_url'].startswith('documents/files/') and edition['file_url'] in files
+        assert hashlib.sha256((root/edition['file_url']).read_bytes()).hexdigest()==edition['pdf_sha256']
+        assert hashlib.sha256((root/edition['source_archive']).read_bytes()).hexdigest()==edition['source_archive_sha256']
+        with zipfile.ZipFile(root/edition['source_archive']) as archive:
+            assert set(archive.namelist())=={item['path'] for item in edition['source_files']}
+            assert len(archive.namelist())==len(edition['source_files'])
+            for item in edition['source_files']:
+                assert '..' not in PurePosixPath(item['path']).parts
+                assert hashlib.sha256(archive.read(item['path'])).hexdigest()==item['sha256']
+        assert any(item['work']==edition['work'] and item['sha256']==edition['original_pdf_sha256'] for item in documents['files'])
     assert len(documents['files'])==len({r['repository_path'] for r in documents['files']})
     pdf_count=0
     for record in documents['files']:
@@ -232,7 +247,7 @@ def inspect_site(root):
     assert source_lines(code.decode('utf-8')) in (root/demo['reader_url']).read_text(encoding='utf-8')
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,
-                reading_documents=len(documents['files']),pdfs=pdf_count,readable_math_expressions=readable_math,notation=notation,
+                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,notation=notation,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 

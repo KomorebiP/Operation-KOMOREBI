@@ -6,17 +6,17 @@
 
 [Read](#read) · [Written proofs](#written-proofs) · [Lean](#lean) · [Code](#code) · [Evidence](#evidence)
 
-**Completion:** Reader available, source qualification pending · **Lean:** No Lean claim · **Confidence:** Unassessed
+**Completion:** Reading edition complete · **Lean:** No Lean claim · **Confidence:** Unassessed
 
-A standalone reader PDF is supplied. This component does not include editable source.
+A conceptual essay on representations and languages for machine reasoning. The revised monograph and HTML reading edition include editable sources and a documented editorial review.
 
 ## Before you start
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** 29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected. No Lean verification claim for the essay or new mathematical review.
+**Recorded results and limits:** The original 29-page September 2026 PDF is retained. A new 25-page editorial reading edition has a complete editable manuscript, monograph typesetting, full page inspection, and documented local mathematical clarifications. Scientific confidence remains unassessed. The essay makes no Lean verification claim.
 
-**Remaining work:** Recover the exact editable v10 source, rebuild and inspect the full PDF, and map technical assertions to their source-specific evidence before final reader qualification (F07).
+**Remaining work:** Independent mathematical review of the full essay and source-specific reconciliation of its broader research claims remain separate work. Recovery of the original v10 editable source remains open.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -26,7 +26,9 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 ## Read
 
-- [Read PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
+[Revised reading edition](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Monograph PDF](../../website/assets/publications/machine-native-mathematics.pdf)
+
+- [Original September 2026 PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
 - [Maintained edition guide](../components/MACHINE_NATIVE_MATHEMATICS.md)
 
 [Back to work navigation](#work-navigation)
@@ -35,7 +37,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 Find the statement number or section in the [reading files](#read), then read its assumptions and argument. A claim map may cover only part of the written result.
 
-Written proofs may be in the [reading files](#read). There is no separate text or claim map linked here. The [evidence record](#evidence) describes what has been reviewed.
+- [Mathematical discussion in the revised essay](../essays/MACHINE_NATIVE_MATHEMATICS.md)
 
 [Find this work among other written proofs](../browse/PROOFS.md#machine-native-mathematics-essay)
 

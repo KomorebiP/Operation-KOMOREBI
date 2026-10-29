@@ -263,6 +263,7 @@ class Site:
         self.search=[]
         self.asset_count=0
         self.bundle_records=[]
+        self.editorial_editions={}
         self.claims=validate_claims(root,{c['destination']+'/'+f['path'] for c in self.components.values() for f in json.loads((root/c['receipt']).read_bytes())['files']})
         from reader_documents import ReadingDocuments
         self.reader=ReadingDocuments(self)
@@ -324,6 +325,10 @@ class Site:
             return github(self.repos[repo],self.revisions[repo],resolved.lstrip('/'))
         if (repo,resolved) in self.documents:
             return self.rel(document_url(repo,resolved),page)+('#'+parts.fragment if parts.fragment else '')
+        if repo == 'collection':
+            for edition in getattr(self,'editorial_editions',{}).values():
+                if resolved == edition['pdf_source']:
+                    return self.rel(edition['file_url'], page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and resolved=='examples/komorebi_demonstrations.py':
             return self.rel('read/demonstrations.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and not is_image:
@@ -358,7 +363,7 @@ class Site:
                 shortcut=self.reader.work_intro(identifier,page)
                 content=re.sub(r'(</h1>)',lambda m:m[1]+shortcut,content,count=1)
                 pdf=self.reader.primary_pdf(identifier)
-                if pdf:
+                if pdf and not self.assessments[identifier].get('editorial_edition'):
                     link='<p><a href="'+self.rel(pdf['url'],page)+'">Read the written arguments in the PDF</a>. The manuscript source remains available below.</p>'
                     content=content.replace('<h2 id="written-proofs">Written proofs</h2>','<h2 id="written-proofs">Written proofs</h2>'+link)
             else:
@@ -411,6 +416,64 @@ class Site:
             record.update(url='downloads/'+identifier+'.zip',archive_bytes=archive.stat().st_size,archive_sha256=digest(archive.read_bytes()))
             self.bundle_records.append(record)
         self.write('downloads/index.json',json.dumps(self.bundle_records,ensure_ascii=False,indent=2)+'\n')
+    def publish_editorial_editions(self):
+        """Publish separately identified reading editions without replacing imports."""
+        (self.output/'downloads').mkdir(parents=True,exist_ok=True)
+        for work, assessment in self.assessments.items():
+            edition = assessment.get('editorial_edition')
+            if not edition:
+                continue
+            record = json.loads((self.root/safe_path(edition['build_record'])).read_bytes())
+            for field in ('manuscript', 'latex', 'pdf'):
+                path = safe_path(edition[field])
+                if path != record[field] or digest((self.root/path).read_bytes()) != record[field+'_sha256']:
+                    raise ValueError('Reading edition differs from its build record: '+path)
+            source = (self.root/edition['manuscript']).read_text(encoding='utf-8')
+            title = re.search(r'^#\s+(.+)', source, re.M)[1]
+            raw = (self.root/edition['pdf']).read_bytes()
+            dest = 'documents/files/'+blob(raw)+'/Machine_Native_Mathematics_Reading_Edition.pdf'
+            target = self.output/dest
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw)
+            page = 'read/'+work+'/revised-reading-edition.html'
+            original = self.reader.primary_pdf(work)
+            if not original or original['sha256'] != record['original_pdf_sha256']:
+                raise ValueError('Original edition identity differs: '+work)
+            current = dict(work=work, title=title, url=page, file_url=dest,
+                           pdf_source=edition['pdf'], pdf_sha256=record['pdf_sha256'],
+                           manuscript_url=document_url('collection',edition['manuscript']),
+                           manuscript_sha256=record['manuscript_sha256'],
+                           original_pdf_sha256=record['original_pdf_sha256'], pages=record['pages'])
+            archive_url='downloads/'+work+'-reading-edition.zip'
+            source_paths=[edition['manuscript'], edition['latex'], edition['pdf'], edition['build_record'],
+                          'publication/machine-native-mathematics/README.md',
+                          'publication/machine-native-mathematics/EDITORIAL_REVIEW.md',
+                          'tools/build_machine_native_essay.py','docs/PROJECT_STATEMENT.md','LICENSE.md']
+            source_files=[]
+            with zipfile.ZipFile(self.output/archive_url,'w',compression=zipfile.ZIP_DEFLATED) as bundle:
+                for path in source_paths:
+                    safe_path(path)
+                    content=(self.root/path).read_bytes()
+                    bundle.writestr(path,content)
+                    source_files.append(dict(path=path,sha256=digest(content)))
+            current.update(source_archive=archive_url,source_archive_sha256=digest((self.output/archive_url).read_bytes()),source_files=source_files)
+            self.editorial_editions[work]=current
+            viewer=self.reader.viewer_url(current,page)
+            e=html.escape
+            body=('<h1>'+e(title)+'</h1><p>Revised reading edition · 29 October 2026 · '+str(record['pages'])+' pages.</p>'
+                  '<p><a class="button" href="'+self.rel(current['manuscript_url'],page)+'">Read as HTML</a> '
+                  '<a href="'+self.rel(dest,page)+'" download>Download the monograph PDF</a> · '
+                  '<a href="'+viewer+'">Expand PDF reader</a> · '
+                  '<a href="'+self.rel(archive_url,page)+'">Download editable sources</a></p>'
+                  '<p>This edition revises the prose and typesetting and makes local mathematical assumptions explicit. '
+                  'The individual papers retain their own proof and verification records.</p>'
+                  '<iframe class="pdf-reader" title="'+e(title,quote=True)+' — revised reading edition" src="'+viewer+'" allow="fullscreen"></iframe>'
+                  '<p><a href="'+self.rel(original['url'],page)+'">Original September 2026 PDF</a> · '
+                  '<a href="'+self.rel('collection/components/MACHINE_NATIVE_MATHEMATICS.html',page)+'">Edition history and review scope</a></p>')
+            self.page(page,title,body,github(REPOSITORY,self.revision,edition['manuscript']))
+            self.search.append(dict(title=title+' / Revised reading edition',group='Collection',kind='Papers and source',work_ids=[work],url=page,text='Revised monograph PDF editable manuscript sources editorial reading edition machine native mathematics'))
+        self.write('editorial-editions.json',json.dumps(list(self.editorial_editions.values()),ensure_ascii=False,indent=2)+'\n')
+
     def indexes(self):
         e=html.escape
         self.page('index.html','Explore the ideas. Follow the evidence.',home_page())
@@ -474,6 +537,7 @@ class Site:
             raise ValueError('The pinned PDF.js runtime is required')
         verify_pdf_runtime(self.pdfjs_root)
         shutil.copytree(self.pdfjs_root,self.output/'assets/pdfjs')
+        self.publish_editorial_editions()
         self.markdown_pages()
         self.reader.render()
         self.bundles()

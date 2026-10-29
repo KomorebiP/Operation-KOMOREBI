@@ -138,7 +138,9 @@ class ReadingDocuments:
         prepare(self)
 
     def primary_pdf(self, work):
-        return next((r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r['title'] == 'Read PDF'), None)
+        candidates = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf']
+        preferred = next((r for r in candidates if r['title'] == 'Read PDF'), None)
+        return preferred or (candidates[0] if len(candidates) == 1 else None)
 
     def image_url(self, path, page):
         entry = self.owned.get(path)
@@ -174,6 +176,12 @@ class ReadingDocuments:
                 ('#'+fragment if fragment else ''))
 
     def work_intro(self, work, page):
+        edition = getattr(self.site,'assessments',{}).get(work,{}).get('editorial_edition')
+        if edition:
+            manuscript = 'collection/'+edition['manuscript'].removeprefix('docs/').removesuffix('.md')+'.html'
+            shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(manuscript,page)+'">Read the revised edition</a> '
+                        '<a href="'+self.site.rel('read/'+work+'/revised-reading-edition.html',page)+'">Open monograph PDF</a></aside>')
+            return shortcut+self.work_routes(work,page)
         pdf = self.primary_pdf(work)
         shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>') if pdf else ''
         return shortcut+self.work_routes(work, page)
@@ -182,10 +190,14 @@ class ReadingDocuments:
         hub = 'collection/works/'+work+'.html'
         pdf = self.primary_pdf(work)
         routes = [('Paper overview', hub)]
+        edition = getattr(self.site,'assessments',{}).get(work,{}).get('editorial_edition')
+        if edition:
+            manuscript = 'collection/'+edition['manuscript'].removeprefix('docs/').removesuffix('.md')+'.html'
+            routes += [('Revised edition',manuscript),('Monograph PDF','read/'+work+'/revised-reading-edition.html')]
         from readable_chapters import BOOKS
         if work in BOOKS:
             routes.append(('Read chapters', BOOKS[work]['index']))
-        if pdf: routes.append(('Read PDF', pdf['url']))
+        if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))
         if work in self.manuscript_roots: routes.append(('Claims', 'claims.html#'+work))
         routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]
         if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
@@ -234,6 +246,9 @@ class ReadingDocuments:
 
     def document_works(self, repo, path):
         if repo != 'collection': return []
+        editions=[work for work,assessment in getattr(self.site,'assessments',{}).items()
+                  if assessment.get('editorial_edition',{}).get('manuscript')==path]
+        if editions:return editions
         from reader_experience import GUIDED_DEMONSTRATIONS
         if path in GUIDED_DEMONSTRATIONS: return GUIDED_DEMONSTRATIONS[path][1][:]
         if path.startswith('docs/works/'):
@@ -328,7 +343,10 @@ class ReadingDocuments:
     def catalog(self):
         e = html.escape
         pdfs = [r for r in self.records.values() if r['format'] == 'pdf']
-        body = '<h1>Papers and PDFs</h1><p>Read the available papers, visual guides and formal companions here. Each reader includes search, page controls, zoom, printing and a direct download.</p><p><a href="works.html">Browse all works and their evidence</a> · <a href="collection/HAND_WORKED_EXAMPLES.html">Worked examples</a></p><label for="work-query">Find a work or document</label><input id="work-query" type="search" data-result-label="PDFs"><p id="work-count" role="status" aria-live="polite">'+str(len(pdfs))+' PDFs</p><div class="work-list">'
+        editions=list(getattr(self.site,'editorial_editions',{}).values())
+        body = '<h1>Papers and PDFs</h1><p>Read the available papers, visual guides and formal companions here. Each reader includes search, page controls, zoom, printing and a direct download.</p><p><a href="works.html">Browse all works and their evidence</a> · <a href="collection/HAND_WORKED_EXAMPLES.html">Worked examples</a></p><label for="work-query">Find a work or document</label><input id="work-query" type="search" data-result-label="PDFs"><p id="work-count" role="status" aria-live="polite">'+str(len(pdfs)+len(editions))+' PDFs</p><div class="work-list">'
+        for edition in editions:
+            body+='<article class="work" data-search="'+e((edition['title']+' revised reading edition monograph').lower(),quote=True)+'"><p class="eyebrow">Revised reading edition</p><h2><a href="'+edition['url']+'">'+e(edition['title'])+'</a></h2><p>'+str(edition['pages'])+' pages · Editable sources and HTML reading version available.</p><p><a href="'+edition['manuscript_url']+'">Read as HTML</a> · <a href="collection/works/'+edition['work']+'.html">Work and evidence</a></p></article>'
         for r in sorted(pdfs, key=lambda r: (self.site.components[r['work']]['title'], r['title'])):
             title = self.site.components[r['work']]['title']
             body += '<article class="work" data-search="'+e((title+' '+r['title']+' '+r['path']).lower(), quote=True)+'"><p class="eyebrow">'+e(r['title'])+'</p><h2><a href="'+r['url']+'">'+e(title)+'</a></h2><p>'+e(PurePosixPath(r['path']).name)+' · '+f"{r['size']/1e6:.1f}"+' MB</p><p><a href="collection/works/'+r['work']+'.html">Work, proofs, Lean and code</a></p></article>'

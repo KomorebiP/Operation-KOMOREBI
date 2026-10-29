@@ -293,6 +293,31 @@ def validate_maintained_documents(root, paths):
     return set(paths)
 
 
+def validate_editorial_editions(root, data, current):
+    """Bind an editorial reading release separately from frozen source evidence."""
+    for row in data['components']:
+        edition=row.get('editorial_edition')
+        if not edition:
+            continue
+        path=edition['record']
+        assert path in data['assessment_records'], path
+        raw=(root/path).read_bytes()
+        assert hashlib.sha256(raw).hexdigest()==edition['sha256'], 'Editorial record changed: '+path
+        assert current.get(path)==hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest(), path
+        record=json.loads(raw)
+        assert record['work']==row['id'] and record['kind']=='editorial-reading-edition', path
+        assert not record['new_lean_execution'] and not record['new_collection_wide_proof_audit'], path
+        for field in ('manuscript','latex','pdf','build_record'):
+            target=edition[field]
+            assert target==record['artifacts'][field]['path'] and '..' not in target.split('/'), target
+            content=(root/target).read_bytes()
+            item=record['artifacts'][field]
+            assert hashlib.sha256(content).hexdigest()==item['sha256'], target
+            assert current.get(target)==item['git_blob_sha1'], target
+            assert hashlib.sha1(b'blob '+str(len(content)).encode()+b'\0'+content).hexdigest()==item['git_blob_sha1'], target
+        assert edition['manuscript'] in data['maintained_documents'], row['id']
+
+
 def validate(root, data, git):
     source = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
     available = {r['id']: r for r in source['components']}
@@ -345,6 +370,7 @@ def validate(root, data, git):
     assert not data['new_lean_execution'] and not data['new_mathematical_proof_audit']
     pinned = git_tree(root, git, data['source_revision'])
     current = git_tree(root, git, 'HEAD')
+    validate_editorial_editions(root, data, current)
     validate_reader_reviews(root, data, available, current, git)
     from proof_review_coverage import validate_coverage
     for binding in data.get('proof_review_coverage', []):

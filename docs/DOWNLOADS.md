@@ -454,6 +454,8 @@ These are reading selections. TeX may depend on additional files, and the ZIP is
 
 [Reading ZIP and contents](https://KomorebiP.github.io/Operation-KOMOREBI/downloads.html#machine-native-mathematics-essay) · [Work and evidence](works/machine-native-mathematics-essay.md)
 
+[Revised reading edition and editable sources](https://KomorebiP.github.io/Operation-KOMOREBI/downloads/machine-native-mathematics-essay-reading-edition.zip). The original source selection above remains available.
+
 <a id="model-theory-normalization"></a>
 
 ## Model-Theory Normalization

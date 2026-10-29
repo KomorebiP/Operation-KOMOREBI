@@ -319,6 +319,16 @@ class ReaderSiteTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Source receipt mismatch'):
                 Site.read_source(site,entry)
 
+    def test_primary_pdf_accepts_a_descriptive_title_without_guessing_between_companions(self):
+        reader=ReadingDocuments.__new__(ReadingDocuments)
+        original=dict(work='essay',format='pdf',title='Original September 2026 PDF')
+        reader.records={'original.pdf':original}
+        self.assertIs(reader.primary_pdf('essay'),original)
+        reader.records['companion.pdf']=dict(work='essay',format='pdf',title='Companion')
+        self.assertIsNone(reader.primary_pdf('essay'))
+        original['title']='Read PDF'
+        self.assertIs(reader.primary_pdf('essay'),original)
+
     def test_only_receipted_regular_reading_files_get_local_pages(self):
         reader=ReadingDocuments.__new__(ReadingDocuments)
         reader.records={}

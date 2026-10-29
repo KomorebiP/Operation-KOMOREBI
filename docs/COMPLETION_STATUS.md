@@ -21,10 +21,10 @@ Entries deferred from the main reading lists remain in the [incubator](INCUBATOR
 | Stage | Primary entries | Meaning |
 |---|---|---|
 | Scoped release | 9 | The release record marks the stated mathematical or executable requirements as complete. The scope below defines what is covered. |
-| Reading edition complete | 40 | The stated manuscript or reader set is released. Formal coverage, review depth and wider research can remain incomplete. |
+| Reading edition complete | 41 | The stated manuscript or reader set is released. Formal coverage, review depth and wider research can remain incomplete. |
 | Active development | 20 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
 | Experiment / prototype | 12 | A research instrument, implementation or experiment whose tested scope does not establish a general scientific endpoint. |
-| Reader available, source qualification pending | 2 | The PDF edition and reading scope have been identified. Matching editable sources, full page review, and reproducible build qualification remain pending. |
+| Reader available, source qualification pending | 1 | The PDF edition and reading scope have been identified. Matching editable sources, full page review, and reproducible build qualification remain pending. |
 | Needs assessment | 7 | Available material lacks a sufficient assessed source/status record for a stronger label. |
 | Earlier checkpoint | 1 | An earlier edition kept with its own evidence. Later acceptance records do not change that evidence. |
 
@@ -74,7 +74,7 @@ All executable software remains **beta / work in progress**, including implement
 | [Realization Boundaries](STATUS_CATALOG.md#realization-boundaries) | Declared contract recorded | Recorded formal evidence |
 | [Machine Native Reasoning](STATUS_CATALOG.md#monographs-machine-native-reasoning) | Declared contract recorded | Recorded formal evidence |
 
-## Reading edition complete (40)
+## Reading edition complete (41)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
@@ -114,6 +114,7 @@ All executable software remains **beta / work in progress**, including implement
 | [Hodge: source and evidence](STATUS_CATALOG.md#hodge-reader) | Source available, no current pass | Recorded written review |
 | [Inverse Galois: source and evidence](STATUS_CATALOG.md#inverse-galois-reader) | No Lean claim | Recorded written review |
 | [Lehmer: source and evidence](STATUS_CATALOG.md#lehmer-reader) | No Lean claim | Recorded written review |
+| [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay) | No Lean claim | Unassessed |
 | [Prime-Contact Coherence Calculus](STATUS_CATALOG.md#prime-contact-coherence) | No Lean claim | Recorded written review |
 | [Signal Reconstruction](STATUS_CATALOG.md#signal-reconstruction) | Inherited / related evidence | Historical formal evidence |
 | [Stratified Universality](STATUS_CATALOG.md#stratified-universality) | Source available, no current pass | Recorded written review |
@@ -161,12 +162,11 @@ All executable software remains **beta / work in progress**, including implement
 | [PRISM-1](STATUS_CATALOG.md#research-prism-1) | No Lean claim | Experimental evidence |
 | [Universal Generative Deformation Calculus](STATUS_CATALOG.md#universal-generative-deformation) | No Lean claim | Experimental evidence |
 
-## Reader available, source qualification pending (2)
+## Reader available, source qualification pending (1)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
 | [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) | Not assessed | Unassessed |
-| [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay) | No Lean claim | Unassessed |
 
 ## Needs assessment (7)
 

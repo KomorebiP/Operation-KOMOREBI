@@ -159,7 +159,7 @@ Availability alone does not establish an editorial or mathematical completion le
 
 **Done when:** Identify the edition, editable sources, claim scope and actual review/build records, then replace the unassessed labels.
 
-**Progress:** PDF identities, page counts, scope, and selected rendered front matter inspected. Two reader guides and a hash-bound assessment record added. Both entries now distinguish reader availability from completed source/build qualification. Exact editable source recovery, complete page checks, and proof/review reconciliation remain open.
+**Progress:** The machine-native mathematics essay now has a separately identified 25-page editorial reading edition with editable Markdown and TeX, a compiler record, full rendered-page inspection, and documented local mathematical clarifications. Its scientific confidence remains unassessed. The original v10 source is still unrecovered. The Gaussian Elimination entry and independent scientific review requirements remain open.
 
 Related works and source records: [Gaussian Elimination: collected guide](works/gaussian-elimination-guide.md) · [The Possibility for a Machine Native Mathematics](works/machine-native-mathematics-essay.md).
 

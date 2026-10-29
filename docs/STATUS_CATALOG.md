@@ -1070,11 +1070,11 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence. 
 
 ## The Possibility for a Machine Native Mathematics
 
-**Reader available, source qualification pending** · Lean: **No Lean claim** · Confidence basis: **Unassessed**
+**Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Unassessed**
 
-29-page conceptual essay by Komorebi P., dated September 2026 and retained under filename edition v10. Title, author note, and stated conceptual purpose inspected. No Lean verification claim for the essay or new mathematical review.
+The original 29-page September 2026 PDF is retained. A new 25-page editorial reading edition has a complete editable manuscript, monograph typesetting, full page inspection, and documented local mathematical clarifications. Scientific confidence remains unassessed. The essay makes no Lean verification claim.
 
-**Next step:** Recover the exact editable v10 source, rebuild and inspect the full PDF, and map technical assertions to their source-specific evidence before final reader qualification (F07).
+**Next step:** Independent mathematical review of the full essay and source-specific reconciliation of its broader research claims remain separate work. Recovery of the original v10 editable source remains open.
 
 [Return to this work: paper, proofs, Lean, and code](works/machine-native-mathematics-essay.md)
 
