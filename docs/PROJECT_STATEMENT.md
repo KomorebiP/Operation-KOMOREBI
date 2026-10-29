@@ -10,9 +10,9 @@ At its center is Realization Calculus: the study of how mathematical objects are
 
 I use a pseudonym to give readers room to encounter the work on its own terms: through its definitions, arguments, constructions, and results. Biography, credentials, and institutional affiliation can provide context, but they cannot settle the mathematical questions.
 
-For me, the pseudonym is a working arrangement rather than a commitment to permanent anonymity. I first explained this choice in the author note to *The Possibility for a Machine-Native Mathematics* in September 2026.
+For me, the pseudonym is a working arrangement rather than a commitment to permanent anonymity.
 
-[Read the original author note](../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf#page=1).
+[Read the author's note in the current edition of *The Possibility for a Machine-Native Mathematics*](essays/MACHINE_NATIVE_MATHEMATICS.md#authors-note).
 
 ## Authorship and AI assistance
 
@@ -40,12 +40,12 @@ I have made the collection public so that others can inspect, question, reproduc
 
 ## Sources and editorial provenance
 
-This statement was first assembled for publication on 27 October 2026 from the project overview, the essay's author note, and the disclosures below. It was edited on 28 October and revised on 29 October 2026. It is a later synthesis of those sources, not an earlier standalone statement recovered from the collection.
+This statement was first published on 27 October 2026 and edited on 28 and 29 October. Its current wording draws on the project overview, the current essay, and the work-specific disclosures below.
 
-The explanation of the pseudonym paraphrases the original author note. The quoted publication note is unchanged. The [revised essay](essays/MACHINE_NATIVE_MATHEMATICS.md) develops the broader conceptual account.
+The quoted publication note is unchanged. The [current reading edition of *The Possibility for a Machine-Native Mathematics*](essays/MACHINE_NATIVE_MATHEMATICS.md) develops the broader conceptual account.
 
 - [Project overview](../README.md) and [reading guide](START_HERE.md).
-- [Machine-Native Mathematics author note and reader guide](components/MACHINE_NATIVE_MATHEMATICS.md).
+- [Machine-Native Mathematics: current author's note](essays/MACHINE_NATIVE_MATHEMATICS.md#authors-note).
 - [Stratified Relational Workspace: AI assistance disclosure](../research/stratified-relational-workspace/docs/AI_ASSISTANCE_DISCLOSURE.md), including authorship, responsibility, and external review boundaries.
 - [Realization Boundaries: assistance and provenance](../monographs/realization-boundaries/publication/monograph_source/ASSISTANCE_AND_PROVENANCE.md), including the scope of AI-assisted review and its limitations.
 - [Paper II: language-model contribution disclosure](../papers/paper-ii/current/source/annals_expanded/AI_CONTRIBUTION_DISCLOSURE.md). Its statement about author checking applies to that article and is not a collection-wide certification.
