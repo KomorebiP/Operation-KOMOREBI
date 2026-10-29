@@ -53,7 +53,7 @@ def check_search_targets(index, pages):
 
 
 def check_readable_chapter(root, documents, pages):
-    from readable_chapters import BOOKS, CHAPTERS, original_math, expand_math, manuscript_macros
+    from readable_chapters import BOOKS, CHAPTERS, original_math, expand_math, manuscript_macros, chapter_text, validate_monolithic
     records = {r['repository_path']:r for r in documents['files']}
     reports = json.loads((root/'documents/readable-chapters.json').read_bytes())
     assert [r['source'] for r in reports] == [c['source'] for c in CHAPTERS]
@@ -75,9 +75,12 @@ def check_readable_chapter(root, documents, pages):
         source,page=spec['source'],spec['url']
         main_path=BOOKS[spec['work']]['main']
         main=(root/records[main_path]['file_url']).read_text(encoding='utf-8-sig')
+        if BOOKS[spec['work']].get('monolithic'):
+            validate_monolithic(main,BOOKS[spec['work']])
+            assert (report['start_line'],report['end_line'])==(spec['start_line'],spec['end_line'])
         assert report['macro_source']==main_path
         raw=(root/records[source]['file_url']).read_bytes()
-        expressions=original_math(raw.decode('utf-8-sig'))
+        expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
         assert report['source_sha256']==hashlib.sha256(raw).hexdigest()
         assert report['url']==page
         assert report['math_expressions']==len(expressions)

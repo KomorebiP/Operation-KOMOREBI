@@ -95,8 +95,9 @@ jump links remain readable. The browser’s Find command is also available.
 
 The [HTML reading catalogue](https://KomorebiP.github.io/Operation-KOMOREBI/read/index.html)
 brings together the main chapters of [Paper I](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-i/index.html),
-[Paper II](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/index.html)
-and [Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html).
+[Paper II](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-ii/index.html),
+[Paper III](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iii/index.html)
+and [Paper IV](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iv/index.html).
 These editions retain the original prose, equations,
 figures, tables and code examples. Each paper has chapter contents, previous
 and next links, cross references and a bibliography. Paper II also includes its
@@ -108,6 +109,14 @@ Its ten manuscript figures retain their captions. The two conceptual diagrams
 have keyboard-scrollable regions. The separate 22-plate visual atlas is linked
 to the PDF and is not converted to HTML. The build checks all 1,445 mathematical
 expressions in the six selected source sections, in their original order.
+
+Paper IV has 17 main sections, an opening orientation and an atlas introduction.
+Its HTML edition retains all 68 proof bodies, 95 numbered records, six manuscript
+figures and the formalization ledger. The build checks all 1,041 mathematical
+expressions in the main document, in their original order. Chapter links keep
+the line numbers from the single TeX manuscript. The 26 atlas plates remain
+available in the PDF; their introduction and reading routes are also in HTML.
+The preserved formal release and its stated scope remain unchanged.
 
 Statements and proofs link to each other, their claim records and the original
 source lines. Reading pages connect to the paper's recorded Lean coverage, code
@@ -145,7 +154,7 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I, II and III also have formatted HTML chapters. Their separate visual
+Papers I, II, III and IV also have formatted HTML chapters. Their separate visual
 atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 

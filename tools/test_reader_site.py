@@ -11,7 +11,7 @@ from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
 from claim_navigation import statements, manuscript_sources, validate_claims, PAPERS
-from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels, manuscript_bibliography, presentation_tex, passage_links, reading_options
+from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels, manuscript_bibliography, presentation_tex, passage_links, reading_options, chapter_text, validate_monolithic, FOURTH_MAIN, FOURTH_CHAPTERS
 
 
 class ReaderSiteTests(unittest.TestCase):
@@ -39,6 +39,57 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('show-passage-tools',options.labels)
         self.assertEqual(options.inputs[0]['aria-controls'],'chapter-text')
         self.assertIn('#chapter-text',options.links)
+
+    def test_monolithic_ranges_preserve_lines_and_route_claims_to_their_chapter(self):
+        source='Preamble\n\\section{One}\nText $x$.\n\\section{Two}\nText $y$.\n'
+        spec=dict(start_line=4,end_line=5)
+        chapter=Chapter(chapter_text(source,spec),{},section_offset=1)
+        self.assertEqual(chapter.nodes[0]['line'],4)
+        self.assertEqual(chapter.nodes[0]['number'],'2')
+        self.assertEqual(original_math(chapter_text(source,spec)),['y'])
+        for spec in FOURTH_CHAPTERS:
+            self.assertEqual(readable_url(FOURTH_MAIN,spec['start_line']),spec['url']+'#L'+str(spec['start_line']))
+            self.assertEqual(readable_url(FOURTH_MAIN,spec['end_line']),spec['url']+'#L'+str(spec['end_line']))
+        self.assertEqual(readable_url(FOURTH_MAIN),FOURTH_CHAPTERS[0]['url'])
+        self.assertIsNone(readable_url(FOURTH_MAIN,1))
+
+    def test_monolithic_validation_rejects_changed_boundaries_gaps_and_headings(self):
+        source='\\begin{document}\nIntro $x$.\n\\section{One}\nBody $y$.\n\\end{document}'
+        config=dict(chapters=[dict(start_line=1,end_line=2,title='Orientation'),dict(start_line=3,end_line=5,title='One')])
+        validate_monolithic(source,config)
+        with self.assertRaises(ValueError): validate_monolithic('\n'+source,config)
+        with self.assertRaises(ValueError): validate_monolithic(source.replace('{One}','{Two}'),config)
+        config['chapters'][0]['end_line']=1
+        with self.assertRaises(ValueError): validate_monolithic(source,config)
+
+    def test_paper_iv_wrappers_preserve_prose_formulas_and_source_lines(self):
+        source=('\\begin{document}\n\\KomorebiCover\n\\KomorebiOpeningNote{Read $a$.\nThen $b$.}\n'
+                '\\begin{abstract}Abstract $c$.\\end{abstract}\n'
+                '\\modelfigure{model}{Caption $d$.}{fig:model}\n\\end{document}')
+        converted=presentation_tex(source)
+        self.assertEqual(converted.count('\n'),source.count('\n'))
+        chapter=Chapter(source,{})
+        self.assertEqual([n['line'] for n in chapter.nodes],[3,5,6])
+        self.assertEqual([n['kind'] for n in chapter.nodes],['readerroadmap','readerroadmap','figure'])
+        self.assertEqual(original_math(converted),original_math(source))
+        self.assertIn('Read $a$.\nThen $b$.',converted)
+        self.assertEqual(chapter.labels['fig:model']['line'],6)
+
+    def test_paper_iv_part_numbers_and_upright_math_presentation(self):
+        chapter=Chapter(r'\part{Products}\section{Products}\begin{theorem}Text\end{theorem}',{},state=dict(part=3,section=11))
+        self.assertEqual(chapter.nodes[0]['number'],'Part IV')
+        self.assertEqual(chapter.nodes[2]['number'],'12.1')
+        self.assertEqual(expand_math(r'\Thetafun_N',{'Thetafun':r'\symup{\Theta}'}),r'{\mathrm{\Theta}}_N')
+
+    def test_paper_iv_continued_table_header_is_not_a_data_row(self):
+        node=dict(kind='longtable',body=r'{ll}\toprule Records & Scope\\\midrule\endfirsthead\toprule Records & Scope (continued)\\\midrule\endhead $x$ & $y$\\\bottomrule')
+        chapter=Chapter('',{})
+        rendered=render_table(node,chapter)
+        self.assertEqual(rendered.count('<th scope="col">'),2)
+        self.assertEqual(rendered.count('<td>'),2)
+        self.assertEqual(chapter.math,['x','y'])
+        node['body']=node['body'].replace('Scope (continued)','Different (continued)')
+        with self.assertRaises(ValueError): render_table(node,Chapter('',{}))
 
     def test_paper_i_lists_keep_math_before_inside_and_after_items(self):
         source=r'$a$ before. \begin{enumerate}\item $b$\item $c$\end{enumerate} After $d$.'

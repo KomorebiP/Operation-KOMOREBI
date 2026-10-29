@@ -64,7 +64,42 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         chapters=FIRST_CHAPTERS, main_chapters=6, chapter_prefix='',
                         pdf_inputs={'visual_atlas.tex': 'Read the 22-plate visual atlas in the PDF'}), **BOOKS}
 CHAPTERS = FIRST_CHAPTERS + CHAPTERS
-BY_SOURCE = {c['source']:c for c in CHAPTERS}
+FOURTH_BASE = 'papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/'
+FOURTH_MAIN = FOURTH_BASE+'Paper_IV_Traditional_Final.tex'
+# Inclusive, contiguous source ranges. Boundaries are checked before conversion;
+# padding retains the manuscript's original line numbers on every chapter page.
+FOURTH_SECTIONS = [
+    (170, 'orientation', 'Orientation and formal scope'),
+    (211, 'introduction', 'Introduction'),
+    (268, 'construction-map', 'A map of the construction'),
+    (324, 'cyclic-projection', 'Cyclic projection of analytic functions'),
+    (430, 'transfer-exponential', 'The transfer exponential basis'),
+    (577, 'signed-sections', 'Signed cyclic sections and the distinguished denominator'),
+    (750, 'finite-algebra', 'A finite algebra and matrix model'),
+    (917, 'reciprocal-powers', 'Reciprocal powers and parameter polynomials'),
+    (1217, 'logarithmic-derivatives', 'Logarithmic derivatives and Riccati equations'),
+    (1351, 'appell-systems', 'Residue-section reciprocals and Appell systems'),
+    (1607, 'theta-polynomials', 'Scaled reciprocal coupling and theta polynomials'),
+    (1708, 'zero-geometry', 'Growth and the geometry of the large zeros'),
+    (2260, 'products-and-moments', 'Hadamard products and zero power sums'),
+    (2588, 'coefficient-asymptotics', 'Coefficient asymptotics from the nearest zeros'),
+    (2712, 'zero-zeta', 'Zero zeta functions'),
+    (2946, 'scope-boundaries', 'Scope boundaries and further questions'),
+    (2974, 'formalization-ledger', 'Formalization ledger for version 1.0.0'),
+    (3087, 'conclusion', 'Conclusion'),
+    (3109, 'visual-atlas', 'Visual atlas'),
+]
+FOURTH_CHAPTERS = [dict(source=FOURTH_MAIN, url='read/paper-iv/'+slug+'.html', title=title, work='paper-iv',
+                        start_line=start, end_line=FOURTH_SECTIONS[i+1][0]-1 if i+1<len(FOURTH_SECTIONS) else 3123)
+                   for i,(start,slug,title) in enumerate(FOURTH_SECTIONS)]
+BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, main=FOURTH_MAIN,
+                        bib=FOURTH_BASE+'references.bib', index='read/paper-iv/index.html',
+                        bib_page='read/paper-iv/references.html',
+                        title='Cyclic analytic functions, reciprocal families, and spectral zero data',
+                        chapters=FOURTH_CHAPTERS, main_chapters=17, monolithic=True,
+                        pdf_inputs={'atlas-pages': 'Read the 26-plate visual atlas in the PDF'})
+CHAPTERS += FOURTH_CHAPTERS
+BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput'}
 KIND_NAMES = {'standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
@@ -103,6 +138,19 @@ def presentation_tex(text):
     text = re.sub(r'\\addcontentsline\{toc\}\{section\}\{[^{}]*\}', mask, text)
     text = re.sub(r'\\fontsize\{[\d.]+\}\{[\d.]+\}|\\setstretch\{[\d.]+\}|\\selectfont\b', mask, text)
     text = re.sub(r'\\setlength\{\\(?:parindent|parskip)\}\{[^{}]*\}', mask, text)
+    text = re.sub(r'\\(?:begin|end)\{document\}|\\(?:KomorebiCover|tableofcontents|listoffigures)\b|\\pagenumbering\{arabic\}', mask, text)
+    # This exact wrapper only changes spacing in the printed bibliography.
+    text = re.sub(r'\\let\\prscbibliography\\thebibliography\s*\\renewcommand\{\\thebibliography\}\[1\]\{\\prscbibliography\{#1\}\\setlength\{\\itemsep\}\{0pt\}\\setlength\{\\parsep\}\{0pt\}\}', mask, text)
+    text = re.sub(r'\\bibliographystyle\{alpha\}', mask, text)
+    text = text.replace(r'\begin{abstract}', r'\begin{readerroadmap}[title={Abstract}]').replace(r'\end{abstract}', r'\end{readerroadmap}')
+    while (match := re.search(r'\\KomorebiOpeningNote\{', text)):
+        value,end = group(text, match.end()-1)
+        text = text[:match.start()] + r'\begin{readerroadmap}[title={Reading orientation}]' + value + r'\end{readerroadmap}' + text[end:]
+    while (match := re.search(r'\\modelfigure\{', text)):
+        path,end = group(text, match.end()-1)
+        caption,end = group(text, end)
+        label,end = group(text, end)
+        text = text[:match.start()] + r'\begin{figure}\centering\includegraphics[width=.98\linewidth]{' + path + r'.pdf}\caption{' + caption + r'}\label{' + label + r'}\end{figure}' + text[end:]
     # These macros are explicitly empty in the manuscript preamble.
     while (match := re.search(r'\\(?:Depends|Exports)\{', text)):
         _, end = group(text, match.end()-1)
@@ -153,7 +201,8 @@ def manuscript_macros(main):
         value, _ = group(main, m.end())
         if '#' in value: raise ValueError('Argument macro is outside the reading pilot')
         result[m[2]] = value
-    if not {'Pcal', 'Qcal', 'Rcal', 'Scal', 'End', 'id', 'bbk'} <= set(result):
+    required = {'CC','Dfun','Thetafun','Pcal','id'} if r'\newcommand{\Dfun}' in main else {'Pcal', 'Qcal', 'Rcal', 'Scal', 'End', 'id', 'bbk'}
+    if not required <= set(result):
         raise ValueError('Missing manuscript macro definitions')
     # Only the literal, one-argument math wrappers used by the reading editions.
     for name in ('cl', 'closure', 'norm', 'mat'):
@@ -199,7 +248,9 @@ def expand_math(tex, macros):
             else: pieces.append('{'+value+'}' if value is not None else match[0])
         pieces.append(tex[pos:])
         expanded=''.join(pieces)
-        if expanded == tex: return tex
+        # unicode-math's upright alphabet has the same presentation here as
+        # MathJax's supported upright command; retain the original in receipts.
+        if expanded == tex: return re.sub(r'\\symup\b', r'\\mathrm', tex)
         tex = expanded
     raise ValueError('Recursive manuscript macro')
 
@@ -262,7 +313,7 @@ class Chapter:
                 if heading[2]: number=''
                 elif heading[1]=='part':
                     self.part+=1
-                    number='Part '+('I'*self.part)
+                    number='Part '+('I','II','III','IV','V','VI','VII','VIII','IX','X')[self.part-1]
                 elif heading[1] == 'section':
                     self.section += 1
                     self.subsection = self.subsubsection = self.counter = 0
@@ -395,6 +446,9 @@ class Chapter:
                         links.append('<a href="'+html.escape(url,quote=True)+'" aria-label="Reference '+str(number)+': '+html.escape(key,quote=True)+'">['+str(number)+']</a>')
                     out.append(', '.join(links))
                     if option: out.append(', '+self.inline(option))
+                elif name == 'bibliography':
+                    if value!='references' or not getattr(self,'bibliography_url',None): raise ValueError('Unsupported bibliography route')
+                    out.append('<a href="'+html.escape(self.relative(self.bibliography_url),quote=True)+'">Read the bibliography</a>')
                 elif name == 'input':
                     if value in self.external_inputs:
                         target=self.external_inputs[value]
@@ -494,8 +548,35 @@ class Chapter:
 
 
 def readable_url(path, line=None):
-    record = BY_SOURCE.get(path)
+    record = next((c for c in CHAPTERS if c['source']==path and (line is None or 'start_line' not in c or c['start_line']<=line<=c['end_line'])),None)
     return record['url']+('#L'+str(line) if line else '') if record else None
+
+
+def chapter_text(text, spec):
+    if 'start_line' not in spec: return text
+    lines=text.splitlines(keepends=True)
+    start,end=spec['start_line'],spec['end_line']
+    if not 1<=start<=end<=len(lines): raise ValueError('Reading source range is invalid')
+    return '\n'*(start-1)+''.join(lines[start-1:end])
+
+
+def chapter_claims(reader, spec):
+    return [row for row in reader.claims_by_source.get(spec['source'],[])
+            if 'start_line' not in spec or spec['start_line']<=row['statement_line']<=spec['end_line']]
+
+
+def validate_monolithic(main, config):
+    specs=config['chapters']
+    lines=main.splitlines()
+    if lines[specs[0]['start_line']-1]!=r'\begin{document}' or lines[specs[-1]['end_line']-1]!=r'\end{document}':
+        raise ValueError('Manuscript document boundaries changed')
+    for i,spec in enumerate(specs):
+        if i and specs[i-1]['end_line']+1!=spec['start_line']: raise ValueError('Reading ranges have a gap or overlap')
+        text=chapter_text(main,spec)
+        headings=re.findall(r'\\section\{([^{}]+)\}',text)
+        if headings!=([spec['title']] if i else []): raise ValueError('Manuscript section order changed: '+spec['title'])
+    if [m for s in specs for m in original_math(chapter_text(main,s))]!=original_math(main.split(r'\begin{document}',1)[1]):
+        raise ValueError('Manuscript mathematics omitted by chapter ranges')
 
 
 def bibliography(text):
@@ -537,9 +618,11 @@ def prepare(reader):
     for work,config in BOOKS.items():
         reader.add(config['bib'],config['label']+' bibliography source')
         main=reader.site.read_source(reader.records[config['main']]).decode('utf-8-sig')
-        declared=re.findall(r'\\input\{('+re.escape(config.get('chapter_prefix','chapters/'))+r'[^}]+)\}',clean_tex(main).split(r'\begin{document}',1)[-1])
-        if [config['base']+p for p in declared] != [c['source'] for c in config['chapters'][:config['main_chapters']]]:
-            raise ValueError(config['label']+' chapter order changed. Review the readable edition.')
+        if config.get('monolithic'): validate_monolithic(main,config)
+        else:
+            declared=re.findall(r'\\input\{('+re.escape(config.get('chapter_prefix','chapters/'))+r'[^}]+)\}',clean_tex(main).split(r'\begin{document}',1)[-1])
+            if [config['base']+p for p in declared] != [c['source'] for c in config['chapters'][:config['main_chapters']]]:
+                raise ValueError(config['label']+' chapter order changed. Review the readable edition.')
         macros=manuscript_macros(main)
         chapters=[]
         labels={}
@@ -547,10 +630,11 @@ def prepare(reader):
         for spec in config['chapters']:
             reader.add(spec['source'])
             raw=reader.site.read_source(reader.records[spec['source']])
-            chapter=Chapter(raw.decode('utf-8-sig'),macros,state=state,check_refs=False)
+            chapter=Chapter(chapter_text(raw.decode('utf-8-sig'),spec),macros,state=state,check_refs=False)
             chapter.formal_labels=formal_note_labels(main)
             chapter.url=spec['url']
             chapter.base=config['base']
+            chapter.bibliography_url=config['bib_page']
             chapter.external_inputs={name:dict(url=reader.primary_pdf(work)['url'],title=title)
                                      for name,title in config.get('pdf_inputs',{}).items()}
             for label,node in chapter.labels.items():
@@ -566,7 +650,7 @@ def prepare(reader):
             chapter.validate_references()
             chapter.citations={r['key']:(r['key'],chapter.relative(config['bib_page'])+'#ref-'+r['key']) for r in references}
             nodes={n['line']:n for n in chapter.nodes}
-            for row in reader.claims_by_source.get(spec['source'],[]):
+            for row in chapter_claims(reader,spec):
                 if row['statement_line'] not in nodes: raise ValueError('Claim does not have a rendered statement block')
                 if row['proof_line'] and nodes.get(row['proof_line'],{}).get('kind')!='proof':
                     raise ValueError('Claim does not have its recorded rendered proof block')
@@ -623,7 +707,7 @@ def render_table(node,chapter):
     if r'\endfirsthead' in content:
         first,rest=content.split(r'\endfirsthead',1)
         repeated,tail=rest.split(r'\endhead',1)
-        normalize=lambda t:re.sub(r'\s+','',t)
+        normalize=lambda t:re.sub(r'\s+','',t.replace(' (continued)',''))
         first_header=re.sub(r'^.*?\\toprule',r'\\toprule',first,flags=re.S)
         if normalize(first_header)!=normalize(repeated) or original_math(repeated):
             raise ValueError('Unsupported repeated table header')
@@ -673,7 +757,7 @@ def render_reading_index(reader):
         body+='</nav></section>'
     body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. Visual atlases remain in the PDFs, and not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
     site.page(page,'Read the papers online',body)
-    site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions Paper I Paper II Paper III chapters equations proofs',work_ids=list(BOOKS)))
+    site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
 
 
 def passage_links(source_links, reading_links=''):
@@ -700,7 +784,7 @@ def render_book(reader,book):
     reports=[]
     for spec,raw,chapter in book['chapters']:
         source,page,title=spec['source'],spec['url'],config['label']+': '+spec['title']
-        rows={r['statement_line']:r for r in reader.claims_by_source.get(source,[])}
+        rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
         proof_rows={r['proof_line']:r for r in rows.values() if r['proof_line']}
         headings=[n for n in chapter.nodes if n['kind'] in HEADINGS]
         toc='<nav class="chapter-contents" aria-label="Chapter contents"><h2 id="contents">Contents</h2><ol>'
@@ -728,7 +812,7 @@ def render_book(reader,book):
                 if index+1<len(headings): reading_links+=' · <a href="#'+headings[index+1]['id']+'">Next section</a>'
                 body+=passage_links(links,reading_links)
             elif kind=='figure':
-                match=re.match(r'\s*\\centering\s*\\includegraphics\[width=0?\.96\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
+                match=re.match(r'\s*\\centering\s*\\includegraphics\[width=0?\.9[68]\\(?:textwidth|linewidth)\]\{([^}]+)\}\s*\\caption',node['body'])
                 if not match: raise ValueError('Unsupported figure')
                 caption,end=group(node['body'],match.end())
                 if re.sub(r'\\label\{[^}]+\}','',node['body'][end:]).strip(): raise ValueError('Unhandled figure content')
@@ -780,12 +864,13 @@ def render_book(reader,book):
         body+='</article>'+neighbour_links(spec)+reader.work_routes(work,page)
         body+='<details class="document-provenance"><summary>Source and conversion record</summary><p>Source SHA-256: <code>'+reader.records[source]['sha256']+'</code></p><p>Unsupported prose commands stop the build. The mathematical expression sequence is checked against the source, with manuscript macros expanded for display.</p><p><a href="'+site.rel('documents/readable-chapters.json',page)+'">Conversion records</a></p></details>'
         site.page(page,title,body)
-        expressions=original_math(raw.decode('utf-8-sig'))
+        expressions=original_math(chapter_text(raw.decode('utf-8-sig'),spec))
         if chapter.math!=expressions:
             difference=next((i for i,(a,b) in enumerate(zip(chapter.math,expressions)) if a!=b),min(len(chapter.math),len(expressions)))
             raise ValueError('Reading math differs at '+source+' expression '+str(difference)+' rendered '+str(chapter.math[difference:difference+1])+' original '+str(expressions[difference:difference+1]))
         report=dict(source=source,source_sha256=hashlib.sha256(raw).hexdigest(),url=page,math_expressions=len(expressions),math_sequence_sha256=hashlib.sha256(json.dumps(expressions,ensure_ascii=False).encode()).hexdigest(),references=len(chapter.references),labels=sum(len(n['labels']) for n in chapter.nodes),nodes=[{k:n[k] for k in ('kind','id','line','end_line','labels')} for n in chapter.nodes],macro_source=config['main'],macros=chapter.macros,new_proof_review=False,new_lean_execution=False)
         reports.append(report)
+        if 'start_line' in spec: report.update(start_line=spec['start_line'],end_line=spec['end_line'])
         if source==SOURCE: site.write('documents/readable-paper-ii.json',json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     render_book_index(reader,book,reports)
     render_bibliography(reader,book)

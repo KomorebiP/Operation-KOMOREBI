@@ -68,10 +68,18 @@ linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 ## Readable chapters
 
 [The chapter renderer](../tools/readable_chapters.py) publishes the main chapters
-of Papers II and III as readable HTML alongside their original source pages.
+of Papers I, II, III and IV as readable HTML alongside their original source pages.
 Paper II's current verification snapshot has its own reading page. Each paper
 has a chapter index and bibliography, with links between chapters and recorded
 claim locations. Visual atlases remain available as on-site PDFs.
+
+Paper IV's single source is divided into contiguous, checked line ranges for
+17 main sections, the opening orientation and the atlas introduction. These
+ranges preserve original source lines and resolve claim links to the correct
+chapter. The 68 proof bodies, 95 numbered records and all 1,041 mathematical
+expressions in the main document are retained. Six receipt-bound figures are
+included; the 26-plate atlas remains in the PDF. Source changes that shift
+section boundaries require a review of the chapter configuration.
 
 The renderer handles the selected manuscripts' prose, statement environments,
 references, equations, tables, code listings and receipt-bound figures. Its book
