@@ -163,7 +163,10 @@ page and fragment. Claim types and existing evidence assessments are unchanged.
 
 The [Python playground](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html)
 runs the three teaching demonstrations and the pinned Komorebi Math introductory
-example. Python starts on demand in a disposable module worker. Stop terminates
+example. A labelled preset dropdown loads the selected editor, source routes and
+expected output. Choices retain their page fragments, and switching presets keeps
+edits in the current page. The original example links remain available without
+JavaScript. Python starts on demand in a disposable module worker. Stop terminates
 the worker, including an infinite loop. Reset also restores the selected source.
 Each run uses a fresh namespace. A two minute timeout and an output limit keep
 ordinary mistakes manageable. The plain text editors support keyboard navigation.

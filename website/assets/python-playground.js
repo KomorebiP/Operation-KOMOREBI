@@ -3,6 +3,7 @@ const status = document.getElementById("python-status");
 const out = document.getElementById("python-output");
 const errors = document.getElementById("python-error");
 const stop = document.getElementById("python-stop");
+const preset = document.getElementById("python-preset");
 const examples = [...document.querySelectorAll(".python-example")];
 const originals = new Map(examples.map(section => [section.id, section.querySelector("textarea").value]));
 let worker;
@@ -12,15 +13,22 @@ let timer;
 let manifest;
 let stdout = "";
 let stderr = "";
+let selectedExample;
 
 function select() {
   const selected = examples.some(x => "#"+x.id === location.hash) ? location.hash.slice(1) : "packets";
-  if (active) terminate("Stopped because the example changed.");
+  const changed = selectedExample !== selected;
+  if (active && changed) terminate("Stopped because the example changed.");
+  preset.value = selected;
   for (const section of examples) section.hidden = section.id !== selected;
-  for (const link of document.querySelectorAll('[aria-label="Choose a Python example"] a')) {
-    if (link.hash === "#"+selected) link.setAttribute("aria-current", "location");
-    else link.removeAttribute("aria-current");
+  if (changed) {
+    const title = document.querySelector("#"+selected+" h2").textContent;
+    status.textContent = title+" loaded. Press Run when you are ready.";
+    document.getElementById("python-output-title").textContent = "Output: "+title;
+    out.textContent = "Run this preset to see its output here.";
+    errors.textContent = "None.";
   }
+  selectedExample = selected;
 }
 
 function idle() {
@@ -108,6 +116,14 @@ host.addEventListener("click", async event => {
   }
 });
 stop.addEventListener("click", () => terminate("Stopped. Press Run to start a fresh Python runtime."));
-window.addEventListener("hashchange", select);
+preset.addEventListener("change", () => {
+  history.pushState(null, "", "#"+preset.value);
+  select();
+});
+document.getElementById("python-picker").hidden = false;
+document.getElementById("python-example-links").hidden = true;
+window.addEventListener("hashchange", () => {
+  if (!location.hash || examples.some(section => "#"+section.id === location.hash)) select();
+});
 window.addEventListener("pagehide", () => terminate("Python stopped when you left this page. Press Run to start again."));
 select();

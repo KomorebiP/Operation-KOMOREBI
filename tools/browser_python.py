@@ -78,10 +78,13 @@ def build(site, runtime_root):
                   library_files=files, runtime_version=runtime['version'], examples={})
     body = '''<h1>Python playground</h1><p class="lede">Run a small calculation, change the code and compare the result with its written explanation.</p>
 <p>Python starts when you press Run. The first run downloads about 13 MB of runtime files. The library example also loads NumPy and Komorebi Math. Calculations run in your browser. Your edits are kept only on this page until you leave or reset it.</p>
-<nav class="document-routes" aria-label="Choose a Python example">'''
+<div id="python-picker" class="python-picker" hidden><label for="python-preset">Preload an example</label><select id="python-preset" aria-describedby="python-preset-help">
+<optgroup label="Worked examples"><option value="packets">Reconstruct an operator</option><option value="refinement">Refine a signal</option><option value="recovery">Test recovery from a summary</option></optgroup>
+<optgroup label="Library preset"><option value="library">Komorebi Math with NumPy</option></optgroup></select><p id="python-preset-help">Choose a preset to load its code, source links and expected output. Switching presets keeps your edits on this page. Python and any required libraries load when you press Run.</p></div>
+<nav id="python-example-links" class="document-routes" aria-label="Choose a Python example">'''
     body += ''.join('<a href="#'+key+'">'+html.escape(value[0])+'</a>' for key, value in EXAMPLES.items())+'</nav>'
     body += '''<noscript><p>Enable JavaScript to run Python here. The explanations, source and downloads below remain available.</p></noscript>
-<p id="python-help">Use the example links above to choose a starting point. The editor is a plain text field. Tab moves to the next control. Run uses a fresh Python namespace. Stop ends the runtime. Reset also restores the selected code. Fixed expected values may need updating when you change an input.</p>
+<p id="python-help">The editor is a plain text field. Tab moves to the next control. Run uses a fresh Python namespace. Stop ends the runtime. Reset restores the selected preset. Fixed expected values may need updating when you change an input.</p>
 <div id="python-playground" data-worker="assets/python-worker.js" data-manifest="downloads/python-playground.json">
 <p id="python-status" role="status" aria-live="polite">Choose an example, then press Run.</p>'''
     for name, (title, doc, works) in EXAMPLES.items():
@@ -109,7 +112,8 @@ def build(site, runtime_root):
             body += '<a href="'+base+'">'+label+'</a><a href="'+base+'#written-proofs">'+label+' proofs</a><a href="'+base+'#lean">'+label+' Lean coverage</a><a href="'+base+'#code">'+label+' code</a>'
             if work.startswith('paper-'): body += '<a href="claims.html#'+work+'">'+label+' claims</a>'
         body += '</nav><label for="code-'+name+'">Python code: '+title+'</label><textarea id="code-'+name+'" class="python-code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="python-help" rows="14">'+html.escape(source)+'</textarea>'
-        body += '<div class="python-actions"><button type="button" data-run="'+name+'">Run '+({'packets':'packet reconstruction','refinement':'signal refinement','recovery':'recovery check','library':'Komorebi Math'}[name])+'</button><button type="button" data-reset="'+name+'">Reset code</button><a download href="'+download+'">Download original code</a></div></section>'
+        body += '<div class="python-actions"><button type="button" data-run="'+name+'">Run '+({'packets':'packet reconstruction','refinement':'signal refinement','recovery':'recovery check','library':'Komorebi Math'}[name])+'</button><button type="button" data-reset="'+name+'">Reset code</button><a download href="'+download+'">Download original code</a></div>'
+        body += '<details class="python-expected"><summary>Expected output for the published preset</summary><pre>'+html.escape(expected)+'</pre><p>This is the original example\'s output. Your edits may change it.</p></details></section>'
         site.search.append(dict(title='Run Python: '+title,group='Collection',kind='Code',work_ids=works,url='playground.html#'+name,text='Python browser playground editable runnable example NumPy Komorebi Math '+title))
     body += '''<div class="python-results"><h2 id="python-output-title">Output</h2><button type="button" id="python-stop" disabled>Stop Python</button>
 <pre id="python-output" role="region" aria-labelledby="python-output-title" tabindex="0">Run an example to see its output here.</pre>
