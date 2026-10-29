@@ -169,7 +169,7 @@ class ReaderSiteTests(unittest.TestCase):
         reader.claims_by_source = {'main.tex':[row]}
         result = source_lines('intro\nstatement\nend\nproof', reader.source_annotations('main.tex','read/work/main.html'))
         page = Page(result)
-        self.assertEqual(page.ids, ['L1','L2','L3','L4'])
+        self.assertEqual([i for i in page.ids if i.startswith('L')], ['L1','L2','L3','L4'])
         self.assertIn('../../claims.html#exact-claim', page.links)
         self.assertIn('#L2', page.links)
         self.assertIn('#L4', page.links)
@@ -341,6 +341,38 @@ class ReaderSiteTests(unittest.TestCase):
         self.assertIn('&lt;script&gt;',result)
         self.assertNotIn('<script>',result)
         self.assertIn('aria-label="Line 2"',result)
+
+    def test_source_navigation_bounds_match_real_lines_and_links_have_targets(self):
+        for text in ('', 'one\n', 'one\n\nthree'):
+            result=source_lines(text)
+            page=Page(result)
+            self.assertEqual(len(page.ids),len(set(page.ids)))
+            self.assertTrue(all(link[1:] in page.ids for link in page.links if link.startswith('#')))
+            lines=text.splitlines()
+            self.assertEqual(len(page.inputs),int(bool(lines)))
+            if lines:
+                control=page.inputs[0]
+                self.assertEqual((control['min'],control['max'],control['step']),('1',str(len(lines)),'1'))
+                self.assertIn(control['id'],page.labels)
+                self.assertIn('class="source-jump" hidden',result)
+                self.assertNotIn('class="line-number" tabindex="-1"',result)
+
+    def test_wide_guide_blocks_are_keyboard_reachable_without_javascript(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<div class="arithmatex">\\[x=1\\]</div><pre><code>sample</code></pre>'
+                     '<span class="arithmatex">\\(x\\)</span>')
+        result=''.join(rewrite.out)
+        self.assertEqual(result.count('tabindex="0"'),2)
+        self.assertIn('aria-label="Displayed equation. Scroll horizontally if needed."',result)
+        self.assertIn('<span class="arithmatex">',result)
+
+    def test_guide_blocks_preserve_existing_accessible_names(self):
+        rewrite=Rewriter(lambda value,image:value)
+        rewrite.feed('<pre tabindex="0" role="region" aria-label="Original program">x</pre>')
+        result=''.join(rewrite.out)
+        self.assertEqual(result.count('tabindex='),1)
+        self.assertEqual(result.count('aria-label='),1)
+        self.assertIn('role="region" aria-label="Original program"',result)
 
     def test_same_filename_in_different_directories_keeps_distinct_reading_urls(self):
         self.assertNotEqual(page_path('work','one/main.tex'),page_path('work','two/main.tex'))

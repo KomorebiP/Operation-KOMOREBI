@@ -4,13 +4,14 @@ Operation-KOMOREBI is a collection of separate manuscripts, source editions, sof
 
 ## Choose the right report
 
-Use the [issue chooser](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose) for a correction, software problem, or source-record discrepancy. A useful report identifies the exact work, edition or commit, file, and observed problem. You can report a finding without proposing a fix.
+Use the [issue chooser](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose) for a correction, software problem, accessibility barrier, or source-record discrepancy. A useful report identifies the exact work, edition or commit, file, and observed problem. You can report a finding without proposing a fix.
 
 | Report | Include |
 |---|---|
 | Documentation or mathematical correction | The exact sentence, statement, or equation, its assumptions, the problem, and supporting reasoning or a small counterexample where relevant. Lean is optional. |
 | Software problem | Package and revision, operating system, runtime/dependency versions, command, minimal input, expected and actual behavior, exit status, and relevant diagnostics. |
 | Missing source, broken link, or stale record | The page or manifest entry, exact link/path, expected edition or digest, observed result, and any known source reference. |
+| [Accessibility or reading problem](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md) | The page or document, what you wanted to do, and what got in the way. Browser and assistive technology details are optional. |
 
 For a problem specific to the independent [Komorebi Math](https://github.com/KomorebiP/komorebi-math/issues) or [Polyphase Float](https://github.com/KomorebiP/polyphase-float/issues) library, use that repository's issue tracker. Report collection navigation or cross-repository record discrepancies here.
 

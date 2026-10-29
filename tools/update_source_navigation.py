@@ -230,6 +230,8 @@ class Renderer:
 
 [Browse all works](docs/BROWSE.md) · [Read papers](docs/browse/PAPERS.md) · [Find proofs](docs/browse/PROOFS.md) · [Lean sources](docs/browse/LEAN.md) · [Code](docs/browse/CODE.md)
 
+[Accessibility and reading options](docs/ACCESSIBILITY.md) · [Report an accessibility or reading problem](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md)
+
 > **Author’s note:** This work is still in progress. Much of it has been rushed because of circumstances introduced by OpenAI. I am continuing to correct, verify, and organize it.
 
 The [public project and authorship statement](docs/PROJECT_STATEMENT.md#current-state-and-publication-circumstances) explains this context. Each work is at a different stage of completion and review. All executable software remains **beta and work in progress**.

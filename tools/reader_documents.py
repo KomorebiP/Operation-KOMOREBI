@@ -39,9 +39,18 @@ def tex_includes(text, path, owned, main_path=None):
 
 def source_lines(text, annotations=None):
     annotations = annotations or {}
-    return '<pre class="source-lines" tabindex="0" aria-label="Source text with linked line numbers"><code>'+''.join(
+    lines = text.splitlines()
+    navigation = '<div id="source-navigation" class="source-navigation"><p><a href="#source-end">Skip source text</a></p>'
+    if lines:
+        navigation += ('<form id="source-line-form" class="source-jump" hidden>'
+                       '<label for="source-line-number">Line number (1–'+str(len(lines))+')</label>'
+                       '<div><input id="source-line-number" name="line" type="number" min="1" max="'+str(len(lines))+'" step="1" required>'
+                       '<button type="submit">Go to line</button></div>'
+                       '<p class="status">Jump directly to a line, then copy its address from your browser.</p></form>')
+    navigation += '</div>'
+    return navigation+'<pre class="source-lines" tabindex="0" aria-label="Source text with linked line numbers"><code>'+''.join(
         '<span class="source-line" id="L'+str(n)+'">'+annotations.get(n, '')+'<a class="line-number" href="#L'+str(n)+'" aria-label="Line '+str(n)+'">'+str(n)+'</a> '+html.escape(line)+'\n</span>'
-        for n, line in enumerate(text.splitlines(), 1))+'</code></pre>'
+        for n, line in enumerate(lines, 1))+'</code></pre><p id="source-end" tabindex="-1"><a href="#source-navigation">Back to source controls</a></p>'
 
 
 class ReadingDocuments:

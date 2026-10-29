@@ -30,6 +30,9 @@ so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
 and example routes. Readable chapters keep their chapter contents.
 
+In-page links to chapters, statements, proofs and source lines also move keyboard
+focus to the destination. Any enclosing contents disclosure opens when needed.
+
 Use Tab and Shift+Tab to move between controls, Enter to follow a link or
 activate a button, and Space or Enter to open a contents disclosure. Browser
 zoom changes the text size. Reading routes and the work catalogue remain
@@ -64,6 +67,14 @@ file’s statement list provides the same routes without searching through code.
 Mapped Lean modules list the claims that link to that module. The original
 source text and line numbers are preserved.
 
+On original source pages, use **Go to line** to reach a numbered line directly.
+Focus moves to that line and the page address records it, so you can copy a
+link to the passage. With JavaScript enabled, Tab moves through the reading
+controls and claim links without stopping at every line number. **Skip source
+text** moves past the listing, and **Back to source controls** returns to its
+navigation. Without JavaScript, the skip links and individual line links remain
+available. Your browser’s Find command can locate words within the file.
+
 Search covers indexed HTML and source text. Use the PDF reader’s own search for
 the full text of a PDF. With JavaScript disabled, all claim records and paper
 jump links remain readable. The browser’s Find command is also available.
@@ -87,6 +98,8 @@ Search includes passages from these chapters, equation previews and highlighted
 matching words. Common Greek symbols can be searched by name or character,
 such as **rho** or **ρ**. Mathematical previews retain the source expression.
 Wide equations have a separate scroll area that can receive keyboard focus.
+Displayed equations and code blocks in HTML guides can also receive keyboard
+focus without JavaScript. Use the arrow keys to scroll a wide block.
 
 The HTML guides use a locally served, pinned MathJax runtime. Its menu and
 accessibility components are enabled, including assistive MathML and expression
@@ -139,10 +152,11 @@ Lean replay and software qualification retain their separately recorded scope.
 
 ## Report an access problem
 
-Use the [repository issue form](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new/choose)
+Use the [accessibility and reading problem template](https://github.com/KomorebiP/Operation-KOMOREBI/issues/new?template=04-accessibility.md)
 or the [contribution guidance](../CONTRIBUTING.md). Include the page URL, the
 section or control, what you expected, and what happened. Browser and assistive
 technology details are useful when you can provide them.
+You do not need to identify a standard, propose a fix, or share a diagnosis.
 
 Math rendering uses [MathJax](https://www.mathjax.org/) under its retained
 Apache 2.0 license. The website build records the runtime's source and integrity.

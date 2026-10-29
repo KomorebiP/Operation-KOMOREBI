@@ -216,6 +216,14 @@ class Rewriter(HTMLParser):
             self.tables+=1
             self.out.append('<div class="table-scroll" role="region" aria-label="Scrollable table '+str(self.tables)+'" tabindex="0">')
         if tag=='th' and 'scope' not in dict(attrs):values.append(' scope="col"')
+        # Wide display math and code remain keyboard-scrollable without scripts.
+        original = dict(attrs)
+        if tag=='pre' or (tag=='div' and 'arithmatex' in original.get('class','').split()):
+            defaults = {'tabindex':'0', 'role':'group', 'aria-label':
+                        'Code example. Scroll horizontally if needed.' if tag=='pre' else
+                        'Displayed equation. Scroll horizontally if needed.'}
+            for key, value in defaults.items():
+                if key not in original:values.append(' '+key+'="'+value+'"')
         self.out.append('<'+tag+''.join(values)+'>')
     def handle_endtag(self,tag):
         if tag in {'script','style','iframe','object','form'}:

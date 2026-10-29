@@ -20,23 +20,47 @@ if (siteMenuToggle && siteMenuPanel) {
   });
 }
 
-// A section jump moves keyboard focus as well as the visual reading position.
-for (const link of document.querySelectorAll(".page-contents a, .skip-link")) {
-  link.addEventListener("click", event => {
-    if (event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    let target;
-    try { target = document.getElementById(decodeURIComponent(link.hash.slice(1))); } catch { return; }
-    if (!target) return;
-    if (target.matches("a:not([href])") && !target.textContent.trim()) {
-      const next = target.nextElementSibling || (target.parentElement.matches("p") ? target.parentElement.nextElementSibling : null);
-      if (next && next.matches("h2")) target = next;
-    }
+// In-page links move keyboard focus as well as the visual reading position.
+// Delegation also covers links added by search and the notation browser.
+function focusReadingTarget(target, hash) {
+  if (target.matches("a:not([href])") && !target.textContent.trim()) {
+    const next = target.nextElementSibling || (target.parentElement.matches("p") ? target.parentElement.nextElementSibling : null);
+    if (next && next.matches("h1,h2,h3,h4,h5,h6")) target = next;
+  }
+  for (let parent = target.parentElement; parent; parent = parent.parentElement) {
+    if (parent.matches("details")) parent.open = true;
+  }
+  if (location.hash !== hash) history.pushState(null, "", hash);
+  if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+  target.focus({preventScroll: true});
+  target.scrollIntoView();
+}
+document.addEventListener("click", event => {
+  if (event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest("a[href]");
+  if (!link || link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
+  const url = new URL(link.href, location.href);
+  if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search || !url.hash) return;
+  let target;
+  try { target = document.getElementById(decodeURIComponent(url.hash.slice(1))); } catch { return; }
+  if (!target) return;
+  event.preventDefault();
+  focusReadingTarget(target, url.hash);
+});
+
+const sourceLineForm = document.querySelector("#source-line-form");
+if (sourceLineForm) {
+  const lineInput = document.querySelector("#source-line-number");
+  sourceLineForm.addEventListener("submit", event => {
     event.preventDefault();
-    if (location.hash !== link.hash) history.pushState(null, "", link.hash);
-    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-    target.focus({preventScroll: true});
-    target.scrollIntoView();
+    if (!sourceLineForm.reportValidity()) return;
+    const target = document.getElementById("L" + lineInput.valueAsNumber);
+    if (target) focusReadingTarget(target, "#" + target.id);
   });
+  // The direct-line control replaces hundreds of repetitive Tab stops.
+  // Without JavaScript, the original line links remain keyboard reachable.
+  for (const link of document.querySelectorAll(".source-lines .line-number")) link.tabIndex = -1;
+  sourceLineForm.hidden = false;
 }
 
 function normalized(value) {
