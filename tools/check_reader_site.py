@@ -84,6 +84,10 @@ def inspect_site(root):
     index=json.loads((root/'search-index.json').read_bytes())
     check_search_targets(index, pages)
     bundles=json.loads((root/'downloads/index.json').read_bytes())
+    works={r['work'] for r in bundles}
+    for item in index:
+        assert isinstance(item.get('work_ids'),list),('Missing search work list',item['url'])
+        assert len(item['work_ids'])==len(set(item['work_ids'])) and set(item['work_ids']) <= works,('Unknown or repeated search work',item['url'])
     zipped_files=0
     for bundle in bundles:
         path=root/bundle['url']

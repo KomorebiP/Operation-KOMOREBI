@@ -105,6 +105,7 @@ if (form) {
   const input = document.querySelector("#search-query");
   const group = document.querySelector("#search-group");
   const kind = document.querySelector("#search-kind");
+  const work = document.querySelector("#search-work");
   const status = document.querySelector("#search-status");
   const results = document.querySelector("#search-results");
   const more = document.querySelector("#search-more");
@@ -122,9 +123,10 @@ if (form) {
       context.className = "status";
       context.textContent = `${item.group} · ${item.kind}`;
       const excerpt = document.createElement("p");
-      const at = item.text.toLocaleLowerCase().indexOf(queryWords[0] || "");
+      const preview = item.preview || item.text;
+      const at = preview.toLocaleLowerCase().indexOf(queryWords[0] || "");
       const start = Math.max(0, at - 70);
-      excerpt.textContent = (start ? "…" : "") + item.text.slice(start, start + 240) + (item.text.length > start + 240 ? "…" : "");
+      excerpt.textContent = (start ? "…" : "") + preview.slice(start, start + 240) + (preview.length > start + 240 ? "…" : "");
       li.append(heading, context, excerpt);
       results.append(li);
       displayed++;
@@ -140,12 +142,13 @@ if (form) {
     const query = input.value;
     const repository = group.value;
     const type = kind.value;
+    const workId = work.value;
     const words = wordsFor(query);
-    saveParams({q: query, repository, type});
+    saveParams({q: query, repository, type, work: workId});
     results.replaceChildren();
     more.hidden = true;
     results.removeAttribute("aria-busy");
-    if (!words.length && !type && !repository) { status.textContent = "Enter a term or choose a result type."; return; }
+    if (!words.length && !type && !repository && !workId) { status.textContent = "Enter a term, choose a work or choose a result type."; return; }
     status.textContent = "Searching…";
     results.setAttribute("aria-busy", "true");
     try {
@@ -157,7 +160,7 @@ if (form) {
       const index = await indexPromise;
       if (request !== generation) return;
       found = index.filter(item => (!repository || item.group === repository) &&
-        (!type || item.kind === type) && words.every(word => item.normalizedText.includes(word)));
+        (!type || item.kind === type) && (!workId || (item.work_ids || []).includes(workId)) && words.every(word => item.normalizedText.includes(word)));
       const score = item => (normalized(query) === item.normalizedTitle ? 100 : 0) +
         words.filter(word => item.normalizedTitle.includes(word)).length * 10 +
         (item.kind === "Claims" || item.kind === "Glossary" ? 1 : 0);
@@ -172,21 +175,23 @@ if (form) {
   form.addEventListener("submit", search);
   group.addEventListener("change", search);
   kind.addEventListener("change", search);
+  work.addEventListener("change", search);
   more.addEventListener("click", () => renderMore(true));
   form.addEventListener("reset", () => {
     ++generation;
     results.replaceChildren();
     results.removeAttribute("aria-busy");
     more.hidden = true;
-    status.textContent = "Enter a term or choose a result type.";
-    saveParams({q: "", repository: "", type: ""});
+    status.textContent = "Enter a term, choose a work or choose a result type.";
+    saveParams({q: "", repository: "", type: "", work: ""});
     setTimeout(() => input.focus(), 0);
   });
   const params = new URLSearchParams(location.search);
   input.value = params.get("q") || "";
   group.value = params.get("repository") || "";
   kind.value = params.get("type") || "";
-  if (input.value || group.value || kind.value) search();
+  work.value = params.get("work") || "";
+  if (input.value || group.value || kind.value || work.value) search();
 }
 
 for (const pre of document.querySelectorAll("pre")) {

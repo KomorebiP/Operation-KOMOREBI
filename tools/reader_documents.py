@@ -16,7 +16,7 @@ def page_path(work, path):
     return 'read/'+work+'/'+name+'-'+identity+'.html'
 
 
-def tex_includes(text, path, owned):
+def tex_includes(text, path, owned, main_path=None):
     """Resolve explicit local TeX inputs. Never execute TeX or expand macros."""
     result = []
     clean = re.sub(r'(?<!\\)%[^\n]*', '', text)
@@ -28,15 +28,19 @@ def tex_includes(text, path, owned):
             suffix = '.bib' if kind in {'bibliography', 'addbibresource'} else '.tex'
             if not PurePosixPath(name).suffix:
                 name += suffix
-            candidate = posixpath.normpath(posixpath.join(posixpath.dirname(path), name))
-            if candidate in owned:
+            bases = [posixpath.dirname(main_path)] if main_path else []
+            bases.append(posixpath.dirname(path))
+            candidate = next((p for base in bases
+                              if (p := posixpath.normpath(posixpath.join(base, name))) in owned), None)
+            if candidate:
                 result.append(candidate)
     return sorted(set(result))
 
 
-def source_lines(text):
+def source_lines(text, annotations=None):
+    annotations = annotations or {}
     return '<pre class="source-lines" tabindex="0" aria-label="Source text with linked line numbers"><code>'+''.join(
-        '<span class="source-line" id="L'+str(n)+'"><a class="line-number" href="#L'+str(n)+'" aria-label="Line '+str(n)+'">'+str(n)+'</a> '+html.escape(line)+'\n</span>'
+        '<span class="source-line" id="L'+str(n)+'">'+annotations.get(n, '')+'<a class="line-number" href="#L'+str(n)+'" aria-label="Line '+str(n)+'">'+str(n)+'</a> '+html.escape(line)+'\n</span>'
         for n, line in enumerate(text.splitlines(), 1))+'</code></pre>'
 
 
@@ -47,6 +51,10 @@ class ReadingDocuments:
         self.records = {}
         self.inclusions = {}
         self.images = {}
+        self.learning = json.loads((site.root/'manifests/reader-experience.json').read_bytes())
+        self.claims_by_source = {}
+        self.claims_by_module = {}
+        self.manuscript_roots = {w['id']:w['entrypoint'] for w in site.claims.get('works', [])}
         for component in site.registry['components']:
             receipt = json.loads((site.root/('manifests/source-imports/'+component['id']+'.json')).read_bytes())
             for f in receipt['files']:
@@ -57,10 +65,14 @@ class ReadingDocuments:
         for source in site.claims.get('sources', []):
             self.add(source['path'])
         for row in site.claims['records']:
+            self.claims_by_source.setdefault(row['statement_path'], []).append(row)
             self.add(row['statement_path'])
             for declaration in row['lean']:
                 if declaration['path']:
                     self.add(declaration['path'])
+                    mapped = self.claims_by_module.setdefault(declaration['path'], [])
+                    if row not in mapped:
+                        mapped.append(row)
 
     def add(self, path, label=None):
         if path in self.records:
@@ -99,7 +111,12 @@ class ReadingDocuments:
                 break
             for path in pending:
                 text = self.site.read_source(self.records[path]).decode('utf-8-sig')
-                included = tex_includes(text, path, self.owned)
+                work = self.records[path]['work']
+                main = self.manuscript_roots.get(work)
+                # Use the main manuscript directory only for files in that same tree.
+                if main and not path.startswith(posixpath.dirname(main)+'/'):
+                    main = None
+                included = tex_includes(text, path, self.owned, main)
                 self.inclusions[path] = included
                 for child in included:
                     self.add(child)
@@ -143,9 +160,85 @@ class ReadingDocuments:
 
     def work_intro(self, work, page):
         pdf = self.primary_pdf(work)
-        if not pdf:
-            return ''
-        return '<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>'
+        shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>') if pdf else ''
+        return shortcut+self.work_routes(work, page)
+
+    def work_routes(self, work, page):
+        hub = 'collection/works/'+work+'.html'
+        pdf = self.primary_pdf(work)
+        routes = [('Paper overview', hub)]
+        if pdf: routes.append(('Read PDF', pdf['url']))
+        if work in self.manuscript_roots: routes.append(('Claims', 'claims.html#'+work))
+        routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]
+        if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
+            routes.append(('Worked examples', hub+'#worked-examples-for-this-work'))
+        routes += [('Evidence', hub+'#evidence'), ('Search this work', 'search.html?work='+quote(work))]
+        return '<nav class="document-routes" aria-label="Reading routes for this work">'+''.join(
+            '<a href="'+self.site.rel(url, page)+'">'+label+'</a>' for label, url in routes)+'</nav>'
+
+    def source_annotations(self, path, page):
+        result = {}
+        for row in self.claims_by_source.get(path, []):
+            claim = self.site.rel('claims.html', page)+'#'+row['id'].lower()
+            for field, label in [('statement_line', 'Statement'), ('proof_line', 'Proof block')]:
+                line = row[field]
+                if not line: continue
+                links = '<a href="'+claim+'">'+html.escape(row['title'])+'</a>'
+                other = 'proof_line' if field == 'statement_line' else 'statement_line'
+                if row[other]:
+                    links += ' · <a href="#L'+str(row[other])+'">'+('Go to proof' if other=='proof_line' else 'Go to statement')+'</a>'
+                note = '<span class="source-claim-links" role="group" aria-label="Related claim"><span>'+label+': </span>'+links+'</span>'
+                result[line] = result.get(line, '')+note
+        return result
+
+    def source_claims(self, path, page):
+        rows = self.claims_by_source.get(path, [])
+        module = False
+        if not rows:
+            rows = self.claims_by_module.get(path, [])
+            module = True
+        if not rows: return ''
+        body = '<details class="source-claims"><summary>'+str(len(rows))+' '+('claims linked to this Lean module' if module else 'indexed statements in this file')+'</summary><ul>'
+        for row in rows:
+            body += '<li><a href="'+self.site.rel('claims.html', page)+'#'+row['id'].lower()+'">'+html.escape(row['title'])+'</a>'
+            if not module:
+                body += ' · <a href="#L'+str(row['statement_line'])+'">Statement</a>'
+                if row['proof_line']: body += ' · <a href="#L'+str(row['proof_line'])+'">Proof block</a>'
+            body += '</li>'
+        return body+'</ul><p>These links follow the claim index. They do not extend the recorded proof or Lean coverage.</p></details>'
+
+    def search_kind(self, record):
+        if record['repository_path'].endswith('.lean') or 'Lean guide' in record['title']:
+            return 'Lean'
+        if PurePosixPath(record['repository_path']).suffix in {'.py', '.c', '.h'}:
+            return 'Code'
+        return 'Papers and source'
+
+    def document_works(self, repo, path):
+        if repo != 'collection': return []
+        if path.startswith('docs/works/'):
+            work = PurePosixPath(path).stem
+            return [work] if work in self.site.components else []
+        return sorted({work for t in self.learning.get('learning_topics', [])
+                       if t['example'] == path for work in t['works']})
+
+    def search_routes(self):
+        """Index useful work sections even when no individual source is selected."""
+        for component in self.site.registry['components']:
+            work = component['id']
+            title = self.site.components[work]['title']
+            hub = 'collection/works/'+work+'.html'
+            assessment = self.site.assessments[work]
+            lean = self.site.status['labels']['lean'][assessment['lean']][0]
+            routes = [
+                ('Written proofs', 'Written proofs and source files', 'written-proofs', 'Written arguments and available manuscript files for '+title),
+                ('Lean', 'Lean coverage and sources', 'lean', lean+'. '+assessment['scope']),
+                ('Code', 'Code and run instructions', 'code', 'Available code, scripts and software instructions for '+title)]
+            if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
+                routes.append(('Examples', 'Worked examples', 'worked-examples-for-this-work', 'Introductory calculations linked to '+title))
+            for kind, label, fragment, text in routes:
+                self.site.search.append(dict(title=title+' / '+label, group='Collection', kind=kind,
+                                             work_ids=[work], url=hub+'#'+fragment, text=text))
 
     def render(self):
         from build_reader_site import Rewriter, github, math_fences, slugify
@@ -163,13 +256,8 @@ class ReadingDocuments:
             file_url = quote(self.site.rel(record['file_url'], page), safe='/')
             body = '<nav class="breadcrumbs" aria-label="Document navigation"><a href="'+work_url+'">'+e(title)+'</a> / <a href="'+self.site.rel('documents.html', page)+'">Papers and PDFs</a></nav>'
             body += '<header class="document-heading"><p class="eyebrow">'+e(record['title'])+'</p><h1>'+e(title)+'</h1><p class="document-filename">'+e(PurePosixPath(path).name)+'</p></header>'
-            body += '<nav class="document-routes" aria-label="Related work"><a href="'+work_url+'#read">Reading files</a><a href="'+work_url+'#written-proofs">Written proofs</a><a href="'+work_url+'#lean">Lean coverage</a><a href="'+work_url+'#code">Code</a><a href="'+work_url+'#evidence">Evidence</a>'
-            overview = self.site.root/('docs/works/'+work+'.md')
-            if 'id="worked-examples-for-this-work"' in overview.read_text(encoding='utf-8') or '### Worked examples for this work' in overview.read_text(encoding='utf-8'):
-                body += '<a href="'+work_url+'#worked-examples-for-this-work">Worked examples</a>'
-            if work in {w['id'] for w in self.site.claims.get('works', [])}:
-                body += '<a href="'+self.site.rel('claims.html', page)+'#'+work+'">Claim index</a>'
-            body += '</nav>'
+            body += self.work_routes(work, page)
+            body += self.source_claims(path, page)
             siblings = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf' and r != record]
             if record['format'] == 'pdf':
                 if not raw.startswith(b'%PDF-'):
@@ -177,7 +265,7 @@ class ReadingDocuments:
                 viewer_url = e(self.viewer_url(record, page), quote=True)
                 body += '<div class="document-actions"><a class="button" href="'+viewer_url+'">Expand reader</a><a href="'+file_url+'">Open PDF directly</a><a href="'+file_url+'" download>Download PDF</a></div>'
                 body += '<p class="reader-help">Use the reader toolbar to search, choose a page, zoom or print. If the reader does not load, open or download the PDF directly.</p><iframe class="pdf-reader" src="'+viewer_url+'" title="'+e(title+' — '+record['title'], quote=True)+'" allow="fullscreen"></iframe><noscript><p>The embedded reader needs JavaScript. The direct PDF and download links above remain available.</p></noscript>'
-                self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', url=page,
+                self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', kind=self.search_kind(record), work_ids=[work], url=page,
                                              text=title+' '+record['title']+' '+PurePosixPath(path).name))
             else:
                 text = raw.decode('utf-8-sig')
@@ -201,9 +289,9 @@ class ReadingDocuments:
                     pdf = self.primary_pdf(work)
                     if pdf:
                         body += '<p><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the typeset paper</a></p>'
-                    body += source_lines(text)
+                    body += source_lines(text, self.source_annotations(path, page))
                 limit = 15000 if record['format'] == 'markdown' else 4000
-                self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', url=page, text=re.sub(r'\s+', ' ', text)[:limit]))
+                self.site.search.append(dict(title=title+' / '+record['title'], group='Collection', kind=self.search_kind(record), work_ids=[work], url=page, text=re.sub(r'\s+', ' ', text)[:limit]))
             if siblings:
                 body += '<section><h2>Other PDFs for this work</h2><ul>'+''.join('<li><a href="'+self.site.rel(r['url'], page)+'">'+e(r['title'])+'</a></li>' for r in siblings)+'</ul></section>'
             body += '<details class="document-provenance"><summary>Original file and source record</summary><p>This copy matches the recorded source file. Its publication here does not change the work’s review status.</p><p>SHA-256: <code>'+record['sha256']+'</code></p><p><a href="'+github(self.site.repos['collection'], self.site.revision, path)+'">Original source on GitHub</a></p></details><p><a href="'+work_url+'">Back to '+e(title)+'</a></p>'

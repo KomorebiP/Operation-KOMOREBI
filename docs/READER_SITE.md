@@ -98,3 +98,22 @@ type and repository. Search addresses preserve filters. Results load in groups o
 40, and the next group remains reachable through the Show more results button.
 The claim index has separate paper and statement-type filters. Direct claim links
 reveal their paper even when an earlier filter would otherwise hide it.
+
+## Links within a work
+
+The document publisher supplies the same reading routes on work pages and
+source readers. Indexed statement and proof lines have return links to the
+exact claim. Lean module return links use only the declaration paths already
+recorded in the claim index. These are navigation overlays. Downloaded source
+files remain byte for byte identical to their import receipts.
+
+Search entries carry explicit `work_ids`. Reading files use their receipt owner,
+claims and proof locations use their recorded paper, and examples use the
+learning topic relationships. Glossary entries inherit the works linked by
+those topics. General guides and library pages stay outside a work filter
+unless a relationship is recorded. Work section results provide routes to
+proofs, Lean coverage and code instructions even where no individual source
+file has been selected for on-site reading.
+
+The site checker validates search work identifiers and every result’s local
+page and fragment. Claim types and existing evidence assessments are unchanged.

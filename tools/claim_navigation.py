@@ -196,6 +196,7 @@ def render_claim_index(site):
     import html
     e = html.escape
     records = site.claims['records']
+    proof_search = {}
     labels = {'standardfact':'Standard fact', 'classicalinput':'Classical input',
               'classical':'Classical input', 'numericalcertificate':'Numerical certificate'}
     name = lambda kind: labels.get(kind, kind.replace('_', ' ').capitalize())
@@ -226,7 +227,7 @@ def render_claim_index(site):
                   ('Lean coverage',hub+'#lean'),('Code',hub+'#code'),('Evidence',hub+'#evidence'),
                   ('Worked examples',hub+'#worked-examples-for-this-work')]
         body += ''.join('<a href="'+url+'">'+label+'</a>' for label,url in routes)
-        body += '</nav><p class="status">'+('The original record keeps its status and scope. A mapped module does not imply that every statement in this paper has been formalized.' if work['mode']=='correspondence' else 'Statement types are taken from the manuscript. Conjectures, definitions, classical inputs and certificates remain distinct. Lean mappings for individual claims are not assigned by this index.')+'</p>'
+        body += '<a href="'+hub+'#written-proofs">Written proofs</a><a href="search.html?work='+wid+'">Search this paper</a></nav><p class="status">'+('The original record keeps its status and scope. A mapped module does not imply that every statement in this paper has been formalized.' if work['mode']=='correspondence' else 'Statement types are taken from the manuscript. Conjectures, definitions, classical inputs and certificates remain distinct. Lean mappings for individual claims are not assigned by this index.')+'</p>'
         for row in rows:
             identifier = row['id'].lower()
             statement = site.reader.resolve(row['statement_path'], 'claims.html', 'L'+str(row['statement_line']))
@@ -236,7 +237,16 @@ def render_claim_index(site):
                                'Paper '+str(PAPERS.index(wid)+1), ' '.join(row.get('labels', [])),
                                row.get('search_text',''), ' '.join(d['name'] for d in row['lean'])])
             site.search.append(dict(title=title.split(':')[0]+' / '+row['title'], group='Collection',
-                                    kind='Claims', url='claims.html#'+identifier, text=search))
+                                    kind='Claims', work_ids=[wid], url='claims.html#'+identifier, text=search,
+                                    preview=row.get('search_text') or row['scope']))
+            if proof:
+                if proof not in proof_search:
+                    proof_search[proof] = dict(title=title.split(':')[0]+' / Proof: '+row['title'],
+                                              group='Collection', kind='Written proofs', work_ids=[wid],
+                                              url=proof, text=search,
+                                              preview='Written proof location for '+row['title']+'. '+(row.get('search_text') or row['scope']))
+                else:
+                    proof_search[proof]['text'] += ' '+search
             body += '<article class="claim" id="'+identifier+'" data-paper="'+wid+'" data-kind="'+filter_kind(row['kind'])+'" data-search="'+e(search,quote=True)+'"><h3>'+e(row['title'])+'</h3><p class="status">'+e(name(row['kind']))+' · '+('Source status: '+e(row['status']) if wid=='paper-i' else 'Written statement')+'</p><p><a href="#'+identifier+'" aria-label="Permanent link to '+e(row['title'],quote=True)+'">Link to this record</a> · <code>'+e(row['id'])+'</code></p>'
             if wid == 'paper-i': body += '<p>'+e(row['scope'])+'</p>'
             if row.get('labels'): body += '<p class="status">Source labels: '+e(', '.join(row['labels']))+'</p>'
@@ -250,9 +260,10 @@ def render_claim_index(site):
                 body += '</ul></details>'
             else:
                 body += '<p class="status">'+('No declaration mapping recorded for this entry.' if wid=='paper-i' else 'Lean mapping for this statement has not been transcribed here.')+'</p>'
-            body += '<p><a href="'+pdf['url']+'">Read paper</a> · <a href="'+hub+'#lean">Lean coverage</a> · <a href="'+hub+'#code">Code</a> · <a href="'+hub+'#evidence">Evidence</a> · <a href="#claim-filters">Back to filters</a></p></article>'
+            body += '<p><a href="'+pdf['url']+'">Read paper</a> · <a href="'+hub+'#lean">Lean coverage</a> · <a href="'+hub+'#code">Code</a> · <a href="'+hub+'#evidence">Evidence</a> · <a href="'+hub+'#worked-examples-for-this-work">Worked examples</a> · <a href="search.html?work='+wid+'">Search this paper</a> · <a href="#claim-filters">Back to filters</a></p></article>'
         body += '</section>'
     body += '<p><a href="collection/CLAIM_LINKS.html">Index scope and other works</a> · <a href="collection/GLOSSARY.html">Glossary</a> · <a href="search.html">Search the site</a></p>'
+    site.search.extend(proof_search.values())
     site.page('claims.html', 'Follow a written claim', body)
 
 

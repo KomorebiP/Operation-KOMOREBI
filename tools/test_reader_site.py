@@ -14,6 +14,44 @@ from claim_navigation import statements, manuscript_sources, validate_claims, PA
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_source_backlinks_keep_exact_claim_and_counterpart_locations(self):
+        reader = ReadingDocuments.__new__(ReadingDocuments)
+        reader.site = SimpleNamespace(rel=lambda target,page:'../../'+target)
+        row = dict(id='Exact-Claim', title='A < B', statement_line=2, proof_line=4)
+        reader.claims_by_source = {'main.tex':[row]}
+        result = source_lines('intro\nstatement\nend\nproof', reader.source_annotations('main.tex','read/work/main.html'))
+        page = Page(result)
+        self.assertEqual(page.ids, ['L1','L2','L3','L4'])
+        self.assertIn('../../claims.html#exact-claim', page.links)
+        self.assertIn('#L2', page.links)
+        self.assertIn('#L4', page.links)
+        self.assertIn('A &lt; B', result)
+        self.assertEqual(result.count('aria-label="Related claim"'), 2)
+        self.assertEqual(reader.source_annotations('unmapped.tex','read/work/main.html'), {})
+
+    def test_work_routes_link_examples_only_when_a_route_is_recorded(self):
+        reader = ReadingDocuments.__new__(ReadingDocuments)
+        reader.site = SimpleNamespace(rel=lambda target,page:target)
+        reader.records = {'paper.pdf':dict(work='paper-ii',format='pdf',title='Read PDF',url='read/paper-ii/paper.html')}
+        reader.manuscript_roots = {'paper-ii':'main.tex'}
+        reader.learning = {'learning_topics':[{'works':['paper-ii'],'example':'docs/examples/transfer.md'}]}
+        routes = Page(reader.work_routes('paper-ii','index.html')).links
+        self.assertIn('claims.html#paper-ii', routes)
+        self.assertIn('search.html?work=paper-ii', routes)
+        self.assertIn('collection/works/paper-ii.html#worked-examples-for-this-work', routes)
+        other = reader.work_routes('other','index.html')
+        self.assertNotIn('Worked examples', other)
+        self.assertNotIn('claims.html#other', other)
+
+    def test_example_search_membership_follows_recorded_learning_routes(self):
+        reader = ReadingDocuments.__new__(ReadingDocuments)
+        reader.site = SimpleNamespace(components={'paper-i':{},'paper-ii':{}})
+        reader.learning = {'learning_topics':[{'works':['paper-i','paper-ii'],'example':'docs/examples/transfer.md'}]}
+        self.assertEqual(reader.document_works('collection','docs/examples/transfer.md'), ['paper-i','paper-ii'])
+        self.assertEqual(reader.document_works('collection','docs/works/paper-i.md'), ['paper-i'])
+        self.assertEqual(reader.document_works('collection','docs/GLOSSARY.md'), [])
+        self.assertEqual(reader.document_works('math','docs/examples/transfer.md'), [])
+
     def test_search_fragments_must_exist_in_the_target_page(self):
         pages={'claims.html':Page('<article id="first"></article>')}
         check_search_targets([{'url':'claims.html#first'}],pages)
@@ -146,6 +184,8 @@ class ReaderSiteTests(unittest.TestCase):
         owned={'work/main.tex':{},'work/foundations.tex':{},'work/refs.bib':{}}
         text='% \\input{ignored}\n\\input{foundations}\n\\bibliography{refs}\n\\input{\\variable}\n\\input{../../private}\n'
         self.assertEqual(tex_includes(text,'work/main.tex',owned),['work/foundations.tex','work/refs.bib'])
+        owned['work/parts/second.tex'] = {}
+        self.assertEqual(tex_includes('\\input{parts/second}', 'work/parts/first.tex', owned, 'work/main.tex'), ['work/parts/second.tex'])
 
     def test_source_lines_preserve_targets_and_escape_active_content(self):
         result=source_lines('line one\n<script>alert(1)</script>\n')

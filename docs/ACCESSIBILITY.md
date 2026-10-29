@@ -32,6 +32,19 @@ find the same indexed text. The page address preserves your query and filters.
 Use **Show more results** to reach matches beyond the first 40. Keyboard focus
 moves to the first new result, and the result count is announced.
 
+Use **Search this work** on a paper or source page to limit results to that work.
+The **Work** filter keeps its claims, indexed proof locations, reading files,
+Lean coverage, code instructions and linked examples together. Result types
+include **Written proofs**, **Lean** and **Code**. A proof result identifies a
+reading location. It does not add a proof assessment.
+
+Source pages show a **Statement** or **Proof block** link beside each indexed
+starting line. Follow the title to return to the exact claim, or use **Go to
+proof** and **Go to statement** to move between the recorded locations. The
+file’s statement list provides the same routes without searching through code.
+Mapped Lean modules list the claims that link to that module. The original
+source text and line numbers are preserved.
+
 Search covers indexed HTML and source text. Use the PDF reader’s own search for
 the full text of a PDF. With JavaScript disabled, all claim records and paper
 jump links remain readable. The browser’s Find command is also available.
