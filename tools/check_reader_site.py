@@ -155,11 +155,17 @@ def inspect_site(root):
     assert python['collection_revision'] == build['collection_revision']
     assert python['library_revision'] == build['library_revisions']['math']
     assert python['runtime_version'] == runtime['version']
-    assert set(python['examples']) == {'packets', 'refinement', 'recovery', 'library'}
+    from browser_python import EXAMPLES
+    assert set(python['examples']) == set(EXAMPLES)
+    assert python['packages'] == runtime['packages']
+    assert python['plotly_js'] == runtime['plotly_js']
+    assert python['helper_url'] == 'downloads/komorebi_browser.py'
+    assert hashlib.sha256((root/python['helper_url']).read_bytes()).hexdigest() == python['helper_sha256']
     for name, example in python['examples'].items():
         assert example['url'] == 'downloads/python-'+name+'.py'
         assert hashlib.sha256((root/example['url']).read_bytes()).hexdigest() == example['sha256']
         assert example['expected_output'].endswith('\n')
+        assert set(example['packages']) <= set(runtime['packages'])
     assert python['library_url'] == 'downloads/komorebi-math-browser.zip'
     library = root/python['library_url']
     assert hashlib.sha256(library.read_bytes()).hexdigest() == python['library_sha256']

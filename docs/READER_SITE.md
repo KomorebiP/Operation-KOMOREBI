@@ -175,7 +175,8 @@ ordinary mistakes manageable. The plain text editors support keyboard navigation
 counts and SHA-256 checksums. `tools/fetch_python_runtime.py` verifies those files
 before the build copies them to the site. Pass their directory as `--python-root`
 to the site builder. Runtime files load from the same site. The reader does not
-upload editor contents or store them after leaving the page. Edited Python can
+upload editor contents or selected data files. Save draft explicitly stores code
+in this browser. Restore draft and Delete saved draft control that stored copy. Edited Python can
 still use browser networking, so this is not an isolated service for untrusted code.
 
 `tools/browser_python.py` extracts the teaching functions without rewriting their
@@ -190,3 +191,35 @@ The tested browser library scope is packet reconstruction and exact rational
 coordinate changes. NumPy is included. Optional packages, native backends and the
 rest of the library have not been qualified in the browser. A passing example
 does not establish a general theorem, execute Lean or change any proof status.
+
+## Plotting and data in the playground
+
+The preset menu includes interactive 2D signals, a 3D surface, a 3D helix, a
+Matplotlib figure, symbolic SymPy calculations, SciPy integration and CSV/JSON
+data plotting. These are software tutorials, not new proof or novelty claims.
+NumPy, Matplotlib, SymPy and SciPy load on demand from the pinned runtime files.
+Direct imports of those packages also trigger loading. Dynamic imports may need
+an explicit import first. Interactive 3D uses WebGL through the pinned Plotly.js
+runtime. It includes front, top and default view buttons, image downloads, CSV
+and JSON downloads, and a table of the first 100 plotted samples.
+
+`website/python/komorebi_browser.py` supplies the browser display bridge.
+`show_plot(data, layout, description=...)` accepts Plotly-style dictionaries for
+scatter, bar, heatmap, surface and scatter3d traces. `show_matplotlib` and ordinary
+`plt.show()` produce PNGs. `export_file` offers CSV, JSON or text downloads. The
+helper is separate from the Komorebi Math package and is included in the site
+source record with a checksum. Downloaded browser plotting scripts can be opened
+again through the playground's Python file control.
+
+Upload controls read up to five UTF-8 CSV/JSON files locally, at most 2 MB each
+and 4 MB in total. The run receives a snapshot in `uploaded_files`. A run report
+records the executed code, output, package and collection revisions, figures, and
+input-file checksums. It omits the uploaded file contents. Edited code, printed
+output and individual results have separate download controls. Draft saving is
+explicit and local to this browser. No account or server execution is involved.
+
+The helper limits interactive figures to 50,000 samples, messages to 2 MB and
+combined figures and exports to 8 MB per run. Unsupported graphics or unavailable
+WebGL leave a visible error and downloadable data. Source-linked mathematical
+examples retain their existing evidence labels. The broader Komorebi Math
+library remains qualified only for the introductory operations already tested.

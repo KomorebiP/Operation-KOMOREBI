@@ -1,6 +1,9 @@
 // A disposable module worker keeps Python off the reader's UI thread.
 let python;
 let libraryLoaded = false;
+const loaded = new Set();
+let graphicBytes = 0;
+let graphicMessages = 0;
 let manifest;
 let currentId;
 let outputSize = 0;
@@ -26,6 +29,8 @@ function output(type, text) {
 self.onmessage = async ({data}) => {
   currentId = data.id;
   outputSize = 0;
+  graphicBytes = 0;
+  graphicMessages = 0;
   let globals;
   try {
     if (!python) {
@@ -36,24 +41,54 @@ self.onmessage = async ({data}) => {
       const response = await fetch(new URL("../downloads/python-playground.json", import.meta.url));
       if (!response.ok) throw new Error("Could not load the example source record.");
       manifest = await response.json();
+      python.registerJsModule("komorebi_host", {emit(payload) {
+        if (typeof payload !== "string" || payload.length > 2000000 || ++graphicMessages > 20 || (graphicBytes += payload.length) > 8000000) {
+          throw new Error("Figure and export limit reached.");
+        }
+        const value = JSON.parse(payload);
+        if (!["plot", "image", "file"].includes(value.kind)) throw new Error("Unknown display format.");
+        send("display", {value});
+      }});
+      const helper = await bytes(new URL("../"+manifest.helper_url, import.meta.url), manifest.helper_sha256);
+      python.FS.writeFile("/home/pyodide/komorebi_browser.py", helper);
     }
-    if (data.example === "library" && !libraryLoaded) {
-      send("status", {text: "Loading NumPy and the pinned Komorebi Math library."});
-      await python.loadPackage("numpy", {
+    if (data.revision !== manifest.collection_revision) throw new Error("The site was updated. Reload the page before running Python.");
+    const entry = manifest.examples[data.example];
+    if (!entry) throw new Error("Unknown preset. Reload the page and try again.");
+    const parser = python.pyimport("pyodide.code");
+    const importsProxy = parser.find_imports(data.code);
+    const imports = importsProxy.toJs().map(name => name.split(".")[0]);
+    importsProxy.destroy(); parser.destroy();
+    const wanted = new Set([...entry.packages, ...imports.filter(name => ["numpy", "matplotlib", "sympy", "scipy"].includes(name))]);
+    const wantsLibrary = data.example === "library" || imports.includes("komorebi_math");
+    if (wantsLibrary) wanted.add("numpy");
+    const missing = [...wanted].filter(name => !loaded.has(name));
+    if (missing.length) {
+      send("status", {text: "Loading "+missing.join(", ")+". This may take a little while."});
+      await python.loadPackage(missing, {
         messageCallback: text => send("status", {text}),
         errorCallback: text => send("status", {text})
       });
+      missing.forEach(name => loaded.add(name));
+    }
+    if (wantsLibrary && !libraryLoaded) {
+      send("status", {text: "Loading the pinned Komorebi Math library."});
       const raw = await bytes(new URL("../"+manifest.library_url, import.meta.url), manifest.library_sha256);
       python.unpackArchive(raw, "zip", {extractDir: "/home/pyodide"});
       libraryLoaded = true;
     }
+    python.runPython("import komorebi_browser as _browser\n_browser._reset()");
+    if (loaded.has("matplotlib")) {
+      python.runPython("import matplotlib\nmatplotlib.use('Agg', force=True)\nimport matplotlib.pyplot as _plt\n_plt.close('all')\n_plt.show = _browser._show_all");
+    }
     python.setStdout({batched: text => output("stdout", text)});
     python.setStderr({batched: text => output("stderr", text)});
-    globals = python.toPy({__name__: "__main__"});
+    globals = python.toPy({__name__: "__main__", uploaded_files: data.files || {}});
     send("status", {text: "Running. You can stop Python at any time."});
     const result = await python.runPythonAsync(data.code, {globals, filename: data.example+".py"});
     result?.destroy?.();
-    send("done");
+    if (loaded.has("matplotlib")) python.runPython("_browser._show_all()");
+    send("done", {packages: [...wanted], library: libraryLoaded});
   } catch (error) {
     send("error", {text: String(error)});
   } finally {
