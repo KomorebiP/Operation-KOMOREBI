@@ -147,7 +147,7 @@ def render_glossary(config):
     text+='This guide explains '+str(len(terms))+' terms used in the collection and its finite examples. '
     text+='Start with a subject below, use the [alphabetical index](#alphabetical-index), or look up [symbols](#symbols-in-the-introductory-example).\n\n'
     text+='A word can have a more specific meaning in another paper. The paper’s definitions and hypotheses take precedence. Examples and source links provide context without changing any recorded evidence status.\n\n'
-    text+='[Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
+    text+='[Look up notation across the collection](NOTATION_INDEX.md) · [Work through the calculations by hand](HAND_WORKED_EXAMPLES.md) · [Papers, proofs, Lean and code by topic](LEARNING_MAP.md) · [First software runs](FIRST_RUN.md)\n\n'
     for section in config['glossary_sections']:
         text+='- ['+section['title']+'](#'+section['id']+')\n'
     text+='\n'

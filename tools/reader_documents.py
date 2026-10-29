@@ -95,6 +95,8 @@ class ReadingDocuments:
 
     def prepare(self):
         # Include manuscript sections and explicit source passages linked from maintained guides.
+        from notation_index import prepare_sources
+        prepare_sources(self)
         from navigation_links import inline_targets
         for (repo, path), text in self.site.documents.items():
             if repo != 'collection':
@@ -112,7 +114,7 @@ class ReadingDocuments:
             for path in pending:
                 text = self.site.read_source(self.records[path]).decode('utf-8-sig')
                 work = self.records[path]['work']
-                main = self.manuscript_roots.get(work)
+                main = self.notation_roots.get(path) or self.manuscript_roots.get(work)
                 # Use the main manuscript directory only for files in that same tree.
                 if main and not path.startswith(posixpath.dirname(main)+'/'):
                     main = None
@@ -120,6 +122,8 @@ class ReadingDocuments:
                 self.inclusions[path] = included
                 for child in included:
                     self.add(child)
+                    if main and path in self.notation_roots:
+                        self.notation_roots.setdefault(child, main)
                 done.add(path)
         from readable_chapters import prepare
         prepare(self)
@@ -177,7 +181,7 @@ class ReadingDocuments:
         routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]
         if any(work in t['works'] for t in self.learning.get('learning_topics', [])):
             routes.append(('Worked examples', hub+'#worked-examples-for-this-work'))
-        routes += [('Evidence', hub+'#evidence'), ('Search this work', 'search.html?work='+quote(work))]
+        routes += [('Notation', 'notation/'+work+'.html'), ('Evidence', hub+'#evidence'), ('Search this work', 'search.html?work='+quote(work))]
         return '<nav class="document-routes" aria-label="Reading routes for this work">'+''.join(
             '<a href="'+self.site.rel(url, page)+'">'+label+'</a>' for label, url in routes)+'</nav>'
 

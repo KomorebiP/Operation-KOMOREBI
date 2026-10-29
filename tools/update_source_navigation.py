@@ -465,7 +465,7 @@ A successful file-integrity check identifies exact source bytes. A separate repl
 
 **Realization Calculus and Komorebi Space · Komorebi P.**
 
-[Browse by work](BROWSE.md) · [Papers](browse/PAPERS.md) · [Written proofs](browse/PROOFS.md) · [Lean](browse/LEAN.md) · [Code](browse/CODE.md)
+[Notation index](NOTATION_INDEX.md) · [Browse by work](BROWSE.md) · [Papers](browse/PAPERS.md) · [Written proofs](browse/PROOFS.md) · [Lean](browse/LEAN.md) · [Code](browse/CODE.md)
 
 Komorebi studies how to describe an object in parts, carry out operations through those parts, and account for what changes when the description changes. A central question is whether a representation preserves enough information for the task we want to perform.
 

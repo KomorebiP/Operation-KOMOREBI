@@ -251,3 +251,9 @@ independent ordinary rational-series inversion and 190 weighted Stirling entries
 with inclusion-exclusion. It also checks preset outputs and exact export
 normalization. The existing website workflow discovers these tests. Source
 records and proof assessments retain their previous scope.
+
+## Notation reference
+
+The [notation index](NOTATION_INDEX.md) provides symbol search and a source inventory for every work. Entries link to exact source lines and retain the paper’s own context. Its JSON downloads record every detected occurrence in the selected TeX, Markdown and text sources. PDF and image notation remain explicit coverage limits.
+
+`tools/notation_index.py` builds the reference. `manifests/notation-sources.json` declares additional manuscript entrypoints. The reader follows their literal includes and checks source receipts before indexing. Parser regression tests and the site checker validate extraction, source positions, counts and links.
