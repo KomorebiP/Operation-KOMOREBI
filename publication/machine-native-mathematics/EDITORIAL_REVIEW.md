@@ -4,7 +4,7 @@
 
 ## Material and coverage
 
-The source was the complete 29-page September 2026 essay retained as
+The source was the complete 29-page original essay retained as
 `The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf`.
 Its SHA-256 is `dfe58e51a85e008bc7f23885da8453b08201753d6d3dc4bcdb05d339d10a5920`.
 All source pages and the complete revised manuscript were read. All 25 pages of
@@ -96,15 +96,40 @@ languages. No new inclusion theorem is asserted.
 - Conservative-extension monotonicity retains its feasible-set inclusion and fixed external score. It does not certify the performance of a particular search policy.
 - Repeated schematic diagrams are consolidated in prose. No general guarantee of language growth or recursive acceleration is introduced.
 
-## Historical technical claims
+## Current papers and companion studies
 
-The accounts of Papers X, XI, and XII retain the September 2026 scope of the
-original essay and its cited records. They are explicitly a historical snapshot.
-This edit does not replay their formal developments or reassess their proofs.
+The follow-up revision replaces the original essay's older paper summaries with
+the accepted reading editions present at collection revision
+`02b9509f006df41ede2861657b97ef2ed4daf2b9`:
+
+- Paper X 1.0.0: residual seeds, transport categories, and conditional occupied-system completion. The transported family and a summand in a supplied carrier remain distinct outputs requiring a further comparison.
+- Paper XI 1.1.0: finite packet geometry, restricted arithmetic constructions, conditional candidate comparison, and the four remaining Conjecture 66 obligations. The earlier degree-quotient display is removed from this overview rather than attributed to the current monograph.
+- Paper XII 1.0.0: patching support, Hecke packets, and conditional automorphic completion, including the same-field Hecke-point and selected-eigensystem requirements.
+
+The current release READMEs were read in full. Paper XI's release scope and
+selected source introduction, Paper XII's current source-status note, the
+Machine-Native Reasoning correction-memory guide, and the Proof Path Theory
+trace-exchange contract were also consulted. The companion summaries are bounded
+by their current READMEs and these selected passages. They do not certify every
+proof or application in those works. Source paths, revisions, and hashes are
+recorded in the edition manifest.
+
+The new subsection connects the essay to the reviewed Machine-Native Reasoning
+core, Proof Path Theory, Realization Boundaries, and Stratified Relational
+Workspace Theory. It separates proved or formally scoped constructions from
+empirical proposals. The references now use paper titles and current work routes,
+without checkpoint histories in the reader's main discussion.
+
+Checks performed: source identity and publication metadata were authenticated
+against the retained Git objects, and the revised descriptions were compared
+with the cited source passages. The descriptions match those records within
+their stated scopes. No broader application theorem or novelty claim was
+inferred, and the papers' proof developments were not replayed or independently
+reaudited.
 
 ## Validation and remaining obligations
 
-The converter checks all 56 display and 92 inline mathematical expressions for
+The converter checks all mathematical expressions for
 exact preservation between Markdown and TeX. Tectonic 0.17.0 compiled the new
 source. The final log has no overfull boxes, missing characters, undefined
 controls, or unresolved references. The desktop editor's compiler also compiled

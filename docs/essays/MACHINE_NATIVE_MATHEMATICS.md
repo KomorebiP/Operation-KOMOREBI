@@ -16,7 +16,7 @@ The Komorebi project has developed with substantial AI assistance. That assistan
 
 This essay considers how mathematical reasoning might change when a system can revise the representations and operations available to it. It explains the conceptual architecture of Komorebi. The individual papers, formal developments, and software packages remain the sources for their own technical claims.
 
-The first edition appeared in September 2026. This reading edition revises the prose and presentation, makes several mathematical assumptions explicit, and supplies an editable manuscript. The discussion of Papers X, XI, and XII describes the September 2026 records cited below. It is a historical account of those records, rather than a new assessment of the papers or a report of their latest status.
+This reading edition brings that account together with the current papers and companion studies. It revises the prose and presentation, makes the assumptions in the mathematical examples explicit, and supplies an editable manuscript. The references lead to the reading editions and their supporting evidence.
 
 ## Introduction
 
@@ -306,25 +306,23 @@ At a broad schematic level, one encounters global arithmetic data, local Galois 
 
 This provides a concrete meaning for the kind of universality considered here. Several domains might share methods for describing a correspondence, recording its hypotheses, composing its maps, and locating failures of compatibility. They need not share one normal form or become the same mathematical subject.
 
-### The September 2026 records for Papers X, XI, and XII
+### Papers X, XI, and XII
 
-The retained records for Komorebi Papers X, XI, and XII illustrate how this architecture can be separated into layers. Their formal boundaries are essential to understanding what each layer establishes.
+Komorebi Papers X, XI, and XII develop three connected parts of this arithmetic example: residual seeds and transport, local packet geometry, and patching with Hecke data. Each paper states which constructions it supplies and which arithmetic inputs it requires.
 
-The final September 2026 status record for Paper X reports that 20 of its 20 live internal claims were checked at their recorded source scopes. Claim 9.1 supplies a finite arithmetic separator from a supplied general Frobenius occurrence input. Claim 9.2 treats closure of a supplied strictly compatible carrier under a selected finite constituent packet. Its data include the common Frobenius characteristic-polynomial product, finite-copy Weil-Deligne and smooth-inertia data, local characteristic and Euler polynomials, monodromy-kernel dimensions, fixed-space trace sums, semilinear period comparisons, and Hodge-Tate weight multiplicities. Additional local conditions require their own explicit finite-copy closure laws.
+Paper X, *Universal Residual Seeds*, organizes deformation forests, transport categories, and conditional system completion. Its finite arithmetic separator uses a supplied Frobenius occurrence input. Its carrier construction closes supplied compatible data under a selected finite constituent packet, with the required local comparison laws stated explicitly.
 
-Claim 11.1 uses the transported family, arithmetic separator, and compatible-carrier closure to obtain a conditional occupied-system completion theorem. The recorded endpoint is `PaperX.ConditionalOccupiedSystemCompletion.conditional_occupied_system_completion`. Completing that internal contract does not establish unrestricted companions, carrier existence, automorphy, or a general theorem in p-adic Hodge theory. Those existence questions remain outside the contract. See [1](#reference-1).
+The conditional completion theorem has two separate outputs: a transported target family and a recovered summand inside a supplied carrier. Identifying them requires a further comparison. The actual source members, carrier, and arithmetic attachment data remain inputs. This distinction matters whenever a formal transport construction is used to discuss an arithmetic object. See [1](#reference-1).
 
-Paper XI develops the local arithmetic carrier. The cited branches concern residue and Henselian field towers, decomposition and inertia structures, Frobenius-degree pullbacks, lower ramification groups, fixed spaces, conductor summands, Swan and Artin expressions, unramified restriction laws, local polynomials, Gauss phases, and quotients by inertia. The ramified/unramified branch records
+Paper XI, *Tame and Wild Packet Geometry for Local Langlands*, develops finite Frobenius packets, tensor refinement, Gauss phases, finite Heisenberg groups, projective commutator envelopes, and gluing on finite transport graphs. Its restricted arithmetic constructions include odd and dyadic families under their stated classical inputs. The general arithmetic realization problem remains Conjecture 66.
 
-\[
-I=\ker(\deg),\qquad W/I\simeq\operatorname{range}(\deg).
-\]
+The open work is now more specific than a request for abstract local data. It includes constructing the arithmetic candidate, establishing the full characterizing local-factor identities for that same candidate, and supplying the required character and phase data in the stronger cases. A conditional comparison of supplied candidates and a restricted tame attachment are established at their own scopes. They do not supply the general existence statement. See [2](#reference-2).
 
-When a degree-one Frobenius lift is available, it identifies the quotient with the unramified Weil model. The subsequent local-attachment work aims to make the tame monomial packet, local-field ramification filtration, conductor calculation, and local polynomial refer to the same induced parameter. Class field theory, local Langlands, and automorphic induction remain external inputs. Epsilon/gamma matching still needs additive-character and measure normalizations in the cited branch, and the nonmonomial wild comparison remains open there. See [2](#reference-2).
+Paper XII, *Patching Support and Hecke Packets*, develops local quotient conditions, support and patching interfaces, compatible-system constructions, and conditional automorphic completion. Its finite and completed constructions organize how compatible data can be assembled and how global points factor through the required local conditions.
 
-The revised September 2026 contract for Paper XII reports 49 of 49 internal claims completed. It covers completed tensor constructions, closed ideals imposing simultaneous local conditions, local quotient factorization, support and patching statements, compatible-system machinery, and the factorization of global points when the corresponding local restrictions satisfy their quotient conditions. Representability, residual automorphic occupancy, applicable patching and classicality theorems, attached Galois representations, Frobenius density, semisimplification, and general Brauer-Nesbitt remain external inputs. The revised contract is separate from the original-wording ledger. It does not claim universal companions or unrestricted Langlands reciprocity. See [3](#reference-3).
+An arithmetic application still supplies its deformation problem, applicable patching package, full patched support, and a compatible Hecke point over the intended coefficient field. Classicality and the attached representation must concern the selected eigensystem. Propagation compares already existing compatible families under common hypotheses. It does not create missing companions, and it does not assume a solution of Paper XI's general realization problem. See [3](#reference-3).
 
-These records suggest a progression from compatible-family coherence and finite Frobenius recovery, through local arithmetic data, to local conditions and global patching interfaces. They do not constitute an internal proof of the Langlands program. Each interface still has domains, hypotheses, invariants, and obligations that must be checked.
+Together, the papers show how a common calculus can keep transport, arithmetic realization, and global assembly distinct while expressing the conditions that connect them. The usefulness of the interface depends on preserving those conditions through each step.
 
 ### A possible machine-facing record
 
@@ -348,9 +346,9 @@ I use *machine-native mathematics* for mathematical representations designed wit
 
 A machine-facing representation may need explicit transformation contracts, typed invariants, verifiable certificates, residuals, abstraction operators, reconstruction maps, and structural signatures that survive a change of coordinates. Human exposition can describe those objects without carrying all their operational detail in the same form.
 
-There are already suggestive examples of systems constructing useful intermediate descriptions. In September 2026, ARC Prize reported that GPT-6 Astra developed compact symbolic notes while working on unfamiliar ARC-AGI-3 environments. These notes described objects, rules, state, and plans. In a separate tool-enabled harness, the model also built game-specific parsers, planners, search procedures, and software libraries. ARC Prize distinguished those evaluation settings, which matters when interpreting the results. See [4](#reference-4).
+There are already suggestive examples of systems constructing useful intermediate descriptions. ARC Prize reported that GPT-6 Astra developed compact symbolic notes while working on unfamiliar ARC-AGI-3 environments. These notes described objects, rules, state, and plans. In a separate tool-enabled harness, the model also built game-specific parsers, planners, search procedures, and software libraries. ARC Prize distinguished those evaluation settings, which matters when interpreting the results. See [4](#reference-4).
 
-OpenAI's July 2026 ARC-AGI-3 report concerns another part of this problem. Preserving reasoning between actions and replacing rolling truncation with compaction improved the reported results for GPT-5.6 Sol while reducing output-token use. This supports a bounded observation about that harness: retaining useful state can change the reasoning that remains possible over a long interaction. It does not establish that the system created a new mathematical calculus. See [5](#reference-5).
+OpenAI's ARC-AGI-3 report concerns another part of this problem. Preserving reasoning between actions and replacing rolling truncation with compaction improved the reported results for GPT-5.6 Sol while reducing output-token use. This supports a bounded observation about that harness: retaining useful state can change the reasoning that remains possible over a long interaction. It does not establish that the system created a new mathematical calculus. See [5](#reference-5).
 
 AlphaEvolve offers a different example. Google DeepMind describes a system that searches over executable algorithmic candidates, evaluates them, and uses successful constructions in further searches across mathematics and computing. Executable objects become material for an ongoing search, rather than only the final output of one. See [6](#reference-6).
 
@@ -400,6 +398,16 @@ A research project can organize these materials as a structured corpus. Formal d
 Different readers could then request different views. A person might follow the conceptual argument. A proof assistant might read the dependency graph. A computational agent might use an executable construction. Another reasoning system might request its abstraction and transport interfaces.
 
 Calling these views part of one corpus does not make them agree automatically. Their correspondence is an obligation of the project. If that obligation is met, the paper can become one carefully prepared view of a larger mathematical object.
+
+### Related developments in the collection
+
+Several companion studies give these questions a more concrete form. *Machine-Native Reasoning* studies evidence, correction, and the memory needed to retain distinctions that later evidence can reveal. Its reviewed core includes an exact fixed-width memory bound for correction under partition evidence. This connects the choice of an abstraction to what a reasoner must remember, rather than only to the size of its present description. See [7](#reference-7).
+
+*Proof Path Theory* studies discovery fields, certificates, compression, and mathematical memory. Its finite trace checker requires both valid derivation steps and a final saturation check to certify the least seeded closure. A typed exchange format lets a proposed certificate be checked against a separately supplied problem. The proved Lean checker and codecs have a defined boundary, while the Python implementation and text interface retain their own testing obligations. See [8](#reference-8).
+
+*Realization Boundaries* asks what observations fail to determine. It gives families with the same unmarked finite-quotient data and profinite completion but different isomorphism types and computable presentation requirements. A common observation system can therefore leave important realization information unresolved. This is a concrete reason to record what a representation forgets. See [9](#reference-9).
+
+*Stratified Relational Workspace Theory* extends the question to people, models, artifacts, and computational processes that each hold only part of a shared structure. It studies persistent invariants under transfer, joint reconstruction, and tests of whether the relevant capacity belongs to their interaction. The proposed empirical certification still requires review and testing. These studies connect representation change to memory, proof exchange, reconstruction limits, and collaboration. See [10](#reference-10).
 
 ## Learning, language growth, and self-improvement
 
@@ -688,15 +696,15 @@ That is a concrete direction for research. Its value will depend on the mathemat
 
 <a id="reference-1"></a>
 
-**[1] Komorebi P. Paper X.** Final formal status, 25 September 2026. The retained record reports 20 of 20 internal claims checked at their recorded scopes, with the conditional occupied-system completion endpoint identified in the text. [Work, source files, and evidence](../works/paper-x.md).
+**[1] Komorebi P.** *Universal Residual Seeds: Deformation forests, transport categories, and conditional system completion.* Paper X. [Reading edition, source files, and evidence](../works/paper-x.md).
 
 <a id="reference-2"></a>
 
-**[2] Komorebi P. Paper XI.** Ramified/unramified quotient v0.44.0 and Block 45 continuation records, 17 September 2026. [Work, source files, and evidence](../works/paper-xi.md).
+**[2] Komorebi P.** *Tame and Wild Packet Geometry for Local Langlands.* Paper XI. [Reading edition, source files, and evidence](../works/paper-xi.md).
 
 <a id="reference-3"></a>
 
-**[3] Komorebi P. Paper XII.** Completion records for v0.17.0 and v0.17.1, September 2026. The revised internal contract reports 49 of 49 claims. The original-wording ledger and external arithmetic inputs remain distinct. [Work, source files, and evidence](../works/paper-xii.md).
+**[3] Komorebi P.** *Patching Support and Hecke Packets: Conditional automorphic completion.* Paper XII. [Reading edition, source files, and evidence](../works/paper-xii.md).
 
 <a id="reference-4"></a>
 
@@ -709,3 +717,19 @@ That is a concrete direction for research. Its value will depend on the mathemat
 <a id="reference-6"></a>
 
 **[6] AlphaEvolve team.** [AlphaEvolve: How our Gemini-powered coding agent is scaling impact across fields](https://deepmind.google/blog/alphaevolve-impact/). Google DeepMind, 7 May 2026. Consulted 29 October 2026.
+
+<a id="reference-7"></a>
+
+**[7] Komorebi P.** *Machine-Native Reasoning: Reviewed Mathematical Core.* [Reading edition, source files, and evidence](../works/monographs-machine-native-reasoning.md).
+
+<a id="reference-8"></a>
+
+**[8] Komorebi P.** *Proof Path Theory: Certificates, compression, discovery fields, and mathematical memory.* [Reading edition, source files, and evidence](../works/proof-path-theory.md).
+
+<a id="reference-9"></a>
+
+**[9] Komorebi P.** *Realization Boundaries: Finite Grammar, Infinite Groups, and the Limits of Reconstruction.* [Reading edition, source files, and evidence](../works/realization-boundaries.md).
+
+<a id="reference-10"></a>
+
+**[10] Komorebi P.** *Stratified Relational Workspace Theory: A Core-Transfer Framework for Distributed Cognition, Collaboration, and Epistemic Systems.* [Reading edition, source files, and evidence](../works/research-stratified-relational-workspace.md).

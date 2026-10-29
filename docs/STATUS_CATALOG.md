@@ -1072,9 +1072,9 @@ Finished reader on Ramanujan tau nonvanishing with written and finite evidence. 
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Unassessed**
 
-The original 29-page September 2026 PDF is retained. A new 25-page editorial reading edition has a complete editable manuscript, monograph typesetting, full page inspection, and documented local mathematical clarifications. Scientific confidence remains unassessed. The essay makes no Lean verification claim.
+The 25-page reading edition has editable Markdown and TeX, inspected monograph typesetting, and source-reconciled discussions of the current Papers X, XI, XII and selected companion studies. The original PDF is retained. Scientific confidence remains unassessed, with no Lean claim for the essay.
 
-**Next step:** Independent mathematical review of the full essay and source-specific reconciliation of its broader research claims remain separate work. Recovery of the original v10 editable source remains open.
+**Next step:** Independent mathematical review of the full essay and assessment of its broader research and empirical proposals remain separate work. Recovery of the original editable source remains open.
 
 [Return to this work: paper, proofs, Lean, and code](works/machine-native-mathematics-essay.md)
 

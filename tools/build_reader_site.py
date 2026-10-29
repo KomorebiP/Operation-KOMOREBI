@@ -468,7 +468,7 @@ class Site:
                   '<p>This edition revises the prose and typesetting and makes local mathematical assumptions explicit. '
                   'The individual papers retain their own proof and verification records.</p>'
                   '<iframe class="pdf-reader" title="'+e(title,quote=True)+' — revised reading edition" src="'+viewer+'" allow="fullscreen"></iframe>'
-                  '<p><a href="'+self.rel(original['url'],page)+'">Original September 2026 PDF</a> · '
+                  '<p><a href="'+self.rel(original['url'],page)+'">Original PDF</a> · '
                   '<a href="'+self.rel('collection/components/MACHINE_NATIVE_MATHEMATICS.html',page)+'">Edition history and review scope</a></p>')
             self.page(page,title,body,github(REPOSITORY,self.revision,edition['manuscript']))
             self.search.append(dict(title=title+' / Revised reading edition',group='Collection',kind='Papers and source',work_ids=[work],url=page,text='Revised monograph PDF editable manuscript sources editorial reading edition machine native mathematics'))

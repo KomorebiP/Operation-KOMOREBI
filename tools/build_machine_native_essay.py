@@ -48,7 +48,7 @@ bookmarksnumbered=true,pdfdisplaydoctitle=true}
 \setcounter{tocdepth}{1}
 \setcounter{secnumdepth}{1}
 \makeatletter
-\patchcmd{\l@chapter}{\vskip1.0em}{\vskip0.6em}{}{\PackageError{essay}{Could not set contents spacing}{}}
+\patchcmd{\l@chapter}{\vskip1.0em}{\vskip0.3em}{}{\PackageError{essay}{Could not set contents spacing}{}}
 \makeatother
 \titleformat{\chapter}[display]{\normalfont\color{Ink}}{\sffamily\small\color{Accent}\MakeUppercase{\chaptertitlename}\ \thechapter}{9pt}{\fontsize{25}{29}\selectfont\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000}
 \titlespacing*{\chapter}{0pt}{4pt}{20pt}

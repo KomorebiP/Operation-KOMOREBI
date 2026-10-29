@@ -27,7 +27,8 @@ cost and expectation formulas are explicit. The [editorial review](../../publica
 pages were rendered and inspected. The final build log has no overflow,
 missing-character, or unresolved-reference errors. The three external AI reports
 were checked with their original publishers. The discussion of Papers X, XI, and
-XII is explicitly a September 2026 snapshot.
+XII uses their current reading editions. Related work on memory, proof exchange,
+reconstruction limits, and relational workspaces is included with source links.
 
 The essay makes **no Lean verification claim for itself**. This edit does not
 replay other papers' formal developments or independently validate their proofs.
@@ -36,7 +37,7 @@ mathematical review remains separate work.
 
 ## Original edition and further work
 
-[Read the original 29-page September 2026 PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf).
+[Read the original 29-page PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf).
 That v10 file retains its original bytes and source receipt. No matching editable
 source was supplied with the original component. The new manuscript is an
 identified editorial reconstruction, not a recovered copy of that source.

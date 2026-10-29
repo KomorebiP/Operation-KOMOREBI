@@ -14,9 +14,9 @@ A conceptual essay on representations and languages for machine reasoning. The r
 
 **Suggested background:** Read the problem statement, recorded scope and open questions first. The program's definitions determine its subject prerequisites.
 
-**Recorded results and limits:** The original 29-page September 2026 PDF is retained. A new 25-page editorial reading edition has a complete editable manuscript, monograph typesetting, full page inspection, and documented local mathematical clarifications. Scientific confidence remains unassessed. The essay makes no Lean verification claim.
+**Recorded results and limits:** The 25-page reading edition has editable Markdown and TeX, inspected monograph typesetting, and source-reconciled discussions of the current Papers X, XI, XII and selected companion studies. The original PDF is retained. Scientific confidence remains unassessed, with no Lean claim for the essay.
 
-**Remaining work:** Independent mathematical review of the full essay and source-specific reconciliation of its broader research claims remain separate work. Recovery of the original v10 editable source remains open.
+**Remaining work:** Independent mathematical review of the full essay and assessment of its broader research and empirical proposals remain separate work. Recovery of the original editable source remains open.
 
 The background advice is an editorial starting point. The work itself states its prerequisites and hypotheses.
 
@@ -28,7 +28,7 @@ Use the links below to read this work and its supporting files. Ctrl+click (Comm
 
 [Revised reading edition](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Monograph PDF](../../website/assets/publications/machine-native-mathematics.pdf)
 
-- [Original September 2026 PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
+- [Original PDF](../../research/machine-native-mathematics-essay/The_Possibility_for_a_Machine_Native_Mathematics_v10.pdf)
 - [Maintained edition guide](../components/MACHINE_NATIVE_MATHEMATICS.md)
 
 [Back to work navigation](#work-navigation)

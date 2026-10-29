@@ -4,7 +4,7 @@
 
 Komorebi P. · 29 October 2026
 
-This is a new editorial reading edition of the September 2026 essay. The original
+This is the maintained reading edition of the project essay. The original
 v10 PDF remains in `research/machine-native-mathematics-essay/` with its original
 bytes and source receipt. The editable manuscript was prepared from that PDF.
 It is not a recovered copy of the original v10 TeX source.
@@ -50,4 +50,6 @@ workspace directory. Logs belong in the build directory. Re-render and inspect
 the PDF after changes.
 
 This is an editorial reading release. Scientific confidence remains unassessed.
-The September 2026 accounts of other papers retain their historical scope.
+The discussion uses the current reading editions of Papers X, XI, and XII and
+selected companion studies. Exact source identities are retained in the edition
+record. Independent mathematical review remains separate work.
