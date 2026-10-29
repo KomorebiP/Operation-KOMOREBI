@@ -229,7 +229,7 @@ operations and sequence experiments.
 ## Komorebi sequence experiments
 
 The playground opens with the source-linked sequence research group. It includes
-reciprocal coefficient growth, a 3D comparison after factorial normalization,
+reciprocal coefficient growth, labelled 2D and 3D comparisons after factorial normalization,
 and the factorial-weighted Stirling rows from the Special Functions sequence
 atlas. General plotting tutorials remain available further down the menu.
 
@@ -237,9 +237,14 @@ atlas. General plotting tutorials remain available further down the menu.
 output, related works and reading links. Reciprocal presets call the pinned
 library's `reciprocal_coefficients`. The factorial preset checks its row sums
 against `fubini_sequence`. Exact exports use integer and rational text to avoid
-losing large integer digits through JavaScript numbers. Only plotted coordinates
-use floating-point logarithms. The 3D sequence views preserve the discrete
+losing large integer digits through JavaScript numbers. Charts use ordinary
+counts or floating-point logarithms as labelled. The 3D sequence views preserve the discrete
 parameter domains. They do not interpolate a continuous family.
+
+Plot titles wrap above the chart. Larger labels, point shapes, patterned bars
+and keyboard-accessible series checkboxes help distinguish the data. The
+Enlarge plot control gives figures more height. PNG downloads retain titles
+and legends. The factorial weights preset includes a 2D map before its 3D view.
 
 `tools/test_sequence_python.py` compares 448 reciprocal coefficients with
 independent ordinary rational-series inversion and 190 weighted Stirling entries

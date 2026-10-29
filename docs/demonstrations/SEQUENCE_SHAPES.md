@@ -43,9 +43,14 @@ separate exact CSV contains the original mathematical values.
 
 ## Reciprocal landscape
 
-[Run the 3D reciprocal family](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-landscape)
+[Compare the reciprocal families](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#sequence-landscape)
 
-The axes are compressed index $n$, integer spacing $N$, and
+Start with the 2D chart. Each line has its own label, point shape and color.
+Use the series checkboxes to compare fewer families. A vertical value of
+minus ten means $10^{-10}$. Each fall of one unit means a normalized value
+ten times smaller. The Enlarge plot button gives the chart more space.
+
+The separate 3D view uses the same data. Its axes are compressed index $n$, integer spacing $N$, and
 $\log_{10}(A_N^{[r]}(n)/(Nn)!)$. The default has 112 exact coefficient
 samples: seven spacings $N=2,\ldots,8$ and sixteen indices $n=0,\ldots,15$.
 The reciprocal power $r$ is fixed for each run and can be changed in the editor.
@@ -75,11 +80,18 @@ This is a known sequence presented through Komorebi's transform framework.
 
 For $n=5$, the Stirling row is $0,1,15,25,10,1$. Weighting it by $k!$
 gives $0,1,30,150,240,120$. The ordinary sum is 52, and the weighted sum
-is 541. The first plot compares these contributions. The 3D plot shows the
-nonzero contributions over $0\leq k\leq n\leq18$.
+is 541. The first plot compares these contributions as ordinary counts.
+Blue bars show unordered partitions and striped orange bars show ordered
+partitions. The two totals are printed above the chart.
 
-Both figures plot $\log_{10}(1+\text{contribution})$, not the raw integers.
-The added one handles zero values in the bar chart. To recover a row sum,
+The next figure is a 2D map of $\log_{10}(1+\text{contribution})$.
+Each square is an integer pair $(n,k)$. A column shows all contributions
+for one set size $n$. The white triangle where $k>n$ is outside the domain,
+not a set of zero entries. Brighter squares have larger contributions.
+
+The final 3D view shows the nonzero contributions over
+$0\leq k\leq n\leq18$ on the same logarithmic scale as the map.
+The added one handles zero values in the map. To recover a row sum,
 add the exact CSV values rather than the plotted logarithms. The 3D view
 omits zero contributions. The export includes all 190 triangular positions,
 including zeros. `last` can be reduced from 18, and `row` selects a row

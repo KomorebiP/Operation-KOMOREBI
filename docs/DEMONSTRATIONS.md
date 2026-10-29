@@ -29,7 +29,7 @@ The playground also includes a tested introductory Komorebi Math example.
 For examples drawn directly from the sequence work, use
 [Komorebi sequence shapes](demonstrations/SEQUENCE_SHAPES.md). These presets
 plot Paper IV's reciprocal coefficients and factorial normalization, compare
-the family in 3D, and explore the Special Functions atlas's factorial-weighted
+the family in labelled 2D and 3D views, and explore the Special Functions atlas's factorial-weighted
 Stirling sums. Each includes exact data downloads and source links.
 
 ## Run without installing a library

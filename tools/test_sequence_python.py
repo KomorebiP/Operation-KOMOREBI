@@ -5,7 +5,7 @@ from fractions import Fraction as Q
 import importlib.util
 import io
 import json
-from math import comb, factorial
+from math import comb, factorial, log10
 from pathlib import Path
 import sys
 import unittest
@@ -62,6 +62,7 @@ class SequencePythonTests(unittest.TestCase):
                         exec(compile(spec['code'], name+'.py', 'exec'), {'__name__': '__main__'})
                     self.assertEqual(output.getvalue(), spec['expected'])
                     records = [json.loads(m) for m in messages]
+                    plots = [m for m in records if m['kind'] == 'plot']
                     exported = [m for m in records if m['kind'] == 'file']
                     self.assertEqual(len(exported), 1)
                     rows = list(csv.DictReader(io.StringIO(exported[0]['content'])))
@@ -69,6 +70,11 @@ class SequencePythonTests(unittest.TestCase):
                         self.assertEqual(len(rows), 112 if name.endswith('landscape') else 16)
                         for row in rows:
                             self.assertEqual(Q(row['normalized_fraction']), Q(int(row['A']), factorial(int(row['degree']))))
+                        if name.endswith('landscape'):
+                            self.assertEqual(len(plots), 2)
+                            for flat, spatial in zip(plots[0]['data'], plots[1]['data'], strict=True):
+                                self.assertEqual(flat['x'], spatial['x'])
+                                self.assertEqual(flat['y'], spatial['z'])
                     else:
                         self.assertEqual(len(rows), 190)
                         for row in rows:
@@ -78,6 +84,18 @@ class SequencePythonTests(unittest.TestCase):
                             expected = sum((-1)**(k-j)*comb(k,j)*j**n for j in range(k+1))
                             self.assertEqual(int(row['weighted_contribution']), expected)
                             self.assertEqual(int(row['stirling'])*factorial(k), expected)
+                        self.assertEqual(len(plots), 3)
+                        # Bars show ordinary counts. The map uses logs and masks
+                        # only positions outside k <= n, preserving actual zeros.
+                        row_five = [row for row in rows if row['n'] == '5']
+                        self.assertEqual(plots[0]['data'][0]['y'], [int(row['stirling']) for row in row_five])
+                        self.assertEqual(plots[0]['data'][1]['y'], [int(row['weighted_contribution']) for row in row_five])
+                        grid = plots[1]['data'][0]['z']
+                        for row in rows:
+                            self.assertEqual(grid[int(row['k'])][int(row['n'])], log10(1+int(row['weighted_contribution'])))
+                        for k in range(19):
+                            for n in range(k):
+                                self.assertIsNone(grid[k][n])
                     self.assertTrue(any(m['kind'] == 'plot' for m in records))
 
 
