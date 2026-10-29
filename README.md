@@ -8,12 +8,6 @@ Realization Calculus develops the mathematics of decomposition, transfer, refine
 
 [Open the reading website](https://KomorebiP.github.io/Operation-KOMOREBI/).
 
-## A first example
-
-A matrix with rows `(1, 2)` and `(3, 4)` sends the column vector `(2, 3)` to `(8, 18)`. Splitting the vector into its two coordinate parts lets us recover the same answer from four smaller contributions. Leaving out the final contribution changes the result to `(8, 6)`, exposing exactly what is missing.
-
-The [packet demonstration](docs/demonstrations/PACKETS.md) walks through this calculation, explains why reconstruction works, and checks it with an exact Python program. You can also [run and edit the example in your browser](https://KomorebiP.github.io/Operation-KOMOREBI/playground.html#packets).
-
 ## Start here
 
 | What would you like to do? | Begin here |
