@@ -1,8 +1,51 @@
 """Build an on-site catalogue and two-pane reading workspace."""
 import html
 import json
+import posixpath
 import re
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, quote, unquote, urlencode, urlsplit
+
+
+def pair_link(left, right, page, label='Read statement and proof side by side'):
+    """Both targets are site-root paths, including their recorded passage anchors."""
+    for target in (left, right):
+        parts = urlsplit(target)
+        path = unquote(parts.path)
+        if (parts.scheme or parts.netloc or parts.query or not path.endswith('.html')
+                or path.startswith('/') or '..' in path.split('/') or '\\' in target
+                or any(ord(char) < 32 for char in target)):
+            raise ValueError('Invalid paired reading target: '+target)
+    route = posixpath.relpath('side-by-side.html', posixpath.dirname(page) or '.')
+    href = route+'?'+urlencode({'left':left, 'right':right}, quote_via=quote)
+    return '<a class="paired-reading-link" href="'+html.escape(href, quote=True)+'">'+html.escape(label)+'</a>'
+
+
+def check_pair_links(pages):
+    """Check query-encoded destinations as well as the workspace's own URL."""
+    links = pairs = 0
+    for page, parsed in pages.items():
+        for target in parsed.links:
+            parts = urlsplit(target)
+            if parts.scheme or parts.netloc:
+                continue
+            resolved = posixpath.normpath(posixpath.join(posixpath.dirname(page), unquote(parts.path)))
+            if resolved != 'side-by-side.html' or not parts.query:
+                continue
+            params = parse_qs(parts.query, keep_blank_values=True)
+            for side in ('left', 'right'):
+                if side not in params:
+                    continue
+                assert len(params[side]) == 1, ('Duplicate pane target', page, target)
+                destination = urlsplit(params[side][0])
+                path = unquote(destination.path)
+                assert not destination.scheme and not destination.netloc, ('External pane target', page, target)
+                assert path in pages and path not in {'side-by-side.html','404.html'}, ('Missing pane page', page, target)
+                if destination.fragment:
+                    assert unquote(destination.fragment) in pages[path].ids, ('Missing pane passage', page, target)
+                links += 1
+            if 'left' in params and 'right' in params:
+                pairs += 1
+    return dict(targets=links, pairs=pairs)
 
 
 def catalogue(site):
@@ -114,4 +157,4 @@ def check(root, pages):
     page = pages['side-by-side.html']
     assert len(page.iframes) == 2
     assert {'side-reader','side-swap','side-share','side-width','left-document','right-document'} <= set(page.ids)
-    return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']))
+    return dict(pages=len(data['pages']), entries=len(data['entries']), works=len(data['works']), paired_links=check_pair_links(pages))

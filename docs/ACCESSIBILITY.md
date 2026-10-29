@@ -60,6 +60,17 @@ anchor. Each pane has a document picker with work, type and text filters.
 Papers, claims, proof locations, Lean sources, code, notation and examples can
 be read together. Each document keeps its existing evidence and scope notes.
 
+**Read statement and proof side by side** opens the recorded passages directly
+from the claim index, readable chapters and annotated source files. Formatted
+chapters are used where available. Other papers open at the original source
+lines. Entries without a recorded proof location do not receive a proof pair.
+
+Where a Lean module is already linked to a claim, **Read statement beside this
+module** opens the written statement and that source file. It does not claim
+that the module proves the entire statement. The mapping and evidence retain
+their recorded scope. These pair links also work inside the reading workspace,
+where they replace the two documents without opening another tab.
+
 Each pane scrolls independently. Turn on **Open links from this document in the
 other pane** to keep the current document in place while following a reference.
 **Swap sides** exchanges the documents. **Open on its own** opens a document in

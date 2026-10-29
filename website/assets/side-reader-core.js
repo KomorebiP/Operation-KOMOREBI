@@ -15,6 +15,17 @@
   function words(value) {
     return value.normalize("NFKD").replace(/\p{M}/gu, "").toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim().split(/\s+/u).filter(Boolean);
   }
+  function linkedPair(value, base, pages) {
+    try {
+      const url = new URL(value, base);
+      const expected = new URL("side-by-side.html", base);
+      if (url.origin !== expected.origin || url.pathname !== expected.pathname || url.username || url.password) return null;
+      if (url.searchParams.getAll("left").length !== 1 || url.searchParams.getAll("right").length !== 1) return null;
+      const left = canonical(url.searchParams.get("left"), base, pages);
+      const right = canonical(url.searchParams.get("right"), base, pages);
+      return left && right ? {left, right} : null;
+    } catch { return null; }
+  }
   function filter(entries, query, work, kind) {
     const wanted = words(query);
     return entries.filter(row => (!work || row.works.includes(work)) && (!kind || row.kind === kind) &&
@@ -43,7 +54,7 @@
       width: [35,40,45,50,55,60,65].includes(width) ? width : 50,
       invalid: Boolean((params.has("left") && !left) || (params.has("right") && !right))};
   }
-  const api = {canonical, words, filter, pairURL, parsePair};
+  const api = {canonical, words, filter, pairURL, parsePair, linkedPair};
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.KomorebiSideReader = api;
 })(globalThis);

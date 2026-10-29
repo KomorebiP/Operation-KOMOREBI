@@ -219,6 +219,7 @@ class ReadingDocuments:
             '<a href="'+self.site.rel(url, page)+'">'+label+'</a>' for label, url in routes)+'</nav>'
 
     def source_annotations(self, path, page):
+        from side_reader import pair_link
         result = {}
         for row in self.claims_by_source.get(path, []):
             claim = self.site.rel('claims.html', page)+'#'+row['id'].lower()
@@ -229,11 +230,14 @@ class ReadingDocuments:
                 other = 'proof_line' if field == 'statement_line' else 'statement_line'
                 if row[other]:
                     links += ' · <a href="#L'+str(row[other])+'">'+('Go to proof' if other=='proof_line' else 'Go to statement')+'</a>'
+                    links += ' · '+pair_link(page+'#L'+str(row['statement_line']), page+'#L'+str(row['proof_line']), page)
                 note = '<span class="source-claim-links" role="group" aria-label="Related claim"><span>'+label+': </span>'+links+'</span>'
                 result[line] = result.get(line, '')+note
         return result
 
     def source_claims(self, path, page):
+        from side_reader import pair_link
+        from readable_chapters import readable_url
         rows = self.claims_by_source.get(path, [])
         module = False
         if not rows:
@@ -246,6 +250,10 @@ class ReadingDocuments:
             if not module:
                 body += ' · <a href="#L'+str(row['statement_line'])+'">Statement</a>'
                 if row['proof_line']: body += ' · <a href="#L'+str(row['proof_line'])+'">Proof block</a>'
+            else:
+                statement = readable_url(row['statement_path'], row['statement_line']) or self.resolve(row['statement_path'], 'side-by-side.html', 'L'+str(row['statement_line']))
+                if statement:
+                    body += ' · '+pair_link(statement, page, page, 'Read statement beside this module')
             body += '</li>'
         return body+'</ul><p>These links follow the claim index. They do not extend the recorded proof or Lean coverage.</p></details>'
 

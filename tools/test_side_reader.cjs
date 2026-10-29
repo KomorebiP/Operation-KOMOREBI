@@ -31,4 +31,14 @@ assert.equal(api.parsePair(base+'side-by-side.html',base,data,true).view,'left')
 state=api.parsePair(base+'side-by-side.html?left=https%3A%2F%2Fevil.test%2F&right=side-by-side.html&width=0&view=hidden',base,data,false);
 assert.equal(state.left,'read/one.html');assert.equal(state.right,'claims.html#one');assert.equal(state.invalid,true);
 assert.equal(state.width,50);assert.equal(state.view,'both');
-console.log('PASS: local target restrictions, search, work association, mobile defaults and pair-link round trip');
+const paired='side-by-side.html?left=read%2Fone.html%23L12&right=read%2Ftwo.html%23L30';
+assert.deepEqual(api.linkedPair(paired,base,data.pages),{left:'read/one.html#L12',right:'read/two.html#L30'});
+assert.deepEqual(api.linkedPair(base+paired,base,data.pages),{left:'read/one.html#L12',right:'read/two.html#L30'});
+for (const value of [paired.replace('right=','unknown='),paired+'&left=read/one.html',
+  paired.replace('read%2Ftwo.html%23L30','https%3A%2F%2Fevil.test%2F'),
+  paired.replace('read%2Ftwo.html%23L30','side-by-side.html'),
+  'https://evil.test/Operation-KOMOREBI/'+paired,'https://name:secret@example.test/Operation-KOMOREBI/'+paired,
+  'read/one.html?left=read/one.html&right=read/two.html']) {
+  assert.equal(api.linkedPair(value,base,data.pages),null,value);
+}
+console.log('PASS: local target restrictions, search, work association, mobile defaults, pair-link round trip and nested pair routing');

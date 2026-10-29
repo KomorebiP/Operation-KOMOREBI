@@ -76,10 +76,15 @@
     const value = state[side];
     const frame = $(side + "-frame");
     $(side + "-current").textContent = titleFor(value);
+    frame.title = (side === "left" ? "Left" : "Right") + " reading pane: " + titleFor(value);
     const standalone = $(side + "-standalone");
     standalone.href = new URL(value, base).href;
     standalone.hidden = false;
-    if (!pending[side] && loaded[side] === value) return;
+    if (!pending[side] && loaded[side] === value) {
+      if (focusAfterLoad[side]) focusPane(side);
+      focusAfterLoad[side] = false;
+      return;
+    }
     if (!pending[side] && loaded[side] && loaded[side].split("#")[0] === value.split("#")[0]) {
       loaded[side] = value;
       frame.contentWindow.history.replaceState(null, "", new URL(value, base).href);
@@ -139,7 +144,7 @@
     }
     for (const link of doc.querySelectorAll("a[href]")) {
       if (link.hasAttribute("download")) continue;
-      if (!api.canonical(link.href, base, data.pages)) {
+      if (!api.canonical(link.href, base, data.pages) && !api.linkedPair(link.href, base, data.pages)) {
         link.target = "_blank";
         link.rel = "noopener";
         link.setAttribute("aria-label", link.textContent.trim() + " (opens in a new tab)");
@@ -149,6 +154,25 @@
       if (event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
       const link = event.target.closest("a[href]");
       if (!link || link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
+      const pair = api.linkedPair(link.href, base, data.pages);
+      if (pair) {
+        event.preventDefault();
+        event.stopPropagation();
+        state.left = pair.left;
+        state.right = pair.right;
+        state.view = matchMedia("(max-width: 800px)").matches ? "left" : "both";
+        focusAfterLoad.left = true;
+        focusAfterLoad.right = false;
+        layout(); save(true);
+        for (const pane of sides) {
+          $(pane + "-work").value = workFor(state[pane]);
+          $(pane + "-query").value = "";
+          $(pane + "-kind").value = "";
+          refresh(pane); load(pane);
+        }
+        status.textContent = "The statement and its recorded companion are open. Use either pane’s reading controls to continue.";
+        return;
+      }
       const target = api.canonical(link.href, base, data.pages);
       if (!target) return;
       event.preventDefault();
@@ -196,7 +220,8 @@
       fragment.append(option);
     }
     select.replaceChildren(fragment);
-    if (matches.some(row => row.url === previous)) select.value = previous;
+    if (matches.some(row => row.url === state[side])) select.value = state[side];
+    else if (matches.some(row => row.url === previous)) select.value = previous;
     else if (matches.length) select.selectedIndex = 0;
     $(side + "-count").textContent = matches.length + " documents and passages" + (matches.length ? "." : ". Try fewer words or clear the filters.");
     $(side + "-form").querySelector("button[type=submit]").disabled = !matches.length;

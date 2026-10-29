@@ -195,6 +195,7 @@ def validate_claims(root, known_paths):
 def render_claim_index(site):
     import html
     from readable_chapters import readable_url, BOOKS
+    from side_reader import pair_link
     e = html.escape
     records = site.claims['records']
     proof_search = {}
@@ -254,14 +255,17 @@ def render_claim_index(site):
             if row.get('labels'): body += '<p class="status">Source labels: '+e(', '.join(row['labels']))+'</p>'
             body += '<p><a href="'+statement+'">Written statement</a>'+(' · <a href="'+proof+'">'+('Written proof' if wid=='paper-i' else 'Following proof block')+'</a>' if proof else ' · No separate proof block indexed')+'</p>'
             readable = readable_url(row['statement_path'], row['statement_line'])
+            readable_proof = readable_url(row['statement_path'], row['proof_line']) if proof else None
             if readable:
-                body += '<p><a href="'+readable+'">Read formatted statement</a>'+(' · <a href="'+readable_url(row['statement_path'],row['proof_line'])+'">Read formatted proof</a>' if proof else '')+'</p>'
+                body += '<p><a href="'+readable+'">Read formatted statement</a>'+(' · <a href="'+readable_proof+'">Read formatted proof</a>' if readable_proof else '')+'</p>'
+            if proof:
+                body += '<p>'+pair_link(readable or statement, readable_proof or proof, 'claims.html')+'</p>'
             if row['lean']:
                 body += '<details><summary>'+str(len(row['lean']))+' recorded Lean declarations</summary><ul>'
                 for d in row['lean']:
                     url = site.reader.resolve(d['path'], 'claims.html') if d['path'] else None
                     label = '<code>'+e(d['name'])+'</code>'
-                    body += '<li>'+('<a href="'+url+'">'+label+'</a>' if url else label+' (source location not recorded)')+'</li>'
+                    body += '<li>'+('<a href="'+url+'">'+label+'</a> · '+pair_link(readable or statement, url, 'claims.html', 'Read statement beside this module') if url else label+' (source location not recorded)')+'</li>'
                 body += '</ul></details>'
             else:
                 body += '<p class="status">'+('No declaration mapping recorded for this entry.' if wid=='paper-i' else 'Lean mapping for this statement has not been transcribed here.')+'</p>'

@@ -799,6 +799,7 @@ def reading_options(description=None):
 
 
 def render_book(reader,book):
+    from side_reader import pair_link
     site=reader.site
     config=book['config']
     work=config['work']
@@ -872,6 +873,8 @@ def render_book(reader,book):
                     links+=' · <a href="'+site.rel('claims.html',page)+'#'+row['id'].lower()+'">Claim record</a>'
                     other=row['statement_line'] if kind=='proof' else row['proof_line']
                     if other: reading_links=' · '.join(filter(None,['<a href="#L'+str(other)+'">'+('Back to statement' if kind=='proof' else 'Read proof')+'</a>',reading_links]))
+                    if row['proof_line']:
+                        reading_links += ' · '+pair_link(page+'#L'+str(row['statement_line']), page+'#L'+str(row['proof_line']), page)
                     hub=site.rel('collection/works/'+work+'.html',page)
                     links+=' · <a href="'+hub+'#lean">Lean coverage</a> · <a href="'+hub+'#code">Code</a> · <a href="'+hub+'#worked-examples-for-this-work">Worked examples</a>'
                 body+='<section id="'+node['id']+'" class="reading-block '+kind+'">'
