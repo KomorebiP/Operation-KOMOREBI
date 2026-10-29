@@ -2,6 +2,9 @@
 
 [All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: polyphase](../GLOSSARY.md#polyphase) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
+Follow the [complete refinement demonstration](../demonstrations/REFINEMENT.md)
+for runnable code, expected output and a direct route to the written theorem.
+
 Take the finite list
 
 ```math

@@ -4,8 +4,8 @@ This route introduces the vocabulary through a small example. It assumes no fami
 
 1. Read the [project introduction](../START_HERE.md) and [authorship statement](../PROJECT_STATEMENT.md).
 2. Look up **realization**, **projector**, **packet** and **certificate** in the [glossary](../GLOSSARY.md).
-3. Work through [splitting and reconstructing a vector by hand](../examples/01_PACKETS.md). Continue through the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) at your own pace.
-4. Try the [first software examples](../FIRST_RUN.md) when you want to compare a program with the hand calculations.
+3. Follow the [operator reconstruction demonstration](../demonstrations/PACKETS.md) from hand calculation to source evidence. It links the underlying examples and a standalone Python program.
+4. Use the [project map](../PROJECT_MAP.md) to choose another subject, or the [first software examples](../FIRST_RUN.md) to try a library.
 5. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
 6. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
 

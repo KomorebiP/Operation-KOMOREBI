@@ -2,6 +2,8 @@
 
 Start with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.
 
+For the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a concrete introduction, choose one of the [three complete demonstrations](DEMONSTRATIONS.md).
+
 - [New to Komorebi](routes/NEW_READER.md)
 - [Read the mathematics](routes/MATHEMATICS.md)
 - [Inspect a proof](routes/PROOF_REVIEW.md)

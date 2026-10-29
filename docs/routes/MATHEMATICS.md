@@ -2,6 +2,8 @@
 
 This is a suggested sequence, not a prerequisite chain for every work.
 
+The [project map](../PROJECT_MAP.md) distinguishes suggested reading order from connections explicitly recorded in the source. The [demonstrations](../DEMONSTRATIONS.md) provide short routes through calculations, statements, proofs and code.
+
 1. Read [Start here](../START_HERE.md) for the common questions and a finite identity.
 2. Use the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) for concrete calculations with packets, seeds, coordinates and obstructions.
 3. Open [Paper I](../works/paper-i.md) for typed systems and packet coordinates.

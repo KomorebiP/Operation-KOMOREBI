@@ -28,6 +28,8 @@ These introductory calculations lead into this work’s subject. The source and 
 
 - [7. Detect lost information](../examples/07_OBSTRUCTIONS.md) · [Terms and source routes](../LEARNING_MAP.md#obstructions)
 
+**Complete demonstration with runnable code:** [Test recovery from a summary](../demonstrations/RECOVERY.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

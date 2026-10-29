@@ -34,6 +34,8 @@ These introductory calculations lead into this work’s subject. The source and 
 - [11. Build spectral projectors](../examples/11_SPECTRAL_PROJECTORS.md) · [Terms and source routes](../LEARNING_MAP.md#spectral)
 - [15. Compose typed operations](../examples/15_TYPED_PATHS.md) · [Terms and source routes](../LEARNING_MAP.md#typed-paths)
 
+**Complete demonstration with runnable code:** [Reconstruct an operator](../demonstrations/PACKETS.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

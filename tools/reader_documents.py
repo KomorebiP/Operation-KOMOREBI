@@ -221,6 +221,8 @@ class ReadingDocuments:
 
     def document_works(self, repo, path):
         if repo != 'collection': return []
+        from reader_experience import GUIDED_DEMONSTRATIONS
+        if path in GUIDED_DEMONSTRATIONS: return GUIDED_DEMONSTRATIONS[path][1][:]
         if path.startswith('docs/works/'):
             work = PurePosixPath(path).stem
             return [work] if work in self.site.components else []

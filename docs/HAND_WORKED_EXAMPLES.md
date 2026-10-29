@@ -4,6 +4,9 @@ Work through these calculations with pencil and paper. Every example gives its
 inputs, intermediate steps, result and a short exercise with an answer. You do
 not need to install software.
 
+For a guided path from calculation to runnable code and source evidence, start
+with the [three complete demonstrations](DEMONSTRATIONS.md).
+
 Start with the first example if matrices are new to you. A matrix acts on a
 column vector by taking the dot product of each row with that vector. The
 [glossary](GLOSSARY.md) explains the notation and the distinctions used here.

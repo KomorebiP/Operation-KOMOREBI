@@ -112,6 +112,19 @@ The library workflows retain their broader platform and release checks.
 
 ## Claim indexing and search
 
+The [project overview](START_HERE.md), [project map](PROJECT_MAP.md) and
+[three demonstrations](DEMONSTRATIONS.md) introduce the collection as a whole.
+The map labels reading suggestions separately from documented source uses.
+It does not generate or certify a theorem dependency graph.
+
+The website publishes `examples/komorebi_demonstrations.py` as a readable source
+page and an identical download. Its source record includes the collection
+revision and SHA-256. The site checker compares the download and displayed
+source. `python -B tools/check_demonstrations.py` runs each demonstration and
+compares its output with the corresponding guide. The website workflow runs
+this check alongside the existing hand-worked example checks. Demonstration
+pages also participate in the related work's search filter.
+
 Run `python -B tools/claim_navigation.py` to regenerate the manuscript index, then
 run the normal status command to refresh the claim guide. `--check` compares the
 index with the receipt-bound source texts. Paper I keeps its existing correspondence

@@ -2,6 +2,9 @@
 
 [All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: obstruction](../GLOSSARY.md#obstruction) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
+The [complete recovery demonstration](../demonstrations/RECOVERY.md) connects
+this argument to an executable witness and further source material.
+
 Suppose a coarse description keeps only the sum of two real coordinates:
 
 ```math

@@ -170,7 +170,7 @@ class Site:
     def page(self,path,title,body,source=None):
         esc=html.escape
         root=self.rel('index.html',path)
-        nav=[('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Papers and PDFs','documents.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
+        nav=[('Overview','collection/START_HERE.html'),('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Papers and PDFs','documents.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Claims','claims.html'),('Downloads','downloads.html')]
         nav_html=''.join('<a href="'+self.rel(p,path)+'"'+(' aria-current="page"' if p==path else '')+'>'+t+'</a>' for t,p in nav)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
         doc='''<!doctype html>
@@ -219,6 +219,8 @@ class Site:
             return github(self.repos[repo],self.revisions[repo],resolved.lstrip('/'))
         if (repo,resolved) in self.documents:
             return self.rel(document_url(repo,resolved),page)+('#'+parts.fragment if parts.fragment else '')
+        if repo=='collection' and resolved=='examples/komorebi_demonstrations.py':
+            return self.rel('read/demonstrations.html',page)+('#'+parts.fragment if parts.fragment else '')
         if repo=='collection' and not is_image:
             reader_url=self.reader.resolve(resolved,page,parts.fragment)
             if reader_url:return reader_url
@@ -306,6 +308,10 @@ class Site:
         route_links=[('New to Komorebi','Start with a small example and the vocabulary.','NEW_READER'),('Read the mathematics','Choose a work and keep its assumptions in view.','MATHEMATICS'),('Inspect a proof','Follow statements, formal sources and recorded evidence.','PROOF_REVIEW'),('Run the software','Choose an environment and compare expected output.','SOFTWARE')]
         cards=''.join('<a class="route" href="collection/routes/'+key+'.html"><h2>'+title+'</h2><p>'+desc+'</p><span>Open route →</span></a>' for title,desc,key in route_links)
         body='<section class="hero"><p class="eyebrow">Komorebi P. / A working research collection</p><h1>Find a way into<br>the mathematics.</h1><p class="lede">Read a paper, follow its proof, or run a small calculation. Choose your starting point and keep the work’s assumptions and evidence close at hand.</p><p><a class="button" href="works.html">Browse the works</a> <a href="search.html">Search the collection</a></p></section><section aria-label="Choose a reading route" class="route-grid">'+cards+'</section><section class="intro"><h2>Three repositories, one place to begin</h2><dl><dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd><dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd><dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl></section><aside class="notice"><h2>Read the status with the result</h2><p>The collection is a work in progress. Completion, Lean coverage and confidence are separate descriptions. Software is beta. A linked file is not evidence that every claim has been verified.</p><a href="collection/COMPLETION_STATUS.html">Understand the evidence labels</a></aside>'
+        body=body.replace('<a class="button" href="works.html">Browse the works</a> <a href="search.html">Search the collection</a>',
+                          '<a class="button" href="collection/START_HERE.html">Understand the project</a> <a href="works.html">Browse the works</a> · <a href="search.html">Search</a>')
+        introduction='<section class="intro"><h2>What connects the work?</h2><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p><div class="route-grid"><a class="route" href="collection/PROJECT_MAP.html"><h3>See the project map</h3><p>Explore the twelve core papers, related books and documented connections.</p></a><a class="route" href="collection/DEMONSTRATIONS.html"><h3>Follow a complete demonstration</h3><p>Work through a calculation, run its program and follow the source evidence.</p></a></div></section>'
+        body=body.replace('<section aria-label="Choose a reading route"',introduction+'<section aria-label="Choose a reading route"',1)
         self.page('index.html','Read, inspect and run',body)
         body='<h1>Browse the works</h1><p>Each page brings together reading files, written proofs, Lean, code and the recorded limits. Incubator entries remain visible and labeled.</p><form class="filters" data-work-filter><label for="work-query">Find a title or subject</label><input id="work-query" name="q" type="search"><label for="work-group">Collection</label><select id="work-group"><option value="">All collections</option>'+''.join('<option value="'+g+'">'+t+'</option>' for g,t in [('papers','Core papers'),('monographs','Books and companion volumes'),('research','Research programs'),('packages','Software packages'),('experiments','Experiments')])+'</select><button type="reset">Clear filters</button></form><p id="work-count" role="status" aria-live="polite">'+str(len(self.registry['components']))+' works</p><div class="work-list">'
         for row in self.registry['components']:
@@ -326,7 +332,7 @@ class Site:
         for item in self.search:
             if 'kind' not in item:
                 url=item['url']
-                item['kind']=('Glossary' if '/GLOSSARY.' in url else 'Examples' if '/examples/' in url or '/HAND_WORKED_EXAMPLES.' in url else 'Papers and source' if url.startswith('read/') else 'Guides')
+                item['kind']=('Glossary' if '/GLOSSARY.' in url else 'Examples' if '/examples/' in url or '/demonstrations/' in url or '/HAND_WORKED_EXAMPLES.' in url or '/DEMONSTRATIONS.' in url else 'Papers and source' if url.startswith('read/') else 'Guides')
         self.write('search-index.json',json.dumps(self.search,ensure_ascii=False)+'\n')
         body='<h1>Download one work</h1><p>These ZIP files contain selected reading files and license notices, with source identities and SHA-256 checksums. They are not complete Lean or software builds. For those, use the <a href="collection/DOWNLOADS.html#obtain-a-full-component">component source instructions</a>.</p><p><a href="downloads/index.json">All bundle contents and checksums (JSON)</a></p><div class="download-list">'
         for r in self.bundle_records:
@@ -335,6 +341,23 @@ class Site:
         self.page('404.html','Page not found','<h1>This page could not be found</h1><p>Use the <a href="'+BASE_URL+'">Komorebi starting page</a>, <a href="'+BASE_URL+'search.html">search</a> or <a href="'+BASE_URL+'works.html">work index</a> to find the current page.</p>')
     def claim_index(self):
         render_claim_index(self)
+    def demonstration_program(self):
+        """Publish the teaching program as readable source and an exact download."""
+        from reader_documents import source_lines
+        path='examples/komorebi_demonstrations.py'
+        raw=(self.root/path).read_bytes()
+        text=raw.decode('utf-8')
+        download='downloads/komorebi_demonstrations.py'
+        (self.output/download).parent.mkdir(parents=True,exist_ok=True)
+        (self.output/download).write_bytes(raw)
+        record=dict(source=path,source_revision=self.revision,url=download,size=len(raw),sha256=digest(raw),
+                    reader_url='read/demonstrations.html',scope='Three fixed exact teaching examples. No Lean execution or general theorem verification.')
+        self.write('downloads/demonstration-source.json',json.dumps(record,indent=2)+'\n')
+        body='<h1>Program for the three demonstrations</h1><p>Exact integer calculations using Python 3.10 or later and its standard library. The program checks reconstruction, refinement and a recovery witness.</p><nav class="document-routes" aria-label="Demonstration routes"><a href="../collection/DEMONSTRATIONS.html">Setup and scope</a><a href="../collection/demonstrations/PACKETS.html">Operator reconstruction</a><a href="../collection/demonstrations/REFINEMENT.html">Signal refinement</a><a href="../collection/demonstrations/RECOVERY.html">Recovery witness</a></nav><p><a class="button" download href="../'+download+'">Download Python program</a> <a href="../downloads/demonstration-source.json">Revision and checksum</a></p>'
+        body+='<p>From the download folder, run <code>python -B komorebi_demonstrations.py all</code>. Each demonstration page provides its expected output and mathematical explanation.</p>'
+        body+=source_lines(text)
+        self.page('read/demonstrations.html','Program for the three demonstrations',body,github(REPOSITORY,self.revision,path))
+        self.search.append(dict(title='Program for the three demonstrations',group='Collection',kind='Code',work_ids=['paper-i','paper-ii','paper-iii','paper-v','realization-boundaries'],url='read/demonstrations.html',text='Exact integer Python packet operator reconstruction residue refinement recovery obstruction witness standalone program'))
     def build(self):
         if self.output.exists() and any(self.output.iterdir()):
             raise ValueError('Use a new empty site output directory')
@@ -354,6 +377,7 @@ class Site:
         self.reader.render()
         self.bundles()
         self.reader.catalog()
+        self.demonstration_program()
         self.indexes()
         self.write('.nojekyll','')
         result=dict(collection_revision=self.revision,library_revisions=self.revisions,html_guides=len(self.documents),works=len(self.registry['components']),claim_records=len(self.claims['records']),reading_bundles=len(self.bundle_records),bundle_bytes=sum(x['archive_bytes'] for x in self.bundle_records),new_proof_review=False,new_lean_execution=False)

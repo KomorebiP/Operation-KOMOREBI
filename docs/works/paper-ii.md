@@ -30,6 +30,8 @@ These introductory calculations lead into this work’s subject. The source and 
 - [5. Refine a signal](../examples/05_REFINEMENT.md) · [Terms and source routes](../LEARNING_MAP.md#refinement)
 - [11. Build spectral projectors](../examples/11_SPECTRAL_PROJECTORS.md) · [Terms and source routes](../LEARNING_MAP.md#spectral)
 
+**Complete demonstration with runnable code:** [Refine a signal](../demonstrations/REFINEMENT.md).
+
 Use the links below to read this work and its supporting files. Ctrl+click (Command+click on macOS) opens a link in another tab. Your browser’s Back button returns here.
 
 ## Read

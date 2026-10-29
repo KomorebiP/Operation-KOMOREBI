@@ -166,6 +166,14 @@ def inspect_site(root):
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
     readable_math = check_readable_chapter(root,documents,pages)
+    demo=json.loads((root/'downloads/demonstration-source.json').read_bytes())
+    assert demo['source']=='examples/komorebi_demonstrations.py'
+    assert demo['url']=='downloads/komorebi_demonstrations.py'
+    assert demo['source_revision']==json.loads((root/'build-info.json').read_bytes())['collection_revision']
+    code=(root/demo['url']).read_bytes()
+    assert len(code)==demo['size'] and hashlib.sha256(code).hexdigest()==demo['sha256']
+    from reader_documents import source_lines
+    assert source_lines(code.decode('utf-8')) in (root/demo['reader_url']).read_text(encoding='utf-8')
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,
                 reading_documents=len(documents['files']),pdfs=pdf_count,readable_math_expressions=readable_math,

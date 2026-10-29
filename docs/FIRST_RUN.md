@@ -4,6 +4,10 @@ Choose one of the paths below. Each example has a small, explicit expected
 result. Record the source revision with `git rev-parse HEAD` before running it.
 All software remains beta and work in progress.
 
+For a first run that needs no library installation, use the
+[three standalone demonstrations](DEMONSTRATIONS.md). They connect exact
+calculations to their papers, proofs and recorded Lean coverage.
+
 For the calculations before the code, use the [hand-worked examples](HAND_WORKED_EXAMPLES.md).
 The [packet example](examples/01_PACKETS.md) and [coordinate example](examples/03_COORDINATES.md)
 explain the two Python outputs below.

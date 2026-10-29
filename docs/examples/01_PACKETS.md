@@ -2,6 +2,9 @@
 
 [All examples](../HAND_WORKED_EXAMPLES.md) · [Glossary: projector](../GLOSSARY.md#projector) · [Papers, proofs, Lean and code](#papers-proofs-lean-and-code)
 
+For a complete route through blocks, a runnable program and the recorded proof
+links, use [Reconstruct an operator](../demonstrations/PACKETS.md).
+
 We will split a vector into two components and put it back together. Work over
 the real numbers and take
 

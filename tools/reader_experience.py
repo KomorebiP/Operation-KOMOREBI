@@ -6,6 +6,11 @@ import re
 from urllib.parse import quote
 
 SITE = 'https://KomorebiP.github.io/Operation-KOMOREBI/'
+GUIDED_DEMONSTRATIONS = {
+    'docs/demonstrations/PACKETS.md': ('Reconstruct an operator', ['paper-i']),
+    'docs/demonstrations/REFINEMENT.md': ('Refine a signal', ['paper-ii','paper-v']),
+    'docs/demonstrations/RECOVERY.md': ('Test recovery from a summary', ['paper-iii','realization-boundaries']),
+}
 
 
 def link(label, target, page):
@@ -50,6 +55,9 @@ def introduction(root, component, assessment, page):
         for topic in topics:
             text+='- '+link(str(topic['number'])+'. '+topic['title'],topic['example'],page)+' · '+link('Terms and source routes','docs/LEARNING_MAP.md#'+topic['id'],page)+'\n'
         text+='\n'
+        demonstrations=[link(title,path,page) for path,(title,works) in GUIDED_DEMONSTRATIONS.items() if component['id'] in works]
+        if demonstrations:
+            text+='**Complete demonstration with runnable code:** '+' · '.join(demonstrations)+'.\n\n'
     return text
 
 
@@ -58,14 +66,16 @@ ROUTES = {
 
 1. Read the [project introduction](../START_HERE.md) and [authorship statement](../PROJECT_STATEMENT.md).
 2. Look up **realization**, **projector**, **packet** and **certificate** in the [glossary](../GLOSSARY.md).
-3. Work through [splitting and reconstructing a vector by hand](../examples/01_PACKETS.md). Continue through the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) at your own pace.
-4. Try the [first software examples](../FIRST_RUN.md) when you want to compare a program with the hand calculations.
+3. Follow the [operator reconstruction demonstration](../demonstrations/PACKETS.md) from hand calculation to source evidence. It links the underlying examples and a standalone Python program.
+4. Use the [project map](../PROJECT_MAP.md) to choose another subject, or the [first software examples](../FIRST_RUN.md) to try a library.
 5. Read the [common computational language](https://github.com/KomorebiP/komorebi-math/blob/main/docs/UNIFIED_LANGUAGE.md).
 6. Choose one [work](../BROWSE.md). Read its introduction and recorded limits before following technical references.
 
 Start with vectors and matrices if linear algebra is unfamiliar. You can read the work introductions without installing software.
 '''),
     'MATHEMATICS': ('Read the mathematics', '''This is a suggested sequence, not a prerequisite chain for every work.
+
+The [project map](../PROJECT_MAP.md) distinguishes suggested reading order from connections explicitly recorded in the source. The [demonstrations](../DEMONSTRATIONS.md) provide short routes through calculations, statements, proofs and code.
 
 1. Read [Start here](../START_HERE.md) for the common questions and a finite identity.
 2. Use the [hand-worked examples](../HAND_WORKED_EXAMPLES.md) for concrete calculations with packets, seeds, coordinates and obstructions.
@@ -108,6 +118,7 @@ def render_reader_pages(root, components, assessments):
     for key,(title,body) in ROUTES.items():
         out['docs/routes/'+key+'.md'] = '# '+title+'\n\n'+body+footer
     out['docs/READING_ROUTES.md'] = '# Choose a reading route\n\nStart with the task you want to complete. These routes are editorial suggestions and do not change the recorded status of any work.\n\n'+ '\n'.join('- ['+title+'](routes/'+key+'.md)' for key,(title,_) in ROUTES.items())+'\n\n[Hand-worked examples](HAND_WORKED_EXAMPLES.md) · [Searchable website]('+SITE+') · [Browse works](BROWSE.md) · [Glossary](GLOSSARY.md) · [First runs](FIRST_RUN.md)\n'
+    out['docs/READING_ROUTES.md']=out['docs/READING_ROUTES.md'].replace('\n- [New to Komorebi]', '\nFor the collection as a whole, read the [project overview](START_HERE.md) and [project map](PROJECT_MAP.md). For a concrete introduction, choose one of the [three complete demonstrations](DEMONSTRATIONS.md).\n\n- [New to Komorebi]',1)
     out['docs/GLOSSARY.md']=render_glossary(config)
     downloads='# Download one work\n\nThe [website downloads]('+SITE+'downloads.html) provide a separate reading ZIP for each work. Each contains its selected reading files, linked claim guides, available license notices, a source revision and SHA-256 checksums. The website lists file counts and sizes before download.\n\nThese are reading selections. TeX may depend on additional files, and the ZIP is not a complete Lean or software build. Use the source instructions below for a full component.\n\n'
     claim_data=json.loads((root/'manifests/claim-navigation.json').read_bytes())
