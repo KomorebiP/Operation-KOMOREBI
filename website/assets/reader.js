@@ -1,5 +1,44 @@
 "use strict";
 
+const siteMenuToggle = document.querySelector("#site-menu-toggle");
+const siteMenuPanel = document.querySelector("#site-menu-panel");
+if (siteMenuToggle && siteMenuPanel) {
+  function setSiteMenu(open) {
+    siteMenuPanel.hidden = !open;
+    siteMenuToggle.setAttribute("aria-expanded", String(open));
+  }
+  // Without JavaScript the grouped links remain visible and usable.
+  setSiteMenu(false);
+  siteMenuToggle.hidden = false;
+  siteMenuToggle.addEventListener("click", () => setSiteMenu(siteMenuPanel.hidden));
+  document.querySelector(".site-navigation").addEventListener("keydown", event => {
+    if (event.key === "Escape" && !siteMenuPanel.hidden) {
+      event.preventDefault();
+      setSiteMenu(false);
+      siteMenuToggle.focus();
+    }
+  });
+}
+
+// A section jump moves keyboard focus as well as the visual reading position.
+for (const link of document.querySelectorAll(".page-contents a, .skip-link")) {
+  link.addEventListener("click", event => {
+    if (event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    let target;
+    try { target = document.getElementById(decodeURIComponent(link.hash.slice(1))); } catch { return; }
+    if (!target) return;
+    if (target.matches("a:not([href])") && !target.textContent.trim()) {
+      const next = target.nextElementSibling || (target.parentElement.matches("p") ? target.parentElement.nextElementSibling : null);
+      if (next && next.matches("h2")) target = next;
+    }
+    event.preventDefault();
+    if (location.hash !== link.hash) history.pushState(null, "", link.hash);
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus({preventScroll: true});
+    target.scrollIntoView();
+  });
+}
+
 function normalized(value) {
   const symbols = {α:"alpha",β:"beta",γ:"gamma",ρ:"rho",ω:"omega",η:"eta",δ:"delta",ℓ:"ell"};
   value = value.replace(/[αβγρωηδℓ]/gu, symbol => " " + symbols[symbol] + " ");

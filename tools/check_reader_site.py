@@ -19,6 +19,7 @@ class Page(HTMLParser):
         self.h1=0;self.main=0;self.language=None;self.title=False;self.skip=False
         self.images_without_alt=0
         self.iframes=[]
+        self.navigation=0;self.menu_buttons=[];self.menu_panels=[]
         self.feed(text)
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
@@ -35,6 +36,9 @@ class Page(HTMLParser):
         if tag=='label' and a.get('for'):self.labels.add(a['for'])
         if tag=='img' and 'alt' not in a:self.images_without_alt+=1
         if tag=='iframe':self.iframes.append(a)
+        if tag=='nav' and a.get('aria-label')=='Main navigation':self.navigation+=1
+        if a.get('id')=='site-menu-toggle':self.menu_buttons.append(a)
+        if a.get('id')=='site-menu-panel':self.menu_panels.append(a)
 
 
 def check_search_targets(index, pages):
@@ -102,6 +106,10 @@ def inspect_site(root):
         assert len(page.ids)==len(set(page.ids)),(path,'Duplicate IDs',[x for x,n in collections.Counter(page.ids).items() if n>1])
         assert page.images_without_alt==0,(path,'Image without alt attribute')
         assert all(f.get('title') for f in page.iframes),(path,'Frame without a title')
+        assert page.navigation==1 and len(page.menu_buttons)==len(page.menu_panels)==1,(path,'Main navigation')
+        toggle,panel=page.menu_buttons[0],page.menu_panels[0]
+        assert toggle.get('aria-controls')=='site-menu-panel' and toggle.get('aria-expanded')=='true',(path,'Navigation disclosure state')
+        assert 'hidden' in toggle and 'hidden' not in panel,(path,'Navigation must work without JavaScript')
         for control in page.inputs:
             assert control.get('id') in page.labels or control.get('aria-label'),(path,'Unlabeled control')
         for target in page.links:

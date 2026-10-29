@@ -53,6 +53,71 @@ def math_fences(rendered):
                   rendered, flags=re.S)
 
 
+def site_navigation(page):
+    """Ordinary links with a progressively enhanced, nonmodal disclosure."""
+    def link(title, target):
+        current = ' aria-current="page"' if target == page else ''
+        url = posixpath.relpath(target, posixpath.dirname(page) or '.')
+        return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+html.escape(title)+'</a>'
+    groups = [
+        ('Read', [('Overview', 'collection/START_HERE.html'),
+                  ('Reading routes', 'collection/READING_ROUTES.html'),
+                  ('Papers and PDFs', 'documents.html'),
+                  ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
+        ('Look up', [('Claims', 'claims.html'), ('Glossary', 'collection/GLOSSARY.html'),
+                     ('Notation', 'notation.html')]),
+        ('Use', [('Run Python', 'playground.html'), ('Software', 'software.html'),
+                 ('Downloads', 'downloads.html'),
+                 ('Accessibility', 'collection/ACCESSIBILITY.html')]),
+    ]
+    panel = ''.join('<div><p class="site-nav-label">'+title+'</p><ul>'+''.join(
+        '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
+        for title, links in groups)
+    return ('<nav class="site-navigation" aria-label="Main navigation">'
+            '<div class="site-navigation-bar">'+link('Works', 'works.html')+link('Search', 'search.html')+
+            '<button id="site-menu-toggle" type="button" aria-expanded="true" '
+            'aria-controls="site-menu-panel" hidden>Browse <span aria-hidden="true">▾</span></button></div>'
+            '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
+
+
+def page_contents(content):
+    """List section headings from the final sanitized HTML, preserving its IDs."""
+    class Sections(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.sections = []
+            self.heading = None
+            self.anchor = None
+        def handle_starttag(self, tag, attrs):
+            values = dict(attrs)
+            if tag == 'a' and values.get('id') and not values.get('href'):
+                self.anchor = values['id']
+            if tag == 'h2':
+                # Explicit Markdown anchors may already own the heading's ID.
+                self.heading = [values.get('id') or self.anchor, []]
+                self.anchor = None
+        def handle_data(self, data):
+            if self.heading is not None:
+                self.heading[1].append(data)
+            elif data.strip():
+                self.anchor = None
+        def handle_endtag(self, tag):
+            if tag == 'h2' and self.heading is not None:
+                identifier, text = self.heading
+                label = ' '.join(''.join(text).split())
+                if identifier and label:
+                    self.sections.append((identifier, label))
+                self.heading = None
+    parser = Sections()
+    parser.feed(content)
+    if len(parser.sections) < 4:
+        return ''
+    links = ''.join('<li><a href="#'+html.escape(quote(identifier), quote=True)+'">'+
+                    html.escape(label)+'</a></li>' for identifier, label in parser.sections)
+    return ('<details class="page-contents"><summary>On this page</summary>'
+            '<nav aria-label="Sections on this page"><ul>'+links+'</ul></nav></details>')
+
+
 def document_url(repo, path):
     prefix = {'collection':'collection', 'math':'math', 'polyphase':'polyphase'}[repo]
     if path == 'README.md':
@@ -171,8 +236,7 @@ class Site:
     def page(self,path,title,body,source=None):
         esc=html.escape
         root=self.rel('index.html',path)
-        nav=[('Overview','collection/START_HERE.html'),('Reading routes','collection/READING_ROUTES.html'),('Works','works.html'),('Papers and PDFs','documents.html'),('Examples','collection/HAND_WORKED_EXAMPLES.html'),('Run Python','playground.html'),('Software','software.html'),('Glossary','collection/GLOSSARY.html'),('Notation','notation.html'),('Claims','claims.html'),('Downloads','downloads.html')]
-        nav_html=''.join('<a href="'+self.rel(p,path)+'"'+(' aria-current="page"' if p==path else '')+'>'+t+'</a>' for t,p in nav)
+        nav_html=site_navigation(path)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
         doc='''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -180,7 +244,7 @@ class Site:
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 <script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script></head><body>
-<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a><nav aria-label="Main navigation">'''+nav_html+'''<a href="'''+self.rel('search.html',path)+'''">Search</a></nav></header>
+<a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
 <main id="main" tabindex="-1">'''+body+'''</main><footer>'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><p>Work in progress. Completion, Lean coverage and confidence retain their recorded scope.</p></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
@@ -257,6 +321,9 @@ class Site:
                 if pdf:
                     link='<p><a href="'+self.rel(pdf['url'],page)+'">Read the written arguments in the PDF</a>. The manuscript source remains available below.</p>'
                     content=content.replace('<h2 id="written-proofs">Written proofs</h2>','<h2 id="written-proofs">Written proofs</h2>'+link)
+            else:
+                contents=page_contents(content)
+                content=re.sub(r'(</h1>)',lambda m:m[1]+contents,content,count=1)
             body='<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="'+self.rel('index.html',page)+'">Home</a> / <a href="'+self.rel(repo+'/index.html',page)+'">'+section+'</a></nav><article>'+content+'</article>'
             self.page(page,title,body,github(self.repos[repo],self.revisions[repo],path))
             plain=re.sub(r'<[^>]+>',' ',rendered)

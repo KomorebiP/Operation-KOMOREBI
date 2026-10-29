@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 
-from build_reader_site import Rewriter, Site, document_url, math_fences, safe_path, selected_files
+from build_reader_site import Rewriter, Site, document_url, math_fences, safe_path, selected_files, site_navigation, page_contents
 from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
@@ -15,6 +15,46 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_navigation_has_nested_relative_links_and_current_page(self):
+        from html.parser import HTMLParser
+        class Links(HTMLParser):
+            def __init__(self, text):
+                super().__init__()
+                self.links=[]
+                self.feed(text)
+            def handle_starttag(self, tag, attrs):
+                if tag == 'a':self.links.append(dict(attrs))
+        links=Links(site_navigation('collection/GLOSSARY.html')).links
+        self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
+        self.assertIn('../search.html', [a['href'] for a in links])
+        self.assertEqual(len(links),13)
+        self.assertEqual(len({a['href'] for a in links}),13)
+        search=Links(site_navigation('search.html')).links
+        self.assertEqual([a['href'] for a in search if a.get('aria-current')=='page'], ['search.html'])
+
+    def test_contents_preserves_actual_heading_ids_and_plain_labels(self):
+        content=('<h1>Guide</h1><h2 id="a&amp;b">A &amp; <code>B</code></h2>'
+                 '<h3 id="detail">Detail</h3><h2 id="two">Second</h2>'
+                 '<h2 id="three">Third</h2><h2 id="four">Fourth</h2>')
+        rendered=page_contents(content)
+        self.assertIn('href="#a%26b">A &amp; B</a>',rendered)
+        self.assertNotIn('#detail',rendered)
+        self.assertEqual(rendered.count('<li>'),4)
+        self.assertIn('<details class="page-contents">',rendered)
+        self.assertNotIn(' open',rendered)
+
+    def test_contents_omits_short_guides_and_headings_without_targets(self):
+        self.assertEqual(page_contents('<h2 id="one">One</h2><h2>No ID</h2>'*2),'')
+
+    def test_contents_keeps_sections_with_explicit_markdown_anchors(self):
+        content=('<p><a id="linear-foundations"></a></p>\n<h2>Linear foundations</h2>'
+                 '<a id="unrelated"></a><p>Intervening prose.</p><h2>No target</h2>'
+                 '<h2 id="two">Two</h2><h2 id="three">Three</h2><h2 id="four">Four</h2>')
+        rendered=page_contents(content)
+        self.assertIn('href="#linear-foundations">Linear foundations</a>',rendered)
+        self.assertNotIn('#unrelated',rendered)
+        self.assertEqual(rendered.count('<li>'),4)
+
     def test_readable_macro_expansion_preserves_matrix_row_separators(self):
         self.assertEqual(expand_math(r'A\\N+\N',{'N':r'\mathbb N'}),r'A\\N+{\mathbb N}')
         self.assertEqual(expand_math(r'A\\\N',{'N':r'\mathbb N'}),r'A\\{\mathbb N}')

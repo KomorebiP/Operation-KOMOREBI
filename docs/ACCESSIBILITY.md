@@ -11,6 +11,18 @@ keyboard focus, descriptive links, a glossary and search. Work pages keep
 completion, Lean coverage and confidence in text. The layout adapts to smaller
 screens. Wide tables and code blocks can be scrolled with the keyboard.
 
+The header keeps **Works** and **Search** visible. **Browse** opens links grouped
+under **Read**, **Look up** and **Use**. The current page is marked in its link.
+The expanded navigation stays above the content and does not cover it. Press
+Escape while focus is in the navigation to close it and return to Browse.
+When JavaScript is unavailable, the grouped links remain visible.
+
+Long HTML guides have a collapsed **On this page** list of section headings.
+Open it and choose a section to jump there. Keyboard focus follows the jump,
+so the next Tab continues from that section. These section links also work
+without JavaScript. Work pages keep their existing paper, proof, Lean, code
+and example routes. Readable chapters keep their chapter contents.
+
 Use Tab and Shift+Tab to move between controls, Enter to follow a link or
 activate a button, and Space or Enter to open a contents disclosure. Browser
 zoom changes the text size. Reading routes and the work catalogue remain
