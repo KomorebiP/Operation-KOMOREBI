@@ -1,7 +1,7 @@
 """Publish source-preserving HTML reading chapters with explicit syntax coverage.
 
 Unknown prose commands or environments stop the build. Mathematics remains TeX
-for MathJax, with only literal zero-argument macros from the manuscript expanded.
+for MathJax, expanding literal manuscript macros and supported math wrappers.
 This is presentation tooling, not a mathematical review or a general TeX engine.
 """
 import hashlib
@@ -45,13 +45,35 @@ BOOKS['paper-iii']=dict(work='paper-iii',label='Paper III',base=THIRD_BASE,main=
                        bib=THIRD_BASE+'references.bib',index='read/paper-iii/index.html',bib_page='read/paper-iii/references.html',
                        title='Typed transfer, nonlinear packets and obstruction theory',chapters=THIRD_CHAPTERS,main_chapters=4)
 CHAPTERS += THIRD_CHAPTERS
+FIRST_BASE = 'papers/paper-i/current/editable/traditional/'
+FIRST_CHAPTERS = [
+    ('01_orientation.tex', 'orientation', "Reader’s orientation"),
+    ('02_foundations.tex', 'foundations-and-seed-rank', 'Foundations and seed rank'),
+    ('03_packets_and_graphs.tex', 'packets-and-transfer-graphs', 'Packets and transfer graphs'),
+    ('04_transport.tex', 'transport-and-realization', 'Transport and realization'),
+    ('05_worked_models.tex', 'worked-models', 'Worked models and calculations'),
+    ('06_reference.tex', 'reference-and-concordance', 'Notation, concordance and references'),
+]
+FIRST_CHAPTERS = [dict(source=FIRST_BASE+p, url='read/paper-i/'+slug+'.html', title=t, work='paper-i')
+                  for p, slug, t in FIRST_CHAPTERS]
+BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
+                        main=FIRST_BASE+'Paper_I_Monograph.tex', bib=FIRST_BASE+'06_reference.tex',
+                        inline_bibliography=True, index='read/paper-i/index.html',
+                        bib_page='read/paper-i/references.html',
+                        title='Typed operator systems, seed rank and exact packet coordinates',
+                        chapters=FIRST_CHAPTERS, main_chapters=6, chapter_prefix='',
+                        pdf_inputs={'visual_atlas.tex': 'Read the 22-plate visual atlas in the PDF'}), **BOOKS}
+CHAPTERS = FIRST_CHAPTERS + CHAPTERS
 BY_SOURCE = {c['source']:c for c in CHAPTERS}
-NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction'}
-KIND_NAMES = {'standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target'}
+NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput'}
+KIND_NAMES = {'standardfact':'Standard fact','certificate':'Numerical certificate','text':'Passage','roadmap':'Formalization target','classicalinput':'Classical input'}
 HEADINGS = {'part':2,'section':2,'subsection':3,'subsubsection':4,'paragraph':5}
 MATH_PATTERN = re.compile(r'(?<!\\)\$(.*?)(?<!\\)\$|\\\[(.*?)\\\]|(\\begin\{align\*\}.*?\\end\{align\*\})|\\\((.*?)\\\)',re.S)
-BLOCKS = NUMBERED | {'proof','figure','table','longtable','lstlisting','keyidea','interpretation'}
-PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result'}
+PANELS = {'keyidea': 'The central idea', 'interpretation': 'How to read the result',
+          'readerroadmap': 'Reader roadmap', 'microexample': 'Running example',
+          'hypothesisguide': 'Why the hypotheses matter', 'sectionrecap': 'Section recap',
+          'warningbox': 'Do not conflate'}
+BLOCKS = NUMBERED | set(PANELS) | {'proof','figure','table','longtable','tabularx','lstlisting','thebibliography','conceptchain'}
 MACROS = {'Pcal', 'Qcal', 'Rcal', 'Acal', 'Scal', 'cA', 'cS', 'End', 'id', 'bbk'}
 # Search aliases describe notation, not new equivalences between mathematical claims.
 SYMBOLS = {'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'rho': 'ρ', 'omega': 'ω',
@@ -72,6 +94,25 @@ def clean_tex(text):
         parts[i] = re.sub(r'\\setlength\{\\(?:above|below)displayskip\}\{[^{}]*\}',lambda m:' '*len(m[0]),parts[i])
         parts[i] = re.sub(r'\\(?:clearpage|medskip|noindent|small|normalsize|begingroup|endgroup)\b',lambda m:' '*len(m[0]),parts[i])
     return ''.join(parts)
+
+
+def presentation_tex(text):
+    """Mask known print-only layout, preserving all source line numbers."""
+    mask = lambda m: ''.join('\n' if c == '\n' else ' ' for c in m[0])
+    text = re.sub(r'\\(?:begin|end)\{center\}|\\begin\{multicols\}\{2\}|\\end\{multicols\}', mask, text)
+    text = re.sub(r'\\addcontentsline\{toc\}\{section\}\{[^{}]*\}', mask, text)
+    text = re.sub(r'\\fontsize\{[\d.]+\}\{[\d.]+\}|\\setstretch\{[\d.]+\}|\\selectfont\b', mask, text)
+    text = re.sub(r'\\setlength\{\\(?:parindent|parskip)\}\{[^{}]*\}', mask, text)
+    # These macros are explicitly empty in the manuscript preamble.
+    while (match := re.search(r'\\(?:Depends|Exports)\{', text)):
+        _, end = group(text, match.end()-1)
+        text = text[:match.start()] + ''.join('\n' if c=='\n' else ' ' for c in text[match.start():end]) + text[end:]
+    text = re.sub(r'\\RecordID\{([^{}]+)\}', r'\\label{record:\1}', text)
+    text = re.sub(r'''\{(\\['`"](?:\{[A-Za-z]\}|[A-Za-z]))\}''', lambda m:tex_accents(m[1]), text)
+    while (match := re.search(r'\\ConceptChain\{', text)):
+        value, end = group(text, match.end()-1)
+        text = text[:match.start()] + r'\begin{conceptchain}' + value + r'\end{conceptchain}' + text[end:]
+    return text
 
 
 def original_math(text):
@@ -112,7 +153,15 @@ def manuscript_macros(main):
         value, _ = group(main, m.end())
         if '#' in value: raise ValueError('Argument macro is outside the reading pilot')
         result[m[2]] = value
-    if not MACROS <= set(result): raise ValueError('Missing manuscript macro definitions')
+    if not {'Pcal', 'Qcal', 'Rcal', 'Scal', 'End', 'id', 'bbk'} <= set(result):
+        raise ValueError('Missing manuscript macro definitions')
+    # Only the literal, one-argument math wrappers used by the reading editions.
+    for name in ('cl', 'closure', 'norm', 'mat'):
+        match = re.search(r'\\newcommand\{\\'+name+r'\}\[1\]', main)
+        if match:
+            value, _ = group(main, match.end())
+            if re.search(r'#(?!1)', value): raise ValueError('Unsupported math macro argument')
+            result[name] = dict(arguments=1, body=value)
     return result
 
 
@@ -135,7 +184,21 @@ def expand_math(tex, macros):
     if tex.startswith(r'\begin{align*}'):
         tex = tex.replace(r'\begin{align*}',r'\begin{aligned}',1).removesuffix(r'\end{align*}')+r'\end{aligned}'
     for _ in range(10):
-        expanded = re.sub(r'\\\\|\\([A-Za-z]+)', lambda m: '{'+macros[m[1]]+'}' if m[1] in macros else m[0], tex)
+        pieces=[]
+        pos=0
+        for match in re.finditer(r'\\\\|\\([A-Za-z]+)', tex):
+            if match.start()<pos: continue
+            pieces.append(tex[pos:match.start()])
+            value=macros.get(match[1])
+            pos=match.end()
+            if isinstance(value, dict):
+                while pos<len(tex) and tex[pos].isspace(): pos+=1
+                if tex[pos:pos+1]!='{': raise ValueError('Math macro requires a braced argument: '+match[1])
+                argument,pos=group(tex,pos)
+                pieces.append('{'+value['body'].replace('#1',argument)+'}')
+            else: pieces.append('{'+value+'}' if value is not None else match[0])
+        pieces.append(tex[pos:])
+        expanded=''.join(pieces)
         if expanded == tex: return tex
         tex = expanded
     raise ValueError('Recursive manuscript macro')
@@ -156,9 +219,10 @@ def plain_math(tex):
 
 class Chapter:
     def __init__(self, text, macros, section_offset=0, state=None, check_refs=True):
-        self.text = clean_tex(text)
+        self.text = presentation_tex(clean_tex(text))
         self.macros = macros
         self.formal_labels = {}
+        self.external_inputs = {}
         self.math = []
         self.labels = {}
         self.nodes = []
@@ -214,16 +278,22 @@ class Chapter:
                 node = dict(kind=heading[1], title=title, number=number, body='')
             elif env:
                 kind = env[1]
-                if kind not in BLOCKS:
+                if kind not in BLOCKS | {'enumerate','itemize','description'}:
                     raise ValueError('Unsupported reading environment: '+kind)
                 pos += env.end()
                 title = ''
                 if text[pos:pos+1] == '[': title, pos = group(text, pos, '[', ']')
+                if kind in PANELS and title:
+                    if not title.startswith('title={'): raise ValueError('Unsupported panel option: '+title)
+                    title, option_end = group(title, len('title='))
+                    if option_end != len('title={'+title+'}'): raise ValueError('Unsupported panel options')
                 end_tag = '\\end{'+kind+'}'
                 end = text.find(end_tag, pos)
                 if end < 0: raise ValueError('Unclosed '+kind)
                 body = text[pos:end]
                 pos = end+len(end_tag)
+                if kind in {'enumerate','itemize','description'}:
+                    kind,body='text',text[start:pos]
                 number = ''
                 if kind in NUMBERED:
                     self.counter += 1
@@ -240,6 +310,13 @@ class Chapter:
                     node['body'] += m[0]
                     pos += m.end()
             labels = re.findall(r'\\label\{([^{}]+)\}', node['body'])
+            if node['kind']=='text' and not re.sub(r'\\label\{[^{}]+\}', '', node['body']).strip():
+                if labels and not self.nodes: raise ValueError('Unattached manuscript label')
+                for label in labels:
+                    if label in self.labels: raise ValueError('Duplicate chapter label '+label)
+                    self.nodes[-1]['labels'].append(label)
+                    self.labels[label]=self.nodes[-1]
+                continue
             line=self.line(start)
             on_line=sum(n['line']==line for n in self.nodes)
             identifier='L'+str(line)+('-'+str(on_line+1) if on_line else '')
@@ -285,13 +362,16 @@ class Chapter:
                     out.append('§' if name=='S' else '’')
                     if text[pos:pos+1]==' ': pos+=1
                     continue
+                if name=='newline':
+                    out.append('<br>')
+                    continue
                 option = None
                 if text[pos:pos+1]=='[': option,pos=group(text,pos,'[',']')
                 if text[pos:pos+1]!='{': raise ValueError('Missing argument for '+name+' in '+repr(text[:200]))
                 value, pos = group(text, pos)
                 if name == 'label': continue
-                if name in {'textbf','emph','textit','texttt','leanname','path'}:
-                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code'}.get(name,'em')
+                if name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl'}:
+                    tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code'}.get(name,'em')
                     content=html.escape(value.replace(r'\_','_')) if tag=='code' else self.inline(value)
                     out.append('<'+tag+'>'+content+'</'+tag+'>')
                 elif name in {'statusleanthree','statusleanprior','statusroadmap'}:
@@ -316,10 +396,18 @@ class Chapter:
                     out.append(', '.join(links))
                     if option: out.append(', '+self.inline(option))
                 elif name == 'input':
+                    if value in self.external_inputs:
+                        target=self.external_inputs[value]
+                        out.append('<a class="included-reading" href="'+html.escape(self.relative(target['url']),quote=True)+'">'+html.escape(target['title'])+'</a> (this atlas is not converted to HTML)')
+                        continue
                     path = posixpath.normpath(self.base+value)
                     target = BY_SOURCE.get(path)
                     if not target: raise ValueError('Unselected chapter input: '+path)
                     out.append('<a class="included-reading" href="'+self.relative(target['url'])+'">Read '+html.escape(target['title'].lower())+'</a>')
+                elif name=='href':
+                    label,pos=group(text,pos)
+                    if not value.startswith(('https://','http://')): raise ValueError('Unsupported bibliography URL')
+                    out.append('<a href="'+html.escape(value,quote=True)+'">'+self.inline(label)+'</a>')
                 else: raise ValueError('Unsupported prose command: '+name)
             else:
                 m = re.match(r'[^$\\]+', text[pos:])
@@ -337,16 +425,28 @@ class Chapter:
         # Separate paragraphs outside math. A display splits paragraph elements,
         # but its exact mathematical source is passed unchanged to inline().
         # Lists can occur inside statements. Keep them semantic and preserve order.
+        description=re.search(r'\\begin\{description\}(?:\[([^\]]*)\])?(.*?)\\end\{description\}',text,re.S)
+        if description:
+            if description[1] not in (None, r'style=nextline,font=\normalfont\bfseries'):
+                raise ValueError('Unsupported description options')
+            items=re.split(r'\\item\[([^\]]+)\]',description[2])
+            if items[0].strip() or len(items)%2!=1: raise ValueError('Unsupported description list')
+            before=self.paragraphs(text[:description.start()])
+            content=''.join('<dt>'+self.inline(items[i])+'</dt><dd>'+self.paragraphs(items[i+1].strip())+'</dd>' for i in range(1,len(items),2))
+            return before+'<dl>'+content+'</dl>'+self.paragraphs(text[description.end():])
         listing = re.search(r'\\begin\{(enumerate|itemize)\}(?:\[([^\]]*)\])?(.*?)\\end\{\1\}',text,re.S)
         if listing:
             option=listing[2] or ''
-            options={'':'',r'label=(\alph*)':'a',r'label=(\roman*)':'i',r'label=\textbf{S\arabic*.},leftmargin=3.2em':'S'}
+            options={'':'',r'label=(\alph*)':'a',r'label=(\roman*)':'i',r'label=\textbf{S\arabic*.},leftmargin=3.2em':'S',
+                     r'label=\textbf{I.\arabic*.},leftmargin=*,itemsep=0.3em,topsep=0.4em':'I'}
             if option not in options: raise ValueError('Unsupported list labels '+option)
             items=re.split(r'\\item\b',listing[3])
             if items[0].strip(): raise ValueError('Content before first list item')
             tag='ol' if listing[1]=='enumerate' else 'ul'
-            attrs=(' class="seed-axioms"' if options[option]=='S' else ' type="'+options[option]+'"') if option else ''
-            return self.paragraphs(text[:listing.start()])+'<'+tag+attrs+'>'+''.join('<li>'+self.paragraphs(item.strip())+'</li>' for item in items[1:])+'</'+tag+'>'+self.paragraphs(text[listing.end():])
+            attrs=(' class="seed-axioms"' if options[option]=='S' else (' class="paper-conclusions"' if options[option]=='I' else ' type="'+options[option]+'"')) if option else ''
+            before=self.paragraphs(text[:listing.start()])
+            content=''.join('<li>'+('<span class="conclusion-label">I.'+str(i)+'. </span>' if options[option]=='I' else '')+self.paragraphs(item.strip())+'</li>' for i,item in enumerate(items[1:],1))
+            return before+'<'+tag+attrs+'>'+content+'</'+tag+'>'+self.paragraphs(text[listing.end():])
         chunks=[]
         pos=0
         for m in MATH_PATTERN.finditer(text):
@@ -372,7 +472,7 @@ class Chapter:
             value,end=group(text,note.end()-1)
             if note[1] not in self.formal_labels: raise ValueError('Missing manuscript scope label: '+note[1])
             text=text[:note.start()]+self.formal_labels[note[1]]+' '+value+text[end:]
-        text = re.sub(r'\\(?:textbf|emph|textit|texttt|leanname|path)\{([^{}]*)\}',r'\1',text)
+        text = re.sub(r'\\(?:textbf|emph|textit|texttt|leanname|path|nolinkurl)\{([^{}]*)\}',r'\1',text)
         text = text.replace(r'\textquotesingle ', '’').replace(r'\S','§')
         parts = []
         size = 0
@@ -420,6 +520,16 @@ def bibliography(text):
     return entries
 
 
+def manuscript_bibliography(text):
+    match=re.search(r'\\begin\{thebibliography\}\{[^{}]+\}(.*?)\\end\{thebibliography\}',text,re.S)
+    if not match: raise ValueError('Missing manuscript bibliography')
+    entries=list(re.finditer(r'\\bibitem\{([^{}]+)\}',match[1]))
+    if not entries or match[1][:entries[0].start()].strip(): raise ValueError('Unsupported bibliography preamble')
+    return [dict(key=entry[1], line=text.count('\n',0,match.start(1)+entry.start())+1,
+                 body=match[1][entry.end():entries[i+1].start() if i+1<len(entries) else len(match[1])].strip())
+            for i,entry in enumerate(entries)]
+
+
 def prepare(reader):
     """Bind selected books and resolve their references before writing pages."""
     reader.add(BIB,'Paper II historical bibliography output')
@@ -427,7 +537,7 @@ def prepare(reader):
     for work,config in BOOKS.items():
         reader.add(config['bib'],config['label']+' bibliography source')
         main=reader.site.read_source(reader.records[config['main']]).decode('utf-8-sig')
-        declared=re.findall(r'\\input\{(chapters/[^}]+)\}',clean_tex(main))
+        declared=re.findall(r'\\input\{('+re.escape(config.get('chapter_prefix','chapters/'))+r'[^}]+)\}',clean_tex(main).split(r'\begin{document}',1)[-1])
         if [config['base']+p for p in declared] != [c['source'] for c in config['chapters'][:config['main_chapters']]]:
             raise ValueError(config['label']+' chapter order changed. Review the readable edition.')
         macros=manuscript_macros(main)
@@ -441,13 +551,16 @@ def prepare(reader):
             chapter.formal_labels=formal_note_labels(main)
             chapter.url=spec['url']
             chapter.base=config['base']
+            chapter.external_inputs={name:dict(url=reader.primary_pdf(work)['url'],title=title)
+                                     for name,title in config.get('pdf_inputs',{}).items()}
             for label,node in chapter.labels.items():
                 if label in labels: raise ValueError('Duplicate book label '+label)
                 node['url']=chapter.url
                 labels[label]=node
             state={'section':chapter.section,'appendix':chapter.appendix,'part':chapter.part}
             chapters.append((spec,raw,chapter))
-        references=bibliography(reader.site.read_source(reader.records[config['bib']]).decode('utf-8-sig'))
+        bib_text=reader.site.read_source(reader.records[config['bib']]).decode('utf-8-sig')
+        references=(manuscript_bibliography if config.get('inline_bibliography') else bibliography)(bib_text)
         for spec,raw,chapter in chapters:
             chapter.labels=labels
             chapter.validate_references()
@@ -484,16 +597,37 @@ def render_table(node,chapter):
         if not content.startswith(r'\caption'): raise ValueError('Table caption is missing')
         caption,end=group(content,len(r'\caption'))
         content=content[end:].strip()
-        start=re.match(r'\\begin\{tabularx\}',content)
+        content=re.sub(r'^\\label\{[^{}]+\}\s*','',content)
+        start=re.match(r'\\begin\{(tabularx|tabular)\}',content)
         if not start: raise ValueError('Unsupported table environment')
-        width,pos=group(content,start.end())
-        if width!=r'\textwidth': raise ValueError('Unsupported table width')
+        pos=start.end()
+        if start[1]=='tabularx':
+            width,pos=group(content,pos)
+            if width!=r'\textwidth': raise ValueError('Unsupported table width')
         _,pos=group(content,pos)
-        if not content.endswith(r'\end{tabularx}'): raise ValueError('Unhandled table tail')
-        content=content[pos:-len(r'\end{tabularx}')]
+        end_tag=r'\end{'+start[1]+'}'
+        if not content.endswith(end_tag): raise ValueError('Unhandled table tail')
+        content=content[pos:-len(end_tag)]
     else:
         _,pos=group(content,0)
+        if node['kind']=='tabularx': _,pos=group(content,pos)
         content=content[pos:]
+        if content.lstrip().startswith(r'\caption'):
+            content=content.lstrip()
+            caption,pos=group(content,len(r'\caption'))
+            content=content[pos:]
+            content=re.sub(r'^\s*\\label\{[^{}]+\}','',content).lstrip()
+            if not content.startswith(r'\\'): raise ValueError('Missing caption row terminator')
+            content=content[2:]
+    # A print continuation header is not an additional data row.
+    if r'\endfirsthead' in content:
+        first,rest=content.split(r'\endfirsthead',1)
+        repeated,tail=rest.split(r'\endhead',1)
+        normalize=lambda t:re.sub(r'\s+','',t)
+        first_header=re.sub(r'^.*?\\toprule',r'\\toprule',first,flags=re.S)
+        if normalize(first_header)!=normalize(repeated) or original_math(repeated):
+            raise ValueError('Unsupported repeated table header')
+        content=first+tail
     content=re.sub(r'\\(?:toprule|midrule|bottomrule|endfirsthead|endhead|addlinespace)\b','',content)
     rows=[split_cells(row,'&') for row in split_cells(content,r'\\') if row.strip()]
     if not rows or any(len(row)!=len(rows[0]) for row in rows): raise ValueError('Unexpected table column structure')
@@ -524,6 +658,22 @@ def render(reader):
     for book in reader.readable_books.values():
         reports.extend(render_book(reader,book))
     reader.site.write('documents/readable-chapters.json',json.dumps(reports,ensure_ascii=False,indent=2)+'\n')
+    render_reading_index(reader)
+
+
+def render_reading_index(reader):
+    site=reader.site
+    page='read/index.html'
+    body='<p class="eyebrow">HTML reading editions</p><h1>Read the papers online</h1><p>Read at your own pace with chapter contents, selectable equations, and direct links between statements, proofs and their sources. Start with Paper I for the foundations, or choose the paper you need.</p><div class="work-list">'
+    for work,config in BOOKS.items():
+        body+='<section class="work"><p class="eyebrow">'+config['label']+'</p><h2>'+html.escape(config['title'])+'</h2><p>'+str(config['main_chapters'])+' main chapters</p><nav aria-label="'+config['label']+' reading formats">'
+        body+='<a class="button" href="'+site.rel(config['chapters'][0]['url'],page)+'">Start '+config['label']+'</a><a href="'+site.rel(config['index'],page)+'">Chapter contents</a>'
+        pdf=reader.primary_pdf(work)
+        if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
+        body+='</nav></section>'
+    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. Visual atlases remain in the PDFs, and not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
+    site.page(page,'Read the papers online',body)
+    site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions Paper I Paper II Paper III chapters equations proofs',work_ids=list(BOOKS)))
 
 
 def render_book(reader,book):
@@ -569,8 +719,15 @@ def render_book(reader,book):
                 image=reader.image_url(path,page)
                 if not image: raise ValueError('Missing receipt-bound figure '+path)
                 body+='<figure id="'+node['id']+'"><img src="'+image+'" alt="'+e(plain_math(caption.replace('$',''))[0],quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption><p class="passage-links">'+links+'</p></figure>'
-            elif kind in {'table','longtable'}:
+            elif kind in {'table','longtable','tabularx'}:
                 body+='<section id="'+node['id']+'">'+render_table(node,chapter)+'<p class="passage-links">'+links+'</p></section>'
+            elif kind=='conceptchain':
+                body+='<section id="'+node['id']+'"><div class="table-scroll" tabindex="0" role="region" aria-label="Conceptual diagram. Scroll horizontally if needed.">'+chapter.paragraphs(node['body'])+'</div><p class="passage-links">'+links+'</p></section>'
+            elif kind=='thebibliography':
+                body+='<section id="'+node['id']+'"><h2>References</h2>'
+                for entry in book['references']:
+                    body+='<section id="ref-'+entry['key']+'"><h3>'+e(entry['key'])+'</h3>'+chapter.paragraphs(presentation_tex(entry['body']))+'</section>'
+                body+='<p class="passage-links">'+links+'</p></section>'
             elif kind=='lstlisting':
                 body+='<section id="'+node['id']+'"><pre tabindex="0" aria-label="Original algorithm listing"><code>'+e(node['body'].strip('\n'))+'</code></pre><p class="passage-links">'+links+'</p></section>'
             else:
@@ -583,12 +740,14 @@ def render_book(reader,book):
                     links+=' · <a href="'+hub+'#lean">Lean coverage</a> · <a href="'+hub+'#code">Code</a> · <a href="'+hub+'#worked-examples-for-this-work">Worked examples</a>'
                 body+='<section id="'+node['id']+'" class="reading-block '+kind+'">'
                 if kind!='text':
-                    if kind in PANELS: label=PANELS[kind]
-                    if kind=='proof' and row: label='Proof of '+row['title']
+                    if kind in PANELS: label=node['title'] or PANELS[kind]
+                    if kind=='proof' and row:
+                        statement=next(n for n in chapter.nodes if n['line']==row['statement_line'] and n['kind'] in NUMBERED)
+                        label='Proof of '+KIND_NAMES.get(statement['kind'],statement['kind'].capitalize())+' '+statement['number']
                     heading_level=str(min(level+1,6))
                     body+='<h'+heading_level+'>'+chapter.inline(label)+'</h'+heading_level+'>'
                 body+=chapter.paragraphs(node['body'])+'<p class="passage-links">'+links+'</p></section>'
-            if kind!='figure':
+            if kind not in {'figure','thebibliography'}:
                 plain,aliases=plain_math(re.sub(r'\\label\{[^}]+\}','',node['body']).replace('$',''))
                 parent=next((n['title'] for n in reversed(headings) if n['line']<=node['line']),spec['title'])
                 search_title=(parent+' / '+('Algorithm' if kind=='lstlisting' else 'Passage at line '+str(node['line']))) if kind in {'text','lstlisting'} else label
@@ -596,7 +755,7 @@ def render_book(reader,book):
                 # Preview prose only when it has no list/table/input syntax.
                 snippet=re.split(r'\\\[|\\begin',node['body'],maxsplit=1)[0]
                 snippet=re.sub(r'\\label\{[^}]+\}','',snippet).strip()
-                if snippet and kind not in {'table','longtable','lstlisting'} and r'\input' not in snippet:
+                if snippet and kind not in {'table','longtable','tabularx','lstlisting'} and r'\input' not in snippet:
                     item['preview_parts']=chapter.preview(snippet)
                 math_preview=re.search(r'\\\[(.*?)\\\]',node['body'],re.S)
                 if math_preview and len(math_preview[1])<650 and kind!='lstlisting': item['math_preview']=expand_math(math_preview[1],chapter.macros)
@@ -645,13 +804,16 @@ def render_bibliography(reader,book):
     body='<h1>'+label+' bibliography</h1>'+reader.work_routes(work,page)
     body+='<p>Entries follow the retained bibliography source. Citation keys keep references stable without relying on older generated bibliography numbering. These links do not establish what a cited source proves.</p>'
     for entry in book['references']:
-        fields=entry['fields']
         body+='<section id="ref-'+entry['key']+'"><h2>'+html.escape(entry['key'])+'</h2><dl>'
-        for field,value in fields.items():
-            body+='<dt>'+html.escape(field.capitalize())+'</dt><dd>'+html.escape(typography(value).replace('{','').replace('}',''))+'</dd>'
-        body+='</dl><p><a href="'+reader.resolve(config['bib'],page,'L'+str(entry['line']))+'">Original bibliography entry</a> · <a href="#ref-'+entry['key']+'">Permalink</a></p></section>'
+        if 'body' in entry:
+            body+='</dl>'+Chapter('',book['macros']).paragraphs(presentation_tex(entry['body']))
+        else:
+            for field,value in entry['fields'].items():
+                body+='<dt>'+html.escape(field.capitalize())+'</dt><dd>'+html.escape(typography(value).replace('{','').replace('}',''))+'</dd>'
+            body+='</dl>'
+        body+='<p><a href="'+reader.resolve(config['bib'],page,'L'+str(entry['line']))+'">Original bibliography entry</a> · <a href="#ref-'+entry['key']+'">Permalink</a></p></section>'
     site.page(page,label+' bibliography',body)
-    site.search.append(dict(title=label+' / Bibliography',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=' '.join(e['key']+' '+' '.join(e['fields'].values()) for e in book['references'])))
+    site.search.append(dict(title=label+' / Bibliography',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=' '.join(e['key']+' '+(e['body'] if 'body' in e else ' '.join(e['fields'].values())) for e in book['references'])))
 
 
 def chapter_section(chapter,node):

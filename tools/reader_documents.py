@@ -183,7 +183,13 @@ class ReadingDocuments:
                         '<a href="'+self.site.rel('read/'+work+'/revised-reading-edition.html',page)+'">Open monograph PDF</a></aside>')
             return shortcut+self.work_routes(work,page)
         pdf = self.primary_pdf(work)
-        shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>') if pdf else ''
+        from readable_chapters import BOOKS
+        if work in BOOKS:
+            shortcut='<aside class="document-shortcut"><a class="button" href="'+self.site.rel(BOOKS[work]['index'],page)+'">Read online</a>'
+            if pdf: shortcut+=' <a href="'+self.site.rel(pdf['url'],page)+'">Read PDF</a>'
+            shortcut+=' <a href="'+self.site.rel('read/index.html',page)+'">All HTML reading editions</a></aside>'
+        else:
+            shortcut = ('<aside class="document-shortcut"><a class="button" href="'+self.site.rel(pdf['url'], page)+'">Read the paper here</a> <a href="'+self.site.rel('documents.html', page)+'">Browse papers and PDFs</a></aside>') if pdf else ''
         return shortcut+self.work_routes(work, page)
 
     def work_routes(self, work, page):
@@ -344,7 +350,7 @@ class ReadingDocuments:
         e = html.escape
         pdfs = [r for r in self.records.values() if r['format'] == 'pdf']
         editions=list(getattr(self.site,'editorial_editions',{}).values())
-        body = '<h1>Papers and PDFs</h1><p>Read the available papers, visual guides and formal companions here. Each reader includes search, page controls, zoom, printing and a direct download.</p><p><a href="works.html">Browse all works and their evidence</a> · <a href="collection/HAND_WORKED_EXAMPLES.html">Worked examples</a></p><label for="work-query">Find a work or document</label><input id="work-query" type="search" data-result-label="PDFs"><p id="work-count" role="status" aria-live="polite">'+str(len(pdfs)+len(editions))+' PDFs</p><div class="work-list">'
+        body = '<h1>Papers and PDFs</h1><p><a class="button" href="read/index.html">Read the HTML editions of Papers I, II and III</a></p><p>HTML editions provide chapter navigation, selectable equations and links between statements and proofs. Other papers, visual guides and formal companions are available below as PDFs with search, page controls, zoom, printing and a direct download.</p><p><a href="works.html">Browse all works and their evidence</a> · <a href="collection/HAND_WORKED_EXAMPLES.html">Worked examples</a></p><label for="work-query">Find a work or document</label><input id="work-query" type="search" data-result-label="PDFs"><p id="work-count" role="status" aria-live="polite">'+str(len(pdfs)+len(editions))+' PDFs</p><div class="work-list">'
         for edition in editions:
             body+='<article class="work" data-search="'+e((edition['title']+' revised reading edition monograph').lower(),quote=True)+'"><p class="eyebrow">Revised reading edition</p><h2><a href="'+edition['url']+'">'+e(edition['title'])+'</a></h2><p>'+str(edition['pages'])+' pages · Editable sources and HTML reading version available.</p><p><a href="'+edition['manuscript_url']+'">Read as HTML</a> · <a href="collection/works/'+edition['work']+'.html">Work and evidence</a></p></article>'
         for r in sorted(pdfs, key=lambda r: (self.site.components[r['work']]['title'], r['title'])):

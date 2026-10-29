@@ -11,10 +11,67 @@ from check_reader_site import Page, check_search_targets
 from reader_documents import ReadingDocuments, page_path, source_lines, tex_includes
 from fetch_pdf_runtime import extract
 from claim_navigation import statements, manuscript_sources, validate_claims, PAPERS
-from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels
+from readable_chapters import Chapter, expand_math, plain_math, readable_url, original_math, render_table, bibliography, formal_note_labels, manuscript_bibliography, presentation_tex
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_paper_i_lists_keep_math_before_inside_and_after_items(self):
+        source=r'$a$ before. \begin{enumerate}\item $b$\item $c$\end{enumerate} After $d$.'
+        chapter=Chapter('',{})
+        chapter.paragraphs(source)
+        self.assertEqual(chapter.math,['a','b','c','d'])
+        description=r'$a$ \begin{description}\item[Name $b$.] Meaning $c$.\end{description} $d$'
+        chapter=Chapter('',{})
+        rendered=chapter.paragraphs(description)
+        self.assertEqual(chapter.math,['a','b','c','d'])
+        self.assertIn('<dt>Name ',rendered)
+        self.assertIn('</dt><dd>',rendered)
+
+    def test_paper_i_literal_argument_macros_keep_nested_groups_and_matrix_rows(self):
+        macros={'norm':dict(arguments=1,body=r'\left\lVert#1\right\rVert'),
+                'mat':dict(arguments=1,body=r'\begin{pmatrix}#1\end{pmatrix}'), 'R':r'\mathbb R'}
+        self.assertEqual(expand_math(r'\norm{\mat{1&2\\3&\R}}',macros),
+                         r'{\left\lVert{\begin{pmatrix}1&2\\3&{\mathbb R}\end{pmatrix}}\right\rVert}')
+        with self.assertRaises(ValueError): expand_math(r'\norm x',macros)
+
+    def test_paper_i_print_metadata_keeps_source_lines_and_statement_labels(self):
+        source=('\\section{One}\n\\begin{theorem}Statement $x$.\\end{theorem}\n'
+                '\\RecordID{stable}\n\\Depends{Hidden \\nolinkurl{metadata}.}\n'
+                '\\begin{proof}Proof $y$.\\end{proof}')
+        chapter=Chapter(source,{})
+        self.assertEqual([n['line'] for n in chapter.nodes],[1,2,5])
+        self.assertEqual(chapter.labels['record:stable']['line'],2)
+        self.assertEqual(chapter.labels['record:stable']['number'],'1.1')
+
+    def test_paper_i_panels_and_conceptual_diagrams_keep_original_math(self):
+        source=r'\begin{microexample}[title={A model with $x$}]Use $y$.\end{microexample}'+'\n'+r'\ConceptChain{\(x\longrightarrow y\)}'
+        chapter=Chapter(source,{})
+        self.assertEqual([n['kind'] for n in chapter.nodes],['microexample','conceptchain'])
+        self.assertEqual(chapter.nodes[1]['line'],2)
+        for node in chapter.nodes:
+            chapter.inline(node['title'])
+            chapter.paragraphs(node['body'])
+        self.assertEqual(chapter.math,original_math(source))
+
+    def test_paper_i_longtable_has_one_header_and_retains_caption(self):
+        node=dict(kind='longtable',body=r'{ll}\caption{Values}\label{tab:v}\\\toprule A & B\\\midrule\endfirsthead\toprule A & B\\\midrule\endhead $x$ & $y$\\\bottomrule')
+        chapter=Chapter('',{})
+        rendered=render_table(node,chapter)
+        self.assertEqual(rendered.count('<th scope="col">'),2)
+        self.assertEqual(rendered.count('<td>'),2)
+        self.assertIn('<caption>Values</caption>',rendered)
+        self.assertEqual(chapter.math,['x','y'])
+        node['body']=node['body'].replace(r'\endfirsthead\toprule A',r'\endfirsthead\toprule Changed')
+        with self.assertRaises(ValueError): render_table(node,Chapter('',{}))
+
+    def test_paper_i_bibliography_preserves_author_accents_and_link_labels(self):
+        source="Introduction\n"+r"\begin{thebibliography}{99}"+"\n"+r"\bibitem{key}Skowro{\'n}ski. \href{https://doi.org/example}{Original DOI}.\end{thebibliography}"
+        entries=manuscript_bibliography(source)
+        self.assertEqual(entries[0]['line'],3)
+        rendered=Chapter('',{}).paragraphs(presentation_tex(entries[0]['body']))
+        self.assertIn('Skowroński.',rendered)
+        self.assertIn('<a href="https://doi.org/example">Original DOI</a>',rendered)
+
     def test_navigation_has_nested_relative_links_and_current_page(self):
         from html.parser import HTMLParser
         class Links(HTMLParser):
