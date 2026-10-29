@@ -502,10 +502,13 @@ class Site:
                 url=item['url']
                 item['kind']=('Glossary' if '/GLOSSARY.' in url else 'Examples' if '/examples/' in url or '/demonstrations/' in url or '/HAND_WORKED_EXAMPLES.' in url or '/DEMONSTRATIONS.' in url else 'Papers and source' if url.startswith('read/') else 'Guides')
         self.write('search-index.json',json.dumps(self.search,ensure_ascii=False)+'\n')
-        body='<h1>Download one work</h1><p>These ZIP files contain selected reading files and license notices, with source identities and SHA-256 checksums. They are not complete Lean or software builds. For those, use the <a href="collection/DOWNLOADS.html#obtain-a-full-component">component source instructions</a>.</p><p><a href="downloads/index.json">All bundle contents and checksums (JSON)</a></p><div class="download-list">'
+        from download_selector import build as build_selector, interface as selector_interface
+        build_selector(self)
+        body='<link rel="stylesheet" href="assets/download-selector.css?v='+self.revision+'"><h1>Choose your downloads</h1><p>Build one ZIP from the files you want, or download a ready-made reading selection.</p><p><a href="#build-a-zip">Build your own ZIP</a> · <a href="#ready-made">Ready-made reading ZIPs</a> · <a href="collection/DOWNLOADS.html#obtain-a-full-component">Complete source downloads</a></p>'+selector_interface(self)
+        body+='<h2 id="ready-made">Ready-made reading ZIPs</h2><p>One reading selection per work, with license notices and checksums. These are not complete Lean or software builds.</p><p><a href="downloads/index.json">All bundle contents and checksums (JSON)</a></p><div class="download-list">'
         for r in self.bundle_records:
-            body+='<section id="'+r['work']+'"><h2>'+e(r['title'])+'</h2><p><a download href="'+r['url']+'">Download reading ZIP</a> · '+f'{r["archive_bytes"]/1048576:.1f}'+' MB · '+str(len(r['files']))+' selected files</p><details><summary>Contents and checksum</summary><ul>'+''.join('<li>'+e(x['path'])+'</li>' for x in r['files'])+'</ul><p>ZIP SHA-256: <code>'+r['archive_sha256']+'</code></p></details><p><a href="collection/works/'+r['work']+'.html">Work, limits and evidence</a></p></section>'
-        self.page('downloads.html','Download one work',body+'</div>')
+            body+='<section id="'+r['work']+'"><h3>'+e(r['title'])+'</h3><p><a download href="'+r['url']+'">Download reading ZIP</a> · '+f'{r["archive_bytes"]/1048576:.1f}'+' MB · '+str(len(r['files']))+' selected files · <a href="downloads.html?work='+r['work']+'#build-a-zip">Choose files</a></p><details><summary>Contents and checksum</summary><ul>'+''.join('<li>'+e(x['path'])+'</li>' for x in r['files'])+'</ul><p>ZIP SHA-256: <code>'+r['archive_sha256']+'</code></p></details><p><a href="collection/works/'+r['work']+'.html">Work, limits and evidence</a></p></section>'
+        self.page('downloads.html','Choose your downloads',body+'</div>')
         self.page('404.html','Page not found','<h1>This page could not be found</h1><p>Use the <a href="'+BASE_URL+'">Komorebi starting page</a>, <a href="'+BASE_URL+'search.html">search</a> or <a href="'+BASE_URL+'works.html">work index</a> to find the current page.</p>')
     def claim_index(self):
         render_claim_index(self)
