@@ -203,6 +203,8 @@ class ReadingDocuments:
         from readable_chapters import BOOKS
         if work in BOOKS:
             routes.append(('Read chapters', BOOKS[work]['index']))
+            if BOOKS[work].get('diagram_guide'):
+                routes.append(('Diagram descriptions', BOOKS[work]['diagram_guide']))
         if pdf: routes.append(('Original PDF' if edition else 'Read PDF', pdf['url']))
         if work in self.manuscript_roots: routes.append(('Claims', 'claims.html#'+work))
         routes += [('Written proofs', hub+'#written-proofs'), ('Lean', hub+'#lean'), ('Code', hub+'#code')]

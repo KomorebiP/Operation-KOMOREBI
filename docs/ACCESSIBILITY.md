@@ -30,7 +30,7 @@ so the next Tab continues from that section. These section links also work
 without JavaScript. Work pages keep their existing paper, proof, Lean, code
 and example routes. Readable chapters keep their chapter contents.
 
-The HTML chapters of Papers I–III open with repeated source and reference links
+The HTML chapters of Papers I–IV open with repeated source and reference links
 hidden from the reading flow. **Show source and reference links** reveals each
 passage’s permalink, source line, claim record and related resources. The choice
 is remembered in this browser when local storage is available. **Read proof**,
@@ -105,9 +105,13 @@ separate current verification snapshot.
 
 Paper I includes its orientation, foundations, packet and graph results,
 transport, worked models, notation ledger, statement concordance and bibliography.
-Its ten manuscript figures retain their captions. The two conceptual diagrams
-have keyboard-scrollable regions. The separate 22-plate visual atlas is linked
-to the PDF and is not converted to HTML. The build checks all 1,445 mathematical
+Its ten manuscript figures retain their captions and have short text alternatives
+plus a visible **Text description of this figure** link. The
+[diagram descriptions](PAPER_I_DIAGRAMS.md) explain all ten figures and all
+22 visual-atlas plates, including arrows, axes and matrix entries. These reading
+aids can be used on the website or GitHub. Original atlas images remain in the
+PDF, with a direct page link beside each description. The two conceptual
+diagrams have keyboard-scrollable regions. The build checks all 1,445 mathematical
 expressions in the six selected source sections, in their original order.
 
 Paper IV has 17 main sections, an opening orientation and an atlas introduction.

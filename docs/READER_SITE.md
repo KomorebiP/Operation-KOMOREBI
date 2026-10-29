@@ -100,6 +100,13 @@ Extend the selected books only after checking syntax, source fidelity, figures,
 navigation and rendered mathematics. Passing these checks does not establish
 mathematical correctness or new Lean coverage.
 
+Paper I’s [diagram guide](PAPER_I_DIAGRAMS.md) describes its ten chapter figures
+and 22 atlas plates. `website/paper-i-figure-descriptions.json` supplies concise
+image alternatives and guide anchors. Each description is bound to the reviewed
+PNG checksum; changed or missing figures stop the build for review. Original
+captions remain unchanged, and description links stay visible in the quieter
+reading view.
+
 ## Publication
 
 The [reader website workflow](../.github/workflows/reader-site.yml) builds and

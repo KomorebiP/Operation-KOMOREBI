@@ -62,6 +62,8 @@ BOOKS = {'paper-i': dict(work='paper-i', label='Paper I', base=FIRST_BASE,
                         bib_page='read/paper-i/references.html',
                         title='Typed operator systems, seed rank and exact packet coordinates',
                         chapters=FIRST_CHAPTERS, main_chapters=6, chapter_prefix='',
+                        diagram_guide='collection/PAPER_I_DIAGRAMS.html',
+                        figure_descriptions='website/paper-i-figure-descriptions.json',
                         pdf_inputs={'visual_atlas.tex': 'Read the 22-plate visual atlas in the PDF'}), **BOOKS}
 CHAPTERS = FIRST_CHAPTERS + CHAPTERS
 FOURTH_BASE = 'papers/paper-iv/current/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/'
@@ -782,6 +784,8 @@ def render_book(reader,book):
     work=config['work']
     e=html.escape
     reports=[]
+    descriptions=json.loads((site.root/config['figure_descriptions']).read_bytes()) if config.get('figure_descriptions') else {}
+    described=set()
     for spec,raw,chapter in book['chapters']:
         source,page,title=spec['source'],spec['url'],config['label']+': '+spec['title']
         rows={r['statement_line']:r for r in chapter_claims(reader,spec)}
@@ -819,7 +823,17 @@ def render_book(reader,book):
                 path=config['base']+'figures/'+match[1].removesuffix('.pdf')+'.png'
                 image=reader.image_url(path,page)
                 if not image: raise ValueError('Missing receipt-bound figure '+path)
-                body+='<figure id="'+node['id']+'"><img src="'+image+'" alt="'+e(plain_math(caption.replace('$',''))[0],quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+passage_links(links)+'</figure>'
+                alt=plain_math(caption.replace('$',''))[0]
+                description_link=''
+                if config.get('figure_descriptions'):
+                    name=posixpath.basename(path)
+                    description=descriptions.get(name)
+                    if not description or description['source_sha256']!=reader.images[path]['sha256']:
+                        raise ValueError('Review the figure description for '+path)
+                    described.add(name)
+                    alt=description['alt']
+                    description_link='<p><a href="'+site.rel(config['diagram_guide'],page)+'#'+description['anchor']+'">Text description of this figure</a></p>'
+                body+='<figure id="'+node['id']+'"><img src="'+image+'" alt="'+e(alt,quote=True)+'" loading="lazy"><figcaption>'+chapter.inline(caption)+'</figcaption>'+description_link+passage_links(links)+'</figure>'
             elif kind in {'table','longtable','tabularx'}:
                 body+='<section id="'+node['id']+'">'+render_table(node,chapter)+passage_links(links)+'</section>'
             elif kind=='conceptchain':
@@ -872,6 +886,7 @@ def render_book(reader,book):
         reports.append(report)
         if 'start_line' in spec: report.update(start_line=spec['start_line'],end_line=spec['end_line'])
         if source==SOURCE: site.write('documents/readable-paper-ii.json',json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+    if described!=set(descriptions): raise ValueError('Unused figure descriptions for '+work)
     render_book_index(reader,book,reports)
     render_bibliography(reader,book)
     return reports
