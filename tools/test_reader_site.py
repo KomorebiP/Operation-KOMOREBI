@@ -15,6 +15,87 @@ from readable_chapters import Chapter, expand_math, plain_math, readable_url, or
 
 
 class ReaderSiteTests(unittest.TestCase):
+    def test_atlas_plate_boundaries_retain_original_lines_and_reject_reordering(self):
+        from reader_atlas import plates
+        source='\n'.join('\\vpage{'+str(i)+'}{Title}{Topic}{Section 1 (p. 1).}\nText $x$.' for i in range(1,27))
+        parsed=plates(source)
+        self.assertEqual(parsed[2]['line'],5)
+        self.assertEqual(Chapter(parsed[2]['body'],{}).nodes[0]['line'],6)
+        self.assertEqual(parsed[2]['url'],'read/paper-iv/atlas/v03.html')
+        with self.assertRaises(ValueError): plates(source.replace(r'\vpage{3}',r'\vpage{4}'))
+        with self.assertRaises(ValueError): plates(source+'\n'+r'\vpage{27}{Extra}{Topic}{Reference}')
+
+    def test_atlas_wrappers_preserve_prose_math_and_line_numbers(self):
+        from reader_atlas import atlas_tex
+        source='\\head{A model}\nText $a$.\n\\vfig{model}\n\\takeaway{Keep $b$.}\n\\platecaption{Scope $c$.}'
+        converted=atlas_tex(source)
+        self.assertEqual(original_math(source),original_math(converted))
+        self.assertEqual(converted.count('\n'),source.count('\n'))
+        nodes=Chapter(converted,{}).nodes
+        self.assertEqual([n['line'] for n in nodes],[1,2,3,4,5])
+        self.assertIn('Evidence note from the source edition',nodes[-1]['title'])
+
+    def test_atlas_drawing_labels_keep_nested_math_and_reject_untranscribed_math(self):
+        from reader_atlas import drawing_nodes
+        source='\\node[anchor=west] at (1,2) {Value $\\frac{1}{2}$.};\n\\node[] at (2,3) {$y$};'
+        nodes=drawing_nodes(source)
+        self.assertEqual([n['line'] for n in nodes],[1,2])
+        self.assertEqual(nodes[0]['text'],r'Value $\frac{1}{2}$.')
+        with self.assertRaises(ValueError): drawing_nodes(source+' $z$')
+        with self.assertRaises(ValueError): drawing_nodes(source+r'\node (named) {$z$};')
+
+    def test_atlas_transcript_requires_each_label_once(self):
+        from reader_atlas import transcript_order
+        from paper_iv_atlas_descriptions import figure,table
+        nodes=[dict(text='$x$'),dict(text='$y$')]
+        description=figure('Alt','Description',table('Values',['Name','Value'],[['First',0],['Second',1]]))
+        self.assertEqual(transcript_order(description,nodes),[0,1])
+        description['blocks'][0]['rows'][1][1]=0
+        with self.assertRaises(ValueError): transcript_order(description,nodes)
+        description['blocks'][0]['rows'].pop()
+        with self.assertRaises(ValueError): transcript_order(description,nodes)
+
+    def test_atlas_references_resolve_to_manuscript_statements(self):
+        from reader_atlas import source_references
+        rendered=source_references('Traditional monograph: Theorem 3.1 (p. 4).',{('Theorem','3.1'):'chapter.html#L346'},lambda x:x)
+        self.assertIn('href="chapter.html#L346">Theorem 3.1 (p. 4)</a>',rendered)
+        with self.assertRaises(ValueError): source_references('Theorem 3.2 (p. 5).',{},lambda x:x)
+
+    def test_atlas_tables_expose_headers_and_original_label_values(self):
+        from reader_atlas import render_drawing
+        from paper_iv_atlas_descriptions import figure,table
+        drawing=dict(description=figure('Two values','Description',table('Values',['Term','Value'],[['First',0],['Second',1]])),
+                     receipt=dict(image='image.png',source='figure.tex'),nodes=[dict(text='$x$'),dict(text='$y$')])
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{})
+        rendered=render_drawing(drawing,chapter,reader)
+        self.assertEqual(chapter.math,['x','y'])
+        self.assertIn('<caption>Values</caption>',rendered)
+        self.assertEqual(rendered.count('scope="col"'),2)
+        self.assertEqual(rendered.count('scope="row"'),2)
+        self.assertIn('tabindex="0" role="region"',rendered)
+        self.assertIn('id="drawing-label-1"',rendered)
+
+    def test_atlas_formula_order_includes_diagram_between_source_passages(self):
+        from reader_atlas import expected_math
+        plate=dict(body=r'$a$\vfig{drawing}$d$')
+        figures={'drawing':dict(order=[1,0],nodes=[dict(text='$c$'),dict(text='$b$')])}
+        self.assertEqual(expected_math(plate,figures),['a','b','c','d'])
+
+    def test_atlas_long_drawing_formulas_scroll_without_changing_math(self):
+        from reader_atlas import render_drawing
+        from paper_iv_atlas_descriptions import figure,text
+        formula=r'\frac{\partial^{12}f}{\partial x^{12}}+\frac{1}{123456789}'
+        drawing=dict(description=figure('A formula','Description',text(0,1)),
+                     receipt=dict(image='image.png',source='figure.tex'),
+                     nodes=[dict(text='Value $'+formula+'$.'),dict(text='$x$')])
+        reader=SimpleNamespace(site=SimpleNamespace(rel=lambda path,page:path),resolve=lambda path,page:'source.html')
+        chapter=Chapter('',{})
+        rendered=render_drawing(drawing,chapter,reader)
+        self.assertEqual(chapter.math,[formula,'x'])
+        self.assertEqual(rendered.count('role="group" aria-label="Displayed equation. Scroll horizontally if needed."'),2)
+        self.assertEqual(rendered.count('tabindex="0"'),2)
+
     def test_reading_tools_preserve_proof_links_and_no_script_access(self):
         from html.parser import HTMLParser
         class ToolLinks(HTMLParser):

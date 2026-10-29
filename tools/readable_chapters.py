@@ -99,7 +99,7 @@ BOOKS['paper-iv'] = dict(work='paper-iv', label='Paper IV', base=FOURTH_BASE, ma
                         bib_page='read/paper-iv/references.html',
                         title='Cyclic analytic functions, reciprocal families, and spectral zero data',
                         chapters=FOURTH_CHAPTERS, main_chapters=17, monolithic=True,
-                        pdf_inputs={'atlas-pages': 'Read the 26-plate visual atlas in the PDF'})
+                        html_inputs={'atlas-pages': dict(url='read/paper-iv/atlas/index.html',title='Explore the 26 atlas plates in HTML',note='')})
 CHAPTERS += FOURTH_CHAPTERS
 BY_SOURCE = {c['source']:c for c in reversed(CHAPTERS)}
 NUMBERED = {'definition', 'theorem', 'proposition', 'lemma', 'corollary', 'remark', 'example', 'standardfact', 'certificate','boundary','roadmap','construction','classicalinput'}
@@ -276,6 +276,7 @@ class Chapter:
         self.macros = macros
         self.formal_labels = {}
         self.external_inputs = {}
+        self.command_links = {}
         self.math = []
         self.labels = {}
         self.nodes = []
@@ -423,7 +424,11 @@ class Chapter:
                 if text[pos:pos+1]!='{': raise ValueError('Missing argument for '+name+' in '+repr(text[:200]))
                 value, pos = group(text, pos)
                 if name == 'label': continue
-                if name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl'}:
+                if name in self.command_links:
+                    if value not in self.command_links[name]: raise ValueError('Unresolved reading link: '+name+' '+value)
+                    target,label=self.command_links[name][value]
+                    out.append('<a href="'+html.escape(self.relative(target),quote=True)+'">'+html.escape(label)+'</a>')
+                elif name in {'textbf','emph','textit','texttt','leanname','path','nolinkurl'}:
                     tag = {'textbf':'strong','texttt':'code','leanname':'code','path':'code','nolinkurl':'code'}.get(name,'em')
                     content=html.escape(value.replace(r'\_','_')) if tag=='code' else self.inline(value)
                     out.append('<'+tag+'>'+content+'</'+tag+'>')
@@ -454,7 +459,7 @@ class Chapter:
                 elif name == 'input':
                     if value in self.external_inputs:
                         target=self.external_inputs[value]
-                        out.append('<a class="included-reading" href="'+html.escape(self.relative(target['url']),quote=True)+'">'+html.escape(target['title'])+'</a> (this atlas is not converted to HTML)')
+                        out.append('<a class="included-reading" href="'+html.escape(self.relative(target['url']),quote=True)+'">'+html.escape(target['title'])+'</a>'+target.get('note',' (this atlas is not converted to HTML)'))
                         continue
                     path = posixpath.normpath(self.base+value)
                     target = BY_SOURCE.get(path)
@@ -639,6 +644,7 @@ def prepare(reader):
             chapter.bibliography_url=config['bib_page']
             chapter.external_inputs={name:dict(url=reader.primary_pdf(work)['url'],title=title)
                                      for name,title in config.get('pdf_inputs',{}).items()}
+            chapter.external_inputs.update(config.get('html_inputs',{}))
             for label,node in chapter.labels.items():
                 if label in labels: raise ValueError('Duplicate book label '+label)
                 node['url']=chapter.url
@@ -757,7 +763,7 @@ def render_reading_index(reader):
         pdf=reader.primary_pdf(work)
         if pdf: body+='<a href="'+site.rel(pdf['url'],page)+'">Read PDF</a>'
         body+='</nav></section>'
-    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. Visual atlases remain in the PDFs, and not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
+    body+='</div><h2>Reading options</h2><p>Use browser zoom to enlarge text. Wide equations and tables have separate areas that can be scrolled with the keyboard. MathJax provides equation exploration and assistive reading options through its context menu.</p><p>The HTML editions follow the retained manuscripts. <a href="'+site.rel('read/paper-iv/atlas/index.html',page)+'">Paper IV’s 26 atlas plates</a> also have HTML pages with drawings, descriptions and tables. Other visual atlases remain in the PDFs, and not every paper has an HTML edition yet. See <a href="'+site.rel('collection/ACCESSIBILITY.html',page)+'">accessibility and reading options</a> for current coverage and limitations.</p><p><a href="'+site.rel('documents.html',page)+'">Browse all papers and PDFs</a> · <a href="'+site.rel('collection/READING_ROUTES.html',page)+'">Choose a reading route</a></p>'
     site.page(page,'Read the papers online',body)
     site.search.append(dict(title='Read the papers online',group='Collection',kind='Guides',url=page,text='HTML reading editions '+' '.join(c['label'] for c in BOOKS.values())+' chapters equations proofs',work_ids=list(BOOKS)))
 
@@ -769,12 +775,13 @@ def passage_links(source_links, reading_links=''):
     return '<p class="passage-links passage-tools">'+source_links+'</p>'
 
 
-def reading_options():
+def reading_options(description=None):
+    description=description or ('Show each passage’s permalink, source line, claim record '
+                                'and related resources. Proof links and chapter navigation are always available.')
     return ('<div class="reading-options" hidden><label for="show-passage-tools">'
             '<input id="show-passage-tools" type="checkbox" aria-controls="chapter-text" '
             'aria-describedby="reading-options-help">Show source and reference links</label>'
-            '<p id="reading-options-help">Show each passage’s permalink, source line, claim record '
-            'and related resources. Proof links and chapter navigation are always available.</p></div>'
+            '<p id="reading-options-help">'+html.escape(description)+'</p></div>'
             '<p><a href="#chapter-text">Skip contents and start reading</a></p>')
 
 
@@ -909,7 +916,10 @@ def render_book_index(reader,book,reports):
     for record in reader.records.values():
         if record['work']==work and record['format']=='pdf':
             body+='<li><a href="'+site.rel(record['url'],page)+'">'+html.escape(record['title'])+'</a></li>'
-    body+='</ul><p>The visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.</p>'
+    body+='</ul>'
+    if config.get('html_inputs'):
+        body+='<p><a href="'+site.rel(config['html_inputs']['atlas-pages']['url'],page)+'">Explore all 26 atlas plates in HTML</a>, with drawings, text descriptions, equations and tables.</p>'
+    body+='<p>The original visual atlas remains available in the PDF and visual guide. The HTML chapters preserve the source wording, mathematical statements and recorded limits. They do not add a proof assessment.</p>'
     site.page(page,'Read '+label,body)
     site.search.append(dict(title=label+' / Read all chapters',group='Collection',kind='Papers and source',work_ids=[work],url=page,text=config['title']+' readable chapters '+ ' '.join(c['title'] for c in config['chapters'])))
 

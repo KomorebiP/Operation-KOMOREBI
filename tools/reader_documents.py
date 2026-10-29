@@ -136,6 +136,8 @@ class ReadingDocuments:
                 done.add(path)
         from readable_chapters import prepare
         prepare(self)
+        from reader_atlas import prepare as prepare_atlas
+        prepare_atlas(self)
 
     def primary_pdf(self, work):
         candidates = [r for r in self.records.values() if r['work'] == work and r['format'] == 'pdf']
@@ -345,6 +347,8 @@ class ReadingDocuments:
             self.site.page(page, title+' / '+record['title'], body, github(self.site.repos['collection'], self.site.revision, path))
         from readable_chapters import render
         render(self)
+        from reader_atlas import render as render_atlas
+        render_atlas(self)
         records = sorted(self.records.values(), key=lambda r: (r['work'], r['url']))
         self.site.write('documents/index.json', json.dumps(dict(source_revision=self.site.revision, files=records, images=list(self.images.values())), ensure_ascii=False, indent=2)+'\n')
 

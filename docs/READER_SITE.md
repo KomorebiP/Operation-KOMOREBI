@@ -71,15 +71,35 @@ linked images and runtime integrity, in addition to HTML links and reading ZIPs.
 of Papers I, II, III and IV as readable HTML alongside their original source pages.
 Paper II's current verification snapshot has its own reading page. Each paper
 has a chapter index and bibliography, with links between chapters and recorded
-claim locations. Visual atlases remain available as on-site PDFs.
+claim locations. Paper IV's atlas also has HTML plates; the original visual
+atlases remain available as on-site PDFs.
 
 Paper IV's single source is divided into contiguous, checked line ranges for
 17 main sections, the opening orientation and the atlas introduction. These
 ranges preserve original source lines and resolve claim links to the correct
 chapter. The 68 proof bodies, 95 numbered records and all 1,041 mathematical
 expressions in the main document are retained. Six receipt-bound figures are
-included; the 26-plate atlas remains in the PDF. Source changes that shift
+included. Source changes that shift
 section boundaries require a review of the chapter configuration.
+
+[The atlas renderer](../tools/reader_atlas.py) publishes all 26 Paper IV plates,
+including their retained prose and tables, 24 drawings, text descriptions and
+structured label transcripts. Integer references in the
+[reading aids](../tools/paper_iv_atlas_descriptions.py) select original TikZ
+labels; mathematical values are not retyped. Each label must appear exactly once.
+The reader validates references to manuscript sections and statements, preserves
+original source-line links, and records the atlas and drawing mathematical input
+sequences in `documents/paper-iv-atlas.json`. The site checker re-derives those
+sequences from the published source files and verifies the rendered HTML.
+
+Drawing PNGs and their source/image receipts are committed under
+`website/assets/atlas/paper-iv/`. To rebuild only these images, use
+`python tools/build_atlas_figures.py --tectonic PATH_TO_TECTONIC --pdftoppm PATH_TO_PDFTOPPM --stage EMPTY_DIRECTORY`.
+This compiles the unchanged TikZ in an isolated directory and renders 24 cropped
+pages. It does not execute the mathematical model generator or checker. The
+ordinary website build verifies the committed assets without requiring TeX.
+Evidence notes are explicitly attributed to the retained source edition; new
+reading descriptions do not extend its proof or formal-verification scope.
 
 The renderer handles the selected manuscripts' prose, statement environments,
 references, equations, tables, code listings and receipt-bound figures. Its book

@@ -238,6 +238,8 @@ def inspect_site(root):
         assert len(raw)==record['size'] and hashlib.sha256(raw).hexdigest()==record['sha256'],record['repository_path']
         assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==record['git_blob_sha1']
     readable_math = check_readable_chapter(root,documents,pages)
+    from reader_atlas import verify as verify_atlas
+    atlas = verify_atlas(root,documents,pages)
     from notation_index import verify as verify_notation
     notation = verify_notation(root,documents,pages)
     demo=json.loads((root/'downloads/demonstration-source.json').read_bytes())
@@ -250,7 +252,7 @@ def inspect_site(root):
     assert source_lines(code.decode('utf-8')) in (root/demo['reader_url']).read_text(encoding='utf-8')
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,
                 search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,
-                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,notation=notation,
+                reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,atlas=atlas,notation=notation,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 
 

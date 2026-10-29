@@ -118,9 +118,24 @@ Paper IV has 17 main sections, an opening orientation and an atlas introduction.
 Its HTML edition retains all 68 proof bodies, 95 numbered records, six manuscript
 figures and the formalization ledger. The build checks all 1,041 mathematical
 expressions in the main document, in their original order. Chapter links keep
-the line numbers from the single TeX manuscript. The 26 atlas plates remain
-available in the PDF; their introduction and reading routes are also in HTML.
+the line numbers from the single TeX manuscript.
 The preserved formal release and its stated scope remain unchanged.
+
+The [26 Paper IV atlas plates](https://KomorebiP.github.io/Operation-KOMOREBI/read/paper-iv/atlas/index.html)
+also have HTML pages. They retain the source prose and equations, with 24
+drawings rendered from the unchanged TikZ files. Each drawing has a text
+description and a complete transcript of its labels. Matrix entries, coefficient
+values and root certificates use tables with row and column headers. Wide tables
+can be scrolled with the keyboard. Equations use the same MathJax reading controls
+as the manuscript. Each plate links to its manuscript statements and original
+PDF page, and to the previous and next plates.
+
+Descriptions and table headings are added reading aids. Mathematical labels are
+read directly from the retained drawing sources. The build checks that each
+label appears exactly once, verifies image and source checksums, and compares
+the displayed mathematical inputs with the original atlas and figure sources.
+The source's reports of tests and formal evidence remain historical records;
+this conversion does not claim a new run of those mathematical checks.
 
 Statements and proofs link to each other, their claim records and the original
 source lines. Reading pages connect to the paper's recorded Lean coverage, code
@@ -158,8 +173,8 @@ Document pages link back to the work, written proofs, Lean coverage, code and
 available worked examples. Edition READMEs are rendered as HTML. Linked
 manuscript and program sources have selectable text and line links. TeX source
 is shown as source, with links to included manuscript sections where available.
-Papers I, II, III and IV also have formatted HTML chapters. Their separate visual
-atlases remain available through the on-site PDF reader. Use the PDF for
+Papers I, II, III and IV also have formatted HTML chapters. Paper IV's visual atlas
+has HTML plates; all original visual atlases remain available through the on-site PDF reader. Use the PDF for
 typeset manuscript sections that have not yet been converted to HTML.
 
 Reading ZIPs include a contents manifest, source revision, checksums and
