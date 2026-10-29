@@ -19,24 +19,25 @@ class EulerPublicationTests(unittest.TestCase):
         contents={
             'examples/euler_packets.py':raw,
             'docs/demonstrations/EULER_PACKETS.md':b'# Euler\n',
-            'verification/euler-packets/run-003/results.json':b'{}\n',
-            'verification/euler-packets/run-003/congruence-ladders.csv':b'chart,depth,modulus,residue\n3,0,9,8\n',
-            'verification/euler-packets/run-003/coefficient-matrices.csv':b'transform,row,column,value\nlocal,0,0,1\n',
-            'verification/euler-packets/run-003/local-reconstruction.csv':b'chart,depth,error\n2,4,0\n',
-            'verification/euler-packets/run-003/euler-coefficients.csv':b'n,s\n0,1\n',
-            'verification/euler-packets/run-003/power-polynomials.csv':b'n,r\n0,1\n',
-            'verification/euler-packets/cross-check-003/results.json':b'{}\n',
+            'verification/euler-packets/run-004/fibonacci-transfer.csv':b'transform,row,column,value\nconnection,0,0,1\n',
+            'verification/euler-packets/run-004/results.json':b'{}\n',
+            'verification/euler-packets/run-004/congruence-ladders.csv':b'chart,depth,modulus,residue\n3,0,9,8\n',
+            'verification/euler-packets/run-004/coefficient-matrices.csv':b'transform,row,column,value\nlocal,0,0,1\n',
+            'verification/euler-packets/run-004/local-reconstruction.csv':b'chart,depth,error\n2,4,0\n',
+            'verification/euler-packets/run-004/euler-coefficients.csv':b'n,s\n0,1\n',
+            'verification/euler-packets/run-004/power-polynomials.csv':b'n,r\n0,1\n',
+            'verification/euler-packets/cross-check-004b/results.json':b'{}\n',
         }
         digest=hashlib.sha256(raw).hexdigest()
         run=dict(run=dict(status=status,exit_status=0),input_artifacts=[
             dict(path='examples/euler_packets.py',sha256='0'*64 if wrong_input else digest,
                  sha256_after=digest)],outputs=[])
-        for name in ('run-003','cross-check-003'):
+        for name in ('run-004','cross-check-004b'):
             contents['verification/euler-packets/'+name+'/manifest.json']=json.dumps(run).encode()
         for path,content in contents.items():
             target=root/path; target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(content)
         record=dict(title='Euler example',work_ids=['paper-iv'],scope='Test fixture',
-            accepted_runs=['verification/euler-packets/'+n+'/manifest.json' for n in ('run-003','cross-check-003')],
+            accepted_runs=['verification/euler-packets/'+n+'/manifest.json' for n in ('run-004','cross-check-004b')],
             files=[dict(path=p,sha256=hashlib.sha256(b).hexdigest()) for p,b in contents.items()])
         (root/RECORD).parent.mkdir(parents=True,exist_ok=True)
         (root/RECORD).write_text(json.dumps(record))

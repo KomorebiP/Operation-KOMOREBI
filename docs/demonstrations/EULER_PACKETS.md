@@ -2,7 +2,7 @@
 
 **An extended hand-worked Komorebi example · Komorebi P. · 29 October 2026**
 
-[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Coefficient matrices](#write-the-coefficient-transform-as-an-infinite-matrix) · [Supercongruences](#state-the-supercongruences-and-check-an-euler-index-shift) · [Run the exact checks](#run-the-exact-checks)
+[Machine-native mathematics essay](../essays/MACHINE_NATIVE_MATHEMATICS.md) · [Sequence experiments](SEQUENCE_SHAPES.md) · [Coefficient matrices](#write-the-coefficient-transform-as-an-infinite-matrix) · [Supercongruences](#state-the-supercongruences-and-check-an-euler-index-shift) · [Fibonacci transfer](#change-euler-polynomials-to-fibonacci-coordinates) · [Run the exact checks](#run-the-exact-checks)
 
 We will reconstruct the Euler secant numbers through a different sequence, turn the calculation into polynomial identities, and then use the same Euler data in a refinement calculation. At each change of coordinates we will write the transfer explicitly. When a shortcut fails, we will calculate the residual that explains the failure.
 
@@ -2240,6 +2240,396 @@ Two such operations give \((S_qb_0,S_qb_1)\), as required for an original shift 
 
 Finally, \((S^2-I)x=0\), because \(x(n+2)=x(n)\). The filter cannot detect this alternating mode at that spacing. This is its zero at frequency \(\omega=\pi\), evaluated on an actual bounded signal. The statement concerns the filter and the retained phases, with no Fourier transform assigned to the Euler sequence.
 
+## Change Euler polynomials to Fibonacci coordinates
+
+The Fibonacci connection can be made at two levels: as a polynomial basis change, and as a recurrence model for a sequence. We will calculate both before constructing a matrix that sends the even Euler sequence to Fibonacci values.
+
+Define the Fibonacci polynomials by
+
+\[
+F_0(x)=0,\qquad F_1(x)=1,\qquad
+F_{n+1}(x)=xF_n(x)+F_{n-1}(x)\quad(n\geq1).
+\]
+
+For a basis indexed by degree, put \(B_k(x)=F_{k+1}(x)\). Its first terms are
+
+\[
+\begin{aligned}
+B_0&=1,& B_1&=x,& B_2&=x^2+1,\\
+B_3&=x^3+2x,&B_4&=x^4+3x^2+1,&
+B_5&=x^5+4x^3+3x.
+\end{aligned}
+\]
+
+Each \(B_k\) is monic of degree \(k\), so these polynomials form a basis of \(\mathbb Q[x]\). Descending elimination already gives
+
+\[
+x^2=B_2-B_0,\qquad
+x^3=B_3-2B_1,\qquad
+x^4=B_4-3B_2+2B_0.
+\]
+
+There is an explicit formula for every monomial:
+
+\[
+\boxed{
+x^m=\sum_{r=0}^{\lfloor m/2\rfloor}
+(-1)^r\left[\binom mr-\binom m{r-1}\right]B_{m-2r}(x).
+}
+\]
+
+Here a binomial coefficient outside its usual range is zero. To prove the formula, start with \(m=0\), then multiply by \(x\). The Fibonacci recurrence gives \(xB_k=B_{k+1}-B_{k-1}\) for \(k\geq1\), while \(xB_0=B_1\). Thus the new coefficient at \(B_k\), for \(k\geq1\), is the old coefficient at \(B_{k-1}\) minus the old coefficient at \(B_{k+1}\). Pascal's identity gives exactly the displayed difference of binomial coefficients for degree \(m+1\). At \(k=0\), the new coefficient is minus the old coefficient at \(B_1\). When this boundary is present, the same identity follows from \(\binom{2r+1}{r}=\binom{2r+1}{r+1}\). This proves the induction, including the constant term.
+
+Write the classical Euler polynomials in this basis as
+
+\[
+\mathcal E_n(x)=\sum_{k=0}^n C_{k,n}B_k(x).
+\]
+
+Combining the monomial formula with the earlier expansion
+\(\mathcal E_n(x)=\sum_{j=0}^n\binom nj\mathcal E_{n-j}(0)x^j\) gives
+
+\[
+\boxed{
+C_{k,n}=\sum_{r=0}^{\lfloor(n-k)/2\rfloor}
+\binom n{k+2r}\mathcal E_{n-k-2r}(0)(-1)^r
+\left[\binom{k+2r}r-\binom{k+2r}{r-1}\right]
+}
+\]
+
+for \(0\leq k\leq n\), and \(C_{k,n}=0\) when \(k>n\). No sequence limit is needed. This is a finite substitution for one polynomial.
+
+Rows of \(\mathsf C\) are Fibonacci degrees and columns are Euler degrees. The degree-four block is
+
+\[
+\mathsf C^{[4]}=
+\begin{pmatrix}
+1&-\tfrac12&-1&\tfrac74&2\\
+0&1&-1&-2&5\\
+0&0&1&-\tfrac32&-3\\
+0&0&0&1&-2\\
+0&0&0&0&1
+\end{pmatrix}.
+\]
+
+If \(p(x)=\sum_n\alpha_n\mathcal E_n(x)=\sum_k\beta_kB_k(x)\), then \(\beta=\mathsf C\alpha\). In particular, its fifth column says
+
+\[
+\begin{aligned}
+\mathcal E_4(x)
+&=2B_0+5B_1-3B_2-2B_3+B_4\\
+&=2+5x-3(x^2+1)-2(x^3+2x)+(x^4+3x^2+1)\\
+&=x^4-2x^3+x.
+\end{aligned}
+\]
+
+This also recovers an Euler number. At \(x=1/2\), the first five basis values are
+\(1,1/2,5/4,9/8,29/16\). Therefore
+
+\[
+E_4=2^4\mathcal E_4(1/2)
+=16\left(2+\frac52-\frac{15}4-\frac94+\frac{29}{16}\right)=5.
+\]
+
+The infinite matrix here has a different domain from the earlier lower-triangular coefficient matrices. It is upper triangular and each column is finite. It acts on finite-support columns, the coefficient space of polynomials. Its inverse has the same property, and every degree-bounded square block is invertible with diagonal one. An arbitrary infinite Euler expansion would require an additional meaning for its sums. We do not extend this polynomial basis change to all infinite coefficient columns by assumption.
+
+## Write the Fibonacci polynomial transfer matrix
+
+The polynomial recurrence has a two-dimensional transfer:
+
+\[
+\mathsf T(x)=\begin{pmatrix}x&1\\1&0\end{pmatrix},\qquad
+\binom{F_{n+1}(x)}{F_n(x)}=\mathsf T(x)^n\binom10.
+\]
+
+For \(n\geq1\), induction gives
+
+\[
+\mathsf T(x)^n=
+\begin{pmatrix}
+F_{n+1}(x)&F_n(x)\\
+F_n(x)&F_{n-1}(x)
+\end{pmatrix}.
+\]
+
+At \(n=0\) the matrix is the identity. Multiplication by \(\mathsf T(x)\) advances each column by the defining recurrence, proving the next step. For example,
+
+\[
+\mathsf T(x)^4=
+\begin{pmatrix}
+x^4+3x^2+1&x^3+2x\\
+x^3+2x&x^2+1
+\end{pmatrix}.
+\]
+
+At \(x=1\), this becomes \(\bigl(\begin{smallmatrix}5&3\\3&2\end{smallmatrix}\bigr)\), and the usual Fibonacci numbers appear. Its determinant is \((-1)^n\), since \(\det\mathsf T(x)=-1\). In particular, the step is reversible over \(\mathbb Z[x]\):
+
+\[
+\mathsf T(x)^{-1}=\begin{pmatrix}0&1\\1&-x\end{pmatrix}.
+\]
+
+This matrix advances a Fibonacci polynomial state. The connection matrix \(\mathsf C\) changes the coordinates of an entire polynomial. Their sizes, inputs, and purposes are different, even though both come from the same basis recurrence.
+
+## Keep the defect when Euler values enter a Fibonacci recurrence
+
+Return to the compressed even Euler stream
+
+\[
+a_n=E_{2n}=1,-1,5,-61,1385,-50521,\ldots.
+\]
+
+This is distinct from the full-index stream \(E_n=1,0,-1,0,5,0,-61,\ldots\). Define the Fibonacci defect of the chosen stream by
+
+\[
+f_n=a_{n+2}-a_{n+1}-a_n.
+\]
+
+The first four calculations are
+
+\[
+\begin{aligned}
+f_0&=5-(-1)-1=5,\\
+f_1&=-61-5-(-1)=-65,\\
+f_2&=1385-(-61)-5=1441,\\
+f_3&=-50521-1385-(-61)=-51845.
+\end{aligned}
+\]
+
+The coordinate column is now \((a_0,a_1,f_0,f_1,f_2,\ldots)^{\mathsf T}\). Its five-term analysis and synthesis matrices are
+
+\[
+\mathsf D^{[4]}=
+\begin{pmatrix}
+1&0&0&0&0\\0&1&0&0&0\\
+-1&-1&1&0&0\\0&-1&-1&1&0\\0&0&-1&-1&1
+\end{pmatrix},\qquad
+(\mathsf D^{[4]})^{-1}=
+\begin{pmatrix}
+1&0&0&0&0\\0&1&0&0&0\\
+1&1&1&0&0\\1&2&1&1&0\\2&3&2&1&1
+\end{pmatrix}.
+\]
+
+In particular,
+
+\[
+\mathsf D^{[4]}
+\begin{pmatrix}1\\-1\\5\\-61\\1385\end{pmatrix}
+=\begin{pmatrix}1\\-1\\5\\-65\\1441\end{pmatrix}.
+\]
+
+The last row of the inverse recovers
+\(2(1)+3(-1)+2(5)-65+1441=1385\).
+The matrices are lower triangular with diagonal one. At every prefix length at least two, solving
+\(a_{n+2}=a_{n+1}+a_n+f_n\) gives the inverse uniquely. The compatible infinite matrices act on arbitrary rational streams, with a finite sum in every row.
+
+To see the Fibonacci weights in that inverse, use the state order
+\(v_n=(a_n,a_{n+1})^{\mathsf T}\) and set
+
+\[
+\mathsf A=\begin{pmatrix}0&1\\1&1\end{pmatrix},\qquad
+e=\binom01.
+\]
+
+This order reverses the polynomial state used above. With
+\(\mathsf J=\bigl(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\bigr)\), we have
+\(\mathsf A=\mathsf J\mathsf T(1)\mathsf J\). The forced recurrence is exactly
+
+\[
+v_{n+1}=\mathsf A v_n+e f_n.
+\]
+
+Writing \(F_n=F_n(1)\), repeated substitution gives the finite variation-of-constants formula
+
+\[
+\boxed{v_n=\mathsf A^n v_0+
+\sum_{j=0}^{n-1}\mathsf A^{n-1-j}e f_j.}
+\]
+
+The empty sum at \(n=0\) is zero. Induction proves the formula by applying \(\mathsf A\) and adding the next defect. For \(n\geq1\),
+
+\[
+\mathsf A^n=
+\begin{pmatrix}F_{n-1}&F_n\\F_n&F_{n+1}\end{pmatrix},
+\qquad
+a_n=F_{n-1}a_0+F_na_1+
+\sum_{j=0}^{n-2}F_{n-1-j}f_j.
+\]
+
+For example, the state containing \(-61\) and \(1385\) is
+
+\[
+\begin{aligned}
+v_3
+&=\binom{-1}{-1}
++5\binom12-65\binom11+1441\binom01\\
+&=\binom{-61}{1385}.
+\end{aligned}
+\]
+
+Discarding the defects would leave the homogeneous sequence
+\(1,-1,0,-1,-1,-2,\ldots\). It already disagrees with the Euler stream at \(a_2=5\). The Fibonacci model is exact when its forcing coordinates remain attached.
+
+## Move with the Fibonacci transfer
+
+Since \(\det\mathsf A=-1\), the companion matrix has an integer inverse:
+
+\[
+\mathsf A^{-1}=\begin{pmatrix}-1&1\\1&0\end{pmatrix}.
+\]
+
+Define moving coordinates \(z_n=\mathsf A^{-n}v_n\). Multiplying the forced recurrence by \(\mathsf A^{-(n+1)}\) gives
+
+\[
+\boxed{z_{n+1}-z_n=\mathsf A^{-(n+1)}e f_n.}
+\]
+
+The coordinate change is invertible at every step, with \(v_n=\mathsf A^nz_n\). For the Euler stream, the first values are
+
+| \(n\) | State \(v_n\) | Moving coordinates \(z_n\) |
+|---|---|---|
+| 0 | \((1,-1)\) | \((1,-1)\) |
+| 1 | \((-1,5)\) | \((6,-1)\) |
+| 2 | \((5,-61)\) | \((71,-66)\) |
+| 3 | \((-61,1385)\) | \((2953,-1507)\) |
+
+The increments can be checked without a matrix power routine:
+
+\[
+\begin{aligned}
+z_1-z_0&=5(1,0)=(5,0),\\
+z_2-z_1&=-65(-1,1)=(65,-65),\\
+z_3-z_2&=1441(2,-1)=(2882,-1441).
+\end{aligned}
+\]
+
+For a homogeneous Fibonacci solution, every defect is zero and these moving coordinates are constant. Conversely, constant moving coordinates imply zero defect, because \(\mathsf A^{-(n+1)}e\) is nonzero. The Euler example has nonzero increments. The change of coordinates exposes that difference rather than removing it.
+
+## Transfer the Euler sequence to Fibonacci values
+
+We can also ask for a matrix whose output values actually are Fibonacci numbers. For this calculation, use an **ordinary formal series** in a new variable \(z\):
+
+\[
+\mathcal A(z)=\sum_{n\geq0}a_nz^n
+=1-z+5z^2-61z^3+1385z^4-50521z^5+\cdots.
+\]
+
+There are no factorials here. This series differs from the earlier exponential generating function \(\operatorname{sech}t\). All operations take place in \(\mathbb Z[[z]]\), so analytic convergence is unnecessary.
+
+Choose the shifted Fibonacci stream
+
+\[
+g_n=F_{n+1}=1,1,2,3,5,8,\ldots,
+\qquad
+\mathcal G(z)=\frac1{1-z-z^2}.
+\]
+
+The shift makes both constant coefficients one. A unit lower-triangular convolution cannot send \(a_0=1\) to the unshifted \(F_0=0\).
+
+First apply the recurrence polynomial to the source:
+
+\[
+\begin{aligned}
+R(z)&=(1-z-z^2)\mathcal A(z)\\
+&=1-2z+5z^2-65z^3+1441z^4-51845z^5+\cdots.
+\end{aligned}
+\]
+
+Its coefficients after degree one are exactly the defects:
+\(r_0=1\), \(r_1=a_1-a_0=-2\), and \(r_n=f_{n-2}\) for \(n\geq2\). Because \(r_0=1\), there is a unique integral formal inverse \(H=R^{-1}\), obtained from
+
+\[
+h_0=1,\qquad h_n=-\sum_{j=1}^n r_jh_{n-j}.
+\]
+
+Here are the first five steps:
+
+\[
+\begin{aligned}
+h_1&=-(-2)=2,\\
+h_2&=-((-2)2+5)=-1,\\
+h_3&=-((-2)(-1)+5(2)-65)=53,\\
+h_4&=-((-2)53+5(-1)-65(2)+1441)=-1200,\\
+h_5&=-((-2)(-1200)+5(53)-65(-1)+1441(2)-51845)=46233.
+\end{aligned}
+\]
+
+Consequently,
+
+\[
+\boxed{H(z)\mathcal A(z)=\mathcal G(z).}
+\]
+
+Indeed, multiplying the left side by \(1-z-z^2\) gives \(HR=1\). The formal unit \(1-z-z^2\) then gives the claimed identity uniquely.
+
+For ordinary coefficients, let \(\mathsf L(H)_{n,j}=h_{n-j}\) when \(j\leq n\), and zero otherwise. The first six rows give the requested sequence transfer matrix:
+
+\[
+\begin{pmatrix}
+1&0&0&0&0&0\\
+2&1&0&0&0&0\\
+-1&2&1&0&0&0\\
+53&-1&2&1&0&0\\
+-1200&53&-1&2&1&0\\
+46233&-1200&53&-1&2&1
+\end{pmatrix}
+\begin{pmatrix}1\\-1\\5\\-61\\1385\\-50521\end{pmatrix}
+=\begin{pmatrix}1\\1\\2\\3\\5\\8\end{pmatrix}.
+\]
+
+For the last three displayed rows, the arithmetic is
+
+\[
+\begin{aligned}
+53+1+10-61&=3,\\
+-1200-53-5-122+1385&=5,\\
+46233+1200+265+61+2770-50521&=8.
+\end{aligned}
+\]
+
+This is an invertible infinite matrix on all integer streams. Every row is finite, its diagonal is one, and its inverse is \(\mathsf L(R)\). For example, the inverse recovers
+
+\[
+a_4=1441(1)-65(1)+5(2)-2(3)+1(5)=1385.
+\]
+
+The transfer was constructed from the known Euler source and the chosen Fibonacci target. It demonstrates an exact reversible encoding. It does not establish a faster way to discover or compute either sequence.
+
+## Transport the operation along with the Fibonacci coordinates
+
+A sequence transformation should carry its operation as well as its values. Let \(S\) be the forward shift, \((Sc)_n=c_{n+1}\), and let \(\varepsilon_0(c)=c_0\). For any ordinary convolution kernel \(H\), direct cancellation of the finite sums gives
+
+\[
+\begin{aligned}
+(S\mathsf L(H)c)_n
+&=\sum_{j=0}^{n+1}h_{n+1-j}c_j,\\
+(\mathsf L(H)Sc)_n
+&=\sum_{j=1}^{n+1}h_{n+1-j}c_j.
+\end{aligned}
+\]
+
+Their difference is the boundary term \(h_{n+1}c_0\). Set \(u_n=h_{n+1}\). Then
+
+\[
+S\mathsf L(H)-\mathsf L(H)S=u\varepsilon_0,
+\qquad
+\boxed{\mathsf L(H)S\mathsf L(R)=S-u\varepsilon_0.}
+\]
+
+The second identity uses \(\varepsilon_0\mathsf L(R)=\varepsilon_0\), since \(r_0=1\). Thus a shift of the source is represented by a shift plus an explicit boundary correction in the new coordinates. For the Euler input, the first commutator component is
+\(g_1-a_1=1-(-1)=2=h_1a_0\). At component one, it is
+\(g_2-(2a_1+a_2)=2-3=-1=h_2a_0\).
+
+Finally, the target obeys \((S^2-S-I)g=0\). Pulling that operation back to the Euler coordinates gives
+
+\[
+\boxed{
+\bigl[\mathsf L(R)(S^2-S-I)\mathsf L(H)\bigr]a=0.
+}
+\]
+
+This is the transported recurrence. Applying \(S^2-S-I\) directly to \(a\) produces the nonzero defect stream already calculated. The coordinate matrix, inverse, recurrence, and boundary term together specify what the transfer preserves.
+
 ## Run the exact checks
 
 Download the [standalone checker](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler_packets.py), or the [complete source and results bundle](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-and-checks.zip). From the download directory, run:
@@ -2260,6 +2650,9 @@ Matrix checks: inverse, composition, factorial normalization, packets, Pascal sa
 Sampling cutoff control: 3 columns give 32; 5 columns give 1376
 Base changes: exact cocycle; prime-dependent precision checked
 Supercongruence combination: 8 mod 81 and 9 mod 32 give 1385 mod 2592
+Fibonacci polynomial coordinates: E_4(x) = 2 B_0 + 5 B_1 - 3 B_2 - 2 B_3 + B_4
+Fibonacci recurrence defects: 5, -65, 1441, -51845
+Reversible sequence transfer: 1, -1, 5, -61, 1385 -> 1, 1, 2, 3, 5
 Signed Euler difference coordinates: 1, -2, 8, -80, 1664
 Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376
 Refinement: 2*4 + 1376 = 1384
@@ -2276,9 +2669,9 @@ python -B euler_packets.py --output my-euler-results
 
 The program refuses to replace existing result files. The CSV values retain integers and rational numbers, including the ordinary coefficients and their factorial normalization.
 
-You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
+You can also inspect the published [coefficient table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/euler-coefficients.csv), [parameter-polynomial table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/power-polynomials.csv), [local reconstruction and error table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/local-reconstruction.csv), [matrix-entry table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/coefficient-matrices.csv), [supercongruence table](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/congruence-ladders.csv), [Fibonacci transfer matrices](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/fibonacci-transfer.csv), [exact results](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/results.json), and [source identities](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/source-record.json).
 
-The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
+The matrix table contains twelve-by-twelve blocks of each forward and inverse local transform for charts 2, 3, 5 and 7, the Pascal pair, the displayed three-by-five sampling block, and five-by-five base changes from chart three to charts five and two. The Fibonacci table adds the degree-twelve polynomial connection and its inverse, and sixteen-by-sixteen recurrence analysis, synthesis, ordinary sequence transfer and inverse matrices. These finite tables can be inspected entry by entry. The formulas and proofs above define the infinite operators.
 
 The checks use several different routes:
 
@@ -2302,19 +2695,21 @@ The checks use several different routes:
 | Congruential families | Ordinary inversion against the triangular recurrence and denominator clearing | \(N=1,\ldots,6\), every address, indices 0–8 |
 | Sequence transfer | Direct sampled differences against polynomial kernels | Spacings 1–5, every lane, orders 0–5, three specified integer sequences |
 | Refinement composition | Every coefficient of composed and direct kernel rows | Both spacings 1–4, every lane, orders 0–3 |
+| Fibonacci polynomial basis | Closed ballot coefficients against descending monic elimination, inverse products, centered recovery, and polynomial companion powers | Degrees and powers 0–12 |
+| Fibonacci sequence coordinates | Defect analysis and synthesis, companion evolution, moving-state increments, Green-kernel sums, reversible Toeplitz transfer, and full commutator rows | Sixteen even Euler values, states 0–14, all required matrix columns |
 | Prime residuals | Integer polynomial coefficients and application to the three sequences | Primes 2, 3, 5, 7, and 11 |
 
 The permutation control uses a different definition of the numbers. At length \(m\), keep the number of admissible permutations ending at each possible rank. If the next comparison is an ascent, sum the preceding counts below the new rank. For a descent, sum those at or above it. Repeating the prescribed pattern gives the total. The program also enumerates the small permutation sets directly to check this dynamic program. It does not infer a universal enumeration theorem from those samples.
 
-The [bounded run manifest](../../verification/euler-packets/run-003/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [matrix and coefficient-transform self-review](../../verification/euler-packets/PROOF_REVIEW_MATRICES.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
+The [bounded run manifest](../../verification/euler-packets/run-004/manifest.json) records the command, Python version, source hashes before and after execution, time limit, observed completion, and result hashes. The [Fibonacci and coordinate-transfer self-review](../../verification/euler-packets/PROOF_REVIEW_FIBONACCI.md) links the preceding proof reviews and checks the added arguments separately. There is no new Lean run for this example.
 
 A separate check compares 605 reciprocal coefficient values with the pinned Komorebi Math source, using both its integer sequence API and its logarithmic reciprocal-power implementation. It also makes 1,012 comparisons in the local Euler charts: 220 source, kernel and reconstruction values, 528 truncation values and errors, and 264 row weights, across prime charts 2, 3, 5 and 7 through ordinary degree twenty. Its [comparison record](https://komorebip.github.io/Operation-KOMOREBI/downloads/euler-packets/library-comparison.json) retains the source identity and declared ranges.
 
-That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. The universal statements have the written proofs above.
+That supplementary checker also verifies twelve complete rows of the infinite sampling-kernel witness and 18 Euler index-shift supercongruences, for primes 3, 5 and 7 with even starting degree 2–12. It retains the failing degree-zero boundary as a negative control. It also makes 921 Fibonacci comparisons with the pinned library: 169 polynomial connection entries, 52 polynomial companion entries, 13 centered Euler values, 512 recurrence matrix entries, 150 recurrence checks, and 25 full-index records. The full and even-index streams are checked separately at every prefix length from two through twenty-six. The universal statements have the written proofs above.
 
 ## What the example establishes
 
-The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, and sequence-refinement kernels with their Pascal conjugation, composition and prime correction.
+The written calculation gives exact reciprocal recurrences, the two-packet multiplication law and its coarsening obstruction, the quartic reconstruction and enumeration identities, reciprocal parameter polynomials, Euler-polynomial power sums, odd-length and dyadic local supercongruences, infinite coefficient matrices and inverse transforms, prime-dependent base changes, congruential families with explicit addresses, coprime modular reconstruction, formal residual correction, sequence-refinement kernels with their Pascal conjugation, composition and prime correction, and explicit Euler-to-Fibonacci polynomial, recurrence and sequence transfers with their inverses and transported operation.
 
 The finite program checks implementations of these laws in its declared ranges. Its deliberately wrong controls expose missing carry factors, wrong factorial normalization, discarded residuals, and an invalid composite-number generalization.
 

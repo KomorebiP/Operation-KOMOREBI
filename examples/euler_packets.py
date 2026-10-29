@@ -314,6 +314,140 @@ def congruential_packet(spacing, address, count):
     return [value*factorial(spacing*n) for n,value in enumerate(inverse(denominator,count))]
 
 
+def fibonacci_polynomials(count):
+    """B_k=F_(k+1), ascending ordinary polynomial coefficients."""
+    basis=[]
+    previous,current=[F(0)],[F(1)]
+    for _ in range(count):
+        basis.append(current)
+        previous,current=current,trim(add([F(0)]+current,previous))
+    return basis
+
+
+def monic_coordinates(polynomial, basis):
+    """Descending elimination, independent of the ballot coefficient formula."""
+    remainder=list(polynomial)+[F(0)]*(len(basis)-len(polynomial))
+    coordinates=[F(0)]*len(basis)
+    for k in reversed(range(len(basis))):
+        coordinates[k]=remainder[k]
+        for j,value in enumerate(basis[k]):
+            remainder[j]-=coordinates[k]*value
+    assert not any(remainder)
+    return coordinates
+
+
+def fibonacci_examples(euler_polynomials, signed, check):
+    size=len(euler_polynomials)
+    basis=fibonacci_polynomials(size+1)
+    columns=[monic_coordinates(poly,basis[:size]) for poly in euler_polynomials]
+    connection=[list(row) for row in zip(*columns)]
+    for n in range(size):
+        for k in range(size):
+            closed=sum((euler_polynomials[n][k+2*r]*(-1)**r
+                        *(choose(k+2*r,r)-choose(k+2*r,r-1))
+                        for r in range(max(0,(n-k)//2+1))),F(0))
+            check('fibonacci_connection_formula',connection[k][n]==closed)
+        recovered=[F(0)]*size
+        for k in range(size):
+            recovered=add(recovered,scale(basis[k],connection[k][n]),size)
+        check('fibonacci_polynomial_reconstruction',trim(recovered)==euler_polynomials[n])
+        recovered_euler=2**n*sum(connection[k][n]*evaluate(basis[k],F(1,2)) for k in range(size))
+        expected=0 if n%2 else signed[n//2]
+        check('fibonacci_centered_euler_recovery',recovered_euler==expected)
+    reverse_columns=[monic_coordinates(poly,euler_polynomials) for poly in basis[:size]]
+    reverse=[list(row) for row in zip(*reverse_columns)]
+    identity=[[F(i==j) for j in range(size)] for i in range(size)]
+    check('fibonacci_connection_inverse',matrix_product(connection,reverse)==identity)
+    check('fibonacci_connection_inverse',matrix_product(reverse,connection)==identity)
+    displayed=[[1,F(-1,2),-1,F(7,4),2],[0,1,-1,-2,5],
+               [0,0,1,F(-3,2),-3],[0,0,0,1,-2],[0,0,0,0,1]]
+    check('fibonacci_display', [row[:5] for row in connection[:5]]==displayed)
+    check('fibonacci_failure_controls',matrix_vector(displayed,[1,0,0,0,0])
+          != matrix_vector(list(map(list,zip(*displayed))),[1,0,0,0,0]))
+    # Direct polynomial matrix iteration versus the Fibonacci recurrence.
+    polynomial_powers=[]
+    state=[[[F(1)],[F(0)]],[[F(0)],[F(1)]]]
+    for n in range(size):
+        polynomial_powers.append(state)
+        if n:
+            expected=[[basis[n],basis[n-1]],
+                      [basis[n-1],basis[n-2] if n>=2 else [F(0)]]]
+            check('fibonacci_polynomial_companion',state==expected)
+        state=[[trim(add([F(0)]+state[i][0],state[i][1])),state[i][0]] for i in range(2)]
+
+    count=16
+    a=[F(value) for value in signed[:count]]
+    fib=[0,1]
+    for _ in range(count+1):
+        fib.append(fib[-1]+fib[-2])
+    analysis=[[F(i==j) if i<2 else F(j==i)-F(j==i-1)-F(j==i-2)
+               for j in range(count)] for i in range(count)]
+    synthesis=[]
+    for i in range(count):
+        synthesis.append([F(1 if i==0 else fib[i-1]) if j==0 else
+                          F(fib[i]) if j==1 else F(fib[i-j+1]) if j<=i else F(0)
+                          for j in range(count)])
+    identity=[[F(i==j) for j in range(count)] for i in range(count)]
+    check('fibonacci_defect_inverse',matrix_product(analysis,synthesis)==identity)
+    check('fibonacci_defect_inverse',matrix_product(synthesis,analysis)==identity)
+    coordinates=matrix_vector(analysis,a)
+    check('fibonacci_defect_reconstruction',matrix_vector(synthesis,coordinates)==a)
+    defects=coordinates[2:]
+    check('fibonacci_display',defects[:4]==[5,-65,1441,-51845])
+    companion=[[F(0),F(1)],[F(1),F(1)]]
+    inverse_companion=[[F(-1),F(1)],[F(1),F(0)]]
+    forward=backward=[[F(1),F(0)],[F(0),F(1)]]
+    moving=[]
+    for n in range(count-1):
+        state=a[n:n+2]
+        z=matrix_vector(backward,state)
+        moving.append(z)
+        check('fibonacci_moving_state',matrix_vector(forward,z)==state)
+        green=matrix_vector(forward,a[:2])
+        for j in range(n):
+            green=add(green,[F(fib[n-1-j]*defects[j]),F(fib[n-j]*defects[j])],2)
+        check('fibonacci_green_reconstruction',green==state)
+        if n<count-2:
+            next_state=add(matrix_vector(companion,state),[0,defects[n]],2)
+            check('fibonacci_forced_companion',next_state==a[n+1:n+3])
+            next_backward=matrix_product(inverse_companion,backward)
+            increment=matrix_vector(next_backward,[0,defects[n]])
+            check('fibonacci_moving_increment',add(z,increment)==matrix_vector(next_backward,next_state))
+        forward=matrix_product(companion,forward)
+        backward=matrix_product(inverse_companion,backward)
+    check('fibonacci_display',moving[:4]==[[1,-1],[6,-1],[71,-66],[2953,-1507]])
+    check('fibonacci_failure_controls',defects[0]!=0)
+
+    residual=mul(a,[F(1),F(-1),F(-1)],count)
+    kernel=inverse(residual,count)
+    transfer=toeplitz_matrix(kernel,count)
+    inverse_transfer=toeplitz_matrix(residual,count)
+    target=[F(fib[n+1]) for n in range(count)]
+    check('fibonacci_sequence_transfer',matrix_vector(transfer,a)==target)
+    check('fibonacci_sequence_transfer',matrix_vector(inverse_transfer,target)==a)
+    check('fibonacci_toeplitz_inverse',matrix_product(transfer,inverse_transfer)==identity)
+    check('fibonacci_toeplitz_inverse',matrix_product(inverse_transfer,transfer)==identity)
+    check('fibonacci_display',residual[:6]==[1,-2,5,-65,1441,-51845])
+    check('fibonacci_display',kernel[:6]==[1,2,-1,53,-1200,46233])
+    # Complete rows of S L(H)-L(H) S: an infinite rank-one boundary term.
+    for n in range(count-1):
+        for j in range(count):
+            first=kernel[n+1-j] if j<=n+1 else 0
+            second=kernel[n-j+1] if 1<=j<=n+1 else 0
+            check('fibonacci_shift_commutator',first-second==(kernel[n+1] if j==0 else 0))
+    return dict(polynomial_connection=[[str(c) for c in row] for row in connection],
+        polynomial_inverse=[[str(c) for c in row] for row in reverse],
+        polynomial_basis=[[str(c) for c in poly] for poly in basis[:size]],
+        polynomial_companion_powers=[[[[str(c) for c in poly] for poly in row] for row in mat] for mat in polynomial_powers],
+        recurrence_analysis=[[str(c) for c in row] for row in analysis],
+        recurrence_synthesis=[[str(c) for c in row] for row in synthesis],
+        defects=[str(c) for c in defects],moving_states=[[str(c) for c in row] for row in moving],
+        ordinary_residual=[str(c) for c in residual],ordinary_kernel=[str(c) for c in kernel],
+        sequence_transfer=[[str(c) for c in row] for row in transfer],
+        sequence_inverse=[[str(c) for c in row] for row in inverse_transfer],
+        target=[int(c) for c in target])
+
+
 def compute():
     counts = {}
 
@@ -733,6 +867,7 @@ def compute():
     check('sampled_signal_control',all(alternating[n+2]-alternating[n] == 0 for n in range(10)))
     # No field-valued quotient or division by a non-unit is used in the modular check.
 
+    fibonacci=fibonacci_examples(euler_polynomials,signed,check)
     polynomials = reciprocal_polynomials(2,6)
     report = dict(status='PASS',arithmetic='exact integers and fractions',
         python=platform.python_version(),randomness=False,checks=counts,
@@ -747,6 +882,7 @@ def compute():
         local_reconstructions=[odd_example,dyadic_example],
         matrix_examples=matrix_examples,
         base_change_examples=base_change_examples,
+        fibonacci=fibonacci,
         references=REFERENCES,
         bounds=dict(reciprocal_spacing=[2,6],reciprocal_index=[0,10],
             reciprocal_parameters=[str(r) for r in parameters],
@@ -762,6 +898,8 @@ def compute():
             sampling_matrix_spacings=[1,3],sampling_matrix_orders=[0,3],
             base_change_charts=[2,3,5,7],base_change_matrix_size=8,base_change_all_triples=True,
             congruential_family_spacing=[1,6],congruential_addresses='every 0<=j<N',congruential_index=[0,8],
+            fibonacci_polynomial_degree=[0,12],fibonacci_sequence_length=16,
+            fibonacci_companion_power=[0,12],fibonacci_state_index=[0,14],
             difference_spacing=[1,5],difference_offsets='all 0 <= s < M',difference_order=[0,5],
             composition_spacings=[1,4],composition_offsets='all admitted offsets',composition_order=[0,3],
             primes=[2,3,5,7,11]),
@@ -775,7 +913,8 @@ def compute():
 def save_results(directory, report):
     directory.mkdir(parents=True,exist_ok=True)
     paths = [directory/'results.json',directory/'euler-coefficients.csv',directory/'power-polynomials.csv',
-             directory/'local-reconstruction.csv',directory/'coefficient-matrices.csv',directory/'congruence-ladders.csv']
+             directory/'local-reconstruction.csv',directory/'coefficient-matrices.csv',directory/'congruence-ladders.csv',
+             directory/'fibonacci-transfer.csv']
     if any(p.exists() for p in paths):
         raise FileExistsError('Choose a directory with no existing result files')
     paths[0].write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -819,6 +958,14 @@ def save_results(directory, report):
         writer.writerow(['chart','depth','proved_modulus','partial','residue','error','exact_error_valuation'])
         for row in report['base_change_examples']['congruence_ladders']:
             writer.writerow([row[key] for key in ('chart','depth','modulus','partial','residue','error','valuation')])
+    with paths[6].open('w',encoding='utf-8',newline='') as stream:
+        writer=csv.writer(stream,lineterminator='\n')
+        writer.writerow(['transform','row','column','value'])
+        for name in ('polynomial_connection','polynomial_inverse','recurrence_analysis',
+                     'recurrence_synthesis','sequence_transfer','sequence_inverse'):
+            for i,row in enumerate(report['fibonacci'][name]):
+                for j,value in enumerate(row):
+                    writer.writerow([name,i,j,value])
 
 
 def main():
@@ -836,6 +983,9 @@ def main():
     print('Sampling cutoff control: 3 columns give 32; 5 columns give 1376')
     print('Base changes: exact cocycle; prime-dependent precision checked')
     print('Supercongruence combination: 8 mod 81 and 9 mod 32 give 1385 mod 2592')
+    print('Fibonacci polynomial coordinates: E_4(x) = 2 B_0 + 5 B_1 - 3 B_2 - 2 B_3 + B_4')
+    print('Fibonacci recurrence defects: 5, -65, 1441, -51845')
+    print('Reversible sequence transfer: 1, -1, 5, -61, 1385 -> 1, 1, 2, 3, 5')
     print('Signed Euler difference coordinates:', ', '.join(map(str,report['difference_coordinates'])))
     print('Spacing-two lane: 1, 5, 1385; differences: 1, 4, 1376')
     print('Refinement: 2*4 + 1376 = 1384')

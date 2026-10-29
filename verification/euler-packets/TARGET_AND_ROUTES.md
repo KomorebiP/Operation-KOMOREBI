@@ -134,3 +134,20 @@ family itself or changing the working modulus. Include the degree-zero
 counterexample to the stated Euler-index supercongruence, and the concrete
 loss of a ternary digit through a dyadic coordinate coefficient. These extend
 the same checkpoint and must be proved and checked within its final evidence.
+
+## Fibonacci checkpoint EULER-CASE-004
+
+Target fixed before execution against collection base
+`0ba7d402231a341383a47332072ddb20575bdfe7`. Add the existing library's
+Euler-polynomial to Fibonacci-polynomial connection and recurrence defect
+coordinates, with explicit source and target orders. Derive an invertible
+ordinary-series Toeplitz transfer to the shifted Fibonacci sequence. Keep the
+polynomial direct sum separate from arbitrary sequence columns and keep the
+full-index Euler stream separate from its even subsequence. The sequence map
+is constructed from its known source and target; no discovery or speed claim.
+
+Routes: closed connection formula versus monic elimination; companion state
+iteration versus Green-kernel reconstruction; ordinary formal-unit inversion
+versus target recurrence. Contracts 004 declare the finite ranges before runs.
+Same-assistant proof review and mathematical proofreading are separate from
+execution. Earlier contracts and captured evidence are retained historically.

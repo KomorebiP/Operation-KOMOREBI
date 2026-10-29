@@ -47,13 +47,14 @@ def publish(site):
                 raise ValueError('Euler run output differs: '+entry['path'])
     downloads={
         'euler_packets.py':'examples/euler_packets.py',
-        'results.json':'verification/euler-packets/run-003/results.json',
-        'euler-coefficients.csv':'verification/euler-packets/run-003/euler-coefficients.csv',
-        'power-polynomials.csv':'verification/euler-packets/run-003/power-polynomials.csv',
-        'local-reconstruction.csv':'verification/euler-packets/run-003/local-reconstruction.csv',
-        'coefficient-matrices.csv':'verification/euler-packets/run-003/coefficient-matrices.csv',
-        'congruence-ladders.csv':'verification/euler-packets/run-003/congruence-ladders.csv',
-        'library-comparison.json':'verification/euler-packets/cross-check-003/results.json',
+        'results.json':'verification/euler-packets/run-004/results.json',
+        'euler-coefficients.csv':'verification/euler-packets/run-004/euler-coefficients.csv',
+        'power-polynomials.csv':'verification/euler-packets/run-004/power-polynomials.csv',
+        'local-reconstruction.csv':'verification/euler-packets/run-004/local-reconstruction.csv',
+        'coefficient-matrices.csv':'verification/euler-packets/run-004/coefficient-matrices.csv',
+        'congruence-ladders.csv':'verification/euler-packets/run-004/congruence-ladders.csv',
+        'fibonacci-transfer.csv':'verification/euler-packets/run-004/fibonacci-transfer.csv',
+        'library-comparison.json':'verification/euler-packets/cross-check-004b/results.json',
     }
     output=site.output/PREFIX
     output.mkdir(parents=True,exist_ok=True)
@@ -88,7 +89,7 @@ def publish(site):
               'https://github.com/KomorebiP/Operation-KOMOREBI/blob/'+site.revision+'/examples/euler_packets.py')
     site.search.append(dict(title='Euler packets, polynomials and residuals / exact program',
         group='Collection',kind='Code',url=READER,work_ids=record['work_ids'],
-        text='Euler secant A000364 A211212 quartic packets Schur complement reciprocal polynomials infinite coefficient matrices Pascal Toeplitz base changes supercongruences congruential addresses CRT odd-prime dyadic local coordinates Bernoulli sharp precision prime residual exact standalone Python'))
+        text='Euler secant A000364 A211212 quartic packets Schur complement reciprocal polynomials Fibonacci polynomial connection companion defect sequence transfer infinite coefficient matrices Pascal Toeplitz base changes supercongruences congruential addresses CRT odd-prime dyadic local coordinates Bernoulli sharp precision prime residual exact standalone Python'))
     return source
 
 

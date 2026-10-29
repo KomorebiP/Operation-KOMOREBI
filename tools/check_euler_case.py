@@ -13,7 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT/'examples/euler_packets.py'
 PAGE = ROOT/'docs/demonstrations/EULER_PACKETS.md'
-RUN = ROOT/'verification/euler-packets/run-003'
+RUN = ROOT/'verification/euler-packets/run-004'
 
 
 def digest(path):
@@ -40,6 +40,13 @@ def check_library(example, math_root, git):
     from komorebi_math.sequences import reciprocal_coefficients as integral
     from komorebi_math.analytic.reciprocal import reciprocal_coefficients as analytic
     from komorebi_math.arithmetic.euler import EulerLocalCoordinates
+    from komorebi_math.coordinates.polynomials import (
+        euler_to_fibonacci_transform, fibonacci_companion_power,
+        secant_euler_from_fibonacci_coordinates)
+    from komorebi_math.coordinates.recurrence import (
+        analyze_recurrence_coordinates, euler_fibonacci_coordinates,
+        recurrence_analysis_transform, recurrence_synthesis_transform,
+        variation_of_constants_prefix)
     import numpy
     checks=0
     for spacing in range(2,7):
@@ -80,6 +87,45 @@ def check_library(example, math_root, git):
                 local_checks['truncations']+=2
                 assert coordinates.row_weight(degree,depth)==example.valuation(terms[depth],prime)
                 local_checks['row_weights']+=1
+    fib=example.compute()['fibonacci']
+    connection=euler_to_fibonacci_transform(12).matrix
+    fib_checks=dict(connection_entries=0,polynomial_companion_entries=0,
+                    centered_euler_values=0,recurrence_matrix_entries=0,
+                    recurrence_round_trips=0,full_index_records=0)
+    for i in range(13):
+        for j in range(13):
+            assert connection[i][j]==F(fib['polynomial_connection'][i][j])
+            fib_checks['connection_entries']+=1
+    even=[(-1)**n*value for n,value in enumerate(example.reciprocal_recurrence(2,1,26))]
+    full=[F(0) if n%2 else even[n//2] for n in range(26)]
+    assert full[:5]!=even[:5]
+    for n in range(13):
+        mat=fibonacci_companion_power(n)
+        for i in range(2):
+            for j in range(2):
+                assert tuple(mat[i][j])==tuple(map(F,fib['polynomial_companion_powers'][n][i][j]))
+                fib_checks['polynomial_companion_entries']+=1
+        assert secant_euler_from_fibonacci_coordinates(n)==full[n]
+        fib_checks['centered_euler_values']+=1
+    for length in range(2,27):
+        for values in (even[:length],full[:length]):
+            record=analyze_recurrence_coordinates(values,(1,1))
+            expected_coordinates=tuple(values[:2])+tuple(values[i+2]-values[i+1]-values[i] for i in range(length-2))
+            assert record.coordinates()==expected_coordinates
+            assert record.reconstruct()==tuple(values)
+            assert variation_of_constants_prefix(record)==tuple(values)
+            fib_checks['recurrence_round_trips']+=3
+        assert euler_fibonacci_coordinates(length).coordinates()==analyze_recurrence_coordinates(full[:length],(1,1)).coordinates()
+        fib_checks['full_index_records']+=1
+        # Check every entry of the accepted 16-term matrices against the library.
+        if length==16:
+            for api,key in ((recurrence_analysis_transform,'recurrence_analysis'),
+                            (recurrence_synthesis_transform,'recurrence_synthesis')):
+                matrix=api((1,1),length).matrix
+                for i in range(length):
+                    for j in range(length):
+                        assert matrix[i][j]==F(fib[key][i][j])
+                        fib_checks['recurrence_matrix_entries']+=1
     sources=[]
     for name,module in sorted(sys.modules.items()):
         filename=getattr(module,'__file__',None)
@@ -97,6 +143,7 @@ def check_library(example, math_root, git):
                 numpy_version=numpy.__version__,imported_sources=sources,
                 local_charts=[2,3,5,7],local_even_degree=[0,20],
                 local_comparisons=local_checks,local_chart_comparisons=sum(local_checks.values()),
+                fibonacci_comparisons=fib_checks,fibonacci_total_comparisons=sum(fib_checks.values()),
                 scope='Exact numeric library outputs in the declared finite range. Not a proof of the complete Python implementation.')
 
 
