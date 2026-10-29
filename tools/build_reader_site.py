@@ -62,6 +62,7 @@ def site_navigation(page):
     groups = [
         ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
                   ('Papers and PDFs', 'documents.html'),
+                  ('Read side by side', 'side-by-side.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'), ('Glossary', 'collection/GLOSSARY.html'),
                      ('Notation', 'notation.html')]),
@@ -275,6 +276,10 @@ class Site:
         return posixpath.relpath(target,posixpath.dirname(page) or '.')
     def page(self,path,title,body,source=None):
         esc=html.escape
+        if path not in {'side-by-side.html','index.html','404.html'}:
+            pair=self.rel('side-by-side.html',path)+'?left='+quote(path,safe='')
+            launch='<p class="side-launch"><a data-side-reader-link href="'+esc(pair,quote=True)+'">Read side by side</a></p>'
+            body=re.sub(r'(</h1>)',lambda match:match[1]+launch,body,count=1)
         root=self.rel('index.html',path)
         nav_html=site_navigation(path)
         source_html=('<a href="'+esc(source,quote=True)+'">Source on GitHub</a> · ') if source else ''
@@ -283,6 +288,7 @@ class Site:
 <meta name="description" content="Read Komorebi papers, follow recorded proofs and run finite mathematical examples.">
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
 <link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
+<link rel="stylesheet" href="'''+self.rel('assets/side-reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/side-reader.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
 <script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script></head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
@@ -557,10 +563,13 @@ class Site:
         from notation_index import build as build_notation
         notation = build_notation(self)
         self.indexes()
+        from side_reader import build as build_side_reader
+        side_reader = build_side_reader(self)
         self.write('.nojekyll','')
         result=dict(collection_revision=self.revision,library_revisions=self.revisions,html_guides=len(self.documents),works=len(self.registry['components']),claim_records=len(self.claims['records']),reading_bundles=len(self.bundle_records),bundle_bytes=sum(x['archive_bytes'] for x in self.bundle_records),new_proof_review=False,new_lean_execution=False)
         result.update(reading_documents=len(self.reader.records),pdfs=sum(r['format']=='pdf' for r in self.reader.records.values()))
         result['notation'] = notation
+        result['side_reader'] = side_reader
         self.write('build-info.json',json.dumps(result,indent=2)+'\n')
         print(json.dumps(result))
 

@@ -51,6 +51,34 @@ zoom changes the text size. Reading routes and the work catalogue remain
 available when JavaScript is disabled. Search and catalogue filters use
 JavaScript and announce their result counts.
 
+## Read side by side
+
+Choose **Read side by side** on a reading page or from **Browse** to open the
+[two pane reader](https://KomorebiP.github.io/Operation-KOMOREBI/side-by-side.html).
+The page you were reading opens on the left, including its current HTML passage
+anchor. Each pane has a document picker with work, type and text filters.
+Papers, claims, proof locations, Lean sources, code, notation and examples can
+be read together. Each document keeps its existing evidence and scope notes.
+
+Each pane scrolls independently. Turn on **Open links from this document in the
+other pane** to keep the current document in place while following a reference.
+**Swap sides** exchanges the documents. **Open on its own** opens a document in
+a new tab. External links and the full PDF viewer also open in a new tab.
+Links inside the PDF toolbar keep the PDF viewer's normal behaviour.
+**Focus on reading** hides the site header and introduction. **Show site
+navigation** restores them.
+
+**Read left pane** and **Read right pane** move keyboard focus into the selected
+document. **Return to pane controls** at its beginning and end brings focus back.
+The width slider works with the arrow keys. On narrow screens, either pane can
+occupy the full width. **Both panes** stacks them vertically.
+
+**Copy link to this pair** records both document addresses and HTML anchors.
+If clipboard access is unavailable, a selected text field lets you copy the
+link yourself. PDF toolbar page and zoom changes are not captured in pair links.
+The browser Back button restores earlier pairs. Without JavaScript, use the
+ordinary paper, claim and example links in separate browser tabs.
+
 ## Find a statement or term
 
 The [claim index](https://KomorebiP.github.io/Operation-KOMOREBI/claims.html)

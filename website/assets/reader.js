@@ -1,5 +1,19 @@
 "use strict";
 
+const sideReaderLink = document.querySelector("[data-side-reader-link]");
+if (sideReaderLink) {
+  function updateSideReaderLink() {
+    const target = new URL(sideReaderLink.href, location.href);
+    const base = new URL("./", target);
+    const current = new URL(location.href);
+    target.searchParams.set("left", current.pathname.slice(base.pathname.length) + current.search + current.hash);
+    sideReaderLink.href = target.href;
+  }
+  updateSideReaderLink();
+  sideReaderLink.addEventListener("click", updateSideReaderLink);
+  window.addEventListener("hashchange", updateSideReaderLink);
+}
+
 const siteMenuToggle = document.querySelector("#site-menu-toggle");
 const siteMenuPanel = document.querySelector("#site-menu-panel");
 if (siteMenuToggle && siteMenuPanel) {

@@ -254,8 +254,10 @@ def inspect_site(root):
     euler_cases=verify_euler_case(root,pages)
     from download_selector import verify as verify_selector
     download_selection=verify_selector(root,pages)
+    from side_reader import check as check_side_reader
+    side_reader=check_side_reader(root,pages)
     return dict(status='PASS',html_pages=len(pages),local_links=links,fragments=fragments,euler_worked_examples=euler_cases,
-                search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,
+                search_pages=len(index),reading_bundles=len(bundles),checked_bundle_files=zipped_files,download_selection=download_selection,side_reader=side_reader,
                 reading_documents=len(documents['files']),pdfs=pdf_count,editorial_editions=len(editions),readable_math_expressions=readable_math,atlas=atlas,notation=notation,
                 scope='Static navigation, HTML structure and ZIP source identities. Not WCAG certification or mathematical review.')
 

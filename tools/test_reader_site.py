@@ -272,8 +272,8 @@ class ReaderSiteTests(unittest.TestCase):
         links=Links(site_navigation('collection/GLOSSARY.html')).links
         self.assertEqual([a['href'] for a in links if a.get('aria-current')=='page'], ['GLOSSARY.html'])
         self.assertIn('../search.html', [a['href'] for a in links])
-        self.assertEqual(len(links),13)
-        self.assertEqual(len({a['href'] for a in links}),13)
+        self.assertEqual(len(links),14)
+        self.assertEqual(len({a['href'] for a in links}),14)
         search=Links(site_navigation('search.html')).links
         self.assertEqual([a['href'] for a in search if a.get('aria-current')=='page'], ['search.html'])
 
