@@ -60,8 +60,7 @@ def site_navigation(page):
         url = posixpath.relpath(target, posixpath.dirname(page) or '.')
         return '<a href="'+html.escape(url, quote=True)+'"'+current+'>'+html.escape(title)+'</a>'
     groups = [
-        ('Read', [('Overview', 'collection/START_HERE.html'),
-                  ('Reading routes', 'collection/READING_ROUTES.html'),
+        ('Read', [('Reading routes', 'collection/READING_ROUTES.html'),
                   ('Papers and PDFs', 'documents.html'),
                   ('Worked examples', 'collection/HAND_WORKED_EXAMPLES.html')]),
         ('Look up', [('Claims', 'claims.html'), ('Glossary', 'collection/GLOSSARY.html'),
@@ -74,10 +73,42 @@ def site_navigation(page):
         '<li>'+link(label, target)+'</li>' for label, target in links)+'</ul></div>'
         for title, links in groups)
     return ('<nav class="site-navigation" aria-label="Main navigation">'
-            '<div class="site-navigation-bar">'+link('Works', 'works.html')+link('Search', 'search.html')+
+            '<div class="site-navigation-bar">'+link('Collection', 'works.html')+
+            link('About the project', 'collection/START_HERE.html')+link('Search', 'search.html')+
             '<button id="site-menu-toggle" type="button" aria-expanded="true" '
             'aria-controls="site-menu-panel" hidden>Browse <span aria-hidden="true">▾</span></button></div>'
             '<div id="site-menu-panel" class="site-menu-panel">'+panel+'</div></nav>')
+
+
+def home_page():
+    """The Open research introduction keeps each reading route a plain link."""
+    routes = [
+        ('Understand the project', 'Begin with a small example and a guide to the vocabulary.', 'NEW_READER'),
+        ('Read the mathematics', 'Explore the papers and books, with their assumptions in view.', 'MATHEMATICS'),
+        ('Examine a proof', 'Follow statements, formal sources, and recorded evidence.', 'PROOF_REVIEW'),
+        ('Try the software', 'Run a worked example and compare the expected output.', 'SOFTWARE'),
+    ]
+    cards = ''.join(
+        '<a class="home-route" href="collection/routes/'+key+'.html"><div><h3>'+title+
+        '</h3><p>'+description+'</p></div><span aria-hidden="true">→</span></a>'
+        for title, description, key in routes)
+    return '''<section class="home-hero" aria-labelledby="home-title">
+<p class="home-kicker">The Komorebi research collection</p>
+<h1 id="home-title">Explore the ideas.<br>Follow the evidence.</h1>
+<p class="home-lede">A place to read mathematics, inspect the reasoning, and try the calculations for yourself.</p>
+<div class="home-actions"><a class="button" href="collection/START_HERE.html">Start with the introduction <span aria-hidden="true">→</span></a><a class="button button-secondary" href="works.html">Browse all works</a></div>
+</section>
+<section class="home-ways" aria-labelledby="home-ways-title"><h2 id="home-ways-title">What would you like to explore?</h2><p>Choose a starting point. Each route includes context and links to the sources.</p>
+<div class="home-route-grid">'''+cards+'''</div></section>
+<details class="home-more"><summary>Explore the collections and how they connect</summary>
+<div class="home-collection-list"><h2>Three repositories, one place to begin</h2><dl>
+<dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd>
+<dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd>
+<dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl>
+<h3>What connects the work?</h3><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p>
+<ul><li><a href="collection/PROJECT_MAP.html">See the project map</a> — explore the twelve core papers, related books and documented connections.</li>
+<li><a href="collection/DEMONSTRATIONS.html">Follow a complete demonstration</a> — work through a calculation, run its program and follow the source evidence.</li></ul></div></details>
+<details class="home-status"><summary>What does “work in progress” mean?</summary><p>The collection records completion, formal coverage, and confidence separately. A linked file does not mean every claim has been verified. Software is beta.</p><p><a href="collection/COMPLETION_STATUS.html">Read the guide to evidence and status</a></p></details>'''
 
 
 def page_contents(content):
@@ -242,10 +273,11 @@ class Site:
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Read Komorebi papers, follow recorded proofs and run finite mathematical examples.">
 <title>'''+esc(title)+''' · Komorebi</title><link rel="stylesheet" href="'''+self.rel('assets/reader.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.css').read_bytes()).hexdigest()[:12]+'''">
+<link rel="stylesheet" href="'''+self.rel('assets/open-research.css',path)+'?v='+hashlib.sha256((self.root/'website/assets/open-research.css').read_bytes()).hexdigest()[:12]+'''">
 <script defer src="'''+self.rel('assets/mathjax-config.js',path)+'''"></script><script defer src="'''+self.rel('assets/mathjax/tex-svg-full.js',path)+'''"></script>
-<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script></head><body>
+<script defer src="'''+self.rel('assets/reader.js',path)+'?v='+hashlib.sha256((self.root/'website/assets/reader.js').read_bytes()).hexdigest()[:12]+'''"></script></head><body class="open-research'''+(' home-page' if path == 'index.html' else '')+'''">
 <a class="skip-link" href="#main">Skip to main content</a><header class="site-header"><a class="brand" href="'''+root+'''">Komorebi<span>Mathematics · proofs · software</span></a>'''+nav_html+'''</header>
-<main id="main" tabindex="-1">'''+body+'''</main><footer>'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a><p>Work in progress. Completion, Lean coverage and confidence retain their recorded scope.</p></footer></body></html>'''
+<main id="main" tabindex="-1">'''+body+'''</main><footer><div class="footer-links">'''+source_html+'''<a href="'''+self.rel('collection/PROJECT_STATEMENT.html',path)+'''">Project and authorship statement</a> · <a href="'''+self.rel('collection/ACCESSIBILITY.html',path)+'''">Accessibility and reporting problems</a></div><p>Work in progress. Completion, Lean coverage and confidence retain their recorded scope.</p></footer></body></html>'''
         self.write(path,doc)
     def collect_documents(self):
         maintained=set(self.status['maintained_documents'])
@@ -373,14 +405,7 @@ class Site:
         self.write('downloads/index.json',json.dumps(self.bundle_records,ensure_ascii=False,indent=2)+'\n')
     def indexes(self):
         e=html.escape
-        route_links=[('New to Komorebi','Start with a small example and the vocabulary.','NEW_READER'),('Read the mathematics','Choose a work and keep its assumptions in view.','MATHEMATICS'),('Inspect a proof','Follow statements, formal sources and recorded evidence.','PROOF_REVIEW'),('Run the software','Choose an environment and compare expected output.','SOFTWARE')]
-        cards=''.join('<a class="route" href="collection/routes/'+key+'.html"><h2>'+title+'</h2><p>'+desc+'</p><span>Open route →</span></a>' for title,desc,key in route_links)
-        body='<section class="hero"><p class="eyebrow">Komorebi P. / A working research collection</p><h1>Find a way into<br>the mathematics.</h1><p class="lede">Read a paper, follow its proof, or run a small calculation. Choose your starting point and keep the work’s assumptions and evidence close at hand.</p><p><a class="button" href="works.html">Browse the works</a> <a href="search.html">Search the collection</a></p></section><section aria-label="Choose a reading route" class="route-grid">'+cards+'</section><section class="intro"><h2>Three repositories, one place to begin</h2><dl><dt><a href="collection/index.html">Operation KOMOREBI</a></dt><dd>Papers, books, research programs, formal sources and evidence.</dd><dt><a href="math/index.html">Komorebi Math</a></dt><dd>A Python library for finite mathematical constructions and inspectable certificates.</dd><dt><a href="polyphase/index.html">Polyphase Float</a></dt><dd>A C library for arbitrary-precision binary floating-point arithmetic.</dd></dl></section><aside class="notice"><h2>Read the status with the result</h2><p>The collection is a work in progress. Completion, Lean coverage and confidence are separate descriptions. Software is beta. A linked file is not evidence that every claim has been verified.</p><a href="collection/COMPLETION_STATUS.html">Understand the evidence labels</a></aside>'
-        body=body.replace('<a class="button" href="works.html">Browse the works</a> <a href="search.html">Search the collection</a>',
-                          '<a class="button" href="collection/START_HERE.html">Understand the project</a> <a href="works.html">Browse the works</a> · <a href="search.html">Search</a>')
-        introduction='<section class="intro"><h2>What connects the work?</h2><p>Describe an object in parts, transfer operations through those parts, and account for what a change of representation preserves or loses.</p><div class="route-grid"><a class="route" href="collection/PROJECT_MAP.html"><h3>See the project map</h3><p>Explore the twelve core papers, related books and documented connections.</p></a><a class="route" href="collection/DEMONSTRATIONS.html"><h3>Follow a complete demonstration</h3><p>Work through a calculation, run its program and follow the source evidence.</p></a></div></section>'
-        body=body.replace('<section aria-label="Choose a reading route"',introduction+'<section aria-label="Choose a reading route"',1)
-        self.page('index.html','Read, inspect and run',body)
+        self.page('index.html','Explore the ideas. Follow the evidence.',home_page())
         body='<h1>Browse the works</h1><p>Each page brings together reading files, written proofs, Lean, code and the recorded limits. Incubator entries remain visible and labeled.</p><form class="filters" data-work-filter><label for="work-query">Find a title or subject</label><input id="work-query" name="q" type="search"><label for="work-group">Collection</label><select id="work-group"><option value="">All collections</option>'+''.join('<option value="'+g+'">'+t+'</option>' for g,t in [('papers','Core papers'),('monographs','Books and companion volumes'),('research','Research programs'),('packages','Software packages'),('experiments','Experiments')])+'</select><button type="reset">Clear filters</button></form><p id="work-count" role="status" aria-live="polite">'+str(len(self.registry['components']))+' works</p><div class="work-list">'
         for row in self.registry['components']:
             c=self.components[row['id']];s=self.assessments[row['id']]

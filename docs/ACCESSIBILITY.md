@@ -11,11 +11,18 @@ keyboard focus, descriptive links, a glossary and search. Work pages keep
 completion, Lean coverage and confidence in text. The layout adapts to smaller
 screens. Wide tables and code blocks can be scrolled with the keyboard.
 
-The header keeps **Works** and **Search** visible. **Browse** opens links grouped
+The header keeps **Collection**, **About the project** and **Search** visible.
+**Browse** opens links grouped
 under **Read**, **Look up** and **Use**. The current page is marked in its link.
 The expanded navigation stays above the content and does not cover it. Press
 Escape while focus is in the navigation to close it and return to Browse.
 When JavaScript is unavailable, the grouped links remain visible.
+
+The homepage offers four reading routes with underlined titles and large click
+targets. Its collection details and work-in-progress explanation use native
+disclosures that also work without JavaScript. The warm paper, sage surfaces
+and dark green text carry through to the reading pages, with a visible keyboard
+focus outline and layouts that reflow on narrow screens.
 
 Long HTML guides have a collapsed **On this page** list of section headings.
 Open it and choose a section to jump there. Keyboard focus follows the jump,
